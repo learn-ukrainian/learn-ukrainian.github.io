@@ -112,6 +112,24 @@ For a man:
 Keep the earlier identity rule: **Я студе́нт. Я студе́нтка.** Do not force
 **є** into that A1 sentence.
 
+### Діало́г про профе́сії
+
+Послу́хайте та прочита́йте розмо́ву про профе́сії та сім'ю́ — listen to and read the conversation about professions and family:
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Марко́","text":"Окса́но, хто ти? Ти студе́нтка?"},{"speaker":"Окса́на","text":"Так, я студе́нтка. А хто ти?"},{"speaker":"Марко́","text":"Я теж студе́нт. А хто твоя́ сестра́?"},{"speaker":"Окса́на","text":"Моя́ сестра́ — вчи́телька."},{"speaker":"Марко́","text":"Кла́сно! Вона́ до́бра вчи́телька."},{"speaker":"Окса́на","text":"Так. А хто твій брат?"},{"speaker":"Марко́","text":"Мій брат — лі́кар."}]')}
+/>
+
+Розмо́ва про сім'ю́ — conversation about family:
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Окса́на","text":"Твій брат лі́кар? Чудо́во!"},{"speaker":"Марко́","text":"А хто твоя́ ма́ма? Вона́ теж лі́карка?"},{"speaker":"Окса́на","text":"Так, моя́ ма́ма — лі́карка."},{"speaker":"Марко́","text":"А хто твій та́то?"},{"speaker":"Окса́на","text":"Мій та́то — співа́к. А твій дя́дько Мико́ла?"},{"speaker":"Марко́","text":"Мій дя́дько — акто́р."},{"speaker":"Окса́на","text":"А йо́го сестра́ — акто́рка!"}]')}
+/>
+
 ### Фо́рми профе́сій
 
 <Quiz client:only='react' questions={JSON.parse(`[{"question": "She is a teacher.", "options": [{"text": "Вона́ вчи́телька.", "correct": true}, {"text": "Вона́ вчи́тель.", "correct": false}, {"text": "Воно́ вчи́телька.", "correct": false}], "explanation": "Use the feminine profession form for a woman."}, {"question": "She is a doctor.", "options": [{"text": "Вона́ лі́карка.", "correct": true}, {"text": "Вона́ лі́кар.", "correct": false}, {"text": "Він лі́карка.", "correct": false}], "explanation": "Лі́карка is the feminine form."}, {"question": "He is a student.", "options": [{"text": "Він студе́нт.", "correct": true}, {"text": "Він студе́нтка.", "correct": false}, {"text": "Вона́ студе́нт.", "correct": false}], "explanation": "Студе́нт is the masculine form."}, {"question": "She is an actor.", "options": [{"text": "Вона́ акто́рка.", "correct": true}, {"text": "Вона́ акто́р.", "correct": false}, {"text": "Воно́ акто́рка.", "correct": false}], "explanation": "Акто́рка is the feminine profession form."}]`)} instruction={"Choose the natural profession form."} isUkrainian={false} />
@@ -237,11 +255,11 @@ repair the gender traps.
 
 ### Фо́рми профе́сій
 
-*(see lesson, §Підсу́мок)*
+*(see lesson, §Діало́г про профе́сії)*
 
 ### Чолові́чі та жіно́чі фо́рми профе́сій
 
-*(see lesson, §Підсу́мок)*
+*(see lesson, §Діало́г про профе́сії)*
 
 ### Він чи вона́ для люде́й
 
@@ -253,7 +271,7 @@ repair the gender traps.
 
 ### Ви́прав па́стки ро́ду
 
-<ErrorCorrection client:only='react' instruction="Choose the safer Ukrainian sentence." items={JSON.parse(`[{"sentence": "Мій кни́га, мій ру́чка (якщо́ говори́ть чолові́к).", "errorWord": "Мій кни́га, мій ру́чка (якщо́ говори́ть чолові́к).", "correctForm": "Моя́ кни́га, моя́ ру́чка.", "options": ["Моя́ кни́га, моя́ ру́чка.", "Мій кни́га, мій ру́чка."], "explanation": "The possessive follows the nouns кни́га and ру́чка, not the speaker."}, {"sentence": "Мій кни́га тут.", "errorWord": "Мій кни́га тут.", "correctForm": "Моя́ кни́га тут.", "options": ["Моя́ кни́га тут.", "Мій кни́га тут."], "explanation": "Кни́га is feminine, so use моя́."}, {"sentence": "Мій ру́чка там.", "errorWord": "Мій ру́чка там.", "correctForm": "Моя́ ру́чка там.", "options": ["Моя́ ру́чка там.", "Мій ру́чка там."], "explanation": "Ру́чка is feminine, so use моя́."}, {"sentence": "Де стіл? — Воно́ там. (Where is the table? — It is there.)", "errorWord": "Де стіл? — Воно́ там. (Where is the table? — It is there.)", "correctForm": "Де стіл? — Він там.", "options": ["Де стіл? — Він там.", "Де стіл? — Воно́ там."], "explanation": "Стіл is masculine, so the pronoun is він."}, {"sentence": "Це моя́ та́то.", "errorWord": "Це моя́ та́то.", "correctForm": "Це мій та́то.", "options": ["Це мій та́то.", "Це моя́ та́то."], "explanation": "Та́то is masculine."}, {"sentence": "Вона́ Мико́ла.", "errorWord": "Вона́ Мико́ла.", "correctForm": "Він Мико́ла.", "options": ["Він Мико́ла.", "Вона́ Мико́ла."], "explanation": "Мико́ла is a masculine name."}, {"sentence": "Моя́ соба́ка ду́же га́рна.", "errorWord": "Моя́ соба́ка ду́же га́рна.", "correctForm": "Мій соба́ка ду́же га́рний.", "options": ["Мій соба́ка ду́же га́рний.", "Моя́ соба́ка ду́же га́рна."], "explanation": "Соба́ка is masculine in Ukrainian; memorize мій соба́ка."}, {"sentence": "Я є студе́нт.", "errorWord": "Я є студе́нт.", "correctForm": "Я студе́нт.", "options": ["Я студе́нт.", "Я є студе́нт."], "explanation": "Present identity normally omits є."}, {"sentence": "Моє́ ім'я́ є Джон.", "errorWord": "Моє́ ім'я́ є Джон.", "correctForm": "Мене́ зва́ти Джон.", "options": ["Мене́ зва́ти Джон.", "Моє́ ім'я́ є Джон."], "explanation": "Мене́ зва́ти... is the safe name phrase."}]`)} isUkrainian={false} />
+<ErrorCorrection client:only='react' instruction="Choose the safer Ukrainian sentence." items={JSON.parse(`[{"sentence": "Мій кни́га, мій ру́чка (якщо́ гово́рить чолові́к).", "errorWord": "Мій кни́га, мій ру́чка (якщо́ гово́рить чолові́к).", "correctForm": "Моя́ кни́га, моя́ ру́чка.", "options": ["Моя́ кни́га, моя́ ру́чка.", "Мій кни́га, мій ру́чка."], "explanation": "The possessive follows the nouns кни́га and ру́чка, not the speaker."}, {"sentence": "Мій кни́га тут.", "errorWord": "Мій кни́га тут.", "correctForm": "Моя́ кни́га тут.", "options": ["Моя́ кни́га тут.", "Мій кни́га тут."], "explanation": "Кни́га is feminine, so use моя́."}, {"sentence": "Мій ру́чка там.", "errorWord": "Мій ру́чка там.", "correctForm": "Моя́ ру́чка там.", "options": ["Моя́ ру́чка там.", "Мій ру́чка там."], "explanation": "Ру́чка is feminine, so use моя́."}, {"sentence": "Де стіл? — Воно́ там. (Where is the table? — It is there.)", "errorWord": "Де стіл? — Воно́ там. (Where is the table? — It is there.)", "correctForm": "Де стіл? — Він там.", "options": ["Де стіл? — Він там.", "Де стіл? — Воно́ там."], "explanation": "Стіл is masculine, so the pronoun is він."}, {"sentence": "Це моя́ та́то.", "errorWord": "Це моя́ та́то.", "correctForm": "Це мій та́то.", "options": ["Це мій та́то.", "Це моя́ та́то."], "explanation": "Та́то is masculine."}, {"sentence": "Вона́ Мико́ла.", "errorWord": "Вона́ Мико́ла.", "correctForm": "Він Мико́ла.", "options": ["Він Мико́ла.", "Вона́ Мико́ла."], "explanation": "Мико́ла is a masculine name."}, {"sentence": "Моя́ соба́ка ду́же га́рна.", "errorWord": "Моя́ соба́ка ду́же га́рна.", "correctForm": "Мій соба́ка ду́же га́рний.", "options": ["Мій соба́ка ду́же га́рний.", "Моя́ соба́ка ду́же га́рна."], "explanation": "Соба́ка is masculine in Ukrainian; memorize мій соба́ка."}, {"sentence": "Я є студе́нт.", "errorWord": "Я є студе́нт.", "correctForm": "Я студе́нт.", "options": ["Я студе́нт.", "Я є студе́нт."], "explanation": "Present identity normally omits є."}, {"sentence": "Моє́ ім'я́ є Джон.", "errorWord": "Моє́ ім'я́ є Джон.", "correctForm": "Мене́ зва́ти Джон.", "options": ["Мене́ зва́ти Джон.", "Моє́ ім'я́ є Джон."], "explanation": "Мене́ зва́ти... is the safe name phrase."}]`)} isUkrainian={false} />
 
 ### Переві́рка ро́ду
 

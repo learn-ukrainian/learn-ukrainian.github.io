@@ -990,7 +990,7 @@ teach while applying the existing `naturalness` rubric.
 ```json
 {
   "slug": "things-have-gender",
-  "wiki_path": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cu-p1-pilot-writer-things-have-gender-r2/wiki/pedagogy/a1/things-have-gender.md",
+  "wiki_path": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cu-p1-pilot-repair-thg/wiki/pedagogy/a1/things-have-gender.md",
   "phonetic_format_reference": [
     "Spoken target in `[...]` single-character square brackets, not Unicode look-alikes",
     "Pair written and spoken form in close lexical proximity (same sentence or adjacent bullet)",
@@ -1902,18 +1902,30 @@ You are learning to store a noun with its gender cue.
 
 :::tip
 Treat gender as part of the noun card. Do not ask, "Who owns it?" Ask, "What
-phrase travels with this noun: **мій**, **воя́**, or **моє́**?"
+phrase travels with this noun: **мій**, **моя́**, or **моє́**?"
 :::
 
 ## Діало́ги
 
-Послу́хайте та прочита́йте коро́тку розмо́ву — listen to and read the short conversation. Марко́ пока́зує свій стіл і ре́чі Окса́ні:
+Послу́хайте та прочита́йте коро́тку розмо́ву — listen to and read the short conversation:
 
 > **Марко́**: Приві́т! Диви́сь, це мій стіл.
 > **Окса́на**: Кла́сно! А це що?
 > **Марко́**: Це моє́ вікно́. А це — моя́ кни́га.
 > **Окса́на**: До́бре. А хто це?
-> **Марко́**: Це мій та́то. А це — мій соба́ка.
+> **Марко́**: Це мій та́то.
+> **Окса́на**: А хто це бі́ля та́та?
+> **Марко́**: Це моя́ ма́ма і мій брат.
+
+Продо́вження розмо́ви — the conversation continues:
+
+> **Окса́на**: А де твоя́ сестра́?
+> **Марко́**: Моя́ сестра́ там.
+> **Окса́на**: А це твоє́ мі́сто?
+> **Марко́**: Так, це моє́ мі́сто.
+> **Окса́на**: А це хто?
+> **Марко́**: А це — мій соба́ка.
+> **Окса́на**: Він ду́же га́рний!
 
 Розбі́р розмо́ви по́дано ни́жче — the breakdown of the conversation is given below:
 
@@ -2003,6 +2015,8 @@ adjective table yet.
 
 ### Підсу́мок уро́ку 1
 
+Чудо́ва ро́бота! Ви вже впе́внено розрізня́єте три роди́ слів:
+
 | Украї́нська | English support |
 | --- | --- |
 | **Ко́жен іме́нник ма́є рід: він, вона́ чи воно́.** | Every noun has a gender: he, she, or it. |
@@ -2081,27 +2095,24 @@ inline:
     explanation: Вікно́ is neuter.
 - id: act-2
   type: group-sort
-  title: Сорту́й предме́ти за ро́дом
+  title: Сорту́й слова́ за ро́дом
   instruction: Sort each noun by its safest A1 gender phrase.
   groups:
   - label: він / мій
     items:
     - стіл
-    - стіле́ць
-    - телефо́н
-    - комп'ю́тер
+    - та́то
+    - ба́тько
+    - соба́ка
   - label: вона́ / моя́
     items:
     - кни́га
-    - кімна́та
-    - ла́мпа
-    - ру́чка
+    - сестра́
+    - ма́ма
   - label: воно́ / моє́
     items:
     - вікно́
-    - лі́жко
-    - крі́сло
-    - дзе́ркало
+    - мі́сто
 - id: act-5
   type: quiz
   title: Закі́нчення підка́зує рід
@@ -2116,7 +2127,7 @@ inline:
     - text: воно́ / моє́
       correct: false
     explanation: A clear consonant ending is usually masculine.
-  - prompt: телефо́н закі́нчується на при́голосний.
+  - prompt: брат закі́нчується на при́голосний.
     options:
     - text: він / мій
       correct: true
@@ -2124,7 +2135,7 @@ inline:
       correct: false
     - text: воно́ / моє́
       correct: false
-    explanation: Телефо́н is masculine in this A1 pattern.
+    explanation: Брат ends in a consonant and is masculine.
   - prompt: кни́га закі́нчується на -а.
     options:
     - text: вона́ / моя́
@@ -2134,7 +2145,7 @@ inline:
     - text: воно́ / моє́
       correct: false
     explanation: A clear -а ending is usually feminine.
-  - prompt: кімна́та закі́нчується на -а.
+  - prompt: сестра́ закі́нчується на -а.
     options:
     - text: вона́ / моя́
       correct: true
@@ -2142,7 +2153,7 @@ inline:
       correct: false
     - text: воно́ / моє́
       correct: false
-    explanation: Кімна́та is feminine in this A1 pattern.
+    explanation: Сестра́ ends in -а and is feminine.
   - prompt: вікно́ закі́нчується на -о.
     options:
     - text: воно́ / моє́
@@ -2152,7 +2163,7 @@ inline:
     - text: вона́ / моя́
       correct: false
     explanation: A clear -о ending is usually neuter.
-  - prompt: лі́жко закі́нчується на -о.
+  - prompt: мі́сто закі́нчується на -о.
     options:
     - text: воно́ / моє́
       correct: true
@@ -2160,7 +2171,7 @@ inline:
       correct: false
     - text: він / мій
       correct: false
-    explanation: Лі́жко is neuter in this A1 pattern.
+    explanation: Мі́сто ends in -о and is neuter.
 - id: act-3
   type: quiz
   title: Він, вона́ чи воно́?
@@ -2193,7 +2204,7 @@ inline:
     - text: вона́
       correct: false
     explanation: Вікно́ is neuter.
-  - prompt: телефо́н
+  - prompt: ба́тько
     options:
     - text: він
       correct: true
@@ -2201,8 +2212,8 @@ inline:
       correct: false
     - text: воно́
       correct: false
-    explanation: Телефо́н is masculine.
-  - prompt: ла́мпа
+    explanation: Ба́тько is masculine because it names a male person.
+  - prompt: сестра́
     options:
     - text: вона́
       correct: true
@@ -2210,8 +2221,8 @@ inline:
       correct: false
     - text: він
       correct: false
-    explanation: Ла́мпа is feminine.
-  - prompt: лі́жко
+    explanation: Сестра́ is feminine.
+  - prompt: мі́сто
     options:
     - text: воно́
       correct: true
@@ -2219,7 +2230,7 @@ inline:
       correct: false
     - text: він
       correct: false
-    explanation: Лі́жко is neuter.
+    explanation: Мі́сто is neuter.
   - prompt: та́то
     options:
     - text: він
@@ -2246,24 +2257,18 @@ workbook:
   - label: він / мій
     items:
     - стіл
-    - телефо́н
-    - зо́шит
-    - ключ
     - та́то
+    - ба́тько
+    - брат
   - label: вона́ / моя́
     items:
     - кни́га
-    - ла́мпа
-    - кімна́та
-    - ру́чка
     - сестра́
+    - ма́ма
   - label: воно́ / моє́
     items:
     - вікно́
-    - лі́жко
-    - крі́сло
-    - дзе́ркало
-    - фо́то
+    - мі́сто
   id: act-w1
 - id: act-101
   type: true-false

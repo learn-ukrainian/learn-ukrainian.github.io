@@ -1,22 +1,20 @@
 {
   "passed": false,
   "diagnostics": [
-    "lesson 1: 3 stressed forms contradict the stress dictionary: ['Марко́→ма́рко', 'воя́→во́я', 'уро́ці: undeclared unverified stress']",
-    "lesson 2: 1 stressed forms contradict the stress dictionary: ['уро́ці: undeclared unverified stress']",
-    "lesson 3: 3 stressed forms contradict the stress dictionary: ['говори́ть→гово́рить', 'фемініти́ви: undeclared unverified stress', 'фемініти́вом: undeclared unverified stress']",
-    "original paragraph not preserved verbatim: ':::tip\\nTreat gender as part of the noun card. Do not ask, \"Who owns it'",
-    "lesson 1: l2_exposure_floor failed: {'passed': False, 'required': {'uk_dialogue_lines': 13, 'vocab_entries': 0, 'uk_example_sentences': 6, 'uk_tab3_activities': 3}, 'observed': {'uk_dialogue_lines': 5, 'vocab_entries': 20, 'uk_example_sentences': 53, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_dialogue_lines', 'policy': 'a1-m07-14'}",
-    "lesson 2: l2_exposure_floor failed: {'passed': False, 'required': {'uk_dialogue_lines': 13, 'vocab_entries': 0, 'uk_example_sentences': 6, 'uk_tab3_activities': 3}, 'observed': {'uk_dialogue_lines': 0, 'vocab_entries': 23, 'uk_example_sentences': 48, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_dialogue_lines', 'policy': 'a1-m07-14'}",
-    "lesson 3: l2_exposure_floor failed: {'passed': False, 'required': {'uk_dialogue_lines': 13, 'vocab_entries': 0, 'uk_example_sentences': 6, 'uk_tab3_activities': 3}, 'observed': {'uk_dialogue_lines': 0, 'vocab_entries': 35, 'uk_example_sentences': 65, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_dialogue_lines', 'policy': 'a1-m07-14'}"
+    "original paragraph not preserved verbatim: '```text\\nМарія: Привіт! Дивись, це моя кімната.\\nОленка: Класно! У тебе '",
+    "original paragraph not preserved verbatim: '```text\\nОленка: Що у тебе є?\\nМарія: У мене є книга, телефон і фото.\\nОл'",
+    "act-2: original items/answers/groups not preserved structurally",
+    "act-3: original items/answers/groups not preserved structurally",
+    "act-5: original items/answers/groups not preserved structurally",
+    "act-w1: original items/answers/groups not preserved structurally"
   ],
   "blocking": [
-    "lesson 1: 3 stressed forms contradict the stress dictionary: ['Марко́→ма́рко', 'воя́→во́я', 'уро́ці: undeclared unverified stress']",
-    "lesson 2: 1 stressed forms contradict the stress dictionary: ['уро́ці: undeclared unverified stress']",
-    "lesson 3: 3 stressed forms contradict the stress dictionary: ['говори́ть→гово́рить', 'фемініти́ви: undeclared unverified stress', 'фемініти́вом: undeclared unverified stress']",
-    "original paragraph not preserved verbatim: ':::tip\\nTreat gender as part of the noun card. Do not ask, \"Who owns it'",
-    "lesson 1: l2_exposure_floor failed: {'passed': False, 'required': {'uk_dialogue_lines': 13, 'vocab_entries': 0, 'uk_example_sentences': 6, 'uk_tab3_activities': 3}, 'observed': {'uk_dialogue_lines': 5, 'vocab_entries': 20, 'uk_example_sentences': 53, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_dialogue_lines', 'policy': 'a1-m07-14'}",
-    "lesson 2: l2_exposure_floor failed: {'passed': False, 'required': {'uk_dialogue_lines': 13, 'vocab_entries': 0, 'uk_example_sentences': 6, 'uk_tab3_activities': 3}, 'observed': {'uk_dialogue_lines': 0, 'vocab_entries': 23, 'uk_example_sentences': 48, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_dialogue_lines', 'policy': 'a1-m07-14'}",
-    "lesson 3: l2_exposure_floor failed: {'passed': False, 'required': {'uk_dialogue_lines': 13, 'vocab_entries': 0, 'uk_example_sentences': 6, 'uk_tab3_activities': 3}, 'observed': {'uk_dialogue_lines': 0, 'vocab_entries': 35, 'uk_example_sentences': 65, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_dialogue_lines', 'policy': 'a1-m07-14'}"
+    "original paragraph not preserved verbatim: '```text\\nМарія: Привіт! Дивись, це моя кімната.\\nОленка: Класно! У тебе '",
+    "original paragraph not preserved verbatim: '```text\\nОленка: Що у тебе є?\\nМарія: У мене є книга, телефон і фото.\\nОл'",
+    "act-2: original items/answers/groups not preserved structurally",
+    "act-3: original items/answers/groups not preserved structurally",
+    "act-5: original items/answers/groups not preserved structurally",
+    "act-w1: original items/answers/groups not preserved structurally"
   ],
   "warnings": [],
   "facts": {
@@ -32,40 +30,40 @@
     },
     "lessons": {
       "1": {
-        "prose_tokens": 971,
+        "prose_tokens": 1029,
         "inline": 4,
         "workbook": 6,
         "vocab": 18,
         "resources": 2,
         "unverified_stress": 0,
         "unverified_lemmas": 0,
-        "est_minutes": 52
+        "est_minutes": 53
       },
       "2": {
-        "prose_tokens": 677,
+        "prose_tokens": 716,
         "inline": 4,
         "workbook": 6,
         "vocab": 16,
         "resources": 2,
         "unverified_stress": 0,
         "unverified_lemmas": 0,
-        "est_minutes": 47
+        "est_minutes": 48
       },
       "3": {
-        "prose_tokens": 931,
+        "prose_tokens": 1061,
         "inline": 4,
         "workbook": 6,
         "vocab": 14,
         "resources": 2,
         "unverified_stress": 0,
         "unverified_lemmas": 0,
-        "est_minutes": 52
+        "est_minutes": 54
       }
     },
-    "total_prose_tokens": 2579,
+    "total_prose_tokens": 2806,
     "preservation": {
       "long_paragraphs": 47,
-      "lost": 1,
+      "lost": 2,
       "duplicated": 0,
       "misplaced": 0
     },
@@ -73,13 +71,13 @@
       "1": {
         "ratio_advisory": {
           "passed": true,
-          "pct": 42.17,
+          "pct": 45.66,
           "min_pct": 40,
           "max_pct": 55,
           "policy": "a1-m07-14"
         },
         "l2_exposure_floor": {
-          "passed": false,
+          "passed": true,
           "required": {
             "uk_dialogue_lines": 13,
             "vocab_entries": 0,
@@ -87,12 +85,12 @@
             "uk_tab3_activities": 3
           },
           "observed": {
-            "uk_dialogue_lines": 5,
+            "uk_dialogue_lines": 14,
             "vocab_entries": 20,
             "uk_example_sentences": 53,
             "uk_tab3_activities": 4
           },
-          "reason": "too_few_uk_dialogue_lines",
+          "reason": null,
           "policy": "a1-m07-14"
         },
         "long_uk_ceiling": {
@@ -130,13 +128,13 @@
       "2": {
         "ratio_advisory": {
           "passed": true,
-          "pct": 59.0,
+          "pct": 61.77,
           "min_pct": 40,
           "max_pct": 55,
           "policy": "a1-m07-14"
         },
         "l2_exposure_floor": {
-          "passed": false,
+          "passed": true,
           "required": {
             "uk_dialogue_lines": 13,
             "vocab_entries": 0,
@@ -144,12 +142,12 @@
             "uk_tab3_activities": 3
           },
           "observed": {
-            "uk_dialogue_lines": 0,
+            "uk_dialogue_lines": 14,
             "vocab_entries": 23,
             "uk_example_sentences": 48,
             "uk_tab3_activities": 4
           },
-          "reason": "too_few_uk_dialogue_lines",
+          "reason": null,
           "policy": "a1-m07-14"
         },
         "long_uk_ceiling": {
@@ -187,13 +185,13 @@
       "3": {
         "ratio_advisory": {
           "passed": true,
-          "pct": 54.33,
+          "pct": 59.33,
           "min_pct": 40,
           "max_pct": 55,
           "policy": "a1-m07-14"
         },
         "l2_exposure_floor": {
-          "passed": false,
+          "passed": true,
           "required": {
             "uk_dialogue_lines": 13,
             "vocab_entries": 0,
@@ -201,12 +199,12 @@
             "uk_tab3_activities": 3
           },
           "observed": {
-            "uk_dialogue_lines": 0,
+            "uk_dialogue_lines": 14,
             "vocab_entries": 35,
             "uk_example_sentences": 65,
             "uk_tab3_activities": 4
           },
-          "reason": "too_few_uk_dialogue_lines",
+          "reason": null,
           "policy": "a1-m07-14"
         },
         "long_uk_ceiling": {
@@ -249,22 +247,20 @@
     "lesson_split": {
       "passed": false,
       "diagnostics": [
-        "lesson 1: 3 stressed forms contradict the stress dictionary: ['Марко́→ма́рко', 'воя́→во́я', 'уро́ці: undeclared unverified stress']",
-        "lesson 2: 1 stressed forms contradict the stress dictionary: ['уро́ці: undeclared unverified stress']",
-        "lesson 3: 3 stressed forms contradict the stress dictionary: ['говори́ть→гово́рить', 'фемініти́ви: undeclared unverified stress', 'фемініти́вом: undeclared unverified stress']",
-        "original paragraph not preserved verbatim: ':::tip\\nTreat gender as part of the noun card. Do not ask, \"Who owns it'",
-        "lesson 1: l2_exposure_floor failed: {'passed': False, 'required': {'uk_dialogue_lines': 13, 'vocab_entries': 0, 'uk_example_sentences': 6, 'uk_tab3_activities': 3}, 'observed': {'uk_dialogue_lines': 5, 'vocab_entries': 20, 'uk_example_sentences': 53, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_dialogue_lines', 'policy': 'a1-m07-14'}",
-        "lesson 2: l2_exposure_floor failed: {'passed': False, 'required': {'uk_dialogue_lines': 13, 'vocab_entries': 0, 'uk_example_sentences': 6, 'uk_tab3_activities': 3}, 'observed': {'uk_dialogue_lines': 0, 'vocab_entries': 23, 'uk_example_sentences': 48, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_dialogue_lines', 'policy': 'a1-m07-14'}",
-        "lesson 3: l2_exposure_floor failed: {'passed': False, 'required': {'uk_dialogue_lines': 13, 'vocab_entries': 0, 'uk_example_sentences': 6, 'uk_tab3_activities': 3}, 'observed': {'uk_dialogue_lines': 0, 'vocab_entries': 35, 'uk_example_sentences': 65, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_dialogue_lines', 'policy': 'a1-m07-14'}"
+        "original paragraph not preserved verbatim: '```text\\nМарія: Привіт! Дивись, це моя кімната.\\nОленка: Класно! У тебе '",
+        "original paragraph not preserved verbatim: '```text\\nОленка: Що у тебе є?\\nМарія: У мене є книга, телефон і фото.\\nОл'",
+        "act-2: original items/answers/groups not preserved structurally",
+        "act-3: original items/answers/groups not preserved structurally",
+        "act-5: original items/answers/groups not preserved structurally",
+        "act-w1: original items/answers/groups not preserved structurally"
       ],
       "blocking": [
-        "lesson 1: 3 stressed forms contradict the stress dictionary: ['Марко́→ма́рко', 'воя́→во́я', 'уро́ці: undeclared unverified stress']",
-        "lesson 2: 1 stressed forms contradict the stress dictionary: ['уро́ці: undeclared unverified stress']",
-        "lesson 3: 3 stressed forms contradict the stress dictionary: ['говори́ть→гово́рить', 'фемініти́ви: undeclared unverified stress', 'фемініти́вом: undeclared unverified stress']",
-        "original paragraph not preserved verbatim: ':::tip\\nTreat gender as part of the noun card. Do not ask, \"Who owns it'",
-        "lesson 1: l2_exposure_floor failed: {'passed': False, 'required': {'uk_dialogue_lines': 13, 'vocab_entries': 0, 'uk_example_sentences': 6, 'uk_tab3_activities': 3}, 'observed': {'uk_dialogue_lines': 5, 'vocab_entries': 20, 'uk_example_sentences': 53, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_dialogue_lines', 'policy': 'a1-m07-14'}",
-        "lesson 2: l2_exposure_floor failed: {'passed': False, 'required': {'uk_dialogue_lines': 13, 'vocab_entries': 0, 'uk_example_sentences': 6, 'uk_tab3_activities': 3}, 'observed': {'uk_dialogue_lines': 0, 'vocab_entries': 23, 'uk_example_sentences': 48, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_dialogue_lines', 'policy': 'a1-m07-14'}",
-        "lesson 3: l2_exposure_floor failed: {'passed': False, 'required': {'uk_dialogue_lines': 13, 'vocab_entries': 0, 'uk_example_sentences': 6, 'uk_tab3_activities': 3}, 'observed': {'uk_dialogue_lines': 0, 'vocab_entries': 35, 'uk_example_sentences': 65, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_dialogue_lines', 'policy': 'a1-m07-14'}"
+        "original paragraph not preserved verbatim: '```text\\nМарія: Привіт! Дивись, це моя кімната.\\nОленка: Класно! У тебе '",
+        "original paragraph not preserved verbatim: '```text\\nОленка: Що у тебе є?\\nМарія: У мене є книга, телефон і фото.\\nОл'",
+        "act-2: original items/answers/groups not preserved structurally",
+        "act-3: original items/answers/groups not preserved structurally",
+        "act-5: original items/answers/groups not preserved structurally",
+        "act-w1: original items/answers/groups not preserved structurally"
       ],
       "warnings": [],
       "facts": {
@@ -280,40 +276,40 @@
         },
         "lessons": {
           "1": {
-            "prose_tokens": 971,
+            "prose_tokens": 1029,
             "inline": 4,
             "workbook": 6,
             "vocab": 18,
             "resources": 2,
             "unverified_stress": 0,
             "unverified_lemmas": 0,
-            "est_minutes": 52
+            "est_minutes": 53
           },
           "2": {
-            "prose_tokens": 677,
+            "prose_tokens": 716,
             "inline": 4,
             "workbook": 6,
             "vocab": 16,
             "resources": 2,
             "unverified_stress": 0,
             "unverified_lemmas": 0,
-            "est_minutes": 47
+            "est_minutes": 48
           },
           "3": {
-            "prose_tokens": 931,
+            "prose_tokens": 1061,
             "inline": 4,
             "workbook": 6,
             "vocab": 14,
             "resources": 2,
             "unverified_stress": 0,
             "unverified_lemmas": 0,
-            "est_minutes": 52
+            "est_minutes": 54
           }
         },
-        "total_prose_tokens": 2579,
+        "total_prose_tokens": 2806,
         "preservation": {
           "long_paragraphs": 47,
-          "lost": 1,
+          "lost": 2,
           "duplicated": 0,
           "misplaced": 0
         },
@@ -321,13 +317,13 @@
           "1": {
             "ratio_advisory": {
               "passed": true,
-              "pct": 42.17,
+              "pct": 45.66,
               "min_pct": 40,
               "max_pct": 55,
               "policy": "a1-m07-14"
             },
             "l2_exposure_floor": {
-              "passed": false,
+              "passed": true,
               "required": {
                 "uk_dialogue_lines": 13,
                 "vocab_entries": 0,
@@ -335,12 +331,12 @@
                 "uk_tab3_activities": 3
               },
               "observed": {
-                "uk_dialogue_lines": 5,
+                "uk_dialogue_lines": 14,
                 "vocab_entries": 20,
                 "uk_example_sentences": 53,
                 "uk_tab3_activities": 4
               },
-              "reason": "too_few_uk_dialogue_lines",
+              "reason": null,
               "policy": "a1-m07-14"
             },
             "long_uk_ceiling": {
@@ -378,13 +374,13 @@
           "2": {
             "ratio_advisory": {
               "passed": true,
-              "pct": 59.0,
+              "pct": 61.77,
               "min_pct": 40,
               "max_pct": 55,
               "policy": "a1-m07-14"
             },
             "l2_exposure_floor": {
-              "passed": false,
+              "passed": true,
               "required": {
                 "uk_dialogue_lines": 13,
                 "vocab_entries": 0,
@@ -392,12 +388,12 @@
                 "uk_tab3_activities": 3
               },
               "observed": {
-                "uk_dialogue_lines": 0,
+                "uk_dialogue_lines": 14,
                 "vocab_entries": 23,
                 "uk_example_sentences": 48,
                 "uk_tab3_activities": 4
               },
-              "reason": "too_few_uk_dialogue_lines",
+              "reason": null,
               "policy": "a1-m07-14"
             },
             "long_uk_ceiling": {
@@ -435,13 +431,13 @@
           "3": {
             "ratio_advisory": {
               "passed": true,
-              "pct": 54.33,
+              "pct": 59.33,
               "min_pct": 40,
               "max_pct": 55,
               "policy": "a1-m07-14"
             },
             "l2_exposure_floor": {
-              "passed": false,
+              "passed": true,
               "required": {
                 "uk_dialogue_lines": 13,
                 "vocab_entries": 0,
@@ -449,12 +445,12 @@
                 "uk_tab3_activities": 3
               },
               "observed": {
-                "uk_dialogue_lines": 0,
+                "uk_dialogue_lines": 14,
                 "vocab_entries": 35,
                 "uk_example_sentences": 65,
                 "uk_tab3_activities": 4
               },
-              "reason": "too_few_uk_dialogue_lines",
+              "reason": null,
               "policy": "a1-m07-14"
             },
             "long_uk_ceiling": {

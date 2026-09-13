@@ -990,7 +990,7 @@ teach while applying the existing `engagement` rubric.
 ```json
 {
   "slug": "things-have-gender",
-  "wiki_path": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cu-p1-pilot-writer-things-have-gender-r2/wiki/pedagogy/a1/things-have-gender.md",
+  "wiki_path": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cu-p1-pilot-repair-thg/wiki/pedagogy/a1/things-have-gender.md",
   "phonetic_format_reference": [
     "Spoken target in `[...]` single-character square brackets, not Unicode look-alikes",
     "Pair written and spoken form in close lexical proximity (same sentence or adjacent bullet)",
@@ -1869,15 +1869,13 @@ word_target: 550
 Use **У мене́ є...** from the family module with objects. Read the Ukrainian
 dialogue first. Use the support table after the dialogue to check meaning.
 
-```text
-Марі́я: Приві́т! Диви́сь, це моя́ кімна́та.
-Оле́нка: Кла́сно! У тебе́ є стіл?
-Марі́я: Так, у мене́ є стіл і лі́жко.
-Оле́нка: А це твоя́ ла́мпа?
-Марі́я: Так. Це моя́ ла́мпа. Вона́ тут.
-Оле́нка: А вікно́?
-Марі́я: Ось воно́. Моє́ вікно́ вели́ке.
-```
+> **Марі́я**: Приві́т! Диви́сь, це моя́ кімна́та.
+> **Оле́нка**: Кла́сно! У тебе́ є стіл?
+> **Марі́я**: Так, у мене́ є стіл і лі́жко.
+> **Оле́нка**: А це твоя́ ла́мпа?
+> **Марі́я**: Так. Це моя́ ла́мпа. Вона́ тут.
+> **Оле́нка**: А вікно́?
+> **Марі́я**: Ось воно́. Моє́ вікно́ вели́ке.
 
 Support after the dialogue:
 
@@ -1909,11 +1907,13 @@ choose the pronoun.
 
 Now move to a bag:
 
-```text
-Оле́нка: Що у тебе́ є?
-Марі́я: У мене́ є кни́га, телефо́н і фо́то.
-Оле́нка: А у мене́ є ру́чка і зо́шит.
-```
+> **Оле́нка**: Що у тебе́ є?
+> **Марі́я**: У мене́ є кни́га, телефо́н і фо́то.
+> **Оле́нка**: А у мене́ є ру́чка і зо́шит.
+> **Марі́я**: Де твоя́ ру́чка?
+> **Оле́нка**: Ось вона́. А де твій телефо́н?
+> **Марі́я**: Мій телефо́н тут, у су́мці.
+> **Оле́нка**: Ду́же до́бре!
 
 Support after the dialogue:
 
@@ -1957,6 +1957,8 @@ pair: **стіл -> мій стіл**, **кни́га -> моя́ кни́га**
 <!-- INJECT_ACTIVITY: act-4 -->
 
 ### Підсу́мок уро́ку 2
+
+Чудо́во! Тепе́р ви вмі́єте опи́сувати свій про́стір украї́нською мо́вою:
 
 | Украї́нська | English support |
 | --- | --- |
@@ -2211,8 +2213,10 @@ workbook:
     - телефо́н
     - комп'ю́тер
     - ключ
+    - зо́шит
   - label: вона́ / моя́
     items:
+    - кімна́та
     - ла́мпа
     - су́мка
     - ру́чка

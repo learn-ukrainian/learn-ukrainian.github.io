@@ -95,12 +95,20 @@ phrase travels with this noun: **мій**, **моя́**, or **моє́**?"
 
 ## Діало́ги
 
-Послу́хайте та прочита́йте коро́тку розмо́ву — listen to and read the short conversation. Марко́ пока́зує свій стіл і ре́чі Окса́ні:
+Послу́хайте та прочита́йте коро́тку розмо́ву — listen to and read the short conversation:
 
 <DialogueBox
   client:only="react"
   title="Діалог"
-  exchanges={JSON.parse('[{"speaker":"Марко́","text":"Приві́т! Диви́сь, це мій стіл."},{"speaker":"Окса́на","text":"Кла́сно! А це що?"},{"speaker":"Марко́","text":"Це моє́ вікно́. А це — моя́ кни́га."},{"speaker":"Окса́на","text":"До́бре. А хто це?"},{"speaker":"Марко́","text":"Це мій та́то. А це — мій соба́ка."}]')}
+  exchanges={JSON.parse('[{"speaker":"Марко́","text":"Приві́т! Диви́сь, це мій стіл."},{"speaker":"Окса́на","text":"Кла́сно! А це що?"},{"speaker":"Марко́","text":"Це моє́ вікно́. А це — моя́ кни́га."},{"speaker":"Окса́на","text":"До́бре. А хто це?"},{"speaker":"Марко́","text":"Це мій та́то."},{"speaker":"Окса́на","text":"А хто це бі́ля та́та?"},{"speaker":"Марко́","text":"Це моя́ ма́ма і мій брат."}]')}
+/>
+
+Продо́вження розмо́ви — the conversation continues:
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Окса́на","text":"А де твоя́ сестра́?"},{"speaker":"Марко́","text":"Моя́ сестра́ там."},{"speaker":"Окса́на","text":"А це твоє́ мі́сто?"},{"speaker":"Марко́","text":"Так, це моє́ мі́сто."},{"speaker":"Окса́на","text":"А це хто?"},{"speaker":"Марко́","text":"А це — мій соба́ка."},{"speaker":"Окса́на","text":"Він ду́же га́рний!"}]')}
 />
 
 Розбі́р розмо́ви по́дано ни́жче — the breakdown of the conversation is given below:
@@ -142,9 +150,9 @@ But things also have gender:
 | **кни́га** | book | **вона́** | **моя́ кни́га** |
 | **вікно́** | window | **воно́** | **моє́ вікно́** |
 
-### Сорту́й предме́ти за ро́дом
+### Сорту́й слова́ за ро́дом
 
-<GroupSort client:only='react' groups={JSON.parse(`{"він / мій": ["стіл", "стіле́ць", "телефо́н", "комп'ю́тер"], "вона́ / моя́": ["кни́га", "кімна́та", "ла́мпа", "ру́чка"], "воно́ / моє́": ["вікно́", "лі́жко", "крі́сло", "дзе́ркало"]}`)} instruction={"Sort each noun by its safest A1 gender phrase."} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"він / мій": ["стіл", "та́то", "ба́тько", "соба́ка"], "вона́ / моя́": ["кни́га", "сестра́", "ма́ма"], "воно́ / моє́": ["вікно́", "мі́сто"]}`)} instruction={"Sort each noun by its safest A1 gender phrase."} isUkrainian={false} />
 
 Do not ask whether the speaker is a man or a woman. Ask what gender the
 Ukrainian noun has. **Мій стіл** is the same if the owner is Olena, Marko, or
@@ -169,7 +177,7 @@ not fit the easy pattern, learn it as a phrase.
 
 ### Закі́нчення підка́зує рід
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "стіл закі́нчується на при́голосний.", "options": [{"text": "він / мій", "correct": true}, {"text": "вона́ / моя́", "correct": false}, {"text": "воно́ / моє́", "correct": false}], "explanation": "A clear consonant ending is usually masculine."}, {"question": "телефо́н закі́нчується на при́голосний.", "options": [{"text": "він / мій", "correct": true}, {"text": "вона́ / моя́", "correct": false}, {"text": "воно́ / моє́", "correct": false}], "explanation": "Телефо́н is masculine in this A1 pattern."}, {"question": "кни́га закі́нчується на -а.", "options": [{"text": "вона́ / моя́", "correct": true}, {"text": "він / мій", "correct": false}, {"text": "воно́ / моє́", "correct": false}], "explanation": "A clear -а ending is usually feminine."}, {"question": "кімна́та закі́нчується на -а.", "options": [{"text": "вона́ / моя́", "correct": true}, {"text": "він / мій", "correct": false}, {"text": "воно́ / моє́", "correct": false}], "explanation": "Кімна́та is feminine in this A1 pattern."}, {"question": "вікно́ закі́нчується на -о.", "options": [{"text": "воно́ / моє́", "correct": true}, {"text": "він / мій", "correct": false}, {"text": "вона́ / моя́", "correct": false}], "explanation": "A clear -о ending is usually neuter."}, {"question": "лі́жко закі́нчується на -о.", "options": [{"text": "воно́ / моє́", "correct": true}, {"text": "вона́ / моя́", "correct": false}, {"text": "він / мій", "correct": false}], "explanation": "Лі́жко is neuter in this A1 pattern."}]`)} instruction={"Choose the usual gender signal from the noun ending."} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "стіл закі́нчується на при́голосний.", "options": [{"text": "він / мій", "correct": true}, {"text": "вона́ / моя́", "correct": false}, {"text": "воно́ / моє́", "correct": false}], "explanation": "A clear consonant ending is usually masculine."}, {"question": "брат закі́нчується на при́голосний.", "options": [{"text": "він / мій", "correct": true}, {"text": "вона́ / моя́", "correct": false}, {"text": "воно́ / моє́", "correct": false}], "explanation": "Брат ends in a consonant and is masculine."}, {"question": "кни́га закі́нчується на -а.", "options": [{"text": "вона́ / моя́", "correct": true}, {"text": "він / мій", "correct": false}, {"text": "воно́ / моє́", "correct": false}], "explanation": "A clear -а ending is usually feminine."}, {"question": "сестра́ закі́нчується на -а.", "options": [{"text": "вона́ / моя́", "correct": true}, {"text": "він / мій", "correct": false}, {"text": "воно́ / моє́", "correct": false}], "explanation": "Сестра́ ends in -а and is feminine."}, {"question": "вікно́ закі́нчується на -о.", "options": [{"text": "воно́ / моє́", "correct": true}, {"text": "він / мій", "correct": false}, {"text": "вона́ / моя́", "correct": false}], "explanation": "A clear -о ending is usually neuter."}, {"question": "мі́сто закі́нчується на -о.", "options": [{"text": "воно́ / моє́", "correct": true}, {"text": "вона́ / моя́", "correct": false}, {"text": "він / мій", "correct": false}], "explanation": "Мі́сто ends in -о and is neuter."}]`)} instruction={"Choose the usual gender signal from the noun ending."} isUkrainian={false} />
 
 :::tip
 The ending rule is a first guess, not a debate. If this lesson gives you a safe
@@ -195,9 +203,11 @@ adjective table yet.
 
 ### Він, вона́ чи воно́?
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "стіл", "options": [{"text": "він", "correct": true}, {"text": "вона́", "correct": false}, {"text": "воно́", "correct": false}], "explanation": "Стіл ends in a consonant and is masculine."}, {"question": "кни́га", "options": [{"text": "вона́", "correct": true}, {"text": "він", "correct": false}, {"text": "воно́", "correct": false}], "explanation": "Кни́га is feminine."}, {"question": "вікно́", "options": [{"text": "воно́", "correct": true}, {"text": "він", "correct": false}, {"text": "вона́", "correct": false}], "explanation": "Вікно́ is neuter."}, {"question": "телефо́н", "options": [{"text": "він", "correct": true}, {"text": "вона́", "correct": false}, {"text": "воно́", "correct": false}], "explanation": "Телефо́н is masculine."}, {"question": "ла́мпа", "options": [{"text": "вона́", "correct": true}, {"text": "воно́", "correct": false}, {"text": "він", "correct": false}], "explanation": "Ла́мпа is feminine."}, {"question": "лі́жко", "options": [{"text": "воно́", "correct": true}, {"text": "вона́", "correct": false}, {"text": "він", "correct": false}], "explanation": "Лі́жко is neuter."}, {"question": "та́то", "options": [{"text": "він", "correct": true}, {"text": "воно́", "correct": false}, {"text": "вона́", "correct": false}], "explanation": "Та́то is masculine because it names a male person."}, {"question": "Мико́ла", "options": [{"text": "він", "correct": true}, {"text": "вона́", "correct": false}, {"text": "воно́", "correct": false}], "explanation": "Мико́ла is a masculine name."}]`)} instruction={"Choose the Ukrainian gender-test word."} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "стіл", "options": [{"text": "він", "correct": true}, {"text": "вона́", "correct": false}, {"text": "воно́", "correct": false}], "explanation": "Стіл ends in a consonant and is masculine."}, {"question": "кни́га", "options": [{"text": "вона́", "correct": true}, {"text": "він", "correct": false}, {"text": "воно́", "correct": false}], "explanation": "Кни́га is feminine."}, {"question": "вікно́", "options": [{"text": "воно́", "correct": true}, {"text": "він", "correct": false}, {"text": "вона́", "correct": false}], "explanation": "Вікно́ is neuter."}, {"question": "ба́тько", "options": [{"text": "він", "correct": true}, {"text": "вона́", "correct": false}, {"text": "воно́", "correct": false}], "explanation": "Ба́тько is masculine because it names a male person."}, {"question": "сестра́", "options": [{"text": "вона́", "correct": true}, {"text": "воно́", "correct": false}, {"text": "він", "correct": false}], "explanation": "Сестра́ is feminine."}, {"question": "мі́сто", "options": [{"text": "воно́", "correct": true}, {"text": "вона́", "correct": false}, {"text": "він", "correct": false}], "explanation": "Мі́сто is neuter."}, {"question": "та́то", "options": [{"text": "він", "correct": true}, {"text": "воно́", "correct": false}, {"text": "вона́", "correct": false}], "explanation": "Та́то is masculine because it names a male person."}, {"question": "Мико́ла", "options": [{"text": "він", "correct": true}, {"text": "вона́", "correct": false}, {"text": "воно́", "correct": false}], "explanation": "Мико́ла is a masculine name."}]`)} instruction={"Choose the Ukrainian gender-test word."} isUkrainian={false} />
 
 ### Підсу́мок уро́ку 1
+
+Чудо́ва ро́бота! Ви вже впе́внено розрізня́єте три роди́ слів:
 
 | Украї́нська | English support |
 | --- | --- |
@@ -230,7 +240,7 @@ adjective table yet.
 
 *(see lesson, §Діало́ги)*
 
-### Сорту́й предме́ти за ро́дом
+### Сорту́й слова́ за ро́дом
 
 *(see lesson, §Пита́льні слова́)*
 
@@ -244,7 +254,7 @@ adjective table yet.
 
 ### Сорту́й за ро́дом
 
-<GroupSort client:only='react' groups={JSON.parse(`{"він / мій": ["стіл", "телефо́н", "зо́шит", "ключ", "та́то"], "вона́ / моя́": ["кни́га", "ла́мпа", "кімна́та", "ру́чка", "сестра́"], "воно́ / моє́": ["вікно́", "лі́жко", "крі́сло", "дзе́ркало", "фо́то"]}`)} instruction={"Sort each noun by its A1 gender signal."} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"він / мій": ["стіл", "та́то", "ба́тько", "брат"], "вона́ / моя́": ["кни́га", "сестра́", "ма́ма"], "воно́ / моє́": ["вікно́", "мі́сто"]}`)} instruction={"Sort each noun by its A1 gender signal."} isUkrainian={false} />
 
 ### Пра́вда чи ні?
 

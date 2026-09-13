@@ -1,3 +1,41 @@
-The MCP verification tool requires permission that isn't granted in this non-interactive session, so I'll note the absence-of-verification flag per audit rule E and score from the artifacts. The core defect is self-grounded: the module explicitly teaches the feminine possessive as `моя́` throughout (e.g. "use **мій / моя́ / моє́** as a single phrase", "choose **мій / моя́ / моє́**"), yet the Lesson 1 tip corrupts it to a non-existent possessive `воя́` — an internal contradiction requiring no external lookup.
-
-{"score": 7.5, "evidence": "\"What\nphrase travels with this noun: **мій**, **воя́**, or **моє́**?\"", "evidence_quotes": ["Приві́т! Диви́сь, це мій стіл.", "Розбі́р розмо́ви по́дано ни́жче", "phrase travels with this noun: **мій**, **воя́**, or **моє́**?"], "rubric_mapping": "Quote 1 (\"Приві́т! Диви́сь, це мій стіл.\") is evidence FOR: the Марко́/Окса́на dialogue is warm, human, and idiomatic A1 Ukrainian — a real 'look, this is my table' exchange, not a robotic interrogation; native flow and register are correct. Quote 2 (\"Розбі́р розмо́ви по́дано ни́жче\") is evidence FOR: the impersonal -но form (по́дано) is the natural, native Ukrainian construction here, NOT a calqued/evasive passive, showing the writer chose correct impersonal government (residual naturalness signal a regex cannot judge). Quote 3 (\"...**мій**, **воя́**, or **моє́**?\") is evidence AGAINST: the feminine possessive is corrupted to *воя́*, which is not the Ukrainian feminine possessive (моя́). The module itself elsewhere gives the correct triad ('use **мій / моя́ / моє́** as a single phrase'), so this is an internal-contradiction native-error: no Ukrainian editor would write *воя́* as a possessive, and it appears in the exact tip teaching мій/моя/моє, so it reads as non-native and undermines the lesson's core pattern. This VESUM-plausible-but-contextually-wrong form is precisely the residual defect the deterministic gate cannot catch. Balance: prose is otherwise strongly native (natural dialogue, correct impersonal, correct собака-masculine agreement 'Мій соба́ка ду́же га́рний'), but one concrete corrupted possessive in learner-facing teaching prose caps this below PASS.", "issue_ids": ["CORRUPTED_UKRAINIAN_FORM"], "findings": [{"issue_id": "CORRUPTED_UKRAINIAN_FORM", "quote": "phrase travels with this noun: **мій**, **воя́**, or **моє́**?", "severity": "major", "explanation": "The feminine possessive is written as *воя́*, a non-existent Ukrainian possessive form; the intended word is моя́ (the module teaches the triad мій/моя/моє everywhere else). A native Ukrainian editor would immediately rewrite this, and because it sits in the Lesson 1 tip that teaches the possessive triad, it directly contradicts and undermines the module's core teaching point.", "replacement": "phrase travels with this noun: **мій**, **моя́**, or **моє́**?", "dimension": "naturalness"}], "flags": ["mcp_verification_unavailable_permission_denied"], "verdict": "REVISE"}
+{
+  "evidence_quotes": [
+    "А хто це бі́ля та́та?",
+    "Констру́кція «У мене́ є...» поє́днується з усіма́ рода́ми.",
+    "Кла́сно! Вона́ до́бра вчи́телька."
+  ],
+  "rubric_mapping": "Quote 1 supports naturalness: the question uses idiomatic spatial phrasing and naturally follows the father's identification. Quote 2 shows awkward explanatory collocation: the construction combines with nouns, while grammatical gender is their property; describing it as combining with genders sounds mechanically compressed. Quote 3 shows a pragmatic discontinuity in lesson 3: learning only the sister's occupation gives Marko no conversational basis for judging her teaching quality. Across all three lessons, most short identification, possession, and location sentences are natural Ukrainian. These localized defects warrant revision rather than rejection. English scaffolding and pending stress annotation are not penalized. Source authenticity was not independently verified; source-level restrictions and missing audit lines are reported separately from linguistic defects.",
+  "score": 7.8,
+  "evidence": "\"Констру́кція «У мене́ є...» поє́днується з усіма́ рода́ми.\"",
+  "issue_ids": [
+    "UKRAINIAN_GRAMMAR_CALQUE",
+    "DIALOGUE_PRAGMATIC_DISCONTINUITY"
+  ],
+  "findings": [
+    {
+      "issue_id": "UKRAINIAN_GRAMMAR_CALQUE",
+      "quote": "Констру́кція «У мене́ є...» поє́днується з усіма́ рода́ми.",
+      "severity": "moderate",
+      "explanation": "Lesson 2 uses unnatural explanatory metalanguage: a construction takes nouns of different genders, rather than combining with genders themselves.",
+      "replacement": null,
+      "dimension": "naturalness"
+    },
+    {
+      "issue_id": "DIALOGUE_PRAGMATIC_DISCONTINUITY",
+      "quote": "Кла́сно! Вона́ до́бра вчи́телька.",
+      "severity": "moderate",
+      "explanation": "In lesson 3, Marko immediately evaluates the sister as a good teacher after learning only her occupation. Without established acquaintance or supporting context, the assertion sounds inserted to demonstrate an adjective rather than motivated by the conversation.",
+      "replacement": null,
+      "dimension": "naturalness"
+    }
+  ],
+  "flags": [
+    "audit_line_missing: implementation_map_audit",
+    "audit_line_missing: bad_form_audit",
+    "audit_line_missing: activity_split_audit",
+    "out_of_level_textbook: lessons 2 and 3 cite Grade 6 textbooks outside the stated A1 Grades 1–4 citation scope; this is a source-pedagogy flag, not evidence of fabrication",
+    "absence_of_verification: cited resource claims were not independently source-verified",
+    "missing_foreshadowing_gloss: lesson 1 introduces телефо́н, зо́шит, ключ, ла́мпа, кімна́та and дзе́ркало in its ending table without English meanings; their vocabulary entries arrive in lesson 2"
+  ],
+  "verdict": "REVISE"
+}

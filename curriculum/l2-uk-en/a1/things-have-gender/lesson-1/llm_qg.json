@@ -1,30 +1,15 @@
 {
   "dimensions": {
     "pedagogical": {
-      "score": 8.2,
-      "evidence": "\"Do not ask whether the speaker is a man or a woman. Ask what gender the Ukrainian noun has.\"",
+      "score": 8.5,
+      "evidence": "\"Do not ask whether the speaker is a man or a woman.\"",
       "verdict": "PASS",
       "evidence_quotes": [
-        "Do not ask whether the speaker is a man or a woman. Ask what gender the Ukrainian noun has.",
-        "Those last two phrases preview the next module. Do not turn them into a full adjective table yet.",
-        "**вікно́**, **лі́жко**, **дзе́ркало**, **мо́ре**"
+        "Do not ask whether the speaker is a man or a woman.",
+        "Treat gender as part of the noun card.",
+        "The ending rule is a first guess, not a debate."
       ],
-      "rubric_mapping": "Module type: topic-neutral A1 grammar lesson (noun gender), lesson 1 of a 3-lesson upgrade split. Residual-judgment focus: does the sequencing teach, do examples illuminate, is the frame source-backed, is the learner scaffolded. Quote 1 (FOR): the lesson anticipates and pre-empts the single most common English-speaker error (agreeing the possessive with the speaker's own sex rather than the noun's grammatical gender — wiki err-1) with a concrete, memorable rule tied to a taught example (`Мій...",
-      "flags": [
-        "unknown_vocab_unscaffolded"
-      ],
-      "issue_ids": [
-        "UNKNOWN_VOCAB_UNSCAFFOLDED"
-      ],
-      "findings": [
-        {
-          "issue_id": "UNKNOWN_VOCAB_UNSCAFFOLDED",
-          "severity": "minor",
-          "quote": "**вікно́**, **лі́жко**, **дзе́ркало**, **мо́ре**",
-          "explanation": "In the ending-signal table, opaque content nouns лі́жко (bed) and дзе́ркало (mirror) — plus зо́шит and ключ in the consonant row and кімна́та in the -а/-я row — appear as pattern examples with no inline English gloss and are absent from this lesson's vocabulary.yaml, so a zero-Ukrainian A1 learner cannot decode them at first use. Mitigated because the pedagogical point is the ending (not the word meaning), several neighbors (телефо́н, ла́мпа) are internationalisms, and ру́чка/мо́ре are glossed...",
-          "dimension": "pedagogical"
-        }
-      ]
+      "rubric_mapping": "Module type: topic-neutral A1 grammar (noun gender). Residual pedagogy judgment (deterministic gates already cleared word budget/section presence/schema): Quote 1 — \"Do not ask whether the speaker is a man or a woman.\" — EVIDENCE FOR. This pre-empts the single highest-value A1 error the wiki manifest lists (err-1: learners agreeing мій/моя with their own biological sex rather than the noun's grammatical gender). The lesson does not just drill the correct forms; it names and disarms the..."
     },
     "naturalness": {
       "score": 8.5,
@@ -32,59 +17,70 @@
       "verdict": "PASS",
       "evidence_quotes": [
         "Розбі́р розмо́ви по́дано ни́жче",
-        "А це — мій соба́ка.",
-        "**мій**, **воя́**, or **моє́**"
+        "А хто це бі́ля та́та?",
+        "Послу́хайте та прочита́йте коро́тку розмо́ву"
       ],
-      "rubric_mapping": "Quote 1 (\"Розбі́р розмо́ви по́дано ни́жче\") is residual evidence FOR naturalness: it uses the native impersonal -но predicative construction that a Ukrainian editor prefers over the calqued passive an English-model would produce (\"розбір ... є поданий нижче\"). VESUM cannot score this flow choice, so it is genuine residual evidence. Quote 2 (\"А це — мій соба́ка.\") is FOR: собака governs masculine agreement in Ukrainian (мій, not the Russian-pattern моя), a correct decolonized collocation and a...",
+      "rubric_mapping": "Module type: topic-neutral A1 grammar module (grammatical gender) with English carrier — the naturalness surface is the limited Ukrainian dialogue, examples and instructions, judged for flow, government and collocation. (1) 'Розбі́р розмо́ви по́дано ни́жче' — FOR: uses the native impersonal predicative -но form (подано) exactly where a Russian/English-shadowed writer would reach for a calqued passive ('розбір наведений/є наведеним'); correct idiomatic construction, evidence the prose is..."
+    },
+    "decolonization": {
+      "score": 9.2,
+      "evidence": "\"Do not replace them with **па́па** in these A1 lines.\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Do not replace them with **па́па** in these A1 lines.",
+        "repair the most common A1 gender traps without comparing Ukrainian to any other language.",
+        "In Ukrainian, use **він** and **мій соба́ка**. For father, keep the course words **та́то** and **ба́тько**."
+      ],
+      "rubric_mapping": "Module TYPE = topic-neutral (A1 grammar: noun gender он-terms), so the anchor is: 9.0+ baseline when (a) Ukrainian-canonical vocabulary, (c) grammar taught on Ukrainian terms not via Russian, and strict anti-Russian-as-reference execution are present; learner-facing bad-form contrast is deferred here, which the anchor permits. Quote 1 ('Do not replace them with па́па') is evidence FOR: it actively rejects the Russian-colloquial form па́па and locks in canonical та́то/ба́тько — anti-Russian..."
+    },
+    "engagement": {
+      "score": 7.5,
+      "evidence": "\"Чудо́ва ро́бота! Ви вже впе́внено розрізня́єте три роди́ слів:\"",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "A table is **він**. A book is **вона́**. A window is **воно́**.",
+        "Treat gender as part of the noun card.",
+        "Чудо́ва ро́бота! Ви вже впе́внено розрізня́єте три роди́ слів:",
+        "Напиші́ть 2–3 коро́ткі рядки́ про ре́чі бі́ля вас:"
+      ],
+      "rubric_mapping": "Module TYPE: topic-neutral grammar lesson; engagement judged on whether prose holds attention with warm, content-anchored, peer-appropriate register (deterministic callout-count + META_NARRATION gates already passed). Quote 1 'A table is **він**. A book is **вона́**. A window is **воно́**.' — evidence FOR: concrete, vivid, relatable framing that anchors an abstract grammar concept to the learner's own room; not generic filler. Quote 2 'Treat gender as part of the noun card.' — evidence FOR: the...",
       "issue_ids": [
-        "MALFORMED_UKRAINIAN_FORM"
+        "ENGAGEMENT_STICKER_PRAISE"
       ],
       "findings": [
         {
-          "issue_id": "MALFORMED_UKRAINIAN_FORM",
-          "severity": "minor",
-          "quote": "**мій**, **воя́**, or **моє́**",
-          "replacement": "**мій**, **моя́**, or **моє́**",
-          "explanation": "The possessive series the lesson teaches is мій / моя́ / моє́, but the feminine form is rendered as the non-word воя́ (a typo for моя́) inside a learner-facing :::tip that models the pattern directly, so a beginner could internalise a malformed form. This survives the VESUM/russianism gate because воя is a valid inflected form of the archaic noun вой, making it a context-only error the deterministic layer cannot see. Tool verification (verify_word) was unavailable in this session (permission...",
-          "dimension": "naturalness"
+          "issue_id": "ENGAGEMENT_STICKER_PRAISE",
+          "severity": "moderate",
+          "quote": "Чудо́ва ро́бота! Ви вже впе́внено розрізня́єте три роди́ слів:",
+          "replacement": "Ви пройшли перший крок: кожен іменник має рід — він, вона або воно. Далі закріпимо це на практиці.",
+          "explanation": "The lesson-1 summary opens with a 'great job!' praise sticker ('Чудо́ва ро́бота!') plus confidence-flattery ('Ви вже впе́внено розрізня́єте' — you already confidently distinguish). The target learner is an adult peer, and the North Star explicitly and repeatedly bans this anti-pattern ('No \"great job!\" stickers'; the learner is respected by clear explanation, not flattered). The deterministic P5 AI-slop banlist only catches the English 'Great job!', so the Ukrainian equivalent evaded the gate —...",
+          "dimension": "engagement"
         }
       ]
     },
-    "decolonization": {
-      "score": 9.3,
-      "evidence": "\"repair the most common A1 gender traps without comparing Ukrainian to any\"",
-      "verdict": "PASS",
-      "evidence_quotes": [
-        "repair the most common A1 gender traps without comparing Ukrainian to any",
-        "Do not replace them with **па́па** in these A1 lines.",
-        "use **вчи́телька** and **лі́карка** when the person is a woman"
-      ],
-      "rubric_mapping": "Module TYPE = topic-neutral (A1 grammar: noun gender). Anchor = 9.0+ baseline if (a) canonical vocab, (b) absence-only or contrast decolonization, (c) grammar on Ukrainian terms. Quote 1 (\"...without comparing Ukrainian to any other language\") is residual evidence FOR (c) and satisfies decolonization ban-2 (no 'like Russian, but...' scaffolding) — the gate cannot judge this framing stance; the module explicitly refuses cross-language derivation and anchors the rule in the native він/вона/воно...",
-      "flags": [
-        "absence-of-verification: MCP source tools (verify_words, check_russian_shadow) were not authorized in this session..."
-      ]
-    },
-    "engagement": {
-      "score": 8.4,
-      "evidence": "\"Do not ask whether the speaker is a man or a woman.\"",
-      "verdict": "PASS",
-      "evidence_quotes": [
-        "Do not ask whether the speaker is a man or a woman.",
-        "The ending rule is a first guess, not a debate.",
-        "Кла́сно! А це що?"
-      ],
-      "rubric_mapping": "Engagement here is the residual judgment of whether the prose actually holds attention (callout quality, warm vs bureaucratic tone, content-anchored direct address, human vs robotic dialogue) — presence of callouts/absence of META_NARRATION is the gate's job, already passed. Quote 1 (\"Do not ask whether the speaker is a man or a woman.\") is strong evidence FOR: it is content-anchored direct address that names and pre-empts the learner's actual gender-flip confusion (grammatical vs biological..."
-    },
     "tone": {
-      "score": 9.0,
-      "evidence": "\"У попере́дніх мо́дулях ви ви́вчили привіта́ння, знайо́мство та сім'ю́ — in previous modules you learned greetings, introductions, and family.\"",
-      "verdict": "PASS",
+      "score": 7.5,
+      "evidence": "\"Чудо́ва ро́бота!\"",
+      "verdict": "REVISE",
       "evidence_quotes": [
-        "У попере́дніх мо́дулях ви ви́вчили привіта́ння, знайо́мство та сім'ю́ — in previous modules you learned greetings, introductions, and family.",
         "Keep the goal small. You are not learning a full adjective or case system.",
-        "The ending rule is a first guess, not a debate."
+        "Чудо́ва ро́бота!",
+        "Treat gender as part of the noun card."
       ],
-      "rubric_mapping": "Module type for this dim: topic-neutral A1 grammar lesson (published lesson unit under a V7 upgrade split; ULP S1 bilingual, 40-55% UK by design). I judge only the residual `tone` question — is the teacher's voice single, warm, direct — since deterministic gates (META_NARRATION, callout floors, AI-slop banlist, immersion ratio) already ran. QUOTE 1 (FOR, #R-AUDIENCE-LANGUAGE-A1 + #R-SINGLE-VOICE-A1): the opener sets the Ukrainian phrase first and gloss after via em-dash ('сім'ю́ — in previous..."
+      "rubric_mapping": "TONE is the residual register judgment: is the teacher's voice consistent, warm, and peer-appropriate (not childish, not bureaucratic)? (1) \"Keep the goal small. You are not learning a full adjective or case system.\" — evidence FOR: one steady, warm, direct 'you'-voice that scopes expectations respectfully; no third-person learner framing ('the student'/'учня') anywhere, and the named dialogue (Марко/Оксана, 'Приві́т! Диви́сь, це мій стіл.') is a human situation, not a robotic interrogation....",
+      "issue_ids": [
+        "TONE_PRAISE_STICKER"
+      ],
+      "findings": [
+        {
+          "issue_id": "TONE_PRAISE_STICKER",
+          "severity": "medium",
+          "quote": "Чудо́ва ро́бота!",
+          "replacement": "Отже, ви вже розрізня́єте три роди́ слів:",
+          "explanation": "'Great work!' praise sticker opening the lesson-1 summary, reinforced by the patronizing 'Ви вже впе́внено розрізня́єте'. The North Star peer-voice contract bans 'great job!' stickers for the adult learner ('they will not be flattered by ... \"great job!\" stickers; they will be respected by clear explanations'). It is a momentary shift out of the module's otherwise consistent warm-direct teacher voice into a childish cheerleading register. Because it is in Ukrainian, no deterministic English...",
+          "dimension": "tone"
+        }
+      ]
     }
   },
   "aggregate": {
@@ -92,14 +88,18 @@
     "terminal_verdict": "PASS",
     "failing_dims": [
       "pedagogical",
-      "naturalness"
+      "naturalness",
+      "engagement",
+      "tone"
     ],
     "rejected_dims": [],
     "warning_dims": [
       "pedagogical",
-      "naturalness"
+      "naturalness",
+      "engagement",
+      "tone"
     ],
-    "min_score": 8.2,
-    "min_dim": "pedagogical"
+    "min_score": 7.5,
+    "min_dim": "engagement"
   }
 }

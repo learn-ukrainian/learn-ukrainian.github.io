@@ -990,7 +990,7 @@ teach while applying the existing `engagement` rubric.
 ```json
 {
   "slug": "things-have-gender",
-  "wiki_path": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cu-p1-pilot-writer-things-have-gender-r2/wiki/pedagogy/a1/things-have-gender.md",
+  "wiki_path": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cu-p1-pilot-repair-thg/wiki/pedagogy/a1/things-have-gender.md",
   "phonetic_format_reference": [
     "Spoken target in `[...]` single-character square brackets, not Unicode look-alikes",
     "Pair written and spoken form in close lexical proximity (same sentence or adjacent bullet)",
@@ -1915,6 +1915,28 @@ For a man:
 Keep the earlier identity rule: **Я студе́нт. Я студе́нтка.** Do not force
 **є** into that A1 sentence.
 
+### Діало́г про профе́сії
+
+Послу́хайте та прочита́йте розмо́ву про профе́сії та сім'ю́ — listen to and read the conversation about professions and family:
+
+> **Марко́**: Окса́но, хто ти? Ти студе́нтка?
+> **Окса́на**: Так, я студе́нтка. А хто ти?
+> **Марко́**: Я теж студе́нт. А хто твоя́ сестра́?
+> **Окса́на**: Моя́ сестра́ — вчи́телька.
+> **Марко́**: Кла́сно! Вона́ до́бра вчи́телька.
+> **Окса́на**: Так. А хто твій брат?
+> **Марко́**: Мій брат — лі́кар.
+
+Розмо́ва про сім'ю́ — conversation about family:
+
+> **Окса́на**: Твій брат лі́кар? Чудо́во!
+> **Марко́**: А хто твоя́ ма́ма? Вона́ теж лі́карка?
+> **Окса́на**: Так, моя́ ма́ма — лі́карка.
+> **Марко́**: А хто твій та́то?
+> **Окса́на**: Мій та́то — співа́к. А твій дя́дько Мико́ла?
+> **Марко́**: Мій дя́дько — акто́р.
+> **Окса́на**: А йо́го сестра́ — акто́рка!
+
 <!-- INJECT_ACTIVITY: act-9 -->
 
 <!-- INJECT_ACTIVITY: act-301 -->
@@ -2127,7 +2149,7 @@ inline:
     correct: true
   - statement: Сло́во «соба́ка» в украї́нській мо́ві — це вона́.
     correct: false
-  - statement: Для жінки-лікаря вжива́ємо фо́рму «лі́карка».
+  - statement: Для жі́нки-лі́каря вжива́ємо фо́рму «лі́карка».
     correct: true
   - statement: Сло́во «та́то» — це він.
     correct: true
@@ -2136,8 +2158,8 @@ workbook:
   title: Ви́прав па́стки ро́ду
   instruction: Choose the safer Ukrainian sentence.
   items:
-  - sentence: Мій кни́га, мій ру́чка (якщо́ говори́ть чолові́к).
-    error: Мій кни́га, мій ру́чка (якщо́ говори́ть чолові́к).
+  - sentence: Мій кни́га, мій ру́чка (якщо́ гово́рить чолові́к).
+    error: Мій кни́га, мій ру́чка (якщо́ гово́рить чолові́к).
     correction: Моя́ кни́га, моя́ ру́чка.
     options:
     - Моя́ кни́га, моя́ ру́чка.

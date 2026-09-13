@@ -74,15 +74,11 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 Use **У мене́ є...** from the family module with objects. Read the Ukrainian
 dialogue first. Use the support table after the dialogue to check meaning.
 
-```text
-Марі́я: Приві́т! Диви́сь, це моя́ кімна́та.
-Оле́нка: Кла́сно! У тебе́ є стіл?
-Марі́я: Так, у мене́ є стіл і лі́жко.
-Оле́нка: А це твоя́ ла́мпа?
-Марі́я: Так. Це моя́ ла́мпа. Вона́ тут.
-Оле́нка: А вікно́?
-Марі́я: Ось воно́. Моє́ вікно́ вели́ке.
-```
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Марі́я","text":"Приві́т! Диви́сь, це моя́ кімна́та."},{"speaker":"Оле́нка","text":"Кла́сно! У тебе́ є стіл?"},{"speaker":"Марі́я","text":"Так, у мене́ є стіл і лі́жко."},{"speaker":"Оле́нка","text":"А це твоя́ ла́мпа?"},{"speaker":"Марі́я","text":"Так. Це моя́ ла́мпа. Вона́ тут."},{"speaker":"Оле́нка","text":"А вікно́?"},{"speaker":"Марі́я","text":"Ось воно́. Моє́ вікно́ вели́ке."}]')}
+/>
 
 Support after the dialogue:
 
@@ -118,11 +114,11 @@ choose the pronoun.
 
 Now move to a bag:
 
-```text
-Оле́нка: Що у тебе́ є?
-Марі́я: У мене́ є кни́га, телефо́н і фо́то.
-Оле́нка: А у мене́ є ру́чка і зо́шит.
-```
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Оле́нка","text":"Що у тебе́ є?"},{"speaker":"Марі́я","text":"У мене́ є кни́га, телефо́н і фо́то."},{"speaker":"Оле́нка","text":"А у мене́ є ру́чка і зо́шит."},{"speaker":"Марі́я","text":"Де твоя́ ру́чка?"},{"speaker":"Оле́нка","text":"Ось вона́. А де твій телефо́н?"},{"speaker":"Марі́я","text":"Мій телефо́н тут, у су́мці."},{"speaker":"Оле́нка","text":"Ду́же до́бре!"}]')}
+/>
 
 Support after the dialogue:
 
@@ -170,6 +166,8 @@ pair: **стіл -> мій стіл**, **кни́га -> моя́ кни́га**
 <FillIn client:only='react' items={JSON.parse(`[{"sentence": "Це ___ стіл.", "answer": "мій", "options": ["мій", "моя́", "моє́"], "explanation": "Стіл is masculine."}, {"sentence": "Це ___ кни́га.", "answer": "моя́", "options": ["моя́", "мій", "моє́"], "explanation": "Кни́га is feminine."}, {"sentence": "Це ___ вікно́.", "answer": "моє́", "options": ["моє́", "мій", "моя́"], "explanation": "Вікно́ is neuter."}, {"sentence": "Це ___ кімна́та.", "answer": "моя́", "options": ["моя́", "мій", "моє́"], "explanation": "Кімна́та is feminine."}, {"sentence": "Це ___ лі́жко.", "answer": "моє́", "options": ["моє́", "моя́", "мій"], "explanation": "Лі́жко is neuter."}, {"sentence": "Це ___ телефо́н.", "answer": "мій", "options": ["мій", "моя́", "моє́"], "explanation": "Телефо́н is masculine."}, {"sentence": "Це ___ ру́чка.", "answer": "моя́", "options": ["моя́", "мій", "моє́"], "explanation": "Ру́чка is feminine."}, {"sentence": "Це ___ фо́то.", "answer": "моє́", "options": ["моє́", "моя́", "мій"], "explanation": "Фо́то is neuter in this lesson."}]`)} instruction={"Choose мій, моя́, or моє́."} isUkrainian={false} />
 
 ### Підсу́мок уро́ку 2
+
+Чудо́во! Тепе́р ви вмі́єте опи́сувати свій про́стір украї́нською мо́вою:
 
 | Украї́нська | English support |
 | --- | --- |
@@ -224,7 +222,7 @@ pair: **стіл -> мій стіл**, **кни́га -> моя́ кни́га**
 
 ### Сорту́й ре́чі в кімна́ті й су́мці
 
-<GroupSort client:only='react' groups={JSON.parse(`{"він / мій": ["стіле́ць", "телефо́н", "комп'ю́тер", "ключ"], "вона́ / моя́": ["ла́мпа", "су́мка", "ру́чка", "стіна́"], "воно́ / моє́": ["лі́жко", "крі́сло", "дзе́ркало", "фо́то"]}`)} instruction={"Розподілі́ть предме́ти за ро́дом: він, вона́ чи воно́."} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"він / мій": ["стіле́ць", "телефо́н", "комп'ю́тер", "ключ", "зо́шит"], "вона́ / моя́": ["кімна́та", "ла́мпа", "су́мка", "ру́чка", "стіна́"], "воно́ / моє́": ["лі́жко", "крі́сло", "дзе́ркало", "фо́то"]}`)} instruction={"Розподілі́ть предме́ти за ро́дом: він, вона́ чи воно́."} isUkrainian={false} />
 
 ### Складі́ть ре́чення з «У мене́ є»
 

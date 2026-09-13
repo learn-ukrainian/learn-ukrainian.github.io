@@ -1,25 +1,31 @@
+The MCP verification tools aren't granted in this non-interactive session, so I'll ground the naturalness assessment on direct linguistic judgment of the exact quotes and note the absence-of-verification.
+
+Assessment complete. The Ukrainian prose in this A1 lesson-3 (module closure) reads as native throughout: correct feminitive forms, idiomatic completion prose, natural set expressions ("у далеку путь"), and level-appropriate bilingual scaffolding. One mild collocation nit ("Пильну́й па́стки") is the only residual defect — a single minor issue keeps the dimension at PASS.
+
+```json
 {
-  "score": 7.7,
-  "evidence": "\"Пильну́й па́стки\"",
+  "score": 8.4,
+  "evidence": "\"Украї́нський степ широ́кий і ві́тряний.\"",
   "evidence_quotes": [
-    "Пильну́й па́стки",
-    "Напиші́ть 2–3 коро́ткі рядки́ про себе́ та свій про́стір",
-    "У мене́ є стіл, кни́га і вікно́."
+    "Ви упе́внено вжива́єте «мій / моя́ / моє́» та констру́кцію «У мене́ є...».",
+    "Украї́нський степ широ́кий і ві́тряний.",
+    "Пильну́й па́стки"
   ],
-  "rubric_mapping": "Naturalness is a linguistic-quality review of register, government, and collocation (deterministic VESUM/russianism gates already ran). Quote 1 «Пильну́й па́стки» is AGAINST: «Пильну́й» is a ти (2sg) imperative, but the module body otherwise addresses the learner in ви — «Тепе́р переві́рте профе́сії…», «Напиші́ть 2–3 коро́ткі рядки́…», and every activity instruction («Вста́вте», «Розподілі́ть», «Знайді́ть», «Перекладі́ть»). A Ukrainian editor would harmonise this to «Пильну́йте». The same phrase is also a weak collocation: «пильнувати» + accusative most naturally means to keep watch over / tend (пильнувати дитину), so «beware of traps» reads more idiomatically as «стережіться пасток / уникайте пасток». So this span carries both a register slip (single-voice inconsistency) and a soft collocation defect. Quote 2 «Напиші́ть 2–3 коро́ткі рядки́ про себе́ та свій про́стір» is itself natural, idiomatic Ukrainian and establishes the ви baseline that Quote 1 breaks — evidence FOR fluency but AGAINST intra-module consistency when paired with Quote 1. Quote 3 «У мене́ є стіл, кни́га і вікно́.» is evidence FOR: a natural existential/possessive construction with correct enumeration that reads as native. Balance: the Ukrainian is predominantly natural, correct, and canonical (собака m, тато m, біль/степ/розпис/літопис m, путь f all handled correctly; feminitives used; no calques, no anthropomorphic metalanguage, no evasive passives), but the one grounded ти/ви register slip plus the borderline «пильнувати пастки» collocation sit just below the clean-PASS line for a project whose single-voice standard is explicit.",
+  "rubric_mapping": "Residual-judgment naturalness review (deterministic VESUM/russianism gates already passed; MCP verification tools were permission-denied in this non-interactive session, so I ground on direct linguistic judgment and note the absence-of-verification per Audit E). QUOTE 1 — \"Ви упе́внено вжива́єте «мій / моя́ / моє́» та констру́кцію «У мене́ є...».\": evidence FOR. Native, idiomatic register — the collocation 'упевнено вживаєте' and the metalinguistic noun 'конструкцію' are exactly how a Ukrainian teacher summarizes an acquired pattern; flow and government are clean, not calqued. QUOTE 2 — \"Украї́нський степ широ́кий і ві́тряний.\": evidence FOR. The diagnostic example sentence has correct masculine agreement (степ … широ́кий, ві́тряний), natural adjective choice and word order; reads as genuine Ukrainian, not a translation shell. It also correctly exploits 'степ' as an authentic masculine gender-flip prop, and 'у далеку путь' (act-w5) is a real set expression, confirming idiomatic control. QUOTE 3 — \"Пильну́й па́стки\": mild evidence AGAINST — the one residual defect. 'пильнувати' (to guard / keep watch over) does not collocate naturally with 'пастки' (traps): you avoid or beware of traps, you do not stand guard over them, so a native editor would write 'Стережи́ся пасто́к' / 'Уника́й пасто́к'. It is borderline-acceptable in the module's declared розмовний register (colloquial 'пильнуй' ≈ 'watch out'), so it is a minor nit, not a hard failure. Only ONE concrete native-style defect surfaced (the rubric requires two or more to drop below PASS), so the dimension stays at PASS. Note: the resources cite Авраменко/Літвінова Grade 6 (out of a1 Grades 1-4 scope) — that is an out_of_level_textbook concern for the pedagogical dim, not a naturalness defect, so it is not flagged here.",
   "issue_ids": [
-    "register_inconsistency"
+    "UKRAINIAN_GRAMMAR_CALQUE"
   ],
   "findings": [
     {
-      "issue_id": "register_inconsistency",
+      "issue_id": "UKRAINIAN_GRAMMAR_CALQUE",
       "quote": "Пильну́й па́стки",
       "severity": "minor",
-      "explanation": "Single-voice violation: «Пильну́й» is a ти (2sg) imperative, while the rest of the module body and all activity instructions address the learner with ви («переві́рте», «Напиші́ть», «Вста́вте», «Розподілі́ть»). The ти form is a lone register outlier a Ukrainian editor would harmonise. Secondarily, «пильнувати пастки» is a weak collocation — «пильнувати» + accusative reads as keep-watch-over/tend, whereas the intended «watch out for traps» is more natural as «стережіться пасток» / «уникайте пасток».",
-      "replacement": "Стережі́ться пасто́к (or, to match the ви register elsewhere, Пильну́йте)",
+      "explanation": "Government/collocation nit: 'пильнувати' (to guard, keep watch over something valuable — пильнувати дитину/майно) does not idiomatically take 'пастки' as its object, since one avoids traps rather than guards them. A native editor would use 'стерегтися + genitive' or 'уникати + genitive'. Borderline-tolerable in the colloquial register but flagged as the single residual naturalness defect.",
+      "replacement": "Стережи́ся пасто́к",
       "dimension": "naturalness"
     }
   ],
   "flags": [],
-  "verdict": "REVISE"
+  "verdict": "PASS"
 }
+```

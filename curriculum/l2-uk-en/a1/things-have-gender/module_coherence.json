@@ -1,64 +1,105 @@
 {
   "dimensions": {
     "pedagogical": {
-      "score": 7.5,
-      "evidence": "\"Літвінова, 6 клас — с. 129 «§ 25. Рід іменників»\"",
+      "score": 6.5,
+      "evidence": "\"У ___ є телефо́н?\"",
       "verdict": "REVISE",
       "evidence_quotes": [
         "Use **У мене́ є...** from the family module with objects.",
-        "**Моя́ соба́ка га́рна.** | **Мій соба́ка га́рний.**",
-        "Літвінова, 6 клас — с. 129 «§ 25. Рід іменників»"
+        "У ___ є телефо́н?",
+        "Кни́жне / урочи́сте: у дале́ку путь."
       ],
-      "rubric_mapping": "Module type = topic-neutral A1 grammar (noun gender). Quote 1 (Lesson 2) is residual evidence FOR pedagogical: the module is student-aware and cumulative — it explicitly reuses the already-taught 'У мене́ є' frame from the family module rather than re-deriving it, and each lesson opens by naming what the prior lessons built ('У пе́рших двох уро́ках ви опанува́ли...'), so the sequence BUILDS instead of repeating (Audit I signposting satisfied). Quote 2 (Lesson 3 traps table) is strong residual...",
+      "rubric_mapping": "Quote 1 supports coherent progression: lesson 2 explicitly reuses familiar grammar for a new communicative purpose. Quote 2 exposes an underdetermined assessment: act-w3 accepts тебе́ but also offers мене́, which produces a meaningful question; the instruction supplies no intended speaker or meaning. Quote 3 exposes an unsupported diagnostic demand: learners must identify feminine gender from an unfamiliar expression without a gloss or a previously taught gender cue. Calling these words...",
       "flags": [
-        "out_of_level_textbook"
+        "missing_foreshadowing_gloss",
+        "out_of_level_textbook",
+        "activity_split_audit_missing",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit",
+        "source_frame_verification_unavailable: no textbook or corpus verification performed",
+        "preservation_verification_unavailable: baseline artifacts not supplied"
       ],
       "issue_ids": [
-        "LEARNER_FACING_TYPO",
-        "OUT_OF_LEVEL_TEXTBOOK"
+        "A1_PASSAGE_SUPPORT_GAP",
+        "AMBIGUOUS_ASSESSMENT",
+        "FIRST_USE_VOCABULARY_GAP",
+        "OUT_OF_LEVEL_TEXTBOOK",
+        "UNSCAFFOLDED_DIAGNOSTIC"
       ],
       "findings": [
         {
-          "issue_id": "OUT_OF_LEVEL_TEXTBOOK",
-          "severity": "medium",
-          "quote": "Літвінова, 6 клас — с. 129 «§ 25. Рід іменників»",
-          "replacement": "Cite Grade 1-4 sources for A1 (e.g. the plan's Пономарова Grade 3, p.86 / Вашуленко Grade 3, p.112, or Пономарьова Grade 4) instead of Grade 6 textbooks.",
-          "explanation": "Grade 6 textbook cited in an A1 module; the a1 corpus scope permits only Grades 1-4. The same overshoot repeats across Авраменко 6 клас (Lessons 2 and 3) and Літвінова 6 клас (Lesson 3) — four of the module's citations are two grades above learner level. The underlying content (noun gender, feminitive formation) is correct, but the source register is too advanced for A1; per Audit H this counts as pedagogical evidence-against, not fabrication.",
+          "issue_id": "AMBIGUOUS_ASSESSMENT",
+          "severity": "major",
+          "quote": "У ___ є телефо́н?",
+          "explanation": "Lesson 2 act-w3 offers both тебе́ and мене́ but accepts only тебе́. Both complete a meaningful question. The generic instruction does not specify that the learner must ask another person, so the item can penalize a valid interpretation.",
           "dimension": "pedagogical"
         },
         {
-          "issue_id": "LEARNER_FACING_TYPO",
-          "severity": "low",
-          "quote": "**мій**, **воя́**, or **моє́**",
-          "replacement": "**мій**, **моя́**, or **моє́**",
-          "explanation": "In the Lesson-1 :::tip that first anchors the three possessive forms, 'воя́' is a nonword typo for 'моя́'. The garbled token appears at the precise moment the learner is being taught to store nouns with their possessive cue, so it undermines the clarity of the anchoring move for an A1 reader still decoding Cyrillic.",
+          "issue_id": "UNSCAFFOLDED_DIAGNOSTIC",
+          "severity": "major",
+          "quote": "Кни́жне / урочи́сте: у дале́ку путь.",
+          "explanation": "Lesson 3 act-w5 requires a gender judgment from an unfamiliar expression. Neither its meaning nor the relevant gender association is taught before the task; interpreting the adjective ending would require knowledge explicitly deferred. The answer explanation supplies the missing information only after assessment.",
+          "dimension": "pedagogical"
+        },
+        {
+          "issue_id": "FIRST_USE_VOCABULARY_GAP",
+          "severity": "moderate",
+          "quote": "| consonant ending | **він**, **мій** | **стіл**, **телефо́н**, **зо́шит**, **ключ** |",
+          "explanation": "Lesson 1 uses зо́шит and ключ as explanatory examples without meanings, while their vocabulary entries occur in lesson 2. This makes the first published lesson depend on future vocabulary support instead of introducing the words when needed.",
+          "dimension": "pedagogical"
+        },
+        {
+          "issue_id": "A1_PASSAGE_SUPPORT_GAP",
+          "severity": "moderate",
+          "quote": "> **Марко́**: Мій дя́дько — акто́р. > **Окса́на**: А йо́го сестра́ — акто́рка!",
+          "explanation": "These turns conclude lesson 3's extended family dialogue, which has no side-by-side English support. The surrounding tables translate isolated profession examples, not the dialogue's relationships and turns. This leaves the added A1 passage insufficiently scaffolded.",
+          "dimension": "pedagogical"
+        },
+        {
+          "issue_id": "OUT_OF_LEVEL_TEXTBOOK",
+          "severity": "moderate",
+          "quote": "Авраменко, 6 клас — с. 84 «Фемінітиви»",
+          "explanation": "Lesson 3 cites Grade 6 material, as does lesson 2, outside audit H's stated A1 Grades 1–4 source scope. This is a source-selection finding, not a claim that the citation is fabricated.",
           "dimension": "pedagogical"
         }
       ]
     },
     "naturalness": {
-      "score": 7.5,
-      "evidence": "\"What\nphrase travels with this noun: **мій**, **воя́**, or **моє́**?\"",
+      "score": 7.8,
+      "evidence": "\"Констру́кція «У мене́ є...» поє́днується з усіма́ рода́ми.\"",
       "verdict": "REVISE",
       "evidence_quotes": [
-        "Приві́т! Диви́сь, це мій стіл.",
-        "Розбі́р розмо́ви по́дано ни́жче",
-        "phrase travels with this noun: **мій**, **воя́**, or **моє́**?"
+        "А хто це бі́ля та́та?",
+        "Констру́кція «У мене́ є...» поє́днується з усіма́ рода́ми.",
+        "Кла́сно! Вона́ до́бра вчи́телька."
       ],
-      "rubric_mapping": "Quote 1 (\"Приві́т! Диви́сь, це мій стіл.\") is evidence FOR: the Марко́/Окса́на dialogue is warm, human, and idiomatic A1 Ukrainian — a real 'look, this is my table' exchange, not a robotic interrogation; native flow and register are correct. Quote 2 (\"Розбі́р розмо́ви по́дано ни́жче\") is evidence FOR: the impersonal -но form (по́дано) is the natural, native Ukrainian construction here, NOT a calqued/evasive passive, showing the writer chose correct impersonal government (residual naturalness...",
+      "rubric_mapping": "Quote 1 supports naturalness: the question uses idiomatic spatial phrasing and naturally follows the father's identification. Quote 2 shows awkward explanatory collocation: the construction combines with nouns, while grammatical gender is their property; describing it as combining with genders sounds mechanically compressed. Quote 3 shows a pragmatic discontinuity in lesson 3: learning only the sister's occupation gives Marko no conversational basis for judging her teaching quality. Across all...",
       "flags": [
-        "mcp_verification_unavailable_permission_denied"
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit",
+        "out_of_level_textbook: lessons 2 and 3 cite Grade 6 textbooks outside the stated A1 Grades 1–4 citation scope; this is...",
+        "absence_of_verification: cited resource claims were not independently source-verified",
+        "missing_foreshadowing_gloss: lesson 1 introduces телефо́н, зо́шит, ключ, ла́мпа, кімна́та and дзе́ркало in its ending..."
       ],
       "issue_ids": [
-        "CORRUPTED_UKRAINIAN_FORM"
+        "DIALOGUE_PRAGMATIC_DISCONTINUITY",
+        "UKRAINIAN_GRAMMAR_CALQUE"
       ],
       "findings": [
         {
-          "issue_id": "CORRUPTED_UKRAINIAN_FORM",
-          "severity": "major",
-          "quote": "phrase travels with this noun: **мій**, **воя́**, or **моє́**?",
-          "replacement": "phrase travels with this noun: **мій**, **моя́**, or **моє́**?",
-          "explanation": "The feminine possessive is written as *воя́*, a non-existent Ukrainian possessive form; the intended word is моя́ (the module teaches the triad мій/моя/моє everywhere else). A native Ukrainian editor would immediately rewrite this, and because it sits in the Lesson 1 tip that teaches the possessive triad, it directly contradicts and undermines the module's core teaching point.",
+          "issue_id": "UKRAINIAN_GRAMMAR_CALQUE",
+          "severity": "moderate",
+          "quote": "Констру́кція «У мене́ є...» поє́днується з усіма́ рода́ми.",
+          "explanation": "Lesson 2 uses unnatural explanatory metalanguage: a construction takes nouns of different genders, rather than combining with genders themselves.",
+          "dimension": "naturalness"
+        },
+        {
+          "issue_id": "DIALOGUE_PRAGMATIC_DISCONTINUITY",
+          "severity": "moderate",
+          "quote": "Кла́сно! Вона́ до́бра вчи́телька.",
+          "explanation": "In lesson 3, Marko immediately evaluates the sister as a good teacher after learning only her occupation. Without established acquaintance or supporting context, the assertion sounds inserted to demonstrate an adjective rather than motivated by the conversation.",
           "dimension": "naturalness"
         }
       ]
@@ -111,7 +152,7 @@
       "pedagogical",
       "naturalness"
     ],
-    "min_score": 7.5,
+    "min_score": 6.5,
     "min_dim": "pedagogical"
   }
 }

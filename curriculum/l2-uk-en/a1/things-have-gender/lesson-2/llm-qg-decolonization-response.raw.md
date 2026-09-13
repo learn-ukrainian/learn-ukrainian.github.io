@@ -1,18 +1,14 @@
-MCP verification tools aren't permission-granted in this non-interactive session. That's acceptable here: the deterministic gate already confirmed `forbidden_words`/VESUM vocabulary coverage (ground truth per the decolonization rubric), and my residual decolonization judgment rests on directly-readable framing, not on re-verifying vocab. Returning the review JSON.
-
-```json
 {
-  "score": 9.2,
-  "evidence": "\"English uses \"it\" for all three. Ukrainian does not.\"",
+  "score": 9.0,
+  "evidence": "English uses \"it\" for all three. Ukrainian does not.",
   "evidence_quotes": [
     "English uses \"it\" for all three. Ukrainian does not.",
     "The owner does not decide the form. The noun decides it.",
-    "- **мій брат**, **мій та́то**, **мій стіл**"
+    "Це моє́ дзе́ркало."
   ],
-  "rubric_mapping": "Module TYPE = topic-neutral (grammar: noun gender + possessive agreement он/вона/воно). Apply the topic-neutral anchor. Quote 1 (\"English uses \"it\" for all three. Ukrainian does not.\") is evidence FOR: the sole cross-language contrast is anchored to the learner's L1 (English) — the sanctioned A1 scaffold — never to Russian, so Ukrainian is taught on its own terms and satisfies ban-2 (no \"in Ukrainian just like in Russian, but...\"). Quote 2 (\"The owner does not decide the form. The noun decides it.\") is evidence FOR anchor (c): morphology is presented on Ukrainian terms (grammatical gender of the noun governs agreement), with no \"like Russian but\" entry point and no phonetic English/Russian analogy (ban-4 respected). Quote 3 (\"- **мій брат**, **мій та́то**, **мій стіл**\") is evidence FOR anchor (a): canonical Ukrainian lexis in the body — тато (not папа), and the vocab set carries дзеркало (not зеркало), стілець, крісло, комп'ютер, ключ — mirroring wiki step-2's \"тато, а не російський відповідник\"; the dialogue greeting is the native Привіт (not здрастуйте), satisfying ban-5. Bad-form contrast (біль/степ/собака diagnostic) is deferred to a later lesson in this split, so this lesson clears baseline via absence-only decolonization: no Russian-as-reference framing, no raw Russified form inserted, and full canonical-form coverage (VESUM/forbidden_words confirmed by the deterministic gate as ground truth). All three anchor conditions plus strict anti-Russian-as-reference execution are present → 9.0+ baseline. No residual decolonization defect found; no piling of extra anti-colonial rhetoric is required for a clean topic-neutral grammar lesson.",
+  "rubric_mapping": "Module TYPE = topic-neutral (A1 grammar lesson on noun gender / possessives). I apply the topic-neutral anchor: 9.0+ baseline when (a) canonical vocabulary, (b) satisfied by absence-only decolonization when contrast is deferred, and (c) grammar taught on Ukrainian terms with strict anti-Russian-as-reference execution. Quote 1 ('English uses \"it\" for all three. Ukrainian does not.') is evidence FOR (c): the lesson scaffolds gender ONLY against the learner's L1 (English) and explicitly refuses to map English 'it' onto Ukrainian, teaching the noun-driven pronoun system on its own terms — there is zero 'like Russian but...' framing anywhere in the body (ban-2 respected). Quote 2 ('The owner does not decide the form. The noun decides it.') is evidence FOR (c): grammatical gender is presented as an intrinsic property of the Ukrainian noun (VESUM/Pravopys logic), not derived from another language. Quote 3 ('Це моє́ дзе́ркало.') is evidence FOR (a): the vocabulary set is Ukrainian-canonical throughout — дзеркало (not R. зеркало), крісло, ручка, сумка, ключ, стілець — no Russified or surzhyk forms and no unmarked calques. Greetings stay питомо українські (Привіт!, Класно!, Дуже добре!) with no здрастуйте/calque (ban-5 respected). No bad-form contrast is authorized in this deferred/foundational object-vocabulary lesson, so point (b) is met via clean absence-only decolonization (no Russian-as-reference framing, no raw bad-form insertion, full canonical coverage). Balance: all three evidence quotes are FOR the dimension; no concrete residual decolonization defect present, so the topic-neutral baseline of 9.0 holds without piling extra anti-colonial rhetoric onto a grammar lesson.",
   "issue_ids": [],
   "findings": [],
   "flags": [],
   "verdict": "PASS"
 }
-```

@@ -1,15 +1,15 @@
 {
   "dimensions": {
     "pedagogical": {
-      "score": 8.4,
-      "evidence": "\"У пе́рших двох уро́ках ви опанува́ли рід предме́тів у кімна́ті та су́мці.\"",
-      "verdict": "PASS",
+      "score": 7.0,
+      "evidence": "\"Авраменко, 6 клас — с. 84 «Фемінітиви»\"",
+      "verdict": "REVISE",
       "evidence_quotes": [
-        "У пе́рших двох уро́ках ви опанува́ли рід предме́тів у кімна́ті та су́мці.",
-        "The gender-flip mini-check uses five words that are not your active vocabulary:",
-        "Віта́ємо! Ви успі́шно заверши́ли мо́дуль 8 «Ре́чі ма́ють рід»."
+        "У пе́рших двох уро́ках ви опанува́ли рід предме́тів у кімна́ті та су́мці. Цей уро́к підсумо́вує мо́дуль і додає́ важли́ві дета́лі:",
+        "Авраменко, 6 клас — с. 84 «Фемінітиви»",
+        "The gender-flip mini-check uses five words that are not your active vocabulary:"
       ],
-      "rubric_mapping": "This is the module-closing lesson (Підсумок), reviewed as a published upgrade unit. QUOTE 1 (\"У пе́рших двох уро́ках ви опанува́ли рід предме́тів у кімна́ті та су́мці. Цей уро́к підсумо́вує мо́дуль і додає́ важли́ві дета́лі\") is residual evidence FOR pedagogical: it is not a gate check — it shows student-aware, coherent progression. The lesson explicitly names what lessons 1-2 established and positions itself as consolidation-plus-refinement, so exceptions (feminitives, masculine -а/-о names...",
+      "rubric_mapping": "Module TYPE: topic-neutral grammar (gender/feminitives summary lesson). Residual-judgment findings below the deterministic floor. Quote 1 (\"У пе́рших двох уро́ках ви опанува́ли рід предме́тів у кімна́ті та су́мці. Цей уро́к підсумо́вує мо́дуль і додає́ важли́ві дета́лі:\") — Audit I (student-aware) evidence FOR. As the closing lesson of a 3-lesson split it explicitly builds on prior lessons and signposts that it summarises + adds, rather than re-deriving object gender from scratch (no...",
       "flags": [
         "out_of_level_textbook"
       ],
@@ -19,84 +19,99 @@
       "findings": [
         {
           "issue_id": "OUT_OF_LEVEL_TEXTBOOK",
-          "severity": "low",
+          "severity": "medium",
           "quote": "Авраменко, 6 клас — с. 84 «Фемінітиви»",
-          "explanation": "Tab 4 Resources grounds this A1 lesson in Grade 6 textbooks (Авраменко 6 клас, and Літвінова 6 клас for біль/собака/степ/путь), above the a1 corpus scope of Grades 1-4 (audit H). The taught forms (Вона́ вчи́телька / лі́карка) are register-appropriate for A1 and plan-mandated (objective 6), and the citations appear preserved from the baseline module, so the pedagogical impact is limited to source-grade choice rather than out-of-level learner register — but the cited grade is formally out of...",
+          "explanation": "A1 textbook corpus scope is Grades 1-4; this cites a Grade 6 textbook for feminitives. Feminitive formation is a Grade 6 curriculum topic — the module correctly presents the forms as memorised chunks, but the citation choice is out-of-level for an A1 learner and is not among the plan's references (Пономарова Gr3, Вашуленко Gr3, ULP, wiki).",
+          "dimension": "pedagogical"
+        },
+        {
+          "issue_id": "OUT_OF_LEVEL_TEXTBOOK",
+          "severity": "medium",
+          "quote": "Літвінова, 6 клас — с. 130 «Вправа 264. Рід іменників»",
+          "explanation": "Second Grade 6 source in an A1 module; it grounds the exotic gender-exception diagnostic (біль, степ, собака, путь). The gender facts are correct, but sourcing the exception drill from a Grade 6 textbook confirms the register sits above A1 and is outside the A1 corpus-access gate (Grades 1-4).",
           "dimension": "pedagogical"
         }
       ]
     },
     "naturalness": {
-      "score": 7.7,
-      "evidence": "\"Пильну́й па́стки\"",
-      "verdict": "REVISE",
+      "score": 8.4,
+      "evidence": "\"Украї́нський степ широ́кий і ві́тряний.\"",
+      "verdict": "PASS",
       "evidence_quotes": [
-        "Пильну́й па́стки",
-        "Напиші́ть 2–3 коро́ткі рядки́ про себе́ та свій про́стір",
-        "У мене́ є стіл, кни́га і вікно́."
+        "Ви упе́внено вжива́єте «мій / моя́ / моє́» та констру́кцію «У мене́ є...».",
+        "Украї́нський степ широ́кий і ві́тряний.",
+        "Пильну́й па́стки"
       ],
-      "rubric_mapping": "Naturalness is a linguistic-quality review of register, government, and collocation (deterministic VESUM/russianism gates already ran). Quote 1 «Пильну́й па́стки» is AGAINST: «Пильну́й» is a ти (2sg) imperative, but the module body otherwise addresses the learner in ви — «Тепе́р переві́рте профе́сії…», «Напиші́ть 2–3 коро́ткі рядки́…», and every activity instruction («Вста́вте», «Розподілі́ть», «Знайді́ть», «Перекладі́ть»). A Ukrainian editor would harmonise this to «Пильну́йте». The same...",
+      "rubric_mapping": "Residual-judgment naturalness review (deterministic VESUM/russianism gates already passed; MCP verification tools were permission-denied in this non-interactive session, so I ground on direct linguistic judgment and note the absence-of-verification per Audit E). QUOTE 1 — \"Ви упе́внено вжива́єте «мій / моя́ / моє́» та констру́кцію «У мене́ є...».\": evidence FOR. Native, idiomatic register — the collocation 'упевнено вживаєте' and the metalinguistic noun 'конструкцію' are exactly how a Ukrainian...",
       "issue_ids": [
-        "REGISTER_INCONSISTENCY"
+        "UKRAINIAN_GRAMMAR_CALQUE"
       ],
       "findings": [
         {
-          "issue_id": "REGISTER_INCONSISTENCY",
+          "issue_id": "UKRAINIAN_GRAMMAR_CALQUE",
           "severity": "minor",
           "quote": "Пильну́й па́стки",
-          "replacement": "Стережі́ться пасто́к (or, to match the ви register elsewhere, Пильну́йте)",
-          "explanation": "Single-voice violation: «Пильну́й» is a ти (2sg) imperative, while the rest of the module body and all activity instructions address the learner with ви («переві́рте», «Напиші́ть», «Вста́вте», «Розподілі́ть»). The ти form is a lone register outlier a Ukrainian editor would harmonise. Secondarily, «пильнувати пастки» is a weak collocation — «пильнувати» + accusative reads as keep-watch-over/tend, whereas the intended «watch out for traps» is more natural as «стережіться пасток» / «уникайте...",
+          "replacement": "Стережи́ся пасто́к",
+          "explanation": "Government/collocation nit: 'пильнувати' (to guard, keep watch over something valuable — пильнувати дитину/майно) does not idiomatically take 'пастки' as its object, since one avoids traps rather than guards them. A native editor would use 'стерегтися + genitive' or 'уникати + genitive'. Borderline-tolerable in the colloquial register but flagged as the single residual naturalness defect.",
           "dimension": "naturalness"
         }
       ]
     },
     "decolonization": {
-      "score": 9.2,
-      "evidence": "\"trust the Ukrainian gender test, not an instinct from another language.\"",
+      "score": 9.5,
+      "evidence": "\"Use the feminine profession as the normal form for a woman:\"",
       "verdict": "PASS",
       "evidence_quotes": [
         "Use the feminine profession as the normal form for a woman:",
         "trust the Ukrainian gender test, not an instinct from another language.",
         "Соба́ка is masculine in Ukrainian; memorize мій соба́ка."
       ],
-      "rubric_mapping": "Module TYPE: topic-neutral (grammar — noun gender — plus vocabulary basics), so the topic-neutral anchor applies (9.0+ baseline when (a) canonical vocabulary, (c) grammar on Ukrainian terms, and strict anti-Russian-as-reference execution are present; learner-facing bad-form contrast is present here via the Пильну́й па́стки table). (1) 'Use the feminine profession as the normal form for a woman:' — FOR: feminitive-first (вчи́телька/лі́карка/акто́рка/співа́чка as the NORMAL form) is a distinctly...",
-      "flags": [
-        "out_of_level_textbook"
-      ]
+      "rubric_mapping": "Module TYPE = topic-neutral (A1 grammar / gender summary lesson), so I apply the topic-neutral anchor (9.0+ baseline when canonical vocabulary + authorized bad-form contrast + Ukrainian-terms teaching all hold). (1) 'Use the feminine profession as the normal form for a woman:' — FOR the dimension. Making фемінітиви (студе́нтка/вчи́телька/лі́карка/акто́рка/співа́чка) the primary form for a woman is a distinctly Ukrainian, de-Sovietized codification choice (Pravopys-2019 aligned) that rejects the..."
     },
     "engagement": {
-      "score": 8.5,
-      "evidence": "\"just memorize the course phrase **мій соба́ка**\"",
+      "score": 8.2,
+      "evidence": "\"У насту́пному мо́дулі ви познайо́митеся з прикме́тниками.\"",
       "verdict": "PASS",
       "evidence_quotes": [
-        "just memorize the course phrase **мій соба́ка**",
-        "The point is simple: trust the Ukrainian gender test, not an instinct",
-        "**Віта́ємо! Ви успі́шно заверши́ли мо́дуль 8 «Ре́чі ма́ють рід».**",
         "Cover the English support and say the Ukrainian aloud:",
-        "У насту́пному мо́дулі ви познайо́митеся з прикме́тниками."
+        "У насту́пному мо́дулі ви познайо́митеся з прикме́тниками.",
+        "Кла́сно! Вона́ до́бра вчи́телька."
       ],
-      "rubric_mapping": "Module TYPE: topic-neutral grammar/consolidation lesson (Lesson 3, Підсумок — the module-closing self-check). I assess residual engagement QUALITY (attention-hold, warmth, content-anchored address, real vs filler pedagogy), not gate-confirmed presence. (1) 'just memorize the course phrase **мій соба́ка**' — evidence FOR: a warm, peer-voice cognitive-load move ('You do not need a long exception list today') that reassures rather than lectures; it is anchored to the specific exception the learner..."
+      "rubric_mapping": "This is the module-closing summary lesson (A1, topic-neutral grammar consolidation); I score the residual QUALITY of engagement, not gate-checked presence. Quote 1 (\"Cover the English support and say the Ukrainian aloud:\") is evidence FOR: it is a content-anchored, active self-check device — the learner physically covers the English column and produces the Ukrainian, which holds attention through doing rather than reading. It is warm second-person address tied to the exact material just taught..."
     },
     "tone": {
-      "score": 7.5,
-      "evidence": "\"Пильну́й па́стки\"",
+      "score": 7.4,
+      "evidence": "\"They are diagnostic\nprops.\"",
       "verdict": "REVISE",
       "evidence_quotes": [
-        "The point is simple: trust the Ukrainian gender test, not an instinct",
-        "Пильну́й па́стки",
-        "Тепе́р переві́рте профе́сії, чолові́чі імена́ та ви́нятки"
+        "They are diagnostic\nprops.",
+        "You confidently use \"my\" forms and the construction \"I have...\".",
+        "Cover the English support and say the Ukrainian aloud:"
       ],
-      "rubric_mapping": "Module TYPE: topic-neutral A1 grammar/summary lesson; tone assessed for warm, single teacher voice per #R-SINGLE-VOICE-A1 and #R-AUDIENCE-LANGUAGE-A1 (residual judgment only; deterministic META_NARRATION/AI-slop gates already ran). Quote 1 ('The point is simple: trust the Ukrainian gender test, not an instinct') is evidence FOR: it is exactly the reassuring, peer-level, non-condescending register the North Star wants — it demystifies a trap instead of lecturing, mirrored by other warm lines...",
+      "rubric_mapping": "Quote 1 is evidence against tone: assessment-design jargon interrupts the otherwise direct teacher voice and describes the material's testing function instead of addressing the learner's task. Quote 2 is evidence against tone: the closure asserts confidence without observing the learner's performance, making the encouragement sound formulaic rather than personally credible. Quote 3 supports tone: it gives a concrete, respectful action anchored to Ukrainian practice. English scaffolding itself...",
+      "flags": [
+        "out_of_level_textbook: resources.yaml cites Grade 6 textbooks by Авраменко and Літвінова; the supplied A1 corpus-access...",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit"
+      ],
       "issue_ids": [
-        "R_SINGLE_VOICE_A1"
+        "ASSESSMENT_JARGON",
+        "UNEARNED_MASTERY_ASSERTION"
       ],
       "findings": [
         {
-          "issue_id": "R_SINGLE_VOICE_A1",
-          "severity": "medium",
-          "quote": "Пильну́й па́стки",
-          "replacement": "Пильну́йте па́стки",
-          "explanation": "Register inconsistency in the teacher voice: this heading addresses the learner with a 2sg (ти) imperative 'Пильну́й', while the rest of the lesson uniformly uses the 2pl (ви) register ('ви опанува́ли', 'Тепе́р переві́рте профе́сії', 'Напиші́ть 2–3 коро́ткі рядки́', 'Ви успі́шно заверши́ли мо́дуль 8'). A single lone ти form amid a fully ви module is a genuine single-voice slip an editor would normalize.",
+          "issue_id": "ASSESSMENT_JARGON",
+          "severity": "moderate",
+          "quote": "They are diagnostic props.",
+          "explanation": "The phrase shifts from adult-facing teaching into assessment-design terminology. The same distancing register appears in the workbook instruction, weakening the consistent, warm teacher voice.",
+          "dimension": "tone"
+        },
+        {
+          "issue_id": "UNEARNED_MASTERY_ASSERTION",
+          "severity": "minor",
+          "quote": "You confidently use \"my\" forms and the construction \"I have...\".",
+          "explanation": "The module closure declares the learner confident without evidence of their performance. A concrete statement of what they have practiced would provide more credible encouragement.",
           "dimension": "tone"
         }
       ]
@@ -116,7 +131,7 @@
       "naturalness",
       "tone"
     ],
-    "min_score": 7.5,
-    "min_dim": "tone"
+    "min_score": 7.0,
+    "min_dim": "pedagogical"
   }
 }
