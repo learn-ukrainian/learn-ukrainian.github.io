@@ -201,3 +201,20 @@ def test_trajectory_schema_preserve_negative_controls_reconciliation(trajectory_
         "restoration_era": "Відновлено в сучасному Правописі 2019.",
     }
     assert validator.is_valid(calque_full_ctx)
+
+
+def test_pilot_canary_receipt_schema_contract() -> None:
+    """Validate v1_pilot_canary_receipt schema against meta-schema and validate pilot canary receipt fixture."""
+    schema_path = CONTRACTS_DIR / "v1_pilot_canary_receipt.schema.json"
+    assert schema_path.is_file(), f"Missing schema: {schema_path}"
+    with schema_path.open("r", encoding="utf-8") as f:
+        schema = json.load(f)
+    jsonschema.Draft202012Validator.check_schema(schema)
+
+    receipt_path = REPO_ROOT / "data" / "projects" / "open_model_data" / "canary" / "pilot_canary_receipt.json"
+    assert receipt_path.is_file(), f"Missing receipt: {receipt_path}"
+    with receipt_path.open("r", encoding="utf-8") as rf:
+        receipt = json.load(rf)
+    validator = jsonschema.Draft202012Validator(schema)
+    errors = list(validator.iter_errors(receipt))
+    assert not errors, f"Validation errors on canary receipt: {[e.message for e in errors]}"

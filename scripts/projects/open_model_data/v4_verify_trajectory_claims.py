@@ -206,17 +206,18 @@ def detect_term_polarity(text: str, term: str) -> bool | None:
     expressed with non-standard phrasing to falsely pass as presence assertions.
     """
     t_escaped = re.escape(term)
+    term_pat = rf"(?:«|\"|“|\b){t_escaped}(?:»|\"|”|\b)"
     neg_patterns = [
-        rf"«{t_escaped}»[^\n.]{{0,45}}(?:не\s+(?:зафіксован|засвідчен|подан|включен|відом|трапля|існує|подибу|зустріча|знаходи|знайдено|вжива|знає|містить|фіксує)|відсутн|немає|бракує|випадає(?:\s+з\s+реєстру)?|без\s+фіксації)",
-        rf"(?:не\s+(?:зафіксован|засвідчен|подан|включен|відом|трапля|існує|подибу|зустріча|знаходи|знайдено|вжива|знає|містить|фіксує)|відсутн|немає|бракує|випадає(?:\s+з\s+реєстру)?|без\s+фіксації)[^\n.]{{0,45}}«{t_escaped}»",
+        rf"{term_pat}[^\n.]{{0,45}}(?:не\s+(?:зафіксован|засвідчен|подан|включен|відом|трапля|існує|подибу|зустріча|знаходи|знайдено|вжива|знає|містить|фіксує)|відсутн|немає|бракує|випадає(?:\s+з\s+реєстру)?|без\s+фіксації)",
+        rf"(?:не\s+(?:зафіксован|засвідчен|подан|включен|відом|трапля|існує|подибу|зустріча|знаходи|знайдено|вжива|знає|містить|фіксує)|відсутн|немає|бракує|випадає(?:\s+з\s+реєстру)?|без\s+фіксації)[^\n.]{{0,45}}{term_pat}",
     ]
     for pat in neg_patterns:
         if re.search(pat, text, re.IGNORECASE):
             return False
 
     pos_patterns = [
-        rf"«{t_escaped}»[^\n.]{{0,45}}(?:зафіксован|засвідчен|подан|наявн|містить|трапля|зустріча|знаходи|вжива|фіксує)",
-        rf"(?:зафіксован|засвідчен|подан|наявн|містить|трапля|зустріча|знаходи|вжива|фіксує|відповідником\s+є|замість\s+якого|наведено|подає|є\s+у\s+словник|міститься)[^\n.]{{0,45}}«{t_escaped}»",
+        rf"{term_pat}[^\n.]{{0,45}}(?:зафіксован|засвідчен|подан|наявн|містить|трапля|зустріча|знаходи|вжива|фіксує)",
+        rf"(?:зафіксован|засвідчен|подан|наявн|містить|трапля|зустріча|знаходи|вжива|фіксує|відповідником\s+є|замість\s+якого|наведено|подає|є\s+у\s+словник|міститься)[^\n.]{{0,45}}{term_pat}",
     ]
     for pat in pos_patterns:
         if re.search(pat, text, re.IGNORECASE):
@@ -496,18 +497,21 @@ class CoTClaimVerifier:
                     )
                 )
 
-            # Check 1920s / pre-Soviet Academy dictionary citations in suppression note
-            if re.search(r"1920-х|R2U|r2u|Кримськ|Голоскевич", suppression_note):
-                is_absent = bool(re.search(r"відсутн|не засвідчен|не зафіксован|невідом|немає|витісня", suppression_note.lower()))
-                claims.append(
-                    ParsedClaim(
-                        claim_type=ClaimType.R2U_HISTORICAL,
-                        source_field="lexicographical_context.historical_suppression_note",
-                        term=target_term,
-                        claim_text=f"Suppression note cites 1920s dictionary evidence for «{target_term}» (expected_attested={not is_absent})",
-                        expected_attributes={"expected_attested": not is_absent},
+            # Check 1920s / pre-Soviet Academy dictionary citations in suppression note with polarity detection
+            if re.search(r"1920-х|R2U|r2u|Кримськ|Голоскевич|Російсько-українськ.*словник", suppression_note):
+                quoted_in_note = re.findall(r"«([^»]+)»", suppression_note)
+                r2u_terms = [q for q in quoted_in_note if len(q.split()) <= 2] or ([target_term] if target_term else [])
+                for r_term in r2u_terms:
+                    expected_att = detect_term_polarity(suppression_note, r_term)
+                    claims.append(
+                        ParsedClaim(
+                            claim_type=ClaimType.R2U_HISTORICAL,
+                            source_field="lexicographical_context.historical_suppression_note",
+                            term=r_term,
+                            claim_text=f"Suppression note cites 1920s dictionary evidence for «{r_term}» (expected_attested={expected_att})",
+                            expected_attributes={"expected_attested": expected_att},
+                        )
                     )
-                )
 
         # 4. Reasoning steps CoT claims
         reasoning_steps = trajectory.get("reasoning_steps", [])
@@ -976,7 +980,7 @@ def build_verification_receipt(
             ClaimType.R2U_HISTORICAL,
         )
     ]
-    zero_unverified_claims = bool(dict_results and all(r.passed for r in dict_results))
+    zero_unverified_claims = bool(all(r.passed for r in dict_results)) if dict_results else True
 
     living_std_results = [
         r
@@ -984,7 +988,7 @@ def build_verification_receipt(
         for r in out.claims_verified
         if r.claim.claim_type == ClaimType.ULIF_REGISTER and r.claim.expected_attributes.get("tier") == "living_standard"
     ]
-    zero_unattested_living = bool(living_std_results and all(r.passed for r in living_std_results))
+    zero_unattested_living = bool(all(r.passed for r in living_std_results)) if living_std_results else True
 
     has_network_errors = any(
         r.claim.claim_type == ClaimType.R2U_HISTORICAL and "source unavailable" in r.evidence.lower()

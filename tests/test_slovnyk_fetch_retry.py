@@ -25,6 +25,7 @@ class _FakeResp:
 def sleeps(monkeypatch):
     """Neutralize delays; record backoff sleep durations."""
     recorded: list[float] = []
+    monkeypatch.delenv("LEXICON_SLOVNYK_OFFLINE", raising=False)
     monkeypatch.setattr(em, "_polite_slovnyk_delay", lambda: None)
     monkeypatch.setattr(em.time, "sleep", recorded.append)
     monkeypatch.setattr(em.random, "uniform", lambda a, b: 0.0)

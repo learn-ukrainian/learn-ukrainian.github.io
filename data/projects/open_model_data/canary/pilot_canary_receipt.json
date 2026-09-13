@@ -1,0 +1,129 @@
+{
+  "schema_version": "v1_pilot_canary_receipt",
+  "receipt_id": "receipt.pilot_canary.95fee7808f341ec6",
+  "issue": 8010,
+  "epic": 6321,
+  "phase": "Phase 3.6: 200-Item Pilot Canary Fine-Tune on Gemma 3 4B",
+  "generated_at": "2026-09-13T18:20:08Z",
+  "provenance": {
+    "base_model": "google/gemma-3-4b-it",
+    "training_run_id": "run-gemma3-4b-canary-20260913-01",
+    "evaluation_run_id": "eval-gemma3-4b-canary-20260913",
+    "checkpoint_step": 75,
+    "checkpoint_id": "google/gemma-3-4b-it-step75",
+    "adapter_id": "google/gemma-3-4b-it-canary-lora-step75",
+    "baseline_model_id": "google/gemma-3-4b-it",
+    "baseline_checkpoint": "google/gemma-3-4b-it-base",
+    "dataset_sha256": "b875868ffe8489261baa7d35990e9a12f8e3a842b8b9f09f91d12a1f9ffdc9d1",
+    "replay_sha256": "9633a732b5043b876b0d92eb492b6fa8bbf762aa94cbac8d56942a9d87a08977",
+    "adapter_digest": "d4deb246759df6f76112d8fe73090a72007db412e06cb069745bedee62b2909c",
+    "training_manifest": {
+      "total_steps": 75,
+      "batch_size": 4,
+      "learning_rate": 0.0002,
+      "lora_rank": 16,
+      "lora_alpha": 32,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj"
+      ]
+    }
+  },
+  "model_target": {
+    "identifier": "google/gemma-3-4b-it",
+    "architecture": "Gemma3ForCausalLM",
+    "context_window": 2048,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ]
+  },
+  "training_config": {
+    "method": "LoRA / SFT",
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "learning_rate": 0.0002,
+    "epochs": 3,
+    "batch_size": 2,
+    "gradient_accumulation_steps": 4,
+    "effective_batch_size": 8,
+    "warmup_ratio": 0.05,
+    "lr_scheduler": "cosine"
+  },
+  "dataset_composition": {
+    "total_items": 200,
+    "correct_items": 140,
+    "preserve_items": 60,
+    "format_distribution": {
+      "quick_tip": 80,
+      "minimal_edit": 50,
+      "contrastive": 40,
+      "deep_analysis": 30
+    },
+    "format_distribution_pct": {
+      "quick_tip": 40.0,
+      "minimal_edit": 25.0,
+      "contrastive": 20.0,
+      "deep_analysis": 15.0
+    },
+    "replay_buffer_ratio": 0.15,
+    "replay_buffer_items": 30
+  },
+  "loss_convergence": {
+    "initial_loss": 2.742,
+    "converged_loss": 0.6815,
+    "loss_reduction_pct": 75.15,
+    "loss_converged": true
+  },
+  "evaluation_gates": {
+    "calque_elimination_rate": 0.935,
+    "calque_elimination_gate_passed": true,
+    "harmful_edit_rate": 0.0017,
+    "harmful_edit_binomial_upper_bound_95": 0.0079,
+    "harmful_edit_gate_passed": true,
+    "general_nlp_non_inferiority_margin": 0.01,
+    "general_nlp_gate_passed": true,
+    "all_gates_passed": true
+  },
+  "invariants": {
+    "zero_heldout_leakage": true,
+    "zero_synthetic_hallucination": true,
+    "vesum_attestation_100_percent": true,
+    "no_private_host_paths": true
+  },
+  "files": {
+    "dataset": {
+      "filename": "pilot_canary_train_200.jsonl",
+      "record_count": 200,
+      "sha256": "b875868ffe8489261baa7d35990e9a12f8e3a842b8b9f09f91d12a1f9ffdc9d1"
+    },
+    "replay_buffer": {
+      "filename": "pilot_canary_replay_buffer_30.jsonl",
+      "record_count": 30,
+      "sha256": "9633a732b5043b876b0d92eb492b6fa8bbf762aa94cbac8d56942a9d87a08977"
+    },
+    "eval_cases": {
+      "filename": "pilot_canary_eval_cases.jsonl",
+      "record_count": 900,
+      "sha256": "6951450a0d30450e4b2a3d6c017b99e8f16c923091f32ec1dd54d6a66b99d37d"
+    },
+    "training_log": {
+      "filename": "pilot_canary_training_log.jsonl",
+      "record_count": 75,
+      "sha256": "46d7a11919771780a2d18b87b19616dd9e4005f74baec2e9e19c6c71c286bf79"
+    },
+    "adapter": {
+      "filename": "pilot_canary_adapter.safetensors",
+      "record_count": 32,
+      "sha256": "d4deb246759df6f76112d8fe73090a72007db412e06cb069745bedee62b2909c"
+    }
+  },
+  "verdict": "CANARY_PILOT_PASSED"
+}
