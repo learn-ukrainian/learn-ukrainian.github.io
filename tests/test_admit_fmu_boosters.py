@@ -68,3 +68,60 @@ def test_fmu_booster_manifest_pointer_and_fingerprint():
         "fmu" in pointer["richness_gate"]["override_reason"].lower()
         or "booster" in pointer["richness_gate"]["override_reason"].lower()
     )
+
+
+def test_fmu_booster_unsupported_attribution_rejected():
+    from scripts.lexicon.admit_fmu_boosters import EPISODES_DATA, build_new_atlas_entry
+
+    ep = EPISODES_DATA[0]
+    entry = build_new_atlas_entry("будинок на колесах", "noun", "RV / camper", ep)
+
+    # Reject fake VTS attribution and mirror URLs
+    for card in entry.get("definition_cards", []):
+        assert card["source_dict"] != "vts", "Curated FMU definitions must not claim VTS source_dict"
+        assert "slovnyk.me" not in card.get("source_url", ""), "Mirror URLs are forbidden"
+        assert card["source_dict"] == "ohoiko"
+        assert "ukrainianlessons.com" in card["source_url"]
+
+    meaning = entry.get("enrichment", {}).get("meaning", {})
+    assert meaning.get("source") != "vts"
+    assert "slovnyk.me" not in meaning.get("source_url", "")
+
+
+def test_fmu_booster_phrases_not_vesum_attested():
+    from scripts.lexicon.admit_fmu_boosters import EPISODES_DATA, build_new_atlas_entry
+
+    ep = EPISODES_DATA[0]
+    phrase_entry = build_new_atlas_entry("будинок на колесах", "noun", "camper", ep)
+    assert phrase_entry["heritage_status"]["vesum_attested"] is False
+    assert phrase_entry["entry_type"] == "phrase"
+
+    word_entry = build_new_atlas_entry("менеджерка", "noun", "manager", ep)
+    assert word_entry["heritage_status"]["vesum_attested"] is True
+    assert word_entry["entry_type"] == "lemma"
+
+
+def test_fmu_booster_dry_run_preserves_files():
+    from scripts.lexicon.build_fmu_booster_inventory import build_inventory_and_decisions
+
+    inv_bytes_before = INV_PATH.read_bytes()
+    dec_bytes_before = DECISIONS_PATH.read_bytes()
+
+    inv_doc, dec_doc = build_inventory_and_decisions(dry_run=True)
+    assert len(inv_doc["sources"]) == 13
+    assert len(dec_doc["decisions"]) == 308
+
+    assert INV_PATH.read_bytes() == inv_bytes_before
+    assert DECISIONS_PATH.read_bytes() == dec_bytes_before
+
+
+def test_fmu_booster_repeated_episodes_provenance_preserved():
+    from scripts.lexicon.admit_fmu_boosters import EPISODES_DATA
+
+    word_to_eps = {}
+    for ep in EPISODES_DATA:
+        for lemma, _pos, _gloss in ep["words"]:
+            word_to_eps.setdefault(lemma, []).append(ep["num"])
+
+    assert len(word_to_eps["касир"]) >= 2
+    assert len(word_to_eps["касирка"]) >= 2

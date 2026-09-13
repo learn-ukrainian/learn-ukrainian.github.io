@@ -461,7 +461,7 @@ INV_REL = "data/lexicon/source-inventory/ohoiko-fmu-booster-vocabulary.yaml"
 DECISIONS_REL = "data/lexicon/source-inventory-review-decisions/2026-09-13-ohoiko-fmu-booster-approve.yaml"
 
 
-def build_inventory_and_decisions():
+def build_inventory_and_decisions(*, dry_run: bool = False):
     sources = []
     decisions = []
 
@@ -554,15 +554,18 @@ def build_inventory_and_decisions():
         "decisions": decisions,
     }
 
-    INV_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with open(INV_PATH, "w", encoding="utf-8") as f:
-        yaml.safe_dump(inv_doc, f, allow_unicode=True, sort_keys=False, width=1000)
-    print(f"Wrote {INV_PATH} ({len(sources)} sources, {sum(len(s['headwords']) for s in sources)} headwords)")
+    if not dry_run:
+        INV_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with open(INV_PATH, "w", encoding="utf-8") as f:
+            yaml.safe_dump(inv_doc, f, allow_unicode=True, sort_keys=False, width=1000)
+        print(f"Wrote {INV_PATH} ({len(sources)} sources, {sum(len(s['headwords']) for s in sources)} headwords)")
 
-    DECISIONS_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with open(DECISIONS_PATH, "w", encoding="utf-8") as f:
-        yaml.safe_dump(decisions_doc, f, allow_unicode=True, sort_keys=False, width=1000)
-    print(f"Wrote {DECISIONS_PATH} ({len(decisions)} decisions)")
+        DECISIONS_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with open(DECISIONS_PATH, "w", encoding="utf-8") as f:
+            yaml.safe_dump(decisions_doc, f, allow_unicode=True, sort_keys=False, width=1000)
+        print(f"Wrote {DECISIONS_PATH} ({len(decisions)} decisions)")
+
+    return inv_doc, decisions_doc
 
 
 if __name__ == "__main__":

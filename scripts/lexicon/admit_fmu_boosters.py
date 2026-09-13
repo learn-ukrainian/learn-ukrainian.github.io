@@ -24,7 +24,6 @@ import sqlite3
 import subprocess
 import sys
 import tempfile
-import urllib.parse
 from pathlib import Path
 from typing import Any
 
@@ -554,7 +553,7 @@ NEW_DEFINITIONS = {
 }
 
 
-def build_inventory_and_decisions():
+def build_inventory_and_decisions(*, dry_run: bool = False):
     sources = []
     decisions = []
     seen_lemmas = {}
@@ -645,35 +644,44 @@ def build_inventory_and_decisions():
         "decisions": decisions,
     }
 
-    INV_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with open(INV_PATH, "w", encoding="utf-8") as f:
-        yaml.safe_dump(inv_doc, f, allow_unicode=True, sort_keys=False, width=1000)
+    if not dry_run:
+        INV_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with open(INV_PATH, "w", encoding="utf-8") as f:
+            yaml.safe_dump(inv_doc, f, allow_unicode=True, sort_keys=False, width=1000)
 
-    DECISIONS_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with open(DECISIONS_PATH, "w", encoding="utf-8") as f:
-        yaml.safe_dump(decisions_doc, f, allow_unicode=True, sort_keys=False, width=1000)
+        DECISIONS_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with open(DECISIONS_PATH, "w", encoding="utf-8") as f:
+            yaml.safe_dump(decisions_doc, f, allow_unicode=True, sort_keys=False, width=1000)
 
-    validate_decision_file(DECISIONS_PATH)
-    read_source_inventory(INV_PATH)
+        validate_decision_file(DECISIONS_PATH)
+        read_source_inventory(INV_PATH)
+
+    return inv_doc, decisions_doc
 
 
 def build_new_atlas_entry(lemma: str, pos: str, gloss: str, source_info: dict[str, Any]) -> dict[str, Any]:
     def_text = NEW_DEFINITIONS.get(lemma, f"{gloss.capitalize()}.")
-    source_url = f"https://slovnyk.me/dict/vts/{urllib.parse.quote(lemma)}"
+    ep_num = source_info.get("num", "00")
+    ep_id = f"ohoiko-fmu-booster-ep-{ep_num}"
+    locator = f"fmu-booster-ep-{ep_num}"
+    ep_url = source_info.get("url", f"https://www.ukrainianlessons.com/fmu{int(ep_num)}/")
+
     en_terms = [g.strip() for g in re.split(r"[/,;]", gloss) if g.strip()]
     if not en_terms:
         en_terms = [gloss]
 
-    ep_num = source_info.get("num", "00")
-    ep_id = f"ohoiko-fmu-booster-ep-{ep_num}"
-    locator = f"fmu-booster-ep-{ep_num}"
+    # Authentic source attribution: curated educational vocabulary from Anna Ohoiko FMU Booster
+    source_label = f"5 Minute Ukrainian (Анна Огойко, епізод {int(ep_num)})"
+    is_phrase = " " in lemma
+    # Multi-word phrases are not attested in VESUM as single lemmas
+    is_vesum_attested = bool(verify_word(lemma)) if not is_phrase else False
 
     return {
         "lemma": lemma,
         "url_slug": _slug_for_url(lemma),
         "gloss": gloss,
         "pos": pos,
-        "entry_type": "lemma",
+        "entry_type": "phrase" if is_phrase else "lemma",
         "review_state": "approved",
         "primary_source": "source_inventory_grow",
         "source_provenance": [
@@ -695,25 +703,25 @@ def build_new_atlas_entry(lemma: str, pos: str, gloss: str, source_info: dict[st
             "russian_shadow": False,
             "sovietization_risk": 0,
             "calque_warning": None,
-            "vesum_attested": bool(verify_word(lemma) or []) or (" " in lemma),
+            "vesum_attested": is_vesum_attested,
             "warning_severity": "none",
         },
         "definition_cards": [
             {
-                "id": "vts",
-                "source_dict": "vts",
-                "source_label": "ВТС (Великий тлумачний словник сучасної української мови)",
+                "id": "ohoiko",
+                "source_dict": "ohoiko",
+                "source_label": source_label,
                 "definition": def_text,
                 "definitions": [def_text],
-                "source_url": source_url,
+                "source_url": ep_url,
                 "sovietization_risk": 0,
             }
         ],
         "enrichment": {
             "meaning": {
                 "uk": def_text,
-                "source": "vts",
-                "source_url": source_url,
+                "source": "ohoiko",
+                "source_url": ep_url,
             },
             "translation": {
                 "en": en_terms,
@@ -721,14 +729,14 @@ def build_new_atlas_entry(lemma: str, pos: str, gloss: str, source_info: dict[st
                 "source": "learner_english_gloss",
                 "gloss": gloss,
             },
-            "sources": ["vts", "learner_english_gloss"],
+            "sources": ["ohoiko", "learner_english_gloss"],
         },
     }
 
 
 def admit_fmu_boosters(*, dry_run: bool = False) -> dict[str, Any]:
     print("Building inventory and decisions...")
-    build_inventory_and_decisions()
+    build_inventory_and_decisions(dry_run=dry_run)
 
     print(f"Loading hydrated manifest from {MANIFEST_PATH}...")
     manifest_data = load_manifest(MANIFEST_PATH)
@@ -736,16 +744,21 @@ def admit_fmu_boosters(*, dry_run: bool = False) -> dict[str, Any]:
     entries_by_key = {_lemma_key(str(e.get("lemma") or "")): e for e in entries if isinstance(e, dict)}
     print(f"Existing manifest entries: {len(entries_by_key)}")
 
-    # Collect source mapping for all booster words
-    word_to_source = {}
+    # Collect all occurrences for all booster words (preserve repeated episodes)
+    word_to_episodes: dict[str, list[dict[str, Any]]] = {}
     for ep in EPISODES_DATA:
         for lemma, pos, gloss in ep["words"]:
-            if lemma not in word_to_source:
-                word_to_source[lemma] = (pos, gloss, ep)
+            word_to_episodes.setdefault(lemma, []).append(
+                {
+                    "pos": pos,
+                    "gloss": gloss,
+                    "ep": ep,
+                }
+            )
 
-    # 1. Overlay provenance on existing entries
+    # 1. Overlay provenance on existing entries for ALL distinct episodes
     existing_updated = 0
-    for lemma, (_pos, _gloss, ep) in word_to_source.items():
+    for lemma, ep_list in word_to_episodes.items():
         key = _lemma_key(lemma)
         if key in entries_by_key:
             entry = entries_by_key[key]
@@ -753,34 +766,63 @@ def admit_fmu_boosters(*, dry_run: bool = False) -> dict[str, Any]:
             if prov_list is None:
                 prov_list = []
                 entry["source_provenance"] = prov_list
-            locator = f"fmu-booster-ep-{ep['num']}"
-            ep_id = f"ohoiko-fmu-booster-ep-{ep['num']}"
-            already_has = any(
-                isinstance(p, dict) and p.get("source_family") == "ohoiko" and p.get("source_locator") == locator
-                for p in prov_list
-            )
-            if not already_has:
-                prov_list.append(
-                    {
-                        "source_family": "ohoiko",
-                        "source_locator": locator,
-                        "source_id": ep_id,
-                        "source_title": f"Anna Ohoiko - 5 Minute Ukrainian Episode {int(ep['num'])}",
-                        "extraction_mode": "curated_headword",
-                        "visibility": "public",
-                        "redistributable": True,
-                    }
+
+            entry_updated = False
+            for item in ep_list:
+                ep = item["ep"]
+                locator = f"fmu-booster-ep-{ep['num']}"
+                ep_id = f"ohoiko-fmu-booster-ep-{ep['num']}"
+                already_has = any(
+                    isinstance(p, dict) and p.get("source_family") == "ohoiko" and p.get("source_locator") == locator
+                    for p in prov_list
                 )
+                if not already_has:
+                    prov_list.append(
+                        {
+                            "source_family": "ohoiko",
+                            "source_locator": locator,
+                            "source_id": ep_id,
+                            "source_title": f"Anna Ohoiko - 5 Minute Ukrainian Episode {int(ep['num'])}",
+                            "extraction_mode": "curated_headword",
+                            "visibility": "public",
+                            "redistributable": True,
+                        }
+                    )
+                    entry_updated = True
+            if entry_updated:
                 existing_updated += 1
 
     print(f"Updated provenance for {existing_updated} existing manifest entries.")
 
-    # 2. Add newly admitted entries
+    # 2. Add or update newly admitted entries
     new_entries = []
-    for lemma, (pos, gloss, ep) in word_to_source.items():
+    for lemma, ep_list in word_to_episodes.items():
         key = _lemma_key(lemma)
-        if key not in entries_by_key:
-            new_entry = build_new_atlas_entry(lemma, pos, gloss, ep)
+        first_item = ep_list[0]
+        is_booster_admitted = False
+        if key in entries_by_key:
+            entry = entries_by_key[key]
+            if lemma in NEW_DEFINITIONS and entry.get("primary_source") == "source_inventory_grow":
+                is_booster_admitted = True
+
+        if key not in entries_by_key or is_booster_admitted:
+            new_entry = build_new_atlas_entry(lemma, first_item["pos"], first_item["gloss"], first_item["ep"])
+            for extra_item in ep_list[1:]:
+                extra_ep = extra_item["ep"]
+                extra_loc = f"fmu-booster-ep-{extra_ep['num']}"
+                extra_id = f"ohoiko-fmu-booster-ep-{extra_ep['num']}"
+                if not any(p.get("source_locator") == extra_loc for p in new_entry["source_provenance"]):
+                    new_entry["source_provenance"].append(
+                        {
+                            "source_family": "ohoiko",
+                            "source_locator": extra_loc,
+                            "source_id": extra_id,
+                            "source_title": f"Anna Ohoiko - 5 Minute Ukrainian Episode {int(extra_ep['num'])}",
+                            "extraction_mode": "curated_headword",
+                            "visibility": "public",
+                            "redistributable": True,
+                        }
+                    )
             new_entries.append(new_entry)
             entries_by_key[key] = new_entry
 
@@ -811,14 +853,22 @@ def admit_fmu_boosters(*, dry_run: bool = False) -> dict[str, Any]:
             "dry_run": True,
         }
 
+    print(f"Updating fingerprint sidecar {FINGERPRINT_PATH}...")
+    fp_info = write_fingerprint(FINGERPRINT_PATH, root=PROJECT_ROOT)
+    manifest_fingerprint = fp_info["fingerprint"]
+    schema_ver = fp_info.get("schema_version", 1)
+
+    # Embed the exact fresh fingerprint inside manifest_data before serialization
+    manifest_data["manifest_fingerprint"] = {
+        "schema_version": schema_ver,
+        "fingerprint": manifest_fingerprint,
+    }
+
     print(f"Writing updated manifest to {MANIFEST_PATH}...")
     manifest_bytes = (json.dumps(manifest_data, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
     MANIFEST_PATH.write_bytes(manifest_bytes)
     json_sha256 = hashlib.sha256(manifest_bytes).hexdigest()
     json_bytes = len(manifest_bytes)
-
-    print(f"Updating fingerprint sidecar {FINGERPRINT_PATH}...")
-    manifest_fingerprint = write_fingerprint(FINGERPRINT_PATH, root=PROJECT_ROOT)["fingerprint"]
 
     print("Compressing manifest to GZ asset...")
     gz_bytes = gzip.compress(manifest_bytes, mtime=0)
@@ -850,6 +900,7 @@ def admit_fmu_boosters(*, dry_run: bool = False) -> dict[str, Any]:
     pointer_data["gz_bytes"] = len(gz_bytes)
     pointer_data["json_bytes"] = json_bytes
     pointer_data["manifest_fingerprint"] = manifest_fingerprint
+    pointer_data["fingerprint_schema_version"] = schema_ver
     pointer_data["richness_gate"]["override_reason"] = (
         "Admit FMU Vocabulary Booster lists and overlay Anna Ohoiko provenance (#7454, #6370)"
     )
