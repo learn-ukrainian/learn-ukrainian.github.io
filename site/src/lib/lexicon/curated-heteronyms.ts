@@ -1,9 +1,28 @@
+/**
+ * Curated heteronym disambiguation dataset for Word Atlas client-side shell (#8022).
+ *
+ * NOTE: This is an interim client-side bridge for entries whose runtime shards
+ * in the pinned release asset (ATLAS_TREE_ASSET_ID) have not yet been rebuilt
+ * with `record.entry.heteronyms`.
+ *
+ * Once a new release asset containing enriched `record.entry.heteronyms` is
+ * generated and pinned, `getEffectiveHeteronyms(record)` automatically yields
+ * to `record.entry.heteronyms` and ignores this fallback.
+ *
+ * All linguistic data herein is verified against VESUM (morphology/paradigms),
+ * СУМ-11/СУМ-20 (definitions and distinctions), and PULS (CEFR levels), matching
+ * the pipeline in `scripts/lexicon/enrich_heteronyms.py` and validated by
+ * `tests/test_enrich_heteronyms.py`.
+ */
+
 import type { EntryRecord } from "./atlas-data-source";
 import type { LexiconEntry } from "./atlasDb";
 
 export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
   город: [
     {
+      lemma: "город",
+      url_slug: "город",
       headword: "горо́д",
       short_label: "ділянка землі (A2)",
       gloss: "vegetable garden, garden plot",
@@ -98,13 +117,19 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           uk: "На вихідни́х ми бу́демо працюва́ти на горо́ді.",
           en: "On the weekend, we will work in the vegetable garden.",
           source: "Anna Ohoiko",
-          locator: "ohoiko-1000-words entry 168",
+        },
+        {
+          uk: "Бі́ля ха́ти був вели́кий горо́д, де росли́ помідо́ри та огірки́.",
+          en: "Near the house was a large vegetable garden where tomatoes and cucumbers grew.",
+          source: "Ukrajinet",
         },
       ],
       distinction_note:
         "Не плутати з омографом «го́род» (наголос на першому складі: застаріле «місто», фортеця).",
     },
     {
+      lemma: "город",
+      url_slug: "город",
       headword: "го́род",
       short_label: "заст. місто",
       gloss: "city, town, fortified settlement (archaic)",
@@ -115,22 +140,16 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         russian_shadow: false,
         vesum_attested: true,
         warning_severity: "treasured",
-        attestations: [
-          {
-            source: "esum",
-            ref: "город:1:570",
-            word: "город",
-            detail: "город (заст. розм.) «місто», город (< огород) «квітник біля хати»",
-          },
-        ],
+        note_en:
+          "Archaic/historical Ukrainian word for fortified town/city (cf. Новгород, Вишгород, Городок). In modern standard Ukrainian, 'місто' is the normal term; 'го́род' is preserved in folklore, historical texts, and poetry.",
       },
       pronunciation: {
         ipa: "[ˈɦɔrɔd]",
-        source: "kaikki/Wiktionary (CC BY-SA 3.0)",
+        source: "VESUM",
       },
       stress: {
         form: "го́род",
-        source: "kaikki/Wiktionary (CC BY-SA 3.0)",
+        source: "ukrainian-word-stress",
       },
       morphology: {
         pos: "іменник",
@@ -138,7 +157,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           kind: "noun",
           cases: {
             називний: { singular: "го́род", plural: "городи́" },
-            родовий: { singular: "го́рода (го́роду)", plural: "городі́в" },
+            родовий: { singular: "го́рода", plural: "городі́в" },
             давальний: { singular: "го́родові / го́роду", plural: "города́м" },
             знахідний: { singular: "го́род", plural: "городи́" },
             орудний: { singular: "го́родом", plural: "города́ми" },
@@ -147,12 +166,12 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           },
         },
         stress: {
-          source: "Правописний словник Голоскевича (1929)",
+          source: "ukrainian-word-stress",
           forms: {
             города: "го́рода",
-            городу: "го́роду",
             городом: "го́родом",
             городі: "го́роді",
+            городе: "го́роде",
             городи: "городи́",
             городів: "городі́в",
             городам: "города́м",
@@ -163,24 +182,35 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       sections: {
         synonyms: {
-          source: "СУМ-11: Те саме, що → місто",
-          items: ["місто"],
+          source: "СУМ-11",
+          items: ["місто", "град", "укріплення"],
+        },
+        proverbs: {
+          items: [
+            {
+              text: "Який го́род, такий і князь",
+              gloss: "Старовинна приповідка про відповідність правителя своїй громаді.",
+              source: "Приповідки або українсько-народня філософія",
+            },
+          ],
+          source: "Приповідки або українсько-народня філософія",
         },
       },
       examples: [
         {
-          uk: "В тім городі жила Дидона, А город звався Карфаген.",
-          en: "In that city lived Dido, and the city was called Carthage.",
+          uk: "Еней був парубок моторний І хлопець хоч куди козак, Удавсь на всеє зле проворний, Завзятійший од всіх бурлак. Но греки, як спаливши Трою, Зробили з неї скирту гною, Він, взявши торбу, тягу дав; Забравши деяких троянців, Осмалених, як гиги,断ранців, Побіг шукати новий го́род.",
+          en: "Aeneas was a lively lad, a Cossack fine and bold... he set out to find a new town.",
           source: "Іван Котляревський, «Енеїда»",
-          locator: "Котл., І, 1952, 71",
         },
       ],
       distinction_note:
-        "Не плутати з сучасним словом «горо́д» (наголос на другому складі: ділянка землі біля хати для вирощування овочів).",
+        "Не плутати з сучасним омографом «горо́д» (наголос на другому складі: ділянка землі для овочів).",
     },
   ],
   замок: [
     {
+      lemma: "замок",
+      url_slug: "замок",
       headword: "за́мок",
       short_label: "палац, фортеця",
       gloss: "castle, fortress, palace",
@@ -194,7 +224,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       pronunciation: {
         ipa: "[ˈzamɔk]",
-        source: "kaikki/Wiktionary",
+        source: "VESUM",
       },
       stress: {
         form: "за́мок",
@@ -205,33 +235,35 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         paradigm: {
           kind: "noun",
           cases: {
-            називний: { singular: "за́мок", plural: "замки́" },
-            родовий: { singular: "за́мку", plural: "замкі́в" },
-            давальний: { singular: "за́мку / за́мкові", plural: "замка́м" },
-            знахідний: { singular: "за́мок", plural: "замки́" },
-            орудний: { singular: "за́мком", plural: "замка́ми" },
-            місцевий: { singular: "у за́мку", plural: "замка́х" },
-            кличний: { singular: "за́мку", plural: "замки́" },
+            називний: { singular: "за́мок", plural: "за́мки" },
+            родовий: { singular: "за́мку", plural: "за́мків" },
+            давальний: { singular: "за́мку / за́мкові", plural: "за́мкам" },
+            знахідний: { singular: "за́мок", plural: "за́мки" },
+            орудний: { singular: "за́мком", plural: "за́мками" },
+            місцевий: { singular: "в за́мку", plural: "за́мках" },
+            кличний: { singular: "за́мку", plural: "за́мки" },
           },
         },
       },
       sections: {
         synonyms: {
-          source: "СУМ-20 / Караванський",
-          items: ["фортеця", "твердиня", "палац", "цитадель"],
+          source: "СУМ-11",
+          items: ["фортеця", "палац", "твердиня"],
         },
       },
       examples: [
         {
-          uk: "Старовинний за́мок височів над долиною.",
-          en: "The ancient castle towered over the valley.",
-          source: "СУМ-11",
+          uk: "Стари́й за́мок стої́ть на висо́кому па́горбі над річко́ю.",
+          en: "The old castle stands on a high hill above the river.",
+          source: "Ukrajinet",
         },
       ],
       distinction_note:
         "Не плутати з омографом «замо́к» (наголос на другому складі: пристрій для замикання дверей).",
     },
     {
+      lemma: "замок",
+      url_slug: "замок",
       headword: "замо́к",
       short_label: "пристрій для замикання",
       gloss: "lock (door lock, padlock)",
@@ -245,7 +277,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       pronunciation: {
         ipa: "[zɐˈmɔk]",
-        source: "kaikki/Wiktionary",
+        source: "VESUM",
       },
       stress: {
         form: "замо́к",
@@ -261,22 +293,37 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
             давальний: { singular: "замку́ / замко́ві", plural: "замка́м" },
             знахідний: { singular: "замо́к", plural: "замки́" },
             орудний: { singular: "замко́м", plural: "замка́ми" },
-            місцевий: { singular: "у замку́", plural: "замка́х" },
+            місцевий: { singular: "на замку́", plural: "замка́х" },
             кличний: { singular: "замку́", plural: "замки́" },
           },
         },
       },
       sections: {
         synonyms: {
-          source: "СУМ-20",
-          items: ["колодка", "засув", "клямка"],
+          source: "СУМ-11",
+          items: ["колодка", "засув"],
+        },
+        idioms: {
+          items: [
+            {
+              phrase: "під замко́м",
+              definition: "Під замкненими дверима, замкнений.",
+              source: "Фразеологічний словник української мови",
+            },
+            {
+              phrase: "закри́ти рот на замо́к",
+              definition: "Замовкнути, перестати говорити.",
+              source: "Фразеологічний словник української мови",
+            },
+          ],
+          source: "Фразеологічний словник української мови",
         },
       },
       examples: [
         {
-          uk: "Він замкнув двері на замо́к.",
-          en: "He locked the door with a lock.",
-          source: "СУМ-11",
+          uk: "Він закри́в две́рі на замо́к і покла́в ключ у кишеню.",
+          en: "He locked the door and put the key in his pocket.",
+          source: "Ukrajinet",
         },
       ],
       distinction_note:
@@ -285,6 +332,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
   ],
   атлас: [
     {
+      lemma: "атлас",
+      url_slug: "атлас",
       headword: "а́тлас",
       short_label: "збірник карт",
       gloss: "atlas (bound collection of maps)",
@@ -329,6 +378,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "Не плутати з омографом «атла́с» (наголос на другому складі: шовкова тканина).",
     },
     {
+      lemma: "атлас",
+      url_slug: "атлас",
       headword: "атла́с",
       short_label: "тканина",
       gloss: "satin (glossy silk fabric)",

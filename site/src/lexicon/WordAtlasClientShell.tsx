@@ -73,7 +73,7 @@ function bindEtymologyHandlers(root: ParentNode | null): () => void {
   };
 }
 
-function bindHeteronymHandlers(root: ParentNode | null): () => void {
+export function bindHeteronymHandlers(root: ParentNode | null): () => void {
   if (!root) return () => {};
   const tabs = root.querySelectorAll<HTMLElement>("[data-heteronym-target]");
   const panels = root.querySelectorAll<HTMLElement>("[data-heteronym-idx]");
@@ -156,12 +156,24 @@ function bindHeteronymHandlers(root: ParentNode | null): () => void {
     if (!rawHash) return;
     const clean = (s: string) => s.normalize("NFC").replace(/[\u0300\u0301]/g, "").toLowerCase();
     const cleanTarget = clean(rawHash);
-    tabs.forEach((tab, i) => {
-      const hw = tab.getAttribute("data-heteronym-headword") || "";
-      if (hw.normalize("NFC") === rawHash.normalize("NFC") || clean(hw) === cleanTarget) {
+
+    // 1. Try exact NFC headword match first
+    for (let i = 0; i < tabs.length; i++) {
+      const hw = tabs[i]?.getAttribute("data-heteronym-headword") || "";
+      if (hw.normalize("NFC") === rawHash.normalize("NFC")) {
         activateTab(i, false);
+        return;
       }
-    });
+    }
+
+    // 2. Fallback: match without combining stress marks (first match wins)
+    for (let i = 0; i < tabs.length; i++) {
+      const hw = tabs[i]?.getAttribute("data-heteronym-headword") || "";
+      if (clean(hw) === cleanTarget) {
+        activateTab(i, false);
+        return;
+      }
+    }
   };
 
   syncHash();

@@ -228,3 +228,18 @@ def test_apply_heteronyms_to_manifest(tmp_path: Path):
 
     assert entries["атлас"]["display_head"] == "а́тлас"
     assert "збірник карт" in entries["атлас"]["sections"]["synonyms"]["items"]
+
+
+def test_curated_heteronyms_ts_parity():
+    """Verify site/src/lib/lexicon/curated-heteronyms.ts aligns with enrich_heteronyms.py."""
+    ts_file = Path(__file__).resolve().parents[1] / "site" / "src" / "lib" / "lexicon" / "curated-heteronyms.ts"
+    assert ts_file.is_file(), f"Expected {ts_file} to exist"
+    content = ts_file.read_text(encoding="utf-8")
+
+    for lemma, expected_items in enrich_heteronyms.CURATED_HETERONYMS.items():
+        assert f"{lemma}: [" in content, f"Lemma {lemma} missing from curated-heteronyms.ts"
+        for item in expected_items:
+            headword = item["headword"]
+            assert f'headword: "{headword}"' in content, f"Headword {headword} missing from {lemma} in TS"
+            assert f'lemma: "{lemma}"' in content, f"Lemma {lemma} missing from TS"
+            assert f'url_slug: "{lemma}"' in content, f"url_slug {lemma} missing from TS"
