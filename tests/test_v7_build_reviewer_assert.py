@@ -304,6 +304,8 @@ def test_upgrade_allows_gemini_self_review_when_flagged(tmp_path: Path):
     plan = {"slug": "test-slug", "level": "a1"}
     module_dir = tmp_path / "module"
     module_dir.mkdir()
+    for name in linear_pipeline.WRITER_ARTIFACTS:
+        (module_dir / name).write_text("x\n", encoding="utf-8")
     with patch.dict(linear_pipeline.WRITER_DEFAULTS, {"agy-tools": {"model": "gemini-3.8-flash-high", "effort": "high"}}, clear=False):
         with patch.dict(linear_pipeline.REVIEWER_DEFAULTS, {"agy-tools": {"model": "gemini-3.8-flash-high", "effort": "high"}}, clear=False):
             with patch("scripts.build.v7_build._reviewer_for_writer", return_value="agy-tools"):
