@@ -11,7 +11,6 @@
     "target_term",
     "is_calque_or_russianism",
     "morphemic_breakdown",
-    "lexicographical_context",
     "vesum_attestation",
     "register_spectrum",
     "reasoning_steps",
@@ -57,10 +56,6 @@
     "lexicographical_context": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "historical_suppression_note",
-        "restoration_era"
-      ],
       "properties": {
         "historical_suppression_note": {
           "type": "string",
@@ -162,5 +157,32 @@
       "type": "string",
       "minLength": 10
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "is_calque_or_russianism": {
+            "const": true
+          }
+        },
+        "required": [
+          "is_calque_or_russianism"
+        ]
+      },
+      "then": {
+        "required": [
+          "lexicographical_context"
+        ],
+        "properties": {
+          "lexicographical_context": {
+            "required": [
+              "historical_suppression_note",
+              "restoration_era"
+            ]
+          }
+        }
+      }
+    }
+  ]
 }

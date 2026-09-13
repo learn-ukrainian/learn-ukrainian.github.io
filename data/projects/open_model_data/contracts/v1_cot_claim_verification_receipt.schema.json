@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_cot_claim_verification_receipt.schema.json",
+  "title": "CotClaimVerificationReceiptV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "issue",
+    "epic",
+    "generated_at",
+    "counts",
+    "invariants",
+    "files"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v1_cot_claim_verification_receipt"
+    },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^receipt\\.cot_claim_verifier\\.[a-f0-9]{16}$"
+    },
+    "issue": {
+      "const": 8009
+    },
+    "epic": {
+      "const": 6321
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_trajectories",
+        "trajectories_passed",
+        "trajectories_rejected",
+        "total_claims_verified",
+        "vesum_claims_verified",
+        "sum11_claims_verified",
+        "r2u_claims_verified",
+        "ulif_claims_verified"
+      ],
+      "properties": {
+        "total_trajectories": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "trajectories_passed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "trajectories_rejected": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_claims_verified": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "vesum_claims_verified": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sum11_claims_verified": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "r2u_claims_verified": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ulif_claims_verified": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "invariants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pass_rate_100_percent",
+        "zero_unverified_dictionary_claims",
+        "zero_unattested_living_standard_terms",
+        "zero_network_errors_as_missing_word",
+        "no_private_host_paths"
+      ],
+      "properties": {
+        "pass_rate_100_percent": {
+          "type": "boolean"
+        },
+        "zero_unverified_dictionary_claims": {
+          "type": "boolean"
+        },
+        "zero_unattested_living_standard_terms": {
+          "type": "boolean"
+        },
+        "zero_network_errors_as_missing_word": {
+          "type": "boolean"
+        },
+        "no_private_host_paths": {
+          "type": "boolean"
+        }
+      }
+    },
+    "files": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_trajectories",
+        "verified_trajectories",
+        "rejected_trajectories"
+      ],
+      "properties": {
+        "input_trajectories": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "filename",
+            "sha256",
+            "line_count"
+          ],
+          "properties": {
+            "filename": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "line_count": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "verified_trajectories": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "filename",
+            "sha256",
+            "line_count"
+          ],
+          "properties": {
+            "filename": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "line_count": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "rejected_trajectories": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "filename",
+            "sha256",
+            "line_count"
+          ],
+          "properties": {
+            "filename": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "line_count": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    }
+  }
+}
