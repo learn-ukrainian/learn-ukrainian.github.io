@@ -246,6 +246,17 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     section_to_lesson["__intro__"] = 1
     if ly.get("closes_module") != len(lessons):
         block("closes_module must name the last lesson")
+    last_md = module_dir / f"lesson-{len(lessons)}" / "module.md"
+    if last_md.is_file():
+        from scripts.build.lesson_assembler import (
+            _normalize_a1_example_fences,
+            _normalize_a1_module_close,
+        )
+        last_text = _normalize_a1_module_close(
+            _normalize_a1_example_fences(last_md.read_text(encoding="utf-8"))
+        )
+        if "Підсумок модуля" not in last_text and "Module summary" not in last_text:
+            block("last lesson must close with Підсумок модуля — Module summary (not Module completion)")
     exempt = {e.get("id"): e.get("reason") for e in ly.get("items_min_exempt", [])}
     if any(not reason for reason in exempt.values()):
         block("item exemptions require reasons")

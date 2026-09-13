@@ -17,7 +17,10 @@ once across the split (only whitespace and deterministic stress annotation may d
 The introduction belongs to lesson 1. Keep original section headings and activity IDs.
 Expand with useful transitions, explanations and breakdown tables; never pad or repeat
 paragraphs to meet the floor. Each lesson must meet its word_target (minimum 550);
-the whole module must reach at least 2000 prose tokens. The final lesson closes the module.
+the whole module must reach at least 2000 prose tokens. The final lesson closes the module. On that lesson, end with a bilingual heading
+`### Підсумок модуля — Module summary` and 4–7 bilingual bullets of what the
+learner can now do (module 9 shape). Do **not** title it `Завершення модуля` /
+`Module completion`, and do **not** put that close in a support table.
 
 Follow docs/best-practices/ulp-presentation-pattern.md and the v4 lesson contract.
 Use a direct, friendly teaching voice with NO named narrator and NO self-introduction.

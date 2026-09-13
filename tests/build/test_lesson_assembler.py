@@ -243,6 +243,24 @@ def test_a1_assembler_converts_text_fences_to_bilingual_bullets():
     assert "- **У мене́ є стіл.** — I have a table." in out
 
 
+def test_a1_assembler_rewrites_module_completion_to_summary():
+    from scripts.build.lesson_assembler import _normalize_a1_module_close
+
+    raw = (
+        "Workbook practice will make the pattern automatic.\n\n"
+        "### Заве́ршення мо́дуля — Module completion\n\n"
+        "| Украї́нська | English support |\n"
+        "| --- | --- |\n"
+        "| **Віта́ємо!** | Congratulations! |\n"
+        "| **Тепе́р ви зна́єте рід.** | Now you know gender. |\n"
+    )
+    out = _normalize_a1_module_close(raw)
+    assert "Module completion" not in out
+    assert "### Підсумок модуля — Module summary" in out
+    assert "- **Віта́ємо!** — Congratulations!" in out
+    assert "- **Тепе́р ви зна́єте рід.** — Now you know gender." in out
+
+
 def test_custom_artifact_directory_keeps_plan_slug(gold, tmp_path):
     import shutil
 

@@ -207,6 +207,34 @@ def _normalize_a1_example_fences(markdown: str) -> str:
     return _EXAMPLE_FENCE.sub(replace, markdown)
 
 
+_MODULE_COMPLETION_HEADING = re.compile(
+    r"(?im)^###\s+.*(?:Заве.?ршення мо.?дуля|Module completion)\s*$"
+)
+_FOLLOWING_SUPPORT_TABLE = re.compile(
+    r"\A\s*((?:\|[^\n]*\|\n)+)",
+)
+
+
+def _normalize_a1_module_close(markdown: str) -> str:
+    """Last A1 lesson: module-9 close is 'Підсумок модуля — Module summary' + bullets, not a completion table."""
+    match = _MODULE_COMPLETION_HEADING.search(markdown)
+    if not match:
+        return markdown
+    rest = markdown[match.end():]
+    table_match = _FOLLOWING_SUPPORT_TABLE.search(rest)
+    heading = "### Підсумок модуля — Module summary\n\n"
+    if not table_match:
+        return markdown[: match.start()] + heading + rest.lstrip("\n")
+    bullets = []
+    for uk, en in _rows_from_support_table(table_match.group(1)):
+        if en:
+            bullets.append(f"- **{uk}** — {en}")
+        else:
+            bullets.append(f"- **{uk}**")
+    body = "\n".join(bullets) + "\n\n" + rest[table_match.end():].lstrip("\n")
+    return markdown[: match.start()] + heading + body
+
+
 def assemble_lessons(module_dir: Path, output_dir: Path, plan_path: Path, *, validated: bool = True) -> dict[str, str]:
     """Emit index.mdx and numbered pages; vocabulary accumulates by first use.
 
@@ -244,6 +272,8 @@ def assemble_lessons(module_dir: Path, output_dir: Path, plan_path: Path, *, val
         body = (source / "module.md").read_text(encoding="utf-8")
         if _is_a1(level):
             body = _normalize_a1_example_fences(body)
+            if n == numbers[-1]:
+                body = _normalize_a1_module_close(body)
         mdx = generate_mdx(
             re.sub(r"^(>\s*\*\*[^*]+)\*\*:", r"\1:**", body, flags=re.MULTILINE), n,
             yaml_activities=activities, meta_data=metadata,
