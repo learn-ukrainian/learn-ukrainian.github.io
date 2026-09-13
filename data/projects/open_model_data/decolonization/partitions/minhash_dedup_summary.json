@@ -1,0 +1,10 @@
+{
+  "schema_version": "v1_minhash_dedup_summary",
+  "algorithm": "MinHash_64perm_Token_Jaccard",
+  "similarity_threshold": 0.8,
+  "max_cross_split_similarity": 0.1818,
+  "cross_split_duplicates_above_threshold": 0,
+  "heldout_cases_evaluated": 1000,
+  "train_sample_evaluated": 500,
+  "status": "PASS"
+}

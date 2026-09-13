@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1_train_source_custody",
+  "zno_tasks": {
+    "count": 1646,
+    "custody": "TRAIN_ONLY"
+  },
+  "style_guide": {
+    "count": 342,
+    "custody": "TRAIN_ONLY"
+  },
+  "ua_gec": {
+    "excluded_test_count": 1159,
+    "train_docs_count": 1145
+  },
+  "textbooks": {
+    "train_chunks_count": 41611
+  }
+}

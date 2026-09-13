@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_decolonization_partition_manifest.schema.json",
+  "title": "v1_decolonization_partition_manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dataset_name",
+    "phase",
+    "issue",
+    "parent_epic",
+    "source_custody_summary",
+    "phenomenon_partition_summary",
+    "heldout_suite_summary",
+    "minhash_dedup_summary",
+    "files"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "v1_decolonization_partition_manifest"
+    },
+    "dataset_name": {
+      "type": "string"
+    },
+    "phase": {
+      "type": "string"
+    },
+    "issue": {
+      "type": "integer",
+      "const": 8005
+    },
+    "parent_epic": {
+      "type": "integer",
+      "const": 6321
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "source_custody_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ua_gec_excluded_test_count",
+        "ua_gec_train_documents_count",
+        "ua_gec_heldout_documents_count",
+        "zno_tasks_train_only_count",
+        "style_guide_train_only_count",
+        "textbook_train_chunks_count",
+        "textbook_heldout_chunks_count"
+      ],
+      "properties": {
+        "ua_gec_excluded_test_count": { "type": "integer", "minimum": 1 },
+        "ua_gec_train_documents_count": { "type": "integer", "minimum": 1 },
+        "ua_gec_heldout_documents_count": { "type": "integer", "minimum": 1 },
+        "zno_tasks_train_only_count": { "type": "integer", "minimum": 1 },
+        "style_guide_train_only_count": { "type": "integer", "minimum": 1 },
+        "textbook_train_chunks_count": { "type": "integer", "minimum": 1 },
+        "textbook_heldout_chunks_count": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "phenomenon_partition_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_phenomena_count",
+        "train_phenomena_count",
+        "heldout_seen_phenomena_count",
+        "heldout_unseen_phenomena_count",
+        "lemma_family_leakage_count"
+      ],
+      "properties": {
+        "total_phenomena_count": { "type": "integer", "minimum": 1 },
+        "train_phenomena_count": { "type": "integer", "minimum": 1 },
+        "heldout_seen_phenomena_count": { "type": "integer", "minimum": 0 },
+        "heldout_unseen_phenomena_count": { "type": "integer", "minimum": 1 },
+        "lemma_family_leakage_count": { "type": "integer", "const": 0 }
+      }
+    },
+    "heldout_suite_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_eval_cases",
+        "preserve_cases",
+        "correct_cases",
+        "statistical_power"
+      ],
+      "properties": {
+        "total_eval_cases": { "type": "integer", "const": 1000 },
+        "preserve_cases": { "type": "integer", "const": 600 },
+        "correct_cases": { "type": "integer", "const": 400 },
+        "statistical_power": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "target_harmful_edit_rate_gate",
+            "max_tolerated_preserve_errors",
+            "exact_one_sided_95_binomial_upper_bound",
+            "statistically_sound"
+          ],
+          "properties": {
+            "target_harmful_edit_rate_gate": { "type": "string" },
+            "max_tolerated_preserve_errors": { "type": "integer" },
+            "exact_one_sided_95_binomial_upper_bound": { "type": "number", "maximum": 0.01 },
+            "statistically_sound": { "type": "boolean", "const": true }
+          }
+        }
+      }
+    },
+    "minhash_dedup_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "permutations",
+        "similarity_threshold",
+        "max_cross_split_similarity",
+        "cross_split_duplicates_above_threshold"
+      ],
+      "properties": {
+        "algorithm": { "type": "string" },
+        "permutations": { "type": "integer", "minimum": 16 },
+        "similarity_threshold": { "type": "number", "const": 0.8 },
+        "max_cross_split_similarity": { "type": "number", "maximum": 0.8 },
+        "cross_split_duplicates_above_threshold": { "type": "integer", "const": 0 }
+      }
+    },
+    "files": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "filename",
+          "record_count",
+          "sha256"
+        ],
+        "properties": {
+          "filename": { "type": "string" },
+          "record_count": { "type": "integer", "minimum": 0 },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      }
+    }
+  }
+}

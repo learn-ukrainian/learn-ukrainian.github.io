@@ -1,0 +1,59 @@
+{
+  "schema_version": "v1_decolonization_partition_manifest",
+  "dataset_name": "Ukrainian Linguistic Decolonization & Reasoning (ULDR) Phase 3 Partition",
+  "phase": "Phase 3.0: Pre-Extraction Partition Firewall & Source Custody",
+  "issue": 8005,
+  "parent_epic": 6321,
+  "generated_at": "2026-09-13T08:15:00Z",
+  "source_custody_summary": {
+    "ua_gec_excluded_test_count": 1159,
+    "ua_gec_train_documents_count": 1145,
+    "ua_gec_heldout_documents_count": 263,
+    "zno_tasks_train_only_count": 1646,
+    "style_guide_train_only_count": 342,
+    "textbook_train_chunks_count": 41611,
+    "textbook_heldout_chunks_count": 10459
+  },
+  "phenomenon_partition_summary": {
+    "total_phenomena_count": 1480,
+    "train_phenomena_count": 1247,
+    "heldout_seen_phenomena_count": 331,
+    "heldout_unseen_phenomena_count": 333,
+    "lemma_family_leakage_count": 0
+  },
+  "heldout_suite_summary": {
+    "total_eval_cases": 1000,
+    "preserve_cases": 600,
+    "correct_cases": 400,
+    "statistical_power": {
+      "target_harmful_edit_rate_gate": "<= 1.0%",
+      "max_tolerated_preserve_errors": 1,
+      "exact_one_sided_95_binomial_upper_bound": 0.0079,
+      "statistically_sound": true
+    }
+  },
+  "minhash_dedup_summary": {
+    "algorithm": "MinHash_64perm_Token_Jaccard",
+    "permutations": 64,
+    "similarity_threshold": 0.8,
+    "max_cross_split_similarity": 0.1818,
+    "cross_split_duplicates_above_threshold": 0
+  },
+  "files": {
+    "train_source_custody": {
+      "filename": "train_source_custody.json",
+      "record_count": 1,
+      "sha256": "0640d0fd5c33bbfdfbf321b84f4127e1d923cef2c87ed1bc3d085a26314d8fd0"
+    },
+    "heldout_evaluation_suite_1000": {
+      "filename": "heldout_evaluation_suite_1000.jsonl",
+      "record_count": 1000,
+      "sha256": "f79b60b7fa750e42642fbf65f61877f4aa09980cef615fa798813f2f06de9e3f"
+    },
+    "minhash_dedup_summary": {
+      "filename": "minhash_dedup_summary.json",
+      "record_count": 1,
+      "sha256": "7ff4de84b0726fa4b235b3a1af38442c88d8822836c297495ee3d01762ca744c"
+    }
+  }
+}
