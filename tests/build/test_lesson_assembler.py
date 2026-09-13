@@ -223,6 +223,26 @@ def test_a1_opening_hygiene_four_shapes():
     assert "Questions turn the verbs" in questions
 
 
+def test_a1_assembler_converts_text_fences_to_bilingual_bullets():
+    from scripts.build.lesson_assembler import _normalize_a1_example_fences
+
+    raw = (
+        "Then make three tiny room lines.\n\n"
+        "```text\n"
+        "Це моя́ кімна́та.\n"
+        "У мене́ є стіл.\n"
+        "```\n\n"
+        "| Украї́нська | English support |\n"
+        "| --- | --- |\n"
+        "| **Це моя́ кімна́та.** | This is my room. |\n"
+        "| **У мене́ є стіл.** | I have a table. |\n"
+    )
+    out = _normalize_a1_example_fences(raw)
+    assert "```" not in out
+    assert "- **Це моя́ кімна́та.** — This is my room." in out
+    assert "- **У мене́ є стіл.** — I have a table." in out
+
+
 def test_custom_artifact_directory_keeps_plan_slug(gold, tmp_path):
     import shutil
 

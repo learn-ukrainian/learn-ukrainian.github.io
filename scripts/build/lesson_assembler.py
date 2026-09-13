@@ -170,6 +170,43 @@ def _landing_intro(level: str, module_dir: Path, slug: str, cards: list[str]) ->
     return f"{heading}\n\n" + "\n".join(cards)
 
 
+_EXAMPLE_FENCE = re.compile(
+    r"```(?:text)?\r?\n(.*?)```(?:[ \t]*\n(?:(?!\|)[^\n]{0,100}\n){0,3})?((?:\|[^\n]*\|\n)+)?",
+    re.DOTALL,
+)
+
+
+def _rows_from_support_table(table: str) -> list[tuple[str, str]]:
+    rows: list[tuple[str, str]] = []
+    for line in table.splitlines():
+        cells = [cell.strip().strip("*") for cell in line.strip().strip("|").split("|")]
+        if len(cells) < 2:
+            continue
+        if set(cells[1]) <= set("-: ") or "English" in cells[1] or "Україн" in cells[0]:
+            continue
+        rows.append((cells[0], cells[1]))
+    return rows
+
+
+def _normalize_a1_example_fences(markdown: str) -> str:
+    """A1: learner examples are bilingual bullets (module 9), never ```text fences."""
+
+    def replace(match: re.Match[str]) -> str:
+        fence_body, table = match.group(1), match.group(2) or ""
+        pairs = _rows_from_support_table(table)
+        if not pairs:
+            pairs = [(line.strip(), "") for line in fence_body.splitlines() if line.strip()]
+        lines = []
+        for uk, en in pairs:
+            if en:
+                lines.append(f"- **{uk}** — {en}")
+            else:
+                lines.append(f"- **{uk}**")
+        return "\n".join(lines) + "\n\n"
+
+    return _EXAMPLE_FENCE.sub(replace, markdown)
+
+
 def assemble_lessons(module_dir: Path, output_dir: Path, plan_path: Path, *, validated: bool = True) -> dict[str, str]:
     """Emit index.mdx and numbered pages; vocabulary accumulates by first use.
 
@@ -204,9 +241,11 @@ def assemble_lessons(module_dir: Path, output_dir: Path, plan_path: Path, *, val
             resources.setdefault(json.dumps(item, sort_keys=True, ensure_ascii=False), item)
         workbook.extend(lesson_workbook)
         metadata = dict(plan, title=lesson["title"], level=level)
+        body = (source / "module.md").read_text(encoding="utf-8")
+        if _is_a1(level):
+            body = _normalize_a1_example_fences(body)
         mdx = generate_mdx(
-            re.sub(r"^(>\s*\*\*[^*]+)\*\*:", r"\1:**",
-                   (source / "module.md").read_text(encoding="utf-8"), flags=re.MULTILINE), n,
+            re.sub(r"^(>\s*\*\*[^*]+)\*\*:", r"\1:**", body, flags=re.MULTILINE), n,
             yaml_activities=activities, meta_data=metadata,
             vocab_items=list(vocabulary.values()), external_resources={"books": lesson_resources},
             level=level, pipeline_version="v7-upgrade", build_status="validated",
