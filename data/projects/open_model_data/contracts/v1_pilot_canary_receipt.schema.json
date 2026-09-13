@@ -309,7 +309,8 @@
       "required": [
         "dataset",
         "replay_buffer",
-        "eval_cases"
+        "eval_cases",
+        "training_log"
       ],
       "properties": {
         "dataset": {
@@ -355,6 +356,27 @@
           }
         },
         "eval_cases": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "filename",
+            "record_count",
+            "sha256"
+          ],
+          "properties": {
+            "filename": {
+              "type": "string"
+            },
+            "record_count": {
+              "type": "integer"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        },
+        "training_log": {
           "type": "object",
           "additionalProperties": false,
           "required": [

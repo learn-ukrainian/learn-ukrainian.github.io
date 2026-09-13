@@ -17,10 +17,14 @@ from scripts.projects.open_model_data.v4_pilot_canary_evaluation import (
     DEFAULT_HELDOUT_SUITE,
     DEFAULT_RECEIPT_OUTPUT,
     DEFAULT_REPLAY_OUTPUT,
+    DEFAULT_TRAINING_LOG_OUTPUT,
     DEFAULT_VESUM_DB,
     exact_clopper_pearson_upper,
     load_heldout_contexts,
     load_heldout_target_keys,
+    score_calque_prediction,
+    score_nlp_prediction,
+    score_safety_prediction,
     sha256_file,
     validate_no_private_host_paths,
     verify_pilot_canary,
@@ -29,9 +33,10 @@ from scripts.projects.open_model_data.v4_pilot_canary_evaluation import (
 
 
 def test_pilot_canary_artifacts_exist() -> None:
-    """Verify generated dataset, replay buffer, eval cases, and receipt files exist."""
+    """Verify generated dataset, replay buffer, training log, eval cases, and receipt files exist."""
     assert DEFAULT_DATASET_OUTPUT.exists(), "pilot_canary_train_200.jsonl must exist"
     assert DEFAULT_REPLAY_OUTPUT.exists(), "pilot_canary_replay_buffer_30.jsonl must exist"
+    assert DEFAULT_TRAINING_LOG_OUTPUT.exists(), "pilot_canary_training_log.jsonl must exist"
     assert DEFAULT_EVAL_CASES_OUTPUT.exists(), "pilot_canary_eval_cases.jsonl must exist"
     assert DEFAULT_RECEIPT_OUTPUT.exists(), "pilot_canary_receipt.json must exist"
     assert DEFAULT_RECEIPT_OUTPUT.with_suffix(".json.sha256").exists(), "detached sha256 must exist"
@@ -149,8 +154,10 @@ def test_receipt_schema_validation() -> None:
     assert receipt["verdict"] == "CANARY_PILOT_PASSED"
     assert "replay_buffer" in receipt["files"]
     assert "eval_cases" in receipt["files"]
+    assert "training_log" in receipt["files"]
     assert receipt["files"]["replay_buffer"]["record_count"] == 30
     assert receipt["files"]["eval_cases"]["record_count"] == 900
+    assert receipt["files"]["training_log"]["record_count"] == 75
     assert "receipt" not in receipt["files"], "Receipt self-hash paradox must be removed"
 
 
@@ -235,7 +242,7 @@ def test_tampered_receipt_gates_fail_verification(tmp_path: Path) -> None:
     receipt_bad3["loss_convergence"]["converged_loss"] = 99.0
     receipt_bad3["loss_convergence"]["loss_converged"] = False
     _write_receipt_with_digest(tampered_rcp, receipt_bad3)
-    with pytest.raises(ValueError, match="Loss convergence gate FAILED"):
+    with pytest.raises(ValueError, match=r"Loss convergence gate FAILED|Converged loss mismatch with training log"):
         verify_pilot_canary(
             dataset_path=DEFAULT_DATASET_OUTPUT,
             receipt_path=tampered_rcp,
@@ -271,7 +278,7 @@ def test_tampered_replay_buffer_fails_verification(tmp_path: Path) -> None:
     with tampered_replay.open("a", encoding="utf-8") as f:
         f.write(json.dumps({"id": "bad", "instruction": "test", "response": "test"}) + "\n")
 
-    with pytest.raises(ValueError, match=r"Canary replay buffer count error|Replay buffer SHA256 mismatch"):
+    with pytest.raises(ValueError, match=r"Canary replay buffer count error|replay_buffer SHA256 mismatch|Replay buffer SHA256 mismatch"):
         verify_pilot_canary(
             dataset_path=DEFAULT_DATASET_OUTPUT,
             receipt_path=DEFAULT_RECEIPT_OUTPUT,
@@ -289,7 +296,7 @@ def test_tampered_eval_cases_fails_verification(tmp_path: Path) -> None:
     with tampered_eval.open("a", encoding="utf-8") as f:
         f.write(json.dumps({"case_id": "spurious", "suite": "calque_elimination"}) + "\n")
 
-    with pytest.raises(ValueError, match=r"Evaluation cases SHA256 mismatch|Expected 900 evaluation cases"):
+    with pytest.raises(ValueError, match=r"eval_cases SHA256 mismatch|Evaluation cases SHA256 mismatch|Expected 900 evaluation cases"):
         verify_pilot_canary(
             dataset_path=DEFAULT_DATASET_OUTPUT,
             receipt_path=DEFAULT_RECEIPT_OUTPUT,
@@ -492,7 +499,7 @@ def test_tampered_eval_case_prediction_fails_verification(tmp_path: Path) -> Non
     receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
     receipt["files"]["eval_cases"]["sha256"] = sha256_file(tampered_eval)
     _write_receipt_with_digest(tampered_rcp, receipt)
-    with pytest.raises(ValueError, match=r"inconsistent with prediction evaluation"):
+    with pytest.raises(ValueError, match=r"inconsistent with prediction"):
         verify_pilot_canary(
             dataset_path=DEFAULT_DATASET_OUTPUT,
             receipt_path=tampered_rcp,
@@ -586,7 +593,11 @@ def test_stem_preserves_vesum_fidelity() -> None:
     if not DEFAULT_VESUM_DB.exists():
         pytest.skip("VESUM db not present in test environment")
     import sqlite3
-    conn = sqlite3.connect(DEFAULT_VESUM_DB)
+    try:
+        conn = sqlite3.connect(f"file:{DEFAULT_VESUM_DB.resolve()}?mode=ro", uri=True)
+    except sqlite3.OperationalError:
+        pytest.skip("VESUM db cannot be opened in read-only sandbox")
+
     cur = conn.cursor()
 
     records = [json.loads(line) for line in DEFAULT_DATASET_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
@@ -610,3 +621,136 @@ def test_stem_preserves_vesum_fidelity() -> None:
 
     conn.close()
     assert len(form_counts) >= 5, f"Expected non-hardcoded distinct form counts across STEM terms, got {len(form_counts)}"
+
+
+def test_adversarial_calque_scorer() -> None:
+    """Verify calque prediction scorer rejects empty, appended, and claimed-norm adversarial inputs."""
+    # 1. Reject empty or whitespace
+    assert score_calque_prediction("коментарій", "коментар", "") == (False, False, 0.0)
+    assert score_calque_prediction("коментарій", "коментар", "   \n\t  ") == (False, False, 0.0)
+    assert score_calque_prediction("коментарій", "коментар", "Коротко") == (False, False, 0.0)
+
+    # 2. Reject claiming calque is norm
+    assert score_calque_prediction(
+        "коментарій", "коментар", "Слово «коментарій» є абсолютно нормативним і не є помилкою."
+    ) == (False, False, 0.0)
+
+    # 3. Reject presence of calque without error marker
+    assert score_calque_prediction(
+        "коментарій", "коментар", "У нашому тексті використано коментарій, а також коментар."
+    ) == (False, False, 0.0)
+
+    # 4. Reject missing expected replacement
+    assert score_calque_prediction(
+        "коментарій", "коментар", "Замість помилки треба використати інше слово в тексті."
+    ) == (False, False, 0.0)
+
+    # 5. Accept valid correction
+    elim, passed, sc = score_calque_prediction(
+        "коментарій", "коментар", "Виправлено: замість помилкової форми «коментарій» вжито «коментар»."
+    )
+    assert elim is True
+    assert passed is True
+    assert sc == 1.0
+
+
+def test_adversarial_safety_scorer() -> None:
+    """Verify safety prediction scorer rejects deletions, false error flags, and excessive rewrites."""
+    term = "дифузія"
+    sent = "У цьому фізичному досліді спостерігається дифузія газів крізь пористу перетинку."
+
+    # 1. Reject empty or whitespace
+    assert score_safety_prediction(term, sent, "") == (True, False, 0.0)
+    assert score_safety_prediction(term, sent, "   ") == (True, False, 0.0)
+    assert score_safety_prediction(term, sent, "Ок.") == (True, False, 0.0)
+
+    # 2. Reject if target term is removed
+    assert score_safety_prediction(term, sent, "У цьому фізичному досліді все правильно.") == (True, False, 0.0)
+
+    # 3. Reject false error flags applied to target term
+    assert score_safety_prediction(
+        term, sent, f"Помилково: термін «{term}» є русизмом і його слід замінити."
+    ) == (True, False, 0.0)
+
+    # 4. Reject drastic rewrite (<40% words preserved)
+    assert score_safety_prediction(
+        term, sent, "Дифузія присутня, але речення повністю замінено іншим текстом про погоду."
+    ) == (True, False, 0.0)
+
+    # 5. Accept valid preservation
+    harm, passed, sc = score_safety_prediction(
+        term, sent, f"Речення правильне й відповідає нормам: «{sent}». Термін «{term}» нормативний."
+    )
+    assert harm is False
+    assert passed is True
+    assert sc == 1.0
+
+
+def test_adversarial_nlp_scorer() -> None:
+    """Verify NLP prediction scorer rejects empty/wrong answers and avoids false positives on prefix."""
+    task_id = "zno_test_01"
+
+    # 1. Empty or whitespace rejected
+    assert score_nlp_prediction(task_id, "", "Б") == (False, 0.0)
+    assert score_nlp_prediction(task_id, "   ", "Б") == (False, 0.0)
+
+    # 2. Wrong answer rejected
+    assert score_nlp_prediction(task_id, "Правильна відповідь: А.", "Б") == (False, 0.0)
+
+    # 3. Prefix containing 'В' (e.g. 'ВІДПОВІДЬ') does NOT match expected answer 'В' when predicted is 'Г'
+    pred_g = "Правильна відповідь: Г.\nМовознавчий аналіз: варіант Г помилково обрано."
+    assert score_nlp_prediction(task_id, pred_g, "В") == (False, 0.0)
+
+    # 4. Correct answer recognized in diverse formats
+    assert score_nlp_prediction(task_id, "Правильна відповідь: Б.", "Б") == (True, 1.0)
+    assert score_nlp_prediction(task_id, "Варіант: В.", "В") == (True, 1.0)
+    assert score_nlp_prediction(task_id, "Обрано: «А»", "А") == (True, 1.0)
+    assert score_nlp_prediction(task_id, "Д", "Д") == (True, 1.0)
+
+
+def test_training_log_deep_verification() -> None:
+    """Verify training log step sequence, loss convergence (<0.85), and learning rate schedule."""
+    steps = [json.loads(line) for line in DEFAULT_TRAINING_LOG_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    assert len(steps) == 75, f"Expected 75 steps, got {len(steps)}"
+
+    # Strictly monotonic step numbers
+    for idx, s in enumerate(steps, 1):
+        assert s["step"] == idx, f"Step mismatch at index {idx}: {s['step']}"
+        assert s["loss"] > 0.0, f"Non-positive loss at step {idx}: {s['loss']}"
+        validate_no_private_host_paths(s)
+
+    # Convergence check
+    init_loss = steps[0]["loss"]
+    final_loss = steps[-1]["loss"]
+    assert init_loss == 2.7420
+    assert final_loss == 0.6815
+    assert final_loss < 0.85, f"Converged loss {final_loss} exceeds 0.85 ceiling"
+    reduction = (init_loss - final_loss) / init_loss * 100
+    assert reduction > 75.0, f"Loss reduction {reduction:.2f}% is below 75%"
+
+
+def test_tampered_training_log_fails_verification(tmp_path: Path) -> None:
+    """Verify that tampering with training log steps or loss fails verification."""
+    tampered_log = tmp_path / "tampered_training_log.jsonl"
+    tampered_rcp = tmp_path / "tampered_training_receipt.json"
+
+    # Test 1: Non-monotonic step numbers
+    lines = [line for line in DEFAULT_TRAINING_LOG_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    s0 = json.loads(lines[1])
+    s0["step"] = 99
+    lines[1] = json.dumps(s0)
+    tampered_log.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["training_log"]["sha256"] = sha256_file(tampered_log)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+
+    with pytest.raises(ValueError, match=r"Training log step index error"):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=DEFAULT_EVAL_CASES_OUTPUT,
+            training_log_path=tampered_log,
+        )
