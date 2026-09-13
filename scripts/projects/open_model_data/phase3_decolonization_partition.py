@@ -151,10 +151,6 @@ def extract_root_family(word: str) -> str:
                 changed = True
                 break
 
-    # Strip epenthetic 'л' after labials (б, п, в, м, ф)
-    if w.endswith("л") and len(w) >= 4 and w[-2] in "бпвмф":
-        w = w[:-1]
-
     # Normalize common phonological alternations
     w = w.replace("і", "о")
     w = re.sub(r"[чц]", "к", w)
@@ -720,6 +716,10 @@ class DecolonizationPartitionFirewall:
                 if jac_s >= 0.80:
                     dup_count += 1
 
+        assert dup_count == 0, f"Near-duplicates detected above threshold: {dup_count}"
+        assert max_sig_sim < 0.85, f"Max MinHash signature similarity {max_sig_sim} >= 0.85"
+        assert max_cross_sim < 0.80, f"Max cross-split Jaccard similarity {max_cross_sim} >= 0.80"
+
         # 8. Write Artifacts
         train_custody_file = self.output_dir / "train_source_custody.json"
         heldout_suite_file = self.output_dir / "heldout_evaluation_suite_1000.jsonl"
@@ -891,6 +891,12 @@ def verify_manifest(output_dir: Path = DEFAULT_OUTPUT_DIR) -> bool:
     m_sum = manifest["minhash_dedup_summary"]
     if m_sum["cross_split_duplicates_above_threshold"] != 0:
         print("ERROR: Near-duplicate pairs above threshold detected!", file=sys.stderr)
+        return False
+    if m_sum["max_minhash_signature_similarity"] >= 0.85:
+        print("ERROR: Max MinHash signature similarity >= 0.85!", file=sys.stderr)
+        return False
+    if m_sum["max_cross_split_similarity"] >= 0.80:
+        print("ERROR: Max cross-split similarity >= 0.80!", file=sys.stderr)
         return False
 
     h_sum = manifest["heldout_suite_summary"]

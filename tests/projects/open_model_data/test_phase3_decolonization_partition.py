@@ -23,6 +23,7 @@ if str(REPO_ROOT) not in sys.path:
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     DEFAULT_SOURCES_DB,
     DEFAULT_VESUM_DB,
+    SENTENCE_SPLIT_RE,
     MinHashDedup,
     exact_clopper_pearson_upper,
     extract_root_family,
@@ -231,34 +232,58 @@ def test_minhash_near_duplicate_zero_collisions() -> None:
     assert report["similarity_threshold"] == 0.80
     assert report["cross_split_duplicates_above_threshold"] == 0
     assert report["max_cross_split_similarity"] < 0.80
+    assert report["max_minhash_signature_similarity"] < 0.85
     assert report["status"] == "PASS"
 
 
 def test_independent_minhash_cross_split_verification() -> None:
-    """Independently re-run MinHash signatures and token Jaccard on a cross-split sample."""
+    """Independently re-run MinHash signatures and token Jaccard on a cross-split sample across all sources."""
     minhash = MinHashDedup(num_perm=64, bands=16, rows_per_band=4)
 
     # Load held-out cases
     with HELDOUT_SUITE_FILE.open("r", encoding="utf-8") as f:
         heldout_cases = [json.loads(line) for line in f if line.strip()]
 
-    # Sample sentences from sources.db
+    # Sample sentences from sources.db across all 4 training sources
     s_conn = sqlite3.connect(DEFAULT_SOURCES_DB)
     sc = s_conn.cursor()
     zno_stems = [r[0] for r in sc.execute("SELECT stem FROM zno_tasks WHERE stem IS NOT NULL LIMIT 100").fetchall()]
     sg_texts = [r[0] for r in sc.execute("SELECT text FROM style_guide WHERE text IS NOT NULL LIMIT 50").fetchall()]
+
+    # Sample textbook train chunks (strictly train partition by author/title hash)
+    tb_rows = sc.execute("SELECT title, text, author_uk FROM textbooks LIMIT 500").fetchall()
+    tb_train_sents = []
+    for title, text, author in tb_rows:
+        author_key = author or "unknown"
+        h = int(hashlib.sha256(f"tb_author:{author_key}:{title}".encode()).hexdigest()[:8], 16)
+        if h % 10 < 8:  # strictly train chunks
+            for s in SENTENCE_SPLIT_RE.split(text):
+                s = s.strip()
+                if 35 <= len(s) <= 220:
+                    tb_train_sents.append(s)
+                    break
+            if len(tb_train_sents) >= 100:
+                break
+
     s_conn.close()
 
-    train_sample = zno_stems + sg_texts
+    train_sample = zno_stems + sg_texts + tb_train_sents
+    assert len(train_sample) >= 200, f"Expected >= 200 training sample sentences, got {len(train_sample)}"
 
-    # Verify no sample cross-split pair exceeds 0.80 Jaccard similarity
+    # Verify no sample cross-split pair exceeds 0.80 Jaccard similarity or 0.85 MinHash signature similarity
     for h_case in heldout_cases[:50]:
         h_toks = normalize_text(h_case["input_text"]).split()
-        for t_sent in train_sample[:50]:
+        h_sig = minhash.signature(h_toks)
+        for t_sent in train_sample[:100]:
             t_toks = normalize_text(t_sent).split()
+            t_sig = minhash.signature(t_toks)
             jaccard = MinHashDedup.jaccard_similarity(h_toks, t_toks)
+            sig_sim = MinHashDedup.sig_similarity(h_sig, t_sig)
             assert jaccard < 0.80, (
                 f"Cross-split near duplicate detected: Jaccard {jaccard} between '{h_toks}' and '{t_toks}'"
+            )
+            assert sig_sim < 0.85, (
+                f"Cross-split MinHash signature similarity {sig_sim} >= 0.85 between '{h_toks}' and '{t_toks}'"
             )
 
 
