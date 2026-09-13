@@ -46,7 +46,7 @@ def test_fmu_booster_decisions_are_valid():
     assert all(d.get("approved_gloss") for d in decisions)
 
 
-def test_fmu_booster_all_single_words_vesum_attested():
+def test_fmu_booster_all_single_words_vesum_attested(requires_vesum_db):
     records = read_source_inventory(INV_PATH, project_root=PROJECT_ROOT)
     for r in records:
         if " " not in r.lemma:
@@ -88,15 +88,20 @@ def test_fmu_booster_unsupported_attribution_rejected():
     assert "slovnyk.me" not in meaning.get("source_url", "")
 
 
-def test_fmu_booster_phrases_not_vesum_attested():
-    from scripts.lexicon.admit_fmu_boosters import EPISODES_DATA, build_new_atlas_entry
+def test_fmu_booster_phrases_not_vesum_attested(monkeypatch):
+    from scripts.lexicon import admit_fmu_boosters as admit
 
-    ep = EPISODES_DATA[0]
-    phrase_entry = build_new_atlas_entry("будинок на колесах", "noun", "camper", ep)
+    def fake_verify_word(lemma: str, *args, **kwargs):
+        return [{"lemma": lemma, "pos": "noun", "tags": ""}] if " " not in lemma else []
+
+    monkeypatch.setattr(admit, "verify_word", fake_verify_word)
+
+    ep = admit.EPISODES_DATA[0]
+    phrase_entry = admit.build_new_atlas_entry("будинок на колесах", "noun", "camper", ep)
     assert phrase_entry["heritage_status"]["vesum_attested"] is False
     assert phrase_entry["entry_type"] == "phrase"
 
-    word_entry = build_new_atlas_entry("менеджерка", "noun", "manager", ep)
+    word_entry = admit.build_new_atlas_entry("менеджерка", "noun", "manager", ep)
     assert word_entry["heritage_status"]["vesum_attested"] is True
     assert word_entry["entry_type"] == "lemma"
 

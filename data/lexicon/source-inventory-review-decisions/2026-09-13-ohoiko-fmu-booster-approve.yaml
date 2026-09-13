@@ -1769,7 +1769,7 @@ decisions:
 - lemma: мама
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: mom / mother
+  approved_gloss: mother
   sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
   source_inventory:
     key: 1d887358a0df166c
@@ -1799,7 +1799,7 @@ decisions:
 - lemma: тато
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: dad / father
+  approved_gloss: father; dad
   sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
   source_inventory:
     key: 6042a136ca6f573f
@@ -2114,7 +2114,7 @@ decisions:
 - lemma: чоловік
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: husband
+  approved_gloss: husband; man
   sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
   source_inventory:
     key: 748f13bba9ddaeb3
@@ -2159,7 +2159,7 @@ decisions:
 - lemma: свекор
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: father-in-law (husband's father)
+  approved_gloss: father-in-law; husband's father
   sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
   source_inventory:
     key: 8399d30136a25378
@@ -2174,7 +2174,7 @@ decisions:
 - lemma: свекруха
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: mother-in-law (husband's mother)
+  approved_gloss: mother-in-law; husband's mother
   sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
   source_inventory:
     key: 194b3be9ffcd5714
@@ -2189,7 +2189,7 @@ decisions:
 - lemma: тесть
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: father-in-law (wife's father)
+  approved_gloss: father-in-law; wife's father
   sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
   source_inventory:
     key: ab7a6af710358c53
@@ -2204,7 +2204,7 @@ decisions:
 - lemma: теща
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: mother-in-law (wife's mother)
+  approved_gloss: mother-in-law; wife's mother
   sense_note: curated ohoiko auto-approve (fmu-booster-ep-33); no AI review
   source_inventory:
     key: bd39cad6ec3cfe56
@@ -2414,7 +2414,7 @@ decisions:
 - lemma: помічник
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: assistant / helper (male)
+  approved_gloss: helper
   sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
   source_inventory:
     key: 26159c82b2a581ce
@@ -2564,7 +2564,7 @@ decisions:
 - lemma: бухгалтер
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: accountant (male)
+  approved_gloss: Accountant
   sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
   source_inventory:
     key: 94337ee7c5acf558
@@ -2864,7 +2864,7 @@ decisions:
 - lemma: підприємець
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: entrepreneur (male)
+  approved_gloss: entrepreneur
   sense_note: curated ohoiko auto-approve (fmu-booster-ep-35); no AI review
   source_inventory:
     key: 18d3f43a257c714a
@@ -3329,7 +3329,7 @@ decisions:
 - lemma: горище
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: attic / loft
+  approved_gloss: attic
   sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
   source_inventory:
     key: b6d2bf585da95500
@@ -3344,7 +3344,7 @@ decisions:
 - lemma: комора
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: pantry / storage room
+  approved_gloss: Storeroom / Pantry
   sense_note: curated ohoiko auto-approve (fmu-booster-ep-42); no AI review
   source_inventory:
     key: 3fa8339c908838cb
@@ -3449,7 +3449,7 @@ decisions:
 - lemma: миска
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: basin / bowl
+  approved_gloss: a bowl
   sense_note: curated ohoiko auto-approve (fmu-booster-ep-44); no AI review
   source_inventory:
     key: da3b36b4c4b1253d
@@ -4514,7 +4514,7 @@ decisions:
 - lemma: смуга
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: traffic lane
+  approved_gloss: Lane (road)
   sense_note: curated ohoiko auto-approve (fmu-booster-ep-55); no AI review
   source_inventory:
     key: 4799bf32d634f01c

@@ -651,7 +651,7 @@ sources:
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
   - lemma: мама
     pos: noun
-    gloss: mom / mother
+    gloss: mother
     locator: fmu-booster-ep-33
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
   - lemma: мати
@@ -661,7 +661,7 @@ sources:
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
   - lemma: тато
     pos: noun
-    gloss: dad / father
+    gloss: father; dad
     locator: fmu-booster-ep-33
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
   - lemma: батько
@@ -766,7 +766,7 @@ sources:
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
   - lemma: чоловік
     pos: noun
-    gloss: husband
+    gloss: husband; man
     locator: fmu-booster-ep-33
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
   - lemma: дружина
@@ -781,22 +781,22 @@ sources:
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
   - lemma: свекор
     pos: noun
-    gloss: father-in-law (husband's father)
+    gloss: father-in-law; husband's father
     locator: fmu-booster-ep-33
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
   - lemma: свекруха
     pos: noun
-    gloss: mother-in-law (husband's mother)
+    gloss: mother-in-law; husband's mother
     locator: fmu-booster-ep-33
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
   - lemma: тесть
     pos: noun
-    gloss: father-in-law (wife's father)
+    gloss: father-in-law; wife's father
     locator: fmu-booster-ep-33
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
   - lemma: теща
     pos: noun
-    gloss: mother-in-law (wife's mother)
+    gloss: mother-in-law; wife's mother
     locator: fmu-booster-ep-33
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 33: Family Members'
   - lemma: невістка
@@ -875,7 +875,7 @@ sources:
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
   - lemma: помічник
     pos: noun
-    gloss: assistant / helper (male)
+    gloss: helper
     locator: fmu-booster-ep-35
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
   - lemma: помічниця
@@ -925,7 +925,7 @@ sources:
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
   - lemma: бухгалтер
     pos: noun
-    gloss: accountant (male)
+    gloss: Accountant
     locator: fmu-booster-ep-35
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
   - lemma: бухгалтерка
@@ -1025,7 +1025,7 @@ sources:
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
   - lemma: підприємець
     pos: noun
-    gloss: entrepreneur (male)
+    gloss: entrepreneur
     locator: fmu-booster-ep-35
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 35: Jobs and Professions'
   - lemma: підприємниця
@@ -1189,12 +1189,12 @@ sources:
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
   - lemma: горище
     pos: noun
-    gloss: attic / loft
+    gloss: attic
     locator: fmu-booster-ep-42
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
   - lemma: комора
     pos: noun
-    gloss: pantry / storage room
+    gloss: Storeroom / Pantry
     locator: fmu-booster-ep-42
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 42: Housing and Rooms'
 - id: ohoiko-fmu-booster-ep-44
@@ -1238,7 +1238,7 @@ sources:
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
   - lemma: миска
     pos: noun
-    gloss: basin / bowl
+    gloss: a bowl
     locator: fmu-booster-ep-44
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 44: Things in Every House'
   - lemma: пилосос
@@ -1620,7 +1620,7 @@ sources:
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 55: Car and Road Vocabulary'
   - lemma: смуга
     pos: noun
-    gloss: traffic lane
+    gloss: Lane (road)
     locator: fmu-booster-ep-55
     context: 'Джерело: 5 Minute Ukrainian / Анна Огойко, епізод 55: Car and Road Vocabulary'
   - lemma: дорожній знак

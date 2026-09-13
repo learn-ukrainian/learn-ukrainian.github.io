@@ -7,7 +7,7 @@
       },
       {
         "path": "scripts/lexicon/admit_fmu_boosters.py",
-        "sha256": "a5dd9df32246d66a6f69e5883c2f72cb31f5d31c96e4317a905121acdf23de86"
+        "sha256": "dc0e1d1af712618f7c1fd49ec0313a226c377e76ffbcea873b995d30bc0baae6"
       },
       {
         "path": "scripts/lexicon/admit_stem_slice_2a.py",
@@ -51,7 +51,7 @@
       },
       {
         "path": "scripts/lexicon/build_fmu_booster_inventory.py",
-        "sha256": "c553d1d78c527e57d52d71792da712285e543b62552f2d1ab4e38d1554ed613f"
+        "sha256": "cde70af47888b4b359704a24d69c19200e1b94c6c36ae101619a739bcfaf1518"
       },
       {
         "path": "scripts/lexicon/build_kaikki_lookup.py",
