@@ -50,6 +50,40 @@ def manifest_schema() -> dict:
     return schema
 
 
+@pytest.fixture
+def requires_sources_db() -> Path:
+    """Skip test if uncommitted sources.db is missing or lacking required tables in CI."""
+    if not DEFAULT_SOURCES_DB.is_file() or DEFAULT_SOURCES_DB.stat().st_size < 1_000_000:
+        pytest.skip(f"requires {DEFAULT_SOURCES_DB} (not provisioned in CI)")
+    try:
+        with sqlite3.connect(f"file:{DEFAULT_SOURCES_DB}?mode=ro", uri=True) as conn:
+            tables = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type IN ('table', 'view')")}
+            required = {"ua_gec_errors", "zno_tasks", "style_guide", "textbooks"}
+            missing = sorted(required - tables)
+            if missing:
+                pytest.skip(f"requires {DEFAULT_SOURCES_DB} with tables: {', '.join(missing)} (not provisioned in CI)")
+    except sqlite3.Error as e:
+        pytest.skip(f"cannot open {DEFAULT_SOURCES_DB}: {e}")
+    return DEFAULT_SOURCES_DB
+
+
+@pytest.fixture
+def requires_vesum_db() -> Path:
+    """Skip test if uncommitted vesum.db is missing or lacking forms_all in CI."""
+    if not DEFAULT_VESUM_DB.is_file() or DEFAULT_VESUM_DB.stat().st_size < 1_000_000:
+        pytest.skip(f"requires {DEFAULT_VESUM_DB} (not provisioned in CI)")
+    try:
+        with sqlite3.connect(f"file:{DEFAULT_VESUM_DB}?mode=ro", uri=True) as conn:
+            tables = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type IN ('table', 'view')")}
+            required = {"forms_all"}
+            missing = sorted(required - tables)
+            if missing:
+                pytest.skip(f"requires {DEFAULT_VESUM_DB} with tables: {', '.join(missing)} (not provisioned in CI)")
+    except sqlite3.Error as e:
+        pytest.skip(f"cannot open {DEFAULT_VESUM_DB}: {e}")
+    return DEFAULT_VESUM_DB
+
+
 def test_partition_manifest_integrity(manifest_schema: dict) -> None:
     """Verify partition manifest matches Draft2020-12 schema and files match exact SHA-256."""
     assert MANIFEST_FILE.is_file(), f"Missing manifest: {MANIFEST_FILE}"
@@ -115,7 +149,7 @@ def test_root_family_derivational_extraction_unit() -> None:
     assert buy_roots.pop() == "куп"
 
 
-def test_preserve_cases_verbatim_target_and_vesum_attestation() -> None:
+def test_preserve_cases_verbatim_target_and_vesum_attestation(requires_vesum_db: Path) -> None:
     """Verify that all 600 PRESERVE cases contain target_term verbatim and are attested in VESUM."""
     assert HELDOUT_SUITE_FILE.is_file(), f"Missing held-out suite: {HELDOUT_SUITE_FILE}"
 
@@ -148,7 +182,7 @@ def test_preserve_cases_verbatim_target_and_vesum_attestation() -> None:
     v_conn.close()
 
 
-def test_derivational_closure_independent_zero_leakage() -> None:
+def test_derivational_closure_independent_zero_leakage(requires_sources_db: Path, requires_vesum_db: Path) -> None:
     """Independently recompute root families and verify zero root overlap between train and held-out unseen."""
     with MANIFEST_FILE.open("r", encoding="utf-8") as f:
         manifest = json.load(f)
@@ -220,7 +254,7 @@ def test_derivational_closure_independent_zero_leakage() -> None:
     )
 
 
-def test_ua_gec_test_split_strict_zero_leakage() -> None:
+def test_ua_gec_test_split_strict_zero_leakage(requires_sources_db: Path) -> None:
     """Verify that official UA-GEC test split is 100% excluded from held-out suite and training partition."""
     s_conn = sqlite3.connect(DEFAULT_SOURCES_DB)
     sc = s_conn.cursor()
@@ -266,7 +300,7 @@ def test_minhash_near_duplicate_zero_collisions() -> None:
     assert report["status"] == "PASS"
 
 
-def test_independent_minhash_cross_split_verification() -> None:
+def test_independent_minhash_cross_split_verification(requires_sources_db: Path) -> None:
     """Independently re-run MinHash signatures and token Jaccard on a cross-split sample across all sources."""
     minhash = MinHashDedup(num_perm=64, bands=16, rows_per_band=4)
 
