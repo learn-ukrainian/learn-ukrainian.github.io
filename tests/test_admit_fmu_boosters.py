@@ -86,7 +86,7 @@ def test_fmu_booster_unsupported_attribution_rejected():
         assert card["source_dict"] != "vts", "Curated FMU definitions must not claim VTS source_dict"
         assert "slovnyk.me" not in card.get("source_url", ""), "Mirror URLs are forbidden"
         assert card["source_dict"] == "ohoiko"
-        assert "ukrainianlessons.com" in card["source_url"]
+        assert card["source_url"].startswith("https://www.ukrainianlessons.com/")
 
     meaning = entry.get("enrichment", {}).get("meaning", {})
     assert meaning.get("source") != "vts"
