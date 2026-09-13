@@ -309,14 +309,15 @@ def test_upgrade_allows_gemini_self_review_when_flagged(tmp_path: Path):
     with patch.dict(linear_pipeline.WRITER_DEFAULTS, {"agy-tools": {"model": "gemini-3.8-flash-high", "effort": "high"}}, clear=False):
         with patch.dict(linear_pipeline.REVIEWER_DEFAULTS, {"agy-tools": {"model": "gemini-3.8-flash-high", "effort": "high"}}, clear=False):
             with patch("scripts.build.v7_build._reviewer_for_writer", return_value="agy-tools"):
-                with patch("scripts.agent_runtime.runner.invoke") as invoke:
-                    invoke.side_effect = RuntimeError("stop after assert")
-                    with pytest.raises(RuntimeError, match="stop after assert"):
-                        v7_build._run_llm_qg(
-                            plan=plan, plan_content="c", module_dir=module_dir,
-                            writer="agy-tools", reviewer_override="agy-tools",
-                            allow_same_model=True,
-                        )
+                with patch("scripts.build.linear_pipeline.render_review_prompt", return_value="prompt"):
+                    with patch("scripts.agent_runtime.runner.invoke") as invoke:
+                        invoke.side_effect = RuntimeError("stop after assert")
+                        with pytest.raises(RuntimeError, match="stop after assert"):
+                            v7_build._run_llm_qg(
+                                plan=plan, plan_content="c", module_dir=module_dir,
+                                writer="agy-tools", reviewer_override="agy-tools",
+                                allow_same_model=True,
+                            )
 
 
 def _llm_qg_response(dim: str) -> str:
