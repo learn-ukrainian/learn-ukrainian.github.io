@@ -30,6 +30,15 @@ Write dialogues as > blockquotes, never as code fences; put the English breakdow
 Verify language claims with sources/VESUM tools; never guess Ukrainian forms or stress.
 Stress annotation runs deterministically AFTER review; do not invent stressed spellings.
 
+A1 landing overview (lesson 1 only): if the original module opening (text before the first `##`) has no "By the end, you can" after tables/tips/code fences are ignored, also return:
+
+```markdown file=landing-overview.md
+```
+
+Shape = module 9, not a clone: (1) 1–2 short English-carrier paragraphs with bold Ukrainian targets, (2) "By the end, you can:" 4–7 communicative bullets, (3) one "keep the scope small" sentence. Vary the hook. No `:::tip`, no markdown tables, no `Привіт!` narrator. If the cleaned original already has "By the end, you can", do **not** write this file.
+
+A2+ upgrade: full Ukrainian immersion. Do not write English-carrier landings or landing-overview.md.
+
 ## Activities and vocabulary
 
 Keep every original activity's type, items, answer flags and groups structurally intact.

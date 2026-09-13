@@ -1,5 +1,7 @@
 """Held-out gold artifacts are hash-checked fixtures, never published as lessons."""
 
+from pathlib import Path
+
 import pytest
 import yaml
 
@@ -103,7 +105,7 @@ const ts = require('typescript');
 const source = fs.readFileSync('site/src/pages/[...slug].astro', 'utf8').split('---')[1];
 const tree = ts.createSourceFile('route.ts', source, ts.ScriptTarget.Latest, true);
 const wanted = new Set(['TRACKS', 'HIDDEN_DOCS', 'normalizeId', 'allDocs', 'visibleDocs',
- 'deployedDocsByTrack', 'landingDocsByTrack', 'plannedModuleGroups']);
+ 'deployedDocsByTrack', 'landingDocsByTrack', 'plannedModuleGroups', 'A1_UNITS']);
 const selected = tree.statements.filter(statement => {
  if (ts.isFunctionDeclaration(statement)) return statement.name?.text === 'getStaticPaths';
  if (ts.isVariableStatement(statement)) {
@@ -115,8 +117,9 @@ const selected = tree.statements.filter(statement => {
  }
  return false;
 }).map(statement => statement.getText(tree)).join('\n').replace('export async function', 'async function').replaceAll('import.meta.env.PROD', 'true');
-const helper = fs.readFileSync('site/src/lib/a1-archive-routes.ts', 'utf8').replace('export function', 'function');
-const compiled = ts.transpileModule(helper + '\n' + selected, {compilerOptions: {target: ts.ScriptTarget.ES2022}}).outputText;
+const helper = fs.readFileSync('site/src/lib/a1-archive-routes.ts', 'utf8').replaceAll('export ', '');
+const units = fs.readFileSync('site/src/data/a1-v1-modules.ts', 'utf8').replaceAll('export ', '');
+const compiled = ts.transpileModule(helper + '\n' + units + '\n' + selected, {compilerOptions: {target: ts.ScriptTarget.ES2022}}).outputText;
 const docs = JSON.parse(fs.readFileSync(0, 'utf8'));
 const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
 new AsyncFunction('getCollection', 'moduleCount', compiled + '\nreturn {routes: await getStaticPaths(), groups: plannedModuleGroups("a1", TRACKS["a1"]), visible: [...deployedDocsByTrack.keys()]};')(
@@ -137,10 +140,12 @@ new AsyncFunction('getCollection', 'moduleCount', compiled + '\nreturn {routes: 
     } <= routes
     assert "a1/draft" not in routes
     assert "a1" in result["visible"]
-    modules = result["groups"][0]["items"]
-    assert len(modules) == 1
-    assert modules[0]["slug"] == "things-have-gender"
-    assert [item["n"] for item in modules[0]["lessons"]] == [1, 2, 3]
+    assert result["groups"][0]["unit"].startswith("A1.1")
+    upgraded = next(
+        item for group in result["groups"] for item in group["items"]
+        if item["slug"] == "things-have-gender"
+    )
+    assert [item["n"] for item in upgraded["lessons"]] == [1, 2, 3]
 
 
 def test_a1_landing_follows_original_bilingual_intro(gold, tmp_path):
@@ -159,13 +164,63 @@ def test_a1_landing_follows_original_bilingual_intro(gold, tmp_path):
     assert "вона" in lesson_tab
 
 
-def test_a1_landing_without_original_keeps_bilingual_heading(gold, tmp_path):
+def test_a1_landing_without_original_is_lesson_list_only(gold, tmp_path):
+    """No original summary and no writer overview → cards only, never plan YAML."""
     module, plan = gold
     pages = assemble_lessons(module, tmp_path / "site", plan)
     lesson_tab = pages["index"].split('<TabItem label="Урок — Lesson">', 1)[1].split("</TabItem>", 1)[0]
     assert "## Objectives" not in lesson_tab
-    assert "## Цілі — Objectives" in lesson_tab
+    assert "## Цілі — Objectives" not in lesson_tab
     assert "## Уроки — Lessons" in lesson_tab
+
+
+def test_a1_landing_prefers_writer_overview(gold, tmp_path):
+    module, plan = gold
+    (module / "landing-overview.md").write_text(
+        "You already know **він**. Now describe things.\n\n"
+        "By the end, you can:\n\n- ask **який?** with a noun.\n\n"
+        "Keep the scope small. Today is not a full declension lesson.\n"
+    )
+    pages = assemble_lessons(module, tmp_path / "site", plan)
+    lesson_tab = pages["index"].split('<TabItem label="Урок — Lesson">', 1)[1].split("</TabItem>", 1)[0]
+    assert "You already know **він**" in lesson_tab
+    assert "By the end, you can" in lesson_tab
+    assert "## Уроки — Lessons" in lesson_tab
+
+
+def test_a1_opening_hygiene_four_shapes():
+    from scripts.build.lesson_assembler import _clean_a1_landing_prose
+
+    root = Path("curriculum/l2-uk-en/a1-v1")
+    if not root.exists():
+        pytest.skip("a1-v1 archive not in this checkout")
+
+    def opening(slug: str) -> str:
+        text = (root / slug / "module.md").read_text(encoding="utf-8")
+        return text.split("## ", 1)[0]
+
+    nine = _clean_a1_landing_prose(opening("what-is-it-like"))
+    assert nine is not None
+    assert "By the end, you can" in nine
+    assert ":::" not in nine
+
+    eight = _clean_a1_landing_prose(opening("things-have-gender"))
+    assert eight is not None
+    assert "By the end, you can" in eight
+    assert ":::" not in eight
+    assert "Treat gender as part of the noun card" not in eight
+
+    morning = _clean_a1_landing_prose(opening("my-morning"))
+    assert morning is not None
+    assert "By the end" not in morning
+    assert "прокидаюся" in morning
+
+    questions = _clean_a1_landing_prose(opening("questions"))
+    assert questions is not None
+    assert "Хто ти?" not in questions
+    assert "|" not in questions
+    assert "The safest A1 pattern is" not in questions
+    assert "Questions turn the verbs" in questions
 
 
 def test_custom_artifact_directory_keeps_plan_slug(gold, tmp_path):

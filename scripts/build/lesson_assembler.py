@@ -89,13 +89,43 @@ _A1_TAB_LABELS = {
 }
 
 
-def _original_intro(module_dir: Path, slug: str) -> str | None:
-    """Original A1 module intro: English carrier text with embedded Ukrainian terms.
+def _plan_level(plan: dict) -> str:
+    raw = str(plan.get("level") or plan.get("base_level") or "a1").strip().lower()
+    return raw.split("-")[0] if raw else "a1"
 
-    Pulled from the a1-v1 module body before its first ``## `` heading, so the
-    upgraded landing keeps the original UK–EN ratio pattern instead of dumping
-    Ukrainian plan objectives under an English-only heading.
+
+def _is_a1(level: str) -> bool:
+    return _plan_level({"level": level}) == "a1"
+
+
+_DANGLING_LEAD_IN = re.compile(
+    r"(?i)(?:The (?:safest|useful) A1 pattern is:|Treat the first phrases as whole expressions:|"
+    r"The core call frame is:|Official Ukrainian emergency numbers[^\n]*:)\s*"
+)
+_NARRATOR_HELLO = re.compile(r"(?m)^Привіт!?\s*")
+
+
+def _clean_a1_landing_prose(body: str) -> str | None:
+    """A1 landing prose: module-9 shape after stripping broken original extras.
+
+    Tables, tip boxes, and code fences belong in lessons, not on the landing.
+    If nothing usable remains, return None (lesson list only — never dump plan YAML).
     """
+    body = re.sub(r"^# [^\n]+\n", "", body)
+    body = re.sub(r"<!--.*?-->", "", body, flags=re.DOTALL)
+    body = re.sub(r":::tip(?:\[[^\]]*\])?.*?:::", "", body, flags=re.DOTALL)
+    body = re.sub(r"```.*?```", "", body, flags=re.DOTALL)
+    body = re.sub(r"(?m)^\s*\|.*\|\s*$\n?", "", body)
+    body = _DANGLING_LEAD_IN.sub("", body)
+    body = _NARRATOR_HELLO.sub("", body)
+    body = re.sub(r"\n{3,}", "\n\n", body).strip()
+    if len(body) < 40:
+        return None
+    return body
+
+
+def _original_intro(module_dir: Path, slug: str) -> str | None:
+    """Usable A1 landing prose from the previous edition, or None if there is none."""
     candidates = [module_dir.parent.parent / "a1-v1" / slug / "module.md"]
     if len(module_dir.parents) >= 4:
         candidates.append(module_dir.parents[3] / "site/src/content/docs/a1-v1" / f"{slug}.mdx")
@@ -111,12 +141,33 @@ def _original_intro(module_dir: Path, slug: str) -> str | None:
             body = match.group(1) if match else ""
         else:
             body = re.split(r"^## ", text, maxsplit=1, flags=re.MULTILINE)[0]
-        body = re.sub(r"^# [^\n]+\n", "", body)
-        body = re.sub(r"<!--.*?-->", "", body, flags=re.DOTALL)
-        body = re.sub(r"\n{3,}", "\n\n", body).strip()
-        if body:
-            return body
+        cleaned = _clean_a1_landing_prose(body)
+        if cleaned:
+            return cleaned
     return None
+
+
+def _writer_landing_overview(module_dir: Path) -> str | None:
+    """Optional Gemini-authored 9-shape overview (upgrade writer, lesson 1)."""
+    path = module_dir / "landing-overview.md"
+    if not path.is_file():
+        return None
+    return _clean_a1_landing_prose(path.read_text(encoding="utf-8"))
+
+
+def _landing_intro(level: str, module_dir: Path, slug: str, cards: list[str]) -> str:
+    """Level-specific landing Lesson tab. A1 is bilingual; A2+ is Ukrainian-only.
+
+    A1 prefers a writer landing-overview.md, then a *cleaned* original opening.
+    If neither exists, the landing is the lesson list only — never plan YAML.
+    A2+ never copies an English-carrier original (full immersion).
+    """
+    if _is_a1(level):
+        intro = _writer_landing_overview(module_dir) or _original_intro(module_dir, slug) or ""
+        heading = "## Уроки — Lessons"
+        return f"{intro}\n\n{heading}\n\n" + "\n".join(cards) if intro else f"{heading}\n\n" + "\n".join(cards)
+    heading = "## Уроки"
+    return f"{heading}\n\n" + "\n".join(cards)
 
 
 def assemble_lessons(module_dir: Path, output_dir: Path, plan_path: Path, *, validated: bool = True) -> dict[str, str]:
@@ -134,7 +185,7 @@ def assemble_lessons(module_dir: Path, output_dir: Path, plan_path: Path, *, val
     slug = plan.get("slug")
     if not isinstance(slug, str) or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug):
         raise ValueError("Plan slug must be a lowercase URL slug")
-    level = "a1"
+    level = _plan_level(plan)
     base = f"/{level}/{slug}/"
     pages: dict[str, str] = {}
     vocabulary: dict[str, dict] = {}
@@ -158,33 +209,29 @@ def assemble_lessons(module_dir: Path, output_dir: Path, plan_path: Path, *, val
                    (source / "module.md").read_text(encoding="utf-8"), flags=re.MULTILINE), n,
             yaml_activities=activities, meta_data=metadata,
             vocab_items=list(vocabulary.values()), external_resources={"books": lesson_resources},
-            level="a1", pipeline_version="v7-upgrade", build_status="validated",
+            level=level, pipeline_version="v7-upgrade", build_status="validated",
         ).replace("\n{/**/}\n", "\n")
         previous = base if offset == 0 else f"{base}{n - 1}/"
         following = f"{base}{n + 1}/" if offset + 1 < len(lessons) else base
         for label, anchor in [("Vocabulary", "vocabulary"), ("Activities", "activities"), ("Resources", "resources")]:
-            label = _A1_TAB_LABELS[label]
-            mdx = mdx.replace(f'<TabItem label="{label}">', f'<TabItem label="{label}">\n\n<span id="{anchor}"></span>')
+            tab = _A1_TAB_LABELS[label] if _is_a1(level) else label
+            mdx = mdx.replace(f'<TabItem label="{tab}">', f'<TabItem label="{tab}">\n\n<span id="{anchor}"></span>')
         mdx = _frontmatter(mdx, draft=not validated, prev=previous, next=following, lesson=n, module_slug=slug)
         mdx += f'\n<nav aria-label="Lesson navigation">\n\n[Previous]({previous}) · [Module]({base}) · [Next]({following})\n\n</nav>\n'
         pages[str(n)] = mdx
         cards.append(f'- [{n}. {lesson["title"]}]({base}{n}/) — {lesson["minutes"]} min')
         tab_links.append((n, lesson["title"]))
-    intro = _original_intro(module_dir, slug)
-    if intro is None:
-        objectives = plan.get("objectives", [])
-        intro = "## Цілі — Objectives\n\n" + "\n".join(f"- {item}" for item in objectives)
-    intro += "\n\n## Уроки — Lessons\n\n" + "\n".join(cards)
+    intro = _landing_intro(level, module_dir, slug, cards)
     landing = generate_mdx(
         intro, int(plan.get("sequence", 1)), yaml_activities=workbook,
         meta_data=dict(plan, level=level), vocab_items=list(vocabulary.values()),
-        external_resources={"books": list(resources.values())}, level="a1",
+        external_resources={"books": list(resources.values())}, level=level,
         pipeline_version="v7-upgrade", build_status="validated",
     ).replace("\n{/**/}\n", "\n")
     for label, anchor in [("Vocabulary", "vocabulary"), ("Activities", "activities"), ("Resources", "resources")]:
-        label = _A1_TAB_LABELS[label]
+        tab = _A1_TAB_LABELS[label] if _is_a1(level) else label
         links = " · ".join(f"[{n}. {title}]({base}{n}/#{anchor})" for n, title in tab_links)
-        landing = landing.replace(f'<TabItem label="{label}">', f'<TabItem label="{label}">\n\n{links}')
+        landing = landing.replace(f'<TabItem label="{tab}">', f'<TabItem label="{tab}">\n\n{links}')
     pages = {"index": _frontmatter(landing, draft=not validated, lessons=[
         {"n": item["n"], "title": item["title"], "minutes": item["minutes"], "href": f'{base}{item["n"]}/'}
         for item in lessons
