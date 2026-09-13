@@ -796,7 +796,8 @@ class TestModel:
         cmd = run.call_args.args[0]
         assert "agy" in cmd[0] or cmd[0].endswith("/agy")
         assert "--model" in cmd
-        assert "gemini-3.5-flash-high" in cmd or "Gemini 3.5 Flash (High)" in cmd
+        # Retired 3.5 aliases remap to live 3.8 slugs before argv is built.
+        assert "gemini-3.8-flash-high" in cmd or "Gemini 3.8 Flash (High)" in cmd
         _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
 
 

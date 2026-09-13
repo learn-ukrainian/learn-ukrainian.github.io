@@ -114,7 +114,7 @@ const selected = tree.statements.filter(statement => {
        || statement.expression.getText(tree) === 'deployedDocsByTrack.values()';
  }
  return false;
-}).map(statement => statement.getText(tree)).join('\n').replace('export async function', 'async function');
+}).map(statement => statement.getText(tree)).join('\n').replace('export async function', 'async function').replaceAll('import.meta.env.PROD', 'true');
 const helper = fs.readFileSync('site/src/lib/a1-archive-routes.ts', 'utf8').replace('export function', 'function');
 const compiled = ts.transpileModule(helper + '\n' + selected, {compilerOptions: {target: ts.ScriptTarget.ES2022}}).outputText;
 const docs = JSON.parse(fs.readFileSync(0, 'utf8'));

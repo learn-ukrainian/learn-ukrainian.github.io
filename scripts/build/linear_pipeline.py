@@ -2222,8 +2222,9 @@ def _wiki_roots() -> list[Path]:
                 ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
                 cwd=WIKI_DIR.parent if WIKI_DIR.parent.exists() else Path.cwd(),
                 text=True,
+                timeout=30,
             ).strip()
-        except (OSError, subprocess.CalledProcessError):
+        except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
             common = ""
         if common:
             add(Path(common).parent / "wiki")
