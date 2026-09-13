@@ -20,7 +20,7 @@ import math
 import re
 import sqlite3
 import sys
-from collections import Counter
+from collections import Counter, defaultdict
 from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
@@ -35,7 +35,6 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     MinHashDedup,
-    MinHashSignature,
     normalize_text,
 )
 from scripts.projects.open_model_data.v4_decolonization_reasoning import (
@@ -436,24 +435,40 @@ def compute_heldout_minhash_similarity(
     sft_records: list[dict[str, Any]],
     dpo_records: list[dict[str, Any]],
 ) -> tuple[float, float, int]:
-    """Exhaustively verify partition firewall isolation using MinHash and token Jaccard.
+    """Exhaustively verify partition firewall isolation using MinHash and exact token Jaccard.
 
-    Loads 1,000 held-out cases, computes 64-permutation MinHash signatures across
-    held-out texts vs all production texts (queries, responses, prompts, chosen, rejected),
-    and measures the exact empirical maximum cross-split similarity.
+    Loads 1,000 held-out cases and evaluates all production texts (queries, responses,
+    prompts, chosen, rejected) using:
+    1. Full matrix 64-permutation MinHash signature comparison across all N x M pairs.
+    2. Exact inverted-index token Jaccard evaluation across all N x M pairs with
+       mathematical upper-bound pruning (min(|P|,|H|) / max(|P|,|H|) <= current_max),
+       guaranteeing a mathematically exact exhaustive maximum Jaccard across all pairs.
 
     Returns:
-        (max_minhash_sim, max_token_jaccard_sim, candidate_comparisons)
+        (max_minhash_sim, max_token_jaccard_sim, comparisons_evaluated)
     """
+    try:
+        import numpy as np
+    except ImportError as e:
+        raise RuntimeError("numpy is strictly required for exhaustive MinHash matrix computation") from e
+
     minhash = MinHashDedup(num_perm=64, bands=16, rows_per_band=4)
     heldout_records = load_jsonl(heldout_suite_path)
 
     heldout_tokens: list[list[str]] = []
     heldout_sigs: list[tuple[int, ...]] = []
+    heldout_token_sets: list[set[str]] = []
     for c in heldout_records:
         toks = normalize_text(c["input_text"]).split()
         heldout_tokens.append(toks)
+        heldout_token_sets.append(set(toks))
         heldout_sigs.append(minhash.signature(toks).min_hashes)
+
+    # Inverted index from token -> set of heldout case indices
+    inv_index: dict[str, set[int]] = defaultdict(set)
+    for h_idx, tset in enumerate(heldout_token_sets):
+        for token in tset:
+            inv_index[token].add(h_idx)
 
     prod_texts: list[str] = []
     for r in sft_records:
@@ -466,64 +481,49 @@ def compute_heldout_minhash_similarity(
 
     prod_tokens: list[list[str]] = []
     prod_sigs: list[tuple[int, ...]] = []
+    prod_token_sets: list[set[str]] = []
     for t in prod_texts:
         toks = normalize_text(t).split()
         if not toks:
             continue
         prod_tokens.append(toks)
+        prod_token_sets.append(set(toks))
         prod_sigs.append(minhash.signature(toks).min_hashes)
 
     comparisons_count = len(heldout_sigs) * len(prod_sigs)
+
+    # 1. Exhaustive MinHash Matrix Comparison across all N x M pairs
+    h_matrix = np.array(heldout_sigs, dtype=np.int64)
+    p_matrix = np.array(prod_sigs, dtype=np.int64)
     max_minhash_sim = 0.0
+
+    for i in range(0, len(p_matrix), 1000):
+        p_batch = p_matrix[i : i + 1000]
+        eq = (h_matrix[:, np.newaxis, :] == p_batch[np.newaxis, :, :]).sum(axis=2) / 64.0
+        batch_max = float(eq.max())
+        if batch_max > max_minhash_sim:
+            max_minhash_sim = batch_max
+
+    # 2. Exact Exhaustive Token Jaccard via Inverted Index with Upper-Bound Pruning
     max_jaccard_sim = 0.0
+    for p_set in prod_token_sets:
+        p_len = len(p_set)
+        candidates: set[int] = set()
+        for tok in p_set:
+            if tok in inv_index:
+                candidates.update(inv_index[tok])
 
-    try:
-        import numpy as np
+        for h_idx in candidates:
+            h_set = heldout_token_sets[h_idx]
+            h_len = len(h_set)
+            ub = min(p_len, h_len) / max(p_len, h_len)
+            if ub <= max_jaccard_sim:
+                continue
 
-        h_matrix = np.array(heldout_sigs, dtype=np.int64)
-        p_matrix = np.array(prod_sigs, dtype=np.int64)
-
-        heldout_token_sets = [set(t) for t in heldout_tokens]
-        prod_token_sets = [set(t) for t in prod_tokens]
-
-        for i in range(0, len(p_matrix), 1000):
-            p_batch = p_matrix[i : i + 1000]
-            eq = (h_matrix[:, np.newaxis, :] == p_batch[np.newaxis, :, :]).sum(axis=2) / 64.0
-            batch_max = float(eq.max())
-            if batch_max > max_minhash_sim:
-                max_minhash_sim = batch_max
-
-            high_pairs = np.argwhere(eq >= 0.15)
-            for h_idx, b_idx in high_pairs:
-                p_idx = i + b_idx
-                h_set = heldout_token_sets[h_idx]
-                p_set = prod_token_sets[p_idx]
-                inter = len(h_set & p_set)
-                if inter > 0:
-                    jac = inter / len(h_set | p_set)
-                    if jac > max_jaccard_sim:
-                        max_jaccard_sim = jac
-
-    except ImportError:
-        lsh_table: dict[tuple[int, tuple[int, ...]], set[int]] = {}
-        for idx, sig_tuple in enumerate(heldout_sigs):
-            sig_obj = MinHashSignature(sig_tuple)
-            for b_key in minhash.band_hashes(sig_obj):
-                lsh_table.setdefault(b_key, set()).add(idx)
-
-        for p_idx, sig_tuple in enumerate(prod_sigs):
-            sig_obj = MinHashSignature(sig_tuple)
-            candidates: set[int] = set()
-            for b_key in minhash.band_hashes(sig_obj):
-                if b_key in lsh_table:
-                    candidates.update(lsh_table[b_key])
-            for h_idx in candidates:
-                sim = MinHashDedup.sig_similarity(sig_obj, MinHashSignature(heldout_sigs[h_idx]))
-                jac = MinHashDedup.jaccard_similarity(prod_tokens[p_idx], heldout_tokens[h_idx])
-                if sim > max_minhash_sim:
-                    max_minhash_sim = sim
-                if jac > max_jaccard_sim:
-                    max_jaccard_sim = jac
+            inter = len(p_set & h_set)
+            jac = inter / (p_len + h_len - inter)
+            if jac > max_jaccard_sim:
+                max_jaccard_sim = jac
 
     if max_minhash_sim >= 0.80:
         raise ValueError(f"Partition firewall violation: MinHash similarity {max_minhash_sim:.4f} >= 0.80")
@@ -674,6 +674,10 @@ def assemble_production_shards(
         if firewall_meta.get("max_minhash_similarity", 1.0) >= 0.80:
             raise ValueError(
                 f"Partition leak: max_minhash_similarity {firewall_meta['max_minhash_similarity']} >= 0.80"
+            )
+        if firewall_meta.get("max_token_jaccard_similarity", 1.0) >= 0.80:
+            raise ValueError(
+                f"Partition leak: max_token_jaccard_similarity {firewall_meta['max_token_jaccard_similarity']} >= 0.80"
             )
         if not firewall_meta.get("partition_isolated"):
             raise ValueError("Partition firewall reported not isolated")
@@ -1000,6 +1004,7 @@ def assemble_production_shards(
                     "target_term_leakage_count": target_term_leak_count,
                     "record_id_leakage_count": id_leak_count,
                     "max_minhash_similarity": measured_minhash_sim,
+                    "max_token_jaccard_similarity": measured_jaccard_sim,
                     "partition_isolated": True,
                 },
             },

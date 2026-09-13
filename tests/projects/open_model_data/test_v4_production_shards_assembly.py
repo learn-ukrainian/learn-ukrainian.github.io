@@ -37,6 +37,7 @@ from scripts.projects.open_model_data.v4_production_shards_assembly import (
     TOTAL_SFT_QUOTA,
     TRAJECTORY_SCHEMA_PATH,
     assert_no_private_host_paths,
+    compute_heldout_minhash_similarity,
     load_jsonl,
     sha256_file,
     verify_production_release,
@@ -268,15 +269,84 @@ def test_partition_firewall_zero_leakage(
 
 
 def test_partition_firewall_minhash_isolation(receipt_data: dict[str, Any]) -> None:
-    """Verify empirical MinHash near-duplicate similarity is strictly < 0.80 and reported accurately."""
+    """Verify empirical MinHash and exact Jaccard near-duplicate similarity are strictly < 0.80."""
     firewall = receipt_data["deliverables"]["heldout_evaluation_suite"]["partition_firewall"]
     assert firewall["partition_isolated"] is True
     assert firewall["target_term_leakage_count"] == 0
     assert firewall["record_id_leakage_count"] == 0
+
     max_sim = firewall["max_minhash_similarity"]
     assert isinstance(max_sim, (int, float))
     assert max_sim < 0.80, f"MinHash similarity {max_sim} >= 0.80 threshold"
     assert max_sim == 0.2188, f"Unexpected MinHash similarity {max_sim}, expected measured value 0.2188"
+
+    max_jac = firewall["max_token_jaccard_similarity"]
+    assert isinstance(max_jac, (int, float))
+    assert max_jac < 0.80, f"Token Jaccard similarity {max_jac} >= 0.80 threshold"
+    assert max_jac == 0.2, f"Unexpected Token Jaccard similarity {max_jac}, expected measured value 0.2000"
+
+
+def test_compute_heldout_minhash_similarity_detects_duplicate(tmp_path: Path) -> None:
+    """Verify compute_heldout_minhash_similarity detects duplicate/near-duplicate and raises ValueError."""
+    fake_heldout = tmp_path / "fake_heldout.jsonl"
+    fake_case = {
+        "eval_id": "eval_synth_001",
+        "case_type": "CORRECT",
+        "input_text": "Особливості деколонізації української термінології та мовних норм",
+    }
+    fake_heldout.write_text(json.dumps(fake_case, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    # Identical query in SFT
+    synth_sft = [
+        {
+            "query": "Особливості деколонізації української термінології та мовних норм",
+            "final_response": "Питома мовна форма повністю відповідає літературній нормі.",
+        }
+    ]
+    synth_dpo: list[dict[str, Any]] = []
+
+    with pytest.raises(ValueError, match="Partition firewall violation"):
+        compute_heldout_minhash_similarity(
+            heldout_suite_path=fake_heldout,
+            sft_records=synth_sft,
+            dpo_records=synth_dpo,
+        )
+
+
+def test_compute_heldout_minhash_similarity_synthetic_distinct(tmp_path: Path) -> None:
+    """Verify compute_heldout_minhash_similarity produces expected exact values on distinct texts."""
+    fake_heldout = tmp_path / "fake_heldout_distinct.jsonl"
+    heldout_cases = [
+        {"eval_id": "eval_d_01", "input_text": "Фізика твердого тіла та дослідження напівпровідникових кристалів."},
+        {"eval_id": "eval_d_02", "input_text": "Хімічний синтез органічних макромолекул у водних розчинах."},
+    ]
+    with fake_heldout.open("w", encoding="utf-8") as f:
+        for c in heldout_cases:
+            f.write(json.dumps(c, ensure_ascii=False) + "\n")
+
+    synth_sft = [
+        {
+            "query": "Порівняльний аналіз лексикографічних джерел шістдесятих років.",
+            "final_response": "Історична граматика підтверджує питомість давньоруської форми.",
+        }
+    ]
+    synth_dpo = [
+        {
+            "prompt": "Культура українського публіцистичного мовлення.",
+            "chosen": "Вживайте літературний зворот замість калькованого канцеляризму.",
+            "rejected": "Радянський канцеляризм залишається поширеним у документації.",
+        }
+    ]
+
+    minhash_sim, jaccard_sim, count = compute_heldout_minhash_similarity(
+        heldout_suite_path=fake_heldout,
+        sft_records=synth_sft,
+        dpo_records=synth_dpo,
+    )
+
+    assert minhash_sim < 0.25
+    assert jaccard_sim < 0.20  # Only minimal single-stopword overlap possible
+    assert count == 10  # 2 heldout cases x 5 production texts = 10 pairwise comparisons
 
 
 def test_no_private_host_paths_opsec(receipt_data: dict[str, Any]) -> None:

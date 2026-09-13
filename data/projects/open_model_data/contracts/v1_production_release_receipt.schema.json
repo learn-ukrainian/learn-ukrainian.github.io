@@ -216,6 +216,7 @@
                 "target_term_leakage_count",
                 "record_id_leakage_count",
                 "max_minhash_similarity",
+                "max_token_jaccard_similarity",
                 "partition_isolated"
               ],
               "properties": {
@@ -228,6 +229,10 @@
                   "const": 0
                 },
                 "max_minhash_similarity": {
+                  "type": "number",
+                  "maximum": 0.80
+                },
+                "max_token_jaccard_similarity": {
                   "type": "number",
                   "maximum": 0.80
                 },

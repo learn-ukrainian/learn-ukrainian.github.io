@@ -89,7 +89,7 @@ The dataset is isolated from the 1,000-case held-out evaluation suite (`data/pro
 - **Held-Out Composition**: 600 PRESERVE cases + 400 CORRECT cases from low-web-visibility sources.
 - **Calque Target Firewall**: 0 overlap between the 4,200 training calques and the 400 held-out CORRECT target patterns.
 - **ID Disjointness**: 0 ID collisions across all 6,000 SFT and 3,000 DPO records against held-out evaluation IDs.
-- **MinHash Deduplication**: Maximum near-duplicate MinHash similarity between production shards and held-out items $< 0.80$ (measured empirical maximum across 21,000,000 pairwise comparisons: 0.2188; token Jaccard: 0.2000).
+- **MinHash & Token Jaccard Firewall**: Both MinHash similarity and token Jaccard similarity between production shards and held-out items are strictly $< 0.80$. Computed across all 21,000,000 pairwise comparisons (1,000 held-out cases $\times$ 21,000 queries, prompts, and responses), the measured empirical maximums are MinHash similarity: **0.2188** and exact exhaustive token Jaccard: **0.2000**. Both metrics are validated by contract schema and persisted in `production_release_receipt.json`.
 
 ---
 
