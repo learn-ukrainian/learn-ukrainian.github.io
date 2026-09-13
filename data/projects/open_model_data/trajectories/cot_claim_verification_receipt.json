@@ -1,8 +1,8 @@
 {
   "counts": {
-    "r2u_claims_verified": 3,
+    "r2u_claims_verified": 5,
     "sum11_claims_verified": 14,
-    "total_claims_verified": 68,
+    "total_claims_verified": 70,
     "total_trajectories": 3,
     "trajectories_passed": 3,
     "trajectories_rejected": 0,
@@ -27,7 +27,7 @@
       "sha256": "ffd545d9178c9d0327c10a31292f1328792c5e0172c2af79ef336926ab68e3f1"
     }
   },
-  "generated_at": "2026-09-13T14:00:51.618106+00:00",
+  "generated_at": "2026-09-13T14:37:01.518942+00:00",
   "invariants": {
     "no_private_host_paths": true,
     "pass_rate_100_percent": true,

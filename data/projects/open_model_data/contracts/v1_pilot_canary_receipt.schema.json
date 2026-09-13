@@ -1,0 +1,362 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_pilot_canary_receipt.schema.json",
+  "title": "PilotCanaryReceiptV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "issue",
+    "epic",
+    "phase",
+    "generated_at",
+    "model_target",
+    "training_config",
+    "dataset_composition",
+    "loss_convergence",
+    "evaluation_gates",
+    "invariants",
+    "files",
+    "verdict"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v1_pilot_canary_receipt"
+    },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^receipt\\.pilot_canary\\.[a-f0-9]{16}$"
+    },
+    "issue": {
+      "const": 8010
+    },
+    "epic": {
+      "const": 6321
+    },
+    "phase": {
+      "const": "Phase 3.6: 200-Item Pilot Canary Fine-Tune on Gemma 3 4B"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "model_target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identifier",
+        "architecture",
+        "context_window",
+        "target_modules"
+      ],
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "architecture": {
+          "type": "string"
+        },
+        "context_window": {
+          "type": "integer",
+          "minimum": 512
+        },
+        "target_modules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "training_config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "lora_r",
+        "lora_alpha",
+        "learning_rate",
+        "epochs",
+        "batch_size",
+        "gradient_accumulation_steps",
+        "effective_batch_size",
+        "warmup_ratio",
+        "lr_scheduler"
+      ],
+      "properties": {
+        "method": {
+          "type": "string"
+        },
+        "lora_r": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "lora_alpha": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "learning_rate": {
+          "type": "number",
+          "minimum": 0.0
+        },
+        "epochs": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "batch_size": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "gradient_accumulation_steps": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "effective_batch_size": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "warmup_ratio": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "lr_scheduler": {
+          "type": "string"
+        }
+      }
+    },
+    "dataset_composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_items",
+        "correct_items",
+        "preserve_items",
+        "format_distribution",
+        "format_distribution_pct",
+        "replay_buffer_ratio",
+        "replay_buffer_items"
+      ],
+      "properties": {
+        "total_items": {
+          "const": 200
+        },
+        "correct_items": {
+          "const": 140
+        },
+        "preserve_items": {
+          "const": 60
+        },
+        "format_distribution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "quick_tip",
+            "minimal_edit",
+            "contrastive",
+            "deep_analysis"
+          ],
+          "properties": {
+            "quick_tip": {
+              "const": 80
+            },
+            "minimal_edit": {
+              "const": 50
+            },
+            "contrastive": {
+              "const": 40
+            },
+            "deep_analysis": {
+              "const": 30
+            }
+          }
+        },
+        "format_distribution_pct": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "quick_tip",
+            "minimal_edit",
+            "contrastive",
+            "deep_analysis"
+          ],
+          "properties": {
+            "quick_tip": {
+              "const": 40.0
+            },
+            "minimal_edit": {
+              "const": 25.0
+            },
+            "contrastive": {
+              "const": 20.0
+            },
+            "deep_analysis": {
+              "const": 15.0
+            }
+          }
+        },
+        "replay_buffer_ratio": {
+          "type": "number",
+          "minimum": 0.15
+        },
+        "replay_buffer_items": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "loss_convergence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "initial_loss",
+        "converged_loss",
+        "loss_reduction_pct",
+        "loss_converged"
+      ],
+      "properties": {
+        "initial_loss": {
+          "type": "number",
+          "minimum": 0.0
+        },
+        "converged_loss": {
+          "type": "number",
+          "minimum": 0.0
+        },
+        "loss_reduction_pct": {
+          "type": "number"
+        },
+        "loss_converged": {
+          "type": "boolean"
+        }
+      }
+    },
+    "evaluation_gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "calque_elimination_rate",
+        "calque_elimination_gate_passed",
+        "harmful_edit_rate",
+        "harmful_edit_binomial_upper_bound_95",
+        "harmful_edit_gate_passed",
+        "general_nlp_non_inferiority_margin",
+        "general_nlp_gate_passed",
+        "all_gates_passed"
+      ],
+      "properties": {
+        "calque_elimination_rate": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "calque_elimination_gate_passed": {
+          "type": "boolean"
+        },
+        "harmful_edit_rate": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "harmful_edit_binomial_upper_bound_95": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "harmful_edit_gate_passed": {
+          "type": "boolean"
+        },
+        "general_nlp_non_inferiority_margin": {
+          "type": "number",
+          "minimum": 0.0
+        },
+        "general_nlp_gate_passed": {
+          "type": "boolean"
+        },
+        "all_gates_passed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "invariants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "zero_heldout_leakage",
+        "zero_synthetic_hallucination",
+        "vesum_attestation_100_percent",
+        "no_private_host_paths"
+      ],
+      "properties": {
+        "zero_heldout_leakage": {
+          "type": "boolean"
+        },
+        "zero_synthetic_hallucination": {
+          "type": "boolean"
+        },
+        "vesum_attestation_100_percent": {
+          "type": "boolean"
+        },
+        "no_private_host_paths": {
+          "type": "boolean"
+        }
+      }
+    },
+    "files": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dataset",
+        "receipt"
+      ],
+      "properties": {
+        "dataset": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "filename",
+            "record_count",
+            "sha256"
+          ],
+          "properties": {
+            "filename": {
+              "type": "string"
+            },
+            "record_count": {
+              "type": "integer"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        },
+        "receipt": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "filename",
+            "sha256"
+          ],
+          "properties": {
+            "filename": {
+              "type": "string"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        }
+      }
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "CANARY_PILOT_PASSED",
+        "CANARY_PILOT_FAILED"
+      ]
+    }
+  }
+}
