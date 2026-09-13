@@ -107,17 +107,118 @@ def parse_textbook_contrast_tables(
         res = vc.execute("SELECT lemma FROM forms_all WHERE word_form = ? LIMIT 1", (clean,)).fetchone()
         return res[0] if res else clean
 
+    def test_alignment(seq1: list[str], seq2: list[str]) -> int:
+        if len(seq1) != len(seq2) or not seq1:
+            return 0
+        matches = 0
+        for s1, s2 in zip(seq1, seq2, strict=True):
+            w1 = set(re.findall(r"[а-яіїєґ']+", s1.lower()))
+            w2 = set(re.findall(r"[а-яіїєґ']+", s2.lower()))
+            lemmas1 = {get_lemma(w) for w in w1 if len(w) >= 3}
+            lemmas2 = {get_lemma(w) for w in w2 if len(w) >= 3}
+            stems1 = {_get_stem(w) for w in w1 if len(_get_stem(w)) >= 3}
+            stems2 = {_get_stem(w) for w in w2 if len(_get_stem(w)) >= 3}
+            if (
+                len(w1.intersection(w2)) > 0
+                or len(lemmas1.intersection(lemmas2)) > 0
+                or len(stems1.intersection(stems2)) > 0
+            ):
+                matches += 1
+        return matches
+
+    def check_side_by_side_line(line_str: str) -> tuple[str, str] | None:
+        words = line_str.split()
+        if len(words) < 2:
+            return None
+        # 1. Comma in line with 2-word left part
+        if "," in line_str:
+            first_comma = line_str.index(",")
+            left_part = line_str[:first_comma].split()
+            if len(left_part) == 2:
+                return (left_part[0], left_part[1] + line_str[first_comma:])
+        # 2. Superlative constructions
+        if words[0].lower() in ("самий", "сама", "саме", "самі") and len(words) >= 3:
+            return (" ".join(words[:2]), " ".join(words[2:]))
+        # 3. Repeated anchor word
+        for i in range(1, len(words)):
+            if words[i].lower() == words[0].lower():
+                return (" ".join(words[:i]), " ".join(words[i:]))
+        # 4. Shared stem / lemma morphological split
+        best_split = None
+        best_score = -999
+        for i in range(1, len(words)):
+            p1 = words[:i]
+            p2 = words[i:]
+            lemmas1 = {get_lemma(w) for w in p1 if len(w) >= 3}
+            lemmas2 = {get_lemma(w) for w in p2 if len(w) >= 3}
+            stems1 = {_get_stem(w) for w in p1 if len(_get_stem(w)) >= 3}
+            stems2 = {_get_stem(w) for w in p2 if len(_get_stem(w)) >= 3}
+            overlap = len(lemmas1.intersection(lemmas2).union(stems1.intersection(stems2)))
+            diff = abs(len(p1) - len(p2))
+            score = overlap * 10 - diff
+            if score > best_score:
+                best_score = score
+                best_split = (" ".join(p1), " ".join(p2))
+        if best_split and best_score > 0:
+            return best_split
+        # Reject unevidenced lines: no blind 2-word bisection fallback
+        return None
+
     rows = sc.execute(
         "SELECT id, chunk_id, title, author_uk, grade, subject, text FROM textbooks "
-        "WHERE text LIKE '%НЕПРАВИЛЬНО%ПРАВИЛЬНО%' "
-        "   OR text LIKE '%ПРАВИЛЬНО%НЕПРАВИЛЬНО%' "
+        "WHERE text LIKE '%НЕПРАВИЛЬНО%' "
+        "   OR text LIKE '%ПРАВИЛЬНО%' "
+        "   OR text LIKE '%Правильно%' "
         "   OR text LIKE '%❌%' "
         "   OR text LIKE '%Культура мовлення%' "
-        "   OR text LIKE '%Культура слова%'"
+        "   OR text LIKE '%Культура слова%' "
+        "   OR text LIKE '%Антисуржик%'"
     ).fetchall()
 
     contrast_records = []
     seen_pairs = set()
+
+    def add_pair(
+        cid: str,
+        author_key: str,
+        grade: Any,
+        subj: Any,
+        inc: str,
+        cor: str,
+        ctx: str,
+        pidx: int,
+    ) -> bool:
+        inc = re.sub(r"^[/\\–—\-\s]+|[/\\–—\-\s]+$", "", inc).strip(",.:;!? ")
+        cor = re.sub(r"^[/\\–—\-\s]+|[/\\–—\-\s]+$", "", cor).strip(",.:;!? ")
+        if len(inc) < 2 or len(cor) < 2 or inc.lower() == cor.lower():
+            return False
+        cor_words = re.findall(r"[а-яіїєґ']+", cor.lower())
+        if not cor_words:
+            return False
+        first_word = cor_words[0]
+        corr_lemma = get_lemma(first_word)
+        root_fam = extract_root_family(corr_lemma) or extract_root_family(first_word) or first_word[:3]
+        if not root_fam:
+            return False
+        pair_key = (inc.lower(), cor.lower())
+        if pair_key in seen_pairs:
+            return False
+        seen_pairs.add(pair_key)
+        contrast_records.append(
+            {
+                "item_id": f"contrast.textbook.{cid}.{pidx}",
+                "chunk_id": cid,
+                "source": f"textbook:{cid}",
+                "author": author_key,
+                "grade": grade,
+                "subject": subj or "ukrmova",
+                "incorrect": inc,
+                "correct": cor,
+                "derivational_family": root_fam,
+                "context": ctx,
+            }
+        )
+        return True
 
     for r in rows:
         _tid, cid, title, author, grade, subj, text = r
@@ -129,145 +230,138 @@ def parse_textbook_contrast_tables(
                 continue
 
         lines = text.split("\n")
-        table_mode: str | None = None
         pair_idx = 1
+        i = 0
 
-        for line in lines:
-            line_str = line.strip()
+        while i < len(lines):
+            line_str = lines[i].strip()
             if not line_str:
+                i += 1
                 continue
 
-            # Header detection
-            if re.search(r"НЕПРАВИЛЬНО\s+ПРАВИЛЬНО", line_str, re.IGNORECASE):
-                table_mode = "incorrect_first"
-                continue
-            elif re.search(r"ПРАВИЛЬНО\s+НЕПРАВИЛЬНО", line_str, re.IGNORECASE):
-                table_mode = "correct_first"
-                continue
-            elif "❌" in line_str and "✅" in line_str:
+            # Inline emoji contrast: ❌ ... ✅ ...
+            if "❌" in line_str and "✅" in line_str:
                 m = re.search(r"❌\s*([^✅\n]+)\s*✅\s*([^\n]+)", line_str)
-                if m:
-                    inc, cor = m.group(1).strip(), m.group(2).strip()
-                    if len(inc) >= 2 and len(cor) >= 2 and inc.lower() != cor.lower():
-                        pair_key = (inc.lower(), cor.lower())
-                        if pair_key not in seen_pairs:
-                            seen_pairs.add(pair_key)
-                            first_word = cor.split()[0].strip(",.:;!?")
-                            corr_lemma = get_lemma(first_word)
-                            root_fam = (
-                                extract_root_family(corr_lemma) or extract_root_family(first_word) or first_word[:3]
-                            )
-                            contrast_records.append(
-                                {
-                                    "item_id": f"contrast.textbook.{cid}.{pair_idx}",
-                                    "chunk_id": cid,
-                                    "source": f"textbook:{cid}",
-                                    "author": author_key,
-                                    "grade": grade,
-                                    "subject": subj or "ukrmova",
-                                    "incorrect": inc,
-                                    "correct": cor,
-                                    "derivational_family": root_fam,
-                                    "context": line_str,
-                                }
-                            )
-                            pair_idx += 1
+                if m and add_pair(
+                    cid,
+                    author_key,
+                    grade,
+                    subj,
+                    m.group(1).strip(),
+                    m.group(2).strip(),
+                    line_str,
+                    pair_idx,
+                ):
+                    pair_idx += 1
+                i += 1
                 continue
 
-            if table_mode:
-                if line_str.isdigit() or len(line_str) < 3:
-                    table_mode = None
-                    continue
-                # Stop on narrative, instructions, exercise numbers, citations, URLs
+            # Header detection (case-insensitive word boundary)
+            m_inc = re.search(r"\bНЕПРАВИЛЬНО\b", line_str, re.IGNORECASE)
+            m_cor = re.search(r"\bПРАВИЛЬНО\b", line_str, re.IGNORECASE)
+            if not (m_inc and m_cor):
+                i += 1
+                continue
+
+            mode = "incorrect_first" if m_inc.start() < m_cor.start() else "correct_first"
+
+            candidate_lines = []
+            j = i + 1
+            while j < len(lines):
+                l = lines[j].strip()
+                if l.isdigit() or len(l) < 2:
+                    break
+                # Stop on narrative, instructions, exercise numbers, citations, headings
                 if re.match(
-                    r"^(\d+[\.\)]|\d+\s|[А-Я]\.|\bПрочитайте\b|\bСкладіть\b|\bПерепишіть\b|\bПерегляньте\b|\bРозрізняймо\b|\bДО РЕЧІ\b|\bЗАУВАЖТЕ\b|\bПоясніть\b|\bВправа\b|\bРозділ\b|\bТема\b)",
-                    line_str,
+                    r"^(\d+[\.\)]|\d+\s|[А-Я]\.|\bПрочитайте\b|\bСкладіть\b|\bПерепишіть\b|\bПерегляньте\b|\bРозрізняймо\b|\bДО РЕЧІ\b|\bЗАУВАЖТЕ\b|\bПоясніть\b|\bВправа\b|\bРозділ\b|\bТема\b|\bКорисно знати\b)",
+                    l,
                 ):
-                    table_mode = None
-                    continue
-                if re.match(r"^[А-Г]\s+", line_str) or re.search(r"https?://|cutt\.ly|[a-zA-Z\?«»–—\(\)]", line_str):
-                    table_mode = None
-                    continue
-                if len(line_str.split()) > 10:
-                    table_mode = None
-                    continue
+                    break
+                if re.match(r"^[А-Г]\s+", l) or re.search(r"https?://|cutt\.ly|[a-zA-Z\?«»–—\(\)]", l):
+                    break
+                if len(l.split()) > 10:
+                    break
+                candidate_lines.append(l)
+                j += 1
 
-                words = line_str.split()
-                if len(words) < 2:
-                    continue
+            i = j
+            if not candidate_lines:
+                continue
 
-                pair = None
-                if "," in line_str:
-                    first_comma = line_str.index(",")
-                    left_part = line_str[:first_comma].split()
-                    if len(left_part) == 2:
-                        pair = (left_part[0], left_part[1] + line_str[first_comma:])
+            # 1. Check for two-column (or multi-column) block layout
+            offset = 0
+            is_two_col = False
+            while offset < len(candidate_lines):
+                rem = len(candidate_lines) - offset
+                best_k = None
+                best_matches = 0
+                for k in range(2, rem // 2 + 1):
+                    col1 = candidate_lines[offset : offset + k]
+                    col2 = candidate_lines[offset + k : offset + 2 * k]
+                    m = test_alignment(col1, col2)
+                    min_m = 2 if k >= 3 else 1
+                    if (
+                        m >= min_m
+                        and (m / k) >= 0.5
+                        and (m > best_matches or (m == best_matches and (best_k is None or k > best_k)))
+                    ):
+                        best_matches = m
+                        best_k = k
 
-                if not pair and words[0].lower() in ("самий", "сама", "саме", "самі") and len(words) >= 3:
-                    pair = (" ".join(words[:2]), " ".join(words[2:]))
+                if best_k:
+                    is_two_col = True
+                    c1 = candidate_lines[offset : offset + best_k]
+                    c2 = candidate_lines[offset + best_k : offset + 2 * best_k]
+                    for w1, w2 in zip(c1, c2, strict=True):
+                        inc, cor = (w1, w2) if mode == "incorrect_first" else (w2, w1)
+                        p1 = text.find(w1)
+                        p2 = text.find(w2)
+                        if p1 != -1 and p2 != -1:
+                            start_p = min(p1, p2)
+                            end_p = max(p1 + len(w1), p2 + len(w2))
+                            ctx = text[start_p:end_p]
+                        else:
+                            ctx = f"{w1} -> {w2}"
 
-                if not pair:
-                    for i in range(1, len(words)):
-                        if words[i].lower() == words[0].lower():
-                            pair = (" ".join(words[:i]), " ".join(words[i:]))
-                            break
-
-                if not pair:
-                    best_split = None
-                    best_score = -999
-                    for i in range(1, len(words)):
-                        p1 = words[:i]
-                        p2 = words[i:]
-                        stems1 = {_get_stem(w) for w in p1 if len(_get_stem(w)) >= 3}
-                        stems2 = {_get_stem(w) for w in p2 if len(_get_stem(w)) >= 3}
-                        overlap = len(stems1.intersection(stems2))
-                        diff = abs(len(p1) - len(p2))
-                        score = overlap * 10 - diff
-                        if score > best_score:
-                            best_score = score
-                            best_split = (" ".join(p1), " ".join(p2))
-                    if best_split and best_score > 0:
-                        pair = best_split
-
-                if not pair and len(words) == 2:
-                    # Single-word contrast pairs side-by-side
-                    pair = (words[0], words[1])
-
-                if not pair:
-                    # Reject ambiguous multi-word lines lacking structural split evidence
-                    continue
-
-                w1 = pair[0].strip(",.:;!?")
-                w2 = pair[1].strip(",.:;!?")
-                if table_mode == "incorrect_first":
-                    inc, cor = w1, w2
+                        if add_pair(cid, author_key, grade, subj, inc, cor, ctx, pair_idx):
+                            pair_idx += 1
+                    offset += 2 * best_k
                 else:
-                    inc, cor = w2, w1
+                    break
 
-                if len(inc) < 2 or len(cor) < 2 or inc.lower() == cor.lower():
-                    continue
+            # 2. Check Alternating Rows if not half-and-half
+            if not is_two_col and len(candidate_lines) >= 4 and len(candidate_lines) % 2 == 0:
+                alt_matches = sum(
+                    1
+                    for idx in range(len(candidate_lines) // 2)
+                    if test_alignment([candidate_lines[2 * idx]], [candidate_lines[2 * idx + 1]])
+                )
+                if alt_matches >= 2 and (alt_matches / (len(candidate_lines) // 2)) >= 0.6:
+                    is_two_col = True
+                    for idx in range(len(candidate_lines) // 2):
+                        w1 = candidate_lines[2 * idx]
+                        w2 = candidate_lines[2 * idx + 1]
+                        inc, cor = (w1, w2) if mode == "incorrect_first" else (w2, w1)
+                        p1 = text.find(w1)
+                        p2 = text.find(w2)
+                        if p1 != -1 and p2 != -1:
+                            start_p = min(p1, p2)
+                            end_p = max(p1 + len(w1), p2 + len(w2))
+                            ctx = text[start_p:end_p]
+                        else:
+                            ctx = f"{w1} -> {w2}"
 
-                pair_key = (inc.lower(), cor.lower())
-                if pair_key not in seen_pairs:
-                    seen_pairs.add(pair_key)
-                    first_word = cor.split()[0].strip(",.:;!?")
-                    corr_lemma = get_lemma(first_word)
-                    root_fam = extract_root_family(corr_lemma) or extract_root_family(first_word) or first_word[:3]
-                    contrast_records.append(
-                        {
-                            "item_id": f"contrast.textbook.{cid}.{pair_idx}",
-                            "chunk_id": cid,
-                            "source": f"textbook:{cid}",
-                            "author": author_key,
-                            "grade": grade,
-                            "subject": subj or "ukrmova",
-                            "incorrect": inc,
-                            "correct": cor,
-                            "derivational_family": root_fam,
-                            "context": line_str,
-                        }
-                    )
-                    pair_idx += 1
+                        if add_pair(cid, author_key, grade, subj, inc, cor, ctx, pair_idx):
+                            pair_idx += 1
+
+            # 3. Check Side-by-Side if not column-based
+            if not is_two_col:
+                for l in candidate_lines:
+                    p = check_side_by_side_line(l)
+                    if p:
+                        inc, cor = (p[0], p[1]) if mode == "incorrect_first" else (p[1], p[0])
+                        if add_pair(cid, author_key, grade, subj, inc, cor, l, pair_idx):
+                            pair_idx += 1
 
     s_conn.close()
     v_conn.close()
