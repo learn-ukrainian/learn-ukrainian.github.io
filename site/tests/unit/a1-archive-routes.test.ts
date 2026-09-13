@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { evaluate } from '@mdx-js/mdx';
 import * as runtime from 'react/jsx-runtime';
 import { archiveBookmarkPaths } from '../../src/lib/a1-archive-routes';
@@ -29,7 +31,7 @@ describe('canonical A1 landing', () => {
     num: 1, slug: 'example', title: 'Example', status: 'active',
     lessons: [{ n: 1, title: 'Lesson', minutes: 5, href: '/a1/example/1/' }],
   }] }] }])('renders the published lesson modules with their actual count: %j', async ({ modules }) => {
-    const source = readFileSync(new URL('../../src/content/docs/a1/index.mdx', import.meta.url), 'utf8')
+    const source = readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), '../../src/content/docs/a1/index.mdx'), 'utf8')
       .replace(/^---\n[\s\S]*?\n---\n/, '')
       .replace("import LevelLanding from '@site/src/components/LevelLanding';",
         'export const LevelLanding = (props) => props;');
