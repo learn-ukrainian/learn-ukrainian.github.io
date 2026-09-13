@@ -28,6 +28,7 @@ Usage:
 
 from __future__ import annotations
 
+import enum
 import re
 import time
 from datetime import UTC, datetime
@@ -961,19 +962,40 @@ def _parse_dict_entries(html: str) -> list[dict[str, str]]:
     return entries
 
 
-def r2u_translate(russian_word: str) -> list[dict[str, str]]:
-    """Look up Russian→Ukrainian translation on r2u.org.ua.
+class R2ULookupStatus(enum.StrEnum):
+    FOUND = "found"
+    NOT_FOUND_WITHIN_VERIFIED_COVERAGE = "not_found_within_verified_coverage"
+    SOURCE_UNAVAILABLE = "source_unavailable"
 
-    Uses the /s endpoint (?w=word). Returns list of {headword, translation} dicts.
+
+def r2u_translate_with_status(russian_word: str) -> tuple[R2ULookupStatus, list[dict[str, str]]]:
+    """Look up Russian→Ukrainian translation on r2u.org.ua with network vs absence disambiguation.
+
+    Uses the /s endpoint (?w=word). Returns (status, list of {headword, translation} dicts).
+    Differentiates SOURCE_UNAVAILABLE (network timeout / HTTP error) from
+    NOT_FOUND_WITHIN_VERIFIED_COVERAGE. Never treats network errors as missing word proof.
     """
     try:
         r = _get(f"{R2U_BASE}/s", params={"w": russian_word}, timeout=20)
         if r.status_code == 404:
-            return []
+            return R2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE, []
         r.raise_for_status()
-        return _parse_dict_entries(r.text)
-    except requests.RequestException:
-        return []
+        entries = _parse_dict_entries(r.text)
+        if entries:
+            return R2ULookupStatus.FOUND, entries
+        return R2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE, []
+    except (requests.RequestException, OSError):
+        return R2ULookupStatus.SOURCE_UNAVAILABLE, []
+
+
+def r2u_translate(russian_word: str) -> list[dict[str, str]]:
+    """Look up Russian→Ukrainian translation on r2u.org.ua.
+
+    Uses the /s endpoint (?w=word). Returns list of {headword, translation} dicts.
+    Note: For strict disambiguation of network timeouts vs absence, use r2u_translate_with_status().
+    """
+    _status, entries = r2u_translate_with_status(russian_word)
+    return entries
 
 
 # ══════════════════════════════════════════════════════════════════

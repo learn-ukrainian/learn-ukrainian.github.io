@@ -1111,6 +1111,18 @@ edits, known context-stripped junk such as `рожі -> мармизи` and
 same-document/tag repeats. Tune the documented CLI constants only when the
 fixture policy itself is changing.
 
+### `scripts/projects/open_model_data/v4_differential_soviet_miner.py`
+
+Differential Soviet candidate miner and modern whitelist filter (ULDR Phase 3.4, #8008, Epic #6321). Ingests 7,152 entries with `sovietization_risk > 0` from `sum11` in `data/sources.db`, enforces an explicit 20th-century technical neologism whitelist (*програмування*, *комп'ютер*, *авіація*, *транзистор*), disambiguates network errors (`SOURCE_UNAVAILABLE`) from absent terms (`NOT_FOUND_WITHIN_VERIFIED_COVERAGE`), tags Soviet ideological realia, and rejects Skrypnykivka-only archaisms.
+
+```bash
+# Mine and adjudicate candidates
+.venv/bin/python scripts/projects/open_model_data/v4_differential_soviet_miner.py
+
+# Verify generated receipt and checksums
+.venv/bin/python scripts/projects/open_model_data/v4_differential_soviet_miner.py --verify-only
+```
+
 ### `scripts/audit/module_quality_audit.py`
 
 Coverage report for planned modules, built modules, deterministic surface

@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_differential_soviet_candidate.schema.json",
+  "title": "DifferentialSovietCandidateV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "candidate_id",
+    "sum11_id",
+    "word",
+    "sovietization_risk",
+    "sovietization_keywords",
+    "status",
+    "adjudication_category",
+    "authentic_alternatives",
+    "is_neologism_whitelisted",
+    "vesum_attested",
+    "r2u_lookup_status"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v1_differential_soviet_candidate"
+    },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^soviet\\.cand\\.[a-f0-9]{16}$"
+    },
+    "sum11_id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "word": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sovietization_risk": {
+      "type": "integer",
+      "enum": [1, 2]
+    },
+    "sovietization_keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "CANDIDATE_ADMITTED",
+        "WHITELIST_PRESERVED",
+        "IDEOLOGICAL_HISTORICAL_ONLY",
+        "SKRYPNYKIVKA_ARCHAISM_REJECTED",
+        "UNVERIFIED_EXCLUDED"
+      ]
+    },
+    "adjudication_category": {
+      "type": "string",
+      "enum": [
+        "lexical_calque",
+        "syntactic_calque",
+        "soviet_realia_ideology",
+        "modern_neologism_technical",
+        "modern_internationalism",
+        "skrypnykivka_archaism",
+        "standard_ukrainian_preserved"
+      ]
+    },
+    "authentic_alternatives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "term",
+          "source",
+          "vesum_attested",
+          "is_modern_standard"
+        ],
+        "properties": {
+          "term": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "vesum_attested": {
+            "type": "boolean"
+          },
+          "is_modern_standard": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "is_neologism_whitelisted": {
+      "type": "boolean"
+    },
+    "vesum_attested": {
+      "type": "boolean"
+    },
+    "r2u_lookup_status": {
+      "type": "string",
+      "enum": [
+        "found",
+        "not_found",
+        "not_found_within_verified_coverage",
+        "source_unavailable",
+        "cached",
+        "not_queried"
+      ]
+    }
+  }
+}
