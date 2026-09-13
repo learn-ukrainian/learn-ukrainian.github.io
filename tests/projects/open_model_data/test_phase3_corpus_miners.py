@@ -37,6 +37,7 @@ from scripts.projects.open_model_data.phase3_mined_candidate_guards import (
 from scripts.projects.open_model_data.v4_mine_corpus_calques import (
     DEFAULT_SOURCES_DB,
     DEFAULT_VESUM_DB,
+    official_zno_stem,
     strip_invented_zno_ellipsis,
 )
 from scripts.projects.open_model_data.v4_mine_uagec_calques import (
@@ -272,6 +273,20 @@ def test_independent_sources_grounding(requires_sources_db: Path) -> None:
     for rec in uagec_records:
         assert rec["doc_id"] not in test_doc_ids, f"Protected test doc_id {rec['doc_id']} found in mined record: {rec}"
 
+    with ZNO_FILE.open(encoding="utf-8") as handle:
+        zno_records = [json.loads(line) for line in handle if line.strip()]
+    mismatched = []
+    for rec in zno_records:
+        try:
+            tid = int(str(rec["task_id"]).split(".", 1)[1])
+        except (IndexError, ValueError):
+            mismatched.append(rec.get("task_id"))
+            continue
+        row = sc.execute("SELECT stem FROM zno_tasks WHERE id = ?", (tid,)).fetchone()
+        if row is None or rec.get("stem") != official_zno_stem(row[0]):
+            mismatched.append(rec.get("task_id"))
+    assert mismatched == [], f"ZNO stems that are not official zno_tasks.stem: {mismatched[:10]}"
+
     s_conn.close()
 
 
@@ -336,7 +351,22 @@ def test_f2_synthetic_wrapper_and_ellipsis_guards() -> None:
     invented = "Зображене в уривку ... [скорочено] ... суголосне з подіями твору"
     assert contains_invented_zno_ellipsis(invented)
     assert not contains_invented_zno_ellipsis("Зображене в уривку суголосне з подіями твору")
-    assert "[скорочено]" not in strip_invented_zno_ellipsis(invented)
+    cleaned = strip_invented_zno_ellipsis(invented)
+    assert "[скорочено]" not in cleaned
+    assert " ... ... " not in cleaned
+    assert cleaned == "Зображене в уривку суголосне з подіями твору"
+
+
+def test_f2_strip_skorocheno_does_not_leave_spliced_ellipsis() -> None:
+    """F2 regression: looking for корочено (missing с) cannot strip [скорочено]."""
+    invented = "Зображене в уривку ... [скорочено] ... суголосне з подіями твору"
+    typo_strip = re.sub(r"\s*\.\.\.\s*\[c?корочено\]\s*\.\.\.\s*", " ", invented, flags=re.IGNORECASE)
+    assert "[скорочено]" in typo_strip
+    cleaned = strip_invented_zno_ellipsis(invented)
+    assert cleaned == "Зображене в уривку суголосне з подіями твору"
+    leftover = "Зображене в уривку ... ... суголосне з подіями твору"
+    assert contains_invented_zno_ellipsis(leftover)
+    assert " ... ... " not in strip_invented_zno_ellipsis(leftover)
 
 
 def test_f2_shipped_uagec_and_zno_have_zero_synthetic_wrappers() -> None:
@@ -357,14 +387,19 @@ def test_f2_shipped_uagec_and_zno_have_zero_synthetic_wrappers() -> None:
     assert ungrounded == 0, f"Ungrounded UA-GEC sentence_context rows: {ungrounded}"
 
     invented = 0
+    spliced = 0
     with ZNO_FILE.open(encoding="utf-8") as handle:
         for line in handle:
             if not line.strip():
                 continue
             rec = json.loads(line)
-            if contains_invented_zno_ellipsis(rec.get("stem", "")):
+            stem = rec.get("stem", "")
+            if contains_invented_zno_ellipsis(stem):
                 invented += 1
-    assert invented == 0, f"Invented ZNO [скорочено] stems still present: {invented}"
+            if " ... ... " in stem or re.search(r"\.\.\.\s*\.\.\.", stem):
+                spliced += 1
+    assert invented == 0, f"Invented ZNO [скорочено] / spliced stems still present: {invented}"
+    assert spliced == 0, f"Miner-spliced ' ... ... ' stems still present: {spliced}"
 
 
 def test_f3_phase30_firewall_helpers_and_zero_heldout_leak() -> None:

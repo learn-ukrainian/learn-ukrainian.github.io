@@ -13,7 +13,7 @@
     "zno_distractor_tasks": {
       "filename": "zno_distractor_tasks.jsonl",
       "record_count": 1646,
-      "sha256": "658906b56da850bfe4db6067cb5ce83041128fd8d4ebbdd6f0c014f8a757293d",
+      "sha256": "eee5cf3706eba2fecbb9cb3bf983657b593690a250316e455688c9369506f062",
       "description": "1,646 official ZNO/NMT exam tasks with verified stems, distractors, and keys."
     },
     "uagec_mined_calques": {

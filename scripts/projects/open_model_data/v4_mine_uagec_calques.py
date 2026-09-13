@@ -491,7 +491,9 @@ def main() -> None:
         sys.exit(0)
 
     if args.repair_existing:
-        from scripts.projects.open_model_data.v4_mine_corpus_calques import strip_invented_zno_ellipsis
+        from scripts.projects.open_model_data.v4_mine_corpus_calques import (
+            restore_zno_stems_from_official_exam_text,
+        )
 
         zno_path = args.output_dir / "zno_distractor_tasks.jsonl"
         if zno_path.is_file():
@@ -500,9 +502,13 @@ def main() -> None:
                 for line in handle:
                     if not line.strip():
                         continue
-                    rec = json.loads(line)
-                    rec["stem"] = strip_invented_zno_ellipsis(rec.get("stem", ""))
-                    repaired_zno.append(rec)
+                    repaired_zno.append(json.loads(line))
+            stats = restore_zno_stems_from_official_exam_text(
+                repaired_zno,
+                sources_db=args.sources_db,
+            )
+            if stats["missing"]:
+                raise ValueError(f"Official ZNO stems missing for {stats['missing']} records")
             with zno_path.open("w", encoding="utf-8") as handle:
                 for rec in repaired_zno:
                     handle.write(json.dumps(rec, ensure_ascii=False) + "\n")
@@ -527,7 +533,9 @@ def main() -> None:
         topic_counts: dict[str, int] = {}
         for rec in zno_records:
             topic_counts[rec["topic_norm"]] = topic_counts.get(rec["topic_norm"], 0) + 1
-        existing_manifest = json.loads((args.output_dir / "decolonization_mined_manifest.json").read_text(encoding="utf-8"))
+        existing_manifest = json.loads(
+            (args.output_dir / "decolonization_mined_manifest.json").read_text(encoding="utf-8")
+        )
         corpus_sum = {
             "contrast_records_count": len(contrast_records),
             "unique_chunks_count": len(unique_chunks),

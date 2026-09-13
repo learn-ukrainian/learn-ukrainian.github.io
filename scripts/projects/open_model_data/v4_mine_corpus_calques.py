@@ -27,19 +27,119 @@ from scripts.projects.open_model_data.phase3_decolonization_partition import (
     is_phase30_textbook_heldout,
 )
 from scripts.projects.open_model_data.phase3_mined_candidate_guards import (
+    INVENTED_ZNO_CONNECTOR_RE,
     INVENTED_ZNO_ELLIPSIS_RE,
+    INVENTED_ZNO_SPLICE_RE,
+    contains_invented_zno_ellipsis,
     is_inverted_do_po_date_range,
     verify_mined_manifest,
 )
 
 
 def strip_invented_zno_ellipsis(stem: str) -> str:
-    """Remove miner-invented ``[скорочено]`` connectors; leftover spans stay source text."""
+    """Remove miner-invented ``[скорочено]`` connectors and leftover `` ... ... `` splices."""
     if not stem:
         return ""
-    cleaned = re.sub(r"\s*\.\.\.\s*\[c?корочено\]\s*\.\.\.\s*", " ", stem, flags=re.IGNORECASE)
+    cleaned = INVENTED_ZNO_CONNECTOR_RE.sub(" ", stem)
     cleaned = INVENTED_ZNO_ELLIPSIS_RE.sub(" ", cleaned)
+    cleaned = INVENTED_ZNO_SPLICE_RE.sub(" ", cleaned)
     return re.sub(r"\s+", " ", cleaned).strip()
+
+
+def official_zno_stem(stem: str) -> str:
+    """Keep official exam bytes; strip only an invented ``[скорочено]`` connector if present."""
+    text = (stem or "").strip()
+    if not text:
+        return ""
+    if INVENTED_ZNO_ELLIPSIS_RE.search(text):
+        return strip_invented_zno_ellipsis(text)
+    return text
+
+
+def _stems_from_zno_html(html: str) -> dict[int, str]:
+    """Parse official stems from a zno.osvita.ua booklet page (same extraction as ingest)."""
+    from bs4 import BeautifulSoup
+
+    soup = BeautifulSoup(html, "html.parser")
+    stems: dict[int, str] = {}
+    for card in soup.find_all(class_="task-card"):
+        task_no_match = re.search(r"\d+", card.get("id", "") or "")
+        if not task_no_match:
+            continue
+        q_div = card.find(class_="question")
+        stem = q_div.get_text(separator="\n", strip=True) if q_div else ""
+        stems[int(task_no_match.group(0))] = official_zno_stem(stem)
+    return stems
+
+
+def load_official_zno_stems_from_sources(sources_db: Path) -> dict[int, str]:
+    """Map ``zno_tasks.id`` → official ``stem``."""
+    conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    try:
+        rows = conn.execute("SELECT id, stem FROM zno_tasks ORDER BY id").fetchall()
+    finally:
+        conn.close()
+    return {int(tid): official_zno_stem(stem) for tid, stem in rows}
+
+
+def load_official_zno_stems_from_html(cache_dir: Path) -> dict[tuple[int, str, int], str]:
+    """Map ``(year, session, task_no)`` → official stem from published exam pages."""
+    from scripts.ingest.zno_ingest import ONLINE_TEST_MAPPING, fetch_page_with_rate_limit
+
+    stems: dict[tuple[int, str, int], str] = {}
+    for (year, session, subject_scope), (catalogue, test_id) in ONLINE_TEST_MAPPING.items():
+        cache_path = cache_dir / f"{catalogue}_{test_id}.html"
+        url = f"https://zno.osvita.ua/{catalogue}/{test_id}/"
+        html = fetch_page_with_rate_limit(url, cache_path)
+        for task_no, stem in _stems_from_zno_html(html).items():
+            key = (int(year), str(session), int(task_no))
+            if key in stems and stems[key] != stem:
+                raise ValueError(f"Conflicting official stems for {key} ({subject_scope})")
+            stems[key] = stem
+    return stems
+
+
+def restore_zno_stems_from_official_exam_text(
+    records: list[dict[str, Any]],
+    sources_db: Path | None = None,
+    cache_dir: Path | None = None,
+) -> dict[str, int]:
+    """Replace mined stems with official exam text. Prefer ``zno_tasks.stem`` when present."""
+    restored = 0
+    longer = 0
+    missing = 0
+    by_id: dict[int, str] = {}
+    by_key: dict[tuple[int, str, int], str] = {}
+    db_path = sources_db if sources_db is not None and sources_db.is_file() and sources_db.stat().st_size > 0 else None
+    if db_path is not None:
+        by_id = load_official_zno_stems_from_sources(db_path)
+    else:
+        cache = cache_dir if cache_dir is not None else Path("/tmp/zno_cache")
+        by_key = load_official_zno_stems_from_html(cache)
+
+    for rec in records:
+        previous = rec.get("stem") or ""
+        official = ""
+        if by_id:
+            try:
+                tid = int(str(rec.get("task_id", "")).split(".", 1)[1])
+            except (IndexError, ValueError):
+                tid = -1
+            official = by_id.get(tid, "")
+        else:
+            try:
+                key = (int(rec["year"]), str(rec["session"]), int(rec["task_no"]))
+            except (KeyError, TypeError, ValueError):
+                key = None
+            official = by_key.get(key, "") if key is not None else ""
+        if not official:
+            missing += 1
+            continue
+        rec["stem"] = official
+        restored += 1
+        if len(official) > len(previous):
+            longer += 1
+    return {"restored": restored, "longer": longer, "missing": missing}
 
 
 def resolve_data_path(rel_path: str) -> Path:
@@ -524,7 +624,7 @@ def parse_zno_exam_tasks(sources_db: Path) -> list[dict[str, Any]]:
             correct_choice = options.get("right", [])
 
         # Official exam text must stay byte-faithful. Never invent a «[скорочено]» ellipsis.
-        stem_str = strip_invented_zno_ellipsis((stem or "").strip())
+        stem_str = official_zno_stem(stem)
 
         tasks.append(
             {
@@ -596,6 +696,17 @@ def main() -> None:
     parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--verify-only", action="store_true", help="Verify existing output files.")
+    parser.add_argument(
+        "--restore-zno-stems",
+        action="store_true",
+        help="Rewrite committed ZNO stems from official zno_tasks.stem or published exam HTML.",
+    )
+    parser.add_argument(
+        "--zno-html-cache",
+        type=Path,
+        default=Path("/tmp/zno_cache"),
+        help="Cache directory for official zno.osvita.ua booklet HTML.",
+    )
     args = parser.parse_args()
 
     if args.verify_only:
@@ -613,6 +724,37 @@ def main() -> None:
             print(f"Verification failed: {exc}")
             sys.exit(1)
         print("Mined artifacts verified (schema, SHA-256, F1–F3 guards).")
+        sys.exit(0)
+
+    if args.restore_zno_stems:
+        zno_path = args.output_dir / "zno_distractor_tasks.jsonl"
+        if not zno_path.is_file():
+            print(f"Missing ZNO artifact: {zno_path.name}")
+            sys.exit(1)
+        records = []
+        with zno_path.open(encoding="utf-8") as handle:
+            for line in handle:
+                if line.strip():
+                    records.append(json.loads(line))
+        stats = restore_zno_stems_from_official_exam_text(
+            records,
+            sources_db=args.sources_db,
+            cache_dir=args.zno_html_cache,
+        )
+        remaining = [rec.get("task_id") for rec in records if contains_invented_zno_ellipsis(rec.get("stem", ""))]
+        if stats["missing"] or remaining:
+            print(f"ZNO stem restore incomplete: missing={stats['missing']} spliced={len(remaining)}")
+            sys.exit(1)
+        with zno_path.open("w", encoding="utf-8") as handle:
+            for rec in records:
+                handle.write(json.dumps(rec, ensure_ascii=False) + "\n")
+        manifest_path = args.output_dir / "decolonization_mined_manifest.json"
+        if manifest_path.is_file():
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["files"]["zno_distractor_tasks"]["sha256"] = hashlib.sha256(zno_path.read_bytes()).hexdigest()
+            manifest["files"]["zno_distractor_tasks"]["record_count"] = len(records)
+            manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
+        print(f"Restored official ZNO stems: {stats['restored']} ({stats['longer']} longer than the prior splice).")
         sys.exit(0)
 
     summary = mine_corpus_calques(args.sources_db, args.vesum_db, args.output_dir)

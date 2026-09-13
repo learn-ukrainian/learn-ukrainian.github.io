@@ -84,7 +84,7 @@
         "stem": {
           "type": "string",
           "minLength": 1,
-          "not": {"pattern": "\\[c?скорочено\\]"}
+          "not": {"pattern": "(\\[(?:c|с)?корочено\\]|\\.\\.\\.\\s*\\.\\.\\.)"}
         },
         "options": {"type": ["array", "object", "string", "null"]},
         "correct_key": {},

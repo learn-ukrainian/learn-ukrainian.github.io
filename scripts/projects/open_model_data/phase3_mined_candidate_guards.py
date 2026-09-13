@@ -44,7 +44,14 @@ PO_DATE_RANGE_RE = re.compile(r"\bз\s+\d+\s+по\b", re.IGNORECASE)
 SYNTHETIC_UAGEC_WRAPPER_RE = re.compile(
     r"^У тексті вжито (?:вираз|конструкцію):\s*«.+»\s*\(виправлено на:\s*«.+»\)\.?\s*$"
 )
-INVENTED_ZNO_ELLIPSIS_RE = re.compile(r"\[c?скорочено\]", re.IGNORECASE)
+# Ukrainian «скорочено». The previous typo ``[c?корочено]`` never matched
+# ``[скорочено]`` and left miner-spliced `` ... ... `` behind.
+INVENTED_ZNO_ELLIPSIS_RE = re.compile(r"\[\s*(?:c|с)?корочено\s*\]", re.IGNORECASE)
+INVENTED_ZNO_CONNECTOR_RE = re.compile(
+    r"\s*\.\.\.\s*\[\s*(?:c|с)?корочено\s*\]\s*\.\.\.\s*",
+    re.IGNORECASE,
+)
+INVENTED_ZNO_SPLICE_RE = re.compile(r"\s*\.\.\.\s*\.\.\.\s*")
 
 SCHEMA_RECORD_DEFS = {
     "corpus_contrast_tables": "contrastRecord",
@@ -64,8 +71,9 @@ def is_synthetic_uagec_wrapper(sentence_context: str) -> bool:
 
 
 def contains_invented_zno_ellipsis(stem: str) -> bool:
-    """True when a ZNO stem contains the miner-inserted ``[скорочено]`` marker."""
-    return bool(INVENTED_ZNO_ELLIPSIS_RE.search(stem or ""))
+    """True for miner-inserted ``[скорочено]`` or leftover spliced `` ... ... ``."""
+    text = stem or ""
+    return bool(INVENTED_ZNO_ELLIPSIS_RE.search(text) or INVENTED_ZNO_SPLICE_RE.search(text))
 
 
 def is_constrained_mined_filename(filename: str) -> bool:
@@ -195,7 +203,7 @@ def verify_mined_manifest(
         rec.get("task_id") for rec in load_jsonl(zno_path) if contains_invented_zno_ellipsis(rec.get("stem", ""))
     ]
     if invented:
-        raise ValueError(f"Invented ZNO ellipsis in stems: {len(invented)}")
+        raise ValueError(f"Invented ZNO ellipsis or spliced ' ... ... ' in stems: {len(invented)}")
 
     summary = manifest["uagec_mining_summary"]
     admitted = int(summary["g_case_admitted"])
