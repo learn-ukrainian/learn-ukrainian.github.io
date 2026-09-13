@@ -4214,6 +4214,7 @@ def parse_writer_output_strict_json(output: str, *, lesson_mode: bool = False) -
     fence_start_line = 0
     fence_open_run = 0  # Backtick-run length of the OPEN fence (CommonMark).
     fence_lines: list[str] = []
+    inner_code_run = 0
 
     # CommonMark fence semantics (#2026-05-20 design triangulation via Codex +
     # DeepSeek consults): an opening fence of N>=3 backticks is closed by a
@@ -4272,7 +4273,16 @@ def parse_writer_output_strict_json(output: str, *, lesson_mode: bool = False) -
             # against the rare case where the writer opens a NEW info-bearing
             # fence inside an artifact — that's content too, not a close.
             close_info = fence_match.group("info").strip()
-            if run_len < fence_open_run or close_info:
+            if inner_code_run:
+                if run_len >= inner_code_run and not close_info:
+                    inner_code_run = 0
+                fence_lines.append(line)
+                continue
+            if close_info:
+                inner_code_run = run_len
+                fence_lines.append(line)
+                continue
+            if run_len < fence_open_run:
                 fence_lines.append(line)
                 continue
 
@@ -4291,6 +4301,7 @@ def parse_writer_output_strict_json(output: str, *, lesson_mode: bool = False) -
             pending_name = None
             fence_start_line = 0
             fence_open_run = 0
+            inner_code_run = 0
             fence_lines = []
             continue
 
