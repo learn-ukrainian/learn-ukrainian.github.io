@@ -605,6 +605,34 @@ body {
   border: 1px solid var(--lu-border);
   border-radius: var(--lu-radius);
   background: var(--lu-surface-muted);
+  color: var(--lu-text);
+  font-family: inherit;
+  font-size: 0.96rem;
+}
+
+/* Fenced learner examples (```text) are highlighted by Astro as
+   pre.astro-code with an inlined github-dark background + ink (#24292e on
+   #e1e4e8). The inline style wins over normal rules, so light mode renders a
+   near-black IDE block with an inverted light code box inside it. Override
+   the inline chrome (!important is required) so fences read as example cards:
+   paper surface, readable ink, blue spine — in both themes. */
+.lu-content pre.astro-code {
+  background: var(--lu-surface-raised) !important;
+  color: var(--lu-text) !important;
+  border: 1px solid var(--lu-border);
+  border-left: 4px solid var(--lu-blue);
+  box-shadow: var(--lu-shadow);
+}
+
+.lu-content pre code {
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+}
+
+.lu-content pre.astro-code code span {
+  color: inherit !important;
 }
 
 .lu-content blockquote {
@@ -623,6 +651,7 @@ body {
   border-spacing: 0;
   margin: 16px 0;
   background: var(--lu-surface-raised);
+  color: var(--lu-text);
   border: 1px solid var(--lu-border);
   border-radius: 8px;
   overflow-x: auto;
