@@ -1123,6 +1123,18 @@ Differential Soviet candidate miner and modern whitelist filter (ULDR Phase 3.4,
 .venv/bin/python scripts/projects/open_model_data/v4_differential_soviet_miner.py --verify-only
 ```
 
+### `scripts/projects/open_model_data/v4_verify_trajectory_claims.py`
+
+Automated Chain-of-Thought (CoT) factual claim-verifier for Ukrainian linguistic reasoning trajectories (ULDR Phase 3.5, #8009, Epic #6321). Ingests trajectory JSONL records, parses reasoning steps, and grounds linguistic claims against local databases (`vesum.db` for lemma attestation, inflected forms count, tags, and living standard validity; `sources.db` for СУМ-11 headwords, volume citations, and definitions; `r2u_differential_cache.json` for 1920s Academy dictionary attestation; and `ulif_dump_all.db` for orthographic register). Trajectories with ungrounded, fabricated, or miscounted claims are hard-rejected. Emits cryptographic verification receipts validated against `v1_cot_claim_verification_receipt.schema.json`.
+
+```bash
+# Run claim verification across input trajectories
+.venv/bin/python scripts/projects/open_model_data/v4_verify_trajectory_claims.py
+
+# Fast receipt and checksum integrity check
+.venv/bin/python scripts/projects/open_model_data/v4_verify_trajectory_claims.py --verify-only
+```
+
 ### `scripts/audit/module_quality_audit.py`
 
 Coverage report for planned modules, built modules, deterministic surface

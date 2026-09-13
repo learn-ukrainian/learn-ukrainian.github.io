@@ -120,3 +120,84 @@ def test_dpo_pair_schema_negative_rejection(dpo_pair_schema: dict) -> None:
         },
     }
     assert not validator.is_valid(invalid_record)
+
+
+def test_trajectory_schema_preserve_negative_controls_reconciliation(trajectory_schema: dict) -> None:
+    validator = jsonschema.Draft202012Validator(trajectory_schema)
+    valid_base = {
+        "schema_version": "v1_decolonization_trajectory",
+        "trajectory_id": "traj.decolonize.0000000000000000",
+        "query": "Яке значення терміна «дифузія»?",
+        "target_term": "дифузія",
+        "is_calque_or_russianism": False,
+        "morphemic_breakdown": {
+            "source_formation": "Living STEM term with entity type physics_chemistry.",
+            "ukrainian_equivalent_mechanism": "No substitution: attested standard term, not a calque.",
+        },
+        "vesum_attestation": [
+            {
+                "lemma": "дифузія",
+                "vesum_forms_count": 7,
+                "is_standard_attested": True,
+            }
+        ],
+        "register_spectrum": {
+            "primary_living_standard": "дифузія",
+            "alternatives": [
+                {
+                    "lemma": "дифузія",
+                    "register_tier": "living_standard",
+                    "evidence_source": "STEM textbook fizyka",
+                }
+            ],
+        },
+        "reasoning_steps": [
+            "1. Термін «дифузія» є нормативним фізичним терміном.",
+            "2. ВЕСУМ: лема «дифузія» має повну парадигму.",
+        ],
+        "final_response": "Термін «дифузія» є нормативним українським терміном на позначення процесу взаємного проникнення речовин.",
+    }
+
+    # PRESERVE with omitted lexicographical_context is valid
+    assert validator.is_valid(valid_base)
+
+    # PRESERVE with empty lexicographical_context is valid
+    preserve_empty_ctx = dict(valid_base)
+    preserve_empty_ctx["lexicographical_context"] = {}
+    assert validator.is_valid(preserve_empty_ctx)
+
+    # PRESERVE with optional non-suppression notes is valid
+    preserve_full_ctx = dict(valid_base)
+    preserve_full_ctx["lexicographical_context"] = {
+        "historical_suppression_note": "PRESERVE control: suppression does not apply.",
+        "restoration_era": "n/a",
+    }
+    assert validator.is_valid(preserve_full_ctx)
+
+    # CALQUE (is_calque_or_russianism == True) with omitted lexicographical_context must FAIL
+    calque_missing_ctx = dict(valid_base)
+    calque_missing_ctx["is_calque_or_russianism"] = True
+    assert not validator.is_valid(calque_missing_ctx)
+
+    # CALQUE with empty lexicographical_context must FAIL
+    calque_empty_ctx = dict(valid_base)
+    calque_empty_ctx["is_calque_or_russianism"] = True
+    calque_empty_ctx["lexicographical_context"] = {}
+    assert not validator.is_valid(calque_empty_ctx)
+
+    # CALQUE with only historical_suppression_note (missing restoration_era) must FAIL
+    calque_partial_ctx = dict(valid_base)
+    calque_partial_ctx["is_calque_or_russianism"] = True
+    calque_partial_ctx["lexicographical_context"] = {
+        "historical_suppression_note": "Штучно нав'язано радянськими словниками.",
+    }
+    assert not validator.is_valid(calque_partial_ctx)
+
+    # CALQUE with full suppression fields must PASS
+    calque_full_ctx = dict(valid_base)
+    calque_full_ctx["is_calque_or_russianism"] = True
+    calque_full_ctx["lexicographical_context"] = {
+        "historical_suppression_note": "Штучно нав'язано радянськими словниками.",
+        "restoration_era": "Відновлено в сучасному Правописі 2019.",
+    }
+    assert validator.is_valid(calque_full_ctx)
