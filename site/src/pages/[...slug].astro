@@ -6,6 +6,12 @@ import ChromeText from '../components/chrome/ChromeText.astro';
 import { CHROME_STRINGS } from '../lib/i18n/chrome';
 import { isPublishedReading } from '../lib/readings';
 import { archiveBookmarkPaths } from '../lib/a1-archive-routes';
+import {
+  isUpgradedLesson,
+  isUpgradedModuleLanding,
+  lessonNumberFromDoc,
+  moduleSlugFromDoc,
+} from '../lib/a1-lesson-nav';
 import curriculumStats from '../data/curriculum-stats.json';
 import lexiconSearchIndex from '../data/lexicon-search-index.json';
 
@@ -303,7 +309,7 @@ const visibleDocs = allDocs.filter((entry) => {
   const id = normalizeId(entry.id);
   const track = id.split('/')[0];
   if (HIDDEN_DOCS.has(id)) return false;
-  if (entry.data.draft) return false;
+  if (entry.data.draft && import.meta.env.PROD) return false;
   return track in TRACKS || (id !== 'index' && id === track);
 });
 
@@ -384,7 +390,7 @@ export async function getStaticPaths() {
     }
     if (!publicLessonPrefixes.has(track)) return false;
     if (hiddenDocs.has(id)) return false;
-    if (entry.data.draft) return false;
+    if (entry.data.draft && import.meta.env.PROD) return false;
     return true;
   });
   const tracks = [...new Set([...configuredTracks, ...landingDocsByPathTrack.keys()])];
@@ -528,44 +534,105 @@ const navItems = HIDDEN_LINK_TRACKS.has(currentTrackId)
       { href: pageMeta.currentPath, label: pageMeta.title },
     ];
 
-// Doc-layout lesson sidebar (#2823): persistent track navigation built from the
-// same per-track sorted lesson list the track landing page uses.
-const sidebar = props.kind === 'doc'
-  ? (() => {
-      if (HIDDEN_LINK_TRACKS.has(docTrack)) return undefined;
-      const lessons = deployedDocsByTrack.get(docTrack) ?? [];
-      if (lessons.length === 0) return undefined;
-      const links = lessons.map((entry) => {
-        const id = normalizeId(entry.id);
-        const order = entry.data.sidebar?.order;
-        return {
-          href: hrefFromRoute(id),
-          label: entry.data.title,
-          num: order ? String(order).padStart(2, '0') : '•',
-          active: id === docRoute,
-        };
-      });
-      const currentIndex = links.findIndex((link) => link.active);
-      const position = currentIndex >= 0 ? currentIndex + 1 : 0;
+// Two-level A1 nav: modules on /a1/, lessons under a module. Other tracks keep
+// the flat per-track lesson list (#2823).
+const sidebar = (() => {
+  const trackId = props.kind === 'track' ? props.track : docTrack;
+  if (!trackId || HIDDEN_LINK_TRACKS.has(trackId)) return undefined;
+  const trackDocs = deployedDocsByTrack.get(trackId) ?? [];
+
+  if (trackId === 'a1' && (props.kind === 'landingDoc' || props.kind === 'track')) {
+    const modules = trackDocs.filter((entry) => isUpgradedModuleLanding(entry.id, entry.data.lessons));
+    if (modules.length === 0) return undefined;
+    const links = modules.map((entry) => {
+      const id = normalizeId(entry.id);
+      const order = entry.data.sidebar?.order;
       return {
-        backHref: `/${docTrack}/`,
-        backLabel: TRACKS[docTrack]?.label ?? docTrack.toUpperCase(),
-        // Ukrainian sidebar labels for ALL tracks (immersion rule #M-13) — was
-        // gated to b1 only, which leaked English nav text for folk/seminars/core.
-        positionLabel: position > 0
-          ? `Урок ${position} з ${links.length}`
-          : `${links.length} уроки`,
-        positionLabelEn: position > 0
-          ? `Lesson ${position} of ${links.length}`
-          : `${links.length} lessons`,
-        titleLabel: 'Уроки',
-        navLabel: 'Уроки цього рівня',
-        progressDone: position,
-        progressTotal: links.length,
-        links,
+        href: hrefFromRoute(id),
+        label: entry.data.title,
+        num: order ? String(order).padStart(2, '0') : '•',
+        active: false,
       };
-    })()
-  : undefined;
+    });
+    return {
+      backHref: '/',
+      backLabel: 'Home',
+      positionLabel: `${links.length} модулі`,
+      positionLabelEn: `${links.length} modules`,
+      titleLabel: 'Модулі',
+      navLabel: 'Модулі цього рівня',
+      progressDone: 0,
+      progressTotal: links.length,
+      links,
+    };
+  }
+
+  if (trackId === 'a1' && props.kind === 'doc') {
+    const moduleSlug = moduleSlugFromDoc(docRoute);
+    if (!moduleSlug) return undefined;
+    const lessons = trackDocs
+      .filter((entry) => isUpgradedLesson(entry.id) && moduleSlugFromDoc(entry.id) === moduleSlug)
+      .sort((a, b) => Number(lessonNumberFromDoc(a.id) ?? 0) - Number(lessonNumberFromDoc(b.id) ?? 0));
+    if (lessons.length === 0) return undefined;
+    const links = lessons.map((entry) => {
+      const id = normalizeId(entry.id);
+      return {
+        href: hrefFromRoute(id),
+        label: entry.data.title,
+        num: lessonNumberFromDoc(id) ?? '•',
+        active: id === docRoute,
+      };
+    });
+    const currentIndex = links.findIndex((link) => link.active);
+    const position = currentIndex >= 0 ? currentIndex + 1 : 0;
+    return {
+      backHref: '/a1/',
+      backLabel: TRACKS.a1?.label ?? 'A1',
+      positionLabel: position > 0
+        ? `Урок ${position} з ${links.length}`
+        : `${links.length} уроки`,
+      positionLabelEn: position > 0
+        ? `Lesson ${position} of ${links.length}`
+        : `${links.length} lessons`,
+      titleLabel: 'Уроки',
+      navLabel: 'Уроки цього модуля',
+      progressDone: position,
+      progressTotal: links.length,
+      links,
+    };
+  }
+
+  if (props.kind !== 'doc') return undefined;
+  const lessons = trackDocs;
+  if (lessons.length === 0) return undefined;
+  const links = lessons.map((entry) => {
+    const id = normalizeId(entry.id);
+    const order = entry.data.sidebar?.order;
+    return {
+      href: hrefFromRoute(id),
+      label: entry.data.title,
+      num: order ? String(order).padStart(2, '0') : '•',
+      active: id === docRoute,
+    };
+  });
+  const currentIndex = links.findIndex((link) => link.active);
+  const position = currentIndex >= 0 ? currentIndex + 1 : 0;
+  return {
+    backHref: `/${trackId}/`,
+    backLabel: TRACKS[trackId]?.label ?? trackId.toUpperCase(),
+    positionLabel: position > 0
+      ? `Урок ${position} з ${links.length}`
+      : `${links.length} уроки`,
+    positionLabelEn: position > 0
+      ? `Lesson ${position} of ${links.length}`
+      : `${links.length} lessons`,
+    titleLabel: 'Уроки',
+    navLabel: 'Уроки цього рівня',
+    progressDone: position,
+    progressTotal: links.length,
+    links,
+  };
+})();
 
 const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
   if (track === 'a1') {
