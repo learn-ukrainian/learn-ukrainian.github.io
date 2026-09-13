@@ -1,0 +1,49 @@
+{
+  "schema_version": "v1_human_gold_seeds_manifest",
+  "dataset_name": "Ukrainian Linguistic Decolonization & Reasoning (ULDR) Human Gold Seeds",
+  "phase": "Phase 2: 150 Human Gold Seeds",
+  "issue": 8001,
+  "parent_epic": 6321,
+  "total_records": 150,
+  "category_quotas": {
+    "polysemy_sense": 35,
+    "prepositional_gov": 25,
+    "active_participles": 25,
+    "voice_reflexivity": 20,
+    "historical_authority": 15,
+    "phraseology_collocations": 15,
+    "lexical_restitution": 15
+  },
+  "category_distribution": {
+    "polysemy_sense": 35,
+    "prepositional_gov": 25,
+    "active_participles": 25,
+    "voice_reflexivity": 20,
+    "historical_authority": 15,
+    "phraseology_collocations": 15,
+    "lexical_restitution": 15
+  },
+  "files": {
+    "trajectories": {
+      "filename": "human_gold_seeds_150_trajectories.jsonl",
+      "record_count": 150,
+      "sha256": "2a417f50bb8de1062dbd3087d8424592cacc34d7ce226209cac916ddd8815834"
+    },
+    "dpo_pairs": {
+      "filename": "human_gold_seeds_150_dpo.jsonl",
+      "record_count": 150,
+      "sha256": "0e3885ac79b6ca4c17dd5ac6759712e5b4ff776398b6a1a8b6b5fa25af68d3c0"
+    }
+  },
+  "linguistic_grounding": {
+    "primary_authority": "Борис Антоненко-Давидович «Як ми говоримо» (342 розділи)",
+    "curriculum_corpus": "Підручники МОН 1-11 класи (Авраменко, Глазова, Заболотний)",
+    "morphological_engine": "ВЕСУМ 6.7M словоформ",
+    "schema_contracts": [
+      "v1_decolonization_trajectory.schema.json",
+      "v1_decolonization_dpo_pair.schema.json"
+    ],
+    "quote_quality_defects": 0,
+    "schema_validation": "100% PASS"
+  }
+}
