@@ -268,6 +268,9 @@ def parse_textbook_contrast_tables(
         cor = re.sub(r"\s+", " ", cor).strip()
         if len(inc) < 2 or len(cor) < 2 or inc.lower() == cor.lower():
             return False
+        # Reject inverted date range expressions where "по" is incorrectly marked as correct instead of "до"
+        if re.search(r"\bз\s+\d+\s+до\b", inc, re.IGNORECASE) and re.search(r"\bз\s+\d+\s+по\b", cor, re.IGNORECASE):
+            return False
         cor_words = get_content_words(cor)
         if not cor_words:
             cor_words = re.findall(r"[а-яіїєґ']+", cor.replace("’", "'").lower())

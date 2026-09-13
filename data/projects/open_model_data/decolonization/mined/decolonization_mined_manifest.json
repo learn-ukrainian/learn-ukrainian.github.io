@@ -2,12 +2,12 @@
   "schema_version": "v1_decolonization_mined_candidates",
   "issue": 8006,
   "parent_epic": 6321,
-  "generated_at": "2026-09-13T10:55:34.287177+00:00",
+  "generated_at": "2026-09-13T11:03:29.159741+00:00",
   "files": {
     "corpus_contrast_tables": {
       "filename": "corpus_contrast_tables.jsonl",
-      "record_count": 436,
-      "sha256": "34e1d64bc7d0797980c4b35e3ffa760e278e4f9824b15a6eb314a397ae4f5347",
+      "record_count": 435,
+      "sha256": "2f7d123cf16c8b9eb480a40fd9beaacfd3fb4f3905e07a4d79482e4edca9b9b1",
       "description": "Human-authored contrast tables (НЕПРАВИЛЬНО -> ПРАВИЛЬНО, ❌ -> ✅) from textbooks."
     },
     "zno_distractor_tasks": {
@@ -24,11 +24,11 @@
     }
   },
   "corpus_contrast_tables_summary": {
-    "total_contrast_pairs": 436,
+    "total_contrast_pairs": 435,
     "unique_chunks_mined": 116,
     "top_authors": {
       "Авраменко": 209,
-      "Глазова": 117,
+      "Глазова": 116,
       "Заболотний": 109,
       "Голуб": 1
     }
