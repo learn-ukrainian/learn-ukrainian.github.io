@@ -408,10 +408,12 @@ class ClaudeAdapter:
         if cli_version and cli_version >= _EFFORT_MIN_VERSION:
             cmd.append("--exclude-dynamic-system-prompt-sections")
 
-        # Large sealed review dossiers can exceed execve ARG_MAX. Claude print
-        # mode accepts text on stdin, so the isolation path never places review
-        # evidence in argv. Ordinary calls retain the positional behavior.
-        if not review_isolation:
+        # Large sealed review dossiers and multi-lesson coherence prompts can
+        # exceed execve ARG_MAX (Linux MAX_ARG_STRLEN = 128KB). Claude print
+        # mode accepts text on stdin, so the isolation path and large prompts
+        # never place review evidence in argv. Ordinary calls retain positional.
+        use_stdin = review_isolation or len(prompt.encode("utf-8")) >= 100_000
+        if not use_stdin:
             # Prompt positional MUST be last, preceded by `--` end-of-options marker.
             # See comment near `cmd.append("-p")` above for the Commander.js rationale.
             cmd.extend(["--", prompt])
@@ -419,7 +421,7 @@ class ClaudeAdapter:
         return InvocationPlan(
             cmd=cmd,
             cwd=cwd,
-            stdin_payload=prompt if review_isolation else "",
+            stdin_payload=prompt if use_stdin else "",
             output_file=None,
             env_overrides={"AB_DISCUSS_READONLY": "1"} if discussion_readonly else {},
             liveness_paths=self._resolve_liveness_paths(cwd),
