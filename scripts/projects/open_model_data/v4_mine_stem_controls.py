@@ -745,7 +745,7 @@ def build_trajectory(
             {
                 "lemma": lemma,
                 "vesum_forms_count": count,
-                "is_standard_attested": attested if lemma == decision.target_term else attested,
+                "is_standard_attested": attested,
                 "tags": tags or ["attested"],
             }
         )

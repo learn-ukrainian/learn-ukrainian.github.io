@@ -335,7 +335,7 @@ def test_mine_exact_production_quotas(tmp_path: Path) -> None:
     ]
     assert len(index_rows) == 1800
     assert all(row["action"] == "PRESERVE" and row["vesum_attested"] for row in index_rows)
-    assert all("heldout-reserved-chunk" != row["chunk_id"] for row in index_rows)
+    assert all(row["chunk_id"] != "heldout-reserved-chunk" for row in index_rows)
     assert all(row["entity_type"] != "abstract_quantity_data_scope" for row in index_rows)
     for row in index_rows:
         assert_no_corpus_text(row)
@@ -381,7 +381,7 @@ def test_heldout_chunk_is_excluded(tmp_path: Path) -> None:
 
 
 def test_verify_only_and_cli_help(tmp_path: Path) -> None:
-    sources, vesum, heldout = _build_fixture_dbs(tmp_path, sft_quota=12)
+    sources, vesum, _ = _build_fixture_dbs(tmp_path, sft_quota=12)
     out = tmp_path / "cli"
     code = main(
         [
@@ -407,6 +407,7 @@ def test_verify_only_and_cli_help(tmp_path: Path) -> None:
         [sys.executable, "-m", "scripts.projects.open_model_data.v4_mine_stem_controls", "--help"],
         cwd=REPO_ROOT,
         text=True,
+        timeout=60,
     )
     assert "python -m scripts.projects.open_model_data.v4_mine_stem_controls" in help_text
     assert "$SOURCES_DB" in help_text
