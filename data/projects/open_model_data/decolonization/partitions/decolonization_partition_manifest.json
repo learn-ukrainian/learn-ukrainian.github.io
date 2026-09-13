@@ -7,17 +7,17 @@
   "generated_at": "2026-09-13T08:42:00Z",
   "source_custody_summary": {
     "ua_gec_excluded_test_count": 1159,
-    "ua_gec_train_documents_count": 1145,
-    "ua_gec_heldout_documents_count": 263,
+    "ua_gec_train_documents_count": 1021,
+    "ua_gec_heldout_documents_count": 240,
     "zno_tasks_train_only_count": 1646,
     "style_guide_train_only_count": 342,
     "textbook_train_chunks_count": 41611,
     "textbook_heldout_chunks_count": 10459
   },
   "phenomenon_partition_summary": {
-    "total_phenomena_count": 1353,
-    "train_phenomena_count": 1551,
-    "heldout_seen_phenomena_count": 453,
+    "total_phenomena_count": 1354,
+    "train_phenomena_count": 1558,
+    "heldout_seen_phenomena_count": 454,
     "heldout_unseen_phenomena_count": 531,
     "lemma_family_leakage_count": 0
   },
@@ -37,7 +37,7 @@
     "permutations": 64,
     "bands": 16,
     "rows_per_band": 4,
-    "train_corpus_sentences_indexed": 45687,
+    "train_corpus_sentences_indexed": 45504,
     "similarity_threshold": 0.8,
     "max_minhash_signature_similarity": 0.7969,
     "max_cross_split_similarity": 0.7619,
@@ -47,17 +47,17 @@
     "train_source_custody": {
       "filename": "train_source_custody.json",
       "record_count": 1,
-      "sha256": "0640d0fd5c33bbfdfbf321b84f4127e1d923cef2c87ed1bc3d085a26314d8fd0"
+      "sha256": "3f75cb18df7fc5abb6bd61756284714f26ed1d02e7244e558bb3e16038869c5d"
     },
     "heldout_evaluation_suite_1000": {
       "filename": "heldout_evaluation_suite_1000.jsonl",
       "record_count": 1000,
-      "sha256": "4c295d9a1d5f34232081df68fef85bda2ea3f4877469a405d66cc9313ef56ebe"
+      "sha256": "20b485f5d31ac069740282ca278d94e730dbbb4ca3ec50b5589d0083d287b0f0"
     },
     "minhash_dedup_summary": {
       "filename": "minhash_dedup_summary.json",
       "record_count": 1,
-      "sha256": "f0aae19dbe6b68cddeb81e2826c1fd7dc7d84079908a97540de78700f8969629"
+      "sha256": "5c23d2b94493c04a67ccc85a2e546f074be9b74cf5b1161304d587b15f25c454"
     }
   }
 }

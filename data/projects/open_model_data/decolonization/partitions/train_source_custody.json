@@ -10,7 +10,7 @@
   },
   "ua_gec": {
     "excluded_test_count": 1159,
-    "train_docs_count": 1145
+    "train_docs_count": 1021
   },
   "textbooks": {
     "train_chunks_count": 41611

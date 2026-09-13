@@ -186,7 +186,7 @@ def exact_clopper_pearson_upper(k: int, n: int, confidence: float = 0.95) -> flo
     p = 0.0
     step = 0.0001
     while p < 1.0:
-        prob = math.pow(1 - p, n) + n * p * math.pow(1 - p, n - 1)
+        prob = sum(math.comb(n, i) * math.pow(p, i) * math.pow(1 - p, n - i) for i in range(k + 1))
         if prob <= alpha:
             return round(p, 5)
         p += step
@@ -293,14 +293,16 @@ class DecolonizationPartitionFirewall:
 
         gec_excluded_test = []
         gec_train_candidates = []
-        doc_ids_all = set()
+        test_doc_ids = set()
+        train_candidate_doc_ids = set()
 
         for row in gec_rows:
             rid, err, corr, etype, doc_id, ann_id, part = row
-            doc_ids_all.add(doc_id)
-            if "test" in part:
+            if "test" in part.lower():
                 gec_excluded_test.append(rid)
+                test_doc_ids.add(doc_id)
             else:
+                train_candidate_doc_ids.add(doc_id)
                 gec_train_candidates.append(
                     {
                         "id": rid,
@@ -313,11 +315,11 @@ class DecolonizationPartitionFirewall:
                     }
                 )
 
-        # Partition UA-GEC train docs: 80% train, 20% held-out
-        sorted_docs = sorted(list(doc_ids_all))
+        # Strictly partition ONLY pure train docs: 80% train, 20% held-out (test docs strictly excluded)
+        pure_train_docs = sorted(list(train_candidate_doc_ids - test_doc_ids))
         ua_gec_train_docs = set()
         ua_gec_heldout_docs = set()
-        for doc_id in sorted_docs:
+        for doc_id in pure_train_docs:
             h = int(hashlib.sha256(f"uagec_doc:{doc_id}".encode()).hexdigest()[:8], 16)
             if h % 10 < 8:
                 ua_gec_train_docs.add(doc_id)
@@ -377,13 +379,13 @@ class DecolonizationPartitionFirewall:
                 s = s.strip()
                 if 20 <= len(s) <= 300:
                     train_sentences.append(s)
-        # Source 3: UA-GEC train docs (strictly train partition, exclude test and held-out docs)
-        for r in gec_rows:
-            if r[6] != "test" and r[4] in ua_gec_train_docs:
-                if r[1] and len(r[1].strip()) >= 15:
-                    train_sentences.append(r[1].strip())
-                if r[2] and len(r[2].strip()) >= 15:
-                    train_sentences.append(r[2].strip())
+        # Source 3: UA-GEC train docs (strictly train candidate rows from train docs; test split strictly excluded)
+        for c in gec_train_candidates:
+            if c["doc_id"] in ua_gec_train_docs:
+                if c["error"] and len(c["error"].strip()) >= 15:
+                    train_sentences.append(c["error"].strip())
+                if c["correct"] and len(c["correct"].strip()) >= 15:
+                    train_sentences.append(c["correct"].strip())
         # Source 4: Textbook train chunks (1 representative sentence from EACH of the 41,611 chunks)
         for chunk in textbook_train_chunks:
             for s in SENTENCE_SPLIT_RE.split(chunk["text"]):

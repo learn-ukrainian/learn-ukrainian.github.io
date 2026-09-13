@@ -187,7 +187,9 @@ def test_derivational_closure_independent_zero_leakage() -> None:
         res = vc.execute("SELECT lemma FROM forms_all WHERE word_form = ? LIMIT 1", (word.strip().lower(),)).fetchone()
         return res[0] if res else word.strip().lower()
 
-    gec_rows = sc.execute("SELECT error, correct, error_type FROM ua_gec_errors WHERE partition != 'test'").fetchall()
+    gec_rows = sc.execute(
+        "SELECT error, correct, error_type FROM ua_gec_errors WHERE partition NOT LIKE '%test%'"
+    ).fetchall()
 
     phenomena = [r for r in gec_rows if r[2] in ("F/Calque", "F/Collocation") and r[0] and r[1]]
 
@@ -216,6 +218,34 @@ def test_derivational_closure_independent_zero_leakage() -> None:
     assert not intersection, (
         f"Independent leakage detected between train roots and heldout unseen roots: {intersection}"
     )
+
+
+def test_ua_gec_test_split_strict_zero_leakage() -> None:
+    """Verify that official UA-GEC test split is 100% excluded from held-out suite and training partition."""
+    s_conn = sqlite3.connect(DEFAULT_SOURCES_DB)
+    sc = s_conn.cursor()
+
+    test_rows = sc.execute(
+        "SELECT id, error, correct, doc_id FROM ua_gec_errors WHERE partition LIKE '%test%'"
+    ).fetchall()
+    s_conn.close()
+
+    assert len(test_rows) == 1159, f"Expected 1159 UA-GEC test rows, found {len(test_rows)}"
+    test_doc_ids = {r[3] for r in test_rows}
+
+    # 1. Verify manifest source custody numbers
+    with MANIFEST_FILE.open("r", encoding="utf-8") as f:
+        manifest = json.load(f)
+    assert manifest["source_custody_summary"]["ua_gec_excluded_test_count"] == 1159
+
+    # 2. Verify held-out evaluation suite has 0 references to test doc_ids
+    with HELDOUT_SUITE_FILE.open("r", encoding="utf-8") as f:
+        heldout_cases = [json.loads(line) for line in f if line.strip()]
+
+    for c in heldout_cases:
+        source = c["source_metadata"]["source"]
+        for t_doc in test_doc_ids:
+            assert f":{t_doc}" not in source, f"Protected UA-GEC test doc_id {t_doc} found in held-out case: {c}"
 
 
 def test_minhash_near_duplicate_zero_collisions() -> None:
