@@ -69,7 +69,7 @@ describe("WordAtlasArticle heteronym support (#8022)", () => {
     },
   };
 
-  test("renders heteronym switcher bar when entry has multiple heteronyms", () => {
+  test("renders accessible heteronym switcher bar and panels when entry has multiple heteronyms", () => {
     const html = renderWordAtlasArticle({
       record: heteronymRecord,
       generatedAt: "2026-09-13T00:00:00Z",
@@ -79,6 +79,7 @@ describe("WordAtlasArticle heteronym support (#8022)", () => {
     const doc = parser.parseFromString(html, "text/html");
     const nav = doc.querySelector(".atlas-heteronym-nav");
     expect(nav).not.toBeNull();
+    expect(nav?.getAttribute("role")).toBe("tablist");
 
     const tabs = nav!.querySelectorAll(".atlas-heteronym-tab");
     expect(tabs.length).toBe(2);
@@ -86,13 +87,24 @@ describe("WordAtlasArticle heteronym support (#8022)", () => {
     expect(tabs[0].textContent).toContain("горо́д");
     expect(tabs[0].textContent).toContain("ділянка землі (A2)");
     expect(tabs[0].classList.contains("active")).toBe(true);
+    expect(tabs[0].getAttribute("role")).toBe("tab");
+    expect(tabs[0].getAttribute("aria-selected")).toBe("true");
+    expect(tabs[0].getAttribute("aria-controls")).toBe("heteronym-panel-0");
 
     expect(tabs[1].textContent).toContain("го́род");
     expect(tabs[1].textContent).toContain("заст. місто");
     expect(tabs[1].classList.contains("active")).toBe(false);
+    expect(tabs[1].getAttribute("role")).toBe("tab");
+    expect(tabs[1].getAttribute("aria-selected")).toBe("false");
+    expect(tabs[1].getAttribute("aria-controls")).toBe("heteronym-panel-1");
+
+    const panels = doc.querySelectorAll(".atlas-heteronym-panel");
+    expect(panels.length).toBe(2);
+    expect(panels[0].id).toBe("heteronym-panel-0");
+    expect(panels[1].id).toBe("heteronym-panel-1");
   });
 
-  test("default heteronym renders correct title, gloss, and distinction note", () => {
+  test("renders distinct content and hatnotes in both heteronym panels in SSR HTML", () => {
     const html = renderWordAtlasArticle({
       record: heteronymRecord,
       generatedAt: "2026-09-13T00:00:00Z",
@@ -101,15 +113,83 @@ describe("WordAtlasArticle heteronym support (#8022)", () => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
 
-    const title = doc.querySelector(".word-title");
-    expect(title?.textContent).toContain("горо́д");
+    const panel0 = doc.querySelector("#heteronym-panel-0");
+    expect(panel0).not.toBeNull();
+    expect(panel0?.getAttribute("style")).toBeNull();
+    expect(panel0?.querySelector(".word-title")?.textContent).toContain("горо́д");
+    expect(panel0?.querySelector(".word-pos")?.textContent).toContain("vegetable garden");
+    expect(panel0?.querySelector(".atlas-heteronym-hatnote")?.textContent).toContain("Не плутати з омографом «го́род»");
+    const jump0 = panel0?.querySelector("[data-heteronym-jump]");
+    expect(decodeURIComponent(jump0?.getAttribute("href") || "")).toBe("#го́род");
 
-    const pos = doc.querySelector(".word-pos");
-    expect(pos?.textContent).toContain("vegetable garden");
+    const panel1 = doc.querySelector("#heteronym-panel-1");
+    expect(panel1).not.toBeNull();
+    expect(panel1?.getAttribute("style")).toMatch(/display:\s*none/);
+    expect(panel1?.querySelector(".word-title")?.textContent).toContain("го́род");
+    expect(panel1?.querySelector(".word-pos")?.textContent).toContain("city, town, fortified settlement");
+    expect(panel1?.querySelector(".atlas-heteronym-hatnote")?.textContent).toContain("Не плутати з сучасним словом «горо́д»");
+    const jump1 = panel1?.querySelector("[data-heteronym-jump]");
+    expect(decodeURIComponent(jump1?.getAttribute("href") || "")).toBe("#горо́д");
+  });
 
-    const hatnote = doc.querySelector(".atlas-heteronym-hatnote");
-    expect(hatnote?.textContent).toContain("Не плутати з омографом «го́род»");
-    expect(hatnote?.textContent).toContain("Перейти до «го́род» →");
+  test("renders distinct synonyms in sections for атлас heteronyms", () => {
+    const atlasRecord: EntryRecord = {
+      entry: {
+        lemma: "атлас",
+        url_slug: "атлас",
+        gloss: "atlas (bound collection of maps)",
+        pos: "noun",
+        heteronyms: [
+          {
+            headword: "а́тлас",
+            short_label: "збірник карт",
+            gloss: "atlas (bound collection of maps)",
+            pos: "noun",
+            sections: {
+              synonyms: {
+                items: ["збірник карт", "географічний атлас"],
+                source: "СУМ-11",
+              },
+            },
+          },
+          {
+            headword: "атла́с",
+            short_label: "тканина",
+            gloss: "satin (glossy silk fabric)",
+            pos: "noun",
+            sections: {
+              synonyms: {
+                items: ["шовк", "сатин"],
+                source: "СУМ-11",
+              },
+            },
+          },
+        ],
+      } as any,
+      aliases: [],
+      relations: [],
+      provenance: [],
+      renderContext: {
+        practiceLevels: [],
+        componentLinks: [],
+      },
+    };
+
+    const html = renderWordAtlasArticle({
+      record: atlasRecord,
+      generatedAt: "2026-09-13T00:00:00Z",
+      manifestVersion: "1.0",
+    });
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+
+    const panel0 = doc.querySelector("#heteronym-panel-0");
+    expect(panel0?.textContent).toContain("збірник карт");
+    expect(panel0?.textContent).not.toContain("сатин");
+
+    const panel1 = doc.querySelector("#heteronym-panel-1");
+    expect(panel1?.textContent).toContain("сатин");
+    expect(panel1?.textContent).not.toContain("географічний атлас");
   });
 
   test("standard entry without heteronyms does not render switcher nav", () => {
@@ -139,28 +219,5 @@ describe("WordAtlasArticle heteronym support (#8022)", () => {
 
     const nav = doc.querySelector(".atlas-heteronym-nav");
     expect(nav).toBeNull();
-  });
-
-  test("initializes to heteronym matching window.location.hash", () => {
-    window.location.hash = "#го́род";
-    const html = renderWordAtlasArticle({
-      record: heteronymRecord,
-      generatedAt: "2026-09-13T00:00:00Z",
-      manifestVersion: "1.0",
-    });
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, "text/html");
-
-    const title = doc.querySelector(".word-title");
-    expect(title?.textContent).toContain("го́род");
-
-    const pos = doc.querySelector(".word-pos");
-    expect(pos?.textContent).toContain("city, town, fortified settlement");
-
-    const tabs = doc.querySelectorAll(".atlas-heteronym-tab");
-    expect(tabs[1].classList.contains("active")).toBe(true);
-    expect(tabs[0].classList.contains("active")).toBe(false);
-
-    window.location.hash = "";
   });
 });

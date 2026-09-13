@@ -1517,6 +1517,7 @@ html[data-theme='dark'] .lu-content .word-atlas .word-hero .practice-cta-hero {
 
 .atlas-heteronym-hatnote-switchers {
   display: inline-flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
@@ -1534,4 +1535,31 @@ html[data-theme='dark'] .lu-content .word-atlas .word-hero .practice-cta-hero {
 
 .atlas-heteronym-hatnote-btn:hover {
   color: var(--lu-primary-hover, #003f88);
+}
+
+.atlas-heteronym-panel[hidden] {
+  display: none !important;
+}
+
+[data-theme='dark'] .atlas-heteronym-nav {
+  background: var(--lu-surface-muted, #1e293b);
+  border-color: var(--lu-border, #334155);
+}
+
+[data-theme='dark'] .atlas-heteronym-tab {
+  background: var(--lu-surface, #0f172a);
+  border-color: var(--lu-border, #334155);
+  color: var(--lu-text, #f1f5f9);
+}
+
+[data-theme='dark'] .atlas-heteronym-tab.active {
+  background: var(--blue, #3b82f6);
+  border-color: var(--blue, #3b82f6);
+  color: #ffffff;
+}
+
+[data-theme='dark'] .atlas-heteronym-hatnote {
+  background: rgba(0, 105, 92, 0.2);
+  border-left-color: var(--teal, #2dd4bf);
+  color: var(--lu-text, #f1f5f9);
 }

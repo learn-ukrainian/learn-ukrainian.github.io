@@ -307,8 +307,8 @@ CURATED_HETERONYMS: dict[str, list[dict[str, Any]]] = {
             },
             "sections": {
                 "synonyms": {
-                    "source": "СУМ-20",
-                    "items": ["фортеця", "твердиня", "палац"],
+                    "source": "СУМ-20 / Караванський",
+                    "items": ["фортеця", "твердиня", "палац", "цитадель"],
                 },
             },
             "examples": [
@@ -358,7 +358,7 @@ CURATED_HETERONYMS: dict[str, list[dict[str, Any]]] = {
             "sections": {
                 "synonyms": {
                     "source": "СУМ-20",
-                    "items": ["колодка"],
+                    "items": ["колодка", "засув", "клямка"],
                 },
             },
             "examples": [
@@ -407,6 +407,12 @@ CURATED_HETERONYMS: dict[str, list[dict[str, Any]]] = {
                     },
                 },
             },
+            "sections": {
+                "synonyms": {
+                    "source": "СУМ-11",
+                    "items": ["збірник карт", "альбом карт", "географічний атлас"],
+                },
+            },
             "distinction_note": "Не плутати з омографом «атла́с» (наголос на другому складі: шовкова тканина).",
         },
         {
@@ -442,6 +448,12 @@ CURATED_HETERONYMS: dict[str, list[dict[str, Any]]] = {
                         "місцевий": {"singular": "в атла́сі", "plural": "атла́сах"},
                         "кличний": {"singular": "атла́се", "plural": "атла́си"},
                     },
+                },
+            },
+            "sections": {
+                "synonyms": {
+                    "source": "СУМ-11",
+                    "items": ["шовк", "сатин", "шовкова тканина"],
                 },
             },
             "distinction_note": "Не плутати з омографом «а́тлас» (наголос на першому складі: збірник географічних або анатомічних карт).",
@@ -546,36 +558,37 @@ def apply_heteronyms(
             if row:
                 payload = json.loads(row[0])
                 payload["heteronyms"] = heteronyms
-                if lemma == "город":
-                    payload["gloss"] = "vegetable garden"
-                    payload["pronunciation"] = {"ipa": "[ɦɔˈrɔd]", "source": "VESUM"}
-                    payload["heritage_status"] = {
-                        "classification": "standard",
-                        "is_russianism": False,
-                        "russian_shadow": False,
-                        "vesum_attested": True,
-                        "warning_severity": None,
-                        "calque_warning": None,
+                primary_het = heteronyms[0]
+                payload["display_head"] = primary_het.get("headword", lemma)
+                if primary_het.get("gloss"):
+                    payload["gloss"] = primary_het["gloss"]
+                if primary_het.get("pronunciation"):
+                    payload["pronunciation"] = primary_het["pronunciation"]
+                if primary_het.get("heritage_status"):
+                    payload["heritage_status"] = primary_het["heritage_status"]
+                payload["distinction_note"] = primary_het.get("distinction_note")
+
+                if "enrichment" in payload and isinstance(payload["enrichment"], dict):
+                    payload["enrichment"]["stress"] = {
+                        "form": primary_het.get("headword", lemma),
+                        "source": primary_het.get("stress", {}).get("source", "ukrainian-word-stress"),
+                        "ipa": primary_het.get("pronunciation", {}).get("ipa"),
                     }
-                    if "enrichment" in payload and isinstance(payload["enrichment"], dict):
-                        payload["enrichment"]["stress"] = {
-                            "form": "горо́д",
-                            "source": "ukrainian-word-stress",
-                            "ipa": "[ɦɔˈrɔd]",
-                        }
-                    if "sections" in payload and isinstance(payload["sections"], dict):
-                        payload["sections"]["synonyms"] = {
-                            "source": "СУМ-20",
-                            "items": ["грядка", "городчик"],
-                        }
-                    payload["distinction_note"] = heteronyms[0].get("distinction_note")
-                    cur.execute(
-                        "UPDATE articles SET display_head = ?, heritage_classification = 'standard' WHERE slug = ?",
-                        ("горо́д", lemma),
-                    )
-                    updated_counts["db_articles"] += 1
-                elif lemma == "замок" or lemma == "атлас":
-                    payload["distinction_note"] = heteronyms[0].get("distinction_note")
+                if "sections" in primary_het:
+                    if "sections" not in payload or not isinstance(payload["sections"], dict):
+                        payload["sections"] = {}
+                    for sec_key, sec_val in primary_het["sections"].items():
+                        payload["sections"][sec_key] = sec_val
+
+                heritage_cls = (
+                    primary_het.get("heritage_status", {}).get("classification")
+                    or "standard"
+                )
+                cur.execute(
+                    "UPDATE articles SET display_head = ?, gloss = ?, heritage_classification = ? WHERE slug = ?",
+                    (primary_het.get("headword", lemma), payload.get("gloss"), heritage_cls, lemma),
+                )
+                updated_counts["db_articles"] += 1
 
                 cur.execute(
                     "UPDATE article_payloads SET payload_json = ? WHERE slug = ?",
@@ -598,31 +611,27 @@ def apply_heteronyms(
                     heteronyms = build_heteronyms_for_lemma(lemma)
                     if heteronyms:
                         e["heteronyms"] = heteronyms
-                        if lemma == "город":
-                            e["gloss"] = "vegetable garden"
-                            e["pronunciation"] = {"ipa": "[ɦɔˈrɔd]", "source": "VESUM"}
-                            e["heritage_status"] = {
-                                "classification": "standard",
-                                "is_russianism": False,
-                                "russian_shadow": False,
-                                "vesum_attested": True,
-                                "warning_severity": None,
-                                "calque_warning": None,
+                        primary_het = heteronyms[0]
+                        e["display_head"] = primary_het.get("headword", lemma)
+                        if primary_het.get("gloss"):
+                            e["gloss"] = primary_het["gloss"]
+                        if primary_het.get("pronunciation"):
+                            e["pronunciation"] = primary_het["pronunciation"]
+                        if primary_het.get("heritage_status"):
+                            e["heritage_status"] = primary_het["heritage_status"]
+                        e["distinction_note"] = primary_het.get("distinction_note")
+
+                        if "enrichment" in e and isinstance(e["enrichment"], dict):
+                            e["enrichment"]["stress"] = {
+                                "form": primary_het.get("headword", lemma),
+                                "source": primary_het.get("stress", {}).get("source", "ukrainian-word-stress"),
+                                "ipa": primary_het.get("pronunciation", {}).get("ipa"),
                             }
-                            if "enrichment" in e and isinstance(e["enrichment"], dict):
-                                e["enrichment"]["stress"] = {
-                                    "form": "горо́д",
-                                    "source": "ukrainian-word-stress",
-                                    "ipa": "[ɦɔˈrɔd]",
-                                }
-                            if "sections" in e and isinstance(e["sections"], dict):
-                                e["sections"]["synonyms"] = {
-                                    "source": "СУМ-20",
-                                    "items": ["грядка", "городчик"],
-                                }
-                            e["distinction_note"] = heteronyms[0].get("distinction_note")
-                        elif lemma in ("замок", "атлас"):
-                            e["distinction_note"] = heteronyms[0].get("distinction_note")
+                        if "sections" in primary_het:
+                            if "sections" not in e or not isinstance(e["sections"], dict):
+                                e["sections"] = {}
+                            for sec_key, sec_val in primary_het["sections"].items():
+                                e["sections"][sec_key] = sec_val
                         manifest_dirty = True
                         updated_counts["manifest_entries"] += 1
             if manifest_dirty:

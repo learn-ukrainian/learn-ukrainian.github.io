@@ -71,6 +71,25 @@ def test_zamok_disambiguation():
     assert "колодка" in lock["sections"]["synonyms"]["items"]
 
 
+def test_atlas_disambiguation():
+    """Verify атлас maps collection vs satin fabric disambiguation."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("атлас")
+    assert items is not None
+    assert len(items) == 2
+
+    maps, satin = items[0], items[1]
+
+    assert maps["headword"] == "а́тлас"
+    assert maps["pronunciation"]["ipa"] == "[ˈatɫɐs]"
+    assert maps["short_label"] == "збірник карт"
+    assert "збірник карт" in maps["sections"]["synonyms"]["items"]
+
+    assert satin["headword"] == "атла́с"
+    assert satin["pronunciation"]["ipa"] == "[ɐtˈɫas]"
+    assert satin["short_label"] == "тканина"
+    assert "шовк" in satin["sections"]["synonyms"]["items"]
+
+
 def test_sum11_parsing():
     """Verify regex extraction of heteronyms from multi-headword СУМ-11 text."""
     sample_text = (
@@ -86,7 +105,7 @@ def test_sum11_parsing():
 
 
 def test_apply_heteronyms_to_db(tmp_path: Path):
-    """Verify apply_heteronyms updates SQLite database properly."""
+    """Verify apply_heteronyms updates SQLite database properly for all heteronym lemmas."""
     db_path = tmp_path / "test_atlas.db"
     dummy_manifest = tmp_path / "empty_manifest.json"
     dummy_manifest.write_text("{}", encoding="utf-8")
@@ -110,49 +129,63 @@ def test_apply_heteronyms_to_db(tmp_path: Path):
         )"""
     )
 
-    initial_payload = {
-        "lemma": "город",
-        "url_slug": "город",
-        "gloss": "vegetable garden",
-        "heritage_status": {"classification": "authentic-archaism"},
-        "enrichment": {"stress": {"form": "го́род"}},
-        "sections": {"synonyms": {"items": ["місто"]}},
-    }
-    conn.execute(
-        "INSERT INTO article_payloads VALUES (?, ?, ?, 1)",
-        ("город", 1, json.dumps(initial_payload)),
-    )
-    conn.execute(
-        "INSERT INTO articles VALUES (?, ?, ?, ?, ?)",
-        ("город", "город", "noun", "vegetable garden", "authentic-archaism"),
-    )
+    initial_records = [
+        ("город", "город", "vegetable garden", "authentic-archaism", {"items": ["місто"]}),
+        ("замок", "замок", "castle / lock", "standard", {"items": ["палац"]}),
+        ("атлас", "атлас", "atlas / satin", "standard", None),
+    ]
+    for slug, head, gloss, heritage, syns in initial_records:
+        sec = {"synonyms": syns} if syns else {}
+        p = {"lemma": slug, "url_slug": slug, "gloss": gloss, "heritage_status": {"classification": heritage}, "sections": sec}
+        conn.execute("INSERT INTO article_payloads VALUES (?, 1, ?, 1)", (slug, json.dumps(p)))
+        conn.execute("INSERT INTO articles VALUES (?, ?, 'noun', ?, ?)", (slug, head, gloss, heritage))
     conn.commit()
     conn.close()
 
     counts = enrich_heteronyms.apply_heteronyms(
-        db_path=db_path, manifest_path=dummy_manifest, lemmas=["город"]
+        db_path=db_path, manifest_path=dummy_manifest, lemmas=["город", "замок", "атлас"]
     )
-    assert counts["db_payloads"] == 1
-    assert counts["db_articles"] == 1
+    assert counts["db_payloads"] == 3
+    assert counts["db_articles"] == 3
 
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    row = cur.execute("SELECT payload_json FROM article_payloads WHERE slug = 'город'").fetchone()
-    assert row is not None
-    payload = json.loads(row[0])
-    assert "heteronyms" in payload
-    assert len(payload["heteronyms"]) == 2
-    assert payload["heteronyms"][0]["headword"] == "горо́д"
-    assert payload["heritage_status"]["classification"] == "standard"
-    assert payload["sections"]["synonyms"]["items"] == ["грядка", "городчик"]
 
-    article_row = cur.execute("SELECT display_head, heritage_classification FROM articles WHERE slug = 'город'").fetchone()
-    assert article_row == ("горо́д", "standard")
+    # Verify город
+    g_row = cur.execute("SELECT payload_json FROM article_payloads WHERE slug = 'город'").fetchone()
+    assert g_row is not None
+    g_payload = json.loads(g_row[0])
+    assert len(g_payload["heteronyms"]) == 2
+    assert g_payload["heteronyms"][0]["headword"] == "горо́д"
+    assert g_payload["display_head"] == "горо́д"
+    assert g_payload["heritage_status"]["classification"] == "standard"
+    assert g_payload["sections"]["synonyms"]["items"] == ["грядка", "городчик"]
+
+    # Verify замок
+    z_row = cur.execute("SELECT payload_json FROM article_payloads WHERE slug = 'замок'").fetchone()
+    assert z_row is not None
+    z_payload = json.loads(z_row[0])
+    assert len(z_payload["heteronyms"]) == 2
+    assert z_payload["display_head"] == "за́мок"
+    assert "фортеця" in z_payload["sections"]["synonyms"]["items"]
+    z_art = cur.execute("SELECT display_head, gloss FROM articles WHERE slug = 'замок'").fetchone()
+    assert z_art == ("за́мок", "castle, fortress, palace")
+
+    # Verify атлас
+    a_row = cur.execute("SELECT payload_json FROM article_payloads WHERE slug = 'атлас'").fetchone()
+    assert a_row is not None
+    a_payload = json.loads(a_row[0])
+    assert len(a_payload["heteronyms"]) == 2
+    assert a_payload["display_head"] == "а́тлас"
+    assert "збірник карт" in a_payload["sections"]["synonyms"]["items"]
+    a_art = cur.execute("SELECT display_head, gloss FROM articles WHERE slug = 'атлас'").fetchone()
+    assert a_art == ("а́тлас", "atlas (bound collection of maps)")
+
     conn.close()
 
 
 def test_apply_heteronyms_to_manifest(tmp_path: Path):
-    """Verify apply_heteronyms updates JSON manifest properly."""
+    """Verify apply_heteronyms updates JSON manifest properly for all heteronyms."""
     manifest_path = tmp_path / "lexicon-manifest.json"
     data = {
         "entries": [
@@ -161,20 +194,37 @@ def test_apply_heteronyms_to_manifest(tmp_path: Path):
                 "url_slug": "город",
                 "gloss": "vegetable garden",
                 "heritage_status": {"classification": "authentic-archaism"},
-            }
+            },
+            {
+                "lemma": "замок",
+                "url_slug": "замок",
+                "gloss": "castle / lock",
+                "heritage_status": {"classification": "standard"},
+            },
+            {
+                "lemma": "атлас",
+                "url_slug": "атлас",
+                "gloss": "atlas / satin",
+                "heritage_status": {"classification": "standard"},
+            },
         ]
     }
     manifest_path.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
 
     dummy_db = tmp_path / "empty.db"
     counts = enrich_heteronyms.apply_heteronyms(
-        db_path=dummy_db, manifest_path=manifest_path, lemmas=["город"]
+        db_path=dummy_db, manifest_path=manifest_path, lemmas=["город", "замок", "атлас"]
     )
-    assert counts["manifest_entries"] == 1
+    assert counts["manifest_entries"] == 3
 
     updated = json.loads(manifest_path.read_text(encoding="utf-8"))
-    entry = updated["entries"][0]
-    assert "heteronyms" in entry
-    assert len(entry["heteronyms"]) == 2
-    assert entry["heteronyms"][0]["headword"] == "горо́д"
-    assert entry["heritage_status"]["classification"] == "standard"
+    entries = {e["lemma"]: e for e in updated["entries"]}
+
+    assert entries["город"]["display_head"] == "горо́д"
+    assert entries["город"]["sections"]["synonyms"]["items"] == ["грядка", "городчик"]
+
+    assert entries["замок"]["display_head"] == "за́мок"
+    assert "фортеця" in entries["замок"]["sections"]["synonyms"]["items"]
+
+    assert entries["атлас"]["display_head"] == "а́тлас"
+    assert "збірник карт" in entries["атлас"]["sections"]["synonyms"]["items"]

@@ -35,19 +35,97 @@ const { state } = Astro.props as Props;
     </WordAtlasArticle>
     <script is:inline>
       (() => {
-        const root = document.querySelector('[data-word-atlas]');
+        function initAtlasInteractions() {
+          const root = document.querySelector('[data-word-atlas]');
+          if (!root) return;
 
-        root?.querySelectorAll('[data-ety-note]').forEach((stage) => {
-          stage.addEventListener('click', () => {
-            root.querySelectorAll('[data-ety-note]').forEach((item) => item.classList.remove('active'));
-            stage.classList.add('active');
-            const output = stage.closest('.atlas-section')?.querySelector('[data-ety-note-output]');
-            if (output) {
-              output.textContent = stage.dataset.etyNote || output.textContent;
-              output.style.background = 'var(--teal-light)';
-            }
+          root.querySelectorAll('[data-ety-note]').forEach((stage) => {
+            stage.addEventListener('click', () => {
+              root.querySelectorAll('[data-ety-note]').forEach((item) => item.classList.remove('active'));
+              stage.classList.add('active');
+              const output = stage.closest('.atlas-section')?.querySelector('[data-ety-note-output]');
+              if (output) {
+                output.textContent = stage.dataset.etyNote || output.textContent;
+                output.style.background = 'var(--teal-light)';
+              }
+            });
           });
-        });
+
+          // Heteronym tab navigation
+          const tabs = root.querySelectorAll('[data-heteronym-target]');
+          const panels = root.querySelectorAll('[data-heteronym-idx]');
+          if (!tabs.length || !panels.length) return;
+
+          function activateHeteronymTab(index) {
+            tabs.forEach((tab, i) => {
+              const isSelected = i === index;
+              tab.classList.toggle('active', isSelected);
+              tab.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+              tab.tabIndex = isSelected ? 0 : -1;
+            });
+            panels.forEach((panel, i) => {
+              const isSelected = i === index;
+              panel.style.display = isSelected ? '' : 'none';
+              panel.hidden = !isSelected;
+            });
+          }
+
+          function selectHeteronymByHash() {
+            const raw = decodeURIComponent(window.location.hash.replace(/^#/, '')).trim().normalize('NFC');
+            if (!raw) return;
+            tabs.forEach((tab, i) => {
+              const hw = (tab.dataset.heteronymHeadword || '').normalize('NFC');
+              const unaccented = hw.replace(/[\u0300-\u036f]/g, '');
+              if (hw === raw || `${i + 1}` === raw || unaccented === raw) {
+                activateHeteronymTab(i);
+              }
+            });
+          }
+
+          tabs.forEach((tab, i) => {
+            tab.addEventListener('click', () => {
+              activateHeteronymTab(i);
+              const hw = tab.dataset.heteronymHeadword;
+              if (hw && window.history?.replaceState) {
+                window.history.replaceState(null, '', `#${encodeURIComponent(hw)}`);
+              }
+            });
+            tab.addEventListener('keydown', (e) => {
+              let nextIndex = null;
+              if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                nextIndex = (i + 1) % tabs.length;
+              } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                nextIndex = (i - 1 + tabs.length) % tabs.length;
+              } else if (e.key === 'Home') {
+                nextIndex = 0;
+              } else if (e.key === 'End') {
+                nextIndex = tabs.length - 1;
+              }
+              if (nextIndex !== null) {
+                e.preventDefault();
+                tabs[nextIndex].focus();
+                tabs[nextIndex].click();
+              }
+            });
+          });
+
+          root.querySelectorAll('[data-heteronym-jump]').forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+              e.preventDefault();
+              const targetIdx = parseInt(btn.dataset.heteronymJump, 10);
+              if (!isNaN(targetIdx) && tabs[targetIdx]) {
+                tabs[targetIdx].click();
+                tabs[targetIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              }
+            });
+          });
+
+          selectHeteronymByHash();
+          window.addEventListener('hashchange', selectHeteronymByHash);
+        }
+
+        initAtlasInteractions();
+        document.addEventListener('astro:page-load', initAtlasInteractions);
       })();
     </script>
   </>
