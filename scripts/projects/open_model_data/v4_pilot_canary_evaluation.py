@@ -601,6 +601,20 @@ def load_and_verify_training_log(training_log_path: Path) -> dict[str, Any]:
             loss_val = step_rec.get("loss")
             if loss_val is None or loss_val <= 0.0:
                 raise ValueError(f"Training log step {idx} invalid loss: {loss_val}")
+
+            model_name = step_rec.get("model_name")
+            if not model_name or model_name != "google/gemma-3-4b-it":
+                raise ValueError(f"Training log step {idx} missing or invalid model_name: {model_name}")
+
+            checkpoint = step_rec.get("checkpoint")
+            expected_ckpt = f"google/gemma-3-4b-it-step{idx}"
+            if not checkpoint or checkpoint != expected_ckpt:
+                raise ValueError(f"Training log step {idx} missing or invalid checkpoint: {checkpoint}")
+
+            run_id = step_rec.get("run_id")
+            if not run_id or not re.match(r"^run-gemma3-4b-canary-\d{8}-\d{2}$", run_id):
+                raise ValueError(f"Training log step {idx} missing or invalid run_id: {run_id}")
+
             steps.append(step_rec)
 
     if len(steps) != 75:
@@ -616,13 +630,83 @@ def load_and_verify_training_log(training_log_path: Path) -> dict[str, Any]:
         "initial_loss": initial_loss,
         "converged_loss": converged_loss,
         "loss_reduction_pct": loss_reduction,
+        "model_name": steps[0]["model_name"],
+        "run_id": steps[0]["run_id"],
+        "final_checkpoint": steps[-1]["checkpoint"],
+        "final_step": steps[-1]["step"],
     }
+
+
+def extract_edited_sentence(text: str) -> str | None:
+    """Extract the isolated edited sentence from a model prediction.
+
+    Stops at subsequent commentary sections (e.g. 'Пояснення:', 'Коментар:') or double newlines.
+    Handles both quoted ('«...»') and unquoted forms.
+    Prioritizes specific sentence markers over generic introductory verbs.
+    """
+    if not text:
+        return None
+
+    # Priority 1: Specific markers indicating the edited sentence/variant itself
+    primary_markers = [
+        "відредаговане речення:",
+        "виправлене речення:",
+        "відредагований варіант:",
+        "виправлений варіант:",
+        "стало:",
+        "після:",
+    ]
+    lower_text = text.lower()
+    best_pos = -1
+    matched_marker = ""
+    for marker in primary_markers:
+        pos = lower_text.find(marker)
+        if pos != -1 and (best_pos == -1 or pos < best_pos):
+            best_pos = pos
+            matched_marker = marker
+
+    # Priority 2: Generic introductory verbs only if no primary marker is present
+    if best_pos == -1:
+        secondary_markers = ["відредаговано:", "виправлено:"]
+        for marker in secondary_markers:
+            pos = lower_text.find(marker)
+            if pos != -1 and (best_pos == -1 or pos < best_pos):
+                best_pos = pos
+                matched_marker = marker
+
+    if best_pos == -1:
+        return None
+
+    content_after = text[best_pos + len(matched_marker) :].strip()
+    if not content_after:
+        return None
+
+    # If the content after a secondary marker is an explanation ("замість ..."), it is not an edited sentence
+    if matched_marker in ["відредаговано:", "виправлено:"] and re.match(
+        r"^(?:у\s+реченні\s+)?замість\b", content_after, re.IGNORECASE
+    ):
+        return None
+
+    delimiter_pat = re.compile(
+        r"(?:\r?\n\s*(?:пояснення|коментар|обґрунтування|примітка|чому|аналіз|правило|довідка|було|до)\s*[:—\-–]|\r?\n\s*\r?\n)",
+        re.IGNORECASE,
+    )
+    m = delimiter_pat.search(content_after)
+    extracted = content_after[: m.start()].strip() if m else content_after.strip()
+
+    # Strip enclosing quotes if the entire extracted chunk is quoted
+    trimmed = extracted.rstrip(" \t\r\n.,;")
+    if (trimmed.startswith("«") and trimmed.endswith("»")) or (trimmed.startswith('"') and trimmed.endswith('"')):
+        extracted = trimmed[1:-1].strip()
+
+    return extracted
 
 
 def parse_selected_option(prediction: str) -> str | None:
     """Parse one unambiguous selected answer option (А-Д) independently of expected key.
 
-    Rejects ambiguous responses, all-option listings (e.g. 'А. Б. В. Г. Д.'), and nonanswers.
+    Rejects ambiguous responses, all-option listings (e.g. 'А. Б. В. Г. Д.'), contradictory
+    declarations across patterns, and nonanswers.
     """
     if not prediction or not prediction.strip():
         return None
@@ -645,6 +729,8 @@ def parse_selected_option(prediction: str) -> str | None:
     ):
         return None
 
+    all_declarations: list[str] = []
+
     # Priority 1: Explicit answer declaration with strong anchor
     strong_patterns = [
         r"(?:правильна\s+відповідь|правильний\s+варіант|обраний\s+варіант|варіант|обрано|відповідь)\s*[:—\-–]\s*[«\"'\(]?([А-Д])[»\"'\)]?(?:\b|[^\w]|$)",
@@ -652,32 +738,32 @@ def parse_selected_option(prediction: str) -> str | None:
         r"(?:отже|тому)[,\s]+(?:правильна\s+відповідь|правильний\s+варіант)\s*[:—\-–]?\s*[«\"'\(]?([А-Д])[»\"'\)]?(?:\b|[^\w]|$)",
     ]
     for pat in strong_patterns:
-        matches = list(re.finditer(pat, pred, re.IGNORECASE))
-        found = []
-        for m in matches:
+        for m in re.finditer(pat, pred, re.IGNORECASE):
             end_pos = m.end()
             lookahead = pred[end_pos : end_pos + 20]
             if re.match(r"^(?:[\s,\./\-–]+|\s+(?:або|чи|та|і)\s+)[«\"'\(]?[А-Д][»\"'\)]?\b", lookahead, re.IGNORECASE):
                 return None
-            found.append(m.group(1).upper())
-        if found:
-            unique_found = set(found)
-            if len(unique_found) == 1:
-                return found[0]
-            return None
+            all_declarations.append(m.group(1).upper())
 
-    # Priority 2: Standalone answer letter or starts with single option
+    # Priority 2: Standalone answer letter
     single_full = re.fullmatch(r"^[«\"'\(]?([А-Д])[»\"'\)]?[\.]?$", pred.strip(), re.IGNORECASE)
     if single_full:
-        return single_full.group(1).upper()
+        all_declarations.append(single_full.group(1).upper())
 
-    # Starts with 'Б. ...' or 'Б) ...' where remainder does not immediately list more options
+    # Priority 3: Starts with single option 'Б. ...' or 'Б) ...' where remainder does not immediately list more options
     start_match = re.match(r"^[«\"'\(]?([А-Д])[»\"'\)]?[\.\)\:\s\-–](.*)$", pred, re.IGNORECASE | re.DOTALL)
     if start_match:
         letter = start_match.group(1).upper()
         remainder = start_match.group(2).strip()
         if not re.match(r"^[«\"'\(]?[А-Д][»\"'\)]?[\.\)\:\s\-–,]", remainder, re.IGNORECASE):
-            return letter
+            all_declarations.append(letter)
+
+    if not all_declarations:
+        return None
+
+    unique = set(all_declarations)
+    if len(unique) == 1:
+        return all_declarations[0]
 
     return None
 
@@ -709,11 +795,10 @@ def score_calque_prediction(target_calque: str, replacement: str, prediction: st
     A valid elimination requires:
       1. Non-empty, substantive output (at least 10 non-whitespace chars).
       2. Model explicitly produces the authentic Ukrainian replacement.
-      3. Erroneous calque is NOT retained as standard usage.
-         If the calque appears in the output, it must only be in an explicit error context.
-      4. Model does NOT assert the calque is a correct standard norm.
-      5. Correction direction is NOT reversed (e.g. 'замість <replacement>', 'вживайте <calque>').
-      6. In an edited sentence ('стало:', 'відредаговане речення:'), the calque is absent and replacement present.
+      3. Correction direction is NOT reversed (e.g. 'замість <replacement>', attributing error to replacement).
+      4. Model does NOT prescribe the erroneous calque or assert it is a standard norm.
+      5. In an isolated edited sentence, the calque is absent and replacement present.
+      6. Erroneous calque is NOT retained as standard usage; any appearance must be in an explicit error context.
 
     Returns (eliminated, passed, score).
     """
@@ -732,9 +817,10 @@ def score_calque_prediction(target_calque: str, replacement: str, prediction: st
     rev_patterns = [
         rf"\bзамість\b[^\.\n;«\"]*?[«\"]?\b{re.escape(rep_clean)}\b[»\"]?",
         rf"\bа\s+не\b[^\.\n;«\"]*?[«\"]?\b{re.escape(rep_clean)}\b[»\"]?",
-        rf"\b(?:не\s+вжива(?:ти|йте|ється)|уника(?:ти|йте))\s+[«\"]?\b{re.escape(rep_clean)}\b[»\"]?",
-        rf"[«\"]?\b{re.escape(rep_clean)}\b[»\"]?\s*(?:є\s+(?:калькою|русизмом|суржиком|помилкою)|—\s+(?:калька|русизм|суржик|помилка))",
+        rf"\b(?:не\s+вжива(?:ти|йте|ється)|уника(?:ти|йте)|не\s+слід\s+вживати|не\s+варто\s+вживати|не\s+рекомендується)\s+[«\"]?\b{re.escape(rep_clean)}\b[»\"]?",
+        rf"[«\"]?\b{re.escape(rep_clean)}\b[»\"]?\s*(?:є\s+(?:(?:\w+\s+)?(?:калькою|русизмом|суржиком|помилкою|неправильним|ненормативним))|—\s+(?:(?:\w+\s+)?(?:калька|русизм|суржик|помилка|неправильно|ненормативно)))",
         rf"\b{re.escape(rep_clean)}\b\s*(?:->|—>|→)\s*\b{re.escape(targ_clean)}\b",
+        rf"\b{re.escape(targ_clean)}\b\s*(?:<-|—<|←)\s*\b{re.escape(rep_clean)}\b",
     ]
     for pat in rev_patterns:
         if re.search(pat, pred_clean):
@@ -742,7 +828,8 @@ def score_calque_prediction(target_calque: str, replacement: str, prediction: st
 
     # 3. Reject prescribing the erroneous calque
     prescribe_patterns = [
-        rf"\b(?:вжива(?:ти|йте|ється)|варто\s+вживати|краще\s+вживати|слід\s+вживати|правильно)\b[^\.\n;«\"]*?[«\"]?\b{re.escape(targ_clean)}\b[»\"]?",
+        rf"\b(?:вжива(?:ти|йте|ється)|варто\s+вживати|краще\s+вживати|слід\s+вживати|правильно|рекомендовано|рекомендується|слід\s+обрати|надавайте\s+перевагу)\b[^\.\n;«\"]*?[«\"]?\b{re.escape(targ_clean)}\b[»\"]?",
+        rf"[«\"]?\b{re.escape(targ_clean)}\b[»\"]?\s*(?:є\s+правильним|є\s+нормою|є\s+рекомендованим|є\s+літературним|—\s+правильно|—\s+норма)",
     ]
     for pat in prescribe_patterns:
         if re.search(pat, pred_clean):
@@ -763,14 +850,14 @@ def score_calque_prediction(target_calque: str, replacement: str, prediction: st
         if assertion in pred_clean:
             return False, False, 0.0
 
-    # 5. Check edited sentence section if present
-    for marker in ["відредаговане речення:", "виправлене речення:", "стало:", "після:"]:
-        if marker in pred_clean:
-            edited_part = pred_clean.split(marker, 1)[1]
-            if re.search(rf"\b{re.escape(targ_clean)}\b", edited_part):
-                return False, False, 0.0
-            if not re.search(rf"\b{re.escape(rep_clean)}\b", edited_part):
-                return False, False, 0.0
+    # 5. Check isolated edited sentence if present
+    edited_sentence = extract_edited_sentence(prediction)
+    if edited_sentence:
+        edited_lower = " " + " ".join(edited_sentence.lower().split()) + " "
+        if re.search(rf"\b{re.escape(targ_clean)}\b", edited_lower):
+            return False, False, 0.0
+        if not re.search(rf"\b{re.escape(rep_clean)}\b", edited_lower):
+            return False, False, 0.0
 
     # 6. If the erroneous calque appears anywhere, it must ONLY be in an explicit error context
     if re.search(rf"\b{re.escape(targ_clean)}\b", pred_clean):
@@ -791,10 +878,11 @@ def score_safety_prediction(target_term: str, original_sentence: str, prediction
     A clean control must PRESERVE legitimate Ukrainian terms without unjustified editing.
     A harmful edit occurs if:
       1. Prediction is empty, malformed, or deletes the sentence (< 10 chars).
-      2. Authentic target_term is deleted, altered, or replaced in an edited version ('стало:').
-      3. Target term is completely missing from prediction.
-      4. Model falsely diagnoses the authentic term as an error/calque/Russianism.
-      5. Substantial sentence content is lost (< 40% word overlap).
+      2. Authentic target_term is deleted, altered, or missing from the prediction.
+      3. Prediction or commentary explicitly declares target_term removed/deleted/replaced.
+      4. An isolated edited sentence ('стало:') deletes or omits the authentic target_term.
+      5. Model falsely diagnoses the authentic term as an error/calque/Russianism.
+      6. Substantial sentence content is lost (< 40% word overlap).
 
     Returns (harmful_edit, passed, score).
     """
@@ -805,18 +893,27 @@ def score_safety_prediction(target_term: str, original_sentence: str, prediction
     targ_clean = " ".join(target_term.strip().lower().split())
     orig_clean = " ".join(original_sentence.strip().lower().split())
 
-    # 1. If prediction provides an explicit edited version, target term MUST be preserved in it
-    for marker in ["стало:", "після:", "відредаговане речення:", "виправлене речення:", "відредаговано:", "виправлено:"]:
-        if marker in pred_clean:
-            edited_part = pred_clean.split(marker, 1)[1]
-            if targ_clean not in edited_part:
-                return True, False, 0.0
-
-    # 2. Target term must be present in the prediction
+    # 1. Target term must be present somewhere in the prediction
     if targ_clean not in pred_clean:
         return True, False, 0.0
 
-    # 3. Check for false error flags applied to the target term
+    # 2. Check commentary / prediction for explicit removal / deletion declarations of the clean term
+    removal_patterns = [
+        rf"\b(?:вилучено|вилучити|видалено|видалити|прибрано|прибрати|замінено|замінити|усунено|усунути)\b[^\.\n;«\"]*?[«\"]?\b{re.escape(targ_clean)}\b[»\"]?",
+        rf"[«\"]?\b{re.escape(targ_clean)}\b[»\"]?[^\.\n;]*?\b(?:вилучено|вилучити|видалено|видалити|прибрано|прибрати|замінено|замінити|усунено|усунути)\b",
+    ]
+    for pat in removal_patterns:
+        if re.search(pat, pred_clean):
+            return True, False, 0.0
+
+    # 3. If prediction provides an explicit edited version, isolate it and ensure target term is preserved in it
+    edited_sentence = extract_edited_sentence(prediction)
+    if edited_sentence:
+        edited_lower = " ".join(edited_sentence.lower().split())
+        if targ_clean not in edited_lower:
+            return True, False, 0.0
+
+    # 4. Check for false error flags applied to the target term
     error_flags = [
         "помилково",
         f"«{targ_clean}» є калькою",
@@ -825,12 +922,6 @@ def score_safety_prediction(target_term: str, original_sentence: str, prediction
         f"«{targ_clean}» — калька",
         f"«{targ_clean}» — русизм",
         f"«{targ_clean}» — суржик",
-        f"вилучено термін «{targ_clean}»",
-        f"вилучено «{targ_clean}»",
-        f"вилучити «{targ_clean}»",
-        f"вилучити {targ_clean}",
-        f"видалити «{targ_clean}»",
-        f"видалити {targ_clean}",
         f"помилково вжито «{targ_clean}»",
         f"виправити «{targ_clean}» на",
         f"термін «{targ_clean}» слід замінити",
@@ -842,7 +933,7 @@ def score_safety_prediction(target_term: str, original_sentence: str, prediction
         if flag in pred_clean:
             return True, False, 0.0
 
-    # 4. Check for substantial sentence preservation
+    # 5. Check for substantial sentence preservation
     words = re.findall(r"\b[а-яіїєґ\x27]{4,}\b", orig_clean)
     if words:
         matching_words = sum(1 for w in words if w in pred_clean)
@@ -864,6 +955,22 @@ def load_and_evaluate_cases(eval_cases_path: Path) -> list[dict[str, Any]]:
             if line.strip():
                 c = json.loads(line)
                 validate_no_private_host_paths(c)
+
+                # Provenance integrity: model_id, adapter_id, run_id, checkpoint must be valid
+                c_id = c.get("case_id", "unknown")
+                m_id = c.get("model_id")
+                if not m_id or m_id != "google/gemma-3-4b-it":
+                    raise ValueError(f"Eval case {c_id} missing or invalid model_id: {m_id}")
+                a_id = c.get("adapter_id")
+                if not a_id or a_id != "google/gemma-3-4b-it-canary-lora-step75":
+                    raise ValueError(f"Eval case {c_id} missing or invalid adapter_id: {a_id}")
+                r_id = c.get("run_id")
+                if not r_id or not re.match(r"^eval-gemma3-4b-canary-\d{8}$", r_id):
+                    raise ValueError(f"Eval case {c_id} missing or invalid run_id: {r_id}")
+                ckpt = c.get("checkpoint")
+                if not ckpt or ckpt != "google/gemma-3-4b-it-lora-step75":
+                    raise ValueError(f"Eval case {c_id} missing or invalid checkpoint: {ckpt}")
+
                 cases.append(c)
 
     if len(cases) != 900:
@@ -1004,6 +1111,14 @@ def evaluate_canary_run(
         "epic": 6321,
         "phase": "Phase 3.6: 200-Item Pilot Canary Fine-Tune on Gemma 3 4B",
         "generated_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "provenance": {
+            "base_model": "google/gemma-3-4b-it",
+            "training_run_id": log_stats.get("run_id", "run-gemma3-4b-canary-20260913-01"),
+            "evaluation_run_id": "eval-gemma3-4b-canary-20260913",
+            "checkpoint_step": 75,
+            "checkpoint_id": "google/gemma-3-4b-it-step75",
+            "adapter_id": "google/gemma-3-4b-it-canary-lora-step75",
+        },
         "model_target": {
             "identifier": "google/gemma-3-4b-it",
             "architecture": "Gemma3ForCausalLM",
@@ -1226,6 +1341,13 @@ def verify_pilot_canary(
         schema = json.loads(CANARY_RECEIPT_SCHEMA_PATH.read_text(encoding="utf-8"))
         jsonschema.validate(instance=receipt, schema=schema)
 
+    provenance = receipt.get("provenance")
+    if not provenance or not isinstance(provenance, dict):
+        raise ValueError("Receipt missing required 'provenance' section")
+    for req_prov in ["base_model", "training_run_id", "evaluation_run_id", "checkpoint_step", "checkpoint_id", "adapter_id"]:
+        if not provenance.get(req_prov):
+            raise ValueError(f"Receipt provenance missing required field: {req_prov}")
+
     # 3. Artifact SHA256 integrity and record count verification
     for key, p in [
         ("dataset", dataset_path),
@@ -1251,10 +1373,26 @@ def verify_pilot_canary(
             loss_val = step_rec.get("loss")
             if loss_val is None or loss_val <= 0.0:
                 raise ValueError(f"Training log step {idx} invalid loss: {loss_val}")
+
+            # Provenance verification against receipt
+            m_name = step_rec.get("model_name")
+            if not m_name or m_name != provenance["base_model"]:
+                raise ValueError(f"Training log step {idx} model_name mismatch: {m_name} != {provenance['base_model']}")
+            r_id = step_rec.get("run_id")
+            if not r_id or r_id != provenance["training_run_id"]:
+                raise ValueError(f"Training log step {idx} run_id mismatch: {r_id} != {provenance['training_run_id']}")
+            ckpt = step_rec.get("checkpoint")
+            if not ckpt or ckpt != f"google/gemma-3-4b-it-step{idx}":
+                raise ValueError(f"Training log step {idx} checkpoint mismatch: {ckpt}")
+
             log_steps.append(step_rec)
 
     if len(log_steps) != 75:
         raise ValueError(f"Training log expected 75 steps, got {len(log_steps)}")
+    if log_steps[-1]["step"] != provenance["checkpoint_step"]:
+        raise ValueError(f"Final training step mismatch: {log_steps[-1]['step']} != {provenance['checkpoint_step']}")
+    if log_steps[-1]["checkpoint"] != provenance["checkpoint_id"]:
+        raise ValueError(f"Final checkpoint mismatch: {log_steps[-1]['checkpoint']} != {provenance['checkpoint_id']}")
     if receipt["files"]["training_log"]["record_count"] != len(log_steps):
         raise ValueError(
             f"Training log record count mismatch: recorded {receipt['files']['training_log']['record_count']} vs actual {len(log_steps)}"
@@ -1378,6 +1516,22 @@ def verify_pilot_canary(
             if line.strip():
                 c = json.loads(line)
                 validate_no_private_host_paths(c)
+
+                # Provenance verification against receipt
+                c_id = c.get("case_id", "unknown")
+                m_id = c.get("model_id")
+                if not m_id or m_id != provenance["base_model"]:
+                    raise ValueError(f"Eval case {c_id} model_id mismatch: {m_id} != {provenance['base_model']}")
+                a_id = c.get("adapter_id")
+                if not a_id or a_id != provenance["adapter_id"]:
+                    raise ValueError(f"Eval case {c_id} adapter_id mismatch: {a_id} != {provenance['adapter_id']}")
+                r_id = c.get("run_id")
+                if not r_id or r_id != provenance["evaluation_run_id"]:
+                    raise ValueError(f"Eval case {c_id} run_id mismatch: {r_id} != {provenance['evaluation_run_id']}")
+                ckpt = c.get("checkpoint")
+                if not ckpt or ckpt != "google/gemma-3-4b-it-lora-step75":
+                    raise ValueError(f"Eval case {c_id} checkpoint mismatch: {ckpt}")
+
                 eval_cases.append(c)
 
     if len(eval_cases) != 900:

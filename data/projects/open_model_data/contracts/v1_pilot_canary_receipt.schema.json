@@ -11,6 +11,7 @@
     "epic",
     "phase",
     "generated_at",
+    "provenance",
     "model_target",
     "training_config",
     "dataset_composition",
@@ -40,6 +41,40 @@
     "generated_at": {
       "type": "string",
       "format": "date-time"
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "base_model",
+        "training_run_id",
+        "evaluation_run_id",
+        "checkpoint_step",
+        "checkpoint_id",
+        "adapter_id"
+      ],
+      "properties": {
+        "base_model": {
+          "const": "google/gemma-3-4b-it"
+        },
+        "training_run_id": {
+          "type": "string",
+          "pattern": "^run-gemma3-4b-canary-\\d{8}-\\d{2}$"
+        },
+        "evaluation_run_id": {
+          "type": "string",
+          "pattern": "^eval-gemma3-4b-canary-\\d{8}$"
+        },
+        "checkpoint_step": {
+          "const": 75
+        },
+        "checkpoint_id": {
+          "const": "google/gemma-3-4b-it-step75"
+        },
+        "adapter_id": {
+          "const": "google/gemma-3-4b-it-canary-lora-step75"
+        }
+      }
     },
     "model_target": {
       "type": "object",

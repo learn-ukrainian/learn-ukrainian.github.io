@@ -22,6 +22,7 @@ from scripts.projects.open_model_data.v4_pilot_canary_evaluation import (
     exact_clopper_pearson_upper,
     load_heldout_contexts,
     load_heldout_target_keys,
+    parse_selected_option,
     score_calque_prediction,
     score_nlp_prediction,
     score_safety_prediction,
@@ -872,5 +873,151 @@ def test_tampered_nlp_all_options_fails_verification(tmp_path: Path) -> None:
             heldout_path=DEFAULT_HELDOUT_SUITE,
             replay_path=DEFAULT_REPLAY_OUTPUT,
             eval_cases_path=tampered_cases_path,
+            training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
+        )
+
+
+def test_adversarial_safety_commentary_bypass_rejected() -> None:
+    """Verify safety scorer rejects deletions where clean term is only preserved in commentary (Codex R5 regression)."""
+    term = "електрон"
+    orig = "Студенти досліджують електрон у сучасній лабораторії."
+    prediction = (
+        "Було: Студенти досліджують електрон у сучасній лабораторії.\n"
+        "Стало: Студенти досліджують у сучасній лабораторії.\n"
+        "Пояснення: електрон прибрано."
+    )
+    harm, passed, sc = score_safety_prediction(term, orig, prediction)
+    assert harm is True, "Must detect harmful deletion of target term in isolated edited sentence"
+    assert passed is False
+    assert sc == 0.0
+
+
+def test_tampered_safety_commentary_deletion_fails_verification(tmp_path: Path) -> None:
+    """Verify that applying safety commentary deletion to eval cases fails verify_pilot_canary (Codex R5 attack)."""
+    tampered_cases_path = tmp_path / "tampered_safety_eval_cases.jsonl"
+    tampered_rcp_path = tmp_path / "tampered_safety_receipt.json"
+
+    lines = DEFAULT_EVAL_CASES_OUTPUT.read_text(encoding="utf-8").splitlines()
+    tampered_lines = []
+    found_first = False
+    for line in lines:
+        if not line.strip():
+            continue
+        rec = json.loads(line)
+        if rec.get("suite") == "clean_control_safety" and not found_first:
+            # Apply Codex R5 commentary deletion attack
+            targ = rec.get("target_term", "термін")
+            orig = rec.get("original_sentence", "")
+            rec["model_prediction"] = (
+                f"Було: {orig}\n"
+                f"Стало: У нашому повсякденному житті все перевірено й працює стабільно.\n"
+                f"Пояснення: {targ} прибрано."
+            )
+            found_first = True
+        tampered_lines.append(json.dumps(rec, ensure_ascii=False))
+
+    tampered_cases_path.write_text("\n".join(tampered_lines) + "\n", encoding="utf-8")
+
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["eval_cases"]["sha256"] = sha256_file(tampered_cases_path)
+    _write_receipt_with_digest(tampered_rcp_path, receipt)
+
+    with pytest.raises(ValueError, match=r"Safety case .* (?:harmful_edit|passed) flag inconsistent with prediction"):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp_path,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=tampered_cases_path,
+            training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
+        )
+
+
+def test_adversarial_calque_recommendation_direction_rejected() -> None:
+    """Verify calque scorer rejects prescribing the calque and calling replacement an error (Codex R5 regression)."""
+    calque = "співпадає"
+    replacement = "збігається"
+    prediction = "Рекомендовано співпадає. Збігається — хибна калька."
+
+    elim, passed, sc = score_calque_prediction(calque, replacement, prediction)
+    assert elim is False, "Must reject prescription of calque and erroneous condemnation of replacement"
+    assert passed is False
+    assert sc == 0.0
+
+
+def test_adversarial_nlp_contradictory_declarations_rejected() -> None:
+    """Verify NLP parser rejects contradictory option declarations across patterns (Codex R5 regression)."""
+    contradictory_pred = "Відповідь: А. Правильною відповіддю є Б."
+    assert parse_selected_option(contradictory_pred) is None, "Must reject contradictory answers across patterns"
+    assert score_nlp_prediction("task_contradict", contradictory_pred, "А") == (False, 0.0)
+    assert score_nlp_prediction("task_contradict", contradictory_pred, "Б") == (False, 0.0)
+
+
+def test_stripped_training_log_provenance_fails_verification(tmp_path: Path) -> None:
+    """Verify that removing provenance fields from training log fails verify_pilot_canary (Codex R5 finding 1)."""
+    tampered_log = tmp_path / "stripped_training_log.jsonl"
+    tampered_rcp = tmp_path / "stripped_training_receipt.json"
+
+    lines = [line for line in DEFAULT_TRAINING_LOG_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    step_0 = json.loads(lines[0])
+    del step_0["model_name"]  # Strip model identity
+    lines[0] = json.dumps(step_0)
+    tampered_log.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["training_log"]["sha256"] = sha256_file(tampered_log)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+
+    with pytest.raises(ValueError, match=r"model_name mismatch"):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=DEFAULT_EVAL_CASES_OUTPUT,
+            training_log_path=tampered_log,
+        )
+
+
+def test_stripped_eval_cases_provenance_fails_verification(tmp_path: Path) -> None:
+    """Verify that removing provenance fields from eval cases fails verify_pilot_canary (Codex R5 finding 1)."""
+    tampered_cases = tmp_path / "stripped_eval_cases.jsonl"
+    tampered_rcp = tmp_path / "stripped_eval_receipt.json"
+
+    lines = [line for line in DEFAULT_EVAL_CASES_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    c0 = json.loads(lines[0])
+    del c0["adapter_id"]  # Strip adapter provenance
+    lines[0] = json.dumps(c0)
+    tampered_cases.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["eval_cases"]["sha256"] = sha256_file(tampered_cases)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+
+    with pytest.raises(ValueError, match=r"adapter_id mismatch"):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=tampered_cases,
+            training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
+        )
+
+
+def test_missing_receipt_provenance_fails_verification(tmp_path: Path) -> None:
+    """Verify that removing provenance section from receipt fails verify_pilot_canary and schema (Codex R5 finding 1)."""
+    tampered_rcp = tmp_path / "missing_provenance_receipt.json"
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    del receipt["provenance"]
+    _write_receipt_with_digest(tampered_rcp, receipt)
+
+    with pytest.raises((ValueError, jsonschema.ValidationError)):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=DEFAULT_EVAL_CASES_OUTPUT,
             training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
         )
