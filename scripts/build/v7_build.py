@@ -1879,15 +1879,19 @@ def _upgrade_gemini_adjust_then_astra(
     content_override: str | None = None,
 ) -> dict[str, Any]:
     """Gemini reviews and may rewrite; Astra (medium) is the independent gate."""
-    self_review = _run_llm_qg(
-        plan=plan, plan_content=plan_content, module_dir=module_dir, writer=writer,
-        reviewer_override=writer, profile="core",
-        stdout_silence_timeout=stdout_silence_timeout,
-        review_context=review_context + "\nGemini self-review: you wrote this. Adjust if needed. Sources/VESUM required.",
-        content_override=content_override, allow_same_model=True,
-    )
+    try:
+        self_review = _run_llm_qg(
+            plan=plan, plan_content=plan_content, module_dir=module_dir, writer=writer,
+            reviewer_override=writer, profile="core",
+            stdout_silence_timeout=stdout_silence_timeout,
+            review_context=review_context + "\nGemini self-review: you wrote this. Adjust if needed. Sources/VESUM required.",
+            content_override=content_override, allow_same_model=True,
+        )
+    except linear_pipeline.LinearPipelineError as exc:
+        self_review = {"passed": False, "error": str(exc), "skipped_adjust": True}
+        print(f"[upgrade] Gemini self-review failed ({exc}); continuing to Astra", file=sys.stderr, flush=True)
     linear_pipeline.write_json(module_dir / "llm_qg_gemini.json", self_review)
-    if not _llm_qg_payload_passes(self_review) and content_override is None:
+    if not _llm_qg_payload_passes(self_review) and content_override is None and not self_review.get("skipped_adjust"):
         adjust = (
             writer_prompt
             + "\n\n## Gemini self-review requested adjustments\n\n"
