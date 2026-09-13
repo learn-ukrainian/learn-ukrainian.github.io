@@ -9,8 +9,7 @@ from pathlib import Path
 import jsonschema
 import numpy as np
 import pytest
-import safetensors.torch
-import torch
+import safetensors.numpy
 from scipy.stats import binomtest
 
 from scripts.projects.open_model_data.v4_pilot_canary_evaluation import (
@@ -1616,8 +1615,8 @@ def test_adversarial_adapter_seed42_random_weights_rejected(tmp_path: Path) -> N
         for m in ["q_proj", "k_proj", "v_proj", "o_proj"]:
             name_a = f"base_model.model.model.layers.{l}.self_attn.{m}.lora_A.weight"
             name_b = f"base_model.model.model.layers.{l}.self_attn.{m}.lora_B.weight"
-            tensors[name_a] = torch.tensor((rng.standard_normal((16, 256), dtype=np.float32) * 0.02).astype(np.float32))
-            tensors[name_b] = torch.tensor((rng.standard_normal((256, 16), dtype=np.float32) * 0.02).astype(np.float32))
+            tensors[name_a] = (rng.standard_normal((16, 256), dtype=np.float32) * 0.02).astype(np.float32)
+            tensors[name_b] = (rng.standard_normal((256, 16), dtype=np.float32) * 0.02).astype(np.float32)
 
     receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
     metadata = {
@@ -1632,7 +1631,7 @@ def test_adversarial_adapter_seed42_random_weights_rejected(tmp_path: Path) -> N
         "lora_rank": "16",
         "lora_alpha": "32",
     }
-    safetensors.torch.save_file(tensors, tampered_adapter, metadata=metadata)
+    safetensors.numpy.save_file(tensors, tampered_adapter, metadata=metadata)
     ad_hash = sha256_file(tampered_adapter)
 
     tampered_log = tmp_path / "tampered_training_log.jsonl"
