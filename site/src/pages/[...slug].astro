@@ -16,6 +16,7 @@ import {
 } from '../lib/a1-lesson-nav';
 import curriculumStats from '../data/curriculum-stats.json';
 import lexiconSearchIndex from '../data/lexicon-search-index.json';
+import { A1_UNITS } from '../data/a1-v1-modules';
 
 type DocsEntry = CollectionEntry<'docs'>;
 type TrackStats = Record<string, { modules?: number } | number>;
@@ -649,18 +650,37 @@ const sidebar = (() => {
 
 const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
   if (track === 'a1') {
-    return [{
-      unit: trackOverview.title,
-      items: (deployedDocsByTrack.get(track) ?? [])
-        .filter(entry => Array.isArray(entry.data.lessons))
-        .map(entry => ({
-          num: entry.data.sidebar?.order ?? 1,
-          slug: normalizeId(entry.id).split('/')[1],
-          title: entry.data.title,
-          status: 'active' as const,
-          lessons: entry.data.lessons as { n: number; title: string; minutes: number; href: string }[],
-        })),
-    }];
+    // Unit membership mirrors the previous-edition curriculum map (a1-v1).
+    // Upgraded modules go live in their curriculum slot; the rest stay locked.
+    const upgradedBySlug = new Map(
+      (deployedDocsByTrack.get(track) ?? [])
+        .filter((entry) => Array.isArray(entry.data.lessons))
+        .map((entry) => [normalizeId(entry.id).split('/')[1], entry] as const),
+    );
+    return A1_UNITS.map((group) => ({
+      unit: group.unit,
+      items: group.items.map((item) => {
+        const upgraded = upgradedBySlug.get(item.slug);
+        if (upgraded) {
+          return {
+            num: upgraded.data.sidebar?.order ?? item.num,
+            slug: item.slug,
+            title: upgraded.data.title,
+            status: 'active' as const,
+            lessons: upgraded.data.lessons as { n: number; title: string; minutes: number; href: string }[],
+          };
+        }
+        return {
+          num: item.num,
+          slug: item.slug,
+          title: item.title,
+          titleEn: item.titleEn,
+          sub: item.sub,
+          subEn: item.subEn,
+          status: 'locked' as const,
+        };
+      }),
+    }));
   }
   const count = moduleCount(track);
   return [{
@@ -701,7 +721,7 @@ const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
       level={pageTrack.label.toUpperCase()}
       title={pageTrack.title}
       subtitle={pageTrack.subtitle}
-      moduleCount={props.track === 'a1' ? plannedModuleGroups(props.track, pageTrack)[0].items.length : moduleCount(props.track)}
+      moduleCount={props.track === 'a1' ? plannedModuleGroups(props.track, pageTrack).reduce((total, group) => total + group.items.length, 0) : moduleCount(props.track)}
       wordTarget={4000}
       color={`var(--lu-id-${props.track === 'a1-v1' ? 'a1' : props.track})`}
       modules={plannedModuleGroups(props.track, pageTrack)}
