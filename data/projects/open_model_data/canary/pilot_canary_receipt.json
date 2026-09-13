@@ -1,17 +1,35 @@
 {
   "schema_version": "v1_pilot_canary_receipt",
-  "receipt_id": "receipt.pilot_canary.0824c7157840bdf8",
+  "receipt_id": "receipt.pilot_canary.240628380447cf1e",
   "issue": 8010,
   "epic": 6321,
   "phase": "Phase 3.6: 200-Item Pilot Canary Fine-Tune on Gemma 3 4B",
-  "generated_at": "2026-09-13T16:38:30Z",
+  "generated_at": "2026-09-13T16:59:41Z",
   "provenance": {
     "base_model": "google/gemma-3-4b-it",
     "training_run_id": "run-gemma3-4b-canary-20260913-01",
     "evaluation_run_id": "eval-gemma3-4b-canary-20260913",
     "checkpoint_step": 75,
     "checkpoint_id": "google/gemma-3-4b-it-step75",
-    "adapter_id": "google/gemma-3-4b-it-canary-lora-step75"
+    "adapter_id": "google/gemma-3-4b-it-canary-lora-step75",
+    "baseline_model_id": "google/gemma-3-4b-it",
+    "baseline_checkpoint": "google/gemma-3-4b-it-base",
+    "dataset_sha256": "b875868ffe8489261baa7d35990e9a12f8e3a842b8b9f09f91d12a1f9ffdc9d1",
+    "replay_sha256": "9633a732b5043b876b0d92eb492b6fa8bbf762aa94cbac8d56942a9d87a08977",
+    "adapter_digest": "f9b137f37318dde58f8076ebbd0eefd5afb073d8a64e6d5a50be4a8d324dec6d",
+    "training_manifest": {
+      "total_steps": 75,
+      "batch_size": 4,
+      "learning_rate": 0.0002,
+      "lora_rank": 16,
+      "lora_alpha": 32,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj"
+      ]
+    }
   },
   "model_target": {
     "identifier": "google/gemma-3-4b-it",

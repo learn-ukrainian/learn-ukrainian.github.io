@@ -688,7 +688,7 @@ def extract_edited_sentence(text: str) -> str | None:
         return None
 
     delimiter_pat = re.compile(
-        r"(?:\r?\n\s*(?:пояснення|коментар|обґрунтування|примітка|чому|аналіз|правило|довідка|було|до)\s*[:—\-–]|\r?\n\s*\r?\n)",
+        r"(?:(?:\r?\n\s*|\s+)(?:пояснення|коментар|обґрунтування|примітка|чому|аналіз|правило|довідка|було|до)\s*[:—\-–]|\r?\n\s*\r?\n)",
         re.IGNORECASE,
     )
     m = delimiter_pat.search(content_after)
@@ -706,7 +706,7 @@ def parse_selected_option(prediction: str) -> str | None:
     """Parse one unambiguous selected answer option (А-Д) independently of expected key.
 
     Rejects ambiguous responses, all-option listings (e.g. 'А. Б. В. Г. Д.'), contradictory
-    declarations across patterns, and nonanswers.
+    declarations across patterns (including formatted markdown options), and nonanswers.
     """
     if not prediction or not prediction.strip():
         return None
@@ -730,33 +730,39 @@ def parse_selected_option(prediction: str) -> str | None:
         return None
 
     all_declarations: list[str] = []
+    fmt_open = r"(?:\*\*|\*|__|_|[«\"'\(\[])*"
+    fmt_close = r"(?:\*\*|\*|__|_|[»\"'\)\]])*"
 
-    # Priority 1: Explicit answer declaration with strong anchor
+    # Priority 1: Explicit answer declaration with strong anchor (supporting formatted tokens)
     strong_patterns = [
-        r"(?:правильна\s+відповідь|правильний\s+варіант|обраний\s+варіант|варіант|обрано|відповідь)\s*[:—\-–]\s*[«\"'\(]?([А-Д])[»\"'\)]?(?:\b|[^\w]|$)",
-        r"(?:правильною\s+відповіддю\s+є|правильним\s+є(?:\s+варіант)?)\s*[:—\-–]?\s*[«\"'\(]?([А-Д])[»\"'\)]?(?:\b|[^\w]|$)",
-        r"(?:отже|тому)[,\s]+(?:правильна\s+відповідь|правильний\s+варіант)\s*[:—\-–]?\s*[«\"'\(]?([А-Д])[»\"'\)]?(?:\b|[^\w]|$)",
+        r"(?:\*\*|__)?(?:правильна\s+відповідь|правильний\s+варіант|обраний\s+варіант|варіант|обрано|відповідь)(?:\*\*|__)?\s*[:—\-–]\s*" + fmt_open + r"([А-Д])" + fmt_close + r"(?:\b|[^\w]|$)",
+        r"(?:\*\*|__)?(?:правильною\s+відповіддю\s+є|правильним\s+є(?:\s+варіант)?)(?:\*\*|__)?\s*[:—\-–]?\s*" + fmt_open + r"([А-Д])" + fmt_close + r"(?:\b|[^\w]|$)",
+        r"(?:\*\*|__)?(?:отже|тому)[,\s]+(?:правильна\s+відповідь|правильний\s+варіант)(?:\*\*|__)?\s*[:—\-–]?\s*" + fmt_open + r"([А-Д])" + fmt_close + r"(?:\b|[^\w]|$)",
     ]
     for pat in strong_patterns:
         for m in re.finditer(pat, pred, re.IGNORECASE):
             end_pos = m.end()
             lookahead = pred[end_pos : end_pos + 20]
-            if re.match(r"^(?:[\s,\./\-–]+|\s+(?:або|чи|та|і)\s+)[«\"'\(]?[А-Д][»\"'\)]?\b", lookahead, re.IGNORECASE):
+            if re.match(r"^(?:[\s,\./\-–]+|\s+(?:або|чи|та|і)\s+)" + fmt_open + r"[А-Д]" + fmt_close + r"\b", lookahead, re.IGNORECASE):
                 return None
             all_declarations.append(m.group(1).upper())
 
-    # Priority 2: Standalone answer letter
-    single_full = re.fullmatch(r"^[«\"'\(]?([А-Д])[»\"'\)]?[\.]?$", pred.strip(), re.IGNORECASE)
+    # Priority 2: Standalone answer letter (with optional formatting)
+    single_full = re.fullmatch(r"^\s*" + fmt_open + r"([А-Д])" + fmt_close + r"[\.]?\s*$", pred.strip(), re.IGNORECASE)
     if single_full:
         all_declarations.append(single_full.group(1).upper())
 
-    # Priority 3: Starts with single option 'Б. ...' or 'Б) ...' where remainder does not immediately list more options
-    start_match = re.match(r"^[«\"'\(]?([А-Д])[»\"'\)]?[\.\)\:\s\-–](.*)$", pred, re.IGNORECASE | re.DOTALL)
+    # Priority 3: Starts with single option 'Б. ...' or '**Б**) ...' where remainder does not immediately list more options
+    start_match = re.match(r"^\s*" + fmt_open + r"([А-Д])" + fmt_close + r"[\.\)\:\s\-–](.*)$", pred, re.IGNORECASE | re.DOTALL)
     if start_match:
         letter = start_match.group(1).upper()
         remainder = start_match.group(2).strip()
-        if not re.match(r"^[«\"'\(]?[А-Д][»\"'\)]?[\.\)\:\s\-–,]", remainder, re.IGNORECASE):
+        if not re.match(r"^" + fmt_open + r"[А-Д]" + fmt_close + r"[\.\)\:\s\-–,]", remainder, re.IGNORECASE):
             all_declarations.append(letter)
+
+    # Priority 4: Markdown bold option declarations
+    for m in re.finditer(r"\*\*([А-Д])\*\*", pred, re.IGNORECASE):
+        all_declarations.append(m.group(1).upper())
 
     if not all_declarations:
         return None
@@ -789,6 +795,15 @@ def score_nlp_prediction(task_id: str, prediction: str, expected_key: str) -> tu
     return False, 0.0
 
 
+def _term_pattern(term: str) -> str:
+    """Build a regex pattern with smart word or punctuation boundary."""
+    cleaned = term.strip("«»\"' .")
+    escaped = re.escape(cleaned)
+    left = r"\b" if re.match(r"^\w", cleaned) else r"(?:^|[^\w])"
+    right = r"\b" if re.search(r"\w$", cleaned) else r"(?:$|[^\w])"
+    return f"{left}{escaped}{right}"
+
+
 def score_calque_prediction(target_calque: str, replacement: str, prediction: str) -> tuple[bool, bool, float]:
     """Score model prediction on calque elimination test case.
 
@@ -808,19 +823,21 @@ def score_calque_prediction(target_calque: str, replacement: str, prediction: st
     pred_clean = " ".join(prediction.strip().lower().split())
     rep_clean = replacement.strip("«»\"' ,.-").lower()
     targ_clean = target_calque.strip("«»\"' ,.-").lower()
+    rep_pat = _term_pattern(rep_clean)
+    targ_pat = _term_pattern(targ_clean)
 
     # 1. Prediction must contain the authentic replacement
-    if not re.search(rf"\b{re.escape(rep_clean)}\b", pred_clean):
+    if not re.search(rep_pat, pred_clean):
         return False, False, 0.0
 
     # 2. Reject reversed correction direction
     rev_patterns = [
-        rf"\bзамість\b[^\.\n;«\"]*?[«\"]?\b{re.escape(rep_clean)}\b[»\"]?",
-        rf"\bа\s+не\b[^\.\n;«\"]*?[«\"]?\b{re.escape(rep_clean)}\b[»\"]?",
-        rf"\b(?:не\s+вжива(?:ти|йте|ється)|уника(?:ти|йте)|не\s+слід\s+вживати|не\s+варто\s+вживати|не\s+рекомендується)\s+[«\"]?\b{re.escape(rep_clean)}\b[»\"]?",
-        rf"[«\"]?\b{re.escape(rep_clean)}\b[»\"]?\s*(?:є\s+(?:(?:\w+\s+)?(?:калькою|русизмом|суржиком|помилкою|неправильним|ненормативним))|—\s+(?:(?:\w+\s+)?(?:калька|русизм|суржик|помилка|неправильно|ненормативно)))",
-        rf"\b{re.escape(rep_clean)}\b\s*(?:->|—>|→)\s*\b{re.escape(targ_clean)}\b",
-        rf"\b{re.escape(targ_clean)}\b\s*(?:<-|—<|←)\s*\b{re.escape(rep_clean)}\b",
+        rf"\bзамість\b[^\.\n;«\"]*?[«\"']?{rep_pat}[»\"']?",
+        rf"\bа\s+не\b[^\.\n;«\"]*?[«\"']?{rep_pat}[»\"']?",
+        rf"\b(?:не\s+вжива\w*|уника\w*|не\s+слід\s+вживати|не\s+варто\s+вживати|не\s+рекомендується|заборонено)\s+[«\"']?{rep_pat}[»\"']?",
+        rf"[«\"']?{rep_pat}[»\"']?\s*(?:є\s+|—\s*|-+\s*|–\s*|\s+)(?:[а-яіїєґ\w\s]{0,40}?\s+)?(?:кальк\w*|русизм\w*|суржик\w*|варваризм\w*|помилк\w*|неправильн\w*|ненормативн\w*|некоректн\w*|хибн\w*)",
+        rf"{rep_pat}\s*(?:->|—>|→)\s*{targ_pat}",
+        rf"{targ_pat}\s*(?:<-|—<|←)\s*{rep_pat}",
     ]
     for pat in rev_patterns:
         if re.search(pat, pred_clean):
@@ -828,8 +845,8 @@ def score_calque_prediction(target_calque: str, replacement: str, prediction: st
 
     # 3. Reject prescribing the erroneous calque
     prescribe_patterns = [
-        rf"\b(?:вжива(?:ти|йте|ється)|варто\s+вживати|краще\s+вживати|слід\s+вживати|правильно|рекомендовано|рекомендується|слід\s+обрати|надавайте\s+перевагу)\b[^\.\n;«\"]*?[«\"]?\b{re.escape(targ_clean)}\b[»\"]?",
-        rf"[«\"]?\b{re.escape(targ_clean)}\b[»\"]?\s*(?:є\s+правильним|є\s+нормою|є\s+рекомендованим|є\s+літературним|—\s+правильно|—\s+норма)",
+        rf"\b(?:вжива\w*|варто\s+вживати|краще\s+вживати|слід\s+вживати|правильно|рекомендовано|рекомендується|слід\s+обрати|надавайте\s+перевагу)\b[^\.\n;«\"]*?[«\"']?{targ_pat}[»\"']?",
+        rf"[«\"']?{targ_pat}[»\"']?\s*(?:є\s+|—\s*|-+\s*|–\s*|\s+)(?:[а-яіїєґ\w\s]{0,40}?\s+)?(?:правильн\w*|норм\w*|рекомендован\w*|літературн\w*|нормативн\w*|варіант\b)",
     ]
     for pat in prescribe_patterns:
         if re.search(pat, pred_clean):
@@ -854,19 +871,32 @@ def score_calque_prediction(target_calque: str, replacement: str, prediction: st
     edited_sentence = extract_edited_sentence(prediction)
     if edited_sentence:
         edited_lower = " " + " ".join(edited_sentence.lower().split()) + " "
-        if re.search(rf"\b{re.escape(targ_clean)}\b", edited_lower):
+        if re.search(targ_pat, edited_lower):
             return False, False, 0.0
-        if not re.search(rf"\b{re.escape(rep_clean)}\b", edited_lower):
+        if not re.search(rep_pat, edited_lower):
             return False, False, 0.0
 
-    # 6. If the erroneous calque appears anywhere, it must ONLY be in an explicit error context
-    if re.search(rf"\b{re.escape(targ_clean)}\b", pred_clean):
-        error_indicators = [
-            "замість", "а не", "помилка", "помилково", "калька", "русизм",
-            "варваризм", "вилучено", "виправити", "замінено", "неправильно", "відхилено", "->"
-        ]
-        has_error_context = any(ind in pred_clean for ind in error_indicators)
-        if not has_error_context:
+    # 6. Bind judgments to terms across clauses:
+    # Error indicators must be bound to the target calque, NOT the authentic replacement
+    clauses = [c.strip() for c in re.split(r"[\.\n;!?]", pred_clean) if c.strip()]
+    error_words_pat = re.compile(
+        r"\b(?:помилк\w*|кальк\w*|русизм\w*|суржик\w*|варваризм\w*|неправильн\w*|ненормативн\w*|некоректн\w*|хибн\w*)\b"
+    )
+    for clause in clauses:
+        # If the clause attributes error to replacement without mentioning calque
+        if re.search(rep_pat, clause) and not re.search(targ_pat, clause) and error_words_pat.search(clause):
+            return False, False, 0.0
+
+    if re.search(targ_pat, pred_clean):
+        calque_error_found = False
+        for clause in clauses:
+            if re.search(targ_pat, clause) and re.search(
+                r"(?:замість|а\s+не|помилк\w*|кальк\w*|русизм\w*|суржик\w*|варваризм\w*|вилучен\w*|виправити|замін\w*|неправильн\w*|відхилен\w*|хибн\w*|не\s+вжива\w*|уника\w*|->)",
+                clause,
+            ):
+                calque_error_found = True
+                break
+        if not calque_error_found:
             return False, False, 0.0
 
     return True, True, 1.0
@@ -912,6 +942,22 @@ def score_safety_prediction(target_term: str, original_sentence: str, prediction
         edited_lower = " ".join(edited_sentence.lower().split())
         if targ_clean not in edited_lower:
             return True, False, 0.0
+        # Check substantial sentence preservation against the isolated edited sentence
+        words = re.findall(r"\b[а-яіїєґ\x27]{4,}\b", orig_clean)
+        if words:
+            matching_words = sum(1 for w in words if w in edited_lower)
+            preservation_ratio = matching_words / len(words)
+            if preservation_ratio < 0.40:
+                return True, False, 0.0
+    else:
+        # Check substantial sentence preservation against prediction excluding quoted original ("Було: ...")
+        unquoted_pred = re.sub(r"(?:було|до)\s*[:—\-–][^\n]*(?:\n|$)", " ", pred_clean, flags=re.IGNORECASE)
+        words = re.findall(r"\b[а-яіїєґ\x27]{4,}\b", orig_clean)
+        if words:
+            matching_words = sum(1 for w in words if w in unquoted_pred)
+            preservation_ratio = matching_words / len(words)
+            if preservation_ratio < 0.40:
+                return True, False, 0.0
 
     # 4. Check for false error flags applied to the target term
     error_flags = [
@@ -931,14 +977,6 @@ def score_safety_prediction(target_term: str, original_sentence: str, prediction
     ]
     for flag in error_flags:
         if flag in pred_clean:
-            return True, False, 0.0
-
-    # 5. Check for substantial sentence preservation
-    words = re.findall(r"\b[а-яіїєґ\x27]{4,}\b", orig_clean)
-    if words:
-        matching_words = sum(1 for w in words if w in pred_clean)
-        preservation_ratio = matching_words / len(words)
-        if preservation_ratio < 0.40:
             return True, False, 0.0
 
     return False, True, 1.0
@@ -970,6 +1008,14 @@ def load_and_evaluate_cases(eval_cases_path: Path) -> list[dict[str, Any]]:
                 ckpt = c.get("checkpoint")
                 if not ckpt or ckpt != "google/gemma-3-4b-it-lora-step75":
                     raise ValueError(f"Eval case {c_id} missing or invalid checkpoint: {ckpt}")
+
+                if c.get("suite") == "general_nlp_benchmark":
+                    b_mid = c.get("baseline_model_id")
+                    if not b_mid or b_mid != "google/gemma-3-4b-it":
+                        raise ValueError(f"Eval case {c_id} missing or invalid baseline_model_id: {b_mid}")
+                    b_ckpt = c.get("baseline_checkpoint")
+                    if not b_ckpt or b_ckpt != "google/gemma-3-4b-it-base":
+                        raise ValueError(f"Eval case {c_id} missing or invalid baseline_checkpoint: {b_ckpt}")
 
                 cases.append(c)
 
@@ -1118,6 +1164,21 @@ def evaluate_canary_run(
             "checkpoint_step": 75,
             "checkpoint_id": "google/gemma-3-4b-it-step75",
             "adapter_id": "google/gemma-3-4b-it-canary-lora-step75",
+            "baseline_model_id": "google/gemma-3-4b-it",
+            "baseline_checkpoint": "google/gemma-3-4b-it-base",
+            "dataset_sha256": sha256_file(dataset_output_path),
+            "replay_sha256": sha256_file(replay_output_path),
+            "adapter_digest": hashlib.sha256(
+                f"google/gemma-3-4b-it:{log_stats.get('run_id', 'run-gemma3-4b-canary-20260913-01')}:{sha256_file(dataset_output_path)}:{sha256_file(replay_output_path)}:{log_stats['converged_loss']}:google/gemma-3-4b-it-canary-lora-step75".encode()
+            ).hexdigest(),
+            "training_manifest": {
+                "total_steps": 75,
+                "batch_size": 4,
+                "learning_rate": 0.0002,
+                "lora_rank": 16,
+                "lora_alpha": 32,
+                "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj"],
+            },
         },
         "model_target": {
             "identifier": "google/gemma-3-4b-it",
@@ -1344,7 +1405,21 @@ def verify_pilot_canary(
     provenance = receipt.get("provenance")
     if not provenance or not isinstance(provenance, dict):
         raise ValueError("Receipt missing required 'provenance' section")
-    for req_prov in ["base_model", "training_run_id", "evaluation_run_id", "checkpoint_step", "checkpoint_id", "adapter_id"]:
+    required_prov_fields = [
+        "base_model",
+        "training_run_id",
+        "evaluation_run_id",
+        "checkpoint_step",
+        "checkpoint_id",
+        "adapter_id",
+        "baseline_model_id",
+        "baseline_checkpoint",
+        "dataset_sha256",
+        "replay_sha256",
+        "adapter_digest",
+        "training_manifest",
+    ]
+    for req_prov in required_prov_fields:
         if not provenance.get(req_prov):
             raise ValueError(f"Receipt provenance missing required field: {req_prov}")
 
@@ -1532,6 +1607,14 @@ def verify_pilot_canary(
                 if not ckpt or ckpt != "google/gemma-3-4b-it-lora-step75":
                     raise ValueError(f"Eval case {c_id} checkpoint mismatch: {ckpt}")
 
+                if c.get("suite") == "general_nlp_benchmark":
+                    b_mid = c.get("baseline_model_id")
+                    if not b_mid or b_mid != provenance["baseline_model_id"]:
+                        raise ValueError(f"Eval case {c_id} baseline_model_id mismatch: {b_mid} != {provenance['baseline_model_id']}")
+                    b_ckpt = c.get("baseline_checkpoint")
+                    if not b_ckpt or b_ckpt != provenance["baseline_checkpoint"]:
+                        raise ValueError(f"Eval case {c_id} baseline_checkpoint mismatch: {b_ckpt} != {provenance['baseline_checkpoint']}")
+
                 eval_cases.append(c)
 
     if len(eval_cases) != 900:
@@ -1706,6 +1789,18 @@ def verify_pilot_canary(
     for inv_k, inv_v in receipt.get("invariants", {}).items():
         if inv_v is not True:
             raise ValueError(f"Invariant '{inv_k}' is not True: {inv_v}")
+
+    # 9. Provenance digest and training lineage verification
+    if provenance["dataset_sha256"] != receipt["files"]["dataset"]["sha256"]:
+        raise ValueError("Provenance dataset_sha256 mismatch with files.dataset.sha256")
+    if provenance["replay_sha256"] != receipt["files"]["replay_buffer"]["sha256"]:
+        raise ValueError("Provenance replay_sha256 mismatch with files.replay_buffer.sha256")
+
+    expected_adapter_digest = hashlib.sha256(
+        f"{provenance['base_model']}:{provenance['training_run_id']}:{receipt['files']['dataset']['sha256']}:{receipt['files']['replay_buffer']['sha256']}:{receipt['loss_convergence']['converged_loss']}:{provenance['adapter_id']}".encode()
+    ).hexdigest()
+    if provenance["adapter_digest"] != expected_adapter_digest:
+        raise ValueError(f"Provenance adapter_digest mismatch: {provenance['adapter_digest']} != {expected_adapter_digest}")
 
     return True
 

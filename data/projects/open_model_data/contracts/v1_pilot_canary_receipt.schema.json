@@ -51,7 +51,13 @@
         "evaluation_run_id",
         "checkpoint_step",
         "checkpoint_id",
-        "adapter_id"
+        "adapter_id",
+        "baseline_model_id",
+        "baseline_checkpoint",
+        "dataset_sha256",
+        "replay_sha256",
+        "adapter_digest",
+        "training_manifest"
       ],
       "properties": {
         "base_model": {
@@ -73,6 +79,59 @@
         },
         "adapter_id": {
           "const": "google/gemma-3-4b-it-canary-lora-step75"
+        },
+        "baseline_model_id": {
+          "const": "google/gemma-3-4b-it"
+        },
+        "baseline_checkpoint": {
+          "const": "google/gemma-3-4b-it-base"
+        },
+        "dataset_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "replay_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "adapter_digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "training_manifest": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "total_steps",
+            "batch_size",
+            "learning_rate",
+            "lora_rank",
+            "lora_alpha",
+            "target_modules"
+          ],
+          "properties": {
+            "total_steps": {
+              "const": 75
+            },
+            "batch_size": {
+              "const": 4
+            },
+            "learning_rate": {
+              "const": 0.0002
+            },
+            "lora_rank": {
+              "const": 16
+            },
+            "lora_alpha": {
+              "const": 32
+            },
+            "target_modules": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
         }
       }
     },

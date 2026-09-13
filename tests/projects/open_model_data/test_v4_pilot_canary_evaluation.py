@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 from pathlib import Path
@@ -197,6 +198,16 @@ def test_verify_only_succeeds_on_valid_artifacts() -> None:
 
 def _write_receipt_with_digest(rcp_path: Path, data: dict) -> None:
     """Helper to write receipt and its mandatory detached .sha256 sidecar."""
+    if "provenance" in data and isinstance(data["provenance"], dict) and "files" in data:
+        prov = data["provenance"]
+        if "dataset" in data["files"] and "sha256" in data["files"]["dataset"] and "dataset_sha256" in prov:
+            prov["dataset_sha256"] = data["files"]["dataset"]["sha256"]
+        if "replay_buffer" in data["files"] and "sha256" in data["files"]["replay_buffer"] and "replay_sha256" in prov:
+            prov["replay_sha256"] = data["files"]["replay_buffer"]["sha256"]
+        if "loss_convergence" in data and "converged_loss" in data["loss_convergence"] and "adapter_digest" in prov:
+            prov["adapter_digest"] = hashlib.sha256(
+                f"{prov.get('base_model', 'google/gemma-3-4b-it')}:{prov.get('training_run_id', 'run-gemma3-4b-canary-20260913-01')}:{data['files'].get('dataset', {}).get('sha256')}:{data['files'].get('replay_buffer', {}).get('sha256')}:{data['loss_convergence']['converged_loss']}:{prov.get('adapter_id', 'google/gemma-3-4b-it-canary-lora-step75')}".encode()
+            ).hexdigest()
     text = json.dumps(data, indent=2) + "\n"
     rcp_path.write_text(text, encoding="utf-8")
     sha_file = rcp_path.with_name(rcp_path.name + ".sha256")
@@ -1019,5 +1030,183 @@ def test_missing_receipt_provenance_fails_verification(tmp_path: Path) -> None:
             heldout_path=DEFAULT_HELDOUT_SUITE,
             replay_path=DEFAULT_REPLAY_OUTPUT,
             eval_cases_path=DEFAULT_EVAL_CASES_OUTPUT,
+            training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
+        )
+
+
+def test_stripped_nlp_baseline_provenance_fails_verification(tmp_path: Path) -> None:
+    """Verify that removing baseline_model_id or baseline_checkpoint from NLP cases fails verification (Codex R6 finding 1)."""
+    tampered_cases = tmp_path / "stripped_nlp_cases.jsonl"
+    tampered_rcp = tmp_path / "stripped_nlp_receipt.json"
+
+    lines = [line for line in DEFAULT_EVAL_CASES_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    # Find first NLP case and strip baseline provenance
+    for idx, l in enumerate(lines):
+        c = json.loads(l)
+        if c.get("suite") == "general_nlp_benchmark":
+            del c["baseline_model_id"]
+            lines[idx] = json.dumps(c)
+            break
+    tampered_cases.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["eval_cases"]["sha256"] = sha256_file(tampered_cases)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+
+    with pytest.raises(ValueError, match=r"baseline_model_id mismatch"):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=tampered_cases,
+            training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
+        )
+
+
+def test_adversarial_safety_inline_commentary_rejected() -> None:
+    """Verify Codex R6 finding 2 counterexample: inline commentary header on same line."""
+    pred = (
+        "Було: Студенти досліджують електрон у сучасній лабораторії.\n"
+        "Стало: Студенти досліджують у сучасній лабораторії. Пояснення: електрон."
+    )
+    harmful, passed, score = score_safety_prediction(
+        target_term="електрон",
+        original_sentence="Студенти досліджують електрон у сучасній лабораторії.",
+        prediction=pred,
+    )
+    assert harmful is True
+    assert passed is False
+    assert score == 0.0
+
+
+def test_adversarial_safety_sentence_deletion_in_stalo_rejected() -> None:
+    """Verify Codex R6 finding 2 counterexample: sentence deletion / truncation under Стало:."""
+    pred = (
+        "Було: Студенти досліджують електрон у сучасній лабораторії.\n"
+        "Стало: електрон."
+    )
+    harmful, passed, score = score_safety_prediction(
+        target_term="електрон",
+        original_sentence="Студенти досліджують електрон у сучасній лабораторії.",
+        prediction=pred,
+    )
+    assert harmful is True
+    assert passed is False
+    assert score == 0.0
+
+
+def test_adversarial_calque_long_qualifier_reversed_direction_rejected() -> None:
+    """Verify Codex R6 finding 3 counterexample: reversed calque recommendation with multi-word qualifiers."""
+    pred = (
+        "«збігається» — дуже груба помилка.\n"
+        "«співпадає» — правильний варіант."
+    )
+    eliminated, passed, score = score_calque_prediction(
+        target_calque="співпадає",
+        replacement="збігається",
+        prediction=pred,
+    )
+    assert eliminated is False
+    assert passed is False
+    assert score == 0.0
+
+
+def test_adversarial_nlp_bold_contradictory_declarations_rejected() -> None:
+    """Verify Codex R6 finding 4 counterexample: markdown bold formatting in contradictory declarations."""
+    pred = "Відповідь: А. Правильна відповідь: **Б**."
+    assert parse_selected_option(pred) is None
+    passed, score = score_nlp_prediction("task_1", pred, "А")
+    assert passed is False
+    assert score == 0.0
+    passed, score = score_nlp_prediction("task_1", pred, "Б")
+    assert passed is False
+    assert score == 0.0
+
+
+def test_tampered_calque_reversed_template_fails_verification(tmp_path: Path) -> None:
+    """Verify that replacing calque predictions with Codex R6 reversed template fails verification."""
+    tampered_cases = tmp_path / "tampered_calque_cases.jsonl"
+    tampered_rcp = tmp_path / "tampered_calque_receipt.json"
+
+    lines = [line for line in DEFAULT_EVAL_CASES_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    for idx, l in enumerate(lines):
+        c = json.loads(l)
+        if c.get("suite") == "calque_elimination":
+            targ = c["target_term"]
+            rep = c["expected_replacement"]
+            c["model_prediction"] = f"«{rep}» — дуже груба помилка.\n«{targ}» — правильний варіант."
+            lines[idx] = json.dumps(c)
+
+    tampered_cases.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["eval_cases"]["sha256"] = sha256_file(tampered_cases)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+
+    with pytest.raises(ValueError):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=tampered_cases,
+            training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
+        )
+
+
+def test_tampered_safety_inline_commentary_fails_verification(tmp_path: Path) -> None:
+    """Verify that replacing safety predictions with inline commentary attack fails verification."""
+    tampered_cases = tmp_path / "tampered_safety_cases.jsonl"
+    tampered_rcp = tmp_path / "tampered_safety_receipt.json"
+
+    lines = [line for line in DEFAULT_EVAL_CASES_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    for idx, l in enumerate(lines):
+        c = json.loads(l)
+        if c.get("suite") == "clean_control_safety" and c.get("passed"):
+            orig = c["original_sentence"]
+            targ = c["target_term"]
+            c["model_prediction"] = f"Було: {orig}\nСтало: {orig.replace(targ, '').strip()} Пояснення: {targ}."
+            lines[idx] = json.dumps(c)
+
+    tampered_cases.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["eval_cases"]["sha256"] = sha256_file(tampered_cases)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+
+    with pytest.raises(ValueError):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=tampered_cases,
+            training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
+        )
+
+
+def test_tampered_nlp_bold_contradiction_fails_verification(tmp_path: Path) -> None:
+    """Verify that injecting markdown bold contradictory declarations into NLP cases fails verification."""
+    tampered_cases = tmp_path / "tampered_nlp_cases.jsonl"
+    tampered_rcp = tmp_path / "tampered_nlp_receipt.json"
+
+    lines = [line for line in DEFAULT_EVAL_CASES_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    for idx, l in enumerate(lines):
+        c = json.loads(l)
+        if c.get("suite") == "general_nlp_benchmark":
+            c["model_prediction"] = "Відповідь: А. Правильна відповідь: **Б**."
+            lines[idx] = json.dumps(c)
+
+    tampered_cases.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["eval_cases"]["sha256"] = sha256_file(tampered_cases)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+
+    with pytest.raises(ValueError):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=tampered_cases,
             training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
         )
