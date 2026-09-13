@@ -1636,7 +1636,7 @@ def _fetch_slovnyk_entry(lemma: str, lookup_word: str, slug: str) -> dict[str, A
     so a later run retries it).
     """
     if _phase1_offline_mode():
-        return None
+        raise _SlovnykTransientError("offline mode: slovnyk.me network requests disabled")
 
     url = f"{_SLOVNYK_BASE}/dict/{slug}/{quote(lookup_word)}"
     for attempt in range(_SLOVNYK_MAX_RETRIES + 1):
@@ -1775,6 +1775,8 @@ def _cache_has_lookup(cache: dict[str, Any] | None, slug: str) -> bool:
 
 
 def _cache_store_lookup(lemma: str, cache: dict[str, Any], slug: str, row: dict[str, Any] | None) -> None:
+    if _phase1_offline_mode():
+        return
     lookups = cache.setdefault("lookups", {})
     if not isinstance(lookups, dict):
         return

@@ -6799,3 +6799,25 @@ def test_ulif_authoritative_enrichment_integration(monkeypatch) -> None:
     assert "stress" in enrichment
     assert enrichment["stress"]["source"] == ULIF_DICTUA_LABEL
     assert enrichment["stress"]["form"] == "до́брий"
+
+
+def test_offline_mode_does_not_poison_slovnyk_cache(monkeypatch, tmp_path) -> None:
+    """Validate that offline mode raises _SlovnykTransientError and skips _cache_store_lookup to prevent cache poisoning (#6142)."""
+    monkeypatch.setattr(enrich_manifest_module, "_phase1_offline_mode", lambda: True)
+
+    # 1. _fetch_slovnyk_entry raises transient error in offline mode
+    with pytest.raises(enrich_manifest_module._SlovnykTransientError):
+        enrich_manifest_module._fetch_slovnyk_entry("слово", "слово", "vts")
+
+    # 2. _cache_store_lookup does not write to disk when offline
+    dummy_cache_file = tmp_path / "слово.json"
+    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_cache_path", lambda lemma: dummy_cache_file)
+    cache: dict[str, Any] = {"schema_version": 4, "lookups": {}}
+    enrich_manifest_module._cache_store_lookup("слово", cache, "vts", None)
+    assert not dummy_cache_file.exists()
+    assert "vts" not in cache["lookups"]
+
+    # 3. Card builders do not store poison miss into cache dict
+    res = enrich_manifest_module._vts_definition_card("слово", cache)
+    assert res is None
+    assert "vts" not in cache["lookups"]
