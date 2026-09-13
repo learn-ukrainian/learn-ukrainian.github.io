@@ -2473,6 +2473,15 @@ sources:
     context: ПЕРСПЕКТИ́ВА, и, ж. 1. Спосіб зображення на площині або на кривій поверхні об'ємних предметів такими, якими ми бачимо їх з певної точки спостереження. Незвичайними для ока здаються ті твори пензля, де предмети другого плану не взяті в масштабі, не відповідають законам лінійної перспективи (з наук.-попул.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%B5%D1%80%D1%81%D0%BF%D0%B5%D0%BA%D1%82%D0%B8%D0%B2%D0%B0
+  - lemma: рекламний
+    pos: adj
+    count: 25
+    locator: glossary
+    gloss: Advertising, promotional, publicity (attr.); рекламний агент — advertising agent, publicity agent
+    gloss_source: ukreng
+    context: рекла́мний -а, -е. 1》 Стос. до реклами (у 1 знач.). || Який містить рекламу, є рекламою. 2》 Признач. для реклами (у 2 знач.). Рекламна кампанія — здійснення комплексу ретельно спланованих рекламних заходів, розрахованих на певний період часу, район дії, коло осіб.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D1%80%D0%B5%D0%BA%D0%BB%D0%B0%D0%BC%D0%BD%D0%B8%D0%B9
   subject: mystetstvo
 residual:
 - lemma: м
@@ -2505,11 +2514,6 @@ residual:
   count: 29
   reasons:
   - no_en_gloss
-- lemma: рекламний
-  pos: adj
-  count: 25
-  reasons:
-  - no_uk_definition
 - lemma: інтер'єр
   pos: noun
   count: 24
@@ -2611,7 +2615,7 @@ residual:
 stats:
   total_content_candidates: 4309
   attempted: 300
-  admitted: 274
-  residual_this_batch: 26
+  admitted: 275
+  residual_this_batch: 25
   residual_not_attempted: 4009
-  richness: 0.9133
+  richness: 0.92

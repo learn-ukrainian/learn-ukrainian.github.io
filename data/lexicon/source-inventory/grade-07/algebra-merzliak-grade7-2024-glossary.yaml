@@ -2329,6 +2329,15 @@ sources:
     context: РО́ЗА, и, ж. 1. Кущова рослина з великими запашними квітками різних кольорів та стеблами, вкритими колючками; троянда. Рози (троянди) є найкращі декоративно-квіткові рослини (з наук.-попул. літ.); Дівчина заходилася перев'язувати та підчищати рози (О. Ільченко). 2. Квітка цієї рослини.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D1%80%D0%BE%D0%B7%D0%B0
+  - lemma: розкладання
+    pos: noun
+    count: 50
+    locator: glossary
+    gloss: 1) хім. analysis, resolution, disintegration, dissolution (into — на складові частини); 2) мат. expansion, factorization
+    gloss_source: ukreng
+    context: розклада́ння -я, с. Дія за знач. розкладати 1-6) і розкладатися 1-4).
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D1%80%D0%BE%D0%B7%D0%BA%D0%BB%D0%B0%D0%B4%D0%B0%D0%BD%D0%BD%D1%8F
   subject: algebra
 residual:
 - lemma: многочлен
@@ -2395,11 +2404,6 @@ residual:
   reasons:
   - no_uk_definition
   - no_en_gloss
-- lemma: розкладання
-  pos: noun
-  count: 50
-  reasons:
-  - no_uk_definition
 - lemma: тотожно
   pos: adv
   count: 48
@@ -2557,7 +2561,7 @@ residual:
 stats:
   total_content_candidates: 1891
   attempted: 300
-  admitted: 258
-  residual_this_batch: 42
+  admitted: 259
+  residual_this_batch: 41
   residual_not_attempted: 1591
   richness: 0.86

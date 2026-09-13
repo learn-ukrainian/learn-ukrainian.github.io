@@ -2545,6 +2545,24 @@ sources:
     context: СПРО́БА, и, ж. 1. Намагання зробити щось при відсутності впевненості в досягненні успіху. Полк їхній в упертих неодноразових спробах заволодіти Каховським плацдармом порідів ледве чи не на половину (О. Гончар); Вітер є одним з дарових потужних енергетичних джерел природи.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D1%81%D0%BF%D1%80%D0%BE%D0%B1%D0%B0
+  - lemma: визволення
+    pos: noun
+    count: 22
+    locator: glossary
+    gloss: Liberation, release, rescue
+    gloss_source: ukreng
+    context: I визв`оленнядив. визволення. II в`изволеннярідко визволення, -я, с. Дія за знач. визволити.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B2%D0%B8%D0%B7%D0%B2%D0%BE%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F
+  - lemma: повинність
+    pos: noun
+    count: 26
+    locator: glossary
+    gloss: Duty, obligation, service; загальна військова повинність — universal military service, compulsory military service, conscription
+    gloss_source: ukreng
+    context: пови́нність -ності, ж. 1》 іст.Обов'язок селян безплатно виконувати примусові роботи на поміщиків та органи державного управління.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BF%D0%BE%D0%B2%D0%B8%D0%BD%D0%BD%D1%96%D1%81%D1%82%D1%8C
   subject: istoriya
 residual:
 - lemma: м
@@ -2597,19 +2615,9 @@ residual:
   count: 26
   reasons:
   - no_uk_definition
-- lemma: повинність
-  pos: noun
-  count: 26
-  reasons:
-  - no_uk_definition
 - lemma: ім'я
   pos: noun
   count: 23
-  reasons:
-  - no_uk_definition
-- lemma: визволення
-  pos: noun
-  count: 22
   reasons:
   - no_uk_definition
 - lemma: гноблення
@@ -2641,7 +2649,7 @@ residual:
 stats:
   total_content_candidates: 5010
   attempted: 300
-  admitted: 282
-  residual_this_batch: 18
+  admitted: 284
+  residual_this_batch: 16
   residual_not_attempted: 4710
-  richness: 0.94
+  richness: 0.95

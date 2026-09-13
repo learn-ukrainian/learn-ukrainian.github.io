@@ -2500,6 +2500,15 @@ sources:
     context: ПО́БУТ, у, ч. 1. Загальний уклад життя; сукупність звичаїв, властивих якому-небудь народові, певній соціальній групі і т. ін. Старий побут, сімейне безладдя, хатня залежність будь-кого може заморочити (К. Гордієнко); // Повсякденне життя.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D0%B1%D1%83%D1%82
+  - lemma: літочислення
+    pos: noun
+    count: 19
+    locator: glossary
+    gloss: Chronology, era, system of chronology
+    gloss_source: ukreng
+    context: літочи́слення -я, с. Система визначення часу за роками від умовно обраного історичного моменту.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BB%D1%96%D1%82%D0%BE%D1%87%D0%B8%D1%81%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F
   subject: istoriya
 residual:
 - lemma: пам'ять
@@ -2536,11 +2545,6 @@ residual:
 - lemma: проєкт
   pos: noun
   count: 20
-  reasons:
-  - no_uk_definition
-- lemma: літочислення
-  pos: noun
-  count: 19
   reasons:
   - no_uk_definition
 - lemma: зображений
@@ -2624,7 +2628,7 @@ residual:
 stats:
   total_content_candidates: 3218
   attempted: 300
-  admitted: 277
-  residual_this_batch: 23
+  admitted: 278
+  residual_this_batch: 22
   residual_not_attempted: 2918
-  richness: 0.9233
+  richness: 0.93

@@ -2347,6 +2347,24 @@ sources:
     context: О́БЛАСТЬ, і, ж. 1. Частина країни, державної території. За царювання Тамари до Грузії були приєднані деякі області Персії (з навч. літ.); // Адміністративно-територіальна одиниця у деяких країнах, зокрема в Україні. Батько одвіз матір до родичів на село в Харківську область (Л.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C
+  - lemma: астрономія
+    pos: noun
+    count: 41
+    locator: glossary
+    gloss: Astronomy
+    gloss_source: ukreng
+    context: астроно́мія -ї, ж. Наука про рух, будову й розвиток небесних тіл та їхніх систем.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%BD%D0%BE%D0%BC%D1%96%D1%8F
+  - lemma: затемнення
+    pos: noun
+    count: 16
+    locator: glossary
+    gloss: 1) darkening; obscuring (тж. перен.); 2) військ. blackout
+    gloss_source: ukreng
+    context: зате́мнення -я, с. 1》 Дія і стан за знач. затемнити 1), 4). 2》 Предмет, за допомогою якого що-небудь затемнюють. 3》 Астрономічне явище, яке полягає в тому, що одне небесне тіло або його тінь закриває інше небесне тіло.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%B0%D1%82%D0%B5%D0%BC%D0%BD%D0%B5%D0%BD%D0%BD%D1%8F
   subject: fizyka
 residual:
 - lemma: магнітний
@@ -2383,11 +2401,6 @@ residual:
 - lemma: см
   pos: noun
   count: 45
-  reasons:
-  - no_uk_definition
-- lemma: астрономія
-  pos: noun
-  count: 41
   reasons:
   - no_uk_definition
 - lemma: км
@@ -2520,11 +2533,6 @@ residual:
   count: 16
   reasons:
   - no_uk_definition
-- lemma: затемнення
-  pos: noun
-  count: 16
-  reasons:
-  - no_uk_definition
 - lemma: му
   pos: noninfl
   count: 16
@@ -2559,7 +2567,7 @@ residual:
 stats:
   total_content_candidates: 3762
   attempted: 300
-  admitted: 260
-  residual_this_batch: 40
+  admitted: 262
+  residual_this_batch: 38
   residual_not_attempted: 3462
-  richness: 0.8667
+  richness: 0.87

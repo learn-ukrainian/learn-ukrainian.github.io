@@ -1,27 +1,27 @@
 {
-  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-1339eda6d53a.json.gz",
+  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-manifest/lexicon-manifest-add2517ad471.json.gz",
   "release_tag": "atlas-manifest",
   "manifest_version": "0.1",
-  "manifest_fingerprint": "a7c98658d9c8d50bb5e890ee9b217a93a1b70b6dd784aa260c0a644f8e23c669",
+  "manifest_fingerprint": "4f1bd46abbf3a72058dc950830952a1bdf34338f7701afcbdca325d400dc4d77",
   "fingerprint_schema_version": 1,
   "generated_at": "2026-09-11T10:12:36+00:00",
-  "gz_sha256": "9ee987caab340199b2fe7990284a896f1ac74a413468308b3c50e65aff4100fc",
-  "json_sha256": "1339eda6d53a273d46d1efa4680127d7a2c5c80aaa58e4c37c97807c78066fbc",
-  "gz_bytes": 35546955,
-  "json_bytes": 267435770,
+  "gz_sha256": "fd6a10b2850eb64f18b22801b7c659bac6888ff23479c5588b80c16d6c5eadd6",
+  "json_sha256": "add2517ad47181219ea9ac9b55a25068afa4f5b774cd3f5d1ac2356d95c3551c",
+  "gz_bytes": 35692385,
+  "json_bytes": 268665082,
   "richness_gate": {
     "baseline": {
-      "poc_thin_pages": 10529,
+      "poc_thin_pages": 10641,
       "search_no_visible_gloss": 5,
       "old_gate_no_english_anchor": 3010
     },
     "candidate": {
-      "poc_thin_pages": 10529,
+      "poc_thin_pages": 10641,
       "search_no_visible_gloss": 5,
       "old_gate_no_english_anchor": 3010
     },
     "regressions": {},
-    "override_reason": null,
+    "override_reason": "Admit Slice 2A vetted textbook STEM vocabulary (#7551, #6142)",
     "bootstrap": false
   },
   "note": "Pins GitHub Release asset manifest for #3659; hydrate it build time instead committing raw JSON."

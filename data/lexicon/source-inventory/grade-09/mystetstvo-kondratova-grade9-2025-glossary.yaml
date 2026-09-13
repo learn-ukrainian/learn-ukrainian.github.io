@@ -2464,6 +2464,15 @@ sources:
     context: АБСТРАКЦІОНІ́ЗМ, у, ч. Напрям у мистецтві XX ст., представники якого для своїх творів використовують формальні елементи – лінії, абстрактні конфігурації, кольорові плями і т. ін. Зосі він [Даромир] пояснював, що таке імпресіонізм, абстракціонізм, модерн (О.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%B0%D0%B1%D1%81%D1%82%D1%80%D0%B0%D0%BA%D1%86%D1%96%D0%BE%D0%BD%D1%96%D0%B7%D0%BC
+  - lemma: експресіонізм
+    pos: noun
+    count: 26
+    locator: glossary
+    gloss: мист.; expressionism
+    gloss_source: ukreng
+    context: експресіоні́зм -у, ч. Напрям у мистецтві та літературі, що проголосив єдиною реальністю суб'єктивний духовний світ людини та мав за основну мету його вираження.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B5%D0%BA%D1%81%D0%BF%D1%80%D0%B5%D1%81%D1%96%D0%BE%D0%BD%D1%96%D0%B7%D0%BC
   subject: mystetstvo
 residual:
 - lemma: м
@@ -2509,11 +2518,6 @@ residual:
 - lemma: з'явитися
   pos: verb
   count: 28
-  reasons:
-  - no_uk_definition
-- lemma: експресіонізм
-  pos: noun
-  count: 26
   reasons:
   - no_uk_definition
 - lemma: пов'язаний
@@ -2607,7 +2611,7 @@ residual:
 stats:
   total_content_candidates: 4417
   attempted: 300
-  admitted: 273
-  residual_this_batch: 27
+  admitted: 274
+  residual_this_batch: 26
   residual_not_attempted: 4117
   richness: 0.91

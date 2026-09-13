@@ -2365,6 +2365,15 @@ sources:
     context: РО́ТОР, а, ч., спец. Обертова частина машин (турбіни, електричного двигуна і т. ін.), за допомогою якої енергія одного виду перетворюється в енергію іншого виду. Ротор – обертова частина турбіни з насадженими на неї дисками (від латинського слова ротаре – обертати) (з навч.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D1%80%D0%BE%D1%82%D0%BE%D1%80
+  - lemma: коливатися
+    pos: verb
+    count: 31
+    locator: glossary
+    gloss: 1) (про маятник та ін.) to oscillate, to vibrate; 2) (змінюватися) to fluctuate, to vary
+    gloss_source: ukreng
+    context: колива́тися -аюся, -аєшся, недок. 1》 Ритмічно рухатися з одного боку в інший, назад і вперед або зверху вниз. || Злегка гойдатися. || Похитуватися (у такт роботи, ходьби і т. ін.). || Про рух нагрітого повітря, диму і т. ін. || Те саме, що мигати 3).…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BA%D0%BE%D0%BB%D0%B8%D0%B2%D0%B0%D1%82%D0%B8%D1%81%D1%8F
   subject: fizyka
 residual:
 - lemma: магнітний
@@ -2503,11 +2512,6 @@ residual:
   count: 33
   reasons:
   - no_uk_definition
-- lemma: коливатися
-  pos: verb
-  count: 31
-  reasons:
-  - no_uk_definition
 - lemma: утворюватися
   pos: verb
   count: 29
@@ -2569,7 +2573,7 @@ residual:
 stats:
   total_content_candidates: 3840
   attempted: 300
-  admitted: 262
-  residual_this_batch: 38
+  admitted: 263
+  residual_this_batch: 37
   residual_not_attempted: 3540
-  richness: 0.8733
+  richness: 0.88

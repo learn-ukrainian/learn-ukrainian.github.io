@@ -2311,6 +2311,69 @@ sources:
     context: 'ЛЕГКИ́Й, а́, е́. 1. Який має невелику, незначну вагу; протилежне важкий. Чи баба з воза, – що ж? велика дуже вада!.. Кобилі легший віз, сьому кобила й рада (П. Гулак-Артемовський); Птахи знову поверталися з-за моря: схудлі, легкі, бистрі (О.…'
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%BB%D0%B5%D0%B3%D0%BA%D0%B8%D0%B9
+  - lemma: деформація
+    pos: noun
+    count: 40
+    locator: glossary
+    gloss: Deformation; distortion; strain; необоротна деформація — irreversible deformation
+    gloss_source: ukreng
+    context: деформа́ція -ї, ж. Зміна форми або розмірів тіла під впливом прикладених сил чи нагрівання. Остаточна деформація — частина деформації тіла, що не зникає після усунення впливу на нього зовнішніх чинників, що викликали деформацію.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%B5%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%86%D1%96%D1%8F
+  - lemma: жорсткість
+    pos: noun
+    count: 17
+    locator: glossary
+    gloss: 1) hardness; stiffness, inelasticity, inflexibility, rigidity; жорсткість крила — wing stiffness
+    gloss_source: ukreng
+    context: жо́рсткість -кості, ж. 1》 Властивість за знач. жорсткий 1-3). 2》 спец. Здатність чинити опір деформації. Жорсткість води — показник мінералізації води, виражений сумарним вмістом у ній іонів кальцію та магнію.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B6%D0%BE%D1%80%D1%81%D1%82%D0%BA%D1%96%D1%81%D1%82%D1%8C
+  - lemma: лабораторний
+    pos: adj
+    count: 16
+    locator: glossary
+    gloss: Laboratory (attr.)
+    gloss_source: ukreng
+    context: лаборато́рний -а, -е. Прикм. до лабораторія 1). Лабораторне приміщення. || Признач. для дослідів або праці в лабораторії. Лабораторний посуд. Лабораторний халат. || Який виконується або відбувається в лабораторії. Лабораторні заняття.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BB%D0%B0%D0%B1%D0%BE%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BD%D0%B8%D0%B9
+  - lemma: нерівномірний
+    pos: adj
+    count: 14
+    locator: glossary
+    gloss: Irregular, disproportionate, uneven
+    gloss_source: ukreng
+    context: нерівномі́рний -а, -е. Який не має рівномірності у чому-небудь. Нерівномірне охолодження.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BD%D0%B5%D1%80%D1%96%D0%B2%D0%BD%D0%BE%D0%BC%D1%96%D1%80%D0%BD%D0%B8%D0%B9
+  - lemma: притягання
+    pos: noun
+    count: 32
+    locator: glossary
+    gloss: Attraction; капілярне притягання — capillary attraction
+    gloss_source: ukreng
+    context: притяга́ння -я, с. 1》 Дія за знач. притягати. Центр притягання — те, що концентрує, згуртовує навколо себе кого-, що-небудь. 2》 фіз. Тяжіння тіл одне до одного.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BF%D1%80%D0%B8%D1%82%D1%8F%D0%B3%D0%B0%D0%BD%D0%BD%D1%8F
+  - lemma: рівномірний
+    pos: adj
+    count: 73
+    locator: glossary
+    gloss: Uniform, even, equable; рівномірний розподіл — even distribution
+    gloss_source: ukreng
+    context: рівномі́рний -а, -е. 1》 Однаковий, постійний у всіх своїх частинах, елементах або протягом усієї дії. || Який звучить весь час ритмічно, з однаковою силою. || Який здійснюється весь час з однаковою швидкістю, ритмічністю. Рівнозмінний рух. 2》 заст. Який має однакову з чим-небудь величину.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D1%80%D1%96%D0%B2%D0%BD%D0%BE%D0%BC%D1%96%D1%80%D0%BD%D0%B8%D0%B9
+  - lemma: рівномірно
+    pos: adv
+    count: 35
+    locator: glossary
+    gloss: Uniformly; evenly
+    gloss_source: ukreng
+    context: рівномі́рно Присл. до рівномірний.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D1%80%D1%96%D0%B2%D0%BD%D0%BE%D0%BC%D1%96%D1%80%D0%BD%D0%BE
   subject: fizyka
 residual:
 - lemma: м
@@ -2343,11 +2406,6 @@ residual:
   count: 99
   reasons:
   - no_uk_definition
-- lemma: рівномірний
-  pos: adj
-  count: 73
-  reasons:
-  - no_uk_definition
 - lemma: обертання
   pos: noun
   count: 49
@@ -2356,11 +2414,6 @@ residual:
 - lemma: вимірювання
   pos: noun
   count: 48
-  reasons:
-  - no_uk_definition
-- lemma: деформація
-  pos: noun
-  count: 40
   reasons:
   - no_uk_definition
 - lemma: атмосферний
@@ -2373,11 +2426,6 @@ residual:
   count: 35
   reasons:
   - no_uk_definition
-- lemma: рівномірно
-  pos: adv
-  count: 35
-  reasons:
-  - no_uk_definition
 - lemma: напрямлений
   pos: adj
   count: 33
@@ -2385,11 +2433,6 @@ residual:
   - no_uk_definition
   - no_en_gloss
 - lemma: м'яч
-  pos: noun
-  count: 32
-  reasons:
-  - no_uk_definition
-- lemma: притягання
   pos: noun
   count: 32
   reasons:
@@ -2475,11 +2518,6 @@ residual:
   reasons:
   - no_uk_definition
   - no_en_gloss
-- lemma: жорсткість
-  pos: noun
-  count: 17
-  reasons:
-  - no_uk_definition
 - lemma: космічний
   pos: adj
   count: 17
@@ -2495,11 +2533,6 @@ residual:
   count: 17
   reasons:
   - no_en_gloss
-- lemma: лабораторний
-  pos: adj
-  count: 16
-  reasons:
-  - no_uk_definition
 - lemma: металевий
   pos: adj
   count: 15
@@ -2511,11 +2544,6 @@ residual:
   reasons:
   - no_uk_definition
   - no_en_gloss
-- lemma: нерівномірний
-  pos: adj
-  count: 14
-  reasons:
-  - no_uk_definition
 - lemma: ньютон
   pos: noun
   count: 14
@@ -2546,7 +2574,7 @@ residual:
 stats:
   total_content_candidates: 2896
   attempted: 300
-  admitted: 256
-  residual_this_batch: 44
+  admitted: 263
+  residual_this_batch: 37
   residual_not_attempted: 2596
-  richness: 0.8533
+  richness: 0.88

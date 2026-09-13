@@ -2464,13 +2464,17 @@ sources:
     context: НАДЗВИЧА́ЙНИЙ, а, е. 1. Дуже сильний, великий за силою, ступенем свого вияву. Я маю надзвичайну пам'ять на обличчя та місцевості (Леся Українка); Думала [Маруся], що, може, засне, але не могла від надзвичайного перевтомлення (Г. Хоткевич); Перед Василем стояла надзвичайної вроди жінка (М.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%BD%D0%B0%D0%B4%D0%B7%D0%B2%D0%B8%D1%87%D0%B0%D0%B9%D0%BD%D0%B8%D0%B9
+  - lemma: кримінальний
+    pos: adj
+    count: 144
+    locator: glossary
+    gloss: Criminal; кримінальний авторитет — person influential with criminal circles
+    gloss_source: ukreng
+    context: криміна́льний -а, -е. 1》 юр. Те саме, що карний 1-3). 2》 Такий, у якому описуються карні злочини та їх розслідування (про художній твір). Кримінальне чтиво.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BA%D1%80%D0%B8%D0%BC%D1%96%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D0%B8%D0%B9
   subject: pravoznavstvo
 residual:
-- lemma: кримінальний
-  pos: adj
-  count: 144
-  reasons:
-  - no_uk_definition
 - lemma: правовідносини
   pos: noun
   count: 55
@@ -2608,7 +2612,7 @@ residual:
 stats:
   total_content_candidates: 2835
   attempted: 300
-  admitted: 273
-  residual_this_batch: 27
+  admitted: 274
+  residual_this_batch: 26
   residual_not_attempted: 2535
   richness: 0.91

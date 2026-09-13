@@ -2599,6 +2599,15 @@ sources:
     context: земля́ -і, ж. 1》 тільки одн. Третя від Сонця велика планета, яка обертається навколо своєї осі та навколо Сонця. || Місце життя і діяльності людей. 2》 тільки одн. Верхній шар земної кори. || розм. Земляна поверхня, площина, по якій ходять. Земля пером (пухом) кому, над ким — вираз доброї пам'яті про померлого.…
     context_source: vts
     context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%B5%D0%BC%D0%BB%D1%8F
+  - lemma: індивідуальність
+    pos: noun
+    count: 15
+    locator: glossary
+    gloss: Individuality, personality
+    gloss_source: ukreng
+    context: індивідуа́льність -ності, ж. 1》 тільки одн. Сукупність психічних властивостей, характерних рис і досвіду кожної особистості, що відрізняють її від інших індивідуумів. 2》 Людина як носій індивідуальних властивостей, певних характерних ознак і рис; особистість.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D1%96%D0%BD%D0%B4%D0%B8%D0%B2%D1%96%D0%B4%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D1%96%D1%81%D1%82%D1%8C
   subject: etyka
 residual:
 - lemma: сім'я
@@ -2643,11 +2652,6 @@ residual:
   count: 15
   reasons:
   - no_uk_definition
-- lemma: індивідуальність
-  pos: noun
-  count: 15
-  reasons:
-  - no_uk_definition
 - lemma: кування
   pos: noun
   count: 12
@@ -2666,7 +2670,7 @@ residual:
 stats:
   total_content_candidates: 3617
   attempted: 300
-  admitted: 288
-  residual_this_batch: 12
+  admitted: 289
+  residual_this_batch: 11
   residual_not_attempted: 3317
   richness: 0.96

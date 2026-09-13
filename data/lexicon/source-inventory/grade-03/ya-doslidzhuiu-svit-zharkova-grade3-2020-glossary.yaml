@@ -2491,6 +2491,33 @@ sources:
     context: -у, ч. 1》 Те, про що йдеться, розповідається де-небудь, те, що описується, зображується (перев. у книзі, статті і т. ін.). 2》 Сутність, внутрішня особливість чого-небудь. || Певні властивості, характерні риси, які відрізняють явище, предмет від подібних явищ, предметів і т. ін.…
     context_source: vts
     context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%BC%D1%96%D1%81%D1%82
+  - lemma: вуглекислий
+    pos: adj
+    count: 19
+    locator: glossary
+    gloss: Carbonic; вуглекислий газ — carbonic acid gas
+    gloss_source: ukreng
+    context: вуглеки́слий -а, -е. Який має в своєму складі вугільну кислоту. Вуглекислий газ — безбарвний газ, який утворюється внаслідок повного згоряння вуглецю; діоксид карбону.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B2%D1%83%D0%B3%D0%BB%D0%B5%D0%BA%D0%B8%D1%81%D0%BB%D0%B8%D0%B9
+  - lemma: господарський
+    pos: adj
+    count: 10
+    locator: glossary
+    gloss: Economic(al); господарський відділ — administrative and supply section (department)
+    gloss_source: ukreng
+    context: I господ`арський-а, -е. 1》 Стос. до господарства (у 2 знач.). || Який відає господарством якої-небудь установи, організації. Господарська частина. Господарська діяльність — будь-яка діяльність особи, пов'язана з виробництвом і обміном матеріальних та нематеріальних благ.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B3%D0%BE%D1%81%D0%BF%D0%BE%D0%B4%D0%B0%D1%80%D1%81%D1%8C%D0%BA%D0%B8%D0%B9
+  - lemma: розмноження
+    pos: noun
+    count: 12
+    locator: glossary
+    gloss: 1) (документів) duplication, duplicating, making copies (of); 2) біол. reproduction; propagation, increase
+    gloss_source: ukreng
+    context: розмно́ження -я, с. Дія за знач. розмножити, розмножувати і розмножитися, розмножуватися.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D1%80%D0%BE%D0%B7%D0%BC%D0%BD%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F
   subject: ya-doslidzhuiu-svit
 residual:
 - lemma: сім'я
@@ -2540,11 +2567,6 @@ residual:
   count: 20
   reasons:
   - no_en_gloss
-- lemma: вуглекислий
-  pos: adj
-  count: 19
-  reasons:
-  - no_uk_definition
 - lemma: м'яз
   pos: noun
   count: 18
@@ -2582,11 +2604,6 @@ residual:
   count: 13
   reasons:
   - no_uk_definition
-- lemma: розмноження
-  pos: noun
-  count: 12
-  reasons:
-  - no_uk_definition
 - lemma: розміщений
   pos: adj
   count: 12
@@ -2613,15 +2630,10 @@ residual:
   count: 10
   reasons:
   - no_uk_definition
-- lemma: господарський
-  pos: adj
-  count: 10
-  reasons:
-  - no_uk_definition
 stats:
   total_content_candidates: 3107
   attempted: 300
-  admitted: 276
-  residual_this_batch: 24
+  admitted: 279
+  residual_this_batch: 21
   residual_not_attempted: 2807
-  richness: 0.92
+  richness: 0.93

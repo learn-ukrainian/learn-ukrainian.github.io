@@ -2392,6 +2392,33 @@ sources:
     context: АНКЕ́ТА, и, ж. Опитний лист для запису в ньому певних відомостей. Дехто з наших літературознавців і критиків звертався до мене з листами і з анкетами, прохаючи в мене відповіді на різні питання про моє життя, працю і про інше (С. Васильченко); Комісар читав анкету.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%B0%D0%BD%D0%BA%D0%B5%D1%82%D0%B0
+  - lemma: вторинний
+    pos: adj
+    count: 21
+    locator: glossary
+    gloss: Second, secondary; reiterative, repeated; вторинна формація геол. — secondary formation
+    gloss_source: ukreng
+    context: втори́нний -а, -е, книжн. 1》 Який становить другий етап у розвитку чого-небудь або другий ступінь за складом, складністю. || Який є доповненням, додатком до першого. Вторинне обмотування. || Який залежить від чогось, є наслідком чого-небудь.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B2%D1%82%D0%BE%D1%80%D0%B8%D0%BD%D0%BD%D0%B8%D0%B9
+  - lemma: естетичний
+    pos: adj
+    count: 16
+    locator: glossary
+    gloss: Aesthetic
+    gloss_source: ukreng
+    context: естети́чний -а, -е. 1》 Прикм. до естетика. 2》 Пов'язаний зі створенням, відтворенням і сприйняттям прекрасного в мистецтві та житті. || Викликаний прекрасним у житті чи мистецтві.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B5%D1%81%D1%82%D0%B5%D1%82%D0%B8%D1%87%D0%BD%D0%B8%D0%B9
+  - lemma: реалізація
+    pos: noun
+    count: 13
+    locator: glossary
+    gloss: 1) (здійснення, виконання) realization, implementation, fulfilment, carring out; реалізація програми економічної інтеграції — implementation of the program(me) for economic integration
+    gloss_source: ukreng
+    context: реаліза́ція -ї, ж. Дія за знач. реалізувати. Апаратна реалізація спец. — рішення тієї чи іншої задачі тільки за допомогою технічних засобів, без використання програмного забезпечення. Програмна реалізація спец. — рішення тієї чи іншої задачі програмним шляхом.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D1%80%D0%B5%D0%B0%D0%BB%D1%96%D0%B7%D0%B0%D1%86%D1%96%D1%8F
   subject: tekhnolohiyi
 residual:
 - lemma: проєкт
@@ -2469,11 +2496,6 @@ residual:
   count: 22
   reasons:
   - no_uk_definition
-- lemma: вторинний
-  pos: adj
-  count: 21
-  reasons:
-  - no_uk_definition
 - lemma: м
   pos: noun
   count: 20
@@ -2500,11 +2522,6 @@ residual:
   count: 16
   reasons:
   - no_en_gloss
-- lemma: естетичний
-  pos: adj
-  count: 16
-  reasons:
-  - no_uk_definition
 - lemma: оформлення
   pos: noun
   count: 16
@@ -2532,11 +2549,6 @@ residual:
   reasons:
   - no_en_gloss
 - lemma: кг
-  pos: noun
-  count: 13
-  reasons:
-  - no_uk_definition
-- lemma: реалізація
   pos: noun
   count: 13
   reasons:
@@ -2582,7 +2594,7 @@ residual:
 stats:
   total_content_candidates: 4170
   attempted: 300
-  admitted: 265
-  residual_this_batch: 35
+  admitted: 268
+  residual_this_batch: 32
   residual_not_attempted: 3870
-  richness: 0.8833
+  richness: 0.89

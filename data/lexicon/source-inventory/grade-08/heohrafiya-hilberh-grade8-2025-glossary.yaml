@@ -2455,6 +2455,15 @@ sources:
     context: КО́ЛА, и, ж. 1. Високе тропічне вічнозелене дерево родини мальвових з невеликими дзвоникоподібними квітками, зібраними у волоть, та плодами, які містять кофеїн і теобромін та використовуються в медицині та харчовій промисловості.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%BA%D0%BE%D0%BB%D0%B0
+  - lemma: промисловий
+    pos: adj
+    count: 39
+    locator: glossary
+    gloss: Industrial; промисловий капітал — industrial capital
+    gloss_source: ukreng
+    context: промисло́вий -а, -е. Прикм. до промисел 1), 2) і промисловість. Промислова артіль. || Признач. для потреб промислу, промисловості. Промисловий корпус. Промисловий струм. || Який здійснюється в інтересах виробництва. || Який виробляється промисловістю. Промислові товари.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BF%D1%80%D0%BE%D0%BC%D0%B8%D1%81%D0%BB%D0%BE%D0%B2%D0%B8%D0%B9
   subject: heohrafiya
 residual:
 - lemma: м
@@ -2578,11 +2587,6 @@ residual:
   count: 39
   reasons:
   - no_uk_definition
-- lemma: промисловий
-  pos: adj
-  count: 39
-  reasons:
-  - no_uk_definition
 - lemma: фізико-географічний
   pos: adj
   count: 36
@@ -2606,7 +2610,7 @@ residual:
 stats:
   total_content_candidates: 6307
   attempted: 300
-  admitted: 272
-  residual_this_batch: 28
+  admitted: 273
+  residual_this_batch: 27
   residual_not_attempted: 6007
-  richness: 0.9067
+  richness: 0.91

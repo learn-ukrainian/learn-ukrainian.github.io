@@ -2365,6 +2365,15 @@ sources:
     context: ОГІРО́К, рка́, ч. 1. перев. мн. Овочева городня рослина родини гарбузових із сланким стеблом і зеленими довгастими плодами. Серед пасіки десь взялася кавуняча огудина, сплелась з бадилиною, березкою та з широким листом огірків (І. Нечуй-Левицький); Генріх під огірки відводив ліпший ґрунт і брав за них утридорога (С.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%BE%D0%B3%D1%96%D1%80%D0%BE%D0%BA
+  - lemma: послідовний
+    pos: adj
+    count: 4
+    locator: glossary
+    gloss: 1) (про порядок) successive, consecutive; у послідовному порядку — in consecutive order
+    gloss_source: ukreng
+    context: послідо́вний -а, -е. 1》 Який настає, відбувається, здійснюється безпосередньо один за одним. || тільки мн. Які приходять на зміну одне одному, з'являючись щоразу замість попереднього. Ряд послідовних поколінь. || Який здійснюється кількома етапами; поступовий.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BF%D0%BE%D1%81%D0%BB%D1%96%D0%B4%D0%BE%D0%B2%D0%BD%D0%B8%D0%B9
   subject: matematyka
 residual:
 - lemma: см
@@ -2545,11 +2554,6 @@ residual:
   count: 4
   reasons:
   - no_en_gloss
-- lemma: послідовний
-  pos: adj
-  count: 4
-  reasons:
-  - no_uk_definition
 - lemma: проєкт
   pos: noun
   count: 4
@@ -2568,7 +2572,7 @@ residual:
 stats:
   total_content_candidates: 775
   attempted: 300
-  admitted: 262
-  residual_this_batch: 38
+  admitted: 263
+  residual_this_batch: 37
   residual_not_attempted: 475
-  richness: 0.8733
+  richness: 0.88

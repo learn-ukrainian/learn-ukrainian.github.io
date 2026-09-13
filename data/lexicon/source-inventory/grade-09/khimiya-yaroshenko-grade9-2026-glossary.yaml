@@ -2329,6 +2329,15 @@ sources:
     context: ШКІ́РА, и, ж. 1. Зовнішній покрив тіла людини і тварин. Людина була настільки худа, що коли вона витягла з-під ковдри руки, Тамара жахнулася – це були не руки, а обтягнені шкірою палички (А.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D1%88%D0%BA%D1%96%D1%80%D0%B0
+  - lemma: номенклатура
+    pos: noun
+    count: 28
+    locator: glossary
+    gloss: 1) (асортимент) nomenclature, classification, assortment, range, catalog(ue), list; номенклатура виробів — range of commodities (of products), classification of products, listed products
+    gloss_source: ukreng
+    context: номенклату́ра -и, ж. 1》 Сукупність прийнятих для наукового вжитку назв, термінів, що застосовуються в тій чи іншій галузі знання.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BD%D0%BE%D0%BC%D0%B5%D0%BD%D0%BA%D0%BB%D0%B0%D1%82%D1%83%D1%80%D0%B0
   subject: khimiya
 residual:
 - lemma: гідроксид
@@ -2465,11 +2474,6 @@ residual:
   reasons:
   - no_uk_definition
   - no_en_gloss
-- lemma: номенклатура
-  pos: noun
-  count: 28
-  reasons:
-  - no_uk_definition
 - lemma: розглянутий
   pos: adj
   count: 28
@@ -2552,7 +2556,7 @@ residual:
 stats:
   total_content_candidates: 3511
   attempted: 300
-  admitted: 258
-  residual_this_batch: 42
+  admitted: 259
+  residual_this_batch: 41
   residual_not_attempted: 3211
   richness: 0.86

@@ -2518,6 +2518,42 @@ sources:
     context: НАРО́Д, у, ч. 1. Населення держави, жителі країни. Я одержав нагороду. Що скажу свойму народу? Тільки те, що я із ним буду жить життям одним (П. Тичина); Уклін народові, землі, містам, і селам, Де гостем я не раз бував, як друг і брат! (М.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%BD%D0%B0%D1%80%D0%BE%D0%B4
+  - lemma: асоціативний
+    pos: adj
+    count: 8
+    locator: glossary
+    gloss: псих.; associative
+    gloss_source: ukreng
+    context: асоціати́вний -а, -е, псих. Стос. до асоціації (у 3 знач.).
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B0%D1%81%D0%BE%D1%86%D1%96%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D0%B8%D0%B9
+  - lemma: милосердя
+    pos: noun
+    count: 40
+    locator: glossary
+    gloss: Charity, mercy, clemency; сестра милосердя іст. — (medical) nurse
+    gloss_source: ukreng
+    context: милосе́рдя -я, с. Добре, співчутливе ставлення до кого-небудь. || Вияв жалості; помилування. Сестра милосердя іст. — медична сестра.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BC%D0%B8%D0%BB%D0%BE%D1%81%D0%B5%D1%80%D0%B4%D1%8F
+  - lemma: мислитель
+    pos: noun
+    count: 15
+    locator: glossary
+    gloss: Thinker
+    gloss_source: ukreng
+    context: мисли́тель -я, ч. Людина, здатна до глибокого філософського мислення.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BC%D0%B8%D1%81%D0%BB%D0%B8%D1%82%D0%B5%D0%BB%D1%8C
+  - lemma: нетерпимість
+    pos: noun
+    count: 20
+    locator: glossary
+    gloss: Intolerance; intolerability
+    gloss_source: ukreng
+    context: нетерпи́мість -мості, ж. 1》 Абстр. ім. до нетерпимий. 2》 до чого. Небажання, невміння терпимо ставитися до кого-, чого-небудь; нетерпиме ставлення.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BD%D0%B5%D1%82%D0%B5%D1%80%D0%BF%D0%B8%D0%BC%D1%96%D1%81%D1%82%D1%8C
   subject: etyka
 residual:
 - lemma: проєкт
@@ -2534,11 +2570,6 @@ residual:
 - lemma: обов'язок
   pos: noun
   count: 56
-  reasons:
-  - no_uk_definition
-- lemma: милосердя
-  pos: noun
-  count: 40
   reasons:
   - no_uk_definition
 - lemma: наведений
@@ -2573,11 +2604,6 @@ residual:
   count: 22
   reasons:
   - no_uk_definition
-- lemma: нетерпимість
-  pos: noun
-  count: 20
-  reasons:
-  - no_uk_definition
 - lemma: взаємопідтримка
   pos: noun
   count: 19
@@ -2604,11 +2630,6 @@ residual:
   count: 17
   reasons:
   - no_uk_definition
-- lemma: мислитель
-  pos: noun
-  count: 15
-  reasons:
-  - no_uk_definition
 - lemma: пам'ятати
   pos: verb
   count: 13
@@ -2625,15 +2646,10 @@ residual:
   count: 10
   reasons:
   - no_uk_definition
-- lemma: асоціативний
-  pos: adj
-  count: 8
-  reasons:
-  - no_uk_definition
 stats:
   total_content_candidates: 2410
   attempted: 300
-  admitted: 279
-  residual_this_batch: 21
+  admitted: 283
+  residual_this_batch: 17
   residual_not_attempted: 2110
-  richness: 0.93
+  richness: 0.94

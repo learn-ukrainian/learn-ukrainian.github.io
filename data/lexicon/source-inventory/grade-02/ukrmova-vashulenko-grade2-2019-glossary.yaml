@@ -2509,6 +2509,15 @@ sources:
     context: ВИД¹, у, ч. 1. заст. Вигляд, зовнішність. Взяла на себе вид Енея, До Турна просто понеслась (І. Котляревський); Здалеку веселий вид має сільце (М. Коцюбинський); Княжа гора була з природи дуже оборонна .. На давніх малюнках вона має вид стіжка (І. Крип'якевич); // Те саме, що обли́ччя.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B8%D0%B4
+  - lemma: гребінець
+    pos: noun
+    count: 13
+    locator: glossary
+    gloss: Comb; рідкий гребінець — (large-tooth) comb
+    gloss_source: ukreng
+    context: гребіне́ць -нця, ч. 1》 Довгаста пластинка з зубцями (з одного чи двох боків) для розчісування або скріплення волосся і прикрашення жіночої зачіски. 2》 Зменш.-пестл. до гребінь 3-5). 3》 мн. Рогові бахромки, які відростають до зими по краях пальців лап птахів родини куроподібних.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B3%D1%80%D0%B5%D0%B1%D1%96%D0%BD%D0%B5%D1%86%D1%8C
   subject: ukrmova
 residual:
 - lemma: виділений
@@ -2558,11 +2567,6 @@ residual:
   reasons:
   - no_uk_definition
   - no_en_gloss
-- lemma: гребінець
-  pos: noun
-  count: 13
-  reasons:
-  - no_uk_definition
 - lemma: веснонька
   pos: noun
   count: 12
@@ -2627,7 +2631,7 @@ residual:
 stats:
   total_content_candidates: 3322
   attempted: 300
-  admitted: 278
-  residual_this_batch: 22
+  admitted: 279
+  residual_this_batch: 21
   residual_not_attempted: 3022
-  richness: 0.9267
+  richness: 0.93

@@ -2311,6 +2311,15 @@ sources:
     context: СТРИ́ЖЕНЬ, жня, ч. 1. Предмет видовженої форми, який є переважно осьовою або опорною частиною чого-небудь; стержень. Стрижень поршня. 2. Осьова, серединна частина чого-небудь у рослинному чи тваринному організмі. Стрижні від шишок [смереки] зберігаються на дереві іноді по кілька років (з наук.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D1%81%D1%82%D1%80%D0%B8%D0%B6%D0%B5%D0%BD%D1%8C
+  - lemma: зіткнення
+    pos: noun
+    count: 46
+    locator: glossary
+    gloss: 1) (дотикання) contiguity, contact; точки зіткнення — things in common
+    gloss_source: ukreng
+    context: зі́ткнення -я, с. Дія і стан за знач. зіткнутися.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D1%96%D1%82%D0%BA%D0%BD%D0%B5%D0%BD%D0%BD%D1%8F
   subject: fizyka
 residual:
 - lemma: м
@@ -2418,11 +2427,6 @@ residual:
   reasons:
   - no_uk_definition
   - no_en_gloss
-- lemma: зіткнення
-  pos: noun
-  count: 46
-  reasons:
-  - no_uk_definition
 - lemma: коливатися
   pos: verb
   count: 39
@@ -2545,7 +2549,7 @@ residual:
 stats:
   total_content_candidates: 4021
   attempted: 300
-  admitted: 256
-  residual_this_batch: 44
+  admitted: 257
+  residual_this_batch: 43
   residual_not_attempted: 3721
-  richness: 0.8533
+  richness: 0.86

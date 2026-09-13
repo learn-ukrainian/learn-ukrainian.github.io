@@ -2419,6 +2419,33 @@ sources:
     context: КЛА́СТЕР, а, ч. 1. Об'єднання декількох однорідних елементів, що може розглядатися як самостійна одиниця з певними властивостями. У Харкові створили кластер інформаційних технологій (із журн.); У Львові протягом кількох років успішно розвивається кластер туризму (з газ.). 2. інформ.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%BA%D0%BB%D0%B0%D1%81%D1%82%D0%B5%D1%80
+  - lemma: металургія
+    pos: noun
+    count: 102
+    locator: glossary
+    gloss: Metallurgy; металургія заліза — metallurgy of iron
+    gloss_source: ukreng
+    context: металу́ргія -ї, ж. 1》 Галузь важкої промисловості, що займається добуванням металів із руд і їх первинною обробкою. Кольорова металургія. 2》 Наука про одержання металів із руд або речовин, які містять метали, і про надання металевим сплавам необхідних властивостей.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BC%D0%B5%D1%82%D0%B0%D0%BB%D1%83%D1%80%D0%B3%D1%96%D1%8F
+  - lemma: народжуваність
+    pos: noun
+    count: 44
+    locator: glossary
+    gloss: Births, birthrate, natality
+    gloss_source: ukreng
+    context: наро́джуваність -ності, ж. Процес поповнення чисельності населення внаслідок народження дітей. || Відносна кількість народжень за певний відтинок часу.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%B6%D1%83%D0%B2%D0%B0%D0%BD%D1%96%D1%81%D1%82%D1%8C
+  - lemma: первинний
+    pos: adj
+    count: 70
+    locator: glossary
+    gloss: Primary; initial, primordial; первинний період захворювання — initial period of illness
+    gloss_source: ukreng
+    context: перви́нний -а, -е. 1》 Який становить перший, зазвичай найпростіший етап чого-небудь. || Від якого або з якого починається що-небудь; початковий. Первинна аменція мед. — розумова недостатність, яка вважається результатом дії генетичних чинників.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BF%D0%B5%D1%80%D0%B2%D0%B8%D0%BD%D0%BD%D0%B8%D0%B9
   subject: heohrafiya
 residual:
 - lemma: підприємство
@@ -2442,11 +2469,6 @@ residual:
   count: 111
   reasons:
   - no_uk_definition
-- lemma: металургія
-  pos: noun
-  count: 102
-  reasons:
-  - no_uk_definition
 - lemma: машинобудування
   pos: noun
   count: 84
@@ -2462,11 +2484,6 @@ residual:
   count: 74
   reasons:
   - no_en_gloss
-- lemma: первинний
-  pos: adj
-  count: 70
-  reasons:
-  - no_uk_definition
 - lemma: видобування
   pos: noun
   count: 69
@@ -2513,11 +2530,6 @@ residual:
   reasons:
   - no_en_gloss
 - lemma: м'ясо
-  pos: noun
-  count: 44
-  reasons:
-  - no_uk_definition
-- lemma: народжуваність
   pos: noun
   count: 44
   reasons:
@@ -2586,7 +2598,7 @@ residual:
 stats:
   total_content_candidates: 5155
   attempted: 300
-  admitted: 268
-  residual_this_batch: 32
+  admitted: 271
+  residual_this_batch: 29
   residual_not_attempted: 4855
-  richness: 0.8933
+  richness: 0.9

@@ -2419,6 +2419,33 @@ sources:
     context: ВИДІЛЯ́ТИСЯ, я́юся, я́єшся, недок., ВИ́ДІЛИТИСЯ, люся, лишся, док. 1. Відокремлюватися від кого-, чого-небудь, виходити з якогось середовища, утворюючи певну групу. Гострі суперечки розколювали громаду, з неї виділялися сміливі борці, до них приєднувалися ..…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B8%D0%B4%D1%96%D0%BB%D1%8F%D1%82%D0%B8%D1%81%D1%8F
+  - lemma: амперметр
+    pos: noun
+    count: 33
+    locator: glossary
+    gloss: Amperemeter, ammeter
+    gloss_source: ukreng
+    context: амперме́тр -а, ч. Прилад, яким вимірюють силу електричного струму.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B0%D0%BC%D0%BF%D0%B5%D1%80%D0%BC%D0%B5%D1%82%D1%80
+  - lemma: конвекція
+    pos: noun
+    count: 42
+    locator: glossary
+    gloss: фіз.; convection
+    gloss_source: ukreng
+    context: конве́кція -ї, ж., спец. 1》 фіз. Перенесення тепла або електричних зарядів рухливим середовищем. 2》 гідр. Водообмін між верхніми та нижніми шарами в озерах, морях і океанах унаслідок різниці їх температури, густини тощо.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BA%D0%BE%D0%BD%D0%B2%D0%B5%D0%BA%D1%86%D1%96%D1%8F
+  - lemma: рівновага
+    pos: noun
+    count: 45
+    locator: glossary
+    gloss: Equilibrium, equipoise, balance; counterpoise; equibalance; рівновага сил — equilibrium of forces
+    gloss_source: ukreng
+    context: рівнова́га -и, ж. 1》 Стан нерухомості, спокою, в якому перебуває яке-небудь тіло під дією рівних, протилежно направлених сил. Динамічна рівновага. Теплова рівновага. Органи рівноваги — органи людини, більшості тварин та деяких рослин, які реагують певним чином на зміни положення тіла в просторі. Рівновага сил мех.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D1%80%D1%96%D0%B2%D0%BD%D0%BE%D0%B2%D0%B0%D0%B3%D0%B0
   subject: fizyka
 residual:
 - lemma: струма
@@ -2510,11 +2537,6 @@ residual:
   reasons:
   - no_uk_definition
   - no_en_gloss
-- lemma: рівновага
-  pos: noun
-  count: 45
-  reasons:
-  - no_uk_definition
 - lemma: об'єм
   pos: noun
   count: 44
@@ -2531,11 +2553,6 @@ residual:
   count: 43
   reasons:
   - no_en_gloss
-- lemma: конвекція
-  pos: noun
-  count: 42
-  reasons:
-  - no_uk_definition
 - lemma: металевий
   pos: adj
   count: 42
@@ -2568,11 +2585,6 @@ residual:
   count: 34
   reasons:
   - no_en_gloss
-- lemma: амперметр
-  pos: noun
-  count: 33
-  reasons:
-  - no_uk_definition
 - lemma: лабораторний
   pos: adj
   count: 33
@@ -2591,7 +2603,7 @@ residual:
 stats:
   total_content_candidates: 4878
   attempted: 300
-  admitted: 268
-  residual_this_batch: 32
+  admitted: 271
+  residual_this_batch: 29
   residual_not_attempted: 4578
-  richness: 0.8933
+  richness: 0.9

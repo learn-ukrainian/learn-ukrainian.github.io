@@ -2554,6 +2554,15 @@ sources:
     context: рідше ізнов, присл. 1》 Ще раз, ще, удруге; повторно. || Наново, спочатку. 2》 розм. Те саме, що знов-таки 2).
     context_source: vts
     context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%BD%D0%BE%D0%B2
+  - lemma: геометричний
+    pos: adj
+    count: 3
+    locator: glossary
+    gloss: Geometric(al); геометрична прогресія (пропорція) — geometrical progression (proportion)
+    gloss_source: ukreng
+    context: геометри́чний -а, -е. 1》 Стос. до геометрії. Геометрична задача. Геометрична акустика — спрощена теорія поширення звуку, що нехтує дифракційними явищами. Геометрична ілюзія — будь-яка з великого класу зорових ілюзій, що викликається перцептивними деформаціями. Геометрична прогресія мат.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B3%D0%B5%D0%BE%D0%BC%D0%B5%D1%82%D1%80%D0%B8%D1%87%D0%BD%D0%B8%D0%B9
   subject: mystetstvo
 residual:
 - lemma: м
@@ -2598,11 +2607,6 @@ residual:
   count: 4
   reasons:
   - no_en_gloss
-- lemma: геометричний
-  pos: adj
-  count: 3
-  reasons:
-  - no_uk_definition
 - lemma: кру
   pos: noninfl
   count: 3
@@ -2647,7 +2651,7 @@ residual:
 stats:
   total_content_candidates: 944
   attempted: 300
-  admitted: 283
-  residual_this_batch: 17
+  admitted: 284
+  residual_this_batch: 16
   residual_not_attempted: 644
-  richness: 0.9433
+  richness: 0.95
