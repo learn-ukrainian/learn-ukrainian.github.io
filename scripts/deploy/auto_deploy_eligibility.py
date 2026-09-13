@@ -20,6 +20,7 @@ CONTENT_PATH_PREFIXES = (
     "curriculum/",
     "site/src/content/",
     "site/src/data/",
+    "site/src/lib/lexicon/curated-heteronyms.ts",
 )
 
 # Exact release-pointer files under ``site/src/data/``.  A pointer bump only

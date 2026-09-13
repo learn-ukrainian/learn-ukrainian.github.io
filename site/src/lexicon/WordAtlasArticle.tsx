@@ -1,6 +1,7 @@
 import { Fragment, type ReactNode } from "react";
 import type { EntryRecord } from "../lib/lexicon/atlas-data-source";
 import type { LexiconEntry } from "../lib/lexicon/atlasDb";
+import { getEffectiveHeteronyms } from "../lib/lexicon/curated-heteronyms";
 import { atlasPracticeHref } from "../lib/lexicon/atlas-practice-link";
 import { safeHref } from "../lib/lexicon/safe-url";
 import {
@@ -1403,7 +1404,7 @@ export default function WordAtlasArticle({
   partnerParadigm: propPartnerParadigm,
   children,
 }: WordAtlasArticleProps) {
-  const heteronyms = record?.entry?.heteronyms ?? null;
+  const heteronyms = getEffectiveHeteronyms(record);
   const hasHeteronyms = Boolean(heteronyms && heteronyms.length > 1);
   const typeahead = children ?? <DefaultAtlasTypeahead />;
 

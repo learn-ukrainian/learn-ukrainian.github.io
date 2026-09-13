@@ -75,6 +75,7 @@ def test_auto_deploy_accepts_only_site_code_since_last_successful_deployment(tmp
     assert decide_auto_deploy(["site/src/components/Practice.tsx"]).deploy is True
     assert decide_auto_deploy(["site/src/content/docs/a1/hello.mdx"]).reason == "content_drift"
     assert decide_auto_deploy(["site/src/data/lexicon-manifest.json"]).reason == "content_drift"
+    assert decide_auto_deploy(["site/src/lib/lexicon/curated-heteronyms.ts"]).reason == "content_drift"
     assert decide_auto_deploy(["curriculum/l2-uk-en/a1/01-hello.md"]).reason == "content_drift"
     assert decide_auto_deploy(["scripts/build/site.py"]).reason == "unknown_path"
     assert decide_auto_deploy([]).reason == "no_changed_paths"

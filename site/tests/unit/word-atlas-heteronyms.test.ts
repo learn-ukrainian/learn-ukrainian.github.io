@@ -3,6 +3,7 @@
 import { describe, expect, test } from "vitest";
 import { renderWordAtlasArticle } from "../helpers/render-word-atlas-article";
 import type { EntryRecord } from "@site/src/lib/lexicon/atlas-data-source";
+import { bindHeteronymHandlers } from "@site/src/lexicon/WordAtlasClientShell";
 
 describe("WordAtlasArticle heteronym support (#8022)", () => {
   const heteronymRecord: EntryRecord = {
@@ -225,5 +226,209 @@ describe("WordAtlasArticle heteronym support (#8022)", () => {
 
     const nav = doc.querySelector(".atlas-heteronym-nav");
     expect(nav).toBeNull();
+  });
+
+  test("automatically applies curated heteronyms when record.entry.heteronyms is absent from shard (live fallback for город)", () => {
+    // Mimics the live runtime shard for 'город' where record.entry.heteronyms is undefined
+    const liveShardRecord: EntryRecord = {
+      slug: "город",
+      kind: "article",
+      entry: {
+        lemma: "город",
+        url_slug: "город",
+        gloss: "vegetable garden",
+        pos: "noun",
+        heritage_status: {
+          classification: "authentic-archaism",
+        },
+        enrichment: {
+          stress: { form: "го́род" },
+        },
+        sections: {
+          synonyms: { items: ["місто"] },
+        },
+      } as any,
+      aliases: [],
+      relations: [],
+      provenance: [],
+      renderContext: {
+        practiceLevels: [],
+        componentLinks: [],
+      },
+    };
+
+    const html = renderWordAtlasArticle({
+      record: liveShardRecord,
+      generatedAt: "2026-09-13T00:00:00Z",
+      manifestVersion: "1.0",
+    });
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+
+    // Must render the heteronym nav bar
+    const nav = doc.querySelector(".atlas-heteronym-nav");
+    expect(nav).not.toBeNull();
+    const tabs = nav!.querySelectorAll(".atlas-heteronym-tab");
+    expect(tabs.length).toBe(2);
+    expect(tabs[0].textContent).toContain("горо́д");
+    expect(tabs[1].textContent).toContain("го́род");
+
+    // Must render the primary panel with modern standard (A2 vegetable garden)
+    const panel0 = doc.querySelector("#heteronym-panel-0");
+    expect(panel0?.textContent).toContain("горо́д");
+    expect(panel0?.textContent).toContain("vegetable garden");
+    expect(panel0?.textContent).toContain("A2");
+    expect(panel0?.textContent).toContain("грядка");
+
+    // Must render the second panel with archaic city
+    const panel1 = doc.querySelector("#heteronym-panel-1");
+    expect(panel1?.textContent).toContain("го́род");
+    expect(panel1?.textContent).toContain("archaic");
+    expect(panel1?.textContent).toContain("місто");
+  });
+});
+
+describe("bindHeteronymHandlers interactive client wiring (#8022)", () => {
+  function createFixture() {
+    const container = document.createElement("div");
+    container.innerHTML = `
+      <div class="atlas-heteronym-nav" role="tablist">
+        <button class="atlas-heteronym-tab active" data-heteronym-target="0" data-heteronym-headword="горо́д" role="tab" aria-selected="true" tabindex="0">горо́д</button>
+        <button class="atlas-heteronym-tab" data-heteronym-target="1" data-heteronym-headword="го́род" role="tab" aria-selected="false" tabindex="-1">го́род</button>
+      </div>
+      <div id="heteronym-panel-0" data-heteronym-idx="0" role="tabpanel" style="display: block;">
+        <button data-heteronym-jump="1">Go to го́род</button>
+        <p>Garden content</p>
+      </div>
+      <div id="heteronym-panel-1" data-heteronym-idx="1" role="tabpanel" style="display: none;" hidden>
+        <button data-heteronym-jump="0">Go to горо́д</button>
+        <p>City content</p>
+      </div>
+    `;
+    document.body.appendChild(container);
+    return container;
+  }
+
+  test("clicking a tab switches active state and panels", () => {
+    const container = createFixture();
+    const cleanup = bindHeteronymHandlers(container);
+
+    const tabs = container.querySelectorAll<HTMLElement>(".atlas-heteronym-tab");
+    const panel0 = container.querySelector<HTMLElement>("#heteronym-panel-0")!;
+    const panel1 = container.querySelector<HTMLElement>("#heteronym-panel-1")!;
+
+    expect(tabs[0].classList.contains("active")).toBe(true);
+    expect(tabs[1].classList.contains("active")).toBe(false);
+    expect(panel0.style.display).toBe("block");
+    expect(panel1.style.display).toBe("none");
+
+    // Click tab 1
+    tabs[1].click();
+
+    expect(tabs[0].classList.contains("active")).toBe(false);
+    expect(tabs[0].getAttribute("aria-selected")).toBe("false");
+    expect(tabs[0].tabIndex).toBe(-1);
+
+    expect(tabs[1].classList.contains("active")).toBe(true);
+    expect(tabs[1].getAttribute("aria-selected")).toBe("true");
+    expect(tabs[1].tabIndex).toBe(0);
+
+    expect(panel0.style.display).toBe("none");
+    expect(panel0.hasAttribute("hidden")).toBe(true);
+    expect(panel1.style.display).toBe("block");
+    expect(panel1.hasAttribute("hidden")).toBe(false);
+
+    cleanup();
+    container.remove();
+  });
+
+  test("keyboard navigation (ArrowRight, ArrowLeft, Home, End) cycles tabs", () => {
+    const container = createFixture();
+    const cleanup = bindHeteronymHandlers(container);
+
+    const tabs = container.querySelectorAll<HTMLElement>(".atlas-heteronym-tab");
+    const panel1 = container.querySelector<HTMLElement>("#heteronym-panel-1")!;
+
+    // Focus tab 0 and press ArrowRight
+    tabs[0].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }));
+
+    expect(tabs[1].classList.contains("active")).toBe(true);
+    expect(panel1.style.display).toBe("block");
+
+    // Press ArrowRight again (wraps around to tab 0)
+    tabs[1].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }));
+    expect(tabs[0].classList.contains("active")).toBe(true);
+
+    // Press ArrowLeft (wraps backwards to tab 1)
+    tabs[0].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+    expect(tabs[1].classList.contains("active")).toBe(true);
+
+    // Press Home (goes to tab 0)
+    tabs[1].dispatchEvent(new KeyboardEvent("keydown", { key: "Home", bubbles: true }));
+    expect(tabs[0].classList.contains("active")).toBe(true);
+
+    // Press End (goes to tab 1)
+    tabs[0].dispatchEvent(new KeyboardEvent("keydown", { key: "End", bubbles: true }));
+    expect(tabs[1].classList.contains("active")).toBe(true);
+
+    cleanup();
+    container.remove();
+  });
+
+  test("clicking hatnote jump button activates the target tab", () => {
+    const container = createFixture();
+    const cleanup = bindHeteronymHandlers(container);
+
+    const jumpBtn = container.querySelector<HTMLElement>("[data-heteronym-jump='1']")!;
+    const tabs = container.querySelectorAll<HTMLElement>(".atlas-heteronym-tab");
+    const panel1 = container.querySelector<HTMLElement>("#heteronym-panel-1")!;
+
+    jumpBtn.click();
+
+    expect(tabs[1].classList.contains("active")).toBe(true);
+    expect(panel1.style.display).toBe("block");
+
+    cleanup();
+    container.remove();
+  });
+
+  test("syncs with location.hash on load and on hashchange", () => {
+    window.location.hash = "#го́род";
+    const container = createFixture();
+    const cleanup = bindHeteronymHandlers(container);
+
+    const tabs = container.querySelectorAll<HTMLElement>(".atlas-heteronym-tab");
+    const panel1 = container.querySelector<HTMLElement>("#heteronym-panel-1")!;
+
+    // Initial load with hash #го́род activates tab 1
+    expect(tabs[1].classList.contains("active")).toBe(true);
+    expect(panel1.style.display).toBe("block");
+
+    // Fire hashchange to #горо́д
+    window.location.hash = "#горо́д";
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+
+    expect(tabs[0].classList.contains("active")).toBe(true);
+    const panel0 = container.querySelector<HTMLElement>("#heteronym-panel-0")!;
+    expect(panel0.style.display).toBe("block");
+
+    cleanup();
+    container.remove();
+    window.location.hash = "";
+  });
+
+  test("cleanup removes event listeners", () => {
+    const container = createFixture();
+    const cleanup = bindHeteronymHandlers(container);
+
+    const tabs = container.querySelectorAll<HTMLElement>(".atlas-heteronym-tab");
+    cleanup();
+
+    // After cleanup, click should not change active tab
+    tabs[1].click();
+    expect(tabs[1].classList.contains("active")).toBe(false);
+    expect(tabs[0].classList.contains("active")).toBe(true);
+
+    container.remove();
   });
 });

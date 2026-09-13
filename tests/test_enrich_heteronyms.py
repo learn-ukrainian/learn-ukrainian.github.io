@@ -228,3 +228,31 @@ def test_apply_heteronyms_to_manifest(tmp_path: Path):
 
     assert entries["атлас"]["display_head"] == "а́тлас"
     assert "збірник карт" in entries["атлас"]["sections"]["synonyms"]["items"]
+
+
+def test_curated_heteronyms_ts_parity():
+    """Verify site/src/lib/lexicon/curated-heteronyms.ts exactly matches enrich_heteronyms.CURATED_HETERONYMS."""
+    ts_file = Path(__file__).resolve().parents[1] / "site" / "src" / "lib" / "lexicon" / "curated-heteronyms.ts"
+    assert ts_file.is_file(), f"Expected {ts_file} to exist"
+    content = ts_file.read_text(encoding="utf-8")
+
+    prefix = "export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = "
+    start_idx = content.find(prefix)
+    assert start_idx != -1, f"Could not find CURATED_HETERONYMS assignment in {ts_file}"
+    start_idx += len(prefix)
+    end_idx = content.find(";\n\nexport function getEffectiveHeteronyms", start_idx)
+    assert end_idx != -1, f"Could not find end of CURATED_HETERONYMS object in {ts_file}"
+    json_literal = content[start_idx:end_idx].strip()
+    ts_data = json.loads(json_literal)
+
+    assert set(ts_data.keys()) == set(enrich_heteronyms.CURATED_HETERONYMS.keys())
+
+    for lemma, py_items in enrich_heteronyms.CURATED_HETERONYMS.items():
+        ts_items = ts_data[lemma]
+        assert len(ts_items) == len(py_items)
+        for i, py_item in enumerate(py_items):
+            ts_item = ts_items[i]
+            assert ts_item["lemma"] == lemma
+            assert ts_item["url_slug"] == lemma
+            ts_item_clean = {k: v for k, v in ts_item.items() if k not in ("lemma", "url_slug")}
+            assert ts_item_clean == py_item, f"Drift detected for {lemma} entry #{i} ({py_item['headword']})"
