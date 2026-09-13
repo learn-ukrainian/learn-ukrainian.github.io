@@ -308,10 +308,32 @@
       "additionalProperties": false,
       "required": [
         "dataset",
+        "replay_buffer",
         "receipt"
       ],
       "properties": {
         "dataset": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "filename",
+            "record_count",
+            "sha256"
+          ],
+          "properties": {
+            "filename": {
+              "type": "string"
+            },
+            "record_count": {
+              "type": "integer"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        },
+        "replay_buffer": {
           "type": "object",
           "additionalProperties": false,
           "required": [

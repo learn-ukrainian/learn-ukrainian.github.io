@@ -14,6 +14,7 @@ from scripts.projects.open_model_data.v4_pilot_canary_evaluation import (
     DEFAULT_DATASET_OUTPUT,
     DEFAULT_HELDOUT_SUITE,
     DEFAULT_RECEIPT_OUTPUT,
+    DEFAULT_REPLAY_OUTPUT,
     exact_clopper_pearson_upper,
     load_heldout_target_keys,
     validate_no_private_host_paths,
@@ -24,7 +25,26 @@ from scripts.projects.open_model_data.v4_pilot_canary_evaluation import (
 def test_pilot_canary_artifacts_exist() -> None:
     """Verify generated dataset and receipt files exist."""
     assert DEFAULT_DATASET_OUTPUT.exists(), "pilot_canary_train_200.jsonl must exist"
+    assert DEFAULT_REPLAY_OUTPUT.exists(), "pilot_canary_replay_buffer_30.jsonl must exist"
     assert DEFAULT_RECEIPT_OUTPUT.exists(), "pilot_canary_receipt.json must exist"
+
+
+def test_pilot_canary_replay_buffer_composition() -> None:
+    """Verify exact 30-item replay buffer composition and schema fields."""
+    records = [json.loads(line) for line in DEFAULT_REPLAY_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    assert len(records) == 30, f"Expected exactly 30 replay buffer items, got {len(records)}"
+
+    for idx, r in enumerate(records, 1):
+        assert r.get("id"), f"Record {idx} missing id"
+        assert r.get("domain"), f"Record {idx} missing domain"
+        assert r.get("instruction"), f"Record {idx} missing instruction"
+        assert r.get("response"), f"Record {idx} missing response"
+        assert r.get("source") == "authentic_ukrainian_corpus"
+        convs = r.get("conversations", [])
+        assert len(convs) == 2, f"Record {idx} expected 2 conversation turns, got {len(convs)}"
+        assert convs[0]["from"] == "human"
+        assert convs[1]["from"] == "gpt"
+        validate_no_private_host_paths(r)
 
 
 def test_pilot_canary_composition() -> None:
@@ -83,6 +103,8 @@ def test_receipt_schema_validation() -> None:
     assert receipt["issue"] == 8010
     assert receipt["epic"] == 6321
     assert receipt["verdict"] == "CANARY_PILOT_PASSED"
+    assert "replay_buffer" in receipt["files"]
+    assert receipt["files"]["replay_buffer"]["record_count"] == 30
 
 
 def test_canary_safety_gates() -> None:
@@ -112,6 +134,7 @@ def test_verify_only_succeeds_on_valid_artifacts() -> None:
         dataset_path=DEFAULT_DATASET_OUTPUT,
         receipt_path=DEFAULT_RECEIPT_OUTPUT,
         heldout_path=DEFAULT_HELDOUT_SUITE,
+        replay_path=DEFAULT_REPLAY_OUTPUT,
     )
     assert result is True
 
@@ -133,6 +156,27 @@ def test_tampered_dataset_fails_verification(tmp_path: Path) -> None:
             dataset_path=tampered_ds,
             receipt_path=tampered_rcp,
             heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+        )
+
+
+def test_tampered_replay_buffer_fails_verification(tmp_path: Path) -> None:
+    """Verify that tampering with replay buffer records causes verify_pilot_canary to fail."""
+    tampered_replay = tmp_path / "tampered_replay.jsonl"
+    tampered_rcp = tmp_path / "tampered_receipt.json"
+
+    shutil.copyfile(DEFAULT_REPLAY_OUTPUT, tampered_replay)
+    shutil.copyfile(DEFAULT_RECEIPT_OUTPUT, tampered_rcp)
+
+    with tampered_replay.open("a", encoding="utf-8") as f:
+        f.write(json.dumps({"id": "bad", "instruction": "test", "response": "test"}) + "\n")
+
+    with pytest.raises(ValueError, match=r"Canary replay buffer count error|Replay buffer SHA256 mismatch"):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=tampered_replay,
         )
 
 
@@ -142,6 +186,10 @@ def test_no_private_host_paths_in_dataset_or_receipt() -> None:
     validate_no_private_host_paths(receipt)
 
     for line in DEFAULT_DATASET_OUTPUT.read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            validate_no_private_host_paths(json.loads(line))
+
+    for line in DEFAULT_REPLAY_OUTPUT.read_text(encoding="utf-8").splitlines():
         if line.strip():
             validate_no_private_host_paths(json.loads(line))
 
