@@ -123,6 +123,9 @@ class ClaimType(enum.StrEnum):
     NEGATIVE_CONTROL = "NEGATIVE_CONTROL"
 
 
+# Authoritative bibliographic source:
+# «Словник української мови: в 11 томах / АН УРСР. Інститут мовознавства імені О. О. Потебні;
+# редкол.: І. К. Білодід (голова) та ін. — К. : Наукова думка, 1970—1980.»
 SUM11_VOLUMES: dict[int, dict[str, Any]] = {
     1: {"letters": ("А", "В"), "year": 1970},
     2: {"letters": ("Г", "Ж"), "year": 1971},
@@ -130,8 +133,8 @@ SUM11_VOLUMES: dict[int, dict[str, Any]] = {
     4: {"letters": ("І", "М"), "year": 1973},
     5: {"letters": ("Н", "О"), "year": 1974},
     6: {"letters": ("П", "ПОЇТИ"), "year": 1975},
-    7: {"letters": ("ПОЇХАТИ", "РАДІСНИЙ"), "year": 1976},
-    8: {"letters": ("ПРИВАБЛИВО", "РЯБЕНЬКИЙ"), "year": 1977},
+    7: {"letters": ("ПОЇХАТИ", "ПРИРОБЛЯТИ"), "year": 1976},
+    8: {"letters": ("ПРИРОДА", "РЯХТЛИВИЙ"), "year": 1977},
     9: {"letters": ("С", "С"), "year": 1978},
     10: {"letters": ("Т", "Ф"), "year": 1979},
     11: {"letters": ("Х", "Ь"), "year": 1980},
@@ -139,7 +142,10 @@ SUM11_VOLUMES: dict[int, dict[str, Any]] = {
 
 
 def is_term_in_sum11_volume(term: str, volume: int) -> bool:
-    """Verify if a term falls into the alphabetical range of a СУМ-11 volume."""
+    """Verify if a term falls into the alphabetical range of a СУМ-11 volume.
+
+    Grounded in the official volume titles of Словник української мови в 11 томах (1970–1980).
+    """
     t = clean_word(term.split()[0])
     if not t or volume not in SUM11_VOLUMES:
         return False
@@ -159,9 +165,9 @@ def is_term_in_sum11_volume(term: str, volume: int) -> bool:
     if volume == 6:
         return first == "п" and t <= "поїти"
     if volume == 7:
-        return (first == "п" and "поїти" < t < "привабливо") or (first == "р" and t <= "радісний")
+        return first == "п" and "поїти" < t <= "приробляти"
     if volume == 8:
-        return (first == "п" and t >= "привабливо") or (first == "р" and "радісний" < t <= "рябенький")
+        return (first == "п" and t > "приробляти") or (first == "р" and t <= "ряхтливий")
     return False
 
 
@@ -193,26 +199,30 @@ class TrajectoryVerificationOutcome:
     rejection_reasons: list[dict[str, Any]] = field(default_factory=list)
 
 
-def detect_term_polarity(text: str, term: str) -> bool:
-    """Detect whether a term in context is asserted as attested (True) or absent (False)."""
+def detect_term_polarity(text: str, term: str) -> bool | None:
+    """Detect whether a term in context is asserted as attested (True), absent (False), or ambiguous (None).
+
+    Adversarial rigor: avoids silent default-to-True which would allow ungrounded absence claims
+    expressed with non-standard phrasing to falsely pass as presence assertions.
+    """
     t_escaped = re.escape(term)
     neg_patterns = [
-        rf"«{t_escaped}»[^\n.]{{0,35}}(?:не\s+(?:зафіксован|засвідчен|подан|включен|відом)|відсутн|немає|бракує)",
-        rf"(?:не\s+(?:зафіксован|засвідчен|подан|включен|знає|містить|фіксує)|відсутн|немає|бракує)[^\n.]{{0,35}}«{t_escaped}»",
+        rf"«{t_escaped}»[^\n.]{{0,45}}(?:не\s+(?:зафіксован|засвідчен|подан|включен|відом|трапля|існує|подибу|зустріча|знаходи|знайдено|вжива|знає|містить|фіксує)|відсутн|немає|бракує|випадає(?:\s+з\s+реєстру)?|без\s+фіксації)",
+        rf"(?:не\s+(?:зафіксован|засвідчен|подан|включен|відом|трапля|існує|подибу|зустріча|знаходи|знайдено|вжива|знає|містить|фіксує)|відсутн|немає|бракує|випадає(?:\s+з\s+реєстру)?|без\s+фіксації)[^\n.]{{0,45}}«{t_escaped}»",
     ]
     for pat in neg_patterns:
         if re.search(pat, text, re.IGNORECASE):
             return False
 
     pos_patterns = [
-        rf"«{t_escaped}»[^\n.]{{0,35}}(?:зафіксован|засвідчен|подан|наявн|містить)",
-        rf"(?:зафіксован|засвідчен|подан|наявн|містить|відповідником\s+є|замість\s+якого)[^\n.]{{0,40}}«{t_escaped}»",
+        rf"«{t_escaped}»[^\n.]{{0,45}}(?:зафіксован|засвідчен|подан|наявн|містить|трапля|зустріча|знаходи|вжива|фіксує)",
+        rf"(?:зафіксован|засвідчен|подан|наявн|містить|трапля|зустріча|знаходи|вжива|фіксує|відповідником\s+є|замість\s+якого|наведено|подає|є\s+у\s+словник|міститься)[^\n.]{{0,45}}«{t_escaped}»",
     ]
     for pat in pos_patterns:
         if re.search(pat, text, re.IGNORECASE):
             return True
 
-    return True
+    return None
 
 
 class CoTClaimVerifier:
@@ -739,7 +749,15 @@ class CoTClaimVerifier:
                     claim, False, "R2U not queried", f"Term «{claim.term}» not found in local R2U cache and network lookup is disabled"
                 )
 
-            expected_attested = claim.expected_attributes.get("expected_attested", True)
+            expected_attested = claim.expected_attributes.get("expected_attested")
+            if expected_attested is None:
+                return ClaimVerificationResult(
+                    claim,
+                    False,
+                    "Ambiguous polarity",
+                    f"Ambiguous 1920s lexicographical claim: could not determine whether «{claim.term}» was claimed present or absent in 1920s dictionaries",
+                )
+
             is_found = status in (R2ULookupStatus.FOUND, R2ULookupStatus.CACHED)
             is_not_found = status in (R2ULookupStatus.NOT_FOUND, R2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE)
 
@@ -945,26 +963,24 @@ def build_verification_receipt(
                 ulif_claims += 1
 
     pass_rate_100 = bool(total_trajectories > 0 and len(rejected_trajectories) == 0 and len(verified_trajectories) == total_trajectories)
-    zero_unverified_claims = bool(
-        all(
-            r.passed
-            for out in all_outcomes
-            if out.passed
-            for r in out.claims_verified
-            if r.claim.claim_type in (
-                ClaimType.SUM11_HEADWORD,
-                ClaimType.SUM11_VOLUME_YEAR,
-                ClaimType.SUM11_STYLISTIC,
-                ClaimType.SUM11_SOVIETIZATION,
-                ClaimType.R2U_HISTORICAL,
-            )
+
+    dict_results = [
+        r
+        for out in all_outcomes
+        for r in out.claims_verified
+        if r.claim.claim_type in (
+            ClaimType.SUM11_HEADWORD,
+            ClaimType.SUM11_VOLUME_YEAR,
+            ClaimType.SUM11_STYLISTIC,
+            ClaimType.SUM11_SOVIETIZATION,
+            ClaimType.R2U_HISTORICAL,
         )
-    )
+    ]
+    zero_unverified_claims = bool(dict_results and all(r.passed for r in dict_results))
 
     living_std_results = [
         r
         for out in all_outcomes
-        if out.passed
         for r in out.claims_verified
         if r.claim.claim_type == ClaimType.ULIF_REGISTER and r.claim.expected_attributes.get("tier") == "living_standard"
     ]
@@ -1124,6 +1140,10 @@ def run_claim_verifier(
             line = line.strip()
             if line:
                 records.append(json.loads(line))
+
+    # Pre-write OPSEC gate: fail immediately before any output directory or file is touched
+    for rec in records:
+        validate_no_private_host_paths(rec)
 
     verified_records: list[dict[str, Any]] = []
     rejected_records: list[dict[str, Any]] = []
