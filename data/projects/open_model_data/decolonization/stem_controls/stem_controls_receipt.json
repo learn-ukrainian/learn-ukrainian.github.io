@@ -1,0 +1,70 @@
+{
+  "schema_version": "v1_stem_controls_receipt",
+  "dataset_name": "ULDR Phase 3.3 STEM Negative Controls",
+  "phase": "Phase 3.3: STEM Negative Controls & Semantic Polysemy Disambiguation",
+  "issue": 8007,
+  "parent_epic": 6321,
+  "generated_at": "2026-09-13T22:12:54Z",
+  "dependency": {
+    "phase": "3.0",
+    "issue": 8005,
+    "required_on": "main"
+  },
+  "quotas": {
+    "sft_preserve_controls": 1800,
+    "dpo_preserve_pairs": 900
+  },
+  "yield": {
+    "sft_preserve_controls": 1800,
+    "dpo_preserve_pairs": 900
+  },
+  "source_pool": {
+    "stem_chunks_scanned": 269,
+    "stem_subjects": {
+      "algebra": 269
+    },
+    "train_only": true,
+    "heldout_excluded": true
+  },
+  "cleanliness": {
+    "vesum_attested_admitted": 1800,
+    "vesum_reject_count": 631,
+    "style_guide_collision_reject_count": 16,
+    "ocr_reject_count": 1140,
+    "vesum_verification_rate": 1.0
+  },
+  "semantic_typing": {
+    "obyem_preserve": 1,
+    "obyem_correct_excluded": 0,
+    "rahuvaty_preserve": 0,
+    "vidnoshennia_preserve": 5,
+    "nomenclature_modernization": 0,
+    "nomenclature_calque_excluded": 0,
+    "colloquial_preserve": 50,
+    "generic_stem_preserve": 3594,
+    "false_preservation_of_abstract_calques": 0
+  },
+  "safety_assertions": {
+    "no_corpus_text_emitted": true,
+    "no_private_host_paths_disclosed": true,
+    "zero_false_preservation_of_abstract_calques": true,
+    "vesum_verification_complete": true
+  },
+  "files": {
+    "index": {
+      "filename": "stem_controls_index.jsonl",
+      "record_count": 1800,
+      "sha256": "a9a8ec7304bee6c2124c142946da16ca57bcec624936c522ea44b1e4cd9ad14e"
+    },
+    "sft_controls": {
+      "filename": "stem_preserve_sft_controls.jsonl",
+      "record_count": 1800,
+      "sha256": "3151aa835184e8fa30e74092ebcd4f998d0fe106d4e81a63cf147d851b2ebd78"
+    },
+    "dpo_pairs": {
+      "filename": "stem_preserve_dpo_pairs.jsonl",
+      "record_count": 900,
+      "sha256": "9f750b742bce9b59f5cbabf2cdd8a8bb35f5366268c32dccaf4fa96ba89f27cb"
+    }
+  }
+}
