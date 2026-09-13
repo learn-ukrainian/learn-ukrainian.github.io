@@ -169,6 +169,23 @@ The canary run enforces three non-negotiable safety gates before production asse
 
 ---
 
+## Downstream GPU Fine-Tuning & Hugging Face Integration
+
+In accordance with the repository's permanent boundary invariant ([`docs/projects/open-model-data/decolonization-training-guide.md` §1](decolonization-training-guide.md#1-project-invariants--scope-boundary)), no heavy model weight generation, paid model hosting, or intensive GPU compute is executed inside this GitHub repository or its CI environment.
+
+For downstream researchers and developers wishing to execute live full-scale fine-tuning of `google/gemma-3-4b-it` on GPU:
+
+1. **Hugging Face Datasets & Artifacts Repository**:
+   - Model Repository: [`https://huggingface.co/krisztiankoos/uldr-canary-artifacts`](https://huggingface.co/krisztiankoos/uldr-canary-artifacts)
+   - Synchronized files: `pilot_canary_train_200.jsonl`, `pilot_canary_replay_buffer_30.jsonl`, `heldout_evaluation_suite_1000.jsonl`, and `v1_pilot_canary_receipt.schema.json`.
+
+2. **1-Click Google Colab GPU Runner**:
+   - Notebook path: [`scripts/projects/open_model_data/pilot_canary_gemma3_4b_colab.ipynb`](../../scripts/projects/open_model_data/pilot_canary_gemma3_4b_colab.ipynb)
+   - Open directly in Colab: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/learn-ukrainian/learn-ukrainian.github.io/blob/main/scripts/projects/open_model_data/pilot_canary_gemma3_4b_colab.ipynb)
+   - Executes 4-bit QLoRA fine-tuning and 900-case evaluation in ~5–7 minutes on a free Google Colab T4 GPU (or A100), pushing the resulting adapter and evaluation outputs directly back to Hugging Face.
+
+---
+
 ## Testing & Verification
 
 Unit and contract test coverage is maintained in `tests/projects/open_model_data/test_v4_pilot_canary_evaluation.py`:
