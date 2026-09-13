@@ -301,7 +301,7 @@ def test_reviewer_assert_v7_build(tmp_path: Path):
 
 
 def test_upgrade_allows_gemini_self_review_when_flagged(tmp_path: Path):
-    plan = {"slug": "test-slug", "level": "a1"}
+    plan = {"slug": "test-slug", "level": "a1", "sequence": 8, "content_outline": []}
     module_dir = tmp_path / "module"
     module_dir.mkdir()
     for name in linear_pipeline.WRITER_ARTIFACTS:
