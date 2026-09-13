@@ -118,6 +118,10 @@
         "sha256": "0db60aea4658f7a8616066b5c8f1c1bd1d4bc4baf6c9556b72cf69ec61df1208"
       },
       {
+        "path": "scripts/lexicon/enrich_heteronyms.py",
+        "sha256": "ff683d77a217a8ac818278e3118188c78d80037da19055750d9e8c0b69d4f432"
+      },
+      {
         "path": "scripts/lexicon/enrich_manifest.py",
         "sha256": "798f22ebdd0365480584403338edd5ed23f61ba928a4819a78aa7d4c9398e18e"
       },

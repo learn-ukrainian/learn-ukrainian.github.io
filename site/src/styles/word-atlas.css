@@ -1418,3 +1418,120 @@ html[data-theme='dark'] .lu-content .word-atlas .word-hero .practice-cta-hero {
     overflow-x: auto;
   }
 }
+
+/* Heteronym / Homograph Disambiguation Bar */
+.atlas-heteronym-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  background: var(--lu-surface-muted, #f8f9fa);
+  border: 1.5px solid var(--lu-border, #e2e8f0);
+  border-radius: var(--radius, 12px);
+  padding: 12px 18px;
+  margin: 16px 0 24px;
+}
+
+.atlas-heteronym-label {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--lu-text-muted, #64748b);
+}
+
+.atlas-heteronym-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.atlas-heteronym-tab {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 16px;
+  border-radius: 9999px;
+  border: 1.5px solid var(--lu-border, #cbd5e1);
+  background: var(--lu-bg, #ffffff);
+  color: var(--lu-text, #1e293b);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  text-decoration: none;
+}
+
+.atlas-heteronym-tab:hover {
+  border-color: var(--blue, #0057b7);
+  background: var(--blue-light, rgba(0, 87, 183, 0.08));
+}
+
+.atlas-heteronym-tab.active {
+  border-color: var(--blue, #0057b7);
+  background: var(--blue, #0057b7);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 87, 183, 0.25);
+}
+
+.atlas-heteronym-tab.active .atlas-heteronym-tab-hint {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.atlas-heteronym-tab-headword {
+  font-size: 15px;
+}
+
+.atlas-heteronym-tab-hint {
+  font-size: 13px;
+  margin-left: 4px;
+  color: var(--lu-text-muted, #64748b);
+  font-weight: normal;
+}
+
+/* Heteronym Hatnote */
+.atlas-heteronym-hatnote {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 10px 16px;
+  background: var(--teal-light, rgba(122, 215, 203, 0.14));
+  border-left: 4px solid var(--teal, #00695c);
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--lu-text, #1e293b);
+}
+
+.atlas-heteronym-hatnote-icon {
+  font-size: 16px;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+
+.atlas-heteronym-hatnote-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.atlas-heteronym-hatnote-switchers {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.atlas-heteronym-hatnote-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--blue, #0057b7);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.atlas-heteronym-hatnote-btn:hover {
+  color: var(--lu-primary-hover, #003f88);
+}
