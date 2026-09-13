@@ -1,10 +1,15 @@
 {
   "schema_version": "v1_minhash_dedup_summary",
-  "algorithm": "MinHash_64perm_Token_Jaccard",
+  "algorithm": "MinHash_64perm_16band_Token_Jaccard",
+  "permutations": 64,
+  "bands": 16,
+  "rows_per_band": 4,
+  "train_corpus_sentences_indexed": 14006,
   "similarity_threshold": 0.8,
-  "max_cross_split_similarity": 0.1818,
+  "max_minhash_signature_similarity": 0.6875,
+  "max_cross_split_similarity": 0.6667,
   "cross_split_duplicates_above_threshold": 0,
   "heldout_cases_evaluated": 1000,
-  "train_sample_evaluated": 500,
+  "candidate_comparisons_evaluated": 183,
   "status": "PASS"
 }

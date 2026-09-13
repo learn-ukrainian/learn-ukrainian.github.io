@@ -4,7 +4,7 @@
   "phase": "Phase 3.0: Pre-Extraction Partition Firewall & Source Custody",
   "issue": 8005,
   "parent_epic": 6321,
-  "generated_at": "2026-09-13T08:15:00Z",
+  "generated_at": "2026-09-13T08:30:00Z",
   "source_custody_summary": {
     "ua_gec_excluded_test_count": 1159,
     "ua_gec_train_documents_count": 1145,
@@ -15,10 +15,10 @@
     "textbook_heldout_chunks_count": 10459
   },
   "phenomenon_partition_summary": {
-    "total_phenomena_count": 1480,
-    "train_phenomena_count": 1247,
-    "heldout_seen_phenomena_count": 331,
-    "heldout_unseen_phenomena_count": 333,
+    "total_phenomena_count": 1355,
+    "train_phenomena_count": 1563,
+    "heldout_seen_phenomena_count": 459,
+    "heldout_unseen_phenomena_count": 530,
     "lemma_family_leakage_count": 0
   },
   "heldout_suite_summary": {
@@ -33,10 +33,14 @@
     }
   },
   "minhash_dedup_summary": {
-    "algorithm": "MinHash_64perm_Token_Jaccard",
+    "algorithm": "MinHash_64perm_16band_Token_Jaccard",
     "permutations": 64,
+    "bands": 16,
+    "rows_per_band": 4,
+    "train_corpus_sentences_indexed": 14006,
     "similarity_threshold": 0.8,
-    "max_cross_split_similarity": 0.1818,
+    "max_minhash_signature_similarity": 0.6875,
+    "max_cross_split_similarity": 0.6667,
     "cross_split_duplicates_above_threshold": 0
   },
   "files": {
@@ -48,12 +52,12 @@
     "heldout_evaluation_suite_1000": {
       "filename": "heldout_evaluation_suite_1000.jsonl",
       "record_count": 1000,
-      "sha256": "f79b60b7fa750e42642fbf65f61877f4aa09980cef615fa798813f2f06de9e3f"
+      "sha256": "c8e3fca447fd84e0848aa4e83a749259c072fcfc2134d653c28ac068b0a01298"
     },
     "minhash_dedup_summary": {
       "filename": "minhash_dedup_summary.json",
       "record_count": 1,
-      "sha256": "7ff4de84b0726fa4b235b3a1af38442c88d8822836c297495ee3d01762ca744c"
+      "sha256": "64ddee4c0c7e3ec941532f32f5c04d7c849fd6033e0f4e381f485cdf74159394"
     }
   }
 }
