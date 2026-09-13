@@ -107,10 +107,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "260461ae4cec60b924a699cfc003bae3c8dbe5bca2fdfdc9fddaa2ae57a290bf"
-        "sha256": "fb5ea023d7c67b085402e6169293f1734e4071d439f355a53e1b289fa2575147"
-        "sha256": "4ec17e4832024008b91dc0ac44f755d037caf4d773199cb42552bc86cf13d242"
-        "sha256": "f11bb87f6646e38bb5dd34f0929ccc30f71b2618472d2c42c4273b988fcecfbc"
+        "sha256": "798f22ebdd0365480584403338edd5ed23f61ba928a4819a78aa7d4c9398e18e"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
