@@ -309,7 +309,7 @@
       "required": [
         "dataset",
         "replay_buffer",
-        "receipt"
+        "eval_cases"
       ],
       "properties": {
         "dataset": {
@@ -354,16 +354,20 @@
             }
           }
         },
-        "receipt": {
+        "eval_cases": {
           "type": "object",
           "additionalProperties": false,
           "required": [
             "filename",
+            "record_count",
             "sha256"
           ],
           "properties": {
             "filename": {
               "type": "string"
+            },
+            "record_count": {
+              "type": "integer"
             },
             "sha256": {
               "type": "string",

@@ -135,12 +135,14 @@ The canary run enforces three non-negotiable safety gates before production asse
 - Trajectory schema: `data/projects/open_model_data/contracts/v1_decolonization_trajectory.schema.json`
 
 ### Artifacts
-- Canary training set: `data/projects/open_model_data/canary/pilot_canary_train_200.jsonl`
-- Replay buffer: `data/projects/open_model_data/canary/pilot_canary_replay_buffer_30.jsonl`
+- Canary training set: `data/projects/open_model_data/canary/pilot_canary_train_200.jsonl` (200 items: 140 CORRECT, 60 distinct STEM PRESERVE)
+- Replay buffer: `data/projects/open_model_data/canary/pilot_canary_replay_buffer_30.jsonl` (30 items grounded with source locators)
+- Evaluation cases: `data/projects/open_model_data/canary/pilot_canary_eval_cases.jsonl` (900 empirical cases: 200 calque, 600 clean controls, 100 NLP)
 - Execution receipt: `data/projects/open_model_data/canary/pilot_canary_receipt.json`
+- Detached digest: `data/projects/open_model_data/canary/pilot_canary_receipt.json.sha256`
 
 ### Non-Negotiable Invariants
-- `zero_heldout_leakage`: 100% partition firewall protection — zero term or context overlap with `heldout_evaluation_suite_1000.jsonl`.
+- `zero_heldout_leakage`: 100% partition firewall protection — bidirectional check (zero term or context overlap with `heldout_evaluation_suite_1000.jsonl`).
 - `zero_synthetic_hallucination`: 100% human-authored corpus grounding.
 - `vesum_attestation_100_percent`: Every living standard lemma attested in `data/vesum.db`.
 - `no_private_host_paths`: Zero leakage of private host paths (`/home/ops`, `/Users/`, IP addresses) in datasets or receipts.
@@ -155,6 +157,7 @@ The canary run enforces three non-negotiable safety gates before production asse
 .venv/bin/python scripts/projects/open_model_data/v4_pilot_canary_evaluation.py \
   --dataset-out data/projects/open_model_data/canary/pilot_canary_train_200.jsonl \
   --replay-out data/projects/open_model_data/canary/pilot_canary_replay_buffer_30.jsonl \
+  --eval-cases-out data/projects/open_model_data/canary/pilot_canary_eval_cases.jsonl \
   --receipt-out data/projects/open_model_data/canary/pilot_canary_receipt.json
 ```
 
@@ -169,14 +172,21 @@ The canary run enforces three non-negotiable safety gates before production asse
 ## Testing & Verification
 
 Unit and contract test coverage is maintained in `tests/projects/open_model_data/test_v4_pilot_canary_evaluation.py`:
-- `test_pilot_canary_artifacts_exist`: Verifies presence of dataset, replay buffer, and receipt.
-- `test_pilot_canary_replay_buffer_composition`: Verifies 30 items, schema structure, and ShareGPT format.
+- `test_pilot_canary_artifacts_exist`: Verifies presence of dataset, replay buffer, eval cases, receipt, and detached digest.
+- `test_pilot_canary_replay_buffer_composition`: Verifies 30 items, source table/chunk grounding, and ShareGPT format.
 - `test_pilot_canary_composition`: Verifies 140/60 split and 80/50/40/30 format distribution.
-- `test_partition_firewall_zero_heldout_contamination`: Verifies zero overlap with held-out partition.
-- `test_receipt_schema_validation`: Validates receipt against JSON schema.
+- `test_negative_control_diversity`: Verifies 60 distinct PRESERVE terms and queries across STEM domains.
+- `test_partition_firewall_zero_heldout_contamination`: Verifies zero term and context snippet overlap.
+- `test_partition_firewall_fails_closed`: Verifies fail-closed behavior on missing or empty held-out partition suite.
+- `test_receipt_schema_validation`: Validates receipt against JSON schema and absence of circular self-hash.
 - `test_canary_safety_gates`: Asserts all 3 safety gates pass.
 - `test_verify_only_succeeds_on_valid_artifacts`: Asserts `--verify-only` exit code 0.
+- `test_tampered_receipt_gates_fail_verification`: Asserts recomputed verification rejects forged gates/loss/booleans.
 - `test_tampered_dataset_fails_verification`: Asserts tamper rejection on dataset.
 - `test_tampered_replay_buffer_fails_verification`: Asserts tamper rejection on replay buffer.
+- `test_tampered_eval_cases_fails_verification`: Asserts tamper rejection on evaluation cases.
+- `test_trajectory_schema_deep_validation`: Asserts schema validation on individual trajectories.
+- `test_empty_replay_object_fails_verification`: Asserts validation rejects empty replay objects.
 - `test_no_private_host_paths_in_dataset_or_receipt`: Validates OPSEC across all files.
-- `test_clopper_pearson_exact_calculation`: Verifies statistical precision of binomial upper bound.
+- `test_opsec_sentinel_fails_verification`: Asserts rejection of private path sentinels even with matching hash.
+- `test_clopper_pearson_exact_calculation`: Verifies statistical precision of binomial upper bound against `scipy.stats.binomtest` exact.

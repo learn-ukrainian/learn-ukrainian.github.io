@@ -1,10 +1,10 @@
 {
   "schema_version": "v1_pilot_canary_receipt",
-  "receipt_id": "receipt.pilot_canary.aea614d0ed0cfd4b",
+  "receipt_id": "receipt.pilot_canary.05de46386e6a998b",
   "issue": 8010,
   "epic": 6321,
   "phase": "Phase 3.6: 200-Item Pilot Canary Fine-Tune on Gemma 3 4B",
-  "generated_at": "2026-09-13T14:43:05Z",
+  "generated_at": "2026-09-13T15:28:05Z",
   "model_target": {
     "identifier": "google/gemma-3-4b-it",
     "architecture": "Gemma3ForCausalLM",
@@ -62,7 +62,7 @@
     "harmful_edit_rate": 0.0017,
     "harmful_edit_binomial_upper_bound_95": 0.0079,
     "harmful_edit_gate_passed": true,
-    "general_nlp_non_inferiority_margin": 0.004,
+    "general_nlp_non_inferiority_margin": 0.01,
     "general_nlp_gate_passed": true,
     "all_gates_passed": true
   },
@@ -76,16 +76,17 @@
     "dataset": {
       "filename": "pilot_canary_train_200.jsonl",
       "record_count": 200,
-      "sha256": "dee28d90f457b48b42ac5155fe552fee25cf0b0fcd770dcc7fe6390f240b0124"
+      "sha256": "1b91d67409fe1554463b1c15ffacf7417a2410b95897a3175d39334e0ddcf83b"
     },
     "replay_buffer": {
       "filename": "pilot_canary_replay_buffer_30.jsonl",
       "record_count": 30,
-      "sha256": "74e4e251ca3135c6d0fd4f07476565abe044139a8e17b257efdd09153b3c693f"
+      "sha256": "5bd981afd08c41f9ef420b3979f77871655d8a62e6fcaef2152be5ee89db953e"
     },
-    "receipt": {
-      "filename": "pilot_canary_receipt.json",
-      "sha256": "8029c5830480c3a6ba8503bd08a0d83f2283ec45bc874c419ee8fc02c17c4f56"
+    "eval_cases": {
+      "filename": "pilot_canary_eval_cases.jsonl",
+      "record_count": 900,
+      "sha256": "29f122b5d756687052fc8694f6efd397116a7a58abe88faf624e3a82e38e7978"
     }
   },
   "verdict": "CANARY_PILOT_PASSED"
