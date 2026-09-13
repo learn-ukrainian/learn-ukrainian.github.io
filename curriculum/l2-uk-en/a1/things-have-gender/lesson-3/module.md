@@ -1,11 +1,11 @@
-# Профе́сії, па́стки й самопереві́рка
+# Профе́сії, па́стки й самопереві́рка — Professions, traps, and self-check
 
-У пе́рших двох уро́ках ви опанува́ли рід предме́тів у кімна́ті та су́мці. Цей уро́к підсумо́вує мо́дуль і додає́ важли́ві дета́лі:
+У пе́рших двох уро́ках ви опанува́ли рід предме́тів у кімна́ті та су́мці. In the first two lessons you mastered the gender of objects in the room and bag. Цей уро́к підсумо́вує мо́дуль і додає́ важли́ві дета́лі — this lesson sums up the module and adds important details:
 - **Вжива́ти фемініти́ви профе́сій** — use feminine profession forms (**вчи́телька, лі́карка**);
 - **Розпізнава́ти чолові́чі імена́ на -а/-о** — recognise masculine names and family words ending in **-а / -о** (**Мико́ла, та́то**);
 - **Уника́ти типо́вих пасто́к ро́ду** — avoid common gender traps (**мій соба́ка** as course default).
 
-## Підсу́мок
+## Підсу́мок — Summary
 
 For people, choose the form that fits the person.
 
@@ -48,7 +48,7 @@ For a man:
 Keep the earlier identity rule: **Я студе́нт. Я студе́нтка.** Do not force
 **є** into that A1 sentence.
 
-### Діало́г про профе́сії
+### Діало́г про профе́сії — A dialogue about professions
 
 Послу́хайте та прочита́йте розмо́ву про профе́сії та сім'ю́ — listen to and read the conversation about professions and family:
 
@@ -60,6 +60,18 @@ Keep the earlier identity rule: **Я студе́нт. Я студе́нтка.*
 > **Окса́на**: Так. А хто твій брат?
 > **Марко́**: Мій брат — лі́кар.
 
+Розбі́р розмо́ви — breakdown of the conversation:
+
+| Украї́нська | English support |
+| --- | --- |
+| **Окса́но, хто ти? Ти студе́нтка?** | Oksana, what do you do? Are you a student? |
+| **Так, я студе́нтка. А хто ти?** | Yes, I am a student. And you? |
+| **Я теж студе́нт. А хто твоя́ сестра́?** | I am a student too. And what does your sister do? |
+| **Моя́ сестра́ — вчи́телька.** | My sister is a teacher. |
+| **Кла́сно! Вона́ до́бра вчи́телька.** | Great! She is a good teacher. |
+| **Так. А хто твій брат?** | Yes. And what does your brother do? |
+| **Мій брат — лі́кар.** | My brother is a doctor. |
+
 Розмо́ва про сім'ю́ — conversation about family:
 
 > **Окса́на**: Твій брат лі́кар? Чудо́во!
@@ -70,17 +82,29 @@ Keep the earlier identity rule: **Я студе́нт. Я студе́нтка.*
 > **Марко́**: Мій дя́дько — акто́р.
 > **Окса́на**: А йо́го сестра́ — акто́рка!
 
+Розбі́р розмо́ви про сім'ю́ — breakdown of the family conversation:
+
+| Украї́нська | English support |
+| --- | --- |
+| **Твій брат лі́кар? Чудо́во!** | Your brother is a doctor? Wonderful! |
+| **А хто твоя́ ма́ма? Вона́ теж лі́карка?** | And your mom? Is she a doctor too? |
+| **Так, моя́ ма́ма — лі́карка.** | Yes, my mom is a doctor. |
+| **А хто твій та́то?** | And what does your dad do? |
+| **Мій та́то — співа́к. А твій дя́дько Мико́ла?** | My dad is a singer. And your uncle Mykola? |
+| **Мій дя́дько — акто́р.** | My uncle is an actor. |
+| **А йо́го сестра́ — акто́рка!** | And his sister is an actress! |
+
 <!-- INJECT_ACTIVITY: act-9 -->
 
 <!-- INJECT_ACTIVITY: act-301 -->
 
-## Імена́, па́стки й самопереві́рка
+## Імена́, па́стки й самопереві́рка — Names, traps, and self-check
 
 Some male names end in **-а**, **-я**, or **-о**: **Мико́ла**, **Ілля́**,
 **Павло́**. They are still **він** because they name men. Family words such as
 **та́то**, **ба́тько**, and **дя́дько** are also masculine.
 
-### Пильну́й па́стки
+### Пильну́й па́стки — Watch out for traps
 
 Most errors come from using English habits too directly or from trusting the
 ending when the word is an exception.
@@ -108,7 +132,7 @@ from another language.
 
 <!-- INJECT_ACTIVITY: act-303 -->
 
-### Самопереві́рка
+### Самопереві́рка — Self-check
 
 Cover the English support and say the Ukrainian aloud:
 
@@ -125,7 +149,7 @@ Cover the English support and say the Ukrainian aloud:
 | **Де кни́га? Вона́ тут.** | Where is the book? It is here. |
 | **Де вікно́? Воно́ тут.** | Where is the window? It is here. |
 
-Тепе́р переві́рте профе́сії, чолові́чі імена́ та ви́нятки:
+Тепе́р переві́рте профе́сії, чолові́чі імена́ та ви́нятки — now check professions, male names, and exceptions:
 
 | Украї́нська | English support |
 | --- | --- |
@@ -155,7 +179,7 @@ Workbook practice will make the pattern automatic: sort nouns by gender, choose
 **він / вона́ / воно́**, complete **мій / моя́ / моє́**, use **У мене́ є...**, and
 repair the gender traps.
 
-### Заве́ршення мо́дуля
+### Заве́ршення мо́дуля — Module completion
 
 | Украї́нська | English support |
 | --- | --- |
@@ -164,9 +188,9 @@ repair the gender traps.
 | **Ви упе́внено вжива́єте «мій / моя́ / моє́» та констру́кцію «У мене́ є...».** | You confidently use "my" forms and the construction "I have...". |
 | **У насту́пному мо́дулі ви познайо́митеся з прикме́тниками.** | In the next module, you will discover descriptive adjectives. |
 
-### Ва́ше мо́влення
+### Ва́ше мо́влення — Your speaking
 
-Напиші́ть 2–3 коро́ткі рядки́ про себе́ та свій про́стір:
-1. **Я студе́нт (або́: Я студе́нтка).**
-2. **Це моя́ кімна́та.**
-3. **У мене́ є стіл, кни́га і моє́ фо́то.**
+Напиші́ть 2–3 коро́ткі рядки́ про себе́ та свій про́стір — write 2–3 short lines about yourself and your space:
+1. **Я студе́нт (або́: Я студе́нтка).** — I am a student (or, for a woman: I am a student).
+2. **Це моя́ кімна́та.** — This is my room.
+3. **У мене́ є стіл, кни́га і моє́ фо́то.** — I have a table, a book, and my photo.

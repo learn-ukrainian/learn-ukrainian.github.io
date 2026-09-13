@@ -1,7 +1,7 @@
 inline:
 - id: act-4
   type: match-up
-  title: Поєдна́й протиле́жності
+  title: Поєдна́й протиле́жності — Match the opposites
   instruction: Match each adjective with its opposite.
   pairs:
   - left: вели́кий
@@ -18,8 +18,8 @@ inline:
     right: те́мний
 - id: act-201
   type: fill-in
-  title: Сполу́чники і, а, але́
-  instruction: Обері́ть правильний сполу́чник для ко́жного речення.
+  title: Сполу́чники і, а, але́ — Conjunctions і, а, але́
+  instruction: Обері́ть правильний сполу́чник для ко́жного речення. — Choose the correct conjunction for each sentence.
   items:
   - sentence: Стіл нови́й, ___ стіле́ць стари́й.
     answer: а
@@ -65,8 +65,9 @@ inline:
     explanation: Сполу́чник але́ вка́зує на несподі́вану озна́ку (вели́кий, проте́ деше́вий).
 - id: act-204
   type: group-sort
-  title: Протиле́жні озна́ки
-  instruction: Розподілі́ть прикме́тники за темати́чними гру́пами озна́к.
+  title: Протиле́жні озна́ки — Opposite qualities
+  instruction: Розподілі́ть прикме́тники за темати́чними гру́пами озна́к. —
+    Sort the adjectives into thematic groups of qualities.
   groups:
   - label: Розмір та вік
     items:
@@ -88,8 +89,9 @@ inline:
     - те́мний
 - id: act-202
   type: quiz
-  title: Яки́й це предме́т?
-  instruction: Обері́ть правильну фо́рму прикме́тника для узго́дження з іме́нником.
+  title: Яки́й це предме́т? — What kind of object is this?
+  instruction: Обері́ть правильну фо́рму прикме́тника для узго́дження з іме́нником. —
+    Choose the correct adjective form to agree with the noun.
   items:
   - prompt: стіл (нови́й / нова́ / нове́)
     options:
@@ -147,8 +149,9 @@ inline:
     explanation: Лі́жко — сере́дній рід, тому́ зру́чне лі́жко.
 - id: act-203
   type: true-false
-  title: Пра́вда чи ні?
-  instruction: Ви́значте, чи правильне тве́рдження про о́пис предме́тів.
+  title: Пра́вда чи ні? — True or false?
+  instruction: Ви́значте, чи правильне тве́рдження про о́пис предме́тів. —
+    Decide whether the statement about describing objects is correct.
   statements:
   - statement: В украї́нській мо́ві прикме́тник узго́джується з іме́нником у роді.
     answer: true
@@ -171,7 +174,7 @@ inline:
 workbook:
 - id: act-w3
   type: error-correction
-  title: Ви́прав узго́дження прикме́тників
+  title: Ви́прав узго́дження прикме́тників — Fix the adjective agreement
   instruction: Fix the adjective or sentence frame.
   items:
   - sentence: Він є до́брий студе́нт.
@@ -224,7 +227,7 @@ workbook:
     explanation: Ру́чка is feminine, so use моя́ and нова́.
 - id: act-w4
   type: fill-in
-  title: Ви́прав прикметнико́ві пастки́
+  title: Ви́прав прикметнико́ві пастки́ — Fix the adjective traps
   instruction: Choose the standard Ukrainian adjective.
   items:
   - sentence: Цей суп ду́же ___.
@@ -283,8 +286,8 @@ workbook:
     explanation: Use ліни́вий.
 - id: act-w201
   type: match-up
-  title: З'єдна́й анто́німи
-  instruction: З'єдна́йте прикме́тники з ї́хніми протиле́жностями.
+  title: З'єдна́й анто́німи — Match the antonyms
+  instruction: З'єдна́йте прикме́тники з ї́хніми протиле́жностями. — Match the adjectives with their opposites.
   pairs:
   - left: мале́нький
     right: вели́кий
@@ -300,8 +303,9 @@ workbook:
     right: сві́тлий
 - id: act-w202
   type: fill-in
-  title: Встав правильний сполу́чник
-  instruction: Допо́вніть речення сполу́чником і, а або́ але́.
+  title: Встав правильний сполу́чник — Insert the correct conjunction
+  instruction: Допо́вніть речення сполу́чником і, а або́ але́. —
+    Complete the sentence with the conjunction і, а, or але́.
   items:
   - sentence: Стіл нови́й, ___ стіле́ць стари́й.
     answer: а
@@ -348,8 +352,8 @@ workbook:
     explanation: Поєдна́ння двох рівнозна́чних озна́к кімна́ти.
 - id: act-w203
   type: quiz
-  title: Обери́ то́чний о́пис
-  instruction: Обері́ть правильну фо́рму прикме́тника для речення.
+  title: Обери́ то́чний о́пис — Choose the accurate description
+  instruction: Обері́ть правильну фо́рму прикме́тника для речення. — Choose the correct adjective form for the sentence.
   items:
   - prompt: Це ___ стіл.
     options:
@@ -407,8 +411,9 @@ workbook:
     explanation: Ре́чі — множина́, закі́нчення -і.
 - id: act-w204
   type: unjumble
-  title: Склади речення
-  instruction: Розташу́йте слова́ у правильному поря́дку, щоб утвори́ти речення.
+  title: Склади речення — Build the sentence
+  instruction: Розташу́йте слова́ у правильному поря́дку, щоб утвори́ти речення. —
+    Put the words in the correct order to form a sentence.
   items:
   - words:
     - Стіл
@@ -455,8 +460,9 @@ workbook:
     explanation: Поря́док слів у про́сто́му описо́вому реченні.
 - id: act-w205
   type: translate
-  title: 'Бо́нус: переклад украї́нською'
-  instruction: Обері́ть правильний украї́нський переклад для англі́йського речення.
+  title: 'Бо́нус: переклад украї́нською — Bonus: translation into Ukrainian'
+  instruction: Обері́ть правильний украї́нський переклад для англі́йського речення. —
+    Choose the correct Ukrainian translation for the English sentence.
   items:
   - source: The room is big and bright.
     options:

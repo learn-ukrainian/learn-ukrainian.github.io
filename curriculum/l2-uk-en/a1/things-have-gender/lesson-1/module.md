@@ -1,6 +1,6 @@
-# Він, вона́ чи воно́?
+# Він, вона́ чи воно́? — He, she, or it?
 
-У попере́дніх мо́дулях ви ви́вчили привіта́ння, знайо́мство та сім'ю́ — in previous modules you learned greetings, introductions, and family. У цьо́му уро́ці ми дослі́джуємо грамати́чний рід украї́нських іме́нників:
+У попере́дніх мо́дулях ви ви́вчили привіта́ння, знайо́мство та сім'ю́ — in previous modules you learned greetings, introductions, and family. У цьо́му уро́ці ми дослі́джуємо грамати́чний рід украї́нських іме́нників — in this lesson we explore the grammatical gender of Ukrainian nouns:
 - **Визнача́ти рід іме́нників** — determine noun gender using **він / вона́ / воно́**;
 - **Розпізнава́ти закі́нчення слів** — recognise basic noun endings (consonant, **-а / -я**, **-о / -е**);
 - **Вжива́ти присві́йні слова́** — use **мій / моя́ / моє́** as a single phrase with each noun.
@@ -29,7 +29,7 @@ Treat gender as part of the noun card. Do not ask, "Who owns it?" Ask, "What
 phrase travels with this noun: **мій**, **моя́**, or **моє́**?"
 :::
 
-## Діало́ги
+## Діало́ги — Dialogues
 
 Послу́хайте та прочита́йте коро́тку розмо́ву — listen to and read the short conversation:
 
@@ -62,7 +62,7 @@ phrase travels with this noun: **мій**, **моя́**, or **моє́**?"
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
-### Пита́льні слова́
+### Пита́льні слова́ — Question words
 
 Start with the noun question.
 
@@ -94,7 +94,7 @@ Do not ask whether the speaker is a man or a woman. Ask what gender the
 Ukrainian noun has. **Мій стіл** is the same if the owner is Olena, Marko, or
 you.
 
-## Він, вона́, воно́
+## Він, вона́, воно́ — He, she, it
 
 The fastest A1 habit is the **він / вона́ / воно́** test. Endings help you guess
 when the word is new.
@@ -137,9 +137,9 @@ adjective table yet.
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
-### Підсу́мок уро́ку 1
+### Підсу́мок уро́ку 1 — Lesson 1 summary
 
-Чудо́ва ро́бота! Ви вже впе́внено розрізня́єте три роди́ слів:
+Чудо́ва ро́бота! — Great work! Ви вже впе́внено розрізня́єте три роди́ слів — you can already confidently tell apart the three genders of words:
 
 | Украї́нська | English support |
 | --- | --- |
@@ -147,9 +147,9 @@ adjective table yet.
 | **Закі́нчення слів підка́зують пра́вильний рід.** | Word endings hint at the correct gender. |
 | **Запам'ято́вуйте сло́во ра́зом із мій, моя́, моє́.** | Remember each word together with my: **мій, моя́, моє́**. |
 
-### Ва́ше мо́влення
+### Ва́ше мо́влення — Your speaking
 
-Напиші́ть 2–3 коро́ткі рядки́ про ре́чі бі́ля вас:
-1. **Це мій стіл.**
-2. **Це моя́ кни́га.**
-3. **Це моє́ вікно́.**
+Напиші́ть 2–3 коро́ткі рядки́ про ре́чі бі́ля вас — write 2–3 short lines about things near you:
+1. **Це мій стіл.** — This is my table.
+2. **Це моя́ кни́га.** — This is my book.
+3. **Це моє́ вікно́.** — This is my window.

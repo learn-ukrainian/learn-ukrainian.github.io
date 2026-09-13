@@ -1,7 +1,7 @@
 inline:
 - id: act-4
   type: fill-in
-  title: Мій предме́т
+  title: Мій предме́т — My object
   instruction: Choose мій, моя́, or моє́.
   items:
   - sentence: Це ___ стіл.
@@ -62,9 +62,9 @@ inline:
     explanation: Фо́то is neuter in this lesson.
 - id: act-201
   type: quiz
-  title: Рід рече́й навко́ло
+  title: Рід рече́й навко́ло — The gender of things around us
   instruction: Обері́ть прави́льний займе́нник (він, вона́ чи воно́) для ко́жного
-    предме́та.
+    предме́та. — Choose the correct pronoun (він, вона́, or воно́) for each object.
   items:
   - prompt: стіле́ць
     options:
@@ -116,8 +116,9 @@ inline:
       correct: false
 - id: act-202
   type: observe
-  title: Порівня́йте предме́ти та рід
-  instruction: Зверні́ть ува́гу на поєдна́ння іме́нника та присві́йного займе́нника.
+  title: Порівня́йте предме́ти та рід — Compare the objects and their gender
+  instruction: Зверні́ть ува́гу на поєдна́ння іме́нника та присві́йного займе́нника. —
+    Notice how the noun and the possessive pronoun pair up.
   pairs:
   - left: стіле́ць (при́голосний)
     right: мій стіле́ць (він)
@@ -133,8 +134,9 @@ inline:
     right: моє́ дзе́ркало (воно́)
 - id: act-203
   type: true-false
-  title: 'Пра́вда чи ні: ре́чі в кімна́ті й су́мці'
-  instruction: Ви́значте, чи пра́вильно вка́зано рід предме́та.
+  title: 'Пра́вда чи ні: ре́чі в кімна́ті й су́мці — True or false: things in the room and bag'
+  instruction: Ви́значте, чи пра́вильно вка́зано рід предме́та. —
+    Decide whether the gender of the object is stated correctly.
   statements:
   - statement: Сло́во «стіл» — це він.
     correct: true
@@ -151,7 +153,7 @@ inline:
 workbook:
 - id: act-w2
   type: match-up
-  title: Слова́ для кімна́ти й су́мки
+  title: Слова́ для кімна́ти й су́мки — Words for the room and bag
   instruction: Match each Ukrainian noun with its English cue.
   pairs:
   - left: стіл
@@ -172,7 +174,7 @@ workbook:
     right: notebook
 - id: act-w3
   type: fill-in
-  title: У мене́ є предме́ти
+  title: У мене́ є предме́ти — I have objects
   instruction: Complete the object sentence.
   items:
   - sentence: ___ мене́ є стіл.
@@ -226,8 +228,9 @@ workbook:
     explanation: Вікно́ is neuter, so use воно́.
 - id: act-204
   type: group-sort
-  title: Сорту́й ре́чі в кімна́ті й су́мці
-  instruction: 'Розподілі́ть предме́ти за ро́дом: він, вона́ чи воно́.'
+  title: Сорту́й ре́чі в кімна́ті й су́мці — Sort the things in the room and bag
+  instruction: 'Розподілі́ть предме́ти за ро́дом: він, вона́ чи воно́. —
+    Sort the objects by gender: він, вона́, or воно́.'
   groups:
   - label: він / мій
     items:
@@ -251,8 +254,8 @@ workbook:
     - фо́то
 - id: act-205
   type: unjumble
-  title: Складі́ть ре́чення з «У мене́ є»
-  instruction: Складі́ть слова́ у прави́льному поря́дку.
+  title: Складі́ть ре́чення з «У мене́ є» — Build sentences with «У мене́ є»
+  instruction: Складі́ть слова́ у прави́льному поря́дку. — Arrange the words in the correct order.
   words:
   - words:
     - У
@@ -292,8 +295,9 @@ workbook:
     answer: У тебе́ є зо́шит?
 - id: act-206
   type: odd-one-out
-  title: За́йве сло́во за ро́дом
-  instruction: Знайді́ть одне́ сло́во, яке́ відрізня́ється за грамати́чним ро́дом.
+  title: За́йве сло́во за ро́дом — Odd word out by gender
+  instruction: Знайді́ть одне́ сло́во, яке́ відрізня́ється за грамати́чним ро́дом. —
+    Find the one word that differs in grammatical gender.
   items:
   - words:
     - стіл
@@ -340,8 +344,8 @@ workbook:
 - id: act-207
   type: translate
   bonus: true
-  title: 'Бо́нус: перекладі́ть про ре́чі'
-  instruction: Перекладі́ть ре́чення на украї́нську мо́ву.
+  title: 'Бо́нус: перекладі́ть про ре́чі — Bonus: translate about things'
+  instruction: Перекладі́ть ре́чення на украї́нську мо́ву. — Translate the sentences into Ukrainian.
   items:
   - sentence: I have a table and a bed.
     answer: У мене́ є стіл і лі́жко.

@@ -1,7 +1,7 @@
 inline:
 - id: act-1
   type: quiz
-  title: Хто чи що?
+  title: Хто чи що? — Who or what?
   instruction: Choose the question or pronoun that fits the noun.
   items:
   - prompt: та́то
@@ -60,7 +60,7 @@ inline:
     explanation: Вікно́ is neuter.
 - id: act-2
   type: group-sort
-  title: Сорту́й слова́ за ро́дом
+  title: Сорту́й слова́ за ро́дом — Sort the words by gender
   instruction: Sort each noun by its safest A1 gender phrase.
   groups:
   - label: він / мій
@@ -80,7 +80,7 @@ inline:
     - мі́сто
 - id: act-5
   type: quiz
-  title: Закі́нчення підка́зує рід
+  title: Закі́нчення підка́зує рід — The ending hints at the gender
   instruction: Choose the usual gender signal from the noun ending.
   items:
   - prompt: стіл закі́нчується на при́голосний.
@@ -139,7 +139,7 @@ inline:
     explanation: Мі́сто ends in -о and is neuter.
 - id: act-3
   type: quiz
-  title: Він, вона́ чи воно́?
+  title: Він, вона́ чи воно́? — Masculine, feminine, or neuter?
   instruction: Choose the Ukrainian gender-test word.
   items:
   - prompt: стіл
@@ -216,7 +216,7 @@ inline:
     explanation: Мико́ла is a masculine name.
 workbook:
 - type: group-sort
-  title: Сорту́й за ро́дом
+  title: Сорту́й за ро́дом — Sort by gender
   instruction: Sort each noun by its A1 gender signal.
   groups:
   - label: він / мій
@@ -237,8 +237,9 @@ workbook:
   id: act-w1
 - id: act-101
   type: true-false
-  title: Пра́вда чи ні?
-  instruction: Ви́значте, чи пра́вильне тве́рдження про рід іме́нника.
+  title: Пра́вда чи ні? — True or false?
+  instruction: Ви́значте, чи пра́вильне тве́рдження про рід іме́нника. —
+    Decide whether the statement about the gender of the noun is correct.
   statements:
   - statement: «Стіл» — це іме́нник чолові́чого ро́ду (він).
     correct: true
@@ -254,8 +255,8 @@ workbook:
     correct: true
 - id: act-102
   type: quiz
-  title: Він, вона́ чи воно́?
-  instruction: Ви́беріть прави́льний займе́нник для ко́жного іме́нника.
+  title: Він, вона́ чи воно́? — Masculine, feminine, or neuter?
+  instruction: Ви́беріть прави́льний займе́нник для ко́жного іме́нника. — Choose the correct pronoun for each noun.
   items:
   - prompt: стіл
     options:
@@ -307,8 +308,9 @@ workbook:
       correct: false
 - id: act-103
   type: fill-in
-  title: Вста́вте мій, моя́ чи моє́
-  instruction: Ви́беріть прави́льний присві́йний займе́нник до ко́жного іме́нника.
+  title: Вста́вте мій, моя́ чи моє́ — Fill in мій, моя́, or моє́
+  instruction: Ви́беріть прави́льний присві́йний займе́нник до ко́жного іме́нника. —
+    Choose the correct possessive pronoun for each noun.
   items:
   - sentence: Це ___ стіл.
     answer: мій
@@ -348,8 +350,9 @@ workbook:
     - моя́
 - id: act-104
   type: unjumble
-  title: Складі́ть ре́чення
-  instruction: Розташу́йте слова́ у прави́льному поря́дку, щоб утвори́ти ре́чення.
+  title: Складі́ть ре́чення — Build the sentence
+  instruction: Розташу́йте слова́ у прави́льному поря́дку, щоб утвори́ти ре́чення. —
+    Put the words in the correct order to form a sentence.
   words:
   - words:
     - Це
@@ -384,8 +387,9 @@ workbook:
 - id: act-105
   type: translate
   bonus: true
-  title: 'Бо́нус: перекладі́ть ре́чення'
-  instruction: Перекладі́ть ре́чення з англі́йської мо́ви на украї́нську.
+  title: 'Бо́нус: перекладі́ть ре́чення — Bonus: translate the sentences'
+  instruction: Перекладі́ть ре́чення з англі́йської мо́ви на украї́нську. —
+    Translate the sentences from English into Ukrainian.
   items:
   - sentence: This is my table.
     answer: Це мій стіл.

@@ -1,11 +1,11 @@
-# Предме́ти навко́ло
+# Предме́ти навко́ло — Objects around us
 
-У пе́ршому уро́ці ви навчи́лися перевіря́ти рід: стіл — він, кни́га — вона́, вікно́ — воно́. У цьо́му уро́ці ми перехо́димо до предме́тів навко́ло нас:
+У пе́ршому уро́ці ви навчи́лися перевіря́ти рід: стіл — він, кни́га — вона́, вікно́ — воно́. In Lesson 1 you learned to test gender: **стіл** is **він**, **кни́га** is **вона́**, **вікно́** is **воно́**. У цьо́му уро́ці ми перехо́димо до предме́тів навко́ло нас — in this lesson we move on to the objects around us:
 - **Назива́ти ре́чі в кімна́ті та су́мці** — name everyday items in your room and bag;
 - **Говори́ти про володі́ння** — say what you have with **У мене́ є...** and ask with **У тебе́ є...?**;
 - **Замі́нювати іме́нники займе́нниками** — replace nouns with **він / вона́ / воно́** based on gender.
 
-## Предме́ти навко́ло
+## Предме́ти навко́ло — Objects around us
 
 Use **У мене́ є...** from the family module with objects. Read the Ukrainian
 dialogue first. Use the support table after the dialogue to check meaning.
@@ -33,9 +33,9 @@ Support after the dialogue:
 
 Read the object lines again and notice the pronoun:
 
-- **Де стіл? Він тут.**
-- **Де кни́га? Вона́ тут.**
-- **Де вікно́? Воно́ тут.**
+- **Де стіл? Він тут.** — Where is the table? It is here.
+- **Де кни́га? Вона́ тут.** — Where is the book? It is here.
+- **Де вікно́? Воно́ тут.** — Where is the window? It is here.
 
 English uses "it" for all three. Ukrainian does not. Let the Ukrainian noun
 choose the pronoun.
@@ -44,7 +44,7 @@ choose the pronoun.
 
 <!-- INJECT_ACTIVITY: act-202 -->
 
-## Що у твої́й су́мці?
+## Що у твої́й су́мці? — What is in your bag?
 
 Now move to a bag:
 
@@ -68,7 +68,7 @@ Support after the dialogue:
 
 <!-- INJECT_ACTIVITY: act-203 -->
 
-## Мій, моя́, моє́
+## Мій, моя́, моє́ — Three forms of "my"
 
 The possessive word follows the noun (that is, its form follows the noun's grammatical gender, not word order).
 
@@ -83,9 +83,9 @@ The possessive word follows the noun (that is, its form follows the noun's gramm
 
 This is the same habit from family:
 
-- **мій брат**, **мій та́то**, **мій стіл**
-- **моя́ сестра́**, **моя́ ма́ма**, **моя́ кни́га**
-- **моє́ мі́сто**, **моє́ прі́звище**, **моє́ вікно́**
+- **мій брат**, **мій та́то**, **мій стіл** — my brother, my dad, my table
+- **моя́ сестра́**, **моя́ ма́ма**, **моя́ кни́га** — my sister, my mom, my book
+- **моє́ мі́сто**, **моє́ прі́звище**, **моє́ вікно́** — my city, my surname, my window
 
 If you want to say "my room," use **моя́ кімна́та**. If you want to say "my
 chair," use **мій стіле́ць**. If you want to say "my bed," use **моє́ лі́жко**.
@@ -97,9 +97,9 @@ pair: **стіл -> мій стіл**, **кни́га -> моя́ кни́га**
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-### Підсу́мок уро́ку 2
+### Підсу́мок уро́ку 2 — Lesson 2 summary
 
-Чудо́во! Тепе́р ви вмі́єте опи́сувати свій про́стір украї́нською мо́вою:
+Чудо́во! — Great! Тепе́р ви вмі́єте опи́сувати свій про́стір украї́нською мо́вою — now you can describe your space in Ukrainian:
 
 | Украї́нська | English support |
 | --- | --- |
@@ -107,9 +107,9 @@ pair: **стіл -> мій стіл**, **кни́га -> моя́ кни́га**
 | **Констру́кція «У мене́ є...» поє́днується з усіма́ рода́ми.** | The phrase "I have..." pairs with all genders. |
 | **Присві́йне сло́во узго́джується з ро́дом іме́нника.** | The possessive word matches the noun's gender. |
 
-### Ва́ше мо́влення
+### Ва́ше мо́влення — Your speaking
 
-Напиші́ть 2–3 коро́ткі рядки́ про свою́ кімна́ту чи су́мку:
-1. **Це моя́ кімна́та.**
-2. **У мене́ є стіл і лі́жко.**
-3. **Ось мій телефо́н і моя́ су́мка.**
+Напиші́ть 2–3 коро́ткі рядки́ про свою́ кімна́ту чи су́мку — write 2–3 short lines about your room or bag:
+1. **Це моя́ кімна́та.** — This is my room.
+2. **У мене́ є стіл і лі́жко.** — I have a table and a bed.
+3. **Ось мій телефо́н і моя́ су́мка.** — Here are my phone and my bag.

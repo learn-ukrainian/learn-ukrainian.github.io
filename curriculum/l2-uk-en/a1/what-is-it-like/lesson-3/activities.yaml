@@ -1,8 +1,9 @@
 inline:
 - id: act-301
   type: match-up
-  title: Узго́дження прикме́тників
-  instruction: З'єдна́йте прикме́тник із відповідним іме́нником за ро́дом.
+  title: Узго́дження прикме́тників — Adjective agreement
+  instruction: З'єдна́йте прикме́тник із відповідним іме́нником за ро́дом. —
+    Match the adjective with the matching noun by gender.
   pairs:
   - left: ціка́вий
     right: атлас
@@ -18,8 +19,9 @@ inline:
     right: вікно́
 - id: act-302
   type: fill-in
-  title: Фо́рми прикме́тників
-  instruction: Обері́ть правильне закі́нчення або́ сло́во для ко́жного речення.
+  title: Фо́рми прикме́тників — Adjective forms
+  instruction: Обері́ть правильне закі́нчення або́ сло́во для ко́жного речення. —
+    Choose the correct ending or word for each sentence.
   items:
   - sentence: У мене́ є нов__ стіл.
     answer: ий
@@ -65,8 +67,8 @@ inline:
     explanation: Ла́мпа — жіно́чий рід, тому́ стара́ ла́мпа.
 - id: act-303
   type: group-sort
-  title: Розпо́діл за родами
-  instruction: Розподілі́ть словосполу́чення за родами іме́нників.
+  title: Розпо́діл за родами — Sorting by genders
+  instruction: Розподілі́ть словосполу́чення за родами іме́нників. — Sort the phrases by noun gender.
   groups:
   - label: Чолові́чий рід (Він)
     items:
@@ -82,8 +84,8 @@ inline:
     - га́рне фо́то
 - id: act-304
   type: quiz
-  title: Обери́ то́чний о́пис
-  instruction: Обері́ть правильний варіа́нт о́пису предме́та.
+  title: Обери́ то́чний о́пис — Choose the accurate description
+  instruction: Обері́ть правильний варіа́нт о́пису предме́та. — Choose the correct description of the object.
   items:
   - prompt: Яки́й атлас?
     options:
@@ -141,8 +143,9 @@ inline:
     explanation: Фо́то — іме́нник сере́днього ро́ду.
 - id: act-305
   type: odd-one-out
-  title: Знайди́ за́йве
-  instruction: Знайді́ть словосполу́чення, яке́ відрізня́ється за грамати́чним ро́дом.
+  title: Знайди́ за́йве — Find the odd one out
+  instruction: Знайді́ть словосполу́чення, яке́ відрізня́ється за грамати́чним ро́дом. —
+    Find the phrase that differs in grammatical gender.
   items:
   - options:
     - text: ціка́ва кни́га
@@ -207,7 +210,7 @@ inline:
 workbook:
 - id: act-w5
   type: translate
-  title: Обери́ украї́нський рядо́к
+  title: Обери́ украї́нський рядо́к — Choose the Ukrainian line
   instruction: Choose the Ukrainian sentence that matches the English cue.
   items:
   - source: My room is small but nice.
@@ -266,7 +269,7 @@ workbook:
     explanation: Plural phrases use ціка́ві.
 - id: act-w6
   type: true-false
-  title: Швидка́ пере́ві́рка
+  title: Швидка́ пере́ві́рка — Quick check
   instruction: Decide if the statement is right.
   items:
   - statement: Стіл нови́й.
@@ -289,8 +292,8 @@ workbook:
     explanation: This no-є present-tense frame is normal.
 - id: act-w301
   type: fill-in
-  title: Закрі́плення закі́нчень
-  instruction: Вста́вте правильну фо́рму прикме́тника.
+  title: Закрі́плення закі́нчень — Practicing the endings
+  instruction: Вста́вте правильну фо́рму прикме́тника. — Insert the correct adjective form.
   items:
   - sentence: Сергі́й ду́же ___ хло́пчик.
     answer: розу́мний
@@ -336,8 +339,9 @@ workbook:
     explanation: Вікно́ — сере́дній рід.
 - id: act-w302
   type: unjumble
-  title: Склади речення
-  instruction: Розста́вте слова́ у правильному поря́дку, щоб утвори́ти речення.
+  title: Склади речення — Build the sentence
+  instruction: Розста́вте слова́ у правильному поря́дку, щоб утвори́ти речення. —
+    Put the words in the correct order to form a sentence.
   items:
   - words:
     - Це
@@ -385,8 +389,8 @@ workbook:
     explanation: Кімна́та мале́нька, але́ га́рна.
 - id: act-w303
   type: match-up
-  title: Іме́нник та озна́ка
-  instruction: Поєдна́йте предме́т із відповідним о́писом.
+  title: Іме́нник та озна́ка — Noun and quality
+  instruction: Поєдна́йте предме́т із відповідним о́писом. — Match the object with the matching description.
   pairs:
   - left: нови́й стіл
     right: чи́стий
@@ -402,8 +406,8 @@ workbook:
     right: ціка́ва
 - id: act-w304
   type: error-correction
-  title: Ви́прав помилки́ в ро́дах
-  instruction: Знайді́ть і ви́правте по́ми́лку в узго́дженні ро́ду.
+  title: Ви́прав помилки́ в ро́дах — Fix the gender mistakes
+  instruction: Знайді́ть і ви́правте по́ми́лку в узго́дженні ро́ду. — Find and fix the gender agreement mistake.
   items:
   - sentence: Це нова́ атлас.
     error: нова́
@@ -455,8 +459,8 @@ workbook:
     explanation: Вікно́ — сере́дній рід.
 - id: act-w305
   type: group-sort
-  title: Сортува́ння за озна́ками
-  instruction: Розподілі́ть прикме́тники за гру́пами озна́к.
+  title: Сортува́ння за озна́ками — Sorting by qualities
+  instruction: Розподілі́ть прикме́тники за гру́пами озна́к. — Sort the adjectives into groups of qualities.
   groups:
   - label: Розмір і вік
     items:

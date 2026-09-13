@@ -1,7 +1,7 @@
 inline:
 - id: act-9
   type: quiz
-  title: Фо́рми профе́сій
+  title: Фо́рми профе́сій — Profession forms
   instruction: Choose the natural profession form.
   items:
   - prompt: She is a teacher.
@@ -42,9 +42,12 @@ inline:
     explanation: Акто́рка is the feminine profession form.
 - id: act-301
   type: match-up
-  title: Чолові́чі та жіно́чі фо́рми профе́сій
+  title: Чолові́чі та жіно́чі фо́рми профе́сій — Masculine and feminine profession forms
   instruction: 'З''єдна́йте чолові́чу фо́рму профе́сії з відпові́дним фемініти́вом
-    (зберіга́йте початко́ву лі́теру: вчи́тель → вчи́телька, учи́тель → учи́телька).'
+    (зберіга́йте початко́ву лі́теру: вчи́тель → вчи́телька, учи́тель → учи́телька). —
+    Match the masculine profession form with the corresponding feminine
+    form (keep the initial letter: вчи́тель → вчи́телька, учи́тель →
+    учи́телька).'
   pairs:
   - left: студе́нт
     right: студе́нтка
@@ -60,8 +63,8 @@ inline:
     right: співа́чка
 - id: act-302
   type: fill-in
-  title: Він чи вона́ для люде́й
-  instruction: 'Вста́вте прави́льний займе́нник: він чи вона́.'
+  title: Він чи вона́ для люде́й — He or she for people
+  instruction: 'Вста́вте прави́льний займе́нник: він чи вона́. — Insert the correct pronoun: він or вона́.'
   items:
   - sentence: Мико́ла — чолові́к. ___ студе́нт.
     answer: Він
@@ -95,8 +98,9 @@ inline:
     - Він
 - id: act-303
   type: true-false
-  title: 'Пра́вда чи ні: чолові́чі імена́ та ви́нятки'
-  instruction: Ви́значте, чи прави́льне тве́рдження про рід слів.
+  title: 'Пра́вда чи ні: чолові́чі імена́ та ви́нятки — True or false: masculine names and exceptions'
+  instruction: Ви́значте, чи прави́льне тве́рдження про рід слів. —
+    Decide whether the statement about word gender is correct.
   statements:
   - statement: Ім'я́ «Мико́ла» — це він.
     correct: true
@@ -112,7 +116,7 @@ inline:
     correct: true
 workbook:
 - type: error-correction
-  title: Ви́прав па́стки ро́ду
+  title: Ви́прав па́стки ро́ду — Fix the gender traps
   instruction: Choose the safer Ukrainian sentence.
   items:
   - sentence: Мій кни́га, мій ру́чка (якщо́ гово́рить чолові́к).
@@ -180,7 +184,7 @@ workbook:
     explanation: Мене́ зва́ти... is the safe name phrase.
   id: act-w4
 - type: quiz
-  title: Переві́рка ро́ду
+  title: Переві́рка ро́ду — Gender check
   instruction: Choose the Ukrainian gender-test word. These are diagnostic props,
     not new active vocabulary.
   items:
@@ -232,8 +236,9 @@ workbook:
   id: act-w5
 - id: act-304
   type: group-sort
-  title: 'Розподілі́ть слова́: він чи вона́'
-  instruction: 'Розподілі́ть профе́сії та імена́ за ро́дом: він чи вона́.'
+  title: 'Розподілі́ть слова́: він чи вона́ — Sort the words: він or вона́'
+  instruction: 'Розподілі́ть профе́сії та імена́ за ро́дом: він чи вона́. —
+    Sort the professions and names by gender: він or вона́.'
   groups:
   - label: він (чолові́чий рід)
     items:
@@ -253,8 +258,8 @@ workbook:
     - Окса́на
 - id: act-305
   type: unjumble
-  title: Складі́ть ре́чення з профе́сіями
-  instruction: Розташу́йте слова́, щоб утвори́ти прави́льне ре́чення.
+  title: Складі́ть ре́чення з профе́сіями — Build sentences with professions
+  instruction: Розташу́йте слова́, щоб утвори́ти прави́льне ре́чення. — Arrange the words to form a correct sentence.
   words:
   - words:
     - Вона́
@@ -290,8 +295,8 @@ workbook:
     answer: Мене́ зва́ти Мико́ла.
 - id: act-306
   type: odd-one-out
-  title: За́йве сло́во за ро́дом
-  instruction: Знайді́ть одне́ за́йве сло́во за грамати́чним ро́дом.
+  title: За́йве сло́во за ро́дом — Odd word out by gender
+  instruction: Знайді́ть одне́ за́йве сло́во за грамати́чним ро́дом. — Find the one odd word out by grammatical gender.
   items:
   - words:
     - вчи́телька
@@ -338,8 +343,9 @@ workbook:
 - id: act-307
   type: translate
   bonus: true
-  title: 'Бо́нус: перекладі́ть про люде́й і ре́чі'
-  instruction: Перекладі́ть ре́чення з англі́йської мо́ви на украї́нську.
+  title: 'Бо́нус: перекладі́ть про люде́й і ре́чі — Bonus: translate about people and things'
+  instruction: Перекладі́ть ре́чення з англі́йської мо́ви на украї́нську. —
+    Translate the sentences from English into Ukrainian.
   items:
   - sentence: She is a teacher (vchytelka).
     answer: Вона́ вчи́телька.

@@ -1,7 +1,7 @@
 inline:
 - id: act-1
   type: quiz
-  title: Яке́ пита́льне сло́во?
+  title: Яке́ пита́льне сло́во? — Which question word?
   instruction: Choose the question word that fits the noun.
   items:
   - prompt: стіл
@@ -60,7 +60,7 @@ inline:
     explanation: Вікно́ is neuter.
 - id: act-2
   type: fill-in
-  title: Заверши́ прикме́тник
+  title: Заверши́ прикме́тник — Complete the adjective
   instruction: Choose the adjective ending that matches the noun.
   items:
   - sentence: ве́лик__ стіл
@@ -135,8 +135,9 @@ inline:
     explanation: Plural A1 phrases use нові́.
 - id: act-101
   type: match-up
-  title: Пита́ння та переклад
-  instruction: З'єдна́йте украї́нське пита́ння з англі́йським перекладом.
+  title: Пита́ння та переклад — Question and translation
+  instruction: З'єдна́йте украї́нське пита́ння з англі́йським перекладом. —
+    Match the Ukrainian question with its English translation.
   pairs:
   - left: Яки́й це стіл?
     right: What kind of table is this?
@@ -152,7 +153,7 @@ inline:
     right: What kind of photo is this?
 - id: act-3
   type: group-sort
-  title: Сорту́й фра́зи
+  title: Сорту́й фра́зи — Sort the phrases
   instruction: Sort each adjective-noun phrase by the question it answers.
   groups:
   - label: Яки́й?
@@ -181,8 +182,9 @@ inline:
     - деше́ві листі́вки
 - id: act-102
   type: true-false
-  title: Пра́вда чи ні?
-  instruction: Ви́значте, чи правильне узго́дження прикме́тника з іме́нником.
+  title: Пра́вда чи ні? — True or false?
+  instruction: Ви́значте, чи правильне узго́дження прикме́тника з іме́нником. —
+    Decide whether the adjective agrees correctly with the noun.
   statements:
   - statement: Стіл нови́й.
     answer: true
@@ -208,7 +210,7 @@ inline:
 workbook:
 - id: act-w1
   type: quiz
-  title: Моде́ль речення
+  title: Моде́ль речення — Sentence model
   instruction: Choose the natural A1 sentence.
   items:
   - prompt: The book is new.
@@ -267,7 +269,7 @@ workbook:
     explanation: Plural phrases use ціка́ві.
 - id: act-w2
   type: fill-in
-  title: Опиши́ кімна́ту
+  title: Опиши́ кімна́ту — Describe the room
   instruction: Complete the short room lines.
   items:
   - sentence: Моя́ кімна́та ___ і сві́тла.
@@ -314,8 +316,9 @@ workbook:
     explanation: Стіл is masculine.
 - id: act-w101
   type: quiz
-  title: Обери́ пита́ння
-  instruction: Обері́ть правильне пита́льне сло́во для по́даного іме́нника.
+  title: Обери́ пита́ння — Choose the question
+  instruction: Обері́ть правильне пита́льне сло́во для по́даного іме́нника. —
+    Choose the correct question word for the given noun.
   items:
   - prompt: стіл
     options:
@@ -373,8 +376,8 @@ workbook:
     explanation: Кімна́та — жіно́чий рід.
 - id: act-w102
   type: fill-in
-  title: Встав закі́нчення
-  instruction: Дода́йте правильне закі́нчення прикме́тника.
+  title: Встав закі́нчення — Insert the ending
+  instruction: Дода́йте правильне закі́нчення прикме́тника. — Add the correct adjective ending.
   items:
   - sentence: Це нов___ атлас.
     answer: ий
@@ -420,8 +423,8 @@ workbook:
     explanation: Вікно́ — воно́ (сере́дній рід).
 - id: act-w103
   type: group-sort
-  title: Розпо́діли за закі́нченням
-  instruction: Розподілі́ть прикме́тники за закі́нченням ро́ду.
+  title: Розпо́діли за закі́нченням — Sort by ending
+  instruction: Розподілі́ть прикме́тники за закі́нченням ро́ду. — Sort the adjectives by gender ending.
   groups:
   - label: -ий (чолові́чий рід)
     items:
@@ -440,8 +443,8 @@ workbook:
     - старе́
 - id: act-w104
   type: error-correction
-  title: Ви́прав закі́нчення
-  instruction: Знайді́ть і ви́правте по́ми́лку в узго́дженні.
+  title: Ви́прав закі́нчення — Fix the ending
+  instruction: Знайді́ть і ви́правте по́ми́лку в узго́дженні. — Find and fix the agreement mistake.
   items:
   - sentence: Це вели́ка стіл.
     error: вели́ка
@@ -493,8 +496,8 @@ workbook:
     explanation: Плака́т — чолові́чий рід, тому́ вели́кий плака́т.
 - id: act-w105
   type: translate
-  title: 'Бо́нус: переклад'
-  instruction: Обері́ть правильний переклад украї́нською мо́вою.
+  title: 'Бо́нус: переклад — Bonus: translation'
+  instruction: Обері́ть правильний переклад украї́нською мо́вою. — Choose the correct Ukrainian translation.
   items:
   - source: A new table
     options:

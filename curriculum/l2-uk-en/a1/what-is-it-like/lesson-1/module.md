@@ -1,4 +1,4 @@
-# Яки́й він?
+# Яки́й він? — What is it like?
 
 У цьому́ уроці ви навчите́ся опи́сувати ре́чі навко́ло себе́ — in this lesson you will learn how to describe things around you:
 - **Ста́вити запита́ння** — ask **яки́й? / яка? / яке́? / які́?**;
@@ -23,7 +23,7 @@ By the end, you can:
 Keep the scope small. Today is not a full adjective-declension lesson. You are
 training the first visible pattern: noun gender plus adjective ending.
 
-## Діало́ги
+## Діало́ги — Dialogues
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
@@ -39,10 +39,10 @@ Ukrainian asks it four ways because the noun still matters.
 
 Read the question and the answer as a pair:
 
-- **Яки́й стіл?** — **Вели́кий стіл.**
-- **Яка кни́га?** — **Ціка́ва кни́га.**
-- **Яке́ фо́то?** — **Старе́ фо́то.**
-- **Які́ ре́чі?** — **Но́ві ре́чі.**
+- **Яки́й стіл?** — **Вели́кий стіл.** — What kind of table? — A big table.
+- **Яка кни́га?** — **Ціка́ва кни́га.** — What kind of book? — An interesting book.
+- **Яке́ фо́то?** — **Старе́ фо́то.** — What kind of photo? — An old photo.
+- **Які́ ре́чі?** — **Но́ві ре́чі.** — What kind of things? — New things.
 
 At a weekend book fair, Sofia and Taras are looking at a small table:
 
@@ -104,7 +104,7 @@ not a word-for-word English sentence with "is."
 
 <!-- INJECT_ACTIVITY: act-101 -->
 
-## Яки́й? Яка? Яке́?
+## Яки́й? Яка? Яке́? — What kind?
 
 Use the same gender habit from **мій / моя́ / моє́**. If the noun is masculine,
 the adjective usually ends in **-ий**. If the noun is feminine, use **-а**. If
@@ -124,7 +124,7 @@ Colors and soft-looking adjectives come next. If you see **си́ній** or
 **си́нє** today, treat it as a preview word, not a new pattern to practice. The
 productive pattern here is still **-ий / -а / -е / -і**.
 
-For **прикме́тники в множині́**, the first A1 pattern is friendly: masculine,
+For **прикме́тники в множині́** (adjectives in the plural), the first A1 pattern is friendly: masculine,
 feminine, and neuter nouns all use **-і** in the plural. Ask **які́?** and say
 **нові́ столи́**, **нові́ кни́ги**, **нові́ фо́то**. Later you will meet more plural
 details; today, just recognize **які́?** plus **-і**.
@@ -139,13 +139,13 @@ the ending.
 
 <!-- INJECT_ACTIVITY: act-102 -->
 
-### Підсумок уро́ку
+### Підсумок уро́ку — Lesson summary
 
-Переві́рте себе́ — check yourself. Поєдна́йте іме́нник та прикме́тник:
-- **стіл** — чолові́чий рід: **нови́й стіл**, **вели́кий стіл**;
-- **кни́га** — жіно́чий рід: **нова́ кни́га**, **вели́ка кни́га**;
-- **фо́то** — сере́дній рід: **нове́ фо́то**, **вели́ке фо́то**;
-- **кни́ги** — множина́: **нові́ кни́ги**, **вели́кі кни́ги**.
+Переві́рте себе́ — check yourself. Поєдна́йте іме́нник та прикме́тник — match the noun and the adjective:
+- **стіл** — чолові́чий рід (masculine): **нови́й стіл**, **вели́кий стіл**;
+- **кни́га** — жіно́чий рід (feminine): **нова́ кни́га**, **вели́ка кни́га**;
+- **фо́то** — сере́дній рід (neuter): **нове́ фо́то**, **вели́ке фо́то**;
+- **кни́ги** — множина́ (plural): **нові́ кни́ги**, **вели́кі кни́ги**.
 
 Коро́ткий о́пис предме́тів — short description of things:
 
@@ -156,4 +156,4 @@ the ending.
 | **Там чи́сте вікно́.** | Over there is a clean window. |
 | **Це га́рні ре́чі.** | These are nice things. |
 
-Тепе́р ви мо́жете ле́гко запита́ти **Яки́й стіл?**, **Яка кни́га?** або́ **Яке́ вікно́?** і назва́ти ї́хній о́пис.
+Тепе́р ви мо́жете ле́гко запита́ти **Яки́й стіл?**, **Яка кни́га?** або́ **Яке́ вікно́?** і назва́ти ї́хній о́пис — now you can easily ask **Яки́й стіл?**, **Яка кни́га?**, or **Яке́ вікно́?** and say what they are like.
