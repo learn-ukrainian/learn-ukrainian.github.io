@@ -25,13 +25,14 @@ const moduleCount = (id: string) => {
 // only when its id is here, so a listed track without a landing (e.g. the lit-*
 // subgenres) stays plain text instead of linking to a 404.
 const LANDING_TRACKS = new Set([
-  'a1', 'a2', 'b1', 'b2', 'c1', 'c2',
+  'a1', 'a1-v1', 'a2', 'b1', 'b2', 'c1', 'c2',
   'folk', 'bio', 'hist', 'istorio', 'lit', 'oes', 'ruth',
 ]);
 const trackHref = (id: string) => (LANDING_TRACKS.has(id) ? `/${id}/` : undefined);
 
 const coreTracks: TrackRow[] = ([
-  { id: 'a1', label: 'A1', titleKey: 'home.track.beginner', statusKey: 'status.preview' },
+  { id: 'a1', label: 'A1', titleKey: 'home.track.a1New', statusKey: 'status.preview' },
+  { id: 'a1-v1', label: 'A1', titleKey: 'home.track.a1Previous', statusKey: 'status.released' },
   { id: 'a2', label: 'A2', titleKey: 'home.track.preIntermediate', statusKey: 'status.released' },
   { id: 'b1', label: 'B1', titleKey: 'home.track.intermediate', statusKey: 'status.released' },
   { id: 'b2', label: 'B2', titleKey: 'home.track.upperIntermediate', statusKey: 'status.released' },
@@ -76,6 +77,7 @@ const seminarTracks: TrackRow[] = ([
       </p>
       <div class="home-actions">
         <a class="home-primary" href="/a1/"><ChromeText k="home.actionStartA1" /></a>
+        <a class="home-secondary" href="/a1-v1/"><ChromeText k="home.actionOpenA1Previous" /></a>
         <a class="home-secondary" href="/b2/"><ChromeText k="home.actionOpenB2" /></a>
       </div>
     </div>
@@ -96,8 +98,13 @@ const seminarTracks: TrackRow[] = ([
     <div class="lu-card-grid">
       <a class="lu-card" href="/a1/">
         <span class="track-badge a1">A1</span>
-        <h3><ChromeText k="home.track.beginner" /></h3>
+        <h3><ChromeText k="home.track.a1New" /></h3>
         <p><ChromeText k="home.cardA1Desc" /></p>
+      </a>
+      <a class="lu-card" href="/a1-v1/">
+        <span class="track-badge a1">A1</span>
+        <h3><ChromeText k="home.track.a1Previous" /></h3>
+        <p><ChromeText k="home.cardA1PreviousDesc" /></p>
       </a>
       <a class="lu-card" href="/a2/">
         <span class="track-badge a2">A2</span>
