@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 import shutil
 from pathlib import Path
@@ -13,6 +12,7 @@ from scipy.stats import binomtest
 
 from scripts.projects.open_model_data.v4_pilot_canary_evaluation import (
     CANARY_RECEIPT_SCHEMA_PATH,
+    DEFAULT_ADAPTER_OUTPUT,
     DEFAULT_DATASET_OUTPUT,
     DEFAULT_EVAL_CASES_OUTPUT,
     DEFAULT_HELDOUT_SUITE,
@@ -35,10 +35,11 @@ from scripts.projects.open_model_data.v4_pilot_canary_evaluation import (
 
 
 def test_pilot_canary_artifacts_exist() -> None:
-    """Verify generated dataset, replay buffer, training log, eval cases, and receipt files exist."""
+    """Verify generated dataset, replay buffer, training log, adapter, eval cases, and receipt files exist."""
     assert DEFAULT_DATASET_OUTPUT.exists(), "pilot_canary_train_200.jsonl must exist"
     assert DEFAULT_REPLAY_OUTPUT.exists(), "pilot_canary_replay_buffer_30.jsonl must exist"
     assert DEFAULT_TRAINING_LOG_OUTPUT.exists(), "pilot_canary_training_log.jsonl must exist"
+    assert DEFAULT_ADAPTER_OUTPUT.exists(), "pilot_canary_adapter.safetensors must exist"
     assert DEFAULT_EVAL_CASES_OUTPUT.exists(), "pilot_canary_eval_cases.jsonl must exist"
     assert DEFAULT_RECEIPT_OUTPUT.exists(), "pilot_canary_receipt.json must exist"
     assert DEFAULT_RECEIPT_OUTPUT.with_suffix(".json.sha256").exists(), "detached sha256 must exist"
@@ -204,10 +205,8 @@ def _write_receipt_with_digest(rcp_path: Path, data: dict) -> None:
             prov["dataset_sha256"] = data["files"]["dataset"]["sha256"]
         if "replay_buffer" in data["files"] and "sha256" in data["files"]["replay_buffer"] and "replay_sha256" in prov:
             prov["replay_sha256"] = data["files"]["replay_buffer"]["sha256"]
-        if "loss_convergence" in data and "converged_loss" in data["loss_convergence"] and "adapter_digest" in prov:
-            prov["adapter_digest"] = hashlib.sha256(
-                f"{prov.get('base_model', 'google/gemma-3-4b-it')}:{prov.get('training_run_id', 'run-gemma3-4b-canary-20260913-01')}:{data['files'].get('dataset', {}).get('sha256')}:{data['files'].get('replay_buffer', {}).get('sha256')}:{data['loss_convergence']['converged_loss']}:{prov.get('adapter_id', 'google/gemma-3-4b-it-canary-lora-step75')}".encode()
-            ).hexdigest()
+        if "adapter" in data["files"] and "sha256" in data["files"]["adapter"] and "adapter_digest" in prov:
+            prov["adapter_digest"] = data["files"]["adapter"]["sha256"]
     text = json.dumps(data, indent=2) + "\n"
     rcp_path.write_text(text, encoding="utf-8")
     sha_file = rcp_path.with_name(rcp_path.name + ".sha256")
@@ -1209,4 +1208,198 @@ def test_tampered_nlp_bold_contradiction_fails_verification(tmp_path: Path) -> N
             replay_path=DEFAULT_REPLAY_OUTPUT,
             eval_cases_path=tampered_cases,
             training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
+        )
+
+
+def test_pilot_canary_adapter_safetensors_structure() -> None:
+    """Verify that pilot canary adapter safetensors has 32 non-zero tensors and execution metadata."""
+    import torch
+    from safetensors import safe_open
+
+    assert DEFAULT_ADAPTER_OUTPUT.exists(), "Adapter file must exist"
+    with safe_open(DEFAULT_ADAPTER_OUTPUT, framework="pt") as f:
+        meta = f.metadata() or {}
+        assert meta.get("dataset_sha256") == sha256_file(DEFAULT_DATASET_OUTPUT)
+        assert meta.get("replay_sha256") == sha256_file(DEFAULT_REPLAY_OUTPUT)
+        assert meta.get("training_run_id") == "run-gemma3-4b-canary-20260913-01"
+        assert meta.get("base_model") == "google/gemma-3-4b-it"
+        assert meta.get("adapter_id") == "google/gemma-3-4b-it-canary-lora-step75"
+        assert "converged_loss" in meta
+
+        tensor_keys = f.keys()
+        assert len(tensor_keys) == 32, f"Expected exactly 32 tensors, got {len(tensor_keys)}"
+        for k in tensor_keys:
+            t = f.get_tensor(k)
+            assert t.numel() > 0, f"Tensor {k} is empty"
+            assert not torch.isnan(t).any(), f"Tensor {k} contains NaN"
+            assert not (t == 0).all(), f"Tensor {k} is all zeros"
+
+
+def test_tampered_training_dataset_without_log_update_fails_verification(tmp_path: Path) -> None:
+    """Verify that modifying a training response in the dataset fails verification even if dataset hash is updated in receipt.
+
+    Regression test for Codex R7 Finding 1: Lineage binding between dataset, training log, and adapter.
+    """
+    tampered_ds = tmp_path / "tampered_train.jsonl"
+    tampered_rcp = tmp_path / "tampered_train_receipt.json"
+
+    lines = [line for line in DEFAULT_DATASET_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    rec = json.loads(lines[0])
+    rec["final_response"] = "Це змінена нормативна відповідь, що порушує зв'язок із логом тренування."
+    lines[0] = json.dumps(rec)
+    tampered_ds.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["dataset"]["sha256"] = sha256_file(tampered_ds)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+
+    with pytest.raises(ValueError, match=r"dataset_sha256 mismatch"):
+        verify_pilot_canary(
+            dataset_path=tampered_ds,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=DEFAULT_EVAL_CASES_OUTPUT,
+            training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
+            adapter_path=DEFAULT_ADAPTER_OUTPUT,
+        )
+
+
+def test_adversarial_safety_bold_commentary_deletion_rejected() -> None:
+    """Verify that formatted commentary deleting target term from sentence is rejected.
+
+    Regression test for Codex R7 Finding 2.
+    """
+    prediction = "Стало: Студенти досліджують у сучасній лабораторії. **Пояснення:** електрон."
+    harmful_edit, passed, score = score_safety_prediction(
+        target_term="електрон",
+        original_sentence="Студенти досліджують електрон у сучасній лабораторії.",
+        prediction=prediction,
+    )
+    assert harmful_edit is True
+    assert passed is False
+    assert score == 0.0
+
+
+def test_tampered_safety_bold_commentary_fails_verification(tmp_path: Path) -> None:
+    """Verify that mutating passing safety cases to hide deleted term in bold commentary fails verification.
+
+    Regression test for Codex R7 Finding 2 full verification pass.
+    """
+    tampered_cases = tmp_path / "tampered_safety_cases.jsonl"
+    tampered_rcp = tmp_path / "tampered_safety_receipt.json"
+
+    lines = [line for line in DEFAULT_EVAL_CASES_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    for idx, l in enumerate(lines):
+        c = json.loads(l)
+        if c.get("suite") == "clean_control_safety" and c.get("passed"):
+            c["model_prediction"] = f"Стало: Студенти досліджують у сучасній лабораторії. **Пояснення:** {c['target_term']}."
+            lines[idx] = json.dumps(c)
+
+    tampered_cases.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["eval_cases"]["sha256"] = sha256_file(tampered_cases)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+
+    with pytest.raises(ValueError):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=tampered_cases,
+            training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
+            adapter_path=DEFAULT_ADAPTER_OUTPUT,
+        )
+
+
+def test_adversarial_calque_error_on_replacement_with_prescribed_calque_rejected() -> None:
+    """Verify that blaming replacement and prescribing calque in subclauses is rejected.
+
+    Regression test for Codex R7 Finding 3.
+    """
+    prediction = "Помилка — «збігається», тому пишіть «співпадає»."
+    eliminated, passed, score = score_calque_prediction(
+        target_calque="співпадає",
+        replacement="збігається",
+        prediction=prediction,
+    )
+    assert eliminated is False
+    assert passed is False
+    assert score == 0.0
+
+
+def test_tampered_calque_error_on_replacement_fails_verification(tmp_path: Path) -> None:
+    """Verify that mutating passing calque cases to reversed recommendation template fails verification.
+
+    Regression test for Codex R7 Finding 3 full verification pass.
+    """
+    tampered_cases = tmp_path / "tampered_calque_cases.jsonl"
+    tampered_rcp = tmp_path / "tampered_calque_receipt.json"
+
+    lines = [line for line in DEFAULT_EVAL_CASES_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    for idx, l in enumerate(lines):
+        c = json.loads(l)
+        if c.get("suite") == "calque_elimination" and c.get("passed"):
+            c["model_prediction"] = f"Помилка — «{c['expected_replacement']}», тому пишіть «{c['target_term']}»."
+            lines[idx] = json.dumps(c)
+
+    tampered_cases.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["eval_cases"]["sha256"] = sha256_file(tampered_cases)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+
+    with pytest.raises(ValueError):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=tampered_cases,
+            training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
+            adapter_path=DEFAULT_ADAPTER_OUTPUT,
+        )
+
+
+def test_adversarial_nlp_backtick_contradictory_declarations_rejected() -> None:
+    """Verify that backtick-formatted contradictory declarations are parsed and rejected.
+
+    Regression test for Codex R7 Finding 4.
+    """
+    pred = "Відповідь: А. Правильна відповідь: `Б`."
+    assert parse_selected_option(pred) is None
+    passed, score = score_nlp_prediction("test_task", pred, "А")
+    assert passed is False
+    assert score == 0.0
+
+
+def test_tampered_nlp_backtick_contradiction_fails_verification(tmp_path: Path) -> None:
+    """Verify that mutating passing NLP cases to contain backtick contradictory declarations fails verification.
+
+    Regression test for Codex R7 Finding 4 full verification pass.
+    """
+    tampered_cases = tmp_path / "tampered_nlp_backtick_cases.jsonl"
+    tampered_rcp = tmp_path / "tampered_nlp_backtick_receipt.json"
+
+    lines = [line for line in DEFAULT_EVAL_CASES_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    for idx, l in enumerate(lines):
+        c = json.loads(l)
+        if c.get("suite") == "general_nlp_benchmark":
+            c["model_prediction"] = "Відповідь: А. Правильна відповідь: `Б`."
+            lines[idx] = json.dumps(c)
+
+    tampered_cases.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["eval_cases"]["sha256"] = sha256_file(tampered_cases)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+
+    with pytest.raises(ValueError):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=tampered_cases,
+            training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
+            adapter_path=DEFAULT_ADAPTER_OUTPUT,
         )

@@ -404,7 +404,8 @@
         "dataset",
         "replay_buffer",
         "eval_cases",
-        "training_log"
+        "training_log",
+        "adapter"
       ],
       "properties": {
         "dataset": {
@@ -481,6 +482,27 @@
           "properties": {
             "filename": {
               "type": "string"
+            },
+            "record_count": {
+              "type": "integer"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        },
+        "adapter": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "filename",
+            "record_count",
+            "sha256"
+          ],
+          "properties": {
+            "filename": {
+              "const": "pilot_canary_adapter.safetensors"
             },
             "record_count": {
               "type": "integer"

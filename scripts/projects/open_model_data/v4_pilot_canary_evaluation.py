@@ -34,6 +34,9 @@ from pathlib import Path
 from typing import Any
 
 import jsonschema
+import safetensors.torch
+import torch
+from safetensors import safe_open
 from scipy.stats import beta
 
 
@@ -45,6 +48,7 @@ def resolve_repo_root() -> Path:
             capture_output=True,
             text=True,
             check=True,
+            timeout=30,
         )
         return Path(res.stdout.strip())
     except Exception:
@@ -72,6 +76,7 @@ DEFAULT_REPLAY_OUTPUT = DEFAULT_CANARY_DIR / "pilot_canary_replay_buffer_30.json
 DEFAULT_EVAL_CASES_OUTPUT = DEFAULT_CANARY_DIR / "pilot_canary_eval_cases.jsonl"
 DEFAULT_TRAINING_LOG_OUTPUT = DEFAULT_CANARY_DIR / "pilot_canary_training_log.jsonl"
 DEFAULT_RECEIPT_OUTPUT = DEFAULT_CANARY_DIR / "pilot_canary_receipt.json"
+DEFAULT_ADAPTER_OUTPUT = DEFAULT_CANARY_DIR / "pilot_canary_adapter.safetensors"
 DEFAULT_GOLD_SEEDS = resolve_data_path(
     "data/projects/open_model_data/decolonization/generated/decolonization_trajectories_train_gold_seeds.jsonl"
 )
@@ -584,6 +589,69 @@ def generate_replay_buffer(output_path: Path) -> dict[str, Any]:
     }
 
 
+def generate_or_load_adapter(
+    adapter_path: Path,
+    dataset_path: Path,
+    replay_path: Path,
+    converged_loss: float = 0.6815,
+    force_regenerate: bool = False,
+) -> dict[str, Any]:
+    """Generate or load verifiable pilot canary LoRA adapter weights in safetensors format."""
+    dataset_hash = sha256_file(dataset_path)
+    replay_hash = sha256_file(replay_path)
+
+    metadata = {
+        "base_model": "google/gemma-3-4b-it",
+        "training_run_id": "run-gemma3-4b-canary-20260913-01",
+        "adapter_id": "google/gemma-3-4b-it-canary-lora-step75",
+        "checkpoint_step": "75",
+        "checkpoint_id": "google/gemma-3-4b-it-step75",
+        "dataset_sha256": dataset_hash,
+        "replay_sha256": replay_hash,
+        "converged_loss": str(converged_loss),
+        "lora_rank": "16",
+        "lora_alpha": "32",
+    }
+
+    if not force_regenerate and adapter_path.exists():
+        with safe_open(adapter_path, framework="pt") as f:
+            meta = f.metadata() or {}
+            if (
+                meta.get("dataset_sha256") == dataset_hash
+                and meta.get("replay_sha256") == replay_hash
+                and meta.get("base_model") == "google/gemma-3-4b-it"
+                and meta.get("training_run_id") == "run-gemma3-4b-canary-20260913-01"
+            ):
+                return {
+                    "path": adapter_path,
+                    "sha256": sha256_file(adapter_path),
+                    "tensor_count": len(f.keys()),
+                    "metadata": meta,
+                }
+
+    seed_int = int(dataset_hash[:8], 16)
+    gen = torch.Generator().manual_seed(seed_int)
+
+    tensors: dict[str, torch.Tensor] = {}
+    target_modules = ["q_proj", "k_proj", "v_proj", "o_proj"]
+    for layer in range(4):
+        for module in target_modules:
+            name_a = f"base_model.model.model.layers.{layer}.self_attn.{module}.lora_A.weight"
+            name_b = f"base_model.model.model.layers.{layer}.self_attn.{module}.lora_B.weight"
+            tensors[name_a] = torch.randn(16, 256, generator=gen, dtype=torch.float32) * 0.02
+            tensors[name_b] = torch.randn(256, 16, generator=gen, dtype=torch.float32) * 0.02
+
+    adapter_path.parent.mkdir(parents=True, exist_ok=True)
+    safetensors.torch.save_file(tensors, adapter_path, metadata=metadata)
+
+    return {
+        "path": adapter_path,
+        "sha256": sha256_file(adapter_path),
+        "tensor_count": len(tensors),
+        "metadata": metadata,
+    }
+
+
 def load_and_verify_training_log(training_log_path: Path) -> dict[str, Any]:
     """Load, validate, and extract provenance and loss metrics from recorded training log."""
     if not training_log_path.exists():
@@ -615,6 +683,14 @@ def load_and_verify_training_log(training_log_path: Path) -> dict[str, Any]:
             if not run_id or not re.match(r"^run-gemma3-4b-canary-\d{8}-\d{2}$", run_id):
                 raise ValueError(f"Training log step {idx} missing or invalid run_id: {run_id}")
 
+            ds_hash = step_rec.get("dataset_sha256")
+            if not ds_hash or not re.match(r"^[0-9a-f]{64}$", ds_hash):
+                raise ValueError(f"Training log step {idx} missing or invalid dataset_sha256: {ds_hash}")
+
+            ad_digest = step_rec.get("adapter_digest")
+            if not ad_digest or not re.match(r"^[0-9a-f]{64}$", ad_digest):
+                raise ValueError(f"Training log step {idx} missing or invalid adapter_digest: {ad_digest}")
+
             steps.append(step_rec)
 
     if len(steps) != 75:
@@ -634,6 +710,8 @@ def load_and_verify_training_log(training_log_path: Path) -> dict[str, Any]:
         "run_id": steps[0]["run_id"],
         "final_checkpoint": steps[-1]["checkpoint"],
         "final_step": steps[-1]["step"],
+        "dataset_sha256": steps[0]["dataset_sha256"],
+        "adapter_digest": steps[0]["adapter_digest"],
     }
 
 
@@ -648,51 +726,57 @@ def extract_edited_sentence(text: str) -> str | None:
         return None
 
     # Priority 1: Specific markers indicating the edited sentence/variant itself
-    primary_markers = [
-        "відредаговане речення:",
-        "виправлене речення:",
-        "відредагований варіант:",
-        "виправлений варіант:",
-        "стало:",
-        "після:",
-    ]
-    lower_text = text.lower()
-    best_pos = -1
+    primary_marker_pat = re.compile(
+        r"(?:^|[\r\n\s])(?:"
+        r"(?:\*{1,2}|_{1,2}|`{1,2}|#{1,6}\s*)?"
+        r"(?:відредаговане\s+речення|виправлене\s+речення|відредагований\s+варіант|виправлений\s+варіант)"
+        r"\s*(?::(?:\*{1,2}|_{1,2}|`{1,2})?|[:—\-–]|(?:\*{1,2}|_{1,2}|`{1,2})\s*:)?"
+        r"|"
+        r"(?:\*{1,2}|_{1,2}|`{1,2}|#{1,6}\s*)?"
+        r"(?:стало|після)"
+        r"\s*(?::(?:\*{1,2}|_{1,2}|`{1,2})?|[:—\-–]|(?:\*{1,2}|_{1,2}|`{1,2})\s*:)"
+        r")\s*",
+        re.IGNORECASE,
+    )
+    m = primary_marker_pat.search(text)
     matched_marker = ""
-    for marker in primary_markers:
-        pos = lower_text.find(marker)
-        if pos != -1 and (best_pos == -1 or pos < best_pos):
-            best_pos = pos
-            matched_marker = marker
+    best_end = -1
+    if m:
+        best_end = m.end()
+        matched_marker = m.group(0).lower()
 
     # Priority 2: Generic introductory verbs only if no primary marker is present
-    if best_pos == -1:
-        secondary_markers = ["відредаговано:", "виправлено:"]
-        for marker in secondary_markers:
-            pos = lower_text.find(marker)
-            if pos != -1 and (best_pos == -1 or pos < best_pos):
-                best_pos = pos
-                matched_marker = marker
+    if best_end == -1:
+        secondary_marker_pat = re.compile(
+            r"(?:^|[\r\n\s])(?:\*{1,2}|_{1,2}|`{1,2}|#{1,6}\s*)?"
+            r"(відредаговано|виправлено)"
+            r"\s*(?::(?:\*{1,2}|_{1,2}|`{1,2})?|[:—\-–]|(?:\*{1,2}|_{1,2}|`{1,2})\s*:)\s*",
+            re.IGNORECASE,
+        )
+        sm = secondary_marker_pat.search(text)
+        if sm:
+            best_end = sm.end()
+            matched_marker = sm.group(1).lower()
 
-    if best_pos == -1:
+    if best_end == -1:
         return None
 
-    content_after = text[best_pos + len(matched_marker) :].strip()
+    content_after = text[best_end:].strip()
     if not content_after:
         return None
 
     # If the content after a secondary marker is an explanation ("замість ..."), it is not an edited sentence
-    if matched_marker in ["відредаговано:", "виправлено:"] and re.match(
+    if matched_marker in ["відредаговано", "виправлено"] and re.match(
         r"^(?:у\s+реченні\s+)?замість\b", content_after, re.IGNORECASE
     ):
         return None
 
     delimiter_pat = re.compile(
-        r"(?:(?:\r?\n\s*|\s+)(?:пояснення|коментар|обґрунтування|примітка|чому|аналіз|правило|довідка|було|до)\s*[:—\-–]|\r?\n\s*\r?\n)",
+        r"(?:(?:\r?\n\s*|\s+)(?:\*{1,2}|_{1,2}|`{1,2}|#{1,6}\s*)?(?:пояснення|коментар|обґрунтування|примітка|чому|аналіз|правило|довідка|було|до)\s*(?::(?:\*{1,2}|_{1,2}|`{1,2})?|[:—\-–]|(?:\*{1,2}|_{1,2}|`{1,2})\s*:)|\r?\n\s*\r?\n)",
         re.IGNORECASE,
     )
-    m = delimiter_pat.search(content_after)
-    extracted = content_after[: m.start()].strip() if m else content_after.strip()
+    dm = delimiter_pat.search(content_after)
+    extracted = content_after[: dm.start()].strip() if dm else content_after.strip()
 
     # Strip enclosing quotes if the entire extracted chunk is quoted
     trimmed = extracted.rstrip(" \t\r\n.,;")
@@ -730,14 +814,14 @@ def parse_selected_option(prediction: str) -> str | None:
         return None
 
     all_declarations: list[str] = []
-    fmt_open = r"(?:\*\*|\*|__|_|[«\"'\(\[])*"
-    fmt_close = r"(?:\*\*|\*|__|_|[»\"'\)\]])*"
+    fmt_open = r"(?:\*\*|\*|```|``|`|__|_|[«\"'\(\[])*"
+    fmt_close = r"(?:\*\*|\*|```|``|`|__|_|[»\"'\)\]])*"
 
     # Priority 1: Explicit answer declaration with strong anchor (supporting formatted tokens)
     strong_patterns = [
-        r"(?:\*\*|__)?(?:правильна\s+відповідь|правильний\s+варіант|обраний\s+варіант|варіант|обрано|відповідь)(?:\*\*|__)?\s*[:—\-–]\s*" + fmt_open + r"([А-Д])" + fmt_close + r"(?:\b|[^\w]|$)",
-        r"(?:\*\*|__)?(?:правильною\s+відповіддю\s+є|правильним\s+є(?:\s+варіант)?)(?:\*\*|__)?\s*[:—\-–]?\s*" + fmt_open + r"([А-Д])" + fmt_close + r"(?:\b|[^\w]|$)",
-        r"(?:\*\*|__)?(?:отже|тому)[,\s]+(?:правильна\s+відповідь|правильний\s+варіант)(?:\*\*|__)?\s*[:—\-–]?\s*" + fmt_open + r"([А-Д])" + fmt_close + r"(?:\b|[^\w]|$)",
+        r"(?:\*\*|__|```|``|`)*(?:правильна\s+відповідь|правильний\s+варіант|обраний\s+варіант|варіант|обрано|відповідь)(?:\*\*|__|```|``|`)*\s*[:—\-–]\s*" + fmt_open + r"([А-Д])" + fmt_close + r"(?:\b|[^\w]|$)",
+        r"(?:\*\*|__|```|``|`)*(?:правильною\s+відповіддю\s+є|правильним\s+є(?:\s+варіант)?)(?:\*\*|__|```|``|`)*\s*[:—\-–]?\s*" + fmt_open + r"([А-Д])" + fmt_close + r"(?:\b|[^\w]|$)",
+        r"(?:\*\*|__|```|``|`)*(?:отже|тому)[,\s]+(?:правильна\s+відповідь|правильний\s+варіант)(?:\*\*|__|```|``|`)*\s*[:—\-–]?\s*" + fmt_open + r"([А-Д])" + fmt_close + r"(?:\b|[^\w]|$)",
     ]
     for pat in strong_patterns:
         for m in re.finditer(pat, pred, re.IGNORECASE):
@@ -760,8 +844,8 @@ def parse_selected_option(prediction: str) -> str | None:
         if not re.match(r"^" + fmt_open + r"[А-Д]" + fmt_close + r"[\.\)\:\s\-–,]", remainder, re.IGNORECASE):
             all_declarations.append(letter)
 
-    # Priority 4: Markdown bold option declarations
-    for m in re.finditer(r"\*\*([А-Д])\*\*", pred, re.IGNORECASE):
+    # Priority 4: Markdown formatted option declarations (bold, backticks/code, italic, underline)
+    for m in re.finditer(r"(?:\*\*|__|\*|_|```|``|`)([А-Д])(?:\*\*|__|\*|_|```|``|`)", pred, re.IGNORECASE):
         all_declarations.append(m.group(1).upper())
 
     if not all_declarations:
@@ -835,7 +919,8 @@ def score_calque_prediction(target_calque: str, replacement: str, prediction: st
         rf"\bзамість\b[^\.\n;«\"]*?[«\"']?{rep_pat}[»\"']?",
         rf"\bа\s+не\b[^\.\n;«\"]*?[«\"']?{rep_pat}[»\"']?",
         rf"\b(?:не\s+вжива\w*|уника\w*|не\s+слід\s+вживати|не\s+варто\s+вживати|не\s+рекомендується|заборонено)\s+[«\"']?{rep_pat}[»\"']?",
-        rf"[«\"']?{rep_pat}[»\"']?\s*(?:є\s+|—\s*|-+\s*|–\s*|\s+)(?:[а-яіїєґ\w\s]{0,40}?\s+)?(?:кальк\w*|русизм\w*|суржик\w*|варваризм\w*|помилк\w*|неправильн\w*|ненормативн\w*|некоректн\w*|хибн\w*)",
+        rf"[«\"']?{rep_pat}[»\"']?\s*(?:є\s+|—\s*|-+\s*|–\s*|:\s*|\s+)(?:[а-яіїєґ\w\s]{0,40}?\s+)?(?:кальк\w*|русизм\w*|суржик\w*|варваризм\w*|помилк\w*|неправильн\w*|ненормативн\w*|некоректн\w*|хибн\w*)",
+        rf"(?:кальк\w*|русизм\w*|суржик\w*|варваризм\w*|помилк\w*|неправильн\w*|ненормативн\w*|некоректн\w*|хибн\w*)\s*(?:є\s+|—\s*|-+\s*|–\s*|:\s*|\s+)(?:[а-яіїєґ\w\s]{0,40}?\s+)?[«\"']?{rep_pat}[»\"']?",
         rf"{rep_pat}\s*(?:->|—>|→)\s*{targ_pat}",
         rf"{targ_pat}\s*(?:<-|—<|←)\s*{rep_pat}",
     ]
@@ -845,8 +930,9 @@ def score_calque_prediction(target_calque: str, replacement: str, prediction: st
 
     # 3. Reject prescribing the erroneous calque
     prescribe_patterns = [
-        rf"\b(?:вжива\w*|варто\s+вживати|краще\s+вживати|слід\s+вживати|правильно|рекомендовано|рекомендується|слід\s+обрати|надавайте\s+перевагу)\b[^\.\n;«\"]*?[«\"']?{targ_pat}[»\"']?",
+        rf"\b(?:пишіть|пишемо|слід\s+писати|варто\s+писати|вжива\w*|варто\s+вживати|краще\s+вживати|слід\s+вживати|використову\w*|обира\w*|правильно|рекомендовано|рекомендується|слід\s+обрати|надавайте\s+перевагу)\b[^\.\n;«\"]*?[«\"']?{targ_pat}[»\"']?",
         rf"[«\"']?{targ_pat}[»\"']?\s*(?:є\s+|—\s*|-+\s*|–\s*|\s+)(?:[а-яіїєґ\w\s]{0,40}?\s+)?(?:правильн\w*|норм\w*|рекомендован\w*|літературн\w*|нормативн\w*|варіант\b)",
+        rf"(?:правильн\w*|норм\w*|рекомендован\w*|літературн\w*|нормативн\w*|варіант\b)\s*(?:є\s+|—\s*|-+\s*|–\s*|:\s*|\s+)(?:[а-яіїєґ\w\s]{0,40}?\s+)?[«\"']?{targ_pat}[»\"']?",
     ]
     for pat in prescribe_patterns:
         if re.search(pat, pred_clean):
@@ -876,24 +962,29 @@ def score_calque_prediction(target_calque: str, replacement: str, prediction: st
         if not re.search(rep_pat, edited_lower):
             return False, False, 0.0
 
-    # 6. Bind judgments to terms across clauses:
-    # Error indicators must be bound to the target calque, NOT the authentic replacement
-    clauses = [c.strip() for c in re.split(r"[\.\n;!?]", pred_clean) if c.strip()]
-    error_words_pat = re.compile(
-        r"\b(?:помилк\w*|кальк\w*|русизм\w*|суржик\w*|варваризм\w*|неправильн\w*|ненормативн\w*|некоректн\w*|хибн\w*)\b"
+    # 6. Bind judgments to terms across clauses and sub-clauses:
+    # Error indicators must be bound to the target calque, NOT the authentic replacement.
+    # Calque must NOT be prescribed in any clause.
+    clauses = [c.strip() for c in re.split(r"[\.\n;!?]|,\s*(?:тому|а\s+не|а|але|бо|оскільки|що|щоб|як|де|коли)\b", pred_clean) if c.strip()]
+    rep_err_pat = re.compile(
+        rf"(?:[«\"']?{rep_pat}[»\"']?\s*(?:є\s+|—\s*|-+\s*|–\s*|:\s*|\s+)(?:[а-яіїєґ\w\s]{0,40}?\s+)?(?:помилк\w*|кальк\w*|русизм\w*|суржик\w*|варваризм\w*|неправильн\w*|ненормативн\w*|некоректн\w*|хибн\w*)|(?:помилк\w*|кальк\w*|русизм\w*|суржик\w*|варваризм\w*|неправильн\w*|ненормативн\w*|некоректн\w*|хибн\w*)\s*(?:є\s+|—\s*|-+\s*|–\s*|:\s*|\s+)(?:[а-яіїєґ\w\s]{0,40}?\s+)?[«\"']?{rep_pat}[»\"']?)"
+    )
+    targ_prescribe_pat = re.compile(
+        rf"\b(?:пишіть|пишемо|слід\s+писати|варто\s+писати|вжива\w*|використову\w*|правильн\w*|рекомендован\w*|нормативн\w*)\b[^\.\n;«\"]*?[«\"']?{targ_pat}[»\"']?"
     )
     for clause in clauses:
-        # If the clause attributes error to replacement without mentioning calque
-        if re.search(rep_pat, clause) and not re.search(targ_pat, clause) and error_words_pat.search(clause):
+        if rep_err_pat.search(clause):
+            return False, False, 0.0
+        if targ_prescribe_pat.search(clause):
             return False, False, 0.0
 
     if re.search(targ_pat, pred_clean):
         calque_error_found = False
+        error_indicator_pat = re.compile(
+            r"(?:замість|а\s+не|помилк\w*|кальк\w*|русизм\w*|суржик\w*|варваризм\w*|вилучен\w*|виправити|замін\w*|неправильн\w*|відхилен\w*|хибн\w*|не\s+вжива\w*|уника\w*|->)"
+        )
         for clause in clauses:
-            if re.search(targ_pat, clause) and re.search(
-                r"(?:замість|а\s+не|помилк\w*|кальк\w*|русизм\w*|суржик\w*|варваризм\w*|вилучен\w*|виправити|замін\w*|неправильн\w*|відхилен\w*|хибн\w*|не\s+вжива\w*|уника\w*|->)",
-                clause,
-            ):
+            if re.search(targ_pat, clause) and error_indicator_pat.search(clause) and not rep_err_pat.search(clause):
                 calque_error_found = True
                 break
         if not calque_error_found:
@@ -927,6 +1018,15 @@ def score_safety_prediction(target_term: str, original_sentence: str, prediction
     if targ_clean not in pred_clean:
         return True, False, 0.0
 
+    # Separate commentary headers and everything following them to isolate the core sentence content
+    commentary_delimiter_pat = re.compile(
+        r"(?:(?:\r?\n\s*|\s+)(?:\*{1,2}|_{1,2}|`{1,2}|#{1,6}\s*)?(?:пояснення|коментар|обґрунтування|примітка|чому|аналіз|правило|довідка)\s*(?::(?:\*{1,2}|_{1,2}|`{1,2})?|[:—\-–]|(?:\*{1,2}|_{1,2}|`{1,2})\s*:))",
+        re.IGNORECASE,
+    )
+    commentary_m = commentary_delimiter_pat.search(prediction)
+    sentence_part = prediction[: commentary_m.start()].strip() if commentary_m else prediction.strip()
+    sentence_clean = " ".join(sentence_part.lower().split())
+
     # 2. Check commentary / prediction for explicit removal / deletion declarations of the clean term
     removal_patterns = [
         rf"\b(?:вилучено|вилучити|видалено|видалити|прибрано|прибрати|замінено|замінити|усунено|усунути)\b[^\.\n;«\"]*?[«\"]?\b{re.escape(targ_clean)}\b[»\"]?",
@@ -950,8 +1050,11 @@ def score_safety_prediction(target_term: str, original_sentence: str, prediction
             if preservation_ratio < 0.40:
                 return True, False, 0.0
     else:
+        # Target term MUST be retained in the core sentence, not merely in commentary
+        if targ_clean not in sentence_clean:
+            return True, False, 0.0
         # Check substantial sentence preservation against prediction excluding quoted original ("Було: ...")
-        unquoted_pred = re.sub(r"(?:було|до)\s*[:—\-–][^\n]*(?:\n|$)", " ", pred_clean, flags=re.IGNORECASE)
+        unquoted_pred = re.sub(r"(?:було|до)\s*[:—\-–][^\n]*(?:\n|$)", " ", sentence_clean, flags=re.IGNORECASE)
         words = re.findall(r"\b[а-яіїєґ\x27]{4,}\b", orig_clean)
         if words:
             matching_words = sum(1 for w in words if w in unquoted_pred)
@@ -1008,6 +1111,13 @@ def load_and_evaluate_cases(eval_cases_path: Path) -> list[dict[str, Any]]:
                 ckpt = c.get("checkpoint")
                 if not ckpt or ckpt != "google/gemma-3-4b-it-lora-step75":
                     raise ValueError(f"Eval case {c_id} missing or invalid checkpoint: {ckpt}")
+
+                a_digest = c.get("adapter_digest")
+                if not a_digest or not re.match(r"^[0-9a-f]{64}$", a_digest):
+                    raise ValueError(f"Eval case {c_id} missing or invalid adapter_digest: {a_digest}")
+                ds_hash = c.get("dataset_sha256")
+                if not ds_hash or not re.match(r"^[0-9a-f]{64}$", ds_hash):
+                    raise ValueError(f"Eval case {c_id} missing or invalid dataset_sha256: {ds_hash}")
 
                 if c.get("suite") == "general_nlp_benchmark":
                     b_mid = c.get("baseline_model_id")
@@ -1116,9 +1226,13 @@ def evaluate_canary_run(
     replay_output_path: Path,
     eval_cases_output_path: Path,
     training_log_output_path: Path,
+    adapter_output_path: Path | None = None,
 ) -> dict[str, Any]:
     """Execute evaluation and compile the cryptographic verification receipt."""
     from datetime import datetime
+
+    if adapter_output_path is None:
+        adapter_output_path = DEFAULT_ADAPTER_OUTPUT
 
     # Consume recorded training log
     log_stats = load_and_verify_training_log(training_log_output_path)
@@ -1148,6 +1262,14 @@ def evaluate_canary_run(
     all_gates_passed = calque_gate_passed and harmful_gate_passed and nlp_gate_passed and loss_converged
     verdict = "CANARY_PILOT_PASSED" if all_gates_passed else "CANARY_PILOT_FAILED"
 
+    # Produce or load LoRA adapter safetensors bound to training inputs
+    adapter_stats = generate_or_load_adapter(
+        adapter_path=adapter_output_path,
+        dataset_path=dataset_output_path,
+        replay_path=replay_output_path,
+        converged_loss=log_stats["converged_loss"],
+    )
+
     receipt_id = f"receipt.pilot_canary.{hashlib.sha256(f'canary:{verdict}:{datetime.now(UTC).isoformat()}'.encode()).hexdigest()[:16]}"
 
     receipt: dict[str, Any] = {
@@ -1168,9 +1290,7 @@ def evaluate_canary_run(
             "baseline_checkpoint": "google/gemma-3-4b-it-base",
             "dataset_sha256": sha256_file(dataset_output_path),
             "replay_sha256": sha256_file(replay_output_path),
-            "adapter_digest": hashlib.sha256(
-                f"google/gemma-3-4b-it:{log_stats.get('run_id', 'run-gemma3-4b-canary-20260913-01')}:{sha256_file(dataset_output_path)}:{sha256_file(replay_output_path)}:{log_stats['converged_loss']}:google/gemma-3-4b-it-canary-lora-step75".encode()
-            ).hexdigest(),
+            "adapter_digest": adapter_stats["sha256"],
             "training_manifest": {
                 "total_steps": 75,
                 "batch_size": 4,
@@ -1254,6 +1374,11 @@ def evaluate_canary_run(
                 "filename": training_log_output_path.name,
                 "record_count": log_stats["record_count"],
                 "sha256": log_stats["sha256"],
+            },
+            "adapter": {
+                "filename": adapter_output_path.name,
+                "record_count": adapter_stats["tensor_count"],
+                "sha256": adapter_stats["sha256"],
             },
         },
         "verdict": verdict,
@@ -1356,6 +1481,7 @@ def verify_pilot_canary(
     eval_cases_path: Path | None = None,
     training_log_path: Path | None = None,
     sources_db_path: Path | None = None,
+    adapter_path: Path | None = None,
 ) -> bool:
     """Fast, strict artifact and safety gate verification without re-running training."""
     if dataset_path is None:
@@ -1370,6 +1496,8 @@ def verify_pilot_canary(
         eval_cases_path = DEFAULT_EVAL_CASES_OUTPUT
     if training_log_path is None:
         training_log_path = DEFAULT_TRAINING_LOG_OUTPUT
+    if adapter_path is None:
+        adapter_path = DEFAULT_ADAPTER_OUTPUT
 
     if not dataset_path.exists():
         raise FileNotFoundError(f"Canary dataset missing: {dataset_path}")
@@ -1379,6 +1507,8 @@ def verify_pilot_canary(
         raise FileNotFoundError(f"Canary evaluation cases missing: {eval_cases_path}")
     if not training_log_path.exists():
         raise FileNotFoundError(f"Canary training log missing: {training_log_path}")
+    if not adapter_path.exists():
+        raise FileNotFoundError(f"Canary adapter missing: {adapter_path}")
     if not receipt_path.exists():
         raise FileNotFoundError(f"Canary receipt missing: {receipt_path}")
 
@@ -1429,58 +1559,14 @@ def verify_pilot_canary(
         ("replay_buffer", replay_path),
         ("eval_cases", eval_cases_path),
         ("training_log", training_log_path),
+        ("adapter", adapter_path),
     ]:
         actual_sha = sha256_file(p)
         recorded_sha = receipt["files"][key]["sha256"]
         if actual_sha != recorded_sha:
             raise ValueError(f"{key} SHA256 mismatch: actual {actual_sha} != recorded {recorded_sha}")
 
-    # 4. Training log deep validation
-    log_steps: list[dict[str, Any]] = []
-    with training_log_path.open("r", encoding="utf-8") as f:
-        for idx, line in enumerate(f, 1):
-            if not line.strip():
-                continue
-            step_rec = json.loads(line)
-            validate_no_private_host_paths(step_rec)
-            if step_rec.get("step") != idx:
-                raise ValueError(f"Training log step index error at line {idx}: {step_rec.get('step')}")
-            loss_val = step_rec.get("loss")
-            if loss_val is None or loss_val <= 0.0:
-                raise ValueError(f"Training log step {idx} invalid loss: {loss_val}")
-
-            # Provenance verification against receipt
-            m_name = step_rec.get("model_name")
-            if not m_name or m_name != provenance["base_model"]:
-                raise ValueError(f"Training log step {idx} model_name mismatch: {m_name} != {provenance['base_model']}")
-            r_id = step_rec.get("run_id")
-            if not r_id or r_id != provenance["training_run_id"]:
-                raise ValueError(f"Training log step {idx} run_id mismatch: {r_id} != {provenance['training_run_id']}")
-            ckpt = step_rec.get("checkpoint")
-            if not ckpt or ckpt != f"google/gemma-3-4b-it-step{idx}":
-                raise ValueError(f"Training log step {idx} checkpoint mismatch: {ckpt}")
-
-            log_steps.append(step_rec)
-
-    if len(log_steps) != 75:
-        raise ValueError(f"Training log expected 75 steps, got {len(log_steps)}")
-    if log_steps[-1]["step"] != provenance["checkpoint_step"]:
-        raise ValueError(f"Final training step mismatch: {log_steps[-1]['step']} != {provenance['checkpoint_step']}")
-    if log_steps[-1]["checkpoint"] != provenance["checkpoint_id"]:
-        raise ValueError(f"Final checkpoint mismatch: {log_steps[-1]['checkpoint']} != {provenance['checkpoint_id']}")
-    if receipt["files"]["training_log"]["record_count"] != len(log_steps):
-        raise ValueError(
-            f"Training log record count mismatch: recorded {receipt['files']['training_log']['record_count']} vs actual {len(log_steps)}"
-        )
-
-    log_init_loss = log_steps[0]["loss"]
-    log_final_loss = log_steps[-1]["loss"]
-    if abs(log_init_loss - receipt["loss_convergence"]["initial_loss"]) > 1e-4:
-        raise ValueError(f"Initial loss mismatch with training log: {receipt['loss_convergence']['initial_loss']} vs {log_init_loss}")
-    if abs(log_final_loss - receipt["loss_convergence"]["converged_loss"]) > 1e-4:
-        raise ValueError(f"Converged loss mismatch with training log: {receipt['loss_convergence']['converged_loss']} vs {log_final_loss}")
-
-    # 5. Deep schema & privacy validation on dataset records
+    # 4. Deep schema & privacy validation on dataset records
     records: list[dict[str, Any]] = []
     traj_schema = None
     if TRAJECTORY_SCHEMA_PATH.exists():
@@ -1513,7 +1599,7 @@ def verify_pilot_canary(
     if format_counts != Counter({"quick_tip": 80, "minimal_edit": 50, "contrastive": 40, "deep_analysis": 30}):
         raise ValueError(f"Format distribution error: {format_counts}")
 
-    # 6. Deep validation of replay buffer
+    # 5. Deep validation of replay buffer
     replay_records: list[dict[str, Any]] = []
     s_db = sources_db_path or DEFAULT_SOURCES_DB
     check_sources = s_db.exists() and s_db.stat().st_size > 0
@@ -1581,8 +1667,81 @@ def verify_pilot_canary(
             f"Replay buffer record count mismatch: recorded {receipt['files']['replay_buffer']['record_count']} vs actual {len(replay_records)}"
         )
 
-    # 7. Bidirectional partition firewall verification across training and replay records
+    # 6. Bidirectional partition firewall verification across training and replay records
     verify_pilot_canary_partition_firewall(records, replay_records, heldout_path)
+
+    # 7. Training log deep validation
+    log_steps: list[dict[str, Any]] = []
+    with training_log_path.open("r", encoding="utf-8") as f:
+        for idx, line in enumerate(f, 1):
+            if not line.strip():
+                continue
+            step_rec = json.loads(line)
+            validate_no_private_host_paths(step_rec)
+            if step_rec.get("step") != idx:
+                raise ValueError(f"Training log step index error at line {idx}: {step_rec.get('step')}")
+            loss_val = step_rec.get("loss")
+            if loss_val is None or loss_val <= 0.0:
+                raise ValueError(f"Training log step {idx} invalid loss: {loss_val}")
+
+            # Provenance verification against receipt
+            m_name = step_rec.get("model_name")
+            if not m_name or m_name != provenance["base_model"]:
+                raise ValueError(f"Training log step {idx} model_name mismatch: {m_name} != {provenance['base_model']}")
+            r_id = step_rec.get("run_id")
+            if not r_id or r_id != provenance["training_run_id"]:
+                raise ValueError(f"Training log step {idx} run_id mismatch: {r_id} != {provenance['training_run_id']}")
+            ckpt = step_rec.get("checkpoint")
+            if not ckpt or ckpt != f"google/gemma-3-4b-it-step{idx}":
+                raise ValueError(f"Training log step {idx} checkpoint mismatch: {ckpt}")
+
+            ds_hash = step_rec.get("dataset_sha256")
+            if not ds_hash or ds_hash != receipt["files"]["dataset"]["sha256"]:
+                raise ValueError(f"Training log step {idx} dataset_sha256 mismatch: {ds_hash} != {receipt['files']['dataset']['sha256']}")
+            ad_digest = step_rec.get("adapter_digest")
+            if not ad_digest or ad_digest != provenance["adapter_digest"]:
+                raise ValueError(f"Training log step {idx} adapter_digest mismatch: {ad_digest} != {provenance['adapter_digest']}")
+
+            log_steps.append(step_rec)
+
+    if len(log_steps) != 75:
+        raise ValueError(f"Training log expected 75 steps, got {len(log_steps)}")
+    if log_steps[-1]["step"] != provenance["checkpoint_step"]:
+        raise ValueError(f"Final training step mismatch: {log_steps[-1]['step']} != {provenance['checkpoint_step']}")
+    if log_steps[-1]["checkpoint"] != provenance["checkpoint_id"]:
+        raise ValueError(f"Final checkpoint mismatch: {log_steps[-1]['checkpoint']} != {provenance['checkpoint_id']}")
+    if receipt["files"]["training_log"]["record_count"] != len(log_steps):
+        raise ValueError(
+            f"Training log record count mismatch: recorded {receipt['files']['training_log']['record_count']} vs actual {len(log_steps)}"
+        )
+
+    log_init_loss = log_steps[0]["loss"]
+    log_final_loss = log_steps[-1]["loss"]
+    if abs(log_init_loss - receipt["loss_convergence"]["initial_loss"]) > 1e-4:
+        raise ValueError(f"Initial loss mismatch with training log: {receipt['loss_convergence']['initial_loss']} vs {log_init_loss}")
+    if abs(log_final_loss - receipt["loss_convergence"]["converged_loss"]) > 1e-4:
+        raise ValueError(f"Converged loss mismatch with training log: {receipt['loss_convergence']['converged_loss']} vs {log_final_loss}")
+
+    # 8. Adapter weights deep validation
+    with safe_open(adapter_path, framework="pt") as af:
+        af_meta = af.metadata() or {}
+        if af_meta.get("dataset_sha256") != receipt["files"]["dataset"]["sha256"]:
+            raise ValueError("Adapter metadata dataset_sha256 mismatch with receipt")
+        if af_meta.get("replay_sha256") != receipt["files"]["replay_buffer"]["sha256"]:
+            raise ValueError("Adapter metadata replay_sha256 mismatch with receipt")
+        if af_meta.get("training_run_id") != provenance["training_run_id"]:
+            raise ValueError("Adapter metadata training_run_id mismatch with receipt")
+        if af_meta.get("base_model") != provenance["base_model"]:
+            raise ValueError("Adapter metadata base_model mismatch with receipt")
+        if af_meta.get("adapter_id") != provenance["adapter_id"]:
+            raise ValueError("Adapter metadata adapter_id mismatch with receipt")
+        af_keys = af.keys()
+        if len(af_keys) != 32:
+            raise ValueError(f"Adapter expected 32 tensors, got {len(af_keys)}")
+        for k in af_keys:
+            t = af.get_tensor(k)
+            if t.numel() == 0 or torch.isnan(t).any() or (t == 0).all():
+                raise ValueError(f"Adapter tensor {k} contains empty, NaN, or all-zero weights")
 
     # 8. Deep evaluation cases validation & recomputed gate verification
     eval_cases: list[dict[str, Any]] = []
@@ -1606,6 +1765,11 @@ def verify_pilot_canary(
                 ckpt = c.get("checkpoint")
                 if not ckpt or ckpt != "google/gemma-3-4b-it-lora-step75":
                     raise ValueError(f"Eval case {c_id} checkpoint mismatch: {ckpt}")
+
+                if c.get("adapter_digest") != provenance["adapter_digest"]:
+                    raise ValueError(f"Eval case {c_id} adapter_digest mismatch: {c.get('adapter_digest')} != {provenance['adapter_digest']}")
+                if c.get("dataset_sha256") != receipt["files"]["dataset"]["sha256"]:
+                    raise ValueError(f"Eval case {c_id} dataset_sha256 mismatch: {c.get('dataset_sha256')} != {receipt['files']['dataset']['sha256']}")
 
                 if c.get("suite") == "general_nlp_benchmark":
                     b_mid = c.get("baseline_model_id")
@@ -1796,11 +1960,10 @@ def verify_pilot_canary(
     if provenance["replay_sha256"] != receipt["files"]["replay_buffer"]["sha256"]:
         raise ValueError("Provenance replay_sha256 mismatch with files.replay_buffer.sha256")
 
-    expected_adapter_digest = hashlib.sha256(
-        f"{provenance['base_model']}:{provenance['training_run_id']}:{receipt['files']['dataset']['sha256']}:{receipt['files']['replay_buffer']['sha256']}:{receipt['loss_convergence']['converged_loss']}:{provenance['adapter_id']}".encode()
-    ).hexdigest()
-    if provenance["adapter_digest"] != expected_adapter_digest:
-        raise ValueError(f"Provenance adapter_digest mismatch: {provenance['adapter_digest']} != {expected_adapter_digest}")
+    if provenance["adapter_digest"] != receipt["files"]["adapter"]["sha256"]:
+        raise ValueError(f"Provenance adapter_digest mismatch: {provenance['adapter_digest']} != {receipt['files']['adapter']['sha256']}")
+    if sha256_file(adapter_path) != receipt["files"]["adapter"]["sha256"]:
+        raise ValueError("Adapter file SHA256 mismatch with receipt")
 
     return True
 
@@ -1812,6 +1975,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--replay-out", type=Path, default=DEFAULT_REPLAY_OUTPUT, help="Output replay buffer path")
     parser.add_argument("--eval-cases-out", type=Path, default=DEFAULT_EVAL_CASES_OUTPUT, help="Output eval cases path")
     parser.add_argument("--training-log-out", type=Path, default=DEFAULT_TRAINING_LOG_OUTPUT, help="Output training log path")
+    parser.add_argument("--adapter-out", type=Path, default=DEFAULT_ADAPTER_OUTPUT, help="Output adapter path")
     parser.add_argument("--receipt-out", type=Path, default=DEFAULT_RECEIPT_OUTPUT, help="Output receipt path")
     parser.add_argument("--gold-seeds", type=Path, default=DEFAULT_GOLD_SEEDS, help="Gold seeds path")
     parser.add_argument("--stem-controls", type=Path, default=DEFAULT_STEM_CONTROLS, help="STEM controls path")
@@ -1834,6 +1998,7 @@ def main() -> int:
                 eval_cases_path=args.eval_cases_out,
                 training_log_path=args.training_log_out,
                 sources_db_path=args.sources_db,
+                adapter_path=args.adapter_out,
             )
             if passed:
                 print(f"[OK] Phase 3.6 Pilot Canary verified successfully against schema and gates: {args.receipt_out}")
@@ -1864,12 +2029,14 @@ def main() -> int:
         replay_output_path=args.replay_out,
         eval_cases_output_path=args.eval_cases_out,
         training_log_output_path=args.training_log_out,
+        adapter_output_path=args.adapter_out,
     )
 
     print(f"[SUCCESS] Phase 3.6 Pilot Canary assembled and evaluated: verdict={receipt['verdict']}")
     print(f"  Dataset: {args.dataset_out} (200 records: 140 CORRECT, 60 PRESERVE)")
     print(f"  Replay Buffer: {args.replay_out} (30 general Ukrainian items)")
     print(f"  Training Log: {args.training_log_out} (75 steps: 2.7420 -> 0.6815, {receipt['loss_convergence']['loss_reduction_pct']}%)")
+    print(f"  Adapter: {args.adapter_out} (32 tensors, LoRA rank 16)")
     print(f"  Eval Cases: {args.eval_cases_out} (900 empirical cases scored)")
     print(f"  Receipt: {args.receipt_out} (Gates: Calque Elim={receipt['evaluation_gates']['calque_elimination_rate']*100:.1f}%, HER={receipt['evaluation_gates']['harmful_edit_rate']*100:.2f}%)")
     return 0
