@@ -1,75 +1,75 @@
-{"step": 1, "epoch": 0.04, "loss": 2.742, "learning_rate": 4e-05, "grad_norm": 1.6785}
-{"step": 2, "epoch": 0.08, "loss": 2.6548, "learning_rate": 8e-05, "grad_norm": 1.6442}
-{"step": 3, "epoch": 0.12, "loss": 2.5713, "learning_rate": 0.00012, "grad_norm": 1.6107}
-{"step": 4, "epoch": 0.16, "loss": 2.4913, "learning_rate": 0.00016, "grad_norm": 1.578}
-{"step": 5, "epoch": 0.2, "loss": 2.4147, "learning_rate": 0.0002, "grad_norm": 1.5461}
-{"step": 6, "epoch": 0.24, "loss": 2.3414, "learning_rate": 0.0001999, "grad_norm": 1.5149}
-{"step": 7, "epoch": 0.28, "loss": 2.2711, "learning_rate": 0.0001996, "grad_norm": 1.4845}
-{"step": 8, "epoch": 0.32, "loss": 2.2038, "learning_rate": 0.00019909, "grad_norm": 1.4548}
-{"step": 9, "epoch": 0.36, "loss": 2.1394, "learning_rate": 0.00019839, "grad_norm": 1.4259}
-{"step": 10, "epoch": 0.4, "loss": 2.0777, "learning_rate": 0.00019749, "grad_norm": 1.3976}
-{"step": 11, "epoch": 0.44, "loss": 2.0186, "learning_rate": 0.0001964, "grad_norm": 1.3701}
-{"step": 12, "epoch": 0.48, "loss": 1.962, "learning_rate": 0.00019511, "grad_norm": 1.3431}
-{"step": 13, "epoch": 0.52, "loss": 1.9078, "learning_rate": 0.00019362, "grad_norm": 1.3169}
-{"step": 14, "epoch": 0.56, "loss": 1.8559, "learning_rate": 0.00019195, "grad_norm": 1.2912}
-{"step": 15, "epoch": 0.6, "loss": 1.8062, "learning_rate": 0.0001901, "grad_norm": 1.2662}
-{"step": 16, "epoch": 0.64, "loss": 1.7586, "learning_rate": 0.00018806, "grad_norm": 1.2418}
-{"step": 17, "epoch": 0.68, "loss": 1.713, "learning_rate": 0.00018584, "grad_norm": 1.218}
-{"step": 18, "epoch": 0.72, "loss": 1.6694, "learning_rate": 0.00018346, "grad_norm": 1.1947}
-{"step": 19, "epoch": 0.76, "loss": 1.6276, "learning_rate": 0.0001809, "grad_norm": 1.172}
-{"step": 20, "epoch": 0.8, "loss": 1.5875, "learning_rate": 0.00017818, "grad_norm": 1.1498}
-{"step": 21, "epoch": 0.84, "loss": 1.5492, "learning_rate": 0.00017531, "grad_norm": 1.1282}
-{"step": 22, "epoch": 0.88, "loss": 1.5125, "learning_rate": 0.00017228, "grad_norm": 1.1071}
-{"step": 23, "epoch": 0.92, "loss": 1.4773, "learning_rate": 0.00016911, "grad_norm": 1.0865}
-{"step": 24, "epoch": 0.96, "loss": 1.4436, "learning_rate": 0.00016579, "grad_norm": 1.0664}
-{"step": 25, "epoch": 1.0, "loss": 1.4114, "learning_rate": 0.00016235, "grad_norm": 1.0468}
-{"step": 26, "epoch": 1.04, "loss": 1.3805, "learning_rate": 0.00015878, "grad_norm": 1.0276}
-{"step": 27, "epoch": 1.08, "loss": 1.3509, "learning_rate": 0.00015509, "grad_norm": 1.009}
-{"step": 28, "epoch": 1.12, "loss": 1.3226, "learning_rate": 0.00015129, "grad_norm": 0.9907}
-{"step": 29, "epoch": 1.16, "loss": 1.2954, "learning_rate": 0.00014739, "grad_norm": 0.9729}
-{"step": 30, "epoch": 1.2, "loss": 1.2695, "learning_rate": 0.00014339, "grad_norm": 0.9555}
-{"step": 31, "epoch": 1.24, "loss": 1.2446, "learning_rate": 0.0001393, "grad_norm": 0.9386}
-{"step": 32, "epoch": 1.28, "loss": 1.2207, "learning_rate": 0.00013514, "grad_norm": 0.922}
-{"step": 33, "epoch": 1.32, "loss": 1.1979, "learning_rate": 0.0001309, "grad_norm": 0.9059}
-{"step": 34, "epoch": 1.36, "loss": 1.1761, "learning_rate": 0.0001266, "grad_norm": 0.8901}
-{"step": 35, "epoch": 1.4, "loss": 1.1551, "learning_rate": 0.00012225, "grad_norm": 0.8748}
-{"step": 36, "epoch": 1.44, "loss": 1.1351, "learning_rate": 0.00011786, "grad_norm": 0.8597}
-{"step": 37, "epoch": 1.48, "loss": 1.1159, "learning_rate": 0.00011342, "grad_norm": 0.8451}
-{"step": 38, "epoch": 1.52, "loss": 1.0975, "learning_rate": 0.00010896, "grad_norm": 0.8308}
-{"step": 39, "epoch": 1.56, "loss": 1.0799, "learning_rate": 0.00010449, "grad_norm": 0.8168}
-{"step": 40, "epoch": 1.6, "loss": 1.063, "learning_rate": 0.0001, "grad_norm": 0.8032}
-{"step": 41, "epoch": 1.64, "loss": 1.0469, "learning_rate": 9.551e-05, "grad_norm": 0.7899}
-{"step": 42, "epoch": 1.68, "loss": 1.0314, "learning_rate": 9.104e-05, "grad_norm": 0.7769}
-{"step": 43, "epoch": 1.72, "loss": 1.0166, "learning_rate": 8.658e-05, "grad_norm": 0.7643}
-{"step": 44, "epoch": 1.76, "loss": 1.0024, "learning_rate": 8.214e-05, "grad_norm": 0.7519}
-{"step": 45, "epoch": 1.8, "loss": 0.9889, "learning_rate": 7.775e-05, "grad_norm": 0.7399}
-{"step": 46, "epoch": 1.84, "loss": 0.9758, "learning_rate": 7.34e-05, "grad_norm": 0.7281}
-{"step": 47, "epoch": 1.88, "loss": 0.9634, "learning_rate": 6.91e-05, "grad_norm": 0.7166}
-{"step": 48, "epoch": 1.92, "loss": 0.9515, "learning_rate": 6.486e-05, "grad_norm": 0.7054}
-{"step": 49, "epoch": 1.96, "loss": 0.94, "learning_rate": 6.07e-05, "grad_norm": 0.6944}
-{"step": 50, "epoch": 2.0, "loss": 0.9291, "learning_rate": 5.661e-05, "grad_norm": 0.6838}
-{"step": 51, "epoch": 2.04, "loss": 0.9186, "learning_rate": 5.261e-05, "grad_norm": 0.6733}
-{"step": 52, "epoch": 2.08, "loss": 0.9086, "learning_rate": 4.871e-05, "grad_norm": 0.6632}
-{"step": 53, "epoch": 2.12, "loss": 0.899, "learning_rate": 4.491e-05, "grad_norm": 0.6532}
-{"step": 54, "epoch": 2.16, "loss": 0.8898, "learning_rate": 4.122e-05, "grad_norm": 0.6435}
-{"step": 55, "epoch": 2.2, "loss": 0.881, "learning_rate": 3.765e-05, "grad_norm": 0.6341}
-{"step": 56, "epoch": 2.24, "loss": 0.8725, "learning_rate": 3.421e-05, "grad_norm": 0.6249}
-{"step": 57, "epoch": 2.28, "loss": 0.8644, "learning_rate": 3.089e-05, "grad_norm": 0.6158}
-{"step": 58, "epoch": 2.32, "loss": 0.8567, "learning_rate": 2.772e-05, "grad_norm": 0.6071}
-{"step": 59, "epoch": 2.36, "loss": 0.8493, "learning_rate": 2.469e-05, "grad_norm": 0.5985}
-{"step": 60, "epoch": 2.4, "loss": 0.8422, "learning_rate": 2.182e-05, "grad_norm": 0.5901}
-{"step": 61, "epoch": 2.44, "loss": 0.8354, "learning_rate": 1.91e-05, "grad_norm": 0.5819}
-{"step": 62, "epoch": 2.48, "loss": 0.8289, "learning_rate": 1.654e-05, "grad_norm": 0.574}
-{"step": 63, "epoch": 2.52, "loss": 0.8226, "learning_rate": 1.416e-05, "grad_norm": 0.5662}
-{"step": 64, "epoch": 2.56, "loss": 0.8166, "learning_rate": 1.194e-05, "grad_norm": 0.5586}
-{"step": 65, "epoch": 2.6, "loss": 0.8109, "learning_rate": 9.9e-06, "grad_norm": 0.5512}
-{"step": 66, "epoch": 2.64, "loss": 0.8055, "learning_rate": 8.05e-06, "grad_norm": 0.5439}
-{"step": 67, "epoch": 2.68, "loss": 0.8002, "learning_rate": 6.38e-06, "grad_norm": 0.5369}
-{"step": 68, "epoch": 2.72, "loss": 0.7952, "learning_rate": 4.89e-06, "grad_norm": 0.53}
-{"step": 69, "epoch": 2.76, "loss": 0.7904, "learning_rate": 3.6e-06, "grad_norm": 0.5232}
-{"step": 70, "epoch": 2.8, "loss": 0.7858, "learning_rate": 2.51e-06, "grad_norm": 0.5167}
-{"step": 71, "epoch": 2.84, "loss": 0.7814, "learning_rate": 1.61e-06, "grad_norm": 0.5103}
-{"step": 72, "epoch": 2.88, "loss": 0.7771, "learning_rate": 9.1e-07, "grad_norm": 0.504}
-{"step": 73, "epoch": 2.92, "loss": 0.7731, "learning_rate": 4e-07, "grad_norm": 0.4979}
-{"step": 74, "epoch": 2.96, "loss": 0.7692, "learning_rate": 1e-07, "grad_norm": 0.4919}
-{"step": 75, "epoch": 3.0, "loss": 0.6815, "learning_rate": 0.0, "grad_norm": 0.4861}
+{"step": 1, "epoch": 0.04, "loss": 2.742, "learning_rate": 4e-05, "grad_norm": 1.6785, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step1", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 2, "epoch": 0.08, "loss": 2.6548, "learning_rate": 8e-05, "grad_norm": 1.6442, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step2", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 3, "epoch": 0.12, "loss": 2.5713, "learning_rate": 0.00012, "grad_norm": 1.6107, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step3", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 4, "epoch": 0.16, "loss": 2.4913, "learning_rate": 0.00016, "grad_norm": 1.578, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step4", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 5, "epoch": 0.2, "loss": 2.4147, "learning_rate": 0.0002, "grad_norm": 1.5461, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step5", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 6, "epoch": 0.24, "loss": 2.3414, "learning_rate": 0.0001999, "grad_norm": 1.5149, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step6", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 7, "epoch": 0.28, "loss": 2.2711, "learning_rate": 0.0001996, "grad_norm": 1.4845, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step7", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 8, "epoch": 0.32, "loss": 2.2038, "learning_rate": 0.00019909, "grad_norm": 1.4548, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step8", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 9, "epoch": 0.36, "loss": 2.1394, "learning_rate": 0.00019839, "grad_norm": 1.4259, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step9", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 10, "epoch": 0.4, "loss": 2.0777, "learning_rate": 0.00019749, "grad_norm": 1.3976, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step10", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 11, "epoch": 0.44, "loss": 2.0186, "learning_rate": 0.0001964, "grad_norm": 1.3701, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step11", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 12, "epoch": 0.48, "loss": 1.962, "learning_rate": 0.00019511, "grad_norm": 1.3431, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step12", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 13, "epoch": 0.52, "loss": 1.9078, "learning_rate": 0.00019362, "grad_norm": 1.3169, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step13", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 14, "epoch": 0.56, "loss": 1.8559, "learning_rate": 0.00019195, "grad_norm": 1.2912, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step14", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 15, "epoch": 0.6, "loss": 1.8062, "learning_rate": 0.0001901, "grad_norm": 1.2662, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step15", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 16, "epoch": 0.64, "loss": 1.7586, "learning_rate": 0.00018806, "grad_norm": 1.2418, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step16", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 17, "epoch": 0.68, "loss": 1.713, "learning_rate": 0.00018584, "grad_norm": 1.218, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step17", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 18, "epoch": 0.72, "loss": 1.6694, "learning_rate": 0.00018346, "grad_norm": 1.1947, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step18", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 19, "epoch": 0.76, "loss": 1.6276, "learning_rate": 0.0001809, "grad_norm": 1.172, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step19", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 20, "epoch": 0.8, "loss": 1.5875, "learning_rate": 0.00017818, "grad_norm": 1.1498, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step20", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 21, "epoch": 0.84, "loss": 1.5492, "learning_rate": 0.00017531, "grad_norm": 1.1282, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step21", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 22, "epoch": 0.88, "loss": 1.5125, "learning_rate": 0.00017228, "grad_norm": 1.1071, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step22", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 23, "epoch": 0.92, "loss": 1.4773, "learning_rate": 0.00016911, "grad_norm": 1.0865, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step23", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 24, "epoch": 0.96, "loss": 1.4436, "learning_rate": 0.00016579, "grad_norm": 1.0664, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step24", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 25, "epoch": 1.0, "loss": 1.4114, "learning_rate": 0.00016235, "grad_norm": 1.0468, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step25", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 26, "epoch": 1.04, "loss": 1.3805, "learning_rate": 0.00015878, "grad_norm": 1.0276, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step26", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 27, "epoch": 1.08, "loss": 1.3509, "learning_rate": 0.00015509, "grad_norm": 1.009, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step27", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 28, "epoch": 1.12, "loss": 1.3226, "learning_rate": 0.00015129, "grad_norm": 0.9907, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step28", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 29, "epoch": 1.16, "loss": 1.2954, "learning_rate": 0.00014739, "grad_norm": 0.9729, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step29", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 30, "epoch": 1.2, "loss": 1.2695, "learning_rate": 0.00014339, "grad_norm": 0.9555, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step30", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 31, "epoch": 1.24, "loss": 1.2446, "learning_rate": 0.0001393, "grad_norm": 0.9386, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step31", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 32, "epoch": 1.28, "loss": 1.2207, "learning_rate": 0.00013514, "grad_norm": 0.922, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step32", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 33, "epoch": 1.32, "loss": 1.1979, "learning_rate": 0.0001309, "grad_norm": 0.9059, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step33", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 34, "epoch": 1.36, "loss": 1.1761, "learning_rate": 0.0001266, "grad_norm": 0.8901, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step34", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 35, "epoch": 1.4, "loss": 1.1551, "learning_rate": 0.00012225, "grad_norm": 0.8748, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step35", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 36, "epoch": 1.44, "loss": 1.1351, "learning_rate": 0.00011786, "grad_norm": 0.8597, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step36", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 37, "epoch": 1.48, "loss": 1.1159, "learning_rate": 0.00011342, "grad_norm": 0.8451, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step37", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 38, "epoch": 1.52, "loss": 1.0975, "learning_rate": 0.00010896, "grad_norm": 0.8308, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step38", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 39, "epoch": 1.56, "loss": 1.0799, "learning_rate": 0.00010449, "grad_norm": 0.8168, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step39", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 40, "epoch": 1.6, "loss": 1.063, "learning_rate": 0.0001, "grad_norm": 0.8032, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step40", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 41, "epoch": 1.64, "loss": 1.0469, "learning_rate": 9.551e-05, "grad_norm": 0.7899, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step41", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 42, "epoch": 1.68, "loss": 1.0314, "learning_rate": 9.104e-05, "grad_norm": 0.7769, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step42", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 43, "epoch": 1.72, "loss": 1.0166, "learning_rate": 8.658e-05, "grad_norm": 0.7643, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step43", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 44, "epoch": 1.76, "loss": 1.0024, "learning_rate": 8.214e-05, "grad_norm": 0.7519, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step44", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 45, "epoch": 1.8, "loss": 0.9889, "learning_rate": 7.775e-05, "grad_norm": 0.7399, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step45", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 46, "epoch": 1.84, "loss": 0.9758, "learning_rate": 7.34e-05, "grad_norm": 0.7281, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step46", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 47, "epoch": 1.88, "loss": 0.9634, "learning_rate": 6.91e-05, "grad_norm": 0.7166, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step47", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 48, "epoch": 1.92, "loss": 0.9515, "learning_rate": 6.486e-05, "grad_norm": 0.7054, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step48", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 49, "epoch": 1.96, "loss": 0.94, "learning_rate": 6.07e-05, "grad_norm": 0.6944, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step49", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 50, "epoch": 2.0, "loss": 0.9291, "learning_rate": 5.661e-05, "grad_norm": 0.6838, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step50", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 51, "epoch": 2.04, "loss": 0.9186, "learning_rate": 5.261e-05, "grad_norm": 0.6733, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step51", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 52, "epoch": 2.08, "loss": 0.9086, "learning_rate": 4.871e-05, "grad_norm": 0.6632, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step52", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 53, "epoch": 2.12, "loss": 0.899, "learning_rate": 4.491e-05, "grad_norm": 0.6532, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step53", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 54, "epoch": 2.16, "loss": 0.8898, "learning_rate": 4.122e-05, "grad_norm": 0.6435, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step54", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 55, "epoch": 2.2, "loss": 0.881, "learning_rate": 3.765e-05, "grad_norm": 0.6341, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step55", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 56, "epoch": 2.24, "loss": 0.8725, "learning_rate": 3.421e-05, "grad_norm": 0.6249, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step56", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 57, "epoch": 2.28, "loss": 0.8644, "learning_rate": 3.089e-05, "grad_norm": 0.6158, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step57", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 58, "epoch": 2.32, "loss": 0.8567, "learning_rate": 2.772e-05, "grad_norm": 0.6071, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step58", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 59, "epoch": 2.36, "loss": 0.8493, "learning_rate": 2.469e-05, "grad_norm": 0.5985, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step59", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 60, "epoch": 2.4, "loss": 0.8422, "learning_rate": 2.182e-05, "grad_norm": 0.5901, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step60", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 61, "epoch": 2.44, "loss": 0.8354, "learning_rate": 1.91e-05, "grad_norm": 0.5819, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step61", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 62, "epoch": 2.48, "loss": 0.8289, "learning_rate": 1.654e-05, "grad_norm": 0.574, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step62", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 63, "epoch": 2.52, "loss": 0.8226, "learning_rate": 1.416e-05, "grad_norm": 0.5662, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step63", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 64, "epoch": 2.56, "loss": 0.8166, "learning_rate": 1.194e-05, "grad_norm": 0.5586, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step64", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 65, "epoch": 2.6, "loss": 0.8109, "learning_rate": 9.9e-06, "grad_norm": 0.5512, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step65", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 66, "epoch": 2.64, "loss": 0.8055, "learning_rate": 8.05e-06, "grad_norm": 0.5439, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step66", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 67, "epoch": 2.68, "loss": 0.8002, "learning_rate": 6.38e-06, "grad_norm": 0.5369, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step67", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 68, "epoch": 2.72, "loss": 0.7952, "learning_rate": 4.89e-06, "grad_norm": 0.53, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step68", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 69, "epoch": 2.76, "loss": 0.7904, "learning_rate": 3.6e-06, "grad_norm": 0.5232, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step69", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 70, "epoch": 2.8, "loss": 0.7858, "learning_rate": 2.51e-06, "grad_norm": 0.5167, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step70", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 71, "epoch": 2.84, "loss": 0.7814, "learning_rate": 1.61e-06, "grad_norm": 0.5103, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step71", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 72, "epoch": 2.88, "loss": 0.7771, "learning_rate": 9.1e-07, "grad_norm": 0.504, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step72", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 73, "epoch": 2.92, "loss": 0.7731, "learning_rate": 4e-07, "grad_norm": 0.4979, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step73", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 74, "epoch": 2.96, "loss": 0.7692, "learning_rate": 1e-07, "grad_norm": 0.4919, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step74", "run_id": "run-gemma3-4b-canary-20260913-01"}
+{"step": 75, "epoch": 3.0, "loss": 0.6815, "learning_rate": 0.0, "grad_norm": 0.4861, "model_name": "google/gemma-3-4b-it", "checkpoint": "google/gemma-3-4b-it-step75", "run_id": "run-gemma3-4b-canary-20260913-01"}

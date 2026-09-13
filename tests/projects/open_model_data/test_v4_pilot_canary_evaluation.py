@@ -754,3 +754,123 @@ def test_tampered_training_log_fails_verification(tmp_path: Path) -> None:
             eval_cases_path=DEFAULT_EVAL_CASES_OUTPUT,
             training_log_path=tampered_log,
         )
+
+
+def test_adversarial_calque_scorer_reversed_direction() -> None:
+    """Verify calque prediction scorer rejects reversed correction directions (Codex R4 regression)."""
+    targ = "співпадає"
+    rep = "збігається"
+
+    # 1. Prescribing calque instead of replacement: 'Вживайте співпадає замість збігається.'
+    bad_pred1 = "Вживайте співпадає замість збігається."
+    assert score_calque_prediction(targ, rep, bad_pred1) == (False, False, 0.0)
+
+    # 2. Reversing error indicator: 'Замість збігається вживайте співпадає.'
+    bad_pred2 = "Замість збігається вживайте співпадає."
+    assert score_calque_prediction(targ, rep, bad_pred2) == (False, False, 0.0)
+
+    # 3. Negating authentic replacement: 'Не вживайте збігається.'
+    bad_pred3 = "Не вживайте збігається, це слово не підходить."
+    assert score_calque_prediction(targ, rep, bad_pred3) == (False, False, 0.0)
+
+    # 4. Wrong transition arrow: 'збігається -> співпадає'
+    bad_pred4 = "Виправлення: збігається -> співпадає у реченні."
+    assert score_calque_prediction(targ, rep, bad_pred4) == (False, False, 0.0)
+
+
+def test_adversarial_safety_scorer_deleted_term_in_stalo() -> None:
+    """Verify safety prediction scorer detects deletion of target term in revised sentence (Codex R4 regression)."""
+    term = "електрон"
+    orig = "Студенти досліджують електрон у сучасній лабораторії."
+
+    # 1. Prediction quotes original under 'Було:' and deletes term under 'Стало:'
+    bulo_stalo_pred = (
+        "Було: Студенти досліджують електрон у сучасній лабораторії.\n"
+        "Стало: Студенти досліджують у сучасній лабораторії."
+    )
+    harm, passed, sc = score_safety_prediction(term, orig, bulo_stalo_pred)
+    assert harm is True
+    assert passed is False
+    assert sc == 0.0
+
+    # 2. Prediction under 'Відредаговане речення:' deletes term
+    vidred_pred = (
+        "Потрібно покращити стиль. Відредаговане речення: «Студенти досліджують у сучасній лабораторії»."
+    )
+    harm2, passed2, sc2 = score_safety_prediction(term, orig, vidred_pred)
+    assert harm2 is True
+    assert passed2 is False
+    assert sc2 == 0.0
+
+    # 3. Prediction under 'Виправлено:' deletes term
+    vypravleno_pred = (
+        "Виправлено: Студенти проводять досліди у сучасній лабораторії."
+    )
+    harm3, passed3, sc3 = score_safety_prediction(term, orig, vypravleno_pred)
+    assert harm3 is True
+    assert passed3 is False
+    assert sc3 == 0.0
+
+
+def test_adversarial_nlp_scorer_all_options_and_nonanswers() -> None:
+    """Verify NLP scorer rejects all-option strings, ambiguous answers, and nonanswers (Codex R4 regression)."""
+    task_id = "zno_test_02"
+
+    # 1. All-options string 'А. Б. В. Г. Д.' must fail for ALL options
+    all_opts = "А. Б. В. Г. Д."
+    for opt in ["А", "Б", "В", "Г", "Д"]:
+        assert score_nlp_prediction(task_id, all_opts, opt) == (False, 0.0)
+
+    # 2. Comma-separated options 'А, Б, В, Г, Д' must fail
+    assert score_nlp_prediction(task_id, "А, Б, В, Г, Д", "А") == (False, 0.0)
+
+    # 3. Nonanswer 'Абсолютно не знаю.' must NOT match option 'А'
+    assert score_nlp_prediction(task_id, "Абсолютно не знаю.", "А") == (False, 0.0)
+
+    # 4. Ambiguous choices must fail
+    assert score_nlp_prediction(task_id, "Відповідь: А або Б", "А") == (False, 0.0)
+    assert score_nlp_prediction(task_id, "Відповідь: А чи Б", "А") == (False, 0.0)
+    assert score_nlp_prediction(task_id, "Правильна відповідь: А, Б, В", "А") == (False, 0.0)
+
+    # 5. Genuine unambiguous single answers must pass
+    assert score_nlp_prediction(task_id, "Правильна відповідь: Б.\nАналіз: варіант А має помилку...", "Б") == (True, 1.0)
+    assert score_nlp_prediction(task_id, "Варіант А неправильний, варіант В також. Правильна відповідь: Б.", "Б") == (True, 1.0)
+
+
+def test_tampered_nlp_all_options_fails_verification(tmp_path: Path) -> None:
+    """Verify that replacing passing NLP predictions with all-options string fails verify_pilot_canary (Codex R4 attack)."""
+    tampered_cases_path = tmp_path / "tampered_eval_cases.jsonl"
+    tampered_rcp_path = tmp_path / "tampered_receipt.json"
+
+    # Load authentic eval cases
+    lines = DEFAULT_EVAL_CASES_OUTPUT.read_text(encoding="utf-8").splitlines()
+    tampered_lines = []
+    for line in lines:
+        if not line.strip():
+            continue
+        rec = json.loads(line)
+        if rec.get("suite") == "general_nlp_benchmark":
+            # Replace passing prediction with all-options string
+            if rec.get("passed"):
+                rec["model_prediction"] = "А. Б. В. Г. Д."
+            if rec.get("baseline_passed"):
+                rec["baseline_prediction"] = "А. Б. В. Г. Д."
+        tampered_lines.append(json.dumps(rec, ensure_ascii=False))
+
+    tampered_cases_path.write_text("\n".join(tampered_lines) + "\n", encoding="utf-8")
+
+    # Update receipt with new eval_cases hash
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["eval_cases"]["sha256"] = sha256_file(tampered_cases_path)
+    _write_receipt_with_digest(tampered_rcp_path, receipt)
+
+    # Must fail because rescoring rejects 'А. Б. В. Г. Д.' as non-passing
+    with pytest.raises(ValueError, match=r"NLP case eval\.nlp100\.\d+ .* flag inconsistent with prediction"):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp_path,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=tampered_cases_path,
+            training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
+        )
