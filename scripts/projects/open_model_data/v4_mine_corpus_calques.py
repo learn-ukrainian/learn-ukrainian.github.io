@@ -22,7 +22,24 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.projects.open_model_data.phase3_decolonization_partition import extract_root_family
+from scripts.projects.open_model_data.phase3_decolonization_partition import (
+    extract_root_family,
+    is_phase30_textbook_heldout,
+)
+from scripts.projects.open_model_data.phase3_mined_candidate_guards import (
+    INVENTED_ZNO_ELLIPSIS_RE,
+    is_inverted_do_po_date_range,
+    verify_mined_manifest,
+)
+
+
+def strip_invented_zno_ellipsis(stem: str) -> str:
+    """Remove miner-invented ``[скорочено]`` connectors; leftover spans stay source text."""
+    if not stem:
+        return ""
+    cleaned = re.sub(r"\s*\.\.\.\s*\[c?корочено\]\s*\.\.\.\s*", " ", stem, flags=re.IGNORECASE)
+    cleaned = INVENTED_ZNO_ELLIPSIS_RE.sub(" ", cleaned)
+    return re.sub(r"\s+", " ", cleaned).strip()
 
 
 def resolve_data_path(rel_path: str) -> Path:
@@ -49,10 +66,6 @@ def resolve_data_path(rel_path: str) -> Path:
 DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "decolonization" / "mined"
-DEFAULT_CUSTODY_FILE = (
-    REPO_ROOT / "data" / "projects" / "open_model_data" / "decolonization" / "partitions" / "train_source_custody.json"
-)
-
 TITLE_EXEMPTIONS = {
     "ім",
     "вул",
@@ -269,7 +282,7 @@ def parse_textbook_contrast_tables(
         if len(inc) < 2 or len(cor) < 2 or inc.lower() == cor.lower():
             return False
         # Reject inverted date range expressions where "по" is incorrectly marked as correct instead of "до"
-        if re.search(r"\bз\s+\d+\s+до\b", inc, re.IGNORECASE) and re.search(r"\bз\s+\d+\s+по\b", cor, re.IGNORECASE):
+        if is_inverted_do_po_date_range(inc, cor):
             return False
         cor_words = get_content_words(cor)
         if not cor_words:
@@ -304,11 +317,9 @@ def parse_textbook_contrast_tables(
     for r in rows:
         _tid, cid, title, author, grade, subj, text = r
         author_key = author or "unknown"
-        if train_only_author_hashes:
-            h = int(hashlib.sha256(f"tb_author:{author_key}:{title}".encode()).hexdigest()[:8], 16)
-            if h % 10 >= 8:
-                # Strictly respect Phase 3.0 custody: skip held-out chunks for training miner
-                continue
+        if train_only_author_hashes and is_phase30_textbook_heldout(author_key, title):
+            # Same Phase 3.0 function as the partition firewall — not the count-only custody JSON.
+            continue
 
         lines = text.split("\n")
         pair_idx = 1
@@ -512,12 +523,8 @@ def parse_zno_exam_tasks(sources_db: Path) -> list[dict[str, Any]]:
             distractors = options.get("left", [])
             correct_choice = options.get("right", [])
 
-        stem_str = (stem or "").strip()
-        if len(stem_str) > 150:
-            lines = [l.strip() for l in stem_str.split("\n") if l.strip()]
-            tail = lines[-2:] if len(lines) >= 2 else lines
-            prompt = " ".join(tail)
-            stem_str = lines[0][:80] + " ... [скорочено] ... " + prompt
+        # Official exam text must stay byte-faithful. Never invent a «[скорочено]» ellipsis.
+        stem_str = strip_invented_zno_ellipsis((stem or "").strip())
 
         tasks.append(
             {
@@ -592,14 +599,20 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.verify_only:
-        contrast_file = args.output_dir / "corpus_contrast_tables.jsonl"
-        zno_file = args.output_dir / "zno_distractor_tasks.jsonl"
-        if not contrast_file.is_file() or not zno_file.is_file():
-            print("Missing output files for verification.")
+        schema_path = (
+            REPO_ROOT
+            / "data"
+            / "projects"
+            / "open_model_data"
+            / "contracts"
+            / "v1_decolonization_mined_candidates.schema.json"
+        )
+        try:
+            verify_mined_manifest(args.output_dir, schema_path)
+        except ValueError as exc:
+            print(f"Verification failed: {exc}")
             sys.exit(1)
-        c_count = sum(1 for _ in contrast_file.open(encoding="utf-8"))
-        z_count = sum(1 for _ in zno_file.open(encoding="utf-8"))
-        print(f"Verified files: {c_count} contrast tables, {z_count} ZNO tasks.")
+        print("Mined artifacts verified (schema, SHA-256, F1–F3 guards).")
         sys.exit(0)
 
     summary = mine_corpus_calques(args.sources_db, args.vesum_db, args.output_dir)

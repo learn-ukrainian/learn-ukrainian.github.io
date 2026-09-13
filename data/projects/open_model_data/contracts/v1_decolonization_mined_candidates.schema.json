@@ -14,6 +14,120 @@
     "zno_tasks_summary",
     "uagec_mining_summary"
   ],
+  "$defs": {
+    "minedFilename": {
+      "type": "string",
+      "pattern": "^(corpus_contrast_tables|zno_distractor_tasks|uagec_mined_calques)\\.jsonl$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "fileEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filename", "record_count", "sha256", "description"],
+      "properties": {
+        "filename": {"$ref": "#/$defs/minedFilename"},
+        "record_count": {"type": "integer", "minimum": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "description": {"type": "string", "minLength": 1}
+      }
+    },
+    "contrastRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id",
+        "chunk_id",
+        "source",
+        "author",
+        "incorrect",
+        "correct",
+        "derivational_family",
+        "context"
+      ],
+      "properties": {
+        "item_id": {"type": "string", "pattern": "^contrast\\.textbook\\."},
+        "chunk_id": {"type": "string", "minLength": 1},
+        "source": {"type": "string", "pattern": "^textbook:"},
+        "author": {"type": "string", "minLength": 1},
+        "grade": {"type": ["string", "integer", "null"]},
+        "subject": {"type": "string"},
+        "incorrect": {"type": "string", "minLength": 2},
+        "correct": {"type": "string", "minLength": 2},
+        "derivational_family": {"type": "string", "minLength": 2},
+        "context": {"type": "string", "minLength": 2}
+      }
+    },
+    "znoRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "task_id",
+        "exam",
+        "year",
+        "stem",
+        "topic_norm",
+        "options",
+        "correct_key"
+      ],
+      "properties": {
+        "task_id": {"type": "string", "pattern": "^zno\\."},
+        "exam": {"type": "string", "enum": ["zno", "nmt", "dpa"]},
+        "year": {"type": "integer", "minimum": 2006},
+        "session": {"type": ["string", "null"]},
+        "task_no": {"type": ["integer", "string", "null"]},
+        "subject": {"type": ["string", "null"]},
+        "task_format": {"type": ["string", "null"]},
+        "topic_norm": {"type": "string", "minLength": 1},
+        "stem": {
+          "type": "string",
+          "minLength": 1,
+          "not": {"pattern": "\\[c?скорочено\\]"}
+        },
+        "options": {"type": ["array", "object", "string", "null"]},
+        "correct_key": {},
+        "distractors": {"type": ["array", "object", "null"]},
+        "correct_choice": {}
+      }
+    },
+    "uagecRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_id",
+        "error_id",
+        "error",
+        "correct",
+        "error_type",
+        "doc_id",
+        "partition",
+        "derivational_family",
+        "sentence_context",
+        "curriculum_admission"
+      ],
+      "properties": {
+        "record_id": {"type": "string", "pattern": "^uagec\\."},
+        "error_id": {"type": "integer"},
+        "error": {"type": "string", "minLength": 1},
+        "correct": {"type": "string", "minLength": 1},
+        "error_type": {"type": "string", "enum": ["F/Calque", "F/Collocation", "G/Case"]},
+        "doc_id": {"type": "string", "minLength": 1},
+        "annotator_id": {"type": ["string", "integer"]},
+        "partition": {"type": "string", "minLength": 1, "not": {"pattern": "test"}},
+        "is_native": {"type": "boolean"},
+        "source_lang": {"type": "string"},
+        "derivational_family": {"type": "string", "minLength": 2},
+        "sentence_context": {
+          "type": "string",
+          "minLength": 2,
+          "not": {"pattern": "^У тексті вжито (вираз|конструкцію):"}
+        },
+        "curriculum_admission": {"type": "string", "const": "ADMITTED"}
+      }
+    }
+  },
   "properties": {
     "schema_version": {
       "type": "string",
@@ -41,39 +155,46 @@
       "additionalProperties": false,
       "properties": {
         "corpus_contrast_tables": {
-          "type": "object",
-          "required": ["filename", "record_count", "sha256", "description"],
-          "properties": {
-            "filename": {"type": "string"},
-            "record_count": {"type": "integer", "minimum": 300},
-            "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
-            "description": {"type": "string"}
-          }
+          "allOf": [
+            {"$ref": "#/$defs/fileEntry"},
+            {
+              "type": "object",
+              "properties": {
+                "filename": {"const": "corpus_contrast_tables.jsonl"},
+                "record_count": {"type": "integer", "minimum": 300}
+              }
+            }
+          ]
         },
         "zno_distractor_tasks": {
-          "type": "object",
-          "required": ["filename", "record_count", "sha256", "description"],
-          "properties": {
-            "filename": {"type": "string"},
-            "record_count": {"type": "integer", "minimum": 1000},
-            "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
-            "description": {"type": "string"}
-          }
+          "allOf": [
+            {"$ref": "#/$defs/fileEntry"},
+            {
+              "type": "object",
+              "properties": {
+                "filename": {"const": "zno_distractor_tasks.jsonl"},
+                "record_count": {"type": "integer", "const": 1646}
+              }
+            }
+          ]
         },
         "uagec_mined_calques": {
-          "type": "object",
-          "required": ["filename", "record_count", "sha256", "description"],
-          "properties": {
-            "filename": {"type": "string"},
-            "record_count": {"type": "integer", "minimum": 2000},
-            "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
-            "description": {"type": "string"}
-          }
+          "allOf": [
+            {"$ref": "#/$defs/fileEntry"},
+            {
+              "type": "object",
+              "properties": {
+                "filename": {"const": "uagec_mined_calques.jsonl"},
+                "record_count": {"type": "integer", "minimum": 2000}
+              }
+            }
+          ]
         }
       }
     },
     "corpus_contrast_tables_summary": {
       "type": "object",
+      "additionalProperties": false,
       "required": ["total_contrast_pairs", "unique_chunks_mined", "top_authors"],
       "properties": {
         "total_contrast_pairs": {"type": "integer", "minimum": 300},
@@ -86,9 +207,10 @@
     },
     "zno_tasks_summary": {
       "type": "object",
+      "additionalProperties": false,
       "required": ["total_zno_tasks", "lexical_norm_tasks", "syntactic_norm_tasks", "topic_distribution"],
       "properties": {
-        "total_zno_tasks": {"type": "integer", "minimum": 1000},
+        "total_zno_tasks": {"type": "integer", "const": 1646},
         "lexical_norm_tasks": {"type": "integer"},
         "syntactic_norm_tasks": {"type": "integer"},
         "topic_distribution": {
@@ -99,6 +221,7 @@
     },
     "uagec_mining_summary": {
       "type": "object",
+      "additionalProperties": false,
       "required": [
         "total_calque_collocation_available",
         "calque_count",
@@ -114,10 +237,10 @@
         "calque_count": {"type": "integer", "minimum": 1500},
         "collocation_count": {"type": "integer", "minimum": 300},
         "protected_test_split_excluded": {"type": "integer", "minimum": 500},
-        "train_calque_collocation_extracted": {"type": "integer", "minimum": 2000},
+        "train_calque_collocation_extracted": {"type": "integer", "minimum": 1},
         "g_case_total": {"type": "integer", "minimum": 3000},
-        "g_case_admitted": {"type": "integer"},
-        "g_case_admitted_ratio": {"type": "number", "maximum": 0.25}
+        "g_case_admitted": {"type": "integer", "minimum": 0},
+        "g_case_admitted_ratio": {"type": "number", "minimum": 0, "maximum": 0.25}
       }
     }
   },

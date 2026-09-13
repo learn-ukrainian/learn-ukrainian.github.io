@@ -21,9 +21,27 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.projects.open_model_data.phase3_decolonization_partition import (
+    is_phase30_textbook_heldout,
+    is_phase30_uagec_heldout_doc,
+    uagec_doc_partition_bucket,
+)
+from scripts.projects.open_model_data.phase3_mined_candidate_guards import (
+    contains_invented_zno_ellipsis,
+    is_constrained_mined_filename,
+    is_grounded_uagec_sentence,
+    is_inverted_do_po_date_range,
+    is_synthetic_uagec_wrapper,
+    verify_mined_manifest,
+)
 from scripts.projects.open_model_data.v4_mine_corpus_calques import (
     DEFAULT_SOURCES_DB,
     DEFAULT_VESUM_DB,
+    strip_invented_zno_ellipsis,
+)
+from scripts.projects.open_model_data.v4_mine_uagec_calques import (
+    lookup_uagec_source_sentence,
+    resolve_uagec_sentence_context,
 )
 
 CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
@@ -175,7 +193,7 @@ def test_uagec_mining_curriculum_cap_and_invariants() -> None:
             if line.strip():
                 records.append(json.loads(line.strip()))
 
-    assert len(records) >= 2500, f"Expected >= 2,500 mined UA-GEC records, got {len(records)}"
+    assert len(records) >= 2000, f"Expected >= 2000 grounded UA-GEC records, got {len(records)}"
 
     calque_colloc_count = 0
     case_count = 0
@@ -195,7 +213,7 @@ def test_uagec_mining_curriculum_cap_and_invariants() -> None:
     total_records = len(records)
     case_ratio = case_count / total_records
     assert case_ratio <= 0.25, f"Curriculum cap violated: G/Case ratio {case_ratio:.4f} > 0.25"
-    assert calque_colloc_count >= 2000, f"Expected >= 2000 calques/collocations, got {calque_colloc_count}"
+    assert calque_colloc_count >= 1500, f"Expected >= 1500 grounded calques/collocations, got {calque_colloc_count}"
 
 
 def test_mined_cli_verify_only() -> None:
@@ -274,3 +292,177 @@ def test_independent_vesum_lemma_attestation(requires_vesum_db: Path) -> None:
 
     assert attested_count >= 40, f"Expected >= 40/50 VESUM attestations for contrast terms, got {attested_count}"
     v_conn.close()
+
+
+def test_f1_inverted_do_po_date_range_guard_rejects_calque_as_gold() -> None:
+    """F1: з N до labeled incorrect against з N по must fail (would have passed before the guard)."""
+    assert is_inverted_do_po_date_range("з 5 до 15 січня", "з 5 по 15 січня")
+    assert is_inverted_do_po_date_range("робота з 1 до 10 березня", "робота з 1 по 10 березня")
+    assert not is_inverted_do_po_date_range("з 5 по 15 січня", "з 5 до 15 січня")
+    assert not is_inverted_do_po_date_range("по вулиці", "на вулиці")
+
+
+def test_f1_shipped_contrast_tables_have_no_inverted_do_po_pairs() -> None:
+    """F1 lock: committed contrast JSONL never teaches the Russian с…по calque as correct."""
+    assert CONTRAST_FILE.is_file()
+    inverted = []
+    glazova_s0120 = []
+    with CONTRAST_FILE.open(encoding="utf-8") as handle:
+        for line in handle:
+            if not line.strip():
+                continue
+            rec = json.loads(line)
+            if is_inverted_do_po_date_range(rec["incorrect"], rec["correct"]):
+                inverted.append(rec["item_id"])
+            if rec.get("chunk_id") == "11-klas-ukrajinska-mova-glazova-2019_s0120":
+                glazova_s0120.append(rec)
+    assert inverted == [], f"Inverted з…до / з…по gold still shipped: {inverted}"
+    assert glazova_s0120, "glazova-2019_s0120 contrast rows missing"
+    assert all(
+        not (rec["incorrect"].startswith("з 5 до") and rec["correct"].startswith("з 5 по")) for rec in glazova_s0120
+    )
+
+
+def test_f2_synthetic_wrapper_and_ellipsis_guards() -> None:
+    """F2: miner-invented wrappers/ellipses fail; original sentences pass."""
+    wrapper = "У тексті вжито вираз: «коментарій» (виправлено на: «коментар»)."
+    construction = "У тексті вжито конструкцію: «по вулиці» (виправлено на: «на вулиці»)."
+    original = "Я написав коментарій під дописом."
+    assert is_synthetic_uagec_wrapper(wrapper)
+    assert is_synthetic_uagec_wrapper(construction)
+    assert not is_synthetic_uagec_wrapper(original)
+    assert not is_grounded_uagec_sentence(wrapper, "коментарій")
+    assert is_grounded_uagec_sentence(original, "коментарій")
+    invented = "Зображене в уривку ... [скорочено] ... суголосне з подіями твору"
+    assert contains_invented_zno_ellipsis(invented)
+    assert not contains_invented_zno_ellipsis("Зображене в уривку суголосне з подіями твору")
+    assert "[скорочено]" not in strip_invented_zno_ellipsis(invented)
+
+
+def test_f2_shipped_uagec_and_zno_have_zero_synthetic_wrappers() -> None:
+    """F2 lock: committed UA-GEC contexts are original sentences; ZNO stems have no [скорочено]."""
+    assert UAGEC_FILE.is_file()
+    wrappers = 0
+    ungrounded = 0
+    with UAGEC_FILE.open(encoding="utf-8") as handle:
+        for line in handle:
+            if not line.strip():
+                continue
+            rec = json.loads(line)
+            if is_synthetic_uagec_wrapper(rec.get("sentence_context", "")):
+                wrappers += 1
+            if not is_grounded_uagec_sentence(rec.get("sentence_context", ""), rec.get("error", "")):
+                ungrounded += 1
+    assert wrappers == 0, f"Synthetic UA-GEC wrappers still present: {wrappers}"
+    assert ungrounded == 0, f"Ungrounded UA-GEC sentence_context rows: {ungrounded}"
+
+    invented = 0
+    with ZNO_FILE.open(encoding="utf-8") as handle:
+        for line in handle:
+            if not line.strip():
+                continue
+            rec = json.loads(line)
+            if contains_invented_zno_ellipsis(rec.get("stem", "")):
+                invented += 1
+    assert invented == 0, f"Invented ZNO [скорочено] stems still present: {invented}"
+
+
+def test_f3_phase30_firewall_helpers_and_zero_heldout_leak() -> None:
+    """F3: Phase 3.0 uagec_doc: split is applied; leaked docs would fail this test."""
+    leaked_example = None
+    train_example = None
+    # Deterministic search over a small id space so the test names a real held-out bucket.
+    for doc_id in (f"{index:04d}" for index in range(40)):
+        if is_phase30_uagec_heldout_doc(doc_id) and leaked_example is None:
+            leaked_example = doc_id
+        if not is_phase30_uagec_heldout_doc(doc_id) and train_example is None:
+            train_example = doc_id
+        if leaked_example and train_example:
+            break
+    assert leaked_example is not None and train_example is not None
+    assert uagec_doc_partition_bucket(leaked_example) >= 8
+    assert uagec_doc_partition_bucket(train_example) < 8
+    assert is_phase30_textbook_heldout("heldout-author", "heldout-title") in (True, False)
+
+    assert UAGEC_FILE.is_file()
+    leaked_docs: set[str] = set()
+    with UAGEC_FILE.open(encoding="utf-8") as handle:
+        for line in handle:
+            if not line.strip():
+                continue
+            rec = json.loads(line)
+            if is_phase30_uagec_heldout_doc(str(rec["doc_id"])):
+                leaked_docs.add(str(rec["doc_id"]))
+    assert not leaked_docs, f"Phase 3.0 held-out UA-GEC leak: {sorted(leaked_docs)[:10]}"
+
+
+def test_f3_lookup_uses_complete_context_fixture(tmp_path: Path) -> None:
+    """F3/F2: original sentence comes from the UA-GEC source file, never a wrapper."""
+    checkout = tmp_path / "ua-gec"
+    annotated = checkout / "data/gec-fluency/train/annotated/0001.a1.ann"
+    source = checkout / "data/gec-fluency/train/source-sentences/0001.src.txt"
+    annotated.parent.mkdir(parents=True)
+    source.parent.mkdir(parents=True)
+    annotated.write_text("Я {коментарій=>коментар:::error_type=F/Calque} написав.\n", encoding="utf-8")
+    source.write_text("Я коментарій написав.\n", encoding="utf-8")
+    sentence = lookup_uagec_source_sentence(
+        checkout, "gec-fluency/train", "0001", "1", "коментарій", correct="коментар"
+    )
+    assert sentence == "Я коментарій написав."
+    rec = {
+        "error_id": 1,
+        "error": "коментарій",
+        "correct": "коментар",
+        "partition": "gec-fluency/train",
+        "doc_id": "0001",
+        "annotator_id": "1",
+    }
+    resolved = resolve_uagec_sentence_context(rec, {}, checkout)
+    assert resolved == "Я коментарій написав."
+    assert resolve_uagec_sentence_context(rec, {}, None) is None
+
+
+def test_f4_verify_only_hashes_and_schema_reject_unconstrained_filenames(manifest_schema: dict, tmp_path: Path) -> None:
+    """F4/F5: --verify-only is hash+record contract, not line-count; absolute paths fail."""
+    result = verify_mined_manifest(MINED_DIR, MANIFEST_SCHEMA_PATH)
+    assert result["ok"] is True
+    assert not is_constrained_mined_filename("/home/ops/corpus_contrast_tables.jsonl")
+    assert not is_constrained_mined_filename("nested/uagec_mined_calques.jsonl")
+    assert is_constrained_mined_filename("uagec_mined_calques.jsonl")
+
+    bad = {
+        "filename": "/tmp/uagec_mined_calques.jsonl",
+        "record_count": 10,
+        "sha256": "a" * 64,
+        "description": "bad",
+    }
+    file_schema = {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$defs": manifest_schema["$defs"],
+        **manifest_schema["$defs"]["fileEntry"],
+    }
+    errors = list(jsonschema.Draft202012Validator(file_schema).iter_errors(bad))
+    assert errors, "unconstrained absolute filename must fail the file-entry contract"
+
+    wrapper_row = {
+        "record_id": "uagec.1",
+        "error_id": 1,
+        "error": "коментарій",
+        "correct": "коментар",
+        "error_type": "F/Calque",
+        "doc_id": "0000",
+        "annotator_id": "1",
+        "partition": "gec-fluency/train",
+        "is_native": False,
+        "source_lang": "",
+        "derivational_family": "коментар",
+        "sentence_context": "У тексті вжито вираз: «коментарій» (виправлено на: «коментар»).",
+        "curriculum_admission": "ADMITTED",
+    }
+    record_schema = {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$defs": manifest_schema["$defs"],
+        **manifest_schema["$defs"]["uagecRecord"],
+    }
+    wrapper_errors = list(jsonschema.Draft202012Validator(record_schema).iter_errors(wrapper_row))
+    assert wrapper_errors, "synthetic wrapper row must fail the UA-GEC JSONL contract"

@@ -170,6 +170,40 @@ def sha256_text(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
+PHASE30_TRAIN_BUCKET_MAX = 8  # sha256[:8] % 10 < 8 → train; >= 8 → held-out
+
+
+def uagec_doc_partition_key(doc_id: str) -> str:
+    """Stable Phase 3.0 document key. Do not change the prefix; held-out membership depends on it."""
+    return f"uagec_doc:{doc_id}"
+
+
+def uagec_doc_partition_bucket(doc_id: str) -> int:
+    """Return 0–9 bucket for a UA-GEC document under the Phase 3.0 firewall."""
+    return int(hashlib.sha256(uagec_doc_partition_key(doc_id).encode()).hexdigest()[:8], 16) % 10
+
+
+def is_phase30_uagec_heldout_doc(doc_id: str) -> bool:
+    """True when ``sha256(uagec_doc:{doc_id})[:8] % 10 >= 8`` (Phase 3.0 held-out)."""
+    return uagec_doc_partition_bucket(doc_id) >= PHASE30_TRAIN_BUCKET_MAX
+
+
+def textbook_author_partition_key(author_key: str, title: str) -> str:
+    """Stable Phase 3.0 textbook author/title key."""
+    return f"tb_author:{author_key}:{title}"
+
+
+def textbook_author_partition_bucket(author_key: str, title: str) -> int:
+    """Return 0–9 bucket for a textbook author/title under the Phase 3.0 firewall."""
+    digest = hashlib.sha256(textbook_author_partition_key(author_key, title).encode()).hexdigest()
+    return int(digest[:8], 16) % 10
+
+
+def is_phase30_textbook_heldout(author_key: str, title: str) -> bool:
+    """True when ``sha256(tb_author:{author}:{title})[:8] % 10 >= 8``."""
+    return textbook_author_partition_bucket(author_key, title) >= PHASE30_TRAIN_BUCKET_MAX
+
+
 def sha256_file(path: Path) -> str:
     hasher = hashlib.sha256()
     with path.open("rb") as f:
@@ -320,11 +354,10 @@ class DecolonizationPartitionFirewall:
         ua_gec_train_docs = set()
         ua_gec_heldout_docs = set()
         for doc_id in pure_train_docs:
-            h = int(hashlib.sha256(f"uagec_doc:{doc_id}".encode()).hexdigest()[:8], 16)
-            if h % 10 < 8:
-                ua_gec_train_docs.add(doc_id)
-            else:
+            if is_phase30_uagec_heldout_doc(doc_id):
                 ua_gec_heldout_docs.add(doc_id)
+            else:
+                ua_gec_train_docs.add(doc_id)
 
         # 2. Source Custody: ZNO & Style Guide (100% TRAIN_ONLY)
         zno_count = sc.execute("SELECT count(*) FROM zno_tasks").fetchone()[0]
@@ -351,7 +384,6 @@ class DecolonizationPartitionFirewall:
         for tb in textbook_rows:
             tid, cid, title, text, author, subj = tb
             author_key = author or "unknown"
-            h = int(hashlib.sha256(f"tb_author:{author_key}:{title}".encode()).hexdigest()[:8], 16)
             item = {
                 "id": tid,
                 "chunk_id": cid,
@@ -361,10 +393,10 @@ class DecolonizationPartitionFirewall:
                 "subject": subj,
                 "is_stem": subj in stem_subjects,
             }
-            if h % 10 < 8:
-                textbook_train_chunks.append(item)
-            else:
+            if is_phase30_textbook_heldout(author_key, title):
                 textbook_heldout_chunks.append(item)
+            else:
+                textbook_train_chunks.append(item)
 
         # 4. Gather Full Training Corpus Pool across all 4 Sources (covering 100% of textbook train chunks)
         train_sentences = []
