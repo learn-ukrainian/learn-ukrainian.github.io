@@ -959,6 +959,7 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/audit/lint_anti_menu.py` | Detect anti-menu sign-off prompts in markdown | `.venv/bin/python scripts/audit/lint_anti_menu.py --text docs/session-state/current.md` |
 | `scripts/audit/decision_lineage.py` | Scan decision git backlinks | `.venv/bin/python scripts/audit/decision_lineage.py --decision-id ADR-008` |
 | `scripts/ci/ci_timings.py` | Measure per-event and per-job CI durations and merge-queue timings (#7174). BEFORE snapshot for the 2026-09-02 sweet-spot drive: [`docs/plans/2026-09-02-ci-sweet-spot.md`](plans/2026-09-02-ci-sweet-spot.md) | `.venv/bin/python scripts/ci/ci_timings.py --event merge_group --since 2026-08-22` |
+| `scripts/projects/open_model_data/v4_mine_stem_controls.py` | Phase 3.3 STEM `PRESERVE` miner + polysemy typing (#8007). Receipts are hash-only; shards stay local. | `python -m scripts.projects.open_model_data.v4_mine_stem_controls --sources-db "$SOURCES_DB" --vesum-db "$VESUM_DB" --output-dir "$STEM_CONTROLS_OUT"` |
 
 ---
 

@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_stem_controls_receipt.schema.json",
+  "title": "v1_stem_controls_receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dataset_name",
+    "phase",
+    "issue",
+    "parent_epic",
+    "generated_at",
+    "dependency",
+    "quotas",
+    "yield",
+    "source_pool",
+    "cleanliness",
+    "semantic_typing",
+    "safety_assertions",
+    "files"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "v1_stem_controls_receipt"
+    },
+    "dataset_name": {
+      "type": "string",
+      "minLength": 8
+    },
+    "phase": {
+      "type": "string",
+      "minLength": 8
+    },
+    "issue": {
+      "type": "integer",
+      "const": 8007
+    },
+    "parent_epic": {
+      "type": "integer",
+      "const": 6321
+    },
+    "generated_at": {
+      "type": "string",
+      "minLength": 10
+    },
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["phase", "issue", "required_on"],
+      "properties": {
+        "phase": { "type": "string", "const": "3.0" },
+        "issue": { "type": "integer", "const": 8005 },
+        "required_on": { "type": "string", "const": "main" }
+      }
+    },
+    "quotas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sft_preserve_controls", "dpo_preserve_pairs"],
+      "properties": {
+        "sft_preserve_controls": { "type": "integer", "minimum": 1 },
+        "dpo_preserve_pairs": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "yield": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sft_preserve_controls", "dpo_preserve_pairs"],
+      "properties": {
+        "sft_preserve_controls": { "type": "integer", "minimum": 1 },
+        "dpo_preserve_pairs": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "source_pool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stem_chunks_scanned", "stem_subjects", "train_only", "heldout_excluded"],
+      "properties": {
+        "stem_chunks_scanned": { "type": "integer", "minimum": 0 },
+        "stem_subjects": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "train_only": { "type": "boolean", "const": true },
+        "heldout_excluded": { "type": "boolean", "const": true }
+      }
+    },
+    "cleanliness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "vesum_attested_admitted",
+        "vesum_reject_count",
+        "style_guide_collision_reject_count",
+        "ocr_reject_count",
+        "vesum_verification_rate"
+      ],
+      "properties": {
+        "vesum_attested_admitted": { "type": "integer", "minimum": 0 },
+        "vesum_reject_count": { "type": "integer", "minimum": 0 },
+        "style_guide_collision_reject_count": { "type": "integer", "minimum": 0 },
+        "ocr_reject_count": { "type": "integer", "minimum": 0 },
+        "vesum_verification_rate": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "semantic_typing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "obyem_preserve",
+        "obyem_correct_excluded",
+        "rahuvaty_preserve",
+        "vidnoshennia_preserve",
+        "nomenclature_modernization",
+        "nomenclature_calque_excluded",
+        "colloquial_preserve",
+        "generic_stem_preserve",
+        "false_preservation_of_abstract_calques"
+      ],
+      "properties": {
+        "obyem_preserve": { "type": "integer", "minimum": 0 },
+        "obyem_correct_excluded": { "type": "integer", "minimum": 0 },
+        "rahuvaty_preserve": { "type": "integer", "minimum": 0 },
+        "vidnoshennia_preserve": { "type": "integer", "minimum": 0 },
+        "nomenclature_modernization": { "type": "integer", "minimum": 0 },
+        "nomenclature_calque_excluded": { "type": "integer", "minimum": 0 },
+        "colloquial_preserve": { "type": "integer", "minimum": 0 },
+        "generic_stem_preserve": { "type": "integer", "minimum": 0 },
+        "false_preservation_of_abstract_calques": { "type": "integer", "const": 0 }
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "no_corpus_text_emitted",
+        "no_private_host_paths_disclosed",
+        "zero_false_preservation_of_abstract_calques",
+        "vesum_verification_complete"
+      ],
+      "properties": {
+        "no_corpus_text_emitted": { "type": "boolean", "const": true },
+        "no_private_host_paths_disclosed": { "type": "boolean", "const": true },
+        "zero_false_preservation_of_abstract_calques": { "type": "boolean", "const": true },
+        "vesum_verification_complete": { "type": "boolean", "const": true }
+      }
+    },
+    "files": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["index"],
+      "properties": {
+        "index": { "$ref": "#/$defs/file_meta" },
+        "sft_controls": { "$ref": "#/$defs/file_meta" },
+        "dpo_pairs": { "$ref": "#/$defs/file_meta" }
+      }
+    }
+  },
+  "$defs": {
+    "file_meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filename", "record_count", "sha256"],
+      "properties": {
+        "filename": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]+$"
+        },
+        "record_count": { "type": "integer", "minimum": 1 },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    }
+  }
+}
