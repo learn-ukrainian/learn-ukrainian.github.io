@@ -19,6 +19,7 @@ import os
 import re
 import shutil
 import sqlite3
+import subprocess
 import sys
 import tempfile
 import unicodedata
@@ -2200,9 +2201,38 @@ def _build_wiki_packet(level: str, slug: str) -> str:
     )
 
 
+def _wiki_roots() -> list[Path]:
+    """Wiki trees to search. Dispatch worktrees sparse-exclude wiki/; fall back to the primary checkout."""
+    from wiki.config import WIKI_DIR
+
+    roots: list[Path] = []
+    seen: set[Path] = set()
+
+    def add(path: Path) -> None:
+        resolved = path.resolve()
+        if resolved in seen or not path.exists():
+            return
+        seen.add(resolved)
+        roots.append(path)
+
+    add(WIKI_DIR)
+    if not WIKI_DIR.exists():
+        try:
+            common = subprocess.check_output(
+                ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
+                cwd=WIKI_DIR.parent if WIKI_DIR.parent.exists() else Path.cwd(),
+                text=True,
+            ).strip()
+        except (OSError, subprocess.CalledProcessError):
+            common = ""
+        if common:
+            add(Path(common).parent / "wiki")
+    return roots
+
+
 def _wiki_article_paths(level: str, slug: str) -> list[Path]:
     """Return exact wiki article paths for a level/slug pair."""
-    from wiki.config import TRACK_DOMAINS, TRACK_WRITE_DOMAIN, WIKI_DIR
+    from wiki.config import TRACK_DOMAINS, TRACK_WRITE_DOMAIN
 
     domains: list[str] = []
     write_domain = TRACK_WRITE_DOMAIN.get(level)
@@ -2211,24 +2241,22 @@ def _wiki_article_paths(level: str, slug: str) -> list[Path]:
     domains.extend(TRACK_DOMAINS.get(level, []))
     domains.append(level)
 
-    seen_domains: set[str] = set()
     paths: list[Path] = []
     seen_paths: set[Path] = set()
-    for domain in domains:
-        if not domain or domain in seen_domains:
-            continue
-        seen_domains.add(domain)
-        domain_dir = WIKI_DIR / domain
-        if not domain_dir.exists():
-            continue
-
-        direct = domain_dir / f"{slug}.md"
-        candidates = [direct] if direct.exists() else list(domain_dir.rglob(f"{slug}.md"))
-        for candidate in candidates:
-            if candidate.name == "index.md" or candidate in seen_paths:
+    for wiki_root in _wiki_roots():
+        for domain in domains:
+            if not domain:
                 continue
-            seen_paths.add(candidate)
-            paths.append(candidate)
+            domain_dir = wiki_root / domain
+            if not domain_dir.exists():
+                continue
+            direct = domain_dir / f"{slug}.md"
+            candidates = [direct] if direct.exists() else list(domain_dir.rglob(f"{slug}.md"))
+            for candidate in candidates:
+                if candidate.name == "index.md" or candidate in seen_paths:
+                    continue
+                seen_paths.add(candidate)
+                paths.append(candidate)
     return paths
 
 

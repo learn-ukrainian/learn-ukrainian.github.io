@@ -1,0 +1,318 @@
+---
+title: Який? Яка? Яке?
+description: Великий стіл, нова книга — опис предметів
+sidebar:
+  order: 1
+  label: 01. Який? Яка? Яке?
+pipeline: v7-upgrade
+build_status: validated
+draft: true
+prev: /a1/what-is-it-like/
+next: /a1/what-is-it-like/2/
+lesson: 1
+module_slug: what-is-it-like
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords from '@site/src/components/MarkTheWords';
+import { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes from '@site/src/components/HighlightMorphemes';
+import { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Lesson">
+
+У цьому́ уроці ви навчите́ся опи́сувати ре́чі навко́ло себе́ — in this lesson you will learn how to describe things around you:
+- **Ста́вити запита́ння** — ask **яки́й? / яка? / яке́? / які́?**;
+- **Узго́джувати рід** — match adjective endings to noun gender (**нови́й стіл**, **нова́ кни́га**, **нове́ фо́то**);
+- **Будува́ти коро́ткі речення** — make simple descriptive sentences without extra words.
+
+In the last module, you learned that every Ukrainian noun has a gender signal:
+**стіл** is **він**, **кни́га** is **вона́**, and **вікно́** is **воно́**. Now you
+can use that signal to describe things. The small rule is this: the noun chooses
+the adjective ending.
+
+By the end, you can:
+
+- ask **яки́й? / яка? / яке́? / які́?** with the right kind of noun;
+- use hard-ending adjective phrases in the nominative case:
+  **вели́кий стіл**, **нова́ кни́га**, **чи́сте вікно́**, **га́рні ре́чі**;
+- describe a room or a book-fair table with short A1 sentences;
+- join two qualities with **і**, or contrast them with **а** and **але́**;
+- repair common adjective traps such as **смачни́й**, **жо́втий**,
+  **правильний**, and **розу́мний**.
+
+Keep the scope small. Today is not a full adjective-declension lesson. You are
+training the first visible pattern: noun gender plus adjective ending.
+
+## Діало́ги
+
+### Яке́ пита́льне сло́во?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "стіл", "options": [{"text": "Яки́й?", "correct": true}, {"text": "Яка?", "correct": false}, {"text": "Яке́?", "correct": false}], "explanation": "Стіл is masculine, so ask Яки́й?"}, {"question": "кни́га", "options": [{"text": "Яка?", "correct": true}, {"text": "Яки́й?", "correct": false}, {"text": "Яке́?", "correct": false}], "explanation": "Кни́га is feminine, so ask Яка?"}, {"question": "фо́то", "options": [{"text": "Яке́?", "correct": true}, {"text": "Яка?", "correct": false}, {"text": "Яки́й?", "correct": false}], "explanation": "Фо́то is neuter in this lesson, so ask Яке́?"}, {"question": "кімна́та", "options": [{"text": "Яка?", "correct": true}, {"text": "Яки́й?", "correct": false}, {"text": "Які́?", "correct": false}], "explanation": "Кімна́та is feminine."}, {"question": "кни́ги", "options": [{"text": "Які́?", "correct": true}, {"text": "Яке́?", "correct": false}, {"text": "Яки́й?", "correct": false}], "explanation": "Кни́ги is plural, so ask Які́?"}, {"question": "вікно́", "options": [{"text": "Яке́?", "correct": true}, {"text": "Яки́й?", "correct": false}, {"text": "Яка?", "correct": false}], "explanation": "Вікно́ is neuter."}]`)} instruction={"Choose the question word that fits the noun."} isUkrainian={false} />
+
+Start with the question word. English has one easy phrase, "what kind of."
+Ukrainian asks it four ways because the noun still matters.
+
+| Ask | Use with | Answer phrase |
+| --- | --- | --- |
+| **Яки́й?** | **стіл**, **атлас**, **плака́т** | **нови́й стіл** |
+| **Яка?** | **кни́га**, **листі́вка**, **кімна́та** | **нова́ кни́га** |
+| **Яке́?** | **фо́то**, **вікно́**, **лі́жко** | **нове́ фо́то** |
+| **Які́?** | plural things | **нові́ кни́ги** |
+
+Read the question and the answer as a pair:
+
+- **Яки́й стіл?** — **Вели́кий стіл.**
+- **Яка кни́га?** — **Ціка́ва кни́га.**
+- **Яке́ фо́то?** — **Старе́ фо́то.**
+- **Які́ ре́чі?** — **Но́ві ре́чі.**
+
+At a weekend book fair, Sofia and Taras are looking at a small table:
+
+```text
+Софія: Дивись, це нова книга.
+Тарас: Яка вона?
+Софія: Вона цікава і гарна.
+Тарас: А атлас? Який він?
+Софія: Він старий, але корисний.
+Тарас: А фото? Яке воно?
+Софія: Воно маленьке.
+```
+
+| Украї́нська | English support |
+| --- | --- |
+| **Софія: Диви́сь, це нова́ кни́га.** | Sofia: Look, this is a new book. |
+| **Тара́с: Яка вона́?** | Taras: What is it like? |
+| **Софія: Вона́ ціка́ва і га́рна.** | Sofia: It is interesting and nice. |
+| **Тара́с: А атлас? Яки́й він?** | Taras: And the atlas? What is it like? |
+| **Софія: Він стари́й, але́ ко́ри́сний.** | Sofia: It is old, but useful. |
+| **Тара́с: А фо́то? Яке́ воно́?** | Taras: And the photo? What is it like? |
+| **Софія: Воно́ мале́ньке.** | Sofia: It is small. |
+
+Notice the short answers. You do not need **є** here. Say **Кни́га ціка́ва**,
+not a word-for-word English sentence with "is."
+
+### Заверши́ прикме́тник
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "ве́лик__ стіл", "answer": "ий", "options": ["ий", "а", "е"], "explanation": "Стіл is masculine, so use вели́кий."}, {"sentence": "нов__ кни́га", "answer": "а", "options": ["а", "ий", "е"], "explanation": "Кни́га is feminine, so use нова́."}, {"sentence": "чист__ вікно́", "answer": "е", "options": ["е", "ий", "а"], "explanation": "Вікно́ is neuter, so use чи́сте."}, {"sentence": "стар__ фо́то", "answer": "е", "options": ["е", "а", "ий"], "explanation": "Фо́то is neuter in this lesson."}, {"sentence": "дорог__ телефо́н", "answer": "ий", "options": ["ий", "а", "е"], "explanation": "Телефо́н is masculine."}, {"sentence": "дешев__ листі́вка", "answer": "а", "options": ["а", "е", "ий"], "explanation": "Листі́вка is feminine."}, {"sentence": "гарн__ кімна́та", "answer": "а", "options": ["а", "ий", "е"], "explanation": "Кімна́та is feminine."}, {"sentence": "брудн__ дзе́ркало", "answer": "е", "options": ["е", "а", "ий"], "explanation": "Дзе́ркало is neuter."}, {"sentence": "світл__ плака́т", "answer": "ий", "options": ["ий", "е", "а"], "explanation": "Плака́т is masculine."}, {"sentence": "нов__ кни́ги", "answer": "і", "options": ["і", "а", "е"], "explanation": "Plural A1 phrases use нові́."}]`)} instruction={"Choose the adjective ending that matches the noun."} isUkrainian={false} />
+
+Послухайте ще одну́ розмо́ву на книжко́вому я́рмарку — listen to another conversation at the book fair:
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Тара́с","text":"Диви́сь, ось вели́кий плака́т."},{"speaker":"Софія","text":"Яки́й він яскра́вий!"},{"speaker":"Тара́с","text":"А ця листі́вка? Яка вона́?"},{"speaker":"Софія","text":"Вона́ мале́нька, але́ га́рна."},{"speaker":"Тара́с","text":"А вікно́ бі́ля сто́лу?"},{"speaker":"Софія","text":"Воно́ вели́ке і чи́сте."},{"speaker":"Тара́с","text":"Чудо́во, тут ду́же приє́мно!"}]')}
+/>
+
+Продо́вження розмо́ви — the conversation continues:
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Софія","text":"А нови́й телефо́н у тебе́ є?"},{"speaker":"Тара́с","text":"Так, ось він."},{"speaker":"Софія","text":"Яки́й він?"},{"speaker":"Тара́с","text":"Він нови́й і зру́чний."},{"speaker":"Софія","text":"А старе́ фо́то на столі́?"},{"speaker":"Тара́с","text":"Воно́ старе́, але́ ціка́ве."},{"speaker":"Софія","text":"Це ду́же га́рні ре́чі!"}]')}
+/>
+
+Ро́збі́р нови́х ре́плік — breakdown of new lines:
+
+| Украї́нська | English support |
+| --- | --- |
+| **Диви́сь, ось вели́кий плака́т.** | Look, here is a big poster. |
+| **Вона́ мале́нька, але́ га́рна.** | It is small, but nice. |
+| **Воно́ вели́ке і чи́сте.** | It is big and clean. |
+| **Він нови́й і зру́чний.** | It is new and comfortable. |
+| **Воно́ старе́, але́ ціка́ве.** | It is old, but interesting. |
+| **Це ду́же га́рні ре́чі!** | These are very nice things! |
+
+### Пита́ння та переклад
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Яки́й це стіл?", "right": "What kind of table is this?"}, {"left": "Яка це кни́га?", "right": "What kind of book is this?"}, {"left": "Яке́ це вікно́?", "right": "What kind of window is this?"}, {"left": "Які́ це ре́чі?", "right": "What kind of things are these?"}, {"left": "Яки́й це атлас?", "right": "What kind of atlas is this?"}, {"left": "Яке́ це фо́то?", "right": "What kind of photo is this?"}]`)} instruction={"З'єдна́йте украї́нське пита́ння з англі́йським перекладом."} isUkrainian={false} />
+
+## Яки́й? Яка? Яке́?
+
+Use the same gender habit from **мій / моя́ / моє́**. If the noun is masculine,
+the adjective usually ends in **-ий**. If the noun is feminine, use **-а**. If
+the noun is neuter, use **-е**. For plural A1 phrases, use **-і**.
+
+| Noun signal | Question | Adjective ending | Example |
+| --- | --- | --- | --- |
+| **він / мій** | **яки́й?** | **-ий** | **вели́кий стіл** |
+| **вона́ / моя́** | **яка?** | **-а** | **вели́ка кімна́та** |
+| **воно́ / моє́** | **яке́?** | **-е** | **вели́ке вікно́** |
+| plural | **які́?** | **-і** | **вели́кі кни́ги** |
+
+This is the **Називни́й відмі́нок**, the naming form. You are describing the noun
+as it stands on its own: **стіл нови́й**, **кни́га нова́**, **вікно́ нове́**.
+
+Colors and soft-looking adjectives come next. If you see **си́ній** or
+**си́нє** today, treat it as a preview word, not a new pattern to practice. The
+productive pattern here is still **-ий / -а / -е / -і**.
+
+For **прикме́тники в множині́**, the first A1 pattern is friendly: masculine,
+feminine, and neuter nouns all use **-і** in the plural. Ask **які́?** and say
+**нові́ столи́**, **нові́ кни́ги**, **нові́ фо́то**. Later you will meet more plural
+details; today, just recognize **які́?** plus **-і**.
+
+### Сорту́й фра́зи
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Яки́й?": ["вели́кий стіл", "нови́й телефо́н", "стари́й атлас", "дороги́й плака́т"], "Яка?": ["нова́ кни́га", "га́рна листі́вка", "чи́ста кімна́та", "деше́ва ру́чка"], "Яке́?": ["старе́ фо́то", "чи́сте вікно́", "вели́ке лі́жко", "брудне́ дзе́ркало"], "Які́?": ["нові́ кни́ги", "га́рні ре́чі", "старі́ фо́то", "деше́ві листі́вки"]}`)} instruction={"Sort each adjective-noun phrase by the question it answers."} isUkrainian={false} />
+
+:::tip
+When you hesitate, do not start with the English adjective. Start with the
+Ukrainian noun: **стіл -> він -> яки́й? -> нови́й стіл**. The noun gives you
+the ending.
+:::
+
+### Пра́вда чи ні?
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Стіл нови́й.", "isTrue": true, "explanation": "Стіл — чолові́чий рід, закі́нчення -ий."}, {"statement": "Кни́га нови́й.", "isTrue": false, "explanation": "Кни́га — жіно́чий рід: нова́ кни́га."}, {"statement": "Вікно́ чи́сте.", "isTrue": true, "explanation": "Вікно́ — сере́дній рід, закі́нчення -е."}, {"statement": "Атлас старе́.", "isTrue": false, "explanation": "Атлас — чолові́чий рід: стари́й атлас."}, {"statement": "Фо́то нове́.", "isTrue": true, "explanation": "Фо́то — сере́дній рід, закі́нчення -е."}, {"statement": "Плака́т вели́ка.", "isTrue": false, "explanation": "Плака́т — чолові́чий рід: вели́кий плака́т."}, {"statement": "Кімна́та вели́ка.", "isTrue": true, "explanation": "Кімна́та — жіно́чий рід, закі́нчення -а."}]`)} instruction={"Ви́значте, чи правильне узго́дження прикме́тника з іме́нником."} isUkrainian={false} />
+
+### Підсумок уро́ку
+
+Переві́рте себе́ — check yourself. Поєдна́йте іме́нник та прикме́тник:
+- **стіл** — чолові́чий рід: **нови́й стіл**, **вели́кий стіл**;
+- **кни́га** — жіно́чий рід: **нова́ кни́га**, **вели́ка кни́га**;
+- **фо́то** — сере́дній рід: **нове́ фо́то**, **вели́ке фо́то**;
+- **кни́ги** — множина́: **нові́ кни́ги**, **вели́кі кни́ги**.
+
+Коро́ткий о́пис предме́тів — short description of things:
+
+| Украї́нська | English support |
+| --- | --- |
+| **Це мій нови́й стіл.** | This is my new table. |
+| **Ось стара́ кни́га.** | Here is an old book. |
+| **Там чи́сте вікно́.** | Over there is a clean window. |
+| **Це га́рні ре́чі.** | These are nice things. |
+
+Тепе́р ви мо́жете ле́гко запита́ти **Яки́й стіл?**, **Яка кни́га?** або́ **Яке́ вікно́?** і назва́ти ї́хній о́пис.
+
+</TabItem>
+<TabItem label="Vocabulary">
+
+<span id="vocabulary"></span>
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"яки́й","translation":"what kind, masculine","pos":"pronoun","example":"Яки́й стіл?","examples":["Яки́й стіл?"],"atlas_href":"/lexicon/який/"},{"word":"яка","translation":"what kind, feminine","pos":"pronoun","example":"Яка кни́га?","examples":["Яка кни́га?"],"atlas_href":"/lexicon/яка/"},{"word":"яке́","translation":"what kind, neuter","pos":"pronoun","example":"Яке́ фо́то?","examples":["Яке́ фо́то?"],"atlas_href":"/lexicon/яке/"},{"word":"які́","translation":"what kind, plural","pos":"pronoun","example":"Які́ ре́чі?","examples":["Які́ ре́чі?"],"atlas_href":"/lexicon/які/"},{"word":"вели́кий","translation":"big, masculine","pos":"adj","example":"Це вели́кий стіл.","examples":["Це вели́кий стіл."],"atlas_href":"/lexicon/великий/"},{"word":"вели́ка","translation":"big, feminine","pos":"adj","example":"Це вели́ка кімна́та.","examples":["Це вели́ка кімна́та."],"atlas_href":"/lexicon/велика/"},{"word":"вели́ке","translation":"big, neuter","pos":"adj","example":"Це вели́ке вікно́.","examples":["Це вели́ке вікно́."],"atlas_href":"/lexicon/велике/"},{"word":"нови́й","translation":"new, masculine","pos":"adj","example":"Стіл нови́й.","examples":["Стіл нови́й."],"atlas_href":"/lexicon/новий/"},{"word":"нова́","translation":"new, feminine","pos":"adj","example":"Кни́га нова́.","examples":["Кни́га нова́."],"atlas_href":"/lexicon/нова/"},{"word":"нове́","translation":"new, neuter","pos":"adj","example":"Фо́то нове́.","examples":["Фо́то нове́."],"atlas_href":"/lexicon/нове/"},{"word":"стари́й","translation":"old, masculine","pos":"adj","example":"Атлас стари́й.","examples":["Атлас стари́й."],"atlas_href":"/lexicon/старий/"},{"word":"старе́","translation":"old, neuter","pos":"adj","example":"Лі́жко старе́.","examples":["Лі́жко старе́."],"atlas_href":"/lexicon/старе/"},{"word":"атлас","translation":"atlas","pos":"noun","example":"Атлас стари́й.","examples":["Атлас стари́й."],"atlas_href":"/lexicon/атлас/"},{"word":"плака́т","translation":"poster","pos":"noun","example":"Плака́т вели́кий.","examples":["Плака́т вели́кий."],"atlas_href":"/lexicon/плакат/"}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"яки́й","back":"what kind, masculine"},{"front":"яка","back":"what kind, feminine"},{"front":"яке́","back":"what kind, neuter"},{"front":"які́","back":"what kind, plural"},{"front":"вели́кий","back":"big, masculine"},{"front":"вели́ка","back":"big, feminine"},{"front":"вели́ке","back":"big, neuter"},{"front":"нови́й","back":"new, masculine"},{"front":"нова́","back":"new, feminine"},{"front":"нове́","back":"new, neuter"},{"front":"стари́й","back":"old, masculine"},{"front":"старе́","back":"old, neuter"},{"front":"атлас","back":"atlas"},{"front":"плака́т","back":"poster"}]`)} />
+
+</TabItem>
+<TabItem label="Activities">
+
+<span id="activities"></span>
+
+### Яке́ пита́льне сло́во?
+
+*(see lesson, §Діало́ги)*
+
+### Заверши́ прикме́тник
+
+*(see lesson, §Діало́ги)*
+
+### Пита́ння та переклад
+
+*(see lesson, §Діало́ги)*
+
+### Сорту́й фра́зи
+
+*(see lesson, §Яки́й? Яка? Яке́?)*
+
+### Пра́вда чи ні?
+
+*(see lesson, §Яки́й? Яка? Яке́?)*
+
+### Моде́ль речення
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "The book is new.", "options": [{"text": "Кни́га нова́.", "correct": true}, {"text": "Кни́га є нова́.", "correct": false}, {"text": "Кни́га нови́й.", "correct": false}], "explanation": "Ukrainian usually leaves out є in this present-tense frame."}, {"question": "The table is clean.", "options": [{"text": "Стіл чи́стий.", "correct": true}, {"text": "Стіл чи́ста.", "correct": false}, {"text": "Стіл є чи́стий.", "correct": false}], "explanation": "Стіл is masculine, and the no-є frame is natural."}, {"question": "The window is big.", "options": [{"text": "Вікно́ вели́ке.", "correct": true}, {"text": "Вікно́ вели́кий.", "correct": false}, {"text": "Вікно́ вели́ка.", "correct": false}], "explanation": "Вікно́ is neuter."}, {"question": "A nice postcard", "options": [{"text": "га́рна листі́вка", "correct": true}, {"text": "га́рний листі́вка", "correct": false}, {"text": "га́рне листі́вка", "correct": false}], "explanation": "Листі́вка is feminine."}, {"question": "A useful atlas", "options": [{"text": "ко́ри́сний атлас", "correct": true}, {"text": "ко́ри́сна атлас", "correct": false}, {"text": "ко́ри́сне атлас", "correct": false}], "explanation": "Атлас is masculine."}, {"question": "Interesting things", "options": [{"text": "ціка́ві ре́чі", "correct": true}, {"text": "ціка́ва ре́чі", "correct": false}, {"text": "ціка́ве ре́чі", "correct": false}], "explanation": "Plural phrases use ціка́ві."}]`)} instruction={"Choose the natural A1 sentence."} isUkrainian={false} />
+
+### Опиши́ кімна́ту
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Моя́ кімна́та ___ і сві́тла.", "answer": "мале́нька", "options": ["мале́нька", "мале́нький", "мале́ньке"], "explanation": "Кімна́та is feminine."}, {"sentence": "Стіл ___ і чи́стий.", "answer": "нови́й", "options": ["нови́й", "нова́", "нове́"], "explanation": "Стіл is masculine."}, {"sentence": "Лі́жко старе́, ___ зру́чне.", "answer": "але́", "options": ["але́", "яки́й", "яка"], "explanation": "Але́ adds a contrast."}, {"sentence": "Вікно́ ___ і чи́сте.", "answer": "вели́ке", "options": ["вели́ке", "вели́кий", "вели́ка"], "explanation": "Вікно́ is neuter."}, {"sentence": "Кни́га доро́га, ___ листі́вка деше́ва.", "answer": "а", "options": ["а", "і", "яке́"], "explanation": "А contrasts two things."}, {"sentence": "У мене́ є ___ стіл і стара́ ла́мпа.", "answer": "нови́й", "options": ["нови́й", "нова́", "нове́"], "explanation": "Стіл is masculine."}]`)} instruction={"Complete the short room lines."} isUkrainian={false} />
+
+### Обери́ пита́ння
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "стіл", "options": [{"text": "Яки́й?", "correct": true}, {"text": "Яка?", "correct": false}, {"text": "Яке́?", "correct": false}], "explanation": "Стіл — чолові́чий рід."}, {"question": "плака́т", "options": [{"text": "Яки́й?", "correct": true}, {"text": "Яка?", "correct": false}, {"text": "Яке́?", "correct": false}], "explanation": "Плака́т — чолові́чий рід."}, {"question": "листі́вка", "options": [{"text": "Яка?", "correct": true}, {"text": "Яки́й?", "correct": false}, {"text": "Яке́?", "correct": false}], "explanation": "Листі́вка — жіно́чий рід."}, {"question": "дзе́ркало", "options": [{"text": "Яке́?", "correct": true}, {"text": "Яки́й?", "correct": false}, {"text": "Яка?", "correct": false}], "explanation": "Дзе́ркало — сере́дній рід."}, {"question": "атлас", "options": [{"text": "Яки́й?", "correct": true}, {"text": "Яка?", "correct": false}, {"text": "Яке́?", "correct": false}], "explanation": "Атлас — чолові́чий рід."}, {"question": "кімна́та", "options": [{"text": "Яка?", "correct": true}, {"text": "Яки́й?", "correct": false}, {"text": "Яке́?", "correct": false}], "explanation": "Кімна́та — жіно́чий рід."}]`)} instruction={"Обері́ть правильне пита́льне сло́во для по́даного іме́нника."} isUkrainian={false} />
+
+### Встав закі́нчення
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Це нов___ атлас.", "answer": "ий", "options": ["ий", "а", "е"], "explanation": "Атлас — він (чолові́чий рід)."}, {"sentence": "Це нов___ листі́вка.", "answer": "а", "options": ["а", "ий", "е"], "explanation": "Листі́вка — вона́ (жіно́чий рід)."}, {"sentence": "Це нов___ фо́то.", "answer": "е", "options": ["е", "а", "ий"], "explanation": "Фо́то — воно́ (сере́дній рід)."}, {"sentence": "Це ве́лик___ плака́т.", "answer": "ий", "options": ["ий", "а", "е"], "explanation": "Плака́т — він (чолові́чий рід)."}, {"sentence": "Це ве́лик___ кімна́та.", "answer": "а", "options": ["а", "ий", "е"], "explanation": "Кімна́та — вона́ (жіно́чий рід)."}, {"sentence": "Це ве́лик___ вікно́.", "answer": "е", "options": ["е", "а", "ий"], "explanation": "Вікно́ — воно́ (сере́дній рід)."}]`)} instruction={"Дода́йте правильне закі́нчення прикме́тника."} isUkrainian={false} />
+
+### Розпо́діли за закі́нченням
+
+<GroupSort client:only='react' groups={JSON.parse(`{"-ий (чолові́чий рід)": ["вели́кий", "нови́й", "стари́й"], "-а (жіно́чий рід)": ["вели́ка", "нова́", "га́рна"], "-е (сере́дній рід)": ["вели́ке", "нове́", "старе́"]}`)} instruction={"Розподілі́ть прикме́тники за закі́нченням ро́ду."} isUkrainian={false} />
+
+### Ви́прав закі́нчення
+
+<ErrorCorrection client:only='react' instruction="Знайді́ть і ви́правте по́ми́лку в узго́дженні." items={JSON.parse(`[{"sentence": "Це вели́ка стіл.", "errorWord": "вели́ка", "correctForm": "вели́кий", "options": ["вели́кий", "вели́ка", "вели́ке"], "explanation": "Стіл — чолові́чий рід, тому́ вели́кий стіл."}, {"sentence": "Це нови́й кни́га.", "errorWord": "нови́й", "correctForm": "нова́", "options": ["нова́", "нови́й", "нове́"], "explanation": "Кни́га — жіно́чий рід, тому́ нова́ кни́га."}, {"sentence": "Це нова́ вікно́.", "errorWord": "нова́", "correctForm": "нове́", "options": ["нове́", "нова́", "нови́й"], "explanation": "Вікно́ — сере́дній рід, тому́ нове́ вікно́."}, {"sentence": "Це стари́й фо́то.", "errorWord": "стари́й", "correctForm": "старе́", "options": ["старе́", "стари́й", "стара́"], "explanation": "Фо́то — сере́дній рід, тому́ старе́ фо́то."}, {"sentence": "Це старе́ атлас.", "errorWord": "старе́", "correctForm": "стари́й", "options": ["стари́й", "старе́", "стара́"], "explanation": "Атлас — чолові́чий рід, тому́ стари́й атлас."}, {"sentence": "Це вели́ке плака́т.", "errorWord": "вели́ке", "correctForm": "вели́кий", "options": ["вели́кий", "вели́ке", "вели́ка"], "explanation": "Плака́т — чолові́чий рід, тому́ вели́кий плака́т."}]`)} isUkrainian={false} />
+
+### Бо́нус: переклад
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "A new table", "options": [{"text": "нови́й стіл", "correct": true}, {"text": "нова́ стіл", "correct": false}, {"text": "нове́ стіл", "correct": false}], "explanation": "Стіл is masculine."}, {"source": "A new book", "options": [{"text": "нова́ кни́га", "correct": true}, {"text": "нови́й кни́га", "correct": false}, {"text": "нове́ кни́га", "correct": false}], "explanation": "Кни́га is feminine."}, {"source": "A new window", "options": [{"text": "нове́ вікно́", "correct": true}, {"text": "нови́й вікно́", "correct": false}, {"text": "нова́ вікно́", "correct": false}], "explanation": "Вікно́ is neuter."}, {"source": "An old photo", "options": [{"text": "старе́ фо́то", "correct": true}, {"text": "стари́й фо́то", "correct": false}, {"text": "стара́ фо́то", "correct": false}], "explanation": "Фо́то is neuter."}, {"source": "A big poster", "options": [{"text": "вели́кий плака́т", "correct": true}, {"text": "вели́ка плака́т", "correct": false}, {"text": "вели́ке плака́т", "correct": false}], "explanation": "Плака́т is masculine."}, {"source": "An old atlas", "options": [{"text": "стари́й атлас", "correct": true}, {"text": "стара́ атлас", "correct": false}, {"text": "старе́ атлас", "correct": false}], "explanation": "Атлас is masculine."}]`)} instruction={"Обері́ть правильний переклад украї́нською мо́вою."} isUkrainian={false} />
+
+</TabItem>
+<TabItem label="Resources">
+
+<span id="resources"></span>
+
+:::info[🎧 🔗 External Resources]
+
+**📚 Books:**
+- 📚 [Dobra Forma: Adjectives (Gender and Number in Nominative)](https://opentext.ku.edu/dobraforma/chapter/16-1/)
+  Exercises for nominative adjective agreement with masculine, feminine, and neuter nouns.
+- 📚 [Introduction to Ukrainian ADJECTIVES — прикме́тники](https://www.ukrainianlessons.com/video-adjectives/)
+  Visual introduction to Ukrainian adjectives and question words яки́й, яка, яке́.
+- 📚 **Пономарова 3 клас — Рід прикме́тників**
+  Правило: Прикме́тник ма́є таки́й рід, як іме́нник, з яки́м він зв'язаний.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
+
+<nav aria-label="Lesson navigation">
+
+[Previous](/a1/what-is-it-like/) · [Module](/a1/what-is-it-like/) · [Next](/a1/what-is-it-like/2/)
+
+</nav>

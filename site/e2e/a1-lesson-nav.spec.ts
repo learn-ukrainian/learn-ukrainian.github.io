@@ -48,6 +48,20 @@ test.describe('A1 upgrade nav', () => {
     await expect(page.locator('.lu-sidebar-link.active .lu-sidebar-num')).toHaveText('02');
   });
 
+  test('A1 landing lists both upgraded modules', async ({ page }) => {
+    await page.goto('/a1/');
+    const labels = await page.locator('.lu-sidebar-text').allTextContents();
+    expect(labels).toEqual(expect.arrayContaining(['Речі мають рід', 'Який він?']));
+  });
+
+  test('last gender lesson next goes to the next module landing', async ({ page }) => {
+    await page.goto('/a1/things-have-gender/3/');
+    await expect(page.locator('.lesson-next-prev a').last()).toHaveAttribute('href', '/a1/what-is-it-like/');
+    await page.locator('.lesson-next-prev a').last().click();
+    await expect(page).toHaveURL(/\/a1\/what-is-it-like\/$/);
+    await expect(page.locator('.lu-sidebar-text')).toHaveText(['Який? Яка? Яке?', 'Прикметники', 'Підсумок']);
+  });
+
   test('lesson prev/next hrefs are real paths, not /a1//a1/', async ({ page }) => {
     await page.goto('/a1/things-have-gender/1/');
     const prev = page.locator('.lesson-next-prev a').first();

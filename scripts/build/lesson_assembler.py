@@ -30,8 +30,12 @@ def _activities(path: Path) -> tuple[list, list]:
     for placement in ("inline", "workbook"):
         for original in raw.get(placement, []):
             item = copy.deepcopy(original)
-            if item.get("type") == "unjumble" and "words" in item:
+            if item.get("type") == "unjumble" and "words" in item and "items" not in item:
                 item["items"] = item["words"]
+            if item.get("type") == "unjumble":
+                for row in item.get("items", []):
+                    if "answer" not in row and "sentence" in row:
+                        row["answer"] = row["sentence"]
             if item.get("type") == "true-false" and "statements" in item:
                 item["items"] = item["statements"]
             if item.get("type") == "observe" and "pairs" in item:
@@ -43,6 +47,23 @@ def _activities(path: Path) -> tuple[list, list]:
                         row["source"] = row["sentence"]
                     if "options" not in row and "answer" in row:
                         row["options"] = [{"text": row["answer"], "correct": True}]
+            if item.get("type") == "odd-one-out":
+                for row in item.get("items", []):
+                    options = row.get("options")
+                    if isinstance(row.get("correct"), int) or not isinstance(options, list):
+                        continue
+                    texts = []
+                    odd_index = None
+                    for index, option in enumerate(options):
+                        if isinstance(option, dict):
+                            texts.append(str(option.get("text") or option.get("word") or ""))
+                            if option.get("correct") is True and odd_index is None:
+                                odd_index = index
+                        else:
+                            texts.append(str(option))
+                    if odd_index is not None:
+                        row["correct"] = odd_index
+                        row["words"] = texts
             parsed = parser._parse_activity(item)
             all_items.append(parsed)
             if placement == "workbook":
