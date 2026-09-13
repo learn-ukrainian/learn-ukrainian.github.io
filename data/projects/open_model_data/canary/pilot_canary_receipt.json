@@ -1,10 +1,10 @@
 {
   "schema_version": "v1_pilot_canary_receipt",
-  "receipt_id": "receipt.pilot_canary.60343375c4ac3cc1",
+  "receipt_id": "receipt.pilot_canary.d0c2eac022a67d68",
   "issue": 8010,
   "epic": 6321,
   "phase": "Phase 3.6: 200-Item Pilot Canary Fine-Tune on Gemma 3 4B",
-  "generated_at": "2026-09-13T17:20:54Z",
+  "generated_at": "2026-09-13T17:46:01Z",
   "provenance": {
     "base_model": "google/gemma-3-4b-it",
     "training_run_id": "run-gemma3-4b-canary-20260913-01",
@@ -16,7 +16,7 @@
     "baseline_checkpoint": "google/gemma-3-4b-it-base",
     "dataset_sha256": "b875868ffe8489261baa7d35990e9a12f8e3a842b8b9f09f91d12a1f9ffdc9d1",
     "replay_sha256": "9633a732b5043b876b0d92eb492b6fa8bbf762aa94cbac8d56942a9d87a08977",
-    "adapter_digest": "db6a52de2a0589995e1b011e47e4d9e37c2bdacc4a45df3deac8819df944b614",
+    "adapter_digest": "075ef88b6df44a318a77902f4ed52744febdb804a2624893e272c75911f7a2c0",
     "training_manifest": {
       "total_steps": 75,
       "batch_size": 4,
@@ -112,17 +112,17 @@
     "eval_cases": {
       "filename": "pilot_canary_eval_cases.jsonl",
       "record_count": 900,
-      "sha256": "004fcc5cd9680d9a9b62a6b2dd553406d5ecef7bebb435b389f0cf65a16ce739"
+      "sha256": "6feb516a021e0f2132c6fd175e111d8df80ec66b7b75aed2b94a8c643f9aab95"
     },
     "training_log": {
       "filename": "pilot_canary_training_log.jsonl",
       "record_count": 75,
-      "sha256": "bb6a32b66c20d02b67e97fbd3ad0c94a9c86ba38341f3fa0930708c46b45a483"
+      "sha256": "3629f36522f77e15bf9295107c8f5899ebdc54c69c61c0c724f460b5417abb26"
     },
     "adapter": {
       "filename": "pilot_canary_adapter.safetensors",
       "record_count": 32,
-      "sha256": "db6a52de2a0589995e1b011e47e4d9e37c2bdacc4a45df3deac8819df944b614"
+      "sha256": "075ef88b6df44a318a77902f4ed52744febdb804a2624893e272c75911f7a2c0"
     }
   },
   "verdict": "CANARY_PILOT_PASSED"

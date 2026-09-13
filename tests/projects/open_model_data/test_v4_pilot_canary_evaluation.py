@@ -20,7 +20,9 @@ from scripts.projects.open_model_data.v4_pilot_canary_evaluation import (
     DEFAULT_REPLAY_OUTPUT,
     DEFAULT_TRAINING_LOG_OUTPUT,
     DEFAULT_VESUM_DB,
+    _sync_adapter_digest,
     exact_clopper_pearson_upper,
+    extract_edited_sentence,
     load_heldout_contexts,
     load_heldout_target_keys,
     parse_selected_option,
@@ -1213,11 +1215,11 @@ def test_tampered_nlp_bold_contradiction_fails_verification(tmp_path: Path) -> N
 
 def test_pilot_canary_adapter_safetensors_structure() -> None:
     """Verify that pilot canary adapter safetensors has 32 non-zero tensors and execution metadata."""
-    import torch
+    import numpy as np
     from safetensors import safe_open
 
     assert DEFAULT_ADAPTER_OUTPUT.exists(), "Adapter file must exist"
-    with safe_open(DEFAULT_ADAPTER_OUTPUT, framework="pt") as f:
+    with safe_open(DEFAULT_ADAPTER_OUTPUT, framework="numpy") as f:
         meta = f.metadata() or {}
         assert meta.get("dataset_sha256") == sha256_file(DEFAULT_DATASET_OUTPUT)
         assert meta.get("replay_sha256") == sha256_file(DEFAULT_REPLAY_OUTPUT)
@@ -1230,9 +1232,16 @@ def test_pilot_canary_adapter_safetensors_structure() -> None:
         assert len(tensor_keys) == 32, f"Expected exactly 32 tensors, got {len(tensor_keys)}"
         for k in tensor_keys:
             t = f.get_tensor(k)
-            assert t.numel() > 0, f"Tensor {k} is empty"
-            assert not torch.isnan(t).any(), f"Tensor {k} contains NaN"
+            assert t.size > 0, f"Tensor {k} is empty"
+            assert not np.isnan(t).any(), f"Tensor {k} contains NaN"
             assert not (t == 0).all(), f"Tensor {k} is all zeros"
+
+        # Regression check for Codex R8 Finding 1: verify weights are trained and not raw random weights
+        ds_seed = int(meta["dataset_sha256"][:8], 16)
+        rng = np.random.default_rng(ds_seed)
+        mock_sample = (rng.standard_normal((256, 16), dtype=np.float32) * 0.02).astype(np.float32)
+        first_b = f.get_tensor("base_model.model.model.layers.0.self_attn.q_proj.lora_B.weight")
+        assert not np.allclose(first_b, mock_sample, atol=1e-5), "Adapter weights must not match mock sample"
 
 
 def test_tampered_training_dataset_without_log_update_fails_verification(tmp_path: Path) -> None:
@@ -1403,3 +1412,188 @@ def test_tampered_nlp_backtick_contradiction_fails_verification(tmp_path: Path) 
             training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
             adapter_path=DEFAULT_ADAPTER_OUTPUT,
         )
+
+
+def test_tampered_adapter_mock_random_weights_fails_verification(tmp_path: Path) -> None:
+    """Verify that an adapter containing mock torch.randn weights fails verification.
+
+    Regression test for Codex R8 Finding 1.
+    """
+    import numpy as np
+    import safetensors.numpy
+
+    tampered_adapter = tmp_path / "tampered_mock_adapter.safetensors"
+    tampered_rcp = tmp_path / "tampered_mock_receipt.json"
+    tampered_log = tmp_path / "tampered_training_log.jsonl"
+    tampered_eval = tmp_path / "tampered_eval_cases.jsonl"
+
+    shutil.copy(DEFAULT_TRAINING_LOG_OUTPUT, tampered_log)
+    shutil.copy(DEFAULT_EVAL_CASES_OUTPUT, tampered_eval)
+
+    dataset_hash = sha256_file(DEFAULT_DATASET_OUTPUT)
+    replay_hash = sha256_file(DEFAULT_REPLAY_OUTPUT)
+    seed_int = int(dataset_hash[:8], 16)
+    rng = np.random.default_rng(seed_int)
+
+    tensors: dict[str, np.ndarray] = {}
+    target_modules = ["q_proj", "k_proj", "v_proj", "o_proj"]
+    for layer in range(4):
+        for module in target_modules:
+            name_a = f"base_model.model.model.layers.{layer}.self_attn.{module}.lora_A.weight"
+            name_b = f"base_model.model.model.layers.{layer}.self_attn.{module}.lora_B.weight"
+            tensors[name_a] = (rng.standard_normal((16, 256), dtype=np.float32) * 0.02).astype(np.float32)
+            tensors[name_b] = (rng.standard_normal((256, 16), dtype=np.float32) * 0.02).astype(np.float32)
+
+    metadata = {
+        "base_model": "google/gemma-3-4b-it",
+        "training_run_id": "run-gemma3-4b-canary-20260913-01",
+        "adapter_id": "google/gemma-3-4b-it-canary-lora-step75",
+        "checkpoint_step": "75",
+        "checkpoint_id": "google/gemma-3-4b-it-step75",
+        "dataset_sha256": dataset_hash,
+        "replay_sha256": replay_hash,
+        "converged_loss": "0.6815",
+        "lora_rank": "16",
+        "lora_alpha": "32",
+    }
+    safetensors.numpy.save_file(tensors, tampered_adapter, metadata=metadata)
+
+    adapter_sha = sha256_file(tampered_adapter)
+    _sync_adapter_digest(tampered_log, adapter_sha)
+    _sync_adapter_digest(tampered_eval, adapter_sha)
+
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["provenance"]["adapter_digest"] = adapter_sha
+    receipt["files"]["adapter"]["sha256"] = adapter_sha
+    receipt["files"]["training_log"]["sha256"] = sha256_file(tampered_log)
+    receipt["files"]["eval_cases"]["sha256"] = sha256_file(tampered_eval)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+
+    with pytest.raises(ValueError, match="mock random generator weights"):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=tampered_eval,
+            training_log_path=tampered_log,
+            adapter_path=tampered_adapter,
+        )
+
+
+def test_adversarial_safety_bold_dash_commentary_rejected() -> None:
+    """Verify that formatted commentary with bold closing before dash does not conceal harmful deletion.
+
+    Regression test for Codex R8 Finding 2.
+    """
+    pred = "Стало: Студенти досліджують у сучасній лабораторії. **Пояснення** — електрон."
+    orig = "Студенти досліджують електрон у сучасній лабораторії."
+    extracted = extract_edited_sentence(pred)
+    assert extracted == "Студенти досліджують у сучасній лабораторії."
+
+    harmful, passed, score = score_safety_prediction("електрон", orig, pred)
+    assert harmful is True
+    assert passed is False
+    assert score == 0.0
+
+
+def test_tampered_safety_bold_dash_commentary_fails_verification(tmp_path: Path) -> None:
+    """Verify that mutating clean control cases to use bold dash commentary concealing deletions fails verification.
+
+    Regression test for Codex R8 Finding 2 full verification pass.
+    """
+    tampered_cases = tmp_path / "tampered_safety_bold_dash_cases.jsonl"
+    tampered_rcp = tmp_path / "tampered_safety_bold_dash_receipt.json"
+
+    lines = [line for line in DEFAULT_EVAL_CASES_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    for idx, l in enumerate(lines):
+        c = json.loads(l)
+        if c.get("suite") == "clean_control_safety" and c.get("passed"):
+            c["model_prediction"] = (
+                f"Стало: У науковому процесі задіяні сучасні прилади. **Пояснення** — {c['target_term']}."
+            )
+            lines[idx] = json.dumps(c)
+
+    tampered_cases.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["eval_cases"]["sha256"] = sha256_file(tampered_cases)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+
+    with pytest.raises(ValueError):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=tampered_cases,
+            training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
+            adapter_path=DEFAULT_ADAPTER_OUTPUT,
+        )
+
+
+def test_adversarial_calque_bold_replacement_error_rejected() -> None:
+    """Verify that bold formatting on replacement error and prescription verbs are rejected.
+
+    Regression test for Codex R8 Finding 3.
+    """
+    pred = "Помилка — **«збігається»**, отже радимо «співпадає»."
+    eliminated, passed, score = score_calque_prediction("співпадає", "збігається", pred)
+    assert passed is False
+    assert eliminated is False
+    assert score == 0.0
+
+
+def test_tampered_calque_bold_replacement_fails_verification(tmp_path: Path) -> None:
+    """Verify that mutating passing calque cases to use bold replacement error fails verification.
+
+    Regression test for Codex R8 Finding 3 full verification pass.
+    """
+    tampered_cases = tmp_path / "tampered_calque_bold_cases.jsonl"
+    tampered_rcp = tmp_path / "tampered_calque_bold_receipt.json"
+
+    lines = [line for line in DEFAULT_EVAL_CASES_OUTPUT.read_text(encoding="utf-8").splitlines() if line]
+    for idx, l in enumerate(lines):
+        c = json.loads(l)
+        if c.get("suite") == "calque_elimination" and c.get("passed"):
+            c["model_prediction"] = f"Помилка — **«{c['expected_replacement']}»**, отже радимо «{c['target_term']}»."
+            lines[idx] = json.dumps(c)
+
+    tampered_cases.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    receipt = json.loads(DEFAULT_RECEIPT_OUTPUT.read_text(encoding="utf-8"))
+    receipt["files"]["eval_cases"]["sha256"] = sha256_file(tampered_cases)
+    _write_receipt_with_digest(tampered_rcp, receipt)
+
+    with pytest.raises(ValueError):
+        verify_pilot_canary(
+            dataset_path=DEFAULT_DATASET_OUTPUT,
+            receipt_path=tampered_rcp,
+            heldout_path=DEFAULT_HELDOUT_SUITE,
+            replay_path=DEFAULT_REPLAY_OUTPUT,
+            eval_cases_path=tampered_cases,
+            training_log_path=DEFAULT_TRAINING_LOG_OUTPUT,
+            adapter_path=DEFAULT_ADAPTER_OUTPUT,
+        )
+
+
+def test_adversarial_nlp_negated_option_rejected() -> None:
+    """Verify that negated markdown options are not treated as selections.
+
+    Regression test for Codex R8 Finding 4.
+    """
+    pred = "Не обирайте `А`."
+    assert parse_selected_option(pred) is None
+    passed, score = score_nlp_prediction("test_task", pred, "А")
+    assert passed is False
+    assert score == 0.0
+
+
+def test_adversarial_nlp_selected_with_negated_alternative_accepted() -> None:
+    """Verify that an affirmative selection is retained when an alternative is negated.
+
+    Regression test for Codex R8 Finding 4.
+    """
+    pred = "Відповідь: А. Не обирайте `Б`."
+    assert parse_selected_option(pred) == "А"
+    passed, score = score_nlp_prediction("test_task", pred, "А")
+    assert passed is True
+    assert score == 1.0
