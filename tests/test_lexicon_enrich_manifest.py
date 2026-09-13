@@ -632,6 +632,9 @@ def test_style_markers_match_whole_tokens_only() -> None:
     assert _style_markers_in_tag("adj:f:v_naz:compb:long") == ["long"]
     # … a plain modern-paradigm tag surfaces nothing …
     assert _style_markers_in_tag("adj:f:v_naz:compb") == []
+    # … `subst` (nonstandard forms) is a style marker, not a grammatical sub-tag (#5092).
+    assert _style_markers_in_tag("noun:anim:m:v_dav:prop:lname:subst") == ["subst"]
+    assert _STYLE_MARKER_LABELS["subst"] == "нестандартна форма"
     # … `ns` (pluralia tantum) is grammatical, NOT a style marker, so двері is clean.
     assert _style_markers_in_tag("noun:inanim:p:v_naz:ns") == []
     assert "ns" not in _STYLE_MARKER_LABELS
