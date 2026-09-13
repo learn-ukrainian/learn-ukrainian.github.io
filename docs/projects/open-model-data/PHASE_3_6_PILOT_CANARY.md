@@ -6,7 +6,12 @@ Part of **Epic #6321** (Open Model Data) and **Issue #8010**.
 Operational Plan: `docs/projects/open-model-data/CORPUS_GROUNDED_DECOLONIZATION_DATASET_PLAN.md` §5 (Phase 3.6).
 Predecessor: Phase 3.5 Automated CoT Claim-Verifier (#8009).
 
-This component executes an empirical pilot canary fine-tuning run and directional safety gate evaluation before authorizing full-scale 6,000-trajectory production assembly (Phase 3.7). In alignment with Operator Contract Items 7 (tool-backed claims), 9 (Ukrainian immersion), and 14 (pre-dispatch outcome adequacy), full dataset scaling requires prior empirical proof that the target architecture (`google/gemma-3-4b-it`) converges cleanly, eliminates calques at or above target rates, and strictly respects authentic Ukrainian vocabulary without harmful over-correction.
+This component delivers the **offline contract verification harness, deterministic test suites, and downstream GPU training/evaluation scaffold** before authorizing full-scale 6,000-trajectory production assembly (Phase 3.7). In alignment with Operator Contract Items 7 (tool-backed claims), 9 (Ukrainian immersion), and 14 (pre-dispatch outcome adequacy), full dataset scaling requires prior proof that the data partitioning, formatting contracts, schema validators, cryptographic checksums, and safety gate scoring functions are completely verified.
+
+### In-Repository Synthetic Contract Harness vs. Downstream GPU Execution
+In accordance with the repository's permanent boundary invariant ([`docs/projects/open-model-data/decolonization-training-guide.md` §1](decolonization-training-guide.md#1-project-invariants--scope-boundary)), no heavy model weights, GPU training clusters, or live model inference are hosted or executed inside this GitHub repository or its CI environment.
+- **In-Repository Contract Harness (Option b)**: The in-tree script `v4_pilot_canary_evaluation.py` and committed receipt `pilot_canary_receipt.json` serve as a deterministic synthetic contract and schema verification demonstration. They prove the integrity of the 200-item dataset, 30-item replay buffer, partition firewall, schema contracts, cryptographic digests, and adversarial scoring logic in <2s without PyTorch or GPU dependencies in CI. The loss curve and gate percentages recorded in `pilot_canary_receipt.json` represent the deterministic baseline metrics of this synthetic harness.
+- **Downstream GPU Training & Evaluation Scaffold**: For researchers wishing to execute live GPU fine-tuning on authentic `google/gemma-3-4b-it` weights, a complete 1-click Google Colab notebook (`scripts/projects/open_model_data/pilot_canary_gemma3_4b_colab.ipynb`) is provided alongside public dataset hosting on Hugging Face (`https://huggingface.co/krisztiankoos/uldr-canary-artifacts`). No live GPU run has yet occurred inside this repository or CI.
 
 ---
 
@@ -173,16 +178,20 @@ The canary run enforces three non-negotiable safety gates before production asse
 
 In accordance with the repository's permanent boundary invariant ([`docs/projects/open-model-data/decolonization-training-guide.md` §1](decolonization-training-guide.md#1-project-invariants--scope-boundary)), no heavy model weight generation, paid model hosting, or intensive GPU compute is executed inside this GitHub repository or its CI environment.
 
-For downstream researchers and developers wishing to execute live full-scale fine-tuning of `google/gemma-3-4b-it` on GPU:
+For downstream researchers wishing to execute live GPU fine-tuning of `google/gemma-3-4b-it` on GPU:
 
-1. **Hugging Face Datasets & Artifacts Repository**:
-   - Model Repository: [`https://huggingface.co/krisztiankoos/uldr-canary-artifacts`](https://huggingface.co/krisztiankoos/uldr-canary-artifacts)
-   - Synchronized files: `pilot_canary_train_200.jsonl`, `pilot_canary_replay_buffer_30.jsonl`, `heldout_evaluation_suite_1000.jsonl`, and `v1_pilot_canary_receipt.schema.json`.
+1. **Public Hugging Face Datasets & Artifacts Repository**:
+   - Model Repository: [`https://huggingface.co/krisztiankoos/uldr-canary-artifacts`](https://huggingface.co/krisztiankoos/uldr-canary-artifacts) (Public access — no authentication required to download datasets).
+   - Hosted files: `pilot_canary_train_200.jsonl` (200 training items), `pilot_canary_replay_buffer_30.jsonl` (30 replay items), `pilot_canary_eval_cases.jsonl` (900 evaluation cases), `heldout_evaluation_suite_1000.jsonl`, and `v1_pilot_canary_receipt.schema.json`.
 
-2. **1-Click Google Colab GPU Runner**:
+2. **Google Colab GPU Training & Evaluation Scaffold**:
    - Notebook path: [`scripts/projects/open_model_data/pilot_canary_gemma3_4b_colab.ipynb`](../../scripts/projects/open_model_data/pilot_canary_gemma3_4b_colab.ipynb)
    - Open directly in Colab: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/learn-ukrainian/learn-ukrainian.github.io/blob/main/scripts/projects/open_model_data/pilot_canary_gemma3_4b_colab.ipynb)
-   - Executes 4-bit QLoRA fine-tuning and 900-case evaluation in ~5–7 minutes on a free Google Colab T4 GPU (or A100), pushing the resulting adapter and evaluation outputs directly back to Hugging Face.
+   - Note: The committed notebook is provided as an open-source, unexecuted downstream scaffold for researchers with external GPU hardware (e.g. Google Colab T4/A100). It implements:
+     - 4-bit QLoRA fine-tuning of `google/gemma-3-4b-it` on `pilot_canary_train_200.jsonl` + `pilot_canary_replay_buffer_30.jsonl`.
+     - Inference evaluation on the 900-case evaluation suite (`pilot_canary_eval_cases.jsonl`), calculating empirical Calque Elimination Rate, Harmful-Edit Rate with Clopper-Pearson 95% binomial upper bound, and General NLP non-inferiority margin.
+     - Export of trained adapter weights, training log, and `evaluation_results.json` back to Hugging Face.
+   - Note on execution state: No live GPU run occurs inside this GitHub repository or in GitHub Actions CI; the in-repo receipt reflects the synthetic contract verification harness.
 
 ---
 

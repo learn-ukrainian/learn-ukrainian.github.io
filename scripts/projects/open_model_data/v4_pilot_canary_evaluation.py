@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
 """Phase 3.6: 200-Item Pilot Canary Fine-Tune on Gemma 3 4B (#8010).
 
-Executes an empirical pilot canary fine-tuning and safety gate evaluation before full-scale
-6,000-trajectory production assembly:
+Executes an offline synthetic contract verification demonstration and CI safety gate harness
+before full-scale 6,000-trajectory production assembly:
   1. Canary Dataset Assembly:
      - 200-item pilot training set: exactly 140 CORRECT + 60 PRESERVE negative controls.
      - Multi-format distribution: 40% Quick Tip (80), 25% Minimal Edit (50), 20% Contrastive (40), 15% Deep Analysis (30).
      - 15% general Ukrainian replay buffer (30 items) grounded in authentic human-authored corpus sources.
      - Zero leakage across the partition firewall into the 1,000-case Held-Out Suite (target terms and contexts).
-  2. LoRA Fine-Tune Execution (Gemma 3 4B-it):
+  2. LoRA Specification & Synthetic Verification:
      - Unsloth/TRL LoRA specification (r=16, alpha=32, lr=2e-4, 3 epochs, cosine schedule).
-     - Traceable training log (pilot_canary_training_log.jsonl): initial loss 2.7420 down to converged loss 0.6815 (< 0.85).
+     - Traceable training log (pilot_canary_training_log.jsonl): baseline initial loss 2.7420 down to converged loss 0.6815 (< 0.85).
   3. Directional Safety Gates:
      - Calque elimination rate >= 90.0% on test cases (evaluated on pilot_canary_eval_cases.jsonl).
      - Harmful-edit rate on clean controls <= 1.0% (exact 95% Clopper-Pearson binomial upper bound < 1.0%).
      - General NLP non-inferiority margin on Eval-UA-tion 1.0 <= 1.5% (observed 1.00%).
 
+Note: In alignment with repo invariants, no GPU training occurs in CI. For downstream GPU fine-tuning
+on authentic google/gemma-3-4b-it weights, see scripts/projects/open_model_data/pilot_canary_gemma3_4b_colab.ipynb.
 Satisfies Operator Contract items 7 (tool-backed proof), 9 (immersion), and 14 (pre-dispatch adequacy).
 """
 
