@@ -209,6 +209,7 @@ def test_mined_cli_verify_only() -> None:
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
+        timeout=60,
     )
     assert res1.returncode == 0, f"v4_mine_corpus_calques.py --verify-only failed: {res1.stderr}"
 
@@ -221,6 +222,7 @@ def test_mined_cli_verify_only() -> None:
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
+        timeout=60,
     )
     assert res2.returncode == 0, f"v4_mine_uagec_calques.py --verify-only failed: {res2.stderr}"
 

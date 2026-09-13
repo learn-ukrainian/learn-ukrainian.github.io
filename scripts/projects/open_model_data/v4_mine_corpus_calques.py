@@ -82,8 +82,69 @@ TITLE_EXEMPTIONS = {
 }
 
 
+UKRAINIAN_STOPWORDS = {
+    "і",
+    "й",
+    "та",
+    "а",
+    "але",
+    "чи",
+    "або",
+    "в",
+    "у",
+    "на",
+    "з",
+    "із",
+    "зі",
+    "до",
+    "по",
+    "за",
+    "про",
+    "при",
+    "під",
+    "над",
+    "перед",
+    "для",
+    "від",
+    "без",
+    "через",
+    "після",
+    "не",
+    "ні",
+    "як",
+    "що",
+    "щоб",
+    "це",
+    "той",
+    "такий",
+    "який",
+    "яка",
+    "яке",
+    "які",
+    "хто",
+    "ми",
+    "ви",
+    "він",
+    "вона",
+    "воно",
+    "вони",
+    "його",
+    "її",
+    "їх",
+    "їм",
+    "нам",
+    "вам",
+}
+
+
+def get_content_words(s: str) -> list[str]:
+    s_clean = s.replace("’", "'").replace("`", "'")
+    words = re.findall(r"[а-яіїєґ']+", s_clean.lower())
+    return [w for w in words if len(w) >= 3 and w not in UKRAINIAN_STOPWORDS]
+
+
 def _get_stem(w: str) -> str:
-    clean = re.sub(r"[^а-яіїєґ']", "", w.lower())
+    clean = re.sub(r"[^а-яіїєґ']", "", w.replace("’", "'").lower())
     if len(clean) <= 3:
         return clean
     return clean[:4]
@@ -101,28 +162,35 @@ def parse_textbook_contrast_tables(
     vc = v_conn.cursor()
 
     def get_lemma(word: str) -> str:
-        clean = re.sub(r"[^а-яіїєґ']", "", word.strip().lower())
+        clean = re.sub(r"[^а-яіїєґ']", "", word.replace("’", "'").strip().lower())
         if not clean:
             return ""
         res = vc.execute("SELECT lemma FROM forms_all WHERE word_form = ? LIMIT 1", (clean,)).fetchone()
         return res[0] if res else clean
+
+    def test_pair_alignment(s1: str, s2: str) -> bool:
+        if s1.strip().lower() == s2.strip().lower():
+            return False
+        cw1 = set(get_content_words(s1))
+        cw2 = set(get_content_words(s2))
+        if not cw1 or not cw2:
+            return False
+        if cw1.intersection(cw2):
+            return True
+        lemmas1 = {get_lemma(w) for w in cw1}
+        lemmas2 = {get_lemma(w) for w in cw2}
+        if lemmas1.intersection(lemmas2):
+            return True
+        stems1 = {_get_stem(w) for w in cw1}
+        stems2 = {_get_stem(w) for w in cw2}
+        return bool(stems1.intersection(stems2))
 
     def test_alignment(seq1: list[str], seq2: list[str]) -> int:
         if len(seq1) != len(seq2) or not seq1:
             return 0
         matches = 0
         for s1, s2 in zip(seq1, seq2, strict=True):
-            w1 = set(re.findall(r"[а-яіїєґ']+", s1.lower()))
-            w2 = set(re.findall(r"[а-яіїєґ']+", s2.lower()))
-            lemmas1 = {get_lemma(w) for w in w1 if len(w) >= 3}
-            lemmas2 = {get_lemma(w) for w in w2 if len(w) >= 3}
-            stems1 = {_get_stem(w) for w in w1 if len(_get_stem(w)) >= 3}
-            stems2 = {_get_stem(w) for w in w2 if len(_get_stem(w)) >= 3}
-            if (
-                len(w1.intersection(w2)) > 0
-                or len(lemmas1.intersection(lemmas2)) > 0
-                or len(stems1.intersection(stems2)) > 0
-            ):
+            if test_pair_alignment(s1, s2):
                 matches += 1
         return matches
 
@@ -139,21 +207,27 @@ def parse_textbook_contrast_tables(
         # 2. Superlative constructions
         if words[0].lower() in ("самий", "сама", "саме", "самі") and len(words) >= 3:
             return (" ".join(words[:2]), " ".join(words[2:]))
-        # 3. Repeated anchor word
+        # 3. Repeated anchor word (non-stopword)
         for i in range(1, len(words)):
-            if words[i].lower() == words[0].lower():
+            w0 = words[0].replace("’", "'").lower()
+            wi = words[i].replace("’", "'").lower()
+            if wi == w0 and w0 not in UKRAINIAN_STOPWORDS:
                 return (" ".join(words[:i]), " ".join(words[i:]))
-        # 4. Shared stem / lemma morphological split
+        # 4. Shared stem / lemma morphological split on content words
         best_split = None
         best_score = -999
         for i in range(1, len(words)):
             p1 = words[:i]
             p2 = words[i:]
-            lemmas1 = {get_lemma(w) for w in p1 if len(w) >= 3}
-            lemmas2 = {get_lemma(w) for w in p2 if len(w) >= 3}
-            stems1 = {_get_stem(w) for w in p1 if len(_get_stem(w)) >= 3}
-            stems2 = {_get_stem(w) for w in p2 if len(_get_stem(w)) >= 3}
-            overlap = len(lemmas1.intersection(lemmas2).union(stems1.intersection(stems2)))
+            cw1 = set(get_content_words(" ".join(p1)))
+            cw2 = set(get_content_words(" ".join(p2)))
+            if not cw1 or not cw2:
+                continue
+            lemmas1 = {get_lemma(w) for w in cw1}
+            lemmas2 = {get_lemma(w) for w in cw2}
+            stems1 = {_get_stem(w) for w in cw1}
+            stems2 = {_get_stem(w) for w in cw2}
+            overlap = len(cw1.intersection(cw2).union(lemmas1.intersection(lemmas2)).union(stems1.intersection(stems2)))
             diff = abs(len(p1) - len(p2))
             score = overlap * 10 - diff
             if score > best_score:
@@ -190,15 +264,19 @@ def parse_textbook_contrast_tables(
     ) -> bool:
         inc = re.sub(r"^[/\\–—\-\s]+|[/\\–—\-\s]+$", "", inc).strip(",.:;!? ")
         cor = re.sub(r"^[/\\–—\-\s]+|[/\\–—\-\s]+$", "", cor).strip(",.:;!? ")
+        inc = re.sub(r"\s+", " ", inc).strip()
+        cor = re.sub(r"\s+", " ", cor).strip()
         if len(inc) < 2 or len(cor) < 2 or inc.lower() == cor.lower():
             return False
-        cor_words = re.findall(r"[а-яіїєґ']+", cor.lower())
+        cor_words = get_content_words(cor)
+        if not cor_words:
+            cor_words = re.findall(r"[а-яіїєґ']+", cor.replace("’", "'").lower())
         if not cor_words:
             return False
         first_word = cor_words[0]
         corr_lemma = get_lemma(first_word)
         root_fam = extract_root_family(corr_lemma) or extract_root_family(first_word) or first_word[:3]
-        if not root_fam:
+        if not root_fam or len(root_fam) < 2:
             return False
         pair_key = (inc.lower(), cor.lower())
         if pair_key in seen_pairs:
@@ -257,6 +335,10 @@ def parse_textbook_contrast_tables(
                 continue
 
             # Header detection (case-insensitive word boundary)
+            if re.search(r"(\[|URL|http|с\.\s*[–—\-]|ДонНУ|монографія|видавництво|редакція)", line_str, re.IGNORECASE):
+                i += 1
+                continue
+
             m_inc = re.search(r"\bНЕПРАВИЛЬНО\b", line_str, re.IGNORECASE)
             m_cor = re.search(r"\bПРАВИЛЬНО\b", line_str, re.IGNORECASE)
             if not (m_inc and m_cor):
@@ -269,24 +351,35 @@ def parse_textbook_contrast_tables(
             j = i + 1
             while j < len(lines):
                 l = lines[j].strip()
-                if l.isdigit() or len(l) < 2:
+                if not l or l.isdigit() or len(l) < 2:
                     break
                 # Stop on narrative, instructions, exercise numbers, citations, headings
                 if re.match(
-                    r"^(\d+[\.\)]|\d+\s|[А-Я]\.|\bПрочитайте\b|\bСкладіть\b|\bПерепишіть\b|\bПерегляньте\b|\bРозрізняймо\b|\bДО РЕЧІ\b|\bЗАУВАЖТЕ\b|\bПоясніть\b|\bВправа\b|\bРозділ\b|\bТема\b|\bКорисно знати\b)",
+                    r"^(\d+[\.\)]|\d+\s|[А-Я]\.|\bПрочитайте\b|\bСкладіть\b|\bВизначте\b|\bЯкі\b|\bПерепишіть\b|\bПерегляньте\b|\bРозрізняймо\b|\bДО РЕЧІ\b|\bЗАУВАЖТЕ\b|\bПоясніть\b|\bВправа\b|\bРозділ\b|\bТема\b|\bКорисно знати\b)",
                     l,
                 ):
                     break
-                if re.match(r"^[А-Г]\s+", l) or re.search(r"https?://|cutt\.ly|[a-zA-Z\?«»–—\(\)]", l):
+                # Reject wrapped lines ending with hyphens
+                if l.endswith("-") or l.endswith("–") or l.endswith("—"):
                     break
-                if len(l.split()) > 10:
+                l_clean = re.sub(r"\([^)]*\)", "", l).strip()
+                l_clean = re.sub(r"\s+", " ", l_clean)
+                if re.match(r"^[А-Г]\s+", l_clean) or re.search(r"https?://|cutt\.ly|[a-zA-Z\?«»–—]", l_clean):
                     break
-                candidate_lines.append(l)
+                l_words = l_clean.split()
+                if len(l_words) > 6:
+                    break
+                if l_clean.endswith(".") and len(l_words) > 3:
+                    break
+                candidate_lines.append((l, l_clean))
                 j += 1
 
             i = j
             if not candidate_lines:
                 continue
+
+            raw_lines = [item[0] for item in candidate_lines]
+            clean_lines = [item[1] for item in candidate_lines]
 
             # 1. Check for two-column (or multi-column) block layout
             offset = 0
@@ -296,8 +389,8 @@ def parse_textbook_contrast_tables(
                 best_k = None
                 best_matches = 0
                 for k in range(2, rem // 2 + 1):
-                    col1 = candidate_lines[offset : offset + k]
-                    col2 = candidate_lines[offset + k : offset + 2 * k]
+                    col1 = clean_lines[offset : offset + k]
+                    col2 = clean_lines[offset + k : offset + 2 * k]
                     m = test_alignment(col1, col2)
                     min_m = 2 if k >= 3 else 1
                     if (
@@ -310,20 +403,28 @@ def parse_textbook_contrast_tables(
 
                 if best_k:
                     is_two_col = True
-                    c1 = candidate_lines[offset : offset + best_k]
-                    c2 = candidate_lines[offset + best_k : offset + 2 * best_k]
-                    for w1, w2 in zip(c1, c2, strict=True):
-                        inc, cor = (w1, w2) if mode == "incorrect_first" else (w2, w1)
-                        p1 = text.find(w1)
-                        p2 = text.find(w2)
+                    c1_clean = clean_lines[offset : offset + best_k]
+                    c2_clean = clean_lines[offset + best_k : offset + 2 * best_k]
+                    c1_raw = raw_lines[offset : offset + best_k]
+                    c2_raw = raw_lines[offset + best_k : offset + 2 * best_k]
+                    for (w1_raw, w1_clean), (w2_raw, w2_clean) in zip(
+                        zip(c1_raw, c1_clean, strict=True),
+                        zip(c2_raw, c2_clean, strict=True),
+                        strict=True,
+                    ):
+                        inc_clean, cor_clean = (
+                            (w1_clean, w2_clean) if mode == "incorrect_first" else (w2_clean, w1_clean)
+                        )
+                        p1 = text.find(w1_raw)
+                        p2 = text.find(w2_raw)
                         if p1 != -1 and p2 != -1:
                             start_p = min(p1, p2)
-                            end_p = max(p1 + len(w1), p2 + len(w2))
+                            end_p = max(p1 + len(w1_raw), p2 + len(w2_raw))
                             ctx = text[start_p:end_p]
                         else:
-                            ctx = f"{w1} -> {w2}"
+                            continue
 
-                        if add_pair(cid, author_key, grade, subj, inc, cor, ctx, pair_idx):
+                        if add_pair(cid, author_key, grade, subj, inc_clean, cor_clean, ctx, pair_idx):
                             pair_idx += 1
                     offset += 2 * best_k
                 else:
@@ -334,33 +435,35 @@ def parse_textbook_contrast_tables(
                 alt_matches = sum(
                     1
                     for idx in range(len(candidate_lines) // 2)
-                    if test_alignment([candidate_lines[2 * idx]], [candidate_lines[2 * idx + 1]])
+                    if test_pair_alignment(clean_lines[2 * idx], clean_lines[2 * idx + 1])
                 )
                 if alt_matches >= 2 and (alt_matches / (len(candidate_lines) // 2)) >= 0.6:
                     is_two_col = True
                     for idx in range(len(candidate_lines) // 2):
-                        w1 = candidate_lines[2 * idx]
-                        w2 = candidate_lines[2 * idx + 1]
-                        inc, cor = (w1, w2) if mode == "incorrect_first" else (w2, w1)
-                        p1 = text.find(w1)
-                        p2 = text.find(w2)
+                        w1_raw, w1_clean = candidate_lines[2 * idx]
+                        w2_raw, w2_clean = candidate_lines[2 * idx + 1]
+                        inc_clean, cor_clean = (
+                            (w1_clean, w2_clean) if mode == "incorrect_first" else (w2_clean, w1_clean)
+                        )
+                        p1 = text.find(w1_raw)
+                        p2 = text.find(w2_raw)
                         if p1 != -1 and p2 != -1:
                             start_p = min(p1, p2)
-                            end_p = max(p1 + len(w1), p2 + len(w2))
+                            end_p = max(p1 + len(w1_raw), p2 + len(w2_raw))
                             ctx = text[start_p:end_p]
                         else:
-                            ctx = f"{w1} -> {w2}"
+                            continue
 
-                        if add_pair(cid, author_key, grade, subj, inc, cor, ctx, pair_idx):
+                        if add_pair(cid, author_key, grade, subj, inc_clean, cor_clean, ctx, pair_idx):
                             pair_idx += 1
 
             # 3. Check Side-by-Side if not column-based
             if not is_two_col:
-                for l in candidate_lines:
-                    p = check_side_by_side_line(l)
+                for raw_l, clean_l in candidate_lines:
+                    p = check_side_by_side_line(clean_l)
                     if p:
                         inc, cor = (p[0], p[1]) if mode == "incorrect_first" else (p[1], p[0])
-                        if add_pair(cid, author_key, grade, subj, inc, cor, l, pair_idx):
+                        if add_pair(cid, author_key, grade, subj, inc, cor, raw_l, pair_idx):
                             pair_idx += 1
 
     s_conn.close()
