@@ -1,5 +1,6 @@
 import { Fragment, type ReactNode } from "react";
 import type { EntryRecord } from "../lib/lexicon/atlas-data-source";
+import type { LexiconEntry } from "../lib/lexicon/atlasDb";
 import { atlasPracticeHref } from "../lib/lexicon/atlas-practice-link";
 import { safeHref } from "../lib/lexicon/safe-url";
 import {
@@ -127,22 +128,72 @@ function hasPastForms(past: VerbParadigm["past"]) {
   return PAST_ROWS.some((row) => hasForm(past?.[row.key]));
 }
 
-export default function WordAtlasArticle({
-  record,
+function getEffectiveHeteronymRecord(
+  baseRecord: EntryRecord,
+  heteronym: LexiconEntry,
+): EntryRecord {
+  const baseEntry = baseRecord.entry;
+  const baseEnrichment =
+    typeof baseEntry.enrichment === "object" && baseEntry.enrichment !== null
+      ? (baseEntry.enrichment as Record<string, any>)
+      : {};
+  const heteronymEnrichment =
+    typeof heteronym.enrichment === "object" && heteronym.enrichment !== null
+      ? (heteronym.enrichment as Record<string, any>)
+      : {};
+  const baseSections =
+    typeof baseEntry.sections === "object" && baseEntry.sections !== null
+      ? (baseEntry.sections as Record<string, any>)
+      : {};
+  const heteronymSections =
+    typeof heteronym.sections === "object" && heteronym.sections !== null
+      ? (heteronym.sections as Record<string, any>)
+      : {};
+
+  const effectiveEntry: LexiconEntry = {
+    ...baseEntry,
+    ...heteronym,
+    lemma: heteronym.headword || heteronym.lemma || baseEntry.lemma,
+    gloss: heteronym.gloss !== undefined ? heteronym.gloss : baseEntry.gloss,
+    pos: heteronym.pos !== undefined ? heteronym.pos : baseEntry.pos,
+    pronunciation: heteronym.pronunciation !== undefined ? heteronym.pronunciation : baseEntry.pronunciation,
+    heritage_status: heteronym.heritage_status !== undefined ? heteronym.heritage_status : baseEntry.heritage_status,
+    distinction_note: heteronym.distinction_note !== undefined ? heteronym.distinction_note : baseEntry.distinction_note,
+    sections: heteronym.sections !== undefined ? { ...baseSections, ...heteronymSections } : baseEntry.sections,
+    enrichment: {
+      ...baseEnrichment,
+      ...heteronymEnrichment,
+      stress: heteronym.stress ?? heteronymEnrichment.stress ?? baseEnrichment.stress,
+      cefr: heteronym.cefr !== undefined ? (heteronym.cefr ? { level: heteronym.cefr } : null) : baseEnrichment.cefr,
+      morphology: heteronym.morphology ?? heteronymEnrichment.morphology ?? baseEnrichment.morphology,
+      examples: heteronym.examples ?? heteronymEnrichment.examples ?? baseEnrichment.examples,
+    },
+  };
+  return {
+    ...baseRecord,
+    entry: effectiveEntry,
+  };
+}
+
+interface WordAtlasArticleBodyProps {
+  record: EntryRecord;
+  view: ReturnType<typeof buildWordAtlasArticleView>;
+  generatedAt: string;
+  manifestVersion: string;
+  hasHeteronyms?: boolean;
+  heteronyms?: LexiconEntry[] | null;
+  currentHeteronymIdx?: number;
+}
+
+function WordAtlasArticleBody({
+  record: _record,
+  view,
   generatedAt,
   manifestVersion,
-  atlasLinkCatalog,
-  partnerRecord,
-  partnerParadigm: propPartnerParadigm,
-  children,
-}: WordAtlasArticleProps) {
-  const view = buildWordAtlasArticleView(
-    record,
-    generatedAt,
-    manifestVersion,
-    atlasLinkCatalog,
-    propPartnerParadigm ?? partnerRecord,
-  );
+  hasHeteronyms = false,
+  heteronyms = null,
+  currentHeteronymIdx = 0,
+}: WordAtlasArticleBodyProps) {
   const {
     entry,
     enrichment,
@@ -183,25 +234,20 @@ export default function WordAtlasArticle({
     verbPedagogy,
     hasVerbPedagogy,
     verbPedagogySources,
-    resolvedAspectPartnerSlug,
+    resolvedAspectPartnerSlug: _resolvedAspectPartnerSlug,
     partnerParadigm,
     hasAspectPartner,
     hasPractice,
     stressDisplay,
   } = view;
 
-  const typeahead = children ?? <DefaultAtlasTypeahead />;
+  const contentId =
+    currentHeteronymIdx > 0
+      ? `word-${entry.url_slug}-${currentHeteronymIdx}`
+      : `word-${entry.url_slug}`;
 
   return (
-
-    <div className={`${styles.root} word-atlas`} data-word-atlas="">
-      <div className="word-switch">
-        {typeahead}
-        <a className="atlas-button filter" href={safeHref("/lexicon/") ?? undefined}>До Атласу</a>
-        <span className="poc-label">Атлас слів (Лексикон)</span>
-      </div>
-
-      <div id={`word-${entry.url_slug}`}>
+    <div id={contentId}>
         {entry.form_of ? (
           <>
             <div className="word-hero">
@@ -273,6 +319,32 @@ export default function WordAtlasArticle({
                 </span>
               )}
             </div>
+            {entry.distinction_note && (
+              <div className="atlas-heteronym-hatnote" role="note">
+                <span className="atlas-heteronym-hatnote-icon" aria-hidden="true">💡</span>
+                <div className="atlas-heteronym-hatnote-content">
+                  <span>{entry.distinction_note}</span>
+                  {hasHeteronyms && heteronyms && (
+                    <span className="atlas-heteronym-hatnote-switchers">
+                      {heteronyms.map((hOther, otherIdx) => {
+                        if (otherIdx === currentHeteronymIdx) return null;
+                        const targetTitle = hOther.headword || hOther.lemma;
+                        return (
+                          <a
+                            key={targetTitle}
+                            href={`#${encodeURIComponent(targetTitle)}`}
+                            className="atlas-heteronym-hatnote-btn"
+                            data-heteronym-jump={otherIdx}
+                          >
+                            Перейти до «{targetTitle}»{hOther.short_label ? ` (${hOther.short_label})` : ""} →
+                          </a>
+                        );
+                      })}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -1319,6 +1391,113 @@ export default function WordAtlasArticle({
           </>
         )}
       </div>
+  );
+}
+
+export default function WordAtlasArticle({
+  record,
+  generatedAt,
+  manifestVersion,
+  atlasLinkCatalog,
+  partnerRecord,
+  partnerParadigm: propPartnerParadigm,
+  children,
+}: WordAtlasArticleProps) {
+  const heteronyms = record?.entry?.heteronyms ?? null;
+  const hasHeteronyms = Boolean(heteronyms && heteronyms.length > 1);
+  const typeahead = children ?? <DefaultAtlasTypeahead />;
+
+  return (
+    <div className={`${styles.root} word-atlas`} data-word-atlas="">
+      <div className="word-switch">
+        {typeahead}
+        <a className="atlas-button filter" href={safeHref("/lexicon/") ?? undefined}>До Атласу</a>
+        <span className="poc-label">Атлас слів (Лексикон)</span>
+      </div>
+
+      {hasHeteronyms && (
+        <nav className="atlas-heteronym-nav" role="tablist" aria-label="Омографи з різним наголосом">
+          <span className="atlas-heteronym-label">Омографи:</span>
+          <div className="atlas-heteronym-tabs">
+            {heteronyms!.map((h, idx) => {
+              const isSelected = idx === 0;
+              const title = h.headword || h.lemma || `Варіант ${idx + 1}`;
+              return (
+                <button
+                  key={title}
+                  type="button"
+                  role="tab"
+                  id={`heteronym-tab-${idx}`}
+                  aria-controls={`heteronym-panel-${idx}`}
+                  aria-selected={isSelected ? "true" : "false"}
+                  tabIndex={isSelected ? 0 : -1}
+                  data-heteronym-target={idx}
+                  data-heteronym-headword={title}
+                  className={`atlas-heteronym-tab ${isSelected ? "active" : ""}`}
+                >
+                  <strong className="atlas-heteronym-tab-headword">{title}</strong>
+                  {h.short_label ? (
+                    <span className="atlas-heteronym-tab-hint"> — {h.short_label}</span>
+                  ) : h.gloss ? (
+                    <span className="atlas-heteronym-tab-hint"> — {h.gloss}</span>
+                  ) : null}
+                </button>
+              );
+            })}
+          </div>
+        </nav>
+      )}
+
+      {hasHeteronyms ? (
+        heteronyms!.map((h, idx) => {
+          const isSelected = idx === 0;
+          const title = h.headword || h.lemma || `Варіант ${idx + 1}`;
+          const effectiveRecord = getEffectiveHeteronymRecord(record, h);
+          const heteronymView = buildWordAtlasArticleView(
+            effectiveRecord,
+            generatedAt,
+            manifestVersion,
+            atlasLinkCatalog,
+            propPartnerParadigm ?? partnerRecord,
+          );
+          return (
+            <div
+              key={title}
+              id={`heteronym-panel-${idx}`}
+              role="tabpanel"
+              aria-labelledby={`heteronym-tab-${idx}`}
+              data-heteronym-idx={idx}
+              data-heteronym-headword={title}
+              className="atlas-heteronym-panel"
+              style={isSelected ? undefined : { display: "none" }}
+            >
+              <WordAtlasArticleBody
+                record={effectiveRecord}
+                view={heteronymView}
+                generatedAt={generatedAt}
+                manifestVersion={manifestVersion}
+                hasHeteronyms={hasHeteronyms}
+                heteronyms={heteronyms}
+                currentHeteronymIdx={idx}
+              />
+            </div>
+          );
+        })
+      ) : (
+        <WordAtlasArticleBody
+          record={record}
+          view={buildWordAtlasArticleView(
+            record,
+            generatedAt,
+            manifestVersion,
+            atlasLinkCatalog,
+            propPartnerParadigm ?? partnerRecord,
+          )}
+          generatedAt={generatedAt}
+          manifestVersion={manifestVersion}
+          hasHeteronyms={false}
+        />
+      )}
     </div>
   );
 }

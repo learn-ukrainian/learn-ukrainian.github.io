@@ -30,6 +30,14 @@ export interface LexiconEntry {
   enrichment?: unknown;
   heritage_status?: unknown;
   wiki_reference?: unknown;
+  heteronyms?: LexiconEntry[];
+  distinction_note?: string;
+  short_label?: string;
+  headword?: string;
+  stress?: unknown;
+  cefr?: string | null;
+  morphology?: unknown;
+  examples?: unknown;
 }
 
 interface PayloadRow {

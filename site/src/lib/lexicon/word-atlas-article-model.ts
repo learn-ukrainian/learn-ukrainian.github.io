@@ -269,6 +269,10 @@ export interface LexiconEntryView {
     wikisource_url?: string | null;
     attribution: string;
   } | null;
+  heteronyms?: LexiconEntryView[] | null;
+  distinction_note?: string | null;
+  short_label?: string | null;
+  headword?: string | null;
 }
 
 /** Minimal canonical article shape needed for learner-facing Atlas backlinks. */
