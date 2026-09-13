@@ -789,23 +789,30 @@ def admit_fmu_boosters(*, dry_run: bool = False) -> dict[str, Any]:
                         }
                     )
                     entry_updated = True
+
+            # If this is an already-promoted booster entry whose definition card needs authentic attribution, update in-place
+            for card in entry.get("definition_cards", []):
+                if card.get("source_dict") == "vts" and lemma in NEW_DEFINITIONS:
+                    ep = ep_list[0]["ep"]
+                    ep_num = ep.get("num", "00")
+                    ep_url = ep.get("url", f"https://www.ukrainianlessons.com/fmu{int(ep_num)}/")
+                    card["id"] = "ohoiko"
+                    card["source_dict"] = "ohoiko"
+                    card["source_label"] = f"5 Minute Ukrainian (Анна Огойко, епізод {int(ep_num)})"
+                    card["source_url"] = ep_url
+                    entry_updated = True
+
             if entry_updated:
                 existing_updated += 1
 
     print(f"Updated provenance for {existing_updated} existing manifest entries.")
 
-    # 2. Add or update newly admitted entries
+    # 2. Add newly admitted entries (strictly when not in manifest)
     new_entries = []
     for lemma, ep_list in word_to_episodes.items():
         key = _lemma_key(lemma)
-        first_item = ep_list[0]
-        is_booster_admitted = False
-        if key in entries_by_key:
-            entry = entries_by_key[key]
-            if lemma in NEW_DEFINITIONS and entry.get("primary_source") == "source_inventory_grow":
-                is_booster_admitted = True
-
-        if key not in entries_by_key or is_booster_admitted:
+        if key not in entries_by_key:
+            first_item = ep_list[0]
             new_entry = build_new_atlas_entry(lemma, first_item["pos"], first_item["gloss"], first_item["ep"])
             for extra_item in ep_list[1:]:
                 extra_ep = extra_item["ep"]

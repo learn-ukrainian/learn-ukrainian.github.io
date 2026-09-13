@@ -7,7 +7,7 @@
       },
       {
         "path": "scripts/lexicon/admit_fmu_boosters.py",
-        "sha256": "117c568b96de7fc5e2e0a64306a2bebc1e1a310e2e18769e0b97ad7ebe1daeb5"
+        "sha256": "a5dd9df32246d66a6f69e5883c2f72cb31f5d31c96e4317a905121acdf23de86"
       },
       {
         "path": "scripts/lexicon/admit_stem_slice_2a.py",

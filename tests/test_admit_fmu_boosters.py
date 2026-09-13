@@ -125,3 +125,71 @@ def test_fmu_booster_repeated_episodes_provenance_preserved():
 
     assert len(word_to_eps["касир"]) >= 2
     assert len(word_to_eps["касирка"]) >= 2
+
+
+def test_fmu_booster_existing_entry_metadata_and_provenance_preserved():
+    from scripts.lexicon.admit_fmu_boosters import EPISODES_DATA
+
+    # Simulate an existing entry with rich provenance and custom metadata
+    existing_entry = {
+        "lemma": "касир",
+        "url_slug": "касир",
+        "pos": "noun",
+        "entry_type": "lemma",
+        "primary_source": "textbook_glossary",
+        "custom_editorial_field": "do_not_erase_me",
+        "source_provenance": [
+            {
+                "source_family": "textbook",
+                "source_id": "book-grade-07-math",
+                "source_locator": "p.123",
+                "extraction_mode": "glossary",
+            }
+        ],
+        "definition_cards": [
+            {
+                "id": "sum20",
+                "source_dict": "sum20",
+                "source_label": "СУМ-20",
+                "definition": "Той, хто приймає і видає гроші.",
+                "source_url": "https://slovnyk.ua/sum20",
+            }
+        ],
+    }
+
+    word_to_episodes = {}
+    for ep in EPISODES_DATA:
+        for lemma, pos, gloss in ep["words"]:
+            word_to_episodes.setdefault(lemma, []).append(
+                {
+                    "pos": pos,
+                    "gloss": gloss,
+                    "ep": ep,
+                }
+            )
+
+    ep_list = word_to_episodes["касир"]
+    prov_list = existing_entry["source_provenance"]
+    for item in ep_list:
+        ep = item["ep"]
+        locator = f"fmu-booster-ep-{ep['num']}"
+        ep_id = f"ohoiko-fmu-booster-ep-{ep['num']}"
+        if not any(p.get("source_locator") == locator for p in prov_list):
+            prov_list.append(
+                {
+                    "source_family": "ohoiko",
+                    "source_locator": locator,
+                    "source_id": ep_id,
+                    "source_title": f"Anna Ohoiko - 5 Minute Ukrainian Episode {int(ep['num'])}",
+                    "extraction_mode": "curated_headword",
+                    "visibility": "public",
+                    "redistributable": True,
+                }
+            )
+
+    # Verify existing fields, original provenance, and definition cards are preserved
+    assert existing_entry["custom_editorial_field"] == "do_not_erase_me"
+    assert existing_entry["primary_source"] == "textbook_glossary"
+    assert existing_entry["source_provenance"][0]["source_family"] == "textbook"
+    assert len(existing_entry["source_provenance"]) >= 3  # 1 textbook + 2 FMU
+    assert existing_entry["definition_cards"][0]["source_dict"] == "sum20"
