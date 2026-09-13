@@ -104,27 +104,19 @@ def check_quote_quality(quote: str) -> str | None:
     return None
 
 
-def check_vesum_lemma(
-    lemma: str,
-    tier: str,
-    conn: sqlite3.Connection,
-) -> tuple[int, bool, list[str]]:
-    """Query local VESUM database for paradigm form counts and morphology tags."""
-    if tier == "purist_neologism":
-        # Purist neologisms are explicitly unvetted/hallucinated seeds for contrast
-        return 0, False, ["purism", "neologism"]
+FUNCTION_WORDS: set[str] = {
+    "в", "у", "на", "за", "по", "при", "з", "із", "зі", "до", "про", "від", "для",
+    "під", "над", "перед", "через", "без", "і", "й", "та", "або", "чи", "а", "але",
+    "б", "би", "же", "ж", "не", "ні", "що", "як", "щоб", "бо", "щодо",
+}
 
-    cur = conn.cursor()
-    clean = re.sub(r"[\u0300\u0301]", "", lemma).strip().lower()
-    clean_words = re.sub(r"[,«»\"“”]", "", clean)
-    words = [w for w in clean_words.split() if w]
-    if not words:
-        return 0, False, []
 
+def _check_vesum_single_word(w: str, cur: sqlite3.Cursor) -> tuple[int, bool, list[str]]:
+    """Check a single word token in VESUM, returning (form_count, is_standard, tags)."""
     # 1. Direct lemma lookup in standard forms view
-    rows = cur.execute("SELECT tags FROM forms WHERE lemma = ?", (clean,)).fetchall()
+    rows = cur.execute("SELECT tags FROM forms WHERE lemma = ?", (w,)).fetchall()
     if rows:
-        tags = []
+        tags: list[str] = []
         for r in rows:
             if r[0]:
                 for t in r[0].split(":"):
@@ -132,23 +124,79 @@ def check_vesum_lemma(
                         tags.append(t)
         return len(rows), True, tags[:5]
 
-    # 2. Multi-word phrase check
-    word_counts = []
-    tags = []
-    for w in words:
-        rows = cur.execute(
-            "SELECT tags FROM forms WHERE word_form = ? OR lemma = ?",
-            (w, w),
-        ).fetchall()
-        word_counts.append(len(rows))
-        for r in rows[:2]:
+    # 2. Inflected word_form lookup in standard forms -> resolve to lemma paradigm count
+    lemmas = cur.execute("SELECT DISTINCT lemma, tags FROM forms WHERE word_form = ?", (w,)).fetchall()
+    if lemmas:
+        counts = [
+            cur.execute("SELECT count(*) FROM forms WHERE lemma = ?", (lem[0],)).fetchone()[0]
+            for lem in lemmas
+        ]
+        max_cnt = max(counts)
+        tags = []
+        for r in lemmas:
+            if r[1]:
+                for t in r[1].split(":"):
+                    if t and t not in tags:
+                        tags.append(t)
+        return max_cnt, True, tags[:5]
+
+    # 3. Check forms_all (non-standard: :bad, :subst, dialectal, slang)
+    rows_all = cur.execute("SELECT tags FROM forms_all WHERE lemma = ? OR word_form = ?", (w, w)).fetchall()
+    if rows_all:
+        tags = []
+        for r in rows_all:
             if r[0]:
                 for t in r[0].split(":"):
                     if t and t not in tags:
                         tags.append(t)
+        return len(rows_all), False, tags[:5]
 
-    min_count = min(word_counts) if word_counts else 0
-    return min_count, min_count > 0, tags[:5]
+    return 0, False, ["unattested"]
+
+
+def check_vesum_lemma(
+    lemma: str,
+    tier: str,
+    conn: sqlite3.Connection,
+) -> tuple[int, bool, list[str]]:
+    """Query local VESUM database for paradigm form counts and morphology tags.
+
+    Handles single words, inflected forms, and multi-word phrases:
+    - For multi-word phrases: ensures every token exists in VESUM, but calculates
+      vesum_forms_count and tags from content words to prevent closed-class function
+      words (prepositions, particles) from artificially collapsing counts to 1.
+    - For purist_neologism / calque tiers: queries the database to report genuine
+      attestation (standard, non-standard :bad/:subst forms, or unattested) rather
+      than short-circuiting.
+    """
+    cur = conn.cursor()
+    clean = re.sub(r"[\u0300\u0301]", "", lemma).strip().lower()
+    clean_words = re.sub(r"[,«»\"“”]", "", clean)
+    words = [w for w in clean_words.split() if w]
+    if not words:
+        return 0, False, ["empty"]
+
+    if len(words) == 1:
+        return _check_vesum_single_word(words[0], cur)
+
+    # Multi-word phrase: verify every token, but calculate paradigm depth from content words
+    word_results = [_check_vesum_single_word(w, cur) for w in words]
+    all_tokens_attested = all(att for _, att, _ in word_results)
+
+    content_results = [res for w, res in zip(words, word_results, strict=True) if w not in FUNCTION_WORDS]
+    if not content_results:
+        content_results = word_results
+
+    min_content_count = min(cnt for cnt, _, _ in content_results)
+    is_standard = all_tokens_attested and min_content_count > 0
+
+    tags: list[str] = []
+    for _, _, t_list in content_results:
+        for t in t_list:
+            if t not in tags:
+                tags.append(t)
+
+    return min_content_count, is_standard, tags[:5]
 
 
 def build_gold_records(

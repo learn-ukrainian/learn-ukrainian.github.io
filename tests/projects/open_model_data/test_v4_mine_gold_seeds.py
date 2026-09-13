@@ -186,3 +186,65 @@ def test_gold_seeds_generator_cli_verify_only() -> None:
     res = subprocess.run(cmd, cwd=REPO_ROOT, capture_output=True, text=True, timeout=30)
     assert res.returncode == 0, f"CLI --verify-only failed:\nSTDOUT: {res.stdout}\nSTDERR: {res.stderr}"
     assert "150 trajectories and 150 DPO pairs are 100% schema-valid!" in res.stdout
+
+
+def test_phrase_vesum_attestation_informative_not_collapsed() -> None:
+    """Verify multi-word idioms do not collapse to count=1 from function words (Claude Finding 1)."""
+    assert TRAJ_FILE.is_file()
+    records = []
+    with TRAJ_FILE.open("r", encoding="utf-8") as f:
+        records = [json.loads(line) for line in f if line.strip()]
+
+    attestations_by_lemma = {}
+    for r in records:
+        for att in r.get("vesum_attestation", []):
+            attestations_by_lemma[att["lemma"]] = att
+
+    # Benchmark multi-word phrases whose counts must reflect content word paradigms
+    benchmark_phrases = {
+        "впадати в очі": 10,
+        "за законом": 14,
+        "мати рацію": 10,
+        "брати участь": 8,
+        "дбати про": 14,
+        "по п'ятницях": 10,
+        "з допомогою": 10,
+    }
+    for phrase, min_forms in benchmark_phrases.items():
+        assert phrase in attestations_by_lemma, f"Phrase {phrase} not found in attestations"
+        att = attestations_by_lemma[phrase]
+        assert att["is_standard_attested"] is True
+        assert att["vesum_forms_count"] >= min_forms, (
+            f"Phrase {phrase} collapsed to {att['vesum_forms_count']} (expected >= {min_forms})"
+        )
+
+
+def test_purist_neologism_semantics_and_contrastive_tagging() -> None:
+    """Verify purist_neologism semantics and non-short-circuited DB lookups (Claude Finding 2)."""
+    assert TRAJ_FILE.is_file()
+    records = []
+    with TRAJ_FILE.open("r", encoding="utf-8") as f:
+        records = [json.loads(line) for line in f if line.strip()]
+
+    attestations_by_lemma = {}
+    for r in records:
+        for att in r.get("vesum_attestation", []):
+            attestations_by_lemma[att["lemma"]] = att
+
+    # 1. Non-standard participle is detected in forms_all with forms_count > 0 but is_standard_attested = False
+    assert "існуючий" in attestations_by_lemma
+    isn = attestations_by_lemma["існуючий"]
+    assert isn["vesum_forms_count"] > 0
+    assert isn["is_standard_attested"] is False
+
+    # 2. Soviet-codified calque is accurately reported from forms view
+    assert "мисль" in attestations_by_lemma
+    mysl = attestations_by_lemma["мисль"]
+    assert mysl["vesum_forms_count"] == 14
+    assert mysl["is_standard_attested"] is True
+
+    # 3. Completely unattested calque reports count 0 and unattested tag
+    assert "утюг" in attestations_by_lemma
+    utyuh = attestations_by_lemma["утюг"]
+    assert utyuh["vesum_forms_count"] == 0
+    assert utyuh["is_standard_attested"] is False
