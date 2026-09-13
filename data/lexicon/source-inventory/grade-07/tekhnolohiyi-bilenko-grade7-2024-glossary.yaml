@@ -2401,6 +2401,24 @@ sources:
     context: ВІДПОЧИ́НОК, нку, ч. Відновлення сил після втоми припиненням або зміною виду діяльності. Хоч би ставало тії [тієї] короткої літньої ночі на відпочинок після денної праці (Панас Мирний); Замість відпочинку мала стільки клопоту і роботи (М.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%B2%D1%96%D0%B4%D0%BF%D0%BE%D1%87%D0%B8%D0%BD%D0%BE%D0%BA
+  - lemma: вирощування
+    pos: noun
+    count: 14
+    locator: glossary
+    gloss: 1) (дітей) rearing, bringing up; 2) (тварин) breeding; (рослин) growing, raising, cultivation
+    gloss_source: ukreng
+    context: виро́щування -я, с. Дія за знач. вирощувати.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B2%D0%B8%D1%80%D0%BE%D1%89%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F
+  - lemma: різьблення
+    pos: noun
+    count: 7
+    locator: glossary
+    gloss: (по дереву, мармуру та ін.) carving, fretwork
+    gloss_source: ukreng
+    context: рі́зьблення -я, с. 1》 Дія за знач. різьбити. 2》 Мистецтво вирізування малюнка, візерунка на якому-небудь твердому матеріалі; різьба (у 1 знач.). Художнє різьблення — вид декоративно-ужиткового мистецтва; оздоблення виробів з дерева, кості, каменю та ін. різьбленими орнаментальними або сюжетними зображеннями.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D1%80%D1%96%D0%B7%D1%8C%D0%B1%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F
   subject: tekhnolohiyi
 residual:
 - lemma: проєкт
@@ -2477,11 +2495,6 @@ residual:
   count: 15
   reasons:
   - no_en_gloss
-- lemma: вирощування
-  pos: noun
-  count: 14
-  reasons:
-  - no_uk_definition
 - lemma: мм
   pos: noun
   count: 14
@@ -2555,11 +2568,6 @@ residual:
   count: 7
   reasons:
   - no_en_gloss
-- lemma: різьблення
-  pos: noun
-  count: 7
-  reasons:
-  - no_uk_definition
 - lemma: створений
   pos: adj
   count: 7
@@ -2584,7 +2592,7 @@ residual:
 stats:
   total_content_candidates: 3009
   attempted: 300
-  admitted: 266
-  residual_this_batch: 34
+  admitted: 268
+  residual_this_batch: 32
   residual_not_attempted: 2709
-  richness: 0.8867
+  richness: 0.89

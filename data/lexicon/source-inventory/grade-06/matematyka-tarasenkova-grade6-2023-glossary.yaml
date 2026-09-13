@@ -2383,6 +2383,24 @@ sources:
     context: НАБЛИ́ЖЕННЯ, я, с. Дія за знач. набли́зити, наближа́ти і набли́зитися, наближа́тися. Будівничі сподіваються, що максимальне наближення до Дніпра, власна зона відпочинку припадуть до душі тим, хто житиме тут (з наук.-попул. літ.); В оцих перших квітах відчувався .. подих і нестримне наближення весни (А. Шиян).
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%BD%D0%B0%D0%B1%D0%BB%D0%B8%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F
+  - lemma: перпендикулярний
+    pos: adj
+    count: 27
+    locator: glossary
+    gloss: Perpendicular; (про підйом, падіння) sheer
+    gloss_source: ukreng
+    context: перпендикуля́рний -а, -е. Який є перпендикуляром. || Розташований під прямим кутом до чого-небудь.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BF%D0%B5%D1%80%D0%BF%D0%B5%D0%BD%D0%B4%D0%B8%D0%BA%D1%83%D0%BB%D1%8F%D1%80%D0%BD%D0%B8%D0%B9
+  - lemma: розміщення
+    pos: noun
+    count: 14
+    locator: glossary
+    gloss: 1) (розташування) placing, arrangement, disposal; siting, location; disposition; (розподіл) distribution; географічне розміщення виробничих сил — geographical distribution of productive forces
+    gloss_source: ukreng
+    context: розмі́щення -я, с. 1》 Дія за знач. розмістити, розміщати. 2》 Система, порядок розташування кого-, чого-небудь. Розміщення наголосів.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D1%80%D0%BE%D0%B7%D0%BC%D1%96%D1%89%D0%B5%D0%BD%D0%BD%D1%8F
   subject: matematyka
 residual:
 - lemma: видавничий
@@ -2493,11 +2511,6 @@ residual:
   count: 27
   reasons:
   - no_uk_definition
-- lemma: перпендикулярний
-  pos: adj
-  count: 27
-  reasons:
-  - no_uk_definition
 - lemma: дм
   pos: noun
   count: 25
@@ -2559,11 +2572,6 @@ residual:
   reasons:
   - no_uk_definition
   - no_en_gloss
-- lemma: розміщення
-  pos: noun
-  count: 14
-  reasons:
-  - no_uk_definition
 - lemma: розподіл
   pos: noun
   count: 13
@@ -2582,7 +2590,7 @@ residual:
 stats:
   total_content_candidates: 1521
   attempted: 300
-  admitted: 264
-  residual_this_batch: 36
+  admitted: 266
+  residual_this_batch: 34
   residual_not_attempted: 1221
-  richness: 0.88
+  richness: 0.89

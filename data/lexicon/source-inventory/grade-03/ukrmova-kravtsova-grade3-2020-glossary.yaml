@@ -2491,6 +2491,15 @@ sources:
     context: 'МАЛЯ́, я́ти, с. 1. розм. Маленька дитина. [Перше потерча:] Нас матуся положила і м''якенько постелила, .. і тихенько заспівала: люлі-люлі-люлята, засніть, мої малята!…'
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%BC%D0%B0%D0%BB%D1%8F
+  - lemma: правильність
+    pos: noun
+    count: 9
+    locator: glossary
+    gloss: 1) (вірність) rightness; (безпомилковість) correctness, justness, accuracy; правильність стилю (мови) — correctness of style (language)
+    gloss_source: ukreng
+    context: пра́вильність -ності, ж. Абстр. ім. до правильний.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BF%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D1%8C%D0%BD%D1%96%D1%81%D1%82%D1%8C
   subject: ukrmova
 residual:
 - lemma: виділений
@@ -2581,11 +2590,6 @@ residual:
   count: 10
   reasons:
   - no_en_gloss
-- lemma: правильність
-  pos: noun
-  count: 9
-  reasons:
-  - no_uk_definition
 - lemma: зображений
   pos: adj
   count: 8
@@ -2620,7 +2624,7 @@ residual:
 stats:
   total_content_candidates: 2828
   attempted: 300
-  admitted: 276
-  residual_this_batch: 24
+  admitted: 277
+  residual_this_batch: 23
   residual_not_attempted: 2528
   richness: 0.92

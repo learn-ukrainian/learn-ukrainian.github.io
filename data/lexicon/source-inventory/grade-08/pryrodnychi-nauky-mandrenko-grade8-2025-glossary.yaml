@@ -2491,6 +2491,15 @@ sources:
     context: НЕОБХІ́ДНИЙ, а, е. 1. Без якого неможливо обійтися; конче потрібний. – Він мені такий дорогий і такий необхідний в житті, що страх за нього – це, по суті, страх за саму себе (А. Головко). 2. у знач. ім. необхі́дне, ного, с. Те, що обов'язково потрібне для забезпечення нормальних умов життя, праці і т. ін.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%BD%D0%B5%D0%BE%D0%B1%D1%85%D1%96%D0%B4%D0%BD%D0%B8%D0%B9
+  - lemma: електромагніт
+    pos: noun
+    count: 39
+    locator: glossary
+    gloss: Electromagnet
+    gloss_source: ukreng
+    context: електромагні́т -у, ч., фіз. Пристрій, що набуває магнітних властивостей під час протікання його котушкою електричного струму.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B5%D0%BB%D0%B5%D0%BA%D1%82%D1%80%D0%BE%D0%BC%D0%B0%D0%B3%D0%BD%D1%96%D1%82
   subject: pryrodnychi-nauky
 residual:
 - lemma: ранка
@@ -2566,11 +2575,6 @@ residual:
   count: 40
   reasons:
   - no_uk_definition
-- lemma: електромагніт
-  pos: noun
-  count: 39
-  reasons:
-  - no_uk_definition
 - lemma: відбивання
   pos: noun
   count: 38
@@ -2619,7 +2623,7 @@ residual:
 stats:
   total_content_candidates: 5285
   attempted: 300
-  admitted: 276
-  residual_this_batch: 24
+  admitted: 277
+  residual_this_batch: 23
   residual_not_attempted: 4985
   richness: 0.92

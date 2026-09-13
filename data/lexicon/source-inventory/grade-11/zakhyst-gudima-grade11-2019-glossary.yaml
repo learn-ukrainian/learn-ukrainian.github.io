@@ -2518,6 +2518,24 @@ sources:
     context: ПРИЗНА́ЧЕННЯ, я, с. 1. Дія за знач. призна́чи́ти. Найважливішим актом, спрямованим на визволення руської церкви з-під візантійського впливу, було призначення в часи правління Ярослава Мудрого, всупереч бажанню Візантії, митрополита з руських (з наук. літ.); Призначення Зав'ялова на дублювання ролі Івана Грозного ..…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%BF%D1%80%D0%B8%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%BD%D1%8F
+  - lemma: оповіщення
+    pos: noun
+    count: 29
+    locator: glossary
+    gloss: Notification, announcement, declaration
+    gloss_source: ukreng
+    context: опові́щення -я, с. 1》 Дія за знач. оповістити, оповіщати. 2》 Письмове повідомлення про що-небудь.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BE%D0%BF%D0%BE%D0%B2%D1%96%D1%89%D0%B5%D0%BD%D0%BD%D1%8F
+  - lemma: притомний
+    pos: adj
+    count: 33
+    locator: glossary
+    gloss: Conscious
+    gloss_source: ukreng
+    context: прито́мний -а, -е. 1》 Який не втратив свідомості, може свідомо, осмислено сприймати дійсність. 2》 розм. Який усвідомлює свої дії, має здоровий глузд. 3》 зах. Присутній.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BF%D1%80%D0%B8%D1%82%D0%BE%D0%BC%D0%BD%D0%B8%D0%B9
   subject: zakhyst
 residual:
 - lemma: домедичний
@@ -2595,11 +2613,6 @@ residual:
   count: 33
   reasons:
   - no_uk_definition
-- lemma: притомний
-  pos: adj
-  count: 33
-  reasons:
-  - no_uk_definition
 - lemma: пов'язаний
   pos: adj
   count: 30
@@ -2611,11 +2624,6 @@ residual:
   reasons:
   - no_en_gloss
 - lemma: ліквідація
-  pos: noun
-  count: 29
-  reasons:
-  - no_uk_definition
-- lemma: оповіщення
   pos: noun
   count: 29
   reasons:
@@ -2634,7 +2642,7 @@ residual:
 stats:
   total_content_candidates: 6568
   attempted: 300
-  admitted: 279
-  residual_this_batch: 21
+  admitted: 281
+  residual_this_batch: 19
   residual_not_attempted: 6268
-  richness: 0.93
+  richness: 0.94

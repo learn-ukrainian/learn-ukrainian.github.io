@@ -2455,6 +2455,33 @@ sources:
     context: НАЗИВА́ТИ, а́ю, а́єш, недок., НАЗВА́ТИ, ву́, ве́ш, док., кого, що. 1. перев. док. Давати кому-, чому-небудь назву, ім'я. Любяч – так здавна називали люди полянського племені городище роду Воїнів над Дніпром (С. Скляренко); Громадою при долині Його поховали І долину і криницю На пам'ять назвали Москалевою (Т.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%BD%D0%B0%D0%B7%D0%B8%D0%B2%D0%B0%D1%82%D0%B8
+  - lemma: граничний
+    pos: adj
+    count: 93
+    locator: glossary
+    gloss: Limiting; limit, top, maximum (attr.); граничний вік — age limit
+    gloss_source: ukreng
+    context: грани́чний -а, -е. Який є найвищим ступенем чого-небудь; крайній. Гранична функція. Гранична ставка податку — частина додаткового, доходу, що її доводиться виплачувати у вигляді податку. Граничний дохід ек. — приріст доходу в результаті збільшення продажу товару на одну одиницю. Граничний кут фіз.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B3%D1%80%D0%B0%D0%BD%D0%B8%D1%87%D0%BD%D0%B8%D0%B9
+  - lemma: економіст
+    pos: noun
+    count: 35
+    locator: glossary
+    gloss: Economist
+    gloss_source: ukreng
+    context: економі́ст -а, ч. 1》 Учений, фахівець з економіки, економічних наук. || Службовець, фахівець з економічних питань. 2》 політ., іст. Послідовник, прихильник економізму.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B5%D0%BA%D0%BE%D0%BD%D0%BE%D0%BC%D1%96%D1%81%D1%82
+  - lemma: придбання
+    pos: noun
+    count: 38
+    locator: glossary
+    gloss: Acquirement, acquisition, gaining, obtaining
+    gloss_source: ukreng
+    context: придба́ння -я, с. 1》 Дія за знач. придбати, придбавати. 2》 Те, що хто-небудь придбав (у 1 знач.); майно, власність. 3》 перен. Те, що є чиїмсь досягненням, надбанням.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BF%D1%80%D0%B8%D0%B4%D0%B1%D0%B0%D0%BD%D0%BD%D1%8F
   subject: ekonomika
 residual:
 - lemma: грн
@@ -2485,11 +2512,6 @@ residual:
 - lemma: суб'єкт
   pos: noun
   count: 131
-  reasons:
-  - no_uk_definition
-- lemma: граничний
-  pos: adj
-  count: 93
   reasons:
   - no_uk_definition
 - lemma: розподіл
@@ -2558,11 +2580,6 @@ residual:
   count: 42
   reasons:
   - no_uk_definition
-- lemma: придбання
-  pos: noun
-  count: 38
-  reasons:
-  - no_uk_definition
 - lemma: сім'я
   pos: noun
   count: 38
@@ -2574,11 +2591,6 @@ residual:
   reasons:
   - no_uk_definition
   - no_en_gloss
-- lemma: економіст
-  pos: noun
-  count: 35
-  reasons:
-  - no_uk_definition
 - lemma: користування
   pos: noun
   count: 34
@@ -2602,7 +2614,7 @@ residual:
 stats:
   total_content_candidates: 4536
   attempted: 300
-  admitted: 272
-  residual_this_batch: 28
+  admitted: 275
+  residual_this_batch: 25
   residual_not_attempted: 4236
-  richness: 0.9067
+  richness: 0.92

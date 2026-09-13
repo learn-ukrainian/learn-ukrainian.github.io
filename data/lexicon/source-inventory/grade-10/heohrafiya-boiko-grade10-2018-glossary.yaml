@@ -2437,6 +2437,15 @@ sources:
     context: БАВО́ВНИК, у, ч. Те саме, що баво́вна 1. На полі вже дозрів бавовник білосніжний (Н. Забіла); Бавовник є найціннішою і найбільш посухостійкою технічною культурою (з наук. літ.).
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%B1%D0%B0%D0%B2%D0%BE%D0%B2%D0%BD%D0%B8%D0%BA
+  - lemma: корпорація
+    pos: noun
+    count: 16
+    locator: glossary
+    gloss: Corporation; акціонерна корпорація — stock corporation
+    gloss_source: ukreng
+    context: корпора́ція -ї, ж. 1》 Договірні об'єднання, створені на основі поєднання виробничих, наукових та комерційних інтересів, з делегуванням окремих повноважень централізованого регулювання діяльності кожного з учасників. 2》 Замкнена група осіб, об'єднана вузькофаховими, становими та іншими інтересами.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BA%D0%BE%D1%80%D0%BF%D0%BE%D1%80%D0%B0%D1%86%D1%96%D1%8F
   subject: heohrafiya
 residual:
 - lemma: млн
@@ -2589,15 +2598,10 @@ residual:
   reasons:
   - no_uk_definition
   - no_en_gloss
-- lemma: корпорація
-  pos: noun
-  count: 16
-  reasons:
-  - no_uk_definition
 stats:
   total_content_candidates: 4173
   attempted: 300
-  admitted: 270
-  residual_this_batch: 30
+  admitted: 271
+  residual_this_batch: 29
   residual_not_attempted: 3873
   richness: 0.9

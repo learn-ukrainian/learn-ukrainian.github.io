@@ -2572,6 +2572,15 @@ sources:
     context: до́вгий -а, -е. 1》 Який має велику довжину; прот. короткий. || розм. Високий на зріст (про людину). 2》 Який охоплює значний проміжок часу; тривалий, довгочасний. Довгий карбованець перен. — легкий і великий заробіток.
     context_source: vts
     context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%BE%D0%B2%D0%B3%D0%B8%D0%B9
+  - lemma: пригодницький
+    pos: adj
+    count: 15
+    locator: glossary
+    gloss: Adventure (attr.); пригодницький фільм — thriller
+    gloss_source: ukreng
+    context: приго́дницький -а, -е. 1》 Побудований на пригодах (у 2 знач.). Пригодницька література — твір, у якому розповідається про незвичайні пригоди, захоплюючі мандрівки, географічні відкриття тощо. 2》 Власт. тому, хто шукає пригод (у 2 знач.).
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BF%D1%80%D0%B8%D0%B3%D0%BE%D0%B4%D0%BD%D0%B8%D1%86%D1%8C%D0%BA%D0%B8%D0%B9
   subject: ukrlit
 residual:
 - lemma: гімназист
@@ -2642,11 +2651,6 @@ residual:
   count: 19
   reasons:
   - no_en_gloss
-- lemma: пригодницький
-  pos: adj
-  count: 15
-  reasons:
-  - no_uk_definition
 - lemma: героїко-романтичний
   pos: adj
   count: 14
@@ -2656,7 +2660,7 @@ residual:
 stats:
   total_content_candidates: 7695
   attempted: 300
-  admitted: 285
-  residual_this_batch: 15
+  admitted: 286
+  residual_this_batch: 14
   residual_not_attempted: 7395
   richness: 0.95

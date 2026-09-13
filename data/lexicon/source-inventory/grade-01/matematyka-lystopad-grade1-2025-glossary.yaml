@@ -2356,6 +2356,15 @@ sources:
     context: 'ТА́ТО, а, ч., розм. Те саме, що ба́тько 1. І вчила княгиня [дитину] Тілько “мамо” вимовляти, А “тато” не вчила... (Т. Шевченко); – Виблагай у батька дозвіл побратись – і мій тато пристане на це (М. Коцюбинський); Оленчук надів кожушок .. Діти, відчувши якусь тривогу, обліпили його: – Тату, куди ви? (О.…'
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D1%82%D0%B0%D1%82%D0%BE
+  - lemma: вимірювання
+    pos: noun
+    count: 3
+    locator: glossary
+    gloss: Measure, measurement, measuring; (глибини води) sounding, bathymetry, fathoming; (температури, висоти тощо) taking; (землемірне) survey(ing)
+    gloss_source: ukreng
+    context: вимі́рювання -я, с. Дія за знач. вимірювати 1), 2). Абсолютне вимірювання — вимірювання, яке засноване на прямому вимірюванні однієї або декількох основних величин. Відносне вимірювання — вимірювання відношення величини до іншої однорідної величини.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B2%D0%B8%D0%BC%D1%96%D1%80%D1%8E%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F
   subject: matematyka
 residual:
 - lemma: видавничий
@@ -2523,11 +2532,6 @@ residual:
   count: 4
   reasons:
   - no_en_gloss
-- lemma: вимірювання
-  pos: noun
-  count: 3
-  reasons:
-  - no_uk_definition
 - lemma: віднімаючи
   pos: advp
   count: 3
@@ -2563,7 +2567,7 @@ residual:
 stats:
   total_content_candidates: 849
   attempted: 300
-  admitted: 261
-  residual_this_batch: 39
+  admitted: 262
+  residual_this_batch: 38
   residual_not_attempted: 549
   richness: 0.87

@@ -2383,6 +2383,15 @@ sources:
     context: 'БА́ЧИТИ, чу, чиш, недок. 1. Сприймати зором. А той оповідав: Чоловік, що Його звуть Ісусом, грязиво зробив, і очі помазав мені, і до мене сказав: Піди в Силоам та й умийся. Я ж пішов та й умився, і став бачити (Біблія. Пер. І. Огієнка); Він ще не встиг накласти окуляри, погано бачив, і лице його ..…'
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%B1%D0%B0%D1%87%D0%B8%D1%82%D0%B8
+  - lemma: нагрівання
+    pos: noun
+    count: 24
+    locator: glossary
+    gloss: Heating, warming; (підшипника) running hot
+    gloss_source: ukreng
+    context: нагріва́ння -я, с. Дія за знач. нагрівати і нагріватися.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BD%D0%B0%D0%B3%D1%80%D1%96%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F
   subject: khimiya
 residual:
 - lemma: видавництво
@@ -2402,11 +2411,6 @@ residual:
   - no_uk_definition
 - lemma: металічний
   pos: adj
-  count: 24
-  reasons:
-  - no_uk_definition
-- lemma: нагрівання
-  pos: noun
   count: 24
   reasons:
   - no_uk_definition
@@ -2576,7 +2580,7 @@ residual:
 stats:
   total_content_candidates: 2276
   attempted: 300
-  admitted: 264
-  residual_this_batch: 36
+  admitted: 265
+  residual_this_batch: 35
   residual_not_attempted: 1976
   richness: 0.88

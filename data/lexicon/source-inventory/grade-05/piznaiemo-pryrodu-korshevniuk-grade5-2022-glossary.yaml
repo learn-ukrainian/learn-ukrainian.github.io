@@ -2491,6 +2491,33 @@ sources:
     context: 'зві́дки присл. 1》 З якого місця? || З якої місцевості родом? || З якого боку? 2》 З якого джерела? 3》 З якої причини, чому? 4》 Уживається в знач. сполучного слова: а) у підрядних реченнях місця; б) у підрядних додаткових реченнях.…'
     context_source: vts
     context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%B2%D1%96%D0%B4%D0%BA%D0%B8
+  - lemma: атмосферний
+    pos: adj
+    count: 12
+    locator: glossary
+    gloss: Atmospheric; атмосферний тиск — atmospheric pressure
+    gloss_source: ukreng
+    context: атмосфе́рний -а, -е. Прикм. до атмосфера (у 1 знач.). Атмосферний азот. || Який виникає, відбувається в атмосфері. Атмосферні опади.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B0%D1%82%D0%BC%D0%BE%D1%81%D1%84%D0%B5%D1%80%D0%BD%D0%B8%D0%B9
+  - lemma: літосфера
+    pos: noun
+    count: 14
+    locator: glossary
+    gloss: геол.; lithosphere
+    gloss_source: ukreng
+    context: літосфе́ра -и, ж., геол. Верхня тверда оболонка земної кулі; земна кора.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BB%D1%96%D1%82%D0%BE%D1%81%D1%84%D0%B5%D1%80%D0%B0
+  - lemma: розділення
+    pos: noun
+    count: 23
+    locator: glossary
+    gloss: Division; disseverance; розділення сфер впливу — division of spheres of influence
+    gloss_source: ukreng
+    context: розді́лення -я, с. Дія за знач. розділити, розділяти.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D1%80%D0%BE%D0%B7%D0%B4%D1%96%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F
   subject: pryroda
 residual:
 - lemma: м'яз
@@ -2535,11 +2562,6 @@ residual:
   count: 23
   reasons:
   - no_en_gloss
-- lemma: розділення
-  pos: noun
-  count: 23
-  reasons:
-  - no_uk_definition
 - lemma: км
   pos: noun
   count: 22
@@ -2585,11 +2607,6 @@ residual:
   count: 15
   reasons:
   - no_en_gloss
-- lemma: літосфера
-  pos: noun
-  count: 14
-  reasons:
-  - no_uk_definition
 - lemma: скориставшись
   pos: advp
   count: 14
@@ -2606,11 +2623,6 @@ residual:
   count: 13
   reasons:
   - no_uk_definition
-- lemma: атмосферний
-  pos: adj
-  count: 12
-  reasons:
-  - no_uk_definition
 - lemma: розглянутий
   pos: adj
   count: 12
@@ -2619,7 +2631,7 @@ residual:
 stats:
   total_content_candidates: 3365
   attempted: 300
-  admitted: 276
-  residual_this_batch: 24
+  admitted: 279
+  residual_this_batch: 21
   residual_not_attempted: 3065
-  richness: 0.92
+  richness: 0.93

@@ -2473,6 +2473,15 @@ sources:
     context: ВХО́ДИТИ (УХО́ДИТИ), ВВІХО́ДИТИ (УВІХО́ДИТИ), джу, диш, недок., ВВІЙТИ́ (УВІЙТИ́), увійду́, уві́йде́ш, док. 1. до чого, у що і без дод. Ідучи, потрапляти, проникати куди-небудь, у межі, у середину чого-небудь. Увіходжу в сіни – справді чутно бучу .. Уходжу в хату ..…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%B2%D1%85%D0%BE%D0%B4%D0%B8%D1%82%D0%B8
+  - lemma: класифікувати
+    pos: verb
+    count: 13
+    locator: glossary
+    gloss: To classify
+    gloss_source: ukreng
+    context: класифікува́ти -ую, -уєш, недок. і док., перех. Розподіляти предмети, явища або поняття на класи, групи тощо за спільними ознаками, властивостями; групувати.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BA%D0%BB%D0%B0%D1%81%D0%B8%D1%84%D1%96%D0%BA%D1%83%D0%B2%D0%B0%D1%82%D0%B8
   subject: pryroda
 residual:
 - lemma: здоров'я
@@ -2534,11 +2543,6 @@ residual:
 - lemma: розв'язання
   pos: noun
   count: 14
-  reasons:
-  - no_uk_definition
-- lemma: класифікувати
-  pos: verb
-  count: 13
   reasons:
   - no_uk_definition
 - lemma: утворюватися
@@ -2611,7 +2615,7 @@ residual:
 stats:
   total_content_candidates: 3322
   attempted: 300
-  admitted: 274
-  residual_this_batch: 26
+  admitted: 275
+  residual_this_batch: 25
   residual_not_attempted: 3022
-  richness: 0.9133
+  richness: 0.92

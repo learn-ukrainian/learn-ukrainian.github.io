@@ -2599,6 +2599,15 @@ sources:
     context: СПОЧА́ТКУ, присл. 1. Перед чимсь іншим; спершу, раніше. Спочатку вона пам'ятає себе чорною, вічно в сажі, коло панських свиней (М.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D1%81%D0%BF%D0%BE%D1%87%D0%B0%D1%82%D0%BA%D1%83
+  - lemma: переживання
+    pos: noun
+    count: 11
+    locator: glossary
+    gloss: Experience; (почуття) feeling, emotional experience
+    gloss_source: ukreng
+    context: пережива́ння -я, с. 1》 Дія і стан за знач. переживати 4), 5). 2》 перев. мн.Почуття, враження людини, які визначають її психічний стан у даний момент.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BF%D0%B5%D1%80%D0%B5%D0%B6%D0%B8%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F
   subject: zarubizhna-literatura
 residual:
 - lemma: м
@@ -2656,15 +2665,10 @@ residual:
   count: 11
   reasons:
   - no_en_gloss
-- lemma: переживання
-  pos: noun
-  count: 11
-  reasons:
-  - no_uk_definition
 stats:
   total_content_candidates: 5471
   attempted: 300
-  admitted: 288
-  residual_this_batch: 12
+  admitted: 289
+  residual_this_batch: 11
   residual_not_attempted: 5171
   richness: 0.96

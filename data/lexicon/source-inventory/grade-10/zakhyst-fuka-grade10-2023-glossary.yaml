@@ -2428,6 +2428,51 @@ sources:
     context: ПРИМІ́ЩЕННЯ, я, с. 1. Будівля, квартира чи окрема кімната, в якій поміщається хто-, що-небудь, яка використовується для чогось. Звуки оркестру рвуться в повітрі, як шрапнель. Приміщення тиру гримить оплесками (О.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%BF%D1%80%D0%B8%D0%BC%D1%96%D1%89%D0%B5%D0%BD%D0%BD%D1%8F
+  - lemma: видимість
+    pos: noun
+    count: 40
+    locator: glossary
+    gloss: 1) (фізична) visibility; астр. apparition; 2) перен. (ширма, фікція) outward appearance; semblance
+    gloss_source: ukreng
+    context: ви́димість -мості, ж. 1》 Можливість бачити на далеку відстань. Зона видимості — ділянка простору, в якій хвильовий зв'язок між передавальною і приймальною сторонами здійснюється без ретранслятора.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B2%D0%B8%D0%B4%D0%B8%D0%BC%D1%96%D1%81%D1%82%D1%8C
+  - lemma: дальність
+    pos: noun
+    count: 40
+    locator: glossary
+    gloss: Distance; (стрільби) range
+    gloss_source: ukreng
+    context: да́льність -ності, ж. Відстань між двома певними точками (напр. між точкою вильоту і точкою приземлення).
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%B0%D0%BB%D1%8C%D0%BD%D1%96%D1%81%D1%82%D1%8C
+  - lemma: евакуація
+    pos: noun
+    count: 53
+    locator: glossary
+    gloss: Evacuation
+    gloss_source: ukreng
+    context: евакуа́ція -ї, ж. 1》 Організоване вивезення людей, підприємств, установ та різних матеріальних цінностей з небезпечної місцевості під час війни, стихійного лиха і т. ін. || розм. Стан евакуйованих людей, установ, майна і т. ін., а також місце і час перебування в такому стані.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B5%D0%B2%D0%B0%D0%BA%D1%83%D0%B0%D1%86%D1%96%D1%8F
+  - lemma: кровотеча
+    pos: noun
+    count: 179
+    locator: glossary
+    gloss: Bleeding; (носова) epistaxis; мед. h(a)emorrhage
+    gloss_source: ukreng
+    context: кровоте́ча -і, ж. Витікання крові за межі кровоносних судин.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BA%D1%80%D0%BE%D0%B2%D0%BE%D1%82%D0%B5%D1%87%D0%B0
+  - lemma: підрозділ
+    pos: noun
+    count: 94
+    locator: glossary
+    gloss: 1) subdivision; 2) військ. subunit, subordinate unit; element
+    gloss_source: ukreng
+    context: підро́зділ -у, ч. 1》 Складова частина чого-небудь більшого. || Частина розділу (книги, статті і т. ін.). 2》 Військова одиниця в складі більшої (батальйон, дивізіон у полку, рота в батальйоні, взвод у роті і т. ін.).
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BF%D1%96%D0%B4%D1%80%D0%BE%D0%B7%D0%B4%D1%96%D0%BB
   subject: zakhyst
 residual:
 - lemma: м
@@ -2435,11 +2480,6 @@ residual:
   count: 303
   reasons:
   - no_en_gloss
-- lemma: кровотеча
-  pos: noun
-  count: 179
-  reasons:
-  - no_uk_definition
 - lemma: гвинтівка
   pos: noun
   count: 157
@@ -2448,11 +2488,6 @@ residual:
 - lemma: мм
   pos: noun
   count: 152
-  reasons:
-  - no_uk_definition
-- lemma: підрозділ
-  pos: noun
-  count: 94
   reasons:
   - no_uk_definition
 - lemma: домедичний
@@ -2496,11 +2531,6 @@ residual:
 - lemma: підприємство
   pos: noun
   count: 55
-  reasons:
-  - no_uk_definition
-- lemma: евакуація
-  pos: noun
-  count: 53
   reasons:
   - no_uk_definition
 - lemma: м'яз
@@ -2565,17 +2595,7 @@ residual:
   reasons:
   - no_uk_definition
   - no_en_gloss
-- lemma: видимість
-  pos: noun
-  count: 40
-  reasons:
-  - no_uk_definition
 - lemma: винесення
-  pos: noun
-  count: 40
-  reasons:
-  - no_uk_definition
-- lemma: дальність
   pos: noun
   count: 40
   reasons:
@@ -2593,7 +2613,7 @@ residual:
 stats:
   total_content_candidates: 7713
   attempted: 300
-  admitted: 269
-  residual_this_batch: 31
+  admitted: 274
+  residual_this_batch: 26
   residual_not_attempted: 7413
-  richness: 0.8967
+  richness: 0.91

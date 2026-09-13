@@ -2554,6 +2554,24 @@ sources:
     context: ка́зка -и, ж. 1》 Розповідний народно-поетичний або писемно-літературний твір про вигадані події, вигаданих осіб, іноді за участю фантастичних сил. 2》 розм. Те, що не відповідає дійсності; вигадка, байка.
     context_source: vts
     context_url: https://slovnyk.me/dict/vts/%D0%BA%D0%B0%D0%B7%D0%BA%D0%B0
+  - lemma: орфографічний
+    pos: adj
+    count: 14
+    locator: glossary
+    gloss: Orthographic(al), spelling (attr.); орфографічна помилка — spelling mistake
+    gloss_source: ukreng
+    context: орфографі́чний -а, -е. Стос. до орфографії. Орфографічний словник — словник, у якому в алфавітному порядку дано перелік нормативного написання слів та окремих їх форм відповідно до чинного правопису.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BE%D1%80%D1%84%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D1%96%D1%87%D0%BD%D0%B8%D0%B9
+  - lemma: орфоепічний
+    pos: adj
+    count: 17
+    locator: glossary
+    gloss: фон.; orthoepic(al)
+    gloss_source: ukreng
+    context: орфоепі́чний -а, -е. Стос. до орфоепії. Орфоепічний словник — словник, у якому зафіксовані норми літературної вимови.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BE%D1%80%D1%84%D0%BE%D0%B5%D0%BF%D1%96%D1%87%D0%BD%D0%B8%D0%B9
   subject: ukrmova
 residual:
 - lemma: м
@@ -2598,11 +2616,6 @@ residual:
   count: 18
   reasons:
   - no_uk_definition
-- lemma: орфоепічний
-  pos: adj
-  count: 17
-  reasons:
-  - no_uk_definition
 - lemma: здоров'я
   pos: noun
   count: 16
@@ -2624,11 +2637,6 @@ residual:
   reasons:
   - no_uk_definition
   - no_en_gloss
-- lemma: орфографічний
-  pos: adj
-  count: 14
-  reasons:
-  - no_uk_definition
 - lemma: м'якість
   pos: noun
   count: 13
@@ -2647,7 +2655,7 @@ residual:
 stats:
   total_content_candidates: 5471
   attempted: 300
-  admitted: 283
-  residual_this_batch: 17
+  admitted: 285
+  residual_this_batch: 15
   residual_not_attempted: 5171
-  richness: 0.9433
+  richness: 0.95

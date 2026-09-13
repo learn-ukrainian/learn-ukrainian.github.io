@@ -2446,6 +2446,24 @@ sources:
     context: БІК, бо́ку, ч. 1. Права або ліва частина тулуба від плеча до стегна. Тріщали кості, ребра, боки. Летіли зуби, пухли щоки (І. Котляревський); Перевертаюся з боку на бік і не можу вснути [заснути] (Б. Лепкий); Він, видобувшись на ґанок, став до людей так, щоб усім було видно бомби, що теліпаються в нього при боці (О.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%B1%D1%96%D0%BA
+  - lemma: клітинний
+    pos: adj
+    count: 63
+    locator: glossary
+    gloss: Cellular
+    gloss_source: ukreng
+    context: кліти́нний -а, -е. Прикм. до клітина 1). Клітинне ядро. Клітинна будова. Клітинна оболонка — оболонка, яка покриває поверхню клітини, забезпечує її цілісність і регулює обмін речовин між клітиною та навколишнім середовищем.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BA%D0%BB%D1%96%D1%82%D0%B8%D0%BD%D0%BD%D0%B8%D0%B9
+  - lemma: регуляція
+    pos: noun
+    count: 30
+    locator: glossary
+    gloss: Regulation, control; adjustment, correction
+    gloss_source: ukreng
+    context: регуля́ція -ї, ж. Дія за знач. регулювати.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D1%80%D0%B5%D0%B3%D1%83%D0%BB%D1%8F%D1%86%D1%96%D1%8F
   subject: biolohiya
 residual:
 - lemma: життєдіяльність
@@ -2475,11 +2493,6 @@ residual:
   reasons:
   - no_uk_definition
   - no_en_gloss
-- lemma: клітинний
-  pos: adj
-  count: 63
-  reasons:
-  - no_uk_definition
 - lemma: м
   pos: noun
   count: 52
@@ -2510,11 +2523,6 @@ residual:
   count: 34
   reasons:
   - no_en_gloss
-- lemma: регуляція
-  pos: noun
-  count: 30
-  reasons:
-  - no_uk_definition
 - lemma: річковий
   pos: adj
   count: 30
@@ -2599,7 +2607,7 @@ residual:
 stats:
   total_content_candidates: 5395
   attempted: 300
-  admitted: 271
-  residual_this_batch: 29
+  admitted: 273
+  residual_this_batch: 27
   residual_not_attempted: 5095
-  richness: 0.9033
+  richness: 0.91

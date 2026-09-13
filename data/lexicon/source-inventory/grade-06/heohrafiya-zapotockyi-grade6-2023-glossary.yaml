@@ -2491,6 +2491,24 @@ sources:
     context: БІК, бо́ку, ч. 1. Права або ліва частина тулуба від плеча до стегна. Тріщали кості, ребра, боки. Летіли зуби, пухли щоки (І. Котляревський); Перевертаюся з боку на бік і не можу вснути [заснути] (Б. Лепкий); Він, видобувшись на ґанок, став до людей так, щоб усім було видно бомби, що теліпаються в нього при боці (О.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%B1%D1%96%D0%BA
+  - lemma: гідросфера
+    pos: noun
+    count: 70
+    locator: glossary
+    gloss: Hydrosphere
+    gloss_source: ukreng
+    context: гідросфе́ра -и, ж. Сукупність усіх вод (океани, моря, підземні води, льодовики і т. ін.), що у вигляді перериваної оболонки огортають земну кулю.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B3%D1%96%D0%B4%D1%80%D0%BE%D1%81%D1%84%D0%B5%D1%80%D0%B0
+  - lemma: руйнування
+    pos: noun
+    count: 18
+    locator: glossary
+    gloss: (знищення) destruction, demolition, ruin, collapse, holocaust; (гниття) decay
+    gloss_source: ukreng
+    context: руйнува́ння -я, с. Дія за знач. руйнувати та дія і стан за знач. руйнуватися. || Результат цієї дії.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D1%80%D1%83%D0%B9%D0%BD%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F
   subject: heohrafiya
 residual:
 - lemma: м
@@ -2506,11 +2524,6 @@ residual:
 - lemma: атмосферний
   pos: adj
   count: 90
-  reasons:
-  - no_uk_definition
-- lemma: гідросфера
-  pos: noun
-  count: 70
   reasons:
   - no_uk_definition
 - lemma: літосфера
@@ -2609,15 +2622,10 @@ residual:
   count: 18
   reasons:
   - no_uk_definition
-- lemma: руйнування
-  pos: noun
-  count: 18
-  reasons:
-  - no_uk_definition
 stats:
   total_content_candidates: 4192
   attempted: 300
-  admitted: 276
-  residual_this_batch: 24
+  admitted: 278
+  residual_this_batch: 22
   residual_not_attempted: 3892
-  richness: 0.92
+  richness: 0.93

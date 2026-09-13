@@ -2590,6 +2590,15 @@ sources:
     context: ПЕРІ́ОД, у, ч. 1. Проміжок часу, обмежений певними датами, подіями і т. ін. Програми й статути не пишуться на якісь надто довгі періоди (В. Еллан-Блакитний); // Час, коли відбувається яка-небудь подія, триває дія, розгортається чиясь діяльність і т. ін.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%B5%D1%80%D1%96%D0%BE%D0%B4
+  - lemma: дозрівання
+    pos: noun
+    count: 20
+    locator: glossary
+    gloss: Ripening
+    gloss_source: ukreng
+    context: дозріва́ння -я, с. Дія за знач. дозрівати I.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%BE%D0%B7%D1%80%D1%96%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F
   subject: zdorovia
 residual:
 - lemma: здоров'я
@@ -2628,11 +2637,6 @@ residual:
   reasons:
   - no_uk_definition
   - no_en_gloss
-- lemma: дозрівання
-  pos: noun
-  count: 20
-  reasons:
-  - no_uk_definition
 - lemma: розв'язання
   pos: noun
   count: 18
@@ -2661,7 +2665,7 @@ residual:
 stats:
   total_content_candidates: 4139
   attempted: 300
-  admitted: 287
-  residual_this_batch: 13
+  admitted: 288
+  residual_this_batch: 12
   residual_not_attempted: 3839
-  richness: 0.9567
+  richness: 0.96

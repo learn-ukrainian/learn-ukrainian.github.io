@@ -2590,6 +2590,15 @@ sources:
     context: ВЧИ́ТИСЯ див. учи́тися.
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%B2%D1%87%D0%B8%D1%82%D0%B8%D1%81%D1%8F
+  - lemma: драматургія
+    pos: noun
+    count: 21
+    locator: glossary
+    gloss: 1) dramatic art, dramaturgy; 2) збірн. plays (pl.), drama
+    gloss_source: ukreng
+    context: драматургі́я -ї, ж. 1》 Драматичне мистецтво. || Характерні риси стилю, прийоми творчості в драматичному мистецтві якого-небудь письменника, напрямку, школи і т. ін. 2》 збірн. Сукупність драматичних творів письменника, літературного напрямку, народу, епохи. 3》 Теорія побудови драматичного твору.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D1%80%D0%B0%D0%BC%D0%B0%D1%82%D1%83%D1%80%D0%B3%D1%96%D1%8F
   subject: ukrlit
 residual:
 - lemma: м
@@ -2638,11 +2647,6 @@ residual:
   count: 23
   reasons:
   - no_en_gloss
-- lemma: драматургія
-  pos: noun
-  count: 21
-  reasons:
-  - no_uk_definition
 - lemma: пам'ять
   pos: noun
   count: 21
@@ -2661,7 +2665,7 @@ residual:
 stats:
   total_content_candidates: 8361
   attempted: 300
-  admitted: 287
-  residual_this_batch: 13
+  admitted: 288
+  residual_this_batch: 12
   residual_not_attempted: 8061
-  richness: 0.9567
+  richness: 0.96

@@ -2572,6 +2572,15 @@ sources:
     context: ВИРІЗНЯ́ТИСЯ, я́юся, я́єшся, недок., ВИ́РІЗНИТИСЯ, нюся, нишся, док. Виділятися серед інших, бути помітним. Дедалі вирізняються окремі групи і розмови (Леся Українка); Деякі голоси Ярошенко впізнав одразу; вирізнялися два дисканти братів Мосурів (С.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B8%D1%80%D1%96%D0%B7%D0%BD%D1%8F%D1%82%D0%B8%D1%81%D1%8F
+  - lemma: освітлення
+    pos: noun
+    count: 10
+    locator: glossary
+    gloss: 1) (дія) lighting; 2) (світло) light; illumination
+    gloss_source: ukreng
+    context: осві́тлення -я, с. 1》 Дія за знач. освітлити 1). 2》 Світло від якого-небудь джерела. 3》 Технічне обладнання, яке є джерелом світла. 4》 спец. Розподіл світла і тіні на картині, фотознімку і т. ін. 5》 перен. Пояснення, тлумачення чого-небудь (фактів, подій і т. ін.); висвітлення, інтерпретація.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BE%D1%81%D0%B2%D1%96%D1%82%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F
   subject: mystetstvo
 residual:
 - lemma: дійство
@@ -2640,11 +2649,6 @@ residual:
   reasons:
   - no_uk_definition
   - no_en_gloss
-- lemma: освітлення
-  pos: noun
-  count: 10
-  reasons:
-  - no_uk_definition
 - lemma: архітектурний
   pos: adj
   count: 9
@@ -2653,7 +2657,7 @@ residual:
 stats:
   total_content_candidates: 3013
   attempted: 300
-  admitted: 285
-  residual_this_batch: 15
+  admitted: 286
+  residual_this_batch: 14
   residual_not_attempted: 2713
   richness: 0.95

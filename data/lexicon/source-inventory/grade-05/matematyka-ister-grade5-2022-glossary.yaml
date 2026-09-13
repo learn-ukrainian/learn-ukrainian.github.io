@@ -2338,6 +2338,15 @@ sources:
     context: ТАРІ́ЛКА, и, ж. 1. Кругла посудина з широким плескатим дном і низькими вінцями, куди насипають або накладають страву. Поставила тарілку з хлібом Перед старим Еолом-дідом (І. Котляревський); Нахиливсь [Карпо Петрович] над тарілкою і потиху почав сьорбати юшку (М.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D1%82%D0%B0%D1%80%D1%96%D0%BB%D0%BA%D0%B0
+  - lemma: рівносторонній
+    pos: adj
+    count: 8
+    locator: glossary
+    gloss: мат.; equilateral
+    gloss_source: ukreng
+    context: рівносторо́нній -я, -є, мат. Який має рівні сторони (про геометричні фігури).
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D1%80%D1%96%D0%B2%D0%BD%D0%BE%D1%81%D1%82%D0%BE%D1%80%D0%BE%D0%BD%D0%BD%D1%96%D0%B9
   subject: matematyka
 residual:
 - lemma: см
@@ -2528,11 +2537,6 @@ residual:
   count: 8
   reasons:
   - no_en_gloss
-- lemma: рівносторонній
-  pos: adj
-  count: 8
-  reasons:
-  - no_uk_definition
 - lemma: ар
   pos: noun
   count: 6
@@ -2562,7 +2566,7 @@ residual:
 stats:
   total_content_candidates: 1330
   attempted: 300
-  admitted: 259
-  residual_this_batch: 41
+  admitted: 260
+  residual_this_batch: 40
   residual_not_attempted: 1030
-  richness: 0.8633
+  richness: 0.87

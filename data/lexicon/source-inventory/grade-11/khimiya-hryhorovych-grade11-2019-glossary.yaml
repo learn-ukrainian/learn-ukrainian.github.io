@@ -2293,6 +2293,15 @@ sources:
     context: ПОШИ́РЕНИЙ, а, е. 1. Дієпр. пас. до поши́рити 1. Осередній дворик .. оточений будовою з галереєю під аркадами, що поширена посередині виступом рундука і ложею (великою нішею) (Леся Українка). 2. у знач. прикм. Який часто трапляється, широко відомий, популярний.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D1%88%D0%B8%D1%80%D0%B5%D0%BD%D0%B8%D0%B9
+  - lemma: кислотність
+    pos: noun
+    count: 24
+    locator: glossary
+    gloss: Acidity
+    gloss_source: ukreng
+    context: кисло́тність -ності, ж. Ступінь вмісту кислоти (у 2 знач.).
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BA%D0%B8%D1%81%D0%BB%D0%BE%D1%82%D0%BD%D1%96%D1%81%D1%82%D1%8C
   subject: khimiya
 residual:
 - lemma: модернізація
@@ -2443,11 +2452,6 @@ residual:
   count: 24
   reasons:
   - no_en_gloss
-- lemma: кислотність
-  pos: noun
-  count: 24
-  reasons:
-  - no_uk_definition
 - lemma: амфотерний
   pos: adj
   count: 23
@@ -2536,7 +2540,7 @@ residual:
 stats:
   total_content_candidates: 3148
   attempted: 300
-  admitted: 254
-  residual_this_batch: 46
+  admitted: 255
+  residual_this_batch: 45
   residual_not_attempted: 2848
-  richness: 0.8467
+  richness: 0.85

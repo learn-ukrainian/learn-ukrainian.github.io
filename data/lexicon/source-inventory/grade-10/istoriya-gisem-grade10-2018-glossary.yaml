@@ -2527,6 +2527,33 @@ sources:
     context: УХВАЛИ́ТИ¹ див. ухва́лювати¹. УХВАЛИ́ТИ² див. ухва́лювати².
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D1%83%D1%85%D0%B2%D0%B0%D0%BB%D0%B8%D1%82%D0%B8
+  - lemma: делегація
+    pos: noun
+    count: 16
+    locator: glossary
+    gloss: Delegation; deputation; group
+    gloss_source: ukreng
+    context: делега́ція -ї, ж. Група делегатів від якої-небудь організації, установи, колективу.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%B5%D0%BB%D0%B5%D0%B3%D0%B0%D1%86%D1%96%D1%8F
+  - lemma: засідання
+    pos: noun
+    count: 16
+    locator: glossary
+    gloss: Conference, meeting; (суду, парламенту та ін.) session, sitting; відкривати (закривати) засідання — to open (to close) the meeting (conference)
+    gloss_source: ukreng
+    context: I зас`ідання-я, с. Зібрання певного кола людей – членів якого-небудь органу, представників якоїсь організації і т. ін. – для обговорення і вирішення чогось. II засід`ання-я, с. Дія за знач. засідати II 4).
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%B0%D1%81%D1%96%D0%B4%D0%B0%D0%BD%D0%BD%D1%8F
+  - lemma: командування
+    pos: noun
+    count: 68
+    locator: glossary
+    gloss: Command; headquarters; верховне командування — supreme command
+    gloss_source: ukreng
+    context: кома́ндування -я, с. 1》 Дія за знач. командувати. 2》 збірн. Особи, які стоять на чолі військ, військових підрозділів і т. ін.; командири.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BA%D0%BE%D0%BC%D0%B0%D0%BD%D0%B4%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F
   subject: istoriya
 residual:
 - lemma: м
@@ -2534,11 +2561,6 @@ residual:
   count: 128
   reasons:
   - no_en_gloss
-- lemma: командування
-  pos: noun
-  count: 68
-  reasons:
-  - no_uk_definition
 - lemma: млн
   pos: noun
   count: 48
@@ -2600,17 +2622,7 @@ residual:
   count: 17
   reasons:
   - no_uk_definition
-- lemma: делегація
-  pos: noun
-  count: 16
-  reasons:
-  - no_uk_definition
 - lemma: запровадження
-  pos: noun
-  count: 16
-  reasons:
-  - no_uk_definition
-- lemma: засідання
   pos: noun
   count: 16
   reasons:
@@ -2634,7 +2646,7 @@ residual:
 stats:
   total_content_candidates: 4389
   attempted: 300
-  admitted: 280
-  residual_this_batch: 20
+  admitted: 283
+  residual_this_batch: 17
   residual_not_attempted: 4089
-  richness: 0.9333
+  richness: 0.94

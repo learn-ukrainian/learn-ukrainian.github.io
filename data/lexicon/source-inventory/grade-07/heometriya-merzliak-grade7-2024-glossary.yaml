@@ -2329,6 +2329,15 @@ sources:
     context: ПОТРІ́БНО, пред. 1. Необхідно, слід (робити, виконувати що-небудь). Коли будете посилати мені книжки, звістіть, що саме посилаєте. Це потрібно (М. Коцюбинський); Ріст рослин при вивченні стану їх живлення особливо потрібно враховувати в садах (з наук.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%BF%D0%BE%D1%82%D1%80%D1%96%D0%B1%D0%BD%D0%BE
+  - lemma: гіпотенуза
+    pos: noun
+    count: 56
+    locator: glossary
+    gloss: мат.; hypotenuse
+    gloss_source: ukreng
+    context: гіпотену́за -и, ж. Сторона прямокутного трикутника, яка лежить проти прямого кута.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B3%D1%96%D0%BF%D0%BE%D1%82%D0%B5%D0%BD%D1%83%D0%B7%D0%B0
   subject: heometriya
 residual:
 - lemma: см
@@ -2369,11 +2378,6 @@ residual:
   count: 67
   reasons:
   - no_en_gloss
-- lemma: гіпотенуза
-  pos: noun
-  count: 56
-  reasons:
-  - no_uk_definition
 - lemma: трикут
   pos: noun
   count: 53
@@ -2556,7 +2560,7 @@ residual:
 stats:
   total_content_candidates: 1558
   attempted: 300
-  admitted: 258
-  residual_this_batch: 42
+  admitted: 259
+  residual_this_batch: 41
   residual_not_attempted: 1258
   richness: 0.86

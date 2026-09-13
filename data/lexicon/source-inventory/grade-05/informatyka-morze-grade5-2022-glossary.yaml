@@ -2437,6 +2437,24 @@ sources:
     context: ОПИ́СУВАТИ, ую, уєш, недок., ОПИСА́ТИ, опишу́, опи́шеш, док. 1. кого, що. В усній або письмовій формі розповідати про кого-, що-небудь; змальовувати когось, щось мовними засобами. Тепер би треба описати Евандра батьківську печаль І хлипання всі розказати, І крик, і охання, і жаль (І.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%BE%D0%BF%D0%B8%D1%81%D1%83%D0%B2%D0%B0%D1%82%D0%B8
+  - lemma: демонстрація
+    pos: noun
+    count: 21
+    locator: glossary
+    gloss: 1) (процесія) demonstration; демонстрація безробітних — demonstration of the unemployed
+    gloss_source: ukreng
+    context: демонстра́ція -ї, ж. 1》 Процесія людей на знак вираження яких-небудь громадсько-політичних настроїв. 2》 Дії, вчинки і т. ін., що виражають протест проти кого-, чого-небудь. 3》 Публічний показ чого-небудь. 4》 Вияв, свідчення чого-небудь. 5》 Тактичні дії збройних сил, скеровані на дезорганізацію противника.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B4%D0%B5%D0%BC%D0%BE%D0%BD%D1%81%D1%82%D1%80%D0%B0%D1%86%D1%96%D1%8F
+  - lemma: розгалуження
+    pos: noun
+    count: 21
+    locator: glossary
+    gloss: Ramification, embranchment, branching; ел. split; анат. (нерва) radicle; (про дорогу тж.) forking
+    gloss_source: ukreng
+    context: розгалу́ження -я, с. 1》 Дія за знач. розгалузити і розгалузитися 1-3). 2》 Те саме, що відгалуження 2), 3). 3》 Напрям, галузь чого-небудь (науки, виробництва, мистецтва і т. ін.). 4》 Залізнична розвилка. 5》 У програмуванні – вибір у програмі однієї з декількох послідовностей команд.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D1%80%D0%BE%D0%B7%D0%B3%D0%B0%D0%BB%D1%83%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F
   subject: informatyka
 residual:
 - lemma: об'єкт
@@ -2486,21 +2504,11 @@ residual:
   count: 26
   reasons:
   - no_en_gloss
-- lemma: демонстрація
-  pos: noun
-  count: 21
-  reasons:
-  - no_uk_definition
 - lemma: запропонований
   pos: adj
   count: 21
   reasons:
   - no_en_gloss
-- lemma: розгалуження
-  pos: noun
-  count: 21
-  reasons:
-  - no_uk_definition
 - lemma: вебсторінка
   pos: noun
   count: 18
@@ -2602,7 +2610,7 @@ residual:
 stats:
   total_content_candidates: 2374
   attempted: 300
-  admitted: 270
-  residual_this_batch: 30
+  admitted: 272
+  residual_this_batch: 28
   residual_not_attempted: 2074
-  richness: 0.9
+  richness: 0.91

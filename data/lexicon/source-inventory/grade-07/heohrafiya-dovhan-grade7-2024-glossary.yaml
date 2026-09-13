@@ -2473,6 +2473,15 @@ sources:
     context: запита́ння -я, с. 1》 Звертання до кого-небудь з метою з'ясування чогось; питання. || Те, що вимагає з'ясування. || Тема для відповіді під час перевірки знань учня, збирання якихось відомостей і т. ін. Ставити запитання.…
     context_source: vts
     context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%B0%D0%BF%D0%B8%D1%82%D0%B0%D0%BD%D0%BD%D1%8F
+  - lemma: рослинність
+    pos: noun
+    count: 19
+    locator: glossary
+    gloss: Vegetation; verdure, green; позбавлений рослинності — bleak, bare, barren
+    gloss_source: ukreng
+    context: росли́нність -ності, ж. 1》 Сукупність рослин, рослинний покрив якої-небудь місцевості. 2》 розм. Волосся на обличчі й тілі людини.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D1%80%D0%BE%D1%81%D0%BB%D0%B8%D0%BD%D0%BD%D1%96%D1%81%D1%82%D1%8C
   subject: heohrafiya
 residual:
 - lemma: видавництво
@@ -2590,11 +2599,6 @@ residual:
   reasons:
   - no_uk_definition
   - no_en_gloss
-- lemma: рослинність
-  pos: noun
-  count: 19
-  reasons:
-  - no_uk_definition
 - lemma: градусний
   pos: adj
   count: 18
@@ -2614,7 +2618,7 @@ residual:
 stats:
   total_content_candidates: 3624
   attempted: 300
-  admitted: 274
-  residual_this_batch: 26
+  admitted: 275
+  residual_this_batch: 25
   residual_not_attempted: 3324
-  richness: 0.9133
+  richness: 0.92

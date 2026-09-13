@@ -223,6 +223,7 @@ def test_main_runs_with_primary_fallback_db(tmp_path: Path, monkeypatch: pytest.
     worktree = tmp_path / "worktree"
     worktree.mkdir(parents=True, exist_ok=True)
 
+    monkeypatch.setattr(admit, "PROJECT_ROOT", worktree)
     monkeypatch.setattr(admit, "_resolve_primary_checkout", lambda root=None: primary)
 
     def fake_cache(lemma: str) -> dict:

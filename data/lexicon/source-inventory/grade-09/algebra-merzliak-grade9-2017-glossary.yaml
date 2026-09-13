@@ -2356,6 +2356,15 @@ sources:
     context: ВНИЗ (УНИ́З), присл. 1. У напрямі до низу; протилежне вгору. Перескакуючи з каменя на камінь і хапаючись за кущі, ми зійшли вниз (С. Васильченко); Янсон, не звертаючи уваги, iде до вiкна на вулицю, розчиняє й дивиться вниз (В. Винниченко); Раптом літаки з виттям пішли вниз, пікіруючи... (І.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%BD%D0%B8%D0%B7
+  - lemma: перенесення
+    pos: noun
+    count: 12
+    locator: glossary
+    gloss: 1) (у повітрі, no воді) transference, wattage, transportation; 2) (болю та ін.) endurance
+    gloss_source: ukreng
+    context: перене́сення -я, с. 1》 Дія за знач. переносити, перенести і переноситися, перенестися. 2》 Те саме, що анжамбеман.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BF%D0%B5%D1%80%D0%B5%D0%BD%D0%B5%D1%81%D0%B5%D0%BD%D0%BD%D1%8F
   subject: algebra
 residual:
 - lemma: геометричний
@@ -2536,11 +2545,6 @@ residual:
   count: 12
   reasons:
   - no_uk_definition
-- lemma: перенесення
-  pos: noun
-  count: 12
-  reasons:
-  - no_uk_definition
 - lemma: ц
   pos: noun
   count: 12
@@ -2565,7 +2569,7 @@ residual:
 stats:
   total_content_candidates: 1877
   attempted: 300
-  admitted: 261
-  residual_this_batch: 39
+  admitted: 262
+  residual_this_batch: 38
   residual_not_attempted: 1577
   richness: 0.87

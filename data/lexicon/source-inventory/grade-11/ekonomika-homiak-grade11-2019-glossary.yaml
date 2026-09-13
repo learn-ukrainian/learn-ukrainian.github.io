@@ -2509,6 +2509,15 @@ sources:
     context: забезпе́чувати -ую, -уєш, недок., забезпечити, -чу, -чиш; наказ. сп. забезпеч; док., перех. і без додатка. 1》 Постачаючи щось у достатній кількості, задовольняти кого-, що-небудь у якихось потребах. || Надавати кому-небудь достатні матеріальні засоби до існування.…
     context_source: vts
     context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%B0%D0%B1%D0%B5%D0%B7%D0%BF%D0%B5%D1%87%D1%83%D0%B2%D0%B0%D1%82%D0%B8
+  - lemma: залучення
+    pos: noun
+    count: 31
+    locator: glossary
+    gloss: Attraction; залучення іноземних інвестицій — attraction of foreign investments
+    gloss_source: ukreng
+    context: залу́чення -я, с. Дія за знач. залучити.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B7%D0%B0%D0%BB%D1%83%D1%87%D0%B5%D0%BD%D0%BD%D1%8F
   subject: ekonomika
 residual:
 - lemma: підприємство
@@ -2612,11 +2621,6 @@ residual:
   count: 34
   reasons:
   - no_uk_definition
-- lemma: залучення
-  pos: noun
-  count: 31
-  reasons:
-  - no_uk_definition
 - lemma: мінімальний
   pos: adj
   count: 30
@@ -2625,7 +2629,7 @@ residual:
 stats:
   total_content_candidates: 4645
   attempted: 300
-  admitted: 278
-  residual_this_batch: 22
+  admitted: 279
+  residual_this_batch: 21
   residual_not_attempted: 4345
-  richness: 0.9267
+  richness: 0.93

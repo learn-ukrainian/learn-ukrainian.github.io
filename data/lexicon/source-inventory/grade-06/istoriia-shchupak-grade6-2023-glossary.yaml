@@ -2383,6 +2383,24 @@ sources:
     context: РОЗВИВА́ТИСЯ, а́юся, а́єшся, недок., РОЗВИ́ТИСЯ, розів'ю́ся, розів'є́шся і РОЗВИ́НУТИСЯ, нуся, нешся; мин. ч. розви́вся, вила́ся, ло́ся і розви́нувся, нулася, лося; док. 1. розм.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D1%80%D0%BE%D0%B7%D0%B2%D0%B8%D0%B2%D0%B0%D1%82%D0%B8%D1%81%D1%8F
+  - lemma: вірування
+    pos: noun
+    count: 23
+    locator: glossary
+    gloss: Belief, creed
+    gloss_source: ukreng
+    context: ві́рування -я, с. Релігійні уявлення кого-небудь; віросповідання.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B2%D1%96%D1%80%D1%83%D0%B2%D0%B0%D0%BD%D0%BD%D1%8F
+  - lemma: періодизація
+    pos: noun
+    count: 20
+    locator: glossary
+    gloss: Periodization, division into periods
+    gloss_source: ukreng
+    context: періодиза́ція -ї, ж. Поділ на періоди (у 1, 2 знач.).
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BF%D0%B5%D1%80%D1%96%D0%BE%D0%B4%D0%B8%D0%B7%D0%B0%D1%86%D1%96%D1%8F
   subject: istoriya
 residual:
 - lemma: видавничий
@@ -2463,11 +2481,6 @@ residual:
   count: 26
   reasons:
   - no_uk_definition
-- lemma: вірування
-  pos: noun
-  count: 23
-  reasons:
-  - no_uk_definition
 - lemma: запам'ятати
   pos: verb
   count: 22
@@ -2486,11 +2499,6 @@ residual:
 - lemma: індій
   pos: noun
   count: 21
-  reasons:
-  - no_uk_definition
-- lemma: періодизація
-  pos: noun
-  count: 20
   reasons:
   - no_uk_definition
 - lemma: проєкт
@@ -2577,7 +2585,7 @@ residual:
 stats:
   total_content_candidates: 4142
   attempted: 300
-  admitted: 264
-  residual_this_batch: 36
+  admitted: 266
+  residual_this_batch: 34
   residual_not_attempted: 3842
-  richness: 0.88
+  richness: 0.89

@@ -2365,6 +2365,33 @@ sources:
     context: ВИ́НИКНУТИ див. виника́ти.
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D0%B2%D0%B8%D0%BD%D0%B8%D0%BA%D0%BD%D1%83%D1%82%D0%B8
+  - lemma: візантійський
+    pos: adj
+    count: 28
+    locator: glossary
+    gloss: Byzantine; візантійський стиль — Byzantine (Byzantinesque) style
+    gloss_source: ukreng
+    context: візанті́йський -а, -е, іст. Прикм. до візантійці й Візантія. || Який походить з Візантії. Візантійські купці. || Власт. Візантії. Візантійська архітектура. Візантійське право — правова система Візантії (6-15 ст.), що була запозичена феодальним правом Вірменії, Грузії, деяких країн Європи та Азії.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%B2%D1%96%D0%B7%D0%B0%D0%BD%D1%82%D1%96%D0%B9%D1%81%D1%8C%D0%BA%D0%B8%D0%B9
+  - lemma: класицизм
+    pos: noun
+    count: 66
+    locator: glossary
+    gloss: Classicism
+    gloss_source: ukreng
+    context: класици́зм -у, ч. Напрям у європейській літературі й мистецтві 17 – початку 19 ст., сутність якого полягала в наслідуванні мистецтва та поезії Стародавньої Греції, Риму та в дотримуванні системи суворих правил відтворення дійсності.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BA%D0%BB%D0%B0%D1%81%D0%B8%D1%86%D0%B8%D0%B7%D0%BC
+  - lemma: імпресіонізм
+    pos: noun
+    count: 25
+    locator: glossary
+    gloss: мист.; impressionism
+    gloss_source: ukreng
+    context: імпресіоні́зм -у, ч. Напрям у мистецтві й літературі, що виник наприкінці 19 ст. і прагнув відтворити найтонші суб'єктивні відчуття й переживання художника, письменника.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D1%96%D0%BC%D0%BF%D1%80%D0%B5%D1%81%D1%96%D0%BE%D0%BD%D1%96%D0%B7%D0%BC
   subject: mystetstvo
 residual:
 - lemma: його
@@ -2377,11 +2404,6 @@ residual:
   count: 72
   reasons:
   - no_en_gloss
-- lemma: класицизм
-  pos: noun
-  count: 66
-  reasons:
-  - no_uk_definition
 - lemma: романтизм
   pos: noun
   count: 64
@@ -2448,11 +2470,6 @@ residual:
   count: 29
   reasons:
   - no_en_gloss
-- lemma: візантійський
-  pos: adj
-  count: 28
-  reasons:
-  - no_uk_definition
 - lemma: ім'я
   pos: noun
   count: 28
@@ -2464,11 +2481,6 @@ residual:
   reasons:
   - no_uk_definition
 - lemma: пам'ятник
-  pos: noun
-  count: 25
-  reasons:
-  - no_uk_definition
-- lemma: імпресіонізм
   pos: noun
   count: 25
   reasons:
@@ -2564,7 +2576,7 @@ residual:
 stats:
   total_content_candidates: 6286
   attempted: 300
-  admitted: 262
-  residual_this_batch: 38
+  admitted: 265
+  residual_this_batch: 35
   residual_not_attempted: 5986
-  richness: 0.8733
+  richness: 0.88

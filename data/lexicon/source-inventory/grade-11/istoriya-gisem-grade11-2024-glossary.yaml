@@ -2518,6 +2518,15 @@ sources:
     context: 'ШИРО́КИЙ, а, е. 1. Який має велику ширину (у 1 знач.); протилежне вузький. Широкий шлях замовк: ні пішки, ні на возі Ніхто його не турбував (Л. Глібов); В нас по містах вибудувані пишні будинки з ясними вікнами, з широкими ворітьми (Марко Вовчок); Біліє широка бинда гречки, і пахощі повівають (М.…'
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D1%88%D0%B8%D1%80%D0%BE%D0%BA%D0%B8%D0%B9
+  - lemma: ідеологічний
+    pos: adj
+    count: 26
+    locator: glossary
+    gloss: Ideological
+    gloss_source: ukreng
+    context: ідеологі́чний -а, -е. Стос. до ідеології, пов'язаний з нею.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D1%96%D0%B4%D0%B5%D0%BE%D0%BB%D0%BE%D0%B3%D1%96%D1%87%D0%BD%D0%B8%D0%B9
   subject: istoriya
 residual:
 - lemma: м
@@ -2607,11 +2616,6 @@ residual:
   count: 26
   reasons:
   - no_uk_definition
-- lemma: ідеологічний
-  pos: adj
-  count: 26
-  reasons:
-  - no_uk_definition
 - lemma: відеоролик
   pos: noun
   count: 25
@@ -2631,7 +2635,7 @@ residual:
 stats:
   total_content_candidates: 5341
   attempted: 300
-  admitted: 279
-  residual_this_batch: 21
+  admitted: 280
+  residual_this_batch: 20
   residual_not_attempted: 5041
   richness: 0.93

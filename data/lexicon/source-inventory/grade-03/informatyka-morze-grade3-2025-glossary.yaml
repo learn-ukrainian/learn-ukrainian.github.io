@@ -2374,6 +2374,33 @@ sources:
     context: СВИСТО́К, тка́, ч. 1. Пристрій для свисту (у 1 знач.). Засюрчав свисток кондуктора. І поїзд рушив (А. Головко); Він зробив аж три свистки. Такі хороші та голосні! (Є. Кравченко); // Пристрій для подання сигналів за допомогою свисту (у 3 знач.). Він збив манометр і ударив залізом по боці [паровика].…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D1%81%D0%B2%D0%B8%D1%81%D1%82%D0%BE%D0%BA
+  - lemma: переміщення
+    pos: noun
+    count: 7
+    locator: glossary
+    gloss: Transfer(ence), relocation, shift(ing); (зміна посади) transfer; геол. dislocation; військ. displacement; тех. travel, move, moving, drift; переміщення континентів — continental drift
+    gloss_source: ukreng
+    context: 'перемі́щення -я, с. Дія і стан за знач. перемістити і переміститися. || У системах обробки інформації: а) розташування даних в оперативній пам''яті за новими адресами; б) присвоєння нових значень переміщуваним адресним константам у разі зміни місцезнаходження програми в оперативній пам''яті;…'
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BF%D0%B5%D1%80%D0%B5%D0%BC%D1%96%D1%89%D0%B5%D0%BD%D0%BD%D1%8F
+  - lemma: персональний
+    pos: adj
+    count: 6
+    locator: glossary
+    gloss: Personal; персональний комп'ютер — personal computer, PC
+    gloss_source: ukreng
+    context: персона́льний -а, -е. Який стосується певної, окремої особи, належить їй. Персональний склад — склад осіб, що працюють в одній установі, на одному підприємстві і т. ін.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BF%D0%B5%D1%80%D1%81%D0%BE%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D0%B8%D0%B9
+  - lemma: інформаційний
+    pos: adj
+    count: 18
+    locator: glossary
+    gloss: Information (attr.); інформаційний бізнес — information business
+    gloss_source: ukreng
+    context: інформаці́йний -а, -е. 1》 Стос. до інформації, який містить інформацію. || Який опрацьовує та видає інформацію. Інформаційна машина. 2》 Стос. до інформації як газетно-журнального жанру, що містить інформацію, відомості про що-небудь. Інформаційний жанр.…
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D1%96%D0%BD%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%86%D1%96%D0%B9%D0%BD%D0%B8%D0%B9
   subject: informatyka
 residual:
 - lemma: комп'ютер
@@ -2423,11 +2450,6 @@ residual:
   count: 18
   reasons:
   - no_en_gloss
-- lemma: інформаційний
-  pos: adj
-  count: 18
-  reasons:
-  - no_uk_definition
 - lemma: створений
   pos: adj
   count: 17
@@ -2522,11 +2544,6 @@ residual:
   count: 7
   reasons:
   - no_uk_definition
-- lemma: переміщення
-  pos: noun
-  count: 7
-  reasons:
-  - no_uk_definition
 - lemma: ілюстрація
   pos: noun
   count: 7
@@ -2558,11 +2575,6 @@ residual:
   reasons:
   - no_uk_definition
   - no_en_gloss
-- lemma: персональний
-  pos: adj
-  count: 6
-  reasons:
-  - no_uk_definition
 - lemma: розміщений
   pos: adj
   count: 6
@@ -2572,7 +2584,7 @@ residual:
 stats:
   total_content_candidates: 1703
   attempted: 300
-  admitted: 263
-  residual_this_batch: 37
+  admitted: 266
+  residual_this_batch: 34
   residual_not_attempted: 1403
-  richness: 0.8767
+  richness: 0.89

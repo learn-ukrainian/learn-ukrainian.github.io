@@ -2419,6 +2419,15 @@ sources:
     context: РЕ́БУС, а, ч. 1. Загадка, в якій слова або фрази, що розгадуються, зображено у вигляді комбінації малюнків з літерами та іншими знаками. Він помітив синка, доньку і дружину – з немовлям на руках, занурених в складні новітні ієрогліфи ребусів (Олесь Досвітній). 2. перен. Що-небудь загадкове, незрозуміле.…
     context_source: sum20
     context_url: https://slovnyk.me/dict/newsum/%D1%80%D0%B5%D0%B1%D1%83%D1%81
+  - lemma: паралелепіпед
+    pos: noun
+    count: 13
+    locator: glossary
+    gloss: мат.; parallelepiped
+    gloss_source: ukreng
+    context: паралелепі́пед -а, ч. Шестигранник, гранями якого є паралелограми з попарно паралельними площинами.
+    context_source: vts
+    context_url: https://slovnyk.me/dict/vts/%D0%BF%D0%B0%D1%80%D0%B0%D0%BB%D0%B5%D0%BB%D0%B5%D0%BF%D1%96%D0%BF%D0%B5%D0%B4
   subject: matematyka
 residual:
 - lemma: грн
@@ -2510,11 +2519,6 @@ residual:
   count: 15
   reasons:
   - no_uk_definition
-- lemma: паралелепіпед
-  pos: noun
-  count: 13
-  reasons:
-  - no_uk_definition
 - lemma: велосипедист
   pos: noun
   count: 12
@@ -2589,7 +2593,7 @@ residual:
 stats:
   total_content_candidates: 1326
   attempted: 300
-  admitted: 268
-  residual_this_batch: 32
+  admitted: 269
+  residual_this_batch: 31
   residual_not_attempted: 1026
-  richness: 0.8933
+  richness: 0.9
