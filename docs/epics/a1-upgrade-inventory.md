@@ -58,6 +58,7 @@ table as a substitute for `curriculum.yaml` order.
 | Piece | Rule |
 |---|---|
 | Writer | `agy-tools` / Gemini 3.8 Flash High. `--upgrade`. Sources/VESUM **required** (LLM dataset). |
+| Review | Gemini self-review (may rewrite). Then **Astra / gpt-6-astra medium** as the independent gate. |
 | Shape | Module 9: bilingual bullets, dialogues as `>`, last lesson `Підсумок модуля — Module summary`. No ` ```text `, no `Завершення модуля` table. |
 | Immersion | Copy the **old module's** A1 English/UK mix, not 9's topic. Landing: clean 9-shape or Gemini `landing-overview.md` if no "By the end". |
 | Activities | Keep originals; add until ≥10/lesson. |

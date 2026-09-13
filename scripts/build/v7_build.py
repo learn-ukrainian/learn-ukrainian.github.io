@@ -1218,15 +1218,19 @@ def _run_llm_qg(
     reviewer_samples: int = 1,
     review_context: str = "",
     content_override: str | None = None,
+    allow_same_model: bool = False,
+    effort_override: str | None = None,
 ) -> dict[str, Any]:
     from scripts.agent_runtime.runner import invoke
 
     reviewer = _reviewer_for_writer(writer, reviewer_override)
     defaults = linear_pipeline.REVIEWER_DEFAULTS[reviewer]
     sample_count = max(1, int(reviewer_samples))
+    effort = effort_override or defaults["effort"]
 
-    assert linear_pipeline.WRITER_DEFAULTS[writer]["model"] != defaults["model"], \
-        f"same-model self-review forbidden: writer={writer} reviewer={reviewer}"
+    if not allow_same_model:
+        assert linear_pipeline.WRITER_DEFAULTS[writer]["model"] != defaults["model"], \
+            f"same-model self-review forbidden: writer={writer} reviewer={reviewer}"
 
     agent_name = reviewer.split("-", 1)[0]
     generated_content = content_override if content_override is not None else _generated_content(module_dir)
@@ -1284,7 +1288,7 @@ def _run_llm_qg(
                     model=defaults["model"],
                     task_id=task_id,
                     entrypoint="dispatch",
-                    effort=defaults["effort"],
+                    effort=effort,
                     tool_config={"output_format": "stream-json"},
                     stdout_silence_timeout=stdout_silence_timeout,
                 )
@@ -1857,6 +1861,59 @@ def _upgrade_declared_map(derived: dict, raw: str | None) -> dict:
     return declared
 
 
+UPGRADE_INDEPENDENT_REVIEWER = "codex-tools"
+UPGRADE_INDEPENDENT_EFFORT = "medium"
+
+
+def _upgrade_gemini_adjust_then_astra(
+    *,
+    plan: Mapping[str, Any],
+    plan_content: str,
+    module_dir: Path,
+    writer: str,
+    independent_reviewer: str,
+    review_context: str,
+    writer_prompt: str,
+    stdout_silence_timeout: int | None,
+    effort: str | None,
+    content_override: str | None = None,
+) -> dict[str, Any]:
+    """Gemini reviews and may rewrite; Astra (medium) is the independent gate."""
+    self_review = _run_llm_qg(
+        plan=plan, plan_content=plan_content, module_dir=module_dir, writer=writer,
+        reviewer_override=writer, profile="core",
+        stdout_silence_timeout=stdout_silence_timeout,
+        review_context=review_context + "\nGemini self-review: you wrote this. Adjust if needed. Sources/VESUM required.",
+        content_override=content_override, allow_same_model=True,
+    )
+    linear_pipeline.write_json(module_dir / "llm_qg_gemini.json", self_review)
+    if not _llm_qg_payload_passes(self_review) and content_override is None:
+        adjust = (
+            writer_prompt
+            + "\n\n## Gemini self-review requested adjustments\n\n"
+            + json.dumps(self_review, ensure_ascii=False)[:12000]
+            + "\n\nReturn the four artifacts again. Keep original prose. Use sources/VESUM."
+        )
+        response = linear_pipeline.invoke_writer(
+            adjust, writer,
+            cwd=PROJECT_ROOT if writer == "gemini-tools" else module_dir,
+            tool_trace_path=module_dir / "writer_adjust_tool_calls.json",
+            stdout_silence_timeout=stdout_silence_timeout, effort=effort,
+        )
+        (module_dir / "writer_output.adjust.raw.md").write_text(response, encoding="utf-8")
+        linear_pipeline.write_writer_artifacts(
+            module_dir, linear_pipeline.parse_writer_output(response, lesson_mode=True),
+        )
+    independent = _run_llm_qg(
+        plan=plan, plan_content=plan_content, module_dir=module_dir, writer=writer,
+        reviewer_override=independent_reviewer, profile="core",
+        stdout_silence_timeout=stdout_silence_timeout,
+        review_context=review_context + "\nIndependent Astra review after Gemini self-adjust. Sources/VESUM required.",
+        content_override=content_override, effort_override=UPGRADE_INDEPENDENT_EFFORT,
+    )
+    return independent
+
+
 def _run_upgrade(args: argparse.Namespace) -> int:
     """V7's upgrade mode: existing artifacts -> scoped writer/review -> lesson gates/MDX."""
     from scripts.build.lesson_assembler import assemble_lessons
@@ -1899,17 +1956,22 @@ def _run_upgrade(args: argparse.Namespace) -> int:
             tracker.emit("module_done", dry_run=True, writer_invoked=False, **fields)
             return 0
         writer = _normalize_writer(args.writer)
-        reviewer = _normalize_writer(args.reviewer) if args.reviewer else None
+        if writer == "claude-tools":
+            writer = "agy-tools"
+        independent_reviewer = _normalize_writer(args.reviewer) if args.reviewer else UPGRADE_INDEPENDENT_REVIEWER
         from scripts.review.reviewer_resolver import UNRESOLVED_AUTHOR_FAMILIES, resolve_family
 
         writer_family = resolve_family(linear_pipeline.WRITER_DEFAULTS[writer]["model"])
-        reviewer_family = resolve_family(linear_pipeline.REVIEWER_DEFAULTS[_reviewer_for_writer(writer, reviewer)]["model"])
-        if writer_family in UNRESOLVED_AUTHOR_FAMILIES or reviewer_family in UNRESOLVED_AUTHOR_FAMILIES or writer_family == reviewer_family:
-            raise linear_pipeline.LinearPipelineError("Upgrade review requires an identified cross-family reviewer")
-        writer_identity = {"writer": writer, "model": linear_pipeline.WRITER_DEFAULTS[writer]["model"], "effort": args.effort}
+        independent_family = resolve_family(linear_pipeline.REVIEWER_DEFAULTS[independent_reviewer]["model"])
+        if writer_family in UNRESOLVED_AUTHOR_FAMILIES or independent_family in UNRESOLVED_AUTHOR_FAMILIES or writer_family == independent_family:
+            raise linear_pipeline.LinearPipelineError("Upgrade independent review (Astra) must be a different identified family from the Gemini writer")
+        writer_identity = {"writer": writer, "model": linear_pipeline.WRITER_DEFAULTS[writer]["model"], "effort": args.effort or linear_pipeline.WRITER_DEFAULTS[writer]["effort"]}
         review_identity = json.dumps({
-            "writer": writer_identity, "reviewer": _reviewer_for_writer(writer, reviewer),
-            "review_model": linear_pipeline.REVIEWER_DEFAULTS[_reviewer_for_writer(writer, reviewer)]["model"],
+            "writer": writer_identity,
+            "self_reviewer": writer,
+            "independent_reviewer": independent_reviewer,
+            "independent_model": linear_pipeline.REVIEWER_DEFAULTS[independent_reviewer]["model"],
+            "independent_effort": UPGRADE_INDEPENDENT_EFFORT,
         }, sort_keys=True)
         prior_vocabulary: list[str] = []
         for lesson in lesson_map["lessons"]:
@@ -1956,15 +2018,16 @@ def _run_upgrade(args: argparse.Namespace) -> int:
             lesson_plan = dict(plan, word_target=lesson["word_target"], content_outline=[
                 section for section in plan["content_outline"] if section["section"] in lesson["sections"]
             ])
-            review = _run_llm_qg(
+            review = _upgrade_gemini_adjust_then_astra(
                 plan=lesson_plan, plan_content=yaml.safe_dump(lesson_plan, allow_unicode=True),
-                module_dir=lesson_dir, writer=writer, reviewer_override=reviewer, profile="core",
-                stdout_silence_timeout=args.writer_timeout,
+                module_dir=lesson_dir, writer=writer, independent_reviewer=independent_reviewer,
                 review_context=review_identity + "\n" + _upgrade_review_context(lesson_map, n),
+                writer_prompt=prompt, stdout_silence_timeout=args.writer_timeout,
+                effort=args.effort or linear_pipeline.WRITER_DEFAULTS[writer]["effort"],
             )
             linear_pipeline.write_json(lesson_dir / "llm_qg.json", review)
             if not _llm_qg_payload_passes(review):
-                raise linear_pipeline.LinearPipelineError(f"Lesson {n} cross-family review failed")
+                raise linear_pipeline.LinearPipelineError(f"Lesson {n} Astra review failed")
             prior_vocabulary.extend(str(entry["lemma"]) for entry in linear_pipeline.load_yaml(lesson_dir / "vocabulary.yaml"))
 
         phase = "module_coherence"
@@ -1974,8 +2037,10 @@ def _run_upgrade(args: argparse.Namespace) -> int:
         )
         coherence = _run_llm_qg(
             plan=plan, plan_content=yaml.safe_dump(plan, allow_unicode=True), module_dir=module_dir,
-            writer=writer, reviewer_override=reviewer, profile="core", stdout_silence_timeout=args.writer_timeout,
-            review_context=review_identity + "\n" + _upgrade_review_context(lesson_map, None), content_override=joined,
+            writer=writer, reviewer_override=independent_reviewer, profile="core",
+            stdout_silence_timeout=args.writer_timeout,
+            review_context=review_identity + "\n" + _upgrade_review_context(lesson_map, None),
+            content_override=joined, effort_override=UPGRADE_INDEPENDENT_EFFORT,
         )
         linear_pipeline.write_json(module_dir / "module_coherence.json", coherence)
         if not _llm_qg_payload_passes(coherence):
