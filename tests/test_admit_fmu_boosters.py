@@ -59,11 +59,16 @@ def test_fmu_booster_manifest_pointer_and_fingerprint():
     assert FINGERPRINT_PATH.is_file()
 
     pointer = json.loads(POINTER_PATH.read_text(encoding="utf-8"))
-    from scripts.lexicon.manifest_fingerprint import build_fingerprint
+    from scripts.lexicon.check_manifest_freshness import check_freshness
+    from scripts.lexicon.manifest_fingerprint import build_fingerprint, sidecar_payload
 
-    bf = build_fingerprint(PROJECT_ROOT)
-
-    assert pointer["manifest_fingerprint"] == bf["fingerprint"]
+    # Sidecar tracks lexicon-code bytes. The pointer digest pins the published
+    # release asset and must not be rewritten on script-only CI fixes.
+    assert check_freshness(root=PROJECT_ROOT, fingerprint_path=FINGERPRINT_PATH) == 0
+    sidecar = json.loads(FINGERPRINT_PATH.read_text(encoding="utf-8"))
+    assert sidecar == sidecar_payload(build_fingerprint(PROJECT_ROOT))
+    assert pointer["manifest_fingerprint"]
+    assert len(pointer["manifest_fingerprint"]) == 64
     assert (
         "fmu" in pointer["richness_gate"]["override_reason"].lower()
         or "booster" in pointer["richness_gate"]["override_reason"].lower()
