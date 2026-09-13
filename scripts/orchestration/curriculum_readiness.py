@@ -232,7 +232,8 @@ def _research_path(repo_root: Path, track: str, slug: str) -> Path:
 def artifact_path(artifact: str, repo_root: Path, track: str, slug: str) -> Path:
     """Resolve a registered artifact ID without track-name branches."""
     curriculum = repo_root / "curriculum" / "l2-uk-en"
-    plan_track = base_level(track, manifest=curriculum / "curriculum.yaml")
+    manifest = curriculum / "curriculum.yaml"
+    plan_track = base_level(track, manifest=manifest) if manifest.exists() else track
     resolvers: dict[str, Callable[[], Path]] = {
         "research": lambda: _research_path(repo_root, track, slug),
         "dossier": lambda: repo_root / "docs" / "research" / track / f"{slug}.md",

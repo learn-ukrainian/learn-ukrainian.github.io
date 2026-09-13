@@ -11,7 +11,13 @@ from pathlib import Path
 
 import yaml
 
-from scripts.level_config import base_level, resolve_content_track
+try:
+    from scripts.level_config import base_level, resolve_content_track
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    # CLI consumers also load this module with only scripts/ on sys.path.
+    from level_config import base_level, resolve_content_track
 
 CURRICULUM_ROOT = Path(__file__).resolve().parent.parent.parent / "curriculum" / "l2-uk-en"
 
