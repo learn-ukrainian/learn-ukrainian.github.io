@@ -42,30 +42,50 @@ Drawing on **15,563 STEM textbook chunks**, boundary decisions key on **semantic
 ### 2.4 Minimal-Pair DPO Preference Architecture
 To eliminate shortcut learning where DPO separates chosen from rejected based on superficial formatting, length, or lexicographical quotes:
 - **Minimal Pairs:** Chosen and rejected responses share identical length ($\pm 10\%$), identical formatting, and identical CoT scaffolds, isolating the preference signal to linguistic validity.
-- **PRESERVE DPO Pairs (900 pairs):** For clean `PRESERVE` negative controls, the rejected response represents **plausible hyper-puristic over-correction** (e.g. wrongly modifying *об'єм куба* $\rightarrow$ *обсяг куба*). This explicitly penalizes unnecessary edits.
+- **PRESERVE DPO Pairs (900 pairs):** Sourced via two complementary paths: (a) plausible hyper-puristic over-corrections (e.g. wrongly modifying *об'єм куба* $\rightarrow$ *обсяг куба*), and (b) reframed human correction pairs (taking human-corrected clean text as input + chosen, and the original pre-correction sentence as rejected).
 - **On-Policy Error Harvesting:** Target Gemma checkpoints are sampled on development prompts; verified calques emitted by the model are harvested as realistic hard negatives.
+- **Caricature Control:** Rejected completions are bounded to realistic error densities (matching the empirical UA-GEC distribution of 1–2 errors per sentence).
 
 ### 2.5 Pre-Extraction Partition Firewall & Pre-Training Contamination Defense
 - **Early Source Custody:** Source documents and authors are partitioned into Train vs. Held-Out *before* extraction, feature derivation, or prompt rendering.
+- **MinHash Fuzzy Deduplication:** Near-duplicate passages across splits are eliminated using MinHash / Jaccard similarity ($\ge 0.80$), preventing overlapping chunk boundaries or reprinted textbook editions from leaking.
+- **UA-GEC Test Split Protection:** The official UA-GEC test split is strictly excluded from all training data to preserve independent external evaluation integrity.
 - **Contamination Defense:** Verbatim ZNO/NMT exam tasks and classic Antonenko-Davydovych chapters are widely mirrored online and present in Gemma pre-training data. They are strictly restricted to **Train-only**.
 - **Held-Out Evaluation Suite (1,000 cases):** Constructed from low-web-visibility sources, author-disjoint splits, and fresh human-authored test cases.
 - **Statistical Power Allocation:** Allocated as **600 PRESERVE cases + 400 CORRECT cases**. On 600 clean cases, observing $\le 1$ harmful edit yields an exact one-sided 95% binomial upper bound of $0.788\%$, guaranteeing rigorous compliance with the $\le 1.0\%$ Harmful-Edit Rate gate.
+
+### 2.6 Differential Mining Guardrails ("Fighting Fire with Fire")
+- **20th-Century Neologism & Internationalism Whitelist:** Maintain an explicit whitelist of modern technical and scientific vocabulary coined after 1930 (e.g. *програмування*, *авіація*, *транзистор*). Absence from 1920s R2U is expected and must not trigger false calque flags.
+- **`r2u_translate` Network vs. Absence Disambiguation:** Differentiate `SOURCE_UNAVAILABLE` (network timeout / HTTP failure) from `NOT_FOUND_WITHIN_VERIFIED_COVERAGE`. Never treat an empty network return as proof of absence.
+- **Semantic Calque Division of Labor:** Lemma-level differential mining cannot detect semantic shifts on existing lemmas (*являтися*, *відмінний*, *зустрічатися*). Semantic calques are strictly mined from UA-GEC, Antonenko-Davydovych, and textbook contrast tables.
+
+### 2.7 Curriculum Stratification & Error Budget
+To prevent high-volume error categories from overwhelming the dataset:
+- **Prepositional Government (`G/Case`):** Capped at $\le 25\%$ of total training records (preventing UA-GEC's 5,024 prepositional errors from dominating).
+- **Lexical Calques & Russianisms (`F/Calque`):** Target $40\%$ of training records.
+- **Active Present Participles (`-чий / -ший`):** Target $15\%$ of training records.
+- **Syntactic Voice & Passive Reflexivity (`-ся` vs `-но/-то`):** Target $10\%$ of training records.
+- **Phraseological Collocations:** Target $10\%$ of training records.
+
+### 2.8 Dual-Tier Open Release Policy
+- **Public Shards:** Data derived from public domain and open-licensed sources (Grinchenko 1907, 1920s Academy works, UA-GEC CC-BY-4.0) will be released openly on Hugging Face.
+- **Research-Internal Shards:** Shards derived from copyrighted school textbooks and protected 20th-century monographs remain in a *train-only local research partition* with model weights publicly released.
 
 ---
 
 ## 3. Grounded Corpus Assets Inventory
 
-| Corpus Asset | Location in Repository | Volume | Operational Role |
-| :--- | :--- | :--- | :--- |
-| **STEM Textbooks (Gr 1–11)** | `sources.db` $\rightarrow$ `textbooks` | **15,563 chunks** (65 books across 10 subjects) | Terminology grounding, polysemy boundaries, vetted `PRESERVE` controls |
-| **Language & Lit Textbooks** | `sources.db` $\rightarrow$ `textbooks` | **16,872 chunks** (127 books) | 379 chunks with explicit contrastive tables (❌ НЕПРАВИЛЬНО $\rightarrow$ ✅ ПРАВИЛЬНО) |
-| **ZNO / NMT Exam Tasks** | `sources.db` $\rightarrow$ `zno_tasks` | **1,646 tasks** | Authentic distractors and official gold keys (Train-only) |
-| **UA-GEC Error Corpus** | `sources.db` $\rightarrow$ `ua_gec_errors` | **8,937 spans** | 2,856 `F/Calque` and `F/Collocation` errors with author metadata |
-| **Antonenko-Davydovych *«Як ми говоримо»*** | `sources.db` $\rightarrow$ `style_guide` | **342 chapters** | Etymological, derivational, and register analysis (Train-only) |
-| **Pre-Soviet Academy Dictionaries** | `scripts.rag.source_query.r2u_translate` | **Full endpoints** | Historical discovery candidate lookup (Krymskyi-Yefremov, Pidmohylnyi-Pluzhnyk) |
-| **Soviet СУМ-11 (Differential Mirror)** | `sources.db` $\rightarrow$ `sum11` | **127,069 entries** | Negative mirror: identifying ideological elevation (7,152 `sovietization_risk` flags) |
-| **ULIF Academic Dictionary** | `data/ulif_dump_all.db` | **13,392 entries** | Register qualifiers (`діал.`, `розм.`, `книжн.`, `заст.`) to bound hyper-purism |
-| **VESUM Morphological Database** | `data/vesum.db` | **409K lemmas, 6.7M forms** | Inflectional validation and non-standard tag verification |
+| Corpus Asset | Location in Repository | Volume | Operational Role | Licensing / Release Tier |
+| :--- | :--- | :--- | :--- | :--- |
+| **STEM Textbooks (Gr 1–11)** | `sources.db` $\rightarrow$ `textbooks` | **15,563 chunks** (65 books across 10 subjects) | Terminology grounding, polysemy boundaries, vetted `PRESERVE` controls | Train-only research partition |
+| **Language & Lit Textbooks** | `sources.db` $\rightarrow$ `textbooks` | **16,872 chunks** (127 books) | 379 chunks with explicit contrastive tables (❌ НЕПРАВИЛЬНО $\rightarrow$ ✅ ПРАВИЛЬНО) | Train-only research partition |
+| **ZNO / NMT Exam Tasks** | `sources.db` $\rightarrow$ `zno_tasks` | **1,646 tasks** | Authentic distractors and official gold keys (Train-only) | Educational fair use / Train-only |
+| **UA-GEC Error Corpus** | `sources.db` $\rightarrow$ `ua_gec_errors` | **8,937 spans** | 2,856 `F/Calque` and `F/Collocation` errors with author metadata | CC-BY-4.0 (Public redistribution) |
+| **Antonenko-Davydovych *«Як ми говоримо»*** | `sources.db` $\rightarrow$ `style_guide` | **342 chapters** | Etymological, derivational, and register analysis (Train-only) | Train-only research partition |
+| **Pre-Soviet Academy Dictionaries** | `scripts.rag.source_query.r2u_translate` | **Full endpoints** | Historical discovery candidate lookup (Krymskyi-Yefremov, Pidmohylnyi-Pluzhnyk) | Public Domain (Public redistribution) |
+| **Soviet СУМ-11 (Differential Mirror)** | `sources.db` $\rightarrow$ `sum11` | **127,069 entries** | Negative mirror: identifying ideological elevation (7,152 `sovietization_risk` flags) | Academic research mirror |
+| **ULIF Academic Dictionary** | `data/ulif_dump_all.db` | **13,392 entries** | Register qualifiers (`діал.`, `розм.`, `книжн.`, `заст.`) to bound hyper-purism | Lexicographical reference |
+| **VESUM Morphological Database** | `data/vesum.db` | **409K lemmas, 6.7M forms** | Inflectional validation and non-standard tag verification | Open source (GPL/CC) |
 
 ---
 
@@ -83,12 +103,12 @@ flowchart TD
         U1["ULIF Dump (13.3K entries, Register Qualifiers)"]
     end
 
-    subgraph Partitioning ["2. Pre-Extraction Partition Firewall"]
-        PF["Source & Phenomenon Partitioning (Train vs Held-Out Custody)"]
+    subgraph Partitioning ["2. Pre-Extraction Partition Firewall (Phase 3.0)"]
+        PF["Source, Author & Phenomenon Partitioning (Train vs Held-Out Custody)"]
         T1 & T2 & Z1 & G1 --> PF
     end
 
-    subgraph Extraction ["3. Candidate Extraction Tooling"]
+    subgraph Extraction ["3. Candidate Extraction Tooling (Phases 3.1–3.4)"]
         E1["v4_mine_corpus_calques.py (Textbook & ZNO Tables)"]
         E2["v4_mine_uagec_calques.py (UA-GEC Sentence Contexts)"]
         E3["v4_mine_stem_controls.py (Vetted PRESERVE Controls)"]
@@ -96,7 +116,7 @@ flowchart TD
         PF --> E1 & E2 & E3 & E4
     end
 
-    subgraph Synthesis ["4. Trajectory Generation & Claim Verification"]
+    subgraph Synthesis ["4. Trajectory Generation & Claim Verification (Phase 3.5)"]
         V1["VESUM 3-Tier Content Attestation & Inflection Check"]
         V2["Contextual Decision Classifier (CORRECT, PRESERVE, REGISTER)"]
         V3["Multi-Format Output Generator (Tip, Edit, Contrast, Analysis)"]
@@ -104,12 +124,12 @@ flowchart TD
         E1 & E2 & E3 & E4 --> V1 --> V2 --> V3 --> V4
     end
 
-    subgraph Canary ["5. Pilot Canary Phase"]
+    subgraph Canary ["5. Pilot Canary Phase (Phase 3.6)"]
         PC["200-Item Pilot Canary (Gemma 3 4B Fine-Tune & Safety Evaluation)"]
         V4 --> PC
     end
 
-    subgraph Deliverables ["6. Production Release Shards"]
+    subgraph Deliverables ["6. Production Release Shards (Phase 3.7)"]
         D1["6,000 SFT Reasoning Trajectories (30% PRESERVE)"]
         D2["3,000 DPO Preference Pairs (Minimal-Pair Anti-Soviet Contrast)"]
         D3["Held-Out Evaluation Suite (600 PRESERVE + 400 CORRECT)"]
@@ -142,9 +162,9 @@ A model checkpoint is admitted for public Hugging Face release only when satisfy
 
 - **Milestone 1 (v1 Pilot Deliverable):** [COMPLETED] 1,200 SFT + 1,200 DPO pairs validated and evaluated; UNLP paper draft authored.
 - **Milestone 2 (Human Gold Seeds):** [COMPLETED] 150 deeply researched Human Gold Seeds authored, verified, and merged under PR #8002 with independent cross-family approval.
-- **Milestone 3.0 (Source Custody & Partition Firewall):** Pre-extraction partitioning separating Train from the 1,000-case Held-Out Suite (600 PRESERVE / 400 CORRECT).
+- **Milestone 3.0 (Source Custody & Partition Firewall):** Pre-extraction partitioning separating Train from the 1,000-case Held-Out Suite (600 PRESERVE / 400 CORRECT) with MinHash deduplication.
 - **Milestone 3.1–3.4 (Corpus Extraction Scripts):** Implement `v4_mine_corpus_calques.py`, `v4_mine_uagec_calques.py`, `v4_mine_stem_controls.py`, and `v4_differential_soviet_miner.py`.
-- **Milestone 3.5 (Automated CoT Claim-Verifier):** Implement `v4_verify_trajectory_claims.py` verifying all dictionary, morphology, and historical claims.
+- **Milestone 3.5 (Automated CoT Claim-Verifier):** Implement `v4_verify_trajectory_claims.py` verifying all dictionary, morphology, and historical claims against local DBs.
 - **Milestone 3.6 (200-Item Pilot Canary):** Fine-tune Gemma 3 4B on 200 items; confirm calque-elimination and harmful-edit directional success before 6K scaling.
 - **Milestone 3.7 (Production Assembly):** Assemble and validate 6,000 SFT + 3,000 DPO production shards against schemas and cross-family review.
 - **Milestone 4 (Final Checkpoint Training & Publication):** Train Gemma 3/4 production checkpoints, evaluate against the 3 non-negotiable release gates, and publish weights on Hugging Face.
