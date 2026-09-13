@@ -4,22 +4,22 @@
     "candidates_admitted": 15,
     "false_calque_flags_on_whitelist": 0,
     "ideological_realia_tagged": 168,
-    "neologisms_preserved": 15,
+    "neologisms_preserved": 11,
     "network_timeouts_as_missing_words": 0
   },
   "epic": 6321,
   "files": {
     "candidates_index": {
       "filename": "differential_soviet_candidates.jsonl",
-      "line_count": 198,
-      "sha256": "a7fa12bb770407303eedca1d4326ef31241aebc52d3ac165806ebbfca8cb0f69"
+      "line_count": 194,
+      "sha256": "0ae68e20856ef1ef9c012d9c4c8514d605f1654a5f7be22061507dd6dfc5ade8"
     },
     "candidates_manifest": {
       "filename": "differential_soviet_manifest.json",
-      "sha256": "7cc77051c5e8658de6f3e34e3d10c70a5e5c4746bfb06b65d002691ae0031e11"
+      "sha256": "25a258e9f21a79d5d8dd236243d317b5c861152fedb8c60049b7d419fe30604a"
     }
   },
-  "generated_at": "2026-09-13T12:15:58.752584+00:00",
+  "generated_at": "2026-09-13T12:28:00.043378+00:00",
   "invariants": {
     "all_replacements_vesum_attested": true,
     "no_private_host_paths": true,
@@ -27,7 +27,7 @@
     "zero_network_errors_as_missing_word": true
   },
   "issue": 8008,
-  "receipt_id": "receipt.soviet_miner.6af492e707198bb6",
+  "receipt_id": "receipt.soviet_miner.cba23d22729f23ec",
   "schema_version": "v1_differential_soviet_receipt",
   "sum11_risk_pool": {
     "risk_1_count": 6397,
@@ -35,7 +35,7 @@
     "total_entries": 7152
   },
   "whitelists": {
-    "neologism_whitelist_count": 112,
+    "neologism_whitelist_count": 119,
     "skrypnykivka_archaism_count": 10
   }
 }

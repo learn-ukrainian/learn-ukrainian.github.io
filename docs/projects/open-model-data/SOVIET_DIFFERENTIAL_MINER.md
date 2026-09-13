@@ -6,9 +6,10 @@ Part of **Epic #6321** (Open Model Data) and **Issue #8008**.
 
 This tool executes differential lexicographical mining by contrasting Soviet СУМ-11 dictionary entries flagged with `sovietization_risk > 0` against pre-Soviet 1920s Academy dictionaries (R2U) and modern Ukrainian standards (Pravopys 2019 / MESU / VESUM).
 
-Crucially, it enforces two non-negotiable linguistic and structural invariants:
-1. **20th-Century Technical Neologism Whitelist**: Modern computing, aviation, and scientific terms coined after 1930 (*програмування*, *комп'ютер*, *авіація*, *транзистор*, *лазер*, *пластмаса*) are inherently absent from 1920s dictionaries. Their absence MUST NOT trigger false calque flags.
-2. **Network Timeout vs Absence Disambiguation**: Differentiates `SOURCE_UNAVAILABLE` (network timeouts or HTTP failures) from `NOT_FOUND_WITHIN_VERIFIED_COVERAGE`. Network outages are strictly never logged as missing-word proof or treated as evidence of Sovietization.
+Crucially, it enforces non-negotiable linguistic and structural invariants:
+1. **20th-Century Technical Neologism Whitelist**: Modern computing, aviation, and scientific terms coined after 1930 (*програмування*, *комп'ютер*, *авіація*, *транзистор*, *лазер*, *пластмаса*) are inherently absent from 1920s dictionaries. Their absence MUST NOT trigger false calque flags. Whitelist matching uses strict lemma equality, hyphenated compound components, or stem prefixes (>= 7 chars) — never loose infix matching — preventing older vocabulary like *автомобільний* or *стереотип* from false classification.
+2. **Network Timeout vs Absence Disambiguation & Differential Contrast**: Live and cached R2U lookups strictly differentiate `SOURCE_UNAVAILABLE` (network timeouts or HTTP failures) from `NOT_FOUND_WITHIN_VERIFIED_COVERAGE`. Network outages are strictly never logged as missing-word proof or treated as evidence of Sovietization. All discovery candidates carry verified `r2u_lookup_status` values (`found`, `not_found_within_verified_coverage`, etc.), cached locally in `r2u_differential_cache.json` for deterministic reproducibility.
+3. **100% Fail-Closed VESUM Attestation**: Every authentic Ukrainian alternative replacement is verified against `forms_all` in `data/vesum.db`. Attestation fails closed: missing database cursors raise `RuntimeError` rather than silently certifying replacements.
 
 ---
 
@@ -39,6 +40,7 @@ Every entry is deterministically categorized into:
   - `differential_soviet_receipt.json`
   - `differential_soviet_manifest.json`
   - `differential_soviet_candidates.jsonl`
+  - `r2u_differential_cache.json`
 
 ---
 
@@ -48,6 +50,12 @@ Every entry is deterministically categorized into:
 
 ```bash
 .venv/bin/python scripts/projects/open_model_data/v4_differential_soviet_miner.py
+```
+
+### Run Offline with Local Cache Only
+
+```bash
+.venv/bin/python scripts/projects/open_model_data/v4_differential_soviet_miner.py --no-network
 ```
 
 ### Verify Integrity & Hashes (Fast Verification Gate)

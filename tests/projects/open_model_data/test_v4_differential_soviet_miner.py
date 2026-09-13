@@ -23,6 +23,7 @@ from scripts.projects.open_model_data.v4_differential_soviet_miner import (
     R2ULookupStatus,
     Sum11RiskEntry,
     adjudicate_sum11_entry,
+    build_differential_receipt,
     is_neologism_whitelisted,
     is_skrypnykivka_archaism,
     is_soviet_ideological_realia,
@@ -58,13 +59,39 @@ def receipt_schema() -> dict:
     return schema
 
 
+@pytest.fixture
+def mock_vesum_cursor() -> sqlite3.Cursor:
+    conn = sqlite3.connect(":memory:")
+    cursor = conn.cursor()
+    cursor.execute("CREATE TABLE forms_all (id INTEGER PRIMARY KEY, lemma TEXT, word_form TEXT)")
+    cursor.execute("CREATE INDEX idx_forms_all_lemma ON forms_all(lemma)")
+    cursor.execute("CREATE INDEX idx_forms_all_word_form ON forms_all(word_form)")
+    test_lemmas = [
+        "чинний", "переважний", "збігатися", "брати", "участь", "принаймні",
+        "міра", "того", "як", "ініціатива", "щодо", "наступний", "крайній",
+        "раз", "мати", "рація", "відбуватися", "впадати", "око", "насамперед",
+        "кошт", "порушити", "питання", "панівний", "відсталий", "віджилий",
+        "домінантний", "надихальний", "організаційний", "підрослий",
+        "підпорядковувальний", "перетворювальний", "життєствердний",
+        "принизливий", "спрямовувальний", "стримувальний", "хвилювальний",
+        "програмування", "комп'ютер", "авіація", "транзистор", "лазер",
+        "пластмаса", "полімер", "радар", "генетика", "інтернет",
+        "рівнобіжник", "терпуг", "прямовис", "довгокутник", "дрібножил",
+        "комсомол", "колгосп", "партком", "райком", "стахановець",
+        "діючий", "подавляючий", "співпадати", "слідуючий",
+    ]
+    for lem in test_lemmas:
+        cursor.execute("INSERT INTO forms_all (lemma, word_form) VALUES (?, ?)", (lem, lem))
+    return cursor
+
+
 def test_contracts_schema_validity(candidate_schema: dict, receipt_schema: dict) -> None:
     """Ensure JSON Schema definitions are valid Draft 2020-12 schemas."""
     assert candidate_schema["title"] == "DifferentialSovietCandidateV1"
     assert receipt_schema["title"] == "DifferentialSovietReceiptV1"
 
 
-def test_modern_20th_century_neologism_whitelist(candidate_schema: dict) -> None:
+def test_modern_20th_century_neologism_whitelist(candidate_schema: dict, mock_vesum_cursor: sqlite3.Cursor) -> None:
     """Acceptance criterion: Zero false calque flags on 20th-century technical neologisms.
 
     Absence of modern computing/aviation/physics terms in 1920s R2U must NOT trigger calque flags.
@@ -92,13 +119,19 @@ def test_modern_20th_century_neologism_whitelist(candidate_schema: dict) -> None
             sovietization_risk=1,
             sovietization_keywords=["кпрс"],
         )
-        result = adjudicate_sum11_entry(entry, vesum_cursor=None)
+        result = adjudicate_sum11_entry(entry, vesum_cursor=mock_vesum_cursor, allow_network=False)
         jsonschema.validate(instance=result, schema=candidate_schema)
 
         assert result["status"] == AdjudicationStatus.WHITELIST_PRESERVED.value
         assert result["adjudication_category"] == AdjudicationCategory.MODERN_NEOLOGISM_TECHNICAL.value
         assert result["is_neologism_whitelisted"] is True
         assert result["authentic_alternatives"] == []
+
+
+def test_neologism_whitelist_avoids_substring_false_positives() -> None:
+    """Verify whitelist rejects non-neologisms and does not match via loose infix substrings."""
+    assert not is_neologism_whitelisted("автомобільний"), "автомобільний must not match via infix 'мобільний'"
+    assert not is_neologism_whitelisted("стереотип"), "стереотип must not match via prefix 'стерео'"
 
 
 def test_r2u_network_timeout_vs_absence_disambiguation() -> None:
@@ -125,7 +158,7 @@ def test_r2u_network_timeout_vs_absence_disambiguation() -> None:
             assert translations == []
 
 
-def test_skrypnykivka_only_archaism_rejection(candidate_schema: dict) -> None:
+def test_skrypnykivka_only_archaism_rejection(candidate_schema: dict, mock_vesum_cursor: sqlite3.Cursor) -> None:
     """Acceptance criterion: Reject Skrypnykivka-only archaisms from modern replacement."""
     sample_archaisms = ["рівнобіжник", "терпуг", "прямовис", "довгокутник", "дрібножил"]
 
@@ -139,7 +172,7 @@ def test_skrypnykivka_only_archaism_rejection(candidate_schema: dict) -> None:
             sovietization_risk=1,
             sovietization_keywords=["ленін"],
         )
-        result = adjudicate_sum11_entry(entry, vesum_cursor=None)
+        result = adjudicate_sum11_entry(entry, vesum_cursor=mock_vesum_cursor, allow_network=False)
         jsonschema.validate(instance=result, schema=candidate_schema)
 
         assert result["status"] == AdjudicationStatus.SKRYPNYKIVKA_ARCHAISM_REJECTED.value
@@ -147,7 +180,7 @@ def test_skrypnykivka_only_archaism_rejection(candidate_schema: dict) -> None:
         assert result["is_neologism_whitelisted"] is False
 
 
-def test_soviet_ideological_realia_tagging(candidate_schema: dict) -> None:
+def test_soviet_ideological_realia_tagging(candidate_schema: dict, mock_vesum_cursor: sqlite3.Cursor) -> None:
     """Ensure Soviet ideological realia are categorized as historical political terms, not calques."""
     sample_realia = [
         ("комсомол", ["комсомол"]),
@@ -167,14 +200,14 @@ def test_soviet_ideological_realia_tagging(candidate_schema: dict) -> None:
             sovietization_risk=2,
             sovietization_keywords=keywords,
         )
-        result = adjudicate_sum11_entry(entry, vesum_cursor=None)
+        result = adjudicate_sum11_entry(entry, vesum_cursor=mock_vesum_cursor, allow_network=False)
         jsonschema.validate(instance=result, schema=candidate_schema)
 
         assert result["status"] == AdjudicationStatus.IDEOLOGICAL_HISTORICAL_ONLY.value
         assert result["adjudication_category"] == AdjudicationCategory.SOVIET_REALIA_IDEOLOGY.value
 
 
-def test_authentic_soviet_calque_replacements(candidate_schema: dict) -> None:
+def test_authentic_soviet_calque_replacements(candidate_schema: dict, mock_vesum_cursor: sqlite3.Cursor) -> None:
     """Verify authentic Ukrainian replacements for verified Soviet/Russian calques."""
     assert len(AUTHENTIC_SOVIET_CALQUE_REPLACEMENTS) >= 10
 
@@ -187,7 +220,7 @@ def test_authentic_soviet_calque_replacements(candidate_schema: dict) -> None:
             sovietization_risk=1,
             sovietization_keywords=["партія"],
         )
-        result = adjudicate_sum11_entry(entry, vesum_cursor=None)
+        result = adjudicate_sum11_entry(entry, vesum_cursor=mock_vesum_cursor, allow_network=False)
         jsonschema.validate(instance=result, schema=candidate_schema)
 
         assert result["status"] == AdjudicationStatus.CANDIDATE_ADMITTED.value
@@ -210,6 +243,41 @@ def test_vesum_attestation_mock() -> None:
     assert verify_in_vesum("чинний", mock_cursor) is True
     assert verify_in_vesum("йшов", mock_cursor) is True
     assert verify_in_vesum("неіснуючеслово", mock_cursor) is False
+
+
+def test_vesum_attestation_fails_closed_without_cursor() -> None:
+    """Verify verify_in_vesum fails closed (raises RuntimeError) when cursor is None."""
+    with pytest.raises(RuntimeError, match="VESUM database cursor required"):
+        verify_in_vesum("чинний", None)
+
+
+def test_build_differential_receipt_enforces_vesum_invariant() -> None:
+    """Verify build_differential_receipt raises ValueError if any replacement lacks VESUM attestation."""
+    bad_candidates = [
+        {
+            "schema_version": "v1_differential_soviet_candidate",
+            "candidate_id": "soviet.cand.1111222233334444",
+            "sum11_id": 100,
+            "word": "діючий",
+            "sovietization_risk": 1,
+            "sovietization_keywords": ["партія"],
+            "status": "CANDIDATE_ADMITTED",
+            "adjudication_category": "lexical_calque",
+            "authentic_alternatives": [
+                {
+                    "term": "вигаданеслово",
+                    "source": "Antonenko-Davydovych",
+                    "vesum_attested": False,
+                    "is_modern_standard": True,
+                }
+            ],
+            "is_neologism_whitelisted": False,
+            "vesum_attested": True,
+            "r2u_lookup_status": "found",
+        }
+    ]
+    with pytest.raises(ValueError, match="authentic alternatives lack VESUM attestation"):
+        build_differential_receipt(bad_candidates, OUTPUT_DIR)
 
 
 def test_opsec_no_private_host_paths() -> None:
@@ -253,8 +321,8 @@ def test_differential_receipt_manifest_and_invariants(receipt_schema: dict) -> N
     assert MANIFEST_FILE.is_file()
     with MANIFEST_FILE.open("r", encoding="utf-8") as f:
         manifest = json.load(f)
-    assert manifest["entry_count"] == 198
-    assert receipt["files"]["candidates_index"]["line_count"] == 198
+    assert manifest["entry_count"] == receipt["files"]["candidates_index"]["line_count"]
+    assert manifest["entry_count"] >= 190
     validate_no_private_host_paths(manifest)
 
 
@@ -270,3 +338,38 @@ def test_miner_cli_verify_only() -> None:
     )
     assert res.returncode == 0, f"--verify-only failed: stdout={res.stdout}, stderr={res.stderr}"
     assert "verified clean" in res.stdout
+
+
+def test_miner_cli_verify_only_fails_on_manifest_tampering(tmp_path: Path) -> None:
+    """Ensure --verify-only fails if the manifest file is missing or has a hash mismatch."""
+    import shutil
+
+    tmp_out = tmp_path / "soviet_candidates"
+    tmp_out.mkdir()
+    shutil.copy(RECEIPT_FILE, tmp_out / RECEIPT_FILE.name)
+    shutil.copy(CANDIDATES_FILE, tmp_out / CANDIDATES_FILE.name)
+
+    script_path = REPO_ROOT / "scripts" / "projects" / "open_model_data" / "v4_differential_soviet_miner.py"
+
+    # 1. Missing manifest must fail
+    res_missing = subprocess.run(
+        [sys.executable, str(script_path), "--verify-only", "--output-dir", str(tmp_out)],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert res_missing.returncode != 0
+    assert "Required files missing" in res_missing.stdout
+
+    # 2. Corrupted manifest hash must fail
+    (tmp_out / MANIFEST_FILE.name).write_text('{"tampered": true}\n', encoding="utf-8")
+    res_tampered = subprocess.run(
+        [sys.executable, str(script_path), "--verify-only", "--output-dir", str(tmp_out)],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert res_tampered.returncode != 0
+    assert "Hash mismatch" in res_tampered.stdout

@@ -50,6 +50,7 @@ def resolve_data_path(rel_path: str) -> Path:
 DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "soviet_candidates"
+DEFAULT_R2U_CACHE = resolve_data_path("data/projects/open_model_data/soviet_candidates/r2u_differential_cache.json")
 CANDIDATE_SCHEMA = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_differential_soviet_candidate.schema.json"
 RECEIPT_SCHEMA = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_differential_soviet_receipt.schema.json"
 
@@ -176,6 +177,8 @@ MODERN_20TH_CENTURY_WHITELIST: frozenset[str] = frozenset(
         "стрептоміцин",
         "вітамін",
         "вітамінний",
+        "вітамінологія",
+        "вітамінолог",
         "ген",
         "генетика",
         "генетичний",
@@ -198,13 +201,18 @@ MODERN_20TH_CENTURY_WHITELIST: frozenset[str] = frozenset(
         "телевізійний",
         "радіо",
         "радіомовлення",
+        "радіотехніка",
+        "радіотехнічний",
+        "радіоустановка",
         "відео",
         "відеомагнітофон",
         "відеокамера",
         "магнітофон",
         "трансляція",
-        "стерео",
+        "стереосистема",
         "стереофонія",
+        "стереофонічний",
+        "стереозвук",
         "мобільний",
         "смартфон",
     }
@@ -427,11 +435,18 @@ def clean_word(text: str) -> str:
 
 
 def is_neologism_whitelisted(word: str) -> bool:
-    """Determine if a word is an attested 20th-century modern neologism/internationalism."""
+    """Determine if a word is an attested 20th-century modern neologism/internationalism.
+
+    Strict matching only: exact lemma, hyphenated compound component, or strict stem prefix
+    (>= 7 chars). Loose infix substring matching is forbidden to prevent false positives
+    on older vocabulary (e.g. автомобільний matching мобільний, стереотип matching стерео).
+    """
     norm = clean_word(word)
     if norm in MODERN_20TH_CENTURY_WHITELIST:
         return True
-    return any(len(item) >= 5 and (norm.startswith(item) or item in norm) for item in MODERN_20TH_CENTURY_WHITELIST)
+    if any(part in MODERN_20TH_CENTURY_WHITELIST for part in norm.split("-")):
+        return True
+    return any(len(item) >= 7 and norm.startswith(item) for item in MODERN_20TH_CENTURY_WHITELIST)
 
 
 def is_skrypnykivka_archaism(word: str) -> bool:
@@ -453,34 +468,54 @@ def is_soviet_ideological_realia(word: str, keywords: list[str]) -> bool:
 def query_r2u_safe(
     word: str,
     *,
-    cache_entries: dict[str, dict[str, Any]] | None = None,
-    allow_network: bool = False,
+    cache_entries: dict[str, Any] | None = None,
+    allow_network: bool = True,
 ) -> tuple[R2ULookupStatus, list[str]]:
     """Query R2U with network vs absence disambiguation.
 
     Returns (status, list of translation lemmas).
-    Never treats a network timeout or error as NOT_FOUND_WITHIN_VERIFIED_COVERAGE.
+    Differentiates SOURCE_UNAVAILABLE from NOT_FOUND_WITHIN_VERIFIED_COVERAGE.
+    Never treats a network timeout or error as missing word proof.
     """
     norm = clean_word(word)
     if cache_entries is not None and norm in cache_entries:
         entry = cache_entries[norm]
+        raw_status = entry.get("status", "found")
+        try:
+            status = R2ULookupStatus(raw_status)
+        except ValueError:
+            status = R2ULookupStatus.FOUND
         translations = entry.get("translations", [])
-        return R2ULookupStatus.CACHED, translations
+        return status, translations
 
     if not allow_network:
         return R2ULookupStatus.NOT_QUERIED, []
 
-    # Try using canonical r2u_translate_with_status from scripts.rag.source_query
+    # Try using canonical r2u_translate_with_status from scripts.rag.source_query or rag.source_query
     try:
-        from scripts.rag.source_query import r2u_translate_with_status
+        try:
+            from scripts.rag.source_query import r2u_translate_with_status
+        except ImportError:
+            from rag.source_query import r2u_translate_with_status
 
         sq_status, entries = r2u_translate_with_status(norm)
         if sq_status.value == R2ULookupStatus.FOUND.value:
             translations = [e.get("translation", "") for e in entries if e.get("translation")]
-            return R2ULookupStatus.FOUND, translations[:10]
-        if sq_status.value == R2ULookupStatus.SOURCE_UNAVAILABLE.value:
-            return R2ULookupStatus.SOURCE_UNAVAILABLE, []
-        return R2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE, []
+            res_status = R2ULookupStatus.FOUND
+            res_trans = translations[:10]
+        elif sq_status.value == R2ULookupStatus.SOURCE_UNAVAILABLE.value:
+            res_status = R2ULookupStatus.SOURCE_UNAVAILABLE
+            res_trans = []
+        else:
+            res_status = R2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE
+            res_trans = []
+
+        if cache_entries is not None and res_status != R2ULookupStatus.SOURCE_UNAVAILABLE:
+            cache_entries[norm] = {
+                "status": res_status.value,
+                "translations": [t[:120].strip() for t in res_trans[:5]],
+            }
+        return res_status, res_trans
     except Exception:
         pass
 
@@ -495,7 +530,6 @@ def query_r2u_safe(
             if response.status != 200:
                 return R2ULookupStatus.SOURCE_UNAVAILABLE, []
             html = response.read().decode("utf-8", errors="replace")
-            # Parse translations
             matches = re.findall(r'<td class="result_row[^"]*">(.*?)</td>', html, re.DOTALL)
             translations = []
             for match in matches:
@@ -503,18 +537,44 @@ def query_r2u_safe(
                 words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", clean)
                 translations.extend(words)
             if translations:
-                return R2ULookupStatus.FOUND, translations[:10]
-            return R2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE, []
+                res_status = R2ULookupStatus.FOUND
+                res_trans = translations[:10]
+            else:
+                res_status = R2ULookupStatus.NOT_FOUND_WITHIN_VERIFIED_COVERAGE
+                res_trans = []
+            if cache_entries is not None:
+                cache_entries[norm] = {
+                    "status": res_status.value,
+                    "translations": [t[:120].strip() for t in res_trans[:5]],
+                }
+            return res_status, res_trans
     except (urllib.error.URLError, TimeoutError, OSError):
         # Strict disambiguation: network failure is NEVER absence
         return R2ULookupStatus.SOURCE_UNAVAILABLE, []
 
 
 def verify_in_vesum(lemma: str, cursor: sqlite3.Cursor | None) -> bool:
-    """Verify living standard Ukrainian attestation in VESUM."""
+    """Verify living standard Ukrainian attestation in VESUM forms_all.
+
+    Fails closed: requires an active sqlite3 cursor to vesum.db with forms_all table.
+    """
     if cursor is None:
-        return True  # Fallback in environments without vesum.db
+        raise RuntimeError(
+            "VESUM database cursor required for attestation verification. "
+            "Cannot certify authentic Ukrainian replacements without data/vesum.db."
+        )
     norm = clean_word(lemma)
+    # If multi-word phrase, check all constituent content words (length > 1)
+    words = [w for w in norm.split() if len(w) > 1]
+    if len(words) > 1:
+        for w in words:
+            cursor.execute("SELECT 1 FROM forms_all WHERE lemma = ? LIMIT 1", (w,))
+            if cursor.fetchone():
+                continue
+            cursor.execute("SELECT 1 FROM forms_all WHERE word_form = ? LIMIT 1", (w,))
+            if not cursor.fetchone():
+                return False
+        return True
     cursor.execute("SELECT 1 FROM forms_all WHERE lemma = ? LIMIT 1", (norm,))
     if cursor.fetchone():
         return True
@@ -525,7 +585,9 @@ def verify_in_vesum(lemma: str, cursor: sqlite3.Cursor | None) -> bool:
 def adjudicate_sum11_entry(
     entry: Sum11RiskEntry,
     vesum_cursor: sqlite3.Cursor | None,
-    r2u_cache: dict[str, dict[str, Any]] | None = None,
+    r2u_cache: dict[str, Any] | None = None,
+    *,
+    allow_network: bool = True,
 ) -> dict[str, Any]:
     """Adjudicate a single sum11 entry flagged with sovietization_risk > 0."""
     norm = clean_word(entry.word)
@@ -533,6 +595,7 @@ def adjudicate_sum11_entry(
 
     # 1. Check Neologism & Internationalism Whitelist (Zero false calques on modern tech)
     if is_neologism_whitelisted(norm):
+        r2u_status, _ = query_r2u_safe(norm, cache_entries=r2u_cache, allow_network=allow_network)
         return {
             "schema_version": "v1_differential_soviet_candidate",
             "candidate_id": f"soviet.cand.{hashlib.sha256(f'sum11:{entry.id}:{norm}'.encode()).hexdigest()[:16]}",
@@ -545,13 +608,14 @@ def adjudicate_sum11_entry(
             "authentic_alternatives": [],
             "is_neologism_whitelisted": True,
             "vesum_attested": verify_in_vesum(norm, vesum_cursor),
-            "r2u_lookup_status": R2ULookupStatus.NOT_QUERIED.value,
+            "r2u_lookup_status": r2u_status.value,
         }
 
     # 2. Check Known Authentic Soviet Calque Replacements (Antonenko-Davydovych / Living Standard)
     if norm in AUTHENTIC_SOVIET_CALQUE_REPLACEMENTS:
         calque_info = AUTHENTIC_SOVIET_CALQUE_REPLACEMENTS[norm]
         rep = calque_info["replacement"]
+        r2u_status, _ = query_r2u_safe(norm, cache_entries=r2u_cache, allow_network=allow_network)
         return {
             "schema_version": "v1_differential_soviet_candidate",
             "candidate_id": f"soviet.cand.{hashlib.sha256(f'sum11:{entry.id}:{norm}'.encode()).hexdigest()[:16]}",
@@ -571,11 +635,12 @@ def adjudicate_sum11_entry(
             ],
             "is_neologism_whitelisted": False,
             "vesum_attested": verify_in_vesum(norm, vesum_cursor),
-            "r2u_lookup_status": R2ULookupStatus.CACHED.value if (r2u_cache and norm in r2u_cache) else R2ULookupStatus.NOT_QUERIED.value,
+            "r2u_lookup_status": r2u_status.value,
         }
 
     # 3. Check Skrypnykivka-only archaisms (reject obsolete 1920s purisms)
     if is_skrypnykivka_archaism(norm):
+        r2u_status, _ = query_r2u_safe(norm, cache_entries=r2u_cache, allow_network=allow_network)
         return {
             "schema_version": "v1_differential_soviet_candidate",
             "candidate_id": f"soviet.cand.{hashlib.sha256(f'sum11:{entry.id}:{norm}'.encode()).hexdigest()[:16]}",
@@ -588,11 +653,12 @@ def adjudicate_sum11_entry(
             "authentic_alternatives": [],
             "is_neologism_whitelisted": False,
             "vesum_attested": verify_in_vesum(norm, vesum_cursor),
-            "r2u_lookup_status": R2ULookupStatus.NOT_QUERIED.value,
+            "r2u_lookup_status": r2u_status.value,
         }
 
     # 4. Check Historical Soviet Ideological Realia (Not calques, but historical political realia)
     if is_soviet_ideological_realia(norm, keywords):
+        r2u_status, _ = query_r2u_safe(norm, cache_entries=r2u_cache, allow_network=allow_network)
         return {
             "schema_version": "v1_differential_soviet_candidate",
             "candidate_id": f"soviet.cand.{hashlib.sha256(f'sum11:{entry.id}:{norm}'.encode()).hexdigest()[:16]}",
@@ -605,7 +671,7 @@ def adjudicate_sum11_entry(
             "authentic_alternatives": [],
             "is_neologism_whitelisted": False,
             "vesum_attested": verify_in_vesum(norm, vesum_cursor),
-            "r2u_lookup_status": R2ULookupStatus.NOT_QUERIED.value,
+            "r2u_lookup_status": r2u_status.value,
         }
 
     # 5. Default Standard Living Ukrainian (Flagged only by incidental quote in СУМ-11)
@@ -652,13 +718,25 @@ def build_differential_receipt(
     if timeout_as_missing != 0:
         raise ValueError(f"Invariant violation: {timeout_as_missing} network timeouts treated as missing word proof!")
 
-    receipt_bytes = hashlib.sha256(json.dumps(candidates, sort_keys=True).encode()).hexdigest()
-    receipt_id = f"receipt.soviet_miner.{receipt_bytes[:16]}"
-
     discovery_candidates = [
         c for c in candidates
         if not (c["status"] == AdjudicationStatus.WHITELIST_PRESERVED.value and c["adjudication_category"] == AdjudicationCategory.STANDARD_UKRAINIAN_PRESERVED.value)
     ]
+
+    queried_candidates = sum(1 for c in discovery_candidates if c["r2u_lookup_status"] != R2ULookupStatus.NOT_QUERIED.value)
+    if len(discovery_candidates) > 0 and queried_candidates == 0:
+        raise ValueError("Invariant violation: zero discovery candidates had R2U differential queries performed!")
+
+    all_alternatives = [alt for c in candidates for alt in c.get("authentic_alternatives", [])]
+    if not all_alternatives:
+        raise ValueError("Invariant violation: no authentic alternatives found to verify VESUM attestation!")
+    unattested = [alt["term"] for alt in all_alternatives if not alt.get("vesum_attested")]
+    if unattested:
+        raise ValueError(f"Invariant violation: authentic alternatives lack VESUM attestation: {unattested}")
+    all_vesum_attested = len(unattested) == 0
+
+    receipt_bytes = hashlib.sha256(json.dumps(candidates, sort_keys=True).encode()).hexdigest()
+    receipt_id = f"receipt.soviet_miner.{receipt_bytes[:16]}"
 
     index_filename = "differential_soviet_candidates.jsonl"
     index_lines = [json.dumps(c, ensure_ascii=False, separators=(",", ":")) for c in discovery_candidates]
@@ -673,8 +751,8 @@ def build_differential_receipt(
         "index_file": index_filename,
         "index_sha256": index_sha,
     }
-    manifest_bytes = json.dumps(manifest_data, indent=2, sort_keys=True).encode()
-    manifest_sha = hashlib.sha256(manifest_bytes).hexdigest()
+    manifest_content = json.dumps(manifest_data, indent=2, sort_keys=True) + "\n"
+    manifest_sha = hashlib.sha256(manifest_content.encode("utf-8")).hexdigest()
 
     receipt = {
         "schema_version": "v1_differential_soviet_receipt",
@@ -700,9 +778,9 @@ def build_differential_receipt(
             "network_timeouts_as_missing_words": 0,
         },
         "invariants": {
-            "zero_false_calque_on_neologisms": True,
-            "zero_network_errors_as_missing_word": True,
-            "all_replacements_vesum_attested": True,
+            "zero_false_calque_on_neologisms": bool(false_calques == 0),
+            "zero_network_errors_as_missing_word": bool(timeout_as_missing == 0),
+            "all_replacements_vesum_attested": bool(all_vesum_attested),
             "no_private_host_paths": True,
         },
         "files": {
@@ -719,7 +797,7 @@ def build_differential_receipt(
     }
 
     validate_no_private_host_paths(receipt)
-    return receipt, index_content, manifest_data
+    return receipt, index_content, manifest_content, manifest_data
 
 
 def run_miner(
@@ -728,6 +806,7 @@ def run_miner(
     output_dir: Path,
     *,
     verify_only: bool = False,
+    allow_network: bool = True,
 ) -> int:
     """Run Phase 3.4 differential Soviet candidate miner."""
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -736,18 +815,51 @@ def run_miner(
     manifest_path = output_dir / "differential_soviet_manifest.json"
 
     if verify_only:
-        if not receipt_path.exists() or not index_path.exists():
+        if not receipt_path.exists() or not index_path.exists() or not manifest_path.exists():
             print(f"Error: Required files missing for --verify-only in {output_dir}")
             return 1
         receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
         validate_no_private_host_paths(receipt)
-        # Verify hash
+
+        # Verify index hash and line count
         content = index_path.read_text(encoding="utf-8")
-        current_sha = hashlib.sha256(content.encode("utf-8")).hexdigest()
-        expected_sha = receipt["files"]["candidates_index"]["sha256"]
-        if current_sha != expected_sha:
-            print(f"Error: Hash mismatch for {index_path.name}: {current_sha} != {expected_sha}")
+        current_index_sha = hashlib.sha256(content.encode("utf-8")).hexdigest()
+        expected_index_sha = receipt["files"]["candidates_index"]["sha256"]
+        if current_index_sha != expected_index_sha:
+            print(f"Error: Hash mismatch for {index_path.name}: {current_index_sha} != {expected_index_sha}")
             return 1
+
+        actual_line_count = len([line for line in content.splitlines() if line.strip()])
+        expected_line_count = receipt["files"]["candidates_index"]["line_count"]
+        if actual_line_count != expected_line_count:
+            print(f"Error: Line count mismatch for {index_path.name}: {actual_line_count} != {expected_line_count}")
+            return 1
+
+        # Verify manifest hash and contents
+        manifest_text = manifest_path.read_text(encoding="utf-8")
+        current_manifest_sha = hashlib.sha256(manifest_text.encode("utf-8")).hexdigest()
+        expected_manifest_sha = receipt["files"]["candidates_manifest"]["sha256"]
+        if current_manifest_sha != expected_manifest_sha:
+            print(f"Error: Hash mismatch for {manifest_path.name}: {current_manifest_sha} != {expected_manifest_sha}")
+            return 1
+
+        manifest = json.loads(manifest_text)
+        validate_no_private_host_paths(manifest)
+        if manifest.get("index_sha256") != expected_index_sha:
+            print(f"Error: Manifest index_sha256 mismatch: {manifest.get('index_sha256')} != {expected_index_sha}")
+            return 1
+        if manifest.get("entry_count") != expected_line_count:
+            print(f"Error: Manifest entry_count mismatch: {manifest.get('entry_count')} != {expected_line_count}")
+            return 1
+        if manifest.get("receipt_id") != receipt["receipt_id"]:
+            print(f"Error: Manifest receipt_id mismatch: {manifest.get('receipt_id')} != {receipt['receipt_id']}")
+            return 1
+
+        for inv_k, inv_v in receipt.get("invariants", {}).items():
+            if inv_v is not True:
+                print(f"Error: Invariant {inv_k} is not True in receipt")
+                return 1
+
         print("✓ Differential Soviet candidate receipt and manifest verified clean.")
         return 0
 
@@ -756,15 +868,30 @@ def run_miner(
         print(f"Error: sources.db not found at {sources_db_path}")
         return 1
 
+    if not vesum_db_path.exists():
+        print(f"Error: vesum.db not found at {vesum_db_path}. Living standard attestation requires vesum.db.")
+        return 1
+
+    # Load R2U differential cache if available
+    cache_path = output_dir / "r2u_differential_cache.json"
+    r2u_cache: dict[str, Any] = {}
+    if cache_path.exists():
+        try:
+            r2u_cache = json.loads(cache_path.read_text(encoding="utf-8"))
+        except Exception:
+            r2u_cache = {}
+    elif DEFAULT_R2U_CACHE.exists():
+        try:
+            r2u_cache = json.loads(DEFAULT_R2U_CACHE.read_text(encoding="utf-8"))
+        except Exception:
+            r2u_cache = {}
+
     conn = sqlite3.connect(f"file:{sources_db_path.resolve()}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
-    vesum_conn = None
-    vesum_cursor = None
-    if vesum_db_path.exists():
-        vesum_conn = sqlite3.connect(f"file:{vesum_db_path.resolve()}?mode=ro", uri=True)
-        vesum_cursor = vesum_conn.cursor()
+    vesum_conn = sqlite3.connect(f"file:{vesum_db_path.resolve()}?mode=ro", uri=True)
+    vesum_cursor = vesum_conn.cursor()
 
     try:
         rows = cursor.execute(
@@ -783,14 +910,21 @@ def run_miner(
                 sovietization_risk=r["sovietization_risk"],
                 sovietization_keywords=r["sovietization_keywords"].split(",") if r["sovietization_keywords"] else [],
             )
-            candidate = adjudicate_sum11_entry(entry, vesum_cursor)
+            candidate = adjudicate_sum11_entry(
+                entry,
+                vesum_cursor,
+                r2u_cache=r2u_cache,
+                allow_network=allow_network,
+            )
             candidates.append(candidate)
 
-        receipt, index_content, manifest_data = build_differential_receipt(candidates, output_dir)
+        receipt, index_content, manifest_content, _manifest_data = build_differential_receipt(candidates, output_dir)
 
         index_path.write_text(index_content, encoding="utf-8")
-        manifest_path.write_text(json.dumps(manifest_data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        manifest_path.write_text(manifest_content, encoding="utf-8")
         receipt_path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        if r2u_cache:
+            cache_path.write_text(json.dumps(r2u_cache, indent=2, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
 
         print(f"Successfully processed {len(candidates)} entries.")
         print(f"  Admitted candidates: {receipt['counts']['candidates_admitted']}")
@@ -801,8 +935,7 @@ def run_miner(
         return 0
     finally:
         conn.close()
-        if vesum_conn:
-            vesum_conn.close()
+        vesum_conn.close()
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -811,6 +944,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB, help="Path to vesum.db")
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR, help="Output directory")
     parser.add_argument("--verify-only", action="store_true", help="Verify receipt and hashes without re-mining")
+    parser.add_argument("--no-network", action="store_true", help="Disable live network queries; rely only on local cache")
     args = parser.parse_args(argv)
 
     return run_miner(
@@ -818,6 +952,7 @@ def main(argv: list[str] | None = None) -> int:
         vesum_db_path=args.vesum_db,
         output_dir=args.output_dir,
         verify_only=args.verify_only,
+        allow_network=not args.no_network,
     )
 
 
