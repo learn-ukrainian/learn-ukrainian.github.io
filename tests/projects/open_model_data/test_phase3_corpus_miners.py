@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import sqlite3
 import subprocess
 import sys
@@ -129,6 +130,11 @@ def test_textbook_contrast_tables_authenticity_and_invariants() -> None:
         assert "correct" in rec and len(rec["correct"]) >= 2
         assert rec["incorrect"].lower() != rec["correct"].lower(), f"Trivial identity pair: {rec}"
         assert "derivational_family" in rec and len(rec["derivational_family"]) >= 1
+        assert not re.search(r"[a-zA-Z]|https?://", rec["incorrect"]), f"Latin/URL in incorrect: {rec}"
+        assert not re.search(r"[a-zA-Z]|https?://", rec["correct"]), f"Latin/URL in correct: {rec}"
+        assert rec.get("context"), f"Missing context in {rec}"
+        assert rec["incorrect"].split()[0] in rec["context"]
+        assert rec["correct"].split()[0] in rec["context"]
 
         pair_key = (rec["incorrect"].lower(), rec["correct"].lower())
         assert pair_key not in seen_items, f"Duplicate contrast pair: {pair_key}"
@@ -232,9 +238,9 @@ def test_independent_sources_grounding(requires_sources_db: Path) -> None:
         cid = rec["chunk_id"]
         row = sc.execute("SELECT id, text FROM textbooks WHERE chunk_id = ?", (cid,)).fetchone()
         assert row is not None, f"Chunk {cid} missing from textbooks table"
-        assert rec["incorrect"].split()[0] in row[1] or rec["correct"].split()[0] in row[1], (
-            f"Terms from {rec} not found in chunk {cid} text"
-        )
+        assert rec["context"] in row[1], f"Context line from {rec} missing from chunk {cid}"
+        assert rec["incorrect"].split()[0] in rec["context"], f"Incorrect term not in context: {rec}"
+        assert rec["correct"].split()[0] in rec["context"], f"Correct term not in context: {rec}"
 
     # 2. Verify all test doc_ids in ua_gec_errors are strictly absent from mined uagec records
     test_rows = sc.execute("SELECT doc_id FROM ua_gec_errors WHERE partition LIKE '%test%'").fetchall()

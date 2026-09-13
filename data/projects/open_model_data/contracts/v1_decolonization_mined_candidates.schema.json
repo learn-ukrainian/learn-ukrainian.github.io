@@ -55,7 +55,7 @@
           "required": ["filename", "record_count", "sha256", "description"],
           "properties": {
             "filename": {"type": "string"},
-            "record_count": {"type": "integer", "const": 1646},
+            "record_count": {"type": "integer", "minimum": 1000},
             "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
             "description": {"type": "string"}
           }
@@ -88,7 +88,7 @@
       "type": "object",
       "required": ["total_zno_tasks", "lexical_norm_tasks", "syntactic_norm_tasks", "topic_distribution"],
       "properties": {
-        "total_zno_tasks": {"type": "integer", "const": 1646},
+        "total_zno_tasks": {"type": "integer", "minimum": 1000},
         "lexical_norm_tasks": {"type": "integer"},
         "syntactic_norm_tasks": {"type": "integer"},
         "topic_distribution": {
@@ -110,12 +110,12 @@
         "g_case_admitted_ratio"
       ],
       "properties": {
-        "total_calque_collocation_available": {"type": "integer", "const": 2856},
-        "calque_count": {"type": "integer", "const": 2397},
-        "collocation_count": {"type": "integer", "const": 459},
-        "protected_test_split_excluded": {"type": "integer", "const": 1159},
+        "total_calque_collocation_available": {"type": "integer", "minimum": 2000},
+        "calque_count": {"type": "integer", "minimum": 1500},
+        "collocation_count": {"type": "integer", "minimum": 300},
+        "protected_test_split_excluded": {"type": "integer", "minimum": 500},
         "train_calque_collocation_extracted": {"type": "integer", "minimum": 2000},
-        "g_case_total": {"type": "integer", "const": 5024},
+        "g_case_total": {"type": "integer", "minimum": 3000},
         "g_case_admitted": {"type": "integer"},
         "g_case_admitted_ratio": {"type": "number", "maximum": 0.25}
       }

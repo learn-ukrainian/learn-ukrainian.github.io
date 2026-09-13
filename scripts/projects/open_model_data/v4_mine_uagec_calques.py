@@ -103,12 +103,26 @@ def mine_uagec_calques(
     # 1. Identify and quarantine protected UA-GEC test split
     test_doc_ids = set()
     test_rows_count = 0
+    total_available_calques = 0
+    total_available_collocations = 0
+    total_available_cases = 0
+
     for r in all_rows:
         part = r[6]
         doc_id = r[4]
+        etype = r[3]
+        if etype == "F/Calque":
+            total_available_calques += 1
+        elif etype == "F/Collocation":
+            total_available_collocations += 1
+        elif etype == "G/Case":
+            total_available_cases += 1
+
         if "test" in part.lower():
             test_doc_ids.add(doc_id)
             test_rows_count += 1
+
+    total_available_calque_colloc = total_available_calques + total_available_collocations
 
     # 2. Extract train candidate rows
     train_calques = []
@@ -228,12 +242,12 @@ def mine_uagec_calques(
     admitted_ratio = round(len(admitted_cases) / total_admitted, 4) if total_admitted else 0.0
 
     return {
-        "total_calque_collocation_available": 2856,
-        "calque_count": 2397,
-        "collocation_count": 459,
+        "total_calque_collocation_available": total_available_calque_colloc,
+        "calque_count": total_available_calques,
+        "collocation_count": total_available_collocations,
         "protected_test_split_excluded": test_rows_count,
         "train_calque_collocation_extracted": total_calque_colloc,
-        "g_case_total": 5024,
+        "g_case_total": total_available_cases,
         "g_case_admitted": len(admitted_cases),
         "g_case_admitted_ratio": admitted_ratio,
         "mined_records_count": len(mined_records),

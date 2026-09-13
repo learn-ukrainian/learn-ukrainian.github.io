@@ -229,9 +229,13 @@ def parse_textbook_contrast_tables(
                     if best_split and best_score > 0:
                         pair = best_split
 
+                if not pair and len(words) == 2:
+                    # Single-word contrast pairs side-by-side
+                    pair = (words[0], words[1])
+
                 if not pair:
-                    mid = len(words) // 2
-                    pair = (" ".join(words[:mid]), " ".join(words[mid:]))
+                    # Reject ambiguous multi-word lines lacking structural split evidence
+                    continue
 
                 w1 = pair[0].strip(",.:;!?")
                 w2 = pair[1].strip(",.:;!?")
