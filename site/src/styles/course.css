@@ -666,7 +666,8 @@ body {
 
 .lu-content th,
 .lu-content td {
-  padding: 9px 12px;
+  padding: 12px 16px;
+  line-height: 1.6;
   border-bottom: 1px solid var(--lu-border);
   border-right: 1px solid var(--lu-border);
   vertical-align: top;

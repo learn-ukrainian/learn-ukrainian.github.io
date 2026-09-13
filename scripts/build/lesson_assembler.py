@@ -81,6 +81,44 @@ def _frontmatter(mdx: str, **extra: object) -> str:
     return "---\n" + yaml.safe_dump(data, allow_unicode=True, sort_keys=False) + "---\n" + body
 
 
+# A1 tabs are bilingual in generate_mdx (Ukrainian first, English after).
+_A1_TAB_LABELS = {
+    "Vocabulary": "Словник — Vocabulary",
+    "Activities": "Вправи — Activities",
+    "Resources": "Ресурси — Resources",
+}
+
+
+def _original_intro(module_dir: Path, slug: str) -> str | None:
+    """Original A1 module intro: English carrier text with embedded Ukrainian terms.
+
+    Pulled from the a1-v1 module body before its first ``## `` heading, so the
+    upgraded landing keeps the original UK–EN ratio pattern instead of dumping
+    Ukrainian plan objectives under an English-only heading.
+    """
+    candidates = [module_dir.parent.parent / "a1-v1" / slug / "module.md"]
+    if len(module_dir.parents) >= 4:
+        candidates.append(module_dir.parents[3] / "site/src/content/docs/a1-v1" / f"{slug}.mdx")
+    for path in candidates:
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8")
+        if path.suffix == ".mdx":
+            match = re.search(
+                r'<TabItem label="Lesson">\s*(.*?)(?=^## |^</TabItem>)',
+                text, flags=re.DOTALL | re.MULTILINE,
+            )
+            body = match.group(1) if match else ""
+        else:
+            body = re.split(r"^## ", text, maxsplit=1, flags=re.MULTILINE)[0]
+        body = re.sub(r"^# [^\n]+\n", "", body)
+        body = re.sub(r"<!--.*?-->", "", body, flags=re.DOTALL)
+        body = re.sub(r"\n{3,}", "\n\n", body).strip()
+        if body:
+            return body
+    return None
+
+
 def assemble_lessons(module_dir: Path, output_dir: Path, plan_path: Path, *, validated: bool = True) -> dict[str, str]:
     """Emit index.mdx and numbered pages; vocabulary accumulates by first use.
 
@@ -125,15 +163,18 @@ def assemble_lessons(module_dir: Path, output_dir: Path, plan_path: Path, *, val
         previous = base if offset == 0 else f"{base}{n - 1}/"
         following = f"{base}{n + 1}/" if offset + 1 < len(lessons) else base
         for label, anchor in [("Vocabulary", "vocabulary"), ("Activities", "activities"), ("Resources", "resources")]:
+            label = _A1_TAB_LABELS[label]
             mdx = mdx.replace(f'<TabItem label="{label}">', f'<TabItem label="{label}">\n\n<span id="{anchor}"></span>')
         mdx = _frontmatter(mdx, draft=not validated, prev=previous, next=following, lesson=n, module_slug=slug)
         mdx += f'\n<nav aria-label="Lesson navigation">\n\n[Previous]({previous}) · [Module]({base}) · [Next]({following})\n\n</nav>\n'
         pages[str(n)] = mdx
         cards.append(f'- [{n}. {lesson["title"]}]({base}{n}/) — {lesson["minutes"]} min')
         tab_links.append((n, lesson["title"]))
-    objectives = plan.get("objectives", [])
-    intro = "## Objectives\n\n" + "\n".join(f"- {item}" for item in objectives)
-    intro += "\n\n## Lessons\n\n" + "\n".join(cards)
+    intro = _original_intro(module_dir, slug)
+    if intro is None:
+        objectives = plan.get("objectives", [])
+        intro = "## Цілі — Objectives\n\n" + "\n".join(f"- {item}" for item in objectives)
+    intro += "\n\n## Уроки — Lessons\n\n" + "\n".join(cards)
     landing = generate_mdx(
         intro, int(plan.get("sequence", 1)), yaml_activities=workbook,
         meta_data=dict(plan, level=level), vocab_items=list(vocabulary.values()),
@@ -141,6 +182,7 @@ def assemble_lessons(module_dir: Path, output_dir: Path, plan_path: Path, *, val
         pipeline_version="v7-upgrade", build_status="validated",
     ).replace("\n{/**/}\n", "\n")
     for label, anchor in [("Vocabulary", "vocabulary"), ("Activities", "activities"), ("Resources", "resources")]:
+        label = _A1_TAB_LABELS[label]
         links = " · ".join(f"[{n}. {title}]({base}{n}/#{anchor})" for n, title in tab_links)
         landing = landing.replace(f'<TabItem label="{label}">', f'<TabItem label="{label}">\n\n{links}')
     pages = {"index": _frontmatter(landing, draft=not validated, lessons=[

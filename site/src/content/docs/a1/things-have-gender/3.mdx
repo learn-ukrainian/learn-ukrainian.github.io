@@ -62,7 +62,7 @@ import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 <Tabs syncKey="module-tab">
-<TabItem label="Lesson">
+<TabItem label="Урок — Lesson">
 
 У пе́рших двох уро́ках ви опанува́ли рід предме́тів у кімна́ті та су́мці. In the first two lessons you mastered the gender of objects in the room and bag. Цей уро́к підсумо́вує мо́дуль і додає́ важли́ві дета́лі — this lesson sums up the module and adds important details:
 - **Вжива́ти фемініти́ви профе́сій** — use feminine profession forms (**вчи́телька, лі́карка**);
@@ -264,7 +264,7 @@ repair the gender traps.
 3. **У мене́ є стіл, кни́га і моє́ фо́то.** — I have a table, a book, and my photo.
 
 </TabItem>
-<TabItem label="Vocabulary">
+<TabItem label="Словник — Vocabulary">
 
 <span id="vocabulary"></span>
 
@@ -273,7 +273,7 @@ repair the gender traps.
 <FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"рід","back":"grammatical gender"},{"front":"іме́нник","back":"noun"},{"front":"хто це?","back":"who is this?"},{"front":"що це?","back":"what is this?"},{"front":"він","back":"he / masculine gender-test word"},{"front":"вона́","back":"she / feminine gender-test word"},{"front":"воно́","back":"it / neuter gender-test word"},{"front":"мій","back":"my, masculine"},{"front":"моя́","back":"my, feminine"},{"front":"моє́","back":"my, neuter"},{"front":"стіл","back":"table"},{"front":"кни́га","back":"book"},{"front":"вікно́","back":"window"},{"front":"мі́сто","back":"city"},{"front":"та́то","back":"dad"},{"front":"ба́тько","back":"father"},{"front":"соба́ка","back":"dog"},{"front":"Мико́ла","back":"Mykola"},{"front":"у мене́ є","back":"I have"},{"front":"у тебе́ є","back":"do you have / you have"},{"front":"кімна́та","back":"room"},{"front":"лі́жко","back":"bed"},{"front":"стіле́ць","back":"chair"},{"front":"ла́мпа","back":"lamp"},{"front":"телефо́н","back":"phone"},{"front":"комп'ю́тер","back":"computer"},{"front":"зо́шит","back":"notebook"},{"front":"ру́чка","back":"pen"},{"front":"су́мка","back":"bag"},{"front":"крі́сло","back":"armchair"},{"front":"дзе́ркало","back":"mirror"},{"front":"ключ","back":"key"},{"front":"фо́то","back":"photo"},{"front":"стіна́","back":"wall"},{"front":"дя́дько","back":"uncle"},{"front":"студе́нт","back":"male student"},{"front":"студе́нтка","back":"female student"},{"front":"вчи́тель","back":"male teacher"},{"front":"вчи́телька","back":"female teacher"},{"front":"учи́телька","back":"female teacher"},{"front":"лі́кар","back":"male doctor"},{"front":"лі́карка","back":"female doctor"},{"front":"акто́р","back":"male actor"},{"front":"акто́рка","back":"female actor"},{"front":"співа́к","back":"male singer"},{"front":"співа́чка","back":"female singer"},{"front":"Ілля́","back":"Illia"},{"front":"Павло́","back":"Pavlo"}]`)} />
 
 </TabItem>
-<TabItem label="Activities">
+<TabItem label="Вправи — Activities">
 
 <span id="activities"></span>
 
@@ -318,7 +318,7 @@ repair the gender traps.
 <Translate client:only='react' questions={JSON.parse(`[{"source": "She is a teacher (vchytelka).", "options": [{"text": "Вона́ вчи́телька.", "correct": true}]}, {"source": "He is a doctor.", "options": [{"text": "Він лі́кар.", "correct": true}]}, {"source": "My dog is handsome.", "options": [{"text": "Мій соба́ка га́рний.", "correct": true}]}, {"source": "This is my uncle.", "options": [{"text": "Це мій дя́дько.", "correct": true}]}, {"source": "My name is John.", "options": [{"text": "Мене́ зва́ти Джон.", "correct": true}]}, {"source": "She is a student.", "options": [{"text": "Вона́ студе́нтка.", "correct": true}]}]`)} instruction={"Перекладі́ть ре́чення з англі́йської мо́ви на украї́нську. — Translate the sentences from English into Ukrainian."} isUkrainian={false} />
 
 </TabItem>
-<TabItem label="Resources">
+<TabItem label="Ресурси — Resources">
 
 <span id="resources"></span>
 

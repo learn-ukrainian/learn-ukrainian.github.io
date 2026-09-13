@@ -62,7 +62,7 @@ import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 <Tabs syncKey="module-tab">
-<TabItem label="Lesson">
+<TabItem label="Урок — Lesson">
 
 У цьому́ уроці ви навчите́ся опи́сувати ре́чі навко́ло себе́ — in this lesson you will learn how to describe things around you:
 - **Ста́вити запита́ння** — ask **яки́й? / яка? / яке́? / які́?**;
@@ -229,7 +229,7 @@ the ending.
 Тепе́р ви мо́жете ле́гко запита́ти **Яки́й стіл?**, **Яка кни́га?** або́ **Яке́ вікно́?** і назва́ти ї́хній о́пис — now you can easily ask **Яки́й стіл?**, **Яка кни́га?**, or **Яке́ вікно́?** and say what they are like.
 
 </TabItem>
-<TabItem label="Vocabulary">
+<TabItem label="Словник — Vocabulary">
 
 <span id="vocabulary"></span>
 
@@ -238,7 +238,7 @@ the ending.
 <FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"яки́й","back":"what kind, masculine"},{"front":"яка","back":"what kind, feminine"},{"front":"яке́","back":"what kind, neuter"},{"front":"які́","back":"what kind, plural"},{"front":"вели́кий","back":"big, masculine"},{"front":"вели́ка","back":"big, feminine"},{"front":"вели́ке","back":"big, neuter"},{"front":"нови́й","back":"new, masculine"},{"front":"нова́","back":"new, feminine"},{"front":"нове́","back":"new, neuter"},{"front":"стари́й","back":"old, masculine"},{"front":"старе́","back":"old, neuter"},{"front":"атлас","back":"atlas"},{"front":"плака́т","back":"poster"}]`)} />
 
 </TabItem>
-<TabItem label="Activities">
+<TabItem label="Вправи — Activities">
 
 <span id="activities"></span>
 
@@ -291,7 +291,7 @@ the ending.
 <Translate client:only='react' questions={JSON.parse(`[{"source": "A new table", "options": [{"text": "нови́й стіл", "correct": true}, {"text": "нова́ стіл", "correct": false}, {"text": "нове́ стіл", "correct": false}], "explanation": "Стіл is masculine."}, {"source": "A new book", "options": [{"text": "нова́ кни́га", "correct": true}, {"text": "нови́й кни́га", "correct": false}, {"text": "нове́ кни́га", "correct": false}], "explanation": "Кни́га is feminine."}, {"source": "A new window", "options": [{"text": "нове́ вікно́", "correct": true}, {"text": "нови́й вікно́", "correct": false}, {"text": "нова́ вікно́", "correct": false}], "explanation": "Вікно́ is neuter."}, {"source": "An old photo", "options": [{"text": "старе́ фо́то", "correct": true}, {"text": "стари́й фо́то", "correct": false}, {"text": "стара́ фо́то", "correct": false}], "explanation": "Фо́то is neuter."}, {"source": "A big poster", "options": [{"text": "вели́кий плака́т", "correct": true}, {"text": "вели́ка плака́т", "correct": false}, {"text": "вели́ке плака́т", "correct": false}], "explanation": "Плака́т is masculine."}, {"source": "An old atlas", "options": [{"text": "стари́й атлас", "correct": true}, {"text": "стара́ атлас", "correct": false}, {"text": "старе́ атлас", "correct": false}], "explanation": "Атлас is masculine."}]`)} instruction={"Обері́ть правильний переклад украї́нською мо́вою. — Choose the correct Ukrainian translation."} isUkrainian={false} />
 
 </TabItem>
-<TabItem label="Resources">
+<TabItem label="Ресурси — Resources">
 
 <span id="resources"></span>
 

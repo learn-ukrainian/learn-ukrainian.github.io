@@ -143,6 +143,31 @@ new AsyncFunction('getCollection', 'moduleCount', compiled + '\nreturn {routes: 
     assert [item["n"] for item in modules[0]["lessons"]] == [1, 2, 3]
 
 
+def test_a1_landing_follows_original_bilingual_intro(gold, tmp_path):
+    """A1 landing: original English-carrier intro + UK terms, never an English-only Objectives dump."""
+    module, plan = gold
+    original = tmp_path / "curriculum/l2-uk-en/a1-v1/things-have-gender/module.md"
+    original.parent.mkdir(parents=True, exist_ok=True)
+    original.write_text(fixture_text("baseline", "curriculum/l2-uk-en/a1-v1/things-have-gender/module.md"))
+    pages = assemble_lessons(module, tmp_path / "site", plan)
+    lesson_tab = pages["index"].split('<TabItem label="Урок — Lesson">', 1)[1].split("</TabItem>", 1)[0]
+    assert "## Objectives" not in lesson_tab
+    assert "## Уроки — Lessons" in lesson_tab
+    # English carrier with embedded Ukrainian target terms.
+    assert "By the end, you can" in lesson_tab
+    assert "він" in lesson_tab
+    assert "вона" in lesson_tab
+
+
+def test_a1_landing_without_original_keeps_bilingual_heading(gold, tmp_path):
+    module, plan = gold
+    pages = assemble_lessons(module, tmp_path / "site", plan)
+    lesson_tab = pages["index"].split('<TabItem label="Урок — Lesson">', 1)[1].split("</TabItem>", 1)[0]
+    assert "## Objectives" not in lesson_tab
+    assert "## Цілі — Objectives" in lesson_tab
+    assert "## Уроки — Lessons" in lesson_tab
+
+
 def test_custom_artifact_directory_keeps_plan_slug(gold, tmp_path):
     import shutil
 

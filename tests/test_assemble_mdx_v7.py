@@ -170,8 +170,8 @@ references:
     assert "<FlashcardDeck" in mdx
     assert mdx.index("<VocabCard") < mdx.index("<FlashcardDeck")
 
-    lesson_tab = _tab_item(mdx, "Lesson")
-    activities_tab = _tab_item(mdx, "Activities")
+    lesson_tab = _tab_item(mdx, "Урок — Lesson")
+    activities_tab = _tab_item(mdx, "Вправи — Activities")
     assert len(_ACTIVITY_COMPONENT_RE.findall(lesson_tab)) == 2
     assert len(_ACTIVITY_COMPONENT_RE.findall(activities_tab)) == 5
     assert "<Observe" in lesson_tab

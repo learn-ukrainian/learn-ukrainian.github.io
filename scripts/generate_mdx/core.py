@@ -640,8 +640,16 @@ sidebar:
         ("Activities", "\u0417\u043e\u0448\u0438\u0442" if is_a2_2_preview else "\u0412\u043f\u0440\u0430\u0432\u0438",   activities_content),
         ("Resources",  "\u0420\u0435\u0441\u0443\u0440\u0441\u0438",  resources_content),
     ]
+    def _tab_label(en: str, uk: str) -> str:
+        if is_ukrainian_forced:
+            return uk
+        # A1 is bilingual: Ukrainian first, English support after.
+        if lvl == "a1":
+            return f"{uk} — {en}"
+        return en
+
     tab_items = '\n'.join(
-        f'<TabItem label="{uk if is_ukrainian_forced else en}">\n\n'
+        f'<TabItem label="{_tab_label(en, uk)}">\n\n'
         f'{content.strip()}\n\n</TabItem>'
         for en, uk, content in tabs
     )

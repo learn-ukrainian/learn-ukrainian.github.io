@@ -62,7 +62,7 @@ import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 <Tabs syncKey="module-tab">
-<TabItem label="Lesson">
+<TabItem label="Урок — Lesson">
 
 У пе́ршому уро́ці ви навчи́лися перевіря́ти рід: стіл — він, кни́га — вона́, вікно́ — воно́. In Lesson 1 you learned to test gender: **стіл** is **він**, **кни́га** is **вона́**, **вікно́** is **воно́**. У цьо́му уро́ці ми перехо́димо до предме́тів навко́ло нас — in this lesson we move on to the objects around us:
 - **Назива́ти ре́чі в кімна́ті та су́мці** — name everyday items in your room and bag;
@@ -183,7 +183,7 @@ pair: **стіл -> мій стіл**, **кни́га -> моя́ кни́га**
 3. **Ось мій телефо́н і моя́ су́мка.** — Here are my phone and my bag.
 
 </TabItem>
-<TabItem label="Vocabulary">
+<TabItem label="Словник — Vocabulary">
 
 <span id="vocabulary"></span>
 
@@ -192,7 +192,7 @@ pair: **стіл -> мій стіл**, **кни́га -> моя́ кни́га**
 <FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"рід","back":"grammatical gender"},{"front":"іме́нник","back":"noun"},{"front":"хто це?","back":"who is this?"},{"front":"що це?","back":"what is this?"},{"front":"він","back":"he / masculine gender-test word"},{"front":"вона́","back":"she / feminine gender-test word"},{"front":"воно́","back":"it / neuter gender-test word"},{"front":"мій","back":"my, masculine"},{"front":"моя́","back":"my, feminine"},{"front":"моє́","back":"my, neuter"},{"front":"стіл","back":"table"},{"front":"кни́га","back":"book"},{"front":"вікно́","back":"window"},{"front":"мі́сто","back":"city"},{"front":"та́то","back":"dad"},{"front":"ба́тько","back":"father"},{"front":"соба́ка","back":"dog"},{"front":"Мико́ла","back":"Mykola"},{"front":"у мене́ є","back":"I have"},{"front":"у тебе́ є","back":"do you have / you have"},{"front":"кімна́та","back":"room"},{"front":"лі́жко","back":"bed"},{"front":"стіле́ць","back":"chair"},{"front":"ла́мпа","back":"lamp"},{"front":"телефо́н","back":"phone"},{"front":"комп'ю́тер","back":"computer"},{"front":"зо́шит","back":"notebook"},{"front":"ру́чка","back":"pen"},{"front":"су́мка","back":"bag"},{"front":"крі́сло","back":"armchair"},{"front":"дзе́ркало","back":"mirror"},{"front":"ключ","back":"key"},{"front":"фо́то","back":"photo"},{"front":"стіна́","back":"wall"}]`)} />
 
 </TabItem>
-<TabItem label="Activities">
+<TabItem label="Вправи — Activities">
 
 <span id="activities"></span>
 
@@ -237,7 +237,7 @@ pair: **стіл -> мій стіл**, **кни́га -> моя́ кни́га**
 <Translate client:only='react' questions={JSON.parse(`[{"source": "I have a table and a bed.", "options": [{"text": "У мене́ є стіл і лі́жко.", "correct": true}]}, {"source": "Do you (informal) have a phone?", "options": [{"text": "У тебе́ є телефо́н?", "correct": true}]}, {"source": "This is my bag.", "options": [{"text": "Це моя́ су́мка.", "correct": true}]}, {"source": "Where is the mirror?", "options": [{"text": "Де дзе́ркало?", "correct": true}]}, {"source": "Here is my armchair.", "options": [{"text": "Ось моє́ крі́сло.", "correct": true}]}, {"source": "My room is here.", "options": [{"text": "Моя́ кімна́та тут.", "correct": true}]}]`)} instruction={"Перекладі́ть ре́чення на украї́нську мо́ву. — Translate the sentences into Ukrainian."} isUkrainian={false} />
 
 </TabItem>
-<TabItem label="Resources">
+<TabItem label="Ресурси — Resources">
 
 <span id="resources"></span>
 
