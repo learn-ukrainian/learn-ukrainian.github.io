@@ -1201,6 +1201,100 @@ def _resume_llm_qg_dim_if_current(
     return parsed
 
 
+_COMBINED_QG_INSTRUCTIONS = """
+Score ALL five dimensions in ONE JSON object. The lesson artifacts appear ONCE below.
+Do not restate them. Do not emit five separate essays.
+
+Dimensions: pedagogical, naturalness, decolonization, engagement, tone.
+Each value must be:
+{"score": <0-10 number>, "verdict": "PASS"|"REVISE"|"REJECT", "evidence": "<short>", "evidence_quotes": ["<exact substring from the artifacts>"]}
+
+Upgrade rules: A1 bilingual (UK then EN); no ```text learner examples; last lesson
+closes with Підсумок модуля — Module summary; VESUM/sources for gender/government.
+
+Return ONLY JSON of the form:
+{"pedagogical": {...}, "naturalness": {...}, "decolonization": {...}, "engagement": {...}, "tone": {...}}
+""".strip()
+
+
+def _run_combined_llm_qg(
+    *,
+    plan: Mapping[str, Any],
+    generated_content: str,
+    module_dir: Path,
+    writer: str,
+    reviewer: str,
+    defaults: Mapping[str, Any],
+    effort: str,
+    agent_name: str,
+    review_context: str,
+    stdout_silence_timeout: int | None,
+    profile: str | None,
+) -> dict[str, Any]:
+    from scripts.agent_runtime.runner import invoke
+
+    prompt = "\n\n".join(
+        part for part in (review_context, _COMBINED_QG_INSTRUCTIONS, generated_content) if part
+    )
+    prompt_path = module_dir / "llm-qg-combined-prompt.md"
+    response_path = module_dir / "llm-qg-combined-response.raw.md"
+    prompt_path.write_text(prompt, encoding="utf-8")
+    last_error: linear_pipeline.LinearPipelineError | None = None
+    parsed_dims: dict[str, Any] | None = None
+    for attempt in range(1, LLM_QG_DIM_MAX_ATTEMPTS + 1):
+        result = invoke(
+            agent_name,
+            prompt if last_error is None else _llm_qg_retry_prompt(prompt, last_error),
+            mode="read-only",
+            cwd=module_dir,
+            model=defaults["model"],
+            task_id=f"linear-v7-qg-{plan['slug']}-combined",
+            entrypoint="dispatch",
+            effort=effort,
+            tool_config={"output_format": "stream-json"},
+            stdout_silence_timeout=stdout_silence_timeout,
+        )
+        response = str(getattr(result, "response", "") or "")
+        response_path.write_text(response, encoding="utf-8")
+        try:
+            payload = json.loads(response) if response.strip().startswith("{") else None
+            if not isinstance(payload, dict):
+                for candidate in reversed(_llm_qg_balanced_json_objects(response)):
+                    try:
+                        payload = json.loads(candidate)
+                    except json.JSONDecodeError:
+                        continue
+                    if isinstance(payload, dict):
+                        break
+            if not isinstance(payload, dict):
+                raise linear_pipeline.LinearPipelineError("combined LLM QG did not return JSON")
+            report: dict[str, Any] = {}
+            for dim in QG_DIMS:
+                report[dim] = _parse_llm_qg_dim_response(
+                    json.dumps(payload.get(dim) or payload, ensure_ascii=False),
+                    dim=dim,
+                    response_path=response_path,
+                )
+                _validate_llm_qg_dim_grounding(
+                    report[dim],
+                    dim=dim,
+                    generated_content=generated_content,
+                    response_path=response_path,
+                )
+            parsed_dims = report
+            break
+        except linear_pipeline.LinearPipelineError as exc:
+            last_error = exc
+            if attempt < LLM_QG_DIM_MAX_ATTEMPTS:
+                print(f"[llm-qg] combined: attempt {attempt} failed; retrying ({exc})", file=sys.stderr, flush=True)
+                continue
+            raise linear_pipeline.LinearPipelineError(
+                f"combined LLM QG failed after {LLM_QG_DIM_MAX_ATTEMPTS} attempt(s): {last_error}"
+            ) from last_error
+    assert parsed_dims is not None
+    return linear_pipeline.aggregate_llm_review(parsed_dims, str(plan["level"]), profile=profile)
+
+
 def _run_llm_qg(
     *,
     plan: Mapping[str, Any],
@@ -1220,6 +1314,7 @@ def _run_llm_qg(
     content_override: str | None = None,
     allow_same_model: bool = False,
     effort_override: str | None = None,
+    combined: bool = False,
 ) -> dict[str, Any]:
     from scripts.agent_runtime.runner import invoke
 
@@ -1235,6 +1330,21 @@ def _run_llm_qg(
     agent_name = reviewer.split("-", 1)[0]
     generated_content = content_override if content_override is not None else _generated_content(module_dir)
     report: dict[str, Any] = {}
+
+    if combined:
+        return _run_combined_llm_qg(
+            plan=plan,
+            generated_content=generated_content,
+            module_dir=module_dir,
+            writer=writer,
+            reviewer=reviewer,
+            defaults=defaults,
+            effort=effort,
+            agent_name=agent_name,
+            review_context=review_context,
+            stdout_silence_timeout=stdout_silence_timeout,
+            profile=profile,
+        )
 
     for dim in QG_DIMS:
         prompt = linear_pipeline.render_review_prompt(
@@ -1888,7 +1998,7 @@ def _upgrade_gemini_adjust_then_astra(
             review_context=review_context + "\nGemini self-review: you wrote this. Adjust if VESUM/`sources` would change a form. "
             "Calling sources is how the Ukrainian gets better, and this run tests that the tools work "
             "(LLM dataset). If you skipped tools while writing, call them now and fix.",
-            content_override=content_override, allow_same_model=True,
+            content_override=content_override, allow_same_model=True, combined=True,
         )
     except linear_pipeline.LinearPipelineError as exc:
         self_review = {"passed": False, "error": str(exc), "skipped_adjust": True}
@@ -1899,7 +2009,8 @@ def _upgrade_gemini_adjust_then_astra(
             writer_prompt
             + "\n\n## Gemini self-review requested adjustments\n\n"
             + json.dumps(self_review, ensure_ascii=False)[:12000]
-            + "\n\nReturn the four artifacts again. Keep original prose. Use sources/VESUM."
+            + "\n\nReturn the four artifacts again. Keep original prose. Call sources/VESUM: "
+            "that is how the Ukrainian improves, and this run tests the tools (LLM dataset)."
         )
         response = linear_pipeline.invoke_writer(
             adjust, writer,
@@ -1919,6 +2030,7 @@ def _upgrade_gemini_adjust_then_astra(
             "Fail ungrounded gender/government/examples. VESUM/`sources` is how the Ukrainian is "
             "better than a fluent guess; this corpus trains an LLM and tests the tools.",
         content_override=content_override, effort_override=UPGRADE_INDEPENDENT_EFFORT,
+        combined=True,
     )
     return independent
 
