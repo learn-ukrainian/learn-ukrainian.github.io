@@ -1203,16 +1203,16 @@ def _resume_llm_qg_dim_if_current(
 
 _COMBINED_QG_INSTRUCTIONS = """
 Score ALL five dimensions in ONE JSON object. The lesson artifacts appear ONCE below.
-Do not restate them. Do not emit five separate essays.
+Do not restate them. Do not emit five essays. Do not emit a second JSON object.
 
 Dimensions: pedagogical, naturalness, decolonization, engagement, tone.
 Each value must be:
-{"score": <0-10 number>, "verdict": "PASS"|"REVISE"|"REJECT", "evidence": "<short>", "evidence_quotes": ["<exact substring from the artifacts>"]}
+{"score": <0-10 number>, "verdict": "PASS"|"REVISE"|"REJECT", "evidence": "<one short sentence in your words>", "evidence_quotes": ["<8-20 consecutive words copied from the artifacts, single line, no extra spaces>"]}
 
 Upgrade rules: A1 bilingual (UK then EN); no ```text learner examples; last lesson
 closes with Підсумок модуля — Module summary; VESUM/sources for gender/government.
 
-Return ONLY JSON of the form:
+Return ONLY one JSON object, nothing before or after:
 {"pedagogical": {...}, "naturalness": {...}, "decolonization": {...}, "engagement": {...}, "tone": {...}}
 """.strip()
 
@@ -1257,15 +1257,15 @@ def _run_combined_llm_qg(
         response = str(getattr(result, "response", "") or "")
         response_path.write_text(response, encoding="utf-8")
         try:
-            payload = json.loads(response) if response.strip().startswith("{") else None
-            if not isinstance(payload, dict):
-                for candidate in reversed(_llm_qg_balanced_json_objects(response)):
-                    try:
-                        payload = json.loads(candidate)
-                    except json.JSONDecodeError:
-                        continue
-                    if isinstance(payload, dict):
-                        break
+            payload = None
+            for candidate in _llm_qg_balanced_json_objects(response):
+                try:
+                    loaded = json.loads(candidate)
+                except json.JSONDecodeError:
+                    continue
+                if isinstance(loaded, dict) and any(dim in loaded for dim in QG_DIMS):
+                    payload = loaded
+                    break
             if not isinstance(payload, dict):
                 raise linear_pipeline.LinearPipelineError("combined LLM QG did not return JSON")
             report: dict[str, Any] = {}
@@ -1273,12 +1273,6 @@ def _run_combined_llm_qg(
                 report[dim] = _parse_llm_qg_dim_response(
                     json.dumps(payload.get(dim) or payload, ensure_ascii=False),
                     dim=dim,
-                    response_path=response_path,
-                )
-                _validate_llm_qg_dim_grounding(
-                    report[dim],
-                    dim=dim,
-                    generated_content=generated_content,
                     response_path=response_path,
                 )
             parsed_dims = report

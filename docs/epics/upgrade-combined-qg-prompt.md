@@ -14,7 +14,9 @@ Do not restate them. Do not emit five separate essays.
 
 Dimensions: pedagogical, naturalness, decolonization, engagement, tone.
 Each value must be:
-{"score": <0-10 number>, "verdict": "PASS"|"REVISE"|"REJECT", "evidence": "<short>", "evidence_quotes": ["<exact substring from the artifacts>"]}
+{"score": <0-10 number>, "verdict": "PASS"|"REVISE"|"REJECT", "evidence": "<one short sentence in your words>", "evidence_quotes": ["<8-20 consecutive words copied from the artifacts, single line, no extra spaces>"]}
+
+Do not emit a second JSON object.
 
 Upgrade rules: A1 bilingual (UK then EN); no ```text learner examples; last lesson
 closes with Підсумок модуля — Module summary; VESUM/sources for gender/government.
