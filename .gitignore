@@ -522,3 +522,9 @@ data/telemetry/*
 
 # Build-time pronunciation slice; only test fixtures are tracked (#4696).
 /site/public/audio/pronunciation/
+
+# Phase 3.3 STEM PRESERVE shards carry train-only textbook passages.
+# Receipt + hash index are committed when generated without corpus text;
+# JSONL shards stay local research partition (#8007).
+data/projects/open_model_data/decolonization/stem_controls/*_controls.jsonl
+data/projects/open_model_data/decolonization/stem_controls/*_pairs.jsonl

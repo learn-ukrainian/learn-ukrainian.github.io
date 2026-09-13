@@ -171,7 +171,7 @@ flowchart TD
 | **Phase 3.0** | Source Custody & Partition Firewall | `phase3_heldout_partition.py` | Phenomenon-level split; ZNO/style-guide to Train; MinHash dedup; 600/400 eval split |
 | **Phase 3.1** | Textbook & ZNO Mining Script | `v4_mine_corpus_calques.py` | 379 textbook contrast chunks + 1,646 ZNO tasks; explicit table alignment |
 | **Phase 3.2** | UA-GEC Context Extraction | `v4_mine_uagec_calques.py` | 2,856 `F/Calque` and `F/Collocation` pairs in full context; author-disjoint; UA-GEC test split preserved |
-| **Phase 3.3** | STEM Negative Control Generator | `v4_mine_stem_controls.py` | 15,563 STEM chunks; vetted for cleanliness; semantic entity typing |
+| **Phase 3.3** | STEM Negative Control Generator | `v4_mine_stem_controls.py` (`python -m scripts.projects.open_model_data.v4_mine_stem_controls`; runbook `PHASE_3_3_STEM_NEGATIVE_CONTROLS.md`) | 15,563 STEM chunks; vetted for cleanliness; semantic entity typing; exactly 1,800 SFT + 900 DPO `PRESERVE` |
 | **Phase 3.4** | Differential Soviet Candidate Miner | `v4_differential_soviet_miner.py` | СУМ-11 `sovietization_risk` vs. R2U; 20th-century whitelist; human adjudication filter |
 | **Phase 3.5** | Automated CoT Claim-Verifier | `v4_verify_trajectory_claims.py` | Verifies every cited lemma, form, dictionary claim, and historical date against local DBs |
 | **Phase 3.6** | 200-Item Pilot Canary | `v4_pilot_canary_evaluation.py` | Fine-tune Gemma 3 4B on 200 items; verify calque-fix and HER $\le 1\%$ |
