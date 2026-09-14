@@ -317,25 +317,25 @@ def _correct_keys(blob: dict) -> set[str]:
     if type(correct) is int and 0 <= correct < len(options):
         text = _option_text(options[correct])
         if text.strip():
-            keys.add(strip_acute(text).lower().strip())
+            keys.add(nfc(text).lower().strip())
     elif isinstance(correct, str) and correct.strip():
-        keys.add(strip_acute(correct).lower().strip())
+        keys.add(nfc(correct).lower().strip())
     answer = blob.get("answer") if blob.get("answer") not in (None, "") else blob.get("target")
     if isinstance(answer, list):
         for item in answer:
             if type(item) is int and 0 <= item < len(options):
                 text = _option_text(options[item])
                 if text.strip():
-                    keys.add(strip_acute(text).lower().strip())
+                    keys.add(nfc(text).lower().strip())
             elif isinstance(item, str) and item.strip():
-                keys.add(strip_acute(item).lower().strip())
+                keys.add(nfc(item).lower().strip())
     elif isinstance(answer, str) and answer.strip():
-        keys.add(strip_acute(answer).lower().strip())
+        keys.add(nfc(answer).lower().strip())
     for option in options:
         if isinstance(option, dict) and option.get("correct") is True:
             text = _option_text(option)
             if text.strip():
-                keys.add(strip_acute(text).lower().strip())
+                keys.add(nfc(text).lower().strip())
     return keys
 
 
@@ -350,7 +350,7 @@ def pedagogical_error_forms(acts: dict) -> set[str]:
         for blob in blobs:
             for key, value in blob.items():
                 if key.lower() in _ERROR_KEYS and isinstance(value, str) and value.strip():
-                    out.add(strip_acute(value).lower().strip())
+                    out.add(nfc(value).lower().strip())
             sentence = blob.get("sentence")
             if isinstance(sentence, str) and "_" in sentence:
                 for tok in _stress_tokens(sentence):
@@ -360,15 +360,15 @@ def pedagogical_error_forms(acts: dict) -> set[str]:
                     if wrapped:
                         continue
                     if "_" in tok:
-                        out.add(strip_acute(tok.strip("_")).lower())
+                        out.add(nfc(tok.strip("_")).lower())
             correct_keys = _correct_keys(blob)
             for option in blob.get("options") or []:
                 if isinstance(option, dict) and option.get("correct") is False:
                     text = option.get("text") or option.get("en") or ""
                     if isinstance(text, str) and text.strip():
-                        out.add(strip_acute(text).lower().strip())
+                        out.add(nfc(text).lower().strip())
                 elif isinstance(option, str) and option.strip():
-                    key = strip_acute(option).lower().strip()
+                    key = nfc(option).lower().strip()
                     if key and key not in correct_keys:
                         out.add(key)
     return {form for form in out if form}
@@ -396,7 +396,8 @@ def _acute_positions(form: str) -> list[int]:
     return out
 
 
-def wrong_stress(text: str, allow: set[str], proper: set[str] = frozenset()) -> list[str]:
+def wrong_stress(text: str, allow: set[str], proper: set[str] = frozenset(),
+                 exact_skip: set[str] | frozenset[str] = frozenset()) -> list[str]:
     """Marked forms whose acute is not on a vowel the stress dictionary accepts.
     Uses the repo oracle (scripts.verification.stress, ULIF-derived); forms the dictionary
     does not know are skipped here (they must be declared in unverified_stress)."""
@@ -414,7 +415,9 @@ def wrong_stress(text: str, allow: set[str], proper: set[str] = frozenset()) -> 
             continue
         tok = tok.strip("_").strip("'’-")
         bare = strip_acute(tok)
-        if not tok or bare.lower() in allow:
+        if not tok or nfc(tok).lower() in exact_skip:
+            continue
+        if bare.lower() in allow:
             continue
         forms: list[str] = []
         # proper names (declared in lessons.yaml: proper_names, or capitalised vocabulary lemmas) are looked
@@ -615,9 +618,9 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             for activity in (acts.get("inline") or []) + (acts.get("workbook") or []):
                 if not isinstance(activity, dict):
                     continue
-                local = allow | pedagogical_error_forms({"inline": [activity], "workbook": []})
+                errors = pedagogical_error_forms({"inline": [activity], "workbook": []})
                 blob = "\n".join(str(x) for x in leaves(activity) if isinstance(x, str))
-                wrong += wrong_stress(blob, local, proper)
+                wrong += wrong_stress(blob, allow, proper, exact_skip={nfc(w).lower() for w in errors})
         except Exception as exc:
             block(f"lesson {n}: stress oracle unavailable: {type(exc).__name__}")
             wrong = []
@@ -628,7 +631,8 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
         for activity in (acts.get("inline") or []) + (acts.get("workbook") or []):
             if not isinstance(activity, dict):
                 continue
-            local = allow | pedagogical_error_forms({"inline": [activity], "workbook": []})
+            errors = pedagogical_error_forms({"inline": [activity], "workbook": []})
+            local = allow | {strip_acute(w).lower() for w in errors}
             blob = "\n".join(str(x) for x in leaves(activity) if isinstance(x, str))
             bad.extend(missing_stress(blob, local))
         bad = sorted(set(bad))
@@ -719,11 +723,17 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     if len(provenance) != len(originals) or len(prov) != len(provenance):
         block("provenance must cover every original exactly once")
     # Allocation records first introduction once; a later lesson may use prior vocabulary.
+    # Names copied verbatim from the archived module are already in the baseline; do not
+    # force a citation that would break preservation.
+    base_hay = norm_md("\n".join(
+        (source_dir / name).read_text() if (source_dir / name).is_file() else ""
+        for name in ("module.md", "activities.yaml", "vocabulary.yaml")
+    ))
     for path in module_dir.glob("lesson-*/*"):
         if path.name not in {"module.md", "activities.yaml", "vocabulary.yaml"}:
             continue
         for line in path.read_text().splitlines():
-            if NAME_RE.search(line) and not ATTR_RE.search(line):
+            if NAME_RE.search(line) and not ATTR_RE.search(line) and norm_md(line) not in base_hay:
                 block(f"unattributed reference-name hit in {path.name}")
     for n, md in lesson_md_raw.items():
         try:

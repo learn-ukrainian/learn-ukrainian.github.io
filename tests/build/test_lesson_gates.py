@@ -100,6 +100,21 @@ def test_one_syllable_acute_is_not_undeclared_stress():
     assert gates.wrong_stress("ка́ ли́ ко́", set()) == []
 
 
+def test_wrong_stress_option_is_pedagogy_not_an_oracle_failure():
+    """нови́й vs но́вий is a real distractor pair; only the wrong option is exempt."""
+    acts = {
+        "inline": [{"id": "act-stress", "type": "fill-in",
+                    "items": [{"sentence": "Це ___ комп'ютер.", "answer": "нови́й",
+                               "options": ["нови́й", "но́вий"]}]}],
+        "workbook": [],
+    }
+    errors = gates.pedagogical_error_forms(acts)
+    assert any(gates.strip_acute(form) == "новий" and form != "нови́й" for form in errors)
+    skip = {gates.nfc(w).lower() for w in errors}
+    assert gates.wrong_stress("но́вий", set(), exact_skip=skip) == []
+    assert gates.wrong_stress("но́вий", set())  # without skip, the false acute is a miss
+
+
 def test_error_correction_wrong_spellings_are_not_missing_stress():
     acts = {
         "inline": [],
