@@ -292,9 +292,9 @@ CITATION_MENTION_PATTERNS = [
         r"([a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+(?:\s+[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+)*\s+(?:dictionary|corpus|lexicon|словник\w*|корпус\w*|довідник\w*))\b",
         re.IGNORECASE,
     ),
-    # "словник ..." or "словник «...»" (dictionary keyword followed by name or quoted title)
+    # "словник ..." or "словник «...»" (dictionary keyword followed by name or quoted title, including coordinate lists)
     re.compile(
-        r"\b((?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+(?:«[^»]+»|\"[^\"]+\"|[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+))",
+        r"\b((?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+(?:«[^»]+»|\"[^\"]+\"|[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+)(?:\s+(?:та|і|й|and|or|,)\s+(?:«[^»]+»|\"[^\"]+\"|[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+))*)(?!\w)",
         re.IGNORECASE,
     ),
 ]
@@ -320,11 +320,32 @@ def verify_citation_whitelist(text: str) -> tuple[bool, list[str], list[str]]:
     for cpat in CITATION_MENTION_PATTERNS:
         for match in cpat.finditer(text):
             citation_span = match.group(1).strip() if match.lastindex else match.group(0).strip()
-            # If neither the captured span nor the matched expression contains an approved authority
-            if not any(app.search(citation_span) for app in APPROVED_CITATION_PATTERNS) and not any(
-                app.search(match.group(0)) for app in APPROVED_CITATION_PATTERNS
-            ):
-                found_unapproved.append(citation_span)
+            # Split coordinate lists (e.g. "VESUM and zorblax dictionary", "ВЕСУМ та Zorblax")
+            keyword_m = re.search(
+                r"\s+(?:dictionary|corpus|lexicon|словник\w*|корпус\w*|довідник\w*)$",
+                citation_span,
+                re.IGNORECASE,
+            )
+            if keyword_m:
+                names_part = citation_span[: keyword_m.start()].strip()
+                kw = keyword_m.group(0).strip()
+                names = re.split(r"\s+(?:and|or|та|і|й|,)\s+", names_part)
+                for name in names:
+                    name = name.strip()
+                    if name and not any(app.search(name) for app in APPROVED_CITATION_PATTERNS):
+                        found_unapproved.append(f"{name} {kw}")
+            else:
+                # E.g. "словник Zorblax", "словниками ВЕСУМ та Zorblax"
+                clean_span = re.sub(
+                    r"^(?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+",
+                    "",
+                    citation_span,
+                )
+                sub_entities = re.split(r"\s+(?:та|і|й|and|or|,)\s+", clean_span)
+                for ent in sub_entities:
+                    ent = ent.strip().strip("«»\"'")
+                    if ent and not any(app.search(ent) for app in APPROVED_CITATION_PATTERNS):
+                        found_unapproved.append(ent)
 
     all_violations = sorted(list(set(found_prohibited + found_unapproved)))
     is_clean = len(all_violations) == 0
@@ -389,6 +410,7 @@ class EvaluationSummary:
     high_freq_eliminated: int
     high_freq_recall: float
     high_freq_floor: int
+    high_freq_distinct_covered: int
     gate5_pass: bool
 
     # Overall Verdict
@@ -458,7 +480,7 @@ def evaluate_prediction(
 
         has_valid_replacement = False
         if exp_clean:
-            if exp_clean.lower() in resp_lower or (exp_tokens and is_contiguous_subsequence(exp_tokens, resp_tokens)):
+            if exp_tokens and is_contiguous_subsequence(exp_tokens, resp_tokens):
                 has_valid_replacement = True
         else:
             has_valid_replacement = bool(resp_tokens)
@@ -537,7 +559,7 @@ def evaluate_prediction(
             thought_and_resp = (parsed.thought_text + " " + parsed.final_response).lower()
             t_lower = target_term.lower()
 
-            clauses = [c.strip() for c in re.split(r"[.\n;!?]+", thought_and_resp) if c.strip()]
+            clauses = [c.strip() for c in re.split(r"[.,\n;!?—–:]+", thought_and_resp) if c.strip()]
             for clause in clauses:
                 mentions_target = (
                     f"«{t_lower}»" in clause
@@ -546,7 +568,7 @@ def evaluate_prediction(
                     or f"термін {t_lower}" in clause
                     or f"форма {t_lower}" in clause
                     or f"«{t_lower}" in clause
-                    or (t_lower in clause and any(kw in clause for kw in ("кальк", "росіянізм", "помилк", "суржик", "замін", "уникай")))
+                    or (t_lower in clause and any(kw in clause for kw in ("кальк", "росіянізм", "помилк", "суржик", "замін", "уникай", "ненормативн")))
                 )
                 if not mentions_target:
                     continue
@@ -565,28 +587,42 @@ def evaluate_prediction(
                             f"помилкове вживання «{t_lower}»",
                         )
                     )
-                    or any(w in clause for w in ("є калькою", "— калька", "є росіянізмом", "є помилкою", "помилково"))
+                    or any(
+                        w in clause
+                        for w in (
+                            "є калькою",
+                            "— калька",
+                            "є росіянізмом",
+                            "є помилкою",
+                            "помилково",
+                            "ненормативн",
+                            "є суржиком",
+                            "є штучн",
+                        )
+                    )
                 )
 
-                clause_negated = any(
-                    np in clause
-                    for np in (
-                        "не є калькою",
-                        "не калька",
-                        "не є росіянізмом",
-                        "не росіянізм",
-                        "не є помилкою",
-                        "не помилка",
-                        "не потребує",
-                        "є нормативн",
-                        "нормативн",
-                        "питом",
-                        "правильно",
-                        "літературн",
-                        "зберігаємо",
-                        "preserve",
-                        "без змін",
+                clause_negated = (
+                    any(
+                        np in clause
+                        for np in (
+                            "не є калькою",
+                            "не калька",
+                            "не є росіянізмом",
+                            "не росіянізм",
+                            "не є помилкою",
+                            "не помилка",
+                            "не є суржиком",
+                            "не потребує",
+                            "питом",
+                            "правильно",
+                            "літературн",
+                            "зберігаємо",
+                            "preserve",
+                            "без змін",
+                        )
                     )
+                    or bool(re.search(r"\b(?<!не\s)(?<!не)нормативн\w*\b", clause))
                 )
 
                 if clause_condemns and not clause_negated:
@@ -657,12 +693,24 @@ def run_evaluation_suite(
     citation_hallucination_rate = citation_violations / total_cases if total_cases > 0 else 0.0
     gate4_pass = citation_violations == 0
 
-    # Gate 5 metrics (High-Frequency Calque Floor)
+    # Gate 5 metrics (High-Frequency Calque Floor: distinct required calques covered)
     hf_cases = [r for r in correct_cases if r.is_high_frequency_calque]
     hf_total = len(hf_cases)
     hf_eliminated = sum(1 for r in hf_cases if r.calque_eliminated)
     hf_recall = (hf_eliminated / hf_total) if hf_total > 0 else 0.0
-    gate5_pass = (hf_total >= min_high_freq_floor) and (hf_recall >= 1.0)
+
+    # Count distinct canonical HIGH_FREQUENCY_CALQUES that were evaluated and eliminated
+    covered_distinct_calques = {
+        hf
+        for hf in HIGH_FREQUENCY_CALQUES
+        if any(
+            (hf in r.target_term.lower() or r.target_term.lower() in hf)
+            and r.calque_eliminated
+            for r in hf_cases
+        )
+    }
+    hf_distinct_count = len(covered_distinct_calques)
+    gate5_pass = (hf_distinct_count >= min_high_freq_floor) and (hf_recall >= 1.0)
 
     all_gates = gate1_pass and gate2_pass and gate3_pass and gate4_pass and gate5_pass
 
@@ -691,6 +739,7 @@ def run_evaluation_suite(
         high_freq_eliminated=hf_eliminated,
         high_freq_recall=hf_recall,
         high_freq_floor=min_high_freq_floor,
+        high_freq_distinct_covered=hf_distinct_count,
         gate5_pass=gate5_pass,
         all_gates_pass=all_gates,
         results=[asdict(r) for r in results],
@@ -722,7 +771,7 @@ def format_markdown_report(summary: EvaluationSummary) -> str:
 | **Gate 2: Harmful-Edit Rate** | <= 1.0% (Clopper-Pearson 95%) | **{summary.harmful_edit_rate * 100:.2f}%** (Upper bound: **{summary.clopper_pearson_upper * 100:.2f}%**, N={summary.preserve_cases_total}) | {g2_icon} |
 | **Gate 3: Span Integrity Gate** | 100% (0 mutations outside span) | **{summary.span_integrity_rate * 100:.2f}%** ({summary.span_integrity_violations} violations) | {g3_icon} |
 | **Gate 4: Citation Whitelist Gate** | 0% foreign hallucinations | **{summary.citation_violations_count}** violations (rate: {summary.citation_hallucination_rate * 100:.2f}%) | {g4_icon} |
-| **Gate 5: High-Frequency Calque Floor** | 100% on top 50 calques (min floor: {summary.high_freq_floor}) | **{summary.high_freq_recall * 100:.2f}%** ({summary.high_freq_eliminated}/{summary.high_freq_total}) | {g5_icon} |
+| **Gate 5: High-Frequency Calque Floor** | 100% on top 50 calques ({summary.high_freq_floor} distinct required) | **{summary.high_freq_recall * 100:.2f}%** ({summary.high_freq_distinct_covered}/{summary.high_freq_floor} distinct covered, {summary.high_freq_eliminated}/{summary.high_freq_total} total) | {g5_icon} |
 
 ---
 

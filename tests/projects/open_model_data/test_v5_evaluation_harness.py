@@ -291,3 +291,74 @@ def test_gate5_partial_coverage_fails() -> None:
     assert summary.high_freq_total == 1
     assert summary.gate5_pass is False
     assert summary.all_gates_pass is False
+
+
+def test_evaluate_prediction_prefix_suffix_substring_rejected() -> None:
+    """Verify Gate 1 rejects non-contiguous or embedded prefix/suffix token additions (e.g. 'XYZбрати участьXYZ')."""
+    case = {
+        "eval_id": "c_subseq",
+        "case_type": "CORRECT",
+        "target_term": "приймати участь",
+        "input_text": "Студенти будуть приймати участь у заходах.",
+        "expected_replacement": "брати участь",
+    }
+    pred = "Студенти будуть XYZбрати участьXYZ у заходах."
+    res = evaluate_prediction(case, pred)
+    assert res.calque_eliminated is False
+
+
+def test_evaluate_prediction_comma_clause_and_nenormatyvnym() -> None:
+    """Verify comma-separated clauses and 'ненормативним' are properly flagged as harmful edits."""
+    case1 = {
+        "eval_id": "p_comma",
+        "case_type": "PRESERVE",
+        "target_term": "матеріал",
+        "input_text": "Матеріал підручника викладено послідовно.",
+        "expected_replacement": None,
+    }
+    pred1 = "<thought>Слово «матеріал» є калькою, проте це поширене слово.</thought>Матеріал підручника викладено послідовно."
+    res1 = evaluate_prediction(case1, pred1)
+    assert res1.harmful_edit is True
+
+    case2 = {
+        "eval_id": "p_nenorm",
+        "case_type": "PRESERVE",
+        "target_term": "матеріал",
+        "input_text": "Матеріал підручника викладено послідовно.",
+        "expected_replacement": None,
+    }
+    pred2 = "<thought>Слово «матеріал» вважається ненормативним у цьому контексті.</thought>Матеріал підручника викладено послідовно."
+    res2 = evaluate_prediction(case2, pred2)
+    assert res2.harmful_edit is True
+
+
+def test_citation_whitelist_co_citation_unapproved_rejected() -> None:
+    """Verify coordinate co-citations (approved + unapproved) reject the unapproved authority."""
+    text1 = "According to VESUM and zorblax dictionary, this is standard."
+    is_clean1, _approved1, violations1 = verify_citation_whitelist(text1)
+    assert is_clean1 is False
+    assert any("zorblax" in v.lower() for v in violations1)
+
+    text2 = "За словниками ВЕСУМ та zorblax, це правильно."
+    is_clean2, _approved2, violations2 = verify_citation_whitelist(text2)
+    assert is_clean2 is False
+    assert any("zorblax" in v.lower() for v in violations2)
+
+
+def test_gate5_duplicate_calques_cannot_inflate_floor() -> None:
+    """Verify 50 rows of a single calque fail Gate 5 because distinct calque count is 1."""
+    cases = [
+        {
+            "eval_id": f"c_dup_{i}",
+            "case_type": "CORRECT",
+            "target_term": "приймати участь",
+            "input_text": f"Студенти {i} будуть приймати участь у заходах.",
+            "expected_replacement": "брати участь",
+        }
+        for i in range(50)
+    ]
+    preds = {f"c_dup_{i}": f"Студенти {i} будуть брати участь у заходах." for i in range(50)}
+    summary = run_evaluation_suite(cases, preds, min_high_freq_floor=50)
+    assert summary.high_freq_total == 50
+    assert summary.high_freq_distinct_covered == 1
+    assert summary.gate5_pass is False
