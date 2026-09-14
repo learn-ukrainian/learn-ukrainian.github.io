@@ -397,10 +397,10 @@ CONJ_COORD_GENITIVE_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_GENIT
 
 PLURAL_COORD_RE = rf"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+){ENTITY_CITATION_RE})"
 INTRO_COMMA_COORD_INSTRUMENTAL_RE = (
-    rf"(?:\s*,\s*{ENTITY_CITATION_INSTRUMENTAL_RE}(?=\s*,\s*(?!{PARTICIPLE_CLAUSE_RE})|\s+(?:та|і|й|and|or)\b))"
+    rf"(?:\s*,\s*{ENTITY_CITATION_INSTRUMENTAL_RE}(?=\s*,\s*(?!\s)(?!{PARTICIPLE_CLAUSE_RE})|\s+(?:та|і|й|and|or)\b))"
 )
 INTRO_COMMA_COORD_GENITIVE_RE = (
-    rf"(?:\s*,\s*{ENTITY_CITATION_GENITIVE_RE}(?=\s*,\s*(?!{PARTICIPLE_CLAUSE_RE})|\s+(?:та|і|й|and|or)\b))"
+    rf"(?:\s*,\s*{ENTITY_CITATION_GENITIVE_RE}(?=\s*,\s*(?!\s)(?!{PARTICIPLE_CLAUSE_RE})|\s+(?:та|і|й|and|or)\b))"
 )
 
 CITATION_MENTION_PATTERNS = [

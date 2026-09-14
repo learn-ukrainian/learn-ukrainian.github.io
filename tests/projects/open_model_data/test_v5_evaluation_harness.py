@@ -1162,3 +1162,22 @@ def test_citation_whitelist_r14_f1_attribution_boundary_disambiguation() -> None
     assert is_clean5 is False
     assert any("Зорблакса" in v for v in viol5)
     assert any("ВЕСУМ" in a for a in app5)
+
+    # 5. Quoted subject followed by participle clause (R15-F1 non-backtracking)
+    text6 = "За даними ВЕСУМ, «Школа», описана вище, є правильною."
+    is_clean6, app6, viol6 = verify_citation_whitelist(text6)
+    assert is_clean6 is True
+    assert app6 == ["ВЕСУМ"]
+    assert viol6 == []
+
+    text7 = "Відповідно до ВЕСУМ, «Школа», описана вище, є правильною."
+    is_clean7, app7, viol7 = verify_citation_whitelist(text7)
+    assert is_clean7 is True
+    assert app7 == ["ВЕСУМ"]
+    assert viol7 == []
+
+    text8 = "Згідно з ВЕСУМ, «Школа», описана вище, є правильною."
+    is_clean8, app8, viol8 = verify_citation_whitelist(text8)
+    assert is_clean8 is True
+    assert app8 == ["ВЕСУМ"]
+    assert viol8 == []
