@@ -1125,3 +1125,40 @@ def test_citation_whitelist_r13_f3_genitive_co_citation_zorblaka_detected() -> N
     assert is_clean2 is False
     assert any("Зорблака" in v for v in viol2)
     assert any("ВЕСУМ" in a for a in app2)
+
+
+def test_citation_whitelist_r14_f1_attribution_boundary_disambiguation() -> None:
+    """Verify sentence subject followed by participle clause is not mistaken for co-citation (R14-F1)."""
+    # 1. 'За даними' with sentence subject 'Школа' followed by participle clause
+    text1 = "За даними ВЕСУМ, Школа, описана вище, є правильною."
+    is_clean1, app1, viol1 = verify_citation_whitelist(text1)
+    assert is_clean1 is True
+    assert app1 == ["ВЕСУМ"]
+    assert viol1 == []
+
+    # 2. 'Відповідно до' with sentence subject 'Школа' followed by participle clause
+    text2 = "Відповідно до ВЕСУМ, Школа, описана вище, є правильною."
+    is_clean2, app2, viol2 = verify_citation_whitelist(text2)
+    assert is_clean2 is True
+    assert app2 == ["ВЕСУМ"]
+    assert viol2 == []
+
+    # 3. 'Згідно з' with sentence subject 'Школа' followed by participle clause
+    text3 = "Згідно з ВЕСУМ, Школа, описана вище, є правильною."
+    is_clean3, app3, viol3 = verify_citation_whitelist(text3)
+    assert is_clean3 is True
+    assert app3 == ["ВЕСУМ"]
+    assert viol3 == []
+
+    # 4. 'Відповідно до' and 'За даними' with co-citation 'Зорблакса'
+    text4 = "Відповідно до ВЕСУМ, Зорблакса, це правильно."
+    is_clean4, app4, viol4 = verify_citation_whitelist(text4)
+    assert is_clean4 is False
+    assert any("Зорблакса" in v for v in viol4)
+    assert any("ВЕСУМ" in a for a in app4)
+
+    text5 = "За даними ВЕСУМ, Зорблакса, це правильно."
+    is_clean5, app5, viol5 = verify_citation_whitelist(text5)
+    assert is_clean5 is False
+    assert any("Зорблакса" in v for v in viol5)
+    assert any("ВЕСУМ" in a for a in app5)

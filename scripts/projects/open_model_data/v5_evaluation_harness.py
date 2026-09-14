@@ -372,11 +372,15 @@ INSTRUMENTAL_NAME_RE = (
     r"(?:[A-ZА-ЯІЇЄҐ][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:ом|ем|ям|ою|ею|єю|овим|євим|им|ім)\b)"
 )
 GENITIVE_NAME_RE = (
-    r"(?:[A-ZА-ЯІЇЄҐ][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:а|я|у|ю|ого|ього|ів|ей|ові|єві)\b)"
+    r"(?:[A-ZА-ЯІЇЄҐ][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:кса|ака|яка|нка|нга|нта|рда|рта|нда|льда|вича|овича|евича|ьова|ьові|ова|ева|ого|ього|ів|ей|ові|єві|у|ю)\b)"
 )
 ANY_CAP_NAME_RE = (
     r"[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:-[A-ZА-ЯІЇЄҐ0-9][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)*"
     r"(?:\s+[A-ZА-ЯІЇЄҐ0-9][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)*"
+)
+
+PARTICIPLE_CLAUSE_RE = (
+    r"(?:описан\w*|зазначен\w*|вказан\w*|наведен\w*|подан\w*|згадан\w*|розглянут\w*|використан\w*|проілюстрован\w*)"
 )
 
 ENTITY_CITATION_RE = rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{ANY_CAP_NAME_RE})"
@@ -393,10 +397,10 @@ CONJ_COORD_GENITIVE_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_GENIT
 
 PLURAL_COORD_RE = rf"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+){ENTITY_CITATION_RE})"
 INTRO_COMMA_COORD_INSTRUMENTAL_RE = (
-    rf"(?:\s*,\s*{ENTITY_CITATION_INSTRUMENTAL_RE}(?=\s*,|\s+(?:та|і|й|and|or)\b))"
+    rf"(?:\s*,\s*{ENTITY_CITATION_INSTRUMENTAL_RE}(?=\s*,\s*(?!{PARTICIPLE_CLAUSE_RE})|\s+(?:та|і|й|and|or)\b))"
 )
 INTRO_COMMA_COORD_GENITIVE_RE = (
-    rf"(?:\s*,\s*{ENTITY_CITATION_GENITIVE_RE}(?=\s*,|\s+(?:та|і|й|and|or)\b))"
+    rf"(?:\s*,\s*{ENTITY_CITATION_GENITIVE_RE}(?=\s*,\s*(?!{PARTICIPLE_CLAUSE_RE})|\s+(?:та|і|й|and|or)\b))"
 )
 
 CITATION_MENTION_PATTERNS = [
