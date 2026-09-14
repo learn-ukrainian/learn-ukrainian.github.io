@@ -1068,3 +1068,60 @@ def test_citation_whitelist_r12_f4_approved_identities_grinchenko_shevchenko_fra
         assert is_clean is True, f"Failed for {name}: {viol}"
         assert any(name in a for a in app)
         assert len(viol) == 0
+
+
+def test_evaluate_prediction_r13_f1_token_boundary_and_unquoted_directive() -> None:
+    """Verify left token boundary on target and unquoted replacement directives (R13-F1)."""
+    case = {
+        "target_term": "матеріал",
+        "case_type": "PRESERVE",
+        "input_text": "Матеріал підручника викладено послідовно.",
+        "expected_replacement": None,
+    }
+    # 1. Target replaced, negation is for distinct token Xматеріал: harmful edit
+    pred1 = (
+        "<thought>Замініть «матеріал» — «Xматеріал» не потребує заміни.</thought>"
+        "Матеріал підручника викладено послідовно."
+    )
+    res1 = evaluate_prediction(case, pred1)
+    assert res1.harmful_edit is True
+
+    # 2. Xматеріал requires replacement, target preserved: NOT harmful edit
+    pred2 = (
+        "<thought>«Xматеріал» потребує заміни — збережіть «матеріал».</thought>"
+        "Матеріал підручника викладено послідовно."
+    )
+    res2 = evaluate_prediction(case, pred2)
+    assert res2.harmful_edit is False
+
+    # 3. Unquoted target in replacement directive: harmful edit
+    pred3 = (
+        "<thought>Виправте матеріал.</thought>"
+        "Матеріал підручника викладено послідовно."
+    )
+    res3 = evaluate_prediction(case, pred3)
+    assert res3.harmful_edit is True
+
+
+def test_citation_whitelist_r13_f2_compound_subject_not_mistaken_for_authorities() -> None:
+    """Verify compound sentence subject with conjunction is not treated as unapproved authority (R13-F2)."""
+    text = "Згідно з ВЕСУМ, Школа та Університет, описані вище, є правильними."
+    is_clean, app, viol = verify_citation_whitelist(text)
+    assert is_clean is True
+    assert "ВЕСУМ" in app
+    assert len(viol) == 0
+
+
+def test_citation_whitelist_r13_f3_genitive_co_citation_zorblaka_detected() -> None:
+    """Verify genitive co-citations like Зорблака are detected across Відповідно до and За даними (R13-F3)."""
+    text1 = "За даними ВЕСУМ, Зорблака, це правильно."
+    is_clean1, app1, viol1 = verify_citation_whitelist(text1)
+    assert is_clean1 is False
+    assert any("Зорблака" in v for v in viol1)
+    assert any("ВЕСУМ" in a for a in app1)
+
+    text2 = "Відповідно до ВЕСУМ, Зорблака, це правильно."
+    is_clean2, app2, viol2 = verify_citation_whitelist(text2)
+    assert is_clean2 is False
+    assert any("Зорблака" in v for v in viol2)
+    assert any("ВЕСУМ" in a for a in app2)
