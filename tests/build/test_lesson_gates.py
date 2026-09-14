@@ -235,6 +235,27 @@ def test_removed_original_paragraph_fails(gold):
     assert report["facts"]["preservation"]["lost"] > 0
 
 
+def test_copied_archived_name_line_is_not_unattributed(gold):
+    module, source, plan = gold
+    line = "If you want extra listening support, open ULP Season 1."
+    (source / "module.md").write_text((source / "module.md").read_text() + "\n" + line + "\n")
+    path = module / "lesson-1/module.md"
+    path.write_text(path.read_text() + "\n" + line + "\n")
+    report = gates.run_lesson_gates(module, source, plan)
+    assert not any("unattributed reference-name" in d for d in report["blocking"])
+
+
+def test_name_substring_of_archived_citation_is_still_unattributed(gold):
+    module, source, plan = gold
+    (source / "module.md").write_text(
+        (source / "module.md").read_text() + "\nQuoted from Anna Ohoiko.\n"
+    )
+    path = module / "lesson-1/module.md"
+    path.write_text(path.read_text() + "\nAnna\n")
+    report = gates.run_lesson_gates(module, source, plan)
+    assert any("unattributed reference-name" in d for d in report["blocking"])
+
+
 def test_list_shaped_baseline_activities_do_not_crash(gold):
     module, source, plan = gold
     data = yaml.safe_load((source / "activities.yaml").read_text())

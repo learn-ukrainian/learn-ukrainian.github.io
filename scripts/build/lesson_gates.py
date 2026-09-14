@@ -723,17 +723,19 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     if len(provenance) != len(originals) or len(prov) != len(provenance):
         block("provenance must cover every original exactly once")
     # Allocation records first introduction once; a later lesson may use prior vocabulary.
-    # Names copied verbatim from the archived module are already in the baseline; do not
-    # force a citation that would break preservation.
-    base_hay = norm_md("\n".join(
-        (source_dir / name).read_text() if (source_dir / name).is_file() else ""
-        for name in ("module.md", "activities.yaml", "vocabulary.yaml")
-    ))
+    # Names copied as complete archived lines are already in the baseline; do not
+    # force a citation that would break preservation. Substrings of an attributed
+    # archive sentence are not copies.
+    base_lines = set()
+    for name in ("module.md", "activities.yaml", "vocabulary.yaml"):
+        archived = source_dir / name
+        if archived.is_file():
+            base_lines.update(norm_md(line) for line in archived.read_text().splitlines() if line.strip())
     for path in module_dir.glob("lesson-*/*"):
         if path.name not in {"module.md", "activities.yaml", "vocabulary.yaml"}:
             continue
         for line in path.read_text().splitlines():
-            if NAME_RE.search(line) and not ATTR_RE.search(line) and norm_md(line) not in base_hay:
+            if NAME_RE.search(line) and not ATTR_RE.search(line) and norm_md(line) not in base_lines:
                 block(f"unattributed reference-name hit in {path.name}")
     for n, md in lesson_md_raw.items():
         try:
