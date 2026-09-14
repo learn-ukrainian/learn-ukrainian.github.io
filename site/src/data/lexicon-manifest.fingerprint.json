@@ -131,7 +131,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_heteronyms.py",
-        "sha256": "f04009ba09446bf564d71bfbda1c08b8921409708ebc81bdd44e2defc5a67246"
+        "sha256": "06161c59095934bf47a717d991a30245dbd6fa679622177c9124d924b4e14f5f"
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",

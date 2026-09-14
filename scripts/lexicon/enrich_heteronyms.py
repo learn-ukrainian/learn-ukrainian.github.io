@@ -514,10 +514,8 @@ def build_heteronyms_for_lemma(lemma: str) -> list[dict[str, Any]] | None:
 
 
 def _resolve_atlas_db(custom_path: str | Path | None = None) -> Path:
-    if custom_path:
-        p = Path(custom_path)
-        if p.is_file():
-            return p
+    if custom_path is not None:
+        return Path(custom_path)
     env_path = os.environ.get("ATLAS_DB_PATH")
     if env_path and Path(env_path).is_file():
         return Path(env_path)
@@ -533,10 +531,9 @@ def _resolve_atlas_db(custom_path: str | Path | None = None) -> Path:
 
 
 def _resolve_manifest_path(custom_path: str | Path | None = None) -> Path | None:
-    if custom_path:
+    if custom_path is not None:
         p = Path(custom_path)
-        if p.is_file():
-            return p
+        return p if p.is_file() else None
     local = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
     if local.is_file():
         return local
