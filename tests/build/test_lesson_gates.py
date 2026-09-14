@@ -41,6 +41,7 @@ def test_fill_in_blanked_strings_count_as_rendered():
     assert not gates._visible_in_render("missing sentence here", "other page")
     landing = gates.norm_text('{"instruction":"Example ___."}')
     assert gates._visible_in_render("Example {answer}.", landing)
+    assert gates._visible_in_render("де__ (soft sign)", gates.norm_text("де___ (soft sign)"))
 
 
 def test_one_syllable_acute_is_not_undeclared_stress():
