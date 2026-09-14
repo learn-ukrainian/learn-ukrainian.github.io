@@ -384,7 +384,8 @@ PARTICIPLE_CLAUSE_RE = (
 )
 
 SUBJECT_PREDICATE_VERBS = r"(?:є|належить|вживається|пишеться|має|було|буде|вважається|становить|означає|визнано)"
-SUBJECT_VERB_CLAUSE = rf"(?:(?:\s+(?:не|також|теж|цілком|зовсім))?\s+{SUBJECT_PREDICATE_VERBS}\b)"
+SUBJECT_MODIFIERS_RE = r"(?:не|також|теж|цілком|зовсім|вже|ще)"
+SUBJECT_VERB_CLAUSE = rf"(?:(?:\s+{SUBJECT_MODIFIERS_RE})*\s+{SUBJECT_PREDICATE_VERBS}\b)"
 SUBJECT_CAP_NOUN_RE = r"[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*"
 SUBJECT_ANY_NOUN_RE = rf"(?:{QUOTED_ENTITY_RE}|{SUBJECT_CAP_NOUN_RE})"
 SUBJECT_NOUNS = (

@@ -1485,3 +1485,24 @@ def test_citation_whitelist_r20_findings():
     assert ok2b is True
     assert app2b == ["ВЕСУМ"]
     assert viol2b == []
+
+
+def test_citation_whitelist_r21_findings():
+    # R21-F1: Combined modifiers («також не є») before predicate verbs
+    t1 = "Згідно з ВЕСУМ, «Мова», як зазначено вище, також не є правильною."
+    ok1, app1, viol1 = verify_citation_whitelist(t1)
+    assert ok1 is True
+    assert app1 == ["ВЕСУМ"]
+    assert viol1 == []
+
+    t2 = "За даними ВЕСУМ, «Мова», як зазначено вище, також не є правильною."
+    ok2, app2, viol2 = verify_citation_whitelist(t2)
+    assert ok2 is True
+    assert app2 == ["ВЕСУМ"]
+    assert viol2 == []
+
+    t3 = "Відповідно до ВЕСУМ, «Мова», як зазначено вище, також не є правильною."
+    ok3, app3, viol3 = verify_citation_whitelist(t3)
+    assert ok3 is True
+    assert app3 == ["ВЕСУМ"]
+    assert viol3 == []
