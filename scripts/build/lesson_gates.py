@@ -198,13 +198,21 @@ def _stress_tokens(text: str) -> list[str]:
 
 
 def _skip_stress_token(tok: str) -> bool:
-    """Hyphenation demos, fill-in gaps, and 1-syllable fragments are not dictionary words."""
+    """Hyphenation demos, fill-in gaps, and 1-syllable fragments are not dictionary words.
+
+    Markdown ``_книга_`` / ``__книга__`` is emphasis (check the inner word).
+    Fill-in gaps are internal ``_`` (мален_кий) or a blank ``__`` that is not
+    wrapping both sides (дере__).
+    """
     if not tok:
         return True
     core = tok.strip("_")
-    if "_" in core or tok.endswith("__") or tok.startswith("__"):
+    if "_" in core:
         return True
-    if tok.endswith("_") and not tok.startswith("_"):
+    wrapped = (tok.startswith("__") and tok.endswith("__")) or (
+        tok.startswith("_") and tok.endswith("_") and not tok.startswith("__")
+    )
+    if not wrapped and (tok.startswith("__") or tok.endswith("__")):
         return True
     if "-" in core.strip("-"):
         return True
