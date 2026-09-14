@@ -103,6 +103,15 @@ def test_error_correction_wrong_spellings_are_not_missing_stress():
         }],
     }
     assert "сімя" in gates.pedagogical_error_forms(quiz)
+    fill_opts = {
+        "inline": [{"id": "act-fo", "type": "fill-in",
+                    "items": [{"sentence": "Це ___.", "answer": "книга",
+                               "options": ["книга", "сімя"]}]}],
+        "workbook": [],
+    }
+    forms = gates.pedagogical_error_forms(fill_opts)
+    assert "сімя" in forms
+    assert "книга" not in forms
 
 
 def test_hyphenation_models_are_not_missing_stress():

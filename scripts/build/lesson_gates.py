@@ -245,13 +245,17 @@ def pedagogical_error_forms(acts: dict) -> set[str]:
                         continue
                     if "_" in tok:
                         out.add(strip_acute(tok.strip("_")).lower())
+            answer = blob.get("answer") or blob.get("correct") or blob.get("target")
+            answer_key = strip_acute(str(answer)).lower().strip() if answer else ""
             for option in blob.get("options") or []:
                 if isinstance(option, dict) and option.get("correct") is False:
                     text = option.get("text") or option.get("en") or ""
                     if isinstance(text, str) and text.strip():
                         out.add(strip_acute(text).lower().strip())
                 elif isinstance(option, str) and option.strip():
-                    out.add(strip_acute(option).lower().strip())
+                    key = strip_acute(option).lower().strip()
+                    if key and key != answer_key:
+                        out.add(key)
     return {form for form in out if form}
 
 
