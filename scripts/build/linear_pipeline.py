@@ -9451,7 +9451,7 @@ def _validate_lesson_writer_artifact(artifact: str, parsed: Any) -> None:
         for placement, activities in parsed.items():
             if not isinstance(activities, list):
                 raise LinearPipelineError(f"Lesson {placement} activities must be a list")
-            allowed = ALLOWED["both"] | ALLOWED[f"{placement}_only"]
+            allowed = ALLOWED["both"] | ALLOWED["inline_only"] | ALLOWED["workbook_only"]
             for item in activities:
                 if not isinstance(item, dict) or item.get("type") not in allowed or not item.get("id"):
                     raise LinearPipelineError(f"Invalid lesson {placement} activity identity/type")
