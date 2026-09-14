@@ -57,8 +57,11 @@ A2+ upgrade: full Ukrainian immersion. Do not write English-carrier landings or 
 Keep every original activity's type, items, answer flags and groups structurally intact.
 Use provenance to find its assigned lesson. Inline IDs stay unchanged; id-less workbook
 originals use act-w1, act-w2, etc. Add distinct activities with globally unique IDs.
-Each lesson needs >=10 activities: 4–6 inline and 6–9 workbook; >=6 items each unless
-the deterministic map declares an original-item exemption. Do not create exemptions.
+A lesson with no activities is a defect (boring theory). After a 2–5 lesson split the
+originals will not fill every lesson — **generate new unique activities** until this
+lesson has 4–6 inline and 6–9 workbook (≥10 total). Closing/summary lessons still need
+practice, not recap-only. >=6 items each unless the deterministic map declares an
+original-item exemption. Do not create exemptions.
 Use <!-- INJECT_ACTIVITY: id --> for each inline activity, once, in its relevant section.
 Use only the base A1 placement/type matrix below. Preserve every option of odd-one-out.
 
