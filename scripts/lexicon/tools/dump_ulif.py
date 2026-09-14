@@ -41,8 +41,7 @@ ULIF_URL = "https://lcorp.ulif.org.ua/dictua/"
 DEFAULT_DELAY_SECONDS = 1.0
 DEFAULT_TIMEOUT_SECONDS = 20
 DEFAULT_USER_AGENT = (
-    "learn-ukrainian-atlas/1.0 "
-    "(noncommercial educational ULIF lexicon intake; https://github.com/learn-ukrainian)"
+    "learn-ukrainian-atlas/1.0 (noncommercial educational ULIF lexicon intake; https://github.com/learn-ukrainian)"
 )
 
 _REGISTER_RE = re.compile(
@@ -51,6 +50,16 @@ _REGISTER_RE = re.compile(
     r"зоол\.|грам\.|лінгв\.|юр\.|військ\.|мор\.|тех\.|спорт\.)",
     re.IGNORECASE,
 )
+
+_ULIF_CASE_LABELS = {
+    "називний",
+    "родовий",
+    "давальний",
+    "знахідний",
+    "орудний",
+    "місцевий",
+    "кличний",
+}
 
 
 class DictUACrawler:
@@ -156,26 +165,32 @@ class DictUACrawler:
     @staticmethod
     def _parse_paradigm(html: str) -> dict[str, Any] | None:
         soup = BeautifulSoup(html, "html.parser")
-        table = soup.find(id="ContentPlaceHolder1_dgv")
-        if table is None:
+        article = soup.find(id="ContentPlaceHolder1_article")
+        if article is None:
             return None
-        headers: list[str] = []
-        rows: list[list[str]] = []
-        for tr in table.find_all("tr"):
-            th_cells = tr.find_all("th")
-            if th_cells and not headers:
-                headers = [" ".join(c.get_text(" ", strip=True).split()) for c in th_cells]
-            td_cells = tr.find_all("td")
-            if td_cells:
-                rows.append([" ".join(c.get_text(" ", strip=True).split()) for c in td_cells])
-        return {"headers": headers, "rows": rows} if rows else None
+        for table in article.find_all("table"):
+            rows: list[list[str]] = []
+            for tr in table.find_all("tr", recursive=False):
+                cells = tr.find_all(["td", "th"], recursive=False)
+                row = [" ".join(c.get_text(" ", strip=True).split()) for c in cells]
+                if any(row):
+                    rows.append(row)
+            if not rows:
+                for tr in table.find_all("tr"):
+                    cells = tr.find_all(["td", "th"])
+                    row = [" ".join(c.get_text(" ", strip=True).split()) for c in cells]
+                    if any(row):
+                        rows.append(row)
+            if rows:
+                labels = {cell.casefold() for row in rows for cell in row}
+                if labels & _ULIF_CASE_LABELS or any("інфінітив" in cell.casefold() for row in rows for cell in row):
+                    return {"headers": rows[0], "rows": rows}
+        return None
 
     @staticmethod
     def _parse_relation_tab(html: str) -> list[dict[str, Any]]:
         soup = BeautifulSoup(html, "html.parser")
-        container = soup.find(id="ContentPlaceHolder1_article") or soup.find(
-            id="ContentPlaceHolder1_dgv"
-        )
+        container = soup.find(id="ContentPlaceHolder1_article") or soup.find(id="ContentPlaceHolder1_dgv")
         if container is None:
             return []
 
@@ -190,24 +205,18 @@ class DictUACrawler:
                 cell_text = " ".join(cells[0].get_text(" ", strip=True).split())
                 if not cell_text:
                     continue
-                bolds = [
-                    " ".join(b.get_text(" ", strip=True).split())
-                    for b in cells[0].find_all(["b", "strong"])
-                ]
-                italics = [
-                    " ".join(i.get_text(" ", strip=True).split())
-                    for i in cells[0].find_all(["i", "em"])
-                ]
-                labels = [
-                    m.group(0) for m in _REGISTER_RE.finditer(" ".join(italics))
-                ]
+                bolds = [" ".join(b.get_text(" ", strip=True).split()) for b in cells[0].find_all(["b", "strong"])]
+                italics = [" ".join(i.get_text(" ", strip=True).split()) for i in cells[0].find_all(["i", "em"])]
+                labels = [m.group(0) for m in _REGISTER_RE.finditer(" ".join(italics))]
                 citations = re.findall(r"\(([^()]*)\)", cell_text)
-                results.append({
-                    "text": cell_text,
-                    "terms": bolds,
-                    "register_labels": sorted(set(labels)),
-                    "citations": citations,
-                })
+                results.append(
+                    {
+                        "text": cell_text,
+                        "terms": bolds,
+                        "register_labels": sorted(set(labels)),
+                        "citations": citations,
+                    }
+                )
 
         # Check for paragraph format if table gave nothing
         if not results:
@@ -215,24 +224,18 @@ class DictUACrawler:
                 p_text = " ".join(p.get_text(" ", strip=True).split())
                 if not p_text:
                     continue
-                bolds = [
-                    " ".join(b.get_text(" ", strip=True).split())
-                    for b in p.find_all(["b", "strong"])
-                ]
-                italics = [
-                    " ".join(i.get_text(" ", strip=True).split())
-                    for i in p.find_all(["i", "em"])
-                ]
-                labels = [
-                    m.group(0) for m in _REGISTER_RE.finditer(" ".join(italics))
-                ]
+                bolds = [" ".join(b.get_text(" ", strip=True).split()) for b in p.find_all(["b", "strong"])]
+                italics = [" ".join(i.get_text(" ", strip=True).split()) for i in p.find_all(["i", "em"])]
+                labels = [m.group(0) for m in _REGISTER_RE.finditer(" ".join(italics))]
                 citations = re.findall(r"\(([^()]*)\)", p_text)
-                results.append({
-                    "text": p_text,
-                    "terms": bolds,
-                    "register_labels": sorted(set(labels)),
-                    "citations": citations,
-                })
+                results.append(
+                    {
+                        "text": p_text,
+                        "terms": bolds,
+                        "register_labels": sorted(set(labels)),
+                        "citations": citations,
+                    }
+                )
 
         return results
 
@@ -348,9 +351,7 @@ class DumpDB:
             """)
 
     def get_completed_lemmas(self) -> set[str]:
-        cursor = self.conn.execute(
-            "SELECT lemma FROM ulif_entries WHERE status IN ('ok', 'not_found');"
-        )
+        cursor = self.conn.execute("SELECT lemma FROM ulif_entries WHERE status IN ('ok', 'not_found');")
         return {row[0] for row in cursor.fetchall()}
 
     def store_entry(self, entry: dict[str, Any], include_html: bool = False) -> None:
@@ -376,18 +377,10 @@ class DumpDB:
                     entry.get("canonical_headword", ""),
                     entry.get("status", "error"),
                     entry.get("retrieved_at", ""),
-                    json.dumps(entry.get("paradigm"), ensure_ascii=False)
-                    if entry.get("paradigm")
-                    else None,
-                    json.dumps(entry.get("synonyms"), ensure_ascii=False)
-                    if entry.get("synonyms")
-                    else None,
-                    json.dumps(entry.get("phraseology"), ensure_ascii=False)
-                    if entry.get("phraseology")
-                    else None,
-                    json.dumps(entry.get("antonyms"), ensure_ascii=False)
-                    if entry.get("antonyms")
-                    else None,
+                    json.dumps(entry.get("paradigm"), ensure_ascii=False) if entry.get("paradigm") else None,
+                    json.dumps(entry.get("synonyms"), ensure_ascii=False) if entry.get("synonyms") else None,
+                    json.dumps(entry.get("phraseology"), ensure_ascii=False) if entry.get("phraseology") else None,
+                    json.dumps(entry.get("antonyms"), ensure_ascii=False) if entry.get("antonyms") else None,
                     json.dumps(entry.get("raw_responses"), ensure_ascii=False)
                     if include_html and entry.get("raw_responses")
                     else None,
@@ -418,9 +411,7 @@ def load_atlas_manifest_lemmas(manifest_path: Path) -> list[str]:
 
 def load_vesum_lemmas(vesum_db_path: Path) -> list[str]:
     conn = sqlite3.connect(str(vesum_db_path))
-    cursor = conn.execute(
-        "SELECT DISTINCT lemma FROM forms_all WHERE lemma != '' ORDER BY lemma;"
-    )
+    cursor = conn.execute("SELECT DISTINCT lemma FROM forms_all WHERE lemma != '' ORDER BY lemma;")
     lemmas = [row[0] for row in cursor.fetchall()]
     conn.close()
     return lemmas
@@ -500,7 +491,9 @@ def run(args: argparse.Namespace) -> int:
             except Exception as e:
                 error_count += 1
                 headword = word
-                db.store_entry({"lemma": word, "status": "error", "retrieved_at": datetime.datetime.now(datetime.UTC).isoformat()})
+                db.store_entry(
+                    {"lemma": word, "status": "error", "retrieved_at": datetime.datetime.now(datetime.UTC).isoformat()}
+                )
                 print(f"\n[Error on {word}]: {e}", file=sys.stderr)
 
             elapsed = time.monotonic() - start_time
@@ -546,7 +539,16 @@ def import_to_sources(dump_db_path: Path, sources_db_path: Path) -> int:
     print(f"Importing {len(rows):,} entries from {dump_db_path} to {sources_db_path}...")
     imported = 0
     now_ts = datetime.datetime.now(datetime.UTC).isoformat()
-    for lemma, canonical_headword, status, retrieved_at, paradigm_json, synonyms_json, phraseology_json, antonyms_json in rows:
+    for (
+        lemma,
+        canonical_headword,
+        status,
+        retrieved_at,
+        paradigm_json,
+        synonyms_json,
+        phraseology_json,
+        antonyms_json,
+    ) in rows:
         sections: dict[str, Any] = {}
         if paradigm_json:
             sections["paradigm"] = json.loads(paradigm_json)
@@ -576,9 +578,7 @@ def import_to_sources(dump_db_path: Path, sources_db_path: Path) -> int:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
         "--db",
         type=str,
