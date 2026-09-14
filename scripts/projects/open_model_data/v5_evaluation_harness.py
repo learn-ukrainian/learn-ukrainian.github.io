@@ -293,7 +293,8 @@ ENTITY_CITATION_RE = (
     r"(?:\s+[A-ZА-ЯІЇЄҐ0-9][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)*)"
 )
 CONJ_COORD_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_RE})"
-COMMA_COORD_RE = rf"(?:\s*,\s*{ENTITY_CITATION_RE}(?=\s*,|\s+(?:та|і|й|and|or)\s+))"
+PLURAL_COORD_RE = rf"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+){ENTITY_CITATION_RE})"
+INTRO_COMMA_COORD_RE = rf"(?:\s*,\s*{ENTITY_CITATION_RE}(?=\s*,|\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_RE}\s*,))"
 
 CITATION_MENTION_PATTERNS = [
     # 1. "... dictionary" or "... словник" (case-insensitive name preceding dictionary keyword)
@@ -304,7 +305,7 @@ CITATION_MENTION_PATTERNS = [
     ),
     # 2a. Plural keyword with comma or conjunction coordinates: "словники ВЕСУМ, Zorblax"
     re.compile(
-        rf"\b((?:[Сс]ловник(?:и|ами|ах)|[Кк]орпус(?:и|ами|ах)|[Дд]овідник(?:и|ами|ах)|[Бб]аз(?:и|ами|ах))\s+{ENTITY_CITATION_RE}(?:{COMMA_COORD_RE}|{CONJ_COORD_RE})*)"
+        rf"\b((?:[Сс]ловник(?:и|ами|ах)|[Кк]орпус(?:и|ами|ах)|[Дд]овідник(?:и|ами|ах)|[Бб]аз(?:и|ами|ах))\s+{ENTITY_CITATION_RE}(?:{PLURAL_COORD_RE})*)"
         r"(?!\w)"
     ),
     # 2b. Singular keyword with conjunction coordinates: "словник ВЕСУМ та Zorblax"
@@ -315,7 +316,7 @@ CITATION_MENTION_PATTERNS = [
     # 3. Introductory attribution phrases: "згідно з <Entities>", "відповідно до <Entities>", etc.
     re.compile(
         rf"\b(?:[Зз]гідно\s+(?:з|із)|[Вв]ідповідно\s+до|[Зз]а\s+даними|[Зз]а\s+версією)\s+"
-        rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?({ENTITY_CITATION_RE}(?:{COMMA_COORD_RE}|{CONJ_COORD_RE})*)"
+        rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?({ENTITY_CITATION_RE}(?:{INTRO_COMMA_COORD_RE}|{CONJ_COORD_RE})*)"
         r"(?!\w)"
     ),
 ]
@@ -650,28 +651,31 @@ def evaluate_prediction(
                     or has_nenorm_condemn
                 )
 
+                t_token = rf"(?:[«\"“‘\']?{re.escape(t_lower)}[»\"”’\']?(?!\w)|(?:це|дане|зазначене)\s+(?:слово|термін)\b)"
+                left_b = r"(?:\b|(?<=[\s«\"“‘\'(^]))(?<!інше\s)(?<!іншого\s)(?<!іншим\s)(?<!нового\s)(?<!інший\s)"
+
                 target_neg_pattern = bool(
                     re.search(
-                        rf"\b(?<!інше\s)(?<!іншого\s)(?<!іншим\s)(?<!нового\s)(?<!інший\s)(?:«?{re.escape(t_lower)}»?|(?:це|дане|зазначене)\s+(?:слово|термін))\s+(?:не\s+(?:є\s+)?(?:кальк\w*|росіянізм\w*|помилк\w*|суржик\w*|ненормативн\w*|штучн\w*)|не\s+помилк\w*|не\s+кальк\w*|не\s+росіянізм\w*|не\s+потребує\s+(?:змін|виправлення|редагування))",
+                        rf"{left_b}{t_token}\s+(?:не\s+(?:є\s+)?(?:кальк\w*|росіянізм\w*|помилк\w*|суржик\w*|ненормативн\w*|штучн\w*)|не\s+помилк\w*|не\s+кальк\w*|не\s+росіянізм\w*|не\s+потребує\s+(?:змін|виправлення|редагування))",
                         clause,
                     )
                 )
 
                 target_affirm = bool(
                     re.search(
-                        rf"\b(?<!інше\s)(?<!іншого\s)(?<!іншим\s)(?<!нового\s)(?<!інший\s)(?:«?{re.escape(t_lower)}»?|(?:це|дане|зазначене)\s+(?:слово|термін))\s+(?:є\s+)?(?:нормативн|правильн|питом)",
+                        rf"{left_b}{t_token}\s+(?:є\s+)?(?:нормативн\w*|правильн\w*|питом\w*|коректн\w*)",
                         clause,
                     )
                 )
 
                 target_preserve = bool(
                     re.search(
-                        rf"\b(?:зберігаємо|залишаємо\s+без\s+змін)\s+(?:«?{re.escape(t_lower)}»?|(?:це|дане|зазначене)\s+(?:слово|термін))",
+                        rf"\b(?:зберігаємо|залишаємо\s+без\s+змін)\s+{t_token}",
                         clause,
                     )
                 ) or bool(
                     re.search(
-                        rf"\b(?:«?{re.escape(t_lower)}»?|(?:це|дане|зазначене)\s+(?:слово|термін))\s+(?:зберігаємо|залишаємо\s+без\s+змін|без\s+змін)",
+                        rf"{left_b}{t_token}\s+(?:зберігаємо|залишаємо\s+без\s+змін|без\s+змін)",
                         clause,
                     )
                 )

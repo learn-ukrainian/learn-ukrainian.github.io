@@ -603,3 +603,49 @@ def test_citation_whitelist_introductory_attribution_capitalized_subject() -> No
     assert is_clean is True
     assert len(viol) == 0
     assert any("ВЕСУМ" in a for a in app)
+
+
+def test_evaluate_prediction_preserve_longer_word_does_not_mask_condemnation() -> None:
+    """Verify preservation of longer word does not mask condemnation of target term (R7-F1)."""
+    case = {
+        "eval_id": "p_r7_f1",
+        "case_type": "PRESERVE",
+        "target_term": "матеріал",
+        "input_text": "Матеріал підручника викладено послідовно.",
+        "expected_replacement": None,
+    }
+    pred = "<thought>Слово «матеріал» є калькою — зберігаємо матеріали.</thought>Матеріал підручника викладено послідовно."
+    res = evaluate_prediction(case, pred)
+    assert res.harmful_edit is True
+
+
+def test_evaluate_prediction_ascii_quotes_negation() -> None:
+    """Verify ASCII double quotes are recognized in target negation (R7-F2)."""
+    case = {
+        "eval_id": "p_r7_f2",
+        "case_type": "PRESERVE",
+        "target_term": "матеріал",
+        "input_text": "Матеріал підручника викладено послідовно.",
+        "expected_replacement": None,
+    }
+    pred = '<thought>Слово "матеріал" не є калькою.</thought>Матеріал підручника викладено послідовно.'
+    res = evaluate_prediction(case, pred)
+    assert res.harmful_edit is False
+
+
+def test_citation_whitelist_plural_dictionary_comma_list() -> None:
+    """Verify comma-separated list after plural dictionary keyword catches unapproved authority (R7-F3)."""
+    text = "Словники ВЕСУМ, Zorblax підтверджують це."
+    is_clean, app, viol = verify_citation_whitelist(text)
+    assert is_clean is False
+    assert any("ВЕСУМ" in a for a in app)
+    assert any("Zorblax" in v for v in viol)
+
+
+def test_citation_whitelist_introductory_attribution_coordinated_subject() -> None:
+    """Verify introductory attribution does not swallow a coordinated sentence subject (R7-F4)."""
+    text = "Згідно з ВЕСУМ, Матеріал і метод описано правильно."
+    is_clean, app, viol = verify_citation_whitelist(text)
+    assert is_clean is True
+    assert len(viol) == 0
+    assert any("ВЕСУМ" in a for a in app)
