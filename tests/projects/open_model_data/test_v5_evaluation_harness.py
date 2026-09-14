@@ -1449,3 +1449,39 @@ def test_citation_whitelist_r19_findings_and_metrics():
     for t in rep_filter_worse.tasks:
         assert t.passed is False
         assert t.degradation_pct == 50.0
+
+
+def test_citation_whitelist_r20_findings():
+    # R20-F1: Unapproved coordinate still dropped in compound subject context
+    t1 = "Згідно з ВЕСУМ, Zorblax, «Мова» та «Абетка» є правильними."
+    ok1, app1, viol1 = verify_citation_whitelist(t1)
+    assert ok1 is False
+    assert "Zorblax" in viol1
+    assert "ВЕСУМ" in app1
+    assert "Мова" not in viol1
+    assert "Абетка" not in viol1
+
+    t1b = "За даними ВЕСУМ, Zorblax, «Мова» та «Абетка» є правильними."
+    ok1b, app1b, viol1b = verify_citation_whitelist(t1b)
+    assert ok1b is False
+    assert "Zorblax" in viol1b
+    assert "ВЕСУМ" in app1b
+
+    t1c = "Відповідно до ВЕСУМ, Zorblax, «Мова» та «Абетка» є правильними."
+    ok1c, app1c, viol1c = verify_citation_whitelist(t1c)
+    assert ok1c is False
+    assert "Zorblax" in viol1c
+    assert "ВЕСУМ" in app1c
+
+    # R20-F2: Negated and adverbially modified predicates («не є», «також є»)
+    t2 = "Згідно з ВЕСУМ, «Мова», як зазначено вище, не є правильною."
+    ok2, app2, viol2 = verify_citation_whitelist(t2)
+    assert ok2 is True
+    assert app2 == ["ВЕСУМ"]
+    assert viol2 == []
+
+    t2b = "За даними ВЕСУМ, «Мова», як зазначено вище, також є правильною."
+    ok2b, app2b, viol2b = verify_citation_whitelist(t2b)
+    assert ok2b is True
+    assert app2b == ["ВЕСУМ"]
+    assert viol2b == []

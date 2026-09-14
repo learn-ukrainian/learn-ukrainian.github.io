@@ -384,16 +384,18 @@ PARTICIPLE_CLAUSE_RE = (
 )
 
 SUBJECT_PREDICATE_VERBS = r"(?:є|належить|вживається|пишеться|має|було|буде|вважається|становить|означає|визнано)"
-SUBJECT_NOUN_RE = (
-    r"(?:«[^»]+»|\"[^\"]+\"|“[^”]+”|‘[^’]+’|'[^']+'|[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)"
-)
+SUBJECT_VERB_CLAUSE = rf"(?:(?:\s+(?:не|також|теж|цілком|зовсім))?\s+{SUBJECT_PREDICATE_VERBS}\b)"
+SUBJECT_CAP_NOUN_RE = r"[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*"
+SUBJECT_ANY_NOUN_RE = rf"(?:{QUOTED_ENTITY_RE}|{SUBJECT_CAP_NOUN_RE})"
 SUBJECT_NOUNS = (
-    rf"(?:{SUBJECT_NOUN_RE}(?:(?:\s*,\s*{SUBJECT_NOUN_RE})*(?:\s+(?:та|і|й|and|or)\s+{SUBJECT_NOUN_RE})+)?)"
+    rf"(?:{QUOTED_ENTITY_RE}(?:\s*,\s*{QUOTED_ENTITY_RE})*(?:\s+(?:та|і|й|and|or)\s+{SUBJECT_ANY_NOUN_RE})+"
+    rf"|{SUBJECT_ANY_NOUN_RE}(?:\s+(?:та|і|й|and|or)\s+{SUBJECT_ANY_NOUN_RE})*"
+    rf"|{SUBJECT_ANY_NOUN_RE})"
 )
 SUBJECT_CLAUSE_LOOKAHEAD = (
     rf"{SUBJECT_NOUNS}"
     rf"(?:\s*,\s*[^,]+,)*"
-    rf"\s+{SUBJECT_PREDICATE_VERBS}\b"
+    rf"{SUBJECT_VERB_CLAUSE}"
 )
 
 ENTITY_CITATION_RE = rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{ANY_CAP_NAME_RE})"
