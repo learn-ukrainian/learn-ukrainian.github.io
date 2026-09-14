@@ -927,3 +927,64 @@ def test_citation_whitelist_r10_f4_two_authority_cyrillic_list_catches_unapprove
     assert is_clean is False
     assert any("Зорблаксом" in v for v in viol)
     assert any("ВЕСУМ" in a for a in app)
+
+
+def test_evaluate_academic_non_inferiority_r11_f1_metadata_samples_rejected() -> None:
+    """Verify non-score metadata fields like 'samples' are not compared as scores (R11-F1)."""
+    base_scores = {
+        "mmlu_ua": {"acc_norm,none": 0.70, "samples": 100},
+        "arc_ua": {"acc_norm,none": 0.60, "samples": 100},
+        "hellaswag_ua": {"acc_norm,none": 0.65, "samples": 100},
+        "gsm8k_ua": {"exact_match,none": 0.50, "samples": 100},
+    }
+    aligned_scores = {
+        "mmlu_ua": {"acc,none": 0.10, "samples": 100},
+        "arc_ua": {"acc_norm,none": 0.60, "samples": 100},
+        "hellaswag_ua": {"acc_norm,none": 0.65, "samples": 100},
+        "gsm8k_ua": {"exact_match,none": 0.50, "samples": 100},
+    }
+    result = evaluate_academic_non_inferiority(base_scores, aligned_scores)
+    assert result.overall_passed is False
+    task_map = {t.benchmark: t for t in result.tasks}
+    assert task_map["mmlu_ua"].passed is False
+    assert "No matching score metric found" in (task_map["mmlu_ua"].details.get("error") or "")
+
+
+def test_evaluate_prediction_r11_f2_replace_directive_not_masked_by_error_negation() -> None:
+    """Verify negating error does not mask explicit replacement instruction (R11-F2)."""
+    case = {
+        "target_term": "матеріал",
+        "case_type": "PRESERVE",
+        "input_text": "Матеріал підручника викладено послідовно.",
+        "expected_replacement": None,
+    }
+    pred = (
+        "<thought>Замініть «матеріал» — це слово не є помилкою.</thought>"
+        "Матеріал підручника викладено послідовно."
+    )
+    res = evaluate_prediction(case, pred)
+    assert res.harmful_edit is True
+    assert "Harmful over-correction detected" in res.details
+
+
+def test_citation_whitelist_r11_f3_fabricated_suffix_on_adjective_authority_rejected() -> None:
+    """Verify fabricated suffixes attached to adjective authority prefix are rejected (R11-F3)."""
+    text = "Згідно з “академічнZorblax СУМ”, це правильно."
+    is_clean, _app, viol = verify_citation_whitelist(text)
+    assert is_clean is False
+    assert any("академічнZorblax СУМ" in v for v in viol)
+
+
+def test_citation_whitelist_r11_f4_two_authority_extraction_across_supported_prefixes() -> None:
+    """Verify coordinate authority extraction across Відповідно до and За даними (R11-F4)."""
+    text1 = "Відповідно до ВЕСУМ, Зорблакса, це правильно."
+    is_clean1, app1, viol1 = verify_citation_whitelist(text1)
+    assert is_clean1 is False
+    assert any("Зорблакса" in v for v in viol1)
+    assert any("ВЕСУМ" in a for a in app1)
+
+    text2 = "За даними ВЕСУМ, Зорблакса, це правильно."
+    is_clean2, app2, viol2 = verify_citation_whitelist(text2)
+    assert is_clean2 is False
+    assert any("Зорблакса" in v for v in viol2)
+    assert any("ВЕСУМ" in a for a in app2)
