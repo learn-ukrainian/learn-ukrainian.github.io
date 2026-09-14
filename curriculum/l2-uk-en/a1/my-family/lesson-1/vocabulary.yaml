@@ -1,56 +1,56 @@
-- lemma: сім'я
+- lemma: сі́м'я
   translation: family, close household
   pos: noun
-  usage: Це моя сім'я.
-- lemma: родина
+  usage: Це моя́ сі́м'я.
+- lemma: роди́на
   translation: family or kin
   pos: noun
-  usage: У мене велика родина.
-- lemma: мама
+  usage: У мене́ ве́лика роди́на.
+- lemma: ма́ма
   translation: mom
   pos: noun
-  usage: Це моя мама.
-- lemma: мати
+  usage: Це моя́ ма́ма.
+- lemma: ма́ти
   translation: mother
   pos: noun
-  usage: Це моя мати.
-- lemma: тато
+  usage: Це моя́ ма́ти.
+- lemma: та́то
   translation: dad
   pos: noun
-  usage: Це мій тато.
-- lemma: батько
+  usage: Це мій та́то.
+- lemma: ба́тько
   translation: father
   pos: noun
-  usage: Це мій батько.
+  usage: Це мій ба́тько.
 - lemma: брат
   translation: brother
   pos: noun
-  usage: У мене є брат.
-- lemma: сестра
+  usage: У мене́ є брат.
+- lemma: сестра́
   translation: sister
   pos: noun
-  usage: У мене є сестра.
+  usage: У мене́ є сестра́.
 - lemma: син
   translation: son
   pos: noun
   usage: Це мій син.
-- lemma: дочка
+- lemma: дочка́
   translation: daughter
   pos: noun
-  usage: Це моя дочка.
-- lemma: донька
+  usage: Це моя́ дочка́.
+- lemma: до́нька
   translation: daughter
   pos: noun
-  usage: Це моя донька.
-- lemma: бабуся
+  usage: Це моя́ до́нька.
+- lemma: бабу́ся
   translation: grandmother
   pos: noun
-  usage: Це моя бабуся.
-- lemma: дідусь
+  usage: Це моя́ бабу́ся.
+- lemma: діду́сь
   translation: grandfather
   pos: noun
-  usage: Це мій дідусь.
-- lemma: батьки
+  usage: Це мій діду́сь.
+- lemma: батьки́
   translation: parents
   pos: noun plural
-  usage: Це мої батьки.
+  usage: Це мої́ батьки́.

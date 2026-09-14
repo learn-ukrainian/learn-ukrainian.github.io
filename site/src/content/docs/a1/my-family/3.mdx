@@ -1,0 +1,346 @@
+---
+title: Слухай, фото, зошит
+description: У мене є брат — показуємо фотографії
+sidebar:
+  order: 3
+  label: 03. Слухай, фото, зошит
+pipeline: v7-upgrade
+build_status: validated
+draft: false
+prev: /a1/my-family/2/
+next: /a1/my-family/4/
+lesson: 3
+module_slug: my-family
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords from '@site/src/components/MarkTheWords';
+import { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes from '@site/src/components/HighlightMorphemes';
+import { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок — Lesson">
+
+У пе́рших двох уро́ках ви познайо́милися з на́звами чле́нів сім'ї́ та навчи́лися говори́ти про володі́ння: **У мене́ є...**, **Це мій брат**, **Це моя́ сестра́**. In the first two lessons, you practiced identifying family members and expressing relationships with **у мене́ є** and possessive pronouns.
+
+Тепе́р час поєдна́ти ці на́вички в реа́льних ситуа́ціях спілкува́ння — now it is time to connect these skills in everyday contexts:
+- **Слу́хати живе́ мо́влення** — listen to authentic Ukrainian family speech and understand questions about relatives;
+- **Розпізнава́ти пі́дписи до фо́то** — read captions on family snapshots using **твій**, **твоя́**, **твоє́**, **твої́**, **йо́го**, and **її́**;
+- **Працюва́ти з зо́шитом** — connect printed and handwritten Ukrainian labels for core family words;
+- **Розпізнава́ти офіці́йні імена́** — recognize the three parts of full Ukrainian names (**ім'я́**, **по ба́тькові**, **прі́звище**) as polite cultural markers.
+
+### Розми́нка — Warm-up and retrieval
+
+Before diving into audio recordings and photo labels, recall the core family vocabulary and pointing patterns from Lessons 1 and 2:
+
+| Украї́нська фра́за — Ukrainian phrase | Роль — Role | English meaning |
+| --- | --- | --- |
+| **Хто це?** | Пита́ння про люди́ну — Asking about a person | Who is this? |
+| **Це мій брат.** | Чолові́чий рід — Masculine agreement | This is my brother. |
+| **Це моя́ сестра́.** | Жіно́чий рід — Feminine agreement | This is my sister. |
+| **Це моє́ мі́сто.** | Сере́дній рід — Neuter agreement | This is my city / hometown. |
+| **Це мої́ батьки́.** | Множина́ — Plural agreement | These are my parents. |
+| **У тебе́ є брат?** | Запита́ння про ро́дича — Question about family | Do you have a brother? |
+| **Так, у мене́ є оди́н брат.** | Ствердна́ ві́дповідь — Affirmative answer | Yes, I have one brother. |
+
+Notice that the question **Хто це?** specifically asks about a person, while **Це...** introduces anyone in a photo.
+
+## Слу́хай, фо́то, зо́шит
+
+The Resources tab has optional Ukrainian Lessons Podcast pages for this topic:
+Episode 6 for **сім'я́ / У мене́ є...**, Episode 7 for **мій / моя́**, and
+Episode 10 for connected review speech. Choose one short phrase, listen once,
+repeat once, and come back to the page.
+
+For handwriting recognition, ask a teacher, tutor, or classmate to write these
+original labels beside a simple family sketch: **ма́ма**, **та́то**,
+**брат**, **сестра́**, **сім'я́**, **бабу́ся**. First compare the notebook
+label with the printed word; then write your own line.
+
+### Слу́хаємо подкаст — Listening to family speech
+
+Listening to natural Ukrainian speech trains your ear to recognize family words within continuous sentences. In Episode 6, Episode 7, and Episode 10 of the Ukrainian Lessons Podcast, speakers point to family snapshots and describe their relatives.
+
+Listen to how two friends look through a digital photo gallery on a smartphone:
+
+> Софі́я: Подиви́сь, це мої́ старі́ сіме́йні фотогра́фії!
+> Рома́н: Ду́же ціка́во! Хто це на фо́то?
+> Софі́я: Це моя́ бабу́ся Тетя́на і мій діду́сь Васи́ль.
+> Рома́н: А це твій та́то?
+> Софі́я: Так, це мій та́то Євге́н, а по́руч — йо́го сестра́ Окса́на. Це моя́ ті́тка.
+> Рома́н: Як га́рно! А чи є в тебе́ фотогра́фія бра́та?
+> Софі́я: Так, ось мій бра́т Ко́ля. Йо́го зва́ти Мико́ла, але́ ми ка́жемо Ко́ля.
+
+English breakdown after the Ukrainian dialogue:
+
+| Украї́нська фра́за | English breakdown |
+| --- | --- |
+| **Подиви́сь, це мої́ старі́ сіме́йні фотогра́фії!** | Look, these are my old family photos! |
+| **Хто це на фо́то?** | Who is this in the photo? |
+| **Це моя́ бабу́ся Тетя́на і мій діду́сь Васи́ль.** | This is my grandmother Tetiana and my grandfather Vasyl. |
+| **А це твій та́то?** | And is this your dad? |
+| **А по́руч — йо́го сестра́ Окса́на.** | And next to him is his sister Oksana. |
+| **А чи є в тебе́ фотогра́фія бра́та?** | And do you have a photo of your brother? |
+| **Йо́го зва́ти Мико́ла, але́ ми ка́жемо Ко́ля.** | His name is Mykola, but we call him Kolia. |
+
+When asking a polar question (yes/no question), Ukrainian often uses the particle **чи** at the start of a sentence: **Чи це твоя́ бабу́ся?** — Is this your grandmother? You can also simply use rising intonation: **Це твій та́то? ↗**.
+
+### Запита́ння до сіме́йних фо́то
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Ти хо́чеш спита́ти, хто зобра́жений на зні́мку.", "options": [{"text": "Хто це на фо́то?", "correct": true}, {"text": "Що це на фо́то?", "correct": false}, {"text": "Де це на фо́то?", "correct": false}], "explanation": "Пита́ння «Хто це?» вжива́ємо про люде́й."}, {"question": "Ти запи́туєш дру́га, чи це йо́го ма́ма.", "options": [{"text": "Чи це твоя́ ма́ма?", "correct": true}, {"text": "Чи це твій ма́ма?", "correct": false}, {"text": "Чи це твоє́ ма́ма?", "correct": false}], "explanation": "Ма́ма — жіно́чого ро́ду, тому́ вжива́ємо твоя́."}, {"question": "Ти пока́зуєш на бра́та й ка́жеш йо́го ім'я́.", "options": [{"text": "Це мій брат. Йо́го зва́ти Ко́ля.", "correct": true}, {"text": "Це мій брат. Її зва́ти Ко́ля.", "correct": false}, {"text": "Це мій брат. Мій зва́ти Ко́ля.", "correct": false}], "explanation": "Для чолові́ка (бра́та) вжива́ємо займе́нник йо́го."}, {"question": "Ти пока́зуєш на сестру́ й ка́жеш її ім'я́.", "options": [{"text": "Це моя́ сестра́. Її зва́ти Катя́.", "correct": true}, {"text": "Це моя́ сестра́. Йо́го зва́ти Катя́.", "correct": false}, {"text": "Це моя́ сестра́. Їх зва́ти Катя́.", "correct": false}], "explanation": "Для жінки́ (се́стри) вжива́ємо займе́нник її."}, {"question": "Ти пока́зуєш мі́сто на світли́ні.", "options": [{"text": "Це моє́ рі́дне мі́сто.", "correct": true}, {"text": "Це мій рі́дне мі́сто.", "correct": false}, {"text": "Це моя́ рі́дне мі́сто.", "correct": false}], "explanation": "Мі́сто — сере́днього ро́ду, тому́ вжива́ємо моє́."}, {"question": "Ти запи́туєш про спі́льні сіме́йні зні́мки.", "options": [{"text": "Де твої́ сіме́йні фотогра́фії?", "correct": true}, {"text": "Де твій сіме́йні фотогра́фії?", "correct": false}, {"text": "Де твоя́ сіме́йні фотогра́фії?", "correct": false}], "explanation": "Фотогра́фії — множина́, тому́ вжива́ємо твої́."}]`)} instruction={"Обери́ пра́вильну ві́дповідь або́ запита́ння для розмо́ви про фотогра́фії."} isUkrainian={false} />
+
+### Сіме́йні фотогра́фії — Reading photo labels
+
+When people share family photos or post them online, they attach short captions to introduce relatives. In these captions, possessive pronouns indicate whose relative is shown.
+
+Remember that possessive pronouns agree in gender and number with the family word, not with the speaker:
+
+| Рід або́ число́ — Gender / Number | Фо́рма «твій» — Your form | Зразо́к пі́дпису — Sample caption | English translation |
+| --- | --- | --- | --- |
+| **Чолові́чий рід (він)** | **твій** | **Це твій брат?** | Is this your brother? |
+| **Жіно́чий рід (во́на)** | **твоя́** | **Це твоя́ сестра́ Катя́.** | This is your sister Katia. |
+| **Сере́дній рід (воно́)** | **твоє́** | **Це твоє́ рі́дне мі́сто?** | Is this your hometown? |
+| **Множина́ (во́ни)** | **твої́** | **Це твої́ батьки́ на фо́то.** | These are your parents in the photo. |
+
+Unlike **твій / твоя́ / твоє́ / твої́**, the third-person possessive words **йо́го** (his) and **її** (her) do not decline:
+- **йо́го та́то** (his dad), **йо́го ма́ма** (his mom), **йо́го мі́сто** (his city), **йо́го батьки́** (his parents);
+- **її та́то** (her dad), **її ма́ма** (her mom), **її мі́сто** (her city), **її батьки́** (her parents).
+
+They stay constant regardless of whether the possessed noun is masculine, feminine, neuter, or plural:
+
+| Украї́нський пі́дпис | Поя́снення — Explanation | English support |
+| --- | --- | --- |
+| **Це мій брат Ко́ля. Йо́го зва́ти Мико́ла.** | Masculine subject → **йо́го** | This is my brother Kolia. His name is Mykola. |
+| **Це моя́ сестра́ Катя́. Її зва́ти Катери́на.** | Feminine subject → **її** | This is my sister Katia. Her name is Kateryna. |
+| **Це її ма́ма Мари́на.** | Invariable possessive **її** | This is her mom Maryna. |
+| **Це йо́го та́то Євге́н.** | Invariable possessive **йо́го** | This is his dad Yevhen. |
+
+### Твій, твоя́, твоє́ чи твої́?
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Це ___ ма́ма на фотогра́фії?", "answer": "твоя́", "options": ["твоя́", "твій", "твоє́", "твої́"], "explanation": "Ма́ма — жіно́чого ро́ду, тому́ твоя́."}, {"sentence": "Ось ___ діду́сь Васи́ль.", "answer": "твій", "options": ["твій", "твоя́", "твоє́", "твої́"], "explanation": "Діду́сь — чолові́чого ро́ду, тому́ твій."}, {"sentence": "Це ___ рі́дне мі́сто?", "answer": "твоє́", "options": ["твоє́", "твій", "твоя́", "твої́"], "explanation": "Мі́сто — сере́днього ро́ду, тому́ твоє́."}, {"sentence": "Де ___ сіме́йні зні́мки?", "answer": "твої́", "options": ["твої́", "твій", "твоя́", "твоє́"], "explanation": "Зні́мки — множина́, тому́ твої́."}, {"sentence": "Це ___ сестра́ Оле́на?", "answer": "твоя́", "options": ["твоя́", "твій", "твоє́", "твої́"], "explanation": "Сестра́ — жіно́чого ро́ду, тому́ твоя́."}, {"sentence": "Це ___ прі́звище в зо́шиті?", "answer": "твоє́", "options": ["твоє́", "твій", "твоя́", "твої́"], "explanation": "Прі́звище — сере́днього ро́ду, тому́ твоє́."}]`)} instruction={"Встав пра́вильну фо́рму займе́нника до ко́жного іме́нника."} isUkrainian={false} />
+
+### Рукопи́сний зо́шит — Notebook and handwriting recognition
+
+In real Ukrainian classrooms and daily life, family words are frequently written by hand in personal notebooks (**зо́шит**). Reading cursive handwriting requires connecting printed Cyrillic typography with handwriting letterforms.
+
+Pay special attention to these common family words when reading or writing in a notebook:
+
+| Друко́ване сло́во — Printed | На́голос — Stress | Зна́чення — Meaning | Особли́вість написа́ння — Writing note |
+| --- | --- | --- | --- |
+| **ма́ма** | **ма́ма** | mom | Two simple syllables with round **а** |
+| **та́то** | **та́то** | dad | Ending in **-о**, but masculine gender |
+| **брат** | **бра́т** | brother | Single-syllable word; no vowel reduction |
+| **сестра́** | **сестра́** | sister | End-stressed in singular (**сестра́**), stem-stressed in plural (**се́стри**) |
+| **сі́м'я** | **сім'я́** | family (close) | Apostrophe after **м** before **я**; end-stress |
+| **бабу́ся** | **бабу́ся** | grandmother | Soft ending **-ся**; affectionate tone |
+| **діду́сь** | **діду́сь** | grandfather | Soft sign **-сь** at the end |
+
+Educational guidelines emphasize creating clear photo presentations and labeling family members accurately: «Вста́вте на ти́тульний слайд фотогра́фію ва́шої роди́ни... Уведі́ть на́зву презента́ції («Моя́ роди́на») та а́втора (ва́ше прі́звище, ім'я́)» (quoted from: Т. В. Воронцо́ва, *Інформа́тика. 4 клас*, с. 122).
+
+When creating your personal notebook entry:
+1. Draw or paste a simple snapshot or sketch of your family.
+2. Label each person clearly with their relationship: **Це моя́ ма́ма**, **Це мій та́то**, **Це мій брат**.
+3. Underneath, add their name: **Її зва́ти...** or **Йо́го зва́ти...**.
+
+### Пі́дписи до фотогра́фій
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Хто це?", "right": "запита́ння про люди́ну на зні́мку"}, {"left": "Це моя́ сі́м'я.", "right": "предста́влення роди́ни"}, {"left": "Йо́го зва́ти Ко́ля.", "right": "ім'я́ бра́та або́ та́та"}, {"left": "Її зва́ти Катя́.", "right": "ім'я́ се́стри або́ мами́"}, {"left": "Це моє́ мі́сто.", "right": "на́зва насе́леного пу́нкту"}, {"left": "Чи це твій діду́сь?", "right": "уто́чнення про дідуся́"}]`)} instruction={"З'єдна́й пі́дпис під фотогра́фією з йо́го зна́ченням."} isUkrainian={false} />
+
+### По́вне ім'я́ як сигна́л — Recognizing formal names
+
+Ukrainian personal names follow a three-part cultural tradition that you will encounter on official identification, badges, class registers, and formal signs:
+
+- **Ім'я́ (Given Name) + По ба́тькові (Patronymic) + Прі́звище (Surname)**
+- **Марі́я           + Васи́лівна               + Ковале́нко**
+
+Understanding how these parts function helps you recognize formal address:
+
+| Складни́к — Component | При́клад — Example | Роль — Cultural function |
+| --- | --- | --- |
+| **Ім'я́** | **Марі́я**, **Іва́н**, **Оле́на** | Given name used with family, friends, and peers |
+| **По ба́тькові** | **Васи́лівна**, **Іва́нович** | Patronymic based on father's name; sign of polite, formal respect |
+| **Прі́звище** | **Ковале́нко**, **Шевче́нко** | Family surname shared across generations |
+| **Мі́сто** | **Киї́в**, **Львів**, **Полта́ва** | City or place of residence listed on forms and documents |
+
+Ukrainian feminine patronymics end in **-івна** or **-ївна** (e.g., *Васи́лівна*, *Сергі́ївна*), never the Russian suffix *-овна́*. Masculine patronymics end in **-ович** or **-йович** (e.g., *Іва́нович*, *Васи́льович*).
+
+When meeting an official, teacher, or doctor, you will hear formal greetings using the vocative case: **«До́брий день, Марі́є Васи́лівно!»**. At the A1 level, you only need to recognize this structure as a signal of polite respect. You do not need to construct your own patronymic endings yet.
+
+### Слу́хаємо та перевіря́ємо
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Сло́во «мі́сто» сере́днього ро́ду, тому́ пра́вильно сказа́ти «моє́ мі́сто».", "isTrue": true, "explanation": "Мі́сто закі́нчується на -о і є іме́нником сере́днього ро́ду."}, {"statement": "Фо́рми «йо́го» та «її» змі́нюються за рода́ми іме́нників, як «мій» і «моя́».", "isTrue": false, "explanation": "Фо́рми «йо́го» та «її» в ро́лі присві́йних слів є незмі́нними."}, {"statement": "Пита́ння «Чи це твоя́ бабу́ся?» вимага́є ві́дповіді «так» або́ «ні».", "isTrue": true, "explanation": "Ча́стка «чи» на поча́тку утво́рює зага́льне запита́ння."}, {"statement": "Зі сло́вом «сестра́» мо́жна вжи́ти займе́нник «твій».", "isTrue": false, "explanation": "Сестра́ — жіно́чого ро́ду, тому́ потрі́бно каза́ти «твоя́ сестра́»."}, {"statement": "У сло́ві «сі́м'я» обов'язко́во пи́шеться апостро́ф.", "isTrue": true, "explanation": "Апостро́ф ста́виться пі́сля «м» пере́д «я»."}, {"statement": "Сло́во «батьки́» вжива́ється в множині́, тому́ пра́вильно каза́ти «твої́ батьки́».", "isTrue": true, "explanation": "Батьки́ — фо́рма множи́ни, що узго́джується із займе́нником «твої́»."}]`)} instruction={"Ви́знач, чи тве́рдження є пра́вильним згі́дно з пра́вилами украї́нської мо́ви."} isUkrainian={false} />
+
+### Зна́йди за́йве сло́во
+
+<OddOneOut client:only='react' instruction={"Обери́ одне́ сло́во, яке́ не підхо́дить до гру́пи за ро́дом або́ зна́ченням."} items={JSON.parse(`[{"words": ["ма́ма", "сестра́", "бабу́ся", "брат"], "correct": 3, "explanation": "Брат — чолові́чого ро́ду, а ма́ма, сестра́ й бабу́ся — жіно́чого."}, {"words": ["та́то", "діду́сь", "син", "дочка́"], "correct": 3, "explanation": "Дочка́ — жіно́чого ро́ду, тоді́ як і́нші слова́ познача́ють чоловікі́в."}, {"words": ["твій", "мій", "наш", "твоя́"], "correct": 3, "explanation": "Твоя́ — жіно́чого ро́ду, тоді́ як і́нші фо́рми — чолові́чого."}, {"words": ["моє́", "твоє́", "мі́сто", "мої́"], "correct": 3, "explanation": "Мої́ — фо́рма множи́ни, а і́нші слова́ пов'я́зані із сере́днім ро́дом."}, {"words": ["ім'я́", "прі́звище", "по ба́тькові", "зо́шит"], "correct": 3, "explanation": "Зо́шит — навча́льний предме́т, а ре́шта — складники́ по́вного і́мені люди́ни."}, {"words": ["оди́н", "два", "брат", "дві"], "correct": 2, "explanation": "Брат — це іме́нник, тоді́ як і́нші слова́ є числі́вниками."}]`)} />
+
+### Практику́ємо ра́зом — Guided dialogue practice
+
+Review how notebook notes and photos come together when students discuss a completed assignment:
+
+> Марко́: Оле́но, чий це зо́шит на столі́?
+> Оле́на: Це мій зо́шит для уро́ків украї́нської мо́ви.
+> Марко́: А що тут напи́сано бі́ля фотогра́фії?
+> Оле́на: Тут напи́сано: «Моя́ сім'я́». Ось моє́ ім'я́, а це моє́ рі́дне мі́сто Полта́ва.
+> Марко́: Ду́же акура́тно! А хто це вгорі́ на зні́мку?
+> Оле́на: Це моя́ бабу́ся Тетя́на і її́ сестра́ Наді́я. Вони́ живу́ть у селі́.
+> Марко́: Дя́кую! Тепе́р я теж офо́рмлю свій сіме́йний зо́шит.
+
+Side-by-side English support for the dialogue:
+
+| Украї́нська ре́пліка | English support |
+| --- | --- |
+| **Чий це зо́шит на столі́?** | Whose notebook is this on the table? |
+| **Це мій зо́шит для уро́ків украї́нської мо́ви.** | This is my notebook for Ukrainian language lessons. |
+| **А що тут напи́сано бі́ля фотогра́фії?** | And what is written here next to the photo? |
+| **Тут напи́сано: «Моя́ сім'я́».** | It is written here: "My family". |
+| **Ось моє́ ім'я́, а це моє́ рі́дне мі́сто Полта́ва.** | Here is my name, and this is my hometown Poltava. |
+| **А хто це вгорі́ на зні́мку?** | And who is this at the top of the snapshot? |
+| **Це моя́ бабу́ся Тетя́на і її́ сестра́ Наді́я.** | This is my grandmother Tetiana and her sister Nadiia. |
+| **Тепе́р я теж офо́рмлю свій сіме́йний зо́шит.** | Now I will also set up my family notebook. |
+
+### Пі́дсумок уро́ку — Lesson recap
+
+У цьо́му уро́ці ви навчи́лися поє́днувати слу́хання, чита́ння пі́дписів до фотогра́фій та робо́ту з рукопи́сним зо́шитом — in this lesson you have developed key multimedia and observational skills for family communication:
+- **Слу́хати живе́ мо́влення** — understand natural questions and descriptions from podcast audio when people discuss family snapshots;
+- **Вжива́ти твій, твоя́, твоє́, твої́** — select the correct possessive form based on the gender and number of the noun in questions and captions;
+- **Розпізнава́ти йо́го та її́** — identify third-person possessives as invariable markers (*йо́го брат*, *її́ сестра́*);
+- **Розрізня́ти друко́вані й рукопи́сні фо́рми** — connect cursive and printed letters for core family words (**ма́ма**, **та́то**, **бра́т**, **сестра́**, **бабу́ся**, **сім'я́**);
+- **Розпізнава́ти три скла́дники і́мені** — identify given name (**ім'я́**), patronymic (**по ба́тькові**), and surname (**прі́звище**) as polite formal signals.
+
+### Насту́пний крок — Next step
+
+In Lesson 4 (**Самопереві́рка**), you will complete the module by bringing together all family terms, possessive pronouns, and descriptive sentences to introduce your entire family in a confident, connected Ukrainian presentation.
+
+</TabItem>
+<TabItem label="Словник — Vocabulary">
+
+<span id="vocabulary"></span>
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"сі́м'я","translation":"family, close household","pos":"noun","example":"Це моя́ сі́м'я.","examples":["Це моя́ сі́м'я."],"atlas_href":"/lexicon/сім-я/"},{"word":"роди́на","translation":"family or kin","pos":"noun","example":"У мене́ ве́лика роди́на.","examples":["У мене́ ве́лика роди́на."],"atlas_href":"/lexicon/родина/"},{"word":"ма́ма","translation":"mom","pos":"noun","example":"Це моя́ ма́ма.","examples":["Це моя́ ма́ма."],"atlas_href":"/lexicon/мама/"},{"word":"ма́ти","translation":"mother","pos":"noun","example":"Це моя́ ма́ти.","examples":["Це моя́ ма́ти."],"atlas_href":"/lexicon/мати/"},{"word":"та́то","translation":"dad","pos":"noun","example":"Це мій та́то.","examples":["Це мій та́то."],"atlas_href":"/lexicon/тато/"},{"word":"ба́тько","translation":"father","pos":"noun","example":"Це мій ба́тько.","examples":["Це мій ба́тько."],"atlas_href":"/lexicon/батько/"},{"word":"брат","translation":"brother","pos":"noun","example":"У мене́ є брат.","examples":["У мене́ є брат."],"atlas_href":"/lexicon/брат/"},{"word":"сестра́","translation":"sister","pos":"noun","example":"У мене́ є сестра́.","examples":["У мене́ є сестра́."],"atlas_href":"/lexicon/сестра/"},{"word":"син","translation":"son","pos":"noun","example":"Це мій син.","examples":["Це мій син."],"atlas_href":"/lexicon/син/"},{"word":"дочка́","translation":"daughter","pos":"noun","example":"Це моя́ дочка́.","examples":["Це моя́ дочка́."],"atlas_href":"/lexicon/дочка/"},{"word":"до́нька","translation":"daughter","pos":"noun","example":"Це моя́ до́нька.","examples":["Це моя́ до́нька."],"atlas_href":"/lexicon/донька/"},{"word":"бабу́ся","translation":"grandmother","pos":"noun","example":"Це моя́ бабу́ся.","examples":["Це моя́ бабу́ся."],"atlas_href":"/lexicon/бабуся/"},{"word":"діду́сь","translation":"grandfather","pos":"noun","example":"Це мій діду́сь.","examples":["Це мій діду́сь."],"atlas_href":"/lexicon/дідусь/"},{"word":"батьки́","translation":"parents","pos":"noun plural","example":"Це мої́ батьки́.","examples":["Це мої́ батьки́."],"atlas_href":"/lexicon/батьки/"},{"word":"у мене́ є","translation":"I have","pos":"phrase","example":"У мене́ є брат.","examples":["У мене́ є брат."]},{"word":"у тебе́ є","translation":"you have, informal","pos":"phrase","example":"У тебе́ є сестра́?","examples":["У тебе́ є сестра́?"]},{"word":"у вас є","translation":"you have, formal or plural","pos":"phrase","example":"У вас є ді́ти?","examples":["У вас є ді́ти?"]},{"word":"оди́н","translation":"one, masculine","pos":"numeral","example":"оди́н брат","examples":["оди́н брат"],"atlas_href":"/lexicon/один/"},{"word":"одна́","translation":"one, feminine","pos":"numeral","example":"одна́ сестра́","examples":["одна́ сестра́"],"atlas_href":"/lexicon/одна/"},{"word":"два","translation":"two, masculine/neuter","pos":"numeral","example":"два брати́","examples":["два брати́"],"atlas_href":"/lexicon/два/"},{"word":"дві","translation":"two, feminine","pos":"numeral","example":"дві се́стри","examples":["дві се́стри"],"atlas_href":"/lexicon/дві/"},{"word":"ті́льки","translation":"only","pos":"adverb","example":"У мене́ ті́льки оди́н брат.","examples":["У мене́ ті́льки оди́н брат."],"atlas_href":"/lexicon/тільки/"},{"word":"мій","translation":"my, masculine","pos":"pronoun","example":"Це мій брат.","examples":["Це мій брат."],"atlas_href":"/lexicon/мій/"},{"word":"моя́","translation":"my, feminine","pos":"pronoun","example":"Це моя́ сестра́.","examples":["Це моя́ сестра́."],"atlas_href":"/lexicon/моя/"},{"word":"моє́","translation":"my, neuter","pos":"pronoun","example":"Це моє́ мі́сто.","examples":["Це моє́ мі́сто."],"atlas_href":"/lexicon/моє/"},{"word":"мої́","translation":"my, plural","pos":"pronoun","example":"Це мої́ батьки́.","examples":["Це мої́ батьки́."],"atlas_href":"/lexicon/мої/"},{"word":"твій","translation":"your, masculine informal","pos":"pronoun","example":"Це твій брат?","examples":["Це твій брат?"],"atlas_href":"/lexicon/твій/"},{"word":"твоя́","translation":"your, feminine informal","pos":"pronoun","example":"Це твоя́ ма́ма?","examples":["Це твоя́ ма́ма?"],"atlas_href":"/lexicon/твоя/"},{"word":"твоє́","translation":"your, neuter informal","pos":"pronoun","example":"Це твоє́ прі́звище?","examples":["Це твоє́ прі́звище?"],"atlas_href":"/lexicon/твоє/"},{"word":"твої́","translation":"your, plural informal","pos":"pronoun","example":"Де твої́ сіме́йні фотогра́фії?","examples":["Де твої́ сіме́йні фотогра́фії?"],"atlas_href":"/lexicon/твої/"},{"word":"йо́го","translation":"his / him, fixed possessive here","pos":"pronoun","example":"Йо́го зва́ти Ко́ля.","examples":["Йо́го зва́ти Ко́ля."],"atlas_href":"/lexicon/його/"},{"word":"її","translation":"her, fixed possessive here","pos":"pronoun","example":"Її зва́ти Катя́.","examples":["Її зва́ти Катя́."],"atlas_href":"/lexicon/її/"},{"word":"хто","translation":"who","pos":"pronoun","example":"Хто це на фо́то?","examples":["Хто це на фо́то?"],"atlas_href":"/lexicon/хто/"},{"word":"зва́ти","translation":"to call / be named","pos":"verb","example":"Як йо́го зва́ти?","examples":["Як йо́го зва́ти?"],"atlas_href":"/lexicon/звати/"},{"word":"чи","translation":"or / whether in questions","pos":"conjunction","example":"Чи це твоя́ бабу́ся?","examples":["Чи це твоя́ бабу́ся?"],"atlas_href":"/lexicon/чи/"},{"word":"ім'я́","translation":"given name","pos":"noun","example":"Моє́ ім'я́ — Марко́.","examples":["Моє́ ім'я́ — Марко́."],"atlas_href":"/lexicon/ім-я/"},{"word":"прі́звище","translation":"surname","pos":"noun","example":"Моє́ прі́звище — Ковале́нко.","examples":["Моє́ прі́звище — Ковале́нко."],"atlas_href":"/lexicon/прізвище/"},{"word":"по ба́тькові","translation":"patronymic","pos":"phrase","example":"Васи́лівна — це по ба́тькові.","examples":["Васи́лівна — це по ба́тькові."],"atlas_href":"/lexicon/по-батькові/"},{"word":"мі́сто","translation":"city","pos":"noun","example":"Це моє́ рі́дне мі́сто.","examples":["Це моє́ рі́дне мі́сто."],"atlas_href":"/lexicon/місто/"}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"сі́м'я","back":"family, close household"},{"front":"роди́на","back":"family or kin"},{"front":"ма́ма","back":"mom"},{"front":"ма́ти","back":"mother"},{"front":"та́то","back":"dad"},{"front":"ба́тько","back":"father"},{"front":"брат","back":"brother"},{"front":"сестра́","back":"sister"},{"front":"син","back":"son"},{"front":"дочка́","back":"daughter"},{"front":"до́нька","back":"daughter"},{"front":"бабу́ся","back":"grandmother"},{"front":"діду́сь","back":"grandfather"},{"front":"батьки́","back":"parents"},{"front":"у мене́ є","back":"I have"},{"front":"у тебе́ є","back":"you have, informal"},{"front":"у вас є","back":"you have, formal or plural"},{"front":"оди́н","back":"one, masculine"},{"front":"одна́","back":"one, feminine"},{"front":"два","back":"two, masculine/neuter"},{"front":"дві","back":"two, feminine"},{"front":"ті́льки","back":"only"},{"front":"мій","back":"my, masculine"},{"front":"моя́","back":"my, feminine"},{"front":"моє́","back":"my, neuter"},{"front":"мої́","back":"my, plural"},{"front":"твій","back":"your, masculine informal"},{"front":"твоя́","back":"your, feminine informal"},{"front":"твоє́","back":"your, neuter informal"},{"front":"твої́","back":"your, plural informal"},{"front":"йо́го","back":"his / him, fixed possessive here"},{"front":"її","back":"her, fixed possessive here"},{"front":"хто","back":"who"},{"front":"зва́ти","back":"to call / be named"},{"front":"чи","back":"or / whether in questions"},{"front":"ім'я́","back":"given name"},{"front":"прі́звище","back":"surname"},{"front":"по ба́тькові","back":"patronymic"},{"front":"мі́сто","back":"city"}]`)} />
+
+</TabItem>
+<TabItem label="Вправи — Activities">
+
+<span id="activities"></span>
+
+### Запита́ння до сіме́йних фо́то
+
+*(see lesson, §Слу́хаємо подкаст — Listening to family speech)*
+
+### Твій, твоя́, твоє́ чи твої́?
+
+*(see lesson, §Сіме́йні фотогра́фії — Reading photo labels)*
+
+### Пі́дписи до фотогра́фій
+
+*(see lesson, §Рукопи́сний зо́шит — Notebook and handwriting recognition)*
+
+### Слу́хаємо та перевіря́ємо
+
+*(see lesson, §По́вне ім'я́ як сигна́л — Recognizing formal names)*
+
+### Зна́йди за́йве сло́во
+
+*(see lesson, §По́вне ім'я́ як сигна́л — Recognizing formal names)*
+
+### По́вне ім'я́ як сигна́л
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "ім'я́", "right": "Марі́я"}, {"left": "прі́звище", "right": "Ковале́нко"}, {"left": "по ба́тькові", "right": "Васи́лівна"}, {"left": "До́брий день, Марі́є Васи́лівно!", "right": "форма́льне зверта́ння"}]`)} instruction={"З'єдна́й части́ну форма́льного і́мені з підка́зкою. Це ті́льки впізнава́ння."} isUkrainian={false} />
+
+### Йо́го чи її?
+
+<GroupSort client:only='react' groups={JSON.parse(`{"йо́го (his)": ["Це мій брат. Йо́го зва́ти Бо́гдан.", "Це мій та́то. Йо́го зва́ти Євге́н.", "Це мій діду́сь. Йо́го роди́на у Льво́ві.", "Це мій син. Йо́го зо́шит тут."], "її (her)": ["Це моя́ сестра́. Її зва́ти Оле́на.", "Це моя́ ма́ма. Її зва́ти Мари́на.", "Це моя́ бабу́ся. Її зва́ти Тетя́на.", "Це моя́ дочка́. Її фо́то на столі́."]}`)} instruction={"Розпо́діли ре́чення за тим, чи стосу́ється ро́зповідь чолові́ка (йо́го) або́ жінки́ (її)."} isUkrainian={false} />
+
+### Роди́нні пі́дписи в зо́шиті
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Ось ___ роди́на на фотогра́фії.", "answer": "моя́", "options": ["моя́", "мій", "моє́", "мої́"], "explanation": "Роди́на — жіно́чого ро́ду."}, {"sentence": "Це ___ діду́сь і бабу́ся.", "answer": "мої́", "options": ["мої́", "мій", "моя́", "моє́"], "explanation": "Діду́сь і бабу́ся ра́зом — множина́ (во́ни)."}, {"sentence": "Чи це ___ брат Ко́ля?", "answer": "твій", "options": ["твій", "твоя́", "твоє́", "твої́"], "explanation": "Брат — чолові́чого ро́ду."}, {"sentence": "Це моє́ рі́дне ___ Полта́ва.", "answer": "мі́сто", "options": ["мі́сто", "зо́шит", "ба́тько", "брат"], "explanation": "Полта́ва — це мі́сто."}, {"sentence": "Це моя́ ті́тка. ___ зва́ти Окса́на.", "answer": "Її", "options": ["Її", "Йо́го", "Він", "Мій"], "explanation": "Ті́тка — жі́нка, тому́ вжива́ємо її."}, {"sentence": "Це мій дя́дько. ___ зва́ти Тара́с.", "answer": "Йо́го", "options": ["Йо́го", "Її", "Во́на", "Моя́"], "explanation": "Дя́дько — чолові́к, тому́ вжива́ємо йо́го."}]`)} instruction={"Встав пра́вильне сло́во для пі́дпису під сіме́йними світли́нами."} isUkrainian={false} />
+
+### Скла́ди ре́чення з фотогра́фій
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "моя́ / Це / сі́м'я / фотогра́фії / на", "answer": "Це моя́ сі́м'я на фотогра́фії."}, {"jumbled": "є / тебе́ / У / сестра́ / чи / брат", "answer": "У тебе́ є брат чи сестра́?"}, {"jumbled": "зва́ти / Йо́го / Дени́с / брат / мій / Це", "answer": "Це мій брат. Йо́го зва́ти Дени́с."}, {"jumbled": "рі́дне / Це / Львів / моє́ / мі́сто", "answer": "Це моє́ рі́дне мі́сто Львів."}, {"jumbled": "Тетя́на / Її / Це / бабу́ся / моя́ / зва́ти", "answer": "Це моя́ бабу́ся. Її зва́ти Тетя́на."}, {"jumbled": "твій / Чи / це / на / діду́сь / фо́то", "answer": "Чи це твій діду́сь на фо́то?"}]`)} instruction={"Розста́в слова́ у пра́вильному поря́дку, щоб утвори́ти ре́чення."} />
+
+### Випра́в помилки́ в пі́дписах
+
+<ErrorCorrection client:only='react' instruction="Зна́йди та випра́в поми́лку в узго́дженні або́ слововжива́нні." items={JSON.parse(`[{"sentence": "Це мій сестра́ Катя́.", "errorWord": "мій сестра́", "correctForm": "моя́ сестра́", "options": ["моя́ сестра́", "мій сестра́"], "explanation": "Сестра́ — жіно́чого ро́ду, тому́ потрі́бно каза́ти «моя́ сестра́»."}, {"sentence": "Це моє́ батьки́ на зні́мку.", "errorWord": "моє́ батьки́", "correctForm": "мої́ батьки́", "options": ["мої́ батьки́", "моє́ батьки́"], "explanation": "Батьки́ — множина́, тому́ вжива́ємо «мої́ батьки́»."}, {"sentence": "Як її зва́ти? Йо́го зва́ти Окса́на.", "errorWord": "Йо́го зва́ти Окса́на", "correctForm": "Її зва́ти Окса́на", "options": ["Її зва́ти Окса́на", "Йо́го зва́ти Окса́на"], "explanation": "Окса́на — жіно́че ім'я́, тому́ займе́нник «її»."}, {"sentence": "Це твій мі́сто Ха́рків?", "errorWord": "твій мі́сто", "correctForm": "твоє́ мі́сто", "options": ["твоє́ мі́сто", "твій мі́сто"], "explanation": "Мі́сто — сере́днього ро́ду, тому́ «твоє́ мі́сто»."}, {"sentence": "Це моя́ сі́м'я. Її звуть Іва́н.", "errorWord": "Її звуть Іва́н", "correctForm": "Йо́го зва́ти Іва́н", "options": ["Йо́го зва́ти Іва́н", "Її звуть Іва́н"], "explanation": "Іва́н — чолові́че ім'я́, тому́ ка́жемо «йо́го зва́ти»."}, {"sentence": "У тебе́ є брати́ чи се́стри? У мене́ нема́є брат.", "errorWord": "У мене́ нема́є брат", "correctForm": "Ні, у мене́ ті́льки оди́н брат", "options": ["Ні, у мене́ ті́льки оди́н брат", "У мене́ нема́є брат"], "explanation": "На рі́вні A1 уника́ємо непра́вильних констру́кцій з «нема́є + називни́й відмі́нок»."}]`)} isUkrainian={false} />
+
+### Пере́клад для сіме́йного зо́шита
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "This is my family in the photo.", "options": [{"text": "Це моя́ сі́м'я на фотогра́фії.", "correct": true}, {"text": "Це мій сі́м'я на фотогра́фії.", "correct": false}, {"text": "Це моє́ сі́м'я на фотогра́фії.", "correct": false}], "explanation": "Сі́м'я — жіно́чого ро́ду, тому́ моя́ сі́м'я."}, {"source": "Who is this?", "options": [{"text": "Хто це?", "correct": true}, {"text": "Що це?", "correct": false}, {"text": "Де це?", "correct": false}], "explanation": "Хто запи́тує про люди́ну."}, {"source": "His name is Kolia.", "options": [{"text": "Йо́го зва́ти Ко́ля.", "correct": true}, {"text": "Її зва́ти Ко́ля.", "correct": false}, {"text": "Моє́ ім'я́ Ко́ля.", "correct": false}], "explanation": "Йо́го вжива́ємо для чолові́ка."}, {"source": "Her name is Tetiana.", "options": [{"text": "Її зва́ти Тетя́на.", "correct": true}, {"text": "Йо́го зва́ти Тетя́на.", "correct": false}, {"text": "Твоє́ ім'я́ Тетя́на.", "correct": false}], "explanation": "Її вжива́ємо для жінки́."}, {"source": "Is this your grandmother?", "options": [{"text": "Чи це твоя́ бабу́ся?", "correct": true}, {"text": "Чи це твій бабу́ся?", "correct": false}, {"text": "Чи це твоє́ бабу́ся?", "correct": false}], "explanation": "Бабу́ся — жіно́чого ро́ду, тому́ твоя́ бабу́ся."}, {"source": "This is my hometown.", "options": [{"text": "Це моє́ рі́дне мі́сто.", "correct": true}, {"text": "Це мій рі́дне мі́сто.", "correct": false}, {"text": "Це моя́ рі́дне мі́сто.", "correct": false}], "explanation": "Мі́сто — сере́днього ро́ду, тому́ моє́ рі́дне мі́сто."}]`)} instruction={"Обери́ пра́вильний украї́нський пере́клад для ре́чення."} isUkrainian={false} />
+
+### Офіці́йні да́ні та зверта́ння
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "«Окса́на» в докуме́нті — це...", "options": [{"text": "ім'я́", "correct": true}, {"text": "прі́звище", "correct": false}, {"text": "по ба́тькові", "correct": false}], "explanation": "Окса́на — це вла́сне ім'я́ (given name)."}, {"question": "«Васи́лівна» в офіці́йному зверта́нні — це...", "options": [{"text": "по ба́тькові", "correct": true}, {"text": "ім'я́", "correct": false}, {"text": "прі́звище", "correct": false}], "explanation": "Васи́лівна — це фо́рма по ба́тькові з жіно́чим су́фіксом -івна."}, {"question": "«Ковале́нко» в анке́ті — це...", "options": [{"text": "прі́звище", "correct": true}, {"text": "ім'я́", "correct": false}, {"text": "по ба́тькові", "correct": false}], "explanation": "Ковале́нко — украї́нське прі́звище."}, {"question": "Яки́й су́фікс утво́рює украї́нське жіно́че по ба́тькові від і́мені Петро́?", "options": [{"text": "-івна (Петрі́вна)", "correct": true}, {"text": "-овна́ (Петровна)", "correct": false}, {"text": "-євна (Петрєвна)", "correct": false}], "explanation": "В украї́нській мо́ві вжива́ються су́фікси -івна / -ївна, а не -овна́."}, {"question": "Зверта́ння «До́брий день, Марі́є Васи́лівно!» вка́зує на...", "options": [{"text": "форма́льний, вві́чливий регі́стр", "correct": true}, {"text": "неформа́льну розмо́ву між ді́тьми", "correct": false}, {"text": "коро́тку ві́дповідь «так/ні»", "correct": false}], "explanation": "Зверта́ння на ім'я́ та по ба́тькові сигналізу́є про вві́чливе, офіці́йне спілкува́ння."}, {"question": "У гра́фі «Мі́сто прожива́ння» вка́зують...", "options": [{"text": "насе́лений пункт (напри́клад, Киї́в чи Львів)", "correct": true}, {"text": "прі́звище роди́ни", "correct": false}, {"text": "вік дити́ни", "correct": false}], "explanation": "Сло́во «мі́сто» означа́є насе́лений пункт (city)."}]`)} instruction={"Ви́знач пра́вильну на́зву елеме́нта офіці́йного і́мені."} isUkrainian={false} />
+
+</TabItem>
+<TabItem label="Ресурси — Resources">
+
+<span id="resources"></span>
+
+:::info[🎧 🔗 External Resources]
+
+**📚 Books:**
+- 📚 **Інформа́тика. 4 клас. Воронцо́ва (2021)**
+  Пі́дпис до сіме́йної фотогра́фії: «Моя́ роди́на», ім'я, по ба́тькові та прі́звище.
+
+**🎧 Audio:**
+- 🎧 [ULP Season 1, Episode 10 — Review](https://www.ukrainianlessons.com/episode10/) — connected review speech about myself and my family.
+- 🎧 [ULP Season 1, Episode 6 — Family + I Have](https://www.ukrainianlessons.com/episode6/) — family words, the phrase У мене́ є, and one/two gender agreement.
+- 🎧 [ULP Season 1, Episode 7 — Possessive Pronouns](https://www.ukrainianlessons.com/episode7/) — мій/моя́/моє́/мої́ and Це моя́ ма́ма.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
+
+<nav aria-label="Lesson navigation">
+
+[Previous](/a1/my-family/2/) · [Module](/a1/my-family/) · [Next](/a1/my-family/4/)
+
+</nav>
