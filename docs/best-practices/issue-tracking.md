@@ -49,7 +49,7 @@ Non-trivial issues must carry the **task-quality pack** (DoR before dispatch,
 DoD before close): see [`task-quality.md`](task-quality.md). Advisory check:
 
 ```bash
-.venv/bin/python scripts/check_issue_task_quality.py --issue N
+.venv/bin/python scripts/ci/check_issue_task_quality.py --issue N
 ```
 
 A good issue has:

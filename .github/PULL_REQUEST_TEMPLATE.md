@@ -12,7 +12,7 @@
 - [ ] Modules pass audit (`scripts/audit_module.py`) when curriculum touched
 - [ ] Website builds without errors (`cd site && npm run build`) when site touched
 - [ ] Ukrainian text reviewed for naturalness when learner-facing copy changes
-- [ ] Task-quality advisory (non-trivial issues): `.venv/bin/python scripts/check_issue_task_quality.py --issue N`
+- [ ] Task-quality advisory (non-trivial issues): `.venv/bin/python scripts/ci/check_issue_task_quality.py --issue N`
 
 ## Terminal goal
 

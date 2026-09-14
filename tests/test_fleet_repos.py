@@ -1,4 +1,4 @@
-"""Tests for scripts/fleet_repos.py (#672 P2.1)."""
+"""Tests for scripts/orchestration/fleet_repos.py (#672 P2.1)."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from scripts.fleet_repos import (
+from scripts.orchestration.fleet_repos import (
     FleetRepoError,
     default_repo_key,
     load_fleet_repos,

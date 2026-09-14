@@ -5799,9 +5799,17 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     fleet_repo_meta: dict[str, Any] | None = None
     target_repo_root = _REPO_ROOT
     try:
-        from scripts.fleet_repos import FleetRepoError, fleet_repo_as_dict, resolve_fleet_repo
+        from scripts.orchestration.fleet_repos import (
+            FleetRepoError,
+            fleet_repo_as_dict,
+            resolve_fleet_repo,
+        )
     except ImportError:  # pragma: no cover - flat script path
-        from fleet_repos import FleetRepoError, fleet_repo_as_dict, resolve_fleet_repo  # type: ignore
+        from orchestration.fleet_repos import (  # type: ignore
+            FleetRepoError,
+            fleet_repo_as_dict,
+            resolve_fleet_repo,
+        )
 
     try:
         fleet_repo, target_repo_root = resolve_fleet_repo(fleet_repo_key, primary_root=_REPO_ROOT)
