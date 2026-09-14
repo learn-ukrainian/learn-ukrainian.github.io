@@ -1,5 +1,5 @@
 # Agent budget soft-caps used by /api/state/routing-budget for burn% computation.
-# These are SOFT caps — the router warns when burn% approaches; it does not block.
+# Subscription caps are soft; prepaid thresholds also drive the opt-in dispatch guard.
 # Update when Anthropic announces tier or promo changes.
 #
 # Effective windows (anchored to user's billing cycle, treated as ISO weeks for now):
@@ -43,3 +43,11 @@ kimi:
 glm:
   # Z.AI Coding Plan (GLM). Native probe: api.z.ai quota API (5h + weekly).
   # LOCAL-ONLY credential file ~/.secret/zai.key or ZAI_API_KEY.
+
+# Prepaid USD routing thresholds; independent of the subscription cost ledger.
+deepseek:
+  near_cap_usd: 5
+  warm_usd: 20
+openrouter:
+  near_cap_usd: 5
+  warm_usd: 20

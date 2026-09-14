@@ -751,7 +751,15 @@ gemini-flash**) must not self-decompose into serial micro-PRs — the orchestrat
 sequencing. Canonical wording: `agents_extensions/shared/rules/workflow.md` § Dispatch brief
 unit; routing: `model-assignment.md` § agy/gemini-flash worker briefs.
 
-**Capacity-first routing (operator 2026-08-12 / #4707):** before implement dispatch, run
+**Capacity-first routing (operator 2026-08-12 / #4707):** before implement dispatch,
+`python -m scripts.fleet.usage show` displays subscription capacity and prepaid
+DeepSeek/OpenRouter funding from the Monitor snapshot. Use `json` for the shared
+routing-budget payload, `refresh` (or `--fresh`) for blocking native probes, and
+`doctor` for credential path/env presence without secret values. OpenRouter is a
+funding account, not a default dispatch pick; key cap remaining is not balance.
+`DELEGATE_MONITOR_API` selects the existing Monitor. Offline reads fall back to
+blocking in-process refresh and identify that source. `CODEXBAR_*` naming cleanup
+is a follow-up; compatibility keys remain unchanged. For code pick order, run
 `.venv/bin/python -m scripts.fleet.capacity_pick` and pass `--check-budget` (or set
 `LU_DISPATCH_CHECK_BUDGET=1` in seat launchers). The guard hard-subs hot/near_cap/deficit
 lanes when `scripts/config/agent_fallback_substitutions.yaml` `dispatch_fallbacks` has a

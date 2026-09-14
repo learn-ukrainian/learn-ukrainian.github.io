@@ -2,8 +2,8 @@
 """Capacity-first lane picker for pre-dispatch routing (operator 2026-08-12).
 
 Drivers run this before every implement dispatch. Prefer cool/idle seats;
-mark hot / near_cap / deficit lanes AVOID. Uses ``compute_routing_budget``
-(already embeds CodexBar) — no multi-provider refresh loops unless ``--fresh``.
+mark hot / near_cap / deficit lanes AVOID. Shares the Monitor snapshot and
+blocking native refresh path with ``scripts.fleet.usage``.
 """
 
 from __future__ import annotations
@@ -64,6 +64,9 @@ def _monitor_base() -> str:
 def lane_status(agent_info: dict[str, Any] | None) -> str:
     """Resolve display status for a routing-budget agent record."""
     info = agent_info or {}
+    native = info.get("codexbar") or {}
+    if info.get("freshness", native.get("freshness")) == "unavailable":
+        return "unknown"
     status = info.get("status")
     if not status and isinstance(info.get("interactive"), dict):
         status = info["interactive"].get("status")
@@ -166,6 +169,14 @@ def build_lane_rows(
     rows: list[dict[str, Any]] = []
     for lane in lanes:
         info = agents.get(lane) if isinstance(agents.get(lane), dict) else {}
+        if lane == "deepseek":
+            from scripts.api.state_router import _api_lane_status_from_account
+
+            account = (budget.get("api_accounts") or {}).get(lane) or {}
+            status = _api_lane_status_from_account(lane, account)
+            info = {**info, "status": status, "probe_state": account.get("probe_state")}
+            if status not in {"cool", "warm"} or account.get("is_available") is False or account.get("status") == "near_cap":
+                info["eligible"] = False
         if budget.get("transport") == "acp" and info.get("eligible") is not True:
             info = {**info, "eligible": False}
         status = lane_status(info)
@@ -315,6 +326,7 @@ def build_report(
     return {
         "transport": budget.get("transport", "dispatch"),
         "generated_at": budget.get("generated_at"),
+        "source": budget.get("source", "unknown"),
         "rows": rows,
         "pick_order": pick_order,
         "cooler_lanes": cooler_lanes(rows),
@@ -352,7 +364,7 @@ def format_human(report: dict[str, Any]) -> str:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="python -m scripts.fleet.capacity_pick",
-        description="Print capacity-first lane pick order before implement dispatch.",
+        description="Print capacity-first lane pick order before implement dispatch.\nUse to compare capacity, not to certify model eligibility.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
@@ -366,7 +378,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--fresh",
         action="store_true",
-        help="Pass fresh_codexbar=True to compute_routing_budget (may be slow).",
+        help="Block for native usage probes (default: warm Monitor snapshot).",
     )
     parser.add_argument("--json", action="store_true", help="Machine-readable JSON only.")
     parser.add_argument(
@@ -382,12 +394,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    try:
-        from scripts.api.state_router import compute_routing_budget
-    except ImportError:  # pragma: no cover - script path fallback
-        from api.state_router import compute_routing_budget  # type: ignore
+    from scripts.fleet.usage import read_budget
 
-    budget = compute_routing_budget(fresh_codexbar=bool(args.fresh), transport=args.transport)
+    budget = read_budget(fresh=bool(args.fresh), transport=args.transport)
     active = fetch_active_in_flight()
     report = build_report(budget, active_in_flight=active)
 

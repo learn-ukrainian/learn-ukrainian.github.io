@@ -119,6 +119,8 @@ _cursor_last_good: tuple[float, dict[str, Any]] | None = None
 _cursor_refresh_lock = threading.Lock()
 _cursor_refresh_thread: threading.Thread | None = None
 _api_account_last_good: dict[str, tuple[float, dict[str, Any]]] = {}
+_api_account_last_failure: dict[str, tuple[float, dict[str, Any]]] = {}
+API_ACCOUNT_FAILURE_TTL_S = 30.0
 _api_account_refresh_lock = threading.Lock()
 _api_account_refresh_thread: threading.Thread | None = None
 
@@ -169,6 +171,7 @@ def _record_probe_result(provider: str, data: dict[str, Any] | None) -> bool:
 
     assert data is not None  # narrowed by _is_usable_capacity
     snapshot = dict(data)
+    _last_failure_data.pop(provider, None)
     cache_set(f"codexbar_usage:{provider}", snapshot)
     _last_good_data[provider] = (time.monotonic(), snapshot)
     return True
@@ -290,7 +293,8 @@ def refresh_provider_usage_data(
     refreshed: dict[str, dict[str, Any]] = {}
     with ThreadPoolExecutor(max_workers=len(unique_providers)) as executor:
         futures = {
-            provider: executor.submit(fetch_provider_usage, provider, timeout_s=timeout_s)
+            provider: (executor.submit(_refresh_cursor_usage_live) if provider == "cursor"
+                       else executor.submit(fetch_provider_usage, provider, timeout_s=timeout_s))
             for provider in unique_providers
         }
         for provider, future in futures.items():
@@ -527,7 +531,8 @@ def _load_glm_api_key() -> str | None:
 def _load_first_line_secret(path: Path) -> str | None:
     try:
         if path.is_file():
-            line = path.read_text(encoding="utf-8").strip().splitlines()[0].strip()
+            lines = path.read_text(encoding="utf-8").strip().splitlines()
+            line = lines[0].strip() if lines else ""
             if line:
                 return line
     except OSError:
@@ -556,6 +561,16 @@ def _load_openrouter_api_key() -> str | None:
     if key:
         return key
     return _load_first_line_secret(Path.home() / ".secret" / "openrouter.key")
+
+
+def _load_openrouter_management_api_key() -> str | None:
+    env = os.environ.get("OPENROUTER_MANAGEMENT_API_KEY", "").strip()
+    if env:
+        return env
+    return (
+        _load_opencode_provider_key("openrouter-management")
+        or _load_first_line_secret(Path.home() / ".secret" / "openrouter-management.key")
+    )
 
 
 def _load_deepseek_api_key() -> str | None:
@@ -635,7 +650,7 @@ def _probe_openrouter_native(*, timeout_s: float) -> dict[str, Any]:
     fetched_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     api_key = _load_openrouter_api_key()
     if not api_key:
-        return _empty_openrouter_account("NEED_PROBE")
+        return _empty_openrouter_account("NEED_KEY")
     status, payload, err = _http_json_request(
         "GET",
         "https://openrouter.ai/api/v1/key",
@@ -670,7 +685,8 @@ def _probe_openrouter_native(*, timeout_s: float) -> dict[str, Any]:
         "account_remaining_usd": None,
         "fetched_at": fetched_at,
     }
-    management_key = os.environ.get("OPENROUTER_MANAGEMENT_API_KEY", "").strip()
+    management_key = _load_openrouter_management_api_key()
+    result["balance_probe_state"] = "NEED_PROBE" if management_key else "NEED_KEY"
     if management_key:
         credits_status, credits_payload, _ = _http_json_request(
             "GET",
@@ -690,6 +706,9 @@ def _probe_openrouter_native(*, timeout_s: float) -> dict[str, Any]:
                 used = _as_optional_float(credits_data.get("total_usage"))
                 if total is not None and used is not None:
                     result["account_remaining_usd"] = round(total - used, 4)
+                    result["balance_probe_state"] = "ok"
+        if result["balance_probe_state"] != "ok":
+            result["probe_state"] = "NEED_PROBE"
     return result
 
 
@@ -697,7 +716,7 @@ def _probe_deepseek_native(*, timeout_s: float) -> dict[str, Any]:
     fetched_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     api_key = _load_deepseek_api_key()
     if not api_key:
-        return _empty_deepseek_account("NEED_PROBE")
+        return _empty_deepseek_account("NEED_KEY")
     status, payload, err = _http_json_request(
         "GET",
         "https://api.deepseek.com/user/balance",
@@ -751,18 +770,17 @@ def _api_account_cache_key(provider: str) -> str:
 
 
 def _api_account_is_cacheable(data: dict[str, Any] | None) -> bool:
-    if not isinstance(data, dict):
-        return False
-    if data.get("fetched_at"):
-        return True
-    return data.get("probe_state") in {"NEED_PROBE", "ok"}
+    return isinstance(data, dict) and data.get("probe_state") == "ok" and bool(data.get("fetched_at"))
 
 
 def _record_api_account_result(provider: str, data: dict[str, Any] | None) -> bool:
     if not _api_account_is_cacheable(data):
+        if isinstance(data, dict):
+            _api_account_last_failure[provider] = (time.monotonic(), dict(data))
         return False
     assert data is not None
     snapshot = dict(data)
+    _api_account_last_failure.pop(provider, None)
     cache_set(_api_account_cache_key(provider), snapshot)
     _api_account_last_good[provider] = (time.monotonic(), snapshot)
     return True
@@ -821,14 +839,10 @@ def refresh_api_account_data(
             try:
                 data = future.result()
             except Exception as exc:
-                data = _probe_api_account_live(provider, timeout_s=timeout_s)
-                data["auth_error"] = f"API account refresh failed: {exc}"
-            if _record_api_account_result(provider, data):
-                refreshed[provider] = _with_api_account_observation_metadata(
-                    data,
-                    freshness="fresh",
-                    age_s=0.0,
-                )
+                data = _empty_openrouter_account() if provider == "openrouter" else _empty_deepseek_account()
+                data["auth_error"] = f"API account refresh failed: {type(exc).__name__}"
+            _record_api_account_result(provider, data)
+            refreshed[provider] = _api_account_snapshot(provider)
     return refreshed
 
 
@@ -852,41 +866,47 @@ def trigger_api_account_background_refresh() -> None:
         _api_account_refresh_thread.start()
 
 
-def get_api_account_data(provider: str) -> dict[str, Any]:
-    """Cache-only prepaid API account read; background refresh keeps snapshots warm."""
-    cache_key = _api_account_cache_key(provider)
-    cached = cache_get_with_age(cache_key, ttl=_api_account_cache_ttl_s())
-    if cached is not None:
+def _api_account_snapshot(provider: str) -> dict[str, Any]:
+    """Read observations without starting work; failures never replace good capacity."""
+    failure = _api_account_last_failure.get(provider)
+    cached = cache_get_with_age(_api_account_cache_key(provider), ttl=_api_account_cache_ttl_s())
+    if cached is not None and _api_account_is_cacheable(cached[0]) and not failure:
         val, age = cached
-        if _api_account_is_cacheable(val):
-            return _with_api_account_observation_metadata(
-                val,
-                freshness="fresh",
-                age_s=age,
-            )
+        partial_expired = (
+            val.get("balance_probe_state") in {"NEED_KEY", "NEED_PROBE"}
+            and age >= API_ACCOUNT_FAILURE_TTL_S
+        )
+        if not partial_expired:
+            return _with_api_account_observation_metadata(val, freshness="fresh", age_s=age)
+    good = _api_account_last_good.get(provider)
+    if good:
+        observed, val = good
+        result = _with_api_account_observation_metadata(
+            val, freshness="stale_last_good", age_s=time.monotonic() - observed,
+        )
+    else:
+        val = failure[1] if failure else (
+            _empty_openrouter_account() if provider == "openrouter" else _empty_deepseek_account()
+        )
+        result = _with_api_account_observation_metadata(val, freshness="unavailable", age_s=None)
+    if failure:
+        result.update({
+            "failure_kind": failure[1].get("probe_state"),
+            "last_failure_at": failure[1].get("fetched_at"),
+        })
+    return result
 
-    if not _scheduler_is_running() and _on_demand_refresh_enabled():
+
+def get_api_account_data(provider: str) -> dict[str, Any]:
+    """Cache-only read with short retries for failed or missing-key probes."""
+    result = _api_account_snapshot(provider)
+    failure = _api_account_last_failure.get(provider)
+    retry_due = not failure or time.monotonic() - failure[0] >= API_ACCOUNT_FAILURE_TTL_S
+    needs_retry = failure or result.get("balance_probe_state") in {"NEED_KEY", "NEED_PROBE"}
+    if (result["freshness"] != "fresh" and retry_due
+            and (needs_retry or not _scheduler_is_running()) and _on_demand_refresh_enabled()):
         trigger_api_account_background_refresh()
-
-    if provider in _api_account_last_good:
-        t_mono, val = _api_account_last_good[provider]
-        return _with_api_account_observation_metadata(
-            val,
-            freshness="stale_last_good",
-            age_s=time.monotonic() - t_mono,
-        )
-
-    if provider == "openrouter":
-        return _with_api_account_observation_metadata(
-            _empty_openrouter_account("NEED_PROBE"),
-            freshness="unavailable",
-            age_s=None,
-        )
-    return _with_api_account_observation_metadata(
-        _empty_deepseek_account("NEED_PROBE"),
-        freshness="unavailable",
-        age_s=None,
-    )
+    return result
 
 
 def get_api_accounts_snapshot() -> dict[str, dict[str, Any]]:

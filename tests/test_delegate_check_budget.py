@@ -741,3 +741,65 @@ def test_dispatch_cursor_missing_session_stream_db_is_absence_not_refusal(monkey
     assert rc == 0
     assert len(spawned) == 1
     assert "CAPACITY REFUSED" not in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("lane,provider", [("deepseek", None), ("codex", "openrouter")])
+@pytest.mark.parametrize("change", [
+    {"total_balance": 0, "limit_remaining_usd": 0},
+    {"is_available": False}, {"total_balance": 4.99, "limit_remaining_usd": 4.99},
+    {"probe_state": "NEED_PROBE"}, {"probe_state": "NEED_KEY"},
+    {"freshness": "stale_last_good"}, {"freshness": "unavailable"}, {"age_s": 601},
+])
+def test_prepaid_guard_refuses_without_cost_ledger(monkeypatch, lane, provider, change):
+    account = {"probe_state": "ok", "freshness": "fresh", "age_s": 1,
+               "currency": "USD", "total_balance": 30, "limit_remaining_usd": 30,
+               "is_available": True, **change}
+    prepaid = provider or lane
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: {
+        "agents": {}, "api_accounts": {prepaid: account},
+        "diagnostics": {"records_loaded": 0, "stale": True},
+    })
+    with pytest.raises(delegate.BudgetGuardRefuseError, match=f"NOTE: ROUTING REFUSED: prepaid {prepaid}"):
+        delegate._resolve_agent_with_budget_guard(lane, provider=provider)
+
+
+@pytest.mark.parametrize("lane,provider", [("deepseek", None), ("codex", "openrouter")])
+def test_fresh_funded_prepaid_does_not_require_cost_ledger(monkeypatch, lane, provider):
+    account = {"probe_state": "ok", "freshness": "fresh", "age_s": 1,
+               "currency": "USD", "total_balance": 30, "limit_remaining_usd": 30, "is_available": True}
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: {
+        "agents": {}, "api_accounts": {provider or lane: account},
+        "diagnostics": {"records_loaded": 0, "stale": True},
+    })
+    assert delegate._resolve_agent_with_budget_guard(lane, provider=provider) == lane
+
+
+@pytest.mark.parametrize("lane,provider", [("deepseek", None), ("codex", "openrouter")])
+def test_prepaid_monitor_failure_refuses(monkeypatch, lane, provider):
+    def unavailable():
+        raise delegate.MonitorApiUnavailable("offline")
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", unavailable)
+    with pytest.raises(delegate.BudgetGuardRefuseError, match="NEED_PROBE"):
+        delegate._resolve_agent_with_budget_guard(lane, provider=provider)
+
+
+@pytest.mark.parametrize("args,prepaid", [
+    (("--agent", "deepseek"), "deepseek"),
+    (("--provider", "openrouter"), "openrouter"),
+])
+def test_check_budget_empty_prepaid_refuses_before_spawn(monkeypatch, tmp_path, capsys, args, prepaid):
+    _patch_spawn(monkeypatch, tmp_path)
+    spawned = _track_worker_spawns(monkeypatch)
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: {
+        "agents": {}, "diagnostics": {"records_loaded": 0},
+        "api_accounts": {prepaid: {"probe_state": "ok", "freshness": "fresh", "age_s": 0,
+                                    "currency": "USD", "total_balance": 0, "limit_remaining_usd": 0}},
+    })
+    result = delegate.cmd_dispatch(_dispatch_args("--check-budget", *args))
+    assert result == 2
+    assert not spawned
+    message = capsys.readouterr().err
+    assert f"ROUTING REFUSED: prepaid {prepaid} status=near_cap" in message
+    print(f"check-budget fixture {prepaid}: exit={result}, worker_spawns={len(spawned)}")
+    print(message.strip())

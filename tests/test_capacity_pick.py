@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 
+import pytest
+
 from scripts.fleet import capacity_pick
 
 
@@ -38,9 +40,12 @@ def _fixture_budget() -> dict:
             "kimi": {"status": "warm", "burn_pct_7d": 55.0, "remaining_pct": 45.0},
             "gemini": {"status": "unknown", "burn_pct_7d": None},
             "grok": {"status": "cool", "burn_pct_7d": 20.0, "remaining_pct": 80.0},
-            "deepseek": {"status": "cool", "burn_pct_7d": 10.0, "remaining_pct": 90.0},
             "glm": {"status": "cool", "burn_pct_7d": 12.0, "remaining_pct": 88.0},
         },
+        "api_accounts": {"deepseek": {
+            "probe_state": "ok", "freshness": "fresh", "age_s": 0,
+            "currency": "USD", "total_balance": 30.0, "is_available": True,
+        }},
         "in_flight": {"cursor": 0, "codex": 1},
         "recommendation": {
             "primary_agent_for_code": "cursor",
@@ -100,9 +105,9 @@ def test_main_json_fixture(monkeypatch, capsys):
 
     fake_budget = _fixture_budget()
 
-    import scripts.api.state_router as state_router
+    from scripts.fleet import usage
 
-    monkeypatch.setattr(state_router, "compute_routing_budget", lambda **_kwargs: fake_budget)
+    monkeypatch.setattr(usage, "read_budget", lambda **_kwargs: fake_budget)
 
     rc = capacity_pick.main(["--json"])
     assert rc == 0
@@ -120,8 +125,31 @@ def test_main_strict_no_cool(monkeypatch, capsys):
         "recommendation": {"primary_agent_for_code": None, "rationale": "", "warnings": []},
         "diagnostics": {},
     }
-    import scripts.api.state_router as state_router
+    from scripts.fleet import usage
 
-    monkeypatch.setattr(state_router, "compute_routing_budget", lambda **_kwargs: hot_only)
+    monkeypatch.setattr(usage, "read_budget", lambda **_kwargs: hot_only)
     assert capacity_pick.main(["--strict"]) == 2
     assert "no cool/warm lane" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("change", [
+    {"total_balance": 0}, {"is_available": False}, {"total_balance": 4.99},
+    {"probe_state": "NEED_PROBE"}, {"freshness": "unavailable"},
+    {"freshness": "stale_last_good"}, {"age_s": 601},
+])
+def test_prepaid_deepseek_avoid(change):
+    budget = _fixture_budget()
+    budget["api_accounts"]["deepseek"].update(change)
+    budget["recommendation"]["primary_agent_for_code"] = "deepseek"
+    report = capacity_pick.build_report(budget)
+    deepseek = next(row for row in report["pick_order"] if row["lane"] == "deepseek")
+    assert deepseek["pick"] == "AVOID"
+    assert deepseek["remaining_pct"] is None
+    assert report["recommendation"]["primary_agent_for_code"] is None
+
+
+def test_unavailable_subscription_never_cool():
+    budget = _fixture_budget()
+    budget["agents"]["cursor"]["codexbar"]["freshness"] = "unavailable"
+    row = next(row for row in capacity_pick.build_lane_rows(budget) if row["lane"] == "cursor")
+    assert row["status"] == "unknown"
