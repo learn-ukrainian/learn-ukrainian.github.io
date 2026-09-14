@@ -1,5 +1,9 @@
 # Cycle 007 evidence-compile throughput (design)
 
+> **Historical record — not an active execution contract.** This document preserves
+> the reviewed runtime notes for predecessor issue `#6375` under epic `#7423`.
+> Superseded by the active ULDR dataset architecture under epic `#6321`.
+
 Status: resume-only implementation candidate. It requires CI, independent
 cross-family exact-head approval, merge, and deployment before a new evidence
 compile may start. Packet-parallel execution remains unauthorized.

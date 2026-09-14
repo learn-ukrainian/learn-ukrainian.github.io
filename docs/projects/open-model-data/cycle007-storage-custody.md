@@ -1,5 +1,9 @@
 # Cycle007 storage custody (compact / reclaim prep)
 
+> **Historical record — not an active execution contract.** This document preserves
+> the reviewed storage and compaction records for predecessor issue `#7434` under epic `#7423`.
+> Superseded by the active ULDR dataset architecture under epic `#6321`.
+
 Status: exact deletion authorized for issue `#7434` under epic `#7423`;
 execution remains receipt-gated and crash-resumable.
 Cycle007 remains evaluation-only. Labeling remains OFF. This page is text-free:
