@@ -40,7 +40,10 @@ from scripts.orchestration import reap_worktrees
 DEFAULT_WRITER_TIMEOUT_S = 1800
 FETCH_TIMEOUT_S = 30
 GIT_ARTIFACT_TIMEOUT_S = 30
-WORKTREE_CHILD_TIMEOUT_S = DEFAULT_WRITER_TIMEOUT_S + FETCH_TIMEOUT_S
+# Wall clock for the whole --worktree child. A 4-lesson upgrade is writer +
+# Gemini QG + Astra QG per lesson; DEFAULT_WRITER_TIMEOUT_S is per-call silence,
+# not the pipeline. 30 minutes killed A1 5-7 mid-QG.
+WORKTREE_CHILD_TIMEOUT_S = 8 * 3600
 WORKTREE_AUTO = "auto"
 WRITER_ALIASES = {
     "claude": "claude-tools",
