@@ -990,7 +990,7 @@ teach while applying the existing `pedagogical` rubric.
 ```json
 {
   "slug": "things-have-gender",
-  "wiki_path": "/home/ops/learn-ukrainian/.worktrees/dispatch/agy/cu-p1-pilot-repair-thg/wiki/pedagogy/a1/things-have-gender.md",
+  "wiki_path": "wiki/pedagogy/a1/things-have-gender.md",
   "phonetic_format_reference": [
     "Spoken target in `[...]` single-character square brackets, not Unicode look-alikes",
     "Pair written and spoken form in close lexical proximity (same sentence or adjacent bullet)",

@@ -10,7 +10,7 @@ Output:
 ====================== 83 passed, 1500 deselected in 11.23s ======================
 
 
-Log: file:///home/ops/.gemini/antigravity-cli/brain/2dda1ab1-7a5b-425f-868b-cfb35863fcfa/.system_generated/tasks/task-78.log
+Log: local agent task log (task-78)
 </SYSTEM_MESSAGE>
 The following is a <SYSTEM_MESSAGE> not actually sent by the user. It is provided by the system as important information to pay attention to.
 
@@ -49,7 +49,7 @@ Output:
 ===================== 83/2033 items selected in 7.02s ======================
 
 
-Log: file:///home/ops/.gemini/antigravity-cli/brain/2dda1ab1-7a5b-425f-868b-cfb35863fcfa/.system_generated/tasks/task-82.log
+Log: local agent task log (task-82)
 </SYSTEM_MESSAGE>
 The following is a <SYSTEM_MESSAGE> not actually sent by the user. It is provided by the system as important information to pay attention to.
 
@@ -59,9 +59,9 @@ The following is a <SYSTEM_MESSAGE> not actually sent by the user. It is provide
 The command exited with code 0.
 Output:
 ============================= test session starts ==============================
-platform linux -- Python 3.12.8, pytest-9.1.1, pluggy-1.6.0 -- /home/ops/learn-ukrainian/.venv/bin/python
+platform linux -- Python 3.12.8, pytest-9.1.1, pluggy-1.6.0 -- .venv/bin/python
 cachedir: .pytest_cache
-rootdir: /home/ops/learn-ukrainian/.worktrees/dispatch/agy/cu-p1-pilot-writer-things-have-gender-r2
+rootdir: .worktrees/dispatch/agy/cu-p1-pilot-writer-things-have-gender-r2
 configfile: pyproject.toml
 plugins: cov-7.1.0, timeout-2.4.0, mock-3.15.1, anyio-4.14.2, xdist-3.8.0
 timeout: 120.0s
@@ -76,7 +76,7 @@ collecting ... collected 2033 items / 2032 deselected / 1 selected
 ==================== 1/2033 items selected in 6.78s ====================
 
 
-Log: file:///home/ops/.gemini/antigravity-cli/brain/2dda1ab1-7a5b-425f-868b-cfb35863fcfa/.system_generated/tasks/task-112.log
+Log: local agent task log (task-112)
 </SYSTEM_MESSAGE>
 The following is a <SYSTEM_MESSAGE> not actually sent by the user. It is provided by the system as important information to pay attention to.
 
@@ -86,9 +86,9 @@ The following is a <SYSTEM_MESSAGE> not actually sent by the user. It is provide
 The command exited with code 0.
 Output:
 ============================= test session starts ==============================
-platform linux -- Python 3.12.8, pytest-9.1.1, pluggy-1.6.0 -- /home/ops/learn-ukrainian/.venv/bin/python
+platform linux -- Python 3.12.8, pytest-9.1.1, pluggy-1.6.0 -- .venv/bin/python
 cachedir: .pytest_cache
-rootdir: /home/ops/learn-ukrainian/.worktrees/dispatch/agy/cu-p1-pilot-writer-things-have-gender-r2
+rootdir: .worktrees/dispatch/agy/cu-p1-pilot-writer-things-have-gender-r2
 configfile: pyproject.toml
 plugins: cov-7.1.0, timeout-2.4.0, mock-3.15.1, anyio-4.14.2, xdist-3.8.0
 timeout: 120.0s
@@ -115,7 +115,7 @@ collecting ... collected 15 items
 ============================== 15 passed in 8.35s ==============================
 
 
-Log: file:///home/ops/.gemini/antigravity-cli/brain/2dda1ab1-7a5b-425f-868b-cfb35863fcfa/.system_generated/tasks/task-137.log
+Log: local agent task log (task-137)
 </SYSTEM_MESSAGE>}
 The following is a <SYSTEM_MESSAGE> not actually sent by the user. It is provided by the system as important information to pay attention to.
 
@@ -127,7 +127,7 @@ Output:
 Added stress count: 0
 
 
-Log: file:///home/ops/.gemini/antigravity-cli/brain/2dda1ab1-7a5b-425f-868b-cfb35863fcfa/.system_generated/tasks/task-173.log
+Log: local agent task log (task-173)
 </SYSTEM_MESSAGE>
 The following is a <SYSTEM_MESSAGE> not actually sent by the user. It is provided by the system as important information to pay attention to.
 
@@ -140,7 +140,7 @@ Added stress count from unstressed: 71
 Any diff with gold after stripping acute? True
 
 
-Log: file:///home/ops/.gemini/antigravity-cli/brain/2dda1ab1-7a5b-425f-868b-cfb35863fcfa/.system_generated/tasks/task-177.log
+Log: local agent task log (task-177)
 </SYSTEM_MESSAGE>
 The following is a <SYSTEM_MESSAGE> not actually sent by the user. It is provided by the system as important information to pay attention to.
 
@@ -153,7 +153,7 @@ Missing stress after annotate_file: 28 ['Англійська', 'Він', 'Ві�
 Wrong stress after annotate_file: 0 []
 
 
-Log: file:///home/ops/.gemini/antigravity-cli/brain/2dda1ab1-7a5b-425f-868b-cfb35863fcfa/.system_generated/tasks/task-181.log
+Log: local agent task log (task-181)
 </SYSTEM_MESSAGE>
 ```markdown file=module.md
 # Він, вона́ чи воно́?

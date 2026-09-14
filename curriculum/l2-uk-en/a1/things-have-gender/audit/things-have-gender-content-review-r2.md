@@ -118,7 +118,7 @@ Live `mcp__sources__verify_words` batches returned **38/38** and **21/21** found
 ## Reproducible verification and release boundary
 
 All project commands and Git operations ran in the assigned dispatch worktree:
-`/home/ops/learn-ukrainian/.worktrees/dispatch/codex/cu-p1-pilot-rereview-thg-codex`.
+`.worktrees/dispatch/codex/cu-p1-pilot-rereview-thg-codex`.
 
 ```text
 git rev-parse HEAD
@@ -127,7 +127,7 @@ b7407cff1d12e52363baa6dcde22f271dc2de8c3
 git branch --show-current
 codex/cu-p1-upgrade-mode-machinery
 
-/home/ops/learn-ukrainian/.venv/bin/python -m scripts.build.verify_shippable a1 things-have-gender --lesson --json
+.venv/bin/python -m scripts.build.verify_shippable a1 things-have-gender --lesson --json
 exit: 1
 shippable: false
 render_fully_validated: false

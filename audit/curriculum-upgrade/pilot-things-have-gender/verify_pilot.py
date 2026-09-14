@@ -16,7 +16,7 @@ Layout: original is archived unchanged at curriculum/l2-uk-en/a1-v1/things-have-
 the split lives at curriculum/l2-uk-en/a1/things-have-gender/.
 
 Usage (from the dispatch worktree root):
-    /home/ops/learn-ukrainian/.venv/bin/python audit/curriculum-upgrade/pilot-things-have-gender/verify_pilot.py
+    .venv/bin/python audit/curriculum-upgrade/pilot-things-have-gender/verify_pilot.py
 """
 from __future__ import annotations
 
