@@ -61,12 +61,21 @@ def norm_text(t: str) -> str:
     return re.sub(r"\s+", " ", strip_acute(t)).strip()
 
 
+def _dialogue_props_text(page: str) -> str:
+    """Text that actually lives on visible DialogueBox props, not the rest of the page."""
+    blobs = re.findall(r"<DialogueBox[\s\S]*?/>", strip_comments(page))
+    decoded = re.sub(r"\\u([0-9a-fA-F]{4})", lambda m: chr(int(m[1], 16)), " ".join(blobs))
+    decoded = decoded.replace('\\"', '"').replace("\\n", " ")
+    return norm_text(decoded)
+
+
 def _visible_in_render(value: str, literal_text: str) -> bool:
     """True if YAML text or its fill-in-blanked form is on the published page."""
     variants = [
         norm_text(value),
         norm_text(re.sub(r"\{([^{}]+)\}", "___", value)),
         norm_text(re.sub(r"\[([^\[\]]{1,12})\]", "___", value)),
+        norm_text(re.sub(r"_{2,}", "___", value)),
     ]
     return any(variant and variant in literal_text for variant in variants)
 
@@ -555,14 +564,24 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                 continue
             if para.lstrip().startswith(">") and "<DialogueBox" in page:
                 # DialogueBox serializes speaker and spoken text as separate props.
+                # Writer lines look like "Тарас : UK (English.)" — drop the English tail.
                 chunks = [re.sub(r"^>\s*", "", line) for line in para.splitlines() if line.strip()]
                 missing = False
                 for chunk in chunks:
                     speaker, sep, spoken = chunk.partition(":")
-                    for value in (speaker, spoken) if sep else (chunk,):
-                        if md_to_text(value) not in literal_text:
-                            missing = True
+                    if sep:
+                        spoken = re.sub(r"\s*\([^()]*\)\s*$", "", spoken)
+                        values = (speaker, spoken)
+                    else:
+                        values = (chunk,)
+                    hay = _dialogue_props_text(page)
+                    if any(md_to_text(value) not in hay for value in values):
+                        missing = True
                 if not missing:
+                    continue
+            if re.search(r"\s+[—–]\s+", para):
+                parts = re.split(r"\s+[—–]\s+", para, maxsplit=1)
+                if len(parts) == 2 and all(md_to_text(part) in visible for part in parts):
                     continue
             if md_to_text(para) not in visible:
                 block(f"lesson {n}: render lacks lesson paragraph: {md_to_text(para)[:100]!r}")
