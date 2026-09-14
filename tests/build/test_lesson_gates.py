@@ -87,6 +87,16 @@ def test_error_correction_wrong_spellings_are_not_missing_stress():
     }
     allow2 = gates.pedagogical_error_forms(gapped)
     assert "вчител" in allow2
+    quiz = {
+        "inline": [],
+        "workbook": [{
+            "id": "act-q",
+            "type": "quiz",
+            "items": [{"options": [{"text": "сімя", "correct": False},
+                                   {"text": "сім'я́", "correct": True}]}],
+        }],
+    }
+    assert "сімя" in gates.pedagogical_error_forms(quiz)
 
 
 def test_hyphenation_models_are_not_missing_stress():

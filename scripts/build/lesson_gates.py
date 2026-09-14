@@ -240,6 +240,13 @@ def pedagogical_error_forms(acts: dict) -> set[str]:
                 for tok in _stress_tokens(sentence):
                     if "_" in tok:
                         out.add(strip_acute(tok.strip("_")).lower())
+            for option in blob.get("options") or []:
+                if isinstance(option, dict) and option.get("correct") is False:
+                    text = option.get("text") or option.get("en") or ""
+                    if isinstance(text, str) and text.strip():
+                        out.add(strip_acute(text).lower().strip())
+                elif isinstance(option, str) and option.strip():
+                    out.add(strip_acute(option).lower().strip())
     return {form for form in out if form}
 
 
@@ -633,14 +640,14 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                         missing = True
                 if not missing:
                     continue
-            if re.search(r"\s+[—–]\s+", para):
-                parts = re.split(r"\s+[—–]\s+", para, maxsplit=1)
+            if re.search(r"[—–]", para):
+                parts = re.split(r"\s*[—–]\s*", para, maxsplit=1)
                 if len(parts) == 2 and all(md_to_text(part) in visible for part in parts):
                     continue
             if md_to_text(para) not in visible:
                 block(f"lesson {n}: render lacks lesson paragraph: {md_to_text(para)[:100]!r}")
-        for aid, (owner, _, act) in new_acts.items():
-            if owner != n:
+        for aid, (owner, placement, act) in new_acts.items():
+            if owner != n or placement == "workbook":
                 continue
             for value in leaves({k: v for k, v in act.items() if k in LIST_FIELDS or k in ("title", "instruction")}):
                 if isinstance(value, str) and len(value) >= 3 and not _visible_in_render(value, literal_text):
