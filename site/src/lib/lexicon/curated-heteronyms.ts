@@ -5044,7 +5044,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           }
         }
       },
-      "distinction_note": "Не плутати з омографом «обладна́ння» (наголос на четвертому складі: дія — облаштування приміщення)."
+      "distinction_note": "Не плутати з омографом «обладна́ння» (наголос на третьому складі: дія — облаштування приміщення)."
     },
     {
       "lemma": "обладнання",
@@ -6810,7 +6810,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з омографом «квітко́вий» (наголос на третьому складі: ботанічний термін, спец.)."
+      "distinction_note": "Не плутати з омографом «квітко́вий» (наголос на другому складі: ботанічний термін, спец.)."
     }
   ],
   "наголос": [
@@ -7561,6 +7561,3055 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         }
       },
       "distinction_note": "Не плутати з омографом «хара́ктерний» (наголос на другому складі: вольовий, впертий, розм.)."
+    }
+  ],
+  "господарський": [
+    {
+      "lemma": "господарський",
+      "url_slug": "господарський",
+      "headword": "госпо́дарський",
+      "short_label": "належний господареві (B1)",
+      "gloss": "of/belonging to the master of the house or estate; personal, domestic",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ɦɔˈspɔdɐrsʲkɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "госпо́дарський",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "панський",
+            "хазяйський"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «господа́рський» (наголос на третьому складі: пов'язаний з господарством, економікою)."
+    },
+    {
+      "lemma": "господарський",
+      "url_slug": "господарський",
+      "headword": "господа́рський",
+      "short_label": "пов'язаний з господарством (B1)",
+      "gloss": "of/relating to the economy, farming, or management of an estate/enterprise",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ɦɔspɔˈdarsʲkɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "господа́рський",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "економічний",
+            "хазяйновитий"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «госпо́дарський» (наголос на другому складі: належний господареві, особистий)."
+    }
+  ],
+  "замковий": [
+    {
+      "lemma": "замковий",
+      "url_slug": "замковий",
+      "headword": "за́мковий",
+      "short_label": "прикм. до за́мок (B1)",
+      "gloss": "of/relating to a castle or fortress",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈzamkɔwɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "за́мковий",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "фортечний"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «замкови́й» (наголос на останньому складі: пов'язаний із замко́м на дверях)."
+    },
+    {
+      "lemma": "замковий",
+      "url_slug": "замковий",
+      "headword": "замкови́й",
+      "short_label": "прикм. до замо́к (B1)",
+      "gloss": "of/relating to a door lock or padlock",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[zɐmkɔˈwɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "замкови́й",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "дверний"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «за́мковий» (наголос на першому складі: пов'язаний із за́мком-фортецею)."
+    }
+  ],
+  "верхом": [
+    {
+      "lemma": "верхом",
+      "url_slug": "верхом",
+      "headword": "ве́рхом",
+      "short_label": "по верхній частині (B1)",
+      "gloss": "along/over the top of something; filled to the brim, heaped over the rim",
+      "pos": "adverb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈwɛrxɔm]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ве́рхом",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прислівник",
+        "paradigm": {
+          "kind": "adverb"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «верхо́м» (наголос на другому складі, рідко: те саме, що «верхи» -- сидячи на коні)."
+    },
+    {
+      "lemma": "верхом",
+      "url_slug": "верхом",
+      "headword": "верхо́м",
+      "short_label": "сидячи на коні (рідко, B1)",
+      "gloss": "mounted, astride, on horseback (rare synonym of верхи)",
+      "pos": "adverb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[wɛˈrxɔm]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "верхо́м",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прислівник",
+        "paradigm": {
+          "kind": "adverb"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "верхи"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ве́рхом» (наголос на першому складі: по верхній частині чого-небудь, з верхом)."
+    }
+  ],
+  "вибухати": [
+    {
+      "lemma": "вибухати",
+      "url_slug": "вибухати",
+      "headword": "вибуха́ти",
+      "short_label": "вибухати, розриватися (A2)",
+      "gloss": "to explode, detonate with great force; (of feelings, events) to erupt suddenly",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[wɪbuˈxatɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "вибуха́ти",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "розриватися",
+            "детонувати"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ви́бухати» (наголос на першому складі, док., розм.: раптом сказати все одразу)."
+    },
+    {
+      "lemma": "вибухати",
+      "url_slug": "вибухати",
+      "headword": "ви́бухати",
+      "short_label": "раптом усе сказати (розм., B1)",
+      "gloss": "to blurt out, say everything suddenly (colloquial, perfective)",
+      "pos": "verb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈwɪbuxɐtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ви́бухати",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "доконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «вибуха́ти» (наголос на третьому складі, недок.: розриватися з силою і звуком)."
+    }
+  ],
+  "вивозити": [
+    {
+      "lemma": "вивозити",
+      "url_slug": "вивозити",
+      "headword": "виво́зити",
+      "short_label": "везти геть, експортувати (A2)",
+      "gloss": "to carry/take out of a place; (also) to export goods to another country",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[wɪˈwɔzɪtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "виво́зити",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "експортувати"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ви́возити» (наголос на першому складі, док.: вивезти все за кілька разів; розм. забруднити одяг)."
+    },
+    {
+      "lemma": "вивозити",
+      "url_slug": "вивозити",
+      "headword": "ви́возити",
+      "short_label": "забруднити, вивезти все (розм., B1)",
+      "gloss": "to remove/carry away entirely by repeated trips; (colloquial) to get one's clothes dirty while working",
+      "pos": "verb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈwɪwɔzɪtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ви́возити",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "доконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «виво́зити» (наголос на другому складі, недок.: везти геть, експортувати)."
+    }
+  ],
+  "виганяти": [
+    {
+      "lemma": "виганяти",
+      "url_slug": "виганяти",
+      "headword": "виганя́ти",
+      "short_label": "проганяти, виводити геть (A2)",
+      "gloss": "to drive out, expel, evict (people); to drive/take livestock out to pasture",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[wɪɦɐˈnʲatɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "виганя́ти",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "проганяти",
+            "виводити"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ви́ганяти» (наголос на першому складі, док., рідко: набігатися по багатьох місцях; інший корінь -- від «ганяти», не «гнати»)."
+    },
+    {
+      "lemma": "виганяти",
+      "url_slug": "виганяти",
+      "headword": "ви́ганяти",
+      "short_label": "набігатися (рідко, розм.)",
+      "gloss": "to have spent time running about to many places (rare, colloquial; from ганяти, unrelated to виганяти/гнати)",
+      "pos": "verb",
+      "cefr": null,
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈwɪɦɐnʲɐtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ви́ганяти",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "доконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «виганя́ти» (наголос на третьому складі, недок.: проганяти когось геть, виганяти худобу на пасовище)."
+    }
+  ],
+  "вилітати": [
+    {
+      "lemma": "вилітати",
+      "url_slug": "вилітати",
+      "headword": "виліта́ти",
+      "short_label": "вилітати, відправлятися (A2)",
+      "gloss": "to fly out, take off, depart by air; (colloquial) to be expelled, fired",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[wɪɫʲiˈtatɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "виліта́ти",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "відлітати"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ви́літати» (наголос на першому складі, док.: пробути якийсь час літаючи)."
+    },
+    {
+      "lemma": "вилітати",
+      "url_slug": "вилітати",
+      "headword": "ви́літати",
+      "short_label": "пробути якийсь час у польоті (B1)",
+      "gloss": "to spend time flying, fly around for a while (delimitative perfective)",
+      "pos": "verb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈwɪɫʲitɐtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ви́літати",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "доконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «виліта́ти» (наголос на третьому складі, недок.: вилітати, відправлятися в політ)."
+    }
+  ],
+  "витягати": [
+    {
+      "lemma": "витягати",
+      "url_slug": "витягати",
+      "headword": "витяга́ти",
+      "short_label": "тягнучи, виймати (A2)",
+      "gloss": "to pull out, extract, stretch out; to help someone out of a difficult situation",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[wɪtʲɐˈɦatɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "витяга́ти",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "виймати",
+            "видобувати"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ви́тягати» (наголос на першому складі, док.: вибрати щось звідкись за кілька разів)."
+    },
+    {
+      "lemma": "витягати",
+      "url_slug": "витягати",
+      "headword": "ви́тягати",
+      "short_label": "вибрати за кілька разів (B1)",
+      "gloss": "to pick out/draw out repeatedly, several times (perfective)",
+      "pos": "verb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈwɪtʲɐɦɐtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ви́тягати",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "доконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «витяга́ти» (наголос на третьому складі, недок.: тягнучи, виймати, розтягувати)."
+    }
+  ],
+  "відкликання": [
+    {
+      "lemma": "відкликання",
+      "url_slug": "відкликання",
+      "headword": "відкли́кання",
+      "short_label": "позбавлення повноважень (B2)",
+      "gloss": "recall, withdrawal (of deputies, ambassadors, officials from their post)",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[wʲiˈdkɫɪkɐnnʲɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "відкли́кання",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "cases": {
+            "називний": {
+              "singular": "відкли́кання",
+              "plural": "відкли́кання"
+            },
+            "родовий": {
+              "singular": "відкли́кання",
+              "plural": "відкли́кань"
+            },
+            "давальний": {
+              "singular": "відкли́канню",
+              "plural": "відкли́канням"
+            },
+            "знахідний": {
+              "singular": "відкли́кання",
+              "plural": "відкли́кання"
+            },
+            "орудний": {
+              "singular": "відкли́канням",
+              "plural": "відкли́каннями"
+            },
+            "місцевий": {
+              "singular": "(у) відкли́канні / відкли́канню",
+              "plural": "відкли́каннях"
+            },
+            "кличний": {
+              "singular": "відкли́кання",
+              "plural": "відкли́кання"
+            }
+          }
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "звільнення",
+            "усунення"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «відклика́ння» (наголос на третьому складі: здатність відкликатися, відгук на поклик)."
+    },
+    {
+      "lemma": "відкликання",
+      "url_slug": "відкликання",
+      "headword": "відклика́ння",
+      "short_label": "відгук на поклик (B2)",
+      "gloss": "responsiveness; the act of answering a call (per the verb відклика́тися)",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[wʲidkɫɪˈkannʲɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "відклика́ння",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "cases": {
+            "називний": {
+              "singular": "відклика́ння",
+              "plural": "відклика́ння"
+            },
+            "родовий": {
+              "singular": "відклика́ння",
+              "plural": "відклика́нь"
+            },
+            "давальний": {
+              "singular": "відклика́нню",
+              "plural": "відклика́нням"
+            },
+            "знахідний": {
+              "singular": "відклика́ння",
+              "plural": "відклика́ння"
+            },
+            "орудний": {
+              "singular": "відклика́нням",
+              "plural": "відклика́ннями"
+            },
+            "місцевий": {
+              "singular": "(у) відклика́нні / відклика́нню",
+              "plural": "відклика́ннях"
+            },
+            "кличний": {
+              "singular": "відклика́ння",
+              "plural": "відклика́ння"
+            }
+          }
+        }
+      },
+      "distinction_note": "Не плутати з омографом «відкли́кання» (наголос на другому складі: позбавлення повноважень депутата, посла)."
+    }
+  ],
+  "відповідний": [
+    {
+      "lemma": "відповідний",
+      "url_slug": "відповідний",
+      "headword": "відпові́дний",
+      "short_label": "підхожий, належний (A2)",
+      "gloss": "suitable, appropriate, corresponding (fitting for a given case)",
+      "pos": "adjective",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[wʲidpɔˈwʲidnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "відпові́дний",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "підхожий",
+            "належний"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «відповідни́й» (наголос на останньому складі: даний у відповідь -- відповідний лист)."
+    },
+    {
+      "lemma": "відповідний",
+      "url_slug": "відповідний",
+      "headword": "відповідни́й",
+      "short_label": "даний у відповідь (B2)",
+      "gloss": "given in reply/response (e.g. an answering letter or diplomatic note)",
+      "pos": "adjective",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[wʲidpɔwʲiˈdnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "відповідни́й",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «відпові́дний» (наголос на третьому складі: підхожий, належний для якогось випадку)."
+    }
+  ],
+  "вітряний": [
+    {
+      "lemma": "вітряний",
+      "url_slug": "вітряний",
+      "headword": "ві́тряний",
+      "short_label": "з вітром (A2)",
+      "gloss": "windy (accompanied by wind); (figuratively, of a person) flighty, frivolous",
+      "pos": "adjective",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈwʲitrɐnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ві́тряний",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "буряний"
+          ]
+        },
+        "antonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "тихий",
+            "безвітряний"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «вітряни́й» (наголос на останньому складі: що діє за допомогою вітру -- вітряний млин)."
+    },
+    {
+      "lemma": "вітряний",
+      "url_slug": "вітряний",
+      "headword": "вітряни́й",
+      "short_label": "що діє вітром (B1)",
+      "gloss": "wind-powered (e.g. a windmill)",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[wʲitrɐˈnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "вітряни́й",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ві́тряний» (наголос на першому складі: з вітром, вітряна погода)."
+    }
+  ],
+  "водяний": [
+    {
+      "lemma": "водяний",
+      "url_slug": "водяний",
+      "headword": "водя́ний",
+      "short_label": "водянистий (B1)",
+      "gloss": "watery, diluted, waterlogged (of soil, food); rich in water",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[wɔˈdʲanɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "водя́ний",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "водянистий"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «водяни́й» (наголос на останньому складі: пов'язаний з водою -- водяний млин, водяний спорт)."
+    },
+    {
+      "lemma": "водяний",
+      "url_slug": "водяний",
+      "headword": "водяни́й",
+      "short_label": "пов'язаний з водою (A2)",
+      "gloss": "aquatic, water-related, water-powered (of mills, sports, plants/animals); (dated, as a noun) a water spirit",
+      "pos": "adjective",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[wɔdʲɐˈnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "водяни́й",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "водний"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «водя́ний» (наголос на другому складі: водянистий, багатий на воду)."
+    }
+  ],
+  "воловий": [
+    {
+      "lemma": "воловий",
+      "url_slug": "воловий",
+      "headword": "во́ловий",
+      "short_label": "прикм. до во́ло (діал.)",
+      "gloss": "relating to воло -- the crop (craw) of a bird; (dialectal, folk) relating to a goiter",
+      "pos": "adjective",
+      "cefr": null,
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈwɔɫɔwɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "во́ловий",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «воло́вий» (наголос на другому складі: прикметник до «віл» -- волова шкура, воловий плуг)."
+    },
+    {
+      "lemma": "воловий",
+      "url_slug": "воловий",
+      "headword": "воло́вий",
+      "short_label": "прикм. до віл (B1)",
+      "gloss": "of/relating to an ox (ox-hide, ox-drawn, ox-meat); (figuratively) extremely strong, tough",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[wɔˈɫɔwɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "воло́вий",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «во́ловий» (наголос на першому складі, діал.: прикметник до «воло» -- воло птаха або зоб)."
+    }
+  ],
+  "гукати": [
+    {
+      "lemma": "гукати",
+      "url_slug": "гукати",
+      "headword": "гу́кати",
+      "short_label": "видавати гучний звук (розм., B1)",
+      "gloss": "to make a loud, sharp sound; to hoot (of trains, thunder)",
+      "pos": "verb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈɦukɐtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "гу́кати",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «гука́ти» (наголос на другому складі: голосно кликати когось, звертатися до когось)."
+    },
+    {
+      "lemma": "гукати",
+      "url_slug": "гукати",
+      "headword": "гука́ти",
+      "short_label": "голосно кликати (A2)",
+      "gloss": "to call out loudly, summon; to shout at someone",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ɦuˈkatɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "гука́ти",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "кликати",
+            "гукнути"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «гу́кати» (наголос на першому складі, розм.: видавати гучний, різкий звук -- про грім, потяг)."
+    }
+  ],
+  "гвоздик": [
+    {
+      "lemma": "гвоздик",
+      "url_slug": "гвоздик",
+      "headword": "гво́здик",
+      "short_label": "маленький цвях (рідко)",
+      "gloss": "a small nail, tack (diminutive of гвоздь, rare)",
+      "pos": "noun",
+      "cefr": null,
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": false,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈɦwɔzdɪk]",
+        "source": "СУМ-11"
+      },
+      "stress": {
+        "form": "гво́здик",
+        "source": "СУМ-11"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "cases": {
+            "називний": {
+              "singular": "гво́здик",
+              "plural": "гво́здики"
+            },
+            "родовий": {
+              "singular": "гво́здика",
+              "plural": "гво́здиків"
+            },
+            "давальний": {
+              "singular": "гво́здику / гво́здикові",
+              "plural": "гво́здикам"
+            },
+            "знахідний": {
+              "singular": "гво́здик",
+              "plural": "гво́здики"
+            },
+            "орудний": {
+              "singular": "гво́здиком",
+              "plural": "гво́здиками"
+            },
+            "місцевий": {
+              "singular": "(на) гво́здику",
+              "plural": "гво́здиках"
+            },
+            "кличний": {
+              "singular": "гво́здику",
+              "plural": "гво́здики"
+            }
+          }
+        }
+      },
+      "distinction_note": "Не плутати з омографом «гвозди́к» (наголос на другому складі, зазвич. мн.: народна назва рослини чорнобривці)."
+    },
+    {
+      "lemma": "гвоздик",
+      "url_slug": "гвоздик",
+      "headword": "гвозди́к",
+      "short_label": "чорнобривці (переваж. мн.)",
+      "gloss": "marigold (Tagetes; folk/regional name, usually used in the plural)",
+      "pos": "noun",
+      "cefr": null,
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": false,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ɦwɔˈzdɪk]",
+        "source": "СУМ-11"
+      },
+      "stress": {
+        "form": "гвозди́к",
+        "source": "СУМ-11"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "cases": {
+            "називний": {
+              "singular": "гвозди́к",
+              "plural": "гвозди́ки"
+            },
+            "родовий": {
+              "singular": "гвозди́ка",
+              "plural": "гвозди́ків"
+            },
+            "давальний": {
+              "singular": "гвозди́ку / гвозди́кові",
+              "plural": "гвозди́кам"
+            },
+            "знахідний": {
+              "singular": "гвозди́к",
+              "plural": "гвозди́ки"
+            },
+            "орудний": {
+              "singular": "гвозди́ком",
+              "plural": "гвозди́ками"
+            },
+            "місцевий": {
+              "singular": "(на) гвозди́ку",
+              "plural": "гвозди́ках"
+            },
+            "кличний": {
+              "singular": "гвозди́ку",
+              "plural": "гвозди́ки"
+            }
+          }
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "повняк"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «гво́здик» (наголос на першому складі, рідко: маленький цвях, зменш. від «гвоздь»)."
+    }
+  ],
+  "гладкий": [
+    {
+      "lemma": "гладкий",
+      "url_slug": "гладкий",
+      "headword": "гла́дкий",
+      "short_label": "рівний, без нерівностей (A2)",
+      "gloss": "smooth, even, without bumps or folds",
+      "pos": "adjective",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈɦɫadkɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "гла́дкий",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "рівний"
+          ]
+        },
+        "antonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "шорсткий",
+            "нерівний"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «гладки́й» (наголос на другому складі: вгодований, ситий, повний тілом)."
+    },
+    {
+      "lemma": "гладкий",
+      "url_slug": "гладкий",
+      "headword": "гладки́й",
+      "short_label": "вгодований, ситий (B1)",
+      "gloss": "plump, corpulent, well-fed",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ɦɫɐˈdkɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "гладки́й",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "вгодований",
+            "ситий"
+          ]
+        },
+        "antonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "худий"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «гла́дкий» (наголос на першому складі: рівний, без нерівностей і виступів)."
+    }
+  ],
+  "діяння": [
+    {
+      "lemma": "діяння",
+      "url_slug": "діяння",
+      "headword": "ді́яння",
+      "short_label": "дія, вчинок (B1)",
+      "gloss": "a deed, act, action; (plural) conduct, deeds",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈdʲijɐnnʲɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ді́яння",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "cases": {
+            "називний": {
+              "singular": "ді́яння",
+              "plural": "ді́яння"
+            },
+            "родовий": {
+              "singular": "ді́яння",
+              "plural": "ді́янь"
+            },
+            "давальний": {
+              "singular": "ді́янню",
+              "plural": "ді́янням"
+            },
+            "знахідний": {
+              "singular": "ді́яння",
+              "plural": "ді́яння"
+            },
+            "орудний": {
+              "singular": "ді́янням",
+              "plural": "ді́яннями"
+            },
+            "місцевий": {
+              "singular": "(у) ді́янні / ді́янню",
+              "plural": "ді́яннях"
+            },
+            "кличний": {
+              "singular": "ді́яння",
+              "plural": "ді́яння"
+            }
+          }
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "дія",
+            "вчинок"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «дія́ння» (наголос на другому складі, рел.: церковне читання про діяння апостолів)."
+    },
+    {
+      "lemma": "діяння",
+      "url_slug": "діяння",
+      "headword": "дія́ння",
+      "short_label": "церк. читання про апостолів",
+      "gloss": "(religious) the church reading of the Acts of the Apostles; «Діяння апостолів» = the Acts of the Apostles",
+      "pos": "noun",
+      "cefr": null,
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[dʲiˈjannʲɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "дія́ння",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "cases": {
+            "називний": {
+              "singular": "дія́ння",
+              "plural": "дія́ння"
+            },
+            "родовий": {
+              "singular": "дія́ння",
+              "plural": "дія́нь"
+            },
+            "давальний": {
+              "singular": "дія́нню",
+              "plural": "дія́нням"
+            },
+            "знахідний": {
+              "singular": "дія́ння",
+              "plural": "дія́ння"
+            },
+            "орудний": {
+              "singular": "дія́нням",
+              "plural": "дія́ннями"
+            },
+            "місцевий": {
+              "singular": "(у) дія́нні / дія́нню",
+              "plural": "дія́ннях"
+            },
+            "кличний": {
+              "singular": "дія́ння",
+              "plural": "дія́ння"
+            }
+          }
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ді́яння» (наголос на першому складі: дія, вчинок, учинки людини)."
+    }
+  ],
+  "добродійство": [
+    {
+      "lemma": "добродійство",
+      "url_slug": "добродійство",
+      "headword": "добро́дійство",
+      "short_label": "шановне товариство (заст., збірн.)",
+      "gloss": "the esteemed folk, ladies and gentlemen (archaic collective address term; see добродій)",
+      "pos": "noun",
+      "cefr": null,
+      "heritage_status": {
+        "classification": "authentic-archaism",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": "treasured",
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[dɔˈbrɔdʲijstwɔ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "добро́дійство",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "cases": {
+            "називний": {
+              "singular": "добро́дійство",
+              "plural": "добро́дійства"
+            },
+            "родовий": {
+              "singular": "добро́дійства",
+              "plural": "добро́дійств"
+            },
+            "давальний": {
+              "singular": "добро́дійству",
+              "plural": "добро́дійствам"
+            },
+            "знахідний": {
+              "singular": "добро́дійство",
+              "plural": "добро́дійства"
+            },
+            "орудний": {
+              "singular": "добро́дійством",
+              "plural": "добро́дійствами"
+            },
+            "місцевий": {
+              "singular": "(у) добро́дійстві / добро́дійству",
+              "plural": "добро́дійствах"
+            },
+            "кличний": {
+              "singular": "добро́дійство",
+              "plural": "добро́дійства"
+            }
+          }
+        }
+      },
+      "distinction_note": "Не плутати з омографом «доброді́йство» (наголос на третьому складі, розм.: доброчинність, добра справа)."
+    },
+    {
+      "lemma": "добродійство",
+      "url_slug": "добродійство",
+      "headword": "доброді́йство",
+      "short_label": "доброчинність (розм., B2)",
+      "gloss": "beneficence, charity; a good/charitable deed (= добродіяння)",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[dɔbrɔˈdʲijstwɔ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "доброді́йство",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "cases": {
+            "називний": {
+              "singular": "доброді́йство",
+              "plural": "доброді́йства"
+            },
+            "родовий": {
+              "singular": "доброді́йства",
+              "plural": "доброді́йств"
+            },
+            "давальний": {
+              "singular": "доброді́йству",
+              "plural": "доброді́йствам"
+            },
+            "знахідний": {
+              "singular": "доброді́йство",
+              "plural": "доброді́йства"
+            },
+            "орудний": {
+              "singular": "доброді́йством",
+              "plural": "доброді́йствами"
+            },
+            "місцевий": {
+              "singular": "(у) доброді́йстві / доброді́йству",
+              "plural": "доброді́йствах"
+            },
+            "кличний": {
+              "singular": "доброді́йство",
+              "plural": "доброді́йства"
+            }
+          }
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "добродіяння",
+            "доброчинність"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «добро́дійство» (наголос на другому складі, заст., збірн.: шановне товариство, зверт. форма)."
+    }
+  ],
+  "духовий": [
+    {
+      "lemma": "духовий",
+      "url_slug": "духовий",
+      "headword": "духо́вий",
+      "short_label": "духовний (діал.)",
+      "gloss": "spiritual (dialectal synonym of духовний)",
+      "pos": "adjective",
+      "cefr": null,
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[duˈxɔwɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "духо́вий",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «духови́й» (наголос на останньому складі: пов'язаний із духовими інструментами або жаром -- духовий оркестр, духова шафа)."
+    },
+    {
+      "lemma": "духовий",
+      "url_slug": "духовий",
+      "headword": "духови́й",
+      "short_label": "духові інструменти, жарова піч (A2)",
+      "gloss": "wind-instrument-related (of music); operated by hot air (e.g. an oven)",
+      "pos": "adjective",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[duxɔˈwɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "духови́й",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "жаровий"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «духо́вий» (наголос на другому складі, діал.: духовний, пов'язаний із духом)."
+    }
+  ],
+  "забігати": [
+    {
+      "lemma": "забігати",
+      "url_slug": "забігати",
+      "headword": "забі́гати",
+      "short_label": "почати бігати (B1)",
+      "gloss": "to begin running about (bounded perfective)",
+      "pos": "verb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[zɐˈbʲiɦɐtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "забі́гати",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "доконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «забіга́ти» (наголос на третьому складі, недок.: заходити ненадовго, забігати наперед)."
+    },
+    {
+      "lemma": "забігати",
+      "url_slug": "забігати",
+      "headword": "забіга́ти",
+      "short_label": "заходити ненадовго (A2)",
+      "gloss": "to run into somewhere briefly; to drop by; to run ahead",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[zɐbʲiˈɦatɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "забіга́ти",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "заходити",
+            "навідуватися"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «забі́гати» (наголос на другому складі, док.: почати бігати)."
+    }
+  ],
+  "загорода": [
+    {
+      "lemma": "загорода",
+      "url_slug": "загорода",
+      "headword": "за́города",
+      "short_label": "загін для худоби (B1)",
+      "gloss": "an enclosed pen for keeping domestic animals or birds",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈzaɦɔrɔdɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "за́города",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "cases": {
+            "називний": {
+              "singular": "за́города",
+              "plural": "за́городи"
+            },
+            "родовий": {
+              "singular": "за́городи",
+              "plural": "за́город"
+            },
+            "давальний": {
+              "singular": "за́городі",
+              "plural": "за́городам"
+            },
+            "знахідний": {
+              "singular": "за́городу",
+              "plural": "за́городи"
+            },
+            "орудний": {
+              "singular": "за́городою",
+              "plural": "за́городами"
+            },
+            "місцевий": {
+              "singular": "(у) за́городі",
+              "plural": "за́городах"
+            },
+            "кличний": {
+              "singular": "за́городо",
+              "plural": "за́городи"
+            }
+          }
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "загін",
+            "кошара"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «загоро́да» (наголос на третьому складі: тин, паркан, огорожа)."
+    },
+    {
+      "lemma": "загорода",
+      "url_slug": "загорода",
+      "headword": "загоро́да",
+      "short_label": "тин, огорожа (B1)",
+      "gloss": "a fence, wall, or similar barrier that encloses something",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[zɐɦɔˈrɔdɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "загоро́да",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "cases": {
+            "називний": {
+              "singular": "загоро́да",
+              "plural": "загоро́ди"
+            },
+            "родовий": {
+              "singular": "загоро́ди",
+              "plural": "загоро́д"
+            },
+            "давальний": {
+              "singular": "загоро́ді",
+              "plural": "загоро́дам"
+            },
+            "знахідний": {
+              "singular": "загоро́ду",
+              "plural": "загоро́ди"
+            },
+            "орудний": {
+              "singular": "загоро́дою",
+              "plural": "загоро́дами"
+            },
+            "місцевий": {
+              "singular": "(у) загоро́ді",
+              "plural": "загоро́дах"
+            },
+            "кличний": {
+              "singular": "загоро́до",
+              "plural": "загоро́ди"
+            }
+          }
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "тин",
+            "паркан",
+            "огорожа"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «за́города» (наголос на першому складі: загороджена ділянка для худоби)."
+    }
+  ],
+  "запальний": [
+    {
+      "lemma": "запальний",
+      "url_slug": "запальний",
+      "headword": "запа́льний",
+      "short_label": "пов'язаний із запалом (спец., B2)",
+      "gloss": "relating to a fuse or ignition charge (special/military term)",
+      "pos": "adjective",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[zɐˈpaɫʲnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "запа́льний",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «запальни́й» (наголос на останньому складі: запалювальний; перен. запальна людина -- гарячкувата, схильна до захоплення)."
+    },
+    {
+      "lemma": "запальний",
+      "url_slug": "запальний",
+      "headword": "запальни́й",
+      "short_label": "запалювальний; гарячкуватий (B1)",
+      "gloss": "incendiary; (figuratively) rousing, passionate, quick-tempered; (medical) inflammatory",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[zɐpɐɫʲˈnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "запальни́й",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "палкий",
+            "гарячкуватий"
+          ]
+        },
+        "antonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "спокійний",
+            "стриманий"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «запа́льний» (наголос на другому складі, спец.: пов'язаний із запалом -- запальний гніт)."
+    }
+  ],
+  "затока": [
+    {
+      "lemma": "затока",
+      "url_slug": "затока",
+      "headword": "зато́ка",
+      "short_label": "бухта (A2)",
+      "gloss": "a bay, gulf (part of a sea, lake, or river that cuts into land)",
+      "pos": "noun",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[zɐˈtɔkɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "зато́ка",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "cases": {
+            "називний": {
+              "singular": "зато́ка",
+              "plural": "зато́ки"
+            },
+            "родовий": {
+              "singular": "зато́ки",
+              "plural": "зато́к"
+            },
+            "давальний": {
+              "singular": "зато́ці",
+              "plural": "зато́кам"
+            },
+            "знахідний": {
+              "singular": "зато́ку",
+              "plural": "зато́ки"
+            },
+            "орудний": {
+              "singular": "зато́кою",
+              "plural": "зато́ками"
+            },
+            "місцевий": {
+              "singular": "(у) зато́ці",
+              "plural": "зато́ках"
+            },
+            "кличний": {
+              "singular": "зато́ко",
+              "plural": "зато́ки"
+            }
+          }
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "бухта",
+            "лиман"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «за́тока» (наголос на першому складі, діал.: слизький схил дороги, куди сповзають сани)."
+    },
+    {
+      "lemma": "затока",
+      "url_slug": "затока",
+      "headword": "за́тока",
+      "short_label": "слизький схил дороги (діал.)",
+      "gloss": "(dialectal) a slippery downhill stretch of road where sledges slide off",
+      "pos": "noun",
+      "cefr": null,
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈzatɔkɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "за́тока",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "cases": {
+            "називний": {
+              "singular": "за́тока",
+              "plural": "за́токи"
+            },
+            "родовий": {
+              "singular": "за́токи",
+              "plural": "за́ток"
+            },
+            "давальний": {
+              "singular": "за́тоці",
+              "plural": "за́токам"
+            },
+            "знахідний": {
+              "singular": "за́току",
+              "plural": "за́токи"
+            },
+            "орудний": {
+              "singular": "за́токою",
+              "plural": "за́токами"
+            },
+            "місцевий": {
+              "singular": "(у) за́тоці",
+              "plural": "за́токах"
+            },
+            "кличний": {
+              "singular": "за́токо",
+              "plural": "за́токи"
+            }
+          }
+        }
+      },
+      "distinction_note": "Не плутати з омографом «зато́ка» (наголос на другому складі: частина моря чи озера, що вдається в сушу; бухта)."
+    }
+  ],
+  "збігатися": [
+    {
+      "lemma": "збігатися",
+      "url_slug": "збігатися",
+      "headword": "збіга́тися",
+      "short_label": "сходитися, збігатися в часі (A2)",
+      "gloss": "to run together, converge from different directions; to coincide (in time, opinion); (of fabric) to shrink",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[zbʲiˈɦatɪsʲɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "збіга́тися",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "сходитися",
+            "збиратися"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «збі́гатися» (наголос на першому складі, док., заст./розм.: набігатися по багатьох місцях, стомитися від бігу)."
+    },
+    {
+      "lemma": "збігатися",
+      "url_slug": "збігатися",
+      "headword": "збі́гатися",
+      "short_label": "набігатися (заст., розм.)",
+      "gloss": "(archaic) to have visited many places running about; (colloquial) to tire oneself out from running",
+      "pos": "verb",
+      "cefr": null,
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈzbʲiɦɐtɪsʲɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "збі́гатися",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "доконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «збіга́тися» (наголос на другому складі, недок.: сходитися докупи, збігатися в часі)."
+    }
+  ],
+  "землянин": [
+    {
+      "lemma": "землянин",
+      "url_slug": "землянин",
+      "headword": "земля́нин",
+      "short_label": "мешканець Землі (A2)",
+      "gloss": "an inhabitant of planet Earth, Earthling",
+      "pos": "noun",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[zɛˈmɫʲanɪn]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "земля́нин",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "note": "клас іменників на -анин/-янин: у множині суфікс -ин зникає",
+          "cases": {
+            "називний": {
+              "singular": "земля́нин",
+              "plural": "земля́ни"
+            },
+            "родовий": {
+              "singular": "земля́нина",
+              "plural": "земля́н"
+            },
+            "давальний": {
+              "singular": "земля́нинові / земля́нину",
+              "plural": "земля́нам"
+            },
+            "знахідний": {
+              "singular": "земля́нина",
+              "plural": "земля́н"
+            },
+            "орудний": {
+              "singular": "земля́нином",
+              "plural": "земля́нами"
+            },
+            "місцевий": {
+              "singular": "(на) земля́ні / земля́нинові / земля́нину",
+              "plural": "земля́нах"
+            },
+            "кличний": {
+              "singular": "земля́нине",
+              "plural": "земля́ни"
+            }
+          }
+        }
+      },
+      "sections": {
+        "antonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "інопланетянин"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «земляни́н» (наголос на останньому складі, заст.: селянин)."
+    },
+    {
+      "lemma": "землянин",
+      "url_slug": "землянин",
+      "headword": "земляни́н",
+      "short_label": "селянин (заст.)",
+      "gloss": "a peasant, countryman (archaic synonym of селянин)",
+      "pos": "noun",
+      "cefr": null,
+      "heritage_status": {
+        "classification": "authentic-archaism",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": "treasured",
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[zɛmɫʲɐˈnɪn]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "земляни́н",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "note": "форми множини для цього застарілого значення рідко фіксуються окремо",
+          "cases": {
+            "називний": {
+              "singular": "земляни́н",
+              "plural": null
+            },
+            "родовий": {
+              "singular": "земляни́на",
+              "plural": null
+            },
+            "давальний": {
+              "singular": "земляни́нові / земляни́ну",
+              "plural": null
+            },
+            "знахідний": {
+              "singular": "земляни́на",
+              "plural": null
+            },
+            "орудний": {
+              "singular": "земляни́ном",
+              "plural": null
+            },
+            "місцевий": {
+              "singular": "(на) земляни́ні / земляни́нові / земляни́ну",
+              "plural": null
+            },
+            "кличний": {
+              "singular": "земляни́не",
+              "plural": null
+            }
+          }
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "селянин"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «земля́нин» (наголос на другому складі: мешканець планети Земля)."
+    }
+  ],
+  "ковтати": [
+    {
+      "lemma": "ковтати",
+      "url_slug": "ковтати",
+      "headword": "ковта́ти",
+      "short_label": "проковтнути їжу (A1)",
+      "gloss": "to swallow (move food/drink from the mouth to the stomach)",
+      "pos": "verb",
+      "cefr": "A1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[kɔˈwtatɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ковта́ти",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "глитати"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ко́втати» (наголос на першому складі, діал.: битися, стукатися)."
+    },
+    {
+      "lemma": "ковтати",
+      "url_slug": "ковтати",
+      "headword": "ко́втати",
+      "short_label": "битися, стукатися (діал.)",
+      "gloss": "(dialectal) to knock, hit, bang against something",
+      "pos": "verb",
+      "cefr": null,
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈkɔwtɐtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ко́втати",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ковта́ти» (наголос на другому складі: проковтнути їжу чи напій)."
+    }
+  ],
+  "колон": [
+    {
+      "lemma": "колон",
+      "url_slug": "колон",
+      "headword": "ко́лон",
+      "short_label": "віршовий рядок (спец., C1)",
+      "gloss": "a colon -- a rhythmic unit of verse or prose sharing one rhythmic stress (literary/prosody term)",
+      "pos": "noun",
+      "cefr": "C1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈkɔɫɔn]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ко́лон",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "cases": {
+            "називний": {
+              "singular": "ко́лон",
+              "plural": "ко́лони"
+            },
+            "родовий": {
+              "singular": "ко́лона",
+              "plural": "ко́лонів"
+            },
+            "давальний": {
+              "singular": "ко́лону / ко́лонові",
+              "plural": "ко́лонам"
+            },
+            "знахідний": {
+              "singular": "ко́лон",
+              "plural": "ко́лони"
+            },
+            "орудний": {
+              "singular": "ко́лоном",
+              "plural": "ко́лонами"
+            },
+            "місцевий": {
+              "singular": "(у) ко́лоні / ко́лону / ко́лонові",
+              "plural": "ко́лонах"
+            },
+            "кличний": {
+              "singular": "ко́лоне",
+              "plural": "ко́лони"
+            }
+          }
+        }
+      },
+      "distinction_note": "Не плутати з омографом «коло́н» (наголос на другому складі: селянин-орендар у Римській імперії або середньовіччі)."
+    },
+    {
+      "lemma": "колон",
+      "url_slug": "колон",
+      "headword": "коло́н",
+      "short_label": "селянин-орендар (іст., C1)",
+      "gloss": "a colonus -- a Roman or medieval tenant peasant farmer (historical term)",
+      "pos": "noun",
+      "cefr": "C1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[kɔˈɫɔn]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "коло́н",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "note": "тварин./анімат. відмінювання (родовий = знахідний)",
+          "cases": {
+            "називний": {
+              "singular": "коло́н",
+              "plural": "коло́ни"
+            },
+            "родовий": {
+              "singular": "коло́на",
+              "plural": "коло́нів"
+            },
+            "давальний": {
+              "singular": "коло́ну / коло́нові",
+              "plural": "коло́нам"
+            },
+            "знахідний": {
+              "singular": "коло́на",
+              "plural": "коло́нів"
+            },
+            "орудний": {
+              "singular": "коло́ном",
+              "plural": "коло́нами"
+            },
+            "місцевий": {
+              "singular": "(у) коло́ні / коло́ну / коло́нові",
+              "plural": "коло́нах"
+            },
+            "кличний": {
+              "singular": "коло́не",
+              "plural": "коло́ни"
+            }
+          }
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "орендар"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ко́лон» (наголос на першому складі: віршовий рядок, ритмічна одиниця тексту)."
+    }
+  ],
+  "колючий": [
+    {
+      "lemma": "колючий",
+      "url_slug": "колючий",
+      "headword": "ко́лючий",
+      "short_label": "яким колють (B1)",
+      "gloss": "which pricks/is used for piercing (of an organ or device); causing a sharp, piercing pain sensation",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈkɔɫʲut͡ʃɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ко́лючий",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «колю́чий» (наголос на другому складі: колючий терен, колюча борода; перен. дошкульний)."
+    },
+    {
+      "lemma": "колючий",
+      "url_slug": "колючий",
+      "headword": "колю́чий",
+      "short_label": "з колючками, дошкульний (A2)",
+      "gloss": "prickly, thorny, covered with thorns/spines; (figuratively) sharp-tongued, biting",
+      "pos": "adjective",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[kɔˈɫʲut͡ʃɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "колю́чий",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "дошкульний"
+          ]
+        },
+        "antonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "гладенький",
+            "м'який"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ко́лючий» (наголос на першому складі: яким колють, гострий -- колючий апарат, колючий біль)."
+    }
+  ],
+  "копати": [
+    {
+      "lemma": "копати",
+      "url_slug": "копати",
+      "headword": "ко́пати",
+      "short_label": "бити ногою (A1)",
+      "gloss": "to kick, strike with the foot; (of animals) to buck, kick",
+      "pos": "verb",
+      "cefr": "A1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈkɔpɐtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ко́пати",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «копа́ти» (наголос на другому складі: розпушувати землю заступом чи лопатою)."
+    },
+    {
+      "lemma": "копати",
+      "url_slug": "копати",
+      "headword": "копа́ти",
+      "short_label": "розпушувати землю (A1)",
+      "gloss": "to dig (loosen soil with a spade or shovel)",
+      "pos": "verb",
+      "cefr": "A1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[kɔˈpatɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "копа́ти",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "розпушувати"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ко́пати» (наголос на першому складі: бити, штовхати ногою)."
+    }
+  ],
+  "коханий": [
+    {
+      "lemma": "коханий",
+      "url_slug": "коханий",
+      "headword": "ко́ханий",
+      "short_label": "плеканий, доглянутий (поет., рідко)",
+      "gloss": "lovingly tended, cultivated (archaic/poetic passive participle of ко́хати in its \"to tend, cultivate\" sense, e.g. of flowers)",
+      "pos": "adjective",
+      "cefr": null,
+      "heritage_status": {
+        "classification": "authentic-archaism",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": "treasured",
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈkɔxɐnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ко́ханий",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «коха́ний» (наголос на другому складі: той, кого кохають; милий, любий)."
+    },
+    {
+      "lemma": "коханий",
+      "url_slug": "коханий",
+      "headword": "коха́ний",
+      "short_label": "той, кого кохають (A1)",
+      "gloss": "beloved; darling, sweetheart (the person one loves)",
+      "pos": "adjective",
+      "cefr": "A1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[kɔˈxanɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "коха́ний",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "милий",
+            "любий"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ко́ханий» (наголос на першому складі, поет., рідко: плеканий, доглянутий -- дієприкметник до «кохати» квіти)."
+    }
+  ],
+  "ведмежина": [
+    {
+      "lemma": "ведмежина",
+      "url_slug": "ведмежина",
+      "headword": "ведме́жина",
+      "short_label": "ведмеже м'ясо (рідко)",
+      "gloss": "bear meat (= ведмежатина)",
+      "pos": "noun",
+      "cefr": null,
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[wɛˈdmɛʒɪnɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ведме́жина",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "note": "переважно вживається в однині",
+          "cases": {
+            "називний": {
+              "singular": "ведме́жина",
+              "plural": null
+            },
+            "родовий": {
+              "singular": "ведме́жини",
+              "plural": null
+            },
+            "давальний": {
+              "singular": "ведме́жині",
+              "plural": null
+            },
+            "знахідний": {
+              "singular": "ведме́жину",
+              "plural": null
+            },
+            "орудний": {
+              "singular": "ведме́жиною",
+              "plural": null
+            },
+            "місцевий": {
+              "singular": "(у) ведме́жині",
+              "plural": null
+            },
+            "кличний": {
+              "singular": "ведме́жино",
+              "plural": null
+            }
+          }
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "ведмежатина"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ведмежи́на» (наголос на третьому складі: дикий кущ родини трояндових з темно-червоними ягодами)."
+    },
+    {
+      "lemma": "ведмежина",
+      "url_slug": "ведмежина",
+      "headword": "ведмежи́на",
+      "short_label": "дикий кущ з ягодами (рідко)",
+      "gloss": "a wild shrub of the rose family (Rosaceae) with dark-red edible berries; the berries themselves",
+      "pos": "noun",
+      "cefr": null,
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[wɛdmɛˈʒɪnɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ведмежи́на",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "note": "переважно вживається в однині",
+          "cases": {
+            "називний": {
+              "singular": "ведмежи́на",
+              "plural": null
+            },
+            "родовий": {
+              "singular": "ведмежи́ни",
+              "plural": null
+            },
+            "давальний": {
+              "singular": "ведмежи́ні",
+              "plural": null
+            },
+            "знахідний": {
+              "singular": "ведмежи́ну",
+              "plural": null
+            },
+            "орудний": {
+              "singular": "ведмежи́ною",
+              "plural": null
+            },
+            "місцевий": {
+              "singular": "(у) ведмежи́ні",
+              "plural": null
+            },
+            "кличний": {
+              "singular": "ведмежи́но",
+              "plural": null
+            }
+          }
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ведме́жина» (наголос на другому складі: ведмеже м'ясо)."
+    }
+  ],
+  "вигідний": [
+    {
+      "lemma": "вигідний",
+      "url_slug": "вигідний",
+      "headword": "ви́гідний",
+      "short_label": "прибутковий (A2)",
+      "gloss": "profitable, beneficial (from which one can gain a benefit or profit)",
+      "pos": "adjective",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈwɪɦʲidnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ви́гідний",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "прибутковий",
+            "корисний"
+          ]
+        },
+        "antonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "невигідний",
+            "збитковий"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «вигі́дний» (наголос на другому складі: зручний для користування, приємний)."
+    },
+    {
+      "lemma": "вигідний",
+      "url_slug": "вигідний",
+      "headword": "вигі́дний",
+      "short_label": "зручний (A2)",
+      "gloss": "comfortable, convenient (to use), pleasant",
+      "pos": "adjective",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[wɪˈɦʲidnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "вигі́дний",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "sections": {
+        "synonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "зручний",
+            "приємний"
+          ]
+        },
+        "antonyms": {
+          "source": "СУМ-11",
+          "items": [
+            "незручний"
+          ]
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ви́гідний» (наголос на першому складі: прибутковий, який дає користь чи прибуток)."
     }
   ]
 };
