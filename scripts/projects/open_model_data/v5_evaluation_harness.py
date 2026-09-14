@@ -287,13 +287,13 @@ def check_span_integrity(input_text: str, output_text: str, target_term: str) ->
 
 ENTITY_CITATION_RE = (
     r"(?:«[^»]+»|\"[^\"]+\"|"
-    r"(?:(?:чинн\w*|академічн\w*|офіційн\w*|нов\w*|стар\w*)\s+)?"
-    r"(?:[Пп]равопис\w*|[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)(?:\s+\d+)?|"
+    r"(?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+(?:«[^»]+»|\"[^\"]+\"|[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)|"
+    r"(?:(?:чинн\w*|академічн\w*|офіційн\w*|нов\w*|стар\w*)\s+)?(?:[Пп]равопис\w*|[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)(?:\s+\d+)?|"
     r"[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:-[A-ZА-ЯІЇЄҐ0-9][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)*"
     r"(?:\s+[A-ZА-ЯІЇЄҐ0-9][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)*)"
 )
 CONJ_COORD_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_RE})"
-COMMA_COORD_RE = rf"(?:\s*,\s*{ENTITY_CITATION_RE})"
+COMMA_COORD_RE = rf"(?:\s*,\s*{ENTITY_CITATION_RE}(?=\s*,|\s+(?:та|і|й|and|or)\s+))"
 
 CITATION_MENTION_PATTERNS = [
     # 1. "... dictionary" or "... словник" (case-insensitive name preceding dictionary keyword)
@@ -364,9 +364,14 @@ def verify_citation_whitelist(text: str) -> tuple[bool, list[str], list[str]]:
                 )
                 sub_entities = re.split(r"\s*,\s*|\s+(?:та|і|й|and|or)\s+", clean_span)
                 for ent in sub_entities:
-                    ent = ent.strip().strip("«»\"'")
-                    if ent and not any(app.search(ent) for app in APPROVED_CITATION_PATTERNS):
-                        found_unapproved.append(ent)
+                    ent = re.sub(
+                        r"^(?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+",
+                        "",
+                        ent.strip(),
+                    )
+                    clean_ent = ent.strip().strip("«»\"'")
+                    if clean_ent and not any(app.search(clean_ent) for app in APPROVED_CITATION_PATTERNS):
+                        found_unapproved.append(clean_ent)
 
     all_violations = sorted(list(set(found_prohibited + found_unapproved)))
     is_clean = len(all_violations) == 0
@@ -645,37 +650,12 @@ def evaluate_prediction(
                     or has_nenorm_condemn
                 )
 
-                target_negations = (
-                    f"«{t_lower}» не є калькою",
-                    f"«{t_lower}» не є росіянізмом",
-                    f"«{t_lower}» не є помилкою",
-                    f"«{t_lower}» не помилка",
-                    f"«{t_lower}» не є суржиком",
-                    f"«{t_lower}» не є штучн",
-                    f"слово {t_lower} не є калькою",
-                    f"слово {t_lower} не є росіянізмом",
-                    f"слово {t_lower} не є помилкою",
-                    f"слово {t_lower} не помилка",
-                    f"«{t_lower}» є нормативним",
-                    f"слово {t_lower} є нормативним",
-                    f"зберігаємо «{t_lower}»",
-                    f"зберігаємо слово {t_lower}",
-                    f"зберігаємо термін {t_lower}",
-                    f"«{t_lower}» без змін",
-                    "не є калькою",
-                    "не калька",
-                    "не є росіянізмом",
-                    "не росіянізм",
-                    "не є помилкою",
-                    "не помилка",
-                    "не є суржиком",
-                    "не є штучн",
-                    "не потребує змін",
-                    "не потребує виправлення",
-                    "не потребує заміни",
+                target_neg_pattern = bool(
+                    re.search(
+                        rf"\b(?<!інше\s)(?<!іншого\s)(?<!іншим\s)(?<!нового\s)(?<!інший\s)(?:«?{re.escape(t_lower)}»?|(?:це|дане|зазначене)\s+(?:слово|термін))\s+(?:не\s+(?:є\s+)?(?:кальк\w*|росіянізм\w*|помилк\w*|суржик\w*|ненормативн\w*|штучн\w*)|не\s+помилк\w*|не\s+кальк\w*|не\s+росіянізм\w*|не\s+потребує\s+(?:змін|виправлення|редагування))",
+                        clause,
+                    )
                 )
-
-                neg_nenorm = bool(re.search(r"\bне\s+(?:є\s+)?(?:вважається\s+)?ненормативн\w*\b", clause))
 
                 target_affirm = bool(
                     re.search(
@@ -684,14 +664,20 @@ def evaluate_prediction(
                     )
                 )
 
-                target_preserve = (
-                    any(p in clause for p in ("зберігаємо", "preserve", "без змін"))
-                    and not bool(re.search(r"\b(?:решт\w*|інш\w*|нового|іншого)\b", clause))
+                target_preserve = bool(
+                    re.search(
+                        rf"\b(?:зберігаємо|залишаємо\s+без\s+змін)\s+(?:«?{re.escape(t_lower)}»?|(?:це|дане|зазначене)\s+(?:слово|термін))",
+                        clause,
+                    )
+                ) or bool(
+                    re.search(
+                        rf"\b(?:«?{re.escape(t_lower)}»?|(?:це|дане|зазначене)\s+(?:слово|термін))\s+(?:зберігаємо|залишаємо\s+без\s+змін|без\s+змін)",
+                        clause,
+                    )
                 )
 
                 clause_negated = (
-                    any(np in clause for np in target_negations)
-                    or neg_nenorm
+                    target_neg_pattern
                     or target_affirm
                     or target_preserve
                 )

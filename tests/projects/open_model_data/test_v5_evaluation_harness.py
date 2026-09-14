@@ -567,3 +567,39 @@ def test_citation_whitelist_approved_cocitation_prose_not_violation() -> None:
     is_clean3, _app3, viol3 = verify_citation_whitelist(text3)
     assert is_clean3 is True
     assert len(viol3) == 0
+
+
+def test_evaluate_prediction_inshe_slovo_negation_and_sentence_structure_preserve() -> None:
+    """Verify 'інше слово не є калькою' and 'зберігаємо структуру речення' do not suppress condemnation (R6-F1)."""
+    case = {
+        "eval_id": "p_r6_f1",
+        "case_type": "PRESERVE",
+        "target_term": "матеріал",
+        "input_text": "Матеріал підручника викладено послідовно.",
+        "expected_replacement": None,
+    }
+    pred1 = "<thought>Слово «матеріал» є калькою — інше слово не є калькою.</thought>Матеріал підручника викладено послідовно."
+    res1 = evaluate_prediction(case, pred1)
+    assert res1.harmful_edit is True
+
+    pred2 = "<thought>Слово «матеріал» є калькою; зберігаємо структуру речення без змін.</thought>Матеріал підручника викладено послідовно."
+    res2 = evaluate_prediction(case, pred2)
+    assert res2.harmful_edit is True
+
+
+def test_citation_whitelist_repeated_dictionary_keyword() -> None:
+    """Verify repeating dictionary keyword in co-citations still catches unapproved authority (R6-F2)."""
+    text = "За словником ВЕСУМ та словником Zorblax, це правильно."
+    is_clean, app, viol = verify_citation_whitelist(text)
+    assert is_clean is False
+    assert any("ВЕСУМ" in a for a in app)
+    assert any("Zorblax" in v for v in viol)
+
+
+def test_citation_whitelist_introductory_attribution_capitalized_subject() -> None:
+    """Verify introductory citation does not consume a capitalized sentence subject (R6-F3)."""
+    text = "Згідно з ВЕСУМ, Матеріал є правильним словом."
+    is_clean, app, viol = verify_citation_whitelist(text)
+    assert is_clean is True
+    assert len(viol) == 0
+    assert any("ВЕСУМ" in a for a in app)
