@@ -68,12 +68,15 @@ jobs:
             torch==2.13.0
           .venv/bin/python -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0
 
+      - name: Set Stanza resources directory
+        run: echo "STANZA_RESOURCES_DIR=${STANZA_RESOURCES_DIR:-${HOME}/stanza_resources}" >> "$GITHUB_ENV"
+
       - name: Restore Stanza Ukrainian model cache
         id: stanza-model-cache
         continue-on-error: true
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: ~/stanza_resources
+          path: ${{ env.STANZA_RESOURCES_DIR }}
           key: stanza-uk-model-v2-${{ runner.os }}-${{ hashFiles('requirements-lock.txt') }}
 
       - name: Provision and verify Stanza Ukrainian model
@@ -81,7 +84,19 @@ jobs:
           set -euo pipefail
           for attempt in 1 2 3; do
             echo "stanza provision attempt ${attempt}/3"
-            if .venv/bin/python -c "from scripts.pipeline.stress_annotator import annotate_stress; print(annotate_stress('Мама читає книжку.'))"; then
+            if .venv/bin/python - <<'PY'
+          import os
+          from pathlib import Path
+
+          import stanza
+
+          resources = Path(os.environ["STANZA_RESOURCES_DIR"])
+          stanza.download("uk", model_dir=str(resources))
+          assert resources.is_dir() and any(resources.iterdir()), "Stanza resources missing or empty"
+          stanza.Pipeline("uk", dir=str(resources), download_method=None, use_gpu=False)
+          print("Stanza Ukrainian resources exist, are non-empty, and load offline")
+          PY
+            then
               exit 0
             fi
             case "${attempt}" in
@@ -96,7 +111,7 @@ jobs:
         if: steps.stanza-model-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: ~/stanza_resources
+          path: ${{ env.STANZA_RESOURCES_DIR }}
           key: stanza-uk-model-v2-${{ runner.os }}-${{ hashFiles('requirements-lock.txt') }}
 
       - name: Run slow pytest selection
