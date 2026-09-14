@@ -17,7 +17,6 @@ Supports:
 from __future__ import annotations
 
 import argparse
-import difflib
 import json
 import re
 import sys
@@ -252,31 +251,40 @@ def check_span_integrity(input_text: str, output_text: str, target_term: str) ->
         # Target not found in input (e.g. prompt format without exact sentence)
         return True, "target_not_in_input"
 
-    # Non-target prefix and suffix must be substantially preserved
+    # Non-target prefix and suffix must be preserved exactly
     prefix_in = in_tokens[:target_idx]
     suffix_in = in_tokens[target_idx + target_len :]
 
-    # Check prefix match in out_tokens
+    # Check exact prefix match in out_tokens
     if prefix_in:
         out_prefix = out_tokens[: len(prefix_in)]
-        matcher = difflib.SequenceMatcher(None, prefix_in, out_prefix)
-        if matcher.ratio() < 0.85:
-            return False, f"prefix_mutation (similarity {matcher.ratio():.2f})"
+        if out_prefix != prefix_in:
+            return False, f"prefix_mutation: expected {prefix_in!r}, got {out_prefix!r}"
 
-    # Check suffix match in out_tokens
+    # Check exact suffix match in out_tokens
     if suffix_in:
         out_suffix = out_tokens[-len(suffix_in) :]
-        matcher = difflib.SequenceMatcher(None, suffix_in, out_suffix)
-        if matcher.ratio() < 0.85:
-            return False, f"suffix_mutation (similarity {matcher.ratio():.2f})"
+        if out_suffix != suffix_in:
+            return False, f"suffix_mutation: expected {suffix_in!r}, got {out_suffix!r}"
 
     return True, "intact"
 
 
+CITATION_MENTION_PATTERNS = [
+    re.compile(
+        r"\b(?!(?:У|В|За|По|До|На|З|Згідно|Відповідно|Зокрема)\b)([A-ZА-Я][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+(?:\s+[A-ZА-Я][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+)*\s+(?:Dictionary|dictionary|Словник\w*|словник\w*|Corpus|corpus|Корпус\w*|корпус\w*|Довідник\w*|довідник\w*))\b"
+    ),
+    re.compile(
+        r"\b(?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+(?:«[^»]+»|\"[^\"]+\"|([A-ZА-Я][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+))\b"
+    ),
+]
+
+
 def verify_citation_whitelist(text: str) -> tuple[bool, list[str], list[str]]:
-    """Verify citations against whitelist; detect hallucinated foreign sources."""
+    """Verify citations against whitelist; detect hallucinated foreign sources and reject unapproved authorities."""
     found_approved: list[str] = []
     found_prohibited: list[str] = []
+    found_unapproved: list[str] = []
 
     for pat in APPROVED_CITATION_PATTERNS:
         m = pat.findall(text)
@@ -288,8 +296,17 @@ def verify_citation_whitelist(text: str) -> tuple[bool, list[str], list[str]]:
         if m:
             found_prohibited.extend(m)
 
-    is_clean = len(found_prohibited) == 0
-    return is_clean, sorted(list(set(found_approved))), sorted(list(set(found_prohibited)))
+    # True whitelist: check for any cited authority entity mentions that are not approved
+    for cpat in CITATION_MENTION_PATTERNS:
+        for match in cpat.finditer(text):
+            citation_span = match.group(1).strip() if match.lastindex else match.group(0).strip()
+            # If citation span does not match any approved pattern, mark as unapproved
+            if not any(app.search(citation_span) for app in APPROVED_CITATION_PATTERNS):
+                found_unapproved.append(citation_span)
+
+    all_violations = sorted(list(set(found_prohibited + found_unapproved)))
+    is_clean = len(all_violations) == 0
+    return is_clean, sorted(list(set(found_approved))), all_violations
 
 
 @dataclass
@@ -405,15 +422,28 @@ def evaluate_prediction(
                 target_in_final = True
                 break
 
+    expected_replacement = eval_case.get("expected_replacement")
+    exp_clean = expected_replacement.strip().strip("–—\"'«» .,") if expected_replacement else ""
+    exp_tokens = normalize_tokens(exp_clean) if exp_clean else []
+
     if case_type == "CORRECT":
-        # Calque must NOT be recommended or preserved in the final output
+        # Calque must NOT be recommended or preserved in the final output,
+        # AND the valid correction/expected replacement must be present.
+        # This prevents scoring arbitrary substitutions (e.g. 'XYZ') as successful.
+        resp_lower = parsed.final_response.lower()
+        t_lower = target_term.lower()
+
+        has_valid_replacement = False
+        if exp_clean:
+            if exp_clean.lower() in resp_lower or (exp_tokens and all(tok in resp_tokens for tok in exp_tokens)):
+                has_valid_replacement = True
+        else:
+            has_valid_replacement = bool(resp_tokens)
+
         if not target_in_final:
-            calque_eliminated = True
+            calque_eliminated = has_valid_replacement
         else:
             # Calque is present in final response: check whether it is critiqued/contrasted or endorsed
-            resp_lower = parsed.final_response.lower()
-            t_lower = target_term.lower()
-
             is_affirmed = any(
                 p in resp_lower
                 for p in (
@@ -448,8 +478,7 @@ def evaluate_prediction(
             if is_affirmed:
                 calque_eliminated = False
             elif is_critiqued:
-                # If critiqued and replacement or normative indicator is present
-                calque_eliminated = True
+                calque_eliminated = has_valid_replacement
             else:
                 calque_eliminated = False
 
@@ -470,7 +499,7 @@ def evaluate_prediction(
             hallucinated_citations=prohibited_cits,
             approved_citations=approved_cits,
             is_high_frequency_calque=is_high_freq,
-            details="Calque eliminated" if calque_eliminated else "Calque still present or affirmed in final response",
+            details="Calque eliminated" if calque_eliminated else "Calque still present or uncorrected in final response",
         )
 
     else:  # PRESERVE
@@ -478,12 +507,51 @@ def evaluate_prediction(
         # If the target is missing from final response or mutated, harmful edit occurred
         harmful_edit = not target_in_final
 
-        # Also harmful if model explicitly declares the word a calque/error
-        thought_and_resp = (parsed.thought_text + " " + parsed.final_response).lower()
-        if any(w in thought_and_resp for w in ("кальк", "росіянізм", "помилк", "суржик")) and (
-            f"«{target_term.lower()}»" in thought_and_resp or f"слово {target_term.lower()}" in thought_and_resp
-        ):
-            harmful_edit = True
+        # Also check whether model condemned the authentic word as a calque or error
+        if not harmful_edit:
+            thought_and_resp = (parsed.thought_text + " " + parsed.final_response).lower()
+            t_lower = target_term.lower()
+
+            # Check if there is explicit condemnation of the target term
+            condemnation_phrases = (
+                f"«{t_lower}» є калькою",
+                f"«{t_lower}» — калька",
+                f"«{t_lower}» є росіянізмом",
+                f"слово {t_lower} є калькою",
+                f"слово {t_lower} є росіянізмом",
+                f"замініть «{t_lower}»",
+                f"уникайте «{t_lower}»",
+                f"помилкове вживання «{t_lower}»",
+            )
+            is_condemned = any(cp in thought_and_resp for cp in condemnation_phrases)
+
+            # Check if this statement is actually negated or affirms normative status
+            negation_phrases = (
+                f"«{t_lower}» не є калькою",
+                f"«{t_lower}» не є росіянізмом",
+                f"«{t_lower}» не є помилкою",
+                f"слово «{t_lower}» не є",
+                f"слово {t_lower} не є",
+                f"{t_lower} не є калькою",
+                f"{t_lower} не є росіянізмом",
+                "не є калькою",
+                "не є росіянізмом",
+                "не є помилкою",
+                "не калька",
+                "не помилка",
+                "не потребує заміни",
+                "не потребує редагування",
+                "є нормативним",
+                "нормативне слово",
+                "питоме слово",
+                "вердикт preserve",
+            )
+            is_negated = any(np in thought_and_resp for np in negation_phrases)
+
+            if (is_condemned and not is_negated) or (not is_negated and any(w in thought_and_resp for w in ("кальк", "росіянізм", "помилк", "суржик")) and (
+                f"«{t_lower}»" in thought_and_resp or f"слово {t_lower}" in thought_and_resp
+            )):
+                harmful_edit = True
 
         span_pass, span_note = check_span_integrity(input_text, parsed.final_response, target_term)
 
@@ -552,8 +620,8 @@ def run_evaluation_suite(
     hf_cases = [r for r in correct_cases if r.is_high_frequency_calque]
     hf_total = len(hf_cases)
     hf_eliminated = sum(1 for r in hf_cases if r.calque_eliminated)
-    hf_recall = (hf_eliminated / hf_total) if hf_total > 0 else 1.0
-    gate5_pass = hf_recall >= 1.0
+    hf_recall = (hf_eliminated / hf_total) if hf_total > 0 else 0.0
+    gate5_pass = (hf_total > 0) and (hf_recall >= 1.0)
 
     all_gates = gate1_pass and gate2_pass and gate3_pass and gate4_pass and gate5_pass
 

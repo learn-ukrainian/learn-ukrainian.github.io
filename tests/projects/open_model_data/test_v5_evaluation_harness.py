@@ -6,6 +6,7 @@ import pytest
 
 from scripts.projects.open_model_data.v5_evaluation_harness import (
     check_span_integrity,
+    evaluate_prediction,
     exact_clopper_pearson_upper,
     format_markdown_report,
     parse_model_output,
@@ -163,3 +164,67 @@ def test_full_evaluation_suite_run() -> None:
     md = format_markdown_report(summary)
     assert "# ULDR Phase 5.1 Evaluation Audit Report" in md
     assert "Gate 1: Calque Elimination Rate" in md
+
+
+def test_span_integrity_collateral_token_mutation() -> None:
+    """Verify that collateral mutations outside the target error span fail span integrity."""
+    orig = "a b c d e f g h TARGET tail"
+    edited = "a b c d e f g WRONG FIX tail"
+    target = "TARGET"
+    is_intact, note = check_span_integrity(orig, edited, target)
+    assert is_intact is False
+    assert "prefix_mutation" in note
+
+
+def test_citation_whitelist_unknown_authority_rejected() -> None:
+    """Verify fabricated or unapproved dictionaries (true whitelist) are rejected."""
+    text = "According to the fabricated Zorblax Dictionary, this is correct."
+    is_clean, _approved, violations = verify_citation_whitelist(text)
+    assert is_clean is False
+    assert any("Zorblax Dictionary" in v for v in violations)
+
+
+def test_evaluate_prediction_arbitrary_replacement_rejected() -> None:
+    """Verify Gate 1 rejects arbitrary replacements (e.g. 'XYZ') where target disappears without valid correction."""
+    case = {
+        "eval_id": "c_xyz",
+        "case_type": "CORRECT",
+        "target_term": "приймати участь",
+        "input_text": "Студенти будуть приймати участь у виборах.",
+        "expected_replacement": "брати участь",
+    }
+    pred = "Студенти будуть XYZ у виборах."
+    res = evaluate_prediction(case, pred)
+    assert res.calque_eliminated is False
+
+
+def test_evaluate_prediction_preserve_negation_not_harmful() -> None:
+    """Verify Gate 2 handles negation properly in thoughts ('не є калькою' is not harmful)."""
+    case = {
+        "eval_id": "p_neg",
+        "case_type": "PRESERVE",
+        "target_term": "матеріал",
+        "input_text": "Матеріал підручника викладено послідовно.",
+        "expected_replacement": None,
+    }
+    pred = "<thought>Слово «матеріал» не є калькою, це нормативний термін.</thought>Матеріал підручника викладено послідовно."
+    res = evaluate_prediction(case, pred)
+    assert res.harmful_edit is False
+
+
+def test_gate5_zero_coverage_fails() -> None:
+    """Verify Gate 5 strictly fails when no high-frequency calques are present in the evaluated set."""
+    cases = [
+        {
+            "eval_id": "c_non_hf",
+            "case_type": "CORRECT",
+            "target_term": "рідкісний_варваризм",
+            "input_text": "Контекст речення: рідкісний_варваризм.",
+            "expected_replacement": "питоме_слово",
+        }
+    ]
+    preds = {"c_non_hf": "Контекст речення: питоме_слово."}
+    summary = run_evaluation_suite(cases, preds)
+    assert summary.high_freq_total == 0
+    assert summary.gate5_pass is False
+    assert summary.all_gates_pass is False
