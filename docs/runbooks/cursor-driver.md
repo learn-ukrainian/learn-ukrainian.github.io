@@ -78,7 +78,7 @@ the primary interpreter + bridge module (same bus as every other seat — not a
 second discuss API):
 
 ```bash
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python \
+.venv/bin/python \
   scripts/ai_agent_bridge/__main__.py discuss <channel> "<topic>" \
   --with <a>,<b> [--max-rounds N]
 ```

@@ -232,13 +232,13 @@ Run from the dedicated worktree while using the repository's Python 3.12.8
 environment:
 
 ```bash
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python \
+.venv/bin/python \
   -m scripts.projects.ua_open_weight_eval.hf_jobs_baseline prepare-bundle \
-  --output /Users/krisztiankoos/projects/learn-ukrainian/batch_state/issue-6273/hf-job-bundle-v4
+  --output batch_state/issue-6273/hf-job-bundle-v4
 
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python \
+.venv/bin/python \
   -m scripts.projects.ua_open_weight_eval.hf_jobs_baseline verify-bundle \
-  --bundle /Users/krisztiankoos/projects/learn-ukrainian/batch_state/issue-6273/hf-job-bundle-v4
+  --bundle batch_state/issue-6273/hf-job-bundle-v4
 ```
 
 The prepared source-only request packet has SHA-256

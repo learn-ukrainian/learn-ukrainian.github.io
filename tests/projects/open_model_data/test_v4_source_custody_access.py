@@ -81,6 +81,28 @@ def test_open_model_data_scripts_have_no_baked_run_root_default() -> None:
         assert "/home/ops/<" not in text, f"{path} still documents a host path template"
 
 
+def test_watch_desk_narrative_docs_have_no_baked_host_run_root() -> None:
+    # Narrative operator docs must not bake a host checkout path. Detector
+    # needles in tests and OPSEC scanners stay in those suites.
+    narrative_docs = (
+        Path("docs/audits/2026-09-11-uldr-program-audit.md"),
+        Path("docs/dispatch-briefs/2026-09-12-cu-p0-pilot-repair-brief.md"),
+        Path("docs/dispatch-briefs/2026-09-12-cu-p0-pilot-writer-brief.md"),
+        Path("docs/projects/open-model-data/PHASE_3_5_COT_CLAIM_VERIFIER.md"),
+        Path("docs/projects/open-model-data/PHASE_3_6_PILOT_CANARY.md"),
+        Path("docs/runbooks/cursor-driver.md"),
+        Path("docs/runbooks/background-session-tasks.md"),
+        Path("docs/runbooks/word-atlas-source-inventory-review-candidates.md"),
+        Path("docs/runbooks/codex-hooks.md"),
+        Path("docs/projects/ua-open-weight-eval/HF_JOBS_BASELINE.md"),
+    )
+    for path in narrative_docs:
+        text = path.read_text(encoding="utf-8")
+        assert "/home/ops" not in text, f"{path} still documents a host run-root"
+        assert "/home/ubuntu" not in text, f"{path} still documents a host run-root"
+        assert "/Users/krisztiankoos" not in text, f"{path} still documents a host checkout path"
+
+
 def test_primary_repo_root_uses_env_when_set(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv(custody.PRIMARY_REPO_ROOT_ENV, str(tmp_path))
     assert custody._primary_repo_root() == tmp_path.resolve()
