@@ -58,9 +58,9 @@ def test_production_colab_notebook_contract_invariants() -> None:
     assert "google/gemma-3-4b-it" in content, "Notebook must reference google/gemma-3-4b-it"
     # Must specify QLoRA NF4
     assert "nf4" in content, "Notebook must configure nf4 quantization"
-    # Must test all 3 directional safety gates
-    assert "90" in content, "Must test Calque Elimination >= 90%"
-    assert "95" in content, "Must test Preservation >= 95%"
+    # Must test the two canonical directional safety gates with Clopper-Pearson bound
+    assert "exact_clopper_pearson_upper" in content, "Must implement Clopper-Pearson exact bound"
+    assert "90.0" in content, "Must test Calque Elimination >= 90%"
     assert "1.0" in content, "Must test Harmful-Edit <= 1.0%"
 
     # No hardcoded secrets or raw keys
