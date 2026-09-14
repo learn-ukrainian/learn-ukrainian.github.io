@@ -117,6 +117,22 @@ describe('UnjumbleQuestion', () => {
     expect(onComplete).toHaveBeenCalledWith(true);
   });
 
+  test('letter tiles grade as a word when the answer has no spaces', async () => {
+    const onComplete = vi.fn();
+    const user = userEvent.setup();
+    const { container } = render(
+      <UnjumbleQuestion words="д / і / м" answer="дім" onComplete={onComplete} />,
+    );
+
+    for (const letter of ['д', 'і', 'м']) {
+      await user.click(within(container.querySelector('[data-activity="word-bank"]')!).getByRole('button', { name: letter }));
+    }
+    await user.click(submitBtn(container));
+
+    expect(onComplete).toHaveBeenCalledWith(true);
+    expect(container.querySelector('[data-correct="true"]')).toBeInTheDocument();
+  });
+
   test('reset restores initial state', async () => {
     const user = userEvent.setup();
     const { container } = render(<UnjumbleQuestion {...props} />);
