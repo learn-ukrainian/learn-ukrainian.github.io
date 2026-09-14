@@ -1,0 +1,10 @@
+{
+  "mode": "upgrade",
+  "sha256": {
+    "curriculum/l2-uk-en/a1-v1/special-signs/module.md": "55fc9e717c775caa7e32cbd4ab4c80cbcf125f2cdf159e64f7cad44458b5a0d1",
+    "curriculum/l2-uk-en/a1-v1/special-signs/activities.yaml": "65439f22132528bfe66ea60a974d385cc83c3da7b9c3672001e1c5d08a62ae44",
+    "curriculum/l2-uk-en/a1-v1/special-signs/vocabulary.yaml": "3d1f0cfb21e38620188fa4f7b1c90b298d3f9942f9e6ea9d89bd0cc99bc84841",
+    "curriculum/l2-uk-en/a1-v1/special-signs/resources.yaml": "21c905ba3a5f796228fcc0abc770f00627a0b8cda4ddc850ef7c2a5cd5ccb8ab",
+    "curriculum/l2-uk-en/plans/a1/special-signs.yaml": "dd2dbed1d6c530561f7cac6e833e0e5941b389036b05eb8ba6a951dcd393a6a6"
+  }
+}
