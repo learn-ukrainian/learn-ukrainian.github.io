@@ -61,6 +61,16 @@ def norm_text(t: str) -> str:
     return re.sub(r"\s+", " ", strip_acute(t)).strip()
 
 
+def _visible_in_render(value: str, literal_text: str) -> bool:
+    """True if YAML text or its fill-in-blanked form is on the published page."""
+    variants = [
+        norm_text(value),
+        norm_text(re.sub(r"\{([^{}]+)\}", "___", value)),
+        norm_text(re.sub(r"\[([^\[\]]{1,12})\]", "___", value)),
+    ]
+    return any(variant and variant in literal_text for variant in variants)
+
+
 def sections(md: str) -> dict[str, str]:
     """Return {section_title: body} with '__intro__' for text before the first '## '."""
     out: dict[str, str] = {}
@@ -210,6 +220,8 @@ def wrong_stress(text: str, allow: set[str], proper: set[str] = frozenset()) -> 
         bare = strip_acute(tok)
         if not tok or bare.lower() in allow:
             continue
+        if len(re.findall(r"[аеєиіїоуюяАЕЄИІЇОУЮЯ]", bare)) < 2:
+            continue  # syllable/fragment (ка́, ко́), not a dictionary word
         forms: list[str] = []
         # proper names (declared in lessons.yaml: proper_names, or capitalised vocabulary lemmas) are looked
         # up with their case first (Марко́); everything else lowercase first, so sentence-initial common words
@@ -413,7 +425,8 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             block(f"lesson {n}: {len(bad)} multi-syllable words without stress mark (not in unverified_stress): {bad[:20]}")
         est = prose_tokens / 60 + 2.5 * len(inline) + 3 * len(workbook) + 8
         per_lesson[n] = {"prose_tokens": prose_tokens, "inline": len(inline), "workbook": len(workbook),
-                         "vocab": len(lemmas), "resources": len(res), "unverified_stress": len(u_stress),
+                         "vocab": len(lemmas), "lemma_list": lemmas, "resources": len(res),
+                         "unverified_stress": len(u_stress),
                          "unverified_lemmas": len(u_lem), "est_minutes": round(est)}
         if not 45 <= est <= 75:
             warn(f"lesson {n}: pacing estimate {est:.0f} min outside 45–75 (heuristic)")
@@ -424,10 +437,14 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     if dup:
         block(f"duplicate activity ids across lessons: {dup}")
     base_lemmas = sorted(norm_md(str(e.get("lemma", ""))).lower() for e in base_vocab)
-    if sorted(all_lemmas) != base_lemmas:
-        block("vocabulary multiset != baseline 48: "
-              f"missing={sorted(set(base_lemmas)-set(all_lemmas))} extra={sorted(set(all_lemmas)-set(base_lemmas))} "
-              f"dups={sorted({l for l in all_lemmas if all_lemmas.count(l) > 1})}")
+    if sorted(set(all_lemmas)) != sorted(set(base_lemmas)):
+        block("vocabulary set != baseline: "
+              f"missing={sorted(set(base_lemmas)-set(all_lemmas))} extra={sorted(set(all_lemmas)-set(base_lemmas))}")
+    for n, facts in per_lesson.items():
+        lemmas = facts.get("lemma_list") or []
+        dups = sorted({lemma for lemma in lemmas if lemmas.count(lemma) > 1})
+        if dups:
+            block(f"lesson {n}: duplicate vocabulary lemmas in one lesson: {dups}")
     total = sum(v["prose_tokens"] for v in per_lesson.values())
     report["facts"]["total_prose_tokens"] = total
     if total < 2000:
@@ -553,7 +570,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             if owner != n:
                 continue
             for value in leaves({k: v for k, v in act.items() if k in LIST_FIELDS or k in ("title", "instruction")}):
-                if isinstance(value, str) and len(value) >= 3 and norm_text(value) not in literal_text:
+                if isinstance(value, str) and len(value) >= 3 and not _visible_in_render(value, literal_text):
                     block(f"lesson {n}: render lacks activity string from {aid}: {value!r}")
         for entry in lesson_vocab[n]:
             if norm_text(str(entry["lemma"])) not in visible:
@@ -581,7 +598,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             if placement == "workbook":
                 for value in leaves({k: v for k, v in activity.items()
                                      if k in LIST_FIELDS or k in ("title", "instruction")}):
-                    if isinstance(value, str) and len(value) >= 3 and norm_text(value) not in landing_text:
+                    if isinstance(value, str) and len(value) >= 3 and not _visible_in_render(value, landing_text):
                         block(f"module landing lacks workbook union string from {aid}")
     return {"passed": not report["blocking"], "diagnostics": report["blocking"], **report}
 

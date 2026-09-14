@@ -35,6 +35,18 @@ def gold(tmp_path, monkeypatch):
     return module, source, plan
 
 
+def test_fill_in_blanked_strings_count_as_rendered():
+    assert gates._visible_in_render("Київ — {столиця}.", gates.norm_text("Київ — ___."))
+    assert gates._visible_in_render("лі́теру [Я]", gates.norm_text("лі́теру ___"))
+    assert not gates._visible_in_render("missing sentence here", "other page")
+    landing = gates.norm_text('{"instruction":"Example ___."}')
+    assert gates._visible_in_render("Example {answer}.", landing)
+
+
+def test_one_syllable_acute_is_not_undeclared_stress():
+    assert gates.wrong_stress("ка́ ли́ ко́", set()) == []
+
+
 def test_structural_containment_keeps_answers_and_multiplicity():
     assert gates.contains({"items": ["a", "a"]}, {"items": ["a", "a", "b"]})
     assert not gates.contains({"items": ["a", "a"]}, {"items": ["a", "b"]})
