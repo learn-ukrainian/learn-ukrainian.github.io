@@ -1,0 +1,454 @@
+inline:
+- id: act-1
+  type: quiz
+  title: Ти чи ви?
+  instruction: Обери фразу для ситуації.
+  items:
+  - prompt: Ти знайомишся з однокурсником свого віку.
+    options:
+    - text: Як тебе звати?
+      correct: true
+    - text: Як вас звати?
+      correct: false
+    explanation: З одним знайомим або рівним співрозмовником уживай тебе.
+  - prompt: Ти знайомишся з незнайомим дорослим на орієнтації.
+    options:
+    - text: Як вас звати?
+      correct: true
+    - text: Як тебе звати?
+      correct: false
+    explanation: З незнайомим дорослим або у формальній ситуації уживай вас.
+  - prompt: Однокурсник питає твоє ім'я. Ти відповідаєш і повертаєш питання.
+    options:
+    - text: Мене звати Олена. А тебе?
+      correct: true
+    - text: Мене звати Олена. А вас?
+      correct: false
+    explanation: Рівна ситуація залишається неформальною.
+  - prompt: Викладач питає твоє ім'я. Ти відповідаєш і повертаєш питання.
+    options:
+    - text: Мене звати Петро. А вас?
+      correct: true
+    - text: Мене звати Петро. А тебе?
+      correct: false
+    explanation: З викладачем ситуація залишається формальною.
+- id: act-101
+  type: match-up
+  title: Репліка та відповідь
+  instruction: З'єднай репліку першого мовця з влучною відповіддю співрозмовника.
+  pairs:
+  - left: Привіт! Як тебе звати?
+    right: Мене звати Марко.
+  - left: Мене звати Олена. А тебе?
+    right: Мене звати Марко. Дуже приємно!
+  - left: Добрий день! Як вас звати?
+    right: Мене звати Петро.
+  - left: Дуже приємно!
+    right: Мені також.
+  - left: Це Андрій. Він зі Львова.
+    right: Дуже приємно. А хто це?
+  - left: Ви з України?
+    right: Так, я з Києва.
+- id: act-102
+  type: quiz
+  title: Репліки в розмові
+  instruction: Обери влучну репліку для кожної ситуації.
+  items:
+  - prompt: 'Співрозмовник сказав: «Привіт! Як тебе звати?». Що ти відповідаєш?'
+    options:
+    - text: Мене звати Олена. А тебе?
+      correct: true
+    - text: Це кава.
+      correct: false
+    - text: До побачення!
+      correct: false
+    explanation: На запитання про ім'я відповідай «Мене звати...» і ввічливо повертай
+      запитання.
+  - prompt: 'Викладач на зустрічі запитує: «Добрий день! Як вас звати?». Твоя відповідь:'
+    options:
+    - text: Мене звати Петро. А вас?
+      correct: true
+    - text: Привіт! А тебе?
+      correct: false
+    - text: Я зі Львова.
+      correct: false
+    explanation: У формальній розмові вживай «А вас?».
+  - prompt: 'Співрозмовник каже: «Дуже приємно!». Яка ввічлива відповідь?'
+    options:
+    - text: Мені також.
+      correct: true
+    - text: Як тебе звати?
+      correct: false
+    - text: Звідки ти?
+      correct: false
+    explanation: «Мені також» або «Дуже приємно!» — природна відповідь на ввічливе
+      знайомство.
+  - prompt: Ти хочеш ввічливо привітатися з викладачем удень. Що сказати?
+    options:
+    - text: Добрий день!
+      correct: true
+    - text: Привіт!
+      correct: false
+    - text: До побачення!
+      correct: false
+    explanation: «Добрий день!» — ввічливе денне вітання.
+  - prompt: Ти вітаєшся з ровесником у хостелі. Що сказати?
+    options:
+    - text: Привіт!
+      correct: true
+    - text: Добрий день, пане!
+      correct: false
+    - text: Як вас звати?
+      correct: false
+    explanation: «Привіт!» — невимушене вітання з однолітком.
+  - prompt: 'Ти хочеш перепитати ім''я друга після того, як назвав своє:'
+    options:
+    - text: А тебе?
+      correct: true
+    - text: А у тебе?
+      correct: false
+    - text: Хто це?
+      correct: false
+    explanation: Коротка форма відлуння — «А тебе?», без прийменника «у».
+- id: act-2
+  type: fill-in
+  title: Склади ім'я
+  instruction: Обери пропущене слово або фразу.
+  items:
+  - sentence: ___ звати Марко.
+    answer: Мене
+    options:
+    - Мене
+    - Ти
+    - Це
+    explanation: Мене звати... — цілий блок для представлення імені.
+  - sentence: Як ___ зва́ти?
+    answer: тебе
+    options:
+    - тебе
+    - я
+    - він
+    explanation: Як тебе звати? — неформальне питання.
+  - sentence: Як ___ звати?
+    answer: вас
+    options:
+    - вас
+    - вона
+    - ми
+    explanation: Як вас звати? — формальне або множинне питання.
+  - sentence: Дуже ___!
+    answer: приємно
+    options:
+    - приємно
+    - студент
+    - звідки
+    explanation: Дуже приємно звучить після обміну іменами.
+  - sentence: Мене звати Олена. А ___?
+    answer: тебе
+    options:
+    - тебе
+    - Київ
+    - це
+    explanation: А тебе? неформально повертає питання.
+- id: act-104
+  type: fill-in
+  title: Діалоги знайомства
+  instruction: Встав пропущені слова у репліки розмови.
+  items:
+  - sentence: — Привіт! Як ___ звати? — Мене звати Марко.
+    answer: тебе
+    options:
+    - тебе
+    - вас
+    - це
+    explanation: «Привіт!» показує неформальну розмову, тому вживаємо «тебе».
+  - sentence: — Добрий день! Як ___ звати? — Мене звати Петро.
+    answer: вас
+    options:
+    - вас
+    - тебе
+    - хто
+    explanation: «Добрий день!» показує поважне звертання, тому вживаємо «вас».
+  - sentence: — Мене звати Олена. ___ тебе? — Мене звати Марко.
+    answer: А
+    options:
+    - А
+    - Хто
+    - Що
+    explanation: «А тебе?» — коротке ехо-повернення запитання.
+  - sentence: — Мене звати Софія. ___ вас? — Мене звати Петро.
+    answer: А
+    options:
+    - А
+    - Де
+    - Як
+    explanation: «А вас?» — ввічливе ехо-повернення запитання.
+  - sentence: — Дуже приємно! — Мені ___!
+    answer: також
+    options:
+    - також
+    - привіт
+    - хто
+    explanation: «Мені також!» — ввічлива відповідь на «Дуже приємно!».
+  - sentence: — Вибачте, як вас звати? — ___ звати Наталка.
+    answer: Мене
+    options:
+    - Мене
+    - Я
+    - Ти
+    explanation: «Мене звати...» — готова конструкція для представлення себе.
+workbook:
+- id: act-w1
+  type: error-correction
+  title: Обери українське речення
+  anchor_id: fix-common-l2-traps
+  instruction: Обери безпечніший український рядок про ідентичність.
+  items:
+  - sentence: Я є студент.
+    error: Я є студент.
+    correction: Я студент.
+    options:
+    - Я студент.
+    - Я є студент.
+    explanation: У теперішній ідентичності кажи Я студент або Я — студент.
+  - sentence: Моє ім'я є Джон.
+    error: Моє ім'я є Джон.
+    correction: Мене звати Джон.
+    options:
+    - Мене звати Джон.
+    - Моє ім'я є Джон.
+    explanation: Мене звати... — частотна модель першого представлення.
+  - sentence: Мене звати Марко. А у тебе?
+    error: А у тебе?
+    correction: А тебе?
+    options:
+    - А тебе?
+    - А у тебе?
+    explanation: На A1 уживай короткий відлунний блок А тебе?; форму з у вивчатимемо
+      пізніше.
+  - sentence: Оксана каже, "Я (жінка) лікар."
+    error: Я (жінка) лікар.
+    correction: Я лікарка.
+    options:
+    - Я лікарка.
+    - Я (жінка) лікар.
+    explanation: Лікарка — стандартна жіноча форма для жінки, яка працює лікарем.
+  - sentence: Воно мій тато.
+    error: Воно
+    correction: Це мій тато.
+    options:
+    - Це мій тато.
+    - Воно мій тато.
+    explanation: Для першого називання людини вживай це; він можливе після цього.
+  - sentence: Привіт, пане професоре!
+    error: Привіт
+    correction: Добрий день, пане професоре!
+    options:
+    - Добрий день, пане професоре!
+    - Привіт, пане професоре!
+    explanation: З професором або незнайомим дорослим уживай Добрий день.
+- id: act-w101
+  type: match-up
+  title: Ввічливі фрази
+  instruction: З'єднай англійський вираз із правильним українським відповідником.
+  pairs:
+  - left: What is your name? (informal)
+    right: Як тебе звати?
+  - left: What is your name? (formal)
+    right: Як вас звати?
+  - left: My name is...
+    right: Мене звати...
+  - left: And yours? (informal)
+    right: А тебе?
+  - left: And yours? (formal)
+    right: А вас?
+  - left: Pleased to meet you!
+    right: Дуже приємно!
+- id: act-w102
+  type: group-sort
+  title: Регістри знайомства
+  instruction: Розподіли фрази за рівнем ввічливості.
+  groups:
+  - label: Неформально (ровесники, друзі)
+    items:
+    - Привіт!
+    - Як тебе звати?
+    - А тебе?
+  - label: Формально (викладачі, незнайомі люди)
+    items:
+    - Добрий день!
+    - Як вас звати?
+    - А вас?
+- id: act-w103
+  type: quiz
+  title: Обери доречний вираз
+  instruction: Обери найкращу фразу для кожної мовленнєвої ситуації.
+  items:
+  - prompt: 'Ти знайомишся з новим одногрупником в університеті:'
+    options:
+    - text: Привіт! Як тебе звати?
+      correct: true
+    - text: Добрий день, пане професоре!
+      correct: false
+    explanation: 'З ровесником та одногрупником уживай невимушене «ти»: «Як тебе звати?».'
+  - prompt: 'Ти вітаєшся з викладачем на кафедрі:'
+    options:
+    - text: Добрий день! Як вас звати?
+      correct: true
+    - text: Привіт! Як тебе звати?
+      correct: false
+    explanation: З викладачем завжди дотримуємося формального тону на «ви».
+  - prompt: 'Співрозмовник відповів: «Дуже приємно!». Що ти скажеш?'
+    options:
+    - text: Мені також.
+      correct: true
+    - text: Як тебе звати?
+      correct: false
+    explanation: «Мені також.» — ввічлива взаємна відповідь.
+  - prompt: 'Ти ненароком зачепив людину в аудиторії й перепрошуєш:'
+    options:
+    - text: Вибачте!
+      correct: true
+    - text: Ізвиніть!
+      correct: false
+    explanation: «Вибачте» або «пробачте» — питомі форми вибачення.
+  - prompt: 'Ти щиро дякуєш за корисну пораду:'
+    options:
+    - text: Дякую!
+      correct: true
+    - text: Спасібо!
+      correct: false
+    explanation: «Дякую» та «спасибі» — нормативні слова подяки.
+  - prompt: 'Ти назвав своє ім''я ровесникові й хочеш дізнатися його ім''я:'
+    options:
+    - text: А тебе?
+      correct: true
+    - text: А у тебе?
+      correct: false
+    explanation: «А тебе?» — чистий вираз-відлуння без зайвого прийменника «у».
+- id: act-w104
+  type: true-false
+  title: Мовні факти про знайомство
+  instruction: Визнач, чи правдиве кожне твердження про українське знайомство.
+  statements:
+  - statement: В українській мові фраза «Мене звати...» вживається без дієслова «є».
+    correct: true
+    explanation: В українській мові дієслово-зв'язка «є» у цій конструкції не потрібне.
+  - statement: Фраза «А тебе?» — це ввічливе повернення запитання другові чи ровеснику.
+    correct: true
+    explanation: «А тебе?» неформально повертає щойно поставлене запитання.
+  - statement: Форму «Як вас звати?» вживають лише тоді, коли звертаються до дітей.
+    correct: false
+    explanation: «Як вас звати?» — це поважне звертання до дорослої людини або групи
+      людей.
+  - statement: Фраза «А у тебе?» є обов'язковим стандартом першого знайомства на рівні
+      A1.
+    correct: false
+    explanation: На A1 вживають прямий ехо-патерн «А тебе?», уникаючи прийменникових
+      форм.
+  - statement: Слово «Привіт!» підходить для офіційної бесіди з деканом факультету.
+    correct: false
+    explanation: Для офіційного звертання використовують «Добрий день!».
+  - statement: Вирази «дякую» та «спасибі» є питомими нормативними словами подяки.
+    correct: true
+    explanation: Обидва слова є нормативними в сучасній українській літературній мові.
+- id: act-w105
+  type: translate
+  title: Переклад ключових виразів
+  instruction: Обери правильний український переклад для англійської фрази.
+  items:
+  - source: My name is Olena.
+    options:
+    - text: Мене звати Олена.
+      correct: true
+    - text: Як тебе звати?
+      correct: false
+    - text: Це Олена.
+      correct: false
+    explanation: «Мене звати...» означає «My name is...».
+  - source: What is your name? (informal)
+    options:
+    - text: Як тебе звати?
+      correct: true
+    - text: Як вас звати?
+      correct: false
+    - text: Звідки ти?
+      correct: false
+    explanation: Неформальне звертання — «Як тебе звати?».
+  - source: What is your name? (formal)
+    options:
+    - text: Як вас звати?
+      correct: true
+    - text: Як тебе звати?
+      correct: false
+    - text: А вас?
+      correct: false
+    explanation: Формальне звертання — «Як вас звати?».
+  - source: Pleased to meet you!
+    options:
+    - text: Дуже приємно!
+      correct: true
+    - text: Добрий день!
+      correct: false
+    - text: До побачення!
+      correct: false
+    explanation: «Дуже приємно!» перекладається як «Pleased to meet you!».
+  - source: And yours? (informal)
+    options:
+    - text: А тебе?
+      correct: true
+    - text: А вас?
+      correct: false
+    - text: Хто це?
+      correct: false
+    explanation: «А тебе?» — неформальне ехо-запитання.
+  - source: Good afternoon!
+    options:
+    - text: Добрий день!
+      correct: true
+    - text: Привіт!
+      correct: false
+    - text: Дякую!
+      correct: false
+    explanation: «Добрий день!» — ввічливе денне привітання.
+- id: act-w106
+  type: fill-in
+  title: Обери нормативну форму
+  instruction: Заповни пропуск питомим українським словом.
+  items:
+  - sentence: ___, як вас звати?
+    answer: Вибачте
+    options:
+    - Вибачте
+    - Ізвиніть
+    explanation: «Вибачте» або «пробачте» — нормативні форми звертання.
+  - sentence: Дуже приємно! — Мені ___!
+    answer: теж
+    options:
+    - теж
+    - тоже
+    explanation: «Теж» або «також» — питомі українські відповідники.
+  - sentence: Щиро ___ за розмову!
+    answer: дякую
+    options:
+    - дякую
+    - спасібо
+    explanation: «Дякую» або «спасибі» — нормативні слова подяки.
+  - sentence: Мене звати Марко. ___ тебе?
+    answer: А
+    options:
+    - А
+    - А у
+    explanation: На рівні A1 вживаємо безпечний зворот «А тебе?».
+  - sentence: ___, як ваші справи?
+    answer: Пробачте
+    options:
+    - Пробачте
+    - Ізвінітє
+    explanation: «Пробачте» — питома українська форма вибачення.
+  - sentence: Мене звати Софія, і мені ___ приємно.
+    answer: також
+    options:
+    - також
+    - тоже
+    explanation: «Також» — правильна літературна форма.

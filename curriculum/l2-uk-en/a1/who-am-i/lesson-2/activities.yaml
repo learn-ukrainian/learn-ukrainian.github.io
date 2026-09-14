@@ -1,0 +1,388 @@
+inline:
+- id: act-3
+  type: match-up
+  title: Це / хто / що
+  instruction: З'єднай український рядок із його роботою.
+  pairs:
+  - left: Це Андрій.
+    right: представити людину
+  - left: Це Оксана.
+    right: представити іншу людину
+  - left: Хто це?
+    right: запитати про людину
+  - left: Що це?
+    right: запитати про річ
+  - left: Це кава.
+    right: назвати річ
+- id: act-201
+  type: quiz
+  title: Хто це чи що це?
+  instruction: Обери правильне запитання для кожної ситуації.
+  items:
+  - prompt: 'Ти бачиш на столі чашку: Це кава.'
+    options:
+    - text: Що це?
+      correct: true
+    - text: Хто це?
+      correct: false
+    explanation: Для неживих предметів уживай Що це?.
+  - prompt: 'Ти показуєш на фото друга: Це Андрій.'
+    options:
+    - text: Хто це?
+      correct: true
+    - text: Що це?
+      correct: false
+    explanation: Для людей уживай Хто це?.
+  - prompt: 'Ти показуєш на нову однокурсницю: Це Оксана.'
+    options:
+    - text: Хто це?
+      correct: true
+    - text: Що це?
+      correct: false
+    explanation: Для людей запитуй Хто це?.
+  - prompt: 'Ти бачиш фото міста: Це Київ.'
+    options:
+    - text: Що це?
+      correct: true
+    - text: Хто це?
+      correct: false
+    explanation: Для міст і речей запитуй Що це?.
+  - prompt: 'Ти показуєш на свого батька: Це мій тато.'
+    options:
+    - text: Хто це?
+      correct: true
+    - text: Що це?
+      correct: false
+    explanation: Тато — людина, тому запитуємо Хто це?.
+  - prompt: 'Ти показуєш на свою подругу: Це моя подруга.'
+    options:
+    - text: Хто це?
+      correct: true
+    - text: Що це?
+      correct: false
+    explanation: Подруга — людина, тому запитуємо Хто це?.
+- id: act-4
+  type: quiz
+  title: Обери займенник
+  instruction: Обери займенник для української ситуації.
+  items:
+  - prompt: Мовець говорить про себе.
+    options:
+    - text: я
+      correct: true
+    - text: ти
+      correct: false
+    - text: вони
+      correct: false
+    explanation: Я — це мовець.
+  - prompt: Один друг або близький однокурсник.
+    options:
+    - text: ти
+      correct: true
+    - text: ви
+      correct: false
+    - text: він
+      correct: false
+    explanation: Ти — один неформальний співрозмовник.
+  - prompt: Один незнайомий дорослий або формальна ситуація.
+    options:
+    - text: ви
+      correct: true
+    - text: ти
+      correct: false
+    - text: вона
+      correct: false
+    explanation: Ви — формально до однієї людини, а також множина.
+  - prompt: Жінка або дівчина вже відома в розмові.
+    options:
+    - text: вона
+      correct: true
+    - text: він
+      correct: false
+    - text: я
+      correct: false
+    explanation: Вона вказує на жінку або дівчину.
+- id: act-202
+  type: match-up
+  title: Особові займенники
+  instruction: З'єднай займенник із його значенням у розмові.
+  pairs:
+  - left: я
+    right: мовець про себе
+  - left: ти
+    right: один близький друг
+  - left: він
+    right: знайомий чоловік
+  - left: вона
+    right: знайома жінка
+  - left: ми
+    right: група разом із мовцем
+  - left: ви
+    right: викладач або незнайомий дорослий
+  - left: вони
+    right: інші люди у множині
+- id: act-203
+  type: fill-in
+  title: 'Він чи вона: професії'
+  instruction: Обери правильну чоловічу або жіночу форму професії.
+  items:
+  - sentence: Оксана працює в лікарні. Вона — ___.
+    answer: лікарка
+    options:
+    - лікарка
+    - лікар
+    explanation: 'Для жінки вживай стандартну жіночу форму: лікарка.'
+  - sentence: Тарас навчається в університеті. Він — ___.
+    answer: студент
+    options:
+    - студент
+    - студентка
+    explanation: 'Для чоловіка вживай чоловічу форму: студент.'
+  - sentence: Марія викладає в школі. Вона — ___.
+    answer: вчителька
+    options:
+    - вчителька
+    - вчитель
+    explanation: 'Для жінки вживай жіночу форму: вчителька.'
+  - sentence: Марко створює комп'ютерні програми. Він — ___.
+    answer: програміст
+    options:
+    - програміст
+    - програмістка
+    explanation: 'Для чоловіка вживай чоловічу форму: програміст.'
+  - sentence: Софія проєктує мости. Вона — ___.
+    answer: інженерка
+    options:
+    - інженерка
+    - інженер
+    explanation: 'Для жінки вживай стандартну жіночу форму: інженерка.'
+  - sentence: Андрій народився в Україні. Він — ___.
+    answer: українець
+    options:
+    - українець
+    - українка
+    explanation: 'Для чоловіка вживай форму: українець.'
+workbook:
+- id: act-w2
+  type: match-up
+  title: Пари професій
+  instruction: З'єднай чоловічу і жіночу форму професії.
+  pairs:
+  - left: студент
+    right: студентка
+  - left: вчитель
+    right: вчителька
+  - left: лікар
+    right: лікарка
+  - left: програміст
+    right: програмістка
+  - left: інженер
+    right: інженерка
+  - left: українець
+    right: українка
+  - left: канадієць
+    right: канадка
+  - left: американець
+    right: американка
+- id: act-w3
+  type: group-sort
+  title: Неформально чи формально
+  instruction: Розклади фрази за ситуацією.
+  groups:
+  - label: Неформально
+    items:
+    - Як тебе звати?
+    - А тебе?
+    - Звідки ти?
+  - label: Формально
+    items:
+    - Як вас звати?
+    - А вас?
+    - Звідки ви?
+- id: act-w201
+  type: group-sort
+  title: 'Чоловічий та жіночий рід: люди'
+  instruction: Розподіли слова на чоловічі та жіночі форми.
+  groups:
+  - label: Чоловіча форма
+    items:
+    - студент
+    - вчитель
+    - лікар
+    - програміст
+  - label: Жіноча форма
+    items:
+    - студентка
+    - вчителька
+    - лікарка
+    - програмістка
+- id: act-w202
+  type: fill-in
+  title: Речення про себе та інших
+  instruction: Встав правильне слово в речення.
+  items:
+  - sentence: Це Андрій. ___ зі Львова.
+    answer: Він
+    options:
+    - Він
+    - Вона
+    - Воно
+    explanation: Андрій — чоловік, тому вживаємо Він.
+  - sentence: Це Оксана. ___ — лікарка.
+    answer: Вона
+    options:
+    - Вона
+    - Він
+    - Вони
+    explanation: Оксана — жінка, тому вживаємо Вона.
+  - sentence: Я навчаюся в університеті. Я — ___.
+    answer: студент
+    options:
+    - студент
+    - кава
+    - Київ
+    explanation: Студент — назва ролі людини.
+  - sentence: Це моя мама. Вона — ___.
+    answer: вчителька
+    options:
+    - вчителька
+    - вчитель
+    - тато
+    explanation: Мама — жінка, тому вживаємо форму вчителька.
+  - sentence: Це Андрій і Тарас. ___ — студенти.
+    answer: Вони
+    options:
+    - Вони
+    - Він
+    - Вона
+    explanation: Про кількох людей говоримо Вони.
+  - sentence: ___ це? Це кава.
+    answer: Що
+    options:
+    - Що
+    - Хто
+    - Як
+    explanation: Кава — це річ, тому запитуємо Що це?.
+- id: act-w203
+  type: translate
+  title: Значення речень ідентичності
+  instruction: Обери правильний англійський переклад.
+  items:
+  - source: Це кава.
+    options:
+    - text: This is coffee.
+      correct: true
+    - text: Who is this?
+      correct: false
+    - text: What is this?
+      correct: false
+    explanation: Це кава означає This is coffee.
+  - source: Хто це?
+    options:
+    - text: Who is this?
+      correct: true
+    - text: What is this?
+      correct: false
+    - text: This is Andrii.
+      correct: false
+    explanation: Хто це? запитує про людину.
+  - source: Що це?
+    options:
+    - text: What is this?
+      correct: true
+    - text: Who is this?
+      correct: false
+    - text: This is coffee.
+      correct: false
+    explanation: Що це? запитує про річ.
+  - source: Я — студент.
+    options:
+    - text: I am a male student.
+      correct: true
+    - text: She is a doctor.
+      correct: false
+    - text: He is a teacher.
+      correct: false
+    explanation: Я — студент говорить хлопець або чоловік про себе.
+  - source: Вона — лікарка.
+    options:
+    - text: She is a doctor.
+      correct: true
+    - text: He is a doctor.
+      correct: false
+    - text: I am a student.
+      correct: false
+    explanation: Вона — лікарка називає професію жінки.
+  - source: Це мій тато.
+    options:
+    - text: This is my dad.
+      correct: true
+    - text: This is my mom.
+      correct: false
+    - text: This is my friend.
+      correct: false
+    explanation: Це мій тато представляє батька.
+- id: act-w204
+  type: error-correction
+  title: Виправ помилки в ідентичності
+  instruction: Обери правильне українське речення замість помилкового.
+  items:
+  - sentence: Я є студентка.
+    error: Я є студентка.
+    correction: Я — студентка.
+    options:
+    - Я — студентка.
+    - Я є студентка.
+    explanation: 'У теперішньому часі дієслово «є» пропускається: Я — студентка.'
+  - sentence: Оксана — лікар.
+    error: Оксана — лікар.
+    correction: Оксана — лікарка.
+    options:
+    - Оксана — лікарка.
+    - Оксана — лікар.
+    explanation: 'Для жінки вживай стандартний фемінітив: лікарка.'
+  - sentence: Воно мій тато.
+    error: Воно мій тато.
+    correction: Це мій тато.
+    options:
+    - Це мій тато.
+    - Воно мій тато.
+    explanation: Для вказівки на людину вживай вказівне слово «це».
+  - sentence: Це хто?
+    error: Це хто?
+    correction: Хто це?
+    options:
+    - Хто це?
+    - Це хто?
+    explanation: 'Питальне слово в українській мові ставиться на початку: Хто це?.'
+  - sentence: Це що?
+    error: Це що?
+    correction: Що це?
+    options:
+    - Що це?
+    - Це що?
+    explanation: 'Питальне слово ставиться на початку речення: Що це?.'
+  - sentence: Софія — інженер.
+    error: Софія — інженер.
+    correction: Софія — інженерка.
+    options:
+    - Софія — інженерка.
+    - Софія — інженер.
+    explanation: 'Для жінки вживай форму жіночого роду: інженерка.'
+- id: act-w205
+  type: match-up
+  title: Речення ідентичності
+  instruction: З'єднай речення з особою, яка про себе говорить або про яку говорять.
+  pairs:
+  - left: Я — студентка.
+    right: дівчина про своє навчання
+  - left: Він — лікар.
+    right: про знайомого лікаря-чоловіка
+  - left: Вона — лікарка.
+    right: про знайому лікарку-жінку
+  - left: Ми — студенти.
+    right: група молоді про себе
+  - left: Він — інженер.
+    right: про знайомого інженера-чоловіка
+  - left: Вона — інженерка.
+    right: про знайому інженерку-жінку

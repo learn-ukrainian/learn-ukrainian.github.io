@@ -1,0 +1,440 @@
+inline:
+- id: act-301
+  type: match-up
+  title: Питання і відповіді про походження
+  instruction: З'єднай запитання про походження з правильною відповіддю.
+  pairs:
+  - left: Звідки ти?
+    right: Я з України.
+  - left: Звідки ви?
+    right: Я з Канади.
+  - left: Ви з України?
+    right: Так, я з Києва.
+  - left: Хто це?
+    right: Це Оксана, вона з Одеси.
+  - left: Як тебе звати?
+    right: Мене звати Марко.
+  - left: Як вас звати?
+    right: Мене звати Петро.
+- id: act-302
+  type: fill-in
+  title: З чи зі? Країни та міста
+  instruction: Обери правильний прийменник (з чи зі) для кожного міста або країни.
+  items:
+  - sentence: Я ___ України.
+    answer: з
+    options:
+    - з
+    - зі
+    explanation: 'Перед голосним [у] вживаємо з: з України.'
+  - sentence: Марко приїхав ___ Канади.
+    answer: з
+    options:
+    - з
+    - зі
+    explanation: 'Перед одним приголосним [к] вживаємо з: з Канади.'
+  - sentence: Андрій ___ Львова.
+    answer: зі
+    options:
+    - зі
+    - з
+    explanation: 'Перед збігом приголосних [льв] для милозвучності вживаємо зі: зі
+      Львова.'
+  - sentence: Мій друг ___ Штатів.
+    answer: зі
+    options:
+    - зі
+    - з
+    explanation: 'Перед збігом приголосних [шт] вживаємо зі: зі Штатів.'
+  - sentence: Софія родом ___ Києва.
+    answer: з
+    options:
+    - з
+    - зі
+    explanation: 'Перед одиничним приголосним [к] уживаємо з: з Києва.'
+  - sentence: Оксана ___ Одеси.
+    answer: з
+    options:
+    - з
+    - зі
+    explanation: 'Перед голосним [о] вживаємо з: з Одеси.'
+- id: act-303
+  type: quiz
+  title: 'Формально чи неформально: походження'
+  instruction: Обери відповідну репліку для кожної ситуації спілкування.
+  items:
+  - prompt: Ти знайомишся з новим однокурсником і хочеш дізнатися, звідки він.
+    options:
+    - text: Звідки ти?
+      correct: true
+    - text: Звідки ви?
+      correct: false
+    explanation: 'До однокурсника або ровесника звертаємося на ти: Звідки ти?.'
+  - prompt: Ти запитуєш професора в університеті про його рідне місто.
+    options:
+    - text: Звідки ви?
+      correct: true
+    - text: Звідки ти?
+      correct: false
+    explanation: 'До викладача або незнайомої старшої людини звертаємося на ви: Звідки
+      ви?.'
+  - prompt: Співрозмовник запитав тебе «Звідки ти?». Як ввічливо повернути питання
+      ровеснику?
+    options:
+    - text: Я з Києва. А ти?
+      correct: true
+    - text: Я з Києва. А ви?
+      correct: false
+    explanation: У неформальній розмові повертаємо питання через А ти?.
+  - prompt: Викладач запитав «Ви з України?». Як відповісти ствердно?
+    options:
+    - text: Так, я з України.
+      correct: true
+    - text: Ні, я з Канади.
+      correct: false
+    explanation: Так, я з України підтверджує походження з України.
+  - prompt: Ти представляєш чоловіка і називаєш його місто.
+    options:
+    - text: Це Андрій. Він зі Львова.
+      correct: true
+    - text: Це Андрій. Вона зі Львова.
+      correct: false
+    explanation: 'Для чоловіка вживаємо займенник він: Він зі Львова.'
+  - prompt: Ти представляєш жінку і називаєш її місто.
+    options:
+    - text: Це Оксана. Вона з Одеси.
+      correct: true
+    - text: Це Оксана. Він з Одеси.
+      correct: false
+    explanation: 'Для жінки вживаємо займенник вона: Вона з Одеси.'
+- id: act-304
+  type: true-false
+  title: Слухай і перевіряй факти
+  instruction: Визнач, чи твердження є правильним (Правда), чи хибним (Неправда).
+  items:
+  - statement: У фразах «з України» та «з Києва» вживається прийменник «з».
+    correct: true
+    explanation: Перед голосними та більшістю приголосних уживаємо прийменник з.
+  - statement: 'Перед словом «Львова» правильно вживати прийменник «зі»: зі Львова.'
+    correct: true
+    explanation: Збіг приголосних [льв] вимагає форми зі для милозвучності.
+  - statement: Слово «прізвище» означає особисте ім'я людини.
+    correct: false
+    explanation: Прізвище означає родове ім'я (surname), а не особисте ім'я.
+  - statement: Слово «дружина» — це нормативна українська назва заміжньої жінки.
+    correct: true
+    explanation: Дружина — питоме українське слово; слово жена є росіянізмом.
+  - statement: Форма «зі Штатів» є неправильною в українській мові.
+    correct: false
+    explanation: Форма зі Штатів є правильною і милозвучною через збіг приголосних
+      [шт].
+  - statement: Запитання «Звідки ти?» використовується у формальному спілкуванні з
+      професором.
+    correct: false
+    explanation: 'З професором уживаємо форму пошани: Звідки ви?.'
+- id: act-305
+  type: match-up
+  title: 'Картка знайомства: поля та значення'
+  instruction: З'єднай категорію анкети з відповідним записом.
+  pairs:
+  - left: Ім'я
+    right: Софія
+  - left: Прізвище
+    right: Шевченко
+  - left: Країна
+    right: Україна
+  - left: Місто
+    right: Київ
+  - left: Професія
+    right: лікарка
+  - left: Родина
+    right: дружина
+workbook:
+- id: act-w4
+  type: fill-in
+  title: Доповни діалог
+  instruction: Обери фразу, яка завершує рядок першого знайомства.
+  items:
+  - sentence: Привіт! Як ___ звати?
+    answer: тебе
+    options:
+    - тебе
+    - вас
+    - це
+    explanation: Привіт показує неформальну ситуацію з ровесником.
+  - sentence: Мене ___ Олена.
+    answer: звати
+    options:
+    - звати
+    - це
+    - з
+    explanation: Мене звати... — блок для імені.
+  - sentence: Мене звати Марко. ___ тебе?
+    answer: А
+    options:
+    - А
+    - Хто
+    - Що
+    explanation: А тебе? повертає питання.
+  - sentence: Добрий день! Як ___ звати?
+    answer: вас
+    options:
+    - вас
+    - тебе
+    - я
+    explanation: Добрий день пасує до формальної версії тут.
+  - sentence: Дуже ___!
+    answer: приємно
+    options:
+    - приємно
+    - Київ
+    - студентка
+    explanation: Дуже приємно звучить після обміну іменами.
+  - sentence: ___ ти? Я з Канади.
+    answer: Звідки
+    options:
+    - Звідки
+    - Хто
+    - Що
+    explanation: Звідки питає, звідки людина.
+- id: act-w301
+  type: match-up
+  title: Міста та країни
+  instruction: З'єднай назву міста з країною або описом розташування.
+  pairs:
+  - left: Київ
+    right: столиця України
+  - left: Львів
+    right: місто на заході України
+  - left: Одеса
+    right: місто на півдні України
+  - left: Торонто
+    right: місто в Канаді
+  - left: Берлін
+    right: місто в Німеччині
+  - left: Нью-Йорк
+    right: місто в Штатах
+- id: act-w302
+  type: group-sort
+  title: Прийменник з чи зі
+  instruction: Розподіли фрази за прийменником, який у них уживається.
+  groups:
+  - label: Прийменник з
+    items:
+    - з України
+    - з Канади
+    - з Німеччини
+    - з Києва
+    - з Одеси
+  - label: Прийменник зі
+    items:
+    - зі Львова
+    - зі Штатів
+- id: act-w303
+  type: fill-in
+  title: 'Формули знайомства: нормативний вибір'
+  instruction: Обери безпечне нормативне українське слово замість типової помилки
+    чи кальки.
+  items:
+  - sentence: Це моя ___, її звати Оксана.
+    answer: дружина
+    options:
+    - дружина
+    - жена
+    explanation: Дружина — стандартне українське слово.
+  - sentence: Це мій ___, він лікар.
+    answer: тато
+    options:
+    - тато
+    - папа
+    explanation: Тато — нейтральний початковий вибір для родини.
+  - sentence: ___, як вас звати?
+    answer: Вибачте
+    options:
+    - Вибачте
+    - Ізвиніть
+    explanation: Вибачте — нормативна форма звертання.
+  - sentence: Дуже приємно! — Мені ___ приємно.
+    answer: теж
+    options:
+    - теж
+    - тоже
+    explanation: Теж і також — питомі українські прислівники.
+  - sentence: Дуже дякую! — ___!
+    answer: Будь ласка
+    options:
+    - Будь ласка
+    - Пожалуста
+    explanation: Будь ласка — українська відповідь на подяку.
+  - sentence: Моє ___ — Шевченко.
+    answer: прізвище
+    options:
+    - прізвище
+    - фамілія
+    explanation: Прізвище означає родове ім'я; фамілія — калька.
+- id: act-w304
+  type: translate
+  title: Переклад виразів про походження
+  instruction: Обери правильний англійський переклад для кожної української фрази.
+  items:
+  - source: Звідки ти?
+    options:
+    - text: Where are you from? informal
+      correct: true
+    - text: What is your name?
+      correct: false
+    - text: Who is this?
+      correct: false
+    explanation: Звідки ти? запитує про походження ровесника.
+  - source: Я з України.
+    options:
+    - text: I am from Ukraine.
+      correct: true
+    - text: I am from Canada.
+      correct: false
+    - text: I am a student.
+      correct: false
+    explanation: Я з України означає I am from Ukraine.
+  - source: Він зі Львова.
+    options:
+    - text: He is from Lviv.
+      correct: true
+    - text: She is from Kyiv.
+      correct: false
+    - text: He is a doctor.
+      correct: false
+    explanation: Він зі Львова вказує на місто походження чоловіка.
+  - source: Моє прізвище — Мельник.
+    options:
+    - text: My surname is Melnyk.
+      correct: true
+    - text: My name is Melnyk.
+      correct: false
+    - text: My friend is Melnyk.
+      correct: false
+    explanation: Прізвище перекладається як surname або last name.
+  - source: Це моя дружина.
+    options:
+    - text: This is my wife.
+      correct: true
+    - text: This is my friend.
+      correct: false
+    - text: This is my mom.
+      correct: false
+    explanation: Дружина означає wife.
+  - source: Я зі Штатів.
+    options:
+    - text: I am from the States.
+      correct: true
+    - text: I am from Germany.
+      correct: false
+    - text: I am from Odesa.
+      correct: false
+    explanation: Я зі Штатів означає I am from the States.
+- id: act-w305
+  type: error-correction
+  title: Виправ помилки у фразах походження
+  instruction: Обери правильний нормативний варіант речення.
+  items:
+  - sentence: Я із Канади.
+    error: Я із Канади.
+    correction: Я з Канади.
+    options:
+    - Я з Канади.
+    - Я із Канади.
+    explanation: 'Перед приголосним [к] уживаємо прийменник з: Я з Канади.'
+  - sentence: Він з Львова.
+    error: Він з Львова.
+    correction: Він зі Львова.
+    options:
+    - Він зі Львова.
+    - Він з Львова.
+    explanation: 'Перед збігом приголосних [льв] уживаємо зі: Він зі Львова.'
+  - sentence: Це моя жена.
+    error: Це моя жена.
+    correction: Це моя дружина.
+    options:
+    - Це моя дружина.
+    - Це моя жена.
+    explanation: В українській мові вживаємо дружина.
+  - sentence: Моя фамілія Коваленко.
+    error: Моя фамілія Коваленко.
+    correction: Моє прізвище Коваленко.
+    options:
+    - Моє прізвище Коваленко.
+    - Моя фамілія Коваленко.
+    explanation: 'Українською мовою родове ім''я — це прізвище (середній рід: моє
+      прізвище).'
+  - sentence: Ізвиніть, звідки ви?
+    error: Ізвиніть, звідки ви?
+    correction: Вибачте, звідки ви?
+    options:
+    - Вибачте, звідки ви?
+    - Ізвиніть, звідки ви?
+    explanation: Вибачте або пробачте — правильні українські форми вибачення.
+  - sentence: Мені тоже приємно.
+    error: Мені тоже приємно.
+    correction: Мені теж приємно.
+    options:
+    - Мені теж приємно.
+    - Мені тоже приємно.
+    explanation: В українській мові вживаємо теж або також.
+- id: act-w306
+  type: quiz
+  title: Підсумок знайомства та походження
+  instruction: Обери правильну відповідь на запитання про мовні правила знайомства.
+  items:
+  - prompt: Яке запитання слід поставити незнайомому дорослому про країну походження?
+    options:
+    - text: Звідки ви?
+      correct: true
+    - text: Звідки ти?
+      correct: false
+    - text: Хто це?
+      correct: false
+    explanation: Для ввічливого звертання використовуємо Звідки ви?.
+  - prompt: Як правильно сказати «I am from Germany» українською мовою?
+    options:
+    - text: Я з Німеччини.
+      correct: true
+    - text: Я з Канади.
+      correct: false
+    - text: Я з Києва.
+      correct: false
+    explanation: Я з Німеччини перекладається як I am from Germany.
+  - prompt: Чому ми говоримо «зі Львова», але «з Києва»?
+    options:
+    - text: Через збіг приголосних [льв] для милозвучності вживаємо «зі».
+      correct: true
+    - text: Це залежить від розміру міста.
+      correct: false
+    - text: Львів — це жіночий рід.
+      correct: false
+    explanation: Форма зі вживається для уникнення важкого збігу приголосних звуків.
+  - prompt: Яке слово є правильним українським терміном для родинного імені (surname)?
+    options:
+    - text: прізвище
+      correct: true
+    - text: фамілія
+      correct: false
+    - text: ім'я
+      correct: false
+    explanation: Прізвище — літературне українське слово.
+  - prompt: Який займенник узгоджується зі словом «прізвище»?
+    options:
+    - text: моє прізвище
+      correct: true
+    - text: мій прізвище
+      correct: false
+    - text: моя прізвище
+      correct: false
+    explanation: Прізвище — іменник середнього роду, тому моє прізвище.
+  - prompt: 'Як правильно відреагувати на представлення дружини: «Це моя дружина Марина»?'
+    options:
+    - text: Дуже приємно!
+      correct: true
+    - text: До побачення!
+      correct: false
+    - text: Вибачте!
+      correct: false
+    explanation: Дуже приємно! — стандартна ввічлива відповідь під час знайомства.

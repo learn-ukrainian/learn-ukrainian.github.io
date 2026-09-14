@@ -1,0 +1,10 @@
+{
+  "mode": "upgrade",
+  "sha256": {
+    "curriculum/l2-uk-en/a1-v1/who-am-i/module.md": "88fab706b85edb51fe38ac539f7ba7f5ae0e0b6e2cffe1d70c0cd07a3c51bbfe",
+    "curriculum/l2-uk-en/a1-v1/who-am-i/activities.yaml": "3c9c619a4274403174736d26c2eb43c86718c886bf152a30e4a823cca27e4644",
+    "curriculum/l2-uk-en/a1-v1/who-am-i/vocabulary.yaml": "3173a0891cc6055e99bd534cafc5d15e90f3b7f811728e13e57abe07bf62030b",
+    "curriculum/l2-uk-en/a1-v1/who-am-i/resources.yaml": "2d5e7bd880856b37f7a99a155e739eee91c1d1b483e4c8dcc1522bd5f7ba32f5",
+    "curriculum/l2-uk-en/plans/a1/who-am-i.yaml": "8e83b0f4f606c24f449b808d521ee42a3d089c2b089d14ae7f527fc871256f62"
+  }
+}

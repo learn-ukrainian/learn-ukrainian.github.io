@@ -1,0 +1,116 @@
+- lemma: я
+  translation: I
+  pos: pronoun
+  usage: Я з України.
+- lemma: ти
+  translation: you, informal singular
+  pos: pronoun
+  usage: Звідки ти?
+- lemma: він
+  translation: he
+  pos: pronoun
+  usage: Він зі Львова.
+- lemma: вона
+  translation: she
+  pos: pronoun
+  usage: Вона — лікарка.
+- lemma: ми
+  translation: we
+  pos: pronoun
+  usage: Ми студенти.
+- lemma: ви
+  translation: you, formal or plural
+  pos: pronoun
+  usage: Як вас звати?
+- lemma: вони
+  translation: they
+  pos: pronoun
+  usage: Вони з України.
+- lemma: це
+  translation: this is / this
+  pos: pronoun
+  usage: Це Оксана.
+- lemma: хто
+  translation: who
+  pos: pronoun
+  usage: Хто це?
+- lemma: що
+  translation: what
+  pos: pronoun
+  usage: Що це?
+- lemma: тато
+  translation: dad
+  pos: noun
+  usage: Це мій тато.
+- lemma: мама
+  translation: mom
+  pos: noun
+  usage: Це моя мама.
+- lemma: подруга
+  translation: female friend
+  pos: noun
+  usage: Це моя подруга.
+- lemma: студент
+  translation: male student
+  pos: noun
+  usage: Я — студент.
+- lemma: студентка
+  translation: female student
+  pos: noun
+  usage: Я — студентка.
+- lemma: вчитель
+  translation: male teacher
+  pos: noun
+  usage: Він — вчитель.
+- lemma: вчителька
+  translation: female teacher
+  pos: noun
+  usage: Вона — вчителька.
+- lemma: лікар
+  translation: male doctor
+  pos: noun
+  usage: Він — лікар.
+- lemma: лікарка
+  translation: female doctor
+  pos: noun
+  usage: Вона — лікарка.
+- lemma: програміст
+  translation: male programmer
+  pos: noun
+  usage: Марко — програміст.
+- lemma: програмістка
+  translation: female programmer
+  pos: noun
+  usage: Олена — програмістка.
+- lemma: інженер
+  translation: male engineer
+  pos: noun
+  usage: Андрій — інженер.
+- lemma: інженерка
+  translation: female engineer
+  pos: noun
+  usage: Оксана — інженерка.
+- lemma: українець
+  translation: Ukrainian man
+  pos: noun
+  usage: Андрій — українець.
+- lemma: українка
+  translation: Ukrainian woman
+  pos: noun
+  usage: Олена — українка.
+- lemma: канадієць
+  translation: Canadian man
+  pos: noun
+  usage: Марко — канадієць.
+- lemma: канадка
+  translation: Canadian woman
+  pos: noun
+  usage: Олена — канадка.
+- lemma: американець
+  translation: American man
+  pos: noun
+  usage: Андрій — американець.
+- lemma: американка
+  translation: American woman
+  pos: noun
+  usage: Софія — американка.

@@ -1,0 +1,56 @@
+- lemma: привіт
+  translation: hi
+  pos: interjection
+  usage: Привіт!
+- lemma: добрий день
+  translation: good afternoon / hello
+  pos: phrase
+  usage: Добрий день!
+- lemma: мене звати
+  translation: my name is
+  pos: phrase
+  usage: Мене звати Олена.
+- lemma: як тебе звати?
+  translation: what is your name? informal
+  pos: phrase
+  usage: Як тебе звати?
+- lemma: як вас звати?
+  translation: what is your name? formal
+  pos: phrase
+  usage: Як вас звати?
+- lemma: а тебе?
+  translation: and yours? informal
+  pos: phrase
+  usage: А тебе?
+- lemma: а вас?
+  translation: and yours? formal
+  pos: phrase
+  usage: А вас?
+- lemma: дуже приємно
+  translation: pleased to meet you
+  pos: phrase
+  usage: Дуже приємно!
+- lemma: дякую
+  translation: thank you
+  pos: interjection
+  usage: Дякую!
+- lemma: спасибі
+  translation: thank you
+  pos: interjection
+  usage: Спасибі!
+- lemma: вибачте
+  translation: excuse me
+  pos: interjection
+  usage: Вибачте, як вас звати?
+- lemma: пробачте
+  translation: excuse me / forgive me
+  pos: interjection
+  usage: Пробачте.
+- lemma: теж
+  translation: also / too
+  pos: adverb
+  usage: Мені теж приємно.
+- lemma: також
+  translation: also
+  pos: adverb
+  usage: Мені також приємно.
