@@ -9,7 +9,7 @@ from jsonschema import Draft7Validator
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
-from yaml_activities import ActivityParser, OrderActivity
+from yaml_activities import ActivityParser, CountSyllablesActivity, OrderActivity
 
 
 def _a1_schema_validator() -> Draft7Validator:
@@ -154,6 +154,32 @@ def test_order_accepts_item_string_permutation_as_correct_order(tmp_path):
     assert isinstance(order_activity, OrderActivity)
     assert order_activity.correct_order == [2, 0, 3, 1]
     assert "<Order" in parser.to_mdx(activities)
+
+
+def test_count_syllables_accepts_syllables_alias(tmp_path):
+    fixture = tmp_path / "count.yaml"
+    fixture.write_text(
+        """
+- id: count-alias
+  type: count-syllables
+  title: Count
+  instruction: How many syllables?
+  items:
+    - word: дім
+      syllables: 1
+    - lemma: молоко
+      count: "3"
+""",
+        encoding="utf-8",
+    )
+    parser = ActivityParser()
+    activities = parser.parse(fixture)
+    act = activities[0]
+    assert isinstance(act, CountSyllablesActivity)
+    assert act.items[0].word == "дім"
+    assert act.items[0].correct == 1
+    assert act.items[1].word == "молоко"
+    assert act.items[1].correct == 3
 
 
 def test_order_preserves_activity_ukrainian_flag(tmp_path):

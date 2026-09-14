@@ -1426,13 +1426,17 @@ class ActivityParser:
     def _parse_count_syllables(self, data: dict) -> CountSyllablesActivity:
         items = []
         for item in data.get('items', []):
-            if 'word' not in item or 'correct' not in item:
+            word = item.get('word') or item.get('lemma') or item.get('text')
+            correct = item.get('correct')
+            if correct is None:
+                correct = item.get('syllables') or item.get('count') or item.get('answer')
+            if isinstance(correct, str) and correct.strip().isdigit():
+                correct = int(correct.strip())
+            if not word or not isinstance(correct, int):
                 raise KeyError("count-syllables item requires word and correct")
-            if not isinstance(item['correct'], int):
-                raise TypeError("count-syllables item correct must be an integer")
             items.append(CountSyllablesItem(
-                word=str(item['word']),
-                correct=item['correct'],
+                word=str(word),
+                correct=correct,
                 translation=str(item['translation']) if item.get('translation') else None,
             ))
         if not items:
