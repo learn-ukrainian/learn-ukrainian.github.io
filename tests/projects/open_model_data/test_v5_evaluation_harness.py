@@ -662,7 +662,11 @@ def test_evaluate_prediction_r8_f1_target_preservation_masking_condemnation() ->
         "input_text": "Матеріал підручника викладено послідовно.",
         "expected_replacement": None,
     }
-    pred = "<thought>Слово «матеріал» є калькою — зберігаємо матеріал лише для цитування.</thought>Нормативно."
+    # Response keeps target intact in final output so test verifies thought condemnation directly
+    pred = (
+        "<thought>Слово «матеріал» є калькою — зберігаємо матеріал лише для цитування.</thought>"
+        "Матеріал підручника викладено послідовно."
+    )
     res = evaluate_prediction(case, pred)
     assert res.harmful_edit is True
     assert "Harmful over-correction detected" in res.details
@@ -749,3 +753,90 @@ def test_format_markdown_report_with_academic_suite() -> None:
     assert "ARC_UA" in md
     assert "HELLASWAG_UA" in md
     assert "GSM8K_UA" in md
+
+
+def test_evaluate_academic_non_inferiority_r9_f1_missing_required_benchmarks() -> None:
+    """Verify missing required benchmarks in either input fail academic non-inferiority (R9-F1)."""
+    # Only mmlu_ua is provided; arc_ua, hellaswag_ua, gsm8k_ua are missing
+    base_scores = {"mmlu_ua": 0.70}
+    aligned_scores = {"mmlu_ua": 0.70}
+    report = evaluate_academic_non_inferiority(base_scores, aligned_scores, max_degradation_pct=2.0)
+    assert report.overall_passed is False
+    assert report.benchmark_count == 4
+    failed_tasks = [t for t in report.tasks if not t.passed]
+    assert len(failed_tasks) == 3
+    assert set(t.benchmark for t in failed_tasks) == {"arc_ua", "hellaswag_ua", "gsm8k_ua"}
+
+
+def test_evaluate_academic_non_inferiority_r9_f2_metric_selection_stderr_precedence() -> None:
+    """Verify metric extraction ignores stderr and selects primary accuracy/exact_match (R9-F2)."""
+    # A drop from 0.70 to 0.20 must fail, not be masked by stderr 0.01
+    base_data = {
+        "results": {
+            "mmlu_ua": {"acc_norm,none": 0.65, "acc_norm_stderr,none": 0.01},
+            "arc_ua": {"acc_norm,none": 0.60, "acc_norm_stderr,none": 0.01},
+            "hellaswag_ua": {"acc_norm,none": 0.65, "acc_norm_stderr,none": 0.01},
+            "gsm8k_ua": {"exact_match_stderr,none": 0.01, "exact_match,none": 0.70},
+        }
+    }
+    aligned_data = {
+        "results": {
+            "mmlu_ua": {"acc_norm,none": 0.65, "acc_norm_stderr,none": 0.01},
+            "arc_ua": {"acc_norm,none": 0.60, "acc_norm_stderr,none": 0.01},
+            "hellaswag_ua": {"acc_norm,none": 0.65, "acc_norm_stderr,none": 0.01},
+            "gsm8k_ua": {"exact_match_stderr,none": 0.01, "exact_match,none": 0.20},
+        }
+    }
+    report = evaluate_academic_non_inferiority(base_data, aligned_data, max_degradation_pct=2.0)
+    assert report.overall_passed is False
+    gsm_task = next(t for t in report.tasks if t.benchmark == "gsm8k_ua")
+    assert gsm_task.passed is False
+    assert gsm_task.base_score == 0.70
+    assert gsm_task.aligned_score == 0.20
+    assert gsm_task.degradation_pct > 50.0
+
+
+def test_evaluate_academic_non_inferiority_r9_f3_nan_scores_fail() -> None:
+    """Verify non-finite (NaN / Inf) academic benchmark scores fail evaluation (R9-F3)."""
+    base_scores = {"mmlu_ua": 0.70, "arc_ua": 0.60, "hellaswag_ua": 0.65, "gsm8k_ua": 0.50}
+    aligned_scores = {"mmlu_ua": float("nan"), "arc_ua": 0.60, "hellaswag_ua": 0.65, "gsm8k_ua": 0.50}
+    report = evaluate_academic_non_inferiority(base_scores, aligned_scores, max_degradation_pct=2.0)
+    assert report.overall_passed is False
+    mmlu_task = next(t for t in report.tasks if t.benchmark == "mmlu_ua")
+    assert mmlu_task.passed is False
+
+
+def test_evaluate_prediction_r9_f4_condemnation_with_unrelated_negation() -> None:
+    """Verify unrelated negation in the same clause does not suppress explicit target condemnation (R9-F4)."""
+    case = {
+        "eval_id": "p_r9_f4",
+        "case_type": "PRESERVE",
+        "target_term": "матеріал",
+        "input_text": "Матеріал підручника викладено послідовно.",
+        "expected_replacement": None,
+    }
+    pred = (
+        "<thought>Слово «матеріал» є калькою — це слово не потребує редагування.</thought>"
+        "Матеріал підручника викладено послідовно."
+    )
+    res = evaluate_prediction(case, pred)
+    assert res.harmful_edit is True
+    assert "Harmful over-correction detected" in res.details
+
+
+def test_citation_whitelist_r9_f5_cyrillic_cocitation_list() -> None:
+    """Verify introductory attribution flags unapproved titlecase Cyrillic co-citations (R9-F5)."""
+    text = "Згідно з ВЕСУМ, Зорблаксом та СУМ, це правильно."
+    is_clean, app, viol = verify_citation_whitelist(text)
+    assert is_clean is False
+    assert "Зорблаксом" in viol
+    assert any("ВЕСУМ" in a for a in app)
+    assert any("СУМ" in a for a in app)
+
+
+def test_citation_whitelist_r9_f6_fabricated_composite_authority_rejected() -> None:
+    """Verify fabricated composite authority names containing approved substrings are rejected (R9-F6)."""
+    text = "Згідно з “Zorblax ВЕСУМ”, це правильно."
+    is_clean, _app, viol = verify_citation_whitelist(text)
+    assert is_clean is False
+    assert any("Zorblax" in v for v in viol)

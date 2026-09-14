@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 import sys
 from collections.abc import Sequence
@@ -42,7 +43,7 @@ DEFAULT_HELDOUT_PATH = (
     / "heldout_evaluation_suite_1000.jsonl"
 )
 
-# Approved Ukrainian reference authorities for Gate 4
+# Approved Ukrainian reference authorities for Gate 4 (unanchored for prose citation detection)
 APPROVED_CITATION_PATTERNS = [
     re.compile(r"\bвесум\b", re.IGNORECASE),
     re.compile(r"\bvesum\b", re.IGNORECASE),
@@ -66,6 +67,80 @@ APPROVED_CITATION_PATTERNS = [
     re.compile(r"\bкурило\b", re.IGNORECASE),
     re.compile(r"\bголоскевич\w*\b", re.IGNORECASE),
 ]
+
+# Approved Ukrainian reference authorities for Gate 4 (anchored to validate complete entity identity)
+APPROVED_AUTHORITY_REGEXES = [
+    re.compile(
+        r"^(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*(?:\s+даних)?)\s+)?(?:весум\w*|vesum\w*)(?:\s+(?:онлайн|on-line|\d+))?$",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"^(?:(?:академічн\w*|тлумачн\w*)\s+)?(?:(?:словник\w*)\s+)?сум(?:-11|-20)?(?:\s+(?:онлайн|on-line|\d+))?$",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"^(?:академічн\w*\s+)?словник\s+української\s+мови(?:\s+(?:в\s+\d+\s+томах|том\w*\s+\d+|\d{4}))?$",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"^(?:(?:чинн\w*|новий|нового|новому|академічн\w*|українськ\w*|офіційн\w*)\s+)*правопис(?:у|ом|і)?(?:\s+(?:2019|\d{4}))?(?:\s+року)?$",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"^(?:(?:прац\w*|книг\w*)\s+)?(?:(?:борис\w*)\s+)?антоненк[оа]-давидович\w*(?:\s+«?як\s+ми\s+говоримо»?)?$",
+        re.IGNORECASE,
+    ),
+    re.compile(r"^«?як\s+ми\s+говоримо»?$", re.IGNORECASE),
+    re.compile(
+        r"^(?:(?:словник\w*)\s+)?(?:(?:борис\w*)\s+)?грінченк\w*(?:\s+словарь\s+української\s+мови)?$",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"^словарь\s+української\s+мови(?:\s+(?:грінченк\w*|1907(?:\s+року)?))?$",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"^(?:уліф(?:\s+нан\s+україни)?|словники\s+україни(?:\s+(?:on-line|онлайн))?)$",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"^(?:(?:словник\w*)\s+)?(?:(?:святослав\w*)\s+)?караванськ\w*$",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"^(?:(?:професор\w*)\s+)?(?:(?:олександр\w*)\s+)?пономарів\w*(?:\s+«?культура\s+слова»?)?$",
+        re.IGNORECASE,
+    ),
+    re.compile(r"^«?культура\s+слова»?$", re.IGNORECASE),
+    re.compile(
+        r"^(?:мон(?:\s+україни)?|міністерств\w*\s+освіти\s+і\s+науки(?:\s+україни)?)$",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"^(?:(?:шкільн\w*|академічн\w*)\s+)?підручник\w*(?:\s+з\s+української\s+мови)?(?:\s+для\s+\d+\s+класу)?$",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"^(?:(?:корпус\w*)\s+)?ua-gec$",
+        re.IGNORECASE,
+    ),
+    re.compile(r"^(?:(?:тарас\w*)\s+)?шевченк\w*$", re.IGNORECASE),
+    re.compile(r"^(?:(?:іван\w*)\s+)?франк\w*$", re.IGNORECASE),
+    re.compile(r"^(?:(?:агатангел\w*)\s+)?кримськ\w*$", re.IGNORECASE),
+    re.compile(r"^(?:(?:олекс\w*)\s+)?синявськ\w*$", re.IGNORECASE),
+    re.compile(r"^(?:(?:олен\w*)\s+)?курило$", re.IGNORECASE),
+    re.compile(r"^голоскевич\w*$", re.IGNORECASE),
+    re.compile(
+        r"^(?:кумех|граматичн\w*\s+словник\s+української\s+мови)$",
+        re.IGNORECASE,
+    ),
+]
+
+
+def is_approved_authority(name: str) -> bool:
+    """Validate authority against approved reference whitelist using anchored matching."""
+    clean = name.strip().strip("«»\"'“”‘’")
+    return any(p.match(clean) for p in APPROVED_AUTHORITY_REGEXES)
 
 # Blacklisted hallucinated or foreign program citations (Gate 4 violations)
 PROHIBITED_CITATION_PATTERNS = [
@@ -299,11 +374,13 @@ ANY_CAP_NAME_RE = (
 )
 
 ENTITY_CITATION_RE = rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{ANY_CAP_NAME_RE})"
-INTRO_COORDINATED_ENTITY_RE = rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})"
+INTRO_SPECIAL_ENTITY_RE = rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})"
 
 CONJ_COORD_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_RE})"
 PLURAL_COORD_RE = rf"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+){ENTITY_CITATION_RE})"
-INTRO_COMMA_COORD_RE = rf"(?:\s*,\s*{INTRO_COORDINATED_ENTITY_RE}(?=\s*,|\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_RE}\s*,))"
+INTRO_COMMA_COORD_RE = (
+    rf"(?:\s*,\s*(?:{INTRO_SPECIAL_ENTITY_RE}(?=\s*,)|{ENTITY_CITATION_RE}(?=\s*,\s*{ENTITY_CITATION_RE}|\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_RE}\s*,)))"
+)
 
 CITATION_MENTION_PATTERNS = [
     # 1. "... dictionary" or "... словник" (case-insensitive name preceding dictionary keyword)
@@ -337,15 +414,15 @@ def verify_citation_whitelist(text: str) -> tuple[bool, list[str], list[str]]:
     found_prohibited: list[str] = []
     found_unapproved: list[str] = []
 
-    for pat in APPROVED_CITATION_PATTERNS:
-        m = pat.findall(text)
-        if m:
-            found_approved.extend(m)
-
     for pat in PROHIBITED_CITATION_PATTERNS:
         m = pat.findall(text)
         if m:
             found_prohibited.extend(m)
+
+    for pat in APPROVED_CITATION_PATTERNS:
+        m = pat.findall(text)
+        if m:
+            found_approved.extend(m)
 
     # True whitelist: check for any cited authority entity mentions that are not approved
     for cpat in CITATION_MENTION_PATTERNS:
@@ -363,8 +440,11 @@ def verify_citation_whitelist(text: str) -> tuple[bool, list[str], list[str]]:
                 names = re.split(r"\s*,\s*|\s+(?:and|or|та|і|й)\s+", names_part)
                 for name in names:
                     name = name.strip()
-                    if name and not any(app.search(name) for app in APPROVED_CITATION_PATTERNS):
-                        found_unapproved.append(f"{name} {kw}")
+                    full_name = f"{name} {kw}"
+                    if is_approved_authority(full_name) or is_approved_authority(name):
+                        found_approved.append(full_name)
+                    else:
+                        found_unapproved.append(full_name)
             else:
                 # E.g. "словник Zorblax", "словниками ВЕСУМ та Zorblax", "словниками ВЕСУМ, Zorblax"
                 clean_span = re.sub(
@@ -380,8 +460,11 @@ def verify_citation_whitelist(text: str) -> tuple[bool, list[str], list[str]]:
                         ent.strip(),
                     )
                     clean_ent = ent.strip().strip("«»\"'“”‘’")
-                    if clean_ent and not any(app.search(clean_ent) for app in APPROVED_CITATION_PATTERNS):
-                        found_unapproved.append(clean_ent)
+                    if clean_ent:
+                        if is_approved_authority(clean_ent):
+                            found_approved.append(clean_ent)
+                        else:
+                            found_unapproved.append(clean_ent)
 
     all_violations = sorted(list(set(found_prohibited + found_unapproved)))
     is_clean = len(all_violations) == 0
@@ -436,18 +519,79 @@ class AcademicNonInferiorityReport:
     benchmark_count: int
 
 
-def extract_benchmark_score(entry: Any) -> float:
-    """Extract a numeric accuracy/score from an entry (float, int, or dict)."""
+PREFERRED_METRIC_KEYS = (
+    "acc_norm,none",
+    "acc_norm",
+    "acc,none",
+    "acc",
+    "exact_match,none",
+    "exact_match",
+    "f1,none",
+    "f1",
+    "accuracy",
+    "score",
+    "value",
+)
+EXCLUDED_METRIC_SUBSTRINGS = (
+    "stderr",
+    "std_err",
+    "_err",
+    "error",
+    "std",
+    "loss",
+    "runtime",
+    "seconds",
+    "samples_per_second",
+)
+
+
+def extract_benchmark_score(entry: Any, preferred_key: str | None = None) -> tuple[float, str]:
+    """Extract a numeric accuracy/score and metric name from an entry (float, int, or dict).
+
+    Returns (score, metric_name).
+    Rejects non-finite values (NaN, Inf) and ambiguous/error metrics.
+    """
     if isinstance(entry, (int, float)):
-        return float(entry)
+        val = float(entry)
+        if not math.isfinite(val):
+            raise ValueError(f"Non-finite benchmark score encountered: {entry}")
+        return val, "raw_score"
+
     if isinstance(entry, dict):
-        for key in ("acc,none", "acc_norm,none", "acc", "acc_norm", "accuracy", "score", "value"):
+        if preferred_key and preferred_key in entry:
+            val = entry[preferred_key]
+            if isinstance(val, (int, float)):
+                fval = float(val)
+                if not math.isfinite(fval):
+                    raise ValueError(f"Non-finite score for key '{preferred_key}': {val}")
+                return fval, preferred_key
+
+        # First, search preferred keys in priority order
+        for key in PREFERRED_METRIC_KEYS:
             if key in entry and isinstance(entry[key], (int, float)):
-                return float(entry[key])
-        for v in entry.values():
-            if isinstance(v, (int, float)):
-                return float(v)
-    raise ValueError(f"Could not extract numeric score from benchmark entry: {entry}")
+                fval = float(entry[key])
+                if not math.isfinite(fval):
+                    raise ValueError(f"Non-finite score for key '{key}': {entry[key]}")
+                return fval, key
+
+        # Filter out known non-score / error metrics
+        clean_candidates = {
+            k: float(v)
+            for k, v in entry.items()
+            if isinstance(v, (int, float))
+            and not any(ex in k.lower() for ex in EXCLUDED_METRIC_SUBSTRINGS)
+        }
+        if len(clean_candidates) == 1:
+            k, v = next(iter(clean_candidates.items()))
+            if not math.isfinite(v):
+                raise ValueError(f"Non-finite score for key '{k}': {v}")
+            return v, k
+
+        if not clean_candidates:
+            raise ValueError(f"No valid metric score found in benchmark entry: {list(entry.keys())}")
+        raise ValueError(f"Ambiguous metrics in benchmark entry: {list(clean_candidates.keys())}")
+
+    raise ValueError(f"Invalid benchmark entry type: {type(entry).__name__}")
 
 
 def evaluate_academic_non_inferiority(
@@ -459,7 +603,9 @@ def evaluate_academic_non_inferiority(
     """Evaluate Eval-UA-tion 1.0 academic non-inferiority across Ukrainian benchmarks.
 
     Compares aligned model scores against base foundation weights.
-    Fails if performance degradation on any evaluated benchmark exceeds max_degradation_pct (default: 2.0%).
+    Every required benchmark must be present in both result sets.
+    Fails if performance degradation on any evaluated benchmark exceeds max_degradation_pct (default: 2.0%)
+    or if any score is non-finite (NaN / Inf).
     """
     tasks: list[BenchmarkTaskResult] = []
     worst_degradation = 0.0
@@ -471,18 +617,25 @@ def evaluate_academic_non_inferiority(
         aligned_results.get("results", aligned_results) if isinstance(aligned_results, dict) else aligned_results
     )
 
-    benchmark_keys: set[str] = set()
-    if isinstance(base_benchmarks, dict) and isinstance(aligned_benchmarks, dict):
-        benchmark_keys.update(base_benchmarks.keys())
-        benchmark_keys.update(aligned_benchmarks.keys())
+    if not isinstance(base_benchmarks, dict) or not isinstance(aligned_benchmarks, dict):
+        return AcademicNonInferiorityReport(
+            tasks=[],
+            overall_passed=False,
+            max_allowed_degradation_pct=max_degradation_pct,
+            worst_degradation_pct=100.0,
+            benchmark_count=0,
+        )
 
-    evaluated_benchmarks = [b for b in required_benchmarks if b in benchmark_keys]
-    if not evaluated_benchmarks:
-        evaluated_benchmarks = sorted(list(set(base_benchmarks.keys()) & set(aligned_benchmarks.keys())))
+    # Every required benchmark MUST be evaluated
+    benchmarks_to_evaluate = list(required_benchmarks)
+    # Include any additional common benchmarks present in both inputs
+    for b in sorted(base_benchmarks.keys()):
+        if b in aligned_benchmarks and b not in benchmarks_to_evaluate:
+            benchmarks_to_evaluate.append(b)
 
     overall_passed = True
 
-    for bname in evaluated_benchmarks:
+    for bname in benchmarks_to_evaluate:
         if bname not in base_benchmarks or bname not in aligned_benchmarks:
             tasks.append(
                 BenchmarkTaskResult(
@@ -492,15 +645,47 @@ def evaluate_academic_non_inferiority(
                     relative_change_pct=-100.0,
                     degradation_pct=100.0,
                     passed=False,
-                    details={"error": "Benchmark missing from one or both result sets"},
+                    details={"error": f"Required benchmark '{bname}' missing from one or both result sets"},
                 )
             )
             overall_passed = False
             worst_degradation = max(worst_degradation, 100.0)
             continue
 
-        base_score = extract_benchmark_score(base_benchmarks[bname])
-        aligned_score = extract_benchmark_score(aligned_benchmarks[bname])
+        try:
+            base_score, metric_name = extract_benchmark_score(base_benchmarks[bname])
+            aligned_score, _ = extract_benchmark_score(aligned_benchmarks[bname], preferred_key=metric_name)
+        except ValueError as exc:
+            tasks.append(
+                BenchmarkTaskResult(
+                    benchmark=bname,
+                    base_score=0.0,
+                    aligned_score=0.0,
+                    relative_change_pct=-100.0,
+                    degradation_pct=100.0,
+                    passed=False,
+                    details={"error": str(exc)},
+                )
+            )
+            overall_passed = False
+            worst_degradation = max(worst_degradation, 100.0)
+            continue
+
+        if not (math.isfinite(base_score) and math.isfinite(aligned_score)):
+            tasks.append(
+                BenchmarkTaskResult(
+                    benchmark=bname,
+                    base_score=base_score,
+                    aligned_score=aligned_score,
+                    relative_change_pct=-100.0,
+                    degradation_pct=100.0,
+                    passed=False,
+                    details={"error": "Non-finite score encountered"},
+                )
+            )
+            overall_passed = False
+            worst_degradation = max(worst_degradation, 100.0)
+            continue
 
         if base_score > 0:
             rel_change = ((aligned_score - base_score) / base_score) * 100.0
@@ -522,7 +707,7 @@ def evaluate_academic_non_inferiority(
                 relative_change_pct=rel_change,
                 degradation_pct=degradation,
                 passed=passed,
-                details={},
+                details={"metric": metric_name},
             )
         )
 
@@ -725,6 +910,8 @@ def evaluate_prediction(
         if not harmful_edit:
             thought_and_resp = (parsed.thought_text + " " + parsed.final_response).lower()
             t_lower = target_term.lower()
+            t_token = rf"(?:[«\"“‘\']?{re.escape(t_lower)}[»\"”’\']?(?!\w)|(?:це|дане|зазначене)\s+(?:слово|термін)\b)"
+            left_b = r"(?:\b|(?<=[\s«\"“‘\'(^]))(?<!інше\s)(?<!іншого\s)(?<!іншим\s)(?<!нового\s)(?<!інший\s)"
 
             clauses = [c.strip() for c in re.split(r"[.,\n;!?]+", thought_and_resp) if c.strip()]
             for clause in clauses:
@@ -740,80 +927,50 @@ def evaluate_prediction(
                 if not mentions_target:
                     continue
 
-                has_nenorm_condemn = bool(re.search(r"\bненормативн\w*\b", clause)) and not bool(
-                    re.search(r"\bне\s+(?:є\s+)?(?:вважається\s+)?ненормативн\w*\b", clause)
-                )
-
+                # Positive condemnation of the target word as a calque, Russianism, or error
                 copula_condemn = bool(
                     re.search(
-                        r"(?:є|[—–\-]|\:)\s*(?:це\s+)?(?:кальк\w*|росіянізм\w*|помилк\w*|суржик\w*|ненормативн\w*|штучн\w*)",
+                        rf"{left_b}{t_token}\s+(?:(?:—|–|-|:)\s+(?:(?:це|є)\s+)?|(?:є|було|вважається|становить)\s+)(?:кальк\w*|росіянізм\w*|помилк\w*|суржик\w*|ненормативн\w*|штучн\w*)",
                         clause,
                     )
                 )
-
-                clause_condemns = (
-                    any(
-                        cp in clause
-                        for cp in (
-                            f"«{t_lower}» є калькою",
-                            f"«{t_lower}» — калька",
-                            f"«{t_lower}» – калька",
-                            f"«{t_lower}»: калька",
-                            f"«{t_lower}» є росіянізмом",
-                            f"«{t_lower}» — росіянізм",
-                            f"«{t_lower}» – росіянізм",
-                            f"«{t_lower}»: росіянізм",
-                            f"слово {t_lower} є калькою",
-                            f"слово {t_lower} — калька",
-                            f"слово {t_lower} – калька",
-                            f"слово {t_lower}: калька",
-                            f"слово {t_lower} є росіянізмом",
-                            f"замініть «{t_lower}»",
-                            f"уникайте «{t_lower}»",
-                            f"помилкове вживання «{t_lower}»",
-                        )
+                explicit_phrase_condemn = any(
+                    cp in clause
+                    for cp in (
+                        f"«{t_lower}» є калькою",
+                        f"«{t_lower}» — калька",
+                        f"«{t_lower}» – калька",
+                        f"«{t_lower}»: калька",
+                        f"«{t_lower}» є росіянізмом",
+                        f"«{t_lower}» — росіянізм",
+                        f"«{t_lower}» – росіянізм",
+                        f"«{t_lower}»: росіянізм",
+                        f"слово {t_lower} є калькою",
+                        f"слово {t_lower} — калька",
+                        f"слово {t_lower} – калька",
+                        f"слово {t_lower}: калька",
+                        f"слово {t_lower} є росіянізмом",
+                        f"замініть «{t_lower}»",
+                        f"уникайте «{t_lower}»",
+                        f"помилкове вживання «{t_lower}»",
                     )
-                    or any(
-                        w in clause
-                        for w in (
-                            "є калькою",
-                            "— калька",
-                            "– калька",
-                            ": калька",
-                            "є росіянізмом",
-                            "є помилкою",
-                            "помилково",
-                            "є суржиком",
-                            "є штучн",
-                        )
-                    )
-                    or copula_condemn
-                    or has_nenorm_condemn
                 )
+                target_condemn = copula_condemn or explicit_phrase_condemn
 
-                t_token = rf"(?:[«\"“‘\']?{re.escape(t_lower)}[»\"”’\']?(?!\w)|(?:це|дане|зазначене)\s+(?:слово|термін)\b)"
-                left_b = r"(?:\b|(?<=[\s«\"“‘\'(^]))(?<!інше\s)(?<!іншого\s)(?<!іншим\s)(?<!нового\s)(?<!інший\s)"
-
+                # Direct negation of the condemnation itself (e.g. "не є калькою", "— не калька", "не росіянізм")
                 target_neg_pattern = bool(
                     re.search(
-                        rf"{left_b}{t_token}\s+(?:не\s+(?:є\s+)?(?:кальк\w*|росіянізм\w*|помилк\w*|суржик\w*|ненормативн\w*|штучн\w*)|не\s+помилк\w*|не\s+кальк\w*|не\s+росіянізм\w*|не\s+потребує\s+(?:змін|виправлення|редагування))",
+                        rf"{left_b}{t_token}\s+(?:(?:—|–|-|:)\s+(?:це\s+)?не\s+(?:є\s+)?|не\s+(?:є|було|вважається|становить)?\s*)(?:кальк\w*|росіянізм\w*|помилк\w*|суржик\w*|ненормативн\w*|штучн\w*)",
                         clause,
                     )
-                )
-
-                target_affirm = bool(
+                ) or bool(
                     re.search(
-                        rf"{left_b}{t_token}\s+(?:є\s+)?(?:нормативн\w*|правильн\w*|питом\w*|коректн\w*)",
+                        rf"{left_b}{t_token}\s+не\s+(?:є\s+)?(?:помилк\w*|кальк\w*|росіянізм\w*)",
                         clause,
                     )
                 )
 
-                clause_negated = (
-                    target_neg_pattern
-                    or target_affirm
-                )
-
-                if clause_condemns and not clause_negated:
+                if target_condemn and not target_neg_pattern:
                     harmful_edit = True
                     break
 
