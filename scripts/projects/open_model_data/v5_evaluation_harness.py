@@ -227,6 +227,16 @@ def normalize_tokens(s: str) -> list[str]:
     return [t.lower() for t in re.findall(r"[А-Яа-яЇїІіЄєҐґA-Za-z0-9]+", s_clean)]
 
 
+def is_contiguous_subsequence(sub: list[str], seq: list[str]) -> bool:
+    """Check if sub is an exact contiguous subsequence of seq."""
+    if not sub:
+        return True
+    sub_len = len(sub)
+    if sub_len > len(seq):
+        return False
+    return any(seq[i : i + sub_len] == sub for i in range(len(seq) - sub_len + 1))
+
+
 def check_span_integrity(input_text: str, output_text: str, target_term: str) -> tuple[bool, str]:
     """Verify that text outside the target span is preserved without collateral mutations."""
     if not input_text or not output_text:
@@ -255,6 +265,11 @@ def check_span_integrity(input_text: str, output_text: str, target_term: str) ->
     prefix_in = in_tokens[:target_idx]
     suffix_in = in_tokens[target_idx + target_len :]
 
+    # Required length check: output tokens must contain at least prefix and suffix non-overlapping
+    min_required_len = len(prefix_in) + len(suffix_in)
+    if len(out_tokens) < min_required_len:
+        return False, f"span_truncation: output length {len(out_tokens)} shorter than non-target prefix+suffix {min_required_len}"
+
     # Check exact prefix match in out_tokens
     if prefix_in:
         out_prefix = out_tokens[: len(prefix_in)]
@@ -263,7 +278,7 @@ def check_span_integrity(input_text: str, output_text: str, target_term: str) ->
 
     # Check exact suffix match in out_tokens
     if suffix_in:
-        out_suffix = out_tokens[-len(suffix_in) :]
+        out_suffix = out_tokens[len(out_tokens) - len(suffix_in) :]
         if out_suffix != suffix_in:
             return False, f"suffix_mutation: expected {suffix_in!r}, got {out_suffix!r}"
 
@@ -271,11 +286,16 @@ def check_span_integrity(input_text: str, output_text: str, target_term: str) ->
 
 
 CITATION_MENTION_PATTERNS = [
+    # "... dictionary" or "... словник" (case-insensitive name preceding dictionary keyword)
     re.compile(
-        r"\b(?!(?:У|В|За|По|До|На|З|Згідно|Відповідно|Зокрема)\b)([A-ZА-Я][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+(?:\s+[A-ZА-Я][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+)*\s+(?:Dictionary|dictionary|Словник\w*|словник\w*|Corpus|corpus|Корпус\w*|корпус\w*|Довідник\w*|довідник\w*))\b"
+        r"\b(?!(?:у|в|за|по|до|на|з|із|зі|згідно|відповідно|зокрема|цей|цього|цьому|кожен|кожний|який|якого|інший|іншого)\b)"
+        r"([a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+(?:\s+[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+)*\s+(?:dictionary|corpus|lexicon|словник\w*|корпус\w*|довідник\w*))\b",
+        re.IGNORECASE,
     ),
+    # "словник ..." or "словник «...»" (dictionary keyword followed by name or quoted title)
     re.compile(
-        r"\b(?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+(?:«[^»]+»|\"[^\"]+\"|([A-ZА-Я][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+))\b"
+        r"\b((?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+(?:«[^»]+»|\"[^\"]+\"|[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+))",
+        re.IGNORECASE,
     ),
 ]
 
@@ -300,8 +320,10 @@ def verify_citation_whitelist(text: str) -> tuple[bool, list[str], list[str]]:
     for cpat in CITATION_MENTION_PATTERNS:
         for match in cpat.finditer(text):
             citation_span = match.group(1).strip() if match.lastindex else match.group(0).strip()
-            # If citation span does not match any approved pattern, mark as unapproved
-            if not any(app.search(citation_span) for app in APPROVED_CITATION_PATTERNS):
+            # If neither the captured span nor the matched expression contains an approved authority
+            if not any(app.search(citation_span) for app in APPROVED_CITATION_PATTERNS) and not any(
+                app.search(match.group(0)) for app in APPROVED_CITATION_PATTERNS
+            ):
                 found_unapproved.append(citation_span)
 
     all_violations = sorted(list(set(found_prohibited + found_unapproved)))
@@ -366,6 +388,7 @@ class EvaluationSummary:
     high_freq_total: int
     high_freq_eliminated: int
     high_freq_recall: float
+    high_freq_floor: int
     gate5_pass: bool
 
     # Overall Verdict
@@ -428,14 +451,14 @@ def evaluate_prediction(
 
     if case_type == "CORRECT":
         # Calque must NOT be recommended or preserved in the final output,
-        # AND the valid correction/expected replacement must be present.
+        # AND the valid correction/expected replacement must be present as a contiguous sequence.
         # This prevents scoring arbitrary substitutions (e.g. 'XYZ') as successful.
         resp_lower = parsed.final_response.lower()
         t_lower = target_term.lower()
 
         has_valid_replacement = False
         if exp_clean:
-            if exp_clean.lower() in resp_lower or (exp_tokens and all(tok in resp_tokens for tok in exp_tokens)):
+            if exp_clean.lower() in resp_lower or (exp_tokens and is_contiguous_subsequence(exp_tokens, resp_tokens)):
                 has_valid_replacement = True
         else:
             has_valid_replacement = bool(resp_tokens)
@@ -507,51 +530,68 @@ def evaluate_prediction(
         # If the target is missing from final response or mutated, harmful edit occurred
         harmful_edit = not target_in_final
 
-        # Also check whether model condemned the authentic word as a calque or error
+        # Also check whether model condemned the authentic word as a calque or error.
+        # Condemnation and negation are evaluated per clause to prevent unrelated normative
+        # statements from globally masking explicit target condemnation.
         if not harmful_edit:
             thought_and_resp = (parsed.thought_text + " " + parsed.final_response).lower()
             t_lower = target_term.lower()
 
-            # Check if there is explicit condemnation of the target term
-            condemnation_phrases = (
-                f"«{t_lower}» є калькою",
-                f"«{t_lower}» — калька",
-                f"«{t_lower}» є росіянізмом",
-                f"слово {t_lower} є калькою",
-                f"слово {t_lower} є росіянізмом",
-                f"замініть «{t_lower}»",
-                f"уникайте «{t_lower}»",
-                f"помилкове вживання «{t_lower}»",
-            )
-            is_condemned = any(cp in thought_and_resp for cp in condemnation_phrases)
+            clauses = [c.strip() for c in re.split(r"[.\n;!?]+", thought_and_resp) if c.strip()]
+            for clause in clauses:
+                mentions_target = (
+                    f"«{t_lower}»" in clause
+                    or f"\"{t_lower}\"" in clause
+                    or f"слово {t_lower}" in clause
+                    or f"термін {t_lower}" in clause
+                    or f"форма {t_lower}" in clause
+                    or f"«{t_lower}" in clause
+                    or (t_lower in clause and any(kw in clause for kw in ("кальк", "росіянізм", "помилк", "суржик", "замін", "уникай")))
+                )
+                if not mentions_target:
+                    continue
 
-            # Check if this statement is actually negated or affirms normative status
-            negation_phrases = (
-                f"«{t_lower}» не є калькою",
-                f"«{t_lower}» не є росіянізмом",
-                f"«{t_lower}» не є помилкою",
-                f"слово «{t_lower}» не є",
-                f"слово {t_lower} не є",
-                f"{t_lower} не є калькою",
-                f"{t_lower} не є росіянізмом",
-                "не є калькою",
-                "не є росіянізмом",
-                "не є помилкою",
-                "не калька",
-                "не помилка",
-                "не потребує заміни",
-                "не потребує редагування",
-                "є нормативним",
-                "нормативне слово",
-                "питоме слово",
-                "вердикт preserve",
-            )
-            is_negated = any(np in thought_and_resp for np in negation_phrases)
+                clause_condemns = (
+                    any(
+                        cp in clause
+                        for cp in (
+                            f"«{t_lower}» є калькою",
+                            f"«{t_lower}» — калька",
+                            f"«{t_lower}» є росіянізмом",
+                            f"слово {t_lower} є калькою",
+                            f"слово {t_lower} є росіянізмом",
+                            f"замініть «{t_lower}»",
+                            f"уникайте «{t_lower}»",
+                            f"помилкове вживання «{t_lower}»",
+                        )
+                    )
+                    or any(w in clause for w in ("є калькою", "— калька", "є росіянізмом", "є помилкою", "помилково"))
+                )
 
-            if (is_condemned and not is_negated) or (not is_negated and any(w in thought_and_resp for w in ("кальк", "росіянізм", "помилк", "суржик")) and (
-                f"«{t_lower}»" in thought_and_resp or f"слово {t_lower}" in thought_and_resp
-            )):
-                harmful_edit = True
+                clause_negated = any(
+                    np in clause
+                    for np in (
+                        "не є калькою",
+                        "не калька",
+                        "не є росіянізмом",
+                        "не росіянізм",
+                        "не є помилкою",
+                        "не помилка",
+                        "не потребує",
+                        "є нормативн",
+                        "нормативн",
+                        "питом",
+                        "правильно",
+                        "літературн",
+                        "зберігаємо",
+                        "preserve",
+                        "без змін",
+                    )
+                )
+
+                if clause_condemns and not clause_negated:
+                    harmful_edit = True
+                    break
 
         span_pass, span_note = check_span_integrity(input_text, parsed.final_response, target_term)
 
@@ -576,6 +616,7 @@ def evaluate_prediction(
 def run_evaluation_suite(
     eval_cases: list[dict[str, Any]],
     predictions: dict[str, str],
+    min_high_freq_floor: int = 50,
 ) -> EvaluationSummary:
     """Run full evaluation suite across all provided cases and predictions."""
     results: list[CaseEvaluationResult] = []
@@ -621,7 +662,7 @@ def run_evaluation_suite(
     hf_total = len(hf_cases)
     hf_eliminated = sum(1 for r in hf_cases if r.calque_eliminated)
     hf_recall = (hf_eliminated / hf_total) if hf_total > 0 else 0.0
-    gate5_pass = (hf_total > 0) and (hf_recall >= 1.0)
+    gate5_pass = (hf_total >= min_high_freq_floor) and (hf_recall >= 1.0)
 
     all_gates = gate1_pass and gate2_pass and gate3_pass and gate4_pass and gate5_pass
 
@@ -649,6 +690,7 @@ def run_evaluation_suite(
         high_freq_total=hf_total,
         high_freq_eliminated=hf_eliminated,
         high_freq_recall=hf_recall,
+        high_freq_floor=min_high_freq_floor,
         gate5_pass=gate5_pass,
         all_gates_pass=all_gates,
         results=[asdict(r) for r in results],
@@ -680,7 +722,7 @@ def format_markdown_report(summary: EvaluationSummary) -> str:
 | **Gate 2: Harmful-Edit Rate** | <= 1.0% (Clopper-Pearson 95%) | **{summary.harmful_edit_rate * 100:.2f}%** (Upper bound: **{summary.clopper_pearson_upper * 100:.2f}%**, N={summary.preserve_cases_total}) | {g2_icon} |
 | **Gate 3: Span Integrity Gate** | 100% (0 mutations outside span) | **{summary.span_integrity_rate * 100:.2f}%** ({summary.span_integrity_violations} violations) | {g3_icon} |
 | **Gate 4: Citation Whitelist Gate** | 0% foreign hallucinations | **{summary.citation_violations_count}** violations (rate: {summary.citation_hallucination_rate * 100:.2f}%) | {g4_icon} |
-| **Gate 5: High-Frequency Calque Floor** | 100% on top 50 calques | **{summary.high_freq_recall * 100:.2f}%** ({summary.high_freq_eliminated}/{summary.high_freq_total}) | {g5_icon} |
+| **Gate 5: High-Frequency Calque Floor** | 100% on top 50 calques (min floor: {summary.high_freq_floor}) | **{summary.high_freq_recall * 100:.2f}%** ({summary.high_freq_eliminated}/{summary.high_freq_total}) | {g5_icon} |
 
 ---
 
@@ -700,6 +742,7 @@ def main() -> int:
     parser.add_argument("--predictions", type=Path, default=None, help="Path to model predictions JSONL")
     parser.add_argument("--output-json", type=Path, default=Path("evaluation_report.json"), help="Output JSON path")
     parser.add_argument("--output-md", type=Path, default=Path("evaluation_report.md"), help="Output Markdown path")
+    parser.add_argument("--min-high-freq-floor", type=int, default=50, help="Minimum high-frequency calques required")
     parser.add_argument("--self-test", action="store_true", help="Run self-test contract verification")
     args = parser.parse_args()
 
@@ -725,7 +768,7 @@ def main() -> int:
             "test_correct_01": "<thought>1. Діагностика: слово бажаючий є калькою.\n2. ВЕСУМ: охочий.</thought>Правильно вживати «охочий» замість «бажаючий».",
             "test_preserve_01": "<thought>1. Діагностика: матеріал є нормативним словом.</thought>Термін «матеріал» є нормативним, залишаємо без змін.",
         }
-        summary = run_evaluation_suite(test_cases, test_preds)
+        summary = run_evaluation_suite(test_cases, test_preds, min_high_freq_floor=1)
         print(f"Self-test complete: Gate 1 Pass: {summary.gate1_pass}, Format valid: {summary.format_valid_count}")
         return 0
 
@@ -743,7 +786,7 @@ def main() -> int:
     preds_raw = [json.loads(line) for line in args.predictions.read_text(encoding="utf-8").splitlines() if line.strip()]
     predictions = {p.get("eval_id") or p.get("id"): p.get("prediction") or p.get("output") or p.get("response") for p in preds_raw}
 
-    summary = run_evaluation_suite(eval_cases, predictions)
+    summary = run_evaluation_suite(eval_cases, predictions, min_high_freq_floor=args.min_high_freq_floor)
 
     args.output_json.write_text(json.dumps(asdict(summary), ensure_ascii=False, indent=2), encoding="utf-8")
     md_content = format_markdown_report(summary)

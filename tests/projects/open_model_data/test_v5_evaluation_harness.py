@@ -146,7 +146,7 @@ def test_full_evaluation_suite_run() -> None:
         "p01": "<thought>Матеріал є нормативним словом.</thought>Матеріал підручника викладено послідовно.",
     }
 
-    summary = run_evaluation_suite(test_cases, preds)
+    summary = run_evaluation_suite(test_cases, preds, min_high_freq_floor=2)
     assert summary.total_cases == 3
     assert summary.format_valid_count == 3
     assert summary.correct_cases_total == 2
@@ -176,12 +176,29 @@ def test_span_integrity_collateral_token_mutation() -> None:
     assert "prefix_mutation" in note
 
 
+def test_span_integrity_overlapping_spans_rejected() -> None:
+    """Verify prefix and suffix matches cannot overlap (e.g. 'a TARGET a' -> 'a')."""
+    is_intact, note = check_span_integrity("a TARGET a", "a", "TARGET")
+    assert is_intact is False
+    assert "span_truncation" in note
+
+
 def test_citation_whitelist_unknown_authority_rejected() -> None:
     """Verify fabricated or unapproved dictionaries (true whitelist) are rejected."""
-    text = "According to the fabricated Zorblax Dictionary, this is correct."
-    is_clean, _approved, violations = verify_citation_whitelist(text)
-    assert is_clean is False
-    assert any("Zorblax Dictionary" in v for v in violations)
+    text1 = "According to the fabricated Zorblax Dictionary, this is correct."
+    is_clean1, _approved1, violations1 = verify_citation_whitelist(text1)
+    assert is_clean1 is False
+    assert any("Zorblax Dictionary" in v for v in violations1)
+
+    text2 = "За словником «Zorblax», це правильно."
+    is_clean2, _approved2, violations2 = verify_citation_whitelist(text2)
+    assert is_clean2 is False
+    assert any("Zorblax" in v for v in violations2)
+
+    text3 = "According to zorblax dictionary, this is correct."
+    is_clean3, _approved3, violations3 = verify_citation_whitelist(text3)
+    assert is_clean3 is False
+    assert any("zorblax" in v.lower() for v in violations3)
 
 
 def test_evaluate_prediction_arbitrary_replacement_rejected() -> None:
@@ -194,6 +211,20 @@ def test_evaluate_prediction_arbitrary_replacement_rejected() -> None:
         "expected_replacement": "брати участь",
     }
     pred = "Студенти будуть XYZ у виборах."
+    res = evaluate_prediction(case, pred)
+    assert res.calque_eliminated is False
+
+
+def test_evaluate_prediction_reordered_tokens_rejected() -> None:
+    """Verify Gate 1 rejects arbitrary token reordering / interspersed replacement."""
+    case = {
+        "eval_id": "c_reorder",
+        "case_type": "CORRECT",
+        "target_term": "приймати участь",
+        "input_text": "Студенти будуть приймати участь у заходах.",
+        "expected_replacement": "брати участь",
+    }
+    pred = "Студенти будуть участь XYZ брати у заходах."
     res = evaluate_prediction(case, pred)
     assert res.calque_eliminated is False
 
@@ -212,6 +243,20 @@ def test_evaluate_prediction_preserve_negation_not_harmful() -> None:
     assert res.harmful_edit is False
 
 
+def test_evaluate_prediction_preserve_unrelated_normative_not_masking_condemnation() -> None:
+    """Verify unrelated normative statements in thought do not mask explicit condemnation of target."""
+    case = {
+        "eval_id": "p_unrelated",
+        "case_type": "PRESERVE",
+        "target_term": "матеріал",
+        "input_text": "Матеріал підручника викладено послідовно.",
+        "expected_replacement": None,
+    }
+    pred = "<thought>Слово «матеріал» є калькою. Інше слово є нормативним.</thought>Матеріал підручника викладено послідовно."
+    res = evaluate_prediction(case, pred)
+    assert res.harmful_edit is True
+
+
 def test_gate5_zero_coverage_fails() -> None:
     """Verify Gate 5 strictly fails when no high-frequency calques are present in the evaluated set."""
     cases = [
@@ -226,5 +271,23 @@ def test_gate5_zero_coverage_fails() -> None:
     preds = {"c_non_hf": "Контекст речення: питоме_слово."}
     summary = run_evaluation_suite(cases, preds)
     assert summary.high_freq_total == 0
+    assert summary.gate5_pass is False
+    assert summary.all_gates_pass is False
+
+
+def test_gate5_partial_coverage_fails() -> None:
+    """Verify Gate 5 fails when coverage is below the required 50-calque floor."""
+    cases = [
+        {
+            "eval_id": "c_hf_01",
+            "case_type": "CORRECT",
+            "target_term": "приймати участь",
+            "input_text": "Студенти будуть приймати участь у заходах.",
+            "expected_replacement": "брати участь",
+        }
+    ]
+    preds = {"c_hf_01": "Студенти будуть брати участь у заходах."}
+    summary = run_evaluation_suite(cases, preds, min_high_freq_floor=50)
+    assert summary.high_freq_total == 1
     assert summary.gate5_pass is False
     assert summary.all_gates_pass is False
