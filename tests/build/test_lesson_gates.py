@@ -75,6 +75,51 @@ def test_list_shaped_baseline_activities_do_not_crash(gold):
     assert not any("has no attribute" in d for d in report["diagnostics"])
 
 
+def test_writer_artifact_allows_original_inline_error_correction():
+    from scripts.build.linear_pipeline import _validate_lesson_writer_artifact
+
+    _validate_lesson_writer_artifact("activities.yaml", {
+        "inline": [{
+            "id": "act-4",
+            "type": "error-correction",
+            "instruction": "Виправте.",
+            "items": [{"incorrect": "a", "correct": "b"}] * 4,
+        }],
+        "workbook": [{
+            "id": "act-w1",
+            "type": "quiz",
+            "instruction": "Оберіть.",
+            "questions": [{"question": "q", "choices": ["a"]}],
+        }],
+    })
+
+
+def test_original_inline_error_correction_skips_workbook_only_placement(gold):
+    module, source, plan = gold
+    data = yaml.safe_load((source / "activities.yaml").read_text())
+    data["inline"].append({
+        "id": "act-err",
+        "type": "error-correction",
+        "title": "Пастки",
+        "items": [{"sentence": "x", "correction": "y"}] * 6,
+    })
+    (source / "activities.yaml").write_text(yaml.safe_dump(data, allow_unicode=True))
+    lesson_acts = yaml.safe_load((module / "lesson-1" / "activities.yaml").read_text())
+    lesson_acts["inline"].append({
+        "id": "act-err",
+        "type": "error-correction",
+        "title": "Пастки",
+        "items": [{"sentence": "x", "correction": "y"}] * 6,
+    })
+    (module / "lesson-1" / "activities.yaml").write_text(yaml.safe_dump(lesson_acts, allow_unicode=True))
+    md = (module / "lesson-1" / "module.md").read_text()
+    (module / "lesson-1" / "module.md").write_text(
+        md + "\n<!-- INJECT_ACTIVITY: act-err -->\n"
+    )
+    report = gates.run_lesson_gates(module, source, plan)
+    assert not any("act-err type error-correction is workbook-only" in d for d in report["diagnostics"])
+
+
 def test_unavailable_stress_oracle_fails_closed(gold, monkeypatch):
     def unavailable(*args):
         raise RuntimeError("unavailable")

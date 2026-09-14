@@ -272,6 +272,8 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     base_md, base_acts = base["module.md"], _normalize_activities(
         base["module.md"], yaml.safe_load(base["activities.yaml"]),
     )
+    original_ids = {a.get("id") for a in base_acts.get("inline", [])} | {
+        (a.get("id") or f"act-w{i + 1}") for i, a in enumerate(base_acts.get("workbook", []))}
     base_vocab = yaml.safe_load(base["vocabulary.yaml"])
     base_secs = sections(base_md)
     base_paras_by_lesson: dict[int, list[str]] = {L["n"]: [] for L in lessons}
@@ -343,11 +345,12 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                     continue
                 all_ids.append(aid)
                 new_acts[aid] = (n, placement, a)
-                if typ in ALLOWED["inline_only"] and placement != "inline":
-                    block(f"lesson {n}: {aid} type {typ} is inline-only")
-                elif typ in ALLOWED["workbook_only"] and placement != "workbook":
-                    block(f"lesson {n}: {aid} type {typ} is workbook-only")
-                elif typ not in ALLOWED["both"] | ALLOWED["inline_only"] | ALLOWED["workbook_only"]:
+                if aid not in original_ids:
+                    if typ in ALLOWED["inline_only"] and placement != "inline":
+                        block(f"lesson {n}: {aid} type {typ} is inline-only")
+                    elif typ in ALLOWED["workbook_only"] and placement != "workbook":
+                        block(f"lesson {n}: {aid} type {typ} is workbook-only")
+                if typ not in ALLOWED["both"] | ALLOWED["inline_only"] | ALLOWED["workbook_only"]:
                     block(f"lesson {n}: {aid} type {typ} not in the A1 allowlist")
                 # item minimum: count elements of the first list field; groups count their inner items
                 cnt = None
@@ -472,8 +475,6 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
 
 
     # Exemptions cannot be invented for new writer activities.
-    original_ids = {a.get("id") for a in base_acts.get("inline", [])} | {
-        (a.get("id") or f"act-w{i + 1}") for i, a in enumerate(base_acts.get("workbook", []))}
     if not set(exempt) <= original_ids:
         block("item exemptions may name only preserved original activities")
     if len(provenance) != len(originals) or len(prov) != len(provenance):
