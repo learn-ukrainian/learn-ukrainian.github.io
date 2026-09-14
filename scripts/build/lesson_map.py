@@ -1,8 +1,14 @@
 """Deterministic section ownership for V7 upgrades; never authors lesson prose.
 
-The last outline section closes the module. Earlier sections are packed in
-outline order to the lesson word minimum; trailing unplanned source sections
-stay with their preceding planned section. Introduction belongs to lesson one.
+When every plan outline heading appears in the archived module, in order, pack
+outline sections to the lesson word minimum (modules 8–9). When titles do not
+match, pack the real ``##`` headings by actual word count so a long module can
+become four or five lessons. The last heading always closes the module.
+Introduction belongs to lesson one.
+
+The map assigns original activities only. Every lesson still needs 4–6 inline
+and 6–9 workbook activities (≥10 total); the upgrade writer must generate the
+gap. A lesson with no activities is a defect.
 """
 from __future__ import annotations
 
@@ -78,13 +84,73 @@ def validate_lesson_map(mapping: dict) -> None:
         raise ValueError("Item exemption must reference an original activity")
 
 
-def derive_lesson_map(plan: dict, module_text: str, activities: dict) -> dict:
-    """Derive a map solely from outline order, word budgets, and source markers.
+def _word_count(text: str) -> int:
+    return len(re.findall(r"\S+", text))
+
+
+def _normalize_activities(module_text: str, activities: object) -> dict[str, list]:
+    """Accept ``{inline, workbook}`` or a flat list (legacy A1.1)."""
+    if activities is None:
+        activities = {}
+    if isinstance(activities, list):
+        marker_ids = set(re.findall(r"<!--\s*INJECT_ACTIVITY:\s*([^\s>]+)\s*-->", module_text))
+        inline, workbook = [], []
+        for item in activities:
+            if not isinstance(item, dict):
+                raise ValueError("Activity entries must be mappings")
+            if item.get("id") in marker_ids:
+                inline.append(item)
+            else:
+                workbook.append(item)
+        return {"inline": inline, "workbook": workbook}
+    if not isinstance(activities, dict):
+        raise ValueError("activities.yaml must be a mapping or a list")
+    return {
+        "inline": list(activities.get("inline") or []),
+        "workbook": list(activities.get("workbook") or []),
+    }
+
+
+def _pack_outline_groups(outline: list, outline_names: list[str]) -> list[list[str]]:
+    groups: list[list[str]] = []
+    pending: list[str] = []
+    words = 0
+    for entry, name in zip(outline[:-1], outline_names[:-1], strict=True):
+        pending.append(name)
+        words += entry["words"]
+        if words >= WORD_MINIMUM:
+            groups.append(pending)
+            pending, words = [], 0
+    if pending:
+        groups.append(pending)
+    groups.append([outline_names[-1]])
+    return groups
+
+
+def _pack_source_word_groups(sections: dict[str, str], source_names: list[str]) -> list[list[str]]:
+    groups: list[list[str]] = []
+    pending: list[str] = []
+    words = 0
+    for name in source_names[:-1]:
+        pending.append(name)
+        words += _word_count(sections[name])
+        if words >= WORD_MINIMUM:
+            groups.append(pending)
+            pending, words = [], 0
+    if pending:
+        groups.append(pending)
+    groups.append([source_names[-1]])
+    return groups
+
+
+def derive_lesson_map(plan: dict, module_text: str, activities: dict | list | None) -> dict:
+    """Derive a map from outline order or, on heading mismatch, source headings.
 
     Id-less workbook originals receive stable ``act-wN`` identities. Workbook
     order is allocated proportionally across lessons because originals have no
     section markers; this is placement, not a claim of semantic provenance.
     Explicit workbook ``lesson`` metadata, when provided, takes precedence.
+    New activities to hit the per-lesson floor are the writer's job.
     """
     outline = plan.get("content_outline")
     if not isinstance(outline, list) or not outline:
@@ -94,28 +160,23 @@ def derive_lesson_map(plan: dict, module_text: str, activities: dict) -> dict:
     if len(set(outline_names)) != len(outline_names):
         raise ValueError("Duplicate outline sections")
     source_names = list(sections)[1:]
-    if [name for name in source_names if name in outline_names] != outline_names:
-        raise ValueError("Original headings must contain every outline section in order")
+    if not source_names:
+        raise ValueError("Archived module has no ## sections to split")
     for entry in outline:
         budget = entry.get("words")
         if isinstance(budget, bool) or not isinstance(budget, int) or budget <= 0:
             raise ValueError("Outline words must be a positive integer")
-    groups, pending, words = [], [], 0
-    for entry, name in zip(outline[:-1], outline_names[:-1], strict=True):
-        budget = entry["words"]
-        pending.append(name)
-        words += budget
-        if words >= WORD_MINIMUM:
-            groups.append(pending)
-            pending, words = [], 0
-    if pending:
-        groups.append(pending)
-    groups.append([outline_names[-1]])
-    owners = {name: n for n, group in enumerate(groups, 1) for name in group}
-    current_owner = 1
-    for name in source_names:
-        current_owner = owners.get(name, current_owner)
-        owners[name] = current_owner
+    matched = [name for name in source_names if name in outline_names] == outline_names
+    if matched:
+        groups = _pack_outline_groups(outline, outline_names)
+        owners = {name: n for n, group in enumerate(groups, 1) for name in group}
+        current_owner = 1
+        for name in source_names:
+            current_owner = owners.get(name, current_owner)
+            owners[name] = current_owner
+    else:
+        groups = _pack_source_word_groups(sections, source_names)
+        owners = {name: n for n, group in enumerate(groups, 1) for name in group}
     lessons = []
     for n, group in enumerate(groups, 1):
         lessons.append({
@@ -125,6 +186,7 @@ def derive_lesson_map(plan: dict, module_text: str, activities: dict) -> dict:
             "activities": {"total": 10, "inline": [4, 6], "workbook": [6, 9]},
             "unverified_stress": [], "unverified_lemmas": [],
         })
+    activities = _normalize_activities(module_text, activities)
     marker_owners = {}
     for name, body in sections.items():
         for activity_id in re.findall(r"<!--\s*INJECT_ACTIVITY:\s*([^\s>]+)\s*-->", body):

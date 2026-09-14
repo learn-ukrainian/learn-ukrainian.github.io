@@ -267,7 +267,11 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
         target = L.get("activities", {})
         if target.get("inline") != [4, 6] or target.get("workbook") != [6, 9] or target.get("total", 0) < 10:
             block(f"lesson {L.get('n')}: invalid activity targets")
-    base_md, base_acts = base["module.md"], yaml.safe_load(base["activities.yaml"])
+    from scripts.build.lesson_map import _normalize_activities
+
+    base_md, base_acts = base["module.md"], _normalize_activities(
+        base["module.md"], yaml.safe_load(base["activities.yaml"]),
+    )
     base_vocab = yaml.safe_load(base["vocabulary.yaml"])
     base_secs = sections(base_md)
     base_paras_by_lesson: dict[int, list[str]] = {L["n"]: [] for L in lessons}
@@ -445,7 +449,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                 [("workbook", i, a) for i, a in enumerate(base_acts.get("workbook", []))]
     for placement, i, a in originals:
         p = prov.get((placement, i))
-        expected_id = a.get("id") if placement == "inline" else f"act-w{i+1}"
+        expected_id = a.get("id") if placement == "inline" else (a.get("id") or f"act-w{i+1}")
         if not p:
             block(f"provenance missing for original {placement}[{i}] ({expected_id})")
             continue
@@ -469,7 +473,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
 
     # Exemptions cannot be invented for new writer activities.
     original_ids = {a.get("id") for a in base_acts.get("inline", [])} | {
-        f"act-w{i + 1}" for i, _ in enumerate(base_acts.get("workbook", []))}
+        (a.get("id") or f"act-w{i + 1}") for i, a in enumerate(base_acts.get("workbook", []))}
     if not set(exempt) <= original_ids:
         block("item exemptions may name only preserved original activities")
     if len(provenance) != len(originals) or len(prov) != len(provenance):

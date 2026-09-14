@@ -68,11 +68,78 @@ def test_invalid_map_fails_closed(baseline, mutation):
         validate_lesson_map(mapping)
 
 
-def test_missing_outline_heading_fails(baseline):
+def test_mismatched_outline_packs_source_headings():
+    filler = "word " * 200
+    plan = {"content_outline": [
+        {"section": "План А", "words": 300},
+        {"section": "План Б", "words": 300},
+        {"section": "Підсумок", "words": 150},
+    ]}
+    prose = (
+        "Intro\n"
+        f"## Sound First\n{filler}\n"
+        f"## Vowels\n{filler}\n"
+        f"## Consonants\n{filler}\n"
+        f"## Conversation\n{filler}\n"
+        "## Close\nend\n"
+        "<!-- INJECT_ACTIVITY: act-1 -->\n"
+    )
+    activities = {"inline": [{"id": "act-1", "type": "quiz", "items": [{}] * 6}],
+                  "workbook": [{"type": "quiz"} for _ in range(6)]}
+    result = derive_lesson_map(plan, prose, activities)
+    assert len(result["lessons"]) == 3
+    assert result["lessons"][0]["sections"] == ["Sound First", "Vowels", "Consonants"]
+    assert result["lessons"][1]["sections"] == ["Conversation"]
+    assert result["lessons"][2]["sections"] == ["Close"]
+    assert result["closes_module"] == 3
+    assert all(L["activities"]["total"] >= 10 for L in result["lessons"])
+
+
+def test_source_heading_pack_can_exceed_three_lessons():
+    filler = "word " * 300
+    plan = {"content_outline": [
+        {"section": "UnusedA", "words": 200},
+        {"section": "UnusedB", "words": 200},
+    ]}
+    names = ["A", "B", "C", "D", "E", "F"]
+    prose = "Intro\n" + "".join(f"## {name}\n{filler}\n" for name in names)
+    prose += "<!-- INJECT_ACTIVITY: act-1 -->\n"
+    activities = {"inline": [{"id": "act-1", "type": "quiz", "items": [{}] * 6}],
+                  "workbook": [{"type": "quiz"} for _ in range(8)]}
+    result = derive_lesson_map(plan, prose, activities)
+    assert len(result["lessons"]) >= 4
+    assert result["closes_module"] == len(result["lessons"])
+    assert result["lessons"][-1]["sections"] == ["F"]
+
+
+def test_list_activities_split_by_inject_markers():
+    plan = {"content_outline": [
+        {"section": "First", "words": 280},
+        {"section": "Second", "words": 280},
+        {"section": "Close", "words": 200},
+    ]}
+    prose = (
+        "Intro\n## First\nA\n<!-- INJECT_ACTIVITY: act-1 -->\n"
+        "## Second\nB\n## Close\nC\n"
+    )
+    activities = [
+        {"id": "act-1", "type": "quiz", "items": [{}] * 6},
+        {"id": "act-2", "type": "quiz", "items": [{}] * 6},
+        {"id": "act-3", "type": "quiz", "items": [{}] * 6},
+    ]
+    result = derive_lesson_map(plan, prose, activities)
+    inline = [row for row in result["provenance"] if row["placement"] == "inline"]
+    workbook = [row for row in result["provenance"] if row["placement"] == "workbook"]
+    assert inline == [{"placement": "inline", "index": 0, "new_id": "act-1", "lesson": 1}]
+    assert [row["new_id"] for row in workbook] == ["act-2", "act-3"]
+
+
+def test_missing_outline_heading_no_longer_hard_fails(baseline):
     plan, prose, activities = baseline
     plan["content_outline"][0]["section"] = "Absent"
-    with pytest.raises(ValueError, match="every outline section"):
-        derive_lesson_map(plan, prose, activities)
+    result = derive_lesson_map(plan, prose, activities)
+    assert result["lessons"]
+    assert result["closes_module"] == len(result["lessons"])
 
 
 def test_orphan_and_duplicate_inline_markers_fail(baseline):
