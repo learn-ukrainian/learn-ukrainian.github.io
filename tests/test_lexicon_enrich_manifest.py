@@ -9,6 +9,7 @@ import pytest
 
 from scripts.lexicon import enrich_manifest as enrich_manifest_module
 from scripts.lexicon import load_relation_candidates as relation_loader
+from scripts.lexicon import manifest_io
 from scripts.lexicon.enrich_manifest import (
     _BALLA_REVERSE_SOURCE,
     _DROP_ANTONYM_LEMMAS,
@@ -6844,3 +6845,90 @@ def test_slovnyk_cache_migrates_v3_preserving_positive_lookups(monkeypatch, tmp_
     assert "newsum" in cache["lookups"]
     assert cache["lookups"]["newsum"]["text"] == "одиниця мови"
     assert "ukreng" not in cache["lookups"]
+
+
+def test_usage_notes_cache_only_preserves_fields_and_never_fetches(tmp_path, monkeypatch):
+    import copy
+    import socket
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("offline apply attempted network or hydration")
+
+    monkeypatch.setattr(socket, "socket", forbidden)
+    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_cache", forbidden)
+    monkeypatch.setattr(manifest_io, "load_manifest", forbidden)
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path)
+    cache = {
+        "schema_version": 4, "lookup_word": "що",
+        "lookups": {"davydov": {
+            "dictionary_slug": "davydov", "word": "що",
+            "text": "що " + "Cached essay fixture for extraction and preservation. " * 8,
+        }},
+    }
+    cache_path = tmp_path / "що.json"
+    cache_path.write_text(json.dumps(cache))
+    cache_bytes = cache_path.read_bytes()
+    existing = {"items": [{"text": "Existing note", "source": "Existing source"}]}
+    manifest = {"entries": [
+        {"lemma": "що", "sections": {"idioms": {"items": ["preserved"]}},
+         "gate_provenance": {"usage_notes": "skipped-offline", "idioms": "skipped-offline"}},
+        {"lemma": "що", "sections": {"usage_notes": existing}},
+        {"lemma": "missing"},
+    ]}
+    before = copy.deepcopy(manifest)
+    assert enrich_manifest_module.apply_cached_usage_notes(manifest) == 1
+    assert manifest["entries"][0]["sections"]["usage_notes"]["items"]
+    assert manifest["entries"][0]["sections"]["idioms"] == before["entries"][0]["sections"]["idioms"]
+    assert manifest["entries"][0]["gate_provenance"] == {"idioms": "skipped-offline"}
+    assert manifest["entries"][1:] == before["entries"][1:]
+    assert enrich_manifest_module.apply_cached_usage_notes(manifest) == 0
+    assert cache_path.read_bytes() == cache_bytes
+
+
+@pytest.mark.parametrize("override", [{"schema_version": 3}, {"lookup_word": "other"}])
+def test_usage_notes_cache_only_rejects_incompatible_cache(tmp_path, monkeypatch, override):
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path)
+    cache = {"schema_version": 4, "lookup_word": "що", "lookups": {
+        "davydov": {"text": "Cached fixture. " * 30}}}
+    cache.update(override)
+    (tmp_path / "що.json").write_text(json.dumps(cache))
+    manifest = {"entries": [{"lemma": "що"}]}
+    assert enrich_manifest_module.apply_cached_usage_notes(manifest) == 0
+    assert manifest == {"entries": [{"lemma": "що"}]}
+
+
+def test_usage_notes_cache_only_cli_fails_closed_without_local_input(tmp_path, monkeypatch):
+    def forbidden(*args, **kwargs):
+        raise AssertionError("offline CLI attempted full enrichment or hydration")
+
+    monkeypatch.setattr(enrich_manifest_module, "MANIFEST", tmp_path / "missing.json")
+    monkeypatch.setattr(manifest_io, "load_manifest", forbidden)
+    monkeypatch.setattr(enrich_manifest_module, "enrich", forbidden)
+    with pytest.raises(FileNotFoundError):
+        enrich_manifest_module.main(["--write", "--usage-notes-cache-only"])
+    assert not list(tmp_path.iterdir())
+
+
+def test_usage_notes_cache_only_cli_writes_separate_candidate(tmp_path, monkeypatch):
+    import socket
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("offline CLI attempted network")
+
+    monkeypatch.setattr(socket, "socket", forbidden)
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path / "cache")
+    baseline = tmp_path / "baseline.json"
+    baseline.write_text('{"entries": [{"lemma": "missing"}]}')
+    original = baseline.read_bytes()
+    output = tmp_path / "candidate.json"
+    monkeypatch.setattr(enrich_manifest_module, "MANIFEST", baseline)
+    assert enrich_manifest_module.main([
+        "--write", "--usage-notes-cache-only", "--output", str(output),
+    ]) == 0
+    assert json.loads(output.read_text()) == json.loads(original)
+    assert baseline.read_bytes() == original
+    with pytest.raises(SystemExit):
+        enrich_manifest_module.main([
+            "--write", "--usage-notes-cache-only", "--output", str(baseline),
+        ])
+    assert baseline.read_bytes() == original
