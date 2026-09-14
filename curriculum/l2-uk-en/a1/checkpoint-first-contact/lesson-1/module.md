@@ -1,6 +1,6 @@
-# Підсумок: перший контакт
+# Пі́дсумок: пе́рший конта́кт
 
-**Приві́т! Мене́ зва́ти Богдан. Я з Дніпра́.** — Hi! My name is Bohdan.
+**Приві́т! Мене́ зва́ти Бо́гдан. Я з Дніпра́.** — Hi! My name is Bohdan.
 I am from Dnipro.
 
 This checkpoint is a working rehearsal for the first six modules. Nothing here
@@ -11,15 +11,15 @@ you are from, name a simple role or profession, and add one family line.
 By the end, you can:
 
 - read short Ukrainian words aloud without using Russian as a bridge;
-- choose the safe greeting and farewell phrases: **Добрий день**, **Привіт**,
-  **До побачення**, and **Бувай**;
-- introduce yourself with **Мене звати...**, not a word-for-word English
+- choose the safe greeting and farewell phrases: **До́брий день**, **Приві́т**,
+  **До поба́чення**, and **Бува́й**;
+- introduce yourself with **Мене́ зва́ти...**, not a word-for-word English
   sentence;
-- say **Я студент / Я студентка** without forcing **є** into the line;
-- answer **Звідки ти?** with **Я з...**;
-- use **Мені 20 років** for age;
-- add family with **У мене є...** and **мій / моя / моє / мої**;
-- recognize direct address such as **Привіт, Богдане!** and **Соломіє!** as
+- say **Я студе́нт / Я студе́нтка** without forcing **є** into the line;
+- answer **Зві́дки ти?** with **Я з...**;
+- use **Мені́ 20 рокі́в** for age;
+- add family with **У мене́ є...** and **мій / моя́ / моє́ / мої́**;
+- recognize direct address such as **Приві́т, Бо́гдане!** and **Соломі́є!** as
   the vocative signal.
 
 The checkpoint keeps a Ukrainian-first frame. Ukrainian letters, stress, and
@@ -31,13 +31,13 @@ The roadmap behind this checkpoint has six learner steps: sound and alphabet
 control, reading words, special signs, stress, self-introduction, and one
 family line. Use that order as a checklist, not as new grammar to memorize.
 
-## Що ми знаємо?
+## Що ми зна́ємо?
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
 You now have six small toolkits.
 
-| Опора | Що ти вже робиш |
+| Опо́ра | Що ти вже ро́биш |
 | --- | --- |
 | **Зву́ки й лі́тери** | recognize Ukrainian letters, vowels, **ґ**, **ї**, **є**, **и**, **і**, **ь**, and the apostrophe |
 | **Чита́ння** | read short words and syllables slowly but confidently |
@@ -52,7 +52,7 @@ you hesitate, return to the sentence frame instead of translating from English.
 
 Keep these blocks as whole blocks:
 
-| Український блок | English support |
+| Украї́нський блок | English support |
 | --- | --- |
 | **Як тебе́ зва́ти?** | What is your name? |
 | **Мене́ зва́ти...** | My name is... |
@@ -69,24 +69,24 @@ setting, so the main dialogue stays in **ти**. Do not mix **ти** and **Ви*
 the same first-contact exchange unless the situation changes.
 
 :::tip
-When a line feels hard, reduce it to one phrase: **Мене звати...**, **Я з...**,
-**Я студент / студентка**, or **У мене є...**. The checkpoint rewards reliable
+When a line feels hard, reduce it to one phrase: **Мене́ зва́ти...**, **Я з...**,
+**Я студе́нт / студе́нтка**, or **У мене́ є...**. The checkpoint rewards reliable
 phrases, not long translated sentences.
 :::
 
-Коли ми зустрічаємо нову людину, ми обираємо привітання відповідно до ситуації — when we meet a new person, we choose greetings according to the situation:
+Коли́ ми зустріча́ємо нову́ люди́ну, ми обира́ємо привіта́ння відпові́дно до ситуа́ції — when we meet a new person, we choose greetings according to the situation:
 
-| Українська фраза | Роль у розмові | English support |
+| Украї́нська фра́за | Роль у розмо́ві | English support |
 | --- | --- | --- |
-| **Приві́т!** | неформальне привітання для друзів | Hi! (informal) |
-| **До́брий день!** | нейтральне ввічливе привітання | Good day! / Hello! (polite) |
-| **Віта́ю!** | нейтральне ввічливе вітання | Greetings! / Welcome! |
-| **До поба́чення!** | стандартне прощання | Goodbye! (standard) |
-| **Бува́й!** | дружнє прощання для ровесників | Bye! (informal) |
+| **Приві́т!** | неформа́льне привіта́ння для дру́зів | Hi! (informal) |
+| **До́брий день!** | нейтра́льне вві́чливе привіта́ння | Good day! / Hello! (polite) |
+| **Віта́ю!** | нейтра́льне вві́чливе віта́ння | Greetings! / Welcome! |
+| **До поба́чення!** | станда́ртне проща́ння | Goodbye! (standard) |
+| **Бува́й!** | дру́жнє проща́ння для рове́сників | Bye! (informal) |
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
-## Читання
+## Чита́ння
 
 Read this text aloud. Use the letter and stress habits from the script modules.
 The content is only the A1.1 world: name, place, role, family, and a simple
@@ -106,7 +106,7 @@ closing.
 
 English support after the Ukrainian text:
 
-| Українська | English support |
+| Украї́нська | English support |
 | --- | --- |
 | **Моє́ прі́звище Ковале́нко.** | My surname is Kovalenko. |
 | **Я з Ки́єва.** | I am from Kyiv. |
@@ -116,16 +116,16 @@ English support after the Ukrainian text:
 
 Now check the reading decisions.
 
-- In **прізвище**, keep **и** and **і** separate.
-- In **сім'я**, the apostrophe tells you to keep the **м** and **я** apart.
-- In **Київ**, do not flatten **ї**.
-- In **вчителька**, read slowly; the word is useful, but the profession table
+- In **прі́звище**, keep **и** and **і** separate.
+- In **сі́м'я**, the apostrophe tells you to keep the **м** and **я** apart.
+- In **Киї́в**, do not flatten **ї**.
+- In **вчи́телька**, read slowly; the word is useful, but the profession table
   is still small.
-- In direct address, **Богдан** becomes **Богдане** and **Соломія** becomes
-  **Соломіє**. At A1, recognize the signal and copy safe examples. Do not turn
+- In direct address, **Бо́гдан** becomes **Бо́гдане** and **Соломі́я** becomes
+  **Соломі́є**. At A1, recognize the signal and copy safe examples. Do not turn
   this checkpoint into a full case table.
 
-Alphabet order is also a learner tool. If you look up **прізвище** in a
+Alphabet order is also a learner tool. If you look up **прі́звище** in a
 dictionary, the first letter is not enough; after **п**, keep comparing the next
 letters. That habit matters more than speed.
 
@@ -134,27 +134,27 @@ Read the text one line at a time. A checkpoint pass is steady pronunciation and
 safe phrases, not a perfect performance at full speed.
 :::
 
-Під час читання зверніть увагу на особливості вимови ключових слів — while reading, pay attention to key pronunciation features:
+Під час чита́ння зверні́ть ува́гу на особли́вості вимо́ви ключови́х слів — while reading, pay attention to key pronunciation features:
 
-| Опора | Слово у тексті | Як читати | English support |
+| Опо́ра | Сло́во у те́ксті | Як чита́ти | English support |
 | --- | --- | --- | --- |
-| **и** проти **і** | **прі́звище** | [і] після м'якого [р'], [и] після [з] | Keep [i] tense and [y] relaxed |
-| апостроф | **сім'я́** | роздільна вимова губного [м] та [йа] | Pronounce [m] and [ya] separately |
-| літера **ї** | **Ки́їв** | завжди позначає два звуки [йі] | Always two sounds: [yi] |
-| м'який знак | **вчи́телька** | пом'якшує звук [т'] перед [е] | Softens [t'] before [e] |
-| наголос | **познайо́митися** | наголошений склад **-йо́-** | Stress falls on the syllable -йо- |
+| **и** про́ти **і** | **прі́звище** | [і] пі́сля м'яко́го [р'], [и] пі́сля [з] | Keep [i] tense and [y] relaxed |
+| апостро́ф | **сім'я́** | розді́льна вимо́ва губно́го [м] та [йа] | Pronounce [m] and [ya] separately |
+| лі́тера **ї** | **Киї́в** | за́вжди познача́є два зву́ки [йі] | Always two sounds: [yi] |
+| м'яки́й знак | **вчи́телька** | пом'я́кшує звук [т'] пере́д [е] | Softens [t'] before [e] |
+| на́голос | **познайо́митися** | наголо́шений склад **-йо́-** | Stress falls on the syllable -йо- |
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
-## Граматика
+## Грама́тика
 
 The grammar checkpoint has six safe patterns. They are small, but they cover a
 real first meeting.
 
-| Опора | Безпечний рядок | Не треба зараз |
+| Опо́ра | Безпе́чний рядо́к | Не тре́ба за́раз |
 | --- | --- | --- |
-| **Це + noun** | **Це Богдан. Це моя́ сестра́.** | Do not overbuild the sentence. |
-| Identity without **є** | **Я студе́нт. Вона́ лі́карка.** | Do not say **Я є студент** in this A1 sentence. |
+| **Це + noun** | **Це Бо́гдан. Це моя́ сестра́.** | Do not overbuild the sentence. |
+| Identity without **є** | **Я студе́нт. Вона́ лі́карка.** | Do not say **Я є студе́нт** in this A1 sentence. |
 | Name | **Мене́ зва́ти Соломі́я.** | Do not build **Моє́ ім'я́ є...** from English. |
 | Origin | **Я з Кана́ди. Я зі Льво́ва.** | Use **з / зі** as the learned phrase. |
 | Age | **Мені́ 20 ро́ків.** | Do not use the English "have years" shape. |
@@ -165,30 +165,30 @@ For family and identity, the owned word chooses the possessive form:
 | Word | My line |
 | --- | --- |
 | **брат** | **мій брат** |
-| **мама** | **моя мама** |
-| **місто** | **моє місто** |
-| **батьки** | **мої батьки** |
+| **ма́ма** | **моя́ ма́ма** |
+| **мі́сто** | **моє́ мі́сто** |
+| **батьки́** | **мої́ батьки́** |
 
 The gender habit is not only a family topic. A word should be stored with its
-gender when that helps you later: **студент** is masculine, **студентка** is
-feminine, and **прізвище** is neuter. You do not need a full case system today,
+gender when that helps you later: **студе́нт** is masculine, **студе́нтка** is
+feminine, and **прі́звище** is neuter. You do not need a full case system today,
 but you do need the habit of learning a noun with its form cues.
 
-The safe social vocabulary also stays native Ukrainian. Use **прізвище** for
-surname in official-style lines, not colloquial **фамілія**. Use **тато** or
-**батько** for father in this course context; keep **папа** as recognition, not
-the active A1 default. Use **Добрий день** or **Вітаю** when you need a neutral hello, and
-**До побачення** for goodbye.
+The safe social vocabulary also stays native Ukrainian. Use **прі́звище** for
+surname in official-style lines, not colloquial **фамі́лія**. Use **та́то** or
+**ба́тько** for father in this course context; keep **па́па** as recognition, not
+the active A1 default. Use **До́брий день** or **Віта́ю** when you need a neutral hello, and
+**До поба́чення** for goodbye.
 
-Порівняйте безпечні зразки з типовими помилками початківців — compare safe patterns with common beginner mistakes:
+Порівня́йте безпе́чні зразки́ з типо́вими помилка́ми початкі́вців — compare safe patterns with common beginner mistakes:
 
-| Конструкція | Безпечний рядок | Помилка початківця | Чому це важливо |
+| Констру́кція | Безпе́чний рядо́к | Поми́лка початкі́вця | Чому́ це важли́во |
 | --- | --- | --- | --- |
-| Представлення | **Мене́ зва́ти Марко́.** | *Моє ім'я є Марко.* | В українській мові ім'я називають через **Мене звати**. |
-| Фах та статус | **Я студе́нт.** / **Я вчи́телька.** | *Я є студент.* | Зв'язка **є** не потрібна в теперішньому часі. |
-| Вік | **Мені́ 20 ро́ків.** | *Я маю 20 років.* | Для віку використовують форму давального відмінка: **Мені ... років**. |
-| Походження | **Я з Ки́єва.** / **Я зі Льво́ва.** | *Я є від Київ.* | Походження передають прийменником **з / зі** з родовим відмінком. |
-| Наявність | **У мене́ є сестра́.** | *Я маю одна сестра.* | Конструкція **У мене є...** природно показує наявність рідних. |
-| Родове ім'я | **Моє́ прі́звище Ковале́нко.** | *Моя фамілія Коваленко.* | Стандартне слово в анкетах і розмові — **прізвище** (середній рід). |
+| Предста́влення | **Мене́ зва́ти Марко́.** | *Моє́ ім'я́ є Марко́.* | В украї́нській мо́ві ім'я́ назива́ють че́рез **Мене́ зва́ти**. |
+| Фах та ста́тус | **Я студе́нт.** / **Я вчи́телька.** | *Я є студе́нт.* | Зв'я́зка **є** не потрі́бна в тепе́рішньому ча́сі. |
+| Вік | **Мені́ 20 ро́ків.** | *Я маю́ 20 рокі́в.* | Для ві́ку використо́вують фо́рму дава́льного відмі́нка: **Мені́ ... рокі́в**. |
+| Похо́дження | **Я з Ки́єва.** / **Я зі Льво́ва.** | *Я є від Киї́в.* | Похо́дження передаю́ть прийме́нником **з / зі** з родови́м відмі́нком. |
+| Ная́вність | **У мене́ є сестра́.** | *Я маю́ одна́ сестра́.* | Констру́кція **У мене́ є...** приро́дно пока́зує ная́вність рі́дних. |
+| Родове́ ім'я́ | **Моє́ прі́звище Ковале́нко.** | *Моя́ фамі́лія Ковале́нко.* | Станда́ртне сло́во в анке́тах і розмо́ві — **прі́звище** (сере́дній рід). |
 
 <!-- INJECT_ACTIVITY: act-4 -->

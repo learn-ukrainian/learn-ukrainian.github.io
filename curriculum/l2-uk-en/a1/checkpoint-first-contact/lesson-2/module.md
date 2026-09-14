@@ -1,4 +1,4 @@
-# Діалог — Dialogue
+# Діало́г — Dialogue
 
 У пе́ршому уро́ці ми повтори́ли абе́тку, пра́вила чита́ння та ключові́ грамати́чні моде́лі — in the first lesson we reviewed the alphabet, reading rules, and key grammatical patterns. Тепе́р час поєдна́ти ви́вчені фра́зи у повноці́нній розмо́ві — now it is time to combine the learned phrases in a full conversation:
 - **Розповіда́ти про себе́** — state your name, origin, and occupation;
@@ -6,7 +6,7 @@
 - **Говори́ти про роди́ну** — name close family members with **У мене́ є...**;
 - **Вжива́ти вві́чливі кліше́** — exchange polite responses such as **Ду́же приє́мно** and **Мені́ теж**.
 
-## Діалог
+## Діало́г
 
 This is the full first-contact task. Read it once for meaning, then read it
 again aloud. The setting is a break on the first day of Ukrainian courses, so
@@ -136,7 +136,7 @@ practice.
 
 English support after the Ukrainian chat:
 
-| Українська | English support |
+| Украї́нська | English support |
 | --- | --- |
 | **А тебе́?** | And you? |
 | **Приві́т, Лі́но!** | Hi, Lina! |
@@ -144,12 +144,12 @@ English support after the Ukrainian chat:
 
 This online task also reviews the borrowed-word habit from the wiki brief:
 modern Ukrainian can use international words, but your core first-contact
-grammar should stay Ukrainian. In a course chat, still say **Мене звати...**,
-**Я з...**, and **До побачення**.
+grammar should stay Ukrainian. In a course chat, still say **Мене́ зва́ти...**,
+**Я з...**, and **До поба́чення**.
 
 <!-- INJECT_ACTIVITY: act-6 -->
 
-## Слу́хай, зошит, підсумок
+## Слу́хай, зо́шит, пі́дсумок
 
 For lawful listening, use Ukrainian Lessons Podcast Episode 10 as listen-only
 review support. Listen for short phrases you already know, repeat them, and
@@ -160,19 +160,19 @@ original five-line card with **ім'я́**, **прі́звище**, **Кана́
 **сестра́**, and **До поба́чення**. First compare the notebook card with the
 printed model; then write your own final card.
 
-### Картка знайомства — Introduction card
+### Ка́ртка знайо́мства — Introduction card
 
-Під час заповнення анкети або картки в зошиті важливо правильно вказувати категорії — when filling in a card in your notebook or a questionnaire, it is important to label categories accurately:
+Під час запо́внення анке́ти або́ картки́ в зо́шиті важли́во пра́вильно вка́зувати катего́рії — when filling in a card in your notebook or a questionnaire, it is important to label categories accurately:
 
-| Поле картки | Значення | Зразок запису | English support |
+| По́ле картки́ | Зна́чення | Зразо́к за́пису | English support |
 | --- | --- | --- | --- |
-| **Ім'я́** | перше або особисте ім'я | Богда́н / Соломі́я | First name |
-| **Прі́звище** | родове ім'я (не фамілія) | Ковале́нко / Ме́льник | Surname |
-| **Похо́дження** | місто або країна | Дніпро́, Украї́на / Кана́да | Origin / Country |
-| **Профе́сія** | поточний фах або статус | студе́нт / вчи́телька | Profession / occupation |
-| **Роди́на** | рідні люди | ма́ма, та́то, брат, сестра́ | Family members |
-| **Проща́ння** | стандартне закриття | До поба́чення! | Polite farewell |
+| **Ім'я́** | пе́рше або́ особи́сте ім'я́ | Богда́н / Соломі́я | First name |
+| **Прі́звище** | родове́ ім'я́ (не фамі́лія) | Ковале́нко / Ме́льник | Surname |
+| **Похо́дження** | мі́сто або́ краї́на | Дніпро́, Украї́на / Кана́да | Origin / Country |
+| **Профе́сія** | пото́чний фах або́ ста́тус | студе́нт / вчи́телька | Profession / occupation |
+| **Роди́на** | рі́дні лю́ди | ма́ма, та́то, брат, сестра́ | Family members |
+| **Проща́ння** | станда́ртне закриття́ | До поба́чення! | Polite farewell |
 
-Практикуйте написання цих слів від руки у робочому зошиті — practice writing these words by hand in your workbook.
+Практику́йте написа́ння цих слів від ру́ки у робо́чому зо́шиті — practice writing these words by hand in your workbook.
 
 <!-- INJECT_ACTIVITY: act-202 -->

@@ -1,72 +1,72 @@
-- lemma: ім'я
+- lemma: ім'я́
   translation: first name
   pos: noun
-  usage: Моє ім'я Олена.
-- lemma: прізвище
+  usage: Моє́ ім'я́ Оле́на.
+- lemma: прі́звище
   translation: surname
   pos: noun
-  usage: Моє прізвище Мельник.
-- lemma: знайомство
+  usage: Моє́ прі́звище Ме́льник.
+- lemma: знайо́мство
   translation: acquaintance / introduction
   pos: noun
-  usage: Це перше знайомство.
-- lemma: познайомитися
+  usage: Це пе́рше знайо́мство.
+- lemma: познайо́митися
   translation: to meet / get acquainted
   pos: verb
-  usage: Дуже приємно познайомитися!
-- lemma: професія
+  usage: Ду́же приє́мно познайо́митися!
+- lemma: профе́сія
   translation: profession
   pos: noun
-  usage: Моя професія — вчителька.
-- lemma: походження
+  usage: Моя́ профе́сія — вчи́телька.
+- lemma: похо́дження
   translation: origin
   pos: noun
-  usage: Походження відповідає на питання Звідки ти?
-- lemma: Вітаю
+  usage: Похо́дження відповіда́є на пита́ння Зві́дки ти?
+- lemma: Віта́ю
   translation: hello / greetings
   pos: interjection
-  usage: Вітаю! Мене звати Олена.
-- lemma: Дуже приємно
+  usage: Віта́ю! Мене́ зва́ти Оле́на.
+- lemma: Ду́же приє́мно
   translation: very nice to meet you
   pos: phrase
-  usage: Дуже приємно!
-- lemma: Мені теж
+  usage: Ду́же приє́мно!
+- lemma: Мені́ теж
   translation: me too
   pos: phrase
-  usage: Мені теж.
-- lemma: Мене звати
+  usage: Мені́ теж.
+- lemma: Мене́ зва́ти
   translation: my name is
   pos: phrase
-  usage: Мене звати Богдан.
-- lemma: Як тебе звати?
+  usage: Мене́ зва́ти Бо́гдан.
+- lemma: Як тебе́ зва́ти?
   translation: what is your name? informal
   pos: phrase
-  usage: Як тебе звати?
-- lemma: Звідки ти?
+  usage: Як тебе́ зва́ти?
+- lemma: Зві́дки ти?
   translation: where are you from? informal
   pos: phrase
-  usage: Звідки ти?
+  usage: Зві́дки ти?
 - lemma: Я з
   translation: I am from
   pos: phrase
-  usage: Я з Канади.
-- lemma: Мені 20 років
+  usage: Я з Кана́ди.
+- lemma: Мені́ 20 рокі́в
   translation: I am 20 years old
   pos: phrase
-  usage: Мені 20 років.
-- lemma: У мене є
+  usage: Мені́ 20 рокі́в.
+- lemma: У мене́ є
   translation: I have
   pos: phrase
-  usage: У мене є сестра.
-- lemma: студент
+  usage: У мене́ є сестра́.
+- lemma: студе́нт
   translation: male student
   pos: noun
-  usage: Я студент.
-- lemma: студентка
+  usage: Я студе́нт.
+- lemma: студе́нтка
   translation: female student
   pos: noun
-  usage: Я студентка.
-- lemma: сім'я
+  usage: Я студе́нтка.
+- lemma: сі́м'я
   translation: family, close household
   pos: noun
-  usage: Це моя сім'я.
+  usage: Це моя́ сі́м'я.
