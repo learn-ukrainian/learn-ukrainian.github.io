@@ -18,11 +18,16 @@ across every VESUM-attested unstressed case form (safe for these lemmas
 because none of them has stress mobility that crosses that offset; the one
 exception, the archaic "peasant" sense of землянин, has its plural omitted
 rather than guessed, since VESUM does not independently attest a mobile
-plural for that sense). `гвоздик` is the single lemma in this batch absent
-from VESUM's `forms_all` entirely (0 rows) -- its stress, IPA and paradigm
-are derived from the СУМ-11 headword accents and regular masculine hard-stem
-declension by analogy, and its `heritage_status.vesum_attested` is `False`
-accordingly.
+plural for that sense). All lemmas in this batch are attested in VESUM's
+`forms_all` (`heritage_status.vesum_attested` is `True` throughout); an
+earlier draft of this batch included `гвоздик`, whose paradigm VESUM does
+not attest at all (0 rows) -- flagged by cross-family review (PR #8073) as
+an unverified extrapolation and replaced with `випробування`
+(ви́пробування "testing, the act of trying something" vs випро́бування
+"trial, ordeal, hardship"), which carries a full VESUM-attested paradigm for
+both stress variants. The same review also caught a wrong locative singular
+for земля́нин -- corrected from the elided "(на) земля́ні" to the
+VESUM-attested "на земля́нині / земля́нинові / земля́нину".
 
 Several of this batch's stress/sense pairings correct errors present in the
 originating task brief (which had them reversed or misattributed relative to
@@ -692,75 +697,72 @@ CURATED_HETERONYMS_BATCH_3: dict[str, list[dict[str, Any]]] = {
             "distinction_note": "Не плутати з омографом «гу́кати» (наголос на першому складі, розм.: видавати гучний, різкий звук -- про грім, потяг).",
         },
     ],
-    "гвоздик": [
+    "випробування": [
         {
-            "headword": "гво́здик",
-            "short_label": "маленький цвях (рідко)",
-            "gloss": "a small nail, tack (diminutive of гвоздь, rare)",
+            "headword": "ви́пробування",
+            "short_label": "процес перевірки, тестування (A2)",
+            "gloss": "the act or process of testing, trying (something) out (act per значенням «ви́пробувати»)",
             "pos": "noun",
-            "cefr": None,
+            "cefr": "A2",
             "heritage_status": {
                 "classification": "standard",
                 "is_russianism": False,
                 "russian_shadow": False,
-                "vesum_attested": False,
+                "vesum_attested": True,
                 "warning_severity": None,
                 "calque_warning": None,
             },
-            "pronunciation": {"ipa": "[ˈɦwɔzdɪk]", "source": "СУМ-11"},
-            "stress": {"form": "гво́здик", "source": "СУМ-11"},
+            "pronunciation": {"ipa": "[ˈwɪprɔbʊwɐnʲːɐ]", "source": "VESUM"},
+            "stress": {"form": "ви́пробування", "source": "ukrainian-word-stress"},
             "morphology": {
                 "pos": "іменник",
                 "paradigm": {
                     "kind": "noun",
                     "cases": {
-                        "називний": {"singular": "гво́здик", "plural": "гво́здики"},
-                        "родовий": {"singular": "гво́здика", "plural": "гво́здиків"},
-                        "давальний": {"singular": "гво́здику / гво́здикові", "plural": "гво́здикам"},
-                        "знахідний": {"singular": "гво́здик", "plural": "гво́здики"},
-                        "орудний": {"singular": "гво́здиком", "plural": "гво́здиками"},
-                        "місцевий": {"singular": "(на) гво́здику", "plural": "гво́здиках"},
-                        "кличний": {"singular": "гво́здику", "plural": "гво́здики"},
+                        "називний": {"singular": "ви́пробування", "plural": "ви́пробування"},
+                        "родовий": {"singular": "ви́пробування", "plural": "ви́пробувань"},
+                        "давальний": {"singular": "ви́пробуванню", "plural": "ви́пробуванням"},
+                        "знахідний": {"singular": "ви́пробування", "plural": "ви́пробування"},
+                        "орудний": {"singular": "ви́пробуванням", "plural": "ви́пробуваннями"},
+                        "місцевий": {"singular": "(на/у) ви́пробуванні / ви́пробуванню", "plural": "ви́пробуваннях"},
+                        "кличний": {"singular": "ви́пробування", "plural": "ви́пробування"},
                     },
                 },
             },
-            "distinction_note": "Не плутати з омографом «гвозди́к» (наголос на другому складі, зазвич. мн.: народна назва рослини чорнобривці).",
+            "distinction_note": "Не плутати з омографом «випро́бування» (наголос на третьому складі: перевірка якостей, властивостей когось/чогось, іспит; тяжкі переживання, лихо).",
         },
         {
-            "headword": "гвозди́к",
-            "short_label": "чорнобривці (переваж. мн.)",
-            "gloss": "marigold (Tagetes; folk/regional name, usually used in the plural)",
+            "headword": "випро́бування",
+            "short_label": "іспит; тяжке переживання (B1)",
+            "gloss": "a test, trial, examination of someone's/something's qualities or properties; (also) an ordeal, hardship, tribulation",
             "pos": "noun",
-            "cefr": None,
+            "cefr": "B1",
             "heritage_status": {
                 "classification": "standard",
                 "is_russianism": False,
                 "russian_shadow": False,
-                "vesum_attested": False,
+                "vesum_attested": True,
                 "warning_severity": None,
                 "calque_warning": None,
             },
-            "pronunciation": {"ipa": "[ɦwɔˈzdɪk]", "source": "СУМ-11"},
-            "stress": {"form": "гвозди́к", "source": "СУМ-11"},
+            "pronunciation": {"ipa": "[wɪˈprɔbʊwɐnʲːɐ]", "source": "VESUM"},
+            "stress": {"form": "випро́бування", "source": "ukrainian-word-stress"},
             "morphology": {
                 "pos": "іменник",
                 "paradigm": {
                     "kind": "noun",
                     "cases": {
-                        "називний": {"singular": "гвозди́к", "plural": "гвозди́ки"},
-                        "родовий": {"singular": "гвозди́ка", "plural": "гвозди́ків"},
-                        "давальний": {"singular": "гвозди́ку / гвозди́кові", "plural": "гвозди́кам"},
-                        "знахідний": {"singular": "гвозди́к", "plural": "гвозди́ки"},
-                        "орудний": {"singular": "гвозди́ком", "plural": "гвозди́ками"},
-                        "місцевий": {"singular": "(на) гвозди́ку", "plural": "гвозди́ках"},
-                        "кличний": {"singular": "гвозди́ку", "plural": "гвозди́ки"},
+                        "називний": {"singular": "випро́бування", "plural": "випро́бування"},
+                        "родовий": {"singular": "випро́бування", "plural": "випро́бувань"},
+                        "давальний": {"singular": "випро́буванню", "plural": "випро́буванням"},
+                        "знахідний": {"singular": "випро́бування", "plural": "випро́бування"},
+                        "орудний": {"singular": "випро́буванням", "plural": "випро́буваннями"},
+                        "місцевий": {"singular": "(на/у) випро́буванні / випро́буванню", "plural": "випро́буваннях"},
+                        "кличний": {"singular": "випро́бування", "plural": "випро́бування"},
                     },
                 },
             },
-            "sections": {
-                "synonyms": {"source": "СУМ-11", "items": ["повняк"]},
-            },
-            "distinction_note": "Не плутати з омографом «гво́здик» (наголос на першому складі, рідко: маленький цвях, зменш. від «гвоздь»).",
+            "distinction_note": "Не плутати з омографом «ви́пробування» (наголос на першому складі: дія за значенням «ви́пробувати», процес тестування).",
         },
     ],
     "гладкий": [
@@ -1299,7 +1301,7 @@ CURATED_HETERONYMS_BATCH_3: dict[str, list[dict[str, Any]]] = {
                         "давальний": {"singular": "земля́нинові / земля́нину", "plural": "земля́нам"},
                         "знахідний": {"singular": "земля́нина", "plural": "земля́н"},
                         "орудний": {"singular": "земля́нином", "plural": "земля́нами"},
-                        "місцевий": {"singular": "(на) земля́ні / земля́нинові / земля́нину", "plural": "земля́нах"},
+                        "місцевий": {"singular": "на земля́нині / земля́нинові / земля́нину", "plural": "земля́нах"},
                         "кличний": {"singular": "земля́нине", "plural": "земля́ни"},
                     },
                 },
@@ -1336,7 +1338,7 @@ CURATED_HETERONYMS_BATCH_3: dict[str, list[dict[str, Any]]] = {
                         "давальний": {"singular": "земляни́нові / земляни́ну", "plural": None},
                         "знахідний": {"singular": "земляни́на", "plural": None},
                         "орудний": {"singular": "земляни́ном", "plural": None},
-                        "місцевий": {"singular": "(на) земляни́ні / земляни́нові / земляни́ну", "plural": None},
+                        "місцевий": {"singular": "на земляни́ні / земляни́нові / земляни́ну", "plural": None},
                         "кличний": {"singular": "земляни́не", "plural": None},
                     },
                 },
