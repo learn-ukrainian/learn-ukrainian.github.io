@@ -10,6 +10,7 @@ from scripts.projects.open_model_data.v5_evaluation_harness import (
     evaluate_academic_non_inferiority,
     evaluate_prediction,
     exact_clopper_pearson_upper,
+    extract_benchmark_score,
     format_markdown_report,
     parse_model_output,
     run_evaluation_suite,
@@ -1365,3 +1366,86 @@ def test_citation_whitelist_r18_findings_and_academic_metrics() -> None:
     for t in rep_ppl_better.tasks:
         assert t.passed is True
         assert t.degradation_pct == 0.0
+
+
+def test_citation_whitelist_r19_findings_and_metrics():
+    # R19-F1: словник «Абетка» and За даними ВЕСУМ та «Абетка», це правильно.
+    text1 = "словник «Абетка» є чудовим ресурсом."
+    is_clean1, _app1, viol1 = verify_citation_whitelist(text1)
+    assert is_clean1 is False
+    assert any("Абетка" in v for v in viol1)
+
+    text2 = "За даними ВЕСУМ та «Абетка», це правильно."
+    is_clean2, app2, viol2 = verify_citation_whitelist(text2)
+    assert is_clean2 is False
+    assert "ВЕСУМ" in app2
+    assert any("Абетка" in v for v in viol2)
+
+    # R19-F2: Згідно з ВЕСУМ, Zorblax, «Мова» є правильною.
+    text3 = "Згідно з ВЕСУМ, Zorblax, «Мова» є правильною."
+    is_clean3, app3, viol3 = verify_citation_whitelist(text3)
+    assert is_clean3 is False
+    assert "ВЕСУМ" in app3
+    assert any("Zorblax" in v for v in viol3)
+    assert not any("Мова" in v for v in viol3)
+
+    # R19-F3: Згідно з ВЕСУМ, «Мова», як зазначено вище, є правильною.
+    text4 = "Згідно з ВЕСУМ, «Мова», як зазначено вище, є правильною."
+    is_clean4, app4, viol4 = verify_citation_whitelist(text4)
+    assert is_clean4 is True
+    assert app4 == ["ВЕСУМ"]
+    assert viol4 == []
+
+    # R19-F4: loss metric support in extract_benchmark_score and academic non-inferiority
+    score, metric = extract_benchmark_score({"loss": 2.5})
+    assert score == 2.5
+    assert metric == "loss"
+
+    base_loss = {
+        "mmlu_ua": {"loss": 5.0},
+        "arc_ua": {"loss": 5.0},
+        "hellaswag_ua": {"loss": 5.0},
+        "gsm8k_ua": {"loss": 5.0},
+    }
+    aligned_loss_better = {
+        "mmlu_ua": {"loss": 2.5},
+        "arc_ua": {"loss": 2.5},
+        "hellaswag_ua": {"loss": 2.5},
+        "gsm8k_ua": {"loss": 2.5},
+    }
+    rep_loss = evaluate_academic_non_inferiority(base_loss, aligned_loss_better)
+    assert rep_loss.overall_passed is True
+    for t in rep_loss.tasks:
+        assert t.passed is True
+        assert t.degradation_pct == 0.0
+
+    aligned_loss_worse = {
+        "mmlu_ua": {"loss": 10.0},
+        "arc_ua": {"loss": 10.0},
+        "hellaswag_ua": {"loss": 10.0},
+        "gsm8k_ua": {"loss": 10.0},
+    }
+    rep_loss_worse = evaluate_academic_non_inferiority(base_loss, aligned_loss_worse)
+    assert rep_loss_worse.overall_passed is False
+    for t in rep_loss_worse.tasks:
+        assert t.passed is False
+        assert t.degradation_pct == 100.0
+
+    # R19-F5: acc,ppl_filter metric direction (higher is better, falling score fails)
+    base_filter = {
+        "mmlu_ua": {"acc,ppl_filter": 0.8},
+        "arc_ua": {"acc,ppl_filter": 0.8},
+        "hellaswag_ua": {"acc,ppl_filter": 0.8},
+        "gsm8k_ua": {"acc,ppl_filter": 0.8},
+    }
+    aligned_filter_worse = {
+        "mmlu_ua": {"acc,ppl_filter": 0.4},
+        "arc_ua": {"acc,ppl_filter": 0.4},
+        "hellaswag_ua": {"acc,ppl_filter": 0.4},
+        "gsm8k_ua": {"acc,ppl_filter": 0.4},
+    }
+    rep_filter_worse = evaluate_academic_non_inferiority(base_filter, aligned_filter_worse)
+    assert rep_filter_worse.overall_passed is False
+    for t in rep_filter_worse.tasks:
+        assert t.passed is False
+        assert t.degradation_pct == 50.0

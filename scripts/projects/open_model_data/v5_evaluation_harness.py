@@ -383,21 +383,20 @@ PARTICIPLE_CLAUSE_RE = (
     r"(?:описан\w*|зазначен\w*|вказан\w*|наведен\w*|подан\w*|згадан\w*|розглянут\w*|використан\w*|проілюстрован\w*)"
 )
 
-QUOTED_AUTHORITY_NAMES = (
-    r"(?:[A-ZА-ЯІЇЄҐ][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:кс|ака|яка|нка|нга|нта|рда|рта|нда|льда|вича|овича|евича|ьова|ьові|ова|ева|ого|ього|ів|ей|ові|єві|у|ю|ом|ем|ям|ою|ею|єю|овим|євим|им|ім)\b)"
+SUBJECT_PREDICATE_VERBS = r"(?:є|належить|вживається|пишеться|має|було|буде|вважається|становить|означає|визнано)"
+SUBJECT_NOUN_RE = (
+    r"(?:«[^»]+»|\"[^\"]+\"|“[^”]+”|‘[^’]+’|'[^']+'|[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)"
 )
-QUOTED_AUTHORITY_INSTRUMENTAL_RE = (
-    rf"(?:«|“|\"|'|‘)"
-    rf"(?:{KEYWORD_AUTHORITY_RE}|\w*(?:словник|правопис|корпус|довідник|баз)\w*|{LATIN_OR_ACRONYM_RE}|{INSTRUMENTAL_NAME_RE}|{QUOTED_AUTHORITY_NAMES}|[Яя]к\s+ми\s+говоримо|[Кк]ультура\s+слова|[Сс]ловарь\s+української\s+мови)"
-    rf"(?:»|”|\"|'|’)"
+SUBJECT_NOUNS = (
+    rf"(?:{SUBJECT_NOUN_RE}(?:(?:\s*,\s*{SUBJECT_NOUN_RE})*(?:\s+(?:та|і|й|and|or)\s+{SUBJECT_NOUN_RE})+)?)"
 )
-QUOTED_AUTHORITY_GENITIVE_RE = (
-    rf"(?:«|“|\"|'|‘)"
-    rf"(?:{KEYWORD_AUTHORITY_RE}|\w*(?:словник|правопис|корпус|довідник|баз)\w*|{LATIN_OR_ACRONYM_RE}|{GENITIVE_NAME_RE}|{QUOTED_AUTHORITY_NAMES}|[Яя]к\s+ми\s+говоримо|[Кк]ультура\s+слова|[Сс]ловарь\s+української\s+мови)"
-    rf"(?:»|”|\"|'|’)"
+SUBJECT_CLAUSE_LOOKAHEAD = (
+    rf"{SUBJECT_NOUNS}"
+    rf"(?:\s*,\s*[^,]+,)*"
+    rf"\s+{SUBJECT_PREDICATE_VERBS}\b"
 )
 
-ENTITY_CITATION_RE = rf"(?:{QUOTED_AUTHORITY_INSTRUMENTAL_RE}|{KEYWORD_AUTHORITY_RE}|{ANY_CAP_NAME_RE})"
+ENTITY_CITATION_RE = rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{ANY_CAP_NAME_RE})"
 
 # Primary authority entity directly following the preposition
 PRIMARY_ENTITY_INSTRUMENTAL_RE = (
@@ -408,33 +407,31 @@ PRIMARY_ENTITY_GENITIVE_RE = (
 )
 
 # Coordinate authority entity following a comma or conjunction
-COORD_ENTITY_INSTRUMENTAL_RE = (
-    rf"(?:{QUOTED_AUTHORITY_INSTRUMENTAL_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE}|{INSTRUMENTAL_NAME_RE})"
-)
-COORD_ENTITY_GENITIVE_RE = (
-    rf"(?:{QUOTED_AUTHORITY_GENITIVE_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE}|{GENITIVE_NAME_RE})"
-)
+ENTITY_CITATION_INSTRUMENTAL_RE = PRIMARY_ENTITY_INSTRUMENTAL_RE
+ENTITY_CITATION_GENITIVE_RE = PRIMARY_ENTITY_GENITIVE_RE
 
 CONJ_COORD_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_RE})"
-DIRECT_CONJ_INSTRUMENTAL_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{COORD_ENTITY_INSTRUMENTAL_RE})"
-DIRECT_CONJ_GENITIVE_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{COORD_ENTITY_GENITIVE_RE})"
+DIRECT_CONJ_INSTRUMENTAL_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_INSTRUMENTAL_RE})"
+DIRECT_CONJ_GENITIVE_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_GENITIVE_RE})"
 
 PLURAL_COORD_RE = rf"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+){ENTITY_CITATION_RE})"
 
 COMMA_COORD_INSTRUMENTAL_RE = (
-    rf"(?:\s*,\s*{COORD_ENTITY_INSTRUMENTAL_RE}"
-    rf"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+){COORD_ENTITY_INSTRUMENTAL_RE})*"
-    rf"(?!\s*,\s*{COORD_ENTITY_INSTRUMENTAL_RE})"
+    rf"(?!\s*,\s*(?!\s){SUBJECT_CLAUSE_LOOKAHEAD})"
+    rf"(?:\s*,\s*{ENTITY_CITATION_INSTRUMENTAL_RE}"
+    rf"(?:(?:\s*,\s*(?!\s*(?!\s){SUBJECT_CLAUSE_LOOKAHEAD})|\s+(?:та|і|й|and|or)\s+){ENTITY_CITATION_INSTRUMENTAL_RE})*"
+    rf"(?!\s*,\s*(?!\s*(?!\s){SUBJECT_CLAUSE_LOOKAHEAD}){ENTITY_CITATION_INSTRUMENTAL_RE})"
     rf"(?!\s+(?:та|і|й|and|or)\b)"
-    rf"(?=\s*,\s*(?!\s)(?!{PARTICIPLE_CLAUSE_RE})))"
+    rf"(?=\s*,\s*(?!\s)))"
 )
 
 COMMA_COORD_GENITIVE_RE = (
-    rf"(?:\s*,\s*{COORD_ENTITY_GENITIVE_RE}"
-    rf"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+){COORD_ENTITY_GENITIVE_RE})*"
-    rf"(?!\s*,\s*{COORD_ENTITY_GENITIVE_RE})"
+    rf"(?!\s*,\s*(?!\s){SUBJECT_CLAUSE_LOOKAHEAD})"
+    rf"(?:\s*,\s*{ENTITY_CITATION_GENITIVE_RE}"
+    rf"(?:(?:\s*,\s*(?!\s*(?!\s){SUBJECT_CLAUSE_LOOKAHEAD})|\s+(?:та|і|й|and|or)\s+){ENTITY_CITATION_GENITIVE_RE})*"
+    rf"(?!\s*,\s*(?!\s*(?!\s){SUBJECT_CLAUSE_LOOKAHEAD}){ENTITY_CITATION_GENITIVE_RE})"
     rf"(?!\s+(?:та|і|й|and|or)\b)"
-    rf"(?=\s*,\s*(?!\s)(?!{PARTICIPLE_CLAUSE_RE})))"
+    rf"(?=\s*,\s*(?!\s)))"
 )
 
 CITATION_MENTION_PATTERNS = [
@@ -611,6 +608,7 @@ SUPPORTED_SCORE_METRIC_NAMES = (
     "mc2",
     "perplexity",
     "ppl",
+    "loss",
     "score",
 )
 EXCLUDED_METRIC_SUBSTRINGS = (
@@ -619,7 +617,6 @@ EXCLUDED_METRIC_SUBSTRINGS = (
     "_err",
     "error",
     "std",
-    "loss",
     "runtime",
     "seconds",
     "samples_per_second",
@@ -640,12 +637,12 @@ EXCLUDED_METRIC_SUBSTRINGS = (
 def is_supported_score_metric(key: str) -> bool:
     """Check if key represents an explicit recognized score metric, rejecting metadata."""
     k = key.strip().lower()
-    if any(ex in k for ex in EXCLUDED_METRIC_SUBSTRINGS):
+    metric_id = k.split(",")[0].strip()
+    if any(ex in metric_id for ex in EXCLUDED_METRIC_SUBSTRINGS):
         return False
-    metric_name = k.split(",")[0].strip()
-    if metric_name in SUPPORTED_SCORE_METRIC_NAMES:
+    if metric_id in SUPPORTED_SCORE_METRIC_NAMES:
         return True
-    return bool(re.match(r"^pass@\d+$", metric_name))
+    return bool(re.match(r"^pass@\d+$", metric_id))
 
 
 def extract_benchmark_score(entry: Any, preferred_key: str | None = None) -> tuple[float, str]:
@@ -847,7 +844,8 @@ def evaluate_academic_non_inferiority(
             worst_degradation = max(worst_degradation, 100.0)
             continue
 
-        is_lower_better = any(m in metric_name.lower() for m in ("perplexity", "ppl", "loss"))
+        metric_id = metric_name.split(",")[0].strip().lower()
+        is_lower_better = metric_id in ("perplexity", "ppl", "loss")
         if is_lower_better:
             # For lower-is-better metrics (perplexity, ppl, loss), higher aligned score is degradation
             if base_score > 0:
