@@ -1,0 +1,43 @@
+{
+  "pedagogical": {
+    "score": 5,
+    "verdict": "REVISE",
+    "evidence": "Progression is coherent, but 11 activities exceed the mapped 10, punctuation answers lack decisive cues, and added vocabulary lacks first-use support; preservation and lesson-3 closure remain unverified.",
+    "evidence_quotes": [
+      "In the next lesson, we take these two essential skills",
+      "З'єднай українське слово з відповідним значенням. pairs: - left: хто"
+    ]
+  },
+  "naturalness": {
+    "score": 5,
+    "verdict": "REJECT",
+    "evidence": "The sources audit cannot pass: VESUM and dictionary calls were blocked by the approval policy, leaving morphology and usage unverified.",
+    "evidence_quotes": [
+      "Some Ukrainian words move stress when the form changes."
+    ]
+  },
+  "decolonization": {
+    "score": 6,
+    "verdict": "REVISE",
+    "evidence": "The framing centers Ukrainian, but blocked sources checks leave the required evidence against calques and unsupported examples unresolved.",
+    "evidence_quotes": [
+      "Keep the explanation Ukrainian-centered. Listen to the Ukrainian words, notice"
+    ]
+  },
+  "engagement": {
+    "score": 7,
+    "verdict": "REVISE",
+    "evidence": "The supported dialogue encourages speaking, but repeated recognition exercises and unexplained Ukrainian instructions limit independent A1 participation.",
+    "evidence_quotes": [
+      "Read this short beginner dialogue aloud, listening to the contour of each line:"
+    ]
+  },
+  "tone": {
+    "score": 6,
+    "verdict": "REVISE",
+    "evidence": "The reassuring voice suits beginners, but the named teacher violates the explicit narrator restriction.",
+    "evidence_quotes": [
+      "Teacher Oksana starts with a tiny routine: listen, mark, repeat."
+    ]
+  }
+}

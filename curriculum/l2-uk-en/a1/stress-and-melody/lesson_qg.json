@@ -1,0 +1,572 @@
+{
+  "passed": false,
+  "diagnostics": [
+    "lesson 1: contradictory payload in act-3.items: 'замок' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w1.items[0].options: 'новий' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w1.items[1].options: 'старий' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w1.items[2].options: 'одинадцять' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w1.items[3].options: 'чотирнадцять' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w1.items[4].options: 'голови' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w1.items[5].options: 'марія' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w2.pairs: 'замок' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w2.pairs: 'атлас' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w2.pairs: 'орган' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w2.pairs: 'сім'я' appears 2x in one list",
+    "lesson 1: 5 stressed forms contradict the stress dictionary: ['да́: undeclared unverified stress', 'ка́: undeclared unverified stress', 'ли́: undeclared unverified stress', 'на́: undeclared unverified stress', 'рі́: undeclared unverified stress']",
+    "lesson 1: 17 multi-syllable words without stress mark (not in unverified_stress): ['Переклад', 'Правила', 'Речення', 'Типові', 'відповідним', 'знаки', 'знаком', 'переклад', 'правилом', 'правильний', 'правильним', 'правильну', 'реченню', 'речення', 'склади', 'усі', \"ім'я\"]",
+    "lesson 2: contradictory payload in act-5.items[0].options: 'новий' appears 2x in one list",
+    "lesson 2: contradictory payload in act-5.items[1].options: 'старий' appears 2x in one list",
+    "lesson 2: contradictory payload in act-5.items[2].options: 'одинадцять' appears 2x in one list",
+    "lesson 2: contradictory payload in act-5.items[3].options: 'чотирнадцять' appears 2x in one list",
+    "lesson 2: contradictory payload in act-5.items[4].options: 'голови' appears 2x in one list",
+    "lesson 2: contradictory payload in act-5.items[5].options: 'марія' appears 2x in one list",
+    "lesson 2: 19 stressed forms contradict the stress dictionary: ['ві́д: undeclared unverified stress', 'гра́: undeclared unverified stress', 'и́й: undeclared unverified stress', 'ко́: undeclared unverified stress', 'ли́: undeclared unverified stress', 'на́: undeclared unverified stress', 'но́к: undeclared unverified stress', 'о́: undeclared unverified stress', 'рі́: undeclared unverified stress', 'сто́: undeclared unverified stress', 'ська́: undeclared unverified stress', 'те́бе→тебе́', 'у́к: undeclared unverified stress', 'фо́: undeclared unverified stress', 'фі́: undeclared unverified stress']",
+    "lesson 2: 27 multi-syllable words without stress mark (not in unverified_stress): ['Олю', 'Оля', 'Олі', 'Переклад', 'Послухайте', 'Правила', 'Підсумок', 'Речення', 'Склади', 'Типові', 'Українська', 'Усі', 'дякую', 'знаком', 'переклад', 'правилом', 'правильне', 'правильний', 'правильної', 'правильну']",
+    "lesson 3: 28 multi-syllable words without stress mark (not in unverified_stress): ['Знайди', 'Олю', 'Оля', 'Олі', 'Послухайте', 'Підсумок', 'атлас', 'відповідним', 'замок', 'знаки', 'знаком', 'орган', 'парах', 'перекладом', 'пили', 'правильне', 'правильний', 'правильному', 'підсумки', 'підсумковий']",
+    "unattributed reference-name hit in module.md",
+    "lesson 1: l2_exposure_floor failed: {'passed': False, 'required': {'uk_dialogue_lines': 10, 'vocab_entries': 0, 'uk_example_sentences': 0, 'uk_tab3_activities': 4}, 'observed': {'uk_dialogue_lines': 5, 'vocab_entries': 27, 'uk_example_sentences': 46, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_dialogue_lines', 'policy': 'a1-m04-06'}",
+    "lesson 2: long_uk_ceiling failed: {'passed': False, 'required': {'max_unsupported_uk_words': 36, 'support_proximity': 8}, 'observed': {'offending_runs': 1}, 'reason': 'long_uk_without_gloss', 'offending_runs': ['У насту пному уро ці ми проведемо фіна льну переві рку матеріа лу всьо го мо дуля переві римо всі ти пи мело дики та підсуму ємо результа ти на шого пе ршого фонети чного ку рсу'], 'policy': 'a1-m04-06'}"
+  ],
+  "blocking": [
+    "lesson 1: contradictory payload in act-3.items: 'замок' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w1.items[0].options: 'новий' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w1.items[1].options: 'старий' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w1.items[2].options: 'одинадцять' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w1.items[3].options: 'чотирнадцять' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w1.items[4].options: 'голови' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w1.items[5].options: 'марія' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w2.pairs: 'замок' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w2.pairs: 'атлас' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w2.pairs: 'орган' appears 2x in one list",
+    "lesson 1: contradictory payload in act-w2.pairs: 'сім'я' appears 2x in one list",
+    "lesson 1: 5 stressed forms contradict the stress dictionary: ['да́: undeclared unverified stress', 'ка́: undeclared unverified stress', 'ли́: undeclared unverified stress', 'на́: undeclared unverified stress', 'рі́: undeclared unverified stress']",
+    "lesson 1: 17 multi-syllable words without stress mark (not in unverified_stress): ['Переклад', 'Правила', 'Речення', 'Типові', 'відповідним', 'знаки', 'знаком', 'переклад', 'правилом', 'правильний', 'правильним', 'правильну', 'реченню', 'речення', 'склади', 'усі', \"ім'я\"]",
+    "lesson 2: contradictory payload in act-5.items[0].options: 'новий' appears 2x in one list",
+    "lesson 2: contradictory payload in act-5.items[1].options: 'старий' appears 2x in one list",
+    "lesson 2: contradictory payload in act-5.items[2].options: 'одинадцять' appears 2x in one list",
+    "lesson 2: contradictory payload in act-5.items[3].options: 'чотирнадцять' appears 2x in one list",
+    "lesson 2: contradictory payload in act-5.items[4].options: 'голови' appears 2x in one list",
+    "lesson 2: contradictory payload in act-5.items[5].options: 'марія' appears 2x in one list",
+    "lesson 2: 19 stressed forms contradict the stress dictionary: ['ві́д: undeclared unverified stress', 'гра́: undeclared unverified stress', 'и́й: undeclared unverified stress', 'ко́: undeclared unverified stress', 'ли́: undeclared unverified stress', 'на́: undeclared unverified stress', 'но́к: undeclared unverified stress', 'о́: undeclared unverified stress', 'рі́: undeclared unverified stress', 'сто́: undeclared unverified stress', 'ська́: undeclared unverified stress', 'те́бе→тебе́', 'у́к: undeclared unverified stress', 'фо́: undeclared unverified stress', 'фі́: undeclared unverified stress']",
+    "lesson 2: 27 multi-syllable words without stress mark (not in unverified_stress): ['Олю', 'Оля', 'Олі', 'Переклад', 'Послухайте', 'Правила', 'Підсумок', 'Речення', 'Склади', 'Типові', 'Українська', 'Усі', 'дякую', 'знаком', 'переклад', 'правилом', 'правильне', 'правильний', 'правильної', 'правильну']",
+    "lesson 3: 28 multi-syllable words without stress mark (not in unverified_stress): ['Знайди', 'Олю', 'Оля', 'Олі', 'Послухайте', 'Підсумок', 'атлас', 'відповідним', 'замок', 'знаки', 'знаком', 'орган', 'парах', 'перекладом', 'пили', 'правильне', 'правильний', 'правильному', 'підсумки', 'підсумковий']",
+    "unattributed reference-name hit in module.md",
+    "lesson 1: l2_exposure_floor failed: {'passed': False, 'required': {'uk_dialogue_lines': 10, 'vocab_entries': 0, 'uk_example_sentences': 0, 'uk_tab3_activities': 4}, 'observed': {'uk_dialogue_lines': 5, 'vocab_entries': 27, 'uk_example_sentences': 46, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_dialogue_lines', 'policy': 'a1-m04-06'}",
+    "lesson 2: long_uk_ceiling failed: {'passed': False, 'required': {'max_unsupported_uk_words': 36, 'support_proximity': 8}, 'observed': {'offending_runs': 1}, 'reason': 'long_uk_without_gloss', 'offending_runs': ['У насту пному уро ці ми проведемо фіна льну переві рку матеріа лу всьо го мо дуля переві римо всі ти пи мело дики та підсуму ємо результа ти на шого пе ршого фонети чного ку рсу'], 'policy': 'a1-m04-06'}"
+  ],
+  "warnings": [],
+  "facts": {
+    "baseline": {
+      "commit": null,
+      "prose_tokens": 1571,
+      "long_paragraphs": 46,
+      "activities": {
+        "inline": 5,
+        "workbook": 6
+      },
+      "vocab": 43
+    },
+    "lessons": {
+      "1": {
+        "prose_tokens": 1063,
+        "inline": 4,
+        "workbook": 7,
+        "vocab": 16,
+        "resources": 3,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 57
+      },
+      "2": {
+        "prose_tokens": 1333,
+        "inline": 5,
+        "workbook": 7,
+        "vocab": 15,
+        "resources": 3,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 64
+      },
+      "3": {
+        "prose_tokens": 1463,
+        "inline": 5,
+        "workbook": 7,
+        "vocab": 12,
+        "resources": 3,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 66
+      }
+    },
+    "total_prose_tokens": 3859,
+    "preservation": {
+      "long_paragraphs": 46,
+      "lost": 0,
+      "duplicated": 0,
+      "misplaced": 0
+    },
+    "immersion": {
+      "1": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 22.48,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m04-06"
+        },
+        "l2_exposure_floor": {
+          "passed": false,
+          "required": {
+            "uk_dialogue_lines": 10,
+            "vocab_entries": 0,
+            "uk_example_sentences": 0,
+            "uk_tab3_activities": 4
+          },
+          "observed": {
+            "uk_dialogue_lines": 5,
+            "vocab_entries": 27,
+            "uk_example_sentences": 46,
+            "uk_tab3_activities": 4
+          },
+          "reason": "too_few_uk_dialogue_lines",
+          "policy": "a1-m04-06"
+        },
+        "long_uk_ceiling": {
+          "passed": true,
+          "required": {
+            "max_unsupported_uk_words": 36,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 0
+          },
+          "reason": null,
+          "offending_runs": [],
+          "policy": "a1-m04-06"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m04-06"
+        }
+      },
+      "2": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 49.05,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m04-06"
+        },
+        "l2_exposure_floor": {
+          "passed": true,
+          "required": {
+            "uk_dialogue_lines": 10,
+            "vocab_entries": 0,
+            "uk_example_sentences": 0,
+            "uk_tab3_activities": 4
+          },
+          "observed": {
+            "uk_dialogue_lines": 11,
+            "vocab_entries": 39,
+            "uk_example_sentences": 67,
+            "uk_tab3_activities": 5
+          },
+          "reason": null,
+          "policy": "a1-m04-06"
+        },
+        "long_uk_ceiling": {
+          "passed": false,
+          "required": {
+            "max_unsupported_uk_words": 36,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 1
+          },
+          "reason": "long_uk_without_gloss",
+          "offending_runs": [
+            "У насту пному уро ці ми проведемо фіна льну переві рку матеріа лу всьо го мо дуля переві римо всі ти пи мело дики та підсуму ємо результа ти на шого пе ршого фонети чного ку рсу"
+          ],
+          "policy": "a1-m04-06"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m04-06"
+        }
+      },
+      "3": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 51.56,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m04-06"
+        },
+        "l2_exposure_floor": {
+          "passed": true,
+          "required": {
+            "uk_dialogue_lines": 10,
+            "vocab_entries": 0,
+            "uk_example_sentences": 0,
+            "uk_tab3_activities": 4
+          },
+          "observed": {
+            "uk_dialogue_lines": 11,
+            "vocab_entries": 24,
+            "uk_example_sentences": 60,
+            "uk_tab3_activities": 5
+          },
+          "reason": null,
+          "policy": "a1-m04-06"
+        },
+        "long_uk_ceiling": {
+          "passed": true,
+          "required": {
+            "max_unsupported_uk_words": 36,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 0
+          },
+          "reason": null,
+          "offending_runs": [],
+          "policy": "a1-m04-06"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m04-06"
+        }
+      }
+    }
+  },
+  "mode": "upgrade",
+  "gates": {
+    "passed": false,
+    "lesson_split": {
+      "passed": false,
+      "diagnostics": [
+        "lesson 1: contradictory payload in act-3.items: 'замок' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w1.items[0].options: 'новий' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w1.items[1].options: 'старий' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w1.items[2].options: 'одинадцять' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w1.items[3].options: 'чотирнадцять' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w1.items[4].options: 'голови' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w1.items[5].options: 'марія' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w2.pairs: 'замок' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w2.pairs: 'атлас' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w2.pairs: 'орган' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w2.pairs: 'сім'я' appears 2x in one list",
+        "lesson 1: 5 stressed forms contradict the stress dictionary: ['да́: undeclared unverified stress', 'ка́: undeclared unverified stress', 'ли́: undeclared unverified stress', 'на́: undeclared unverified stress', 'рі́: undeclared unverified stress']",
+        "lesson 1: 17 multi-syllable words without stress mark (not in unverified_stress): ['Переклад', 'Правила', 'Речення', 'Типові', 'відповідним', 'знаки', 'знаком', 'переклад', 'правилом', 'правильний', 'правильним', 'правильну', 'реченню', 'речення', 'склади', 'усі', \"ім'я\"]",
+        "lesson 2: contradictory payload in act-5.items[0].options: 'новий' appears 2x in one list",
+        "lesson 2: contradictory payload in act-5.items[1].options: 'старий' appears 2x in one list",
+        "lesson 2: contradictory payload in act-5.items[2].options: 'одинадцять' appears 2x in one list",
+        "lesson 2: contradictory payload in act-5.items[3].options: 'чотирнадцять' appears 2x in one list",
+        "lesson 2: contradictory payload in act-5.items[4].options: 'голови' appears 2x in one list",
+        "lesson 2: contradictory payload in act-5.items[5].options: 'марія' appears 2x in one list",
+        "lesson 2: 19 stressed forms contradict the stress dictionary: ['ві́д: undeclared unverified stress', 'гра́: undeclared unverified stress', 'и́й: undeclared unverified stress', 'ко́: undeclared unverified stress', 'ли́: undeclared unverified stress', 'на́: undeclared unverified stress', 'но́к: undeclared unverified stress', 'о́: undeclared unverified stress', 'рі́: undeclared unverified stress', 'сто́: undeclared unverified stress', 'ська́: undeclared unverified stress', 'те́бе→тебе́', 'у́к: undeclared unverified stress', 'фо́: undeclared unverified stress', 'фі́: undeclared unverified stress']",
+        "lesson 2: 27 multi-syllable words without stress mark (not in unverified_stress): ['Олю', 'Оля', 'Олі', 'Переклад', 'Послухайте', 'Правила', 'Підсумок', 'Речення', 'Склади', 'Типові', 'Українська', 'Усі', 'дякую', 'знаком', 'переклад', 'правилом', 'правильне', 'правильний', 'правильної', 'правильну']",
+        "lesson 3: 28 multi-syllable words without stress mark (not in unverified_stress): ['Знайди', 'Олю', 'Оля', 'Олі', 'Послухайте', 'Підсумок', 'атлас', 'відповідним', 'замок', 'знаки', 'знаком', 'орган', 'парах', 'перекладом', 'пили', 'правильне', 'правильний', 'правильному', 'підсумки', 'підсумковий']",
+        "unattributed reference-name hit in module.md",
+        "lesson 1: l2_exposure_floor failed: {'passed': False, 'required': {'uk_dialogue_lines': 10, 'vocab_entries': 0, 'uk_example_sentences': 0, 'uk_tab3_activities': 4}, 'observed': {'uk_dialogue_lines': 5, 'vocab_entries': 27, 'uk_example_sentences': 46, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_dialogue_lines', 'policy': 'a1-m04-06'}",
+        "lesson 2: long_uk_ceiling failed: {'passed': False, 'required': {'max_unsupported_uk_words': 36, 'support_proximity': 8}, 'observed': {'offending_runs': 1}, 'reason': 'long_uk_without_gloss', 'offending_runs': ['У насту пному уро ці ми проведемо фіна льну переві рку матеріа лу всьо го мо дуля переві римо всі ти пи мело дики та підсуму ємо результа ти на шого пе ршого фонети чного ку рсу'], 'policy': 'a1-m04-06'}"
+      ],
+      "blocking": [
+        "lesson 1: contradictory payload in act-3.items: 'замок' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w1.items[0].options: 'новий' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w1.items[1].options: 'старий' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w1.items[2].options: 'одинадцять' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w1.items[3].options: 'чотирнадцять' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w1.items[4].options: 'голови' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w1.items[5].options: 'марія' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w2.pairs: 'замок' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w2.pairs: 'атлас' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w2.pairs: 'орган' appears 2x in one list",
+        "lesson 1: contradictory payload in act-w2.pairs: 'сім'я' appears 2x in one list",
+        "lesson 1: 5 stressed forms contradict the stress dictionary: ['да́: undeclared unverified stress', 'ка́: undeclared unverified stress', 'ли́: undeclared unverified stress', 'на́: undeclared unverified stress', 'рі́: undeclared unverified stress']",
+        "lesson 1: 17 multi-syllable words without stress mark (not in unverified_stress): ['Переклад', 'Правила', 'Речення', 'Типові', 'відповідним', 'знаки', 'знаком', 'переклад', 'правилом', 'правильний', 'правильним', 'правильну', 'реченню', 'речення', 'склади', 'усі', \"ім'я\"]",
+        "lesson 2: contradictory payload in act-5.items[0].options: 'новий' appears 2x in one list",
+        "lesson 2: contradictory payload in act-5.items[1].options: 'старий' appears 2x in one list",
+        "lesson 2: contradictory payload in act-5.items[2].options: 'одинадцять' appears 2x in one list",
+        "lesson 2: contradictory payload in act-5.items[3].options: 'чотирнадцять' appears 2x in one list",
+        "lesson 2: contradictory payload in act-5.items[4].options: 'голови' appears 2x in one list",
+        "lesson 2: contradictory payload in act-5.items[5].options: 'марія' appears 2x in one list",
+        "lesson 2: 19 stressed forms contradict the stress dictionary: ['ві́д: undeclared unverified stress', 'гра́: undeclared unverified stress', 'и́й: undeclared unverified stress', 'ко́: undeclared unverified stress', 'ли́: undeclared unverified stress', 'на́: undeclared unverified stress', 'но́к: undeclared unverified stress', 'о́: undeclared unverified stress', 'рі́: undeclared unverified stress', 'сто́: undeclared unverified stress', 'ська́: undeclared unverified stress', 'те́бе→тебе́', 'у́к: undeclared unverified stress', 'фо́: undeclared unverified stress', 'фі́: undeclared unverified stress']",
+        "lesson 2: 27 multi-syllable words without stress mark (not in unverified_stress): ['Олю', 'Оля', 'Олі', 'Переклад', 'Послухайте', 'Правила', 'Підсумок', 'Речення', 'Склади', 'Типові', 'Українська', 'Усі', 'дякую', 'знаком', 'переклад', 'правилом', 'правильне', 'правильний', 'правильної', 'правильну']",
+        "lesson 3: 28 multi-syllable words without stress mark (not in unverified_stress): ['Знайди', 'Олю', 'Оля', 'Олі', 'Послухайте', 'Підсумок', 'атлас', 'відповідним', 'замок', 'знаки', 'знаком', 'орган', 'парах', 'перекладом', 'пили', 'правильне', 'правильний', 'правильному', 'підсумки', 'підсумковий']",
+        "unattributed reference-name hit in module.md",
+        "lesson 1: l2_exposure_floor failed: {'passed': False, 'required': {'uk_dialogue_lines': 10, 'vocab_entries': 0, 'uk_example_sentences': 0, 'uk_tab3_activities': 4}, 'observed': {'uk_dialogue_lines': 5, 'vocab_entries': 27, 'uk_example_sentences': 46, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_dialogue_lines', 'policy': 'a1-m04-06'}",
+        "lesson 2: long_uk_ceiling failed: {'passed': False, 'required': {'max_unsupported_uk_words': 36, 'support_proximity': 8}, 'observed': {'offending_runs': 1}, 'reason': 'long_uk_without_gloss', 'offending_runs': ['У насту пному уро ці ми проведемо фіна льну переві рку матеріа лу всьо го мо дуля переві римо всі ти пи мело дики та підсуму ємо результа ти на шого пе ршого фонети чного ку рсу'], 'policy': 'a1-m04-06'}"
+      ],
+      "warnings": [],
+      "facts": {
+        "baseline": {
+          "commit": null,
+          "prose_tokens": 1571,
+          "long_paragraphs": 46,
+          "activities": {
+            "inline": 5,
+            "workbook": 6
+          },
+          "vocab": 43
+        },
+        "lessons": {
+          "1": {
+            "prose_tokens": 1063,
+            "inline": 4,
+            "workbook": 7,
+            "vocab": 16,
+            "resources": 3,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 57
+          },
+          "2": {
+            "prose_tokens": 1333,
+            "inline": 5,
+            "workbook": 7,
+            "vocab": 15,
+            "resources": 3,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 64
+          },
+          "3": {
+            "prose_tokens": 1463,
+            "inline": 5,
+            "workbook": 7,
+            "vocab": 12,
+            "resources": 3,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 66
+          }
+        },
+        "total_prose_tokens": 3859,
+        "preservation": {
+          "long_paragraphs": 46,
+          "lost": 0,
+          "duplicated": 0,
+          "misplaced": 0
+        },
+        "immersion": {
+          "1": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 22.48,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m04-06"
+            },
+            "l2_exposure_floor": {
+              "passed": false,
+              "required": {
+                "uk_dialogue_lines": 10,
+                "vocab_entries": 0,
+                "uk_example_sentences": 0,
+                "uk_tab3_activities": 4
+              },
+              "observed": {
+                "uk_dialogue_lines": 5,
+                "vocab_entries": 27,
+                "uk_example_sentences": 46,
+                "uk_tab3_activities": 4
+              },
+              "reason": "too_few_uk_dialogue_lines",
+              "policy": "a1-m04-06"
+            },
+            "long_uk_ceiling": {
+              "passed": true,
+              "required": {
+                "max_unsupported_uk_words": 36,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 0
+              },
+              "reason": null,
+              "offending_runs": [],
+              "policy": "a1-m04-06"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m04-06"
+            }
+          },
+          "2": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 49.05,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m04-06"
+            },
+            "l2_exposure_floor": {
+              "passed": true,
+              "required": {
+                "uk_dialogue_lines": 10,
+                "vocab_entries": 0,
+                "uk_example_sentences": 0,
+                "uk_tab3_activities": 4
+              },
+              "observed": {
+                "uk_dialogue_lines": 11,
+                "vocab_entries": 39,
+                "uk_example_sentences": 67,
+                "uk_tab3_activities": 5
+              },
+              "reason": null,
+              "policy": "a1-m04-06"
+            },
+            "long_uk_ceiling": {
+              "passed": false,
+              "required": {
+                "max_unsupported_uk_words": 36,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 1
+              },
+              "reason": "long_uk_without_gloss",
+              "offending_runs": [
+                "У насту пному уро ці ми проведемо фіна льну переві рку матеріа лу всьо го мо дуля переві римо всі ти пи мело дики та підсуму ємо результа ти на шого пе ршого фонети чного ку рсу"
+              ],
+              "policy": "a1-m04-06"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m04-06"
+            }
+          },
+          "3": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 51.56,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m04-06"
+            },
+            "l2_exposure_floor": {
+              "passed": true,
+              "required": {
+                "uk_dialogue_lines": 10,
+                "vocab_entries": 0,
+                "uk_example_sentences": 0,
+                "uk_tab3_activities": 4
+              },
+              "observed": {
+                "uk_dialogue_lines": 11,
+                "vocab_entries": 24,
+                "uk_example_sentences": 60,
+                "uk_tab3_activities": 5
+              },
+              "reason": null,
+              "policy": "a1-m04-06"
+            },
+            "long_uk_ceiling": {
+              "passed": true,
+              "required": {
+                "max_unsupported_uk_words": 36,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 0
+              },
+              "reason": null,
+              "offending_runs": [],
+              "policy": "a1-m04-06"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m04-06"
+            }
+          }
+        }
+      }
+    }
+  }
+}

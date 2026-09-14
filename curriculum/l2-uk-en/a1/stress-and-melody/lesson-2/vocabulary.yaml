@@ -1,0 +1,60 @@
+- lemma: столи́ця
+  translation: capital
+  pos: noun
+  usage: Киї́в — це столи́ця.
+- lemma: ра́нок
+  translation: morning
+  pos: noun
+  usage: До́брий ра́нок!
+- lemma: метро́
+  translation: metro
+  pos: noun
+  usage: Ось метро́.
+- lemma: фотогра́фія
+  translation: photograph
+  pos: noun
+  usage: Це нова́ фотогра́фія.
+- lemma: одина́дцять
+  translation: eleven
+  pos: numeral
+  usage: Одина́дцять слів.
+- lemma: чотирна́дцять
+  translation: fourteen
+  pos: numeral
+  usage: Чотирна́дцять гри́вень.
+- lemma: молоко́
+  translation: milk
+  pos: noun
+  usage: Холо́дне молоко́.
+- lemma: голова́
+  translation: head
+  pos: noun
+  usage: Боли́ть голова́.
+- lemma: го́лови
+  translation: heads
+  pos: noun plural
+  usage: Го́лови.
+- lemma: украї́нська
+  translation: Ukrainian
+  pos: adjective
+  usage: Украї́нська мо́ва.
+- lemma: відпочи́нок
+  translation: rest / vacation
+  pos: noun
+  usage: Відпочи́нок чудо́вий.
+- lemma: нови́й
+  translation: new
+  pos: adjective
+  usage: Нови́й підру́чник.
+- lemma: стари́й
+  translation: old
+  pos: adjective
+  usage: Стари́й буди́нок.
+- lemma: га́рно
+  translation: nicely / beautiful
+  pos: adverb
+  usage: Як га́рно!
+- lemma: Марі́я
+  translation: Maria
+  pos: proper noun
+  usage: Мене́ зва́ти Марі́я.

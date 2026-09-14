@@ -1,0 +1,245 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 5.8,
+      "evidence": "\"Це апте́ка ↘\"",
+      "verdict": "REJECT",
+      "evidence_quotes": [
+        "Це апте́ка ↘",
+        "Де моя́ ___?",
+        "Keep the explanation Ukrainian-centered."
+      ],
+      "rubric_mapping": "Quote 1: AGAINST assessment validity. Lesson 3 act-w304 marks a legitimate falling statement as erroneous without punctuation, audio, or context establishing a question. Quote 2: AGAINST answer discrimination. Lesson 3 act-w301 accepts only кни́га although ка́ва also completes the question naturally; the explanation supplies no distinguishing context. Quote 3: AGAINST finished-lesson pedagogy: this directs the writer's explanatory approach rather than teaching the learner a language skill. The...",
+      "flags": [
+        "source_verification_blocked: VESUM and textbook calls returned 'MCP tool call requires approval, but approval policy is...",
+        "unverified citation: exact textbook quotations and page attributions could not be verified",
+        "out_of_level_textbook: all three lessons cite Grade 5 textbooks; audit H permits Grades 1–4 for A1",
+        "activity_split_audit_missing",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit",
+        "missing_foreshadowing_gloss: молоко in Lesson 1",
+        "unverified_vocab_introduction: no vocab_level_check evidence supplied for added non-plan vocabulary"
+      ],
+      "issue_ids": [
+        "AMBIGUOUS_ASSESSMENT",
+        "FIRST_USE_VOCABULARY_DELAY",
+        "INTERNAL_LEAKAGE"
+      ],
+      "findings": [
+        {
+          "issue_id": "AMBIGUOUS_ASSESSMENT",
+          "severity": "high",
+          "quote": "Це апте́ка ↘",
+          "explanation": "Lesson 3 act-w304 requires changing the falling contour to rising, but the supplied sentence supports a statement. Conversely, the same activity rejects rising intonation for Це ка́ва without establishing statement intent. Learners must guess an undisclosed communicative purpose.",
+          "dimension": "pedagogical"
+        },
+        {
+          "issue_id": "AMBIGUOUS_ASSESSMENT",
+          "severity": "high",
+          "quote": "Де моя́ ___?",
+          "explanation": "Lesson 3 act-w301 marks only кни́га correct, although ка́ва is also a coherent completion. Similar underdetermination affects Lesson 2 act-w201, where several correctly stressed numerals fit the same sentence. These exercises penalize defensible answers instead of diagnosing the taught skill.",
+          "dimension": "pedagogical"
+        },
+        {
+          "issue_id": "INTERNAL_LEAKAGE",
+          "severity": "high",
+          "quote": "Keep the explanation Ukrainian-centered.",
+          "explanation": "This is an instruction about authoring the explanation, embedded in learner-facing prose. It meets the rubric's writer-scaffolding rejection criterion.",
+          "dimension": "pedagogical"
+        },
+        {
+          "issue_id": "FIRST_USE_VOCABULARY_DELAY",
+          "severity": "medium",
+          "quote": "**ка́ва. вода́. молоко́.** Listen first, then read the marks.",
+          "explanation": "Lesson 1 introduces and repeatedly tests молоко without an English meaning; its vocabulary entry is deferred to Lesson 2. Other central words, including атлас and орган, are taught in Lesson 1 but allocated to Lesson 3. Cumulative tabs therefore provide key vocabulary support after the lesson requiring it.",
+          "dimension": "pedagogical"
+        }
+      ]
+    },
+    "naturalness": {
+      "score": 7.0,
+      "evidence": "\"наголошений закінчення -и́й\"",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "наголошений закінчення -и́й",
+        "Питання з питальним словом як де має спадну мелодику.",
+        "Це географічний атлас чи блискучий атлас?"
+      ],
+      "rubric_mapping": "Quote 1, lesson-2 act-203: AGAINST—gender agreement error; masculine наголошений modifies neuter закінчення. The neuter pattern is supported by the official [Ukrainian orthography](https://mova.gov.ua/storage/app/sites/19/pravopis.pdf); attempted VESUM verification was blocked. Quote 2, lesson-3 act-w5: AGAINST—awkward explanatory syntax; як де leaves the example word unmarked and reads like a literal 'such as where' construction. This is editorial judgment with source verification unavailable....",
+      "flags": [
+        "sources_verification_blocked: verify_words and search_definitions were called, but returned 'MCP tool call requires...",
+        "unverified citation: exact textbook quotations attributed to Заболотний Grade 5 p.73 and Авраменко Grade 5 p.19 remain...",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit"
+      ],
+      "issue_ids": [
+        "UKRAINIAN_GENDER_AGREEMENT",
+        "UKRAINIAN_GRAMMAR_CALQUE",
+        "UNNATURAL_DIALOGUE"
+      ],
+      "findings": [
+        {
+          "issue_id": "UKRAINIAN_GENDER_AGREEMENT",
+          "severity": "major",
+          "quote": "наголошений закінчення -и́й",
+          "replacement": "наголошене закінчення -ий",
+          "explanation": "Lesson-2 act-203 mismatches the adjective's masculine form with the neuter noun закінчення. The official orthography supports the neuter noun pattern; the requested VESUM confirmation could not complete because tool approval is disabled.",
+          "dimension": "naturalness"
+        },
+        {
+          "issue_id": "UKRAINIAN_GRAMMAR_CALQUE",
+          "severity": "moderate",
+          "quote": "Питання з питальним словом як де має спадну мелодику.",
+          "replacement": "Питання з питальним словом «де» має спадну мелодику.",
+          "explanation": "Lesson-3 act-w5 uses awkward example-introducing syntax. Naming the actual question word directly removes the ambiguous як де sequence. Source verification remains unavailable.",
+          "dimension": "naturalness"
+        },
+        {
+          "issue_id": "UNNATURAL_DIALOGUE",
+          "severity": "moderate",
+          "quote": "Це географічний атлас чи блискучий атлас?",
+          "explanation": "The preceding identification of a book and atlas makes the satin alternative pragmatically unmotivated. The exchange sounds assembled to exhibit homographs rather than spoken in the established situation.",
+          "dimension": "naturalness"
+        }
+      ]
+    },
+    "decolonization": {
+      "score": 7.5,
+      "evidence": "\"Український наголос вільний, тобто він може падати на будь-який склад\"",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "In **молоко́**, the first two **о** sounds stay **о**.",
+        "Склад — це частина слова, яку вимовляють одним поштовхом видихуваного повітря",
+        "Український наголос вільний, тобто він може падати на будь-який склад"
+      ],
+      "rubric_mapping": "TYPE: topic-neutral phonetics across all three lessons. Quote 1 supports Ukrainian-as-reference teaching: pronunciation is explained directly through Ukrainian words, without Russian comparison. Quotes 2 and 3 invoke Ukrainian textbook authority, but their exact attribution remains unverified; this is an evidence gap, not proof of fabrication. Ukrainian settings and dialogues preserve an independent Ukrainian frame without requiring political rhetoric. However, the mandatory sources audit could...",
+      "flags": [
+        "unverified citation: textbook quotations in lessons 2 and 3",
+        "source_verification_blocked: tool approval required under approval policy never",
+        "morphology_verification_unresolved: VESUM batch call blocked",
+        "out_of_level_textbook: Заболотний Grade 5 and Авраменко Grade 5",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit"
+      ],
+      "issue_ids": [
+        "UNVERIFIED_SOURCE_ATTRIBUTION"
+      ],
+      "findings": [
+        {
+          "issue_id": "UNVERIFIED_SOURCE_ATTRIBUTION",
+          "severity": "major",
+          "quote": "Український наголос вільний, тобто він може падати на будь-який склад",
+          "explanation": "Lesson 3 presents this as a verbatim quotation from Заболотний Grade 5, p. 73. The source lookup was blocked, leaving the exact wording and page attribution unresolved. The same limitation affects the textbook quotations in Lesson 2 and the Авраменко quotation in Lesson 3. Independent Ukrainian authority is the intended foundation, but the required source audit has not substantiated these attributions.",
+          "dimension": "decolonization"
+        }
+      ]
+    },
+    "engagement": {
+      "score": 6.8,
+      "evidence": "\"Це географічний атлас чи блискучий атлас?\"",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Point to the stress mark.",
+        "Це географічний атлас чи блискучий атлас?",
+        "Де моя́ ___?"
+      ],
+      "rubric_mapping": "Quote 1 supports engagement: Lesson 1 gives an immediate physical action anchored to the Ukrainian examples, making its explanation participatory. Quote 2 shows contrived dialogue in Lesson 3: after identifying a book and atlas, the speakers manufacture a satin misunderstanding, then jump between parents, pharmacy and castle without a sustained purpose. Lesson 2 similarly expands recognition exchanges without giving the speakers a meaningful goal. Quote 3 exposes frustrating workbook...",
+      "flags": [
+        "source_verification_blocked: VESUM and sources calls returned 'MCP tool call requires approval, but approval policy is...",
+        "unverified citation: textbook quotations in lessons 2 and 3 could not be checked",
+        "out_of_level_textbook: all three Resources artifacts cite Заболотний Grade 5 and Авраменко Grade 5, outside audit H's...",
+        "activity_split_audit_missing",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit",
+        "missing_foreshadowing_gloss: lesson 1 introduces молоко́ and голова́ without English meanings; their vocabulary entries...",
+        "unverified_vocab_introduction: no vocab_level_check evidence accompanies non-plan additions"
+      ],
+      "issue_ids": [
+        "CONTRIVED_DIALOGUE",
+        "UNDERDETERMINED_ACTIVITY"
+      ],
+      "findings": [
+        {
+          "issue_id": "CONTRIVED_DIALOGUE",
+          "severity": "medium",
+          "quote": "Це географічний атлас чи блискучий атлас?",
+          "explanation": "Lesson 3's culminating dialogue forces a homograph contrast after the object has already been introduced as an atlas alongside a book. Subsequent unrelated topic changes make the exchange feel like a vocabulary checklist rather than a conversation worth following.",
+          "dimension": "engagement"
+        },
+        {
+          "issue_id": "UNDERDETERMINED_ACTIVITY",
+          "severity": "high",
+          "quote": "Де моя́ ___?",
+          "explanation": "Lesson 3 act-w301 marks only кни́га correct, but looking for coffee is equally compatible with the prompt. Without a picture, situation or other cue, learners must guess the author's intention. Similar unspecified intentions affect punctuation and contour exercises, weakening trust and meaningful participation.",
+          "dimension": "engagement"
+        }
+      ]
+    },
+    "tone": {
+      "score": 5.8,
+      "evidence": "\"Writing down new vocabulary with explicit stress marks bridges eye recognition and vocal production:\"",
+      "verdict": "REJECT",
+      "evidence_quotes": [
+        "Do not worry if your melody feels slow at first. Slow and clear is the right\nA1 target.",
+        "Writing down new vocabulary with explicit stress marks bridges eye recognition and vocal production:",
+        "**Триєдність навчання** (the learning triad): поєднуємо друк (**друк**), запис у зошиті (**зошит**) та виразне читання вголос (**голос**)."
+      ],
+      "rubric_mapping": "Quote 1 supports tone: Lesson 1 offers specific, reassuring guidance directly to you. Quote 2 opposes tone: Lesson 2 switches to abstract educational exposition about recognition and production instead of maintaining that conversational instruction. Quote 3 reinforces the register shift through elevated Ukrainian metalanguage and an institutional-sounding label for ordinary practice. Lesson 3 continues this tendency with 'Ukrainian phonetic theory emphasizes this rule:'. The defect is...",
+      "flags": [
+        "source_verification_unavailable: sources.verify_words returned 'MCP tool call requires approval, but approval policy is...",
+        "unverified citation: the exact Заболотний and Авраменко quotations in Lessons 2 and 3 were not verified against source...",
+        "out_of_level_textbook: all three Resources artifacts cite Заболотний Grade 5 and Авраменко Grade 5; audit H restricts...",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit"
+      ],
+      "issue_ids": [
+        "INCONSISTENT_TEACHER_REGISTER"
+      ],
+      "findings": [
+        {
+          "issue_id": "INCONSISTENT_TEACHER_REGISTER",
+          "severity": "major",
+          "quote": "Writing down new vocabulary with explicit stress marks bridges eye recognition and vocal production:",
+          "explanation": "Lesson 2 replaces Lesson 1's warm, concrete direct address with academic commentary about learning mechanisms. The surrounding language about motor memory and acoustic patterns sustains the change rather than providing one necessary technical explanation.",
+          "dimension": "tone"
+        },
+        {
+          "issue_id": "INCONSISTENT_TEACHER_REGISTER",
+          "severity": "major",
+          "quote": "**Триєдність навчання** (the learning triad)",
+          "explanation": "This elevated label makes the summary sound like a pedagogical report. Together with Lesson 3's appeals to Ukrainian phonetic theory, it breaks continuity with the approachable opening lesson.",
+          "dimension": "tone"
+        }
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "REJECT",
+    "terminal_verdict": "PASS",
+    "failing_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
+    ],
+    "rejected_dims": [
+      "pedagogical",
+      "tone"
+    ],
+    "warning_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
+    ],
+    "min_score": 5.8,
+    "min_dim": "pedagogical"
+  }
+}

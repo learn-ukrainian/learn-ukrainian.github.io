@@ -1,0 +1,58 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 9.2,
+      "evidence": "The lesson systematically consolidates pronunciation models stating that «In speech, three pitch contours provide safe, natural models for beginners».",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "In speech, three pitch contours provide safe, natural models for beginners:",
+        "Before you leave the lesson tab, check four things aloud:"
+      ]
+    },
+    "naturalness": {
+      "score": 9.5,
+      "evidence": "The dialogue uses authentic spoken phrasing such as «Мама і тато пили каву в кафе. (Mom and dad were having coffee in the cafe.) ↘».",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Мама і тато пили каву в кафе. (Mom and dad were having coffee in the cafe.) ↘",
+        "Ось аптека біля метро. А що там вдалині — це замок?"
+      ]
+    },
+    "decolonization": {
+      "score": 9.6,
+      "evidence": "Phonetic instruction centers Ukrainian orthoepy directly noting «Remember to keep every unstressed vowel clear: in молоко́, do not reduce [о] to [а]».",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Remember to keep every unstressed vowel clear: in молоко́, do not reduce [о] to [а].",
+        "«Український наголос вільний, тобто він може падати на будь-який склад» (quoted from: Заболотний Grade 5, p. 73)."
+      ]
+    },
+    "engagement": {
+      "score": 9.0,
+      "evidence": "The review features actionable practice routines advising learners to «Ask a native Ukrainian teacher or tutor to listen to one read-aloud from this module».",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Ask a native Ukrainian teacher or tutor to listen to one read-aloud from this module.",
+        "The feedback target is narrow: stress, clear vowels, and the direction of the sentence melody."
+      ]
+    },
+    "tone": {
+      "score": 9.3,
+      "evidence": "The encouraging instructional tone reassures the learner that «You can now read a marked Ukrainian word, keep vowels clear, and choose the first safe melody».",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "You can now read a marked Ukrainian word, keep vowels clear, and choose the first safe melody",
+        "ви знаєте, що в українській мові наголос може падати на будь-який склад і рухатися у формах слів"
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "PASS",
+    "terminal_verdict": "PASS",
+    "failing_dims": [],
+    "rejected_dims": [],
+    "warning_dims": [],
+    "min_score": 9.0,
+    "min_dim": "engagement"
+  }
+}

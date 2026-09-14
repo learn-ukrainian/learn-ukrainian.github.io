@@ -1,0 +1,64 @@
+- lemma: на́голос
+  translation: stress / accent
+  pos: noun
+  usage: На́голос у сло́ві ка́ва.
+- lemma: мело́дика
+  translation: melody / intonation
+  pos: noun
+  usage: Мело́дика ре́чення.
+- lemma: склад
+  translation: syllable
+  pos: noun
+  usage: Оди́н склад.
+- lemma: наголо́шений
+  translation: stressed
+  pos: adjective
+  usage: Наголо́шений склад.
+- lemma: ненаголо́шений
+  translation: unstressed
+  pos: adjective
+  usage: Ненаголо́шений склад.
+- lemma: голосни́й
+  translation: vowel
+  pos: adjective / noun
+  usage: Голосни́й звук.
+- lemma: сло́во
+  translation: word
+  pos: noun
+  usage: Сло́во ка́ва.
+- lemma: ре́чення
+  translation: sentence
+  pos: noun
+  usage: Ре́чення ма́є мело́дику.
+- lemma: пита́ння
+  translation: question
+  pos: noun
+  usage: Це пита́ння.
+- lemma: хто
+  translation: who
+  pos: pronoun
+  usage: Хто це?
+- lemma: що
+  translation: what
+  pos: pronoun
+  usage: Що це?
+- lemma: де
+  translation: where
+  pos: adverb
+  usage: Де метро́?
+- lemma: коли́
+  translation: when
+  pos: adverb
+  usage: Ко́ли?
+- lemma: як
+  translation: how
+  pos: adverb
+  usage: Як спра́ви?
+- lemma: ка́ва
+  translation: coffee
+  pos: noun
+  usage: Ка́ва.
+- lemma: вода́
+  translation: water
+  pos: noun
+  usage: Вода́.

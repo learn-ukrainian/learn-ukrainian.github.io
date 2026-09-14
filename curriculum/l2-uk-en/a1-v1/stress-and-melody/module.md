@@ -24,7 +24,7 @@ By the end, you can:
 - read a short greeting dialogue with Ukrainian rhythm.
 
 :::tip
-If you want extra listening support, open [ULP Season 1, Episode 5 —
+If you want extra listening support (source: Anna Ohoiko), open [ULP Season 1, Episode 5 —
 Pronunciation Trainer](https://www.ukrainianlessons.com/episode5/) from the
 Resources tab and copy only short model words.
 :::

@@ -1,0 +1,402 @@
+inline:
+- id: act-1
+  type: quiz
+  title: Де на́голос
+  instruction: Обери́ склад із позна́ченим на́голосом.
+  items:
+  - prompt: 'Чита́й: ка́ва. Де на́голос?'
+    options:
+    - text: пе́рший склад
+      correct: true
+    - text: оста́нній склад
+      correct: false
+    - text: нема́є на́голосу
+      correct: false
+    explanation: У сло́ві ка́ва на́голос на ка́.
+  - prompt: 'Чита́й: вода́. Де на́голос?'
+    options:
+    - text: оста́нній склад
+      correct: true
+    - text: пе́рший склад
+      correct: false
+    - text: усі́ скла́ди одна́кові
+      correct: false
+    explanation: У сло́ві вода́ на́голос на да́.
+  - prompt: 'Чита́й: столи́ця. Де на́голос?'
+    options:
+    - text: сере́дній склад
+      correct: true
+    - text: пе́рший склад
+      correct: false
+    - text: оста́нній склад
+      correct: false
+    explanation: У сло́ві столи́ця на́голос на ли́.
+  - prompt: 'Молоко́: що ро́бимо з ненаголо́шеними голосни́ми?'
+    options:
+    - text: трима́ємо ко́жен голосни́й чи́стим
+      correct: true
+    - text: пропуска́ємо пе́рший голосни́й
+      correct: false
+    - text: чита́ємо ко́жне о як а
+      correct: false
+    explanation: Украї́нські ненаголо́шені голосні́ залиша́ються чи́стими.
+- id: act-2
+  type: quiz
+  title: Ви́бір мело́дики
+  instruction: Обери́ пе́ршу моде́ль мело́дики ре́чення.
+  items:
+  - prompt: Це ка́ва.
+    options:
+    - text: спадна́ ↘
+      correct: true
+    - text: висхідна́ ↗
+      correct: false
+    explanation: Тве́рдження ма́є спадну́ мело́дику.
+  - prompt: Це ка́ва?
+    options:
+    - text: висхідна́ ↗
+      correct: true
+    - text: спадна́ ↘
+      correct: false
+    explanation: Так/ні пита́ння ма́є висхідну́ мело́дику.
+  - prompt: Де метро́?
+    options:
+    - text: спадна́ ↘
+      correct: true
+    - text: висхідна́ ↗
+      correct: false
+    explanation: Пита́ння з де на A1 ма́є спадну́ мело́дику.
+  - prompt: Як га́рно!
+    options:
+    - text: сильні́ша спадна́ ↘↘
+      correct: true
+    - text: висхідна́ ↗
+      correct: false
+    explanation: О́клик ма́є сильні́шу спадну́ мело́дику.
+- id: act-3
+  type: quiz
+  title: Швидки́й контра́ст
+  instruction: Обери́ коро́тку англі́йську підка́зку.
+  items:
+  - prompt: за́мок
+    options:
+    - text: castle
+      correct: true
+    - text: lock
+      correct: false
+    explanation: За́мок із на́голосом на пе́ршому скла́ді — castle.
+  - prompt: замо́к
+    options:
+    - text: lock
+      correct: true
+    - text: castle
+      correct: false
+    explanation: Замо́к із на́голосом на оста́нньому скла́ді — lock.
+  - prompt: сім'я́
+    options:
+    - text: family
+      correct: true
+    - text: seed
+      correct: false
+    explanation: Сім'я́ з фіна́льним на́голосом — family.
+- id: act-4
+  type: fill-in
+  title: Пунктуа́ція і мело́дика
+  instruction: Обери́ розділо́вий знак, яки́й відповіда́є ре́ченню.
+  items:
+  - sentence: Це ка́ва_
+    answer: .
+    options:
+    - .
+    - '?'
+    - '!'
+    explanation: Тве́рдження ма́є кра́пку й спадну́ мело́дику.
+  - sentence: Це метро́_
+    answer: '?'
+    options:
+    - '?'
+    - .
+    - '!'
+    explanation: Так/ні пита́ння ма́є знак пита́ння й висхідну́ мело́дику.
+  - sentence: Де апте́ка_
+    answer: '?'
+    options:
+    - '?'
+    - .
+    - '!'
+    explanation: Де ро́бить це пита́нням, але́ мело́дика спадна́.
+  - sentence: Як га́рно_
+    answer: '!'
+    options:
+    - '!'
+    - '?'
+    - .
+    explanation: Це о́клик.
+  - sentence: Так, це вода́_
+    answer: .
+    options:
+    - .
+    - '?'
+    - '!'
+    explanation: Це тве́рдження.
+workbook:
+- id: act-w1
+  type: fill-in
+  title: Ти́пові помилки́ на́голосу
+  instruction: Обери́ нормати́вну фо́рму з позна́ченим на́голосом.
+  items:
+  - sentence: 'нови́й: ___'
+    answer: нови́й
+    options:
+    - нови́й
+    - стари́й
+    explanation: У сло́ві нови́й на́голос на оста́нній части́ні.
+  - sentence: 'стари́й: ___'
+    answer: стари́й
+    options:
+    - стари́й
+    - молоди́й
+    explanation: У сло́ві стари́й на́голос на оста́нній части́ні.
+  - sentence: 'одина́дцять: ___'
+    answer: одина́дцять
+    options:
+    - одина́дцять
+    - де́сять
+    explanation: Одина́дцять ма́є на́голос на -на́-.
+  - sentence: 'чотирна́дцять: ___'
+    answer: чотирна́дцять
+    options:
+    - чотирна́дцять
+    - два́дцять
+    explanation: Чотирна́дцять теж ма́є на́голос на -на́-.
+  - sentence: 'множина́ слова́ голова́: ___'
+    answer: го́лови
+    options:
+    - го́лови
+    - голови́
+    explanation: 'У цій па́рі на́голос ру́хається: голова́, але́ го́лови.'
+  - sentence: 'ім''я́: ___'
+    answer: Марі́я
+    options:
+    - Марі́я
+    - Окса́на
+    explanation: У цьому́ і́мені на́голос на рі́.
+- id: act-w2
+  type: match-up
+  title: На́голос змі́нює зна́чення
+  instruction: З'єдна́й наголо́шене сло́во з коро́ткою англі́йською підка́зкою.
+  pairs:
+  - left: за́мок
+    right: castle
+  - left: замо́к
+    right: lock
+  - left: а́тлас
+    right: atlas
+  - left: атла́с
+    right: satin
+  - left: о́рган
+    right: body organ
+  - left: орга́н
+    right: musical instrument
+  - left: сі́м'я
+    right: seed
+  - left: сім'я́
+    right: family
+- id: act-w101
+  type: match-up
+  title: Пита́льні та ключові́ слова́
+  instruction: З'єдна́й украї́нське сло́во з відпові́дним зна́ченням.
+  pairs:
+  - left: хто
+    right: who
+  - left: що
+    right: what
+  - left: де
+    right: where
+  - left: як
+    right: how
+  - left: коли́
+    right: when
+  - left: на́голос
+    right: word stress
+  - left: мело́дика
+    right: sentence melody
+  - left: склад
+    right: syllable
+- id: act-w102
+  type: quiz
+  title: 'Мело́дика: спадна́ чи висхідна́?'
+  instruction: Ви́знач пра́вильну інтонаці́йну моде́ль для ко́жного ре́чення.
+  items:
+  - prompt: Це вода́.
+    options:
+    - text: спадна́ ↘ (тве́рдження)
+      correct: true
+    - text: висхідна́ ↗
+      correct: false
+    explanation: Тве́рдження закі́нчується спадно́ю інтона́цією.
+  - prompt: Це вода́?
+    options:
+    - text: висхідна́ ↗ (зага́льне пита́ння)
+      correct: true
+    - text: спадна́ ↘
+      correct: false
+    explanation: Зага́льне пита́ння (так/ні) ма́є висхідну́ інтона́цію.
+  - prompt: Що це?
+    options:
+    - text: спадна́ ↘ (пита́льне сло́во «що»)
+      correct: true
+    - text: висхідна́ ↗
+      correct: false
+    explanation: Пита́ння з пита́льним сло́вом «що» ма́є спадну́ інтона́цію.
+  - prompt: Хто це?
+    options:
+    - text: спадна́ ↘ (пита́льне сло́во «хто»)
+      correct: true
+    - text: висхідна́ ↗
+      correct: false
+    explanation: Пита́ння з пита́льним сло́вом «хто» ма́є спадну́ інтона́цію.
+  - prompt: А у тебе́?
+    options:
+    - text: висхідна́ ↗ (зворо́тне пита́ння)
+      correct: true
+    - text: спадна́ ↘
+      correct: false
+    explanation: Зворо́тне пита́ння «А у тебе́?» вимовля́ється з висхідно́ю інтона́цією.
+  - prompt: Як спра́ви?
+    options:
+    - text: спадна́ ↘ (пита́льне сло́во «як»)
+      correct: true
+    - text: висхідна́ ↗
+      correct: false
+    explanation: Пита́ння з пита́льним сло́вом «як» за ба́зовим пра́вилом ма́є спадну́ інтона́цію.
+- id: act-w103
+  type: true-false
+  title: Пра́вила украї́нського на́голосу
+  instruction: Ви́знач, чи тве́рдження правди́ве (пра́вда), чи хи́бне (непра́вда).
+  items:
+  - statement: 'Украї́нський на́голос є рухо́мим і мо́же змі́нювати фо́рму слів (напри́клад:
+      голова́ — го́лови).'
+    correct: true
+    explanation: На́голос в украї́нській мо́ві мо́же перемі́щуватися у фо́рмах слів.
+  - statement: Слова́ за́мок і замо́к означа́ють одне́ й те са́ме.
+    correct: false
+    explanation: 'На́голос розрізня́є зна́чення: за́мок — castle, замо́к — lock.'
+  - statement: У сло́ві вода́ на́голос па́дає на пе́рший склад.
+    correct: false
+    explanation: У сло́ві вода́ на́голос па́дає на дру́гий (оста́нній) склад.
+  - statement: Пита́ння Що це? за прави́лом ма́є спадну́ інтона́цію ↘.
+    correct: true
+    explanation: Пита́ння з пита́льними слова́ми ма́ють спадни́й ко́нтур.
+  - statement: Окли́чне ре́чення Як га́рно! вимовля́ється зі спадно́ю інтона́цією ↘↘.
+    correct: true
+    explanation: Окли́чні ре́чення ма́ють вира́зну спадну́ мело́дику.
+  - statement: У сло́ві молоко́ ненаголо́шені зву́ки [о] перетво́рюються на [а].
+    correct: false
+    explanation: В украї́нській мо́ві ненаголо́шені зву́ки [о] вимовля́ються чі́тко.
+- id: act-w104
+  type: fill-in
+  title: Розділо́ві зна́ки та інтона́ція
+  instruction: Допо́вни ре́чення пра́вильним розділо́вим зна́ком.
+  items:
+  - sentence: Ось гаря́ча ка́ва_
+    answer: .
+    options:
+    - .
+    - '?'
+    - '!'
+    explanation: Це розповідне́ ре́чення.
+  - sentence: Це твоя́ вода́_
+    answer: '?'
+    options:
+    - '?'
+    - .
+    - '!'
+    explanation: Це зага́льне пита́ння.
+  - sentence: Хто це_
+    answer: '?'
+    options:
+    - '?'
+    - .
+    - '!'
+    explanation: Це пита́ння з пита́льним сло́вом.
+  - sentence: Що це_
+    answer: '?'
+    options:
+    - '?'
+    - .
+    - '!'
+    explanation: Це пита́ння з пита́льним сло́вом.
+  - sentence: Як чудо́во_
+    answer: '!'
+    options:
+    - '!'
+    - '?'
+    - .
+    explanation: Це окли́чне ре́чення.
+  - sentence: Так, це метро́_
+    answer: .
+    options:
+    - .
+    - '?'
+    - '!'
+    explanation: Це розповідне́ ре́чення-ві́дповідь.
+- id: act-w105
+  type: translate
+  title: Пере́клад те́рмінів
+  instruction: Обери́ пра́вильний пере́клад для ко́жного сло́ва.
+  items:
+  - source: голосни́й
+    options:
+    - text: vowel
+      correct: true
+    - text: consonant
+      correct: false
+    - text: word
+      correct: false
+    explanation: Голосни́й — vowel.
+  - source: мело́дика
+    options:
+    - text: sentence melody / intonation
+      correct: true
+    - text: spelling
+      correct: false
+    - text: accent mark
+      correct: false
+    explanation: Мело́дика — sentence melody.
+  - source: склад
+    options:
+    - text: syllable
+      correct: true
+    - text: letter
+      correct: false
+    - text: sentence
+      correct: false
+    explanation: Склад — syllable.
+  - source: ре́чення
+    options:
+    - text: sentence
+      correct: true
+    - text: word
+      correct: false
+    - text: sound
+      correct: false
+    explanation: Ре́чення — sentence.
+  - source: пита́ння
+    options:
+    - text: question
+      correct: true
+    - text: statement
+      correct: false
+    - text: greeting
+      correct: false
+    explanation: Пита́ння — question.
+  - source: сло́во
+    options:
+    - text: word
+      correct: true
+    - text: syllable
+      correct: false
+    - text: phrase
+      correct: false
+    explanation: Сло́во — word.

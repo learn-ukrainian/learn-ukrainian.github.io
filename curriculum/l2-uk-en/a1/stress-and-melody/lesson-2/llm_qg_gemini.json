@@ -1,0 +1,53 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 9.3,
+      "evidence": "Multi-syllable instruction builds systematic reading habits: \"When reading multi-syllable Ukrainian words, keep every unstressed vowel clear and distinct:\".",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "When reading multi-syllable Ukrainian words, keep every unstressed vowel clear and distinct:"
+      ]
+    },
+    "naturalness": {
+      "score": 9.5,
+      "evidence": "Dialogue lines demonstrate natural conversational Ukrainian with accurate vocative forms: \"Послухайте розмову Олі та Тараса про подорож і фотографії — listen to Olya and Taras talk about travel and photographs:\".",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Послухайте розмову Олі та Тараса про подорож і фотографії — listen to Olya and Taras talk about travel and photographs:"
+      ]
+    },
+    "decolonization": {
+      "score": 9.6,
+      "evidence": "Targeted phonetic guidance prevents Russian vowel reduction and stress transfer habits: \"- **Уникати типових пасток наголосу** — master stress in numerals (**одина́дцять**, **чотирна́дцять**), adjectives (**нови́й**, **стари́й**), and names (**Марі́я**);\".",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "- **Уникати типових пасток наголосу** — master stress in numerals (**одина́дцять**, **чотирна́дцять**), adjectives (**нови́й**, **стари́й**), and names (**Марі́я**);"
+      ]
+    },
+    "engagement": {
+      "score": 9.2,
+      "evidence": "Multi-sensory triad actively integrates print recognition, motor handwriting, and vocalization: \"- **Зошит** (notebook) builds motor memory as you write out the syllables and place the accent mark;\".",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "- **Зошит** (notebook) builds motor memory as you write out the syllables and place the accent mark;"
+      ]
+    },
+    "tone": {
+      "score": 9.0,
+      "evidence": "Encouraging educator tone sets realistic expectations without overwhelming beginner students: \"For this module, a stress mark is a training wheel. It is not usually printed\".",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "For this module, a stress mark is a training wheel. It is not usually printed"
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "PASS",
+    "terminal_verdict": "PASS",
+    "failing_dims": [],
+    "rejected_dims": [],
+    "warning_dims": [],
+    "min_score": 9.0,
+    "min_dim": "tone"
+  }
+}

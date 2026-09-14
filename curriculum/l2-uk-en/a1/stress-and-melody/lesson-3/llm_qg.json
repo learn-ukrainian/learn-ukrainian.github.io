@@ -1,0 +1,69 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 5.0,
+      "evidence": "Correct module closure and bilingual dialogue support coexist with a forbidden text fence, ambiguous answer keys, missing vocabulary scaffolding, and unverified cumulative preservation.",
+      "verdict": "REJECT",
+      "evidence_quotes": [
+        "У цьому реченні за змістом підходить слово кни́га.",
+        "Мама і тато пили каву в кафе. (Mom and dad were having coffee in the cafe.)"
+      ]
+    },
+    "naturalness": {
+      "score": 5.0,
+      "evidence": "The atlas-or-satin exchange feels contrived, and attempted VESUM gender/form and sources government/example checks were blocked by approval policy, leaving the mandatory grounding unverified.",
+      "verdict": "REJECT",
+      "evidence_quotes": [
+        "Це географічний атлас чи блискучий атлас? (Is this a geographic atlas or shiny satin?)"
+      ]
+    },
+    "decolonization": {
+      "score": 7.0,
+      "evidence": "Ukrainian authorities receive marked quotations and Resources entries, but unsuccessful sources calls leave authentic usage insufficiently verified without establishing any Russian calque.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "«Український наголос вільний, тобто він може падати на будь-який склад»"
+      ]
+    },
+    "engagement": {
+      "score": 6.0,
+      "evidence": "Read-aloud feedback offers useful participation, but repeated stress classification and duplicated dialogue presentation weaken progression toward a meaningful final challenge.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "The workbook adds extra practice with the same skills: stress sorting,",
+        "Ask a native Ukrainian teacher or tutor to listen to one read-aloud"
+      ]
+    },
+    "tone": {
+      "score": 8.0,
+      "evidence": "The instructional voice remains respectful and practical, with named dialogue participants rather than a named narrator.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Before you leave the lesson tab, check four things aloud:",
+        "You can now read a marked Ukrainian word, keep vowels clear, and choose"
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "REJECT",
+    "terminal_verdict": "PASS",
+    "failing_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement"
+    ],
+    "rejected_dims": [
+      "pedagogical",
+      "naturalness"
+    ],
+    "warning_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement"
+    ],
+    "min_score": 5.0,
+    "min_dim": "pedagogical"
+  }
+}

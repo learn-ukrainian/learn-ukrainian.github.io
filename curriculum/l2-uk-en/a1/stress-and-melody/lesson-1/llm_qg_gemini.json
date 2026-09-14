@@ -1,0 +1,53 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 9.2,
+      "evidence": "The lesson grounds Ukrainian stress rules with clear cognitive scaffolding: \"Ukrainian stress is free. It can fall near the beginning, middle, or end of a word.\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Ukrainian stress is free. It can fall near the beginning, middle, or end of a word."
+      ]
+    },
+    "naturalness": {
+      "score": 9.5,
+      "evidence": "Authentic beginner dialogue models natural pitch contours without awkward calques: \"Read this short beginner dialogue aloud, listening to the contour of each line:\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Read this short beginner dialogue aloud, listening to the contour of each line:"
+      ]
+    },
+    "decolonization": {
+      "score": 9.6,
+      "evidence": "Explicitly protects Ukrainian phonology from vowel reduction calques on its own terms: \"A second habit matters just as much: do not blur unstressed vowels.\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "A second habit matters just as much: do not blur unstressed vowels."
+      ]
+    },
+    "engagement": {
+      "score": 9.0,
+      "evidence": "Provides supportive pacing advice that builds learner confidence during rhythm practice: \"Do not worry if your melody feels slow at first. Slow and clear is the right A1 target.\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Do not worry if your melody feels slow at first. Slow and clear is the right A1 target."
+      ]
+    },
+    "tone": {
+      "score": 8.8,
+      "evidence": "Maintains a realistic and encouraging peer voice without condescension or preachy padding: \"Today you are not memorizing every stress pattern in Ukrainian.\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Today you are not memorizing every stress pattern in Ukrainian."
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "PASS",
+    "terminal_verdict": "PASS",
+    "failing_dims": [],
+    "rejected_dims": [],
+    "warning_dims": [],
+    "min_score": 8.8,
+    "min_dim": "tone"
+  }
+}
