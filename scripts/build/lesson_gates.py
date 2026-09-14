@@ -21,6 +21,8 @@ ALLOWED = {
     "workbook_only": {"anagram", "error-correction", "translate"},
 }
 LIST_FIELDS = ("items", "questions", "pairs", "sentences", "words", "statements", "groups")
+# Gloss / media fields the MDX renderer does not serialize into the page.
+_RENDER_SKIP_KEYS = frozenset({"translation", "hint", "gloss", "notes", "ipa", "audio", "image"})
 NAME_RE = re.compile(r"анна|anna|ulp|ohoiko|огойко", re.I)
 ATTR_RE = re.compile(r"цит\.|цитата|за:|джерело|quoted from|source:|цитуємо", re.I)
 ACUTE = "́"
@@ -61,12 +63,63 @@ def norm_text(t: str) -> str:
     return re.sub(r"\s+", " ", strip_acute(t)).strip()
 
 
+def unescape_published(page: str) -> str:
+    """Collapse JSON-in-template-literal extra backslashes from _dump_safe_json."""
+    decoded = re.sub(r"\\u([0-9a-fA-F]{4})", lambda m: chr(int(m[1], 16)), page)
+    previous = None
+    while previous != decoded:
+        previous = decoded
+        decoded = (
+            decoded.replace("\\\\", "\\")
+            .replace('\\"', '"')
+            .replace("\\'", "'")
+            .replace("\\n", " ")
+            .replace("\\`", "`")
+        )
+    return decoded
+
+
 def _dialogue_props_text(page: str) -> str:
     """Text that actually lives on visible DialogueBox props, not the rest of the page."""
     blobs = re.findall(r"<DialogueBox[\s\S]*?/>", strip_comments(page))
-    decoded = re.sub(r"\\u([0-9a-fA-F]{4})", lambda m: chr(int(m[1], 16)), " ".join(blobs))
-    decoded = decoded.replace('\\"', '"').replace("\\n", " ")
-    return norm_text(decoded)
+    return norm_text(unescape_published(" ".join(blobs)))
+
+
+_SPEAKER = re.compile(r"([A-ZА-ЯІЇЄҐ][\w'’\-]{1,24})\s*:\s*")
+
+
+def _dialogue_turns(para: str) -> list[tuple[str, str]]:
+    """Speaker/spoken pairs, including mashed 'Тарас : … Оксана : …' lines."""
+    text = strip_acute(para.strip())
+    text = re.sub(r"^>\s*", "", text, flags=re.M)
+    text = re.sub(r"\*\*([^*]+)\*\*", r"\1", text)
+    text = re.sub(r"\*\([^()]*\)\*", " ", text)
+    text = re.sub(r"\([^()]*\)", " ", text)
+    matches = list(_SPEAKER.finditer(text))
+    if not matches:
+        return []
+    turns: list[tuple[str, str]] = []
+    for i, match in enumerate(matches):
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+        spoken = text[match.end():end]
+        spoken = re.sub(r"\s*\*\([^()]*\)\*", "", spoken)
+        spoken = re.sub(r"\s*[—–]\s*.*$", "", spoken)
+        spoken = re.sub(r"\s*\([^()]*\)\s*$", "", spoken)
+        speaker = match.group(1).strip()
+        spoken = spoken.strip().strip("*_").strip()
+        if speaker and spoken:
+            turns.append((speaker, spoken))
+    return turns
+
+
+def _spoken_in_hay(spoken: str, hay: str) -> bool:
+    text = md_to_text(spoken)
+    if not text:
+        return False
+    if text in hay:
+        return True
+    parts = [p.strip() for p in re.split(r"(?<=[.!?])\s+", text) if len(p.strip()) >= 8]
+    return bool(parts) and any(part in hay for part in parts)
 
 
 def _visible_in_render(value: str, literal_text: str) -> bool:
@@ -76,6 +129,7 @@ def _visible_in_render(value: str, literal_text: str) -> bool:
         norm_text(re.sub(r"\{([^{}]+)\}", "___", value)),
         norm_text(re.sub(r"\[([^\[\]]{1,12})\]", "___", value)),
         norm_text(re.sub(r"_{2,}", "___", value)),
+        norm_text(value.replace("-", "")),
     ]
     return any(variant and variant in literal_text for variant in variants)
 
@@ -101,12 +155,20 @@ def paragraphs(t: str) -> list[str]:
     return [p.strip() for p in re.split(r"\n\s*\n", strip_comments(t)) if p.strip()]
 
 
-def leaves(obj) -> list:
+def leaves(obj, skip: set[str] | frozenset[str] = frozenset()) -> list:
     if isinstance(obj, dict):
-        return [x for v in obj.values() for x in leaves(v)]
+        return [x for k, v in obj.items() if k not in skip for x in leaves(v, skip)]
     if isinstance(obj, list):
-        return [x for v in obj for x in leaves(v)]
+        return [x for v in obj for x in leaves(v, skip)]
     return [obj]
+
+
+def _activity_render_strings(act: dict) -> list:
+    skip = set(_RENDER_SKIP_KEYS)
+    if act.get("type") == "unjumble":
+        skip.add("explanation")
+    payload = {k: v for k, v in act.items() if k in LIST_FIELDS or k in ("title", "instruction")}
+    return leaves(payload, skip)
 
 
 def contains(orig, new) -> bool:
@@ -640,31 +702,44 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             continue
         # Parse serialized props as well as Markdown: escaped strings must remain
         # represented on the published surface (e.g. OddOneOut choices).
-        decoded = re.sub(r"\\u([0-9a-fA-F]{4})", lambda m: chr(int(m[1], 16)), page)
-        decoded = decoded.replace('\\"', '"').replace("\\n", " ")
+        decoded = unescape_published(page)
         visible = norm_text(md_to_text(decoded))
         literal_text = norm_text(strip_comments(decoded))
         if len(re.findall(r"<TabItem\s", strip_comments(page))) != 4:
             block(f"lesson {n}: render must have four learner tabs")
-        for para in paragraphs(md):
+        for para in paragraphs(re.sub(r"```.*?```", "\n", md, flags=re.S)):
             if len(para.split()) < 8:
                 continue
-            if para.lstrip().startswith(">") and "<DialogueBox" in page:
-                # DialogueBox serializes speaker and spoken text as separate props.
-                # Writer lines look like "Тарас : UK (English.)" — drop the English tail.
-                chunks = [re.sub(r"^>\s*", "", line) for line in para.splitlines() if line.strip()]
-                missing = False
-                for chunk in chunks:
-                    speaker, sep, spoken = chunk.partition(":")
-                    if sep:
-                        spoken = re.sub(r"\s*\([^()]*\)\s*$", "", spoken)
-                        values = (speaker, spoken)
-                    else:
-                        values = (chunk,)
-                    hay = _dialogue_props_text(page)
-                    if any(md_to_text(value) not in hay for value in values):
-                        missing = True
-                if not missing:
+            if re.match(r"^#{1,6}\s+", para.strip()):
+                continue
+            turns = _dialogue_turns(para)
+            if turns and "<DialogueBox" in page:
+                hay = _dialogue_props_text(page)
+                if all(md_to_text(speaker) in hay and _spoken_in_hay(spoken, hay)
+                       for speaker, spoken in turns):
+                    continue
+            if para.lstrip().startswith("|"):
+                hay = _dialogue_props_text(page) if "<DialogueBox" in page else ""
+                cells_ok = True
+                for line in para.splitlines():
+                    if re.match(r"^\s*\|?\s*:?-{2,}", line) or not line.strip():
+                        continue
+                    cells = [md_to_text(c) for c in line.strip().strip("|").split("|")]
+                    if cells and re.search(r"ukrainian|україн|english|use\b", cells[0], re.I):
+                        continue
+                    for cell in cells:
+                        if len(cell) < 3:
+                            continue
+                        if cell in visible:
+                            continue
+                        cell_turns = _dialogue_turns(cell)
+                        if cell_turns and hay and all(
+                            md_to_text(speaker) in hay and _spoken_in_hay(spoken, hay)
+                            for speaker, spoken in cell_turns
+                        ):
+                            continue
+                        cells_ok = False
+                if cells_ok:
                     continue
             if re.search(r"[—–]", para):
                 parts = re.split(r"\s*[—–]\s*", para, maxsplit=1)
@@ -675,7 +750,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
         for aid, (owner, placement, act) in new_acts.items():
             if owner != n or placement == "workbook":
                 continue
-            for value in leaves({k: v for k, v in act.items() if k in LIST_FIELDS or k in ("title", "instruction")}):
+            for value in _activity_render_strings(act):
                 if isinstance(value, str) and len(value) >= 3 and not _visible_in_render(value, literal_text):
                     block(f"lesson {n}: render lacks activity string from {aid}: {value!r}")
         for entry in lesson_vocab[n]:
@@ -688,7 +763,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     if not landing:
         block("module landing render missing")
     else:
-        landing_text = norm_text(strip_comments(landing).replace('\\"', '"'))
+        landing_text = norm_text(strip_comments(unescape_published(landing)))
         if len(re.findall(r"<TabItem\s", strip_comments(landing))) != 4:
             block("module landing must have four learner tabs")
         for lemma in base_lemmas:
@@ -702,8 +777,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                     block("module landing lacks resource union entry")
         for aid, (_, placement, activity) in new_acts.items():
             if placement == "workbook":
-                for value in leaves({k: v for k, v in activity.items()
-                                     if k in LIST_FIELDS or k in ("title", "instruction")}):
+                for value in _activity_render_strings(activity):
                     if isinstance(value, str) and len(value) >= 3 and not _visible_in_render(value, landing_text):
                         block(f"module landing lacks workbook union string from {aid}")
     return {"passed": not report["blocking"], "diagnostics": report["blocking"], **report}

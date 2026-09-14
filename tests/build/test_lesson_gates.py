@@ -42,6 +42,23 @@ def test_fill_in_blanked_strings_count_as_rendered():
     landing = gates.norm_text('{"instruction":"Example ___."}')
     assert gates._visible_in_render("Example {answer}.", landing)
     assert gates._visible_in_render("де__ (soft sign)", gates.norm_text("де___ (soft sign)"))
+    escaped = gates.unescape_published(
+        'pairs={JSON.parse(`[{"right": "Informal \\\\"Hi!\\\\" for friends and family"}]`)}'
+    )
+    hay = gates.norm_text(escaped)
+    assert gates._visible_in_render('Informal "Hi!" for friends and family', hay)
+    mashed = "Тарас : Привіт, Оксано! — Hi, Oksana! Оксана : Привіт, Тарасе!"
+    assert gates._dialogue_turns(mashed) == [
+        ("Тарас", "Привіт, Оксано!"),
+        ("Оксана", "Привіт, Тарасе!"),
+    ]
+    quoted = "> **Окса́на**: До́брий день!\n> **Іва́н**: До́брий день, вчи́телю!"
+    assert gates._dialogue_turns(quoted) == [
+        ("Оксана", "Добрий день!"),
+        ("Іван", "Добрий день, вчителю!"),
+    ]
+    italic = "> **Тара́с**: Сього́дні свя́то! *(Today is a holiday!)*"
+    assert gates._dialogue_turns(italic) == [("Тарас", "Сьогодні свято!")]
 
 
 def test_dialogue_props_ignore_unrelated_prose():

@@ -771,9 +771,17 @@ class ActivityParser:
         activity.id = data.get('id', '')
         return activity
 
+    def _item_rows(self, data: dict) -> list:
+        """Writer YAML uses items, questions, or statements for the same row list."""
+        for key in ("items", "questions", "statements"):
+            rows = data.get(key)
+            if isinstance(rows, list) and rows:
+                return rows
+        return []
+
     def _parse_quiz(self, data: dict) -> QuizActivity:
         items = []
-        for item_data in data.get('items', []):
+        for item_data in self._item_rows(data):
             raw_options = item_data.get('options', [])
             correct_answer = item_data.get('answer')
             correct_index = item_data.get('correct')  # V2: integer index
@@ -801,7 +809,7 @@ class ActivityParser:
 
     def _parse_select(self, data: dict) -> SelectActivity:
         items = []
-        for item_data in data.get('items', []):
+        for item_data in self._item_rows(data):
             raw_options = item_data.get('options', [])
             correct_answer = item_data.get('answer')
             options = []
@@ -821,9 +829,13 @@ class ActivityParser:
 
     def _parse_true_false(self, data: dict) -> TrueFalseActivity:
         items = []
-        for item_data in data.get('items', []):
+        for item_data in self._item_rows(data):
             statement = item_data.get('statement') or item_data.get('question', '')
             correct = item_data.get('correct')
+            if correct is None:
+                correct = item_data.get('is_true')
+            if correct is None:
+                correct = item_data.get('isTrue')
             if correct is None:
                 correct = item_data.get('answer', False)
             items.append(TrueFalseItem(statement=statement, correct=correct, explanation=item_data.get('explanation')))
@@ -831,7 +843,7 @@ class ActivityParser:
 
     def _parse_fill_in(self, data: dict) -> FillInActivity:
         items = []
-        for item_data in data.get('items', []):
+        for item_data in self._item_rows(data):
             sentence = item_data.get('sentence') or item_data.get('prompt', '')
             answer = item_data.get('answer') or item_data.get('correct')
             if not answer:
@@ -994,9 +1006,18 @@ class ActivityParser:
 
     def _parse_translate(self, data: dict) -> TranslateActivity:
         items = []
-        for i in data.get('items', []):
-            source = i.get('source') or i.get('uk') or i.get('prompt') or ''
-            target = i.get('target') or i.get('answer') or i.get('correct') or i.get('en')
+        for i in self._item_rows(data):
+            source = (
+                i.get('source') or i.get('prompt') or i.get('english')
+                or i.get('en') or i.get('uk') or i.get('ukrainian') or ''
+            )
+            target = (
+                i.get('target') or i.get('answer') or i.get('correct')
+                or i.get('ukrainian') or i.get('en') or i.get('english')
+            )
+            if i.get('english') and i.get('ukrainian'):
+                source = i.get('english')
+                target = i.get('ukrainian')
             options = []
             for o in i.get('options', []) or []:
                 if isinstance(o, str):
@@ -1008,7 +1029,7 @@ class ActivityParser:
                 elif isinstance(o, dict):
                     text = str(o.get('text') or o.get('en') or '').strip()
                     options.append(TranslateOption(text=text, correct=bool(o.get('correct'))))
-            if target and options and not any(opt.correct for opt in options):
+            if target and not any(opt.correct for opt in options):
                 for opt in options:
                     if opt.text.casefold() == str(target).strip().casefold():
                         opt.correct = True
