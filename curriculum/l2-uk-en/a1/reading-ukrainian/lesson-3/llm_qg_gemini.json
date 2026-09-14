@@ -1,0 +1,53 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 10.0,
+      "evidence": "The lesson scaffolds smoothly from individual syllables to sentence decoding and closes with a comprehensive module summary.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Коли окремі склади стають знайомими, об'єднуйте їх у слова, а слова — у перші прості речення."
+      ]
+    },
+    "naturalness": {
+      "score": 10.0,
+      "evidence": "All phrasing follows authentic Ukrainian phonological terminology and syntactic norms without calques.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "«Під час читання по складах не робіть пауз між літерами одного складу, а зливайте приголосний з голосним»"
+      ]
+    },
+    "decolonization": {
+      "score": 10.0,
+      "evidence": "The materials center Ukrainian geography, culture, and educational standards without Soviet or Russocentric framing.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Пам'ятайте золоте правило української фонетики: «Скільки у слові голосних звуків, стільки й складів»"
+      ]
+    },
+    "engagement": {
+      "score": 10.0,
+      "evidence": "The lesson engages learners through varied activity formats, interactive dialogue, and tactile kinesthetic reading techniques.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Покладіть долоню під підборіддя: кожен дотик — це один голосний звук і один склад"
+      ]
+    },
+    "tone": {
+      "score": 10.0,
+      "evidence": "The instructional tone is welcoming, encouraging, and clear without any patronizing or persona-driven preaching.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Вітаємо з успішним завершенням модуля! — Congratulations on successfully completing the module!"
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "PASS",
+    "terminal_verdict": "PASS",
+    "failing_dims": [],
+    "rejected_dims": [],
+    "warning_dims": [],
+    "min_score": 10.0,
+    "min_dim": "pedagogical"
+  }
+}

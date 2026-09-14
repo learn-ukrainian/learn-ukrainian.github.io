@@ -1,0 +1,375 @@
+inline:
+- id: act-l3-sent-match
+  type: match-up
+  title: З'єдна́й ре́чення з пере́кладом
+  instruction: З'єдна́й просте́ украї́нське ре́чення з йо́го англі́йським пере́кладом.
+  pairs:
+  - left: Ма́ма чита́є.
+    right: Mother is reading.
+  - left: Та́то пи́ше.
+    right: Father is writing.
+  - left: Киї́в — столи́ця Украї́ни.
+    right: Kyiv is the capital of Ukraine.
+  - left: Ось моє́ я́блуко.
+    right: Here is my apple.
+  - left: Це на́ша ву́лиця.
+    right: This is our street.
+  - left: Луна́є га́рна пі́сня.
+    right: A nice song is playing.
+- id: act-l3-syllables-count
+  type: count-syllables
+  title: Пораху́й скла́ди у до́вгих слова́х
+  instruction: Пораху́й голосні́ зву́ки та ви́знач кі́лькість скла́дів.
+  maxCount: 6
+  items:
+  - word: бібліоте́ка
+    correct: 5
+  - word: університе́т
+    correct: 5
+  - word: фотогра́фія
+    correct: 5
+  - word: шокола́д
+    correct: 3
+  - word: абе́тка
+    correct: 3
+  - word: ре́чення
+    correct: 3
+- id: act-l3-divide
+  type: divide-words
+  title: Поді́ли слова́ на скла́ди
+  instruction: Поді́ли ко́жне сло́во на скла́ди за голосни́ми зву́ками.
+  items:
+  - word: кни́га
+    answer: кни га
+  - word: шокола́д
+    answer: шо ко лад
+  - word: абе́тка
+    answer: а бе тка
+  - word: столи́ця
+    answer: сто ли ця
+  - word: пі́сня
+    answer: піс ня
+  - word: джерело́
+    answer: дже ре ло
+- id: act-l3-quiz
+  type: quiz
+  title: Пра́вила та кро́ки чита́ння
+  instruction: Обери́ пра́вильну ві́дповідь про чита́ння слів і ре́чень.
+  items:
+  - prompt: З чого́ почина́ється чита́ння незнайо́мого сло́ва?
+    options:
+    - text: З по́шуку голосни́х зву́ків і по́ділу на скла́ди
+      correct: true
+    - text: З чита́ння ко́жної окре́мої лі́тери по́спіль
+      correct: false
+    - text: З запам'ято́вування фо́рми сло́ва без чита́ння
+      correct: false
+    explanation: Голосні́ зву́ки визнача́ють кі́лькість скла́дів і допомага́ють прочита́ти
+      сло́во пла́вно.
+  - prompt: Скі́льки скла́дів у сло́ві «університе́т»?
+    options:
+    - text: '5'
+      correct: true
+    - text: '4'
+      correct: false
+    - text: '6'
+      correct: false
+    explanation: У сло́ві «університе́т» п'ять голосни́х зву́ків (у, і, е, и, е), тому́
+      п'ять скла́дів.
+  - prompt: Як пра́вильно прочита́ти ре́чення «Ма́ма чита́є»?
+    options:
+    - text: Прочита́ти ко́жне сло́во по скла́дах і з'єдна́ти у фра́зу
+      correct: true
+    - text: Назва́ти окре́мо ко́жну лі́теру ко́жного сло́ва
+      correct: false
+    - text: Пропусти́ти голосні́ зву́ки
+      correct: false
+    explanation: Чита́ння по скла́дах допомага́є об'єдна́ти зву́ки у пла́вне осми́слене ре́чення.
+  - prompt: Що допомага́є переві́рити кі́лькість скла́дів під час вимо́ви?
+    options:
+    - text: Доло́ня під підборі́ддям на ко́жному голосно́му по́штовху
+      correct: true
+    - text: Рахува́ння при́голосних лі́тер
+      correct: false
+    - text: Закрива́ння оче́й під час мо́влення
+      correct: false
+    explanation: Ко́жен до́тик підборі́ддя до доло́ні відповіда́є одно́му голосно́му зву́ку
+      і скла́ду.
+  - prompt: Яке́ сло́во склада́ється з трьох відкри́тих скла́дів?
+    options:
+    - text: молоко́
+      correct: true
+    - text: день
+      correct: false
+    - text: Львів
+      correct: false
+    explanation: 'Сло́во «молоко́» ма́є три відкри́ті скла́ди: мо-ло-ко.'
+  - prompt: Як чита́ємо ре́чення з лі́терою «ї» в сло́ві «Украї́на»?
+    options:
+    - text: Чі́тко вимовля́ємо [йі] у скла́ді «ї»
+      correct: true
+    - text: Чита́ємо як просте́ [і]
+      correct: false
+    - text: Пропуска́ємо цю лі́теру
+      correct: false
+    explanation: Лі́тера Ї за́вжди познача́є два зву́ки [йі].
+- id: act-l3-tf
+  type: true-false
+  title: Фа́кти про пла́вне чита́ння
+  instruction: Ви́знач, чи є тве́рдження пра́вильним.
+  items:
+  - statement: У сло́ві рі́вно сті́льки скла́дів, скі́льки в ньому голосни́х зву́ків.
+    correct: true
+    explanation: Це осно́вне пра́вило украї́нського складопо́ділу.
+  - statement: При́голосний звук сам по собі́ мо́же утвори́ти склад.
+    correct: false
+    explanation: При́голосний звук без голосно́го не утво́рює скла́ду.
+  - statement: До́вгі слова́ ле́гше чита́ти, якщо́ споча́тку розби́ти їх на скла́ди.
+    correct: true
+    explanation: Поскладо́ве чита́ння запобіга́є помилка́м у багатоскладо́вих слова́х.
+  - statement: Під час чита́ння ре́чення слова́ слід об'є́днувати у пла́вний поті́к.
+    correct: true
+    explanation: Пла́вне інтонува́ння ро́бить мо́влення приро́дним і зрозумі́лим.
+  - statement: Сло́во «бібліоте́ка» ма́є три скла́ди.
+    correct: false
+    explanation: 'Сло́во «бібліоте́ка» ма́є п''ять голосни́х і п''ять скла́дів: бі-блі-о-те-ка.'
+  - statement: Тест із доло́нею під підборі́ддям пока́зує ко́жен голосни́й і́мпульс.
+    correct: true
+    explanation: Опуска́ння ще́лепи відбу́вається на ко́жному відкри́тому голосно́му зву́ці.
+workbook:
+- id: act-w5
+  type: watch-and-repeat
+  title: Повто́р голосни́х
+  instruction: Подиви́ся о́гляд абе́тки ще раз, по́тім повто́ри прості́ голосні́.
+  items:
+  - letter: А
+    sound: '[а]'
+    word: ма́ма
+    video: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  - letter: О
+    sound: '[о]'
+    word: молоко́
+    video: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  - letter: У
+    sound: '[у]'
+    word: ву́лиця
+    video: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  - letter: И
+    sound: '[и]'
+    word: ми
+    video: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  - letter: І
+    sound: '[і]'
+    word: пі́сня
+    video: https://www.youtube.com/watch?v=ksXIXj7CXwc
+- id: act-5
+  type: quiz
+  title: Мініперевірка чита́ння
+  instruction: Обери́ пра́вильну ві́дповідь.
+  items:
+  - prompt: Склад — що це?
+    options:
+    - text: лі́тера
+      correct: false
+    - text: syllable
+      correct: true
+    - text: greeting
+      correct: false
+    explanation: Склад — це части́на сло́ва з голосни́м зву́ком.
+  - prompt: Молоко́ — скі́льки скла́дів?
+    options:
+    - text: '2'
+      correct: false
+    - text: '3'
+      correct: true
+    - text: '1'
+      correct: false
+    explanation: Молоко́ ма́є три голосні́ зву́ки й три склади́.
+  - prompt: Я́ка лі́тера за́вжди [йі]?
+    options:
+    - text: І
+      correct: false
+    - text: И
+      correct: false
+    - text: Ї
+      correct: true
+    explanation: Ї за́вжди чита́ємо як [йі].
+- id: act-l3-wb-odd
+  type: odd-one-out
+  title: За́йве сло́во за кі́лькістю скла́дів
+  instruction: Зна́йди сло́во, яке́ відрізня́ється кі́лькістю скла́дів від ре́шти слів у
+    рядку́.
+  items:
+  - words:
+    - ма́ма
+    - та́то
+    - ка́ша
+    - день
+    answer: день
+    explanation: День ма́є оди́н склад, тоді́ як і́нші слова́ ма́ють два скла́ди.
+  - words:
+    - молоко́
+    - ву́лиця
+    - столи́ця
+    - Киї́в
+    answer: Киї́в
+    explanation: Киї́в ма́є два скла́ди, а і́нші слова́ ма́ють по три скла́ди.
+  - words:
+    - університе́т
+    - бібліоте́ка
+    - фотогра́фія
+    - ка́ша
+    answer: ка́ша
+    explanation: Ка́ша ма́є два скла́ди, а і́нші слова́ ма́ють по п'ять скла́дів.
+  - words:
+    - Львів
+    - сон
+    - ліс
+    - вода́
+    answer: вода́
+    explanation: Вода́ ма́є два скла́ди, а слова́ Львів, сон і ліс — односкладо́ві.
+  - words:
+    - люди́на
+    - апте́ка
+    - пі́сня
+    - маши́на
+    answer: пі́сня
+    explanation: Пі́сня ма́є два скла́ди, а люди́на, апте́ка і маши́на — трискладо́ві слова́.
+  - words:
+    - так
+    - ні
+    - дім
+    - та́то
+    answer: та́то
+    explanation: Та́то ма́є два скла́ди, а і́нші слова́ ма́ють лише́ оди́н склад.
+- id: act-l3-wb-sort
+  type: group-sort
+  title: Групува́ння слів за кі́лькістю скла́дів
+  instruction: Розпо́діли слова́ за кі́лькістю скла́дів.
+  groups:
+  - label: Оди́н склад
+    items:
+    - день
+    - Львів
+    - хліб
+  - label: Два скла́ди
+    items:
+    - ма́ма
+    - та́то
+    - ка́ша
+  - label: Три скла́ди
+    items:
+    - молоко́
+    - ву́лиця
+    - столи́ця
+- id: act-l3-wb-fill
+  type: fill-in
+  title: Встав пропу́щене сло́во в ре́чення
+  instruction: Запо́вни про́пуск відпові́дним сло́вом, яке́ підхо́дить за змі́стом.
+  items:
+  - sentence: Киї́в — це головна́ {столи́ця} Украї́ни.
+    options:
+    - столи́ця
+    - ка́ша
+    - пі́сня
+    explanation: Киї́в є столи́цею Украї́ни.
+  - sentence: У сло́ві {молоко́} три відкри́ті скла́ди.
+    options:
+    - молоко́
+    - день
+    - Львів
+    explanation: 'Молоко́ ма́є три скла́ди: мо-ло-ко.'
+  - sentence: Ма́ма чита́є чудо́ве {сло́во} у кни́зі.
+    options:
+    - сло́во
+    - ка́ша
+    - так
+    explanation: Ма́ма чита́є сло́во.
+  - sentence: На столі́ лежи́ть сві́же сокови́те {я́блуко}.
+    options:
+    - я́блуко
+    - ву́лиця
+    - абе́тка
+    explanation: Я́блуко лежи́ть на столі́.
+  - sentence: Це на́ша рі́дна міська́ {ву́лиця}.
+    options:
+    - ву́лиця
+    - молоко́
+    - ні
+    explanation: Ву́лиця — на́зва місько́го шля́ху.
+  - sentence: З ра́діо луна́є га́рна украї́нська {пі́сня}.
+    options:
+    - пі́сня
+    - та́то
+    - день
+    explanation: Пі́сня луна́є з ра́діо.
+- id: act-l3-wb-match
+  type: match-up
+  title: З'єдна́й сло́во з моде́ллю чита́ння
+  instruction: З'єдна́й сло́во з йо́го поскладо́вою моде́ллю чита́ння.
+  pairs:
+  - left: ка́ша
+    right: два скла́ди (ка-ша)
+  - left: молоко́
+    right: три відкри́ті скла́ди (мо-ло-ко)
+  - left: люди́на
+    right: три скла́ди з йото́ваною ю (лю-ди-на)
+  - left: університе́т
+    right: п'ять скла́дів (у-ні-вер-си-тет)
+  - left: день
+    right: оди́н склад із м'яки́м зна́ком (день)
+  - left: я́блуко
+    right: три скла́ди, я познача́є [йа] (яб-лу-ко)
+- id: act-l3-wb-translate
+  type: translate
+  title: Чита́ємо та розумі́ємо слова́
+  instruction: Прочита́й украї́нське сло́во та обери́ пра́вильний пере́клад.
+  items:
+  - source: столи́ця
+    target: capital
+    options:
+    - capital
+    - street
+    - city
+    - country
+    explanation: Столи́ця означа́є capital.
+  - source: люди́на
+    target: person
+    options:
+    - person
+    - people
+    - teacher
+    - student
+    explanation: Люди́на переклада́ється як person.
+  - source: ву́лиця
+    target: street
+    options:
+    - street
+    - house
+    - room
+    - city
+    explanation: Ву́лиця означа́є street.
+  - source: я́блуко
+    target: apple
+    options:
+    - apple
+    - bread
+    - milk
+    - water
+    explanation: Я́блуко переклада́ється як apple.
+  - source: пі́сня
+    target: song
+    options:
+    - song
+    - story
+    - book
+    - letter
+    explanation: Пі́сня означа́є song.
+  - source: абе́тка
+    target: alphabet
+    options:
+    - alphabet
+    - word
+    - sound
+    - syllable
+    explanation: Абе́тка переклада́ється як alphabet.

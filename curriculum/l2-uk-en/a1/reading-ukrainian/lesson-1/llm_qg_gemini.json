@@ -1,0 +1,53 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 10.0,
+      "evidence": "The lesson scaffolds smoothly from syllable counting and vowel recognition to multi-syllable word reading with tightly aligned activities.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Ukrainian children learn this rule from their very first school reader:"
+      ]
+    },
+    "naturalness": {
+      "score": 10.0,
+      "evidence": "All Ukrainian words and phonetic contrasts follow authentic standard morphology and phonology verified by VESUM and orthoepic sources.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Літера Ї ніколи не пом'якшує приголосні й завжди дає [йі]."
+      ]
+    },
+    "decolonization": {
+      "score": 10.0,
+      "evidence": "The lesson explicitly rejects Russian phonological interference like akanie while anchoring reading habits in Ukrainian orthographic norms and geography.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "В українській мові ненаголошений звук [о] читається як [а]."
+      ]
+    },
+    "engagement": {
+      "score": 10.0,
+      "evidence": "Interactive partner dialogue, chin-movement physical checks, and varied activity formats maintain high learner involvement throughout the lesson.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Student A reads the syllables slowly; Student B checks the vowel count and meaning:"
+      ]
+    },
+    "tone": {
+      "score": 10.0,
+      "evidence": "The instructional voice is respectful, supportive, and free of named narrators, offering clear guidance with attributed pedagogical citations.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "If a word feels long, do not speed up."
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "PASS",
+    "terminal_verdict": "PASS",
+    "failing_dims": [],
+    "rejected_dims": [],
+    "warning_dims": [],
+    "min_score": 10.0,
+    "min_dim": "pedagogical"
+  }
+}

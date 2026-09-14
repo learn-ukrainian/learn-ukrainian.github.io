@@ -1,0 +1,9 @@
+{
+  "identity": {
+    "writer": "agy-tools",
+    "model": "gemini-3.8-flash-high",
+    "effort": "high"
+  },
+  "prompt_sha256": "719309ec3ba025d0943325e22bdcb1a2f2bf266e3c2dcc42d957411c2d5f71c2",
+  "response_sha256": "0178184b8c4acd012e8a2fb31340f498b4cce79c2808d441b98f6f46778043f4"
+}

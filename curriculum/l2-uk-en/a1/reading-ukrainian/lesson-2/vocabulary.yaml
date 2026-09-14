@@ -1,0 +1,52 @@
+- lemma: день
+  translation: day
+  pos: noun
+  usage: День.
+- lemma: о́сінь
+  translation: autumn
+  pos: noun
+  usage: О́сінь.
+- lemma: ба́тько
+  translation: father
+  pos: noun
+  usage: Ба́тько.
+- lemma: вчи́тель
+  translation: teacher
+  pos: noun
+  usage: Вчи́тель.
+- lemma: джерело́
+  translation: source / spring
+  pos: noun
+  usage: Джерело́.
+- lemma: дзе́ркало
+  translation: mirror
+  pos: noun
+  usage: Дзе́ркало.
+- lemma: абе́тка
+  translation: alphabet
+  pos: noun
+  usage: Украї́нська абе́тка.
+- lemma: м'яки́й знак
+  translation: soft sign
+  pos: noun phrase
+  usage: Ь - м'яки́й знак.
+- lemma: апо́строф
+  translation: apostrophe
+  pos: noun
+  usage: У сло́ві «сім'я́» є апо́строф.
+- lemma: Киї́в
+  translation: Kyiv
+  pos: proper noun
+  usage: Киї́в - столи́ця Украї́ни.
+- lemma: Украї́на
+  translation: Ukraine
+  pos: proper noun
+  usage: Украї́на.
+- lemma: так
+  translation: yes / like this
+  pos: adverb
+  usage: Так.
+- lemma: ні
+  translation: 'no'
+  pos: particle
+  usage: Ні.

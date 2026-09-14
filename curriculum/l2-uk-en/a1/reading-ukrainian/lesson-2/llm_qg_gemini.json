@@ -1,0 +1,53 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 10.0,
+      "evidence": "The lesson provides structured decoding routines, clear phonics rules, and scaffolded practice matching primary classroom methodology.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Follow the sound analysis routine established in Ukrainian classrooms:"
+      ]
+    },
+    "naturalness": {
+      "score": 10.0,
+      "evidence": "The Ukrainian text and dialogues demonstrate authentic grammar, natural phrasing, and attested lexical forms without calques.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Ви навчилися впевнено розпізнавати друковані форми, уникати підступних пасток та перевіряти себе перед читанням уголос."
+      ]
+    },
+    "decolonization": {
+      "score": 10.0,
+      "evidence": "The materials firmly ground Ukrainian orthography and phonology in native norms while actively rejecting foreign transliteration crutches.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Do not use another language's alphabet as the shortcut."
+      ]
+    },
+    "engagement": {
+      "score": 10.0,
+      "evidence": "A diverse array of interactive activity formats and collaborative partner routines keep learners actively applying reading rules.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "З'єднай слово або знак із правилом безпечного читання."
+      ]
+    },
+    "tone": {
+      "score": 10.0,
+      "evidence": "The instructional tone is patient, constructive, and supportive of steady habit formation without punitive pressure.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "These are reading habits, not a pronunciation exam."
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "PASS",
+    "terminal_verdict": "PASS",
+    "failing_dims": [],
+    "rejected_dims": [],
+    "warning_dims": [],
+    "min_score": 10.0,
+    "min_dim": "pedagogical"
+  }
+}

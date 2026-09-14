@@ -15,7 +15,9 @@ lessons:
     workbook:
     - 6
     - 9
-  unverified_stress: []
+  unverified_stress:
+  - ньому
+  - її
   unverified_lemmas: []
 - n: 2
   title: Друк, зошит, перевірка
@@ -32,7 +34,12 @@ lessons:
     workbook:
     - 6
     - 9
-  unverified_stress: []
+  unverified_stress:
+  - буквосполучення
+  - буквосполученням
+  - буквосполучень
+  - сіма
+  - її
   unverified_lemmas: []
 - n: 3
   title: Далі
@@ -48,7 +55,9 @@ lessons:
     workbook:
     - 6
     - 9
-  unverified_stress: []
+  unverified_stress:
+  - Мініперевірка
+  - ньому
   unverified_lemmas: []
 closes_module: 3
 provenance:
@@ -105,4 +114,6 @@ items_min_exempt:
   reason: 5-item original activity preserved from baseline
 - id: act-5
   reason: 3-item original activity preserved from baseline
-proper_names: []
+proper_names:
+- Вашуленко
+- Захарійчук
