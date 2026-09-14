@@ -715,6 +715,11 @@ REJECTED_BALANCING_PHRASES = [
     "Словники другої половини двадцятого століття фіксували подібні звороти.",
     "Автори тогочасних видань не вважали це порушенням стандарту.",
     "У мовному вжитку ці форми функціонували паралельно.",
+    "Цей слововжиток був поширений у радянській періодиці.",
+    "Подібні варіанти часто фіксувалися у тогочасних довідниках.",
+    "У багатьох публікаціях цей вислів вважався звичним.",
+    "Така лексична одиниця траплялася в офіційному діловодстві.",
+    "Мовці нерідко послуговувалися цією формою у щоденному спілкуванні.",
 ]
 
 CHOSEN_BALANCING_PHRASES = [
@@ -726,6 +731,10 @@ CHOSEN_BALANCING_PHRASES = [
     "Чинна літературна норма рекомендує саме «{alt}».",
     "Цей вибір узгоджується з нормами академічного слововжитку.",
     "Така форма є природною для української літературної традиції.",
+    "Слововжиток спирається на авторитетні академічні словники.",
+    "Це питомий відповідник, засвідчений класичною традицією.",
+    "Вживання цієї лексеми увиразнює зміст висловлювання.",
+    "Форма належить до активного словникового запасу сучасної мови.",
 ]
 
 
@@ -735,11 +744,13 @@ def balance_dpo_pair_lengths(
     target_term: str,
     primary_alt: str,
 ) -> tuple[str, str]:
-    """Dynamically balance DPO lengths to |len(c) - len(r)| / max(len(c), len(r)) <= 10.0%."""
+    """Dynamically balance DPO lengths to |len(c) - len(r)| / max(len(c), len(r)) <= 10.0% without duplicate phrases."""
     c = chosen.strip()
     r = rejected.strip()
+    used_r: set[str] = set()
+    used_c: set[str] = set()
 
-    for _ in range(8):
+    for _ in range(16):
         c_len = len(c)
         r_len = len(r)
         diff = abs(c_len - r_len) / max(c_len, r_len)
@@ -747,17 +758,25 @@ def balance_dpo_pair_lengths(
             break
         if r_len < c_len:
             needed = c_len - r_len
+            available_r = [p for p in REJECTED_BALANCING_PHRASES if p not in used_r]
+            if not available_r:
+                available_r = REJECTED_BALANCING_PHRASES
             best_p = min(
-                REJECTED_BALANCING_PHRASES,
+                available_r,
                 key=lambda p: abs(len(p.format(target=target_term, alt=primary_alt)) + 1 - needed),
             )
+            used_r.add(best_p)
             r = r + " " + best_p.format(target=target_term, alt=primary_alt)
         else:
             needed = r_len - c_len
+            available_c = [p for p in CHOSEN_BALANCING_PHRASES if p not in used_c]
+            if not available_c:
+                available_c = CHOSEN_BALANCING_PHRASES
             best_p = min(
-                CHOSEN_BALANCING_PHRASES,
+                available_c,
                 key=lambda p: abs(len(p.format(target=target_term, alt=primary_alt)) + 1 - needed),
             )
+            used_c.add(best_p)
             c = c + " " + best_p.format(target=target_term, alt=primary_alt)
 
     return c, r
