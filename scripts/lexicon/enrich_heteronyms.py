@@ -30,8 +30,10 @@ if str(ROOT) not in sys.path:
 
 try:
     from scripts.lexicon.curated_heteronyms_batch import CURATED_HETERONYMS_BATCH
+    from scripts.lexicon.curated_heteronyms_batch2 import CURATED_HETERONYMS_BATCH_2
 except ModuleNotFoundError:
     from curated_heteronyms_batch import CURATED_HETERONYMS_BATCH
+    from curated_heteronyms_batch2 import CURATED_HETERONYMS_BATCH_2
 
 
 @lru_cache(maxsize=1)
@@ -467,6 +469,7 @@ CURATED_HETERONYMS: dict[str, list[dict[str, Any]]] = {
         },
     ],
     **CURATED_HETERONYMS_BATCH,
+    **CURATED_HETERONYMS_BATCH_2,
 }
 
 
