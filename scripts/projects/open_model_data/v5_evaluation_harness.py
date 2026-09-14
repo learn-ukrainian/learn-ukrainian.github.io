@@ -47,7 +47,7 @@ APPROVED_CITATION_PATTERNS = [
     re.compile(r"\bvesum\b", re.IGNORECASE),
     re.compile(r"\bсум(?:-11|-20)?\b", re.IGNORECASE),
     re.compile(r"\bправопис(?:у|ом|і)?(?:\s+2019)?\b", re.IGNORECASE),
-    re.compile(r"\бантоненк[оа]-давидович\w*\b", re.IGNORECASE),
+    re.compile(r"\bантоненк[оа]-давидович\w*\b", re.IGNORECASE),
     re.compile(r"«?як\s+ми\s+говоримо»?", re.IGNORECASE),
     re.compile(r"\bгрінченк\w*\b", re.IGNORECASE),
     re.compile(r"словарь\s+української\s+мови", re.IGNORECASE),
@@ -294,7 +294,10 @@ CITATION_MENTION_PATTERNS = [
     ),
     # "словник ..." or "словник «...»" (dictionary keyword followed by name or quoted title, including coordinate lists)
     re.compile(
-        r"\b((?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+(?:«[^»]+»|\"[^\"]+\"|[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+)(?:\s+(?:та|і|й|and|or|,)\s+(?:«[^»]+»|\"[^\"]+\"|[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+))*)(?!\w)",
+        r"\b((?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+"
+        r"(?:«[^»]+»|\"[^\"]+\"|[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+)"
+        r"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+)"
+        r"(?:«[^»]+»|\"[^\"]+\"|(?!(?:це|що|який|яка|яке|які|але|проте|однак|тому|адже|бо|де|коли|якщо|як|то|правильно|нормативно|потрібно)\b)[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]+))*)(?!\w)",
         re.IGNORECASE,
     ),
 ]
@@ -320,7 +323,7 @@ def verify_citation_whitelist(text: str) -> tuple[bool, list[str], list[str]]:
     for cpat in CITATION_MENTION_PATTERNS:
         for match in cpat.finditer(text):
             citation_span = match.group(1).strip() if match.lastindex else match.group(0).strip()
-            # Split coordinate lists (e.g. "VESUM and zorblax dictionary", "ВЕСУМ та Zorblax")
+            # Split coordinate lists (e.g. "VESUM and zorblax dictionary", "ВЕСУМ та Zorblax", "ВЕСУМ, Zorblax")
             keyword_m = re.search(
                 r"\s+(?:dictionary|corpus|lexicon|словник\w*|корпус\w*|довідник\w*)$",
                 citation_span,
@@ -329,19 +332,19 @@ def verify_citation_whitelist(text: str) -> tuple[bool, list[str], list[str]]:
             if keyword_m:
                 names_part = citation_span[: keyword_m.start()].strip()
                 kw = keyword_m.group(0).strip()
-                names = re.split(r"\s+(?:and|or|та|і|й|,)\s+", names_part)
+                names = re.split(r"\s*,\s*|\s+(?:and|or|та|і|й)\s+", names_part)
                 for name in names:
                     name = name.strip()
                     if name and not any(app.search(name) for app in APPROVED_CITATION_PATTERNS):
                         found_unapproved.append(f"{name} {kw}")
             else:
-                # E.g. "словник Zorblax", "словниками ВЕСУМ та Zorblax"
+                # E.g. "словник Zorblax", "словниками ВЕСУМ та Zorblax", "словниками ВЕСУМ, Zorblax"
                 clean_span = re.sub(
                     r"^(?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+",
                     "",
                     citation_span,
                 )
-                sub_entities = re.split(r"\s+(?:та|і|й|and|or|,)\s+", clean_span)
+                sub_entities = re.split(r"\s*,\s*|\s+(?:та|і|й|and|or)\s+", clean_span)
                 for ent in sub_entities:
                     ent = ent.strip().strip("«»\"'")
                     if ent and not any(app.search(ent) for app in APPROVED_CITATION_PATTERNS):
@@ -559,7 +562,7 @@ def evaluate_prediction(
             thought_and_resp = (parsed.thought_text + " " + parsed.final_response).lower()
             t_lower = target_term.lower()
 
-            clauses = [c.strip() for c in re.split(r"[.,\n;!?—–:]+", thought_and_resp) if c.strip()]
+            clauses = [c.strip() for c in re.split(r"[.,\n;!?]+", thought_and_resp) if c.strip()]
             for clause in clauses:
                 mentions_target = (
                     f"«{t_lower}»" in clause
@@ -572,6 +575,10 @@ def evaluate_prediction(
                 )
                 if not mentions_target:
                     continue
+
+                has_nenorm_condemn = bool(re.search(r"\bненормативн\w*\b", clause)) and not bool(
+                    re.search(r"\bне\s+(?:є\s+)?(?:вважається\s+)?ненормативн\w*\b", clause)
+                )
 
                 clause_condemns = (
                     any(
@@ -595,11 +602,11 @@ def evaluate_prediction(
                             "є росіянізмом",
                             "є помилкою",
                             "помилково",
-                            "ненормативн",
                             "є суржиком",
                             "є штучн",
                         )
                     )
+                    or has_nenorm_condemn
                 )
 
                 clause_negated = (
@@ -623,6 +630,7 @@ def evaluate_prediction(
                         )
                     )
                     or bool(re.search(r"\b(?<!не\s)(?<!не)нормативн\w*\b", clause))
+                    or bool(re.search(r"\bне\s+(?:є\s+)?(?:вважається\s+)?ненормативн\w*\b", clause))
                 )
 
                 if clause_condemns and not clause_negated:
@@ -704,7 +712,7 @@ def run_evaluation_suite(
         hf
         for hf in HIGH_FREQUENCY_CALQUES
         if any(
-            (hf in r.target_term.lower() or r.target_term.lower() in hf)
+            normalize_tokens(r.target_term) == normalize_tokens(hf)
             and r.calque_eliminated
             for r in hf_cases
         )

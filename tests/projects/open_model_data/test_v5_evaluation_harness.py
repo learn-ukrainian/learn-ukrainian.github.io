@@ -362,3 +362,87 @@ def test_gate5_duplicate_calques_cannot_inflate_floor() -> None:
     assert summary.high_freq_total == 50
     assert summary.high_freq_distinct_covered == 1
     assert summary.gate5_pass is False
+
+
+def test_citation_whitelist_antonenko_davydovych() -> None:
+    """Verify approved authority Antonenko-Davydovych is recognized."""
+    text = "За словником Антоненка-Давидовича, це правильно."
+    is_clean, approved, violations = verify_citation_whitelist(text)
+    assert is_clean is True
+    assert len(violations) == 0
+    assert any("Антоненка-Давидовича" in a for a in approved)
+
+
+def test_citation_whitelist_comma_separated_sources() -> None:
+    """Verify comma-separated citations without leading space (e.g. 'ВЕСУМ, Zorblax') detect unapproved sources."""
+    text1 = "За словниками ВЕСУМ, Zorblax, це правильно."
+    is_clean1, approved1, violations1 = verify_citation_whitelist(text1)
+    assert is_clean1 is False
+    assert any("Zorblax" in v for v in violations1)
+    assert any("ВЕСУМ" in a for a in approved1)
+
+    text2 = "За словниками ВЕСУМ, СУМ-11, це правильно."
+    is_clean2, approved2, violations2 = verify_citation_whitelist(text2)
+    assert is_clean2 is True
+    assert len(violations2) == 0
+    assert any("ВЕСУМ" in a for a in approved2)
+    assert any("СУМ-11" in a for a in approved2)
+
+
+def test_evaluate_prediction_em_dash_copula_condemnation() -> None:
+    """Verify em-dash copula ('Слово «матеріал» — калька.') triggers harmful_edit."""
+    case = {
+        "eval_id": "p_dash",
+        "case_type": "PRESERVE",
+        "target_term": "матеріал",
+        "input_text": "Матеріал підручника викладено послідовно.",
+        "expected_replacement": None,
+    }
+    pred = "<thought>Слово «матеріал» — калька.</thought>Матеріал підручника викладено послідовно."
+    res = evaluate_prediction(case, pred)
+    assert res.harmful_edit is True
+
+
+def test_evaluate_prediction_negated_nenormatyvnym_not_harmful() -> None:
+    """Verify 'не є ненормативним' does not trigger harmful edit."""
+    case = {
+        "eval_id": "p_not_nenorm",
+        "case_type": "PRESERVE",
+        "target_term": "матеріал",
+        "input_text": "Матеріал підручника викладено послідовно.",
+        "expected_replacement": None,
+    }
+    pred = "<thought>Слово «матеріал» не є ненормативним.</thought>Матеріал підручника викладено послідовно."
+    res = evaluate_prediction(case, pred)
+    assert res.harmful_edit is False
+
+
+def test_gate5_partial_substring_target_does_not_inflate_coverage() -> None:
+    """Verify 48 canonical targets plus partial substring target 'значення' does not reach floor 50."""
+    from scripts.projects.open_model_data.v5_evaluation_harness import HIGH_FREQUENCY_CALQUES
+
+    hf_48 = HIGH_FREQUENCY_CALQUES[:48]
+    cases = [
+        {
+            "eval_id": f"c_hf_{i}",
+            "case_type": "CORRECT",
+            "target_term": term,
+            "input_text": f"Контекст для {term}.",
+            "expected_replacement": "заміна",
+        }
+        for i, term in enumerate(hf_48)
+    ]
+    # Add partial substring target that is not a full canonical calque
+    cases.append(
+        {
+            "eval_id": "c_partial",
+            "case_type": "CORRECT",
+            "target_term": "значення",
+            "input_text": "Контекст для значення.",
+            "expected_replacement": "заміна",
+        }
+    )
+    preds = {c["eval_id"]: "Контекст для заміна." for c in cases}
+    summary = run_evaluation_suite(cases, preds, min_high_freq_floor=50)
+    assert summary.high_freq_distinct_covered == 48
+    assert summary.gate5_pass is False
