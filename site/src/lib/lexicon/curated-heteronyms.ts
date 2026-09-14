@@ -4699,7 +4699,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "недоконаний"
         }
       },
-      "distinction_note": "Не плутати з омографом «дякува́ти» (наголос на другому складі: бути дяком, церковна посада)."
+      "distinction_note": "Не плутати з омографом «дякува́ти» (наголос на третьому складі: бути дяком, церковна посада)."
     },
     {
       "lemma": "дякувати",
@@ -7208,11 +7208,11 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
               "plural": "пере́ди"
             },
             "родовий": {
-              "singular": "пере́ду",
+              "singular": "пе́реду",
               "plural": "пере́дів"
             },
             "давальний": {
-              "singular": "пере́ду / пере́дові",
+              "singular": "пе́реду / пере́дові",
               "plural": "пере́дам"
             },
             "знахідний": {
@@ -7356,7 +7356,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
               "plural": "пі́длітками"
             },
             "місцевий": {
-              "singular": "(про) пі́дліткові / пі́длітку",
+              "singular": "(у) пі́дліткові / пі́длітку",
               "plural": "пі́длітках"
             },
             "кличний": {
@@ -7418,7 +7418,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
               "plural": "підлі́тками"
             },
             "місцевий": {
-              "singular": "(про) підлі́ткові / підлі́тку",
+              "singular": "(у) підлі́ткові / підлі́тку",
               "plural": "підлі́тках"
             },
             "кличний": {

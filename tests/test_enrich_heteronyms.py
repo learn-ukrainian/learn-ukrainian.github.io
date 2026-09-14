@@ -379,4 +379,4 @@ def test_pered_preposition_vs_noun():
 
     assert noun["headword"] == "пере́д"
     assert noun["pos"] == "noun"
-    assert noun["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "пере́ду"
+    assert noun["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "пе́реду"

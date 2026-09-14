@@ -53,7 +53,7 @@ CURATED_HETERONYMS_BATCH_2: dict[str, list[dict[str, Any]]] = {
                     "aspect": "недоконаний"
                 }
             },
-            "distinction_note": "Не плутати з омографом «дякува́ти» (наголос на другому складі: бути дяком, церковна посада)."
+            "distinction_note": "Не плутати з омографом «дякува́ти» (наголос на третьому складі: бути дяком, церковна посада)."
         },
         {
             "headword": "дякува́ти",
@@ -2452,11 +2452,11 @@ CURATED_HETERONYMS_BATCH_2: dict[str, list[dict[str, Any]]] = {
                             "plural": "пере́ди"
                         },
                         "родовий": {
-                            "singular": "пере́ду",
+                            "singular": "пе́реду",
                             "plural": "пере́дів"
                         },
                         "давальний": {
-                            "singular": "пере́ду / пере́дові",
+                            "singular": "пе́реду / пере́дові",
                             "plural": "пере́дам"
                         },
                         "знахідний": {
@@ -2594,7 +2594,7 @@ CURATED_HETERONYMS_BATCH_2: dict[str, list[dict[str, Any]]] = {
                             "plural": "пі́длітками"
                         },
                         "місцевий": {
-                            "singular": "(про) пі́дліткові / пі́длітку",
+                            "singular": "(у) пі́дліткові / пі́длітку",
                             "plural": "пі́длітках"
                         },
                         "кличний": {
@@ -2654,7 +2654,7 @@ CURATED_HETERONYMS_BATCH_2: dict[str, list[dict[str, Any]]] = {
                             "plural": "підлі́тками"
                         },
                         "місцевий": {
-                            "singular": "(про) підлі́ткові / підлі́тку",
+                            "singular": "(у) підлі́ткові / підлі́тку",
                             "plural": "підлі́тках"
                         },
                         "кличний": {
