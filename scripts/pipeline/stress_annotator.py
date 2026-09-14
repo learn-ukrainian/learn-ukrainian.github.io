@@ -158,6 +158,8 @@ def _oracle_choice(word: str) -> str | None:
     Lookup is casefolded so title-case ``Мене`` does not hit a different
     trie key than ``мене``. A single acute already on an allowed vowel is
     kept (подвійний наголос: either listed position is acceptable).
+    Ambiguous dictionary readings (Правила, Підсумок) take the first
+    pedagogical form when the surface is unstressed.
     """
     from scripts.verification.stress import (
         _stress_positions_in_marked_string,
@@ -170,14 +172,16 @@ def _oracle_choice(word: str) -> str | None:
     if _count_syllables(clean) < 2:
         return None
     result = verify_stress(clean.lower())
-    if result["status"] != "ok" or len(result["matches"]) != 1:
+    matches = result.get("matches") or []
+    if result["status"] not in {"ok", "ambiguous"} or not matches:
         return None
-    match = result["matches"][0]
-    allowed = set(match.get("vowel_indices") or [])
+    allowed: set[int] = set()
+    for match in matches:
+        allowed.update(match.get("vowel_indices") or [])
     _, current = _stress_positions_in_marked_string(word)
     if len(current) == 1 and current[0] in allowed:
         return word
-    return transfer_stress_marks(pedagogical_stressed_form(match), clean)
+    return transfer_stress_marks(pedagogical_stressed_form(matches[0]), clean)
 
 
 def _build_skip_mask(text: str) -> list[tuple[int, int]]:
