@@ -990,7 +990,7 @@ teach while applying the existing `engagement` rubric.
 ```json
 {
   "slug": "what-is-it-like",
-  "wiki_path": "/home/ops/learn-ukrainian/wiki/pedagogy/a1/what-is-it-like.md",
+  "wiki_path": "wiki/pedagogy/a1/what-is-it-like.md",
   "phonetic_format_reference": [
     "Spoken target in `[...]` single-character square brackets, not Unicode look-alikes",
     "Pair written and spoken form in close lexical proximity (same sentence or adjacent bullet)",
