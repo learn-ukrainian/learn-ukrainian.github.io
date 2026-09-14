@@ -128,7 +128,7 @@ protobuf==7.36.0
 psutil==7.2.2
 psycopg==3.3.4
 psycopg-binary==3.3.4
-pyarrow==24.0.0
+pyarrow==25.0.1
 pyasn1==0.6.4
 pyasn1_modules==0.4.2
 pycookiecheat==0.8.0
