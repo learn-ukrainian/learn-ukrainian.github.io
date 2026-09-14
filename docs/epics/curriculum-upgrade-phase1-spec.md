@@ -1,7 +1,10 @@
 # Curriculum upgrade Phase 1 — V7 machinery (#7994)
 
-Status: implemented machinery; acceptance remains open for the immersion decision
-in [RESIDUAL.md](../../RESIDUAL.md). This is one PR, not curriculum publication.
+**Binding scars:** [`a1-upgrade-operating-rules.md`](a1-upgrade-operating-rules.md).
+PR #7999 is merged; modules 8–9 are live on `/a1/`. Auto-deploy does not publish
+curriculum — see that file for Pages dispatch.
+
+Status: implemented machinery; A1 content rollout continues in manifest order.
 
 ## Frozen outcome and denominator
 

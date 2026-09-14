@@ -1,9 +1,13 @@
 # A1 upgrade inventory and engine plan
 
-Status: inventory complete; encoder in upgrade writer/assembler/gates. Do not
-hand-edit lesson pages. Run `--upgrade` with `--writer agy-tools` (Gemini 3.8
-Flash High). Pedagogical review stays **cross-family**; Gemini also does a
-**sources audit** because this corpus feeds a Ukrainian LLM dataset.
+**Binding scars:** [`a1-upgrade-operating-rules.md`](a1-upgrade-operating-rules.md)
+(epics #7994 / #7995). Load that file first.
+
+Status: inventory complete; encoder in upgrade writer/assembler/gates. Modules
+8–9 are live on `/a1/`. Do not hand-edit lesson pages. Run `--upgrade` with
+`--writer agy-tools` (Gemini 3.8 Flash High). Pedagogical review stays
+**cross-family**; Gemini also does a **sources audit** because this corpus
+feeds a Ukrainian LLM dataset.
 
 ## Pushback (binding)
 

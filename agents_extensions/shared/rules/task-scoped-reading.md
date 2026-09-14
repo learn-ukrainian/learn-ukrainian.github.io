@@ -14,6 +14,7 @@ retain relevant context across phases and reload when its contents change.
 | Any repository change, including documentation | `agents_extensions/shared/rules/critical-rules.md`; `agents_extensions/shared/rules/delegate-must-use-worktree.md`; `agents_extensions/shared/rules/workflow.md` sections on task workflow and merge policy |
 | CLI implementation or interface change | `agents_extensions/shared/rules/cli-help-standard.md` |
 | Curriculum planning, build, repair, or semantic review | `agents_extensions/shared/rules/non-negotiable-rules.md`; select the relevant curriculum skill below |
+| A1 / curriculum upgrade (`v7_build.py --upgrade`, epics #7994 #7995) | `docs/epics/a1-upgrade-operating-rules.md`; then `docs/epics/a1-upgrade-inventory.md` and `docs/epics/a1-upgrade-landing-contract.md` |
 | Assigning workers or choosing model/provider routes | `agents_extensions/shared/rules/model-assignment.md`; `agents_extensions/shared/rules/workflow.md` research-registry and pre-dispatch sections; use live catalog and quota evidence |
 | Explicitly assigned epic/track driver | `agents_extensions/shared/rules/fleet-comms-coordination.md`; `agents_extensions/shared/rules/fleet-driver-routing.md`; `docs/best-practices/fleet-shared-doctrine.md`; `docs/best-practices/fleet-role-scorecard.md`; `drive-epic` skill |
 | Fleet Comms action outside an assigned driver role | `agents_extensions/shared/rules/fleet-comms-coordination.md`; preserve existing ownership and use only the requested action |
