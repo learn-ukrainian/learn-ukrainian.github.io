@@ -833,7 +833,14 @@ class ActivityParser:
         items = []
         for item_data in data.get('items', []):
             sentence = item_data.get('sentence') or item_data.get('prompt', '')
-            items.append(FillInItem(sentence=sentence, answer=item_data['answer'], options=item_data.get('options', []), explanation=item_data.get('explanation')))
+            answer = item_data.get('answer') or item_data.get('correct')
+            if not answer:
+                braced = re.search(r"\{([^{}]+)\}", sentence)
+                if braced:
+                    answer = braced.group(1).strip()
+            if not answer:
+                raise KeyError("fill-in item needs answer, correct, or {answer} in the sentence")
+            items.append(FillInItem(sentence=sentence, answer=answer, options=item_data.get('options', []), explanation=item_data.get('explanation')))
         return FillInActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
 
     def _parse_cloze(self, data: dict) -> ClozeActivity:
