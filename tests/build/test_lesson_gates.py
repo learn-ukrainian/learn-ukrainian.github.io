@@ -75,6 +75,22 @@ def test_list_shaped_baseline_activities_do_not_crash(gold):
     assert not any("has no attribute" in d for d in report["diagnostics"])
 
 
+def test_homograph_pair_is_not_a_payload_contradiction():
+    from scripts.build.lesson_gates import contradictions
+
+    payload = {
+        "pairs": [
+            {"left": "за́мок", "right": "castle"},
+            {"left": "замо́к", "right": "lock"},
+        ]
+    }
+    assert contradictions(payload, "act-w2") == []
+    dup = {"items": ["за́мок", "за́мок"]}
+    assert any("appears 2x" in c for c in contradictions(dup, "act-3"))
+    nfc = {"items": ["й", "и\u0306"]}
+    assert any("appears 2x" in c for c in contradictions(nfc, "act-nfc"))
+
+
 def test_writer_artifact_allows_original_inline_error_correction():
     from scripts.build.linear_pipeline import _validate_lesson_writer_artifact
 

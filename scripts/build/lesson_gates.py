@@ -111,13 +111,24 @@ def contains(orig, new) -> bool:
     return type(orig) is type(new) and orig == new
 
 
-def first_text(x) -> str | None:
+def first_text(x, *, keep_stress: bool = False) -> str | None:
+    """Primary text of a payload node. Stress is stripped unless keep_stress.
+
+    Contradiction checks keep combining acutes so за́мок and замо́к (the
+    pedagogical pair in stress-and-melody) are not the same option twice.
+    """
+    def key(s: str) -> str:
+        s = unicodedata.normalize("NFC", s).lower()
+        if keep_stress:
+            return re.sub(r"\s+", " ", s).strip()
+        return norm_md(s)
+
     if isinstance(x, str):
-        return norm_md(x).lower()
+        return key(x)
     if isinstance(x, dict):
         for v in x.values():
             if isinstance(v, str) and v.strip():
-                return norm_md(v).lower()
+                return key(v)
     return None
 
 
@@ -132,7 +143,7 @@ def contradictions(obj, path="") -> list[str]:
     if isinstance(obj, list):
         seen: dict[str, int] = {}
         for i, e in enumerate(obj):
-            t = first_text(e)
+            t = first_text(e, keep_stress=True)
             if t:
                 seen[t] = seen.get(t, 0) + 1
             out += contradictions(e, f"{path}[{i}]")
@@ -142,7 +153,7 @@ def contradictions(obj, path="") -> list[str]:
             allitems: dict[str, int] = {}
             for g in obj:
                 for it in g["items"]:
-                    t = first_text(it)
+                    t = first_text(it, keep_stress=True)
                     if t:
                         allitems[t] = allitems.get(t, 0) + 1
             out += [f"{path}: item '{t}' sits in {c} groups" for t, c in allitems.items() if c > 1]
