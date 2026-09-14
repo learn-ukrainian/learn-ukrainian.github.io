@@ -591,6 +591,22 @@ class TestParserEdgeCases:
         assert "{столиця}" not in activities[0].items[0].sentence
         assert "___" in activities[0].items[0].sentence
 
+    def test_parse_unjumble_letters_and_word(self, parser, tmp_path):
+        yaml_file = tmp_path / "unjumble-letters.yaml"
+        yaml_file.write_text(
+            "- type: unjumble\n"
+            "  title: Letters\n"
+            "  items:\n"
+            "    - letters:\n"
+            "        - д\n"
+            "        - і\n"
+            "        - м\n"
+            "      word: дім\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert activities[0].items[0].words == ["д", "і", "м"]
+        assert activities[0].items[0].answer == "дім"
+
     def test_parse_match_up(self, parser, tmp_path):
         yaml_file = tmp_path / "mu.yaml"
         yaml_file.write_text(
@@ -664,6 +680,22 @@ class TestUnjumbleParsing:
         )
         with pytest.raises(ValueError, match=r"bad-unjumble.*field 'jumbled'.*str or list.*int"):
             parser.parse(yaml_file)
+
+    def test_parse_unjumble_letters_and_word(self, parser, tmp_path):
+        yaml_file = tmp_path / "unjumble-letters.yaml"
+        yaml_file.write_text(
+            "- type: unjumble\n"
+            "  title: Letters\n"
+            "  items:\n"
+            "    - letters:\n"
+            "        - д\n"
+            "        - і\n"
+            "        - м\n"
+            "      word: дім\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert activities[0].items[0].words == ["д", "і", "м"]
+        assert activities[0].items[0].answer == "дім"
 
 
 class TestAnagramParsing:

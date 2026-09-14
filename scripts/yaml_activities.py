@@ -888,7 +888,7 @@ class ActivityParser:
         items = []
         for item_index, item_data in enumerate(data.get('items', [])):
             words = self._unjumble_words(item_data, item_index)
-            answer = item_data.get('answer')
+            answer = item_data.get('answer') or item_data.get('word') or item_data.get('sentence')
             if answer is None and 'correct_order' in item_data:
                 correct_order = item_data['correct_order']
                 if isinstance(correct_order, list):
@@ -901,7 +901,7 @@ class ActivityParser:
         return UnjumbleActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
 
     def _unjumble_words(self, item_data: dict, item_index: int) -> list[str]:
-        for field_name in ('words', 'jumbled', 'prompt', 'scrambled'):
+        for field_name in ('words', 'jumbled', 'prompt', 'scrambled', 'letters', 'tiles'):
             if field_name in item_data:
                 return self._tokens_from_unjumble_field(item_data[field_name], field_name, item_index)
         raise KeyError(f"unjumble item {item_index} missing one of: words, jumbled, prompt, scrambled")
