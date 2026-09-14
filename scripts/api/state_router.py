@@ -32,6 +32,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import math
 import re
 import threading
 from datetime import UTC, date, datetime, timedelta
@@ -77,6 +78,7 @@ from .config import LEVELS
 from .lane_health import compute_lane_health
 from .project_state_store import REPORT_TTL_SECONDS, get_freshest_lane_usage
 from .runtime_router import summarize_runtime_usage
+from .subscription_usage import _api_account_cache_ttl_s
 
 try:
     from agent_runtime.usage import summarize_fleet_burn, summarize_lane_runtime
@@ -578,7 +580,7 @@ def _in_flight_by_agent(tasks_dir: Path | None = None) -> dict[str, int]:
     When *tasks_dir* is set, preserve the same PID-liveness semantics as
     ``delegate_api.active_delegate_tasks`` (dead ``running`` PIDs → zombie, not in-flight).
     """
-    in_flight = {agent: 0 for agent in AGENT_NAMES}
+    in_flight = {agent: 0 for agent in (*AGENT_NAMES, "deepseek")}
     try:
         if tasks_dir is not None:
             if not tasks_dir.exists():
@@ -595,17 +597,17 @@ def _in_flight_by_agent(tasks_dir: Path | None = None) -> dict[str, int]:
                 status, _alive = delegate_api._derived_task_status(payload)
                 if status not in {"running", "spawning"}:
                     continue
-                agent = _agent_key(payload.get("agent"))
+                agent = normalize_seat(str(payload.get("agent") or ""))
                 if agent:
-                    in_flight[agent] += 1
+                    in_flight[agent] = in_flight.get(agent, 0) + 1
             return in_flight
         tasks = delegate_api.active_delegate_tasks()["tasks"]
     except Exception:
         return in_flight
     for task in tasks:
-        agent = _agent_key(task.get("agent"))
+        agent = normalize_seat(str(task.get("agent") or ""))
         if agent:
-            in_flight[agent] += 1
+            in_flight[agent] = in_flight.get(agent, 0) + 1
     return in_flight
 
 
@@ -948,32 +950,39 @@ def _overlay_notebook_lane_usage(
 
 def _api_account_remaining_usd(lane: str, account: dict[str, Any]) -> float | None:
     if lane == "openrouter":
-        remaining = account.get("limit_remaining_usd")
-        if isinstance(remaining, (int, float)) and not isinstance(remaining, bool):
-            return float(remaining)
-        account_remaining = account.get("account_remaining_usd")
-        if isinstance(account_remaining, (int, float)) and not isinstance(account_remaining, bool):
-            return float(account_remaining)
-        return None
-    if lane == "deepseek":
+        # Both funding balance and key cap constrain spend; a funded key cannot
+        # override an empty account (and a funded account cannot override its cap).
+        values = [account.get(key) for key in ("limit_remaining_usd", "account_remaining_usd")]
+        known = [float(value) for value in values if isinstance(value, (int, float))
+                 and not isinstance(value, bool) and math.isfinite(value)]
+        return min(known) if known else None
+    if lane == "deepseek" and str(account.get("currency") or "").upper() == "USD":
         total = account.get("total_balance")
-        if isinstance(total, (int, float)) and not isinstance(total, bool):
+        if isinstance(total, (int, float)) and not isinstance(total, bool) and math.isfinite(total):
             return float(total)
     return None
 
 
-def _api_lane_status_from_account(lane: str, account: dict[str, Any]) -> str:
+def _api_lane_status_from_account(
+    lane: str, account: dict[str, Any], budgets: dict[str, Any] | None = None,
+) -> str:
     probe_state = str(account.get("probe_state") or "").upper()
-    if probe_state != "OK":
+    age = account.get("age_s")
+    if (probe_state != "OK" or account.get("freshness") != "fresh"
+            or not isinstance(age, (int, float)) or isinstance(age, bool)
+            or not math.isfinite(age) or not 0 <= age < _api_account_cache_ttl_s()):
         return "unknown"
     if lane == "deepseek" and account.get("is_available") is False:
         return "near_cap"
     remaining = _api_account_remaining_usd(lane, account)
     if remaining is None:
         return "unknown"
-    if remaining < 5.0:
+    if budgets is None:
+        budgets, _ = _load_agent_budgets()
+    config = budgets.get(lane) or {}
+    if remaining <= 0 or remaining < float(config.get("near_cap_usd", 5.0)):
         return "near_cap"
-    if remaining < 20.0:
+    if remaining < float(config.get("warm_usd", 20.0)):
         return "warm"
     return "cool"
 
@@ -997,6 +1006,8 @@ def _build_api_accounts_payload(
 def _ranked_api_entries(
     api_accounts: dict[str, dict[str, Any]],
     health_records: dict[str, Any],
+    in_flight: dict[str, int] | None = None,
+    budgets: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     ranked_apis: list[dict[str, Any]] = []
     for lane in API_LANES:
@@ -1006,12 +1017,12 @@ def _ranked_api_entries(
             {
                 "lane": lane,
                 "type": "api",
-                "status": _api_lane_status_from_account(lane, account),
+                "status": _api_lane_status_from_account(lane, account, budgets),
                 "burn_pct_7d": None,
                 "remaining_pct": None,
                 "remaining_usd": _round_money(remaining_usd) if remaining_usd is not None else None,
                 "resets_at": account.get("limit_reset") if lane == "openrouter" else None,
-                "in_flight": 0,
+                "in_flight": (in_flight or {}).get(lane, 0),
                 "health": health_records.get(lane, {"healthy": True, "consecutive_failures": 0, "span_minutes": 0}),
                 "probe_state": account.get("probe_state"),
             }
@@ -1125,7 +1136,7 @@ def _compute_dispatch_routing_budget(
             }
             for lane in SUBSCRIPTION_LANES
         ]
-        ranked_apis = _ranked_api_entries(api_accounts, health_records)
+        ranked_apis = _ranked_api_entries(api_accounts, health_records, in_flight_by_agent, budgets)
         ranked = ranked_subs + ranked_apis
 
         healthy_lanes = [x for x in ranked if x.get("health", {}).get("healthy", True)]
@@ -1288,6 +1299,10 @@ def _compute_dispatch_routing_budget(
         else:
             cb_data = refreshed_codexbar.get(lane) or get_provider_usage_data(lane)
         if isinstance(cb_data, dict):
+            agents[lane]["freshness"] = cb_data.get("freshness", "unavailable")
+            agents[lane]["age_s"] = cb_data.get("age_s")
+            if cb_data.get("error_kind") == "need_login" or cb_data.get("failure_kind") == "need_login":
+                agents[lane]["probe_state"] = "NEED_LOGIN"
             cb_freshness[lane] = str(cb_data.get("freshness") or (
                 "stale_last_good" if cb_data.get("stale") else "fresh"
             ))
@@ -1691,7 +1706,7 @@ def _compute_dispatch_routing_budget(
         )
     )
 
-    ranked_apis = _ranked_api_entries(api_accounts, health_records)
+    ranked_apis = _ranked_api_entries(api_accounts, health_records, in_flight_by_agent, budgets)
     # per one design note treat absent as full, but AC requires status unknown NOT cool for ranked view
     ranked = ranked_subs + ranked_apis
 
@@ -1792,10 +1807,11 @@ def compute_routing_budget(
 
     health = probe_acp_health(project_root or Path(__file__).resolve().parents[2])
     warnings = list(budget["recommendation"].get("warnings", []))
+    prepaid_budgets, _ = _load_agent_budgets(budget_config_path)
     for lane in health:
         if lane not in budget["agents"]:
             account = budget.get("api_accounts", {}).get(lane)
-            status = _api_lane_status_from_account(lane, account) if account else "unknown"
+            status = _api_lane_status_from_account(lane, account, prepaid_budgets) if account else "unknown"
             budget["agents"][lane] = {"status": status}
     for lane, info in budget["agents"].items():
         info["dispatch_health"] = info.get("health")

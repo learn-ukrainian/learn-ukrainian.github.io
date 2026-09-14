@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -267,3 +268,50 @@ def test_in_flight_excludes_zombie_running_tasks(tmp_path: Path, monkeypatch) ->
     )
     counts = state_router._in_flight_by_agent(tasks)
     assert counts["codex"] == 1
+
+
+def test_prepaid_thresholds_currency_and_account_cap(monkeypatch, tmp_path):
+    path = tmp_path / "budgets.yaml"
+    path.write_text("deepseek:\n  near_cap_usd: 10\n  warm_usd: 40\nopenrouter:\n  near_cap_usd: 10\n  warm_usd: 40\n")
+    budgets, _ = state_router._load_agent_budgets(path)
+    account = {"probe_state": "ok", "freshness": "fresh", "age_s": 0, "currency": "USD", "total_balance": 8}
+    assert state_router._api_lane_status_from_account("deepseek", account, budgets) == "near_cap"
+    assert state_router._api_lane_status_from_account("deepseek", {**account, "total_balance": 30}, budgets) == "warm"
+    assert state_router._api_lane_status_from_account("deepseek", {**account, "total_balance": 40}, budgets) == "cool"
+    assert state_router._api_lane_status_from_account("deepseek", {**account, "currency": "CNY"}, budgets) == "unknown"
+    router = {**account, "limit_remaining_usd": 80, "account_remaining_usd": 0}
+    assert state_router._api_lane_status_from_account("openrouter", router, budgets) == "near_cap"
+    router.update(limit_remaining_usd=0, account_remaining_usd=80)
+    assert state_router._api_lane_status_from_account("openrouter", router, budgets) == "near_cap"
+
+
+def test_prepaid_in_flight_and_ranked_entries(monkeypatch, tmp_path):
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    for index, agent in enumerate(("deepseek", "deepseek", "pool", "grok-build")):
+        (tasks / f"task{index}.json").write_text(json.dumps({"agent": agent, "status": "spawning"}))
+    counts = state_router._in_flight_by_agent(tasks)
+    assert counts["deepseek"] == 2
+    assert counts["pool"] == 1
+    assert counts["grok"] == 1
+    ranked = state_router._ranked_api_entries({"deepseek": {
+        "probe_state": "ok", "freshness": "fresh", "age_s": 0, "currency": "USD", "total_balance": 30,
+    }}, {}, counts)
+    row = next(row for row in ranked if row["lane"] == "deepseek")
+    assert row["in_flight"] == 2
+    assert row["remaining_pct"] is None and row["burn_pct_7d"] is None
+
+
+def test_subscription_need_login_reaches_capacity_pick(monkeypatch, tmp_path):
+    config = _configure_base(monkeypatch, tmp_path)
+    monkeypatch.setattr(state_router, "get_provider_usage_data", lambda lane: {
+        "freshness": "unavailable", "error_kind": "need_login", "status": "unavailable",
+    })
+    budget = state_router.compute_routing_budget(
+        budget_config_path=config, tasks_dir=tmp_path / "tasks",
+        project_root=tmp_path, curriculum_root=tmp_path, batch_state_dir=tmp_path,
+    )
+    rows = {row["lane"]: row for row in capacity_pick.build_lane_rows(budget)}
+    for lane in ("claude", "codex", "kimi", "grok"):
+        assert budget["agents"][lane]["probe_state"] == "NEED_LOGIN"
+        assert rows[lane]["avoid"] is True

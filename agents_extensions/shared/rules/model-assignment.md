@@ -200,29 +200,22 @@ Brief shape: `workflow.md` § Dispatch brief unit.
 
 **Writer routing refinement (user-confirmed 2026-07-07):** general content writing runs on **codex + agy** (agy = the standout A1-A2 immersion teaching voice per the 2026-07-04 bakeoff — do not forget it exists); the Claude window is SAVED for judgment work (architecture, adversarial review, hard bugs — codex is the primary coder, not Claude). The **V7 PIPELINE writer seat is separate**: it stays `claude-tools` because that seat is in-harness TOOL-CALLING fit, not prose (codex-tools emitted `tool_calls=0`); after any Claude-model rotation, spot-check ONE module before the next batch.
 
-**CodexBar pace/reserve (width truth source):** the working command is the CodexBar CLI —
-`codexbar usage --json --provider <codex|claude|gemini|cursor|grok|kimi>`. It returns
-`usage.{primary,secondary,tertiary}.usedPercent` for every lane it can probe, but
-`pace.<window>.{stage,summary,deltaPercent,willLastToReset}` is only available for
-**codex** (secondary window only) and **claude** (primary + secondary). Measured right now:
-
-| lane | has `pace` | pace windows | `usage.secondary` |
-| --- | --- | --- | --- |
-| codex | yes | `secondary` | object |
-| claude | yes | `primary`, `secondary` | object |
-| gemini | no | — | null |
-| cursor | no | — | object |
-| grok | no | — | null |
-| kimi | no | — | object |
-
-For **codex** and **claude**, read the SIGNAL (`pace.<window>.stage` + reserve /
-`willLastToReset`) to decide width. For **gemini/cursor/grok/kimi** the operator is partly
-blind to pace: fall back to `usage.<window>.usedPercent`, in-flight count, and lane health,
-and SAY the picture is partial rather than guessing. `/api/state/routing-budget` +
-`delegate --check-budget` mirror the same signal but have historically dropped it
-(`burn_pct_7d: null` / `remaining_pct: null` per lane) — a null there is MISSING DATA, not zero
-usage and not zero remaining; when they disagree or return nulls, trust the CLI. It does not list every API/routed model and therefore
-must never define the fleet by itself.
+**Native usage pace/reserve (width truth source):** run
+`python -m scripts.fleet.usage show` or `python -m scripts.fleet.usage json`.
+The default reads the same warm Monitor `/api/state/routing-budget` snapshot;
+`refresh` or `--fresh` performs blocking native probes. Inspect `source`,
+per-row `freshness` and `age_s`; unavailable data is unknown capacity.
+Subscription rows expose `remaining_pct` and compatibility `codexbar` metadata
+(`pace_summary`, `weekly_pace_delta_pct`, `will_last_to_reset`) where observed.
+Missing pace is partial evidence, never a guessed reserve. Prepaid DeepSeek
+uses USD thresholds from `agent_budgets.yaml`; OpenRouter is a funding account
+with `pick: n/a`. A key spending cap is distinct from account balance. Run
+`python -m scripts.fleet.usage doctor` for credential path/env presence only.
+OpenRouter account balance requires a management key (env, OpenCode's explicit
+`openrouter-management` entry, or `~/.secret/openrouter-management.key`).
+The CLI reports `balance: needs management key` when it cannot read that balance.
+Follow-up naming debt: retain `CODEXBAR_*` environment and `codexbar` payload keys
+for compatibility; a global rename is outside this change.
 
 **Model-by-harness intent:** operator-authorized Astra/Grok orchestration from Hermes
 keeps model family, model ID, harness, and functional role as separate axes. Hermes
@@ -429,7 +422,7 @@ Typical live driver count (names rotate; count is the constraint):
 
 **Multi-driver rules:**
 1. Drivers share the **same free worker pools** — before dispatch, read `/api/delegate/active`
-   and CodexBar so two Groks + four Codexes do not all stampede one near_cap lane.
+   and native usage so two Groks + four Codexes do not all stampede one near_cap lane.
 2. Claim **disjoint** work (stream epic / issue / owned paths); no duplicate branches.
 3. **Timed pause, not permanent neglect:** a lane at near_cap or operator-paused carries an
    explicit **return-at** timestamp. Example (2026-08-08 survey): Codex weekly pause ends
@@ -441,7 +434,7 @@ Typical live driver count (names rotate; count is the constraint):
 **Before every dispatch / CF spend**, read live headroom (do not cache percentages into policy):
 
 ```bash
-codexbar usage --json --provider <cursor|codex|claude|deepseek|zai|grok|kimi|antigravity|…>
+python -m scripts.fleet.usage show
 curl -s http://localhost:8765/api/delegate/active
 repo_root=$(dirname "$(git rev-parse --git-common-dir)")
 df -h /; du -sh "$repo_root/.worktrees"
@@ -481,8 +474,8 @@ no multi-GB shielded `lu-review-*` trees — formal CF is direct `ask-*` only).
 
 ### Worker priority ladder — first pick per work type (user standing order 2026-07-11: stop re-deriving this)
 
-Route by FIT, then shed from HOT lanes — fanout WIDTH is decided by CodexBar **pace stage + reserve**
-(`codexbar usage --json --provider <lane>`; read `pace.<window>.{stage,summary,deltaPercent,willLastToReset}`),
+Route by FIT, then shed from HOT lanes — fanout WIDTH is decided by native **pace + reserve**
+(`python -m scripts.fleet.usage json`; read `agents[lane].codexbar.{pace_summary,weekly_pace_delta_pct,will_last_to_reset}`),
 and it is TWO-SIDED (operator 2026-07-26):
 
 - **Lower bound — no idle paid capacity:** a lane sitting at `in_flight=0` while work queues behind

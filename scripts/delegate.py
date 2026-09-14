@@ -6008,7 +6008,11 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
 
     if _dispatch_check_budget_enabled(args) and not getattr(args, "force_agent", False):
         try:
-            dispatch_agent = _resolve_agent_with_budget_guard(requested_agent)
+            dispatch_agent = (
+                _resolve_agent_with_budget_guard(requested_agent, provider="openrouter")
+                if getattr(args, "provider", None) == "openrouter"
+                else _resolve_agent_with_budget_guard(requested_agent)
+            )
         except BudgetGuardRefuseError as exc:
             print(f"❌ {exc}", file=sys.stderr)
             return 2
@@ -6970,20 +6974,41 @@ def _budget_needs_hard_capacity_action(
     return False, ""
 
 
-def _resolve_agent_with_budget_guard(agent: str) -> str:
+def _resolve_agent_with_budget_guard(agent: str, *, provider: str | None = None) -> str:
     """Return possibly-substituted agent.
 
     Hard auto-sub on fresh snapshot when chosen lane is near_cap, hot, or in
     CodexBar deficit (will_last_to_reset is False), if yaml dispatch_fallbacks
     has a known target. Without a usable fallback: refuse (raise
     BudgetGuardRefuseError) unless caller used --force-agent before this call.
-    Stale/empty: advisory only, no sub (never-trip guard).
+    Subscription stale/empty: advisory only. Prepaid requires fresh verified
+    funding independently of the subscription ledger and never auto-substitutes.
     """
     requested = (agent or "").strip().lower()
     try:
         payload = _fetch_routing_budget()
     except MonitorApiUnavailable:
+        if requested == "deepseek" or provider == "openrouter":
+            raise BudgetGuardRefuseError(
+                "NOTE: ROUTING REFUSED: prepaid capacity NEED_PROBE; Monitor API unreachable."
+            ) from None
         print("⚠ ROUTING CHECK SKIPPED: Monitor API unreachable", file=sys.stderr)
+        return requested
+
+    prepaid = "openrouter" if provider == "openrouter" else requested if requested == "deepseek" else None
+    if prepaid:
+        from scripts.api.state_router import _api_lane_status_from_account
+
+        accounts = payload.get("api_accounts") or {}
+        account = accounts.get(prepaid) or {}
+        status = _api_lane_status_from_account(prepaid, account)
+        if status not in {"cool", "warm"} or account.get("is_available") is False or account.get("status") == "near_cap":
+            raise BudgetGuardRefuseError(
+                f"NOTE: ROUTING REFUSED: prepaid {prepaid} status={status}; "
+                f"probe_state={account.get('probe_state', 'NEED_PROBE')}; "
+                f"freshness={account.get('freshness', 'unavailable')}. "
+                "Verify funding with `python -m scripts.fleet.usage refresh` or pass --force-agent."
+            )
         return requested
 
     diags = payload.get("diagnostics") or {}
@@ -7846,7 +7871,8 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Query /api/state/routing-budget before spawning; hard-sub or refuse "
-            "when the requested lane is near_cap/hot/deficit. Also enabled when "
+            "when the requested lane is near_cap/hot/deficit; prepaid DeepSeek/OpenRouter "
+            "also refuse unknown, stale or empty funding. Also enabled when "
             "LU_DISPATCH_CHECK_BUDGET=1 (launchers can force without flag churn)."
         ),
     )

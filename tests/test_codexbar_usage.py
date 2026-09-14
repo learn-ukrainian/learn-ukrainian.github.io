@@ -1303,20 +1303,20 @@ DEEPSEEK_BALANCE_FIXTURE = {
 }
 
 
-def test_openrouter_missing_key_returns_need_probe(monkeypatch):
+def test_openrouter_missing_key_returns_need_key(monkeypatch):
     monkeypatch.setattr(subscription_usage_mod, "_load_openrouter_api_key", lambda: None)
     codexbar_usage_mod._api_account_last_good.pop("openrouter", None)
     result = subscription_usage_mod._probe_openrouter_native(timeout_s=1.0)
-    assert result["probe_state"] == "NEED_PROBE"
+    assert result["probe_state"] == "NEED_KEY"
     assert result["usage_usd"] is None
     assert result["limit_remaining_usd"] is None
 
 
-def test_deepseek_missing_key_returns_need_probe(monkeypatch):
+def test_deepseek_missing_key_returns_need_key(monkeypatch):
     monkeypatch.setattr(subscription_usage_mod, "_load_deepseek_api_key", lambda: None)
     codexbar_usage_mod._api_account_last_good.pop("deepseek", None)
     result = subscription_usage_mod._probe_deepseek_native(timeout_s=1.0)
-    assert result["probe_state"] == "NEED_PROBE"
+    assert result["probe_state"] == "NEED_KEY"
     assert result["total_balance"] is None
     assert result["local_only"] is True
 
@@ -1835,3 +1835,134 @@ def test_cursor_need_login_within_short_ttl_still_served_fresh(monkeypatch):
     result = codexbar_usage_mod.get_cursor_lane_usage()
     assert result["freshness"] == "fresh"
     assert result["probe_state"] == "NEED_LOGIN"
+
+
+def test_prepaid_failure_preserves_last_good_and_retries_quickly(monkeypatch):
+    mod = subscription_usage_mod
+    monkeypatch.setattr(mod, "_api_account_last_good", {})
+    monkeypatch.setattr(mod, "_api_account_last_failure", {})
+    monkeypatch.setattr(mod, "_on_demand_refresh_enabled", lambda: False)
+    cache_invalidate("api_account:deepseek")
+    good = {"probe_state": "ok", "total_balance": 30, "currency": "USD", "fetched_at": "2026-09-14T12:00:00Z"}
+    failed = {"probe_state": "NEED_PROBE", "total_balance": None, "fetched_at": "2026-09-14T12:01:00Z"}
+    monkeypatch.setattr(mod, "_probe_api_account_live", lambda *a, **kw: good)
+    assert mod.refresh_api_account_data(["deepseek"])["deepseek"]["freshness"] == "fresh"
+    original = mod._api_account_last_good["deepseek"]
+    monkeypatch.setattr(mod, "_probe_api_account_live", lambda *a, **kw: failed)
+    observed = mod.refresh_api_account_data(["deepseek"])["deepseek"]
+    assert mod._api_account_last_good["deepseek"] == original
+    assert observed["total_balance"] == 30
+    assert observed["freshness"] == "stale_last_good"
+    assert observed["failure_kind"] == "NEED_PROBE"
+    assert mod.get_api_account_data("deepseek")["freshness"] == "stale_last_good"
+    called = []
+    monkeypatch.setattr(mod, "_on_demand_refresh_enabled", lambda: True)
+    monkeypatch.setattr(mod, "_scheduler_is_running", lambda: False)
+    monkeypatch.setattr(mod, "trigger_api_account_background_refresh", lambda: called.append(True))
+    mod.get_api_account_data("deepseek")
+    assert not called
+    tick, data = mod._api_account_last_failure["deepseek"]
+    mod._api_account_last_failure["deepseek"] = (tick - 31, data)
+    # Failure retry must not wait for the much longer scheduler interval.
+    monkeypatch.setattr(mod, "_scheduler_is_running", lambda: True)
+    mod.get_api_account_data("deepseek")
+    assert called == [True]
+    monkeypatch.setattr(mod, "_probe_api_account_live", lambda *a, **kw: good)
+    assert mod.refresh_api_account_data(["deepseek"])["deepseek"]["freshness"] == "fresh"
+    assert "deepseek" not in mod._api_account_last_failure
+    cache_invalidate("api_account:deepseek")
+
+
+def test_prepaid_failure_without_good_is_unavailable(monkeypatch):
+    mod = subscription_usage_mod
+    monkeypatch.setattr(mod, "_api_account_last_good", {})
+    monkeypatch.setattr(mod, "_api_account_last_failure", {})
+    cache_invalidate("api_account:openrouter")
+    monkeypatch.setattr(mod, "_probe_api_account_live", lambda *a, **kw: {"probe_state": "NEED_KEY"})
+    result = mod.refresh_api_account_data(["openrouter"])["openrouter"]
+    assert result["freshness"] == "unavailable"
+    assert result["probe_state"] == "NEED_KEY"
+    assert not mod._api_account_last_good
+
+
+def test_management_key_loaders_and_balance(monkeypatch, tmp_path):
+    mod = subscription_usage_mod
+    monkeypatch.setattr(Path, "home", lambda: tmp_path)
+    monkeypatch.delenv("OPENROUTER_MANAGEMENT_API_KEY", raising=False)
+    secret = tmp_path / ".secret/openrouter-management.key"
+    secret.parent.mkdir()
+    secret.write_text("")
+    assert mod._load_openrouter_management_api_key() is None
+    secret.write_text("file-fixture\n")
+    assert mod._load_openrouter_management_api_key() == "file-fixture"
+    auth = tmp_path / ".local/share/opencode/auth.json"
+    auth.parent.mkdir(parents=True)
+    auth.write_text(json.dumps({"openrouter-management": {"key": "opencode-fixture"}}))
+    assert mod._load_openrouter_management_api_key() == "opencode-fixture"
+    monkeypatch.setenv("OPENROUTER_MANAGEMENT_API_KEY", "env-fixture")
+    assert mod._load_openrouter_management_api_key() == "env-fixture"
+    monkeypatch.setattr(mod, "_load_openrouter_api_key", lambda: "ordinary-fixture")
+    def http(method, url, **kwargs):
+        if url.endswith("/credits"):
+            assert kwargs["headers"]["Authorization"] == "Bearer env-fixture"
+            return 200, {"data": {"total_credits": 100, "total_usage": 100}}, None
+        return 200, {"data": {"limit_remaining": 70}}, None
+    monkeypatch.setattr(mod, "_http_json_request", http)
+    result = mod._probe_openrouter_native(timeout_s=1)
+    assert result["account_remaining_usd"] == 0
+    assert result["balance_probe_state"] == "ok"
+
+
+
+def test_cursor_explicit_refresh_is_blocking(monkeypatch):
+    mod = subscription_usage_mod
+    calls = []
+    def refresh():
+        calls.append("blocking")
+        return {"weekly_used_pct": 20, "freshness": "fresh"}
+    monkeypatch.setattr(mod, "_refresh_cursor_usage_live", refresh)
+    monkeypatch.setattr(mod, "get_cursor_lane_usage", lambda: (_ for _ in ()).throw(AssertionError("cache-only")))
+    monkeypatch.setattr(mod, "_record_probe_result", lambda *a: True)
+    result = mod.refresh_provider_usage_data(["cursor"])
+    assert calls == ["blocking"]
+    assert result["cursor"]["weekly_used_pct"] == 20
+
+
+def test_subscription_login_failure_clears_on_success(monkeypatch):
+    mod = subscription_usage_mod
+    monkeypatch.setattr(mod, "_last_failure_data", {})
+    monkeypatch.setattr(mod, "_last_good_data", {})
+    monkeypatch.setattr(mod, "cache_set", lambda *a: None)
+    assert not mod._record_probe_result("codex", {"error_kind": "need_login"})
+    assert mod._last_failure_data["codex"]["failure_kind"] == "need_login"
+    assert mod._record_probe_result("codex", {"weekly_used_pct": 10})
+    assert "codex" not in mod._last_failure_data
+
+
+def test_management_balance_failure_is_not_a_good_prepaid_sample(monkeypatch):
+    mod = subscription_usage_mod
+    monkeypatch.setattr(mod, "_load_openrouter_api_key", lambda: "ordinary-fixture")
+    monkeypatch.setattr(mod, "_load_openrouter_management_api_key", lambda: "management-fixture")
+    def http(method, url, **kwargs):
+        return (200, {"data": {"limit_remaining": 100}}, None) if url.endswith("/key") else (503, None, "unavailable")
+    monkeypatch.setattr(mod, "_http_json_request", http)
+    result = mod._probe_openrouter_native(timeout_s=1)
+    assert result["probe_state"] == "NEED_PROBE"
+    assert result["balance_probe_state"] == "NEED_PROBE"
+    assert not mod._api_account_is_cacheable(result)
+
+
+def test_management_key_missing_uses_short_cache_ttl(monkeypatch):
+    mod = subscription_usage_mod
+    monkeypatch.setattr(mod, "_api_account_last_failure", {})
+    monkeypatch.setattr(mod, "_api_account_last_good", {})
+    monkeypatch.setattr(mod, "_scheduler_is_running", lambda: True)
+    monkeypatch.setattr(mod, "_on_demand_refresh_enabled", lambda: True)
+    called = []
+    monkeypatch.setattr(mod, "trigger_api_account_background_refresh", lambda: called.append(True))
+    account = {"probe_state": "ok", "balance_probe_state": "NEED_KEY", "fetched_at": "2026-09-14T12:00:00Z"}
+    monkeypatch.setattr(mod, "cache_get_with_age", lambda *a, **kw: (account, 31))
+    mod._api_account_last_good["openrouter"] = (time.monotonic() - 31, account)
+    result = mod.get_api_account_data("openrouter")
+    assert result["freshness"] == "stale_last_good"
+    assert called == [True]
