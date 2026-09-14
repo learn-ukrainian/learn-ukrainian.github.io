@@ -10883,16 +10883,16 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "крижовий",
       "url_slug": "крижовий",
       "headword": "крижо́вий",
-      "short_label": "хрестоподібний (B2)",
-      "gloss": "cruciform, cross-shaped (e.g. crossways, cruciform church plan)",
+      "short_label": "хрестоподібний (заст. B2)",
+      "gloss": "cruciform, cross-shaped (e.g. crossways, cruciform church plan; archaic)",
       "pos": "adjective",
       "cefr": "B2",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-archaism",
         "is_russianism": false,
         "russian_shadow": false,
         "vesum_attested": true,
-        "warning_severity": null,
+        "warning_severity": "treasured",
         "calque_warning": null
       },
       "pronunciation": {
@@ -11019,8 +11019,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "линути",
       "url_slug": "линути",
       "headword": "ли́нути",
-      "short_label": "швидко текти, литися (B1)",
-      "gloss": "to pour, gush forth, stream rapidly",
+      "short_label": "летіти, ширяти, линути в думках (поет. B1)",
+      "gloss": "to soar, fly, rush smoothly, float (of birds, sound, time; imperfective)",
       "pos": "verb",
       "cefr": "B1",
       "heritage_status": {
@@ -11046,14 +11046,14 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "недоконаний"
         }
       },
-      "distinction_note": "Не плутати з омографом «лину́ти» (наголос на другому складі: летіти, ширяти в повітрі або думках)."
+      "distinction_note": "Не плутати з омографом «лину́ти» (наголос на другому складі: линути раз, хлюпнути, доконаний вид)."
     },
     {
       "lemma": "линути",
       "url_slug": "линути",
       "headword": "лину́ти",
-      "short_label": "летіти, ширяти в повітрі (B1)",
-      "gloss": "to soar, fly swift, drift through air or memory",
+      "short_label": "хлюпнути, однократно лити (док. B1)",
+      "gloss": "to pour once, splash once (instantaneous/perfective of лити)",
       "pos": "verb",
       "cefr": "B1",
       "heritage_status": {
@@ -11076,10 +11076,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "pos": "дієслово",
         "paradigm": {
           "kind": "verb",
-          "aspect": "недоконаний"
+          "aspect": "доконаний"
         }
       },
-      "distinction_note": "Не плутати з омографом «ли́нути» (наголос на першому складі: струменіти, швидко литися потоком)."
+      "distinction_note": "Не плутати з омографом «ли́нути» (наголос на першому складі: летіти, ширяти, линути у вирій, недоконаний вид)."
     }
   ],
   "лікарський": [
@@ -11087,8 +11087,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "лікарський",
       "url_slug": "лікарський",
       "headword": "лі́карський",
-      "short_label": "цілющий, лікувальний (A2)",
-      "gloss": "medicinal, pharmaceutical, healing (e.g. medicinal herbs, medicinal substances)",
+      "short_label": "належний лікареві (A2)",
+      "gloss": "physician's, doctor's (e.g. doctor's visit, physician's coat)",
       "pos": "adjective",
       "cefr": "A2",
       "heritage_status": {
@@ -11113,14 +11113,14 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з омографом «ліка́рський» (наголос на другому складі: пов'язаний з професією чи особою лікаря)."
+      "distinction_note": "Не плутати з омографом «ліка́рський» (наголос на другому складі: цілющий, лікувальний, аптечний)."
     },
     {
       "lemma": "лікарський",
       "url_slug": "лікарський",
       "headword": "ліка́рський",
-      "short_label": "належний лікареві (A2)",
-      "gloss": "physician's, medical doctor's (e.g. medical examination, doctor's confidentiality)",
+      "short_label": "цілющий, лікувальний (A2)",
+      "gloss": "medicinal, curative, pharmaceutical (e.g. medicinal herbs, healing plants)",
       "pos": "adjective",
       "cefr": "A2",
       "heritage_status": {
@@ -11145,7 +11145,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з омографом «лі́карський» (наголос на першому складі: цілющий, лікувальний, аптечний)."
+      "distinction_note": "Не плутати з омографом «лі́карський» (наголос на першому складі: пов'язаний з професією чи особою лікаря)."
     }
   ],
   "масниця": [
@@ -11223,8 +11223,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "милування",
       "url_slug": "милування",
       "headword": "ми́лування",
-      "short_label": "захоплення красою (B1)",
-      "gloss": "admiration, gazing with delight, aesthetic contemplation",
+      "short_label": "помилування, пощада (B1)",
+      "gloss": "act of sparing, pardoning, granting of mercy/clemency",
       "pos": "noun",
       "cefr": "B1",
       "heritage_status": {
@@ -11251,14 +11251,14 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "неістота"
         }
       },
-      "distinction_note": "Не плутати з омографом «милува́ння» (наголос на третьому складі: вияв ніжності, пестощі або дарування пощади)."
+      "distinction_note": "Не плутати з омографом «милува́ння» (наголос на третьому складі: пестощі, ніжність або захоплення красою)."
     },
     {
       "lemma": "милування",
       "url_slug": "милування",
       "headword": "милува́ння",
-      "short_label": "пестощі, ніжність (B1)",
-      "gloss": "caressing, fondling, or granting of mercy/pardon",
+      "short_label": "пестощі, захоплення красою (B1)",
+      "gloss": "caressing, tender affection; or aesthetic contemplation, admiring gaze",
       "pos": "noun",
       "cefr": "B1",
       "heritage_status": {
@@ -11285,7 +11285,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "неістота"
         }
       },
-      "distinction_note": "Не плутати з омографом «ми́лування» (наголос на першому складі: захоплення красою, споглядання з насолодою)."
+      "distinction_note": "Не плутати з омографом «ми́лування» (наголос на першому складі: дія за значенням ми́лувати, дарування пощади)."
     }
   ],
   "милувати": [
@@ -11293,8 +11293,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "милувати",
       "url_slug": "милувати",
       "headword": "ми́лувати",
-      "short_label": "радувати око, тішити (B1)",
-      "gloss": "to delight, please, feast the eyes",
+      "short_label": "жаліти, дарувати пощаду (B1)",
+      "gloss": "to spare, show mercy, pardon, refrain from harming",
       "pos": "verb",
       "cefr": "B1",
       "heritage_status": {
@@ -11320,14 +11320,14 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "недоконаний"
         }
       },
-      "distinction_note": "Не плутати з омографом «милува́ти» (наголос на третьому складі: прощати провину, дарувати життя чи пестити)."
+      "distinction_note": "Не плутати з омографом «милува́ти» (наголос на третьому складі: пестити, ніжити, ласкати)."
     },
     {
       "lemma": "милувати",
       "url_slug": "милувати",
       "headword": "милува́ти",
-      "short_label": "прощати, дарувати пощаду (B1)",
-      "gloss": "to pardon, show mercy, spare; or to caress, fondle",
+      "short_label": "пестити, ніжити (B1)",
+      "gloss": "to caress, fondle, cuddle, treat affectionately",
       "pos": "verb",
       "cefr": "B1",
       "heritage_status": {
@@ -11353,7 +11353,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "недоконаний"
         }
       },
-      "distinction_note": "Не плутати з омографом «ми́лувати» (наголос на першому складі: приносити естетичну радість, тішити око)."
+      "distinction_note": "Не плутати з омографом «ми́лувати» (наголос на першому складі: жаліти, дарувати пощаду, не завдавати шкоди)."
     }
   ],
   "мильниця": [
@@ -11389,14 +11389,14 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "неістота"
         }
       },
-      "distinction_note": "Не плутати з омографом «мильни́ця» (наголос на другому складі: багаторічна трав'яниста рослина мильнянка)."
+      "distinction_note": "Не плутати з омографом «мильни́ця» (наголос на другому складі: багаторічна трав'яниста рослина мильнянка, діалектне)."
     },
     {
       "lemma": "мильниця",
       "url_slug": "мильниця",
       "headword": "мильни́ця",
-      "short_label": "рослина мильнянка (B2)",
-      "gloss": "soapwort plant (Saponaria officinalis)",
+      "short_label": "рослина мильнянка (діал. B2)",
+      "gloss": "soapwort plant (Saponaria officinalis, dialectal)",
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
@@ -11432,7 +11432,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "url_slug": "надмір",
       "headword": "на́дмір",
       "short_label": "надлишок, зайвина (B1)",
-      "gloss": "excess, surplus, profusion",
+      "gloss": "excess, surplus, profusion (e.g. surplus of water, excess of happiness)",
       "pos": "noun",
       "cefr": "B1",
       "heritage_status": {
@@ -11459,15 +11459,15 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "неістота"
         }
       },
-      "distinction_note": "Не плутати з омографом «надмі́р» (наголос на другому складі: крайня надмірність, надмірна міра)."
+      "distinction_note": "Не плутати з омографом «надмі́р» (наголос на другому складі: прислівник — надміру, занадто)."
     },
     {
       "lemma": "надмір",
       "url_slug": "надмір",
       "headword": "надмі́р",
-      "short_label": "надмірна міра (B1)",
-      "gloss": "immoderation, overabundance, excessiveness",
-      "pos": "noun",
+      "short_label": "надміру, занадто (присл. B1)",
+      "gloss": "excessively, overly, too much (synonymous with надмі́ру)",
+      "pos": "adverb",
       "cefr": "B1",
       "heritage_status": {
         "classification": "standard",
@@ -11486,14 +11486,12 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "source": "ukrainian-word-stress"
       },
       "morphology": {
-        "pos": "іменник",
+        "pos": "прислівник",
         "paradigm": {
-          "kind": "noun",
-          "gender": "чоловічий",
-          "animacy": "неістота"
+          "kind": "adverb"
         }
       },
-      "distinction_note": "Не плутати з омографом «на́дмір» (наголос на першому складі: залишок понад норму, надлишок)."
+      "distinction_note": "Не плутати з омографом «на́дмір» (наголос на першому складі: іменник — надлишок, зайвина)."
     }
   ],
   "названий": [
@@ -11567,10 +11565,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "накидка",
       "url_slug": "накидка",
       "headword": "на́кидка",
-      "short_label": "плащ або покривало (A2)",
-      "gloss": "cape, cloak, loose sleeveless wrap or decorative throw",
+      "short_label": "націнка, надбавка до плати (B2)",
+      "gloss": "surcharge, fee increase, extra charge (action of adding to payment)",
       "pos": "noun",
-      "cefr": "A2",
+      "cefr": "B2",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": false,
@@ -11595,16 +11593,16 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "неістота"
         }
       },
-      "distinction_note": "Не плутати з омографом «наки́дка» (наголос на другому складі: грошова надбавка до ціни, націнка)."
+      "distinction_note": "Не плутати з омографом «наки́дка» (наголос на другому складі: верхній одяг без рукавів або покривало на подушку чи ліжко)."
     },
     {
       "lemma": "накидка",
       "url_slug": "накидка",
       "headword": "наки́дка",
-      "short_label": "націнка, надбавка до ціни (B2)",
-      "gloss": "surcharge, extra charge, price markup",
+      "short_label": "плащ без рукавів, покривало (A2)",
+      "gloss": "cape, cloak, loose sleeveless wrap, or decorative coverlet/throw",
       "pos": "noun",
-      "cefr": "B2",
+      "cefr": "A2",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": false,
@@ -11629,7 +11627,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "неістота"
         }
       },
-      "distinction_note": "Не плутати з омографом «на́кидка» (наголос на першому складі: вид верхнього одягу без рукавів чи покривало)."
+      "distinction_note": "Не плутати з омографом «на́кидка» (наголос на першому складі: надбавка до плати чи ціни, націнка)."
     }
   ],
   "наносити": [
@@ -11705,10 +11703,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "нападати",
       "url_slug": "нападати",
       "headword": "напа́дати",
-      "short_label": "вчиняти напад, атакувати (A2)",
-      "gloss": "to attack, assault, initiate an aggression",
+      "short_label": "випасти у великій кількості (док. B1)",
+      "gloss": "to fall and accumulate in quantity (e.g. fallen snow, leaves; perfective)",
       "pos": "verb",
-      "cefr": "A2",
+      "cefr": "B1",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": false,
@@ -11729,19 +11727,19 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "pos": "дієслово",
         "paradigm": {
           "kind": "verb",
-          "aspect": "недоконаний"
+          "aspect": "доконаний"
         }
       },
-      "distinction_note": "Не плутати з омографом «напада́ти» (наголос на третьому складі: нападати купою, випасти у великій кількості)."
+      "distinction_note": "Не плутати з омографом «напада́ти» (наголос на третьому складі: атакувати, штурмувати, недоконаний вид)."
     },
     {
       "lemma": "нападати",
       "url_slug": "нападати",
       "headword": "напада́ти",
-      "short_label": "випасти у великій кількості (B1)",
-      "gloss": "to fall and accumulate in great quantities (of snow, autumn leaves, fruit)",
+      "short_label": "атакувати, штурмувати (недок. A2)",
+      "gloss": "to attack, assault, initiate an aggression (imperfective)",
       "pos": "verb",
-      "cefr": "B1",
+      "cefr": "A2",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": false,
@@ -11762,10 +11760,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "pos": "дієслово",
         "paradigm": {
           "kind": "verb",
-          "aspect": "доконаний"
+          "aspect": "недоконаний"
         }
       },
-      "distinction_note": "Не плутати з омографом «напа́дати» (наголос на другому складі: нападати на супротивника, штурмувати)."
+      "distinction_note": "Не плутати з омографом «напа́дати» (наголос на другому складі: нападати купою, випасти у великій кількості, доконаний вид)."
     }
   ],
   "натискати": [
@@ -11911,10 +11909,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "нескладний",
       "url_slug": "нескладний",
       "headword": "нескла́дний",
-      "short_label": "простий, легкий (A2)",
-      "gloss": "simple, uncomplicated, easy to understand or perform",
+      "short_label": "незграбний, незлагоджений (B1)",
+      "gloss": "discordant, clumsy, disjointed, incoherent (lacking harmony, proportion, or logic)",
       "pos": "adjective",
-      "cefr": "A2",
+      "cefr": "B1",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": false,
@@ -11937,16 +11935,16 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з омографом «нескладни́й» (наголос на третьому складі: незграбний, невладний, безладний у мові чи рухах)."
+      "distinction_note": "Не плутати з омографом «нескладни́й» (наголос на третьому складі: простий, нескладний для виконання)."
     },
     {
       "lemma": "нескладний",
       "url_slug": "нескладний",
       "headword": "нескладни́й",
-      "short_label": "незграбний, безладний (B1)",
-      "gloss": "clumsy, discordant, rambling, lacking harmony/coherence",
+      "short_label": "простий, неважкий (A2)",
+      "gloss": "simple, uncomplicated, not difficult, easy to perform",
       "pos": "adjective",
-      "cefr": "B1",
+      "cefr": "A2",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": false,
@@ -11969,7 +11967,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з омографом «нескла́дний» (наголос на другому складі: елементарний, простий для розуміння)."
+      "distinction_note": "Не плутати з омографом «нескла́дний» (наголос на другому складі: незграбний, позбавлений гармонії чи логіки)."
     }
   ],
   "обруч": [
@@ -11977,10 +11975,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "обруч",
       "url_slug": "обруч",
       "headword": "о́бруч",
-      "short_label": "кільце, гімнастичний снаряд (A2)",
-      "gloss": "hoop, metal/wooden circular band, hula hoop",
-      "pos": "noun",
-      "cefr": "A2",
+      "short_label": "поруч, поряд (присл., рідко B2)",
+      "gloss": "alongside, nearby, side by side (rare/conversational adverb synonymous with поруч)",
+      "pos": "adverb",
+      "cefr": "B2",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": false,
@@ -11998,29 +11996,27 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "source": "ukrainian-word-stress"
       },
       "morphology": {
-        "pos": "іменник",
+        "pos": "прислівник",
         "paradigm": {
-          "kind": "noun",
-          "gender": "чоловічий",
-          "animacy": "неістота"
+          "kind": "adverb"
         }
       },
-      "distinction_note": "Не плутати з омографом «обру́ч» (наголос на другому складі: наручний браслет, наруччя)."
+      "distinction_note": "Не плутати з омографом «обру́ч» (наголос на другому складі: іменник — круглий обід, кільце, гімнастичний чи бондарський снаряд)."
     },
     {
       "lemma": "обруч",
       "url_slug": "обруч",
       "headword": "обру́ч",
-      "short_label": "браслет, наруччя (заст., діал.)",
-      "gloss": "bracelet, wrist band, armlet (archaic/dialectal)",
+      "short_label": "кільце, обід, спортивний снаряд (A2)",
+      "gloss": "hoop, rim, metal/wooden circular band (e.g. for a barrel or gymnastic hula hoop)",
       "pos": "noun",
-      "cefr": "B2",
+      "cefr": "A2",
       "heritage_status": {
-        "classification": "authentic-archaism",
+        "classification": "standard",
         "is_russianism": false,
         "russian_shadow": false,
         "vesum_attested": true,
-        "warning_severity": "treasured",
+        "warning_severity": null,
         "calque_warning": null
       },
       "pronunciation": {
@@ -12039,7 +12035,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "неістота"
         }
       },
-      "distinction_note": "Не плутати з омографом «о́бруч» (наголос на першому складі: зігнутий у коло прут, спортивний снаряд)."
+      "distinction_note": "Не плутати з омографом «о́бруч» (наголос на першому складі: прислівник — поруч, поряд)."
     }
   ],
   "осад": [
@@ -12183,10 +12179,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "перебігати",
       "url_slug": "перебігати",
       "headword": "перебі́гати",
-      "short_label": "перетинати бігом (A2)",
-      "gloss": "to run across, cross by running (e.g. cross the road)",
+      "short_label": "пробігати певний час (док. B2)",
+      "gloss": "to spend/run through a period of time running (e.g. run barefoot through winter; perfective)",
       "pos": "verb",
-      "cefr": "A2",
+      "cefr": "B2",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": false,
@@ -12207,19 +12203,19 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "pos": "дієслово",
         "paradigm": {
           "kind": "verb",
-          "aspect": "недоконаний"
+          "aspect": "доконаний"
         }
       },
-      "distinction_note": "Не плутати з омографом «перебіга́ти» (наголос на четвертому складі: перегнати суперника у бігу)."
+      "distinction_note": "Не плутати з омографом «перебіга́ти» (наголос на четвертому складі: пересуватися бігом з місця на місце, перетинати вулицю, недоконаний вид)."
     },
     {
       "lemma": "перебігати",
       "url_slug": "перебігати",
       "headword": "перебіга́ти",
-      "short_label": "перегнати в бігу (B2)",
-      "gloss": "to outrun in a race, run longer or faster than others",
+      "short_label": "перетинати бігом (недок. A2)",
+      "gloss": "to run across, cross by running (e.g. cross the street, move between shelters; imperfective)",
       "pos": "verb",
-      "cefr": "B2",
+      "cefr": "A2",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": false,
@@ -12243,7 +12239,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "недоконаний"
         }
       },
-      "distinction_note": "Не плутати з омографом «перебі́гати» (наголос на третьому складі: перебігти простір, перебігти вулицю)."
+      "distinction_note": "Не плутати з омографом «перебі́гати» (наголос на третьому складі: бігати протягом певного часу, доконаний вид)."
     }
   ],
   "переводити": [
@@ -12251,8 +12247,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "переводити",
       "url_slug": "переводити",
       "headword": "перево́дити",
-      "short_label": "переміщати, перемикати (A2)",
-      "gloss": "to lead across, transfer, shift gaze, translate/switch",
+      "short_label": "переміщати, марнувати (недок. A2)",
+      "gloss": "to lead across, transfer; squander, waste (e.g. waste money/food; imperfective)",
       "pos": "verb",
       "cefr": "A2",
       "heritage_status": {
@@ -12278,16 +12274,16 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "недоконаний"
         }
       },
-      "distinction_note": "Не плутати з омографом «переводи́ти» (наголос на четвертому складі: марнувати даремно, знищувати ресурси)."
+      "distinction_note": "Не плутати з омографом «переводи́ти» (наголос на четвертому складі: провести багатьох чи всіх людей кудись, доконаний вид)."
     },
     {
       "lemma": "переводити",
       "url_slug": "переводити",
       "headword": "переводи́ти",
-      "short_label": "марнувати, нищити (B1)",
-      "gloss": "to waste, squander, destroy needlessly (e.g. waste money or time)",
+      "short_label": "провести багатьох або всіх (док. B2)",
+      "gloss": "to escort, lead across, or guide many/all people to a destination (perfective)",
       "pos": "verb",
-      "cefr": "B1",
+      "cefr": "B2",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": false,
@@ -12308,10 +12304,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "pos": "дієслово",
         "paradigm": {
           "kind": "verb",
-          "aspect": "недоконаний"
+          "aspect": "доконаний"
         }
       },
-      "distinction_note": "Не плутати з омографом «перево́дити» (наголос на третьому складі: переводити через дорогу, переводити погляд)."
+      "distinction_note": "Не плутати з омографом «перево́дити» (наголос на третьому складі: переводити через дорогу або марнувати ресурси, недоконаний вид)."
     }
   ],
   "переломний": [
@@ -12719,16 +12715,16 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "пікнік",
       "url_slug": "пікнік",
       "headword": "пі́кнік",
-      "short_label": "тип тілобудови (B2)",
-      "gloss": "pyknic type, stocky stout constitution of human body (anthropological)",
+      "short_label": "людина кремезної статури (заст. B2)",
+      "gloss": "person of pyknic/stocky build, stocky individual with broad frame (archaic constitutional type)",
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-archaism",
         "is_russianism": false,
         "russian_shadow": false,
         "vesum_attested": true,
-        "warning_severity": null,
+        "warning_severity": "treasured",
         "calque_warning": null
       },
       "pronunciation": {
@@ -12781,7 +12777,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "неістота"
         }
       },
-      "distinction_note": "Не плутати з омографом «пі́кнік» (наголос на першому складі: конституційний тип тілобудови людини)."
+      "distinction_note": "Не плутати з омографом «пі́кнік» (наголос на першому складі: людина міцної, кремезної статури)."
     }
   ]
 };

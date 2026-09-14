@@ -478,16 +478,32 @@ def test_batch3_lemmas_not_duplicated_from_earlier_batches():
 
 
 def test_likarskyi_disambiguation():
-    """Verify лікарський medicinal vs doctor's disambiguation (batch 4)."""
+    """Verify лікарський doctor's vs medicinal disambiguation (batch 4)."""
     items = enrich_heteronyms.build_heteronyms_for_lemma("лікарський")
     assert items is not None
     assert len(items) == 2
 
-    medicinal, doctors = items[0], items[1]
-    assert medicinal["headword"] == "лі́карський"
-    assert "medicinal" in medicinal["gloss"]
-    assert doctors["headword"] == "ліка́рський"
-    assert "physician" in doctors["gloss"] or "doctor" in doctors["gloss"]
+    doctors, medicinal = items[0], items[1]
+    assert doctors["headword"] == "лі́карський"
+    assert "doctor" in doctors["gloss"] or "physician" in doctors["gloss"]
+    assert medicinal["headword"] == "ліка́рський"
+    assert "medicinal" in medicinal["gloss"] or "curative" in medicinal["gloss"]
+
+
+def test_lynuti_disambiguation():
+    """Verify линути soar/fly (impf) vs splash/pour once (pf) disambiguation (batch 4)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("линути")
+    assert items is not None
+    assert len(items) == 2
+
+    soar, splash = items[0], items[1]
+    assert soar["headword"] == "ли́нути"
+    assert soar["morphology"]["paradigm"]["aspect"] == "недоконаний"
+    assert "soar" in soar["gloss"] or "fly" in soar["gloss"]
+    assert splash["headword"] == "лину́ти"
+    assert splash["morphology"]["paradigm"]["aspect"] == "доконаний"
+    assert "pour once" in splash["gloss"] or "splash" in splash["gloss"]
+
 
 
 def test_parnyi_disambiguation():
