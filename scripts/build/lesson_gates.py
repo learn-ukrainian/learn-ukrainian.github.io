@@ -199,12 +199,17 @@ def _stress_tokens(text: str) -> list[str]:
 
 def _skip_stress_token(tok: str) -> bool:
     """Hyphenation demos, fill-in gaps, and 1-syllable fragments are not dictionary words."""
-    if not tok or "_" in tok:
+    if not tok:
         return True
-    if "-" in tok.strip("-"):
+    core = tok.strip("_")
+    if "_" in core or tok.endswith("__") or tok.startswith("__"):
         return True
-    bare = strip_acute(tok.strip("'’-"))
-    return len(re.findall(r"[аеєиіїоуюяАЕЄИІЇОУЮЯ]", bare)) < 2
+    if tok.endswith("_") and not tok.startswith("_"):
+        return True
+    if "-" in core.strip("-"):
+        return True
+    bare = strip_acute(core.strip("'’-"))
+    return not bare or len(re.findall(r"[аеєиіїоуюяАЕЄИІЇОУЮЯ]", bare)) < 2
 
 
 def missing_stress(text: str, allow: set[str]) -> list[str]:
@@ -213,7 +218,7 @@ def missing_stress(text: str, allow: set[str]) -> list[str]:
     for tok in _stress_tokens(learner_text(text)):
         if ACUTE in tok or _skip_stress_token(tok):
             continue
-        tok = tok.strip("'’-")
+        tok = tok.strip("_").strip("'’-")
         if tok and strip_acute(tok).lower() not in allow:
             bad.append(tok)
     return bad
@@ -245,7 +250,7 @@ def wrong_stress(text: str, allow: set[str], proper: set[str] = frozenset()) -> 
         seen.add(tok)
         if _skip_stress_token(tok):
             continue
-        tok = tok.strip("'’-")
+        tok = tok.strip("_").strip("'’-")
         bare = strip_acute(tok)
         if not tok or bare.lower() in allow:
             continue

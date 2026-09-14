@@ -75,6 +75,8 @@ def test_hyphenation_models_are_not_missing_stress():
     assert flagged == []
     assert gates.missing_stress("дере__", set()) == []
     assert "книга" in gates.missing_stress("-книга", set())
+    assert "книга" in gates.missing_stress("_книга_", set())
+    assert gates.missing_stress("мален_кий", set()) == []
 
 
 def test_structural_containment_keeps_answers_and_multiplicity():
