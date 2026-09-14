@@ -86,6 +86,19 @@ def _dialogue_props_text(page: str) -> str:
 
 
 _SPEAKER = re.compile(r"([A-ZА-ЯІЇЄҐ][\w'’\-]{1,24})\s*:\s*")
+_CYR = re.compile(r"[А-ЩЬЮЯҐЄІЇа-щьюяґєії]")
+_LAT = re.compile(r"[A-Za-z]")
+
+
+def _strip_support_tail(spoken: str) -> str:
+    """Drop A1 English gloss after em/en dash; keep spoken dashes that are not a gloss."""
+    match = re.search(r"\s*[—–]\s*", spoken)
+    if not match:
+        return spoken
+    head, tail = spoken[: match.start()], spoken[match.end():]
+    if _CYR.search(head) and _LAT.search(tail) and not _CYR.search(tail):
+        return head.strip()
+    return spoken
 
 
 def _dialogue_turns(para: str) -> list[tuple[str, str]]:
@@ -103,7 +116,7 @@ def _dialogue_turns(para: str) -> list[tuple[str, str]]:
         end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
         spoken = text[match.end():end]
         spoken = re.sub(r"\s*\*\([^()]*\)\*", "", spoken)
-        spoken = re.sub(r"\s*[—–]\s*.*$", "", spoken)
+        spoken = _strip_support_tail(spoken)
         spoken = re.sub(r"\s*\([^()]*\)\s*$", "", spoken)
         speaker = match.group(1).strip()
         spoken = spoken.strip().strip("*_").strip()

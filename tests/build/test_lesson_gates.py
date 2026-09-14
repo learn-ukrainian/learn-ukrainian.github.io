@@ -59,6 +59,15 @@ def test_fill_in_blanked_strings_count_as_rendered():
     ]
     italic = "> **Тара́с**: Сього́дні свя́то! *(Today is a holiday!)*"
     assert gates._dialogue_turns(italic) == [("Тарас", "Сьогодні свято!")]
+    clause = "> **Alice:** Keep this complete first sentence — retain this essential second clause too."
+    assert gates._dialogue_turns(clause) == [
+        ("Alice", "Keep this complete first sentence — retain this essential second clause too."),
+    ]
+    hay_full = 'exchanges=[{"speaker":"Alice","text":"Keep this complete first sentence — retain this essential second clause too."}]'
+    hay_cut = 'exchanges=[{"speaker":"Alice","text":"Keep this complete first sentence"}]'
+    spoken = "Keep this complete first sentence — retain this essential second clause too."
+    assert gates._spoken_in_hay(spoken, hay_full)
+    assert not gates._spoken_in_hay(spoken, hay_cut)
     hay = 'exchanges=[{"speaker":"Тарас","text":"This sentence is retained."}]'
     assert not gates._spoken_in_hay(
         "This sentence is retained. This other sentence has disappeared completely.",
