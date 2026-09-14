@@ -1008,13 +1008,16 @@ class ActivityParser:
         items = []
         for i in self._item_rows(data):
             source = (
-                i.get('source') or i.get('prompt') or i.get('english')
-                or i.get('en') or i.get('uk') or i.get('ukrainian') or ''
+                i.get('source') or i.get('prompt') or i.get('uk')
+                or i.get('ukrainian') or i.get('english') or i.get('en') or ''
             )
             target = (
                 i.get('target') or i.get('answer') or i.get('correct')
-                or i.get('ukrainian') or i.get('en') or i.get('english')
+                or i.get('en') or i.get('english') or i.get('ukrainian')
             )
+            if i.get('uk') and i.get('en') and not i.get('source'):
+                source = i.get('uk')
+                target = i.get('en')
             if i.get('english') and i.get('ukrainian'):
                 source = i.get('english')
                 target = i.get('ukrainian')

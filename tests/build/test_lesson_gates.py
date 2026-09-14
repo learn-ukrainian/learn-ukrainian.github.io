@@ -59,6 +59,12 @@ def test_fill_in_blanked_strings_count_as_rendered():
     ]
     italic = "> **Тара́с**: Сього́дні свя́то! *(Today is a holiday!)*"
     assert gates._dialogue_turns(italic) == [("Тарас", "Сьогодні свято!")]
+    hay = 'exchanges=[{"speaker":"Тарас","text":"This sentence is retained."}]'
+    assert not gates._spoken_in_hay(
+        "This sentence is retained. This other sentence has disappeared completely.",
+        hay,
+    )
+    assert gates._spoken_in_hay("This sentence is retained.", hay)
 
 
 def test_dialogue_props_ignore_unrelated_prose():
@@ -151,6 +157,15 @@ def test_error_forms_do_not_exempt_the_same_spelling_in_another_activity():
     assert "книга" not in prose_allow
     assert "книга" in gates.missing_stress("книга на столі", prose_allow)
     assert "книга" not in gates.missing_stress("книга на столі", quiz_allow)
+    indexed = {
+        "inline": [{"id": "act-ix", "type": "quiz",
+                    "questions": [{"options": ["книга", "сімя"], "correct": 0}]}],
+        "workbook": [],
+    }
+    allow_ix = gates.pedagogical_error_forms(indexed)
+    assert "сімя" in allow_ix
+    assert "книга" not in allow_ix
+    assert "книга" in gates.missing_stress("книга", allow_ix)
 
 
 def test_hyphenation_models_are_not_missing_stress():

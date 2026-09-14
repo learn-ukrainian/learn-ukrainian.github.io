@@ -114,12 +114,7 @@ def _dialogue_turns(para: str) -> list[tuple[str, str]]:
 
 def _spoken_in_hay(spoken: str, hay: str) -> bool:
     text = md_to_text(spoken)
-    if not text:
-        return False
-    if text in hay:
-        return True
-    parts = [p.strip() for p in re.split(r"(?<=[.!?])\s+", text) if len(p.strip()) >= 8]
-    return bool(parts) and any(part in hay for part in parts)
+    return bool(text) and text in hay
 
 
 def _visible_in_render(value: str, literal_text: str) -> bool:
@@ -285,6 +280,52 @@ def _skip_stress_token(tok: str) -> bool:
 _ERROR_KEYS = frozenset({"error", "errorword", "incorrect", "error_word"})
 
 
+def _activity_rows(activity: dict) -> list:
+    """Same row aliases as ActivityParser._item_rows: items, questions, statements."""
+    for key in ("items", "questions", "statements"):
+        rows = activity.get(key)
+        if isinstance(rows, list) and rows:
+            return [row for row in rows if isinstance(row, dict)]
+    return []
+
+
+def _option_text(option) -> str:
+    if isinstance(option, dict):
+        text = option.get("text") or option.get("en") or ""
+        return text if isinstance(text, str) else ""
+    return option if isinstance(option, str) else ""
+
+
+def _correct_keys(blob: dict) -> set[str]:
+    """Spellings the parser treats as the right answer — never error-forms."""
+    keys: set[str] = set()
+    options = blob.get("options") or []
+    correct = blob.get("correct")
+    if type(correct) is int and 0 <= correct < len(options):
+        text = _option_text(options[correct])
+        if text.strip():
+            keys.add(strip_acute(text).lower().strip())
+    elif isinstance(correct, str) and correct.strip():
+        keys.add(strip_acute(correct).lower().strip())
+    answer = blob.get("answer") if blob.get("answer") not in (None, "") else blob.get("target")
+    if isinstance(answer, list):
+        for item in answer:
+            if type(item) is int and 0 <= item < len(options):
+                text = _option_text(options[item])
+                if text.strip():
+                    keys.add(strip_acute(text).lower().strip())
+            elif isinstance(item, str) and item.strip():
+                keys.add(strip_acute(item).lower().strip())
+    elif isinstance(answer, str) and answer.strip():
+        keys.add(strip_acute(answer).lower().strip())
+    for option in options:
+        if isinstance(option, dict) and option.get("correct") is True:
+            text = _option_text(option)
+            if text.strip():
+                keys.add(strip_acute(text).lower().strip())
+    return keys
+
+
 def pedagogical_error_forms(acts: dict) -> set[str]:
     """Wrong spellings in error-correction / gapped fill-in are not lemmas to stress."""
     out: set[str] = set()
@@ -292,7 +333,7 @@ def pedagogical_error_forms(acts: dict) -> set[str]:
         if not isinstance(activity, dict):
             continue
         blobs = [activity]
-        blobs.extend(item for item in (activity.get("items") or []) if isinstance(item, dict))
+        blobs.extend(_activity_rows(activity))
         for blob in blobs:
             for key, value in blob.items():
                 if key.lower() in _ERROR_KEYS and isinstance(value, str) and value.strip():
@@ -307,8 +348,7 @@ def pedagogical_error_forms(acts: dict) -> set[str]:
                         continue
                     if "_" in tok:
                         out.add(strip_acute(tok.strip("_")).lower())
-            answer = blob.get("answer") or blob.get("correct") or blob.get("target")
-            answer_key = strip_acute(str(answer)).lower().strip() if answer else ""
+            correct_keys = _correct_keys(blob)
             for option in blob.get("options") or []:
                 if isinstance(option, dict) and option.get("correct") is False:
                     text = option.get("text") or option.get("en") or ""
@@ -316,7 +356,7 @@ def pedagogical_error_forms(acts: dict) -> set[str]:
                         out.add(strip_acute(text).lower().strip())
                 elif isinstance(option, str) and option.strip():
                     key = strip_acute(option).lower().strip()
-                    if key and key != answer_key:
+                    if key and key not in correct_keys:
                         out.add(key)
     return {form for form in out if form}
 

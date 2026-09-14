@@ -138,6 +138,23 @@ class TestParsing:
         assert activity.items[0].source == "Good day / Hello"
         assert any(opt.text == "Добрий день" and opt.correct for opt in activity.items[0].options)
 
+    def test_translate_legacy_uk_en_keeps_ukrainian_source(self, parser, tmp_path):
+        path = tmp_path / "activities.yaml"
+        path.write_text(
+            """
+- id: act-tr
+  type: translate
+  title: Translate
+  items:
+  - uk: Добрий день
+    en: Good day
+""",
+            encoding="utf-8",
+        )
+        activity = parser.parse(path)[0]
+        assert activity.items[0].source == "Добрий день"
+        assert any(opt.text == "Good day" and opt.correct for opt in activity.items[0].options)
+
     def test_parse_preserves_titles(self, parser, sample_yaml_path):
         """Titles are preserved during parsing."""
         activities = parser.parse(sample_yaml_path)
