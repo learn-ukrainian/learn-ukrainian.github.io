@@ -87,6 +87,12 @@ def test_error_correction_wrong_spellings_are_not_missing_stress():
     }
     allow2 = gates.pedagogical_error_forms(gapped)
     assert "вчител" in allow2
+    italic = {
+        "inline": [{"id": "act-i", "type": "fill-in",
+                    "items": [{"sentence": "_книга_ на столі.", "answer": "книга"}]}],
+        "workbook": [],
+    }
+    assert "книга" not in gates.pedagogical_error_forms(italic)
     quiz = {
         "inline": [],
         "workbook": [{

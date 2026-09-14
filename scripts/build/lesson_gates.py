@@ -238,6 +238,11 @@ def pedagogical_error_forms(acts: dict) -> set[str]:
             sentence = blob.get("sentence")
             if isinstance(sentence, str) and "_" in sentence:
                 for tok in _stress_tokens(sentence):
+                    wrapped = (tok.startswith("__") and tok.endswith("__")) or (
+                        tok.startswith("_") and tok.endswith("_") and not tok.startswith("__")
+                    )
+                    if wrapped:
+                        continue
                     if "_" in tok:
                         out.add(strip_acute(tok.strip("_")).lower())
             for option in blob.get("options") or []:
