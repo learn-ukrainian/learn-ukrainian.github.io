@@ -1181,3 +1181,56 @@ def test_citation_whitelist_r14_f1_attribution_boundary_disambiguation() -> None
     assert is_clean8 is True
     assert app8 == ["ВЕСУМ"]
     assert viol8 == []
+
+
+def test_citation_whitelist_r16_f1_compound_quoted_subject_disambiguation() -> None:
+    """Verify compound quoted subjects followed by participle clause are not captured as authorities (R16-F1)."""
+    # 1. Quoted compound subjects with conjunction followed by participle clause
+    text1 = "Згідно з ВЕСУМ, «Школа» та «Університет», описані вище, є правильними."
+    is_clean1, app1, viol1 = verify_citation_whitelist(text1)
+    assert is_clean1 is True
+    assert app1 == ["ВЕСУМ"]
+    assert viol1 == []
+
+    text2 = "За даними ВЕСУМ, «Школа» та «Університет», описані вище, є правильними."
+    is_clean2, app2, viol2 = verify_citation_whitelist(text2)
+    assert is_clean2 is True
+    assert app2 == ["ВЕСУМ"]
+    assert viol2 == []
+
+    text3 = "Відповідно до ВЕСУМ, «Школа» та «Університет», описані вище, є правильними."
+    is_clean3, app3, viol3 = verify_citation_whitelist(text3)
+    assert is_clean3 is True
+    assert app3 == ["ВЕСУМ"]
+    assert viol3 == []
+
+    # 2. Quoted compound subjects with commas and conjunction followed by participle clause
+    text4 = "Згідно з ВЕСУМ, «Школа», «Коледж» та «Університет», описані вище, є правильними."
+    is_clean4, app4, viol4 = verify_citation_whitelist(text4)
+    assert is_clean4 is True
+    assert app4 == ["ВЕСУМ"]
+    assert viol4 == []
+
+    # 3. Genuine co-citations without participle clauses are caught
+    text5 = "Згідно з ВЕСУМ, «Зорблакс» та «Фальшсловник», це правильно."
+    is_clean5, app5, viol5 = verify_citation_whitelist(text5)
+    assert is_clean5 is False
+    assert any("Зорблакс" in v for v in viol5)
+    assert any("Фальшсловник" in v for v in viol5)
+    assert any("ВЕСУМ" in a for a in app5)
+
+    text6 = "За даними ВЕСУМ, Зорблака та «Фальшсловник», це правильно."
+    is_clean6, app6, viol6 = verify_citation_whitelist(text6)
+    assert is_clean6 is False
+    assert any("Зорблака" in v for v in viol6)
+    assert any("Фальшсловник" in v for v in viol6)
+    assert any("ВЕСУМ" in a for a in app6)
+
+    # 4. Approved multi-authority co-citations remain approved
+    text7 = "Згідно з ВЕСУМ, УЛІФ та Грінченком, це правильно."
+    is_clean7, app7, viol7 = verify_citation_whitelist(text7)
+    assert is_clean7 is True
+    assert "ВЕСУМ" in app7
+    assert "УЛІФ" in app7
+    assert any("Грінченк" in a for a in app7)
+    assert viol7 == []
