@@ -25,6 +25,13 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+try:
+    from scripts.lexicon.curated_heteronyms_batch import CURATED_HETERONYMS_BATCH
+except ModuleNotFoundError:
+    from curated_heteronyms_batch import CURATED_HETERONYMS_BATCH
 
 
 @lru_cache(maxsize=1)
@@ -459,6 +466,7 @@ CURATED_HETERONYMS: dict[str, list[dict[str, Any]]] = {
             "distinction_note": "Не плутати з омографом «а́тлас» (наголос на першому складі: збірник географічних або анатомічних карт).",
         },
     ],
+    **CURATED_HETERONYMS_BATCH,
 }
 
 
@@ -680,7 +688,11 @@ def main() -> int:
                     heads = [p["head"] for p in parsed]
                     print(f"  {w}: {', '.join(heads)}")
         conn.close()
+        curated_count = len(CURATED_HETERONYMS)
+        residual = heteronym_count - curated_count
         print(f"Total heteronyms detected: {heteronym_count}")
+        print(f"Curated in SSOT: {curated_count}")
+        print(f"Remaining scan residual: {residual}")
         return 0
 
     parser.print_help()
