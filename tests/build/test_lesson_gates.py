@@ -65,6 +65,16 @@ def test_removed_original_paragraph_fails(gold):
     assert report["facts"]["preservation"]["lost"] > 0
 
 
+def test_list_shaped_baseline_activities_do_not_crash(gold):
+    module, source, plan = gold
+    data = yaml.safe_load((source / "activities.yaml").read_text())
+    combined = list(data.get("inline") or []) + list(data.get("workbook") or [])
+    (source / "activities.yaml").write_text(yaml.safe_dump(combined, allow_unicode=True))
+    report = gates.run_lesson_gates(module, source, plan)
+    assert "passed" in report
+    assert not any("has no attribute" in d for d in report["diagnostics"])
+
+
 def test_unavailable_stress_oracle_fails_closed(gold, monkeypatch):
     def unavailable(*args):
         raise RuntimeError("unavailable")
