@@ -988,3 +988,83 @@ def test_citation_whitelist_r11_f4_two_authority_extraction_across_supported_pre
     assert is_clean2 is False
     assert any("Зорблакса" in v for v in viol2)
     assert any("ВЕСУМ" in a for a in app2)
+
+
+def test_evaluate_academic_non_inferiority_r12_f1_normalization_key_rejected() -> None:
+    """Verify metadata keys like 'normalization' are rejected as score metrics (R12-F1)."""
+    base_scores = {
+        "mmlu_ua": {"acc_norm,none": 0.70, "normalization": 1},
+        "arc_ua": {"acc_norm,none": 0.60, "normalization": 1},
+        "hellaswag_ua": {"acc_norm,none": 0.65, "normalization": 1},
+        "gsm8k_ua": {"exact_match,none": 0.50, "normalization": 1},
+    }
+    aligned_scores = {
+        "mmlu_ua": {"acc,none": 0.10, "normalization": 1},
+        "arc_ua": {"acc_norm,none": 0.60, "normalization": 1},
+        "hellaswag_ua": {"acc_norm,none": 0.65, "normalization": 1},
+        "gsm8k_ua": {"exact_match,none": 0.50, "normalization": 1},
+    }
+    result = evaluate_academic_non_inferiority(base_scores, aligned_scores)
+    assert result.overall_passed is False
+    task_map = {t.benchmark: t for t in result.tasks}
+    assert task_map["mmlu_ua"].passed is False
+    assert "No matching score metric found" in (task_map["mmlu_ua"].details.get("error") or "")
+
+
+def test_evaluate_prediction_r12_f2_replacement_negation_scoped_to_target() -> None:
+    """Verify replacement negation is strictly scoped to the target term (R12-F2)."""
+    case = {
+        "target_term": "матеріал",
+        "case_type": "PRESERVE",
+        "input_text": "Матеріал підручника викладено послідовно.",
+        "expected_replacement": None,
+    }
+    # 1. Thought replaces target, but negates replacement for unrelated word: must be harmful edit
+    pred1 = (
+        "<thought>Замініть «матеріал» — інше слово не потребує заміни.</thought>"
+        "Матеріал підручника викладено послідовно."
+    )
+    res1 = evaluate_prediction(case, pred1)
+    assert res1.harmful_edit is True
+    assert "Harmful over-correction detected" in res1.details
+
+    # 2. Thought negates replacement of target: must NOT be harmful edit
+    pred2 = (
+        "<thought>Не слід замінити «матеріал».</thought>"
+        "Матеріал підручника викладено послідовно."
+    )
+    res2 = evaluate_prediction(case, pred2)
+    assert res2.harmful_edit is False
+
+    # 3. Thought negates replacement with imperfective verb: must NOT be harmful edit
+    pred3 = (
+        "<thought>Не слід замінювати «матеріал».</thought>"
+        "Матеріал підручника викладено послідовно."
+    )
+    res3 = evaluate_prediction(case, pred3)
+    assert res3.harmful_edit is False
+
+
+def test_citation_whitelist_r12_f3_sentence_subject_not_mistaken_for_authority() -> None:
+    """Verify sentence subject followed by comma is not captured as unapproved authority (R12-F3)."""
+    text1 = "Згідно з ВЕСУМ, Школа, описана вище, є правильною."
+    is_clean1, app1, viol1 = verify_citation_whitelist(text1)
+    assert is_clean1 is True
+    assert "ВЕСУМ" in app1
+    assert "Школа" not in viol1
+    assert len(viol1) == 0
+
+    text2 = "Згідно з ВЕСУМ, Зорблаксом, це правильно."
+    is_clean2, _app2, viol2 = verify_citation_whitelist(text2)
+    assert is_clean2 is False
+    assert any("Зорблаксом" in v for v in viol2)
+
+
+def test_citation_whitelist_r12_f4_approved_identities_grinchenko_shevchenko_franko() -> None:
+    """Verify nominative forms of Grinchenko, Shevchenko, and Franko are approved (R12-F4)."""
+    for name in ("Грінченко", "Шевченко", "Франко"):
+        text = f"Згідно з “{name}”, це правильно."
+        is_clean, app, viol = verify_citation_whitelist(text)
+        assert is_clean is True, f"Failed for {name}: {viol}"
+        assert any(name in a for a in app)
+        assert len(viol) == 0

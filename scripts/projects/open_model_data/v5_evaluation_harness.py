@@ -92,11 +92,11 @@ APPROVED_AUTHORITY_REGEXES = [
     ),
     re.compile(r"^«?як\s+ми\s+говоримо»?$", re.IGNORECASE),
     re.compile(
-        r"^(?:(?:словник(?:и|ів|ам|ами|ах|а|у|ом|і)?)\s+)?(?:(?:борис(?:а|у|ом|ові|і)?)\s+)?грінченк(?:а|у|ом|і)?(?:\s+словарь\s+української\s+мови)?$",
+        r"^(?:(?:словник(?:и|ів|ам|ами|ах|а|у|ом|і)?)\s+)?(?:(?:борис(?:а|у|ом|ові|і)?)\s+)?грінченк(?:о|а|у|ом|і)?(?:\s+словарь\s+української\s+мови)?$",
         re.IGNORECASE,
     ),
     re.compile(
-        r"^словарь\s+української\s+мови(?:\s+(?:грінченк(?:а|у|ом|і)?|1907(?:\s+року)?))?$",
+        r"^словарь\s+української\s+мови(?:\s+(?:грінченк(?:о|а|у|ом|і)?|1907(?:\s+року)?))?$",
         re.IGNORECASE,
     ),
     re.compile(
@@ -124,8 +124,8 @@ APPROVED_AUTHORITY_REGEXES = [
         r"^(?:(?:корпус(?:и|ів|ам|ами|ах|а|у|ом|і)?)\s+)?ua-gec$",
         re.IGNORECASE,
     ),
-    re.compile(r"^(?:(?:тарас(?:а|у|ом|ові|і)?)\s+)?шевченк(?:а|у|ом|і)?$", re.IGNORECASE),
-    re.compile(r"^(?:(?:іван(?:а|у|ом|ові|і)?)\s+)?франк(?:а|у|ом|і)?$", re.IGNORECASE),
+    re.compile(r"^(?:(?:тарас(?:а|у|ом|ові|і)?)\s+)?шевченк(?:о|а|у|ом|і)?$", re.IGNORECASE),
+    re.compile(r"^(?:(?:іван(?:а|у|ом|ові|і)?)\s+)?франк(?:о|а|у|ом|і)?$", re.IGNORECASE),
     re.compile(r"^(?:(?:агатангел(?:а|у|ом|ові|і)?)\s+)?кримськ(?:ого|ому|им|ий)?$", re.IGNORECASE),
     re.compile(r"^(?:(?:олекс(?:а|и|і|у|ею|ові)?)\s+)?синявськ(?:ого|ому|им|ий)?$", re.IGNORECASE),
     re.compile(r"^(?:(?:олен(?:а|и|і|у|ою)?)\s+)?курил(?:о|а|у|ом|і)$", re.IGNORECASE),
@@ -368,8 +368,11 @@ KEYWORD_AUTHORITY_RE = (
     r"(?:\s+(?:«[^»]+»|\"[^\"]+\"|“[^”]+”|‘[^’]+’|'[^']+'|[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*|\d+))?"
 )
 LATIN_OR_ACRONYM_RE = r"(?:[a-zA-Z][a-zA-Z0-9’'\-]*(?:\s+[a-zA-Z0-9’'\-]+)*|[А-ЯІЇЄҐ]{2,}(?:-[0-9А-ЯІЇЄҐ]+)?)"
-OBLIQUE_CASE_NAME_RE = (
-    r"(?:[A-ZА-ЯІЇЄҐ][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:ом|ем|ям|ою|ею|овим|євим|им|ім|а|я|у|ю|ів|ей|ові|єві|і)\b)"
+INSTRUMENTAL_NAME_RE = (
+    r"(?:[A-ZА-ЯІЇЄҐ][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:ом|ем|ям|ою|ею|єю|овим|євим|им|ім)\b)"
+)
+GENITIVE_NAME_RE = (
+    r"(?:[A-ZА-ЯІЇЄҐ][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:кса|нка|нга|нта|рда|рта|нда|льда|вича|овича|евича|ьова|ьові|ова|ева|ого|ього|ів|ей|ові|єві|у|ю)\b)"
 )
 ANY_CAP_NAME_RE = (
     r"[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:-[A-ZА-ЯІЇЄҐ0-9][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)*"
@@ -377,14 +380,20 @@ ANY_CAP_NAME_RE = (
 )
 
 ENTITY_CITATION_RE = rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{ANY_CAP_NAME_RE})"
-INTRO_SPECIAL_ENTITY_RE = (
-    rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE}|{OBLIQUE_CASE_NAME_RE})"
+INTRO_SPECIAL_ENTITY_INSTRUMENTAL_RE = (
+    rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE}|{INSTRUMENTAL_NAME_RE})"
+)
+INTRO_SPECIAL_ENTITY_GENITIVE_RE = (
+    rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE}|{GENITIVE_NAME_RE})"
 )
 
 CONJ_COORD_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_RE})"
 PLURAL_COORD_RE = rf"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+){ENTITY_CITATION_RE})"
-INTRO_COMMA_COORD_RE = (
-    rf"(?:\s*,\s*(?:{INTRO_SPECIAL_ENTITY_RE}(?=\s*,)|{ENTITY_CITATION_RE}(?=\s*,\s*{ENTITY_CITATION_RE}|\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_RE}\s*,)))"
+INTRO_COMMA_COORD_INSTRUMENTAL_RE = (
+    rf"(?:\s*,\s*(?:{INTRO_SPECIAL_ENTITY_INSTRUMENTAL_RE}(?=\s*,)|{ENTITY_CITATION_RE}(?=\s*,\s*{ENTITY_CITATION_RE}|\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_RE}\s*,)))"
+)
+INTRO_COMMA_COORD_GENITIVE_RE = (
+    rf"(?:\s*,\s*(?:{INTRO_SPECIAL_ENTITY_GENITIVE_RE}(?=\s*,)|{ENTITY_CITATION_RE}(?=\s*,\s*{ENTITY_CITATION_RE}|\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_RE}\s*,)))"
 )
 
 CITATION_MENTION_PATTERNS = [
@@ -404,10 +413,16 @@ CITATION_MENTION_PATTERNS = [
         rf"\b((?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+{ENTITY_CITATION_RE}(?:{CONJ_COORD_RE})*)"
         r"(?!\w)"
     ),
-    # 3. Introductory attribution phrases: "згідно з <Entities>", "відповідно до <Entities>", etc.
+    # 3a. Instrumental introductory attribution phrases: "згідно з <Entities>"
     re.compile(
-        rf"\b(?:[Зз]гідно\s+(?:з|із|зі)|[Вв]ідповідно\s+до|[Зз]а\s+даними|[Зз]а\s+версією)\s+"
-        rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?({ENTITY_CITATION_RE}(?:{INTRO_COMMA_COORD_RE}|{CONJ_COORD_RE})*)"
+        rf"\b[Зз]гідно\s+(?:з|із|зі)\s+"
+        rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?({ENTITY_CITATION_RE}(?:{INTRO_COMMA_COORD_INSTRUMENTAL_RE}|{CONJ_COORD_RE})*)"
+        r"(?!\w)"
+    ),
+    # 3b. Genitive introductory attribution phrases: "відповідно до <Entities>", "за даними <Entities>", etc.
+    re.compile(
+        rf"\b(?:[Вв]ідповідно\s+до|[Зз]а\s+даними|[Зз]а\s+версією)\s+"
+        rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?({ENTITY_CITATION_RE}(?:{INTRO_COMMA_COORD_GENITIVE_RE}|{CONJ_COORD_RE})*)"
         r"(?!\w)"
     ),
 ]
@@ -536,19 +551,26 @@ PREFERRED_METRIC_KEYS = (
     "accuracy",
     "score",
 )
-RECOGNIZED_SCORE_METRIC_SUBSTRINGS = (
+SUPPORTED_SCORE_METRIC_NAMES = (
     "acc",
+    "acc_norm",
+    "accuracy",
     "exact_match",
+    "em",
     "f1",
+    "macro_f1",
+    "micro_f1",
     "bleu",
     "rouge",
-    "score",
-    "norm",
+    "rouge1",
+    "rouge2",
+    "rougel",
+    "rouge_l",
     "mc1",
     "mc2",
     "perplexity",
     "ppl",
-    "pass@",
+    "score",
 )
 EXCLUDED_METRIC_SUBSTRINGS = (
     "stderr",
@@ -572,6 +594,17 @@ EXCLUDED_METRIC_SUBSTRINGS = (
     "num",
     "id",
 )
+
+
+def is_supported_score_metric(key: str) -> bool:
+    """Check if key represents an explicit recognized score metric, rejecting metadata."""
+    k = key.strip().lower()
+    if any(ex in k for ex in EXCLUDED_METRIC_SUBSTRINGS):
+        return False
+    metric_name = k.split(",")[0].strip()
+    if metric_name in SUPPORTED_SCORE_METRIC_NAMES:
+        return True
+    return bool(re.match(r"^pass@\d+$", metric_name))
 
 
 def extract_benchmark_score(entry: Any, preferred_key: str | None = None) -> tuple[float, str]:
@@ -607,9 +640,7 @@ def extract_benchmark_score(entry: Any, preferred_key: str | None = None) -> tup
         clean_candidates = {
             k: float(v)
             for k, v in entry.items()
-            if isinstance(v, (int, float))
-            and any(sc in k.lower() for sc in RECOGNIZED_SCORE_METRIC_SUBSTRINGS)
-            and not any(ex in k.lower() for ex in EXCLUDED_METRIC_SUBSTRINGS)
+            if isinstance(v, (int, float)) and is_supported_score_metric(k)
         }
         if len(clean_candidates) == 1:
             k, v = next(iter(clean_candidates.items()))
@@ -660,8 +691,7 @@ def extract_matching_benchmark_scores(
             if k in aligned_entry
             and isinstance(base_entry[k], (int, float))
             and isinstance(aligned_entry[k], (int, float))
-            and any(sc in k.lower() for sc in RECOGNIZED_SCORE_METRIC_SUBSTRINGS)
-            and not any(ex in k.lower() for ex in EXCLUDED_METRIC_SUBSTRINGS)
+            and is_supported_score_metric(k)
         ]
         if len(clean_common) == 1:
             k = clean_common[0]
@@ -1091,46 +1121,35 @@ def evaluate_prediction(
                     )
                 )
 
-                # 4. Replacement instruction vs replacement negation
-                directive_replace = any(
-                    cp in clause
-                    for cp in (
-                        f"замініть «{t_lower}»",
-                        f"замінити «{t_lower}»",
-                        f"уникайте «{t_lower}»",
-                        f"уникати «{t_lower}»",
-                        f"потребує заміни «{t_lower}»",
-                        f"слід замінити «{t_lower}»",
-                        f"варто замінити «{t_lower}»",
-                        f"необхідно замінити «{t_lower}»",
+                # 4. Replacement instruction vs replacement negation targeting t_token
+                directive_replace = bool(
+                    re.search(
+                        rf"(?<!не\s)(?<!не\sслід\s)(?<!не\sварто\s)(?<!не\sтреба\s)(?<!не\sпотрібно\s)(?<!не\sнеобхідно\s)"
+                        rf"(?:замініть|замінити|уникайте|уникати|виправте|виправити|"
+                        rf"(?:слід|варто|потрібно|необхідно|треба)\s+(?:замінити|замінювати|уникати|виправити|виправляти)|"
+                        rf"(?:потребує|вимагає)\s+(?:заміни|виправлення))\s+(?:слово\s+|вживання\s+)?«?{t_token}»?",
+                        clause,
                     )
                 ) or bool(
                     re.search(
-                        rf"(?<!не\s)(?<!не\sслід\s)(?<!не\sварто\s)(?<!не\sтреба\s)(?<!не\sпотрібно\s)(?:замініть|замінити|уникайте|уникати|виправте|виправити)\s+«?{t_token}»?",
+                        rf"(?:слово\s+)?«?{t_token}»?\s+(?<!не\s)(?<!не\sслід\s)(?<!не\sварто\s)(?<!не\sтреба\s)(?<!не\sпотрібно\s)"
+                        rf"(?:потребує\s+(?:заміни|виправлення)|вимагає\s+заміни|(?:слід|варто|потрібно|необхідно|треба)\s+(?:замінити|замінювати|уникати|виправити|виправляти))",
                         clause,
                     )
                 )
-                negates_replace = any(
-                    np in clause
-                    for np in (
-                        f"не замінюйте «{t_lower}»",
-                        f"не замінювати «{t_lower}»",
-                        f"не слід замінювати «{t_lower}»",
-                        f"не варто замінювати «{t_lower}»",
-                        f"не потребує заміни «{t_lower}»",
-                        f"не потрібно замінювати «{t_lower}»",
-                        f"не треба замінювати «{t_lower}»",
-                        f"не слід уникати «{t_lower}»",
-                        f"не варто уникати «{t_lower}»",
-                        "не потребує заміни",
-                        "не потрібно замінювати",
-                        "не треба замінювати",
-                        "не потребує виправлення",
-                        "не потребує редагування",
+                negates_replace = bool(
+                    re.search(
+                        rf"не\s+(?:слід|варто|потрібно|необхідно|треба)?\s*(?:замінювати|замінити|уникати|виправляти|виправити)\s+(?:слово\s+|вживання\s+)?«?{t_token}»?",
+                        clause,
                     )
                 ) or bool(
                     re.search(
-                        rf"не\s+(?:слід|варто|потрібно|треба)?\s*(?:замінювати|виправляти|уникати|редагувати)\s+«?{t_token}»?",
+                        rf"(?:не\s+потребує|не\s+вимагає)\s+(?:заміни|виправлення)\s+(?:слово\s+|вживання\s+)?«?{t_token}»?",
+                        clause,
+                    )
+                ) or bool(
+                    re.search(
+                        rf"(?:слово\s+)?«?{t_token}»?\s+(?:не\s+потребує\s+(?:заміни|виправлення)|не\s+вимагає\s+заміни|не\s+(?:слід|варто|потрібно|необхідно|треба)?\s*(?:замінювати|замінити|уникати|виправляти|виправити))",
                         clause,
                     )
                 )
