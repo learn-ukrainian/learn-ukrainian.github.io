@@ -118,7 +118,7 @@ def first_text(x, *, keep_stress: bool = False) -> str | None:
     pedagogical pair in stress-and-melody) are not the same option twice.
     """
     def key(s: str) -> str:
-        s = s.lower()
+        s = unicodedata.normalize("NFC", s).lower()
         if keep_stress:
             return re.sub(r"\s+", " ", s).strip()
         return norm_md(s)

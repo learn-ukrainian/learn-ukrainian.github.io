@@ -87,6 +87,8 @@ def test_homograph_pair_is_not_a_payload_contradiction():
     assert contradictions(payload, "act-w2") == []
     dup = {"items": ["за́мок", "за́мок"]}
     assert any("appears 2x" in c for c in contradictions(dup, "act-3"))
+    nfc = {"items": ["й", "и\u0306"]}
+    assert any("appears 2x" in c for c in contradictions(nfc, "act-nfc"))
 
 
 def test_writer_artifact_allows_original_inline_error_correction():
