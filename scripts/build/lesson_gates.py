@@ -21,6 +21,8 @@ ALLOWED = {
     "workbook_only": {"anagram", "error-correction", "translate"},
 }
 LIST_FIELDS = ("items", "questions", "pairs", "sentences", "words", "statements", "groups")
+# Gloss / media fields the MDX renderer does not serialize into the page.
+_RENDER_SKIP_KEYS = frozenset({"translation", "hint", "gloss", "notes", "ipa", "audio", "image"})
 NAME_RE = re.compile(r"анна|anna|ulp|ohoiko|огойко", re.I)
 ATTR_RE = re.compile(r"цит\.|цитата|за:|джерело|quoted from|source:|цитуємо", re.I)
 ACUTE = "́"
@@ -61,6 +63,72 @@ def norm_text(t: str) -> str:
     return re.sub(r"\s+", " ", strip_acute(t)).strip()
 
 
+def unescape_published(page: str) -> str:
+    """Collapse JSON-in-template-literal extra backslashes from _dump_safe_json."""
+    decoded = re.sub(r"\\u([0-9a-fA-F]{4})", lambda m: chr(int(m[1], 16)), page)
+    previous = None
+    while previous != decoded:
+        previous = decoded
+        decoded = (
+            decoded.replace("\\\\", "\\")
+            .replace('\\"', '"')
+            .replace("\\'", "'")
+            .replace("\\n", " ")
+            .replace("\\`", "`")
+        )
+    return decoded
+
+
+def _dialogue_props_text(page: str) -> str:
+    """Text that actually lives on visible DialogueBox props, not the rest of the page."""
+    blobs = re.findall(r"<DialogueBox[\s\S]*?/>", strip_comments(page))
+    return norm_text(unescape_published(" ".join(blobs)))
+
+
+_SPEAKER = re.compile(r"([A-ZА-ЯІЇЄҐ][\w'’\-]{1,24})\s*:\s*")
+
+
+def _dialogue_turns(para: str) -> list[tuple[str, str]]:
+    """Speaker/spoken pairs, including mashed 'Тарас : … Оксана : …' lines."""
+    text = strip_acute(para.strip())
+    text = re.sub(r"^>\s*", "", text, flags=re.M)
+    text = re.sub(r"\*\*([^*]+)\*\*", r"\1", text)
+    text = re.sub(r"\*\([^()]*\)\*", " ", text)
+    text = re.sub(r"\([^()]*\)", " ", text)
+    matches = list(_SPEAKER.finditer(text))
+    if not matches:
+        return []
+    turns: list[tuple[str, str]] = []
+    for i, match in enumerate(matches):
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+        spoken = text[match.end():end]
+        spoken = re.sub(r"\s*\*\([^()]*\)\*", "", spoken)
+        spoken = re.sub(r"\s*[—–]\s*.*$", "", spoken)
+        spoken = re.sub(r"\s*\([^()]*\)\s*$", "", spoken)
+        speaker = match.group(1).strip()
+        spoken = spoken.strip().strip("*_").strip()
+        if speaker and spoken:
+            turns.append((speaker, spoken))
+    return turns
+
+
+def _spoken_in_hay(spoken: str, hay: str) -> bool:
+    text = md_to_text(spoken)
+    return bool(text) and text in hay
+
+
+def _visible_in_render(value: str, literal_text: str) -> bool:
+    """True if YAML text or its fill-in-blanked form is on the published page."""
+    variants = [
+        norm_text(value),
+        norm_text(re.sub(r"\{([^{}]+)\}", "___", value)),
+        norm_text(re.sub(r"\[([^\[\]]{1,12})\]", "___", value)),
+        norm_text(re.sub(r"_{2,}", "___", value)),
+        norm_text(value.replace("-", "")),
+    ]
+    return any(variant and variant in literal_text for variant in variants)
+
+
 def sections(md: str) -> dict[str, str]:
     """Return {section_title: body} with '__intro__' for text before the first '## '."""
     out: dict[str, str] = {}
@@ -82,12 +150,20 @@ def paragraphs(t: str) -> list[str]:
     return [p.strip() for p in re.split(r"\n\s*\n", strip_comments(t)) if p.strip()]
 
 
-def leaves(obj) -> list:
+def leaves(obj, skip: set[str] | frozenset[str] = frozenset()) -> list:
     if isinstance(obj, dict):
-        return [x for v in obj.values() for x in leaves(v)]
+        return [x for k, v in obj.items() if k not in skip for x in leaves(v, skip)]
     if isinstance(obj, list):
-        return [x for v in obj for x in leaves(v)]
+        return [x for v in obj for x in leaves(v, skip)]
     return [obj]
+
+
+def _activity_render_strings(act: dict) -> list:
+    skip = set(_RENDER_SKIP_KEYS)
+    if act.get("type") == "unjumble":
+        skip.add("explanation")
+    payload = {k: v for k, v in act.items() if k in LIST_FIELDS or k in ("title", "instruction")}
+    return leaves(payload, skip)
 
 
 def contains(orig, new) -> bool:
@@ -111,13 +187,24 @@ def contains(orig, new) -> bool:
     return type(orig) is type(new) and orig == new
 
 
-def first_text(x) -> str | None:
+def first_text(x, *, keep_stress: bool = False) -> str | None:
+    """Primary text of a payload node. Stress is stripped unless keep_stress.
+
+    Contradiction checks keep combining acutes so за́мок and замо́к (the
+    pedagogical pair in stress-and-melody) are not the same option twice.
+    """
+    def key(s: str) -> str:
+        s = unicodedata.normalize("NFC", s).lower()
+        if keep_stress:
+            return re.sub(r"\s+", " ", s).strip()
+        return norm_md(s)
+
     if isinstance(x, str):
-        return norm_md(x).lower()
+        return key(x)
     if isinstance(x, dict):
         for v in x.values():
             if isinstance(v, str) and v.strip():
-                return norm_md(v).lower()
+                return key(v)
     return None
 
 
@@ -132,7 +219,7 @@ def contradictions(obj, path="") -> list[str]:
     if isinstance(obj, list):
         seen: dict[str, int] = {}
         for i, e in enumerate(obj):
-            t = first_text(e)
+            t = first_text(e, keep_stress=True)
             if t:
                 seen[t] = seen.get(t, 0) + 1
             out += contradictions(e, f"{path}[{i}]")
@@ -142,7 +229,7 @@ def contradictions(obj, path="") -> list[str]:
             allitems: dict[str, int] = {}
             for g in obj:
                 for it in g["items"]:
-                    t = first_text(it)
+                    t = first_text(it, keep_stress=True)
                     if t:
                         allitems[t] = allitems.get(t, 0) + 1
             out += [f"{path}: item '{t}' sits in {c} groups" for t, c in allitems.items() if c > 1]
@@ -159,14 +246,129 @@ def learner_text(md: str) -> str:
     return t
 
 
+_TOKEN_RE = re.compile(rf"[{CYR}'’{ACUTE}_-]+")
+
+
+def _stress_tokens(text: str) -> list[str]:
+    """Learner tokens. Hyphenated transfer models (дере-в'яний) stay one token."""
+    return _TOKEN_RE.findall(nfc(text).replace("''", "'").replace("’", "'"))
+
+
+def _skip_stress_token(tok: str) -> bool:
+    """Hyphenation demos, fill-in gaps, and 1-syllable fragments are not dictionary words.
+
+    Markdown ``_книга_`` / ``__книга__`` is emphasis (check the inner word).
+    Fill-in gaps are internal ``_`` (мален_кий) or a blank ``__`` that is not
+    wrapping both sides (дере__).
+    """
+    if not tok:
+        return True
+    core = tok.strip("_")
+    if "_" in core:
+        return True
+    wrapped = (tok.startswith("__") and tok.endswith("__")) or (
+        tok.startswith("_") and tok.endswith("_") and not tok.startswith("__")
+    )
+    if not wrapped and (tok.startswith("__") or tok.endswith("__")):
+        return True
+    if "-" in core.strip("-"):
+        return True
+    bare = strip_acute(core.strip("'’-"))
+    return not bare or len(re.findall(r"[аеєиіїоуюяАЕЄИІЇОУЮЯ]", bare)) < 2
+
+
+_ERROR_KEYS = frozenset({"error", "errorword", "incorrect", "error_word"})
+
+
+def _activity_rows(activity: dict) -> list:
+    """Same row aliases as ActivityParser._item_rows: items, questions, statements."""
+    for key in ("items", "questions", "statements"):
+        rows = activity.get(key)
+        if isinstance(rows, list) and rows:
+            return [row for row in rows if isinstance(row, dict)]
+    return []
+
+
+def _option_text(option) -> str:
+    if isinstance(option, dict):
+        text = option.get("text") or option.get("en") or ""
+        return text if isinstance(text, str) else ""
+    return option if isinstance(option, str) else ""
+
+
+def _correct_keys(blob: dict) -> set[str]:
+    """Spellings the parser treats as the right answer — never error-forms."""
+    keys: set[str] = set()
+    options = blob.get("options") or []
+    correct = blob.get("correct")
+    if type(correct) is int and 0 <= correct < len(options):
+        text = _option_text(options[correct])
+        if text.strip():
+            keys.add(strip_acute(text).lower().strip())
+    elif isinstance(correct, str) and correct.strip():
+        keys.add(strip_acute(correct).lower().strip())
+    answer = blob.get("answer") if blob.get("answer") not in (None, "") else blob.get("target")
+    if isinstance(answer, list):
+        for item in answer:
+            if type(item) is int and 0 <= item < len(options):
+                text = _option_text(options[item])
+                if text.strip():
+                    keys.add(strip_acute(text).lower().strip())
+            elif isinstance(item, str) and item.strip():
+                keys.add(strip_acute(item).lower().strip())
+    elif isinstance(answer, str) and answer.strip():
+        keys.add(strip_acute(answer).lower().strip())
+    for option in options:
+        if isinstance(option, dict) and option.get("correct") is True:
+            text = _option_text(option)
+            if text.strip():
+                keys.add(strip_acute(text).lower().strip())
+    return keys
+
+
+def pedagogical_error_forms(acts: dict) -> set[str]:
+    """Wrong spellings in error-correction / gapped fill-in are not lemmas to stress."""
+    out: set[str] = set()
+    for activity in (acts.get("inline") or []) + (acts.get("workbook") or []):
+        if not isinstance(activity, dict):
+            continue
+        blobs = [activity]
+        blobs.extend(_activity_rows(activity))
+        for blob in blobs:
+            for key, value in blob.items():
+                if key.lower() in _ERROR_KEYS and isinstance(value, str) and value.strip():
+                    out.add(strip_acute(value).lower().strip())
+            sentence = blob.get("sentence")
+            if isinstance(sentence, str) and "_" in sentence:
+                for tok in _stress_tokens(sentence):
+                    wrapped = (tok.startswith("__") and tok.endswith("__")) or (
+                        tok.startswith("_") and tok.endswith("_") and not tok.startswith("__")
+                    )
+                    if wrapped:
+                        continue
+                    if "_" in tok:
+                        out.add(strip_acute(tok.strip("_")).lower())
+            correct_keys = _correct_keys(blob)
+            for option in blob.get("options") or []:
+                if isinstance(option, dict) and option.get("correct") is False:
+                    text = option.get("text") or option.get("en") or ""
+                    if isinstance(text, str) and text.strip():
+                        out.add(strip_acute(text).lower().strip())
+                elif isinstance(option, str) and option.strip():
+                    key = strip_acute(option).lower().strip()
+                    if key and key not in correct_keys:
+                        out.add(key)
+    return {form for form in out if form}
+
+
 def missing_stress(text: str, allow: set[str]) -> list[str]:
     """Cyrillic tokens (NFC) with >=2 vowels and no combining acute, in learner-facing text."""
     bad = []
-    for tok in re.findall(rf"[{CYR}'’{ACUTE}]+", nfc(learner_text(text))):
-        if ACUTE in tok:
+    for tok in _stress_tokens(learner_text(text)):
+        if ACUTE in tok or _skip_stress_token(tok):
             continue
-        tok = tok.strip("'’")
-        if tok and len(re.findall(r"[аеєиіїоуюяАЕЄИІЇОУЮЯ]", tok)) >= 2 and strip_acute(tok).lower() not in allow:
+        tok = tok.strip("_").strip("'’-")
+        if tok and strip_acute(tok).lower() not in allow:
             bad.append(tok)
     return bad
 
@@ -191,11 +393,13 @@ def wrong_stress(text: str, allow: set[str], proper: set[str] = frozenset()) -> 
         raise RuntimeError("stress oracle unavailable") from e
     out: list[str] = []
     seen: set[str] = set()
-    for tok in re.findall(rf"[{CYR}'{ACUTE}]+", nfc(text).replace("''", "'").replace("’", "'")):
+    for tok in _stress_tokens(text):
         if ACUTE not in tok or tok in seen:
             continue
         seen.add(tok)
-        tok = tok.strip("'’")
+        if _skip_stress_token(tok):
+            continue
+        tok = tok.strip("_").strip("'’-")
         bare = strip_acute(tok)
         if not tok or bare.lower() in allow:
             continue
@@ -272,6 +476,8 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     base_md, base_acts = base["module.md"], _normalize_activities(
         base["module.md"], yaml.safe_load(base["activities.yaml"]),
     )
+    original_ids = {a.get("id") for a in base_acts.get("inline", [])} | {
+        (a.get("id") or f"act-w{i + 1}") for i, a in enumerate(base_acts.get("workbook", []))}
     base_vocab = yaml.safe_load(base["vocabulary.yaml"])
     base_secs = sections(base_md)
     base_paras_by_lesson: dict[int, list[str]] = {L["n"]: [] for L in lessons}
@@ -343,11 +549,12 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                     continue
                 all_ids.append(aid)
                 new_acts[aid] = (n, placement, a)
-                if typ in ALLOWED["inline_only"] and placement != "inline":
-                    block(f"lesson {n}: {aid} type {typ} is inline-only")
-                elif typ in ALLOWED["workbook_only"] and placement != "workbook":
-                    block(f"lesson {n}: {aid} type {typ} is workbook-only")
-                elif typ not in ALLOWED["both"] | ALLOWED["inline_only"] | ALLOWED["workbook_only"]:
+                if aid not in original_ids:
+                    if typ in ALLOWED["inline_only"] and placement != "inline":
+                        block(f"lesson {n}: {aid} type {typ} is inline-only")
+                    elif typ in ALLOWED["workbook_only"] and placement != "workbook":
+                        block(f"lesson {n}: {aid} type {typ} is workbook-only")
+                if typ not in ALLOWED["both"] | ALLOWED["inline_only"] | ALLOWED["workbook_only"]:
                     block(f"lesson {n}: {aid} type {typ} not in the A1 allowlist")
                 # item minimum: count elements of the first list field; groups count their inner items
                 cnt = None
@@ -382,24 +589,42 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             block(f"lesson {n}: {len(u_stress)} unverified stresses > {MAX_UNVERIFIED_STRESS} (stop rule)")
         if len(u_lem) > MAX_UNVERIFIED_LEMMAS:
             block(f"lesson {n}: {len(u_lem)} unverified lemmas > {MAX_UNVERIFIED_LEMMAS} (stop rule)")
-        allow = {strip_acute(w).lower() for w in u_stress}
-        # stress CORRECTNESS: every marked form must match a dictionary reading (not just carry a mark)
         proper = {strip_acute(str(w)) for w in (ly.get("proper_names") or [])} | {strip_acute(str(e.get("lemma", ""))) for e in vocab if str(e.get("lemma", ""))[:1].isupper()}
+        allow = {strip_acute(w).lower() for w in u_stress} | {w.lower() for w in proper}
         try:
-            wrong = wrong_stress(learner_text(lesson_md_clean[n]) + "\n" + "\n".join(str(x) for x in leaves(acts) + leaves(vocab) if isinstance(x, str)), allow, proper)
+            wrong = wrong_stress(
+                learner_text(lesson_md_clean[n]) + "\n" + "\n".join(
+                    str(x) for x in leaves(vocab) if isinstance(x, str)
+                ),
+                allow,
+                proper,
+            )
+            for activity in (acts.get("inline") or []) + (acts.get("workbook") or []):
+                if not isinstance(activity, dict):
+                    continue
+                local = allow | pedagogical_error_forms({"inline": [activity], "workbook": []})
+                blob = "\n".join(str(x) for x in leaves(activity) if isinstance(x, str))
+                wrong += wrong_stress(blob, local, proper)
         except Exception as exc:
             block(f"lesson {n}: stress oracle unavailable: {type(exc).__name__}")
             wrong = []
         if wrong:
             block(f"lesson {n}: {len(wrong)} stressed forms contradict the stress dictionary: {wrong[:15]}")
         bad = sorted(set(missing_stress(lesson_md_clean[n], allow)
-                         + missing_stress("\n".join(str(x) for x in leaves(acts) if isinstance(x, str)), allow)
                          + missing_stress("\n".join(str(x) for x in leaves(vocab) if isinstance(x, str)), allow)))
+        for activity in (acts.get("inline") or []) + (acts.get("workbook") or []):
+            if not isinstance(activity, dict):
+                continue
+            local = allow | pedagogical_error_forms({"inline": [activity], "workbook": []})
+            blob = "\n".join(str(x) for x in leaves(activity) if isinstance(x, str))
+            bad.extend(missing_stress(blob, local))
+        bad = sorted(set(bad))
         if bad:
             block(f"lesson {n}: {len(bad)} multi-syllable words without stress mark (not in unverified_stress): {bad[:20]}")
         est = prose_tokens / 60 + 2.5 * len(inline) + 3 * len(workbook) + 8
         per_lesson[n] = {"prose_tokens": prose_tokens, "inline": len(inline), "workbook": len(workbook),
-                         "vocab": len(lemmas), "resources": len(res), "unverified_stress": len(u_stress),
+                         "vocab": len(lemmas), "lemma_list": lemmas, "resources": len(res),
+                         "unverified_stress": len(u_stress),
                          "unverified_lemmas": len(u_lem), "est_minutes": round(est)}
         if not 45 <= est <= 75:
             warn(f"lesson {n}: pacing estimate {est:.0f} min outside 45–75 (heuristic)")
@@ -410,10 +635,14 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     if dup:
         block(f"duplicate activity ids across lessons: {dup}")
     base_lemmas = sorted(norm_md(str(e.get("lemma", ""))).lower() for e in base_vocab)
-    if sorted(all_lemmas) != base_lemmas:
-        block("vocabulary multiset != baseline 48: "
-              f"missing={sorted(set(base_lemmas)-set(all_lemmas))} extra={sorted(set(all_lemmas)-set(base_lemmas))} "
-              f"dups={sorted({l for l in all_lemmas if all_lemmas.count(l) > 1})}")
+    if sorted(set(all_lemmas)) != sorted(set(base_lemmas)):
+        block("vocabulary set != baseline: "
+              f"missing={sorted(set(base_lemmas)-set(all_lemmas))} extra={sorted(set(all_lemmas)-set(base_lemmas))}")
+    for n, facts in per_lesson.items():
+        lemmas = facts.get("lemma_list") or []
+        dups = sorted({lemma for lemma in lemmas if lemmas.count(lemma) > 1})
+        if dups:
+            block(f"lesson {n}: duplicate vocabulary lemmas in one lesson: {dups}")
     total = sum(v["prose_tokens"] for v in per_lesson.values())
     report["facts"]["total_prose_tokens"] = total
     if total < 2000:
@@ -472,8 +701,6 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
 
 
     # Exemptions cannot be invented for new writer activities.
-    original_ids = {a.get("id") for a in base_acts.get("inline", [])} | {
-        (a.get("id") or f"act-w{i + 1}") for i, a in enumerate(base_acts.get("workbook", []))}
     if not set(exempt) <= original_ids:
         block("item exemptions may name only preserved original activities")
     if len(provenance) != len(originals) or len(prov) != len(provenance):
@@ -515,33 +742,56 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             continue
         # Parse serialized props as well as Markdown: escaped strings must remain
         # represented on the published surface (e.g. OddOneOut choices).
-        decoded = re.sub(r"\\u([0-9a-fA-F]{4})", lambda m: chr(int(m[1], 16)), page)
-        decoded = decoded.replace('\\"', '"').replace("\\n", " ")
+        decoded = unescape_published(page)
         visible = norm_text(md_to_text(decoded))
         literal_text = norm_text(strip_comments(decoded))
         if len(re.findall(r"<TabItem\s", strip_comments(page))) != 4:
             block(f"lesson {n}: render must have four learner tabs")
-        for para in paragraphs(md):
+        for para in paragraphs(re.sub(r"```.*?```", "\n", md, flags=re.S)):
             if len(para.split()) < 8:
                 continue
-            if para.lstrip().startswith(">") and "<DialogueBox" in page:
-                # DialogueBox serializes speaker and spoken text as separate props.
-                chunks = [re.sub(r"^>\s*", "", line) for line in para.splitlines() if line.strip()]
-                missing = False
-                for chunk in chunks:
-                    speaker, sep, spoken = chunk.partition(":")
-                    for value in (speaker, spoken) if sep else (chunk,):
-                        if md_to_text(value) not in literal_text:
-                            missing = True
-                if not missing:
+            if re.match(r"^#{1,6}\s+", para.strip()):
+                continue
+            turns = _dialogue_turns(para)
+            if turns and "<DialogueBox" in page:
+                hay = _dialogue_props_text(page)
+                if all(md_to_text(speaker) in hay and _spoken_in_hay(spoken, hay)
+                       for speaker, spoken in turns):
+                    continue
+            if para.lstrip().startswith("|"):
+                hay = _dialogue_props_text(page) if "<DialogueBox" in page else ""
+                cells_ok = True
+                for line in para.splitlines():
+                    if re.match(r"^\s*\|?\s*:?-{2,}", line) or not line.strip():
+                        continue
+                    cells = [md_to_text(c) for c in line.strip().strip("|").split("|")]
+                    if cells and re.search(r"ukrainian|україн|english|use\b", cells[0], re.I):
+                        continue
+                    for cell in cells:
+                        if len(cell) < 3:
+                            continue
+                        if cell in visible:
+                            continue
+                        cell_turns = _dialogue_turns(cell)
+                        if cell_turns and hay and all(
+                            md_to_text(speaker) in hay and _spoken_in_hay(spoken, hay)
+                            for speaker, spoken in cell_turns
+                        ):
+                            continue
+                        cells_ok = False
+                if cells_ok:
+                    continue
+            if re.search(r"[—–]", para):
+                parts = re.split(r"\s*[—–]\s*", para, maxsplit=1)
+                if len(parts) == 2 and all(md_to_text(part) in visible for part in parts):
                     continue
             if md_to_text(para) not in visible:
                 block(f"lesson {n}: render lacks lesson paragraph: {md_to_text(para)[:100]!r}")
-        for aid, (owner, _, act) in new_acts.items():
-            if owner != n:
+        for aid, (owner, placement, act) in new_acts.items():
+            if owner != n or placement == "workbook":
                 continue
-            for value in leaves({k: v for k, v in act.items() if k in LIST_FIELDS or k in ("title", "instruction")}):
-                if isinstance(value, str) and len(value) >= 3 and norm_text(value) not in literal_text:
+            for value in _activity_render_strings(act):
+                if isinstance(value, str) and len(value) >= 3 and not _visible_in_render(value, literal_text):
                     block(f"lesson {n}: render lacks activity string from {aid}: {value!r}")
         for entry in lesson_vocab[n]:
             if norm_text(str(entry["lemma"])) not in visible:
@@ -553,7 +803,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     if not landing:
         block("module landing render missing")
     else:
-        landing_text = norm_text(strip_comments(landing).replace('\\"', '"'))
+        landing_text = norm_text(strip_comments(unescape_published(landing)))
         if len(re.findall(r"<TabItem\s", strip_comments(landing))) != 4:
             block("module landing must have four learner tabs")
         for lemma in base_lemmas:
@@ -567,9 +817,8 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                     block("module landing lacks resource union entry")
         for aid, (_, placement, activity) in new_acts.items():
             if placement == "workbook":
-                for value in leaves({k: v for k, v in activity.items()
-                                     if k in LIST_FIELDS or k in ("title", "instruction")}):
-                    if isinstance(value, str) and len(value) >= 3 and norm_text(value) not in landing_text:
+                for value in _activity_render_strings(activity):
+                    if isinstance(value, str) and len(value) >= 3 and not _visible_in_render(value, landing_text):
                         block(f"module landing lacks workbook union string from {aid}")
     return {"passed": not report["blocking"], "diagnostics": report["blocking"], **report}
 

@@ -771,9 +771,17 @@ class ActivityParser:
         activity.id = data.get('id', '')
         return activity
 
+    def _item_rows(self, data: dict) -> list:
+        """Writer YAML uses items, questions, or statements for the same row list."""
+        for key in ("items", "questions", "statements"):
+            rows = data.get(key)
+            if isinstance(rows, list) and rows:
+                return rows
+        return []
+
     def _parse_quiz(self, data: dict) -> QuizActivity:
         items = []
-        for item_data in data.get('items', []):
+        for item_data in self._item_rows(data):
             raw_options = item_data.get('options', [])
             correct_answer = item_data.get('answer')
             correct_index = item_data.get('correct')  # V2: integer index
@@ -801,7 +809,7 @@ class ActivityParser:
 
     def _parse_select(self, data: dict) -> SelectActivity:
         items = []
-        for item_data in data.get('items', []):
+        for item_data in self._item_rows(data):
             raw_options = item_data.get('options', [])
             correct_answer = item_data.get('answer')
             options = []
@@ -821,9 +829,13 @@ class ActivityParser:
 
     def _parse_true_false(self, data: dict) -> TrueFalseActivity:
         items = []
-        for item_data in data.get('items', []):
+        for item_data in self._item_rows(data):
             statement = item_data.get('statement') or item_data.get('question', '')
             correct = item_data.get('correct')
+            if correct is None:
+                correct = item_data.get('is_true')
+            if correct is None:
+                correct = item_data.get('isTrue')
             if correct is None:
                 correct = item_data.get('answer', False)
             items.append(TrueFalseItem(statement=statement, correct=correct, explanation=item_data.get('explanation')))
@@ -831,9 +843,27 @@ class ActivityParser:
 
     def _parse_fill_in(self, data: dict) -> FillInActivity:
         items = []
-        for item_data in data.get('items', []):
+        for item_data in self._item_rows(data):
             sentence = item_data.get('sentence') or item_data.get('prompt', '')
-            items.append(FillInItem(sentence=sentence, answer=item_data['answer'], options=item_data.get('options', []), explanation=item_data.get('explanation')))
+            answer = item_data.get('answer') or item_data.get('correct')
+            if not answer:
+                blanks = item_data.get('blanks')
+                if isinstance(blanks, list) and blanks:
+                    answer = str(blanks[0]).strip()
+                elif isinstance(blanks, str) and blanks.strip():
+                    answer = blanks.strip()
+            if not answer:
+                braced = re.search(r"\{([^{}]+)\}", sentence)
+                if braced:
+                    answer = braced.group(1).strip()
+                    sentence = sentence[:braced.start()] + "___" + sentence[braced.end():]
+            if answer:
+                bracket = re.search(r"\[" + re.escape(answer) + r"\]", sentence)
+                if bracket:
+                    sentence = sentence[:bracket.start()] + "___" + sentence[bracket.end():]
+            if not answer:
+                raise KeyError("fill-in item needs answer, correct, blanks, or {answer} in the sentence")
+            items.append(FillInItem(sentence=sentence, answer=answer, options=item_data.get('options', []), explanation=item_data.get('explanation')))
         return FillInActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
 
     def _parse_cloze(self, data: dict) -> ClozeActivity:
@@ -880,7 +910,7 @@ class ActivityParser:
         items = []
         for item_index, item_data in enumerate(data.get('items', [])):
             words = self._unjumble_words(item_data, item_index)
-            answer = item_data.get('answer')
+            answer = item_data.get('answer') or item_data.get('word') or item_data.get('sentence')
             if answer is None and 'correct_order' in item_data:
                 correct_order = item_data['correct_order']
                 if isinstance(correct_order, list):
@@ -893,7 +923,7 @@ class ActivityParser:
         return UnjumbleActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
 
     def _unjumble_words(self, item_data: dict, item_index: int) -> list[str]:
-        for field_name in ('words', 'jumbled', 'prompt', 'scrambled'):
+        for field_name in ('words', 'jumbled', 'prompt', 'scrambled', 'letters', 'tiles'):
             if field_name in item_data:
                 return self._tokens_from_unjumble_field(item_data[field_name], field_name, item_index)
         raise KeyError(f"unjumble item {item_index} missing one of: words, jumbled, prompt, scrambled")
@@ -975,7 +1005,41 @@ class ActivityParser:
         )
 
     def _parse_translate(self, data: dict) -> TranslateActivity:
-        items = [TranslateItem(source=i['source'], options=[TranslateOption(text=o['text'], correct=o.get('correct', False)) for o in i.get('options', [])], explanation=i.get('explanation')) for i in data.get('items', [])]
+        items = []
+        for i in self._item_rows(data):
+            source = (
+                i.get('source') or i.get('prompt') or i.get('uk')
+                or i.get('ukrainian') or i.get('english') or i.get('en') or ''
+            )
+            target = (
+                i.get('target') or i.get('answer') or i.get('correct')
+                or i.get('en') or i.get('english') or i.get('ukrainian')
+            )
+            if i.get('uk') and i.get('en') and not i.get('source'):
+                source = i.get('uk')
+                target = i.get('en')
+            if i.get('english') and i.get('ukrainian'):
+                source = i.get('english')
+                target = i.get('ukrainian')
+            options = []
+            for o in i.get('options', []) or []:
+                if isinstance(o, str):
+                    text = o.strip()
+                    options.append(TranslateOption(
+                        text=text,
+                        correct=bool(target) and text.casefold() == str(target).strip().casefold(),
+                    ))
+                elif isinstance(o, dict):
+                    text = str(o.get('text') or o.get('en') or '').strip()
+                    options.append(TranslateOption(text=text, correct=bool(o.get('correct'))))
+            if target and not any(opt.correct for opt in options):
+                for opt in options:
+                    if opt.text.casefold() == str(target).strip().casefold():
+                        opt.correct = True
+                        break
+                else:
+                    options.append(TranslateOption(text=str(target).strip(), correct=True))
+            items.append(TranslateItem(source=source, options=options, explanation=i.get('explanation')))
         return TranslateActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
 
     def _parse_anagram(self, data: dict) -> AnagramActivity:
@@ -1426,13 +1490,17 @@ class ActivityParser:
     def _parse_count_syllables(self, data: dict) -> CountSyllablesActivity:
         items = []
         for item in data.get('items', []):
-            if 'word' not in item or 'correct' not in item:
+            word = item.get('word') or item.get('lemma') or item.get('text')
+            correct = item.get('correct')
+            if correct is None:
+                correct = item.get('syllables') or item.get('count') or item.get('answer')
+            if isinstance(correct, str) and correct.strip().isdigit():
+                correct = int(correct.strip())
+            if not word or not isinstance(correct, int):
                 raise KeyError("count-syllables item requires word and correct")
-            if not isinstance(item['correct'], int):
-                raise TypeError("count-syllables item correct must be an integer")
             items.append(CountSyllablesItem(
-                word=str(item['word']),
-                correct=item['correct'],
+                word=str(word),
+                correct=correct,
                 translation=str(item['translation']) if item.get('translation') else None,
             ))
         if not items:
