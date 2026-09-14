@@ -8605,6 +8605,31 @@ def enrich(
     return enriched, len(entries)
 
 
+def apply_cached_usage_notes(manifest: dict[str, Any]) -> int:
+    """Fill empty usage notes from matching v4 cache files; never fetch or write caches.
+
+    Preserve populated sections and every unrelated field. Missing, incompatible,
+    or mismatched caches provide no evidence and leave the entry untouched.
+    """
+    added = 0
+    for entry in manifest["entries"]:
+        sections = entry.get("sections") or {}
+        if (sections.get("usage_notes") or {}).get("items"):
+            continue
+        lemma = entry["lemma"]
+        cache = _load_current_slovnyk_cache_file(_slovnyk_cache_path(lemma))
+        if not cache or cache.get("lookup_word") != _slovnyk_lookup_word(lemma):
+            continue
+        notes = _usage_notes_slovnyk(lemma, cache)
+        if notes:
+            sections["usage_notes"] = notes
+            entry["sections"] = sections
+            # This section now has positive local evidence.
+            entry.get("gate_provenance", {}).pop("usage_notes", None)
+            added += 1
+    return added
+
+
 def build_parser() -> argparse.ArgumentParser:
     """CLI parser for enrich_manifest (``#5393`` argv guard)."""
     return argparse.ArgumentParser(
@@ -8620,9 +8645,12 @@ def build_parser() -> argparse.ArgumentParser:
             "Examples:\n"
             "  # Print usage without touching any files\n"
             "  .venv/bin/python scripts/lexicon/enrich_manifest.py --help\n\n"
+            "  # Fill usage notes offline into a separate candidate\n"
+            "  .venv/bin/python scripts/lexicon/enrich_manifest.py --write --usage-notes-cache-only\n\n"
             "  # Run full enrichment (rewrites lexicon-manifest.json)\n"
             "  .venv/bin/python scripts/lexicon/enrich_manifest.py --write\n\n"
             "Outputs (only with --write):\n"
+            "  --usage-notes-cache-only: --output candidate only; no hydration or network\n"
             "  site/src/data/lexicon-manifest.json  — rewritten with enrichment blocks\n"
             "  site/src/data/lexicon-manifest.fingerprint.json  — refreshed fingerprint\n"
             "  data/lexicon/side/*.sqlite, data/lexicon/runner_work/  — staging side DBs\n\n"
@@ -8652,12 +8680,34 @@ def main(argv: Sequence[str] | None = None) -> int:
             "Default: refuse with usage and exit non-zero (no files touched)."
         ),
     )
+    parser.add_argument(
+        "--usage-notes-cache-only", action="store_true",
+        help="Fill only empty usage notes from local v4 caches, without network access (default: full enrichment).",
+    )
+    parser.add_argument(
+        "--output", type=Path,
+        help="Candidate JSON path for --usage-notes-cache-only (default: site/src/data/lexicon-manifest.usage-notes.json).",
+    )
     args = parser.parse_args(argv)
+    if args.output and not args.usage_notes_cache_only:
+        parser.error("--output requires --usage-notes-cache-only")
     if not args.write:
         parser.error(
             "refusing to run enrichment without --write "
             "(rewrites site/src/data/lexicon-manifest.json; pass --write to proceed)"
         )
+
+    if args.usage_notes_cache_only:
+        output = args.output or MANIFEST.with_name("lexicon-manifest.usage-notes.json")
+        if output.resolve() == MANIFEST.resolve():
+            parser.error("cache-only output must differ from the baseline manifest")
+        # Deliberately bypass load_manifest: a missing local input must fail,
+        # never hydrate a release or replace a richer candidate.
+        manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        added = apply_cached_usage_notes(manifest)
+        output.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        print(f"usage_notes: {added} newly non-empty / {len(manifest['entries'])} entries; candidate: {output}")
+        return 0
 
     enriched, total = enrich()
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
