@@ -840,3 +840,90 @@ def test_citation_whitelist_r9_f6_fabricated_composite_authority_rejected() -> N
     is_clean, _app, viol = verify_citation_whitelist(text)
     assert is_clean is False
     assert any("Zorblax" in v for v in viol)
+
+
+def test_evaluate_academic_non_inferiority_r10_f1_mismatched_metric_identities() -> None:
+    """Verify academic non-inferiority fails when base and aligned metrics do not match (R10-F1)."""
+    base_data = {
+        "results": {
+            b: {"acc_norm,none": 0.70, "acc,none": 0.65} for b in STANDARD_ACADEMIC_BENCHMARKS
+        }
+    }
+    aligned_data = {
+        "results": {
+            b: {"acc_norm,none": 0.70, "acc,none": 0.65} for b in STANDARD_ACADEMIC_BENCHMARKS
+        }
+    }
+    # aligned has acc,none=0.71 but lacks acc_norm,none: cannot compare apples to oranges
+    aligned_data["results"]["mmlu_ua"] = {"acc,none": 0.71}
+
+    # Should find common metric acc,none if both have it, but if base only has acc_norm,none:
+    base_only_norm = {
+        "results": {
+            b: {"acc_norm,none": 0.70} for b in STANDARD_ACADEMIC_BENCHMARKS
+        }
+    }
+    report = evaluate_academic_non_inferiority(base_only_norm, aligned_data, max_degradation_pct=2.0)
+    assert report.overall_passed is False
+    mmlu_task = next(t for t in report.tasks if t.benchmark == "mmlu_ua")
+    assert mmlu_task.passed is False
+    assert "No matching score metric found" in mmlu_task.details.get("error", "")
+
+
+def test_evaluate_prediction_r10_f2_negating_different_predicate_does_not_mask_condemnation() -> None:
+    """Verify negating one predicate does not mask a different condemnation in the same clause (R10-F2)."""
+    case = {
+        "eval_id": "p_r10_f2",
+        "case_type": "PRESERVE",
+        "target_term": "матеріал",
+        "input_text": "Матеріал підручника викладено послідовно.",
+        "expected_replacement": None,
+    }
+    # 1. Thought condemns as calque, negates error
+    pred1 = (
+        "<thought>Слово «матеріал» є калькою — це слово не є помилкою.</thought>"
+        "Матеріал підручника викладено послідовно."
+    )
+    res1 = evaluate_prediction(case, pred1)
+    assert res1.harmful_edit is True
+    assert "Harmful over-correction detected" in res1.details
+
+    # 2. Thought negates calque, condemns as Russianism
+    pred2 = (
+        "<thought>Слово «матеріал» не є калькою — це слово є росіянізмом.</thought>"
+        "Матеріал підручника викладено послідовно."
+    )
+    res2 = evaluate_prediction(case, pred2)
+    assert res2.harmful_edit is True
+    assert "Harmful over-correction detected" in res2.details
+
+    # 3. Thought condemns with intervening adjective
+    pred3 = (
+        "<thought>Слово «матеріал» є очевидною калькою.</thought>"
+        "Матеріал підручника викладено послідовно."
+    )
+    res3 = evaluate_prediction(case, pred3)
+    assert res3.harmful_edit is True
+    assert "Harmful over-correction detected" in res3.details
+
+
+def test_citation_whitelist_r10_f3_fabricated_suffix_rejected() -> None:
+    """Verify fabricated suffixes attached to approved names are rejected (R10-F3)."""
+    text1 = "Згідно з “ВЕСУМZorblax”, це правильно."
+    is_clean1, _app1, viol1 = verify_citation_whitelist(text1)
+    assert is_clean1 is False
+    assert any("ВЕСУМZorblax" in v for v in viol1)
+
+    text2 = "Згідно з “Правопис 2099”, це правильно."
+    is_clean2, _app2, viol2 = verify_citation_whitelist(text2)
+    assert is_clean2 is False
+    assert any("Правопис 2099" in v for v in viol2)
+
+
+def test_citation_whitelist_r10_f4_two_authority_cyrillic_list_catches_unapproved() -> None:
+    """Verify two-authority Cyrillic list catches second unapproved authority (R10-F4)."""
+    text = "Згідно з ВЕСУМ, Зорблаксом, це правильно."
+    is_clean, app, viol = verify_citation_whitelist(text)
+    assert is_clean is False
+    assert any("Зорблаксом" in v for v in viol)
+    assert any("ВЕСУМ" in a for a in app)

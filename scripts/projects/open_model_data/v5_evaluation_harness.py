@@ -45,10 +45,10 @@ DEFAULT_HELDOUT_PATH = (
 
 # Approved Ukrainian reference authorities for Gate 4 (unanchored for prose citation detection)
 APPROVED_CITATION_PATTERNS = [
-    re.compile(r"\bвесум\b", re.IGNORECASE),
+    re.compile(r"\bвесум(?:у|ом|і|а)?\b", re.IGNORECASE),
     re.compile(r"\bvesum\b", re.IGNORECASE),
     re.compile(r"\bсум(?:-11|-20)?\b", re.IGNORECASE),
-    re.compile(r"\bправопис(?:у|ом|і)?(?:\s+2019)?\b", re.IGNORECASE),
+    re.compile(r"\bправопис(?:у|ом|і)?(?:\s+(?:2019|1992|1928))?\b", re.IGNORECASE),
     re.compile(r"\bантоненк[оа]-давидович\w*\b", re.IGNORECASE),
     re.compile(r"«?як\s+ми\s+говоримо»?", re.IGNORECASE),
     re.compile(r"\bгрінченк\w*\b", re.IGNORECASE),
@@ -71,7 +71,7 @@ APPROVED_CITATION_PATTERNS = [
 # Approved Ukrainian reference authorities for Gate 4 (anchored to validate complete entity identity)
 APPROVED_AUTHORITY_REGEXES = [
     re.compile(
-        r"^(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*(?:\s+даних)?)\s+)?(?:весум\w*|vesum\w*)(?:\s+(?:онлайн|on-line|\d+))?$",
+        r"^(?:(?:словник(?:и|а|у|ом|і)?|корпус(?:и|а|у|ом|і)?|довідник(?:и|а|у|ом|і)?|баз(?:а|и|і|ою|ами|ах)?(?:\s+даних)?)\s+)?(?:весум(?:у|ом|і|а)?|vesum)(?:\s+(?:онлайн|on-line|\d+))?$",
         re.IGNORECASE,
     ),
     re.compile(
@@ -79,24 +79,24 @@ APPROVED_AUTHORITY_REGEXES = [
         re.IGNORECASE,
     ),
     re.compile(
-        r"^(?:академічн\w*\s+)?словник\s+української\s+мови(?:\s+(?:в\s+\d+\s+томах|том\w*\s+\d+|\d{4}))?$",
+        r"^(?:академічн\w*\s+)?словник\s+української\s+мови(?:\s+(?:в\s+\d+\s+томах|том\w*\s+\d+|(?:19\d{2}|20[0-2]\d)))?$",
         re.IGNORECASE,
     ),
     re.compile(
-        r"^(?:(?:чинн\w*|новий|нового|новому|академічн\w*|українськ\w*|офіційн\w*)\s+)*правопис(?:у|ом|і)?(?:\s+(?:2019|\d{4}))?(?:\s+року)?$",
+        r"^(?:(?:чинн\w*|новий|нового|новому|академічн\w*|українськ\w*|офіційн\w*)\s+)*правопис(?:у|ом|і)?(?:\s+(?:2019|1992|1928|1946|1960))?(?:\s+року)?$",
         re.IGNORECASE,
     ),
     re.compile(
-        r"^(?:(?:прац\w*|книг\w*)\s+)?(?:(?:борис\w*)\s+)?антоненк[оа]-давидович\w*(?:\s+«?як\s+ми\s+говоримо»?)?$",
+        r"^(?:(?:прац\w*|книг\w*)\s+)?(?:(?:борис\w*)\s+)?антоненк[оа]-давидович(?:а|ем|еві|у|і)?(?:\s+«?як\s+ми\s+говоримо»?)?$",
         re.IGNORECASE,
     ),
     re.compile(r"^«?як\s+ми\s+говоримо»?$", re.IGNORECASE),
     re.compile(
-        r"^(?:(?:словник\w*)\s+)?(?:(?:борис\w*)\s+)?грінченк\w*(?:\s+словарь\s+української\s+мови)?$",
+        r"^(?:(?:словник\w*)\s+)?(?:(?:борис\w*)\s+)?грінченк(?:а|у|ом|і)?(?:\s+словарь\s+української\s+мови)?$",
         re.IGNORECASE,
     ),
     re.compile(
-        r"^словарь\s+української\s+мови(?:\s+(?:грінченк\w*|1907(?:\s+року)?))?$",
+        r"^словарь\s+української\s+мови(?:\s+(?:грінченк(?:а|у|ом|і)?|1907(?:\s+року)?))?$",
         re.IGNORECASE,
     ),
     re.compile(
@@ -104,11 +104,11 @@ APPROVED_AUTHORITY_REGEXES = [
         re.IGNORECASE,
     ),
     re.compile(
-        r"^(?:(?:словник\w*)\s+)?(?:(?:святослав\w*)\s+)?караванськ\w*$",
+        r"^(?:(?:словник\w*)\s+)?(?:(?:святослав\w*)\s+)?караванськ(?:ого|ому|им|ий)?$",
         re.IGNORECASE,
     ),
     re.compile(
-        r"^(?:(?:професор\w*)\s+)?(?:(?:олександр\w*)\s+)?пономарів\w*(?:\s+«?культура\s+слова»?)?$",
+        r"^(?:(?:професор\w*)\s+)?(?:(?:олександр\w*)\s+)?пономар(?:ів|ьова|ьову|ьовим|ьові)?(?:\s+«?культура\s+слова»?)?$",
         re.IGNORECASE,
     ),
     re.compile(r"^«?культура\s+слова»?$", re.IGNORECASE),
@@ -117,19 +117,19 @@ APPROVED_AUTHORITY_REGEXES = [
         re.IGNORECASE,
     ),
     re.compile(
-        r"^(?:(?:шкільн\w*|академічн\w*)\s+)?підручник\w*(?:\s+з\s+української\s+мови)?(?:\s+для\s+\d+\s+класу)?$",
+        r"^(?:(?:шкільн\w*|академічн\w*)\s+)?підручник(?:и|а|у|ом|і)?(?:\s+з\s+української\s+мови)?(?:\s+для\s+(?:[1-9]|1[0-1])\s+класу)?$",
         re.IGNORECASE,
     ),
     re.compile(
         r"^(?:(?:корпус\w*)\s+)?ua-gec$",
         re.IGNORECASE,
     ),
-    re.compile(r"^(?:(?:тарас\w*)\s+)?шевченк\w*$", re.IGNORECASE),
-    re.compile(r"^(?:(?:іван\w*)\s+)?франк\w*$", re.IGNORECASE),
-    re.compile(r"^(?:(?:агатангел\w*)\s+)?кримськ\w*$", re.IGNORECASE),
-    re.compile(r"^(?:(?:олекс\w*)\s+)?синявськ\w*$", re.IGNORECASE),
-    re.compile(r"^(?:(?:олен\w*)\s+)?курило$", re.IGNORECASE),
-    re.compile(r"^голоскевич\w*$", re.IGNORECASE),
+    re.compile(r"^(?:(?:тарас\w*)\s+)?шевченк(?:а|у|ом|і)?$", re.IGNORECASE),
+    re.compile(r"^(?:(?:іван\w*)\s+)?франк(?:а|у|ом|і)?$", re.IGNORECASE),
+    re.compile(r"^(?:(?:агатангел\w*)\s+)?кримськ(?:ого|ому|им|ий)?$", re.IGNORECASE),
+    re.compile(r"^(?:(?:олекс\w*)\s+)?синявськ(?:ого|ому|им|ий)?$", re.IGNORECASE),
+    re.compile(r"^(?:(?:олен\w*)\s+)?курил(?:о|а|у|ом|і)$", re.IGNORECASE),
+    re.compile(r"^голоскевич(?:а|ем|еві|у|і)?$", re.IGNORECASE),
     re.compile(
         r"^(?:кумех|граматичн\w*\s+словник\s+української\s+мови)$",
         re.IGNORECASE,
@@ -368,13 +368,16 @@ KEYWORD_AUTHORITY_RE = (
     r"(?:\s+(?:«[^»]+»|\"[^\"]+\"|“[^”]+”|‘[^’]+’|'[^']+'|[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*|\d+))?"
 )
 LATIN_OR_ACRONYM_RE = r"(?:[a-zA-Z][a-zA-Z0-9’'\-]*(?:\s+[a-zA-Z0-9’'\-]+)*|[А-ЯІЇЄҐ]{2,}(?:-[0-9А-ЯІЇЄҐ]+)?)"
+INSTRUMENTAL_NAME_RE = r"(?:[A-ZА-ЯІЇЄҐ][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:ом|ем|ям|ою|ею|овим|євим|им|ім)\b)"
 ANY_CAP_NAME_RE = (
     r"[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:-[A-ZА-ЯІЇЄҐ0-9][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)*"
     r"(?:\s+[A-ZА-ЯІЇЄҐ0-9][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)*"
 )
 
 ENTITY_CITATION_RE = rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{ANY_CAP_NAME_RE})"
-INTRO_SPECIAL_ENTITY_RE = rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})"
+INTRO_SPECIAL_ENTITY_RE = (
+    rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE}|{INSTRUMENTAL_NAME_RE})"
+)
 
 CONJ_COORD_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_RE})"
 PLURAL_COORD_RE = rf"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+){ENTITY_CITATION_RE})"
@@ -594,6 +597,63 @@ def extract_benchmark_score(entry: Any, preferred_key: str | None = None) -> tup
     raise ValueError(f"Invalid benchmark entry type: {type(entry).__name__}")
 
 
+def extract_matching_benchmark_scores(
+    base_entry: Any,
+    aligned_entry: Any,
+) -> tuple[float, float, str]:
+    """Extract scores for base and aligned benchmarks using an exact matching metric.
+
+    Raises ValueError if no matching metric is present in both entries,
+    if either score is non-finite (NaN, Inf), or if entries are invalid.
+    """
+    if isinstance(base_entry, (int, float)) and isinstance(aligned_entry, (int, float)):
+        bval = float(base_entry)
+        aval = float(aligned_entry)
+        if not (math.isfinite(bval) and math.isfinite(aval)):
+            raise ValueError(f"Non-finite score encountered: base={bval}, aligned={aval}")
+        return bval, aval, "raw_score"
+
+    if isinstance(base_entry, dict) and isinstance(aligned_entry, dict):
+        # 1. Search preferred keys in priority order present in BOTH entries
+        for key in PREFERRED_METRIC_KEYS:
+            if key in base_entry and key in aligned_entry:
+                bval = base_entry[key]
+                aval = aligned_entry[key]
+                if isinstance(bval, (int, float)) and isinstance(aval, (int, float)):
+                    fbval = float(bval)
+                    faval = float(aval)
+                    if not (math.isfinite(fbval) and math.isfinite(faval)):
+                        raise ValueError(f"Non-finite score for matching key '{key}': base={bval}, aligned={aval}")
+                    return fbval, faval, key
+
+        # 2. Search clean common metrics present in BOTH entries
+        clean_common = [
+            k
+            for k in base_entry
+            if k in aligned_entry
+            and isinstance(base_entry[k], (int, float))
+            and isinstance(aligned_entry[k], (int, float))
+            and not any(ex in k.lower() for ex in EXCLUDED_METRIC_SUBSTRINGS)
+        ]
+        if len(clean_common) == 1:
+            k = clean_common[0]
+            fbval = float(base_entry[k])
+            faval = float(aligned_entry[k])
+            if not (math.isfinite(fbval) and math.isfinite(faval)):
+                raise ValueError(f"Non-finite score for matching key '{k}': base={fbval}, aligned={faval}")
+            return fbval, faval, k
+
+        if not clean_common:
+            raise ValueError(
+                f"No matching score metric found between base {list(base_entry.keys())} and aligned {list(aligned_entry.keys())}"
+            )
+        raise ValueError(f"Ambiguous matching metrics between base and aligned results: {clean_common}")
+
+    raise ValueError(
+        f"Mismatched or invalid benchmark entry types: base={type(base_entry).__name__}, aligned={type(aligned_entry).__name__}"
+    )
+
+
 def evaluate_academic_non_inferiority(
     base_results: dict[str, Any],
     aligned_results: dict[str, Any],
@@ -653,8 +713,9 @@ def evaluate_academic_non_inferiority(
             continue
 
         try:
-            base_score, metric_name = extract_benchmark_score(base_benchmarks[bname])
-            aligned_score, _ = extract_benchmark_score(aligned_benchmarks[bname], preferred_key=metric_name)
+            base_score, aligned_score, metric_name = extract_matching_benchmark_scores(
+                base_benchmarks[bname], aligned_benchmarks[bname]
+            )
         except ValueError as exc:
             tasks.append(
                 BenchmarkTaskResult(
@@ -927,50 +988,95 @@ def evaluate_prediction(
                 if not mentions_target:
                     continue
 
-                # Positive condemnation of the target word as a calque, Russianism, or error
-                copula_condemn = bool(
+                adj_filler = r"(?:(?:очевидн\w*|груб\w*|явн\w*|типов\w*|неприпустим\w*|стилістичн\w*|лексичн\w*)\s+)?"
+
+                # 1. Calque condemnation vs negation
+                copula_calque = bool(
                     re.search(
-                        rf"{left_b}{t_token}\s+(?:(?:—|–|-|:)\s+(?:(?:це|є)\s+)?|(?:є|було|вважається|становить)\s+)(?:кальк\w*|росіянізм\w*|помилк\w*|суржик\w*|ненормативн\w*|штучн\w*)",
+                        rf"{left_b}{t_token}\s+(?:(?:—|–|-|:)\s+(?:(?:це|є)\s+)?|(?:є|було|вважається|становить)\s+){adj_filler}кальк\w*",
                         clause,
                     )
-                )
-                explicit_phrase_condemn = any(
+                ) or any(
                     cp in clause
                     for cp in (
                         f"«{t_lower}» є калькою",
                         f"«{t_lower}» — калька",
                         f"«{t_lower}» – калька",
                         f"«{t_lower}»: калька",
-                        f"«{t_lower}» є росіянізмом",
-                        f"«{t_lower}» — росіянізм",
-                        f"«{t_lower}» – росіянізм",
-                        f"«{t_lower}»: росіянізм",
                         f"слово {t_lower} є калькою",
                         f"слово {t_lower} — калька",
                         f"слово {t_lower} – калька",
                         f"слово {t_lower}: калька",
+                    )
+                )
+                negates_calque = bool(
+                    re.search(
+                        rf"{left_b}{t_token}\s+(?:(?:—|–|-|:)\s+(?:це\s+)?не\s+(?:є\s+)?|не\s+(?:є|було|вважається|становить)?\s*){adj_filler}кальк\w*",
+                        clause,
+                    )
+                ) or bool(
+                    re.search(rf"{left_b}{t_token}\s+не\s+(?:є\s+)?кальк\w*", clause)
+                )
+
+                # 2. Russianism condemnation vs negation
+                copula_russianism = bool(
+                    re.search(
+                        rf"{left_b}{t_token}\s+(?:(?:—|–|-|:)\s+(?:(?:це|є)\s+)?|(?:є|було|вважається|становить)\s+){adj_filler}росіянізм\w*",
+                        clause,
+                    )
+                ) or any(
+                    cp in clause
+                    for cp in (
+                        f"«{t_lower}» є росіянізмом",
+                        f"«{t_lower}» — росіянізм",
+                        f"«{t_lower}» – росіянізм",
+                        f"«{t_lower}»: росіянізм",
                         f"слово {t_lower} є росіянізмом",
+                        f"слово {t_lower} — росіянізм",
+                    )
+                )
+                negates_russianism = bool(
+                    re.search(
+                        rf"{left_b}{t_token}\s+(?:(?:—|–|-|:)\s+(?:це\s+)?не\s+(?:є\s+)?|не\s+(?:є|було|вважається|становить)?\s*){adj_filler}росіянізм\w*",
+                        clause,
+                    )
+                ) or bool(
+                    re.search(rf"{left_b}{t_token}\s+не\s+(?:є\s+)?росіянізм\w*", clause)
+                )
+
+                # 3. Error / surzhyk / artificial / unnormative condemnation vs negation
+                copula_other = bool(
+                    re.search(
+                        rf"{left_b}{t_token}\s+(?:(?:—|–|-|:)\s+(?:(?:це|є)\s+)?|(?:є|було|вважається|становить)\s+){adj_filler}(?:помилк\w*|суржик\w*|ненормативн\w*|штучн\w*)",
+                        clause,
+                    )
+                ) or any(
+                    cp in clause
+                    for cp in (
                         f"замініть «{t_lower}»",
                         f"уникайте «{t_lower}»",
                         f"помилкове вживання «{t_lower}»",
                     )
                 )
-                target_condemn = copula_condemn or explicit_phrase_condemn
-
-                # Direct negation of the condemnation itself (e.g. "не є калькою", "— не калька", "не росіянізм")
-                target_neg_pattern = bool(
+                negates_other = bool(
                     re.search(
-                        rf"{left_b}{t_token}\s+(?:(?:—|–|-|:)\s+(?:це\s+)?не\s+(?:є\s+)?|не\s+(?:є|було|вважається|становить)?\s*)(?:кальк\w*|росіянізм\w*|помилк\w*|суржик\w*|ненормативн\w*|штучн\w*)",
+                        rf"{left_b}{t_token}\s+(?:(?:—|–|-|:)\s+(?:це\s+)?не\s+(?:є\s+)?|не\s+(?:є|було|вважається|становить)?\s*){adj_filler}(?:помилк\w*|суржик\w*|ненормативн\w*|штучн\w*)",
                         clause,
                     )
                 ) or bool(
                     re.search(
-                        rf"{left_b}{t_token}\s+не\s+(?:є\s+)?(?:помилк\w*|кальк\w*|росіянізм\w*)",
+                        rf"{left_b}{t_token}\s+не\s+(?:є\s+)?(?:помилк\w*|суржик\w*|ненормативн\w*|штучн\w*)",
                         clause,
                     )
                 )
 
-                if target_condemn and not target_neg_pattern:
+                has_unnegated_condemnation = (
+                    (copula_calque and not negates_calque)
+                    or (copula_russianism and not negates_russianism)
+                    or (copula_other and not negates_other)
+                )
+
+                if has_unnegated_condemnation:
                     harmful_edit = True
                     break
 
