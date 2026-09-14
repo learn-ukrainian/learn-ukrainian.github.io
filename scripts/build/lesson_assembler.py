@@ -170,10 +170,10 @@ def _landing_intro(level: str, module_dir: Path, slug: str, cards: list[str]) ->
     return f"{heading}\n\n" + "\n".join(cards)
 
 
-_EXAMPLE_FENCE = re.compile(
-    r"```(?:text)?\r?\n(.*?)```"
-    r"(?:(?:[ \t]*\r?\n(?:(?!\|)[^\n]{0,100})?){0,3}\n((?:\|[^\n]*\|\n)+))?",
-    re.DOTALL,
+_EXAMPLE_FENCE = re.compile(r"```(?:text)?\r?\n(.*?)```", re.DOTALL)
+_SUPPORT_TABLE = re.compile(r"((?:\|[^\n]*\|\n)+)")
+_SUPPORT_CAPTION = re.compile(
+    r"(?i)^support after(?: the (?:ukrainian )?(?:lines|dialogue))?\s*:?\s*$"
 )
 
 
@@ -189,23 +189,48 @@ def _rows_from_support_table(table: str) -> list[tuple[str, str]]:
     return rows
 
 
+def _take_paired_support_table(after: str) -> tuple[str, int]:
+    """Return (table, consumed) when *after* is blanks/captions then a table.
+
+    Arbitrary prose between a fence and a table is not consumed.
+    """
+    index = 0
+    while index < len(after):
+        newline = after.find("\n", index)
+        line = after[index:] if newline == -1 else after[index:newline]
+        nxt = len(after) if newline == -1 else newline + 1
+        stripped = line.strip()
+        if not stripped or _SUPPORT_CAPTION.match(stripped):
+            index = nxt
+            continue
+        break
+    table_match = _SUPPORT_TABLE.match(after[index:])
+    if table_match is None:
+        return "", 0
+    return table_match.group(1), index + table_match.end()
+
+
+def _example_bullets(fence_body: str, table: str) -> str:
+    pairs = _rows_from_support_table(table)
+    if not pairs:
+        pairs = [(line.strip(), "") for line in fence_body.splitlines() if line.strip()]
+    lines = []
+    for uk, en in pairs:
+        lines.append(f"- **{uk}** — {en}" if en else f"- **{uk}**")
+    return "\n".join(lines) + "\n\n"
+
+
 def _normalize_a1_example_fences(markdown: str) -> str:
     """A1: learner examples are bilingual bullets (module 9), never ```text fences."""
-
-    def replace(match: re.Match[str]) -> str:
-        fence_body, table = match.group(1), match.group(2) or ""
-        pairs = _rows_from_support_table(table)
-        if not pairs:
-            pairs = [(line.strip(), "") for line in fence_body.splitlines() if line.strip()]
-        lines = []
-        for uk, en in pairs:
-            if en:
-                lines.append(f"- **{uk}** — {en}")
-            else:
-                lines.append(f"- **{uk}**")
-        return "\n".join(lines) + "\n\n"
-
-    return _EXAMPLE_FENCE.sub(replace, markdown)
+    parts: list[str] = []
+    cursor = 0
+    for match in _EXAMPLE_FENCE.finditer(markdown):
+        parts.append(markdown[cursor:match.start()])
+        table, consumed = _take_paired_support_table(markdown[match.end():])
+        parts.append(_example_bullets(match.group(1), table))
+        cursor = match.end() + consumed
+    parts.append(markdown[cursor:])
+    return "".join(parts)
 
 
 _MODULE_COMPLETION_HEADING = re.compile(

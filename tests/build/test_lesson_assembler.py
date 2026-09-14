@@ -279,6 +279,24 @@ def test_a1_assembler_pairs_fence_with_following_support_table():
     assert "- **Марі́я: Це моя́ кімна́та.** — Mariia: This is my room." in out
 
 
+def test_a1_assembler_keeps_prose_between_fence_and_table():
+    from scripts.build.lesson_assembler import _normalize_a1_example_fences
+
+    raw = (
+        "```text\n"
+        "книга\n"
+        "```\n\n"
+        "This explanation is needed.\n\n"
+        "| Украї́нська | English support |\n"
+        "| --- | --- |\n"
+        "| книга | book |\n"
+    )
+    out = _normalize_a1_example_fences(raw)
+    assert "```" not in out
+    assert "This explanation is needed." in out
+    assert "| книга | book |" in out
+
+
 def test_a1_assembler_rewrites_module_completion_to_summary():
     from scripts.build.lesson_assembler import _normalize_a1_module_close
 
