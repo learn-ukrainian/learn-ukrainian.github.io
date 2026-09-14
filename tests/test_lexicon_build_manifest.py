@@ -236,7 +236,7 @@ def test_manifest_sources_all_vocabulary_files_and_a2_word_field() -> None:
     assert "батько" in entries
     assert "відмінок" in entries
     assert "голосний" in entries
-    assert any(usage["track"] == "a1" and usage["slug"] == "my-family" for usage in entries["батько"]["course_usage"])
+    assert any(usage["track"] == "a1-v1" and usage["slug"] == "my-family" for usage in entries["батько"]["course_usage"])
     assert any(usage["track"] == "a2" and usage["slug"] == "a2-bridge" for usage in entries["відмінок"]["course_usage"])
 
 

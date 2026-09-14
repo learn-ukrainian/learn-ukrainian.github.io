@@ -226,8 +226,8 @@ Practice there.
 """
 
     mdx = generate_mdx(md_content, 1, yaml_activities=activities, level="a1")
-    lesson_tab = mdx.split('<TabItem label="Vocabulary">')[0]
-    tab3 = mdx.split('<TabItem label="Activities">', 1)[1].split("</TabItem>", 1)[0]
+    lesson_tab = mdx.split('<TabItem label="Словник — Vocabulary">')[0]
+    tab3 = mdx.split('<TabItem label="Вправи — Activities">', 1)[1].split("</TabItem>", 1)[0]
 
     assert "INJECT_ACTIVITY" not in lesson_tab
     assert "act-1 inline greeting" in lesson_tab
@@ -269,10 +269,10 @@ subtitle: Test
     assert '<TabItem label="Словник">' in folk_mdx
     assert '<TabItem label="Вправи">' in folk_mdx
     assert '<TabItem label="Ресурси">' in folk_mdx
-    assert '<TabItem label="Lesson">' in a1_mdx
-    assert '<TabItem label="Vocabulary">' in a1_mdx
-    assert '<TabItem label="Activities">' in a1_mdx
-    assert '<TabItem label="Resources">' in a1_mdx
+    assert '<TabItem label="Урок — Lesson">' in a1_mdx
+    assert '<TabItem label="Словник — Vocabulary">' in a1_mdx
+    assert '<TabItem label="Вправи — Activities">' in a1_mdx
+    assert '<TabItem label="Ресурси — Resources">' in a1_mdx
 
 
 def test_v7_seminar_tab3_inline_cross_refs_use_ukrainian(tmp_path):
@@ -424,8 +424,8 @@ Practice here.
 """
 
     mdx = generate_mdx(md_content, 1, yaml_activities=activities, level="a1")
-    lesson_tab = mdx.split('<TabItem label="Vocabulary">')[0]
-    tab3 = mdx.split('<TabItem label="Activities">', 1)[1].split("</TabItem>", 1)[0]
+    lesson_tab = mdx.split('<TabItem label="Словник — Vocabulary">')[0]
+    tab3 = mdx.split('<TabItem label="Вправи — Activities">', 1)[1].split("</TabItem>", 1)[0]
 
     assert "Inline fill duplicate" in lesson_tab
     assert "<FillIn" in lesson_tab
@@ -470,7 +470,7 @@ subtitle: Test
 """
 
     mdx = generate_mdx(md_content, 1, yaml_activities=activities, level="a1")
-    tab3 = mdx.split('<TabItem label="Activities">', 1)[1].split("</TabItem>", 1)[0]
+    tab3 = mdx.split('<TabItem label="Вправи — Activities">', 1)[1].split("</TabItem>", 1)[0]
 
     assert "No workbook activities for this module; see the Lesson tab." not in tab3
     assert "### Inline one\n\n*(see lesson tab)*" in tab3

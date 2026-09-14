@@ -1,0 +1,492 @@
+{
+  "passed": false,
+  "diagnostics": [
+    "original paragraph not preserved verbatim: '```text\\nМарія: Привіт! Дивись, це моя кімната.\\nОленка: Класно! У тебе '",
+    "original paragraph not preserved verbatim: '```text\\nОленка: Що у тебе є?\\nМарія: У мене є книга, телефон і фото.\\nОл'",
+    "act-2: original items/answers/groups not preserved structurally",
+    "act-3: original items/answers/groups not preserved structurally",
+    "act-5: original items/answers/groups not preserved structurally",
+    "act-w1: original items/answers/groups not preserved structurally"
+  ],
+  "blocking": [
+    "original paragraph not preserved verbatim: '```text\\nМарія: Привіт! Дивись, це моя кімната.\\nОленка: Класно! У тебе '",
+    "original paragraph not preserved verbatim: '```text\\nОленка: Що у тебе є?\\nМарія: У мене є книга, телефон і фото.\\nОл'",
+    "act-2: original items/answers/groups not preserved structurally",
+    "act-3: original items/answers/groups not preserved structurally",
+    "act-5: original items/answers/groups not preserved structurally",
+    "act-w1: original items/answers/groups not preserved structurally"
+  ],
+  "warnings": [],
+  "facts": {
+    "baseline": {
+      "commit": null,
+      "prose_tokens": 1772,
+      "long_paragraphs": 47,
+      "activities": {
+        "inline": 6,
+        "workbook": 5
+      },
+      "vocab": 48
+    },
+    "lessons": {
+      "1": {
+        "prose_tokens": 1029,
+        "inline": 4,
+        "workbook": 6,
+        "vocab": 18,
+        "resources": 2,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 53
+      },
+      "2": {
+        "prose_tokens": 716,
+        "inline": 4,
+        "workbook": 6,
+        "vocab": 16,
+        "resources": 2,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 48
+      },
+      "3": {
+        "prose_tokens": 1061,
+        "inline": 4,
+        "workbook": 6,
+        "vocab": 14,
+        "resources": 2,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 54
+      }
+    },
+    "total_prose_tokens": 2806,
+    "preservation": {
+      "long_paragraphs": 47,
+      "lost": 2,
+      "duplicated": 0,
+      "misplaced": 0
+    },
+    "immersion": {
+      "1": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 45.66,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m07-14"
+        },
+        "l2_exposure_floor": {
+          "passed": true,
+          "required": {
+            "uk_dialogue_lines": 13,
+            "vocab_entries": 0,
+            "uk_example_sentences": 6,
+            "uk_tab3_activities": 3
+          },
+          "observed": {
+            "uk_dialogue_lines": 14,
+            "vocab_entries": 20,
+            "uk_example_sentences": 53,
+            "uk_tab3_activities": 4
+          },
+          "reason": null,
+          "policy": "a1-m07-14"
+        },
+        "long_uk_ceiling": {
+          "passed": true,
+          "required": {
+            "max_unsupported_uk_words": 68,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 0
+          },
+          "reason": null,
+          "offending_runs": [],
+          "policy": "a1-m07-14"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m07-14"
+        }
+      },
+      "2": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 61.77,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m07-14"
+        },
+        "l2_exposure_floor": {
+          "passed": true,
+          "required": {
+            "uk_dialogue_lines": 13,
+            "vocab_entries": 0,
+            "uk_example_sentences": 6,
+            "uk_tab3_activities": 3
+          },
+          "observed": {
+            "uk_dialogue_lines": 14,
+            "vocab_entries": 23,
+            "uk_example_sentences": 48,
+            "uk_tab3_activities": 4
+          },
+          "reason": null,
+          "policy": "a1-m07-14"
+        },
+        "long_uk_ceiling": {
+          "passed": true,
+          "required": {
+            "max_unsupported_uk_words": 68,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 0
+          },
+          "reason": null,
+          "offending_runs": [],
+          "policy": "a1-m07-14"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m07-14"
+        }
+      },
+      "3": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 59.33,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m07-14"
+        },
+        "l2_exposure_floor": {
+          "passed": true,
+          "required": {
+            "uk_dialogue_lines": 13,
+            "vocab_entries": 0,
+            "uk_example_sentences": 6,
+            "uk_tab3_activities": 3
+          },
+          "observed": {
+            "uk_dialogue_lines": 14,
+            "vocab_entries": 35,
+            "uk_example_sentences": 65,
+            "uk_tab3_activities": 4
+          },
+          "reason": null,
+          "policy": "a1-m07-14"
+        },
+        "long_uk_ceiling": {
+          "passed": true,
+          "required": {
+            "max_unsupported_uk_words": 68,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 0
+          },
+          "reason": null,
+          "offending_runs": [],
+          "policy": "a1-m07-14"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m07-14"
+        }
+      }
+    }
+  },
+  "mode": "upgrade",
+  "gates": {
+    "passed": false,
+    "lesson_split": {
+      "passed": false,
+      "diagnostics": [
+        "original paragraph not preserved verbatim: '```text\\nМарія: Привіт! Дивись, це моя кімната.\\nОленка: Класно! У тебе '",
+        "original paragraph not preserved verbatim: '```text\\nОленка: Що у тебе є?\\nМарія: У мене є книга, телефон і фото.\\nОл'",
+        "act-2: original items/answers/groups not preserved structurally",
+        "act-3: original items/answers/groups not preserved structurally",
+        "act-5: original items/answers/groups not preserved structurally",
+        "act-w1: original items/answers/groups not preserved structurally"
+      ],
+      "blocking": [
+        "original paragraph not preserved verbatim: '```text\\nМарія: Привіт! Дивись, це моя кімната.\\nОленка: Класно! У тебе '",
+        "original paragraph not preserved verbatim: '```text\\nОленка: Що у тебе є?\\nМарія: У мене є книга, телефон і фото.\\nОл'",
+        "act-2: original items/answers/groups not preserved structurally",
+        "act-3: original items/answers/groups not preserved structurally",
+        "act-5: original items/answers/groups not preserved structurally",
+        "act-w1: original items/answers/groups not preserved structurally"
+      ],
+      "warnings": [],
+      "facts": {
+        "baseline": {
+          "commit": null,
+          "prose_tokens": 1772,
+          "long_paragraphs": 47,
+          "activities": {
+            "inline": 6,
+            "workbook": 5
+          },
+          "vocab": 48
+        },
+        "lessons": {
+          "1": {
+            "prose_tokens": 1029,
+            "inline": 4,
+            "workbook": 6,
+            "vocab": 18,
+            "resources": 2,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 53
+          },
+          "2": {
+            "prose_tokens": 716,
+            "inline": 4,
+            "workbook": 6,
+            "vocab": 16,
+            "resources": 2,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 48
+          },
+          "3": {
+            "prose_tokens": 1061,
+            "inline": 4,
+            "workbook": 6,
+            "vocab": 14,
+            "resources": 2,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 54
+          }
+        },
+        "total_prose_tokens": 2806,
+        "preservation": {
+          "long_paragraphs": 47,
+          "lost": 2,
+          "duplicated": 0,
+          "misplaced": 0
+        },
+        "immersion": {
+          "1": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 45.66,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m07-14"
+            },
+            "l2_exposure_floor": {
+              "passed": true,
+              "required": {
+                "uk_dialogue_lines": 13,
+                "vocab_entries": 0,
+                "uk_example_sentences": 6,
+                "uk_tab3_activities": 3
+              },
+              "observed": {
+                "uk_dialogue_lines": 14,
+                "vocab_entries": 20,
+                "uk_example_sentences": 53,
+                "uk_tab3_activities": 4
+              },
+              "reason": null,
+              "policy": "a1-m07-14"
+            },
+            "long_uk_ceiling": {
+              "passed": true,
+              "required": {
+                "max_unsupported_uk_words": 68,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 0
+              },
+              "reason": null,
+              "offending_runs": [],
+              "policy": "a1-m07-14"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m07-14"
+            }
+          },
+          "2": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 61.77,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m07-14"
+            },
+            "l2_exposure_floor": {
+              "passed": true,
+              "required": {
+                "uk_dialogue_lines": 13,
+                "vocab_entries": 0,
+                "uk_example_sentences": 6,
+                "uk_tab3_activities": 3
+              },
+              "observed": {
+                "uk_dialogue_lines": 14,
+                "vocab_entries": 23,
+                "uk_example_sentences": 48,
+                "uk_tab3_activities": 4
+              },
+              "reason": null,
+              "policy": "a1-m07-14"
+            },
+            "long_uk_ceiling": {
+              "passed": true,
+              "required": {
+                "max_unsupported_uk_words": 68,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 0
+              },
+              "reason": null,
+              "offending_runs": [],
+              "policy": "a1-m07-14"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m07-14"
+            }
+          },
+          "3": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 59.33,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m07-14"
+            },
+            "l2_exposure_floor": {
+              "passed": true,
+              "required": {
+                "uk_dialogue_lines": 13,
+                "vocab_entries": 0,
+                "uk_example_sentences": 6,
+                "uk_tab3_activities": 3
+              },
+              "observed": {
+                "uk_dialogue_lines": 14,
+                "vocab_entries": 35,
+                "uk_example_sentences": 65,
+                "uk_tab3_activities": 4
+              },
+              "reason": null,
+              "policy": "a1-m07-14"
+            },
+            "long_uk_ceiling": {
+              "passed": true,
+              "required": {
+                "max_unsupported_uk_words": 68,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 0
+              },
+              "reason": null,
+              "offending_runs": [],
+              "policy": "a1-m07-14"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m07-14"
+            }
+          }
+        }
+      }
+    }
+  }
+}

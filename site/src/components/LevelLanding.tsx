@@ -12,6 +12,7 @@ type ModuleItem = {
   slug: string;
   sub?: string;
   subEn?: string;     // Optional English sub shown beneath the Ukrainian one
+  lessons?: { n: number; title: string; minutes: number; href: string }[];
   status: 'done' | 'active' | 'todo' | 'locked';
 };
 
@@ -94,9 +95,17 @@ function ModuleCard({ mod, level, color }: { mod: ModuleItem; level: string; col
   // Enter activation, and SR "link" role all land on the module row (#6712).
   if (isLinked) {
     return (
-      <a className={itemClass} href={`/${levelKey}/${mod.slug}/`}>
-        {body}
-      </a>
+      <div>
+        <a className={itemClass} href={`/${levelKey}/${mod.slug}/`}>
+          {body}
+        </a>
+        {!!mod.lessons?.length && <details>
+          <summary>{mod.lessons.length} <ChromeDual en="lessons" uk="уроків" /></summary>
+          <ol>{mod.lessons.map(lesson => <li key={lesson.n}>
+            <a href={lesson.href}>{lesson.title}</a> · {lesson.minutes} min
+          </li>)}</ol>
+        </details>}
+      </div>
     );
   }
   return <div className={itemClass}>{body}</div>;
@@ -139,6 +148,7 @@ export default function LevelLanding(props: LevelLandingProps): ReactNode {
 
   const doneCount = unitGroups.reduce((acc, g) => acc + g.items.filter(m => m.status === 'done').length, 0);
   const moduleCount = totalModules || unitGroups.reduce((acc, g) => acc + g.items.length, 0);
+  const lessonCount = unitGroups.reduce((total, group) => total + group.items.reduce((sum, mod) => sum + (mod.lessons?.length ?? 0), 0), 0);
   const pct = moduleCount > 0 ? Math.round((doneCount / moduleCount) * 100) : 0;
   const heroBackground = getHeroBackground(color, accentColor);
   const badgeKey = getBadgeKey(level);
@@ -154,6 +164,7 @@ export default function LevelLanding(props: LevelLandingProps): ReactNode {
         {displaySub && <div className={styles.heroSub}>{displaySub}</div>}
         <div className={styles.heroStats}>
           <span>{'\uD83D\uDCD6'} {moduleCount} <ChromeText k="stats.modules" /></span>
+          {lessonCount > 0 && <span>{lessonCount} <ChromeDual en="lessons" uk="уроків" /></span>}
           {wordTarget > 0 && <span>{'\uD83D\uDCAC'} {wordTarget.toLocaleString()} <ChromeText k="stats.targetWords" /></span>}
           {hours && <span>{'\u23F1'} ~{hours} <ChromeText k="stats.hours" /></span>}
         </div>

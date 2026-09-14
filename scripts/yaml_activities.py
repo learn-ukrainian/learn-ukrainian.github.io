@@ -1813,7 +1813,12 @@ class ActivityParser:
 
     def _fill_in_to_mdx(self, activity: FillInActivity, is_ukrainian_forced: bool = False) -> str:
         heading = activity.title or 'Fill In'
-        items = [{'sentence': str(i.sentence), 'answer': str(i.answer), 'options': [str(opt) for opt in i.options]} for i in activity.items]
+        items = [
+            {"sentence": str(i.sentence), "answer": str(i.answer),
+             "options": [str(opt) for opt in i.options],
+             **({"explanation": str(i.explanation)} if i.explanation else {})}
+            for i in activity.items
+        ]
         return f"### {self._escape_jsx(heading)}\n\n<FillIn client:only='react' items={{JSON.parse(`{self._dump_safe_json(items)}`)}}{self._instruction_prop(activity.instruction)} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"
 
     def _cloze_to_mdx(self, activity: ClozeActivity, is_ukrainian_forced: bool = False) -> str:
@@ -1862,6 +1867,11 @@ class ActivityParser:
                 str(i.answer),
                 [str(option) for option in i.options],
             )
+            # A whole-sentence task must retain its authored punctuation and
+            # complete choices; phrase extraction is only for a smaller span.
+            if i.error == i.sentence:
+                correct_form = str(i.answer)
+                options = [str(option) for option in i.options]
             items.append({
                 "sentence": str(i.sentence),
                 "errorWord": str(i.error) if i.error is not None else None,

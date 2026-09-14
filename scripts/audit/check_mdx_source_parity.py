@@ -20,6 +20,7 @@ GENERATOR_ENTRYPOINT = PROJECT_ROOT / "scripts/generate_mdx.py"
 GENERATOR_PACKAGE = PROJECT_ROOT / "scripts/generate_mdx"
 GENERATOR_DEPENDENCIES = {
     PROJECT_ROOT / "scripts/yaml_activities.py",
+    PROJECT_ROOT / "scripts/build/lesson_assembler.py",
 }
 NAV_FRONTMATTER_RE = re.compile(r"^(prev|next):(?:\s|$)")
 DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
@@ -181,7 +182,7 @@ def check_parity(mdx_files: list[Path], changed_files: set[Path], base: str | No
             continue
 
         level = parts[0]
-        slug = rel_path.stem
+        slug = parts[1] if len(parts) >= 3 else rel_path.stem
 
         if len(parts) == 2 and slug == "index":
             continue

@@ -30,6 +30,7 @@ const en = {
   // Global nav / header / footer
   'nav.home': 'Home',
   'nav.a1': 'A1',
+  'nav.a1Previous': 'A1 previous',
   'nav.a2': 'A2',
   'nav.b1': 'B1',
   'nav.b2': 'B2',
@@ -115,11 +116,12 @@ const en = {
   'home.eyebrow': 'Course ladder and reference tools',
   'home.introHeading': 'Start with A1. Continue through A2 and B1. Move into B2 when you are ready. C1 and C2 course maps are available for advanced learners.',
   'home.introBody':
-    'The released course path is A1, then A2, then B1, then B2. C1 and C2 are available as course maps while their modules continue to be built. Word Atlas supports the course as a reference tool, not as a separate course track. Seminar tracks are listed for context, but they are not public entry points yet.',
+    'A1 is moving to 60-minute lessons, with its previous edition available in the archive. Continue through A2, B1, and B2. C1 and C2 are available as course maps while their modules continue to be built. Word Atlas supports the course as a reference tool, not as a separate course track. Seminar tracks are listed for context, but they are not public entry points yet.',
   'home.actionStartA1': 'Start A1',
+  'home.actionOpenA1Previous': 'Open previous A1',
   'home.actionOpenB1Preview': 'Open B1',
   'home.actionOpenB2': 'Open B2',
-  'home.roadmapA1': 'Released beginner course',
+  'home.roadmapA1': 'New lessons · previous edition available',
   'home.roadmapA2': 'Released continuation course',
   'home.roadmapB1': 'Released intermediate course',
   'home.roadmapB2': 'Released upper-intermediate course',
@@ -130,7 +132,7 @@ const en = {
   'home.roadmapSeminarsNote': 'Not promoted yet',
   'home.availableNow': 'Available Now',
   'home.cardA1Desc':
-    '55 modules for sounds, reading, first conversations, everyday needs, and an A1 finale.',
+    'Upgraded 60-minute lessons. Currently a course landing only; lessons are not published yet.',
   'home.cardA2Desc':
     '69 modules take learners from the A2 bridge through everyday situations, cases, aspect, and the A2 finale.',
   'home.cardB1Desc':
@@ -146,6 +148,9 @@ const en = {
     'This map separates released courses, preview work, and future inventory. The recommended learner path is A1 first, then A2, then B1, then B2. C1 and C2 course maps are available for advanced study. Seminar tracks are shown for context only and are not promoted as learner entry points yet.',
   'home.courseLadder': 'Course Ladder',
   'home.seminarTracks': 'Seminar Tracks',
+  'home.track.a1New': 'New A1',
+  'home.track.a1Previous': 'Previous A1',
+  'home.cardA1PreviousDesc': 'The complete previous edition: 55 modules available now.',
   'home.track.beginner': 'Beginner Course',
   'home.track.preIntermediate': 'Pre-Intermediate Course',
   'home.track.intermediate': 'Intermediate Course',
@@ -382,6 +387,7 @@ export type ChromeKey = keyof typeof en;
 const uk: Record<ChromeKey, string> = {
   'nav.home': 'Головна',
   'nav.a1': 'A1',
+  'nav.a1Previous': 'A1 попередня',
   'nav.a2': 'A2',
   'nav.b1': 'B1',
   'nav.b2': 'B2',
@@ -462,11 +468,12 @@ const uk: Record<ChromeKey, string> = {
   'home.eyebrow': 'Драбина курсу та довідкові інструменти',
   'home.introHeading': 'Почніть з A1. Продовжіть A2 і B1. Переходьте до B2, коли будете готові. Карти курсів C1 і C2 доступні для просунутих учнів.',
   'home.introBody':
-    'Випущений шлях курсу — A1, потім A2, потім B1, потім B2. C1 і C2 доступні як карти курсу, поки їхні модулі далі створюються. Атлас слів підтримує курс як довідковий інструмент, а не як окремий навчальний напрям. Семінарські напрями подано для контексту, але вони ще не є публічними точками входу.',
+    'A1 переходить на 60-хвилинні уроки; попередня версія доступна в архіві. Далі — A2, B1 і B2. C1 і C2 доступні як карти курсу, поки їхні модулі далі створюються. Атлас слів підтримує курс як довідковий інструмент, а не як окремий навчальний напрям. Семінарські напрями подано для контексту, але вони ще не є публічними точками входу.',
   'home.actionStartA1': 'Почати A1',
+  'home.actionOpenA1Previous': 'Відкрити попередню A1',
   'home.actionOpenB1Preview': 'Відкрити B1',
   'home.actionOpenB2': 'Відкрити B2',
-  'home.roadmapA1': 'Випущений початковий курс',
+  'home.roadmapA1': 'Нові уроки · попередня версія доступна',
   'home.roadmapA2': 'Випущений курс-продовження',
   'home.roadmapB1': 'Випущений середній курс',
   'home.roadmapB2': 'Випущений курс вище середнього рівня',
@@ -477,7 +484,7 @@ const uk: Record<ChromeKey, string> = {
   'home.roadmapSeminarsNote': 'Ще не просувається',
   'home.availableNow': 'Доступно зараз',
   'home.cardA1Desc':
-    '55 модулів про звуки, читання, перші розмови, повсякденні потреби та фінал A1.',
+    'Оновлені 60-хвилинні уроки. Наразі доступна лише сторінка курсу; уроки ще не опубліковані.',
   'home.cardA2Desc':
     '69 модулів ведуть учнів від містка A2 через повсякденні ситуації, відмінки, вид і фінал A2.',
   'home.cardB1Desc':
@@ -493,6 +500,9 @@ const uk: Record<ChromeKey, string> = {
     'Ця карта розділяє випущені курси, анонсовану роботу та майбутній інвентар. Рекомендований шлях учня — спочатку A1, потім A2, потім B1, потім B2. Карти курсів C1 і C2 доступні для просунутого навчання. Семінарські напрями показано лише для контексту й не просуваються як точки входу для учнів.',
   'home.courseLadder': 'Драбина курсу',
   'home.seminarTracks': 'Семінарські напрями',
+  'home.track.a1New': 'Нова A1',
+  'home.track.a1Previous': 'Попередня A1',
+  'home.cardA1PreviousDesc': 'Повна попередня версія: 55 модулів доступні зараз.',
   'home.track.beginner': 'Початковий курс',
   'home.track.preIntermediate': 'Курс перед середнім рівнем',
   'home.track.intermediate': 'Середній курс',

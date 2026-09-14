@@ -163,12 +163,18 @@ def test_roster_uses_only_active_manifest_and_matches_required_fixture_counts() 
     assert response.status_code == 200
     data = response.json()
     VALIDATOR.validate(data)
-    assert data["totals"]["manifest_active_tracks"] == 20
+    assert data["totals"]["manifest_active_tracks"] == 21
     assert data["totals"]["manifest_active_modules"] == 1932
     tracks = {item["track"]: item for item in data["tracks"]}
-    assert set(tracks).isdisjoint({"lit-doc", "lit-crimea"})
-    assert tracks["a1"]["module_state_counts"] == {"unbuilt": 0, "partial": 0, "built": 55}
-    assert tracks["a1"]["publication_state_counts"]["published"] == 55
+    assert set(tracks) == {
+        "a1", "a1-v1", "a2", "b1", "b2", "c1", "c2", "hist", "bio", "lit",
+        "istorio", "oes", "ruth", "lit-essay", "lit-hist-fic", "lit-fantastika",
+        "lit-war", "lit-humor", "lit-youth", "lit-drama", "folk",
+    }
+    assert tracks["a1"]["module_state_counts"] == {"unbuilt": 0, "partial": 0, "built": 0}
+    assert tracks["a1"]["publication_state_counts"]["published"] == 0
+    assert tracks["a1-v1"]["module_state_counts"] == {"unbuilt": 0, "partial": 0, "built": 55}
+    assert tracks["a1-v1"]["publication_state_counts"]["published"] == 55
     assert tracks["a2"]["publication_state_counts"]["published"] == 69
     assert tracks["b1"]["publication_state_counts"]["published"] == 94
     assert tracks["b2"]["publication_state_counts"]["published"] == 93
@@ -184,7 +190,7 @@ def test_roster_uses_only_active_manifest_and_matches_required_fixture_counts() 
 
 
 def test_one_track_roster_meets_budget_and_keeps_distinct_telemetry_semantics() -> None:
-    response = CLIENT.get("/api/state/preparation?track=a1")
+    response = CLIENT.get("/api/state/preparation?track=a1-v1")
 
     assert response.status_code == 200
     assert len(response.content) < 5_000
@@ -192,7 +198,7 @@ def test_one_track_roster_meets_budget_and_keeps_distinct_telemetry_semantics() 
     VALIDATOR.validate(data)
     assert data["totals"]["returned_tracks"] == 1
     assert data["totals"]["returned_modules"] == 55
-    legacy = CLIENT.get("/api/state/summary").json()["tracks"]["a1"]
+    legacy = CLIENT.get("/api/state/summary").json()["tracks"]["a1-v1"]
     assert legacy["content_done"] == 0
     assert legacy["published_mdx"] == 55
     assert data["tracks"][0]["module_state_counts"]["built"] == 55
@@ -205,6 +211,7 @@ def test_module_projection_is_compact_canonical_and_has_no_ready_boolean() -> No
     assert len(response.content) < 3_000
     data = response.json()
     VALIDATOR.validate(data)
+    assert data["track"] == "a1-v1"
     assert data["module_state"] == "built"
     assert data["publication"] == {
         "state": "published",
@@ -526,7 +533,7 @@ def test_release_route_reads_from_the_reported_primary_checkout(
         app.state.ctx.with_roots(project_root=release, live_repo_root=dispatch),
     )
 
-    response = CLIENT.get("/api/state/preparation?track=a1")
+    response = CLIENT.get("/api/state/preparation?track=a1-v1")
 
     assert response.status_code == 200
     data = response.json()

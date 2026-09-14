@@ -1,0 +1,317 @@
+---
+title: Підсумок
+description: він, вона, воно — кожен іменник має рід
+sidebar:
+  order: 3
+  label: 03. Підсумок
+pipeline: v7-upgrade
+build_status: validated
+draft: false
+prev: /a1/things-have-gender/2/
+next: /a1/things-have-gender/
+lesson: 3
+module_slug: things-have-gender
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords from '@site/src/components/MarkTheWords';
+import { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes from '@site/src/components/HighlightMorphemes';
+import { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок — Lesson">
+
+У пе́рших двох уро́ках ви опанува́ли рід предме́тів у кімна́ті та су́мці. In the first two lessons you mastered the gender of objects in the room and bag. Цей уро́к підсумо́вує мо́дуль і додає́ важли́ві дета́лі — this lesson sums up the module and adds important details:
+- **Вжива́ти фемініти́ви профе́сій** — use feminine profession forms (**вчи́телька, лі́карка**);
+- **Розпізнава́ти чолові́чі імена́ на -а/-о** — recognise masculine names and family words ending in **-а / -о** (**Мико́ла, та́то**);
+- **Уника́ти типо́вих пасто́к ро́ду** — avoid common gender traps (**мій соба́ка** as course default).
+
+## Підсу́мок — Summary
+
+For people, choose the form that fits the person.
+
+| Masculine | Feminine |
+| --- | --- |
+| **студе́нт** | **студе́нтка** |
+| **вчи́тель / учи́тель** | **вчи́телька / учи́телька** |
+| **лі́кар** | **лі́карка** |
+| **акто́р** | **акто́рка** |
+| **співа́к** | **співа́чка** |
+
+Use the feminine profession as the normal form for a woman:
+
+- **Вона́ студе́нтка.** — She is a student.
+- **Вона́ вчи́телька.** — She is a teacher.
+- **Вона́ лі́карка.** — She is a doctor.
+
+For a man:
+
+- **Він студе́нт.** — He is a student.
+- **Він вчи́тель.** — He is a teacher.
+- **Він лі́кар.** — He is a doctor.
+
+Keep the earlier identity rule: **Я студе́нт. Я студе́нтка.** Do not force
+**є** into that A1 sentence.
+
+### Діало́г про профе́сії — A dialogue about professions
+
+Послу́хайте та прочита́йте розмо́ву про профе́сії та сім'ю́ — listen to and read the conversation about professions and family:
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Марко́","text":"Окса́но, хто ти? Ти студе́нтка?"},{"speaker":"Окса́на","text":"Так, я студе́нтка. А хто ти?"},{"speaker":"Марко́","text":"Я теж студе́нт. А хто твоя́ сестра́?"},{"speaker":"Окса́на","text":"Моя́ сестра́ — вчи́телька."},{"speaker":"Марко́","text":"Кла́сно! Вона́ до́бра вчи́телька."},{"speaker":"Окса́на","text":"Так. А хто твій брат?"},{"speaker":"Марко́","text":"Мій брат — лі́кар."}]')}
+/>
+
+Розбі́р розмо́ви — breakdown of the conversation:
+
+| Украї́нська | English support |
+| --- | --- |
+| **Окса́но, хто ти? Ти студе́нтка?** | Oksana, what do you do? Are you a student? |
+| **Так, я студе́нтка. А хто ти?** | Yes, I am a student. And you? |
+| **Я теж студе́нт. А хто твоя́ сестра́?** | I am a student too. And what does your sister do? |
+| **Моя́ сестра́ — вчи́телька.** | My sister is a teacher. |
+| **Кла́сно! Вона́ до́бра вчи́телька.** | Great! She is a good teacher. |
+| **Так. А хто твій брат?** | Yes. And what does your brother do? |
+| **Мій брат — лі́кар.** | My brother is a doctor. |
+
+Розмо́ва про сім'ю́ — conversation about family:
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Окса́на","text":"Твій брат лі́кар? Чудо́во!"},{"speaker":"Марко́","text":"А хто твоя́ ма́ма? Вона́ теж лі́карка?"},{"speaker":"Окса́на","text":"Так, моя́ ма́ма — лі́карка."},{"speaker":"Марко́","text":"А хто твій та́то?"},{"speaker":"Окса́на","text":"Мій та́то — співа́к. А твій дя́дько Мико́ла?"},{"speaker":"Марко́","text":"Мій дя́дько — акто́р."},{"speaker":"Окса́на","text":"А йо́го сестра́ — акто́рка!"}]')}
+/>
+
+Розбі́р розмо́ви про сім'ю́ — breakdown of the family conversation:
+
+| Украї́нська | English support |
+| --- | --- |
+| **Твій брат лі́кар? Чудо́во!** | Your brother is a doctor? Wonderful! |
+| **А хто твоя́ ма́ма? Вона́ теж лі́карка?** | And your mom? Is she a doctor too? |
+| **Так, моя́ ма́ма — лі́карка.** | Yes, my mom is a doctor. |
+| **А хто твій та́то?** | And what does your dad do? |
+| **Мій та́то — співа́к. А твій дя́дько Мико́ла?** | My dad is a singer. And your uncle Mykola? |
+| **Мій дя́дько — акто́р.** | My uncle is an actor. |
+| **А йо́го сестра́ — акто́рка!** | And his sister is an actress! |
+
+### Фо́рми профе́сій — Profession forms
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "She is a teacher.", "options": [{"text": "Вона́ вчи́телька.", "correct": true}, {"text": "Вона́ вчи́тель.", "correct": false}, {"text": "Воно́ вчи́телька.", "correct": false}], "explanation": "Use the feminine profession form for a woman."}, {"question": "She is a doctor.", "options": [{"text": "Вона́ лі́карка.", "correct": true}, {"text": "Вона́ лі́кар.", "correct": false}, {"text": "Він лі́карка.", "correct": false}], "explanation": "Лі́карка is the feminine form."}, {"question": "He is a student.", "options": [{"text": "Він студе́нт.", "correct": true}, {"text": "Він студе́нтка.", "correct": false}, {"text": "Вона́ студе́нт.", "correct": false}], "explanation": "Студе́нт is the masculine form."}, {"question": "She is an actor.", "options": [{"text": "Вона́ акто́рка.", "correct": true}, {"text": "Вона́ акто́р.", "correct": false}, {"text": "Воно́ акто́рка.", "correct": false}], "explanation": "Акто́рка is the feminine profession form."}]`)} instruction={"Choose the natural profession form."} isUkrainian={false} />
+
+### Чолові́чі та жіно́чі фо́рми профе́сій — Masculine and feminine profession forms
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "студе́нт", "right": "студе́нтка"}, {"left": "вчи́тель", "right": "вчи́телька"}, {"left": "учи́тель", "right": "учи́телька"}, {"left": "лі́кар", "right": "лі́карка"}, {"left": "акто́р", "right": "акто́рка"}, {"left": "співа́к", "right": "співа́чка"}]`)} instruction={"З'єдна́йте чолові́чу фо́рму профе́сії з відпові́дним фемініти́вом (зберіга́йте початко́ву лі́теру: вчи́тель → вчи́телька, учи́тель → учи́телька). — Match the masculine profession form with the corresponding feminine form (keep the initial letter: вчи́тель → вчи́телька, учи́тель → учи́телька)."} isUkrainian={false} />
+
+## Імена́, па́стки й самопереві́рка — Names, traps, and self-check
+
+Some male names end in **-а**, **-я**, or **-о**: **Мико́ла**, **Ілля́**,
+**Павло́**. They are still **він** because they name men. Family words such as
+**та́то**, **ба́тько**, and **дя́дько** are also masculine.
+
+### Пильну́й па́стки — Watch out for traps
+
+Most errors come from using English habits too directly or from trusting the
+ending when the word is an exception.
+
+| Trap | Say this |
+| --- | --- |
+| **мій кни́га** | **моя́ кни́га** |
+| **мій ру́чка** | **моя́ ру́чка** |
+| **Де стіл? Воно́ там.** | **Де стіл? Він там.** |
+| **Це моя́ та́то.** | **Це мій та́то.** |
+| **Вона́ Мико́ла.** | **Він Мико́ла.** |
+| **Моя́ соба́ка га́рна.** | **Мій соба́ка га́рний.** |
+| **Я є студе́нт.** | **Я студе́нт.** |
+| **Моє́ ім'я́ є Джон.** | **Мене́ зва́ти Джон.** |
+
+For **соба́ка**, just memorize the course phrase **мій соба́ка**. You do not need
+a long exception list today.
+
+The gender-flip mini-check uses five words that are not your active vocabulary:
+**біль**, **степ**, **ро́зпис**, **літо́пис**, and **путь**. They are diagnostic
+props. The point is simple: trust the Ukrainian gender test, not an instinct
+from another language.
+
+### Він чи вона́ для люде́й — He or she for people
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Мико́ла — чолові́к. ___ студе́нт.", "answer": "Він", "options": ["Він", "Вона́"]}, {"sentence": "Окса́на — жі́нка. ___ лі́карка.", "answer": "Вона́", "options": ["Вона́", "Він"]}, {"sentence": "Павло́ — вчи́тель. ___ тут.", "answer": "Він", "options": ["Він", "Вона́"]}, {"sentence": "Марі́я — співа́чка. ___ там.", "answer": "Вона́", "options": ["Вона́", "Він"]}, {"sentence": "Ілля́ — акто́р. ___ працю́є.", "answer": "Він", "options": ["Він", "Вона́"]}, {"sentence": "Оле́на — вчи́телька. ___ працю́є.", "answer": "Вона́", "options": ["Вона́", "Він"]}]`)} instruction={"Вста́вте прави́льний займе́нник: він чи вона́. — Insert the correct pronoun: він or вона́."} isUkrainian={false} />
+
+### Пра́вда чи ні: чолові́чі імена́ та ви́нятки — True or false: masculine names and exceptions
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Ім'я́ «Мико́ла» — це він.", "isTrue": true, "explanation": ""}, {"statement": "Ім'я́ «Павло́» — це воно́.", "isTrue": false, "explanation": ""}, {"statement": "Сло́во «дя́дько» — це він.", "isTrue": true, "explanation": ""}, {"statement": "Сло́во «соба́ка» в украї́нській мо́ві — це вона́.", "isTrue": false, "explanation": ""}, {"statement": "Для жі́нки-лі́каря вжива́ємо фо́рму «лі́карка».", "isTrue": true, "explanation": ""}, {"statement": "Сло́во «та́то» — це він.", "isTrue": true, "explanation": ""}]`)} instruction={"Ви́значте, чи прави́льне тве́рдження про рід слів. — Decide whether the statement about word gender is correct."} isUkrainian={false} />
+
+### Самопереві́рка — Self-check
+
+Cover the English support and say the Ukrainian aloud:
+
+| Украї́нська | English support |
+| --- | --- |
+| **Це моя́ кімна́та.** | This is my room. |
+| **У мене́ є стіл.** | I have a table. |
+| **У мене́ є кни́га.** | I have a book. |
+| **У мене́ є вікно́.** | I have a window. |
+| **мій стіл** | my table |
+| **моя́ ру́чка** | my pen |
+| **моє́ лі́жко** | my bed |
+| **Де стіл? Він тут.** | Where is the table? It is here. |
+| **Де кни́га? Вона́ тут.** | Where is the book? It is here. |
+| **Де вікно́? Воно́ тут.** | Where is the window? It is here. |
+
+Тепе́р переві́рте профе́сії, чолові́чі імена́ та ви́нятки — now check professions, male names, and exceptions:
+
+| Украї́нська | English support |
+| --- | --- |
+| **Він студе́нт. Вона́ студе́нтка.** | He is a student. She is a student. |
+| **Він вчи́тель. Вона́ вчи́телька.** | He is a teacher. She is a teacher. |
+| **Він лі́кар. Вона́ лі́карка.** | He is a doctor. She is a doctor. |
+| **Він Мико́ла. Це мій та́то.** | He is Mykola. This is my dad. |
+| **Це мій соба́ка.** | This is my dog (course default). |
+| **Це мій дя́дько.** | This is my uncle. |
+
+Then make three tiny room lines. Read the Ukrainian first, then check the
+support.
+
+- **Це моя́ кімна́та.** — This is my room.
+- **У мене́ є стіл, кни́га і вікно́.** — I have a table, a book, and a window.
+- **Мій стіл тут, моя́ кни́га тут, моє́ вікно́ там.** — My table is here, my book is here, my window is there.
+
+Workbook practice will make the pattern automatic: sort nouns by gender, choose
+**він / вона́ / воно́**, complete **мій / моя́ / моє́**, use **У мене́ є...**, and
+repair the gender traps.
+
+### Підсумок модуля — Module summary
+
+- **Віта́ємо! Ви успі́шно заверши́ли мо́дуль 8 «Ре́чі ма́ють рід».** — Congratulations! You have successfully completed Module 8 "Things Have Gender."
+- **Тепе́р ви зна́єте рід іме́нників, закі́нчення слів та фемініти́ви.** — Now you know noun genders, word endings, and feminine profession forms.
+- **Ви упе́внено вжива́єте «мій / моя́ / моє́» та констру́кцію «У мене́ є...».** — You confidently use "my" forms and the construction "I have...".
+- **У насту́пному мо́дулі ви познайо́митеся з прикме́тниками.** — In the next module, you will discover descriptive adjectives.
+
+### Ва́ше мо́влення — Your speaking
+
+Напиші́ть 2–3 коро́ткі рядки́ про себе́ та свій про́стір — write 2–3 short lines about yourself and your space:
+1. **Я студе́нт (або́: Я студе́нтка).** — I am a student (or, for a woman: I am a student).
+2. **Це моя́ кімна́та.** — This is my room.
+3. **У мене́ є стіл, кни́га і моє́ фо́то.** — I have a table, a book, and my photo.
+
+</TabItem>
+<TabItem label="Словник — Vocabulary">
+
+<span id="vocabulary"></span>
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"рід","translation":"grammatical gender","pos":"noun","example":"Украї́нські іме́нники ма́ють рід.","examples":["Украї́нські іме́нники ма́ють рід."],"atlas_href":"/lexicon/рід/"},{"word":"іме́нник","translation":"noun","pos":"noun","example":"Стіл — це іме́нник.","examples":["Стіл — це іме́нник."],"atlas_href":"/lexicon/іменник/"},{"word":"хто це?","translation":"who is this?","pos":"phrase","example":"Хто це? Це та́то.","examples":["Хто це? Це та́то."]},{"word":"що це?","translation":"what is this?","pos":"phrase","example":"Що це? Це стіл.","examples":["Що це? Це стіл."]},{"word":"він","translation":"he / masculine gender-test word","pos":"pronoun","example":"Стіл — він.","examples":["Стіл — він."],"atlas_href":"/lexicon/він/"},{"word":"вона́","translation":"she / feminine gender-test word","pos":"pronoun","example":"Кни́га — вона́.","examples":["Кни́га — вона́."],"atlas_href":"/lexicon/вона/"},{"word":"воно́","translation":"it / neuter gender-test word","pos":"pronoun","example":"Вікно́ — воно́.","examples":["Вікно́ — воно́."],"atlas_href":"/lexicon/воно/"},{"word":"мій","translation":"my, masculine","pos":"pronoun","example":"Це мій стіл.","examples":["Це мій стіл."],"atlas_href":"/lexicon/мій/"},{"word":"моя́","translation":"my, feminine","pos":"pronoun","example":"Це моя́ кни́га.","examples":["Це моя́ кни́га."],"atlas_href":"/lexicon/моя/"},{"word":"моє́","translation":"my, neuter","pos":"pronoun","example":"Це моє́ вікно́.","examples":["Це моє́ вікно́."],"atlas_href":"/lexicon/моє/"},{"word":"стіл","translation":"table","pos":"noun","example":"У мене́ є стіл.","examples":["У мене́ є стіл."],"atlas_href":"/lexicon/стіл/"},{"word":"кни́га","translation":"book","pos":"noun","example":"Це моя́ кни́га.","examples":["Це моя́ кни́га."],"atlas_href":"/lexicon/книга/"},{"word":"вікно́","translation":"window","pos":"noun","example":"Моє́ вікно́ вели́ке.","examples":["Моє́ вікно́ вели́ке."],"atlas_href":"/lexicon/вікно/"},{"word":"мі́сто","translation":"city","pos":"noun","example":"Моє́ мі́сто вели́ке.","examples":["Моє́ мі́сто вели́ке."],"atlas_href":"/lexicon/місто/"},{"word":"та́то","translation":"dad","pos":"noun","example":"Це мій та́то.","examples":["Це мій та́то."],"atlas_href":"/lexicon/тато/"},{"word":"ба́тько","translation":"father","pos":"noun","example":"Це мій ба́тько.","examples":["Це мій ба́тько."],"atlas_href":"/lexicon/батько/"},{"word":"соба́ка","translation":"dog","pos":"noun","example":"Це мій соба́ка.","examples":["Це мій соба́ка."],"atlas_href":"/lexicon/собака/"},{"word":"Мико́ла","translation":"Mykola","pos":"proper noun","example":"Він Мико́ла.","examples":["Він Мико́ла."],"atlas_href":"/lexicon/микола/"},{"word":"у мене́ є","translation":"I have","pos":"phrase","example":"У мене́ є стіл.","examples":["У мене́ є стіл."]},{"word":"у тебе́ є","translation":"do you have / you have","pos":"phrase","example":"У тебе́ є стіл?","examples":["У тебе́ є стіл?"]},{"word":"кімна́та","translation":"room","pos":"noun","example":"Це моя́ кімна́та.","examples":["Це моя́ кімна́та."],"atlas_href":"/lexicon/кімната/"},{"word":"лі́жко","translation":"bed","pos":"noun","example":"Це моє́ лі́жко.","examples":["Це моє́ лі́жко."],"atlas_href":"/lexicon/ліжко/"},{"word":"стіле́ць","translation":"chair","pos":"noun","example":"Це мій стіле́ць.","examples":["Це мій стіле́ць."],"atlas_href":"/lexicon/стілець/"},{"word":"ла́мпа","translation":"lamp","pos":"noun","example":"Це моя́ ла́мпа.","examples":["Це моя́ ла́мпа."],"atlas_href":"/lexicon/лампа/"},{"word":"телефо́н","translation":"phone","pos":"noun","example":"Це мій телефо́н.","examples":["Це мій телефо́н."],"atlas_href":"/lexicon/телефон/"},{"word":"комп'ю́тер","translation":"computer","pos":"noun","example":"Це мій комп'ю́тер.","examples":["Це мій комп'ю́тер."],"atlas_href":"/lexicon/комп-ютер/"},{"word":"зо́шит","translation":"notebook","pos":"noun","example":"Це мій зо́шит.","examples":["Це мій зо́шит."],"atlas_href":"/lexicon/зошит/"},{"word":"ру́чка","translation":"pen","pos":"noun","example":"Це моя́ ру́чка.","examples":["Це моя́ ру́чка."],"atlas_href":"/lexicon/ручка/"},{"word":"су́мка","translation":"bag","pos":"noun","example":"Це моя́ су́мка.","examples":["Це моя́ су́мка."],"atlas_href":"/lexicon/сумка/"},{"word":"крі́сло","translation":"armchair","pos":"noun","example":"Це моє́ крі́сло.","examples":["Це моє́ крі́сло."],"atlas_href":"/lexicon/крісло/"},{"word":"дзе́ркало","translation":"mirror","pos":"noun","example":"Це моє́ дзе́ркало.","examples":["Це моє́ дзе́ркало."],"atlas_href":"/lexicon/дзеркало/"},{"word":"ключ","translation":"key","pos":"noun","example":"Це мій ключ.","examples":["Це мій ключ."],"atlas_href":"/lexicon/ключ/"},{"word":"фо́то","translation":"photo","pos":"noun","example":"Це моє́ фо́то.","examples":["Це моє́ фо́то."],"atlas_href":"/lexicon/фото/"},{"word":"стіна́","translation":"wall","pos":"noun","example":"Це моя́ стіна́.","examples":["Це моя́ стіна́."],"atlas_href":"/lexicon/стіна/"},{"word":"дя́дько","translation":"uncle","pos":"noun","example":"Це мій дя́дько.","examples":["Це мій дя́дько."],"atlas_href":"/lexicon/дядько/"},{"word":"студе́нт","translation":"male student","pos":"noun","example":"Він студе́нт.","examples":["Він студе́нт."],"atlas_href":"/lexicon/студент/"},{"word":"студе́нтка","translation":"female student","pos":"noun","example":"Вона́ студе́нтка.","examples":["Вона́ студе́нтка."],"atlas_href":"/lexicon/студентка/"},{"word":"вчи́тель","translation":"male teacher","pos":"noun","example":"Він вчи́тель.","examples":["Він вчи́тель."],"atlas_href":"/lexicon/вчитель/"},{"word":"вчи́телька","translation":"female teacher","pos":"noun","example":"Вона́ вчи́телька.","examples":["Вона́ вчи́телька."],"atlas_href":"/lexicon/вчителька/"},{"word":"учи́телька","translation":"female teacher","pos":"noun","example":"Вона́ учи́телька.","examples":["Вона́ учи́телька."],"atlas_href":"/lexicon/учителька/"},{"word":"лі́кар","translation":"male doctor","pos":"noun","example":"Він лі́кар.","examples":["Він лі́кар."],"atlas_href":"/lexicon/лікар/"},{"word":"лі́карка","translation":"female doctor","pos":"noun","example":"Вона́ лі́карка.","examples":["Вона́ лі́карка."],"atlas_href":"/lexicon/лікарка/"},{"word":"акто́р","translation":"male actor","pos":"noun","example":"Він акто́р.","examples":["Він акто́р."],"atlas_href":"/lexicon/актор/"},{"word":"акто́рка","translation":"female actor","pos":"noun","example":"Вона́ акто́рка.","examples":["Вона́ акто́рка."],"atlas_href":"/lexicon/акторка/"},{"word":"співа́к","translation":"male singer","pos":"noun","example":"Він співа́к.","examples":["Він співа́к."],"atlas_href":"/lexicon/співак/"},{"word":"співа́чка","translation":"female singer","pos":"noun","example":"Вона́ співа́чка.","examples":["Вона́ співа́чка."],"atlas_href":"/lexicon/співачка/"},{"word":"Ілля́","translation":"Illia","pos":"proper noun","example":"Він Ілля́.","examples":["Він Ілля́."],"atlas_href":"/lexicon/ілля/"},{"word":"Павло́","translation":"Pavlo","pos":"proper noun","example":"Він Павло́.","examples":["Він Павло́."],"atlas_href":"/lexicon/павло/"}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"рід","back":"grammatical gender"},{"front":"іме́нник","back":"noun"},{"front":"хто це?","back":"who is this?"},{"front":"що це?","back":"what is this?"},{"front":"він","back":"he / masculine gender-test word"},{"front":"вона́","back":"she / feminine gender-test word"},{"front":"воно́","back":"it / neuter gender-test word"},{"front":"мій","back":"my, masculine"},{"front":"моя́","back":"my, feminine"},{"front":"моє́","back":"my, neuter"},{"front":"стіл","back":"table"},{"front":"кни́га","back":"book"},{"front":"вікно́","back":"window"},{"front":"мі́сто","back":"city"},{"front":"та́то","back":"dad"},{"front":"ба́тько","back":"father"},{"front":"соба́ка","back":"dog"},{"front":"Мико́ла","back":"Mykola"},{"front":"у мене́ є","back":"I have"},{"front":"у тебе́ є","back":"do you have / you have"},{"front":"кімна́та","back":"room"},{"front":"лі́жко","back":"bed"},{"front":"стіле́ць","back":"chair"},{"front":"ла́мпа","back":"lamp"},{"front":"телефо́н","back":"phone"},{"front":"комп'ю́тер","back":"computer"},{"front":"зо́шит","back":"notebook"},{"front":"ру́чка","back":"pen"},{"front":"су́мка","back":"bag"},{"front":"крі́сло","back":"armchair"},{"front":"дзе́ркало","back":"mirror"},{"front":"ключ","back":"key"},{"front":"фо́то","back":"photo"},{"front":"стіна́","back":"wall"},{"front":"дя́дько","back":"uncle"},{"front":"студе́нт","back":"male student"},{"front":"студе́нтка","back":"female student"},{"front":"вчи́тель","back":"male teacher"},{"front":"вчи́телька","back":"female teacher"},{"front":"учи́телька","back":"female teacher"},{"front":"лі́кар","back":"male doctor"},{"front":"лі́карка","back":"female doctor"},{"front":"акто́р","back":"male actor"},{"front":"акто́рка","back":"female actor"},{"front":"співа́к","back":"male singer"},{"front":"співа́чка","back":"female singer"},{"front":"Ілля́","back":"Illia"},{"front":"Павло́","back":"Pavlo"}]`)} />
+
+</TabItem>
+<TabItem label="Вправи — Activities">
+
+<span id="activities"></span>
+
+### Фо́рми профе́сій — Profession forms
+
+*(see lesson, §Діало́г про профе́сії — A dialogue about professions)*
+
+### Чолові́чі та жіно́чі фо́рми профе́сій — Masculine and feminine profession forms
+
+*(see lesson, §Діало́г про профе́сії — A dialogue about professions)*
+
+### Він чи вона́ для люде́й — He or she for people
+
+*(see lesson, §Пильну́й па́стки — Watch out for traps)*
+
+### Пра́вда чи ні: чолові́чі імена́ та ви́нятки — True or false: masculine names and exceptions
+
+*(see lesson, §Пильну́й па́стки — Watch out for traps)*
+
+### Ви́прав па́стки ро́ду — Fix the gender traps
+
+<ErrorCorrection client:only='react' instruction="Choose the safer Ukrainian sentence." items={JSON.parse(`[{"sentence": "Мій кни́га, мій ру́чка (якщо́ гово́рить чолові́к).", "errorWord": "Мій кни́га, мій ру́чка (якщо́ гово́рить чолові́к).", "correctForm": "Моя́ кни́га, моя́ ру́чка.", "options": ["Моя́ кни́га, моя́ ру́чка.", "Мій кни́га, мій ру́чка."], "explanation": "The possessive follows the nouns кни́га and ру́чка, not the speaker."}, {"sentence": "Мій кни́га тут.", "errorWord": "Мій кни́га тут.", "correctForm": "Моя́ кни́га тут.", "options": ["Моя́ кни́га тут.", "Мій кни́га тут."], "explanation": "Кни́га is feminine, so use моя́."}, {"sentence": "Мій ру́чка там.", "errorWord": "Мій ру́чка там.", "correctForm": "Моя́ ру́чка там.", "options": ["Моя́ ру́чка там.", "Мій ру́чка там."], "explanation": "Ру́чка is feminine, so use моя́."}, {"sentence": "Де стіл? — Воно́ там. (Where is the table? — It is there.)", "errorWord": "Де стіл? — Воно́ там. (Where is the table? — It is there.)", "correctForm": "Де стіл? — Він там.", "options": ["Де стіл? — Він там.", "Де стіл? — Воно́ там."], "explanation": "Стіл is masculine, so the pronoun is він."}, {"sentence": "Це моя́ та́то.", "errorWord": "Це моя́ та́то.", "correctForm": "Це мій та́то.", "options": ["Це мій та́то.", "Це моя́ та́то."], "explanation": "Та́то is masculine."}, {"sentence": "Вона́ Мико́ла.", "errorWord": "Вона́ Мико́ла.", "correctForm": "Він Мико́ла.", "options": ["Він Мико́ла.", "Вона́ Мико́ла."], "explanation": "Мико́ла is a masculine name."}, {"sentence": "Моя́ соба́ка ду́же га́рна.", "errorWord": "Моя́ соба́ка ду́же га́рна.", "correctForm": "Мій соба́ка ду́же га́рний.", "options": ["Мій соба́ка ду́же га́рний.", "Моя́ соба́ка ду́же га́рна."], "explanation": "Соба́ка is masculine in Ukrainian; memorize мій соба́ка."}, {"sentence": "Я є студе́нт.", "errorWord": "Я є студе́нт.", "correctForm": "Я студе́нт.", "options": ["Я студе́нт.", "Я є студе́нт."], "explanation": "Present identity normally omits є."}, {"sentence": "Моє́ ім'я́ є Джон.", "errorWord": "Моє́ ім'я́ є Джон.", "correctForm": "Мене́ зва́ти Джон.", "options": ["Мене́ зва́ти Джон.", "Моє́ ім'я́ є Джон."], "explanation": "Мене́ зва́ти... is the safe name phrase."}]`)} isUkrainian={false} />
+
+### Переві́рка ро́ду — Gender check
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Яки́й у мене́ си́льний біль у плечі́!", "options": [{"text": "він", "correct": true}, {"text": "вона́", "correct": false}, {"text": "воно́", "correct": false}], "explanation": "Біль is masculine in Ukrainian."}, {"question": "Украї́нський степ широ́кий і ві́тряний.", "options": [{"text": "він", "correct": true}, {"text": "вона́", "correct": false}, {"text": "воно́", "correct": false}], "explanation": "Степ is masculine in Ukrainian."}, {"question": "Цей ро́зпис на стіні́ — робо́та украї́нського худо́жника.", "options": [{"text": "він", "correct": true}, {"text": "вона́", "correct": false}, {"text": "воно́", "correct": false}], "explanation": "Ро́зпис is masculine in Ukrainian."}, {"question": "Да́вній літо́пис розповіда́є про Ки́ївську Русь.", "options": [{"text": "він", "correct": true}, {"text": "вона́", "correct": false}, {"text": "воно́", "correct": false}], "explanation": "Літо́пис is masculine in Ukrainian."}, {"question": "Кни́жне / урочи́сте: у дале́ку путь.", "options": [{"text": "вона́", "correct": true}, {"text": "він", "correct": false}, {"text": "воно́", "correct": false}], "explanation": "Путь is feminine in this diagnostic expression."}]`)} instruction={"Choose the Ukrainian gender-test word. These are diagnostic props, not new active vocabulary."} isUkrainian={false} />
+
+### Розподілі́ть слова́: він чи вона́ — Sort the words: він or вона́
+
+<GroupSort client:only='react' groups={JSON.parse(`{"він (чолові́чий рід)": ["студе́нт", "вчи́тель", "лі́кар", "Мико́ла", "Ілля́", "дя́дько"], "вона́ (жіно́чий рід)": ["студе́нтка", "вчи́телька", "лі́карка", "акто́рка", "співа́чка", "Окса́на"]}`)} instruction={"Розподілі́ть профе́сії та імена́ за ро́дом: він чи вона́. — Sort the professions and names by gender: він or вона́."} isUkrainian={false} />
+
+### Складі́ть ре́чення з профе́сіями — Build sentences with professions
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Вона́ / моя́ / вчи́телька", "answer": "Вона́ моя́ вчи́телька."}, {"jumbled": "Він / мій / лі́кар", "answer": "Він мій лі́кар."}, {"jumbled": "Це / мій / соба́ка", "answer": "Це мій соба́ка."}, {"jumbled": "Це / мій / дя́дько", "answer": "Це мій дя́дько."}, {"jumbled": "Він / акто́р / а / вона́ / акто́рка", "answer": "Він акто́р, а вона́ акто́рка."}, {"jumbled": "Мене́ / зва́ти / Мико́ла", "answer": "Мене́ зва́ти Мико́ла."}]`)} instruction={"Розташу́йте слова́, щоб утвори́ти прави́льне ре́чення. — Arrange the words to form a correct sentence."} />
+
+### За́йве сло́во за ро́дом — Odd word out by gender
+
+<OddOneOut client:only='react' instruction={"Знайді́ть одне́ за́йве сло́во за грамати́чним ро́дом. — Find the one odd word out by grammatical gender."} items={JSON.parse(`[{"words": ["вчи́телька", "лі́карка", "студе́нтка", "студе́нт"], "correct": 3, "explanation": "Студе́нт — чолові́ча фо́рма, і́нші — жіно́чі."}, {"words": ["акто́р", "співа́к", "лі́кар", "акто́рка"], "correct": 3, "explanation": "Акто́рка — жіно́ча фо́рма, і́нші — чолові́чі."}, {"words": ["Мико́ла", "Ілля́", "Павло́", "Окса́на"], "correct": 3, "explanation": "Окса́на — жіно́че ім'я́, і́нші — чолові́чі."}, {"words": ["та́то", "ба́тько", "дя́дько", "ма́ма"], "correct": 3, "explanation": "Ма́ма — жіно́чий рід, і́нші — чолові́чий."}, {"words": ["стіл", "телефо́н", "зо́шит", "кни́га"], "correct": 3, "explanation": "Кни́га — жіно́чий рід, і́нші — чолові́чий."}, {"words": ["вікно́", "лі́жко", "фо́то", "ла́мпа"], "correct": 3, "explanation": "Ла́мпа — жіно́чий рід, і́нші — сере́дній."}]`)} />
+
+### Бо́нус: перекладі́ть про люде́й і ре́чі — Bonus: translate about people and things
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "She is a teacher (vchytelka).", "options": [{"text": "Вона́ вчи́телька.", "correct": true}]}, {"source": "He is a doctor.", "options": [{"text": "Він лі́кар.", "correct": true}]}, {"source": "My dog is handsome.", "options": [{"text": "Мій соба́ка га́рний.", "correct": true}]}, {"source": "This is my uncle.", "options": [{"text": "Це мій дя́дько.", "correct": true}]}, {"source": "My name is John.", "options": [{"text": "Мене́ зва́ти Джон.", "correct": true}]}, {"source": "She is a student.", "options": [{"text": "Вона́ студе́нтка.", "correct": true}]}]`)} instruction={"Перекладі́ть ре́чення з англі́йської мо́ви на украї́нську. — Translate the sentences from English into Ukrainian."} isUkrainian={false} />
+
+</TabItem>
+<TabItem label="Ресурси — Resources">
+
+<span id="resources"></span>
+
+:::info[🎧 🔗 External Resources]
+
+**📚 Books:**
+- 📚 **Авра́менко, 6 клас — с. 84 «Фемінітиви»**
+  Тво́рення фемінітивів су́фіксом -к(а): учи́телька, співа́чка, лі́карка.
+- 📚 **Літвінова, 6 клас — с. 130 «Впра́ва 264. Рід іме́нників»**
+  Рід іме́нників-ви́нятків: біль, соба́ка, степ (чолові́чий рід), путь (жіно́чий рід).
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
+
+<nav aria-label="Lesson navigation">
+
+[Previous](/a1/things-have-gender/2/) · [Module](/a1/things-have-gender/) · [Next](/a1/things-have-gender/)
+
+</nav>

@@ -174,8 +174,8 @@ class TestBuildLearnerState:
         assert state["cumulative_vocabulary"] == ["так"]
         assert "ні" not in state["cumulative_vocabulary"]
 
-    def test_build_learner_state_a1_m20_has_vocab(self):
-        state = build_learner_state("a1", 20)
+    def test_build_learner_state_a1_archive_m20_has_vocab(self):
+        state = build_learner_state("a1-v1", 20)
 
         assert state["cumulative_vocabulary"]
 

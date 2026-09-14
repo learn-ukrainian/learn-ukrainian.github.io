@@ -45,7 +45,8 @@ if str(SCRIPT_DIR) not in sys.path:
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from manifest_utils import CORE_LEVELS, TRACKS, Module, get_modules_for_level
+from level_config import base_level
+from manifest_utils import Module, get_modules_for_level, load_manifest
 from slug_utils import to_bare_slug
 
 # Re-export Activity for type annotations used by callers
@@ -481,6 +482,7 @@ def generate_mdx(
         pipeline_version
         and pipeline_version not in ("v5", "v6")
         and not (pipeline_version == "linear-phase-4" and build_status in {"validated", "reviewed"})
+        and not (str(pipeline_version).startswith("v7") and build_status in {"validated", "reviewed"})
     )
     explicit_draft = fm.get("draft")
     if isinstance(explicit_draft, bool):
@@ -639,8 +641,16 @@ sidebar:
         ("Activities", "\u0417\u043e\u0448\u0438\u0442" if is_a2_2_preview else "\u0412\u043f\u0440\u0430\u0432\u0438",   activities_content),
         ("Resources",  "\u0420\u0435\u0441\u0443\u0440\u0441\u0438",  resources_content),
     ]
+    def _tab_label(en: str, uk: str) -> str:
+        if is_ukrainian_forced:
+            return uk
+        # A1 is bilingual: Ukrainian first, English support after.
+        if lvl == "a1":
+            return f"{uk} — {en}"
+        return en
+
     tab_items = '\n'.join(
-        f'<TabItem label="{uk if is_ukrainian_forced else en}">\n\n'
+        f'<TabItem label="{_tab_label(en, uk)}">\n\n'
         f'{content.strip()}\n\n</TabItem>'
         for en, uk, content in tabs
     )
@@ -715,21 +725,12 @@ sidebar:
 
 def get_modules_from_manifest(target_level: str | None = None) -> list[Module]:
     """Get list of modules to process from manifest."""
-    all_modules = []
-
-    # Process core levels
-    for level in CORE_LEVELS:
-        if target_level and level != target_level:
-            continue
-        all_modules.extend(get_modules_for_level(level))
-
-    # Process tracks (hist, bio, lit)
-    for track_name in TRACKS:
-        if target_level and track_name != target_level:
-            continue
-        all_modules.extend(get_modules_for_level(track_name))
-
-    return all_modules
+    return [
+        module
+        for level in load_manifest().get("levels", {})
+        if target_level is None or level == target_level
+        for module in get_modules_for_level(level)
+    ]
 
 
 def main():
@@ -838,7 +839,8 @@ def main():
 
         # Load PLAN file for title/subtitle
         plan_data = None
-        plan_file = CURRICULUM_DIR / lang_pair / 'plans' / mod.level.lower() / f"{mod.slug}.yaml"
+        plan_level = base_level(mod.level, manifest=CURRICULUM_DIR / lang_pair / 'curriculum.yaml')
+        plan_file = CURRICULUM_DIR / lang_pair / 'plans' / plan_level / f"{mod.slug}.yaml"
         if plan_file.exists():
             try:
                 with open(plan_file, encoding='utf-8') as f:

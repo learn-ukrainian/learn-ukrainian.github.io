@@ -44,6 +44,7 @@ def _data_repo_root() -> Path:
 
 PROJECT_ROOT = _data_repo_root()
 
+from scripts.level_config import base_level, resolve_content_track
 from scripts.orchestration.prompt_contracts import (
     LifecycleConfigError,
     load_active_tracks,
@@ -888,14 +889,16 @@ def build_explicit_size_policy_record(
 
 
 def _plan_paths_for_track(track: str) -> list[Path]:
-    plans_dir = CURRICULUM_ROOT / "plans" / track
+    manifest = CURRICULUM_ROOT / "curriculum.yaml"
+    plan_track = base_level(track, manifest=manifest) if manifest.exists() else track
+    plans_dir = CURRICULUM_ROOT / "plans" / plan_track
     if not plans_dir.exists():
         return []
     return sorted(path for path in plans_dir.glob("*.yaml") if not path.name.endswith(".bak.yaml"))
 
 
 def _module_path(track: str, slug: str) -> Path:
-    track_dir = CURRICULUM_ROOT / track
+    track_dir = CURRICULUM_ROOT / resolve_content_track(track, slug, CURRICULUM_ROOT)
     nested = track_dir / slug / "module.md"
     candidates = [
         nested,

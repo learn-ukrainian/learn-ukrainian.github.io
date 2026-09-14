@@ -55,6 +55,11 @@ def test_check_targets_fails_when_generation_changes_mdx(
     monkeypatch.setattr(mdx_drift, "MDX_ROOT", mdx_root)
     monkeypatch.setattr(mdx_drift, "PROJECT_ROOT", tmp_path)
     monkeypatch.setattr(mdx_drift, "_run_generator", regenerate)
+    curriculum_root = tmp_path / "curriculum/l2-uk-en"
+    module_dir = curriculum_root / "a1/things-have-gender"
+    module_dir.mkdir(parents=True)
+    (module_dir / "module.md").write_text("legacy source\n", encoding="utf-8")
+    monkeypatch.setattr(mdx_drift, "CURRICULUM_ROOT", curriculum_root)
 
     rc = mdx_drift.check_targets(
         [ModuleTarget(level="a1", slug="things-have-gender", local_num=8)]

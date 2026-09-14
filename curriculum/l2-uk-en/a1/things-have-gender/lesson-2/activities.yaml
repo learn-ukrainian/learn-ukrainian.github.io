@@ -1,0 +1,361 @@
+inline:
+- id: act-4
+  type: fill-in
+  title: Мій предме́т — My object
+  instruction: Choose мій, моя́, or моє́.
+  items:
+  - sentence: Це ___ стіл.
+    answer: мій
+    options:
+    - мій
+    - моя́
+    - моє́
+    explanation: Стіл is masculine.
+  - sentence: Це ___ кни́га.
+    answer: моя́
+    options:
+    - моя́
+    - мій
+    - моє́
+    explanation: Кни́га is feminine.
+  - sentence: Це ___ вікно́.
+    answer: моє́
+    options:
+    - моє́
+    - мій
+    - моя́
+    explanation: Вікно́ is neuter.
+  - sentence: Це ___ кімна́та.
+    answer: моя́
+    options:
+    - моя́
+    - мій
+    - моє́
+    explanation: Кімна́та is feminine.
+  - sentence: Це ___ лі́жко.
+    answer: моє́
+    options:
+    - моє́
+    - моя́
+    - мій
+    explanation: Лі́жко is neuter.
+  - sentence: Це ___ телефо́н.
+    answer: мій
+    options:
+    - мій
+    - моя́
+    - моє́
+    explanation: Телефо́н is masculine.
+  - sentence: Це ___ ру́чка.
+    answer: моя́
+    options:
+    - моя́
+    - мій
+    - моє́
+    explanation: Ру́чка is feminine.
+  - sentence: Це ___ фо́то.
+    answer: моє́
+    options:
+    - моє́
+    - моя́
+    - мій
+    explanation: Фо́то is neuter in this lesson.
+- id: act-201
+  type: quiz
+  title: Рід рече́й навко́ло — The gender of things around us
+  instruction: Обері́ть прави́льний займе́нник (він, вона́ чи воно́) для ко́жного
+    предме́та. — Choose the correct pronoun (він, вона́, or воно́) for each object.
+  items:
+  - prompt: стіле́ць
+    options:
+    - text: він
+      correct: true
+    - text: вона́
+      correct: false
+    - text: воно́
+      correct: false
+  - prompt: ла́мпа
+    options:
+    - text: вона́
+      correct: true
+    - text: він
+      correct: false
+    - text: воно́
+      correct: false
+  - prompt: лі́жко
+    options:
+    - text: воно́
+      correct: true
+    - text: вона́
+      correct: false
+    - text: він
+      correct: false
+  - prompt: телефо́н
+    options:
+    - text: він
+      correct: true
+    - text: вона́
+      correct: false
+    - text: воно́
+      correct: false
+  - prompt: су́мка
+    options:
+    - text: вона́
+      correct: true
+    - text: він
+      correct: false
+    - text: воно́
+      correct: false
+  - prompt: дзе́ркало
+    options:
+    - text: воно́
+      correct: true
+    - text: він
+      correct: false
+    - text: вона́
+      correct: false
+- id: act-202
+  type: observe
+  title: Порівня́йте предме́ти та рід — Compare the objects and their gender
+  instruction: Зверні́ть ува́гу на поєдна́ння іме́нника та присві́йного займе́нника. —
+    Notice how the noun and the possessive pronoun pair up.
+  pairs:
+  - left: стіле́ць (при́голосний)
+    right: мій стіле́ць (він)
+  - left: су́мка (закі́нчення -а)
+    right: моя́ су́мка (вона́)
+  - left: лі́жко (закі́нчення -о)
+    right: моє́ лі́жко (воно́)
+  - left: телефо́н (при́голосний)
+    right: мій телефо́н (він)
+  - left: ла́мпа (закі́нчення -а)
+    right: моя́ ла́мпа (вона́)
+  - left: дзе́ркало (закі́нчення -о)
+    right: моє́ дзе́ркало (воно́)
+- id: act-203
+  type: true-false
+  title: 'Пра́вда чи ні: ре́чі в кімна́ті й су́мці — True or false: things in the room and bag'
+  instruction: Ви́значте, чи пра́вильно вка́зано рід предме́та. —
+    Decide whether the gender of the object is stated correctly.
+  statements:
+  - statement: Сло́во «стіл» — це він.
+    correct: true
+  - statement: Сло́во «ла́мпа» — це воно́.
+    correct: false
+  - statement: Сло́во «лі́жко» — це воно́.
+    correct: true
+  - statement: Сло́во «су́мка» — це вона́.
+    correct: true
+  - statement: Сло́во «телефо́н» — це вона́.
+    correct: false
+  - statement: Сло́во «дзе́ркало» — це воно́.
+    correct: true
+workbook:
+- id: act-w2
+  type: match-up
+  title: Слова́ для кімна́ти й су́мки — Words for the room and bag
+  instruction: Match each Ukrainian noun with its English cue.
+  pairs:
+  - left: стіл
+    right: table
+  - left: кни́га
+    right: book
+  - left: вікно́
+    right: window
+  - left: кімна́та
+    right: room
+  - left: лі́жко
+    right: bed
+  - left: телефо́н
+    right: phone
+  - left: ру́чка
+    right: pen
+  - left: зо́шит
+    right: notebook
+- id: act-w3
+  type: fill-in
+  title: У мене́ є предме́ти — I have objects
+  instruction: Complete the object sentence.
+  items:
+  - sentence: ___ мене́ є стіл.
+    answer: У
+    options:
+    - У
+    - Це
+    - Хто
+    explanation: У мене́ є... is the I-have phrase.
+  - sentence: У мене́ ___ кни́га.
+    answer: є
+    options:
+    - є
+    - зва́ти
+    - моя́
+    explanation: У мене́ є... stays as one phrase.
+  - sentence: У ___ є телефо́н?
+    answer: тебе́
+    options:
+    - тебе́
+    - мене́
+    - мій
+    explanation: У тебе́ є...? asks one familiar person.
+  - sentence: У мене́ є ___.
+    answer: вікно́
+    options:
+    - вікно́
+    - він
+    - моя́
+    explanation: Вікно́ is an object noun after У мене́ є.
+  - sentence: Де стіл? ___ тут.
+    answer: Він
+    options:
+    - Він
+    - Вона́
+    - Воно́
+    explanation: Стіл is masculine, so use він.
+  - sentence: Де кни́га? ___ тут.
+    answer: Вона́
+    options:
+    - Вона́
+    - Він
+    - Воно́
+    explanation: Кни́га is feminine, so use вона́.
+  - sentence: Де вікно́? ___ там.
+    answer: Воно́
+    options:
+    - Воно́
+    - Вона́
+    - Він
+    explanation: Вікно́ is neuter, so use воно́.
+- id: act-204
+  type: group-sort
+  title: Сорту́й ре́чі в кімна́ті й су́мці — Sort the things in the room and bag
+  instruction: 'Розподілі́ть предме́ти за ро́дом: він, вона́ чи воно́. —
+    Sort the objects by gender: він, вона́, or воно́.'
+  groups:
+  - label: він / мій
+    items:
+    - стіле́ць
+    - телефо́н
+    - комп'ю́тер
+    - ключ
+    - зо́шит
+  - label: вона́ / моя́
+    items:
+    - кімна́та
+    - ла́мпа
+    - су́мка
+    - ру́чка
+    - стіна́
+  - label: воно́ / моє́
+    items:
+    - лі́жко
+    - крі́сло
+    - дзе́ркало
+    - фо́то
+- id: act-205
+  type: unjumble
+  title: Складі́ть ре́чення з «У мене́ є» — Build sentences with «У мене́ є»
+  instruction: Складі́ть слова́ у прави́льному поря́дку. — Arrange the words in the correct order.
+  words:
+  - words:
+    - У
+    - мене́
+    - є
+    - стіл
+    answer: У мене́ є стіл.
+  - words:
+    - У
+    - тебе́
+    - є
+    - ла́мпа
+    answer: У тебе́ є ла́мпа?
+  - words:
+    - У
+    - мене́
+    - є
+    - су́мка
+    answer: У мене́ є су́мка.
+  - words:
+    - У
+    - тебе́
+    - є
+    - телефо́н
+    answer: У тебе́ є телефо́н?
+  - words:
+    - У
+    - мене́
+    - є
+    - лі́жко
+    answer: У мене́ є лі́жко.
+  - words:
+    - У
+    - тебе́
+    - є
+    - зо́шит
+    answer: У тебе́ є зо́шит?
+- id: act-206
+  type: odd-one-out
+  title: За́йве сло́во за ро́дом — Odd word out by gender
+  instruction: Знайді́ть одне́ сло́во, яке́ відрізня́ється за грамати́чним ро́дом. —
+    Find the one word that differs in grammatical gender.
+  items:
+  - words:
+    - стіл
+    - телефо́н
+    - зо́шит
+    - кни́га
+    answer: кни́га
+    explanation: Кни́га — жіно́чий рід, і́нші — чолові́чий.
+  - words:
+    - ла́мпа
+    - су́мка
+    - ру́чка
+    - лі́жко
+    answer: лі́жко
+    explanation: Лі́жко — сере́дній рід, і́нші — жіно́чий.
+  - words:
+    - вікно́
+    - дзе́ркало
+    - крі́сло
+    - стіле́ць
+    answer: стіле́ць
+    explanation: Стіле́ць — чолові́чий рід, і́нші — сере́дній.
+  - words:
+    - ключ
+    - комп'ю́тер
+    - стіл
+    - стіна́
+    answer: стіна́
+    explanation: Стіна́ — жіно́чий рід, і́нші — чолові́чий.
+  - words:
+    - кімна́та
+    - стіна́
+    - су́мка
+    - фо́то
+    answer: фо́то
+    explanation: Фо́то — сере́дній рід, і́нші — жіно́чий.
+  - words:
+    - лі́жко
+    - вікно́
+    - фо́то
+    - зо́шит
+    answer: зо́шит
+    explanation: Зо́шит — чолові́чий рід, і́нші — сере́дній.
+- id: act-207
+  type: translate
+  bonus: true
+  title: 'Бо́нус: перекладі́ть про ре́чі — Bonus: translate about things'
+  instruction: Перекладі́ть ре́чення на украї́нську мо́ву. — Translate the sentences into Ukrainian.
+  items:
+  - sentence: I have a table and a bed.
+    answer: У мене́ є стіл і лі́жко.
+  - sentence: Do you (informal) have a phone?
+    answer: У тебе́ є телефо́н?
+  - sentence: This is my bag.
+    answer: Це моя́ су́мка.
+  - sentence: Where is the mirror?
+    answer: Де дзе́ркало?
+  - sentence: Here is my armchair.
+    answer: Ось моє́ крі́сло.
+  - sentence: My room is here.
+    answer: Моя́ кімна́та тут.

@@ -1,0 +1,56 @@
+- lemma: яки́й
+  translation: what kind, masculine
+  pos: pronoun
+  usage: Яки́й стіл?
+- lemma: яка
+  translation: what kind, feminine
+  pos: pronoun
+  usage: Яка кни́га?
+- lemma: яке́
+  translation: what kind, neuter
+  pos: pronoun
+  usage: Яке́ фо́то?
+- lemma: які́
+  translation: what kind, plural
+  pos: pronoun
+  usage: Які́ ре́чі?
+- lemma: вели́кий
+  translation: big, masculine
+  pos: adj
+  usage: Це вели́кий стіл.
+- lemma: вели́ка
+  translation: big, feminine
+  pos: adj
+  usage: Це вели́ка кімна́та.
+- lemma: вели́ке
+  translation: big, neuter
+  pos: adj
+  usage: Це вели́ке вікно́.
+- lemma: нови́й
+  translation: new, masculine
+  pos: adj
+  usage: Стіл нови́й.
+- lemma: нова́
+  translation: new, feminine
+  pos: adj
+  usage: Кни́га нова́.
+- lemma: нове́
+  translation: new, neuter
+  pos: adj
+  usage: Фо́то нове́.
+- lemma: стари́й
+  translation: old, masculine
+  pos: adj
+  usage: Атлас стари́й.
+- lemma: старе́
+  translation: old, neuter
+  pos: adj
+  usage: Лі́жко старе́.
+- lemma: атлас
+  translation: atlas
+  pos: noun
+  usage: Атлас стари́й.
+- lemma: плака́т
+  translation: poster
+  pos: noun
+  usage: Плака́т вели́кий.

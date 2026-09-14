@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "V7 upgrade lesson map",
+  "type": "object",
+  "required": ["lessons", "closes_module", "provenance", "items_min_exempt", "proper_names"],
+  "additionalProperties": false,
+  "properties": {
+    "lessons": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/lesson"}},
+    "closes_module": {"type": "integer", "minimum": 1},
+    "provenance": {"type": "array", "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["placement", "index", "new_id", "lesson"],
+      "properties": {
+        "placement": {"enum": ["inline", "workbook"]},
+        "index": {"type": "integer", "minimum": 0},
+        "new_id": {"type": "string", "minLength": 1},
+        "lesson": {"type": "integer", "minimum": 1}
+      }
+    }},
+    "items_min_exempt": {"type": "array", "items": {
+      "type": "object", "additionalProperties": false, "required": ["id", "reason"],
+      "properties": {"id": {"type": "string", "minLength": 1}, "reason": {"type": "string", "minLength": 1}}
+    }},
+    "proper_names": {"$ref": "#/$defs/strings"}
+  },
+  "$defs": {
+    "strings": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "lesson": {
+      "type": "object", "additionalProperties": false,
+      "required": ["n", "title", "sections", "minutes", "word_target", "activities", "unverified_stress", "unverified_lemmas"],
+      "properties": {
+        "n": {"type": "integer", "minimum": 1},
+        "title": {"type": "string", "minLength": 1},
+        "sections": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "minutes": {"const": 60},
+        "word_target": {"type": "integer", "minimum": 550},
+        "activities": {
+          "type": "object", "additionalProperties": false, "required": ["total", "inline", "workbook"],
+          "properties": {"total": {"type": "integer", "minimum": 10}, "inline": {"const": [4, 6]}, "workbook": {"const": [6, 9]}}
+        },
+        "unverified_stress": {"allOf": [{"$ref": "#/$defs/strings"}], "maxItems": 10},
+        "unverified_lemmas": {"allOf": [{"$ref": "#/$defs/strings"}], "maxItems": 5}
+      }
+    }
+  }
+}

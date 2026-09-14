@@ -7,6 +7,7 @@ from scripts.audit.check_writer_prompt_size import (
     WRITER_PROMPT_CEILING_BYTES,
     render_fixture_writer_prompt,
 )
+from scripts.level_config import resolve_content_track
 
 
 def test_ceiling_is_130kb() -> None:
@@ -34,7 +35,8 @@ def test_fixture_modules_includes_a1_my_morning() -> None:
 def test_fixture_module_path_resolves() -> None:
     project_root = Path(__file__).resolve().parents[1]
     for level, slug in FIXTURE_MODULES:
-        expected = project_root / "curriculum" / "l2-uk-en" / level / slug
+        curriculum = project_root / "curriculum" / "l2-uk-en"
+        expected = curriculum / resolve_content_track(level, slug, curriculum) / slug
         assert expected.exists(), f"Fixture path {expected} should exist"
 
 

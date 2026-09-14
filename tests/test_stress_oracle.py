@@ -20,6 +20,8 @@ from scripts.verification.stress import (
     _load_trie,
     _parse_dictionary_value,
     _trie_value,
+    pedagogical_stressed_form,
+    transfer_stress_marks,
     verify_stress,
 )
 
@@ -79,6 +81,33 @@ class TestHeteronymEnumeration:
         result = verify_stress("село")
         assert result["status"] == "ok"
         assert result["unresolvable_by_tags"] is False
+
+
+class TestPedagogicalForm:
+    """Learner-facing single acute: collapse packed duals; honor overrides."""
+
+    def test_rozbir_collapses_to_last_vowel(self):
+        match = verify_stress("розбір")["matches"][0]
+        assert match["vowel_indices"] == [1, 4]
+        assert pedagogical_stressed_form(match) == f"розбі{STRESS}р"
+
+    def test_korysnyi_collapses_to_last_vowel(self):
+        match = verify_stress("корисний")["matches"][0]
+        assert pedagogical_stressed_form(match) == f"кори{STRESS}сний"
+
+    def test_zavzhdy_override_keeps_first_vowel(self):
+        result = verify_stress("завжди")
+        match = result["matches"][0]
+        assert match["override_applied"] is True
+        assert pedagogical_stressed_form(match) == f"за{STRESS}вжди"
+
+    def test_takozh_override_keeps_first_vowel(self):
+        match = verify_stress("також")["matches"][0]
+        assert match["override_applied"] is True
+        assert pedagogical_stressed_form(match) == f"та{STRESS}кож"
+
+    def test_transfer_preserves_capitalization(self):
+        assert transfer_stress_marks(f"розбі{STRESS}р", "Розбір") == f"Розбі{STRESS}р"
 
 
 class TestNotFound:

@@ -1,0 +1,555 @@
+inline:
+- id: act-1
+  type: quiz
+  title: Яке́ пита́льне сло́во? — Which question word?
+  instruction: Choose the question word that fits the noun.
+  items:
+  - prompt: стіл
+    options:
+    - text: Яки́й?
+      correct: true
+    - text: Яка?
+      correct: false
+    - text: Яке́?
+      correct: false
+    explanation: Стіл is masculine, so ask Яки́й?
+  - prompt: кни́га
+    options:
+    - text: Яка?
+      correct: true
+    - text: Яки́й?
+      correct: false
+    - text: Яке́?
+      correct: false
+    explanation: Кни́га is feminine, so ask Яка?
+  - prompt: фо́то
+    options:
+    - text: Яке́?
+      correct: true
+    - text: Яка?
+      correct: false
+    - text: Яки́й?
+      correct: false
+    explanation: Фо́то is neuter in this lesson, so ask Яке́?
+  - prompt: кімна́та
+    options:
+    - text: Яка?
+      correct: true
+    - text: Яки́й?
+      correct: false
+    - text: Які́?
+      correct: false
+    explanation: Кімна́та is feminine.
+  - prompt: кни́ги
+    options:
+    - text: Які́?
+      correct: true
+    - text: Яке́?
+      correct: false
+    - text: Яки́й?
+      correct: false
+    explanation: Кни́ги is plural, so ask Які́?
+  - prompt: вікно́
+    options:
+    - text: Яке́?
+      correct: true
+    - text: Яки́й?
+      correct: false
+    - text: Яка?
+      correct: false
+    explanation: Вікно́ is neuter.
+- id: act-2
+  type: fill-in
+  title: Заверши́ прикме́тник — Complete the adjective
+  instruction: Choose the adjective ending that matches the noun.
+  items:
+  - sentence: ве́лик__ стіл
+    answer: ий
+    options:
+    - ий
+    - а
+    - е
+    explanation: Стіл is masculine, so use вели́кий.
+  - sentence: нов__ кни́га
+    answer: а
+    options:
+    - а
+    - ий
+    - е
+    explanation: Кни́га is feminine, so use нова́.
+  - sentence: чист__ вікно́
+    answer: е
+    options:
+    - е
+    - ий
+    - а
+    explanation: Вікно́ is neuter, so use чи́сте.
+  - sentence: стар__ фо́то
+    answer: е
+    options:
+    - е
+    - а
+    - ий
+    explanation: Фо́то is neuter in this lesson.
+  - sentence: дорог__ телефо́н
+    answer: ий
+    options:
+    - ий
+    - а
+    - е
+    explanation: Телефо́н is masculine.
+  - sentence: дешев__ листі́вка
+    answer: а
+    options:
+    - а
+    - е
+    - ий
+    explanation: Листі́вка is feminine.
+  - sentence: гарн__ кімна́та
+    answer: а
+    options:
+    - а
+    - ий
+    - е
+    explanation: Кімна́та is feminine.
+  - sentence: брудн__ дзе́ркало
+    answer: е
+    options:
+    - е
+    - а
+    - ий
+    explanation: Дзе́ркало is neuter.
+  - sentence: світл__ плака́т
+    answer: ий
+    options:
+    - ий
+    - е
+    - а
+    explanation: Плака́т is masculine.
+  - sentence: нов__ кни́ги
+    answer: і
+    options:
+    - і
+    - а
+    - е
+    explanation: Plural A1 phrases use нові́.
+- id: act-101
+  type: match-up
+  title: Пита́ння та переклад — Question and translation
+  instruction: З'єдна́йте украї́нське пита́ння з англі́йським перекладом. —
+    Match the Ukrainian question with its English translation.
+  pairs:
+  - left: Яки́й це стіл?
+    right: What kind of table is this?
+  - left: Яка це кни́га?
+    right: What kind of book is this?
+  - left: Яке́ це вікно́?
+    right: What kind of window is this?
+  - left: Які́ це ре́чі?
+    right: What kind of things are these?
+  - left: Яки́й це атлас?
+    right: What kind of atlas is this?
+  - left: Яке́ це фо́то?
+    right: What kind of photo is this?
+- id: act-3
+  type: group-sort
+  title: Сорту́й фра́зи — Sort the phrases
+  instruction: Sort each adjective-noun phrase by the question it answers.
+  groups:
+  - label: Яки́й?
+    items:
+    - вели́кий стіл
+    - нови́й телефо́н
+    - стари́й атлас
+    - дороги́й плака́т
+  - label: Яка?
+    items:
+    - нова́ кни́га
+    - га́рна листі́вка
+    - чи́ста кімна́та
+    - деше́ва ру́чка
+  - label: Яке́?
+    items:
+    - старе́ фо́то
+    - чи́сте вікно́
+    - вели́ке лі́жко
+    - брудне́ дзе́ркало
+  - label: Які́?
+    items:
+    - нові́ кни́ги
+    - га́рні ре́чі
+    - старі́ фо́то
+    - деше́ві листі́вки
+- id: act-102
+  type: true-false
+  title: Пра́вда чи ні? — True or false?
+  instruction: Ви́значте, чи правильне узго́дження прикме́тника з іме́нником. —
+    Decide whether the adjective agrees correctly with the noun.
+  statements:
+  - statement: Стіл нови́й.
+    answer: true
+    explanation: Стіл — чолові́чий рід, закі́нчення -ий.
+  - statement: Кни́га нови́й.
+    answer: false
+    explanation: 'Кни́га — жіно́чий рід: нова́ кни́га.'
+  - statement: Вікно́ чи́сте.
+    answer: true
+    explanation: Вікно́ — сере́дній рід, закі́нчення -е.
+  - statement: Атлас старе́.
+    answer: false
+    explanation: 'Атлас — чолові́чий рід: стари́й атлас.'
+  - statement: Фо́то нове́.
+    answer: true
+    explanation: Фо́то — сере́дній рід, закі́нчення -е.
+  - statement: Плака́т вели́ка.
+    answer: false
+    explanation: 'Плака́т — чолові́чий рід: вели́кий плака́т.'
+  - statement: Кімна́та вели́ка.
+    answer: true
+    explanation: Кімна́та — жіно́чий рід, закі́нчення -а.
+workbook:
+- id: act-w1
+  type: quiz
+  title: Моде́ль речення — Sentence model
+  instruction: Choose the natural A1 sentence.
+  items:
+  - prompt: The book is new.
+    options:
+    - text: Кни́га нова́.
+      correct: true
+    - text: Кни́га є нова́.
+      correct: false
+    - text: Кни́га нови́й.
+      correct: false
+    explanation: Ukrainian usually leaves out є in this present-tense frame.
+  - prompt: The table is clean.
+    options:
+    - text: Стіл чи́стий.
+      correct: true
+    - text: Стіл чи́ста.
+      correct: false
+    - text: Стіл є чи́стий.
+      correct: false
+    explanation: Стіл is masculine, and the no-є frame is natural.
+  - prompt: The window is big.
+    options:
+    - text: Вікно́ вели́ке.
+      correct: true
+    - text: Вікно́ вели́кий.
+      correct: false
+    - text: Вікно́ вели́ка.
+      correct: false
+    explanation: Вікно́ is neuter.
+  - prompt: A nice postcard
+    options:
+    - text: га́рна листі́вка
+      correct: true
+    - text: га́рний листі́вка
+      correct: false
+    - text: га́рне листі́вка
+      correct: false
+    explanation: Листі́вка is feminine.
+  - prompt: A useful atlas
+    options:
+    - text: кори́сний атлас
+      correct: true
+    - text: кори́сна атлас
+      correct: false
+    - text: кори́сне атлас
+      correct: false
+    explanation: Атлас is masculine.
+  - prompt: Interesting things
+    options:
+    - text: ціка́ві ре́чі
+      correct: true
+    - text: ціка́ва ре́чі
+      correct: false
+    - text: ціка́ве ре́чі
+      correct: false
+    explanation: Plural phrases use ціка́ві.
+- id: act-w2
+  type: fill-in
+  title: Опиши́ кімна́ту — Describe the room
+  instruction: Complete the short room lines.
+  items:
+  - sentence: Моя́ кімна́та ___ і сві́тла.
+    answer: мале́нька
+    options:
+    - мале́нька
+    - мале́нький
+    - мале́ньке
+    explanation: Кімна́та is feminine.
+  - sentence: Стіл ___ і чи́стий.
+    answer: нови́й
+    options:
+    - нови́й
+    - нова́
+    - нове́
+    explanation: Стіл is masculine.
+  - sentence: Лі́жко старе́, ___ зру́чне.
+    answer: але́
+    options:
+    - але́
+    - яки́й
+    - яка
+    explanation: Але́ adds a contrast.
+  - sentence: Вікно́ ___ і чи́сте.
+    answer: вели́ке
+    options:
+    - вели́ке
+    - вели́кий
+    - вели́ка
+    explanation: Вікно́ is neuter.
+  - sentence: Кни́га доро́га, ___ листі́вка деше́ва.
+    answer: а
+    options:
+    - а
+    - і
+    - яке́
+    explanation: А contrasts two things.
+  - sentence: У мене́ є ___ стіл і стара́ ла́мпа.
+    answer: нови́й
+    options:
+    - нови́й
+    - нова́
+    - нове́
+    explanation: Стіл is masculine.
+- id: act-w101
+  type: quiz
+  title: Обери́ пита́ння — Choose the question
+  instruction: Обері́ть правильне пита́льне сло́во для по́даного іме́нника. —
+    Choose the correct question word for the given noun.
+  items:
+  - prompt: стіл
+    options:
+    - text: Яки́й?
+      correct: true
+    - text: Яка?
+      correct: false
+    - text: Яке́?
+      correct: false
+    explanation: Стіл — чолові́чий рід.
+  - prompt: плака́т
+    options:
+    - text: Яки́й?
+      correct: true
+    - text: Яка?
+      correct: false
+    - text: Яке́?
+      correct: false
+    explanation: Плака́т — чолові́чий рід.
+  - prompt: листі́вка
+    options:
+    - text: Яка?
+      correct: true
+    - text: Яки́й?
+      correct: false
+    - text: Яке́?
+      correct: false
+    explanation: Листі́вка — жіно́чий рід.
+  - prompt: дзе́ркало
+    options:
+    - text: Яке́?
+      correct: true
+    - text: Яки́й?
+      correct: false
+    - text: Яка?
+      correct: false
+    explanation: Дзе́ркало — сере́дній рід.
+  - prompt: атлас
+    options:
+    - text: Яки́й?
+      correct: true
+    - text: Яка?
+      correct: false
+    - text: Яке́?
+      correct: false
+    explanation: Атлас — чолові́чий рід.
+  - prompt: кімна́та
+    options:
+    - text: Яка?
+      correct: true
+    - text: Яки́й?
+      correct: false
+    - text: Яке́?
+      correct: false
+    explanation: Кімна́та — жіно́чий рід.
+- id: act-w102
+  type: fill-in
+  title: Встав закі́нчення — Insert the ending
+  instruction: Дода́йте правильне закі́нчення прикме́тника. — Add the correct adjective ending.
+  items:
+  - sentence: Це нов___ атлас.
+    answer: ий
+    options:
+    - ий
+    - а
+    - е
+    explanation: Атлас — він (чолові́чий рід).
+  - sentence: Це нов___ листі́вка.
+    answer: а
+    options:
+    - а
+    - ий
+    - е
+    explanation: Листі́вка — вона́ (жіно́чий рід).
+  - sentence: Це нов___ фо́то.
+    answer: е
+    options:
+    - е
+    - а
+    - ий
+    explanation: Фо́то — воно́ (сере́дній рід).
+  - sentence: Це ве́лик___ плака́т.
+    answer: ий
+    options:
+    - ий
+    - а
+    - е
+    explanation: Плака́т — він (чолові́чий рід).
+  - sentence: Це ве́лик___ кімна́та.
+    answer: а
+    options:
+    - а
+    - ий
+    - е
+    explanation: Кімна́та — вона́ (жіно́чий рід).
+  - sentence: Це ве́лик___ вікно́.
+    answer: е
+    options:
+    - е
+    - а
+    - ий
+    explanation: Вікно́ — воно́ (сере́дній рід).
+- id: act-w103
+  type: group-sort
+  title: Розпо́діли за закі́нченням — Sort by ending
+  instruction: Розподілі́ть прикме́тники за закі́нченням ро́ду. — Sort the adjectives by gender ending.
+  groups:
+  - label: -ий (чолові́чий рід)
+    items:
+    - вели́кий
+    - нови́й
+    - стари́й
+  - label: -а (жіно́чий рід)
+    items:
+    - вели́ка
+    - нова́
+    - га́рна
+  - label: -е (сере́дній рід)
+    items:
+    - вели́ке
+    - нове́
+    - старе́
+- id: act-w104
+  type: error-correction
+  title: Ви́прав закі́нчення — Fix the ending
+  instruction: Знайді́ть і ви́правте поми́лку в узго́дженні. — Find and fix the agreement mistake.
+  items:
+  - sentence: Це вели́ка стіл.
+    error: вели́ка
+    answer: вели́кий
+    options:
+    - вели́кий
+    - вели́ка
+    - вели́ке
+    explanation: Стіл — чолові́чий рід, тому́ вели́кий стіл.
+  - sentence: Це нови́й кни́га.
+    error: нови́й
+    answer: нова́
+    options:
+    - нова́
+    - нови́й
+    - нове́
+    explanation: Кни́га — жіно́чий рід, тому́ нова́ кни́га.
+  - sentence: Це нова́ вікно́.
+    error: нова́
+    answer: нове́
+    options:
+    - нове́
+    - нова́
+    - нови́й
+    explanation: Вікно́ — сере́дній рід, тому́ нове́ вікно́.
+  - sentence: Це стари́й фо́то.
+    error: стари́й
+    answer: старе́
+    options:
+    - старе́
+    - стари́й
+    - стара́
+    explanation: Фо́то — сере́дній рід, тому́ старе́ фо́то.
+  - sentence: Це старе́ атлас.
+    error: старе́
+    answer: стари́й
+    options:
+    - стари́й
+    - старе́
+    - стара́
+    explanation: Атлас — чолові́чий рід, тому́ стари́й атлас.
+  - sentence: Це вели́ке плака́т.
+    error: вели́ке
+    answer: вели́кий
+    options:
+    - вели́кий
+    - вели́ке
+    - вели́ка
+    explanation: Плака́т — чолові́чий рід, тому́ вели́кий плака́т.
+- id: act-w105
+  type: translate
+  title: 'Бо́нус: переклад — Bonus: translation'
+  instruction: Обері́ть правильний переклад украї́нською мо́вою. — Choose the correct Ukrainian translation.
+  items:
+  - source: A new table
+    options:
+    - text: нови́й стіл
+      correct: true
+    - text: нова́ стіл
+      correct: false
+    - text: нове́ стіл
+      correct: false
+    explanation: Стіл is masculine.
+  - source: A new book
+    options:
+    - text: нова́ кни́га
+      correct: true
+    - text: нови́й кни́га
+      correct: false
+    - text: нове́ кни́га
+      correct: false
+    explanation: Кни́га is feminine.
+  - source: A new window
+    options:
+    - text: нове́ вікно́
+      correct: true
+    - text: нови́й вікно́
+      correct: false
+    - text: нова́ вікно́
+      correct: false
+    explanation: Вікно́ is neuter.
+  - source: An old photo
+    options:
+    - text: старе́ фо́то
+      correct: true
+    - text: стари́й фо́то
+      correct: false
+    - text: стара́ фо́то
+      correct: false
+    explanation: Фо́то is neuter.
+  - source: A big poster
+    options:
+    - text: вели́кий плака́т
+      correct: true
+    - text: вели́ка плака́т
+      correct: false
+    - text: вели́ке плака́т
+      correct: false
+    explanation: Плака́т is masculine.
+  - source: An old atlas
+    options:
+    - text: стари́й атлас
+      correct: true
+    - text: стара́ атлас
+      correct: false
+    - text: старе́ атлас
+      correct: false
+    explanation: Атлас is masculine.

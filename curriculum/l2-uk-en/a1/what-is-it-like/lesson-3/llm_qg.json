@@ -1,0 +1,72 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 8.5,
+      "evidence": "\"A good final check is to cover the ending and ask two questions.\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "A good final check is to cover the ending and ask two questions.",
+        "Повторення попередніх уроків — retrieval from Lessons 1 and 2:",
+        "This small routine is more useful than memorizing a large table before you can use the phrases."
+      ],
+      "rubric_mapping": "Module TYPE = topic-neutral A1 grammar summary (Підсумок closing lesson); residual pedagogical judgment applied, deterministic gates (word budget, section presence, activity schema/types, immersion) treated as ground truth. QUOTE 1 (\"A good final check is to cover the ending and ask two questions...\") is strong evidence FOR: it teaches a transferable metacognitive decoding routine (identify gender, then number → question word + ending), which is exactly the residual 'does the sequencing..."
+    },
+    "naturalness": {
+      "score": 9.0,
+      "evidence": "\"Атлас старий, але дуже цікавий.\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Атлас старий, але дуже цікавий.",
+        "прикметник може стояти перед іменником (**нова книга**) або після нього (**книга нова**) без зайвого дієслова **є**",
+        "Софіє, подивись, яка гарна листівка!"
+      ],
+      "rubric_mapping": "Residual naturalness judgment (deterministic VESUM/russianism/immersion gates treated as ground truth; no attributed literary quotes or dictionary citations in the body, so audits A/B are N/A). (1) 'Атлас старий, але дуже цікавий.' — evidence FOR: idiomatic copula-free adjectival predication with a natural але-contrast; this is exactly the no-є present-tense frame native Ukrainian uses, not an English 'to be' calque. (2) 'прикметник може стояти перед іменником (нова книга) або після нього..."
+    },
+    "decolonization": {
+      "score": 9.2,
+      "evidence": "\"в українській мові прикметник може стояти перед іменником (**нова книга**) або після нього (**книга нова**) без зайвого дієслова **є**\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "в українській мові прикметник може стояти перед іменником (**нова книга**) або після нього (**книга нова**) без зайвого дієслова **є**",
+        "usage: Сергій розумний.",
+        "usage: Учень лінивий."
+      ],
+      "rubric_mapping": "Module TYPE = topic-neutral (adjective agreement + object-description grammar/vocabulary summary lesson), so the topic-neutral anchor applies: 9.0+ baseline when (a) canonical vocabulary throughout, (c) grammar on Ukrainian terms, and strict anti-Russian-as-reference execution are present. Quote 1 (\"без зайвого дієслова є\") is strong residual evidence FOR: it teaches Ukrainian predicative syntax on its own terms — the copula-free 'книга нова' construction — instead of scaffolding through an..."
+    },
+    "engagement": {
+      "score": 8.2,
+      "evidence": "\"This small routine is more useful than memorizing a large table before you can use the phrases.\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "This small routine is more useful than memorizing a large table before you can use the phrases.",
+        "You do not need the theory yet. You only need safe phrases:",
+        "Пам'ятайте про узгодження — remember the agreement rule:"
+      ],
+      "rubric_mapping": "Engagement residual = does the prose hold attention, do callouts carry real pedagogy vs filler, is the voice warm vs bureaucratic, are dialogues human vs robotic. Quote 1 ('This small routine is more useful than memorizing a large table before you can use the phrases.') is evidence FOR: a content-anchored, peer-voice study technique (cover-the-ending + two questions) that holds attention with a concrete, usable move instead of generic encouragement — the 'callouts/tips carry real pedagogy, warm..."
+    },
+    "tone": {
+      "score": 8.5,
+      "evidence": "\"У цьому підсумковому уроці ви закріпите всі знання про прикметники та опис предметів:\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "У цьому підсумковому уроці ви закріпите всі знання про прикметники та опис предметів:",
+        "Софіє, подивись, яка гарна листівка!",
+        "Пам'ятайте про узгодження — remember the agreement rule:"
+      ],
+      "rubric_mapping": "Module TYPE for cross-reference: this is a topic-neutral A1 grammar/vocabulary summary lesson, so bilingual scaffolding is by design (immersion note: 40-55% UK, ULP S1). I assess residual register/voice, not the deterministic META_NARRATION gate. QUOTE 1 ('...ви закріпите всі знання...') is evidence FOR: the lesson opens in a warm, direct second-person teacher voice ('ви'), and this same you/your address is sustained across both languages ('Now make your own three-line room description. Keep it..."
+    }
+  },
+  "aggregate": {
+    "verdict": "REVISE",
+    "terminal_verdict": "PASS",
+    "failing_dims": [
+      "pedagogical"
+    ],
+    "rejected_dims": [],
+    "warning_dims": [
+      "pedagogical"
+    ],
+    "min_score": 8.2,
+    "min_dim": "engagement"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 7.5,
+      "evidence": "\"Авраменко, 6 клас — с. 83 «§ 43. Рід іменників»\"",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "У пе́ршому уро́ці ви навчи́лися перевіря́ти рід: стіл — він, кни́га — вона́, вікно́ — воно́.",
+        "Let the Ukrainian noun choose the pronoun.",
+        "This is the same habit from family:",
+        "Авраменко, 6 клас — с. 83 «§ 43. Рід іменників»"
+      ],
+      "rubric_mapping": "Module TYPE: topic-neutral A1 grammar lesson (noun gender + possessive agreement), judged against the pedagogical residual rubric (sequencing that teaches, student-aware build, Audit F source-pedagogy, Audit G split-purpose, Audit H corpus-access). Quote 1 (\"У пе́ршому уро́ці ви навчи́лися перевіря́ти рід...\") is evidence FOR: lesson 2 opens by explicitly anchoring to what lesson 1 taught, then advancing to objects — coherent cumulative progression that BUILDS rather than repeats, exactly the...",
+      "flags": [
+        "out_of_level_textbook"
+      ],
+      "issue_ids": [
+        "OUT_OF_LEVEL_TEXTBOOK"
+      ],
+      "findings": [
+        {
+          "issue_id": "OUT_OF_LEVEL_TEXTBOOK",
+          "severity": "medium",
+          "quote": "Авраменко, 6 клас — с. 83 «§ 43. Рід іменників»",
+          "replacement": "Replace Grade 6 citations with the plan's in-scope Grade 1-4 sources (e.g. Пономарова Grade 3 p.86; Вашуленко Grade 3 p.112).",
+          "explanation": "Audit H: A1 textbook citation scope is Grades 1-4. This Resources entry cites a Grade 6 (6 клас) grammar textbook. The concept (noun gender) is A1-appropriate, but the source register is two grades above the A1 ceiling. The plan itself grounds the identical concept in Grade 3 sources (Пономарова Grade 3 p.86, Вашуленко Grade 3 p.112), so this is a fixable register regression, not a content error.",
+          "dimension": "pedagogical"
+        },
+        {
+          "issue_id": "OUT_OF_LEVEL_TEXTBOOK",
+          "severity": "medium",
+          "quote": "Літвінова, 6 клас — с. 129 «§ 25. Рід іменників»",
+          "replacement": "Swap to a Grade 1-4 textbook citation covering noun gender for the A1 register.",
+          "explanation": "Audit H: second out-of-level textbook citation — Grade 6 (6 клас) source in an A1 module whose allowed scope is Grades 1-4. Factually about the right topic (рід іменників) but the source grade exceeds the A1 learner register band.",
+          "dimension": "pedagogical"
+        }
+      ]
+    },
+    "naturalness": {
+      "score": 8.5,
+      "evidence": "\"Присві́йне сло́во узго́джується з ро́дом іме́нника.\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Присві́йне сло́во узго́джується з ро́дом іме́нника.",
+        "Ось вона́. А де твій телефо́н?",
+        "Знайді́ть одне́ сло́во, яке́ відрізня́ється за грамати́чним ро́дом."
+      ],
+      "rubric_mapping": "Residual naturalness judgment only (VESUM/russianism/immersion gates already passed). Quote 1 ('Присвійне слово узгоджується з родом іменника') — evidence FOR: correct native government узгоджуватися з + instrumental (з родом), clean grammatical register, no calqued architecture; a native editor would leave it. Quote 2 ('Ось вона. А де твій телефо́н?') — evidence FOR: authentic conversational dialogue with natural ellipsis and word order (Ось вона / А де твій...), reads as real spoken Ukrainian...",
+      "flags": [
+        "out_of_level_textbook"
+      ]
+    },
+    "decolonization": {
+      "score": 9.0,
+      "evidence": "English uses \"it\" for all three. Ukrainian does not.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "English uses \"it\" for all three. Ukrainian does not.",
+        "The owner does not decide the form. The noun decides it.",
+        "Це моє́ дзе́ркало."
+      ],
+      "rubric_mapping": "Module TYPE = topic-neutral (A1 grammar lesson on noun gender / possessives). I apply the topic-neutral anchor: 9.0+ baseline when (a) canonical vocabulary, (b) satisfied by absence-only decolonization when contrast is deferred, and (c) grammar taught on Ukrainian terms with strict anti-Russian-as-reference execution. Quote 1 ('English uses \"it\" for all three. Ukrainian does not.') is evidence FOR (c): the lesson scaffolds gender ONLY against the learner's L1 (English) and explicitly refuses to..."
+    },
+    "engagement": {
+      "score": 8.3,
+      "evidence": "\"The owner does not decide the form. The noun decides it.\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "The owner does not decide the form. The noun decides it.",
+        "Кла́сно! У тебе́ є стіл?",
+        "Напиші́ть 2–3 коро́ткі рядки́ про свою́ кімна́ту чи су́мку:"
+      ],
+      "rubric_mapping": "Module type for engagement scoring: A1 topic-neutral grammar lesson (noun gender), reviewed as a split published lesson 2, not a fresh build — so writer self-audit lines (activity_split/bad_form/implementation_map) are not expected and their absence is not penalized. (1) \"The owner does not decide the form. The noun decides it.\" — this :::tip is residual evidence FOR engagement: the gate only confirmed callout presence, and this callout carries real, content-anchored pedagogy (the load-bearing...",
+      "flags": [
+        "out_of_level_textbook"
+      ]
+    },
+    "tone": {
+      "score": 9.0,
+      "evidence": "\"Чудо́во! Тепе́р ви вмі́єте опи́сувати свій про́стір украї́нською мо́вою\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "У пе́ршому уро́ці ви навчи́лися перевіря́ти рід",
+        "Чудо́во! Тепе́р ви вмі́єте опи́сувати свій про́стір украї́нською мо́вою",
+        "The owner does not decide the form. The noun decides it."
+      ],
+      "rubric_mapping": "Residual tone judgment for an A1 published lesson: is the teacher's voice consistent, warm, and direct, without register shifts, third-person learner framing, robotic dialogue, or AI slop (META_NARRATION/AI-slop already gated). All three quotes are evidence FOR. (1) 'У пе́ршому уро́ці ви навчи́лися перевіря́ти рід' — the lesson opens by warmly addressing the learner in second person ('ви навчи́лися') and connecting back to lesson 1 rather than treating the learner as starting cold; this is the..."
+    }
+  },
+  "aggregate": {
+    "verdict": "REVISE",
+    "terminal_verdict": "PASS",
+    "failing_dims": [
+      "pedagogical",
+      "naturalness"
+    ],
+    "rejected_dims": [],
+    "warning_dims": [
+      "pedagogical",
+      "naturalness"
+    ],
+    "min_score": 7.5,
+    "min_dim": "pedagogical"
+  }
+}

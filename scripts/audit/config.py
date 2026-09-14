@@ -7,6 +7,7 @@ and activity requirements for each CEFR level.
 
 from common.thresholds import LEVEL_THRESHOLDS, get_naturalness_min
 from config import get_immersion_range as shared_get_immersion_range
+from level_config import base_level
 
 # Proper names and abbreviations whitelisted from VESUM verification.
 # These are valid Ukrainian words that VESUM may not contain (names, acronyms, etc.).
@@ -1657,6 +1658,9 @@ def get_b1_immersion_range(module_num: int) -> tuple[int, int]:
 
 def get_level_config(level_code: str, module_focus: str | None = None) -> dict:
     """Get configuration for a specific level, optionally with focus."""
+    resolved = base_level(level_code)
+    if resolved != level_code.lower():
+        level_code = resolved.upper()
     config_key = level_code
     if module_focus:
         # Try focus as direct top-level key first (renamed seminar tracks: biography, history, istorio)

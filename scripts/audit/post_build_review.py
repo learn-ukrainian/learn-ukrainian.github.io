@@ -31,6 +31,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.common.repo_root import main_checkout_root
+from scripts.level_config import base_level, resolve_content_track
 from scripts.orchestration.prompt_contracts import (
     LifecycleConfigError,
     load_active_tracks,
@@ -298,11 +299,12 @@ def resolve_target(
     policy = policy or load_track_policy(repo_root / POLICY_PATH.relative_to(PROJECT_ROOT), repo_root=repo_root)
     track_policy = resolve_track_policy(track, policy)
     curriculum = repo_root / "curriculum" / "l2-uk-en"
-    plan = curriculum / "plans" / track / f"{slug}.yaml"
+    plan_track = base_level(track, manifest=curriculum / "curriculum.yaml")
+    plan = curriculum / "plans" / plan_track / f"{slug}.yaml"
     if not plan.exists():
         raise ReviewProtocolError(f"Missing plan: {display_path(plan, repo_root)}")
 
-    track_dir = curriculum / track
+    track_dir = curriculum / resolve_content_track(track, slug, curriculum)
     module_dir = track_dir / slug
     content = _single_existing(
         [module_dir / "module.md", track_dir / f"{slug}.md", *track_dir.glob(f"[0-9]*-{slug}.md")],

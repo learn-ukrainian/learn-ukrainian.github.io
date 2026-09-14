@@ -16,9 +16,11 @@ PLACEHOLDERS = {
 
 DOWNSTREAM_TOKENS = frozenset(
     {
+        "ACTIVITY_CONFIG",
         "ACTIVITY_COUNT_TARGET",
         "ALLOWED_ACTIVITY_TYPES",
         "ARTIFACT_TEXT",
+        "BASE_LEVEL",
         "CANONICAL_ANCHORS",
         "CANONICAL_ANCHORS_REVIEWER",
         "COMPONENT_PROPS_SCHEMA",
@@ -56,6 +58,8 @@ DOWNSTREAM_TOKENS = frozenset(
         "KNOWLEDGE_PACKET",
         "LETTER_MODULE_ACTIVE",
         "LEARNER_STATE",
+        "LESSON_MAP",
+        "LESSON_SCOPE",
         "LEVEL",
         "LEVEL_CONSTRAINTS",
         "LEVEL_CONTEXT",
@@ -68,6 +72,8 @@ DOWNSTREAM_TOKENS = frozenset(
         "OBLIGATION_CHECKLIST",
         "OBLIGATION_ID",
         "OBLIGATION_TYPE",
+        "ORIGINAL_ARTIFACTS",
+        "ORIGINAL_PLAN",
         "PEDAGOGICAL_FINDINGS",
         "PEDAGOGICAL_CONSTRAINTS",
         "PEDAGOGY_PATTERNS",
@@ -87,6 +93,7 @@ DOWNSTREAM_TOKENS = frozenset(
         "SEMINAR_TYPE_REFERENCE",
         "SIZE_POLICY",
         "SKELETON_SECTION",
+        "SLUG",
         "SUMMARY_HEADING",
         "SURGICAL_DIFF_HINT",
         "TOOL_INSTRUCTIONS",

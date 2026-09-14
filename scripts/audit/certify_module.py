@@ -27,9 +27,10 @@ if str(PROJECT_ROOT / "scripts") not in sys.path:
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from manifest_utils import get_module_by_number, get_modules_for_level, parse_numbered_slug
+from manifest_utils import get_module_by_number, get_modules_for_level, load_manifest, parse_numbered_slug
 
 from scripts.audit import check_mdx_source_parity
+from scripts.level_config import base_level, resolve_content_track, resolve_manifest_module_track
 from scripts.validate import validate_plans as plan_yaml_validator
 
 QG_ARTIFACT_NAMES = frozenset({"llm_qg.json", "python_qg.json"})
@@ -56,12 +57,22 @@ class ModuleTarget:
         return f"{self.level}/{self.slug}"
 
     @property
+    def content_level(self) -> str:
+        return resolve_content_track(self.level, self.slug, CURRICULUM_ROOT)
+
+    @property
+    def plan_level(self) -> str:
+        return base_level(self.level, manifest=CURRICULUM_ROOT / "curriculum.yaml")
+
+    @property
     def module_dir(self) -> Path:
-        return CURRICULUM_ROOT / self.level / self.slug
+        return CURRICULUM_ROOT / self.content_level / self.slug
 
     @property
     def mdx_path(self) -> Path:
-        return MDX_ROOT / self.level / f"{self.slug}.mdx"
+        track = self.content_level
+        landing = MDX_ROOT / track / self.slug / "index.mdx"
+        return landing if landing.is_file() else MDX_ROOT / track / f"{self.slug}.mdx"
 
 
 @dataclass(frozen=True)
@@ -135,7 +146,8 @@ def parse_target(values: list[str]) -> ModuleTarget:
         return ModuleTarget(lang_pair=lang_pair, level=level, slug=module.slug, local_num=module.local_num)
 
     _, bare_slug = parse_numbered_slug(module_ref)
-    for module in get_modules_for_level(level):
+    resolved_level = resolve_manifest_module_track(level, bare_slug, load_manifest()["levels"])
+    for module in get_modules_for_level(resolved_level):
         if module.slug == bare_slug or module.numbered_slug == module_ref:
             return ModuleTarget(lang_pair=lang_pair, level=level, slug=module.slug, local_num=module.local_num)
 
@@ -145,28 +157,28 @@ def parse_target(values: list[str]) -> ModuleTarget:
 def module_source_files(target: ModuleTarget) -> list[Path]:
     """Return existing curriculum source files that feed this module's MDX."""
     candidates = [
-        CURRICULUM_ROOT / "plans" / target.level / f"{target.slug}.yaml",
+        CURRICULUM_ROOT / "plans" / target.plan_level / f"{target.slug}.yaml",
         target.module_dir / "module.md",
         target.module_dir / "activities.yaml",
         target.module_dir / "vocabulary.yaml",
         target.module_dir / "resources.yaml",
-        CURRICULUM_ROOT / target.level / "meta" / f"{target.slug}.yaml",
-        CURRICULUM_ROOT / target.level / f"{target.slug}.md",
-        CURRICULUM_ROOT / target.level / "activities" / f"{target.slug}.yaml",
-        CURRICULUM_ROOT / target.level / "vocabulary" / f"{target.slug}.yaml",
-        CURRICULUM_ROOT / target.level / "resources" / f"{target.slug}.yaml",
+        CURRICULUM_ROOT / target.content_level / "meta" / f"{target.slug}.yaml",
+        CURRICULUM_ROOT / target.content_level / f"{target.slug}.md",
+        CURRICULUM_ROOT / target.content_level / "activities" / f"{target.slug}.yaml",
+        CURRICULUM_ROOT / target.content_level / "vocabulary" / f"{target.slug}.yaml",
+        CURRICULUM_ROOT / target.content_level / "resources" / f"{target.slug}.yaml",
     ]
     return [path for path in candidates if path.exists()]
 
 
 def plan_source_file(target: ModuleTarget) -> Path:
-    return CURRICULUM_ROOT / "plans" / target.level / f"{target.slug}.yaml"
+    return CURRICULUM_ROOT / "plans" / target.plan_level / f"{target.slug}.yaml"
 
 
 def vocabulary_source_files(target: ModuleTarget) -> list[Path]:
     candidates = [
         target.module_dir / "vocabulary.yaml",
-        CURRICULUM_ROOT / target.level / "vocabulary" / f"{target.slug}.yaml",
+        CURRICULUM_ROOT / target.content_level / "vocabulary" / f"{target.slug}.yaml",
     ]
     return [path for path in candidates if path.exists()]
 
@@ -394,7 +406,7 @@ def run_vocabulary_presence_guard(target: ModuleTarget) -> int:
         return 0
     expected_paths = [
         target.module_dir / "vocabulary.yaml",
-        CURRICULUM_ROOT / target.level / "vocabulary" / f"{target.slug}.yaml",
+        CURRICULUM_ROOT / target.content_level / "vocabulary" / f"{target.slug}.yaml",
     ]
     print(f"[FAIL] no vocabulary source found for {target.label}; checked:")
     for path in expected_paths:
@@ -417,7 +429,7 @@ def build_checks(
                 str(VENV_PYTHON),
                 "scripts/generate_mdx.py",
                 target.lang_pair,
-                target.level,
+                target.content_level,
                 str(target.local_num),
                 "--validate",
             ),
@@ -428,7 +440,7 @@ def build_checks(
                 str(VENV_PYTHON),
                 "scripts/validate_activities.py",
                 target.lang_pair,
-                target.level,
+                target.content_level,
                 str(target.local_num),
             ),
         ),
@@ -451,7 +463,7 @@ def build_checks(
                 (
                     str(VENV_PYTHON),
                     "scripts/validate_plan_config.py",
-                    f"{target.level}/{target.slug}",
+                    f"{target.plan_level}/{target.slug}",
                 ),
             ),
             CommandCheck(

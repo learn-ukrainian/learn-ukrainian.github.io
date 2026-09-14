@@ -17,6 +17,7 @@ import argparse
 import json
 import re
 import sqlite3
+import sys
 import unicodedata
 from collections.abc import Mapping
 from dataclasses import dataclass
@@ -27,6 +28,11 @@ from typing import Any
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.level_config import resolve_module_track
+
 DEFAULT_MANIFEST = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_VESUM = PROJECT_ROOT / "data" / "vesum.db"
 DEFAULT_SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
@@ -838,7 +844,8 @@ def _check_cross_links(
             continue
         track = str(usage.get("track") or "").strip()
         slug = str(usage.get("slug") or "").strip()
-        if not track or not slug or (track, slug) not in curriculum_modules:
+        resolved_track = resolve_module_track(track, slug, curriculum_modules)
+        if not track or not slug or (resolved_track, slug) not in curriculum_modules:
             violations.append(
                 Violation(
                     "cross_link_integrity",

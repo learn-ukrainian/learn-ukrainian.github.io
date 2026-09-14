@@ -11,6 +11,14 @@ from pathlib import Path
 
 import yaml
 
+try:
+    from scripts.level_config import base_level, resolve_content_track
+except ModuleNotFoundError as exc:
+    if exc.name != "scripts":
+        raise
+    # CLI consumers also load this module with only scripts/ on sys.path.
+    from level_config import base_level, resolve_content_track
+
 CURRICULUM_ROOT = Path(__file__).resolve().parent.parent.parent / "curriculum" / "l2-uk-en"
 
 
@@ -33,7 +41,9 @@ def _parse_vocab_hint_lemma(entry: str) -> str | None:
 
 def _load_planned_vocab(track: str, slug: str) -> list[str]:
     """Load planned vocabulary lemmas from plan targets and hints."""
-    path = CURRICULUM_ROOT / "plans" / track / f"{slug}.yaml"
+    manifest = CURRICULUM_ROOT / "curriculum.yaml"
+    plan_track = base_level(track, manifest=manifest) if manifest.exists() else track
+    path = CURRICULUM_ROOT / "plans" / plan_track / f"{slug}.yaml"
     if not path.exists():
         return []
 
@@ -94,7 +104,8 @@ def _load_planned_vocab(track: str, slug: str) -> list[str]:
 
 def _load_vocab(track: str, slug: str) -> list[str]:
     """Load vocabulary lemmas for a module."""
-    path = CURRICULUM_ROOT / track / slug / "vocabulary.yaml"
+    content_track = resolve_content_track(track, slug, CURRICULUM_ROOT)
+    path = CURRICULUM_ROOT / content_track / slug / "vocabulary.yaml"
     if path.exists():
         built_vocab: list[str] = []
         try:
@@ -124,7 +135,9 @@ def _load_grammar(track: str, slug: str) -> list[str]:
     Both shapes normalize to strings here so consumers (format_learner_state)
     can `', '.join(...)` safely.
     """
-    path = CURRICULUM_ROOT / "plans" / track / f"{slug}.yaml"
+    manifest = CURRICULUM_ROOT / "curriculum.yaml"
+    plan_track = base_level(track, manifest=manifest) if manifest.exists() else track
+    path = CURRICULUM_ROOT / "plans" / plan_track / f"{slug}.yaml"
     if not path.exists():
         return []
     try:
@@ -147,7 +160,9 @@ def _load_grammar(track: str, slug: str) -> list[str]:
 
 def _load_plan_title(track: str, slug: str) -> str | None:
     """Load a module's title from its plan."""
-    path = CURRICULUM_ROOT / "plans" / track / f"{slug}.yaml"
+    manifest = CURRICULUM_ROOT / "curriculum.yaml"
+    plan_track = base_level(track, manifest=manifest) if manifest.exists() else track
+    path = CURRICULUM_ROOT / "plans" / plan_track / f"{slug}.yaml"
     if not path.exists():
         return None
     try:

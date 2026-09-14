@@ -19,6 +19,7 @@ import os
 import re
 import shutil
 import sqlite3
+import subprocess
 import sys
 import tempfile
 import unicodedata
@@ -111,10 +112,8 @@ WRITER_DEFAULTS: dict[str, dict[str, str]] = {
     "cursor-tools": {"model": "composer-2.5", "effort": "medium"},
     "deepseek-tools": {"model": "deepseek-v4-pro", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
-    # agy effort is a no-op on the CLI today (Phase-2 follow-up). The
-    # model field is informational only; the TUI-selected model is what
-    # actually runs. "medium" is a placeholder for telemetry parity.
-    "agy-tools": {"model": "gemini-3.5-flash-high", "effort": "medium"},
+    # AGY selects the model via --model; effort remains a telemetry placeholder.
+    "agy-tools": {"model": "gemini-3.8-flash-high", "effort": "high"},
 }
 PROMPT_BY_WRITER = {
     "grok-tools": "linear-write-grok.md",
@@ -159,7 +158,7 @@ REVIEWER_DEFAULTS: dict[str, dict[str, str]] = {
     "cursor-tools": {"model": "grok-4.5", "effort": "medium"},
     "deepseek-tools": {"model": "deepseek-v4-pro", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
-    "agy-tools": {"model": "gemini-3.5-flash-high", "effort": "medium"},
+    "agy-tools": {"model": "gemini-3.8-flash-high", "effort": "medium"},
 }
 WRITER_ARTIFACTS = (
     "module.md",
@@ -1022,7 +1021,43 @@ def curriculum_profile_for_level(
 
 
 def plan_path_for(level: str, slug: str) -> Path:
+    from scripts.level_config import base_level
+
+    level = base_level(level)
     return PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans" / level / f"{slug}.yaml"
+
+
+def render_upgrade_prompt(
+    plan: Mapping[str, Any],
+    source_dir: Path,
+    lesson_map: Mapping[str, Any],
+    *,
+    lesson: int | None = None,
+    prior_vocabulary: Sequence[str] = (),
+) -> str:
+    """Render the V7 lesson-scoped upgrade brief without retrieval or model calls."""
+    from scripts.pipeline.config_tables import get_activity_config
+
+    level = str(plan["level"]).lower()
+    sequence = int(plan["sequence"])
+    template = (Path(__file__).parent / "phases/linear-write-upgrade.md").read_text(encoding="utf-8")
+    state = format_learner_state(build_learner_state(level, sequence))
+    state += "\nPreviously introduced in this module: " + json.dumps(list(prior_vocabulary), ensure_ascii=False)
+    values = {
+        "BASE_LEVEL": level,
+        "SLUG": str(plan["slug"]),
+        "LESSON_SCOPE": f"lesson {lesson}" if lesson is not None else "dry-run preview of all lesson briefs",
+        "ACTIVITY_CONFIG": yaml.safe_dump(get_activity_config(level, sequence, str(plan["slug"])), sort_keys=False),
+        "LEARNER_STATE": state,
+        "LESSON_MAP": yaml.safe_dump(dict(lesson_map), allow_unicode=True, sort_keys=False),
+        "ORIGINAL_PLAN": yaml.safe_dump(dict(plan), allow_unicode=True, sort_keys=False),
+        "ORIGINAL_ARTIFACTS": "\n\n".join(
+            f"### {name}\n\n{(source_dir / name).read_text(encoding='utf-8')}"
+            for name in WRITER_ARTIFACTS
+        ),
+    }
+    # One substitution pass: input artifacts may themselves contain template-like text.
+    return re.sub(r"\{([A-Z_]+)\}", lambda match: values.get(match[1], match[0]), template)
 
 
 def _legacy_section_points(section: Mapping[str, Any]) -> list[str]:
@@ -1628,8 +1663,11 @@ def _build_dictionary_context(
         return ""
 
     try:
+        from importlib import import_module
+
         from scripts.verification import vesum as vesum_lookup
-        from wiki import sources_db
+
+        sources_db = import_module("wiki.sources_db")
     except Exception as exc:
         return f"## Dictionary context\n\n*Dictionary context unavailable: {type(exc).__name__}: {exc}*"
 
@@ -2163,9 +2201,39 @@ def _build_wiki_packet(level: str, slug: str) -> str:
     )
 
 
+def _wiki_roots() -> list[Path]:
+    """Wiki trees to search. Dispatch worktrees sparse-exclude wiki/; fall back to the primary checkout."""
+    from wiki.config import WIKI_DIR
+
+    roots: list[Path] = []
+    seen: set[Path] = set()
+
+    def add(path: Path) -> None:
+        resolved = path.resolve()
+        if resolved in seen or not path.exists():
+            return
+        seen.add(resolved)
+        roots.append(path)
+
+    add(WIKI_DIR)
+    if not WIKI_DIR.exists():
+        try:
+            common = subprocess.check_output(
+                ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
+                cwd=WIKI_DIR.parent if WIKI_DIR.parent.exists() else Path.cwd(),
+                text=True,
+                timeout=30,
+            ).strip()
+        except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+            common = ""
+        if common:
+            add(Path(common).parent / "wiki")
+    return roots
+
+
 def _wiki_article_paths(level: str, slug: str) -> list[Path]:
     """Return exact wiki article paths for a level/slug pair."""
-    from wiki.config import TRACK_DOMAINS, TRACK_WRITE_DOMAIN, WIKI_DIR
+    from wiki.config import TRACK_DOMAINS, TRACK_WRITE_DOMAIN
 
     domains: list[str] = []
     write_domain = TRACK_WRITE_DOMAIN.get(level)
@@ -2174,24 +2242,22 @@ def _wiki_article_paths(level: str, slug: str) -> list[Path]:
     domains.extend(TRACK_DOMAINS.get(level, []))
     domains.append(level)
 
-    seen_domains: set[str] = set()
     paths: list[Path] = []
     seen_paths: set[Path] = set()
-    for domain in domains:
-        if not domain or domain in seen_domains:
-            continue
-        seen_domains.add(domain)
-        domain_dir = WIKI_DIR / domain
-        if not domain_dir.exists():
-            continue
-
-        direct = domain_dir / f"{slug}.md"
-        candidates = [direct] if direct.exists() else list(domain_dir.rglob(f"{slug}.md"))
-        for candidate in candidates:
-            if candidate.name == "index.md" or candidate in seen_paths:
+    for wiki_root in _wiki_roots():
+        for domain in domains:
+            if not domain:
                 continue
-            seen_paths.add(candidate)
-            paths.append(candidate)
+            domain_dir = wiki_root / domain
+            if not domain_dir.exists():
+                continue
+            direct = domain_dir / f"{slug}.md"
+            candidates = [direct] if direct.exists() else list(domain_dir.rglob(f"{slug}.md"))
+            for candidate in candidates:
+                if candidate.name == "index.md" or candidate in seen_paths:
+                    continue
+                seen_paths.add(candidate)
+                paths.append(candidate)
     return paths
 
 
@@ -4134,7 +4200,7 @@ def invoke_writer(
     return response_text
 
 
-def parse_writer_output_strict_json(output: str) -> dict[str, str]:
+def parse_writer_output_strict_json(output: str, *, lesson_mode: bool = False) -> dict[str, str]:
     """Parse writer output with strict JSON for structured artifacts.
 
     The structured JSON values are serialized back to YAML strings so downstream
@@ -4148,6 +4214,7 @@ def parse_writer_output_strict_json(output: str) -> dict[str, str]:
     fence_start_line = 0
     fence_open_run = 0  # Backtick-run length of the OPEN fence (CommonMark).
     fence_lines: list[str] = []
+    inner_code_run = 0
 
     # CommonMark fence semantics (#2026-05-20 design triangulation via Codex +
     # DeepSeek consults): an opening fence of N>=3 backticks is closed by a
@@ -4206,7 +4273,16 @@ def parse_writer_output_strict_json(output: str) -> dict[str, str]:
             # against the rare case where the writer opens a NEW info-bearing
             # fence inside an artifact — that's content too, not a close.
             close_info = fence_match.group("info").strip()
-            if run_len < fence_open_run or close_info:
+            if inner_code_run:
+                if run_len >= inner_code_run and not close_info:
+                    inner_code_run = 0
+                fence_lines.append(line)
+                continue
+            if close_info:
+                inner_code_run = run_len
+                fence_lines.append(line)
+                continue
+            if run_len < fence_open_run:
                 fence_lines.append(line)
                 continue
 
@@ -4217,6 +4293,7 @@ def parse_writer_output_strict_json(output: str) -> dict[str, str]:
                     fence_name,
                     "\n".join(fence_lines),
                     fence_start_line + 1,
+                    lesson_mode=lesson_mode,
                 )
             in_fence = False
             fence_name = None
@@ -4224,6 +4301,7 @@ def parse_writer_output_strict_json(output: str) -> dict[str, str]:
             pending_name = None
             fence_start_line = 0
             fence_open_run = 0
+            inner_code_run = 0
             fence_lines = []
             continue
 
@@ -4247,9 +4325,9 @@ def parse_writer_output_strict_json(output: str) -> dict[str, str]:
     return {name: artifacts[name] for name in WRITER_ARTIFACTS}
 
 
-def parse_writer_output(output: str) -> dict[str, str]:
+def parse_writer_output(output: str, *, lesson_mode: bool = False) -> dict[str, str]:
     """Compatibility wrapper for the strict JSON writer-output parser."""
-    return parse_writer_output_strict_json(output)
+    return parse_writer_output_strict_json(output, lesson_mode=lesson_mode)
 
 
 # Recognized info strings that identify a fence as the patched module.md.
@@ -8991,6 +9069,9 @@ def run_python_qg(
     ignored_vesum_missing_surfaces: Collection[str] = (),
     event_sink: Callable[..., None] | None = None,
     resource_liveness_fn: Callable[[str], bool] | None = None,
+    lesson_mode: bool = False,
+    source_dir: Path | None = None,
+    rendered: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     """Run deterministic Phase 4 quality gates for one module directory.
 
@@ -9001,6 +9082,13 @@ def run_python_qg(
     time, so builds never perform network liveness checks.
     """
     plan = plan_check(plan_path)
+    if lesson_mode:
+        from scripts.build.lesson_gates import run_lesson_gates
+
+        if source_dir is None:
+            raise LinearPipelineError("Lesson Python QG requires the original source_dir")
+        result = run_lesson_gates(module_dir, source_dir, plan, rendered=rendered)
+        return {**result, "mode": "upgrade", "gates": {"passed": result["passed"], "lesson_split": result}}
     module_text = _read_required(module_dir / "module.md")
     activities = _load_bare_activity_list(module_dir / "activities.yaml")
     vocabulary = _load_yaml_list(module_dir / "vocabulary.yaml", "vocabulary")
@@ -9213,7 +9301,12 @@ def _archetype_fit_gate(
 
 
 def assemble_mdx(module_dir: Path, output_path: Path, plan_path: Path) -> str:
-    """Assemble the 4-tab Site MDX file from authoring artifacts."""
+    """Assemble module MDX, or a landing and numbered pages for lessons."""
+    if (module_dir / "lessons.yaml").exists():
+        from scripts.build.lesson_assembler import assemble_lessons
+
+        lesson_output = output_path.parent if output_path.name == "index.mdx" else output_path.with_suffix("")
+        return assemble_lessons(module_dir, lesson_output, plan_path)["index"]
     plan = plan_check(plan_path)
     activities_path = module_dir / "activities.yaml"
     vocabulary_path = module_dir / "vocabulary.yaml"
@@ -9320,6 +9413,8 @@ def _parse_and_dump_writer_json_artifact(
     artifact: str,
     body: str,
     content_start_line: int,
+    *,
+    lesson_mode: bool = False,
 ) -> str:
     try:
         parsed = json.loads(body, parse_constant=_reject_non_strict_json_constant)
@@ -9333,9 +9428,45 @@ def _parse_and_dump_writer_json_artifact(
     except ValueError as exc:
         raise LinearPipelineError(f"{artifact} invalid JSON: {exc}") from exc
 
-    _normalize_writer_json_artifact(artifact, parsed)
-    _validate_writer_json_artifact(artifact, parsed)
+    if lesson_mode:
+        _validate_lesson_writer_artifact(artifact, parsed)
+    else:
+        _normalize_writer_json_artifact(artifact, parsed)
+        _validate_writer_json_artifact(artifact, parsed)
     return yaml.safe_dump(parsed, allow_unicode=True, sort_keys=False)
+
+
+def _validate_lesson_writer_artifact(artifact: str, parsed: Any) -> None:
+    """Validate the Phase 0 artifact shape before the full lesson semantic gates.
+
+    Upgrade originals use inline/workbook and several older payload spellings.
+    Preserve them losslessly; the assembler adapts them and the provenance gate
+    compares the original structure. Fresh-module schema validation is unchanged.
+    """
+    from scripts.build.lesson_gates import ALLOWED, LIST_FIELDS
+
+    if artifact == "activities.yaml":
+        if not isinstance(parsed, dict) or set(parsed) != {"inline", "workbook"}:
+            raise LinearPipelineError("Lesson activities require inline and workbook lists")
+        for placement, activities in parsed.items():
+            if not isinstance(activities, list):
+                raise LinearPipelineError(f"Lesson {placement} activities must be a list")
+            allowed = ALLOWED["both"] | ALLOWED[f"{placement}_only"]
+            for item in activities:
+                if not isinstance(item, dict) or item.get("type") not in allowed or not item.get("id"):
+                    raise LinearPipelineError(f"Invalid lesson {placement} activity identity/type")
+                if not (item.get("title") or item.get("instruction")):
+                    raise LinearPipelineError("Lesson activity requires title or instruction")
+                if not any(isinstance(item.get(field), list) for field in LIST_FIELDS):
+                    raise LinearPipelineError("Lesson activity has no list payload")
+        return
+    if not isinstance(parsed, list) or not parsed or not all(isinstance(item, dict) for item in parsed):
+        raise LinearPipelineError(f"Lesson {artifact} must be a nonempty list of objects")
+    for item in parsed:
+        if artifact == "vocabulary.yaml" and not all(item.get(key) for key in ("lemma", "translation", "pos", "usage")):
+            raise LinearPipelineError("Lesson vocabulary requires lemma, translation, pos, usage")
+        if artifact == "resources.yaml" and not (item.get("title") and (item.get("url") or item.get("chunk_id") or item.get("source"))):
+            raise LinearPipelineError("Lesson resource requires title and url/chunk_id/source")
 
 
 def _normalize_writer_json_artifact(artifact: str, parsed: Any) -> None:

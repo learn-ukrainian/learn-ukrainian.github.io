@@ -40,7 +40,7 @@ streams:
     title: "Curriculum upgrade machinery — pipeline upgrade mode, lessons.yaml, per-lesson gates, MDX assembler"
     epics: [7994]
   a1-upgrade:
-    title: "A1 content rollout — 55 modules into 60-minute lessons under parallel a1-v2"
+    title: "A1 content rollout — 55 modules into 60-minute lessons under canonical a1"
     epics: [7995]
   seminars-folk:
     title: "FOLK track re-research + rebuild"

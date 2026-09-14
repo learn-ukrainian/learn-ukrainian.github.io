@@ -19,8 +19,10 @@ Usage:
 
 from __future__ import annotations
 
+import argparse
 import re
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 import yaml
@@ -238,15 +240,29 @@ def _is_legacy_field_mismatch(
     ) in LEGACY_FIELD_MISMATCHES
 
 
-def load_curriculum() -> dict[str, list[str]]:
-    """Load curriculum.yaml and return {level: [slug, ...]} mapping."""
+@dataclass
+class CurriculumLevel:
+    modules: list[str]
+    base_level: str | None = None
+    plan_modules: list[str] | None = None
+
+
+def load_curriculum() -> dict[str, CurriculumLevel]:
+    """Load module lists and optional base-plan ownership from curriculum.yaml."""
     with open(CURRICULUM_PATH, encoding="utf-8") as f:
         data = yaml.safe_load(f)
 
-    result: dict[str, list[str]] = {}
+    result: dict[str, CurriculumLevel] = {}
     for level_key, level_data in data.get("levels", {}).items():
         modules = level_data.get("modules", [])
-        result[level_key] = [m for m in modules if isinstance(m, str)]
+        result[level_key] = CurriculumLevel(
+            [m for m in modules if isinstance(m, str)], level_data.get("base_level")
+        )
+    # Publication is incremental, but the unchanged A1 plans retain their full
+    # sequence and prerequisites. The archive preserves that ordered inventory.
+    # A1 still owns and validates plans/a1, including every original plan.
+    if "a1" in result and "a1-v1" in result and result["a1-v1"].base_level == "a1":
+        result["a1"].plan_modules = result["a1-v1"].modules
     return result
 
 
@@ -355,15 +371,23 @@ def _fix_ref_in_file(plan_file: Path, old_ref: str, new_ref: str,
     return False
 
 
-def validate_track(level: str, slugs: list[str], fix: bool = False) -> tuple[list[str], int]:
-    """Validate all plan files for a track. Returns (issues, fix_count)."""
+def validate_track(
+    level: str, slugs: list[str], fix: bool = False, *, base_level: str | None = None,
+) -> tuple[list[str], int]:
+    """Validate plans, leaving base-track numbering/references to their owner.
+
+    Parallel tracks select base plans; they neither own the other base plans
+    nor redefine their sequence, module IDs, or prerequisite order.
+    Returns (issues, fix_count).
+    """
     errors: list[str] = []
     warnings: list[str] = []
     fix_count = 0
-    plan_dir = find_plan_dir(level)
+    owner_level = base_level if base_level is not None else level
+    plan_dir = find_plan_dir(owner_level)
 
     if not plan_dir:
-        errors.append(f"[{level}] Plan directory not found: {PLANS_DIR / level}")
+        errors.append(f"[{level}] Plan directory not found: {PLANS_DIR / owner_level}")
         return errors, 0
 
     # Build slug -> sequence mapping (1-indexed)
@@ -380,6 +404,8 @@ def validate_track(level: str, slugs: list[str], fix: bool = False) -> tuple[lis
     # Check every plan file
     for plan_file in sorted(plan_dir.glob("*.yaml")):
         file_slug = plan_file.stem
+        if base_level is not None and file_slug not in slug_to_seq:
+            continue
         found_slugs.add(file_slug)
 
         try:
@@ -402,7 +428,7 @@ def validate_track(level: str, slugs: list[str], fix: bool = False) -> tuple[lis
         expected_mod = expected_module_id(level, expected_seq)
         # Level field can use various conventions:
         # curriculum key "b1" -> plan "B1", "lit-essay" -> "LIT.ESSAY" or "LIT-ESSAY"
-        expected_level_variants = _level_variants(level)
+        expected_level_variants = _level_variants(owner_level)
 
         # Check slug field
         plan_slug = plan.get("slug", "")
@@ -419,7 +445,8 @@ def validate_track(level: str, slugs: list[str], fix: bool = False) -> tuple[lis
         # Check sequence field
         plan_seq = plan.get("sequence")
         if (
-            plan_seq is not None
+            base_level is None
+            and plan_seq is not None
             and int(plan_seq) != expected_seq
             and not _is_legacy_field_mismatch(
                 level, plan_file.name, "sequence", plan_seq, expected_seq
@@ -435,7 +462,8 @@ def validate_track(level: str, slugs: list[str], fix: bool = False) -> tuple[lis
         # Check module field
         plan_mod = plan.get("module", "")
         if (
-            plan_mod
+            base_level is None
+            and plan_mod
             and str(plan_mod) != expected_mod
             and not _is_legacy_field_mismatch(
                 level, plan_file.name, "module", plan_mod, expected_mod
@@ -455,6 +483,10 @@ def validate_track(level: str, slugs: list[str], fix: bool = False) -> tuple[lis
                 f"[{level}] {plan_file.name}: level={plan_level!r}, "
                 f"expected one of {expected_level_variants}"
             )
+
+        # Base-track validation owns its reference numbering and ordering.
+        if base_level is not None:
+            continue
 
         # Check connects_to and prerequisites references
         for field_name in ("connects_to", "prerequisites"):
@@ -554,7 +586,7 @@ def validate_track(level: str, slugs: list[str], fix: bool = False) -> tuple[lis
     # Check for missing plan files
     for slug, seq in slug_to_seq.items():
         if slug not in found_slugs:
-            if _is_intentionally_missing_plan(level, slug, seq):
+            if base_level is None and _is_intentionally_missing_plan(level, slug, seq):
                 continue
             errors.append(
                 f"[{level}] MISSING: {slug}.yaml (seq {seq}) has no plan file"
@@ -602,12 +634,30 @@ def _remove_entry_from_file(plan_file: Path, entry: str) -> bool:
 
 
 def main():
-    fix = "--fix" in sys.argv
-    args = [a for a in sys.argv[1:] if not a.startswith("-")]
+    parser = argparse.ArgumentParser(
+        description=(
+            "Validate plan ordering and metadata against curriculum.yaml. "
+            "Use for manifest/plan consistency, not learner-content review. "
+            "Parallel levels reuse base_level plans without renumbering them."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  scripts/validate/validate_plan_ordering.py\n"
+            "  scripts/validate/validate_plan_ordering.py a1\n"
+            "Outputs: diagnostics on stdout; --fix edits fixable plan fields/references.\n"
+            "Exit codes: 0 = no errors; 1 = validation errors; 2 = invalid arguments.\n"
+            "Related: curriculum/l2-uk-en/curriculum.yaml; PR #7999."
+        ),
+    )
+    parser.add_argument("tracks", nargs="*", help="Track keys (e.g. a1); default: all tracks.")
+    parser.add_argument("--fix", action="store_true", help="Edit fixable plan mismatches; default: check only.")
+    args = parser.parse_args()
+    fix = args.fix
 
     curriculum = load_curriculum()
 
-    tracks = args or list(curriculum.keys())
+    tracks = args.tracks or list(curriculum.keys())
 
     total_errors = 0
     total_warnings = 0
@@ -617,14 +667,23 @@ def main():
         if track not in curriculum:
             print(f"Track '{track}' not found in curriculum.yaml")
             print(f"Available: {', '.join(sorted(curriculum.keys()))}")
+            total_errors += 1
             continue
 
-        slugs = curriculum[track]
+        track_config = curriculum[track]
+        slugs = track_config.modules
         print(f"\n{'=' * 60}")
         print(f"Track: {track} ({len(slugs)} modules)")
         print(f"{'=' * 60}")
 
-        issues, fixes = validate_track(track, slugs, fix=fix)
+        plan_slugs = track_config.plan_modules if track_config.plan_modules is not None else slugs
+        issues, fixes = validate_track(track, plan_slugs, fix=fix, base_level=track_config.base_level)
+        if track_config.plan_modules is not None:
+            print(f"  Plan inventory: {len(plan_slugs)} unchanged plans in plans/{track}")
+            issues.extend(
+                f"[{track}] Published module {slug!r} has no archived plan inventory entry"
+                for slug in slugs if slug not in plan_slugs
+            )
 
         errors = [i for i in issues if "ORPHAN" not in i and "doesn't match" not in i]
         warnings = [i for i in issues if "ORPHAN" in i or "doesn't match" in i]

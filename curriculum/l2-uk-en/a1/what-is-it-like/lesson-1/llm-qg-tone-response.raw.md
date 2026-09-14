@@ -1,0 +1,14 @@
+{
+  "score": 8.6,
+  "evidence": "\"When you hesitate, do not start with the English adjective. Start with the Ukrainian noun: **стіл -> він -> який? -> новий стіл**. The noun gives you the ending.\"",
+  "evidence_quotes": [
+    "Keep the scope small. Today is not a full adjective-declension lesson. You are\ntraining the first visible pattern: noun gender plus adjective ending.",
+    "When you hesitate, do not start with the English adjective. Start with the\nUkrainian noun: **стіл -> він -> який? -> новий стіл**. The noun gives you\nthe ending.",
+    "Notice the short answers. You do not need **є** here. Say **Книга цікава**,\nnot a word-for-word English sentence with \"is.\""
+  ],
+  "rubric_mapping": "Residual tone judgment only; deterministic gates (META_NARRATION ban, AI-slop banlist, callout minimums) already passed. Module TYPE for register expectations: topic-neutral A1 grammar lesson (adjective agreement), so an English explanatory carrier with Ukrainian example-first anchoring is the sanctioned A1 posture, not a tone defect. (1) 'Keep the scope small. Today is not a full adjective-declension lesson...' — evidence FOR #R-SINGLE-VOICE-A1: a warm, honest, non-condescending peer voice that scopes the lesson directly to 'you' without teacherly padding or preachy imperative; no register drop into bureaucratic or inspirational filler. (2) 'When you hesitate, do not start with the English adjective. Start with the Ukrainian noun: стіл -> він -> який? -> новий стіл...' — evidence FOR engagement-quality: the :::tip callout carries real, content-anchored procedural pedagogy (a concrete decision chain) rather than generic motivation, and keeps the single direct-address ('you') voice. (3) 'Notice the short answers. You do not need є here. Say Книга цікава, not a word-for-word English sentence with \"is.\"' — evidence FOR content-anchored direct address (#R-AUDIENCE-LANGUAGE-A1): 'Notice...' points at a specific Ukrainian feature in the learner's own examples, not a filler imperative. Checks cleared: consistent single teacher voice end-to-end (no English->metalanguage->preachy->casual drift); second person throughout ('you'/'ви': 'Перевірте себе', 'Тепер ви можете'), no third-person framing of the learner (no 'the student'/'студента'/'учня'/'the reader'); named characters (Софія/Тарас) confined to dialogues with a real book-fair setting and natural touches ('Дивись', 'Чудово, тут дуже приємно!'), not robotic interrogation. Minor cap below 9.0: the dialogue exchanges lean pattern-drill (repetitive Який він?/Яка вона? Q&A) so engagement is functional rather than vivid, but this stays within A1 norms and is not a REVISE-level register defect. No AWKWARD_PASSIVE/UNNATURAL_ANTHROPOMORPHISM/ENGLISH-led-lecture/AI_LEAKAGE/PATH_LEAKAGE tone defects found. All three quotes are evidence FOR; no concrete residual tone defect, so score >= 8.",
+  "issue_ids": [],
+  "findings": [],
+  "flags": [],
+  "verdict": "PASS"
+}

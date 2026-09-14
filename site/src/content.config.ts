@@ -5,7 +5,7 @@ export const collections = {
 	docs: defineCollection({
 		loader: glob({
 			pattern: [
-				'{a1,a2,bio,folk}/**/*.{md,mdx}',
+				'{a1,a1-v1,a2,bio,folk}/**/*.{md,mdx}',
 				'{b1,b2}/**/*.{md,mdx}',
 				'{c1,c2,hist,istorio,lit,lit-drama,lit-essay,lit-fantastika,lit-hist-fic,lit-humor,lit-war,lit-youth,oes,ruth}/index.{md,mdx}',
 			],

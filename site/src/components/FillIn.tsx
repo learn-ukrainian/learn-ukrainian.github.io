@@ -42,6 +42,8 @@ export interface FillInQuestionProps {
    * @ukrainianText true
    */
   options?: string[];
+  /** Feedback shown after the learner submits an answer. */
+  explanation?: string;
   /**
    * UI language flag for Ukrainian labels and feedback.
    * @ukrainianText false
@@ -57,6 +59,7 @@ export function FillInQuestion({
   sentence,
   answer,
   options = [],
+  explanation,
   isUkrainian,
   onComplete,
   disabled = false,
@@ -214,6 +217,7 @@ export function FillInQuestion({
           data-correct={isCorrect ? 'true' : 'false'}
         >
           {isCorrect ? correctLabel : `${answerLabel} ${answer}`}
+          {explanation && <p>{parseMarkdown(explanation)}</p>}
         </div>
       )}
     </div>
@@ -236,6 +240,8 @@ interface FillInItem {
    * @ukrainianText true
    */
   options?: string[];
+  /** Feedback shown after the learner submits an answer. */
+  explanation?: string;
 }
 
 interface FillInProps {
@@ -307,6 +313,7 @@ export default function FillIn({ items, instruction, isUkrainian }: FillInProps)
                 </select>
                 {parseMarkdown(parts[1])}
               </span>
+              {showResults && item.explanation && <p className={styles.feedback}>{parseMarkdown(item.explanation)}</p>}
               {showResults && !isCorrect && (
                 <span className={styles.correctHint}>
                   {isUkrainian ? 'Правильно:' : 'Correct:'} {item.answer}

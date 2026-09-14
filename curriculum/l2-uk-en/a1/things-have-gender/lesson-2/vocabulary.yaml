@@ -1,0 +1,64 @@
+- lemma: у мене́ є
+  translation: I have
+  pos: phrase
+  usage: У мене́ є стіл.
+- lemma: у тебе́ є
+  translation: do you have / you have
+  pos: phrase
+  usage: У тебе́ є стіл?
+- lemma: кімна́та
+  translation: room
+  pos: noun
+  usage: Це моя́ кімна́та.
+- lemma: лі́жко
+  translation: bed
+  pos: noun
+  usage: Це моє́ лі́жко.
+- lemma: стіле́ць
+  translation: chair
+  pos: noun
+  usage: Це мій стіле́ць.
+- lemma: ла́мпа
+  translation: lamp
+  pos: noun
+  usage: Це моя́ ла́мпа.
+- lemma: телефо́н
+  translation: phone
+  pos: noun
+  usage: Це мій телефо́н.
+- lemma: комп'ю́тер
+  translation: computer
+  pos: noun
+  usage: Це мій комп'ю́тер.
+- lemma: зо́шит
+  translation: notebook
+  pos: noun
+  usage: Це мій зо́шит.
+- lemma: ру́чка
+  translation: pen
+  pos: noun
+  usage: Це моя́ ру́чка.
+- lemma: су́мка
+  translation: bag
+  pos: noun
+  usage: Це моя́ су́мка.
+- lemma: крі́сло
+  translation: armchair
+  pos: noun
+  usage: Це моє́ крі́сло.
+- lemma: дзе́ркало
+  translation: mirror
+  pos: noun
+  usage: Це моє́ дзе́ркало.
+- lemma: ключ
+  translation: key
+  pos: noun
+  usage: Це мій ключ.
+- lemma: фо́то
+  translation: photo
+  pos: noun
+  usage: Це моє́ фо́то.
+- lemma: стіна́
+  translation: wall
+  pos: noun
+  usage: Це моя́ стіна́.

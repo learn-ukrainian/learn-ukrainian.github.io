@@ -176,10 +176,8 @@ def test_non_vesum_words_are_reported(tmp_path):
 
 def test_cli_smoke(tmp_path):
     paths = _build_fake_project(tmp_path)
-    python_bin = REPO_ROOT / ".venv" / "bin" / "python"
-
     result = subprocess.run(
-        [str(python_bin), "scripts/analytics/vocab_progression.py", "a1"],
+        [sys.executable, "scripts/analytics/vocab_progression.py", "a1"],
         cwd=REPO_ROOT,
         env={**os.environ, "VOCAB_PROGRESSION_PROJECT_ROOT": str(paths.root)},
         capture_output=True,

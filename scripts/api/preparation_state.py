@@ -282,6 +282,7 @@ def build_module_state(
     except (curriculum_readiness.ReadinessError, OSError) as exc:
         raise PreparationStateError(str(exc)) from exc
 
+    track = canonical["track"]
     bundle = bundle_evidence(repo_root, track, slug)
     publication = publication_evidence(repo_root, track, slug)
     findings = canonical.get("findings") or []

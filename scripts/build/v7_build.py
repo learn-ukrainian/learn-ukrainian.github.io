@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -105,6 +106,11 @@ class PrimaryCheckoutPersistError(PrimaryCheckoutSafetyError):
 
 
 _MODULE_ARTIFACT_NAMES = (
+    "lessons.yaml",
+    "lesson_qg.json",
+    "upgrade_inputs.json",
+    "module_coherence.json",
+    "upgrade_writer.json",
     "writer_prompt.md",
     "writer_output.raw.md",
     "hermes.write.jsonl",
@@ -343,6 +349,10 @@ def _existing_module_artifacts(module_dir: Path) -> list[Path]:
     paths = [module_dir / name for name in _MODULE_ARTIFACT_NAMES]
     for pattern in _MODULE_ARTIFACT_GLOBS:
         paths.extend(sorted(module_dir.glob(pattern)))
+    if (module_dir / "lessons.yaml").exists():
+        for lesson_dir in sorted(module_dir.glob("lesson-*")):
+            if lesson_dir.is_dir():
+                paths.extend(_existing_module_artifacts(lesson_dir))
     return [path for path in paths if path.exists()]
 
 
@@ -380,6 +390,8 @@ def _persist_artifact_paths(
     for path in (mdx_path, default_mdx):
         if path is not None and path.exists():
             candidate_paths.append(path)
+            if path.name == "index.mdx":
+                candidate_paths.extend(sorted(path.parent.glob("[0-9]*.mdx")))
 
     archive_dir = run_archive.archive_dir_for(
         worktree.path,
@@ -753,6 +765,11 @@ def _run_in_worktree(args: argparse.Namespace, raw_argv: list[str]) -> int:
             level=level,
             slug=slug,
         )
+        if getattr(args, "upgrade", False):
+            mdx_path = (
+                worktree.path / "site/src/content/docs" / level / slug / "index.mdx"
+                if args.out is None else module_dir / "mdx/index.mdx"
+            )
         archive.terminal(
             status="complete" if result == "success" else "failed",
             artifact_dir=module_dir,
@@ -1184,6 +1201,94 @@ def _resume_llm_qg_dim_if_current(
     return parsed
 
 
+_COMBINED_QG_INSTRUCTIONS = """
+Score ALL five dimensions in ONE JSON object. The lesson artifacts appear ONCE below.
+Do not restate them. Do not emit five essays. Do not emit a second JSON object.
+
+Dimensions: pedagogical, naturalness, decolonization, engagement, tone.
+Each value must be:
+{"score": <0-10 number>, "verdict": "PASS"|"REVISE"|"REJECT", "evidence": "<one short sentence in your words>", "evidence_quotes": ["<8-20 consecutive words copied from the artifacts, single line, no extra spaces>"]}
+
+Upgrade rules: A1 bilingual (UK then EN); no ```text learner examples; last lesson
+closes with Підсумок модуля — Module summary; VESUM/sources for gender/government.
+
+Return ONLY one JSON object, nothing before or after:
+{"pedagogical": {...}, "naturalness": {...}, "decolonization": {...}, "engagement": {...}, "tone": {...}}
+""".strip()
+
+
+def _run_combined_llm_qg(
+    *,
+    plan: Mapping[str, Any],
+    generated_content: str,
+    module_dir: Path,
+    writer: str,
+    reviewer: str,
+    defaults: Mapping[str, Any],
+    effort: str,
+    agent_name: str,
+    review_context: str,
+    stdout_silence_timeout: int | None,
+    profile: str | None,
+) -> dict[str, Any]:
+    from scripts.agent_runtime.runner import invoke
+
+    prompt = "\n\n".join(
+        part for part in (review_context, _COMBINED_QG_INSTRUCTIONS, generated_content) if part
+    )
+    prompt_path = module_dir / "llm-qg-combined-prompt.md"
+    response_path = module_dir / "llm-qg-combined-response.raw.md"
+    prompt_path.write_text(prompt, encoding="utf-8")
+    last_error: linear_pipeline.LinearPipelineError | None = None
+    parsed_dims: dict[str, Any] | None = None
+    for attempt in range(1, LLM_QG_DIM_MAX_ATTEMPTS + 1):
+        result = invoke(
+            agent_name,
+            prompt if last_error is None else _llm_qg_retry_prompt(prompt, last_error),
+            mode="read-only",
+            cwd=module_dir,
+            model=defaults["model"],
+            task_id=f"linear-v7-qg-{plan['slug']}-combined",
+            entrypoint="dispatch",
+            effort=effort,
+            tool_config={"output_format": "stream-json"},
+            stdout_silence_timeout=stdout_silence_timeout,
+        )
+        response = str(getattr(result, "response", "") or "")
+        response_path.write_text(response, encoding="utf-8")
+        try:
+            payload = None
+            for candidate in _llm_qg_balanced_json_objects(response):
+                try:
+                    loaded = json.loads(candidate)
+                except json.JSONDecodeError:
+                    continue
+                if isinstance(loaded, dict) and any(dim in loaded for dim in QG_DIMS):
+                    payload = loaded
+                    break
+            if not isinstance(payload, dict):
+                raise linear_pipeline.LinearPipelineError("combined LLM QG did not return JSON")
+            report: dict[str, Any] = {}
+            for dim in QG_DIMS:
+                report[dim] = _parse_llm_qg_dim_response(
+                    json.dumps(payload.get(dim) or payload, ensure_ascii=False),
+                    dim=dim,
+                    response_path=response_path,
+                )
+            parsed_dims = report
+            break
+        except linear_pipeline.LinearPipelineError as exc:
+            last_error = exc
+            if attempt < LLM_QG_DIM_MAX_ATTEMPTS:
+                print(f"[llm-qg] combined: attempt {attempt} failed; retrying ({exc})", file=sys.stderr, flush=True)
+                continue
+            raise linear_pipeline.LinearPipelineError(
+                f"combined LLM QG failed after {LLM_QG_DIM_MAX_ATTEMPTS} attempt(s): {last_error}"
+            ) from last_error
+    assert parsed_dims is not None
+    return linear_pipeline.aggregate_llm_review(parsed_dims, str(plan["level"]), profile=profile)
+
+
 def _run_llm_qg(
     *,
     plan: Mapping[str, Any],
@@ -1199,19 +1304,41 @@ def _run_llm_qg(
     obligation_checklist: Mapping[str, Any] | None = None,
     event_sink: Callable[..., None] | None = None,
     reviewer_samples: int = 1,
+    review_context: str = "",
+    content_override: str | None = None,
+    allow_same_model: bool = False,
+    effort_override: str | None = None,
+    combined: bool = False,
 ) -> dict[str, Any]:
     from scripts.agent_runtime.runner import invoke
 
     reviewer = _reviewer_for_writer(writer, reviewer_override)
     defaults = linear_pipeline.REVIEWER_DEFAULTS[reviewer]
     sample_count = max(1, int(reviewer_samples))
+    effort = effort_override or defaults["effort"]
 
-    assert linear_pipeline.WRITER_DEFAULTS[writer]["model"] != defaults["model"], \
-        f"same-model self-review forbidden: writer={writer} reviewer={reviewer}"
+    if not allow_same_model:
+        assert linear_pipeline.WRITER_DEFAULTS[writer]["model"] != defaults["model"], \
+            f"same-model self-review forbidden: writer={writer} reviewer={reviewer}"
 
     agent_name = reviewer.split("-", 1)[0]
-    generated_content = _generated_content(module_dir)
+    generated_content = content_override if content_override is not None else _generated_content(module_dir)
     report: dict[str, Any] = {}
+
+    if combined:
+        return _run_combined_llm_qg(
+            plan=plan,
+            generated_content=generated_content,
+            module_dir=module_dir,
+            writer=writer,
+            reviewer=reviewer,
+            defaults=defaults,
+            effort=effort,
+            agent_name=agent_name,
+            review_context=review_context,
+            stdout_silence_timeout=stdout_silence_timeout,
+            profile=profile,
+        )
 
     for dim in QG_DIMS:
         prompt = linear_pipeline.render_review_prompt(
@@ -1224,6 +1351,8 @@ def _run_llm_qg(
             use_generator=use_generator,
             obligation_checklist=obligation_checklist,
         )
+        if review_context:
+            prompt = review_context + "\n\n" + prompt
         prompt_path = module_dir / f"llm-qg-{dim}-prompt.md"
         response_path = module_dir / f"llm-qg-{dim}-response.raw.md"
         if sample_count == 1:
@@ -1263,7 +1392,7 @@ def _run_llm_qg(
                     model=defaults["model"],
                     task_id=task_id,
                     entrypoint="dispatch",
-                    effort=defaults["effort"],
+                    effort=effort,
                     tool_config={"output_format": "stream-json"},
                     stdout_silence_timeout=stdout_silence_timeout,
                 )
@@ -1469,6 +1598,7 @@ def build_parser() -> argparse.ArgumentParser:
         epilog=(
             "Examples:\n"
             "  .venv/bin/python scripts/build/v7_build.py a1 my-morning --dry-run\n"
+            "  .venv/bin/python scripts/build/v7_build.py a1 things-have-gender --upgrade --dry-run\n"
             "  .venv/bin/python scripts/build/v7_build.py a1 my-morning --worktree\n"
             "  .venv/bin/python scripts/build/v7_build.py a1 my-morning --writer gemini-tools\n"
             "  .venv/bin/python scripts/build/v7_build.py a1 my-morning --writer codex-tools --telemetry-out audit/bakeoff-2026-05-05/gpt55.write.jsonl\n"
@@ -1477,7 +1607,8 @@ def build_parser() -> argparse.ArgumentParser:
             "  Emits JSONL monitor events to stdout, or appends them to --telemetry-out. Full builds write the writer "
             "artifacts, knowledge_packet.md, writer_prompt.md, python_qg.json, "
             "llm_qg.json, and {slug}.mdx under --out or "
-            "curriculum/l2-uk-en/{level}/{slug}/. Dry runs do not write files.\n\n"
+            "curriculum/l2-uk-en/{level}/{slug}/. Upgrade dry runs save lessons.yaml, input hashes and writer_prompt.md; "
+            "upgrade builds produce lesson-N artifacts and index.mdx plus N.mdx in canonical a1.\n\n"
             "Worktrees:\n"
             "  Pass --worktree to create .worktrees/builds/{level}-{slug}-{timestamp}/ "
             "and run this build there on a build/{level}/{slug}-{timestamp} branch. "
@@ -1507,6 +1638,14 @@ def build_parser() -> argparse.ArgumentParser:
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = build_parser()
+    parser.add_argument(
+        "--upgrade", action="store_true",
+        help="Upgrade an existing A1 module from archived a1-v1 into canonical a1 lessons; skip wiki retrieval and plan writing (default: false).",
+    )
+    parser.add_argument(
+        "--lesson-map", metavar="PATH", default=None,
+        help="Reviewed lesson metadata/exception declarations for --upgrade (default: derive fresh); section ownership and provenance must match deterministic derivation.",
+    )
     parser.add_argument(
         "level",
         help="Curriculum level code, for example a1, b1-pro, or hist.",
@@ -1563,7 +1702,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help=(
             "Load the plan and build the knowledge packet, then stop before "
-            "writer invocation and file writes (default: false)."
+            "writer invocation (default: false). In --upgrade mode, save lessons.yaml "
+            "and the rendered writer_prompt.md without calling any model."
         ),
     )
     parser.add_argument(
@@ -1772,7 +1912,291 @@ def _run_stress_annotation_for_level(module_dir: Path, level: str) -> dict[str, 
     return linear_pipeline.run_stress_annotation(module_dir)
 
 
+def _upgrade_output_dir(args: argparse.Namespace) -> Path:
+    """Keep upgrade writes in this worktree and outside protected input trees."""
+    output = _resolve_output_dir(args.out, "a1", args.slug).resolve()
+    root = PROJECT_ROOT.resolve()
+    if not output.is_relative_to(root):
+        raise linear_pipeline.LinearPipelineError("Upgrade output must be inside the build worktree")
+    for protected in (root / "curriculum/l2-uk-en/a1-v1", root / "curriculum/l2-uk-en/plans"):
+        if output.is_relative_to(protected) or protected.is_relative_to(output):
+            raise linear_pipeline.LinearPipelineError("Upgrade output overlaps protected original modules or plans")
+    return output
+
+
+def _upgrade_review_context(lesson_map: Mapping[str, Any], lesson: int | None) -> str:
+    scope = f"lesson {lesson}" if lesson else "the complete module across all lessons"
+    return (
+        f"V7 UPGRADE review of {scope}. Review the published lesson unit, not a fresh module build. "
+        "No wiki packet or plan rewrite applies. Assess preservation, lesson_split, coherent progression, "
+        "first-use cumulative vocabulary, final module closure (`Підсумок модуля — Module summary` "
+        "on the last lesson, not Module completion), no named narrator, marked attributed "
+        "quotations with Resources entries, no ```text learner examples, and side-by-side English "
+        "support for added A1 Ukrainian passages of three or more sentences. "
+        "SOURCES AUDIT: VESUM/`sources` is why the Ukrainian is trustworthy (gender, government, "
+        "real examples — not Russian calques). This corpus trains a Ukrainian LLM and tests whether "
+        "the sources tools actually get used. No tool calls = fail. Ungrounded morphology = fail. "
+        "Judge the current dimension independently using exact "
+        "quotes from these artifacts. Stress annotation follows review. Lesson map:\n"
+        + json.dumps(lesson_map, ensure_ascii=False)
+    )
+
+
+def _upgrade_declared_map(derived: dict, raw: str | None) -> dict:
+    """Accept reviewed declarations without letting them rewrite derived ownership."""
+    if raw is None:
+        return derived
+    from scripts.build.lesson_map import validate_lesson_map
+
+    declared = linear_pipeline.load_yaml(_resolve_project_path(raw))
+    validate_lesson_map(declared)
+    for key in ("closes_module", "provenance"):
+        if declared[key] != derived[key]:
+            raise linear_pipeline.LinearPipelineError(f"Reviewed lesson map changes deterministic {key}")
+    if len(declared["lessons"]) != len(derived["lessons"]):
+        raise linear_pipeline.LinearPipelineError("Reviewed map changes lesson count")
+    for expected, actual in zip(derived["lessons"], declared["lessons"], strict=True):
+        for key in ("n", "sections", "minutes", "activities"):
+            if expected[key] != actual[key]:
+                raise linear_pipeline.LinearPipelineError(f"Reviewed map changes deterministic lesson {key}")
+        if actual["word_target"] < expected["word_target"]:
+            raise linear_pipeline.LinearPipelineError("Reviewed map lowers word target")
+    if {item["id"] for item in declared["items_min_exempt"]} != {item["id"] for item in derived["items_min_exempt"]}:
+        raise linear_pipeline.LinearPipelineError("Reviewed map changes original-item exemptions")
+    return declared
+
+
+UPGRADE_INDEPENDENT_REVIEWER = "codex-tools"
+UPGRADE_INDEPENDENT_EFFORT = "medium"
+
+
+def _upgrade_gemini_adjust_then_astra(
+    *,
+    plan: Mapping[str, Any],
+    plan_content: str,
+    module_dir: Path,
+    writer: str,
+    independent_reviewer: str,
+    review_context: str,
+    writer_prompt: str,
+    stdout_silence_timeout: int | None,
+    effort: str | None,
+    content_override: str | None = None,
+) -> dict[str, Any]:
+    """Gemini reviews and may rewrite; Astra (medium) is the independent gate."""
+    try:
+        self_review = _run_llm_qg(
+            plan=plan, plan_content=plan_content, module_dir=module_dir, writer=writer,
+            reviewer_override=writer, profile="core",
+            stdout_silence_timeout=stdout_silence_timeout,
+            review_context=review_context + "\nGemini self-review: you wrote this. Adjust if VESUM/`sources` would change a form. "
+            "Calling sources is how the Ukrainian gets better, and this run tests that the tools work "
+            "(LLM dataset). If you skipped tools while writing, call them now and fix.",
+            content_override=content_override, allow_same_model=True, combined=True,
+        )
+    except linear_pipeline.LinearPipelineError as exc:
+        self_review = {"passed": False, "error": str(exc), "skipped_adjust": True}
+        print(f"[upgrade] Gemini self-review failed ({exc}); continuing to Astra", file=sys.stderr, flush=True)
+    linear_pipeline.write_json(module_dir / "llm_qg_gemini.json", self_review)
+    if not _llm_qg_payload_passes(self_review) and content_override is None and not self_review.get("skipped_adjust"):
+        adjust = (
+            writer_prompt
+            + "\n\n## Gemini self-review requested adjustments\n\n"
+            + json.dumps(self_review, ensure_ascii=False)[:12000]
+            + "\n\nReturn the four artifacts again. Keep original prose. Call sources/VESUM: "
+            "that is how the Ukrainian improves, and this run tests the tools (LLM dataset)."
+        )
+        response = linear_pipeline.invoke_writer(
+            adjust, writer,
+            cwd=PROJECT_ROOT if writer == "gemini-tools" else module_dir,
+            tool_trace_path=module_dir / "writer_adjust_tool_calls.json",
+            stdout_silence_timeout=stdout_silence_timeout, effort=effort,
+        )
+        (module_dir / "writer_output.adjust.raw.md").write_text(response, encoding="utf-8")
+        linear_pipeline.write_writer_artifacts(
+            module_dir, linear_pipeline.parse_writer_output(response, lesson_mode=True),
+        )
+    independent = _run_llm_qg(
+        plan=plan, plan_content=plan_content, module_dir=module_dir, writer=writer,
+        reviewer_override=independent_reviewer, profile="core",
+        stdout_silence_timeout=stdout_silence_timeout,
+        review_context=review_context + "\nIndependent Astra review after Gemini self-adjust. "
+            "Fail ungrounded gender/government/examples. VESUM/`sources` is how the Ukrainian is "
+            "better than a fluent guess; this corpus trains an LLM and tests the tools.",
+        content_override=content_override, effort_override=UPGRADE_INDEPENDENT_EFFORT,
+        combined=True,
+    )
+    return independent
+
+
+def _run_upgrade(args: argparse.Namespace) -> int:
+    """V7's upgrade mode: existing artifacts -> scoped writer/review -> lesson gates/MDX."""
+    from scripts.build.lesson_assembler import assemble_lessons
+    from scripts.build.lesson_map import derive_lesson_map
+    from scripts.pipeline.stress_annotator import annotate_file
+
+    tracker = LastEventTracker()
+    phase = "input"
+    fields = {"mode": "upgrade", "level": "a1", "slug": args.slug}
+    tracker.emit("module_start", **fields)
+    try:
+        if args.level.lower() != "a1":
+            raise linear_pipeline.LinearPipelineError("--upgrade currently accepts base level a1 only")
+        if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", args.slug):
+            raise linear_pipeline.LinearPipelineError("Upgrade slug must be a single kebab-case module name")
+        if getattr(args, "use_generator", False):
+            raise linear_pipeline.LinearPipelineError("--upgrade uses linear-write-upgrade.md; --use-generator is incompatible")
+        source_dir = _default_module_dir("a1-v1", args.slug)
+        plan_path = linear_pipeline.plan_path_for("a1", args.slug)
+        plan = linear_pipeline.plan_check(plan_path)
+        module_dir = _upgrade_output_dir(args)
+        original_paths = [source_dir / name for name in linear_pipeline.WRITER_ARTIFACTS] + [plan_path]
+        source_hashes = {str(p.relative_to(PROJECT_ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in original_paths}
+        lesson_map = derive_lesson_map(
+            plan, (source_dir / "module.md").read_text(encoding="utf-8"),
+            linear_pipeline.load_yaml(source_dir / "activities.yaml"),
+        )
+        lesson_map = _upgrade_declared_map(lesson_map, getattr(args, "lesson_map", None))
+        module_dir.mkdir(parents=True, exist_ok=True)
+        import yaml
+
+        (module_dir / "lessons.yaml").write_text(yaml.safe_dump(lesson_map, allow_unicode=True, sort_keys=False), encoding="utf-8")
+        linear_pipeline.write_json(module_dir / "upgrade_inputs.json", {"mode": "upgrade", "sha256": source_hashes})
+        prompt = linear_pipeline.render_upgrade_prompt(plan, source_dir, lesson_map)
+        (module_dir / "writer_prompt.md").write_text(prompt, encoding="utf-8")
+        tracker.emit("upgrade_prepared", lessons=len(lesson_map["lessons"]),
+                     prompt_path=str(module_dir / "writer_prompt.md"),
+                     skipped_phases=["knowledge_packet", "wiki_manifest", "wiki_completeness_gate", "plan_writing", "fresh_authoring"], **fields)
+        if args.dry_run:
+            tracker.emit("module_done", dry_run=True, writer_invoked=False, **fields)
+            return 0
+        writer = _normalize_writer(args.writer)
+        if writer == "claude-tools":
+            writer = "agy-tools"
+        independent_reviewer = _normalize_writer(args.reviewer) if args.reviewer else UPGRADE_INDEPENDENT_REVIEWER
+        from scripts.review.reviewer_resolver import UNRESOLVED_AUTHOR_FAMILIES, resolve_family
+
+        writer_family = resolve_family(linear_pipeline.WRITER_DEFAULTS[writer]["model"])
+        independent_family = resolve_family(linear_pipeline.REVIEWER_DEFAULTS[independent_reviewer]["model"])
+        if writer_family in UNRESOLVED_AUTHOR_FAMILIES or independent_family in UNRESOLVED_AUTHOR_FAMILIES or writer_family == independent_family:
+            raise linear_pipeline.LinearPipelineError("Upgrade independent review (Astra) must be a different identified family from the Gemini writer")
+        writer_identity = {"writer": writer, "model": linear_pipeline.WRITER_DEFAULTS[writer]["model"], "effort": args.effort or linear_pipeline.WRITER_DEFAULTS[writer]["effort"]}
+        review_identity = json.dumps({
+            "writer": writer_identity,
+            "self_reviewer": writer,
+            "independent_reviewer": independent_reviewer,
+            "independent_model": linear_pipeline.REVIEWER_DEFAULTS[independent_reviewer]["model"],
+            "independent_effort": UPGRADE_INDEPENDENT_EFFORT,
+        }, sort_keys=True)
+        prior_vocabulary: list[str] = []
+        for lesson in lesson_map["lessons"]:
+            n = lesson["n"]
+            lesson_dir = module_dir / f"lesson-{n}"
+            lesson_dir.mkdir(parents=True, exist_ok=True)
+            phase = "writer"
+            prompt = linear_pipeline.render_upgrade_prompt(plan, source_dir, lesson_map, lesson=n, prior_vocabulary=prior_vocabulary)
+            prompt_path = lesson_dir / "writer_prompt.md"
+            receipt_path = lesson_dir / "upgrade_writer.json"
+            receipt = _read_json(receipt_path) or {}
+            response_path = lesson_dir / "writer_output.raw.md"
+            reusable = (
+                not args.no_resume and prompt_path.exists()
+                and prompt_path.read_text(encoding="utf-8") == prompt
+                and response_path.exists()
+                and receipt.get("identity") == writer_identity
+                and receipt.get("prompt_sha256") == hashlib.sha256(prompt.encode()).hexdigest()
+                and receipt.get("response_sha256") == hashlib.sha256(response_path.read_bytes()).hexdigest()
+            )
+            if not reusable:
+                prompt_path.write_text(prompt, encoding="utf-8")
+                tracker.emit("phase_start", phase=phase, lesson=n, writer=writer, **fields)
+                response = linear_pipeline.invoke_writer(
+                    prompt, writer, cwd=PROJECT_ROOT if writer == "gemini-tools" else lesson_dir,
+                    tool_trace_path=lesson_dir / "writer_tool_calls.json",
+                    stdout_silence_timeout=args.writer_timeout, effort=args.effort,
+                )
+                response_path.write_text(response, encoding="utf-8")
+                linear_pipeline.write_writer_artifacts(lesson_dir, linear_pipeline.parse_writer_output(response, lesson_mode=True))
+                linear_pipeline.write_json(receipt_path, {
+                    "identity": writer_identity,
+                    "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest(),
+                    "response_sha256": hashlib.sha256(response_path.read_bytes()).hexdigest(),
+                })
+            else:
+                # Re-parse the bound raw response, so post-review annotations or
+                # external edits cannot silently become unreviewed writer output.
+                linear_pipeline.write_writer_artifacts(
+                    lesson_dir, linear_pipeline.parse_writer_output(response_path.read_text(encoding="utf-8"), lesson_mode=True),
+                )
+                tracker.emit("phase_resumed", phase=phase, lesson=n, **fields)
+            phase = "llm_qg"
+            lesson_plan = dict(plan, word_target=lesson["word_target"], content_outline=[
+                section for section in plan["content_outline"] if section["section"] in lesson["sections"]
+            ])
+            review = _upgrade_gemini_adjust_then_astra(
+                plan=lesson_plan, plan_content=yaml.safe_dump(lesson_plan, allow_unicode=True),
+                module_dir=lesson_dir, writer=writer, independent_reviewer=independent_reviewer,
+                review_context=review_identity + "\n" + _upgrade_review_context(lesson_map, n),
+                writer_prompt=prompt, stdout_silence_timeout=args.writer_timeout,
+                effort=args.effort or linear_pipeline.WRITER_DEFAULTS[writer]["effort"],
+            )
+            linear_pipeline.write_json(lesson_dir / "llm_qg.json", review)
+            if not _llm_qg_payload_passes(review):
+                raise linear_pipeline.LinearPipelineError(f"Lesson {n} Astra review failed")
+            prior_vocabulary.extend(str(entry["lemma"]) for entry in linear_pipeline.load_yaml(lesson_dir / "vocabulary.yaml"))
+
+        phase = "module_coherence"
+        joined = "\n\n".join(
+            f"## lesson-{lesson['n']}\n{_generated_content(module_dir / ('lesson-' + str(lesson['n'])))}"
+            for lesson in lesson_map["lessons"]
+        )
+        coherence = _run_llm_qg(
+            plan=plan, plan_content=yaml.safe_dump(plan, allow_unicode=True), module_dir=module_dir,
+            writer=writer, reviewer_override=independent_reviewer, profile="core",
+            stdout_silence_timeout=args.writer_timeout,
+            review_context=review_identity + "\n" + _upgrade_review_context(lesson_map, None),
+            content_override=joined, effort_override=UPGRADE_INDEPENDENT_EFFORT,
+        )
+        linear_pipeline.write_json(module_dir / "module_coherence.json", coherence)
+        if not _llm_qg_payload_passes(coherence):
+            raise linear_pipeline.LinearPipelineError("Module coherence review failed")
+        phase = "stress_annotation"
+        for lesson in lesson_map["lessons"]:
+            lesson_dir = module_dir / f"lesson-{lesson['n']}"
+            counts = {name: annotate_file(lesson_dir / name) for name in linear_pipeline.WRITER_ARTIFACTS}
+            linear_pipeline.write_json(lesson_dir / "stress_annotation.json", {"files": counts, "passed": True})
+        phase = "assemble_mdx"
+        output_dir = (
+            PROJECT_ROOT / "site/src/content/docs/a1" / args.slug
+            if args.out is None else module_dir / "mdx"
+        )
+        rendered = assemble_lessons(module_dir, output_dir, plan_path, validated=False)
+        phase = "python_qg"
+        gates = linear_pipeline.run_python_qg(module_dir, plan_path, lesson_mode=True, source_dir=source_dir, rendered=rendered)
+        linear_pipeline.write_json(module_dir / "lesson_qg.json", gates)
+        if gates.get("passed") is not True:
+            raise linear_pipeline.LinearPipelineError("Upgrade lesson gates failed; see lesson_qg.json")
+        for key, mdx in rendered.items():
+            gate = linear_pipeline.run_mdx_render_gate(mdx)
+            if gate.get("passed") is not True:
+                raise linear_pipeline.LinearPipelineError(f"MDX render failed for {key}: {gate}")
+        if any(hashlib.sha256(p.read_bytes()).hexdigest() != source_hashes[str(p.relative_to(PROJECT_ROOT))] for p in original_paths):
+            raise linear_pipeline.LinearPipelineError("Original module or plan changed during upgrade")
+        assemble_lessons(module_dir, output_dir, plan_path, validated=True)
+        tracker.emit("module_done", lessons=len(lesson_map["lessons"]), writer_invoked=True, **fields)
+        return 0
+    except AgentStalledError as exc:
+        tracker.emit("module_failed", phase=phase, error=str(exc), **fields)
+        return 124
+    except (linear_pipeline.LinearPipelineError, OSError, ValueError) as exc:
+        tracker.emit("module_failed", phase=phase, error=str(exc), **fields)
+        print(f"v7_build upgrade: {exc}", file=sys.stderr)
+        return 1
+
+
 def _run(args: argparse.Namespace) -> int:
+    if getattr(args, "upgrade", False):
+        return _run_upgrade(args)
     level = args.level.lower()
     slug = args.slug
     writer = _normalize_writer(args.writer)
