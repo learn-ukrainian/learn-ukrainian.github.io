@@ -983,7 +983,29 @@ class ActivityParser:
         )
 
     def _parse_translate(self, data: dict) -> TranslateActivity:
-        items = [TranslateItem(source=i['source'], options=[TranslateOption(text=o['text'], correct=o.get('correct', False)) for o in i.get('options', [])], explanation=i.get('explanation')) for i in data.get('items', [])]
+        items = []
+        for i in data.get('items', []):
+            source = i.get('source') or i.get('uk') or i.get('prompt') or ''
+            target = i.get('target') or i.get('answer') or i.get('correct') or i.get('en')
+            options = []
+            for o in i.get('options', []) or []:
+                if isinstance(o, str):
+                    text = o.strip()
+                    options.append(TranslateOption(
+                        text=text,
+                        correct=bool(target) and text.casefold() == str(target).strip().casefold(),
+                    ))
+                elif isinstance(o, dict):
+                    text = str(o.get('text') or o.get('en') or '').strip()
+                    options.append(TranslateOption(text=text, correct=bool(o.get('correct'))))
+            if target and options and not any(opt.correct for opt in options):
+                for opt in options:
+                    if opt.text.casefold() == str(target).strip().casefold():
+                        opt.correct = True
+                        break
+                else:
+                    options.append(TranslateOption(text=str(target).strip(), correct=True))
+            items.append(TranslateItem(source=source, options=options, explanation=i.get('explanation')))
         return TranslateActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
 
     def _parse_anagram(self, data: dict) -> AnagramActivity:
