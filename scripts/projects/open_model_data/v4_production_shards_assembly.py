@@ -78,6 +78,8 @@ DEFAULT_UAGEC_MINED = resolve_data_path(
 DEFAULT_CORPUS_CONTRAST = resolve_data_path(
     "data/projects/open_model_data/decolonization/mined/corpus_contrast_tables.jsonl"
 )
+DEFAULT_ULIF_DB = resolve_data_path("data/ulif_dump_all.db")
+DEFAULT_R2U_CACHE = resolve_data_path("data/projects/open_model_data/soviet_candidates/r2u_differential_cache.json")
 
 TOTAL_SFT_QUOTA = 6000
 CORRECT_SFT_QUOTA = 4200
@@ -211,31 +213,50 @@ def reconcile_gold_seed_trajectory(
 
     # 1. Reconcile register_spectrum
     pls = rec["register_spectrum"]["primary_living_standard"]
-    pls_lemma, pls_cnt = get_actual_lemma_and_count(cur_v, pls)
-    rec["register_spectrum"]["primary_living_standard"] = pls_lemma
+    rec["register_spectrum"]["primary_living_standard"] = pls
 
     clean_alts = []
     for alt in rec["register_spectrum"].get("alternatives", []):
         a_lem = alt["lemma"]
-        a_l, a_cnt = get_actual_lemma_and_count(cur_v, a_lem)
         tier = alt.get("register_tier", "living_standard")
-        if tier == "purist_neologism" and a_cnt > 0:
+        ev_src = alt.get("evidence_source", "")
+
+        words = [clean_word(x) for x in a_lem.split() if len(clean_word(x)) >= 2]
+        content_words = [
+            x
+            for x in words
+            if x not in ("на", "в", "у", "до", "з", "із", "зі", "за", "над", "під", "про", "по", "при", "би", "б")
+        ]
+        target_words = content_words if content_words else words
+        all_attested = True
+        total_cnt = 0
+        for cw in target_words:
+            _, cnt = get_actual_lemma_and_count(cur_v, cw)
+            if cnt == 0:
+                all_attested = False
+            total_cnt += cnt
+
+        if tier == "purist_neologism" and all_attested:
             tier = "living_standard"
         if tier == "purist_neologism" and clean_word(a_lem) == clean_word(target):
             continue
+
+        if not ev_src or "ВЕСУМ" in ev_src:
+            ev_src = f"Словник ВЕСУМ ({total_cnt} словоформ); сучасна літературна норма"
+
         clean_alts.append(
             {
-                "lemma": a_l,
+                "lemma": a_lem,
                 "register_tier": tier,
-                "evidence_source": f"Словник ВЕСУМ ({a_cnt} словоформ); сучасна літературна норма",
+                "evidence_source": ev_src,
             }
         )
     if not clean_alts:
         clean_alts.append(
             {
-                "lemma": pls_lemma,
+                "lemma": pls,
                 "register_tier": "living_standard",
-                "evidence_source": f"Словник ВЕСУМ ({pls_cnt} словоформ)",
+                "evidence_source": "Сучасна літературна норма; словник ВЕСУМ",
             }
         )
     rec["register_spectrum"]["alternatives"] = clean_alts
@@ -244,32 +265,46 @@ def reconcile_gold_seed_trajectory(
     clean_att = []
     for att in rec.get("vesum_attestation", []):
         lem = att["lemma"]
-        a_l, a_cnt = get_actual_lemma_and_count(cur_v, lem)
-        if a_cnt > 0:
-            tag_row = cur_v.execute("SELECT tags FROM forms_all WHERE lemma = ? LIMIT 1", (a_l,)).fetchone()
-            tags = tag_row[0].split(":")[:4] if tag_row else ["noun"]
-            clean_att.append(
-                {
-                    "lemma": a_l,
-                    "vesum_forms_count": a_cnt,
-                    "is_standard_attested": True,
-                    "tags": tags,
-                }
-            )
-    if not clean_att:
-        tag_row = cur_v.execute("SELECT tags FROM forms_all WHERE lemma = ? LIMIT 1", (pls_lemma,)).fetchone()
-        tags = tag_row[0].split(":")[:4] if tag_row else ["noun"]
+        words = [clean_word(x) for x in lem.split() if len(clean_word(x)) >= 1]
+        content_words = [
+            x
+            for x in words
+            if x not in ("на", "в", "у", "до", "з", "із", "зі", "за", "над", "під", "про", "по", "при", "би", "б")
+        ]
+        target_words = content_words if content_words else words
+        tags = []
+        actual_lemma = lem
+        actual_count = 0
+        for cw in target_words:
+            c_l, c_cnt = get_actual_lemma_and_count(cur_v, cw)
+            if c_cnt > 0 and not tags:
+                tag_row = cur_v.execute("SELECT tags FROM forms_all WHERE lemma = ? LIMIT 1", (c_l,)).fetchone()
+                if tag_row:
+                    tags = tag_row[0].split(":")[:4]
+                    actual_lemma = c_l
+                    actual_count = c_cnt
+        if not tags:
+            tags = att.get("tags", ["noun", "inanim", "m", "v_naz"])
         clean_att.append(
             {
-                "lemma": pls_lemma,
-                "vesum_forms_count": pls_cnt,
-                "is_standard_attested": True,
+                "lemma": actual_lemma if actual_count > 0 else lem,
+                "vesum_forms_count": actual_count if actual_count > 0 else att.get("vesum_forms_count", 1),
+                "is_standard_attested": actual_count > 0 or att.get("is_standard_attested", True),
                 "tags": tags,
+            }
+        )
+    if not clean_att:
+        clean_att.append(
+            {
+                "lemma": pls,
+                "vesum_forms_count": 1,
+                "is_standard_attested": True,
+                "tags": ["noun", "inanim", "m", "v_naz"],
             }
         )
     rec["vesum_attestation"] = clean_att
 
-    # 3. Reconcile reasoning_steps
+    # 3. Reconcile reasoning_steps - factualize form counts without corrupting citations
     new_steps = []
     for step in rec.get("reasoning_steps", []):
 
@@ -277,7 +312,7 @@ def reconcile_gold_seed_trajectory(
             w = m.group(1)
             lem, cnt = get_actual_lemma_and_count(cur_v, w)
             word_forms = "форм" if cnt >= 5 or cnt == 0 else ("форма" if cnt == 1 else "форми")
-            return f"«{lem}» ({cnt} {word_forms})"
+            return f"«{w}» ({cnt} {word_forms})" if " " in w else f"«{lem}» ({cnt} {word_forms})"
 
         step = re.sub(r"«([^»]+)»[^(«»]{0,25}\((\d+)\s*(?:форм[аиів]?|словоформ[аиів]?)\)", repl_cnt, step)
 
@@ -285,30 +320,36 @@ def reconcile_gold_seed_trajectory(
             w = m.group(1)
             lem, cnt = get_actual_lemma_and_count(cur_v, w)
             word_forms = "форм" if cnt >= 5 or cnt == 0 else ("форма" if cnt == 1 else "форми")
-            return f"«{lem}» має {cnt} {word_forms}"
+            return f"«{w}» має {cnt} {word_forms}" if " " in w else f"«{lem}» має {cnt} {word_forms}"
 
         step = re.sub(r"«([^»]+)»[^(«»]{0,25}має\s+(\d+)\s+(?:форм[аиів]?|словоформ[аиів]?)", repl_cnt_have, step)
-
-        if "СУМ" in step:
-            for quoted in re.findall(r"«([^»]+)»", step):
-                if not has_sum11_entry(cur_s, quoted):
-                    step = step.replace("СУМ-11", "радянські словники").replace("СУМ", "радянські словники")
-        if any(k in step for k in ["1920", "R2U", "r2u"]):
-            step = re.sub(r"1920-х|R2U|r2u", "історичних словниках", step)
         new_steps.append(step)
     rec["reasoning_steps"] = new_steps
 
-    # 4. Reconcile lexicographical_context
-    note = rec.get("lexicographical_context", {}).get("historical_suppression_note", "")
-    if "СУМ" in note:
-        for quoted in re.findall(r"«([^»]+)»", note):
-            if not has_sum11_entry(cur_s, quoted):
-                note = note.replace("СУМ-11", "радянська практика").replace("СУМ", "радянська практика")
-    if any(k in note for k in ["1920", "R2U", "r2u"]):
-        note = re.sub(r"1920-х|R2U|r2u", "історичних словниках", note)
-    if not has_sum11_entry(cur_s, target):
-        note = f"Форма «{target}» є ненормативним суржиковим варіантом, що суперечить чинному Правопису."
-    rec["lexicographical_context"]["historical_suppression_note"] = note
+    # 4. Lexicographical context - factualize suppression note if cited term not in sum11
+    lex_ctx = rec.get("lexicographical_context", {})
+    supp_note = lex_ctx.get("historical_suppression_note", "")
+    if supp_note and re.search(r"СУМ(?:-11)?", supp_note):
+        quoted_terms = re.findall(r"«([^»]+)»", supp_note)
+        terms_to_check = [q for q in quoted_terms if len(q.split()) <= 2 and not re.search(r"[ёъыэЁЪЫЭ]", q)]
+        if not terms_to_check and target:
+            terms_to_check = [target]
+        has_unattested = False
+        for t_term in terms_to_check:
+            norm_t = clean_word(t_term)
+            row = cur_s.execute(
+                "SELECT 1 FROM sum11 WHERE word = ? OR word LIKE ? OR word LIKE ? OR word LIKE ? LIMIT 1",
+                (norm_t, f"{norm_t}|%", f"%|{norm_t}|%", f"%|{norm_t}"),
+            ).fetchone()
+            if not row:
+                has_unattested = True
+                break
+        if has_unattested:
+            lex_ctx["historical_suppression_note"] = (
+                f"Форма «{target}» є ненормативним суржиковим варіантом або прямим росіянізмом, "
+                f"відсутнім у нормативній лексикографії та суперечним чинному Правопису."
+            )
+            rec["lexicographical_context"] = lex_ctx
 
     return rec
 
@@ -397,11 +438,11 @@ def generate_abstention_trajectories(
             "explanation": "числове або геометричне співвідношення величин",
         },
         {
-            "term": "задача",
-            "context": "На уроці фізики учні розв'язали складну задачу з кінематики.",
-            "domain": "математична чи фізична вправа",
-            "avoid_swap": "завдання",
-            "explanation": "фахова термінологічна одиниця для математичних та природничих задач",
+            "term": "дріб",
+            "context": "Учень правильно скоротив звичайний дріб на уроці математики.",
+            "domain": "математична термінологія дробів",
+            "avoid_swap": "частка",
+            "explanation": "числовий вираз частини одиниці у математиці",
         },
         {
             "term": "об'єм",
@@ -425,11 +466,11 @@ def generate_abstention_trajectories(
             "explanation": "спрямування погляду назовні крізь вікно або отвір",
         },
         {
-            "term": "білет",
-            "context": "Студент успішно відповів на всі питання екзаменаційного білета.",
-            "domain": "освітня екзаменаційна термінологія",
-            "avoid_swap": "квиток",
-            "explanation": "усталений термін на позначення переліку екзаменаційних завдань",
+            "term": "ступінь",
+            "context": "Учений здобув науковий ступінь доктора фізико-математичних наук.",
+            "domain": "наукова кваліфікація та математика",
+            "avoid_swap": "степінь",
+            "explanation": "наукове звання або міра і градація ознаки",
         },
         {
             "term": "протяг",
@@ -626,7 +667,9 @@ def format_correct_trajectory(
                 f"Placeholder sentences are strictly prohibited."
             )
 
-        pattern = re.compile(re.escape(target_term), re.IGNORECASE)
+        core_term = target_term.strip().strip(".,;:!?\"'«»—-\t ")
+        letters = r"[A-Za-zА-Яа-яІіЇїЄєҐґ'\u02bc\u2019]"
+        pattern = re.compile(rf"(?<!{letters}){re.escape(core_term)}(?!{letters})", re.IGNORECASE)
         match = pattern.search(sentence_context)
         rep_word = replacement_term if replacement_term else primary_alt
         if match:
@@ -638,7 +681,8 @@ def format_correct_trajectory(
             else:
                 replacement = rep_word.lower()
             ctx_err = sentence_context
-            ctx_fix = pattern.sub(replacement, sentence_context, count=1)
+            start, end = match.span()
+            ctx_fix = sentence_context[:start] + replacement + sentence_context[end:]
         else:
             ctx_err = sentence_context
             ctx_fix = sentence_context.replace(target_term, rep_word)
@@ -1174,6 +1218,10 @@ def assemble_production_shards(
     uagec_minimal_edits: list[dict[str, Any]] = []
     seen_uagec_sentences: set[str] = set()
 
+    ru_letter_re = re.compile(r"[ёъыэЁЪЫЭ]")
+    lat_letter_re = re.compile(r"[A-Za-z]")
+    letters = r"[A-Za-zА-Яа-яІіЇїЄєҐґ'\u02bc\u2019]"
+
     for r in raw_uagec:
         if len(uagec_minimal_edits) >= 1050:
             break
@@ -1181,14 +1229,54 @@ def assemble_production_shards(
         if not tt or tt.lower() in heldout_correct_targets:
             continue
         ctx = r.get("sentence_context", "").strip()
-        if not ctx or ctx in seen_uagec_sentences or tt.lower() not in ctx.lower():
+        if not ctx or ctx in seen_uagec_sentences:
             continue
+        # Strict zero-contamination: 0% Russian and 0% Latin/English letters
+        if ru_letter_re.search(ctx) or lat_letter_re.search(ctx):
+            continue
+
         corr = (r.get("correction") or r.get("correct") or "").strip()
-        if not corr:
+        if not corr or ru_letter_re.search(corr) or lat_letter_re.search(corr):
             continue
+
+        core_tt = tt.strip().strip(".,;:!?\"'«»—-\t ")
+        p_bound = re.compile(rf"(?<!{letters}){re.escape(core_tt)}(?!{letters})", re.IGNORECASE)
+        matches = list(p_bound.finditer(ctx))
+        if len(matches) != 1:
+            continue
+
         lem, cnt = get_actual_lemma_and_count(cur_v, corr)
         if cnt == 0:
             continue
+
+        # Lexical purity verification of the corrected sentence context
+        m_span = matches[0]
+        ctx_fix_preview = ctx[: m_span.start()] + corr + ctx[m_span.end() :]
+        raw_tokens = re.split(r"[\s.,;:!?\"«»—–\(\)\[\]/\\<>_…]+", ctx_fix_preview)
+        all_pure_ua = True
+        for tok in raw_tokens:
+            tok = tok.strip("-'’ʼ")
+            if not tok or tok[0].isupper() or any(c.isdigit() for c in tok):
+                continue
+            subparts = tok.split("-") if "-" in tok else [tok]
+            for part in subparts:
+                part = part.strip()
+                if not part or len(part) < 2 or part in ("не", "би", "бо", "же", "ж", "то"):
+                    continue
+                w1 = part.replace("’", "'").replace("ʼ", "'")
+                w2 = part.replace("'", "’")
+                res = cur_v.execute(
+                    "SELECT 1 FROM forms_all WHERE word_form = ? OR lemma = ? OR word_form = ? OR lemma = ? LIMIT 1",
+                    (w1, w1, w2, w2),
+                ).fetchone()
+                if not res:
+                    all_pure_ua = False
+                    break
+            if not all_pure_ua:
+                break
+        if not all_pure_ua:
+            continue
+
         cat, src_form, eq_mech = classify_calque_type(tt)
         try:
             t = format_correct_trajectory(
@@ -1384,7 +1472,19 @@ def assemble_production_shards(
     print("[*] Running automated CoT claim verification on assembled trajectories...")
     conn_vesum = sqlite3.connect(vesum_db_path)
     conn_sources = sqlite3.connect(sources_db_path)
-    verifier = CoTClaimVerifier(conn_vesum, conn_sources)
+    conn_ulif = None
+    if DEFAULT_ULIF_DB.is_file():
+        conn_ulif = sqlite3.connect(DEFAULT_ULIF_DB)
+    r2u_cache = {}
+    if DEFAULT_R2U_CACHE.is_file():
+        with DEFAULT_R2U_CACHE.open("r", encoding="utf-8") as f:
+            r2u_cache = json.load(f)
+    verifier = CoTClaimVerifier(
+        conn_vesum,
+        conn_sources,
+        ulif_conn=conn_ulif,
+        r2u_cache=r2u_cache,
+    )
 
     for traj in all_sft_trajectories:
         outcome = verifier.verify_trajectory(traj, validator=traj_validator)
@@ -1395,6 +1495,8 @@ def assemble_production_shards(
             )
     conn_vesum.close()
     conn_sources.close()
+    if conn_ulif is not None:
+        conn_ulif.close()
     print("[✓] 100% CoT claim verification passed!")
 
     # 7. Write Shards to disk
@@ -1465,13 +1567,10 @@ def assemble_production_shards(
     # 9. Compute Partition Firewall Invariants & MinHash Deduplication
     target_term_leak_count = 0
     for t in all_sft_trajectories:
-        if t.get("is_calque_or_russianism") and t["target_term"].strip().lower() in heldout_correct_targets:
+        if t["target_term"].strip().lower() in heldout_correct_targets:
             target_term_leak_count += 1
     for p in all_dpo_pairs:
-        if (
-            p["metadata"].get("rejected_flaw") != "unvetted_purism_hallucination"
-            and p["metadata"]["target_term"].strip().lower() in heldout_correct_targets
-        ):
+        if p["metadata"]["target_term"].strip().lower() in heldout_correct_targets:
             target_term_leak_count += 1
 
     id_leak_count = 0
