@@ -1,0 +1,53 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 10.0,
+      "evidence": "The lesson provides structured guidance on phonemic contrasts and syllable division with clear error boundaries.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Mechanical spelling fails here. You cannot put apostrophe before every **я**."
+      ]
+    },
+    "naturalness": {
+      "score": 10.0,
+      "evidence": "Spoken dialogues and structural explanations employ natural modern Ukrainian verified against standard reference corpora.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Апо́строф залиша́ється з лі́терою перед ним. *(The apostrophe stays with the letter before it.)*"
+      ]
+    },
+    "decolonization": {
+      "score": 10.0,
+      "evidence": "Ukrainian orthography is analyzed entirely within its own phonological framework without external linguistic dependencies.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "have Ukrainian jobs, so you do not need another alphabet or another sign to"
+      ]
+    },
+    "engagement": {
+      "score": 10.0,
+      "evidence": "The lesson engages learners through contextual conversational exchanges and diverse interactive exercise formats.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Послу́хайте коро́тку розмо́ву про свя́то та обі́д — listen to a short conversation about a holiday and lunch:"
+      ]
+    },
+    "tone": {
+      "score": 10.0,
+      "evidence": "The instruction maintains an objective, constructive, and supportive tone focused on learner mastery.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Use the signs as reading instructions, not decorations. Before moving on,"
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "PASS",
+    "terminal_verdict": "PASS",
+    "failing_dims": [],
+    "rejected_dims": [],
+    "warning_dims": [],
+    "min_score": 10.0,
+    "min_dim": "pedagogical"
+  }
+}

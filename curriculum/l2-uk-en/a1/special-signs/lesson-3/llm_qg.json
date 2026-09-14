@@ -1,0 +1,69 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 3.0,
+      "evidence": "Act-303 inserts ь into Сього_дні incorrectly; cumulative vocabulary coverage is unproven, although assigned workbook IDs and the required module-summary heading remain.",
+      "verdict": "REJECT",
+      "evidence_quotes": [
+        "Повто́римо три фундамента́льні контра́сти, які́ ви вже вмі́єте розпізнава́ти на слух та на письмі́",
+        "Після губного [м] перед я завжди пишеться апостроф."
+      ]
+    },
+    "naturalness": {
+      "score": 5.0,
+      "evidence": "Sources verification calls were denied by the approval policy, leaving morphology, government and examples unverified; the dialogue also reads as scripted rule recitation.",
+      "verdict": "REJECT",
+      "evidence_quotes": [
+        "Так! Пе́рше пра́вило: знак ь пом'я́кшує при́голосний у слова́х день та сіль."
+      ]
+    },
+    "decolonization": {
+      "score": 7.0,
+      "evidence": "Ukrainian textbook quotations have matching Resources entries and no explicit Russian framing appears, but their attribution and Ukrainian usage grounding remain unverified.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Як зазначено в авторитетному шкільному підручнику: «Апостроф позначає роздільну вимову твердого приголосного та звуків [йа], [йу], [йе], [йі]»"
+      ]
+    },
+    "engagement": {
+      "score": 6.0,
+      "evidence": "Varied activities support practice, but repeating the entire instructional dialogue in a breakdown table adds repetition without a meaningful communicative task.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Послу́хайте коро́тку розмо́ву двох дру́зів, які́ підбива́ють підсу́мки пе́ршого мо́дуля"
+      ]
+    },
+    "tone": {
+      "score": 7.0,
+      "evidence": "Bilingual prose, no named narrator and no text fences meet presentation requirements, but inflated academic phrasing weakens the beginner-friendly voice.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Тепе́р час зібра́ти всі знання́ в єди́ну чітку́ систе́му"
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "REJECT",
+    "terminal_verdict": "PASS",
+    "failing_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
+    ],
+    "rejected_dims": [
+      "pedagogical",
+      "naturalness"
+    ],
+    "warning_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
+    ],
+    "min_score": 3.0,
+    "min_dim": "pedagogical"
+  }
+}

@@ -48,7 +48,8 @@ lessons:
     workbook:
     - 6
     - 9
-  unverified_stress: []
+  unverified_stress:
+  - ньо́го
   unverified_lemmas: []
 closes_module: 3
 provenance:
@@ -121,4 +122,6 @@ items_min_exempt:
   reason: 3-item original activity preserved from baseline
 - id: act-w7
   reason: 3-item original activity preserved from baseline
-proper_names: []
+proper_names:
+- Вашуленко
+- Захарійчук

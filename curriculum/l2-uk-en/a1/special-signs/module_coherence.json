@@ -1,0 +1,243 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 5.5,
+      "evidence": "\"Сього_дні гарний день.\"",
+      "verdict": "REJECT",
+      "evidence_quotes": [
+        "Module 2 already introduced these letters. Here you only need the quick review",
+        "Після губного [м] перед я завжди пишеться апостроф.",
+        "Сього_дні гарний день."
+      ],
+      "rubric_mapping": "Quote 1 supports sequencing: lesson 1 explicitly reuses prior learning before introducing the signs. Quote 2 is an overgeneralized rule in lesson 3 act-305: the final assessment replaces prepared examples with an incorrect universal claim. Pravopys §7 explicitly includes exceptions, including тьмяний: [Pravopys §7](https://2019.pravopys.net/sections/7/). Quote 3 exposes incorrect instructional feedback: inserting the keyed ь produces Сьогоьдні, contradicting сьогодні elsewhere in the artifacts....",
+      "flags": [
+        "sources_verification_blocked: automatic approval review rejected verify_words, query_pravopys...",
+        "unverified citation: exact textbook quotations attributed to Большакова, Захарійчук and Вашуленко could not be checked...",
+        "activity_split_audit_missing",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit",
+        "missing_foreshadowing_gloss: буряк, бур'ян and свято appear and are assessed in lesson 1 before their lesson-2...",
+        "unknown_vocab_unscaffolded: added assessment sentences require vocabulary and constructions beyond the supplied...",
+        "unverified_vocab_introduction: no vocab_level_check evidence accompanies added non-plan vocabulary"
+      ],
+      "issue_ids": [
+        "A1_ASSESSMENT_SCAFFOLDING",
+        "AMBIGUOUS_SIGN_CLASSIFICATION",
+        "INCORRECT_ANSWER_KEY",
+        "OVERGENERALIZED_ORTHOGRAPHY_RULE"
+      ],
+      "findings": [
+        {
+          "issue_id": "OVERGENERALIZED_ORTHOGRAPHY_RULE",
+          "severity": "high",
+          "quote": "Після губного [м] перед я завжди пишеться апостроф.",
+          "explanation": "Lesson 3 act-305 teaches an unconditional rule rather than the spelling of сім'я. Pravopys §7 explicitly excludes certain root consonant clusters and lists тьмяний. Similarly, act-302 claims that consonant clusters universally exclude the apostrophe. The concluding lesson therefore encourages generalizations that the earlier prepared-word approach appropriately avoided.",
+          "dimension": "pedagogical"
+        },
+        {
+          "issue_id": "INCORRECT_ANSWER_KEY",
+          "severity": "high",
+          "quote": "Сього_дні гарний день.",
+          "replacement": "С_огодні гарний день.",
+          "explanation": "Lesson 3 act-303 keys ь at a position after о, yielding Сьогоьдні. The soft sign is already present after с. This rewards incorrect spelling during final consolidation. The artifact itself supplies сьогодні as the correct comparison; independent VESUM verification was attempted but blocked.",
+          "dimension": "pedagogical"
+        },
+        {
+          "issue_id": "AMBIGUOUS_SIGN_CLASSIFICATION",
+          "severity": "medium",
+          "quote": "П'ять має апо́строф перед я, а інші слова мають м'який знак.",
+          "explanation": "Lesson 1 act-w103 frames apostrophe and soft-sign membership as contrasting categories even though п'ять contains both. Other exclusive sorting tasks also place п'ять and дев'ять only in the apostrophe group. Lesson 2 explicitly teaches 'find both apostrophe and soft sign', so the activities need a stated classification priority or a both-signs category to avoid contradictory feedback.",
+          "dimension": "pedagogical"
+        },
+        {
+          "issue_id": "A1_ASSESSMENT_SCAFFOLDING",
+          "severity": "medium",
+          "quote": "У дерев'яну дошку вбито залізний цв_ях.",
+          "explanation": "Lesson 2 act-203 embeds a basic spelling decision in an unsupported impersonal construction and vocabulary absent from the supplied vocabulary lists, including дошка, вбити and залізний. The learner can fill the familiar word without understanding the sentence. Comparable sentence expansion and dense Ukrainian metalanguage increase decoding demands without advancing the target sign contrast.",
+          "dimension": "pedagogical"
+        }
+      ]
+    },
+    "naturalness": {
+      "score": 7.0,
+      "evidence": "\"ніко́ли не додаючи́ ви́гаданий м'яки́й знак\"",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "ніко́ли не додаючи́ ви́гаданий м'яки́й знак",
+        "корінни́й збіг св/цв перед я без апо́строфа",
+        "На столі лежить залізний цв_ях."
+      ],
+      "rubric_mapping": "Quote 1 AGAINST: lesson 3 has a dangling adverbial participle. The preceding clause makes звук the subject of звучи́ть, but adding a written sign is the learner's action; an imperative is needed. Quote 2 AGAINST: корінни́й збіг is unnatural linguistic terminology for a consonant cluster within a root; кореневий is the relevant adjective. Quote 3 FOR: lesson 2 uses straightforward Ukrainian location, word order, and adjective–noun agreement in a contextualized exercise. These are editorial...",
+      "flags": [
+        "source_verification_blocked: Sources calls returned 'MCP tool call requires approval, but approval policy is never'; no...",
+        "unverified citation: the exact quotations attributed to Большакова, Захарійчук, and Вашуленко could not be checked...",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit"
+      ],
+      "issue_ids": [
+        "UKRAINIAN_GRAMMAR_CALQUE"
+      ],
+      "findings": [
+        {
+          "issue_id": "UKRAINIAN_GRAMMAR_CALQUE",
+          "severity": "major",
+          "quote": "ніко́ли не додаючи́ ви́гаданий м'яки́й знак",
+          "replacement": "Ніколи не додавайте вигаданий м'який знак.",
+          "explanation": "Lesson 3 attaches an instruction to the learner as an adverbial participle following a clause whose subject is звук. This creates an incoherent shared-agent construction. Source verification was attempted but blocked.",
+          "dimension": "naturalness"
+        },
+        {
+          "issue_id": "UKRAINIAN_GRAMMAR_CALQUE",
+          "severity": "moderate",
+          "quote": "корінни́й збіг св/цв перед я без апо́строфа",
+          "replacement": "збіг приголосних св/цв у корені перед я без апострофа",
+          "explanation": "Lesson 3 uses корінний where the intended relationship is to the word root. The resulting technical collocation reads unnaturally. Dictionary and VESUM verification were attempted but blocked.",
+          "dimension": "naturalness"
+        }
+      ]
+    },
+    "decolonization": {
+      "score": 7.5,
+      "evidence": "\"«Апостроф позначає роздільну вимову твердого приголосного та звуків [йа], [йу], [йе], [йі]» (quoted from: Большакова, 2 клас, p. 58-59).\"",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "The apostrophe is a Ukrainian reading instruction: do not soften the previous\nconsonant; keep the next **й** sound.",
+        "Stay inside Ukrainian for this lesson. The apostrophe and soft sign already\nhave Ukrainian jobs, so you do not need another alphabet or another sign to\nexplain them.",
+        "«Апостроф позначає роздільну вимову твердого приголосного та звуків [йа], [йу], [йе], [йі]» (quoted from: Большакова, 2 клас, p. 58-59)."
+      ],
+      "rubric_mapping": "TYPE: topic-neutral phonetics module. Quote 1 supports teaching Ukrainian through its own sound–spelling relationships. Quote 2 explicitly maintains Ukrainian as the explanatory reference; no additional political rhetoric or Russian comparison is needed. This posture continues through lesson 3. Quote 3 exposes the unresolved source-authority issue: exact textbook wording is asserted, but its attribution could not be independently verified. Calls to sources.verify_words, sources.query_pravopys...",
+      "flags": [
+        "source_verification_unavailable: sources calls require approval; approval policy is never",
+        "unverified citation: lesson-3 textbook quotations remain unresolved",
+        "vesum_verification_unresolved: batch verification returned no linguistic evidence",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit"
+      ],
+      "issue_ids": [
+        "SOURCE_VERIFICATION_UNRESOLVED"
+      ],
+      "findings": [
+        {
+          "issue_id": "SOURCE_VERIFICATION_UNRESOLVED",
+          "severity": "blocking",
+          "quote": "«Апостроф позначає роздільну вимову твердого приголосного та звуків [йа], [йу], [йе], [йі]» (quoted from: Большакова, 2 клас, p. 58-59).",
+          "explanation": "The lesson presents exact wording as Ukrainian textbook authority. Source access was blocked, leaving this attribution, the other two textbook quotations in lesson 3, and the requested independent morphological verification unresolved. Resources entries establish attribution intent, not textual authenticity. This is an evidence limitation, not a finding that the quotations are fabricated.",
+          "dimension": "decolonization"
+        }
+      ]
+    },
+    "engagement": {
+      "score": 6.5,
+      "evidence": "\"**Тара́с**: А дру́ге пра́вило — про апо́строф?\"",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "**ь** points backward. It is a silent instruction for the consonant before it.",
+        "**Тара́с**: А дру́ге пра́вило — про апо́строф?",
+        "Порівня́льна табли́ця підсумко́вих моде́лей — summary comparative table:"
+      ],
+      "rubric_mapping": "Quote 1 supports engagement: the concise, content-anchored mnemonic gives the learner an actionable reading cue. Quote 2 weighs against engagement: lesson 3's friends recite an ordered grammar summary without a practical purpose, uncertainty, or conversational stakes. Quote 3 anchors cumulative padding: lesson 3 repeats the contrasts in an opening explanation, this table, a rule-recitation dialogue, a full dialogue breakdown, a pitfalls reminder, and the closing summary. Review is explicitly...",
+      "flags": [
+        "source_verification_unavailable",
+        "unverified citation: lesson-3 textbook quotations",
+        "vesum_verification_unavailable",
+        "activity_split_audit_missing",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit"
+      ],
+      "issue_ids": [
+        "REPETITIVE_LOW_VALUE_RECAP",
+        "ROBOTIC_DIALOGUE",
+        "SOURCE_VERIFICATION_UNAVAILABLE"
+      ],
+      "findings": [
+        {
+          "issue_id": "ROBOTIC_DIALOGUE",
+          "severity": "medium",
+          "quote": "**Тара́с**: А дру́ге пра́вило — про апо́строф?",
+          "explanation": "The concluding conversation makes friends prompt numbered rules they already know. It reproduces the teacher's explanation instead of giving the exchange a human purpose, weakening the dialogue's ability to sustain attention.",
+          "dimension": "engagement"
+        },
+        {
+          "issue_id": "REPETITIVE_LOW_VALUE_RECAP",
+          "severity": "medium",
+          "quote": "Порівня́льна табли́ця підсумко́вих моде́лей — summary comparative table:",
+          "explanation": "This table follows a detailed contrast recap and precedes another recitation and a turn-by-turn reproduction of that recitation. Together with the pitfalls reminder and final summary, the sequence repeatedly explains familiar material without a corresponding increase in application or discovery. Preserve the required module closure while reducing redundancy in added recap material.",
+          "dimension": "engagement"
+        },
+        {
+          "issue_id": "SOURCE_VERIFICATION_UNAVAILABLE",
+          "severity": "medium",
+          "quote": "«Апостроф позначає роздільну вимову твердого приголосного та звуків [йа], [йу], [йе], [йі]»",
+          "explanation": "The lesson uses an attributed textbook quotation to reinforce its recap, but its exact wording and attribution remain unverified. Both attempted sources calls were blocked because approval is required and the current approval policy is never. This is missing evidence, not proof of fabrication; VESUM morphology verification also could not complete.",
+          "dimension": "engagement"
+        }
+      ]
+    },
+    "tone": {
+      "score": 5.8,
+      "evidence": "\"Розподіли слова за типом орфограми.\"",
+      "verdict": "REJECT",
+      "evidence_quotes": [
+        "Keep the goal simple. You are not learning every spelling rule today.",
+        "Тепе́р час зібра́ти всі знання́ в єди́ну чітку́ систе́му",
+        "Розподіли слова за типом орфограми."
+      ],
+      "rubric_mapping": "Quote 1 supports tone: lesson 1 addresses you directly and sets a reassuring, concrete scope. Quote 2 shows the closing lesson shifting toward grand, abstract exposition instead of maintaining that practical voice. Quote 3 reinforces the register shift: lesson 3 addresses beginners in specialist classroom metalanguage. English support itself is appropriate for A1 and is not penalized. Across lesson 2 and lesson 3, increasingly formal rule recitation weakens the consistent adult-peer voice....",
+      "flags": [
+        "source_verification_blocked: verify_source_attribution and verify_words returned approval-required errors under...",
+        "unverified citation: the attributed textbook quotations in lesson 3 remain unauthenticated",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit"
+      ],
+      "issue_ids": [
+        "REGISTER_SHIFT",
+        "ROBOTIC_DIALOGUE"
+      ],
+      "findings": [
+        {
+          "issue_id": "REGISTER_SHIFT",
+          "severity": "major",
+          "quote": "Розподіли слова за типом орфограми.",
+          "explanation": "Lesson 3 replaces the opening lesson's concrete, accessible directions with specialist Ukrainian classroom terminology. Together with the abstract closing exposition, this produces the mid-module register shift prohibited by the tone rubric; the issue is the changing teacher voice, not Ukrainian or English proportions.",
+          "dimension": "tone"
+        },
+        {
+          "issue_id": "ROBOTIC_DIALOGUE",
+          "severity": "moderate",
+          "quote": "А дру́ге пра́вило — про апо́строф?",
+          "explanation": "The concluding conversation presents two friends reciting numbered rules in an examination sequence. Their exchanges sound like a teacher's checklist distributed between speakers rather than a human conversation, reinforcing the increasingly school-like register.",
+          "dimension": "tone"
+        }
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "REJECT",
+    "terminal_verdict": "PASS",
+    "failing_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
+    ],
+    "rejected_dims": [
+      "pedagogical",
+      "tone"
+    ],
+    "warning_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
+    ],
+    "min_score": 5.5,
+    "min_dim": "pedagogical"
+  }
+}

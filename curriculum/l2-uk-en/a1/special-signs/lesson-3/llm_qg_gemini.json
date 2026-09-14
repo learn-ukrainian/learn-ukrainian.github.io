@@ -1,0 +1,53 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 10.0,
+      "evidence": "The lesson provides a systematic module synthesis confirming \"now it is time to assemble all knowledge into a single clear system.\"",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "now it is time to assemble all knowledge into a single clear system."
+      ]
+    },
+    "naturalness": {
+      "score": 9.5,
+      "evidence": "The Ukrainian dialogue features idiomatic phrasing as in «Са́ме так: буря́к ма́є м'яки́й звук [р'], а свя́то та цвях ма́ють збіг при́голосних!»",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Са́ме так: буря́к ма́є м'яки́й звук `[р']`, а свя́то та цвях ма́ють збіг при́голосних!"
+      ]
+    },
+    "decolonization": {
+      "score": 10.0,
+      "evidence": "The lesson guards against Russian phonological interference stating «у сло́ві **ло́жка** звучи́ть тверди́й звук [л] *(in ложка sounds hard [l])*, ніко́ли не додаючи́»",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "у сло́ві **ло́жка** звучи́ть тверди́й звук `[л]` *(in ложка sounds hard [l])*, ніко́ли не додаючи́"
+      ]
+    },
+    "engagement": {
+      "score": 9.5,
+      "evidence": "Interactive practice is introduced with «Послу́хайте коро́тку розмо́ву двох дру́зів, які́ підбива́ють підсу́мки пе́ршого мо́дуля — listen to a short conversation»",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Послу́хайте коро́тку розмо́ву двох дру́зів, які́ підбива́ють підсу́мки пе́ршого мо́дуля — listen to a short conversation"
+      ]
+    },
+    "tone": {
+      "score": 10.0,
+      "evidence": "The unit sets an encouraging, respectful instructional tone with «Віта́ємо на підсумко́вому уро́ці пе́ршого мо́дуля — welcome to the concluding lesson of the first module.»",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Віта́ємо на підсумко́вому уро́ці пе́ршого мо́дуля — welcome to the concluding lesson of the first module."
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "PASS",
+    "terminal_verdict": "PASS",
+    "failing_dims": [],
+    "rejected_dims": [],
+    "warning_dims": [],
+    "min_score": 9.5,
+    "min_dim": "naturalness"
+  }
+}

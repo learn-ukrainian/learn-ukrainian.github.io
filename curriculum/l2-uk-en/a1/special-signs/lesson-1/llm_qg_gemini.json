@@ -1,0 +1,57 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 9.5,
+      "evidence": "The lesson preserves baseline activities, introduces cumulative vocabulary smoothly, and maintains systematic pedagogical progression with bilingual scaffolding.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "The apostrophe is a Ukrainian reading instruction: do not soften the previous consonant; keep the next **й** sound."
+      ]
+    },
+    "naturalness": {
+      "score": 9.6,
+      "evidence": "All Ukrainian sentences and dialogue turns exhibit authentic native syntax, correct vocative inflection, and full VESUM morphological validity.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "При́голосний залиша́ється тверди́м, а насту́пний звук [й] звучи́ть вира́зно й чі́тко."
+      ]
+    },
+    "decolonization": {
+      "score": 9.6,
+      "evidence": "Ukrainian orthography and phonetics are taught on their own terms without Russian-as-reference crutches or colonial calques.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Коли́ ми чита́ємо розді́льно, між зву́ками з'явля́ється [й] — when we read separately, [й] appears between the sounds."
+      ]
+    },
+    "engagement": {
+      "score": 9.2,
+      "evidence": "Instructional callouts and varied interactive practice formats keep learner attention focused on practical pronunciation targets.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "**ь** points backward. It is a silent instruction for the consonant before it."
+      ]
+    },
+    "tone": {
+      "score": 7.2,
+      "evidence": "The introductory instructional text introduces a named narrator persona contrary to the requirement that people appear only inside dialogues.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Teacher Oksana's routine for this module is short: find the sign, say what it does,"
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "REVISE",
+    "terminal_verdict": "PASS",
+    "failing_dims": [
+      "tone"
+    ],
+    "rejected_dims": [],
+    "warning_dims": [
+      "tone"
+    ],
+    "min_score": 7.2,
+    "min_dim": "tone"
+  }
+}

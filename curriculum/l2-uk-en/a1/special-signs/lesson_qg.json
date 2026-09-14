@@ -1,0 +1,516 @@
+{
+  "passed": false,
+  "diagnostics": [
+    "lesson 1: 14 multi-syllable words without stress mark (not in unverified_stress): ['Правила', 'Яка', 'вчител', 'дихання', 'злите', 'знаки', 'знаком', 'знаків', 'переклад', 'правильний', 'правильну', 'речення', 'роздільне', 'ютер']",
+    "lesson 2: 2 stressed forms contradict the stress dictionary: ['голо́вні→го́ловні/го́ловні/го́ловні/го́ловні/головні́/головні́/головні́/головні́/головні́/головні́/головні́/головні́', 'йа́н: undeclared unverified stress']",
+    "lesson 2: 25 multi-syllable words without stress mark (not in unverified_stress): ['Склади', 'Яка', 'бурян', \"в'яний\", 'городі', 'знаки', 'знаком', 'льожка', 'мален', 'поділ', 'правило', 'правильне', 'правильний', 'правильному', 'правильну', 'речення', 'реченнях', 'роздільного', \"св'ято\", 'складами']",
+    "lesson 3: 37 multi-syllable words without stress mark (not in unverified_stress): ['Вашуленко', 'Захарійчук', 'Мален', 'Правильна', 'Підсумковий', 'Підсумкові', 'Підсумок', 'Яка', \"в'яний\", 'відповідним', 'знаком', 'знаків', 'мален', 'нього', 'ніколи', 'одного', 'поділ', 'правил', 'правило', 'правилом']",
+    "vocabulary multiset != baseline 48: missing=[] extra=[] dups=[\"бур'ян\", 'буряк', 'вчитель', 'день', \"комп'ютер\", 'кінь', \"м'ясо\", 'маленький', \"п'ять\", 'свято', 'сьогодні', 'сіль', \"сім'я\", 'цвях']",
+    "lesson 1: long_uk_ceiling failed: {'passed': False, 'required': {'max_unsupported_uk_words': 10, 'support_proximity': 8}, 'observed': {'offending_runs': 5}, 'reason': 'long_uk_without_gloss', 'offending_runs': ['Окса на До брий день Іва н До брий день вчи телю Окса на Сього дні га рний день Іва н Так день те плий і я сний', \"Зверні ть ува гу сло во день ма є м'яки й кінце вий звук н' а сло во вчи тель м'яки й звук л' Це знак м'я кшення\", 'б п в м ф р апостро ф я ю є ї', \"Окса на Це твоя сім'я Іва н Так це моя сім'я Нас п'ять у роди ні Окса на А де твій комп'ю тер Іва н Ось мій комп'ю тер на столі Окса на Чудо во це твій робо чий куто ...\", \"Потрену йтеся у вимо ві слів із апо строфом Повторі ть уго лос сім'я м'я со п'ять комп'ю тер При голосний залиша ється тверди м а насту пний звук й звучи ть вира зно й чі тко\"], 'policy': 'a1-m01-03'}",
+    "lesson 2: render lacks lesson paragraph: \"Тарас : Сьогодні свято! (Today is a holiday!) Мар'яна : Так, сьогодні чудовий день! (Yes, today is a\"",
+    "lesson 2: render lacks lesson paragraph: \"Олег : Привіт! Як переносити слово бур'ян? (Hi! How to divide the word бур'ян across lines?) Мар'яна\"",
+    "lesson 3: render lacks lesson paragraph: 'Тарас : Привіт! Ми вже добре знаємо, як читати особливі знаки? (Hi! Do we already know well how to r'"
+  ],
+  "blocking": [
+    "lesson 1: 14 multi-syllable words without stress mark (not in unverified_stress): ['Правила', 'Яка', 'вчител', 'дихання', 'злите', 'знаки', 'знаком', 'знаків', 'переклад', 'правильний', 'правильну', 'речення', 'роздільне', 'ютер']",
+    "lesson 2: 2 stressed forms contradict the stress dictionary: ['голо́вні→го́ловні/го́ловні/го́ловні/го́ловні/головні́/головні́/головні́/головні́/головні́/головні́/головні́/головні́', 'йа́н: undeclared unverified stress']",
+    "lesson 2: 25 multi-syllable words without stress mark (not in unverified_stress): ['Склади', 'Яка', 'бурян', \"в'яний\", 'городі', 'знаки', 'знаком', 'льожка', 'мален', 'поділ', 'правило', 'правильне', 'правильний', 'правильному', 'правильну', 'речення', 'реченнях', 'роздільного', \"св'ято\", 'складами']",
+    "lesson 3: 37 multi-syllable words without stress mark (not in unverified_stress): ['Вашуленко', 'Захарійчук', 'Мален', 'Правильна', 'Підсумковий', 'Підсумкові', 'Підсумок', 'Яка', \"в'яний\", 'відповідним', 'знаком', 'знаків', 'мален', 'нього', 'ніколи', 'одного', 'поділ', 'правил', 'правило', 'правилом']",
+    "vocabulary multiset != baseline 48: missing=[] extra=[] dups=[\"бур'ян\", 'буряк', 'вчитель', 'день', \"комп'ютер\", 'кінь', \"м'ясо\", 'маленький', \"п'ять\", 'свято', 'сьогодні', 'сіль', \"сім'я\", 'цвях']",
+    "lesson 1: long_uk_ceiling failed: {'passed': False, 'required': {'max_unsupported_uk_words': 10, 'support_proximity': 8}, 'observed': {'offending_runs': 5}, 'reason': 'long_uk_without_gloss', 'offending_runs': ['Окса на До брий день Іва н До брий день вчи телю Окса на Сього дні га рний день Іва н Так день те плий і я сний', \"Зверні ть ува гу сло во день ма є м'яки й кінце вий звук н' а сло во вчи тель м'яки й звук л' Це знак м'я кшення\", 'б п в м ф р апостро ф я ю є ї', \"Окса на Це твоя сім'я Іва н Так це моя сім'я Нас п'ять у роди ні Окса на А де твій комп'ю тер Іва н Ось мій комп'ю тер на столі Окса на Чудо во це твій робо чий куто ...\", \"Потрену йтеся у вимо ві слів із апо строфом Повторі ть уго лос сім'я м'я со п'ять комп'ю тер При голосний залиша ється тверди м а насту пний звук й звучи ть вира зно й чі тко\"], 'policy': 'a1-m01-03'}",
+    "lesson 2: render lacks lesson paragraph: \"Тарас : Сьогодні свято! (Today is a holiday!) Мар'яна : Так, сьогодні чудовий день! (Yes, today is a\"",
+    "lesson 2: render lacks lesson paragraph: \"Олег : Привіт! Як переносити слово бур'ян? (Hi! How to divide the word бур'ян across lines?) Мар'яна\"",
+    "lesson 3: render lacks lesson paragraph: 'Тарас : Привіт! Ми вже добре знаємо, як читати особливі знаки? (Hi! Do we already know well how to r'"
+  ],
+  "warnings": [],
+  "facts": {
+    "baseline": {
+      "commit": null,
+      "prose_tokens": 1449,
+      "long_paragraphs": 42,
+      "activities": {
+        "inline": 5,
+        "workbook": 7
+      },
+      "vocab": 29
+    },
+    "lessons": {
+      "1": {
+        "prose_tokens": 1161,
+        "inline": 5,
+        "workbook": 7,
+        "vocab": 18,
+        "resources": 3,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 61
+      },
+      "2": {
+        "prose_tokens": 1014,
+        "inline": 5,
+        "workbook": 7,
+        "vocab": 12,
+        "resources": 3,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 58
+      },
+      "3": {
+        "prose_tokens": 1420,
+        "inline": 5,
+        "workbook": 6,
+        "vocab": 14,
+        "resources": 3,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 62
+      }
+    },
+    "total_prose_tokens": 3595,
+    "preservation": {
+      "long_paragraphs": 42,
+      "lost": 0,
+      "duplicated": 0,
+      "misplaced": 0
+    },
+    "immersion": {
+      "1": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 40.07,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m01-03"
+        },
+        "l2_exposure_floor": {
+          "passed": true,
+          "required": {
+            "uk_dialogue_lines": 0,
+            "vocab_entries": 0,
+            "uk_example_sentences": 0,
+            "uk_tab3_activities": 5
+          },
+          "observed": {
+            "uk_dialogue_lines": 9,
+            "vocab_entries": 32,
+            "uk_example_sentences": 57,
+            "uk_tab3_activities": 5
+          },
+          "reason": null,
+          "policy": "a1-m01-03"
+        },
+        "long_uk_ceiling": {
+          "passed": false,
+          "required": {
+            "max_unsupported_uk_words": 10,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 5
+          },
+          "reason": "long_uk_without_gloss",
+          "offending_runs": [
+            "Окса на До брий день Іва н До брий день вчи телю Окса на Сього дні га рний день Іва н Так день те плий і я сний",
+            "Зверні ть ува гу сло во день ма є м'яки й кінце вий звук н' а сло во вчи тель м'яки й звук л' Це знак м'я кшення",
+            "б п в м ф р апостро ф я ю є ї",
+            "Окса на Це твоя сім'я Іва н Так це моя сім'я Нас п'ять у роди ні Окса на А де твій комп'ю тер Іва н Ось мій комп'ю тер на столі Окса на Чудо во це твій робо чий куто ...",
+            "Потрену йтеся у вимо ві слів із апо строфом Повторі ть уго лос сім'я м'я со п'ять комп'ю тер При голосний залиша ється тверди м а насту пний звук й звучи ть вира зно й чі тко"
+          ],
+          "policy": "a1-m01-03"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m01-03"
+        }
+      },
+      "2": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 41.78,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m01-03"
+        },
+        "l2_exposure_floor": {
+          "passed": true,
+          "required": {
+            "uk_dialogue_lines": 0,
+            "vocab_entries": 0,
+            "uk_example_sentences": 0,
+            "uk_tab3_activities": 5
+          },
+          "observed": {
+            "uk_dialogue_lines": 8,
+            "vocab_entries": 17,
+            "uk_example_sentences": 42,
+            "uk_tab3_activities": 5
+          },
+          "reason": null,
+          "policy": "a1-m01-03"
+        },
+        "long_uk_ceiling": {
+          "passed": true,
+          "required": {
+            "max_unsupported_uk_words": 10,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 0
+          },
+          "reason": null,
+          "offending_runs": [],
+          "policy": "a1-m01-03"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m01-03"
+        }
+      },
+      "3": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 64.11,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m01-03"
+        },
+        "l2_exposure_floor": {
+          "passed": true,
+          "required": {
+            "uk_dialogue_lines": 0,
+            "vocab_entries": 0,
+            "uk_example_sentences": 0,
+            "uk_tab3_activities": 5
+          },
+          "observed": {
+            "uk_dialogue_lines": 7,
+            "vocab_entries": 9,
+            "uk_example_sentences": 38,
+            "uk_tab3_activities": 5
+          },
+          "reason": null,
+          "policy": "a1-m01-03"
+        },
+        "long_uk_ceiling": {
+          "passed": true,
+          "required": {
+            "max_unsupported_uk_words": 10,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 0
+          },
+          "reason": null,
+          "offending_runs": [],
+          "policy": "a1-m01-03"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m01-03"
+        }
+      }
+    }
+  },
+  "mode": "upgrade",
+  "gates": {
+    "passed": false,
+    "lesson_split": {
+      "passed": false,
+      "diagnostics": [
+        "lesson 1: 14 multi-syllable words without stress mark (not in unverified_stress): ['Правила', 'Яка', 'вчител', 'дихання', 'злите', 'знаки', 'знаком', 'знаків', 'переклад', 'правильний', 'правильну', 'речення', 'роздільне', 'ютер']",
+        "lesson 2: 2 stressed forms contradict the stress dictionary: ['голо́вні→го́ловні/го́ловні/го́ловні/го́ловні/головні́/головні́/головні́/головні́/головні́/головні́/головні́/головні́', 'йа́н: undeclared unverified stress']",
+        "lesson 2: 25 multi-syllable words without stress mark (not in unverified_stress): ['Склади', 'Яка', 'бурян', \"в'яний\", 'городі', 'знаки', 'знаком', 'льожка', 'мален', 'поділ', 'правило', 'правильне', 'правильний', 'правильному', 'правильну', 'речення', 'реченнях', 'роздільного', \"св'ято\", 'складами']",
+        "lesson 3: 37 multi-syllable words without stress mark (not in unverified_stress): ['Вашуленко', 'Захарійчук', 'Мален', 'Правильна', 'Підсумковий', 'Підсумкові', 'Підсумок', 'Яка', \"в'яний\", 'відповідним', 'знаком', 'знаків', 'мален', 'нього', 'ніколи', 'одного', 'поділ', 'правил', 'правило', 'правилом']",
+        "vocabulary multiset != baseline 48: missing=[] extra=[] dups=[\"бур'ян\", 'буряк', 'вчитель', 'день', \"комп'ютер\", 'кінь', \"м'ясо\", 'маленький', \"п'ять\", 'свято', 'сьогодні', 'сіль', \"сім'я\", 'цвях']",
+        "lesson 1: long_uk_ceiling failed: {'passed': False, 'required': {'max_unsupported_uk_words': 10, 'support_proximity': 8}, 'observed': {'offending_runs': 5}, 'reason': 'long_uk_without_gloss', 'offending_runs': ['Окса на До брий день Іва н До брий день вчи телю Окса на Сього дні га рний день Іва н Так день те плий і я сний', \"Зверні ть ува гу сло во день ма є м'яки й кінце вий звук н' а сло во вчи тель м'яки й звук л' Це знак м'я кшення\", 'б п в м ф р апостро ф я ю є ї', \"Окса на Це твоя сім'я Іва н Так це моя сім'я Нас п'ять у роди ні Окса на А де твій комп'ю тер Іва н Ось мій комп'ю тер на столі Окса на Чудо во це твій робо чий куто ...\", \"Потрену йтеся у вимо ві слів із апо строфом Повторі ть уго лос сім'я м'я со п'ять комп'ю тер При голосний залиша ється тверди м а насту пний звук й звучи ть вира зно й чі тко\"], 'policy': 'a1-m01-03'}",
+        "lesson 2: render lacks lesson paragraph: \"Тарас : Сьогодні свято! (Today is a holiday!) Мар'яна : Так, сьогодні чудовий день! (Yes, today is a\"",
+        "lesson 2: render lacks lesson paragraph: \"Олег : Привіт! Як переносити слово бур'ян? (Hi! How to divide the word бур'ян across lines?) Мар'яна\"",
+        "lesson 3: render lacks lesson paragraph: 'Тарас : Привіт! Ми вже добре знаємо, як читати особливі знаки? (Hi! Do we already know well how to r'"
+      ],
+      "blocking": [
+        "lesson 1: 14 multi-syllable words without stress mark (not in unverified_stress): ['Правила', 'Яка', 'вчител', 'дихання', 'злите', 'знаки', 'знаком', 'знаків', 'переклад', 'правильний', 'правильну', 'речення', 'роздільне', 'ютер']",
+        "lesson 2: 2 stressed forms contradict the stress dictionary: ['голо́вні→го́ловні/го́ловні/го́ловні/го́ловні/головні́/головні́/головні́/головні́/головні́/головні́/головні́/головні́', 'йа́н: undeclared unverified stress']",
+        "lesson 2: 25 multi-syllable words without stress mark (not in unverified_stress): ['Склади', 'Яка', 'бурян', \"в'яний\", 'городі', 'знаки', 'знаком', 'льожка', 'мален', 'поділ', 'правило', 'правильне', 'правильний', 'правильному', 'правильну', 'речення', 'реченнях', 'роздільного', \"св'ято\", 'складами']",
+        "lesson 3: 37 multi-syllable words without stress mark (not in unverified_stress): ['Вашуленко', 'Захарійчук', 'Мален', 'Правильна', 'Підсумковий', 'Підсумкові', 'Підсумок', 'Яка', \"в'яний\", 'відповідним', 'знаком', 'знаків', 'мален', 'нього', 'ніколи', 'одного', 'поділ', 'правил', 'правило', 'правилом']",
+        "vocabulary multiset != baseline 48: missing=[] extra=[] dups=[\"бур'ян\", 'буряк', 'вчитель', 'день', \"комп'ютер\", 'кінь', \"м'ясо\", 'маленький', \"п'ять\", 'свято', 'сьогодні', 'сіль', \"сім'я\", 'цвях']",
+        "lesson 1: long_uk_ceiling failed: {'passed': False, 'required': {'max_unsupported_uk_words': 10, 'support_proximity': 8}, 'observed': {'offending_runs': 5}, 'reason': 'long_uk_without_gloss', 'offending_runs': ['Окса на До брий день Іва н До брий день вчи телю Окса на Сього дні га рний день Іва н Так день те плий і я сний', \"Зверні ть ува гу сло во день ма є м'яки й кінце вий звук н' а сло во вчи тель м'яки й звук л' Це знак м'я кшення\", 'б п в м ф р апостро ф я ю є ї', \"Окса на Це твоя сім'я Іва н Так це моя сім'я Нас п'ять у роди ні Окса на А де твій комп'ю тер Іва н Ось мій комп'ю тер на столі Окса на Чудо во це твій робо чий куто ...\", \"Потрену йтеся у вимо ві слів із апо строфом Повторі ть уго лос сім'я м'я со п'ять комп'ю тер При голосний залиша ється тверди м а насту пний звук й звучи ть вира зно й чі тко\"], 'policy': 'a1-m01-03'}",
+        "lesson 2: render lacks lesson paragraph: \"Тарас : Сьогодні свято! (Today is a holiday!) Мар'яна : Так, сьогодні чудовий день! (Yes, today is a\"",
+        "lesson 2: render lacks lesson paragraph: \"Олег : Привіт! Як переносити слово бур'ян? (Hi! How to divide the word бур'ян across lines?) Мар'яна\"",
+        "lesson 3: render lacks lesson paragraph: 'Тарас : Привіт! Ми вже добре знаємо, як читати особливі знаки? (Hi! Do we already know well how to r'"
+      ],
+      "warnings": [],
+      "facts": {
+        "baseline": {
+          "commit": null,
+          "prose_tokens": 1449,
+          "long_paragraphs": 42,
+          "activities": {
+            "inline": 5,
+            "workbook": 7
+          },
+          "vocab": 29
+        },
+        "lessons": {
+          "1": {
+            "prose_tokens": 1161,
+            "inline": 5,
+            "workbook": 7,
+            "vocab": 18,
+            "resources": 3,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 61
+          },
+          "2": {
+            "prose_tokens": 1014,
+            "inline": 5,
+            "workbook": 7,
+            "vocab": 12,
+            "resources": 3,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 58
+          },
+          "3": {
+            "prose_tokens": 1420,
+            "inline": 5,
+            "workbook": 6,
+            "vocab": 14,
+            "resources": 3,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 62
+          }
+        },
+        "total_prose_tokens": 3595,
+        "preservation": {
+          "long_paragraphs": 42,
+          "lost": 0,
+          "duplicated": 0,
+          "misplaced": 0
+        },
+        "immersion": {
+          "1": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 40.07,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m01-03"
+            },
+            "l2_exposure_floor": {
+              "passed": true,
+              "required": {
+                "uk_dialogue_lines": 0,
+                "vocab_entries": 0,
+                "uk_example_sentences": 0,
+                "uk_tab3_activities": 5
+              },
+              "observed": {
+                "uk_dialogue_lines": 9,
+                "vocab_entries": 32,
+                "uk_example_sentences": 57,
+                "uk_tab3_activities": 5
+              },
+              "reason": null,
+              "policy": "a1-m01-03"
+            },
+            "long_uk_ceiling": {
+              "passed": false,
+              "required": {
+                "max_unsupported_uk_words": 10,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 5
+              },
+              "reason": "long_uk_without_gloss",
+              "offending_runs": [
+                "Окса на До брий день Іва н До брий день вчи телю Окса на Сього дні га рний день Іва н Так день те плий і я сний",
+                "Зверні ть ува гу сло во день ма є м'яки й кінце вий звук н' а сло во вчи тель м'яки й звук л' Це знак м'я кшення",
+                "б п в м ф р апостро ф я ю є ї",
+                "Окса на Це твоя сім'я Іва н Так це моя сім'я Нас п'ять у роди ні Окса на А де твій комп'ю тер Іва н Ось мій комп'ю тер на столі Окса на Чудо во це твій робо чий куто ...",
+                "Потрену йтеся у вимо ві слів із апо строфом Повторі ть уго лос сім'я м'я со п'ять комп'ю тер При голосний залиша ється тверди м а насту пний звук й звучи ть вира зно й чі тко"
+              ],
+              "policy": "a1-m01-03"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m01-03"
+            }
+          },
+          "2": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 41.78,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m01-03"
+            },
+            "l2_exposure_floor": {
+              "passed": true,
+              "required": {
+                "uk_dialogue_lines": 0,
+                "vocab_entries": 0,
+                "uk_example_sentences": 0,
+                "uk_tab3_activities": 5
+              },
+              "observed": {
+                "uk_dialogue_lines": 8,
+                "vocab_entries": 17,
+                "uk_example_sentences": 42,
+                "uk_tab3_activities": 5
+              },
+              "reason": null,
+              "policy": "a1-m01-03"
+            },
+            "long_uk_ceiling": {
+              "passed": true,
+              "required": {
+                "max_unsupported_uk_words": 10,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 0
+              },
+              "reason": null,
+              "offending_runs": [],
+              "policy": "a1-m01-03"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m01-03"
+            }
+          },
+          "3": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 64.11,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m01-03"
+            },
+            "l2_exposure_floor": {
+              "passed": true,
+              "required": {
+                "uk_dialogue_lines": 0,
+                "vocab_entries": 0,
+                "uk_example_sentences": 0,
+                "uk_tab3_activities": 5
+              },
+              "observed": {
+                "uk_dialogue_lines": 7,
+                "vocab_entries": 9,
+                "uk_example_sentences": 38,
+                "uk_tab3_activities": 5
+              },
+              "reason": null,
+              "policy": "a1-m01-03"
+            },
+            "long_uk_ceiling": {
+              "passed": true,
+              "required": {
+                "max_unsupported_uk_words": 10,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 0
+              },
+              "reason": null,
+              "offending_runs": [],
+              "policy": "a1-m01-03"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m01-03"
+            }
+          }
+        }
+      }
+    }
+  }
+}

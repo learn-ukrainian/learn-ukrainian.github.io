@@ -1,0 +1,72 @@
+- lemma: м'яки́й знак
+  translation: soft sign
+  pos: noun phrase
+  usage: Ь — м'яки́й знак.
+- lemma: апо́строф
+  translation: apostrophe
+  pos: noun
+  usage: У сло́ві «сім'я́» є апо́строф.
+- lemma: знак
+  translation: sign
+  pos: noun
+  usage: Це знак.
+- lemma: м'яки́й
+  translation: soft
+  pos: adjective
+  usage: Це м'яки́й звук.
+- lemma: тверди́й
+  translation: hard
+  pos: adjective
+  usage: Це тверди́й звук.
+- lemma: йото́ваний
+  translation: iotated
+  pos: adjective
+  usage: Я — йото́вана лі́тера.
+- lemma: розді́льно
+  translation: separately
+  pos: adverb
+  usage: Чита́й розді́льно.
+- lemma: зли́то
+  translation: together / smoothly
+  pos: adverb
+  usage: Чита́й зли́то.
+- lemma: день
+  translation: day
+  pos: noun
+  usage: День.
+- lemma: кінь
+  translation: horse
+  pos: noun
+  usage: Кінь.
+- lemma: сіль
+  translation: salt
+  pos: noun
+  usage: Сіль.
+- lemma: вчи́тель
+  translation: teacher
+  pos: noun
+  usage: Вчи́тель.
+- lemma: сім'я́
+  translation: family
+  pos: noun
+  usage: Сім'я́.
+- lemma: м'я́со
+  translation: meat
+  pos: noun
+  usage: М'я́со.
+- lemma: п'ять
+  translation: five
+  pos: numeral
+  usage: П'ять.
+- lemma: де́в'ять
+  translation: nine
+  pos: numeral
+  usage: Де́в'ять.
+- lemma: ім'я́
+  translation: name
+  pos: noun
+  usage: Ім'я́.
+- lemma: комп'ю́тер
+  translation: computer
+  pos: noun
+  usage: Комп'ю́тер.
