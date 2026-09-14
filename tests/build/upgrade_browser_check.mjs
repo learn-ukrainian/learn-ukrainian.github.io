@@ -45,12 +45,28 @@ assert.equal(built.status, 0, built.stdout + built.stderr);
 console.log('ASTRO_FIXTURE_BUILD: PASS (4 generated pages)');
 const server = http.createServer((request, response) => {
   let file = path.join(dist, decodeURIComponent(new URL(request.url, 'http://localhost').pathname));
-  if (!file.startsWith(dist + path.sep) || !fs.existsSync(file)) {
+  if (!file.startsWith(dist + path.sep)) {
     response.writeHead(404); response.end(); return;
   }
-  if (fs.statSync(file).isDirectory()) file = path.join(file, 'index.html');
-  response.setHeader('Content-Type', ({ '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css' })[path.extname(file)] || 'application/octet-stream');
-  response.end(fs.readFileSync(file));
+  let fd;
+  try {
+    fd = fs.openSync(file, 'r');
+    if (fs.fstatSync(fd).isDirectory()) {
+      fs.closeSync(fd);
+      fd = undefined;
+      file = path.join(file, 'index.html');
+      fd = fs.openSync(file, 'r');
+    }
+    const body = fs.readFileSync(fd);
+    response.setHeader('Content-Type', ({ '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css' })[path.extname(file)] || 'application/octet-stream');
+    response.end(body);
+  } catch {
+    response.writeHead(404); response.end();
+  } finally {
+    if (fd !== undefined) {
+      try { fs.closeSync(fd); } catch { /* already closed */ }
+    }
+  }
 });
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
 const browser = await chromium.launch();
