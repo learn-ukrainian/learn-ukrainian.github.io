@@ -309,7 +309,7 @@ def test_muzyka_disambiguation():
 
 
 def test_batch_expansion_count():
-    """Verify batch heteronym expansion admits 104 curated lemmas with exact scan residual.
+    """Verify batch heteronym expansion admits 136 curated lemmas with exact scan residual.
 
     Batch 1 (#8039, PR #8043): 40 curated. Batch 2 (#8039 continuation): +32
     lemmas selected from the atlas.db-approved, A1/A2/B1 tier residual, each
@@ -318,13 +318,14 @@ def test_batch_expansion_count():
     correcting the `--scan` denominator: 45 candidate pairs share an
     identical stress across both SUM-11 headwords (homonyms, not
     heteronyms, e.g. ВІДВО́ЗИТИ/ВІ́ХА/ДЕРЖА́ВА), so the true denominator is
-    422, not the pre-fix 467.
+    422, not the pre-fix 467. Batch 4 (#8039 continuation): +32 lemmas
+    selected from the remaining 318 residual candidates, expanding SSOT to 136.
     """
     total_curated = len(enrich_heteronyms.CURATED_HETERONYMS)
-    assert total_curated == 104
+    assert total_curated == 136
     # Corrected denominator is 422 true two-way-stress candidates;
-    # residual is 422 - 104 = 318
-    assert 422 - total_curated == 318
+    # residual is 422 - 136 = 286
+    assert 422 - total_curated == 286
 
 
 def test_kredyt_disambiguation():
@@ -474,3 +475,77 @@ def test_batch3_lemmas_not_duplicated_from_earlier_batches():
     assert "бубон" not in CURATED_HETERONYMS_BATCH_3
     assert "копати" in CURATED_HETERONYMS_BATCH_3
     assert "коханий" in CURATED_HETERONYMS_BATCH_3
+
+
+def test_likarskyi_disambiguation():
+    """Verify лікарський doctor's vs medicinal disambiguation (batch 4)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("лікарський")
+    assert items is not None
+    assert len(items) == 2
+
+    doctors, medicinal = items[0], items[1]
+    assert doctors["headword"] == "лі́карський"
+    assert "doctor" in doctors["gloss"] or "physician" in doctors["gloss"]
+    assert medicinal["headword"] == "ліка́рський"
+    assert "medicinal" in medicinal["gloss"] or "curative" in medicinal["gloss"]
+
+
+def test_lynuti_disambiguation():
+    """Verify линути soar/fly (impf) vs splash/pour once (pf) disambiguation (batch 4)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("линути")
+    assert items is not None
+    assert len(items) == 2
+
+    soar, splash = items[0], items[1]
+    assert soar["headword"] == "ли́нути"
+    assert soar["morphology"]["paradigm"]["aspect"] == "недоконаний"
+    assert "soar" in soar["gloss"] or "fly" in soar["gloss"]
+    assert splash["headword"] == "лину́ти"
+    assert splash["morphology"]["paradigm"]["aspect"] == "доконаний"
+    assert "pour once" in splash["gloss"] or "splash" in splash["gloss"]
+
+
+
+def test_parnyi_disambiguation():
+    """Verify парний paired/even vs warm/fresh-milked disambiguation (batch 4)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("парний")
+    assert items is not None
+    assert len(items) == 2
+
+    paired, warm = items[0], items[1]
+    assert paired["headword"] == "па́рний"
+    assert "paired" in paired["gloss"] or "even" in paired["gloss"]
+    assert warm["headword"] == "парни́й"
+    assert "fresh-milked" in warm["gloss"] or "steamy" in warm["gloss"]
+
+
+def test_natsinka_disambiguation():
+    """Verify націнка markup sum/amount vs price increase action disambiguation (batch 4)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("націнка")
+    assert items is not None
+    assert len(items) == 2
+
+    markup_sum, price_hike = items[0], items[1]
+    assert markup_sum["headword"] == "на́цінка"
+    assert "markup" in markup_sum["gloss"]
+    assert price_hike["headword"] == "наці́нка"
+    assert "raising" in price_hike["gloss"] or "increase" in price_hike["gloss"]
+
+
+
+def test_batch4_lemmas_not_duplicated_from_earlier_batches():
+    """Verify batch 4's 32 lemmas are net-new and mutually disjoint with batches 1-3."""
+    from scripts.lexicon.curated_heteronyms_batch import CURATED_HETERONYMS_BATCH
+    from scripts.lexicon.curated_heteronyms_batch2 import CURATED_HETERONYMS_BATCH_2
+    from scripts.lexicon.curated_heteronyms_batch3 import CURATED_HETERONYMS_BATCH_3
+    from scripts.lexicon.curated_heteronyms_batch4 import CURATED_HETERONYMS_BATCH_4
+
+    assert len(CURATED_HETERONYMS_BATCH_4) == 32
+    earlier = (
+        set(CURATED_HETERONYMS_BATCH)
+        | set(CURATED_HETERONYMS_BATCH_2)
+        | set(CURATED_HETERONYMS_BATCH_3)
+    )
+    assert earlier & set(CURATED_HETERONYMS_BATCH_4) == set()
+    assert "лікарський" in CURATED_HETERONYMS_BATCH_4
+    assert "парний" in CURATED_HETERONYMS_BATCH_4
