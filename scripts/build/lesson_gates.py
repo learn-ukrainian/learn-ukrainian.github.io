@@ -598,7 +598,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             if placement == "workbook":
                 for value in leaves({k: v for k, v in activity.items()
                                      if k in LIST_FIELDS or k in ("title", "instruction")}):
-                    if isinstance(value, str) and len(value) >= 3 and norm_text(value) not in landing_text:
+                    if isinstance(value, str) and len(value) >= 3 and not _visible_in_render(value, landing_text):
                         block(f"module landing lacks workbook union string from {aid}")
     return {"passed": not report["blocking"], "diagnostics": report["blocking"], **report}
 
