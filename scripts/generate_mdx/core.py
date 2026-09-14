@@ -482,6 +482,7 @@ def generate_mdx(
         pipeline_version
         and pipeline_version not in ("v5", "v6")
         and not (pipeline_version == "linear-phase-4" and build_status in {"validated", "reviewed"})
+        and not (str(pipeline_version).startswith("v7") and build_status in {"validated", "reviewed"})
     )
     explicit_draft = fm.get("draft")
     if isinstance(explicit_draft, bool):
