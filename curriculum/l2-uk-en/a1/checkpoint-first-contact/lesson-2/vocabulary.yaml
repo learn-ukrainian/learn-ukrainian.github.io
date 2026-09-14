@@ -1,0 +1,68 @@
+- lemma: національність
+  translation: nationality
+  pos: noun
+  usage: Моя національність — канадка.
+- lemma: У тебе є
+  translation: do you have / you have
+  pos: phrase
+  usage: У тебе є брат?
+- lemma: вчителька
+  translation: female teacher
+  pos: noun
+  usage: Вона вчителька.
+- lemma: інженер
+  translation: engineer
+  pos: noun
+  usage: Мій тато — інженер.
+- lemma: українка
+  translation: Ukrainian woman
+  pos: noun
+  usage: Олена — українка.
+- lemma: канадка
+  translation: Canadian woman
+  pos: noun
+  usage: Олена — канадка.
+- lemma: родина
+  translation: family or kin
+  pos: noun
+  usage: Це моя родина.
+- lemma: мама
+  translation: mom
+  pos: noun
+  usage: Це моя мама.
+- lemma: тато
+  translation: dad
+  pos: noun
+  usage: Це мій тато.
+- lemma: брат
+  translation: brother
+  pos: noun
+  usage: У мене є брат.
+- lemma: сестра
+  translation: sister
+  pos: noun
+  usage: У мене є сестра.
+- lemma: мій
+  translation: my, masculine
+  pos: pronoun
+  usage: Це мій брат.
+- lemma: моя
+  translation: my, feminine
+  pos: pronoun
+  usage: Це моя мама.
+- lemma: моє
+  translation: my, neuter
+  pos: pronoun
+  usage: Це моє прізвище.
+- lemma: мої
+  translation: my, plural
+  pos: pronoun
+  usage: Це мої батьки.
+- lemma: його
+  translation: his / him
+  pos: pronoun
+  usage: Його звати Назар.
+- lemma: її
+  translation: her
+  pos: pronoun
+  usage: Її звати Ірина.

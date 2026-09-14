@@ -1,0 +1,10 @@
+{
+  "mode": "upgrade",
+  "sha256": {
+    "curriculum/l2-uk-en/a1-v1/checkpoint-first-contact/module.md": "d442d9a5691bb3d0c3e4eca7d67660473c4b46a77435280714d0244fecc1aa02",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-first-contact/activities.yaml": "41b900ebb25af93833682fa88710c10b9a53334de0a1eebc589cc9c136ebca6b",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-first-contact/vocabulary.yaml": "29d60e1ad4b07e2ff393f5eb64bfcdcbe25563e7685855793adbbd93bd664c0d",
+    "curriculum/l2-uk-en/a1-v1/checkpoint-first-contact/resources.yaml": "aa9fe98a8bc45b163914ab1613c9cbbe9a556e239c59e09e55bbc3760f49f49a",
+    "curriculum/l2-uk-en/plans/a1/checkpoint-first-contact.yaml": "f09fad745eb195cb6a5956d4c256b1e78de02aea8976832b7c260da19d075096"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 5.0,
+      "evidence": "Sections follow the split, but prohibited text fencing, incomplete bilingual support and unsupported workbook vocabulary fail; baseline preservation and lesson-3 closure remain unverified.",
+      "verdict": "REJECT",
+      "evidence_quotes": [
+        "English support after the Ukrainian text:",
+        "Це ___ місто. Я тут живу."
+      ]
+    },
+    "naturalness": {
+      "score": 5.0,
+      "evidence": "Gender, government and example grounding remain unverified because attempted VESUM and dictionary calls returned an approval-policy error.",
+      "verdict": "REJECT",
+      "evidence_quotes": [
+        "Походження передають прийменником **з / зі** з родовим відмінком.",
+        "The gender habit is not only a family topic."
+      ]
+    },
+    "decolonization": {
+      "score": 6.0,
+      "evidence": "Ukrainian-first framing is explicit, but normative exclusions lack successful source verification or supporting Resources entries.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Non-target greetings and calques appear only as wrong choices inside correction practice."
+      ]
+    },
+    "engagement": {
+      "score": 7.0,
+      "evidence": "A practical meeting scenario and varied exercises help, but predominantly closed-answer practice underdelivers the promised conversational rehearsal.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "can you meet one new person and keep the exchange moving?"
+      ]
+    },
+    "tone": {
+      "score": 6.0,
+      "evidence": "Reassuring coaching is undermined by the prohibited named narrator opening, which is neither dialogue nor a marked attributed quotation.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "**Приві́т! Мене́ зва́ти Богдан. Я з Дніпра́.** — Hi! My name is Bohdan."
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "REJECT",
+    "terminal_verdict": "PASS",
+    "failing_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
+    ],
+    "rejected_dims": [
+      "pedagogical",
+      "naturalness"
+    ],
+    "warning_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
+    ],
+    "min_score": 5.0,
+    "min_dim": "pedagogical"
+  }
+}

@@ -1,0 +1,487 @@
+inline:
+- id: act-1
+  type: quiz
+  title: Готовність до знайомства
+  instruction: Обери безпечний український рядок для ситуації.
+  items:
+  - prompt: Ти вітаєш ровесника на початку заняття.
+    options:
+    - text: Привіт!
+      correct: true
+    - text: До побачення!
+      correct: false
+    - text: Мені теж.
+      correct: false
+    explanation: Привіт — неформальне привітання для ровесника.
+  - prompt: Ти нейтрально вітаєш викладача або адміністратора.
+    options:
+    - text: Добрий день!
+      correct: true
+    - text: Бувай!
+      correct: false
+    - text: Мене звати!
+      correct: false
+    explanation: Добрий день — безпечне нейтральне формальне привітання.
+  - prompt: Ти називаєш своє ім'я.
+    options:
+    - text: Мене звати Олена.
+      correct: true
+    - text: Моє ім'я є Олена.
+      correct: false
+    - text: Я звати Олена.
+      correct: false
+    explanation: Мене звати... — головний блок для імені.
+  - prompt: Ти кажеш, що ти студент.
+    options:
+    - text: Я студент.
+      correct: true
+    - text: Я є студент.
+      correct: false
+    - text: Мене студент.
+      correct: false
+    explanation: У такому реченні українська зазвичай не додає є.
+  - prompt: Ти кажеш свій вік.
+    options:
+    - text: Мені 20 років.
+      correct: true
+    - text: Я маю 20 років.
+      correct: false
+    - text: Я 20 роки.
+      correct: false
+    explanation: Вік подаємо блоком Мені ... років.
+  - prompt: Скільки літер в українській абетці?
+    options:
+    - text: '33'
+      correct: true
+    - text: '38'
+      correct: false
+    - text: '32'
+      correct: false
+    explanation: Українська абетка має 33 літери.
+  - prompt: Скільки звуків в українській мові?
+    options:
+    - text: '38'
+      correct: true
+    - text: '33'
+      correct: false
+    - text: '10'
+      correct: false
+    explanation: У базовому підрахунку курсу українська має 38 звуків.
+  - prompt: Що робить м'який знак у слові день?
+    options:
+    - text: Пом'якшує попередній приголосний.
+      correct: true
+    - text: Позначає окремий голосний звук.
+      correct: false
+    - text: Замінює апостроф.
+      correct: false
+    explanation: Ь не має власного звука; він пом'якшує попередній приголосний.
+  - prompt: Яке написання з апострофом правильне?
+    options:
+    - text: сім'я
+      correct: true
+    - text: сімя
+      correct: false
+    - text: сімья
+      correct: false
+    explanation: Вивчений родинний приклад пишемо сім'я.
+  - prompt: Де позначено наголос?
+    options:
+    - text: Приві́т
+      correct: true
+    - text: Привіт
+      correct: false
+    - text: Прівіт
+      correct: false
+    explanation: Позначка над голосною показує наголошений склад.
+  - prompt: Ти додаєш одну родинну фразу.
+    options:
+    - text: У мене є мама і тато.
+      correct: true
+    - text: Мене є мама і тато.
+      correct: false
+    - text: Я звати мама і тато.
+      correct: false
+    explanation: У мене є... — безпечний блок для родини.
+  - prompt: Ти ввічливо завершуєш перше знайомство.
+    options:
+    - text: Дуже приємно. До побачення!
+      correct: true
+    - text: Дуже прізвище. Привіт!
+      correct: false
+    - text: Звідки ти? Мені теж!
+      correct: false
+    explanation: Дуже приємно і До побачення завершують розмову.
+- id: act-2
+  type: match-up
+  title: Питання і відповіді
+  instruction: З'єднай питання з природною відповіддю.
+  pairs:
+  - left: Як тебе звати?
+    right: Мене звати Богдан.
+  - left: Звідки ти?
+    right: Я з Дніпра.
+  - left: Ти студентка?
+    right: Так, я студентка.
+  - left: У тебе є брат?
+    right: Так, у мене є брат.
+  - left: Як її звати?
+    right: Її звати Ірина.
+  - left: Це твоя мама?
+    right: Так, це моя мама.
+  - left: Скільки тобі років?
+    right: Мені 20 років.
+  - left: Дуже приємно.
+    right: Мені теж.
+- id: act-3
+  type: fill-in
+  title: Доповни текст
+  instruction: Обери пропущене слово або блок у самопрезентації.
+  items:
+  - sentence: Привіт! ___ звати Марко.
+    answer: Мене
+    options:
+    - Мене
+    - Моє
+    - Мій
+    explanation: Мене звати... — безпечний блок для імені.
+  - sentence: Моє ___ Коваленко.
+    answer: прізвище
+    options:
+    - прізвище
+    - фамілія
+    - професія
+    explanation: Прізвище — стандартне українське слово для родового імені.
+  - sentence: Я ___ Києва.
+    answer: з
+    options:
+    - з
+    - у
+    - це
+    explanation: Я з... дає походження.
+  - sentence: Я ___.
+    answer: студент
+    options:
+    - студент
+    - є студент
+    - мене студент
+    explanation: Речення A1 про ідентичність не потребує є.
+  - sentence: ___ 20 років.
+    answer: Мені
+    options:
+    - Мені
+    - Я маю
+    - Мене
+    explanation: Вік подаємо блоком Мені ... років.
+  - sentence: У мене ___ сестра.
+    answer: є
+    options:
+    - є
+    - звати
+    - з
+    explanation: У мене є... — блок, щоб сказати, що хтось або щось є в мене.
+  - sentence: Це ___ мама.
+    answer: моя
+    options:
+    - моя
+    - мій
+    - моє
+    explanation: Мама — жіночого роду, тому моя.
+  - sentence: Дуже ___ познайомитися!
+    answer: приємно
+    options:
+    - приємно
+    - прізвище
+    - звати
+    explanation: Дуже приємно познайомитися завершує знайомство.
+- id: act-4
+  type: quiz
+  title: Виправ A1.1 пастки
+  instruction: Обери нормативну українську форму.
+  items:
+  - prompt: Представлення імені
+    options:
+    - text: Мене звати Джон.
+      correct: true
+    - text: Моє ім'я є Джон.
+      correct: false
+    explanation: Українська представляє ім'я через Мене звати...
+  - prompt: Речення ідентичності
+    options:
+    - text: Я студент.
+      correct: true
+    - text: Я є студент.
+      correct: false
+    explanation: Теперішня ідентичність зазвичай не додає є.
+  - prompt: Речення про вік
+    options:
+    - text: Мені 20 років.
+      correct: true
+    - text: Я маю 20 років.
+      correct: false
+    explanation: Вік подаємо блоком Мені ... років.
+  - prompt: Пряме звертання
+    options:
+    - text: Привіт, Максиме!
+      correct: true
+    - text: Привіт, Максим!
+      correct: false
+    explanation: Пряме звертання має кличну форму в безпечному прикладі.
+  - prompt: Безпечне привітання
+    options:
+    - text: Добрий день! Мене звати Оксана.
+      correct: true
+    - text: Здрастуйте! Мене звати Оксана.
+      correct: false
+    explanation: Добрий день — безпечне стандартне привітання.
+  - prompt: Прізвище
+    options:
+    - text: Моє прізвище Сміт.
+      correct: true
+    - text: Моя фамілія Сміт.
+      correct: false
+    explanation: Прізвище — стандартне українське слово.
+  - prompt: Прощання
+    options:
+    - text: До побачення!
+      correct: true
+    - text: Пока!
+      correct: false
+    explanation: До побачення — безпечне стандартне прощання.
+  - prompt: Звичка до роду іменника
+    options:
+    - text: Вивчення слова разом із його родом
+      correct: true
+    - text: Ігнорування роду іменника
+      correct: false
+    explanation: Запам'ятовуй український іменник разом із підказками роду.
+workbook:
+- id: act-w1
+  type: quiz
+  title: Швидкий переклад
+  instruction: Обери англійське значення кожного українського рядка.
+  items:
+  - prompt: Мене звати Олена.
+    options:
+    - text: My name is Olena.
+      correct: true
+    - text: I am from Olena.
+      correct: false
+    - text: Olena is my surname.
+      correct: false
+    explanation: Мене звати... називає ім'я.
+  - prompt: Моє прізвище Мельник.
+    options:
+    - text: My surname is Melnyk.
+      correct: true
+    - text: My profession is Melnyk.
+      correct: false
+    - text: My family is Melnyk.
+      correct: false
+    explanation: Прізвище означає родове ім'я.
+  - prompt: Я з Канади.
+    options:
+    - text: I am from Canada.
+      correct: true
+    - text: I am in Canada.
+      correct: false
+    - text: I have Canada.
+      correct: false
+    explanation: Я з... подає походження.
+  - prompt: Я студентка.
+    options:
+    - text: I am a female student.
+      correct: true
+    - text: I have a student.
+      correct: false
+    - text: My name is student.
+      correct: false
+    explanation: У цьому реченні ідентичність виражена іменником без є.
+  - prompt: У мене є сестра.
+    options:
+    - text: I have a sister.
+      correct: true
+    - text: You have a sister.
+      correct: false
+    - text: This is my sister.
+      correct: false
+    explanation: У мене є... — блок для наявності.
+  - prompt: Мені теж.
+    options:
+    - text: Me too.
+      correct: true
+    - text: Nice to meet you.
+      correct: false
+    - text: Goodbye.
+      correct: false
+    explanation: Мені теж дає взаємну відповідь.
+- id: act-w4
+  type: match-up
+  title: Питання та їхнє значення
+  instruction: З'єднай українське запитання з його значенням англійською.
+  pairs:
+  - left: Як тебе звати?
+    right: What is your name?
+  - left: Звідки ти?
+    right: Where are you from?
+  - left: Ти студент?
+    right: Are you a student?
+  - left: Скільки тобі років?
+    right: How old are you?
+  - left: У тебе є брат?
+    right: Do you have a brother?
+  - left: Хто це?
+    right: Who is this?
+- id: act-w5
+  type: group-sort
+  title: Рід іменників
+  instruction: Розподіли іменники за граматичним родом.
+  groups:
+  - name: Чоловічий рід (він)
+    items:
+    - студент
+    - інженер
+    - брат
+  - name: Жіночий рід (вона)
+    items:
+    - студентка
+    - вчителька
+    - сестра
+  - name: Середній рід (воно)
+    items:
+    - місто
+    - прізвище
+    - ім'я
+- id: act-w6
+  type: fill-in
+  title: Присвійні займенники
+  instruction: Обери правильну форму присвійного займенника.
+  items:
+  - sentence: Це ___ брат. Він інженер.
+    answer: мій
+    options:
+    - мій
+    - моя
+    - моє
+    explanation: Брат — іменник чоловічого роду, тому вживаємо мій.
+  - sentence: Це ___ сестра. Вона студентка.
+    answer: моя
+    options:
+    - моя
+    - мій
+    - моє
+    explanation: Сестра — іменник жіночого роду, тому вживаємо моя.
+  - sentence: Це ___ місто. Я тут живу.
+    answer: моє
+    options:
+    - моє
+    - мій
+    - моя
+    explanation: Місто — іменник середнього роду, тому вживаємо моє.
+  - sentence: Це ___ мама. Вона вчителька.
+    answer: моя
+    options:
+    - моя
+    - мій
+    - мої
+    explanation: Мама — жіночого роду, тому вживаємо моя.
+  - sentence: Це ___ батьки. Вони вдома.
+    answer: мої
+    options:
+    - мої
+    - мій
+    - моє
+    explanation: Батьки — множина, тому вживаємо мої.
+  - sentence: Це ___ ім'я. Воно коротке.
+    answer: моє
+    options:
+    - моє
+    - моя
+    - мій
+    explanation: Ім'я — іменник середнього роду, тому вживаємо моє.
+- id: act-w7
+  type: unjumble
+  title: Склади речення
+  instruction: Розстав слова у правильному порядку, щоб утворити природне українське
+    речення.
+  items:
+  - words:
+    - Мене
+    - звати
+    - Олена.
+    answer: Мене звати Олена.
+  - words:
+    - Я
+    - студент
+    - у
+    - Києві.
+    answer: Я студент у Києві.
+  - words:
+    - У
+    - мене
+    - є
+    - сестра.
+    answer: У мене є сестра.
+  - words:
+    - Моє
+    - прізвище
+    - Коваленко.
+    answer: Моє прізвище Коваленко.
+  - words:
+    - Я
+    - з
+    - Дніпра.
+    answer: Я з Дніпра.
+  - words:
+    - Дуже
+    - приємно
+    - познайомитися.
+    answer: Дуже приємно познайомитися.
+- id: act-w8
+  type: true-false
+  title: Правда чи неправда про знайомство
+  instruction: Визнач, чи твердження про українське мовлення правильне.
+  items:
+  - statement: Для представлення власного імені природно казати «Мене звати...».
+    correct: true
+    explanation: Конструкція «Мене звати...» є стандартною та природною для української
+      мови.
+  - statement: У реченні «Я студент» обов'язково треба писати слово «є».
+    correct: false
+    explanation: В українській мові дієслово «бути» у теперішньому часі зазвичай не
+      вживається в таких реченнях.
+  - statement: Питання «Звідки ти?» вживають, щоб дізнатися про походження співрозмовника.
+    correct: true
+    explanation: «Звідки ти?» означає «Where are you from?» і запитує про походження.
+  - statement: Вік в українській мові позначають фразою «Я маю 20 років».
+    correct: false
+    explanation: Природний вираз — «Мені 20 років» з давальним відмінком («мені»).
+  - statement: 'Слово «прізвище» належить до середнього роду: «моє прізвище».'
+    correct: true
+    explanation: «Прізвище» закінчується на -е і є іменником середнього роду.
+  - statement: Фраза «Бувай!» є формальним вітанням для розмови з викладачем.
+    correct: false
+    explanation: «Бувай!» — це неформальне прощання для друзів або ровесників.
+- id: act-w9
+  type: anagram
+  title: 'Анаграми: перші слова'
+  instruction: Склади українське слово з переплутаних літер.
+  items:
+  - scrambled: в, і, т, п, и, р
+    answer: привіт
+    hint: Неформальне привітання
+  - scrambled: т, с, е, с, р, а
+    answer: сестра
+    hint: Член родини
+  - scrambled: я, с, і, м, '
+    answer: сім'я
+    hint: Близькі родичі
+  - scrambled: т, с, д, н, е, у, т
+    answer: студент
+    hint: Людина, яка навчається
+  - scrambled: б, р, т, а
+    answer: брат
+    hint: Член родини
+  - scrambled: м, с, т, о, і
+    answer: місто
+    hint: Київ, Львів або Дніпро

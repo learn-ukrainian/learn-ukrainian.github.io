@@ -1,0 +1,17 @@
+{
+  "mode": "v7",
+  "track": "a1",
+  "slug": "checkpoint-first-contact",
+  "run_id": "20260914-221057",
+  "parent_run_id": null,
+  "started_at": "2026-09-14T22:11:06.293032+00:00",
+  "finished_at": "2026-09-14T22:41:36.315055+00:00",
+  "status": "failed",
+  "failed_phase": null,
+  "failure_class": null,
+  "agent": "agy-tools",
+  "model": "gemini-3.8-flash-high",
+  "effort": "high",
+  "prompt_sha": "e56d3aa0bfb164e6ab1384e41c3d4c9117b0d850d39e51109152ec56a1632a2b",
+  "phases": {}
+}
