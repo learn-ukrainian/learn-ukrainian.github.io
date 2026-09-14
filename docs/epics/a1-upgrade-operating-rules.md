@@ -93,6 +93,6 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
 ## Commands
 
 ```sh
-/home/ops/learn-ukrainian/.venv/bin/python scripts/build/v7_build.py a1 <slug> --upgrade --worktree --writer gemini-tools
+.venv/bin/python scripts/build/v7_build.py a1 <slug> --upgrade --worktree --writer gemini-tools
 gh workflow run deploy-pages.yml --ref main
 ```
