@@ -838,6 +838,7 @@ class ActivityParser:
                 braced = re.search(r"\{([^{}]+)\}", sentence)
                 if braced:
                     answer = braced.group(1).strip()
+                    sentence = sentence[:braced.start()] + "___" + sentence[braced.end():]
             if not answer:
                 raise KeyError("fill-in item needs answer, correct, or {answer} in the sentence")
             items.append(FillInItem(sentence=sentence, answer=answer, options=item_data.get('options', []), explanation=item_data.get('explanation')))

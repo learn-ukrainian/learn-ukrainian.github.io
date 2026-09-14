@@ -588,6 +588,8 @@ class TestParserEdgeCases:
         )
         activities = parser.parse(yaml_file)
         assert activities[0].items[0].answer == "столиця"
+        assert "{столиця}" not in activities[0].items[0].sentence
+        assert "___" in activities[0].items[0].sentence
 
     def test_parse_match_up(self, parser, tmp_path):
         yaml_file = tmp_path / "mu.yaml"
