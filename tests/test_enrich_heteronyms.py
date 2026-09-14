@@ -309,16 +309,22 @@ def test_muzyka_disambiguation():
 
 
 def test_batch_expansion_count():
-    """Verify batch heteronym expansion admits 72 curated lemmas with exact scan residual.
+    """Verify batch heteronym expansion admits 104 curated lemmas with exact scan residual.
 
     Batch 1 (#8039, PR #8043): 40 curated. Batch 2 (#8039 continuation): +32
-    lemmas selected from the atlas.db-approved, A1/A2/B1 tier of the 427
-    residual, each with a genuinely distinct SUM-11 stress position.
+    lemmas selected from the atlas.db-approved, A1/A2/B1 tier residual, each
+    with a genuinely distinct SUM-11 stress position. Batch 3 (#8039
+    continuation): +32 lemmas selected from the live Atlas manifest, after
+    correcting the `--scan` denominator: 45 candidate pairs share an
+    identical stress across both SUM-11 headwords (homonyms, not
+    heteronyms, e.g. ВІДВО́ЗИТИ/ВІ́ХА/ДЕРЖА́ВА), so the true denominator is
+    422, not the pre-fix 467.
     """
     total_curated = len(enrich_heteronyms.CURATED_HETERONYMS)
-    assert total_curated == 72
-    # Baseline denominator is 467 candidates; residual is 467 - 72 = 395
-    assert 467 - total_curated == 395
+    assert total_curated == 104
+    # Corrected denominator is 422 true two-way-stress candidates;
+    # residual is 422 - 104 = 318
+    assert 422 - total_curated == 318
 
 
 def test_kredyt_disambiguation():
@@ -380,3 +386,91 @@ def test_pered_preposition_vs_noun():
     assert noun["headword"] == "пере́д"
     assert noun["pos"] == "noun"
     assert noun["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "пе́реду"
+
+
+def test_gospodarskyi_disambiguation():
+    """Verify господарський household/domestic vs economic/farming disambiguation (batch 3)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("господарський")
+    assert items is not None
+    assert len(items) == 2
+
+    domestic, economic = items[0], items[1]
+    assert domestic["headword"] == "госпо́дарський"
+    assert domestic["pronunciation"]["ipa"] == "[ɦɔˈspɔdɐrsʲkɪj]"
+    assert economic["headword"] == "господа́рський"
+    assert economic["pronunciation"]["ipa"] == "[ɦɔspɔˈdarsʲkɪj]"
+
+
+def test_zamkovyi_disambiguation():
+    """Verify замковий castle-related vs lock-related disambiguation (batch 3)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("замковий")
+    assert items is not None
+    assert len(items) == 2
+
+    castle, lock = items[0], items[1]
+    assert castle["headword"] == "за́мковий"
+    assert castle["cefr"] == "B1"
+    assert lock["headword"] == "замкови́й"
+    assert lock["cefr"] == "B1"
+
+
+def test_kopaty_disambiguation():
+    """Verify копати kick vs dig disambiguation (batch 3)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("копати")
+    assert items is not None
+    assert len(items) == 2
+
+    kick, dig = items[0], items[1]
+    assert kick["headword"] == "ко́пати"
+    assert kick["gloss"].startswith("to kick")
+    assert dig["headword"] == "копа́ти"
+    assert dig["gloss"].startswith("to dig")
+    assert kick["morphology"]["paradigm"]["aspect"] == "недоконаний"
+    assert dig["morphology"]["paradigm"]["aspect"] == "недоконаний"
+
+
+def test_kolon_disambiguation_matches_vesum_not_sum11_order():
+    """Verify колон stress follows VESUM's current assignment, not raw СУМ-11 headword order (batch 3).
+
+    СУМ-11's 1970s headword order lists КОЛО́Н (metrics term) before
+    КО́ЛОН (colonus/peasant); VESUM's `forms_all` source_comment attests the
+    reverse stress-to-sense mapping for the modern standard, which is what
+    this curated entry follows.
+    """
+    items = enrich_heteronyms.build_heteronyms_for_lemma("колон")
+    assert items is not None
+    assert len(items) == 2
+
+    metrics, colonus = items[0], items[1]
+    assert metrics["headword"] == "ко́лон"
+    assert "verse" in metrics["gloss"] or "colon" in metrics["gloss"]
+    assert colonus["headword"] == "коло́н"
+    assert "colonus" in colonus["gloss"]
+
+
+def test_vyhidnyi_disambiguation():
+    """Verify вигідний profitable vs comfortable disambiguation (batch 3, replaces дихання)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("вигідний")
+    assert items is not None
+    assert len(items) == 2
+
+    profitable, comfortable = items[0], items[1]
+    assert profitable["headword"] == "ви́гідний"
+    assert profitable["gloss"].startswith("profitable")
+    assert comfortable["headword"] == "вигі́дний"
+    assert comfortable["gloss"].startswith("comfortable")
+
+
+def test_batch3_lemmas_not_duplicated_from_earlier_batches():
+    """Verify batch 3's 32 lemmas are net-new (варення and бубон were dropped as dupes)."""
+    from scripts.lexicon.curated_heteronyms_batch import CURATED_HETERONYMS_BATCH
+    from scripts.lexicon.curated_heteronyms_batch2 import CURATED_HETERONYMS_BATCH_2
+    from scripts.lexicon.curated_heteronyms_batch3 import CURATED_HETERONYMS_BATCH_3
+
+    assert len(CURATED_HETERONYMS_BATCH_3) == 32
+    earlier = set(CURATED_HETERONYMS_BATCH) | set(CURATED_HETERONYMS_BATCH_2)
+    assert earlier & set(CURATED_HETERONYMS_BATCH_3) == set()
+    assert "варення" not in CURATED_HETERONYMS_BATCH_3
+    assert "бубон" not in CURATED_HETERONYMS_BATCH_3
+    assert "копати" in CURATED_HETERONYMS_BATCH_3
+    assert "коханий" in CURATED_HETERONYMS_BATCH_3

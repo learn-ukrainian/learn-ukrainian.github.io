@@ -31,9 +31,11 @@ if str(ROOT) not in sys.path:
 try:
     from scripts.lexicon.curated_heteronyms_batch import CURATED_HETERONYMS_BATCH
     from scripts.lexicon.curated_heteronyms_batch2 import CURATED_HETERONYMS_BATCH_2
+    from scripts.lexicon.curated_heteronyms_batch3 import CURATED_HETERONYMS_BATCH_3
 except ModuleNotFoundError:
     from curated_heteronyms_batch import CURATED_HETERONYMS_BATCH
     from curated_heteronyms_batch2 import CURATED_HETERONYMS_BATCH_2
+    from curated_heteronyms_batch3 import CURATED_HETERONYMS_BATCH_3
 
 
 @lru_cache(maxsize=1)
@@ -470,6 +472,7 @@ CURATED_HETERONYMS: dict[str, list[dict[str, Any]]] = {
     ],
     **CURATED_HETERONYMS_BATCH,
     **CURATED_HETERONYMS_BATCH_2,
+    **CURATED_HETERONYMS_BATCH_3,
 }
 
 
@@ -511,10 +514,8 @@ def build_heteronyms_for_lemma(lemma: str) -> list[dict[str, Any]] | None:
 
 
 def _resolve_atlas_db(custom_path: str | Path | None = None) -> Path:
-    if custom_path:
-        p = Path(custom_path)
-        if p.is_file():
-            return p
+    if custom_path is not None:
+        return Path(custom_path)
     env_path = os.environ.get("ATLAS_DB_PATH")
     if env_path and Path(env_path).is_file():
         return Path(env_path)
@@ -530,10 +531,9 @@ def _resolve_atlas_db(custom_path: str | Path | None = None) -> Path:
 
 
 def _resolve_manifest_path(custom_path: str | Path | None = None) -> Path | None:
-    if custom_path:
+    if custom_path is not None:
         p = Path(custom_path)
-        if p.is_file():
-            return p
+        return p if p.is_file() else None
     local = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
     if local.is_file():
         return local
@@ -685,11 +685,19 @@ def main() -> int:
         heteronym_count = 0
         for w, defn in rows:
             parsed = parse_sum11_heteronyms(w, defn)
-            if len(parsed) >= 2:
-                heteronym_count += 1
-                if heteronym_count <= 20:
-                    heads = [p["head"] for p in parsed]
-                    print(f"  {w}: {', '.join(heads)}")
+            if len(parsed) < 2:
+                continue
+            # Multiple СУМ-11 headwords are only true heteronyms if their
+            # stress positions actually differ -- 45 entries (e.g. ВІДВО́ЗИТИ,
+            # ВІ́ХА, ДЕРЖА́ВА) repeat the identical stressed head across
+            # senses, which makes them homonyms, not heteronyms.
+            unique_stresses = {p["head"].replace("̀", "́") for p in parsed}
+            if len(unique_stresses) < 2:
+                continue
+            heteronym_count += 1
+            if heteronym_count <= 20:
+                heads = [p["head"] for p in parsed]
+                print(f"  {w}: {', '.join(heads)}")
         conn.close()
         curated_count = len(CURATED_HETERONYMS)
         residual = heteronym_count - curated_count
