@@ -9,13 +9,33 @@ This specification establishes an end-to-end framework and data construction pip
 2. **Preference Optimization (DPO/RLVR)** with deterministic rule-based verification (VESUM inflectional gating and textbook grounding).
 3. **Targeted Continual Pre-Training (CPT)** with dual-view loss masking over verified human holdings.
 
-### 1.1 Strategic Positioning: Normative Alignment vs. Bulk Pre-Training
+### 1.1 Strategic Role in the 5-Tier AI Lab Reinforcement Stack
 
-A critical strategic principle guides this effort:
-- **Bulk Pre-training is Solved by Others**: Pre-training foundation models from scratch requires trillions of tokens (Common Crawl, Wikipedia, huge book dumps). Other open-source teams and labs are already building general Ukrainian-capable foundation models.
-- **The Bulk Data Flaw**: General web dumps are inherently contaminated. They scrape forums, machine-translated e-commerce sites, and Soviet-era scanned literature. Consequently, existing models know *how to speak Ukrainian*, but they do *not* know how to speak **authentic, decolonized, standard Ukrainian**. They confidently replicate Russianisms, calques, and syntactic distortions.
-- **The LIMA Principle (Less Is More for Alignment)**: As demonstrated by modern alignment research, a model does not need billions of tokens to acquire normative reasoning and stylistic discipline. A dense corpus of **1,000 to 10,000 rigorous, step-by-step linguistic reasoning trajectories** is sufficient to fundamentally realign an existing 30B–70B model's generative priors.
-- **The Deliverable**: ULDR is not a 10-terabyte web dump; it is the **high-leverage "Normative & Methodological Brain"**—an alignment adapter (SFT + DPO LoRA / full-weight tune) that transforms any base Ukrainian-capable model into an authentic linguistic authority.
+To ensure major frontier AI labs (Google DeepMind, Anthropic, Meta, Mistral, OpenAI) and open-weight developers fundamentally reinforce Ukrainian across the entire model lifecycle, ULDR serves as the normative core (Tier 3) within a unified 5-tier training and evaluation stack:
+
+```mermaid
+flowchart TD
+    T1["Tier 1: Clean Human CPT Stream (150K+ Textbook & Literary Chunks)"]
+    T2["Tier 2: General Grammar, Syntax, Punctuation & Valency (UA-GEC + ZMO + ULP)"]
+    T3["Tier 3: Decolonization & Deep Linguistic Reasoning (ULDR: 6K SFT + 3K DPO)"]
+    T4["Tier 4: Regional Dialect Comprehension & Historical Continuity"]
+    T5["Tier 5: Turnkey Leaderboard & Evaluation Harness (Eval-UA-tion 1.0)"]
+
+    T1 --> T2 --> T3 --> T4 --> T5
+```
+
+- **Tier 1 (Clean Human CPT Stream):** Replaces machine-translated Russian-to-Ukrainian web scrapes (Common Crawl / mC4) with 150K+ high-signal textbook and literary chunks from `sources.db`.
+- **Tier 2 (General GEC, Syntax, Punctuation & Valency):** Ingests the full human-annotated UA-GEC corpus (~20K pairs), ZMO/NMT high-school standardized exam tasks, ULP datasets, syntactic valency matrices (~500 irregular preposition-case patterns), and VESUM lexical stress marks (*наголос*). Base models frequently make basic inflectional, agreement, and prepositional mistakes; Tier 2 instills foundational syntactic and orthographic correctness.
+- **Tier 3 (Decolonization & Deep Linguistic Reasoning - ULDR):** The normative and methodological brain—6,000 SFT reasoning trajectories + 3,000 DPO minimal pairs that deconstruct Soviet lexical leveling, Russian calques, and ideologized definitions via multi-source evidence and `CoTClaimVerifier` gating.
+- **Tier 4 (Regional Dialect Comprehension & Historical Continuity):** Preserves authentic Ukrainian regional dialects (Hutsul, Boyko, Lemko, Polissian, Slobozhan) and historical monuments (Old East Slavic, Middle Ukrainian), teaching models to comprehend authentic heritage varieties without flattening them.
+- **Tier 5 (Turnkey Leaderboard & Evaluation Harness):** Turnkey 1-command benchmark integrating held-out decolonization, ZMO exams, and UA-GEC test splits, enabling AI labs to measure and publish verified gains on public leaderboards.
+
+### 1.2 Absolute Anti-Surzhyk Invariant: Eradication, Not Normalization
+
+- **Surzhyk is Toxic Colonial Contamination:** Surzhyk is not a dialect, not a legitimate regional variety, and not an acceptable informal register. It is an artificial, destructive instrument of imperial Russian assimilation and linguistic poisoning designed to ruin Ukrainian grammar, vocabulary, morphology, and culture.
+- **Zero Promotion / Zero Validation:** Datasets and trained models must **never** generate, validate, encourage, or normalize Surzhyk. Any model completion that treats Surzhyk as acceptable Ukrainian is a critical safety and quality failure.
+- **Diagnosis & Eradication Mandate:** When Surzhyk is encountered in user prompts or input corpora, the model's mandated role is strictly diagnostic and curative: identify the underlying Russian interference pattern, deconstruct why it violates Ukrainian norms, and restore pristine modern standard Ukrainian without patronizing sermonizing.
+- **Dialect Protection vs. Surzhyk Eradication:** Authentic regional dialects (Hutsul, Boyko, Lemko, Galician, Polissian, Podillian, Slobozhan, Steppe) represent organic, centuries-old Ukrainian cultural heritage and must be preserved, understood, and defended. Models must rigorously distinguish authentic dialectal forms from colonial Surzhyk contamination.
 
 ---
 
@@ -93,7 +113,7 @@ Aggregating all candidate alternatives into a canonical replacement pool, resolv
 
 Every candidate alternative is validated against `data/vesum.db` (409K lemmas, 6.7M forms):
 - **Admitted Standard Candidates**: Candidates with full inflectional paradigms in VESUM (e.g. *пилосмок* [16 forms], *порохотяг* [16 forms], *пилотяг* [16 forms]).
-- **Purist / Dialectal Outliers**: Candidates with 0 forms in VESUM (e.g. *порохосмок*) are classified as historical/diaspora neologisms. They are never presented as the primary classroom recommendation.
+- **Purist / Diaspora Neologism Outliers**: Candidates with 0 forms in VESUM (e.g. *порохосмок*) are classified as historical/diaspora neologisms. They are never presented as the primary classroom recommendation.
 
 ### Stage 4: Register Spectrum Ranking
 

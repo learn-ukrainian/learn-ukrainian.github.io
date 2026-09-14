@@ -12,11 +12,28 @@
 Pre-trained foundation models systematically confuse Soviet lexical leveling with authentic Ukrainian standards. Expanding from the **150 Human Gold Seeds (Phase 2, PR #8002)** to a **production-scale dataset (6,000 SFT trajectories + 3,000 DPO preference pairs)** requires avoiding synthetic LLM "hallucinated errors".
 
 ### 1.1 The Refined Grounding & Claim-Level Mandate
+
 Following adversarial deliberation with Claude Fable 5.1 and Codex Sol, the mandate is formally defined:
 1. **100% Human-Authored Contexts & Error Spans:** Every underlying sentence, attested error span, distractor, and candidate correction originates directly from verified human-authored Ukrainian texts in local storage (`sources.db`, `ua_gec_errors`, `zno_tasks`, `textbooks`, `style_guide`). No sentences or errors may be invented by an LLM.
 2. **Automated Claim-Verification of Reasoning Prose:** Explanatory reasoning and Chain-of-Thought (CoT) trajectories must pass an automated claim-verifier (`v4_verify_trajectory_claims.py`) that validates every dictionary citation (СУМ-11, R2U), inflectional claim (VESUM), and register qualifier (ULIF) against local databases. Any ungrounded claim triggers immediate record rejection.
 3. **Pinned Target Norm:** The target standard is explicitly pinned to **Modern Standard Ukrainian per the 2019 Orthography (Український правопис 2019) and current MESU school curricula**, cleansed of Soviet leveling and Russian calques. Historical 1920s dictionaries (R2U) and 1930s purge bulletins serve strictly as *candidate discovery heuristics*, never as an uncritical replacement blueprint (preventing archaisms like *рівнобіжник* instead of standard *паралелограм*).
 4. **Dual-Tier Open Release Policy:** Shards derived from public domain sources (Grinchenko 1907, 1920s Academy works, UA-GEC CC-BY-4.0) are cleared for public open-source Hugging Face redistribution. Shards derived from copyrighted school textbooks and protected 20th-century monographs remain in a *train-only local research partition* with model weights publicly released.
+
+### 1.2 The 5-Tier Ukrainian AI Lab Reinforcement Stack
+
+To ensure major frontier AI labs (Google DeepMind, Anthropic, Meta, Mistral, OpenAI) and open-weight model developers actively ingest our work to reinforce Ukrainian across the complete model lifecycle, the operational scope encompasses 5 integrated tiers:
+1. **Tier 1 (Clean Pretraining / CPT Stream):** 150,000+ deduplicated, high-signal textbook & literary chunks from `sources.db` to replace MT-polluted web text (Common Crawl / mC4).
+2. **Tier 2 (General GEC, Syntax & Valency):** Complete human-annotated UA-GEC (~20K pairs), ZMO/NMT high-school standardized exam tasks, ULP datasets, syntactic valency matrix (~500 irregular preposition-case patterns), and VESUM lexical stress marks (*наголос*).
+3. **Tier 3 (Decolonization & Deep Reasoning - ULDR):** 6,000 SFT reasoning trajectories + 3,000 DPO minimal pairs with automated `CoTClaimVerifier` proof, strict length balancing ($\le 10\%$), and 1,800 calibrated negative controls (STEM + polysemic abstention).
+4. **Tier 4 (Dialects & Historical Monuments):** Authentic dialect comprehension (Hutsul, Boyko, Lemko, Polissian, Slobozhan) strictly isolated from Surzhyk, plus Middle Ukrainian and Cossack chronicle comprehension.
+5. **Tier 5 (Turnkey Evaluation Benchmark / Leaderboard Harness):** A 1-command evaluation harness integrating the 1,000-case held-out suite, ZMO test benchmarks, and clean UA-GEC splits for `lm-evaluation-harness` and `lighteval`.
+
+### 1.3 Absolute Anti-Surzhyk Invariant: Eradication, Not Normalization
+
+- **Surzhyk is Toxic Colonial Contamination:** Surzhyk is not a dialect, not an organic regional variety, and not an acceptable informal register. It is an artificial, destructive instrument of imperial Russian assimilation and linguistic poisoning designed to ruin Ukrainian grammar, vocabulary, morphology, and culture.
+- **Zero Promotion / Zero Validation:** Datasets and trained models must **never** generate, validate, encourage, or normalize Surzhyk. Any model completion that treats Surzhyk as acceptable Ukrainian is a critical safety and quality failure.
+- **Diagnosis & Eradication Mandate:** When Surzhyk is encountered in user prompts or input corpora, the model's mandated role is strictly diagnostic and curative: identify the underlying Russian interference pattern, deconstruct why it violates Ukrainian norms, and restore pristine modern standard Ukrainian without patronizing sermonizing.
+- **Dialect Protection vs. Surzhyk Eradication:** Authentic regional dialects (Hutsul, Boyko, Lemko, Galician, Polissian, Podillian, Slobozhan, Steppe) represent organic, centuries-old Ukrainian cultural heritage and must be preserved, understood, and defended. Models must rigorously distinguish authentic dialectal forms from colonial Surzhyk contamination.
 
 ---
 
@@ -27,7 +44,10 @@ Following adversarial deliberation with Claude Fable 5.1 and Codex Sol, the mand
 | **STEM Textbooks (Gr 1–11)** | `sources.db` $\rightarrow$ `textbooks` | **15,563 chunks** (65 books across 10 subjects) | Scientific terminology decolonization, polysemy boundaries (*об'єм*, *рахувати*, *відношення*), and vetted `PRESERVE` controls | Train-only research partition |
 | **Language & Lit Textbooks** | `sources.db` $\rightarrow$ `textbooks` | **16,872 chunks** (127 books) | 379 chunks with explicit contrastive tables (❌ НЕПРАВИЛЬНО $\rightarrow$ ✅ ПРАВИЛЬНО) | Train-only research partition |
 | **ZNO / NMT Exam Tasks** | `sources.db` $\rightarrow$ `zno_tasks` | **1,646 official tasks** | Real state-exam distractors (authentic calques) paired with validated correct keys (Train-only to prevent pretraining eval contamination) | Educational fair use / Train-only |
-| **UA-GEC Error Corpus** | `sources.db` $\rightarrow$ `ua_gec_errors` | **8,937 annotated error spans** | 2,856 human-annotated calques (`F/Calque`) and collocations (`F/Collocation`) from real writing with author metadata | CC-BY-4.0 (Public redistribution) |
+| **UA-GEC Full Corpus (GEC)** | `sources.db` $\rightarrow$ `ua_gec_errors` / public UA-GEC | **~20,000+ sentence pairs** | General grammar error correction: orthography, morphology, syntax, and punctuation | CC-BY-4.0 (Public redistribution) |
+| **ULP / UNLP Grammar Datasets** | `data/` $\rightarrow$ external UNLP repos | **GEC & evaluation splits** | Benchmark grammar correction and Ukrainian NLP evaluation baselines | Open source / Academic |
+| **Authentic Literary Corpus** | `sources.db` $\rightarrow$ `literary_texts` | **127,419 chunks** | Historical continuity, chronicle language, classic 19th-20th c. prose (Tier 1 CPT & Tier 4 Dialect/History) | Public domain / Fair use |
+| **Syntactic Valency Matrix** | `data/` $\rightarrow$ valency tables | **~500 patterns** | Non-calqued prepositional government (*дякую вам*, *властивий кому*, *хворіти на щось*) | Open research |
 | **Antonenko-Davydovych *«Як ми говоримо»*** | `sources.db` $\rightarrow$ `style_guide` | **342 full chapters** | Morphemic, etymological, and literary reasoning steps (Train-only) | Train-only research partition |
 | **Pre-Soviet & 1920s Dictionaries (R2U)** | `scripts.rag.source_query.r2u_translate` | **Full indexed endpoints** | Pre-1933 authentic equivalents (Krymskyi-Yefremov 1924–33, Pidmohylnyi-Pluzhnyk 1926–27) used as historical discovery heuristics | Public Domain (Public redistribution) |
 | **Soviet СУМ-11 (Differential Mirror)** | `sources.db` $\rightarrow$ `sum11` | **127,069 entries** | Negative differential mirror: detecting Soviet ideological elevation and artificial convergence (7,152 `sovietization_risk` flags) | Academic research mirror |
@@ -39,6 +59,7 @@ Following adversarial deliberation with Claude Fable 5.1 and Codex Sol, the mand
 ## 3. Comprehensive Methodological Architecture
 
 ### 3.1 STEM Polysemy & Semantic Boundary Mechanics
+
 To prevent hyper-purism, boundary decisions must key on **semantic entity type and mathematical/physical definitions**, not merely coarse textbook subject tags:
 
 ```
@@ -73,12 +94,14 @@ To prevent hyper-purism, boundary decisions must key on **semantic entity type a
    - Traditional trivial names (e.g. *сірчана кислота*, standard Ukrainian formation from *сірка*, alongside IUPAC systematic *сульфатна кислота*) are categorized as *nomenclature modernization*, avoiding the erroneous public claim that traditional Ukrainian roots are Russian calques.
 
 ### 3.2 Negative Control Architecture (The 30% `PRESERVE` Target)
+
 To ensure the model does not become an aggressive over-corrector:
 - **30% of the SFT corpus (1,800 trajectories)** consists of `PRESERVE` negative controls.
 - **Source Vetting:** Raw textbook passages must pass an automated cleanliness filter (VESUM attestation + style-guide collision check + OCR sanity check) before being admitted as `PRESERVE` controls.
 - **Intentional Colloquial Register Preservation:** Include vetted conversational and colloquial prose (`розм.`) where informal Ukrainian is preserved as-is, teaching the model that colloquial register does not equal Russian interference.
 
 ### 3.3 Minimal-Pair DPO Preference Architecture
+
 To avoid shortcut learning (where DPO separates chosen from rejected based on superficial formatting, length, or archaic lexicographical tone):
 1. **Length & Structure Matching:** Chosen and rejected completions must be minimal pairs with matched length ($\pm 10\%$), identical format, and identical Chain-of-Thought scaffolding, differing strictly on the linguistic verdict and lexical replacement.
 2. **PRESERVE DPO Pairs (900 pairs):** Sourced via two complementary mechanisms:
@@ -88,6 +111,7 @@ To avoid shortcut learning (where DPO separates chosen from rejected based on su
 4. **Caricature Control & Error Density:** Cap rejected completions to realistic error densities (matching the empirical UA-GEC distribution of 1–2 errors per sentence), preventing exaggerated caricatures.
 
 ### 3.4 Pre-Extraction Partition Firewall & Leakage Defense
+
 To prevent data leakage and benchmark gaming:
 1. **Partition at Source Intake (Phase 3.0):** Partitioning happens before extraction, feature derivation, or prompt formatting.
 2. **Phenomenon-Level Split:** The unit of partitioning is the *linguistic phenomenon / calque pair*, not just individual sentences. The held-out suite measures both seen-phenomenon generalization and unseen-phenomenon transfer.
@@ -98,6 +122,7 @@ To prevent data leakage and benchmark gaming:
 7. **Evaluation Allocation & Statistical Power:** The 1,000 held-out cases are allocated as **600 PRESERVE cases + 400 CORRECT cases**. On 600 clean cases, observing $\le 1$ harmful edit yields an exact one-sided 95% binomial upper bound of $0.788\%$, statistically proving compliance with the $\le 1.0\%$ Harmful-Edit Rate gate.
 
 ### 3.5 Differential Soviet Miner Guardrails ("Fighting Fire with Fire")
+
 When mining candidates from СУМ-11 and pre-Soviet dictionaries:
 1. **20th-Century Neologism & Internationalism Whitelist:** Maintain an explicit whitelist of modern technical, scientific, and computing vocabulary coined after 1930 (e.g. *програмування*, *авіація*, *транзистор*). Absence from 1920s R2U is expected and must not trigger false calque flags.
 2. **`r2u_translate` Network vs. Absence Disambiguation:** Differentiate `SOURCE_UNAVAILABLE` (network timeout / HTTP failure) from `NOT_FOUND_WITHIN_VERIFIED_COVERAGE`. Never treat an empty network return as proof of absence.
@@ -105,6 +130,7 @@ When mining candidates from СУМ-11 and pre-Soviet dictionaries:
 4. **Semantic Calque Division of Labor:** Lemma-level differential mining cannot detect semantic shifts on existing lemmas (*являтися*, *відмінний*, *зустрічатися*). Semantic calques are strictly mined from UA-GEC, Antonenko-Davydovych, and textbook contrast tables.
 
 ### 3.6 Curriculum Stratification & Error Budget
+
 To prevent high-volume error categories from overwhelming the dataset:
 - **Prepositional Government (`G/Case`):** Capped at $\le 25\%$ of total training records (preventing UA-GEC's 5,024 prepositional errors from dominating).
 - **Lexical Calques & Russianisms (`F/Calque`):** Target $40\%$ of training records.
@@ -176,6 +202,11 @@ flowchart TD
 | **Phase 3.5** | Automated CoT Claim-Verifier | `v4_verify_trajectory_claims.py` | Verifies every cited lemma, form, dictionary claim, and historical date against local DBs |
 | **Phase 3.6** | 200-Item Pilot Canary | `v4_pilot_canary_evaluation.py` | Fine-tune Gemma 3 4B on 200 items; verify calque-fix and HER $\le 1\%$ |
 | **Phase 3.7** | Production Assembly | `6,000 SFT + 3,000 DPO` | Full sharded release validated against schemas and cross-family review |
+| **Phase 4** | Production Alignment Recipe | `Phase 4 Recipe` (#8037) | Gemma 3 4B/12B Colab & HF jobs training script; loss-masked SFT + DPO |
+| **Phase 5.1** | Grammatical & Benchmark Eval | `Eval-UA-tion 1.0` (#8050) | Full UA-GEC, ZMO, and academic non-inferiority evaluation suite |
+| **Phase 5.2** | Dialect & History Protection | `Phase 5.2 Suite` (#8051) | 300 dialectal + 200 historical cases; non-corruption rate $\ge 98.0\%$ |
+| **Phase 5.3–5.4** | Data Repair & Context Injection | Data Repair (#8052, #8053) | Real sentence contexts, gold seed expansion, dynamic DPO pair synthesis |
+| **Phase 5.5** | Model Release & 5-Tier Suite | Production Release (#8054) | Merged safetensors, GGUF quants, and complete 5-tier AI lab dataset suite |
 
 ---
 
@@ -188,3 +219,5 @@ flowchart TD
 5. **Harmful-Edit Rate Gate:** Fine-tuned checkpoint must exhibit $\le 1.0\%$ unjustified modifications on the 600-case clean evaluation partition (exact one-sided 95% binomial upper bound $< 1.0\%$).
 6. **Zero Pre-Training Memorization Leakage:** 100% of held-out evaluation items are held out from web-visible public exams and classic monographs.
 7. **No Synthetic Sentence Hallucination:** 100% of underlying sentence contexts originate from local human-authored corpus files.
+8. **Absolute Anti-Surzhyk Invariant Gate:** 0% tolerance for model generation or validation of Surzhyk. Any model completion adopting or validating Surzhyk as acceptable Ukrainian is an automatic failure. All Surzhyk inputs must be diagnosed as colonial interference and cured into standard Ukrainian.
+9. **Authentic Dialect Protection Gate:** $\ge 98.0\%$ preservation rate on authentic Ukrainian regional dialects (Hutsul, Boyko, Lemko, Polissian, Slobozhan); models must never misclassify authentic regional dialect as Surzhyk or broken Ukrainian.
