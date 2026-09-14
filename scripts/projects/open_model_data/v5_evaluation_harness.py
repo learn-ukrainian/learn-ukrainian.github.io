@@ -383,32 +383,56 @@ PARTICIPLE_CLAUSE_RE = (
     r"(?:описан\w*|зазначен\w*|вказан\w*|наведен\w*|подан\w*|згадан\w*|розглянут\w*|використан\w*|проілюстрован\w*)"
 )
 
-ENTITY_CITATION_RE = rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{ANY_CAP_NAME_RE})"
-ENTITY_CITATION_INSTRUMENTAL_RE = (
+QUOTED_AUTHORITY_NAMES = (
+    r"(?:[A-ZА-ЯІЇЄҐ][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:кс|ака|яка|нка|нга|нта|рда|рта|нда|льда|вича|овича|евича|ьова|ьові|ова|ева|ого|ього|ів|ей|ові|єві|у|ю|ом|ем|ям|ою|ею|єю|овим|євим|им|ім)\b)"
+)
+QUOTED_AUTHORITY_INSTRUMENTAL_RE = (
+    rf"(?:«|“|\"|'|‘)"
+    rf"(?:{KEYWORD_AUTHORITY_RE}|\w*(?:словник|правопис|корпус|довідник|баз)\w*|{LATIN_OR_ACRONYM_RE}|{INSTRUMENTAL_NAME_RE}|{QUOTED_AUTHORITY_NAMES}|[Яя]к\s+ми\s+говоримо|[Кк]ультура\s+слова|[Сс]ловарь\s+української\s+мови)"
+    rf"(?:»|”|\"|'|’)"
+)
+QUOTED_AUTHORITY_GENITIVE_RE = (
+    rf"(?:«|“|\"|'|‘)"
+    rf"(?:{KEYWORD_AUTHORITY_RE}|\w*(?:словник|правопис|корпус|довідник|баз)\w*|{LATIN_OR_ACRONYM_RE}|{GENITIVE_NAME_RE}|{QUOTED_AUTHORITY_NAMES}|[Яя]к\s+ми\s+говоримо|[Кк]ультура\s+слова|[Сс]ловарь\s+української\s+мови)"
+    rf"(?:»|”|\"|'|’)"
+)
+
+ENTITY_CITATION_RE = rf"(?:{QUOTED_AUTHORITY_INSTRUMENTAL_RE}|{KEYWORD_AUTHORITY_RE}|{ANY_CAP_NAME_RE})"
+
+# Primary authority entity directly following the preposition
+PRIMARY_ENTITY_INSTRUMENTAL_RE = (
     rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE}|{INSTRUMENTAL_NAME_RE})"
 )
-ENTITY_CITATION_GENITIVE_RE = (
+PRIMARY_ENTITY_GENITIVE_RE = (
     rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE}|{GENITIVE_NAME_RE})"
 )
 
+# Coordinate authority entity following a comma or conjunction
+COORD_ENTITY_INSTRUMENTAL_RE = (
+    rf"(?:{QUOTED_AUTHORITY_INSTRUMENTAL_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE}|{INSTRUMENTAL_NAME_RE})"
+)
+COORD_ENTITY_GENITIVE_RE = (
+    rf"(?:{QUOTED_AUTHORITY_GENITIVE_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE}|{GENITIVE_NAME_RE})"
+)
+
 CONJ_COORD_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_RE})"
-DIRECT_CONJ_INSTRUMENTAL_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_INSTRUMENTAL_RE})"
-DIRECT_CONJ_GENITIVE_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_GENITIVE_RE})"
+DIRECT_CONJ_INSTRUMENTAL_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{COORD_ENTITY_INSTRUMENTAL_RE})"
+DIRECT_CONJ_GENITIVE_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{COORD_ENTITY_GENITIVE_RE})"
 
 PLURAL_COORD_RE = rf"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+){ENTITY_CITATION_RE})"
 
 COMMA_COORD_INSTRUMENTAL_RE = (
-    rf"(?:\s*,\s*{ENTITY_CITATION_INSTRUMENTAL_RE}"
-    rf"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+){ENTITY_CITATION_INSTRUMENTAL_RE})*"
-    rf"(?!\s*,\s*{ENTITY_CITATION_INSTRUMENTAL_RE})"
+    rf"(?:\s*,\s*{COORD_ENTITY_INSTRUMENTAL_RE}"
+    rf"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+){COORD_ENTITY_INSTRUMENTAL_RE})*"
+    rf"(?!\s*,\s*{COORD_ENTITY_INSTRUMENTAL_RE})"
     rf"(?!\s+(?:та|і|й|and|or)\b)"
     rf"(?=\s*,\s*(?!\s)(?!{PARTICIPLE_CLAUSE_RE})))"
 )
 
 COMMA_COORD_GENITIVE_RE = (
-    rf"(?:\s*,\s*{ENTITY_CITATION_GENITIVE_RE}"
-    rf"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+){ENTITY_CITATION_GENITIVE_RE})*"
-    rf"(?!\s*,\s*{ENTITY_CITATION_GENITIVE_RE})"
+    rf"(?:\s*,\s*{COORD_ENTITY_GENITIVE_RE}"
+    rf"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+){COORD_ENTITY_GENITIVE_RE})*"
+    rf"(?!\s*,\s*{COORD_ENTITY_GENITIVE_RE})"
     rf"(?!\s+(?:та|і|й|and|or)\b)"
     rf"(?=\s*,\s*(?!\s)(?!{PARTICIPLE_CLAUSE_RE})))"
 )
@@ -433,13 +457,13 @@ CITATION_MENTION_PATTERNS = [
     # 3a. Instrumental introductory attribution phrases: "згідно з <Entities>"
     re.compile(
         rf"\b[Зз]гідно\s+(?:з|із|зі)\s+"
-        rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?({ENTITY_CITATION_INSTRUMENTAL_RE}(?:{DIRECT_CONJ_INSTRUMENTAL_RE}+|{COMMA_COORD_INSTRUMENTAL_RE})*)"
+        rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?({PRIMARY_ENTITY_INSTRUMENTAL_RE}(?:{DIRECT_CONJ_INSTRUMENTAL_RE}+|{COMMA_COORD_INSTRUMENTAL_RE})*)"
         r"(?!\w)"
     ),
     # 3b. Genitive introductory attribution phrases: "відповідно до <Entities>", "за даними <Entities>", etc.
     re.compile(
         rf"\b(?:[Вв]ідповідно\s+до|[Зз]а\s+даними|[Зз]а\s+версією)\s+"
-        rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?({ENTITY_CITATION_GENITIVE_RE}(?:{DIRECT_CONJ_GENITIVE_RE}+|{COMMA_COORD_GENITIVE_RE})*)"
+        rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?({PRIMARY_ENTITY_GENITIVE_RE}(?:{DIRECT_CONJ_GENITIVE_RE}+|{COMMA_COORD_GENITIVE_RE})*)"
         r"(?!\w)"
     ),
 ]
@@ -823,13 +847,23 @@ def evaluate_academic_non_inferiority(
             worst_degradation = max(worst_degradation, 100.0)
             continue
 
-        if base_score > 0:
-            rel_change = ((aligned_score - base_score) / base_score) * 100.0
+        is_lower_better = any(m in metric_name.lower() for m in ("perplexity", "ppl", "loss"))
+        if is_lower_better:
+            # For lower-is-better metrics (perplexity, ppl, loss), higher aligned score is degradation
+            if base_score > 0:
+                rel_change = ((aligned_score - base_score) / base_score) * 100.0
+            else:
+                rel_change = 0.0 if aligned_score <= base_score else 100.0
+            degradation = max(0.0, rel_change)
         else:
-            rel_change = 0.0 if aligned_score >= base_score else -100.0
+            # For higher-is-better metrics (accuracy, f1, etc.), lower aligned score is degradation
+            if base_score > 0:
+                rel_change = ((aligned_score - base_score) / base_score) * 100.0
+            else:
+                rel_change = 0.0 if aligned_score >= base_score else -100.0
+            degradation = max(0.0, -rel_change)
 
-        degradation = max(0.0, -rel_change)
-        passed = degradation <= max_degradation_pct
+        passed = degradation <= (max_degradation_pct + 1e-7)
 
         if not passed:
             overall_passed = False

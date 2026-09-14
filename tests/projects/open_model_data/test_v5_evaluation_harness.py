@@ -1275,3 +1275,93 @@ def test_citation_whitelist_r17_findings_sentence_subject_and_repeated_conjuncti
     assert is_clean6 is True
     assert app6 == ["ВЕСУМ"]
     assert viol6 == []
+
+
+def test_citation_whitelist_r18_findings_and_academic_metrics() -> None:
+    """Verify Round 18 findings: unapproved authorities, parenthetical subjects, float precision, perplexity."""
+    # 1. Finding 1: Coordinate unapproved authority followed by quoted subject
+    text1 = "Згідно з ВЕСУМ, Zorblax, «Школа» є правильною."
+    is_clean1, app1, viol1 = verify_citation_whitelist(text1)
+    assert is_clean1 is False
+    assert app1 == ["ВЕСУМ"]
+    assert viol1 == ["Zorblax"]
+
+    text2 = "За даними ВЕСУМ, Zorblax, «Школа» є правильною."
+    is_clean2, app2, viol2 = verify_citation_whitelist(text2)
+    assert is_clean2 is False
+    assert app2 == ["ВЕСУМ"]
+    assert viol2 == ["Zorblax"]
+
+    text3 = "Відповідно до ВЕСУМ, Zorblax, «Школа» є правильною."
+    is_clean3, app3, viol3 = verify_citation_whitelist(text3)
+    assert is_clean3 is False
+    assert app3 == ["ВЕСУМ"]
+    assert viol3 == ["Zorblax"]
+
+    # 2. Finding 2: Parenthetical clause modifying subject does not turn subject into authority
+    text4 = "Згідно з ВЕСУМ, «Школа», як зазначено вище, є правильною."
+    is_clean4, app4, viol4 = verify_citation_whitelist(text4)
+    assert is_clean4 is True
+    assert app4 == ["ВЕСУМ"]
+    assert viol4 == []
+
+    text5 = "За даними ВЕСУМ, «Школа», як зазначено вище, є правильною."
+    is_clean5, app5, viol5 = verify_citation_whitelist(text5)
+    assert is_clean5 is True
+    assert app5 == ["ВЕСУМ"]
+    assert viol5 == []
+
+    text6 = "Відповідно до ВЕСУМ, «Школа», як зазначено вище, є правильною."
+    is_clean6, app6, viol6 = verify_citation_whitelist(text6)
+    assert is_clean6 is True
+    assert app6 == ["ВЕСУМ"]
+    assert viol6 == []
+
+    # 3. Finding 3: Numerically stable 2% degradation float precision
+    base_eval = {
+        "mmlu_ua": {"acc_norm": 0.5},
+        "arc_ua": {"acc_norm": 0.5},
+        "hellaswag_ua": {"acc_norm": 0.5},
+        "gsm8k_ua": {"exact_match": 0.5},
+    }
+    aligned_eval = {
+        "mmlu_ua": {"acc_norm": 0.49},
+        "arc_ua": {"acc_norm": 0.49},
+        "hellaswag_ua": {"acc_norm": 0.49},
+        "gsm8k_ua": {"exact_match": 0.49},
+    }
+    rep = evaluate_academic_non_inferiority(base_eval, aligned_eval)
+    assert rep.overall_passed is True
+    for t in rep.tasks:
+        assert t.passed is True
+
+    # 4. Finding 4: Perplexity is lower-is-better; worsening fails non-inferiority
+    base_ppl = {
+        "mmlu_ua": {"perplexity": 10.0},
+        "arc_ua": {"perplexity": 10.0},
+        "hellaswag_ua": {"perplexity": 10.0},
+        "gsm8k_ua": {"perplexity": 10.0},
+    }
+    aligned_ppl_worse = {
+        "mmlu_ua": {"perplexity": 20.0},
+        "arc_ua": {"perplexity": 20.0},
+        "hellaswag_ua": {"perplexity": 20.0},
+        "gsm8k_ua": {"perplexity": 20.0},
+    }
+    rep_ppl_worse = evaluate_academic_non_inferiority(base_ppl, aligned_ppl_worse)
+    assert rep_ppl_worse.overall_passed is False
+    for t in rep_ppl_worse.tasks:
+        assert t.passed is False
+        assert t.degradation_pct == 100.0
+
+    aligned_ppl_better = {
+        "mmlu_ua": {"perplexity": 5.0},
+        "arc_ua": {"perplexity": 5.0},
+        "hellaswag_ua": {"perplexity": 5.0},
+        "gsm8k_ua": {"perplexity": 5.0},
+    }
+    rep_ppl_better = evaluate_academic_non_inferiority(base_ppl, aligned_ppl_better)
+    assert rep_ppl_better.overall_passed is True
+    for t in rep_ppl_better.tasks:
+        assert t.passed is True
+        assert t.degradation_pct == 0.0
