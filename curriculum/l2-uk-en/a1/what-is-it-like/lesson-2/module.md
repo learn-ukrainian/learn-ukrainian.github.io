@@ -1,13 +1,13 @@
 # Прикме́тники — Adjectives
 
-У цьому́ уроці ви навчите́ся впе́внено опи́сувати предме́ти за допомо́гою пар прикме́тників — in this lesson you will learn to confidently describe objects using pairs of adjectives:
+У цьому́ уро́ці ви навчите́ся впе́внено опи́сувати предме́ти за допомо́гою пар прикме́тників — in this lesson you will learn to confidently describe objects using pairs of adjectives:
 - **Узго́джувати протиле́жні озна́ки** — use common adjective pairs (**вели́кий / мале́нький**, **нови́й / стари́й**, **чи́стий / брудни́й**);
 - **Поє́днувати та протиставля́ти** — join qualities with **і** or contrast them with **а** and **але́**;
 - **Опи́сувати кімна́ту та ре́чі** — build clear descriptive sentences in natural Ukrainian;
 - **Уника́ти типових пасто́к** — choose standard Ukrainian words (**смачни́й**, **правильний**, **розу́мний**).
 
 Повто́рення з пе́ршого уро́ку — retrieval from Lesson 1:
-У попере́дньому уроці ви навчи́лися узго́джувати закі́нчення прикме́тників із ро́дом іме́нника — in the previous lesson you learned to match adjective endings with the noun's gender:
+У попере́дньому уро́ці ви навчи́лися узго́джувати закі́нчення прикме́тників із ро́дом іме́нника — in the previous lesson you learned to match adjective endings with the noun's gender:
 - чолові́чий рід (masculine): **вели́кий стіл**, **нови́й телефо́н**;
 - жіно́чий рід (feminine): **нова́ кни́га**, **га́рна кімна́та**;
 - сере́дній рід (neuter): **нове́ фо́то**, **чи́сте вікно́**;
@@ -32,7 +32,7 @@ The three useful A1 formats are:
 
 | Format | Example | Meaning |
 | --- | --- | --- |
-| question and answer | **Яки́й стіл? — Но́вий стіл.** | What kind of table? A new table. |
+| question and answer | **Яки́й стіл? — Нови́й стіл.** | What kind of table? A new table. |
 | adjective before noun | **нова́ кни́га** | a new book |
 | adjective after noun | **Кни́га нова́.** | The book is new. |
 
@@ -58,7 +58,7 @@ Use **а** when you contrast two things:
 
 Use **але́** when the second idea limits the first:
 
-- **Атлас стари́й, але́ ко́ри́сний.** — The atlas is old but useful.
+- **Атлас стари́й, але́ кори́сний.** — The atlas is old but useful.
 - **Кімна́та мале́нька, але́ га́рна.** — The room is small but nice.
 - **Плака́т вели́кий, але́ деше́вий.** — The poster is big but cheap.
 
@@ -69,21 +69,21 @@ Use **але́** when the second idea limits the first:
 Послухайте розмо́ву про ви́бір рече́й — listen to a conversation about choosing things:
 
 > **Тара́с**: Диви́сь, яка га́рна листі́вка!
-> **Софія**: Так, вона́ га́рна і деше́ва.
+> **Софі́я**: Так, вона́ га́рна і деше́ва.
 > **Тара́с**: А цей атлас? Він дороги́й?
-> **Софія**: Ні, атлас стари́й, але́ ко́ри́сний.
+> **Софі́я**: Ні, атлас стари́й, але́ кори́сний.
 > **Тара́с**: А ось нови́й плака́т. Він вели́кий чи мале́нький?
-> **Софія**: Він вели́кий і сві́тлий.
+> **Софі́я**: Він вели́кий і сві́тлий.
 > **Тара́с**: Чудо́во, це ду́же га́рні ре́чі!
 
-Ро́збі́р нови́х ре́плік — breakdown of lines:
+Розбі́р нови́х ре́плік — breakdown of lines:
 
 | Украї́нська | English support |
 | --- | --- |
 | **Диви́сь, яка га́рна листі́вка!** | Look, what a nice postcard! |
 | **Так, вона́ га́рна і деше́ва.** | Yes, it is nice and cheap. |
 | **А цей атлас? Він дороги́й?** | And this atlas? Is it expensive? |
-| **Ні, атлас стари́й, але́ ко́ри́сний.** | No, the atlas is old, but useful. |
+| **Ні, атлас стари́й, але́ кори́сний.** | No, the atlas is old, but useful. |
 | **А ось нови́й плака́т.** | And here is a new poster. |
 | **Він вели́кий чи мале́нький?** | Is it big or small? |
 | **Він вели́кий і сві́тлий.** | It is big and bright. |
@@ -118,7 +118,7 @@ Support after the Ukrainian lines:
 Cover the English and answer aloud:
 
 - **Яка кімна́та?** — **Мале́нька, але́ сві́тла.** — What is the room like? — Small but bright.
-- **Яки́й стіл?** — **Но́вий і чи́стий.** — What is the table like? — New and clean.
+- **Яки́й стіл?** — **Нови́й і чи́стий.** — What is the table like? — New and clean.
 - **Яке́ лі́жко?** — **Старе́, але́ зру́чне.** — What is the bed like? — Old but comfortable.
 
 <!-- INJECT_ACTIVITY: act-202 -->
@@ -154,4 +154,4 @@ One more sentence-frame trap: present-tense Ukrainian often has no visible
 - **Сполу́чники в реченні**: вжива́йте **і** для поєдна́ння озна́к (**нови́й і чи́стий**), **а** для протиста́влення двох предме́тів (**стіл нови́й, а стіле́ць стари́й**), **але́** для обме́ження чи уто́чнення (**мале́нька, але́ сві́тла**). Conjunctions in a sentence: use **і** to join qualities (**нови́й і чи́стий** = new and clean), **а** to contrast two things (**стіл нови́й, а стіле́ць стари́й** = the table is new, and the chair is old), **але́** to limit or clarify (**мале́нька, але́ сві́тла** = small but bright).
 - **Украї́нські фо́рми за́мість ка́льок**: говорі́ть **смачни́й**, **правильний**, **розу́мний** та буду́йте речення без за́йвого дієсло́ва **є** у тепе́рішньому ча́сі. Ukrainian forms instead of calques: say **смачни́й** (tasty), **правильний** (correct), **розу́мний** (smart), and build sentences without an extra **є** ("is") in the present tense.
 
-У насту́пному уроці ми підіб'ємо́ підсумок усьо́го мо́дуля та закрі́пимо всі моде́лі о́пису предме́тів — in the next lesson we will sum up the whole module and reinforce all the patterns for describing objects.
+У насту́пному уро́ці ми підіб'ємо́ підсумок усьо́го мо́дуля та закрі́пимо всі моде́лі о́пису предме́тів — in the next lesson we will sum up the whole module and reinforce all the patterns for describing objects.

@@ -51,7 +51,7 @@ inline:
     - яки́й
     - яка
     explanation: Сполу́чник але́ вка́зує на протиста́влення чи уто́чнення.
-  - sentence: Це нов__ і ко́ри́сний атлас.
+  - sentence: Це нов__ і кори́сний атлас.
     answer: ий
     options:
     - ий
@@ -196,7 +196,7 @@ inline:
       correct: true
     - text: га́рна листі́вка
       correct: false
-    explanation: Но́вий телефо́н — чолові́чий рід, і́нші словосполу́чення — жіно́чого ро́ду.
+    explanation: Нови́й телефо́н — чолові́чий рід, і́нші словосполу́чення — жіно́чого ро́ду.
   - options:
     - text: старе́ лі́жко
       correct: false
@@ -206,7 +206,7 @@ inline:
       correct: false
     - text: вели́ке вікно́
       correct: false
-    explanation: Но́вий атлас — чолові́чий рід, і́нші словосполу́чення — сере́днього ро́ду.
+    explanation: Нови́й атлас — чолові́чий рід, і́нші словосполу́чення — сере́днього ро́ду.
 workbook:
 - id: act-w5
   type: translate
@@ -269,7 +269,7 @@ workbook:
     explanation: Plural phrases use ціка́ві.
 - id: act-w6
   type: true-false
-  title: Швидка́ пере́ві́рка — Quick check
+  title: Швидка́ переві́рка — Quick check
   instruction: Decide if the statement is right.
   items:
   - statement: Стіл нови́й.
@@ -399,7 +399,7 @@ workbook:
   - left: вели́ке вікно́
     right: чи́сте
   - left: стари́й атлас
-    right: ко́ри́сний
+    right: кори́сний
   - left: гаря́чий суп
     right: смачни́й
   - left: нова́ кни́га
@@ -407,7 +407,7 @@ workbook:
 - id: act-w304
   type: error-correction
   title: Ви́прав помилки́ в ро́дах — Fix the gender mistakes
-  instruction: Знайді́ть і ви́правте по́ми́лку в узго́дженні ро́ду. — Find and fix the gender agreement mistake.
+  instruction: Знайді́ть і ви́правте поми́лку в узго́дженні ро́ду. — Find and fix the gender agreement mistake.
   items:
   - sentence: Це нова́ атлас.
     error: нова́

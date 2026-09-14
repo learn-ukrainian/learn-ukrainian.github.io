@@ -27,6 +27,48 @@ from scripts.pipeline.stress_annotator import (
     annotate_stress,
 )
 
+
+class TestOraclePedagogy:
+    """Sources verify_stress oracle: repair, collapse, keep valid singles.
+
+    These lookups hit the offline ULIF trie (no Stanza).
+    """
+
+    def test_collapses_packed_double_acute(self):
+        result, count = annotate_stress("Це розбір і корисний приклад.")
+        assert f"ро{STRESS_MARK}збі{STRESS_MARK}р" not in result
+        assert f"ко{STRESS_MARK}ри{STRESS_MARK}сний" not in result
+        assert f"розбі{STRESS_MARK}р" in result
+        assert f"кори{STRESS_MARK}сний" in result
+        assert count >= 2
+
+    def test_repairs_wrong_single_acute(self):
+        result, count = annotate_stress(f"Це се{STRESS_MARK}стра. Вона говори{STRESS_MARK}ть.")
+        assert f"се{STRESS_MARK}стра" not in result
+        assert f"говори{STRESS_MARK}ть" not in result
+        assert f"сестра{STRESS_MARK}" in result
+        assert f"гово{STRESS_MARK}рить" in result
+        assert count >= 2
+
+    def test_keeps_valid_single_on_dual_word(self):
+        text = f"Розбі{STRESS_MARK}р."
+        result, count = annotate_stress(text)
+        assert f"Розбі{STRESS_MARK}р" in result
+        assert f"Ро{STRESS_MARK}збі{STRESS_MARK}р" not in result
+        assert count == 0
+
+    def test_title_case_mene_uses_lowercase_oracle(self):
+        result, _count = annotate_stress("Мене звати Олег.")
+        assert f"Ме{STRESS_MARK}не" not in result
+        assert f"Мене{STRESS_MARK}" in result
+
+    def test_zavzhdy_override_not_last_vowel(self):
+        result, _count = annotate_stress("Я завжди тут.")
+        assert f"за{STRESS_MARK}вжди{STRESS_MARK}" not in result
+        assert f"за{STRESS_MARK}вжди" in result
+        assert f"завжди{STRESS_MARK}" not in result
+
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------

@@ -18,8 +18,8 @@ of the contract this module implements:
   ``input``.
 - ``scripts/data/stress_overrides.yaml`` is applied as a pre-lookup patch,
   keyed by *exact* lemma string match only (never extended to inflected
-  forms) — matching its one existing consumer,
-  ``scripts/generate_mdx/generate_ipa.py``.
+  forms) — consumers are ``scripts/generate_mdx/generate_ipa.py`` and
+  ``scripts/pipeline/stress_annotator.py``.
 - The trie packs ambiguous readings into a private byte layout
   (``compile_dict.py``'s ``POS_SEP``/``REC_SEP``/``accent_pos`` scheme) that
   the package's public API (``Stressifier``, ``find_accent_positions``)
@@ -298,6 +298,49 @@ def _build_match(unstressed_form: str, positions: list[int], required_tags: list
         "required_tags": required_tags,
         "override_applied": override_applied,
     }
+
+
+def transfer_stress_marks(marked_src: str, dest_unstressed: str) -> str:
+    """Copy combining-acute positions from *marked_src* onto *dest_unstressed*.
+
+    Used to keep the caller's capitalization while applying a dictionary or
+    override form. If the unstressed lengths differ, *dest_unstressed* is
+    returned unchanged.
+    """
+    _, indices = _stress_positions_in_marked_string(marked_src)
+    if not indices:
+        return dest_unstressed
+    if len(_strip_stress(marked_src)) != len(dest_unstressed):
+        return dest_unstressed
+    out = dest_unstressed
+    for index in sorted(indices, reverse=True):
+        if index < 0 or index >= len(out):
+            return dest_unstressed
+        out = out[: index + 1] + "\u0301" + out[index + 1 :]
+    return out
+
+
+def pedagogical_stressed_form(match: dict[str, Any]) -> str:
+    """Single-acute learner form for one ``verify_stress`` match.
+
+    The ULIF trie packs dual-acceptable positions (подвійний наголос) and
+    occasional primary+secondary into one ``stressed_form`` with two acutes
+    (``ро́збі́р``, ``за́вжди́``). A1/A2 pedagogy marks one vowel. Hyphenated
+    compounds keep every mark. Overrides already encode the intended form.
+
+    For non-hyphenated packed readings the last marked vowel is the
+    primary (``розбі́р``, ``кори́сний``). First-syllable duals such as
+    ``завжди`` / ``також`` belong in ``stress_overrides.yaml``.
+    """
+    form = match["stressed_form"]
+    unstressed = match["unstressed_form"]
+    if match.get("override_applied") or "-" in unstressed:
+        return form
+    indices = list(match.get("vowel_indices") or [])
+    if len(indices) <= 1:
+        return form
+    keep = indices[-1]
+    return unstressed[: keep + 1] + "\u0301" + unstressed[keep + 1 :]
 
 
 def _readings_unresolvable_by_tags(candidates: list[dict[str, Any]]) -> bool:

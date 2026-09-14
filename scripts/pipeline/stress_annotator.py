@@ -3,7 +3,10 @@
 Reads generated .md content, finds Ukrainian words, adds combining acute
 accent (U+0301) on the stressed vowel for words with 2+ syllables.
 Marks every multi-syllable Ukrainian word occurrence. The annotator is
-idempotent: already-stressed words are preserved and are not double-marked.
+idempotent: a second pass adds no marks. Already-stressed words are
+repaired when they disagree with the Sources ``verify_stress`` oracle
+(wrong vowel, or two acutes packed onto one non-hyphenated form). A
+single acute on an allowed dictionary vowel is kept.
 
 Uses sentence-level processing for context-aware heteronym disambiguation.
 The Stressifier uses Stanza NLP internally — feeding full sentences allows
@@ -132,6 +135,51 @@ def _already_stressed(word: str) -> bool:
     return STRESS_MARK in word
 
 
+def _strip_surface_stress(word: str) -> str:
+    return word.replace(STRESS_MARK, "")
+
+
+def _collapse_non_hyphen_multi_acute(word: str) -> str:
+    """Keep one acute on non-hyphenated forms; hyphenated compounds keep all."""
+    from scripts.verification.stress import _stress_positions_in_marked_string
+
+    if "-" in _strip_surface_stress(word) or word.count(STRESS_MARK) <= 1:
+        return word
+    bare, indices = _stress_positions_in_marked_string(word)
+    if len(indices) <= 1:
+        return word
+    keep = indices[-1]
+    return bare[: keep + 1] + STRESS_MARK + bare[keep + 1 :]
+
+
+def _oracle_choice(word: str) -> str | None:
+    """Pedagogical surface form from verify_stress, or None if unresolved.
+
+    Lookup is casefolded so title-case ``Мене`` does not hit a different
+    trie key than ``мене``. A single acute already on an allowed vowel is
+    kept (подвійний наголос: either listed position is acceptable).
+    """
+    from scripts.verification.stress import (
+        _stress_positions_in_marked_string,
+        pedagogical_stressed_form,
+        transfer_stress_marks,
+        verify_stress,
+    )
+
+    clean = _strip_surface_stress(word)
+    if _count_syllables(clean) < 2:
+        return None
+    result = verify_stress(clean.lower())
+    if result["status"] != "ok" or len(result["matches"]) != 1:
+        return None
+    match = result["matches"][0]
+    allowed = set(match.get("vowel_indices") or [])
+    _, current = _stress_positions_in_marked_string(word)
+    if len(current) == 1 and current[0] in allowed:
+        return word
+    return transfer_stress_marks(pedagogical_stressed_form(match), clean)
+
+
 def _build_skip_mask(text: str) -> list[tuple[int, int]]:
     """Build list of (start, end) ranges to skip (comments, code, URLs)."""
     ranges = []
@@ -247,65 +295,69 @@ def _annotate_dialoguebox_uk_attrs(text: str) -> tuple[str, int]:
 
 
 def annotate_stress(text: str) -> tuple[str, int]:
-    """Add stress marks to Ukrainian words in text.
+    """Add and repair stress marks on Ukrainian words in text.
 
-    Returns (annotated_text, count_of_words_stressed).
+    Returns (annotated_text, count_of_words_changed).
 
     Strategy:
     - Only stress words with 2+ syllables (single-syllable = obvious)
     - Skip words inside HTML comments, code blocks, URLs, JSX tags
-    - Skip words that already have stress marks
+    - Unique ``verify_stress`` hits: repair wrong/double marks; keep a
+      single acute on an allowed vowel; fill unstressed words
+    - Heteronyms / not-found: sentence Stressifier, then collapse duals
     - Add a focused second pass for DialogueBox uk="..." values
-    - Use ukrainian-word-stress library with SENTENCE context for disambiguation
     """
+    from scripts.verification.stress import transfer_stress_marks
+
     skip_ranges = _build_skip_mask(text)
     matches = list(_CYRILLIC_WORD_RE.finditer(text))
+    replacements: dict[int, str] = {}
+    unresolved: list[re.Match[str]] = []
 
-    # Build stress map using sentence-level processing (reuses matches)
-    stress_map = _build_sentence_stress_map(text, matches)
-
-    count = 0
-
-    # Per-word fallback: if the sentence-level stressifier didn't stress a word,
-    # try stressing it in isolation. The sentence processor sometimes drops words
-    # (especially in mixed-language or tabular content).
-    stressifier = _get_stressifier()
-    for m in matches:
-        pos = m.start(1)
-        if pos in stress_map:
+    for match in matches:
+        if _in_skip_range(match.start(), skip_ranges):
             continue
-        word = m.group(1)
-        clean = word.replace(STRESS_MARK, "")
-        if _count_syllables(clean) < 2:
+        word = match.group(1)
+        if _count_syllables(_strip_surface_stress(word)) < 2:
             continue
-        try:
-            stressed = stressifier(clean)
-        except Exception:
+        chosen = _oracle_choice(word)
+        if chosen is None:
+            unresolved.append(match)
             continue
-        if STRESS_MARK in stressed and stressed.replace(STRESS_MARK, "") == clean:
-            stress_map[pos] = stressed
+        if chosen != word:
+            replacements[match.start(1)] = chosen
 
-    # Annotate every eligible occurrence (reverse for safe replacement).
+    if unresolved:
+        stress_map = _build_sentence_stress_map(text, matches)
+        stressifier = _get_stressifier()
+        for match in unresolved:
+            pos = match.start(1)
+            word = match.group(1)
+            clean = _strip_surface_stress(word)
+            stressed = stress_map.get(pos)
+            if stressed is None:
+                try:
+                    stressed = stressifier(clean)
+                except Exception:
+                    continue
+                if STRESS_MARK not in stressed or _strip_surface_stress(stressed) != clean:
+                    continue
+            collapsed = transfer_stress_marks(
+                _collapse_non_hyphen_multi_acute(stressed), clean,
+            )
+            if _already_stressed(word) and word.count(STRESS_MARK) == 1:
+                continue
+            if collapsed != word:
+                replacements[pos] = collapsed
+
     result = list(text)
-    for i in reversed(range(len(matches))):
-        m = matches[i]
-        word = m.group(1)
-
-        if _in_skip_range(m.start(), skip_ranges):
+    count = 0
+    for match in reversed(matches):
+        replacement = replacements.get(match.start(1))
+        if replacement is None:
             continue
-
-        if _already_stressed(word):
-            continue
-
-        if _count_syllables(word) < 2:
-            continue
-
-        stressed = stress_map.get(m.start(1))
-        if stressed is None:
-            continue
-
-        start, end = m.start(1), m.end(1)
-        result[start:end] = list(stressed)
+        start, end = match.start(1), match.end(1)
+        result[start:end] = list(replacement)
         count += 1
 
     annotated = "".join(result)

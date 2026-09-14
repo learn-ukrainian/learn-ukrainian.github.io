@@ -251,11 +251,11 @@ workbook:
     explanation: Листі́вка is feminine.
   - prompt: A useful atlas
     options:
-    - text: ко́ри́сний атлас
+    - text: кори́сний атлас
       correct: true
-    - text: ко́ри́сна атлас
+    - text: кори́сна атлас
       correct: false
-    - text: ко́ри́сне атлас
+    - text: кори́сне атлас
       correct: false
     explanation: Атлас is masculine.
   - prompt: Interesting things
@@ -444,7 +444,7 @@ workbook:
 - id: act-w104
   type: error-correction
   title: Ви́прав закі́нчення — Fix the ending
-  instruction: Знайді́ть і ви́правте по́ми́лку в узго́дженні. — Find and fix the agreement mistake.
+  instruction: Знайді́ть і ви́правте поми́лку в узго́дженні. — Find and fix the agreement mistake.
   items:
   - sentence: Це вели́ка стіл.
     error: вели́ка

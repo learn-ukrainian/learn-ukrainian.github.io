@@ -1,6 +1,6 @@
 # Яки́й він? — What is it like?
 
-У цьому́ уроці ви навчите́ся опи́сувати ре́чі навко́ло себе́ — in this lesson you will learn how to describe things around you:
+У цьому́ уро́ці ви навчите́ся опи́сувати ре́чі навко́ло себе́ — in this lesson you will learn how to describe things around you:
 - **Ста́вити запита́ння** — ask **яки́й? / яка? / яке́? / які́?**;
 - **Узго́джувати рід** — match adjective endings to noun gender (**нови́й стіл**, **нова́ кни́га**, **нове́ фо́то**);
 - **Будува́ти коро́ткі речення** — make simple descriptive sentences without extra words.
@@ -42,7 +42,7 @@ Read the question and the answer as a pair:
 - **Яки́й стіл?** — **Вели́кий стіл.** — What kind of table? — A big table.
 - **Яка кни́га?** — **Ціка́ва кни́га.** — What kind of book? — An interesting book.
 - **Яке́ фо́то?** — **Старе́ фо́то.** — What kind of photo? — An old photo.
-- **Які́ ре́чі?** — **Но́ві ре́чі.** — What kind of things? — New things.
+- **Які́ ре́чі?** — **Нові́ ре́чі.** — What kind of things? — New things.
 
 At a weekend book fair, Sofia and Taras are looking at a small table:
 
@@ -58,13 +58,13 @@ At a weekend book fair, Sofia and Taras are looking at a small table:
 
 | Украї́нська | English support |
 | --- | --- |
-| **Софія: Диви́сь, це нова́ кни́га.** | Sofia: Look, this is a new book. |
+| **Софі́я: Диви́сь, це нова́ кни́га.** | Sofia: Look, this is a new book. |
 | **Тара́с: Яка вона́?** | Taras: What is it like? |
-| **Софія: Вона́ ціка́ва і га́рна.** | Sofia: It is interesting and nice. |
+| **Софі́я: Вона́ ціка́ва і га́рна.** | Sofia: It is interesting and nice. |
 | **Тара́с: А атлас? Яки́й він?** | Taras: And the atlas? What is it like? |
-| **Софія: Він стари́й, але́ ко́ри́сний.** | Sofia: It is old, but useful. |
+| **Софі́я: Він стари́й, але́ кори́сний.** | Sofia: It is old, but useful. |
 | **Тара́с: А фо́то? Яке́ воно́?** | Taras: And the photo? What is it like? |
-| **Софія: Воно́ мале́ньке.** | Sofia: It is small. |
+| **Софі́я: Воно́ мале́ньке.** | Sofia: It is small. |
 
 Notice the short answers. You do not need **є** here. Say **Кни́га ціка́ва**,
 not a word-for-word English sentence with "is."
@@ -74,24 +74,24 @@ not a word-for-word English sentence with "is."
 Послухайте ще одну́ розмо́ву на книжко́вому я́рмарку — listen to another conversation at the book fair:
 
 > **Тара́с**: Диви́сь, ось вели́кий плака́т.
-> **Софія**: Яки́й він яскра́вий!
+> **Софі́я**: Яки́й він яскра́вий!
 > **Тара́с**: А ця листі́вка? Яка вона́?
-> **Софія**: Вона́ мале́нька, але́ га́рна.
+> **Софі́я**: Вона́ мале́нька, але́ га́рна.
 > **Тара́с**: А вікно́ бі́ля сто́лу?
-> **Софія**: Воно́ вели́ке і чи́сте.
+> **Софі́я**: Воно́ вели́ке і чи́сте.
 > **Тара́с**: Чудо́во, тут ду́же приє́мно!
 
 Продо́вження розмо́ви — the conversation continues:
 
-> **Софія**: А нови́й телефо́н у тебе́ є?
+> **Софі́я**: А нови́й телефо́н у тебе́ є?
 > **Тара́с**: Так, ось він.
-> **Софія**: Яки́й він?
+> **Софі́я**: Яки́й він?
 > **Тара́с**: Він нови́й і зру́чний.
-> **Софія**: А старе́ фо́то на столі́?
+> **Софі́я**: А старе́ фо́то на столі́?
 > **Тара́с**: Воно́ старе́, але́ ціка́ве.
-> **Софія**: Це ду́же га́рні ре́чі!
+> **Софі́я**: Це ду́же га́рні ре́чі!
 
-Ро́збі́р нови́х ре́плік — breakdown of new lines:
+Розбі́р нови́х ре́плік — breakdown of new lines:
 
 | Украї́нська | English support |
 | --- | --- |
