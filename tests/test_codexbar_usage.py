@@ -561,7 +561,7 @@ def test_normalize_kimi_healthy_shape():
 
 def test_kimi_provider_error_surfaces_unknown(monkeypatch):
     """Credential/provider error -> status='unknown' + auth_error, never zero usage."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-token")
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-token")
     monkeypatch.setattr(
         subscription_usage_mod,
         "_http_json_request",
@@ -587,7 +587,7 @@ def test_kimi_provider_error_surfaces_unknown(monkeypatch):
 
 def test_kimi_provider_error_with_nonzero_exit_still_surfaces(monkeypatch):
     """HTTP 401 on credential errors must surface the payload, not be swallowed."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-token")
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-token")
     monkeypatch.setattr(
         subscription_usage_mod,
         "_http_json_request",
@@ -1458,7 +1458,7 @@ def test_load_kimi_bearer_reads_nested_tokens_shape(tmp_path, monkeypatch):
     monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
     cred_path = tmp_path / "kimi-code.json"
     cred_path.write_text(
-        json.dumps({"tokens": {"accessToken": "fixture-nested-kimi", "refreshToken": "fixture-refresh"}}),
+        json.dumps({"tokens": {"accessToken": "fixture-nested-kimi"}}),
         encoding="utf-8",
     )
     monkeypatch.setenv("KIMI_CODE_CREDENTIALS_PATH", str(cred_path))
@@ -1643,7 +1643,7 @@ def test_kimi_credentials_present_but_http_failure_is_fetch_error_not_need_login
     """A present, loadable credential file that fails at the network layer must
     surface fetch_error/unavailable — never re-claim NEED_LOGIN, which would
     wrongly tell the operator to log in again."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-kimi-token")
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-kimi-token")
     monkeypatch.setattr(
         subscription_usage_mod,
         "_http_json_request",
@@ -1679,7 +1679,7 @@ def test_kimi_string_usage_and_derived_used_parses_healthy(monkeypatch):
             }
         ],
     }
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-kimi-token")
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-kimi-token")
     monkeypatch.setattr(
         subscription_usage_mod,
         "_http_json_request",
@@ -1700,7 +1700,7 @@ def test_kimi_string_usage_and_derived_used_parses_healthy(monkeypatch):
 
 def test_kimi_http_200_unparseable_payload_is_not_need_login(monkeypatch):
     """Bearer present + HTTP 200 but no usable windows → unparseable, not need_login."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-kimi-token")
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-kimi-token")
     monkeypatch.setattr(
         subscription_usage_mod,
         "_http_json_request",
@@ -1737,7 +1737,7 @@ def test_coerce_float_rejects_non_finite_string_and_float():
 
 def test_kimi_http_200_nan_used_is_unparseable_not_healthy(monkeypatch):
     """HTTP 200 with used=NaN must not become healthy with nan percents."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-kimi-token")
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-kimi-token")
     monkeypatch.setattr(
         subscription_usage_mod,
         "_http_json_request",
