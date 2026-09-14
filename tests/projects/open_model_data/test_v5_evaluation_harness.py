@@ -1234,3 +1234,44 @@ def test_citation_whitelist_r16_f1_compound_quoted_subject_disambiguation() -> N
     assert "УЛІФ" in app7
     assert any("Грінченк" in a for a in app7)
     assert viol7 == []
+
+
+def test_citation_whitelist_r17_findings_sentence_subject_and_repeated_conjunctions() -> None:
+    """Verify sentence subject without comma and repeated conjunctions with participle guard (R17)."""
+    # 1. Finding 1: Sentence subject after introductory comma without closing comma
+    text1 = "Згідно з ВЕСУМ, «Школа» є правильною."
+    is_clean1, app1, viol1 = verify_citation_whitelist(text1)
+    assert is_clean1 is True
+    assert app1 == ["ВЕСУМ"]
+    assert viol1 == []
+
+    text2 = "За даними ВЕСУМ, «Школа» є правильною."
+    is_clean2, app2, viol2 = verify_citation_whitelist(text2)
+    assert is_clean2 is True
+    assert app2 == ["ВЕСУМ"]
+    assert viol2 == []
+
+    text3 = "Відповідно до ВЕСУМ, «Школа» є правильною."
+    is_clean3, app3, viol3 = verify_citation_whitelist(text3)
+    assert is_clean3 is True
+    assert app3 == ["ВЕСУМ"]
+    assert viol3 == []
+
+    # 2. Finding 2: Repeated conjunctions followed by participle clause
+    text4 = "Згідно з ВЕСУМ, «Школа» та «Коледж» та «Університет», описані вище, є правильними."
+    is_clean4, app4, viol4 = verify_citation_whitelist(text4)
+    assert is_clean4 is True
+    assert app4 == ["ВЕСУМ"]
+    assert viol4 == []
+
+    text5 = "За даними ВЕСУМ, «Школа» та «Коледж» та «Університет», описані вище, є правильними."
+    is_clean5, app5, viol5 = verify_citation_whitelist(text5)
+    assert is_clean5 is True
+    assert app5 == ["ВЕСУМ"]
+    assert viol5 == []
+
+    text6 = "Відповідно до ВЕСУМ, «Школа» та «Коледж» та «Університет», описані вище, є правильними."
+    is_clean6, app6, viol6 = verify_citation_whitelist(text6)
+    assert is_clean6 is True
+    assert app6 == ["ВЕСУМ"]
+    assert viol6 == []

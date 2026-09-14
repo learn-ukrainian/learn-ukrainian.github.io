@@ -398,19 +398,19 @@ DIRECT_CONJ_GENITIVE_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_GENI
 PLURAL_COORD_RE = rf"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+){ENTITY_CITATION_RE})"
 
 COMMA_COORD_INSTRUMENTAL_RE = (
-    rf"(?:"
-    rf"(?:\s*,\s*{ENTITY_CITATION_INSTRUMENTAL_RE})*\s*,\s*{ENTITY_CITATION_INSTRUMENTAL_RE}\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_INSTRUMENTAL_RE}(?!\s*,\s*(?!\s){PARTICIPLE_CLAUSE_RE})"
-    rf"|"
-    rf"(?:\s*,\s*{ENTITY_CITATION_INSTRUMENTAL_RE})+(?!\s*,\s*{ENTITY_CITATION_INSTRUMENTAL_RE})(?!\s+(?:та|і|й|and|or)\b)(?!\s*,\s*(?!\s){PARTICIPLE_CLAUSE_RE})"
-    rf")"
+    rf"(?:\s*,\s*{ENTITY_CITATION_INSTRUMENTAL_RE}"
+    rf"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+){ENTITY_CITATION_INSTRUMENTAL_RE})*"
+    rf"(?!\s*,\s*{ENTITY_CITATION_INSTRUMENTAL_RE})"
+    rf"(?!\s+(?:та|і|й|and|or)\b)"
+    rf"(?=\s*,\s*(?!\s)(?!{PARTICIPLE_CLAUSE_RE})))"
 )
 
 COMMA_COORD_GENITIVE_RE = (
-    rf"(?:"
-    rf"(?:\s*,\s*{ENTITY_CITATION_GENITIVE_RE})*\s*,\s*{ENTITY_CITATION_GENITIVE_RE}\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_GENITIVE_RE}(?!\s*,\s*(?!\s){PARTICIPLE_CLAUSE_RE})"
-    rf"|"
-    rf"(?:\s*,\s*{ENTITY_CITATION_GENITIVE_RE})+(?!\s*,\s*{ENTITY_CITATION_GENITIVE_RE})(?!\s+(?:та|і|й|and|or)\b)(?!\s*,\s*(?!\s){PARTICIPLE_CLAUSE_RE})"
-    rf")"
+    rf"(?:\s*,\s*{ENTITY_CITATION_GENITIVE_RE}"
+    rf"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+){ENTITY_CITATION_GENITIVE_RE})*"
+    rf"(?!\s*,\s*{ENTITY_CITATION_GENITIVE_RE})"
+    rf"(?!\s+(?:та|і|й|and|or)\b)"
+    rf"(?=\s*,\s*(?!\s)(?!{PARTICIPLE_CLAUSE_RE})))"
 )
 
 CITATION_MENTION_PATTERNS = [
@@ -433,13 +433,13 @@ CITATION_MENTION_PATTERNS = [
     # 3a. Instrumental introductory attribution phrases: "згідно з <Entities>"
     re.compile(
         rf"\b[Зз]гідно\s+(?:з|із|зі)\s+"
-        rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?({ENTITY_CITATION_INSTRUMENTAL_RE}(?:{DIRECT_CONJ_INSTRUMENTAL_RE}|{COMMA_COORD_INSTRUMENTAL_RE})*)"
+        rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?({ENTITY_CITATION_INSTRUMENTAL_RE}(?:{DIRECT_CONJ_INSTRUMENTAL_RE}+|{COMMA_COORD_INSTRUMENTAL_RE})*)"
         r"(?!\w)"
     ),
     # 3b. Genitive introductory attribution phrases: "відповідно до <Entities>", "за даними <Entities>", etc.
     re.compile(
         rf"\b(?:[Вв]ідповідно\s+до|[Зз]а\s+даними|[Зз]а\s+версією)\s+"
-        rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?({ENTITY_CITATION_GENITIVE_RE}(?:{DIRECT_CONJ_GENITIVE_RE}|{COMMA_COORD_GENITIVE_RE})*)"
+        rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?({ENTITY_CITATION_GENITIVE_RE}(?:{DIRECT_CONJ_GENITIVE_RE}+|{COMMA_COORD_GENITIVE_RE})*)"
         r"(?!\w)"
     ),
 ]
