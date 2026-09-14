@@ -189,14 +189,30 @@ def learner_text(md: str) -> str:
     return t
 
 
+_TOKEN_RE = re.compile(rf"[{CYR}'’{ACUTE}-]+")
+
+
+def _stress_tokens(text: str) -> list[str]:
+    """Learner tokens. Hyphenated transfer models (дере-в'яний) stay one token."""
+    return _TOKEN_RE.findall(nfc(text).replace("''", "'").replace("’", "'"))
+
+
+def _skip_stress_token(tok: str) -> bool:
+    """Hyphenation demos, fill-in gaps, and 1-syllable fragments are not dictionary words."""
+    if not tok or "-" in tok or "_" in tok:
+        return True
+    bare = strip_acute(tok.strip("'’"))
+    return len(re.findall(r"[аеєиіїоуюяАЕЄИІЇОУЮЯ]", bare)) < 2
+
+
 def missing_stress(text: str, allow: set[str]) -> list[str]:
     """Cyrillic tokens (NFC) with >=2 vowels and no combining acute, in learner-facing text."""
     bad = []
-    for tok in re.findall(rf"[{CYR}'’{ACUTE}]+", nfc(learner_text(text))):
-        if ACUTE in tok:
+    for tok in _stress_tokens(learner_text(text)):
+        if ACUTE in tok or _skip_stress_token(tok):
             continue
-        tok = tok.strip("'’")
-        if tok and len(re.findall(r"[аеєиіїоуюяАЕЄИІЇОУЮЯ]", tok)) >= 2 and strip_acute(tok).lower() not in allow:
+        tok = tok.strip("'’-")
+        if tok and strip_acute(tok).lower() not in allow:
             bad.append(tok)
     return bad
 
@@ -221,16 +237,16 @@ def wrong_stress(text: str, allow: set[str], proper: set[str] = frozenset()) -> 
         raise RuntimeError("stress oracle unavailable") from e
     out: list[str] = []
     seen: set[str] = set()
-    for tok in re.findall(rf"[{CYR}'{ACUTE}]+", nfc(text).replace("''", "'").replace("’", "'")):
+    for tok in _stress_tokens(text):
         if ACUTE not in tok or tok in seen:
             continue
         seen.add(tok)
-        tok = tok.strip("'’")
+        if _skip_stress_token(tok):
+            continue
+        tok = tok.strip("'’-")
         bare = strip_acute(tok)
         if not tok or bare.lower() in allow:
             continue
-        if len(re.findall(r"[аеєиіїоуюяАЕЄИІЇОУЮЯ]", bare)) < 2:
-            continue  # syllable/fragment (ка́, ко́), not a dictionary word
         forms: list[str] = []
         # proper names (declared in lessons.yaml: proper_names, or capitalised vocabulary lemmas) are looked
         # up with their case first (Марко́); everything else lowercase first, so sentence-initial common words
