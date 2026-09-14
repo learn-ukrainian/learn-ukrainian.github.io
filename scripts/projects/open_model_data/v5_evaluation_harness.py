@@ -292,13 +292,19 @@ CITATION_MENTION_PATTERNS = [
         r"([a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+(?:\s+[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+)*\s+(?:dictionary|corpus|lexicon|словник\w*|корпус\w*|довідник\w*))\b",
         re.IGNORECASE,
     ),
-    # "словник ..." or "словник «...»" (dictionary keyword followed by name or quoted title, including coordinate lists)
+    # 2. "словник <Name> [, <Name2>]" (coordinate names after comma MUST be capitalized or quoted; conjunctions permit any casing)
     re.compile(
         r"\b((?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+"
-        r"(?:«[^»]+»|\"[^\"]+\"|[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+)"
-        r"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+)"
-        r"(?:«[^»]+»|\"[^\"]+\"|(?!(?:це|що|який|яка|яке|які|але|проте|однак|тому|адже|бо|де|коли|якщо|як|то|правильно|нормативно|потрібно)\b)[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]+))*)(?!\w)",
-        re.IGNORECASE,
+        r"(?:«[^»]+»|\"[^\"]+\"|[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]+)"
+        r"(?:(?:\s*,\s*(?:«[^»]+»|\"[^\"]+\"|[A-ZА-ЯІЇЄҐ][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:-[A-ZА-ЯІЇЄҐ0-9][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)*))|"
+        r"(?:\s+(?:та|і|й|and|or)\s+(?:«[^»]+»|\"[^\"]+\"|[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]+)))*)"
+        r"(?!\w)"
+    ),
+    # 3. Attribution introductory phrases: "згідно з <Authority>", "відповідно до <Authority>", etc.
+    re.compile(
+        r"\b(?:[Зз]гідно\s+(?:з|із)|[Вв]ідповідно\s+до|[Зз]а\s+даними|[Зз]а\s+версією)\s+"
+        r"(?:словник\w*|корпус\w*|довідник\w*|баз\w*)?\s*"
+        r"(«[^»]+»|\"[^\"]+\"|[A-ZА-ЯІЇЄҐ][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:\s+[A-ZА-ЯІЇЄҐ][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]+)*)\b"
     ),
 ]
 
@@ -323,6 +329,13 @@ def verify_citation_whitelist(text: str) -> tuple[bool, list[str], list[str]]:
     for cpat in CITATION_MENTION_PATTERNS:
         for match in cpat.finditer(text):
             citation_span = match.group(1).strip() if match.lastindex else match.group(0).strip()
+            # Attribution introductory phrase check (e.g. "згідно з Zorblax", "відповідно до ВЕСУМ")
+            if cpat == CITATION_MENTION_PATTERNS[2]:
+                ent = citation_span.strip().strip("«»\"'")
+                if ent and not any(app.search(ent) for app in APPROVED_CITATION_PATTERNS):
+                    found_unapproved.append(ent)
+                continue
+
             # Split coordinate lists (e.g. "VESUM and zorblax dictionary", "ВЕСУМ та Zorblax", "ВЕСУМ, Zorblax")
             keyword_m = re.search(
                 r"\s+(?:dictionary|corpus|lexicon|словник\w*|корпус\w*|довідник\w*)$",
@@ -580,14 +593,29 @@ def evaluate_prediction(
                     re.search(r"\bне\s+(?:є\s+)?(?:вважається\s+)?ненормативн\w*\b", clause)
                 )
 
+                copula_condemn = bool(
+                    re.search(
+                        r"(?:є|[—–\-]|\:)\s*(?:це\s+)?(?:кальк\w*|росіянізм\w*|помилк\w*|суржик\w*|ненормативн\w*|штучн\w*)",
+                        clause,
+                    )
+                )
+
                 clause_condemns = (
                     any(
                         cp in clause
                         for cp in (
                             f"«{t_lower}» є калькою",
                             f"«{t_lower}» — калька",
+                            f"«{t_lower}» – калька",
+                            f"«{t_lower}»: калька",
                             f"«{t_lower}» є росіянізмом",
+                            f"«{t_lower}» — росіянізм",
+                            f"«{t_lower}» – росіянізм",
+                            f"«{t_lower}»: росіянізм",
                             f"слово {t_lower} є калькою",
+                            f"слово {t_lower} — калька",
+                            f"слово {t_lower} – калька",
+                            f"слово {t_lower}: калька",
                             f"слово {t_lower} є росіянізмом",
                             f"замініть «{t_lower}»",
                             f"уникайте «{t_lower}»",
@@ -599,6 +627,8 @@ def evaluate_prediction(
                         for w in (
                             "є калькою",
                             "— калька",
+                            "– калька",
+                            ": калька",
                             "є росіянізмом",
                             "є помилкою",
                             "помилково",
@@ -606,6 +636,7 @@ def evaluate_prediction(
                             "є штучн",
                         )
                     )
+                    or copula_condemn
                     or has_nenorm_condemn
                 )
 
@@ -620,17 +651,20 @@ def evaluate_prediction(
                             "не є помилкою",
                             "не помилка",
                             "не є суржиком",
+                            "не є штучн",
                             "не потребує",
-                            "питом",
-                            "правильно",
-                            "літературн",
                             "зберігаємо",
                             "preserve",
                             "без змін",
                         )
                     )
-                    or bool(re.search(r"\b(?<!не\s)(?<!не)нормативн\w*\b", clause))
                     or bool(re.search(r"\bне\s+(?:є\s+)?(?:вважається\s+)?ненормативн\w*\b", clause))
+                    or bool(
+                        re.search(
+                            rf"\b(?:«?{re.escape(t_lower)}»?|слово|термін)\s+(?:є\s+)?(?:нормативн|правильн|питом)",
+                            clause,
+                        )
+                    )
                 )
 
                 if clause_condemns and not clause_negated:

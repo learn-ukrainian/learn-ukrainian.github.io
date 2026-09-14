@@ -446,3 +446,58 @@ def test_gate5_partial_substring_target_does_not_inflate_coverage() -> None:
     summary = run_evaluation_suite(cases, preds, min_high_freq_floor=50)
     assert summary.high_freq_distinct_covered == 48
     assert summary.gate5_pass is False
+
+
+def test_evaluate_prediction_condemnation_with_pravylno_in_clause() -> None:
+    """Verify that 'правильно' in following prose does not suppress explicit condemnation (F1)."""
+    case = {
+        "eval_id": "p_condemn_pravylno",
+        "case_type": "PRESERVE",
+        "target_term": "матеріал",
+        "input_text": "Матеріал підручника викладено послідовно.",
+        "expected_replacement": None,
+    }
+    pred = "<thought>Слово «матеріал» є калькою — правильно вживати інше слово.</thought>Матеріал підручника викладено послідовно."
+    res = evaluate_prediction(case, pred)
+    assert res.harmful_edit is True
+
+
+def test_evaluate_prediction_en_dash_and_colon_copula() -> None:
+    """Verify en-dash and colon copula condemnation are detected as harmful edits (F2)."""
+    case = {
+        "eval_id": "p_copula",
+        "case_type": "PRESERVE",
+        "target_term": "матеріал",
+        "input_text": "Матеріал підручника викладено послідовно.",
+        "expected_replacement": None,
+    }
+    pred_en_dash = "<thought>Слово «матеріал» – калька.</thought>Матеріал підручника викладено послідовно."
+    res1 = evaluate_prediction(case, pred_en_dash)
+    assert res1.harmful_edit is True
+
+    pred_colon = "<thought>Слово «матеріал»: калька.</thought>Матеріал підручника викладено послідовно."
+    res2 = evaluate_prediction(case, pred_colon)
+    assert res2.harmful_edit is True
+
+
+def test_citation_whitelist_prose_following_comma_not_matched() -> None:
+    """Verify ordinary prose after citation comma is not swallowed as an unapproved source (F3)."""
+    text = "За словником ВЕСУМ, слово правильне."
+    is_clean, approved, violations = verify_citation_whitelist(text)
+    assert is_clean is True
+    assert len(violations) == 0
+    assert any("ВЕСУМ" in a for a in approved)
+
+
+def test_citation_whitelist_introductory_attribution_phrase() -> None:
+    """Verify introductory attribution phrases ('згідно з', 'відповідно до') validate authorities (F4)."""
+    text1 = "Згідно з Zorblax, це правильно."
+    is_clean1, _approved1, violations1 = verify_citation_whitelist(text1)
+    assert is_clean1 is False
+    assert any("Zorblax" in v for v in violations1)
+
+    text2 = "Згідно з ВЕСУМ, це правильно."
+    is_clean2, approved2, violations2 = verify_citation_whitelist(text2)
+    assert is_clean2 is True
+    assert len(violations2) == 0
+    assert any("ВЕСУМ" in a for a in approved2)
