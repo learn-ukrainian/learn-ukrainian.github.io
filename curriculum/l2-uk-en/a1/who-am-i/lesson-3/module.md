@@ -4,7 +4,7 @@
 
 **Зві́дки?** means "from where?" Use the country phrases as memorized expressions:
 
-| Питання | Відповідь |
+| Пита́ння | Ві́дповідь |
 | --- | --- |
 | **Зві́дки ти?** | **Я з Украї́ни.** |
 | **Зві́дки ви?** | **Я з Кана́ди.** |
@@ -12,7 +12,7 @@
 
 Add a few prepared places:
 
-| Українська | English support |
+| Украї́нська | English support |
 | --- | --- |
 | **Я з Украї́ни.** | I am from Ukraine. |
 | **Я з Кана́ди.** | I am from Canada. |
@@ -62,18 +62,18 @@ English support after the Ukrainian dialogue:
 ### Прийме́нники з та зі — Prepositions with origins
 
 В украї́нській мо́ві вжива́ються фо́рми **з** та **зі** для милозву́чності — in Ukrainian, the forms **з** and **зі** are used for euphony to avoid hard consonant clusters:
-- **з** ужива́ється пе́ред голосними́ та бі́льшістю приголо́сних — use **з** before vowels and most consonants: **з Украї́ни**, **з Кана́ди**, **з Німе́ччини**, **з Ки́єва**, **з Оде́си**;
-- **зі** ужива́ється пе́ред збі́гом приголо́сних, особли́во зі зву́ками [с], [з], [ш], [ж] — use **зі** before consonant clusters, especially those starting with sibilants: **зі Льво́ва**, **зі Шта́тів**.
+- **з** ужива́ється пе́ред голосни́ми та бі́льшістю при́голосних — use **з** before vowels and most consonants: **з Украї́ни**, **з Кана́ди**, **з Німе́ччини**, **з Ки́єва**, **з Оде́си**;
+- **зі** ужива́ється пе́ред збі́гом при́голосних, особли́во зі зву́ками [с], [з], [ш], [ж] — use **зі** before consonant clusters, especially those starting with sibilants: **зі Льво́ва**, **зі Шта́тів**.
 
 | Прийме́нник | При́клад | Причи́на вжива́ння | English support |
 | --- | --- | --- | --- |
-| **з** | **з Украї́ни** | пе́ред голосним [у] | from Ukraine |
-| **з** | **з Кана́ди** | пе́ред одини́чним приголо́сним [к] | from Canada |
-| **з** | **з Ки́єва** | пе́ред одини́чним приголо́сним [к] | from Kyiv |
-| **з** | **з Німе́ччини** | пе́ред одини́чним приголо́сним [н] | from Germany |
-| **з** | **з Оде́си** | пе́ред голосним [о] | from Odesa |
-| **зі** | **зі Льво́ва** | пе́ред збі́гом приголо́сних [льв] | from Lviv |
-| **зі** | **зі Шта́тів** | пе́ред збі́гом приголо́сних [шт] | from the States |
+| **з** | **з Украї́ни** | пе́ред голосни́м [у] | from Ukraine |
+| **з** | **з Кана́ди** | пе́ред одини́чним при́голосним [к] | from Canada |
+| **з** | **з Ки́єва** | пе́ред одини́чним при́голосним [к] | from Kyiv |
+| **з** | **з Німе́ччини** | пе́ред одини́чним при́голосним [н] | from Germany |
+| **з** | **з Оде́си** | пе́ред голосни́м [о] | from Odesa |
+| **зі** | **зі Льво́ва** | пе́ред збі́гом при́голосних [льв] | from Lviv |
+| **зі** | **зі Шта́тів** | пе́ред збі́гом при́голосних [шт] | from the States |
 
 <!-- INJECT_ACTIVITY: act-302 -->
 
@@ -127,7 +127,7 @@ English support after the Ukrainian dialogue:
 
 <!-- INJECT_ACTIVITY: act-303 -->
 
-## Слу́хай і записуй
+## Слу́хай і запи́суй
 
 The Resources tab has three optional Ukrainian Lessons Podcast links: Episode
 3 for introductions, Episode 4 for **Зві́дки?**, and Episode 8 for
@@ -135,23 +135,23 @@ professions. Listen for one short phrase, repeat it once, and come back here.
 
 For handwriting recognition, ask a teacher, tutor, or classmate to write these
 original labels in a notebook: **ім'я́** (name), **прі́звище** (surname),
-**Ки́їв**, **студе́нтка**, **лі́карка**. First compare the notebook label with
+**Киї́в**, **студе́нтка**, **лі́карка**. First compare the notebook label with
 the printed word; then write your own line.
 
 ### Ка́ртка знайо́мства та анке́та — Introduction card and questionnaire
 
-Під час знайо́мства ча́сто дово́диться запо́внювати анке́ту або запи́сувати да́ні в зо́шит — during an introduction, you often need to fill out a form or write details in a notebook:
+Під час знайо́мства ча́сто дово́диться запо́внювати анке́ту або́ запи́сувати да́ні в зо́шит — during an introduction, you often need to fill out a form or write details in a notebook:
 
 | По́ле в анке́ті | Зна́чення | При́клад за́пису | English support |
 | --- | --- | --- | --- |
 | **Ім'я́** | вла́сне ім'я́ люди́ни | Софі́я / Марко́ | First name |
 | **Прі́звище** | родове́ прі́звище | Шевче́нко / Ме́льник | Surname |
 | **Краї́на** | краї́на похо́дження | Украї́на / Кана́да | Country |
-| **Мі́сто** | мі́сто наро́дження чи прожива́ння | Ки́їв / Оде́са / Львів | City |
-| **Профе́сія** | фах або рід занять | студе́нтка / програмі́ст | Profession |
+| **Мі́сто** | мі́сто наро́дження чи прожива́ння | Киї́в / Оде́са / Львів | City |
+| **Профе́сія** | фах або́ рід заня́ть | студе́нтка / програмі́ст | Profession |
 | **Роди́на** | близькі́ лю́ди | та́то, ма́ма, дружи́на | Family |
 
-Зверні́ть ува́гу на сло́во **прі́звище** — pay attention to the word **прі́звище**: в украї́нській мо́ві це родове́ ім'я́ (англі́йською *surname* або *last name*). Ніко́ли не вжива́йте су́ржикове сло́во *фамі́лія* — never use the calque *фамілія*.
+Зверні́ть ува́гу на сло́во **прі́звище** — pay attention to the word **прі́звище**: в украї́нській мо́ві це родове́ ім'я́ (англі́йською *surname* або́ *last name*). Ніко́ли не вжива́йте су́ржикове сло́во *фамі́лія* — never use the calque *фамі́лія*.
 
 <!-- INJECT_ACTIVITY: act-304 -->
 
@@ -160,7 +160,7 @@ the printed word; then write your own line.
 Порівня́йте друко́вані лі́тери з рукопи́сними зразка́ми — compare printed letters with handwritten models:
 - **ім'я́** — зверні́ть ува́гу на апо́строф пе́ред лі́терою **я**;
 - **прі́звище** — чі́тко пиші́ть лі́теру **щ** із мале́ньким хво́стиком зни́зу;
-- **Ки́їв** — пиші́ть дві кра́пки над лі́терою **ї**;
+- **Киї́в** — пиші́ть дві кра́пки над лі́терою **ї**;
 - **студе́нтка** — з'є́днуйте лі́тери **д**, **е**, **н** пла́вно;
 - **лі́карка** — зверні́ть ува́гу на на́голос на пе́ршому скла́ді [лі́-].
 
@@ -168,7 +168,7 @@ the printed word; then write your own line.
 1. **Ім'я́**: Софі́я.
 2. **Прі́звище**: Шевче́нко.
 3. **Краї́на**: Украї́на.
-4. **Мі́сто**: Ки́їв.
+4. **Мі́сто**: Киї́в.
 5. **Профе́сія**: студе́нтка.
 
 <!-- INJECT_ACTIVITY: act-305 -->

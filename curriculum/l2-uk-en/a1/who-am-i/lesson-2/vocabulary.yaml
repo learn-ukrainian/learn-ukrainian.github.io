@@ -1,35 +1,35 @@
 - lemma: я
   translation: I
   pos: pronoun
-  usage: Я з України.
+  usage: Я з Украї́ни.
 - lemma: ти
   translation: you, informal singular
   pos: pronoun
-  usage: Звідки ти?
+  usage: Зві́дки ти?
 - lemma: він
   translation: he
   pos: pronoun
-  usage: Він зі Львова.
-- lemma: вона
+  usage: Він зі Льво́ва.
+- lemma: во́на
   translation: she
   pos: pronoun
-  usage: Вона — лікарка.
+  usage: Во́на — лі́карка.
 - lemma: ми
   translation: we
   pos: pronoun
-  usage: Ми студенти.
+  usage: Ми студе́нти.
 - lemma: ви
   translation: you, formal or plural
   pos: pronoun
-  usage: Як вас звати?
-- lemma: вони
+  usage: Як вас зва́ти?
+- lemma: во́ни
   translation: they
   pos: pronoun
-  usage: Вони з України.
+  usage: Во́ни з Украї́ни.
 - lemma: це
   translation: this is / this
   pos: pronoun
-  usage: Це Оксана.
+  usage: Це Окса́на.
 - lemma: хто
   translation: who
   pos: pronoun
@@ -38,79 +38,79 @@
   translation: what
   pos: pronoun
   usage: Що це?
-- lemma: тато
+- lemma: та́то
   translation: dad
   pos: noun
-  usage: Це мій тато.
-- lemma: мама
+  usage: Це мій та́то.
+- lemma: ма́ма
   translation: mom
   pos: noun
-  usage: Це моя мама.
-- lemma: подруга
+  usage: Це моя́ ма́ма.
+- lemma: по́друга
   translation: female friend
   pos: noun
-  usage: Це моя подруга.
-- lemma: студент
+  usage: Це моя́ по́друга.
+- lemma: студе́нт
   translation: male student
   pos: noun
-  usage: Я — студент.
-- lemma: студентка
+  usage: Я — студе́нт.
+- lemma: студе́нтка
   translation: female student
   pos: noun
-  usage: Я — студентка.
-- lemma: вчитель
+  usage: Я — студе́нтка.
+- lemma: вчи́тель
   translation: male teacher
   pos: noun
-  usage: Він — вчитель.
-- lemma: вчителька
+  usage: Він — вчи́тель.
+- lemma: вчи́телька
   translation: female teacher
   pos: noun
-  usage: Вона — вчителька.
-- lemma: лікар
+  usage: Во́на — вчи́телька.
+- lemma: лі́кар
   translation: male doctor
   pos: noun
-  usage: Він — лікар.
-- lemma: лікарка
+  usage: Він — лі́кар.
+- lemma: лі́карка
   translation: female doctor
   pos: noun
-  usage: Вона — лікарка.
-- lemma: програміст
+  usage: Во́на — лі́карка.
+- lemma: програмі́ст
   translation: male programmer
   pos: noun
-  usage: Марко — програміст.
-- lemma: програмістка
+  usage: Марко́ — програмі́ст.
+- lemma: програмі́стка
   translation: female programmer
   pos: noun
-  usage: Олена — програмістка.
-- lemma: інженер
+  usage: Оле́на — програмі́стка.
+- lemma: інжене́р
   translation: male engineer
   pos: noun
-  usage: Андрій — інженер.
-- lemma: інженерка
+  usage: Андрі́й — інжене́р.
+- lemma: інжене́рка
   translation: female engineer
   pos: noun
-  usage: Оксана — інженерка.
-- lemma: українець
+  usage: Окса́на — інжене́рка.
+- lemma: украї́нець
   translation: Ukrainian man
   pos: noun
-  usage: Андрій — українець.
-- lemma: українка
+  usage: Андрі́й — украї́нець.
+- lemma: украї́нка
   translation: Ukrainian woman
   pos: noun
-  usage: Олена — українка.
-- lemma: канадієць
+  usage: Оле́на — украї́нка.
+- lemma: канаді́єць
   translation: Canadian man
   pos: noun
-  usage: Марко — канадієць.
-- lemma: канадка
+  usage: Марко́ — канаді́єць.
+- lemma: кана́дка
   translation: Canadian woman
   pos: noun
-  usage: Олена — канадка.
-- lemma: американець
+  usage: Оле́на — кана́дка.
+- lemma: америка́нець
   translation: American man
   pos: noun
-  usage: Андрій — американець.
-- lemma: американка
+  usage: Андрі́й — америка́нець.
+- lemma: америка́нка
   translation: American woman
   pos: noun
-  usage: Софія — американка.
+  usage: Софі́я — америка́нка.

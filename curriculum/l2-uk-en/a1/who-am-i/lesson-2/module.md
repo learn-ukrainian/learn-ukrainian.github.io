@@ -8,7 +8,7 @@ person:
 | Украї́нська | English support |
 | --- | --- |
 | **Це ка́ва.** | This is coffee. |
-| **Це Ки́їв.** | This is Kyiv. |
+| **Це Киї́в.** | This is Kyiv. |
 | **Це Андрі́й.** | This is Andrii. |
 | **Це Окса́на.** | This is Oksana. |
 

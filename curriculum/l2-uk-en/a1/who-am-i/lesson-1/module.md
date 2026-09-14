@@ -7,7 +7,7 @@ This lesson stays short and spoken. First you hear a Ukrainian line, then you
 use a small amount of English support to check the meaning. Treat the first
 phrases as whole expressions:
 
-| Українська опора | English support |
+| Украї́нська опо́ра | English support |
 | --- | --- |
 | **Мене́ зва́ти...** | My name is... |
 | **Як тебе́ зва́ти?** | What is your name? informal |
@@ -24,7 +24,7 @@ By the end, you can:
 - answer **Мене́ зва́ти...**;
 - return the question with **А тебе́?** or **А вас?**;
 - point to a person or thing with **це**;
-- use **я**, **ти**, **він**, **вона**, and **ви** in simple identity lines;
+- use **я**, **ти**, **він**, **во́на**, and **ви** in simple identity lines;
 - say **Я — студе́нт** or **Я — студе́нтка** without adding a present-tense
   "am" word;
 - say where you are from with memorized phrases such as **Я з Украї́ни** and
@@ -98,7 +98,7 @@ The third dialogue introduces another person:
 
 English support after the Ukrainian dialogue:
 
-| Українська | English support |
+| Украї́нська | English support |
 | --- | --- |
 | **Це Андрі́й.** | This is Andrii. |
 | **Він зі Льво́ва.** | He is from Lviv. |
@@ -118,7 +118,7 @@ Here is another everyday exchange between two students meeting for the first tim
 
 English support for the informal conversation:
 
-| Українська | English support |
+| Украї́нська | English support |
 | --- | --- |
 | **Приві́т!** | Hi! |
 | **Як тебе́ зва́ти?** | What is your name? informal |
@@ -135,7 +135,7 @@ Now practice a formal conversation exchange in two quick turns:
 
 English support for the formal greeting:
 
-| Українська | English support |
+| Украї́нська | English support |
 | --- | --- |
 | **До́брий день!** | Good afternoon! |
 | **Як вас зва́ти?** | What is your name? formal |
@@ -149,7 +149,7 @@ The conversation concludes politely:
 
 English support for the conclusion:
 
-| Українська | English support |
+| Украї́нська | English support |
 | --- | --- |
 | **Мене́ зва́ти Петро́.** | My name is Petro. |
 | **Ду́же приє́мно!** | Pleased to meet you! |
@@ -162,7 +162,7 @@ And here is an introduction between classmates:
 
 English support for the introduction:
 
-| Українська | English support |
+| Украї́нська | English support |
 | --- | --- |
 | **Мене́ зва́ти Тара́с.** | My name is Taras. |
 | **Мене́ зва́ти Окса́на.** | My name is Oksana. |
@@ -174,7 +174,7 @@ The classmates complete their greeting:
 
 English support for the response:
 
-| Українська | English support |
+| Украї́нська | English support |
 | --- | --- |
 | **Ду́же приє́мно!** | Pleased to meet you! |
 | **Мені́ теж!** | Me too! |
@@ -188,7 +188,7 @@ Notice how both **теж** and **та́кож** work naturally when returning po
 **Мене́ зва́ти...** is one phrase. You do not need the grammar of **мене́** or
 **зва́ти** yet. You need the social move: ask, answer, echo.
 
-| Українська | English support |
+| Украї́нська | English support |
 | --- | --- |
 | **Мене́ зва́ти Марко́.** | My name is Marko. |
 | **Мене́ зва́ти Оле́на.** | My name is Olena. |
@@ -217,13 +217,13 @@ natural first-introduction model is **Мене́ зва́ти...**.
 
 Polite first contact also uses natural formulas for gratitude and apologies. Choose authentic Ukrainian words:
 
-| Ситуація — Context | Українська норма | English support |
+| Ситуа́ція — Context | Украї́нська но́рма | English support |
 | --- | --- | --- |
 | Saying thank you | **Дя́кую!** / **Спаси́бі!** | Thank you! |
 | Saying excuse me or sorry | **Ви́бачте!** / **Проба́чте!** | Excuse me! / Forgive me! |
 | Returning a feeling | **Мені́ теж.** / **Мені́ та́кож.** | Me too. / Likewise. |
 
-Remember to keep the echo question simple: say **А тебе́?** with peers and **А вас?** with teachers or new adults. Do not add prepositional constructions like *А у тебе?* at this level.
+Remember to keep the echo question simple: say **А тебе́?** with peers and **А вас?** with teachers or new adults. Do not add prepositional constructions like *А у тебе́?* at this level.
 
 <!-- INJECT_ACTIVITY: act-104 -->
 

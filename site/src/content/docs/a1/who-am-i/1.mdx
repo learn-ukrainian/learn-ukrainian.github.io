@@ -1,0 +1,398 @@
+---
+title: Мене звати...
+description: Мене звати... — ваша перша справжня розмова
+sidebar:
+  order: 1
+  label: 01. Мене звати...
+pipeline: v7-upgrade
+build_status: validated
+draft: false
+prev: /a1/who-am-i/
+next: /a1/who-am-i/2/
+lesson: 1
+module_slug: who-am-i
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords from '@site/src/components/MarkTheWords';
+import { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes from '@site/src/components/HighlightMorphemes';
+import { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок — Lesson">
+
+**Приві́т! Мене́ зва́ти Марко́. А тебе́?** — Hi! My name is Marko.
+And yours?
+
+This lesson stays short and spoken. First you hear a Ukrainian line, then you
+use a small amount of English support to check the meaning. Treat the first
+phrases as whole expressions:
+
+| Украї́нська опо́ра | English support |
+| --- | --- |
+| **Мене́ зва́ти...** | My name is... |
+| **Як тебе́ зва́ти?** | What is your name? informal |
+| **Як вас зва́ти?** | What is your name? formal |
+| **Ду́же приє́мно!** | Nice to meet you! |
+| **Зві́дки ти?** | Where are you from? |
+
+You do not need to explain every form yet. A first conversation can be built
+from safe pieces.
+
+By the end, you can:
+
+- ask **Як тебе́ зва́ти?** with a peer and **Як вас зва́ти?** with a new adult;
+- answer **Мене́ зва́ти...**;
+- return the question with **А тебе́?** or **А вас?**;
+- point to a person or thing with **це**;
+- use **я**, **ти**, **він**, **во́на**, and **ви** in simple identity lines;
+- say **Я — студе́нт** or **Я — студе́нтка** without adding a present-tense
+  "am" word;
+- say where you are from with memorized phrases such as **Я з Украї́ни** and
+  **Я з Кана́ди**;
+- choose Ukrainian identity words, including **лі́карка**, **вчи́телька**, and
+  **інжене́рка**.
+
+## Діало́ги
+
+Read each Ukrainian dialogue first. Do not translate line by line while you
+read. The support table comes after the dialogue.
+
+- **Марко́: Приві́т! Як тебе́ зва́ти?**
+- **Оле́на: Мене́ зва́ти Оле́на. А тебе́?**
+- **Марко́: Мене́ зва́ти Марко́. Ду́же приє́мно!**
+- **Оле́на: Ду́же приє́мно! Зві́дки ти?**
+- **Марко́: Я з Кана́ди. А ти?**
+- **Оле́на: Я з Украї́ни.**
+
+English support after the Ukrainian dialogue:
+
+| Українська | English support |
+| --- | --- |
+| **Приві́т!** | Hi! |
+| **Як тебе́ зва́ти?** | What is your name? informal |
+| **А тебе́?** | And yours? informal |
+| **Я з Кана́ди.** | I am from Canada. |
+| **Я з Украї́ни.** | I am from Ukraine. |
+
+Use **Приві́т** with peers. Use **А тебе́?** only after the name question is
+already active. It is an echo pattern: short, polite, and easy.
+
+### Ти чи ви?
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Ти знайо́мишся з одноку́рсником свого́ ві́ку.", "options": [{"text": "Як тебе́ зва́ти?", "correct": true}, {"text": "Як вас зва́ти?", "correct": false}], "explanation": "З одни́м знайо́мим або́ рі́вним співрозмо́вником ужива́й тебе́."}, {"question": "Ти знайо́мишся з незнайо́мим доро́слим на орієнта́ції.", "options": [{"text": "Як вас зва́ти?", "correct": true}, {"text": "Як тебе́ зва́ти?", "correct": false}], "explanation": "З незнайо́мим доро́слим або́ у форма́льній ситуа́ції ужива́й вас."}, {"question": "Одноку́рсник пита́є твоє́ ім'я́. Ти відповіда́єш і поверта́єш пита́ння.", "options": [{"text": "Мене́ зва́ти Оле́на. А тебе́?", "correct": true}, {"text": "Мене́ зва́ти Оле́на. А вас?", "correct": false}], "explanation": "Рі́вна ситуа́ція залиша́ється неформа́льною."}, {"question": "Виклада́ч пита́є твоє́ ім'я́. Ти відповіда́єш і поверта́єш пита́ння.", "options": [{"text": "Мене́ зва́ти Петро́. А вас?", "correct": true}, {"text": "Мене́ зва́ти Петро́. А тебе́?", "correct": false}], "explanation": "З викладаче́м ситуа́ція залиша́ється форма́льною."}]`)} instruction={"Обери́ фра́зу для ситуа́ції."} isUkrainian={false} />
+
+Now read a formal first meeting:
+
+- **Петро́: До́брий день! Як вас зва́ти?**
+- **Софі́я: Мене́ зва́ти Софі́я. А вас?**
+- **Петро́: Мене́ зва́ти Петро́. Ду́же приє́мно!**
+- **Софі́я: Мені́ також. Ви з Украї́ни?**
+- **Петро́: Так, я з Ки́єва.**
+
+English support after the Ukrainian dialogue:
+
+| Українська | English support |
+| --- | --- |
+| **До́брий день!** | Good afternoon! |
+| **Як вас зва́ти?** | What is your name? formal |
+| **А вас?** | And yours? formal |
+| **Мені́ також.** | Me too. |
+| **Так, я з Ки́єва.** | Yes, I am from Kyiv. |
+
+The formal version changes two pieces. **тебе́** becomes **вас**. **ти**
+becomes **ви**. English has one everyday word, "you"; Ukrainian asks you to
+choose relationship and politeness.
+
+### Ре́пліка та ві́дповідь
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Приві́т! Як тебе́ зва́ти?", "right": "Мене́ зва́ти Марко́."}, {"left": "Мене́ зва́ти Оле́на. А тебе́?", "right": "Мене́ зва́ти Марко́. Ду́же приє́мно!"}, {"left": "До́брий день! Як вас зва́ти?", "right": "Мене́ зва́ти Петро́."}, {"left": "Ду́же приє́мно!", "right": "Мені́ та́кож."}, {"left": "Це Андрі́й. Він зі Льво́ва.", "right": "Ду́же приє́мно. А хто це?"}, {"left": "Ви з Украї́ни?", "right": "Так, я з Ки́єва."}]`)} instruction={"З'єдна́й ре́пліку пе́ршого мо́вця з влу́чною ві́дповіддю співрозмо́вника."} isUkrainian={false} />
+
+The third dialogue introduces another person:
+
+- **Тара́с: Це Андрі́й. Він зі Льво́ва.**
+- **Ната́лка: Ду́же приє́мно. А хто це?**
+- **Тара́с: Це Окса́на. Вона́ з Оде́си. Вона́ — лі́карка.**
+- **Ната́лка: Ду́же приє́мно!**
+
+English support after the Ukrainian dialogue:
+
+| Украї́нська | English support |
+| --- | --- |
+| **Це Андрі́й.** | This is Andrii. |
+| **Він зі Льво́ва.** | He is from Lviv. |
+| **А хто це?** | And who is this? |
+| **Вона́ — лі́карка.** | She is a doctor. |
+
+For a woman, use the feminine profession form when Ukrainian has the normal
+form: **лі́карка**, **вчи́телька**, **інжене́рка**, **програмі́стка**,
+**студе́нтка**. These are standard Ukrainian identity words.
+
+Here is another everyday exchange between two students meeting for the first time:
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Оле́на","text":"Приві́т! Як тебе́ зва́ти?"},{"speaker":"Марко́","text":"Мене́ зва́ти Марко́. А тебе́?"},{"speaker":"Оле́на","text":"Мене́ зва́ти Оле́на. Ду́же приє́мно!"},{"speaker":"Марко́","text":"Мені́ теж ду́же приє́мно!"}]')}
+/>
+
+English support for the informal conversation:
+
+| Украї́нська | English support |
+| --- | --- |
+| **Приві́т!** | Hi! |
+| **Як тебе́ зва́ти?** | What is your name? informal |
+| **Мене́ зва́ти Марко́.** | My name is Marko. |
+| **А тебе́?** | And yours? informal |
+| **Мене́ зва́ти Оле́на.** | My name is Olena. |
+| **Ду́же приє́мно!** | Pleased to meet you! |
+| **Мені́ теж ду́же приє́мно!** | Pleased to meet you too! |
+
+Now practice a formal conversation exchange in two quick turns:
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Петро́","text":"До́брий день! Як вас зва́ти?"},{"speaker":"Софі́я","text":"До́брий день! Мене́ зва́ти Софі́я. А вас?"}]')}
+/>
+
+English support for the formal greeting:
+
+| Украї́нська | English support |
+| --- | --- |
+| **До́брий день!** | Good afternoon! |
+| **Як вас зва́ти?** | What is your name? formal |
+| **Мене́ зва́ти Софі́я.** | My name is Sofiia. |
+| **А вас?** | And yours? formal |
+
+The conversation concludes politely:
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Петро́","text":"Мене́ зва́ти Петро́. Ду́же приє́мно!"},{"speaker":"Софі́я","text":"Мені́ та́кож приє́мно!"}]')}
+/>
+
+English support for the conclusion:
+
+| Украї́нська | English support |
+| --- | --- |
+| **Мене́ зва́ти Петро́.** | My name is Petro. |
+| **Ду́же приє́мно!** | Pleased to meet you! |
+| **Мені́ та́кож приє́мно!** | Pleased to meet you too! formal |
+
+And here is an introduction between classmates:
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Тара́с","text":"Приві́т! Мене́ зва́ти Тара́с. А тебе́?"},{"speaker":"Окса́на","text":"Приві́т! Мене́ зва́ти Окса́на."}]')}
+/>
+
+English support for the introduction:
+
+| Украї́нська | English support |
+| --- | --- |
+| **Мене́ зва́ти Тара́с.** | My name is Taras. |
+| **Мене́ зва́ти Окса́на.** | My name is Oksana. |
+
+The classmates complete their greeting:
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Тара́с","text":"Ду́же приє́мно!"},{"speaker":"Окса́на","text":"Мені́ теж!"}]')}
+/>
+
+English support for the response:
+
+| Украї́нська | English support |
+| --- | --- |
+| **Ду́же приє́мно!** | Pleased to meet you! |
+| **Мені́ теж!** | Me too! |
+
+Notice how both **теж** and **та́кож** work naturally when returning polite expressions. Both are standard Ukrainian choices.
+
+### Ре́пліки в розмо́ві
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Співрозмо́вник сказа́в: «Приві́т! Як тебе́ зва́ти?». Що ти відповіда́єш?", "options": [{"text": "Мене́ зва́ти Оле́на. А тебе́?", "correct": true}, {"text": "Це ка́ва.", "correct": false}, {"text": "До поба́чення!", "correct": false}], "explanation": "На запита́ння про ім'я́ відповіда́й «Мене́ зва́ти...» і вві́чливо поверта́й запита́ння."}, {"question": "Виклада́ч на зу́стрічі запи́тує: «До́брий день! Як вас зва́ти?». Твоя́ ві́дповідь:", "options": [{"text": "Мене́ зва́ти Петро́. А вас?", "correct": true}, {"text": "Приві́т! А тебе́?", "correct": false}, {"text": "Я зі Льво́ва.", "correct": false}], "explanation": "У форма́льній розмо́ві вжива́й «А вас?»."}, {"question": "Співрозмо́вник ка́же: «Ду́же приє́мно!». Я́ка вві́члива ві́дповідь?", "options": [{"text": "Мені́ та́кож.", "correct": true}, {"text": "Як тебе́ зва́ти?", "correct": false}, {"text": "Зві́дки ти?", "correct": false}], "explanation": "«Мені́ та́кож» або́ «Ду́же приє́мно!» — приро́дна ві́дповідь на вві́чливе знайо́мство."}, {"question": "Ти хо́чеш вві́чливо привіта́тися з викладаче́м уде́нь. Що сказа́ти?", "options": [{"text": "До́брий день!", "correct": true}, {"text": "Приві́т!", "correct": false}, {"text": "До поба́чення!", "correct": false}], "explanation": "«До́брий день!» — вві́чливе де́нне віта́ння."}, {"question": "Ти віта́єшся з рове́сником у хостелі. Що сказа́ти?", "options": [{"text": "Приві́т!", "correct": true}, {"text": "До́брий день, па́не!", "correct": false}, {"text": "Як вас зва́ти?", "correct": false}], "explanation": "«Приві́т!» — неви́мушене віта́ння з одно́літком."}, {"question": "Ти хо́чеш перепита́ти ім'я дру́га пі́сля то́го, як назва́в своє́:", "options": [{"text": "А тебе́?", "correct": true}, {"text": "А у тебе́?", "correct": false}, {"text": "Хто це?", "correct": false}], "explanation": "Коро́тка фо́рма відлу́ння — «А тебе́?», без прийме́нника «у»."}]`)} instruction={"Обери́ влу́чну ре́пліку для ко́жної ситуа́ції."} isUkrainian={false} />
+
+## Мене́ зва́ти...
+
+**Мене́ зва́ти...** is one phrase. You do not need the grammar of **мене́** or
+**зва́ти** yet. You need the social move: ask, answer, echo.
+
+| Украї́нська | English support |
+| --- | --- |
+| **Мене́ зва́ти Марко́.** | My name is Marko. |
+| **Мене́ зва́ти Оле́на.** | My name is Olena. |
+| **Мене́ зва́ти [ім'я́].** | My name is [name]. |
+| **Як тебе́ зва́ти?** | What is your name? informal |
+| **Як вас зва́ти?** | What is your name? formal |
+| **До поба́чення!** | Goodbye! |
+
+Name exchange order:
+
+1. **Приві́т!** or **До́брий день!**
+2. **Як тебе́ зва́ти?** or **Як вас зва́ти?**
+3. **Мене́ зва́ти...**
+4. **А тебе́?** or **А вас?**
+5. **Ду́же приє́мно!**
+
+:::tip
+For this module, **А тебе́?** and **А вас?** are return buttons. Use them only
+after the same question is already active in the conversation.
+:::
+
+### Скла́ди ім'я́
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___ зва́ти Марко́.", "answer": "Мене́", "options": ["Мене́", "Ти", "Це"], "explanation": "Мене́ зва́ти... — ці́лий блок для предста́влення і́мені."}, {"sentence": "Як ___ зва́ти?", "answer": "тебе́", "options": ["тебе́", "я", "він"], "explanation": "Як тебе́ зва́ти? — неформа́льне пита́ння."}, {"sentence": "Як ___ зва́ти?", "answer": "вас", "options": ["вас", "во́на", "ми"], "explanation": "Як вас зва́ти? — форма́льне або́ множи́нне пита́ння."}, {"sentence": "Ду́же ___!", "answer": "приє́мно", "options": ["приє́мно", "студе́нт", "зві́дки"], "explanation": "Ду́же приє́мно звучи́ть пі́сля о́бміну імена́ми."}, {"sentence": "Мене́ зва́ти Оле́на. А ___?", "answer": "тебе́", "options": ["тебе́", "Киї́в", "це"], "explanation": "А тебе́? неформа́льно поверта́є пита́ння."}]`)} instruction={"Обери́ пропу́щене сло́во або́ фра́зу."} isUkrainian={false} />
+
+Avoid the English-shaped line "My name is..." as a Ukrainian sentence. The
+natural first-introduction model is **Мене́ зва́ти...**.
+
+Polite first contact also uses natural formulas for gratitude and apologies. Choose authentic Ukrainian words:
+
+| Ситуа́ція — Context | Украї́нська но́рма | English support |
+| --- | --- | --- |
+| Saying thank you | **Дя́кую!** / **Спаси́бі!** | Thank you! |
+| Saying excuse me or sorry | **Ви́бачте!** / **Проба́чте!** | Excuse me! / Forgive me! |
+| Returning a feeling | **Мені́ теж.** / **Мені́ та́кож.** | Me too. / Likewise. |
+
+Remember to keep the echo question simple: say **А тебе́?** with peers and **А вас?** with teachers or new adults. Do not add prepositional constructions like *А у тебе́?* at this level.
+
+### Діало́ги знайо́мства
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "— Приві́т! Як ___ зва́ти? — Мене́ зва́ти Марко́.", "answer": "тебе́", "options": ["тебе́", "вас", "це"], "explanation": "«Приві́т!» пока́зує неформа́льну розмо́ву, тому́ вжива́ємо «тебе́»."}, {"sentence": "— До́брий день! Як ___ зва́ти? — Мене́ зва́ти Петро́.", "answer": "вас", "options": ["вас", "тебе́", "хто"], "explanation": "«До́брий день!» пока́зує пова́жне зверта́ння, тому́ вжива́ємо «вас»."}, {"sentence": "— Мене́ зва́ти Оле́на. ___ тебе́? — Мене́ зва́ти Марко́.", "answer": "А", "options": ["А", "Хто", "Що"], "explanation": "«А тебе́?» — коро́тке е́хо-пове́рнення запита́ння."}, {"sentence": "— Мене́ зва́ти Софі́я. ___ вас? — Мене́ зва́ти Петро́.", "answer": "А", "options": ["А", "Де", "Як"], "explanation": "«А вас?» — вві́чливе е́хо-пове́рнення запита́ння."}, {"sentence": "— Ду́же приє́мно! — Мені́ ___!", "answer": "та́кож", "options": ["та́кож", "приві́т", "хто"], "explanation": "«Мені́ та́кож!» — вві́члива ві́дповідь на «Ду́же приє́мно!»."}, {"sentence": "— Ви́бачте, як вас зва́ти? — ___ зва́ти Ната́лка.", "answer": "Мене́", "options": ["Мене́", "Я", "Ти"], "explanation": "«Мене́ зва́ти...» — гото́ва констру́кція для предста́влення себе́."}]`)} instruction={"Встав пропу́щені слова́ у ре́пліки розмо́ви."} isUkrainian={false} />
+
+In this opening lesson, you have mastered the essential ritual of introducing yourself in Ukrainian: greeting your conversational partner, asking and giving names, returning the question with a polite echo, and acknowledging the introduction. In Lesson 2, you will learn to point to people and objects using **це**, meet Ukrainian personal pronouns, and state roles and professions with **Я — студе́нт**.
+
+</TabItem>
+<TabItem label="Словник — Vocabulary">
+
+<span id="vocabulary"></span>
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"приві́т","translation":"hi","pos":"interjection","example":"Приві́т!","examples":["Приві́т!"],"atlas_href":"/lexicon/привіт/"},{"word":"до́брий день","translation":"good afternoon / hello","pos":"phrase","example":"До́брий день!","examples":["До́брий день!"],"atlas_href":"/lexicon/добрий-день/"},{"word":"мене́ зва́ти","translation":"my name is","pos":"phrase","example":"Мене́ зва́ти Оле́на.","examples":["Мене́ зва́ти Оле́на."],"atlas_href":"/lexicon/мене-звати/"},{"word":"як тебе́ зва́ти?","translation":"what is your name? informal","pos":"phrase","example":"Як тебе́ зва́ти?","examples":["Як тебе́ зва́ти?"],"atlas_href":"/lexicon/як-тебе-звати/"},{"word":"як вас зва́ти?","translation":"what is your name? formal","pos":"phrase","example":"Як вас зва́ти?","examples":["Як вас зва́ти?"],"atlas_href":"/lexicon/як-вас-звати/"},{"word":"а тебе́?","translation":"and yours? informal","pos":"phrase","example":"А тебе́?","examples":["А тебе́?"]},{"word":"а вас?","translation":"and yours? formal","pos":"phrase","example":"А вас?","examples":["А вас?"]},{"word":"ду́же приє́мно","translation":"pleased to meet you","pos":"phrase","example":"Ду́же приє́мно!","examples":["Ду́же приє́мно!"],"atlas_href":"/lexicon/дуже-приємно/"},{"word":"дя́кую","translation":"thank you","pos":"interjection","example":"Дя́кую!","examples":["Дя́кую!"],"atlas_href":"/lexicon/дякую/"},{"word":"спаси́бі","translation":"thank you","pos":"interjection","example":"Спаси́бі!","examples":["Спаси́бі!"],"atlas_href":"/lexicon/спасибі/"},{"word":"ви́бачте","translation":"excuse me","pos":"interjection","example":"Ви́бачте, як вас зва́ти?","examples":["Ви́бачте, як вас зва́ти?"],"atlas_href":"/lexicon/вибачте/"},{"word":"проба́чте","translation":"excuse me / forgive me","pos":"interjection","example":"Проба́чте.","examples":["Проба́чте."],"atlas_href":"/lexicon/пробачте/"},{"word":"теж","translation":"also / too","pos":"adverb","example":"Мені́ теж приє́мно.","examples":["Мені́ теж приє́мно."],"atlas_href":"/lexicon/теж/"},{"word":"та́кож","translation":"also","pos":"adverb","example":"Мені́ та́кож приє́мно.","examples":["Мені́ та́кож приє́мно."],"atlas_href":"/lexicon/також/"}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"приві́т","back":"hi"},{"front":"до́брий день","back":"good afternoon / hello"},{"front":"мене́ зва́ти","back":"my name is"},{"front":"як тебе́ зва́ти?","back":"what is your name? informal"},{"front":"як вас зва́ти?","back":"what is your name? formal"},{"front":"а тебе́?","back":"and yours? informal"},{"front":"а вас?","back":"and yours? formal"},{"front":"ду́же приє́мно","back":"pleased to meet you"},{"front":"дя́кую","back":"thank you"},{"front":"спаси́бі","back":"thank you"},{"front":"ви́бачте","back":"excuse me"},{"front":"проба́чте","back":"excuse me / forgive me"},{"front":"теж","back":"also / too"},{"front":"та́кож","back":"also"}]`)} />
+
+</TabItem>
+<TabItem label="Вправи — Activities">
+
+<span id="activities"></span>
+
+### Ти чи ви?
+
+*(see lesson, §Діало́ги)*
+
+### Ре́пліка та ві́дповідь
+
+*(see lesson, §Діало́ги)*
+
+### Ре́пліки в розмо́ві
+
+*(see lesson, §Діало́ги)*
+
+### Скла́ди ім'я́
+
+*(see lesson, §Мене́ зва́ти...)*
+
+### Діало́ги знайо́мства
+
+*(see lesson, §Мене́ зва́ти...)*
+
+<span id="fix-common-l2-traps"></span>
+
+### Обери́ украї́нське ре́чення
+
+<ErrorCorrection client:only='react' instruction="Обери́ безпе́чніший украї́нський рядо́к про іденти́чність." items={JSON.parse(`[{"sentence": "Я є студе́нт.", "errorWord": "Я є студе́нт.", "correctForm": "Я студе́нт.", "options": ["Я студе́нт.", "Я є студе́нт."], "explanation": "У тепе́рішній іденти́чності кажи́ Я студе́нт або́ Я — студе́нт."}, {"sentence": "Моє́ ім'я́ є Джон.", "errorWord": "Моє́ ім'я́ є Джон.", "correctForm": "Мене́ зва́ти Джон.", "options": ["Мене́ зва́ти Джон.", "Моє́ ім'я́ є Джон."], "explanation": "Мене́ зва́ти... — часто́тна моде́ль пе́ршого предста́влення."}, {"sentence": "Мене́ зва́ти Марко́. А у тебе́?", "errorWord": "А у тебе́?", "correctForm": "А тебе́?", "options": ["А тебе́?", "А у тебе́?"], "explanation": "На A1 ужива́й коро́ткий відлу́нний блок А тебе́?; фо́рму з у вивча́тимемо пізні́ше."}, {"sentence": "Окса́на ка́же, \\"Я (жі́нка) лі́кар.\\"", "errorWord": "Я (жі́нка) лі́кар.", "correctForm": "Я лі́карка.", "options": ["Я лі́карка.", "Я (жі́нка) лі́кар."], "explanation": "Лі́карка — станда́ртна жіно́ча фо́рма для жінки́, я́ка працю́є лі́карем."}, {"sentence": "Воно́ мій та́то.", "errorWord": "Воно́", "correctForm": "Це мій та́то.", "options": ["Це мій та́то.", "Воно"], "explanation": "Для пе́ршого назива́ння люди́ни вжива́й це; він можли́ве пі́сля цього́."}, {"sentence": "Приві́т, па́не профе́соре!", "errorWord": "Приві́т", "correctForm": "До ́ брий день", "options": ["До ́ брий день", "Приві ́ т"], "explanation": "З профе́сором або́ незнайо́мим доро́слим ужива́й До́брий день."}]`)} isUkrainian={false} />
+
+### Вві́чливі фра́зи
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "What is your name? (informal)", "right": "Як тебе́ зва́ти?"}, {"left": "What is your name? (formal)", "right": "Як вас зва́ти?"}, {"left": "My name is...", "right": "Мене́ зва́ти..."}, {"left": "And yours? (informal)", "right": "А тебе́?"}, {"left": "And yours? (formal)", "right": "А вас?"}, {"left": "Pleased to meet you!", "right": "Ду́же приє́мно!"}]`)} instruction={"З'єдна́й англі́йський ви́раз із пра́вильним украї́нським відпові́дником."} isUkrainian={false} />
+
+### Регі́стри знайо́мства
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Неформа́льно (рове́сники, дру́зі)": ["Приві́т!", "Як тебе́ зва́ти?", "А тебе́?"], "Форма́льно (викладачі́, незнайо́мі лю́ди)": ["До́брий день!", "Як вас зва́ти?", "А вас?"]}`)} instruction={"Розпо́діли фра́зи за рі́внем вві́чливості."} isUkrainian={false} />
+
+### Обери́ доре́чний ви́раз
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Ти знайо́мишся з нови́м одногрупником в університе́ті:", "options": [{"text": "Приві́т! Як тебе́ зва́ти?", "correct": true}, {"text": "До́брий день, па́не профе́соре!", "correct": false}], "explanation": "З рове́сником та одногрупником ужива́й неви́мушене «ти»: «Як тебе́ зва́ти?»."}, {"question": "Ти віта́єшся з викладаче́м на ка́федрі:", "options": [{"text": "До́брий день! Як вас зва́ти?", "correct": true}, {"text": "Приві́т! Як тебе́ зва́ти?", "correct": false}], "explanation": "З викладаче́м за́вжди дотри́муємося форма́льного то́ну на «ви»."}, {"question": "Співрозмо́вник відпові́в: «Ду́же приє́мно!». Що ти ска́жеш?", "options": [{"text": "Мені́ та́кож.", "correct": true}, {"text": "Як тебе́ зва́ти?", "correct": false}], "explanation": "«Мені́ та́кож.» — вві́члива взає́мна ві́дповідь."}, {"question": "Ти ненаро́ком зачепи́в люди́ну в аудито́рії й перепро́шуєш:", "options": [{"text": "Ви́бачте!", "correct": true}, {"text": "Ізвиніть!", "correct": false}], "explanation": "«Ви́бачте» або́ «проба́чте» — пито́мі фо́рми ви́бачення."}, {"question": "Ти щи́ро дя́куєш за кори́сну пора́ду:", "options": [{"text": "Дя́кую!", "correct": true}, {"text": "Спасібо!", "correct": false}], "explanation": "«Дя́кую» та «спаси́бі» — нормати́вні слова́ подя́ки."}, {"question": "Ти назва́в своє́ ім'я рове́сникові й хо́чеш дізна́тися йо́го ім'я:", "options": [{"text": "А тебе́?", "correct": true}, {"text": "А у тебе́?", "correct": false}], "explanation": "«А тебе́?» — чи́стий ви́раз-відлу́ння без за́йвого прийме́нника «у»."}]`)} instruction={"Обери́ найкра́щу фра́зу для ко́жної мовленнє́вої ситуа́ції."} isUkrainian={false} />
+
+### Мо́вні фа́кти про знайо́мство
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "В украї́нській мо́ві фра́за «Мене́ зва́ти...» вжива́ється без дієслова́ «є».", "isTrue": true, "explanation": "В украї́нській мо́ві дієсло́во-зв'я́зка «є» у цій констру́кції не потрі́бне."}, {"statement": "Фра́за «А тебе́?» — це вві́чливе пове́рнення запита́ння дру́гові чи рове́снику.", "isTrue": true, "explanation": "«А тебе́?» неформа́льно поверта́є що́йно поста́влене запита́ння."}, {"statement": "Фо́рму «Як вас зва́ти?» вжива́ють лише́ тоді́, коли́ зверта́ються до діте́й.", "isTrue": false, "explanation": "«Як вас зва́ти?» — це пова́жне зверта́ння до доро́слої люди́ни або́ гру́пи люде́й."}, {"statement": "Фра́за «А у тебе́?» є обов'язко́вим станда́ртом пе́ршого знайо́мства на рі́вні A1.", "isTrue": false, "explanation": "На A1 вжива́ють прями́й е́хо-патерн «А тебе́?», уника́ючи прийменнико́вих форм."}, {"statement": "Сло́во «Приві́т!» підхо́дить для офіці́йної бе́сіди з дека́ном факульте́ту.", "isTrue": false, "explanation": "Для офіці́йного зверта́ння використо́вують «До́брий день!»."}, {"statement": "Ви́рази «дя́кую» та «спаси́бі» є пито́мими нормати́вними слова́ми подя́ки.", "isTrue": true, "explanation": "Оби́два слова́ є нормати́вними в суча́сній украї́нській літерату́рній мо́ві."}]`)} instruction={"Ви́знач, чи правди́ве ко́жне тве́рдження про украї́нське знайо́мство."} isUkrainian={false} />
+
+### Пере́клад ключови́х ви́разів
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "My name is Olena.", "options": [{"text": "Мене́ зва́ти Оле́на.", "correct": true}, {"text": "Як тебе́ зва́ти?", "correct": false}, {"text": "Це Оле́на.", "correct": false}], "explanation": "«Мене́ зва́ти...» означа́є «My name is...»."}, {"source": "What is your name? (informal)", "options": [{"text": "Як тебе́ зва́ти?", "correct": true}, {"text": "Як вас зва́ти?", "correct": false}, {"text": "Зві́дки ти?", "correct": false}], "explanation": "Неформа́льне зверта́ння — «Як тебе́ зва́ти?»."}, {"source": "What is your name? (formal)", "options": [{"text": "Як вас зва́ти?", "correct": true}, {"text": "Як тебе́ зва́ти?", "correct": false}, {"text": "А вас?", "correct": false}], "explanation": "Форма́льне зверта́ння — «Як вас зва́ти?»."}, {"source": "Pleased to meet you!", "options": [{"text": "Ду́же приє́мно!", "correct": true}, {"text": "До́брий день!", "correct": false}, {"text": "До поба́чення!", "correct": false}], "explanation": "«Ду́же приє́мно!» переклада́ється як «Pleased to meet you!»."}, {"source": "And yours? (informal)", "options": [{"text": "А тебе́?", "correct": true}, {"text": "А вас?", "correct": false}, {"text": "Хто це?", "correct": false}], "explanation": "«А тебе́?» — неформа́льне е́хо-запита́ння."}, {"source": "Good afternoon!", "options": [{"text": "До́брий день!", "correct": true}, {"text": "Приві́т!", "correct": false}, {"text": "Дя́кую!", "correct": false}], "explanation": "«До́брий день!» — вві́чливе де́нне привіта́ння."}]`)} instruction={"Обери́ пра́вильний украї́нський пере́клад для англі́йської фра́зи."} isUkrainian={false} />
+
+### Обери́ нормати́вну фо́рму
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___, як вас зва́ти?", "answer": "Ви́бачте", "options": ["Ви́бачте", "Ізвиніть"], "explanation": "«Ви́бачте» або́ «проба́чте» — нормати́вні фо́рми зверта́ння."}, {"sentence": "Ду́же приє́мно! — Мені́ ___!", "answer": "теж", "options": ["теж", "тоже"], "explanation": "«Теж» або́ «та́кож» — пито́мі украї́нські відпові́дники."}, {"sentence": "Щи́ро ___ за розмо́ву!", "answer": "дя́кую", "options": ["дя́кую", "спасібо"], "explanation": "«Дя́кую» або́ «спаси́бі» — нормати́вні слова́ подя́ки."}, {"sentence": "Мене́ зва́ти Марко́. ___ тебе́?", "answer": "А", "options": ["А", "А у"], "explanation": "На рі́вні A1 вжива́ємо безпе́чний зворо́т «А тебе́?»."}, {"sentence": "___, як ва́ші спра́ви?", "answer": "Проба́чте", "options": ["Проба́чте", "Ізвінітє"], "explanation": "«Проба́чте» — пито́ма украї́нська фо́рма ви́бачення."}, {"sentence": "Мене́ зва́ти Софі́я, і мені́ ___ приє́мно.", "answer": "та́кож", "options": ["та́кож", "тоже"], "explanation": "«Та́кож» — пра́вильна літерату́рна фо́рма."}]`)} instruction={"Запо́вни про́пуск пито́мим украї́нським сло́вом."} isUkrainian={false} />
+
+</TabItem>
+<TabItem label="Ресурси — Resources">
+
+<span id="resources"></span>
+
+:::info[🎧 🔗 External Resources]
+
+**🎧 Audio:**
+- 🎧 [Ukrainian Lessons Podcast Season 1, Episode 1 — Greetings in Ukrainian](https://www.ukrainianlessons.com/episode1/) — Informal and formal greetings: Приві́т and До́брий день.
+- 🎧 [Ukrainian Lessons Podcast Season 1, Episode 3 — How to Introduce Yourself](https://www.ukrainianlessons.com/episode3/) — Introductions, greeting exchanges, and polite responses in Ukrainian.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
+
+<nav aria-label="Lesson navigation">
+
+[Previous](/a1/who-am-i/) · [Module](/a1/who-am-i/) · [Next](/a1/who-am-i/2/)
+
+</nav>

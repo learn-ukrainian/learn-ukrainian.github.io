@@ -1,56 +1,56 @@
-- lemma: привіт
+- lemma: приві́т
   translation: hi
   pos: interjection
-  usage: Привіт!
-- lemma: добрий день
+  usage: Приві́т!
+- lemma: до́брий день
   translation: good afternoon / hello
   pos: phrase
-  usage: Добрий день!
-- lemma: мене звати
+  usage: До́брий день!
+- lemma: мене́ зва́ти
   translation: my name is
   pos: phrase
-  usage: Мене звати Олена.
-- lemma: як тебе звати?
+  usage: Мене́ зва́ти Оле́на.
+- lemma: як тебе́ зва́ти?
   translation: what is your name? informal
   pos: phrase
-  usage: Як тебе звати?
-- lemma: як вас звати?
+  usage: Як тебе́ зва́ти?
+- lemma: як вас зва́ти?
   translation: what is your name? formal
   pos: phrase
-  usage: Як вас звати?
-- lemma: а тебе?
+  usage: Як вас зва́ти?
+- lemma: а тебе́?
   translation: and yours? informal
   pos: phrase
-  usage: А тебе?
+  usage: А тебе́?
 - lemma: а вас?
   translation: and yours? formal
   pos: phrase
   usage: А вас?
-- lemma: дуже приємно
+- lemma: ду́же приє́мно
   translation: pleased to meet you
   pos: phrase
-  usage: Дуже приємно!
-- lemma: дякую
+  usage: Ду́же приє́мно!
+- lemma: дя́кую
   translation: thank you
   pos: interjection
-  usage: Дякую!
-- lemma: спасибі
+  usage: Дя́кую!
+- lemma: спаси́бі
   translation: thank you
   pos: interjection
-  usage: Спасибі!
-- lemma: вибачте
+  usage: Спаси́бі!
+- lemma: ви́бачте
   translation: excuse me
   pos: interjection
-  usage: Вибачте, як вас звати?
-- lemma: пробачте
+  usage: Ви́бачте, як вас зва́ти?
+- lemma: проба́чте
   translation: excuse me / forgive me
   pos: interjection
-  usage: Пробачте.
+  usage: Проба́чте.
 - lemma: теж
   translation: also / too
   pos: adverb
-  usage: Мені теж приємно.
-- lemma: також
+  usage: Мені́ теж приє́мно.
+- lemma: та́кож
   translation: also
   pos: adverb
-  usage: Мені також приємно.
+  usage: Мені́ та́кож приє́мно.
