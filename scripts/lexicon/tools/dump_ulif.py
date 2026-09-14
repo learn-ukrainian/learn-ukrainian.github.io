@@ -52,6 +52,17 @@ _REGISTER_RE = re.compile(
     re.IGNORECASE,
 )
 
+_ULIF_CASE_LABELS = {
+    "називний",
+    "родовий",
+    "давальний",
+    "знахідний",
+    "орудний",
+    "місцевий",
+    "кличний",
+}
+
+
 
 class DictUACrawler:
     """Polite, robust HTTP client and parser for DictUA."""
@@ -156,19 +167,29 @@ class DictUACrawler:
     @staticmethod
     def _parse_paradigm(html: str) -> dict[str, Any] | None:
         soup = BeautifulSoup(html, "html.parser")
-        table = soup.find(id="ContentPlaceHolder1_dgv")
-        if table is None:
+        article = soup.find(id="ContentPlaceHolder1_article")
+        if article is None:
             return None
-        headers: list[str] = []
-        rows: list[list[str]] = []
-        for tr in table.find_all("tr"):
-            th_cells = tr.find_all("th")
-            if th_cells and not headers:
-                headers = [" ".join(c.get_text(" ", strip=True).split()) for c in th_cells]
-            td_cells = tr.find_all("td")
-            if td_cells:
-                rows.append([" ".join(c.get_text(" ", strip=True).split()) for c in td_cells])
-        return {"headers": headers, "rows": rows} if rows else None
+        for table in article.find_all("table"):
+            rows: list[list[str]] = []
+            for tr in table.find_all("tr", recursive=False):
+                cells = tr.find_all(["td", "th"], recursive=False)
+                row = [" ".join(c.get_text(" ", strip=True).split()) for c in cells]
+                if any(row):
+                    rows.append(row)
+            if not rows:
+                for tr in table.find_all("tr"):
+                    cells = tr.find_all(["td", "th"])
+                    row = [" ".join(c.get_text(" ", strip=True).split()) for c in cells]
+                    if any(row):
+                        rows.append(row)
+            if rows:
+                labels = {cell.casefold() for row in rows for cell in row}
+                if labels & _ULIF_CASE_LABELS or any(
+                    "інфінітив" in cell.casefold() for row in rows for cell in row
+                ):
+                    return {"headers": rows[0], "rows": rows}
+        return None
 
     @staticmethod
     def _parse_relation_tab(html: str) -> list[dict[str, Any]]:
