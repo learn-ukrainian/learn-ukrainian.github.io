@@ -705,3 +705,20 @@ def test_compute_routing_budget_computes_in_flight_once(monkeypatch, tmp_path):
     assert len(sub_lanes) == len(state_router.SUBSCRIPTION_LANES)
     for row in sub_lanes:
         assert "in_flight" in row
+
+
+def test_glm_is_not_a_subscription_lane_or_ranked_provider(monkeypatch, tmp_path):
+    """Retired GLM/Z.AI seat must not appear in routing-budget lanes or rank."""
+    from scripts.api import subscription_usage as subscription_usage_mod
+
+    assert "glm" not in state_router.SUBSCRIPTION_LANES
+    assert "glm" not in subscription_usage_mod.SUBSCRIPTION_PROVIDERS
+    assert "glm" not in subscription_usage_mod.PROVIDER_TO_LANE
+    assert "glm" not in subscription_usage_mod._NATIVE_PROBES
+
+    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
+    _configure(monkeypatch, tmp_path, [])
+    data = state_router.compute_routing_budget(now)
+
+    assert "glm" not in data["agents"]
+    assert all(row.get("lane") != "glm" for row in data.get("ranked_by_headroom", []))

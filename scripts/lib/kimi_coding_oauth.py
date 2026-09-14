@@ -68,7 +68,88 @@ def _credentials_path() -> Path:
     override = os.environ.get("KIMI_CODE_CREDENTIALS_PATH")
     if override:
         return Path(override).expanduser()
+    home = os.environ.get("KIMI_CODE_HOME")
+    if home:
+        return Path(home).expanduser() / "credentials" / "kimi-code.json"
     return Path.home() / ".kimi-code" / "credentials" / "kimi-code.json"
+
+
+_TOKEN_WRAP_KEYS = ("tokens", "oauth", "credentials", "auth")
+_ACCESS_KEYS = ("access_token", "accessToken")
+_REFRESH_KEYS = ("refresh_token", "refreshToken")
+_EXPIRES_AT_KEYS = ("expires_at", "expiresAt")
+_EXPIRES_IN_KEYS = ("expires_in", "expiresIn")
+
+
+def _first_str(data: dict, keys: tuple[str, ...]) -> str | None:
+    for key in keys:
+        val = data.get(key)
+        if isinstance(val, str) and val.strip():
+            return val.strip()
+    return None
+
+
+def _first_number(data: dict, keys: tuple[str, ...]) -> float | None:
+    for key in keys:
+        val = data.get(key)
+        if isinstance(val, (int, float)) and not isinstance(val, bool):
+            return float(val)
+    return None
+
+
+def _flatten_credential_fields(data: dict) -> dict:
+    """Normalize nested / camelCase Kimi Code login artifacts to the helper shape.
+
+    Does not promote ``id_token`` to a bearer. The usages API wants the
+    OAuth access_token (refreshed when expired), not an identity JWT.
+    """
+    candidates = [data]
+    for wrap in _TOKEN_WRAP_KEYS:
+        nested = data.get(wrap)
+        if isinstance(nested, dict):
+            candidates.append(nested)
+
+    access = None
+    refresh = None
+    expires_at = None
+    expires_in = None
+    token_type = None
+    scope = None
+    for src in candidates:
+        if access is None:
+            access = _first_str(src, _ACCESS_KEYS)
+        if refresh is None:
+            refresh = _first_str(src, _REFRESH_KEYS)
+        if expires_at is None:
+            expires_at = _first_number(src, _EXPIRES_AT_KEYS)
+        if expires_in is None:
+            expires_in = _first_number(src, _EXPIRES_IN_KEYS)
+        if token_type is None:
+            val = src.get("token_type") or src.get("tokenType")
+            if isinstance(val, str) and val.strip():
+                token_type = val.strip()
+        if scope is None:
+            val = src.get("scope")
+            if isinstance(val, str) and val.strip():
+                scope = val.strip()
+
+    if access is None and refresh is None:
+        return data
+
+    merged = dict(data)
+    if access is not None:
+        merged["access_token"] = access
+    if refresh is not None:
+        merged["refresh_token"] = refresh
+    if expires_at is not None:
+        merged["expires_at"] = expires_at
+    if expires_in is not None:
+        merged["expires_in"] = int(expires_in)
+    if token_type is not None:
+        merged["token_type"] = token_type
+    if scope is not None:
+        merged["scope"] = scope
+    return merged
 
 
 def _margin_seconds() -> int:
@@ -84,7 +165,7 @@ def _read_credentials(path: Path) -> dict:
         data = json.load(handle)
     if not isinstance(data, dict):
         raise ValueError("credential file is not a JSON object")
-    return data
+    return _flatten_credential_fields(data)
 
 
 def _fresh_token(data: dict, margin: int) -> str | None:
@@ -350,12 +431,18 @@ def _emit_token(token: str) -> int:
     return 0
 
 
-def cmd_token() -> int:
+def resolve_access_token(*, margin: int | None = None) -> str:
+    """Return a usable Kimi Code OAuth access token for trusted in-process callers.
+
+    Uses the stored access token when it remains valid beyond the safety
+    margin; otherwise performs one ``refresh_token`` grant and writes the
+    rotated credential back. Never prints the token.
+    """
     path = _credentials_path()
-    margin = _margin_seconds()
+    if margin is None:
+        margin = _margin_seconds()
     if not path.is_file():
-        _print_err(f"kimi-coding-oauth: credential file not found: {path} (run `kimi login`)")
-        return 2
+        raise NoCredentialsError(f"credential file not found: {path} (run `kimi login`)")
 
     # Serialize refreshes across concurrent apiKeyHelper invocations. The lock
     # file is ours; the kimi CLI does not take it, so after acquiring we
@@ -367,34 +454,36 @@ def cmd_token() -> int:
         try:
             data = _read_credentials(path)
         except (OSError, ValueError) as exc:
-            _print_err(f"kimi-coding-oauth: cannot read credentials: {exc}")
-            return 2
+            raise NoCredentialsError(f"cannot read credentials: {exc}") from exc
 
-        held = _held_secrets(data)
         token = _fresh_token(data, margin)
         if token is not None:
-            return _emit_token(token)
+            return token
 
-        try:
-            merged = _refresh(data)
-            held.update(_held_secrets(merged))
-        except NoCredentialsError as exc:
-            _print_err(f"kimi-coding-oauth: {exc}", secrets=held)
-            return 2
-        except RefreshFailedError as exc:
-            _print_err(f"kimi-coding-oauth: {exc}", secrets=held)
-            return 3
+        held = _held_secrets(data)
+        merged = _refresh(data)
+        held.update(_held_secrets(merged))
         try:
             _write_credentials(path, merged)
         except OSError as exc:
-            _print_err(f"kimi-coding-oauth: cannot write credentials: {exc}", secrets=held)
-            return 3
+            raise RefreshFailedError(f"cannot write credentials: {exc}", secrets=held) from exc
 
         token = _fresh_token(merged, 0)
         if token is not None:
-            return _emit_token(token)
-        _print_err("kimi-coding-oauth: refreshed token is already expired", secrets=held)
+            return token
+        raise RefreshFailedError("refreshed token is already expired", secrets=held)
+
+
+def cmd_token() -> int:
+    try:
+        token = resolve_access_token()
+    except NoCredentialsError as exc:
+        _print_err(f"kimi-coding-oauth: {exc}")
+        return 2
+    except RefreshFailedError as exc:
+        _print_err(f"kimi-coding-oauth: {exc}")
         return 3
+    return _emit_token(token)
 
 
 def cmd_refresh() -> int:

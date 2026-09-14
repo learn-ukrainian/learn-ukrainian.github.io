@@ -45,6 +45,11 @@ try:
 except ImportError:  # pragma: no cover
     from common.repo_root import main_checkout_root
 
+try:
+    from scripts.lib import kimi_coding_oauth
+except ImportError:  # pragma: no cover
+    from lib import kimi_coding_oauth  # type: ignore
+
 # Live-measured 2026-08-04: `codexbar usage --json --provider claude` took
 # ~17s end-to-end twice in a row (its own dashboard-fetch latency, not a
 # hang) while codex returned in ~2s. The prior 2.0s refresh timeout
@@ -84,7 +89,6 @@ SUBSCRIPTION_PROVIDERS: tuple[str, ...] = (
     "codex",
     "cursor",
     "gemini",
-    "glm",
     "grok",
     "kimi",
 )
@@ -96,7 +100,6 @@ PROVIDER_TO_LANE = {
     "gemini": "gemini",
     "antigravity": "gemini",
     "agy": "gemini",
-    "glm": "glm",
     "grok": "grok",
     "kimi": "kimi",
 }
@@ -423,22 +426,40 @@ def _load_codex_oauth_token() -> str | None:
     return None
 
 
-def _load_kimi_bearer() -> str | None:
+def _load_kimi_static_bearer() -> str | None:
+    """Last-resort read of a stored access_token when refresh is unavailable."""
+    data = _read_json_file(kimi_coding_oauth._credentials_path())
+    if not data:
+        return None
+    flat = kimi_coding_oauth._flatten_credential_fields(data)
+    token = flat.get("access_token")
+    if isinstance(token, str) and token.strip():
+        return token.strip()
+    return None
+
+
+def _load_kimi_bearer(*, force_refresh: bool = False) -> str | None:
+    """Return a Kimi Code bearer from env or the current login artifacts.
+
+    ``KIMI_CODE_API_KEY`` wins (static key). Otherwise reuse the Kimi Code
+    OAuth helper so a valid ``kimi login`` on the host is refreshed before
+    the usages probe, matching the CLI path. A stale access_token alone is
+    not enough — those live ~15 minutes.
+    """
     api_key = os.environ.get("KIMI_CODE_API_KEY", "").strip()
     if api_key:
         return api_key
-    cred_path = Path(
-        os.environ.get(
-            "KIMI_CODE_CREDENTIALS_PATH",
-            str(Path.home() / ".kimi-code" / "credentials" / "kimi-code.json"),
-        )
-    ).expanduser()
-    data = _read_json_file(cred_path)
-    if data:
-        token = data.get("access_token")
-        if isinstance(token, str) and token.strip():
-            return token.strip()
-    return None
+    try:
+        if force_refresh:
+            return kimi_coding_oauth.force_refresh_token()
+        return kimi_coding_oauth.resolve_access_token()
+    except (
+        kimi_coding_oauth.NoCredentialsError,
+        kimi_coding_oauth.RefreshFailedError,
+        OSError,
+        ValueError,
+    ):
+        return _load_kimi_static_bearer()
 
 
 def _load_grok_bearer() -> str | None:
@@ -1033,19 +1054,30 @@ def _kimi_window_minutes(item: dict[str, Any]) -> int:
     return 300
 
 
+def _kimi_usages_request(token: str, *, timeout_s: float) -> tuple[int, Any, str | None]:
+    return _http_json_request(
+        "GET",
+        "https://api.kimi.com/coding/v1/usages",
+        headers={"Authorization": f"Bearer {token}"},
+        timeout_s=timeout_s,
+    )
+
+
 def _probe_kimi_native(*, timeout_s: float) -> dict[str, Any]:
+    used_env_key = bool(os.environ.get("KIMI_CODE_API_KEY", "").strip())
     token = _load_kimi_bearer()
     if not token:
         return _normalize_provider_error(
             "kimi",
             {"message": "Kimi Code credentials unavailable", "kind": "need_login", "code": "NEED_LOGIN"},
         )
-    status, payload, err = _http_json_request(
-        "GET",
-        "https://api.kimi.com/coding/v1/usages",
-        headers={"Authorization": f"Bearer {token}"},
-        timeout_s=timeout_s,
-    )
+    status, payload, err = _kimi_usages_request(token, timeout_s=timeout_s)
+    # Access tokens last ~15 min. A still-listed expires_at can still 401;
+    # one refresh-token grant rebinds the bearer the CLI already uses.
+    if status in {401, 403} and not used_env_key:
+        refreshed = _load_kimi_bearer(force_refresh=True)
+        if refreshed and refreshed != token:
+            status, payload, err = _kimi_usages_request(refreshed, timeout_s=timeout_s)
     if status in {401, 403}:
         return _normalize_provider_error(
             "kimi",
@@ -1310,7 +1342,8 @@ _NATIVE_PROBES = {
     "grok": _probe_grok_native,
     "gemini": _probe_antigravity_native,
     "antigravity": _probe_antigravity_native,
-    "glm": _probe_glm_native,
+    # GLM/Z.AI is not a live subscription lane. Keep _probe_glm_native for
+    # manual diagnostics; do not register it here or routing-budget ranks it.
 }
 
 

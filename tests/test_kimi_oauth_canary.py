@@ -138,3 +138,30 @@ def test_failure_alert_does_not_raise_when_fleet_comms_is_unavailable(capsys) ->
         assert canary.post_failure_alert("local_io") is False
 
     assert "fleet-comms alert failed: RuntimeError" in capsys.readouterr().err
+
+
+def test_credentials_path_honors_kimi_code_home(tmp_path, monkeypatch) -> None:
+    monkeypatch.delenv("KIMI_CODE_CREDENTIALS_PATH", raising=False)
+    monkeypatch.setenv("KIMI_CODE_HOME", str(tmp_path / "kimi-home"))
+    assert kimi_coding_oauth._credentials_path() == tmp_path / "kimi-home" / "credentials" / "kimi-code.json"
+
+
+def test_flatten_credential_fields_reads_nested_camel_case() -> None:
+    flat = kimi_coding_oauth._flatten_credential_fields(
+        {
+            "id_token": "identity-jwt",
+            "tokens": {"accessToken": "nested-access", "refreshToken": "nested-refresh", "expiresAt": 99},
+        }
+    )
+    assert flat["access_token"] == "nested-access"
+    assert flat["access_token"] != "identity-jwt"
+    assert flat["refresh_token"] == "nested-refresh"
+    assert flat["expires_at"] == 99.0
+
+
+def test_resolve_access_token_returns_fresh_without_network(tmp_path, monkeypatch) -> None:
+    credential = tmp_path / "kimi-code.json"
+    _credential(credential)
+    monkeypatch.setenv("KIMI_CODE_CREDENTIALS_PATH", str(credential))
+    monkeypatch.setenv("KIMI_CODE_OAUTH_HOST", "http://127.0.0.1:9")
+    assert kimi_coding_oauth.resolve_access_token() == "old-access"
