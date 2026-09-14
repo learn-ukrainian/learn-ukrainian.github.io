@@ -908,9 +908,13 @@ class ActivityParser:
 
     def _parse_unjumble(self, data: dict) -> UnjumbleActivity:
         items = []
-        for item_index, item_data in enumerate(data.get('items', [])):
+        for item_index, item_data in enumerate(self._item_rows(data)):
             words = self._unjumble_words(item_data, item_index)
-            answer = item_data.get('answer') or item_data.get('word') or item_data.get('sentence')
+            answer = (
+                item_data.get('answer') or item_data.get('word')
+                or item_data.get('sentence') or item_data.get('correct')
+                or item_data.get('target')
+            )
             if answer is None and 'correct_order' in item_data:
                 correct_order = item_data['correct_order']
                 if isinstance(correct_order, list):

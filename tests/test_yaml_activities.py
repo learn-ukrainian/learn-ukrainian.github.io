@@ -155,6 +155,26 @@ class TestParsing:
         assert activity.items[0].source == "Добрий день"
         assert any(opt.text == "Good day" and opt.correct for opt in activity.items[0].options)
 
+    def test_unjumble_scrambled_correct_alias(self, parser, tmp_path):
+        path = tmp_path / "activities.yaml"
+        path.write_text(
+            """
+- id: act-unj
+  type: unjumble
+  title: Unjumble
+  items:
+  - scrambled:
+    - Це
+    - моя́
+    - сім'я
+    correct: Це моя́ сім'я
+""",
+            encoding="utf-8",
+        )
+        activity = parser.parse(path)[0]
+        assert activity.items[0].words == ["Це", "моя́", "сім'я"]
+        assert activity.items[0].answer == "Це моя́ сім'я"
+
     def test_parse_preserves_titles(self, parser, sample_yaml_path):
         """Titles are preserved during parsing."""
         activities = parser.parse(sample_yaml_path)
