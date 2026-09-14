@@ -1,8 +1,8 @@
-"""Tests for scripts/check_issue_task_quality.py (#7854)."""
+"""Tests for scripts/ci/check_issue_task_quality.py (#7854)."""
 
 from __future__ import annotations
 
-from scripts.check_issue_task_quality import main, score_body
+from scripts.ci.check_issue_task_quality import main, score_body
 
 COMPLETE = """
 ## User-visible outcome
@@ -12,7 +12,7 @@ Ship the advisory checker.
 #7854 audit showed empty DoD cards.
 
 ## In scope
-`scripts/check_issue_task_quality.py` and issue templates.
+`scripts/ci/check_issue_task_quality.py` and issue templates.
 
 ## Non-goals
 No blocking CI gate.
@@ -22,7 +22,7 @@ All templates under .github/ISSUE_TEMPLATE/.
 
 ## Verify
 ```bash
-.venv/bin/python scripts/check_issue_task_quality.py --help
+.venv/bin/python scripts/ci/check_issue_task_quality.py --help
 ```
 
 ## Dependencies
@@ -107,7 +107,7 @@ def test_missing_body_file_strict_fails(tmp_path) -> None:
 
 def test_empty_tilde_verify_fence_warns() -> None:
     body = COMPLETE.replace(
-        "## Verify\n```bash\n.venv/bin/python scripts/check_issue_task_quality.py --help\n```",
+        "## Verify\n```bash\n.venv/bin/python scripts/ci/check_issue_task_quality.py --help\n```",
         "## Verify\n~~~bash\n~~~\n",
     )
     result = score_body(body)

@@ -96,9 +96,9 @@ Waiting on review/CI is an actionable nonterminal state — **not** “blocked�
 Before dispatch and before close:
 
 ```bash
-.venv/bin/python scripts/check_issue_task_quality.py --issue N
+.venv/bin/python scripts/ci/check_issue_task_quality.py --issue N
 # or score a draft body:
-.venv/bin/python scripts/check_issue_task_quality.py --body-file /tmp/issue.md
+.venv/bin/python scripts/ci/check_issue_task_quality.py --body-file /tmp/issue.md
 ```
 
 Exit `0` with `PASS` or `WARN` (missing fields listed). v1 does **not** block
