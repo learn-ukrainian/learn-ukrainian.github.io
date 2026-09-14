@@ -10603,6 +10603,2186 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "distinction_note": "Не плутати з омографом «ви́гідний» (наголос на першому складі: прибутковий, який дає користь чи прибуток)."
     }
+  ],
+  "вигідність": [
+    {
+      "lemma": "вигідність",
+      "url_slug": "вигідність",
+      "headword": "ви́гідність",
+      "short_label": "прибутковість, користь (B1)",
+      "gloss": "profitability, commercial advantage, financial benefit",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈwɪɦʲidnʲisʲtʲ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ви́гідність",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "жіночий",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «вигі́дність» (наголос на другому складі: зручність, комфортні умови)."
+    },
+    {
+      "lemma": "вигідність",
+      "url_slug": "вигідність",
+      "headword": "вигі́дність",
+      "short_label": "зручність, комфорт (B1)",
+      "gloss": "convenience, comfort, suitability of conditions",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[wɪˈɦʲidnʲisʲtʲ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "вигі́дність",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "жіночий",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ви́гідність» (наголос на першому складі: матеріальна вигода, прибутковість)."
+    }
+  ],
+  "комірник": [
+    {
+      "lemma": "комірник",
+      "url_slug": "комірник",
+      "headword": "комі́рник",
+      "short_label": "квартирант, пожилець (розм.)",
+      "gloss": "lodger, tenant, roomer",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[kɔˈmʲirnɪk]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "комі́рник",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "чоловічий",
+          "animacy": "істота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «комірни́к» (наголос на третьому складі: завідувач комори чи складу)."
+    },
+    {
+      "lemma": "комірник",
+      "url_slug": "комірник",
+      "headword": "комірни́к",
+      "short_label": "завідувач складу, комори (B1)",
+      "gloss": "storekeeper, warehouseman, stock controller",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[kɔmʲirˈnɪk]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "комірни́к",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "чоловічий",
+          "animacy": "істота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «комі́рник» (наголос на другому складі: квартира́нт, пожилець)."
+    }
+  ],
+  "копнути": [
+    {
+      "lemma": "копнути",
+      "url_slug": "копнути",
+      "headword": "ко́пнути",
+      "short_label": "вдарити ногою (A2)",
+      "gloss": "to kick once, give a kick with foot",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈkɔpnutɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ко́пнути",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "доконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «копну́ти» (наголос на другому складі: однократна дія від копати лопатою чи землерийним знаряддям)."
+    },
+    {
+      "lemma": "копнути",
+      "url_slug": "копнути",
+      "headword": "копну́ти",
+      "short_label": "вдарити лопатою, розкопати (A2)",
+      "gloss": "to dig once, make a single stroke with a spade",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[kɔpˈnutɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "копну́ти",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "доконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ко́пнути» (наголос на першому складі: вдарити ногою, копнути м'яч)."
+    }
+  ],
+  "копчений": [
+    {
+      "lemma": "копчений",
+      "url_slug": "копчений",
+      "headword": "ко́пчений",
+      "short_label": "дієприкметник: оброблений димом (B1)",
+      "gloss": "smoked (passive participle: subjected to the smoking process)",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈkɔpt͡ʃenɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ко́пчений",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «копче́ний» (наголос на другому складі: якісний прикметник, копчена риба, копчена ковбаса)."
+    },
+    {
+      "lemma": "копчений",
+      "url_slug": "копчений",
+      "headword": "копче́ний",
+      "short_label": "прикметник: копчені вироби (A2)",
+      "gloss": "smoked (adjective: prepared by smoking, e.g. smoked sausage, fish)",
+      "pos": "adjective",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[kɔpˈt͡ʃɛnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "копче́ний",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ко́пчений» (наголос на першому складі: віддієслівний дієприкметник від коптити)."
+    }
+  ],
+  "крижовий": [
+    {
+      "lemma": "крижовий",
+      "url_slug": "крижовий",
+      "headword": "крижо́вий",
+      "short_label": "хрестоподібний (B2)",
+      "gloss": "cruciform, cross-shaped (e.g. crossways, cruciform church plan)",
+      "pos": "adjective",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[krɪˈʒɔwɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "крижо́вий",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «крижови́й» (наголос на третьому складі: анатомічний термін, пов'язаний з крижами хребта)."
+    },
+    {
+      "lemma": "крижовий",
+      "url_slug": "крижовий",
+      "headword": "крижови́й",
+      "short_label": "анатомічний: відділ хребта (B1)",
+      "gloss": "sacral (anatomical: of/pertaining to the sacrum or sacral spine)",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[krɪʒɔˈwɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "крижови́й",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «крижо́вий» (наголос на другому складі: хрестоподібний, у формі хреста)."
+    }
+  ],
+  "денник": [
+    {
+      "lemma": "денник",
+      "url_slug": "денник",
+      "headword": "де́нник",
+      "short_label": "щоденник (зах., заст.)",
+      "gloss": "diary, personal daily journal (regional/archaic)",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-archaism",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": "treasured",
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈdɛnːɪk]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "де́нник",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "чоловічий",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «денни́к» (наголос на другому складі: ізольоване стійло для коня у стайні)."
+    },
+    {
+      "lemma": "денник",
+      "url_slug": "денник",
+      "headword": "денни́к",
+      "short_label": "стійло для коня в стайні (B1)",
+      "gloss": "horse box, single enclosed stall in a stable",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[dɛnˈnɪk]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "денни́к",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "чоловічий",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «де́нник» (наголос на першому складі: щоденник у західноукраїнській традиції)."
+    }
+  ],
+  "линути": [
+    {
+      "lemma": "линути",
+      "url_slug": "линути",
+      "headword": "ли́нути",
+      "short_label": "швидко текти, литися (B1)",
+      "gloss": "to pour, gush forth, stream rapidly",
+      "pos": "verb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈlɪnutɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ли́нути",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «лину́ти» (наголос на другому складі: летіти, ширяти в повітрі або думках)."
+    },
+    {
+      "lemma": "линути",
+      "url_slug": "линути",
+      "headword": "лину́ти",
+      "short_label": "летіти, ширяти в повітрі (B1)",
+      "gloss": "to soar, fly swift, drift through air or memory",
+      "pos": "verb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[lɪˈnutɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "лину́ти",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ли́нути» (наголос на першому складі: струменіти, швидко литися потоком)."
+    }
+  ],
+  "лікарський": [
+    {
+      "lemma": "лікарський",
+      "url_slug": "лікарський",
+      "headword": "лі́карський",
+      "short_label": "цілющий, лікувальний (A2)",
+      "gloss": "medicinal, pharmaceutical, healing (e.g. medicinal herbs, medicinal substances)",
+      "pos": "adjective",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈlʲikɐrsʲkɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "лі́карський",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ліка́рський» (наголос на другому складі: пов'язаний з професією чи особою лікаря)."
+    },
+    {
+      "lemma": "лікарський",
+      "url_slug": "лікарський",
+      "headword": "ліка́рський",
+      "short_label": "належний лікареві (A2)",
+      "gloss": "physician's, medical doctor's (e.g. medical examination, doctor's confidentiality)",
+      "pos": "adjective",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[lʲiˈkarsʲkɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ліка́рський",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «лі́карський» (наголос на першому складі: цілющий, лікувальний, аптечний)."
+    }
+  ],
+  "масниця": [
+    {
+      "lemma": "масниця",
+      "url_slug": "масниця",
+      "headword": "ма́сниця",
+      "short_label": "свято проводів зими (A2)",
+      "gloss": "Masnytsia (traditional Ukrainian pre-Lenten carnival festival, pancake/butter week)",
+      "pos": "noun",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈmasnɪt͡sʲɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ма́сниця",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "жіночий",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «масни́ця» (наголос на другому складі: діжка або глечик для збивання масла)."
+    },
+    {
+      "lemma": "масниця",
+      "url_slug": "масниця",
+      "headword": "масни́ця",
+      "short_label": "діжка для збивання масла (B2)",
+      "gloss": "butter churn, tub used for churning fresh butter",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[mɐsˈnɪt͡sʲɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "масни́ця",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "жіночий",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ма́сниця» (наголос на першому складі: свято зустрічі весни та проводів зими)."
+    }
+  ],
+  "милування": [
+    {
+      "lemma": "милування",
+      "url_slug": "милування",
+      "headword": "ми́лування",
+      "short_label": "захоплення красою (B1)",
+      "gloss": "admiration, gazing with delight, aesthetic contemplation",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈmɪɫʊwɐnʲːɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ми́лування",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "середній",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «милува́ння» (наголос на третьому складі: вияв ніжності, пестощі або дарування пощади)."
+    },
+    {
+      "lemma": "милування",
+      "url_slug": "милування",
+      "headword": "милува́ння",
+      "short_label": "пестощі, ніжність (B1)",
+      "gloss": "caressing, fondling, or granting of mercy/pardon",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[mɪɫʊˈwanʲːɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "милува́ння",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "середній",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ми́лування» (наголос на першому складі: захоплення красою, споглядання з насолодою)."
+    }
+  ],
+  "милувати": [
+    {
+      "lemma": "милувати",
+      "url_slug": "милувати",
+      "headword": "ми́лувати",
+      "short_label": "радувати око, тішити (B1)",
+      "gloss": "to delight, please, feast the eyes",
+      "pos": "verb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈmɪɫʊwɐtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ми́лувати",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «милува́ти» (наголос на третьому складі: прощати провину, дарувати життя чи пестити)."
+    },
+    {
+      "lemma": "милувати",
+      "url_slug": "милувати",
+      "headword": "милува́ти",
+      "short_label": "прощати, дарувати пощаду (B1)",
+      "gloss": "to pardon, show mercy, spare; or to caress, fondle",
+      "pos": "verb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[mɪɫʊˈwatɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "милува́ти",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ми́лувати» (наголос на першому складі: приносити естетичну радість, тішити око)."
+    }
+  ],
+  "мильниця": [
+    {
+      "lemma": "мильниця",
+      "url_slug": "мильниця",
+      "headword": "ми́льниця",
+      "short_label": "підставка для мила (A1)",
+      "gloss": "soap dish, soap case",
+      "pos": "noun",
+      "cefr": "A1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈmɪlʲnɪt͡sʲɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ми́льниця",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "жіночий",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «мильни́ця» (наголос на другому складі: багаторічна трав'яниста рослина мильнянка)."
+    },
+    {
+      "lemma": "мильниця",
+      "url_slug": "мильниця",
+      "headword": "мильни́ця",
+      "short_label": "рослина мильнянка (B2)",
+      "gloss": "soapwort plant (Saponaria officinalis)",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[mɪlʲˈnɪt͡sʲɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "мильни́ця",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "жіночий",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «ми́льниця» (наголос на першому складі: коробочка або підставка для туалетного мила)."
+    }
+  ],
+  "надмір": [
+    {
+      "lemma": "надмір",
+      "url_slug": "надмір",
+      "headword": "на́дмір",
+      "short_label": "надлишок, зайвина (B1)",
+      "gloss": "excess, surplus, profusion",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈnadmʲir]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "на́дмір",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "чоловічий",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «надмі́р» (наголос на другому складі: крайня надмірність, надмірна міра)."
+    },
+    {
+      "lemma": "надмір",
+      "url_slug": "надмір",
+      "headword": "надмі́р",
+      "short_label": "надмірна міра (B1)",
+      "gloss": "immoderation, overabundance, excessiveness",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[nɐdˈmʲir]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "надмі́р",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "чоловічий",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «на́дмір» (наголос на першому складі: залишок понад норму, надлишок)."
+    }
+  ],
+  "названий": [
+    {
+      "lemma": "названий",
+      "url_slug": "названий",
+      "headword": "на́званий",
+      "short_label": "якому дали ім'я чи назву (A2)",
+      "gloss": "named, called, titled (passive participle: given a name)",
+      "pos": "adjective",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈnazwɐnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "на́званий",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «назва́ний» (наголос на другому складі: прийомний, названий брат, названа мати)."
+    },
+    {
+      "lemma": "названий",
+      "url_slug": "названий",
+      "headword": "назва́ний",
+      "short_label": "прийомний, названий брат (B1)",
+      "gloss": "adoptive, foster, sworn (e.g. sworn brother, foster parents)",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[nɐzˈwanɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "назва́ний",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «на́званий» (наголос на першому складі: охарактеризований певним іменем чи назвою)."
+    }
+  ],
+  "накидка": [
+    {
+      "lemma": "накидка",
+      "url_slug": "накидка",
+      "headword": "на́кидка",
+      "short_label": "плащ або покривало (A2)",
+      "gloss": "cape, cloak, loose sleeveless wrap or decorative throw",
+      "pos": "noun",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈnakɪdkɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "на́кидка",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "жіночий",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «наки́дка» (наголос на другому складі: грошова надбавка до ціни, націнка)."
+    },
+    {
+      "lemma": "накидка",
+      "url_slug": "накидка",
+      "headword": "наки́дка",
+      "short_label": "націнка, надбавка до ціни (B2)",
+      "gloss": "surcharge, extra charge, price markup",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[nɐˈkɪdkɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "наки́дка",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "жіночий",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «на́кидка» (наголос на першому складі: вид верхнього одягу без рукавів чи покривало)."
+    }
+  ],
+  "наносити": [
+    {
+      "lemma": "наносити",
+      "url_slug": "наносити",
+      "headword": "нано́сити",
+      "short_label": "вкривати шаром, креслити (B1)",
+      "gloss": "to apply a layer/coat, plot on a map, deposit drift (paint, marks, sediment)",
+      "pos": "verb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[nɐˈnɔsɪtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "нано́сити",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «наноси́ти» (наголос на третьому складі: доконаний вид, наносити багато речей або води)."
+    },
+    {
+      "lemma": "наносити",
+      "url_slug": "наносити",
+      "headword": "наноси́ти",
+      "short_label": "принести у великій кількості (A2)",
+      "gloss": "to bring/carry in large quantities (e.g. bring lots of water or firewood)",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[nɐnɔˈsɪtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "наноси́ти",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "доконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «нано́сити» (наголос на другому складі: недоконаний вид, покривати шаром або позначати на карті)."
+    }
+  ],
+  "нападати": [
+    {
+      "lemma": "нападати",
+      "url_slug": "нападати",
+      "headword": "напа́дати",
+      "short_label": "вчиняти напад, атакувати (A2)",
+      "gloss": "to attack, assault, initiate an aggression",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[nɐˈpadɐtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "напа́дати",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «напада́ти» (наголос на третьому складі: нападати купою, випасти у великій кількості)."
+    },
+    {
+      "lemma": "нападати",
+      "url_slug": "нападати",
+      "headword": "напада́ти",
+      "short_label": "випасти у великій кількості (B1)",
+      "gloss": "to fall and accumulate in great quantities (of snow, autumn leaves, fruit)",
+      "pos": "verb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[nɐpɐˈdatɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "напада́ти",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "доконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «напа́дати» (наголос на другому складі: нападати на супротивника, штурмувати)."
+    }
+  ],
+  "натискати": [
+    {
+      "lemma": "натискати",
+      "url_slug": "натискати",
+      "headword": "нати́скати",
+      "short_label": "напхати, щільно набити (B2)",
+      "gloss": "to cram, stuff full, pack tightly into a confined space",
+      "pos": "verb",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[nɐˈtɪskɐtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "нати́скати",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "доконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «натиска́ти» (наголос на третьому складі: тиснути на кнопку чи клавішу)."
+    },
+    {
+      "lemma": "натискати",
+      "url_slug": "натискати",
+      "headword": "натиска́ти",
+      "short_label": "тиснути на кнопку, клавішу (A1)",
+      "gloss": "to press, click, depress (a button, key, switch, or lever)",
+      "pos": "verb",
+      "cefr": "A1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[nɐtɪsˈkatɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "натиска́ти",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «нати́скати» (наголос на другому складі: щільно напхати, набити купою)."
+    }
+  ],
+  "націнка": [
+    {
+      "lemma": "націнка",
+      "url_slug": "націнка",
+      "headword": "на́цінка",
+      "short_label": "торговельна надбавка до ціни (B1)",
+      "gloss": "price markup, retail margin added to cost",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈnat͡sʲinkɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "на́цінка",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "жіночий",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «наці́нка» (наголос на другому складі: процес оцінювання або визначення вартості)."
+    },
+    {
+      "lemma": "націнка",
+      "url_slug": "націнка",
+      "headword": "наці́нка",
+      "short_label": "оцінювання вартості, таксування (B2)",
+      "gloss": "valuation, appraisal, assessment of cost",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[nɐˈt͡sʲinkɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "наці́нка",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "жіночий",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «на́цінка» (наголос на першому складі: сума торгової надбавки до ціни товару)."
+    }
+  ],
+  "нескладний": [
+    {
+      "lemma": "нескладний",
+      "url_slug": "нескладний",
+      "headword": "нескла́дний",
+      "short_label": "простий, легкий (A2)",
+      "gloss": "simple, uncomplicated, easy to understand or perform",
+      "pos": "adjective",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[nɛˈskɫadnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "нескла́дний",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «нескладни́й» (наголос на третьому складі: незграбний, невладний, безладний у мові чи рухах)."
+    },
+    {
+      "lemma": "нескладний",
+      "url_slug": "нескладний",
+      "headword": "нескладни́й",
+      "short_label": "незграбний, безладний (B1)",
+      "gloss": "clumsy, discordant, rambling, lacking harmony/coherence",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[nɛskɫɐdˈnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "нескладни́й",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «нескла́дний» (наголос на другому складі: елементарний, простий для розуміння)."
+    }
+  ],
+  "обруч": [
+    {
+      "lemma": "обруч",
+      "url_slug": "обруч",
+      "headword": "о́бруч",
+      "short_label": "кільце, гімнастичний снаряд (A2)",
+      "gloss": "hoop, metal/wooden circular band, hula hoop",
+      "pos": "noun",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈɔbrut͡ʃ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "о́бруч",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "чоловічий",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «обру́ч» (наголос на другому складі: наручний браслет, наруччя)."
+    },
+    {
+      "lemma": "обруч",
+      "url_slug": "обруч",
+      "headword": "обру́ч",
+      "short_label": "браслет, наруччя (заст., діал.)",
+      "gloss": "bracelet, wrist band, armlet (archaic/dialectal)",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-archaism",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": "treasured",
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ɔˈbrut͡ʃ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "обру́ч",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "чоловічий",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «о́бруч» (наголос на першому складі: зігнутий у коло прут, спортивний снаряд)."
+    }
+  ],
+  "осад": [
+    {
+      "lemma": "осад",
+      "url_slug": "осад",
+      "headword": "о́сад",
+      "short_label": "гуща на дні, неприємний настрій (B1)",
+      "gloss": "sediment, dregs, precipitate; emotional aftertaste of bitterness",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈɔsɐd]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "о́сад",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "чоловічий",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «оса́д» (наголос на другому складі: ярус, поверх будинку в давніх текстах)."
+    },
+    {
+      "lemma": "осад",
+      "url_slug": "осад",
+      "headword": "оса́д",
+      "short_label": "поверх, ярус споруди (заст.)",
+      "gloss": "story, floor, architectural tier of a building (archaic)",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-archaism",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": "treasured",
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ɔˈsad]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "оса́д",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "чоловічий",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «о́сад» (наголос на першому складі: тверді часточки на дні або неприємний душевний настрій)."
+    }
+  ],
+  "парний": [
+    {
+      "lemma": "парний",
+      "url_slug": "парний",
+      "headword": "па́рний",
+      "short_label": "у парі, парні числа (A1)",
+      "gloss": "paired, twin; even (of numbers: divisible by two)",
+      "pos": "adjective",
+      "cefr": "A1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈparnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "па́рний",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «парни́й» (наголос на другому складі: щойно надоєний, теплий, насичений парою)."
+    },
+    {
+      "lemma": "парний",
+      "url_slug": "парний",
+      "headword": "парни́й",
+      "short_label": "щойно надоєний, теплий (B1)",
+      "gloss": "fresh-milked, steamy warm, humid (e.g. fresh warm milk, sultry air)",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[pɐrˈnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "парни́й",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «па́рний» (наголос на першому складі: парні предмети, парні числа)."
+    }
+  ],
+  "перебігати": [
+    {
+      "lemma": "перебігати",
+      "url_slug": "перебігати",
+      "headword": "перебі́гати",
+      "short_label": "перетинати бігом (A2)",
+      "gloss": "to run across, cross by running (e.g. cross the road)",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[pɛrɛˈbʲiɦɐtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "перебі́гати",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «перебіга́ти» (наголос на четвертому складі: перегнати суперника у бігу)."
+    },
+    {
+      "lemma": "перебігати",
+      "url_slug": "перебігати",
+      "headword": "перебіга́ти",
+      "short_label": "перегнати в бігу (B2)",
+      "gloss": "to outrun in a race, run longer or faster than others",
+      "pos": "verb",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[pɛrɛbʲiˈɦatɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "перебіга́ти",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «перебі́гати» (наголос на третьому складі: перебігти простір, перебігти вулицю)."
+    }
+  ],
+  "переводити": [
+    {
+      "lemma": "переводити",
+      "url_slug": "переводити",
+      "headword": "перево́дити",
+      "short_label": "переміщати, перемикати (A2)",
+      "gloss": "to lead across, transfer, shift gaze, translate/switch",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[pɛrɛˈwɔdɪtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "перево́дити",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «переводи́ти» (наголос на четвертому складі: марнувати даремно, знищувати ресурси)."
+    },
+    {
+      "lemma": "переводити",
+      "url_slug": "переводити",
+      "headword": "переводи́ти",
+      "short_label": "марнувати, нищити (B1)",
+      "gloss": "to waste, squander, destroy needlessly (e.g. waste money or time)",
+      "pos": "verb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[pɛrɛwɔˈdɪtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "переводи́ти",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «перево́дити» (наголос на третьому складі: переводити через дорогу, переводити погляд)."
+    }
+  ],
+  "переломний": [
+    {
+      "lemma": "переломний",
+      "url_slug": "переломний",
+      "headword": "переломни́й",
+      "short_label": "вирішальний, поворотний (B1)",
+      "gloss": "turning-point, watershed, decisive, critical (e.g. turning point in history)",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[pɛrɛɫɔmˈnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "переломни́й",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «перело́мний» (наголос на третьому складі: оптичний термін, що стосується заломлення світла чи хвиль)."
+    },
+    {
+      "lemma": "переломний",
+      "url_slug": "переломний",
+      "headword": "перело́мний",
+      "short_label": "фізичний: заломлювальний (B2)",
+      "gloss": "refractive, refracting (physical: relating to refraction of rays/waves)",
+      "pos": "adjective",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[pɛrɛˈɫɔmnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "перело́мний",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «переломни́й» (наголос на четвертому складі: вирішальний, визначальний для зміни напрямку розвитку)."
+    }
+  ],
+  "переносний": [
+    {
+      "lemma": "переносний",
+      "url_slug": "переносний",
+      "headword": "перено́сний",
+      "short_label": "метафоричний, алегоричний (A2)",
+      "gloss": "figurative, metaphorical (e.g. metaphorical meaning, figurative sense)",
+      "pos": "adjective",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[pɛrɛˈnɔsnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "перено́сний",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «переносни́й» (наголос на четвертому складі: портативний, який можна переносити з місця на місце)."
+    },
+    {
+      "lemma": "переносний",
+      "url_slug": "переносний",
+      "headword": "переносни́й",
+      "short_label": "портативний, рухомий (A2)",
+      "gloss": "portable, movable, transportable (e.g. portable computer, portable stove)",
+      "pos": "adjective",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[pɛrɛnɔˈsnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "переносни́й",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «перено́сний» (наголос на третьому складі: образний, ужитий у переносному значенні)."
+    }
+  ],
+  "пересічний": [
+    {
+      "lemma": "пересічний",
+      "url_slug": "пересічний",
+      "headword": "пересі́чний",
+      "short_label": "звичайний, середній (B1)",
+      "gloss": "average, ordinary, typical (e.g. average citizen, median level)",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[pɛrɛˈsʲit͡ʃnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "пересі́чний",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «пересічни́й» (наголос на четвертому складі: геометрія чи планування, який перетинається з чимось)."
+    },
+    {
+      "lemma": "пересічний",
+      "url_slug": "пересічний",
+      "headword": "пересічни́й",
+      "short_label": "який перетинається (B2)",
+      "gloss": "intersecting, transversal (e.g. intersecting streets, intersecting lines)",
+      "pos": "adjective",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[pɛrɛsʲiˈt͡ʃnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "пересічни́й",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «пересі́чний» (наголос на третьому складі: звичайний, пересічний громадянин)."
+    }
+  ],
+  "печений": [
+    {
+      "lemma": "печений",
+      "url_slug": "печений",
+      "headword": "пе́чений",
+      "short_label": "дієприкметник: щойно спечений (B1)",
+      "gloss": "baked (passive participle: prepared by baking in an oven)",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈpɛt͡ʃenɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "пе́чений",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «пече́ний» (наголос на другому складі: якісний прикметник, печена картопля, печене м'ясо)."
+    },
+    {
+      "lemma": "печений",
+      "url_slug": "печений",
+      "headword": "пече́ний",
+      "short_label": "прикметник: печені страви (A1)",
+      "gloss": "baked, roasted (adjective: of food products, e.g. baked potato, roasted apples)",
+      "pos": "adjective",
+      "cefr": "A1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[pɛˈt͡ʃɛnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "пече́ний",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «пе́чений» (наголос на першому складі: віддієслівний дієприкметник від пекти)."
+    }
+  ],
+  "писнути": [
+    {
+      "lemma": "писнути",
+      "url_slug": "писнути",
+      "headword": "пи́снути",
+      "short_label": "тонко пищати, писнути раз (A2)",
+      "gloss": "to squeak, peep once (of a mouse, bird, or quiet whimper)",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈpɪsnutɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "пи́снути",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "доконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «писну́ти» (наголос на другому складі: швидко написати кілька слів або рядків)."
+    },
+    {
+      "lemma": "писнути",
+      "url_slug": "писнути",
+      "headword": "писну́ти",
+      "short_label": "написати кілька слів (A2)",
+      "gloss": "to drop a line, jot down, write a brief note",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[pɪsˈnutɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "писну́ти",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "доконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «пи́снути» (наголос на першому складі: видати тонкий писк, тихо писнути)."
+    }
+  ],
+  "підданий": [
+    {
+      "lemma": "підданий",
+      "url_slug": "підданий",
+      "headword": "пі́дданий",
+      "short_label": "який зазнав впливу (B1)",
+      "gloss": "subjected to, exposed to (e.g. subjected to criticism, tested by fire)",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈpʲidːɐnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "пі́дданий",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «підда́ний» (наголос на другому складі: громадянин чи підвладний правителя монархії)."
+    },
+    {
+      "lemma": "підданий",
+      "url_slug": "підданий",
+      "headword": "підда́ний",
+      "short_label": "громадянин монархії (B1)",
+      "gloss": "subject of a realm, citizen of a monarchical state",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[pʲidˈdanɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "підда́ний",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "чоловічий",
+          "animacy": "істота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «пі́дданий» (наголос на першому складі: дієприкметник, підданий випробуванню чи дії)."
+    }
+  ],
+  "пікнік": [
+    {
+      "lemma": "пікнік",
+      "url_slug": "пікнік",
+      "headword": "пі́кнік",
+      "short_label": "тип тілобудови (B2)",
+      "gloss": "pyknic type, stocky stout constitution of human body (anthropological)",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[ˈpʲiknʲik]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "пі́кнік",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "чоловічий",
+          "animacy": "істота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «пікні́к» (наголос на другому складі: розважальна заміська прогулянка з частуванням)."
+    },
+    {
+      "lemma": "пікнік",
+      "url_slug": "пікнік",
+      "headword": "пікні́к",
+      "short_label": "відпочинок на природі (A1)",
+      "gloss": "picnic, leisure outing with an outdoor meal",
+      "pos": "noun",
+      "cefr": "A1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true,
+        "warning_severity": null,
+        "calque_warning": null
+      },
+      "pronunciation": {
+        "ipa": "[pʲikˈnʲik]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "пікні́к",
+        "source": "ukrainian-word-stress"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "чоловічий",
+          "animacy": "неістота"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «пі́кнік» (наголос на першому складі: конституційний тип тілобудови людини)."
+    }
   ]
 };
 
