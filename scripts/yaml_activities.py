@@ -835,12 +835,22 @@ class ActivityParser:
             sentence = item_data.get('sentence') or item_data.get('prompt', '')
             answer = item_data.get('answer') or item_data.get('correct')
             if not answer:
+                blanks = item_data.get('blanks')
+                if isinstance(blanks, list) and blanks:
+                    answer = str(blanks[0]).strip()
+                elif isinstance(blanks, str) and blanks.strip():
+                    answer = blanks.strip()
+            if not answer:
                 braced = re.search(r"\{([^{}]+)\}", sentence)
                 if braced:
                     answer = braced.group(1).strip()
                     sentence = sentence[:braced.start()] + "___" + sentence[braced.end():]
+            if answer:
+                bracket = re.search(r"\[" + re.escape(answer) + r"\]", sentence)
+                if bracket:
+                    sentence = sentence[:bracket.start()] + "___" + sentence[bracket.end():]
             if not answer:
-                raise KeyError("fill-in item needs answer, correct, or {answer} in the sentence")
+                raise KeyError("fill-in item needs answer, correct, blanks, or {answer} in the sentence")
             items.append(FillInItem(sentence=sentence, answer=answer, options=item_data.get('options', []), explanation=item_data.get('explanation')))
         return FillInActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
 

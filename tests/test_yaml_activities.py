@@ -591,6 +591,24 @@ class TestParserEdgeCases:
         assert "{столиця}" not in activities[0].items[0].sentence
         assert "___" in activities[0].items[0].sentence
 
+    def test_parse_fill_in_answer_from_blanks_field(self, parser, tmp_path):
+        yaml_file = tmp_path / "fi-blanks.yaml"
+        yaml_file.write_text(
+            "- type: fill-in\n"
+            "  title: Fill Blanks\n"
+            "  items:\n"
+            "    - sentence: Я́блуко почина́ється на лі́теру [Я].\n"
+            "      blanks:\n"
+            "        - Я\n"
+            "      options:\n"
+            "        - Я\n"
+            "        - Ю\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert activities[0].items[0].answer == "Я"
+        assert "[Я]" not in activities[0].items[0].sentence
+        assert "___" in activities[0].items[0].sentence
+
     def test_parse_match_up(self, parser, tmp_path):
         yaml_file = tmp_path / "mu.yaml"
         yaml_file.write_text(
