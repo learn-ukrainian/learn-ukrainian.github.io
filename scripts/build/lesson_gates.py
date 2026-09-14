@@ -62,8 +62,8 @@ def norm_text(t: str) -> str:
 
 
 def _dialogue_props_text(page: str) -> str:
-    """Text that actually lives on DialogueBox props, not the rest of the page."""
-    blobs = re.findall(r"<DialogueBox[\s\S]*?/>", page)
+    """Text that actually lives on visible DialogueBox props, not the rest of the page."""
+    blobs = re.findall(r"<DialogueBox[\s\S]*?/>", strip_comments(page))
     decoded = re.sub(r"\\u([0-9a-fA-F]{4})", lambda m: chr(int(m[1], 16)), " ".join(blobs))
     decoded = decoded.replace('\\"', '"').replace("\\n", " ")
     return norm_text(decoded)

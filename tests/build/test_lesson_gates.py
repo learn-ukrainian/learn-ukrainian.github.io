@@ -54,6 +54,14 @@ def test_dialogue_props_ignore_unrelated_prose():
     assert "Оксана" in hay
     assert "Тарас" not in hay
     assert "свято" not in hay
+    commented = (
+        '<!-- <DialogueBox exchanges={JSON.parse(\'[{"speaker":"Тарас","text":"свято"}]\')} /> -->'
+        '<DialogueBox exchanges={JSON.parse(\'[{"speaker":"Оксана","text":"Привіт"}]\')} />'
+    )
+    hay2 = gates._dialogue_props_text(commented)
+    assert "Привіт" in hay2
+    assert "Тарас" not in hay2
+    assert "свято" not in hay2
 
 
 def test_one_syllable_acute_is_not_undeclared_stress():
