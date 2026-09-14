@@ -68,6 +68,19 @@ def test_one_syllable_acute_is_not_undeclared_stress():
     assert gates.wrong_stress("ка́ ли́ ко́", set()) == []
 
 
+def test_hyphenation_models_are_not_missing_stress():
+    text = "Мо́делі: дере-в'яний, Мар'-яна, бур'-ян."
+    assert gates.missing_stress(text, set()) == []
+    flagged = gates.wrong_stress("дере́-в'яний Мар'-я́на", set())
+    assert flagged == []
+    assert gates.missing_stress("дере__", set()) == []
+    assert "книга" in gates.missing_stress("-книга", set())
+    assert "книга" in gates.missing_stress("_книга_", set())
+    assert "книга" in gates.missing_stress("__книга__", set())
+    assert "книга" in gates.missing_stress("книга_", set())
+    assert gates.missing_stress("мален_кий", set()) == []
+
+
 def test_structural_containment_keeps_answers_and_multiplicity():
     assert gates.contains({"items": ["a", "a"]}, {"items": ["a", "a", "b"]})
     assert not gates.contains({"items": ["a", "a"]}, {"items": ["a", "b"]})
