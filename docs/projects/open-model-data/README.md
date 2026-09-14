@@ -77,7 +77,7 @@ flowchart LR
 ### Active Next Phases (Phase 5 Sub-Issues under Epic #6321)
 * [**#8050 — Phase 5.1**](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8050): **Automated Evaluation Suite for Grammatical Correctness & Academic Non-Inferiority** (`Eval-UA-tion 1.0` via `lm-evaluation-harness`).
 * [**#8051 — Phase 5.2**](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8051): **Dialect & Historical Protection Test Suite** (Preventing hyper-purist over-standardization of regional dialects and historical stages).
-* [**#8052 — Phase 5.3**](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8052): **Curate 150 Human Gold Seeds** (Deeply researched trajectories from Antonenko-Davydovych *«Як ми говоримо»* and *mova.ua*).
+* [**#8052 — Phase 5.3**](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8052): **Curate 150 High-Assurance Corpus-Grounded Gold Seeds** (Deeply researched trajectories from Antonenko-Davydovych *«Як ми говоримо»* and *mova.ua*).
 * [**#8053 — Phase 5.4**](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8053): **Targeted Grammatical & Syntactic Alignment Expansion** (Precision correctness over bulk fluency; ~30% `PRESERVE` controls).
 * [**#8054 — Phase 5.5**](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8054): **Production Model Alignment Run & Open-Weight Release on Hugging Face** (Full training on larger base weights with formal Model Card).
 
@@ -97,6 +97,7 @@ flowchart LR
 ### Component Deep Dives & Phase Summaries
 | Document | Scope |
 | :--- | :--- |
+| [`CORPUS_PROFILER.md`](CORPUS_PROFILER.md) | Corpus profiling tool assessing lexical diversity, genre balance, and vocabulary distribution across training sources. |
 | [`PHASE_3_3_STEM_NEGATIVE_CONTROLS.md`](PHASE_3_3_STEM_NEGATIVE_CONTROLS.md) | Extraction methodology for 15,563 STEM chunks and polysemy boundaries (*об'єм* vs. *обсяг*). |
 | [`PHASE_3_5_COT_CLAIM_VERIFIER.md`](PHASE_3_5_COT_CLAIM_VERIFIER.md) | Automated fact-checking engine validating dictionary and morphological claims in reasoning traces. |
 | [`PHASE_3_6_PILOT_CANARY.md`](PHASE_3_6_PILOT_CANARY.md) | 200-item canary fine-tuning results on Gemma 3 4B. |

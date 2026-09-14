@@ -8,14 +8,14 @@
 
 ## 1. Executive Summary & Problem Statement
 
-The Phase 4 pilot training proved that instruction-tuning Google Gemma 3 4B (`krisztiankoos/uldr-gemma3-4b-lora`) with Ukrainian normative reasoning is directionally sound: in Quick Tip format, the model achieves **80% accuracy** on isolated terms (*бажаючий* $\rightarrow$ *охочий*, *на протязі* $\rightarrow$ *протягом*, preserving scientific *матеріал*).
+The Phase 4 pilot training proved that instruction-tuning Google Gemma 3 4B (`krisztiankoos/uldr-gemma3-4b-lora`) with Ukrainian normative reasoning is directionally viable on isolated Quick Tip queries (*бажаючий* $\rightarrow$ *охочий*, *на протязі* $\rightarrow$ *протягом*, preserving scientific *матеріал*), but achieves only **50% strict accuracy** (2/5 CORRECT, 3/5 PRESERVE) on full-sentence cases under rigorous span-integrity and citation gates. The naive 80% heuristic pass rate was debunked by Astra and Fable during pilot verification.
 
 However, an empirical inspection and tri-agent adversarial audit revealed that **the current data pipeline cannot support a production release**:
-1. **0% Gold Seeds in Training:** The 150 curated seeds were never loaded into the production training assembler (`v4_production_shards_assembly.py`).
+1. **0% Gold Seeds in Training (Pilot Run):** During the Phase 4 pilot run, the 150 curated seeds were never loaded into the production training assembler (`v4_production_shards_assembly.py`).
 2. **Tautological Placeholder Sentences:** All 1,050 "minimal edit" training examples used the generic fallback sentence: `«У тексті вжито ненормативну форму X замість питомого слова.»` instead of real sentences. This trained the model to blindly swap words into arbitrary slots, causing **collocation corruption** (*побитися об заклад* $\rightarrow$ *побитися об друга*).
 3. **Over-Preservation Bias:** 1,800 PRESERVE examples (30%) were rendered as rigid boilerplate (*«Вердикт PRESERVE: «X» залишаємо»*), leading the model to ignore pervasive calques like *приймати участь* in formal sentences.
 4. **Citation Hallucinations:** Rigorous template formatting forced the model to cite a dictionary name and count for every entry, prompting the base model to hallucinate foreign dictionary names (*COBUILD*, *LexicalLab*) when it lacked Ukrainian dictionary memory.
-5. **Damaged DPO Pairs:** Preference pairs contained length-padding hacks (*«Так. Так. Так. Так.»*), English leaks, and truncated words (*«відповідає акад»*).
+5. **Damaged DPO Pairs:** Preference pairs contained length-padding hacks (`"Так. Так. Так. Так."`), English leaks, and truncated words (*«відповідає акад»*).
 
 **Conclusion:** Phase 5 is restructured from a direct release into a **Data Repair, Infrastructure Hardening, and Production Verification Phase**.
 
@@ -67,7 +67,7 @@ flowchart TD
      * $N \ge 300$ authentic sentences with real calques from UA-GEC and textbooks for CORRECT.
      * High-Frequency Calque Floor: Dedicated 50-case benchmark of pervasive Russianisms (*приймати участь*, *на протязі*, *приймати міри*, *рахувати що*).
   3. **Dialect & Historical Protection Suite ([#8051](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8051)):**
-     * Regional Ukrainian (Galician, Podolian, Polissian, Transcarpathian) and 1920s classic prose (Pidmohylny, Khvylovy, Skovoroda).
+     * Regional Ukrainian (Galician, Podolian, Polissian, Transcarpathian), 1920s classic prose (Pidmohylny, Khvylovy, Zerov), and early literary classics (Skovoroda, Kotliarevsky, Shevchenko).
      * Must be preserved intact; zero unauthorized standardization allowed.
 
 ---
@@ -121,10 +121,10 @@ flowchart TD
 
 A cornerstone of our decolonized pedagogy is ensuring that the model does **not** become a blunt hyper-purist weapon that erases legitimate linguistic diversity. Authentic Ukrainian consists of rich regional dialects (Hutsul, Boyko, Lemko, Polissian, Podolian, Slobozhan) and historical literary strata (Old East Slavic chronicles, Cossack baroque, 1920s Executed Renaissance).
 
-Soviet linguistic engineering deliberately branded authentic regional Ukrainian terms as "hostile Polonisms" or "bourgeois nationalism" in order to replace them with Russian cognates (*філіжанка* $\rightarrow$ *чашка*, *фіранка* $\rightarrow$ *занавеска*, *похибка* $\rightarrow$ *помилка*). A truly decolonized model must actively protect, explain, and contextualize these forms.
+Soviet linguistic engineering deliberately branded authentic regional Ukrainian terms as "hostile Polonisms" or "bourgeois nationalism" in order to sideline distinct Ukrainian vocabulary in favor of Russian-shared cognates (*філіжанка* $\rightarrow$ *чашка*, or pushing artificial calques over native words like *фіранка*), and flattened nuanced technical distinctions (such as scientific *похибка* [measurement error / uncertainty] vs general *помилка* [mistake]). A truly decolonized model must actively protect, explain, and contextualize these forms.
 
-### A. Training Implementation: The `OFFER_REGISTER_ALTERNATIVES` Decision Class
-In Phase 5.3 ([#8052](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8052)) and 5.4 ([#8053](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8053)), dialectal, archaic, and regional forms are explicitly modeled through the `OFFER_REGISTER_ALTERNATIVES` decision framework:
+### A. Proposed Decision Class: OFFER_REGISTER_ALTERNATIVES (#8051)
+While the current dataset schema implements binary `CORRECT` vs `PRESERVE`, under the upcoming Dialect & Historical Suite ([#8051](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8051)), we propose extending the schema with a 3rd decision class: `OFFER_REGISTER_ALTERNATIVES`. For dialectal, archaic, and regional forms:
 * **The Model Must Never Treat Authentic Regionalisms as Errors:**
   When encountering words like *філіжанка*, *горнятко*, *плай*, *ґазда*, *легінь*, *банітувати*, *дзиґар*, the model does **not** emit a correction.
 * **Contextual Nuance & Stylistic Guidance:**
@@ -140,4 +140,4 @@ Before any model is approved for production release:
    * Scored on preservation: the model must achieve $\ge 98.0\%$ non-corruption rate.
 2. **The Historical & Classical Partition (200+ spans):**
    * Spans from Old East Slavic chronicles, Cossack era acts, and 1920s literature.
-   * If the model attempts to "correct" authentic historical vocabulary or grammar into modern school textbook forms, it fails Gate 2.
+   * If the model attempts to "correct" authentic historical vocabulary or grammar into modern school textbook forms, it fails the Harmful-Edit Gate (Gate 2: $\le 1.0\%$ error rate on authentic controls).

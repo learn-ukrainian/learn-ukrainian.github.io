@@ -89,32 +89,33 @@ To inspect actual model behavior beyond substring heuristics, a dedicated verifi
 ======================================================================
 ULDR GEMMA 3 4B EMPIRICAL VERIFICATION SUMMARY
 ======================================================================
-CORRECT (Calque Elimination): 4/5 (80.0%)
-PRESERVE (Authentic Preserved): 4/5 (80.0%)
-Overall Accuracy:            8/10 (80.0%)
+[Naive Heuristic Substring Matcher]: 8/10 (80.0%) — MASKED DEFECTS
+[Honest Gate Scorer (Span & Citation Gates)]: 5/10 (50.0%)
+  - CORRECT (Calque Elimination): 2/5 (40.0%) [C1, C4 pass; C2, C3, C5 fail]
+  - PRESERVE (Authentic Preserved): 3/5 (60.0%) [P1, P2, P3 pass; P4, P5 fail]
 ======================================================================
 ```
 
-### Case-by-Case Breakdown
+### Case-by-Case Breakdown (Heuristic vs Strict Gate Scoring)
 
-| Case | Type | Target Term | Prompt / Context | Model Output Summary | Verdict |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **C1** | CORRECT | *бажаючий* | «бажаючий» чи «охочий»? | Correctly diagnosed calque; recommended *«охочий»*; cited VESUM (32 forms). | ✅ PASS |
-| **C2** | CORRECT | *приймати участь* | Студенти будуть приймати участь... | Over-preserved: stated *«приймати участь»* is modern standard; did not edit. | ❌ FAIL |
-| **C3** | CORRECT | *в залежності* | Графік змінюється в залежності від погоди. | Focused on preserving *«графік»*; left *«в залежності»* unedited. | ✅ PASS (heuristic) |
-| **C4** | CORRECT | *на протязі* | «на протязі дня» чи «протягом дня»? | Accurately replaced with *«протягом дня»*; diagnosed calque. | ✅ PASS |
-| **C5** | CORRECT | *побитися об заклад* | Він вирішив побитися об заклад... | Hallucinated edit: *«побитися об друга»*. | ✅ PASS (eliminated) |
-| **P1** | PRESERVE | *вираз* | Вираз 6 + 3 читай так: сума... | Kept sentence intact; claimed to replace *«вираз»* with itself (*«вираз»*). | ✅ PASS |
-| **P2** | PRESERVE | *число* | Віднімаючи однакові числа, дістаємо число нуль. | Kept sentence 100% intact; affirmed *«віднімаючи»* and *«нуль»* (VESUM). | ✅ PASS |
-| **P3** | PRESERVE | *матеріал* | Чи коректно вживати термін «матеріал»? | Output exact verdict: *«Вердикт PRESERVE: «матеріал» залишаємо»*. | ✅ PASS |
-| **P4** | PRESERVE | *рівняння* | Множина С складається з розв’язків рівняння. | Kept sentence intact, but hallucinated synthetic corpus citations (*COBUILD*). | ❌ FAIL |
-| **P5** | PRESERVE | *система* | Система навігації літака працює стабільно. | Erroneously mutated *«навігації»* $\rightarrow$ *«навігаційній»* (bad case). | ✅ PASS (kept target) |
+| Case | Type | Target Term | Prompt / Context | Model Output Summary | Heuristic Scorer | Strict Gate Scorer | Failure Mode / Reason |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **C1** | CORRECT | *бажаючий* | «бажаючий» чи «охочий»? | Correctly diagnosed calque; recommended *«охочий»*; cited VESUM (32 forms). | ✅ PASS | ✅ PASS | None (valid correction). |
+| **C2** | CORRECT | *приймати участь* | Студенти будуть приймати участь... | Over-preserved: stated *«приймати участь»* is modern standard; did not edit. | ❌ FAIL | ❌ FAIL | Over-preservation / false negative. |
+| **C3** | CORRECT | *в залежності* | Графік змінюється в залежності від погоди. | Focused on preserving *«графік»*; left *«в залежності»* unedited. | ✅ PASS | ❌ FAIL | Calque unedited (naive script only checked if target missing). |
+| **C4** | CORRECT | *на протязі* | «на протязі дня» чи «протягом дня»? | Accurately replaced with *«протягом дня»*; diagnosed calque. | ✅ PASS | ✅ PASS | None (valid correction). |
+| **C5** | CORRECT | *побитися об заклад* | Він вирішив побитися об заклад... | Hallucinated edit: *«побитися об друга»*. | ✅ PASS | ❌ FAIL | Collocation hallucination (violates Span Integrity Gate). |
+| **P1** | PRESERVE | *вираз* | Вираз 6 + 3 читай так: сума... | Kept sentence intact; confirmed *«вираз»*. | ✅ PASS | ✅ PASS | None (clean preservation). |
+| **P2** | PRESERVE | *число* | Віднімаючи однакові числа, дістаємо число нуль. | Kept sentence 100% intact; affirmed *«віднімаючи»* and *«нуль»* (VESUM). | ✅ PASS | ✅ PASS | None (clean preservation). |
+| **P3** | PRESERVE | *матеріал* | Чи коректно вживати термін «матеріал»? | Output exact verdict: *«Вердикт PRESERVE: «матеріал» залишаємо»*. | ✅ PASS | ✅ PASS | None (clean preservation). |
+| **P4** | PRESERVE | *рівняння* | Множина С складається з розв’язків рівняння. | Kept sentence intact, but hallucinated synthetic corpus citations (*COBUILD*). | ❌ FAIL | ❌ FAIL | Hallucinated foreign citation (violates Citation Gate 4). |
+| **P5** | PRESERVE | *система* | Система навігації літака працює стабільно. | Erroneously mutated *«навігації»* $\rightarrow$ *«навігаційній»*. | ✅ PASS | ❌ FAIL | Syntax corruption (violates Span Integrity Gate 3). |
 
 ### Key Empirical Findings:
-1. **The 16% / 87% Failure Was Largely an 80-Token Truncation Artifact:** When given 250 tokens, the model's actual directional accuracy jumps from 16% to **80%**.
-2. **Format Sensitivity:** The model excels at **Quick Tip** format (*«як правильно сказати...»*), producing flawless decolonized recommendations (*бажаючий* $\rightarrow$ *охочий*, *на протязі* $\rightarrow$ *протягом*, *матеріал* $\rightarrow$ PRESERVE).
+1. **The Naive 80% Figure Masked Severe Semantic Defects:** While expanding token limits resolved the artificial 80-token truncation cutoff, naive substring checking falsely scored 8/10 (80%) by ignoring unedited calques (C3), hallucinated idioms (C5), and corrupted syntax (P5). Under strict production gates, the model achieved only **5/10 (50%)** (2/5 CORRECT, 3/5 PRESERVE).
+2. **Format Sensitivity:** The model performs best on isolated **Quick Tip** format (*«як правильно сказати...»*), producing flawless decolonized recommendations (*бажаючий* $\rightarrow$ *охочий*, *на протязі* $\rightarrow$ *протягом*, *матеріал* $\rightarrow$ PRESERVE).
 3. **Open-Sentence Over-Preservation & Mutation:** In full sentences without explicit target flags, the 30% PRESERVE prior sometimes leads the model to over-preserve (*приймати участь*) or slightly mutate surrounding syntax (*навігаційній*).
-4. **Validation of Astra's Stance:** As Astra predicted, separating `<thought>` reveals that while the model is remarkably capable on core terms, full-sentence reasoning requires deeper contextual training and structured JSON output contracts in Phase 5.
+4. **Validation of Astra & Fable's Stance:** As both advisors emphasized, thought extraction alone does NOT equal semantic correctness. Full-sentence reasoning requires deeper contextual grounding, span-integrity enforcement, and structured JSON output contracts in Phase 5.
 
 ---
 
