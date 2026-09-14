@@ -309,8 +309,74 @@ def test_muzyka_disambiguation():
 
 
 def test_batch_expansion_count():
-    """Verify batch heteronym expansion admits 40 curated lemmas with exact scan residual."""
+    """Verify batch heteronym expansion admits 72 curated lemmas with exact scan residual.
+
+    Batch 1 (#8039, PR #8043): 40 curated. Batch 2 (#8039 continuation): +32
+    lemmas selected from the atlas.db-approved, A1/A2/B1 tier of the 427
+    residual, each with a genuinely distinct SUM-11 stress position.
+    """
     total_curated = len(enrich_heteronyms.CURATED_HETERONYMS)
-    assert total_curated == 40
-    # Baseline denominator is 467 candidates; residual is 467 - 40 = 427
-    assert 467 - total_curated == 427
+    assert total_curated == 72
+    # Baseline denominator is 467 candidates; residual is 467 - 72 = 395
+    assert 467 - total_curated == 395
+
+
+def test_kredyt_disambiguation():
+    """Verify кредит accounting-ledger term vs loan/credit disambiguation (batch 2)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("кредит")
+    assert items is not None
+    assert len(items) == 2
+
+    ledger, loan = items[0], items[1]
+    assert ledger["headword"] == "кре́дит"
+    assert ledger["pronunciation"]["ipa"] == "[ˈkrɛdɪt]"
+    assert ledger["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "кре́диту"
+
+    assert loan["headword"] == "креди́т"
+    assert loan["cefr"] == "A2"
+    assert loan["pronunciation"]["ipa"] == "[krɛˈdɪt]"
+
+
+def test_rodovyi_perednii_style_directional_verb_aspect_pairs():
+    """Verify обходити/обходитися directional-verb aspect pairs (batch 2)."""
+    obhodyty = enrich_heteronyms.build_heteronyms_for_lemma("обходити")
+    assert obhodyty is not None
+    assert len(obhodyty) == 2
+    assert obhodyty[0]["headword"] == "обхо́дити"
+    assert obhodyty[0]["morphology"]["paradigm"]["aspect"] == "недоконаний"
+    assert obhodyty[1]["headword"] == "обходи́ти"
+    assert obhodyty[1]["morphology"]["paradigm"]["aspect"] == "доконаний"
+
+
+def test_pidlitok_disambiguation():
+    """Verify підліток teenager vs fledgling-bird disambiguation (batch 2).
+
+    SUM-11 marks the rare "fledgling" sense with a double-accent notation
+    (пі́длі́ток); the attested alternate stress (підлі́ток) is used as its
+    headword so the pair is a genuine two-way stress contrast.
+    """
+    items = enrich_heteronyms.build_heteronyms_for_lemma("підліток")
+    assert items is not None
+    assert len(items) == 2
+
+    teenager, fledgling = items[0], items[1]
+    assert teenager["headword"] == "пі́дліток"
+    assert teenager["cefr"] == "B1"
+    assert fledgling["headword"] == "підлі́ток"
+    assert fledgling["cefr"] is None
+
+
+def test_pered_preposition_vs_noun():
+    """Verify перед preposition vs пере́д front-part noun disambiguation (batch 2)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("перед")
+    assert items is not None
+    assert len(items) == 2
+
+    prep, noun = items[0], items[1]
+    assert prep["headword"] == "пе́ред"
+    assert prep["pos"] == "preposition"
+    assert prep["morphology"]["paradigm"]["kind"] == "preposition"
+
+    assert noun["headword"] == "пере́д"
+    assert noun["pos"] == "noun"
+    assert noun["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "пе́реду"

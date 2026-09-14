@@ -607,6 +607,25 @@ class TestParserEdgeCases:
         assert activities[0].items[0].words == ["д", "і", "м"]
         assert activities[0].items[0].answer == "дім"
 
+    def test_parse_fill_in_answer_from_blanks_field(self, parser, tmp_path):
+        yaml_file = tmp_path / "fi-blanks.yaml"
+        yaml_file.write_text(
+            "- type: fill-in\n"
+            "  title: Fill Blanks\n"
+            "  items:\n"
+            "    - sentence: Я́блуко почина́ється на лі́теру [Я].\n"
+            "      blanks:\n"
+            "        - Я\n"
+            "      options:\n"
+            "        - Я\n"
+            "        - Ю\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert activities[0].items[0].answer == "Я"
+        assert "[Я]" not in activities[0].items[0].sentence
+        assert "___" in activities[0].items[0].sentence
+
+
     def test_parse_match_up(self, parser, tmp_path):
         yaml_file = tmp_path / "mu.yaml"
         yaml_file.write_text(
@@ -635,6 +654,24 @@ class TestParserEdgeCases:
         activities = parser.parse(yaml_file)
         assert len(activities) == 1
         assert activities[0].type == "translate"
+
+    def test_parse_translate_string_options_and_target(self, parser, tmp_path):
+        yaml_file = tmp_path / "tr-strings.yaml"
+        yaml_file.write_text(
+            "- type: translate\n"
+            "  title: Translate strings\n"
+            "  items:\n"
+            "    - source: столи́ця\n"
+            "      target: capital\n"
+            "      options:\n"
+            "        - capital\n"
+            "        - street\n"
+            "        - city\n"
+        )
+        activities = parser.parse(yaml_file)
+        texts = [o.text for o in activities[0].items[0].options]
+        assert texts == ["capital", "street", "city"]
+        assert [o.correct for o in activities[0].items[0].options] == [True, False, False]
 
 
 class TestUnjumbleParsing:

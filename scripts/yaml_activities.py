@@ -835,12 +835,22 @@ class ActivityParser:
             sentence = item_data.get('sentence') or item_data.get('prompt', '')
             answer = item_data.get('answer') or item_data.get('correct')
             if not answer:
+                blanks = item_data.get('blanks')
+                if isinstance(blanks, list) and blanks:
+                    answer = str(blanks[0]).strip()
+                elif isinstance(blanks, str) and blanks.strip():
+                    answer = blanks.strip()
+            if not answer:
                 braced = re.search(r"\{([^{}]+)\}", sentence)
                 if braced:
                     answer = braced.group(1).strip()
                     sentence = sentence[:braced.start()] + "___" + sentence[braced.end():]
+            if answer:
+                bracket = re.search(r"\[" + re.escape(answer) + r"\]", sentence)
+                if bracket:
+                    sentence = sentence[:bracket.start()] + "___" + sentence[bracket.end():]
             if not answer:
-                raise KeyError("fill-in item needs answer, correct, or {answer} in the sentence")
+                raise KeyError("fill-in item needs answer, correct, blanks, or {answer} in the sentence")
             items.append(FillInItem(sentence=sentence, answer=answer, options=item_data.get('options', []), explanation=item_data.get('explanation')))
         return FillInActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
 
@@ -983,7 +993,29 @@ class ActivityParser:
         )
 
     def _parse_translate(self, data: dict) -> TranslateActivity:
-        items = [TranslateItem(source=i['source'], options=[TranslateOption(text=o['text'], correct=o.get('correct', False)) for o in i.get('options', [])], explanation=i.get('explanation')) for i in data.get('items', [])]
+        items = []
+        for i in data.get('items', []):
+            source = i.get('source') or i.get('uk') or i.get('prompt') or ''
+            target = i.get('target') or i.get('answer') or i.get('correct') or i.get('en')
+            options = []
+            for o in i.get('options', []) or []:
+                if isinstance(o, str):
+                    text = o.strip()
+                    options.append(TranslateOption(
+                        text=text,
+                        correct=bool(target) and text.casefold() == str(target).strip().casefold(),
+                    ))
+                elif isinstance(o, dict):
+                    text = str(o.get('text') or o.get('en') or '').strip()
+                    options.append(TranslateOption(text=text, correct=bool(o.get('correct'))))
+            if target and options and not any(opt.correct for opt in options):
+                for opt in options:
+                    if opt.text.casefold() == str(target).strip().casefold():
+                        opt.correct = True
+                        break
+                else:
+                    options.append(TranslateOption(text=str(target).strip(), correct=True))
+            items.append(TranslateItem(source=source, options=options, explanation=i.get('explanation')))
         return TranslateActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
 
     def _parse_anagram(self, data: dict) -> AnagramActivity:
@@ -1434,13 +1466,17 @@ class ActivityParser:
     def _parse_count_syllables(self, data: dict) -> CountSyllablesActivity:
         items = []
         for item in data.get('items', []):
-            if 'word' not in item or 'correct' not in item:
+            word = item.get('word') or item.get('lemma') or item.get('text')
+            correct = item.get('correct')
+            if correct is None:
+                correct = item.get('syllables') or item.get('count') or item.get('answer')
+            if isinstance(correct, str) and correct.strip().isdigit():
+                correct = int(correct.strip())
+            if not word or not isinstance(correct, int):
                 raise KeyError("count-syllables item requires word and correct")
-            if not isinstance(item['correct'], int):
-                raise TypeError("count-syllables item correct must be an integer")
             items.append(CountSyllablesItem(
-                word=str(item['word']),
-                correct=item['correct'],
+                word=str(word),
+                correct=correct,
                 translation=str(item['translation']) if item.get('translation') else None,
             ))
         if not items:

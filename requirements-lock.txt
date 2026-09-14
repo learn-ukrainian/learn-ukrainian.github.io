@@ -7,7 +7,7 @@ aiosqlite==0.22.1
 annotated-doc==0.0.5
 annotated-types==0.7.0
 anthropic==0.108.0
-anyio==4.14.2
+anyio==4.15.1
 APScheduler==3.11.2
 attrs==26.1.0
 Authlib==1.7.2
@@ -66,7 +66,7 @@ huggingface_hub==1.29.0
 humanfriendly==10.0
 hyperframe==6.1.0
 identify==2.6.19
-idna==3.18
+idna==3.19
 ifaddr==0.2.0
 ijson==3.5.1
 iniconfig==2.3.0
@@ -128,7 +128,7 @@ protobuf==7.36.0
 psutil==7.2.2
 psycopg==3.3.4
 psycopg-binary==3.3.4
-pyarrow==24.0.0
+pyarrow==25.0.1
 pyasn1==0.6.4
 pyasn1_modules==0.4.2
 pycookiecheat==0.8.0
@@ -159,7 +159,7 @@ pytest==9.0.3
 python-dateutil==2.9.0.post0
 python-discovery==1.4.4
 python-docx==1.2.0
-python-dotenv==1.2.2
+python-dotenv==1.2.3
 python-jose==3.5.0
 python-multipart==0.0.32
 PyYAML==6.0.3
