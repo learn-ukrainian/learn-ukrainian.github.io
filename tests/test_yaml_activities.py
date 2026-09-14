@@ -638,6 +638,24 @@ class TestParserEdgeCases:
         assert len(activities) == 1
         assert activities[0].type == "translate"
 
+    def test_parse_translate_string_options_and_target(self, parser, tmp_path):
+        yaml_file = tmp_path / "tr-strings.yaml"
+        yaml_file.write_text(
+            "- type: translate\n"
+            "  title: Translate strings\n"
+            "  items:\n"
+            "    - source: столи́ця\n"
+            "      target: capital\n"
+            "      options:\n"
+            "        - capital\n"
+            "        - street\n"
+            "        - city\n"
+        )
+        activities = parser.parse(yaml_file)
+        texts = [o.text for o in activities[0].items[0].options]
+        assert texts == ["capital", "street", "city"]
+        assert [o.correct for o in activities[0].items[0].options] == [True, False, False]
+
 
 class TestUnjumbleParsing:
     def test_parse_unjumble_list_shape_round_trips_to_mdx(self, parser, tmp_path):
