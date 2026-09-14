@@ -178,7 +178,7 @@ def _fleet_burn_has_activity(fleet_burn: dict[str, Any] | None) -> bool:
 
 router = APIRouter(tags=["state"])
 
-SUBSCRIPTION_LANES = ("claude", "codex", "gemini", "grok", "cursor", "kimi", "glm")
+SUBSCRIPTION_LANES = ("claude", "codex", "gemini", "grok", "cursor", "kimi")
 API_LANES = ("openrouter", "deepseek")
 AGENT_NAMES = SUBSCRIPTION_LANES  # only subscription lanes participate in CodexBar window checks
 STATE_SUMMARY_TTL_S = 60.0

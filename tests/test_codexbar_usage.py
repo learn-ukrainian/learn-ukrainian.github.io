@@ -6,6 +6,7 @@ import json
 import threading
 import time
 from datetime import UTC, datetime
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
 from scripts.analytics.cost_report import CostRecord
@@ -560,7 +561,7 @@ def test_normalize_kimi_healthy_shape():
 
 def test_kimi_provider_error_surfaces_unknown(monkeypatch):
     """Credential/provider error -> status='unknown' + auth_error, never zero usage."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-token")
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-token")
     monkeypatch.setattr(
         subscription_usage_mod,
         "_http_json_request",
@@ -586,7 +587,7 @@ def test_kimi_provider_error_surfaces_unknown(monkeypatch):
 
 def test_kimi_provider_error_with_nonzero_exit_still_surfaces(monkeypatch):
     """HTTP 401 on credential errors must surface the payload, not be swallowed."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-token")
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-token")
     monkeypatch.setattr(
         subscription_usage_mod,
         "_http_json_request",
@@ -1452,6 +1453,180 @@ def test_load_kimi_bearer_reads_credentials_file(tmp_path, monkeypatch):
     assert subscription_usage_mod._load_kimi_bearer() == "fixture-kimi-token"
 
 
+def test_load_kimi_bearer_reads_nested_tokens_shape(tmp_path, monkeypatch):
+    """Some CLI artifacts nest the OAuth set under tokens / camelCase keys."""
+    monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
+    cred_path = tmp_path / "kimi-code.json"
+    cred_path.write_text(
+        json.dumps({"tokens": {"accessToken": "fixture-nested-kimi"}}),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("KIMI_CODE_CREDENTIALS_PATH", str(cred_path))
+
+    assert subscription_usage_mod._load_kimi_bearer() == "fixture-nested-kimi"
+
+
+def test_load_kimi_bearer_uses_kimi_code_home(tmp_path, monkeypatch):
+    """Honor KIMI_CODE_HOME the same way the native Kimi adapter does."""
+    monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
+    monkeypatch.delenv("KIMI_CODE_CREDENTIALS_PATH", raising=False)
+    home = tmp_path / "kimi-home"
+    cred_dir = home / "credentials"
+    cred_dir.mkdir(parents=True)
+    (cred_dir / "kimi-code.json").write_text(
+        json.dumps({"access_token": "fixture-home-token"}),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("KIMI_CODE_HOME", str(home))
+
+    assert subscription_usage_mod._load_kimi_bearer() == "fixture-home-token"
+
+
+class _KimiOAuthRefreshServer:
+    """Minimal /api/oauth/token endpoint for bearer-refresh unit tests."""
+
+    def __init__(self, payload: dict, status: int = 200) -> None:
+        self.payload = payload
+        self.status = status
+        self.bodies: list[str] = []
+        outer = self
+
+        class Handler(BaseHTTPRequestHandler):
+            def do_POST(self) -> None:
+                length = int(self.headers.get("Content-Length", "0"))
+                outer.bodies.append(self.rfile.read(length).decode("utf-8"))
+                body = json.dumps(outer.payload).encode("utf-8")
+                self.send_response(outer.status)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+
+            def log_message(self, *args: object) -> None:
+                pass
+
+        self.server = HTTPServer(("127.0.0.1", 0), Handler)
+        self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
+
+    @property
+    def url(self) -> str:
+        host, port = self.server.server_address
+        return f"http://{host}:{port}"
+
+    def __enter__(self) -> _KimiOAuthRefreshServer:
+        self.thread.start()
+        return self
+
+    def __exit__(self, *exc: object) -> None:
+        self.server.shutdown()
+        self.server.server_close()
+        self.thread.join(timeout=5)
+
+
+def test_load_kimi_bearer_refreshes_expired_oauth_token(tmp_path, monkeypatch):
+    """Expired access_token + refresh_token must rebind via the OAuth helper."""
+    monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
+    cred_path = tmp_path / "kimi-code.json"
+    cred_path.write_text(
+        json.dumps(
+            {
+                "access_token": "stale-access",
+                "refresh_token": "fixture-refresh",
+                "expires_at": time.time() - 30,
+                "token_type": "Bearer",
+                "scope": "kimi-code",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("KIMI_CODE_CREDENTIALS_PATH", str(cred_path))
+    payload = {
+        "access_token": "rotated-access",
+        "refresh_token": "rotated-refresh",
+        "expires_in": 900,
+        "token_type": "Bearer",
+        "scope": "kimi-code",
+    }
+    with _KimiOAuthRefreshServer(payload) as server:
+        monkeypatch.setenv("KIMI_CODE_OAUTH_HOST", server.url)
+        assert subscription_usage_mod._load_kimi_bearer() == "rotated-access"
+
+    stored = json.loads(cred_path.read_text(encoding="utf-8"))
+    assert stored["access_token"] == "rotated-access"
+    assert stored["refresh_token"] == "rotated-refresh"
+
+
+def test_kimi_probe_retries_usages_after_401_refresh(tmp_path, monkeypatch):
+    """Usages 401 with a listed expires_at still force-refreshes once and recovers."""
+    monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
+    cred_path = tmp_path / "kimi-code.json"
+    cred_path.write_text(
+        json.dumps(
+            {
+                "access_token": "stale-but-unexpired",
+                "refresh_token": "fixture-refresh",
+                "expires_at": time.time() + 3600,
+                "token_type": "Bearer",
+                "scope": "kimi-code",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("KIMI_CODE_CREDENTIALS_PATH", str(cred_path))
+    live_shape = {
+        "usage": {
+            "used": "40",
+            "limit": "100",
+            "remaining": "60",
+            "resetTime": "2026-09-10T00:00:00Z",
+        },
+        "limits": [
+            {
+                "detail": {
+                    "limit": "100",
+                    "remaining": "55",
+                    "resetTime": "2026-09-03T10:00:00Z",
+                },
+                "window": {"duration": 300, "timeUnit": "TIME_UNIT_MINUTE"},
+            }
+        ],
+    }
+    payload = {
+        "access_token": "rotated-access",
+        "refresh_token": "rotated-refresh",
+        "expires_in": 900,
+        "token_type": "Bearer",
+        "scope": "kimi-code",
+    }
+    usages_auths: list[str] = []
+
+    def _fake_http(method, url, **kwargs):
+        usages_auths.append(kwargs.get("headers", {}).get("Authorization", ""))
+        if len(usages_auths) == 1:
+            return (401, None, "unauthorized")
+        return (200, live_shape, None)
+
+    monkeypatch.setattr(subscription_usage_mod, "_http_json_request", _fake_http)
+    codexbar_usage_mod._last_good_data.pop("kimi", None)
+
+    with _KimiOAuthRefreshServer(payload) as server:
+        monkeypatch.setenv("KIMI_CODE_OAUTH_HOST", server.url)
+        res = codexbar_usage_mod.fetch_codexbar_usage("kimi", timeout_s=1.0)
+
+    assert res["status"] == "healthy"
+    assert usages_auths == ["Bearer stale-but-unexpired", "Bearer rotated-access"]
+    assert res["primary_used_pct"] == 45.0
+
+
+def test_glm_is_not_a_live_subscription_provider():
+    """Routing-budget must not list or probe GLM as a live subscription."""
+    assert "glm" not in subscription_usage_mod.SUBSCRIPTION_PROVIDERS
+    assert "glm" not in subscription_usage_mod.SUBSCRIPTION_LANES_WITHOUT_CURSOR
+    assert "glm" not in subscription_usage_mod.PROVIDER_TO_LANE
+    assert "glm" not in subscription_usage_mod._NATIVE_PROBES
+    assert "glm" not in state_router.SUBSCRIPTION_LANES
+
+
 def test_kimi_missing_credentials_file_is_need_login(tmp_path, monkeypatch):
     """No credential file anywhere → honest NEED_LOGIN, not a fetch_error."""
     monkeypatch.delenv("KIMI_CODE_API_KEY", raising=False)
@@ -1468,7 +1643,7 @@ def test_kimi_credentials_present_but_http_failure_is_fetch_error_not_need_login
     """A present, loadable credential file that fails at the network layer must
     surface fetch_error/unavailable — never re-claim NEED_LOGIN, which would
     wrongly tell the operator to log in again."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-kimi-token")
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-kimi-token")
     monkeypatch.setattr(
         subscription_usage_mod,
         "_http_json_request",
@@ -1504,7 +1679,7 @@ def test_kimi_string_usage_and_derived_used_parses_healthy(monkeypatch):
             }
         ],
     }
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-kimi-token")
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-kimi-token")
     monkeypatch.setattr(
         subscription_usage_mod,
         "_http_json_request",
@@ -1525,7 +1700,7 @@ def test_kimi_string_usage_and_derived_used_parses_healthy(monkeypatch):
 
 def test_kimi_http_200_unparseable_payload_is_not_need_login(monkeypatch):
     """Bearer present + HTTP 200 but no usable windows → unparseable, not need_login."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-kimi-token")
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-kimi-token")
     monkeypatch.setattr(
         subscription_usage_mod,
         "_http_json_request",
@@ -1562,7 +1737,7 @@ def test_coerce_float_rejects_non_finite_string_and_float():
 
 def test_kimi_http_200_nan_used_is_unparseable_not_healthy(monkeypatch):
     """HTTP 200 with used=NaN must not become healthy with nan percents."""
-    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda: "fixture-kimi-token")
+    monkeypatch.setattr(subscription_usage_mod, "_load_kimi_bearer", lambda **_kwargs: "fixture-kimi-token")
     monkeypatch.setattr(
         subscription_usage_mod,
         "_http_json_request",
