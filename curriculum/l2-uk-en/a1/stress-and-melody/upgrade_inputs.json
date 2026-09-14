@@ -1,0 +1,10 @@
+{
+  "mode": "upgrade",
+  "sha256": {
+    "curriculum/l2-uk-en/a1-v1/stress-and-melody/module.md": "0b6d381b2b76693f217aa5951b30d7c52601b05faa182500197248c005cd759a",
+    "curriculum/l2-uk-en/a1-v1/stress-and-melody/activities.yaml": "acce5940811811e4aad0a252ef0ad32ba29c5627aeb288c4bb6534429fc86f2c",
+    "curriculum/l2-uk-en/a1-v1/stress-and-melody/vocabulary.yaml": "a78d61ee02918653b6eb9b71b3a91a4247fdd390541d691c35f868769651ca01",
+    "curriculum/l2-uk-en/a1-v1/stress-and-melody/resources.yaml": "0f99b3fb1e397fbbb96432a24d1df908a318f6dd3f5f3e68c1e63f367852e4d2",
+    "curriculum/l2-uk-en/plans/a1/stress-and-melody.yaml": "bd815042bec1c574816b365454b55d4633f2afa6b52c5647a8ade161260b4742"
+  }
+}
