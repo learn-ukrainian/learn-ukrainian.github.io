@@ -68,6 +68,27 @@ def test_one_syllable_acute_is_not_undeclared_stress():
     assert gates.wrong_stress("ка́ ли́ ко́", set()) == []
 
 
+def test_error_correction_wrong_spellings_are_not_missing_stress():
+    acts = {
+        "inline": [],
+        "workbook": [{
+            "id": "act-err",
+            "type": "error-correction",
+            "items": [{"sentence": "Не пиши сімя без апо́строфа.", "error": "сімя"}],
+        }],
+    }
+    allow = gates.pedagogical_error_forms(acts)
+    assert "сімя" in allow
+    assert "сімя" not in gates.missing_stress("Не пиши сімя без апо́строфа.", allow)
+    gapped = {
+        "inline": [{"id": "act-fill", "type": "fill-in",
+                    "items": [{"sentence": "вчител_.", "answer": "ь"}]}],
+        "workbook": [],
+    }
+    allow2 = gates.pedagogical_error_forms(gapped)
+    assert "вчител" in allow2
+
+
 def test_hyphenation_models_are_not_missing_stress():
     text = "Мо́делі: дере-в'яний, Мар'-яна, бур'-ян."
     assert gates.missing_stress(text, set()) == []

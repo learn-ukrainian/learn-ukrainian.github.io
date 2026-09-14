@@ -220,6 +220,29 @@ def _skip_stress_token(tok: str) -> bool:
     return not bare or len(re.findall(r"[аеєиіїоуюяАЕЄИІЇОУЮЯ]", bare)) < 2
 
 
+_ERROR_KEYS = frozenset({"error", "errorword", "incorrect", "error_word"})
+
+
+def pedagogical_error_forms(acts: dict) -> set[str]:
+    """Wrong spellings in error-correction / gapped fill-in are not lemmas to stress."""
+    out: set[str] = set()
+    for activity in (acts.get("inline") or []) + (acts.get("workbook") or []):
+        if not isinstance(activity, dict):
+            continue
+        blobs = [activity]
+        blobs.extend(item for item in (activity.get("items") or []) if isinstance(item, dict))
+        for blob in blobs:
+            for key, value in blob.items():
+                if key.lower() in _ERROR_KEYS and isinstance(value, str) and value.strip():
+                    out.add(strip_acute(value).lower().strip())
+            sentence = blob.get("sentence")
+            if isinstance(sentence, str) and "_" in sentence:
+                for tok in _stress_tokens(sentence):
+                    if "_" in tok:
+                        out.add(strip_acute(tok.strip("_")).lower())
+    return {form for form in out if form}
+
+
 def missing_stress(text: str, allow: set[str]) -> list[str]:
     """Cyrillic tokens (NFC) with >=2 vowels and no combining acute, in learner-facing text."""
     bad = []
@@ -448,7 +471,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             block(f"lesson {n}: {len(u_stress)} unverified stresses > {MAX_UNVERIFIED_STRESS} (stop rule)")
         if len(u_lem) > MAX_UNVERIFIED_LEMMAS:
             block(f"lesson {n}: {len(u_lem)} unverified lemmas > {MAX_UNVERIFIED_LEMMAS} (stop rule)")
-        allow = {strip_acute(w).lower() for w in u_stress}
+        allow = {strip_acute(w).lower() for w in u_stress} | pedagogical_error_forms(acts)
         # stress CORRECTNESS: every marked form must match a dictionary reading (not just carry a mark)
         proper = {strip_acute(str(w)) for w in (ly.get("proper_names") or [])} | {strip_acute(str(e.get("lemma", ""))) for e in vocab if str(e.get("lemma", ""))[:1].isupper()}
         try:
