@@ -575,6 +575,22 @@ class TestParserEdgeCases:
         assert activities[0].type == "fill-in"
         assert activities[0].items[0].answer == "був"
 
+    def test_parse_fill_in_answer_from_braces(self, parser, tmp_path):
+        yaml_file = tmp_path / "fi-brace.yaml"
+        yaml_file.write_text(
+            "- type: fill-in\n"
+            "  title: Fill Brace\n"
+            "  items:\n"
+            "    - sentence: Київ — це головна {столиця} України.\n"
+            "      options:\n"
+            "        - столиця\n"
+            "        - каша\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert activities[0].items[0].answer == "столиця"
+        assert "{столиця}" not in activities[0].items[0].sentence
+        assert "___" in activities[0].items[0].sentence
+
     def test_parse_match_up(self, parser, tmp_path):
         yaml_file = tmp_path / "mu.yaml"
         yaml_file.write_text(
