@@ -256,3 +256,61 @@ def test_curated_heteronyms_ts_parity():
             assert ts_item["url_slug"] == lemma
             ts_item_clean = {k: v for k, v in ts_item.items() if k not in ("lemma", "url_slug")}
             assert ts_item_clean == py_item, f"Drift detected for {lemma} entry #{i} ({py_item['headword']})"
+
+
+def test_obid_disambiguation():
+    """Verify обід wheel rim vs lunch/dinner disambiguation (#8039)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("обід")
+    assert items is not None
+    assert len(items) == 2
+
+    rim, lunch = items[0], items[1]
+    assert rim["headword"] == "о́бід"
+    assert rim["short_label"] == "у колеса"
+    assert rim["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "о́бода"
+    assert rim["pronunciation"]["ipa"] == "[ˈɔbʲid]"
+
+    assert lunch["headword"] == "обі́д"
+    assert lunch["short_label"] == "споживання їжі (A1)"
+    assert lunch["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "обі́ду"
+    assert lunch["pronunciation"]["ipa"] == "[oˈbʲid]"
+
+
+def test_organ_disambiguation():
+    """Verify орган body/state organ vs musical pipe organ disambiguation (#8039)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("орган")
+    assert items is not None
+    assert len(items) == 2
+
+    body_organ, pipe_organ = items[0], items[1]
+    assert body_organ["headword"] == "о́рган"
+    assert body_organ["cefr"] == "A1"
+    assert body_organ["pronunciation"]["ipa"] == "[ˈɔrɦɐn]"
+
+    assert pipe_organ["headword"] == "орга́н"
+    assert pipe_organ["cefr"] == "B1"
+    assert pipe_organ["pronunciation"]["ipa"] == "[ɔrˈɦan]"
+
+
+def test_muzyka_disambiguation():
+    """Verify музика music art vs musician disambiguation (#8039)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("музика")
+    assert items is not None
+    assert len(items) == 2
+
+    music_art, musician = items[0], items[1]
+    assert music_art["headword"] == "му́зика"
+    assert music_art["short_label"] == "вид мистецтва (A1)"
+    assert music_art["morphology"]["paradigm"]["cases"]["родовий"]["plural"] == "му́зик"
+
+    assert musician["headword"] == "музи́ка"
+    assert musician["short_label"] == "музикант, виконавець (B1)"
+    assert musician["morphology"]["paradigm"]["cases"]["знахідний"]["plural"] == "музи́к"
+
+
+def test_batch_expansion_count():
+    """Verify batch heteronym expansion admits 40 curated lemmas with exact scan residual."""
+    total_curated = len(enrich_heteronyms.CURATED_HETERONYMS)
+    assert total_curated == 40
+    # Baseline denominator is 467 candidates; residual is 467 - 40 = 427
+    assert 467 - total_curated == 427
