@@ -501,3 +501,69 @@ def test_citation_whitelist_introductory_attribution_phrase() -> None:
     assert is_clean2 is True
     assert len(violations2) == 0
     assert any("ВЕСУМ" in a for a in approved2)
+
+
+def test_evaluate_prediction_inshe_slovo_does_not_suppress_condemnation() -> None:
+    """Verify unrelated affirmation like 'інше слово є нормативним' does not suppress condemnation (R5-F1)."""
+    case = {
+        "eval_id": "p_r5_f1",
+        "case_type": "PRESERVE",
+        "target_term": "матеріал",
+        "input_text": "Матеріал підручника викладено послідовно.",
+        "expected_replacement": None,
+    }
+    pred1 = "<thought>Слово «матеріал» є калькою — інше слово є нормативним.</thought>Матеріал підручника викладено послідовно."
+    res1 = evaluate_prediction(case, pred1)
+    assert res1.harmful_edit is True
+
+    pred2 = "<thought>Слово «матеріал» є калькою; зберігаємо решту речення без змін.</thought>Матеріал підручника викладено послідовно."
+    res2 = evaluate_prediction(case, pred2)
+    assert res2.harmful_edit is True
+
+
+def test_citation_whitelist_quoted_introductory_authorities() -> None:
+    """Verify quoted introductory authorities in guillemets or ASCII quotes are detected (R5-F2)."""
+    text1 = "Згідно з «Zorblax», це правильно."
+    is_clean1, _app1, viol1 = verify_citation_whitelist(text1)
+    assert is_clean1 is False
+    assert any("Zorblax" in v for v in viol1)
+
+    text2 = 'Відповідно до "Zorblax", це правильно.'
+    is_clean2, _app2, viol2 = verify_citation_whitelist(text2)
+    assert is_clean2 is False
+    assert any("Zorblax" in v for v in viol2)
+
+
+def test_citation_whitelist_introductory_cocitations() -> None:
+    """Verify introductory co-citations validate every coordinated authority (R5-F3)."""
+    text1 = "Згідно з ВЕСУМ та Zorblax, це правильно."
+    is_clean1, app1, viol1 = verify_citation_whitelist(text1)
+    assert is_clean1 is False
+    assert any("ВЕСУМ" in a for a in app1)
+    assert any("Zorblax" in v for v in viol1)
+
+    text2 = "Згідно з ВЕСУМ, Zorblax, це правильно."
+    is_clean2, app2, viol2 = verify_citation_whitelist(text2)
+    assert is_clean2 is False
+    assert any("ВЕСУМ" in a for a in app2)
+    assert any("Zorblax" in v for v in viol2)
+
+
+def test_citation_whitelist_approved_cocitation_prose_not_violation() -> None:
+    """Verify approved co-citations with qualifying prose or capitalized subject do not trigger violations (R5-F4)."""
+    text1 = "За словником ВЕСУМ та чинним Правописом 2019, слово правильне."
+    is_clean1, app1, viol1 = verify_citation_whitelist(text1)
+    assert is_clean1 is True
+    assert len(viol1) == 0
+    assert any("ВЕСУМ" in a for a in app1)
+    assert any("Правопис" in a for a in app1)
+
+    text2 = "За словником ВЕСУМ і слово правильне."
+    is_clean2, _app2, viol2 = verify_citation_whitelist(text2)
+    assert is_clean2 is True
+    assert len(viol2) == 0
+
+    text3 = "За словником ВЕСУМ, Матеріал є правильним словом."
+    is_clean3, _app3, viol3 = verify_citation_whitelist(text3)
+    assert is_clean3 is True
+    assert len(viol3) == 0

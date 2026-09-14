@@ -285,26 +285,38 @@ def check_span_integrity(input_text: str, output_text: str, target_term: str) ->
     return True, "intact"
 
 
+ENTITY_CITATION_RE = (
+    r"(?:«[^»]+»|\"[^\"]+\"|"
+    r"(?:(?:чинн\w*|академічн\w*|офіційн\w*|нов\w*|стар\w*)\s+)?"
+    r"(?:[Пп]равопис\w*|[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)(?:\s+\d+)?|"
+    r"[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:-[A-ZА-ЯІЇЄҐ0-9][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)*"
+    r"(?:\s+[A-ZА-ЯІЇЄҐ0-9][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)*)"
+)
+CONJ_COORD_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_RE})"
+COMMA_COORD_RE = rf"(?:\s*,\s*{ENTITY_CITATION_RE})"
+
 CITATION_MENTION_PATTERNS = [
-    # "... dictionary" or "... словник" (case-insensitive name preceding dictionary keyword)
+    # 1. "... dictionary" or "... словник" (case-insensitive name preceding dictionary keyword)
     re.compile(
         r"\b(?!(?:у|в|за|по|до|на|з|із|зі|згідно|відповідно|зокрема|цей|цього|цьому|кожен|кожний|який|якого|інший|іншого)\b)"
         r"([a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+(?:\s+[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ’'\-]+)*\s+(?:dictionary|corpus|lexicon|словник\w*|корпус\w*|довідник\w*))\b",
         re.IGNORECASE,
     ),
-    # 2. "словник <Name> [, <Name2>]" (coordinate names after comma MUST be capitalized or quoted; conjunctions permit any casing)
+    # 2a. Plural keyword with comma or conjunction coordinates: "словники ВЕСУМ, Zorblax"
     re.compile(
-        r"\b((?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+"
-        r"(?:«[^»]+»|\"[^\"]+\"|[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]+)"
-        r"(?:(?:\s*,\s*(?:«[^»]+»|\"[^\"]+\"|[A-ZА-ЯІЇЄҐ][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:-[A-ZА-ЯІЇЄҐ0-9][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)*))|"
-        r"(?:\s+(?:та|і|й|and|or)\s+(?:«[^»]+»|\"[^\"]+\"|[a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]+)))*)"
+        rf"\b((?:[Сс]ловник(?:и|ами|ах)|[Кк]орпус(?:и|ами|ах)|[Дд]овідник(?:и|ами|ах)|[Бб]аз(?:и|ами|ах))\s+{ENTITY_CITATION_RE}(?:{COMMA_COORD_RE}|{CONJ_COORD_RE})*)"
         r"(?!\w)"
     ),
-    # 3. Attribution introductory phrases: "згідно з <Authority>", "відповідно до <Authority>", etc.
+    # 2b. Singular keyword with conjunction coordinates: "словник ВЕСУМ та Zorblax"
     re.compile(
-        r"\b(?:[Зз]гідно\s+(?:з|із)|[Вв]ідповідно\s+до|[Зз]а\s+даними|[Зз]а\s+версією)\s+"
-        r"(?:словник\w*|корпус\w*|довідник\w*|баз\w*)?\s*"
-        r"(«[^»]+»|\"[^\"]+\"|[A-ZА-ЯІЇЄҐ][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:\s+[A-ZА-ЯІЇЄҐ][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]+)*)\b"
+        rf"\b((?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+{ENTITY_CITATION_RE}(?:{CONJ_COORD_RE})*)"
+        r"(?!\w)"
+    ),
+    # 3. Introductory attribution phrases: "згідно з <Entities>", "відповідно до <Entities>", etc.
+    re.compile(
+        rf"\b(?:[Зз]гідно\s+(?:з|із)|[Вв]ідповідно\s+до|[Зз]а\s+даними|[Зз]а\s+версією)\s+"
+        rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?({ENTITY_CITATION_RE}(?:{COMMA_COORD_RE}|{CONJ_COORD_RE})*)"
+        r"(?!\w)"
     ),
 ]
 
@@ -329,13 +341,6 @@ def verify_citation_whitelist(text: str) -> tuple[bool, list[str], list[str]]:
     for cpat in CITATION_MENTION_PATTERNS:
         for match in cpat.finditer(text):
             citation_span = match.group(1).strip() if match.lastindex else match.group(0).strip()
-            # Attribution introductory phrase check (e.g. "згідно з Zorblax", "відповідно до ВЕСУМ")
-            if cpat == CITATION_MENTION_PATTERNS[2]:
-                ent = citation_span.strip().strip("«»\"'")
-                if ent and not any(app.search(ent) for app in APPROVED_CITATION_PATTERNS):
-                    found_unapproved.append(ent)
-                continue
-
             # Split coordinate lists (e.g. "VESUM and zorblax dictionary", "ВЕСУМ та Zorblax", "ВЕСУМ, Zorblax")
             keyword_m = re.search(
                 r"\s+(?:dictionary|corpus|lexicon|словник\w*|корпус\w*|довідник\w*)$",
@@ -640,31 +645,55 @@ def evaluate_prediction(
                     or has_nenorm_condemn
                 )
 
+                target_negations = (
+                    f"«{t_lower}» не є калькою",
+                    f"«{t_lower}» не є росіянізмом",
+                    f"«{t_lower}» не є помилкою",
+                    f"«{t_lower}» не помилка",
+                    f"«{t_lower}» не є суржиком",
+                    f"«{t_lower}» не є штучн",
+                    f"слово {t_lower} не є калькою",
+                    f"слово {t_lower} не є росіянізмом",
+                    f"слово {t_lower} не є помилкою",
+                    f"слово {t_lower} не помилка",
+                    f"«{t_lower}» є нормативним",
+                    f"слово {t_lower} є нормативним",
+                    f"зберігаємо «{t_lower}»",
+                    f"зберігаємо слово {t_lower}",
+                    f"зберігаємо термін {t_lower}",
+                    f"«{t_lower}» без змін",
+                    "не є калькою",
+                    "не калька",
+                    "не є росіянізмом",
+                    "не росіянізм",
+                    "не є помилкою",
+                    "не помилка",
+                    "не є суржиком",
+                    "не є штучн",
+                    "не потребує змін",
+                    "не потребує виправлення",
+                    "не потребує заміни",
+                )
+
+                neg_nenorm = bool(re.search(r"\bне\s+(?:є\s+)?(?:вважається\s+)?ненормативн\w*\b", clause))
+
+                target_affirm = bool(
+                    re.search(
+                        rf"\b(?<!інше\s)(?<!іншого\s)(?<!іншим\s)(?<!нового\s)(?<!інший\s)(?:«?{re.escape(t_lower)}»?|(?:це|дане|зазначене)\s+(?:слово|термін))\s+(?:є\s+)?(?:нормативн|правильн|питом)",
+                        clause,
+                    )
+                )
+
+                target_preserve = (
+                    any(p in clause for p in ("зберігаємо", "preserve", "без змін"))
+                    and not bool(re.search(r"\b(?:решт\w*|інш\w*|нового|іншого)\b", clause))
+                )
+
                 clause_negated = (
-                    any(
-                        np in clause
-                        for np in (
-                            "не є калькою",
-                            "не калька",
-                            "не є росіянізмом",
-                            "не росіянізм",
-                            "не є помилкою",
-                            "не помилка",
-                            "не є суржиком",
-                            "не є штучн",
-                            "не потребує",
-                            "зберігаємо",
-                            "preserve",
-                            "без змін",
-                        )
-                    )
-                    or bool(re.search(r"\bне\s+(?:є\s+)?(?:вважається\s+)?ненормативн\w*\b", clause))
-                    or bool(
-                        re.search(
-                            rf"\b(?:«?{re.escape(t_lower)}»?|слово|термін)\s+(?:є\s+)?(?:нормативн|правильн|питом)",
-                            clause,
-                        )
-                    )
+                    any(np in clause for np in target_negations)
+                    or neg_nenorm
+                    or target_affirm
+                    or target_preserve
                 )
 
                 if clause_condemns and not clause_negated:
