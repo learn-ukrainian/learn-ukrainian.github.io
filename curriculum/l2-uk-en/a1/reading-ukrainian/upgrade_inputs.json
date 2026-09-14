@@ -1,0 +1,10 @@
+{
+  "mode": "upgrade",
+  "sha256": {
+    "curriculum/l2-uk-en/a1-v1/reading-ukrainian/module.md": "c49a57b2d80b54aad30ac52a1907938e19c606a508ab69df706d34198350000a",
+    "curriculum/l2-uk-en/a1-v1/reading-ukrainian/activities.yaml": "ba87450e8370d148577e8ed19adfbbc83c17607e3d412647cb2a4138738eee14",
+    "curriculum/l2-uk-en/a1-v1/reading-ukrainian/vocabulary.yaml": "224b677a2180fe3dc28903524d0e1469f6cef1948b9def1a4bf512b234a2f774",
+    "curriculum/l2-uk-en/a1-v1/reading-ukrainian/resources.yaml": "b6eed4892a791e78a48402b6db8278518026d11e08e4ac869c4c95936f9f7089",
+    "curriculum/l2-uk-en/plans/a1/reading-ukrainian.yaml": "fbfce0907fe247c0a795317dab456c17740d7f51c25cbf174a327232839f7ed5"
+  }
+}
