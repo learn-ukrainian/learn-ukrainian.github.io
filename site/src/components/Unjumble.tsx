@@ -170,7 +170,8 @@ export function UnjumbleQuestion({
     completionReportedRef.current = false;
   };
 
-  const userAnswer = selectedWords.map(w => w.text).join(' ');
+  const joiner = /\s/.test(answer.trim()) ? ' ' : '';
+  const userAnswer = selectedWords.map(w => w.text).join(joiner);
   const isCorrect = userAnswer.toLowerCase().trim() === answer.toLowerCase().trim();
 
   const placeholderLabel = isUkrainian ? 'Перетягніть слова сюди, щоб скласти речення...' : 'Drag words here to build the sentence...';
