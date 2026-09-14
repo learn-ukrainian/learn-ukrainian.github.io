@@ -2,7 +2,8 @@
 
 **Status:** Proposed Architecture & Advisory Memo
 **Author:** Gemini (AGY) — Advisor Only
-**Issue / PR Reference:** refs #7999, #7994
+**Issue / PR Reference:** refs #7999, #7994, #7995
+**Binding scars:** [`a1-upgrade-operating-rules.md`](a1-upgrade-operating-rules.md) — load first. Canonical `/a1/`; archive `/a1-v1/`.
 **Trailer:** `X-Agent: agy/cu-p1-a1-normalize-advisor`
 **Scope:** A1 Canonical Landing (`/a1/{slug}/` Lesson Tab) Normalization across 55 modules. Strictly A1 only (A2/B1/B2 immersion out of scope).
 

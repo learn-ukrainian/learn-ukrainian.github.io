@@ -1,7 +1,10 @@
 # Curriculum upgrade Phase 1 — V7 machinery (#7994)
 
-Status: implemented machinery; acceptance remains open for the immersion decision
-in [RESIDUAL.md](../../RESIDUAL.md). This is one PR, not curriculum publication.
+**Binding scars:** [`a1-upgrade-operating-rules.md`](a1-upgrade-operating-rules.md).
+PR #7999 is merged; modules 8–9 are live on `/a1/`. Auto-deploy does not publish
+curriculum — see that file for Pages dispatch.
+
+Status: implemented machinery; A1 content rollout continues in manifest order.
 
 ## Frozen outcome and denominator
 
@@ -44,10 +47,10 @@ merge disposition. Codex owns this implementation, integration and verification.
 Run from a dispatch worktree with the shared interpreter:
 
 ```sh
-/home/ops/learn-ukrainian/.venv/bin/python scripts/build/v7_build.py a1 things-have-gender --upgrade --dry-run
-/home/ops/learn-ukrainian/.venv/bin/python scripts/build/v7_build.py a1 things-have-gender --upgrade --writer gemini-tools --worktree
-/home/ops/learn-ukrainian/.venv/bin/python scripts/build/v7_build.py a1 things-have-gender --upgrade --writer codex-tools --worktree
-/home/ops/learn-ukrainian/.venv/bin/python -m scripts.build.verify_shippable a1 things-have-gender --lesson
+.venv/bin/python scripts/build/v7_build.py a1 things-have-gender --upgrade --dry-run
+.venv/bin/python scripts/build/v7_build.py a1 things-have-gender --upgrade --writer gemini-tools --worktree
+.venv/bin/python scripts/build/v7_build.py a1 things-have-gender --upgrade --writer codex-tools --worktree
+.venv/bin/python -m scripts.build.verify_shippable a1 things-have-gender --lesson
 ```
 
 Only the first command is authorized for live execution in this PR. Existing
@@ -119,7 +122,7 @@ Reports/prompts/telemetry are local build artifacts and are not product curricul
 Routing card `acceptance_cmd` (cwd is the assigned dispatch worktree):
 
 ```sh
-/home/ops/learn-ukrainian/.venv/bin/python -m pytest tests/build/test_lesson_map.py tests/build/test_lesson_assembler.py tests/build/test_lesson_gates.py tests/build/test_v7_upgrade.py -q
+.venv/bin/python -m pytest tests/build/test_lesson_map.py tests/build/test_lesson_assembler.py tests/build/test_lesson_gates.py tests/build/test_v7_upgrade.py -q
 ```
 
 - [x] Deriver matches pinned gold section lists, intro owner, closure and provenance.
