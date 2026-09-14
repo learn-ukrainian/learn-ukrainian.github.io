@@ -114,6 +114,28 @@ def test_error_correction_wrong_spellings_are_not_missing_stress():
     assert "книга" not in forms
 
 
+def test_error_forms_do_not_exempt_the_same_spelling_in_another_activity():
+    """A wrong option in one item must not skip missing-stress on the same token elsewhere."""
+    quiz = {
+        "id": "act-wrong",
+        "type": "quiz",
+        "items": [{"options": [{"text": "книга", "correct": False},
+                               {"text": "кни́га", "correct": True}]}],
+    }
+    prose = {
+        "id": "act-prose",
+        "type": "match",
+        "instruction": "Прочитай: книга на столі.",
+        "items": [{"left": "книга", "right": "book"}],
+    }
+    quiz_allow = gates.pedagogical_error_forms({"inline": [quiz], "workbook": []})
+    prose_allow = gates.pedagogical_error_forms({"inline": [prose], "workbook": []})
+    assert "книга" in quiz_allow
+    assert "книга" not in prose_allow
+    assert "книга" in gates.missing_stress("книга на столі", prose_allow)
+    assert "книга" not in gates.missing_stress("книга на столі", quiz_allow)
+
+
 def test_hyphenation_models_are_not_missing_stress():
     text = "Мо́делі: дере-в'яний, Мар'-яна, бур'-ян."
     assert gates.missing_stress(text, set()) == []
