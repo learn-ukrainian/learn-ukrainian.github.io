@@ -61,6 +61,14 @@ def norm_text(t: str) -> str:
     return re.sub(r"\s+", " ", strip_acute(t)).strip()
 
 
+def _dialogue_props_text(page: str) -> str:
+    """Text that actually lives on DialogueBox props, not the rest of the page."""
+    blobs = re.findall(r"<DialogueBox[\s\S]*?/>", page)
+    decoded = re.sub(r"\\u([0-9a-fA-F]{4})", lambda m: chr(int(m[1], 16)), " ".join(blobs))
+    decoded = decoded.replace('\\"', '"').replace("\\n", " ")
+    return norm_text(decoded)
+
+
 def _visible_in_render(value: str, literal_text: str) -> bool:
     """True if YAML text or its fill-in-blanked form is on the published page."""
     variants = [
@@ -566,7 +574,8 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                         values = (speaker, spoken)
                     else:
                         values = (chunk,)
-                    if any(md_to_text(value) not in literal_text for value in values):
+                    hay = _dialogue_props_text(page)
+                    if any(md_to_text(value) not in hay for value in values):
                         missing = True
                 if not missing:
                     continue

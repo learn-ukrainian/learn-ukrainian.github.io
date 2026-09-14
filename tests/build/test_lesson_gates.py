@@ -44,6 +44,18 @@ def test_fill_in_blanked_strings_count_as_rendered():
     assert gates._visible_in_render("де__ (soft sign)", gates.norm_text("де___ (soft sign)"))
 
 
+def test_dialogue_props_ignore_unrelated_prose():
+    page = (
+        'Тарас Сьогодні свято '
+        '<DialogueBox exchanges={JSON.parse(\'[{"speaker":"Оксана","text":"Привіт"}]\')} />'
+    )
+    hay = gates._dialogue_props_text(page)
+    assert "Привіт" in hay
+    assert "Оксана" in hay
+    assert "Тарас" not in hay
+    assert "свято" not in hay
+
+
 def test_one_syllable_acute_is_not_undeclared_stress():
     assert gates.wrong_stress("ка́ ли́ ко́", set()) == []
 
