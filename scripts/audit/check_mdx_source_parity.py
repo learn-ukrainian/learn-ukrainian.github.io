@@ -20,6 +20,7 @@ GENERATOR_ENTRYPOINT = PROJECT_ROOT / "scripts/generate_mdx.py"
 GENERATOR_PACKAGE = PROJECT_ROOT / "scripts/generate_mdx"
 GENERATOR_DEPENDENCIES = {
     PROJECT_ROOT / "scripts/yaml_activities.py",
+    PROJECT_ROOT / "scripts/build/lesson_assembler.py",
 }
 NAV_FRONTMATTER_RE = re.compile(r"^(prev|next):(?:\s|$)")
 DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0

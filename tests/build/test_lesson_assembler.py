@@ -243,6 +243,42 @@ def test_a1_assembler_converts_text_fences_to_bilingual_bullets():
     assert "- **У мене́ є стіл.** — I have a table." in out
 
 
+def test_a1_assembler_keeps_prose_after_text_fence():
+    from scripts.build.lesson_assembler import _normalize_a1_example_fences
+
+    raw = (
+        "Then make three tiny room lines.\n\n"
+        "```text\n"
+        "книга\n"
+        "```\n\n"
+        "This explanation is needed.\n\n"
+        "After\n"
+    )
+    out = _normalize_a1_example_fences(raw)
+    assert "```" not in out
+    assert "- **книга**" in out
+    assert "This explanation is needed." in out
+    assert "After" in out
+
+
+def test_a1_assembler_pairs_fence_with_following_support_table():
+    from scripts.build.lesson_assembler import _normalize_a1_example_fences
+
+    raw = (
+        "```text\n"
+        "Марія: Це моя кімната.\n"
+        "```\n\n"
+        "Support after the Ukrainian lines:\n\n"
+        "| Украї́нська | English support |\n"
+        "| --- | --- |\n"
+        "| **Марі́я: Це моя́ кімна́та.** | Mariia: This is my room. |\n"
+    )
+    out = _normalize_a1_example_fences(raw)
+    assert "```" not in out
+    assert "Support after the Ukrainian lines:" not in out
+    assert "- **Марі́я: Це моя́ кімна́та.** — Mariia: This is my room." in out
+
+
 def test_a1_assembler_rewrites_module_completion_to_summary():
     from scripts.build.lesson_assembler import _normalize_a1_module_close
 

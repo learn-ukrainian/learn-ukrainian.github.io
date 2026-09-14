@@ -171,7 +171,8 @@ def _landing_intro(level: str, module_dir: Path, slug: str, cards: list[str]) ->
 
 
 _EXAMPLE_FENCE = re.compile(
-    r"```(?:text)?\r?\n(.*?)```(?:[ \t]*\n(?:(?!\|)[^\n]{0,100}\n){0,3})?((?:\|[^\n]*\|\n)+)?",
+    r"```(?:text)?\r?\n(.*?)```"
+    r"(?:(?:[ \t]*\r?\n(?:(?!\|)[^\n]{0,100})?){0,3}\n((?:\|[^\n]*\|\n)+))?",
     re.DOTALL,
 )
 
