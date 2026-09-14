@@ -845,7 +845,7 @@ their original scope. No new artifact rebuild or model benchmark was run here.
 Tests ran with the project interpreter on the reviewed author worktree:
 
 ```text
-/home/ops/learn-ukrainian/.venv/bin/python -m pytest \
+.venv/bin/python -m pytest \
   tests/projects/open_model_data/test_v4_decolonization_reasoning.py \
   tests/projects/open_model_data/test_v4_format_and_evaluate.py \
   tests/projects/open_model_data/test_v1_decolonization_contracts.py -q
@@ -1087,8 +1087,9 @@ checks, five skipped checks, and no failed or pending checks on PR #7972.
 ### Reproduced results
 
 All commands ran inside
-`/home/ops/learn-ukrainian/.worktrees/dispatch/codex/uldr-audit-20260911`,
-using `/home/ops/learn-ukrainian/.venv/bin/python` as the interpreter after
+the assigned dispatch worktree
+`.worktrees/dispatch/codex/uldr-audit-20260911`,
+using `.venv/bin/python` as the interpreter after
 integrating merged main into the audit branch. Only the audit document differs
 from main; no evaluator, generator, test or dataset edits were made.
 
@@ -1112,9 +1113,9 @@ from main; no evaluator, generator, test or dataset edits were made.
 Reproduction commands (the benchmark prints aggregates only):
 
 ```bash
-/home/ops/learn-ukrainian/.venv/bin/python -m pytest tests/projects/open_model_data/test_v4_format_and_evaluate.py -q
-/home/ops/learn-ukrainian/.venv/bin/python -m pytest tests/projects/open_model_data/test_v4_decolonization_reasoning.py tests/projects/open_model_data/test_v1_decolonization_contracts.py -q
-/home/ops/learn-ukrainian/.venv/bin/python - <<'PYCODE'
+.venv/bin/python -m pytest tests/projects/open_model_data/test_v4_format_and_evaluate.py -q
+.venv/bin/python -m pytest tests/projects/open_model_data/test_v4_decolonization_reasoning.py tests/projects/open_model_data/test_v1_decolonization_contracts.py -q
+.venv/bin/python - <<'PYCODE'
 import json
 from scripts.projects.open_model_data.v4_evaluate_decolonization import (
     DEFAULT_HELD_OUT_FILE, evaluate_predictions,
@@ -1124,8 +1125,8 @@ passed = sum(row["is_pass"] for row in summary.pop("evaluations"))
 assert (passed, summary["expected_gold_records"]) == (232, 234)
 print(json.dumps(dict(summary, passed_records=passed), sort_keys=True))
 PYCODE
-/home/ops/learn-ukrainian/.venv/bin/python -m ruff check scripts/projects/open_model_data/v4_evaluate_decolonization.py scripts/projects/open_model_data/v4_decolonization_reasoning.py tests/projects/open_model_data/test_v4_format_and_evaluate.py tests/projects/open_model_data/test_v4_decolonization_reasoning.py
-/home/ops/learn-ukrainian/.venv/bin/python -m ruff format --check scripts/projects/open_model_data/v4_evaluate_decolonization.py scripts/projects/open_model_data/v4_decolonization_reasoning.py tests/projects/open_model_data/test_v4_format_and_evaluate.py tests/projects/open_model_data/test_v4_decolonization_reasoning.py
+.venv/bin/python -m ruff check scripts/projects/open_model_data/v4_evaluate_decolonization.py scripts/projects/open_model_data/v4_decolonization_reasoning.py tests/projects/open_model_data/test_v4_format_and_evaluate.py tests/projects/open_model_data/test_v4_decolonization_reasoning.py
+.venv/bin/python -m ruff format --check scripts/projects/open_model_data/v4_evaluate_decolonization.py scripts/projects/open_model_data/v4_decolonization_reasoning.py tests/projects/open_model_data/test_v4_format_and_evaluate.py tests/projects/open_model_data/test_v4_decolonization_reasoning.py
 ```
 
 The benchmark uses the held-out artifact as both gold and predictions, matching

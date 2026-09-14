@@ -1,10 +1,10 @@
 # Repair pass — PR #7991 (a1-v2/things-have-gender pilot) after cross-family content review
 
-You are the writer seat repairing your own pilot. Work ONLY in the existing dispatch worktree branch `agy/cu-p0-pilot-writer-things-have-gender` (the runtime places you there; `pwd` must be under `.worktrees/dispatch/`). Python is `/home/ops/learn-ukrainian/.venv/bin/python`. **Do not touch** `scripts/`, `site/`, `starlight/`, `.github/`, `curriculum/l2-uk-en/plans/`, or the original module under `curriculum/l2-uk-en/a1/things-have-gender/`. Do not edit `audit/curriculum-upgrade/pilot-things-have-gender/verify_pilot.py` or `browser_check.mjs`.
+You are the writer seat repairing your own pilot. Work ONLY in the existing dispatch worktree branch `agy/cu-p0-pilot-writer-things-have-gender` (the runtime places you there; `pwd` must be under `.worktrees/dispatch/`). Python is `.venv/bin/python` (primary checkout interpreter; set `LEARN_UKRAINIAN_PRIMARY_REPO_ROOT` when an extra search root is required). **Do not touch** `scripts/`, `site/`, `starlight/`, `.github/`, `curriculum/l2-uk-en/plans/`, or the original module under `curriculum/l2-uk-en/a1/things-have-gender/`. Do not edit `audit/curriculum-upgrade/pilot-things-have-gender/verify_pilot.py` or `browser_check.mjs`.
 
 ## What happened
 The independent Codex review returned REQUEST-CHANGES. Read it in full first:
-`/home/ops/learn-ukrainian/batch_state/tasks/cu-p0-pr7991-content-review-codex.result`
+`batch_state/tasks/cu-p0-pr7991-content-review-codex.result`
 The orchestrator has already fixed stress placement (29 forms) and `Стіна́`, and rebuilt the odd-one-out cards; the current head is what you start from (`git log -3`).
 
 Your previous report claimed "every stress verified" and "every lemma verified"; the batch re-check found 29 wrong stresses. This time **every language claim in your report carries the pasted tool output** (`mcp__sources__verify_stress`, `verify_words`, `check_russian_shadow`, `search_ua_gec_errors`, `search_text`). A claim without a receipt counts as unverified.
@@ -26,7 +26,7 @@ The original module's prose is **locked**: the checker requires every original p
 For every word you add or change: `verify_words` on the inflected form; `check_russian_shadow` on the lemma; `search_ua_gec_errors` on new verb/preposition phrases; stress marks on every multi-syllable word — **but do not guess a stress**: call `verify_stress` and paste the result; for a `not_found` form add it to that lesson's `unverified_stress` in `lessons.yaml` with a reason in `NOTES.md`. Proper names go in `lessons.yaml: proper_names`.
 
 ## Verification before you push (paste raw command + cwd + output in the PR)
-1. `/home/ops/learn-ukrainian/.venv/bin/python audit/curriculum-upgrade/pilot-things-have-gender/verify_pilot.py` → `VERIFY_PILOT: PASS`
+1. `.venv/bin/python audit/curriculum-upgrade/pilot-things-have-gender/verify_pilot.py` → `VERIFY_PILOT: PASS`
 2. `node audit/curriculum-upgrade/pilot-things-have-gender/browser_check.mjs` → `BROWSER_CHECK: PASS`
 3. `git diff --stat 7829e74b6031cdcc4ef69895b5f42e0643569e44 -- scripts site starlight .github curriculum/l2-uk-en/plans curriculum/l2-uk-en/a1/things-have-gender` → empty
 4. Rendered page updated for every change (the checker's render-coverage check enforces it).

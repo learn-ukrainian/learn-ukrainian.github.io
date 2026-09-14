@@ -134,11 +134,12 @@ include:
 - `site/src/data/lexicon-manifest.fingerprint.json`
 
 The full enrichment step requires local ignored `data/sources.db`. A worktree
-does not contain the database by default; symlink the local project database
-into the worktree before a smoke run and remove it afterward:
+does not contain the database by default; symlink the primary checkout
+database (via `LEARN_UKRAINIAN_PRIMARY_REPO_ROOT` or cwd/git discovery) into
+the worktree before a smoke run and remove it afterward:
 
 ```bash
-ln -s /Users/krisztiankoos/projects/learn-ukrainian/data/sources.db data/sources.db
+ln -s "${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:?}/data/sources.db" data/sources.db
 .venv/bin/python -m scripts.audit.generate_source_inventory_review_candidates --report
 rm -f data/sources.db
 ```

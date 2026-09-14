@@ -426,7 +426,7 @@ write enforcement to #4445/#4446/#4448/#4449 instead of claiming hook coverage.
 Environment:
 
 - cwd:
-  `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/4447-codex-hooks-deploy`
+  `.worktrees/dispatch/codex/4447-codex-hooks-deploy`
 - Codex CLI: `codex-cli 0.142.5`
 - Command:
   `.venv/bin/python scripts/agent_runtime/codex_hook_probe.py --keep-workdir --timeout 240`

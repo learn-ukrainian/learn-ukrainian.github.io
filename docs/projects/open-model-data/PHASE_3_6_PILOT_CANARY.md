@@ -150,7 +150,7 @@ The canary run enforces three non-negotiable safety gates before production asse
 - `zero_heldout_leakage`: 100% partition firewall protection — bidirectional check (zero term or context overlap with `heldout_evaluation_suite_1000.jsonl`).
 - `zero_synthetic_hallucination`: 100% human-authored corpus grounding.
 - `vesum_attestation_100_percent`: Every living standard lemma attested in `data/vesum.db`.
-- `no_private_host_paths`: Zero leakage of private host paths (`/home/ops`, `/Users/`, IP addresses) in datasets or receipts.
+- `no_private_host_paths`: Zero leakage of private host home-directory paths or RFC1918 addresses in datasets or receipts.
 
 ---
 

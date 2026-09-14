@@ -30,7 +30,7 @@ This component implements the automated factual claim-verification engine for Ch
      - `no_private_host_paths`: Trajectory-level and receipt-level OPSEC scans pass with zero private paths.
 
 3. **OPSEC & Subprocess Safety**:
-   - Zero leakage of private hostnames, IP addresses, or local developer paths (`/home/ops`, `/Users/`) into public artifacts, verified via trajectory-level OPSEC scans on both verified and rejected datasets.
+   - Zero leakage of private hostnames, IP addresses, or local developer home-directory paths into public artifacts, verified via trajectory-level OPSEC scans on both verified and rejected datasets.
    - All subprocess calls bounded by explicit timeouts (`timeout=30`), audited via AST.
 
 ---

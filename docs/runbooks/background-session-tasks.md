@@ -28,7 +28,7 @@ SERVICE_ROOT="/path/to/durable/local-teacher"
 SERVICE_LOG="$SERVICE_ROOT/local-teacher.log"
 SERVICE_PID="$SERVICE_ROOT/local-teacher.pid"
 
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python \
+.venv/bin/python \
   scripts/tools/detach_session_task.py \
   --workdir "$SERVICE_ROOT" \
   --log-file "$SERVICE_LOG" \
