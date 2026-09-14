@@ -62,6 +62,12 @@ class TestOraclePedagogy:
         assert f"Ме{STRESS_MARK}не" not in result
         assert f"Мене{STRESS_MARK}" in result
 
+    def test_ambiguous_metalanguage_gets_first_reading(self):
+        result, count = annotate_stress("Правила. Підсумок.")
+        assert f"Пра{STRESS_MARK}вила" in result
+        assert f"Пі{STRESS_MARK}дсумок" in result
+        assert count >= 2
+
     def test_zavzhdy_override_not_last_vowel(self):
         result, _count = annotate_stress("Я завжди тут.")
         assert f"за{STRESS_MARK}вжди{STRESS_MARK}" not in result
