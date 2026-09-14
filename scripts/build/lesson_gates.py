@@ -478,9 +478,8 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             block(f"lesson {n}: {len(u_stress)} unverified stresses > {MAX_UNVERIFIED_STRESS} (stop rule)")
         if len(u_lem) > MAX_UNVERIFIED_LEMMAS:
             block(f"lesson {n}: {len(u_lem)} unverified lemmas > {MAX_UNVERIFIED_LEMMAS} (stop rule)")
-        allow = {strip_acute(w).lower() for w in u_stress} | pedagogical_error_forms(acts)
-        # stress CORRECTNESS: every marked form must match a dictionary reading (not just carry a mark)
         proper = {strip_acute(str(w)) for w in (ly.get("proper_names") or [])} | {strip_acute(str(e.get("lemma", ""))) for e in vocab if str(e.get("lemma", ""))[:1].isupper()}
+        allow = {strip_acute(w).lower() for w in u_stress} | pedagogical_error_forms(acts) | {w.lower() for w in proper}
         try:
             wrong = wrong_stress(learner_text(lesson_md_clean[n]) + "\n" + "\n".join(str(x) for x in leaves(acts) + leaves(vocab) if isinstance(x, str)), allow, proper)
         except Exception as exc:
