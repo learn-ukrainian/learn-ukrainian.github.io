@@ -73,6 +73,8 @@ def test_hyphenation_models_are_not_missing_stress():
     assert gates.missing_stress(text, set()) == []
     flagged = gates.wrong_stress("дере́-в'яний Мар'-я́на", set())
     assert flagged == []
+    assert gates.missing_stress("дере__", set()) == []
+    assert "книга" in gates.missing_stress("-книга", set())
 
 
 def test_structural_containment_keeps_answers_and_multiplicity():

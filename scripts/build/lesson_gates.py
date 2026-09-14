@@ -189,7 +189,7 @@ def learner_text(md: str) -> str:
     return t
 
 
-_TOKEN_RE = re.compile(rf"[{CYR}'’{ACUTE}-]+")
+_TOKEN_RE = re.compile(rf"[{CYR}'’{ACUTE}_-]+")
 
 
 def _stress_tokens(text: str) -> list[str]:
@@ -199,9 +199,11 @@ def _stress_tokens(text: str) -> list[str]:
 
 def _skip_stress_token(tok: str) -> bool:
     """Hyphenation demos, fill-in gaps, and 1-syllable fragments are not dictionary words."""
-    if not tok or "-" in tok or "_" in tok:
+    if not tok or "_" in tok:
         return True
-    bare = strip_acute(tok.strip("'’"))
+    if "-" in tok.strip("-"):
+        return True
+    bare = strip_acute(tok.strip("'’-"))
     return len(re.findall(r"[аеєиіїоуюяАЕЄИІЇОУЮЯ]", bare)) < 2
 
 
