@@ -1,0 +1,527 @@
+inline:
+- id: act-301
+  type: quiz
+  title: Запитання до сімейних фото
+  instruction: Обери правильну відповідь або запитання для розмови про фотографії.
+  items:
+  - prompt: Ти хочеш спитати, хто зображений на знімку.
+    options:
+    - text: Хто це на фото?
+      correct: true
+    - text: Що це на фото?
+      correct: false
+    - text: Де це на фото?
+      correct: false
+    explanation: Питання «Хто це?» вживаємо про людей.
+  - prompt: Ти запитуєш друга, чи це його мама.
+    options:
+    - text: Чи це твоя мама?
+      correct: true
+    - text: Чи це твій мама?
+      correct: false
+    - text: Чи це твоє мама?
+      correct: false
+    explanation: Мама — жіночого роду, тому вживаємо твоя.
+  - prompt: Ти показуєш на брата й кажеш його ім'я.
+    options:
+    - text: Це мій брат. Його звати Коля.
+      correct: true
+    - text: Це мій брат. Її звати Коля.
+      correct: false
+    - text: Це мій брат. Мій звати Коля.
+      correct: false
+    explanation: Для чоловіка (брата) вживаємо займенник його.
+  - prompt: Ти показуєш на сестру й кажеш її ім'я.
+    options:
+    - text: Це моя сестра. Її звати Катя.
+      correct: true
+    - text: Це моя сестра. Його звати Катя.
+      correct: false
+    - text: Це моя сестра. Їх звати Катя.
+      correct: false
+    explanation: Для жінки (сестри) вживаємо займенник її.
+  - prompt: Ти показуєш місто на світлині.
+    options:
+    - text: Це моє рідне місто.
+      correct: true
+    - text: Це мій рідне місто.
+      correct: false
+    - text: Це моя рідне місто.
+      correct: false
+    explanation: Місто — середнього роду, тому вживаємо моє.
+  - prompt: Ти запитуєш про спільні сімейні знімки.
+    options:
+    - text: Де твої сімейні фотографії?
+      correct: true
+    - text: Де твій сімейні фотографії?
+      correct: false
+    - text: Де твоя сімейні фотографії?
+      correct: false
+    explanation: Фотографії — множина, тому вживаємо твої.
+- id: act-302
+  type: fill-in
+  title: Твій, твоя, твоє чи твої?
+  instruction: Встав правильну форму займенника до кожного іменника.
+  items:
+  - sentence: Це ___ мама на фотографії?
+    answer: твоя
+    options:
+    - твоя
+    - твій
+    - твоє
+    - твої
+    explanation: Мама — жіночого роду, тому твоя.
+  - sentence: Ось ___ дідусь Василь.
+    answer: твій
+    options:
+    - твій
+    - твоя
+    - твоє
+    - твої
+    explanation: Дідусь — чоловічого роду, тому твій.
+  - sentence: Це ___ рідне місто?
+    answer: твоє
+    options:
+    - твоє
+    - твій
+    - твоя
+    - твої
+    explanation: Місто — середнього роду, тому твоє.
+  - sentence: Де ___ сімейні знімки?
+    answer: твої
+    options:
+    - твої
+    - твій
+    - твоя
+    - твоє
+    explanation: Знімки — множина, тому твої.
+  - sentence: Це ___ сестра Олена?
+    answer: твоя
+    options:
+    - твоя
+    - твій
+    - твоє
+    - твої
+    explanation: Сестра — жіночого роду, тому твоя.
+  - sentence: Це ___ прізвище в зошиті?
+    answer: твоє
+    options:
+    - твоє
+    - твій
+    - твоя
+    - твої
+    explanation: Прізвище — середнього роду, тому твоє.
+- id: act-303
+  type: match-up
+  title: Підписи до фотографій
+  instruction: З'єднай підпис під фотографією з його значенням.
+  pairs:
+  - left: Хто це?
+    right: запитання про людину на знімку
+  - left: Це моя сім'я.
+    right: представлення родини
+  - left: Його звати Коля.
+    right: ім'я брата або тата
+  - left: Її звати Катя.
+    right: ім'я сестри або мами
+  - left: Це моє місто.
+    right: назва населеного пункту
+  - left: Чи це твій дідусь?
+    right: уточнення про дідуся
+- id: act-304
+  type: true-false
+  title: Слухаємо та перевіряємо
+  instruction: Визнач, чи твердження є правильним згідно з правилами української мови.
+  items:
+  - statement: Слово «місто» середнього роду, тому правильно сказати «моє місто».
+    correct: true
+    explanation: Місто закінчується на -о і є іменником середнього роду.
+  - statement: Форми «його» та «її» змінюються за родами іменників, як «мій» і «моя».
+    correct: false
+    explanation: Форми «його» та «її» в ролі присвійних слів є незмінними.
+  - statement: Питання «Чи це твоя бабуся?» вимагає відповіді «так» або «ні».
+    correct: true
+    explanation: Частка «чи» на початку утворює загальне запитання.
+  - statement: Зі словом «сестра» можна вжити займенник «твій».
+    correct: false
+    explanation: Сестра — жіночого роду, тому потрібно казати «твоя сестра».
+  - statement: У слові «сім'я» обов'язково пишеться апостроф.
+    correct: true
+    explanation: Апостроф ставиться після «м» перед «я».
+  - statement: Слово «батьки» вживається в множині, тому правильно казати «твої батьки».
+    correct: true
+    explanation: Батьки — форма множини, що узгоджується із займенником «твої».
+- id: act-305
+  type: odd-one-out
+  title: Знайди зайве слово
+  instruction: Обери одне слово, яке не підходить до групи за родом або значенням.
+  items:
+  - options:
+    - text: мама
+      correct: false
+    - text: сестра
+      correct: false
+    - text: бабуся
+      correct: false
+    - text: брат
+      correct: true
+    explanation: Брат — чоловічого роду, а мама, сестра й бабуся — жіночого.
+  - options:
+    - text: тато
+      correct: false
+    - text: дідусь
+      correct: false
+    - text: син
+      correct: false
+    - text: дочка
+      correct: true
+    explanation: Дочка — жіночого роду, тоді як інші слова позначають чоловіків.
+  - options:
+    - text: твій
+      correct: false
+    - text: мій
+      correct: false
+    - text: наш
+      correct: false
+    - text: твоя
+      correct: true
+    explanation: Твоя — жіночого роду, тоді як інші форми — чоловічого.
+  - options:
+    - text: моє
+      correct: false
+    - text: твоє
+      correct: false
+    - text: місто
+      correct: false
+    - text: мої
+      correct: true
+    explanation: Мої — форма множини, а інші слова пов'язані із середнім родом.
+  - options:
+    - text: ім'я
+      correct: false
+    - text: прізвище
+      correct: false
+    - text: по батькові
+      correct: false
+    - text: зошит
+      correct: true
+    explanation: Зошит — навчальний предмет, а решта — складники повного імені людини.
+  - options:
+    - text: один
+      correct: false
+    - text: два
+      correct: false
+    - text: брат
+      correct: true
+    - text: дві
+      correct: false
+    explanation: Брат — це іменник, тоді як інші слова є числівниками.
+workbook:
+- id: act-w4
+  type: match-up
+  title: Повне ім'я як сигнал
+  instruction: З'єднай частину формального імені з підказкою. Це тільки впізнавання.
+  pairs:
+  - left: ім'я
+    right: Марія
+  - left: прізвище
+    right: Коваленко
+  - left: по батькові
+    right: Василівна
+  - left: Добрий день, Маріє Василівно!
+    right: формальне звертання
+- id: act-w301
+  type: group-sort
+  title: Його чи її?
+  instruction: Розподіли речення за тим, чи стосується розповідь чоловіка (його) або
+    жінки (її).
+  groups:
+  - label: його (his)
+    items:
+    - Це мій брат. Його звати Богдан.
+    - Це мій тато. Його звати Євген.
+    - Це мій дідусь. Його родина у Львові.
+    - Це мій син. Його зошит тут.
+  - label: її (her)
+    items:
+    - Це моя сестра. Її звати Олена.
+    - Це моя мама. Її звати Марина.
+    - Це моя бабуся. Її звати Тетяна.
+    - Це моя дочка. Її фото на столі.
+- id: act-w302
+  type: fill-in
+  title: Родинні підписи в зошиті
+  instruction: Встав правильне слово для підпису під сімейними світлинами.
+  items:
+  - sentence: Ось ___ родина на фотографії.
+    answer: моя
+    options:
+    - моя
+    - мій
+    - моє
+    - мої
+    explanation: Родина — жіночого роду.
+  - sentence: Це ___ дідусь і бабуся.
+    answer: мої
+    options:
+    - мої
+    - мій
+    - моя
+    - моє
+    explanation: Дідусь і бабуся разом — множина (вони).
+  - sentence: Чи це ___ брат Коля?
+    answer: твій
+    options:
+    - твій
+    - твоя
+    - твоє
+    - твої
+    explanation: Брат — чоловічого роду.
+  - sentence: Це моє рідне ___ Полтава.
+    answer: місто
+    options:
+    - місто
+    - зошит
+    - батько
+    - брат
+    explanation: Полтава — це місто.
+  - sentence: Це моя тітка. ___ звати Оксана.
+    answer: Її
+    options:
+    - Її
+    - Його
+    - Він
+    - Мій
+    explanation: Тітка — жінка, тому вживаємо її.
+  - sentence: Це мій дядько. ___ звати Тарас.
+    answer: Його
+    options:
+    - Його
+    - Її
+    - Вона
+    - Моя
+    explanation: Дядько — чоловік, тому вживаємо його.
+- id: act-w303
+  type: unjumble
+  title: Склади речення з фотографій
+  instruction: Розстав слова у правильному порядку, щоб утворити речення.
+  items:
+  - scrambled:
+    - моя
+    - Це
+    - сім'я
+    - фотографії
+    - на
+    correct: Це моя сім'я на фотографії.
+    explanation: 'Природний порядок слів: підмет, означення, обставина.'
+  - scrambled:
+    - є
+    - тебе
+    - У
+    - сестра
+    - чи
+    - брат
+    correct: У тебе є брат чи сестра?
+    explanation: Питання починається зі сталого звороту «У тебе є...».
+  - scrambled:
+    - звати
+    - Його
+    - Денис
+    - брат
+    - мій
+    - Це
+    correct: Це мій брат. Його звати Денис.
+    explanation: Спочатку представляємо людину, потім називаємо ім'я.
+  - scrambled:
+    - рідне
+    - Це
+    - Львів
+    - моє
+    - місто
+    correct: Це моє рідне місто Львів.
+    explanation: 'Узгодження: моє рідне місто.'
+  - scrambled:
+    - Тетяна
+    - Її
+    - Це
+    - бабуся
+    - моя
+    - звати
+    correct: Це моя бабуся. Її звати Тетяна.
+    explanation: Представлення бабусі та її імені.
+  - scrambled:
+    - твій
+    - Чи
+    - це
+    - на
+    - дідусь
+    - фото
+    correct: Чи це твій дідусь на фото?
+    explanation: Запитання з часткою «чи».
+- id: act-w304
+  type: error-correction
+  title: Виправ помилки в підписах
+  instruction: Знайди та виправ помилку в узгодженні або слововживанні.
+  items:
+  - sentence: Це мій сестра Катя.
+    error: мій сестра
+    correction: моя сестра
+    options:
+    - моя сестра
+    - мій сестра
+    explanation: Сестра — жіночого роду, тому потрібно казати «моя сестра».
+  - sentence: Це моє батьки на знімку.
+    error: моє батьки
+    correction: мої батьки
+    options:
+    - мої батьки
+    - моє батьки
+    explanation: Батьки — множина, тому вживаємо «мої батьки».
+  - sentence: Як її звати? Його звати Оксана.
+    error: Його звати Оксана
+    correction: Її звати Оксана
+    options:
+    - Її звати Оксана
+    - Його звати Оксана
+    explanation: Оксана — жіноче ім'я, тому займенник «її».
+  - sentence: Це твій місто Харків?
+    error: твій місто
+    correction: твоє місто
+    options:
+    - твоє місто
+    - твій місто
+    explanation: Місто — середнього роду, тому «твоє місто».
+  - sentence: Це моя сім'я. Її звуть Іван.
+    error: Її звуть Іван
+    correction: Його звати Іван
+    options:
+    - Його звати Іван
+    - Її звуть Іван
+    explanation: Іван — чоловіче ім'я, тому кажемо «його звати».
+  - sentence: У тебе є брати чи сестри? У мене немає брат.
+    error: У мене немає брат
+    correction: Ні, у мене тільки один брат
+    options:
+    - Ні, у мене тільки один брат
+    - У мене немає брат
+    explanation: На рівні A1 уникаємо неправильних конструкцій з «немає + називний
+      відмінок».
+- id: act-w305
+  type: translate
+  title: Переклад для сімейного зошита
+  instruction: Обери правильний український переклад для речення.
+  items:
+  - source: This is my family in the photo.
+    options:
+    - text: Це моя сім'я на фотографії.
+      correct: true
+    - text: Це мій сім'я на фотографії.
+      correct: false
+    - text: Це моє сім'я на фотографії.
+      correct: false
+    explanation: Сім'я — жіночого роду, тому моя сім'я.
+  - source: Who is this?
+    options:
+    - text: Хто це?
+      correct: true
+    - text: Що це?
+      correct: false
+    - text: Де це?
+      correct: false
+    explanation: Хто запитує про людину.
+  - source: His name is Kolia.
+    options:
+    - text: Його звати Коля.
+      correct: true
+    - text: Її звати Коля.
+      correct: false
+    - text: Моє ім'я Коля.
+      correct: false
+    explanation: Його вживаємо для чоловіка.
+  - source: Her name is Tetiana.
+    options:
+    - text: Її звати Тетяна.
+      correct: true
+    - text: Його звати Тетяна.
+      correct: false
+    - text: Твоє ім'я Тетяна.
+      correct: false
+    explanation: Її вживаємо для жінки.
+  - source: Is this your grandmother?
+    options:
+    - text: Чи це твоя бабуся?
+      correct: true
+    - text: Чи це твій бабуся?
+      correct: false
+    - text: Чи це твоє бабуся?
+      correct: false
+    explanation: Бабуся — жіночого роду, тому твоя бабуся.
+  - source: This is my hometown.
+    options:
+    - text: Це моє рідне місто.
+      correct: true
+    - text: Це мій рідне місто.
+      correct: false
+    - text: Це моя рідне місто.
+      correct: false
+    explanation: Місто — середнього роду, тому моє рідне місто.
+- id: act-w306
+  type: quiz
+  title: Офіційні дані та звертання
+  instruction: Визнач правильну назву елемента офіційного імені.
+  items:
+  - prompt: «Оксана» в документі — це...
+    options:
+    - text: ім'я
+      correct: true
+    - text: прізвище
+      correct: false
+    - text: по батькові
+      correct: false
+    explanation: Оксана — це власне ім'я (given name).
+  - prompt: «Василівна» в офіційному звертанні — це...
+    options:
+    - text: по батькові
+      correct: true
+    - text: ім'я
+      correct: false
+    - text: прізвище
+      correct: false
+    explanation: Василівна — це форма по батькові з жіночим суфіксом -івна.
+  - prompt: «Коваленко» в анкеті — це...
+    options:
+    - text: прізвище
+      correct: true
+    - text: ім'я
+      correct: false
+    - text: по батькові
+      correct: false
+    explanation: Коваленко — українське прізвище.
+  - prompt: Який суфікс утворює українське жіноче по батькові від імені Петро?
+    options:
+    - text: -івна (Петрівна)
+      correct: true
+    - text: -овна (Петровна)
+      correct: false
+    - text: -євна (Петрєвна)
+      correct: false
+    explanation: В українській мові вживаються суфікси -івна / -ївна, а не -овна.
+  - prompt: Звертання «Добрий день, Маріє Василівно!» вказує на...
+    options:
+    - text: формальний, ввічливий регістр
+      correct: true
+    - text: неформальну розмову між дітьми
+      correct: false
+    - text: коротку відповідь «так/ні»
+      correct: false
+    explanation: Звертання на ім'я та по батькові сигналізує про ввічливе, офіційне
+      спілкування.
+  - prompt: У графі «Місто проживання» вказують...
+    options:
+    - text: населений пункт (наприклад, Київ чи Львів)
+      correct: true
+    - text: прізвище родини
+      correct: false
+    - text: вік дитини
+      correct: false
+    explanation: Слово «місто» означає населений пункт (city).

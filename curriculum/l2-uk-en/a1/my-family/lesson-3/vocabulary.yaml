@@ -1,0 +1,48 @@
+- lemma: твоя
+  translation: your, feminine informal
+  pos: pronoun
+  usage: Це твоя мама?
+- lemma: твоє
+  translation: your, neuter informal
+  pos: pronoun
+  usage: Це твоє прізвище?
+- lemma: твої
+  translation: your, plural informal
+  pos: pronoun
+  usage: Де твої сімейні фотографії?
+- lemma: його
+  translation: his / him, fixed possessive here
+  pos: pronoun
+  usage: Його звати Коля.
+- lemma: її
+  translation: her, fixed possessive here
+  pos: pronoun
+  usage: Її звати Катя.
+- lemma: хто
+  translation: who
+  pos: pronoun
+  usage: Хто це на фото?
+- lemma: звати
+  translation: to call / be named
+  pos: verb
+  usage: Як його звати?
+- lemma: чи
+  translation: or / whether in questions
+  pos: conjunction
+  usage: Чи це твоя бабуся?
+- lemma: ім'я
+  translation: given name
+  pos: noun
+  usage: Моє ім'я — Марко.
+- lemma: прізвище
+  translation: surname
+  pos: noun
+  usage: Моє прізвище — Коваленко.
+- lemma: по батькові
+  translation: patronymic
+  pos: phrase
+  usage: Василівна — це по батькові.
+- lemma: місто
+  translation: city
+  pos: noun
+  usage: Це моє рідне місто.

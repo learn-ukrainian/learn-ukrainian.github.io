@@ -1,0 +1,485 @@
+inline:
+- id: act-1
+  type: quiz
+  title: Питання до фото
+  instruction: Обери український рядок для фото-розмови.
+  items:
+  - prompt: Ти питаєш одного ровесника про брата.
+    options:
+    - text: У тебе є брат?
+      correct: true
+    - text: У мене є брат?
+      correct: false
+    - text: Це брат?
+      correct: false
+    explanation: У тебе є...? питає одну знайому людину.
+  - prompt: Ти відповідаєш так і кажеш, що маєш одну сестру.
+    options:
+    - text: Так, у мене є одна сестра.
+      correct: true
+    - text: Так, у тебе є одна сестра.
+      correct: false
+    - text: Так, це одна сестра.
+      correct: false
+    explanation: У мене є... відповідає за себе.
+  - prompt: Ти відповідаєш ні короткою A1-фразою.
+    options:
+    - text: Ні.
+      correct: true
+    - text: У мене немає брат.
+      correct: false
+    - text: Ні є брат.
+      correct: false
+    explanation: На A1 тримай заперечну відповідь простою.
+  - prompt: Ти питаєш, як його звати.
+    options:
+    - text: Як його звати?
+      correct: true
+    - text: Як її звати?
+      correct: false
+    - text: Що його звати?
+      correct: false
+    explanation: Його підходить до брата, тата, сина або дідуся.
+  - prompt: Ти показуєш маму на фото.
+    options:
+    - text: Це моя мама.
+      correct: true
+    - text: Це мій мама.
+      correct: false
+    - text: Це моє мама.
+      correct: false
+    explanation: Мама — жіночого роду, тому моя.
+  - prompt: Ти показуєш батьків.
+    options:
+    - text: Це мої батьки.
+      correct: true
+    - text: Це мій батьки.
+      correct: false
+    - text: Це моя батьки.
+      correct: false
+    explanation: Батьки — множина, тому мої.
+- id: act-101
+  type: match-up
+  title: Фрази знайомства з сім'єю
+  instruction: З'єднай початок фрази з її продовженням.
+  pairs:
+  - left: Це моя сім'я
+    right: на фотографії.
+  - left: У тебе є
+    right: брати чи сестри?
+  - left: У мене є два брати
+    right: і одна сестра.
+  - left: Як його
+    right: звати?
+  - left: Це моя сестра Катя,
+    right: а це мій брат Коля.
+  - left: Хто це?
+    right: Це моя мама.
+- id: act-2
+  type: match-up
+  title: Слова родини
+  instruction: З'єднай українське слово з українською підказкою.
+  pairs:
+  - left: мама
+    right: мати
+  - left: тато
+    right: батько
+  - left: брат
+    right: син для моїх батьків
+  - left: сестра
+    right: дочка для моїх батьків
+  - left: бабуся
+    right: мама мами або тата
+  - left: дідусь
+    right: тато мами або тата
+  - left: батьки
+    right: мама і тато
+  - left: родичі
+    right: люди з родини
+- id: act-102
+  type: quiz
+  title: Хто це на фото?
+  instruction: Обери правильне слово для людини на фотографії.
+  items:
+  - prompt: Жінка, яка народила дитину — це...
+    options:
+    - text: мама
+      correct: true
+    - text: тато
+      correct: false
+    - text: брат
+      correct: false
+    explanation: Мама (мати) — жінка стосовно своїх дітей.
+  - prompt: Чоловік, батько дітей — це...
+    options:
+    - text: тато
+      correct: true
+    - text: сестра
+      correct: false
+    - text: бабуся
+      correct: false
+    explanation: Тато (батько) — чоловік стосовно своїх дітей.
+  - prompt: Хлопець для своїх батьків — це...
+    options:
+    - text: син
+      correct: true
+    - text: дочка
+      correct: false
+    - text: мати
+      correct: false
+    explanation: Хлопець для батьків — це син.
+  - prompt: Дівчина для своїх батьків — це...
+    options:
+    - text: дочка
+      correct: true
+    - text: син
+      correct: false
+    - text: дідусь
+      correct: false
+    explanation: Дівчина для батьків — це дочка (донька).
+  - prompt: Мама твого тата або мами — це...
+    options:
+    - text: бабуся
+      correct: true
+    - text: сестра
+      correct: false
+    - text: мати
+      correct: false
+    explanation: Мама батьків — це бабуся.
+  - prompt: Тато твого тата або мами — це...
+    options:
+    - text: дідусь
+      correct: true
+    - text: брат
+      correct: false
+    - text: син
+      correct: false
+    explanation: Тато батьків — це дідусь.
+- id: act-103
+  type: fill-in
+  title: Він чи вона?
+  instruction: Встав займенник він або вона.
+  items:
+  - sentence: Це мій брат. ___ студент.
+    answer: Він
+    options:
+    - Він
+    - Вона
+    explanation: Брат — чоловічий рід (він).
+  - sentence: Це моя сестра. ___ студентка.
+    answer: Вона
+    options:
+    - Вона
+    - Він
+    explanation: Сестра — жіночий рід (вона).
+  - sentence: Це мій тато. ___ інженер.
+    answer: Він
+    options:
+    - Він
+    - Вона
+    explanation: Тато — чоловічий рід (він).
+  - sentence: Це моя мама. ___ вчителька.
+    answer: Вона
+    options:
+    - Вона
+    - Він
+    explanation: Мама — жіночий рід (вона).
+  - sentence: Це мій син. ___ школяр.
+    answer: Він
+    options:
+    - Він
+    - Вона
+    explanation: Син — чоловічий рід (він).
+  - sentence: Це моя дочка. ___ школярка.
+    answer: Вона
+    options:
+    - Вона
+    - Він
+    explanation: Дочка — жіночий рід (вона).
+workbook:
+- id: act-w1
+  type: error-correction
+  title: Обери українське родинне речення
+  instruction: Обери безпечніший український рядок.
+  items:
+  - sentence: Моє ім'я є Джон.
+    error: Моє ім'я є Джон.
+    correction: Мене звати Джон.
+    options:
+    - Мене звати Джон.
+    - Моє ім'я є Джон.
+    explanation: Мене звати... — природна модель першого представлення.
+  - sentence: Я маю брата.
+    error: Я маю брата.
+    correction: У мене є брат.
+    options:
+    - У мене є брат.
+    - Я маю брата.
+    explanation: Для родини на A1 вживай безпечний блок У мене є...
+  - sentence: Це мій мама.
+    error: Це мій мама.
+    correction: Це моя мама.
+    options:
+    - Це моя мама.
+    - Це мій мама.
+    explanation: Мама — жіночого роду, тому вживай моя.
+  - sentence: Це є мій брат.
+    error: Це є мій брат.
+    correction: Це мій брат.
+    options:
+    - Це мій брат.
+    - Це є мій брат.
+    explanation: У простому фото-реченні є не потрібне.
+  - sentence: Батьки (у значенні батька)
+    error: Батьки (у значенні батька)
+    correction: Тато / батько
+    options:
+    - Тато / батько
+    - Батьки
+    explanation: Батьки означає маму й тата або кількох батьків, а не одного тата.
+  - sentence: У мене немає брат.
+    error: У мене немає брат.
+    correction: Ні.
+    options:
+    - Ні.
+    - У мене немає брат.
+    explanation: На A1 відповідай коротко; повний блок із немає буде пізніше.
+- id: act-w101
+  type: match-up
+  title: Родинні пари
+  instruction: З'єднай чоловічі та жіночі назви членів родини.
+  pairs:
+  - left: тато
+    right: мама
+  - left: батько
+    right: мати
+  - left: брат
+    right: сестра
+  - left: син
+    right: дочка
+  - left: дідусь
+    right: бабуся
+  - left: він
+    right: вона
+- id: act-w102
+  type: group-sort
+  title: 'Він чи вона: рід членів родини'
+  instruction: Розподіли слова за граматичним родом.
+  groups:
+  - label: він (чоловічий рід)
+    items:
+    - тато
+    - батько
+    - брат
+    - син
+    - дідусь
+  - label: вона (жіночий рід)
+    items:
+    - мама
+    - мати
+    - сестра
+    - дочка
+    - бабуся
+- id: act-w103
+  type: fill-in
+  title: Доповни речення про сім'ю
+  instruction: Обери правильне слово для кожного речення.
+  items:
+  - sentence: Це мій тато. ___ інженер.
+    answer: Він
+    options:
+    - Він
+    - Вона
+    - Воно
+    explanation: Тато — чоловічого роду (він).
+  - sentence: Це моя мама. ___ вчителька.
+    answer: Вона
+    options:
+    - Вона
+    - Він
+    - Воно
+    explanation: Мама — жіночого роду (вона).
+  - sentence: Це мій брат. ___ звати Іван.
+    answer: Його
+    options:
+    - Його
+    - Її
+    - Їх
+    explanation: Його вживаємо про брата.
+  - sentence: Це моя сестра. ___ звати Оля.
+    answer: Її
+    options:
+    - Її
+    - Його
+    - Мій
+    explanation: Її вживаємо про сестру.
+  - sentence: Це мої ___ — мама і тато.
+    answer: батьки
+    options:
+    - батьки
+    - брати
+    - дідусі
+    explanation: Мама і тато разом — батьки.
+  - sentence: — ___ це? — Це мій дідусь.
+    answer: Хто
+    options:
+    - Хто
+    - Що
+    - Як
+    explanation: Хто запитує про людину.
+- id: act-w104
+  type: unjumble
+  title: Склади речення про знайомство
+  instruction: Розташуй слова у правильному порядку.
+  items:
+  - words:
+    - Це
+    - моя
+    - сім'я.
+    sentence: Це моя сім'я.
+  - words:
+    - Хто
+    - це
+    - на
+    - фото?
+    sentence: Хто це на фото?
+  - words:
+    - Це
+    - мій
+    - брат
+    - Коля.
+    sentence: Це мій брат Коля.
+  - words:
+    - Як
+    - його
+    - звати?
+    sentence: Як його звати?
+  - words:
+    - Це
+    - моя
+    - мама
+    - Марина.
+    sentence: Це моя мама Марина.
+  - words:
+    - Це
+    - мої
+    - батьки.
+    sentence: Це мої батьки.
+- id: act-w105
+  type: translate
+  title: 'Переклад: знайомство з родиною'
+  instruction: Обери правильний український переклад для кожного рядка.
+  items:
+  - source: This is my family.
+    options:
+    - text: Це моя сім'я.
+      correct: true
+    - text: Це моє місто.
+      correct: false
+    - text: Це мій брат.
+      correct: false
+    explanation: Сім'я — жіночого роду (моя сім'я).
+  - source: Who is this?
+    options:
+    - text: Хто це?
+      correct: true
+    - text: Що це?
+      correct: false
+    - text: Де це?
+      correct: false
+    explanation: Хто питає про людину.
+  - source: This is my father.
+    options:
+    - text: Це мій тато.
+      correct: true
+    - text: Це моя мама.
+      correct: false
+    - text: Це мої батьки.
+      correct: false
+    explanation: Тато — чоловічого роду (мій тато).
+  - source: This is my sister.
+    options:
+    - text: Це моя сестра.
+      correct: true
+    - text: Це мій брат.
+      correct: false
+    - text: Це моя дочка.
+      correct: false
+    explanation: Сестра — жіночого роду (моя сестра).
+  - source: These are my parents.
+    options:
+    - text: Це мої батьки.
+      correct: true
+    - text: Це мій батько.
+      correct: false
+    - text: Це моя родина.
+      correct: false
+    explanation: Батьки — множина (мої батьки).
+  - source: His name is Kolia.
+    options:
+    - text: Його звати Коля.
+      correct: true
+    - text: Її звати Катя.
+      correct: false
+    - text: Мене звати Коля.
+      correct: false
+    explanation: Його вживаємо про чоловіка або хлопця.
+- id: act-w106
+  type: quiz
+  title: Розуміння родинних зв'язків
+  instruction: Прочитай запитання та обери правильну відповідь.
+  items:
+  - prompt: Хто такий тато?
+    options:
+    - text: Батько
+      correct: true
+    - text: Брат
+      correct: false
+    - text: Син
+      correct: false
+    explanation: Тато і батько — синоніми.
+  - prompt: Хто така мама?
+    options:
+    - text: Мати
+      correct: true
+    - text: Сестра
+      correct: false
+    - text: Бабуся
+      correct: false
+    explanation: Мама і мати — синоніми.
+  - prompt: Мама і тато разом — це...
+    options:
+    - text: батьки
+      correct: true
+    - text: брати
+      correct: false
+    - text: дідусі
+      correct: false
+    explanation: Батьки — це мама й тато.
+  - prompt: Мама моєї мами — це моя...
+    options:
+    - text: бабуся
+      correct: true
+    - text: сестра
+      correct: false
+    - text: дочка
+      correct: false
+    explanation: Мама мами — бабуся.
+  - prompt: Тато мого тата — це мій...
+    options:
+    - text: дідусь
+      correct: true
+    - text: брат
+      correct: false
+    - text: батько
+      correct: false
+    explanation: Тато тата — дідусь.
+  - prompt: Син моїх батьків для мене — це мій...
+    options:
+    - text: брат
+      correct: true
+    - text: дідусь
+      correct: false
+    - text: тато
+      correct: false
+    explanation: Син батьків — брат.
