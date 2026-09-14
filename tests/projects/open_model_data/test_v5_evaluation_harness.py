@@ -5,7 +5,9 @@ from __future__ import annotations
 import pytest
 
 from scripts.projects.open_model_data.v5_evaluation_harness import (
+    STANDARD_ACADEMIC_BENCHMARKS,
     check_span_integrity,
+    evaluate_academic_non_inferiority,
     evaluate_prediction,
     exact_clopper_pearson_upper,
     format_markdown_report,
@@ -649,3 +651,101 @@ def test_citation_whitelist_introductory_attribution_coordinated_subject() -> No
     assert is_clean is True
     assert len(viol) == 0
     assert any("ВЕСУМ" in a for a in app)
+
+
+def test_evaluate_prediction_r8_f1_target_preservation_masking_condemnation() -> None:
+    """Verify target preservation wording does not negate explicit condemnation (R8-F1)."""
+    case = {
+        "eval_id": "p_r8_f1",
+        "case_type": "PRESERVE",
+        "target_term": "матеріал",
+        "input_text": "Матеріал підручника викладено послідовно.",
+        "expected_replacement": None,
+    }
+    pred = "<thought>Слово «матеріал» є калькою — зберігаємо матеріал лише для цитування.</thought>Нормативно."
+    res = evaluate_prediction(case, pred)
+    assert res.harmful_edit is True
+    assert "Harmful over-correction detected" in res.details
+
+
+def test_citation_whitelist_r8_f2_typographic_curly_quotes() -> None:
+    """Verify typographic curly quotes and 'згідно зі' are caught for unapproved citations (R8-F2)."""
+    text1 = "Згідно з “Zorblax”, це правильно."
+    is_clean1, _app1, viol1 = verify_citation_whitelist(text1)
+    assert is_clean1 is False
+    assert "Zorblax" in viol1
+
+    text2 = "Згідно зі ‘Zorblax’, це правильно."
+    is_clean2, _app2, viol2 = verify_citation_whitelist(text2)
+    assert is_clean2 is False
+    assert "Zorblax" in viol2
+
+
+def test_citation_whitelist_r8_f3_introductory_attribution_parenthetical_subject() -> None:
+    """Verify introductory attribution does not swallow a sentence subject with parenthetical comma (R8-F3)."""
+    text = "Згідно з ВЕСУМ, Матеріал, описаний вище, є правильним."
+    is_clean, app, viol = verify_citation_whitelist(text)
+    assert is_clean is True
+    assert len(viol) == 0
+    assert any("ВЕСУМ" in a for a in app)
+
+
+def test_evaluate_academic_non_inferiority_pass() -> None:
+    """Verify academic non-inferiority passes when degradation is <= threshold (R8-F4)."""
+    base_scores = {"mmlu_ua": 0.6500, "arc_ua": 0.5800, "hellaswag_ua": 0.6200, "gsm8k_ua": 0.4500}
+    assert set(STANDARD_ACADEMIC_BENCHMARKS) == set(base_scores.keys())
+    aligned_scores = {"mmlu_ua": 0.6450, "arc_ua": 0.5850, "hellaswag_ua": 0.6150, "gsm8k_ua": 0.4480}
+    report = evaluate_academic_non_inferiority(base_scores, aligned_scores, max_degradation_pct=2.0)
+    assert report.overall_passed is True
+    assert report.benchmark_count == 4
+    assert report.worst_degradation_pct <= 2.0
+    assert all(t.passed for t in report.tasks)
+
+
+def test_evaluate_academic_non_inferiority_fail() -> None:
+    """Verify academic non-inferiority fails when any benchmark degrades > threshold (R8-F4)."""
+    base_scores = {"mmlu_ua": 0.6500, "arc_ua": 0.5800, "hellaswag_ua": 0.6200, "gsm8k_ua": 0.4500}
+    aligned_scores = {"mmlu_ua": 0.6200, "arc_ua": 0.5800, "hellaswag_ua": 0.6200, "gsm8k_ua": 0.4500}
+    # mmlu_ua drops from 0.65 to 0.62: degradation is ~4.6% (> 2.0%)
+    report = evaluate_academic_non_inferiority(base_scores, aligned_scores, max_degradation_pct=2.0)
+    assert report.overall_passed is False
+    mmlu_task = next(t for t in report.tasks if t.benchmark == "mmlu_ua")
+    assert mmlu_task.passed is False
+    assert mmlu_task.degradation_pct > 2.0
+
+
+def test_evaluate_academic_non_inferiority_lm_eval_dict_format() -> None:
+    """Verify academic non-inferiority parses lm-evaluation-harness output dicts (R8-F4)."""
+    base_data = {
+        "results": {
+            "mmlu_ua": {"acc,none": 0.70},
+            "arc_ua": {"acc_norm,none": 0.60},
+            "hellaswag_ua": {"acc_norm,none": 0.65},
+            "gsm8k_ua": {"exact_match,none": 0.50},
+        }
+    }
+    aligned_data = {
+        "results": {
+            "mmlu_ua": {"acc,none": 0.71},
+            "arc_ua": {"acc_norm,none": 0.60},
+            "hellaswag_ua": {"acc_norm,none": 0.645},
+            "gsm8k_ua": {"exact_match,none": 0.50},
+        }
+    }
+    report = evaluate_academic_non_inferiority(base_data, aligned_data, max_degradation_pct=2.0)
+    assert report.overall_passed is True
+    assert report.benchmark_count == 4
+
+
+def test_format_markdown_report_with_academic_suite() -> None:
+    """Verify format_markdown_report renders Eval-UA-tion 1.0 section when present (R8-F4)."""
+    base_scores = {"mmlu_ua": 0.6500, "arc_ua": 0.5800, "hellaswag_ua": 0.6200, "gsm8k_ua": 0.4500}
+    aligned_scores = {"mmlu_ua": 0.6480, "arc_ua": 0.5850, "hellaswag_ua": 0.6150, "gsm8k_ua": 0.4480}
+    acad = evaluate_academic_non_inferiority(base_scores, aligned_scores, max_degradation_pct=2.0)
+    summary = run_evaluation_suite([], {}, academic_report=acad)
+    md = format_markdown_report(summary)
+    assert "Academic Non-Inferiority Suite (Eval-UA-tion 1.0)" in md
+    assert "MMLU_UA" in md
+    assert "ARC_UA" in md
+    assert "HELLASWAG_UA" in md
+    assert "GSM8K_UA" in md

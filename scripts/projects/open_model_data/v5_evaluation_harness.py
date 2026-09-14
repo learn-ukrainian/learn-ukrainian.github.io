@@ -20,6 +20,7 @@ import argparse
 import json
 import re
 import sys
+from collections.abc import Sequence
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
@@ -285,16 +286,24 @@ def check_span_integrity(input_text: str, output_text: str, target_term: str) ->
     return True, "intact"
 
 
-ENTITY_CITATION_RE = (
-    r"(?:«[^»]+»|\"[^\"]+\"|"
-    r"(?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+(?:«[^»]+»|\"[^\"]+\"|[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)|"
-    r"(?:(?:чинн\w*|академічн\w*|офіційн\w*|нов\w*|стар\w*)\s+)?(?:[Пп]равопис\w*|[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)(?:\s+\d+)?|"
-    r"[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:-[A-ZА-ЯІЇЄҐ0-9][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)*"
-    r"(?:\s+[A-ZА-ЯІЇЄҐ0-9][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)*)"
+QUOTED_ENTITY_RE = r"(?:«[^»]+»|\"[^\"]+\"|“[^”]+”|‘[^’]+’|'[^']+')"
+KEYWORD_AUTHORITY_RE = (
+    r"(?:(?:чинн\w*|академічн\w*|офіційн\w*|нов\w*|стар\w*)\s+)?"
+    r"(?:[Пп]равопис\w*|[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)"
+    r"(?:\s+(?:«[^»]+»|\"[^\"]+\"|“[^”]+”|‘[^’]+’|'[^']+'|[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*|\d+))?"
 )
+LATIN_OR_ACRONYM_RE = r"(?:[a-zA-Z][a-zA-Z0-9’'\-]*(?:\s+[a-zA-Z0-9’'\-]+)*|[А-ЯІЇЄҐ]{2,}(?:-[0-9А-ЯІЇЄҐ]+)?)"
+ANY_CAP_NAME_RE = (
+    r"[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:-[A-ZА-ЯІЇЄҐ0-9][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)*"
+    r"(?:\s+[A-ZА-ЯІЇЄҐ0-9][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*)*"
+)
+
+ENTITY_CITATION_RE = rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{ANY_CAP_NAME_RE})"
+INTRO_COORDINATED_ENTITY_RE = rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})"
+
 CONJ_COORD_RE = rf"(?:\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_RE})"
 PLURAL_COORD_RE = rf"(?:(?:\s*,\s*|\s+(?:та|і|й|and|or)\s+){ENTITY_CITATION_RE})"
-INTRO_COMMA_COORD_RE = rf"(?:\s*,\s*{ENTITY_CITATION_RE}(?=\s*,|\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_RE}\s*,))"
+INTRO_COMMA_COORD_RE = rf"(?:\s*,\s*{INTRO_COORDINATED_ENTITY_RE}(?=\s*,|\s+(?:та|і|й|and|or)\s+{ENTITY_CITATION_RE}\s*,))"
 
 CITATION_MENTION_PATTERNS = [
     # 1. "... dictionary" or "... словник" (case-insensitive name preceding dictionary keyword)
@@ -315,7 +324,7 @@ CITATION_MENTION_PATTERNS = [
     ),
     # 3. Introductory attribution phrases: "згідно з <Entities>", "відповідно до <Entities>", etc.
     re.compile(
-        rf"\b(?:[Зз]гідно\s+(?:з|із)|[Вв]ідповідно\s+до|[Зз]а\s+даними|[Зз]а\s+версією)\s+"
+        rf"\b(?:[Зз]гідно\s+(?:з|із|зі)|[Вв]ідповідно\s+до|[Зз]а\s+даними|[Зз]а\s+версією)\s+"
         rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?({ENTITY_CITATION_RE}(?:{INTRO_COMMA_COORD_RE}|{CONJ_COORD_RE})*)"
         r"(?!\w)"
     ),
@@ -370,7 +379,7 @@ def verify_citation_whitelist(text: str) -> tuple[bool, list[str], list[str]]:
                         "",
                         ent.strip(),
                     )
-                    clean_ent = ent.strip().strip("«»\"'")
+                    clean_ent = ent.strip().strip("«»\"'“”‘’")
                     if clean_ent and not any(app.search(clean_ent) for app in APPROVED_CITATION_PATTERNS):
                         found_unapproved.append(clean_ent)
 
@@ -397,6 +406,136 @@ class CaseEvaluationResult:
     approved_citations: list[str]
     is_high_frequency_calque: bool
     details: str = ""
+
+
+# Standard Ukrainian academic benchmarks for Eval-UA-tion 1.0
+STANDARD_ACADEMIC_BENCHMARKS = ("mmlu_ua", "arc_ua", "hellaswag_ua", "gsm8k_ua")
+
+
+@dataclass
+class BenchmarkTaskResult:
+    """Individual academic benchmark task evaluation comparison."""
+
+    benchmark: str
+    base_score: float
+    aligned_score: float
+    relative_change_pct: float
+    degradation_pct: float
+    passed: bool
+    details: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class AcademicNonInferiorityReport:
+    """Evaluation summary for Eval-UA-tion 1.0 academic non-inferiority suite."""
+
+    tasks: list[BenchmarkTaskResult]
+    overall_passed: bool
+    max_allowed_degradation_pct: float
+    worst_degradation_pct: float
+    benchmark_count: int
+
+
+def extract_benchmark_score(entry: Any) -> float:
+    """Extract a numeric accuracy/score from an entry (float, int, or dict)."""
+    if isinstance(entry, (int, float)):
+        return float(entry)
+    if isinstance(entry, dict):
+        for key in ("acc,none", "acc_norm,none", "acc", "acc_norm", "accuracy", "score", "value"):
+            if key in entry and isinstance(entry[key], (int, float)):
+                return float(entry[key])
+        for v in entry.values():
+            if isinstance(v, (int, float)):
+                return float(v)
+    raise ValueError(f"Could not extract numeric score from benchmark entry: {entry}")
+
+
+def evaluate_academic_non_inferiority(
+    base_results: dict[str, Any],
+    aligned_results: dict[str, Any],
+    max_degradation_pct: float = 2.0,
+    required_benchmarks: Sequence[str] = STANDARD_ACADEMIC_BENCHMARKS,
+) -> AcademicNonInferiorityReport:
+    """Evaluate Eval-UA-tion 1.0 academic non-inferiority across Ukrainian benchmarks.
+
+    Compares aligned model scores against base foundation weights.
+    Fails if performance degradation on any evaluated benchmark exceeds max_degradation_pct (default: 2.0%).
+    """
+    tasks: list[BenchmarkTaskResult] = []
+    worst_degradation = 0.0
+
+    base_benchmarks = (
+        base_results.get("results", base_results) if isinstance(base_results, dict) else base_results
+    )
+    aligned_benchmarks = (
+        aligned_results.get("results", aligned_results) if isinstance(aligned_results, dict) else aligned_results
+    )
+
+    benchmark_keys: set[str] = set()
+    if isinstance(base_benchmarks, dict) and isinstance(aligned_benchmarks, dict):
+        benchmark_keys.update(base_benchmarks.keys())
+        benchmark_keys.update(aligned_benchmarks.keys())
+
+    evaluated_benchmarks = [b for b in required_benchmarks if b in benchmark_keys]
+    if not evaluated_benchmarks:
+        evaluated_benchmarks = sorted(list(set(base_benchmarks.keys()) & set(aligned_benchmarks.keys())))
+
+    overall_passed = True
+
+    for bname in evaluated_benchmarks:
+        if bname not in base_benchmarks or bname not in aligned_benchmarks:
+            tasks.append(
+                BenchmarkTaskResult(
+                    benchmark=bname,
+                    base_score=0.0,
+                    aligned_score=0.0,
+                    relative_change_pct=-100.0,
+                    degradation_pct=100.0,
+                    passed=False,
+                    details={"error": "Benchmark missing from one or both result sets"},
+                )
+            )
+            overall_passed = False
+            worst_degradation = max(worst_degradation, 100.0)
+            continue
+
+        base_score = extract_benchmark_score(base_benchmarks[bname])
+        aligned_score = extract_benchmark_score(aligned_benchmarks[bname])
+
+        if base_score > 0:
+            rel_change = ((aligned_score - base_score) / base_score) * 100.0
+        else:
+            rel_change = 0.0 if aligned_score >= base_score else -100.0
+
+        degradation = max(0.0, -rel_change)
+        passed = degradation <= max_degradation_pct
+
+        if not passed:
+            overall_passed = False
+        worst_degradation = max(worst_degradation, degradation)
+
+        tasks.append(
+            BenchmarkTaskResult(
+                benchmark=bname,
+                base_score=base_score,
+                aligned_score=aligned_score,
+                relative_change_pct=rel_change,
+                degradation_pct=degradation,
+                passed=passed,
+                details={},
+            )
+        )
+
+    if not tasks:
+        overall_passed = False
+
+    return AcademicNonInferiorityReport(
+        tasks=tasks,
+        overall_passed=overall_passed,
+        max_allowed_degradation_pct=max_degradation_pct,
+        worst_degradation_pct=worst_degradation,
+        benchmark_count=len(tasks),
+    )
 
 
 @dataclass
@@ -443,6 +582,7 @@ class EvaluationSummary:
     # Overall Verdict
     all_gates_pass: bool
     results: list[dict[str, Any]] = field(default_factory=list)
+    academic_non_inferiority: AcademicNonInferiorityReport | None = None
 
 
 def evaluate_prediction(
@@ -668,22 +808,9 @@ def evaluate_prediction(
                     )
                 )
 
-                target_preserve = bool(
-                    re.search(
-                        rf"\b(?:зберігаємо|залишаємо\s+без\s+змін)\s+{t_token}",
-                        clause,
-                    )
-                ) or bool(
-                    re.search(
-                        rf"{left_b}{t_token}\s+(?:зберігаємо|залишаємо\s+без\s+змін|без\s+змін)",
-                        clause,
-                    )
-                )
-
                 clause_negated = (
                     target_neg_pattern
                     or target_affirm
-                    or target_preserve
                 )
 
                 if clause_condemns and not clause_negated:
@@ -714,6 +841,7 @@ def run_evaluation_suite(
     eval_cases: list[dict[str, Any]],
     predictions: dict[str, str],
     min_high_freq_floor: int = 50,
+    academic_report: AcademicNonInferiorityReport | None = None,
 ) -> EvaluationSummary:
     """Run full evaluation suite across all provided cases and predictions."""
     results: list[CaseEvaluationResult] = []
@@ -774,6 +902,8 @@ def run_evaluation_suite(
     gate5_pass = (hf_distinct_count >= min_high_freq_floor) and (hf_recall >= 1.0)
 
     all_gates = gate1_pass and gate2_pass and gate3_pass and gate4_pass and gate5_pass
+    if academic_report is not None:
+        all_gates = all_gates and academic_report.overall_passed
 
     return EvaluationSummary(
         timestamp=datetime.now(UTC).isoformat(),
@@ -804,6 +934,7 @@ def run_evaluation_suite(
         gate5_pass=gate5_pass,
         all_gates_pass=all_gates,
         results=[asdict(r) for r in results],
+        academic_non_inferiority=academic_report,
     )
 
 
@@ -816,33 +947,63 @@ def format_markdown_report(summary: EvaluationSummary) -> str:
     g4_icon = "✅ PASS" if summary.gate4_pass else "❌ FAIL"
     g5_icon = "✅ PASS" if summary.gate5_pass else "❌ FAIL"
 
-    return f"""# ULDR Phase 5.1 Evaluation Audit Report
->
-> **Evaluation Timestamp:** `{summary.timestamp}`
-> **Overall Gate Verdict:** **{status_icon}**
-> **Total Evaluated Cases:** `{summary.total_cases}` (`{summary.format_valid_count}` format-valid, `{summary.format_error_count}` format-errors)
+    report_lines = [
+        "# ULDR Phase 5.1 Evaluation Audit Report",
+        ">",
+        f"> **Evaluation Timestamp:** `{summary.timestamp}`",
+        f"> **Overall Gate Verdict:** **{status_icon}**",
+        f"> **Total Evaluated Cases:** `{summary.total_cases}` (`{summary.format_valid_count}` format-valid, `{summary.format_error_count}` format-errors)",
+        "",
+        "---",
+        "",
+        "## 1. Quality Gate Scorecard",
+        "",
+        "| Production Gate | Target Threshold | Measured Score | Status |",
+        "| :--- | :--- | :--- | :--- |",
+        f"| **Gate 1: Calque Elimination Rate** | >= 90.0% | **{summary.calque_elimination_rate * 100:.2f}%** ({summary.correct_eliminated_count}/{summary.correct_cases_total}) | {g1_icon} |",
+        f"| **Gate 2: Harmful-Edit Rate** | <= 1.0% (Clopper-Pearson 95%) | **{summary.harmful_edit_rate * 100:.2f}%** (Upper bound: **{summary.clopper_pearson_upper * 100:.2f}%**, N={summary.preserve_cases_total}) | {g2_icon} |",
+        f"| **Gate 3: Span Integrity Gate** | 100% (0 mutations outside span) | **{summary.span_integrity_rate * 100:.2f}%** ({summary.span_integrity_violations} violations) | {g3_icon} |",
+        f"| **Gate 4: Citation Whitelist Gate** | 0% foreign hallucinations | **{summary.citation_violations_count}** violations (rate: {summary.citation_hallucination_rate * 100:.2f}%) | {g4_icon} |",
+        f"| **Gate 5: High-Frequency Calque Floor** | 100% on top 50 calques ({summary.high_freq_floor} distinct required) | **{summary.high_freq_recall * 100:.2f}%** ({summary.high_freq_distinct_covered}/{summary.high_freq_floor} distinct covered, {summary.high_freq_eliminated}/{summary.high_freq_total} total) | {g5_icon} |",
+    ]
 
----
+    if summary.academic_non_inferiority:
+        acad = summary.academic_non_inferiority
+        acad_status_icon = "✅ PASS" if acad.overall_passed else "❌ FAIL"
+        report_lines.extend([
+            "",
+            "---",
+            "",
+            "## 2. Academic Non-Inferiority Suite (Eval-UA-tion 1.0)",
+            f"> **Academic Suite Verdict:** **{acad_status_icon}** (Worst degradation: **{acad.worst_degradation_pct:.2f}%**, Max allowed: **{acad.max_allowed_degradation_pct:.2f}%**)",
+            "",
+            "| Academic Benchmark | Base Score | Aligned Score | Relative Change | Max Degradation | Status |",
+            "| :--- | :--- | :--- | :--- | :--- | :--- |",
+        ])
+        for task in acad.tasks:
+            t_icon = "✅ PASS" if task.passed else "❌ FAIL"
+            change_str = f"{task.relative_change_pct:+.2f}%"
+            report_lines.append(
+                f"| **{task.benchmark.upper()}** | {task.base_score:.4f} | {task.aligned_score:.4f} | {change_str} | <= {acad.max_allowed_degradation_pct:.2f}% | {t_icon} |"
+            )
 
-## 1. Quality Gate Scorecard
+    report_lines.extend([
+        "",
+        "---",
+        "",
+        "## 3. Gate Definitions & Statistical Criteria" if summary.academic_non_inferiority else "## 2. Gate Definitions & Statistical Criteria",
+        "* **Gate 1 (Calque Elimination):** Measures eradication of Russianisms and calques in final recommendations on held-out cases.",
+        "* **Gate 2 (Harmful Edits):** Exact one-sided 95% Clopper-Pearson binomial upper bound U = Beta^-1(0.95; k+1, n-k) <= 0.01 on >= 300 clean controls.",
+        "* **Gate 3 (Span Integrity):** Prevents collocation hallucinations (*побитися об заклад* -> *побитися об друга*). Tokens outside designated error spans must not be mutated.",
+        "* **Gate 4 (Citation Whitelist):** Rejects hallucinated foreign dictionaries (*COBUILD*, *LexicalLab*). Only approved authorities (ВЕСУМ, СУМ-20, Правопис 2019, Антоненко-Давидович, Грінченко, УЛІФ, UA-GEC) permitted.",
+        "* **Gate 5 (High-Frequency Calque Floor):** Requires 100% recall on the 50 most common Ukrainian calques (*приймати участь*, *на протязі*, *приймати міри*).",
+    ])
+    if summary.academic_non_inferiority:
+        report_lines.append(
+            "* **Academic Non-Inferiority (Eval-UA-tion 1.0):** Ukrainian benchmark integration (MMLU-UA, ARC-UA, HellaSwag-UA, GSM8k-UA) guaranteeing <= 2.0% degradation against base foundation weights."
+        )
 
-| Production Gate | Target Threshold | Measured Score | Status |
-| :--- | :--- | :--- | :--- |
-| **Gate 1: Calque Elimination Rate** | >= 90.0% | **{summary.calque_elimination_rate * 100:.2f}%** ({summary.correct_eliminated_count}/{summary.correct_cases_total}) | {g1_icon} |
-| **Gate 2: Harmful-Edit Rate** | <= 1.0% (Clopper-Pearson 95%) | **{summary.harmful_edit_rate * 100:.2f}%** (Upper bound: **{summary.clopper_pearson_upper * 100:.2f}%**, N={summary.preserve_cases_total}) | {g2_icon} |
-| **Gate 3: Span Integrity Gate** | 100% (0 mutations outside span) | **{summary.span_integrity_rate * 100:.2f}%** ({summary.span_integrity_violations} violations) | {g3_icon} |
-| **Gate 4: Citation Whitelist Gate** | 0% foreign hallucinations | **{summary.citation_violations_count}** violations (rate: {summary.citation_hallucination_rate * 100:.2f}%) | {g4_icon} |
-| **Gate 5: High-Frequency Calque Floor** | 100% on top 50 calques ({summary.high_freq_floor} distinct required) | **{summary.high_freq_recall * 100:.2f}%** ({summary.high_freq_distinct_covered}/{summary.high_freq_floor} distinct covered, {summary.high_freq_eliminated}/{summary.high_freq_total} total) | {g5_icon} |
-
----
-
-## 2. Gate Definitions & Statistical Criteria
-* **Gate 1 (Calque Elimination):** Measures eradication of Russianisms and calques in final recommendations on held-out cases.
-* **Gate 2 (Harmful Edits):** Exact one-sided 95% Clopper-Pearson binomial upper bound U = Beta^-1(0.95; k+1, n-k) <= 0.01 on >= 300 clean controls.
-* **Gate 3 (Span Integrity):** Prevents collocation hallucinations (*побитися об заклад* -> *побитися об друга*). Tokens outside designated error spans must not be mutated.
-* **Gate 4 (Citation Whitelist):** Rejects hallucinated foreign dictionaries (*COBUILD*, *LexicalLab*). Only approved authorities (ВЕСУМ, СУМ-20, Правопис 2019, Антоненко-Давидович, Грінченко, УЛІФ, UA-GEC) permitted.
-* **Gate 5 (High-Frequency Calque Floor):** Requires 100% recall on the 50 most common Ukrainian calques (*приймати участь*, *на протязі*, *приймати міри*).
-"""
+    return "\n".join(report_lines) + "\n"
 
 
 def main() -> int:
@@ -853,6 +1014,9 @@ def main() -> int:
     parser.add_argument("--output-json", type=Path, default=Path("evaluation_report.json"), help="Output JSON path")
     parser.add_argument("--output-md", type=Path, default=Path("evaluation_report.md"), help="Output Markdown path")
     parser.add_argument("--min-high-freq-floor", type=int, default=50, help="Minimum high-frequency calques required")
+    parser.add_argument("--base-benchmarks", type=Path, default=None, help="Path to base model academic benchmark JSON")
+    parser.add_argument("--aligned-benchmarks", type=Path, default=None, help="Path to aligned model academic benchmark JSON")
+    parser.add_argument("--max-degradation-pct", type=float, default=2.0, help="Maximum allowed degradation percentage (default: 2.0%)")
     parser.add_argument("--self-test", action="store_true", help="Run self-test contract verification")
     args = parser.parse_args()
 
@@ -878,8 +1042,18 @@ def main() -> int:
             "test_correct_01": "<thought>1. Діагностика: слово бажаючий є калькою.\n2. ВЕСУМ: охочий.</thought>Правильно вживати «охочий» замість «бажаючий».",
             "test_preserve_01": "<thought>1. Діагностика: матеріал є нормативним словом.</thought>Термін «матеріал» є нормативним, залишаємо без змін.",
         }
-        summary = run_evaluation_suite(test_cases, test_preds, min_high_freq_floor=1)
-        print(f"Self-test complete: Gate 1 Pass: {summary.gate1_pass}, Format valid: {summary.format_valid_count}")
+
+        # Verify academic non-inferiority evaluation self-test
+        sample_base = {"mmlu_ua": 0.6500, "arc_ua": 0.5800, "hellaswag_ua": 0.6200, "gsm8k_ua": 0.4500}
+        sample_aligned_pass = {"mmlu_ua": 0.6480, "arc_ua": 0.5850, "hellaswag_ua": 0.6150, "gsm8k_ua": 0.4480}
+        sample_aligned_fail = {"mmlu_ua": 0.6000, "arc_ua": 0.5800, "hellaswag_ua": 0.6200, "gsm8k_ua": 0.4500}
+        acad_pass = evaluate_academic_non_inferiority(sample_base, sample_aligned_pass, max_degradation_pct=2.0)
+        acad_fail = evaluate_academic_non_inferiority(sample_base, sample_aligned_fail, max_degradation_pct=2.0)
+        assert acad_pass.overall_passed is True, "Self-test failed: academic non-inferiority should pass"
+        assert acad_fail.overall_passed is False, "Self-test failed: academic non-inferiority should fail"
+
+        summary = run_evaluation_suite(test_cases, test_preds, min_high_freq_floor=1, academic_report=acad_pass)
+        print(f"Self-test complete: Gate 1 Pass: {summary.gate1_pass}, Format valid: {summary.format_valid_count}, Academic Non-Inferiority Pass: {summary.academic_non_inferiority.overall_passed if summary.academic_non_inferiority else 'N/A'}")
         return 0
 
     if not args.predictions:
@@ -890,13 +1064,29 @@ def main() -> int:
         print(f"Error: Held-out file {args.heldout} does not exist.", file=sys.stderr)
         return 1
 
+    academic_report = None
+    if args.base_benchmarks or args.aligned_benchmarks:
+        if not (args.base_benchmarks and args.aligned_benchmarks):
+            print("Error: Both --base-benchmarks and --aligned-benchmarks are required when evaluating academic non-inferiority.", file=sys.stderr)
+            return 1
+        base_data = json.loads(args.base_benchmarks.read_text(encoding="utf-8"))
+        aligned_data = json.loads(args.aligned_benchmarks.read_text(encoding="utf-8"))
+        academic_report = evaluate_academic_non_inferiority(
+            base_data, aligned_data, max_degradation_pct=args.max_degradation_pct
+        )
+
     eval_cases = [json.loads(line) for line in args.heldout.read_text(encoding="utf-8").splitlines() if line.strip()]
 
     # Load predictions
     preds_raw = [json.loads(line) for line in args.predictions.read_text(encoding="utf-8").splitlines() if line.strip()]
     predictions = {p.get("eval_id") or p.get("id"): p.get("prediction") or p.get("output") or p.get("response") for p in preds_raw}
 
-    summary = run_evaluation_suite(eval_cases, predictions, min_high_freq_floor=args.min_high_freq_floor)
+    summary = run_evaluation_suite(
+        eval_cases,
+        predictions,
+        min_high_freq_floor=args.min_high_freq_floor,
+        academic_report=academic_report,
+    )
 
     args.output_json.write_text(json.dumps(asdict(summary), ensure_ascii=False, indent=2), encoding="utf-8")
     md_content = format_markdown_report(summary)
