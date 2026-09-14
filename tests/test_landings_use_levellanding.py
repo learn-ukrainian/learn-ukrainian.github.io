@@ -94,7 +94,7 @@ def test_a1_landing_receives_published_lesson_modules_from_router() -> None:
 
     assert "<Content modules={docTrack === 'a1' && pageTrack ? plannedModuleGroups(docTrack, pageTrack) : []} />" in text
     assert "(deployedDocsByTrack.get(track) ?? [])" in text
-    assert ".filter(entry => Array.isArray(entry.data.lessons))" in text
+    assert "isUpgradedModuleLanding" in text
     assert "lessons: entry.data.lessons" in text
 
 

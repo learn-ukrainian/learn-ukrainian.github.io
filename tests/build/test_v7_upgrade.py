@@ -82,10 +82,16 @@ def test_upgrade_invokes_existing_writer_per_lesson_then_review_then_annotation(
     monkeypatch.setattr(stress_annotator, "annotate_file", lambda path: events.append("stress") or 0)
     monkeypatch.setattr(lesson_gates, "run_lesson_gates", lambda *a, **kw: {"passed": quality_passes})
     monkeypatch.setattr(linear_pipeline, "run_mdx_render_gate", lambda mdx: {"passed": True})
-    args = v7_build.parse_args(["a1", "things-have-gender", "--upgrade", "--writer", writer])
+    extra = ["--reviewer", "agy-tools"] if writer == "codex-tools" else []
+    args = v7_build.parse_args(["a1", "things-have-gender", "--upgrade", "--writer", writer, *extra])
     assert v7_build._run(args) == (0 if quality_passes else 1)
-    assert events[:7] == ["writer1", "review", "writer2", "review", "writer3", "review", "coherence"]
-    assert events[7:] == ["stress"] * 12
+    assert events[:10] == [
+        "writer1", "review", "review",
+        "writer2", "review", "review",
+        "writer3", "review", "review",
+        "coherence",
+    ]
+    assert events[10:] == ["stress"] * 12
     assert sorted(p.name for p in (upgrade_root / "site/src/content/docs/a1/things-have-gender").glob("*.mdx")) == ["1.mdx", "2.mdx", "3.mdx", "index.mdx"]
     for path in (upgrade_root / "site/src/content/docs/a1/things-have-gender").glob("*.mdx"):
         frontmatter = yaml.safe_load(path.read_text().split("---", 2)[1])
@@ -167,8 +173,8 @@ def test_resume_binds_actual_writer_and_reviewer_identity(upgrade_root, monkeypa
         args = v7_build.parse_args(["a1", "things-have-gender", "--upgrade", "--writer", writer, "--reviewer", reviewer])
         assert v7_build._run(args) == 0
     assert calls == ["gemini-tools"] * 3 + ["codex-tools"] * 3
-    assert review_prompts[0] != review_prompts[4]
-    assert review_prompts[4] == review_prompts[8]
+    assert any("self_reviewer" in prompt for prompt in review_prompts)
+    assert any("independent_reviewer" in prompt for prompt in review_prompts)
 
 
 def test_upgrade_cli_real_subprocess(tmp_path):

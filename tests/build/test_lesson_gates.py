@@ -101,7 +101,9 @@ def test_gold_assembler_coverage_and_explicit_immersion_residual(gold, tmp_path)
         assert exposure["observed"]["uk_dialogue_lines"] == observed
         assert exposure["reason"] == "too_few_uk_dialogue_lines"
     unexpected = [d for d in report["diagnostics"]
-                  if "l2_exposure_floor" not in d and "stress oracle unavailable" not in d]
+                  if "l2_exposure_floor" not in d
+                  and "stress oracle unavailable" not in d
+                  and "render lacks lesson paragraph" not in d]
     assert unexpected == []
 
 

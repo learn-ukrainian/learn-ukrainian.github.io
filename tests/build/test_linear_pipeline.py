@@ -4491,5 +4491,5 @@ def test_codex_writer_and_reviewer_defaults_use_astra_with_explicit_effort():
 
 
 def test_agy_writer_and_reviewer_defaults_use_live_flash_with_preserved_effort():
-    assert linear_pipeline.WRITER_DEFAULTS["agy-tools"] == {"model": "gemini-3.8-flash-high", "effort": "medium"}
+    assert linear_pipeline.WRITER_DEFAULTS["agy-tools"] == {"model": "gemini-3.8-flash-high", "effort": "high"}
     assert linear_pipeline.REVIEWER_DEFAULTS["agy-tools"] == {"model": "gemini-3.8-flash-high", "effort": "medium"}
