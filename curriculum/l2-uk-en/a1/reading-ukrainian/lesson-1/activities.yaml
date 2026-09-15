@@ -1,0 +1,371 @@
+inline:
+- id: act-1
+  type: count-syllables
+  title: Раху́й склади́
+  instruction: Раху́й голосні́ зву́ки. Ко́жен голосни́й звук дає́ оди́н склад.
+  maxCount: 5
+  items:
+  - word: день
+    correct: 1
+  - word: ма́ма
+    correct: 2
+  - word: молоко́
+    correct: 3
+  - word: ву́лиця
+    correct: 3
+  - word: бібліоте́ка
+    correct: 5
+  - word: Украї́на
+    correct: 4
+- id: act-syllables-quiz
+  type: quiz
+  title: Скі́льки голосни́х — сті́льки скла́дів
+  instruction: Ви́знач кі́лькість скла́дів у сло́ві за кі́лькістю голосни́х зву́ків.
+  questions:
+  - question: Скі́льки скла́дів у сло́ві «ха-та»?
+    options:
+    - text: '1'
+      correct: false
+    - text: '2'
+      correct: true
+    - text: '3'
+      correct: false
+    explanation: У сло́ві «ха́та» два голосні́ зву́ки [а], тому́ два скла́ди.
+  - question: Скі́льки скла́дів у сло́ві «ру-ка»?
+    options:
+    - text: '2'
+      correct: true
+    - text: '1'
+      correct: false
+    - text: '3'
+      correct: false
+    explanation: У сло́ві «рука́» два голосні́ зву́ки [у, а] — два скла́ди.
+  - question: Скі́льки скла́дів у сло́ві «во-да»?
+    options:
+    - text: '3'
+      correct: false
+    - text: '2'
+      correct: true
+    - text: '1'
+      correct: false
+    explanation: У сло́ві «вода́» два голосні́ зву́ки [о, а] — два скла́ди.
+  - question: Скі́льки скла́дів у сло́ві «ка-ша»?
+    options:
+    - text: '2'
+      correct: true
+    - text: '4'
+      correct: false
+    - text: '1'
+      correct: false
+    explanation: У сло́ві «ка́ша» два голосні́ зву́ки [а, а] — два скла́ди.
+  - question: Скі́льки скла́дів у сло́ві «банк»?
+    options:
+    - text: '2'
+      correct: false
+    - text: '1'
+      correct: true
+    - text: '3'
+      correct: false
+    explanation: У сло́ві «банк» лише́ оди́н голосни́й звук [а] — оди́н склад.
+  - question: Скі́льки скла́дів у сло́ві «сон»?
+    options:
+    - text: '1'
+      correct: true
+    - text: '2'
+      correct: false
+    - text: '3'
+      correct: false
+    explanation: У сло́ві «сон» оди́н голосни́й звук [о] — оди́н склад.
+- id: act-2
+  type: match-up
+  title: Роль лі́тер у чита́нні
+  instruction: З'єдна́й лі́теру з її ро́ллю в чита́нні.
+  pairs:
+  - left: А
+    right: познача́є [а]
+  - left: О
+    right: познача́є [о]
+  - left: И
+    right: познача́є [и]
+  - left: І
+    right: познача́є [і]
+  - left: Я на поча́тку сло́ва
+    right: '[йа]'
+  - left: Ї
+    right: за́вжди [йі]
+- id: act-vowels-fill
+  type: fill-in
+  title: Впізна́й голосну́ лі́теру
+  instruction: Встав пра́вильну лі́теру у сло́во.
+  items:
+  - sentence: Я́блуко почина́ється на лі́теру [Я].
+    blanks:
+    - Я
+    options:
+    - Я
+    - Ю
+    - Є
+    explanation: У сло́ві я́блуко початко́ва лі́тера Я познача́є [йа].
+  - sentence: У сло́ві Украї́на є особли́ва лі́тера [Ї].
+    blanks:
+    - Ї
+    options:
+    - Ї
+    - І
+    - И
+    explanation: Лі́тера Ї за́вжди познача́є два зву́ки [йі].
+  - sentence: У сло́ві люди́на пі́сля л стої́ть лі́тера [ю].
+    blanks:
+    - ю
+    options:
+    - ю
+    - я
+    - є
+    explanation: Лі́тера ю пом'я́кшує при́голосний [л'].
+  - sentence: У сло́ві пі́сня пі́сля н стої́ть лі́тера [я].
+    blanks:
+    - я
+    options:
+    - я
+    - а
+    - о
+    explanation: Лі́тера я пом'я́кшує попере́дній звук [н'].
+  - sentence: У сло́ві молоко́ всі три голосні́ — це лі́тери [о].
+    blanks:
+    - о
+    options:
+    - о
+    - а
+    - у
+    explanation: Всі три скла́ди у сло́ві молоко́ ма́ють голосни́й звук [о].
+  - sentence: У сло́ві ка́ша голосні́ зву́ки познача́є лі́тера [а].
+    blanks:
+    - а
+    options:
+    - а
+    - о
+    - и
+    explanation: У сло́ві ка́ша дві голосні́ лі́тери а.
+- id: act-3
+  type: divide-words
+  title: Поді́ли на склади́
+  instruction: Поді́ли ко́жне друко́ване сло́во на склади́.
+  items:
+  - word: ма́ма
+    answer: ма ма
+  - word: молоко́
+    answer: мо ло ко
+  - word: ву́лиця
+    answer: ву ли ця
+  - word: столи́ця
+    answer: сто ли ця
+  - word: люди́на
+    answer: лю ди на
+  - word: бібліоте́ка
+    answer: бі блі о те ка
+- id: act-words-match
+  type: match-up
+  title: Сло́во та йо́го зна́чення
+  instruction: З'єдна́й прочи́тане украї́нське сло́во з англі́йським пере́кладом.
+  pairs:
+  - left: ма́ма
+    right: mother
+  - left: та́то
+    right: father
+  - left: вода́
+    right: water
+  - left: ка́ша
+    right: porridge
+  - left: ву́лиця
+    right: street
+  - left: столи́ця
+    right: capital
+workbook:
+- id: act-w1
+  type: group-sort
+  title: Оди́н, два чи три склади́
+  instruction: Розпо́діли сло́ва за кі́лькістю скла́дів.
+  groups:
+  - label: Оди́н склад
+    items:
+    - день
+    - Львів
+  - label: Два склади́
+    items:
+    - ма́ма
+    - та́то
+    - Ки́їв
+  - label: Три склади́
+    items:
+    - молоко́
+    - ву́лиця
+    - столи́ця
+- id: act-w2
+  type: odd-one-out
+  title: За́йве за кі́лькістю скла́дів
+  instruction: Обери́ сло́во, яке́ ма́є і́ншу кі́лькість скла́дів.
+  items:
+  - words:
+    - ма́ма
+    - та́то
+    - вода́
+    - день
+    answer: день
+    explanation: День ма́є оди́н склад; і́нші слова́ ма́ють два.
+  - words:
+    - молоко́
+    - ву́лиця
+    - столи́ця
+    - Ки́їв
+    answer: Ки́їв
+    explanation: Ки́їв ма́є два скла́ди; і́нші слова́ ма́ють три.
+  - words:
+    - день
+    - Львів
+    - ма́ма
+    - так
+    answer: ма́ма
+    explanation: Ма́ма ма́є два скла́ди; і́нші слова́ ма́ють оди́н.
+  - words:
+    - бібліоте́ка
+    - університе́т
+    - фотогра́фія
+    - ка́ша
+    answer: ка́ша
+    explanation: Ка́ша ма́є два скла́ди; і́нші слова́ ма́ють п'ять.
+- id: act-w-count
+  type: count-syllables
+  title: Підраху́нок скла́дів у нови́х слова́х
+  instruction: Пораху́й кі́лькість скла́дів у ко́жному сло́ві.
+  maxCount: 5
+  items:
+  - word: та́то
+    correct: 2
+  - word: вода́
+    correct: 2
+  - word: ка́ша
+    correct: 2
+  - word: люди́на
+    correct: 3
+  - word: столи́ця
+    correct: 3
+  - word: університе́т
+    correct: 5
+- id: act-w-divide
+  type: divide-words
+  title: Розпо́діл слів на скла́ди
+  instruction: Запиши́ слова́, розділя́ючи скла́ди пробі́лом.
+  items:
+  - word: вода́
+    answer: во да
+  - word: та́то
+    answer: та то
+  - word: ка́ша
+    answer: ка ша
+  - word: рука́
+    answer: ру ка
+  - word: я́блуко
+    answer: яб лу ко
+  - word: Полта́ва
+    answer: Пол та ва
+- id: act-w-tf
+  type: true-false
+  title: Пра́вила украї́нського чита́ння
+  instruction: Ви́знач, чи тве́рдження є пра́вильним.
+  items:
+  - statement: У сло́ві сті́льки скла́дів, скі́льки в ньому голосни́х зву́ків.
+    correct: true
+    explanation: Це головне́ пра́вило складопо́ділу в украї́нській мо́ві.
+  - statement: При́голосний звук без голосно́го мо́же утвори́ти склад.
+    correct: false
+    explanation: Склад утво́рюється лише́ навко́ло голосно́го зву́ка.
+  - statement: Лі́тера Ї за́вжди познача́є два зву́ки [йі].
+    correct: true
+    explanation: Лі́тера Ї ні́коли не пом'я́кшує при́голосні й за́вжди дає́ [йі].
+  - statement: В украї́нській мо́ві ненаголо́шений звук [о] чита́ється як [а].
+    correct: false
+    explanation: В украї́нській мо́ві [о] за́вжди звучи́ть чі́тко як [о], напри́клад, у
+      сло́ві молоко́.
+  - statement: У сло́ві «день» оди́н склад.
+    correct: true
+    explanation: У сло́ві «день» оди́н голосни́й звук [е], тому́ оди́н склад.
+  - statement: У сло́ві «я́блуко» пе́рший звук — це лише́ оди́н звук [а].
+    correct: false
+    explanation: 'На поча́тку сло́ва лі́тера Я познача́є два зву́ки: [й] та [а].'
+- id: act-w-match
+  type: match-up
+  title: Скла́дові па́ри
+  instruction: З'єдна́й поча́ток сло́ва з йо́го закі́нченням.
+  pairs:
+  - left: мо-ло-
+    right: ко
+  - left: ву-ли-
+    right: ця
+  - left: лю-ди-
+    right: на
+  - left: піс-
+    right: ня
+  - left: ка-
+    right: ша
+  - left: та-
+    right: то
+- id: act-w-quiz
+  type: quiz
+  title: Переві́рка чита́ння слів
+  instruction: Обери́ пра́вильний варіа́нт ві́дповіді.
+  questions:
+  - question: Як пра́вильно прочита́ти сло́во «молоко́»?
+    options:
+    - text: мо-ло-ко з чітки́м [о]
+      correct: true
+    - text: ма-ла-ко че́рез [а]
+      correct: false
+    - text: м-л-к по лі́терах
+      correct: false
+    explanation: Украї́нське [о] за́вжди вимовля́ється чі́тко й вира́зно.
+  - question: Скі́льки скла́дів у на́зві мі́ста «Львів»?
+    options:
+    - text: 1 склад
+      correct: true
+    - text: 2 скла́ди
+      correct: false
+    - text: 3 скла́ди
+      correct: false
+    explanation: У сло́ві «Львів» лише́ оди́н голосни́й звук [і], тому́ оди́н склад.
+  - question: Скі́льки скла́дів у на́зві мі́ста «Ки́їв»?
+    options:
+    - text: 2 скла́ди
+      correct: true
+    - text: 1 склад
+      correct: false
+    - text: 3 скла́ди
+      correct: false
+    explanation: 'Голосні́ зву́ки [и] та [йі] утво́рюють два скла́ди: Ки-їв.'
+  - question: Я́ку роль вико́нує лі́тера Я у сло́ві «пі́сня»?
+    options:
+    - text: пом'я́кшує попере́дній при́голосний [н'] та познача́є звук [а]
+      correct: true
+    - text: познача́є два зву́ки [йа]
+      correct: false
+    - text: не познача́є зву́ка
+      correct: false
+    explanation: Пі́сля при́голосного лі́тера Я познача́є м'я́кість цього́ при́голосного
+      та звук [а].
+  - question: Що означа́є сло́во «столи́ця»?
+    options:
+    - text: capital city
+      correct: true
+    - text: big street
+      correct: false
+    - text: small village
+      correct: false
+    explanation: Столи́ця — це головне́ мі́сто держа́ви (Ки́їв — столи́ця Украї́ни).
+  - question: Як ді́ти вча́ться чита́ти украї́нські слова́?
+    options:
+    - text: 'по скла́дах: склад за скла́дом'
+      correct: true
+    - text: назива́ючи лі́тери окре́мо
+      correct: false
+    - text: вга́дуючи з і́ншої мо́ви
+      correct: false
+    explanation: 'Підхі́д «зни́зу вго́ру»: звук -> склад -> сло́во.'

@@ -1,0 +1,56 @@
+- lemma: склад
+  translation: syllable
+  pos: noun
+  usage: У сло́ві ма́ма два склади́.
+- lemma: голосни́й звук
+  translation: vowel sound
+  pos: noun phrase
+  usage: А - голосни́й звук.
+- lemma: при́голосний звук
+  translation: consonant sound
+  pos: noun phrase
+  usage: М - при́голосний звук.
+- lemma: чита́ти
+  translation: to read
+  pos: verb
+  usage: Я чита́ю сло́во.
+- lemma: писа́ти
+  translation: to write
+  pos: verb
+  usage: Я пишу́ лі́теру.
+- lemma: ма́ма
+  translation: mother
+  pos: noun
+  usage: Ма́ма.
+- lemma: та́то
+  translation: father
+  pos: noun
+  usage: Та́то.
+- lemma: молоко́
+  translation: milk
+  pos: noun
+  usage: Молоко́.
+- lemma: я́блуко
+  translation: apple
+  pos: noun
+  usage: Я́блуко.
+- lemma: люди́на
+  translation: person
+  pos: noun
+  usage: Люди́на.
+- lemma: ву́лиця
+  translation: street
+  pos: noun
+  usage: Ву́лиця.
+- lemma: столи́ця
+  translation: capital
+  pos: noun
+  usage: Ки́їв - столи́ця Украї́ни.
+- lemma: день
+  translation: day
+  pos: noun
+  usage: День.
+- lemma: абе́тка
+  translation: alphabet
+  pos: noun
+  usage: Украї́нська абе́тка.
