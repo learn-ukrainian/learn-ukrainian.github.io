@@ -17320,8 +17320,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "типовий",
       "url_slug": "типовий",
       "headword": "типо́вий",
-      "short_label": "характерний, показний, зразковий",
-      "gloss": "typical, characteristic, representative of a group or kind",
+      "short_label": "характерний, показовий, показний",
+      "gloss": "typical, characteristic, representative of a kind (характерний, показовий)",
       "pos": "adjective",
       "cefr": "A2",
       "heritage_status": {
@@ -17343,7 +17343,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з технічним терміном «типови́й» (наголос на кінці: спроєктований за зразком, типовий проєкт).",
+      "distinction_note": "Означає «характерний, показовий, який виражає найістотніші риси» (типовий приклад, типовий випадок). Не плутати з «типови́й» (наголос на кінці: виконаний за зразком, зразковий, серійний: типовий проєкт).",
       "meaning": {
         "definitions": [
           "Який виражає найістотніші риси певної групи людей, явищ; характерний, показовий."
@@ -17362,8 +17362,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "типовий",
       "url_slug": "типовий",
       "headword": "типови́й",
-      "short_label": "стандартизований за зразком (техн.)",
-      "gloss": "standardized, model-based, type-designed (e.g. типовий проєкт будинку)",
+      "short_label": "виконаний за зразком, зразковий, стандартизований (техн.)",
+      "gloss": "standardized, model-based, type-designed (зразковий; виконаний за зразком: типовий проєкт)",
       "pos": "adjective",
       "cefr": "A2",
       "heritage_status": {
@@ -17385,10 +17385,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з якісним значенням «типо́вий» (характерний приклад, типовий випадок).",
+      "distinction_note": "Означає «виконаний за певним зразком чи стандартом, зразковий, серійний» (ВТС / Орфографічний словник: типови́й = зразковий; типовий проєкт). Не плутати з «типо́вий» (наголос на другому складі: характерний, показовий).",
       "meaning": {
         "definitions": [
-          "(техн., спец.) Виконаний за певним зразком, стандартом; серійний (типовий будинок)."
+          "(техн., спец.) Виконаний за певним зразком, стандартом; серійний (типовий будинок, типовий проєкт)."
         ],
         "source": "ВТС"
       },
