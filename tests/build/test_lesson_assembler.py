@@ -118,8 +118,9 @@ const selected = tree.statements.filter(statement => {
  return false;
 }).map(statement => statement.getText(tree)).join('\n').replace('export async function', 'async function').replaceAll('import.meta.env.PROD', 'true');
 const helper = fs.readFileSync('site/src/lib/a1-archive-routes.ts', 'utf8').replaceAll('export ', '');
+const nav = fs.readFileSync('site/src/lib/a1-lesson-nav.ts', 'utf8').replaceAll('export ', '');
 const units = fs.readFileSync('site/src/data/a1-v1-modules.ts', 'utf8').replaceAll('export ', '');
-const compiled = ts.transpileModule(helper + '\n' + units + '\n' + selected, {compilerOptions: {target: ts.ScriptTarget.ES2022}}).outputText;
+const compiled = ts.transpileModule(helper + '\n' + nav + '\n' + units + '\n' + selected, {compilerOptions: {target: ts.ScriptTarget.ES2022}}).outputText;
 const docs = JSON.parse(fs.readFileSync(0, 'utf8'));
 const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
 new AsyncFunction('getCollection', 'moduleCount', compiled + '\nreturn {routes: await getStaticPaths(), groups: plannedModuleGroups("a1", TRACKS["a1"]), visible: [...deployedDocsByTrack.keys()]};')(
