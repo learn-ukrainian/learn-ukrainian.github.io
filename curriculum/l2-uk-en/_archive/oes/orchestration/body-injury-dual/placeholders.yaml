@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: body-injury-dual
 TOPIC_TITLE: Body Injury Dual
 MODULE_NUM: '55'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/body-injury-dual.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/body-injury-dual.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/body-injury-dual.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/body-injury-dual.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/body-injury-dual.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/body-injury-dual-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/body-injury-dual-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/body-injury-dual.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/body-injury-dual.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/body-injury-dual.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/body-injury-dual.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/body-injury-dual.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/body-injury-dual-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/body-injury-dual-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

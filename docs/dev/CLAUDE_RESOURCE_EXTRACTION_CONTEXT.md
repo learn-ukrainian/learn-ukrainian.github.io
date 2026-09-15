@@ -37,7 +37,7 @@ Implement 4 Python scripts to extract, merge, validate, and regenerate external 
 
 ## Schema Design (Already Complete)
 
-**READ THIS FIRST:** `/Users/krisztiankoos/projects/learn-ukrainian/docs/resources/EXTERNAL_RESOURCES_SCHEMA.md`
+**READ THIS FIRST:** `docs/resources/EXTERNAL_RESOURCES_SCHEMA.md`
 
 This schema defines:
 - 5 resource types: `youtube`, `podcasts`, `articles`, `books`, `websites`

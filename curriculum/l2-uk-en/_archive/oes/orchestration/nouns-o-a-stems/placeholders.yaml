@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: nouns-o-a-stems
 TOPIC_TITLE: Nouns O A Stems
 MODULE_NUM: '7'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/nouns-o-a-stems.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/nouns-o-a-stems.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/nouns-o-a-stems.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/nouns-o-a-stems.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/nouns-o-a-stems.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/nouns-o-a-stems-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/nouns-o-a-stems-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/nouns-o-a-stems.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/nouns-o-a-stems.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/nouns-o-a-stems.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/nouns-o-a-stems.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/nouns-o-a-stems.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/nouns-o-a-stems-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/nouns-o-a-stems-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

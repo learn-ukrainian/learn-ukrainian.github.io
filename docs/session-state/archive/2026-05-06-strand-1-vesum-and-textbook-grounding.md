@@ -136,7 +136,7 @@ User flagged 2026-05-06 evening:
 ## Cold-start protocol for next session
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 source ./.envrc
 
 curl -s http://localhost:8765/api/state/manifest

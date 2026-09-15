@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: kostenko-marusia-churai-1
 TOPIC_TITLE: 'Ліна Костенко: «Маруся Чурай» — роман у віршах'
 MODULE_NUM: '141'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/kostenko-marusia-churai-1.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/kostenko-marusia-churai-1.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/kostenko-marusia-churai-1.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/kostenko-marusia-churai-1.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/kostenko-marusia-churai-1.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/kostenko-marusia-churai-1-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/kostenko-marusia-churai-1-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/kostenko-marusia-churai-1.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/kostenko-marusia-churai-1.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/kostenko-marusia-churai-1.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/kostenko-marusia-churai-1.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/kostenko-marusia-churai-1.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/kostenko-marusia-churai-1-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/kostenko-marusia-churai-1-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

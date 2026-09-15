@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: glorifying-host
 TOPIC_TITLE: Glorifying Host
 MODULE_NUM: '78'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/glorifying-host.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/glorifying-host.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/glorifying-host.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/glorifying-host.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/glorifying-host.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/glorifying-host-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/glorifying-host-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/glorifying-host.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/glorifying-host.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/glorifying-host.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/glorifying-host.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/glorifying-host.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/glorifying-host-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/glorifying-host-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

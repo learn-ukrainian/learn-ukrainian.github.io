@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: simple-tongue-vyshensky
 TOPIC_TITLE: Simple Tongue Vyshensky
 MODULE_NUM: '66'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/simple-tongue-vyshensky.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/simple-tongue-vyshensky.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/simple-tongue-vyshensky.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/simple-tongue-vyshensky.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/simple-tongue-vyshensky.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/simple-tongue-vyshensky-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/simple-tongue-vyshensky-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/simple-tongue-vyshensky.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/simple-tongue-vyshensky.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/simple-tongue-vyshensky.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/simple-tongue-vyshensky.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/simple-tongue-vyshensky.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/simple-tongue-vyshensky-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/simple-tongue-vyshensky-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

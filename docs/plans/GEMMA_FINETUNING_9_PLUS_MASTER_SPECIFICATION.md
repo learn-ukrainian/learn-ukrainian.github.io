@@ -6,7 +6,7 @@
 > **Architectural Reviewer**: Sol (`gpt-5.6-sol`)  
 > **Red Team Reviewer**: Fable (Pending Sol Approval Gate)  
 > **Public Path**: `docs/plans/GEMMA_FINETUNING_9_PLUS_MASTER_SPECIFICATION.md`  
-> **Private Path**: `/Users/krisztiankoos/projects/learn-ukrainian-infra-private/docs/plans/GEMMA_FINETUNING_9_PLUS_MASTER_SPECIFICATION.md`
+> **Private Path**: `learn-ukrainian-infra-private/docs/plans/GEMMA_FINETUNING_9_PLUS_MASTER_SPECIFICATION.md`
 
 ---
 

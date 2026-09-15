@@ -2,7 +2,7 @@
 
 Date: 2026-06-23
 Auditor: codex/gpt-5
-Worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/b2-m02-quality-audit
+Worktree: .worktrees/dispatch/codex/b2-m02-quality-audit
 Scope: B2 M02 `past-passive-participles`
 Read-only audit phase: true
 Durable report path: docs/audits/b2-quality-audit-2026-06-23.md

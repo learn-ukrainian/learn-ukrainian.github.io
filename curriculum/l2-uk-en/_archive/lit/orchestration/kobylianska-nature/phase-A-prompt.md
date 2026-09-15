@@ -10,19 +10,19 @@
 Read the **existing research notes** (already complete — do NOT re-research):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/kobylianska-nature-research.md
+curriculum/l2-uk-en/lit/research/kobylianska-nature-research.md
 ```
 
 Read the plan file (SOURCE OF TRUTH for structure):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/kobylianska-nature.yaml
+curriculum/l2-uk-en/plans/lit/kobylianska-nature.yaml
 ```
 
 Read the current meta file (for reference — you will replace the content_outline):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/kobylianska-nature.yaml
+curriculum/l2-uk-en/lit/meta/kobylianska-nature.yaml
 ```
 
 ---

@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: andrukhovych-recreations
 TOPIC_TITLE: 'Юрій Андрухович: «Рекреації»'
 MODULE_NUM: '170'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/andrukhovych-recreations.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/andrukhovych-recreations.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/andrukhovych-recreations.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/andrukhovych-recreations.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/andrukhovych-recreations.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/andrukhovych-recreations-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/andrukhovych-recreations-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/andrukhovych-recreations.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/andrukhovych-recreations.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/andrukhovych-recreations.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/andrukhovych-recreations.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/andrukhovych-recreations.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/andrukhovych-recreations-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/andrukhovych-recreations-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

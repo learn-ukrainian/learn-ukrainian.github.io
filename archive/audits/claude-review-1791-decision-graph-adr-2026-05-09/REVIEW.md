@@ -186,7 +186,7 @@ Output:
 [DISAGREE]: 139
 ```
 
-DB path: `/Users/krisztiankoos/projects/learn-ukrainian/.mcp/servers/message-broker/messages.db`.
+DB path: `.mcp/servers/message-broker/messages.db`.
 
 ### E2. `channel_messages` schema (live, 2026-05-09)
 

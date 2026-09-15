@@ -3,14 +3,14 @@ LEVEL: LIT_HUMOR
 SLUG: ilchenko-cossack-mamai
 TOPIC_TITLE: Ilchenko Cossack Mamai
 MODULE_NUM: '8'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-humor/ilchenko-cossack-mamai.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/meta/ilchenko-cossack-mamai.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/ilchenko-cossack-mamai.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/activities/ilchenko-cossack-mamai.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/vocabulary/ilchenko-cossack-mamai.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/research/ilchenko-cossack-mamai-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/review/ilchenko-cossack-mamai-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-humor/ilchenko-cossack-mamai.yaml
+META_PATH: curriculum/l2-uk-en/lit-humor/meta/ilchenko-cossack-mamai.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-humor/ilchenko-cossack-mamai.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-humor/activities/ilchenko-cossack-mamai.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-humor/vocabulary/ilchenko-cossack-mamai.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-humor/research/ilchenko-cossack-mamai-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-humor/review/ilchenko-cossack-mamai-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-humor.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

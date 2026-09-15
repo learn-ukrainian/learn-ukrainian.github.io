@@ -151,7 +151,7 @@ Operator session · Three V7 builds against seminar plans
 <h3>agy is blocked, not bad</h3>
 <p>The adapter port (PR <a href="https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/2163">#2163</a>, merged as <code>29043426a9</code>) is durable. Once agy upstream ships MCP plugin enablement (kubedojo Phase-2 follow-up), the adapter should pick it up via <code>~/.gemini/config/mcp_config.json</code> — agy&apos;s own CLI log surfaces that as its MCP discovery path:</p>
 <pre><code>E0520 21:11:14 discovery.go:335] Failed to load JSON config file
-  /Users/krisztiankoos/.gemini/config/mcp_config.json:
+  .gemini/config/mcp_config.json:
   unexpected end of JSON input</code></pre>
 <p>The file exists but is 0 bytes. Writing the <code>sources</code> server config there is the obvious next experiment (operator-decision pending — user-global mcp_config.json affects all agy invocations across projects, so the call is on the operator, not the orchestrator).</p>
 

@@ -101,7 +101,7 @@ Write `audit/twopass-pass2-only-2026-05-13/REPORT.md` containing:
 
 1. **Worktree setup:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian && \
+   cd . && \
    git worktree add -b codex/pass2-only-contract-test-2026-05-13 .worktrees/dispatch/codex/pass2-only-contract-test-2026-05-13 origin/main
    ```
 2. **Build experiment directory:** `audit/twopass-pass2-only-2026-05-13/` with subdirs `pass1_stripped/`, `pass2_output/`, plus the scripts.

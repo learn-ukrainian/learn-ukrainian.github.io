@@ -15,7 +15,7 @@ Add JSONL event emission at writer-side and reviewer-side hook points in the V7 
 ## Worktree
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin main
 .venv/bin/python scripts/delegate.py dispatch ...  # invoked by parent
 ```

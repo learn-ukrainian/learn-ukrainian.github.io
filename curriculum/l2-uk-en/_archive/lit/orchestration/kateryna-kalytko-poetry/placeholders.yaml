@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: kateryna-kalytko-poetry
 TOPIC_TITLE: Kateryna Kalytko Poetry
 MODULE_NUM: '203'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/kateryna-kalytko-poetry.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/kateryna-kalytko-poetry.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/kateryna-kalytko-poetry.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/kateryna-kalytko-poetry.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/kateryna-kalytko-poetry.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/kateryna-kalytko-poetry-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/kateryna-kalytko-poetry-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/kateryna-kalytko-poetry.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/kateryna-kalytko-poetry.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/kateryna-kalytko-poetry.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/kateryna-kalytko-poetry.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/kateryna-kalytko-poetry.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/kateryna-kalytko-poetry-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/kateryna-kalytko-poetry-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

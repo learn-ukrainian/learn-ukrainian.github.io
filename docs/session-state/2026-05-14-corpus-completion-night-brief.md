@@ -125,7 +125,7 @@ m20 GREEN is gated on Task B (page column fix). Phase 2b m01-m07 batch remains p
 
 After merge:
 ```bash
-git worktree remove --force /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/db-write-evidence-rule-2026-05-14
+git worktree remove --force .worktrees/dispatch/claude/db-write-evidence-rule-2026-05-14
 git branch -d inline/db-write-evidence-rule-2026-05-14
 ```
 
@@ -164,18 +164,18 @@ Continue this pattern for C2-C4 unless the user reverts the direction.
 
 ```
 $ git worktree list
-/Users/krisztiankoos/projects/learn-ukrainian                                                                main
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/builds/a1-my-morning-20260513-122043                build/a1/my-morning-20260513-122043
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/builds/a1-my-morning-20260513-161726                build/a1/my-morning-20260513-161726
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/builds/a1-my-morning-20260513-164953                build/a1/my-morning-20260513-164953
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/builds/a1-my-morning-20260513-193448                build/a1/my-morning-20260513-193448
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/builds/a1-my-morning-20260513-221945                build/a1/my-morning-20260513-221945
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-interactive                                   (detached)
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/bakeoff-2026-05-12-night            claude/bakeoff-2026-05-12-night
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/db-write-evidence-rule-2026-05-14   inline/db-write-evidence-rule-2026-05-14  (← PR #1978)
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/writer-prompt-tune-2026-05-13       claude/writer-prompt-tune-2026-05-13
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1476-auto-path                       codex/1476-auto-path-2026-04-26
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/pass2-only-contract-test-2026-05-13  codex/pass2-only-contract-test-2026-05-13
+.                                                                main
+.worktrees/builds/a1-my-morning-20260513-122043                build/a1/my-morning-20260513-122043
+.worktrees/builds/a1-my-morning-20260513-161726                build/a1/my-morning-20260513-161726
+.worktrees/builds/a1-my-morning-20260513-164953                build/a1/my-morning-20260513-164953
+.worktrees/builds/a1-my-morning-20260513-193448                build/a1/my-morning-20260513-193448
+.worktrees/builds/a1-my-morning-20260513-221945                build/a1/my-morning-20260513-221945
+.worktrees/codex-interactive                                   (detached)
+.worktrees/dispatch/claude/bakeoff-2026-05-12-night            claude/bakeoff-2026-05-12-night
+.worktrees/dispatch/claude/db-write-evidence-rule-2026-05-14   inline/db-write-evidence-rule-2026-05-14  (← PR #1978)
+.worktrees/dispatch/claude/writer-prompt-tune-2026-05-13       claude/writer-prompt-tune-2026-05-13
+.worktrees/dispatch/codex/1476-auto-path                       codex/1476-auto-path-2026-04-26
+.worktrees/dispatch/codex/pass2-only-contract-test-2026-05-13  codex/pass2-only-contract-test-2026-05-13
 ```
 
 The 5 m20 build worktrees can be cleaned after Task B lands and m20 build #6 verifies the page-index fix. The codex/claude dispatch worktrees from before May 12-13 are stale (their branches are merged or abandoned) — safe to clean any time but not blocking.

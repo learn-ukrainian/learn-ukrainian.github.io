@@ -54,7 +54,7 @@
 
 ## Restart
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin -q && git log -1 --oneline origin/main
 cat /tmp/grok-atlas-calque.log          # grok swarm §6 output → verify + integrate
 curl -s http://localhost:8765/api/delegate/active   # #2901 + reviews

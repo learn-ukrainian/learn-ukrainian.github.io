@@ -244,11 +244,11 @@ def test_normalize_tool_calls_correlates_codex_mcp_output_by_call_id() -> None:
         {
             "type": "function_call_output",
             "call_id": "call_shell_123",
-            "output": "/Users/krisztiankoos/projects/learn-ukrainian",
+            "output": ".",
         },
     ]
     shell_calls = normalize_tool_calls(shell_events)
     assert len(shell_calls) == 1
     assert shell_calls[0]["name"] == "exec_command"
-    assert shell_calls[0]["result"] == "/Users/krisztiankoos/projects/learn-ukrainian"
-    assert "/Users/krisztiankoos/projects/learn-ukrainian" in shell_calls[0]["output_summary"]
+    assert shell_calls[0]["result"] == "."
+    assert "." in shell_calls[0]["output_summary"]

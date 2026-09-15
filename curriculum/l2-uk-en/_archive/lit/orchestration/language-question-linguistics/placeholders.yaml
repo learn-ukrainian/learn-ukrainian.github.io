@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: language-question-linguistics
 TOPIC_TITLE: Мовне питання
 MODULE_NUM: '24'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/language-question-linguistics.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/language-question-linguistics.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/language-question-linguistics.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/language-question-linguistics.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/language-question-linguistics.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/language-question-linguistics-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/language-question-linguistics-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/language-question-linguistics.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/language-question-linguistics.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/language-question-linguistics.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/language-question-linguistics.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/language-question-linguistics.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/language-question-linguistics-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/language-question-linguistics-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

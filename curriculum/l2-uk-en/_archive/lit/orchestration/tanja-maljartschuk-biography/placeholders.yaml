@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: tanja-maljartschuk-biography
 TOPIC_TITLE: Tanja Maljartschuk Biography
 MODULE_NUM: '194'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/tanja-maljartschuk-biography.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/tanja-maljartschuk-biography.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/tanja-maljartschuk-biography.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/tanja-maljartschuk-biography.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/tanja-maljartschuk-biography.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/tanja-maljartschuk-biography-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/tanja-maljartschuk-biography-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/tanja-maljartschuk-biography.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/tanja-maljartschuk-biography.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/tanja-maljartschuk-biography.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/tanja-maljartschuk-biography.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/tanja-maljartschuk-biography.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/tanja-maljartschuk-biography-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/tanja-maljartschuk-biography-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

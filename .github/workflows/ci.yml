@@ -451,6 +451,20 @@ jobs:
                   slug = path.stem
               elif parts[:3] == ("docs", "research", "bio"):
                   slug = path.stem
+                  try:
+                      base_text = subprocess.check_output(
+                          ["git", "show", f"{base_sha}:{raw_path}"],
+                          text=True,
+                          stderr=subprocess.DEVNULL,
+                      )
+                  except subprocess.CalledProcessError:
+                      base_text = ""
+                  try:
+                      head_text = (root / raw_path).read_text(encoding="utf-8")
+                  except OSError:
+                      head_text = ""
+                  if readiness.is_host_path_only_text_change(base_text, head_text):
+                      continue
               elif parts[:2] == ("wiki", "figures"):
                   slug = path.name.removesuffix(".sources.yaml") if raw_path.endswith(".sources.yaml") else path.stem
               if slug in manifest_set:

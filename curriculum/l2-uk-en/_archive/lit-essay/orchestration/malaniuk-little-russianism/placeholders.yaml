@@ -3,14 +3,14 @@ LEVEL: LIT_ESSAY
 SLUG: malaniuk-little-russianism
 TOPIC_TITLE: Malaniuk Little Russianism
 MODULE_NUM: '16'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-essay/malaniuk-little-russianism.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/meta/malaniuk-little-russianism.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/malaniuk-little-russianism.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/activities/malaniuk-little-russianism.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/vocabulary/malaniuk-little-russianism.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/research/malaniuk-little-russianism-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/review/malaniuk-little-russianism-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-essay/malaniuk-little-russianism.yaml
+META_PATH: curriculum/l2-uk-en/lit-essay/meta/malaniuk-little-russianism.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-essay/malaniuk-little-russianism.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-essay/activities/malaniuk-little-russianism.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-essay/vocabulary/malaniuk-little-russianism.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-essay/research/malaniuk-little-russianism-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-essay/review/malaniuk-little-russianism-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-essay.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

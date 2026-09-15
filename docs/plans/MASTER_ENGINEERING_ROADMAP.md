@@ -5,7 +5,7 @@
 > **Date**: July 24, 2026  
 > **Target Epics**: #4542 (Model Qualification), #4708 (Hramatka Engine & Datasets)  
 > **Public Path**: `docs/plans/MASTER_ENGINEERING_ROADMAP.md`  
-> **Private Path**: `/Users/krisztiankoos/projects/learn-ukrainian-infra-private/docs/plans/MASTER_ENGINEERING_ROADMAP.md`
+> **Private Path**: `learn-ukrainian-infra-private/docs/plans/MASTER_ENGINEERING_ROADMAP.md`
 
 ---
 

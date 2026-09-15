@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: kulish-literary-legacy
 TOPIC_TITLE: Kulish Literary Legacy
 MODULE_NUM: '21'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/kulish-literary-legacy.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/kulish-literary-legacy.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/kulish-literary-legacy.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/kulish-literary-legacy.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/kulish-literary-legacy.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/kulish-literary-legacy-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/kulish-literary-legacy-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/kulish-literary-legacy.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/kulish-literary-legacy.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/kulish-literary-legacy.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/kulish-literary-legacy.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/kulish-literary-legacy.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/kulish-literary-legacy-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/kulish-literary-legacy-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

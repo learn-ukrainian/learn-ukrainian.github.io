@@ -3,14 +3,14 @@ LEVEL: LIT_ESSAY
 SLUG: oxana-hundorova-postcolonialism
 TOPIC_TITLE: Oxana Hundorova Postcolonialism
 MODULE_NUM: '54'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-essay/oxana-hundorova-postcolonialism.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/meta/oxana-hundorova-postcolonialism.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/oxana-hundorova-postcolonialism.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/activities/oxana-hundorova-postcolonialism.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/vocabulary/oxana-hundorova-postcolonialism.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/research/oxana-hundorova-postcolonialism-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/review/oxana-hundorova-postcolonialism-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-essay/oxana-hundorova-postcolonialism.yaml
+META_PATH: curriculum/l2-uk-en/lit-essay/meta/oxana-hundorova-postcolonialism.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-essay/oxana-hundorova-postcolonialism.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-essay/activities/oxana-hundorova-postcolonialism.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-essay/vocabulary/oxana-hundorova-postcolonialism.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-essay/research/oxana-hundorova-postcolonialism-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-essay/review/oxana-hundorova-postcolonialism-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-essay.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

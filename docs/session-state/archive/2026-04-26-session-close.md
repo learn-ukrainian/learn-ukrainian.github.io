@@ -27,8 +27,8 @@ Both gated by parallel Gemini-3.1-pro-preview + Codex-gpt-5.5 adversarial review
 ## Worktree state at close
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian                              [main, b532271f3d — user WIP, behind origin/main 9 commits]
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-interactive (stale, detached HEAD — pre-existing, NOT mine)
+.                              [main, b532271f3d — user WIP, behind origin/main 9 commits]
+.worktrees/codex-interactive (stale, detached HEAD — pre-existing, NOT mine)
 ```
 
 Both round-3.5 worktrees (`claude-1602-round-3.5-prompt-tighten` + `claude-1602-handoff-round-3.5`) and their branches removed post-merge. The user's main checkout HEAD `b532271f3d` is intentionally behind `origin/main` — that's their working tree with uncommitted edits from in-flight wiki rebuilds. Do **not** `git pull` from there.
@@ -63,7 +63,7 @@ If gates green and module prose is meta-narration-free → round 3.5 is canonica
 
 ```bash
 # 1. Verify state
-git -C /Users/krisztiankoos/projects/learn-ukrainian log --oneline origin/main -5
+git -C . log --oneline origin/main -5
 # Expect (top): 00a0b0115b docs(session) → 9294dedbbe round 3.5 → ab253e00f1 → ccfe0aaac0 → a6b9e7f417
 
 curl -s 'http://localhost:8765/api/comms/inbox?agent=claude'   # expect empty

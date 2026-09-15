@@ -12,9 +12,9 @@ The headless dispatch you were running (`pr-2266-adjustment-2026-05-25`) died at
 
 Two worktrees on disk, both at base SHA `0014318188`, branches already created, files already edited but **not committed**:
 
-**1. `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/2266-v7-plumbing`** (branch `codex/2266-v7-plumbing`) — PR-A plumbing split. 20 modified files including all 9 plumbing files from the brief + all 7 tests + one new file `scripts/audit/check_russicisms.py`. Note: `starlight/src/content/docs/a1/index.mdx` and `scripts/build/phases/linear-write-grok.md` are also modified — verify they belong in PR-A scope, drop the edit if not.
+**1. `.worktrees/dispatch/codex/2266-v7-plumbing`** (branch `codex/2266-v7-plumbing`) — PR-A plumbing split. 20 modified files including all 9 plumbing files from the brief + all 7 tests + one new file `scripts/audit/check_russicisms.py`. Note: `starlight/src/content/docs/a1/index.mdx` and `scripts/build/phases/linear-write-grok.md` are also modified — verify they belong in PR-A scope, drop the edit if not.
 
-**2. `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/2266-b1-adjectives-content`** (branch `codex/2266-b1-adjectives-content`) — PR-B content split. 2 files: `starlight/src/content/docs/b1/adjectives-comparative.mdx` (new) + `starlight/src/content/docs/b1/index.mdx` (modified).
+**2. `.worktrees/dispatch/codex/2266-b1-adjectives-content`** (branch `codex/2266-b1-adjectives-content`) — PR-B content split. 2 files: `starlight/src/content/docs/b1/adjectives-comparative.mdx` (new) + `starlight/src/content/docs/b1/index.mdx` (modified).
 
 ### What I need from you
 

@@ -3,14 +3,14 @@ LEVEL: LIT_HUMOR
 SLUG: ostap-vyshnia-smiles-1
 TOPIC_TITLE: Ostap Vyshnia Smiles 1
 MODULE_NUM: '4'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-humor/ostap-vyshnia-smiles-1.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/meta/ostap-vyshnia-smiles-1.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/ostap-vyshnia-smiles-1.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/activities/ostap-vyshnia-smiles-1.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/vocabulary/ostap-vyshnia-smiles-1.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/research/ostap-vyshnia-smiles-1-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/review/ostap-vyshnia-smiles-1-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-humor/ostap-vyshnia-smiles-1.yaml
+META_PATH: curriculum/l2-uk-en/lit-humor/meta/ostap-vyshnia-smiles-1.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-humor/ostap-vyshnia-smiles-1.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-humor/activities/ostap-vyshnia-smiles-1.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-humor/vocabulary/ostap-vyshnia-smiles-1.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-humor/research/ostap-vyshnia-smiles-1-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-humor/review/ostap-vyshnia-smiles-1-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-humor.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

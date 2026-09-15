@@ -143,15 +143,15 @@ DO NOT regenerate `data/processed/*.jsonl` or `data/sources.db` as part of this 
 ### Verification before commit
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/ruff check scripts/ingest/ tests/
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -m pytest tests/ -k esum -v --tb=short
+cd . && .venv/bin/ruff check scripts/ingest/ tests/
+cd . && .venv/bin/python -m pytest tests/ -k esum -v --tb=short
 # Smoke run all 6 vols:
 for vol in 1 2 3 4 5 6; do
-  cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python scripts/ingest/esum_ingest.py --input data/raw/esum/ia-text-pdf/vol${vol}-text.txt --output /tmp/esum_vol${vol}_fixed.jsonl --vol ${vol} --source-format text-pdf 2>&1 | tail -1
+  cd . && .venv/bin/python scripts/ingest/esum_ingest.py --input data/raw/esum/ia-text-pdf/vol${vol}-text.txt --output /tmp/esum_vol${vol}_fixed.jsonl --vol ${vol} --source-format text-pdf 2>&1 | tail -1
 done
 wc -l /tmp/esum_vol{1..6}_fixed.jsonl
 # Verify the 40 common words from the investigation phase appear correctly:
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -c "
+cd . && .venv/bin/python -c "
 import json
 TARGETS = ['субота', 'кава', 'рік', 'дім', 'день', 'мати', 'батько', 'ранок', 'вечір', 'ніч', 'зима', 'літо', 'осінь', 'весна', 'хліб', 'вода', 'око', 'рука', 'нога', 'голова', 'дитина', 'чоловік', 'жінка', 'родина', 'друг', 'школа', 'місто', 'село', 'річка', 'ліс', 'поле', 'сонце', 'місяць', 'вітер', 'дощ', 'сніг', 'вогонь', 'дерево', 'квітка', 'трава']
 found = set()

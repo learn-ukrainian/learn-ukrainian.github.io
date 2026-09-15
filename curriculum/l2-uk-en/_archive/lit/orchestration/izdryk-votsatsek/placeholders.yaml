@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: izdryk-votsatsek
 TOPIC_TITLE: Izdryk Votsatsek
 MODULE_NUM: '185'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/izdryk-votsatsek.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/izdryk-votsatsek.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/izdryk-votsatsek.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/izdryk-votsatsek.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/izdryk-votsatsek.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/izdryk-votsatsek-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/izdryk-votsatsek-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/izdryk-votsatsek.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/izdryk-votsatsek.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/izdryk-votsatsek.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/izdryk-votsatsek.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/izdryk-votsatsek.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/izdryk-votsatsek-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/izdryk-votsatsek-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

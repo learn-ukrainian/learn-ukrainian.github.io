@@ -153,7 +153,7 @@
         "error": null,
         "returncode": 1,
         "stdout": null,
-        "stderr": "Traceback (most recent call last):\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", "
+        "stderr": "Traceback (most recent call last):\n  File \".hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", "
       },
       {
         "case_id": "cal_clean_short_prose",
@@ -161,7 +161,7 @@
         "error": null,
         "returncode": 1,
         "stdout": null,
-        "stderr": "Traceback (most recent call last):\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", "
+        "stderr": "Traceback (most recent call last):\n  File \".hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", "
       },
       {
         "case_id": "cal_clean_travel",
@@ -169,7 +169,7 @@
         "error": null,
         "returncode": 1,
         "stdout": null,
-        "stderr": "Traceback (most recent call last):\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", "
+        "stderr": "Traceback (most recent call last):\n  File \".hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", "
       },
       {
         "case_id": "cal_clean_workplace",
@@ -177,7 +177,7 @@
         "error": null,
         "returncode": 1,
         "stdout": null,
-        "stderr": "Traceback (most recent call last):\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", "
+        "stderr": "Traceback (most recent call last):\n  File \".hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", "
       },
       {
         "case_id": "cal_dirty_email_calques",
@@ -185,7 +185,7 @@
         "error": null,
         "returncode": 1,
         "stdout": null,
-        "stderr": "Traceback (most recent call last):\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", "
+        "stderr": "Traceback (most recent call last):\n  File \".hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", "
       },
       {
         "case_id": "cal_dirty_medical",
@@ -193,7 +193,7 @@
         "error": null,
         "returncode": 1,
         "stdout": null,
-        "stderr": "Traceback (most recent call last):\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", "
+        "stderr": "Traceback (most recent call last):\n  File \".hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", "
       },
       {
         "case_id": "cal_dirty_workplace",
@@ -201,7 +201,7 @@
         "error": null,
         "returncode": 1,
         "stdout": null,
-        "stderr": "Traceback (most recent call last):\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", "
+        "stderr": "Traceback (most recent call last):\n  File \".hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", "
       },
       {
         "case_id": "cal_dirty_meetup",
@@ -209,7 +209,7 @@
         "error": null,
         "returncode": 1,
         "stdout": null,
-        "stderr": "Traceback (most recent call last):\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", "
+        "stderr": "Traceback (most recent call last):\n  File \".hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", "
       },
       {
         "case_id": "cal_dirty_register",
@@ -217,7 +217,7 @@
         "error": null,
         "returncode": 1,
         "stdout": null,
-        "stderr": "Traceback (most recent call last):\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", "
+        "stderr": "Traceback (most recent call last):\n  File \".hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", "
       },
       {
         "case_id": "cal_debatable_next_steps",
@@ -225,7 +225,7 @@
         "error": null,
         "returncode": 1,
         "stdout": null,
-        "stderr": "Traceback (most recent call last):\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", "
+        "stderr": "Traceback (most recent call last):\n  File \".hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", "
       },
       {
         "case_id": "cal_clean_with_lure",
@@ -233,7 +233,7 @@
         "error": null,
         "returncode": 1,
         "stdout": null,
-        "stderr": "Traceback (most recent call last):\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", "
+        "stderr": "Traceback (most recent call last):\n  File \".hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", "
       },
       {
         "case_id": "cal_dirty_business_meeting",
@@ -241,7 +241,7 @@
         "error": null,
         "returncode": 1,
         "stdout": null,
-        "stderr": "Traceback (most recent call last):\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \"/Users/krisztiankoos/.hermes/hermes-agent/hermes_cli/oneshot.py\", "
+        "stderr": "Traceback (most recent call last):\n  File \".hermes/hermes-agent/venv/bin/hermes\", line 10, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/main.py\", line 12359, in main\n    run_oneshot(\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", line 181, in run_oneshot\n    response = _run_agent(\n               ^^^^^^^^^^^\n  File \".hermes/hermes-agent/hermes_cli/oneshot.py\", "
       }
     ]
   }

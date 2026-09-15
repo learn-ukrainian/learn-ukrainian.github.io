@@ -10,19 +10,19 @@
 Read the **existing research notes** (already complete — do NOT re-research):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/velychko-ruin-baroque-2-research.md
+curriculum/l2-uk-en/ruth/research/velychko-ruin-baroque-2-research.md
 ```
 
 Read the plan file (SOURCE OF TRUTH for structure):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/velychko-ruin-baroque-2.yaml
+curriculum/l2-uk-en/plans/ruth/velychko-ruin-baroque-2.yaml
 ```
 
 Read the current meta file (for reference — you will replace the content_outline):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/velychko-ruin-baroque-2.yaml
+curriculum/l2-uk-en/ruth/meta/velychko-ruin-baroque-2.yaml
 ```
 
 ---

@@ -3,13 +3,13 @@ LEVEL: LIT_CRIMEA
 SLUG: aliev-musayeva-dzhemilev
 TOPIC_TITLE: Aliev Musayeva Dzhemilev
 MODULE_NUM: '4'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-crimea/aliev-musayeva-dzhemilev.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-crimea/meta/aliev-musayeva-dzhemilev.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-crimea/aliev-musayeva-dzhemilev.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-crimea/activities/aliev-musayeva-dzhemilev.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-crimea/vocabulary/aliev-musayeva-dzhemilev.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-crimea/research/aliev-musayeva-dzhemilev-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-crimea/review/aliev-musayeva-dzhemilev-review.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-crimea/aliev-musayeva-dzhemilev.yaml
+META_PATH: curriculum/l2-uk-en/lit-crimea/meta/aliev-musayeva-dzhemilev.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-crimea/aliev-musayeva-dzhemilev.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-crimea/activities/aliev-musayeva-dzhemilev.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-crimea/vocabulary/aliev-musayeva-dzhemilev.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-crimea/research/aliev-musayeva-dzhemilev-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-crimea/review/aliev-musayeva-dzhemilev-review.md
 QUICK_REF_PATH: ''
 SCHEMA_PATH: schemas/activities-lit-crimea.schema.json
 WORD_TARGET: '5000'

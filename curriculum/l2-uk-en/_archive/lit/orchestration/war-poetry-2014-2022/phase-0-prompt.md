@@ -8,13 +8,13 @@
 Read the plan file to understand what this module covers:
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/war-poetry-2014-2022.yaml
+curriculum/l2-uk-en/plans/lit/war-poetry-2014-2022.yaml
 ```
 
 Read the current meta file for content_outline structure:
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/war-poetry-2014-2022.yaml
+curriculum/l2-uk-en/lit/meta/war-poetry-2014-2022.yaml
 ```
 
 ## Your Task

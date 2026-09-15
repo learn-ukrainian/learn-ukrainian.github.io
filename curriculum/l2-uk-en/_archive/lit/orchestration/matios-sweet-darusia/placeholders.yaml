@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: matios-sweet-darusia
 TOPIC_TITLE: Matios Sweet Darusia
 MODULE_NUM: '192'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/matios-sweet-darusia.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/matios-sweet-darusia.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/matios-sweet-darusia.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/matios-sweet-darusia.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/matios-sweet-darusia.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/matios-sweet-darusia-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/matios-sweet-darusia-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/matios-sweet-darusia.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/matios-sweet-darusia.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/matios-sweet-darusia.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/matios-sweet-darusia.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/matios-sweet-darusia.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/matios-sweet-darusia-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/matios-sweet-darusia-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

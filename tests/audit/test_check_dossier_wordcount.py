@@ -114,13 +114,20 @@ def test_non_dossier_research_subdirs_are_exempt(
     dossier = _write_dossier(tmp_path, "real-dossier", 1200)
     assert check_dossier_wordcount._is_research_dossier(dossier)
 
+    top_level_note = tmp_path / "docs" / "research" / "2026-06-12-atlas-short-note.md"
+    top_level_note.write_text("слово слово слово\n", encoding="utf-8")
+    assert not check_dossier_wordcount._is_research_dossier(top_level_note)
+
     atlas_note = tmp_path / "docs" / "research" / "atlas" / "short-note.md"
     monkeypatch.setattr(
-        check_dossier_wordcount, "changed_paths", lambda: [atlas_note, dossier]
+        check_dossier_wordcount,
+        "changed_paths",
+        lambda: [atlas_note, top_level_note, dossier],
     )
     assert check_dossier_wordcount.main(["--changed"]) == 0
     output = capsys.readouterr().out
     assert "atlas/short-note.md" not in output
+    assert "2026-06-12-atlas-short-note.md" not in output
     assert "docs/research/bio/real-dossier.md" in output
 
 

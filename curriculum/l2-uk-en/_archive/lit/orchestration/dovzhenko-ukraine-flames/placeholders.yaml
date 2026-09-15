@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: dovzhenko-ukraine-flames
 TOPIC_TITLE: Dovzhenko Ukraine Flames
 MODULE_NUM: '130'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/dovzhenko-ukraine-flames.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/dovzhenko-ukraine-flames.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/dovzhenko-ukraine-flames.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/dovzhenko-ukraine-flames.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/dovzhenko-ukraine-flames.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/dovzhenko-ukraine-flames-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/dovzhenko-ukraine-flames-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/dovzhenko-ukraine-flames.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/dovzhenko-ukraine-flames.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/dovzhenko-ukraine-flames.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/dovzhenko-ukraine-flames.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/dovzhenko-ukraine-flames.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/dovzhenko-ukraine-flames-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/dovzhenko-ukraine-flames-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

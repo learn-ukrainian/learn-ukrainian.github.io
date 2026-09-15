@@ -56,7 +56,7 @@ Test the fix against both:
 ## Worktree setup
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin
 git worktree add .worktrees/m20-gate-scope-fixes -b fix/m20-vesum-and-textbook-grounding-scope origin/main
 cd .worktrees/m20-gate-scope-fixes

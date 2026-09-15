@@ -13,7 +13,7 @@ A leftover from a previous failed Phase 2 run (the `{X}` bug fixed in #1706) is 
 
 ## Numbered execution steps
 
-1. From the repository root (`/Users/krisztiankoos/projects/learn-ukrainian`), verify you're on `origin/main`:
+1. From the repository root (`.`), verify you're on `origin/main`:
 
    ```bash
    git fetch origin main

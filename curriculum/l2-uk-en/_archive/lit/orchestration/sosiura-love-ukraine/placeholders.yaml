@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: sosiura-love-ukraine
 TOPIC_TITLE: Sosiura Love Ukraine
 MODULE_NUM: '112'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/sosiura-love-ukraine.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/sosiura-love-ukraine.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/sosiura-love-ukraine.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/sosiura-love-ukraine.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/sosiura-love-ukraine.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/sosiura-love-ukraine-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/sosiura-love-ukraine-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/sosiura-love-ukraine.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/sosiura-love-ukraine.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/sosiura-love-ukraine.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/sosiura-love-ukraine.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/sosiura-love-ukraine.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/sosiura-love-ukraine-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/sosiura-love-ukraine-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

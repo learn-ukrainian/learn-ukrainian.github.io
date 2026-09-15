@@ -3,14 +3,14 @@ LEVEL: LIT_HUMOR
 SLUG: ostap-vyshnia-prison
 TOPIC_TITLE: Ostap Vyshnia Prison
 MODULE_NUM: '6'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-humor/ostap-vyshnia-prison.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/meta/ostap-vyshnia-prison.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/ostap-vyshnia-prison.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/activities/ostap-vyshnia-prison.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/vocabulary/ostap-vyshnia-prison.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/research/ostap-vyshnia-prison-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/review/ostap-vyshnia-prison-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-humor/ostap-vyshnia-prison.yaml
+META_PATH: curriculum/l2-uk-en/lit-humor/meta/ostap-vyshnia-prison.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-humor/ostap-vyshnia-prison.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-humor/activities/ostap-vyshnia-prison.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-humor/vocabulary/ostap-vyshnia-prison.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-humor/research/ostap-vyshnia-prison-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-humor/review/ostap-vyshnia-prison-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-humor.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

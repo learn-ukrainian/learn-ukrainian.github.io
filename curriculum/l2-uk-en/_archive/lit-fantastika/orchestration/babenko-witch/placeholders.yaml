@@ -3,14 +3,14 @@ LEVEL: LIT_FANTASTIKA
 SLUG: babenko-witch
 TOPIC_TITLE: Babenko Witch
 MODULE_NUM: '20'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-fantastika/babenko-witch.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/meta/babenko-witch.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/babenko-witch.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/activities/babenko-witch.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/vocabulary/babenko-witch.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/research/babenko-witch-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/review/babenko-witch-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-fantastika/babenko-witch.yaml
+META_PATH: curriculum/l2-uk-en/lit-fantastika/meta/babenko-witch.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-fantastika/babenko-witch.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-fantastika/activities/babenko-witch.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-fantastika/vocabulary/babenko-witch.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-fantastika/research/babenko-witch-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-fantastika/review/babenko-witch-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-fantastika.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

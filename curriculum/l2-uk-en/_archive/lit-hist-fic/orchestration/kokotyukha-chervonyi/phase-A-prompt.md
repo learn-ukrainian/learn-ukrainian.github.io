@@ -10,19 +10,19 @@
 Read the **existing research notes** (already complete — do NOT re-research):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/research/kokotyukha-chervonyi-research.md
+curriculum/l2-uk-en/lit-hist-fic/research/kokotyukha-chervonyi-research.md
 ```
 
 Read the plan file (SOURCE OF TRUTH for structure):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-hist-fic/kokotyukha-chervonyi.yaml
+curriculum/l2-uk-en/plans/lit-hist-fic/kokotyukha-chervonyi.yaml
 ```
 
 Read the current meta file (for reference — you will replace the content_outline):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/meta/kokotyukha-chervonyi.yaml
+curriculum/l2-uk-en/lit-hist-fic/meta/kokotyukha-chervonyi.yaml
 ```
 
 ---

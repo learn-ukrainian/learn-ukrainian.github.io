@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: symonenko-truth
 TOPIC_TITLE: Symonenko Truth
 MODULE_NUM: '136'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/symonenko-truth.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/symonenko-truth.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/symonenko-truth.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/symonenko-truth.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/symonenko-truth.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/symonenko-truth-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/symonenko-truth-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/symonenko-truth.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/symonenko-truth.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/symonenko-truth.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/symonenko-truth.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/symonenko-truth.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/symonenko-truth-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/symonenko-truth-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

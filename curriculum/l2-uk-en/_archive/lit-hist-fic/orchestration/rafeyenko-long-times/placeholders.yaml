@@ -3,14 +3,14 @@ LEVEL: LIT_HIST_FIC
 SLUG: rafeyenko-long-times
 TOPIC_TITLE: Rafeyenko Long Times
 MODULE_NUM: '18'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-hist-fic/rafeyenko-long-times.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/meta/rafeyenko-long-times.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/rafeyenko-long-times.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/activities/rafeyenko-long-times.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/vocabulary/rafeyenko-long-times.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/research/rafeyenko-long-times-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/review/rafeyenko-long-times-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-hist-fic/rafeyenko-long-times.yaml
+META_PATH: curriculum/l2-uk-en/lit-hist-fic/meta/rafeyenko-long-times.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-hist-fic/rafeyenko-long-times.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-hist-fic/activities/rafeyenko-long-times.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-hist-fic/vocabulary/rafeyenko-long-times.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-hist-fic/research/rafeyenko-long-times-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-hist-fic/review/rafeyenko-long-times-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-hist-fic.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

@@ -129,7 +129,7 @@ The dispatch wrapper has created your worktree at
 `.worktrees/dispatch/codex/grok-stage-3-writer-plumbing-2026-05-16/`
 from the post-#2031-merge tip. Verify:
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/grok-stage-3-writer-plumbing-2026-05-16
+cd .worktrees/dispatch/codex/grok-stage-3-writer-plumbing-2026-05-16
 git log -1 --oneline
 ```
 

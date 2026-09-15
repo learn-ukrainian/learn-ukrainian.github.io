@@ -6,7 +6,7 @@ Copy from `BEGIN PROMPT` through `END PROMPT`.
 ## BEGIN PROMPT
 
 You are continuing certification orchestration for the A2 Ukrainian course in
-`/Users/krisztiankoos/projects/learn-ukrainian`.
+`.`.
 
 Your goal is to make A2 learner pages certification-ready one module at a time,
 starting with the first uncertified module in curriculum order. Certification is

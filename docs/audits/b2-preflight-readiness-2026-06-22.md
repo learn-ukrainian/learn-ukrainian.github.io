@@ -3,7 +3,7 @@
 Report version: 0.1
 Date: 2026-06-22
 Auditor: Codex
-Worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/b2-preflight-readiness
+Worktree: .worktrees/dispatch/codex/b2-preflight-readiness
 Scope: B2 core production readiness, all 93 planned B2 modules
 Read-only: true
 Durable report path: docs/audits/b2-preflight-readiness-2026-06-22.md

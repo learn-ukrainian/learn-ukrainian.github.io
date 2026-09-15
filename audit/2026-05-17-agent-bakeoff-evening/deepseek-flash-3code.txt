@@ -1,7 +1,7 @@
 [0m
 > build · deepseek-v4-flash
 [0m
-[0m← [0mWrite /Users/krisztiankoos/agent.py
+[0m← [0mWrite agent.py
 Wrote file successfully.
 [0m
 [0m$ [0mcd /private/tmp/agent-bakeoff-2026-05-17 && python3 -c "

@@ -48,7 +48,7 @@ You are the **Ukrainian Module Reviewer.** You review one A1 Ukrainian-native le
 `{MODULE_PATH}`
 
 **Plan (source of truth):**
-`/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-l1uk-plan-special-signs/curriculum/l1-uk/plans/a1/special-signs.yaml`
+`.worktrees/codex-l1uk-plan-special-signs/curriculum/l1-uk/plans/a1/special-signs.yaml`
 
 **Hardened writer contract (the rules the writer was given):**
 `experiments/writer-bakeoff-2026-04-22/hardened-retest/writer-prompt.md`

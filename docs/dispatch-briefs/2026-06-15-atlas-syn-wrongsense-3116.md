@@ -25,10 +25,10 @@ Code + tests + exclusion-data ONLY. **Do NOT regenerate or commit `site/src/data
 cross-dispatch conflicts). The orchestrator regenerates + commits the manifest after merge.
 
 ## Numbered steps
-1. `cd /Users/krisztiankoos/projects/learn-ukrainian && git fetch origin` (`--worktree` from origin/main).
+1. `cd . && git fetch origin` (`--worktree` from origin/main).
 2. Implement the sense-guard + qualifier preservation + tests.
-3. `cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -m pytest -k "synonym or lexicon or enrich" -q` → paste summary. Test must prove `шлях` drops `кам'яниця` and KEEPS `кам'янка`/`гостинець` (with tag).
-4. `cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/ruff check scripts/ tests/` → paste final line.
+3. `cd . && .venv/bin/python -m pytest -k "synonym or lexicon or enrich" -q` → paste summary. Test must prove `шлях` drops `кам'яниця` and KEEPS `кам'янка`/`гостинець` (with tag).
+4. `cd . && .venv/bin/ruff check scripts/ tests/` → paste final line.
 5. Confirm no manifest staged: `git status --short` shows NO `site/src/data/lexicon-manifest.json`.
 6. Commit `fix(lexicon): §7 drop wrong-sense synonyms + preserve register qualifiers (#3116)`.
 7. `git push -u origin <branch>`; `gh pr create` referencing #3116. NO auto-merge.

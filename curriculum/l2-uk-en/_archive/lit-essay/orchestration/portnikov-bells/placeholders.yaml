@@ -3,14 +3,14 @@ LEVEL: LIT_ESSAY
 SLUG: portnikov-bells
 TOPIC_TITLE: Portnikov Bells
 MODULE_NUM: '33'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-essay/portnikov-bells.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/meta/portnikov-bells.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/portnikov-bells.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/activities/portnikov-bells.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/vocabulary/portnikov-bells.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/research/portnikov-bells-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/review/portnikov-bells-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-essay/portnikov-bells.yaml
+META_PATH: curriculum/l2-uk-en/lit-essay/meta/portnikov-bells.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-essay/portnikov-bells.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-essay/activities/portnikov-bells.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-essay/vocabulary/portnikov-bells.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-essay/research/portnikov-bells-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-essay/review/portnikov-bells-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-essay.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

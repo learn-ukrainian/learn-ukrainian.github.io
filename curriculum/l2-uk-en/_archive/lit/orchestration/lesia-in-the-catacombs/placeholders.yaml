@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: lesia-in-the-catacombs
 TOPIC_TITLE: Lesia In The Catacombs
 MODULE_NUM: '56'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/lesia-in-the-catacombs.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/lesia-in-the-catacombs.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/lesia-in-the-catacombs.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/lesia-in-the-catacombs.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/lesia-in-the-catacombs.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/lesia-in-the-catacombs-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/lesia-in-the-catacombs-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/lesia-in-the-catacombs.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/lesia-in-the-catacombs.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/lesia-in-the-catacombs.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/lesia-in-the-catacombs.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/lesia-in-the-catacombs.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/lesia-in-the-catacombs-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/lesia-in-the-catacombs-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

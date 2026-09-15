@@ -11,7 +11,7 @@
 
 ============================================================
 
-Activate skill full-rebuild-lit. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/sosiura-love-ukraine/phase-A-prompt.md
+Activate skill full-rebuild-lit. Read and execute the instructions at curriculum/l2-uk-en/lit/orchestration/sosiura-love-ukraine/phase-A-prompt.md
 
 ============================================================
 📎 Attached Data:
@@ -22,7 +22,7 @@ Activate skill full-rebuild-lit. Read and execute the instructions at /Users/kri
 CRITICAL INSTRUCTION 1: Never run cat inside a bash command to create a new file or append to an existing file if custom tools exist. ALWAYS use custom grep tools if available instead of running grep inside a bash command unless absolutely needed. DO NOT use ls for listing, cat for viewing, grep for finding, sed for replacing if custom tools that perform these functionalities are available.
 CRITICAL INSTRUCTION 2: Explicitly list related tools before making tool calls. T can only be executed if all other tools are more generic or cannot be used.
 
-The task is to: Read and execute the instructions at `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/sosiura-love-ukraine/phase-A-prompt.md`.
+The task is to: Read and execute the instructions at `curriculum/l2-uk-en/lit/orchestration/sosiura-love-ukraine/phase-A-prompt.md`.
 
 Related tools:
 - `read_file`: To read the prompt file.
@@ -32,11 +32,11 @@ Related tools:
 First, I will read the prompt file.
 
 ```json
-{"file_path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/sosiura-love-ukraine/phase-A-prompt.md"}
+{"file_path": "curriculum/l2-uk-en/lit/orchestration/sosiura-love-ukraine/phase-A-prompt.md"}
 ```
 
 I will call `read_file` now.
-Wait, let me make sure the path is correct: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/sosiura-love-ukraine/phase-A-prompt.md`.
+Wait, let me make sure the path is correct: `curriculum/l2-uk-en/lit/orchestration/sosiura-love-ukraine/phase-A-prompt.md`.
 
 Let's read it.
 
@@ -56,7 +56,7 @@ Oh, wait! The prompt file tells me what to generate. I will read it, read any ad
 Let's read the prompt file.
 ```json
 {
-  "file_path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/sosiura-love-ukraine/phase-A-prompt.md"
+  "file_path": "curriculum/l2-uk-en/lit/orchestration/sosiura-love-ukraine/phase-A-prompt.md"
 }
 ```
 I'll use `read_file`.
@@ -74,18 +74,18 @@ Since I need to read the prompt file to know what text to output, I will use `re
 Let's do it.
 Wait, "OUTPUT ONLY TEXT" means my final response must be the text. I am an AI, I can use tool calls in intermediate steps.
 Let's proceed.
-I will read `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/sosiura-love-ukraine/phase-A-prompt.md`.
+I will read `curriculum/l2-uk-en/lit/orchestration/sosiura-love-ukraine/phase-A-prompt.md`.
 Then act on it.
 Let me check if the skill has loaded. Yes, skill is loaded. Genre is probably in the prompt.
 Let's see.
 Call `read_file`.
 ```json
-{"file_path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/sosiura-love-ukraine/phase-A-prompt.md"}
+{"file_path": "curriculum/l2-uk-en/lit/orchestration/sosiura-love-ukraine/phase-A-prompt.md"}
 ```
 Let's do it.
 Wait, I am typing the tool call now.
 The format is:
-`call:default_api:read_file{"file_path":"/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/sosiura-love-ukraine/phase-A-prompt.md"}`
+`call:default_api:read_file{"file_path":"curriculum/l2-uk-en/lit/orchestration/sosiura-love-ukraine/phase-A-prompt.md"}`
 It is valid.
 Let's see what it contains.
 I will read it now.
@@ -100,7 +100,7 @@ Let me type it out.
 I will send the tool call now.
 ```json
 {
-  "file_path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/sosiura-love-ukraine/phase-A-prompt.md"
+  "file_path": "curriculum/l2-uk-en/lit/orchestration/sosiura-love-ukraine/phase-A-prompt.md"
 }
 ```
 Yes. Let's do it.
@@ -117,8 +117,8 @@ I need to output three blocks of text wrapped in delimiters:
 3. `===FRICTION_START===` ... `===FRICTION_END===`
 
 Wait, to do this correctly I need to read two more files as instructed by the prompt:
-1. Plan file: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/sosiura-love-ukraine.yaml`
-2. Meta file (for reference): `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/sosiura-love-ukraine.yaml`
+1. Plan file: `curriculum/l2-uk-en/plans/lit/sosiura-love-ukraine.yaml`
+2. Meta file (for reference): `curriculum/l2-uk-en/lit/meta/sosiura-love-ukraine.yaml`
 
 I will use `read_file` to read both files before I can generate the text.
 Tools related: `read_file`. It is the most specific tool for this.
@@ -126,8 +126,8 @@ Tools related: `read_file`. It is the most specific tool for this.
 Let's call `read_file` for both.
 Wait, I can make concurrent tool calls! Let me call `read_file` for both files.
 ```
-call:default_api:read_file{"file_path":"/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/sosiura-love-ukraine.yaml"}
-call:default_api:read_file{"file_path":"/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/sosiura-love-ukraine.yaml"}
+call:default_api:read_file{"file_path":"curriculum/l2-uk-en/plans/lit/sosiura-love-ukraine.yaml"}
+call:default_api:read_file{"file_path":"curriculum/l2-uk-en/lit/meta/sosiura-love-ukraine.yaml"}
 ```
 I will do this now.
 Let's see. I am writing out the tool calls.
@@ -135,8 +135,8 @@ I should use `read_file` for both paths.
 I am in TEXT GENERATOR mode but I need to read input files to produce the output. Rule 1: "Your ONLY job is to read input files and produce text output between delimiters."
 I will read them. I'll make the calls concurrently.
 ```json
-{"file_path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/sosiura-love-ukraine.yaml"}
-{"file_path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/sosiura-love-ukraine.yaml"}
+{"file_path": "curriculum/l2-uk-en/plans/lit/sosiura-love-ukraine.yaml"}
+{"file_path": "curriculum/l2-uk-en/lit/meta/sosiura-love-ukraine.yaml"}
 ```
 Let's proceed. I'll call `read_file` twice.
 Wait, since I need to search the web for sources, am I allowed to use `google_web_search`? "Find 3+ Ukrainian-language academic sources...". As an AI, I have internal knowledge of these sources, or I can use the tool if available. The prompt is in a "clean room" environment and I am not strictly forbidden from using `google_web_search` if I need it, but I can also just rely on my training data for this widely known poem "Любіть Україну" by Volodymyr Sosiura (1944). However, let's see if I have internal knowledge. Yes, I do. The poem "Любіть Україну" was written in 1944, published in "Zirka" and "Dnipro", later caused a huge ideological campaign against Sosiura in 1951 (started by an article in "Pravda").

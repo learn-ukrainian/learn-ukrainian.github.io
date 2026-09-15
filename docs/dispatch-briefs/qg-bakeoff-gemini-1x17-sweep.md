@@ -4,10 +4,10 @@ You are the measurement driver. **Run ONE Python command.** Do not write bash sc
 
 ## The only command
 
-From repo root `/Users/krisztiankoos/projects/learn-ukrainian`:
+From repo root `.`:
 
 ```
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 QG_BAKEOFF=1 .venv/bin/python scripts/audit/run_gemini_1x17_sweep.py
 ```
 

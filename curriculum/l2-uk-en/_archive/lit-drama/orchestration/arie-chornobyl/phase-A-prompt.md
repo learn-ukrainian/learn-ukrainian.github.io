@@ -10,13 +10,13 @@
 Read the plan file (SOURCE OF TRUTH):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-drama/arie-chornobyl.yaml
+curriculum/l2-uk-en/plans/lit-drama/arie-chornobyl.yaml
 ```
 
 Read the current meta file (for reference — you will replace the content_outline):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/meta/arie-chornobyl.yaml
+curriculum/l2-uk-en/lit-drama/meta/arie-chornobyl.yaml
 ```
 
 ---

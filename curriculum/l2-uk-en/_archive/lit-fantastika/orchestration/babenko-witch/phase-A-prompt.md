@@ -10,19 +10,19 @@
 Read the **existing research notes** (already complete — do NOT re-research):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/research/babenko-witch-research.md
+curriculum/l2-uk-en/lit-fantastika/research/babenko-witch-research.md
 ```
 
 Read the plan file (SOURCE OF TRUTH for structure):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-fantastika/babenko-witch.yaml
+curriculum/l2-uk-en/plans/lit-fantastika/babenko-witch.yaml
 ```
 
 Read the current meta file (for reference — you will replace the content_outline):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/meta/babenko-witch.yaml
+curriculum/l2-uk-en/lit-fantastika/meta/babenko-witch.yaml
 ```
 
 ---

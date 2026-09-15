@@ -87,7 +87,7 @@ The adapter port (PR #2163, merged as `29043426a9`) is durable. Once agy upstrea
 
 ```
 E0520 21:11:14 discovery.go:335] Failed to load JSON config file
-  /Users/krisztiankoos/.gemini/config/mcp_config.json:
+  .gemini/config/mcp_config.json:
   unexpected end of JSON input
 ```
 

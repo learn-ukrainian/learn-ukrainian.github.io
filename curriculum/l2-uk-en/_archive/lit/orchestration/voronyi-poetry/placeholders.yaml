@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: voronyi-poetry
 TOPIC_TITLE: Voronyi Poetry
 MODULE_NUM: '74'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/voronyi-poetry.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/voronyi-poetry.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/voronyi-poetry.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/voronyi-poetry.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/voronyi-poetry.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/voronyi-poetry-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/voronyi-poetry-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/voronyi-poetry.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/voronyi-poetry.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/voronyi-poetry.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/voronyi-poetry.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/voronyi-poetry.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/voronyi-poetry-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/voronyi-poetry-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

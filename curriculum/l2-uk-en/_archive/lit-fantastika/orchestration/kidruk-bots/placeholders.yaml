@@ -3,14 +3,14 @@ LEVEL: LIT_FANTASTIKA
 SLUG: kidruk-bots
 TOPIC_TITLE: Kidruk Bots
 MODULE_NUM: '18'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-fantastika/kidruk-bots.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/meta/kidruk-bots.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/kidruk-bots.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/activities/kidruk-bots.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/vocabulary/kidruk-bots.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/research/kidruk-bots-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/review/kidruk-bots-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-fantastika/kidruk-bots.yaml
+META_PATH: curriculum/l2-uk-en/lit-fantastika/meta/kidruk-bots.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-fantastika/kidruk-bots.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-fantastika/activities/kidruk-bots.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-fantastika/vocabulary/kidruk-bots.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-fantastika/research/kidruk-bots-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-fantastika/review/kidruk-bots-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-fantastika.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

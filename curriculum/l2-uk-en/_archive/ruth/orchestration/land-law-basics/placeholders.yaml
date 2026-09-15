@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: land-law-basics
 TOPIC_TITLE: Land Law Basics
 MODULE_NUM: '5'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/land-law-basics.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/land-law-basics.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/land-law-basics.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/land-law-basics.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/land-law-basics.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/land-law-basics-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/land-law-basics-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/land-law-basics.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/land-law-basics.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/land-law-basics.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/land-law-basics.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/land-law-basics.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/land-law-basics-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/land-law-basics-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

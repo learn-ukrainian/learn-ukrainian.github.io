@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: kurbas-philosophy
 TOPIC_TITLE: Kurbas Philosophy
 MODULE_NUM: '98'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/kurbas-philosophy.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/kurbas-philosophy.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/kurbas-philosophy.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/kurbas-philosophy.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/kurbas-philosophy.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/kurbas-philosophy-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/kurbas-philosophy-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/kurbas-philosophy.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/kurbas-philosophy.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/kurbas-philosophy.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/kurbas-philosophy.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/kurbas-philosophy.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/kurbas-philosophy-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/kurbas-philosophy-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

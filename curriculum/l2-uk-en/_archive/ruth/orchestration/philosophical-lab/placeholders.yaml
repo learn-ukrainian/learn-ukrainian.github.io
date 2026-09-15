@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: philosophical-lab
 TOPIC_TITLE: Philosophical Lab
 MODULE_NUM: '99'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/philosophical-lab.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/philosophical-lab.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/philosophical-lab.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/philosophical-lab.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/philosophical-lab.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/philosophical-lab-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/philosophical-lab-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/philosophical-lab.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/philosophical-lab.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/philosophical-lab.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/philosophical-lab.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/philosophical-lab.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/philosophical-lab-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/philosophical-lab-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

@@ -10,19 +10,19 @@
 Read the **existing research notes** (already complete — do NOT re-research):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/research/kids-folklore-research.md
+curriculum/l2-uk-en/lit-juvenile/research/kids-folklore-research.md
 ```
 
 Read the plan file (SOURCE OF TRUTH for structure):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-juvenile/kids-folklore.yaml
+curriculum/l2-uk-en/plans/lit-juvenile/kids-folklore.yaml
 ```
 
 Read the current meta file (for reference — you will replace the content_outline):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/meta/kids-folklore.yaml
+curriculum/l2-uk-en/lit-juvenile/meta/kids-folklore.yaml
 ```
 
 ---

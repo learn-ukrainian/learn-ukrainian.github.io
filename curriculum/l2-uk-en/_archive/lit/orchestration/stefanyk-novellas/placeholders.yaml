@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: stefanyk-novellas
 TOPIC_TITLE: Stefanyk Novellas
 MODULE_NUM: '63'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/stefanyk-novellas.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/stefanyk-novellas.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/stefanyk-novellas.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/stefanyk-novellas.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/stefanyk-novellas.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/stefanyk-novellas-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/stefanyk-novellas-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/stefanyk-novellas.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/stefanyk-novellas.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/stefanyk-novellas.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/stefanyk-novellas.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/stefanyk-novellas.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/stefanyk-novellas-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/stefanyk-novellas-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

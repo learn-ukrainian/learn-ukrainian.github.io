@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: orthography-letters
 TOPIC_TITLE: Orthography Letters
 MODULE_NUM: '52'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/orthography-letters.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/orthography-letters.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/orthography-letters.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/orthography-letters.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/orthography-letters.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/orthography-letters-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/orthography-letters-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/orthography-letters.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/orthography-letters.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/orthography-letters.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/orthography-letters.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/orthography-letters.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/orthography-letters-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/orthography-letters-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

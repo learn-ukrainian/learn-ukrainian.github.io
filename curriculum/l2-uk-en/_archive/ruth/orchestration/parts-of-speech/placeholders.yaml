@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: parts-of-speech
 TOPIC_TITLE: Parts Of Speech
 MODULE_NUM: '53'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/parts-of-speech.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/parts-of-speech.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/parts-of-speech.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/parts-of-speech.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/parts-of-speech.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/parts-of-speech-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/parts-of-speech-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/parts-of-speech.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/parts-of-speech.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/parts-of-speech.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/parts-of-speech.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/parts-of-speech.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/parts-of-speech-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/parts-of-speech-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

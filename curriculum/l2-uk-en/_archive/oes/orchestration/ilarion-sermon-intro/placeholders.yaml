@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: ilarion-sermon-intro
 TOPIC_TITLE: Ilarion Sermon Intro
 MODULE_NUM: '96'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/ilarion-sermon-intro.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/ilarion-sermon-intro.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/ilarion-sermon-intro.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/ilarion-sermon-intro.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/ilarion-sermon-intro.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/ilarion-sermon-intro-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/ilarion-sermon-intro-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/ilarion-sermon-intro.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/ilarion-sermon-intro.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/ilarion-sermon-intro.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/ilarion-sermon-intro.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/ilarion-sermon-intro.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/ilarion-sermon-intro-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/ilarion-sermon-intro-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

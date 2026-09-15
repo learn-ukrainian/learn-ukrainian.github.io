@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: son
 TOPIC_TITLE: 'Політична Сатира: Сон'
 MODULE_NUM: '14'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/son.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/son.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/son.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/son.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/son.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/son-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/son-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/son.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/son.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/son.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/son.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/son.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/son-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/son-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

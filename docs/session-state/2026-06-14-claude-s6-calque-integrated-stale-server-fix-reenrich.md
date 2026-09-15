@@ -46,7 +46,7 @@
 
 ## Restart
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin -q && git log -1 --oneline origin/main      # expect #3110 (99d83cf489) + maybe manifest commit
 pgrep -fl enrich_manifest                                    # re-enrich still running?
 cat /tmp/atlas-reenrich.log                                  # final summary when done

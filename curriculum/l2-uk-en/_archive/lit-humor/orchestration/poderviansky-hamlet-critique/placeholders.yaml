@@ -3,14 +3,14 @@ LEVEL: LIT_HUMOR
 SLUG: poderviansky-hamlet-critique
 TOPIC_TITLE: Poderviansky Hamlet Critique
 MODULE_NUM: '10'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-humor/poderviansky-hamlet-critique.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/meta/poderviansky-hamlet-critique.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/poderviansky-hamlet-critique.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/activities/poderviansky-hamlet-critique.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/vocabulary/poderviansky-hamlet-critique.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/research/poderviansky-hamlet-critique-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/review/poderviansky-hamlet-critique-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-humor/poderviansky-hamlet-critique.yaml
+META_PATH: curriculum/l2-uk-en/lit-humor/meta/poderviansky-hamlet-critique.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-humor/poderviansky-hamlet-critique.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-humor/activities/poderviansky-hamlet-critique.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-humor/vocabulary/poderviansky-hamlet-critique.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-humor/research/poderviansky-hamlet-critique-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-humor/review/poderviansky-hamlet-critique-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-humor.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

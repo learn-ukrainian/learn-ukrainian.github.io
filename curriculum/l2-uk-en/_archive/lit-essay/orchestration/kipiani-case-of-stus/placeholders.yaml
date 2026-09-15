@@ -3,14 +3,14 @@ LEVEL: LIT_ESSAY
 SLUG: kipiani-case-of-stus
 TOPIC_TITLE: Kipiani Case Of Stus
 MODULE_NUM: '42'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-essay/kipiani-case-of-stus.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/meta/kipiani-case-of-stus.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/kipiani-case-of-stus.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/activities/kipiani-case-of-stus.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/vocabulary/kipiani-case-of-stus.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/research/kipiani-case-of-stus-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/review/kipiani-case-of-stus-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-essay/kipiani-case-of-stus.yaml
+META_PATH: curriculum/l2-uk-en/lit-essay/meta/kipiani-case-of-stus.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-essay/kipiani-case-of-stus.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-essay/activities/kipiani-case-of-stus.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-essay/vocabulary/kipiani-case-of-stus.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-essay/research/kipiani-case-of-stus-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-essay/review/kipiani-case-of-stus-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-essay.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

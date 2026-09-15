@@ -68,7 +68,7 @@ regression) — needs a deliberate WCAG palette pass.
 
 ## Restart
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git stash list            # stash@{0}=my slice-1 WIP, stash@{1}=Codex WIP
 ./services.sh status      # astro on 4321
 git log origin/main --oneline -6

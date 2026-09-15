@@ -15,7 +15,7 @@ Numbered explicitly per dispatch-brief checklist:
 
 1. **Sync base:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian
+   cd .
    git fetch origin main
    ```
 
@@ -87,12 +87,12 @@ Numbered explicitly per dispatch-brief checklist:
 
 5. **Run full test suite for affected files:**
    ```bash
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest tests/test_holovashchuk_ingest.py tests/ -k 'sources or holovashchuk or mcp' -x -q
+   .venv/bin/python -m pytest tests/test_holovashchuk_ingest.py tests/ -k 'sources or holovashchuk or mcp' -x -q
    ```
 
 6. **Run ruff:**
    ```bash
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/ingestion/ingest_holovashchuk.py scripts/sources/ tests/test_holovashchuk_ingest.py
+   .venv/bin/ruff check scripts/ingestion/ingest_holovashchuk.py scripts/sources/ tests/test_holovashchuk_ingest.py
    ```
 
 7. **Commit** with conventional message + #1665 ref:
@@ -161,7 +161,7 @@ Numbered explicitly per dispatch-brief checklist:
 
 Codex MUST run as step 1:
 ```bash
-git -C /Users/krisztiankoos/projects/learn-ukrainian fetch origin main
+git -C . fetch origin main
 ```
 
 And as step 3 (after worktree):

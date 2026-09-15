@@ -79,7 +79,7 @@ Two distinct causes, confirmed 2026-06-14 (commands run, raw output in handoff):
 - contract: emit path makes NO network call (assert no requests/socket on the hot path).
 
 ## Numbered steps
-1. `cd /Users/krisztiankoos/projects/learn-ukrainian && git fetch origin`. You are in a worktree from
+1. `cd . && git fetch origin`. You are in a worktree from
    `origin/main` (delegate `--worktree`).
 2. Implement scope 1–4. Read `usage.py` first and mirror its atomic-write + path conventions. For scope 3
    read `scripts/agent_runtime/result.py` (the `tokens` contract) before seeding prices, and leave the

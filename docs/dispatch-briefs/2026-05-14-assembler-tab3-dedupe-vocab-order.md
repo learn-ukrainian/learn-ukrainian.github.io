@@ -12,9 +12,9 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-Each bash block runs in a FRESH SHELL. Prefix every command with `cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/assembler-tab3-dedupe-2026-05-14 && ...` or absolute path.
+Each bash block runs in a FRESH SHELL. Prefix every command with `cd .worktrees/dispatch/codex/assembler-tab3-dedupe-2026-05-14 && ...` or absolute path.
 
-Use `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
+Use `.venv/bin/python`.
 
 ---
 
@@ -101,24 +101,24 @@ activities_content = yaml_activities_to_jsx(tab3_activities, is_ukrainian_forced
 
 1. **Worktree setup:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian && \
+   cd . && \
    git worktree add -b codex/assembler-tab3-dedupe-2026-05-14 .worktrees/dispatch/codex/assembler-tab3-dedupe-2026-05-14 origin/main
    ```
 2. **Bug 1:** Find the INJECT_ACTIVITY substituter in `scripts/generate_mdx/core.py` (the one added in #1930). Modify it to record `injected_ids`. Filter `yaml_activities` for Tab 3 by `id not in injected_ids`.
 3. **Bug 2:** Find the vocab-tab-2 renderer in `scripts/generate_mdx/resources.py`. Swap `<FlashcardDeck>` and `<VocabCard>` emission order.
 4. **Tests:** new + existing tests cover both fixes. Run:
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/assembler-tab3-dedupe-2026-05-14 && \
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest tests/test_generate_mdx*.py tests/test_assemble_mdx*.py -x
+   cd .worktrees/dispatch/codex/assembler-tab3-dedupe-2026-05-14 && \
+   .venv/bin/pytest tests/test_generate_mdx*.py tests/test_assemble_mdx*.py -x
    ```
    Quote final summary.
 5. **Ruff:**
    ```bash
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/generate_mdx
+   .venv/bin/ruff check scripts/generate_mdx
    ```
 6. **End-to-end repro:**
    ```bash
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -c "
+   .venv/bin/python -c "
    from pathlib import Path
    from scripts.build.linear_pipeline import assemble_mdx
    mdx = assemble_mdx(

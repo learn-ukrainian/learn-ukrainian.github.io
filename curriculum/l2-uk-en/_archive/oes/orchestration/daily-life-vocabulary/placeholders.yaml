@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: daily-life-vocabulary
 TOPIC_TITLE: Daily Life Vocabulary
 MODULE_NUM: '24'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/daily-life-vocabulary.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/daily-life-vocabulary.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/daily-life-vocabulary.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/daily-life-vocabulary.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/daily-life-vocabulary.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/daily-life-vocabulary-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/daily-life-vocabulary-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/daily-life-vocabulary.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/daily-life-vocabulary.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/daily-life-vocabulary.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/daily-life-vocabulary.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/daily-life-vocabulary.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/daily-life-vocabulary-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/daily-life-vocabulary-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

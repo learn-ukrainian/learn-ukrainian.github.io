@@ -13,7 +13,7 @@ Pick A if `delegate.py` exposes a clean way to override the worktrees base; othe
 ## Worktree
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin main
 git worktree add -b codex/1682-test-delegate-isolation .worktrees/codex-1682 origin/main
 cd .worktrees/codex-1682

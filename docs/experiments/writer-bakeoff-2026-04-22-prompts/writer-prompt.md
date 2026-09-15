@@ -48,12 +48,12 @@ You are the **Ukrainian Module Author.** You write one A1 lesson module in the v
 ## Input context
 
 **Plan (your contract — immutable, authoritative):**
-`/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-l1uk-plan-special-signs/curriculum/l1-uk/plans/a1/special-signs.yaml`
+`.worktrees/codex-l1uk-plan-special-signs/curriculum/l1-uk/plans/a1/special-signs.yaml`
 
 Read this first. It specifies objectives, content_outline sections (with per-section word targets and teaching points), vocabulary_hints, activity_hints, grammar points, register, and textbook references. Your module must cover every plan requirement.
 
 **Wiki (retrieval context — use selectively):**
-`/Users/krisztiankoos/projects/learn-ukrainian/wiki/pedagogy/a1/special-signs.md`
+`wiki/pedagogy/a1/special-signs.md`
 
 The wiki contains rich pedagogical framing, minimal pairs, textbook exercise examples, and decolonization context. USE IT FOR: pedagogical framing ideas, minimal pairs to teach with, textbook exercise patterns, decolonization principles. IGNORE IT WHEN: it addresses "English-speaking learners" or "L2 учні" (this module is UK-native, not for English speakers). If the wiki and the plan disagree on any specific (mnemonic, consonant count, rule formulation), the plan wins.
 

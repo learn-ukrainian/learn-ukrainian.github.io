@@ -12,7 +12,7 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-Each bash block runs in a FRESH SHELL. CWD does NOT persist. Prefix every command with `cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/writer-prompt-resources-schema-2026-05-13 && ...` or absolute path. Inside the worktree, `.venv/` is gitignored — use MAIN checkout's `.venv` via absolute path: `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
+Each bash block runs in a FRESH SHELL. CWD does NOT persist. Prefix every command with `cd .worktrees/dispatch/codex/writer-prompt-resources-schema-2026-05-13 && ...` or absolute path. Inside the worktree, `.venv/` is gitignored — use MAIN checkout's `.venv` via `.venv/bin/python`.
 
 ---
 
@@ -127,7 +127,7 @@ Place this test adjacent to `test_linear_write_prompt_carries_anti_meta_narratio
 
 1. **Read the current template section to confirm line numbers haven't drifted:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/writer-prompt-resources-schema-2026-05-13 && sed -n '195,225p' scripts/build/phases/linear-write.md
+   cd .worktrees/dispatch/codex/writer-prompt-resources-schema-2026-05-13 && sed -n '195,225p' scripts/build/phases/linear-write.md
    ```
    Confirm the "Valid roles" line is at the position the brief expects. If the section has been refactored since `main@7bed977983`, **STOP and report** — the insert site may have moved.
 
@@ -137,19 +137,19 @@ Place this test adjacent to `test_linear_write_prompt_carries_anti_meta_narratio
 
 4. **Run targeted pytest:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/writer-prompt-resources-schema-2026-05-13 && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest tests/build/test_linear_pipeline.py -v 2>&1 | tail -30
+   cd .worktrees/dispatch/codex/writer-prompt-resources-schema-2026-05-13 && .venv/bin/pytest tests/build/test_linear_pipeline.py -v 2>&1 | tail -30
    ```
    Quote the summary line — must include the new test passing.
 
 5. **Lint:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/writer-prompt-resources-schema-2026-05-13 && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/build/ tests/build/test_linear_pipeline.py 2>&1 | tail -5
+   cd .worktrees/dispatch/codex/writer-prompt-resources-schema-2026-05-13 && .venv/bin/ruff check scripts/build/ tests/build/test_linear_pipeline.py 2>&1 | tail -5
    ```
    Quote final line.
 
 6. **Commit:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/writer-prompt-resources-schema-2026-05-13 && git add -A && git commit -m "$(cat <<'INNEREOF'
+   cd .worktrees/dispatch/codex/writer-prompt-resources-schema-2026-05-13 && git add -A && git commit -m "$(cat <<'INNEREOF'
    fix(writer-prompt): document non-textbook role URL requirement in linear-write.md (#1959)
 
    m20 (a1/my-morning) V7 build under Card 1 writer-isolation halted at
@@ -181,12 +181,12 @@ Place this test adjacent to `test_linear_write_prompt_carries_anti_meta_narratio
 
 7. **Push:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/writer-prompt-resources-schema-2026-05-13 && git push -u origin codex/writer-prompt-resources-schema-2026-05-13
+   cd .worktrees/dispatch/codex/writer-prompt-resources-schema-2026-05-13 && git push -u origin codex/writer-prompt-resources-schema-2026-05-13
    ```
 
 8. **Open PR (NO auto-merge):**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/writer-prompt-resources-schema-2026-05-13 && gh pr create --title "fix(writer-prompt): document non-textbook role url requirement (#1959)" --body "$(cat <<'INNEREOF'
+   cd .worktrees/dispatch/codex/writer-prompt-resources-schema-2026-05-13 && gh pr create --title "fix(writer-prompt): document non-textbook role url requirement (#1959)" --body "$(cat <<'INNEREOF'
    ## Summary
 
    - Single-file prompt template edit: adds a "Schema rule for non-textbook roles: \`url:\` is REQUIRED" directive to \`scripts/build/phases/linear-write.md\` § "External Resources" after the Valid roles list.

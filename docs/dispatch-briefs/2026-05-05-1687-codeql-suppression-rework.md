@@ -21,7 +21,7 @@ Best guess: CodeQL's Python rule suppression for `py/clear-text-*` either (a) re
 Worktree already exists: `.worktrees/dispatch/gemini/codeql-B-secrets-exposure` on branch `gemini/codeql-B-secrets-exposure`. Last commit `68d2ef9c1f`. Do NOT recreate; reuse.
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/gemini/codeql-B-secrets-exposure
+cd .worktrees/dispatch/gemini/codeql-B-secrets-exposure
 git fetch origin main
 # If branch is behind main:
 #   git rebase origin/main

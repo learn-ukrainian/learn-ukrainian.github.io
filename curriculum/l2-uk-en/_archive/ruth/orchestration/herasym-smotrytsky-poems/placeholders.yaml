@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: herasym-smotrytsky-poems
 TOPIC_TITLE: Herasym Smotrytsky Poems
 MODULE_NUM: '43'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/herasym-smotrytsky-poems.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/herasym-smotrytsky-poems.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/herasym-smotrytsky-poems.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/herasym-smotrytsky-poems.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/herasym-smotrytsky-poems.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/herasym-smotrytsky-poems-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/herasym-smotrytsky-poems-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/herasym-smotrytsky-poems.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/herasym-smotrytsky-poems.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/herasym-smotrytsky-poems.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/herasym-smotrytsky-poems.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/herasym-smotrytsky-poems.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/herasym-smotrytsky-poems-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/herasym-smotrytsky-poems-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

@@ -12,9 +12,9 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Every command that uses `.venv/`, `scripts/`, or files in MAIN checkout MUST be prefixed with `cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/vesum-norm-fixblock-2026-05-14 && ...` or absolute path.
+Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Every command that uses `.venv/`, `scripts/`, or files in MAIN checkout MUST be prefixed with `cd .worktrees/dispatch/codex/vesum-norm-fixblock-2026-05-14 && ...` or absolute path.
 
-Inside the worktree, `.venv/` is gitignored. Use MAIN checkout's `.venv` via absolute path: `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
+Inside the worktree, `.venv/` is gitignored. Use MAIN checkout's `.venv` via `.venv/bin/python`.
 
 ---
 
@@ -104,19 +104,19 @@ If the parser must remain regex (preserves existing test surface), use non-greed
 
 1. **Worktree setup:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian && \
+   cd . && \
    git worktree add -b codex/vesum-norm-fixblock-2026-05-14 .worktrees/dispatch/codex/vesum-norm-fixblock-2026-05-14 origin/main
    ```
 2. **File-level work** — fix both bugs in `scripts/build/linear_pipeline.py` (extract helpers if cleaner). Aim for minimal surface; each fix ~20-50 LOC including tests.
 3. **Test suite** — add focused tests for both bugs. Then run:
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/vesum-norm-fixblock-2026-05-14 && \
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest tests/test_linear_pipeline*.py tests/test_*vesum* tests/test_*fix* -x
+   cd .worktrees/dispatch/codex/vesum-norm-fixblock-2026-05-14 && \
+   .venv/bin/pytest tests/test_linear_pipeline*.py tests/test_*vesum* tests/test_*fix* -x
    ```
    Quote final summary line raw.
 4. **Ruff:**
    ```bash
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/build/linear_pipeline.py
+   .venv/bin/ruff check scripts/build/linear_pipeline.py
    ```
    Quote final line raw.
 5. **Regression check** — write a small driver that re-runs the gate + fix-block parser on the actual halted artifact at `curriculum/l2-uk-en/a1/my-morning/python_qg.json` (read it from MAIN via absolute path; do NOT modify it). Confirm: (a) the previously-missing decorated forms now hit VESUM after normalization, (b) a synthetic `<fixes>` block with the exact failing content parses cleanly. Capture before/after JSON or assertions in the PR body.

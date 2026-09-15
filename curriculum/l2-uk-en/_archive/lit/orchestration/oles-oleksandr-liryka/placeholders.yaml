@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: oles-oleksandr-liryka
 TOPIC_TITLE: Oles Oleksandr Liryka
 MODULE_NUM: '71'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/oles-oleksandr-liryka.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/oles-oleksandr-liryka.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/oles-oleksandr-liryka.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/oles-oleksandr-liryka.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/oles-oleksandr-liryka.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/oles-oleksandr-liryka-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/oles-oleksandr-liryka-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/oles-oleksandr-liryka.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/oles-oleksandr-liryka.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/oles-oleksandr-liryka.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/oles-oleksandr-liryka.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/oles-oleksandr-liryka.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/oles-oleksandr-liryka-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/oles-oleksandr-liryka-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

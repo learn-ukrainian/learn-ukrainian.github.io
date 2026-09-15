@@ -3,14 +3,14 @@ LEVEL: LIT_HIST_FIC
 SLUG: kokotyukha-red
 TOPIC_TITLE: Kokotyukha Red
 MODULE_NUM: '16'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-hist-fic/kokotyukha-red.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/meta/kokotyukha-red.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/kokotyukha-red.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/activities/kokotyukha-red.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/vocabulary/kokotyukha-red.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/research/kokotyukha-red-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/review/kokotyukha-red-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-hist-fic/kokotyukha-red.yaml
+META_PATH: curriculum/l2-uk-en/lit-hist-fic/meta/kokotyukha-red.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-hist-fic/kokotyukha-red.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-hist-fic/activities/kokotyukha-red.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-hist-fic/vocabulary/kokotyukha-red.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-hist-fic/research/kokotyukha-red-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-hist-fic/review/kokotyukha-red-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-hist-fic.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

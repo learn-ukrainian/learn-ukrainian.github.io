@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: stylistic-contrast-gospel
 TOPIC_TITLE: Stylistic Contrast Gospel
 MODULE_NUM: '8'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/stylistic-contrast-gospel.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/stylistic-contrast-gospel.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/stylistic-contrast-gospel.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/stylistic-contrast-gospel.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/stylistic-contrast-gospel.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/stylistic-contrast-gospel-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/stylistic-contrast-gospel-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/stylistic-contrast-gospel.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/stylistic-contrast-gospel.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/stylistic-contrast-gospel.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/stylistic-contrast-gospel.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/stylistic-contrast-gospel.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/stylistic-contrast-gospel-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/stylistic-contrast-gospel-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

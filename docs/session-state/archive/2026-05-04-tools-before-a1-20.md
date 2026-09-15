@@ -120,7 +120,7 @@ User confirmed multiple times this session:
 
 ```bash
 # 1. Verify clean state on main
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin main
 git status -s              # expected empty
 git log --oneline -5

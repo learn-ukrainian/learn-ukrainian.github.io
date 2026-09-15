@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: smerd-peasants
 TOPIC_TITLE: Smerd Peasants
 MODULE_NUM: '62'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/smerd-peasants.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/smerd-peasants.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/smerd-peasants.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/smerd-peasants.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/smerd-peasants.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/smerd-peasants-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/smerd-peasants-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/smerd-peasants.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/smerd-peasants.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/smerd-peasants.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/smerd-peasants.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/smerd-peasants.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/smerd-peasants-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/smerd-peasants-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

@@ -369,7 +369,7 @@ def test_acpx_spawn_argv_pins_absolute_node_when_shebang_uses_env(tmp_path, monk
         lambda name: str(host_node) if name == "node" else None,
     )
     _isolate_node_fallbacks(monkeypatch, host_node.parent)
-    primary = Path("/Users/krisztiankoos/projects/learn-ukrainian/node_modules/.bin/acpx")
+    primary = Path(__file__).resolve().parents[2] / "node_modules" / ".bin" / "acpx"
     if not primary.is_file():
         pytest.skip("project-local acpx not installed")
     jail_env = acpx_module._acpx_runtime_env_overrides(adapter_label="test-host")

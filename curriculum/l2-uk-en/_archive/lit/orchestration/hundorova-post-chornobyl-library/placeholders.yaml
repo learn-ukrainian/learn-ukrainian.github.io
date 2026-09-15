@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: hundorova-post-chornobyl-library
 TOPIC_TITLE: Hundorova Post Chornobyl Library
 MODULE_NUM: '184'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/hundorova-post-chornobyl-library.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/hundorova-post-chornobyl-library.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/hundorova-post-chornobyl-library.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/hundorova-post-chornobyl-library.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/hundorova-post-chornobyl-library.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/hundorova-post-chornobyl-library-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/hundorova-post-chornobyl-library-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/hundorova-post-chornobyl-library.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/hundorova-post-chornobyl-library.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/hundorova-post-chornobyl-library.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/hundorova-post-chornobyl-library.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/hundorova-post-chornobyl-library.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/hundorova-post-chornobyl-library-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/hundorova-post-chornobyl-library-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

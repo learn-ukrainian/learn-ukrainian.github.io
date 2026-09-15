@@ -201,7 +201,7 @@ Branch: `fix/2127-pr3-corrector-contract-and-yaml-guard`. Path: `.worktrees/disp
 .venv/bin/python -c "
 from pathlib import Path
 from scripts.build.linear_pipeline import _validate_wiki_coverage_artifact_text, LinearPipelineError
-broken = Path('/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/builds/a1-my-morning-20260517-234227/curriculum/l2-uk-en/a1/my-morning/activities.yaml')
+broken = Path('.worktrees/builds/a1-my-morning-20260517-234227/curriculum/l2-uk-en/a1/my-morning/activities.yaml')
 clean = broken.parent / '.wiki_correction_backup' / 'batched_iter_1' / 'activities.yaml'
 try:
     _validate_wiki_coverage_artifact_text('activities.yaml', broken.read_text(encoding='utf-8'))

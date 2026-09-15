@@ -3,14 +3,14 @@ LEVEL: LIT_HUMOR
 SLUG: modern-memes-as-folklore
 TOPIC_TITLE: Modern Memes As Folklore
 MODULE_NUM: '13'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-humor/modern-memes-as-folklore.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/meta/modern-memes-as-folklore.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/modern-memes-as-folklore.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/activities/modern-memes-as-folklore.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/vocabulary/modern-memes-as-folklore.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/research/modern-memes-as-folklore-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/review/modern-memes-as-folklore-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-humor/modern-memes-as-folklore.yaml
+META_PATH: curriculum/l2-uk-en/lit-humor/meta/modern-memes-as-folklore.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-humor/modern-memes-as-folklore.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-humor/activities/modern-memes-as-folklore.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-humor/vocabulary/modern-memes-as-folklore.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-humor/research/modern-memes-as-folklore-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-humor/review/modern-memes-as-folklore-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-humor.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

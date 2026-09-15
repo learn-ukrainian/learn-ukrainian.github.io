@@ -12,9 +12,9 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Prefix every command with `cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/yaml-activities-unjumble-2026-05-14 && ...` or absolute path.
+Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Prefix every command with `cd .worktrees/dispatch/codex/yaml-activities-unjumble-2026-05-14 && ...` or absolute path.
 
-Inside the worktree, `.venv/` is gitignored. Use `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
+Inside the worktree, `.venv/` is gitignored. Use `.venv/bin/python`.
 
 ---
 
@@ -94,7 +94,7 @@ Replace `print("⚠️ Skipping activity ...")` with `raise` OR `logger.error(..
 
 1. **Worktree setup:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian && \
+   cd . && \
    git worktree add -b codex/yaml-activities-unjumble-2026-05-14 .worktrees/dispatch/codex/yaml-activities-unjumble-2026-05-14 origin/main
    ```
 2. **Inspection** — read activity 6 in MAIN checkout's `curriculum/l2-uk-en/a1/my-morning/activities.yaml`. Quote the exact shape in the PR body.
@@ -105,13 +105,13 @@ Replace `print("⚠️ Skipping activity ...")` with `raise` OR `logger.error(..
    - Malformed (e.g. `target: 42`) raises with a clear message.
    Then run:
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/yaml-activities-unjumble-2026-05-14 && \
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest tests/test_yaml_activities*.py tests/test_*activity*.py -x
+   cd .worktrees/dispatch/codex/yaml-activities-unjumble-2026-05-14 && \
+   .venv/bin/pytest tests/test_yaml_activities*.py tests/test_*activity*.py -x
    ```
    Quote final summary line raw.
 5. **Ruff:**
    ```bash
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/yaml_activities.py
+   .venv/bin/ruff check scripts/yaml_activities.py
    ```
    Quote final line raw.
 6. **Regression check** — re-run `assemble_mdx` on `a1/my-morning/` from the worktree. Quote the activity-6 block from the regenerated MDX in the PR body. Show that the previous warning no longer appears.

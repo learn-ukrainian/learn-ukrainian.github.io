@@ -1161,3 +1161,36 @@ def test_readiness_contract_rejects_certification_policy_declarations(tmp_path: 
 def test_dependent_identity_rejects_unknown_evidence_class() -> None:
     with pytest.raises(readiness.ReadinessError, match="unsupported dependent evidence class"):
         readiness.dependent_evidence_identity("legacy-qg", "a" * 64, {"artifact": "v1"})
+
+
+def test_host_path_only_text_change_ignores_baked_checkout_rewrites() -> None:
+    baked_script = (
+        "Run `.venv/bin/python /Users/krisztiankoos/projects/"
+        "learn-ukrainian/scripts/audit/check_dossier_wordcount.py "
+        "--changed`.\n"
+    )
+    baked_venv = (
+        "- [ ] `/Users/krisztiankoos/projects/learn-ukrainian/"
+        ".venv/bin/python scripts/audit/lint_bio_dossier_xref.py "
+        "--paths docs/research/bio/pavlo-pavliuk-but.md`\n"
+    )
+    scrubbed_script = (
+        "Run `.venv/bin/python scripts/audit/check_dossier_wordcount.py "
+        "--changed`.\n"
+    )
+    scrubbed_venv = (
+        "- [ ] `.venv/bin/python scripts/audit/lint_bio_dossier_xref.py "
+        "--paths docs/research/bio/pavlo-pavliuk-but.md`\n"
+    )
+    assert readiness.is_host_path_only_text_change(baked_script, scrubbed_script)
+    assert readiness.is_host_path_only_text_change(baked_venv, scrubbed_venv)
+    assert readiness.is_host_path_only_text_change(
+        "Run `.venv/bin/python /home/"
+        "ops/learn-ukrainian/"
+        "scripts/audit/check_dossier_wordcount.py --changed`.\n",
+        scrubbed_script,
+    )
+    assert not readiness.is_host_path_only_text_change(
+        baked_script, baked_script + "\n## Extra\n"
+    )
+    assert not readiness.is_host_path_only_text_change("", scrubbed_venv)

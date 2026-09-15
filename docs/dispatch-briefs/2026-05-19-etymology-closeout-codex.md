@@ -17,7 +17,7 @@ The Gemini-2.5-flash bulk OCR has a previously-undetected failure mode: **the mo
 Reproduce the scan with:
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 .venv/bin/python - <<'PY'
 from pathlib import Path
 for md in sorted(Path("data/raw/esum/gemini-ocr").glob("vol*/p*.md")):
@@ -57,7 +57,7 @@ Run `.venv/bin/pytest tests/etymology/test_bulk_ocr_quality.py -v` until green. 
 Sweep ALL of `data/raw/esum/gemini-ocr/vol{1..6}/*.md` against the new filter:
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 mkdir -p data/raw/esum/gemini-ocr/_quarantine/2026-05-19-repetition-hallucination
 .venv/bin/python - <<'PY'
 import sys; sys.path.insert(0, 'scripts/etymology')

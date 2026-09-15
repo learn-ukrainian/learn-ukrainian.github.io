@@ -3,14 +3,14 @@ LEVEL: LIT_HUMOR
 SLUG: nechuy-levytsky-kaidash-humor
 TOPIC_TITLE: Nechuy Levytsky Kaidash Humor
 MODULE_NUM: '3'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-humor/nechuy-levytsky-kaidash-humor.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/meta/nechuy-levytsky-kaidash-humor.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/nechuy-levytsky-kaidash-humor.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/activities/nechuy-levytsky-kaidash-humor.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/vocabulary/nechuy-levytsky-kaidash-humor.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/research/nechuy-levytsky-kaidash-humor-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/review/nechuy-levytsky-kaidash-humor-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-humor/nechuy-levytsky-kaidash-humor.yaml
+META_PATH: curriculum/l2-uk-en/lit-humor/meta/nechuy-levytsky-kaidash-humor.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-humor/nechuy-levytsky-kaidash-humor.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-humor/activities/nechuy-levytsky-kaidash-humor.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-humor/vocabulary/nechuy-levytsky-kaidash-humor.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-humor/research/nechuy-levytsky-kaidash-humor-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-humor/review/nechuy-levytsky-kaidash-humor-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-humor.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

@@ -381,61 +381,61 @@ directories instead of ad hoc artifact folders.
 ## Verification Evidence
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba audit/2026-05-18-docs-gaps-and-reorganization/REPORT.md | sed -n '20,70p'
 raw: 45  ### 1.2 — Multi-writer fairness bakeoff methodology
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba docs/session-state/2026-05-19-handoff-gap-audit-and-qwen-integration.md | sed -n '52,151p'
 raw: 122  ### Bakeoff plan for next session
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba docs/session-state/2026-05-19-handoff-gap-audit-and-qwen-integration.md | sed -n '52,151p'
 raw: 129  **Cost reality check:** Earlier session estimates ($20-50 per round) were 5-10× too high. Actual:
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba docs/session-state/2026-05-19-handoff-gap-audit-and-qwen-integration.md | sed -n '52,151p'
 raw: 134  **Prompt-fidelity rubric (deterministic, no LLM judge):**
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba docs/best-practices/agent-activity-matrix.md | sed -n '268,286p'
 raw: 272  ### 8.1 V7 module writer (A1 register-precision; B1+ register-relaxed)
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba docs/best-practices/agent-activity-matrix.md | sed -n '364,385p'
 raw: 377  **Honest take:** DeepSeek has earned primary slots on quality, not just cost. Qwen integration just landed; needs role-specific bakeoffs to know if it earns slots or stays runner-up.
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba docs/best-practices/agent-activity-matrix.md | sed -n '387,427p'
 raw: 387  ### 8.11 Track-level V7 writer routing — STUBBED, pending bakeoff (added v1.2.1 / 2026-05-18)
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: gh issue view 2039 --json number,title,state,url
 raw: {"number":2039,"state":"OPEN","title":"[v7/writer] grok-tools writer produces under-target module.md (~52% of word count) + token-truncation artifact","url":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/2039"}
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: gh pr view 2107 --json number,title,state,mergedAt,url
 raw: {"mergedAt":"2026-05-17T20:03:50Z","number":2107,"state":"MERGED","title":"feat(agent-runtime): wire DeepSeek v4 (pro + flash) for dispatch + ab discuss","url":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/2107"}
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: gh pr view 2112 --json number,title,state,mergedAt,url
 raw: {"mergedAt":"2026-05-17T20:33:16Z","number":2112,"state":"MERGED","title":"feat(api): artifacts feed surfaces MD docs and decouples discovery from serving roots (#2106)","url":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/2112"}
 ```

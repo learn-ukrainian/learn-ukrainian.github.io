@@ -23,7 +23,7 @@ def test_load_manifest_parses_json_blob_without_filesystem_access() -> None:
     # Realistic-shape wiki manifest as produced by build_wiki_manifest.
     manifest = {
         "slug": "my-morning",
-        "wiki_path": "/Users/k/projects/learn-ukrainian/wiki/pedagogy/a1/my-morning.md",
+        "wiki_path": "wiki/pedagogy/a1/my-morning.md",
         "sequence_steps": [
             {"id": f"step-{i}", "heading": f"Крок {i}: ..."} for i in range(1, 8)
         ],

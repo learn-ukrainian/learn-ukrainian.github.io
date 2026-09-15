@@ -3,14 +3,14 @@ LEVEL: LIT_FANTASTIKA
 SLUG: berdnyk-prometheus
 TOPIC_TITLE: Berdnyk Prometheus
 MODULE_NUM: '8'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-fantastika/berdnyk-prometheus.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/meta/berdnyk-prometheus.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/berdnyk-prometheus.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/activities/berdnyk-prometheus.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/vocabulary/berdnyk-prometheus.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/research/berdnyk-prometheus-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/review/berdnyk-prometheus-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-fantastika/berdnyk-prometheus.yaml
+META_PATH: curriculum/l2-uk-en/lit-fantastika/meta/berdnyk-prometheus.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-fantastika/berdnyk-prometheus.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-fantastika/activities/berdnyk-prometheus.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-fantastika/vocabulary/berdnyk-prometheus.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-fantastika/research/berdnyk-prometheus-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-fantastika/review/berdnyk-prometheus-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-fantastika.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

@@ -62,7 +62,7 @@ Run several in parallel; the fleet has been idle.
 
 ## Restart
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin -q && git log -1 --oneline origin/main
 # 1) land in-flight pair deploy if not done: re-enrich finished? commit+push site/src/data/lexicon-manifest.json
 # 2) fan out the quality queue (see §Fleet) — prioritize #3098, #3092, #2971

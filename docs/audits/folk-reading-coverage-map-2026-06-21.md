@@ -3,7 +3,7 @@
 Report version: 0.1
 Date: 2026-06-21
 Auditor: Codex
-Worktree: `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/folk-coverage-map`
+Worktree: `.worktrees/dispatch/codex/folk-coverage-map`
 Scope: all 42 FOLK plans in `curriculum/l2-uk-en/plans/folk/*.yaml`
 Read-only: true for curriculum, site, plan, research, corpus, and source files
 Durable report path: `docs/audits/folk-reading-coverage-map-2026-06-21.md`

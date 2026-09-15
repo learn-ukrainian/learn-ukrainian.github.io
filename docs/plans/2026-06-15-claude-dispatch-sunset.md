@@ -347,73 +347,73 @@ already-decided 2026-06-15 rule.
 ## Verification Evidence
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba claude_extensions/memory/MEMORY.md | sed -n '1,70p'
 raw: 36  ## #M0 — PER-TASK MODEL ASSIGNMENT (HARD RULE, 2026-05-06)
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba claude_extensions/memory/MEMORY.md | sed -n '1,70p'
 raw: 44  | Adversarial review of design / ADR / architecture | `delegate.py dispatch --agent claude --mode read-only --model claude-opus-4-7 --effort xhigh` (headless Opus, separate billing) |
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba scripts/config/agent_fallback_substitutions.yaml
 raw: 46  post_2026_06_15_hard_rule: |
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba docs/best-practices/agent-activity-matrix.md | sed -n '18,36p'
 raw: 29  | **Claude** | Opus 4.7 (orchestrator inline + headless dispatch + Q&A); Sonnet 4.7 (mid-tier headless); Haiku (cheap Explore subagent grep/read) | Anthropic API (interactive, weekly cap $690 — doubled until mid-July 2026 promo); $200/mo agentic pool launches 2026-06-15 (RESERVED for user cold-start, NOT orchestrator) | Interactive cap shared with user sessions | **Pre-June-15: full dispatch.** Post-June-15: NO `delegate.py --agent claude`; inline-via-curriculum-writer subagent only. |
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: rg -n 'delegate\.py[^\n]*--agent claude|--agent claude[^\n]*delegate\.py' scripts
 raw: scripts/config/agent_fallback_substitutions.yaml:14:  - currently_uses: "delegate.py --agent claude (adversarial review)"
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba scripts/ai_agent_bridge/_dispatch_wrappers.py | sed -n '190,235p'
 raw: 198  def build_review_deep_command(target: str, prompt_file: Path, effort: str) -> list[str]:
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba scripts/ai_agent_bridge/_dispatch_wrappers.py | sed -n '190,235p'
 raw: 203          "--agent",
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba scripts/ai_agent_bridge/_dispatch_wrappers.py | sed -n '190,235p'
 raw: 204          "claude",
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: rg -n 'delegate\.py[^\n]*--agent claude|--agent claude[^\n]*delegate\.py' docs/dispatch-briefs docs/dispatch-queue docs/agents docs/best-practices docs/decisions docs/session-state claude_extensions audit --glob '!**/*.html' --glob '!audit/bakeoff-2026-05-13-midday/**' --glob '!audit/incidents/**'
 raw: docs/best-practices/agent-activity-matrix.md:225:| Adversarial review (pre-June-15) | `.venv/bin/python scripts/delegate.py dispatch --agent claude --mode read-only --model claude-opus-4-7 --effort xhigh --task-id X --prompt-file BRIEF` |
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba docs/decisions/2026-05-06-writer-selection-codex-gpt55.md | sed -n '1,155p'
 raw: 120  - **Status:** ACCEPTED → REVISED (night) → **REVISED-AGAIN 2026-05-13 midday on empirical fair-env evidence**. New ACCEPTED default writer for **A1 + A2 scope: claude-tools**. Effective immediately.
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba docs/session-state/2026-05-19-handoff-gap-audit-and-qwen-integration.md | sed -n '104,120p'
 raw: 114  **Strategy direction (user-corrected mid-session):**
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba docs/decisions/pending/2026-05-14-agent-sdk-adoption.md | sed -n '1,235p'
 raw: 3  **Status:** RECONSIDER — surfaced 2026-05-13, demoted same day after user routing direction shifted the cost premise. Adoption is not cancelled; the sequencing and the "wins" framing both need a rethink before re-PROPOSED.
 ```

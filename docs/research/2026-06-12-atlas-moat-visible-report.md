@@ -76,7 +76,7 @@ git status --short --branch
 Cwd:
 
 ```text
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/atlas-moat-visible
+.worktrees/dispatch/codex/atlas-moat-visible
 ```
 
 Output:
@@ -97,7 +97,7 @@ sqlite3 data/sources.db 'PRAGMA table_info(sum11);'
 Cwd:
 
 ```text
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/atlas-moat-visible
+.worktrees/dispatch/codex/atlas-moat-visible
 ```
 
 Output:
@@ -121,7 +121,7 @@ Command:
 Cwd:
 
 ```text
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/atlas-moat-visible
+.worktrees/dispatch/codex/atlas-moat-visible
 ```
 
 Output:
@@ -149,7 +149,7 @@ PY
 Cwd:
 
 ```text
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/atlas-moat-visible
+.worktrees/dispatch/codex/atlas-moat-visible
 ```
 
 Output:
@@ -179,7 +179,7 @@ PY
 Cwd:
 
 ```text
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/atlas-moat-visible
+.worktrees/dispatch/codex/atlas-moat-visible
 ```
 
 Output:
@@ -206,7 +206,7 @@ Command:
 Cwd:
 
 ```text
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/atlas-moat-visible
+.worktrees/dispatch/codex/atlas-moat-visible
 ```
 
 Output:
@@ -224,7 +224,7 @@ Command:
 Cwd:
 
 ```text
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/atlas-moat-visible
+.worktrees/dispatch/codex/atlas-moat-visible
 ```
 
 Output:
@@ -245,7 +245,7 @@ Command:
 Cwd:
 
 ```text
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/atlas-moat-visible
+.worktrees/dispatch/codex/atlas-moat-visible
 ```
 
 Output:
@@ -266,7 +266,7 @@ env -u AGENT_NO_TELEMETRY_FOOTER .venv/bin/python -m pytest tests/ -k 'lexicon o
 Cwd:
 
 ```text
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/atlas-moat-visible
+.worktrees/dispatch/codex/atlas-moat-visible
 ```
 
 Output:
@@ -286,7 +286,7 @@ Command:
 Cwd:
 
 ```text
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/atlas-moat-visible
+.worktrees/dispatch/codex/atlas-moat-visible
 ```
 
 Output:
@@ -306,7 +306,7 @@ npm ci
 Cwd:
 
 ```text
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/atlas-moat-visible/starlight
+.worktrees/dispatch/codex/atlas-moat-visible/starlight
 ```
 
 Output:
@@ -325,7 +325,7 @@ npm run build
 Cwd:
 
 ```text
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/atlas-moat-visible/starlight
+.worktrees/dispatch/codex/atlas-moat-visible/starlight
 ```
 
 Output:
@@ -350,7 +350,7 @@ rg -l 'atlas-heritage-pill--russism' starlight/dist/lexicon | wc -l
 Cwd:
 
 ```text
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/atlas-moat-visible
+.worktrees/dispatch/codex/atlas-moat-visible
 ```
 
 Output:
@@ -368,7 +368,7 @@ rg -l 'atlas-source-caveat' starlight/dist/lexicon | wc -l
 Cwd:
 
 ```text
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/atlas-moat-visible
+.worktrees/dispatch/codex/atlas-moat-visible
 ```
 
 Output:

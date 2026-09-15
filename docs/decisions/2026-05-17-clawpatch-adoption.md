@@ -37,7 +37,7 @@ Brief's §4 step 1 said "install scoped, NOT global"; the user installed globall
 ### `clawpatch doctor` raw output (in trial worktree)
 
 ```text
-root: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/clawpatch-trial
+root: .worktrees/clawpatch-trial
 state: ok
 provider: codex
 model: null
@@ -98,7 +98,7 @@ Findings raw (markdown table form, from `clawpatch report`):
 #### Live reproduction of finding #3 (proof-by-execution per #M-4)
 
 ```text
-$ /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python \
+$ .venv/bin/python \
     scripts/audit/audit_external_resources.py --stats
 Traceback (most recent call last):
   File ".../scripts/audit/audit_external_resources.py", line 216, in <module>

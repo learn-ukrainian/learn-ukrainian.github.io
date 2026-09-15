@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: kotsiubynsky-apple-blossom
 TOPIC_TITLE: Kotsiubynsky Apple Blossom
 MODULE_NUM: '66'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/kotsiubynsky-apple-blossom.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/kotsiubynsky-apple-blossom.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/kotsiubynsky-apple-blossom.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/kotsiubynsky-apple-blossom.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/kotsiubynsky-apple-blossom.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/kotsiubynsky-apple-blossom-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/kotsiubynsky-apple-blossom-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/kotsiubynsky-apple-blossom.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/kotsiubynsky-apple-blossom.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/kotsiubynsky-apple-blossom.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/kotsiubynsky-apple-blossom.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/kotsiubynsky-apple-blossom.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/kotsiubynsky-apple-blossom-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/kotsiubynsky-apple-blossom-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

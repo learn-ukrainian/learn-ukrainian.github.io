@@ -5,7 +5,7 @@ Date: 2026-06-12
 Worktree:
 
 ```text
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/atlas-synonym-sense-fix
+.worktrees/dispatch/codex/atlas-synonym-sense-fix
 ```
 
 ## Manifest Rebuild

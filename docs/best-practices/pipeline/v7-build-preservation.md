@@ -469,49 +469,49 @@ Those are separate surfaces. Cross-link them; do not merge them into this file.
 Each claim above is backed by a command run from this dispatch worktree:
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba docs/session-state/2026-05-19-handoff-gap-audit-and-qwen-integration.md | sed -n '52,151p'
 raw: 60  ### V7 orchestration folder preservation (full plan)
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba docs/session-state/2026-05-19-handoff-gap-audit-and-qwen-integration.md | sed -n '52,151p'
 raw: 62  **Path:** `curriculum/l2-uk-en/_orchestration/{level}/{slug}/runs/{stamp}/` (underscore prefix to keep out of `mcp__sources__*` retrieval namespace, per claude headless's Q5).
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba docs/session-state/2026-05-19-handoff-gap-audit-and-qwen-integration.md | sed -n '52,151p'
 raw: 64  **Build flow:**
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba docs/session-state/2026-05-19-handoff-gap-audit-and-qwen-integration.md | sed -n '52,151p'
 raw: 73  **state.json schema (V7):**
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba docs/session-state/2026-05-19-handoff-gap-audit-and-qwen-integration.md | sed -n '52,151p'
 raw: 96  **MDX-on-failure:** ALWAYS assemble the MDX, regardless of gate pass/fail. Success → `starlight/src/content/docs/{level}/{slug}.mdx`. Failure → `_orchestration/.../runs/{stamp}/{slug}.mdx` with frontmatter `build_status: failed` + `failed_phase: <phase>`. NEVER modify the source `module.md` frontmatter (codex's argument: gate-consumed, parser risk).
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: rg -n '\*_PROMPT\.md' .gitignore
 raw: .gitignore:111:*_PROMPT.md
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: gh pr view 1952 --json number,title,state,mergedAt,url
 raw: {"mergedAt":"2026-05-13T09:25:50Z","number":1952,"state":"MERGED","title":"feat(v7_build): --worktree flag for isolated module builds","url":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/1952"}
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba scripts/build/v7_build.py | sed -n '528,908p'
 raw: 548              "  Pass --worktree to create .worktrees/builds/{level}-{slug}-{timestamp}/ "
 ```

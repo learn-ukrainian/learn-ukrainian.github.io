@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: monomakh-instruction
 TOPIC_TITLE: Monomakh Instruction
 MODULE_NUM: '39'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/monomakh-instruction.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/monomakh-instruction.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/monomakh-instruction.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/monomakh-instruction.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/monomakh-instruction.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/monomakh-instruction-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/monomakh-instruction-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/monomakh-instruction.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/monomakh-instruction.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/monomakh-instruction.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/monomakh-instruction.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/monomakh-instruction.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/monomakh-instruction-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/monomakh-instruction-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

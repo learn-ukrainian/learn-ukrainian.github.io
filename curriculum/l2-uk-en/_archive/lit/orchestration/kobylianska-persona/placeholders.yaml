@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: kobylianska-persona
 TOPIC_TITLE: Kobylianska Persona
 MODULE_NUM: '60'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/kobylianska-persona.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/kobylianska-persona.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/kobylianska-persona.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/kobylianska-persona.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/kobylianska-persona.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/kobylianska-persona-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/kobylianska-persona-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/kobylianska-persona.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/kobylianska-persona.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/kobylianska-persona.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/kobylianska-persona.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/kobylianska-persona.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/kobylianska-persona-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/kobylianska-persona-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

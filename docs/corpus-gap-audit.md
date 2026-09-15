@@ -3,7 +3,7 @@
 Date: 2026-07-06
 
 Scope: deterministic gap audit over the read-only live corpus database at
-`/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db` and the curriculum
+`data/sources.db` and the curriculum
 vocabulary files present in this worktree. This report is an evidence artifact, not an
 acquisition approval. The consumer-driven acquisition queue is marked DRAFT because the
 orchestrator makes the final ranking judgment.
@@ -240,13 +240,13 @@ deterministic queries (re-run, not quoted) and name its consumer, per #4594.
 All commands below were run from:
 
 ```text
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/4594-corpus-gap-audit
+.worktrees/dispatch/codex/4594-corpus-gap-audit
 ```
 
 The database was opened read-only via:
 
 ```text
-sqlite3 'file:/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db?mode=ro'
+sqlite3 'file:data/sources.db?mode=ro'
 ```
 
 ### Issue and worktree orientation
@@ -272,7 +272,7 @@ number: 4594
 ### Content-corpus row counts
 
 ```bash
-sqlite3 -header -column 'file:/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db?mode=ro' "SELECT 'textbooks' AS corpus, COUNT(*) AS chunks FROM textbooks UNION ALL SELECT 'literary_texts', COUNT(*) FROM literary_texts UNION ALL SELECT 'external_articles', COUNT(*) FROM external_articles UNION ALL SELECT 'ukrainian_wiki', COUNT(*) FROM ukrainian_wiki UNION ALL SELECT 'wikipedia', COUNT(*) FROM wikipedia UNION ALL SELECT 'TOTAL_content_corpora', (SELECT COUNT(*) FROM textbooks)+(SELECT COUNT(*) FROM literary_texts)+(SELECT COUNT(*) FROM external_articles)+(SELECT COUNT(*) FROM ukrainian_wiki)+(SELECT COUNT(*) FROM wikipedia);"
+sqlite3 -header -column 'file:data/sources.db?mode=ro' "SELECT 'textbooks' AS corpus, COUNT(*) AS chunks FROM textbooks UNION ALL SELECT 'literary_texts', COUNT(*) FROM literary_texts UNION ALL SELECT 'external_articles', COUNT(*) FROM external_articles UNION ALL SELECT 'ukrainian_wiki', COUNT(*) FROM ukrainian_wiki UNION ALL SELECT 'wikipedia', COUNT(*) FROM wikipedia UNION ALL SELECT 'TOTAL_content_corpora', (SELECT COUNT(*) FROM textbooks)+(SELECT COUNT(*) FROM literary_texts)+(SELECT COUNT(*) FROM external_articles)+(SELECT COUNT(*) FROM ukrainian_wiki)+(SELECT COUNT(*) FROM wikipedia);"
 ```
 
 ```text
@@ -289,7 +289,7 @@ TOTAL_content_corpora  188053
 ### Textbook subject mapping
 
 ```bash
-sqlite3 -header -column 'file:/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db?mode=ro' "WITH mapped AS (SELECT CASE WHEN source_file LIKE '%istori%' OR source_file LIKE '%istorij%' OR source_file LIKE '%istoria%' OR source_file LIKE '%istoriia%' THEN 'history_of_ukraine' WHEN source_file LIKE '%ukrlit%' OR source_file LIKE '%ukrajinska-literatura%' THEN 'ukrainian_literature' WHEN source_file LIKE '%ukrmova%' OR source_file LIKE '%ukrajinska-mova%' OR source_file LIKE '%ukrainska-mova%' OR source_file LIKE '%ukrayinska-mova%' OR source_file LIKE '%bukvar%' THEN 'ukrainian_language' WHEN source_file LIKE 'anna-ohoiko-%' THEN 'learner_lexicon' WHEN source_file LIKE 'ulp-%lesson-notes' THEN 'learner_podcast_notes' WHEN source_file LIKE 'antonenko-davydovych-%' THEN 'style_usage_guide' WHEN source_file LIKE 'pohribnyi-%' THEN 'orthoepy_pronunciation' ELSE 'UNMAPPED' END AS subject, source_file FROM textbooks) SELECT subject, COUNT(*) AS chunks, COUNT(DISTINCT source_file) AS source_files FROM mapped GROUP BY subject ORDER BY chunks DESC, subject;"
+sqlite3 -header -column 'file:data/sources.db?mode=ro' "WITH mapped AS (SELECT CASE WHEN source_file LIKE '%istori%' OR source_file LIKE '%istorij%' OR source_file LIKE '%istoria%' OR source_file LIKE '%istoriia%' THEN 'history_of_ukraine' WHEN source_file LIKE '%ukrlit%' OR source_file LIKE '%ukrajinska-literatura%' THEN 'ukrainian_literature' WHEN source_file LIKE '%ukrmova%' OR source_file LIKE '%ukrajinska-mova%' OR source_file LIKE '%ukrainska-mova%' OR source_file LIKE '%ukrayinska-mova%' OR source_file LIKE '%bukvar%' THEN 'ukrainian_language' WHEN source_file LIKE 'anna-ohoiko-%' THEN 'learner_lexicon' WHEN source_file LIKE 'ulp-%lesson-notes' THEN 'learner_podcast_notes' WHEN source_file LIKE 'antonenko-davydovych-%' THEN 'style_usage_guide' WHEN source_file LIKE 'pohribnyi-%' THEN 'orthoepy_pronunciation' ELSE 'UNMAPPED' END AS subject, source_file FROM textbooks) SELECT subject, COUNT(*) AS chunks, COUNT(DISTINCT source_file) AS source_files FROM mapped GROUP BY subject ORDER BY chunks DESC, subject;"
 ```
 
 ```text
@@ -305,7 +305,7 @@ orthoepy_pronunciation  28      1
 ```
 
 ```bash
-sqlite3 -header -column 'file:/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db?mode=ro' "SELECT COUNT(*) AS rows FROM textbooks WHERE source_file NOT LIKE '%istori%' AND source_file NOT LIKE '%istorij%' AND source_file NOT LIKE '%istoria%' AND source_file NOT LIKE '%istoriia%' AND source_file NOT LIKE '%ukrlit%' AND source_file NOT LIKE '%ukrajinska-literatura%' AND source_file NOT LIKE '%ukrmova%' AND source_file NOT LIKE '%ukrajinska-mova%' AND source_file NOT LIKE '%ukrainska-mova%' AND source_file NOT LIKE '%ukrayinska-mova%' AND source_file NOT LIKE '%bukvar%' AND source_file NOT LIKE 'anna-ohoiko-%' AND source_file NOT LIKE 'ulp-%lesson-notes' AND source_file NOT LIKE 'antonenko-davydovych-%' AND source_file NOT LIKE 'pohribnyi-%';"
+sqlite3 -header -column 'file:data/sources.db?mode=ro' "SELECT COUNT(*) AS rows FROM textbooks WHERE source_file NOT LIKE '%istori%' AND source_file NOT LIKE '%istorij%' AND source_file NOT LIKE '%istoria%' AND source_file NOT LIKE '%istoriia%' AND source_file NOT LIKE '%ukrlit%' AND source_file NOT LIKE '%ukrajinska-literatura%' AND source_file NOT LIKE '%ukrmova%' AND source_file NOT LIKE '%ukrajinska-mova%' AND source_file NOT LIKE '%ukrainska-mova%' AND source_file NOT LIKE '%ukrayinska-mova%' AND source_file NOT LIKE '%bukvar%' AND source_file NOT LIKE 'anna-ohoiko-%' AND source_file NOT LIKE 'ulp-%lesson-notes' AND source_file NOT LIKE 'antonenko-davydovych-%' AND source_file NOT LIKE 'pohribnyi-%';"
 ```
 
 ```text
@@ -315,7 +315,7 @@ rows
 ```
 
 ```bash
-sqlite3 -header -column 'file:/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db?mode=ro' "SELECT COUNT(*) AS chunks FROM textbooks WHERE source_file LIKE '%matem%' OR source_file LIKE '%math%' OR source_file LIKE '%fizy%' OR source_file LIKE '%physics%' OR source_file LIKE '%khim%' OR source_file LIKE '%chem%' OR source_file LIKE '%biol%' OR source_file LIKE '%geogr%' OR source_file LIKE '%informat%' OR source_file LIKE '%ekonom%' OR source_file LIKE '%econom%' OR source_file LIKE '%business%' OR source_file LIKE '%law%' OR source_file LIKE '%pravo%';"
+sqlite3 -header -column 'file:data/sources.db?mode=ro' "SELECT COUNT(*) AS chunks FROM textbooks WHERE source_file LIKE '%matem%' OR source_file LIKE '%math%' OR source_file LIKE '%fizy%' OR source_file LIKE '%physics%' OR source_file LIKE '%khim%' OR source_file LIKE '%chem%' OR source_file LIKE '%biol%' OR source_file LIKE '%geogr%' OR source_file LIKE '%informat%' OR source_file LIKE '%ekonom%' OR source_file LIKE '%econom%' OR source_file LIKE '%business%' OR source_file LIKE '%law%' OR source_file LIKE '%pravo%';"
 ```
 
 ```text
@@ -325,7 +325,7 @@ chunks
 ```
 
 ```bash
-sqlite3 -header -column 'file:/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db?mode=ro' "SELECT COUNT(*) AS chunks FROM textbooks WHERE grade <> '' AND source_file NOT LIKE '%ukrmova%' AND source_file NOT LIKE '%ukrajinska-mova%' AND source_file NOT LIKE '%ukrainska-mova%' AND source_file NOT LIKE '%ukrayinska-mova%' AND source_file NOT LIKE '%bukvar%' AND source_file NOT LIKE '%ukrlit%' AND source_file NOT LIKE '%ukrajinska-literatura%' AND source_file NOT LIKE '%istori%' AND source_file NOT LIKE '%istorij%' AND source_file NOT LIKE '%istoria%' AND source_file NOT LIKE '%istoriia%';"
+sqlite3 -header -column 'file:data/sources.db?mode=ro' "SELECT COUNT(*) AS chunks FROM textbooks WHERE grade <> '' AND source_file NOT LIKE '%ukrmova%' AND source_file NOT LIKE '%ukrajinska-mova%' AND source_file NOT LIKE '%ukrainska-mova%' AND source_file NOT LIKE '%ukrayinska-mova%' AND source_file NOT LIKE '%bukvar%' AND source_file NOT LIKE '%ukrlit%' AND source_file NOT LIKE '%ukrajinska-literatura%' AND source_file NOT LIKE '%istori%' AND source_file NOT LIKE '%istorij%' AND source_file NOT LIKE '%istoria%' AND source_file NOT LIKE '%istoriia%';"
 ```
 
 ```text
@@ -337,7 +337,7 @@ chunks
 ### Literary domain and genre coverage
 
 ```bash
-sqlite3 -header -column 'file:/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db?mode=ro' "SELECT COUNT(*) AS chunks, COUNT(DISTINCT source_file) AS source_files FROM literary_texts; SELECT COUNT(*) AS chunks, COUNT(DISTINCT genre) AS genres FROM literary_texts;"
+sqlite3 -header -column 'file:data/sources.db?mode=ro' "SELECT COUNT(*) AS chunks, COUNT(DISTINCT source_file) AS source_files FROM literary_texts; SELECT COUNT(*) AS chunks, COUNT(DISTINCT genre) AS genres FROM literary_texts;"
 ```
 
 ```text
@@ -350,7 +350,7 @@ chunks  genres
 ```
 
 ```bash
-sqlite3 -header -column 'file:/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db?mode=ro' "SELECT genre, COUNT(*) AS chunks FROM literary_texts GROUP BY genre ORDER BY chunks DESC, genre;"
+sqlite3 -header -column 'file:data/sources.db?mode=ro' "SELECT genre, COUNT(*) AS chunks FROM literary_texts GROUP BY genre ORDER BY chunks DESC, genre;"
 ```
 
 ```text
@@ -391,7 +391,7 @@ letter           1
 ```
 
 ```bash
-sqlite3 -header -column 'file:/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db?mode=ro' "SELECT COUNT(*) AS chunks FROM literary_texts WHERE genre IN ('duma','carol','harvest_song','spring_song','historical_song');"
+sqlite3 -header -column 'file:data/sources.db?mode=ro' "SELECT COUNT(*) AS chunks FROM literary_texts WHERE genre IN ('duma','carol','harvest_song','spring_song','historical_song');"
 ```
 
 ```text
@@ -403,7 +403,7 @@ chunks
 ### External domain coverage
 
 ```bash
-sqlite3 -header -column 'file:/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db?mode=ro' "SELECT domain, register_tag, COUNT(*) AS chunks, COUNT(DISTINCT source_file) AS source_files, MIN(source_file) AS sample_source FROM external_articles GROUP BY domain, register_tag ORDER BY chunks DESC, domain, register_tag;"
+sqlite3 -header -column 'file:data/sources.db?mode=ro' "SELECT domain, register_tag, COUNT(*) AS chunks, COUNT(DISTINCT source_file) AS source_files, MIN(source_file) AS sample_source FROM external_articles GROUP BY domain, register_tag ORDER BY chunks DESC, domain, register_tag;"
 ```
 
 ```text
@@ -422,7 +422,7 @@ ukrlib.com.ua                       1       1             other_blogs
 ```
 
 ```bash
-sqlite3 -header -column 'file:/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db?mode=ro' "SELECT CASE WHEN source_file='ulp_youtube' THEN 'conversational_scripted_or_lesson_audio' WHEN source_file IN ('imtgsh','realna_istoria','istoria_movy','komik_istoryk') THEN 'history_language_youtube_transcript' WHEN source_file='ulp_blogs' OR domain IN ('ukrainianlessons.com','talkukrainian.com','verba.school','opentext.ku.edu') THEN 'pedagogical_blog' WHEN domain='uk.wikipedia.org' THEN 'encyclopedia' WHEN domain='lcorp.ulif.org.ua' THEN 'academic_or_language_resource' WHEN domain='ukrlib.com.ua' THEN 'literary' WHEN register_tag='scripted' THEN 'scripted_pronunciation_video' ELSE 'unmapped_external' END AS external_class, COUNT(*) AS chunks, COUNT(DISTINCT source_file) AS source_files FROM external_articles GROUP BY external_class ORDER BY chunks DESC, external_class;"
+sqlite3 -header -column 'file:data/sources.db?mode=ro' "SELECT CASE WHEN source_file='ulp_youtube' THEN 'conversational_scripted_or_lesson_audio' WHEN source_file IN ('imtgsh','realna_istoria','istoria_movy','komik_istoryk') THEN 'history_language_youtube_transcript' WHEN source_file='ulp_blogs' OR domain IN ('ukrainianlessons.com','talkukrainian.com','verba.school','opentext.ku.edu') THEN 'pedagogical_blog' WHEN domain='uk.wikipedia.org' THEN 'encyclopedia' WHEN domain='lcorp.ulif.org.ua' THEN 'academic_or_language_resource' WHEN domain='ukrlib.com.ua' THEN 'literary' WHEN register_tag='scripted' THEN 'scripted_pronunciation_video' ELSE 'unmapped_external' END AS external_class, COUNT(*) AS chunks, COUNT(DISTINCT source_file) AS source_files FROM external_articles GROUP BY external_class ORDER BY chunks DESC, external_class;"
 ```
 
 ```text
@@ -441,7 +441,7 @@ literary                                 1       1
 ### Ukrainian wiki and Wikipedia coverage
 
 ```bash
-sqlite3 -header -column 'file:/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db?mode=ro' "SELECT track, COUNT(*) AS chunks FROM ukrainian_wiki GROUP BY track ORDER BY chunks DESC, track;"
+sqlite3 -header -column 'file:data/sources.db?mode=ro' "SELECT track, COUNT(*) AS chunks FROM ukrainian_wiki GROUP BY track ORDER BY chunks DESC, track;"
 ```
 
 ```text
@@ -467,7 +467,7 @@ oes             12
 ```
 
 ```bash
-sqlite3 -header -column 'file:/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db?mode=ro' "SELECT COUNT(*) AS chunks FROM wikipedia;"
+sqlite3 -header -column 'file:data/sources.db?mode=ro' "SELECT COUNT(*) AS chunks FROM wikipedia;"
 ```
 
 ```text
@@ -479,7 +479,7 @@ chunks
 ### Register mapping
 
 ```bash
-sqlite3 -header -column 'file:/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db?mode=ro' "WITH register_rows AS (SELECT CASE WHEN grade <> '' THEN 'school_textbook' WHEN source_file LIKE 'ulp-%lesson-notes' THEN 'conversational_scripted_pedagogical' WHEN source_file LIKE 'anna-ohoiko-%' THEN 'pedagogical_reference' WHEN source_file LIKE 'antonenko-davydovych-%' OR source_file LIKE 'pohribnyi-%' THEN 'usage_reference' ELSE 'UNMAPPED_TEXTBOOKS' END AS register, COUNT(*) AS chunks FROM textbooks GROUP BY register UNION ALL SELECT CASE WHEN genre IN ('prose','poetry','drama','fable','anthology','memoir','diary','letters','letter','travelogue','biography','interlude','duma','carol','harvest_song','spring_song','historical_song') THEN 'literary' WHEN genre IN ('encyclopedia','reference','lexicon') THEN 'encyclopedia_reference' WHEN genre IN ('scholarly','philosophy','polemic','legal','documents','rhetoric','grammar','manual','ethnography','religious','hagiography') THEN 'academic_scholarly' WHEN genre='chronicle' THEN 'historical_primary' ELSE 'UNMAPPED_LITERARY' END AS register, COUNT(*) AS chunks FROM literary_texts GROUP BY register UNION ALL SELECT CASE WHEN source_file='ulp_youtube' THEN 'conversational_scripted_pedagogical' WHEN source_file IN ('imtgsh','realna_istoria','istoria_movy','komik_istoryk') THEN 'scripted_public_video_humanities' WHEN source_file='ulp_blogs' OR domain IN ('ukrainianlessons.com','talkukrainian.com','verba.school') THEN 'pedagogical_reference' WHEN domain='opentext.ku.edu' THEN 'academic_scholarly' WHEN domain='uk.wikipedia.org' THEN 'encyclopedia_reference' WHEN domain='lcorp.ulif.org.ua' THEN 'usage_reference' WHEN domain='ukrlib.com.ua' THEN 'literary' WHEN register_tag='scripted' THEN 'usage_reference' ELSE 'UNMAPPED_EXTERNAL' END AS register, COUNT(*) AS chunks FROM external_articles GROUP BY register UNION ALL SELECT 'encyclopedia_reference' AS register, COUNT(*) AS chunks FROM ukrainian_wiki UNION ALL SELECT 'encyclopedia_reference' AS register, COUNT(*) AS chunks FROM wikipedia) SELECT register, SUM(chunks) AS chunks FROM register_rows GROUP BY register ORDER BY chunks DESC, register;"
+sqlite3 -header -column 'file:data/sources.db?mode=ro' "WITH register_rows AS (SELECT CASE WHEN grade <> '' THEN 'school_textbook' WHEN source_file LIKE 'ulp-%lesson-notes' THEN 'conversational_scripted_pedagogical' WHEN source_file LIKE 'anna-ohoiko-%' THEN 'pedagogical_reference' WHEN source_file LIKE 'antonenko-davydovych-%' OR source_file LIKE 'pohribnyi-%' THEN 'usage_reference' ELSE 'UNMAPPED_TEXTBOOKS' END AS register, COUNT(*) AS chunks FROM textbooks GROUP BY register UNION ALL SELECT CASE WHEN genre IN ('prose','poetry','drama','fable','anthology','memoir','diary','letters','letter','travelogue','biography','interlude','duma','carol','harvest_song','spring_song','historical_song') THEN 'literary' WHEN genre IN ('encyclopedia','reference','lexicon') THEN 'encyclopedia_reference' WHEN genre IN ('scholarly','philosophy','polemic','legal','documents','rhetoric','grammar','manual','ethnography','religious','hagiography') THEN 'academic_scholarly' WHEN genre='chronicle' THEN 'historical_primary' ELSE 'UNMAPPED_LITERARY' END AS register, COUNT(*) AS chunks FROM literary_texts GROUP BY register UNION ALL SELECT CASE WHEN source_file='ulp_youtube' THEN 'conversational_scripted_pedagogical' WHEN source_file IN ('imtgsh','realna_istoria','istoria_movy','komik_istoryk') THEN 'scripted_public_video_humanities' WHEN source_file='ulp_blogs' OR domain IN ('ukrainianlessons.com','talkukrainian.com','verba.school') THEN 'pedagogical_reference' WHEN domain='opentext.ku.edu' THEN 'academic_scholarly' WHEN domain='uk.wikipedia.org' THEN 'encyclopedia_reference' WHEN domain='lcorp.ulif.org.ua' THEN 'usage_reference' WHEN domain='ukrlib.com.ua' THEN 'literary' WHEN register_tag='scripted' THEN 'usage_reference' ELSE 'UNMAPPED_EXTERNAL' END AS register, COUNT(*) AS chunks FROM external_articles GROUP BY register UNION ALL SELECT 'encyclopedia_reference' AS register, COUNT(*) AS chunks FROM ukrainian_wiki UNION ALL SELECT 'encyclopedia_reference' AS register, COUNT(*) AS chunks FROM wikipedia) SELECT register, SUM(chunks) AS chunks FROM register_rows GROUP BY register ORDER BY chunks DESC, register;"
 ```
 
 ```text
@@ -498,7 +498,7 @@ UNMAPPED_EXTERNAL                    2
 ```
 
 ```bash
-sqlite3 -header -column 'file:/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db?mode=ro' "SELECT COUNT(*) AS chunks FROM external_articles WHERE lower(register_tag)='press' OR lower(register_tag)='news' OR lower(source_file) LIKE '%press%' OR lower(source_file) LIKE '%news%';"
+sqlite3 -header -column 'file:data/sources.db?mode=ro' "SELECT COUNT(*) AS chunks FROM external_articles WHERE lower(register_tag)='press' OR lower(register_tag)='news' OR lower(source_file) LIKE '%press%' OR lower(source_file) LIKE '%news%';"
 ```
 
 ```text
@@ -508,7 +508,7 @@ chunks
 ```
 
 ```bash
-sqlite3 -header -column 'file:/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db?mode=ro' "SELECT COUNT(*) AS chunks FROM external_articles WHERE lower(register_tag)='conversational' OR lower(register_tag)='conversation' OR lower(register_tag)='spontaneous' OR lower(source_file) LIKE '%conversation%' OR lower(source_file) LIKE '%spoken%' OR lower(source_file) LIKE '%dialog%';"
+sqlite3 -header -column 'file:data/sources.db?mode=ro' "SELECT COUNT(*) AS chunks FROM external_articles WHERE lower(register_tag)='conversational' OR lower(register_tag)='conversation' OR lower(register_tag)='spontaneous' OR lower(source_file) LIKE '%conversation%' OR lower(source_file) LIKE '%spoken%' OR lower(source_file) LIKE '%dialog%';"
 ```
 
 ```text
@@ -581,7 +581,7 @@ keys ['asset_url', 'file_count', 'files', 'generated_at', 'gz_bytes', 'gz_sha256
 ```
 
 ```bash
-sqlite3 -header -column 'file:/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db?mode=ro' "SELECT level, COUNT(*) AS rows, COUNT(DISTINCT word) AS words FROM puls_cefr GROUP BY level ORDER BY level;"
+sqlite3 -header -column 'file:data/sources.db?mode=ro' "SELECT level, COUNT(*) AS rows, COUNT(DISTINCT word) AS words FROM puls_cefr GROUP BY level ORDER BY level;"
 ```
 
 ```text
@@ -641,7 +641,7 @@ import sqlite3
 import unicodedata
 import yaml
 
-DB='file:/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db?mode=ro'
+DB='file:data/sources.db?mode=ro'
 ROOT=Path('curriculum/l2-uk-en')
 SAMPLE_LIMIT=200
 STRESS_RE=re.compile('[\u0300\u0301]')

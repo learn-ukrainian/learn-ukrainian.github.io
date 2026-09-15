@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: kobylianska-nature
 TOPIC_TITLE: Kobylianska Nature
 MODULE_NUM: '57'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/kobylianska-nature.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/kobylianska-nature.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/kobylianska-nature.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/kobylianska-nature.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/kobylianska-nature.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/kobylianska-nature-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/kobylianska-nature-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/kobylianska-nature.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/kobylianska-nature.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/kobylianska-nature.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/kobylianska-nature.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/kobylianska-nature.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/kobylianska-nature-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/kobylianska-nature-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

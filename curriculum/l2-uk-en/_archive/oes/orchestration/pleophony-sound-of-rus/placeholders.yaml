@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: pleophony-sound-of-rus
 TOPIC_TITLE: Pleophony Sound Of Rus
 MODULE_NUM: '4'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/pleophony-sound-of-rus.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/pleophony-sound-of-rus.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/pleophony-sound-of-rus.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/pleophony-sound-of-rus.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/pleophony-sound-of-rus.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/pleophony-sound-of-rus-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/pleophony-sound-of-rus-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/pleophony-sound-of-rus.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/pleophony-sound-of-rus.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/pleophony-sound-of-rus.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/pleophony-sound-of-rus.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/pleophony-sound-of-rus.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/pleophony-sound-of-rus-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/pleophony-sound-of-rus-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

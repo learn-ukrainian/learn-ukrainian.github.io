@@ -72,7 +72,7 @@ subagent worktree, which excludes `docs/references/private/` and `data/`.
 # From the main checkout root. Pass --private-root as an ABSOLUTE path so the run is
 # independent of the current working directory.
 .venv/bin/python -m scripts.lexicon.ohoiko_atlas_intake \
-  --private-root /Users/krisztiankoos/projects/learn-ukrainian/docs/references/private \
+  --private-root docs/references/private \
   --inventory-out data/lexicon/source-inventory/ohoiko-corpus-intake.json
 ```
 
@@ -87,7 +87,7 @@ with the same 1,000-row chunking used here):
 
 ```bash
 .venv/bin/python -m scripts.lexicon.ohoiko_atlas_intake \
-  --private-root /Users/krisztiankoos/projects/learn-ukrainian/docs/references/private \
+  --private-root docs/references/private \
   --inventory-out data/lexicon/source-inventory/ohoiko-corpus-intake.json \
   --ledger-out /tmp/ohoiko-corpus-intake-ledger.yaml \
   --batch-id ohoiko-corpus-intake-2026-07-14 \

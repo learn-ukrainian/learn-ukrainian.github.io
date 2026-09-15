@@ -3,14 +3,14 @@ LEVEL: LIT_ESSAY
 SLUG: drahomanov-chudatski-dumky
 TOPIC_TITLE: Drahomanov Chudatski Dumky
 MODULE_NUM: '3'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-essay/drahomanov-chudatski-dumky.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/meta/drahomanov-chudatski-dumky.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/drahomanov-chudatski-dumky.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/activities/drahomanov-chudatski-dumky.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/vocabulary/drahomanov-chudatski-dumky.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/research/drahomanov-chudatski-dumky-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/review/drahomanov-chudatski-dumky-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-essay/drahomanov-chudatski-dumky.yaml
+META_PATH: curriculum/l2-uk-en/lit-essay/meta/drahomanov-chudatski-dumky.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-essay/drahomanov-chudatski-dumky.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-essay/activities/drahomanov-chudatski-dumky.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-essay/vocabulary/drahomanov-chudatski-dumky.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-essay/research/drahomanov-chudatski-dumky-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-essay/review/drahomanov-chudatski-dumky-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-essay.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

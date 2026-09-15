@@ -110,9 +110,9 @@ The cursor consultation explicitly asks about these. The revised V7.1 ADR must a
 ### Recovery: re-fire cursor when rate-limit window resets
 
 ```bash
-AB_REPO_ROOT=/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/gemini/path-b-writer-prompt-section-floor-2026-05-27 \
-  /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python \
-  /Users/krisztiankoos/projects/learn-ukrainian/scripts/ai_agent_bridge/__main__.py \
+AB_REPO_ROOT=.worktrees/dispatch/gemini/path-b-writer-prompt-section-floor-2026-05-27 \
+  .venv/bin/python \
+  scripts/ai_agent_bridge/__main__.py \
   discuss wiki-driven-writer-pivot - --with cursor --max-rounds 1 \
   < /tmp/cursor-v7_1-vs-v8.md
 ```
@@ -138,7 +138,7 @@ for from_agent, round_idx, kind, ts, body in rows:
 
 If no cursor response yet: check task output file, or tail the cursor agent's session log under its configured runtime directory.
 
-If task `bj33si2vx` or the re-fire task `bac0ynhl1` failed for any reason: re-fire with the same prompt file at `/tmp/cursor-v7_1-vs-v8.md`. **Important**: the channel DB lives in the gemini worktree, NOT main project. Use `AB_REPO_ROOT=/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/gemini/path-b-writer-prompt-section-floor-2026-05-27` env var when invoking the bridge with an absolute script path, otherwise the bridge resolves the wrong DB and reports "channel does not exist".
+If task `bj33si2vx` or the re-fire task `bac0ynhl1` failed for any reason: re-fire with the same prompt file at `/tmp/cursor-v7_1-vs-v8.md`. **Important**: the channel DB lives in the gemini worktree, NOT main project. Use `AB_REPO_ROOT=.worktrees/dispatch/gemini/path-b-writer-prompt-section-floor-2026-05-27` env var when invoking the bridge with an absolute script path, otherwise the bridge resolves the wrong DB and reports "channel does not exist".
 
 ## 6-step opening sequence (next session)
 
@@ -167,10 +167,10 @@ If task `bj33si2vx` or the re-fire task `bac0ynhl1` failed for any reason: re-fi
 
 ### Worktrees on disk
 ```
-/Users/krisztiankoos/projects/learn-ukrainian                                                                                main (reference)
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/gemini/path-b-writer-prompt-section-floor-2026-05-27        gemini/path-b-... (PR #2372 merged; branch still exists locally because worktree using it; channel DB here)
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/docs-pt9-10-v8-2026-05-27                            claude/docs-pt9-10-v8-... (PR #2374 open)
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/agy-ladder-rung-2026-05-27                            codex/agy-ladder-rung-... (PR #2375 merged; branch still exists locally because worktree using it)
+.                                                                                main (reference)
+.worktrees/dispatch/gemini/path-b-writer-prompt-section-floor-2026-05-27        gemini/path-b-... (PR #2372 merged; branch still exists locally because worktree using it; channel DB here)
+.worktrees/dispatch/claude/docs-pt9-10-v8-2026-05-27                            claude/docs-pt9-10-v8-... (PR #2374 open)
+.worktrees/dispatch/codex/agy-ladder-rung-2026-05-27                            codex/agy-ladder-rung-... (PR #2375 merged; branch still exists locally because worktree using it)
 .worktrees/builds/a1-my-morning-20260527-073037/  pre-hardening
 .worktrees/builds/a1-my-morning-20260527-073705/  pre-hardening
 .worktrees/builds/a1-my-morning-20260527-161219/  Pt 9 mid-hardening (stale)

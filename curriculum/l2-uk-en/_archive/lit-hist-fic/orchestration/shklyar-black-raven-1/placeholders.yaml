@@ -3,14 +3,14 @@ LEVEL: LIT_HIST_FIC
 SLUG: shklyar-black-raven-1
 TOPIC_TITLE: Shklyar Black Raven 1
 MODULE_NUM: '12'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-hist-fic/shklyar-black-raven-1.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/meta/shklyar-black-raven-1.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/shklyar-black-raven-1.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/activities/shklyar-black-raven-1.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/vocabulary/shklyar-black-raven-1.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/research/shklyar-black-raven-1-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/review/shklyar-black-raven-1-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-hist-fic/shklyar-black-raven-1.yaml
+META_PATH: curriculum/l2-uk-en/lit-hist-fic/meta/shklyar-black-raven-1.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-hist-fic/shklyar-black-raven-1.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-hist-fic/activities/shklyar-black-raven-1.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-hist-fic/vocabulary/shklyar-black-raven-1.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-hist-fic/research/shklyar-black-raven-1-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-hist-fic/review/shklyar-black-raven-1-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-hist-fic.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

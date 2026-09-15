@@ -93,7 +93,7 @@ The order matters. Each step gates the next.
 
 ```bash
 .venv/bin/python scripts/audit/bakeoff_run.py \
-    --bakeoff-dir /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-08-codex-only \
+    --bakeoff-dir audit/bakeoff-2026-05-08-codex-only \
     --level a1 --slug my-morning \
     --writers codex-tools
 ```

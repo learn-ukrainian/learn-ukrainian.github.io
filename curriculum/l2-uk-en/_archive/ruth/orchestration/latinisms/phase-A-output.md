@@ -11,7 +11,7 @@
 
 ============================================================
 
-Activate skill full-rebuild-ruth. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/orchestration/latinisms/phase-A-prompt.md
+Activate skill full-rebuild-ruth. Read and execute the instructions at curriculum/l2-uk-en/ruth/orchestration/latinisms/phase-A-prompt.md
 
 ============================================================
 📎 Attached Data:
@@ -30,13 +30,13 @@ Activate skill full-rebuild-ruth. Read and execute the instructions at /Users/kr
 Read the plan file (SOURCE OF TRUTH):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/latinisms.yaml
+curriculum/l2-uk-en/plans/ruth/latinisms.yaml
 ```
 
 Read the current meta file (for reference — you will replace the content_outline):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/latinisms.yaml
+curriculum/l2-uk-en/ruth/meta/latinisms.yaml
 ```
 
 ---

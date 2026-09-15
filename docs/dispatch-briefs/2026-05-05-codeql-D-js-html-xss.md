@@ -9,7 +9,7 @@
 ## Worktree instructions (mandatory)
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin main
 git worktree add -b gemini-codeql-D-js-html-xss .worktrees/dispatch/gemini/codeql-D origin/main
 cd .worktrees/dispatch/gemini/codeql-D

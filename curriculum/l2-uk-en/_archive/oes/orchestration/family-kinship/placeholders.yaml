@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: family-kinship
 TOPIC_TITLE: Family Kinship
 MODULE_NUM: '22'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/family-kinship.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/family-kinship.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/family-kinship.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/family-kinship.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/family-kinship.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/family-kinship-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/family-kinship-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/family-kinship.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/family-kinship.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/family-kinship.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/family-kinship.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/family-kinship.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/family-kinship-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/family-kinship-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

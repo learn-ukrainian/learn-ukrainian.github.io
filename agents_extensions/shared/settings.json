@@ -163,11 +163,6 @@
           "description": "Allow Python venv scripts"
         },
         {
-          "pattern": "/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python *",
-          "permission": "allow",
-          "description": "Allow Python venv with absolute path"
-        },
-        {
           "pattern": "python3 *",
           "permission": "allow",
           "description": "Allow Python 3 execution"
@@ -228,7 +223,7 @@
           "description": "Commit changes"
         },
         {
-          "pattern": "git -C /Users/krisztiankoos/projects/learn-ukrainian *",
+          "pattern": "git -C . *",
           "permission": "allow",
           "description": "Git operations with -C flag"
         },

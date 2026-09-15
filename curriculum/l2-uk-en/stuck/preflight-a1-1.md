@@ -7,7 +7,7 @@
 
 ## Last message (truncated)
 
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/the-ukrainian-alphabet/preflight-prompt.md
+curriculum/l2-uk-en/a1/orchestration/the-ukrainian-alphabet/preflight-prompt.md
 
 ## Resolution
 

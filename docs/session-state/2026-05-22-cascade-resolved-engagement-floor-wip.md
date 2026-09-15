@@ -161,7 +161,7 @@ Fix is mechanical: append two callout blocks to the fixture's `module.md` conten
    cd .worktrees/fix/engagement-deterministic-floor
    # find the failing fixture in tests/build/test_linear_pipeline.py line 2516
    # add two `:::tip\n...\n:::` blocks to the structural fixture text
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest tests/build/test_linear_pipeline.py::test_run_python_qg_passes_structural_fixture -q
+   .venv/bin/python -m pytest tests/build/test_linear_pipeline.py::test_run_python_qg_passes_structural_fixture -q
    # if green, open PR via gh pr create
    ```
 5. After PR merges: resume build #11 with `--resume` against the rotated Gemini account to confirm llm_qg engagement now PASSes (gate gives concrete callout/META_NARRATION feedback; LLM dim scores residual quality only).

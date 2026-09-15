@@ -18,7 +18,7 @@ No code logic change. No tests required (this is prompt-text-only). Per #M-4: ev
 ## Worktree setup (mandatory — #M-7 + delegate-must-use-worktree rule)
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin
 git worktree add .worktrees/m20-path1-writer-coverage -b fix/m20-writer-explicit-obligation-coverage origin/main
 cd .worktrees/m20-path1-writer-coverage

@@ -3,14 +3,14 @@ LEVEL: LIT_HUMOR
 SLUG: hlazovyi-satire
 TOPIC_TITLE: Hlazovyi Satire
 MODULE_NUM: '7'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-humor/hlazovyi-satire.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/meta/hlazovyi-satire.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/hlazovyi-satire.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/activities/hlazovyi-satire.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/vocabulary/hlazovyi-satire.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/research/hlazovyi-satire-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/review/hlazovyi-satire-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-humor/hlazovyi-satire.yaml
+META_PATH: curriculum/l2-uk-en/lit-humor/meta/hlazovyi-satire.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-humor/hlazovyi-satire.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-humor/activities/hlazovyi-satire.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-humor/vocabulary/hlazovyi-satire.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-humor/research/hlazovyi-satire-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-humor/review/hlazovyi-satire-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-humor.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

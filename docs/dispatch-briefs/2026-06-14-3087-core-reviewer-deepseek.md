@@ -35,7 +35,7 @@ SEMINAR already overrides these to claude via `seminar_reviewer_overrides`. Add 
 - source_grounding + ukrainian_perspective are NOT changed for CORE.
 
 ## Numbered steps
-1. `cd /Users/krisztiankoos/projects/learn-ukrainian && git fetch origin`. You are in a worktree from `origin/main`.
+1. `cd . && git fetch origin`. You are in a worktree from `origin/main`.
 2. Implement 1–3.
 3. `.venv/bin/python -m pytest tests/ -k "review or reviewer or compile" -q` → paste summary.
 4. `.venv/bin/ruff check scripts/ tests/` → paste `All checks passed!`.

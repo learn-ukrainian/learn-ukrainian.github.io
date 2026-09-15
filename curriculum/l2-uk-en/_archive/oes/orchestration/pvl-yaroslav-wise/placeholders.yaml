@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: pvl-yaroslav-wise
 TOPIC_TITLE: Pvl Yaroslav Wise
 MODULE_NUM: '34'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/pvl-yaroslav-wise.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/pvl-yaroslav-wise.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/pvl-yaroslav-wise.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/pvl-yaroslav-wise.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/pvl-yaroslav-wise.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/pvl-yaroslav-wise-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/pvl-yaroslav-wise-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/pvl-yaroslav-wise.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/pvl-yaroslav-wise.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/pvl-yaroslav-wise.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/pvl-yaroslav-wise.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/pvl-yaroslav-wise.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/pvl-yaroslav-wise-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/pvl-yaroslav-wise-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

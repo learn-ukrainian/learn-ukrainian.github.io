@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: women-in-law
 TOPIC_TITLE: Women In Law
 MODULE_NUM: '66'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/women-in-law.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/women-in-law.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/women-in-law.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/women-in-law.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/women-in-law.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/women-in-law-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/women-in-law-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/women-in-law.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/women-in-law.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/women-in-law.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/women-in-law.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/women-in-law.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/women-in-law-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/women-in-law-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

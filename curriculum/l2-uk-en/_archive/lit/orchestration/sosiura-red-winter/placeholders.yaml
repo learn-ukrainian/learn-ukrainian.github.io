@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: sosiura-red-winter
 TOPIC_TITLE: Sosiura Red Winter
 MODULE_NUM: '113'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/sosiura-red-winter.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/sosiura-red-winter.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/sosiura-red-winter.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/sosiura-red-winter.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/sosiura-red-winter.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/sosiura-red-winter-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/sosiura-red-winter-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/sosiura-red-winter.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/sosiura-red-winter.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/sosiura-red-winter.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/sosiura-red-winter.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/sosiura-red-winter.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/sosiura-red-winter-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/sosiura-red-winter-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

@@ -56,9 +56,9 @@ Dispatch system creates `.worktrees/dispatch/claude/h2-antonenko-fulltext-uagec-
 ### 2. Data symlinks (sparse worktree — three sources now)
 
 ```
-[ -L data/sources.db ] || { rm -f data/sources.db; ln -s /Users/krisztiankoos/projects/learn-ukrainian/data/sources.db data/sources.db; }
-[ -L data/vesum.db ]   || { rm -f data/vesum.db;   ln -s /Users/krisztiankoos/projects/learn-ukrainian/data/vesum.db   data/vesum.db; }
-[ -L data/ua-gec ]     || { rm -f data/ua-gec;     ln -s /Users/krisztiankoos/projects/learn-ukrainian/data/ua-gec     data/ua-gec; }
+[ -L data/sources.db ] || { rm -f data/sources.db; ln -s data/sources.db data/sources.db; }
+[ -L data/vesum.db ]   || { rm -f data/vesum.db;   ln -s data/vesum.db   data/vesum.db; }
+[ -L data/ua-gec ]     || { rm -f data/ua-gec;     ln -s data/ua-gec     data/ua-gec; }
 ```
 
 Verify:

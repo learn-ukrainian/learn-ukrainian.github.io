@@ -3,14 +3,14 @@ LEVEL: LIT_HIST_FIC
 SLUG: ivanychuk-water
 TOPIC_TITLE: Ivanychuk Water
 MODULE_NUM: '9'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-hist-fic/ivanychuk-water.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/meta/ivanychuk-water.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/ivanychuk-water.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/activities/ivanychuk-water.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/vocabulary/ivanychuk-water.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/research/ivanychuk-water-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/review/ivanychuk-water-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-hist-fic/ivanychuk-water.yaml
+META_PATH: curriculum/l2-uk-en/lit-hist-fic/meta/ivanychuk-water.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-hist-fic/ivanychuk-water.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-hist-fic/activities/ivanychuk-water.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-hist-fic/vocabulary/ivanychuk-water.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-hist-fic/research/ivanychuk-water-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-hist-fic/review/ivanychuk-water-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-hist-fic.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

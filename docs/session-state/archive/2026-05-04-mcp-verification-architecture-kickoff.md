@@ -171,7 +171,7 @@ After 11am: full three-agent bandwidth restored.
 
 ```bash
 # 1. Verify clean state on main
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin main
 git status -s              # AGENTS.md + scripts/api/*.py expected dirty (pre-existing)
 git log --oneline -3       # confirm 083d35d2c5 still tip OR newer (handoff commit if landed)

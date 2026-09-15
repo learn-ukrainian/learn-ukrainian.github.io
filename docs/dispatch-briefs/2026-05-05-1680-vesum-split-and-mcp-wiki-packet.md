@@ -13,7 +13,7 @@ Spawned from #1631 (closed via PR #1635). Three residuals not covered:
 ## Worktree (mandatory)
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin main
 .venv/bin/python scripts/delegate.py dispatch ...  # invoked by parent — do not re-invoke
 ```

@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: synthesis-5
 TOPIC_TITLE: 'Синтез: Горизонти епохи 5'
 MODULE_NUM: '217'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/synthesis-5.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/synthesis-5.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/synthesis-5.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/synthesis-5.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/synthesis-5.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/synthesis-5-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/synthesis-5-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/synthesis-5.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/synthesis-5.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/synthesis-5.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/synthesis-5.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/synthesis-5.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/synthesis-5-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/synthesis-5-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

@@ -58,7 +58,7 @@ Resume the Word Atlas completion roadmap from the prior handoff:
 
 ## Restart
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin -q && git merge --ff-only origin/main
 gh pr view 2936 --json state,mergedAt              # confirm landed
 npm run agents:deploy                              # should pass preflight now; syncs .claude drift

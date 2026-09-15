@@ -48,7 +48,7 @@ Since you don't have an API key, you'll test by:
 
 ## Test Plan Location
 
-**READ THIS FIRST:** `/Users/krisztiankoos/projects/learn-ukrainian/docs/dev/GRAMMAR_VALIDATE_TESTING.md`
+**READ THIS FIRST:** `docs/dev/GRAMMAR_VALIDATE_TESTING.md`
 
 This contains 10 comprehensive tests:
 - Tests 1-3: CLI functionality (help, default behavior, graceful degradation)

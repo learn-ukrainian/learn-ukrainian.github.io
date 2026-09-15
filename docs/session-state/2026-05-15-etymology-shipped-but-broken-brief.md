@@ -282,9 +282,9 @@ than the cost of being caught lying.
 
 ```
 $ git worktree list
-/Users/krisztiankoos/projects/learn-ukrainian                              1206e526f1 [main]
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-interactive afe827a268 (detached HEAD) ← Codex session, leave
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/russicism-ua-gec  f582f50649 [feat/russicism-ua-gec-patterns] ← PR #1997, user-owned
+.                              1206e526f1 [main]
+.worktrees/codex-interactive afe827a268 (detached HEAD) ← Codex session, leave
+.worktrees/russicism-ua-gec  f582f50649 [feat/russicism-ua-gec-patterns] ← PR #1997, user-owned
 ```
 
 Three stale dispatch worktrees from earlier sessions cleaned up this

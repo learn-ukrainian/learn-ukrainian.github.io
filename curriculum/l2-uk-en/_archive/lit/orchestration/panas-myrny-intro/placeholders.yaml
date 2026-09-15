@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: panas-myrny-intro
 TOPIC_TITLE: 'Панас Мирний: Корифей української прози'
 MODULE_NUM: '31'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/panas-myrny-intro.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/panas-myrny-intro.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/panas-myrny-intro.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/panas-myrny-intro.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/panas-myrny-intro.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/panas-myrny-intro-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/panas-myrny-intro-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/panas-myrny-intro.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/panas-myrny-intro.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/panas-myrny-intro.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/panas-myrny-intro.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/panas-myrny-intro.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/panas-myrny-intro-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/panas-myrny-intro-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

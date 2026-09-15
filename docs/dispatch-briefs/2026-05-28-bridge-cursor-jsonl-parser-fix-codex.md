@@ -34,7 +34,7 @@ Do NOT claim "should work" or "expected to work" without a tool-backed test.
        elif event.get("type") == "message" and event.get("role") == "assistant":  # ← nor this
            ...
    ```
-2. **`/Users/krisztiankoos/.cursor/projects/Users-krisztiankoos-projects-learn-ukrainian/agent-transcripts/656c0b63-d5b4-4bdf-89cf-e936d00e6b09/656c0b63-d5b4-4bdf-89cf-e936d00e6b09.jsonl`** — actual cursor-agent JSONL output. Inspect line structure: each line is `{"role": "user"|"assistant", "message": {"role": "...", "content": [{"type": "text"|"tool_use", ...}, ...]}}`. Save a sanitized copy as a test fixture (see Deliverable 3).
+2. **`.cursor/projects/Users-krisztiankoos-projects-learn-ukrainian/agent-transcripts/656c0b63-d5b4-4bdf-89cf-e936d00e6b09/656c0b63-d5b4-4bdf-89cf-e936d00e6b09.jsonl`** — actual cursor-agent JSONL output. Inspect line structure: each line is `{"role": "user"|"assistant", "message": {"role": "...", "content": [{"type": "text"|"tool_use", ...}, ...]}}`. Save a sanitized copy as a test fixture (see Deliverable 3).
 3. **`scripts/agent_runtime/parse.py`** (or wherever `parse_json_events` and `normalize_tool_calls` live) — verify whether those helpers already extract anything from the new event shape, or if all the work happens in `parse_response` itself.
 4. **`scripts/ai_agent_bridge/_cursor.py:90-110`** — the `ask-cursor` path uses `--output-format text` (line 96) and works fine. Compare with `adapters/cursor.py:122` which defaults to `--output-format stream-json`. The two paths take different output formats; only the stream-json path is broken.
 5. **`tests/agent_runtime/adapters/test_cursor_adapter.py`** — existing test layout. Match its shape for the new tests.
@@ -115,7 +115,7 @@ This means future bridge bugs that miss the in-process stream still recover the 
 
 ## Numbered steps
 
-1. `cd /Users/krisztiankoos/projects/learn-ukrainian && git fetch origin main --quiet && git worktree add .worktrees/dispatch/codex/bridge-cursor-jsonl-parser-fix-2026-05-28 -b codex/bridge-cursor-jsonl-parser-fix-2026-05-28 origin/main`
+1. `cd . && git fetch origin main --quiet && git worktree add .worktrees/dispatch/codex/bridge-cursor-jsonl-parser-fix-2026-05-28 -b codex/bridge-cursor-jsonl-parser-fix-2026-05-28 origin/main`
 2. `cd .worktrees/dispatch/codex/bridge-cursor-jsonl-parser-fix-2026-05-28`
 3. Do all 6 required reads. Quote at least one raw line per read in your final report.
 4. Implement Deliverables 1-4 in `scripts/agent_runtime/adapters/cursor.py` + test file + fixture. Run `pytest tests/agent_runtime/adapters/test_cursor_adapter.py -v` — must pass.

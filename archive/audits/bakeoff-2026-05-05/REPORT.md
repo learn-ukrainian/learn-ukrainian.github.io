@@ -1,6 +1,6 @@
 # Bakeoff comparison report
 
-- Bakeoff dir: `/Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-05`
+- Bakeoff dir: `audit/bakeoff-2026-05-05`
 - Writers: claude, gemini, gpt55
 - Plan: `curriculum/l2-uk-en/plans/a1/my-morning.yaml`
 - Word target: 1200
@@ -87,13 +87,13 @@
 
 ## Warnings
 
-- missing writer markdown: /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-05/claude.md
-- missing writer markdown: /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-05/gemini.md
-- no writer telemetry events found in: /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-05/gemini.write.jsonl
-- missing writer markdown: /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-05/gpt55.md
-- missing review JSONL file: /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-05/claude-gemini.review.jsonl
-- missing review JSONL file: /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-05/claude-gpt55.review.jsonl
-- missing review JSONL file: /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-05/gemini-claude.review.jsonl
-- missing review JSONL file: /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-05/gemini-gpt55.review.jsonl
-- missing review JSONL file: /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-05/gpt55-claude.review.jsonl
-- missing review JSONL file: /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-05/gpt55-gemini.review.jsonl
+- missing writer markdown: audit/bakeoff-2026-05-05/claude.md
+- missing writer markdown: audit/bakeoff-2026-05-05/gemini.md
+- no writer telemetry events found in: audit/bakeoff-2026-05-05/gemini.write.jsonl
+- missing writer markdown: audit/bakeoff-2026-05-05/gpt55.md
+- missing review JSONL file: audit/bakeoff-2026-05-05/claude-gemini.review.jsonl
+- missing review JSONL file: audit/bakeoff-2026-05-05/claude-gpt55.review.jsonl
+- missing review JSONL file: audit/bakeoff-2026-05-05/gemini-claude.review.jsonl
+- missing review JSONL file: audit/bakeoff-2026-05-05/gemini-gpt55.review.jsonl
+- missing review JSONL file: audit/bakeoff-2026-05-05/gpt55-claude.review.jsonl
+- missing review JSONL file: audit/bakeoff-2026-05-05/gpt55-gemini.review.jsonl

@@ -24,13 +24,13 @@
       "critical": 1,
       "high": 1,
       "medium": 1,
-      "path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-cyrillic-code-iii-content-review.md"
+      "path": "curriculum/l2-uk-en/a1/audit/the-cyrillic-code-iii-content-review.md"
     },
     "prompt_review": {
       "health": "?",
       "fix_loops": 0,
       "friction_count": 6,
-      "path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-cyrillic-code-iii-prompt-review.md"
+      "path": "curriculum/l2-uk-en/a1/audit/the-cyrillic-code-iii-prompt-review.md"
     },
     "grade": "B"
   },
@@ -59,13 +59,13 @@
       "critical": 1,
       "high": 3,
       "medium": 2,
-      "path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-gender-code-content-review.md"
+      "path": "curriculum/l2-uk-en/a1/audit/the-gender-code-content-review.md"
     },
     "prompt_review": {
       "health": "?",
       "fix_loops": 0,
       "friction_count": 3,
-      "path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-gender-code-prompt-review.md"
+      "path": "curriculum/l2-uk-en/a1/audit/the-gender-code-prompt-review.md"
     },
     "grade": "B"
   },
@@ -94,13 +94,13 @@
       "critical": 1,
       "high": 2,
       "medium": 3,
-      "path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/describing-things-adjectives-content-review.md"
+      "path": "curriculum/l2-uk-en/a1/audit/describing-things-adjectives-content-review.md"
     },
     "prompt_review": {
       "health": "VERDICT",
       "fix_loops": 0,
       "friction_count": 10,
-      "path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/describing-things-adjectives-prompt-review.md"
+      "path": "curriculum/l2-uk-en/a1/audit/describing-things-adjectives-prompt-review.md"
     },
     "grade": "C"
   },
@@ -131,7 +131,7 @@
       "health": "?",
       "fix_loops": 0,
       "friction_count": 3,
-      "path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/the-living-verb-i-prompt-review.md"
+      "path": "curriculum/l2-uk-en/a1/audit/the-living-verb-i-prompt-review.md"
     },
     "grade": "F"
   },
@@ -188,7 +188,7 @@
       "health": "?",
       "fix_loops": 3,
       "friction_count": 3,
-      "path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/audit/imperative-and-requests-prompt-review.md"
+      "path": "curriculum/l2-uk-en/a1/audit/imperative-and-requests-prompt-review.md"
     },
     "grade": "F"
   }

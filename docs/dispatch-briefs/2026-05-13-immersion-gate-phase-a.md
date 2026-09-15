@@ -14,9 +14,9 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Every command that uses `.venv/`, `scripts/`, or files in MAIN checkout MUST be prefixed with `cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/immersion-gate-phase-a-2026-05-13 && ...` or absolute path.
+Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Every command that uses `.venv/`, `scripts/`, or files in MAIN checkout MUST be prefixed with `cd .worktrees/dispatch/codex/immersion-gate-phase-a-2026-05-13 && ...` or absolute path.
 
-Inside the worktree, `.venv/` is gitignored. Use MAIN checkout's `.venv` via absolute path: `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
+Inside the worktree, `.venv/` is gitignored. Use MAIN checkout's `.venv` via `.venv/bin/python`.
 
 ---
 
@@ -211,7 +211,7 @@ Also update existing tests that reference `min_pct`/`max_pct` or the old `_immer
 
 1. **Worktree setup:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian && \
+   cd . && \
    git worktree add -b codex/immersion-gate-phase-a-2026-05-13 .worktrees/dispatch/codex/immersion-gate-phase-a-2026-05-13 origin/main
    ```
 
@@ -228,15 +228,15 @@ Also update existing tests that reference `min_pct`/`max_pct` or the old `_immer
 
 4. **Test suite:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/immersion-gate-phase-a-2026-05-13 && \
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest tests/test_immersion_gates.py tests/test_linear_pipeline*.py -x
+   cd .worktrees/dispatch/codex/immersion-gate-phase-a-2026-05-13 && \
+   .venv/bin/pytest tests/test_immersion_gates.py tests/test_linear_pipeline*.py -x
    ```
    Quote final summary line raw.
 
 5. **Ruff:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/immersion-gate-phase-a-2026-05-13 && \
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/build/linear_pipeline.py scripts/config.py tests/test_immersion_gates.py
+   cd .worktrees/dispatch/codex/immersion-gate-phase-a-2026-05-13 && \
+   .venv/bin/ruff check scripts/build/linear_pipeline.py scripts/config.py tests/test_immersion_gates.py
    ```
    Quote final line raw.
 

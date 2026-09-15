@@ -65,7 +65,7 @@ Cleared stashes (recover: `git stash apply <sha>`): folk-wip-presync `1f9d73fad3
 
 ## Restart
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin -q && git log -1 --oneline origin/main   # expect 19c89e6aa4 or later
 gh issue view 2985    # Atlas backlog (synonyms gate, cached-miss refetch next)
 gh issue view 3060    # agy MCP — CHECK codex/agy-mcp-fix c880dab111 FIRST

@@ -11,7 +11,7 @@
 
 ============================================================
 
-Activate skill full-rebuild-oes. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/orchestration/alphabet-glagolitic-cyrillic/phase-A-prompt.md
+Activate skill full-rebuild-oes. Read and execute the instructions at curriculum/l2-uk-en/oes/orchestration/alphabet-glagolitic-cyrillic/phase-A-prompt.md
 
 ============================================================
 📎 Attached Data:
@@ -30,13 +30,13 @@ Activate skill full-rebuild-oes. Read and execute the instructions at /Users/kri
 Read the plan file (SOURCE OF TRUTH):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/alphabet-glagolitic-cyrillic.yaml
+curriculum/l2-uk-en/plans/oes/alphabet-glagolitic-cyrillic.yaml
 ```
 
 Read the current meta file (for reference — you will replace the content_outline):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/alphabet-glagolitic-cyrillic.yaml
+curriculum/l2-uk-en/oes/meta/alphabet-glagolitic-cyrillic.yaml
 ```
 
 ---

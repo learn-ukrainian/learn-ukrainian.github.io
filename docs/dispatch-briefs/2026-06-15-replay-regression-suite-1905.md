@@ -26,11 +26,11 @@ deterministic component handles it correctly — NO network, NO LLM, NO real bui
 - Make it EXTENSIBLE: a clear pattern so the next gate/adapter bug gets a fixture, not a full build.
 
 ## Numbered steps
-1. `cd /Users/krisztiankoos/projects/learn-ukrainian && git fetch origin` (`--worktree` from origin/main).
+1. `cd . && git fetch origin` (`--worktree` from origin/main).
 2. Build `tests/replay/` + fixtures + the 4 regression tests. Reuse existing test patterns
    (`tests/test_linear_pipeline_telemetry.py`, `tests/test_vesum_*`).
-3. `cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -m pytest tests/replay -q` → paste summary (all green, runs with no DB/network).
-4. `cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/ruff check tests/ scripts/ -q` → paste final line.
+3. `cd . && .venv/bin/python -m pytest tests/replay -q` → paste summary (all green, runs with no DB/network).
+4. `cd . && .venv/bin/ruff check tests/ scripts/ -q` → paste final line.
 5. Commit `test(replay): LLM-free pipeline regression suite — 4 gate/telemetry/adapter bug fixtures (#1905)`.
 6. `git push -u origin <branch>`; `gh pr create` referencing #1905 + #1865. NO auto-merge.
 

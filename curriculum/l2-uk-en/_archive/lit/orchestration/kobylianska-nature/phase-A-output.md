@@ -3,9 +3,9 @@ CRITICAL INSTRUCTION 1: I must use specific tools where available. For reading f
 CRITICAL INSTRUCTION 2: Before making tool calls, I must explicitly list out any related tools for the task at hand. Here, the related tools are `read_file`, `run_shell_command` (with cat), `grep_search`. I will use `read_file` because it's the most specific and appropriate tool for reading files.
 
 I will read the three requested files:
-1. `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/kobylianska-nature-research.md`
-2. `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/kobylianska-nature.yaml`
-3. `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/kobylianska-nature.yaml`
+1. `curriculum/l2-uk-en/lit/research/kobylianska-nature-research.md`
+2. `curriculum/l2-uk-en/plans/lit/kobylianska-nature.yaml`
+3. `curriculum/l2-uk-en/lit/meta/kobylianska-nature.yaml`
 
 I'll issue parallel `read_file` calls for these three files.
 Then, based on the content, I will generate the output.
@@ -24,13 +24,13 @@ File paths:
 1: `curriculum/l2-uk-en/lit/research/kobylianska-nature-research.md`
 2: `curriculum/l2-uk-en/plans/lit/kobylianska-nature.yaml`
 3: `curriculum/l2-uk-en/lit/meta/kobylianska-nature.yaml` (from the project dir)
-Project dir is `/Users/krisztiankoos/projects/learn-ukrainian/`
+Project dir is ``
 I'll use `read_file` for all three.
 Wait, I can just use absolute paths or relative paths. I'll use absolute as provided.
 Let's call `read_file`.
-1: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/kobylianska-nature-research.md`
-2: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/kobylianska-nature.yaml`
-3: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/kobylianska-nature.yaml`
+1: `curriculum/l2-uk-en/lit/research/kobylianska-nature-research.md`
+2: `curriculum/l2-uk-en/plans/lit/kobylianska-nature.yaml`
+3: `curriculum/l2-uk-en/lit/meta/kobylianska-nature.yaml`
 Wait, do I need to run a shell command or read_file? `read_file` is the tool.
 Let's do this.
 I'll use the concurrent call format.

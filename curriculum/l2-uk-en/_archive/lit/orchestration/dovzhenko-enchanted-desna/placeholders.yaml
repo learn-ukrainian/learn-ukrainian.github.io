@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: dovzhenko-enchanted-desna
 TOPIC_TITLE: Dovzhenko Enchanted Desna
 MODULE_NUM: '129'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/dovzhenko-enchanted-desna.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/dovzhenko-enchanted-desna.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/dovzhenko-enchanted-desna.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/dovzhenko-enchanted-desna.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/dovzhenko-enchanted-desna.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/dovzhenko-enchanted-desna-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/dovzhenko-enchanted-desna-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/dovzhenko-enchanted-desna.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/dovzhenko-enchanted-desna.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/dovzhenko-enchanted-desna.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/dovzhenko-enchanted-desna.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/dovzhenko-enchanted-desna.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/dovzhenko-enchanted-desna-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/dovzhenko-enchanted-desna-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

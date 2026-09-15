@@ -3,14 +3,14 @@ LEVEL: LIT_HUMOR
 SLUG: andrukhovych-postmodern-irony
 TOPIC_TITLE: Andrukhovych Postmodern Irony
 MODULE_NUM: '9'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-humor/andrukhovych-postmodern-irony.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/meta/andrukhovych-postmodern-irony.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/andrukhovych-postmodern-irony.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/activities/andrukhovych-postmodern-irony.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/vocabulary/andrukhovych-postmodern-irony.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/research/andrukhovych-postmodern-irony-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/review/andrukhovych-postmodern-irony-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-humor/andrukhovych-postmodern-irony.yaml
+META_PATH: curriculum/l2-uk-en/lit-humor/meta/andrukhovych-postmodern-irony.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-humor/andrukhovych-postmodern-irony.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-humor/activities/andrukhovych-postmodern-irony.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-humor/vocabulary/andrukhovych-postmodern-irony.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-humor/research/andrukhovych-postmodern-irony-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-humor/review/andrukhovych-postmodern-irony-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-humor.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: hramoty-xiv
 TOPIC_TITLE: Hramoty Xiv
 MODULE_NUM: '105'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/hramoty-xiv.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/hramoty-xiv.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/hramoty-xiv.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/hramoty-xiv.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/hramoty-xiv.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/hramoty-xiv-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/hramoty-xiv-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/hramoty-xiv.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/hramoty-xiv.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/hramoty-xiv.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/hramoty-xiv.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/hramoty-xiv.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/hramoty-xiv-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/hramoty-xiv-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

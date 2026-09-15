@@ -3,7 +3,7 @@
 version: 0.1
 Date: 2026-06-22
 Auditor: codex/gpt-5
-Worktree: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/b2-m01-build-audit-prompt-pass
+Worktree: .worktrees/dispatch/codex/b2-m01-build-audit-prompt-pass
 Scope: B2 M01 `passive-voice-system`
 Read-only audit phase: true
 Durable report path: docs/audits/b2-quality-audit-2026-06-22.md

@@ -100,7 +100,7 @@ Body cites and registry IDs aligned perfectly. Rebuild launched.
 For reference, the command was:
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 .venv/bin/python scripts/wiki/compile.py --track a1 --slug i-want-i-can --force
 ```
 
@@ -206,10 +206,10 @@ Both #1591 and #1586 dispatches got a warning: "task '...' is using the DEPRECAT
 ## Active worktrees at handoff write time
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian                                          04aae723ab [main]
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-1586-llm-qg-thresholds  d79457e5e9 [codex/1586-llm-qg-thresholds]
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-interactive             3c8bc39bae (detached HEAD)
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/verify-a1-1-phaseA-v5         ab3178fb64 [verify/a1-1-phaseA-v5]
+.                                          04aae723ab [main]
+.worktrees/codex-1586-llm-qg-thresholds  d79457e5e9 [codex/1586-llm-qg-thresholds]
+.worktrees/codex-interactive             3c8bc39bae (detached HEAD)
+.worktrees/verify-a1-1-phaseA-v5         ab3178fb64 [verify/a1-1-phaseA-v5]
 ```
 
 `codex-interactive` and `verify-a1-1-phaseA-v5` are stale from prior sessions — safe to clean up if no longer needed.
@@ -471,10 +471,10 @@ call an explicit numbered step (not a deferred suggestion).
 ### Worktrees at handoff finalization
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian                                         d102a79887 [main]
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-interactive            3c8bc39bae (detached HEAD)
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-phase-4-a1-20-exemplar d313499332 [codex/phase-4-a1-20-exemplar]
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/verify-a1-1-phaseA-v5        ab3178fb64 [verify/a1-1-phaseA-v5]
+.                                         d102a79887 [main]
+.worktrees/codex-interactive            3c8bc39bae (detached HEAD)
+.worktrees/codex-phase-4-a1-20-exemplar d313499332 [codex/phase-4-a1-20-exemplar]
+.worktrees/verify-a1-1-phaseA-v5        ab3178fb64 [verify/a1-1-phaseA-v5]
 ```
 
 The Phase 4 worktree should NOT be deleted in the morning — the

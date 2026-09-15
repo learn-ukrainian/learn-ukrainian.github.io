@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: stylistic-levels
 TOPIC_TITLE: Stylistic Levels
 MODULE_NUM: '58'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/stylistic-levels.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/stylistic-levels.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/stylistic-levels.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/stylistic-levels.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/stylistic-levels.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/stylistic-levels-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/stylistic-levels-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/stylistic-levels.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/stylistic-levels.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/stylistic-levels.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/stylistic-levels.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/stylistic-levels.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/stylistic-levels-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/stylistic-levels-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

@@ -54,8 +54,8 @@ The harness reads `data/sources.db` (1.6 GB) and `data/vesum.db` from
 `PROJECT_ROOT`. Sparse worktrees ship with empty placeholders. Symlink:
 
 ```
-[ -L data/sources.db ] || { rm -f data/sources.db; ln -s /Users/krisztiankoos/projects/learn-ukrainian/data/sources.db data/sources.db; }
-[ -L data/vesum.db ]   || { rm -f data/vesum.db;   ln -s /Users/krisztiankoos/projects/learn-ukrainian/data/vesum.db   data/vesum.db; }
+[ -L data/sources.db ] || { rm -f data/sources.db; ln -s data/sources.db data/sources.db; }
+[ -L data/vesum.db ]   || { rm -f data/vesum.db;   ln -s data/vesum.db   data/vesum.db; }
 ls -la data/sources.db data/vesum.db    # confirm symlinks point to real files
 ```
 

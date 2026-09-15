@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: criminal-law-murder
 TOPIC_TITLE: Criminal Law Murder
 MODULE_NUM: '6'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/criminal-law-murder.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/criminal-law-murder.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/criminal-law-murder.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/criminal-law-murder.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/criminal-law-murder.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/criminal-law-murder-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/criminal-law-murder-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/criminal-law-murder.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/criminal-law-murder.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/criminal-law-murder.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/criminal-law-murder.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/criminal-law-murder.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/criminal-law-murder-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/criminal-law-murder-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

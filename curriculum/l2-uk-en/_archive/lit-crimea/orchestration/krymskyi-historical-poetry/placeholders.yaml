@@ -3,13 +3,13 @@ LEVEL: LIT_CRIMEA
 SLUG: krymskyi-historical-poetry
 TOPIC_TITLE: Krymskyi Historical Poetry
 MODULE_NUM: '5'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-crimea/krymskyi-historical-poetry.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-crimea/meta/krymskyi-historical-poetry.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-crimea/krymskyi-historical-poetry.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-crimea/activities/krymskyi-historical-poetry.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-crimea/vocabulary/krymskyi-historical-poetry.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-crimea/research/krymskyi-historical-poetry-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-crimea/review/krymskyi-historical-poetry-review.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-crimea/krymskyi-historical-poetry.yaml
+META_PATH: curriculum/l2-uk-en/lit-crimea/meta/krymskyi-historical-poetry.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-crimea/krymskyi-historical-poetry.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-crimea/activities/krymskyi-historical-poetry.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-crimea/vocabulary/krymskyi-historical-poetry.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-crimea/research/krymskyi-historical-poetry-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-crimea/review/krymskyi-historical-poetry-review.md
 QUICK_REF_PATH: ''
 SCHEMA_PATH: schemas/activities-lit-crimea.schema.json
 WORD_TARGET: '5000'

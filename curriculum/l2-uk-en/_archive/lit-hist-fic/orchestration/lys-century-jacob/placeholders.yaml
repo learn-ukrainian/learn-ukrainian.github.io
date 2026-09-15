@@ -3,14 +3,14 @@ LEVEL: LIT_HIST_FIC
 SLUG: lys-century-jacob
 TOPIC_TITLE: Lys Century Jacob
 MODULE_NUM: '15'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-hist-fic/lys-century-jacob.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/meta/lys-century-jacob.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/lys-century-jacob.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/activities/lys-century-jacob.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/vocabulary/lys-century-jacob.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/research/lys-century-jacob-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/review/lys-century-jacob-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-hist-fic/lys-century-jacob.yaml
+META_PATH: curriculum/l2-uk-en/lit-hist-fic/meta/lys-century-jacob.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-hist-fic/lys-century-jacob.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-hist-fic/activities/lys-century-jacob.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-hist-fic/vocabulary/lys-century-jacob.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-hist-fic/research/lys-century-jacob-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-hist-fic/review/lys-century-jacob-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-hist-fic.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

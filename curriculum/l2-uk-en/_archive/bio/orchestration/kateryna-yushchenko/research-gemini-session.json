@@ -45,7 +45,7 @@
           "id": "run_shell_command_1773399583778_0",
           "name": "run_shell_command",
           "args": {
-            "command": "python -c \"import sys, json; sys.path.append('/Users/krisztiankoos/projects/learn-ukrainian/scripts'); from mcp_clients import query_wikipedia; print(json.dumps(query_wikipedia('Ющенко Катерина Логвинівна', mode='extract')))\""
+            "command": "python -c \"import sys, json; sys.path.append('scripts'); from mcp_clients import query_wikipedia; print(json.dumps(query_wikipedia('Ющенко Катерина Логвинівна', mode='extract')))\""
           },
           "result": [
             {

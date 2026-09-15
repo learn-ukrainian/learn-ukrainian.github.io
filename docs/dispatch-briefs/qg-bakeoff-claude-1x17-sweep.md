@@ -6,10 +6,10 @@ You are the measurement driver. **Run ONE Python command.** Do not write bash sc
 
 ## The only command
 
-From repo root `/Users/krisztiankoos/projects/learn-ukrainian`:
+From repo root `.`:
 
 ```
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 QG_BAKEOFF=1 .venv/bin/python scripts/audit/run_subscription_1x17_sweep.py --model claude-opus-4-8
 ```
 
@@ -24,7 +24,7 @@ QG_BAKEOFF=1 .venv/bin/python scripts/audit/run_subscription_1x17_sweep.py --mod
 Claude and GPT use different subscription buckets. GPT sweep can run at the same time in a **separate** session:
 
 ```
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 QG_BAKEOFF=1 .venv/bin/python scripts/audit/run_subscription_1x17_sweep.py --model gpt-5.5
 ```
 

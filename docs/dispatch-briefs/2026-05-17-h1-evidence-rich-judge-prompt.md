@@ -41,8 +41,8 @@ Dispatch system creates `.worktrees/dispatch/claude/h1-evidence-rich-judge-2026-
 ### 2. Data symlinks (sparse worktree)
 
 ```
-[ -L data/sources.db ] || { rm -f data/sources.db; ln -s /Users/krisztiankoos/projects/learn-ukrainian/data/sources.db data/sources.db; }
-[ -L data/vesum.db ]   || { rm -f data/vesum.db;   ln -s /Users/krisztiankoos/projects/learn-ukrainian/data/vesum.db   data/vesum.db; }
+[ -L data/sources.db ] || { rm -f data/sources.db; ln -s data/sources.db data/sources.db; }
+[ -L data/vesum.db ]   || { rm -f data/vesum.db;   ln -s data/vesum.db   data/vesum.db; }
 ```
 
 ### 3. Fetch calibration cases

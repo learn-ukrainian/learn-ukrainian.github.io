@@ -69,7 +69,7 @@ Fleet-comms code/pins largely landed on main (`#5602`, `#5611`, `#5613`, PR-M/L)
 ## Startup Checks
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin main --prune
 git status --short --branch
 git pull --ff-only origin main

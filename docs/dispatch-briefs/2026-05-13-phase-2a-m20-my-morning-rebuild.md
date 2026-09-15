@@ -40,7 +40,7 @@ The new build must also satisfy these 5 predicates. If it does AND the new audit
 ## Invocation
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 .venv/bin/python scripts/build/v7_build.py a1 my-morning --worktree
 ```
 

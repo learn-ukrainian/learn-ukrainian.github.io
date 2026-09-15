@@ -12,9 +12,9 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-**Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks.** Every command that uses `.venv/`, `scripts/`, or files in MAIN checkout MUST be prefixed with `cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1894-codex-bridge-resume && ...` (or absolute path).
+**Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks.** Every command that uses `.venv/`, `scripts/`, or files in MAIN checkout MUST be prefixed with `cd .worktrees/dispatch/codex/1894-codex-bridge-resume && ...` (or absolute path).
 
-Inside the worktree, `.venv/` exists ONLY because git worktrees do not copy gitignored dirs. Use the MAIN checkout's `.venv` via absolute path: `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
+Inside the worktree, `.venv/` exists ONLY because git worktrees do not copy gitignored dirs. Use the MAIN checkout's `.venv` via `.venv/bin/python`.
 
 ---
 
@@ -45,7 +45,7 @@ codex exec resume [OPTIONS] <SESSION_ID> [PROMPT]
 Verify yourself in the worktree:
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1894-codex-bridge-resume && codex exec --help | head -10 && echo --- && codex exec resume --help | head -20
+cd .worktrees/dispatch/codex/1894-codex-bridge-resume && codex exec --help | head -10 && echo --- && codex exec resume --help | head -20
 ```
 
 Quote the raw output of both `--help` calls in your final response so we have deterministic evidence the CLI shape didn't drift between dispatch time and write time.
@@ -55,7 +55,7 @@ Codex CLI also has no `--session-id <uuid>` "create with this UUID" form (unlike
 **Quick sanity check before coding** — run a real `codex exec` to confirm the UUID still lands at line 5 of stdout (CLI version 0.130.0 was the last tested version). Quote the first 6 lines of stdout in your response.
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1894-codex-bridge-resume && echo "say hi" | codex exec --color never -s read-only -m gpt-5.5 -o /tmp/codex-1894-probe.txt - 2>&1 | head -6
+cd .worktrees/dispatch/codex/1894-codex-bridge-resume && echo "say hi" | codex exec --color never -s read-only -m gpt-5.5 -o /tmp/codex-1894-probe.txt - 2>&1 | head -6
 ```
 
 ---
@@ -64,7 +64,7 @@ cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1894-
 
 1. **Verify worktree base.** From inside the worktree:
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1894-codex-bridge-resume && git log --oneline -3
+   cd .worktrees/dispatch/codex/1894-codex-bridge-resume && git log --oneline -3
    ```
    Top commit must be `0e97806d7` (or descendant) and the branch must be `codex/1894-codex-bridge-resume`.
 
@@ -117,13 +117,13 @@ cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1894-
 
 6. **Run the full agent-runtime suite** + relevant ones:
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1894-codex-bridge-resume && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest tests/test_agent_runtime.py tests/test_channels_discuss_resume.py -v 2>&1 | tail -30
+   cd .worktrees/dispatch/codex/1894-codex-bridge-resume && .venv/bin/python -m pytest tests/test_agent_runtime.py tests/test_channels_discuss_resume.py -v 2>&1 | tail -30
    ```
    Quote the raw final summary line in your response (e.g. `192 passed in 27.95s`). Bare "tests pass" is not acceptable per #M-4.
 
 7. **Ruff:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1894-codex-bridge-resume && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/agent_runtime/adapters/codex.py scripts/agent_runtime/registry.py tests/test_agent_runtime.py tests/test_channels_discuss_resume.py 2>&1 | tail -10
+   cd .worktrees/dispatch/codex/1894-codex-bridge-resume && .venv/bin/ruff check scripts/agent_runtime/adapters/codex.py scripts/agent_runtime/registry.py tests/test_agent_runtime.py tests/test_channels_discuss_resume.py 2>&1 | tail -10
    ```
    Quote raw output.
 

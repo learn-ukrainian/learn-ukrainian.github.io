@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: barka-yellow-prince
 TOPIC_TITLE: Barka Yellow Prince
 MODULE_NUM: '133'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/barka-yellow-prince.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/barka-yellow-prince.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/barka-yellow-prince.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/barka-yellow-prince.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/barka-yellow-prince.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/barka-yellow-prince-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/barka-yellow-prince-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/barka-yellow-prince.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/barka-yellow-prince.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/barka-yellow-prince.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/barka-yellow-prince.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/barka-yellow-prince.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/barka-yellow-prince-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/barka-yellow-prince-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

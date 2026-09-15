@@ -1,7 +1,7 @@
 Reading additional input from stdin...
 OpenAI Codex v0.130.0
 --------
-workdir: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1805-mcp-observer
+workdir: .worktrees/dispatch/codex/1805-mcp-observer
 model: gpt-5.5
 provider: openai
 approval: never

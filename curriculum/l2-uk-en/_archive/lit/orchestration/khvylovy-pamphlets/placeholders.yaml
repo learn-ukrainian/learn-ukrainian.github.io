@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: khvylovy-pamphlets
 TOPIC_TITLE: Khvylovy Pamphlets
 MODULE_NUM: '93'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/khvylovy-pamphlets.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/khvylovy-pamphlets.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/khvylovy-pamphlets.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/khvylovy-pamphlets.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/khvylovy-pamphlets.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/khvylovy-pamphlets-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/khvylovy-pamphlets-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/khvylovy-pamphlets.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/khvylovy-pamphlets.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/khvylovy-pamphlets.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/khvylovy-pamphlets.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/khvylovy-pamphlets.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/khvylovy-pamphlets-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/khvylovy-pamphlets-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

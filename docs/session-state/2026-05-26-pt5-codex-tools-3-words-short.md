@@ -62,7 +62,7 @@ raw writer_tool_calls.json records=27
 **Build worktree (preserved per MEMORY #M-10):**
 
 ```
-/Users/krisztiankoos/.codex/worktrees/3a9a/learn-ukrainian/.worktrees/builds/a1-my-morning-20260526-193657
+.codex/worktrees/3a9a/learn-ukrainian/.worktrees/builds/a1-my-morning-20260526-193657
 ```
 
 ## What caused the 3-token miss
@@ -127,7 +127,7 @@ The bridge command is the same as rounds #4-#10:
 ```bash
 .venv/bin/python scripts/ai_agent_bridge/__main__.py send-codex-ui \
   --thread 019e6063-c3da-78d1-acaa-4cd684a08786 \
-  --cwd /Users/krisztiankoos/.codex/worktrees/3a9a/learn-ukrainian \
+  --cwd .codex/worktrees/3a9a/learn-ukrainian \
   --from-file /tmp/m20-relay-round11.md \
   --timeout 5400 --json
 ```

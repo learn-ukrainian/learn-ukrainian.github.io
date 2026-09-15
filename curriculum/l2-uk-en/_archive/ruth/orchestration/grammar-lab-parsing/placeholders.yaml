@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: grammar-lab-parsing
 TOPIC_TITLE: Grammar Lab Parsing
 MODULE_NUM: '60'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/grammar-lab-parsing.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/grammar-lab-parsing.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/grammar-lab-parsing.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/grammar-lab-parsing.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/grammar-lab-parsing.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/grammar-lab-parsing-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/grammar-lab-parsing-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/grammar-lab-parsing.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/grammar-lab-parsing.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/grammar-lab-parsing.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/grammar-lab-parsing.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/grammar-lab-parsing.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/grammar-lab-parsing-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/grammar-lab-parsing-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

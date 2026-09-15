@@ -3,14 +3,14 @@ LEVEL: LIT_FANTASTIKA
 SLUG: deresh-arche
 TOPIC_TITLE: Deresh Arche
 MODULE_NUM: '25'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-fantastika/deresh-arche.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/meta/deresh-arche.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/deresh-arche.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/activities/deresh-arche.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/vocabulary/deresh-arche.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/research/deresh-arche-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/review/deresh-arche-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-fantastika/deresh-arche.yaml
+META_PATH: curriculum/l2-uk-en/lit-fantastika/meta/deresh-arche.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-fantastika/deresh-arche.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-fantastika/activities/deresh-arche.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-fantastika/vocabulary/deresh-arche.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-fantastika/research/deresh-arche-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-fantastika/review/deresh-arche-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-fantastika.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

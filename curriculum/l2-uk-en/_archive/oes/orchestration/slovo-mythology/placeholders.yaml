@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: slovo-mythology
 TOPIC_TITLE: Slovo Mythology
 MODULE_NUM: '88'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/slovo-mythology.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/slovo-mythology.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/slovo-mythology.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/slovo-mythology.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/slovo-mythology.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/slovo-mythology-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/slovo-mythology-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/slovo-mythology.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/slovo-mythology.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/slovo-mythology.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/slovo-mythology.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/slovo-mythology.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/slovo-mythology-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/slovo-mythology-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

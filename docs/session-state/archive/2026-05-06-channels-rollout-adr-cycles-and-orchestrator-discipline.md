@@ -125,7 +125,7 @@ Pattern: stale issues from before a major reframe (V7 reboot here) accumulate fa
 ## Cold-start protocol for next session
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 source ./.envrc
 
 # State queries (warm-cache friendly)

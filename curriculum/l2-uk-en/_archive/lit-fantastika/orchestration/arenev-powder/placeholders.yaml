@@ -3,14 +3,14 @@ LEVEL: LIT_FANTASTIKA
 SLUG: arenev-powder
 TOPIC_TITLE: Arenev Powder
 MODULE_NUM: '13'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-fantastika/arenev-powder.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/meta/arenev-powder.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/arenev-powder.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/activities/arenev-powder.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/vocabulary/arenev-powder.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/research/arenev-powder-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/review/arenev-powder-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-fantastika/arenev-powder.yaml
+META_PATH: curriculum/l2-uk-en/lit-fantastika/meta/arenev-powder.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-fantastika/arenev-powder.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-fantastika/activities/arenev-powder.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-fantastika/vocabulary/arenev-powder.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-fantastika/research/arenev-powder-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-fantastika/review/arenev-powder-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-fantastika.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

@@ -70,7 +70,7 @@ Render is at `starlight/src/pages/lexicon/[lemma].astro`; data at `starlight/src
 
 ## Restart
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin -q && git merge --ff-only origin/main
 python3 -c "import json;m=json.load(open('starlight/src/data/lexicon-manifest.json'));print('etymology',sum(1 for x in m['entries'] if (x.get('enrichment') or {}).get('etymology')),'/',len(m['entries']))"  # 42/63
 # B phase 2: dispatch Wiktionary ingest (model on scripts/ingest/goroh_etymology_ingest.py)

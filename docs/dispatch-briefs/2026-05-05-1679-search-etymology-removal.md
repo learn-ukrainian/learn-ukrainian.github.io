@@ -9,7 +9,7 @@ The canonical name is `search_grinchenko_1907`. All call sites should already be
 ## Worktree instructions (mandatory)
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin main
 git worktree add -b codex/1679-remove-search-etymology .worktrees/codex-1679 origin/main
 cd .worktrees/codex-1679

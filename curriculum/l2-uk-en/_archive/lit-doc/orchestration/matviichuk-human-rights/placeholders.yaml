@@ -3,13 +3,13 @@ LEVEL: LIT_DOC
 SLUG: matviichuk-human-rights
 TOPIC_TITLE: Matviichuk Human Rights
 MODULE_NUM: '6'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-doc/matviichuk-human-rights.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-doc/meta/matviichuk-human-rights.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-doc/matviichuk-human-rights.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-doc/activities/matviichuk-human-rights.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-doc/vocabulary/matviichuk-human-rights.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-doc/research/matviichuk-human-rights-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-doc/review/matviichuk-human-rights-review.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-doc/matviichuk-human-rights.yaml
+META_PATH: curriculum/l2-uk-en/lit-doc/meta/matviichuk-human-rights.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-doc/matviichuk-human-rights.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-doc/activities/matviichuk-human-rights.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-doc/vocabulary/matviichuk-human-rights.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-doc/research/matviichuk-human-rights-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-doc/review/matviichuk-human-rights-review.md
 QUICK_REF_PATH: ''
 SCHEMA_PATH: schemas/activities-lit-doc.schema.json
 WORD_TARGET: '5000'

@@ -42,7 +42,7 @@ Conjugation tables are similarly merged: a markdown table with one verb form per
 ## Worktree setup (mandatory)
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin main
 git worktree add -b codex/1724-immersion-splitter .worktrees/dispatch/codex/1724-immersion-splitter origin/main
 cd .worktrees/dispatch/codex/1724-immersion-splitter
@@ -129,10 +129,10 @@ Each writer's `immersion` should either pass or fail for legitimate reasons (e.g
 ## Get Claude adversarial review
 
 ```bash
-git -C /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1724-immersion-splitter \
+git -C .worktrees/dispatch/codex/1724-immersion-splitter \
   diff origin/main..HEAD > /tmp/1724-diff.txt
 
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude \
   "Adversarial review for #1724. Read /tmp/1724-diff.txt. Focus: (A) does the splitter handle three-em-dash variants — em-dash (—), en-dash (–), hyphen-as-dash (-) at line start? (B) what about Ukrainian quotation marks («») wrapping a dialogue line — does that interfere? (C) are the splitter's regex anchors correct (^ requires multiline flag)? (D) does the change preserve the gate's ability to flag REAL long sentences — confirm test #6 actually exercises that?" \
   --task-id 1724-review --model claude-opus-4-7

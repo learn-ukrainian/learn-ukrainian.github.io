@@ -43,15 +43,15 @@ Keyword extract only. No LLM. Runnable as a script:
 
 ```bash
 DIGEST_LABEL=local \
-DIGEST_REPO="$HOME/projects/learn-ukrainian" \
-python3 scripts/ops/digest_codex_rollout.py
+DIGEST_REPO="${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-.}" \
+.venv/bin/python scripts/ops/digest_codex_rollout.py
 ```
 
 | Env | Default |
 | --- | --- |
 | `DIGEST_LABEL` | `local` |
 | `DIGEST_ROOTS` | `~/.codex/sessions:~/.claude/projects:~/.gemini/tmp:~/.config/gemini` |
-| `DIGEST_REPO` | `~/projects/learn-ukrainian` |
+| `DIGEST_REPO` | `.` or `LEARN_UKRAINIAN_PRIMARY_REPO_ROOT` |
 | `DIGEST_MAX` | `12` |
 
 Behavior: glob `**/rollout-*.jsonl` and `**/*.jsonl`, apply a size floor, sort mtime newest first (rollout name is tie-break only — do not rank an old Codex rollout over a newer Claude/other jsonl), cap at `DIGEST_MAX`, tail last 500 lines, keep material keywords, drop AGENTS.md / cold_start / rules-load noise, write `logs/agent-digests/<label>-latest.md`, refresh `logs/agent-digests/index.md`, print the output path plus `bytes= sources= label=`.

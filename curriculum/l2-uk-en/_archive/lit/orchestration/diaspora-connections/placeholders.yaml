@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: diaspora-connections
 TOPIC_TITLE: Diaspora Connections
 MODULE_NUM: '214'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/diaspora-connections.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/diaspora-connections.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/diaspora-connections.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/diaspora-connections.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/diaspora-connections.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/diaspora-connections-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/diaspora-connections-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/diaspora-connections.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/diaspora-connections.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/diaspora-connections.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/diaspora-connections.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/diaspora-connections.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/diaspora-connections-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/diaspora-connections-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

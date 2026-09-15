@@ -123,7 +123,7 @@ the right branches with the existing Gemini fixes in place.
 
 ```bash
 # Worktree A
-cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/gemini/codeql-B-secrets-exposure
+cd .worktrees/dispatch/gemini/codeql-B-secrets-exposure
 git fetch origin
 git rebase origin/main  # take in any post-#1689 main updates
 # ... make Fix 1 edits ...
@@ -132,7 +132,7 @@ git commit -m "..."
 git push --force-with-lease
 
 # Worktree B  
-cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/gemini/codeql-A-path-injection
+cd .worktrees/dispatch/gemini/codeql-A-path-injection
 git fetch origin
 git rebase origin/main
 # ... make Fix 1 + Fix 2 edits ...

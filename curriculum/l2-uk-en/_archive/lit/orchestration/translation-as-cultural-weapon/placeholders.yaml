@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: translation-as-cultural-weapon
 TOPIC_TITLE: Translation As Cultural Weapon
 MODULE_NUM: '125'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/translation-as-cultural-weapon.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/translation-as-cultural-weapon.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/translation-as-cultural-weapon.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/translation-as-cultural-weapon.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/translation-as-cultural-weapon.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/translation-as-cultural-weapon-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/translation-as-cultural-weapon-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/translation-as-cultural-weapon.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/translation-as-cultural-weapon.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/translation-as-cultural-weapon.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/translation-as-cultural-weapon.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/translation-as-cultural-weapon.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/translation-as-cultural-weapon-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/translation-as-cultural-weapon-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: new-prose-resistance
 TOPIC_TITLE: New Prose Resistance
 MODULE_NUM: '211'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/new-prose-resistance.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/new-prose-resistance.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/new-prose-resistance.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/new-prose-resistance.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/new-prose-resistance.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/new-prose-resistance-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/new-prose-resistance-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/new-prose-resistance.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/new-prose-resistance.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/new-prose-resistance.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/new-prose-resistance.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/new-prose-resistance.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/new-prose-resistance-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/new-prose-resistance-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

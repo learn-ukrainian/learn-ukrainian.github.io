@@ -291,8 +291,8 @@ Create: `docs/dev/GRAMMAR_VALIDATE_TEST_REPORT.md`
 ## Context Files
 
 **Read these:**
-- `/Users/krisztiankoos/projects/learn-ukrainian/CLAUDE.md` - Project instructions
-- `/Users/krisztiankoos/projects/learn-ukrainian/scripts/audit/ukrainian_grammar_validator_prompt.md` - Validation prompt
+- `CLAUDE.md` - Project instructions
+- `scripts/audit/ukrainian_grammar_validator_prompt.md` - Validation prompt
 
 **Commits to review:**
 ```bash

@@ -103,7 +103,7 @@ hazard from the prior handoff still unresolved. **Get Codex onto a worktree.**
 
 ## Restart
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin -q && git log origin/main --oneline -8
 curl -sS http://127.0.0.1:8765/api/orient
 gh issue view 2823 --comments

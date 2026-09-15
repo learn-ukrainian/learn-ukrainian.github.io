@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: prokhasko-magical-carpathians
 TOPIC_TITLE: Prokhasko Magical Carpathians
 MODULE_NUM: '191'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/prokhasko-magical-carpathians.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/prokhasko-magical-carpathians.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/prokhasko-magical-carpathians.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/prokhasko-magical-carpathians.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/prokhasko-magical-carpathians.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/prokhasko-magical-carpathians-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/prokhasko-magical-carpathians-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/prokhasko-magical-carpathians.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/prokhasko-magical-carpathians.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/prokhasko-magical-carpathians.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/prokhasko-magical-carpathians.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/prokhasko-magical-carpathians.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/prokhasko-magical-carpathians-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/prokhasko-magical-carpathians-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

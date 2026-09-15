@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: vynnychenko-solar-machine
 TOPIC_TITLE: 'Володимир Винниченко: «Сонячна машина» — перша утопія'
 MODULE_NUM: '69'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/vynnychenko-solar-machine.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/vynnychenko-solar-machine.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vynnychenko-solar-machine.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/vynnychenko-solar-machine.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/vynnychenko-solar-machine.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/vynnychenko-solar-machine-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/vynnychenko-solar-machine-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/vynnychenko-solar-machine.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/vynnychenko-solar-machine.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/vynnychenko-solar-machine.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/vynnychenko-solar-machine.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/vynnychenko-solar-machine.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/vynnychenko-solar-machine-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/vynnychenko-solar-machine-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

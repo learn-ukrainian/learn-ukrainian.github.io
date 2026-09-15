@@ -53,14 +53,14 @@ No `git push origin --delete <branch>` needed — every feature/fix branch from 
 **Worktrees**:
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian                              3006ec8ced [main]
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-interactive 2eb62691d4 (detached HEAD)
+.                              3006ec8ced [main]
+.worktrees/codex-interactive 2eb62691d4 (detached HEAD)
 ```
 
 The `codex-interactive` worktree is on a detached-HEAD commit `2eb62691d4` ("feat(etymology): Phase 1 OCR feasibility — Gemini Vision wins (#2004)"). Long-lived from a prior interactive session. **Safe to keep** if the user runs `codex` interactively from there; otherwise:
 
 ```bash
-git worktree remove --force /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-interactive
+git worktree remove --force .worktrees/codex-interactive
 ```
 
 Check with the user before removing — it's a 2-week-old workspace and may have unstaged exploration work the user wants to preserve. Default: leave alone.

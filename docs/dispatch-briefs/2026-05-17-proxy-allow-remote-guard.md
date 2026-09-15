@@ -25,7 +25,7 @@ close.
 
 2. **Reproduce.** From the worktree:
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian
+   cd .
    # venv symlinked into worktree by delegate.py
    .venv/bin/python scripts/ai_agent_bridge/__main__.py serve --openai --host 0.0.0.0 --help
    # observe: --host is accepted without warning

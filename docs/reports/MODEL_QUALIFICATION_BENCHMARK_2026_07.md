@@ -5,7 +5,7 @@
 > **Benchmark Corpus**: Level-Playing-Field Lviv Rent Anchor (*«Як ми шукали квартиру у Львові»*, B1 45-minute lesson)  
 > **Independent Cross-Family Judges**: Sol (`gpt-5.6-sol`) & Claude Opus (`claude-opus-4-8`)  
 > **Live Web Dashboard**: [http://127.0.0.1:8892/index.html](http://127.0.0.1:8892/index.html)  
-> **Architectural Record**: [ADR 012: Open Model Harness Elevation](file:///Users/krisztiankoos/projects/learn-ukrainian/docs/architecture/ADR_012_OPEN_MODEL_HARNESS_ELEVATION.md)
+> **Architectural Record**: [ADR 012: Open Model Harness Elevation](file://docs/architecture/ADR_012_OPEN_MODEL_HARNESS_ELEVATION.md)
 
 ---
 

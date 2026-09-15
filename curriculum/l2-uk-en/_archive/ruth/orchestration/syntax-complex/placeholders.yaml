@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: syntax-complex
 TOPIC_TITLE: Syntax Complex
 MODULE_NUM: '56'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/syntax-complex.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/syntax-complex.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/syntax-complex.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/syntax-complex.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/syntax-complex.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/syntax-complex-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/syntax-complex-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/syntax-complex.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/syntax-complex.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/syntax-complex.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/syntax-complex.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/syntax-complex.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/syntax-complex-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/syntax-complex-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

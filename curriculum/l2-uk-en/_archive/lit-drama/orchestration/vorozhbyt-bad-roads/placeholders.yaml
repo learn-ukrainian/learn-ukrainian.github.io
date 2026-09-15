@@ -3,13 +3,13 @@ LEVEL: LIT_DRAMA
 SLUG: vorozhbyt-bad-roads
 TOPIC_TITLE: Vorozhbyt Bad Roads
 MODULE_NUM: '8'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-drama/vorozhbyt-bad-roads.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/meta/vorozhbyt-bad-roads.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/vorozhbyt-bad-roads.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/activities/vorozhbyt-bad-roads.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/vocabulary/vorozhbyt-bad-roads.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/research/vorozhbyt-bad-roads-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/review/vorozhbyt-bad-roads-review.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-drama/vorozhbyt-bad-roads.yaml
+META_PATH: curriculum/l2-uk-en/lit-drama/meta/vorozhbyt-bad-roads.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-drama/vorozhbyt-bad-roads.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-drama/activities/vorozhbyt-bad-roads.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-drama/vocabulary/vorozhbyt-bad-roads.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-drama/research/vorozhbyt-bad-roads-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-drama/review/vorozhbyt-bad-roads-review.md
 QUICK_REF_PATH: ''
 SCHEMA_PATH: schemas/activities-lit-drama.schema.json
 WORD_TARGET: '5000'

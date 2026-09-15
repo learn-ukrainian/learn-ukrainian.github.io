@@ -15,7 +15,7 @@ from audit import lint_dispatch_brief
     "body",
     [
         """```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 .venv/bin/python scripts/delegate.py dispatch --task-id example
 ```""",
         """```bash
@@ -48,14 +48,14 @@ def test_brief_passes_with_required_venv_guard(tmp_path: Path, body: str) -> Non
         ),
         (
             """```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/example
+cd .worktrees/dispatch/codex/example
 .venv/bin/python scripts/delegate.py dispatch --task-id example
 ```""",
             5,
         ),
         (
             """```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 .venv/bin/python scripts/delegate.py dispatch --task-id 1
 echo "1"
 echo "2"

@@ -3,14 +3,14 @@ LEVEL: LIT_WAR
 SLUG: maksym-kryvtsov-poetry
 TOPIC_TITLE: Maksym Kryvtsov Poetry
 MODULE_NUM: '21'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-war/maksym-kryvtsov-poetry.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/meta/maksym-kryvtsov-poetry.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/maksym-kryvtsov-poetry.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/activities/maksym-kryvtsov-poetry.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/vocabulary/maksym-kryvtsov-poetry.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/research/maksym-kryvtsov-poetry-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/review/maksym-kryvtsov-poetry-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-war/maksym-kryvtsov-poetry.yaml
+META_PATH: curriculum/l2-uk-en/lit-war/meta/maksym-kryvtsov-poetry.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-war/maksym-kryvtsov-poetry.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-war/activities/maksym-kryvtsov-poetry.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-war/vocabulary/maksym-kryvtsov-poetry.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-war/research/maksym-kryvtsov-poetry-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-war/review/maksym-kryvtsov-poetry-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-war.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

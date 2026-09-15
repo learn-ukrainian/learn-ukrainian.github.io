@@ -3,14 +3,14 @@ LEVEL: LIT_ESSAY
 SLUG: vira-ageyeva-canon
 TOPIC_TITLE: Vira Ageyeva Canon
 MODULE_NUM: '55'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-essay/vira-ageyeva-canon.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/meta/vira-ageyeva-canon.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/vira-ageyeva-canon.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/activities/vira-ageyeva-canon.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/vocabulary/vira-ageyeva-canon.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/research/vira-ageyeva-canon-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/review/vira-ageyeva-canon-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-essay/vira-ageyeva-canon.yaml
+META_PATH: curriculum/l2-uk-en/lit-essay/meta/vira-ageyeva-canon.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-essay/vira-ageyeva-canon.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-essay/activities/vira-ageyeva-canon.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-essay/vocabulary/vira-ageyeva-canon.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-essay/research/vira-ageyeva-canon-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-essay/review/vira-ageyeva-canon-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-essay.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

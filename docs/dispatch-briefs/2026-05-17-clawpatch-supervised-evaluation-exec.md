@@ -29,7 +29,7 @@ User installed clawpatch globally via npm — verified at `/opt/homebrew/bin/cla
 ### Step 2 — `clawpatch init` on a worktree clone
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin
 git worktree add .worktrees/clawpatch-trial -b eval/clawpatch-trial origin/main
 cd .worktrees/clawpatch-trial
@@ -107,7 +107,7 @@ Only ONE file:
 Commit + push from the main repo (not the trial worktree):
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git checkout -b eval/clawpatch-decision-card
 # move/copy the decision card if you wrote it in the trial worktree
 git add docs/decisions/pending/2026-05-17-clawpatch-adoption.md
@@ -152,7 +152,7 @@ Whether the Decision Card recommends adopt or drop:
 ```bash
 # venv symlinked into worktree by delegate.py
 # Remove the trial worktree
-git worktree remove --force /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/clawpatch-trial
+git worktree remove --force .worktrees/clawpatch-trial
 # Delete the trial branch
 git branch -D eval/clawpatch-trial 2>/dev/null
 

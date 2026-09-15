@@ -647,7 +647,7 @@ def test_textbook_grounding_gate_parses_get_chunk_context_list_shape(
 
     # Exact shape codex-tools writer_tool_calls.json round-trip captured
     # at the 2026-05-26 m20 build #7 artifact:
-    #     /Users/k/.codex/worktrees/.../a1-my-morning-20260526-181133/
+    #     .codex/worktrees/.../a1-my-morning-20260526-181133/
     #     curriculum/l2-uk-en/a1/my-morning/writer_tool_calls.json
     _write_tool_calls(
         tmp_path,

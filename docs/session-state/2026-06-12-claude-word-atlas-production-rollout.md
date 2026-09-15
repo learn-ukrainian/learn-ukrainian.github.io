@@ -45,7 +45,7 @@ Atlas = derivative of curriculum vocab. Auto-maintain: CI/hook on `vocabulary.ya
 
 ## Restart
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 .venv/bin/python -c "import json;print(json.load(open('batch_state/tasks/atlas-finalize-all.json')).get('status'))"  # finalize done?
 gh run list --workflow=deploy-pages.yml --limit 2   # what's live
 cat /tmp/claude-atlas-briefs/GOATCOUNTER-CODE.txt    # goatcounter wiring

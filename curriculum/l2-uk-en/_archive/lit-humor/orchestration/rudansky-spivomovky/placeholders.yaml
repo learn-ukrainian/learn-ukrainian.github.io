@@ -3,14 +3,14 @@ LEVEL: LIT_HUMOR
 SLUG: rudansky-spivomovky
 TOPIC_TITLE: Rudansky Spivomovky
 MODULE_NUM: '2'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-humor/rudansky-spivomovky.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/meta/rudansky-spivomovky.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/rudansky-spivomovky.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/activities/rudansky-spivomovky.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/vocabulary/rudansky-spivomovky.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/research/rudansky-spivomovky-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-humor/review/rudansky-spivomovky-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-humor/rudansky-spivomovky.yaml
+META_PATH: curriculum/l2-uk-en/lit-humor/meta/rudansky-spivomovky.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-humor/rudansky-spivomovky.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-humor/activities/rudansky-spivomovky.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-humor/vocabulary/rudansky-spivomovky.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-humor/research/rudansky-spivomovky-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-humor/review/rudansky-spivomovky-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-humor.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

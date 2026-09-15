@@ -85,7 +85,7 @@ To push to 9.0+, the writer would need 2-3 more explicit decolonization moves: a
 
 ## Round #12 build worktree (preserved)
 
-`/Users/krisztiankoos/.codex/worktrees/3a9a/learn-ukrainian/.worktrees/builds/a1-my-morning-20260526-204640/`
+`.codex/worktrees/3a9a/learn-ukrainian/.worktrees/builds/a1-my-morning-20260526-204640/`
 
 Contents include the canonical artifacts (module.md, activities.yaml, vocabulary.yaml, resources.yaml, knowledge_packet.md, implementation_map.json, wiki_manifest.json), the LLM-QG per-dim prompts and raw responses (`llm-qg-{dim}-prompt.md`, `llm-qg-{dim}-response.raw.md` × 5), the writer_output.raw.md, writer_prompt.md, writer_tool_calls.json, python_qg.json, wiki_coverage_gate.json, wiki_coverage_review.json, llm_qg.json.
 

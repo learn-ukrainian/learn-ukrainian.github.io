@@ -52,7 +52,7 @@ WAVE1_STEM_TEXTBOOK_SOURCE_FILES = {
 }
 
 # Quoted from the required read-only probe:
-# sqlite3 'file:/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db?mode=ro' \
+# sqlite3 'file:data/sources.db?mode=ro' \
 #   "SELECT DISTINCT source_file FROM textbooks ORDER BY source_file;"
 CURRENT_TEXTBOOK_SOURCE_FILES = (
     "1-klas-bukvar-bolshakova-2018-1",

@@ -52,8 +52,8 @@ The negative side of rule (2) is what protects real compound nouns like `тем�
 ## Verification before commit
 
 ```
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/ruff check scripts/build/linear_pipeline.py tests/
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -m pytest tests/ -k 'vesum or linear_pipeline' -v --tb=short
+cd . && .venv/bin/ruff check scripts/build/linear_pipeline.py tests/
+cd . && .venv/bin/python -m pytest tests/ -k 'vesum or linear_pipeline' -v --tb=short
 ```
 
 All green required before commit. Per `#M-7` in `memory/MEMORY.md`: pre-commit hook is not a test run.

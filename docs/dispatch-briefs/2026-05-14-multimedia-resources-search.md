@@ -12,9 +12,9 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-Each bash block runs in a FRESH SHELL. Prefix every command with `cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/multimedia-resources-2026-05-14 && ...` or absolute path.
+Each bash block runs in a FRESH SHELL. Prefix every command with `cd .worktrees/dispatch/codex/multimedia-resources-2026-05-14 && ...` or absolute path.
 
-Use `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
+Use `.venv/bin/python`.
 
 ---
 
@@ -145,7 +145,7 @@ Wire into `python_qg` flow so a writer who skips multimedia search HALTS the bui
 
 1. **Worktree setup:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian && \
+   cd . && \
    git fetch origin main --quiet && \
    git worktree add -b codex/multimedia-resources-2026-05-14 .worktrees/dispatch/codex/multimedia-resources-2026-05-14 origin/main
    ```
@@ -160,13 +160,13 @@ Wire into `python_qg` flow so a writer who skips multimedia search HALTS the bui
    - end-to-end: regenerate a1/my-morning MDX (with current dirty source yamls in main checkout — read-only reference) → verify renderer doesn't crash + groups output by role.
 7. **Pytest:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/multimedia-resources-2026-05-14 && \
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest tests/test_wiki_manifest*.py tests/test_writer*.py tests/test_generate_mdx_v7_resources_vocab.py tests/test_resources_search_gate.py -x
+   cd .worktrees/dispatch/codex/multimedia-resources-2026-05-14 && \
+   .venv/bin/pytest tests/test_wiki_manifest*.py tests/test_writer*.py tests/test_generate_mdx_v7_resources_vocab.py tests/test_resources_search_gate.py -x
    ```
    Quote summary.
 8. **Ruff:**
    ```bash
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/build scripts/generate_mdx
+   .venv/bin/ruff check scripts/build scripts/generate_mdx
    ```
 9. **Commit** — conventional: `feat(content-pipeline): wiki manifest + writer prompt + assembler + gate for multimedia external resources`. Reference `Closes #1932`.
 10. **Push + PR.**

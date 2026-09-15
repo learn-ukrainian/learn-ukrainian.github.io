@@ -2,7 +2,7 @@
 
 > **Mode:** danger (full sandbox bypass — needed for `pgrep`/`pkill` watchdog and Claude/Gemini CLI invocations)
 > **Worktree:** `.worktrees/dispatch/codex/bakeoff-2026-05-07-retry/`
-> **Output dir:** `/Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-07-retry/` (absolute path so REPORT.md lands in MAIN checkout; suffix `-retry` preserves prior committed evidence at `audit/bakeoff-2026-05-07/`)
+> **Output dir:** `audit/bakeoff-2026-05-07-retry/` (absolute path so REPORT.md lands in MAIN checkout; suffix `-retry` preserves prior committed evidence at `audit/bakeoff-2026-05-07/`)
 > **Hard timeout:** 7200s (120 min)
 > **Effort:** medium
 > **Silence timeout:** 3600s (1h — bakeoff serial-3-writer execution has long silent stretches between writers; 1800s default killed `bakeoff-2026-05-07` previously)
@@ -11,7 +11,7 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-**Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks.** Every command that uses files in the MAIN checkout (`.venv/`, `scripts/`, `docs/`) MUST be prefixed with `cd /Users/krisztiankoos/projects/learn-ukrainian && ...` or use absolute paths.
+**Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks.** Every command that uses files in the MAIN checkout (`.venv/`, `scripts/`, `docs/`) MUST be prefixed with `cd . && ...` or use absolute paths.
 
 The previous retry attempt (`bakeoff-2026-05-07-retry` task-id, completed 2026-05-07T18:41) failed at step 2 because `.venv/bin/python` resolved against worktree CWD where `.venv/` does not exist (worktrees never have `.venv/` — it's gitignored). Brief V2 wraps every command with explicit `cd`.
 
@@ -43,26 +43,26 @@ Current main commit: should be `6014cbab74` or later (after #1781 merge).
 
 1. Verify base SHA (sanity check):
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian && git rev-parse HEAD && git log --oneline -3
+   cd . && git rev-parse HEAD && git log --oneline -3
    ```
 
 2. **Do NOT** clean `audit/bakeoff-2026-05-07/` — that is committed evidence from the prior failed attempt. The retry uses a different output dir (`audit/bakeoff-2026-05-07-retry/`).
 
    Clean only the retry output dir for a fresh run:
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian && rm -rf audit/bakeoff-2026-05-07-retry/
+   cd . && rm -rf audit/bakeoff-2026-05-07-retry/
    ```
 
 3. Pre-flight smoke (catches plan/packet drift fast):
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python scripts/build/v7_build.py a1 my-morning --writer claude-tools --dry-run
+   cd . && .venv/bin/python scripts/build/v7_build.py a1 my-morning --writer claude-tools --dry-run
    ```
    Expect exit 0 in <5s. If it fails, STOP and report.
 
 4. **Fire the full bakeoff** with absolute `--bakeoff-dir`:
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python scripts/audit/bakeoff_run.py \
-       --bakeoff-dir /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-07-retry \
+   cd . && .venv/bin/python scripts/audit/bakeoff_run.py \
+       --bakeoff-dir audit/bakeoff-2026-05-07-retry \
        --level a1 --slug my-morning \
        --writers claude-tools,gemini-tools,codex-tools
    ```
@@ -75,8 +75,8 @@ Current main commit: should be `6014cbab74` or later (after #1781 merge).
 
 6. **Verify** layout when done:
    ```bash
-   ls -la /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-07-retry/
-   for f in /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-07-retry/*.jsonl; do
+   ls -la audit/bakeoff-2026-05-07-retry/
+   for f in audit/bakeoff-2026-05-07-retry/*.jsonl; do
        echo "=== $f ==="
        tail -1 "$f" | head -c 250
        echo

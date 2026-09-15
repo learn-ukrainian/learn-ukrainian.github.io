@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: artem-chekh-district-d
 TOPIC_TITLE: Artem Chekh District D
 MODULE_NUM: '197'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/artem-chekh-district-d.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/artem-chekh-district-d.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/artem-chekh-district-d.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/artem-chekh-district-d.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/artem-chekh-district-d.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/artem-chekh-district-d-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/artem-chekh-district-d-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/artem-chekh-district-d.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/artem-chekh-district-d.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/artem-chekh-district-d.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/artem-chekh-district-d.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/artem-chekh-district-d.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/artem-chekh-district-d-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/artem-chekh-district-d-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

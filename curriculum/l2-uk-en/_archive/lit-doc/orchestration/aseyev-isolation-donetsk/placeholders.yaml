@@ -3,14 +3,14 @@ LEVEL: LIT_ESSAY
 SLUG: aseyev-isolation-donetsk
 TOPIC_TITLE: Aseyev Isolation Donetsk
 MODULE_NUM: '45'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-essay/aseyev-isolation-donetsk.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/meta/aseyev-isolation-donetsk.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/aseyev-isolation-donetsk.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/activities/aseyev-isolation-donetsk.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/vocabulary/aseyev-isolation-donetsk.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/research/aseyev-isolation-donetsk-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/review/aseyev-isolation-donetsk-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-essay/aseyev-isolation-donetsk.yaml
+META_PATH: curriculum/l2-uk-en/lit-essay/meta/aseyev-isolation-donetsk.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-essay/aseyev-isolation-donetsk.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-essay/activities/aseyev-isolation-donetsk.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-essay/vocabulary/aseyev-isolation-donetsk.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-essay/research/aseyev-isolation-donetsk-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-essay/review/aseyev-isolation-donetsk-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-essay.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

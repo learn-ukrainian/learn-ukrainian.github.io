@@ -57,7 +57,7 @@ Scoped-regen research relegated to shadow-mode RFC (filed as #1526 follow-up). I
 Both inherited from yesterday's handoff. Still open:
 
 - **PR #1521** — `codex-1520-liveness-probe-phase1` — clean diff (391 adds, 0 deletes, 2 files, 24 tests, 100% coverage). CI green except advisory Gemini-Dispatch review. **Should merge** per MEMORY #0H action-bias policy. Didn't get to it this session because the pilot diagnostic took precedence.
-- **Branch `codex-1519-git-hygiene-endpoint`** — worktree at `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-1519-git-hygiene-endpoint`. Orient this morning showed it at main's HEAD (no commits). Mid-session git worktree list showed it at `723fa15181` (not main) — so SOMETHING happened between orientation and commit, but no PR was filed. Needs investigation next session. Either Codex is still working in that worktree (unlikely, would show in delegate logs) or it crashed silently.
+- **Branch `codex-1519-git-hygiene-endpoint`** — worktree at `.worktrees/codex-1519-git-hygiene-endpoint`. Orient this morning showed it at main's HEAD (no commits). Mid-session git worktree list showed it at `723fa15181` (not main) — so SOMETHING happened between orientation and commit, but no PR was filed. Needs investigation next session. Either Codex is still working in that worktree (unlikely, would show in delegate logs) or it crashed silently.
 
 ## Files touched (and why)
 

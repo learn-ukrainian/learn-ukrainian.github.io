@@ -3,14 +3,14 @@ LEVEL: LIT_ESSAY
 SLUG: lypynsky-ham-japheth
 TOPIC_TITLE: Lypynsky Ham Japheth
 MODULE_NUM: '10'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-essay/lypynsky-ham-japheth.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/meta/lypynsky-ham-japheth.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/lypynsky-ham-japheth.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/activities/lypynsky-ham-japheth.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/vocabulary/lypynsky-ham-japheth.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/research/lypynsky-ham-japheth-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/review/lypynsky-ham-japheth-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-essay/lypynsky-ham-japheth.yaml
+META_PATH: curriculum/l2-uk-en/lit-essay/meta/lypynsky-ham-japheth.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-essay/lypynsky-ham-japheth.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-essay/activities/lypynsky-ham-japheth.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-essay/vocabulary/lypynsky-ham-japheth.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-essay/research/lypynsky-ham-japheth-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-essay/review/lypynsky-ham-japheth-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-essay.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

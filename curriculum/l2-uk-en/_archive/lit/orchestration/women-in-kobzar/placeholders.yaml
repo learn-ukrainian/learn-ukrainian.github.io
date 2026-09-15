@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: women-in-kobzar
 TOPIC_TITLE: Жіноча доля в "Кобзарі"
 MODULE_NUM: '18'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/women-in-kobzar.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/women-in-kobzar.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/women-in-kobzar.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/women-in-kobzar.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/women-in-kobzar.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/women-in-kobzar-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/women-in-kobzar-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/women-in-kobzar.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/women-in-kobzar.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/women-in-kobzar.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/women-in-kobzar.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/women-in-kobzar.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/women-in-kobzar-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/women-in-kobzar-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: holy-mountain-athos
 TOPIC_TITLE: Holy Mountain Athos
 MODULE_NUM: '61'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/holy-mountain-athos.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/holy-mountain-athos.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/holy-mountain-athos.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/holy-mountain-athos.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/holy-mountain-athos.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/holy-mountain-athos-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/holy-mountain-athos-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/holy-mountain-athos.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/holy-mountain-athos.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/holy-mountain-athos.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/holy-mountain-athos.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/holy-mountain-athos.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/holy-mountain-athos-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/holy-mountain-athos-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: building-of-lavra
 TOPIC_TITLE: Building Of Lavra
 MODULE_NUM: '92'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/building-of-lavra.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/building-of-lavra.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/building-of-lavra.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/building-of-lavra.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/building-of-lavra.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/building-of-lavra-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/building-of-lavra-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/building-of-lavra.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/building-of-lavra.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/building-of-lavra.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/building-of-lavra.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/building-of-lavra.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/building-of-lavra-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/building-of-lavra-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

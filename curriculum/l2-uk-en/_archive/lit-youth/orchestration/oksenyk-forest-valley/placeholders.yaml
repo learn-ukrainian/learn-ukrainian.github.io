@@ -3,14 +3,14 @@ LEVEL: LIT_JUVENILE
 SLUG: oksenyk-forest-valley
 TOPIC_TITLE: Oksenyk Forest Valley
 MODULE_NUM: '18'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-juvenile/oksenyk-forest-valley.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/meta/oksenyk-forest-valley.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/oksenyk-forest-valley.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/activities/oksenyk-forest-valley.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/vocabulary/oksenyk-forest-valley.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/research/oksenyk-forest-valley-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/review/oksenyk-forest-valley-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-juvenile/oksenyk-forest-valley.yaml
+META_PATH: curriculum/l2-uk-en/lit-juvenile/meta/oksenyk-forest-valley.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-juvenile/oksenyk-forest-valley.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-juvenile/activities/oksenyk-forest-valley.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-juvenile/vocabulary/oksenyk-forest-valley.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-juvenile/research/oksenyk-forest-valley-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-juvenile/review/oksenyk-forest-valley-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-juvenile.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

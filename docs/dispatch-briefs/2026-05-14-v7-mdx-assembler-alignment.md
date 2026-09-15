@@ -12,9 +12,9 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Prefix every command with `cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/v7-mdx-assembler-alignment-2026-05-14 && ...` or absolute path.
+Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Prefix every command with `cd .worktrees/dispatch/codex/v7-mdx-assembler-alignment-2026-05-14 && ...` or absolute path.
 
-Inside the worktree, `.venv/` is gitignored. Use `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
+Inside the worktree, `.venv/` is gitignored. Use `.venv/bin/python`.
 
 ---
 
@@ -229,7 +229,7 @@ Once Bug 1 is fixed, `yaml_activities_to_jsx()` will receive a 10-item list and 
 
 1. **Worktree setup:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian && \
+   cd . && \
    git worktree add -b codex/v7-mdx-assembler-alignment-2026-05-14 .worktrees/dispatch/codex/v7-mdx-assembler-alignment-2026-05-14 origin/main
    ```
 2. **Read the design docs:** `docs/lesson-contract.md`, `docs/poc/poc-lesson-design.html` (especially lines 80-95 dialogue, 465-528 vocab/flashcard, 110-115 source-box), `docs/lesson-schema-design.md`, `docs/lesson-schema.yaml`. Understand the V7 contract before writing code.
@@ -240,19 +240,19 @@ Once Bug 1 is fixed, `yaml_activities_to_jsx()` will receive a 10-item list and 
 7. **Bug 5: Resources author attribution.** Fix `format_resources_for_mdx()`. Use `author`, `pages`, `description`, `role` from V7 `resources.yaml`. No "by Unknown".
 8. **Tests:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/v7-mdx-assembler-alignment-2026-05-14 && \
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest tests/test_generate_mdx*.py tests/test_yaml_activities*.py tests/test_dialogue*.py tests/test_assemble_mdx*.py -x
+   cd .worktrees/dispatch/codex/v7-mdx-assembler-alignment-2026-05-14 && \
+   .venv/bin/pytest tests/test_generate_mdx*.py tests/test_yaml_activities*.py tests/test_dialogue*.py tests/test_assemble_mdx*.py -x
    ```
    Quote final summary line.
 9. **Ruff:**
    ```bash
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/generate_mdx scripts/yaml_activities.py scripts/build/linear_pipeline.py
+   .venv/bin/ruff check scripts/generate_mdx scripts/yaml_activities.py scripts/build/linear_pipeline.py
    ```
    Quote final line.
 10. **End-to-end repro:**
     ```bash
-    cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/v7-mdx-assembler-alignment-2026-05-14 && \
-    /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -c "
+    cd .worktrees/dispatch/codex/v7-mdx-assembler-alignment-2026-05-14 && \
+    .venv/bin/python -c "
     from pathlib import Path
     from scripts.build.linear_pipeline import assemble_mdx
     out = Path('/tmp/test-my-morning.mdx')

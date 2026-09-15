@@ -162,7 +162,7 @@ PR head: `1116e3054c`. Merge-base with current `origin/main`: `b94150a86f`. PR d
 ### E2. Live DB marker counts (re-run 2026-05-09)
 
 ```
-$ sqlite3 'file:/Users/krisztiankoos/projects/learn-ukrainian/.mcp/servers/message-broker/messages.db?mode=ro&immutable=1' "SELECT '[AGREE]', COUNT(*) FROM channel_messages WHERE body LIKE '%[AGREE]%' UNION ALL SELECT '[AGREED]', COUNT(*) … UNION ALL SELECT '[DISAGREE]', COUNT(*) …"
+$ sqlite3 'file:.mcp/servers/message-broker/messages.db?mode=ro&immutable=1' "SELECT '[AGREE]', COUNT(*) FROM channel_messages WHERE body LIKE '%[AGREE]%' UNION ALL SELECT '[AGREED]', COUNT(*) … UNION ALL SELECT '[DISAGREE]', COUNT(*) …"
 [AGREE]|207
 [AGREED]|0
 [OPTION]|1

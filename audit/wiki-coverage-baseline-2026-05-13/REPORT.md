@@ -3,7 +3,7 @@
 Command:
 
 ```bash
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python scripts/audit/measure_wiki_coverage.py wiki/pedagogy/a1/my-morning.md curriculum/l2-uk-en/a1/my-morning/module.md
+.venv/bin/python scripts/audit/measure_wiki_coverage.py wiki/pedagogy/a1/my-morning.md curriculum/l2-uk-en/a1/my-morning/module.md
 ```
 
 Summary:

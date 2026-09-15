@@ -15,7 +15,7 @@
       },
       {
         "path": "scripts/lexicon/admit_teacher_table.py",
-        "sha256": "8aeffd076ce7079479de18a71019a72489cd448987cebd63708e076841f1f32e"
+        "sha256": "949c96e042cd03acfb4d7c0773068bf7d3b6142ee06540975a0dae25829503d3"
       },
       {
         "path": "scripts/lexicon/admit_textbook_book_glossary.py",

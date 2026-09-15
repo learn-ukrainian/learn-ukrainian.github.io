@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: antonenko-davydovych-prose
 TOPIC_TITLE: Antonenko Davydovych Prose
 MODULE_NUM: '120'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/antonenko-davydovych-prose.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/antonenko-davydovych-prose.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/antonenko-davydovych-prose.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/antonenko-davydovych-prose.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/antonenko-davydovych-prose.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/antonenko-davydovych-prose-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/antonenko-davydovych-prose-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/antonenko-davydovych-prose.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/antonenko-davydovych-prose.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/antonenko-davydovych-prose.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/antonenko-davydovych-prose.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/antonenko-davydovych-prose.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/antonenko-davydovych-prose-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/antonenko-davydovych-prose-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

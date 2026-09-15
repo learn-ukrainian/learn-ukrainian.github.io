@@ -124,7 +124,7 @@ Disk hit 100% used / 2.1 GB free during session. After cleanup: 89% / **26 GB fr
 
 **Method**: `git worktree list --porcelain | grep "^worktree " | awk '{print $2}' | grep -v <protected paths> | sort by depth descending | xargs -P 4 git worktree remove --force`. Per #M-10: build worktrees have artifacts auto-committed to local `build/<level>/<slug>-<stamp>` branches before worktree removal, so `--force` is safe. To inspect a removed build's artifacts: `git checkout build/a1/my-morning-<stamp>`.
 
-**Protected during cleanup**: main project (`/Users/krisztiankoos/projects/learn-ukrainian`), codex's own scratch (`~/.codex/worktrees/6877/learn-ukrainian`), live #2208 dispatch (`.worktrees/dispatch/codex/issue-2208-workbook-auto-inject-2026-05-24`).
+**Protected during cleanup**: main project (`.`), codex's own scratch (`~/.codex/worktrees/6877/learn-ukrainian`), live #2208 dispatch (`.worktrees/dispatch/codex/issue-2208-workbook-auto-inject-2026-05-24`).
 
 ## Active state at handoff
 

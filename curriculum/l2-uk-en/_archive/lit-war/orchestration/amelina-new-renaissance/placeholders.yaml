@@ -3,14 +3,14 @@ LEVEL: LIT_WAR
 SLUG: amelina-new-renaissance
 TOPIC_TITLE: Amelina New Renaissance
 MODULE_NUM: '18'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-war/amelina-new-renaissance.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/meta/amelina-new-renaissance.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/amelina-new-renaissance.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/activities/amelina-new-renaissance.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/vocabulary/amelina-new-renaissance.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/research/amelina-new-renaissance-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/review/amelina-new-renaissance-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-war/amelina-new-renaissance.yaml
+META_PATH: curriculum/l2-uk-en/lit-war/meta/amelina-new-renaissance.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-war/amelina-new-renaissance.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-war/activities/amelina-new-renaissance.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-war/vocabulary/amelina-new-renaissance.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-war/research/amelina-new-renaissance-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-war/review/amelina-new-renaissance-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-war.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)
