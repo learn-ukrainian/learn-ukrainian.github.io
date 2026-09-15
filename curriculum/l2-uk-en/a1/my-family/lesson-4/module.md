@@ -1,6 +1,6 @@
 # Самопереві́рка
 
-У пе́рших трьох уро́ках ви ви́вчили слова́ для близько́ї сі́м'ї, навчи́лися говори́ти **У мене́ є...** та вжива́ти присві́йні займе́нники **мій / моя́ / моє́ / мої́**. In the first three lessons, you mastered core family vocabulary, learned to express possession with **у мене́ є**, and practiced choosing possessives by gender.
+У пе́рших трьох уро́ках ви ви́вчили слова́ для близько́ї сім'ї́, навчи́лися говори́ти **У мене́ є...** та вжива́ти присві́йні займе́нники **мій / моя́ / моє́ / мої́**. In the first three lessons, you mastered core family vocabulary, learned to express possession with **у мене́ є**, and practiced choosing possessives by gender.
 
 Тепе́р час підби́ти пі́дсумки та закріпи́ти всі знання́ в підсу́мковому уро́ці — now it is time to summarize and reinforce your skills in this final review lesson:
 - **Самопереві́рка ре́чень** — check yourself on core family sentences and questions;
@@ -76,7 +76,7 @@ Study these key extended family words and how they connect in natural sentences:
 | **моло́дший** | younger | **Це мій моло́дший брат.** | This is my younger brother. |
 | **ста́рший** | older | **Це мій ста́рший брат.** | This is my older brother. |
 | **одру́жений** | married | **Мій ста́рший брат уже́ одру́жений.** | My older brother is already married. |
-| **працюва́ти** | to work | **Во́на лю́бить працюва́ти.** | She likes to work. |
+| **працюва́ти** | to work | **Вона́ лю́бить працюва́ти.** | She likes to work. |
 | **вчи́телька** | female teacher | **Моя́ ма́ма — вчи́телька.** | My mom is a teacher. |
 | **інжене́р** | engineer | **Мій та́то — інжене́р.** | My dad is an engineer. |
 
@@ -90,7 +90,7 @@ Listen to Да́ша and Андрі́й looking at a photo album from a family g
 > Андрі́й: Чудо́ва роди́на! Хто це? *(Wonderful family! Who is this?)*
 > Да́ша: Це мій дя́дько Бо́гдан і моя́ ті́тка Окса́на. *(This is my uncle Bohdan and my aunt Oksana.)*
 > Андрі́й: А це ї́хня дити́на? *(And is this their child?)*
-> Да́ша: Так, це мій моло́дший брат Тара́с. *(Yes, this is my younger brother Taras.)*
+> Да́ша: Ні, це мій моло́дший брат Тара́с. *(No, this is my younger brother Taras.)*
 
 Продо́вження розмо́ви про ста́ршого бра́та — the conversation about the older brother continues:
 
@@ -114,7 +114,7 @@ English support after the Ukrainian dialogue:
 | **Чудо́ва роди́на! Хто це?** | Wonderful family! Who is this? |
 | **Це мій дя́дько Бо́гдан і моя́ ті́тка Окса́на.** | This is my uncle Bohdan and my aunt Oksana. |
 | **А це ї́хня дити́на?** | And is this their child? |
-| **Так, це мій моло́дший брат Тара́с.** | Yes, this is my younger brother Taras. |
+| **Ні, це мій моло́дший брат Тара́с.** | No, this is my younger brother Taras. |
 | **А хто це по́руч?** | And who is this next to them? |
 | **Це мій ста́рший брат Макси́м. Він уже́ одру́жений.** | This is my older brother Maksym. He is already married. |
 | **Хто йо́го дружи́на?** | Who is his wife? |
@@ -126,7 +126,7 @@ English support after the Ukrainian dialogue:
 
 <!-- INJECT_ACTIVITY: act-403 -->
 
-### Зв'я́зне мо́влення: ро́зповідь про свою́ сі́м'ю — Connected speech: Introducing your family
+### Зв'я́зне мо́влення: ро́зповідь про свою́ сім'ю́ — Connected speech: Introducing your family
 
 You can now make a four-sentence family introduction:
 
@@ -173,11 +173,11 @@ the formal name signal, and then complete a short photo dialogue.
 ### Пі́дсумок мо́дуля — Module summary
 
 Підіб'ємо́ пі́дсумки всьо́го мо́дуля — module summary:
-- **На́зви чле́нів сі́м'ї**: ви зна́єте ба́зові слова́ для близьки́х люде́й (**ма́ма**, **та́то**, **брат**, **сестра́**, **син**, **дочка́**, **бабу́ся**, **діду́сь**, **батьки́**) та розши́реної роди́ни (**ро́дичі**, **дя́дько**, **ті́тка**, **дружи́на**, **чолові́к**, **дити́на**). Family member names: you know core words for close family and extended relatives.
+- **На́зви чле́нів сім'ї́**: ви зна́єте ба́зові слова́ для близьки́х люде́й (**ма́ма**, **та́то**, **брат**, **сестра́**, **син**, **дочка́**, **бабу́ся**, **діду́сь**, **батьки́**) та розши́реної роди́ни (**ро́дичі**, **дя́дько**, **ті́тка**, **дружи́на**, **чолові́к**, **дити́на**). Family member names: you know core words for close family and extended relatives.
 - **Констру́кція володі́ння**: ви впе́внено вжива́єте ста́лий ви́раз **У мене́ є...** та ста́вите дру́жні запита́ння **У тебе́ є...?** без калькува́ння дієслова́ to have. Possession pattern: you confidently use the fixed phrase **У мене́ є...** and ask friendly questions **У тебе́ є...?** without calquing to have.
 - **Узго́дження чи́сел**: ви розрізня́єте фо́рми **оди́н брат / одна́ сестра́** та **два брати́ / дві се́стри** за грамати́чним ро́дом. Number agreement: you distinguish masculine and feminine forms for one and two with family nouns.
 - **Присві́йні займе́нники**: ви обира́єте **мій**, **моя́**, **моє́**, **мої́** та **твій**, **твоя́**, **твоє́**, **твої́** за ро́дом і число́м ро́дича, а та́кож розпізнаєте́ незмі́нні фо́рми **йо́го** та **її́**. Possessive pronouns: you choose possessives by the gender and number of the relative, and recognize the invariable forms **йо́го** and **її́**.
 - **Зв'я́зна ро́зповідь про себе́ (Self-presentation)**: ви вмі́єте скла́сти коро́тку зв'я́зну ро́зповідь про себе́ та свої́х рі́дних для знайо́мства з дру́зями. Connected self-presentation: you can compose a short connected story about yourself and your family when meeting friends.
 - **Мо́вна но́рма**: ви свідо́мо обира́єте пито́мі украї́нські роди́нні слова́ та уника́єте поши́рених су́ржикових ка́льок. Language standard: you consciously choose authentic Ukrainian family vocabulary and avoid common Surzhyk borrowings.
 
-Віта́ємо з успі́шним заве́ршенням мо́дуля «Моя́ сі́м'я»! — Congratulations on successfully completing the My Family module! Тепе́р ви го́тові впе́внено розповіда́ти про свої́х найдоро́жчих люде́й украї́нською мо́вою — now you are ready to confidently speak about your loved ones in Ukrainian.
+Віта́ємо з успі́шним заве́ршенням мо́дуля «Моя́ сім'я́»! — Congratulations on successfully completing the My Family module! Тепе́р ви го́тові впе́внено розповіда́ти про свої́х найдоро́жчих люде́й украї́нською мо́вою — now you are ready to confidently speak about your loved ones in Ukrainian.

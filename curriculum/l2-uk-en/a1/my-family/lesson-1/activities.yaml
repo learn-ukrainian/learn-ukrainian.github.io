@@ -63,7 +63,7 @@ inline:
   title: Фра́зи знайо́мства з сім'є́ю
   instruction: З'єдна́й поча́ток фра́зи з її продо́вженням.
   pairs:
-  - left: Це моя́ сі́м'я
+  - left: Це моя́ сім'я́
     right: на фотогра́фії.
   - left: У тебе́ є
     right: брати́ чи се́стри?
@@ -157,45 +157,45 @@ inline:
     explanation: Та́то батькі́в — це діду́сь.
 - id: act-103
   type: fill-in
-  title: Він чи во́на?
-  instruction: Встав займе́нник він або́ во́на.
+  title: Він чи вона́?
+  instruction: Встав займе́нник він або́ вона́.
   items:
   - sentence: Це мій брат. ___ студе́нт.
     answer: Він
     options:
     - Він
-    - Во́на
+    - Вона́
     explanation: Брат — чолові́чий рід (він).
   - sentence: Це моя́ сестра́. ___ студе́нтка.
-    answer: Во́на
+    answer: Вона́
     options:
-    - Во́на
+    - Вона́
     - Він
-    explanation: Сестра́ — жіно́чий рід (во́на).
+    explanation: Сестра́ — жіно́чий рід (вона́).
   - sentence: Це мій та́то. ___ інжене́р.
     answer: Він
     options:
     - Він
-    - Во́на
+    - Вона́
     explanation: Та́то — чолові́чий рід (він).
   - sentence: Це моя́ ма́ма. ___ вчи́телька.
-    answer: Во́на
+    answer: Вона́
     options:
-    - Во́на
+    - Вона́
     - Він
-    explanation: Ма́ма — жіно́чий рід (во́на).
+    explanation: Ма́ма — жіно́чий рід (вона́).
   - sentence: Це мій син. ___ школя́р.
     answer: Він
     options:
     - Він
-    - Во́на
+    - Вона́
     explanation: Син — чолові́чий рід (він).
   - sentence: Це моя́ дочка́. ___ школя́рка.
-    answer: Во́на
+    answer: Вона́
     options:
-    - Во́на
+    - Вона́
     - Він
-    explanation: Дочка́ — жіно́чий рід (во́на).
+    explanation: Дочка́ — жіно́чий рід (вона́).
 workbook:
 - id: act-w1
   type: error-correction
@@ -260,10 +260,10 @@ workbook:
   - left: діду́сь
     right: бабу́ся
   - left: він
-    right: во́на
+    right: вона́
 - id: act-w102
   type: group-sort
-  title: 'Він чи во́на: рід чле́нів роди́ни'
+  title: 'Він чи вона́: рід чле́нів роди́ни'
   instruction: Розпо́діли слова́ за грамати́чним ро́дом.
   groups:
   - label: він (чолові́чий рід)
@@ -273,7 +273,7 @@ workbook:
     - брат
     - син
     - діду́сь
-  - label: во́на (жіно́чий рід)
+  - label: вона́ (жіно́чий рід)
     items:
     - ма́ма
     - ма́ти
@@ -282,23 +282,23 @@ workbook:
     - бабу́ся
 - id: act-w103
   type: fill-in
-  title: Допо́вни ре́чення про сі́м'ю
+  title: Допо́вни ре́чення про сім'ю́
   instruction: Обери́ пра́вильне сло́во для ко́жного ре́чення.
   items:
   - sentence: Це мій та́то. ___ інжене́р.
     answer: Він
     options:
     - Він
-    - Во́на
+    - Вона́
     - Воно́
     explanation: Та́то — чолові́чого ро́ду (він).
   - sentence: Це моя́ ма́ма. ___ вчи́телька.
-    answer: Во́на
+    answer: Вона́
     options:
-    - Во́на
+    - Вона́
     - Він
     - Воно́
-    explanation: Ма́ма — жіно́чого ро́ду (во́на).
+    explanation: Ма́ма — жіно́чого ро́ду (вона́).
   - sentence: Це мій брат. ___ зва́ти Іва́н.
     answer: Йо́го
     options:
@@ -335,8 +335,8 @@ workbook:
   - words:
     - Це
     - моя́
-    - сі́м'я.
-    sentence: Це моя́ сі́м'я.
+    - сім'я́.
+    sentence: Це моя́ сім'я́.
   - words:
     - Хто
     - це
@@ -372,13 +372,13 @@ workbook:
   items:
   - source: This is my family.
     options:
-    - text: Це моя́ сі́м'я.
+    - text: Це моя́ сім'я́.
       correct: true
     - text: Це моє́ мі́сто.
       correct: false
     - text: Це мій брат.
       correct: false
-    explanation: Сі́м'я — жіно́чого ро́ду (моя́ сі́м'я).
+    explanation: Сім'я́ — жіно́чого ро́ду (моя́ сім'я́).
   - source: Who is this?
     options:
     - text: Хто це?

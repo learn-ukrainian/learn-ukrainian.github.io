@@ -75,7 +75,7 @@ Remember that possessive pronouns agree in gender and number with the family wor
 | Рід або́ число́ — Gender / Number | Фо́рма «твій» — Your form | Зразо́к пі́дпису — Sample caption | English translation |
 | --- | --- | --- | --- |
 | **Чолові́чий рід (він)** | **твій** | **Це твій брат?** | Is this your brother? |
-| **Жіно́чий рід (во́на)** | **твоя́** | **Це твоя́ сестра́ Катя́.** | This is your sister Katia. |
+| **Жіно́чий рід (вона́)** | **твоя́** | **Це твоя́ сестра́ Катя́.** | This is your sister Katia. |
 | **Сере́дній рід (воно́)** | **твоє́** | **Це твоє́ рі́дне мі́сто?** | Is this your hometown? |
 | **Множина́ (во́ни)** | **твої́** | **Це твої́ батьки́ на фо́то.** | These are your parents in the photo. |
 
@@ -106,7 +106,7 @@ Pay special attention to these common family words when reading or writing in a 
 | **та́то** | **та́то** | dad | Ending in **-о**, but masculine gender |
 | **брат** | **бра́т** | brother | Single-syllable word; no vowel reduction |
 | **сестра́** | **сестра́** | sister | End-stressed in singular (**сестра́**), stem-stressed in plural (**се́стри**) |
-| **сі́м'я** | **сім'я́** | family (close) | Apostrophe after **м** before **я**; end-stress |
+| **сім'я́** | **сім'я́** | family (close) | Apostrophe after **м** before **я**; end-stress |
 | **бабу́ся** | **бабу́ся** | grandmother | Soft ending **-ся**; affectionate tone |
 | **діду́сь** | **діду́сь** | grandfather | Soft sign **-сь** at the end |
 

@@ -1,4 +1,4 @@
-# Моя́ сі́м'я
+# Моя́ сім'я́
 
 **Це моя́ сім'я́. У мене́ є брат.** — This is my family. I have a brother.
 
@@ -16,7 +16,7 @@ By the end, you can:
   the owner;
 - recognize **йо́го** and **її** in lines such as **Йо́го зва́ти...** and
   **Її зва́ти...**;
-- say **сі́м'я** for your close family and recognize **роди́на** as the wider
+- say **сім'я́** for your close family and recognize **роди́на** as the wider
   family or kin circle;
 - recognize a formal patronymic greeting without producing patronymics yet.
 
@@ -130,7 +130,7 @@ family tree; it is recognizing and saying the common people words.
 
 | Ukrainian | English |
 | --- | --- |
-| **сі́м'я** | family, usually the close household |
+| **сім'я́** | family, usually the close household |
 | **роди́на** | family or kin, often wider than the household |
 | **ма́ма / ма́ти** | mom / mother |
 | **та́то / ба́тько** | dad / father |
@@ -147,14 +147,14 @@ Ukrainian does not use one normal beginner word for "grandparents." Say
 **бабу́ся і діду́сь**.
 
 The gender habit starts here. Say **він / мій** with masculine family words:
-**та́то**, **брат**, **син**, **діду́сь**. Say **во́на / моя́** with feminine
+**та́то**, **брат**, **син**, **діду́сь**. Say **вона́ / моя́** with feminine
 family words: **ма́ма**, **ма́ти**, **сестра́**, **дочка́**, **до́нька**,
 **бабу́ся**.
 
 | Pointing line | English |
 | --- | --- |
 | **Це мій брат. Він студе́нт.** | This is my brother. He is a student. |
-| **Це моя́ сестра́. Во́на студе́нтка.** | This is my sister. She is a student. |
+| **Це моя́ сестра́. Вона́ студе́нтка.** | This is my sister. She is a student. |
 | **Це мій син.** | This is my son. |
 | **Це моя́ дочка́.** | This is my daughter. |
 
@@ -170,7 +170,7 @@ level.
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
-### Різни́ця між сі́м'я та роди́на — Nuances of family terms
+### Різни́ця між сім'я́ та роди́на — Nuances of family terms
 
 In Ukrainian culture, both words are widely used, but they carry a slight difference in perspective. **Сім'я́** usually refers to the immediate household living under one roof (parents and children). **Роди́на** often refers to the wider circle of blood relatives, ancestral generations, and kin. In school textbooks, children often learn the traditional line: *"Роди́на, роди́на — від ба́тька до си́на"* <!-- VERIFY: textbook="2-klas-ukrmova-vashulenko-2019-1" chunk="2-klas-ukrmova-vashulenko-2019-1_s0092" -->.
 
@@ -187,7 +187,7 @@ In Ukrainian culture, both words are widely used, but they carry a slight differ
 
 Notice how descriptions match natural gender. When talking about family members and what they do, Ukrainian uses masculine forms for men and feminine forms for women:
 
-| Чолові́чий рід — Masculine (він) | Жіно́чий рід — Feminine (во́на) | English meaning |
+| Чолові́чий рід — Masculine (він) | Жіно́чий рід — Feminine (вона́) | English meaning |
 | --- | --- | --- |
 | **Мій брат — студе́нт.** | **Моя́ сестра́ — студе́нтка.** | student |
 | **Мій та́то — вчи́тель.** | **Моя́ ма́ма — вчи́телька.** | teacher |
@@ -201,7 +201,7 @@ Notice how descriptions match natural gender. When talking about family members 
 In this lesson, you took your first step into talking about people beyond yourself. You can now point to family photos and introduce your close relatives:
 
 - name key family members: **ма́ма**, **та́то**, **брат**, **сестра́**, **бабу́ся**, **діду́сь**;
-- distinguish between **сі́м'я** (immediate household) and **роди́на** (wider family);
+- distinguish between **сім'я́** (immediate household) and **роди́на** (wider family);
 - identify people using **Хто це?** and answer with **Це мій...** or **Це моя́...**;
 - recognize the formal full-name model (**ім'я́ + по ба́тькові + прі́звище**).
 

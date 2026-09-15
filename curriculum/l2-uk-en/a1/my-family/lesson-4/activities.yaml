@@ -105,7 +105,7 @@ inline:
     explanation: 'Да́ша ка́же: Ми працю́ємо тут, у на́шому мі́сті.'
 - id: act-404
   type: fill-in
-  title: Скла́ди ро́зповідь про сі́м'ю
+  title: Скла́ди ро́зповідь про сім'ю́
   instruction: Обери́ пра́вильне сло́во для ко́жного рядка́ ро́зповіді.
   items:
   - sentence: Мене́ ___ Марко́.
@@ -209,13 +209,13 @@ workbook:
   title: Допо́вни фотодіало́г
   instruction: Обери́ пропу́щене сло́во з роди́нної розмо́ви.
   items:
-  - sentence: Це ___ сі́м'я на фотогра́фії.
+  - sentence: Це ___ сім'я́ на фотогра́фії.
     answer: моя́
     options:
     - моя́
     - мій
     - моє́
-    explanation: Сі́м'я — жіно́чого ро́ду.
+    explanation: Сім'я́ — жіно́чого ро́ду.
   - sentence: ___ це? Це мій та́то.
     answer: Хто
     options:
@@ -228,14 +228,14 @@ workbook:
     options:
     - Її
     - Йо́го
-    - Во́ни
+    - Вони́
     explanation: Її підхо́дить до се́стри.
   - sentence: Це мій брат. ___ зва́ти Ко́ля.
     answer: Йо́го
     options:
     - Йо́го
     - Її
-    - Во́на
+    - Вона́
     explanation: Йо́го підхо́дить до бра́та.
   - sentence: А це ___ бабу́ся?
     answer: твоя́
@@ -249,7 +249,7 @@ workbook:
   title: Швидка́ переві́рка роди́нної ле́ксики
   instruction: Обери́ англі́йське зна́чення.
   items:
-  - source: сі́м'я
+  - source: сім'я́
     options:
     - text: family, close household
       correct: true
@@ -257,7 +257,7 @@ workbook:
       correct: false
     - text: profession
       correct: false
-    explanation: Сі́м'я — сло́во для близько́ї роди́ни.
+    explanation: Сім'я́ — сло́во для близько́ї роди́ни.
   - source: роди́на
     options:
     - text: family or kin
@@ -266,7 +266,7 @@ workbook:
       correct: false
     - text: first name
       correct: false
-    explanation: Роди́на ча́сто звучи́ть ши́рше, ніж сі́м'я.
+    explanation: Роди́на ча́сто звучи́ть ши́рше, ніж сім'я́.
   - source: У мене́ є брат.
     options:
     - text: I have a brother.
