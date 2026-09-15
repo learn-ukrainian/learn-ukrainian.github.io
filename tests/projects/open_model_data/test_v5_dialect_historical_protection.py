@@ -614,6 +614,15 @@ def test_surzhyk_banned_targets_rejects_sum11_standard_words() -> None:
         "так як",
         "в тому числі",
         "в сторону",
+        "з іншої сторони",
+        "іншої сторони",
+        "з однієї сторони",
+        "однієї сторони",
+        "сторона",
+        "роблячи вигляд",
+        "робити вигляд",
+        "терпіти поразку",
+        "у більшості випадків",
         "вилка",
         "вилкою",
         "вилки",
@@ -647,11 +656,15 @@ def test_surzhyk_targets_zero_sum11_definitions_and_lemmas() -> None:
     """Verify that all 100 anti-surzhyk controls have zero SUM-11 headwords, inflected lemmas, or defined subentries."""
     import re
     import sqlite3
+    import unicodedata
 
     sources_db = REPO_ROOT / "data" / "sources.db"
     vesum_db = REPO_ROOT / "data" / "vesum.db"
     if not sources_db.exists():
         pytest.skip("sources.db unavailable")
+
+    def strip_accents(s: str) -> str:
+        return "".join(ch for ch in unicodedata.normalize("NFD", s) if unicodedata.category(ch) != "Mn")
 
     c_src = sqlite3.connect(sources_db).cursor()
     c_ves = sqlite3.connect(vesum_db).cursor() if vesum_db.exists() else None
@@ -684,11 +697,18 @@ def test_surzhyk_targets_zero_sum11_definitions_and_lemmas() -> None:
                     assert not hw_lem, f"Target {target!r} has lemma {lem!r} in sum11 ({case['eval_id']})"
 
         # 2. Multi-word phrase: no defined phraseological subentry or idiom in sum11
-        rows = c_src.execute("SELECT text FROM sum11 WHERE text LIKE ?", (f"%{target}%",)).fetchall()
-        for (text,) in rows:
-            m = re.search(
-                rf"(♦[^\n]*\b{re.escape(target)}\b|\b{re.escape(target)}\b\s*[:—]|\b{re.escape(target)}\b\s*—)",
-                text,
-                re.IGNORECASE,
-            )
-            assert not m, f"Target {target!r} is a defined subentry in sum11: {m.group(0)} ({case['eval_id']})"
+        words = target.split()
+        like_pat = "%" + "%".join(words) + "%"
+        rows = c_src.execute("SELECT word, text FROM sum11 WHERE text LIKE ?", (like_pat,)).fetchall()
+        for hw_word, text in rows:
+            text_clean = strip_accents(text)
+            pats = [
+                rf"[♦◊][^\n]*\b{re.escape(target)}\b",
+                rf"[;—–]\s*\b{re.escape(target)}\b\s*[—–-]\s*[а-яіїєґ]",
+                rf"\b{re.escape(target)}\b\s*[—–-]\s*[а-яіїєґ]",
+            ]
+            for pat in pats:
+                m = re.search(pat, text_clean, re.IGNORECASE)
+                assert not m, (
+                    f"Target {target!r} is a defined subentry in sum11 ({hw_word}): {m.group(0)[:80]} ({case['eval_id']})"
+                )
