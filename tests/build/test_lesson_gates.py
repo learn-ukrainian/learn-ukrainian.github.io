@@ -53,6 +53,10 @@ def test_contains_allows_expanded_explanations():
         {"explanation": "This is correct."},
         {"explanation": 'Ignore the false claim "This is correct."; the answer is wrong.'},
     )
+    assert not gates.contains(
+        {"explanation": "This answer is correct"},
+        {"explanation": "This answer is correctly rejected."},
+    )
 
 
 def test_fence_dialogue_counts_as_preserved():
@@ -76,6 +80,13 @@ def test_fence_dialogue_counts_as_preserved():
     from scripts.generate_mdx.converters import _dialogue_box_mdx
     quoted_page = _dialogue_box_mdx([{"speaker": "Alice", "text": 'Say "hello"!'}], "Dialogue")
     assert gates._fence_preserved_as_dialogue('```text\nAlice: Say "hello"!\n```', quoted_page)
+    paren_page = _dialogue_box_mdx([{"speaker": "Alice", "text": "Use ('hello') here."}], "Dialogue")
+    assert gates._dialogue_pairs_from_page(paren_page) == [("Alice", "Use ('hello') here.")]
+    two = _dialogue_box_mdx(
+        [{"speaker": "Марія", "text": "Привіт!"}, {"speaker": "Оленка", "text": "Класно!"}],
+        "Dialogue",
+    )
+    assert not gates._fence_preserved_as_dialogue(para, two + "\n" + two)
     avoid_md = "| Avoid | Use |\n| --- | --- |\n| вкусний суп | **смачни́й суп** |\n"
     blanked = gates._blank_avoid_cells(avoid_md)
     assert "вкусний" not in blanked

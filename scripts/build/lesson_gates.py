@@ -131,25 +131,47 @@ def _spoken_in_hay(spoken: str, hay: str) -> bool:
     return bool(text) and text in hay
 
 
+def _js_single_quoted_payloads(blob: str) -> list[str]:
+    """Extract JSON.parse('...') payloads without stopping at escaped quotes."""
+    out: list[str] = []
+    for match in re.finditer(r"JSON\.parse\('", blob):
+        i = match.end()
+        chars: list[str] = []
+        while i < len(blob):
+            ch = blob[i]
+            if ch == "\\" and i + 1 < len(blob):
+                chars.append(ch)
+                chars.append(blob[i + 1])
+                i += 2
+                continue
+            if ch == "'":
+                out.append("".join(chars))
+                break
+            chars.append(ch)
+            i += 1
+    return out
+
+
 def _dialogue_pairs_from_page(page: str) -> list[tuple[str, str]]:
     pairs: list[tuple[str, str]] = []
     for blob in re.findall(r"<DialogueBox[\s\S]*?/>", strip_comments(page)):
-        match = re.search(r"JSON\.parse\('([\s\S]*?)'\)", blob)
-        if not match:
+        payloads = _js_single_quoted_payloads(blob)
+        if not payloads:
             match = re.search(r"JSON\.parse\(`([\s\S]*?)`\)", blob)
-        if not match:
-            continue
-        payload = match.group(1).replace("\\'", "'").replace("\\\\", "\\")
-        try:
-            data = json.loads(payload)
-        except json.JSONDecodeError:
-            continue
-        if not isinstance(data, list):
-            continue
-        for row in data:
-            if isinstance(row, dict):
-                pairs.append((md_to_text(str(row.get("speaker") or "")),
-                              md_to_text(str(row.get("text") or ""))))
+            if match:
+                payloads = [match.group(1)]
+        for payload in payloads:
+            decoded = payload.replace("\\'", "'").replace("\\\\", "\\")
+            try:
+                data = json.loads(decoded)
+            except json.JSONDecodeError:
+                continue
+            if not isinstance(data, list):
+                continue
+            for row in data:
+                if isinstance(row, dict):
+                    pairs.append((md_to_text(str(row.get("speaker") or "")),
+                                  md_to_text(str(row.get("text") or ""))))
     return pairs
 
 
@@ -183,24 +205,38 @@ def _blank_avoid_cells(md: str) -> str:
     return "".join(out)
 
 
-def _fence_preserved_as_dialogue(para: str, page: str) -> bool:
-    """Assembler turns ```text speaker fences into DialogueBox; that is preservation."""
+def _fence_turns(para: str) -> list[tuple[str, str]]:
     raw = para.strip()
-    if not raw.startswith("```") or not page or "<DialogueBox" not in page:
-        return False
+    if not raw.startswith("```"):
+        return []
     body = re.sub(r"^```[^\n]*\n?", "", raw)
     body = re.sub(r"\n?```\s*$", "", body)
-    turns = [(md_to_text(speaker), md_to_text(spoken)) for speaker, spoken in _dialogue_turns(body)]
-    if not turns:
-        return False
-    remaining = _dialogue_pairs_from_page(page)
+    return [(md_to_text(speaker), md_to_text(spoken)) for speaker, spoken in _dialogue_turns(body)]
+
+
+def _subsequence_count(needle: list[tuple[str, str]], hay: list[tuple[str, str]]) -> int:
+    if not needle:
+        return 0
+    count = 0
     cursor = 0
-    for turn in turns:
+    while cursor < len(hay):
+        pos = cursor
         try:
-            cursor = remaining.index(turn, cursor) + 1
+            for turn in needle:
+                pos = hay.index(turn, pos) + 1
         except ValueError:
-            return False
-    return True
+            break
+        count += 1
+        cursor = pos
+    return count
+
+
+def _fence_preserved_as_dialogue(para: str, page: str) -> bool:
+    """Assembler turns ```text speaker fences into DialogueBox; that is preservation."""
+    if not page or "<DialogueBox" not in page:
+        return False
+    turns = _fence_turns(para)
+    return bool(turns) and _subsequence_count(turns, _dialogue_pairs_from_page(page)) == 1
 
 
 def _visible_in_render(value: str, literal_text: str) -> bool:
@@ -283,7 +319,14 @@ def contains(orig, new, *, expand_explanations: bool = False) -> bool:
         core = old.rstrip(".:;!? ")
         if len(core) < 12:
             return False
-        return expanded.startswith(old) or expanded.startswith(core + " ") or expanded.startswith(core + ":")
+
+        def continues(prefix: str) -> bool:
+            if not expanded.startswith(prefix):
+                return False
+            rest = expanded[len(prefix):]
+            return not rest or rest[0] in " \t:;—–,"
+
+        return continues(old) or continues(core)
     return type(orig) is type(new) and orig == new
 
 
@@ -761,8 +804,19 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             counts = {m: hay[m].count(key) for m in hay}
             tot = sum(counts.values())
             if tot == 0:
-                page = (rendered or {}).get(str(n), "")
-                if _fence_preserved_as_dialogue(p, page):
+                turns = _fence_turns(p)
+                if turns:
+                    hits = []
+                    for stem, page in (rendered or {}).items():
+                        hits.extend([stem] * _subsequence_count(turns, _dialogue_pairs_from_page(page)))
+                    if len(hits) == 1 and hits[0] == str(n):
+                        continue
+                    if not hits:
+                        lost.append(p)
+                    elif len(hits) > 1:
+                        dupd.append(p)
+                    else:
+                        misplaced.append((p, n, hits))
                     continue
                 lost.append(p)
             elif tot > 1:
