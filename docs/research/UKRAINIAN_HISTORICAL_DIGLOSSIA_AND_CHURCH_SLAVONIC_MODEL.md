@@ -58,7 +58,7 @@ A language model processing Cyrillic historical texts must distinguish the authe
 | **Pronunciation of ѣ (Yat')** | Realized as **[i]** (*віра*, *літо*, *діло*, *гріх*). Inscriptions and early prints show organic interchange with /i/. | Realized as closed **[e]** (*вѣра* read as [vera], *лѣто* as [leto]). | Merged with /e/ (*вера*, *лето*, *дело*, *грех*). | G. Y. Shevelov (*A Historical Phonology of the Ukrainian Language*, 1979, §28.4, pp. 402–415; tracing the evolution of /ě/ to [i] via diphthongal stages in Galician-Volhynian and Kyivan texts); Ostrog Bible (1581); Smotrytskyi (1619); Ohiyenko (1949/2001) pp. 120–123. In St. Sophia epigraphy, graphical fluctuations between ѣ, e, and и reflect early vocalic shifts, with contested individual readings noted in epigraphic literature (cf. S. Vysotsky 1966 вып. 1, 1985 pp. 33–34; V. Korniyenko 2010–2022). |
 | **Pronunciation of Cyrillic Г** | Voiced glottal/velar fricative **[ɦ]** (*Бо[ɦ]ъ*, *[ɦ]осподи*). Intervocalic /g/ remains [ɦ]. | Voiced velar plosive **[ɡ]** (*Бо[ɡ]ъ*, *[ɡ]осподи*); isolated liturgical exception for *Богъ* pronounced [box]/[boɣ]. | Voiced velar plosive **[ɡ]**; intervocalic genitive *-ого/-его* pronounced as [v] (*че[v]о*, *красно[v]о*). | Shevelov (1979) §27; universal Ukrainian orthoepic tradition; Kyiv-Pechersk Lavra prints prior to the 1720 printing ban. |
 | **Vowel Reduction (*Akanie*)** | **Zero akanie.** Distinct unstressed [o] and [e] strictly preserved in speech and liturgical chant (*вода*, *молоко*, *помози*); native organic norm requiring no artificial defense. | Prescribed liturgical norm was *окання* (*д-о-р-о-г-а*), but Russian clerical practice continuously contended with native secular reduction (*акання* / *ікання*: [dɐroɡə]), necessitating explicit normative warnings in church guides. | Obligatory secular phonological reduction (*akanie* / *ikanie*: [vɐda], [məlɐko]). | Rus chronicles (PVL, Kyiv, Galician-Volhynian); Ohiyenko (1949) Part II; Smotrytskyi (1619). |
-| **Dative Singular Masculine** | Vernacular inflection **-ови / -еви** deeply integrated into liturgical and legal texts (*Господеви*, *князеви*, *рабу Пантелеємови*). Codified by Smotrytskyi (1619). | Standard Church Slavonic inflection **-у / -ю** (*Господу*, *князю*, *рабу Пантелеимону*); *-ови/-еви* excluded or marginalized. | Exclusively **-у / -ю** (*князю*, *рабу*); *-ови/-еви* completely absent from grammar. | St. Sophia graffiti (e.g. #133 [Rybakov 1947, Vysotsky 1976]: *помози Мартинови*, #24 [Vysotsky 1966]: *рабу своєму Василеви*, #1058: *рабу своєму Федорови*); Ruska Pravda (11th–12th c.); Smotrytskyi (1619) fol. 46v; Nimchuk (1980). |
+| **Dative Singular Masculine** | Vernacular inflection **-ови / -еви** deeply integrated into liturgical and legal texts (*Господеви*, *князеви*, *рабу Пантелеємови*). Codified by Smotrytskyi (1619). | Standard Church Slavonic inflection **-у / -ю** (*Господу*, *князю*, *рабу Пантелеимону*); *-ови/-еви* excluded or marginalized. | Exclusively **-у / -ю** (*князю*, *рабу*); *-ови/-еви* completely absent from grammar. | St. Sophia graffiti (e.g. record #105 / title 133: *помози Мартинови*, record #122 / title 1058: *рабу своєму Федорови*); Ruska Pravda (11th–12th c.); Smotrytskyi (1619) fol. 46v; Nimchuk (1980). |
 | **Vocative Case** | Vibrant, living grammatical case in liturgy and speech (**Господи, владико, княже, ставропигіє, отче, земле**). | Retained in fixed liturgical formulas (*Господи*, *Боже*, *Отче*), but structurally fossilized as an isolated archaism. | Collapsed into nominative (*князь!*, *отец!*); archaic remnants only in lexicalized interjections (*боже!*, *господи!*). | Korniyenko (2010–2022) passim; Ostrog Bible (1581); Smotrytskyi (1619) fol. 48r; Shevelov (1979). |
 | **Word-Final Labials (б, п, в, м, ф)** | Preserved hard (**сім**, **кров**, **верб**, **голуб**). | Softened or hard depending on Church Slavonic orthographic traditions (*семь*, *кровь*). | Preserved soft (*семь*, *кровь*, *голубь*). | 11th c. Izbornyk of Sviatoslav (1076); St. Sophia epigraphy; Shevelov (1979) §33. |
 | **Infinitive Suffix** | Full historical suffix **-ти** (*писати*, *жити*, *служити*). | Full historical suffix **-ти** (*писати*, *жити*, *служити*) preserved in liturgical text. | Apocopated suffix **-ть** (*писать*, *жить*, *служить*). | Lithuanian Metrica (14th–16th c.); Cossack chronicles; Skovoroda; Ohiyenko (1949). |
@@ -76,7 +76,6 @@ pie title data/sources.db Historical & Dialectal Holdings (Records & Chunks)
     "Middle Ukrainian & Baroque Literature (20,085 chunks)" : 20085
     "Borys Grinchenko Regional Field Citations (11,000+ entries)" : 11000
     "Old East Slavic Primary Chronicles (10,202 chunks)" : 10202
-    "SUM-11 Verified Dialect Records (5,908 entries)" : 5908
     "Saint Sophia Inscriptions Portal (4,157 records)" : 4157
 ```
 
@@ -138,7 +137,8 @@ pie title data/sources.db Historical & Dialectal Holdings (Records & Chunks)
   * *Pavlo Chubynskyi:* 5,433 citations (Polissia, Right-Bank, Chernihiv, Kyiv).
   * *Volodymyr Hnatiuk:* 680 citations (Boyko, Lemko, Transcarpathia).
   * *Slaviano-Serbsk:* 539 citations (Donbas, Luhansk, Siverskyi Donets basin).
-* **СУМ-11 Dialectal Inventory:** **5,908 headwords** tagged `діал.` (satisfying `WHERE text LIKE '%діал.%'`) accompanied by verified literary attestations.
+* **Clean Modern Academic Authorities:** **СУМ-20** (modern 20-volume dictionary of independent Ukraine, restoring vocabulary suppressed under Soviet rule), **VESUM** (409K lemmas, 6.7M inflected forms), and **УЛІФ** (National Academy of Sciences).
+* **Quarantined Sovietization Baseline (СУМ-11, 1970–1980):** Quarantined exclusively for Sovietization detection and contrastive calque-reversal analysis (per repo policy in `GEMINI.md`). Never used as a positive authority for authentic Ukrainian vocabulary or dialectal norms.
 * **Phraseological Dictionary:** **24,683 authentic Ukrainian idioms**.
 
 ### 4.5 Foundational Linguistic Research Texts in Corpus
@@ -156,10 +156,10 @@ Russian imperial and Soviet historiography relied on three linguistic dogmas to 
 ### Refutation 1: Deconstruction of the Pogodin-Sobolevsky Myth
 
 * **The Imperial Myth (Mikhail Pogodin, 1856):** Pogodin claimed that prior to the Mongol invasion of 1240, Kyiv was populated by "Great Russians", who purportedly migrated northeast to Vladimir and Moscow, after which ancestors of modern Ukrainians "migrated from the Carpathian mountains into empty Kyiv" in the 14th century.
-* **The Empirical Refutation (Krymsky, Shevelov, Korniyenko):**
-  1. Epigraphic records in Saint Sophia and contemporary South Rus manuscript texts document specific Ukrainian vernacular phonetic and morphological traits across pre-1240 and post-1240 dated strata (e.g. dative masculine *-ови/-еви* in 11th–12th c. graffiti #24, #133 and 12th–14th c. graffiti #1058; vocatives in *-е/-у*; patronymics in *-ич*; vernacular calendar names like *лоутий* in #4776).
-  2. The presence of these organic South Rus dialect isoglosses in Kyivan epigraphy and Galician-Volhynian chronicles both before and after the 1240 sack directly refutes Pogodin's linguistic thesis that pre-Mongol Kyivan speech was northern Great Russian that vanished without trace.
-  3. Contested or ambiguous individual epigraphic readings (such as earlier tentative readings of fragmentary inscriptions) are explicitly isolated in our evaluation suite and never treated as self-sufficient proof without corroboration from dated manuscript monuments.
+* **The Empirical Refutation (Krymsky, Shevelov, Nimchuk):**
+  1. Early Kyivan epigraphy (e.g. St. Sophia inscriptions: dative masculine *-ови/-еви* in record #105 / title 133 *помози Мартинови* and record #122 / title 1058 *θедорови*; living vocative case; vernacular calendar form *м(ѣсѧ)ца лоу{того}* in record #229 / title 4776) documents specific South Rus vernacular Ukrainian traits penetrating church formulas in the Kyivan territory.
+  2. These epigraphic attestations corroborate the manuscript tradition (the 12th-century Kyiv Chronicle, 13th-century Galician-Volhynian Chronicle, and 14th–15th century charters in `literary_texts`), where characteristically Ukrainian phonetic and morphological features develop continuously in the South Rus core, refuting Pogodin's 1856 thesis that pre-Mongol Kyivan speech was northern Great Russian that vanished without trace.
+  3. Epigraphic evidence is evaluated as individual unmediated vernacular attestations alongside securely dated manuscript monuments, acknowledging that broad epigraphic dating brackets and damaged fragments cannot alone establish isolated demographic chronologies. Contested individual readings are strictly quarantined in our evaluation suite.
 
 ### Refutation 2: Deconstruction of the "Common East Slavic Monolith"
 
@@ -208,7 +208,7 @@ flowchart LR
 
 ### 6.2 Phase 5.6: Regional Dialects Mining & Multi-Zone Evaluation (Issue [#8102](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8102))
 
-* **Data Extraction:** Mine 11,000+ Grinchenko citations and 5,908 SUM-11 dialect entries across 6 distinct historical-ethnographic zones.
+* **Data Extraction:** Mine 11,000+ Grinchenko (1907) regional field citations across 6 distinct historical-ethnographic zones, cross-referenced with modern decolonized authorities (СУМ-20, VESUM, УЛІФ). Soviet-era СУМ-11 is excluded from positive dialect mining and quarantined exclusively for Sovietization contrastive analysis.
 * **Evaluation:** Disaggregated per-zone confusion matrix (Galicia, Polissia, Podillia, Steppe, Slobozhanshchyna, Donbas).
 * **Astra Mixed-Case Invariant:** Test cases must combine dialect forms with real modern spelling errors to ensure the model does not rely on a trivial "do nothing" heuristic.
 * **Output:** Model release `v0.3`.

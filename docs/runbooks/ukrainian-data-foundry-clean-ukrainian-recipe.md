@@ -63,8 +63,9 @@ Ukrainian source material:
 | **Old East Slavic & Kyivan Rus Chronicles (11th–13th c.)** | 10,202 chunks | 17,421,735 chars |
 | **Saint Sophia of Kyiv Epigraphic Corpus (11th–14th c.)** | 4,157 records | 2,570 usable transcriptions (1,915 translations, 1,382 commentary) |
 | **Borys Grinchenko Regional Field Citations (1907)** | 11,000+ entries | 5 collector zones |
-| **СУМ-11 Verified Dialect Records** | 5,908 entries | Verified dialect markers |
 | **Authentic Ukrainian Idioms & Phraseology** | 24,683 entries | Curated dictionary |
+| **Clean Modern Dictionaries (СУМ-20, УЛІФ, VESUM)** | Full coverage | Independent academic authorities |
+| *(Quarantined)* **СУМ-11 Sovietization Context** | Contrastive only | Sovietization detection & calque reversal (`GEMINI.md`) |
 
 This is recovered Ukrainian source data, mechanically distinct from the
 project's synthetic and translated collections. The
@@ -113,7 +114,7 @@ A training consumer receives explicit strata and chooses the mixture:
 - faithful modern-literary text;
 - historical or heritage text (Kyivan Rus epigraphy, Old East Slavic chronicles);
 - Middle Ukrainian and Cossack Baroque text (Velychko, Skovoroda, 14th–15th c. charters);
-- regional, dialectal, and marked-register text (Grinchenko 11k+ field citations, SUM-11);
+- regional, dialectal, and marked-register text (Grinchenko 11k+ field citations, СУМ-20, VESUM);
 - quoted Russian or other-language passages;
 - suspected modern interference or mixed-language passages; and
 - protected or unresolved evidence.
