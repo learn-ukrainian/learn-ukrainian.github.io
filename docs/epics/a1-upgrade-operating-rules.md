@@ -1,7 +1,8 @@
 # A1 / curriculum-upgrade operating rules
 
 Binding scars from the 2026-09-14 hot session (PR #7999 live). Load this file
-before any V7 `--upgrade` work, A1 content rollout, or Pages cutover. Do not
+before any V7 `--upgrade` work, A1 content rollout, or Pages cutover.
+Driver playbook: `$drive-epic` **§0d** (do not fork a second skill). Do not
 rediscover these in chat. Issues #7994 and #7995 must match this file; if they
 disagree, this file plus the operator GO below win until the issue body is
 edited.
