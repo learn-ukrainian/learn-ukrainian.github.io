@@ -847,11 +847,13 @@ def test_batch7_semantic_and_stress_distinctions():
     assert ber[1]["headword"] == "береже́ний"
     assert "cautious" in ber[1]["gloss"].lower() or "wary" in ber[1]["gloss"].lower()
 
-    # буритися: бу́ритися (crumble / rage) vs бури́тися (passive of бурити)
+    # буритися: бу́ритися (rage / storm) vs бури́тися (passive of бурити)
     bur = enrich_heteronyms.build_heteronyms_for_lemma("буритися")
     assert bur is not None and len(bur) == 2
     assert bur[0]["headword"] == "бу́ритися"
-    assert "collapse" in bur[0]["gloss"].lower() or "rage" in bur[0]["gloss"].lower()
+    assert ("rage" in bur[0]["gloss"].lower() or "agitat" in bur[0]["gloss"].lower() or "storm" in bur[0]["gloss"].lower())
+    assert "collapse" not in bur[0]["gloss"].lower()
+    assert "crumble" not in bur[0]["gloss"].lower()
     assert bur[1]["headword"] == "бури́тися"
     assert "drilled" in bur[1]["gloss"].lower() or "bored" in bur[1]["gloss"].lower()
 
