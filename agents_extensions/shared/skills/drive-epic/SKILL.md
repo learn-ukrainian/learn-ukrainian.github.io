@@ -1,6 +1,6 @@
 ---
 name: drive-epic
-description: Drive one explicitly assigned epic or track through Fleet Comms. Use track-completion for a single curriculum module.
+description: Drive one explicitly assigned epic or track through Fleet Comms. For CORE V7 --upgrade / A1 rollout see §0d. Use track-completion for a single fresh CORE module.
 effort: xhigh
 ---
 
@@ -121,6 +121,34 @@ correct the other view the same session. Full contract:
 
 Before a new dispatch, scope, or PR, run `scripts.fleet.hramatka_scope_gate`
 as specified in that runbook; only `ALLOW` permits the new action.
+
+### 0d. CORE V7 `--upgrade` / A1 rollout (epics #7994 / #7995)
+
+This is **not** `$track-completion` (fresh CORE) and **not** a second driver skill.
+Same `$drive-epic` loop. Product loop and scars:
+[`docs/epics/a1-upgrade-operating-rules.md`](../../../../docs/epics/a1-upgrade-operating-rules.md).
+Writer/reviewer seats live there and in `/api/rules` — do not freeze a roster here.
+
+**Done** is the learner URL on the canonical track (`/a1/<slug>/` for this epic),
+with Pages only on present-tense operator GO (§7-rollout). Engine-on-`main` and
+`run_lesson_gates` green in a worktree are **not** done.
+
+Binding for this lane:
+
+1. Preserve-and-expand archived `a1-v1` (or the stated archive). Do not rebuild by
+   hand. Do not rewrite original prose because an upgrade activity is wrong — drop
+   or replace the **invented** pair; show archive vs upgrade when a CF finding
+   looks like a rewrite.
+2. The **driver does not decide Ukrainian**. Gemini writes; Astra reviews; they
+   settle language. Do not referee stress, letters, or morphology in the driver
+   seat.
+3. **Claude Sonnet** implements machinery (`scripts/`, gates, certify). Fable
+   advises only if needed. Driver (Grok) does not solo-implement.
+4. Content PRs are **scripts-free**. One Astra CF per content PR. While CF/CI
+   runs on module N, package N+1 (pipeline). Do not dump every module on one
+   reviewer in one turn.
+5. After gates pass in a worktree, **open the content PR the same session**.
+   Sitting on green worktrees is a driver defect (§2a / §2c).
 
 ### 1. Read topology + metrics (don't hold state — query it)
 
@@ -657,6 +685,7 @@ is necessary, not sufficient — verify the real artifact renders/runs before "r
 - A replacement for the served rules (`/api/rules`) — it points to them; it never
   restates the live roster.
 - The main-orchestrator cold-start (that has its own SessionStart hook / handoff chain).
-- A single-module writer (use `$track-completion`).
+- A single-module writer (fresh CORE: `$track-completion`; V7 `--upgrade`: §0d).
+- A second orchestrator skill for curriculum — do not fork this file.
 - Authority to flip the plane cutover, self-merge a fleet-wide process change, or
   self-review your own dispatched work.
