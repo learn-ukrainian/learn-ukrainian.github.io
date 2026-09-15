@@ -65,7 +65,7 @@ Listen to how two friends talk about their families while looking at photos on a
 > Тара́с: Приві́т, Оле́но! Так, у мене́ є оди́н брат і одна́ сестра́. А в тебе́? *(Hi, Olena! Yes, I have one brother and one sister. And you?)*
 > Оле́на: У мене́ ті́льки оди́н брат. Йо́го зва́ти Бо́гдан. *(I have only one brother. His name is Bohdan.)*
 > Тара́с: Кла́сно! А діду́сь і бабу́ся у вас є? *(Great! And do you have a grandfather and a grandmother?)*
-> Оле́на: Так, у нас є бабу́ся і діду́сь. Во́ни живу́ть у селі́. *(Yes, we have a grandmother and a grandfather. They live in a village.)*
+> Оле́на: Так, у нас є бабу́ся і діду́сь. Вони́ живу́ть у селі́. *(Yes, we have a grandmother and a grandfather. They live in a village.)*
 
 English breakdown after the dialogue:
 
@@ -163,7 +163,7 @@ Always look at the ending of the noun to choose the correct possessive form:
 - **Чолові́чий рід (Masculine — він):** **мій брат**, **мій та́то**, **мій син**, **мій діду́сь**, **твій брат**, **твій друг**. Even though **та́то** and **діду́сь** end in vowels, they refer to male family members, so they take masculine agreement: **мій та́то**, **мій діду́сь**.
 - **Жіно́чий рід (Feminine — вона́):** **моя́ ма́ма**, **моя́ сестра́**, **моя́ дочка́**, **моя́ бабу́ся**, **твоя́ ма́ма**, **твоя́ сестра́**.
 - **Сере́дній рід (Neuter — воно́):** **моє́ мі́сто**, **моє́ село́**, **моє́ прі́звище**, **твоє́ мі́сто**.
-- **Множина́ (Plural — во́ни):** **мої́ батьки́**, **мої́ ро́дичі**, **мої́ брати́**, **мої́ се́стри**, **твої́ батьки́**, **твої́ дру́зі**.
+- **Множина́ (Plural — вони́):** **мої́ батьки́**, **мої́ ро́дичі**, **мої́ брати́**, **мої́ се́стри**, **твої́ батьки́**, **твої́ дру́зі**.
 
 <!-- INJECT_ACTIVITY: act-202 -->
 

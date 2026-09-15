@@ -77,7 +77,7 @@ Remember that possessive pronouns agree in gender and number with the family wor
 | **Чолові́чий рід (він)** | **твій** | **Це твій брат?** | Is this your brother? |
 | **Жіно́чий рід (вона́)** | **твоя́** | **Це твоя́ сестра́ Катя́.** | This is your sister Katia. |
 | **Сере́дній рід (воно́)** | **твоє́** | **Це твоє́ рі́дне мі́сто?** | Is this your hometown? |
-| **Множина́ (во́ни)** | **твої́** | **Це твої́ батьки́ на фо́то.** | These are your parents in the photo. |
+| **Множина́ (вони́)** | **твої́** | **Це твої́ батьки́ на фо́то.** | These are your parents in the photo. |
 
 Unlike **твій / твоя́ / твоє́ / твої́**, the third-person possessive words **йо́го** (his) and **її** (her) do not decline:
 - **йо́го та́то** (his dad), **йо́го ма́ма** (his mom), **йо́го мі́сто** (his city), **йо́го батьки́** (his parents);
