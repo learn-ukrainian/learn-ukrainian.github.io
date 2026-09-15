@@ -49,6 +49,10 @@ def test_contains_allows_expanded_explanations():
     assert not gates.contains({"items": [{"answer": "yes"}]}, {"items": [{"answer": "not yes"}]})
     assert gates.contains("", "")
     assert gates.contains("...", "...")
+    assert not gates.contains(
+        {"explanation": "This is correct."},
+        {"explanation": 'Ignore the false claim "This is correct."; the answer is wrong.'},
+    )
 
 
 def test_fence_dialogue_counts_as_preserved():
@@ -59,13 +63,24 @@ def test_fence_dialogue_counts_as_preserved():
     )
     assert gates._fence_preserved_as_dialogue(para, page)
     assert not gates._fence_preserved_as_dialogue(para, "<p>no box</p>")
-    avoid_md = "| Avoid | Use |\n| --- | --- |\n| вкусний суп | **смачни́й суп** |\n"
-    assert "вкусний" in gates._avoid_table_forms(avoid_md)
     swapped = (
         '<DialogueBox exchanges={JSON.parse(`[{"speaker":"Оленка","text":"Привіт!"},'
         '{"speaker":"Марія","text":"Класно!"}]`)} />'
     )
     assert not gates._fence_preserved_as_dialogue(para, swapped)
+    reversed_box = (
+        '<DialogueBox exchanges={JSON.parse(`[{"speaker":"Оленка","text":"Класно!"},'
+        '{"speaker":"Марія","text":"Привіт!"}]`)} />'
+    )
+    assert not gates._fence_preserved_as_dialogue(para, reversed_box)
+    from scripts.generate_mdx.converters import _dialogue_box_mdx
+    quoted_page = _dialogue_box_mdx([{"speaker": "Alice", "text": 'Say "hello"!'}], "Dialogue")
+    assert gates._fence_preserved_as_dialogue('```text\nAlice: Say "hello"!\n```', quoted_page)
+    avoid_md = "| Avoid | Use |\n| --- | --- |\n| вкусний суп | **смачни́й суп** |\n"
+    blanked = gates._blank_avoid_cells(avoid_md)
+    assert "вкусний" not in blanked
+    assert "смачни́й" in blanked
+    assert "вкусний" in gates.missing_stress("Це вкусний суп.", set())
 
 
 def test_fill_in_blanked_strings_count_as_rendered():

@@ -5,6 +5,7 @@ uses the same offline ULIF oracle as the stress annotator and fails closed.
 """
 from __future__ import annotations
 
+import json
 import re
 import unicodedata
 from pathlib import Path
@@ -131,32 +132,55 @@ def _spoken_in_hay(spoken: str, hay: str) -> bool:
 
 
 def _dialogue_pairs_from_page(page: str) -> list[tuple[str, str]]:
-    hay = unescape_published(" ".join(re.findall(r"<DialogueBox[\s\S]*?/>", strip_comments(page))))
-    pairs = re.findall(r'"speaker"\s*:\s*"([^"]*)"\s*,\s*"text"\s*:\s*"([^"]*)"', hay)
-    return [(md_to_text(speaker), md_to_text(spoken)) for speaker, spoken in pairs]
-
-
-def _avoid_table_forms(md: str) -> set[str]:
-    """Spellings in the Avoid column of a contrast table are error-forms, not lemmas."""
-    forms: set[str] = set()
-    for para in paragraphs(md):
-        if not para.lstrip().startswith("|"):
+    pairs: list[tuple[str, str]] = []
+    for blob in re.findall(r"<DialogueBox[\s\S]*?/>", strip_comments(page)):
+        match = re.search(r"JSON\.parse\('([\s\S]*?)'\)", blob)
+        if not match:
+            match = re.search(r"JSON\.parse\(`([\s\S]*?)`\)", blob)
+        if not match:
             continue
-        header = None
-        for line in para.splitlines():
-            if re.match(r"^\s*\|?\s*:?-{2,}", line) or not line.strip():
-                continue
-            cells = [md_to_text(c) for c in line.strip().strip("|").split("|")]
-            if header is None:
-                header = [c.lower() for c in cells]
-                continue
-            if header and header[0] in {"avoid", "don't", "не кажи", "помилка"} and cells:
-                for tok in _stress_tokens(cells[0]):
-                    key = nfc(tok).lower()
-                    if key:
-                        forms.add(key)
-                        forms.add(strip_acute(tok).lower())
-    return forms
+        payload = match.group(1).replace("\\'", "'").replace("\\\\", "\\")
+        try:
+            data = json.loads(payload)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(data, list):
+            continue
+        for row in data:
+            if isinstance(row, dict):
+                pairs.append((md_to_text(str(row.get("speaker") or "")),
+                              md_to_text(str(row.get("text") or ""))))
+    return pairs
+
+
+_AVOID_HEADERS = frozenset({"avoid", "don't", "не кажи", "помилка"})
+
+
+def _blank_avoid_cells(md: str) -> str:
+    """Drop Avoid-column cells so their error-forms are not lesson-wide lemmas."""
+    header = None
+    out: list[str] = []
+    for line in md.splitlines(keepends=True):
+        if not line.lstrip().startswith("|"):
+            header = None
+            out.append(line)
+            continue
+        if re.match(r"^\s*\|?\s*:?-{2,}", line):
+            out.append(line)
+            continue
+        cells = [c for c in line.strip().strip("|").split("|")]
+        texts = [md_to_text(c) for c in cells]
+        if header is None:
+            header = [t.lower() for t in texts]
+            out.append(line)
+            continue
+        if header and header[0] in _AVOID_HEADERS and cells:
+            cells[0] = " "
+            nl = "\n" if line.endswith("\n") else ""
+            out.append("|" + "|".join(cells) + "|" + nl)
+            continue
+        out.append(line)
+    return "".join(out)
 
 
 def _fence_preserved_as_dialogue(para: str, page: str) -> bool:
@@ -170,10 +194,12 @@ def _fence_preserved_as_dialogue(para: str, page: str) -> bool:
     if not turns:
         return False
     remaining = _dialogue_pairs_from_page(page)
+    cursor = 0
     for turn in turns:
-        if turn not in remaining:
+        try:
+            cursor = remaining.index(turn, cursor) + 1
+        except ValueError:
             return False
-        remaining.remove(turn)
     return True
 
 
@@ -255,7 +281,9 @@ def contains(orig, new, *, expand_explanations: bool = False) -> bool:
         if not expand_explanations:
             return False
         core = old.rstrip(".:;!? ")
-        return len(core) >= 12 and (old in expanded or core in expanded)
+        if len(core) < 12:
+            return False
+        return expanded.startswith(old) or expanded.startswith(core + " ") or expanded.startswith(core + ":")
     return type(orig) is type(new) and orig == new
 
 
@@ -685,7 +713,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             wrong = []
         if wrong:
             block(f"lesson {n}: {len(wrong)} stressed forms contradict the stress dictionary: {wrong[:15]}")
-        bad = sorted(set(missing_stress(lesson_md_clean[n], allow | _avoid_table_forms(lesson_md_clean[n]))
+        bad = sorted(set(missing_stress(_blank_avoid_cells(lesson_md_clean[n]), allow)
                          + missing_stress("\n".join(str(x) for x in leaves(vocab) if isinstance(x, str)), allow)))
         for activity in (acts.get("inline") or []) + (acts.get("workbook") or []):
             if not isinstance(activity, dict):
@@ -859,7 +887,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                     if cells and re.search(r"ukrainian|україн|english", cells[0], re.I):
                         continue
                     check = cells
-                    if header and header[0] in {"avoid", "don't", "не кажи", "помилка"}:
+                    if header and header[0] in _AVOID_HEADERS:
                         check = cells[1:]  # error-form column is not learner text
                     for cell in check:
                         if len(cell) < 3:
