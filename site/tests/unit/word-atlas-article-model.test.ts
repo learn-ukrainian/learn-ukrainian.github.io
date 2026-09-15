@@ -1380,6 +1380,11 @@ describe("verb future, conditional, хай, impersonal, and aspect columns (#760
       expect(shouldRenderDefinitionCard(sum11PillCard)).toBe(false);
       expect(shouldRenderDefinitionCard(vtsCard)).toBe(true);
       expect(shouldRenderDefinitionCard(sum20Card)).toBe(true);
+
+      expect(isModernDefinitionCard(sum20Card)).toBe(true);
+      expect(isModernDefinitionCard(vtsCard)).toBe(true);
+      expect(isModernDefinitionCard(sum11Card)).toBe(false);
+      expect(isModernDefinitionCard({ id: "grinchenko-1", source: "Грінченко (1907)", definitions: ["давнє значення"] })).toBe(false);
     });
 
     test("renders Значення section and soviet-colonization-box for historical-only entries", () => {

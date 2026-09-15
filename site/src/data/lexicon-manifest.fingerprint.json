@@ -107,7 +107,7 @@
       },
       {
         "path": "scripts/lexicon/curated_heteronyms_batch5.py",
-        "sha256": "e46a905d4ef08d409256335bfdd64534176a2bba6cc681e3b2b60d849946fdeb"
+        "sha256": "190bd984d77c7cb924c7cf753c0d07fa5c9145d1d15d0209bd2082db434e9504"
       },
       {
         "path": "scripts/lexicon/curated_membership.py",
@@ -315,7 +315,7 @@
       },
       {
         "path": "scripts/lexicon/sum20_lookup.py",
-        "sha256": "ac21f45a5544ee6feac54f169faed4ac1b1ac6984927842989a7603f9e699956"
+        "sha256": "9e85132115e75a087fd6731d710037b65ac0ea71b715f4d85d93b71406cf75ae"
       },
       {
         "path": "scripts/lexicon/sync_curated_heteronyms_ts.py",

@@ -331,6 +331,120 @@ describe("WordAtlasArticle heteronym support (#8022)", () => {
     expect(panel1?.textContent).toContain("обі́д");
     expect(panel1?.textContent).toContain("lunch");
   });
+
+  test("renders sense-specific definitions and prevents definition leakage across heteronym senses (опій, #8039)", () => {
+    const opiyRecord: EntryRecord = {
+      slug: "опій",
+      kind: "article",
+      entry: {
+        lemma: "опій",
+        url_slug: "опій",
+        gloss: "opium",
+        pos: "noun",
+        enrichment: {
+          meaning: {
+            definitions: ["BASE_PROBE_MARKER_OPIUM"],
+            source: "Base Source",
+          },
+          definition_cards: [
+            {
+              id: "probe-base-card",
+              source: "Base Probe Source",
+              definitions: ["BASE_PROBE_CARD_MARKER"],
+            },
+          ],
+        },
+      } as any,
+      aliases: [],
+      relations: [],
+      provenance: [],
+      renderContext: {
+        practiceLevels: [],
+        componentLinks: [],
+      },
+    };
+
+    const html = renderWordAtlasArticle({
+      record: opiyRecord,
+      generatedAt: "2026-09-15T00:00:00Z",
+      manifestVersion: "1.0",
+    });
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+
+    const panel0 = doc.querySelector("#heteronym-panel-0");
+    const panel1 = doc.querySelector("#heteronym-panel-1");
+
+    expect(panel0).not.toBeNull();
+    expect(panel1).not.toBeNull();
+
+    const panel0Def = panel0?.querySelector(".def-card.sum20 .def-text")?.textContent;
+    const panel1Def = panel1?.querySelector(".def-card.sum20 .def-text")?.textContent;
+
+    // Tab 0 must render sense 1 definition (opium) and NOT horse hoof disease
+    expect(panel0?.textContent).toContain("о́пій");
+    expect(panel0Def).toContain("опійного маку");
+    expect(panel0Def).not.toContain("запалення копит");
+
+    // Tab 1 must render sense 2 definition (horse hoof inflammation) and NOT sense 1 or base probe markers
+    expect(panel1?.textContent).toContain("опі́й");
+    expect(panel1Def).toContain("запалення копит");
+    expect(panel1Def).not.toContain("опійного маку");
+    expect(panel1?.textContent).not.toContain("BASE_PROBE_MARKER_OPIUM");
+    expect(panel1?.textContent).not.toContain("BASE_PROBE_CARD_MARKER");
+  });
+
+  test("isolates sense definitions and preserves null Soviet colonization context (ланець, #8039)", () => {
+    const lanetsRecord: EntryRecord = {
+      slug: "ланець",
+      kind: "article",
+      entry: {
+        lemma: "ланець",
+        url_slug: "ланець",
+        gloss: "ragged person",
+        pos: "noun",
+        enrichment: {
+          meaning: {
+            definitions: ["BASE_RAGGED_PERSON_MEANING"],
+            source: "Base Source",
+          },
+        },
+      } as any,
+      aliases: [],
+      relations: [],
+      provenance: [],
+      renderContext: {
+        practiceLevels: [],
+        componentLinks: [],
+      },
+    };
+
+    const html = renderWordAtlasArticle({
+      record: lanetsRecord,
+      generatedAt: "2026-09-15T00:00:00Z",
+      manifestVersion: "1.0",
+    });
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+
+    const panel0 = doc.querySelector("#heteronym-panel-0");
+    const panel1 = doc.querySelector("#heteronym-panel-1");
+
+    expect(panel0).not.toBeNull();
+    expect(panel1).not.toBeNull();
+
+    // Tab 0: ragged person, СУМ-11 colonization context present
+    expect(panel0?.textContent).toContain("ла́нець");
+    expect(panel0?.textContent).toContain("Одягнена в лахміття людина");
+    expect(panel0?.textContent).not.toContain("Ланцюг.");
+
+    // Tab 1: chain, no ragged person meaning, NO Soviet colonization card (explicitly null)
+    expect(panel1?.textContent).toContain("лане́ць");
+    expect(panel1?.textContent).toContain("Ланцюг.");
+    expect(panel1?.textContent).not.toContain("Одягнена в лахміття людина");
+    expect(panel1?.textContent).not.toContain("BASE_RAGGED_PERSON_MEANING");
+    expect(panel1?.textContent).not.toContain("Радянський окупаційний контекст");
+  });
 });
 
 describe("bindHeteronymHandlers interactive client wiring (#8022)", () => {

@@ -169,6 +169,14 @@ function getEffectiveHeteronymRecord(
     enrichment: {
       ...baseEnrichment,
       ...heteronymEnrichment,
+      meaning:
+        heteronym.meaning !== undefined
+          ? heteronym.meaning
+          : heteronymEnrichment.meaning,
+      definition_cards:
+        heteronym.definition_cards !== undefined
+          ? heteronym.definition_cards
+          : heteronymEnrichment.definition_cards,
       stress: heteronym.stress ?? heteronymEnrichment.stress ?? baseEnrichment.stress,
       cefr: heteronym.cefr !== undefined ? (heteronym.cefr ? { level: heteronym.cefr } : null) : baseEnrichment.cefr,
       morphology: heteronym.morphology ?? heteronymEnrichment.morphology ?? baseEnrichment.morphology,

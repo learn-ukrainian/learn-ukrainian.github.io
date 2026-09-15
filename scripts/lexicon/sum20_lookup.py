@@ -83,10 +83,10 @@ def lookup_sum20_cached(lemma: str, conn: sqlite3.Connection) -> list[dict[str, 
             """
             SELECT a.id, a.wordid, a.headword, a.stressed_headword, a.pos, a.grammar, a.definition_text, a.official_url
             FROM sum20_articles a
-            WHERE a.normalized_lookup_key = ?
+            WHERE a.normalized_lookup_key = ? OR a.normalized_lookup_key LIKE ?
             ORDER BY a.wordid
             """,
-            (norm,),
+            (norm, f"{norm} %"),
         )
         rows = cur.fetchall()
     except sqlite3.OperationalError:
