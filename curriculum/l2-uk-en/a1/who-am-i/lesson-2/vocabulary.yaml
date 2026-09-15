@@ -10,10 +10,10 @@
   translation: he
   pos: pronoun
   usage: Він зі Льво́ва.
-- lemma: во́на
+- lemma: вона́
   translation: she
   pos: pronoun
-  usage: Во́на — лі́карка.
+  usage: Вона́ — лі́карка.
 - lemma: ми
   translation: we
   pos: pronoun
@@ -22,10 +22,10 @@
   translation: you, formal or plural
   pos: pronoun
   usage: Як вас зва́ти?
-- lemma: во́ни
+- lemma: вони́
   translation: they
   pos: pronoun
-  usage: Во́ни з Украї́ни.
+  usage: Вони́ з Украї́ни.
 - lemma: це
   translation: this is / this
   pos: pronoun
@@ -65,7 +65,7 @@
 - lemma: вчи́телька
   translation: female teacher
   pos: noun
-  usage: Во́на — вчи́телька.
+  usage: Вона́ — вчи́телька.
 - lemma: лі́кар
   translation: male doctor
   pos: noun
@@ -73,7 +73,7 @@
 - lemma: лі́карка
   translation: female doctor
   pos: noun
-  usage: Во́на — лі́карка.
+  usage: Вона́ — лі́карка.
 - lemma: програмі́ст
   translation: male programmer
   pos: noun
