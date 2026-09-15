@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: sandarmokh-tragedy-erasure
 TOPIC_TITLE: 'Сандармох: Трагедія знищеного покоління'
 MODULE_NUM: '121'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/sandarmokh-tragedy-erasure.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/sandarmokh-tragedy-erasure.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/sandarmokh-tragedy-erasure.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/sandarmokh-tragedy-erasure.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/sandarmokh-tragedy-erasure.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/sandarmokh-tragedy-erasure-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/sandarmokh-tragedy-erasure-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/sandarmokh-tragedy-erasure.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/sandarmokh-tragedy-erasure.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/sandarmokh-tragedy-erasure.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/sandarmokh-tragedy-erasure.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/sandarmokh-tragedy-erasure.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/sandarmokh-tragedy-erasure-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/sandarmokh-tragedy-erasure-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

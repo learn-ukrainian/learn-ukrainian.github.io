@@ -3,14 +3,14 @@ LEVEL: LIT_ESSAY
 SLUG: franko-what-is-progress
 TOPIC_TITLE: Franko What Is Progress
 MODULE_NUM: '5'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-essay/franko-what-is-progress.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/meta/franko-what-is-progress.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/franko-what-is-progress.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/activities/franko-what-is-progress.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/vocabulary/franko-what-is-progress.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/research/franko-what-is-progress-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/review/franko-what-is-progress-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-essay/franko-what-is-progress.yaml
+META_PATH: curriculum/l2-uk-en/lit-essay/meta/franko-what-is-progress.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-essay/franko-what-is-progress.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-essay/activities/franko-what-is-progress.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-essay/vocabulary/franko-what-is-progress.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-essay/research/franko-what-is-progress-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-essay/review/franko-what-is-progress-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-essay.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

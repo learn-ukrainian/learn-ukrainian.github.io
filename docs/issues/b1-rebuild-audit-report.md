@@ -25,7 +25,7 @@ Date: Sat Jan 10 00:10:12 CET 2026
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/11-aspect-in-imperatives.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/11-aspect-in-imperatives.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 11-aspect-in-imperatives.yaml: [знайдіть-всі-дієслова-в-наказовому-способі] mark-the-words: 'correct_words' is a required property
@@ -99,7 +99,7 @@ Richness     ✅ 95% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/11-aspect-in-imperatives-review.md
+Report: curriculum/l2-uk-en/b1/audit/11-aspect-in-imperatives-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -115,7 +115,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка|Тест' found: Контекстуальні підказки для вибору виду, Тест
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/12-aspect-pairs-essential-40.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/12-aspect-pairs-essential-40.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 12-aspect-pairs-essential-40.yaml: [позначте-доконані-дієслова] mark-the-words: 'correct_words' is a required property
@@ -171,7 +171,7 @@ Richness     ✅ 99% (grammar)
    → Activity count below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/12-aspect-pairs-essential-40-review.md
+Report: curriculum/l2-uk-en/b1/audit/12-aspect-pairs-essential-40-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -187,7 +187,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка|Тест' found: Як обрати вид у робочому контексті?, Тест, Вид у робочому контексті: повний спектр застосування
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/13-work-week-aspect-in-action.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/13-work-week-aspect-in-action.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 13-work-week-aspect-in-action.yaml: [знайдіть-дієслова-дв] mark-the-words: 'correct_words' is a required property
@@ -241,7 +241,7 @@ Richness     ✅ 96% (grammar)
    → Activity count below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/13-work-week-aspect-in-action-review.md
+Report: curriculum/l2-uk-en/b1/audit/13-work-week-aspect-in-action-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -257,7 +257,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: Практика, Інтеграція виду: практика
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/14-aspect-integration-practice.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/14-aspect-integration-practice.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 14-aspect-integration-practice.yaml: [визначення-виду-в-тексті] mark-the-words: 'correct_words' is a required property
@@ -316,7 +316,7 @@ Richness     ✅ 96% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/14-aspect-integration-practice-review.md
+Report: curriculum/l2-uk-en/b1/audit/14-aspect-integration-practice-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -333,7 +333,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/15-checkpoint-aspect-mastery.md (Target: 800)...
+Auditing curriculum/l2-uk-en/b1/15-checkpoint-aspect-mastery.md (Target: 800)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 15-checkpoint-aspect-mastery.yaml: [знайдіть-дієслова-доконаного-виду] mark-the-words: 'correct_words' is a required property
@@ -398,7 +398,7 @@ Richness     ✅ 98% (checkpoint)
    → 4 violations (moderate)
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/15-checkpoint-aspect-mastery-review.md
+Report: curriculum/l2-uk-en/b1/audit/15-checkpoint-aspect-mastery-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -415,7 +415,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/16-motion-verbs-full-system.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/16-motion-verbs-full-system.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 16-motion-verbs-full-system.yaml: [знайдіть-дієслова-руху] mark-the-words: 'correct_words' is a required property
@@ -471,7 +471,7 @@ Richness     ✅ 96% (grammar)
    → Activity count below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/16-motion-verbs-full-system-review.md
+Report: curriculum/l2-uk-en/b1/audit/16-motion-verbs-full-system-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -487,7 +487,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка|Тест' found: Тест, Додаткові приклади в контексті
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/17-motion-coming-going.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/17-motion-coming-going.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 17-motion-coming-going.yaml: [знайдіть-дієслова-з-при-] mark-the-words: 'correct_words' is a required property
@@ -549,7 +549,7 @@ Richness     ✅ 99% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/17-motion-coming-going-review.md
+Report: curriculum/l2-uk-en/b1/audit/17-motion-coming-going-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -566,7 +566,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/18-motion-passing-crossing.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/18-motion-passing-crossing.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 18-motion-passing-crossing.yaml: [префіксальні-дієслова-у-тексті] mark-the-words: 'correct_words' is a required property
@@ -622,7 +622,7 @@ Richness     ✅ 98% (grammar)
    → Activity count below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/18-motion-passing-crossing-review.md
+Report: curriculum/l2-uk-en/b1/audit/18-motion-passing-crossing-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -638,7 +638,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/19-motion-starting-returning.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/19-motion-starting-returning.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 19-motion-starting-returning.yaml: [знайдіть-дієслова-з-префіксами] mark-the-words: 'correct_words' is a required property
@@ -697,7 +697,7 @@ Richness     ✅ 96% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/19-motion-starting-returning-review.md
+Report: curriculum/l2-uk-en/b1/audit/19-motion-starting-returning-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -714,7 +714,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/20-motion-approaching-departing.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/20-motion-approaching-departing.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 20-motion-approaching-departing.yaml: [знайдіть-дієслова-з-префіксами] mark-the-words: 'correct_words' is a required property
@@ -775,7 +775,7 @@ Richness     ✅ 99% (grammar)
    → Activity count below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/20-motion-approaching-departing-review.md
+Report: curriculum/l2-uk-en/b1/audit/20-motion-approaching-departing-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -791,7 +791,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/21-motion-figurative-uses.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/21-motion-figurative-uses.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 21-motion-figurative-uses.yaml: [знайдіть-ідіоми-в-тексті] mark-the-words: 'correct_words' is a required property
@@ -861,7 +861,7 @@ Richness     ✅ 99% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/21-motion-figurative-uses-review.md
+Report: curriculum/l2-uk-en/b1/audit/21-motion-figurative-uses-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -876,7 +876,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/22-motion-full-prefix-integration.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/22-motion-full-prefix-integration.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 22-motion-full-prefix-integration.yaml: [find-motion-verbs] mark-the-words: 'correct_words' is a required property
@@ -946,7 +946,7 @@ Richness     ✅ 99% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/22-motion-full-prefix-integration-review.md
+Report: curriculum/l2-uk-en/b1/audit/22-motion-full-prefix-integration-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -961,7 +961,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/23-motion-patterns-other-verbs.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/23-motion-patterns-other-verbs.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 23-motion-patterns-other-verbs.yaml: [find-prefixed-verbs] mark-the-words: 'correct_words' is a required property
@@ -1040,7 +1040,7 @@ Richness     ❌ 94% < 95% min (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/23-motion-patterns-other-verbs-review.md
+Report: curriculum/l2-uk-en/b1/audit/23-motion-patterns-other-verbs-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -1056,7 +1056,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: Практика, Дієслова руху: практика та інтеграція
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/24-motion-practice-integration.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/24-motion-practice-integration.md (Target: 1500)...
 
   ❌ YAML schema violations: 4
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 24-motion-practice-integration.yaml: [культурні-нюанси-та-логіка] true-false: 'items.7' - 'correct' is a required property
@@ -1131,7 +1131,7 @@ Richness     ✅ 99% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/24-motion-practice-integration-review.md
+Report: curriculum/l2-uk-en/b1/audit/24-motion-practice-integration-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -1148,7 +1148,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/25-checkpoint-motion-verbs.md (Target: 800)...
+Auditing curriculum/l2-uk-en/b1/25-checkpoint-motion-verbs.md (Target: 800)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 25-checkpoint-motion-verbs.yaml: [знайдіть-дієслова-руху] mark-the-words: 'correct_words' is a required property
@@ -1209,7 +1209,7 @@ Richness     ✅ 95% (grammar)
    → 4 violations (moderate)
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/25-checkpoint-motion-verbs-review.md
+Report: curriculum/l2-uk-en/b1/audit/25-checkpoint-motion-verbs-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -1226,7 +1226,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/26-relative-clauses-yakyi.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/26-relative-clauses-yakyi.md (Target: 1500)...
 
   ❌ Error parsing YAML activities: 'source'
   ❌ YAML schema violations: 3
@@ -1279,7 +1279,7 @@ Richness     ✅ 95% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/26-relative-clauses-yakyi-review.md
+Report: curriculum/l2-uk-en/b1/audit/26-relative-clauses-yakyi-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -1296,7 +1296,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/27-relative-clauses-de-kudy-zvidky.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/27-relative-clauses-de-kudy-zvidky.md (Target: 1500)...
 
   ❌ Error parsing YAML activities: 'source'
   ❌ YAML schema violations: 3
@@ -1349,7 +1349,7 @@ Richness     ✅ 98% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/27-relative-clauses-de-kudy-zvidky-review.md
+Report: curriculum/l2-uk-en/b1/audit/27-relative-clauses-de-kudy-zvidky-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -1366,7 +1366,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/28-relative-clauses-koly-shcho.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/28-relative-clauses-koly-shcho.md (Target: 1500)...
 
   ❌ Error parsing YAML activities: 'source'
   ❌ YAML schema violations: 3
@@ -1419,7 +1419,7 @@ Richness     ✅ 99% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/28-relative-clauses-koly-shcho-review.md
+Report: curriculum/l2-uk-en/b1/audit/28-relative-clauses-koly-shcho-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -1436,7 +1436,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/29-purpose-shchob-infinitive.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/29-purpose-shchob-infinitive.md (Target: 1500)...
 
   ❌ Error parsing YAML activities: 'source'
   ❌ YAML schema violations: 3
@@ -1491,7 +1491,7 @@ Richness     ✅ 95% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/29-purpose-shchob-infinitive-review.md
+Report: curriculum/l2-uk-en/b1/audit/29-purpose-shchob-infinitive-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -1506,7 +1506,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/30-purpose-shchob-past-form.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/30-purpose-shchob-past-form.md (Target: 1500)...
 
   ❌ Error parsing YAML activities: 'source'
   ❌ YAML schema violations: 3
@@ -1555,7 +1555,7 @@ Richness     ✅ 99% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/30-purpose-shchob-past-form-review.md
+Report: curriculum/l2-uk-en/b1/audit/30-purpose-shchob-past-form-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -1570,7 +1570,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/31-conditionals-real-yakshcho.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/31-conditionals-real-yakshcho.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 31-conditionals-real-yakshcho.yaml: [позначте-сполучники-умови] mark-the-words: 'correct_words' is a required property
@@ -1627,7 +1627,7 @@ Richness     ✅ 98% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/31-conditionals-real-yakshcho-review.md
+Report: curriculum/l2-uk-en/b1/audit/31-conditionals-real-yakshcho-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -1642,7 +1642,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/32-conditionals-unreal-yakby.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/32-conditionals-unreal-yakby.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 32-conditionals-unreal-yakby.yaml: [позначте-частку-«б»-або-«би»-та-сполучник-«якби»] mark-the-words: 'correct_words' is a required property
@@ -1715,7 +1715,7 @@ Richness     ✅ 95% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/32-conditionals-unreal-yakby-review.md
+Report: curriculum/l2-uk-en/b1/audit/32-conditionals-unreal-yakby-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -1730,7 +1730,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/33-conditionals-mixed-complex.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/33-conditionals-mixed-complex.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 33-conditionals-mixed-complex.yaml: [позначте-часові-маркери-та-сполучники-умови] mark-the-words: 'correct_words' is a required property
@@ -1793,7 +1793,7 @@ Richness     ✅ 99% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/33-conditionals-mixed-complex-review.md
+Report: curriculum/l2-uk-en/b1/audit/33-conditionals-mixed-complex-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -1810,7 +1810,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: Практика, Practice:
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/34-checkpoint-complex-sentences-1.md (Target: 800)...
+Auditing curriculum/l2-uk-en/b1/34-checkpoint-complex-sentences-1.md (Target: 800)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 34-checkpoint-complex-sentences-1.yaml: [позначте-сполучники-й-відносні-слова] mark-the-words: 'correct_words' is a required property
@@ -1880,7 +1880,7 @@ Richness     ✅ 88% (checkpoint)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/34-checkpoint-complex-sentences-1-review.md
+Report: curriculum/l2-uk-en/b1/audit/34-checkpoint-complex-sentences-1-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -1895,7 +1895,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/35-concessive-khocha.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/35-concessive-khocha.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 35-concessive-khocha.yaml: [позначте-допустові-сполучники-та-підсилювальні-слова] mark-the-words: 'correct_words' is a required property
@@ -1963,7 +1963,7 @@ Richness     ✅ 95% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/35-concessive-khocha-review.md
+Report: curriculum/l2-uk-en/b1/audit/35-concessive-khocha-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -1978,7 +1978,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/36-causal-result-clauses.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/36-causal-result-clauses.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 36-causal-result-clauses.yaml: [позначте-причинові-та-наслідкові-сполучники] mark-the-words: 'correct_words' is a required property
@@ -2042,7 +2042,7 @@ Richness     ✅ 98% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/36-causal-result-clauses-review.md
+Report: curriculum/l2-uk-en/b1/audit/36-causal-result-clauses-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -2057,7 +2057,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/37-temporal-clauses.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/37-temporal-clauses.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 37-temporal-clauses.yaml: [позначте-часові-сполучники] mark-the-words: 'correct_words' is a required property
@@ -2121,7 +2121,7 @@ Richness     ✅ 95% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/37-temporal-clauses-review.md
+Report: curriculum/l2-uk-en/b1/audit/37-temporal-clauses-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -2137,7 +2137,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' found: Пояснення, Діалог 1: Пояснення ситуації
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/38-complex-sentence-integration.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/38-complex-sentence-integration.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 38-complex-sentence-integration.yaml: [mark-conjunctions] mark-the-words: 'correct_words' is a required property
@@ -2207,7 +2207,7 @@ Richness     ✅ 96% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/38-complex-sentence-integration-review.md
+Report: curriculum/l2-uk-en/b1/audit/38-complex-sentence-integration-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -2223,7 +2223,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка|Тест' found: Тест, Застосування непрямої мови в різних контекстах
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/39-reported-statements.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/39-reported-statements.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 39-reported-statements.yaml: [mark-reporting-verbs] mark-the-words: 'correct_words' is a required property
@@ -2299,7 +2299,7 @@ Richness     ✅ 99% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/39-reported-statements-review.md
+Report: curriculum/l2-uk-en/b1/audit/39-reported-statements-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -2314,7 +2314,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/40-reported-questions-commands.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/40-reported-questions-commands.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 40-reported-questions-commands.yaml: [складіть-речення-з-розсипаних-слів] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -2371,7 +2371,7 @@ Richness     ✅ 99% (grammar)
    → Activity count below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/40-reported-questions-commands-review.md
+Report: curriculum/l2-uk-en/b1/audit/40-reported-questions-commands-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -2388,7 +2388,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: Практика, Practice:
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/41-checkpoint-complex-sentences-2.md (Target: 800)...
+Auditing curriculum/l2-uk-en/b1/41-checkpoint-complex-sentences-2.md (Target: 800)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 41-checkpoint-complex-sentences-2.yaml: [позначте-сполучники-складних-речень] mark-the-words: 'correct_words' is a required property
@@ -2462,7 +2462,7 @@ Richness     ❌ 84% < 85% min (checkpoint)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/41-checkpoint-complex-sentences-2-review.md
+Report: curriculum/l2-uk-en/b1/audit/41-checkpoint-complex-sentences-2-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -2478,7 +2478,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка|Тест' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/42-adverbial-participles-imperfective.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/42-adverbial-participles-imperfective.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 42-adverbial-participles-imperfective.yaml: [знайдіть-дієприслівники-недоконаного-виду] mark-the-words: 'correct_words' is a required property
@@ -2546,7 +2546,7 @@ Richness     ✅ 99% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/42-adverbial-participles-imperfective-review.md
+Report: curriculum/l2-uk-en/b1/audit/42-adverbial-participles-imperfective-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -2562,7 +2562,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка|Тест' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/43-adverbial-participles-perfective.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/43-adverbial-participles-perfective.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 43-adverbial-participles-perfective.yaml: [знайдіть-дієприслівники-доконаного-виду] mark-the-words: 'correct_words' is a required property
@@ -2634,7 +2634,7 @@ Richness     ✅ 99% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/43-adverbial-participles-perfective-review.md
+Report: curriculum/l2-uk-en/b1/audit/43-adverbial-participles-perfective-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -2650,7 +2650,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка|Тест' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/44-active-participles-phrases.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/44-active-participles-phrases.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 44-active-participles-phrases.yaml: [знайдіть-канцелярити-та-русизми-в-тексті] mark-the-words: 'correct_words' is a required property
@@ -2739,7 +2739,7 @@ Richness     ✅ 99% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/44-active-participles-phrases-review.md
+Report: curriculum/l2-uk-en/b1/audit/44-active-participles-phrases-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -2756,7 +2756,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Practice|Exercises|Activity|Практика|Вправи' found: Практика, Корисні вправи для самостійної практики
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/45-past-passive-participles-1.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/45-past-passive-participles-1.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 45-past-passive-participles-1.yaml: [знайдіть-пасивні-дієприкметники-в-тексті] mark-the-words: 'correct_words' is a required property
@@ -2843,7 +2843,7 @@ Richness     ✅ 99% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/45-past-passive-participles-1-review.md
+Report: curriculum/l2-uk-en/b1/audit/45-past-passive-participles-1-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -2858,7 +2858,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/46-past-passive-participles-2.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/46-past-passive-participles-2.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 46-past-passive-participles-2.yaml: [mark-short-forms] mark-the-words: 'correct_words' is a required property
@@ -2924,7 +2924,7 @@ Richness     ✅ 99% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/46-past-passive-participles-2-review.md
+Report: curriculum/l2-uk-en/b1/audit/46-past-passive-participles-2-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -2939,7 +2939,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/47-passive-constructions.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/47-passive-constructions.md (Target: 1500)...
 
   ❌ Error parsing YAML activities: 'source'
   ❌ YAML schema violations: 3
@@ -2986,7 +2986,7 @@ Richness     ✅ 95% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/47-passive-constructions-review.md
+Report: curriculum/l2-uk-en/b1/audit/47-passive-constructions-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -3001,7 +3001,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/48-diminutives-master-class.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/48-diminutives-master-class.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 48-diminutives-master-class.yaml: [знайдіть-демінутиви] mark-the-words: 'correct_words' is a required property
@@ -3065,7 +3065,7 @@ Richness     ✅ 99% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/48-diminutives-master-class-review.md
+Report: curriculum/l2-uk-en/b1/audit/48-diminutives-master-class-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -3080,7 +3080,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/49-numerals-collectives-fractions.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/49-numerals-collectives-fractions.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 49-numerals-collectives-fractions.yaml: [побудуйте-речення] unjumble: 'items.5' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -3150,7 +3150,7 @@ Richness     ✅ 98% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/49-numerals-collectives-fractions-review.md
+Report: curriculum/l2-uk-en/b1/audit/49-numerals-collectives-fractions-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -3167,7 +3167,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/50-integrated-grammar-lab.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/50-integrated-grammar-lab.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 50-integrated-grammar-lab.yaml: [стилістичний-аналіз] quiz: 'items.7.options.3' - 'correct' is a required property
@@ -3242,7 +3242,7 @@ Richness     ✅ 96% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/50-integrated-grammar-lab-review.md
+Report: curriculum/l2-uk-en/b1/audit/50-integrated-grammar-lab-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -3258,7 +3258,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Warm-up|Introduction|Objectives|Контекст|Вступ|Розминка|Тест' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/51-checkpoint-advanced-grammar.md (Target: 800)...
+Auditing curriculum/l2-uk-en/b1/51-checkpoint-advanced-grammar.md (Target: 800)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 51-checkpoint-advanced-grammar.yaml: [складіть-речення-з-дієприслівниками-та-дієприкметниками] unjumble: 'items.9' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -3375,7 +3375,7 @@ Richness     ✅ 98% (checkpoint)
    → 31 violations (severe - consider revision)
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/51-checkpoint-advanced-grammar-review.md
+Report: curriculum/l2-uk-en/b1/audit/51-checkpoint-advanced-grammar-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -3392,7 +3392,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/52-abstract-concepts-ideas.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/52-abstract-concepts-ideas.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 52-abstract-concepts-ideas.yaml: [складіть-речення] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -3493,7 +3493,7 @@ Richness     ✅ 96% (vocabulary)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/52-abstract-concepts-ideas-review.md
+Report: curriculum/l2-uk-en/b1/audit/52-abstract-concepts-ideas-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -3510,7 +3510,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/53-abstract-concepts-processes.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/53-abstract-concepts-processes.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 53-abstract-concepts-processes.yaml: [складіть-речення] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -3606,7 +3606,7 @@ Richness     ✅ 96% (vocabulary)
    → 24 violations (severe - consider revision)
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/53-abstract-concepts-processes-review.md
+Report: curriculum/l2-uk-en/b1/audit/53-abstract-concepts-processes-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -3623,7 +3623,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/54-expressing-opinions.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/54-expressing-opinions.md (Target: 1500)...
 
   ❌ YAML schema violations: 3
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 54-expressing-opinions.yaml: [дієслова-думки--вибір-правильного-слова] quiz: 'items.13.options.3' - 'correct' is a required property
@@ -3779,7 +3779,7 @@ Richness     ✅ 99% (vocabulary)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/54-expressing-opinions-review.md
+Report: curriculum/l2-uk-en/b1/audit/54-expressing-opinions-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -3796,7 +3796,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/55-agreement-disagreement.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/55-agreement-disagreement.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 55-agreement-disagreement.yaml: [складіть-речення-про-згоду-та-незгоду] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -3886,7 +3886,7 @@ Richness     ✅ 99% (vocabulary)
    → 18 violations (severe - consider revision)
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/55-agreement-disagreement-review.md
+Report: curriculum/l2-uk-en/b1/audit/55-agreement-disagreement-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -3902,7 +3902,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/56-discourse-markers-basic.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/56-discourse-markers-basic.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 56-discourse-markers-basic.yaml: [mark-contrast] mark-the-words: 'correct_words' is a required property
@@ -3994,7 +3994,7 @@ Richness     ✅ 98% (vocabulary)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/56-discourse-markers-basic-review.md
+Report: curriculum/l2-uk-en/b1/audit/56-discourse-markers-basic-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -4011,7 +4011,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Summary|Підсумок' found: Група 5: Висновок та підсумок, Підсумок
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/57-discourse-markers-advanced.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/57-discourse-markers-advanced.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 57-discourse-markers-advanced.yaml: [складіть-речення-з-маркерами] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -4106,7 +4106,7 @@ Richness     ✅ 96% (vocabulary)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/57-discourse-markers-advanced-review.md
+Report: curriculum/l2-uk-en/b1/audit/57-discourse-markers-advanced-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -4123,7 +4123,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/58-describing-changes.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/58-describing-changes.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 58-describing-changes.yaml: [складіть-речення-про-зміни] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -4225,7 +4225,7 @@ Richness     ✅ 96% (vocabulary)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/58-describing-changes-review.md
+Report: curriculum/l2-uk-en/b1/audit/58-describing-changes-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -4242,7 +4242,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/59-media-news.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/59-media-news.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 59-media-news.yaml: [mark-media-vocabulary] mark-the-words: 'correct_words' is a required property
@@ -4346,7 +4346,7 @@ Richness     ✅ 96% (vocabulary)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/59-media-news-review.md
+Report: curriculum/l2-uk-en/b1/audit/59-media-news-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -4363,7 +4363,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/60-society-politics.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/60-society-politics.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 60-society-politics.yaml: [складіть-речення] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -4463,7 +4463,7 @@ Richness     ✅ 97% (vocabulary)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/60-society-politics-review.md
+Report: curriculum/l2-uk-en/b1/audit/60-society-politics-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -4480,7 +4480,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/61-professional-communication.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/61-professional-communication.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 61-professional-communication.yaml: [складіть-речення] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -4572,7 +4572,7 @@ Richness     ✅ 99% (vocabulary)
    → 22 violations (severe - consider revision)
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/61-professional-communication-review.md
+Report: curriculum/l2-uk-en/b1/audit/61-professional-communication-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -4589,7 +4589,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/62-environment-ecology.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/62-environment-ecology.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 62-environment-ecology.yaml: [складіть-речення] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -4681,7 +4681,7 @@ Richness     ✅ 96% (vocabulary)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/62-environment-ecology-review.md
+Report: curriculum/l2-uk-en/b1/audit/62-environment-ecology-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -4698,7 +4698,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/63-health-wellness.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/63-health-wellness.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 63-health-wellness.yaml: [складіть-речення-про-здоров'я] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -4788,7 +4788,7 @@ Richness     ✅ 98% (vocabulary)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/63-health-wellness-review.md
+Report: curriculum/l2-uk-en/b1/audit/63-health-wellness-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -4805,7 +4805,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/64-emotions-deep-dive.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/64-emotions-deep-dive.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 64-emotions-deep-dive.yaml: [складіть-речення-про-емоції] unjumble: 'items.11' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -4907,7 +4907,7 @@ Richness     ✅ 99% (vocabulary)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/64-emotions-deep-dive-review.md
+Report: curriculum/l2-uk-en/b1/audit/64-emotions-deep-dive-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -4924,7 +4924,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/65-relationships.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/65-relationships.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 65-relationships.yaml: [складіть-речення] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -5016,7 +5016,7 @@ Richness     ✅ 99% (vocabulary)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/65-relationships-review.md
+Report: curriculum/l2-uk-en/b1/audit/65-relationships-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -5033,7 +5033,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/66-business-basics.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/66-business-basics.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 66-business-basics.yaml: [складіть-речення] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -5139,7 +5139,7 @@ Richness     ✅ 99% (vocabulary)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/66-business-basics-review.md
+Report: curriculum/l2-uk-en/b1/audit/66-business-basics-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -5156,7 +5156,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/67-travel-geography.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/67-travel-geography.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 67-travel-geography.yaml: [складіть-речення] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -5258,7 +5258,7 @@ Richness     ✅ 98% (vocabulary)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/67-travel-geography-review.md
+Report: curriculum/l2-uk-en/b1/audit/67-travel-geography-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -5275,7 +5275,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/68-synonymy-thinking-verbs.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/68-synonymy-thinking-verbs.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 68-synonymy-thinking-verbs.yaml: [складіть-речення-правильно] unjumble: 'items.9' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -5380,7 +5380,7 @@ Richness     ✅ 99% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/68-synonymy-thinking-verbs-review.md
+Report: curriculum/l2-uk-en/b1/audit/68-synonymy-thinking-verbs-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -5396,7 +5396,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/69-synonymy-speaking-verbs.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/69-synonymy-speaking-verbs.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 69-synonymy-speaking-verbs.yaml: [складіть-речення] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -5489,7 +5489,7 @@ Richness     ✅ 99% (vocabulary)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/69-synonymy-speaking-verbs-review.md
+Report: curriculum/l2-uk-en/b1/audit/69-synonymy-speaking-verbs-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -5506,7 +5506,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/70-collocations-expressions.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/70-collocations-expressions.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 70-collocations-expressions.yaml: [складіть-речення-з-колокаціями] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -5592,7 +5592,7 @@ Richness     ✅ 99% (vocabulary)
    → 19 violations (severe - consider revision)
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/70-collocations-expressions-review.md
+Report: curriculum/l2-uk-en/b1/audit/70-collocations-expressions-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -5609,7 +5609,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/71-emotional-intelligence.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/71-emotional-intelligence.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 71-emotional-intelligence.yaml: [складіть-речення] unjumble: 'items.13' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -5728,7 +5728,7 @@ Richness     ✅ 99% (vocabulary)
    → 33 violations (severe - consider revision)
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/71-emotional-intelligence-review.md
+Report: curriculum/l2-uk-en/b1/audit/71-emotional-intelligence-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -5743,7 +5743,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/72-regions-west.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/72-regions-west.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 72-regions-west.yaml: [складіть-речення-про-західну-україну] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -5825,7 +5825,7 @@ Richness     ✅ 97% (cultural)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/72-regions-west-review.md
+Report: curriculum/l2-uk-en/b1/audit/72-regions-west-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -5840,7 +5840,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/73-regions-east.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/73-regions-east.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 73-regions-east.yaml: [складіть-речення] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -5917,7 +5917,7 @@ Richness     ✅ 98% (cultural)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/73-regions-east-review.md
+Report: curriculum/l2-uk-en/b1/audit/73-regions-east-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -5933,7 +5933,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Презентація' is empty
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/74-regions-south.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/74-regions-south.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 74-regions-south.yaml: [складіть-речення-про-південну-україну] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -6017,7 +6017,7 @@ Richness     ✅ 96% (cultural)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/74-regions-south-review.md
+Report: curriculum/l2-uk-en/b1/audit/74-regions-south-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -6032,7 +6032,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/75-regions-center.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/75-regions-center.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 75-regions-center.yaml: [складіть-речення-про-центральну-україну] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -6114,7 +6114,7 @@ Richness     ✅ 97% (cultural)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/75-regions-center-review.md
+Report: curriculum/l2-uk-en/b1/audit/75-regions-center-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -6129,7 +6129,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/76-ukrainian-music-today.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/76-ukrainian-music-today.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 76-ukrainian-music-today.yaml: [складіть-речення-про-музику] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -6201,7 +6201,7 @@ Richness     ✅ 98% (cultural)
    → 12 violations (severe - consider revision)
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/76-ukrainian-music-today-review.md
+Report: curriculum/l2-uk-en/b1/audit/76-ukrainian-music-today-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -6216,7 +6216,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/77-ukrainian-cinema-and-tv.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/77-ukrainian-cinema-and-tv.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 77-ukrainian-cinema-and-tv.yaml: [знайдіть-слова,-пов'язані-з-кіно] mark-the-words: 'correct_words' is a required property
@@ -6287,7 +6287,7 @@ Richness     ❌ 94% < 95% min (cultural)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/77-ukrainian-cinema-and-tv-review.md
+Report: curriculum/l2-uk-en/b1/audit/77-ukrainian-cinema-and-tv-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -6302,7 +6302,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/78-technology-and-startups.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/78-technology-and-startups.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 78-technology-and-startups.yaml: [речення-про-технології] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -6367,7 +6367,7 @@ Richness     ✅ 98% (cultural)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/78-technology-and-startups-review.md
+Report: curriculum/l2-uk-en/b1/audit/78-technology-and-startups-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -6382,7 +6382,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/79-sports-in-ukraine.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/79-sports-in-ukraine.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 79-sports-in-ukraine.yaml: [речення-про-спорт] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -6449,7 +6449,7 @@ Richness     ✅ 99% (cultural)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/79-sports-in-ukraine-review.md
+Report: curriculum/l2-uk-en/b1/audit/79-sports-in-ukraine-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -6464,7 +6464,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/80-active-lifestyle.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/80-active-lifestyle.md (Target: 1500)...
 
   ❌ YAML schema violations: 1
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 80-active-lifestyle.yaml: [mark-verbs] mark-the-words: 'correct_words' is a required property
@@ -6557,7 +6557,7 @@ Richness     ❌ 93% < 95% min (cultural)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/80-active-lifestyle-review.md
+Report: curriculum/l2-uk-en/b1/audit/80-active-lifestyle-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -6572,7 +6572,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/81-running-in-ukraine.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/81-running-in-ukraine.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 81-running-in-ukraine.yaml: [index-0] quiz: 'items.7' - 'question' is a required property
@@ -6649,7 +6649,7 @@ Richness     ✅ 96% (cultural)
    → Activity count below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/81-running-in-ukraine-review.md
+Report: curriculum/l2-uk-en/b1/audit/81-running-in-ukraine-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -6664,7 +6664,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/82-mountains-trail.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/82-mountains-trail.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 82-mountains-trail.yaml: [index-0] quiz: 'items.13' - 'question' is a required property
@@ -6763,7 +6763,7 @@ Richness     ✅ 96% (cultural)
    → Activity count below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/82-mountains-trail-review.md
+Report: curriculum/l2-uk-en/b1/audit/82-mountains-trail-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -6778,7 +6778,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/83-cycling-water.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/83-cycling-water.md (Target: 1500)...
 
   ❌ YAML schema violations: 3
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 83-cycling-water.yaml: [index-0] quiz: 'items.13' - 'question' is a required property
@@ -6874,7 +6874,7 @@ Richness     ✅ 99% (cultural)
    → Activity count below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/83-cycling-water-review.md
+Report: curriculum/l2-uk-en/b1/audit/83-cycling-water-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -6889,7 +6889,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/84-winter-sports.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/84-winter-sports.md (Target: 1500)...
 
   ❌ YAML schema violations: 3
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 84-winter-sports.yaml: [index-0] quiz: 'items.13' - 'question' is a required property
@@ -6981,7 +6981,7 @@ Richness     ✅ 96% (cultural)
    → Activity count below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/84-winter-sports-review.md
+Report: curriculum/l2-uk-en/b1/audit/84-winter-sports-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -6996,7 +6996,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/85-ukrainian-cuisine.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/85-ukrainian-cuisine.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 85-ukrainian-cuisine.yaml: [складіть-речення-про-українську-кухню] unjumble: 'items.7' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -7078,7 +7078,7 @@ Richness     ✅ 98% (cultural)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/85-ukrainian-cuisine-review.md
+Report: curriculum/l2-uk-en/b1/audit/85-ukrainian-cuisine-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -7094,7 +7094,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Презентація' is empty
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/86-ukrainski-sviata-ta-festyvali.md (Target: 1500)...
+Auditing curriculum/l2-uk-en/b1/86-ukrainski-sviata-ta-festyvali.md (Target: 1500)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 86-ukrainski-sviata-ta-festyvali.yaml: [знайдіть-святкові-терміни] mark-the-words: 'correct_words' is a required property
@@ -7198,7 +7198,7 @@ Richness     ✅ 95% (cultural)
    → Activity count below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/86-ukrainski-sviata-ta-festyvali-review.md
+Report: curriculum/l2-uk-en/b1/audit/86-ukrainski-sviata-ta-festyvali-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -7213,7 +7213,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
   ⚠️  Template violations: 1 critical, 0 warnings, 0 info
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/87-novyny-yak-chytaty.md (Target: 1000)...
+Auditing curriculum/l2-uk-en/b1/87-novyny-yak-chytaty.md (Target: 1000)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 87-novyny-yak-chytaty.yaml: [знайдіть-терміни-журналістики] mark-the-words: 'correct_words' is a required property
@@ -7282,7 +7282,7 @@ Richness     ✅ 97% (grammar)
    → 11 violations (severe - consider revision)
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/87-novyny-yak-chytaty-review.md
+Report: curriculum/l2-uk-en/b1/audit/87-novyny-yak-chytaty-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -7298,7 +7298,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [DUPLICATE_SYNONYMOUS_HEADERS] Multiple aliases for 'Summary|Підсумок' found: Завдання: Підсумок подкасту, Підсумок
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/88-interviu-ta-podkasty.md (Target: 1000)...
+Auditing curriculum/l2-uk-en/b1/88-interviu-ta-podkasty.md (Target: 1000)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 88-interviu-ta-podkasty.yaml: [складіть-речення-про-слухання-подкастів] unjumble: 'items.11' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -7389,7 +7389,7 @@ Richness     ✅ 99% (grammar)
    → 22 violations (severe - consider revision)
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/88-interviu-ta-podkasty-review.md
+Report: curriculum/l2-uk-en/b1/audit/88-interviu-ta-podkasty-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -7406,7 +7406,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/89-b1-grammar-integration.md (Target: 1000)...
+Auditing curriculum/l2-uk-en/b1/89-b1-grammar-integration.md (Target: 1000)...
 
   ❌ Error parsing YAML activities: 'source'
   ❌ YAML schema violations: 3
@@ -7459,7 +7459,7 @@ Richness     ✅ 100% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/89-b1-grammar-integration-review.md
+Report: curriculum/l2-uk-en/b1/audit/89-b1-grammar-integration-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -7475,7 +7475,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Presentation|Grammar|Focus|Презентація|Граматика|Теорія|Пояснення' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/90-b1-vocabulary-integration.md (Target: 1000)...
+Auditing curriculum/l2-uk-en/b1/90-b1-vocabulary-integration.md (Target: 1000)...
 
   ❌ YAML schema violations: 3
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 90-b1-vocabulary-integration.yaml: [складіть-речення-з-лексикою-b1] unjumble: 'items.11' - Additional properties are not allowed ('scrambled' was unexpected)
@@ -7590,7 +7590,7 @@ Richness     ✅ 96% (grammar)
    → 30 violations (severe - consider revision)
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/90-b1-vocabulary-integration-review.md
+Report: curriculum/l2-uk-en/b1/audit/90-b1-vocabulary-integration-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```
@@ -7607,7 +7607,7 @@ Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/aud
      🔴 [MISSING_REQUIRED_SECTION] Missing required section 'Practice|Exercises|Activity|Практика|Вправи' per template 'b1-grammar-module-template'
      🔴 [EMPTY_REQUIRED_SECTION] Required section '## Потрібно більше практики?' is empty
 
-Auditing /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/91-b1-capstone.md (Target: 1000)...
+Auditing curriculum/l2-uk-en/b1/91-b1-capstone.md (Target: 1000)...
 
   ❌ YAML schema violations: 2
      ❌ [YAML_SCHEMA_VIOLATION] Schema error in 91-b1-capstone.yaml: [вид-дієслова-у-контексті] fill-in: 'items.13.options' - ['приходитимеш', 'прийдеш'] is too short
@@ -7673,7 +7673,7 @@ Richness     ✅ 98% (grammar)
    → Activity density below minimum
 
 
-Report: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/audit/91-b1-capstone-review.md
+Report: curriculum/l2-uk-en/b1/audit/91-b1-capstone-review.md
 
 ❌ AUDIT FAILED. Correct errors before proceeding.
 ```

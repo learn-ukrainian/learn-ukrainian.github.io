@@ -77,9 +77,9 @@ Promote the 17 samples to committed test fixtures and ship a detection function 
 ## Verification before commit
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian && ls tests/fixtures/etymology/gemini-hallucinations/ | wc -l   # expect 17 + 1 README = 18
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/ruff check scripts/etymology/ tests/etymology/
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -m pytest tests/etymology/ -v --tb=short
+cd . && ls tests/fixtures/etymology/gemini-hallucinations/ | wc -l   # expect 17 + 1 README = 18
+cd . && .venv/bin/ruff check scripts/etymology/ tests/etymology/
+cd . && .venv/bin/python -m pytest tests/etymology/ -v --tb=short
 ```
 
 All green required before commit.

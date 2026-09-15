@@ -738,7 +738,7 @@ short cues needing edition verification before classroom quotation.
 - [x] No LLM-QG, QG parity, QG DB persistence, or module-quality audit route
   used.
 - [x] `npx markdownlint-cli2 docs/research/bio/semen-palii.md`
-- [x] `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python scripts/audit/lint_bio_dossier_xref.py --paths docs/research/bio/semen-palii.md`
+- [x] `.venv/bin/python scripts/audit/lint_bio_dossier_xref.py --paths docs/research/bio/semen-palii.md`
 - [x] `git diff --check`
 - [x] Guard search for out-of-scope Palii dossier strings returns no matches.
 - [x] Protected artifact/config guard confirms only

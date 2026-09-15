@@ -179,7 +179,7 @@ from `origin/fix/m20-writer-gate-russianism-markers` (PR #2019's branch).
 Your branch name is `codex/pr2019-vesum-gate-fixes-2026-05-16`.
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/pr2019-vesum-gate-fixes-2026-05-16
+cd .worktrees/dispatch/codex/pr2019-vesum-gate-fixes-2026-05-16
 git log -1 --oneline   # verify you're starting from PR #2019's tip
 git log --oneline origin/main..HEAD | head -5   # see #2019's commits relative to main
 ```

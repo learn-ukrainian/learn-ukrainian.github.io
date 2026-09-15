@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: bahrianyi-man-runs
 TOPIC_TITLE: Bahrianyi Man Runs
 MODULE_NUM: '128'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/bahrianyi-man-runs.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/bahrianyi-man-runs.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/bahrianyi-man-runs.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/bahrianyi-man-runs.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/bahrianyi-man-runs.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/bahrianyi-man-runs-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/bahrianyi-man-runs-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/bahrianyi-man-runs.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/bahrianyi-man-runs.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/bahrianyi-man-runs.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/bahrianyi-man-runs.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/bahrianyi-man-runs.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/bahrianyi-man-runs-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/bahrianyi-man-runs-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

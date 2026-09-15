@@ -10,7 +10,7 @@
 When user signals "rotated" / "go" / similar — or if you see PID active under a new run — refire:
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 nohup .venv/bin/python -u scripts/etymology/bulk_ocr_gemini.py \
   --concurrency 1 --rpm 8 --model gemini-2.5-flash \
   >> /tmp/bulk-ocr-2026-05-17-evening.log 2>&1 < /dev/null & disown

@@ -35,11 +35,11 @@ not by regenerating.
   fixtures, not the real 967 MB DB).
 
 ## Numbered steps
-1. `cd /Users/krisztiankoos/projects/learn-ukrainian && git fetch origin` (`--worktree` from origin/main).
+1. `cd . && git fetch origin` (`--worktree` from origin/main).
 2. Implement the Makefile target + fingerprint writer (in `enrich_manifest` or a shared helper) + the
    DB-free check script + the CI wiring + tests.
-3. `cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -m pytest -k "freshness or fingerprint or manifest" -q` → paste summary.
-4. `cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/ruff check scripts/ tests/` → paste final line.
+3. `cd . && .venv/bin/python -m pytest -k "freshness or fingerprint or manifest" -q` → paste summary.
+4. `cd . && .venv/bin/ruff check scripts/ tests/` → paste final line.
 5. Confirm no `.db` and no regenerated `lexicon-manifest.json` staged (you can't regen — no DBs): `git status --short`.
 6. Commit `feat(lexicon): make atlas target + DB-free manifest staleness gate (#3150)`.
 7. `git push -u origin <branch>`; `gh pr create` referencing #3150. NO auto-merge.

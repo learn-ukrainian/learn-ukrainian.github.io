@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: dziuba-literature
 TOPIC_TITLE: Dziuba Literature
 MODULE_NUM: '161'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/dziuba-literature.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/dziuba-literature.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/dziuba-literature.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/dziuba-literature.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/dziuba-literature.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/dziuba-literature-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/dziuba-literature-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/dziuba-literature.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/dziuba-literature.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/dziuba-literature.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/dziuba-literature.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/dziuba-literature.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/dziuba-literature-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/dziuba-literature-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

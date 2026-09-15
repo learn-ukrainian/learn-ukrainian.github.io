@@ -17,7 +17,7 @@ User decision (interview, 2026-05-23): fix this **before** the writer-prompt and
 
 Reproducer (run from repo root):
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -c "
+cd . && .venv/bin/python -c "
 from scripts.pipeline.learner_state import build_learner_state
 from scripts.config import compute_immersion_band
 ls = build_learner_state('a1', 20)

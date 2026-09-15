@@ -114,7 +114,7 @@ The current run uses `--model auto`. Watch the bulk-run-log.jsonl for quota even
 
 If pid 63864 dies cleanly with `BULK_QUALITY_HALT` or `QUOTA_HALT`:
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/etymology-phase-2-bulk-ocr-codex-2026-05-15
+cd .worktrees/dispatch/codex/etymology-phase-2-bulk-ocr-codex-2026-05-15
 .venv/bin/python -u scripts/etymology/bulk_ocr_gemini.py --concurrency 4 --rpm 12 --model auto > /tmp/bulk-ocr-run.log 2>&1 &
 ```
 

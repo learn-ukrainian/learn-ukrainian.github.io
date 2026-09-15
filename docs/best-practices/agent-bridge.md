@@ -544,8 +544,8 @@ Example launchd `.plist` (`docs/examples/learn-ukrainian.codex-inbox.plist`):
 >   <string>learn-ukrainian.codex-inbox</string>
 >   <key>ProgramArguments</key>
 >   <array>
->     <string>/Users/your-user/projects/learn-ukrainian/.venv/bin/python</string>
->     <string>/Users/your-user/projects/learn-ukrainian/scripts/ai_agent_bridge/__main__.py</string>
+>     <string>.venv/bin/python</string>
+>     <string>scripts/ai_agent_bridge/__main__.py</string>
 >     <string>inbox</string>
 >     <string>run</string>
 >     <string>codex</string>
@@ -553,7 +553,7 @@ Example launchd `.plist` (`docs/examples/learn-ukrainian.codex-inbox.plist`):
 >   </array>
 >   <key>WatchPaths</key>
 >   <array>
->     <string>/Users/your-user/projects/learn-ukrainian/.agent/wake/codex</string>
+>     <string>.agent/wake/codex</string>
 >   </array>
 > </dict>
 > </plist>

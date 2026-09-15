@@ -2,7 +2,7 @@
 
 > **Mode:** danger (full sandbox bypass — needed for `pgrep`/`pkill` watchdog and Claude/Gemini CLI invocations)
 > **Worktree:** `.worktrees/dispatch/codex/bakeoff-2026-05-07/`
-> **Output dir:** `/Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-07/` (absolute path so REPORT.md lands in MAIN checkout)
+> **Output dir:** `audit/bakeoff-2026-05-07/` (absolute path so REPORT.md lands in MAIN checkout)
 > **Hard timeout:** 7200s (120 min)
 > **Effort:** medium
 > **Silence timeout:** 1800s (30 min — uses new default from #1763)
@@ -26,7 +26,7 @@ Current main commit: should be ≥ `b2a886bfd8` (after #1775 merge). Verify befo
 
 1. From MAIN checkout, clean any leftover bakeoff state for this fresh run:
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian
+   cd .
    rm -rf audit/bakeoff-2026-05-07/
    ```
    (Do NOT touch `audit/bakeoff-2026-05-05/` — leave the prior broken-signal data as historical record.)
@@ -40,7 +40,7 @@ Current main commit: should be ≥ `b2a886bfd8` (after #1775 merge). Verify befo
 3. **Fire the full bakeoff** with absolute --bakeoff-dir:
    ```bash
    .venv/bin/python scripts/audit/bakeoff_run.py \
-       --bakeoff-dir /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-07 \
+       --bakeoff-dir audit/bakeoff-2026-05-07 \
        --level a1 --slug my-morning \
        --writers claude-tools,gemini-tools,codex-tools
    ```
@@ -53,8 +53,8 @@ Current main commit: should be ≥ `b2a886bfd8` (after #1775 merge). Verify befo
 
 5. **Verify** layout when done:
    ```bash
-   ls -la /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-07/
-   for f in /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-07/*.jsonl; do
+   ls -la audit/bakeoff-2026-05-07/
+   for f in audit/bakeoff-2026-05-07/*.jsonl; do
        echo "=== $f ==="
        tail -1 "$f" | head -c 250
        echo

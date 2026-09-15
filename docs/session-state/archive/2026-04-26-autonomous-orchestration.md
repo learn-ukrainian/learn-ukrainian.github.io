@@ -160,8 +160,8 @@ Phase 4 round 2 dispatched per the parked brief:
 - **Watcher:** background task fires `<task-notification>` on terminal status
 
 **VESUM symlinks verified in the worktree:**
-- `data/vesum.db` → `/Users/krisztiankoos/projects/learn-ukrainian/data/vesum.db`
-- `data/sources.db` → `/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db`
+- `data/vesum.db` → `data/vesum.db`
+- `data/sources.db` → `data/sources.db`
 
 PR #1595's `_provision_data_symlinks()` is working as designed. Codex round 2 has real VESUM access.
 
@@ -252,12 +252,12 @@ Both fire `<task-notification>` on terminal status (done / failed / timeout / ca
 ## Worktrees at handoff write time
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian                                      b532271f3d [main]
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-interactive         3c8bc39bae (detached HEAD)
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-phase-4-a1-20-exemplar     d313499332 [codex/phase-4-a1-20-exemplar]
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-phase4-writer-decouple     (in flight) [codex/phase4-writer-decouple]
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-delegate-vesum-symlink     (in flight) [codex/delegate-vesum-symlink]
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/verify-a1-1-phaseA-v5            ab3178fb64 [verify/a1-1-phaseA-v5]
+.                                      b532271f3d [main]
+.worktrees/codex-interactive         3c8bc39bae (detached HEAD)
+.worktrees/codex-phase-4-a1-20-exemplar     d313499332 [codex/phase-4-a1-20-exemplar]
+.worktrees/codex-phase4-writer-decouple     (in flight) [codex/phase4-writer-decouple]
+.worktrees/codex-delegate-vesum-symlink     (in flight) [codex/delegate-vesum-symlink]
+.worktrees/verify-a1-1-phaseA-v5            ab3178fb64 [verify/a1-1-phaseA-v5]
 ```
 
 `codex-interactive` and `verify-a1-1-phaseA-v5` are stale; safe to clean up later.

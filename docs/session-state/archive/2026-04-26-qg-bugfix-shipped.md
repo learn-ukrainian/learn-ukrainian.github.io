@@ -66,9 +66,9 @@ User pushback corrected this mid-session. The corrected sequence:
 ## Worktree state (cleaned)
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian                                  [main]
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-interactive     (stale, detached HEAD — flagged for prior session, NOT my problem)
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/verify-a1-1-phaseA-v5 (user's preserved manual patches, DO NOT touch)
+.                                  [main]
+.worktrees/codex-interactive     (stale, detached HEAD — flagged for prior session, NOT my problem)
+.worktrees/verify-a1-1-phaseA-v5 (user's preserved manual patches, DO NOT touch)
 ```
 
 Both `codex-phase4-round3-json-exemplar` and `dispatch/claude/phase4-qg-bugfixes` worktrees removed post-merge. Branches were squash-deleted by GitHub on merge.
@@ -134,7 +134,7 @@ None are Phase-4-blockers per current scope.
 
 ```bash
 # 1. Verify state
-git -C /Users/krisztiankoos/projects/learn-ukrainian log --oneline origin/main -5
+git -C . log --oneline origin/main -5
 # Should see: a6b9e7f417 (fix QG) → 3603f11774 (strict-JSON) → 698befbef5 (round-2 hardening)
 
 gh pr list --state open --limit 10  # phase-4 should have NO open PRs

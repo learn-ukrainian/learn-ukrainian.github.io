@@ -4,13 +4,13 @@ SLUG: ukrainian-drama-origins
 TOPIC_TITLE: 'Від Вертепу до Карпенка-Карого: Ґенеза Українського Театру (XVIII–XIX
   ст.)'
 MODULE_NUM: '12'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-drama/ukrainian-drama-origins.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/meta/ukrainian-drama-origins.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/ukrainian-drama-origins.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/activities/ukrainian-drama-origins.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/vocabulary/ukrainian-drama-origins.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/research/ukrainian-drama-origins-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/review/ukrainian-drama-origins-review.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-drama/ukrainian-drama-origins.yaml
+META_PATH: curriculum/l2-uk-en/lit-drama/meta/ukrainian-drama-origins.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-drama/ukrainian-drama-origins.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-drama/activities/ukrainian-drama-origins.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-drama/vocabulary/ukrainian-drama-origins.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-drama/research/ukrainian-drama-origins-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-drama/review/ukrainian-drama-origins-review.md
 QUICK_REF_PATH: ''
 SCHEMA_PATH: schemas/activities-lit-drama.schema.json
 WORD_TARGET: '5000'

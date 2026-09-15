@@ -3,13 +3,13 @@ LEVEL: LIT_DRAMA
 SLUG: skovoroda-dialogues-theatre
 TOPIC_TITLE: 'Діалоги як протодрама: Григорій Сковорода і Витоки Театру Ідей'
 MODULE_NUM: '13'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-drama/skovoroda-dialogues-theatre.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/meta/skovoroda-dialogues-theatre.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/skovoroda-dialogues-theatre.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/activities/skovoroda-dialogues-theatre.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/vocabulary/skovoroda-dialogues-theatre.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/research/skovoroda-dialogues-theatre-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/review/skovoroda-dialogues-theatre-review.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-drama/skovoroda-dialogues-theatre.yaml
+META_PATH: curriculum/l2-uk-en/lit-drama/meta/skovoroda-dialogues-theatre.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-drama/skovoroda-dialogues-theatre.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-drama/activities/skovoroda-dialogues-theatre.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-drama/vocabulary/skovoroda-dialogues-theatre.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-drama/research/skovoroda-dialogues-theatre-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-drama/review/skovoroda-dialogues-theatre-review.md
 QUICK_REF_PATH: ''
 SCHEMA_PATH: schemas/activities-lit-drama.schema.json
 WORD_TARGET: '5000'

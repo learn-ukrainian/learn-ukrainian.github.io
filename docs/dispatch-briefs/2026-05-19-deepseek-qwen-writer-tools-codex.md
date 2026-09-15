@@ -180,14 +180,14 @@ In the writer block (lines 66-91):
 ### Step 5 — Lint sweep
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 .venv/bin/ruff check scripts/build/ scripts/agent_runtime/ tests/
 ```
 
 ### Step 6 — Verification: dry-run for both new writers
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 .venv/bin/python scripts/build/v7_build.py a1 my-morning --writer deepseek-tools --dry-run 2>&1 | tail -10
 .venv/bin/python scripts/build/v7_build.py a1 my-morning --writer qwen-tools --dry-run 2>&1 | tail -10
 ```

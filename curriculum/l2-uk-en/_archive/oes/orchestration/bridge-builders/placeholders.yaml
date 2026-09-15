@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: bridge-builders
 TOPIC_TITLE: Bridge Builders
 MODULE_NUM: '60'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/bridge-builders.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/bridge-builders.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/bridge-builders.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/bridge-builders.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/bridge-builders.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/bridge-builders-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/bridge-builders-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/bridge-builders.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/bridge-builders.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/bridge-builders.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/bridge-builders.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/bridge-builders.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/bridge-builders-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/bridge-builders-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

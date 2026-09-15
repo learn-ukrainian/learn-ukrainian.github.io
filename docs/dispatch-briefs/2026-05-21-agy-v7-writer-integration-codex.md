@@ -28,7 +28,7 @@ Remaining gap for V7 writer promotion:
 Before writing any parser, run a small agy probe and capture its stdout to a file. Examples:
 
 ```
-cd /Users/krisztiankoos/projects/learn-ukrainian && \
+cd . && \
   agy -p --dangerously-skip-permissions \
     "Call mcp_sources_verify_words with arguments {\"words\":[\"стіл\",\"ранок\"]}. \
      Output the verbatim MCP response text." \
@@ -73,8 +73,8 @@ Read `/tmp/agy-marker-sample.txt`. Identify the marker characters that bracket e
 ## Verification before commit
 
 ```
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/ruff check scripts/agent_runtime/ scripts/build/ tests/
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -m pytest tests/ -k 'agy or agent_runtime or linear_pipeline or linear_write or prompt_cot' -v --tb=short
+cd . && .venv/bin/ruff check scripts/agent_runtime/ scripts/build/ tests/
+cd . && .venv/bin/python -m pytest tests/ -k 'agy or agent_runtime or linear_pipeline or linear_write or prompt_cot' -v --tb=short
 ```
 
 All green required.

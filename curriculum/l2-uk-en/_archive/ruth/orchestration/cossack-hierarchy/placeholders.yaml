@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: cossack-hierarchy
 TOPIC_TITLE: Cossack Hierarchy
 MODULE_NUM: '82'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/cossack-hierarchy.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/cossack-hierarchy.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/cossack-hierarchy.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/cossack-hierarchy.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/cossack-hierarchy.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/cossack-hierarchy-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/cossack-hierarchy-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/cossack-hierarchy.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/cossack-hierarchy.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/cossack-hierarchy.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/cossack-hierarchy.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/cossack-hierarchy.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/cossack-hierarchy-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/cossack-hierarchy-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

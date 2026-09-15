@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: baroque-letters
 TOPIC_TITLE: Baroque Letters
 MODULE_NUM: '81'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/baroque-letters.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/baroque-letters.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/baroque-letters.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/baroque-letters.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/baroque-letters.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/baroque-letters-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/baroque-letters-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/baroque-letters.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/baroque-letters.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/baroque-letters.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/baroque-letters.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/baroque-letters.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/baroque-letters-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/baroque-letters-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

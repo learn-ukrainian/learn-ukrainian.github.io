@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: deresh-cult
 TOPIC_TITLE: Deresh Cult
 MODULE_NUM: '199'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/deresh-cult.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/deresh-cult.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/deresh-cult.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/deresh-cult.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/deresh-cult.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/deresh-cult-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/deresh-cult-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/deresh-cult.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/deresh-cult.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/deresh-cult.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/deresh-cult.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/deresh-cult.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/deresh-cult-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/deresh-cult-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

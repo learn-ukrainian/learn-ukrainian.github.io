@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: lords-prayer
 TOPIC_TITLE: Lords Prayer
 MODULE_NUM: '30'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/lords-prayer.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/lords-prayer.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/lords-prayer.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/lords-prayer.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/lords-prayer.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/lords-prayer-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/lords-prayer-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/lords-prayer.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/lords-prayer.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/lords-prayer.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/lords-prayer.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/lords-prayer.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/lords-prayer-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/lords-prayer-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

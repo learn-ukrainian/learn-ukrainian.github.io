@@ -156,11 +156,11 @@ to live in this brief for the next session that hits the pattern.
 
 ```
 $ git worktree list
-/Users/krisztiankoos/projects/learn-ukrainian                                                               3567e46745 [main]
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-interactive                                  ffafa6a60e (detached HEAD)   ← Codex session, leave alone
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/bakeoff-2026-05-12-night           5a72a31f9b   ← user-decision pending
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/writer-prompt-tune-2026-05-13      ce7ca40881   ← user-decision pending
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/pass2-only-contract-test-2026-05-13 5e65230c3f   ← Codex experimental, leave to Codex
+.                                                               3567e46745 [main]
+.worktrees/codex-interactive                                  ffafa6a60e (detached HEAD)   ← Codex session, leave alone
+.worktrees/dispatch/claude/bakeoff-2026-05-12-night           5a72a31f9b   ← user-decision pending
+.worktrees/dispatch/claude/writer-prompt-tune-2026-05-13      ce7ca40881   ← user-decision pending
+.worktrees/dispatch/codex/pass2-only-contract-test-2026-05-13 5e65230c3f   ← Codex experimental, leave to Codex
 ```
 
 This session's worktree (`.worktrees/dispatch/claude/pohribnyi-ocr-2026-05-14`) was cleaned post-merge.

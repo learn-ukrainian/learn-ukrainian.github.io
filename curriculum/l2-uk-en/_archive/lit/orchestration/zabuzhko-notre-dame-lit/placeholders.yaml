@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: zabuzhko-notre-dame-lit
 TOPIC_TITLE: Zabuzhko Notre Dame Lit
 MODULE_NUM: '176'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/zabuzhko-notre-dame-lit.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/zabuzhko-notre-dame-lit.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/zabuzhko-notre-dame-lit.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/zabuzhko-notre-dame-lit.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/zabuzhko-notre-dame-lit.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/zabuzhko-notre-dame-lit-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/zabuzhko-notre-dame-lit-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/zabuzhko-notre-dame-lit.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/zabuzhko-notre-dame-lit.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/zabuzhko-notre-dame-lit.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/zabuzhko-notre-dame-lit.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/zabuzhko-notre-dame-lit.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/zabuzhko-notre-dame-lit-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/zabuzhko-notre-dame-lit-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

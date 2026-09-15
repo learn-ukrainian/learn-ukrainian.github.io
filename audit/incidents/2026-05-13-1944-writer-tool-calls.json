@@ -2,7 +2,7 @@
   {
     "name": "Read",
     "arguments": {
-      "file_path": "/Users/krisztiankoos/projects/learn-ukrainian/docs/session-state/2026-05-13-overnight-orchestration-brief.md"
+      "file_path": "docs/session-state/2026-05-13-overnight-orchestration-brief.md"
     },
     "output_summary": "1 --- 2 date: 2026-05-13 3 session: \"OVERNIGHT — Plan A autonomous orchestration toward 'build first 7 A1 modules' goal. User-overridden CLAUDE.md HARD 'BUILDS NEVER RUN' rule for tonight only. Cascade: PR1 (learner-state V7 wiring) ✅ → PR2 (ULP cumulative-vocab immersion) ✅ → 7 plan reviews ✅ → multimedia resources (#1932) ✅ → build queue 🔄. **Status: BUILD QUEUE IN FLIGHT.** This handoff updates incrementally as builds land.\" 4 status: in_progress 5 mode: overnight-autonomous 6 a[...truncated]",
     "timestamp": "2026-05-12T23:46:53.946764+00:00",
@@ -21,7 +21,7 @@
   {
     "name": "Bash",
     "arguments": {
-      "command": "git -C /Users/krisztiankoos/projects/learn-ukrainian status --short 2>&1 | head -30 && echo \"---\" && git -C /Users/krisztiankoos/projects/learn-ukrainian log -3 --oneline",
+      "command": "git -C . status --short 2>&1 | head -30 && echo \"---\" && git -C . log -3 --oneline",
       "description": "Show working tree state and recent commits"
     },
     "output_summary": "?? docs/session-state/2026-05-13-overnight-orchestration-brief.md --- 6cd8e4b830 feat(immersion+plan-targets): ULP-derived band derivation + recycle-cadence gate + plan.targets schema (#1943) 18af0b5372 feat(learner-state): wire scripts/pipeline/learner_state.py into V7 + new audit gate (PR1) (#1939) 339f385369 feat(content-pipeline): add multimedia external resources (#1937)",
@@ -51,7 +51,7 @@
   {
     "name": "Bash",
     "arguments": {
-      "command": "ls -lt /Users/krisztiankoos/projects/learn-ukrainian/batch_state/tasks/logs/ 2>&1 | head -10 && echo \"---\" && ls -lt /tmp/v7_build* 2>&1 | head -5 && echo \"---\" && ls -lt /tmp/build-queue* /tmp/*queue* 2>&1 | head -10",
+      "command": "ls -lt batch_state/tasks/logs/ 2>&1 | head -10 && echo \"---\" && ls -lt /tmp/v7_build* 2>&1 | head -5 && echo \"---\" && ls -lt /tmp/build-queue* /tmp/*queue* 2>&1 | head -10",
       "description": "Check build logs and queue state"
     },
     "output_summary": "total 4 -rw-r--r-- 1 krisztiankoos staff 0 May 13 01:06 pr2-ulp-immersion-2026-05-13.stderr.log -rw-r--r-- 1 krisztiankoos staff 0 May 13 01:06 pr2-ulp-immersion-2026-05-13.stdout.log -rw-r--r-- 1 krisztiankoos staff 0 May 13 00:25 multimedia-resources-2026-05-13.stderr.log -rw-r--r-- 1 krisztiankoos staff 0 May 13 00:25 multimedia-resources-2026-05-13.stdout.log -rw-r--r-- 1 krisztiankoos staff 0 May 13 00:25 plan-review-a1-first-7-2026-05-13.stderr.log -rw-r--r-- 1 krisztiankoos [...truncated]",
@@ -61,7 +61,7 @@
   {
     "name": "Read",
     "arguments": {
-      "file_path": "/Users/krisztiankoos/projects/learn-ukrainian/docs/session-state/current.md",
+      "file_path": "docs/session-state/current.md",
       "limit": 60
     },
     "output_summary": "1 # Current — multi-agent index (2026-05-14) 2 3 Latest-Brief: docs/session-state/2026-05-14-v7-mdx-assembler-shipped-brief.md 4 5 > **Repo state (2026-05-14 — V7 MDX assembler aligned + dynamic bilingual A1 landing live; all 4 e2e blockers shipped + 2 design-rendering follow-ups shipped; **architectural finding: V7 dropped v6 learner-state — student-aware lesson building NOT wired in V7, immersion still flat-%-bands not ULP-derived**):** **6 PRs merged this session (`1d57748f6f` →[...truncated]",
@@ -73,24 +73,24 @@
     "arguments": {
       "file_path": "/tmp/build-queue-a1-first-7.sh"
     },
-    "output_summary": "1 #!/bin/bash 2 # Build queue for first 7 A1 modules — Plan A override 2026-05-13 3 # Stops on first non-zero exit code (HARD audit gate failure). 4 # stdout: queue-level events only (notifications). 5 # stderr: full v7_build.py stream (captured in Monitor output file for on-demand reading). 6 7 set -uo pipefail 8 cd /Users/krisztiankoos/projects/learn-ukrainian 9 10 MODULES=( 11 sounds-letters-and-hello 12 reading-ukrainian 13 special-signs 14 stress-and-melody 15 who-am-i 16 my-f[...truncated]",
+    "output_summary": "1 #!/bin/bash 2 # Build queue for first 7 A1 modules — Plan A override 2026-05-13 3 # Stops on first non-zero exit code (HARD audit gate failure). 4 # stdout: queue-level events only (notifications). 5 # stderr: full v7_build.py stream (captured in Monitor output file for on-demand reading). 6 7 set -uo pipefail 8 cd . 9 10 MODULES=( 11 sounds-letters-and-hello 12 reading-ukrainian 13 special-signs 14 stress-and-melody 15 who-am-i 16 my-f[...truncated]",
     "timestamp": "2026-05-12T23:46:53.951760+00:00",
-    "result": "1\t#!/bin/bash\n2\t# Build queue for first 7 A1 modules — Plan A override 2026-05-13\n3\t# Stops on first non-zero exit code (HARD audit gate failure).\n4\t# stdout: queue-level events only (notifications).\n5\t# stderr: full v7_build.py stream (captured in Monitor output file for on-demand reading).\n6\t\n7\tset -uo pipefail\n8\tcd /Users/krisztiankoos/projects/learn-ukrainian\n9\t\n10\tMODULES=(\n11\t  sounds-letters-and-hello\n12\t  reading-ukrainian\n13\t  special-signs\n14\t  stress-and-melody\n15\t  who-am-i\n16\t  my-family\n17\t  checkpoint-first-contact\n18\t)\n19\t\n20\ti=0\n21\tfor slug in \"${MODULES[@]}\"; do\n22\t  i=$((i+1))\n23\t  ts=$(date -u +%FT%TZ)\n24\t  echo \"{\\\"event\\\":\\\"queue_build_start\\\",\\\"slug\\\":\\\"$slug\\\",\\\"index\\\":$i,\\\"total\\\":${#MODULES[@]},\\\"ts\\\":\\\"$ts\\\"}\"\n25\t\n26\t  # Redirect v7_build's verbose output to stderr (captured in output file but\n27\t  # NOT a notification). Run with -u for unbuffered stdout.\n28\t  .venv/bin/python -u scripts/build/v7_build.py a1 \"$slug\" >&2\n29\t  rc=$?\n30\t\n31\t  ts=$(date -u +%FT%TZ)\n32\t  if [ \"$rc\" -eq 0 ]; then\n33\t    echo \"{\\\"event\\\":\\\"queue_build_done\\\",\\\"slug\\\":\\\"$slug\\\",\\\"index\\\":$i,\\\"exit_code\\\":0,\\\"ts\\\":\\\"$ts\\\"}\"\n34\t  else\n35\t    echo \"{\\\"event\\\":\\\"queue_halted\\\",\\\"slug\\\":\\\"$slug\\\",\\\"index\\\":$i,\\\"exit_code\\\":$rc,\\\"reason\\\":\\\"v7_build non-zero exit ($rc) — HARD gate failure or other error\\\",\\\"ts\\\":\\\"$ts\\\"}\"\n36\t    exit 1\n37\t  fi\n38\tdone\n39\tts=$(date -u +%FT%TZ)\n40\techo \"{\\\"event\\\":\\\"queue_complete\\\",\\\"total\\\":${#MODULES[@]},\\\"ts\\\":\\\"$ts\\\"}\"\n41\t"
+    "result": "1\t#!/bin/bash\n2\t# Build queue for first 7 A1 modules — Plan A override 2026-05-13\n3\t# Stops on first non-zero exit code (HARD audit gate failure).\n4\t# stdout: queue-level events only (notifications).\n5\t# stderr: full v7_build.py stream (captured in Monitor output file for on-demand reading).\n6\t\n7\tset -uo pipefail\n8\tcd .\n9\t\n10\tMODULES=(\n11\t  sounds-letters-and-hello\n12\t  reading-ukrainian\n13\t  special-signs\n14\t  stress-and-melody\n15\t  who-am-i\n16\t  my-family\n17\t  checkpoint-first-contact\n18\t)\n19\t\n20\ti=0\n21\tfor slug in \"${MODULES[@]}\"; do\n22\t  i=$((i+1))\n23\t  ts=$(date -u +%FT%TZ)\n24\t  echo \"{\\\"event\\\":\\\"queue_build_start\\\",\\\"slug\\\":\\\"$slug\\\",\\\"index\\\":$i,\\\"total\\\":${#MODULES[@]},\\\"ts\\\":\\\"$ts\\\"}\"\n25\t\n26\t  # Redirect v7_build's verbose output to stderr (captured in output file but\n27\t  # NOT a notification). Run with -u for unbuffered stdout.\n28\t  .venv/bin/python -u scripts/build/v7_build.py a1 \"$slug\" >&2\n29\t  rc=$?\n30\t\n31\t  ts=$(date -u +%FT%TZ)\n32\t  if [ \"$rc\" -eq 0 ]; then\n33\t    echo \"{\\\"event\\\":\\\"queue_build_done\\\",\\\"slug\\\":\\\"$slug\\\",\\\"index\\\":$i,\\\"exit_code\\\":0,\\\"ts\\\":\\\"$ts\\\"}\"\n34\t  else\n35\t    echo \"{\\\"event\\\":\\\"queue_halted\\\",\\\"slug\\\":\\\"$slug\\\",\\\"index\\\":$i,\\\"exit_code\\\":$rc,\\\"reason\\\":\\\"v7_build non-zero exit ($rc) — HARD gate failure or other error\\\",\\\"ts\\\":\\\"$ts\\\"}\"\n36\t    exit 1\n37\t  fi\n38\tdone\n39\tts=$(date -u +%FT%TZ)\n40\techo \"{\\\"event\\\":\\\"queue_complete\\\",\\\"total\\\":${#MODULES[@]},\\\"ts\\\":\\\"$ts\\\"}\"\n41\t"
   },
   {
     "name": "Bash",
     "arguments": {
-      "command": "ls -lt /Users/krisztiankoos/projects/learn-ukrainian/.batch_state/*.log 2>&1 | head -5; echo \"---\"; ls -lt /tmp/a1-build-*.log 2>&1 | head -10; echo \"---\"; lsof -p 76030 2>/dev/null | grep -E \"\\.log$|stdout|stderr\" | head -10",
+      "command": "ls -lt .batch_state/*.log 2>&1 | head -5; echo \"---\"; ls -lt /tmp/a1-build-*.log 2>&1 | head -10; echo \"---\"; lsof -p 76030 2>/dev/null | grep -E \"\\.log$|stdout|stderr\" | head -10",
       "description": "Find where the build is writing output"
     },
-    "output_summary": "(eval):1: no matches found: /Users/krisztiankoos/projects/learn-ukrainian/.batch_state/*.log --- (eval):1: no matches found: /tmp/a1-build-*.log ---",
+    "output_summary": "(eval):1: no matches found: .batch_state/*.log --- (eval):1: no matches found: /tmp/a1-build-*.log ---",
     "timestamp": "2026-05-12T23:46:53.951871+00:00",
-    "result": "(eval):1: no matches found: /Users/krisztiankoos/projects/learn-ukrainian/.batch_state/*.log\n---\n(eval):1: no matches found: /tmp/a1-build-*.log\n---"
+    "result": "(eval):1: no matches found: .batch_state/*.log\n---\n(eval):1: no matches found: /tmp/a1-build-*.log\n---"
   },
   {
     "name": "Bash",
     "arguments": {
-      "command": "date -u && echo \"---\" && ps -o pid,etime,state,command -p 76030 && echo \"---\" && ls -la /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/sounds-letters-and-hello/ 2>&1",
+      "command": "date -u && echo \"---\" && ps -o pid,etime,state,command -p 76030 && echo \"---\" && ls -la curriculum/l2-uk-en/a1/sounds-letters-and-hello/ 2>&1",
       "description": "Current UTC time, build uptime, target module dir contents"
     },
     "output_summary": "Tue May 12 23:45:00 UTC 2026 --- PID ELAPSED STAT COMMAND 76030 03:22 S .venv/bin/python -u scripts/build/v7_build.py a1 sounds-letters-and-hello --- total 0 drwxr-xr-x 2 krisztiankoos staff 64 May 13 01:42 . drwxr-xr-x 6 krisztiankoos staff 192 May 13 01:42 ..",
@@ -103,9 +103,9 @@
       "command": "pgrep -lf \"build-queue-a1-first-7\" 2>&1; echo \"---\"; ps -eo pid,ppid,etime,command | awk '$2==76030 || $1==76030 || $0~/build-queue/' | head -10",
       "description": "Find queue script PID and v7_build children"
     },
-    "output_summary": "<persisted-output> Output too large (263.3KB). Full output saved to: /Users/krisztiankoos/.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian-curriculum-l2-uk-en-a1-sounds-letters-and-hello/621f17df-38fa-48e5-9f66-41bc4a23971c/tool-results/bgviiguhe.txt Preview (first 2KB): --- 75869 93188 03:58 /opt/homebrew/bin/bash -c source /Users/krisztiankoos/.claude/shell-snapshots/snapshot-bash-1778623047924-89sy8c.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true &&[...truncated]",
+    "output_summary": "<persisted-output> Output too large (263.3KB). Full output saved to: .claude/projects/-Users-krisztiankoos-projects-learn-ukrainian-curriculum-l2-uk-en-a1-sounds-letters-and-hello/621f17df-38fa-48e5-9f66-41bc4a23971c/tool-results/bgviiguhe.txt Preview (first 2KB): --- 75869 93188 03:58 /opt/homebrew/bin/bash -c source .claude/shell-snapshots/snapshot-bash-1778623047924-89sy8c.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true &&[...truncated]",
     "timestamp": "2026-05-12T23:46:53.952126+00:00",
-    "result": "<persisted-output>\nOutput too large (263.3KB). Full output saved to: /Users/krisztiankoos/.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian-curriculum-l2-uk-en-a1-sounds-letters-and-hello/621f17df-38fa-48e5-9f66-41bc4a23971c/tool-results/bgviiguhe.txt\n\nPreview (first 2KB):\n---\n75869 93188       03:58 /opt/homebrew/bin/bash -c source /Users/krisztiankoos/.claude/shell-snapshots/snapshot-bash-1778623047924-89sy8c.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && eval /tmp/build-queue-a1-first-7.sh < /dev/null && pwd -P >| /tmp/claude-fcca-cwd\n75993 75869       03:58 /bin/bash /tmp/build-queue-a1-first-7.sh\n76030 75993       03:58 .venv/bin/python -u scripts/build/v7_build.py a1 sounds-letters-and-hello\n76376 76030       03:45 /Users/krisztiankoos/projects/learn-ukrainian/embed-venv/bin/python /Users/krisztiankoos/projects/learn-ukrainian/scripts/wiki/mlx_encoder.py\n78330 76030       02:40 npm exec @anthropic-ai/claude-code@latest -p --model claude-opus-4-7 --effort xhigh --output-format stream-json --verbose --mcp-config /Users/krisztiankoos/projects/learn-ukrainian/.mcp.json --allowedTools mcp__sources__* --exclude-dynamic-system-prompt-sections -- # North Star — Curriculum Reboot (#1577 Phase 0 draft)\\012\\012> **Status:** DRAFT v3 — signed off by Codex + Gemini in `architecture`\\012> channel thread `6de2be4789394536abdb6356cd5bb006` (round 2, both\\012> `[AGREE]`). Open questions §OPEN QUESTIONS resolved per panel\\012> consensus and folded into policy. Ready for Phase 3 prompt-template\\012> injection.\\012>\\012> v3 corrects v2 on the immersion model: there is **no B1 entry sub-band**.\\012> The transition out of English finishes inside A2; B1 onwards is 100 %\\012> Ukrainian. The only sanctioned English at B1+ is the **Словник (vocab\\012> tab) translation column** — used for L1 anchoring of new lemmas and\\012> idiom/expression explanation. `scripts/config.py` IMMERSION_POLICIES\\012> still encodes the old \"rescue English\" model at B1; that file is stale\\012> and gets corrected in Phase 2 config audit. The docs are the source of\\012> truth; config follows.\\012>\\012> This document, with `docs/lesson-contract.md`, is the preamble every\\012> prompt template will inject from Phase 3 onward (writer, all LLM QG\\012> reviewers, act\n...\n</persisted-output>"
+    "result": "<persisted-output>\nOutput too large (263.3KB). Full output saved to: .claude/projects/-Users-krisztiankoos-projects-learn-ukrainian-curriculum-l2-uk-en-a1-sounds-letters-and-hello/621f17df-38fa-48e5-9f66-41bc4a23971c/tool-results/bgviiguhe.txt\n\nPreview (first 2KB):\n---\n75869 93188       03:58 /opt/homebrew/bin/bash -c source .claude/shell-snapshots/snapshot-bash-1778623047924-89sy8c.sh 2>/dev/null || true && shopt -u extglob 2>/dev/null || true && eval /tmp/build-queue-a1-first-7.sh < /dev/null && pwd -P >| /tmp/claude-fcca-cwd\n75993 75869       03:58 /bin/bash /tmp/build-queue-a1-first-7.sh\n76030 75993       03:58 .venv/bin/python -u scripts/build/v7_build.py a1 sounds-letters-and-hello\n76376 76030       03:45 embed-venv/bin/python scripts/wiki/mlx_encoder.py\n78330 76030       02:40 npm exec @anthropic-ai/claude-code@latest -p --model claude-opus-4-7 --effort xhigh --output-format stream-json --verbose --mcp-config .mcp.json --allowedTools mcp__sources__* --exclude-dynamic-system-prompt-sections -- # North Star — Curriculum Reboot (#1577 Phase 0 draft)\\012\\012> **Status:** DRAFT v3 — signed off by Codex + Gemini in `architecture`\\012> channel thread `6de2be4789394536abdb6356cd5bb006` (round 2, both\\012> `[AGREE]`). Open questions §OPEN QUESTIONS resolved per panel\\012> consensus and folded into policy. Ready for Phase 3 prompt-template\\012> injection.\\012>\\012> v3 corrects v2 on the immersion model: there is **no B1 entry sub-band**.\\012> The transition out of English finishes inside A2; B1 onwards is 100 %\\012> Ukrainian. The only sanctioned English at B1+ is the **Словник (vocab\\012> tab) translation column** — used for L1 anchoring of new lemmas and\\012> idiom/expression explanation. `scripts/config.py` IMMERSION_POLICIES\\012> still encodes the old \"rescue English\" model at B1; that file is stale\\012> and gets corrected in Phase 2 config audit. The docs are the source of\\012> truth; config follows.\\012>\\012> This document, with `docs/lesson-contract.md`, is the preamble every\\012> prompt template will inject from Phase 3 onward (writer, all LLM QG\\012> reviewers, act\n...\n</persisted-output>"
   },
   {
     "name": "Bash",
@@ -120,7 +120,7 @@
   {
     "name": "Bash",
     "arguments": {
-      "command": "find /Users/krisztiankoos/.claude -name \"*monitor*\" -newer /tmp/build-queue-a1-first-7.sh 2>/dev/null | head -10; echo \"---\"; find /tmp -name \"*monitor*\" -newer /tmp/build-queue-a1-first-7.sh 2>/dev/null | head -10; echo \"---\"; ls -la /Users/krisztiankoos/.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian/ 2>&1 | head -20",
+      "command": "find .claude -name \"*monitor*\" -newer /tmp/build-queue-a1-first-7.sh 2>/dev/null | head -10; echo \"---\"; find /tmp -name \"*monitor*\" -newer /tmp/build-queue-a1-first-7.sh 2>/dev/null | head -10; echo \"---\"; ls -la .claude/projects/-Users-krisztiankoos-projects-learn-ukrainian/ 2>&1 | head -20",
       "description": "Look for Monitor tool output files"
     },
     "output_summary": "--- --- total 107576 drwx------ 402 krisztiankoos staff 12864 May 12 23:58 . drwx------ 265 krisztiankoos staff 8480 May 13 01:42 .. -rw------- 1 krisztiankoos staff 2800346 May 5 08:46 003e59c6-85bc-495b-a6a7-143394100452.jsonl drwx------ 3 krisztiankoos staff 96 Feb 11 13:54 00d953a5-a99d-41e6-ba11-a64021c05835 drwxr-xr-x 3 krisztiankoos staff 96 Apr 1 09:37 00e89856-6e38-4e0a-9d2e-328edcefd4c3 drwx------ 3 krisztiankoos staff 96 Mar 25 10:12 01c4292d-78e2-4482-b24a-057379fb5665 [...truncated]",

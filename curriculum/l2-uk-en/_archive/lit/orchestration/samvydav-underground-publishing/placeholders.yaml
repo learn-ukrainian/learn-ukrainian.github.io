@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: samvydav-underground-publishing
 TOPIC_TITLE: Samvydav Underground Publishing
 MODULE_NUM: '164'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/samvydav-underground-publishing.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/samvydav-underground-publishing.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/samvydav-underground-publishing.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/samvydav-underground-publishing.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/samvydav-underground-publishing.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/samvydav-underground-publishing-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/samvydav-underground-publishing-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/samvydav-underground-publishing.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/samvydav-underground-publishing.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/samvydav-underground-publishing.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/samvydav-underground-publishing.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/samvydav-underground-publishing.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/samvydav-underground-publishing-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/samvydav-underground-publishing-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

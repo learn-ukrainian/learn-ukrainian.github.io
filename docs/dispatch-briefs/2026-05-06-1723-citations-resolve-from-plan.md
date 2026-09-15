@@ -45,7 +45,7 @@ This means **a writer cannot pass `citations_resolve` by quoting the exact textb
 ## Worktree setup (mandatory)
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin main
 git worktree add -b codex/1723-citations-from-plan .worktrees/dispatch/codex/1723-citations-from-plan origin/main
 cd .worktrees/dispatch/codex/1723-citations-from-plan
@@ -133,10 +133,10 @@ Then re-run python_qg against bakeoff output to confirm the gate now passes. Sam
 ## Get Claude adversarial review
 
 ```bash
-git -C /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1723-citations-from-plan \
+git -C .worktrees/dispatch/codex/1723-citations-from-plan \
   diff origin/main..HEAD > /tmp/1723-diff.txt
 
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude \
   "Adversarial review for #1723. Read /tmp/1723-diff.txt. Focus: (A) is the normalization function tight enough to prevent fabricated-citation laundering — e.g. writer cites 'Караман Grade 10 p.999' when the plan only declares p.176? (B) does the matcher handle the Латинські lookalikes attack — Cyrillic 'К' vs Latin 'K'? (C) test coverage of the negative space — are unknown citations still surfaced? (D) does the change touch the source-of-truth corpus list, and if so does it break existing tests?" \
   --task-id 1723-review --model claude-opus-4-7

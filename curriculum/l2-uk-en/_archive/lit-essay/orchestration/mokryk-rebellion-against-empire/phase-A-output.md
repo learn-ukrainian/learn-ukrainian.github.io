@@ -11,7 +11,7 @@
 
 ============================================================
 
-Activate skill full-rebuild-lit. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/orchestration/mokryk-rebellion-against-empire/phase-A-prompt.md
+Activate skill full-rebuild-lit. Read and execute the instructions at curriculum/l2-uk-en/lit-essay/orchestration/mokryk-rebellion-against-empire/phase-A-prompt.md
 
 ============================================================
 📎 Attached Data:
@@ -23,7 +23,7 @@ CRITICAL INSTRUCTION 1: Never run cat inside a bash command to create a new file
 CRITICAL INSTRUCTION 2: Before making tool calls T, think and explicitly list out any related tools for the task at hand. You can only execute a set of tools T if all other tools in the list are either more generic or cannot be used for the task at hand.
 
 Related tools:
-- `read_file`: To read the file `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/orchestration/mokryk-rebellion-against-empire/phase-A-prompt.md`.
+- `read_file`: To read the file `curriculum/l2-uk-en/lit-essay/orchestration/mokryk-rebellion-against-empire/phase-A-prompt.md`.
 
 Plan:
 1. Use `read_file` to read the prompt file.
@@ -33,7 +33,7 @@ Plan:
 Let's read the prompt file.
 ```json
 {
-  "file_path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/orchestration/mokryk-rebellion-against-empire/phase-A-prompt.md"
+  "file_path": "curriculum/l2-uk-en/lit-essay/orchestration/mokryk-rebellion-against-empire/phase-A-prompt.md"
 }
 ```
 Wait, the prompt might tell me to output the result as text. Let's read it. I will use `read_file` tool.
@@ -41,7 +41,7 @@ I also notice the task mentions: "Output your result as plain text between the d
 
 ```
 call:default_api:read_file{
-  file_path: "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/orchestration/mokryk-rebellion-against-empire/phase-A-prompt.md"
+  file_path: "curriculum/l2-uk-en/lit-essay/orchestration/mokryk-rebellion-against-empire/phase-A-prompt.md"
 }
 ```
 Let's see what it contains.
@@ -51,7 +51,7 @@ Let's read the prompt first.
 
 ```
 call:default_api:read_file{
-  file_path: "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/orchestration/mokryk-rebellion-against-empire/phase-A-prompt.md"
+  file_path: "curriculum/l2-uk-en/lit-essay/orchestration/mokryk-rebellion-against-empire/phase-A-prompt.md"
 }
 ```
 I will start with this call.
@@ -66,7 +66,7 @@ Wait, my role is to just generate text based on the instructions in that file.
 
 ```
 call:default_api:read_file{
-  file_path: "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/orchestration/mokryk-rebellion-against-empire/phase-A-prompt.md"
+  file_path: "curriculum/l2-uk-en/lit-essay/orchestration/mokryk-rebellion-against-empire/phase-A-prompt.md"
 }
 ```
 Yes, this is the right tool.
@@ -82,16 +82,16 @@ I am allowed to use other read-only tools as needed.
 I'll read the file first.
 ```json
 {
-  "file_path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/orchestration/mokryk-rebellion-against-empire/phase-A-prompt.md"
+  "file_path": "curriculum/l2-uk-en/lit-essay/orchestration/mokryk-rebellion-against-empire/phase-A-prompt.md"
 }
 ```
 Let's do this.
 ```
-call:default_api:read_file{file_path: "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/orchestration/mokryk-rebellion-against-empire/phase-A-prompt.md"}
+call:default_api:read_file{file_path: "curriculum/l2-uk-en/lit-essay/orchestration/mokryk-rebellion-against-empire/phase-A-prompt.md"}
 ```
 I will do it.
 ```
-call:default_api:read_file{"file_path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/orchestration/mokryk-rebellion-against-empire/phase-A-prompt.md"}
+call:default_api:read_file{"file_path": "curriculum/l2-uk-en/lit-essay/orchestration/mokryk-rebellion-against-empire/phase-A-prompt.md"}
 ```
 I will use the proper XML-like tag.
 `
@@ -105,8 +105,8 @@ Related tools:
 - `run_shell_command`: Read-only commands if necessary.
 
 Plan:
-1. Read the plan file: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-essay/mokryk-rebellion-against-empire.yaml`
-2. Read the current meta file: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/meta/mokryk-rebellion-against-empire.yaml`
+1. Read the plan file: `curriculum/l2-uk-en/plans/lit-essay/mokryk-rebellion-against-empire.yaml`
+2. Read the current meta file: `curriculum/l2-uk-en/lit-essay/meta/mokryk-rebellion-against-empire.yaml`
 3. Research "Радомир Мокрик: Бунт проти імперії" using `google_web_search`. Find academic sources, timeline, primary quotes, engagement hooks.
 4. Synthesize the research into the required output blocks (===RESEARCH_START=== to ===RESEARCH_END===).
 5. Generate the meta outline block (===META_OUTLINE_START=== to ===META_OUTLINE_END===) based on the plan's `content_outline`.

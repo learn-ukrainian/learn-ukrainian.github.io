@@ -3,14 +3,14 @@ LEVEL: LIT_FANTASTIKA
 SLUG: dashvar-village
 TOPIC_TITLE: Dashvar Village
 MODULE_NUM: '17'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-fantastika/dashvar-village.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/meta/dashvar-village.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/dashvar-village.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/activities/dashvar-village.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/vocabulary/dashvar-village.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/research/dashvar-village-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/review/dashvar-village-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-fantastika/dashvar-village.yaml
+META_PATH: curriculum/l2-uk-en/lit-fantastika/meta/dashvar-village.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-fantastika/dashvar-village.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-fantastika/activities/dashvar-village.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-fantastika/vocabulary/dashvar-village.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-fantastika/research/dashvar-village-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-fantastika/review/dashvar-village-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-fantastika.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

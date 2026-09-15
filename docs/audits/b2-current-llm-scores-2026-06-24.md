@@ -25,8 +25,8 @@ This is a durable score note under `docs/audits/`. It intentionally does not per
 Validation commands rerun on the current checkout:
 
 ```bash
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python scripts/audit_module.py --skip-review curriculum/l2-uk-en/b2/passive-voice-system/module.md
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python scripts/audit_module.py --skip-review curriculum/l2-uk-en/b2/past-passive-participles/module.md
+.venv/bin/python scripts/audit_module.py --skip-review curriculum/l2-uk-en/b2/passive-voice-system/module.md
+.venv/bin/python scripts/audit_module.py --skip-review curriculum/l2-uk-en/b2/past-passive-participles/module.md
 ```
 
 Both commands completed successfully. The local generated audit/status/cache outputs were removed before staging.

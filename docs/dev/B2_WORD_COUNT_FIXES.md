@@ -196,8 +196,8 @@ When complete, report:
 ## Context Files
 
 **Read these first:**
-- `/Users/krisztiankoos/projects/learn-ukrainian/CLAUDE.md` - Project instructions
-- `/Users/krisztiankoos/projects/learn-ukrainian/docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` - Quality standards
+- `CLAUDE.md` - Project instructions
+- `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md` - Quality standards
 
 **Reference:**
 - `claude_extensions/quick-ref/b2.md` - B2-specific requirements (if exists)

@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: rozstriliane-vidrodzennia-phenomenon
 TOPIC_TITLE: Розстріляне Відродження як культурний феномен
 MODULE_NUM: '122'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/rozstriliane-vidrodzennia-phenomenon.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/rozstriliane-vidrodzennia-phenomenon.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/rozstriliane-vidrodzennia-phenomenon.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/rozstriliane-vidrodzennia-phenomenon.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/rozstriliane-vidrodzennia-phenomenon.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/rozstriliane-vidrodzennia-phenomenon-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/rozstriliane-vidrodzennia-phenomenon-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/rozstriliane-vidrodzennia-phenomenon.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/rozstriliane-vidrodzennia-phenomenon.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/rozstriliane-vidrodzennia-phenomenon.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/rozstriliane-vidrodzennia-phenomenon.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/rozstriliane-vidrodzennia-phenomenon.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/rozstriliane-vidrodzennia-phenomenon-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/rozstriliane-vidrodzennia-phenomenon-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

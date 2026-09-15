@@ -25,7 +25,7 @@ The bakeoff harness is live and functional. The prompts are live and functional.
 ## Step 0 — Cold-start
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 source ./.envrc
 
 curl -s http://localhost:8765/api/state/manifest

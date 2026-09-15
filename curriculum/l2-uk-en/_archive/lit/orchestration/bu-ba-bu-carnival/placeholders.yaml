@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: bu-ba-bu-carnival
 TOPIC_TITLE: Bu Ba Bu Carnival
 MODULE_NUM: '168'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/bu-ba-bu-carnival.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/bu-ba-bu-carnival.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/bu-ba-bu-carnival.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/bu-ba-bu-carnival.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/bu-ba-bu-carnival.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/bu-ba-bu-carnival-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/bu-ba-bu-carnival-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/bu-ba-bu-carnival.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/bu-ba-bu-carnival.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/bu-ba-bu-carnival.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/bu-ba-bu-carnival.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/bu-ba-bu-carnival.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/bu-ba-bu-carnival-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/bu-ba-bu-carnival-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

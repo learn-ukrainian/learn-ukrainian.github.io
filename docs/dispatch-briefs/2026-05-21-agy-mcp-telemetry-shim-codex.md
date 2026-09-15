@@ -87,8 +87,8 @@ If the prompt template doesn't currently support per-writer conditional sections
 ## Verification before commit
 
 ```
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/ruff check scripts/agent_runtime/ scripts/build/
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -m pytest tests/ -k 'agy or agent_runtime or linear_pipeline' -v --tb=short
+cd . && .venv/bin/ruff check scripts/agent_runtime/ scripts/build/
+cd . && .venv/bin/python -m pytest tests/ -k 'agy or agent_runtime or linear_pipeline' -v --tb=short
 ```
 
 All green required before commit.

@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: yanovsky-master-of-the-ship
 TOPIC_TITLE: Yanovsky Master Of The Ship
 MODULE_NUM: '79'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/yanovsky-master-of-the-ship.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/yanovsky-master-of-the-ship.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/yanovsky-master-of-the-ship.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/yanovsky-master-of-the-ship.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/yanovsky-master-of-the-ship.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/yanovsky-master-of-the-ship-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/yanovsky-master-of-the-ship-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/yanovsky-master-of-the-ship.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/yanovsky-master-of-the-ship.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/yanovsky-master-of-the-ship.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/yanovsky-master-of-the-ship.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/yanovsky-master-of-the-ship.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/yanovsky-master-of-the-ship-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/yanovsky-master-of-the-ship-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

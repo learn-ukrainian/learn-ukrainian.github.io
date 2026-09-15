@@ -3,7 +3,7 @@
 Report version: 0.1
 Date: 2026-07-04
 Auditor: Codex
-Worktree: `/Users/krisztiankoos/.codex/worktrees/1b15/learn-ukrainian`
+Worktree: `.codex/worktrees/1b15/learn-ukrainian`
 Branch: `codex/b2-quality-audit-final-sweep`
 Scope: B2 M01-M93, including checkpoints and final exam
 Read-only curriculum audit: true

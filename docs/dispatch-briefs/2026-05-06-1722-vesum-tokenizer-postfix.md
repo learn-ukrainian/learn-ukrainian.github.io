@@ -34,7 +34,7 @@ Full analysis: GH #1722.
 ## Worktree setup (mandatory)
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin main
 git worktree add -b codex/1722-vesum-postfix .worktrees/dispatch/codex/1722-vesum-postfix origin/main
 cd .worktrees/dispatch/codex/1722-vesum-postfix
@@ -138,7 +138,7 @@ Add a new test file `tests/test_vesum_verified_postfix.py` (or extend an existin
 ## Validation before opening PR
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1722-vesum-postfix
+cd .worktrees/dispatch/codex/1722-vesum-postfix
 .venv/bin/python -m pytest tests/test_vesum_verified_postfix.py -v
 .venv/bin/ruff check scripts/build/python_qg.py scripts/build/linear_pipeline.py
 git diff --check
@@ -168,10 +168,10 @@ If `python_qg.py` doesn't have a CLI (likely — it's invoked from `linear_pipel
 ## Get Claude adversarial review
 
 ```bash
-git -C /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1722-vesum-postfix \
+git -C .worktrees/dispatch/codex/1722-vesum-postfix \
   diff origin/main..HEAD > /tmp/1722-diff.txt
 
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude \
   "Adversarial review for #1722. Read /tmp/1722-diff.txt. Focus: (A) is the tokenizer change correct for Ukrainian — what about the cases NOT covered (the verbs in -ться, -чся, -ться with consonant clusters)? (B) does the proper-noun fix add false positives — what if a writer cites a fictional name not in pymorphy3 / VESUM? (C) does the change touch any other gate or break existing tests? (D) coverage of the new tests — do they actually exercise the fix, or just assert the absence of the old bug?" \
   --task-id 1722-review \

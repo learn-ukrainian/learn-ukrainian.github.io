@@ -3,14 +3,14 @@ LEVEL: LIT_HIST_FIC
 SLUG: kokotyukha-chervonyi
 TOPIC_TITLE: Kokotyukha Chervonyi
 MODULE_NUM: '17'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-hist-fic/kokotyukha-chervonyi.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/meta/kokotyukha-chervonyi.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/kokotyukha-chervonyi.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/activities/kokotyukha-chervonyi.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/vocabulary/kokotyukha-chervonyi.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/research/kokotyukha-chervonyi-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/review/kokotyukha-chervonyi-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-hist-fic/kokotyukha-chervonyi.yaml
+META_PATH: curriculum/l2-uk-en/lit-hist-fic/meta/kokotyukha-chervonyi.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-hist-fic/kokotyukha-chervonyi.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-hist-fic/activities/kokotyukha-chervonyi.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-hist-fic/vocabulary/kokotyukha-chervonyi.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-hist-fic/research/kokotyukha-chervonyi-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-hist-fic/review/kokotyukha-chervonyi-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-hist-fic.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

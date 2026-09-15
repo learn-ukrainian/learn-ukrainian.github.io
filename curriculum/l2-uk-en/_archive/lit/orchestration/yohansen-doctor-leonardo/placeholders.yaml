@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: yohansen-doctor-leonardo
 TOPIC_TITLE: Yohansen Doctor Leonardo
 MODULE_NUM: '104'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/yohansen-doctor-leonardo.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/yohansen-doctor-leonardo.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/yohansen-doctor-leonardo.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/yohansen-doctor-leonardo.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/yohansen-doctor-leonardo.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/yohansen-doctor-leonardo-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/yohansen-doctor-leonardo-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/yohansen-doctor-leonardo.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/yohansen-doctor-leonardo.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/yohansen-doctor-leonardo.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/yohansen-doctor-leonardo.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/yohansen-doctor-leonardo.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/yohansen-doctor-leonardo-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/yohansen-doctor-leonardo-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

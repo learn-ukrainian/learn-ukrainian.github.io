@@ -191,9 +191,9 @@ ebe1a89b3f  fix(sources-db): file-size primary guard + recovery runbook (#1563)
 ## Worktree state at handoff write time
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian                                  f9f7360b12 [main]   ← USER's
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-interactive     3c8bc39bae (detached HEAD)
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/verify-a1-1-phaseA-v5 ab3178fb64 [verify/a1-1-phaseA-v5]
+.                                  f9f7360b12 [main]   ← USER's
+.worktrees/codex-interactive     3c8bc39bae (detached HEAD)
+.worktrees/verify-a1-1-phaseA-v5 ab3178fb64 [verify/a1-1-phaseA-v5]
 ```
 
 `main` is at `f9f7360b12` not `d79457e5e9` because user's main checkout hasn't pulled. Origin/main is at `d79457e5e9`. Don't pull in user's checkout — they may have uncommitted wiki rebuild work.

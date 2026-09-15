@@ -90,10 +90,10 @@ DO NOT regenerate `data/sources.db` or the manifest as part of this dispatch unl
 ## Verification before commit
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/ruff check scripts/etymology/ tests/
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -m pytest tests/etymology/ -v --tb=short
+cd . && .venv/bin/ruff check scripts/etymology/ tests/
+cd . && .venv/bin/python -m pytest tests/etymology/ -v --tb=short
 # Smoke-run the sanitizer:
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -c "
+cd . && .venv/bin/python -c "
 from scripts.etymology.recover_latin_cognates import recover_latin
 cases = [
     ('зіегдгізку', 'sierdzisty'),

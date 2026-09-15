@@ -3,14 +3,14 @@ LEVEL: LIT_WAR
 SLUG: yaryna-chornohuz-war
 TOPIC_TITLE: Yaryna Chornohuz War
 MODULE_NUM: '22'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-war/yaryna-chornohuz-war.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/meta/yaryna-chornohuz-war.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/yaryna-chornohuz-war.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/activities/yaryna-chornohuz-war.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/vocabulary/yaryna-chornohuz-war.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/research/yaryna-chornohuz-war-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/review/yaryna-chornohuz-war-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-war/yaryna-chornohuz-war.yaml
+META_PATH: curriculum/l2-uk-en/lit-war/meta/yaryna-chornohuz-war.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-war/yaryna-chornohuz-war.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-war/activities/yaryna-chornohuz-war.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-war/vocabulary/yaryna-chornohuz-war.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-war/research/yaryna-chornohuz-war-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-war/review/yaryna-chornohuz-war-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-war.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

@@ -47,7 +47,7 @@ Add to `tests/build/test_linear_pipeline.py`:
 ## Worktree + PR + commit
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin
 git worktree add .worktrees/m20-vesum-truefalse -b fix/m20-vesum-skip-truefalse-false-statements origin/main
 cd .worktrees/m20-vesum-truefalse

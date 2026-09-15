@@ -98,7 +98,7 @@ User said "i will start the b2 wiki test with gemini" — test is running / abou
 
 | Path | Branch | Purpose |
 |---|---|---|
-| `/Users/krisztiankoos/projects/learn-ukrainian` | `main` | Primary |
+| `.` | `main` | Primary |
 | `.worktrees/claude-fix-pytest-1421` | `claude-fix-pytest-1421-regressions` | **3 unpushed commits, no PR** — user decision needed |
 | `.worktrees/codex-1286-review-transport` | `codex/codex-1286-review-transport` | **7 dirty files** — blocked on upstream Codex 0.122.0 per handoff |
 | `.worktrees/codex-1452-alignment-manifest` | `codex/1452-alignment-manifest` | **Active Codex dispatch** |

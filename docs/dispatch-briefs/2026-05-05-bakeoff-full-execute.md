@@ -2,7 +2,7 @@
 
 > **Mode:** danger (full sandbox bypass — needed for `pgrep`/`pkill` watchdog and Claude/Gemini CLI invocations)
 > **Worktree:** `.worktrees/dispatch/codex/bakeoff-execute/` (delegate.py requires worktree for danger mode)
-> **Output dir:** `/Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-05/` (absolute path so REPORT.md lands in the MAIN checkout, not in the worktree)
+> **Output dir:** `audit/bakeoff-2026-05-05/` (absolute path so REPORT.md lands in the MAIN checkout, not in the worktree)
 > **Hard timeout:** 7200s (120 min)
 > **Effort:** medium
 
@@ -16,7 +16,7 @@ Run the FULL A1/20 bakeoff: 3 writes (Claude → Gemini → Codex) + 6 cross-rev
 
 1. From the MAIN checkout, clean any leftover bakeoff state:
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian
+   cd .
    rm -rf audit/bakeoff-2026-05-05/
    ```
 
@@ -29,7 +29,7 @@ Run the FULL A1/20 bakeoff: 3 writes (Claude → Gemini → Codex) + 6 cross-rev
 3. **Fire the full bakeoff** with absolute --bakeoff-dir:
    ```bash
    .venv/bin/python scripts/audit/bakeoff_run.py \
-       --bakeoff-dir /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-05 \
+       --bakeoff-dir audit/bakeoff-2026-05-05 \
        --level a1 --slug my-morning \
        --writers claude-tools,gemini-tools,codex-tools
    ```
@@ -42,8 +42,8 @@ Run the FULL A1/20 bakeoff: 3 writes (Claude → Gemini → Codex) + 6 cross-rev
 
 5. **Verify** layout when done:
    ```bash
-   ls -la /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-05/
-   for f in /Users/krisztiankoos/projects/learn-ukrainian/audit/bakeoff-2026-05-05/*.jsonl; do
+   ls -la audit/bakeoff-2026-05-05/
+   for f in audit/bakeoff-2026-05-05/*.jsonl; do
        echo "=== $f ==="
        tail -1 "$f" | head -c 250
        echo

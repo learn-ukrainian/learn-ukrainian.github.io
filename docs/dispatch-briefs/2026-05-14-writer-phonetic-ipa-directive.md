@@ -12,9 +12,9 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Prefix every command with `cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/writer-phonetic-ipa-2026-05-14 && ...` or absolute path.
+Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Prefix every command with `cd .worktrees/dispatch/codex/writer-phonetic-ipa-2026-05-14 && ...` or absolute path.
 
-Inside the worktree, `.venv/` is gitignored. Use `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
+Inside the worktree, `.venv/` is gitignored. Use `.venv/bin/python`.
 
 ---
 
@@ -100,7 +100,7 @@ Test — verify that `spoken_present=false` produces a failure regardless of the
 
 1. **Worktree setup:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian && \
+   cd . && \
    git worktree add -b codex/writer-phonetic-ipa-2026-05-14 .worktrees/dispatch/codex/writer-phonetic-ipa-2026-05-14 origin/main
    ```
 2. **Read the relevant code:** `scripts/build/phases/linear-write.md`, `scripts/audit/wiki_coverage_gate.py`, `tests/test_wiki_coverage*.py`. Understand the current phonetic_rules handling before editing.
@@ -109,13 +109,13 @@ Test — verify that `spoken_present=false` produces a failure regardless of the
 5. **Add tests** — the 3 cases described above.
 6. **Test suite:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/writer-phonetic-ipa-2026-05-14 && \
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest tests/test_wiki_coverage* tests/test_*wiki* -x
+   cd .worktrees/dispatch/codex/writer-phonetic-ipa-2026-05-14 && \
+   .venv/bin/pytest tests/test_wiki_coverage* tests/test_*wiki* -x
    ```
    Quote final summary line raw.
 7. **Ruff:**
    ```bash
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/build/phases scripts/audit/wiki_coverage_gate.py
+   .venv/bin/ruff check scripts/build/phases scripts/audit/wiki_coverage_gate.py
    ```
    Quote final line raw.
 8. **Regression check** — read `curriculum/l2-uk-en/a1/my-morning/wiki_manifest.json` from MAIN (read-only via absolute path) and confirm the 3 phonetic rules are present. State which 3 you found.

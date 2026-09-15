@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: zhadan-voroshilovgrad
 TOPIC_TITLE: Zhadan Voroshilovgrad
 MODULE_NUM: '179'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/zhadan-voroshilovgrad.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/zhadan-voroshilovgrad.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/zhadan-voroshilovgrad.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/zhadan-voroshilovgrad.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/zhadan-voroshilovgrad.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/zhadan-voroshilovgrad-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/zhadan-voroshilovgrad-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/zhadan-voroshilovgrad.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/zhadan-voroshilovgrad.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/zhadan-voroshilovgrad.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/zhadan-voroshilovgrad.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/zhadan-voroshilovgrad.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/zhadan-voroshilovgrad-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/zhadan-voroshilovgrad-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

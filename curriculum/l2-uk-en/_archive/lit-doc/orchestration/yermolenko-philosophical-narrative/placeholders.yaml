@@ -3,13 +3,13 @@ LEVEL: LIT_DOC
 SLUG: yermolenko-philosophical-narrative
 TOPIC_TITLE: Yermolenko Philosophical Narrative
 MODULE_NUM: '5'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-doc/yermolenko-philosophical-narrative.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-doc/meta/yermolenko-philosophical-narrative.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-doc/yermolenko-philosophical-narrative.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-doc/activities/yermolenko-philosophical-narrative.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-doc/vocabulary/yermolenko-philosophical-narrative.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-doc/research/yermolenko-philosophical-narrative-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-doc/review/yermolenko-philosophical-narrative-review.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-doc/yermolenko-philosophical-narrative.yaml
+META_PATH: curriculum/l2-uk-en/lit-doc/meta/yermolenko-philosophical-narrative.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-doc/yermolenko-philosophical-narrative.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-doc/activities/yermolenko-philosophical-narrative.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-doc/vocabulary/yermolenko-philosophical-narrative.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-doc/research/yermolenko-philosophical-narrative-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-doc/review/yermolenko-philosophical-narrative-review.md
 QUICK_REF_PATH: ''
 SCHEMA_PATH: schemas/activities-lit-doc.schema.json
 WORD_TARGET: '5000'

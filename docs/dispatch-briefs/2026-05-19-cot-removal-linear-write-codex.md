@@ -118,7 +118,7 @@ If any test fixture asserts the presence of these blocks, update the assertions 
 
 Run the existing test that covers the writer prompt structure (worktree has no `.venv/`; `cd` to the main repo first):
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 .venv/bin/python -m pytest tests/test_writer_prompt_structured_cot.py -v
 ```
 
@@ -127,7 +127,7 @@ If it asserts the presence of `<plan_reasoning>` and now fails, **update the tes
 ### Step 4 — Lint + test sweep
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 .venv/bin/ruff check scripts/build/ tests/build/
 .venv/bin/python -m pytest tests/build/ tests/test_writer_prompt_structured_cot.py -v
 ```
@@ -139,7 +139,7 @@ Both must pass green. Quote final lines in the PR body. After the test sweep, `c
 This is the load-bearing empirical test. Run a single-module rebuild via V7 with the claude-tools default writer (from the main repo so `.venv/bin/python` resolves):
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 .venv/bin/python scripts/build/v7_build.py a1 my-morning --writer claude-tools --worktree
 ```
 

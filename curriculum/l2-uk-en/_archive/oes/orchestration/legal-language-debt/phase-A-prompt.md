@@ -10,13 +10,13 @@
 Read the plan file (SOURCE OF TRUTH):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/legal-language-debt.yaml
+curriculum/l2-uk-en/plans/oes/legal-language-debt.yaml
 ```
 
 Read the current meta file (for reference — you will replace the content_outline):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/legal-language-debt.yaml
+curriculum/l2-uk-en/oes/meta/legal-language-debt.yaml
 ```
 
 ---

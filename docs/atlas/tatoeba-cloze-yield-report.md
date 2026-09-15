@@ -164,7 +164,7 @@ CLI improvements shipped with this retry (no Phase-3 go-live):
 ### Inputs
 
 Same real-data setup as Phase 1, rerun in worktree
-`/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/tatoeba-cloze-fix-3797`.
+`.worktrees/dispatch/codex/tatoeba-cloze-fix-3797`.
 The hydrated manifest was symlinked from the main checkout at
 `site/src/data/lexicon-manifest.json`; `data/vesum.db` and `data/sources.db`
 were symlinked from the main checkout. Real Tatoeba exports were downloaded
@@ -322,9 +322,9 @@ practice.
 
 ## Inputs
 
-* Worktree: `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/tatoeba-cloze-yield-3797`
-* Python: `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`
-* `PYTHONPATH`: `/Users/krisztiankoos/projects/learn-ukrainian`
+* Worktree: `.worktrees/dispatch/codex/tatoeba-cloze-yield-3797`
+* Python: `.venv/bin/python`
+* `PYTHONPATH`: `.`
 * Manifest input for the required baseline: `site/src/data/lexicon-manifest.json`, symlinked to the hydrated main-checkout manifest.
 * Real Tatoeba exports downloaded 2026-06-26 into `.agent/tmp/tatoeba/`:
   * `ukr_sentences_detailed.tsv.bz2`

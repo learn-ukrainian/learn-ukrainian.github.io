@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: hramoty-xvi-volyn
 TOPIC_TITLE: Hramoty Xvi Volyn
 MODULE_NUM: '106'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/hramoty-xvi-volyn.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/hramoty-xvi-volyn.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/hramoty-xvi-volyn.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/hramoty-xvi-volyn.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/hramoty-xvi-volyn.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/hramoty-xvi-volyn-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/hramoty-xvi-volyn-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/hramoty-xvi-volyn.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/hramoty-xvi-volyn.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/hramoty-xvi-volyn.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/hramoty-xvi-volyn.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/hramoty-xvi-volyn.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/hramoty-xvi-volyn-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/hramoty-xvi-volyn-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

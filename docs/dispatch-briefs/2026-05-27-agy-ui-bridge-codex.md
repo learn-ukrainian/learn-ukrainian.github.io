@@ -26,7 +26,7 @@ Returns a JSON object with `bridge_id`, `thread_id`, `exit_code`, `final_message
 
 ## How agy supports this
 
-The `agy` CLI (`/Users/krisztiankoos/.local/bin/agy`) exposes:
+The `agy` CLI (`.local/bin/agy`) exposes:
 
 ```
 agy --print "<prompt>"          # -p / --print: one-shot non-interactive prompt
@@ -61,7 +61,7 @@ Wire it into `_cli.py` analogous to lines 782-820 (subparser setup) and 921 (dis
 
 ## Numbered execution steps
 
-1. `git worktree add ~/projects/.worktrees/dispatch/codex/agy-ui-bridge-2026-05-27 -b codex/agy-ui-bridge-2026-05-27 origin/main` from `/Users/krisztiankoos/projects/learn-ukrainian`. CD into the worktree.
+1. `git worktree add ~/projects/.worktrees/dispatch/codex/agy-ui-bridge-2026-05-27 -b codex/agy-ui-bridge-2026-05-27 origin/main` from `.`. CD into the worktree.
 2. **Empirical investigation (Step 1 above).** Run `agy --conversation <FRESH-ID> --print "hello"` (or `agy --print "hello"` then `agy --continue --print "follow up"`) and observe the output stream. Find where conversation state is persisted on disk. Document findings inline in the new `_ui_agy.py` docstring (mirroring the `_ui_codex.py` 2026-05-25 probe section).
 3. Read `scripts/ai_agent_bridge/_ui_codex.py` end-to-end. Read `scripts/ai_agent_bridge/_cli.py` lines 780-925 for the `send-codex-ui` wiring.
 4. **Build `scripts/ai_agent_bridge/_ui_agy.py`** mirroring `_ui_codex.py` shape: docstring with empirical findings + `find_session_file` + `_extract_final_message` + `send` function + `main` argparse handler. Target size ~250-350 LOC. Keep the public `send(...)` signature identical to `_ui_codex.send(...)` so callers can swap one for the other.

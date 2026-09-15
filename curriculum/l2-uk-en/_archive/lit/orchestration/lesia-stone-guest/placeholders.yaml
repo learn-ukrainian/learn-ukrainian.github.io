@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: lesia-stone-guest
 TOPIC_TITLE: Lesia Stone Guest
 MODULE_NUM: '54'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/lesia-stone-guest.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/lesia-stone-guest.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/lesia-stone-guest.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/lesia-stone-guest.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/lesia-stone-guest.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/lesia-stone-guest-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/lesia-stone-guest-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/lesia-stone-guest.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/lesia-stone-guest.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/lesia-stone-guest.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/lesia-stone-guest.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/lesia-stone-guest.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/lesia-stone-guest-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/lesia-stone-guest-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

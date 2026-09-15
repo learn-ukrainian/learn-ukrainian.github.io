@@ -11,7 +11,7 @@
 
 ============================================================
 
-Activate skill full-rebuild-lit. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/andrukhovych-perverzion/phase-A-prompt.md
+Activate skill full-rebuild-lit. Read and execute the instructions at curriculum/l2-uk-en/lit/orchestration/andrukhovych-perverzion/phase-A-prompt.md
 
 ============================================================
 📎 Attached Data:
@@ -25,11 +25,11 @@ CRITICAL INSTRUCTION 1: Always prioritize using the most specific tool for the t
 (c) DO NOT use ls for listing, cat for viewing, grep for finding, sed for replacing if custom tools that perform these functionalities are available.
 CRITICAL INSTRUCTION 2: Before making tool calls T, think and explicitly list out any related tools for the task at hand. You can only execute a set of tools T if all other tools in the list are either more generic or cannot be used for the task at hand.
 
-The task is to read and execute the instructions at `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/andrukhovych-perverzion/phase-A-prompt.md`.
+The task is to read and execute the instructions at `curriculum/l2-uk-en/lit/orchestration/andrukhovych-perverzion/phase-A-prompt.md`.
 Since I'm in read-only orchestration mode (as detected by the prompt starting with `ROLE: You are a TEXT GENERATOR` and having `ABSOLUTE RULES`), I need to ONLY read files and then output text.
 Related tools for reading files: `read_file`.
 
-First, I will read the file `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/andrukhovych-perverzion/phase-A-prompt.md`.
+First, I will read the file `curriculum/l2-uk-en/lit/orchestration/andrukhovych-perverzion/phase-A-prompt.md`.
 Then I will follow its instructions and generate the requested text output. Let's read the file now.
 
 Let's do the file read.
@@ -50,7 +50,7 @@ Wait, I don't need to overthink the one-sentence rule for read-only mode, it mig
 Tools available: `read_file`. Let's use it.
 I'll read the phase-A-prompt.md.
 Then I will process it and output the result.
-Let's call `read_file` for `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/andrukhovych-perverzion/phase-A-prompt.md`.
+Let's call `read_file` for `curriculum/l2-uk-en/lit/orchestration/andrukhovych-perverzion/phase-A-prompt.md`.
 
 Let me start my tool call. I'll include a tiny sentence just in case:
 "Reading the specified instruction file for the assigned task."
@@ -58,7 +58,7 @@ No, the Orchestration Mode rule "1. OUTPUT ONLY TEXT... between delimiters. That
 
 
 Let me just do the thought block and then call the `read_file` tool.
-I am supposed to just read the file `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/andrukhovych-perverzion/phase-A-prompt.md`.
+I am supposed to just read the file `curriculum/l2-uk-en/lit/orchestration/andrukhovych-perverzion/phase-A-prompt.md`.
 
 Let's read the file. I will use `read_file`.
 Related tools for reading files: `read_file`.
@@ -75,8 +75,8 @@ CRITICAL INSTRUCTION 2: Before making tool calls T, think and explicitly list ou
 
 The task requires me to execute Phase A (Research + Meta) for "Andrukhovych Perverzion" for the "lit" track.
 The prompt tells me to:
-1. Read the plan file: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/andrukhovych-perverzion.yaml`
-2. Read the current meta file: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/andrukhovych-perverzion.yaml`
+1. Read the plan file: `curriculum/l2-uk-en/plans/lit/andrukhovych-perverzion.yaml`
+2. Read the current meta file: `curriculum/l2-uk-en/lit/meta/andrukhovych-perverzion.yaml`
 3. Produce Research Notes (Output Block 1)
 4. Produce Meta Outline (Output Block 2)
 5. Produce Friction Report (Friction Report)
@@ -90,8 +90,8 @@ No more specific tools are available. I will execute `read_file` concurrently fo
 
 Let me do this. I'll read both files in one go.
 Files to read:
-`/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/andrukhovych-perverzion.yaml`
-`/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/andrukhovych-perverzion.yaml`
+`curriculum/l2-uk-en/plans/lit/andrukhovych-perverzion.yaml`
+`curriculum/l2-uk-en/lit/meta/andrukhovych-perverzion.yaml`
 I'll also run a google search for research right away to save time, or do it in the next step. Let's do it in the next step so I have context from the plan.
 Wait, I can just do the reads first.
 T = `read_file`

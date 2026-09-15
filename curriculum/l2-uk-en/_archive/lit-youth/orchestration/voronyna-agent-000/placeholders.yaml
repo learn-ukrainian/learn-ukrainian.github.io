@@ -3,14 +3,14 @@ LEVEL: LIT_JUVENILE
 SLUG: voronyna-agent-000
 TOPIC_TITLE: Voronyna Agent 000
 MODULE_NUM: '28'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-juvenile/voronyna-agent-000.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/meta/voronyna-agent-000.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/voronyna-agent-000.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/activities/voronyna-agent-000.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/vocabulary/voronyna-agent-000.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/research/voronyna-agent-000-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/review/voronyna-agent-000-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-juvenile/voronyna-agent-000.yaml
+META_PATH: curriculum/l2-uk-en/lit-juvenile/meta/voronyna-agent-000.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-juvenile/voronyna-agent-000.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-juvenile/activities/voronyna-agent-000.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-juvenile/vocabulary/voronyna-agent-000.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-juvenile/research/voronyna-agent-000-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-juvenile/review/voronyna-agent-000-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-juvenile.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

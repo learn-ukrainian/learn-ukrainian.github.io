@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: baroque-poetry
 TOPIC_TITLE: Baroque Poetry
 MODULE_NUM: '74'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/baroque-poetry.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/baroque-poetry.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/baroque-poetry.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/baroque-poetry.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/baroque-poetry.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/baroque-poetry-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/baroque-poetry-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/baroque-poetry.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/baroque-poetry.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/baroque-poetry.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/baroque-poetry.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/baroque-poetry.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/baroque-poetry-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/baroque-poetry-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

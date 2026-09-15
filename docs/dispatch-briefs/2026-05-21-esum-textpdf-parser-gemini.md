@@ -66,13 +66,13 @@ Parser entry-boundary heuristics assume djvutxt's specific line-break convention
 ## Verification before commit
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/ruff check scripts/ingest/ tests/
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -m pytest tests/ -k esum -v --tb=short
+cd . && .venv/bin/ruff check scripts/ingest/ tests/
+cd . && .venv/bin/python -m pytest tests/ -k esum -v --tb=short
 # Smoke-run on real data:
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python scripts/ingest/esum_ingest.py --input data/raw/esum/ia-text-pdf/vol4-text.txt --output /tmp/esum_vol4_textpdf.jsonl --vol 4 --source-format text-pdf
+cd . && .venv/bin/python scripts/ingest/esum_ingest.py --input data/raw/esum/ia-text-pdf/vol4-text.txt --output /tmp/esum_vol4_textpdf.jsonl --vol 4 --source-format text-pdf
 wc -l /tmp/esum_vol4_textpdf.jsonl   # ≥ 4800
 # Regression — djvutxt path unchanged:
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python scripts/ingest/esum_ingest.py --input data/raw/esum/vol1.txt --output /tmp/esum_vol1_djvu.jsonl --vol 1
+cd . && .venv/bin/python scripts/ingest/esum_ingest.py --input data/raw/esum/vol1.txt --output /tmp/esum_vol1_djvu.jsonl --vol 1
 wc -l /tmp/esum_vol1_djvu.jsonl     # ≥ 5140
 ```
 

@@ -1693,7 +1693,7 @@ Response:
   "track": "hist",
   "slug": "kyivan-rus",
   "compiled": true,
-  "path": "/Users/me/projects/learn-ukrainian/wiki/periods/kyivan-rus.md",
+  "path": "wiki/periods/kyivan-rus.md",
   "word_count": 1820,
   "preview": "# Kyivan Rus\\n\\nKyivan Rus was ...",
   "source_count": 7,
@@ -3269,7 +3269,7 @@ Response:
   ],
   "protected_worktrees": [
     {
-      "path": "/Users/you/projects/learn-ukrainian",
+      "path": ".",
       "branch": "main",
       "reason": "primary checkout"
     },

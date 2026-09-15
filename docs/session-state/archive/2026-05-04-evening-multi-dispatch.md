@@ -167,7 +167,7 @@ Do NOT read `CLAUDE.md`, `claude_extensions/rules/*.md`, or
 hash caching.
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 source ./.envrc
 
 # 1. Bootstrap from Monitor API (cached, condensed)

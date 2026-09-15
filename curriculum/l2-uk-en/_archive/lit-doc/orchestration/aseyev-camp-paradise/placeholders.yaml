@@ -3,14 +3,14 @@ LEVEL: LIT_WAR
 SLUG: aseyev-camp-paradise
 TOPIC_TITLE: Aseyev Camp Paradise
 MODULE_NUM: '19'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-war/aseyev-camp-paradise.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/meta/aseyev-camp-paradise.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/aseyev-camp-paradise.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/activities/aseyev-camp-paradise.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/vocabulary/aseyev-camp-paradise.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/research/aseyev-camp-paradise-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/review/aseyev-camp-paradise-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-war/aseyev-camp-paradise.yaml
+META_PATH: curriculum/l2-uk-en/lit-war/meta/aseyev-camp-paradise.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-war/aseyev-camp-paradise.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-war/activities/aseyev-camp-paradise.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-war/vocabulary/aseyev-camp-paradise.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-war/research/aseyev-camp-paradise-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-war/review/aseyev-camp-paradise-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-war.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

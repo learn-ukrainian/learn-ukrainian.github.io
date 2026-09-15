@@ -212,7 +212,7 @@ If the cold-encode OOMs:
 
 If bash starts hanging 60s on every command with "pyenv: cannot rehash: couldn't acquire lock":
 ```bash
-rm -f /Users/krisztiankoos/.pyenv/shims/.pyenv-shim
+rm -f pyenv/shims/.pyenv-shim
 ```
 
 ### Don't propose options. Do the work.

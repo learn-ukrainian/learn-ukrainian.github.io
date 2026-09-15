@@ -728,5 +728,5 @@ editions.
   edited.
 - [x] Required validation planned/run before PR:
   `npx markdownlint-cli2 docs/research/bio/dmytro-hunia.md`,
-  `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python scripts/audit/lint_bio_dossier_xref.py --paths docs/research/bio/dmytro-hunia.md`,
+  `.venv/bin/python scripts/audit/lint_bio_dossier_xref.py --paths docs/research/bio/dmytro-hunia.md`,
   `git diff --check`, protected-scope guard, and unrelated-term guard.

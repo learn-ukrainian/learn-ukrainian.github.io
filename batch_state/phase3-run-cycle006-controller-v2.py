@@ -13,20 +13,43 @@ import hashlib
 import importlib.util
 import json
 import os
+import shutil
 import subprocess
 import tempfile
 from pathlib import Path
 from typing import Any
 
 HERE = Path(__file__).resolve().parent
-PRIMARY_PYTHON = Path("/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python")
+PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
+
+
+def _resolve_primary_python() -> Path:
+    raw = os.environ.get("LEARN_UKRAINIAN_PYTHON", "").strip()
+    if raw:
+        return Path(raw)
+    root_raw = os.environ.get(PRIMARY_REPO_ROOT_ENV, "").strip()
+    root = Path(root_raw).resolve() if root_raw else HERE.parent
+    return root / ".venv" / "bin" / "python"
+
+
+def _resolve_agy() -> Path:
+    raw = os.environ.get("AGY", "").strip() or os.environ.get("LEARN_UKRAINIAN_AGY", "").strip()
+    if raw:
+        return Path(raw)
+    found = shutil.which("agy")
+    if found:
+        return Path(found)
+    return Path("agy")
+
+
+PRIMARY_PYTHON = _resolve_primary_python()
 AMENDMENT = HERE / "phase3-cycle006-restart-amendment-v3.md"
 AMENDMENT_SHA256 = "524e6eb4f18d38f104413fb32f421ff73c3d80bc411d338a6d8a31fabc087474"
 STAGES = ("gemini", "grok", "compare", "adjudicate", "resolve", "certify")
 LANES = {"clean_label": 40, "residual_label": 164}
 GEMINI_MODEL = "Gemini 3.6 Flash (High)"
 CANARY_RECEIPT_SCHEMA = "phase3_cycle006_gemini_public_canary_receipt_v2"
-AGY = Path("/Users/krisztiankoos/.local/bin/agy")
+AGY = _resolve_agy()
 REQUIRED_CODE_PATHS = {
     "gemini_runner": HERE / "phase3-run-cycle006-gemini-label-provider-batch-v2.py",
     "label_validator": HERE / "phase3-cycle006-label-validation-v2.py",

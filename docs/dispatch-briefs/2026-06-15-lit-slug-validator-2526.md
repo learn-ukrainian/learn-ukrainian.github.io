@@ -22,11 +22,11 @@ For each, determine which is canonical/live:
 - Likely a MIX — handle each on its evidence; produce a per-slug decision table in the PR body.
 
 ## Numbered steps
-1. `cd /Users/krisztiankoos/projects/learn-ukrainian && git fetch origin` (you are in a `--worktree` from origin/main).
+1. `cd . && git fetch origin` (you are in a `--worktree` from origin/main).
 2. Investigate the 8; apply the minimal correct fix per the rule above.
-3. `cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python scripts/audit/validate_plan_ordering.py` (find exact path with `git grep -l validate_plan_ordering`) → **0 lit errors**.
-4. If you changed the validator: `cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -m pytest -k "plan_ordering or validate_plan" -q` → paste summary.
-5. `cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/ruff check .` → paste final line.
+3. `cd . && .venv/bin/python scripts/audit/validate_plan_ordering.py` (find exact path with `git grep -l validate_plan_ordering`) → **0 lit errors**.
+4. If you changed the validator: `cd . && .venv/bin/python -m pytest -k "plan_ordering or validate_plan" -q` → paste summary.
+5. `cd . && .venv/bin/ruff check .` → paste final line.
 6. Commit `fix(lit): resolve 8 slug-mismatch errors for validate_plan_ordering promotion (#2526)`.
 7. `git push -u origin <branch>`; `gh pr create` referencing #2526. NO auto-merge.
 

@@ -50,8 +50,8 @@ GOAL_ABORT reason="<why>" last_cmd="<command>" last_cwd="<dir>" last_output="<gr
 ```
 
 All six fields are required. `last_cmd` MUST be the literal command executed, not a paraphrase, and `last_cwd` is the directory it ran from — together they form the reproducer the human will run after reading the transcript. Examples:
-- `GOAL_ABORT reason="blocked_rounds=3" last_cmd=".venv/bin/pytest tests/test_x.py" last_cwd="/Users/k/projects/learn-ukrainian" last_output="FAILED: assertion mismatch line 47" next_action="rebase against origin/main, re-run, file issue if still red" queue_head=fix-test-x`
-- `GOAL_ABORT reason="no_progress=3" last_cmd="git log -1 --oneline origin/main" last_cwd="/Users/k/projects/learn-ukrainian/.worktrees/foo" last_output="0e97806d7 docs(handoff)..." next_action="confirm correct base branch, then resume" queue_head=verify-base`
+- `GOAL_ABORT reason="blocked_rounds=3" last_cmd=".venv/bin/pytest tests/test_x.py" last_cwd="." last_output="FAILED: assertion mismatch line 47" next_action="rebase against origin/main, re-run, file issue if still red" queue_head=fix-test-x`
+- `GOAL_ABORT reason="no_progress=3" last_cmd="git log -1 --oneline origin/main" last_cwd=".worktrees/foo" last_output="0e97806d7 docs(handoff)..." next_action="confirm correct base branch, then resume" queue_head=verify-base`
 
 ### Wait status — for async-dispatch work
 

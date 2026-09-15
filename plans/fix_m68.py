@@ -1,5 +1,5 @@
 
-file_path = "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/advanced-conjunctions-ii.md"
+file_path = "curriculum/l2-uk-en/b2/advanced-conjunctions-ii.md"
 with open(file_path, encoding='utf-8') as f:
     content = f.read()
 

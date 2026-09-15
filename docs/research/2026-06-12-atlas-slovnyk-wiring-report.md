@@ -11,7 +11,7 @@ printf 'synonym_pages=%s\n' "$(rg -l 'id=\"atlas-synonyms-title\"' starlight/dis
 CWD:
 
 ```text
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/atlas-slovnyk-wiring
+.worktrees/dispatch/codex/atlas-slovnyk-wiring
 ```
 
 Raw output:
@@ -64,7 +64,7 @@ PY
 CWD:
 
 ```text
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/atlas-slovnyk-wiring
+.worktrees/dispatch/codex/atlas-slovnyk-wiring
 ```
 
 Raw output:

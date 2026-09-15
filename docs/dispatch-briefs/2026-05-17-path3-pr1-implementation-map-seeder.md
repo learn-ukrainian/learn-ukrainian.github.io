@@ -241,7 +241,7 @@ If schema validation needs a referenceable JSON file, write it to
 ## Worktree setup
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin
 git worktree add .worktrees/path3-pr1-impl-map-seeder -b feat/path3-pr1-implementation-map-seeder origin/main
 cd .worktrees/path3-pr1-impl-map-seeder

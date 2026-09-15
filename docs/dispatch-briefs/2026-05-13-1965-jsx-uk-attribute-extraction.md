@@ -101,7 +101,7 @@ After implementing, run the gates against build #4's actual module.md to confirm
 cd .worktrees/builds/a1-my-morning-20260513-193448
 .venv/bin/python -c "
 import sys
-sys.path.insert(0, '/Users/krisztiankoos/projects/learn-ukrainian')
+sys.path.insert(0, '.')
 # Re-import from your worktree's modified linear_pipeline:
 from scripts.build.linear_pipeline import _count_uk_dialogue_lines, _component_density_gate
 body = open('curriculum/l2-uk-en/a1/my-morning/module.md').read()

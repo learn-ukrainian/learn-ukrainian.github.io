@@ -9,7 +9,7 @@
 ## Reproduce the bug first (verify the diagnosis)
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 codex --dangerously-bypass-approvals-and-sandbox -C "$PWD" --print 'call mcp__sources__verify_words for "кіт"'
 # Expect: "MCP client for `sources` failed to start: ... Method Not Allowed"
 # OR

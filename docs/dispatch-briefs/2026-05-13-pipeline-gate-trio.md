@@ -12,9 +12,9 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Every command that uses `.venv/`, `scripts/`, or files in MAIN checkout MUST be prefixed with `cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/pipeline-gate-trio-2026-05-13 && ...` or absolute path.
+Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Every command that uses `.venv/`, `scripts/`, or files in MAIN checkout MUST be prefixed with `cd .worktrees/dispatch/codex/pipeline-gate-trio-2026-05-13 && ...` or absolute path.
 
-Inside the worktree, `.venv/` is gitignored. Use MAIN checkout's `.venv` via absolute path: `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
+Inside the worktree, `.venv/` is gitignored. Use MAIN checkout's `.venv` via `.venv/bin/python`.
 
 ---
 
@@ -129,19 +129,19 @@ The gate parser is presumably looking for structured fields (`source_type='textb
 
 1. **Worktree setup:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian && \
+   cd . && \
    git worktree add -b codex/pipeline-gate-trio-2026-05-13 .worktrees/dispatch/codex/pipeline-gate-trio-2026-05-13 origin/main
    ```
 2. **File-level work** — fix Bugs A, B, C in `scripts/build/linear_pipeline.py` (+ schema/policy files if needed). Aim for minimal surface; each fix should be 5-30 LOC.
 3. **Test suite** — for each bug, add a focused test. Then run:
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/pipeline-gate-trio-2026-05-13 && \
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest tests/test_linear_pipeline*.py tests/test_*gate*.py -x
+   cd .worktrees/dispatch/codex/pipeline-gate-trio-2026-05-13 && \
+   .venv/bin/pytest tests/test_linear_pipeline*.py tests/test_*gate*.py -x
    ```
    Quote final summary line.
 4. **Ruff:**
    ```bash
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/build/linear_pipeline.py
+   .venv/bin/ruff check scripts/build/linear_pipeline.py
    ```
    Quote final line.
 5. **Regression check** — re-run python_qg on the claude bakeoff artifact (copy or symlink `audit/bakeoff-2026-05-13-midday/claude/` into the worktree if needed, OR write a small driver that calls the gate functions directly on those files). Capture before/after gate JSON for each of the three bugs in the PR body.

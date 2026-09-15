@@ -46,7 +46,7 @@ Steps:
 
 Repro (orchestrator used this):
 ```
-cd /Users/krisztiankoos/projects/learn-ukrainian && \
+cd . && \
 .venv/bin/python -c "import sys;sys.path.insert(0,'scripts');from pathlib import Path;from wiki.review import _run_single_dim as r;a=Path('wiki/pedagogy/a1/this-and-that.md').resolve();d=r(dim='register',article_path=a,article_text=a.read_text(),primary='cursor',fallbacks=(),cwd=Path.cwd());print(d.verdict,d.score,(d.error or '')[:400])"
 ```
 
@@ -57,9 +57,9 @@ lesson). Gate on the CLI being available (skip cleanly if not on PATH/CI), but t
 check (registry id ∈ `grok models` for grok-build) can be a pure assertion.
 
 ## Numbered steps
-1. `cd /Users/krisztiankoos/projects/learn-ukrainian && git fetch origin`
+1. `cd . && git fetch origin`
 2. You are launched in a worktree from `origin/main` (delegate `--worktree`). Symlink data if needed:
-   `ln -sfn /Users/krisztiankoos/projects/learn-ukrainian/data ./data` (do NOT commit it).
+   `ln -sfn data ./data` (do NOT commit it).
 3. Fix A (grok-build, 3 spots). Verify: a real grok-build review invoke returns a valid verdict (repro above with `primary='grok-build'`).
 4. Fix B (cursor MCP wiring). Verify: cursor review returns a valid verdict.
 5. Add smoke tests (C). Run `.venv/bin/python -m pytest tests/agent_runtime/ -q` (or the adapter test dir) → paste summary.

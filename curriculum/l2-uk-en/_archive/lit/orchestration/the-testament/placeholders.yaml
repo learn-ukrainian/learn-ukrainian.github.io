@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: the-testament
 TOPIC_TITLE: Заповіт
 MODULE_NUM: '15'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/the-testament.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/the-testament.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/the-testament.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/the-testament.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/the-testament.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/the-testament-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/the-testament-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/the-testament.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/the-testament.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/the-testament.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/the-testament.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/the-testament.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/the-testament-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/the-testament-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

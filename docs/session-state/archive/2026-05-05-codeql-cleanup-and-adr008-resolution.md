@@ -79,7 +79,7 @@ Two PRs (#1688, #1690) would have shipped with real holes if I had merged on my 
 ## Cold-start protocol for next session
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 source ./.envrc
 
 # 1. Bootstrap from Monitor API

@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: kyiv-mohyla-rhetoric
 TOPIC_TITLE: Kyiv Mohyla Rhetoric
 MODULE_NUM: '72'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/kyiv-mohyla-rhetoric.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/kyiv-mohyla-rhetoric.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/kyiv-mohyla-rhetoric.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/kyiv-mohyla-rhetoric.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/kyiv-mohyla-rhetoric.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/kyiv-mohyla-rhetoric-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/kyiv-mohyla-rhetoric-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/kyiv-mohyla-rhetoric.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/kyiv-mohyla-rhetoric.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/kyiv-mohyla-rhetoric.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/kyiv-mohyla-rhetoric.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/kyiv-mohyla-rhetoric.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/kyiv-mohyla-rhetoric-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/kyiv-mohyla-rhetoric-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

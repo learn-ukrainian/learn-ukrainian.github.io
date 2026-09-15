@@ -55,8 +55,8 @@ no calque signal beyond what F/Calque already provides.
 ### 1. Worktree + data symlink
 
 ```
-[ -L data/sources.db ] || { rm -f data/sources.db; ln -s /Users/krisztiankoos/projects/learn-ukrainian/data/sources.db data/sources.db; }
-[ -L data/ua-gec ]     || { rm -f data/ua-gec;     ln -s /Users/krisztiankoos/projects/learn-ukrainian/data/ua-gec     data/ua-gec; }
+[ -L data/sources.db ] || { rm -f data/sources.db; ln -s data/sources.db data/sources.db; }
+[ -L data/ua-gec ]     || { rm -f data/ua-gec;     ln -s data/ua-gec     data/ua-gec; }
 ```
 
 **WARNING:** `data/sources.db` is the production DB (~1.6 GB). All

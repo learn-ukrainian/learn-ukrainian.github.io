@@ -85,7 +85,7 @@ Per `docs/audits/bio-decolonization-checklist.md`. Scan each dossier for:
 
 ## Numbered execution steps
 
-1. `git worktree add ~/projects/.worktrees/dispatch/codex/r1a-pilot-3-bios-2026-05-26 -b codex/r1a-pilot-3-bios-2026-05-26 origin/main` from `/Users/krisztiankoos/projects/learn-ukrainian`. CD into the worktree.
+1. `git worktree add ~/projects/.worktrees/dispatch/codex/r1a-pilot-3-bios-2026-05-26 -b codex/r1a-pilot-3-bios-2026-05-26 origin/main` from `.`. CD into the worktree.
 2. Read these references in order before writing:
    - `docs/templates/bio-research-dossier-template.md` (the F5 template)
    - `docs/research/bio/pavlo-tychyna.md` (the F5 worked example — same template applied to Block D Тичина)

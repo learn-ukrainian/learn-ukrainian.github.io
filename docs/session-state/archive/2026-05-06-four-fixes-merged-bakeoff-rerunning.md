@@ -98,7 +98,7 @@ PR #1729's body notes: with all 4 fixes applied to the 2026-05-06 bakeoff output
 ## Cold-start protocol
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 source ./.envrc
 
 curl -s http://localhost:8765/api/state/manifest

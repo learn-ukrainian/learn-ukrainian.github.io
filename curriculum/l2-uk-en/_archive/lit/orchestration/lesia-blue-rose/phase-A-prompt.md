@@ -10,13 +10,13 @@
 Read the plan file (SOURCE OF TRUTH):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/lesia-blue-rose.yaml
+curriculum/l2-uk-en/plans/lit/lesia-blue-rose.yaml
 ```
 
 Read the current meta file (for reference — you will replace the content_outline):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/lesia-blue-rose.yaml
+curriculum/l2-uk-en/lit/meta/lesia-blue-rose.yaml
 ```
 
 ---

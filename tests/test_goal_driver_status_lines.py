@@ -41,7 +41,7 @@ def test_abort_line_captures_all_six_fields() -> None:
     line = (
         'GOAL_ABORT reason="blocked_rounds=3" '
         'last_cmd=".venv/bin/pytest tests/test_x.py" '
-        'last_cwd="/Users/k/projects/learn-ukrainian" '
+        'last_cwd="." '
         'last_output="FAILED: assertion mismatch line 47" '
         'next_action="rebase against origin/main, re-run" '
         "queue_head=fix-test-x"
@@ -52,7 +52,7 @@ def test_abort_line_captures_all_six_fields() -> None:
     assert parsed.is_terminal is True
     assert parsed.fields["reason"] == "blocked_rounds=3"
     assert parsed.fields["last_cmd"] == ".venv/bin/pytest tests/test_x.py"
-    assert parsed.fields["last_cwd"] == "/Users/k/projects/learn-ukrainian"
+    assert parsed.fields["last_cwd"] == "."
     assert parsed.fields["last_output"] == "FAILED: assertion mismatch line 47"
     assert parsed.fields["next_action"] == "rebase against origin/main, re-run"
     assert parsed.fields["queue_head"] == "fix-test-x"

@@ -9,7 +9,7 @@ writes a separate staged snapshot for an operator-controlled promotion.
 
 Example (all generated outputs are gitignored)::
 
-    /absolute/path/to/.venv/bin/python -m scripts.lexicon.admit_teacher_table \
+    .venv/bin/python -m scripts.lexicon.admit_teacher_table \
       --extract /secure/input/combined-master-vocabulary-table-3-current.json \
       --queue /secure/input/teacher-table-atlas-work-queue.json \
       --manifest-in /secure/input/lexicon-manifest.json \

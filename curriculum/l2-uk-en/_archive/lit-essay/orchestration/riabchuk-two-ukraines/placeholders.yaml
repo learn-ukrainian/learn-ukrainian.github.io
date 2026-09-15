@@ -3,14 +3,14 @@ LEVEL: LIT_ESSAY
 SLUG: riabchuk-two-ukraines
 TOPIC_TITLE: Riabchuk Two Ukraines
 MODULE_NUM: '28'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-essay/riabchuk-two-ukraines.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/meta/riabchuk-two-ukraines.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/riabchuk-two-ukraines.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/activities/riabchuk-two-ukraines.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/vocabulary/riabchuk-two-ukraines.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/research/riabchuk-two-ukraines-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/review/riabchuk-two-ukraines-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-essay/riabchuk-two-ukraines.yaml
+META_PATH: curriculum/l2-uk-en/lit-essay/meta/riabchuk-two-ukraines.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-essay/riabchuk-two-ukraines.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-essay/activities/riabchuk-two-ukraines.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-essay/vocabulary/riabchuk-two-ukraines.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-essay/research/riabchuk-two-ukraines-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-essay/review/riabchuk-two-ukraines-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-essay.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

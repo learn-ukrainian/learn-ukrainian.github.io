@@ -3,14 +3,14 @@ LEVEL: LIT_WAR
 SLUG: zhadan-internat-war
 TOPIC_TITLE: Zhadan Internat War
 MODULE_NUM: '5'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-war/zhadan-internat-war.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/meta/zhadan-internat-war.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/zhadan-internat-war.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/activities/zhadan-internat-war.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/vocabulary/zhadan-internat-war.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/research/zhadan-internat-war-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/review/zhadan-internat-war-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-war/zhadan-internat-war.yaml
+META_PATH: curriculum/l2-uk-en/lit-war/meta/zhadan-internat-war.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-war/zhadan-internat-war.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-war/activities/zhadan-internat-war.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-war/vocabulary/zhadan-internat-war.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-war/research/zhadan-internat-war-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-war/review/zhadan-internat-war-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-war.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

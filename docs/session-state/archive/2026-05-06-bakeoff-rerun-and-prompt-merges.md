@@ -129,7 +129,7 @@ Low-priority items I deliberately did NOT do this session:
 ## Cold-start protocol for next session
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 source ./.envrc
 
 # 1. Bootstrap

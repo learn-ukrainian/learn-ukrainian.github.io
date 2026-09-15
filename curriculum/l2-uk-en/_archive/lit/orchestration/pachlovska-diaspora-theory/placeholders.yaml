@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: pachlovska-diaspora-theory
 TOPIC_TITLE: Pachlovska Diaspora Theory
 MODULE_NUM: '212'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/pachlovska-diaspora-theory.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/pachlovska-diaspora-theory.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/pachlovska-diaspora-theory.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/pachlovska-diaspora-theory.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/pachlovska-diaspora-theory.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/pachlovska-diaspora-theory-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/pachlovska-diaspora-theory-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/pachlovska-diaspora-theory.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/pachlovska-diaspora-theory.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/pachlovska-diaspora-theory.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/pachlovska-diaspora-theory.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/pachlovska-diaspora-theory.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/pachlovska-diaspora-theory-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/pachlovska-diaspora-theory-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: antonych-mythology
 TOPIC_TITLE: Antonych Mythology
 MODULE_NUM: '111'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/antonych-mythology.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/antonych-mythology.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/antonych-mythology.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/antonych-mythology.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/antonych-mythology.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/antonych-mythology-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/antonych-mythology-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/antonych-mythology.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/antonych-mythology.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/antonych-mythology.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/antonych-mythology.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/antonych-mythology.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/antonych-mythology-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/antonych-mythology-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

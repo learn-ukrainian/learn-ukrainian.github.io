@@ -39,9 +39,9 @@ Dispatch system creates `.worktrees/dispatch/gemini/h2c-typed-calibration-author
 ### 2. Data symlinks (sparse worktree)
 
 ```
-[ -L data/sources.db ] || { rm -f data/sources.db; ln -s /Users/krisztiankoos/projects/learn-ukrainian/data/sources.db data/sources.db; }
-[ -L data/vesum.db ]   || { rm -f data/vesum.db;   ln -s /Users/krisztiankoos/projects/learn-ukrainian/data/vesum.db   data/vesum.db; }
-[ -L data/ua-gec ]     || { rm -f data/ua-gec;     ln -s /Users/krisztiankoos/projects/learn-ukrainian/data/ua-gec     data/ua-gec; }
+[ -L data/sources.db ] || { rm -f data/sources.db; ln -s data/sources.db data/sources.db; }
+[ -L data/vesum.db ]   || { rm -f data/vesum.db;   ln -s data/vesum.db   data/vesum.db; }
+[ -L data/ua-gec ]     || { rm -f data/ua-gec;     ln -s data/ua-gec     data/ua-gec; }
 ```
 
 ### 3. Read the existing 12-case set as exemplar
@@ -125,7 +125,7 @@ mcp__sources__search_text(
 #     for the inline {ORIGINAL=>CORRECTED:::error_type=F/Calque} markers.
 #     If your dispatch worktree doesn't symlink data/ua-gec, add the symlink
 #     in step 2 BEFORE running this lookup:
-#         [ -L data/ua-gec ] || ln -s /Users/krisztiankoos/projects/learn-ukrainian/data/ua-gec data/ua-gec
+#         [ -L data/ua-gec ] || ln -s data/ua-gec data/ua-gec
 #
 #     Quick parser snippet (use in a Bash one-liner or python):
 #         grep -ohE '\{[^{}]+=>[^{}]*:::error_type=F/(Calque|Collocation)\}' data/ua-gec/data/**/annotated/*.ann | \\

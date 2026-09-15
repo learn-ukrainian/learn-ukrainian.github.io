@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: zabuzhko-longest-journey
 TOPIC_TITLE: Zabuzhko Longest Journey
 MODULE_NUM: '177'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/zabuzhko-longest-journey.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/zabuzhko-longest-journey.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/zabuzhko-longest-journey.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/zabuzhko-longest-journey.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/zabuzhko-longest-journey.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/zabuzhko-longest-journey-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/zabuzhko-longest-journey-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/zabuzhko-longest-journey.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/zabuzhko-longest-journey.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/zabuzhko-longest-journey.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/zabuzhko-longest-journey.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/zabuzhko-longest-journey.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/zabuzhko-longest-journey-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/zabuzhko-longest-journey-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

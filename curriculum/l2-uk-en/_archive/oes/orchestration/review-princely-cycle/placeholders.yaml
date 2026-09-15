@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: review-princely-cycle
 TOPIC_TITLE: Review Princely Cycle
 MODULE_NUM: '49'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/review-princely-cycle.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/review-princely-cycle.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review-princely-cycle.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/review-princely-cycle.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/review-princely-cycle.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/review-princely-cycle-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/review-princely-cycle-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/review-princely-cycle.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/review-princely-cycle.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/review-princely-cycle.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/review-princely-cycle.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/review-princely-cycle.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/review-princely-cycle-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/review-princely-cycle-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

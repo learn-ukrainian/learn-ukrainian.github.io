@@ -25,7 +25,7 @@ The auto-correction `_apply_activity_id_inserts` (line 3801) is the right shape 
 ## Worktree setup (mandatory)
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin
 git worktree add .worktrees/m20-inject-gate-fix -b fix/m20-inject-activity-gate-fail-on-unused origin/main
 cd .worktrees/m20-inject-gate-fix

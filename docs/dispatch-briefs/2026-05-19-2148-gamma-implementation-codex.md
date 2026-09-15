@@ -255,7 +255,7 @@ Each step has an explicit verification command. Pass MUST be a real tool output,
 7. **Add new test file** (step 5 above) — `tests/build/test_implementation_map_render.py`.
    → verify (test suite, MANDATORY per #M-7) — the worktree has no `.venv/`; either `cd` to the main repo for `pytest`, or symlink the venv into the worktree first:
    ```
-   cd /Users/krisztiankoos/projects/learn-ukrainian
+   cd .
    .venv/bin/python -m pytest tests/build/test_implementation_map.py tests/build/test_implementation_map_render.py tests/test_writer_prompt_structured_cot.py tests/test_writer_prompt_preemit_checklist.py -v
    cd -
    ```

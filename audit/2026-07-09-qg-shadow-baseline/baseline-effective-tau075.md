@@ -2,7 +2,7 @@
 
 - **Date:** 2026-07-09 18:43:53 UTC
 - **Tau (τ):** 0.75
-- **Artifacts Directory:** `/Users/krisztiankoos/projects/learn-ukrainian/audit/2026-07-06-qg-bakeoff-multirun`
+- **Artifacts Directory:** `audit/2026-07-06-qg-bakeoff-multirun`
 
 ## Summary Totals
 

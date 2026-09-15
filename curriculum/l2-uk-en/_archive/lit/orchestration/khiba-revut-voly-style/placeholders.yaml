@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: khiba-revut-voly-style
 TOPIC_TITLE: Стилістика соціально-психологічного роману
 MODULE_NUM: '34'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/khiba-revut-voly-style.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/khiba-revut-voly-style.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/khiba-revut-voly-style.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/khiba-revut-voly-style.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/khiba-revut-voly-style.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/khiba-revut-voly-style-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/khiba-revut-voly-style-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/khiba-revut-voly-style.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/khiba-revut-voly-style.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/khiba-revut-voly-style.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/khiba-revut-voly-style.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/khiba-revut-voly-style.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/khiba-revut-voly-style-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/khiba-revut-voly-style-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

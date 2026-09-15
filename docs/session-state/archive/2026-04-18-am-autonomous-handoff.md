@@ -17,7 +17,7 @@
 
 3. **Unloaded dead `com.learn-ukrainian.agent-watcher` LaunchAgent**
    - Plist pointed to `scripts/agent_watcher.py` which moved to `scripts/tools/agent_watcher.py` in commit `a541b8d0f` (script-org refactor, 2026-03-25). Result: launchd respawned a missing-script python process every 10 s for 3+ weeks → 191K-line `watcher-stderr.log` of "can't open file" errors.
-   - Action: `launchctl bootout` + plist removed (backup at `~/Library/LaunchAgents/com.learn-ukrainian.agent-watcher.plist.disabled-2026-04-18`). Watcher last ran usefully 2026-03-25; the user has been operating without it via `delegate.py` + `ab channel watch`. **If you want it back, update the plist `ProgramArguments` string to `/Users/krisztiankoos/projects/learn-ukrainian/scripts/tools/agent_watcher.py` and `launchctl bootstrap gui/$(id -u) <plist>`.**
+   - Action: `launchctl bootout` + plist removed (backup at `~/Library/LaunchAgents/com.learn-ukrainian.agent-watcher.plist.disabled-2026-04-18`). Watcher last ran usefully 2026-03-25; the user has been operating without it via `delegate.py` + `ab channel watch`. **If you want it back, update the plist `ProgramArguments` string to `scripts/tools/agent_watcher.py` and `launchctl bootstrap gui/$(id -u) <plist>`.**
 
 ### What's queued (continuing the autonomous plan below)
 

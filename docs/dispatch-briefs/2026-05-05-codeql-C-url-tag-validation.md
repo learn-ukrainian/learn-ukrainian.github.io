@@ -9,7 +9,7 @@
 ## Worktree instructions (mandatory)
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin main
 git worktree add -b gemini-codeql-C-url-tag-validation .worktrees/dispatch/gemini/codeql-C origin/main
 cd .worktrees/dispatch/gemini/codeql-C
@@ -96,8 +96,8 @@ For false positives (e.g. the regex is filtering specific known-safe content lik
 3. **Apply the right fix.** For URL: anchored parse. For tags: real parser or justified suppression.
 4. **Run tests** — many of the affected files ARE tests, so make sure your fix doesn't break test behavior:
    ```bash
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest tests/test_video_discovery.py tests/test_stress_annotation.py tests/test_publish_step.py tests/test_enrich.py -x -q
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest tests/ -k 'video_discovery or audit_external or wiki_compressor or honesty_annotator or contract_compliance or source_query' -x -q
+   .venv/bin/python -m pytest tests/test_video_discovery.py tests/test_stress_annotation.py tests/test_publish_step.py tests/test_enrich.py -x -q
+   .venv/bin/python -m pytest tests/ -k 'video_discovery or audit_external or wiki_compressor or honesty_annotator or contract_compliance or source_query' -x -q
    ```
 5. **Run ruff** on all modified files.
 6. **Commit:**

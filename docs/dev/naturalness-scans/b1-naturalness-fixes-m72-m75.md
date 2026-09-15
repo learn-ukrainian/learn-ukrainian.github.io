@@ -410,10 +410,10 @@ Based on naturalness scan report: /tmp/b1-naturalness-scan-m72-m86.md
 ## Technical Notes
 
 **Files modified:**
-- `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/activities/72-regions-west.yaml`
-- `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/activities/73-regions-east.yaml`
-- `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/activities/74-regions-south.yaml`
-- `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/activities/75-regions-center.yaml`
+- `curriculum/l2-uk-en/b1/activities/72-regions-west.yaml`
+- `curriculum/l2-uk-en/b1/activities/73-regions-east.yaml`
+- `curriculum/l2-uk-en/b1/activities/74-regions-south.yaml`
+- `curriculum/l2-uk-en/b1/activities/75-regions-center.yaml`
 
 **Methodology:**
 - Pattern: Edit unjumble activity `answer` field and corresponding `words` array

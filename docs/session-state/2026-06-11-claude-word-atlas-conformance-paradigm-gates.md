@@ -56,7 +56,7 @@ etymology), **#2985 (Atlas backlog EPIC)**. Git/GitHub hygiene done.
 
 ## Restart
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin -q
 gh run list --workflow=deploy-pages.yml --limit 2   # did the deploy land? live Atlas current?
 gh issue view 2985                                  # Atlas backlog EPIC + research findings

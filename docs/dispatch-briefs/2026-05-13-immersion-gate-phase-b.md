@@ -16,9 +16,9 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-Each bash block runs in a FRESH SHELL. CWD does NOT persist. Prefix every command with `cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/immersion-gate-phase-b-2026-05-13 && ...` or use absolute paths.
+Each bash block runs in a FRESH SHELL. CWD does NOT persist. Prefix every command with `cd .worktrees/dispatch/codex/immersion-gate-phase-b-2026-05-13 && ...` or use absolute paths.
 
-Inside worktree, `.venv/` is gitignored. Use `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
+Inside worktree, `.venv/` is gitignored. Use `.venv/bin/python`.
 
 ---
 
@@ -59,7 +59,7 @@ Inline "I checked X" claims without quoted raw output = hallucination per #M-4. 
 ### Step 1 — verify Phase A landed
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian && \
+cd . && \
 git log origin/main --oneline -10 | grep -i 'immersion-gate\|Phase A\|Card 1'
 ```
 
@@ -68,8 +68,8 @@ If no Phase A merge commit appears, ABORT — Phase A hasn't shipped yet. Print 
 Else verify import works:
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/immersion-gate-phase-b-2026-05-13 && \
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -c "
+cd .worktrees/dispatch/codex/immersion-gate-phase-b-2026-05-13 && \
+.venv/bin/python -c "
 from scripts.build.linear_pipeline import _l2_exposure_floor_gate, _long_uk_ceiling_gate, _component_density_gate, _advisory_immersion_pct
 from scripts.config import IMMERSION_POLICIES
 print('OK: imports work; a1 band count =', len(IMMERSION_POLICIES['a1']))
@@ -95,8 +95,8 @@ Create `scripts/audit/immersion_gate_calibration.py` (new file). It:
 ### Step 3 — run the driver
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/immersion-gate-phase-b-2026-05-13 && \
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python scripts/audit/immersion_gate_calibration.py
+cd .worktrees/dispatch/codex/immersion-gate-phase-b-2026-05-13 && \
+.venv/bin/python scripts/audit/immersion_gate_calibration.py
 ```
 
 Quote the script's final stdout summary.
@@ -136,9 +136,9 @@ Update or add test fixtures so the placeholder tests in `tests/test_immersion_ga
 
 Run:
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/immersion-gate-phase-b-2026-05-13 && \
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest tests/test_immersion_gates.py -x && \
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/config.py scripts/audit/immersion_gate_calibration.py
+cd .worktrees/dispatch/codex/immersion-gate-phase-b-2026-05-13 && \
+.venv/bin/pytest tests/test_immersion_gates.py -x && \
+.venv/bin/ruff check scripts/config.py scripts/audit/immersion_gate_calibration.py
 ```
 
 Quote final summary lines.

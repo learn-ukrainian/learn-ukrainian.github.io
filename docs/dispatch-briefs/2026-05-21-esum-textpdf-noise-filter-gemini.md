@@ -80,11 +80,11 @@ DO NOT regenerate `data/processed/esum_vol*.jsonl` or reload `data/sources.db` a
 ## Verification before commit
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/ruff check scripts/ingest/ tests/
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -m pytest tests/ -k esum -v --tb=short
+cd . && .venv/bin/ruff check scripts/ingest/ tests/
+cd . && .venv/bin/python -m pytest tests/ -k esum -v --tb=short
 # Smoke runs on all 6 vols:
 for vol in 1 2 3 4 5 6; do
-  cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python scripts/ingest/esum_ingest.py --input data/raw/esum/ia-text-pdf/vol${vol}-text.txt --output /tmp/esum_vol${vol}_filtered.jsonl --vol ${vol} --source-format text-pdf 2>&1 | tail -1
+  cd . && .venv/bin/python scripts/ingest/esum_ingest.py --input data/raw/esum/ia-text-pdf/vol${vol}-text.txt --output /tmp/esum_vol${vol}_filtered.jsonl --vol ${vol} --source-format text-pdf 2>&1 | tail -1
 done
 wc -l /tmp/esum_vol{1..6}_filtered.jsonl
 # Sanity-check the rejection on known-noise lemmas:

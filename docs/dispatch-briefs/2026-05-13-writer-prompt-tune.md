@@ -13,9 +13,9 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Always prefix with `cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/writer-prompt-tune-2026-05-13 && ...` or use absolute path.
+Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Always prefix with `cd .worktrees/dispatch/claude/writer-prompt-tune-2026-05-13 && ...` or use absolute path.
 
-Inside the worktree, `.venv/` is gitignored. Use MAIN checkout's `.venv` via absolute path: `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
+Inside the worktree, `.venv/` is gitignored. Use MAIN checkout's `.venv` via `.venv/bin/python`.
 
 ---
 
@@ -123,7 +123,7 @@ Prompt fix shape:
 
 1. **Worktree setup:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian && \
+   cd . && \
    git worktree add -b claude/writer-prompt-tune-2026-05-13 .worktrees/dispatch/claude/writer-prompt-tune-2026-05-13 origin/main
    ```
 2. **Read context first** — before editing, read:
@@ -135,8 +135,8 @@ Prompt fix shape:
 3. **Make minimal edits** — target 30-100 LOC of prompt-text diff total. Do NOT rewrite the whole phase prompt. Each of the three fails should produce a small, scoped, named edit. Add a `<!-- BUDGET DISCIPLINE -->` / `<!-- CITATION DISCIPLINE -->` / `<!-- IMMERSION DISCIPLINE -->` comment block if useful for future archaeology.
 4. **Linter / quick tests:**
    ```bash
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest tests/ -k "prompt or writer" -x
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check claude_extensions/
+   .venv/bin/pytest tests/ -k "prompt or writer" -x
+   .venv/bin/ruff check claude_extensions/
    ```
    Quote both summary lines.
 5. **Optional dry-validation** — DO NOT run a full V7 build (orchestrator policy: only user runs V7 builds). Instead, render the prompt template (whatever the `prompt-review` skill calls) and read the new prompt to confirm the budget/citation/immersion directives are actually present. Quote 3 lines (one per fail).

@@ -3,14 +3,14 @@ LEVEL: LIT_FANTASTIKA
 SLUG: kidruk-colony-hard-scifi
 TOPIC_TITLE: Kidruk Colony Hard Scifi
 MODULE_NUM: '23'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-fantastika/kidruk-colony-hard-scifi.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/meta/kidruk-colony-hard-scifi.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/kidruk-colony-hard-scifi.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/activities/kidruk-colony-hard-scifi.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/vocabulary/kidruk-colony-hard-scifi.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/research/kidruk-colony-hard-scifi-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/review/kidruk-colony-hard-scifi-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-fantastika/kidruk-colony-hard-scifi.yaml
+META_PATH: curriculum/l2-uk-en/lit-fantastika/meta/kidruk-colony-hard-scifi.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-fantastika/kidruk-colony-hard-scifi.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-fantastika/activities/kidruk-colony-hard-scifi.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-fantastika/vocabulary/kidruk-colony-hard-scifi.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-fantastika/research/kidruk-colony-hard-scifi-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-fantastika/review/kidruk-colony-hard-scifi-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-fantastika.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

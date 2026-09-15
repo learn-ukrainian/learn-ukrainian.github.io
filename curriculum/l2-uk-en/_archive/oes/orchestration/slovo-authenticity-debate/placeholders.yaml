@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: slovo-authenticity-debate
 TOPIC_TITLE: Slovo Authenticity Debate
 MODULE_NUM: '89'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/slovo-authenticity-debate.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/slovo-authenticity-debate.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/slovo-authenticity-debate.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/slovo-authenticity-debate.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/slovo-authenticity-debate.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/slovo-authenticity-debate-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/slovo-authenticity-debate-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/slovo-authenticity-debate.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/slovo-authenticity-debate.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/slovo-authenticity-debate.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/slovo-authenticity-debate.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/slovo-authenticity-debate.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/slovo-authenticity-debate-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/slovo-authenticity-debate-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

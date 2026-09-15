@@ -26,7 +26,7 @@ The `notes` field is descriptive metadata about a resource (textbook attribution
 ## Worktree setup
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin
 git worktree add .worktrees/m20-vesum-notes-scope -b fix/m20-vesum-skip-resource-notes origin/main
 cd .worktrees/m20-vesum-notes-scope

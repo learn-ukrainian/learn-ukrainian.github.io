@@ -140,11 +140,11 @@ The actual A1 target reader is somebody who's already opted into learning Ukrain
 ## Worktrees on disk at handoff
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian                                                          main (local at 20ab69072d, reference)
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/builds/a1-my-morning-20260527-163310          Pt 9 forensic (keep)
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/builds/a1-my-morning-20260527-185032          ⭐ Pt 10 baseline 9.5/10 (keep — the ship candidate)
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/v7.1-day3-codex-pilot-2026-05-28    V7.1+codex pilot trigger (can remove — codex PR for the build's nested branch landed)
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/v7.1-day3-m20-pilot-2026-05-28      V7.1+claude pilot trigger (can remove — preview server attempt didn't pan out)
+.                                                          main (local at 20ab69072d, reference)
+.worktrees/builds/a1-my-morning-20260527-163310          Pt 9 forensic (keep)
+.worktrees/builds/a1-my-morning-20260527-185032          ⭐ Pt 10 baseline 9.5/10 (keep — the ship candidate)
+.worktrees/dispatch/claude/v7.1-day3-codex-pilot-2026-05-28    V7.1+codex pilot trigger (can remove — codex PR for the build's nested branch landed)
+.worktrees/dispatch/claude/v7.1-day3-m20-pilot-2026-05-28      V7.1+claude pilot trigger (can remove — preview server attempt didn't pan out)
 ```
 
 Build branches in the local git database for forensic continuity:

@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: the-passion
 TOPIC_TITLE: The Passion
 MODULE_NUM: '33'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/the-passion.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/the-passion.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/the-passion.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/the-passion.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/the-passion.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/the-passion-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/the-passion-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/the-passion.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/the-passion.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/the-passion.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/the-passion.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/the-passion.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/the-passion-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/the-passion-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

@@ -117,7 +117,7 @@ When user says `go`, the Decision Card update should:
 ## Cold-start protocol for next session
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 source ./.envrc
 
 curl -s http://localhost:8765/api/state/manifest

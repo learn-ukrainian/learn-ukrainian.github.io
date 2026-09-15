@@ -28,7 +28,7 @@ Specific failure classes mapped to gate logic:
 ## Worktree setup (mandatory)
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin
 git worktree add .worktrees/m20-impl-shape -b fix/m20-writer-implementation-shape-by-type origin/main
 cd .worktrees/m20-impl-shape

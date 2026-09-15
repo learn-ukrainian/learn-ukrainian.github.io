@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: social-contract
 TOPIC_TITLE: Social Contract
 MODULE_NUM: '88'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/social-contract.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/social-contract.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/social-contract.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/social-contract.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/social-contract.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/social-contract-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/social-contract-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/social-contract.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/social-contract.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/social-contract.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/social-contract.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/social-contract.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/social-contract-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/social-contract-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

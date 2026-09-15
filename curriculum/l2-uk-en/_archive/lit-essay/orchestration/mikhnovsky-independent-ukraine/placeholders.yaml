@@ -3,14 +3,14 @@ LEVEL: LIT_ESSAY
 SLUG: mikhnovsky-independent-ukraine
 TOPIC_TITLE: Mikhnovsky Independent Ukraine
 MODULE_NUM: '8'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-essay/mikhnovsky-independent-ukraine.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/meta/mikhnovsky-independent-ukraine.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/mikhnovsky-independent-ukraine.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/activities/mikhnovsky-independent-ukraine.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/vocabulary/mikhnovsky-independent-ukraine.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/research/mikhnovsky-independent-ukraine-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/review/mikhnovsky-independent-ukraine-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-essay/mikhnovsky-independent-ukraine.yaml
+META_PATH: curriculum/l2-uk-en/lit-essay/meta/mikhnovsky-independent-ukraine.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-essay/mikhnovsky-independent-ukraine.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-essay/activities/mikhnovsky-independent-ukraine.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-essay/vocabulary/mikhnovsky-independent-ukraine.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-essay/research/mikhnovsky-independent-ukraine-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-essay/review/mikhnovsky-independent-ukraine-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-essay.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

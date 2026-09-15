@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: kulish-pathetique
 TOPIC_TITLE: Kulish Pathetique
 MODULE_NUM: '101'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/kulish-pathetique.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/kulish-pathetique.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/kulish-pathetique.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/kulish-pathetique.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/kulish-pathetique.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/kulish-pathetique-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/kulish-pathetique-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/kulish-pathetique.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/kulish-pathetique.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/kulish-pathetique.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/kulish-pathetique.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/kulish-pathetique.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/kulish-pathetique-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/kulish-pathetique-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

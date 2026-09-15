@@ -81,7 +81,7 @@ Run zizmor locally against the modified workflows and capture before/after count
 
 ```bash
 # From the worktree root:
-ln -s /Users/krisztiankoos/projects/learn-ukrainian/.venv .venv 2>/dev/null || true
+ln -s .venv .venv 2>/dev/null || true
 # Find the zizmor binary used in CI:
 grep -h "zizmor" .github/workflows/*.yml | head -3  # to confirm version
 # Re-run zizmor on the changed workflows:

@@ -28,7 +28,7 @@ Strands 2 and 3 of #1720 shipped in #1721 (`f8bd113bca`):
 This is a HARD project rule (`.claude/rules/delegate-must-use-worktree.md`). Run **exactly** these steps, in order, BEFORE any code edits:
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin main                          # avoid stale base — #1472 lesson
 git worktree add -b codex/1720-strand-1 .worktrees/dispatch/codex/1720-strand-1 origin/main
 cd .worktrees/dispatch/codex/1720-strand-1
@@ -147,7 +147,7 @@ In `tests/test_prompt_cot_tier1_scaffolding.py`:
 ## Validation before opening PR
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1720-strand-1
+cd .worktrees/dispatch/codex/1720-strand-1
 .venv/bin/python -m pytest \
   tests/test_writer_correction_no_op_diagnostic.py \
   tests/test_prompt_template_render.py \
@@ -175,10 +175,10 @@ If `bakeoff_aggregate.py` lacks a `--dry-run` flag, run it without args; it must
 After local validation passes:
 
 ```bash
-git -C /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1720-strand-1 \
+git -C .worktrees/dispatch/codex/1720-strand-1 \
   diff origin/main..HEAD > /tmp/strand-1-diff.txt
 
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude \
   "Adversarial review for #1720 strand 1. Read /tmp/strand-1-diff.txt. Focus: (A) does _TOOL_CITATION_RE correctly scope to <plan_reasoning> blocks only and not catch backticks in module.md prose? (B) is the canonical-only normalization choice (no family map) defensible vs the cleaner behavior promised by family aliases? (C) is the correction-pass binary choice (call-or-remove) prompted clearly enough that a writer won't pick a third path or game it? (D) does the new tool_theatre gate enter the existing correction-loop without ordering bugs vs the existing word_count / plan_sections / mdx_render gates? (E) test gaps — specifically: does test #4 (only_scans_plan_reasoning_blocks) actually exercise prose-backticks-outside-block? (F) telemetry shape — would the new tool_theatre_violations field break bakeoff_aggregate.py? Be adversarial." \
   --task-id 1720-strand-1-review \
@@ -192,7 +192,7 @@ Apply review feedback inline. Commit it as a separate commit with `Reviewed-By: 
 ## Open PR
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1720-strand-1
+cd .worktrees/dispatch/codex/1720-strand-1
 git push -u origin codex/1720-strand-1
 
 gh pr create \

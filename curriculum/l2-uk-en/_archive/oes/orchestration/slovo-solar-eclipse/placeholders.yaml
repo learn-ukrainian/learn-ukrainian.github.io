@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: slovo-solar-eclipse
 TOPIC_TITLE: Slovo Solar Eclipse
 MODULE_NUM: '77'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/slovo-solar-eclipse.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/slovo-solar-eclipse.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/slovo-solar-eclipse.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/slovo-solar-eclipse.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/slovo-solar-eclipse.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/slovo-solar-eclipse-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/slovo-solar-eclipse-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/slovo-solar-eclipse.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/slovo-solar-eclipse.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/slovo-solar-eclipse.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/slovo-solar-eclipse.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/slovo-solar-eclipse.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/slovo-solar-eclipse-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/slovo-solar-eclipse-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

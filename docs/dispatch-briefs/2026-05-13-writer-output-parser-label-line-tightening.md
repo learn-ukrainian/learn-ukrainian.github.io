@@ -12,7 +12,7 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Every command that uses `.venv/`, `scripts/`, or files in MAIN checkout MUST be prefixed with `cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/parser-label-tightening-2026-05-13 && ...` or absolute path. Inside the worktree, `.venv/` is gitignored — use MAIN checkout's `.venv` via absolute path: `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
+Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Every command that uses `.venv/`, `scripts/`, or files in MAIN checkout MUST be prefixed with `cd .worktrees/dispatch/codex/parser-label-tightening-2026-05-13 && ...` or absolute path. Inside the worktree, `.venv/` is gitignored — use MAIN checkout's `.venv` via `.venv/bin/python`.
 
 ---
 
@@ -326,7 +326,7 @@ All commands run in the worktree unless prefixed otherwise. The runtime auto-cre
 
 1. **Inspect the failed writer output to confirm understanding before coding:**
    ```bash
-   sed -n '1,20p;90,100p' /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/builds/a1-my-morning-20260513-122043/curriculum/l2-uk-en/a1/my-morning/writer_output.raw.md
+   sed -n '1,20p;90,100p' .worktrees/builds/a1-my-morning-20260513-122043/curriculum/l2-uk-en/a1/my-morning/writer_output.raw.md
    ```
    Confirm: lines 1–20 are `<plan_reasoning>` with `| activities.yaml |` rows; line 96 is ```` ```markdown file=module.md ````. If reality differs, **STOP and report** — the bug premise may have shifted.
 
@@ -341,25 +341,25 @@ All commands run in the worktree unless prefixed otherwise. The runtime auto-cre
 
 4. **Run the full linear_pipeline test suite to confirm zero regressions:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/parser-label-tightening-2026-05-13 && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest tests/build/test_linear_pipeline.py -v 2>&1 | tail -60
+   cd .worktrees/dispatch/codex/parser-label-tightening-2026-05-13 && .venv/bin/pytest tests/build/test_linear_pipeline.py -v 2>&1 | tail -60
    ```
    Quote the full output's last 30 lines (must show both new tests passed AND the existing mismatch test still passes). Per #M-7 (HARD RULE): pytest locally before push, full failure on red.
 
 5. **Run targeted broader pytest sanity-check on adjacent paths:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/parser-label-tightening-2026-05-13 && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest tests/build/ -v 2>&1 | tail -40
+   cd .worktrees/dispatch/codex/parser-label-tightening-2026-05-13 && .venv/bin/pytest tests/build/ -v 2>&1 | tail -40
    ```
    Quote summary line.
 
 6. **Lint:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/parser-label-tightening-2026-05-13 && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/build/linear_pipeline.py tests/build/test_linear_pipeline.py 2>&1 | tail -10
+   cd .worktrees/dispatch/codex/parser-label-tightening-2026-05-13 && .venv/bin/ruff check scripts/build/linear_pipeline.py tests/build/test_linear_pipeline.py 2>&1 | tail -10
    ```
    Quote final line — should be `All checks passed!`.
 
 7. **Commit (conventional message + #1956 closer):**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/parser-label-tightening-2026-05-13 && git add -A && git commit -m "$(cat <<'EOF'
+   cd .worktrees/dispatch/codex/parser-label-tightening-2026-05-13 && git add -A && git commit -m "$(cat <<'EOF'
    fix(linear_pipeline): tighten preceding-label detection to standalone-label-lines (#1956)
 
    Parser was scraping any line for word-boundary embed matches of artifact
@@ -397,12 +397,12 @@ All commands run in the worktree unless prefixed otherwise. The runtime auto-cre
 
 8. **Push branch:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/parser-label-tightening-2026-05-13 && git push -u origin codex/parser-label-tightening-2026-05-13
+   cd .worktrees/dispatch/codex/parser-label-tightening-2026-05-13 && git push -u origin codex/parser-label-tightening-2026-05-13
    ```
 
 9. **Open PR (NO auto-merge):**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/parser-label-tightening-2026-05-13 && gh pr create --title "fix(linear_pipeline): writer-output parser preceding-label-line tightening (#1956)" --body "$(cat <<'EOF'
+   cd .worktrees/dispatch/codex/parser-label-tightening-2026-05-13 && gh pr create --title "fix(linear_pipeline): writer-output parser preceding-label-line tightening (#1956)" --body "$(cat <<'EOF'
    ## Summary
 
    - Tightens `parse_writer_output_strict_json`'s preceding-label detection to require the artifact name be the dominant content of a standalone line (`_artifact_name_from_label_line` helper), not a word-boundary embed match anywhere in any line (`_artifact_name_from_text`).

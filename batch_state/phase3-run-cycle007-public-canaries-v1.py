@@ -51,13 +51,13 @@ GEMINI_MODEL = "Gemini 3.6 Flash (High)"
 GEMINI_FAMILY = "google"
 GEMINI_HARNESS = "agy"
 AGY_PRINT_TIMEOUT = "120m"
-AGY = Path("/Users/krisztiankoos/.local/bin/agy")
+AGY = Path(".local/bin/agy")
 GEMINI_SCHEMA_VERSION = "phase3_cycle007_gemini_public_canary_receipt_v1"
 
 GROK_MODEL = "grok-4.5"
 GROK_FAMILY = "xai"
 GROK_HARNESS = "native_grok"
-GROK = Path("/Users/krisztiankoos/.local/bin/grok")
+GROK = Path(".local/bin/grok")
 GROK_SCHEMA_VERSION = "phase3_cycle007_grok_public_canary_receipt_v1"
 MCP_START_TIMEOUT_SECONDS = 15.0
 

@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: lesia-ukrainka-intro
 TOPIC_TITLE: 'Леся Українка: Донька Прометея'
 MODULE_NUM: '50'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/lesia-ukrainka-intro.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/lesia-ukrainka-intro.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/lesia-ukrainka-intro.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/lesia-ukrainka-intro.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/lesia-ukrainka-intro.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/lesia-ukrainka-intro-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/lesia-ukrainka-intro-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/lesia-ukrainka-intro.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/lesia-ukrainka-intro.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/lesia-ukrainka-intro.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/lesia-ukrainka-intro.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/lesia-ukrainka-intro.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/lesia-ukrainka-intro-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/lesia-ukrainka-intro-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: koval-storinky
 TOPIC_TITLE: Koval Storinky
 MODULE_NUM: '188'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/koval-storinky.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/koval-storinky.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/koval-storinky.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/koval-storinky.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/koval-storinky.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/koval-storinky-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/koval-storinky-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/koval-storinky.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/koval-storinky.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/koval-storinky.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/koval-storinky.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/koval-storinky.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/koval-storinky-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/koval-storinky-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

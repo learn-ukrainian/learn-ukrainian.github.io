@@ -228,7 +228,7 @@ Verify (in test or in code) that the SELF_REVIEW_DETECTED audit gate trips when 
 
 Run the full sweep from the worktree (`.venv/bin/python` needs the main repo's `.venv`; either symlink or cd to main):
 ```
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 .venv/bin/ruff check scripts/agent_runtime/ scripts/build/linear_pipeline.py scripts/build/v7_build.py tests/agent_runtime/
 .venv/bin/python -m pytest tests/agent_runtime/adapters/ tests/test_v7_writer_dispatch.py tests/test_agent_runtime.py -v
 cd -
@@ -240,7 +240,7 @@ All must be green. Quote the final `N passed in M.MMs` and `All checks passed!` 
 Verify each new writer reaches the writer phase (not a wiring error) on a single existing A1 module. Use `a1/my-morning` with a worktree that's reaped after smoke verification. Per `memory/MEMORY.md` BUILDS rule: V7 builds may be agent-run during autonomous orchestration **with `--worktree`**.
 
 ```
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 .venv/bin/python -u scripts/build/v7_build.py a1 my-morning --writer deepseek-tools --worktree 2>&1 | grep --line-buffered '^{"event"' | head -50
 .venv/bin/python -u scripts/build/v7_build.py a1 my-morning --writer qwen-tools --worktree 2>&1 | grep --line-buffered '^{"event"' | head -50
 ```
@@ -279,7 +279,7 @@ gh pr create --base main --head codex/task5-deepseek-qwen-v7-wiring-20260519 --t
 
 1. **Worktree setup.**
    ```
-   cd /Users/krisztiankoos/projects/learn-ukrainian
+   cd .
    git fetch origin
    git worktree add -b codex/task5-deepseek-qwen-v7-wiring-20260519 .worktrees/dispatch/codex/task5-deepseek-qwen-v7-wiring-20260519 origin/main
    cd .worktrees/dispatch/codex/task5-deepseek-qwen-v7-wiring-20260519

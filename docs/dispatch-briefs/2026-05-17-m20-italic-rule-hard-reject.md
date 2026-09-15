@@ -15,7 +15,7 @@ Same shape as merged PR #2094 (which took wiki obligation coverage from 22% → 
 ## Worktree setup (mandatory)
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin
 git worktree add .worktrees/m20-italic-rule -b fix/m20-writer-italic-bad-form-hard-reject origin/main
 cd .worktrees/m20-italic-rule

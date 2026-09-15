@@ -60,7 +60,7 @@
 ## Restart
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin -q && git merge --ff-only origin/main
 curl -s http://localhost:8765/api/delegate/active           # is a1-poc-lesson-pilot done?
 gh pr list --state open --json number,title,headRefName     # find its PR

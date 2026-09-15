@@ -143,7 +143,7 @@ Create a throwaway worktree of `learn-ukrainian` so the `.clawpatch/`
 directory doesn't pollute the main repo until we want it:
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git worktree add .worktrees/clawpatch-trial main
 cd .worktrees/clawpatch-trial
 ~/sandbox/clawpatch-trial/node_modules/.bin/clawpatch init

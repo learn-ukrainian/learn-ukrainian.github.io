@@ -147,7 +147,7 @@ reaches the writer prompt.
 `codex/2018-activity-schema-gate-2026-05-16`.
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/2018-activity-schema-gate-2026-05-16
+cd .worktrees/dispatch/codex/2018-activity-schema-gate-2026-05-16
 git log -1 --oneline   # verify you're on post-#2019 main
 ```
 

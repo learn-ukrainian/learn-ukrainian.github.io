@@ -170,7 +170,7 @@ checkpoint so the biography modules do not invent their own historical frame.
 
 - Current BIO SSOT: `curriculum/l2-uk-en/curriculum.yaml` had 310 BIO modules
   before this pass.
-- Local textbook search: `/Users/krisztiankoos/projects/learn-ukrainian/data/sources.db`
+- Local textbook search: `data/sources.db`
   `textbooks` table, especially `ukrlit` and history sources.
 - Local LIT cross-reference audit:
   `docs/audits/bio-lit-cross-reference-gaps.md`.

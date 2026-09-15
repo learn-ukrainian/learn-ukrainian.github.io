@@ -13,7 +13,7 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-Each bash block runs in a FRESH SHELL. Prefix every command with `cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-shape-contract-2026-05-13 && ...` or absolute path. Inside the worktree, `.venv/` is gitignored — use main checkout's `.venv` via absolute path: `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
+Each bash block runs in a FRESH SHELL. Prefix every command with `cd .worktrees/dispatch/codex/a1-shape-contract-2026-05-13 && ...` or absolute path. Inside the worktree, `.venv/` is gitignored — use main checkout's `.venv` via `.venv/bin/python`.
 
 ---
 
@@ -46,7 +46,7 @@ Inline "I checked X" without quoted raw output = hallucination per #M-4. Quote.
 Read these files FIRST so the implementation respects existing architecture:
 
 ```bash
-cat /Users/krisztiankoos/projects/learn-ukrainian/docs/decisions/pending/2026-05-13-a1-m15-24-shape-contract.md
+cat docs/decisions/pending/2026-05-13-a1-m15-24-shape-contract.md
 sed -n '83,115p;195,230p' scripts/build/phases/linear-write.md   # citation + dialogue sections
 sed -n '5290,5340p;5392,5450p' scripts/build/linear_pipeline.py  # immersion + long_uk gate code
 grep -n "def _citation_gate\|def _count_uk_dialogue_lines\|def _unsupported_run_segments" scripts/build/linear_pipeline.py
@@ -299,13 +299,13 @@ Adapt test signatures and fixtures to whatever the actual citation_matcher API t
 
 6. **Run full test suite:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-shape-contract-2026-05-13 && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest tests/build/test_linear_pipeline.py -v 2>&1 | tail -30
+   cd .worktrees/dispatch/codex/a1-shape-contract-2026-05-13 && .venv/bin/pytest tests/build/test_linear_pipeline.py -v 2>&1 | tail -30
    ```
    Quote final summary. Per #M-7, pytest locally before push.
 
 7. **Lint:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/a1-shape-contract-2026-05-13 && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/build/ tests/build/ 2>&1 | tail -5
+   cd .worktrees/dispatch/codex/a1-shape-contract-2026-05-13 && .venv/bin/ruff check scripts/build/ tests/build/ 2>&1 | tail -5
    ```
    Quote final line.
 

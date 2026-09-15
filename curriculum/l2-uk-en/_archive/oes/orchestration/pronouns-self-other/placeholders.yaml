@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: pronouns-self-other
 TOPIC_TITLE: Pronouns Self Other
 MODULE_NUM: '9'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/pronouns-self-other.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/pronouns-self-other.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/pronouns-self-other.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/pronouns-self-other.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/pronouns-self-other.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/pronouns-self-other-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/pronouns-self-other-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/pronouns-self-other.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/pronouns-self-other.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/pronouns-self-other.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/pronouns-self-other.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/pronouns-self-other.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/pronouns-self-other-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/pronouns-self-other-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

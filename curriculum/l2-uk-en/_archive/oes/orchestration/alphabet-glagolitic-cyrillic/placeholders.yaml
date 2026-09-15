@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: alphabet-glagolitic-cyrillic
 TOPIC_TITLE: Alphabet Glagolitic Cyrillic
 MODULE_NUM: '2'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/alphabet-glagolitic-cyrillic.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/alphabet-glagolitic-cyrillic.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/alphabet-glagolitic-cyrillic.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/alphabet-glagolitic-cyrillic.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/alphabet-glagolitic-cyrillic.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/alphabet-glagolitic-cyrillic-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/alphabet-glagolitic-cyrillic-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/alphabet-glagolitic-cyrillic.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/alphabet-glagolitic-cyrillic.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/alphabet-glagolitic-cyrillic.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/alphabet-glagolitic-cyrillic.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/alphabet-glagolitic-cyrillic.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/alphabet-glagolitic-cyrillic-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/alphabet-glagolitic-cyrillic-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: synonima-slaveno-roska
 TOPIC_TITLE: Synonima Slaveno Roska
 MODULE_NUM: '104'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/synonima-slaveno-roska.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/synonima-slaveno-roska.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/synonima-slaveno-roska.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/synonima-slaveno-roska.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/synonima-slaveno-roska.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/synonima-slaveno-roska-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/synonima-slaveno-roska-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/synonima-slaveno-roska.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/synonima-slaveno-roska.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/synonima-slaveno-roska.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/synonima-slaveno-roska.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/synonima-slaveno-roska.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/synonima-slaveno-roska-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/synonima-slaveno-roska-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

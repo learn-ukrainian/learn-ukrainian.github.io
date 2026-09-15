@@ -3,14 +3,14 @@ LEVEL: LIT_FANTASTIKA
 SLUG: kidruk-colony
 TOPIC_TITLE: Kidruk Colony
 MODULE_NUM: '19'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-fantastika/kidruk-colony.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/meta/kidruk-colony.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/kidruk-colony.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/activities/kidruk-colony.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/vocabulary/kidruk-colony.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/research/kidruk-colony-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/review/kidruk-colony-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-fantastika/kidruk-colony.yaml
+META_PATH: curriculum/l2-uk-en/lit-fantastika/meta/kidruk-colony.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-fantastika/kidruk-colony.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-fantastika/activities/kidruk-colony.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-fantastika/vocabulary/kidruk-colony.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-fantastika/research/kidruk-colony-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-fantastika/review/kidruk-colony-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-fantastika.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

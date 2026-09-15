@@ -3,14 +3,14 @@ LEVEL: LIT_JUVENILE
 SLUG: pchilka-fables
 TOPIC_TITLE: Pchilka Fables
 MODULE_NUM: '2'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-juvenile/pchilka-fables.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/meta/pchilka-fables.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/pchilka-fables.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/activities/pchilka-fables.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/vocabulary/pchilka-fables.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/research/pchilka-fables-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-juvenile/review/pchilka-fables-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-juvenile/pchilka-fables.yaml
+META_PATH: curriculum/l2-uk-en/lit-juvenile/meta/pchilka-fables.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-juvenile/pchilka-fables.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-juvenile/activities/pchilka-fables.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-juvenile/vocabulary/pchilka-fables.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-juvenile/research/pchilka-fables-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-juvenile/review/pchilka-fables-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-juvenile.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

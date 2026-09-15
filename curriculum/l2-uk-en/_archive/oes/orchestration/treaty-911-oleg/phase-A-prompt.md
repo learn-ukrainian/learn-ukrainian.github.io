@@ -10,13 +10,13 @@
 Read the plan file (SOURCE OF TRUTH):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/treaty-911-oleg.yaml
+curriculum/l2-uk-en/plans/oes/treaty-911-oleg.yaml
 ```
 
 Read the current meta file (for reference — you will replace the content_outline):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/treaty-911-oleg.yaml
+curriculum/l2-uk-en/oes/meta/treaty-911-oleg.yaml
 ```
 
 ---

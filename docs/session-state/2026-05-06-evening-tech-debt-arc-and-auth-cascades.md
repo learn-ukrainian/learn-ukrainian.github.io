@@ -63,10 +63,10 @@ Earlier in the session: `gh pr create` and `gh issue create` failed with `Resour
 
 **Worktrees:**
 ```
-/Users/krisztiankoos/projects/learn-ukrainian              dcb091e6a9 [main]
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-interactive    (detached HEAD)
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1725-verbatim-quoting    (3 commits, no PR)
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1754-claude-oauth        (PR #1756 open)
+.              dcb091e6a9 [main]
+.worktrees/codex-interactive    (detached HEAD)
+.worktrees/dispatch/codex/1725-verbatim-quoting    (3 commits, no PR)
+.worktrees/dispatch/codex/1754-claude-oauth        (PR #1756 open)
 ```
 
 ---
@@ -153,7 +153,7 @@ User asked "do we have stale tickets?" — surfaced 2 candidates (#1730 yargs fi
 ## Cold-start protocol for next session
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 source ./.envrc
 
 # 1. Fix the PAT first (blocking all gh write ops on org repos)

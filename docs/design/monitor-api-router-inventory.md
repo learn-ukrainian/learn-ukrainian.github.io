@@ -27,7 +27,7 @@ two prefixes; `reviewer_ghosts_router` uses a multiline `include_router` call).
 grep -c 'include_router' scripts/api/main.py
 # 48
 
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -c "
+.venv/bin/python -c "
 import ast
 from pathlib import Path
 tree = ast.parse(Path('scripts/api/main.py').read_text())
@@ -70,7 +70,7 @@ Decorator-sum script (complete `ROUTER_MAP`; `NESTED` adds child router files
 included via `router.include_router` anywhere under `scripts/api/`):
 
 ```bash
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -c "
+.venv/bin/python -c "
 import re
 from pathlib import Path
 ROUTER_MAP = {
@@ -138,7 +138,7 @@ print(total)
 "
 # 271
 
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -c "
+.venv/bin/python -c "
 import sys; sys.path.insert(0,'.')
 from scripts.api.main import app
 from tests.api.opsec_sweep.registry import FROZEN_HTTP_OPERATION_COUNT, FROZEN_WEBSOCKET_ROUTE_COUNT
@@ -165,7 +165,7 @@ Reproduce by replaying the fixture's setattr invocations and deduplicating on
 grep -c 'monkeypatch\.setattr' tests/api/opsec_sweep/test_opsec_route_sweep.py
 # 61   (static call sites in source; loops expand at runtime)
 
-/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python docs/design/count_opsec_fixture_seams.py
+.venv/bin/python docs/design/count_opsec_fixture_seams.py
 # unique_logical_seams: 198
 # router_attributed_unique: 194
 # global_backstops: 4

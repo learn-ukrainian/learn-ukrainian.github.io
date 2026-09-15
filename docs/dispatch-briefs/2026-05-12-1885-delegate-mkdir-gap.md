@@ -12,7 +12,7 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-Each bash block runs in a FRESH SHELL. Use absolute paths and `cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1885-delegate-mkdir-gap && ...` for every command. Use `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python` for the venv.
+Each bash block runs in a FRESH SHELL. Use absolute paths and `cd .worktrees/dispatch/codex/1885-delegate-mkdir-gap && ...` for every command. Use `.venv/bin/python` for the venv.
 
 ---
 
@@ -40,7 +40,7 @@ When `task_id` contains a `/` (e.g. `codex/1885-foo`), the implicit subdir is no
 
 1. **Verify worktree base:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1885-delegate-mkdir-gap && git log --oneline -3
+   cd .worktrees/dispatch/codex/1885-delegate-mkdir-gap && git log --oneline -3
    ```
    Quote raw output. Branch must be `codex/1885-delegate-mkdir-gap`.
 
@@ -86,13 +86,13 @@ When `task_id` contains a `/` (e.g. `codex/1885-foo`), the implicit subdir is no
 
 6. **Run tests:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1885-delegate-mkdir-gap && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest tests/test_delegate*.py -v 2>&1 | tail -20
+   cd .worktrees/dispatch/codex/1885-delegate-mkdir-gap && .venv/bin/python -m pytest tests/test_delegate*.py -v 2>&1 | tail -20
    ```
    Quote raw final summary line. Bare "tests pass" is not acceptable per #M-4.
 
 7. **Ruff:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/1885-delegate-mkdir-gap && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/delegate.py tests/test_delegate*.py 2>&1 | tail -10
+   cd .worktrees/dispatch/codex/1885-delegate-mkdir-gap && .venv/bin/ruff check scripts/delegate.py tests/test_delegate*.py 2>&1 | tail -10
    ```
    Quote raw output.
 

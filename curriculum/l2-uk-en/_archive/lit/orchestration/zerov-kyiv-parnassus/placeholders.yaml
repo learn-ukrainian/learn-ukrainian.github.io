@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: zerov-kyiv-parnassus
 TOPIC_TITLE: 'Микола Зеров: Київський Парнас'
 MODULE_NUM: '87'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/zerov-kyiv-parnassus.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/zerov-kyiv-parnassus.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/zerov-kyiv-parnassus.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/zerov-kyiv-parnassus.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/zerov-kyiv-parnassus.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/zerov-kyiv-parnassus-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/zerov-kyiv-parnassus-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/zerov-kyiv-parnassus.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/zerov-kyiv-parnassus.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/zerov-kyiv-parnassus.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/zerov-kyiv-parnassus.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/zerov-kyiv-parnassus.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/zerov-kyiv-parnassus-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/zerov-kyiv-parnassus-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

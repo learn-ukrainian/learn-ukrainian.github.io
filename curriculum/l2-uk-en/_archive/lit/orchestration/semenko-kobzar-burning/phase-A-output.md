@@ -11,7 +11,7 @@
 
 ============================================================
 
-Activate skill full-rebuild-lit. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/semenko-kobzar-burning/phase-A-prompt.md
+Activate skill full-rebuild-lit. Read and execute the instructions at curriculum/l2-uk-en/lit/orchestration/semenko-kobzar-burning/phase-A-prompt.md
 
 ============================================================
 📎 Attached Data:
@@ -22,7 +22,7 @@ Activate skill full-rebuild-lit. Read and execute the instructions at /Users/kri
 CRITICAL INSTRUCTION 1: I need to use `read_file` instead of `cat` or `head` within a bash command.
 CRITICAL INSTRUCTION 2: Related tools: `read_file`. I will use `read_file` to read the prompt at the specified path.
 
-1. I need to read the instructions at `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/semenko-kobzar-burning/phase-A-prompt.md`.
+1. I need to read the instructions at `curriculum/l2-uk-en/lit/orchestration/semenko-kobzar-burning/phase-A-prompt.md`.
 2. I will use the `read_file` tool.
 3. Once I read it, I will generate the requested text output. I must not use any other tools (like write_file or run_shell_command) as per the absolute rules. I will just output text.
 4. Let's read the file now. The prompt should tell me exactly what to do. I am a TEXT GENERATOR executing a specific task. I must produce text output between delimiters. I must not write or edit any files. I must not send messages. I must not run shell commands that modify state. I must not take initiative. I must not delegate. I must output ONLY text.
@@ -37,20 +37,20 @@ Wait, I should not use `run_shell_command` with `cat`. I will use `read_file`. T
 I can just read the file and follow the prompt.
 
 I will use `read_file` to read the prompt file. Let's do that.
-Path: `/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/semenko-kobzar-burning/phase-A-prompt.md`
+Path: `curriculum/l2-uk-en/lit/orchestration/semenko-kobzar-burning/phase-A-prompt.md`
 
 Wait, let's look at the available subagents/tools. `read_file` is available.
 I'll do that.
 Once I read the file, I will follow its instructions and generate the text.
 The prompt mentions I am executing "Turn 1" or something similar based on the template. Let's read the prompt first.
 The instructions say:
-"Activate skill full-rebuild-lit. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/semenko-kobzar-burning/phase-A-prompt.md"
+"Activate skill full-rebuild-lit. Read and execute the instructions at curriculum/l2-uk-en/lit/orchestration/semenko-kobzar-burning/phase-A-prompt.md"
 I have activated the skill. Now I read the prompt.
 
 Let's read the file using `read_file`.
 ```json
 {
-  "file_path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/semenko-kobzar-burning/phase-A-prompt.md"
+  "file_path": "curriculum/l2-uk-en/lit/orchestration/semenko-kobzar-burning/phase-A-prompt.md"
 }
 ```
 I will output the tool call.
@@ -65,7 +65,7 @@ Let's execute the `read_file`.
 ```
 call:default_api:read_file
 {
-  "file_path": "/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/semenko-kobzar-burning/phase-A-prompt.md"
+  "file_path": "curriculum/l2-uk-en/lit/orchestration/semenko-kobzar-burning/phase-A-prompt.md"
 }
 ```
 Wait, the instruction says "You may read files (cat, head)". But I am instructed "NEVER run cat inside a bash command to create a new file or append to an existing file if custom tools exist." and "DO NOT use ls for listing, cat for viewing... if custom tools that perform these functionalities are available." I have `read_file`, so I must use `read_file`. It's perfectly aligned.
@@ -79,8 +79,8 @@ CRITICAL INSTRUCTION 2: Related tools: `read_file`, `google_web_search`.
 
 The task requires me to act as a TEXT GENERATOR executing Phase A.
 I need to:
-1. Read the plan file (`/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/semenko-kobzar-burning.yaml`)
-2. Read the meta file (`/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/semenko-kobzar-burning.yaml`)
+1. Read the plan file (`curriculum/l2-uk-en/plans/lit/semenko-kobzar-burning.yaml`)
+2. Read the meta file (`curriculum/l2-uk-en/lit/meta/semenko-kobzar-burning.yaml`)
 3. Research the topic "Semenko Kobzar Burning" using Ukrainian-language sources. Since I don't have direct web access in the orchestration mode except what I can generate from my own knowledge base (or if I could use a tool, but I am in read-only mode and the prompt says "DO NOT RUN SHELL COMMANDS that modify state. You may read files (cat, head)"). Wait, the rules say "DO NOT WRITE OR EDIT ANY FILES... DO NOT SEND MESSAGES... DO NOT RUN SHELL COMMANDS that modify state... OUTPUT ONLY TEXT... Do not explore the codebase beyond what the task requires."
 I should use my internal knowledge for the research if I can't browse, or I can just use `google_web_search`? No, the rule says "OUTPUT ONLY TEXT. Your ONLY job is to read input files and produce text output between delimiters. DO NOT WRITE OR EDIT ANY FILES... DO NOT SEND MESSAGES... DO NOT RUN SHELL COMMANDS that modify state... IF YOU ARE TEMPTED TO DO ANYTHING OTHER THAN WHAT'S DESCRIBED ABOVE: DON'T. Complete the task and stop."
 

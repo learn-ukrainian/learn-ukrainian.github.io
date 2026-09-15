@@ -3,14 +3,14 @@ LEVEL: LIT_HIST_FIC
 SLUG: zahrebelny-death-in-kyiv
 TOPIC_TITLE: Zahrebelny Death In Kyiv
 MODULE_NUM: '7'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-hist-fic/zahrebelny-death-in-kyiv.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/meta/zahrebelny-death-in-kyiv.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/zahrebelny-death-in-kyiv.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/activities/zahrebelny-death-in-kyiv.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/vocabulary/zahrebelny-death-in-kyiv.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/research/zahrebelny-death-in-kyiv-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/review/zahrebelny-death-in-kyiv-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-hist-fic/zahrebelny-death-in-kyiv.yaml
+META_PATH: curriculum/l2-uk-en/lit-hist-fic/meta/zahrebelny-death-in-kyiv.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-hist-fic/zahrebelny-death-in-kyiv.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-hist-fic/activities/zahrebelny-death-in-kyiv.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-hist-fic/vocabulary/zahrebelny-death-in-kyiv.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-hist-fic/research/zahrebelny-death-in-kyiv-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-hist-fic/review/zahrebelny-death-in-kyiv-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-hist-fic.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

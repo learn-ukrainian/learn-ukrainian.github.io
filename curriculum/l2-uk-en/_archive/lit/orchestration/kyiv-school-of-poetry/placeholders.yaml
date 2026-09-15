@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: kyiv-school-of-poetry
 TOPIC_TITLE: Kyiv School Of Poetry
 MODULE_NUM: '221'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/kyiv-school-of-poetry.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/kyiv-school-of-poetry.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/kyiv-school-of-poetry.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/kyiv-school-of-poetry.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/kyiv-school-of-poetry.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/kyiv-school-of-poetry-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/kyiv-school-of-poetry-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/kyiv-school-of-poetry.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/kyiv-school-of-poetry.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/kyiv-school-of-poetry.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/kyiv-school-of-poetry.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/kyiv-school-of-poetry.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/kyiv-school-of-poetry-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/kyiv-school-of-poetry-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

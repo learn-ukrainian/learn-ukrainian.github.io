@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: the-ballads
 TOPIC_TITLE: 'Балади: Між Світами'
 MODULE_NUM: '12'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/the-ballads.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/the-ballads.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/the-ballads.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/the-ballads.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/the-ballads.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/the-ballads-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/the-ballads-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/the-ballads.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/the-ballads.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/the-ballads.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/the-ballads.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/the-ballads.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/the-ballads-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/the-ballads-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

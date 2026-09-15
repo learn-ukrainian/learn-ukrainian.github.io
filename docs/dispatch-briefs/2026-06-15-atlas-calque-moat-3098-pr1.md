@@ -32,10 +32,10 @@ Code + rules-data + tests ONLY. **Do NOT regenerate or commit `site/src/data/lex
 post-merge.
 
 ## Numbered steps
-1. `cd /Users/krisztiankoos/projects/learn-ukrainian && git fetch origin` (`--worktree` from origin/main).
+1. `cd . && git fetch origin` (`--worktree` from origin/main).
 2. Read `enrich_manifest.py` §5/§6 path; build the cited participle-calque rule set; wire the §6 note; tests.
-3. `cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -m pytest -k "calque or lexicon or enrich" -q` → paste summary. Test must prove `працюючий` yields a §6 note `→ працівник` with an Antonenko citation.
-4. `cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/ruff check scripts/ tests/` → paste final line.
+3. `cd . && .venv/bin/python -m pytest -k "calque or lexicon or enrich" -q` → paste summary. Test must prove `працюючий` yields a §6 note `→ працівник` with an Antonenko citation.
+4. `cd . && .venv/bin/ruff check scripts/ tests/` → paste final line.
 5. Confirm no manifest staged: `git status --short` shows NO `site/src/data/lexicon-manifest.json`.
 6. Commit `feat(lexicon): §6 active-participle calque correction layer (PR1 of #3098)`.
 7. `git push -u origin <branch>`; `gh pr create` referencing #3098 (note PR1/N). NO auto-merge.

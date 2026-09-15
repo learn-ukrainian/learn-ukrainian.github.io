@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: property-boundaries
 TOPIC_TITLE: Property Boundaries
 MODULE_NUM: '64'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/property-boundaries.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/property-boundaries.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/property-boundaries.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/property-boundaries.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/property-boundaries.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/property-boundaries-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/property-boundaries-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/property-boundaries.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/property-boundaries.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/property-boundaries.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/property-boundaries.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/property-boundaries.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/property-boundaries-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/property-boundaries-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

@@ -3,14 +3,14 @@ LEVEL: LIT_HIST_FIC
 SLUG: ivanychuk-scar
 TOPIC_TITLE: Ivanychuk Scar
 MODULE_NUM: '10'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-hist-fic/ivanychuk-scar.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/meta/ivanychuk-scar.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/ivanychuk-scar.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/activities/ivanychuk-scar.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/vocabulary/ivanychuk-scar.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/research/ivanychuk-scar-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-hist-fic/review/ivanychuk-scar-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-hist-fic/ivanychuk-scar.yaml
+META_PATH: curriculum/l2-uk-en/lit-hist-fic/meta/ivanychuk-scar.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-hist-fic/ivanychuk-scar.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-hist-fic/activities/ivanychuk-scar.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-hist-fic/vocabulary/ivanychuk-scar.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-hist-fic/research/ivanychuk-scar-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-hist-fic/review/ivanychuk-scar-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-hist-fic.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

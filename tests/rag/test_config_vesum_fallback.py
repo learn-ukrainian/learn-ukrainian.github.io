@@ -1,7 +1,7 @@
 """Tests for scripts.rag.config._resolve_vesum_db_path (#6542 review finding).
 
 The fallback used to hardcode one operator's absolute path
-(``/Users/krisztiankoos/projects/learn-ukrainian``) so that a dispatch
+(``.``) so that a dispatch
 worktree — which excludes ``data/`` via ``worktree.sparsePaths`` — could
 still find the primary checkout's ``vesum.db``. That broke for every other
 operator/machine. This resolves the primary root from the shared ``.git``

@@ -3,13 +3,13 @@ LEVEL: LIT_CRIMEA
 SLUG: dzhelyal-letters-from-cell
 TOPIC_TITLE: Dzhelyal Letters From Cell
 MODULE_NUM: '3'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-crimea/dzhelyal-letters-from-cell.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-crimea/meta/dzhelyal-letters-from-cell.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-crimea/dzhelyal-letters-from-cell.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-crimea/activities/dzhelyal-letters-from-cell.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-crimea/vocabulary/dzhelyal-letters-from-cell.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-crimea/research/dzhelyal-letters-from-cell-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-crimea/review/dzhelyal-letters-from-cell-review.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-crimea/dzhelyal-letters-from-cell.yaml
+META_PATH: curriculum/l2-uk-en/lit-crimea/meta/dzhelyal-letters-from-cell.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-crimea/dzhelyal-letters-from-cell.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-crimea/activities/dzhelyal-letters-from-cell.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-crimea/vocabulary/dzhelyal-letters-from-cell.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-crimea/research/dzhelyal-letters-from-cell-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-crimea/review/dzhelyal-letters-from-cell-review.md
 QUICK_REF_PATH: ''
 SCHEMA_PATH: schemas/activities-lit-crimea.schema.json
 WORD_TARGET: '5000'

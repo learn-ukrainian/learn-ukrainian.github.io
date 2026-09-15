@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: marko-vovchok-marusya
 TOPIC_TITLE: '«Маруся»: Українська легенда в Європі'
 MODULE_NUM: '36'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/marko-vovchok-marusya.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/marko-vovchok-marusya.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/marko-vovchok-marusya.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/marko-vovchok-marusya.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/marko-vovchok-marusya.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/marko-vovchok-marusya-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/marko-vovchok-marusya-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/marko-vovchok-marusya.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/marko-vovchok-marusya.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/marko-vovchok-marusya.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/marko-vovchok-marusya.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/marko-vovchok-marusya.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/marko-vovchok-marusya-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/marko-vovchok-marusya-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

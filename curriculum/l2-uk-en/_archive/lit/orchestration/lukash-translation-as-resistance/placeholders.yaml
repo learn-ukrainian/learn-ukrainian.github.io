@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: lukash-translation-as-resistance
 TOPIC_TITLE: Lukash Translation As Resistance
 MODULE_NUM: '124'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/lukash-translation-as-resistance.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/lukash-translation-as-resistance.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/lukash-translation-as-resistance.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/lukash-translation-as-resistance.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/lukash-translation-as-resistance.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/lukash-translation-as-resistance-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/lukash-translation-as-resistance-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/lukash-translation-as-resistance.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/lukash-translation-as-resistance.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/lukash-translation-as-resistance.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/lukash-translation-as-resistance.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/lukash-translation-as-resistance.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/lukash-translation-as-resistance-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/lukash-translation-as-resistance-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

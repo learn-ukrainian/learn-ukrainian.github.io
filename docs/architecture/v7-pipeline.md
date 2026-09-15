@@ -601,85 +601,85 @@ order from directory listing alone. The current V7 phase order comes from
 ## Verification Evidence
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba docs/architecture/ARCHITECTURE.md | sed -n '1,30p'
 raw: 11  > Read this doc only for V5/V6 historical context. Specific lines below that hardcode "Gemini builds → Claude reviews" are V5/V6 paradigm and are NOT current reboot policy.
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba scripts/build/v7_build.py | sed -n '1,260p'
 raw: 2  """CLI wrapper for the V7 linear module pipeline."""
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: rg -n "PIPELINE|PHASE|phase|argparse|--worktree|plan|knowledge_packet|writer|python_qg|wiki_coverage_gate|wiki_coverage_review|llm_qg|mdx" scripts/build/v7_build.py
 raw: 670:        phase = "plan"
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: rg -n "PIPELINE|PHASE|phase|argparse|--worktree|plan|knowledge_packet|writer|python_qg|wiki_coverage_gate|wiki_coverage_review|llm_qg|mdx" scripts/build/v7_build.py
 raw: 678:        phase = "knowledge_packet"
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: rg -n "PIPELINE|PHASE|phase|argparse|--worktree|plan|knowledge_packet|writer|python_qg|wiki_coverage_gate|wiki_coverage_review|llm_qg|mdx" scripts/build/v7_build.py
 raw: 718:        phase = "writer"
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: rg -n "PIPELINE|PHASE|phase|argparse|--worktree|plan|knowledge_packet|writer|python_qg|wiki_coverage_gate|wiki_coverage_review|llm_qg|mdx" scripts/build/v7_build.py
 raw: 780:        phase = "python_qg"
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: rg -n "PIPELINE|PHASE|phase|argparse|--worktree|plan|knowledge_packet|writer|python_qg|wiki_coverage_gate|wiki_coverage_review|llm_qg|mdx" scripts/build/v7_build.py
 raw: 795:        phase = "wiki_coverage_gate"
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: rg -n "PIPELINE|PHASE|phase|argparse|--worktree|plan|knowledge_packet|writer|python_qg|wiki_coverage_gate|wiki_coverage_review|llm_qg|mdx" scripts/build/v7_build.py
 raw: 812:        phase = "wiki_coverage_review"
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: rg -n "PIPELINE|PHASE|phase|argparse|--worktree|plan|knowledge_packet|writer|python_qg|wiki_coverage_gate|wiki_coverage_review|llm_qg|mdx" scripts/build/v7_build.py
 raw: 852:        phase = "llm_qg"
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: rg -n "PIPELINE|PHASE|phase|argparse|--worktree|plan|knowledge_packet|writer|python_qg|wiki_coverage_gate|wiki_coverage_review|llm_qg|mdx" scripts/build/v7_build.py
 raw: 877:        phase = "mdx"
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba scripts/build/linear_pipeline.py | sed -n '1,220p'
 raw: 1  """Linear Phase 4 module pipeline.
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: ls scripts/build/phases
 raw: linear-write.md
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: nl -ba scripts/build/v6_build.py | sed -n '1,70p'
 raw: 2  """V6 Pipeline Build — OBSOLETE (retired 2026-05-10).
 ```
 
 ```text
-cwd: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/four-deliverable-docs-20260519
+cwd: .worktrees/dispatch/codex/four-deliverable-docs-20260519
 command: gh pr view 1952 --json number,title,state,mergedAt,url
 raw: {"mergedAt":"2026-05-13T09:25:50Z","number":1952,"state":"MERGED","title":"feat(v7_build): --worktree flag for isolated module builds","url":"https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/1952"}
 ```

@@ -3,13 +3,13 @@ LEVEL: LIT_DRAMA
 SLUG: arie-chornobyl
 TOPIC_TITLE: Arie Chornobyl
 MODULE_NUM: '9'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-drama/arie-chornobyl.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/meta/arie-chornobyl.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/arie-chornobyl.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/activities/arie-chornobyl.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/vocabulary/arie-chornobyl.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/research/arie-chornobyl-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-drama/review/arie-chornobyl-review.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-drama/arie-chornobyl.yaml
+META_PATH: curriculum/l2-uk-en/lit-drama/meta/arie-chornobyl.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-drama/arie-chornobyl.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-drama/activities/arie-chornobyl.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-drama/vocabulary/arie-chornobyl.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-drama/research/arie-chornobyl-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-drama/review/arie-chornobyl-review.md
 QUICK_REF_PATH: ''
 SCHEMA_PATH: schemas/activities-lit-drama.schema.json
 WORD_TARGET: '5000'

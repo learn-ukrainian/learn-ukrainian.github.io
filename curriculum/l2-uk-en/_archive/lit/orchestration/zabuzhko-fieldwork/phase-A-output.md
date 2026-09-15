@@ -11,7 +11,7 @@
 
 ============================================================
 
-Activate skill full-rebuild-lit. Read and execute the instructions at /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/orchestration/zabuzhko-fieldwork/phase-A-prompt.md
+Activate skill full-rebuild-lit. Read and execute the instructions at curriculum/l2-uk-en/lit/orchestration/zabuzhko-fieldwork/phase-A-prompt.md
 
 ============================================================
 📎 Attached Data:

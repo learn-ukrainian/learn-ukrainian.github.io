@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: courts-basic
 TOPIC_TITLE: Courts Basic
 MODULE_NUM: '7'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/courts-basic.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/courts-basic.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/courts-basic.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/courts-basic.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/courts-basic.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/courts-basic-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/courts-basic-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/courts-basic.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/courts-basic.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/courts-basic.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/courts-basic.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/courts-basic.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/courts-basic-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/courts-basic-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

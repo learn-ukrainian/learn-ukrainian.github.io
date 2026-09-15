@@ -8,13 +8,13 @@
 Read the plan file to understand what this module covers:
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/kvitka-language.yaml
+curriculum/l2-uk-en/plans/lit/kvitka-language.yaml
 ```
 
 Read the current meta file for content_outline structure:
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/kvitka-language.yaml
+curriculum/l2-uk-en/lit/meta/kvitka-language.yaml
 ```
 
 ## Your Task

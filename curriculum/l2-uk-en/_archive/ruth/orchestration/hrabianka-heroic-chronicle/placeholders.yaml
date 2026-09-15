@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: hrabianka-heroic-chronicle
 TOPIC_TITLE: Hrabianka Heroic Chronicle
 MODULE_NUM: '83'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/hrabianka-heroic-chronicle.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/hrabianka-heroic-chronicle.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/hrabianka-heroic-chronicle.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/hrabianka-heroic-chronicle.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/hrabianka-heroic-chronicle.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/hrabianka-heroic-chronicle-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/hrabianka-heroic-chronicle-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/hrabianka-heroic-chronicle.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/hrabianka-heroic-chronicle.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/hrabianka-heroic-chronicle.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/hrabianka-heroic-chronicle.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/hrabianka-heroic-chronicle.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/hrabianka-heroic-chronicle-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/hrabianka-heroic-chronicle-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

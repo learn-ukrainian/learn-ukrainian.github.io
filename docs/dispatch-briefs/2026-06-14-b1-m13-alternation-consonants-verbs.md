@@ -8,14 +8,14 @@ Model: GPT-5.5, xhigh reasoning.
 
 Role: B1 module builder and local orchestrator. Use a small bounded swarm, but keep the main thread responsible for integration, final diff review, validation, commit, PR, and merge-readiness.
 
-Repo: `/Users/krisztiankoos/projects/learn-ukrainian`
+Repo: `.`
 
 Worktree:
 
 ```bash
 git worktree add -b codex/b1-m13-alternation-verbs .worktrees/dispatch/codex/b1-m13-alternation-verbs origin/main
 cd .worktrees/dispatch/codex/b1-m13-alternation-verbs
-test -e .venv || ln -s /Users/krisztiankoos/projects/learn-ukrainian/.venv .venv  # venv symlinked
+test -e .venv || ln -s .venv .venv  # venv symlinked
 ```
 
 If that branch or path already exists, inspect it first and do not overwrite user work.
@@ -87,7 +87,7 @@ Run the narrowest local gates available for changed artifacts. Prefer existing p
 
 ```bash
 git diff --check
-test -e .venv || ln -s /Users/krisztiankoos/projects/learn-ukrainian/.venv .venv  # venv symlinked
+test -e .venv || ln -s .venv .venv  # venv symlinked
 .venv/bin/python - <<'PY'
 from pathlib import Path
 import yaml

@@ -3,14 +3,14 @@ LEVEL: LIT_FANTASTIKA
 SLUG: arenev-soul-traps
 TOPIC_TITLE: Arenev Soul Traps
 MODULE_NUM: '14'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-fantastika/arenev-soul-traps.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/meta/arenev-soul-traps.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/arenev-soul-traps.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/activities/arenev-soul-traps.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/vocabulary/arenev-soul-traps.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/research/arenev-soul-traps-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/review/arenev-soul-traps-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-fantastika/arenev-soul-traps.yaml
+META_PATH: curriculum/l2-uk-en/lit-fantastika/meta/arenev-soul-traps.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-fantastika/arenev-soul-traps.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-fantastika/activities/arenev-soul-traps.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-fantastika/vocabulary/arenev-soul-traps.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-fantastika/research/arenev-soul-traps-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-fantastika/review/arenev-soul-traps-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-fantastika.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

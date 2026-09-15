@@ -3,14 +3,14 @@ LEVEL: LIT_ESSAY
 SLUG: kostomarov-two-rus-nationalities
 TOPIC_TITLE: Kostomarov Two Rus Nationalities
 MODULE_NUM: '2'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-essay/kostomarov-two-rus-nationalities.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/meta/kostomarov-two-rus-nationalities.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/kostomarov-two-rus-nationalities.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/activities/kostomarov-two-rus-nationalities.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/vocabulary/kostomarov-two-rus-nationalities.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/research/kostomarov-two-rus-nationalities-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/review/kostomarov-two-rus-nationalities-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-essay/kostomarov-two-rus-nationalities.yaml
+META_PATH: curriculum/l2-uk-en/lit-essay/meta/kostomarov-two-rus-nationalities.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-essay/kostomarov-two-rus-nationalities.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-essay/activities/kostomarov-two-rus-nationalities.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-essay/vocabulary/kostomarov-two-rus-nationalities.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-essay/research/kostomarov-two-rus-nationalities-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-essay/review/kostomarov-two-rus-nationalities-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-essay.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

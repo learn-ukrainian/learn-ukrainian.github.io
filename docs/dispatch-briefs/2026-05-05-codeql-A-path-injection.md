@@ -12,7 +12,7 @@
 Work in a git worktree. Do NOT create a feature branch in the main checkout.
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin main
 git worktree add -b gemini-codeql-A-path-injection .worktrees/dispatch/gemini/codeql-A origin/main
 cd .worktrees/dispatch/gemini/codeql-A
@@ -77,11 +77,11 @@ CodeQL `py/path-injection` fires when a user-controlled string flows into a path
 2. **Apply fixes** per the priority above. Prefer `safe_join` where it fits.
 3. **Run tests** for affected files (use ./.venv/bin/python from main checkout if worktree lacks it; #1685's fix uses sys.executable):
    ```bash
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest tests/ -k 'research_quality or image_review or consultation_router or path_safety' -x -q
+   .venv/bin/python -m pytest tests/ -k 'research_quality or image_review or consultation_router or path_safety' -x -q
    ```
 4. **Run ruff** on each modified file:
    ```bash
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/path_safety.py scripts/research/research_quality.py scripts/tools/image_review_server.py scripts/api/consultation_router.py
+   .venv/bin/ruff check scripts/path_safety.py scripts/research/research_quality.py scripts/tools/image_review_server.py scripts/api/consultation_router.py
    ```
 5. **Commit** with conventional message:
    ```

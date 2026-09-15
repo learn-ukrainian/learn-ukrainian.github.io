@@ -11,9 +11,9 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-**Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks.** Every command that uses `.venv/`, `scripts/`, or files in MAIN checkout MUST be prefixed with `cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/tier-2-warm-cache && ...` (or absolute path). The bakeoff brief was bitten by this earlier today; do not repeat the trap.
+**Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks.** Every command that uses `.venv/`, `scripts/`, or files in MAIN checkout MUST be prefixed with `cd .worktrees/dispatch/codex/tier-2-warm-cache && ...` (or absolute path). The bakeoff brief was bitten by this earlier today; do not repeat the trap.
 
-Inside the worktree, `.venv/` exists ONLY because git worktrees do not copy gitignored dirs. Use the MAIN checkout's `.venv` via absolute path: `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
+Inside the worktree, `.venv/` exists ONLY because git worktrees do not copy gitignored dirs. Use the MAIN checkout's `.venv` via `.venv/bin/python`.
 
 ---
 
@@ -48,7 +48,7 @@ Today's `ab discuss` calls `runtime_invoke(...)` with `entrypoint="delegate"`. N
 
 1. **Verify worktree starts on main + #1781 merged.** From inside the worktree:
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/tier-2-warm-cache && git log --oneline -3
+   cd .worktrees/dispatch/codex/tier-2-warm-cache && git log --oneline -3
    ```
    Top commit must be `6014cbab74 fix(prompts): add hard stop rule after writer artifacts (#1781)` or descendant.
 
@@ -161,19 +161,19 @@ Today's `ab discuss` calls `runtime_invoke(...)` with `entrypoint="delegate"`. N
 
 5. **Run tests:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/tier-2-warm-cache && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest tests/test_channels_discuss_resume.py -v
+   cd .worktrees/dispatch/codex/tier-2-warm-cache && .venv/bin/pytest tests/test_channels_discuss_resume.py -v
    ```
    All 3 tests must pass.
 
 6. **Run ruff on the changed files:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/tier-2-warm-cache && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/ai_agent_bridge/_channels_cli.py tests/test_channels_discuss_resume.py
+   cd .worktrees/dispatch/codex/tier-2-warm-cache && .venv/bin/ruff check scripts/ai_agent_bridge/_channels_cli.py tests/test_channels_discuss_resume.py
    ```
    Must exit 0.
 
 7. **Commit:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/tier-2-warm-cache && git add scripts/ai_agent_bridge/_channels_cli.py tests/test_channels_discuss_resume.py
+   cd .worktrees/dispatch/codex/tier-2-warm-cache && git add scripts/ai_agent_bridge/_channels_cli.py tests/test_channels_discuss_resume.py
    git commit -m "$(cat <<'EOF'
    feat(ab-discuss): tier-2 warm-cache via bridge entrypoint + per-agent session_id (#1782)
 
@@ -202,8 +202,8 @@ Today's `ab discuss` calls `runtime_invoke(...)` with `entrypoint="delegate"`. N
 
 8. **Push + open PR:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/tier-2-warm-cache && git push -u origin codex/tier-2-warm-cache
-   /Users/krisztiankoos/.bash_secrets exists in main checkout — ensure GH_TOKEN is sourced before gh calls or rely on the dispatch's existing auth setup. If gh fails with 401, report don't fix.
+   cd .worktrees/dispatch/codex/tier-2-warm-cache && git push -u origin codex/tier-2-warm-cache
+   .bash_secrets exists in main checkout — ensure GH_TOKEN is sourced before gh calls or rely on the dispatch's existing auth setup. If gh fails with 401, report don't fix.
    gh pr create --title "feat(ab-discuss): tier-2 warm-cache via bridge entrypoint + per-agent session_id (#1782)" --body "$(cat <<'EOF'
    ## Summary
 

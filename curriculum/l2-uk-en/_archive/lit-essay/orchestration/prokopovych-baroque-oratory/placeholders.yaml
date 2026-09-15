@@ -4,14 +4,14 @@ SLUG: prokopovych-baroque-oratory
 TOPIC_TITLE: 'Феофан Прокопович і Риторика Барокового Розуму: Києво-Могилянська Ораторська
   Традиція'
 MODULE_NUM: '2'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-essay/prokopovych-baroque-oratory.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/meta/prokopovych-baroque-oratory.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/prokopovych-baroque-oratory.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/activities/prokopovych-baroque-oratory.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/vocabulary/prokopovych-baroque-oratory.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/research/prokopovych-baroque-oratory-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/review/prokopovych-baroque-oratory-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-essay/prokopovych-baroque-oratory.yaml
+META_PATH: curriculum/l2-uk-en/lit-essay/meta/prokopovych-baroque-oratory.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-essay/prokopovych-baroque-oratory.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-essay/activities/prokopovych-baroque-oratory.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-essay/vocabulary/prokopovych-baroque-oratory.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-essay/research/prokopovych-baroque-oratory-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-essay/review/prokopovych-baroque-oratory-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-essay.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

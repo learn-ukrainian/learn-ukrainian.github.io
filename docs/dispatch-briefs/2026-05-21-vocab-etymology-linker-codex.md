@@ -70,11 +70,11 @@ Build an Astro remark plugin that walks every MDX file at build time, finds voca
 ## Verification before commit
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/ruff check scripts/ tests/
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -m pytest tests/etymology/ -v --tb=short
-cd /Users/krisztiankoos/projects/learn-ukrainian/starlight && npm run build 2>&1 | tail -30
+cd . && .venv/bin/ruff check scripts/ tests/
+cd . && .venv/bin/python -m pytest tests/etymology/ -v --tb=short
+cd starlight && npm run build 2>&1 | tail -30
 # Spot-check a real lesson page for vocab links:
-cd /Users/krisztiankoos/projects/learn-ukrainian && grep -c 'href="/etymology/' starlight/dist/a1/*/index.html 2>&1 | head -10
+cd . && grep -c 'href="/etymology/' starlight/dist/a1/*/index.html 2>&1 | head -10
 ```
 
 The grep should produce at least one match per page sampled. Report the actual numbers.

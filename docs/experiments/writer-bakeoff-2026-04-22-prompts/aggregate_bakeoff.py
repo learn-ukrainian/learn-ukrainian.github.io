@@ -14,7 +14,7 @@ from pathlib import Path
 
 import yaml
 
-ROOT = Path("/Users/krisztiankoos/projects/learn-ukrainian")
+ROOT = Path(".")
 TASKS = ROOT / "batch_state" / "tasks"
 REVIEWS_OUT = ROOT / "experiments" / "writer-bakeoff-2026-04-22" / "reviews"
 REVIEWS_OUT.mkdir(parents=True, exist_ok=True)

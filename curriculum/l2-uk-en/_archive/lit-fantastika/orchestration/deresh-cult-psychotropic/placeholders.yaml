@@ -3,14 +3,14 @@ LEVEL: LIT_FANTASTIKA
 SLUG: deresh-cult-psychotropic
 TOPIC_TITLE: Deresh Cult Psychotropic
 MODULE_NUM: '24'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-fantastika/deresh-cult-psychotropic.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/meta/deresh-cult-psychotropic.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/deresh-cult-psychotropic.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/activities/deresh-cult-psychotropic.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/vocabulary/deresh-cult-psychotropic.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/research/deresh-cult-psychotropic-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/review/deresh-cult-psychotropic-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-fantastika/deresh-cult-psychotropic.yaml
+META_PATH: curriculum/l2-uk-en/lit-fantastika/meta/deresh-cult-psychotropic.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-fantastika/deresh-cult-psychotropic.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-fantastika/activities/deresh-cult-psychotropic.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-fantastika/vocabulary/deresh-cult-psychotropic.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-fantastika/research/deresh-cult-psychotropic-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-fantastika/review/deresh-cult-psychotropic-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-fantastika.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

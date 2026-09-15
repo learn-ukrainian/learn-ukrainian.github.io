@@ -9,7 +9,7 @@
 ## Worktree instructions (mandatory)
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin main
 git worktree add -b gemini-codeql-B-secrets-exposure .worktrees/dispatch/gemini/codeql-B origin/main
 cd .worktrees/dispatch/gemini/codeql-B
@@ -83,7 +83,7 @@ CodeQL flags when something that looks like a credential / token / password / AP
 2. **Apply the right fix per pattern above.** Don't blanket-suppress.
 3. **Run tests**:
    ```bash
-   /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -m pytest tests/ -k 'comms_router or gold_router or linear_pipeline or generate_mdx or lexical_sandbox or validate_vocab_yaml' -x -q
+   .venv/bin/python -m pytest tests/ -k 'comms_router or gold_router or linear_pipeline or generate_mdx or lexical_sandbox or validate_vocab_yaml' -x -q
    ```
 4. **Run ruff** on modified files.
 5. **Commit:**

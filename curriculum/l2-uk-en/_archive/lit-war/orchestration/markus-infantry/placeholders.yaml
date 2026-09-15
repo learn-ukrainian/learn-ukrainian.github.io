@@ -3,14 +3,14 @@ LEVEL: LIT_WAR
 SLUG: markus-infantry
 TOPIC_TITLE: Markus Infantry
 MODULE_NUM: '8'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-war/markus-infantry.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/meta/markus-infantry.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/markus-infantry.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/activities/markus-infantry.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/vocabulary/markus-infantry.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/research/markus-infantry-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/review/markus-infantry-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-war/markus-infantry.yaml
+META_PATH: curriculum/l2-uk-en/lit-war/meta/markus-infantry.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-war/markus-infantry.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-war/activities/markus-infantry.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-war/vocabulary/markus-infantry.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-war/research/markus-infantry-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-war/review/markus-infantry-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-war.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

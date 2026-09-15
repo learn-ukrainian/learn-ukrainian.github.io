@@ -79,7 +79,7 @@ Additional edge-case test (combined into `test_plan_reference_match_gate.py` for
 ## REQUIRED steps (numbered — follow in order)
 
 1. `git worktree add -b feat/plan-reference-match-gate ../.worktrees/cursor-option-c-2026-05-24 origin/main` from the project root. Use this worktree for all work; do NOT modify the main project tree.
-2. **CD into the worktree** for every subsequent command: `cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/cursor-option-c-2026-05-24`.
+2. **CD into the worktree** for every subsequent command: `cd .worktrees/cursor-option-c-2026-05-24`.
 3. Symlink venv: `ln -s ../../.venv .venv` (venv symlinked — required for tests). Verify: `ls -la .venv` shows the symlink. # venv symlinked
 4. Read the files you'll modify in this order:
    - `scripts/build/linear_pipeline.py` lines 1-200 (imports + gate registry), 5990-6020 (gate recording), 7801-7826 (existing `_citation_gate`)

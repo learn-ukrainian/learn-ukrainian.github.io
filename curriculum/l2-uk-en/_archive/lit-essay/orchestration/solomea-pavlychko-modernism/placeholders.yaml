@@ -3,14 +3,14 @@ LEVEL: LIT_ESSAY
 SLUG: solomea-pavlychko-modernism
 TOPIC_TITLE: Solomea Pavlychko Modernism
 MODULE_NUM: '53'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-essay/solomea-pavlychko-modernism.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/meta/solomea-pavlychko-modernism.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/solomea-pavlychko-modernism.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/activities/solomea-pavlychko-modernism.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/vocabulary/solomea-pavlychko-modernism.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/research/solomea-pavlychko-modernism-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/review/solomea-pavlychko-modernism-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-essay/solomea-pavlychko-modernism.yaml
+META_PATH: curriculum/l2-uk-en/lit-essay/meta/solomea-pavlychko-modernism.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-essay/solomea-pavlychko-modernism.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-essay/activities/solomea-pavlychko-modernism.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-essay/vocabulary/solomea-pavlychko-modernism.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-essay/research/solomea-pavlychko-modernism-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-essay/review/solomea-pavlychko-modernism-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-essay.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

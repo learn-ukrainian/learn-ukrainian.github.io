@@ -5,7 +5,7 @@
 **Effort**: high
 **Worktree**: yes (default for `--mode danger`)
 **Branch base**: `main` (`0014318188`)
-**Source branch**: `codex/6877-b1-adjectives-comparative-e2e` (the existing PR #2266 branch — checked out at `/Users/krisztiankoos/.codex/worktrees/6877/learn-ukrainian/`)
+**Source branch**: `codex/6877-b1-adjectives-comparative-e2e` (the existing PR #2266 branch — checked out at `.codex/worktrees/6877/learn-ukrainian/`)
 
 ---
 
@@ -23,7 +23,7 @@ The user requested adjustment across all three categories: split the PR, fix con
 
 ## Verifiable-claims preamble (#M-4)
 
-Every claim below was verified against the actual diff in the codex worktree at `/Users/krisztiankoos/.codex/worktrees/6877/learn-ukrainian/`. File paths + line numbers are real. Before doing any edit, codex MUST re-read each cited file/line to confirm. If a cited line has shifted, find the equivalent and report the shift in the PR body.
+Every claim below was verified against the actual diff in the codex worktree at `.codex/worktrees/6877/learn-ukrainian/`. File paths + line numbers are real. Before doing any edit, codex MUST re-read each cited file/line to confirm. If a cited line has shifted, find the equivalent and report the shift in the PR body.
 
 ---
 

@@ -132,7 +132,7 @@ In `docs/best-practices/vocabulary-activity-standards.md` (or wherever the marke
 | Full pytest green | `.venv/bin/pytest tests/ -q` final summary raw (NO `-x` per #1942) |
 | Ruff clean | `.venv/bin/ruff check scripts/build/linear_pipeline.py scripts/build/phases/ tests/build/test_vesum_negative_example_handling.py` raw |
 | Pre-commit clean | `.venv/bin/python -m pre_commit run --files <changed>` raw |
-| m20 worktree replay** | Re-run vesum_verified gate against `/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/builds/a1-my-morning-20260518-000636/curriculum/l2-uk-en/a1/my-morning/` (read-only, no rebuild) and quote the new `vesum_verified` outcome. Should now PASS for the TF-statement `дивюся` while keeping all real `vesum_verified` failures (if any other words fail VESUM legitimately, they should still surface). |
+| m20 worktree replay** | Re-run vesum_verified gate against `.worktrees/builds/a1-my-morning-20260518-000636/curriculum/l2-uk-en/a1/my-morning/` (read-only, no rebuild) and quote the new `vesum_verified` outcome. Should now PASS for the TF-statement `дивюся` while keeping all real `vesum_verified` failures (if any other words fail VESUM legitimately, they should still surface). |
 | Commit + PR | `git log -1 --oneline` + `gh pr view --json url` raw |
 
 **No claim allowed without its raw output line.** Per #M-4.
@@ -163,7 +163,7 @@ Branch: `fix/2128-vesum-bad-marker-everywhere`. Path: `.worktrees/dispatch/codex
 from pathlib import Path
 import json, yaml
 from scripts.build.linear_pipeline import _vesum_gate
-mod_dir = Path('/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/builds/a1-my-morning-20260518-000636/curriculum/l2-uk-en/a1/my-morning')
+mod_dir = Path('.worktrees/builds/a1-my-morning-20260518-000636/curriculum/l2-uk-en/a1/my-morning')
 module_text = (mod_dir / 'module.md').read_text(encoding='utf-8')
 activities = yaml.safe_load((mod_dir / 'activities.yaml').read_text(encoding='utf-8'))
 vocabulary = yaml.safe_load((mod_dir / 'vocabulary.yaml').read_text(encoding='utf-8'))

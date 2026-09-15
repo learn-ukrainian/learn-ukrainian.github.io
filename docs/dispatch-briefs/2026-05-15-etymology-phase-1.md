@@ -70,7 +70,7 @@ Do NOT claim "I added a test" — show the pytest line. Do NOT claim "build pass
 ### 1. Worktree setup
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin
 git worktree add .worktrees/dispatch/codex/etymology-phase-1-2026-05-15 -b codex/etymology-phase-1-2026-05-15 origin/main
 cd .worktrees/dispatch/codex/etymology-phase-1-2026-05-15

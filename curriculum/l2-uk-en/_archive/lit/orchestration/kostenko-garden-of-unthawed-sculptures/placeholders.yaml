@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: kostenko-garden-of-unthawed-sculptures
 TOPIC_TITLE: Kostenko Garden Of Unthawed Sculptures
 MODULE_NUM: '143'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/kostenko-garden-of-unthawed-sculptures.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/kostenko-garden-of-unthawed-sculptures.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/kostenko-garden-of-unthawed-sculptures.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/kostenko-garden-of-unthawed-sculptures.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/kostenko-garden-of-unthawed-sculptures.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/kostenko-garden-of-unthawed-sculptures-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/kostenko-garden-of-unthawed-sculptures-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/kostenko-garden-of-unthawed-sculptures.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/kostenko-garden-of-unthawed-sculptures.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/kostenko-garden-of-unthawed-sculptures.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/kostenko-garden-of-unthawed-sculptures.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/kostenko-garden-of-unthawed-sculptures.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/kostenko-garden-of-unthawed-sculptures-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/kostenko-garden-of-unthawed-sculptures-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

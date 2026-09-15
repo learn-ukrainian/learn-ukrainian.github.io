@@ -124,7 +124,7 @@ If the next session picks up before round 3 finishes:
 
 ```bash
 # 1. Get the lay of the land
-git -C /Users/krisztiankoos/projects/learn-ukrainian log --oneline origin/main -5
+git -C . log --oneline origin/main -5
 gh pr list --state open --limit 10 --json number,title,isDraft,baseRefName
 
 # 2. Check round-3 status
@@ -170,10 +170,10 @@ gh pr list --state open --limit 10 --json number,title,isDraft,baseRefName
 ## Worktrees at handoff time
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian                                              <main>
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-interactive                 (stale, detached HEAD)
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-phase4-round3-json-exemplar (in flight)
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/verify-a1-1-phaseA-v5             (stale, has uncommitted changes — DO NOT remove without user)
+.                                              <main>
+.worktrees/codex-interactive                 (stale, detached HEAD)
+.worktrees/codex-phase4-round3-json-exemplar (in flight)
+.worktrees/verify-a1-1-phaseA-v5             (stale, has uncommitted changes — DO NOT remove without user)
 ```
 
 `codex-interactive` is clean (no uncommitted) but I couldn't confirm autonomously that its branch is fully merged. Safe-ish to remove if user confirms. `verify-a1-1-phaseA-v5` has 11 uncommitted M+D files — leave it alone.

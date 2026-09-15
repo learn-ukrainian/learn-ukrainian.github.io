@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: franko-lviv-period
 TOPIC_TITLE: Franko Lviv Period
 MODULE_NUM: '46'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/franko-lviv-period.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/franko-lviv-period.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/franko-lviv-period.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/franko-lviv-period.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/franko-lviv-period.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/franko-lviv-period-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/franko-lviv-period-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/franko-lviv-period.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/franko-lviv-period.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/franko-lviv-period.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/franko-lviv-period.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/franko-lviv-period.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/franko-lviv-period-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/franko-lviv-period-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

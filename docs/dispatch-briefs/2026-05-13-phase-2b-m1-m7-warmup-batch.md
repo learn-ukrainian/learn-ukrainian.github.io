@@ -31,7 +31,7 @@ Sequential pattern: build m01 → audit → commit + merge to main → build m02
 ### Per-module invocation
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 .venv/bin/python scripts/build/v7_build.py a1 {slug} --worktree
 ```
 

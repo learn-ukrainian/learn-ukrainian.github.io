@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: prepositions-space
 TOPIC_TITLE: Prepositions Space
 MODULE_NUM: '15'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/prepositions-space.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/prepositions-space.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/prepositions-space.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/prepositions-space.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/prepositions-space.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/prepositions-space-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/prepositions-space-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/prepositions-space.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/prepositions-space.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/prepositions-space.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/prepositions-space.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/prepositions-space.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/prepositions-space-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/prepositions-space-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

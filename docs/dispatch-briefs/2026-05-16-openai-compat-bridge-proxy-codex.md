@@ -69,7 +69,7 @@ Fabrication-resistant per `docs/best-practices/deterministic-over-hallucination.
 ### 1. Worktree setup
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin main
 git worktree add -b feat/openai-compat-bridge-proxy \
     .worktrees/dispatch/codex/openai-compat-proxy-2026-05-16 \

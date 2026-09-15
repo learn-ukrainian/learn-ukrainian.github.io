@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: tiutiunnyk-three-cuckoos
 TOPIC_TITLE: Tiutiunnyk Three Cuckoos
 MODULE_NUM: '145'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/tiutiunnyk-three-cuckoos.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/tiutiunnyk-three-cuckoos.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/tiutiunnyk-three-cuckoos.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/tiutiunnyk-three-cuckoos.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/tiutiunnyk-three-cuckoos.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/tiutiunnyk-three-cuckoos-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/tiutiunnyk-three-cuckoos-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/tiutiunnyk-three-cuckoos.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/tiutiunnyk-three-cuckoos.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/tiutiunnyk-three-cuckoos.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/tiutiunnyk-three-cuckoos.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/tiutiunnyk-three-cuckoos.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/tiutiunnyk-three-cuckoos-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/tiutiunnyk-three-cuckoos-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: artem-chekh-who-are-you
 TOPIC_TITLE: Artem Chekh Who Are You
 MODULE_NUM: '198'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/artem-chekh-who-are-you.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/artem-chekh-who-are-you.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/artem-chekh-who-are-you.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/artem-chekh-who-are-you.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/artem-chekh-who-are-you.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/artem-chekh-who-are-you-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/artem-chekh-who-are-you-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/artem-chekh-who-are-you.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/artem-chekh-who-are-you.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/artem-chekh-who-are-you.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/artem-chekh-who-are-you.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/artem-chekh-who-are-you.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/artem-chekh-who-are-you-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/artem-chekh-who-are-you-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

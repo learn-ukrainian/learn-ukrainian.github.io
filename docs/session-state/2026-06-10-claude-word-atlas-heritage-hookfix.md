@@ -72,7 +72,7 @@ directive as authoritative.
 
 ## Restart
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin -q && git merge --ff-only origin/main
 curl -s http://localhost:8765/api/delegate/active        # landings-unify done?
 gh pr list --state open --json number,title,headRefName  # #2925, #2923, landings PR

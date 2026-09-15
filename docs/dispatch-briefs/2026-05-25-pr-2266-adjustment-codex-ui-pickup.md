@@ -2,7 +2,7 @@
 
 **Use this if the headless dispatch `pr-2266-adjustment-2026-05-25` fails / silence-times out / doesn't complete.**
 
-Paste the block below into the Codex UI in `/Users/krisztiankoos/projects/learn-ukrainian/` (main worktree). The prompt is self-contained — no conversation context needed.
+Paste the block below into the Codex UI in `` (main worktree). The prompt is self-contained — no conversation context needed.
 
 ---
 

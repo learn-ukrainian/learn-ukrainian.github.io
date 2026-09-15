@@ -10,19 +10,19 @@
 Read the **existing research notes** (already complete — do NOT re-research):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/cult-of-shevchenko-research.md
+curriculum/l2-uk-en/lit/research/cult-of-shevchenko-research.md
 ```
 
 Read the plan file (SOURCE OF TRUTH for structure):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/cult-of-shevchenko.yaml
+curriculum/l2-uk-en/plans/lit/cult-of-shevchenko.yaml
 ```
 
 Read the current meta file (for reference — you will replace the content_outline):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/cult-of-shevchenko.yaml
+curriculum/l2-uk-en/lit/meta/cult-of-shevchenko.yaml
 ```
 
 ---

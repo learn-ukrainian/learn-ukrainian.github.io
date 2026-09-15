@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: eneida-war
 TOPIC_TITLE: 'Енеїда: Словник Війни'
 MODULE_NUM: '4'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/eneida-war.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/eneida-war.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/eneida-war.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/eneida-war.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/eneida-war.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/eneida-war-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/eneida-war-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/eneida-war.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/eneida-war.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/eneida-war.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/eneida-war.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/eneida-war.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/eneida-war-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/eneida-war-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

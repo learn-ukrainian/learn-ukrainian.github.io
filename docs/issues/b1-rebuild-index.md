@@ -206,7 +206,7 @@ npm run validate:html l2-uk-en b1
 
 ## File Locations
 
-All files in: `/Users/krisztiankoos/projects/learn-ukrainian/docs/issues/`
+All files in: `docs/issues/`
 
 - `b1-audit-quick-summary.md` (5KB) - Quick overview
 - `b1-rebuild-audit-summary.md` (13KB) - Comprehensive analysis

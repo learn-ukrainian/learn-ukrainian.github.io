@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: andrukhovych-moscoviad
 TOPIC_TITLE: Andrukhovych Moscoviad
 MODULE_NUM: '171'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/andrukhovych-moscoviad.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/andrukhovych-moscoviad.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/andrukhovych-moscoviad.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/andrukhovych-moscoviad.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/andrukhovych-moscoviad.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/andrukhovych-moscoviad-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/andrukhovych-moscoviad-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/andrukhovych-moscoviad.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/andrukhovych-moscoviad.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/andrukhovych-moscoviad.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/andrukhovych-moscoviad.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/andrukhovych-moscoviad.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/andrukhovych-moscoviad-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/andrukhovych-moscoviad-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

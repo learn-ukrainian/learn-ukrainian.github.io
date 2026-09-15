@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: need-for-norms
 TOPIC_TITLE: Need For Norms
 MODULE_NUM: '51'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/need-for-norms.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/need-for-norms.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/need-for-norms.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/need-for-norms.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/need-for-norms.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/need-for-norms-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/need-for-norms-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/need-for-norms.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/need-for-norms.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/need-for-norms.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/need-for-norms.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/need-for-norms.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/need-for-norms-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/need-for-norms-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

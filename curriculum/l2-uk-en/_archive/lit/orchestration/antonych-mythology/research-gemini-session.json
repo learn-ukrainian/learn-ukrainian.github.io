@@ -45,7 +45,7 @@
           "id": "run_shell_command_1773430139863_0",
           "name": "run_shell_command",
           "args": {
-            "command": "python -c \"\nimport sys\nimport json\nsys.path.append('/Users/krisztiankoos/projects/learn-ukrainian/.mcp/servers')\nfrom wikipedia_mcp import handle_query_wikipedia\n\nprint(json.dumps(handle_query_wikipedia(query='Богдан-Ігор Антонич', mode='extract')))\n\""
+            "command": "python -c \"\nimport sys\nimport json\nsys.path.append('.mcp/servers')\nfrom wikipedia_mcp import handle_query_wikipedia\n\nprint(json.dumps(handle_query_wikipedia(query='Богдан-Ігор Антонич', mode='extract')))\n\""
           },
           "result": [
             {

@@ -3,14 +3,14 @@ LEVEL: LIT_FANTASTIKA
 SLUG: pavliuk-flesh
 TOPIC_TITLE: Pavliuk Flesh
 MODULE_NUM: '12'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-fantastika/pavliuk-flesh.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/meta/pavliuk-flesh.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/pavliuk-flesh.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/activities/pavliuk-flesh.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/vocabulary/pavliuk-flesh.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/research/pavliuk-flesh-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/review/pavliuk-flesh-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-fantastika/pavliuk-flesh.yaml
+META_PATH: curriculum/l2-uk-en/lit-fantastika/meta/pavliuk-flesh.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-fantastika/pavliuk-flesh.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-fantastika/activities/pavliuk-flesh.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-fantastika/vocabulary/pavliuk-flesh.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-fantastika/research/pavliuk-flesh-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-fantastika/review/pavliuk-flesh-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-fantastika.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

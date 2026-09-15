@@ -13,27 +13,27 @@ This report is a deterministic audit of which dashboards and panels reference li
 
 | Dashboard | Classification | Live Refs (Count) | Dead Refs | Recommendation |
 | :--- | :--- | :---: | :--- | :--- |
-| [admin.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/admin.html) | **healthy** | 11 | None | keep |
-| [artifacts.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/artifacts.html) | **healthy** | 1 | None | keep |
-| [audit-dashboard.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/audit-dashboard.html) | **healthy** | 4 | None | keep |
-| [build-events.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/build-events.html) | **healthy** | 2 | None | keep |
-| [channels.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/channels.html) | **healthy** | 5 | None | keep |
-| [comms.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/comms.html) | **healthy** | 11 | None | keep |
-| [consultation.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/consultation.html) | **healthy** | 6 | None | keep |
-| [cost.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/cost.html) | **healthy** | 4 | None | keep |
-| [curriculum-dashboard.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/curriculum-dashboard.html) | **healthy** | 3 | None | keep |
-| [delegate.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/delegate.html) | **healthy** | 2 | None | keep |
-| [headroom.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/headroom.html) | **healthy** | 1 | None | keep |
-| [image-explorer.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/image-explorer.html) | **healthy** | 9 | None | keep |
-| [images.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/images.html) | **static** | 0 | None | keep |
-| [index.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/index.html) | **healthy** | 14 | None | keep |
-| [orient.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/orient.html) | **healthy** | 2 | None | keep |
-| [progress.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/progress.html) | **healthy** | 3 | None | keep |
-| [quality.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/quality.html) | **healthy** | 5 | None | keep |
-| [routing.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/routing.html) | **healthy** | 4 | None | keep |
-| [runtime.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/runtime.html) | **healthy** | 4 | None | keep |
-| [track-health.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/track-health.html) | **healthy** | 8 | None | keep |
-| [wiki.html](file:///Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/wiki.html) | **healthy** | 5 | None | keep |
+| [admin.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/admin.html) | **healthy** | 11 | None | keep |
+| [artifacts.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/artifacts.html) | **healthy** | 1 | None | keep |
+| [audit-dashboard.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/audit-dashboard.html) | **healthy** | 4 | None | keep |
+| [build-events.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/build-events.html) | **healthy** | 2 | None | keep |
+| [channels.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/channels.html) | **healthy** | 5 | None | keep |
+| [comms.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/comms.html) | **healthy** | 11 | None | keep |
+| [consultation.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/consultation.html) | **healthy** | 6 | None | keep |
+| [cost.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/cost.html) | **healthy** | 4 | None | keep |
+| [curriculum-dashboard.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/curriculum-dashboard.html) | **healthy** | 3 | None | keep |
+| [delegate.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/delegate.html) | **healthy** | 2 | None | keep |
+| [headroom.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/headroom.html) | **healthy** | 1 | None | keep |
+| [image-explorer.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/image-explorer.html) | **healthy** | 9 | None | keep |
+| [images.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/images.html) | **static** | 0 | None | keep |
+| [index.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/index.html) | **healthy** | 14 | None | keep |
+| [orient.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/orient.html) | **healthy** | 2 | None | keep |
+| [progress.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/progress.html) | **healthy** | 3 | None | keep |
+| [quality.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/quality.html) | **healthy** | 5 | None | keep |
+| [routing.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/routing.html) | **healthy** | 4 | None | keep |
+| [runtime.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/runtime.html) | **healthy** | 4 | None | keep |
+| [track-health.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/track-health.html) | **healthy** | 8 | None | keep |
+| [wiki.html](file://.worktrees/dispatch/agy/dashboard-endpoint-audit/dashboards/wiki.html) | **healthy** | 5 | None | keep |
 
 ---
 

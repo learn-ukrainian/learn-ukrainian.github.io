@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: stus-moral-imperative
 TOPIC_TITLE: Stus Moral Imperative
 MODULE_NUM: '138'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/stus-moral-imperative.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/stus-moral-imperative.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/stus-moral-imperative.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/stus-moral-imperative.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/stus-moral-imperative.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/stus-moral-imperative-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/stus-moral-imperative-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/stus-moral-imperative.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/stus-moral-imperative.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/stus-moral-imperative.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/stus-moral-imperative.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/stus-moral-imperative.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/stus-moral-imperative-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/stus-moral-imperative-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

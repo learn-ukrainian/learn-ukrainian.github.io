@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: new-york-group-poets
 TOPIC_TITLE: New York Group Poets
 MODULE_NUM: '212'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/new-york-group-poets.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/new-york-group-poets.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/new-york-group-poets.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/new-york-group-poets.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/new-york-group-poets.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/new-york-group-poets-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/new-york-group-poets-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/new-york-group-poets.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/new-york-group-poets.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/new-york-group-poets.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/new-york-group-poets.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/new-york-group-poets.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/new-york-group-poets-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/new-york-group-poets-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

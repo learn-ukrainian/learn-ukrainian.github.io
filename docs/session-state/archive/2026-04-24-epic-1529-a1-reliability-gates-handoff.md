@@ -27,7 +27,7 @@ Six PRs merged in ~4 hours.
 
 ## Active dispatch (in flight at time of handoff)
 
-**Task: `1529-a-prompt-hardening`** — headless Claude (Opus 4.7, xhigh) working in `.worktrees/dispatch/claude/1529-a-prompt-hardening` on branch `claude/1529-a-prompt-hardening`. Branched from `origin/main` at `6e01709bc0`. Session: `/Users/krisztiankoos/.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian--worktrees-dispatch-claude-1529-a-prompt-hardening/d2fb88c0-eaf4-4975-b3c4-1685e8bafe80.jsonl` (will be active as long as file is growing).
+**Task: `1529-a-prompt-hardening`** — headless Claude (Opus 4.7, xhigh) working in `.worktrees/dispatch/claude/1529-a-prompt-hardening` on branch `claude/1529-a-prompt-hardening`. Branched from `origin/main` at `6e01709bc0`. Session: `.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian--worktrees-dispatch-claude-1529-a-prompt-hardening/d2fb88c0-eaf4-4975-b3c4-1685e8bafe80.jsonl` (will be active as long as file is growing).
 
 Brief at `/tmp/dispatch-briefs/1529-a-prompt-hardening.md` (137 lines). Three deliverables:
 

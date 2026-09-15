@@ -3,14 +3,14 @@ LEVEL: LIT_WAR
 SLUG: zhadan-life-maria
 TOPIC_TITLE: Zhadan Life Maria
 MODULE_NUM: '6'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-war/zhadan-life-maria.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/meta/zhadan-life-maria.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/zhadan-life-maria.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/activities/zhadan-life-maria.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/vocabulary/zhadan-life-maria.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/research/zhadan-life-maria-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/review/zhadan-life-maria-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-war/zhadan-life-maria.yaml
+META_PATH: curriculum/l2-uk-en/lit-war/meta/zhadan-life-maria.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-war/zhadan-life-maria.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-war/activities/zhadan-life-maria.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-war/vocabulary/zhadan-life-maria.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-war/research/zhadan-life-maria-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-war/review/zhadan-life-maria-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-war.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

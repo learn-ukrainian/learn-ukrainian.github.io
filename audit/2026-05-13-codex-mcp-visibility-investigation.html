@@ -185,9 +185,9 @@ url = "http://127.0.0.1:8766/mcp"</pre>
 
 <p><strong>Step 1 — locate the rollout for the failed codex writer call.</strong> The codex.write.jsonl shows the writer ran 00:24:04 → 00:27:04 UTC. Codex rollout filenames are in <em>local time</em> (CEST = UTC+2 in May), so the file is named <code>02-24-04…</code>:</p>
 <pre>$ ls ~/.codex/sessions/2026/05/12/rollout-2026-05-12T02-24-04* &amp;&amp; wc -l !$
-/Users/krisztiankoos/.codex/sessions/2026/05/12/rollout-2026-05-12T02-24-04-019e1991-c63e-7a33-8641-b8c35c36fbc7.jsonl
+.codex/sessions/2026/05/12/rollout-2026-05-12T02-24-04-019e1991-c63e-7a33-8641-b8c35c36fbc7.jsonl
       41  ...rollout-2026-05-12T02-24-04-...jsonl</pre>
-<p>cwd from <code>session_meta</code> line 1: <code>/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/bakeoff-2026-05-12-night/audit/bakeoff-2026-05-12-night/codex</code> — confirmed the right rollout.</p>
+<p>cwd from <code>session_meta</code> line 1: <code>.worktrees/dispatch/claude/bakeoff-2026-05-12-night/audit/bakeoff-2026-05-12-night/codex</code> — confirmed the right rollout.</p>
 
 <p><strong>Step 2 — categorize events in the rollout.</strong></p>
 <pre>Event type breakdown (41 events):
@@ -285,9 +285,9 @@ tool_calls: 8
 <pre>line 3: response_item/message role=developer   ← skipped (correct)
 line 4: response_item/message role=user        ← MATCHER TRIPS HERE
         content[0]: type=input_text len=15849
-          first 80 chars: "# AGENTS.md instructions for /Users/krisztiankoos/projects/learn-ukrainian/.work…"
+          first 80 chars: "# AGENTS.md instructions for .work…"
         content[1]: type=input_text len=295
-          first 80 chars: "&lt;environment_context&gt;\n  &lt;cwd&gt;/Users/krisztiankoos/projects/learn-ukrainian/.work…"
+          first 80 chars: "&lt;environment_context&gt;\n  &lt;cwd&gt;.work…"
 line 5: event_msg/user_message                 ← never reached
 line 6: response_item/message role=user        ← never reached
         content[0]: "# North Star — Curriculum Reboot (#1577 Phase 0 draft)…"  (the REAL prompt)</pre>

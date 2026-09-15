@@ -145,7 +145,7 @@ This is the kind of A1 module the project is meant to produce.
 ## Cold-start protocol for next session
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 source ./.envrc
 
 curl -s http://localhost:8765/api/state/manifest

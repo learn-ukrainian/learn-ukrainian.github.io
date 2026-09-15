@@ -14,7 +14,7 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-**Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks.** Prefix every command with `cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/bakeoff-2026-05-12-night && ...` and use the MAIN `.venv` via absolute path: `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
+**Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks.** Prefix every command with `cd .worktrees/dispatch/claude/bakeoff-2026-05-12-night && ...` and use the MAIN `.venv` via `.venv/bin/python`.
 
 ---
 
@@ -60,13 +60,13 @@ Abort: `GOAL_ABORT reason="..." last_cmd="..." last_cwd="..." last_output="..." 
 
 1. **Verify worktree base.**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/bakeoff-2026-05-12-night && git log --oneline -3
+   cd .worktrees/dispatch/claude/bakeoff-2026-05-12-night && git log --oneline -3
    ```
    Top commit must be `019d055f1c` or descendant. Branch `claude/bakeoff-2026-05-12-night`. Quote raw output.
 
 2. **Create audit dir.**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/bakeoff-2026-05-12-night && mkdir -p audit/bakeoff-2026-05-12-night/{claude,codex}
+   cd .worktrees/dispatch/claude/bakeoff-2026-05-12-night && mkdir -p audit/bakeoff-2026-05-12-night/{claude,codex}
    ```
 
 3. **Verify the prompts you'll be bakeoff'ing.** Read first 30 lines of `scripts/build/phases/linear-write.md` and `scripts/build/phases/linear-review-dim.md`. Confirm via `git log -1 --oneline scripts/build/phases/linear-write.md` that the most recent commit on those prompts is `28417cc3cb` (the 2026-05-11 rewrite) or a descendant of it. **If not, abort** — the bakeoff is meaningless without the new prompts. Quote the `git log` output.
@@ -78,7 +78,7 @@ Abort: `GOAL_ABORT reason="..." last_cmd="..." last_cwd="..." last_output="..." 
 5. **Fire claude-tools build.** From inside the worktree:
 
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/bakeoff-2026-05-12-night && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -u scripts/build/v7_build.py a1 my-morning --writer claude-tools --telemetry-out audit/bakeoff-2026-05-12-night/claude.write.jsonl --out audit/bakeoff-2026-05-12-night/claude/ 2>&1 | tee audit/bakeoff-2026-05-12-night/claude.stdout.log
+   cd .worktrees/dispatch/claude/bakeoff-2026-05-12-night && .venv/bin/python -u scripts/build/v7_build.py a1 my-morning --writer claude-tools --telemetry-out audit/bakeoff-2026-05-12-night/claude.write.jsonl --out audit/bakeoff-2026-05-12-night/claude/ 2>&1 | tee audit/bakeoff-2026-05-12-night/claude.stdout.log
    ```
 
    This will run for 5-15 minutes. Wait for it. Do NOT use ScheduleWakeup. Use synchronous tee-to-file so you have a full log on disk regardless of exit code.
@@ -88,7 +88,7 @@ Abort: `GOAL_ABORT reason="..." last_cmd="..." last_cwd="..." last_output="..." 
 7. **Probe telemetry.** Quote the count of `writer_tool_call` events and any `writer_tool_theatre` events:
 
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/bakeoff-2026-05-12-night && grep -c '"event": *"writer_tool_call"' audit/bakeoff-2026-05-12-night/claude.write.jsonl && grep -c '"event": *"writer_tool_theatre"' audit/bakeoff-2026-05-12-night/claude.write.jsonl && grep '"event": *"phase_writer_summary"' audit/bakeoff-2026-05-12-night/claude.write.jsonl | python3 -m json.tool
+   cd .worktrees/dispatch/claude/bakeoff-2026-05-12-night && grep -c '"event": *"writer_tool_call"' audit/bakeoff-2026-05-12-night/claude.write.jsonl && grep -c '"event": *"writer_tool_theatre"' audit/bakeoff-2026-05-12-night/claude.write.jsonl && grep '"event": *"phase_writer_summary"' audit/bakeoff-2026-05-12-night/claude.write.jsonl | python3 -m json.tool
    ```
 
    If the file is empty or the grep returns no matches, document that explicitly.
@@ -98,7 +98,7 @@ Abort: `GOAL_ABORT reason="..." last_cmd="..." last_cwd="..." last_output="..." 
 8. **Fire codex-tools build.**
 
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/bakeoff-2026-05-12-night && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python -u scripts/build/v7_build.py a1 my-morning --writer codex-tools --telemetry-out audit/bakeoff-2026-05-12-night/codex.write.jsonl --out audit/bakeoff-2026-05-12-night/codex/ 2>&1 | tee audit/bakeoff-2026-05-12-night/codex.stdout.log
+   cd .worktrees/dispatch/claude/bakeoff-2026-05-12-night && .venv/bin/python -u scripts/build/v7_build.py a1 my-morning --writer codex-tools --telemetry-out audit/bakeoff-2026-05-12-night/codex.write.jsonl --out audit/bakeoff-2026-05-12-night/codex/ 2>&1 | tee audit/bakeoff-2026-05-12-night/codex.stdout.log
    ```
 
 9. **Capture exit + probe telemetry** (same pattern as steps 6 + 7, on the codex artifacts).
@@ -110,7 +110,7 @@ Abort: `GOAL_ABORT reason="..." last_cmd="..." last_cwd="..." last_output="..." 
 11. **Inspect python_qg for both.**
 
     ```bash
-    cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/bakeoff-2026-05-12-night && cat audit/bakeoff-2026-05-12-night/claude/python_qg.json 2>/dev/null | python3 -m json.tool | head -100
+    cd .worktrees/dispatch/claude/bakeoff-2026-05-12-night && cat audit/bakeoff-2026-05-12-night/claude/python_qg.json 2>/dev/null | python3 -m json.tool | head -100
     echo ---
     cat audit/bakeoff-2026-05-12-night/codex/python_qg.json 2>/dev/null | python3 -m json.tool | head -100
     ```
@@ -153,7 +153,7 @@ Abort: `GOAL_ABORT reason="..." last_cmd="..." last_cwd="..." last_output="..." 
 16. **Commit.**
 
     ```bash
-    cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/claude/bakeoff-2026-05-12-night && git add audit/bakeoff-2026-05-12-night/ docs/decisions/2026-05-06-writer-selection-codex-gpt55.md && git commit -m "$(cat <<'EOF'
+    cd .worktrees/dispatch/claude/bakeoff-2026-05-12-night && git add audit/bakeoff-2026-05-12-night/ docs/decisions/2026-05-06-writer-selection-codex-gpt55.md && git commit -m "$(cat <<'EOF'
     test(bakeoff): claude-tools vs codex-tools on a1/my-morning (2026-05-12 night)
 
     Empirical test of writer-prompt rewrite (28417cc3cb) against the theatre

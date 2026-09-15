@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: greetings-invocations
 TOPIC_TITLE: Greetings Invocations
 MODULE_NUM: '6'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/greetings-invocations.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/greetings-invocations.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/greetings-invocations.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/greetings-invocations.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/greetings-invocations.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/greetings-invocations-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/greetings-invocations-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/greetings-invocations.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/greetings-invocations.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/greetings-invocations.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/greetings-invocations.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/greetings-invocations.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/greetings-invocations-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/greetings-invocations-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

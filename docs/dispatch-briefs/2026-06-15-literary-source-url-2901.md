@@ -22,10 +22,10 @@ students to readable originals. Read it: `gh issue view 2901`. (External-article
 - Verify backfill count: report rows updated / rows left NULL with reasons.
 
 ## Numbered steps
-1. `cd /Users/krisztiankoos/projects/learn-ukrainian && git fetch origin` (`--worktree` from origin/main).
+1. `cd . && git fetch origin` (`--worktree` from origin/main).
 2. Implement schema migration + ingest propagation + backfill script + tests (temp-db fixture).
-3. `cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -m pytest -k "literary or ingest or source_url" -q` → paste summary.
-4. `cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/ruff check scripts/ tests/` → paste final line.
+3. `cd . && .venv/bin/python -m pytest -k "literary or ingest or source_url" -q` → paste summary.
+4. `cd . && .venv/bin/ruff check scripts/ tests/` → paste final line.
 5. Confirm no DB staged: `git status --short` shows NO `*.db`.
 6. Commit `fix(corpus): propagate source_url into literary_texts (column + ingest + backfill) (#2901)`.
 7. `git push -u origin <branch>`; `gh pr create` referencing #2901. NO auto-merge.

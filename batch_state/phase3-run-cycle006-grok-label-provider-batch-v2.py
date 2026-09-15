@@ -21,7 +21,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-GROK = Path("/Users/krisztiankoos/.local/bin/grok")
+GROK = Path(".local/bin/grok")
 CYCLE = "phase3-v2-1-evaluation-cycle-006"
 AMENDMENT_SHA256 = "524e6eb4f18d38f104413fb32f421ff73c3d80bc411d338a6d8a31fabc087474"
 CYCLE006_AMENDMENT_SHA256 = AMENDMENT_SHA256

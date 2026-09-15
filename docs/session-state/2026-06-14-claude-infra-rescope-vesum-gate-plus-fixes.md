@@ -41,7 +41,7 @@
 
 ## Restart
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 git fetch origin -q && git log -1 --oneline origin/main
 curl -sS http://localhost:8765/api/delegate/active          # is #2991 still running?
 gh pr list --state open --json number,title,headRefName --limit 20   # did codex open the #2991 PR?

@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: intermedii-xvii-xviii
 TOPIC_TITLE: Intermedii Xvii Xviii
 MODULE_NUM: '107'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/intermedii-xvii-xviii.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/intermedii-xvii-xviii.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/intermedii-xvii-xviii.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/intermedii-xvii-xviii.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/intermedii-xvii-xviii.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/intermedii-xvii-xviii-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/intermedii-xvii-xviii-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/intermedii-xvii-xviii.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/intermedii-xvii-xviii.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/intermedii-xvii-xviii.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/intermedii-xvii-xviii.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/intermedii-xvii-xviii.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/intermedii-xvii-xviii-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/intermedii-xvii-xviii-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

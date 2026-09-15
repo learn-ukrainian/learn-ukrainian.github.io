@@ -3,14 +3,14 @@ LEVEL: LIT_WAR
 SLUG: markus-traces-on-road
 TOPIC_TITLE: Markus Traces On Road
 MODULE_NUM: '7'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-war/markus-traces-on-road.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/meta/markus-traces-on-road.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/markus-traces-on-road.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/activities/markus-traces-on-road.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/vocabulary/markus-traces-on-road.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/research/markus-traces-on-road-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/review/markus-traces-on-road-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-war/markus-traces-on-road.yaml
+META_PATH: curriculum/l2-uk-en/lit-war/meta/markus-traces-on-road.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-war/markus-traces-on-road.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-war/activities/markus-traces-on-road.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-war/vocabulary/markus-traces-on-road.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-war/research/markus-traces-on-road-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-war/review/markus-traces-on-road-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-war.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

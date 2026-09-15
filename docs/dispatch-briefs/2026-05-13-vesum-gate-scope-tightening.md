@@ -12,7 +12,7 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-Each bash block runs in a FRESH SHELL. Prefix every command with `cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/vesum-gate-scope-2026-05-13 && ...` or absolute path. Inside the worktree, `.venv/` is gitignored — use main checkout's `.venv` via absolute path: `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python`.
+Each bash block runs in a FRESH SHELL. Prefix every command with `cd .worktrees/dispatch/codex/vesum-gate-scope-2026-05-13 && ...` or absolute path. Inside the worktree, `.venv/` is gitignored — use main checkout's `.venv` via `.venv/bin/python`.
 
 ---
 
@@ -268,7 +268,7 @@ Provide a small helper `_build_fake_verify_words(known: dict[str, bool]) -> Call
 
 1. **Inspect current gate to confirm structure hasn't drifted:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/vesum-gate-scope-2026-05-13 && grep -nE '_ERROR_CORRECTION_INTENTIONAL_FIELDS|def _activity_vesum_text|def _build_vesum_text|_strip_metalinguistic' scripts/build/linear_pipeline.py | head -10
+   cd .worktrees/dispatch/codex/vesum-gate-scope-2026-05-13 && grep -nE '_ERROR_CORRECTION_INTENTIONAL_FIELDS|def _activity_vesum_text|def _build_vesum_text|_strip_metalinguistic' scripts/build/linear_pipeline.py | head -10
    ```
    Confirm line numbers approximate brief expectations.
 
@@ -282,19 +282,19 @@ Provide a small helper `_build_fake_verify_words(known: dict[str, bool]) -> Call
 
 6. **Run full linear_pipeline test suite:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/vesum-gate-scope-2026-05-13 && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/pytest tests/build/test_linear_pipeline.py -v 2>&1 | tail -30
+   cd .worktrees/dispatch/codex/vesum-gate-scope-2026-05-13 && .venv/bin/pytest tests/build/test_linear_pipeline.py -v 2>&1 | tail -30
    ```
    Quote summary line. Must show all new tests passing + existing tests still green. Per #M-7, pytest locally before push.
 
 7. **Lint:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/vesum-gate-scope-2026-05-13 && /Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/ruff check scripts/build/linear_pipeline.py tests/build/test_linear_pipeline.py 2>&1 | tail -5
+   cd .worktrees/dispatch/codex/vesum-gate-scope-2026-05-13 && .venv/bin/ruff check scripts/build/linear_pipeline.py tests/build/test_linear_pipeline.py 2>&1 | tail -5
    ```
    Quote final line.
 
 8. **Commit:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/vesum-gate-scope-2026-05-13 && git add -A && git commit -m "$(cat <<'INNEREOF'
+   cd .worktrees/dispatch/codex/vesum-gate-scope-2026-05-13 && git add -A && git commit -m "$(cat <<'INNEREOF'
    fix(vesum_gate): scope extraction across 4 leak surfaces (#1962 gate 1)
 
    m20 (a1/my-morning) V7 build #3 halted at vesum_verified after ADR-008
@@ -333,12 +333,12 @@ Provide a small helper `_build_fake_verify_words(known: dict[str, bool]) -> Call
 
 9. **Push branch:**
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/vesum-gate-scope-2026-05-13 && git push -u origin codex/vesum-gate-scope-2026-05-13
+   cd .worktrees/dispatch/codex/vesum-gate-scope-2026-05-13 && git push -u origin codex/vesum-gate-scope-2026-05-13
    ```
 
 10. **Open PR (NO auto-merge):**
     ```bash
-    cd /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/vesum-gate-scope-2026-05-13 && gh pr create --title "fix(vesum_gate): scope extraction across 4 leak surfaces (#1962 gate 1)" --body "$(cat <<'INNEREOF'
+    cd .worktrees/dispatch/codex/vesum-gate-scope-2026-05-13 && gh pr create --title "fix(vesum_gate): scope extraction across 4 leak surfaces (#1962 gate 1)" --body "$(cat <<'INNEREOF'
     ## Summary
 
     - Adds \`explanation\` to \`_ERROR_CORRECTION_INTENTIONAL_FIELDS\` (leak 3).

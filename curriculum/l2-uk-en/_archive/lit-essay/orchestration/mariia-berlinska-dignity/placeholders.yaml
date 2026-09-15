@@ -3,14 +3,14 @@ LEVEL: LIT_ESSAY
 SLUG: mariia-berlinska-dignity
 TOPIC_TITLE: Mariia Berlinska Dignity
 MODULE_NUM: '39'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-essay/mariia-berlinska-dignity.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/meta/mariia-berlinska-dignity.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/mariia-berlinska-dignity.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/activities/mariia-berlinska-dignity.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/vocabulary/mariia-berlinska-dignity.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/research/mariia-berlinska-dignity-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/review/mariia-berlinska-dignity-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-essay/mariia-berlinska-dignity.yaml
+META_PATH: curriculum/l2-uk-en/lit-essay/meta/mariia-berlinska-dignity.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-essay/mariia-berlinska-dignity.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-essay/activities/mariia-berlinska-dignity.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-essay/vocabulary/mariia-berlinska-dignity.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-essay/research/mariia-berlinska-dignity-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-essay/review/mariia-berlinska-dignity-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-essay.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

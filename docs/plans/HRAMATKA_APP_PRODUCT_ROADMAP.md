@@ -5,7 +5,7 @@
 > **Target Epic**: Epic #4542 (`hramatka` stream)  
 > **Target Repositories**:
 > - Public: `docs/plans/HRAMATKA_APP_PRODUCT_ROADMAP.md`
-> - Private: `/Users/krisztiankoos/projects/learn-ukrainian-infra-private/docs/plans/HRAMATKA_APP_PRODUCT_ROADMAP.md`
+> - Private: `learn-ukrainian-infra-private/docs/plans/HRAMATKA_APP_PRODUCT_ROADMAP.md`
 
 ---
 

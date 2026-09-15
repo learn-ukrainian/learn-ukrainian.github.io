@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: dialogue-with-latins
 TOPIC_TITLE: Dialogue With Latins
 MODULE_NUM: '64'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/dialogue-with-latins.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/dialogue-with-latins.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/dialogue-with-latins.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/dialogue-with-latins.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/dialogue-with-latins.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/dialogue-with-latins-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/dialogue-with-latins-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/dialogue-with-latins.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/dialogue-with-latins.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/dialogue-with-latins.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/dialogue-with-latins.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/dialogue-with-latins.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/dialogue-with-latins-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/dialogue-with-latins-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

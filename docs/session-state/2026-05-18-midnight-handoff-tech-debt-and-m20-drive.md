@@ -136,9 +136,9 @@ DeepSeek + Grok + Claude lanes idle — fire parallel tech debt while Codex chew
 ## Worktrees at handoff
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian                                                                        4bb0ec0ca1 [main]
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/codex/adopt-kubedojo-artifacts-20260517-215941     4bb0ec0ca1 [codex/adopt-kubedojo-artifacts-20260517-215941]  # ACTIVE
-/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/dispatch/gemini/artifacts-workflow-analysis-20260517-215135 0ce17b725a [gemini/artifacts-workflow-analysis-20260517-215135]  # DONE, NOT PUSHED
+.                                                                        4bb0ec0ca1 [main]
+.worktrees/dispatch/codex/adopt-kubedojo-artifacts-20260517-215941     4bb0ec0ca1 [codex/adopt-kubedojo-artifacts-20260517-215941]  # ACTIVE
+.worktrees/dispatch/gemini/artifacts-workflow-analysis-20260517-215135 0ce17b725a [gemini/artifacts-workflow-analysis-20260517-215135]  # DONE, NOT PUSHED
 ```
 
 **Cleanup needed after handoff**: push the analysis branch (or leave for the next session). Remove the worktree only after pushing.

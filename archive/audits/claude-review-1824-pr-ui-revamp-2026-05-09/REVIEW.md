@@ -326,7 +326,7 @@ tests/test_playground_api_stability.py .                                 [100%]
 ### 5.5 — Marker counts in live broker DB (deterministic from SQL)
 
 ```
-DB:  /Users/krisztiankoos/projects/learn-ukrainian/.mcp/servers/message-broker/messages.db
+DB:  .mcp/servers/message-broker/messages.db
 SQL: SELECT COUNT(*) FROM channel_messages WHERE upper(body) LIKE '%[X]%'
 
 [AGREE]:    207

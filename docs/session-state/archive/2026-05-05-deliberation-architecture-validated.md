@@ -113,7 +113,7 @@ Still parked. Writer choice still undecided. The deliberation architecture valid
 ## Cold-start protocol for next session
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 source ./.envrc
 
 # 1. Bootstrap from Monitor API (cached, condensed)

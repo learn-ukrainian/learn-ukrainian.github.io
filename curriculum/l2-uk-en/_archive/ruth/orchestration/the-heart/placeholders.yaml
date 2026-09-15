@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: the-heart
 TOPIC_TITLE: The Heart
 MODULE_NUM: '94'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/the-heart.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/the-heart.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/the-heart.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/the-heart.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/the-heart.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/the-heart-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/the-heart-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/the-heart.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/the-heart.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/the-heart.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/the-heart.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/the-heart.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/the-heart-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/the-heart-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

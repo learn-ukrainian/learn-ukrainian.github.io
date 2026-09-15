@@ -78,7 +78,7 @@ Defensive record is now in `git log` — auditable history of how each source la
 ## Cold-start protocol for next session
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian
+cd .
 source ./.envrc
 
 # 1. Bootstrap from Monitor API

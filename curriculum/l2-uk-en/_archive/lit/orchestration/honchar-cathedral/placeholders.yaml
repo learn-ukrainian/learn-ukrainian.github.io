@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: honchar-cathedral
 TOPIC_TITLE: Honchar Cathedral
 MODULE_NUM: '147'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/honchar-cathedral.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/honchar-cathedral.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/honchar-cathedral.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/honchar-cathedral.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/honchar-cathedral.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/honchar-cathedral-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/honchar-cathedral-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/honchar-cathedral.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/honchar-cathedral.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/honchar-cathedral.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/honchar-cathedral.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/honchar-cathedral.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/honchar-cathedral-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/honchar-cathedral-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

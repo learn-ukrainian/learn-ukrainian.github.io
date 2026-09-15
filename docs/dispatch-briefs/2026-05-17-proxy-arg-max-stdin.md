@@ -30,7 +30,7 @@ review of PR #2025 (audit/2026-05-16-openai-proxy-gemini-review/REPORT.md).
 
 2. **Reproduce the failure.** From the worktree:
    ```bash
-   cd /Users/krisztiankoos/projects/learn-ukrainian
+   cd .
    # start the proxy if not already up
    PROMPT=$(python3 -c "print('x' * 300000)")
    curl -sX POST http://127.0.0.1:8767/v1/chat/completions \

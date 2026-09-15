@@ -130,7 +130,7 @@ PRs #2306 + #2307 both hit transient `dorny/paths-filter@<SHA>` codeload failure
    ```bash
    .venv/bin/python scripts/ai_agent_bridge/__main__.py send-codex-ui \
      --thread 019e6063-c3da-78d1-acaa-4cd684a08786 \
-     --cwd /Users/krisztiankoos/.codex/worktrees/3a9a/learn-ukrainian \
+     --cwd .codex/worktrees/3a9a/learn-ukrainian \
      --from-file /tmp/m20-relay-round10.md \
      --timeout 5400 --json
    ```

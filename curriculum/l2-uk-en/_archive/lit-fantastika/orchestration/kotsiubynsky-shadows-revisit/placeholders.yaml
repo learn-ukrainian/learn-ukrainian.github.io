@@ -3,14 +3,14 @@ LEVEL: LIT_FANTASTIKA
 SLUG: kotsiubynsky-shadows-revisit
 TOPIC_TITLE: Kotsiubynsky Shadows Revisit
 MODULE_NUM: '3'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-fantastika/kotsiubynsky-shadows-revisit.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/meta/kotsiubynsky-shadows-revisit.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/kotsiubynsky-shadows-revisit.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/activities/kotsiubynsky-shadows-revisit.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/vocabulary/kotsiubynsky-shadows-revisit.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/research/kotsiubynsky-shadows-revisit-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-fantastika/review/kotsiubynsky-shadows-revisit-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-fantastika/kotsiubynsky-shadows-revisit.yaml
+META_PATH: curriculum/l2-uk-en/lit-fantastika/meta/kotsiubynsky-shadows-revisit.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-fantastika/kotsiubynsky-shadows-revisit.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-fantastika/activities/kotsiubynsky-shadows-revisit.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-fantastika/vocabulary/kotsiubynsky-shadows-revisit.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-fantastika/research/kotsiubynsky-shadows-revisit-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-fantastika/review/kotsiubynsky-shadows-revisit-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-fantastika.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

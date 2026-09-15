@@ -10,19 +10,19 @@
 Read the **existing research notes** (already complete — do NOT re-research):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/research/grabowicz-myth-shevchenko-research.md
+curriculum/l2-uk-en/lit-essay/research/grabowicz-myth-shevchenko-research.md
 ```
 
 Read the plan file (SOURCE OF TRUTH for structure):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-essay/grabowicz-myth-shevchenko.yaml
+curriculum/l2-uk-en/plans/lit-essay/grabowicz-myth-shevchenko.yaml
 ```
 
 Read the current meta file (for reference — you will replace the content_outline):
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/meta/grabowicz-myth-shevchenko.yaml
+curriculum/l2-uk-en/lit-essay/meta/grabowicz-myth-shevchenko.yaml
 ```
 
 ---

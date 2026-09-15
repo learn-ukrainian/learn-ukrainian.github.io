@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: kulish-myna-mazailo
 TOPIC_TITLE: 'Микола Куліш: «Мина Мазайло» — філологічна комедія'
 MODULE_NUM: '100'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/kulish-myna-mazailo.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/kulish-myna-mazailo.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/kulish-myna-mazailo.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/kulish-myna-mazailo.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/kulish-myna-mazailo.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/kulish-myna-mazailo-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/kulish-myna-mazailo-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/kulish-myna-mazailo.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/kulish-myna-mazailo.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/kulish-myna-mazailo.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/kulish-myna-mazailo.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/kulish-myna-mazailo.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/kulish-myna-mazailo-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/kulish-myna-mazailo-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

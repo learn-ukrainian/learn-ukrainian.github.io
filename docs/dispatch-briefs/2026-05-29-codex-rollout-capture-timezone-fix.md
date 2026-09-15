@@ -37,5 +37,5 @@ codex-tools must be the V7 SCALE writer (own weekly quota; claude-tools is unaff
 
 ## One-line end-to-end confirmation (for the PR body)
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -u scripts/build/v7_build.py a1 my-morning --writer codex-tools --use-generator --worktree; wt=$(ls -td .worktrees/builds/a1-my-morning-* | head -1); jq -e '[.[] | select((.namespace?=="mcp__sources__") or ((.name? // "")|startswith("mcp__sources__")))] | length > 0' "$wt/curriculum/l2-uk-en/a1/my-morning/writer_tool_calls.json"
+cd . && .venv/bin/python -u scripts/build/v7_build.py a1 my-morning --writer codex-tools --use-generator --worktree; wt=$(ls -td .worktrees/builds/a1-my-morning-* | head -1); jq -e '[.[] | select((.namespace?=="mcp__sources__") or ((.name? // "")|startswith("mcp__sources__")))] | length > 0' "$wt/curriculum/l2-uk-en/a1/my-morning/writer_tool_calls.json"
 ```

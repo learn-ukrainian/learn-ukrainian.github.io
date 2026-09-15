@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: koval-prose-renaissance
 TOPIC_TITLE: Koval Prose Renaissance
 MODULE_NUM: '189'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/koval-prose-renaissance.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/koval-prose-renaissance.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/koval-prose-renaissance.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/koval-prose-renaissance.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/koval-prose-renaissance.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/koval-prose-renaissance-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/koval-prose-renaissance-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/koval-prose-renaissance.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/koval-prose-renaissance.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/koval-prose-renaissance.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/koval-prose-renaissance.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/koval-prose-renaissance.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/koval-prose-renaissance-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/koval-prose-renaissance-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

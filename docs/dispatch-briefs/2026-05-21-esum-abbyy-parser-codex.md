@@ -94,10 +94,10 @@ Use `lxml` (already in repo deps; see `requirements.txt`). `lxml.etree.iterparse
 ## Verification before commit
 
 ```bash
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/ruff check scripts/ingest/ tests/
-cd /Users/krisztiankoos/projects/learn-ukrainian && .venv/bin/python -m pytest tests/ -k 'esum or abbyy' -v --tb=short
+cd . && .venv/bin/ruff check scripts/ingest/ tests/
+cd . && .venv/bin/python -m pytest tests/ -k 'esum or abbyy' -v --tb=short
 # Smoke-run on real data:
-cd /Users/krisztiankoos/projects/learn-ukrainian && /usr/bin/time -l .venv/bin/python scripts/ingest/esum_abbyy_parser.py --input data/raw/esum/ia-abbyy-xml/vol1-abbyy.xml --output /tmp/esum_vol1_abbyy.jsonl --vol 1
+cd . && /usr/bin/time -l .venv/bin/python scripts/ingest/esum_abbyy_parser.py --input data/raw/esum/ia-abbyy-xml/vol1-abbyy.xml --output /tmp/esum_vol1_abbyy.jsonl --vol 1
 wc -l /tmp/esum_vol1_abbyy.jsonl   # 4800-5500
 # Sample diff vs deployed:
 head -3 /tmp/esum_vol1_abbyy.jsonl

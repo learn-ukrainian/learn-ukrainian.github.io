@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: bahrianyi-tiger-trappers
 TOPIC_TITLE: Bahrianyi Tiger Trappers
 MODULE_NUM: '126'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/bahrianyi-tiger-trappers.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/bahrianyi-tiger-trappers.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/bahrianyi-tiger-trappers.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/bahrianyi-tiger-trappers.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/bahrianyi-tiger-trappers.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/bahrianyi-tiger-trappers-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/bahrianyi-tiger-trappers-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/bahrianyi-tiger-trappers.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/bahrianyi-tiger-trappers.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/bahrianyi-tiger-trappers.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/bahrianyi-tiger-trappers.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/bahrianyi-tiger-trappers.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/bahrianyi-tiger-trappers-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/bahrianyi-tiger-trappers-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

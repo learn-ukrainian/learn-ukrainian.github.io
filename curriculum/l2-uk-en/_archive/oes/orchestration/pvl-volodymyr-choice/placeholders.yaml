@@ -3,14 +3,14 @@ LEVEL: OES
 SLUG: pvl-volodymyr-choice
 TOPIC_TITLE: Pvl Volodymyr Choice
 MODULE_NUM: '32'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/oes/pvl-volodymyr-choice.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/meta/pvl-volodymyr-choice.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/pvl-volodymyr-choice.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/activities/pvl-volodymyr-choice.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/vocabulary/pvl-volodymyr-choice.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/research/pvl-volodymyr-choice-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/oes/review/pvl-volodymyr-choice-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/OES.md
+PLAN_PATH: curriculum/l2-uk-en/plans/oes/pvl-volodymyr-choice.yaml
+META_PATH: curriculum/l2-uk-en/oes/meta/pvl-volodymyr-choice.yaml
+CONTENT_PATH: curriculum/l2-uk-en/oes/pvl-volodymyr-choice.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/oes/activities/pvl-volodymyr-choice.yaml
+VOCAB_PATH: curriculum/l2-uk-en/oes/vocabulary/pvl-volodymyr-choice.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/oes/research/pvl-volodymyr-choice-research.md
+REVIEW_PATH: curriculum/l2-uk-en/oes/review/pvl-volodymyr-choice-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/OES.md
 SCHEMA_PATH: schemas/activities-oes.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (paleography)

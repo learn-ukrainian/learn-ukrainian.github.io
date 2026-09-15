@@ -3,14 +3,14 @@ LEVEL: LIT_ESSAY
 SLUG: franko-some-words
 TOPIC_TITLE: Franko Some Words
 MODULE_NUM: '6'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-essay/franko-some-words.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/meta/franko-some-words.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/franko-some-words.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/activities/franko-some-words.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/vocabulary/franko-some-words.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/research/franko-some-words-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/review/franko-some-words-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-essay/franko-some-words.yaml
+META_PATH: curriculum/l2-uk-en/lit-essay/meta/franko-some-words.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-essay/franko-some-words.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-essay/activities/franko-some-words.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-essay/vocabulary/franko-some-words.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-essay/research/franko-some-words-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-essay/review/franko-some-words-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-essay.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

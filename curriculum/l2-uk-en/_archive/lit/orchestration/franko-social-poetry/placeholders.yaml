@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: franko-social-poetry
 TOPIC_TITLE: Franko Social Poetry
 MODULE_NUM: '47'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/franko-social-poetry.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/franko-social-poetry.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/franko-social-poetry.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/franko-social-poetry.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/franko-social-poetry.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/franko-social-poetry-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/franko-social-poetry-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/franko-social-poetry.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/franko-social-poetry.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/franko-social-poetry.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/franko-social-poetry.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/franko-social-poetry.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/franko-social-poetry-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/franko-social-poetry-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

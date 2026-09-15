@@ -108,7 +108,7 @@ Use the captured forensics in `audit/2026-05-19-m20-build-8-gamma-results/`:
 
 ```bash
 # Symlink .venv into the worktree (worktrees don't inherit the main project venv)
-ln -s /Users/krisztiankoos/projects/learn-ukrainian/.venv .venv 2>/dev/null || true
+ln -s .venv .venv 2>/dev/null || true
 .venv/bin/python - <<'PY'
 import json
 from pathlib import Path

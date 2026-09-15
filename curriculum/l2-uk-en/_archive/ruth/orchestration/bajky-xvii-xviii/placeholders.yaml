@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: bajky-xvii-xviii
 TOPIC_TITLE: Bajky Xvii Xviii
 MODULE_NUM: '109'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/bajky-xvii-xviii.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/bajky-xvii-xviii.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/bajky-xvii-xviii.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/bajky-xvii-xviii.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/bajky-xvii-xviii.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/bajky-xvii-xviii-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/bajky-xvii-xviii-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/bajky-xvii-xviii.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/bajky-xvii-xviii.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/bajky-xvii-xviii.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/bajky-xvii-xviii.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/bajky-xvii-xviii.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/bajky-xvii-xviii-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/bajky-xvii-xviii-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

@@ -3,14 +3,14 @@ LEVEL: RUTH
 SLUG: attack-on-bishops
 TOPIC_TITLE: Attack On Bishops
 MODULE_NUM: '62'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/ruth/attack-on-bishops.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/meta/attack-on-bishops.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/attack-on-bishops.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/activities/attack-on-bishops.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/vocabulary/attack-on-bishops.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/research/attack-on-bishops-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/ruth/review/attack-on-bishops-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/RUTH.md
+PLAN_PATH: curriculum/l2-uk-en/plans/ruth/attack-on-bishops.yaml
+META_PATH: curriculum/l2-uk-en/ruth/meta/attack-on-bishops.yaml
+CONTENT_PATH: curriculum/l2-uk-en/ruth/attack-on-bishops.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/ruth/activities/attack-on-bishops.yaml
+VOCAB_PATH: curriculum/l2-uk-en/ruth/vocabulary/attack-on-bishops.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/ruth/research/attack-on-bishops-research.md
+REVIEW_PATH: curriculum/l2-uk-en/ruth/review/attack-on-bishops-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/RUTH.md
 SCHEMA_PATH: schemas/activities-ruth.schema.json
 WORD_TARGET: '5000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (Ruthenian)

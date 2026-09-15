@@ -8,13 +8,13 @@
 Read the plan file to understand what this module covers:
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/stus-moral-imperative.yaml
+curriculum/l2-uk-en/plans/lit/stus-moral-imperative.yaml
 ```
 
 Read the current meta file for content_outline structure:
 
 ```
-/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/stus-moral-imperative.yaml
+curriculum/l2-uk-en/lit/meta/stus-moral-imperative.yaml
 ```
 
 ## Your Task

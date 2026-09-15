@@ -3,14 +3,14 @@ LEVEL: LIT_WAR
 SLUG: kotsyubailo-legacy-lit
 TOPIC_TITLE: Kotsyubailo Legacy Lit
 MODULE_NUM: '14'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-war/kotsyubailo-legacy-lit.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/meta/kotsyubailo-legacy-lit.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/kotsyubailo-legacy-lit.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/activities/kotsyubailo-legacy-lit.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/vocabulary/kotsyubailo-legacy-lit.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/research/kotsyubailo-legacy-lit-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-war/review/kotsyubailo-legacy-lit-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-war/kotsyubailo-legacy-lit.yaml
+META_PATH: curriculum/l2-uk-en/lit-war/meta/kotsyubailo-legacy-lit.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-war/kotsyubailo-legacy-lit.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-war/activities/kotsyubailo-legacy-lit.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-war/vocabulary/kotsyubailo-legacy-lit.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-war/research/kotsyubailo-legacy-lit-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-war/review/kotsyubailo-legacy-lit-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-war.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

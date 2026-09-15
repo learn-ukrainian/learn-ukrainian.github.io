@@ -3,14 +3,14 @@ LEVEL: LIT_ESSAY
 SLUG: mokryk-rebellion-against-empire
 TOPIC_TITLE: 'Радомир Мокрик: Бунт проти імперії'
 MODULE_NUM: '44'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit-essay/mokryk-rebellion-against-empire.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/meta/mokryk-rebellion-against-empire.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/mokryk-rebellion-against-empire.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/activities/mokryk-rebellion-against-empire.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/vocabulary/mokryk-rebellion-against-empire.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/research/mokryk-rebellion-against-empire-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit-essay/review/mokryk-rebellion-against-empire-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit-essay/mokryk-rebellion-against-empire.yaml
+META_PATH: curriculum/l2-uk-en/lit-essay/meta/mokryk-rebellion-against-empire.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit-essay/mokryk-rebellion-against-empire.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit-essay/activities/mokryk-rebellion-against-empire.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit-essay/vocabulary/mokryk-rebellion-against-empire.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit-essay/research/mokryk-rebellion-against-empire-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit-essay/review/mokryk-rebellion-against-empire-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit-essay.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

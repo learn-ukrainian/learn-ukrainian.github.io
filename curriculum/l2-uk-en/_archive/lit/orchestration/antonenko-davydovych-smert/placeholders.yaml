@@ -3,14 +3,14 @@ LEVEL: LIT
 SLUG: antonenko-davydovych-smert
 TOPIC_TITLE: Antonenko Davydovych Smert
 MODULE_NUM: '119'
-PLAN_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/plans/lit/antonenko-davydovych-smert.yaml
-META_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/meta/antonenko-davydovych-smert.yaml
-CONTENT_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/antonenko-davydovych-smert.md
-ACTIVITIES_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/activities/antonenko-davydovych-smert.yaml
-VOCAB_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/vocabulary/antonenko-davydovych-smert.yaml
-RESEARCH_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/research/antonenko-davydovych-smert-research.md
-REVIEW_PATH: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/lit/review/antonenko-davydovych-smert-review.md
-QUICK_REF_PATH: /Users/krisztiankoos/projects/learn-ukrainian/claude_extensions/quick-ref/LIT.md
+PLAN_PATH: curriculum/l2-uk-en/plans/lit/antonenko-davydovych-smert.yaml
+META_PATH: curriculum/l2-uk-en/lit/meta/antonenko-davydovych-smert.yaml
+CONTENT_PATH: curriculum/l2-uk-en/lit/antonenko-davydovych-smert.md
+ACTIVITIES_PATH: curriculum/l2-uk-en/lit/activities/antonenko-davydovych-smert.yaml
+VOCAB_PATH: curriculum/l2-uk-en/lit/vocabulary/antonenko-davydovych-smert.yaml
+RESEARCH_PATH: curriculum/l2-uk-en/lit/research/antonenko-davydovych-smert-research.md
+REVIEW_PATH: curriculum/l2-uk-en/lit/review/antonenko-davydovych-smert-review.md
+QUICK_REF_PATH: claude_extensions/quick-ref/LIT.md
 SCHEMA_PATH: schemas/activities-lit.schema.json
 WORD_TARGET: '4000'
 SKILL_IDENTITY: Professor of Ukrainian Arts (literature)

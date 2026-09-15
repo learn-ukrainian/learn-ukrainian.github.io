@@ -60,7 +60,7 @@ at.
 
 5. **Run the benchmark to see your work cause an improvement.**
    ```
-   cd /Users/krisztiankoos/projects/learn-ukrainian
+   cd .
    # venv symlinked into worktree by delegate.py
    .venv/bin/python scripts/audit/code_review_benchmark.py --help
    # venv symlinked into worktree by delegate.py
