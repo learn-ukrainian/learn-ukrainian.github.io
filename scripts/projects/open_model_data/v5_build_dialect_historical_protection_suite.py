@@ -122,7 +122,7 @@ EXISTING_SUITE_FILE = DEFAULT_OUTPUT_DIR / "dialect_historical_protection_suite_
 OES_WIKI_DIR = REPO_ROOT / "wiki" / "linguistics" / "oes"
 
 LATER_SLAVIC_REJECT_RE = re.compile(
-    r"рицерского|шляхецкого|литовськ|статут|вольност",
+    r"рицерского|шляхецкого|литовськ|статут|вольност|сътворихомъ|проявленье\s+крещенье",
     re.IGNORECASE,
 )
 
@@ -152,21 +152,13 @@ def extract_sentences(text: str) -> list[str]:
 def _load_existing_suite() -> list[dict[str, Any]]:
     if not EXISTING_SUITE_FILE.exists():
         return []
-    return [
-        json.loads(line)
-        for line in EXISTING_SUITE_FILE.read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
+    return [json.loads(line) for line in EXISTING_SUITE_FILE.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
 def _reuse_existing_subgroup(subgroup: str, quota: int) -> list[dict[str, Any]]:
     rows = [c for c in _load_existing_suite() if c.get("subgroup") == subgroup]
     if subgroup == "middle_ukrainian":
-        rows = [
-            c
-            for c in rows
-            if "життя та творчість" not in (c.get("source_metadata") or {}).get("work", "").lower()
-        ]
+        rows = [c for c in rows if "життя та творчість" not in (c.get("source_metadata") or {}).get("work", "").lower()]
     return rows[:quota]
 
 
@@ -337,9 +329,7 @@ def mine_oes_diplomatic(quota: int = 100) -> list[dict[str, Any]]:
     for rec in mine_oes_from_seeds() + mine_oes_from_wiki():
         _append_unique_oes(raw, rec)
     if len(raw) < quota:
-        raise ValueError(
-            f"OES diplomatic harvest produced {len(raw)} unique authentic cases, need {quota}"
-        )
+        raise ValueError(f"OES diplomatic harvest produced {len(raw)} unique authentic cases, need {quota}")
     ordered = _diversify_oes_monuments(raw, quota)
     records = []
     for idx, rec in enumerate(ordered, start=1):
@@ -680,8 +670,7 @@ def mine_historical_sentences(conn: sqlite3.Connection | None) -> list[dict[str,
             reused_mid = reused_mid + mine_middle_ua_from_seeds(100 - len(reused_mid))
         if len(reused_mid) < 100:
             raise ValueError(
-                f"Middle Ukrainian harvest produced {len(reused_mid)} cases after "
-                "dropping biography rows, need 100"
+                f"Middle Ukrainian harvest produced {len(reused_mid)} cases after dropping biography rows, need 100"
             )
         for rec in reused_mid:
             rec = dict(rec)
@@ -961,9 +950,7 @@ def mine_anti_surzhyk_controls(conn: sqlite3.Connection | None) -> list[dict[str
                     break
 
     # Load authentic human-annotated calques from UA-GEC
-    uagec_path = resolve_data_path(
-        "data/projects/open_model_data/decolonization/mined/uagec_mined_calques.jsonl"
-    )
+    uagec_path = resolve_data_path("data/projects/open_model_data/decolonization/mined/uagec_mined_calques.jsonl")
 
     if uagec_path.exists():
         with uagec_path.open("r", encoding="utf-8") as f:

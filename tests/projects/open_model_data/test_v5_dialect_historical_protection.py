@@ -336,9 +336,9 @@ def test_oes_predicate_rejects_commentary_recipes_wrappers_and_padding() -> None
         },
     }
     rejects = [
-        '[П]рεходАщεε врεмА» означає незакінчену дію або пасивність (бихъ, бих(ъ)сА)',
+        "[П]рεходАщεε врεмА» означає незакінчену дію або пасивність (бихъ, бих(ъ)сА)",
         "Привертає увагу м'якість кінцевого -т у формі третьої особи: εсть, нЂсть, вЂсть",
-        '[Д]ієслова обох дієвідмін... вживаються в інших формах, напр.: чεлъ εсмь',
+        "[Д]ієслова обох дієвідмін... вживаються в інших формах, напр.: чεлъ εсмь",
         "Нεхай хорій пиεтъ щодε(н) за пиво... Нεхай дода(ст) корεня чεмεрици бЂлой",
         "Возми корЂнA лЂскового сухого любъ свЂжого, покрай, вари в оцтЂ",
         "**«По потопЂ трие сынове Ноеви»** (Початок розповіді…) [S4], chunk_id:",
@@ -404,9 +404,7 @@ def test_oes_predicate_rejects_commentary_recipes_wrappers_and_padding() -> None
     for text, target in later_rejects:
         rec = {**labeled_pravda, "input_text": text, "target_term": target}
         assert not oes_record_is_authentic(rec), text
-        assert not oes_text_is_diplomatic_excerpt(text) or not oes_text_matches_named_monument(
-            text, "Руська Правда"
-        )
+        assert not oes_text_is_diplomatic_excerpt(text) or not oes_text_matches_named_monument(text, "Руська Правда")
 
     garbled_slovo = {
         **labeled_pvl,
@@ -428,9 +426,9 @@ def test_oes_predicate_rejects_commentary_recipes_wrappers_and_padding() -> None
         "а дроугое холопьство: поиметь робу, а безъ ряду; поимет ли с рядомъ како ся боудеть рядилъ, на том же и стоитъ",
         "а дроугое холопьство: поиметь робу, а безъ рѧдоу; поимет ли с рѧдомъ како сѧ боудеть рѧдилъ, на том же и стоитъ",
     )
-    assert oes_passage_fingerprint(
-        "Аже закупъ бижить <!-- VERIFY:\ncurrency\n--> то обель"
-    ) == oes_passage_fingerprint("Аже закупъ бижить то обель")
+    assert oes_passage_fingerprint("Аже закупъ бижить <!-- VERIFY:\ncurrency\n--> то обель") == oes_passage_fingerprint(
+        "Аже закупъ бижить то обель"
+    )
 
     genuine = {
         **labeled_pvl,
@@ -476,9 +474,7 @@ def test_oes_stratum_is_diplomatic_not_modern_translation(suite_cases: list[dict
                 right["eval_id"],
             )
     unique_passages = oes_honest_unique_passages([c["input_text"] for c in oes])
-    assert len(unique_passages) == len(oes), (
-        f"honest unique passages {len(unique_passages)} != syntactic {len(oes)}"
-    )
+    assert len(unique_passages) == len(oes), f"honest unique passages {len(unique_passages)} != syntactic {len(oes)}"
 
     mid = [c for c in suite_cases if c["subgroup"] == "middle_ukrainian"]
     assert len(mid) == 100
@@ -521,3 +517,50 @@ def test_evaluator_detects_malformed_thought_tags(suite_cases: list[dict[str, An
     assert res.is_pass is False
     assert res.is_corrupted is True
     assert "unclosed_thought_tag" in (res.failure_reason or "")
+
+
+def test_homoglyph_near_duplicate_detection() -> None:
+    """Verify that Latin homoglyph consonants (c/с, p/р, x/х) trigger near-duplicate detection."""
+    p1 = "ничить трава жалощами, а древо с тугою къ земли преклонилось"
+    p2 = "ничить трава жалощами, а древо \u0063 тугою къ земли преклонилось"  # Latin c
+    assert oes_passages_are_near_duplicates(p1, p2)
+
+
+def test_oes_inauthenticity_rejection() -> None:
+    """Verify that prologue headings and editorial reconstructions are rejected."""
+    spaso_prilutsky = {
+        "eval_id": "eval_prot_hist_test",
+        "input_text": (
+            "Проявленье крещенье русьския земля святого апостола АндрЂя, "
+            "како приходилъ в Русь и благословилъ мЂсто и крЂстъ поставилъ идЂже нынЂ градъ Киевъ"
+        ),
+        "target_term": "АндрЂя",
+        "expected_action": "PRESERVE",
+        "source_metadata": {"work": "Повість временних літ", "year": 1113},
+    }
+    assert not oes_record_is_authentic(spaso_prilutsky)
+
+    editorial_reconstruction = {
+        "eval_id": "eval_prot_hist_test",
+        "input_text": "сътворихомъ и ва новымъ написаниємъ",
+        "target_term": "сътворихомъ",
+        "expected_action": "PRESERVE",
+        "source_metadata": {"work": "Повість временних літ", "year": 1113},
+    }
+    assert not oes_record_is_authentic(editorial_reconstruction)
+
+
+def test_surzhyk_banned_targets_rejects_sum11_standard_words() -> None:
+    """Standard Ukrainian words like відмітити/відмічати (СУМ-11: ставити позначку) must be banned from anti-surzhyk."""
+    for word in ("відмітив", "відмітити", "відмічати", "відмічає", "відмічають"):
+        assert word in SURZHYK_BANNED_TARGETS
+        assert word not in SURZHYK_TARGET_ALLOWLIST
+        assert not surzhyk_record_is_authentic(
+            {
+                "eval_id": "eval_test",
+                "subgroup": "colonial_surzhyk_control",
+                "target_term": word,
+                "input_text": f"Він {word} локації на плані.",
+                "source_metadata": {"source": "style_guide"},
+            }
+        )

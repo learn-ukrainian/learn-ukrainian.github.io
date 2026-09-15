@@ -140,7 +140,8 @@ OES_COMMENTARY_RE: re.Pattern[str] = re.compile(
     r"раствор|преходящ|прешедш|напр\.?:|граматик[аииу]|"
     r"атематичн|сигматичн|парадигм|"
     r"челъ\s*/|/\s*(?:чла|чло|чли|ла\b|ло\b|бысте|бяху|быша)|"
-    r"быхъ\s+челъ|быхомъ\s+чли|бяше\s+[—–-]",
+    r"быхъ\s+челъ|быхомъ\s+чли|бяше\s+[—–-]|"
+    r"сътворихомъ|проявленье\s+крещенье|реконструкц",
     re.IGNORECASE,
 )
 
@@ -158,8 +159,8 @@ OES_MEDICAL_RE: re.Pattern[str] = re.compile(
 OES_WIKI_WRAPPER_RE: re.Pattern[str] = re.compile(
     r"chunk_id|\*\*«|^\*\*|\[\s*S\d+\s*\]|`[0-9a-f]{8}_c\d+|"
     r"початок розповіді|вступний заголовок|лаврент|"
-    r"<!--|--&gt;|&lt;!--|VERIFY:|Canonical form",
-    re.IGNORECASE | re.MULTILINE,
+    r"фрагмент\s+договору|договору\s+907|договору\s+911",
+    re.IGNORECASE,
 )
 
 OES_LATER_SLAVIC_RE: re.Pattern[str] = re.compile(
@@ -173,11 +174,11 @@ OES_LATER_SLAVIC_RE: re.Pattern[str] = re.compile(
 # Text labeled as a named monument must actually be that monument.
 OES_PVL_TEXT_RE: re.Pattern[str] = re.compile(
     r"повѣсти\s+врем|потоп[Ђѣ]|ноеви|симови|хамови|афетъ|"
-    r"руска[ӕѧя]\s+зем|кнѧжит|нарек\s+ю|явЂ\s+будеть|сътворихомъ|"
+    r"руска[ӕѧя]\s+зем|кнѧжит|нарек\s+ю|явЂ\s+будеть|"
     r"дъщерию|словеньк|живущем\s+крьщен|киликию|еюпетъ|индикия|"
     r"нирокурия|оудолжишася|свьщания|памъфилию|ефивопья|"
-    r"неятью|съгрЂшениє|клЂн|андрЂя|крЂстъ\s+поставилъ|"
-    r"проявленье\s+крещенье",
+    r"неятью|съгрЂшениє|клЂн|столпа|столпъ|раздЂленьи\s+языкъ|"
+    r"видЂти\s+градъ",
     re.IGNORECASE,
 )
 
@@ -189,7 +190,8 @@ OES_SLOVO_TEXT_RE: re.Pattern[str] = re.compile(
     r"сула\s+не\s+течет|жемчюжн|ожерел|плъкы|бръзыя|"
     r"чрън|посЂяна|польяна|кая\s+раны|небесЂ|дЂвици|свЂтит|"
     r"жалощам|преклонил|звЂринъ|стязи|вережени|"
-    r"дивъ|ветрило|хинов|чръны|веслы|выльяти|роскропити",
+    r"дивъ|ветрило|хинов|чръны|веслы|выльяти|роскропити|"
+    r"ратаев|врани\s+граяхут",
     re.IGNORECASE,
 )
 
@@ -282,8 +284,6 @@ SURZHYK_TARGET_ALLOWLIST: frozenset[str] = frozenset(
         "палатках",
         "палаткою",
         "палатка",
-        "відмітити",
-        "відмітив",
         "почув себе",
         "на відкритому повітрі",
         "в сторону",
@@ -301,6 +301,7 @@ SURZHYK_TARGET_ALLOWLIST: frozenset[str] = frozenset(
         "відносилися",
         "відноситись",
         "відносились",
+        "являюсь",
         "являється",
         "являються",
         "на протязі",
@@ -366,6 +367,11 @@ SURZHYK_BANNED_TARGETS: frozenset[str] = frozenset(
         "настільки",
         "образ",
         "коментарій",
+        "відмітити",
+        "відмітив",
+        "відмічати",
+        "відмічає",
+        "відмічають",
         "коментар",
     }
 )
@@ -435,29 +441,45 @@ def oes_has_diplomatic_graph(text: str) -> bool:
     return bool(OES_GRAPH_RE.search(text or ""))
 
 
-_LATIN_VOWEL_TO_CYRILLIC = str.maketrans(
+_HOMOGLYPH_TO_CYRILLIC = str.maketrans(
     {
         "a": "а",
+        "c": "с",
         "e": "е",
         "i": "і",
+        "j": "ј",
         "o": "о",
+        "p": "р",
+        "s": "ѕ",
         "u": "у",
+        "x": "х",
         "y": "у",
         "A": "А",
+        "B": "В",
+        "C": "С",
         "E": "Е",
+        "H": "Н",
         "I": "І",
+        "J": "Ј",
+        "K": "К",
+        "M": "М",
         "O": "О",
+        "P": "Р",
+        "S": "Ѕ",
+        "T": "Т",
         "U": "У",
+        "X": "Х",
         "Y": "У",
     }
 )
+_LATIN_VOWEL_TO_CYRILLIC = _HOMOGLYPH_TO_CYRILLIC
 
 
 def oes_strip_combining(text: str) -> str:
-    """Drop printed stresses so Половéцкомъ still matches половец."""
+    """Drop printed stresses so Половéцкомъ still matches половец and fold homoglyphs."""
     s = unicodedata.normalize("NFKC", text or "")
     s = "".join(ch for ch in unicodedata.normalize("NFKD", s) if unicodedata.category(ch) != "Mn")
-    return s.translate(_LATIN_VOWEL_TO_CYRILLIC)
+    return s.translate(_HOMOGLYPH_TO_CYRILLIC)
 
 
 def oes_fold_graph_variants(text: str) -> str:

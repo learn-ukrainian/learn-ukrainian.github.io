@@ -4,7 +4,7 @@
   "phase": "Phase 5.2: Dialect & Historical Protection Test Suite (Anti-Over-Standardization Gate)",
   "issue": 8051,
   "parent_epic": 6321,
-  "generated_at": "2026-09-15T13:34:54.335038+00:00",
+  "generated_at": "2026-09-15T14:36:01.972253+00:00",
   "suite_summary": {
     "total_test_cases": 600,
     "preserve_cases": 500,
@@ -44,7 +44,7 @@
   "files": {
     "test_suite_jsonl": {
       "path": "data/projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl",
-      "sha256": "6a505491ea04a3d68eaab4abcca1e125dfbc96ba880ebd5461a51c7f041ef6d3",
+      "sha256": "06024b1eae4aca819aac0b2b8db86c484745d89c8d21880b7a1a0f53ab201100",
       "record_count": 600
     }
   }
