@@ -75,7 +75,8 @@ No web scraping is required. Our local SQLite repository (`data/sources.db`) hol
 pie title data/sources.db Historical & Dialectal Holdings (Records & Chunks)
     "Middle Ukrainian & Baroque Literature (20,085 chunks)" : 20085
     "Borys Grinchenko Regional Field Citations (11,000+ entries)" : 11000
-    "Old East Slavic Primary Chronicles (10,202 chunks)" : 10202
+    "OES Composite Chronicle Candidates (7,469 chunks)" : 7469
+    "OES Modern Translations & Commentary (2,733 chunks)" : 2733
     "Saint Sophia Inscriptions Portal (4,157 records)" : 4157
 ```
 
