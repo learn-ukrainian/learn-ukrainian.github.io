@@ -2116,3 +2116,37 @@ def test_normalize_claude_shape_fallback_pace_uses_codexbar_summary_format():
         assert "Expected" in res["pace_summary"]
         assert "% used" in res["pace_summary"]
         assert "pace delta" not in res["pace_summary"]
+
+
+def test_codex_wham_weekly_only_window_uses_limit_window_seconds(monkeypatch):
+    """ChatGPT wham often returns only primary_window with limit_window_seconds=604800
+    (weekly) and secondary_window=null. Do not default that to a fake 5h window."""
+    from scripts.api import subscription_usage as su
+
+    payload = {
+        "rate_limit": {
+            "allowed": True,
+            "limit_reached": False,
+            "primary_window": {
+                "used_percent": 40,
+                "limit_window_seconds": 604800,
+                "reset_after_seconds": 313014,
+                "reset_at": 1789805715,
+            },
+            "secondary_window": None,
+        }
+    }
+
+    def fake_http(method, url, headers=None, body=None, timeout_s=None):
+        return 200, payload, None
+
+    monkeypatch.setattr(su, "_load_codex_oauth_token", lambda: "tok")
+    monkeypatch.setattr(su, "_http_json_request", fake_http)
+    res = su._probe_codex_native(timeout_s=5)
+    assert res["status"] == "healthy"
+    assert res["primary_used_pct"] is None
+    assert res["weekly_used_pct"] == 40.0
+    assert res["windows"]["secondary"]["window_minutes"] == 10080
+    assert res["pace_summary"] is not None
+    assert "Expected" in res["pace_summary"]
+    assert res["will_last_to_reset"] is not None

@@ -1029,7 +1029,13 @@ def _probe_codex_native(*, timeout_s: float) -> dict[str, Any]:
     primary = rate.get("primary_window") if isinstance(rate, dict) else None
     secondary = rate.get("secondary_window") if isinstance(rate, dict) else None
 
-    def _map_win(win: dict[str, Any] | None) -> dict[str, Any] | None:
+    def _map_win(win: dict[str, Any] | None, *, default_minutes: int) -> dict[str, Any] | None:
+        """Map ChatGPT wham rate windows; honor ``limit_window_seconds`` (CodexBar).
+
+        Live payloads often omit ``window_minutes`` and only send
+        ``limit_window_seconds`` (e.g. 604800 = weekly). Defaulting that to 300
+        mislabels weekly as 5h and hides pace (reset is days out).
+        """
         if not isinstance(win, dict):
             return None
         used = win.get("used_percent") or win.get("usedPercent")
@@ -1039,20 +1045,53 @@ def _probe_codex_native(*, timeout_s: float) -> dict[str, Any]:
                 used = float(win["used"]) / float(limit) * 100.0
         if not isinstance(used, (int, float)):
             return None
-        return _window_from_used_pct(
-            float(used),
-            window_minutes=int(win.get("window_minutes") or win.get("windowMinutes") or 300),
-            resets_at=win.get("reset_at") or win.get("resetsAt"),
-        )
+        win_mins: int | None = None
+        for key in ("window_minutes", "windowMinutes"):
+            raw = win.get(key)
+            if isinstance(raw, (int, float)) and not isinstance(raw, bool) and raw > 0:
+                win_mins = int(raw)
+                break
+        if win_mins is None:
+            for key in ("limit_window_seconds", "limitWindowSeconds"):
+                raw = win.get(key)
+                if isinstance(raw, (int, float)) and not isinstance(raw, bool) and raw > 0:
+                    win_mins = max(1, int(raw) // 60)
+                    break
+        if win_mins is None:
+            win_mins = default_minutes
+        reset = win.get("reset_at") or win.get("resetsAt") or win.get("resetAt")
+        return _window_from_used_pct(float(used), window_minutes=win_mins, resets_at=reset)
 
-    usage = {
-        "primary": _map_win(primary) or _map_win(rate.get("primary") if isinstance(rate, dict) else None),
-        "secondary": _map_win(secondary) or _map_win(rate.get("secondary") if isinstance(rate, dict) else None),
-    }
+    # CodexBar: primary = session (~5h), secondary = weekly (~7d).
+    primary_mapped = _map_win(primary, default_minutes=300) or _map_win(
+        rate.get("primary") if isinstance(rate, dict) else None, default_minutes=300
+    )
+    secondary_mapped = _map_win(secondary, default_minutes=WEEKLY_WINDOW_MINUTES) or _map_win(
+        rate.get("secondary") if isinstance(rate, dict) else None,
+        default_minutes=WEEKLY_WINDOW_MINUTES,
+    )
+    # When ChatGPT only returns one window, slot it by duration (weekly vs session)
+    # instead of duplicating it as a fake 5h secondary.
+    if primary_mapped is not None and secondary_mapped is None:
+        mins = int(primary_mapped.get("windowMinutes") or 0)
+        if mins > 400:  # longer than a session window → weekly/long
+            secondary_mapped = primary_mapped
+            primary_mapped = None
+    elif secondary_mapped is not None and primary_mapped is None:
+        mins = int(secondary_mapped.get("windowMinutes") or 0)
+        if mins <= 400:
+            primary_mapped = secondary_mapped
+            secondary_mapped = None
+
+    usage = {"primary": primary_mapped, "secondary": secondary_mapped}
     if usage["primary"] is None and usage["secondary"] is None:
         return _normalize_provider_error(
             "codex",
-            {"message": "Codex usage payload missing rate windows", "kind": "unparseable_schema", "code": "UNPARSEABLE_SCHEMA"},
+            {
+                "message": "Codex usage payload missing rate windows",
+                "kind": "unparseable_schema",
+                "code": "UNPARSEABLE_SCHEMA",
+            },
         )
     return _normalize_provider_data(
         "codex",
