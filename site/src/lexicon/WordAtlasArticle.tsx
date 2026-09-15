@@ -345,7 +345,7 @@ function WordAtlasArticleBody({
                         const targetTitle = hOther.headword || hOther.lemma;
                         return (
                           <a
-                            key={targetTitle}
+                            key={`${targetTitle}-${otherIdx}`}
                             href={`#${encodeURIComponent(targetTitle)}`}
                             className="atlas-heteronym-hatnote-btn"
                             data-heteronym-jump={otherIdx}
@@ -1465,7 +1465,7 @@ export default function WordAtlasArticle({
               const title = h.headword || h.lemma || `Варіант ${idx + 1}`;
               return (
                 <button
-                  key={title}
+                  key={`${title}-${idx}`}
                   type="button"
                   role="tab"
                   id={`heteronym-tab-${idx}`}
@@ -1503,7 +1503,7 @@ export default function WordAtlasArticle({
           );
           return (
             <div
-              key={title}
+              key={`${title}-${idx}`}
               id={`heteronym-panel-${idx}`}
               role="tabpanel"
               aria-labelledby={`heteronym-tab-${idx}`}

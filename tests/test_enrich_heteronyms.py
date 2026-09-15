@@ -13,8 +13,15 @@ def test_curated_heteronyms_structure():
     """Curated heteronyms must include all required fields for Word Atlas."""
     for lemma, items in enrich_heteronyms.CURATED_HETERONYMS.items():
         assert len(items) >= 2, f"Expected at least 2 heteronyms for {lemma}"
-        heads = [item["headword"] for item in items]
-        assert len(set(heads)) == len(heads), f"Duplicate headwords found for {lemma}"
+        variant_keys = [
+            (
+                item["headword"],
+                item.get("morphology", {}).get("paradigm", {}).get("animacy"),
+                item.get("short_label"),
+            )
+            for item in items
+        ]
+        assert len(set(variant_keys)) == len(variant_keys), f"Duplicate variant entries found for {lemma}"
         for item in items:
             assert "headword" in item
             assert "gloss" in item
@@ -857,18 +864,21 @@ def test_batch7_semantic_and_stress_distinctions():
     assert bur[1]["headword"] == "бури́тися"
     assert "drilled" in bur[1]["gloss"].lower() or "bored" in bur[1]["gloss"].lower()
 
-    # важниця: ва́жниця (person of importance / animate) vs важни́ця (wagon prop / scales / inanimate)
+    # важниця: ва́жниця (person of importance / animate) vs ва́жниця (important matter / inanimate) vs важни́ця (wagon prop / scales / inanimate)
     vazh = enrich_heteronyms.build_heteronyms_for_lemma("важниця")
-    assert vazh is not None and len(vazh) == 2
+    assert vazh is not None and len(vazh) == 3
     assert vazh[0]["headword"] == "ва́жниця"
     assert vazh[0]["morphology"]["paradigm"]["animacy"] == "animate"
     assert "person" in vazh[0]["gloss"].lower() or "importance" in vazh[0]["gloss"].lower()
-    assert vazh[1]["headword"] == "важни́ця"
+    assert vazh[1]["headword"] == "ва́жниця"
     assert vazh[1]["morphology"]["paradigm"]["animacy"] == "inanimate"
-    assert "wagon" in vazh[1]["gloss"].lower() or "prop" in vazh[1]["gloss"].lower() or "scale" in vazh[1]["gloss"].lower()
-    assert "station" not in vazh[1]["gloss"].lower()
-    assert "вагівниця" not in vazh[1]["soviet_colonization_context"]["definition"]
-    assert "вага́ 5" in vazh[1]["soviet_colonization_context"]["definition"]
+    assert "matter" in vazh[1]["gloss"].lower() or "affair" in vazh[1]["gloss"].lower()
+    assert vazh[2]["headword"] == "важни́ця"
+    assert vazh[2]["morphology"]["paradigm"]["animacy"] == "inanimate"
+    assert "wagon" in vazh[2]["gloss"].lower() or "prop" in vazh[2]["gloss"].lower() or "scale" in vazh[2]["gloss"].lower()
+    assert "station" not in vazh[2]["gloss"].lower()
+    assert "вагівниця" not in vazh[2]["soviet_colonization_context"]["definition"]
+    assert "вага́ 5" in vazh[2]["soviet_colonization_context"]["definition"]
 
     # валковий: валко́вий (roller-equipped) vs валкови́й (carter / driver with convoy)
     val = enrich_heteronyms.build_heteronyms_for_lemma("валковий")
