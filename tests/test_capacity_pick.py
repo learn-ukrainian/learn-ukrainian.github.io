@@ -233,3 +233,18 @@ def test_agy_mirror_need_login_is_avoid():
     row = next(r for r in capacity_pick.build_lane_rows(budget) if r["lane"] == "agy")
     assert row["avoid"] is True
     assert "NEED_LOGIN" in row["notes"]
+
+
+def test_cursor_does_not_inherit_glm_quota():
+    """glm→cursor is retirement-only; Cursor must never pick up Z.AI capacity."""
+    budget = _fixture_budget()
+    budget["agents"]["cursor"] = {"status": "unknown", "freshness": "unavailable"}
+    budget["agents"]["glm"] = {
+        "status": "cool",
+        "remaining_pct": 88.0,
+        "codexbar": {"will_last_to_reset": True, "pace_summary": "on pace"},
+    }
+    row = next(r for r in capacity_pick.build_lane_rows(budget) if r["lane"] == "cursor")
+    assert row["status"] == "unknown"
+    assert row["remaining_pct"] is None
+    assert "quota:glm" not in row["notes"]

@@ -147,30 +147,34 @@ def _has_capacity_signal(info: dict[str, Any]) -> bool:
     return isinstance(interactive, dict) and str(interactive.get("status") or "") not in {"", "unknown"}
 
 
+# Live dispatch lanes that share a subscription probe keyed under a retired
+# provider id in routing-budget (PROVIDER_TO_LANE). Do NOT mirror every
+# RETIRED_AGENT_ALIASES entry — e.g. glm→cursor is retirement-only, not a
+# shared Z.AI/Cursor quota pool (CF #8095).
+_SHARED_QUOTA_SOURCES: dict[str, str] = {
+    "agy": "gemini",
+}
+
+
 def _mirror_retired_quota(
     agents: dict[str, Any], lane: str, info: dict[str, Any]
 ) -> tuple[dict[str, Any], str | None]:
-    """Mirror a retired provider's quota onto its live substitute lane.
+    """Mirror a shared-subscription probe onto its live dispatch lane.
 
-    ``PROVIDER_TO_LANE`` keys usage data under the retired provider
-    (``agy`` → ``gemini``), while ``RETIRED_AGENT_ALIASES`` routes dispatch to
-    the live adapter (``gemini`` → ``agy``). The routing budget therefore has
-    no own ``agy`` entry, and without this mirror the substitute lane renders
-    ``unknown`` even when the shared subscription probe (``agy /usage``) is
-    healthy. The mirror is read-only display: the substitute lane consumes the
-    SAME quota, never a second pool.
+    ``PROVIDER_TO_LANE`` keys AGY usage under ``gemini``, while
+    ``RETIRED_AGENT_ALIASES`` routes dispatch ``gemini`` → ``agy``. Without this
+    mirror the ``agy`` row renders ``unknown`` even when ``agy /usage`` is
+    healthy. Only explicit shared-quota pairs are mirrored — never every
+    retired alias (``glm`` → ``cursor`` must not inherit Z.AI capacity).
     """
     if _has_capacity_signal(info):
         return info, None
-    for retired, target in RETIRED_AGENT_ALIASES.items():
-        if target != lane:
-            continue
-        source = agents.get(retired)
-        # Any non-empty source entry mirrors — including NEED_LOGIN/auth-error
-        # shells: the substitute lane's quota IS the retired provider's probe,
-        # so its explicit failure states are the substitute's failures too.
-        if isinstance(source, dict) and source:
-            return dict(source), retired
+    source_lane = _SHARED_QUOTA_SOURCES.get(lane)
+    if not source_lane:
+        return info, None
+    source = agents.get(source_lane)
+    if isinstance(source, dict) and source:
+        return dict(source), source_lane
     return info, None
 
 
