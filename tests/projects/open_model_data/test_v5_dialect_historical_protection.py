@@ -794,6 +794,10 @@ def test_surzhyk_targets_zero_sum11_definitions_and_lemmas() -> None:
         pytest.skip("sources.db unavailable")
 
     c_src = sqlite3.connect(sources_db).cursor()
+    has_sum11 = c_src.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='sum11'").fetchone()
+    if not has_sum11:
+        pytest.skip("sum11 table unavailable in sources.db")
+
     c_ves = sqlite3.connect(vesum_db).cursor() if vesum_db.exists() else None
 
     assert SUITE_PATH.exists()
@@ -847,10 +851,12 @@ def test_surzhyk_phrase_matcher_handles_inflections_and_parenthesized_variants()
 
     sources_db = REPO_ROOT / "data" / "sources.db"
     vesum_db = REPO_ROOT / "data" / "vesum.db"
-    if not sources_db.exists():
-        pytest.skip("sources.db unavailable")
 
-    c_src = sqlite3.connect(sources_db).cursor()
+    has_sum11 = False
+    c_src = None
+    if sources_db.exists():
+        c_src = sqlite3.connect(sources_db).cursor()
+        has_sum11 = bool(c_src.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='sum11'").fetchone())
     c_ves = sqlite3.connect(vesum_db).cursor() if vesum_db.exists() else None
 
     # 1. Controlled dictionary entry test with parenthesized alternative: ♦ Бра́ти (взя́ти) у́часть — …
@@ -882,17 +888,18 @@ def test_surzhyk_phrase_matcher_handles_inflections_and_parenthesized_variants()
         )
 
     # 2. Real DB test: adverbial participle expansion "беручи участь" must resolve to "брати участь" in SUM-11
-    with pytest.raises(AssertionError, match="subentry in sum11"):
-        _verify_single_surzhyk_target_zero_sum11(
-            {"eval_id": "test_advp", "target_term": "беручи участь"},
-            c_src,
-            c_ves,
-        )
+    if has_sum11 and c_src is not None and c_ves is not None:
+        with pytest.raises(AssertionError, match="subentry in sum11"):
+            _verify_single_surzhyk_target_zero_sum11(
+                {"eval_id": "test_advp", "target_term": "беручи участь"},
+                c_src,
+                c_ves,
+            )
 
-    # 3. Real DB test: multi-word dictionary subentry with no banned roots "грати роль"
-    with pytest.raises(AssertionError, match="subentry in sum11"):
-        _verify_single_surzhyk_target_zero_sum11(
-            {"eval_id": "test_role", "target_term": "грати роль"},
-            c_src,
-            c_ves,
-        )
+        # 3. Real DB test: multi-word dictionary subentry with no banned roots "грати роль"
+        with pytest.raises(AssertionError, match="subentry in sum11"):
+            _verify_single_surzhyk_target_zero_sum11(
+                {"eval_id": "test_role", "target_term": "грати роль"},
+                c_src,
+                c_ves,
+            )
