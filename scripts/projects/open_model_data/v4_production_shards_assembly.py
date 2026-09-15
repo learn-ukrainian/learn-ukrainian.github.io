@@ -326,31 +326,6 @@ def reconcile_gold_seed_trajectory(
         new_steps.append(step)
     rec["reasoning_steps"] = new_steps
 
-    # 4. Lexicographical context - factualize suppression note if cited term not in sum11
-    lex_ctx = rec.get("lexicographical_context", {})
-    supp_note = lex_ctx.get("historical_suppression_note", "")
-    if supp_note and re.search(r"СУМ(?:-11)?", supp_note):
-        quoted_terms = re.findall(r"«([^»]+)»", supp_note)
-        terms_to_check = [q for q in quoted_terms if len(q.split()) <= 2 and not re.search(r"[ёъыэЁЪЫЭ]", q)]
-        if not terms_to_check and target:
-            terms_to_check = [target]
-        has_unattested = False
-        for t_term in terms_to_check:
-            norm_t = clean_word(t_term)
-            row = cur_s.execute(
-                "SELECT 1 FROM sum11 WHERE word = ? OR word LIKE ? OR word LIKE ? OR word LIKE ? LIMIT 1",
-                (norm_t, f"{norm_t}|%", f"%|{norm_t}|%", f"%|{norm_t}"),
-            ).fetchone()
-            if not row:
-                has_unattested = True
-                break
-        if has_unattested:
-            lex_ctx["historical_suppression_note"] = (
-                f"Форма «{target}» є ненормативним суржиковим варіантом або прямим росіянізмом, "
-                f"відсутнім у нормативній лексикографії та суперечним чинному Правопису."
-            )
-            rec["lexicographical_context"] = lex_ctx
-
     return rec
 
 
@@ -359,60 +334,119 @@ def format_preserve_trajectory(
     format_type: str,
 ) -> dict[str, Any]:
     """Adapt a vetted STEM preserve control into natural pedagogical Ukrainian voice."""
-    traj = dict(base)
+    traj = {k: v for k, v in base.items() if not k.startswith("_")}
     traj["format_type"] = format_type
     target_term = traj["target_term"]
+    sentence = (base.get("_sentence") or "").strip()
+    if not sentence and "«" in base.get("query", ""):
+        m = re.search(r"реченні:\s*«([^»]+)»", base.get("query", ""))
+        if m:
+            sentence = m.group(1).strip()
 
     if format_type == "quick_tip":
-        traj["query"] = f"Коротка порада: чи коректно вживати термін «{target_term}» у науковому мовленні?"
-        traj["reasoning_steps"] = [
-            f"1. Термінологічний аналіз: термін «{target_term}» вжито у фаховому науковому контексті.",
-            f"2. Нормативна фіксація: форма «{target_term}» є кодифікованою у сучасній українській науковій мові.",
-            "3. Рекомендація: зберігати авторське слововживання, уникаючи штучних гіперпуристичних замін.",
-        ]
-        traj["final_response"] = (
-            f"Коротка порада: так, термін «{target_term}» є повністю правильним, нормативним і доречним у науковому тексті. "
-            f"Він належить до усталеної терміносистеми і не потребує штучного виправлення чи заміни."
-        )
+        if sentence:
+            traj["query"] = f"Коротка порада: чи коректно вживати термін «{target_term}» у науковому реченні «{sentence}»?"
+            traj["reasoning_steps"] = [
+                f"1. Термінологічний аналіз: термін «{target_term}» вжито у фаховому контексті: «{sentence}».",
+                f"2. Нормативна фіксація: форма «{target_term}» є кодифікованою у сучасній українській науковій мові.",
+                "3. Рекомендація: зберігати авторське слововживання, уникаючи штучних гіперпуристичних замін.",
+            ]
+            traj["final_response"] = (
+                f"Коротка порада: так, термін «{target_term}» у реченні «{sentence}» є повністю правильним, нормативним і доречним у науковому тексті. "
+                f"Він належить до усталеної терміносистеми і не потребує штучного виправлення чи заміни."
+            )
+        else:
+            traj["query"] = f"Коротка порада: чи коректно вживати термін «{target_term}» у науковому мовленні?"
+            traj["reasoning_steps"] = [
+                f"1. Термінологічний аналіз: термін «{target_term}» вжито у фаховому науковому контексті.",
+                f"2. Нормативна фіксація: форма «{target_term}» є кодифікованою у сучасній українській науковій мові.",
+                "3. Рекомендація: зберігати авторське слововживання, уникаючи штучних гіперпуристичних замін.",
+            ]
+            traj["final_response"] = (
+                f"Коротка порада: так, термін «{target_term}» є повністю правильним, нормативним і доречним у науковому тексті. "
+                f"Він належить до усталеної терміносистеми і не потребує штучного виправлення чи заміни."
+            )
     elif format_type == "minimal_edit":
-        traj["query"] = f"Чи потребує виправлення використання терміна «{target_term}» у науковому тексті?"
-        traj["reasoning_steps"] = [
-            f"1. Контекстуальна діагностика: перевірка вживання терміна «{target_term}».",
-            "2. Оцінка редагування: сутність цілком відповідає нормам наукового стилю.",
-            "3. Висновок: нульове втручання, текст є нормативним.",
-        ]
-        traj["final_response"] = (
-            f"Редагування не потрібне. Слововживання «{target_term}» повністю відповідає літературній нормі та науковому стандарту. "
-            f"Текст є правильним, тож авторський виклад залишається без змін."
-        )
+        if sentence:
+            traj["query"] = f"Чи потребує виправлення використання терміна «{target_term}» у реченні: «{sentence}»?"
+            traj["reasoning_steps"] = [
+                f"1. Контекстуальна діагностика: перевірка вживання терміна «{target_term}» у реченні «{sentence}».",
+                "2. Оцінка редагування: сутність цілком відповідає нормам наукового стилю.",
+                "3. Висновок: нульове втручання, текст є нормативним.",
+            ]
+            traj["final_response"] = (
+                f"Редагування не потрібне. Слововживання «{target_term}» у реченні «{sentence}» повністю відповідає літературній нормі та науковому стандарту. "
+                f"Текст є правильним, тож авторський виклад залишається без змін."
+            )
+        else:
+            traj["query"] = f"Чи потребує виправлення використання терміна «{target_term}» у науковому тексті?"
+            traj["reasoning_steps"] = [
+                f"1. Контекстуальна діагностика: перевірка вживання терміна «{target_term}».",
+                "2. Оцінка редагування: сутність цілком відповідає нормам наукового стилю.",
+                "3. Висновок: нульове втручання, текст є нормативним.",
+            ]
+            traj["final_response"] = (
+                f"Редагування не потрібне. Слововживання «{target_term}» повністю відповідає літературній нормі та науковому стандарту. "
+                f"Текст є правильним, тож авторський виклад залишається без змін."
+            )
     elif format_type == "contrastive":
-        traj["query"] = f"Порівняйте вживання терміна «{target_term}» у точних науках та побутових мовних кальок."
-        traj["reasoning_steps"] = [
-            f"1. Термінологічне розмежування: «{target_term}» у фаховій мові є точним і питомим поняттям.",
-            "2. Зіставлення з інтерференцією: форма не має ознак чужомовної кальки чи дериваційної деформації.",
-            "3. Нормативний висновок: наукова термінологія підтверджує автентичність одиниці.",
-        ]
-        traj["final_response"] = (
-            f"Контрастивний аналіз: На відміну від випадків міжмовної інтерференції чи побутових кальок, "
-            f"термін «{target_term}» у фаховому контексті є точною, кодифікованою науковою одиницею. "
-            f"Його функціонування є бездоганним, тому потреба в редагуванні відсутня."
-        )
+        if sentence:
+            traj["query"] = f"Проаналізуйте науковий контекст «{sentence}»: чи є термін «{target_term}» питомим на противагу чужомовним калькам?"
+            traj["reasoning_steps"] = [
+                f"1. Термінологічне розмежування: «{target_term}» у контексті «{sentence}» є точним і питомим поняттям.",
+                "2. Зіставлення з інтерференцією: форма не має ознак чужомовної кальки чи дериваційної деформації.",
+                "3. Нормативний висновок: наукова термінологія підтверджує автентичність одиниці.",
+            ]
+            traj["final_response"] = (
+                f"Контрастивний аналіз: У реченні «{sentence}» термін «{target_term}» функціонує як точна, кодифікована наукова одиниця, "
+                f"а не вислід мовної інтерференції чи побутова калька. "
+                f"Його вживання є нормативним і повністю відповідає українській термінологічній системі."
+            )
+        else:
+            traj["query"] = f"Порівняйте вживання терміна «{target_term}» у точних науках та побутових мовних кальок."
+            traj["reasoning_steps"] = [
+                f"1. Термінологічне розмежування: «{target_term}» у фаховій мові є точним і питомим поняттям.",
+                "2. Зіставлення з інтерференцією: форма не має ознак чужомовної кальки чи дериваційної деформації.",
+                "3. Нормативний висновок: наукова термінологія підтверджує автентичність одиниці.",
+            ]
+            traj["final_response"] = (
+                f"Контрастивний аналіз: На відміну від випадків міжмовної інтерференції чи побутових кальок, "
+                f"термін «{target_term}» у фаховому контексті є точною, кодифікованою науковою одиницею. "
+                f"Його функціонування є бездоганним, тому потреба в редагуванні відсутня."
+            )
     elif format_type == "deep_analysis":
-        traj["query"] = (
-            f"Подайте поглиблений аналіз нормативного статусу терміна «{target_term}» у фаховій термінології."
-        )
-        traj["reasoning_steps"] = [
-            f"1. Термінознавча діагностика: «{target_term}» входить до кодифікованого українського наукового обігу.",
-            "2. Лексикографічна верифікація: термін зафіксовано в нормативних словниках сучасної української мови.",
-            "3. Захист від гіперпуризму: спроби штучного витіснення терміна є необґрунтованими.",
-            f"4. Нормативний висновок: «{target_term}» є автентичною складовою наукового стилю.",
-        ]
-        traj["final_response"] = (
-            f"Поглиблений науковий аналіз: Термін «{target_term}» є невіддільною частиною сучасної української "
-            f"наукової термінології. Він пройшов кодифікацію, зафіксований у шкільних та академічних джерелах "
-            f"і відповідає законам українського словотвору. Спроби штучної заміни цього терміна є проявом "
-            f"невиправданого гіперпуризму; слово є чинним літературним стандартом."
-        )
+        if sentence:
+            traj["query"] = (
+                f"Подайте поглиблений аналіз вживання терміна «{target_term}» у науковому реченні «{sentence}»."
+            )
+            traj["reasoning_steps"] = [
+                f"1. Термінознавча діагностика: у контексті «{sentence}» слово «{target_term}» є кодифікованим терміном.",
+                "2. Лексикографічна верифікація: термін зафіксовано в нормативних словниках сучасної української мови.",
+                "3. Захист від гіперпуризму: спроби штучного витіснення терміна є необґрунтованими.",
+                f"4. Нормативний висновок: «{target_term}» є автентичною складовою наукового стилю.",
+            ]
+            traj["final_response"] = (
+                f"Поглиблений науковий аналіз: У контексті «{sentence}» термін «{target_term}» є невіддільною частиною "
+                f"української науково-технічної термінології. Він зафіксований у шкільних та академічних джерелах "
+                f"і відповідає нормам українського словотвору. Спроби штучної заміни цього терміна є проявом "
+                f"невиправданого гіперпуризму; авторське слововживання є бездоганним."
+            )
+        else:
+            traj["query"] = (
+                f"Подайте поглиблений аналіз нормативного статусу терміна «{target_term}» у фаховій термінології."
+            )
+            traj["reasoning_steps"] = [
+                f"1. Термінознавча діагностика: «{target_term}» входить до кодифікованого українського наукового обігу.",
+                "2. Лексикографічна верифікація: термін зафіксовано в нормативних словниках сучасної української мови.",
+                "3. Захист від гіперпуризму: спроби штучного витіснення терміна є необґрунтованими.",
+                f"4. Нормативний висновок: «{target_term}» є автентичною складовою наукового стилю.",
+            ]
+            traj["final_response"] = (
+                f"Поглиблений науковий аналіз: Термін «{target_term}» є невіддільною частиною сучасної української "
+                f"наукової термінології. Він пройшов кодифікацію, зафіксований у шкільних та академічних джерелах "
+                f"і відповідає законам українського словотвору. Спроби штучної заміни цього терміна є проявом "
+                f"невиправданого гіперпуризму; слово є чинним літературним стандартом."
+            )
 
     return traj
 
@@ -984,10 +1018,10 @@ def compute_heldout_minhash_similarity(
             if jac > max_jaccard_sim:
                 max_jaccard_sim = jac
 
-    if max_minhash_sim >= 0.80:
-        raise ValueError(f"Partition firewall violation: MinHash similarity {max_minhash_sim:.4f} >= 0.80")
-    if max_jaccard_sim >= 0.80:
-        raise ValueError(f"Partition firewall violation: Token Jaccard similarity {max_jaccard_sim:.4f} >= 0.80")
+    if max_minhash_sim >= 0.35:
+        raise ValueError(f"Partition firewall violation: MinHash similarity {max_minhash_sim:.4f} >= 0.35")
+    if max_jaccard_sim >= 0.35:
+        raise ValueError(f"Partition firewall violation: Token Jaccard similarity {max_jaccard_sim:.4f} >= 0.35")
 
     return round(max_minhash_sim, 4), round(max_jaccard_sim, 4), comparisons_count
 
@@ -1126,6 +1160,17 @@ def assemble_production_shards(
                 if term in heldout_correct_targets:
                     raise ValueError(f"Partition leak: DPO calque target '{term}' in held-out CORRECT targets!")
 
+        # Partition firewall check against actual held-out artifact
+        calc_minhash, calc_jaccard, _comps = compute_heldout_minhash_similarity(
+            heldout_suite_path=heldout_suite_path,
+            sft_records=all_sft,
+            dpo_records=all_dpo,
+        )
+        if calc_minhash >= 0.35:
+            raise ValueError(f"Partition firewall violation in verify-only: MinHash similarity {calc_minhash:.4f} >= 0.35")
+        if calc_jaccard >= 0.35:
+            raise ValueError(f"Partition firewall violation in verify-only: Token Jaccard similarity {calc_jaccard:.4f} >= 0.35")
+
         firewall_meta = receipt["deliverables"]["heldout_evaluation_suite"]["partition_firewall"]
         if firewall_meta.get("target_term_leakage_count", 0) != 0:
             raise ValueError(
@@ -1133,13 +1178,13 @@ def assemble_production_shards(
             )
         if firewall_meta.get("record_id_leakage_count", 0) != 0:
             raise ValueError(f"Partition leak: record_id_leakage_count = {firewall_meta['record_id_leakage_count']}")
-        if firewall_meta.get("max_minhash_similarity", 1.0) >= 0.80:
+        if firewall_meta.get("max_minhash_similarity", 1.0) >= 0.35:
             raise ValueError(
-                f"Partition leak: max_minhash_similarity {firewall_meta['max_minhash_similarity']} >= 0.80"
+                f"Partition leak: max_minhash_similarity {firewall_meta['max_minhash_similarity']} >= 0.35"
             )
-        if firewall_meta.get("max_token_jaccard_similarity", 1.0) >= 0.80:
+        if firewall_meta.get("max_token_jaccard_similarity", 1.0) >= 0.35:
             raise ValueError(
-                f"Partition leak: max_token_jaccard_similarity {firewall_meta['max_token_jaccard_similarity']} >= 0.80"
+                f"Partition leak: max_token_jaccard_similarity {firewall_meta['max_token_jaccard_similarity']} >= 0.35"
             )
         if not firewall_meta.get("partition_isolated"):
             raise ValueError("Partition firewall reported not isolated")

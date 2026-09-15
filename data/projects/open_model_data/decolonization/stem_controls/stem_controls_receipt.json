@@ -4,7 +4,7 @@
   "phase": "Phase 3.3: STEM Negative Controls & Semantic Polysemy Disambiguation",
   "issue": 8007,
   "parent_epic": 6321,
-  "generated_at": "2026-09-14T21:40:42Z",
+  "generated_at": "2026-09-14T23:56:28Z",
   "dependency": {
     "phase": "3.0",
     "issue": 8005,
@@ -19,29 +19,29 @@
     "dpo_preserve_pairs": 900
   },
   "source_pool": {
-    "stem_chunks_scanned": 269,
+    "stem_chunks_scanned": 398,
     "stem_subjects": {
-      "algebra": 269
+      "algebra": 398
     },
     "train_only": true,
     "heldout_excluded": true
   },
   "cleanliness": {
     "vesum_attested_admitted": 1800,
-    "vesum_reject_count": 631,
-    "style_guide_collision_reject_count": 16,
-    "ocr_reject_count": 1140,
+    "vesum_reject_count": 572,
+    "style_guide_collision_reject_count": 23,
+    "ocr_reject_count": 751,
     "vesum_verification_rate": 1.0
   },
   "semantic_typing": {
-    "obyem_preserve": 1,
+    "obyem_preserve": 4,
     "obyem_correct_excluded": 0,
     "rahuvaty_preserve": 0,
     "vidnoshennia_preserve": 5,
     "nomenclature_modernization": 0,
     "nomenclature_calque_excluded": 0,
-    "colloquial_preserve": 50,
-    "generic_stem_preserve": 3594,
+    "colloquial_preserve": 31,
+    "generic_stem_preserve": 3406,
     "false_preservation_of_abstract_calques": 0
   },
   "safety_assertions": {
@@ -54,17 +54,17 @@
     "index": {
       "filename": "stem_controls_index.jsonl",
       "record_count": 1800,
-      "sha256": "a9a8ec7304bee6c2124c142946da16ca57bcec624936c522ea44b1e4cd9ad14e"
+      "sha256": "b04defb14286b445b64d5e31eb8f5346bc785214743aa345019e6840cf87ccbd"
     },
     "sft_controls": {
       "filename": "stem_preserve_sft_controls.jsonl",
       "record_count": 1800,
-      "sha256": "559dd323e88f29336f53234faf11d9b851f66526c6a2ac320631f72aa0597f53"
+      "sha256": "372796d5869313c5eaf70c7acbe958ed625da3dc471088b9e1357ea044da61e6"
     },
     "dpo_pairs": {
       "filename": "stem_preserve_dpo_pairs.jsonl",
       "record_count": 900,
-      "sha256": "93cae8afd687b31f9587829325d1b2f8b51a99e6d967932ad0612088f047cd1e"
+      "sha256": "b47bcb9695d8d4e40740e4262ab142958930d3a0c976aff1d95a4f3f69fa42e5"
     }
   }
 }

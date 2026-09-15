@@ -29,9 +29,11 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import jsonschema
+import numpy as np
 
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     SENTENCE_SPLIT_RE,
+    MinHashDedup,
 )
 
 CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
@@ -283,6 +285,24 @@ STATIC_STYLE_COLLISIONS: tuple[str, ...] = (
 
 DecisionAction = Literal["PRESERVE", "CORRECT", "REGISTER", "REJECT"]
 
+ENTITY_TYPE_UKRAINIAN: dict[str, str] = {
+    "standard_stem_terminology": "стандартна науково-технічна термінологія",
+    "clean_stem_passage": "нормативний контекст підручника",
+    "nomenclature_modernization": "сучасна наукова номенклатура",
+    "physical_3d_volume": "фізичний тривимірний об’єм",
+    "discrete_counting": "дискретний підрахунок об’єктів",
+    "mathematical_physical_ratio": "математичне чи фізичне відношення",
+    "mathematical_calculation": "математичне обчислення",
+    "true_calque_nomenclature": "калька наукової термінології",
+    "abstract_quantity_data_scope": "абстрактний обсяг даних чи ресурсів",
+    "cognitive_opinion": "висловлення власної думки",
+    "interpersonal_attitude": "міжособистісні стосунки або ставлення",
+    "obyem_underspecified": "невизначений контекст слова «об’єм»",
+    "rahuvaty_underspecified": "невизначений контекст слова «рахувати»",
+    "vidnoshennia_underspecified": "невизначений контекст слова «відношення»",
+}
+
+
 
 @dataclass(frozen=True, slots=True)
 class SemanticDecision:
@@ -527,7 +547,26 @@ def classify_generic_stem(text: str, subject: str) -> SemanticDecision | None:
         "рівняння",
         "функція",
         "теорема",
+        "формула",
         "аксіома",
+        "система",
+        "множина",
+        "вісь",
+        "обчислення",
+        "коефіцієнт",
+        "частка",
+        "невизначеність",
+        "похідна",
+        "аргумент",
+        "період",
+        "інтервал",
+        "проміжок",
+        "нерівність",
+        "тригонометрія",
+        "синус",
+        "косинус",
+        "тангенс",
+        "котангенс",
         "молекула",
         "атом",
         "електрон",
@@ -696,18 +735,8 @@ def classify_generic_stem(text: str, subject: str) -> SemanticDecision | None:
                 rationale="Нормативна науково-технічна термінологія; не застосовувати гіперпуристичну заміну.",
                 register=register,
             )
-    if subject in STEM_SUBJECTS and 40 <= len(text.strip()) <= 240:
-        register = "розм." if classify_colloquial(text) else "standard"
-        return SemanticDecision(
-            pair="generic_stem",
-            target_term="науковий термін",
-            action="PRESERVE",
-            entity_type="clean_stem_passage",
-            replacement=None,
-            rationale="Перевірений науковий контекст без калькованих чи суржикових конструкцій.",
-            register=register,
-        )
     return None
+
 
 
 def ocr_sanity_check(text: str) -> CleanlinessResult:
@@ -888,10 +917,11 @@ def build_trajectory(
                 "tags": tags or ["attested"],
             }
         )
-    query = f"Чи треба виправляти термін «{decision.target_term}» у цьому STEM-контексті?"
+    entity_type_ua = ENTITY_TYPE_UKRAINIAN.get(decision.entity_type, "стандартна науково-технічна термінологія")
+    query = f"Чи треба виправляти термін «{decision.target_term}» у науковому реченні: «{sentence}»?"
     final = (
-        f"Вердикт PRESERVE: «{decision.target_term}» залишаємо. "
-        f"Тип сутності: {decision.entity_type}. {decision.rationale}"
+        f"Рішення: зберегти — термін «{decision.target_term}» залишаємо без змін. "
+        f"Категорія: {entity_type_ua}. {decision.rationale}"
     )
     return {
         "schema_version": "v1_decolonization_trajectory",
@@ -900,14 +930,14 @@ def build_trajectory(
         "target_term": decision.target_term,
         "is_calque_or_russianism": False,
         "morphemic_breakdown": {
-            "source_formation": f"Живе науково-технічне вживання «{decision.target_term}» із типом сутності {decision.entity_type}.",
+            "source_formation": f"Живе науково-технічне вживання терміна «{decision.target_term}» ({entity_type_ua}).",
             "ukrainian_equivalent_mechanism": (
                 "Заміна не потрібна: засвідчений науковий термін належить до сучасної української "
                 "літературної норми, а не до радянських кальок, що потребують виправлення."
             ),
         },
         "lexicographical_context": {
-            "historical_suppression_note": "Контрольний приклад PRESERVE: історичне витіснення відсутнє, термін є нормативним.",
+            "historical_suppression_note": "Контрольний приклад (зберегти): історичне витіснення відсутнє, термін є нормативним.",
             "restoration_era": "чинна норма",
         },
         "vesum_attestation": attestation,
@@ -933,7 +963,7 @@ def build_trajectory(
             ],
         },
         "reasoning_steps": [
-            f"1. Семантичний тип сутності: {decision.entity_type}; контекст не є абстрактною чи економічною калькою.",
+            f"1. Семантична категорія: {entity_type_ua}; контекст не є калькою чи суржиком.",
             "2. Чистота: перевірка у ВЕСУМ, відсутність конфліктів зі стилістичними довідниками та коректність OCR підтверджені.",
             f"3. Регістр={decision.register}: розмовне українське мовлення не трактується як російська інтерференція.",
             f"4. Джерело: тренувальний фрагмент STEM {source_chunk_id}; контрольні фрагменти виключено.",
@@ -964,9 +994,10 @@ def build_dpo_pair(trajectory: dict[str, Any], decision: SemanticDecision) -> di
     hex_id = trajectory["trajectory_id"].rsplit(".", 1)[1]
     chosen = trajectory["final_response"]
     foil = hyperpurist_substitute(decision.target_term, decision)
+    entity_type_ua = ENTITY_TYPE_UKRAINIAN.get(decision.entity_type, "стандартна науково-технічна термінологія")
     rejected = (
-        f"Вердикт PRESERVE скасовано: «{decision.target_term}» нібито треба замінити на «{foil}». "
-        f"Тип сутності: {decision.entity_type}. {decision.rationale}"
+        f"Помилкова заміна: термін «{decision.target_term}» безпідставно замінено на «{foil}». "
+        f"Категорія: {entity_type_ua}. {decision.rationale}"
     )
     c = chosen.strip()
     r = rejected.strip()
@@ -1191,6 +1222,16 @@ def mine_controls(
     collisions = load_style_guide_collisions(sources_conn)
     heldout_chunks = load_heldout_chunk_ids(heldout_suite_path)
 
+    heldout_sigs: np.ndarray | None = None
+    heldout_token_sets: list[set[str]] = []
+    minhash = MinHashDedup(num_perm=64, bands=16, rows_per_band=4)
+    if heldout_suite_path.exists():
+        heldout_cases = load_jsonl(heldout_suite_path)
+        heldout_tokens = [normalize_text(c["input_text"]).split() for c in heldout_cases if c.get("input_text")]
+        heldout_token_sets = [set(t) for t in heldout_tokens if t]
+        if heldout_tokens:
+            heldout_sigs = np.array([minhash.signature(t).min_hashes for t in heldout_tokens], dtype=np.int64)
+
     rows = sources_conn.execute(
         "SELECT id, chunk_id, title, text, author_uk, subject FROM textbooks WHERE subject IN ({})".format(
             ",".join("?" for _ in STEM_SUBJECTS)
@@ -1243,6 +1284,41 @@ def mine_controls(
                 else:
                     filter_counts["ocr"] += 1
                 continue
+            if heldout_sigs is not None and len(heldout_sigs) > 0:
+                texts_to_check = [
+                    sentence,
+                    f"Чи треба виправляти термін «{decision.target_term}» у науковому реченні: «{sentence}»?",
+                    f"Чи потребує виправлення використання терміна «{decision.target_term}» у реченні: «{sentence}»?",
+                    f"Поясніть, чому термін «{decision.target_term}» у контексті «{sentence}» є нормативним, а не калькою.",
+                    f"Подайте поглиблений аналіз вживання терміна «{decision.target_term}» у науковому реченні «{sentence}».",
+                    f"Чи правильним є слововживання терміна «{decision.target_term}» у контексті «{sentence}»?",
+                ]
+                leak = False
+                for txt in texts_to_check:
+                    toks = normalize_text(txt).split()
+                    if not toks:
+                        continue
+                    sig = np.array(minhash.signature(toks).min_hashes, dtype=np.int64)
+                    mh = float(((heldout_sigs == sig).sum(axis=1) / 64.0).max())
+                    if mh >= 0.35:
+                        leak = True
+                        break
+                    tset = set(toks)
+                    tlen = len(tset)
+                    for h_set in heldout_token_sets:
+                        h_len = len(h_set)
+                        if min(tlen, h_len) / max(tlen, h_len) < 0.35:
+                            continue
+                        inter = len(tset & h_set)
+                        if inter / (tlen + h_len - inter) >= 0.35:
+                            leak = True
+                            break
+                    if leak:
+                        break
+                if leak:
+                    filter_counts["heldout_similarity"] += 1
+                    continue
+
             trajectory = build_trajectory(sentence, decision, vesum_cursor, chunk_id, subject)
             seen_passages.add(passage_key)
             admitted.append((trajectory, decision))

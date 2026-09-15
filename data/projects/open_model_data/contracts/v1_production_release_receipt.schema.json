@@ -230,11 +230,11 @@
                 },
                 "max_minhash_similarity": {
                   "type": "number",
-                  "maximum": 0.80
+                  "maximum": 0.35
                 },
                 "max_token_jaccard_similarity": {
                   "type": "number",
-                  "maximum": 0.80
+                  "maximum": 0.35
                 },
                 "partition_isolated": {
                   "type": "boolean",
