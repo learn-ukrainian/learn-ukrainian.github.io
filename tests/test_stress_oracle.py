@@ -77,6 +77,18 @@ class TestOverrides:
         assert match["stressed_form"] == f"Її{STRESS}"
         assert match["override_applied"] is True
 
+    def test_simya_override_prefers_feminine_family(self):
+        # #8082: ULIF packs Fem "family" (сім'я́) and Neut "seed" (сі́м'я);
+        # ambiguous matches listed Neut first and the annotator took
+        # matches[0], breaking A1 pedagogy / slow nightly.
+        result = verify_stress("сім'я")
+        assert result["status"] == "ok"
+        match = result["matches"][0]
+        assert match["stressed_form"] == f"сім'я{STRESS}"
+        assert match["unstressed_form"] == "сім'я"
+        assert match["override_applied"] is True
+        assert match["vowel_index"] == 4
+
 
 class TestHeteronymEnumeration:
     def test_zamok_enumerates_every_reading(self):

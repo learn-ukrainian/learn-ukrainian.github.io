@@ -22,3 +22,7 @@
 # explicitly to cover mid-sentence "її" and sentence-initial "Її".
 її: "її́"
 Її: "Її́"
+# ULIF packs Fem "family" (сім'я́, end-stress) and Neut "seed" (сі́м'я) under
+# the same surface. Ambiguous verify_stress returns Neut first; annotator then
+# picks matches[0] and fails A1 pedagogy / slow nightly (#8082). Prefer Fem.
+сім'я: "сім'я́"
