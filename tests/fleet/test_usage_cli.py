@@ -217,6 +217,81 @@ def test_show_renders_multi_window_allotments(budget):
     assert "primary (5h): used=0.0% rem=100.0%" in text
     assert "secondary (weekly): used=42.0% rem=58.0%" in text
     assert "fetch_error/429" in text
+    assert "tip: Anthropic rate-limited" in text
+
+
+def test_show_does_not_claim_cool_without_allotment_meters():
+    """API-key dispatch cool + NEED_PROBE null windows must display unknown + tip."""
+    budget = {
+        "source": "monitor-api",
+        "agents": {
+            "cursor": {
+                "status": "cool",
+                "freshness": "fresh",
+                "age_s": 10,
+                "probe_state": "NEED_PROBE",
+                "login_state": "authenticated",
+                "error_kind": "missing_session_token",
+                "provider_windows": {
+                    "auto": {
+                        "window": "monthly",
+                        "label": "Cursor Models (Auto)",
+                        "used_pct": None,
+                        "remaining_pct": None,
+                        "resets_at": None,
+                    },
+                    "api": {
+                        "window": "monthly",
+                        "label": "Other Models (API)",
+                        "used_pct": None,
+                        "remaining_pct": None,
+                        "resets_at": None,
+                    },
+                    "grok_bot": {
+                        "window": "weekly",
+                        "label": "Grok Bot",
+                        "used_pct": None,
+                        "remaining_pct": None,
+                        "resets_at": None,
+                    },
+                },
+            }
+        },
+        "api_accounts": {},
+    }
+    text = usage.format_human(budget)
+    assert "cursor | unknown |" in text
+    assert "cursor | cool |" not in text
+    assert "agent login" in text
+    assert "CURSOR_API_KEY alone" in text
+
+
+def test_show_formats_epoch_resets():
+    budget = {
+        "source": "monitor-api",
+        "agents": {
+            "codex": {
+                "status": "cool",
+                "remaining_pct": 62,
+                "codexbar": {
+                    "freshness": "fresh",
+                    "age_s": 1,
+                    "windows": {
+                        "primary": {
+                            "used_pct": 38.0,
+                            "remaining_pct": 62.0,
+                            "resets_at": 1789805715,
+                            "window_minutes": 300,
+                        }
+                    },
+                },
+            }
+        },
+        "api_accounts": {},
+    }
+    text = usage.format_human(budget)
+    assert "resets=1789805715" not in text
+    assert "resets=2026-" in text
 
 
 def test_show_does_not_import_state_router(monkeypatch, budget, capsys):
