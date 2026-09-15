@@ -12929,13 +12929,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         }
       },
       "distinction_note": "Не плутати з омографом «ла́нець» (наголос на першому складі: розмовне голодранець, шахрай).",
-      "soviet_colonization_context": {
-        "source": "СУМ-11 (1970–1980)",
-        "definition": "ЛА́НЕЦЬ, нця, ч., розм. 1. Одягнена в лахміття людина; старець. Забравши деяких Троянців, Осмалених, як гиря, ланців, П’ятами з Трої накивав [Еней] (Котл., І, 1952, 65); — Я гоноровий шляхтич.., у мене є голка, щоб не ходить обірванцем, а ти гольтіпака, ланець, безштанько (Стор., І, 1957, 132); // Надзвичайно бідна людина; бідняк. Дивувалися й завидували Чіпці люди не менше Грицька. \"І як-таки за",
-        "sovietization_risk": 0,
-        "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11, 1970–1980). Подано для історичного аналізу радянського редакторського втручання та ідеологічного зміщення."
-      }
+      "soviet_colonization_context": null
     }
   ],
   "лучити": [
@@ -12943,8 +12937,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "лучити",
       "url_slug": "лучити",
       "headword": "лу́чити",
-      "short_label": "єднати, сполучати",
-      "gloss": "to connect, unite, link, combine",
+      "short_label": "цілити, влучати (розм.)",
+      "gloss": "to aim, hit the mark, strike a target (e.g. Лучив корову, а попав ворону)",
       "pos": "verb",
       "cefr": "B1",
       "heritage_status": {
@@ -12959,7 +12953,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "лу́чити",
-        "source": "СУМ-20"
+        "source": "СУМ-20 (48618)"
       },
       "morphology": {
         "pos": "дієслово",
@@ -12968,10 +12962,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "недоконаний"
         }
       },
-      "distinction_note": "Не плутати з омографом «лучи́ти» (наголос на другому складі: цілитися, влучати в ціль).",
+      "distinction_note": "Не плутати з омографом «лучи́ти» (наголос на другому складі: єднати, сполучати докупи).",
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ЛУ́ЧИТИ, чу, чиш, недок. і док., перех. і без додатка, розм. Цілитися в кого-, що-небудь. Лучив корову, а попав ворону (Номис, 1864, № 1784); Почали шари вкидати У ящик, хто куди хотів. Хто там за різку — кидай вправо, Хто проти неї — вліво луч (Мирний, V, 1955, 292); // Те саме, що влуча́ти 1. Уже стискає міцно коло ворог, Кулі чітко лучать в панцир (Еллан, І, 1958, 75); Юнак з того робочого порі",
+        "definition": "ЛУ́ЧИТИ, чу, чиш, недок. і док., перех. і без додатка, розм. Цілитися в кого-, що-небудь. Лучив корову, а попав ворону (Номис, 1864, № 1784); // Те саме, що влуча́ти 1.",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11, 1970–1980). Подано для історичного аналізу радянського редакторського втручання та ідеологічного зміщення."
@@ -12981,15 +12975,16 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "лучити",
       "url_slug": "лучити",
       "headword": "лучи́ти",
-      "short_label": "цілити, влучати",
-      "gloss": "to hit the target, aim, strike a mark",
+      "short_label": "єднати, сполучати (діал.)",
+      "gloss": "to unite, join, link, connect together (cf. сполучати, злучити)",
       "pos": "verb",
       "cefr": "B2",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-dialectism",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": true,
+        "warning_severity": "treasured"
       },
       "pronunciation": {
         "ipa": "[luˈtʃɪtɪ]",
@@ -12997,7 +12992,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "лучи́ти",
-        "source": "СУМ-20"
+        "source": "СУМ-20 (48619)"
       },
       "morphology": {
         "pos": "дієслово",
@@ -13006,10 +13001,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "недоконаний"
         }
       },
-      "distinction_note": "Не плутати з омографом «лу́чити» (наголос на першому складі: сполучати, з'єднувати докупи).",
+      "distinction_note": "Не плутати з омографом «лу́чити» (наголос на першому складі: цілити, влучати в ціль).",
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ЛУ́ЧИТИ, чу, чиш, недок. і док., перех. і без додатка, розм. Цілитися в кого-, що-небудь. Лучив корову, а попав ворону (Номис, 1864, № 1784); Почали шари вкидати У ящик, хто куди хотів. Хто там за різку — кидай вправо, Хто проти неї — вліво луч (Мирний, V, 1955, 292); // Те саме, що влуча́ти 1. Уже стискає міцно коло ворог, Кулі чітко лучать в панцир (Еллан, І, 1958, 75); Юнак з того робочого порі",
+        "definition": "ЛУЧИ́ТИСЯ², чу́ся, чи́шся, недок., діал. Єднатися. Нечуваний економічний гніт у панській Польщі лучив селян з робітниками.",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11, 1970–1980). Подано для історичного аналізу радянського редакторського втручання та ідеологічного зміщення."
@@ -13097,8 +13092,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "опій",
       "url_slug": "опій",
       "headword": "о́пій",
-      "short_label": "опіум (B1)",
-      "gloss": "opium, narcotic substance",
+      "short_label": "опіум, болезаспокійливий сік (B1)",
+      "gloss": "opium, narcotic analgesic substance dried from poppy heads",
       "pos": "noun",
       "cefr": "B1",
       "heritage_status": {
@@ -13123,10 +13118,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "неістота"
         }
       },
-      "distinction_note": "Не плутати з омографом «опі́й» (наголос на другому складі: застаріле пиятика, запій).",
+      "distinction_note": "Не плутати з омографом «опі́й» (наголос на другому складі: ветеринарне запалення копит коней від надмірного напування).",
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "О́ПІЙ, ю, ч. Висушений молочний сік з недозрілих маківок, який є сильним наркотиком; використовується в медицині як болезаспокійливий і снотворний засіб. — Ви знаєте, се поле — капітал. З цього маку можна би робити прегарний опій (Мак., Вибр., 1954, 316); Ми сиділи в потайному кафе, де можна мати надзвичайну чорну каву, дві-три люльки опію і контрабандне вино \"Кров землі\" (Ю. Янов., II, 1958, 77);",
+        "definition": "О́ПІЙ, ю, ч. Висушений молочний сік з недозрілих маківок, який є сильним наркотиком; використовується в медицині як болезаспокійливий і снотворний засіб.",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11, 1970–1980). Подано для історичного аналізу радянського редакторського втручання та ідеологічного зміщення."
@@ -13136,12 +13131,12 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "опій",
       "url_slug": "опій",
       "headword": "опі́й",
-      "short_label": "пиятика, запій (заст.)",
-      "gloss": "binge drinking, drunken stupor, debauch (archaic)",
+      "short_label": "опой, запалення копит у коней (вет.)",
+      "gloss": "equine hoof inflammation, founder / excessive watering sickness in horses (vet., cf. Грінченко: хвороба у тварин від гарячого пойла)",
       "pos": "noun",
       "cefr": null,
       "heritage_status": {
-        "classification": "authentic-archaism",
+        "classification": "authentic-historism",
         "is_russianism": false,
         "russian_shadow": false,
         "vesum_attested": true,
@@ -13153,7 +13148,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "опі́й",
-        "source": "СУМ-20"
+        "source": "СУМ-20 (66549)"
       },
       "morphology": {
         "pos": "іменник",
@@ -13163,10 +13158,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "неістота"
         }
       },
-      "distinction_note": "Не плутати з омографом «о́пій» (наголос на першому складі: опіум, наркотична речовина).",
+      "distinction_note": "Не плутати з омографом «о́пій» (наголос на першому складі: опіум, лікарська/наркотична речовина).",
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "О́ПІЙ, ю, ч. Висушений молочний сік з недозрілих маківок, який є сильним наркотиком; використовується в медицині як болезаспокійливий і снотворний засіб. — Ви знаєте, се поле — капітал. З цього маку можна би робити прегарний опій (Мак., Вибр., 1954, 316); Ми сиділи в потайному кафе, де можна мати надзвичайну чорну каву, дві-три люльки опію і контрабандне вино \"Кров землі\" (Ю. Янов., II, 1958, 77);",
+        "definition": "О́ПІЙ, ю, ч. Висушений молочний сік з недозрілих маківок. [СУМ-11 не фіксує опі́й, зафіксовано в Грінченка 1907 та СУМ-20 ст. 66549].",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11, 1970–1980). Подано для історичного аналізу радянського редакторського втручання та ідеологічного зміщення."
@@ -13179,7 +13174,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "url_slug": "плавний",
       "headword": "пла́вний",
       "short_label": "гладкий, рівномірний (B1)",
-      "gloss": "smooth, flowing, fluent, continuous",
+      "gloss": "smooth, flowing, fluent, continuous, without abrupt jerks",
       "pos": "adjective",
       "cefr": "B1",
       "heritage_status": {
@@ -13202,10 +13197,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з омографом «плавни́й» (наголос на другому складі: пов'язаний з плавнями — заплавами річок).",
+      "distinction_note": "Не плутати з омографом «плавни́й» (наголос на другому складі: плавучий, сплавний; або стосовний до плавнів — річкових заплав).",
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ПЛА́ВНИЙ, а, е. Рівний, без різких переходів, нешвидкий (про рухи, звуки, мову і т. ін.). Дужими і плавними помахами рук Олеся впевнено розрізала воду (Донч., VI, 1957, 74); Читати [лекцію] слід плавною, добірною і дохідливою мовою (Ковінька, Чому я не сокіл.., 1961, 49); Плавний танець; Плавне гальмування; // Який поступово, без різких змін переходить з одного стану в інший. Процес становлення но",
+        "definition": "ПЛА́ВНИЙ, а, е. Рівний, без різких переходів, нешвидкий (про рухи, звуки, мову і т. ін.).",
         "sovietization_risk": 1,
         "keywords": [
           "соціалістичн"
@@ -13217,8 +13212,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "плавний",
       "url_slug": "плавний",
       "headword": "плавни́й",
-      "short_label": "стосовний до плавнів (річкових заплав)",
-      "gloss": "relating to river floodplains, marshlands, reed-beds (plavni)",
+      "short_label": "плавучий; стосовний до плавнів (B2)",
+      "gloss": "floating, drifting, buoyant (e.g. плавна сітка, cf. Грінченко: пловучій); relating to river floodplains, marshlands (plavni)",
       "pos": "adjective",
       "cefr": "B2",
       "heritage_status": {
@@ -13241,10 +13236,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з омографом «пла́вний» (наголос на першому складі: рівномірний, плавний рух).",
+      "distinction_note": "Не плутати з омографом «пла́вний» (наголос на першому складі: рівномірний, плавний рух чи звук).",
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ПЛА́ВНИЙ, а, е. Рівний, без різких переходів, нешвидкий (про рухи, звуки, мову і т. ін.). Дужими і плавними помахами рук Олеся впевнено розрізала воду (Донч., VI, 1957, 74); Читати [лекцію] слід плавною, добірною і дохідливою мовою (Ковінька, Чому я не сокіл.., 1961, 49); Плавний танець; Плавне гальмування; // Який поступово, без різких змін переходить з одного стану в інший. Процес становлення но",
+        "definition": "ПЛА́ВНИЙ, а, е. Рівний, без різких переходів, нешвидкий (про рухи, звуки, мову і т. ін.).",
         "sovietization_risk": 1,
         "keywords": [
           "соціалістичн"
@@ -13274,7 +13269,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "пла́тина",
-        "source": "СУМ-20"
+        "source": "СУМ-20 (78711)"
       },
       "morphology": {
         "pos": "іменник",
@@ -13284,10 +13279,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "неістота"
         }
       },
-      "distinction_note": "Не плутати з омографом «плати́на» (наголос на другому складі: діалектна назва греблі чи гатки).",
+      "distinction_note": "Не плутати з омографом «плати́на» (наголос на другому складі: народно-діалектна назва хустки).",
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ПЛА́ТИНА, и, ж. Хімічний елемент сірувато-білого кольору, благородний метал, який відзначається великою ковкістю й тягучістю і використовується для виготовлення коштовних виробів, лабораторного хімічного посуду тощо. У природі платина подібно до золота зустрічається в розсипах у вигляді крупинок (Заг. хімія, 1955, 619). ПЛАТИ́НА, и, ж., діал. Хустка. У хвіртку входить старий диякон з речами, належ",
+        "definition": "ПЛА́ТИНА, и, ж. Хімічний елемент сірувато-білого кольору, благородний метал. ПЛАТИ́НА, и, ж., діал. Хустка. У хвіртку входить старий диякон з речами, належними до хрещення, зав’язаними в платину (Васильч., III, 1960, 24).",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11, 1970–1980). Подано для історичного аналізу радянського редакторського втручання та ідеологічного зміщення."
@@ -13297,8 +13292,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "платина",
       "url_slug": "платина",
       "headword": "плати́на",
-      "short_label": "гребля, гатка (діал.)",
-      "gloss": "dam, dike, weir (dialectal / archaic)",
+      "short_label": "хустка, платок (діал.)",
+      "gloss": "kerchief, headscarf, traditional cloth (dialectal / folk, cf. Грінченко: платок; плат, полотно)",
       "pos": "noun",
       "cefr": null,
       "heritage_status": {
@@ -13314,7 +13309,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "плати́на",
-        "source": "СУМ-20"
+        "source": "СУМ-20 (78712)"
       },
       "morphology": {
         "pos": "іменник",
@@ -13324,10 +13319,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "неістота"
         }
       },
-      "distinction_note": "Не плутати з омографом «пла́тина» (наголос на першому складі: благородний метал платина).",
+      "distinction_note": "Не плутати з омографом «пла́тина» (наголос на першому складі: благородний метал платина). Не плутати з російським словом «плотина» (українською: «гребля», «гатка»).",
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ПЛА́ТИНА, и, ж. Хімічний елемент сірувато-білого кольору, благородний метал, який відзначається великою ковкістю й тягучістю і використовується для виготовлення коштовних виробів, лабораторного хімічного посуду тощо. У природі платина подібно до золота зустрічається в розсипах у вигляді крупинок (Заг. хімія, 1955, 619). ПЛАТИ́НА, и, ж., діал. Хустка. У хвіртку входить старий диякон з речами, належ",
+        "definition": "ПЛАТИ́НА, и, ж., діал. Хустка. У хвіртку входить старий диякон з речами, належними до хрещення, зав’язаними в платину (Васильч., III, 1960, 24).",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11, 1970–1980). Подано для історичного аналізу радянського редакторського втручання та ідеологічного зміщення."
@@ -13959,7 +13954,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "url_slug": "порання",
       "headword": "по́рання",
       "short_label": "господарювання, догляд біля хати (B1)",
-      "gloss": "household chores, tidying, livestock tending (from поратися)",
+      "gloss": "household chores, tidying, tending near hearth or livestock (from поратися)",
       "pos": "noun",
       "cefr": "B1",
       "heritage_status": {
@@ -13984,10 +13979,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "неістота"
         }
       },
-      "distinction_note": "Не плутати з омографом «пора́ння» (наголос на другому складі: дія за значенням «поранити», влучне ураження).",
+      "distinction_note": "Не плутати з омографом «пора́ння» (наголос на другому складі: рання пора, ранок, поранок).",
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ПО́РАННЯ, я, с. Дія за знач. по́рати і по́ратися. В хаті і надворі.. Скрізь порання: печуть, варять, Вимітають, миють… (Шевч., I, 1963, 316); Коли пішли з дому пан і панич, почалося щоденне порання (Мирний, III, 1954, 155); Весна означала тут.. роботу на грядках, від якої ввечері не можна було випростати спину, виснажливе порання в кухні біля обідів для сапальників (Вільде, Сестри.., 1958, 11); Пі",
+        "definition": "ПО́РАННЯ, я, с. Дія за знач. по́рати і по́ратися. В хаті і надворі.. Скрізь порання: печуть, варять, Вимітають, миють… (Шевч., I, 1963, 316).",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11, 1970–1980). Подано для історичного аналізу радянського редакторського втручання та ідеологічного зміщення."
@@ -13997,15 +13992,16 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "порання",
       "url_slug": "порання",
       "headword": "пора́ння",
-      "short_label": "поранення, ураження (рідко)",
-      "gloss": "wounding, inflicting a injury, striking a target",
+      "short_label": "ранок, рання пора (діал.)",
+      "gloss": "early morning, dawn, early time of day (cf. поранок; ВТС та СУМ-20 ст. 86498)",
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-dialectism",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": true,
+        "warning_severity": "treasured"
       },
       "pronunciation": {
         "ipa": "[pɔˈrɑnʲːɐ]",
@@ -14013,7 +14009,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "пора́ння",
-        "source": "СУМ-20"
+        "source": "СУМ-20 (86498)"
       },
       "morphology": {
         "pos": "іменник",
@@ -14023,10 +14019,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "неістота"
         }
       },
-      "distinction_note": "Не плутати з омографом «по́рання» (наголос на першому складі: щоденна хатня праця біля печі чи худоби).",
+      "distinction_note": "Не плутати з омографом «по́рання» (наголос на першому складі: хатня праця біля печі чи худоби, від «поратися»).",
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ПО́РАННЯ, я, с. Дія за знач. по́рати і по́ратися. В хаті і надворі.. Скрізь порання: печуть, варять, Вимітають, миють… (Шевч., I, 1963, 316); Коли пішли з дому пан і панич, почалося щоденне порання (Мирний, III, 1954, 155); Весна означала тут.. роботу на грядках, від якої ввечері не можна було випростати спину, виснажливе порання в кухні біля обідів для сапальників (Вільде, Сестри.., 1958, 11); Пі",
+        "definition": "ПО́РАННЯ, я, с. Дія за знач. по́рати і по́ратися. [СУМ-11 не виділяє пора́ння окремою статтею; зафіксовано у ВТС та СУМ-20 ст. 86498].",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11, 1970–1980). Подано для історичного аналізу радянського редакторського втручання та ідеологічного зміщення."
@@ -14037,49 +14033,9 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
     {
       "lemma": "похідний",
       "url_slug": "похідний",
-      "headword": "по́хідний",
-      "short_label": "табірний, експедиційний (B1)",
-      "gloss": "marching, camp, field, expeditionary (relating to a march/campaign)",
-      "pos": "adjective",
-      "cefr": "B1",
-      "heritage_status": {
-        "classification": "standard",
-        "is_russianism": false,
-        "russian_shadow": false,
-        "vesum_attested": true
-      },
-      "pronunciation": {
-        "ipa": "[ˈpɔx⁽ʲ⁾idnɪj]",
-        "source": "VESUM"
-      },
-      "stress": {
-        "form": "по́хідний",
-        "source": "СУМ-20"
-      },
-      "morphology": {
-        "pos": "прикметник",
-        "paradigm": {
-          "kind": "adjective"
-        }
-      },
-      "distinction_note": "Не плутати з омографом «похі́дний» (наголос на другому складі: утворений від іншого, дериват, похідна функція).",
-      "soviet_colonization_context": {
-        "source": "СУМ-11 (1970–1980)",
-        "definition": "ПОХІ́ДНИЙ, а, е. 1. Стос. до походу (у 1, 3 знач.); який буває, виробляється в поході. Школа червоних командирів проходила повз штаб з піснями, в повному похідному порядку (Довж., І, 1958, 212); Своїх хлопців.. Яресько не особливо переобтяжував маршировками на толоці, більше дбав про те, щоб стріляли добре та похідних пісень співали краще за інших (Гончар, II, 1959, 243); Мандрівка на лижах зміцню",
-        "sovietization_risk": 1,
-        "keywords": [
-          "ленін",
-          "маркс"
-        ],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11, 1970–1980). Подано для історичного аналізу радянського редакторського втручання та ідеологічного зміщення."
-      }
-    },
-    {
-      "lemma": "похідний",
-      "url_slug": "похідний",
       "headword": "похі́дний",
-      "short_label": "утворений, деривативний (B1)",
-      "gloss": "derived, secondary, derivative (e.g. похідне слово, похідна величина)",
+      "short_label": "табірний, експедиційний (B1)",
+      "gloss": "marching, camp, field, expeditionary (relating to a march/campaign, e.g. похідний порядок, похідна кухня)",
       "pos": "adjective",
       "cefr": "B1",
       "heritage_status": {
@@ -14094,7 +14050,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "похі́дний",
-        "source": "СУМ-20"
+        "source": "СУМ-20 (88947)"
       },
       "morphology": {
         "pos": "прикметник",
@@ -14102,10 +14058,50 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з омографом «по́хідний» (наголос на першому складі: похідне спорядження, військовий похід).",
+      "distinction_note": "Не плутати з омографом «похідни́й» (наголос на закінченні: утворений від іншого, дериват, похідна величина чи функція).",
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ПОХІ́ДНИЙ, а, е. 1. Стос. до походу (у 1, 3 знач.); який буває, виробляється в поході. Школа червоних командирів проходила повз штаб з піснями, в повному похідному порядку (Довж., І, 1958, 212); Своїх хлопців.. Яресько не особливо переобтяжував маршировками на толоці, більше дбав про те, щоб стріляли добре та похідних пісень співали краще за інших (Гончар, II, 1959, 243); Мандрівка на лижах зміцню",
+        "definition": "ПОХІ́ДНИЙ, а, е. 1. Стос. до походу (у 1, 3 знач.); який буває, виробляється в поході.",
+        "sovietization_risk": 1,
+        "keywords": [
+          "ленін",
+          "маркс"
+        ],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11, 1970–1980). Подано для історичного аналізу радянського редакторського втручання та ідеологічного зміщення."
+      }
+    },
+    {
+      "lemma": "похідний",
+      "url_slug": "похідний",
+      "headword": "похідни́й",
+      "short_label": "утворений, деривативний (B1)",
+      "gloss": "derived, secondary, derivative (e.g. похідне слово, похідна величина, похідна функція в математиці)",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[pɔx⁽ʲ⁾idˈnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "похідни́й",
+        "source": "СУМ-20 (88948)"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «похі́дний» (наголос на другому складі: стосовний до військового походу чи експедиції).",
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ПОХІ́ДНИЙ, а, е. ... 2. Утворений від іншого, вторинний.",
         "sovietization_risk": 1,
         "keywords": [
           "ленін",
@@ -14596,8 +14592,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "провід",
       "url_slug": "провід",
       "headword": "про́від",
-      "short_label": "керівництво, лідерство (B1)",
-      "gloss": "leadership, guidance, steering committee, direction",
+      "short_label": "керівництво; електричний дріт, кабель (B1)",
+      "gloss": "1. leadership, guidance, steering committee, direction; 2. electrical wire, cable, conductor conduit",
       "pos": "noun",
       "cefr": "B1",
       "heritage_status": {
@@ -14612,7 +14608,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "про́від",
-        "source": "СУМ-20"
+        "source": "СУМ-20 (93707)"
       },
       "morphology": {
         "pos": "іменник",
@@ -14622,10 +14618,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "неістота"
         }
       },
-      "distinction_note": "Не плутати з омографом «прові́д» (наголос на другому складі: електричний кабель, дріт або прове́дення).",
+      "distinction_note": "Не плутати з омографом «прові́д» (наголос на другому складі, родовий прово́ду: дія за значенням проводити, провадження чи супровід).",
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ПРО́ВІД, воду, ч. 1. Те саме, що су́провід. Петрусь під проводом баби Василихи одного гарного осіннього дня вирушив здобувати світ (Фр., IV, 1950, 31); Двері вагона відчинилися, і під проводом вартового двоє цивільних внесли велике цебро (Досв., Вибр., 1959, 168); // рідко. Те саме, що акомпанеме́нт 1. Я берусь положити їх [вірші] на голос із проводом двох балабайок (Сам., II, 1958, 307); // За ре",
+        "definition": "ПРО́ВІД, воду, ч. 1. Те саме, що су́провід... 3. Металевий дріт (перев. ізольований), признач. для передавання електричного струму.",
         "sovietization_risk": 2,
         "keywords": [
           "більшов",
@@ -14639,10 +14635,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "провід",
       "url_slug": "провід",
       "headword": "прові́д",
-      "short_label": "електричний кабель, дріт (A2)",
-      "gloss": "wire, electrical wire, cable, conducting conduit",
+      "short_label": "провадження, здійснення (B2)",
+      "gloss": "action of conducting, carrying out, conveyance, leading, guidance action (from проводити; gen. прово́ду)",
       "pos": "noun",
-      "cefr": "A2",
+      "cefr": "B2",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": false,
@@ -14655,7 +14651,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "прові́д",
-        "source": "СУМ-20"
+        "source": "СУМ-20 (93708)"
       },
       "morphology": {
         "pos": "іменник",
@@ -14665,10 +14661,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "неістота"
         }
       },
-      "distinction_note": "Не плутати з омографом «про́від» (наголос на першому складі: організаційне керівництво чи лідерство).",
+      "distinction_note": "Не плутати з омографом «про́від» (наголос на першому складі: керівний орган чи електричний дріт).",
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ПРО́ВІД, воду, ч. 1. Те саме, що су́провід. Петрусь під проводом баби Василихи одного гарного осіннього дня вирушив здобувати світ (Фр., IV, 1950, 31); Двері вагона відчинилися, і під проводом вартового двоє цивільних внесли велике цебро (Досв., Вибр., 1959, 168); // рідко. Те саме, що акомпанеме́нт 1. Я берусь положити їх [вірші] на голос із проводом двох балабайок (Сам., II, 1958, 307); // За ре",
+        "definition": "ПРО́ВІД, воду, ч. Дія за знач. проводи́ти.",
         "sovietization_risk": 2,
         "keywords": [
           "більшов",
@@ -15228,7 +15224,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "роздільни́й",
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС / ULIF"
       },
       "morphology": {
         "pos": "прикметник",

@@ -436,7 +436,10 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          {(definitionCards.length > 0 || enrichment?.meaning || phraseHasGloss) && (
+          {(definitionCards.length > 0 ||
+            enrichment?.meaning ||
+            phraseHasGloss ||
+            entry.soviet_colonization_context) && (
             <section className="atlas-section">
               <h2>Значення</h2>
               {definitionCards.map((card) => (
@@ -490,7 +493,9 @@ function WordAtlasArticleBody({
                     <span>словникове тлумачення</span>
                   </div>
                   <div className="def-text">
-                    {enrichment.meaning.definitions.map((definition) => <p key={definition}>{definition}</p>)}
+                    {(enrichment.meaning.definitions ?? []).map((definition) => (
+                      <p key={definition}>{definition}</p>
+                    ))}
                   </div>
                   {enrichment.meaning.note && <div className="def-flag-inline">{enrichment.meaning.note}</div>}
                 </div>
@@ -591,8 +596,8 @@ function WordAtlasArticleBody({
                     {CASE_ROWS.map((caseRow) => (
                       <tr key={caseRow.key}>
                         <td className="case-name">{caseRow.label}</td>
-                        <td className="form">{stressDisplay(nounParadigm.cases[caseRow.key]?.singular)}</td>
-                        <td className="form">{stressDisplay(nounParadigm.cases[caseRow.key]?.plural)}</td>
+                        <td className="form">{stressDisplay(nounParadigm.cases?.[caseRow.key]?.singular)}</td>
+                        <td className="form">{stressDisplay(nounParadigm.cases?.[caseRow.key]?.plural)}</td>
                       </tr>
                     ))}
                   </tbody>

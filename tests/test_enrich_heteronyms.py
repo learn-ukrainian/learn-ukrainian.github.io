@@ -583,16 +583,72 @@ def test_sapaty_disambiguation():
 
 
 def test_plavnyi_disambiguation():
-    """Verify плавний smooth vs marshland-related disambiguation (batch 5)."""
+    """Verify плавний smooth vs floating/floodplain disambiguation (batch 5)."""
     items = enrich_heteronyms.build_heteronyms_for_lemma("плавний")
     assert items is not None
     assert len(items) == 2
 
-    smooth, marsh = items[0], items[1]
+    smooth, floating = items[0], items[1]
     assert smooth["headword"] == "пла́вний"
     assert "smooth" in smooth["gloss"].lower() or "flowing" in smooth["gloss"].lower()
-    assert marsh["headword"] == "плавни́й"
-    assert "floodplain" in marsh["gloss"].lower() or "marsh" in marsh["gloss"].lower()
+    assert floating["headword"] == "плавни́й"
+    assert (
+        "floating" in floating["gloss"].lower()
+        or "buoyant" in floating["gloss"].lower()
+        or "floodplain" in floating["gloss"].lower()
+        or "marsh" in floating["gloss"].lower()
+    )
+
+
+def test_batch5_semantic_and_stress_distinctions():
+    """Verify Batch 5 stress and semantic distinctions against СУМ-20 / ВТС / Grinchenko."""
+    # лучити: лу́чити (aim) vs лучи́ти (unite)
+    luch = enrich_heteronyms.build_heteronyms_for_lemma("лучити")
+    assert luch is not None and len(luch) == 2
+    assert luch[0]["headword"] == "лу́чити"
+    assert "aim" in luch[0]["gloss"].lower() or "target" in luch[0]["gloss"].lower()
+    assert luch[1]["headword"] == "лучи́ти"
+    assert "unite" in luch[1]["gloss"].lower() or "join" in luch[1]["gloss"].lower()
+
+    # опій: о́пій (opium) vs опі́й (equine inflammation)
+    opii = enrich_heteronyms.build_heteronyms_for_lemma("опій")
+    assert opii is not None and len(opii) == 2
+    assert opii[0]["headword"] == "о́пій"
+    assert "opium" in opii[0]["gloss"].lower()
+    assert opii[1]["headword"] == "опі́й"
+    assert "equine" in opii[1]["gloss"].lower() or "inflammation" in opii[1]["gloss"].lower()
+
+    # платина: пла́тина (metal Pt) vs плати́на (kerchief)
+    plat = enrich_heteronyms.build_heteronyms_for_lemma("платина")
+    assert plat is not None and len(plat) == 2
+    assert plat[0]["headword"] == "пла́тина"
+    assert "platinum" in plat[0]["gloss"].lower()
+    assert plat[1]["headword"] == "плати́на"
+    assert "kerchief" in plat[1]["gloss"].lower() or "headscarf" in plat[1]["gloss"].lower()
+
+    # порання: по́рання (chores) vs пора́ння (early morning)
+    por = enrich_heteronyms.build_heteronyms_for_lemma("порання")
+    assert por is not None and len(por) == 2
+    assert por[0]["headword"] == "по́рання"
+    assert "chores" in por[0]["gloss"].lower() or "tending" in por[0]["gloss"].lower()
+    assert por[1]["headword"] == "пора́ння"
+    assert "morning" in por[1]["gloss"].lower() or "dawn" in por[1]["gloss"].lower()
+
+    # похідний: похі́дний (marching) vs похідни́й (derived)
+    pokh = enrich_heteronyms.build_heteronyms_for_lemma("похідний")
+    assert pokh is not None and len(pokh) == 2
+    assert pokh[0]["headword"] == "похі́дний"
+    assert "marching" in pokh[0]["gloss"].lower() or "camp" in pokh[0]["gloss"].lower()
+    assert pokh[1]["headword"] == "похідни́й"
+    assert "derived" in pokh[1]["gloss"].lower() or "derivative" in pokh[1]["gloss"].lower()
+
+    # провід: про́від (leadership / wire) vs прові́д (conducting action)
+    prov = enrich_heteronyms.build_heteronyms_for_lemma("провід")
+    assert prov is not None and len(prov) == 2
+    assert prov[0]["headword"] == "про́від"
+    assert "leadership" in prov[0]["gloss"].lower() and "wire" in prov[0]["gloss"].lower()
+    assert prov[1]["headword"] == "прові́д"
+    assert "conducting" in prov[1]["gloss"].lower() or "conveyance" in prov[1]["gloss"].lower()
 
 
 def test_batch5_lemmas_not_duplicated_from_earlier_batches():

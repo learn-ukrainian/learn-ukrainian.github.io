@@ -55,57 +55,72 @@ def _resolve_sources_db() -> Path:
     return local
 
 
-def _get_db(db_path: Path | str | None = None) -> sqlite3.Connection:
+def _get_db(db_path: Path | str | None = None, *, write: bool = False) -> sqlite3.Connection:
     target = Path(db_path) if db_path else _resolve_sources_db()
     conn = sqlite3.connect(target)
     conn.row_factory = sqlite3.Row
-    ensure_sum20_official_schema(conn)
+    if write:
+        ensure_sum20_official_schema(conn)
     return conn
 
 
 def lookup_sum20_cached(lemma: str, conn: sqlite3.Connection) -> list[dict[str, Any]]:
-    """Retrieve locally cached СУМ-20 records for lemma."""
+    """Retrieve locally cached СУМ-20 records for lemma (read-only safe)."""
     norm = normalize_sum20_lookup(lemma)
     cur = conn.cursor()
-    cur.execute(
-        """
-        SELECT a.id, a.wordid, a.headword, a.stressed_headword, a.pos, a.grammar, a.definition_text, a.official_url
-        FROM sum20_articles a
-        WHERE a.normalized_lookup_key = ?
-        ORDER BY a.wordid
-        """,
-        (norm,),
-    )
-    rows = cur.fetchall()
+    try:
+        cur.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='sum20_articles'")
+        if not cur.fetchone():
+            return []
+        cur.execute(
+            """
+            SELECT a.id, a.wordid, a.headword, a.stressed_headword, a.pos, a.grammar, a.definition_text, a.official_url
+            FROM sum20_articles a
+            WHERE a.normalized_lookup_key = ?
+            ORDER BY a.wordid
+            """,
+            (norm,),
+        )
+        rows = cur.fetchall()
+    except sqlite3.OperationalError:
+        return []
+
     results = []
     for r in rows:
         art_id = r["id"]
-        cur.execute(
-            """
-            SELECT sense_order, definition, register_labels
-            FROM sum20_senses
-            WHERE article_id = ?
-            ORDER BY sense_order
-            """,
-            (art_id,),
-        )
-        senses = [
-            {
-                "sense_order": s["sense_order"],
-                "definition": s["definition"],
-                "register_labels": json.loads(s["register_labels"]) if s["register_labels"] else [],
-            }
-            for s in cur.fetchall()
-        ]
+        senses = []
+        try:
+            cur.execute(
+                """
+                SELECT sense_order, definition, register_labels
+                FROM sum20_senses
+                WHERE article_id = ?
+                ORDER BY sense_order
+                """,
+                (art_id,),
+            )
+            senses = [
+                {
+                    "sense_order": s["sense_order"],
+                    "definition": s["definition"],
+                    "register_labels": json.loads(s["register_labels"] or "[]"),
+                }
+                for s in cur.fetchall()
+            ]
+        except (sqlite3.OperationalError, json.JSONDecodeError):
+            pass
+
         results.append(
             {
+                "id": art_id,
                 "wordid": r["wordid"],
                 "headword": r["headword"],
                 "stressed_headword": r["stressed_headword"],
                 "pos": r["pos"],
                 "grammar": r["grammar"],
-                "official_url": r["official_url"],
+                "definition": r["definition_text"],
                 "senses": senses,
+                "url": r["official_url"],
             }
         )
     return results
@@ -154,14 +169,22 @@ def fetch_and_cache_sum20(
 
 def lookup_sum20_articles(lemma: str, db_path: Path | str | None = None) -> list[dict[str, Any]]:
     """Retrieve modern authoritative СУМ-20 articles for lemma (cache first, fetch on miss)."""
-    conn = _get_db(db_path)
+    conn = _get_db(db_path, write=False)
     try:
         cached = lookup_sum20_cached(lemma, conn)
         if cached:
             return cached
-        return fetch_and_cache_sum20(lemma, conn)
     finally:
         conn.close()
+
+    try:
+        write_conn = _get_db(db_path, write=True)
+        try:
+            return fetch_and_cache_sum20(lemma, write_conn)
+        finally:
+            write_conn.close()
+    except sqlite3.OperationalError:
+        return []
 
 
 def lookup_sum11_colonization_context(lemma: str, db_path: Path | str | None = None) -> dict[str, Any] | None:

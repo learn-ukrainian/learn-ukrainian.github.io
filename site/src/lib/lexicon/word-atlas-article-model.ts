@@ -637,8 +637,9 @@ export function isSovietizedSum11DefinitionCard(card: DefinitionCard) {
 }
 
 export function shouldRenderDefinitionCard(card: DefinitionCard) {
-  // Retain definition cards (including SUM-11 surfaced as Soviet colonization context)
-  return true;
+  // Exclude Soviet-era SUM-11 cards from modern definition cards.
+  // Historical SUM-11 evidence is routed into the contextual soviet_colonization_context box.
+  return !isSum11DefinitionCard(card);
 }
 
 const RUSALKA_CLASS_LEMMAS = new Set([
@@ -1059,6 +1060,7 @@ export function buildWordAtlasArticleView(
   const rawDefinitionCards = enrichment?.definition_cards ?? [];
   const definitionCards = rawDefinitionCards.filter(shouldRenderDefinitionCard);
   const sovietizedCards = rawDefinitionCards.filter(isSovietizedSum11DefinitionCard);
+  const sum11Cards = rawDefinitionCards.filter(isSum11DefinitionCard);
   const maxSovietizationRisk = Math.max(
     0,
     ...sovietizedCards.map((card) => card.sovietization_risk ?? 1),
@@ -1066,6 +1068,22 @@ export function buildWordAtlasArticleView(
   const sovietizationKeywords = Array.from(
     new Set(sovietizedCards.flatMap((card) => card.sovietization_keywords ?? [])),
   );
+  const derivedSovietContext =
+    entry.soviet_colonization_context ??
+    (sum11Cards.length > 0
+      ? {
+          source: sum11Cards[0].source || "СУМ-11 (1970–1980)",
+          definition: sum11Cards.map((c) => c.definitions.join(" ")).join("\n\n"),
+          sovietization_risk: maxSovietizationRisk,
+          keywords: sovietizationKeywords,
+          historical_note:
+            "Зафіксовано в радянський окупаційний період (СУМ-11, 1970–1980). Подано для історичного аналізу радянського редакторського втручання та ідеологічного зміщення.",
+        }
+      : null);
+  const resolvedEntry =
+    derivedSovietContext && !entry.soviet_colonization_context
+      ? { ...entry, soviet_colonization_context: derivedSovietContext }
+      : entry;
   const letter = entry.lemma.charAt(0).toLocaleUpperCase("uk");
   const headerStress = enrichment?.stress?.form ?? null;
   const cefrLevel = enrichment?.cefr?.level ?? null;
@@ -1148,13 +1166,13 @@ export function buildWordAtlasArticleView(
     styleNotes,
     heritageBoxes,
     courseUsage,
-    entry,
+    entry: resolvedEntry,
     isFullyMarked,
     suppressMorphology,
     formattedOrigin,
   });
   const sourceList = buildSourceList({
-    entry,
+    entry: resolvedEntry,
     enrichment,
     definitionCards,
     sections,
@@ -1213,7 +1231,7 @@ export function buildWordAtlasArticleView(
   }
 
   return {
-    entry,
+    entry: resolvedEntry,
     enrichment,
     sections,
     synonymSets,
