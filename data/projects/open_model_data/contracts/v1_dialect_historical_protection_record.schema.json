@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_dialect_historical_protection_record.schema.json",
+  "title": "v1_dialect_historical_protection_record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "eval_id",
+    "stratum",
+    "subgroup",
+    "case_type",
+    "input_text",
+    "target_term",
+    "expected_action",
+    "expected_replacement",
+    "linguistic_notes",
+    "source_metadata"
+  ],
+  "properties": {
+    "eval_id": {
+      "type": "string",
+      "pattern": "^eval_prot_(?:dial|hist|surz)_\\d{4}$"
+    },
+    "stratum": {
+      "type": "string",
+      "enum": [
+        "regional_dialect",
+        "historical_text",
+        "anti_surzhyk_control"
+      ]
+    },
+    "subgroup": {
+      "type": "string",
+      "enum": [
+        "southwestern_hutsul",
+        "southwestern_boyko",
+        "southwestern_lemko",
+        "southwestern_galician",
+        "southeastern_poltava",
+        "southeastern_slobozhan",
+        "northern_polissian",
+        "old_east_slavic",
+        "middle_ukrainian",
+        "colonial_surzhyk_control"
+      ]
+    },
+    "case_type": {
+      "type": "string",
+      "enum": [
+        "PRESERVE",
+        "CORRECT"
+      ]
+    },
+    "input_text": {
+      "type": "string",
+      "minLength": 10
+    },
+    "target_term": {
+      "type": "string",
+      "minLength": 2
+    },
+    "expected_action": {
+      "type": "string",
+      "enum": [
+        "PRESERVE",
+        "CORRECT"
+      ]
+    },
+    "expected_replacement": {
+      "type": ["string", "null"]
+    },
+    "linguistic_notes": {
+      "type": "string",
+      "minLength": 15
+    },
+    "source_metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "source"
+      ],
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "author": {
+          "type": "string"
+        },
+        "work": {
+          "type": "string"
+        },
+        "year": {
+          "type": "integer"
+        },
+        "language_period": {
+          "type": "string"
+        },
+        "region_or_dialect": {
+          "type": "string"
+        },
+        "error_type": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

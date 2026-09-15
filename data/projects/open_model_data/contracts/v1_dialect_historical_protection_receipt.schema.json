@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_dialect_historical_protection_receipt.schema.json",
+  "title": "v1_dialect_historical_protection_receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dataset_name",
+    "phase",
+    "issue",
+    "parent_epic",
+    "generated_at",
+    "suite_summary",
+    "strata_distribution",
+    "subgroup_distribution",
+    "invariants",
+    "files"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "v1_dialect_historical_protection_receipt"
+    },
+    "dataset_name": {
+      "type": "string",
+      "minLength": 8
+    },
+    "phase": {
+      "type": "string",
+      "minLength": 8
+    },
+    "issue": {
+      "type": "integer",
+      "const": 8051
+    },
+    "parent_epic": {
+      "type": "integer",
+      "const": 6321
+    },
+    "generated_at": {
+      "type": "string",
+      "minLength": 10
+    },
+    "suite_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_test_cases",
+        "preserve_cases",
+        "correct_cases",
+        "statistical_power"
+      ],
+      "properties": {
+        "total_test_cases": {
+          "type": "integer",
+          "const": 600
+        },
+        "preserve_cases": {
+          "type": "integer",
+          "const": 500
+        },
+        "correct_cases": {
+          "type": "integer",
+          "const": 100
+        },
+        "statistical_power": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "target_non_corruption_gate",
+            "max_tolerated_dialect_corruption",
+            "max_tolerated_historical_corruption",
+            "surzhyk_normalization_tolerance",
+            "statistically_sound"
+          ],
+          "properties": {
+            "target_non_corruption_gate": {
+              "type": "string"
+            },
+            "max_tolerated_dialect_corruption": {
+              "type": "integer"
+            },
+            "max_tolerated_historical_corruption": {
+              "type": "integer"
+            },
+            "surzhyk_normalization_tolerance": {
+              "type": "string"
+            },
+            "statistically_sound": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "strata_distribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "regional_dialect",
+        "historical_text",
+        "anti_surzhyk_control"
+      ],
+      "properties": {
+        "regional_dialect": {
+          "type": "integer",
+          "const": 300
+        },
+        "historical_text": {
+          "type": "integer",
+          "const": 200
+        },
+        "anti_surzhyk_control": {
+          "type": "integer",
+          "const": 100
+        }
+      }
+    },
+    "subgroup_distribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "southwestern_hutsul",
+        "southwestern_boyko",
+        "southwestern_lemko",
+        "southwestern_galician",
+        "southeastern_poltava",
+        "southeastern_slobozhan",
+        "northern_polissian",
+        "old_east_slavic",
+        "middle_ukrainian",
+        "colonial_surzhyk_control"
+      ],
+      "properties": {
+        "southwestern_hutsul": { "type": "integer", "minimum": 30 },
+        "southwestern_boyko": { "type": "integer", "minimum": 30 },
+        "southwestern_lemko": { "type": "integer", "minimum": 30 },
+        "southwestern_galician": { "type": "integer", "minimum": 30 },
+        "southeastern_poltava": { "type": "integer", "minimum": 30 },
+        "southeastern_slobozhan": { "type": "integer", "minimum": 20 },
+        "northern_polissian": { "type": "integer", "minimum": 30 },
+        "old_east_slavic": { "type": "integer", "minimum": 80 },
+        "middle_ukrainian": { "type": "integer", "minimum": 80 },
+        "colonial_surzhyk_control": { "type": "integer", "const": 100 }
+      }
+    },
+    "invariants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "anti_surzhyk_eradication_mandate",
+        "zero_surzhyk_normalization_tolerance",
+        "dialect_cultural_heritage_protection",
+        "historical_continuity_preservation",
+        "zero_hallucinated_sources"
+      ],
+      "properties": {
+        "anti_surzhyk_eradication_mandate": { "type": "boolean" },
+        "zero_surzhyk_normalization_tolerance": { "type": "boolean" },
+        "dialect_cultural_heritage_protection": { "type": "boolean" },
+        "historical_continuity_preservation": { "type": "boolean" },
+        "zero_hallucinated_sources": { "type": "boolean" }
+      }
+    },
+    "files": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "test_suite_jsonl"
+      ],
+      "properties": {
+        "test_suite_jsonl": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "path",
+            "sha256",
+            "record_count"
+          ],
+          "properties": {
+            "path": { "type": "string" },
+            "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+            "record_count": { "type": "integer", "const": 600 }
+          }
+        }
+      }
+    }
+  }
+}
