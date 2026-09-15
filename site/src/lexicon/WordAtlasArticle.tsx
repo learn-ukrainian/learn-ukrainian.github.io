@@ -14,6 +14,7 @@ import {
   formatKhayImperative,
   IMPERATIVE_ROWS,
   isMirrorUrl,
+  isModernDefinitionCard,
   learnerFacingUrls,
   MARKED_LEARNER_NOTE,
   PAST_ROWS,
@@ -161,9 +162,21 @@ function getEffectiveHeteronymRecord(
     heritage_status: heteronym.heritage_status !== undefined ? heteronym.heritage_status : baseEntry.heritage_status,
     distinction_note: heteronym.distinction_note !== undefined ? heteronym.distinction_note : baseEntry.distinction_note,
     sections: heteronym.sections !== undefined ? { ...baseSections, ...heteronymSections } : baseEntry.sections,
+    soviet_colonization_context:
+      heteronym.soviet_colonization_context !== undefined
+        ? heteronym.soviet_colonization_context
+        : baseEntry.soviet_colonization_context,
     enrichment: {
       ...baseEnrichment,
       ...heteronymEnrichment,
+      meaning:
+        heteronym.meaning !== undefined
+          ? heteronym.meaning
+          : heteronymEnrichment.meaning,
+      definition_cards:
+        heteronym.definition_cards !== undefined
+          ? heteronym.definition_cards
+          : heteronymEnrichment.definition_cards,
       stress: heteronym.stress ?? heteronymEnrichment.stress ?? baseEnrichment.stress,
       cefr: heteronym.cefr !== undefined ? (heteronym.cefr ? { level: heteronym.cefr } : null) : baseEnrichment.cefr,
       morphology: heteronym.morphology ?? heteronymEnrichment.morphology ?? baseEnrichment.morphology,
@@ -436,7 +449,10 @@ function WordAtlasArticleBody({
             </section>
           )}
 
-          {(definitionCards.length > 0 || enrichment?.meaning || phraseHasGloss) && (
+          {(definitionCards.length > 0 ||
+            enrichment?.meaning ||
+            phraseHasGloss ||
+            entry.soviet_colonization_context) && (
             <section className="atlas-section">
               <h2>Значення</h2>
               {definitionCards.map((card) => (
@@ -459,21 +475,45 @@ function WordAtlasArticleBody({
                     {card.definitions.map((definition) => <p key={definition}>{definition}</p>)}
                   </div>
                   {card.flag_note && <div className="def-flag-inline">{card.flag_note}</div>}
+                  {card.id.includes("grinchenko") && (
+                    <div className="def-flag-inline grinchenko-oppression-note">
+                      Доба царських заборон (Валуєвський циркуляр 1863, Емський указ 1876): фіксація живої народної мови, яку імперська влада намагалася стерти.
+                    </div>
+                  )}
                 </div>
               ))}
-              {definitionCards.length === 0 && enrichment?.meaning && (
+              {entry.soviet_colonization_context && (
+                <div className="def-card sum11-flagged soviet-colonization-box">
+                  <div className="def-source">
+                    <span className="src-pill">Радянський окупаційний контекст</span>
+                    <span>{entry.soviet_colonization_context.source}</span>
+                  </div>
+                  <div className="def-text">
+                    <p>{entry.soviet_colonization_context.definition}</p>
+                  </div>
+                  <div className="def-flag-inline">
+                    {entry.soviet_colonization_context.historical_note ?? "Подано для історичного аналізу радянського мовного втручання та ідеологічного зміщення."}
+                    {Boolean(entry.soviet_colonization_context.keywords?.length) && (
+                      <span className="soviet-keywords"> (Маркери: {entry.soviet_colonization_context.keywords?.join(", ")})</span>
+                    )}
+                  </div>
+                </div>
+              )}
+              {!definitionCards.some(isModernDefinitionCard) && enrichment?.meaning && (
                 <div className="def-card sum20">
                   <div className="def-source">
-                    <span className="src-pill">{enrichment.meaning.source}</span>
+                    <span className="src-pill">{enrichment.meaning.source || "СУМ-20"}</span>
                     <span>словникове тлумачення</span>
                   </div>
                   <div className="def-text">
-                    {enrichment.meaning.definitions.map((definition) => <p key={definition}>{definition}</p>)}
+                    {(enrichment.meaning.definitions ?? []).map((definition) => (
+                      <p key={definition}>{definition}</p>
+                    ))}
                   </div>
                   {enrichment.meaning.note && <div className="def-flag-inline">{enrichment.meaning.note}</div>}
                 </div>
               )}
-              {definitionCards.length === 0 && !enrichment?.meaning && phraseHasGloss && (
+              {!definitionCards.some(isModernDefinitionCard) && !enrichment?.meaning && phraseHasGloss && (
                 <div className="def-card sum20">
                   <div className="def-source">
                     <span className="src-pill">Курс</span>
@@ -569,8 +609,8 @@ function WordAtlasArticleBody({
                     {CASE_ROWS.map((caseRow) => (
                       <tr key={caseRow.key}>
                         <td className="case-name">{caseRow.label}</td>
-                        <td className="form">{stressDisplay(nounParadigm.cases[caseRow.key]?.singular)}</td>
-                        <td className="form">{stressDisplay(nounParadigm.cases[caseRow.key]?.plural)}</td>
+                        <td className="form">{stressDisplay(nounParadigm.cases?.[caseRow.key]?.singular)}</td>
+                        <td className="form">{stressDisplay(nounParadigm.cases?.[caseRow.key]?.plural)}</td>
                       </tr>
                     ))}
                   </tbody>

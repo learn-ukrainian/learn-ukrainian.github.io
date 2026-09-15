@@ -9,7 +9,10 @@ import {
   formatKhayImperative,
   formatPos,
   formatTranslationSource,
+  isModernDefinitionCard,
+  isSum11DefinitionCard,
   sanitizeWikiReference,
+  shouldRenderDefinitionCard,
   type AtlasLinkCatalog,
   type Enrichment,
   type VerbParadigm,
@@ -1341,6 +1344,212 @@ describe("verb future, conditional, хай, impersonal, and aspect columns (#760
       );
       expect(viewWith.hasAspectPartner).toBe(true);
       expect(viewWith.partnerParadigm).toEqual(partnerParadigm);
+    });
+  });
+
+  describe("Soviet Colonization Context & Decolonized Dictionary Rendering (#8039)", () => {
+    test("shouldRenderDefinitionCard filters out Soviet-era SUM-11 cards and preserves modern cards", () => {
+      const sum11Card = {
+        id: "sum11-123",
+        source: "СУМ-11",
+        definitions: ["Радянське тлумачення"],
+      };
+      const sum11PillCard = {
+        id: "entry-1",
+        source: "Словник",
+        source_pill: "СУМ-11",
+        definitions: ["Інше радянське тлумачення"],
+      };
+      const vtsCard = {
+        id: "vts-456",
+        source: "ВТС",
+        definitions: ["Сучасне академічне тлумачення"],
+      };
+      const sum20Card = {
+        id: "sum20-789",
+        source: "СУМ-20",
+        definitions: ["Сучасне офіційне тлумачення УМІФ"],
+      };
+
+      expect(isSum11DefinitionCard(sum11Card)).toBe(true);
+      expect(isSum11DefinitionCard(sum11PillCard)).toBe(true);
+      expect(isSum11DefinitionCard(vtsCard)).toBe(false);
+      expect(isSum11DefinitionCard(sum20Card)).toBe(false);
+
+      expect(shouldRenderDefinitionCard(sum11Card)).toBe(false);
+      expect(shouldRenderDefinitionCard(sum11PillCard)).toBe(false);
+      expect(shouldRenderDefinitionCard(vtsCard)).toBe(true);
+      expect(shouldRenderDefinitionCard(sum20Card)).toBe(true);
+
+      expect(isModernDefinitionCard(sum20Card)).toBe(true);
+      expect(isModernDefinitionCard(vtsCard)).toBe(true);
+      expect(isModernDefinitionCard(sum11Card)).toBe(false);
+      expect(isModernDefinitionCard({ id: "grinchenko-1", source: "Грінченко (1907)", definitions: ["давнє значення"] })).toBe(false);
+    });
+
+    test("renders Значення section and soviet-colonization-box for historical-only entries", () => {
+      const historicalOnlyProps = articleProps({
+        lemma: "ланець-історичне",
+        url_slug: "ланець-історичне",
+        gloss: "",
+        entry_type: "lemma",
+        pos: "noun",
+        ipa: null,
+        primary_source: "course",
+        course_usage: [],
+        soviet_colonization_context: {
+          source: "СУМ-11 (1970–1980)",
+          definition: "ЛАНЕ́ЦЬ, нця́, ч., заст. Ланцюг.",
+          sovietization_risk: 0,
+          keywords: [],
+          historical_note:
+            "Зафіксовано в радянський окупаційний період (СУМ-11, 1970–1980). Подано для історичного аналізу.",
+        },
+      });
+
+      const html = renderWordAtlasArticle(historicalOnlyProps);
+      expect(html).toContain("Значення");
+      expect(html).toContain("soviet-colonization-box");
+      expect(html).toContain("Радянський окупаційний контекст");
+      expect(html).toContain("СУМ-11 (1970–1980)");
+      expect(html).toContain("ЛАНЕ́ЦЬ, нця́, ч., заст. Ланцюг.");
+      expect(html).toContain("Зафіксовано в радянський окупаційний період");
+    });
+
+    test("routes raw SUM-11 definition cards to soviet_colonization_context and preserves modern meaning", () => {
+      const props = articleProps({
+        lemma: "похідний-тест",
+        url_slug: "похідний-тест",
+        gloss: "marching or derived",
+        entry_type: "lemma",
+        pos: "adjective",
+        ipa: null,
+        primary_source: "course",
+        course_usage: [],
+        enrichment: {
+          meaning: {
+            definitions: ["Сучасне наукове значення терміна."],
+            source: "СУМ-20",
+          },
+          definition_cards: [
+            {
+              id: "sum11-flagged-1",
+              source: "СУМ-11 (1970–1980)",
+              definitions: ["Радянська стаття з ленінським контекстом"],
+              sovietization_risk: 2,
+              sovietization_keywords: ["ленін"],
+            },
+          ],
+        },
+      });
+
+      const html = renderWordAtlasArticle(props);
+      // Modern meaning is rendered
+      expect(html).toContain("Сучасне наукове значення терміна.");
+      expect(html).toContain("СУМ-20");
+      expect(html).toContain("словникове тлумачення");
+      // SUM-11 card is NOT rendered as regular card with "перевірено: чисто"
+      expect(html).not.toContain("перевірено: чисто");
+      // Routed into historical context box
+      expect(html).toContain("soviet-colonization-box");
+      expect(html).toContain("Радянський окупаційний контекст");
+      expect(html).toContain("Радянська стаття з ленінським контекстом");
+    });
+
+    test("renders Tsarist Russian imperial oppression note for Grinchenko cards", () => {
+      const props = articleProps({
+        lemma: "платина-тест",
+        url_slug: "платина-тест",
+        gloss: "traditional kerchief",
+        entry_type: "lemma",
+        pos: "noun",
+        ipa: null,
+        primary_source: "course",
+        course_usage: [],
+        enrichment: {
+          definition_cards: [
+            {
+              id: "grinchenko-1",
+              source: "Словарь української мови (Грінченко, 1907–1909)",
+              definitions: ["Платина, -ни, ж. Платок."],
+            },
+          ],
+        },
+      });
+
+      const html = renderWordAtlasArticle(props);
+      expect(html).toContain("grinchenko-oppression-note");
+      expect(html).toContain("Доба царських заборон (Валуєвський циркуляр 1863, Емський указ 1876)");
+      expect(html).toContain("фіксація живої народної мови");
+    });
+
+    test("preserves modern meaning beside historical Grinchenko cards without duplicate cards", () => {
+      const props = articleProps({
+        lemma: "опій-тест",
+        url_slug: "опій-тест",
+        gloss: "equine hoof inflammation",
+        entry_type: "lemma",
+        pos: "noun",
+        ipa: null,
+        primary_source: "course",
+        course_usage: [],
+        enrichment: {
+          meaning: {
+            definitions: ["Ревматичне запалення копит у коня."],
+            source: "СУМ-20",
+          },
+          definition_cards: [
+            {
+              id: "grinchenko-1",
+              source: "Словарь української мови (Грінченко, 1907–1909)",
+              definitions: ["Опій, -пою, м. Боль в копытах лошади."],
+            },
+          ],
+        },
+      });
+
+      const html = renderWordAtlasArticle(props);
+      // Both Grinchenko and modern SUM-20 meaning are rendered
+      expect(html).toContain("Боль в копытах лошади.");
+      expect(html).toContain("grinchenko-oppression-note");
+      expect(html).toContain("Ревматичне запалення копит у коня.");
+      expect(html).toContain("СУМ-20");
+    });
+
+    test("does not recreate Soviet context when soviet_colonization_context is explicitly null", () => {
+      const props = articleProps({
+        lemma: "ланець-ланцюг",
+        url_slug: "ланець-ланцюг",
+        gloss: "archaic chain",
+        entry_type: "lemma",
+        pos: "noun",
+        ipa: null,
+        primary_source: "course",
+        course_usage: [],
+        soviet_colonization_context: null,
+        enrichment: {
+          meaning: {
+            definitions: ["Ланцюг."],
+            source: "СУМ-20",
+          },
+          definition_cards: [
+            {
+              id: "sum11-1",
+              source: "СУМ-11 (1970–1980)",
+              definitions: ["Стаття з іншого омографа"],
+            },
+          ],
+        },
+      });
+
+      const view = buildWordAtlasArticleView(props.record, "test", "test");
+      expect(view.entry.soviet_colonization_context).toBeNull();
+
+      const html = renderWordAtlasArticle(props);
+      expect(html).not.toContain("soviet-colonization-box");
+      expect(html).not.toContain("Радянський окупаційний контекст");
+      expect(html).not.toContain("Стаття з іншого омографа");
+      expect(html).toContain("Ланцюг.");
     });
   });
 });

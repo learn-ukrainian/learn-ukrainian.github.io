@@ -741,6 +741,29 @@ html[data-theme='dark'] .lu-content .word-atlas .word-hero .practice-cta-hero {
   font-weight: 600;
 }
 
+.def-card.soviet-colonization-box {
+  margin-top: 14px;
+  background: var(--lu-state-wrong-bg);
+  border-left: 3px solid var(--red);
+}
+
+.def-card.soviet-colonization-box .src-pill {
+  background: var(--red);
+  color: #fff;
+  font-weight: 700;
+}
+
+.soviet-keywords {
+  font-weight: 600;
+  color: var(--red);
+}
+
+.def-flag-inline.grinchenko-oppression-note {
+  border-top: 1px dashed var(--brown);
+  color: var(--brown);
+  font-style: italic;
+}
+
 .ety-timeline {
   display: flex;
   align-items: center;

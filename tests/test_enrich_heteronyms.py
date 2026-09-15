@@ -309,7 +309,7 @@ def test_muzyka_disambiguation():
 
 
 def test_batch_expansion_count():
-    """Verify batch heteronym expansion admits 136 curated lemmas with exact scan residual.
+    """Verify batch heteronym expansion admits 168 curated lemmas with exact scan residual.
 
     Batch 1 (#8039, PR #8043): 40 curated. Batch 2 (#8039 continuation): +32
     lemmas selected from the atlas.db-approved, A1/A2/B1 tier residual, each
@@ -320,12 +320,15 @@ def test_batch_expansion_count():
     heteronyms, e.g. ВІДВО́ЗИТИ/ВІ́ХА/ДЕРЖА́ВА), so the true denominator is
     422, not the pre-fix 467. Batch 4 (#8039 continuation): +32 lemmas
     selected from the remaining 318 residual candidates, expanding SSOT to 136.
+    Batch 5 (#8039 continuation): +32 lemmas verified against decolonized
+    СУМ-20 / ВТС authorities with СУМ-11 Soviet colonization context attached,
+    expanding SSOT to 168.
     """
     total_curated = len(enrich_heteronyms.CURATED_HETERONYMS)
-    assert total_curated == 136
+    assert total_curated == 168
     # Corrected denominator is 422 true two-way-stress candidates;
-    # residual is 422 - 136 = 286
-    assert 422 - total_curated == 286
+    # residual is 422 - 168 = 254
+    assert 422 - total_curated == 254
 
 
 def test_kredyt_disambiguation():
@@ -549,3 +552,225 @@ def test_batch4_lemmas_not_duplicated_from_earlier_batches():
     assert earlier & set(CURATED_HETERONYMS_BATCH_4) == set()
     assert "лікарський" in CURATED_HETERONYMS_BATCH_4
     assert "парний" in CURATED_HETERONYMS_BATCH_4
+
+
+def test_pokii_disambiguation():
+    """Verify покій peace/tranquility vs chamber/room disambiguation (batch 5)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("покій")
+    assert items is not None
+    assert len(items) == 2
+
+    peace, chamber = items[0], items[1]
+    assert peace["headword"] == "по́кій"
+    assert "peace" in peace["gloss"].lower() or "tranquility" in peace["gloss"].lower()
+    assert chamber["headword"] == "покі́й"
+    assert "room" in chamber["gloss"].lower() or "chamber" in chamber["gloss"].lower()
+    assert "soviet_colonization_context" in peace
+    assert peace["soviet_colonization_context"]["source"] == "СУМ-11 (1970–1980)"
+
+
+def test_sapaty_disambiguation():
+    """Verify сапати wheeze/pant vs hoe/weed disambiguation (batch 5)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("сапати")
+    assert items is not None
+    assert len(items) == 2
+
+    wheeze, hoe = items[0], items[1]
+    assert wheeze["headword"] == "са́пати"
+    assert "breathe" in wheeze["gloss"].lower() or "pant" in wheeze["gloss"].lower()
+    assert hoe["headword"] == "сапа́ти"
+    assert "hoe" in hoe["gloss"].lower() or "weed" in hoe["gloss"].lower()
+
+
+def test_plavnyi_disambiguation():
+    """Verify плавний smooth vs floating/floodplain disambiguation (batch 5)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("плавний")
+    assert items is not None
+    assert len(items) == 2
+
+    smooth, floating = items[0], items[1]
+    assert smooth["headword"] == "пла́вний"
+    assert "smooth" in smooth["gloss"].lower() or "flowing" in smooth["gloss"].lower()
+    assert floating["headword"] == "плавни́й"
+    assert (
+        "floating" in floating["gloss"].lower()
+        or "buoyant" in floating["gloss"].lower()
+        or "floodplain" in floating["gloss"].lower()
+        or "marsh" in floating["gloss"].lower()
+    )
+
+
+def test_batch5_semantic_and_stress_distinctions():
+    """Verify Batch 5 stress and semantic distinctions against СУМ-20 / ВТС / Grinchenko."""
+    # лучити: лу́чити (aim) vs лучи́ти (unite)
+    luch = enrich_heteronyms.build_heteronyms_for_lemma("лучити")
+    assert luch is not None and len(luch) == 2
+    assert luch[0]["headword"] == "лу́чити"
+    assert "aim" in luch[0]["gloss"].lower() or "target" in luch[0]["gloss"].lower()
+    assert luch[1]["headword"] == "лучи́ти"
+    assert "unite" in luch[1]["gloss"].lower() or "join" in luch[1]["gloss"].lower()
+
+    # опій: о́пій (opium) vs опі́й (equine inflammation)
+    opii = enrich_heteronyms.build_heteronyms_for_lemma("опій")
+    assert opii is not None and len(opii) == 2
+    assert opii[0]["headword"] == "о́пій"
+    assert "opium" in opii[0]["gloss"].lower()
+    assert opii[1]["headword"] == "опі́й"
+    assert "equine" in opii[1]["gloss"].lower() or "inflammation" in opii[1]["gloss"].lower()
+
+    # платина: пла́тина (metal Pt) vs плати́на (kerchief)
+    plat = enrich_heteronyms.build_heteronyms_for_lemma("платина")
+    assert plat is not None and len(plat) == 2
+    assert plat[0]["headword"] == "пла́тина"
+    assert "platinum" in plat[0]["gloss"].lower()
+    assert plat[1]["headword"] == "плати́на"
+    assert "kerchief" in plat[1]["gloss"].lower() or "headscarf" in plat[1]["gloss"].lower()
+
+    # порання: по́рання (chores) vs пора́ння (early morning)
+    por = enrich_heteronyms.build_heteronyms_for_lemma("порання")
+    assert por is not None and len(por) == 2
+    assert por[0]["headword"] == "по́рання"
+    assert "chores" in por[0]["gloss"].lower() or "tending" in por[0]["gloss"].lower()
+    assert por[1]["headword"] == "пора́ння"
+    assert "morning" in por[1]["gloss"].lower() or "dawn" in por[1]["gloss"].lower()
+
+    # похідний: похі́дний (marching) vs похідни́й (derived)
+    pokh = enrich_heteronyms.build_heteronyms_for_lemma("похідний")
+    assert pokh is not None and len(pokh) == 2
+    assert pokh[0]["headword"] == "похі́дний"
+    assert "marching" in pokh[0]["gloss"].lower() or "camp" in pokh[0]["gloss"].lower()
+    assert pokh[1]["headword"] == "похідни́й"
+    assert "derived" in pokh[1]["gloss"].lower() or "derivative" in pokh[1]["gloss"].lower()
+
+    # провід: про́від (leadership / wire) vs прові́д (conducting action)
+    prov = enrich_heteronyms.build_heteronyms_for_lemma("провід")
+    assert prov is not None and len(prov) == 2
+    assert prov[0]["headword"] == "про́від"
+    assert "leadership" in prov[0]["gloss"].lower() and "wire" in prov[0]["gloss"].lower()
+    assert prov[1]["headword"] == "прові́д"
+    assert "conducting" in prov[1]["gloss"].lower() or "conveyance" in prov[1]["gloss"].lower()
+
+
+def test_batch5_lemmas_not_duplicated_from_earlier_batches():
+    """Verify batch 5's 32 lemmas are net-new and mutually disjoint with batches 1-4."""
+    from scripts.lexicon.curated_heteronyms_batch import CURATED_HETERONYMS_BATCH
+    from scripts.lexicon.curated_heteronyms_batch2 import CURATED_HETERONYMS_BATCH_2
+    from scripts.lexicon.curated_heteronyms_batch3 import CURATED_HETERONYMS_BATCH_3
+    from scripts.lexicon.curated_heteronyms_batch4 import CURATED_HETERONYMS_BATCH_4
+    from scripts.lexicon.curated_heteronyms_batch5 import CURATED_HETERONYMS_BATCH_5
+
+    assert len(CURATED_HETERONYMS_BATCH_5) == 32
+    earlier = (
+        set(CURATED_HETERONYMS_BATCH)
+        | set(CURATED_HETERONYMS_BATCH_2)
+        | set(CURATED_HETERONYMS_BATCH_3)
+        | set(CURATED_HETERONYMS_BATCH_4)
+    )
+    assert earlier & set(CURATED_HETERONYMS_BATCH_5) == set()
+    assert "покій" in CURATED_HETERONYMS_BATCH_5
+    assert "сапати" in CURATED_HETERONYMS_BATCH_5
+    assert "плавний" in CURATED_HETERONYMS_BATCH_5
+
+
+def test_homonyms_with_numeric_suffixes_and_identical_stress_not_treated_as_heteronyms(monkeypatch):
+    """Separate dictionary article numbers from headword before comparing stress (#8039).
+
+    Ensures that homonyms with identical stress but distinct article numbers (e.g. ТЕ́СТ 1 and ТЕ́СТ 2)
+    are not treated as heteronyms, and that numeric suffixes are stripped from headwords.
+    """
+    from scripts.lexicon import sum20_lookup
+
+    synthetic_same_stress = {
+        "lemma": "синтетичнийтест",
+        "modern_sum20": [
+            {
+                "stressed_headword": "ТЕ́СТ 1",
+                "grammar": "іменник",
+                "senses": [{"definition": "Перше значення тесту"}],
+            },
+            {
+                "stressed_headword": "ТЕ́СТ 2",
+                "grammar": "іменник",
+                "senses": [{"definition": "Друге значення тесту"}],
+            },
+        ],
+        "soviet_colonization_context": None,
+    }
+
+    monkeypatch.setattr(
+        sum20_lookup,
+        "lookup_decolonized_heteronym_evidence",
+        lambda lemma: synthetic_same_stress,
+    )
+    result_same = enrich_heteronyms.build_heteronyms_for_lemma("синтетичнийтест")
+    assert result_same is None
+
+    synthetic_diff_stress = {
+        "lemma": "синтетичнийтест",
+        "modern_sum20": [
+            {
+                "stressed_headword": "ТЕ́СТ 1",
+                "grammar": "іменник",
+                "senses": [{"definition": "Перше значення тесту"}],
+            },
+            {
+                "stressed_headword": "ТЕСТІ́ 2",
+                "grammar": "іменник",
+                "senses": [{"definition": "Друге значення тесту"}],
+            },
+        ],
+        "soviet_colonization_context": None,
+    }
+
+    monkeypatch.setattr(
+        sum20_lookup,
+        "lookup_decolonized_heteronym_evidence",
+        lambda lemma: synthetic_diff_stress,
+    )
+    result_diff = enrich_heteronyms.build_heteronyms_for_lemma("синтетичнийтест")
+    assert result_diff is not None
+    assert len(result_diff) == 2
+    assert result_diff[0]["headword"] == "ТЕ́СТ"
+    assert result_diff[1]["headword"] == "ТЕСТІ́"
+
+
+def test_build_heteronyms_for_lemma_preserves_all_homonyms_when_stresses_differ(monkeypatch):
+    """Verify that when multiple articles share stress but at least one differs, ALL articles are preserved."""
+    from scripts.lexicon import sum20_lookup
+
+    synthetic_three_articles = {
+        "lemma": "синтетичнийтест",
+        "modern_sum20": [
+            {
+                "stressed_headword": "ТЕ́СТ 1",
+                "grammar": "іменник",
+                "senses": [{"definition": "Перше значення тесту"}],
+            },
+            {
+                "stressed_headword": "ТЕ́СТ 2",
+                "grammar": "іменник",
+                "senses": [{"definition": "Друге значення тесту"}],
+            },
+            {
+                "stressed_headword": "ТЕСТІ́ 3",
+                "grammar": "іменник",
+                "senses": [{"definition": "Третє значення тесту"}],
+            },
+        ],
+        "soviet_colonization_context": None,
+    }
+
+    monkeypatch.setattr(
+        sum20_lookup,
+        "lookup_decolonized_heteronym_evidence",
+        lambda lemma: synthetic_three_articles,
+    )
+    result = enrich_heteronyms.build_heteronyms_for_lemma("синтетичнийтест")
+    assert result is not None
+    assert len(result) == 3
+    assert result[0]["headword"] == "ТЕ́СТ"
+    assert result[0]["gloss"] == "Перше значення тесту"
+    assert result[1]["headword"] == "ТЕ́СТ"
+    assert result[1]["gloss"] == "Друге значення тесту"
+    assert result[2]["headword"] == "ТЕСТІ́"
+    assert result[2]["gloss"] == "Третє значення тесту"

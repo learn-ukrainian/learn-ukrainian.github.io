@@ -106,6 +106,10 @@
         "sha256": "5202afc2c9089b26f83d51a4a3c1110a48d2c21920df8c4eb6b23c350d10c70c"
       },
       {
+        "path": "scripts/lexicon/curated_heteronyms_batch5.py",
+        "sha256": "0005a3db8b73b7c884e5934ff2943eec4d49a4d7c7913c834f5d90208d025b69"
+      },
+      {
         "path": "scripts/lexicon/curated_membership.py",
         "sha256": "45a81e21d503eeed19a770eb367dc794cac40f8dd60314ca51273b60a8b3f149"
       },
@@ -135,7 +139,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_heteronyms.py",
-        "sha256": "b0c80ad6d3030126ccd77bae211f96cf0747c0d40f6e398f85b14de77557e7e3"
+        "sha256": "31b7fa99cae772525ac0cef9b9eb6d19e3780ec13b7ca7c90c01b388159e49e8"
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
@@ -308,6 +312,10 @@
       {
         "path": "scripts/lexicon/source_attribution.py",
         "sha256": "b2b3a85f52d6180da05c62a554f7f11b43cf0c818f81fc95153d8b52586b32ae"
+      },
+      {
+        "path": "scripts/lexicon/sum20_lookup.py",
+        "sha256": "9e85132115e75a087fd6731d710037b65ac0ea71b715f4d85d93b71406cf75ae"
       },
       {
         "path": "scripts/lexicon/sync_curated_heteronyms_ts.py",
