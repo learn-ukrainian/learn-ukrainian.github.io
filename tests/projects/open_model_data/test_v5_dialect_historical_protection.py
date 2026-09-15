@@ -20,6 +20,7 @@ from scripts.projects.open_model_data.dialect_protection_invariants import (
     SURZHYK_TARGET_ALLOWLIST,
     lemko_record_is_authentic,
     oes_honest_unique_passages,
+    oes_passage_fingerprint,
     oes_passages_are_near_duplicates,
     oes_record_is_authentic,
     oes_text_is_diplomatic_excerpt,
@@ -380,6 +381,10 @@ def test_oes_predicate_rejects_commentary_recipes_wrappers_and_padding() -> None
             "владыцЂ",
         ),
         (
+            "А взяти владыцЂ дару рубль <!-- VERIFY:\ncurrency\n--> князю",
+            "владыцЂ",
+        ),
+        (
             "Аще егó опýтаевЂ крáсною дЂви́цею, ни нáма бýдетъ сокольцá, ни нáма крáсны дЂви́це, то почнýть нáю пти́ци би́ти въ пóлЂ Половéцкомъ.",
             "таевЂ",
         ),
@@ -423,6 +428,9 @@ def test_oes_predicate_rejects_commentary_recipes_wrappers_and_padding() -> None
         "а дроугое холопьство: поиметь робу, а безъ ряду; поимет ли с рядомъ како ся боудеть рядилъ, на том же и стоитъ",
         "а дроугое холопьство: поиметь робу, а безъ рѧдоу; поимет ли с рѧдомъ како сѧ боудеть рѧдилъ, на том же и стоитъ",
     )
+    assert oes_passage_fingerprint(
+        "Аже закупъ бижить <!-- VERIFY:\ncurrency\n--> то обель"
+    ) == oes_passage_fingerprint("Аже закупъ бижить то обель")
 
     genuine = {
         **labeled_pvl,

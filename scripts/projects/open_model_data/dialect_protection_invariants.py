@@ -489,8 +489,9 @@ def oes_match_blob(text: str) -> str:
 def oes_passage_fingerprint(text: str) -> str:
     """Normalize a passage so wrappers, accents, and graph variants collapse."""
     s = oes_fold_graph_variants(text)
+    # [\s\S] so HTML comments that span lines are stripped (CodeQL py/bad-tag-filter).
+    s = re.sub(r"<!--[\s\S]*?-->", " ", s)
     s = OES_WIKI_WRAPPER_RE.sub(" ", s)
-    s = re.sub(r"<!--.*?-->", " ", s)
     s = re.sub(r"\[\s*s\d+\s*\]", " ", s)
     s = re.sub(r"[*_`«»\"'“”„…·•—–~❙/\\|<>=]+", " ", s)
     s = re.sub(r"[.,;:!?()\[\]<>]+", " ", s)
