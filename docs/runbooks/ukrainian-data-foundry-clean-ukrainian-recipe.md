@@ -59,9 +59,9 @@ Ukrainian source material:
 | School textbooks, grades 1–11 | 49,193 records | 9,564,143 words |
 | External articles | 1,205 records | 1,837,518 words |
 | Ukrainian Wikipedia (Interactive only; frozen from training #6958) | 1,029 records | 2,865,506 words |
-| **Middle Ukrainian & Cossack Baroque (14th–18th c.)** | 20,085 chunks | 36,541,890 chars |
-| **Old East Slavic & Kyivan Rus Chronicles (11th–13th c.)** | 10,202 chunks | 17,422,015 chars |
-| **Saint Sophia of Kyiv Epigraphic Corpus (11th–14th c.)** | 4,157 records | 2,570 text-bearing |
+| **Middle Ukrainian & Cossack Baroque (14th–18th c.)** | 20,085 chunks | 36,561,300 chars |
+| **Old East Slavic & Kyivan Rus Chronicles (11th–13th c.)** | 10,202 chunks | 17,421,735 chars |
+| **Saint Sophia of Kyiv Epigraphic Corpus (11th–14th c.)** | 4,157 records | 2,570 text-bearing (2,570 transcriptions, 1,917 translations) |
 | **Borys Grinchenko Regional Field Citations (1907)** | 11,000+ entries | 5 collector zones |
 | **СУМ-11 Verified Dialect Records** | 6,112 entries | Literary citations |
 | **Authentic Ukrainian Idioms & Phraseology** | 24,683 entries | Curated dictionary |
@@ -74,13 +74,21 @@ core metadata, and verified the textbook family against 158 chunk files, 170
 PDFs, the selection ledger, downloader, and page-URL map. The Saint Sophia
 inscriptions are grounded in Dr. Viacheslav Korniyenko's 12-volume monographs
 (7,000+ physical graffiti) and the University of Gothenburg GRIDH portal
-(`https://saintsophia.dh.gu.se/`), accompanied by Gothenburg's
-`sophia-epigraphic-ai` paleographic character normalization.
+(`https://saintsophia.dh.gu.se/`), accompanied by an evidence-preserving
+paleographic normalization contract that immutably retains raw transcriptions
+and Epidoc XML while preserving editorial uncertainty and abbreviation marks.
 
 The operator has approved retained human-authored families for downstream
 research and model learning toward the project goal, subject to each family’s
 current capability policy. Wikipedia remains available only for its existing
 interactive reference use; it is excluded from teaching, gold, and training.
+
+Downstream model learning, raw-source redistribution, public dataset release,
+public weight or adapter release, and public release are independent
+capabilities. The last four remain separately gated; they do not block an
+independently allowed local-learning preparation. The portable v1 input
+contract records these decisions separately while preserving the existing
+admission receipts byte-for-byte.
 
 ### Kyivan Church Slavonic & Vernacular Diglossia Model
 

@@ -49,21 +49,21 @@ As demonstrated by Metropolitan Ilarion (Prof. Ivan Ohiyenko) in *Історія
 
 ---
 
-## 3. Contrastive Matrix: Kyivan Recension vs. Moscow Synodal Recension
+## 3. Contrastive Matrix: Kyivan Recension vs. Synodal Recension vs. Modern Russian
 
-A language model processing Cyrillic historical texts must distinguish the authentic Kyivan tradition from the Russian imperial standard:
+A language model processing Cyrillic historical texts must distinguish the authentic Kyivan Church Slavonic liturgical tradition from both the 18th-century Russian imperial Synodal standard and modern secular Russian:
 
-| Linguistic Facet | Authentic Kyivan Recension (Київський ізвод) | Moscow/Synodal Recension (Синодальний ізвод) | Evidence in Sources & Inscriptions |
-| :--- | :--- | :--- | :--- |
-| **Pronunciation of ѣ (Yat')** | Realized as **[i]** (*віра*, *літо*, *діло*, *гріх*). Attested in 11th c. St. Sophia graffiti (*вѣдоуть*, *вѣра*) and 16th–17th c. prints. | Realized as **[e]** (*вера*, *лето*, *дело*, *грех*). | St. Sophia graffiti #12, #47; Ostrog Bible (1581); Smotrytskyi (1619). |
-| **Pronunciation of Cyrillic Г** | Voiced glottal/velar fricative **[ɦ]** (*Бо[ɦ]ъ*, *[ɦ]осподи*). | Voiced velar plosive **[ɡ]** (*Бо[ɡ]ъ*, *[ɡ]осподи*), or intervocalic [v] in endings (*че[v]о*). | Shevelov (1979) §27; universal Ukrainian orthoepic tradition. |
-| **Vowel Reduction (*Akanie*)** | **Zero akanie.** Unstressed /o/ strictly preserved as [o] (*вода*, *молоко*, *помози*). | Pervasive **akanie** and **ikanie** (*в[ɐ]да*, *м[ə]л[ɐ]ко*). | Ohiyenko, *Історія укр. літ. мови*, Part II; all Rus chronicles. |
-| **Dative Singular Masculine** | Inflection **-ови / -еви** (*Господеви*, *князеви*, *рабу своєму Пантелеємови*). | Inflection **-у / -ю** (*Господу*, *князю*, *рабу своему Пантелеймону*). | St. Sophia graffiti (dozens of attestations: *Василеви*, *Петрови*); Ruska Pravda. |
-| **Vocative Case** | Strict preservation: **Господи, владико, княже, ставропигіє, отче**. | Collapsed into nominative in secular Russian; heavily reduced in Synodal practice. | Continuous liturgical and epigraphic attestation. |
-| **Word-Final Labials** | Preserved hard: **сім**, **кров**, **верб**. | Softened in Russian: *семь*, *кровь*. | 11th c. Izbornyk, St. Sophia epigraphy. |
-| **Infinitive Forms** | Full suffix **-ти** (*писати*, *жити*, *служити*). | Apocopated suffix **-ть** in Russian (*писать*, *жить*). | Lithuanian Metrica, Baroque homilies, Cossack chronicles. |
-| **Third Person Verb Forms** | Soft **-ть** or hard unpalatalized **-тъ** / zero (*сидить*, *знають*, *робить*). | Standard Russian soft *-ет / -ит* (*сидит*, *знает*). | Charters XIV–XV c., Skovoroda. |
-| **Pleophony (Повноголосся)** | Deep integration: South Slavic stems (*градъ*, *врата*) live side-by-side with vernacular pleophony (*городъ*, *ворота*, *Володимеръ*). | South Slavic forms fossilized as bookish prestige roots contrasted with Russian *город*, *ворота*. | Primary Chronicle (PVL Ipatiev vs. Laurentian), Kyiv Chronicle. |
+| Linguistic Facet | Authentic Kyivan Recension (Київський ізвод) — Liturgical High Code | Moscow / Synodal Recension (Синодальний ізвод) — Imperial Liturgical Standard | Modern Russian (Російська мова) — Secular Imperial Standard | Scholarly Authorities & Textual Locators |
+| :--- | :--- | :--- | :--- | :--- |
+| **Pronunciation of ѣ (Yat')** | Realized as **[i]** (*віра*, *літо*, *діло*, *гріх*). Inscriptions and early prints show organic interchange with /i/. | Realized as closed **[e]** (*вѣра* read as [vera], *лѣто* as [leto]). | Merged with /e/ (*вера*, *лето*, *дело*, *грех*). | St. Sophia graffiti #12, #47 (11th c. interchanges ѣ/и: *вѣдоуть*, *вѣра*); Ostrog Bible (1581); Smotrytskyi (1619); Shevelov (1979) §28; Ohiyenko (1949/2001) pp. 120–123. |
+| **Pronunciation of Cyrillic Г** | Voiced glottal/velar fricative **[ɦ]** (*Бо[ɦ]ъ*, *[ɦ]осподи*). Intervocalic /g/ remains [ɦ]. | Voiced velar plosive **[ɡ]** (*Бо[ɡ]ъ*, *[ɡ]осподи*); isolated liturgical exception for *Богъ* pronounced [box]/[boɣ]. | Voiced velar plosive **[ɡ]**; intervocalic genitive *-ого/-его* pronounced as [v] (*че[v]о*, *красно[v]о*). | Shevelov (1979) §27; universal Ukrainian orthoepic tradition; Kyiv-Pechersk Lavra prints prior to the 1720 printing ban. |
+| **Vowel Reduction (*Akanie*)** | **Zero akanie.** Distinct unstressed [o] and [e] strictly preserved in speech and liturgical chant (*вода*, *молоко*, *помози*). | Printed graphemically with *о*, but in Russian clerical recitation read with Russian vowel reduction (*akanie* / *ikanie*: [vɐda], [məlɐko]). | Obligatory phonological reduction (*akanie* / *ikanie*: [vɐda], [məlɐko]). | Rus chronicles (PVL, Kyiv, Galician-Volhynian); Ohiyenko (1949) Part II; Smotrytskyi (1619). |
+| **Dative Singular Masculine** | Vernacular inflection **-ови / -еви** deeply integrated into liturgical and legal texts (*Господеви*, *князеви*, *рабу Пантелеємови*). Codified by Smotrytskyi (1619). | Standard Church Slavonic inflection **-у / -ю** (*Господу*, *князю*, *рабу Пантелеимону*); *-ови/-еви* excluded or marginalized. | Exclusively **-у / -ю** (*князю*, *рабу*); *-ови/-еви* completely absent from grammar. | St. Sophia graffiti (dozens of attestations: *Василеви*, *Петрови*, *Маркови*); Ruska Pravda (11th–12th c.); Smotrytskyi (1619) fol. 46v; Nimchuk (1980). |
+| **Vocative Case** | Vibrant, living grammatical case in liturgy and speech (**Господи, владико, княже, ставропигіє, отче, земле**). | Retained in fixed liturgical formulas (*Господи*, *Боже*, *Отче*), but structurally fossilized as an isolated archaism. | Collapsed into nominative (*князь!*, *отец!*); archaic remnants only in lexicalized interjections (*боже!*, *господи!*). | Korniyenko (2010–2022) passim; Ostrog Bible (1581); Smotrytskyi (1619) fol. 48r; Shevelov (1979). |
+| **Word-Final Labials (б, п, в, м, ф)** | Preserved hard (**сім**, **кров**, **верб**, **голуб**). | Softened or hard depending on Church Slavonic orthographic traditions (*семь*, *кровь*). | Preserved soft (*семь*, *кровь*, *голубь*). | 11th c. Izbornyk of Sviatoslav (1076); St. Sophia epigraphy; Shevelov (1979) §33. |
+| **Infinitive Suffix** | Full historical suffix **-ти** (*писати*, *жити*, *служити*). | Full historical suffix **-ти** (*писати*, *жити*, *служити*) preserved in liturgical text. | Apocopated suffix **-ть** (*писать*, *жить*, *служить*). | Lithuanian Metrica (14th–16th c.); Cossack chronicles; Skovoroda; Ohiyenko (1949). |
+| **Third-Person Verb Endings** | Soft **-ть** in 3rd pl. (*знають*, *хотять*) and 3rd sg. (*сидить*, *робить*) or unpalatalized **-тъ** / zero (*сидитъ*, *може*). | Strict unpalatalized **-тъ** (*сидитъ*, *знаютъ*). | Palatalized soft *-т* (*сидит*, *знает*). | 14th–15th c. charters; Skovoroda; Ohiyenko (1949) pp. 136–140. |
+| **Pleophony (Повноголосся) vs South Slavic Roots** | South Slavic liturgical stems (*градъ*, *врата*, *злато*) exist in conscious functional diglossia with East Slavic pleophony (*городъ*, *ворота*, *золото*, *Володимеръ*). | South Slavic stems (*градъ*, *врата*) reserved for church texts; vernacular pleophony excluded from liturgical registers. | Lexical split into stylistic doublets (*город/град*, *сторож/страж*, *ворота/врата*). | PVL (Ipatiev vs Laurentian codices); Kyiv Chronicle (12th c.); Smotrytskyi (1619). |
 
 ---
 
@@ -84,20 +84,30 @@ pie title data/sources.db Historical & Dialectal Holdings (Records & Chunks)
 
 * **Table:** `historical_source_records`
 * **Total Records:** **4,157** (complete current public API of the University of Gothenburg Saint Sophia Portal, `https://saintsophia.dh.gu.se/`).
-* **Text-Bearing Inscriptions:** **2,570** clean, text-bearing epigraphic records.
-* **Ukrainian Translations:** **1,917** records accompanied by professional scholarly Ukrainian translations.
-* **Linguistic Commentary:** **2,956** records with deep paleographic and linguistic commentary.
-* **Physical Monograph Foundation:** Dr. Viacheslav Korniyenko's 12-volume monograph series (*Корпус графіті Софії Київської*, 2010–2022) documenting **7,000+ total graffiti**. The Swedish portal digitalized 4,157 of these; the remainder constitutes our known unexposed residual tracked in [`data/historical_language_corpus_denominator.yaml`](file:///home/ops/learn-ukrainian/data/historical_language_corpus_denominator.yaml).
-* **Epigraphic AI Assets:** The University of Gothenburg repository [`gu-gridh/sophia-epigraphic-ai`](https://github.com/gu-gridh/sophia-epigraphic-ai) provides:
-  1. Complete training set (`complete_dataset.csv`, 1,720 samples).
-  2. Cleaning pipeline (`clean_transcription`) for paleographic normalization.
-  3. Unicode character table covering early Cyrillic graphemes (`ѣ, ѧ, ѫ, ѡ, ѱ, ѯ, ъ, ь, ҂`) and Glagolitic glyphs.
+* **Text-Bearing Inscriptions:** **2,570** clean, text-bearing epigraphic records with non-empty transcriptions.
+  * *Exact SQL Predicate:* While 4,144 portal records are catalogued under disposition `text_bearing` (alongside 11 non-textual drawings and 2 quarantined metadata records), exactly **2,570** records contain non-empty `original_transcription` text strings satisfying:
+    ```sql
+    SELECT count(*) FROM historical_source_records
+    WHERE disposition = 'text_bearing'
+      AND original_transcription IS NOT NULL
+      AND trim(original_transcription) != '';
+    ```
+* **Ukrainian Translations:** **1,917** records accompanied by professional scholarly Ukrainian translations (`translation_ukr`).
+* **Linguistic Commentary:** **2,956** records with deep paleographic and linguistic commentary (`commentary_ukr`).
+* **Physical Monograph Foundation & Corpus Denominator:** Dr. Viacheslav Korniyenko's 12-volume monograph series (*Корпус графіті Софії Київської*, 2010–2022) documenting **7,000+ total graffiti**. The Swedish portal digitized 4,157 of these; the remainder constitutes our known unexposed residual tracked in [`data/historical_language_corpus_denominator.yaml`](../../data/historical_language_corpus_denominator.yaml).
+* **Cathedral Foundation Historiographical Nuance:** Inscriptions provide empirical grounding for the revised dating of Saint Sophia's founding to **1011–1018 CE** under Prince Volodymyr the Great and Prince Yaroslav the Wise (demonstrated by Dr. Nadia Nikitenko and Dr. Viacheslav Korniyenko via dated foundation graffiti from 1018 and 1022 CE), challenging the traditional 1037 CE chronicle date recorded in later compilations.
+* **Epigraphic AI Assets & Evidence-Preserving Paleographic Contract:**
+  * The University of Gothenburg repository [`gu-gridh/sophia-epigraphic-ai`](https://github.com/gu-gridh/sophia-epigraphic-ai) provides early Cyrillic token definitions (`ѣ, ѧ, ѫ, ѡ, ѱ, ѯ, ъ, ь, ҂`) and an initial baseline.
+  * *Strict Evidence Preservation:* Upstream `clean_transcription` minimally strips HTML tags and rejects transcriptions containing `?`. Our pipeline enforces an evidence-preserving contract:
+    1. The raw `original_transcription` and Epidoc XML are immutably preserved in `data/sources.db`.
+    2. Editorial uncertainty markers (`?`), lacunae brackets (`[...]`), and combining titla (abbreviation marks) are preserved as structured metadata rather than silently dropped.
+    3. Normalization transformations are deterministic, documented, and certified against test fixtures before any normalized text serves as ground-truth linguistic evidence.
 * **Linguistic Significance:** Epigraphy represents direct, non-standardized human speech scratched on cathedral walls by scribes, clergy, princes, and ordinary citizens. It provides uncontaminated proof of spoken Old Ukrainian vernacular features penetrating Church Slavonic formulas as early as 1018 CE.
 
 ### 4.2 Old East Slavic & Kyivan Rus Chronicles (11th–13th Centuries)
 
 * **Table:** `literary_texts`
-* **Total Chunks:** **10,202 chunks** (17,422,015 characters).
+* **Total Chunks:** **10,202 chunks** (17,421,735 characters, verified SQLite snapshot).
 * **Key Monuments:**
   * **Ipatiev Chronicle (Іпатіївський літопис):** 1,865 chunks — the southern Rus compilation containing the primary text of the Kyiv Chronicle and Galician-Volhynian Chronicle.
   * **Kyiv Chronicle (Київський літопис, 12th c.):** 1,083 chunks — detailed account of central Ukrainian lands with pervasive vernacular phonology and syntax.
@@ -112,7 +122,7 @@ pie title data/sources.db Historical & Dialectal Holdings (Records & Chunks)
 ### 4.3 Middle Ukrainian & Cossack Baroque Literature (14th–18th Centuries)
 
 * **Table:** `literary_texts`
-* **Total Chunks:** **20,085 chunks** (36,541,890 characters).
+* **Total Chunks:** **20,085 chunks** (36,561,300 characters, verified SQLite snapshot).
 * **Key Monuments:**
   * **Samiilo Velychko Chronicle (Літопис Самійла Величка):** 3,354 chunks — monumental Cossack Baroque narrative.
   * **Hryhorii Skovoroda (Повне зібрання творів):** 1,352 chunks — philosophical dialogues, poetry, and letters in baroque literary Ukrainian/Church Slavonic synthesis.
@@ -148,8 +158,8 @@ Russian imperial and Soviet historiography relied on three linguistic dogmas to 
 
 * **The Imperial Myth (Mikhail Pogodin, 1856):** Pogodin claimed that prior to the Mongol invasion of 1240, Kyiv was populated by "Great Russians", who purportedly migrated northeast to Vladimir and Moscow, after which ancestors of modern Ukrainians "migrated from the Carpathian mountains into empty Kyiv" in the 14th century.
 * **The Empirical Refutation (Krymsky, Shevelov, Korniyenko):**
-  1. The **4,157 Saint Sophia graffiti** provide an uninterrupted chronological record from 1018 through the 14th century. The graffiti show the exact same phonological, morphological, and lexical traits before, during, and after the Mongol invasion.
-  2. Inscriptions from the 11th century exhibit characteristically Ukrainian features: the transition of *ѣ* $\rightarrow$ *[i]*, the shift of *[ɡ]* $\rightarrow$ *[ɦ]*, the vocalization of jers into *[e]* and *[o]*, the dative singular ending *-ови*, the vocative case, and patronymics in *-ич*.
+  1. The dated Saint Sophia graffiti documented in Korniyenko's 12-volume corpus provide an uninterrupted chronological record from the foundation graffiti of 1018/1022 through the 12th, 13th, and 14th centuries. The epigraphic sequence demonstrates persistent continuity of specific Ukrainian vernacular phonological, morphological, and lexical traits before, during, and after the Mongol invasion of 1240.
+  2. Inscriptions spanning the 11th through 14th centuries exhibit characteristically Ukrainian features: the transition of *ѣ* $\rightarrow$ *[i]*, the shift of *[ɡ]* $\rightarrow$ *[ɦ]*, the vocalization of jers into *[e]* and *[o]*, the dative singular ending *-ови*, the vocative case, and patronymics in *-ич*.
   3. There is zero paleographic or archaeological evidence of demographic rupture or linguistic replacement in Kyiv.
 
 ### Refutation 2: Deconstruction of the "Common East Slavic Monolith"
@@ -170,7 +180,7 @@ Russian imperial and Soviet historiography relied on three linguistic dogmas to 
 
 ## 6. Multi-Phase Roadmap & Quality Gates (v0.2 -> v1.0)
 
-We reject premature "production v1.0" claims. We advance through empirical releases, with each phase verified by frozen test suites and multi-agent adversarial reviews:
+We reject premature "production v1.0" claims. We advance through empirical releases, with each phase verified by frozen test suites and multi-agent adversarial reviews across **1,600 unique evaluation cases**:
 
 ```mermaid
 flowchart LR
@@ -183,13 +193,18 @@ flowchart LR
 ### 6.1 Phase 5.5: ULDR v0.2 Baseline Freezing (Active Issue [#8054](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8054))
 
 * **Data:** Repaired production shards (`data/projects/open_model_data/release/uldr_v1_production/`: 6,000 SFT + 3,000 DPO).
-* **Mandatory Pre-Training Cross-Stage Audit:** Automated verification of the 600 Phase 5.2 protection cases to guarantee 0 regionalisms or historical forms are falsely flagged as errors.
-* **5 Quality Gates:**
-  * **Gate 1:** Precision $\ge 98.0\%$ on standard literary corrections (1,000 held-out cases).
-  * **Gate 2:** True Positive Rate $\ge 98.0\%$ on colonial calques.
-  * **Gate 3:** False Alarm Rate $\le 1.0\%$ on clean modern sentences.
-  * **Gate 4:** Exact 0 errors on clean dialect ($N \ge 300$, Clopper-Pearson 95% upper bound $\le 0.994\%$) and clean historical ($N \ge 200$) sentences.
-  * **Gate 5 (Citation Verification — Astra Mandate):** Automated verification against `sum20.db` and `vesum.db` that every dictionary citation in `<thought>` tags is authentic. Zero tolerated hallucinated headwords.
+* **Mandatory Pre-Training Cross-Stage Audit:** Automated verification of the 600 Phase 5.2 protection cases to guarantee 0 regionalisms or historical forms are falsely flagged as errors by the training loss.
+* **Evaluation Denominator Structure ($N = 1,600$ unique cases):**
+  * *Held-Out Core Suite ($N = 1,000$ unique cases):* 300 colonial calques, 300 clean modern controls, 400 standard literary corrections.
+  * *Anti-Overstandardization Protection Suite ($N = 600$ unique cases, `dialect_historical_protection_suite_600.jsonl`):* 300 dialect across 6 zones, 200 historical/classical, 100 anti-surzhyk conversational controls.
+* **5 Locked Quality Gates with Full Safety Invariants:**
+  * **Gate 1 (Linguistic Precision & Span Integrity):** Precision $\ge 98.0\%$ on standard literary corrections ($N = 1,000$). **Strict 100% preservation outside designated error span:** every non-target token must be byte/token-identical. Zero unintended rephrasings or collocation mutations permitted (e.g. *побитися об заклад* $\rightarrow$ *побитися об друга*).
+  * **Gate 2 (Calque Elimination Rate):** True Positive Rate $\ge 98.0\%$ on verified colonial calques ($N = 300$).
+  * **Gate 3 (Negative Control / Harmful-Edit Floor):** Exact zero observed errors ($k = 0$) on clean modern sentences ($N \ge 300$, one-sided 95% Clopper-Pearson upper bound $\le 0.994\%$). Model must emit PRESERVE without altering authentic modern literary Ukrainian.
+  * **Gate 4 (Anti-Overstandardization Protection):** Exact zero observed errors ($k = 0$) on dialect ($N = 300$, Clopper-Pearson 95% $\le 0.994\%$), historical ($N = 200$), and conversational controls ($N = 100$). Zero tolerance for altering regional vocabulary, historical grammar, or authentic spoken norms (*шо*, *всьо*).
+  * **Gate 5 (Citation Verification & High-Frequency Calque Floor):**
+    1. Dedicated 50-case 100%-recall high-frequency common-calque floor (*приймати участь*, *на протязі*, *в першу чергу*, *попередити хворобу*).
+    2. Zero hallucinated headwords, senses, or fictitious dictionary attributions across all 1,600 evaluation cases (covering citations in both `<thought>` reasoning traces and final answers). Grounding validated against approved authorities in `data/sources.db` (tables `sum20_articles`/`sum20_senses`, `sum11`, `grinchenko`, `style_guide`), `data/vesum.db`, Правопис 2019, УЛІФ, UA-GEC. Missing/unsupported evidence fails closed.
 * **Output:** Frozen v0.2 Scorecard published in `docs/reports/uldr_v02_scorecard.md`.
 
 ### 6.2 Phase 5.6: Regional Dialects Mining & Multi-Zone Evaluation (Issue [#8102](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8102))
@@ -201,8 +216,8 @@ flowchart LR
 
 ### 6.3 Phase 5.7: Kyivan Rus Epigraphy & Church Slavonic Diglossia (Issue [#8103](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8103))
 
-* **Data Extraction:** Mine the 2,570 text-bearing St. Sophia inscriptions and 10,202 OES chronicle chunks.
-* **Paleographic Pipeline:** Adopt the University of Gothenburg `gu-gridh/sophia-epigraphic-ai` character set (`ѣ, ѧ, ѫ, ѡ, ъ, ҂`) and normalization rules.
+* **Data Extraction:** Mine the 2,570 text-bearing St. Sophia inscriptions (`historical_source_records`) and 10,202 OES chronicle chunks (`literary_texts`).
+* **Evidence-Preserving Paleographic Contract:** Reference the University of Gothenburg [`gu-gridh/sophia-epigraphic-ai`](https://github.com/gu-gridh/sophia-epigraphic-ai) character inventory (`ѣ, ѧ, ѫ, ѡ, ѱ, ѯ, ъ, ь, ҂`) as a baseline. Enforce immutable retention of raw transcriptions and Epidoc XML, preservation of editorial uncertainty markers (`?`), lacunae brackets (`[...]`), and combining titla as structured metadata, with deterministic normalization verified against test fixtures.
 * **Alignment Trajectories:** SFT reasoning paths explicitly teaching the Kyivan Church Slavonic / Vernacular Diglossia model.
 * **Output:** Model release `v0.4a`.
 
@@ -218,6 +233,7 @@ flowchart LR
 ## 7. Operational Commitments & Invariants
 
 1. **No Web Scraping:** All data required for phases 5.5 through 5.8 is already present in `data/sources.db`. No scraping is permitted or needed.
-2. **Deterministic Attribution:** Every training example and evaluation probe must preserve immutable source attribution to its exact record ID, monument, and collector.
-3. **Fail-Closed Gating:** Model releases occur only when all empirical gates are satisfied. Diagnostic failures must be published transparently with confusion matrices and error analyses.
-4. **Permanent Open Source:** This work serves the Ukrainian language and global Ukrainian community under permanent open-source terms.
+2. **Source-Document-Disjoint Partition Invariant:** Train and evaluation sets must be partitioned strictly by document, monument, chronicle manuscript, authorial work, or inscription cluster identity. Adjacent chunks or related views of the same document/source and all derived synthetic/augmented pairs must reside exclusively in either the train partition or the evaluation partition. Split manifests and grouping keys must be frozen with SHA-256 hashes prior to data extraction or augmentation.
+3. **Deterministic Attribution:** Every training example and evaluation probe must preserve immutable source attribution to its exact record ID, monument, and collector.
+4. **Fail-Closed Gating:** Model releases occur only when all empirical gates are satisfied. Diagnostic failures must be published transparently with confusion matrices and error analyses.
+5. **Permanent Open Source:** This work serves the Ukrainian language and global Ukrainian community under permanent open-source terms.

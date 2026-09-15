@@ -14,9 +14,9 @@ The Phase 4 pilot training proved that instruction-tuning Google Gemma 3 4B (`kr
 Following tri-agent adversarial reviews by **Fable (Claude)** and **Astra (Codex)**, the project adopts three non-negotiable operational principles:
 1. **Iterative Versioning Over "Finality":** We call the current alignment baseline **`v0.2`**. We reject all happy-path executive smoothing. Every stage produces an unvarnished scorecard with full confusion matrices, disaggregated regional metrics, and failure analyses.
 2. **Zero Web Scraping Required:** Our local SQLite repository (`data/sources.db`) already possesses vast, verified holdings spanning 1,000 years of Ukrainian language history:
-   - **4,157 Saint Sophia Cathedral inscriptions** (2,570 text-bearing, 1,917 with Ukrainian translations) from the University of Gothenburg GRIDH portal.
-   - **10,202 Old East Slavic chronicle chunks** (17.4M characters) including Ipatiev, Kyiv, PVL, Galician-Volhynian, Laurentian, Novgorod, and Ruska Pravda.
-   - **20,085 Middle Ukrainian & Cossack Baroque chunks** (36.5M characters) including Velychko, Skovoroda, Sofonovych, Khanenko, and 14th–15th century charters.
+   - **4,157 Saint Sophia Cathedral inscriptions** in `historical_source_records` from the University of Gothenburg GRIDH portal (`https://saintsophia.dh.gu.se/`). While 4,144 are categorized as `text_bearing` on the portal (alongside 11 non-textual drawings and 2 quarantined records), exactly **2,570** contain non-empty `original_transcription` text strings under SQL predicate: `disposition = 'text_bearing' AND original_transcription IS NOT NULL AND trim(original_transcription) != ''`. Of these, **1,917** include scholarly Ukrainian translations (`translation_ukr`) and **2,956** include deep paleographic commentary (`commentary_ukr`).
+   - **10,202 Old East Slavic chronicle chunks** (17,421,735 characters, verified SQLite snapshot) including Ipatiev, Kyiv, PVL, Galician-Volhynian, Laurentian, Novgorod, and Ruska Pravda.
+   - **20,085 Middle Ukrainian & Cossack Baroque chunks** (36,561,300 characters, verified SQLite snapshot) including Velychko, Skovoroda, Sofonovych, Khanenko, and 14th–15th century charters.
    - **11,000+ regional dialect field citations** in Borys Grinchenko's 1907 dictionary (Shukhevych, Manzhura, Chubynskyi, Hnatiuk, Slaviano-Serbsk) plus **6,112** verified dialect entries in СУМ-11.
    - **Canonical philological treatises:** Ohiyenko (*Історія української літературної мови*), Shevelov (*Історична фонологія*), and Nimchuk (*Мовознавство*).
 3. **The Church Slavonic Diglossia Model:** Church Slavonic was the "Ukrainian Latin" for 800 years. Base LLMs default to 18th-century Russian imperial synodal standards. Our alignment pipeline must actively defend and teach the **Kyivan Recension (Київський ізвод)**, preventing self-colonization and anachronistic over-standardization.
@@ -29,7 +29,7 @@ Following tri-agent adversarial reviews by **Fable (Claude)** and **Astra (Codex
 flowchart TD
     subgraph TrackA["Track A: Baseline Alignment (Issue #8054)"]
         A1["Pre-Training Audit: 600 Protection Cases\n(Zero Cross-Stage Contradictions)"] --> A2["Train Gemma 3 4B on Repaired Shards\n(6,000 SFT + 3,000 DPO)"]
-        A2 --> A3["Evaluate 5 Binding Gates\n(1,600-Case Evaluation Harness)"]
+        A2 --> A3["Evaluate 5 Binding Gates\n(1,600 Unique Cases: 1,000 Held-Out + 600 Protection)"]
         A3 --> A4["Publish & Freeze v0.2 Baseline Scorecard\n(docs/reports/uldr_v02_scorecard.md)"]
     end
 
@@ -53,19 +53,40 @@ flowchart TD
 
 ## 3. The 5 Binding Quality Gates for Model Qualification
 
-A run of evaluation scripts is merely diagnostic. **Model qualification requires passing all five gates**:
+A run of evaluation scripts is merely diagnostic. **Model qualification requires passing all five gates** across the **1,600 unique evaluation cases**.
 
-| Gate | Target Metric | Evaluation Sub-Suite & Denominator | Enforcement Mechanism |
+### 3.1 Evaluation Suite Structure & Denominator Breakdown
+
+The evaluation denominator consists of exactly **1,600 unique, non-overlapping cases** partitioned across two suites:
+1. **Held-Out Core Evaluation Suite ($N = 1,000$ unique cases):**
+   - **300 Verified Colonial Calques:** Targets pervasive Russianisms (*приймати участь*, *на протязі*, *в першу чергу*, *попередити хворобу*). Evaluated under Gate 2 and Gate 5.
+   - **300 Clean Modern Controls:** Authentic standard literary Ukrainian sentences. Evaluated under Gate 3 to enforce zero harmful edits.
+   - **400 Standard Literary Corrections:** Broad grammatical, agreement, government, and orthographic repair cases. Evaluated under Gate 1.
+2. **Anti-Overstandardization Protection Suite ($N = 600$ unique cases, `dialect_historical_protection_suite_600.jsonl`):**
+   - **300 Regional Dialect Cases:** Disaggregated across 6 historical-ethnographic zones (Southwestern, Northern, Central, Steppe, Slobozhanshchyna, Donbas). Evaluated under Gate 4.
+   - **200 Historical & Classical Spans:** Old East Slavic chronicles, Cossack Baroque prose, 14th–15th c. charters, and 1920s Executed Renaissance literature. Evaluated under Gate 4.
+   - **100 Anti-Surzhyk Conversational Controls:** Genuine Ukrainian spoken norms (*шо*, *всьо*, authentic idioms) falsely maligned by hyper-purist tools. Evaluated under Gate 4.
+
+### 3.2 Binding Gates Table
+
+| Gate | Target Metric | Evaluation Sub-Suite & Denominator | Enforcement Mechanism & Safety Invariants |
 | :--- | :--- | :--- | :--- |
-| **Gate 1: Linguistic Precision** | Precision $\ge 98.0\%$ | Held-Out Correction Suite ($N = 1,000$) | Strict span-level exact match on repaired tokens outside `<thought>` reasoning tags. |
-| **Gate 2: Calque Elimination** | True Positive Rate $\ge 98.0\%$ | Verified Colonial Calques ($N = 300$) | Zero tolerance for accepting pervasive Russianisms (*приймати участь*, *на протязі*, *в першу чергу*). |
-| **Gate 3: Negative Control / False Alarm Floor** | False Positive Rate $\le 1.0\%$ | Clean Modern Sentences ($N = 300$) | Model must emit PRESERVE without mutating authentic modern literary Ukrainian. |
-| **Gate 4: Anti-Overstandardization Protection** | Exact 0 errors ($k = 0$) | Dialect Suite ($N = 300$, Clopper-Pearson 95% $\le 0.994\%$) & Historical ($N = 200$) | Zero tolerance for altering regional vocabulary or historical grammar. |
-| **Gate 5: Citation Support Verification** | 0 Hallucinated Headwords | Reasoning Trace in `<thought>` tags ($N = 1,600$) | Automated verification against `sum20.db` and `vesum.db` (Astra mandate). |
+| **Gate 1: Linguistic Precision & Span Integrity** | Precision $\ge 98.0\%$ | Held-Out Core Suite ($N = 1,000$: 400 standard corrections + 300 calques + 300 clean controls) | **Strict 100% preservation outside designated error span.** Non-target tokens must be byte/token-identical. Zero unintended rephrasings or collocation mutations permitted (e.g. *побитися об заклад* $\rightarrow$ *побитися об друга*). |
+| **Gate 2: Calque Elimination Rate** | True Positive Rate $\ge 98.0\%$ | Verified Colonial Calques ($N = 300$) | Zero tolerance for accepting pervasive Russianisms. Model must replace calques with authentic Ukrainian lexical equivalents. |
+| **Gate 3: Negative Control / Harmful-Edit Floor** | Exact 0 observed errors ($k = 0$) | Clean Modern Sentences ($N = 300$, Clopper-Pearson 95% $\le 0.994\%$) | Model must emit PRESERVE without altering authentic modern literary Ukrainian. A single unprompted edit fails the gate. |
+| **Gate 4: Anti-Overstandardization Protection** | Exact 0 observed errors ($k = 0$) | Protection Suite ($N = 600$: 300 dialect, 200 historical, 100 conversational; Clopper-Pearson 95% $\le 0.994\%$) | Zero tolerance for altering regional vocabulary, historical grammar, or authentic spoken norms (*шо*, *всьо*). |
+| **Gate 5: Citation Verification & Calque Floor** | 100% Citation Grounding & 100% High-Frequency Floor | Dedicated High-Frequency Calques ($N = 50$) & All Reasoning/Answer Citations ($N = 1,600$) | 1. **100% Recall on dedicated 50 most common calques.**<br>2. **0 Hallucinated Headwords or Senses:** Citations in `<thought>` reasoning traces and final answers must validate against named entries/senses in approved authorities whitelist (`data/sources.db` tables `sum20_articles`/`sum20_senses`, `sum11`, `grinchenko`, `style_guide`; `data/vesum.db`; Правопис 2019; УЛІФ; UA-GEC). Missing/unsupported evidence fails closed. |
 
 ---
 
 ## 4. Architectural Integration by Phase
+
+### Source-Document-Disjoint Partition Invariant (Mandatory Across All Phases)
+
+To eliminate data leakage and ensure held-out metrics measure genuine generalization rather than memorization of adjacent text:
+1. **Partitioning by Document/Monument Identity:** Train/evaluation splits are strictly partitioned by document, monument, chronicle manuscript, work, or inscription cluster identity (e.g., chronicle title, authorial work, graffiti wall cluster/object ID, or field collector expedition).
+2. **Zero Adjacent Chunk Leakage:** Adjacent chunks or related views of the same monument/record and all derived synthetic/augmented pairs must reside exclusively in either the train partition or the evaluation partition.
+3. **Cryptographic Manifest Freezing:** Split manifests and grouping keys are frozen with SHA-256 hashes prior to data extraction or augmentation.
 
 ### Phase 5.5: ULDR v0.2 Baseline Alignment ([#8054](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8054))
 
@@ -81,8 +102,8 @@ A run of evaluation scripts is merely diagnostic. **Model qualification requires
 
 ### Phase 5.7: Kyivan Rus Epigraphy & Church Slavonic Diglossia ([#8103](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8103))
 
-- **Corpus Mining:** Ingest 2,570 text-bearing St. Sophia inscriptions and 10,202 OES chronicle chunks.
-- **Gothenburg AI Assets:** Import the University of Gothenburg `gu-gridh/sophia-epigraphic-ai` dataset (1,720 samples), paleographic cleaning rules, and ancient Cyrillic token set.
+- **Corpus Mining:** Ingest 2,570 text-bearing St. Sophia inscriptions (`historical_source_records`) and 10,202 OES chronicle chunks (`literary_texts`).
+- **Gothenburg AI Assets & Evidence-Preserving Paleography:** Reference the University of Gothenburg [`gu-gridh/sophia-epigraphic-ai`](https://github.com/gu-gridh/sophia-epigraphic-ai) character inventory (`ѣ, ѧ, ѫ, ѡ, ѱ, ѯ, ъ, ь, ҂`) as a benchmark baseline. Enforce an evidence-preserving contract: retain raw transcriptions and Epidoc XML immutably, preserve editorial uncertainty and lacunae metadata (`[...]`, `?`), and require deterministic validation fixtures before normalized text serves as ground-truth linguistic evidence.
 - **Kyivan Recension Modeling:** Ground reasoning trajectories in the phonological reality of Kyivan Church Slavonic (ѣ $\rightarrow$ [i], [ɦ], lack of *akanie*, dative *-ови*).
 - **Deliverable:** Release **`v0.4a`**.
 
@@ -97,6 +118,6 @@ A run of evaluation scripts is merely diagnostic. **Model qualification requires
 
 ## 5. Architectural References
 
-- Canonical Diglossia Model: [`docs/research/UKRAINIAN_HISTORICAL_DIGLOSSIA_AND_CHURCH_SLAVONIC_MODEL.md`](../research/UKRAINIAN_HISTORICAL_DIGLOSSIA_AND_CHURCH_SLAVONIC_MODEL.md)
+- Canonical Diglossia Model: [`docs/research/UKRAINIAN_HISTORICAL_DIGLOSSIA_AND_CHURCH_SLAVONIC_MODEL.md`](../../research/UKRAINIAN_HISTORICAL_DIGLOSSIA_AND_CHURCH_SLAVONIC_MODEL.md)
 - Denominator Contract: [`data/historical_language_corpus_denominator.yaml`](../../../data/historical_language_corpus_denominator.yaml)
 - Dialect Protection Suite: [`docs/projects/open-model-data/PHASE_5_2_DIALECT_HISTORICAL_PROTECTION.md`](./PHASE_5_2_DIALECT_HISTORICAL_PROTECTION.md)
