@@ -315,7 +315,7 @@
       },
       {
         "path": "scripts/lexicon/sum20_lookup.py",
-        "sha256": "84d8e90a71d3c57cfd7728fa098153180d5d3bfbc4dc4c13bcc387a2d6ce4f18"
+        "sha256": "ac21f45a5544ee6feac54f169faed4ac1b1ac6984927842989a7603f9e699956"
       },
       {
         "path": "scripts/lexicon/sync_curated_heteronyms_ts.py",

@@ -206,13 +206,15 @@ def lookup_sum20_articles(
 
 def lookup_sum11_colonization_context(lemma: str, db_path: Path | str | None = None) -> dict[str, Any] | None:
     """Retrieve Soviet-era СУМ-11 interpretation explicitly contextualized for historical analysis."""
-    target = Path(db_path) if db_path else _resolve_sources_db()
-    if not target.is_file():
+    try:
+        conn = _get_db(db_path, write=False)
+    except Exception:
         return None
-    conn = sqlite3.connect(target)
-    conn.row_factory = sqlite3.Row
     try:
         cur = conn.cursor()
+        cur.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='sum11'")
+        if not cur.fetchone():
+            return None
         cur.execute(
             """
             SELECT definition, text, sovietization_risk, sovietization_keywords
