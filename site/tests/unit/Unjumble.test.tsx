@@ -1,7 +1,7 @@
 import { describe, test, expect, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { UnjumbleQuestion } from '@site/src/components/Unjumble';
+import { UnjumbleQuestion, normalizeUnjumbleAnswer } from '@site/src/components/Unjumble';
 import Unjumble from '@site/src/components/Unjumble';
 
 // ── helpers ──────────────────────────────────────────────────────────────────
@@ -189,6 +189,102 @@ describe('UnjumbleQuestion', () => {
     await user.click(submitBtn(container));
 
     expect(container.querySelector('[data-activity="feedback"]')).toHaveAttribute('data-correct', 'true');
+  });
+
+  // Tiles never carry punctuation, but the YAML `answer` field can (see #7994:
+  // Gemini audit of things-have-gender act-104/act-205/act-305).
+  describe('grading tolerates punctuation absent from the tiles', () => {
+    // Tiles shuffle to a guaranteed-wrong order, so placing them correctly
+    // means clicking each tile by name in the intended sentence order.
+    async function placeInOrderAndCheck(
+      container: HTMLElement,
+      user: ReturnType<typeof userEvent.setup>,
+      orderedWords: string[]
+    ) {
+      for (const word of orderedWords) {
+        const wordBank = within(container.querySelector('[data-activity="word-bank"]')!);
+        await user.click(wordBank.getByRole('button', { name: word }));
+      }
+      await user.click(submitBtn(container));
+    }
+
+    test('answer with a terminal period grades correct', async () => {
+      const user = userEvent.setup();
+      const { container } = render(
+        <UnjumbleQuestion words="Це / моя / книга" answer="Це моя книга." />
+      );
+      await placeInOrderAndCheck(container, user, ['Це', 'моя', 'книга']);
+      expect(container.querySelector('[data-correct="true"]')).toBeInTheDocument();
+    });
+
+    test('answer with a terminal question mark grades correct', async () => {
+      const user = userEvent.setup();
+      const { container } = render(
+        <UnjumbleQuestion words="Ти / йдеш" answer="Ти йдеш?" />
+      );
+      await placeInOrderAndCheck(container, user, ['Ти', 'йдеш']);
+      expect(container.querySelector('[data-correct="true"]')).toBeInTheDocument();
+    });
+
+    test('answer with an internal clause comma grades correct', async () => {
+      const user = userEvent.setup();
+      const { container } = render(
+        <UnjumbleQuestion words="Привіт / як / справи" answer="Привіт, як справи" />
+      );
+      await placeInOrderAndCheck(container, user, ['Привіт', 'як', 'справи']);
+      expect(container.querySelector('[data-correct="true"]')).toBeInTheDocument();
+    });
+
+    test('an exact already-matching answer still grades correct (no false positive removed)', async () => {
+      const user = userEvent.setup();
+      const { container } = render(
+        <UnjumbleQuestion words="the / dog / runs" answer="the dog runs" />
+      );
+      await placeInOrderAndCheck(container, user, ['the', 'dog', 'runs']);
+      expect(container.querySelector('[data-correct="true"]')).toBeInTheDocument();
+    });
+
+    test('a genuinely wrong order still grades incorrect', async () => {
+      const user = userEvent.setup();
+      const { container } = render(
+        <UnjumbleQuestion words="Це / моя / книга" answer="Це моя книга." />
+      );
+      // Place in reverse order instead of the correct order.
+      const bank = () => container.querySelector<HTMLElement>('[data-activity="word-bank"]')!;
+      for (const word of ['книга', 'моя', 'Це']) {
+        await user.click(within(bank()).getByRole('button', { name: word }));
+      }
+      await user.click(submitBtn(container));
+      expect(container.querySelector('[data-correct="false"]')).toBeInTheDocument();
+    });
+  });
+});
+
+describe('normalizeUnjumbleAnswer', () => {
+  test('strips a terminal period', () => {
+    expect(normalizeUnjumbleAnswer('Це моя книга.')).toBe('це моя книга');
+  });
+
+  test('strips a terminal question mark', () => {
+    expect(normalizeUnjumbleAnswer('Ти йдеш?')).toBe('ти йдеш');
+  });
+
+  test('strips a terminal exclamation mark', () => {
+    expect(normalizeUnjumbleAnswer('Привіт!')).toBe('привіт');
+  });
+
+  test('drops internal clause commas and collapses the resulting whitespace', () => {
+    expect(normalizeUnjumbleAnswer('Привіт, як справи')).toBe('привіт як справи');
+  });
+
+  test('is a no-op (besides casefolding) for an answer with no punctuation', () => {
+    expect(normalizeUnjumbleAnswer('the dog runs')).toBe('the dog runs');
+  });
+
+  test('treats punctuated and unpunctuated forms of the same sentence as equal', () => {
+    expect(normalizeUnjumbleAnswer('Привіт, як справи?')).toBe(
+      normalizeUnjumbleAnswer('Привіт як справи')
+    );
   });
 });
 
