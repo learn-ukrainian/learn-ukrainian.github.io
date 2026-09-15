@@ -163,31 +163,31 @@ workbook:
   title: Дода́й знак у нови́х слова́х
   instruction: Обери́ ь, апо́строф або́ без зна́ка.
   items:
-  - sentence: бур_ян
+  - sentence: бур___ян
     answer: ''''
     options:
     - ''''
     - ь
     - без зна́ка
-  - sentence: комп_ютер
+  - sentence: комп___ютер
     answer: ''''
     options:
     - ''''
     - ь
     - без зна́ка
-  - sentence: ім_я
+  - sentence: ім___я
     answer: ''''
     options:
     - ''''
     - ь
     - без зна́ка
-  - sentence: У сло́ві мален_кий потрі́бен ____.
+  - sentence: У сло́ві мале́нький потрі́бен ___.
     answer: ь
     options:
     - ь
     - ''''
     - без зна́ка
-  - sentence: У сло́ві цвях пра́вильний ви́бір — ____.
+  - sentence: У сло́ві цвях пра́вильний ви́бір — ___.
     answer: без зна́ка
     options:
     - без зна́ка
