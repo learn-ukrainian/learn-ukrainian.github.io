@@ -979,7 +979,7 @@ def build_trajectory(
     }
 
 
-STEM_DPO_BALANCING_PHRASES = [
+STEM_DPO_CHOSEN_BALANCING_PHRASES = [
     "Термін повністю відповідає сучасній українській науковій термінології.",
     "Такий слововжиток є нормативним для цієї наукової галузі.",
     "Слово належить до чинного академічного науково-технічного стандарту.",
@@ -989,6 +989,16 @@ STEM_DPO_BALANCING_PHRASES = [
     "Це питома або засвоєна назва, закріплена у вітчизняній науковій традиції.",
 ]
 
+STEM_DPO_REJECTED_BALANCING_PHRASES = [
+    "Рекомендується послідовно вживати запропонований замінник замість традиційного терміна.",
+    "Ця заміна вважається доцільною для послідовного очищення наукового стилю.",
+    "Запропоновану форму варто обирати в усіх випадках наукового слововжитку.",
+    "Вважаємо за потрібне відмовитися від усталеного слова на користь питомого новотвору.",
+    "Така підстановка має впроваджуватися як пріоритетний нормативний варіант.",
+    "Пропонується вилучити традиційний варіант із сучасних фахових текстів.",
+    "Новостворений відповідник слід вважати бажанішим у науковому мовленні.",
+]
+
 
 def build_dpo_pair(trajectory: dict[str, Any], decision: SemanticDecision) -> dict[str, Any]:
     hex_id = trajectory["trajectory_id"].rsplit(".", 1)[1]
@@ -996,8 +1006,9 @@ def build_dpo_pair(trajectory: dict[str, Any], decision: SemanticDecision) -> di
     foil = hyperpurist_substitute(decision.target_term, decision)
     entity_type_ua = ENTITY_TYPE_UKRAINIAN.get(decision.entity_type, "стандартна науково-технічна термінологія")
     rejected = (
-        f"Помилкова заміна: термін «{decision.target_term}» безпідставно замінено на «{foil}». "
-        f"Категорія: {entity_type_ua}. {decision.rationale}"
+        f"Рішення: виправити — термін «{decision.target_term}» слід замінити на «{foil}». "
+        f"Категорія: {entity_type_ua}. Рекомендується уникати форми «{decision.target_term}» "
+        f"та обов'язково вживати варіант «{foil}» у науковому контексті."
     )
     c = chosen.strip()
     r = rejected.strip()
@@ -1010,17 +1021,17 @@ def build_dpo_pair(trajectory: dict[str, Any], decision: SemanticDecision) -> di
             break
         if r_len < c_len:
             needed = c_len - r_len
-            avail = [p for p in STEM_DPO_BALANCING_PHRASES if p not in used_r]
+            avail = [p for p in STEM_DPO_REJECTED_BALANCING_PHRASES if p not in used_r]
             if not avail:
-                avail = STEM_DPO_BALANCING_PHRASES
+                avail = STEM_DPO_REJECTED_BALANCING_PHRASES
             best_p = min(avail, key=lambda p: abs(len(p) + 1 - needed))
             used_r.add(best_p)
             r = r + " " + best_p
         else:
             needed = r_len - c_len
-            avail = [p for p in STEM_DPO_BALANCING_PHRASES if p not in used_c]
+            avail = [p for p in STEM_DPO_CHOSEN_BALANCING_PHRASES if p not in used_c]
             if not avail:
-                avail = STEM_DPO_BALANCING_PHRASES
+                avail = STEM_DPO_CHOSEN_BALANCING_PHRASES
             best_p = min(avail, key=lambda p: abs(len(p) + 1 - needed))
             used_c.add(best_p)
             c = c + " " + best_p
@@ -1035,7 +1046,7 @@ def build_dpo_pair(trajectory: dict[str, Any], decision: SemanticDecision) -> di
         "metadata": {
             "target_term": decision.target_term,
             "rejected_flaw": "unvetted_purism_hallucination",
-            "primary_alternative": decision.target_term,
+            "primary_alternative": foil,
             "vesum_verified": True,
         },
     }

@@ -4,7 +4,7 @@
   "phase": "Phase 3.7: Production Shards Assembly (6K SFT + 3K DPO) & Release Packaging",
   "issue": 8011,
   "parent_epic": 6321,
-  "generated_at": "2026-09-14T23:58:49Z",
+  "generated_at": "2026-09-15T00:11:49Z",
   "deliverables": {
     "sft_trajectories": {
       "total_count": 6000,
@@ -65,110 +65,110 @@
     "sft_shard_001_of_012.jsonl": {
       "filename": "sft_shard_001_of_012.jsonl",
       "record_count": 500,
-      "sha256": "dbd378a419d11e6447681fbbf83acdbc4b73736c54a66a7f2b0e7295a011faab",
-      "bytes": 1457181
+      "sha256": "f2f17ebfd96e44fead045e934de47ded5d6135bc087e6d6d2aa93b68ce08a169",
+      "bytes": 1458465
     },
     "sft_shard_002_of_012.jsonl": {
       "filename": "sft_shard_002_of_012.jsonl",
       "record_count": 500,
-      "sha256": "f099230b1a4992524dabc1132a17a44cdf9f29522e5aeffcfac8b0cc6e3d7eeb",
-      "bytes": 1402538
+      "sha256": "f21a2e393fd10221a1c793dfce8193725c0fe26279063c974e03ede3845d93fa",
+      "bytes": 1402847
     },
     "sft_shard_003_of_012.jsonl": {
       "filename": "sft_shard_003_of_012.jsonl",
       "record_count": 500,
-      "sha256": "6f0071e21f8892b756838f52211409915bdd2de9c5638d4da636d27f8e1f2443",
-      "bytes": 1422247
+      "sha256": "e04556b03865573c8b7e8265aa9881f759bee37b79ad7b61ac69512ddd246eff",
+      "bytes": 1423441
     },
     "sft_shard_004_of_012.jsonl": {
       "filename": "sft_shard_004_of_012.jsonl",
       "record_count": 500,
-      "sha256": "fc90fadaa1099e3d2897b8c7619462d1bb1f7ff81758d97f53e33eea2a5cedf2",
-      "bytes": 1399357
+      "sha256": "e4d5dbcbf75b826a345de82148c76753425ae5b449914fc6333b38e66c5a892f",
+      "bytes": 1399711
     },
     "sft_shard_005_of_012.jsonl": {
       "filename": "sft_shard_005_of_012.jsonl",
       "record_count": 500,
-      "sha256": "8142ae2339b9c59b923e2ff8abf30ff655268ef9675307648a64616f236da1a3",
-      "bytes": 1431206
+      "sha256": "d3c250390760e24e55f522331ffebea8cb2fae116d2b6501a2acaaff94fc88aa",
+      "bytes": 1431392
     },
     "sft_shard_006_of_012.jsonl": {
       "filename": "sft_shard_006_of_012.jsonl",
       "record_count": 500,
-      "sha256": "a1d2bd20ab1a73a43de52c7249245ab0abbb25d7b54a977a659ec30519f576df",
-      "bytes": 1520839
+      "sha256": "848d04f4e32ff41e014953394549e0ea2273dc0cb9b799e3dd56415bbc6a8465",
+      "bytes": 1521193
     },
     "sft_shard_007_of_012.jsonl": {
       "filename": "sft_shard_007_of_012.jsonl",
       "record_count": 500,
-      "sha256": "3ec89d49ada3f282b918fbfcbc29afdc534549d8e92d488798569fdd9f7c987d",
-      "bytes": 1516007
+      "sha256": "c47f2a06e88b73c56fc7de73b9cb79f778a0e5030f32d61a24525625e58cb241",
+      "bytes": 1516145
     },
     "sft_shard_008_of_012.jsonl": {
       "filename": "sft_shard_008_of_012.jsonl",
       "record_count": 500,
-      "sha256": "0d0cf0e49654905bc67caadffc6b075659fb2b9acf6801cbe79b67e6290b7173",
-      "bytes": 1536169
+      "sha256": "3f23c87d19e2b7613d8ab6ebc1dd794bcb6d163aab0a11225de9d0d1d586c017",
+      "bytes": 1537585
     },
     "sft_shard_009_of_012.jsonl": {
       "filename": "sft_shard_009_of_012.jsonl",
       "record_count": 500,
-      "sha256": "b9b9a506529ca48f7b00f449d6fc8cd50eb92566af56e160d576c3789679dcdb",
-      "bytes": 1584873
+      "sha256": "b9d7bbdc7d9875449d16a42a9edcc08d33378b23496a6e66b4d3cdb02f454466",
+      "bytes": 1587321
     },
     "sft_shard_010_of_012.jsonl": {
       "filename": "sft_shard_010_of_012.jsonl",
       "record_count": 500,
-      "sha256": "278edb4c484ba84305ad34cb7844aef00f66725fa4ddef0a64f135a1ff26db53",
-      "bytes": 1586429
+      "sha256": "b83ec1293709786ab0a96ef53d5d83a9de2250edef3d9a7c45df7ab93774f8cd",
+      "bytes": 1586657
     },
     "sft_shard_011_of_012.jsonl": {
       "filename": "sft_shard_011_of_012.jsonl",
       "record_count": 500,
-      "sha256": "c6984be83a3f358f0141e90ed25b09a377dd20f65e6ae961c4244ad93257c864",
-      "bytes": 1718933
+      "sha256": "85f9d2be0469347ab75fe51b505631b202cf25cad754b5044a979fecf7813acd",
+      "bytes": 1719599
     },
     "sft_shard_012_of_012.jsonl": {
       "filename": "sft_shard_012_of_012.jsonl",
       "record_count": 500,
-      "sha256": "2cdea8ca225ec34be345882774e0191510da136aefd0a3a93435744255617840",
-      "bytes": 1923437
+      "sha256": "b9a3435e82eaff047ef6d22cd6d60e190480f3add87c17295055042af11a613f",
+      "bytes": 1923686
     },
     "dpo_shard_001_of_006.jsonl": {
       "filename": "dpo_shard_001_of_006.jsonl",
       "record_count": 500,
-      "sha256": "72f2e414aa2197239a3fc05556748f3e8371e8f894b9f635ad5fb8e9ec71fc84",
-      "bytes": 711810
+      "sha256": "faf31a1432debe655716453dcd94b262e563b424b3581dafa6f4ec1d1baee340",
+      "bytes": 692855
     },
     "dpo_shard_002_of_006.jsonl": {
       "filename": "dpo_shard_002_of_006.jsonl",
       "record_count": 500,
-      "sha256": "ca82e5f1588b3c3efd9f6cd7a3944aedccb365561d97fb3600457c3bfaa438e2",
-      "bytes": 695362
+      "sha256": "2f7b9cc040af22fe94fe7736fc515f793bfe4e750e32fe40f8551178c6170766",
+      "bytes": 676487
     },
     "dpo_shard_003_of_006.jsonl": {
       "filename": "dpo_shard_003_of_006.jsonl",
       "record_count": 500,
-      "sha256": "c9fc9ea7b53b944c8440574d2bb7f75f6c06e1d35f8bfb1498a0ad7ed182df14",
-      "bytes": 716164
+      "sha256": "eb4e2e704879124994491d1177a6b569f82dbc66dda296a80b1047ca0cc9d38c",
+      "bytes": 697149
     },
     "dpo_shard_004_of_006.jsonl": {
       "filename": "dpo_shard_004_of_006.jsonl",
       "record_count": 500,
-      "sha256": "b486cc50b5e2f1f3d98169df875f4069b9bb957018ed5cdf9cc5270594f10321",
-      "bytes": 712597
+      "sha256": "bd5b9dc9905a14f9531a2e87c9f1f704c78fb5d5914a192cb4ef98f73f48cbc3",
+      "bytes": 693687
     },
     "dpo_shard_005_of_006.jsonl": {
       "filename": "dpo_shard_005_of_006.jsonl",
       "record_count": 500,
-      "sha256": "ff578879826465acc41a0597bfaf54827f302248e723396553890089e985fcbc",
-      "bytes": 711064
+      "sha256": "b3874fa35b7ec926069fb56244268ceffb07b76b5d2aaa8ae179b7ae36518d80",
+      "bytes": 692593
     },
     "dpo_shard_006_of_006.jsonl": {
       "filename": "dpo_shard_006_of_006.jsonl",
       "record_count": 500,
-      "sha256": "188ec77ef2df7f5be11e46ade42587c6e6c97b97ce23253c781f0724ad7cc0b1",
-      "bytes": 866666
+      "sha256": "b253542ef5c9f13893d27b90593c345bc171a2091ee6f71248ea7a1718f7a7fd",
+      "bytes": 847766
     }
   }
 }

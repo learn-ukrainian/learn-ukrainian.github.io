@@ -339,9 +339,14 @@ def format_preserve_trajectory(
     target_term = traj["target_term"]
     sentence = (base.get("_sentence") or "").strip()
     if not sentence and "«" in base.get("query", ""):
-        m = re.search(r"реченні:\s*«([^»]+)»", base.get("query", ""))
+        raw_query = base.get("query", "").strip()
+        m = re.search(r"реченні:\s*«(.*)»\s*\??$", raw_query, re.DOTALL)
         if m:
             sentence = m.group(1).strip()
+        else:
+            m2 = re.search(r"«([^»]+)»", raw_query)
+            if m2:
+                sentence = m2.group(1).strip()
 
     if format_type == "quick_tip":
         if sentence:

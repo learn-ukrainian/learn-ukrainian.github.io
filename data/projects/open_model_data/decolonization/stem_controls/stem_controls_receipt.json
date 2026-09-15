@@ -4,7 +4,7 @@
   "phase": "Phase 3.3: STEM Negative Controls & Semantic Polysemy Disambiguation",
   "issue": 8007,
   "parent_epic": 6321,
-  "generated_at": "2026-09-14T23:56:28Z",
+  "generated_at": "2026-09-15T00:10:05Z",
   "dependency": {
     "phase": "3.0",
     "issue": 8005,
@@ -64,7 +64,7 @@
     "dpo_pairs": {
       "filename": "stem_preserve_dpo_pairs.jsonl",
       "record_count": 900,
-      "sha256": "b47bcb9695d8d4e40740e4262ab142958930d3a0c976aff1d95a4f3f69fa42e5"
+      "sha256": "6c67a7a9b2d866f7ec9458ae6ecf66c8982ec32b831035b4f1baed1e4bddbea8"
     }
   }
 }
