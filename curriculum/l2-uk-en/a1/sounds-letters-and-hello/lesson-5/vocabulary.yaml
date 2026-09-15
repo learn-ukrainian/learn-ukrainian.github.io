@@ -1,0 +1,64 @@
+- lemma: Приві́т
+  translation: Hi
+  pos: phrase
+  usage: Приві́т!
+- lemma: До́брий день
+  translation: Hello / Good day
+  pos: phrase
+  usage: До́брий день!
+- lemma: До́брого ра́нку
+  translation: Good morning
+  pos: phrase
+  usage: До́брого ра́нку!
+- lemma: До́брий ве́чір
+  translation: Good evening
+  pos: phrase
+  usage: До́брий ве́чір!
+- lemma: До поба́чення
+  translation: Goodbye
+  pos: phrase
+  usage: До поба́чення!
+- lemma: На все до́бре
+  translation: All the best
+  pos: phrase
+  usage: На все до́бре!
+- lemma: Як спра́ви?
+  translation: How are you?
+  pos: phrase
+  usage: Як спра́ви?
+- lemma: До́бре
+  translation: Fine / good
+  pos: phrase
+  usage: До́бре.
+- lemma: Чудо́во
+  translation: Great / wonderful
+  pos: phrase
+  usage: Чудо́во.
+- lemma: Норма́льно
+  translation: Okay / normal
+  pos: phrase
+  usage: Норма́льно.
+- lemma: Як тебе́ зва́ти?
+  translation: What is your name?
+  pos: phrase
+  usage: Як тебе́ зва́ти?
+- lemma: Мене́ зва́ти ...
+  translation: My name is ...
+  pos: phrase
+  usage: Мене́ зва́ти А́нна.
+- lemma: звук
+  translation: sound
+  pos: noun
+  usage: Це звук [а].
+- lemma: лі́тера
+  translation: letter
+  pos: noun
+  usage: Це лі́тера П.
+- lemma: склад
+  translation: syllable
+  pos: noun
+  usage: У сло́ві ма́ма два склади́.
+- lemma: на́голос
+  translation: stress
+  pos: noun
+  usage: У сло́ві Приві́т на́голос на і.

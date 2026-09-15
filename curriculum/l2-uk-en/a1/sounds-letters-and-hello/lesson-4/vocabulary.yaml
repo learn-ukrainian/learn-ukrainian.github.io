@@ -1,0 +1,64 @@
+- lemma: молоко́
+  translation: milk
+  pos: noun
+  usage: Молоко́.
+- lemma: о́ко
+  translation: eye
+  pos: noun
+  usage: О́ко.
+- lemma: Приві́т
+  translation: Hi
+  pos: phrase
+  usage: Приві́т!
+- lemma: дім
+  translation: house / home
+  pos: noun
+  usage: Дім.
+- lemma: ніс
+  translation: nose
+  pos: noun
+  usage: Ніс.
+- lemma: сон
+  translation: sleep / dream
+  pos: noun
+  usage: Сон.
+- lemma: м'яки́й знак
+  translation: soft sign
+  pos: noun phrase
+  usage: Ь - м'яки́й знак.
+- lemma: голосни́й звук
+  translation: vowel sound
+  pos: noun phrase
+  usage: '[а] - голосни́й звук.'
+- lemma: при́голосний звук
+  translation: consonant sound
+  pos: noun phrase
+  usage: '[п] - при́голосний звук.'
+- lemma: звук
+  translation: sound
+  pos: noun
+  usage: Це звук [а].
+- lemma: лі́тера
+  translation: letter
+  pos: noun
+  usage: Це лі́тера П.
+- lemma: на́голос
+  translation: stress
+  pos: noun
+  usage: У сло́ві Приві́т на́голос на і.
+- lemma: апо́строф
+  translation: apostrophe
+  pos: noun
+  usage: У сло́ві «ім'я́» є апо́строф.
+- lemma: До́брий день
+  translation: Hello / Good day
+  pos: phrase
+  usage: До́брий день!
+- lemma: ма́ма
+  translation: mother
+  pos: noun
+  usage: Ма́ма.
+- lemma: та́то
+  translation: father
+  pos: noun
+  usage: Та́то.

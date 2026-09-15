@@ -1,0 +1,318 @@
+---
+title: Звуки, літери та привіт
+description: 33 літери, 38 звуків, Привіт!
+sidebar:
+  order: 1
+  label: 01. Звуки, літери та привіт
+pipeline: v7-upgrade
+build_status: validated
+draft: false
+lessons:
+- n: 1
+  title: Six Vowel Sounds, Ten Letters
+  minutes: 60
+  href: /a1/sounds-letters-and-hello/1/
+- n: 2
+  title: 'Stress: Наголос'
+  minutes: 60
+  href: /a1/sounds-letters-and-hello/2/
+- n: 3
+  title: Your First Conversation
+  minutes: 60
+  href: /a1/sounds-letters-and-hello/3/
+- n: 4
+  title: First Pronunciation Traps
+  minutes: 60
+  href: /a1/sounds-letters-and-hello/4/
+- n: 5
+  title: Textbook Check
+  minutes: 60
+  href: /a1/sounds-letters-and-hello/5/
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords from '@site/src/components/MarkTheWords';
+import { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes from '@site/src/components/HighlightMorphemes';
+import { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок — Lesson">
+
+You do not need to read Ukrainian yet. This English-led module uses Ukrainian in small phrases so you can listen, repeat, notice, and use the first phrases safely.
+
+Use this first pass as orientation: one reliable sound rule, a small set of greetings, and enough alphabet awareness to start the workbook without guessing.
+
+By the end, you can:
+
+- say hello, goodbye, and a simple "How are you?";
+- answer with **До́бре**, **Чудо́во**, or **Норма́льно**;
+- ask and answer a name question;
+- explain the difference between a sound and a letter;
+- recognize all 33 Ukrainian letters at first-pass level;
+- know what **склад** means before the next module asks you to count syllables;
+- avoid the first pronunciation traps: blurred **о**, confusing **и** and **і**, adding a sound after **ь**, and turning final voiced consonants into voiceless ones.
+
+## Уроки — Lessons
+
+- [1. Six Vowel Sounds, Ten Letters](/a1/sounds-letters-and-hello/1/) — 60 min
+- [2. Stress: Наголос](/a1/sounds-letters-and-hello/2/) — 60 min
+- [3. Your First Conversation](/a1/sounds-letters-and-hello/3/) — 60 min
+- [4. First Pronunciation Traps](/a1/sounds-letters-and-hello/4/) — 60 min
+- [5. Textbook Check](/a1/sounds-letters-and-hello/5/) — 60 min
+
+</TabItem>
+<TabItem label="Словник — Vocabulary">
+
+[1. Six Vowel Sounds, Ten Letters](/a1/sounds-letters-and-hello/1/#vocabulary) · [2. Stress: Наголос](/a1/sounds-letters-and-hello/2/#vocabulary) · [3. Your First Conversation](/a1/sounds-letters-and-hello/3/#vocabulary) · [4. First Pronunciation Traps](/a1/sounds-letters-and-hello/4/#vocabulary) · [5. Textbook Check](/a1/sounds-letters-and-hello/5/#vocabulary)
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"звук","translation":"sound","pos":"noun","example":"Це звук [а].","examples":["Це звук [а]."],"atlas_href":"/lexicon/звук/"},{"word":"лі́тера","translation":"letter","pos":"noun","example":"Це лі́тера П.","examples":["Це лі́тера П."],"atlas_href":"/lexicon/літера/"},{"word":"абе́тка","translation":"alphabet","pos":"noun","example":"Украї́нська абе́тка ма́є 33 лі́тери.","examples":["Украї́нська абе́тка ма́є 33 лі́тери."],"atlas_href":"/lexicon/абетка/"},{"word":"голосни́й звук","translation":"vowel sound","pos":"noun phrase","example":"[а] - голосни́й звук.","examples":["[а] - голосни́й звук."]},{"word":"при́голосний звук","translation":"consonant sound","pos":"noun phrase","example":"[п] - при́голосний звук.","examples":["[п] - при́голосний звук."]},{"word":"склад","translation":"syllable","pos":"noun","example":"У сло́ві ма́ма два склади́.","examples":["У сло́ві ма́ма два склади́."],"atlas_href":"/lexicon/склад/"},{"word":"м'яки́й знак","translation":"soft sign","pos":"noun phrase","example":"Ь - м'яки́й знак.","examples":["Ь - м'яки́й знак."]},{"word":"Приві́т","translation":"Hi","pos":"phrase","example":"Приві́т!","examples":["Приві́т!"],"atlas_href":"/lexicon/привіт/"},{"word":"ма́ма","translation":"mother","pos":"noun","example":"Ма́ма.","examples":["Ма́ма."],"atlas_href":"/lexicon/мама/"},{"word":"та́то","translation":"father","pos":"noun","example":"Та́то.","examples":["Та́то."],"atlas_href":"/lexicon/тато/"},{"word":"молоко́","translation":"milk","pos":"noun","example":"Молоко́.","examples":["Молоко́."],"atlas_href":"/lexicon/молоко/"},{"word":"о́ко","translation":"eye","pos":"noun","example":"О́ко.","examples":["О́ко."],"atlas_href":"/lexicon/око/"},{"word":"на́голос","translation":"stress","pos":"noun","example":"У сло́ві Приві́т на́голос на і.","examples":["У сло́ві Приві́т на́голос на і."],"atlas_href":"/lexicon/наголос/"},{"word":"апо́строф","translation":"apostrophe","pos":"noun","example":"У сло́ві «ім'я́» є апо́строф.","examples":["У сло́ві «ім'я́» є апо́строф."],"atlas_href":"/lexicon/апостроф/"},{"word":"дім","translation":"house / home","pos":"noun","example":"Дім.","examples":["Дім."],"atlas_href":"/lexicon/дім/"},{"word":"ніс","translation":"nose","pos":"noun","example":"Ніс.","examples":["Ніс."],"atlas_href":"/lexicon/ніс/"},{"word":"сон","translation":"sleep / dream","pos":"noun","example":"Сон.","examples":["Сон."],"atlas_href":"/lexicon/сон/"},{"word":"До́брий день","translation":"Hello / Good day","pos":"phrase","example":"До́брий день!","examples":["До́брий день!"],"atlas_href":"/lexicon/добрий-день/"},{"word":"До́брого ра́нку","translation":"Good morning","pos":"phrase","example":"До́брого ра́нку!","examples":["До́брого ра́нку!"],"atlas_href":"/lexicon/доброго-ранку/"},{"word":"До́брий ве́чір","translation":"Good evening","pos":"phrase","example":"До́брий ве́чір!","examples":["До́брий ве́чір!"],"atlas_href":"/lexicon/добрий-вечір/"},{"word":"Як спра́ви?","translation":"How are you?","pos":"phrase","example":"Як спра́ви?","examples":["Як спра́ви?"],"atlas_href":"/lexicon/як-справи/"},{"word":"До́бре","translation":"Fine / good","pos":"phrase","example":"До́бре.","examples":["До́бре."],"atlas_href":"/lexicon/добре/"},{"word":"Чудо́во","translation":"Great / wonderful","pos":"phrase","example":"Чудо́во.","examples":["Чудо́во."],"atlas_href":"/lexicon/чудово/"},{"word":"Норма́льно","translation":"Okay / normal","pos":"phrase","example":"Норма́льно.","examples":["Норма́льно."],"atlas_href":"/lexicon/нормально/"},{"word":"А у тебе́?","translation":"And you? (after How are you?)","pos":"phrase","example":"До́бре. А у тебе́?","examples":["До́бре. А у тебе́?"]},{"word":"Як тебе́ зва́ти?","translation":"What is your name?","pos":"phrase","example":"Як тебе́ зва́ти?","examples":["Як тебе́ зва́ти?"],"atlas_href":"/lexicon/як-тебе-звати/"},{"word":"Мене́ зва́ти ...","translation":"My name is ...","pos":"phrase","example":"Мене́ зва́ти А́нна.","examples":["Мене́ зва́ти А́нна."]},{"word":"А тебе́?","translation":"And you? (after a name question)","pos":"phrase","example":"Мене́ зва́ти Софі́я. А тебе́?","examples":["Мене́ зва́ти Софі́я. А тебе́?"]},{"word":"До поба́чення","translation":"Goodbye","pos":"phrase","example":"До поба́чення!","examples":["До поба́чення!"]},{"word":"На все до́бре","translation":"All the best","pos":"phrase","example":"На все до́бре!","examples":["На все до́бре!"],"atlas_href":"/lexicon/на-все-добре/"},{"word":"Ра́дий тебе́ ба́чити","translation":"Glad to see you (male speaker)","pos":"phrase","example":"Ра́дий тебе́ ба́чити.","examples":["Ра́дий тебе́ ба́чити."]},{"word":"Ра́да тебе́ ба́чити","translation":"Glad to see you (female speaker)","pos":"phrase","example":"Ра́да тебе́ ба́чити.","examples":["Ра́да тебе́ ба́чити."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"звук","back":"sound"},{"front":"лі́тера","back":"letter"},{"front":"абе́тка","back":"alphabet"},{"front":"голосни́й звук","back":"vowel sound"},{"front":"при́голосний звук","back":"consonant sound"},{"front":"склад","back":"syllable"},{"front":"м'яки́й знак","back":"soft sign"},{"front":"Приві́т","back":"Hi"},{"front":"ма́ма","back":"mother"},{"front":"та́то","back":"father"},{"front":"молоко́","back":"milk"},{"front":"о́ко","back":"eye"},{"front":"на́голос","back":"stress"},{"front":"апо́строф","back":"apostrophe"},{"front":"дім","back":"house / home"},{"front":"ніс","back":"nose"},{"front":"сон","back":"sleep / dream"},{"front":"До́брий день","back":"Hello / Good day"},{"front":"До́брого ра́нку","back":"Good morning"},{"front":"До́брий ве́чір","back":"Good evening"},{"front":"Як спра́ви?","back":"How are you?"},{"front":"До́бре","back":"Fine / good"},{"front":"Чудо́во","back":"Great / wonderful"},{"front":"Норма́льно","back":"Okay / normal"},{"front":"А у тебе́?","back":"And you? (after How are you?)"},{"front":"Як тебе́ зва́ти?","back":"What is your name?"},{"front":"Мене́ зва́ти ...","back":"My name is ..."},{"front":"А тебе́?","back":"And you? (after a name question)"},{"front":"До поба́чення","back":"Goodbye"},{"front":"На все до́бре","back":"All the best"},{"front":"Ра́дий тебе́ ба́чити","back":"Glad to see you (male speaker)"},{"front":"Ра́да тебе́ ба́чити","back":"Glad to see you (female speaker)"}]`)} />
+
+</TabItem>
+<TabItem label="Вправи — Activities">
+
+[1. Six Vowel Sounds, Ten Letters](/a1/sounds-letters-and-hello/1/#activities) · [2. Stress: Наголос](/a1/sounds-letters-and-hello/2/#activities) · [3. Your First Conversation](/a1/sounds-letters-and-hello/3/#activities) · [4. First Pronunciation Traps](/a1/sounds-letters-and-hello/4/#activities) · [5. Textbook Check](/a1/sounds-letters-and-hello/5/#activities)
+
+### Meet склади́
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "What does склад mean?", "options": [{"text": "syllable", "correct": true}, {"text": "letter", "correct": false}, {"text": "greeting", "correct": false}], "explanation": "Склад means syllable. M02 will teach the counting rule."}, {"question": "What gives a склад its voice?", "options": [{"text": "a capital letter", "correct": false}, {"text": "a vowel sound", "correct": true}, {"text": "an English translation", "correct": false}], "explanation": "Every Ukrainian склад needs a vowel sound."}, {"question": "What should you do with ма́ма today?", "options": [{"text": "Memorize every syllable rule.", "correct": false}, {"text": "Notice the two clear а sounds.", "correct": true}, {"text": "Ignore the vowel sounds.", "correct": false}], "explanation": "Today is a sound-first preview. M02 practices syllable counting."}, {"question": "What should you listen for in молоко́?", "options": [{"text": "a blurred English vowel", "correct": false}, {"text": "a silent letter", "correct": false}, {"text": "three clean о sounds", "correct": true}], "explanation": "Ukrainian о stays clean in молоко́."}]`)} instruction={"Choose the safer beginner idea."} isUkrainian={false} />
+
+### Letter and basic sound
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "А", "right": "[а]"}, {"left": "О", "right": "[о]"}, {"left": "У", "right": "[у]"}, {"left": "Е", "right": "[е]"}, {"left": "И", "right": "[и]"}, {"left": "І", "right": "[і]"}]`)} instruction={"Match each basic vowel letter with the clean sound it represents."} isUkrainian={false} />
+
+### Find the vowel sounds
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Which vowel sounds are in the word ма́ма?", "options": [{"text": "Two [а] sounds", "correct": true}, {"text": "One [о] and one [а]", "correct": false}, {"text": "Two [у] sounds", "correct": false}], "explanation": "Ма́ма has two open [а] sounds."}, {"question": "Which vowel sounds are in the word та́то?", "options": [{"text": "An [а] sound and an [о] sound", "correct": true}, {"text": "Two [а] sounds", "correct": false}, {"text": "Two [о] sounds", "correct": false}], "explanation": "Та́то has [а] in the first syllable and [о] in the second."}, {"question": "How many clean [о] sounds are in молоко́?", "options": [{"text": "Three clean [о] sounds", "correct": true}, {"text": "Two [о] sounds and one [а]", "correct": false}, {"text": "Only one [о] sound", "correct": false}], "explanation": "Молоко́ has three clear, unreduced [о] sounds."}, {"question": "Which vowel sounds are in о́ко?", "options": [{"text": "Two clean [о] sounds", "correct": true}, {"text": "One [а] and one [о]", "correct": false}, {"text": "Two [у] sounds", "correct": false}], "explanation": "О́ко has two clean [о] sounds."}, {"question": "Which vowel sound is in the word дім?", "options": [{"text": "The vowel sound [і]", "correct": true}, {"text": "The vowel sound [и]", "correct": false}, {"text": "The vowel sound [е]", "correct": false}], "explanation": "Дім has the single clean vowel sound [і]."}, {"question": "Which vowel sound is in the first syllable of уро́к?", "options": [{"text": "The vowel sound [у]", "correct": true}, {"text": "The vowel sound [о]", "correct": false}, {"text": "The vowel sound [а]", "correct": false}], "explanation": "Уро́к begins with the vowel sound [у]."}]`)} instruction={"Choose the correct vowel breakdown for each Ukrainian word."} isUkrainian={false} />
+
+### Sound analysis drill
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "The Ukrainian alphabet (абе́тка) consists of ___ letters.", "answer": "33", "options": ["33", "38", "6", "10"], "explanation": "There are 33 letters in the Ukrainian alphabet."}, {"sentence": "Spoken Ukrainian has ___ distinct sounds.", "answer": "38", "options": ["38", "33", "6", "22"], "explanation": "Ukrainian phonology has 38 distinct sounds."}, {"sentence": "In Ukrainian, there are ___ basic vowel sounds.", "answer": "6", "options": ["6", "10", "33", "38"], "explanation": "The six basic vowel sounds are [а], [о], [у], [е], [и], [і]."}, {"sentence": "The symbol Ь is called the ___ знак and has no sound of its own.", "answer": "м'яки́й", "options": ["м'яки́й", "голосни́й", "тверди́й", "до́вгий"], "explanation": "Ь is the м'яки́й знак (soft sign)."}, {"sentence": "In the word молоко́, all three vowels are pronounced as clean ___.", "answer": "[о]", "options": ["[о]", "[а]", "[у]", "[е]"], "explanation": "Ukrainian unstressed о remains [о]."}, {"sentence": "A syllable in Ukrainian is called a ___.", "answer": "склад", "options": ["склад", "звук", "лі́тера", "сло́во"], "explanation": "Склад is the Ukrainian word for syllable."}]`)} instruction={"Fill in the missing word or sound description."} isUkrainian={false} />
+
+### Sound facts check
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Sounds belong to the ear and mouth, while letters belong to the eye and hand.", "isTrue": true, "explanation": "Sounds are heard and spoken; letters are seen and written."}, {"statement": "Ukrainian has 10 basic vowel sounds.", "isTrue": false, "explanation": "Ukrainian has 6 basic vowel sounds: [а], [о], [у], [е], [и], [і]."}, {"statement": "Unstressed Ukrainian [о] should be pronounced like an English blurred vowel.", "isTrue": false, "explanation": "Unstressed Ukrainian [о] stays round and clean."}, {"statement": "The word Приві́т has four consonant sounds and two vowel sounds.", "isTrue": true, "explanation": "П, р, в, т are consonants; и, і are vowels."}, {"statement": "The letters Я, Ю, Є, Ї can mark vowel sounds in Ukrainian.", "isTrue": true, "explanation": "They are special letters that can represent vowel sounds or combinations."}, {"statement": "The soft sign Ь represents two sounds together.", "isTrue": false, "explanation": "Ь has no sound of its own."}]`)} instruction={"Select whether each statement is true or false."} isUkrainian={false} />
+
+### Sort words by vowel
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Words with [а]": ["ма́ма", "та́то", "анана́с"], "Words with [о]": ["молоко́", "о́ко", "сон"]}`)} instruction={"Sort the words by the main vowel sound they contain."} isUkrainian={false} />
+
+### Meaning of first words
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "звук", "options": [{"text": "sound", "correct": true}, {"text": "letter", "correct": false}, {"text": "alphabet", "correct": false}], "explanation": "Звук means sound."}, {"source": "лі́тера", "options": [{"text": "letter", "correct": true}, {"text": "sound", "correct": false}, {"text": "syllable", "correct": false}], "explanation": "Лі́тера means letter."}, {"source": "абе́тка", "options": [{"text": "alphabet", "correct": true}, {"text": "word", "correct": false}, {"text": "sentence", "correct": false}], "explanation": "Абе́тка means alphabet."}, {"source": "Приві́т!", "options": [{"text": "Hi! / Hello!", "correct": true}, {"text": "Goodbye!", "correct": false}, {"text": "Thank you!", "correct": false}], "explanation": "Приві́т is the informal greeting Hi."}, {"source": "ма́ма", "options": [{"text": "mother", "correct": true}, {"text": "father", "correct": false}, {"text": "milk", "correct": false}], "explanation": "Ма́ма means mother."}, {"source": "молоко́", "options": [{"text": "milk", "correct": true}, {"text": "water", "correct": false}, {"text": "eye", "correct": false}], "explanation": "Молоко́ means milk."}]`)} instruction={"Choose the correct English meaning for each Ukrainian term."} isUkrainian={false} />
+
+### Find the useful letters
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Which letter is the hard g sound?", "options": [{"text": "Ґ", "correct": true}, {"text": "Г", "correct": false}, {"text": "Ї", "correct": false}], "explanation": "Ґ is the hard g sound; Г is the Ukrainian h-like sound."}, {"question": "Which letter is always [йі]?", "options": [{"text": "Ї", "correct": true}, {"text": "І", "correct": false}, {"text": "И", "correct": false}], "explanation": "Ї is always [йі]. І is the plain [і] vowel."}, {"question": "Which sign has no sound of its own?", "options": [{"text": "Ь", "correct": true}, {"text": "Й", "correct": false}, {"text": "Я", "correct": false}], "explanation": "Ь is the soft sign; it changes the previous consonant."}, {"question": "Which letter is the clean [о] sound in молоко́?", "options": [{"text": "О", "correct": true}, {"text": "А", "correct": false}, {"text": "У", "correct": false}], "explanation": "Ukrainian О stays clean in молоко́."}, {"question": "In Приві́т, which two letters mark different vowel sounds?", "options": [{"text": "И and І", "correct": true}, {"text": "О and У", "correct": false}, {"text": "А and Е", "correct": false}], "explanation": "Приві́т contains both И [и] and І [і]."}]`)} instruction={"Choose the letter or sign that matches the clue."} isUkrainian={false} />
+
+### Sort by syllable count
+
+<GroupSort client:only='react' groups={JSON.parse(`{"1 syllable": ["день", "дім", "ніс", "сон", "жук", "пес"], "2 syllables": ["ма́ма", "та́то", "о́ко", "рука́", "ха́та", "шко́ла"]}`)} instruction={"Sort the words into one-syllable and two-syllable groups."} isUkrainian={false} />
+
+### Fill in the missing letter
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "де__ (soft sign completes the word day)", "answer": "нь", "options": []}, {"sentence": "__у́дзик (hard g letter)", "answer": "ґ", "options": []}, {"sentence": "__ора́ (Ukrainian h-like sound)", "answer": "г", "options": []}, {"sentence": "__у́ка (two merged consonant sounds [шч])", "answer": "щ", "options": []}, {"sentence": "__жа́к (always two sounds [йі])", "answer": "ї", "options": []}, {"sentence": "ім__я́ (separation mark)", "answer": "'", "options": []}]`)} instruction={"Complete each word with the correct letter from today's lesson."} isUkrainian={false} />
+
+### Stress pairs meaning
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "за́мок (stress on first syllable)", "right": "castle"}, {"left": "замо́к (stress on second syllable)", "right": "lock"}, {"left": "бра́ти (stress on first syllable)", "right": "brothers"}, {"left": "брати́ (stress on second syllable)", "right": "to take"}, {"left": "ма́ма (stress on first syllable)", "right": "mother"}, {"left": "та́то (stress on first syllable)", "right": "father"}]`)} instruction={"Match each stressed word to its correct English definition."} isUkrainian={false} />
+
+### Rules of sounds and letters
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Every syllable in Ukrainian must have a vowel sound.", "isTrue": true, "explanation": "Vowels are the heart of syllables; a word has as many syllables as vowel sounds."}, {"statement": "The soft sign Ь has its own independent vowel sound.", "isTrue": false, "explanation": "Ь never has a sound of its own; it only softens the preceding consonant."}, {"statement": "The letter Ї always represents two sounds: [й] + [і].", "isTrue": true, "explanation": "Ї is consistently pronounced [йі]."}, {"statement": "Ukrainian unstressed O is reduced to an A sound.", "isTrue": false, "explanation": "Ukrainian O is always clean [о], even when unstressed."}, {"statement": "Changing stress in Ukrainian can change the meaning of a word.", "isTrue": true, "explanation": "For example, за́мок is castle, but замо́к is lock."}, {"statement": "The letter Щ represents a single simple sound.", "isTrue": false, "explanation": "Щ always represents two consonant sounds merged: [шч]."}]`)} instruction={"Decide whether each statement is true or false."} isUkrainian={false} />
+
+### Translate everyday phrases
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "Good day / Hello", "options": [{"text": "До́брий день", "correct": true}]}, {"source": "Good morning", "options": [{"text": "До́брого ра́нку", "correct": true}]}, {"source": "Good evening", "options": [{"text": "До́брий ве́чір", "correct": true}]}, {"source": "How are you?", "options": [{"text": "Як спра́ви?", "correct": true}]}, {"source": "Fine / Good", "options": [{"text": "До́бре", "correct": true}]}, {"source": "Great / Wonderful", "options": [{"text": "Чудо́во", "correct": true}]}]`)} instruction={"Match each English phrase with its Ukrainian equivalent."} isUkrainian={false} />
+
+### Spell the one-syllable words
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "д / і / м", "answer": "дім"}, {"jumbled": "н / і / с", "answer": "ніс"}, {"jumbled": "с / о / н", "answer": "сон"}, {"jumbled": "д / е / н / ь", "answer": "день"}, {"jumbled": "ж / у / к", "answer": "жук"}, {"jumbled": "п / е / с", "answer": "пес"}]`)} instruction={"Arrange the scrambled letters in the correct order to spell the word."} />
+
+### Vowel or consonant sound?
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Vowel sounds": ["[а]", "[о]", "[у]", "[е]", "[и]", "[і]"], "Consonant sounds": ["[п]", "[р]", "[в]", "[т]", "[м]", "[н]", "[к]", "[с]"]}`)} instruction={"Sort the sounds, not the letters."} isUkrainian={false} />
+
+### Conversational safety check
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "«Приві́т!» is an informal greeting used with friends, family, and peers.", "isTrue": true, "explanation": "«Приві́т!» is the standard informal greeting for friends and classmates."}, {"statement": "In «До́брого ра́нку!», the unstressed «о» letters turn into «а».", "isTrue": false, "explanation": "Ukrainian unstressed [о] stays clean and rounded; it never turns into [а]."}, {"statement": "You say «А тебе́?» when returning a name question («Як тебе́ зва́ти?»).", "isTrue": true, "explanation": "«А тебе́?» is elliptical for «А тебе́ як зва́ти?»."}, {"statement": "A woman says «Ра́дий тебе́ ба́чити!».", "isTrue": false, "explanation": "A female speaker says «Ра́да тебе́ ба́чити!»."}, {"statement": "«До поба́чення!» means «Goodbye!».", "isTrue": true, "explanation": "«До поба́чення!» is the primary neutral goodbye in Ukrainian."}, {"statement": "Ukrainian prefers «в Украї́ні» because «Украї́на» starts with a vowel sound.", "isTrue": true, "explanation": "Starting with «в» before «У-» prevents an awkward vowel clash."}]`)} instruction={"Decide whether each statement is true or false."} isUkrainian={false} />
+
+### Dialogue completion practice
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "— Приві́т! Як ____? / — До́бре, дя́кую!", "answer": "спра́ви", "options": ["спра́ви", "сло́во", "звук"], "explanation": "«Як спра́ви?» is the standard friendly question."}, {"sentence": "— Мене́ зва́ти Марко́. А ____? / — Мене́ зва́ти Софі́я.", "answer": "тебе́", "options": ["тебе́", "у тебе́", "ра́нок"], "explanation": "Use «А тебе́?» to return a name question."}, {"sentence": "— Як спра́ви? / — Чудо́во. А ____? / — Норма́льно.", "answer": "у тебе́", "options": ["у тебе́", "тебе́", "день"], "explanation": "Use «А у тебе́?» to return a status question («Як спра́ви?»)."}, {"sentence": "— До́брого ____! Наста́в я́сний ра́нок.", "answer": "ра́нку", "options": ["ра́нку", "день", "ве́чір"], "explanation": "«До́брого ра́нку!» is the morning greeting."}, {"sentence": "— До ____! / — На все до́бре!", "answer": "поба́чення", "options": ["поба́чення", "лі́тера", "молоко́"], "explanation": "«До поба́чення!» is goodbye."}, {"sentence": "Софі́я ка́же: «____ тебе́ ба́чити, Марко́!».", "answer": "Ра́да", "options": ["Ра́да", "Ра́дий", "До́брий"], "explanation": "A female speaker uses «Ра́да»."}]`)} instruction={"Choose the correct word to complete each exchange."} isUkrainian={false} />
+
+### Conversational function sort
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Greetings": ["До́брий день!", "До́брого ра́нку!", "До́брий ве́чір!", "Приві́т!"], "Answers to 'Як спра́ви?'": ["До́бре.", "Чудо́во.", "Норма́льно."], "Farewells": ["До поба́чення!", "На все до́бре!"]}`)} instruction={"Sort the phrases by their conversational role."} isUkrainian={false} />
+
+### English to Ukrainian phrase meanings
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "Good morning!", "options": [{"text": "До́брого ра́нку!", "correct": true}, {"text": "До́брий ве́чір!", "correct": false}, {"text": "До поба́чення!", "correct": false}], "explanation": "«До́брого ра́нку!» is Good morning."}, {"source": "Good evening!", "options": [{"text": "До́брий ве́чір!", "correct": true}, {"text": "До́брого ра́нку!", "correct": false}, {"text": "Приві́т!", "correct": false}], "explanation": "«До́брий ве́чір!» is Good evening."}, {"source": "What is your name?", "options": [{"text": "Як тебе́ зва́ти?", "correct": true}, {"text": "Як спра́ви?", "correct": false}, {"text": "А у тебе́?", "correct": false}], "explanation": "«Як тебе́ зва́ти?» asks for someone's name."}, {"source": "My name is Marko.", "options": [{"text": "Мене́ зва́ти Марко́.", "correct": true}, {"text": "Мене́ зва́ти Софі́я.", "correct": false}, {"text": "Ра́дий тебе́ ба́чити.", "correct": false}], "explanation": "«Мене́ зва́ти Марко́.» is My name is Marko."}, {"source": "All the best!", "options": [{"text": "На все до́бре!", "correct": true}, {"text": "До поба́чення!", "correct": false}, {"text": "До́брий день!", "correct": false}], "explanation": "«На все до́бре!» is All the best!"}, {"source": "Glad to see you. (male speaker)", "options": [{"text": "Ра́дий тебе́ ба́чити.", "correct": true}, {"text": "Ра́да тебе́ ба́чити.", "correct": false}, {"text": "Як спра́ви?", "correct": false}], "explanation": "A male speaker says «Ра́дий тебе́ ба́чити.»."}]`)} instruction={"Choose the Ukrainian phrase that matches the English conversational cue."} isUkrainian={false} />
+
+### Reorder the conversation lines
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Як / тебе́ / зва́ти?", "answer": "Як тебе́ зва́ти?"}, {"jumbled": "Мене́ / зва́ти / Софі́я.", "answer": "Мене́ зва́ти Софі́я."}, {"jumbled": "До́бре. / А / у / тебе́?", "answer": "До́бре. А у тебе́?"}, {"jumbled": "Ра́да / тебе́ / ба́чити.", "answer": "Ра́да тебе́ ба́чити."}, {"jumbled": "На / все / до́бре!", "answer": "На все до́бре!"}, {"jumbled": "До́брого / ра́нку!", "answer": "До́брого ра́нку!"}]`)} instruction={"Put the words in order to form the correct Ukrainian phrase."} />
+
+### Fix the conversational mistake
+
+<ErrorCorrection client:only='react' instruction="Choose the correct Ukrainian phrase to replace the error." items={JSON.parse(`[{"sentence": "— Мене́ зва́ти Марко́. А у тебе́?", "errorWord": "А у тебе́?", "correctForm": "А тебе́?", "options": ["А тебе́?", "А у тебе́?", "Як спра́ви?"], "explanation": "After a name exchange («Мене́ зва́ти...»), use «А тебе́?», not «А у тебе́?»."}, {"sentence": "Софі́я ка́же: «Ра́дий тебе́ ба́чити!».", "errorWord": "Ра́дий", "correctForm": "Ра́да", "options": ["Ра́да", "Ра́дий", "До́бре"], "explanation": "Sofia is a woman, so she says «Ра́да тебе́ ба́чити!»."}, {"sentence": "Марко́ ка́же: «Ра́да тебе́ ба́чити!».", "errorWord": "Ра́да", "correctForm": "Ра́дий", "options": ["Ра́дий", "Ра́да", "Чудо́во"], "explanation": "Marko is a man, so he says «Ра́дий тебе́ ба́чити!»."}, {"sentence": "— Як спра́ви? — До́бре. А тебе́?", "errorWord": "А тебе́?", "correctForm": "А у тебе́?", "options": ["А у тебе́?", "А тебе́?", "На все до́бре!"], "explanation": "After asking about state («Як спра́ви? — До́бре.»), return with «А у тебе́?»."}, {"sentence": "Віта́ння вра́нці: До́брий ра́нок!", "errorWord": "До́брий ра́нок!", "correctForm": "До́брого ра́нку!", "options": ["До́брого ра́нку!", "До́брий ра́нок!", "До́брий день!"], "explanation": "The canonical Ukrainian morning greeting uses the genitive form «До́брого ра́нку!»."}, {"sentence": "Він живе́ у Украї́ні.", "errorWord": "у Украї́ні", "correctForm": "в Украї́ні", "options": ["в Украї́ні", "у Украї́ні", "й Украї́ні"], "explanation": "To avoid hiatus (two vowel sounds colliding), Ukrainian uses «в» before «У-»."}]`)} isUkrainian={false} />
+
+### See a letter, hear a sound
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "А", "right": "[а]"}, {"left": "О", "right": "[о]"}, {"left": "У", "right": "[у]"}, {"left": "М", "right": "[м]"}, {"left": "Н", "right": "[н]"}, {"left": "Г", "right": "h-like [г]"}, {"left": "Ґ", "right": "hard [g]"}, {"left": "Ї", "right": "[йі]"}, {"left": "Ь", "right": "no sound"}]`)} instruction={"Match each letter with its beginner sound clue."} isUkrainian={false} />
+
+### Дзвінкі́ при́голосні в кінці́ слів — Voiced consonants at word end
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "In Ukrainian, the final sound in дуб remains a voiced [б].", "isTrue": true, "explanation": "Ukrainian does not devoice final voiced consonants into [п]."}, {"statement": "The word сад sounds identical to сат in standard pronunciation.", "isTrue": false, "explanation": "Final [д] keeps its voice and is not devoiced to [т]."}, {"statement": "In гриб, the final consonant is pronounced as [б].", "isTrue": true, "explanation": "Final [б] stays voiced: гриб, not грип."}, {"statement": "Voiced consonants lose their voice at the end of every Ukrainian word.", "isTrue": false, "explanation": "Standard Ukrainian retains voicing at the end of words."}, {"statement": "In ніж, the sound [ж] is voiced.", "isTrue": true, "explanation": "Final [ж] remains voiced."}, {"statement": "In мед, the final sound is pronounced as [д].", "isTrue": true, "explanation": "Final [д] remains voiced in мед."}]`)} instruction={"Choose true or false."} isUkrainian={false} />
+
+### Розпо́діл слів за зву́ком — Sort words by vowel [и] or [і]
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Звук [и]": ["лис", "дим", "сир"], "Звук [і]": ["ліс", "дім", "сіль"]}`)} instruction={"Sort each word by whether it contains the sound [и] or [і]."} isUkrainian={false} />
+
+### Дзвінкі́ зву́ки у слова́х — Voiced consonants in context
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Бі́ля рі́чки росте́ стари́й ____.", "answer": "дуб", "options": ["дуб", "зуб"]}, {"sentence": "У лі́сі ми знайшли́ смачни́й ____.", "answer": "гриб", "options": ["гриб", "грип"]}, {"sentence": "Ко́ло ха́ти цвіте́ зеле́ний ____.", "answer": "сад", "options": ["сад", "ліс"]}, {"sentence": "На столі́ стої́ть соло́дкий ____.", "answer": "мед", "options": ["мед", "сир"]}, {"sentence": "На ку́хні лежи́ть го́стрий ____.", "answer": "ніж", "options": ["ніж", "хліб"]}, {"sentence": "Узи́мку на рі́чці лежи́ть товсти́й ____.", "answer": "лід", "options": ["лід", "сніг"]}]`)} instruction={"Choose the word with the correct voiced ending consonant."} isUkrainian={false} />
+
+### За́йве сло́во за вимо́вою — Odd one out by sound
+
+<OddOneOut client:only='react' instruction={"Find the word that does not fit the phonetic pattern."} items={JSON.parse(`[{"words": ["молоко́", "о́ко", "коро́ва", "ліс"], "correct": 3, "explanation": "Ліс contains [і], whereas the others have clean unstressed or stressed [о]."}, {"words": ["лис", "дим", "сир", "дім"], "correct": 3, "explanation": "Дім has [і] with a softened consonant, while the others have [и]."}, {"words": ["ліс", "дім", "сіль", "дим"], "correct": 3, "explanation": "Дим has [и], while the others have [і]."}, {"words": ["дуб", "гриб", "сад", "ка́ска"], "correct": 3, "explanation": "Ка́ска has voiceless consonants, while the others end in voiced consonants."}, {"words": ["ґа́нок", "ґу́дзик", "ґрунт", "гора́"], "correct": 3, "explanation": "Гора́ starts with glottal [ɦ], while the others start with hard [g] (Ґ)."}, {"words": ["день", "сіль", "кінь", "син"], "correct": 3, "explanation": "Син ends in a hard consonant, while the others end with soft sign ь."}]`)} />
+
+### Лі́тери Г та Ґ — Words with Г and Ґ
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "гора́", "right": "mountain (h-like [г])"}, {"left": "го́лос", "right": "voice (h-like [г])"}, {"left": "га́рний", "right": "fine, good (h-like [г])"}, {"left": "ґа́нок", "right": "porch (hard [ґ])"}, {"left": "ґу́дзик", "right": "button (hard [ґ])"}, {"left": "ґрунт", "right": "soil (hard [ґ])"}]`)} instruction={"Match each word with its translation and sound type."} isUkrainian={false} />
+
+### Phrase meanings
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "Приві́т!", "options": [{"text": "Hi!", "correct": true}, {"text": "Goodbye!", "correct": false}, {"text": "What is your name?", "correct": false}], "explanation": "Приві́т is the informal everyday greeting."}, {"source": "До́брий день!", "options": [{"text": "Hello! / Good day!", "correct": true}, {"text": "Milk!", "correct": false}, {"text": "And you?", "correct": false}], "explanation": "До́брий день is the neutral daytime greeting."}, {"source": "До́брого ра́нку!", "options": [{"text": "Good morning!", "correct": true}, {"text": "Good evening!", "correct": false}, {"text": "My name is Anna.", "correct": false}], "explanation": "Ра́нок means morning, so До́брого ра́нку is Good morning."}, {"source": "До́брий ве́чір!", "options": [{"text": "Good evening!", "correct": true}, {"text": "Good morning!", "correct": false}, {"text": "Fine.", "correct": false}], "explanation": "Ве́чір means evening, so До́брий ве́чір is Good evening."}, {"source": "Як спра́ви?", "options": [{"text": "How are you?", "correct": true}, {"text": "Goodbye!", "correct": false}, {"text": "Letter", "correct": false}], "explanation": "Як спра́ви? asks how someone is doing."}, {"source": "До поба́чення!", "options": [{"text": "Goodbye!", "correct": true}, {"text": "Hi!", "correct": false}, {"text": "Sound", "correct": false}], "explanation": "До поба́чення is the leaving phrase Goodbye."}, {"source": "Ра́да тебе́ ба́чити.", "options": [{"text": "Glad to see you. (female speaker)", "correct": true}, {"text": "What is your name?", "correct": false}, {"text": "Good evening!", "correct": false}], "explanation": "Ра́да is the form a female speaker uses in this phrase."}]`)} instruction={"Choose the English meaning."} isUkrainian={false} />
+
+### Pronunciation traps
+
+<ErrorCorrection client:only='react' instruction="Choose the safer Ukrainian habit." items={JSON.parse(`[{"sentence": "Do not call А, О, У голосни́ми лі́терами.", "errorWord": "голосни́ми лі́терами", "correctForm": "лі́терами, що познача́ють голосні́ зву́ки", "options": ["лі́терами, що познача́ють голосні́ зву́ки", "при́голосними лі́терами"], "explanation": "Safer habit: sounds are голосні́ or при́голосні. Letters represent sounds, so call А, О, У letters that mark vowel sounds."}, {"sentence": "Do not say м[а]ло́ко for молоко́.", "errorWord": "м[а]ло́ко", "correctForm": "молоко́", "options": ["молоко́", "ка́ва", "молоко"], "explanation": "Safer habit: keep Ukrainian о clean. Say молоко́ with three clear о sounds: мо-ло-ко."}, {"sentence": "Do not add a tiny sound after день.", "errorWord": "add a tiny sound after день", "correctForm": "soften н, then stop", "options": ["soften н, then stop", "add і after нь"], "explanation": "Safer habit: ь has no sound of its own. In день, soften н and stop; do not add a tiny vowel after it."}, {"sentence": "Do not treat Ї as a softening letter.", "errorWord": "treat Ї as a softening letter", "correctForm": "read Ї as [йі]", "options": ["read Ї as [йі]", "read Ї as plain [і]"], "explanation": "Safer habit: Ї is not a softening letter. Read it as [йі] every time."}, {"sentence": "Do not make one fixed glad phrase for every speaker.", "errorWord": "one fixed glad phrase", "correctForm": "Ра́дий тебе́ ба́чити / Ра́да тебе́ ба́чити", "options": ["Ра́дий тебе́ ба́чити / Ра́да тебе́ ба́чити", "Ра́дий тебе́ ба́чити for everyone"], "explanation": "Safer habit: match the phrase to the speaker. A male speaker says Ра́дий тебе́ ба́чити; a female speaker says Ра́да тебе́ ба́чити."}]`)} isUkrainian={false} />
+
+### Question and response matching
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Як спра́ви?", "right": "До́бре. А у тебе́?"}, {"left": "Як тебе́ зва́ти?", "right": "Мене́ зва́ти Марко́. А тебе́?"}, {"left": "До́брий день!", "right": "До́брий день!"}, {"left": "До поба́чення!", "right": "На все до́бре!"}, {"left": "Ра́дий тебе́ ба́чити!", "right": "Ра́да тебе́ ба́чити!"}, {"left": "Що таке́ звук?", "right": "Те, що ми чу́ємо й вимовля́ємо."}]`)} instruction={"Match each question or opening line with its natural response."} isUkrainian={false} />
+
+### Conversation phrases in context
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Вра́нці ми ка́жемо: «____!»", "answer": "До́брого ра́нку", "options": ["До́брого ра́нку", "До́брий ве́чір", "До поба́чення"]}, {"sentence": "Уве́чері ми віта́ємося: «____!»", "answer": "До́брий ве́чір", "options": ["До́брий ве́чір", "До́брого ра́нку", "Приві́т"]}, {"sentence": "Коли́ спра́ви чудо́ві, ми відповіда́ємо: «____!»", "answer": "Чудо́во", "options": ["Чудо́во", "Дім", "Ніс"]}, {"sentence": "Коли́ все як зазвича́й, ми ка́жемо: «____.»", "answer": "Норма́льно", "options": ["Норма́льно", "Молоко́", "О́ко"]}, {"sentence": "Пі́сля запита́ння про спра́ви ми пита́ємо: «А у ____?»", "answer": "тебе́", "options": ["тебе́", "та́та", "ма́ми"]}, {"sentence": "Пе́ред тим як іти́, ми ка́жемо: «____!»", "answer": "До поба́чення", "options": ["До поба́чення", "Як спра́ви", "Мене́ зва́ти"]}]`)} instruction={"Fill in the missing phrase to complete the dialogue."} isUkrainian={false} />
+
+### Register sorting: Informal vs neutral and formal
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Неформа́льне спілкува́ння (Informal speech)": ["Приві́т!", "Як спра́ви?", "Ра́дий тебе́ ба́чити", "Ра́да тебе́ ба́чити"], "Нейтра́льне та офіці́йне мо́влення (Neutral / Formal speech)": ["До́брий день!", "До́брого ра́нку!", "До́брий ве́чір!", "До поба́чення!"]}`)} instruction={"Sort each Ukrainian greeting into the correct social register."} isUkrainian={false} />
+
+### Phonics and pronunciation safety check
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "How should you pronounce unstressed о in the word молоко́?", "options": [{"text": "Three clear, rounded [о] sounds, never turning into [а]", "correct": true}, {"text": "The first two should blur into a weak [а]", "correct": false}, {"text": "Silent [о] before consonants", "correct": false}], "explanation": "Ukrainian maintains pure unstressed [о]."}, {"question": "What is the key difference between [и] and [і]?", "options": [{"text": "[и] is a relaxed, open vowel; [і] is a high, smiling vowel", "correct": true}, {"text": "[и] is only found in foreign borrowings", "correct": false}, {"text": "[і] is silent after soft consonants", "correct": false}], "explanation": "Ukrainian distinguishes relaxed [и] from smiling [і]."}, {"question": "Why does Ukrainian have 38 sounds but only 33 letters?", "options": [{"text": "Some letters represent two sounds, some consonants have soft pairs, and ь has no sound", "correct": true}, {"text": "Five letters are never used in modern speech", "correct": false}, {"text": "Ukrainian borrowed extra sounds without making letters", "correct": false}], "explanation": "Letters and sounds are distinct; multiple phonetic realities map to 33 letters."}, {"question": "What should you do with voiced consonants at the end of words like сад or дуб?", "options": [{"text": "Keep them voiced to the very end", "correct": true}, {"text": "Devoice them into [сат] and [дуп]", "correct": false}, {"text": "Drop the final consonant", "correct": false}], "explanation": "Ukrainian literary pronunciation does not devoice final voiced consonants."}, {"question": "What is the function of the soft sign (ь) in the word день?", "options": [{"text": "It softens the preceding consonant [н] and adds no vowel", "correct": true}, {"text": "It adds a tiny extra syllable", "correct": false}, {"text": "It makes the word plural", "correct": false}], "explanation": "ь has no independent sound; it only softens the consonant before it."}, {"question": "Which reciprocal question is appropriate after «Як тебе́ зва́ти?»?", "options": [{"text": "А тебе́?", "correct": true}, {"text": "А у тебе́?", "correct": false}, {"text": "А про тебе́?", "correct": false}], "explanation": "Use «А тебе́?» for names, and «А у тебе́?» for state/wellbeing."}]`)} instruction={"Choose the safer habit for Ukrainian pronunciation and orthography."} isUkrainian={false} />
+
+### Comprehensive module facts
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Every Ukrainian syllable (склад) must contain a vowel sound.", "isTrue": true, "explanation": "Vowels give syllables their voice."}, {"statement": "In Ukrainian, the alphabet order starts with А and ends with Я.", "isTrue": true, "explanation": "А is the first letter; Я is the 33rd letter."}, {"statement": "The phrase «На все до́бре!» is used when greeting someone in the morning.", "isTrue": false, "explanation": "«На все до́бре!» is a farewell phrase meaning \\"All the best!\\"."}, {"statement": "Ukrainian has six basic vowel sounds: [а], [о], [у], [е], [и], [і].", "isTrue": true, "explanation": "These are the six vowel sounds of Ukrainian."}, {"statement": "The word Приві́т has four consonant sounds and two vowel sounds.", "isTrue": true, "explanation": "П-р-и-в-і-т: four consonants ([п], [р], [в], [т]) and two vowels ([и], [і])."}, {"statement": "You can use «Приві́т!» in any formal business meeting without hesitation.", "isTrue": false, "explanation": "Приві́т is informal; use «До́брий день!» in neutral or formal situations."}]`)} instruction={"Choose true or false for each statement."} isUkrainian={false} />
+
+</TabItem>
+<TabItem label="Ресурси — Resources">
+
+[1. Six Vowel Sounds, Ten Letters](/a1/sounds-letters-and-hello/1/#resources) · [2. Stress: Наголос](/a1/sounds-letters-and-hello/2/#resources) · [3. Your First Conversation](/a1/sounds-letters-and-hello/3/#resources) · [4. First Pronunciation Traps](/a1/sounds-letters-and-hello/4/#resources) · [5. Textbook Check](/a1/sounds-letters-and-hello/5/#resources)
+
+:::info[🎧 🔗 External Resources]
+
+**📚 Books:**
+- 📚 **Большако́ва, буква́р 1 клас, p. 24**
+  голосні́/при́голосні че́рез вірші́.
+- 📚 **Большако́ва, буква́р 1 клас, p. 24**
+  при́голосні зву́ки та скла́ди.
+- 📚 **Заболо́тний 5 клас, p. 83**
+  «Зву́ки ми чу́ємо й вимовля́ємо, а бу́кви ба́чимо й пи́шемо.»
+- 📚 **Заболо́тний 5 клас, p. 83**
+  Фоне́тика, зву́ки та бу́кви.
+- 📚 **Захарійчук, буква́р 1 клас (НУШ 2025), p. 13**
+  [•] голосни́й, [–] тверди́й при́голосний, [=] м'яки́й при́голосний.
+- 📚 **Захарійчук, буква́р 1 клас (НУШ 2025), p. 13**
+  [–] тверди́й при́голосний, [=] м'яки́й при́голосний.
+- 📚 **Літвінова 5 клас, p. 130**
+  пита́ння про «голосна́ лі́тера» / «при́голосна лі́тера» and sound-letter distinction.
+
+**📺 Videos:**
+- 📺 [Anna Ohoiko — Letter А pronunciation](https://www.youtube.com/watch?v=hvB3VpcR3ZE) — Plan pronunciation video: А.
+- 📺 [Anna Ohoiko — Letter В pronunciation](https://www.youtube.com/watch?v=aFcvYfvQ2X4) — Plan pronunciation video: В.
+- 📺 [Anna Ohoiko — Letter Г pronunciation](https://www.youtube.com/watch?v=gVnclpSI0DU) — Plan pronunciation video: Г.
+- 📺 [Anna Ohoiko — Letter Г pronunciation](https://www.youtube.com/watch?v=gVnclpSI0DU) — Voiced glottal fricative [ɦ].
+- 📺 [Anna Ohoiko — Letter Д pronunciation](https://www.youtube.com/watch?v=g4Bh-lqzd48) — Plan pronunciation video: Д.
+- 📺 [Anna Ohoiko — Letter Е pronunciation](https://www.youtube.com/watch?v=KFlsroBW0dk) — Plan pronunciation video: Е.
+- 📺 [Anna Ohoiko — Letter И pronunciation](https://www.youtube.com/watch?v=W-1rCu0indE) — Plan pronunciation video: И.
+- 📺 [Anna Ohoiko — Letter И pronunciation](https://www.youtube.com/watch?v=W-1rCu0indE) — Pronunciation of vowel [и].
+- 📺 [Anna Ohoiko — Letter М pronunciation](https://www.youtube.com/watch?v=Ez95H4ibuJo) — Plan pronunciation video: М.
+- 📺 [Anna Ohoiko — Letter Н pronunciation](https://www.youtube.com/watch?v=vNUfiKHPYaU) — Plan pronunciation video: Н.
+- 📺 [Anna Ohoiko — Letter О pronunciation](https://www.youtube.com/watch?v=gJFxRIPRZbI) — Activity pronunciation video: О.
+- 📺 [Anna Ohoiko — Letter О pronunciation](https://www.youtube.com/watch?v=gJFxRIPRZbI) — Clean unstressed [о] practice.
+- 📺 [Anna Ohoiko — Letter П pronunciation](https://www.youtube.com/watch?v=JksSjjxyW5Y) — Plan pronunciation video: П.
+- 📺 [Anna Ohoiko — Letter Р pronunciation](https://www.youtube.com/watch?v=fMGsQ5KPQgg) — Plan pronunciation video: Р.
+- 📺 [Anna Ohoiko — Letter С pronunciation](https://www.youtube.com/watch?v=7UsFBgSL91E) — Plan pronunciation video: С.
+- 📺 [Anna Ohoiko — Letter Т pronunciation](https://www.youtube.com/watch?v=m-jcLR_gK0k) — Plan pronunciation video: Т.
+- 📺 [Anna Ohoiko — Letter У pronunciation](https://www.youtube.com/watch?v=VB1O6PmtYRU) — Plan pronunciation video: У.
+- 📺 [Anna Ohoiko — Letter Щ pronunciation](https://www.youtube.com/watch?v=QmBLieIuf6Q) — Plan pronunciation video: Щ.
+- 📺 [Anna Ohoiko — Letter Ь pronunciation](https://www.youtube.com/watch?v=cJlal8XKBxo) — Plan pronunciation video: Ь.
+- 📺 [Anna Ohoiko — Letter Ь pronunciation](https://www.youtube.com/watch?v=cJlal8XKBxo) — Soft sign softening role.
+- 📺 [Anna Ohoiko — Letter І pronunciation](https://www.youtube.com/watch?v=Z9TH0H4ShGo) — Plan pronunciation video: І.
+- 📺 [Anna Ohoiko — Letter І pronunciation](https://www.youtube.com/watch?v=Z9TH0H4ShGo) — Pronunciation of vowel [і].
+- 📺 [Anna Ohoiko — Letter Ґ pronunciation](https://www.youtube.com/watch?v=gNjHqjTW9WQ) — Plan pronunciation video: Ґ.
+- 📺 [Anna Ohoiko — Letter Ґ pronunciation](https://www.youtube.com/watch?v=gNjHqjTW9WQ) — Voiced velar plosive [g].
+- 📺 [Anna Ohoiko — Ukrainian alphabet overview](https://www.youtube.com/watch?v=ksXIXj7CXwc) — Plan pronunciation video: overview for the full Ukrainian alphabet.
+- 📺 [Anna Ohoiko — Ukrainian alphabet pronunciation playlist](https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV) — Plan pronunciation video: playlist for per-letter Ukrainian pronunciation practice.
+
+**🎧 Audio:**
+- 🎧 [ULP Season 1, Episode 1 — Informal Greetings](https://www.ukrainianlessons.com/episode1/) — Приві́т, Як спра́ви?, response models.
+- 🎧 [ULP Season 1, Episode 1 — Informal Greetings](https://www.ukrainianlessons.com/episode1/) — Приві́т, Як спра́ви?, response models; external search found ULP Episode 1 material.
+
+**🔗 Online resources:**
+- 🔗 **Погрібни́й М. І., «Украї́нська літерату́рна вимо́ва» (1992), с. 7, 11-12** — Но́рми літерату́рної вимо́ви: ненаголо́шений [о] та збере́ження дзві́нкості кінце́вих при́голосних.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />

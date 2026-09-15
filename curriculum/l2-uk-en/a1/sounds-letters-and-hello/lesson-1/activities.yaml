@@ -1,0 +1,436 @@
+inline:
+- id: act-1
+  type: quiz
+  title: Sound or letter?
+  instruction: Choose the correct answer.
+  items:
+  - prompt: What is a звук?
+    options:
+    - text: A sound you hear and say
+      correct: true
+    - text: A letter you see and write
+      correct: false
+    - text: A whole sentence
+      correct: false
+    explanation: A звук belongs to hearing and speaking.
+  - prompt: What is a лі́тера?
+    options:
+    - text: A letter you see and write
+      correct: true
+    - text: A sound you hear and say
+      correct: false
+    - text: A greeting
+      correct: false
+    explanation: A лі́тера belongs to reading and writing.
+  - prompt: How many letters are in the Ukrainian alphabet?
+    options:
+    - text: '33'
+      correct: true
+    - text: '38'
+      correct: false
+    - text: '6'
+      correct: false
+    explanation: Ukrainian has 33 letters.
+  - prompt: How many basic Ukrainian vowel sounds are there?
+    options:
+    - text: '6'
+      correct: true
+    - text: '10'
+      correct: false
+    - text: '33'
+      correct: false
+    explanation: The six basic vowel sounds are [а], [о], [у], [е], [и], [і].
+  - prompt: Does ь have its own sound?
+    options:
+    - text: 'No'
+      correct: true
+    - text: 'Yes'
+      correct: false
+    - text: Only in Приві́т
+      correct: false
+    explanation: The soft sign ь has no sound of its own.
+  - prompt: What does Приві́т mean?
+    options:
+    - text: Hi
+      correct: true
+    - text: Goodbye
+      correct: false
+    - text: Milk
+      correct: false
+    explanation: Приві́т is the informal word for Hi.
+- id: act-101
+  type: match-up
+  title: Sound or letter concepts
+  instruction: Match each Ukrainian term with its core role.
+  pairs:
+  - left: звук
+    right: You hear and say it
+  - left: лі́тера
+    right: You see and write it
+  - left: абе́тка
+    right: The set of 33 letters
+  - left: '38'
+    right: Number of Ukrainian sounds
+  - left: '6'
+    right: Number of basic vowel sounds
+  - left: м'яки́й знак
+    right: Symbol with no sound
+- id: act-102
+  type: fill-in
+  title: Sounds in Приві́т
+  instruction: Choose the sound or classification that completes each statement.
+  items:
+  - sentence: The greeting Приві́т starts with the consonant sound ___.
+    answer: '[п]'
+    options:
+    - '[п]'
+    - '[б]'
+    - '[т]'
+    - '[с]'
+    explanation: The letter П represents the unvoiced consonant sound [п].
+  - sentence: In Приві́т, the letter и marks the vowel sound ___.
+    answer: '[и]'
+    options:
+    - '[и]'
+    - '[і]'
+    - '[а]'
+    - '[о]'
+    explanation: The letter и marks the distinct Ukrainian vowel sound [и].
+  - sentence: The letter в in Приві́т marks the consonant sound ___.
+    answer: '[в]'
+    options:
+    - '[в]'
+    - '[ф]'
+    - '[п]'
+    - '[к]'
+    explanation: The letter в marks the consonant sound [в].
+  - sentence: The letter і in Приві́т marks the vowel sound ___.
+    answer: '[і]'
+    options:
+    - '[і]'
+    - '[и]'
+    - '[е]'
+    - '[у]'
+    explanation: The letter і marks the clean vowel sound [і].
+  - sentence: The final letter т in Приві́т marks the sound ___.
+    answer: '[т]'
+    options:
+    - '[т]'
+    - '[д]'
+    - '[н]'
+    - '[м]'
+    explanation: The letter т represents the consonant sound [т].
+  - sentence: The word Приві́т has exactly ___ vowel sounds in total.
+    answer: two
+    options:
+    - two
+    - four
+    - six
+    - three
+    explanation: 'Приві́т has two vowel sounds: [и] and [і].'
+- id: act-103
+  type: group-sort
+  title: Vowels or consonants
+  instruction: Sort the sounds into vowel sounds and consonant sounds.
+  groups:
+  - name: Vowel sounds
+    items:
+    - '[а]'
+    - '[о]'
+    - '[у]'
+    - '[е]'
+    - '[и]'
+    - '[і]'
+  - name: Consonant sounds
+    items:
+    - '[п]'
+    - '[р]'
+    - '[в]'
+    - '[т]'
+    - '[м]'
+    - '[н]'
+- id: act-104
+  type: true-false
+  title: Vowel rules check
+  instruction: Decide whether each statement is true or false.
+  items:
+  - statement: Ukrainian vowel sounds can be held and sung with an open voice.
+    correct: true
+    explanation: Vowel sounds pass through the mouth freely without any obstruction.
+  - statement: There are 10 vowel sounds and only 6 letters in Ukrainian.
+    correct: false
+    explanation: There are 6 vowel sounds and 10 letters that can mark vowel sounds.
+  - statement: The soft sign Ь has its own open vowel sound.
+    correct: false
+    explanation: Ь has no sound of its own; it only softens the preceding consonant.
+  - statement: In the word молоко́, every letter о represents a clean [о] sound.
+    correct: true
+    explanation: Ukrainian unstressed о does not reduce to an 'а' sound.
+  - statement: The letters и and і represent different vowel sounds.
+    correct: true
+    explanation: In Ukrainian, [и] and [і] are distinct vowel sounds.
+  - statement: Every Ukrainian syllable (склад) must contain a vowel sound.
+    correct: true
+    explanation: A vowel sound is the heart of every Ukrainian syllable.
+workbook:
+- id: act-2
+  type: quiz
+  title: Meet склади́
+  instruction: Choose the safer beginner idea.
+  items:
+  - question: What does склад mean?
+    options:
+    - syllable
+    - letter
+    - greeting
+    correct: 0
+    explanation: Склад means syllable. M02 will teach the counting rule.
+  - question: What gives a склад its voice?
+    options:
+    - a capital letter
+    - a vowel sound
+    - an English translation
+    correct: 1
+    explanation: Every Ukrainian склад needs a vowel sound.
+  - question: What should you do with ма́ма today?
+    options:
+    - Memorize every syllable rule.
+    - Notice the two clear а sounds.
+    - Ignore the vowel sounds.
+    correct: 1
+    explanation: Today is a sound-first preview. M02 practices syllable counting.
+  - question: What should you listen for in молоко́?
+    options:
+    - a blurred English vowel
+    - a silent letter
+    - three clean о sounds
+    correct: 2
+    explanation: Ukrainian о stays clean in молоко́.
+- id: act-w101
+  type: match-up
+  title: Letter and basic sound
+  instruction: Match each basic vowel letter with the clean sound it represents.
+  pairs:
+  - left: А
+    right: '[а]'
+  - left: О
+    right: '[о]'
+  - left: У
+    right: '[у]'
+  - left: Е
+    right: '[е]'
+  - left: И
+    right: '[и]'
+  - left: І
+    right: '[і]'
+- id: act-w102
+  type: quiz
+  title: Find the vowel sounds
+  instruction: Choose the correct vowel breakdown for each Ukrainian word.
+  items:
+  - prompt: Which vowel sounds are in the word ма́ма?
+    options:
+    - text: Two [а] sounds
+      correct: true
+    - text: One [о] and one [а]
+      correct: false
+    - text: Two [у] sounds
+      correct: false
+    explanation: Ма́ма has two open [а] sounds.
+  - prompt: Which vowel sounds are in the word та́то?
+    options:
+    - text: An [а] sound and an [о] sound
+      correct: true
+    - text: Two [а] sounds
+      correct: false
+    - text: Two [о] sounds
+      correct: false
+    explanation: Та́то has [а] in the first syllable and [о] in the second.
+  - prompt: How many clean [о] sounds are in молоко́?
+    options:
+    - text: Three clean [о] sounds
+      correct: true
+    - text: Two [о] sounds and one [а]
+      correct: false
+    - text: Only one [о] sound
+      correct: false
+    explanation: Молоко́ has three clear, unreduced [о] sounds.
+  - prompt: Which vowel sounds are in о́ко?
+    options:
+    - text: Two clean [о] sounds
+      correct: true
+    - text: One [а] and one [о]
+      correct: false
+    - text: Two [у] sounds
+      correct: false
+    explanation: О́ко has two clean [о] sounds.
+  - prompt: Which vowel sound is in the word дім?
+    options:
+    - text: The vowel sound [і]
+      correct: true
+    - text: The vowel sound [и]
+      correct: false
+    - text: The vowel sound [е]
+      correct: false
+    explanation: Дім has the single clean vowel sound [і].
+  - prompt: Which vowel sound is in the first syllable of уро́к?
+    options:
+    - text: The vowel sound [у]
+      correct: true
+    - text: The vowel sound [о]
+      correct: false
+    - text: The vowel sound [а]
+      correct: false
+    explanation: Уро́к begins with the vowel sound [у].
+- id: act-w103
+  type: fill-in
+  title: Sound analysis drill
+  instruction: Fill in the missing word or sound description.
+  items:
+  - sentence: The Ukrainian alphabet (абе́тка) consists of ___ letters.
+    answer: '33'
+    options:
+    - '33'
+    - '38'
+    - '6'
+    - '10'
+    explanation: There are 33 letters in the Ukrainian alphabet.
+  - sentence: Spoken Ukrainian has ___ distinct sounds.
+    answer: '38'
+    options:
+    - '38'
+    - '33'
+    - '6'
+    - '22'
+    explanation: Ukrainian phonology has 38 distinct sounds.
+  - sentence: In Ukrainian, there are ___ basic vowel sounds.
+    answer: '6'
+    options:
+    - '6'
+    - '10'
+    - '33'
+    - '38'
+    explanation: The six basic vowel sounds are [а], [о], [у], [е], [и], [і].
+  - sentence: The symbol Ь is called the ___ знак and has no sound of its own.
+    answer: м'яки́й
+    options:
+    - м'яки́й
+    - голосни́й
+    - тверди́й
+    - до́вгий
+    explanation: Ь is the м'яки́й знак (soft sign).
+  - sentence: In the word молоко́, all three vowels are pronounced as clean ___.
+    answer: '[о]'
+    options:
+    - '[о]'
+    - '[а]'
+    - '[у]'
+    - '[е]'
+    explanation: Ukrainian unstressed о remains [о].
+  - sentence: A syllable in Ukrainian is called a ___.
+    answer: склад
+    options:
+    - склад
+    - звук
+    - лі́тера
+    - сло́во
+    explanation: Склад is the Ukrainian word for syllable.
+- id: act-w104
+  type: true-false
+  title: Sound facts check
+  instruction: Select whether each statement is true or false.
+  items:
+  - statement: Sounds belong to the ear and mouth, while letters belong to the eye
+      and hand.
+    correct: true
+    explanation: Sounds are heard and spoken; letters are seen and written.
+  - statement: Ukrainian has 10 basic vowel sounds.
+    correct: false
+    explanation: 'Ukrainian has 6 basic vowel sounds: [а], [о], [у], [е], [и], [і].'
+  - statement: Unstressed Ukrainian [о] should be pronounced like an English blurred
+      vowel.
+    correct: false
+    explanation: Unstressed Ukrainian [о] stays round and clean.
+  - statement: The word Приві́т has four consonant sounds and two vowel sounds.
+    correct: true
+    explanation: П, р, в, т are consonants; и, і are vowels.
+  - statement: The letters Я, Ю, Є, Ї can mark vowel sounds in Ukrainian.
+    correct: true
+    explanation: They are special letters that can represent vowel sounds or combinations.
+  - statement: The soft sign Ь represents two sounds together.
+    correct: false
+    explanation: Ь has no sound of its own.
+- id: act-w105
+  type: group-sort
+  title: Sort words by vowel
+  instruction: Sort the words by the main vowel sound they contain.
+  groups:
+  - name: Words with [а]
+    items:
+    - ма́ма
+    - та́то
+    - анана́с
+  - name: Words with [о]
+    items:
+    - молоко́
+    - о́ко
+    - сон
+- id: act-w106
+  type: translate
+  title: Meaning of first words
+  instruction: Choose the correct English meaning for each Ukrainian term.
+  items:
+  - source: звук
+    options:
+    - text: sound
+      correct: true
+    - text: letter
+      correct: false
+    - text: alphabet
+      correct: false
+    explanation: Звук means sound.
+  - source: лі́тера
+    options:
+    - text: letter
+      correct: true
+    - text: sound
+      correct: false
+    - text: syllable
+      correct: false
+    explanation: Лі́тера means letter.
+  - source: абе́тка
+    options:
+    - text: alphabet
+      correct: true
+    - text: word
+      correct: false
+    - text: sentence
+      correct: false
+    explanation: Абе́тка means alphabet.
+  - source: Приві́т!
+    options:
+    - text: Hi! / Hello!
+      correct: true
+    - text: Goodbye!
+      correct: false
+    - text: Thank you!
+      correct: false
+    explanation: Приві́т is the informal greeting Hi.
+  - source: ма́ма
+    options:
+    - text: mother
+      correct: true
+    - text: father
+      correct: false
+    - text: milk
+      correct: false
+    explanation: Ма́ма means mother.
+  - source: молоко́
+    options:
+    - text: milk
+      correct: true
+    - text: water
+      correct: false
+    - text: eye
+      correct: false
+    explanation: Молоко́ means milk.

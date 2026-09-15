@@ -1,0 +1,48 @@
+- lemma: на́голос
+  translation: stress
+  pos: noun
+  usage: У сло́ві Приві́т на́голос на і.
+- lemma: апо́строф
+  translation: apostrophe
+  pos: noun
+  usage: У сло́ві «ім'я́» є апо́строф.
+- lemma: дім
+  translation: house / home
+  pos: noun
+  usage: Дім.
+- lemma: ніс
+  translation: nose
+  pos: noun
+  usage: Ніс.
+- lemma: сон
+  translation: sleep / dream
+  pos: noun
+  usage: Сон.
+- lemma: До́брий день
+  translation: Hello / Good day
+  pos: phrase
+  usage: До́брий день!
+- lemma: До́брого ра́нку
+  translation: Good morning
+  pos: phrase
+  usage: До́брого ра́нку!
+- lemma: До́брий ве́чір
+  translation: Good evening
+  pos: phrase
+  usage: До́брий ве́чір!
+- lemma: Як спра́ви?
+  translation: How are you?
+  pos: phrase
+  usage: Як спра́ви?
+- lemma: До́бре
+  translation: Fine / good
+  pos: phrase
+  usage: До́бре.
+- lemma: Чудо́во
+  translation: Great / wonderful
+  pos: phrase
+  usage: Чудо́во.
+- lemma: Норма́льно
+  translation: Okay / normal
+  pos: phrase
+  usage: Норма́льно.
