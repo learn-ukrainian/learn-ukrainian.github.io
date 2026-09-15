@@ -12,7 +12,7 @@ inline:
     right: uses 'і' between consonant and consonant
   - left: вона́ й він
     right: uses 'й' between vowel and consonant
-  - left: жи́ти у мі́сті
+  - left: він у мі́сті
     right: uses 'у' after a consonant to prevent a cluster
   - left: пла́вати в о́зері
     right: uses 'в' after a vowel before a vowel

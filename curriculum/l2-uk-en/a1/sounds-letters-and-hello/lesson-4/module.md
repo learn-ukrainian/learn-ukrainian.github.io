@@ -64,7 +64,7 @@ Keep Ukrainian sound categories independent. Do not use another language as the 
 | **дим** | smoke (relaxed tongue) | **дім** | house / home (softened [д']) |
 | **сир** | cheese (relaxed tongue) | **сіль** | salt (softened [с']) |
 | **ти** | you (informal pronoun) | **ті** | those (demonstrative) |
-| **син** | son (family member) | **сін** (сі́но) | hay (dried grass) |
+| **син** | son (family member) | **сі́но** | hay (dried grass) |
 | **би́ти** | to hit (action) | **бі́гти** | to run (motion) |
 
 <!-- INJECT_ACTIVITY: act-402 -->
