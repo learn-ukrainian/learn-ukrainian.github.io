@@ -1,0 +1,51 @@
+{
+  "schema_version": "v1_dialect_historical_protection_receipt",
+  "dataset_name": "Ukrainian Regional Dialect & Historical Protection Evaluation Suite",
+  "phase": "Phase 5.2: Dialect & Historical Protection Test Suite (Anti-Over-Standardization Gate)",
+  "issue": 8051,
+  "parent_epic": 6321,
+  "generated_at": "2026-09-15T18:20:18.210829+00:00",
+  "suite_summary": {
+    "total_test_cases": 600,
+    "preserve_cases": 500,
+    "correct_cases": 100,
+    "statistical_power": {
+      "target_non_corruption_gate": ">= 98.0%",
+      "max_tolerated_dialect_corruption": 1,
+      "max_tolerated_historical_corruption": 0,
+      "surzhyk_normalization_tolerance": "0.0%",
+      "statistically_sound": true
+    }
+  },
+  "strata_distribution": {
+    "regional_dialect": 300,
+    "historical_text": 200,
+    "anti_surzhyk_control": 100
+  },
+  "subgroup_distribution": {
+    "southwestern_hutsul": 45,
+    "southwestern_boyko": 45,
+    "southwestern_galician": 50,
+    "southeastern_poltava": 45,
+    "southeastern_slobozhan": 25,
+    "northern_polissian": 50,
+    "southwestern_lemko": 40,
+    "old_east_slavic": 100,
+    "middle_ukrainian": 100,
+    "colonial_surzhyk_control": 100
+  },
+  "invariants": {
+    "anti_surzhyk_eradication_mandate": true,
+    "zero_surzhyk_normalization_tolerance": true,
+    "dialect_cultural_heritage_protection": true,
+    "historical_continuity_preservation": true,
+    "zero_hallucinated_sources": true
+  },
+  "files": {
+    "test_suite_jsonl": {
+      "path": "data/projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl",
+      "sha256": "67070c44fcb3efeed5d394e0b598b95a5e5f2c8c984a0b3065c3c0f4e8c36af7",
+      "record_count": 600
+    }
+  }
+}
