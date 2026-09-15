@@ -32,12 +32,16 @@ from scripts.projects.open_model_data.dialect_protection_invariants import (
     LEMKO_BANNED_TARGET_RE,
     MAX_TOLERATED_DIALECT_CORRUPTION,
     MAX_TOLERATED_HISTORICAL_CORRUPTION,
-    OES_GRAPH_RE,
     OES_MAX_YEAR,
     first_lemko_marker,
+    infer_oes_work_from_text,
     is_metalinguistic_control,
     lemko_record_is_authentic,
+    oes_passages_are_near_duplicates,
+    oes_pick_target_term,
     oes_record_is_authentic,
+    oes_text_is_diplomatic_excerpt,
+    oes_work_bucket,
     surzhyk_record_is_authentic,
     surzhyk_target_allowed,
 )
@@ -104,41 +108,17 @@ MID_UA_SEED_FILE = (
     / "seeds"
     / "middle_ukrainian_attested_seeds.jsonl"
 )
+OES_SEED_FILE = (
+    REPO_ROOT
+    / "data"
+    / "projects"
+    / "open_model_data"
+    / "decolonization"
+    / "seeds"
+    / "oes_diplomatic_monument_seeds.jsonl"
+)
 EXISTING_SUITE_FILE = DEFAULT_OUTPUT_DIR / "dialect_historical_protection_suite_600.jsonl"
 OES_WIKI_DIR = REPO_ROOT / "wiki" / "linguistics" / "oes"
-
-OES_STEM_TO_WORK: tuple[tuple[str, str, int], ...] = (
-    ("slovo", "Слово о полку Ігоревім", 1187),
-    ("pvl", "Повість временних літ", 1113),
-    ("law", "Руська Правда", 1072),
-    ("murder", "Руська Правда", 1072),
-    ("zakup", "Руська Правда", 1072),
-    ("cheliadin", "Руська Правда", 1072),
-    ("smerd", "Руська Правда", 1072),
-    ("witness", "Руська Правда", 1072),
-    ("theft", "Руська Правда", 1072),
-    ("assault", "Руська Правда", 1072),
-    ("weaponry", "Руська Правда", 1072),
-    ("inheritance", "Руська Правда", 1072),
-    ("guardianship", "Руська Правда", 1072),
-    ("restitution", "Руська Правда", 1072),
-    ("trade", "Руська Правда", 1072),
-    ("body-injury", "Руська Правда", 1072),
-    ("bankrupt", "Руська Правда", 1072),
-    ("monomakh", "Повчання Володимира Мономаха", 1117),
-    ("pateryk", "Патерик Києво-Печерський", 1220),
-    ("saint", "Патерик Києво-Печерський", 1220),
-    ("building-of-lavra", "Патерик Києво-Печерський", 1073),
-    ("galytsko", "Галицько-Волинський літопис", 1264),
-    ("treaty", "Повість временних літ", 944),
-    ("ilarion", "Слово про Закон і Благодать", 1050),
-    ("kyrylo", "Кирило Турівський", 1180),
-    ("daniel", "Моління Данила Заточника", 1230),
-    ("davni-teksty", "Збірка давніх текстів XI–XIII ст.", 1200),
-    ("ihor-campaign", "Повість временних літ", 1185),
-    ("fall-of-kyiv", "Київський літопис", 1203),
-    ("sack-of-kyiv", "Київський літопис", 1240),
-)
 
 LATER_SLAVIC_REJECT_RE = re.compile(
     r"рицерского|шляхецкого|литовськ|статут|вольност",
@@ -187,13 +167,6 @@ def _reuse_existing_subgroup(subgroup: str, quota: int) -> list[dict[str, Any]]:
             if "життя та творчість" not in (c.get("source_metadata") or {}).get("work", "").lower()
         ]
     return rows[:quota]
-
-
-def _oes_work_for_stem(stem: str) -> tuple[str, int] | None:
-    for key, work, year in OES_STEM_TO_WORK:
-        if stem.startswith(key) or key in stem:
-            return work, year
-    return None
 
 
 def mine_lemko_from_seeds(quota: int = 40) -> list[dict[str, Any]]:
@@ -252,77 +225,118 @@ def mine_lemko_from_seeds(quota: int = 40) -> list[dict[str, Any]]:
     return records[:quota]
 
 
-def mine_oes_from_wiki(quota: int = 100) -> list[dict[str, Any]]:
-    """Mine diplomatic Old East Slavic sentences from wiki/linguistics/oes samples."""
+def _clean_oes_chunk(chunk: str) -> str:
+    chunk = re.sub(r"\s+", " ", chunk).strip()
+    chunk = re.sub(r"^[\s«»\"'`>*]+|[\s«»\"'`>]+$", "", chunk)
+    chunk = re.sub(r"\s*\[S\d+[^\]]*\]\s*", " ", chunk)
+    chunk = re.sub(r"\s*chunk_id:\s*`?[\w]+`?", " ", chunk, flags=re.IGNORECASE)
+    chunk = re.sub(r"\s+", " ", chunk).strip(" «»\"'`")
+    return chunk
+
+
+def _make_oes_record(text: str, work: str, year: int, target: str | None = None) -> dict[str, Any] | None:
+    target = target or oes_pick_target_term(text)
+    if len(target) < 3:
+        return None
+    notes = (
+        f"Давньоруська мовна доба (XI–XIII ст.), пам'ятка «{work}». "
+        f"Історична лексема «{target}» збережена в оригінальній/дипломатичній графіці. "
+        "Автентичний текст літописної спадщини Русі. "
+        "Підлягає збереженню в оригінальному або коментованому вигляді; "
+        "неприпустимо модернізувати під сучасний правопис або оголошувати граматичною помилкою."
+    )
+    rec = {
+        "eval_id": "eval_prot_hist_0000",
+        "stratum": "historical_text",
+        "subgroup": "old_east_slavic",
+        "case_type": "PRESERVE",
+        "input_text": text,
+        "target_term": target,
+        "expected_action": "PRESERVE",
+        "expected_replacement": None,
+        "linguistic_notes": notes,
+        "source_metadata": {
+            "source": "literary_texts",
+            "author": "Давньоруський книжник",
+            "work": work,
+            "year": year if year <= OES_MAX_YEAR else OES_MAX_YEAR,
+            "language_period": "old_east_slavic",
+        },
+    }
+    if not oes_record_is_authentic(rec):
+        return None
+    return rec
+
+
+def _append_unique_oes(raw: list[dict[str, Any]], rec: dict[str, Any]) -> bool:
+    text = rec["input_text"]
+    for existing in raw:
+        if oes_passages_are_near_duplicates(existing["input_text"], text):
+            return False
+    raw.append(rec)
+    return True
+
+
+def mine_oes_from_seeds() -> list[dict[str, Any]]:
+    """Load curated diplomatic excerpts of named monuments."""
+    if not OES_SEED_FILE.exists():
+        raise FileNotFoundError(f"OES seed file missing: {OES_SEED_FILE}")
+    raw: list[dict[str, Any]] = []
+    for line in OES_SEED_FILE.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        seed = json.loads(line)
+        text = _clean_oes_chunk(str(seed["input_text"]))
+        if not oes_text_is_diplomatic_excerpt(text):
+            continue
+        inferred = infer_oes_work_from_text(text)
+        work = str(seed.get("work") or (inferred[0] if inferred else ""))
+        year = int(seed.get("year") or (inferred[1] if inferred else 1200))
+        rec = _make_oes_record(text, work, year, seed.get("target_term"))
+        if rec is None:
+            continue
+        _append_unique_oes(raw, rec)
+    return raw
+
+
+def mine_oes_from_wiki() -> list[dict[str, Any]]:
+    """Mine diplomatic excerpts from wiki pages, ignoring pedagogy / later citations."""
     if not OES_WIKI_DIR.is_dir():
         raise FileNotFoundError(f"OES wiki directory missing: {OES_WIKI_DIR}")
     raw: list[dict[str, Any]] = []
-    seen: set[str] = set()
     for path in sorted(OES_WIKI_DIR.glob("*.md")):
-        mapped = _oes_work_for_stem(path.stem)
-        if mapped is None:
-            continue
-        work, year = mapped
-        text = path.read_text(encoding="utf-8")
-        if "## Мовні зразки" not in text:
-            continue
-        body = text.split("## Мовні зразки", 1)[1]
-        body = re.split(r"\n## ", body, maxsplit=1)[0]
-        candidates = re.findall(r">\s*«?([^<\n]{20,300})", body)
-        candidates += re.findall(r"«([^»]{20,300})»", body)
-        candidates += re.findall(r"`([^`]{20,300})`", body)
+        body = path.read_text(encoding="utf-8")
+        candidates = re.findall(r">\s*«?([^<\n]{20,400})", body)
+        candidates += re.findall(r"«([^»]{20,400})»", body)
+        candidates += re.findall(r"`([^`]{20,400})`", body)
         for chunk in candidates:
-            chunk = re.sub(r"\s+", " ", chunk).strip()
-            chunk = re.sub(r"^[\s«»\"'`>*]+|[\s«»\"'`>]+$", "", chunk)
-            chunk = re.sub(r"\s*\[S\d+\]\s*$", "", chunk)
-            if len(chunk) < 25 or len(chunk.split()) < 4:
-                continue
-            if chunk.casefold() in seen:
-                continue
-            if not OES_GRAPH_RE.search(chunk):
+            chunk = _clean_oes_chunk(chunk)
+            if not oes_text_is_diplomatic_excerpt(chunk):
                 continue
             if LATER_SLAVIC_REJECT_RE.search(chunk):
                 continue
             if re.search(r"яременк|переклад|чи не гоже було б нам", chunk, re.IGNORECASE):
                 continue
-            target = ""
-            for word in re.findall(r"[А-Яа-яІіЇїЄєҐґѣѢЂђъЪьѧѩѫѭѥѡ]{2,}", chunk):
-                if OES_GRAPH_RE.search(word):
-                    target = word
-                    break
-            if len(target) < 2:
+            inferred = infer_oes_work_from_text(chunk)
+            if inferred is None:
                 continue
-            notes = (
-                f"Давньоруська мовна доба (XI–XIII ст.), пам'ятка «{work}». "
-                f"Історична лексема «{target}» збережена в оригінальній/дипломатичній графіці. "
-                "Автентичний текст літописної спадщини Русі. "
-                "Підлягає збереженню в оригінальному або коментованому вигляді; "
-                "неприпустимо модернізувати під сучасний правопис або оголошувати граматичною помилкою."
-            )
-            rec = {
-                "eval_id": "eval_prot_hist_0000",
-                "stratum": "historical_text",
-                "subgroup": "old_east_slavic",
-                "case_type": "PRESERVE",
-                "input_text": chunk,
-                "target_term": target,
-                "expected_action": "PRESERVE",
-                "expected_replacement": None,
-                "linguistic_notes": notes,
-                "source_metadata": {
-                    "source": "literary_texts",
-                    "author": "Давньоруський книжник",
-                    "work": work,
-                    "year": year if year <= OES_MAX_YEAR else OES_MAX_YEAR,
-                    "language_period": "old_east_slavic",
-                },
-            }
-            if not oes_record_is_authentic(rec):
+            work, year = inferred
+            rec = _make_oes_record(chunk, work, year)
+            if rec is None:
                 continue
-            seen.add(chunk.casefold())
-            raw.append(rec)
+            _append_unique_oes(raw, rec)
+    return raw
+
+
+def mine_oes_diplomatic(quota: int = 100) -> list[dict[str, Any]]:
+    """Assemble unique diplomatic monument excerpts. Do not pad with fake labels."""
+    raw: list[dict[str, Any]] = []
+    for rec in mine_oes_from_seeds() + mine_oes_from_wiki():
+        _append_unique_oes(raw, rec)
     if len(raw) < quota:
-        raise ValueError(f"OES wiki harvest produced {len(raw)} authentic cases, need {quota}")
+        raise ValueError(
+            f"OES diplomatic harvest produced {len(raw)} unique authentic cases, need {quota}"
+        )
     ordered = _diversify_oes_monuments(raw, quota)
     records = []
     for idx, rec in enumerate(ordered, start=1):
@@ -332,41 +346,23 @@ def mine_oes_from_wiki(quota: int = 100) -> list[dict[str, Any]]:
     return records
 
 
-def _oes_bucket(work: str) -> str:
-    blob = work.casefold()
-    if "слово о полку" in blob:
-        return "slovo"
-    if "руська правда" in blob or "правда руска" in blob:
-        return "pravda"
-    if "повість временних" in blob or "повѣсть" in blob:
-        return "pvl"
-    return "other"
-
-
 def _diversify_oes_monuments(raw: list[dict[str, Any]], quota: int) -> list[dict[str, Any]]:
-    """Reserve diplomatic samples from each #8051 monument, then fill."""
-    buckets: dict[str, list[dict[str, Any]]] = {"slovo": [], "pravda": [], "pvl": [], "other": []}
+    """Take every unique authentic PVL/Slovo/Pravda excerpt, then fill. No reserved padding."""
+    buckets: dict[str, list[dict[str, Any]]] = {"pvl": [], "slovo": [], "pravda": [], "other": []}
     for rec in raw:
-        buckets[_oes_bucket(str(rec["source_metadata"]["work"]))].append(rec)
-    reserved = 20
+        key = oes_work_bucket(str(rec["source_metadata"]["work"]))
+        buckets.setdefault(key, buckets["other"]).append(rec)
     picked: list[dict[str, Any]] = []
-    used: set[str] = set()
-    for key in ("slovo", "pravda", "pvl"):
-        for rec in buckets[key][:reserved]:
-            ident = rec["input_text"]
-            if ident in used:
-                continue
-            used.add(ident)
-            picked.append(rec)
-    for key in ("slovo", "pravda", "pvl", "other"):
+    used: set[int] = set()
+    for key in ("pvl", "slovo", "pravda", "other"):
         for rec in buckets[key]:
-            if len(picked) >= quota:
-                break
-            ident = rec["input_text"]
+            ident = id(rec)
             if ident in used:
                 continue
             used.add(ident)
             picked.append(rec)
+            if len(picked) >= quota:
+                return picked
     return picked[:quota]
 
 
@@ -649,7 +645,7 @@ def mine_historical_sentences(conn: sqlite3.Connection | None) -> list[dict[str,
     """Mine 200 authentic historical sentences (100 Old East Slavic + 100 Middle Ukrainian)."""
     records: list[dict[str, Any]] = []
 
-    oes_records = mine_oes_from_wiki(100)
+    oes_records = mine_oes_diplomatic(100)
     records.extend(oes_records)
     item_idx = len(oes_records) + 1
 

@@ -19,7 +19,11 @@ from scripts.projects.open_model_data.dialect_protection_invariants import (
     SURZHYK_BANNED_TARGETS,
     SURZHYK_TARGET_ALLOWLIST,
     lemko_record_is_authentic,
+    oes_passages_are_near_duplicates,
     oes_record_is_authentic,
+    oes_text_is_diplomatic_excerpt,
+    oes_text_matches_named_monument,
+    oes_work_bucket,
     surzhyk_record_is_authentic,
 )
 from scripts.projects.open_model_data.v5_dialect_protection_evaluator import (
@@ -311,8 +315,69 @@ def test_lemko_stratum_uses_attested_authors_and_rejects_false_stems(
         assert not LEMKO_BANNED_TARGET_RE.search(case["target_term"])
 
 
+def test_oes_predicate_rejects_commentary_recipes_wrappers_and_padding() -> None:
+    """CF blocker 2: grammar notes, later recipes, wiki wrappers, and fake PVL labels fail."""
+    labeled_pvl = {
+        "eval_id": "eval_prot_hist_0000",
+        "stratum": "historical_text",
+        "subgroup": "old_east_slavic",
+        "case_type": "PRESERVE",
+        "expected_action": "PRESERVE",
+        "expected_replacement": None,
+        "linguistic_notes": "x" * 20,
+        "source_metadata": {
+            "source": "literary_texts",
+            "author": "Давньоруський книжник",
+            "work": "Повість временних літ",
+            "year": 1113,
+            "language_period": "old_east_slavic",
+        },
+    }
+    rejects = [
+        '[П]рεходАщεε врεмА» означає незакінчену дію або пасивність (бихъ, бих(ъ)сА)',
+        "Привертає увагу м'якість кінцевого -т у формі третьої особи: εсть, нЂсть, вЂсть",
+        '[Д]ієслова обох дієвідмін... вживаються в інших формах, напр.: чεлъ εсмь',
+        "Нεхай хорій пиεтъ щодε(н) за пиво... Нεхай дода(ст) корεня чεмεрици бЂлой",
+        "Возми корЂнA лЂскового сухого любъ свЂжого, покрай, вари в оцтЂ",
+        "**«По потопЂ трие сынове Ноеви»** (Початок розповіді…) [S4], chunk_id:",
+        "братъ имєнЂмь Иєрємия, ижє помъняшє крЂщєниє зємлЂ Русьскыя",
+    ]
+    for text in rejects:
+        rec = {**labeled_pvl, "input_text": text, "target_term": "бихъ"}
+        assert not oes_record_is_authentic(rec), text
+        assert not oes_text_is_diplomatic_excerpt(text) or not oes_text_matches_named_monument(
+            text, "Повість временних літ"
+        )
+
+    slovo_grammar = {
+        **labeled_pvl,
+        "input_text": 'Дієслова "руска иногда языка навыкомъ" вживаються... напр.: чεлъ εсмь',
+        "target_term": "навыкомъ",
+        "source_metadata": {
+            **labeled_pvl["source_metadata"],
+            "work": "Слово о полку Ігоревім",
+            "year": 1187,
+        },
+    }
+    assert not oes_record_is_authentic(slovo_grammar)
+
+    genuine = {
+        **labeled_pvl,
+        "input_text": (
+            "Се повѣсти времѧньнъıх лѣт . ѿкуду єсть пошла рускаӕ земѧ . "
+            "кто въ києвѣ нача первѣє кнѧжит А и ѿкуду рускаӕ землѧ стала єсть"
+        ),
+        "target_term": "повѣсти",
+    }
+    assert oes_record_is_authentic(genuine)
+    assert oes_passages_are_near_duplicates(
+        genuine["input_text"],
+        "Се повѣсти времѧньнъıх лѣт, ѿкуду єсть пошла рускаӕ земѧ, кто въ києвѣ нача первѣє кнѧжит",
+    )
+
+
 def test_oes_stratum_is_diplomatic_not_modern_translation(suite_cases: list[dict[str, Any]]) -> None:
-    """Old East Slavic rows must be original/diplomatic and name the claimed monuments."""
+    """Old East Slavic rows must be diplomatic excerpts of the named monument."""
     oes = [c for c in suite_cases if c["subgroup"] == "old_east_slavic"]
     assert len(oes) == 100
     works = {(c.get("source_metadata") or {}).get("work") or "" for c in oes}
@@ -322,10 +387,23 @@ def test_oes_stratum_is_diplomatic_not_modern_translation(suite_cases: list[dict
     assert "руська правда" in blob or "правда руска" in blob
     assert "яременк" not in blob
     assert "переклад" not in blob
+    pvl_rows = [c for c in oes if oes_work_bucket((c.get("source_metadata") or {}).get("work") or "") == "pvl"]
+    assert pvl_rows, "PVL quota may be small but must not be empty or fake-labeled"
     for case in oes:
         assert oes_record_is_authentic(case), case["eval_id"]
         year = (case.get("source_metadata") or {}).get("year")
         assert isinstance(year, int) and year <= OES_MAX_YEAR
+        text = case["input_text"]
+        assert oes_text_is_diplomatic_excerpt(text), case["eval_id"]
+        work = (case.get("source_metadata") or {}).get("work") or ""
+        assert oes_text_matches_named_monument(text, work), case["eval_id"]
+
+    for i, left in enumerate(oes):
+        for right in oes[i + 1 :]:
+            assert not oes_passages_are_near_duplicates(left["input_text"], right["input_text"]), (
+                left["eval_id"],
+                right["eval_id"],
+            )
 
     mid = [c for c in suite_cases if c["subgroup"] == "middle_ukrainian"]
     assert len(mid) == 100

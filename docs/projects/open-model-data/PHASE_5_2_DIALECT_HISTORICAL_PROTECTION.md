@@ -6,7 +6,7 @@
 > **Architecture Reference:** [`DECOLONIZATION_EPIC_ARCHITECTURE.md`](./DECOLONIZATION_EPIC_ARCHITECTURE.md) (§2.9 & §7)
 > **Artifact Receipt:** [`dialect_historical_protection_receipt_v1.json`](../../../data/projects/open_model_data/decolonization/partitions/dialect_historical_protection_receipt_v1.json)
 > **Dataset File:** [`dialect_historical_protection_suite_600.jsonl`](../../../data/projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl)
-> **SHA-256:** `14dbb23fe24c7acbc6ef8753358128a7f87dca6264e922cbf5044a92aaa3056a`
+> **SHA-256:** `e264b79e6a3e0bbefbfa4b225f5737cb0daf071c749d0d53ae75bd826faa0e99`
 
 ---
 
@@ -54,7 +54,7 @@ Spans three major Ukrainian dialect groups, sourced from literary monuments and 
 Evaluates whether the model preserves archaic, baroque, and chronicle registers without attempting modern orthographic standardisation:
 
 1. **Old East Slavic ($N = 100$):**
-   * Diplomatic / original-graph samples from `wiki/linguistics/oes` «Мовні зразки», reserved across the monuments named in #8051: *Слово о полку Ігоревім*, *Руська Правда*, *Повість временних літ*. Modern Яременко translations are rejected; rows require period `old_east_slavic`, year $\le 1300$, and at least one historical graph (*ѣ/Ђ/ъ/ѧ…*). #8051's orthography-clause drop is therefore **not** taken: the stratum stays labeled `old_east_slavic` because the rebuilt rows are diplomatic, not modernized.
+   * Diplomatic excerpts of the named monuments (*Слово о полку Ігоревім*, *Руська Правда*, *Повість временних літ*), plus a few correctly labeled companion monuments (Київський літопис, Кирило Турівський, Патерик). Harvest is seed-backed and text-inferred: wiki «Мовні зразки» chunks are **not** labeled from the filename. Modern grammar commentary, later medical recipes, wiki `chunk_id` wrappers, and near-duplicate padding are rejected by `oes_record_is_authentic`. PVL is the set of unique genuine passages (not a padded N=20). Яременко translations are rejected; rows require period `old_east_slavic`, year $\le 1300$, a historical graph, and a monument-matching excerpt. #8051's orthography-clause drop is therefore **not** taken.
    * Markers are the diplomatic tokens actually present (e.g. *гривнЂ*, *пълку*, *бяшетъ*), not modern glossary stand-ins.
 2. **Middle Ukrainian / Cossack Baroque ($N = 100$):**
    * Sourced from 16th–18th century monuments: *Літопис Григорія Грабянки*, *Григорій Сковорода* (letters, *Silenus Alcibiadis*, *Благодарный Еродій*, *Алфавіт*). Biography-about-author rows (*Життя та творчість Григорія Сковороди*) are excluded.

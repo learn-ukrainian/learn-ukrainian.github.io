@@ -7,6 +7,7 @@ counts/SHA cannot drift away from the authenticity contracts.
 from __future__ import annotations
 
 import re
+import unicodedata
 from typing import Any
 
 # --- Lemko ---
@@ -114,7 +115,6 @@ OES_WORK_NEEDLES: frozenset[str] = frozenset(
         "слово про закон і благодать",
         "кирило турівськ",
         "моління данила",
-        "збірка давніх текстів",
     }
 )
 
@@ -123,12 +123,91 @@ OES_BANNED_WORK_NEEDLES: frozenset[str] = frozenset(
         "яременк",
         "переклад яременка",
         "життя та творчість",
+        "збірка давніх текстів",
     }
 )
 
 OES_GRAPH_RE: re.Pattern[str] = re.compile(r"[ѣѢЂђъЪѧѩѫѭѥѡ]")
 
 OES_MAX_YEAR = 1300
+
+# Modern-UA / later-Slavic framing that wiki «Мовні зразки» mix into OES pages.
+OES_COMMENTARY_RE: re.Pattern[str] = re.compile(
+    r"означає\b|привертає увагу|дієслова|вживаються|м'?якість|"
+    r"дієвідмін|теперішнього часу|дійсного способу|виступають у формах|"
+    r"синтаксичн|ораторськ|смотрицьк|ужевич|знам[εе]нован|"
+    r"спр[аaA]ж[εе]н|вм[Ђѣ]сто|кончащ|начертател|существител|"
+    r"раствор|преходящ|прешедш|напр\.?:|граматик[аииу]|"
+    r"атематичн|сигматичн|парадигм",
+    re.IGNORECASE,
+)
+
+OES_MEDICAL_RE: re.Pattern[str] = re.compile(
+    r"хорій|л[Ђѣεе]кар|возми\s+кор|чемериц|порохъ\s+ут|"
+    r"пи[εе]тъ\s+щод|за\s+пиво|трімай\s+во\s+уста|лЂскового|"
+    r"тяжарных|причиновъ\s+ко\s+см",
+    re.IGNORECASE,
+)
+
+OES_WIKI_WRAPPER_RE: re.Pattern[str] = re.compile(
+    r"chunk_id|\*\*«|^\*\*|\[\s*S\d+\s*\]|`[0-9a-f]{8}_c\d+|"
+    r"початок розповіді|вступний заголовок|лаврент",
+    re.IGNORECASE | re.MULTILINE,
+)
+
+OES_LATER_SLAVIC_RE: re.Pattern[str] = re.compile(
+    r"н[еεе]хай|рицерского|шляхецкого|статут|вольност|синопсис|"
+    r"фрымарчи|позволилъ\s+мεшкан|кроиника|софонович|стародавн|"
+    r"—\s+(ми|ви|він)\s+|або\s+\w+\s+бул|ґды\s+бы|кгды\s+бы|"
+    r"бодай\s+бы|обыкнов|пановалъ",
+    re.IGNORECASE,
+)
+
+# Text labeled as a named monument must actually be that monument.
+OES_PVL_TEXT_RE: re.Pattern[str] = re.compile(
+    r"повѣсти\s+врем|потоп[Ђѣ]|ноеви|симови|хамови|афетъ|"
+    r"руска[ӕѧя]\s+зем|кнѧжит|нарек\s+ю|явЂ\s+будеть|сътворихомъ|"
+    r"дъщерию|словеньк|живущем\s+крьщен|киликию|еюпетъ|индикия|"
+    r"нирокурия|оудолжишася|свьщания|памъфилию|ефивопья|"
+    r"неятью|съгрЂшениє|клЂн",
+    re.IGNORECASE,
+)
+
+OES_SLOVO_TEXT_RE: re.Pattern[str] = re.compile(
+    r"пълку\s+игор|полку\s+игор|боян|комони|каял|ярославн|"
+    r"половец|шелом|игорь\s+възр|луце\s+жъ|не\s+лЂпо\s+ли|"
+    r"русици|буи\s+тур|пирог|лебедЂ|дону\s+велик|харалу[жз]|"
+    r"святъслав|побарая|боричев|трубами\s+повити|хула\s+на\s+хвалу|"
+    r"сула\s+не\s+течет|жемчюжн|ожерел|плъкы|бръзыя|"
+    r"чрън|посЂяна|польяна|кая\s+раны|небесЂ|дЂвици|свЂтит|"
+    r"жалощам|преклонил|звЂринъ|стязи|вережени|"
+    r"дивъ|ветрило|хинов|чръны",
+    re.IGNORECASE,
+)
+
+OES_PRAVDA_TEXT_RE: re.Pattern[str] = re.compile(
+    r"\bаже\b|\bоже\b|\bаще\b|гривн|холоп|закуп|продаж|вир[ъы]|"
+    r"послух|смерд|челядин|обель|обил|тать|кун[ъы]|задниц|"
+    r"переореть|хлЂва|роба|отариц|наимит|остатъкъ|платити\s+за\s+нь|"
+    r"вирник|поконъ",
+    re.IGNORECASE,
+)
+
+OES_PATERIK_TEXT_RE: re.Pattern[str] = re.compile(
+    r"иєрємия|феодос(?:ий|ій|ия)|печерском\s+святом\s+монастыр|"
+    r"антон(?:ий|ій)\s+печер",
+    re.IGNORECASE,
+)
+
+OES_KYIV_CHRONICLE_TEXT_RE: re.Pattern[str] = re.compile(
+    r"києвьскым|батыєва|заборолом|полЂзоша|цЂлЂ\s+быша",
+    re.IGNORECASE,
+)
+
+OES_KYRYLO_TEXT_RE: re.Pattern[str] = re.compile(
+    r"кирила\s+мниха|сънятии\s+тЂла|человЂчьстЂи\s+души",
+    re.IGNORECASE,
+)
 
 # --- Anti-Surzhyk (curated colonial calques only) ---
 
@@ -338,6 +417,110 @@ def oes_has_diplomatic_graph(text: str) -> bool:
     return bool(OES_GRAPH_RE.search(text or ""))
 
 
+def oes_passage_fingerprint(text: str) -> str:
+    """Normalize a passage so ellipsis / punctuation / wiki wrappers collapse."""
+    s = unicodedata.normalize("NFKC", text or "").casefold()
+    s = OES_WIKI_WRAPPER_RE.sub(" ", s)
+    s = re.sub(r"\[\s*s\d+\s*\]", " ", s)
+    s = re.sub(r"[*_`«»\"'“”„…·•—–~❙/\\|]+", " ", s)
+    s = re.sub(r"[.,;:!?()\[\]<>]+", " ", s)
+    s = "".join(ch for ch in unicodedata.normalize("NFKD", s) if unicodedata.category(ch) != "Mn")
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def oes_passages_are_near_duplicates(left: str, right: str) -> bool:
+    a = oes_passage_fingerprint(left)
+    b = oes_passage_fingerprint(right)
+    if not a or not b:
+        return False
+    if a == b:
+        return True
+    shorter, longer = (a, b) if len(a) <= len(b) else (b, a)
+    if len(shorter) >= 40 and shorter in longer:
+        return True
+    prefix = min(56, len(shorter))
+    return prefix >= 40 and longer.startswith(shorter[:prefix])
+
+
+def oes_text_is_diplomatic_excerpt(text: str) -> bool:
+    """Reject grammar commentary, later recipes, wiki wrappers, later Slavic."""
+    raw = text or ""
+    if len(raw) < 25 or len(raw.split()) < 4:
+        return False
+    if not oes_has_diplomatic_graph(raw):
+        return False
+    if OES_COMMENTARY_RE.search(raw):
+        return False
+    if OES_MEDICAL_RE.search(raw):
+        return False
+    if OES_WIKI_WRAPPER_RE.search(raw):
+        return False
+    if OES_LATER_SLAVIC_RE.search(raw):
+        return False
+    return not ('"' in raw or "..." in raw)
+
+
+def oes_work_bucket(work: str) -> str:
+    blob = _norm(work)
+    if "слово о полку" in blob or "слово о плъку" in blob:
+        return "slovo"
+    if "руська правда" in blob or "правда руска" in blob:
+        return "pravda"
+    if "повість временних" in blob or "повѣсть" in blob or "повість минулих" in blob:
+        return "pvl"
+    if "патерик" in blob:
+        return "pateryk"
+    return "other"
+
+
+def oes_text_matches_named_monument(text: str, work: str) -> bool:
+    """The row's work label must be the monument the excerpt actually is."""
+    bucket = oes_work_bucket(work)
+    if bucket == "pvl":
+        if OES_PATERIK_TEXT_RE.search(text) and not OES_PVL_TEXT_RE.search(text):
+            return False
+        if OES_SLOVO_TEXT_RE.search(text) and not OES_PVL_TEXT_RE.search(text):
+            return False
+        return bool(OES_PVL_TEXT_RE.search(text))
+    if bucket == "slovo":
+        if OES_COMMENTARY_RE.search(text):
+            return False
+        return bool(OES_SLOVO_TEXT_RE.search(text))
+    if bucket == "pravda":
+        return bool(OES_PRAVDA_TEXT_RE.search(text))
+    if bucket == "pateryk":
+        return bool(OES_PATERIK_TEXT_RE.search(text))
+    if "київський літопис" in _norm(work):
+        return bool(OES_KYIV_CHRONICLE_TEXT_RE.search(text))
+    if "кирило турівськ" in _norm(work):
+        return bool(OES_KYRYLO_TEXT_RE.search(text))
+    return False
+
+
+def infer_oes_work_from_text(text: str) -> tuple[str, int] | None:
+    """Assign a monument from the excerpt itself, not from a wiki filename."""
+    if OES_PATERIK_TEXT_RE.search(text) and not OES_PVL_TEXT_RE.search(text):
+        return "Патерик Києво-Печерський", 1220
+    if OES_SLOVO_TEXT_RE.search(text):
+        return "Слово о полку Ігоревім", 1187
+    if OES_PRAVDA_TEXT_RE.search(text):
+        return "Руська Правда", 1072
+    if OES_PVL_TEXT_RE.search(text):
+        return "Повість временних літ", 1113
+    if OES_KYIV_CHRONICLE_TEXT_RE.search(text):
+        return "Київський літопис", 1203
+    if OES_KYRYLO_TEXT_RE.search(text):
+        return "Кирило Турівський", 1180
+    return None
+
+
+def oes_pick_target_term(text: str) -> str:
+    for word in re.findall(r"[А-Яа-яІіЇїЄєҐґѣѢЂђъЪьѧѩѫѭѥѡ]{2,}", text or ""):
+        if OES_GRAPH_RE.search(word) and len(word) >= 2:
+            return word
+    return ""
+
+
 def oes_record_is_authentic(case: dict[str, Any]) -> bool:
     meta = case.get("source_metadata") or {}
     work = str(meta.get("work") or "")
@@ -345,6 +528,7 @@ def oes_record_is_authentic(case: dict[str, Any]) -> bool:
     period = str(meta.get("language_period") or "")
     year = meta.get("year")
     text = str(case.get("input_text") or "")
+    target = str(case.get("target_term") or "")
     if has_any_needle(_blob(work, author, text), OES_BANNED_WORK_NEEDLES):
         return False
     if period != "old_east_slavic":
@@ -353,7 +537,13 @@ def oes_record_is_authentic(case: dict[str, Any]) -> bool:
         return False
     if not has_any_needle(work, OES_WORK_NEEDLES):
         return False
-    return oes_has_diplomatic_graph(text)
+    if not oes_text_is_diplomatic_excerpt(text):
+        return False
+    if not oes_text_matches_named_monument(text, work):
+        return False
+    if len(target) < 2 or not OES_GRAPH_RE.search(target):
+        return False
+    return _norm(target) in _norm(text)
 
 
 def normalize_surzhyk_target(target: str) -> str:
