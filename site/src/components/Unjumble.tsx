@@ -15,6 +15,19 @@ function getWordColor(word: string, index: number): string {
   return WORD_COLORS[(charSum + index) % WORD_COLORS.length];
 }
 
+// Tiles never carry punctuation, but the YAML `answer` field can include a
+// terminal `.`/`?`/`!` or clause commas — normalize both sides before
+// comparing so those don't cause false negatives.
+export function normalizeUnjumbleAnswer(text: string): string {
+  return text
+    .trim()
+    .replace(/[.?!]+$/, '')
+    .replace(/,/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+}
+
 export interface UnjumbleQuestionProps {
   /**
    * @schemaDescription Words shown to the learner.
@@ -172,7 +185,7 @@ export function UnjumbleQuestion({
 
   const joiner = /\s/.test(answer.trim()) ? ' ' : '';
   const userAnswer = selectedWords.map(w => w.text).join(joiner);
-  const isCorrect = userAnswer.toLowerCase().trim() === answer.toLowerCase().trim();
+  const isCorrect = normalizeUnjumbleAnswer(userAnswer) === normalizeUnjumbleAnswer(answer);
 
   const placeholderLabel = isUkrainian ? 'Перетягніть слова сюди, щоб скласти речення...' : 'Drag words here to build the sentence...';
   const checkBtnLabel = isUkrainian ? 'Перевірити' : 'Check Answer';
