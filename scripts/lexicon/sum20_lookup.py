@@ -9,6 +9,7 @@ Provides:
 
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import re
@@ -56,10 +57,16 @@ def _resolve_sources_db() -> Path:
 
 
 def _get_db(db_path: Path | str | None = None, *, write: bool = False) -> sqlite3.Connection:
-    target = Path(db_path) if db_path else _resolve_sources_db()
-    conn = sqlite3.connect(target)
+    if isinstance(db_path, str) and (db_path.startswith("file:") or "?" in db_path):
+        conn = sqlite3.connect(db_path, uri=True)
+    else:
+        target = Path(db_path) if db_path else _resolve_sources_db()
+        conn = sqlite3.connect(target)
     conn.row_factory = sqlite3.Row
-    if write:
+    if not write:
+        with contextlib.suppress(sqlite3.OperationalError):
+            conn.execute("PRAGMA query_only = ON")
+    else:
         ensure_sum20_official_schema(conn)
     return conn
 
@@ -167,12 +174,22 @@ def fetch_and_cache_sum20(
     return lookup_sum20_cached(lemma, conn)
 
 
-def lookup_sum20_articles(lemma: str, db_path: Path | str | None = None) -> list[dict[str, Any]]:
-    """Retrieve modern authoritative СУМ-20 articles for lemma (cache first, fetch on miss)."""
+def lookup_sum20_articles(
+    lemma: str,
+    db_path: Path | str | None = None,
+    *,
+    write: bool = False,
+) -> list[dict[str, Any]]:
+    """Retrieve modern authoritative СУМ-20 articles for lemma.
+
+    By default (write=False), only read-only lookup against cached records is performed,
+    enforcing PRAGMA query_only = ON and never attempting schema creation or cache writes.
+    To allow network fetching and caching on miss, pass write=True.
+    """
     conn = _get_db(db_path, write=False)
     try:
         cached = lookup_sum20_cached(lemma, conn)
-        if cached:
+        if cached or not write:
             return cached
     finally:
         conn.close()
@@ -227,9 +244,14 @@ def lookup_sum11_colonization_context(lemma: str, db_path: Path | str | None = N
         conn.close()
 
 
-def lookup_decolonized_heteronym_evidence(lemma: str, db_path: Path | str | None = None) -> dict[str, Any]:
+def lookup_decolonized_heteronym_evidence(
+    lemma: str,
+    db_path: Path | str | None = None,
+    *,
+    write: bool = False,
+) -> dict[str, Any]:
     """Return complete decolonized evidence bundle for a heteronym lemma."""
-    sum20 = lookup_sum20_articles(lemma, db_path)
+    sum20 = lookup_sum20_articles(lemma, db_path, write=write)
     col_context = lookup_sum11_colonization_context(lemma, db_path)
     return {
         "lemma": lemma,

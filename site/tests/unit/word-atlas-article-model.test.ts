@@ -9,6 +9,7 @@ import {
   formatKhayImperative,
   formatPos,
   formatTranslationSource,
+  isModernDefinitionCard,
   isSum11DefinitionCard,
   sanitizeWikiReference,
   shouldRenderDefinitionCard,
@@ -1475,6 +1476,75 @@ describe("verb future, conditional, хай, impersonal, and aspect columns (#760
       expect(html).toContain("grinchenko-oppression-note");
       expect(html).toContain("Доба царських заборон (Валуєвський циркуляр 1863, Емський указ 1876)");
       expect(html).toContain("фіксація живої народної мови");
+    });
+
+    test("preserves modern meaning beside historical Grinchenko cards without duplicate cards", () => {
+      const props = articleProps({
+        lemma: "опій-тест",
+        url_slug: "опій-тест",
+        gloss: "equine hoof inflammation",
+        entry_type: "lemma",
+        pos: "noun",
+        ipa: null,
+        primary_source: "course",
+        course_usage: [],
+        enrichment: {
+          meaning: {
+            definitions: ["Ревматичне запалення копит у коня."],
+            source: "СУМ-20",
+          },
+          definition_cards: [
+            {
+              id: "grinchenko-1",
+              source: "Словарь української мови (Грінченко, 1907–1909)",
+              definitions: ["Опій, -пою, м. Боль в копытах лошади."],
+            },
+          ],
+        },
+      });
+
+      const html = renderWordAtlasArticle(props);
+      // Both Grinchenko and modern SUM-20 meaning are rendered
+      expect(html).toContain("Боль в копытах лошади.");
+      expect(html).toContain("grinchenko-oppression-note");
+      expect(html).toContain("Ревматичне запалення копит у коня.");
+      expect(html).toContain("СУМ-20");
+    });
+
+    test("does not recreate Soviet context when soviet_colonization_context is explicitly null", () => {
+      const props = articleProps({
+        lemma: "ланець-ланцюг",
+        url_slug: "ланець-ланцюг",
+        gloss: "archaic chain",
+        entry_type: "lemma",
+        pos: "noun",
+        ipa: null,
+        primary_source: "course",
+        course_usage: [],
+        soviet_colonization_context: null,
+        enrichment: {
+          meaning: {
+            definitions: ["Ланцюг."],
+            source: "СУМ-20",
+          },
+          definition_cards: [
+            {
+              id: "sum11-1",
+              source: "СУМ-11 (1970–1980)",
+              definitions: ["Стаття з іншого омографа"],
+            },
+          ],
+        },
+      });
+
+      const view = buildWordAtlasArticleView(props.record, "test", "test");
+      expect(view.entry.soviet_colonization_context).toBeNull();
+
+      const html = renderWordAtlasArticle(props);
+      expect(html).not.toContain("soviet-colonization-box");
+      expect(html).not.toContain("Радянський окупаційний контекст");
+      expect(html).not.toContain("Стаття з іншого омографа");
+      expect(html).toContain("Ланцюг.");
     });
   });
 });

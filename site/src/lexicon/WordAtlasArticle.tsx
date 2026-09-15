@@ -14,6 +14,7 @@ import {
   formatKhayImperative,
   IMPERATIVE_ROWS,
   isMirrorUrl,
+  isModernDefinitionCard,
   learnerFacingUrls,
   MARKED_LEARNER_NOTE,
   PAST_ROWS,
@@ -161,6 +162,10 @@ function getEffectiveHeteronymRecord(
     heritage_status: heteronym.heritage_status !== undefined ? heteronym.heritage_status : baseEntry.heritage_status,
     distinction_note: heteronym.distinction_note !== undefined ? heteronym.distinction_note : baseEntry.distinction_note,
     sections: heteronym.sections !== undefined ? { ...baseSections, ...heteronymSections } : baseEntry.sections,
+    soviet_colonization_context:
+      heteronym.soviet_colonization_context !== undefined
+        ? heteronym.soviet_colonization_context
+        : baseEntry.soviet_colonization_context,
     enrichment: {
       ...baseEnrichment,
       ...heteronymEnrichment,
@@ -486,10 +491,10 @@ function WordAtlasArticleBody({
                   </div>
                 </div>
               )}
-              {definitionCards.length === 0 && enrichment?.meaning && (
+              {!definitionCards.some(isModernDefinitionCard) && enrichment?.meaning && (
                 <div className="def-card sum20">
                   <div className="def-source">
-                    <span className="src-pill">{enrichment.meaning.source}</span>
+                    <span className="src-pill">{enrichment.meaning.source || "СУМ-20"}</span>
                     <span>словникове тлумачення</span>
                   </div>
                   <div className="def-text">
@@ -500,7 +505,7 @@ function WordAtlasArticleBody({
                   {enrichment.meaning.note && <div className="def-flag-inline">{enrichment.meaning.note}</div>}
                 </div>
               )}
-              {definitionCards.length === 0 && !enrichment?.meaning && phraseHasGloss && (
+              {!definitionCards.some(isModernDefinitionCard) && !enrichment?.meaning && phraseHasGloss && (
                 <div className="def-card sum20">
                   <div className="def-source">
                     <span className="src-pill">Курс</span>

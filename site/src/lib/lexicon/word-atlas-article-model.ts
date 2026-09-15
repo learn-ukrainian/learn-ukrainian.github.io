@@ -988,6 +988,16 @@ export function sanitizeWikiReference(
   return next;
 }
 
+export function isModernDefinitionCard(card: DefinitionCard): boolean {
+  if (isSum11DefinitionCard(card)) return false;
+  const id = (card.id || "").toLowerCase();
+  const source = (card.source || "").toLowerCase();
+  if (id.includes("grinchenko") || source.includes("грінченко") || source.includes("словарь української мови")) {
+    return false;
+  }
+  return true;
+}
+
 export function sourceClass(card: DefinitionCard) {
   if (card.id.includes("sum11") && ((card.sovietization_risk ?? 0) > 0 || card.id.includes("flagged"))) {
     return "sum11-flagged";
@@ -1069,19 +1079,20 @@ export function buildWordAtlasArticleView(
     new Set(sovietizedCards.flatMap((card) => card.sovietization_keywords ?? [])),
   );
   const derivedSovietContext =
-    entry.soviet_colonization_context ??
-    (sum11Cards.length > 0
-      ? {
-          source: sum11Cards[0].source || "СУМ-11 (1970–1980)",
-          definition: sum11Cards.map((c) => c.definitions.join(" ")).join("\n\n"),
-          sovietization_risk: maxSovietizationRisk,
-          keywords: sovietizationKeywords,
-          historical_note:
-            "Зафіксовано в радянський окупаційний період (СУМ-11, 1970–1980). Подано для історичного аналізу радянського редакторського втручання та ідеологічного зміщення.",
-        }
-      : null);
+    entry.soviet_colonization_context !== undefined
+      ? entry.soviet_colonization_context
+      : (sum11Cards.length > 0
+        ? {
+            source: sum11Cards[0].source || "СУМ-11 (1970–1980)",
+            definition: sum11Cards.map((c) => c.definitions.join(" ")).join("\n\n"),
+            sovietization_risk: maxSovietizationRisk,
+            keywords: sovietizationKeywords,
+            historical_note:
+              "Зафіксовано в радянський окупаційний період (СУМ-11, 1970–1980). Подано для історичного аналізу радянського редакторського втручання та ідеологічного зміщення.",
+          }
+        : null);
   const resolvedEntry =
-    derivedSovietContext && !entry.soviet_colonization_context
+    entry.soviet_colonization_context !== derivedSovietContext
       ? { ...entry, soviet_colonization_context: derivedSovietContext }
       : entry;
   const letter = entry.lemma.charAt(0).toLocaleUpperCase("uk");
