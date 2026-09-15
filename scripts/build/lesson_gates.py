@@ -5,6 +5,7 @@ uses the same offline ULIF oracle as the stress annotator and fails closed.
 """
 from __future__ import annotations
 
+import json
 import re
 import unicodedata
 from pathlib import Path
@@ -130,6 +131,114 @@ def _spoken_in_hay(spoken: str, hay: str) -> bool:
     return bool(text) and text in hay
 
 
+def _js_single_quoted_payloads(blob: str) -> list[str]:
+    """Extract JSON.parse('...') payloads without stopping at escaped quotes."""
+    out: list[str] = []
+    for match in re.finditer(r"JSON\.parse\('", blob):
+        i = match.end()
+        chars: list[str] = []
+        while i < len(blob):
+            ch = blob[i]
+            if ch == "\\" and i + 1 < len(blob):
+                chars.append(ch)
+                chars.append(blob[i + 1])
+                i += 2
+                continue
+            if ch == "'":
+                out.append("".join(chars))
+                break
+            chars.append(ch)
+            i += 1
+    return out
+
+
+def _dialogue_pairs_from_page(page: str) -> list[tuple[str, str]]:
+    pairs: list[tuple[str, str]] = []
+    for blob in re.findall(r"<DialogueBox[\s\S]*?/>", strip_comments(page)):
+        payloads = _js_single_quoted_payloads(blob)
+        if not payloads:
+            match = re.search(r"JSON\.parse\(`([\s\S]*?)`\)", blob)
+            if match:
+                payloads = [match.group(1)]
+        for payload in payloads:
+            decoded = payload.replace("\\'", "'").replace("\\\\", "\\")
+            try:
+                data = json.loads(decoded)
+            except json.JSONDecodeError:
+                continue
+            if not isinstance(data, list):
+                continue
+            for row in data:
+                if isinstance(row, dict):
+                    pairs.append((md_to_text(str(row.get("speaker") or "")),
+                                  md_to_text(str(row.get("text") or ""))))
+    return pairs
+
+
+_AVOID_HEADERS = frozenset({"avoid", "don't", "не кажи", "помилка"})
+
+
+def _blank_avoid_cells(md: str) -> str:
+    """Drop Avoid-column cells so their error-forms are not lesson-wide lemmas."""
+    header = None
+    out: list[str] = []
+    for line in md.splitlines(keepends=True):
+        if not line.lstrip().startswith("|"):
+            header = None
+            out.append(line)
+            continue
+        if re.match(r"^\s*\|?\s*:?-{2,}", line):
+            out.append(line)
+            continue
+        cells = [c for c in line.strip().strip("|").split("|")]
+        texts = [md_to_text(c) for c in cells]
+        if header is None:
+            header = [t.lower() for t in texts]
+            out.append(line)
+            continue
+        if header and header[0] in _AVOID_HEADERS and cells:
+            cells[0] = " "
+            nl = "\n" if line.endswith("\n") else ""
+            out.append("|" + "|".join(cells) + "|" + nl)
+            continue
+        out.append(line)
+    return "".join(out)
+
+
+def _fence_turns(para: str) -> list[tuple[str, str]]:
+    raw = para.strip()
+    if not raw.startswith("```"):
+        return []
+    body = re.sub(r"^```[^\n]*\n?", "", raw)
+    body = re.sub(r"\n?```\s*$", "", body)
+    return [(md_to_text(speaker), md_to_text(spoken)) for speaker, spoken in _dialogue_turns(body)]
+
+
+def _subsequence_count(needle: list[tuple[str, str]], hay: list[tuple[str, str]]) -> int:
+    if not needle:
+        return 0
+    count = 0
+    cursor = 0
+    while cursor < len(hay):
+        pos = cursor
+        try:
+            for turn in needle:
+                pos = hay.index(turn, pos) + 1
+        except ValueError:
+            break
+        count += 1
+        cursor = pos
+    return count
+
+
+def _fence_preserved_as_dialogue(para: str, page: str) -> bool:
+    """Assembler turns ```text speaker fences into DialogueBox; that is preservation."""
+    if not page or "<DialogueBox" not in page:
+        return False
+    turns = _fence_turns(para)
+    return bool(turns) and _subsequence_count(turns, _dialogue_pairs_from_page(page)) == 1
+
+
 def _visible_in_render(value: str, literal_text: str) -> bool:
     """True if YAML text or its fill-in-blanked form is on the published page."""
     variants = [
@@ -179,16 +288,20 @@ def _activity_render_strings(act: dict) -> list:
     return leaves(payload, skip)
 
 
-def contains(orig, new) -> bool:
+def contains(orig, new, *, expand_explanations: bool = False) -> bool:
     """orig ⊆ new structurally with multiplicity: dict keys must exist with contained values;
     each orig list element must match a DISTINCT new element; scalars equal modulo stress
-    marks and with the same type (True is not 1)."""
+    marks and with the same type (True is not 1). Explanation strings may grow a gloss."""
     if isinstance(orig, dict):
-        return isinstance(new, dict) and all(k in new and contains(v, new[k]) for k, v in orig.items())
+        return isinstance(new, dict) and all(
+            k in new and contains(v, new[k], expand_explanations=(k == "explanation"))
+            for k, v in orig.items()
+        )
     if isinstance(orig, list):
         if not isinstance(new, list) or len(orig) > len(new):
             return False
-        cand = [[i for i, n in enumerate(new) if contains(o, n)] for o in orig]
+        cand = [[i for i, n in enumerate(new) if contains(o, n, expand_explanations=expand_explanations)]
+                for o in orig]
 
         def match(k: int, used: frozenset) -> bool:   # complete one-to-one assignment (backtracking)
             if k == len(cand):
@@ -196,7 +309,24 @@ def contains(orig, new) -> bool:
             return any(match(k + 1, used | {i}) for i in cand[k] if i not in used)
         return match(0, frozenset())
     if isinstance(orig, str):
-        return isinstance(new, str) and norm_md(orig) == norm_md(new)
+        if not isinstance(new, str):
+            return False
+        old, expanded = norm_md(orig), norm_md(new)
+        if old == expanded:
+            return True
+        if not expand_explanations:
+            return False
+        core = old.rstrip(".:;!? ")
+        if len(core) < 12:
+            return False
+
+        def continues(prefix: str) -> bool:
+            if not expanded.startswith(prefix):
+                return False
+            rest = expanded[len(prefix):]
+            return not rest or rest[0] in " \t:;—–,"
+
+        return continues(old) or continues(core)
     return type(orig) is type(new) and orig == new
 
 
@@ -626,7 +756,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             wrong = []
         if wrong:
             block(f"lesson {n}: {len(wrong)} stressed forms contradict the stress dictionary: {wrong[:15]}")
-        bad = sorted(set(missing_stress(lesson_md_clean[n], allow)
+        bad = sorted(set(missing_stress(_blank_avoid_cells(lesson_md_clean[n]), allow)
                          + missing_stress("\n".join(str(x) for x in leaves(vocab) if isinstance(x, str)), allow)))
         for activity in (acts.get("inline") or []) + (acts.get("workbook") or []):
             if not isinstance(activity, dict):
@@ -674,6 +804,23 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             counts = {m: hay[m].count(key) for m in hay}
             tot = sum(counts.values())
             if tot == 0:
+                turns = _fence_turns(p)
+                if turns:
+                    hits = []
+                    for stem, page in (rendered or {}).items():
+                        lid = stem[:-4] if stem.endswith(".mdx") else stem
+                        if lid in {"index", ""}:
+                            continue
+                        hits.extend([lid] * _subsequence_count(turns, _dialogue_pairs_from_page(page)))
+                    if len(hits) == 1 and hits[0] == str(n):
+                        continue
+                    if not hits:
+                        lost.append(p)
+                    elif len(hits) > 1:
+                        dupd.append(p)
+                    else:
+                        misplaced.append((p, n, hits))
+                    continue
                 lost.append(p)
             elif tot > 1:
                 dupd.append(p)
@@ -785,14 +932,21 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                     continue
             if para.lstrip().startswith("|"):
                 hay = _dialogue_props_text(page) if "<DialogueBox" in page else ""
+                header = None
                 cells_ok = True
                 for line in para.splitlines():
                     if re.match(r"^\s*\|?\s*:?-{2,}", line) or not line.strip():
                         continue
                     cells = [md_to_text(c) for c in line.strip().strip("|").split("|")]
-                    if cells and re.search(r"ukrainian|україн|english|use\b", cells[0], re.I):
+                    if header is None:
+                        header = [c.lower() for c in cells]
                         continue
-                    for cell in cells:
+                    if cells and re.search(r"ukrainian|україн|english", cells[0], re.I):
+                        continue
+                    check = cells
+                    if header and header[0] in _AVOID_HEADERS:
+                        check = cells[1:]  # error-form column is not learner text
+                    for cell in check:
                         if len(cell) < 3:
                             continue
                         if cell in visible:

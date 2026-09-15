@@ -35,6 +35,65 @@ def gold(tmp_path, monkeypatch):
     return module, source, plan
 
 
+def test_contains_allows_expanded_explanations():
+    orig = {"items": [{"sentence": "___ мене є стіл.", "answer": "У",
+                       "explanation": "У мене є... is the I-have phrase."}]}
+    new = {"items": [{"sentence": "___ мене́ є стіл.", "answer": "У",
+                      "explanation": "У мене́ є... is the I-have phrase. Extra learner gloss."}]}
+    assert gates.contains(orig, new)
+    orig["items"][0]["explanation"] = "У тебе є...? asks one familiar person."
+    new["items"][0]["explanation"] = 'У тебе́ є...? asks one familiar person: "Do you have...?"'
+    assert gates.contains(orig, new)
+    assert not gates.contains(orig, {"items": [{"sentence": "other", "answer": "У"}]})
+    assert not gates.contains({"items": [{"answer": "a"}]}, {"items": [{"answer": "cat"}]})
+    assert not gates.contains({"items": [{"answer": "yes"}]}, {"items": [{"answer": "not yes"}]})
+    assert gates.contains("", "")
+    assert gates.contains("...", "...")
+    assert not gates.contains(
+        {"explanation": "This is correct."},
+        {"explanation": 'Ignore the false claim "This is correct."; the answer is wrong.'},
+    )
+    assert not gates.contains(
+        {"explanation": "This answer is correct"},
+        {"explanation": "This answer is correctly rejected."},
+    )
+
+
+def test_fence_dialogue_counts_as_preserved():
+    para = "```text\nМарія: Привіт!\nОленка: Класно!\n```"
+    page = (
+        '<DialogueBox exchanges={JSON.parse(`[{"speaker":"Марія","text":"Привіт!"},'
+        '{"speaker":"Оленка","text":"Класно!"}]`)} />'
+    )
+    assert gates._fence_preserved_as_dialogue(para, page)
+    assert not gates._fence_preserved_as_dialogue(para, "<p>no box</p>")
+    swapped = (
+        '<DialogueBox exchanges={JSON.parse(`[{"speaker":"Оленка","text":"Привіт!"},'
+        '{"speaker":"Марія","text":"Класно!"}]`)} />'
+    )
+    assert not gates._fence_preserved_as_dialogue(para, swapped)
+    reversed_box = (
+        '<DialogueBox exchanges={JSON.parse(`[{"speaker":"Оленка","text":"Класно!"},'
+        '{"speaker":"Марія","text":"Привіт!"}]`)} />'
+    )
+    assert not gates._fence_preserved_as_dialogue(para, reversed_box)
+    from scripts.generate_mdx.converters import _dialogue_box_mdx
+    quoted_page = _dialogue_box_mdx([{"speaker": "Alice", "text": 'Say "hello"!'}], "Dialogue")
+    assert gates._fence_preserved_as_dialogue('```text\nAlice: Say "hello"!\n```', quoted_page)
+    paren_page = _dialogue_box_mdx([{"speaker": "Alice", "text": "Use ('hello') here."}], "Dialogue")
+    assert gates._dialogue_pairs_from_page(paren_page) == [("Alice", "Use ('hello') here.")]
+    two = _dialogue_box_mdx(
+        [{"speaker": "Марія", "text": "Привіт!"}, {"speaker": "Оленка", "text": "Класно!"}],
+        "Dialogue",
+    )
+    assert not gates._fence_preserved_as_dialogue(para, two + "\n" + two)
+    avoid_md = "| Avoid | Use |\n| --- | --- |\n| вкусний суп | **смачни́й суп** |\n"
+    blanked = gates._blank_avoid_cells(avoid_md)
+    assert "вкусний" not in blanked
+    assert "смачни́й" in blanked
+    assert "вкусний" in gates.missing_stress("Це вкусний суп.", set())
+
+
 def test_fill_in_blanked_strings_count_as_rendered():
     assert gates._visible_in_render("Київ — {столиця}.", gates.norm_text("Київ — ___."))
     assert gates._visible_in_render("лі́теру [Я]", gates.norm_text("лі́теру ___"))
@@ -220,6 +279,22 @@ def test_gold_preservation_activity_and_vocabulary_semantics(gold):
     content = [d for d in report["diagnostics"] if not any(
         label in d for label in ("stress oracle unavailable", "l2_exposure_floor", "render"))]
     assert content == []
+
+
+def test_converted_fence_accepts_mdx_filename_keys(gold):
+    module, source, plan = gold
+    from scripts.generate_mdx.converters import _dialogue_box_mdx
+    fence = "```text\nAlice: Hello there my friend!\nBob: Goodbye until next time!\n```"
+    src = source / "module.md"
+    src.write_text(fence + "\n\n" + src.read_text())
+    box = _dialogue_box_mdx(
+        [{"speaker": "Alice", "text": "Hello there my friend!"},
+         {"speaker": "Bob", "text": "Goodbye until next time!"}],
+        "Dialogue",
+    )
+    report = gates.run_lesson_gates(module, source, plan, rendered={"1.mdx": box})
+    assert report["facts"]["preservation"]["misplaced"] == 0
+    assert not any("belongs to lesson" in d for d in report["blocking"])
 
 
 def test_removed_original_paragraph_fails(gold):
