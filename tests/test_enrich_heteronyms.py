@@ -677,6 +677,14 @@ def test_batch5_lemmas_not_duplicated_from_earlier_batches():
 
 def test_batch6_semantic_and_stress_distinctions():
     """Verify Batch 6 stress and semantic distinctions against СУМ-20 / ВТС / Grinchenko."""
+    # гукнути: гу́кнути (гуркнути, boom / crash / roar) vs гукну́ти (крикнути, shout / call)
+    guk = enrich_heteronyms.build_heteronyms_for_lemma("гукнути")
+    assert guk is not None and len(guk) == 2
+    assert guk[0]["headword"] == "гу́кнути"
+    assert "boom" in guk[0]["gloss"].lower() or "crash" in guk[0]["gloss"].lower() or "thud" in guk[0]["gloss"].lower()
+    assert guk[1]["headword"] == "гукну́ти"
+    assert "shout" in guk[1]["gloss"].lower() or "call" in guk[1]["gloss"].lower()
+
     # балувати: ба́лувати (pamper / spoil) vs балува́ти (feast / attend balls)
     bal = enrich_heteronyms.build_heteronyms_for_lemma("балувати")
     assert bal is not None and len(bal) == 2

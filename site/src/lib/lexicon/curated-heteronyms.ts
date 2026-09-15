@@ -15709,8 +15709,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "гукнути",
       "url_slug": "гукнути",
       "headword": "гу́кнути",
-      "short_label": "вигукнути, відгукнутися (розм.)",
-      "gloss": "to shout, echo, make an echoing sound, call out casually",
+      "short_label": "гуркнути, гримнути, лунко вибухнути",
+      "gloss": "to boom, crash, roar, thud, rumble (гуркнути; resound with a crash, thud, blast or loud horn)",
       "pos": "verb",
       "cefr": "B1",
       "heritage_status": {
@@ -15734,12 +15734,12 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "доконаний"
         }
       },
-      "distinction_note": "Не плутати з омографом «гукну́ти» (наголос на кінцевому -ну́ти: голосно покликати когось, закликати).",
+      "distinction_note": "Означає «гуркнути, видати гуркіт чи глухий звук» (Орфографічний словник: гу́кнути = гуркнути; наприклад, гукнули гармати). Не плутати з «гукну́ти» (наголос на кінці: крикнути, покликати когось).",
       "meaning": {
         "definitions": [
-          "Однократне до гу́кати; вигукнути, лунко зазвучати."
+          "(гуркнути) Однократне до гу́кати; видати глухий гуркіт, гримнути, лунко зазвучати (про гармати, поїзд, гаківниці)."
         ],
-        "source": "СУМ-20 (20522)"
+        "source": "СУМ-20 (20522) / Орфографічний словник"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -15753,8 +15753,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "гукнути",
       "url_slug": "гукнути",
       "headword": "гукну́ти",
-      "short_label": "покликати, закликати когось",
-      "gloss": "to call, shout out to summon someone, invite aloud",
+      "short_label": "крикнути, покликати когось голосним окриком",
+      "gloss": "to shout, cry out, call to summon someone (крикнути, покликати; shout aloud to call a person)",
       "pos": "verb",
       "cefr": "A2",
       "heritage_status": {
@@ -15778,12 +15778,12 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "доконаний"
         }
       },
-      "distinction_note": "Не плутати з омографом «гу́кнути» (наголос на першому складі: однокр. до гу́кати, лунко вигукнути).",
+      "distinction_note": "Означає «крикнути, покликати людину голосним окриком» (Орфографічний словник: гукну́ти = крикнути, покликати). Не плутати з «гу́кнути» (наголос на першому складі: гуркнути, лунко зазвучати).",
       "meaning": {
         "definitions": [
-          "Однократне до гука́ти; покликати, закликати когось."
+          "(крикнути, покликати) Однократне до гука́ти; голосно крикнути, озватися або покликати кого-небудь."
         ],
-        "source": "СУМ-20 (20523)"
+        "source": "СУМ-20 (20523) / Орфографічний словник"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
