@@ -35,6 +35,28 @@ def gold(tmp_path, monkeypatch):
     return module, source, plan
 
 
+def test_contains_allows_expanded_explanations():
+    orig = {"items": [{"sentence": "___ мене є стіл.", "answer": "У",
+                       "explanation": "У мене є... is the I-have phrase."}]}
+    new = {"items": [{"sentence": "___ мене́ є стіл.", "answer": "У",
+                      "explanation": "У мене́ є... is the I-have phrase. Extra learner gloss."}]}
+    assert gates.contains(orig, new)
+    orig["items"][0]["explanation"] = "У тебе є...? asks one familiar person."
+    new["items"][0]["explanation"] = 'У тебе́ є...? asks one familiar person: "Do you have...?"'
+    assert gates.contains(orig, new)
+    assert not gates.contains(orig, {"items": [{"sentence": "other", "answer": "У"}]})
+
+
+def test_fence_dialogue_counts_as_preserved():
+    para = "```text\nМарія: Привіт!\nОленка: Класно!\n```"
+    page = (
+        '<DialogueBox exchanges={JSON.parse(`[{"speaker":"Марія","text":"Привіт!"},'
+        '{"speaker":"Оленка","text":"Класно!"}]`)} />'
+    )
+    assert gates._fence_preserved_as_dialogue(para, page)
+    assert not gates._fence_preserved_as_dialogue(para, "<p>no box</p>")
+
+
 def test_fill_in_blanked_strings_count_as_rendered():
     assert gates._visible_in_render("Київ — {столиця}.", gates.norm_text("Київ — ___."))
     assert gates._visible_in_render("лі́теру [Я]", gates.norm_text("лі́теру ___"))

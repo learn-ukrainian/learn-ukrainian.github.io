@@ -130,6 +130,21 @@ def _spoken_in_hay(spoken: str, hay: str) -> bool:
     return bool(text) and text in hay
 
 
+def _fence_preserved_as_dialogue(para: str, page: str) -> bool:
+    """Assembler turns ```text speaker fences into DialogueBox; that is preservation."""
+    raw = para.strip()
+    if not raw.startswith("```") or not page or "<DialogueBox" not in page:
+        return False
+    body = re.sub(r"^```[^\n]*\n?", "", raw)
+    body = re.sub(r"\n?```\s*$", "", body)
+    turns = _dialogue_turns(body)
+    if not turns:
+        return False
+    hay = _dialogue_props_text(page)
+    return all(md_to_text(speaker) in hay and _spoken_in_hay(spoken, hay)
+               for speaker, spoken in turns)
+
+
 def _visible_in_render(value: str, literal_text: str) -> bool:
     """True if YAML text or its fill-in-blanked form is on the published page."""
     variants = [
@@ -196,7 +211,11 @@ def contains(orig, new) -> bool:
             return any(match(k + 1, used | {i}) for i in cand[k] if i not in used)
         return match(0, frozenset())
     if isinstance(orig, str):
-        return isinstance(new, str) and norm_md(orig) == norm_md(new)
+        if not isinstance(new, str):
+            return False
+        old, expanded = norm_md(orig), norm_md(new)
+        core = old.rstrip(".:;!? ")
+        return bool(core) and (old == expanded or old in expanded or core in expanded)
     return type(orig) is type(new) and orig == new
 
 
@@ -674,6 +693,9 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             counts = {m: hay[m].count(key) for m in hay}
             tot = sum(counts.values())
             if tot == 0:
+                page = (rendered or {}).get(str(n), "")
+                if _fence_preserved_as_dialogue(p, page):
+                    continue
                 lost.append(p)
             elif tot > 1:
                 dupd.append(p)
