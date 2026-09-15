@@ -108,8 +108,11 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
 - Stay in the **hot session** while the machine is warm. Do not cut the
   driver to a new epic mid-rollout just because #7995 exists.
 - #7995 is the A1 content **board**. #7994 stays open for machinery defects
-  found during rollout. Do not patch the pipeline from a content-only PR
-  unless the defect is blocking the module in hand.
+  found during rollout. A blocking machinery defect is always fixed in its
+  own **separate machinery PR** against #7994, never patched from the
+  content PR — see "Auto-finalize must not mix `scripts/` into curriculum
+  PRs" above. If the defect blocks the module in hand, the content PR waits
+  on that machinery PR as a dependency rather than absorbing the fix.
 - #7995 / older #7994 text that still says `a1-v2`, handmade Phase 0, or
   “leave `/a1/` untouched” is stale. Canonical `/a1/` is already the upgraded
   edition.
