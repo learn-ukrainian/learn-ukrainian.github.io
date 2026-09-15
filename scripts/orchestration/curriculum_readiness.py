@@ -78,6 +78,27 @@ _BIO_DEPTH_TYPES = frozenset(
     }
 )
 _INVENTORY_PREPARATION_REASON_CODES = frozenset({"PREPARATION_HOLD_ACTIVE", "PREPARATION_IDENTITY_DRIFT"})
+_BAKED_MACOS_CHECKOUT = "/Users/" + r"[^/\s]+" + "/projects/learn-ukrainian"
+_BAKED_LINUX_CHECKOUT = "/home/" + "ops/learn-ukrainian"
+_BAKED_HOST_CHECKOUT_SLASH_RE = re.compile(
+    rf"(?:{_BAKED_MACOS_CHECKOUT}|{_BAKED_LINUX_CHECKOUT})/"
+)
+_BAKED_HOST_CHECKOUT_BARE_RE = re.compile(
+    rf"(?:{_BAKED_MACOS_CHECKOUT}|{_BAKED_LINUX_CHECKOUT})(?![\w-])"
+)
+
+
+def neutralize_baked_host_checkout_paths(text: str) -> str:
+    """Replace baked host checkout prefixes with repo-relative forms."""
+    text = _BAKED_HOST_CHECKOUT_SLASH_RE.sub("", text)
+    return _BAKED_HOST_CHECKOUT_BARE_RE.sub(".", text)
+
+
+def is_host_path_only_text_change(base_text: str, head_text: str) -> bool:
+    """Return True when two texts differ only by baked host checkout paths."""
+    return neutralize_baked_host_checkout_paths(base_text) == neutralize_baked_host_checkout_paths(
+        head_text
+    )
 
 
 class ReadinessError(ValueError):

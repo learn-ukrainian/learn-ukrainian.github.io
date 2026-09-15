@@ -56,9 +56,6 @@ _PUBLIC_TREES = (
 _SKIP_NAME_PARTS = (
     "dialect_historical",
     "v5_dialect_protection",
-    # BIO dossier checklist edits fire the Contracts preparation-ready
-    # capsule gate. Leave those host-path leftovers out of this scrub.
-    "docs/research/bio/",
 )
 
 
@@ -81,6 +78,12 @@ def _iter_public_files() -> list[Path]:
                 continue
             files.append(candidate)
     return files
+
+
+def test_public_tree_scan_includes_bio_research_dossiers() -> None:
+    files = [str(path.relative_to(ROOT)) for path in _iter_public_files()]
+    bio = [name for name in files if name.startswith("docs/research/bio/")]
+    assert bio, "docs/research/bio/ must be scanned; do not skip that tree"
 
 
 def test_public_tree_has_no_baked_host_checkout_or_venv() -> None:
