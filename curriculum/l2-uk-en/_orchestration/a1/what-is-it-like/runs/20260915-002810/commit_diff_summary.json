@@ -1,0 +1,263 @@
+{
+  "run_id": "20260915-002810",
+  "parent_run_id": null,
+  "base_ref": "0623873596",
+  "head_ref": "0623873596",
+  "files_changed": 42,
+  "insertions": 5094,
+  "deletions": 4966,
+  "paths": [
+    {
+      "path": ".../a1/what-is-it-like/lesson-1/activities.yaml",
+      "status": "modified",
+      "insertions": 2,
+      "deletions": 1
+    },
+    {
+      "path": ".../a1/what-is-it-like/lesson-1/llm_qg.json",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../l2-uk-en/a1/what-is-it-like/lesson-1/module.md",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../a1/what-is-it-like/lesson-1/resources.yaml",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../lesson-1/stress_annotation.json",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../what-is-it-like/lesson-1/upgrade_writer.json",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../a1/what-is-it-like/lesson-1/vocabulary.yaml",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../what-is-it-like/lesson-1/writer_output.raw.md",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../a1/what-is-it-like/lesson-1/writer_prompt.md",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../a1/what-is-it-like/lesson-2/activities.yaml",
+      "status": "modified",
+      "insertions": 4,
+      "deletions": 3
+    },
+    {
+      "path": ".../a1/what-is-it-like/lesson-2/llm_qg.json",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../l2-uk-en/a1/what-is-it-like/lesson-2/module.md",
+      "status": "modified",
+      "insertions": 2,
+      "deletions": 1
+    },
+    {
+      "path": ".../a1/what-is-it-like/lesson-2/resources.yaml",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../lesson-2/stress_annotation.json",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../what-is-it-like/lesson-2/upgrade_writer.json",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../what-is-it-like/lesson-2/writer_output.raw.md",
+      "status": "modified",
+      "insertions": 3,
+      "deletions": 4
+    },
+    {
+      "path": ".../a1/what-is-it-like/lesson-2/writer_prompt.md",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../a1/what-is-it-like/lesson-3/activities.yaml",
+      "status": "modified",
+      "insertions": 5,
+      "deletions": 5
+    },
+    {
+      "path": ".../a1/what-is-it-like/lesson-3/llm_qg.json",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../l2-uk-en/a1/what-is-it-like/lesson-3/module.md",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 2
+    },
+    {
+      "path": ".../a1/what-is-it-like/lesson-3/resources.yaml",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../lesson-3/stress_annotation.json",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../what-is-it-like/lesson-3/upgrade_writer.json",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../a1/what-is-it-like/lesson-3/vocabulary.yaml",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../what-is-it-like/lesson-3/writer_output.raw.md",
+      "status": "modified",
+      "insertions": 5,
+      "deletions": 10
+    },
+    {
+      "path": ".../a1/what-is-it-like/lesson-3/writer_prompt.md",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../llm-qg-decolonization-prompt.md",
+      "status": "modified",
+      "insertions": 10,
+      "deletions": 10
+    },
+    {
+      "path": ".../llm-qg-decolonization-response.raw.md",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../a1/what-is-it-like/llm-qg-engagement-prompt.md",
+      "status": "modified",
+      "insertions": 10,
+      "deletions": 10
+    },
+    {
+      "path": ".../llm-qg-engagement-response.raw.md",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../what-is-it-like/llm-qg-naturalness-prompt.md",
+      "status": "modified",
+      "insertions": 10,
+      "deletions": 10
+    },
+    {
+      "path": ".../llm-qg-naturalness-response.raw.md",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../what-is-it-like/llm-qg-pedagogical-prompt.md",
+      "status": "modified",
+      "insertions": 10,
+      "deletions": 10
+    },
+    {
+      "path": ".../llm-qg-pedagogical-response.raw.md",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../a1/what-is-it-like/llm-qg-tone-prompt.md",
+      "status": "modified",
+      "insertions": 10,
+      "deletions": 10
+    },
+    {
+      "path": ".../a1/what-is-it-like/llm-qg-tone-response.raw.md",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": ".../a1/what-is-it-like/module_coherence.json",
+      "status": "modified",
+      "insertions": 4,
+      "deletions": 1
+    },
+    {
+      "path": ".../l2-uk-en/a1/what-is-it-like/writer_prompt.md",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    },
+    {
+      "path": "site/src/content/docs/a1/what-is-it-like/1.mdx",
+      "status": "modified",
+      "insertions": 2,
+      "deletions": 1
+    },
+    {
+      "path": "site/src/content/docs/a1/what-is-it-like/2.mdx",
+      "status": "modified",
+      "insertions": 2,
+      "deletions": 2
+    },
+    {
+      "path": "site/src/content/docs/a1/what-is-it-like/3.mdx",
+      "status": "modified",
+      "insertions": 2,
+      "deletions": 2
+    },
+    {
+      "path": "site/src/content/docs/a1/what-is-it-like/index.mdx",
+      "status": "modified",
+      "insertions": 1,
+      "deletions": 1
+    }
+  ]
+}

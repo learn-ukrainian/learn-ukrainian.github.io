@@ -1,9 +1,9 @@
 {
   "files": {
-    "module.md": 301,
-    "activities.yaml": 673,
+    "module.md": 395,
+    "activities.yaml": 706,
     "vocabulary.yaml": 38,
-    "resources.yaml": 13
+    "resources.yaml": 16
   },
   "passed": true
 }

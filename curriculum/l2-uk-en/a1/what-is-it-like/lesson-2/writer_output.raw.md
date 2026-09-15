@@ -1,5 +1,4 @@
-I have launched a search for the presentation pattern documentation and will proceed once the results are returned.
-````markdown file=module.md
+```markdown file=module.md
 # Прикметники
 
 У цьому уроці ви навчитеся впевнено описувати предмети за допомогою пар прикметників:
@@ -68,28 +67,53 @@ Use **але** when the second idea limits the first:
 
 <!-- INJECT_ACTIVITY: act-201 -->
 
-Послухайте розмову про вибір речей — listen to a conversation about choosing things:
+Послухайте розмову на книжковому ярмарку — listen to a conversation at the book fair:
 
-> **Тарас**: Дивись, яка гарна листівка!
-> **Софія**: Так, вона гарна і дешева.
-> **Тарас**: А цей атлас? Він дорогий?
-> **Софія**: Ні, атлас старий, але корисний.
-> **Тарас**: А ось новий плакат. Він великий чи маленький?
-> **Софія**: Він великий і світлий.
-> **Тарас**: Чудово, це дуже гарні речі!
+> **Тарас**: Дивись, яка гарна листівка! — Look, what a nice postcard!
+> **Софія**: Так, вона гарна і дешева. — Yes, it is nice and cheap.
+> **Тарас**: А цей атлас? Він дорогий? — And this atlas? Is it expensive?
+> **Софія**: Ні, атлас старий, але корисний. — No, the atlas is old, but useful.
+> **Тарас**: А ось новий плакат. Він великий чи маленький? — And here is a new poster. Is it big or small?
+> **Софія**: Він великий і світлий. — It is big and bright.
+> **Тарас**: А он та книга нова чи стара? — And is that book over there new or old?
+> **Софія**: Вона нова, але не дуже дорога. — It is new, but not very expensive.
 
-Розбір нових реплік — breakdown of lines:
+Розбір першого діалогу — breakdown of the first dialogue:
 
 | Українська | English support |
 | --- | --- |
 | **Дивись, яка гарна листівка!** | Look, what a nice postcard! |
 | **Так, вона гарна і дешева.** | Yes, it is nice and cheap. |
-| **А цей атлас? Він дорогий?** | And this atlas? Is it expensive? |
+| **А цей атлас? Він дорогий?** | And this atlas? What is it like? |
 | **Ні, атлас старий, але корисний.** | No, the atlas is old, but useful. |
-| **А ось новий плакат.** | And here is a new poster. |
-| **Він великий чи маленький?** | Is it big or small? |
+| **А ось новий плакат. Він великий чи маленький?** | And here is a new poster. Is it big or small? |
 | **Він великий і світлий.** | It is big and bright. |
-| **Чудово, це дуже гарні речі!** | Great, these are very nice things! |
+| **А он та книга нова чи стара?** | And is that book over there new or old? |
+| **Вона нова, але не дуже дорога.** | It is new, but not very expensive. |
+
+Послухайте другу розмову про речі для кімнати — listen to a second conversation about things for the room:
+
+> **Тарас**: Який у тебе стіл? — What is your table like?
+> **Софія**: Мій стіл новий і чистий. — My table is new and clean.
+> **Тарас**: А стілець теж новий? — And is the chair new too?
+> **Софія**: Ні, стіл новий, а стілець старий. — No, the table is new, and the chair is old.
+> **Тарас**: А вікно у кімнаті чисте? — And is the window in the room clean?
+> **Софія**: Так, вікно велике і чисте. — Yes, the window is big and clean.
+> **Тарас**: А це старе дзеркало? — And is this an old mirror?
+> **Софія**: Так, дзеркало старе, але зручне. — Yes, the mirror is old, but convenient.
+
+Розбір другого діалогу — breakdown of the second dialogue:
+
+| Українська | English support |
+| --- | --- |
+| **Який у тебе стіл?** | What is your table like? |
+| **Мій стіл новий і чистий.** | My table is new and clean. |
+| **А стілець теж новий?** | And is the chair new too? |
+| **Ні, стіл новий, а стілець старий.** | No, the table is new, and the chair is old. |
+| **А вікно у кімнаті чисте?** | And is the window in the room clean? |
+| **Так, вікно велике і чисте.** | Yes, the window is big and clean. |
+| **А це старе дзеркало?** | And is this an old mirror? |
+| **Так, дзеркало старе, але зручне.** | Yes, the mirror is old, but convenient. |
 
 <!-- INJECT_ACTIVITY: act-204 -->
 
@@ -157,7 +181,7 @@ One more sentence-frame trap: present-tense Ukrainian often has no visible
 - **Українські форми замість кальок**: говоріть **смачний**, **правильний**, **розумний** та будуйте речення без зайвого дієслова **є** у теперішньому часі.
 
 У наступному уроці ми підіб'ємо підсумок усього модуля та закріпимо всі моделі опису предметів.
-````
+```
 
 ```json file=activities.yaml
 {
@@ -319,7 +343,7 @@ One more sentence-frame trap: present-tense Ukrainian often has no visible
               "correct": false
             }
           ],
-          "explanation": "Стіл — чоловічий рід, тому новий стіл."
+          "explanation": "Стіл — іменник чоловічого роду, тому вживаємо новий."
         },
         {
           "prompt": "кімната (світлий / світла / світле)",
@@ -337,7 +361,7 @@ One more sentence-frame trap: present-tense Ukrainian often has no visible
               "correct": false
             }
           ],
-          "explanation": "Кімната — жіночий рід, тому світла кімната."
+          "explanation": "Кімната — жіночий рід, тому закінчення -а: світла."
         },
         {
           "prompt": "вікно (чистий / чиста / чисте)",
@@ -355,61 +379,61 @@ One more sentence-frame trap: present-tense Ukrainian often has no visible
               "correct": false
             }
           ],
-          "explanation": "Вікно — середній рід, тому чисте вікно."
+          "explanation": "Вікно — середній рід, тому вживаємо чисте."
         },
         {
-          "prompt": "листівка (гарний / гарна / гарне)",
+          "prompt": "листівка (дешевий / дешева / дешеве)",
           "options": [
             {
-              "text": "гарна листівка",
+              "text": "дешева листівка",
               "correct": true
             },
             {
-              "text": "гарний листівка",
+              "text": "дешевий листівка",
               "correct": false
             },
             {
-              "text": "гарне листівка",
+              "text": "дешеве листівка",
               "correct": false
             }
           ],
-          "explanation": "Листівка — жіночий рід, тому гарна листівка."
+          "explanation": "Листівка — жіночий рід, тому вживаємо дешева."
         },
         {
-          "prompt": "плакат (дорогий / дорога / дороге)",
+          "prompt": "телефон (дорогий / дорога / дороге)",
           "options": [
             {
-              "text": "дорогий плакат",
+              "text": "дорогий телефон",
               "correct": true
             },
             {
-              "text": "дорога плакат",
+              "text": "дорога телефон",
               "correct": false
             },
             {
-              "text": "дороге плакат",
+              "text": "дороге телефон",
               "correct": false
             }
           ],
-          "explanation": "Плакат — чоловічий рід, тому дорогий плакат."
+          "explanation": "Телефон — чоловічий рід, тому вживаємо дорогий."
         },
         {
-          "prompt": "ліжко (зручний / зручна / зручне)",
+          "prompt": "дзеркало (брудний / брудна / брудне)",
           "options": [
             {
-              "text": "зручне ліжко",
+              "text": "брудне дзеркало",
               "correct": true
             },
             {
-              "text": "зручний ліжко",
+              "text": "брудний дзеркало",
               "correct": false
             },
             {
-              "text": "зручна ліжко",
+              "text": "брудна дзеркало",
               "correct": false
             }
           ],
-          "explanation": "Ліжко — середній рід, тому зручне ліжко."
+          "explanation": "Дзеркало — середній рід, тому вживаємо брудне."
         }
       ]
     },
@@ -417,37 +441,37 @@ One more sentence-frame trap: present-tense Ukrainian often has no visible
       "id": "act-203",
       "type": "true-false",
       "title": "Правда чи ні?",
-      "instruction": "Визначте, чи правильне твердження про опис предметів.",
-      "statements": [
+      "instruction": "Визначте, чи правильне твердження про ознаки предметів.",
+      "items": [
         {
-          "statement": "В українській мові прикметник узгоджується з іменником у роді.",
+          "statement": "Антонім до слова «великий» — це «маленький».",
           "answer": true,
-          "explanation": "Прикметник завжди має той самий рід, що й іменник."
+          "explanation": "Великий і маленький — це антонімічна пара за розміром."
         },
         {
-          "statement": "Для поєднання двох ознак використовують сполучник і.",
-          "answer": true,
-          "explanation": "Сполучник і поєднує рівнозначні ознаки: новий і чистий."
-        },
-        {
-          "statement": "Нормативна форма для позначення смаку — це вкусний суп.",
+          "statement": "Антонім до слова «новий» — це «чистий».",
           "answer": false,
-          "explanation": "Нормативна форма — смачний суп. Слово вкусний є калькою."
+          "explanation": "Антонім до слова новий — це старий."
         },
         {
-          "statement": "Для протиставлення двох предметів підходить сполучник а.",
-          "answer": true,
-          "explanation": "Стіл новий, а стілець старий."
-        },
-        {
-          "statement": "У теперішньому часі обов'язково треба писати: Він є добрий студент.",
+          "statement": "Сполучник «а» поєднує однакові ознаки, а не протиставляє речі.",
           "answer": false,
-          "explanation": "В українській мові дієслово є зазвичай опускається: Він добрий студент."
+          "explanation": "Сполучник а використовується саме для протиставлення."
         },
         {
-          "statement": "Слово правильна відповідь — це нормативне українське словосполучення.",
+          "statement": "У реченні «Стіл новий і чистий» сполучник «і» поєднує дві ознаки стола.",
           "answer": true,
-          "explanation": "Правильна відповідь — це правильний вислів замість кальки вірна відповідь."
+          "explanation": "Сполучник і поєднує дві рівнозначні характеристики одного предмета."
+        },
+        {
+          "statement": "Українською мовою природно сказати: «Цей суп дуже смачний».",
+          "answer": true,
+          "explanation": "Смачний — це нормативне українське слово замість кальки вкусний."
+        },
+        {
+          "statement": "В українській мові обов'язково казати: «Він є добрий студент».",
+          "answer": false,
+          "explanation": "У теперішньому часі дієслово є зазвичай опускається: Він добрий студент."
         }
       ]
     }
@@ -620,31 +644,31 @@ One more sentence-frame trap: present-tense Ukrainian often has no visible
       "id": "act-w201",
       "type": "match-up",
       "title": "З'єднай антоніми",
-      "instruction": "З'єднайте прикметники з їхніми протилежностями.",
+      "instruction": "З'єднайте прикметники з протилежним значенням.",
       "pairs": [
         {
-          "left": "маленький",
-          "right": "великий"
+          "left": "новий",
+          "right": "старий"
         },
         {
-          "left": "старий",
-          "right": "новий"
+          "left": "великий",
+          "right": "маленький"
         },
         {
-          "left": "поганий",
-          "right": "гарний"
+          "left": "чистий",
+          "right": "брудний"
         },
         {
-          "left": "брудний",
-          "right": "чистий"
+          "left": "гарний",
+          "right": "поганий"
         },
         {
-          "left": "дешевий",
-          "right": "дорогий"
+          "left": "дорогий",
+          "right": "дешевий"
         },
         {
-          "left": "темний",
-          "right": "світлий"
+          "left": "світлий",
+          "right": "темний"
         }
       ]
     },
@@ -652,18 +676,8 @@ One more sentence-frame trap: present-tense Ukrainian often has no visible
       "id": "act-w202",
       "type": "fill-in",
       "title": "Встав правильний сполучник",
-      "instruction": "Доповніть речення сполучником і, а або але.",
+      "instruction": "Вставте і, а або але відповідно до змісту речення.",
       "items": [
-        {
-          "sentence": "Стіл новий, ___ стілець старий.",
-          "answer": "а",
-          "options": [
-            "а",
-            "і",
-            "але"
-          ],
-          "explanation": "Контраст між двома предметами передається сполучником а."
-        },
         {
           "sentence": "Кімната маленька, ___ гарна.",
           "answer": "але",
@@ -672,47 +686,57 @@ One more sentence-frame trap: present-tense Ukrainian often has no visible
             "і",
             "а"
           ],
-          "explanation": "Сполучник але вказує на обмеження: кімната хоч і маленька, проте гарна."
+          "explanation": "Сполучник але вказує на обмеження: кімната маленька, проте гарна."
         },
         {
-          "sentence": "Вікно велике ___ чисте.",
-          "answer": "і",
-          "options": [
-            "і",
-            "а",
-            "але"
-          ],
-          "explanation": "Сполучник і поєднує дві позитивні характеристики."
-        },
-        {
-          "sentence": "Книга дорога, ___ листівка дешева.",
+          "sentence": "Стіл новий, ___ стілець старий.",
           "answer": "а",
           "options": [
             "а",
             "і",
             "але"
           ],
-          "explanation": "Протиставлення ціни книги та листівки."
+          "explanation": "Сполучник а протиставляє два предмети."
         },
         {
-          "sentence": "Плакат великий, ___ дешевий.",
-          "answer": "але",
-          "options": [
-            "але",
-            "а",
-            "і"
-          ],
-          "explanation": "Сполучник але підкреслює контраст між розміром та низькою ціною."
-        },
-        {
-          "sentence": "Кімната велика ___ світла.",
+          "sentence": "Вікно чисте ___ велике.",
           "answer": "і",
           "options": [
             "і",
             "а",
             "але"
           ],
-          "explanation": "Поєднання двох рівнозначних ознак кімнати."
+          "explanation": "Сполучник і поєднує дві ознаки вікна."
+        },
+        {
+          "sentence": "Книга нова ___ цікава.",
+          "answer": "і",
+          "options": [
+            "і",
+            "а",
+            "але"
+          ],
+          "explanation": "Сполучник і поєднує рівнозначні ознаки книги."
+        },
+        {
+          "sentence": "Плакат великий, ___ дешевий.",
+          "answer": "але",
+          "options": [
+            "але",
+            "і",
+            "а"
+          ],
+          "explanation": "Але передає контраст між великим розміром і низькою ціною."
+        },
+        {
+          "sentence": "Атлас дорогий, ___ листівка дешева.",
+          "answer": "а",
+          "options": [
+            "а",
+            "і",
+            "але"
+          ],
+          "explanation": "Сполучник а протиставляє атлас і листівку."
         }
       ]
     },
@@ -720,231 +744,46 @@ One more sentence-frame trap: present-tense Ukrainian often has no visible
       "id": "act-w203",
       "type": "quiz",
       "title": "Обери точний опис",
-      "instruction": "Оберіть правильну форму прикметника для речення.",
+      "instruction": "Виберіть граматично правильне речення без зайвих слів.",
       "items": [
         {
-          "prompt": "Це ___ стіл.",
+          "prompt": "The room is bright.",
           "options": [
             {
-              "text": "чистий",
+              "text": "Кімната світла.",
               "correct": true
             },
             {
-              "text": "чиста",
+              "text": "Кімната є світла.",
               "correct": false
             },
             {
-              "text": "чисте",
+              "text": "Кімната світлий.",
               "correct": false
             }
           ],
-          "explanation": "Стіл — чоловічий рід, закінчення -ий."
+          "explanation": "У теперішньому часі дієслово є опускається, а прикметник узгоджується в роді: світла."
         },
         {
-          "prompt": "Це ___ кімната.",
+          "prompt": "The chair is old.",
           "options": [
             {
-              "text": "світла",
+              "text": "Стілець старий.",
               "correct": true
             },
             {
-              "text": "світлий",
+              "text": "Стілець стара.",
               "correct": false
             },
             {
-              "text": "світле",
+              "text": "Стілець є старий.",
               "correct": false
             }
           ],
-          "explanation": "Кімната — жіночий рід, закінчення -а."
+          "explanation": "Стілець — чоловічий рід: стілець старий."
         },
         {
-          "prompt": "Це ___ вікно.",
-          "options": [
-            {
-              "text": "чисте",
-              "correct": true
-            },
-            {
-              "text": "чистий",
-              "correct": false
-            },
-            {
-              "text": "чиста",
-              "correct": false
-            }
-          ],
-          "explanation": "Вікно — середній рід, закінчення -е."
-        },
-        {
-          "prompt": "Це ___ листівка.",
-          "options": [
-            {
-              "text": "дешева",
-              "correct": true
-            },
-            {
-              "text": "дешевий",
-              "correct": false
-            },
-            {
-              "text": "дешеве",
-              "correct": false
-            }
-          ],
-          "explanation": "Листівка — жіночий рід, закінчення -а."
-        },
-        {
-          "prompt": "Це ___ плакат.",
-          "options": [
-            {
-              "text": "дорогий",
-              "correct": true
-            },
-            {
-              "text": "дорога",
-              "correct": false
-            },
-            {
-              "text": "дороге",
-              "correct": false
-            }
-          ],
-          "explanation": "Плакат — чоловічий рід, закінчення -ий."
-        },
-        {
-          "prompt": "Це ___ речі.",
-          "options": [
-            {
-              "text": "гарні",
-              "correct": true
-            },
-            {
-              "text": "гарний",
-              "correct": false
-            },
-            {
-              "text": "гарна",
-              "correct": false
-            }
-          ],
-          "explanation": "Речі — множина, закінчення -і."
-        }
-      ]
-    },
-    {
-      "id": "act-w204",
-      "type": "unjumble",
-      "title": "Склади речення",
-      "instruction": "Розташуйте слова у правильному порядку, щоб утворити речення.",
-      "items": [
-        {
-          "words": [
-            "Стіл",
-            "новий",
-            "і",
-            "чистий."
-          ],
-          "answer": "Стіл новий і чистий.",
-          "explanation": "Стіл новий і чистий — послідовний опис предмета."
-        },
-        {
-          "words": [
-            "Кімната",
-            "маленька,",
-            "але",
-            "світла."
-          ],
-          "answer": "Кімната маленька, але світла.",
-          "explanation": "Сполучник але вживається з комою."
-        },
-        {
-          "words": [
-            "Вікно",
-            "велике",
-            "і",
-            "чисте."
-          ],
-          "answer": "Вікно велике і чисте.",
-          "explanation": "Поєднання ознак вікна через сполучник і."
-        },
-        {
-          "words": [
-            "Книга",
-            "дорога,",
-            "а",
-            "листівка",
-            "дешева."
-          ],
-          "answer": "Книга дорога, а листівка дешева.",
-          "explanation": "Протиставлення книги та листівки зі сполучником а."
-        },
-        {
-          "words": [
-            "Плакат",
-            "великий,",
-            "але",
-            "дешевий."
-          ],
-          "answer": "Плакат великий, але дешевий.",
-          "explanation": "Протиставлення двох ознак плаката через але."
-        },
-        {
-          "words": [
-            "Це",
-            "моя",
-            "нова",
-            "кімната."
-          ],
-          "answer": "Це моя нова кімната.",
-          "explanation": "Порядок слів у простому описовому реченні."
-        }
-      ]
-    },
-    {
-      "id": "act-w205",
-      "type": "translate",
-      "title": "Бонус: переклад українською",
-      "instruction": "Оберіть правильний український переклад для англійського речення.",
-      "items": [
-        {
-          "source": "The room is big and bright.",
-          "options": [
-            {
-              "text": "Кімната велика і світла.",
-              "correct": true
-            },
-            {
-              "text": "Кімната великий і світлий.",
-              "correct": false
-            },
-            {
-              "text": "Кімната велике і світле.",
-              "correct": false
-            }
-          ],
-          "explanation": "Кімната — жіночий рід (велика, світла)."
-        },
-        {
-          "source": "The table is new, but the bed is old.",
-          "options": [
-            {
-              "text": "Стіл новий, але ліжко старе.",
-              "correct": true
-            },
-            {
-              "text": "Стіл нова, але ліжко стара.",
-              "correct": false
-            },
-            {
-              "text": "Стіл нове, але ліжко старий.",
-              "correct": false
-            }
-          ],
-          "explanation": "Стіл — чоловічий рід (новий), а ліжко — середній рід (старе)."
-        },
-        {
-          "source": "The postcard is cheap.",
+          "prompt": "The postcard is cheap.",
           "options": [
             {
               "text": "Листівка дешева.",
@@ -959,61 +798,243 @@ One more sentence-frame trap: present-tense Ukrainian often has no visible
               "correct": false
             }
           ],
-          "explanation": "Листівка — жіночий рід (дешева)."
+          "explanation": "Листівка — жіночий рід: дешева."
         },
         {
-          "source": "The window is clean.",
+          "prompt": "The phone is expensive.",
           "options": [
             {
-              "text": "Вікно чисте.",
+              "text": "Телефон дорогий.",
               "correct": true
             },
             {
-              "text": "Вікно чистий.",
+              "text": "Телефон дорога.",
               "correct": false
             },
             {
-              "text": "Вікно чиста.",
+              "text": "Телефон дороге.",
               "correct": false
             }
           ],
-          "explanation": "Вікно — середній рід (чисте)."
+          "explanation": "Телефон — чоловічий рід: дорогий."
         },
         {
-          "source": "A dirty mirror",
+          "prompt": "The mirror is clean.",
           "options": [
             {
-              "text": "брудне дзеркало",
+              "text": "Дзеркало чисте.",
               "correct": true
             },
             {
-              "text": "брудний дзеркало",
+              "text": "Дзеркало чистий.",
               "correct": false
             },
             {
-              "text": "брудна дзеркало",
+              "text": "Дзеркало чиста.",
               "correct": false
             }
           ],
-          "explanation": "Дзеркало — середній рід (брудне)."
+          "explanation": "Дзеркало — середній рід: чисте."
         },
         {
-          "source": "An expensive phone",
+          "prompt": "The poster is big.",
           "options": [
             {
-              "text": "дорогий телефон",
+              "text": "Плакат великий.",
               "correct": true
             },
             {
-              "text": "дорога телефон",
+              "text": "Плакат велика.",
               "correct": false
             },
             {
-              "text": "дороге телефон",
+              "text": "Плакат велике.",
               "correct": false
             }
           ],
-          "explanation": "Телефон — чоловічий рід (дорогий)."
+          "explanation": "Плакат — чоловічий рід: великий."
+        }
+      ]
+    },
+    {
+      "id": "act-w204",
+      "type": "unjumble",
+      "title": "Склади речення",
+      "instruction": "Розташуйте слова у правильному порядку, щоб утворити речення.",
+      "words": [
+        {
+          "words": [
+            "Моя",
+            "кімната",
+            "велика",
+            "і",
+            "світла"
+          ],
+          "answer": "Моя кімната велика і світла."
+        },
+        {
+          "words": [
+            "Стіл",
+            "новий",
+            "а",
+            "стілець",
+            "старий"
+          ],
+          "answer": "Стіл новий, а стілець старий."
+        },
+        {
+          "words": [
+            "Вікно",
+            "велике",
+            "і",
+            "чисте"
+          ],
+          "answer": "Вікно велике і чисте."
+        },
+        {
+          "words": [
+            "Атлас",
+            "старий",
+            "але",
+            "корисний"
+          ],
+          "answer": "Атлас старий, але корисний."
+        },
+        {
+          "words": [
+            "Ця",
+            "листівка",
+            "маленька",
+            "але",
+            "гарна"
+          ],
+          "answer": "Ця листівка маленька, але гарна."
+        },
+        {
+          "words": [
+            "Новий",
+            "плакат",
+            "великий",
+            "і",
+            "дешевий"
+          ],
+          "answer": "Новий плакат великий і дешевий."
+        }
+      ]
+    },
+    {
+      "id": "act-w205",
+      "type": "translate",
+      "title": "Переклад українською",
+      "instruction": "Оберіть правильний український переклад для речення англійською мовою.",
+      "items": [
+        {
+          "source": "The room is small but nice.",
+          "options": [
+            {
+              "text": "Кімната маленька, але гарна.",
+              "correct": true
+            },
+            {
+              "text": "Кімната маленький, але гарний.",
+              "correct": false
+            },
+            {
+              "text": "Кімната маленьке, але гарне.",
+              "correct": false
+            }
+          ],
+          "explanation": "Кімната — жіночий рід: маленька, але гарна."
+        },
+        {
+          "source": "The table is new and clean.",
+          "options": [
+            {
+              "text": "Стіл новий і чистий.",
+              "correct": true
+            },
+            {
+              "text": "Стіл нова і чиста.",
+              "correct": false
+            },
+            {
+              "text": "Стіл нове і чисте.",
+              "correct": false
+            }
+          ],
+          "explanation": "Стіл — чоловічий рід: новий і чистий."
+        },
+        {
+          "source": "The window is big.",
+          "options": [
+            {
+              "text": "Вікно велике.",
+              "correct": true
+            },
+            {
+              "text": "Вікно великий.",
+              "correct": false
+            },
+            {
+              "text": "Вікно велика.",
+              "correct": false
+            }
+          ],
+          "explanation": "Вікно — середній рід: велике."
+        },
+        {
+          "source": "A cheap postcard",
+          "options": [
+            {
+              "text": "дешева листівка",
+              "correct": true
+            },
+            {
+              "text": "дешевий листівка",
+              "correct": false
+            },
+            {
+              "text": "дешеве листівка",
+              "correct": false
+            }
+          ],
+          "explanation": "Листівка — жіночий рід: дешева листівка."
+        },
+        {
+          "source": "The phone is expensive, but the poster is cheap.",
+          "options": [
+            {
+              "text": "Телефон дорогий, а плакат дешевий.",
+              "correct": true
+            },
+            {
+              "text": "Телефон дорога, а плакат дешева.",
+              "correct": false
+            },
+            {
+              "text": "Телефон дороге, а плакат дешеве.",
+              "correct": false
+            }
+          ],
+          "explanation": "Телефон і плакат — іменники чоловічого роду."
+        },
+        {
+          "source": "The mirror is dirty.",
+          "options": [
+            {
+              "text": "Дзеркало брудне.",
+              "correct": true
+            },
+            {
+              "text": "Дзеркало брудний.",
+              "correct": false
+            },
+            {
+              "text": "Дзеркало брудна.",
+              "correct": false
+            }
+          ],
+          "explanation": "Дзеркало — середній рід: брудне."
         }
       ]
     }
@@ -1108,7 +1129,7 @@ One more sentence-frame trap: present-tense Ukrainian often has no visible
 [
   {
     "title": "Вашуленко 3 клас — Опис кімнати та прикметники",
-    "source": "Вашуленко М. С. Українська мова та читання: підруч. для 3 кл. — с. 128-131",
+    "source": "Вашуленко М. С. Українська мова та читання: підручник для 3 класу — с. 128-131",
     "notes": "Вправи на опис кімнати та узгодження прикметників з іменниками."
   },
   {

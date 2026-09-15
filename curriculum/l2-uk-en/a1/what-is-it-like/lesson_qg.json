@@ -1,0 +1,604 @@
+{
+  "passed": false,
+  "diagnostics": [
+    "lesson 2: 8 multi-syllable words without stress mark (not in unverified_stress): ['вкусний', 'жолтий', 'ленивий', \"обов'язково\", 'роді', 'умний', 'черний', \"ім'я\"]",
+    "lesson 3: 1 multi-syllable words without stress mark (not in unverified_stress): ['Оглядово']",
+    "lesson 1: render lacks lesson paragraph: 'Софія: Дивись, це нова книга. Тарас: Яка вона? Софія: Вона цікава і гарна. Тарас: А атлас? Який він?'",
+    "lesson 1: render lacks lesson paragraph: 'Українська English support Софія: Дивись, це нова книга. Sofia: Look, this is a new book. Тарас: Яка'",
+    "lesson 2: render lacks lesson paragraph: 'Марія: Це моя кімната. Оленка: Яка вона? Марія: Вона маленька, але світла. Оленка: А стіл? Марія: Ст'",
+    "lesson 2: render lacks lesson paragraph: 'Українська English support Марія: Це моя кімната. Mariia: This is my room. Оленка: Яка вона? Olenka:'",
+    "lesson 2: render lacks lesson paragraph: 'Avoid Use вкусний суп смачний суп жолтий олівець жовтий олівець черний кіт чорний кіт красний прапор'",
+    "lesson 3: long_uk_ceiling failed: {'passed': False, 'required': {'max_unsupported_uk_words': 68, 'support_proximity': 8}, 'observed': {'offending_runs': 2}, 'reason': 'long_uk_without_gloss', 'offending_runs': ['Тара с Софі є подиви сь я ка га рна листі вка Софі я Так листі вка ду же га рна і чи ста Тара с А ця нова кни га Я ка во на Софі я Це ціка ва ...', 'Софі я Плака т вели кий і деше вий Тара с А старе фо то бі ля кни ги Яке воно Софі я Воно мале ньке але га рне і чи сте Тара с А твоя стара ла мпа Я ...'], 'policy': 'a1-m07-14'}",
+    "lesson 3: render lacks lesson paragraph: 'Це моя кімната. Вона маленька, але гарна. У мене є новий стіл і стара лампа.'",
+    "lesson 3: render lacks lesson paragraph: 'Українська English support Це моя кімната. This is my room. Вона маленька, але гарна. It is small, b'"
+  ],
+  "blocking": [
+    "lesson 2: 8 multi-syllable words without stress mark (not in unverified_stress): ['вкусний', 'жолтий', 'ленивий', \"обов'язково\", 'роді', 'умний', 'черний', \"ім'я\"]",
+    "lesson 3: 1 multi-syllable words without stress mark (not in unverified_stress): ['Оглядово']",
+    "lesson 1: render lacks lesson paragraph: 'Софія: Дивись, це нова книга. Тарас: Яка вона? Софія: Вона цікава і гарна. Тарас: А атлас? Який він?'",
+    "lesson 1: render lacks lesson paragraph: 'Українська English support Софія: Дивись, це нова книга. Sofia: Look, this is a new book. Тарас: Яка'",
+    "lesson 2: render lacks lesson paragraph: 'Марія: Це моя кімната. Оленка: Яка вона? Марія: Вона маленька, але світла. Оленка: А стіл? Марія: Ст'",
+    "lesson 2: render lacks lesson paragraph: 'Українська English support Марія: Це моя кімната. Mariia: This is my room. Оленка: Яка вона? Olenka:'",
+    "lesson 2: render lacks lesson paragraph: 'Avoid Use вкусний суп смачний суп жолтий олівець жовтий олівець черний кіт чорний кіт красний прапор'",
+    "lesson 3: long_uk_ceiling failed: {'passed': False, 'required': {'max_unsupported_uk_words': 68, 'support_proximity': 8}, 'observed': {'offending_runs': 2}, 'reason': 'long_uk_without_gloss', 'offending_runs': ['Тара с Софі є подиви сь я ка га рна листі вка Софі я Так листі вка ду же га рна і чи ста Тара с А ця нова кни га Я ка во на Софі я Це ціка ва ...', 'Софі я Плака т вели кий і деше вий Тара с А старе фо то бі ля кни ги Яке воно Софі я Воно мале ньке але га рне і чи сте Тара с А твоя стара ла мпа Я ...'], 'policy': 'a1-m07-14'}",
+    "lesson 3: render lacks lesson paragraph: 'Це моя кімната. Вона маленька, але гарна. У мене є новий стіл і стара лампа.'",
+    "lesson 3: render lacks lesson paragraph: 'Українська English support Це моя кімната. This is my room. Вона маленька, але гарна. It is small, b'"
+  ],
+  "warnings": [],
+  "facts": {
+    "baseline": {
+      "commit": null,
+      "prose_tokens": 1528,
+      "long_paragraphs": 41,
+      "activities": {
+        "inline": 4,
+        "workbook": 6
+      },
+      "vocab": 39
+    },
+    "lessons": {
+      "1": {
+        "prose_tokens": 1225,
+        "inline": 5,
+        "workbook": 7,
+        "vocab": 14,
+        "lemma_list": [
+          "який",
+          "яка",
+          "яке",
+          "які",
+          "великий",
+          "велика",
+          "велике",
+          "новий",
+          "нова",
+          "нове",
+          "старий",
+          "старе",
+          "атлас",
+          "плакат"
+        ],
+        "resources": 3,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 62
+      },
+      "2": {
+        "prose_tokens": 1346,
+        "inline": 5,
+        "workbook": 7,
+        "vocab": 13,
+        "lemma_list": [
+          "маленький",
+          "гарний",
+          "поганий",
+          "чистий",
+          "брудний",
+          "дорогий",
+          "дешевий",
+          "світлий",
+          "темний",
+          "а",
+          "але",
+          "і",
+          "листівка"
+        ],
+        "resources": 3,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 64
+      },
+      "3": {
+        "prose_tokens": 1093,
+        "inline": 5,
+        "workbook": 7,
+        "vocab": 12,
+        "lemma_list": [
+          "стара",
+          "гарна",
+          "гарне",
+          "чиста",
+          "чисте",
+          "цікавий",
+          "цікава",
+          "цікаве",
+          "смачний",
+          "правильний",
+          "розумний",
+          "лінивий"
+        ],
+        "resources": 4,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 60
+      }
+    },
+    "total_prose_tokens": 3664,
+    "preservation": {
+      "long_paragraphs": 41,
+      "lost": 0,
+      "duplicated": 0,
+      "misplaced": 0
+    },
+    "immersion": {
+      "1": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 54.32,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m07-14"
+        },
+        "l2_exposure_floor": {
+          "passed": true,
+          "required": {
+            "uk_dialogue_lines": 13,
+            "vocab_entries": 0,
+            "uk_example_sentences": 6,
+            "uk_tab3_activities": 3
+          },
+          "observed": {
+            "uk_dialogue_lines": 14,
+            "vocab_entries": 30,
+            "uk_example_sentences": 64,
+            "uk_tab3_activities": 5
+          },
+          "reason": null,
+          "policy": "a1-m07-14"
+        },
+        "long_uk_ceiling": {
+          "passed": true,
+          "required": {
+            "max_unsupported_uk_words": 68,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 0
+          },
+          "reason": null,
+          "offending_runs": [],
+          "policy": "a1-m07-14"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m07-14"
+        }
+      },
+      "2": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 62.68,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m07-14"
+        },
+        "l2_exposure_floor": {
+          "passed": true,
+          "required": {
+            "uk_dialogue_lines": 13,
+            "vocab_entries": 0,
+            "uk_example_sentences": 6,
+            "uk_tab3_activities": 3
+          },
+          "observed": {
+            "uk_dialogue_lines": 16,
+            "vocab_entries": 35,
+            "uk_example_sentences": 80,
+            "uk_tab3_activities": 5
+          },
+          "reason": null,
+          "policy": "a1-m07-14"
+        },
+        "long_uk_ceiling": {
+          "passed": true,
+          "required": {
+            "max_unsupported_uk_words": 68,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 0
+          },
+          "reason": null,
+          "offending_runs": [],
+          "policy": "a1-m07-14"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m07-14"
+        }
+      },
+      "3": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 60.35,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m07-14"
+        },
+        "l2_exposure_floor": {
+          "passed": true,
+          "required": {
+            "uk_dialogue_lines": 13,
+            "vocab_entries": 0,
+            "uk_example_sentences": 6,
+            "uk_tab3_activities": 3
+          },
+          "observed": {
+            "uk_dialogue_lines": 14,
+            "vocab_entries": 20,
+            "uk_example_sentences": 57,
+            "uk_tab3_activities": 5
+          },
+          "reason": null,
+          "policy": "a1-m07-14"
+        },
+        "long_uk_ceiling": {
+          "passed": false,
+          "required": {
+            "max_unsupported_uk_words": 68,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 2
+          },
+          "reason": "long_uk_without_gloss",
+          "offending_runs": [
+            "Тара с Софі є подиви сь я ка га рна листі вка Софі я Так листі вка ду же га рна і чи ста Тара с А ця нова кни га Я ка во на Софі я Це ціка ва ...",
+            "Софі я Плака т вели кий і деше вий Тара с А старе фо то бі ля кни ги Яке воно Софі я Воно мале ньке але га рне і чи сте Тара с А твоя стара ла мпа Я ..."
+          ],
+          "policy": "a1-m07-14"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m07-14"
+        }
+      }
+    }
+  },
+  "mode": "upgrade",
+  "gates": {
+    "passed": false,
+    "lesson_split": {
+      "passed": false,
+      "diagnostics": [
+        "lesson 2: 8 multi-syllable words without stress mark (not in unverified_stress): ['вкусний', 'жолтий', 'ленивий', \"обов'язково\", 'роді', 'умний', 'черний', \"ім'я\"]",
+        "lesson 3: 1 multi-syllable words without stress mark (not in unverified_stress): ['Оглядово']",
+        "lesson 1: render lacks lesson paragraph: 'Софія: Дивись, це нова книга. Тарас: Яка вона? Софія: Вона цікава і гарна. Тарас: А атлас? Який він?'",
+        "lesson 1: render lacks lesson paragraph: 'Українська English support Софія: Дивись, це нова книга. Sofia: Look, this is a new book. Тарас: Яка'",
+        "lesson 2: render lacks lesson paragraph: 'Марія: Це моя кімната. Оленка: Яка вона? Марія: Вона маленька, але світла. Оленка: А стіл? Марія: Ст'",
+        "lesson 2: render lacks lesson paragraph: 'Українська English support Марія: Це моя кімната. Mariia: This is my room. Оленка: Яка вона? Olenka:'",
+        "lesson 2: render lacks lesson paragraph: 'Avoid Use вкусний суп смачний суп жолтий олівець жовтий олівець черний кіт чорний кіт красний прапор'",
+        "lesson 3: long_uk_ceiling failed: {'passed': False, 'required': {'max_unsupported_uk_words': 68, 'support_proximity': 8}, 'observed': {'offending_runs': 2}, 'reason': 'long_uk_without_gloss', 'offending_runs': ['Тара с Софі є подиви сь я ка га рна листі вка Софі я Так листі вка ду же га рна і чи ста Тара с А ця нова кни га Я ка во на Софі я Це ціка ва ...', 'Софі я Плака т вели кий і деше вий Тара с А старе фо то бі ля кни ги Яке воно Софі я Воно мале ньке але га рне і чи сте Тара с А твоя стара ла мпа Я ...'], 'policy': 'a1-m07-14'}",
+        "lesson 3: render lacks lesson paragraph: 'Це моя кімната. Вона маленька, але гарна. У мене є новий стіл і стара лампа.'",
+        "lesson 3: render lacks lesson paragraph: 'Українська English support Це моя кімната. This is my room. Вона маленька, але гарна. It is small, b'"
+      ],
+      "blocking": [
+        "lesson 2: 8 multi-syllable words without stress mark (not in unverified_stress): ['вкусний', 'жолтий', 'ленивий', \"обов'язково\", 'роді', 'умний', 'черний', \"ім'я\"]",
+        "lesson 3: 1 multi-syllable words without stress mark (not in unverified_stress): ['Оглядово']",
+        "lesson 1: render lacks lesson paragraph: 'Софія: Дивись, це нова книга. Тарас: Яка вона? Софія: Вона цікава і гарна. Тарас: А атлас? Який він?'",
+        "lesson 1: render lacks lesson paragraph: 'Українська English support Софія: Дивись, це нова книга. Sofia: Look, this is a new book. Тарас: Яка'",
+        "lesson 2: render lacks lesson paragraph: 'Марія: Це моя кімната. Оленка: Яка вона? Марія: Вона маленька, але світла. Оленка: А стіл? Марія: Ст'",
+        "lesson 2: render lacks lesson paragraph: 'Українська English support Марія: Це моя кімната. Mariia: This is my room. Оленка: Яка вона? Olenka:'",
+        "lesson 2: render lacks lesson paragraph: 'Avoid Use вкусний суп смачний суп жолтий олівець жовтий олівець черний кіт чорний кіт красний прапор'",
+        "lesson 3: long_uk_ceiling failed: {'passed': False, 'required': {'max_unsupported_uk_words': 68, 'support_proximity': 8}, 'observed': {'offending_runs': 2}, 'reason': 'long_uk_without_gloss', 'offending_runs': ['Тара с Софі є подиви сь я ка га рна листі вка Софі я Так листі вка ду же га рна і чи ста Тара с А ця нова кни га Я ка во на Софі я Це ціка ва ...', 'Софі я Плака т вели кий і деше вий Тара с А старе фо то бі ля кни ги Яке воно Софі я Воно мале ньке але га рне і чи сте Тара с А твоя стара ла мпа Я ...'], 'policy': 'a1-m07-14'}",
+        "lesson 3: render lacks lesson paragraph: 'Це моя кімната. Вона маленька, але гарна. У мене є новий стіл і стара лампа.'",
+        "lesson 3: render lacks lesson paragraph: 'Українська English support Це моя кімната. This is my room. Вона маленька, але гарна. It is small, b'"
+      ],
+      "warnings": [],
+      "facts": {
+        "baseline": {
+          "commit": null,
+          "prose_tokens": 1528,
+          "long_paragraphs": 41,
+          "activities": {
+            "inline": 4,
+            "workbook": 6
+          },
+          "vocab": 39
+        },
+        "lessons": {
+          "1": {
+            "prose_tokens": 1225,
+            "inline": 5,
+            "workbook": 7,
+            "vocab": 14,
+            "lemma_list": [
+              "який",
+              "яка",
+              "яке",
+              "які",
+              "великий",
+              "велика",
+              "велике",
+              "новий",
+              "нова",
+              "нове",
+              "старий",
+              "старе",
+              "атлас",
+              "плакат"
+            ],
+            "resources": 3,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 62
+          },
+          "2": {
+            "prose_tokens": 1346,
+            "inline": 5,
+            "workbook": 7,
+            "vocab": 13,
+            "lemma_list": [
+              "маленький",
+              "гарний",
+              "поганий",
+              "чистий",
+              "брудний",
+              "дорогий",
+              "дешевий",
+              "світлий",
+              "темний",
+              "а",
+              "але",
+              "і",
+              "листівка"
+            ],
+            "resources": 3,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 64
+          },
+          "3": {
+            "prose_tokens": 1093,
+            "inline": 5,
+            "workbook": 7,
+            "vocab": 12,
+            "lemma_list": [
+              "стара",
+              "гарна",
+              "гарне",
+              "чиста",
+              "чисте",
+              "цікавий",
+              "цікава",
+              "цікаве",
+              "смачний",
+              "правильний",
+              "розумний",
+              "лінивий"
+            ],
+            "resources": 4,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 60
+          }
+        },
+        "total_prose_tokens": 3664,
+        "preservation": {
+          "long_paragraphs": 41,
+          "lost": 0,
+          "duplicated": 0,
+          "misplaced": 0
+        },
+        "immersion": {
+          "1": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 54.32,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m07-14"
+            },
+            "l2_exposure_floor": {
+              "passed": true,
+              "required": {
+                "uk_dialogue_lines": 13,
+                "vocab_entries": 0,
+                "uk_example_sentences": 6,
+                "uk_tab3_activities": 3
+              },
+              "observed": {
+                "uk_dialogue_lines": 14,
+                "vocab_entries": 30,
+                "uk_example_sentences": 64,
+                "uk_tab3_activities": 5
+              },
+              "reason": null,
+              "policy": "a1-m07-14"
+            },
+            "long_uk_ceiling": {
+              "passed": true,
+              "required": {
+                "max_unsupported_uk_words": 68,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 0
+              },
+              "reason": null,
+              "offending_runs": [],
+              "policy": "a1-m07-14"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m07-14"
+            }
+          },
+          "2": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 62.68,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m07-14"
+            },
+            "l2_exposure_floor": {
+              "passed": true,
+              "required": {
+                "uk_dialogue_lines": 13,
+                "vocab_entries": 0,
+                "uk_example_sentences": 6,
+                "uk_tab3_activities": 3
+              },
+              "observed": {
+                "uk_dialogue_lines": 16,
+                "vocab_entries": 35,
+                "uk_example_sentences": 80,
+                "uk_tab3_activities": 5
+              },
+              "reason": null,
+              "policy": "a1-m07-14"
+            },
+            "long_uk_ceiling": {
+              "passed": true,
+              "required": {
+                "max_unsupported_uk_words": 68,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 0
+              },
+              "reason": null,
+              "offending_runs": [],
+              "policy": "a1-m07-14"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m07-14"
+            }
+          },
+          "3": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 60.35,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m07-14"
+            },
+            "l2_exposure_floor": {
+              "passed": true,
+              "required": {
+                "uk_dialogue_lines": 13,
+                "vocab_entries": 0,
+                "uk_example_sentences": 6,
+                "uk_tab3_activities": 3
+              },
+              "observed": {
+                "uk_dialogue_lines": 14,
+                "vocab_entries": 20,
+                "uk_example_sentences": 57,
+                "uk_tab3_activities": 5
+              },
+              "reason": null,
+              "policy": "a1-m07-14"
+            },
+            "long_uk_ceiling": {
+              "passed": false,
+              "required": {
+                "max_unsupported_uk_words": 68,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 2
+              },
+              "reason": "long_uk_without_gloss",
+              "offending_runs": [
+                "Тара с Софі є подиви сь я ка га рна листі вка Софі я Так листі вка ду же га рна і чи ста Тара с А ця нова кни га Я ка во на Софі я Це ціка ва ...",
+                "Софі я Плака т вели кий і деше вий Тара с А старе фо то бі ля кни ги Яке воно Софі я Воно мале ньке але га рне і чи сте Тара с А твоя стара ла мпа Я ..."
+              ],
+              "policy": "a1-m07-14"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m07-14"
+            }
+          }
+        }
+      }
+    }
+  }
+}

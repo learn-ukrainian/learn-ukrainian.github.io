@@ -2,10 +2,10 @@
   translation: what kind, masculine
   pos: pronoun
   usage: Яки́й стіл?
-- lemma: яка
+- lemma: я́ка
   translation: what kind, feminine
   pos: pronoun
-  usage: Яка кни́га?
+  usage: Я́ка кни́га?
 - lemma: яке́
   translation: what kind, neuter
   pos: pronoun
@@ -18,10 +18,10 @@
   translation: big, masculine
   pos: adj
   usage: Це вели́кий стіл.
-- lemma: вели́ка
+- lemma: ве́лика
   translation: big, feminine
   pos: adj
-  usage: Це вели́ка кімна́та.
+  usage: Це ве́лика кімна́та.
 - lemma: вели́ке
   translation: big, neuter
   pos: adj
@@ -41,15 +41,15 @@
 - lemma: стари́й
   translation: old, masculine
   pos: adj
-  usage: Атлас стари́й.
+  usage: А́тлас стари́й.
 - lemma: старе́
   translation: old, neuter
   pos: adj
   usage: Лі́жко старе́.
-- lemma: атлас
+- lemma: а́тлас
   translation: atlas
   pos: noun
-  usage: Атлас стари́й.
+  usage: А́тлас стари́й.
 - lemma: плака́т
   translation: poster
   pos: noun

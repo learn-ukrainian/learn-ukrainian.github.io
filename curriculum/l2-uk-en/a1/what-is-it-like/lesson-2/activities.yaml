@@ -1,7 +1,7 @@
 inline:
 - id: act-4
   type: match-up
-  title: Поєдна́й протиле́жності — Match the opposites
+  title: Поєдна́й протиле́жності
   instruction: Match each adjective with its opposite.
   pairs:
   - left: вели́кий
@@ -18,8 +18,8 @@ inline:
     right: те́мний
 - id: act-201
   type: fill-in
-  title: Сполу́чники і, а, але́ — Conjunctions і, а, але́
-  instruction: Обері́ть правильний сполу́чник для ко́жного речення. — Choose the correct conjunction for each sentence.
+  title: Сполу́чники і, а, але́
+  instruction: Обері́ть пра́вильний сполу́чник для ко́жного ре́чення.
   items:
   - sentence: Стіл нови́й, ___ стіле́ць стари́й.
     answer: а
@@ -28,14 +28,14 @@ inline:
     - і
     - але́
     explanation: Сполу́чник а використо́вується для протиста́влення двох предме́тів.
-  - sentence: Кімна́та вели́ка ___ сві́тла.
+  - sentence: Кімна́та ве́лика ___ сві́тла.
     answer: і
     options:
     - і
     - а
     - але́
-    explanation: Сполу́чник і поє́днує дві рівнозна́чні озна́ки.
-  - sentence: Атлас стари́й, ___ кори́сний.
+    explanation: Сполу́чник і поє́днує дві рівнозна́чні о́знаки.
+  - sentence: А́тлас стари́й, ___ кори́сний.
     answer: але́
     options:
     - але́
@@ -55,21 +55,20 @@ inline:
     - і
     - а
     - але́
-    explanation: Сполу́чник і поє́днує рівнозна́чні власти́вості вікна́.
+    explanation: Сполу́чник і поє́днує рівнозна́чні власти́вості ві́кна.
   - sentence: Плака́т вели́кий, ___ деше́вий.
     answer: але́
     options:
     - але́
     - а
     - і
-    explanation: Сполу́чник але́ вка́зує на несподі́вану озна́ку (вели́кий, проте́ деше́вий).
+    explanation: Сполу́чник але́ вка́зує на несподі́вану о́знаку (вели́кий, проте́ деше́вий).
 - id: act-204
   type: group-sort
-  title: Протиле́жні озна́ки — Opposite qualities
-  instruction: Розподілі́ть прикме́тники за темати́чними гру́пами озна́к. —
-    Sort the adjectives into thematic groups of qualities.
+  title: Протиле́жні о́знаки
+  instruction: Розподілі́ть прикме́тники за темати́чними гру́пами о́знак.
   groups:
-  - label: Розмір та вік
+  - label: Ро́змір та вік
     items:
     - вели́кий
     - мале́нький
@@ -89,9 +88,8 @@ inline:
     - те́мний
 - id: act-202
   type: quiz
-  title: Яки́й це предме́т? — What kind of object is this?
-  instruction: Обері́ть правильну фо́рму прикме́тника для узго́дження з іме́нником. —
-    Choose the correct adjective form to agree with the noun.
+  title: Яки́й це предме́т?
+  instruction: Обері́ть пра́вильну фо́рму прикме́тника для узго́дження з іме́нником.
   items:
   - prompt: стіл (нови́й / нова́ / нове́)
     options:
@@ -101,7 +99,7 @@ inline:
       correct: false
     - text: нове́ стіл
       correct: false
-    explanation: Стіл — чолові́чий рід, тому́ нови́й стіл.
+    explanation: Стіл — іме́нник чолові́чого ро́ду, тому́ вжива́ємо нови́й.
   - prompt: кімна́та (сві́тлий / сві́тла / сві́тле)
     options:
     - text: сві́тла кімна́та
@@ -110,7 +108,7 @@ inline:
       correct: false
     - text: сві́тле кімна́та
       correct: false
-    explanation: Кімна́та — жіно́чий рід, тому́ сві́тла кімна́та.
+    explanation: 'Кімна́та — жіно́чий рід, тому́ закі́нчення -а: сві́тла.'
   - prompt: вікно́ (чи́стий / чи́ста / чи́сте)
     options:
     - text: чи́сте вікно́
@@ -119,62 +117,62 @@ inline:
       correct: false
     - text: чи́ста вікно́
       correct: false
-    explanation: Вікно́ — сере́дній рід, тому́ чи́сте вікно́.
-  - prompt: листі́вка (га́рний / га́рна / га́рне)
+    explanation: Вікно́ — сере́дній рід, тому́ вжива́ємо чи́сте.
+  - prompt: листі́вка (деше́вий / деше́ва / деше́ве)
     options:
-    - text: га́рна листі́вка
+    - text: деше́ва листі́вка
       correct: true
-    - text: га́рний листі́вка
+    - text: деше́вий листі́вка
       correct: false
-    - text: га́рне листі́вка
+    - text: деше́ве листі́вка
       correct: false
-    explanation: Листі́вка — жіно́чий рід, тому́ га́рна листі́вка.
-  - prompt: плака́т (дороги́й / дорога́ / дороге́)
+    explanation: Листі́вка — жіно́чий рід, тому́ вжива́ємо деше́ва.
+  - prompt: телефо́н (дороги́й / доро́га / дороге́)
     options:
-    - text: дороги́й плака́т
+    - text: дороги́й телефо́н
       correct: true
-    - text: дорога́ плака́т
+    - text: доро́га телефо́н
       correct: false
-    - text: дороге́ плака́т
+    - text: дороге́ телефо́н
       correct: false
-    explanation: Плака́т — чолові́чий рід, тому́ дороги́й плака́т.
-  - prompt: лі́жко (зру́чний / зру́чна / зру́чне)
+    explanation: Телефо́н — чолові́чий рід, тому́ вжива́ємо дороги́й.
+  - prompt: дзе́ркало (брудни́й / брудна́ / брудне́)
     options:
-    - text: зру́чне лі́жко
+    - text: брудне́ дзе́ркало
       correct: true
-    - text: зру́чний лі́жко
+    - text: брудни́й дзе́ркало
       correct: false
-    - text: зру́чна лі́жко
+    - text: брудна́ дзе́ркало
       correct: false
-    explanation: Лі́жко — сере́дній рід, тому́ зру́чне лі́жко.
+    explanation: Дзе́ркало — сере́дній рід, тому́ вжива́ємо брудне́.
 - id: act-203
   type: true-false
-  title: Пра́вда чи ні? — True or false?
-  instruction: Ви́значте, чи правильне тве́рдження про о́пис предме́тів. —
-    Decide whether the statement about describing objects is correct.
-  statements:
-  - statement: В украї́нській мо́ві прикме́тник узго́джується з іме́нником у роді.
+  title: Пра́вда чи ні?
+  instruction: Ви́значте, чи пра́вильне тве́рдження про о́знаки предме́тів.
+  items:
+  - statement: Анто́нім до слова́ «вели́кий» — це «мале́нький».
     answer: true
-    explanation: Прикме́тник за́вжди ма́є той самий рід, що й іме́нник.
-  - statement: Для поєдна́ння двох озна́к використо́вують сполу́чник і.
-    answer: true
-    explanation: 'Сполу́чник і поє́днує рівнозна́чні озна́ки: нови́й і чи́стий.'
-  - statement: Нормати́вна фо́рма для позна́чення смаку́ — це вкусний суп.
+    explanation: Вели́кий і мале́нький — це антонімі́чна па́ра за ро́зміром.
+  - statement: Анто́нім до слова́ «нови́й» — це «чи́стий».
     answer: false
-    explanation: Нормати́вна фо́рма — смачни́й суп. Сло́во вкусний є ка́лькою.
-  - statement: Для протиста́влення двох предме́тів підхо́дить сполу́чник а.
-    answer: true
-    explanation: Стіл нови́й, а стіле́ць стари́й.
-  - statement: 'У тепе́рішньому ча́сі обов''язково тре́ба писа́ти: Він є до́брий студе́нт.'
+    explanation: Анто́нім до слова́ нови́й — це стари́й.
+  - statement: Сполу́чник «а» поє́днує одна́кові о́знаки, а не протиставля́є ре́чі.
     answer: false
-    explanation: 'В украї́нській мо́ві дієсло́во є зазвича́й опуска́ється: Він до́брий студе́нт.'
-  - statement: Сло́во правильна ві́дповідь — це нормати́вне украї́нське словосполу́чення.
+    explanation: Сполу́чник а використо́вується саме́ для протиста́влення.
+  - statement: У ре́ченні «Стіл нови́й і чи́стий» сполу́чник «і» поє́днує дві о́знаки стола́.
     answer: true
-    explanation: Правильна ві́дповідь — це правильний ви́слів за́мість ка́льки ві́рна ві́дповідь.
+    explanation: Сполу́чник і поє́днує дві рівнозна́чні характери́стики одно́го предме́та.
+  - statement: 'Украї́нською мо́вою приро́дно сказа́ти: «Цей суп ду́же смачни́й».'
+    answer: true
+    explanation: Смачни́й — це нормати́вне украї́нське сло́во за́мість ка́льки вкусний.
+  - statement: 'В украї́нській мо́ві обов''язково каза́ти: «Він є до́брий студе́нт».'
+    answer: false
+    explanation: 'У тепе́рішньому ча́сі дієсло́во є зазвича́й опуска́ється: Він до́брий
+      студе́нт.'
 workbook:
 - id: act-w3
   type: error-correction
-  title: Ви́прав узго́дження прикме́тників — Fix the adjective agreement
+  title: Випра́в узго́дження прикме́тників
   instruction: Fix the adjective or sentence frame.
   items:
   - sentence: Він є до́брий студе́нт.
@@ -198,7 +196,7 @@ workbook:
     answer: 'Яке́ твоє́ ім''я? (або́: Як тебе́ зва́ти?)'
     options:
     - 'Яке́ твоє́ ім''я? (або́: Як тебе́ зва́ти?)'
-    - Яка твоє́ ім'я́?
+    - Я́ка твоє́ ім'я́?
     - Яки́й твоє́ ім'я́?
     explanation: Ім'я́ is neuter; in real introductions, use Як тебе́ зва́ти?
   - sentence: Це ціка́вий кни́га.
@@ -227,7 +225,7 @@ workbook:
     explanation: Ру́чка is feminine, so use моя́ and нова́.
 - id: act-w4
   type: fill-in
-  title: Ви́прав прикметнико́ві пастки́ — Fix the adjective traps
+  title: Випра́в прикме́тникові пастки́
   instruction: Choose the standard Ukrainian adjective.
   items:
   - sentence: Цей суп ду́же ___.
@@ -261,11 +259,11 @@ workbook:
     - плохи́й
     explanation: Use пога́ний.
   - sentence: Це ___ ві́дповідь на запита́ння.
-    answer: правильна
+    answer: пра́вильна
     options:
-    - правильна
+    - пра́вильна
     - ві́рна
-    explanation: Use правильна ві́дповідь for a correct answer.
+    explanation: Use пра́вильна ві́дповідь for a correct answer.
   - sentence: Дай мені́, будь ла́ска, ___ оліве́ць.
     answer: будь-яки́й
     options:
@@ -278,7 +276,7 @@ workbook:
     - розу́мний
     - умний
     explanation: Use розу́мний.
-  - sentence: Тара́с — ___ у́чень.
+  - sentence: Тара́с — ___ уче́нь.
     answer: ліни́вий
     options:
     - ліни́вий
@@ -286,203 +284,93 @@ workbook:
     explanation: Use ліни́вий.
 - id: act-w201
   type: match-up
-  title: З'єдна́й анто́німи — Match the antonyms
-  instruction: З'єдна́йте прикме́тники з ї́хніми протиле́жностями. — Match the adjectives with their opposites.
+  title: З'єдна́й анто́німи
+  instruction: З'єдна́йте прикме́тники з протиле́жним зна́ченням.
   pairs:
-  - left: мале́нький
-    right: вели́кий
-  - left: стари́й
-    right: нови́й
-  - left: пога́ний
-    right: га́рний
-  - left: брудни́й
-    right: чи́стий
-  - left: деше́вий
-    right: дороги́й
-  - left: те́мний
-    right: сві́тлий
+  - left: нови́й
+    right: стари́й
+  - left: вели́кий
+    right: мале́нький
+  - left: чи́стий
+    right: брудни́й
+  - left: га́рний
+    right: пога́ний
+  - left: дороги́й
+    right: деше́вий
+  - left: сві́тлий
+    right: те́мний
 - id: act-w202
   type: fill-in
-  title: Встав правильний сполу́чник — Insert the correct conjunction
-  instruction: Допо́вніть речення сполу́чником і, а або́ але́. —
-    Complete the sentence with the conjunction і, а, or але́.
+  title: Встав пра́вильний сполу́чник
+  instruction: Вста́вте і, а або́ але́ відпові́дно до змі́сту ре́чення.
   items:
-  - sentence: Стіл нови́й, ___ стіле́ць стари́й.
-    answer: а
-    options:
-    - а
-    - і
-    - але́
-    explanation: Контра́ст між двома́ предме́тами передає́ться сполу́чником а.
   - sentence: Кімна́та мале́нька, ___ га́рна.
     answer: але́
     options:
     - але́
     - і
     - а
-    explanation: 'Сполу́чник але́ вка́зує на обме́ження: кімна́та хоч і мале́нька, проте́
-      га́рна.'
-  - sentence: Вікно́ вели́ке ___ чи́сте.
-    answer: і
-    options:
-    - і
-    - а
-    - але́
-    explanation: Сполу́чник і поє́днує дві позити́вні характери́стики.
-  - sentence: Кни́га доро́га, ___ листі́вка деше́ва.
+    explanation: 'Сполу́чник але́ вка́зує на обме́ження: кімна́та мале́нька, проте́ га́рна.'
+  - sentence: Стіл нови́й, ___ стіле́ць стари́й.
     answer: а
     options:
     - а
     - і
     - але́
-    explanation: Протиста́влення ціни́ кни́ги та листі́вки.
-  - sentence: Плака́т вели́кий, ___ деше́вий.
-    answer: але́
-    options:
-    - але́
-    - а
-    - і
-    explanation: Сполу́чник але́ підкре́слює контра́ст між розміром та низько́ю ціно́ю.
-  - sentence: Кімна́та вели́ка ___ сві́тла.
+    explanation: Сполу́чник а протиставля́є два предме́ти.
+  - sentence: Вікно́ чи́сте ___ вели́ке.
     answer: і
     options:
     - і
     - а
     - але́
-    explanation: Поєдна́ння двох рівнозна́чних озна́к кімна́ти.
+    explanation: Сполу́чник і поє́днує дві о́знаки ві́кна.
+  - sentence: Кни́га нова́ ___ ціка́ва.
+    answer: і
+    options:
+    - і
+    - а
+    - але́
+    explanation: Сполу́чник і поє́днує рівнозна́чні о́знаки кни́ги.
+  - sentence: Плака́т вели́кий, ___ деше́вий.
+    answer: але́
+    options:
+    - але́
+    - і
+    - а
+    explanation: Але́ передає́ контра́ст між вели́ким ро́зміром і низько́ю ціно́ю.
+  - sentence: А́тлас дороги́й, ___ листі́вка деше́ва.
+    answer: а
+    options:
+    - а
+    - і
+    - але́
+    explanation: Сполу́чник а протиставля́є а́тлас і листі́вку.
 - id: act-w203
   type: quiz
-  title: Обери́ то́чний о́пис — Choose the accurate description
-  instruction: Обері́ть правильну фо́рму прикме́тника для речення. — Choose the correct adjective form for the sentence.
+  title: Обери́ то́чний о́пис
+  instruction: Ви́беріть грамати́чно пра́вильне ре́чення без за́йвих слів.
   items:
-  - prompt: Це ___ стіл.
+  - prompt: The room is bright.
     options:
-    - text: чи́стий
+    - text: Кімна́та сві́тла.
       correct: true
-    - text: чи́ста
+    - text: Кімна́та є сві́тла.
       correct: false
-    - text: чи́сте
+    - text: Кімна́та сві́тлий.
       correct: false
-    explanation: Стіл — чолові́чий рід, закі́нчення -ий.
-  - prompt: Це ___ кімна́та.
+    explanation: 'У тепе́рішньому ча́сі дієсло́во є опуска́ється, а прикме́тник узго́джується
+      в роді: сві́тла.'
+  - prompt: The chair is old.
     options:
-    - text: сві́тла
+    - text: Стіле́ць стари́й.
       correct: true
-    - text: сві́тлий
+    - text: Стіле́ць стара́.
       correct: false
-    - text: сві́тле
+    - text: Стіле́ць є стари́й.
       correct: false
-    explanation: Кімна́та — жіно́чий рід, закі́нчення -а.
-  - prompt: Це ___ вікно́.
-    options:
-    - text: чи́сте
-      correct: true
-    - text: чи́стий
-      correct: false
-    - text: чи́ста
-      correct: false
-    explanation: Вікно́ — сере́дній рід, закі́нчення -е.
-  - prompt: Це ___ листі́вка.
-    options:
-    - text: деше́ва
-      correct: true
-    - text: деше́вий
-      correct: false
-    - text: деше́ве
-      correct: false
-    explanation: Листі́вка — жіно́чий рід, закі́нчення -а.
-  - prompt: Це ___ плака́т.
-    options:
-    - text: дороги́й
-      correct: true
-    - text: доро́га
-      correct: false
-    - text: дороге́
-      correct: false
-    explanation: Плака́т — чолові́чий рід, закі́нчення -ий.
-  - prompt: Це ___ ре́чі.
-    options:
-    - text: га́рні
-      correct: true
-    - text: га́рний
-      correct: false
-    - text: га́рна
-      correct: false
-    explanation: Ре́чі — множина́, закі́нчення -і.
-- id: act-w204
-  type: unjumble
-  title: Склади речення — Build the sentence
-  instruction: Розташу́йте слова́ у правильному поря́дку, щоб утвори́ти речення. —
-    Put the words in the correct order to form a sentence.
-  items:
-  - words:
-    - Стіл
-    - нови́й
-    - і
-    - чи́стий.
-    answer: Стіл нови́й і чи́стий.
-    explanation: Стіл нови́й і чи́стий — послідо́вний о́пис предме́та.
-  - words:
-    - Кімна́та
-    - мале́нька,
-    - але́
-    - сві́тла.
-    answer: Кімна́та мале́нька, але́ сві́тла.
-    explanation: Сполу́чник але́ вжива́ється з ко́мою.
-  - words:
-    - Вікно́
-    - вели́ке
-    - і
-    - чи́сте.
-    answer: Вікно́ вели́ке і чи́сте.
-    explanation: Поєдна́ння озна́к вікна́ че́рез сполу́чник і.
-  - words:
-    - Кни́га
-    - дорога́,
-    - а
-    - листі́вка
-    - деше́ва.
-    answer: Кни́га доро́га, а листі́вка деше́ва.
-    explanation: Протиста́влення кни́ги та листі́вки зі сполу́чником а.
-  - words:
-    - Плака́т
-    - вели́кий,
-    - але́
-    - деше́вий.
-    answer: Плака́т вели́кий, але́ деше́вий.
-    explanation: Протиста́влення двох озна́к плака́та че́рез але́.
-  - words:
-    - Це
-    - моя́
-    - нова́
-    - кімна́та.
-    answer: Це моя́ нова́ кімна́та.
-    explanation: Поря́док слів у просто́му описо́вому реченні.
-- id: act-w205
-  type: translate
-  title: 'Бо́нус: переклад украї́нською — Bonus: translation into Ukrainian'
-  instruction: Обері́ть правильний украї́нський переклад для англі́йського речення. —
-    Choose the correct Ukrainian translation for the English sentence.
-  items:
-  - source: The room is big and bright.
-    options:
-    - text: Кімна́та вели́ка і сві́тла.
-      correct: true
-    - text: Кімна́та вели́кий і сві́тлий.
-      correct: false
-    - text: Кімна́та вели́ке і сві́тле.
-      correct: false
-    explanation: Кімна́та — жіно́чий рід (вели́ка, сві́тла).
-  - source: The table is new, but the bed is old.
-    options:
-    - text: Стіл нови́й, але́ лі́жко старе́.
-      correct: true
-    - text: Стіл нова́, але́ лі́жко стара́.
-      correct: false
-    - text: Стіл нове́, але́ лі́жко стари́й.
-      correct: false
-    explanation: Стіл — чолові́чий рід (нови́й), а лі́жко — сере́дній рід (старе́).
-  - source: The postcard is cheap.
+    explanation: 'Стіле́ць — чолові́чий рід: стіле́ць стари́й.'
+  - prompt: The postcard is cheap.
     options:
     - text: Листі́вка деше́ва.
       correct: true
@@ -490,31 +378,135 @@ workbook:
       correct: false
     - text: Листі́вка деше́ве.
       correct: false
-    explanation: Листі́вка — жіно́чий рід (деше́ва).
-  - source: The window is clean.
+    explanation: 'Листі́вка — жіно́чий рід: деше́ва.'
+  - prompt: The phone is expensive.
     options:
-    - text: Вікно́ чи́сте.
+    - text: Телефо́н дороги́й.
       correct: true
-    - text: Вікно́ чи́стий.
+    - text: Телефо́н доро́га.
       correct: false
-    - text: Вікно́ чи́ста.
+    - text: Телефо́н дороге́.
       correct: false
-    explanation: Вікно́ — сере́дній рід (чи́сте).
-  - source: A dirty mirror
+    explanation: 'Телефо́н — чолові́чий рід: дороги́й.'
+  - prompt: The mirror is clean.
     options:
-    - text: брудне́ дзе́ркало
+    - text: Дзе́ркало чи́сте.
       correct: true
-    - text: брудни́й дзе́ркало
+    - text: Дзе́ркало чи́стий.
       correct: false
-    - text: брудна́ дзе́ркало
+    - text: Дзе́ркало чи́ста.
       correct: false
-    explanation: Дзе́ркало — сере́дній рід (брудне́).
-  - source: An expensive phone
+    explanation: 'Дзе́ркало — сере́дній рід: чи́сте.'
+  - prompt: The poster is big.
     options:
-    - text: дороги́й телефо́н
+    - text: Плака́т вели́кий.
       correct: true
-    - text: дорога́ телефо́н
+    - text: Плака́т ве́лика.
       correct: false
-    - text: дороге́ телефо́н
+    - text: Плака́т вели́ке.
       correct: false
-    explanation: Телефо́н — чолові́чий рід (дороги́й).
+    explanation: 'Плака́т — чолові́чий рід: вели́кий.'
+- id: act-w204
+  type: unjumble
+  title: Скла́ди ре́чення
+  instruction: Розташу́йте слова́ у пра́вильному поря́дку, щоб утвори́ти ре́чення.
+  words:
+  - words:
+    - Моя́
+    - кімна́та
+    - ве́лика
+    - і
+    - сві́тла
+    answer: Моя́ кімна́та ве́лика і сві́тла.
+  - words:
+    - Стіл
+    - нови́й
+    - а
+    - стіле́ць
+    - стари́й
+    answer: Стіл нови́й, а стіле́ць стари́й.
+  - words:
+    - Вікно́
+    - вели́ке
+    - і
+    - чи́сте
+    answer: Вікно́ вели́ке і чи́сте.
+  - words:
+    - А́тлас
+    - стари́й
+    - але́
+    - кори́сний
+    answer: А́тлас стари́й, але́ кори́сний.
+  - words:
+    - Ця
+    - листі́вка
+    - мале́нька
+    - але́
+    - га́рна
+    answer: Ця листі́вка мале́нька, але́ га́рна.
+  - words:
+    - Нови́й
+    - плака́т
+    - вели́кий
+    - і
+    - деше́вий
+    answer: Нови́й плака́т вели́кий і деше́вий.
+- id: act-w205
+  type: translate
+  title: Пере́клад украї́нською
+  instruction: Обері́ть пра́вильний украї́нський пере́клад для ре́чення англі́йською мо́вою.
+  items:
+  - source: The room is small but nice.
+    options:
+    - text: Кімна́та мале́нька, але́ га́рна.
+      correct: true
+    - text: Кімна́та мале́нький, але́ га́рний.
+      correct: false
+    - text: Кімна́та мале́ньке, але́ га́рне.
+      correct: false
+    explanation: 'Кімна́та — жіно́чий рід: мале́нька, але́ га́рна.'
+  - source: The table is new and clean.
+    options:
+    - text: Стіл нови́й і чи́стий.
+      correct: true
+    - text: Стіл нова́ і чи́ста.
+      correct: false
+    - text: Стіл нове́ і чи́сте.
+      correct: false
+    explanation: 'Стіл — чолові́чий рід: нови́й і чи́стий.'
+  - source: The window is big.
+    options:
+    - text: Вікно́ вели́ке.
+      correct: true
+    - text: Вікно́ вели́кий.
+      correct: false
+    - text: Вікно́ ве́лика.
+      correct: false
+    explanation: 'Вікно́ — сере́дній рід: вели́ке.'
+  - source: A cheap postcard
+    options:
+    - text: деше́ва листі́вка
+      correct: true
+    - text: деше́вий листі́вка
+      correct: false
+    - text: деше́ве листі́вка
+      correct: false
+    explanation: 'Листі́вка — жіно́чий рід: деше́ва листі́вка.'
+  - source: The phone is expensive, but the poster is cheap.
+    options:
+    - text: Телефо́н дороги́й, а плака́т деше́вий.
+      correct: true
+    - text: Телефо́н доро́га, а плака́т деше́ва.
+      correct: false
+    - text: Телефо́н дороге́, а плака́т деше́ве.
+      correct: false
+    explanation: Телефо́н і плака́т — іме́нники чолові́чого ро́ду.
+  - source: The mirror is dirty.
+    options:
+    - text: Дзе́ркало брудне́.
+      correct: true
+    - text: Дзе́ркало брудни́й.
+      correct: false
+    - text: Дзе́ркало брудна́.
+      correct: false
+    explanation: 'Дзе́ркало — сере́дній рід: брудне́.'

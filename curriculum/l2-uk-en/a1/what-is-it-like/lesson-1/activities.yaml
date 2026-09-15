@@ -8,32 +8,32 @@ inline:
     options:
     - text: Яки́й?
       correct: true
-    - text: Яка?
+    - text: Я́ка?
       correct: false
     - text: Яке́?
       correct: false
     explanation: Стіл is masculine, so ask Яки́й?
   - prompt: кни́га
     options:
-    - text: Яка?
+    - text: Я́ка?
       correct: true
     - text: Яки́й?
       correct: false
     - text: Яке́?
       correct: false
-    explanation: Кни́га is feminine, so ask Яка?
+    explanation: Кни́га is feminine, so ask Я́ка?
   - prompt: фо́то
     options:
     - text: Яке́?
       correct: true
-    - text: Яка?
+    - text: Я́ка?
       correct: false
     - text: Яки́й?
       correct: false
     explanation: Фо́то is neuter in this lesson, so ask Яке́?
   - prompt: кімна́та
     options:
-    - text: Яка?
+    - text: Я́ка?
       correct: true
     - text: Яки́й?
       correct: false
@@ -55,7 +55,7 @@ inline:
       correct: true
     - text: Яки́й?
       correct: false
-    - text: Яка?
+    - text: Я́ка?
       correct: false
     explanation: Вікно́ is neuter.
 - id: act-2
@@ -135,19 +135,19 @@ inline:
     explanation: Plural A1 phrases use нові́.
 - id: act-101
   type: match-up
-  title: Пита́ння та переклад — Question and translation
-  instruction: З'єдна́йте украї́нське пита́ння з англі́йським перекладом. —
-    Match the Ukrainian question with its English translation.
+  title: Пита́ння та пере́клад — Question and translation
+  instruction: З'єдна́йте украї́нське пита́ння з англі́йським пере́кладом. — Match the
+    Ukrainian question with its English translation.
   pairs:
   - left: Яки́й це стіл?
     right: What kind of table is this?
-  - left: Яка це кни́га?
+  - left: Я́ка це кни́га?
     right: What kind of book is this?
   - left: Яке́ це вікно́?
     right: What kind of window is this?
   - left: Які́ це ре́чі?
     right: What kind of things are these?
-  - left: Яки́й це атлас?
+  - left: Яки́й це а́тлас?
     right: What kind of atlas is this?
   - left: Яке́ це фо́то?
     right: What kind of photo is this?
@@ -160,9 +160,9 @@ inline:
     items:
     - вели́кий стіл
     - нови́й телефо́н
-    - стари́й атлас
+    - стари́й а́тлас
     - дороги́й плака́т
-  - label: Яка?
+  - label: Я́ка?
     items:
     - нова́ кни́га
     - га́рна листі́вка
@@ -183,8 +183,8 @@ inline:
 - id: act-102
   type: true-false
   title: Пра́вда чи ні? — True or false?
-  instruction: Ви́значте, чи правильне узго́дження прикме́тника з іме́нником. —
-    Decide whether the adjective agrees correctly with the noun.
+  instruction: Ви́значте, чи пра́вильне узго́дження прикме́тника з іме́нником. — Decide
+    whether the adjective agrees correctly with the noun.
   statements:
   - statement: Стіл нови́й.
     answer: true
@@ -195,22 +195,22 @@ inline:
   - statement: Вікно́ чи́сте.
     answer: true
     explanation: Вікно́ — сере́дній рід, закі́нчення -е.
-  - statement: Атлас старе́.
+  - statement: А́тлас старе́.
     answer: false
-    explanation: 'Атлас — чолові́чий рід: стари́й атлас.'
+    explanation: 'А́тлас — чолові́чий рід: стари́й а́тлас.'
   - statement: Фо́то нове́.
     answer: true
     explanation: Фо́то — сере́дній рід, закі́нчення -е.
-  - statement: Плака́т вели́ка.
+  - statement: Плака́т ве́лика.
     answer: false
     explanation: 'Плака́т — чолові́чий рід: вели́кий плака́т.'
-  - statement: Кімна́та вели́ка.
+  - statement: Кімна́та ве́лика.
     answer: true
     explanation: Кімна́та — жіно́чий рід, закі́нчення -а.
 workbook:
 - id: act-w1
   type: quiz
-  title: Моде́ль речення — Sentence model
+  title: Моде́ль ре́чення — Sentence model
   instruction: Choose the natural A1 sentence.
   items:
   - prompt: The book is new.
@@ -237,7 +237,7 @@ workbook:
       correct: true
     - text: Вікно́ вели́кий.
       correct: false
-    - text: Вікно́ вели́ка.
+    - text: Вікно́ ве́лика.
       correct: false
     explanation: Вікно́ is neuter.
   - prompt: A nice postcard
@@ -251,13 +251,13 @@ workbook:
     explanation: Листі́вка is feminine.
   - prompt: A useful atlas
     options:
-    - text: кори́сний атлас
+    - text: кори́сний а́тлас
       correct: true
-    - text: кори́сна атлас
+    - text: кори́сна а́тлас
       correct: false
-    - text: кори́сне атлас
+    - text: кори́сне а́тлас
       correct: false
-    explanation: Атлас is masculine.
+    explanation: А́тлас is masculine.
   - prompt: Interesting things
     options:
     - text: ціка́ві ре́чі
@@ -291,14 +291,14 @@ workbook:
     options:
     - але́
     - яки́й
-    - яка
+    - я́ка
     explanation: Але́ adds a contrast.
   - sentence: Вікно́ ___ і чи́сте.
     answer: вели́ке
     options:
     - вели́ке
     - вели́кий
-    - вели́ка
+    - ве́лика
     explanation: Вікно́ is neuter.
   - sentence: Кни́га доро́га, ___ листі́вка деше́ва.
     answer: а
@@ -317,14 +317,14 @@ workbook:
 - id: act-w101
   type: quiz
   title: Обери́ пита́ння — Choose the question
-  instruction: Обері́ть правильне пита́льне сло́во для по́даного іме́нника. —
-    Choose the correct question word for the given noun.
+  instruction: Обері́ть пра́вильне пита́льне сло́во для по́даного іме́нника. — Choose the
+    correct question word for the given noun.
   items:
   - prompt: стіл
     options:
     - text: Яки́й?
       correct: true
-    - text: Яка?
+    - text: Я́ка?
       correct: false
     - text: Яке́?
       correct: false
@@ -333,14 +333,14 @@ workbook:
     options:
     - text: Яки́й?
       correct: true
-    - text: Яка?
+    - text: Я́ка?
       correct: false
     - text: Яке́?
       correct: false
     explanation: Плака́т — чолові́чий рід.
   - prompt: листі́вка
     options:
-    - text: Яка?
+    - text: Я́ка?
       correct: true
     - text: Яки́й?
       correct: false
@@ -353,21 +353,21 @@ workbook:
       correct: true
     - text: Яки́й?
       correct: false
-    - text: Яка?
+    - text: Я́ка?
       correct: false
     explanation: Дзе́ркало — сере́дній рід.
-  - prompt: атлас
+  - prompt: а́тлас
     options:
     - text: Яки́й?
       correct: true
-    - text: Яка?
+    - text: Я́ка?
       correct: false
     - text: Яке́?
       correct: false
-    explanation: Атлас — чолові́чий рід.
+    explanation: А́тлас — чолові́чий рід.
   - prompt: кімна́та
     options:
-    - text: Яка?
+    - text: Я́ка?
       correct: true
     - text: Яки́й?
       correct: false
@@ -377,22 +377,23 @@ workbook:
 - id: act-w102
   type: fill-in
   title: Встав закі́нчення — Insert the ending
-  instruction: Дода́йте правильне закі́нчення прикме́тника. — Add the correct adjective ending.
+  instruction: Дода́йте пра́вильне закі́нчення прикме́тника. — Add the correct adjective
+    ending.
   items:
-  - sentence: Це нов___ атлас.
+  - sentence: Це нов___ а́тлас.
     answer: ий
     options:
     - ий
     - а
     - е
-    explanation: Атлас — він (чолові́чий рід).
+    explanation: А́тлас — він (чолові́чий рід).
   - sentence: Це нов___ листі́вка.
     answer: а
     options:
     - а
     - ий
     - е
-    explanation: Листі́вка — вона́ (жіно́чий рід).
+    explanation: Листі́вка — во́на (жіно́чий рід).
   - sentence: Це нов___ фо́то.
     answer: е
     options:
@@ -413,7 +414,7 @@ workbook:
     - а
     - ий
     - е
-    explanation: Кімна́та — вона́ (жіно́чий рід).
+    explanation: Кімна́та — во́на (жіно́чий рід).
   - sentence: Це ве́лик___ вікно́.
     answer: е
     options:
@@ -424,7 +425,8 @@ workbook:
 - id: act-w103
   type: group-sort
   title: Розпо́діли за закі́нченням — Sort by ending
-  instruction: Розподілі́ть прикме́тники за закі́нченням ро́ду. — Sort the adjectives by gender ending.
+  instruction: Розподілі́ть прикме́тники за родови́ми закі́нченнями. — Sort the adjectives
+    by gender endings.
   groups:
   - label: -ий (чолові́чий рід)
     items:
@@ -433,7 +435,7 @@ workbook:
     - стари́й
   - label: -а (жіно́чий рід)
     items:
-    - вели́ка
+    - ве́лика
     - нова́
     - га́рна
   - label: -е (сере́дній рід)
@@ -443,15 +445,16 @@ workbook:
     - старе́
 - id: act-w104
   type: error-correction
-  title: Ви́прав закі́нчення — Fix the ending
-  instruction: Знайді́ть і ви́правте поми́лку в узго́дженні. — Find and fix the agreement mistake.
+  title: Випра́в закі́нчення — Fix the ending
+  instruction: Знайді́ть і ви́правте поми́лку в узго́дженні. — Find and fix the agreement
+    mistake.
   items:
-  - sentence: Це вели́ка стіл.
-    error: вели́ка
+  - sentence: Це ве́лика стіл.
+    error: ве́лика
     answer: вели́кий
     options:
     - вели́кий
-    - вели́ка
+    - ве́лика
     - вели́ке
     explanation: Стіл — чолові́чий рід, тому́ вели́кий стіл.
   - sentence: Це нови́й кни́га.
@@ -478,26 +481,27 @@ workbook:
     - стари́й
     - стара́
     explanation: Фо́то — сере́дній рід, тому́ старе́ фо́то.
-  - sentence: Це старе́ атлас.
+  - sentence: Це старе́ а́тлас.
     error: старе́
     answer: стари́й
     options:
     - стари́й
     - старе́
     - стара́
-    explanation: Атлас — чолові́чий рід, тому́ стари́й атлас.
+    explanation: А́тлас — чолові́чий рід, тому́ стари́й а́тлас.
   - sentence: Це вели́ке плака́т.
     error: вели́ке
     answer: вели́кий
     options:
     - вели́кий
     - вели́ке
-    - вели́ка
+    - ве́лика
     explanation: Плака́т — чолові́чий рід, тому́ вели́кий плака́т.
 - id: act-w105
   type: translate
-  title: 'Бо́нус: переклад — Bonus: translation'
-  instruction: Обері́ть правильний переклад украї́нською мо́вою. — Choose the correct Ukrainian translation.
+  title: 'Бо́нус: пере́клад — Bonus: translation'
+  instruction: Обері́ть пра́вильний пере́клад украї́нською мо́вою. — Choose the correct
+    Ukrainian translation.
   items:
   - source: A new table
     options:
@@ -539,17 +543,17 @@ workbook:
     options:
     - text: вели́кий плака́т
       correct: true
-    - text: вели́ка плака́т
+    - text: ве́лика плака́т
       correct: false
     - text: вели́ке плака́т
       correct: false
     explanation: Плака́т is masculine.
   - source: An old atlas
     options:
-    - text: стари́й атлас
+    - text: стари́й а́тлас
       correct: true
-    - text: стара́ атлас
+    - text: стара́ а́тлас
       correct: false
-    - text: старе́ атлас
+    - text: старе́ а́тлас
       correct: false
-    explanation: Атлас is masculine.
+    explanation: А́тлас is masculine.

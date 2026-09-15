@@ -1,117 +1,69 @@
 {
   "dimensions": {
     "pedagogical": {
-      "score": 7.5,
-      "evidence": "\"Чудово, тут дуже приємно!\"",
-      "verdict": "REVISE",
+      "score": 5.0,
+      "evidence": "The prohibited text fence remains, vocabulary introduces unexplained exercise words, and preservation and lesson-3 closure cannot be verified from lesson 1 alone.",
+      "verdict": "REJECT",
       "evidence_quotes": [
-        "Keep the scope small. Today is not a full adjective-declension lesson.",
-        "treat it as a preview word, not a new pattern to practice",
-        "Чудово, тут дуже приємно!"
-      ],
-      "rubric_mapping": "Module type: topic-neutral A1 grammar (adjective–noun gender agreement in the nominative). The teaching frame ('the noun chooses the adjective ending') is textbook-canonical (Пономарова Grade 3, p.98) — source-pedagogy audit F clears; no unsupported taxonomy frame, no impersonal-subject material. Q1 (FOR): 'Keep the scope small. Today is not a full adjective-declension lesson.' — genuine cognitive-load management; the lesson deliberately limits itself to the -ий/-а/-е/-і nominative pattern...",
-      "flags": [
-        "unknown_vocab_unscaffolded"
-      ],
-      "issue_ids": [
-        "UNKNOWN_VOCAB_UNSCAFFOLDED"
-      ],
-      "findings": [
-        {
-          "issue_id": "UNKNOWN_VOCAB_UNSCAFFOLDED",
-          "severity": "moderate",
-          "quote": "Який він яскравий!",
-          "replacement": "Add first-use inline glosses (e.g. **яскравий** *(bright)*, **приємно** *(pleasant)*, **Чудово** *(great)*) or extend the Розбір нових реплік table to cover 'Який він яскравий!' and 'Чудово, тут дуже приємно!'; either drop 'вікно біля столу' or gloss біля, since its genitive government is outside the lesson's stated nominative-only scope.",
-          "explanation": "In the added second book-fair dialogue, яскравий (and приємно, Чудово in 'Чудово, тут дуже приємно!', plus the genitive-governing preposition біля in 'А вікно біля столу?') are introduced only in Ukrainian: none is in vocabulary.yaml and none carries an inline English gloss. The following 'Розбір нових реплік' support table breaks down the pattern lines (Вона маленька, але гарна; Він новий і зручний; etc.) but conspicuously omits every line that contains the genuinely new vocabulary, so at A1...",
-          "dimension": "pedagogical"
-        }
+        "At a weekend book fair, Sofia and Taras are looking at a small table:",
+        "Choose the adjective ending that matches the noun."
       ]
     },
     "naturalness": {
-      "score": 7.5,
-      "evidence": "\"назвати їхній опис\"",
+      "score": 6.0,
+      "evidence": "The phone translation needs contextual revision; attempted VESUM and sources checks were blocked by tool approval policy, leaving morphology and examples unverified.",
       "verdict": "REVISE",
       "evidence_quotes": [
-        "Він старий, але корисний.",
-        "і назвати їхній опис",
-        "Розподіліть прикметники за закінченням роду."
-      ],
-      "rubric_mapping": "Quote 1 (\"Він старий, але корисний.\") is evidence FOR naturalness: a native short predicate-adjective answer that correctly drops the copula «є» and uses «але» for a natural contrast — exactly the A1 spoken register the dialogues aim for, and representative of the strong, human-sounding book-fair exchanges throughout (\"Яка вона?\" / \"Вона цікава і гарна.\" / \"Який він?\"). Quotes 2 and 3 are the residual native-style defects that a Ukrainian editor would rewrite even though every surface form...",
-      "flags": [
-        "missing_foreshadowing_gloss"
-      ],
-      "issue_ids": [
-        "UKRAINIAN_GRAMMAR_CALQUE"
-      ],
-      "findings": [
-        {
-          "issue_id": "UKRAINIAN_GRAMMAR_CALQUE",
-          "severity": "minor",
-          "quote": "і назвати їхній опис",
-          "replacement": "і описати їх",
-          "explanation": "Non-idiomatic collocation: «назвати опис» (to name a description) is not natural Ukrainian. A native editor writes «і описати їх» or «і дати їм характеристику». The intended meaning is 'and describe them', not 'name their description'.",
-          "dimension": "naturalness"
-        },
-        {
-          "issue_id": "UKRAINIAN_GRAMMAR_CALQUE",
-          "severity": "minor",
-          "quote": "за закінченням роду",
-          "replacement": "за родовими закінченнями",
-          "explanation": "Awkward genitive chain in the activity instruction. Gender does not have an ending; the adjective ending signals gender. A native teacher writes «за родом» or «за родовими закінченнями».",
-          "dimension": "naturalness"
-        }
+        "| **Тарас: Він новий і зручний.** | Taras: It is new and comfortable. |"
       ]
     },
     "decolonization": {
-      "score": 9.2,
-      "evidence": "\"repair common adjective traps such as **смачний**, **жовтий**,\"",
-      "verdict": "PASS",
+      "score": 6.0,
+      "evidence": "Ukrainian references are listed, but they do not establish lexical or example provenance, and blocked sources calls prevent the required grounding verdict.",
+      "verdict": "REVISE",
       "evidence_quotes": [
-        "repair common adjective traps such as **смачний**, **жовтий**,",
-        "Use the same gender habit from **мій / моя / моє**.",
-        "Він старий, але корисний."
-      ],
-      "rubric_mapping": "Module TYPE = topic-neutral (A1 grammar: adjective–noun agreement + який/яка/яке question words). Anchor: 9.0+ baseline when (a) Ukrainian-canonical vocabulary, (c) grammar on Ukrainian terms, and strict anti-Russian-as-reference execution are present; learner-facing bad-form contrast is deferred to later split lessons here, so the absence-only standard applies and is met. Quote 1 (\"repair common adjective traps such as смачний, жовтий, правильний, and розумний\") is evidence FOR: it names the...",
-      "flags": [
-        "absence-of-verification: mcp__sources__verify_source_attribution / verify_words / check_russian_shadow..."
+        "Exercises for nominative adjective agreement with masculine, feminine, and",
+        "Фото is neuter in this lesson, so ask Яке?"
       ]
     },
     "engagement": {
-      "score": 8.4,
-      "evidence": "\"When you hesitate, do not start with the English adjective.\"",
+      "score": 7.0,
+      "evidence": "The book-fair setting provides context, but repeated recognition drills offer little independent communication or meaningful dialogue progression.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Sort each adjective-noun phrase by the question it answers.",
+        "Оберіть правильне питальне слово для поданого іменника. — Choose the"
+      ]
+    },
+    "tone": {
+      "score": 8.0,
+      "evidence": "The teaching voice is reassuring, has no named narrator, and provides side-by-side English support for the extended dialogues.",
       "verdict": "PASS",
       "evidence_quotes": [
         "When you hesitate, do not start with the English adjective.",
-        "Notice the short answers. You do not need **є** here.",
-        "Чудово, тут дуже приємно!"
-      ],
-      "rubric_mapping": "Residual engagement judgment (gate already confirmed callout count + META_NARRATION absence). Quote 1 (the :::tip callout \"When you hesitate, do not start with the English adjective.\" -> continues \"Start with the Ukrainian noun: стіл -> він -> який? -> новий стіл. The noun gives you the ending.\") is evidence FOR: this is a content-anchored callout that carries a real, transferable decoding strategy tied to the exact target pattern of the lesson, not motivational filler — it clears the 'callouts..."
-    },
-    "tone": {
-      "score": 8.6,
-      "evidence": "\"When you hesitate, do not start with the English adjective. Start with the Ukrainian noun: **стіл -> він -> який? -> новий стіл**. The noun gives you the ending.\"",
-      "verdict": "PASS",
-      "evidence_quotes": [
-        "Keep the scope small. Today is not a full adjective-declension lesson. You are\ntraining the first visible pattern: noun gender plus adjective ending.",
-        "When you hesitate, do not start with the English adjective. Start with the\nUkrainian noun: **стіл -> він -> який? -> новий стіл**. The noun gives you\nthe ending.",
-        "Notice the short answers. You do not need **є** here. Say **Книга цікава**,\nnot a word-for-word English sentence with \"is.\""
-      ],
-      "rubric_mapping": "Residual tone judgment only; deterministic gates (META_NARRATION ban, AI-slop banlist, callout minimums) already passed. Module TYPE for register expectations: topic-neutral A1 grammar lesson (adjective agreement), so an English explanatory carrier with Ukrainian example-first anchoring is the sanctioned A1 posture, not a tone defect. (1) 'Keep the scope small. Today is not a full adjective-declension lesson...' — evidence FOR #R-SINGLE-VOICE-A1: a warm, honest, non-condescending peer voice..."
+        "| **Софія: Вона маленька, але гарна.** | Sofia: It is small, but nice. |"
+      ]
     }
   },
   "aggregate": {
-    "verdict": "REVISE",
+    "verdict": "REJECT",
     "terminal_verdict": "PASS",
     "failing_dims": [
       "pedagogical",
-      "naturalness"
+      "naturalness",
+      "decolonization",
+      "engagement"
     ],
-    "rejected_dims": [],
+    "rejected_dims": [
+      "pedagogical"
+    ],
     "warning_dims": [
       "pedagogical",
-      "naturalness"
+      "naturalness",
+      "decolonization",
+      "engagement"
     ],
-    "min_score": 7.5,
+    "min_score": 5.0,
     "min_dim": "pedagogical"
   }
 }

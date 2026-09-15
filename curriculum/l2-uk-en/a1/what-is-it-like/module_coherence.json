@@ -1,88 +1,241 @@
 {
   "dimensions": {
     "pedagogical": {
-      "score": 8.5,
-      "evidence": "\"**стіл -> він -> який? -> новий стіл**\"",
-      "verdict": "PASS",
+      "score": 6.4,
+      "evidence": "\"| **А цей атлас? Він дорогий?** | And this atlas? What is it like? |\"",
+      "verdict": "REVISE",
       "evidence_quotes": [
-        "**стіл -> він -> який? -> новий стіл**",
-        "Second, is the noun one thing or many things?",
-        "Який він яскравий!"
+        "<!-- INJECT_ACTIVITY: act-1 -->",
+        "| **А цей атлас? Він дорогий?** | And this atlas? What is it like? |",
+        "**Цікава книга.**"
       ],
-      "rubric_mapping": "Module type: topic-neutral A1 grammar (nominative adjective agreement). Quote 1 (`**стіл -> він -> який? -> новий стіл**`, Lesson 1 :::tip) is evidence FOR: the callout carries real, content-anchored pedagogy — a concrete decision procedure (noun→gender pronoun→question word→ending) rather than filler, directly supporting the residual test 'do the callouts carry real pedagogy' and 'does the sequencing actually teach'. Quote 2 (`Second, is the noun one thing or many things?`, Lesson 3) is...",
+      "rubric_mapping": "1. AGAINST: Lesson 1 places act-1 before introducing the four question forms. Its six-item assessment therefore tests the new distinction before teaching it, without framing this as a diagnostic. Inline practice subsequently includes a ten-item ending drill and sixteen-phrase sorting task, weakening the intended short-check rhythm. 2. AGAINST: Lesson 2 gives conflicting English support for the same dialogue turn: the dialogue says 'Is it expensive?' but its breakdown says 'What is it like?'....",
       "flags": [
-        "missing_foreshadowing_gloss"
+        "missing_foreshadowing_gloss",
+        "activity_split_audit_missing",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit",
+        "source_verification_blocked: mcp__sources__verify_words, two mcp__sources__search_text calls, and...",
+        "source_verification_partial: the cited [Ukrainian Lessons adjective...",
+        "preservation_unverifiable: original pre-upgrade artifacts were not supplied for comparison; stable IDs alone do not...",
+        "prior_learner_state_unavailable: no actual cumulative vocabulary inventory was supplied; first-use findings rely on..."
       ],
       "issue_ids": [
-        "MISSING_FORESHADOWING_GLOSS"
+        "CONTRADICTORY_ENGLISH_SUPPORT",
+        "FIRST_USE_VOCABULARY_SUPPORT",
+        "INLINE_PRACTICE_OVERLOAD",
+        "PRACTICE_BEFORE_INSTRUCTION"
       ],
       "findings": [
         {
-          "issue_id": "MISSING_FORESHADOWING_GLOSS",
-          "severity": "minor",
-          "quote": "Який він яскравий!",
-          "replacement": "Add яскравий — bright / vivid (and приємно — pleasant) to the Lesson 1 breakdown table and/or vocabulary.yaml so every new dialogue adjective carries a first-use gloss.",
-          "explanation": "New A1 adjective яскравий (bright/vivid) appears in the Lesson 1 book-fair dialogue but is omitted from the following 'Розбір нових реплік' English-support table and from vocabulary.yaml, so it reaches the learner without an inline gloss at first mention; приємно in 'тут дуже приємно!' is unglossed the same way. Minor student-aware scaffolding gap in an otherwise well-glossed lesson — context partly carries the meaning, so it does not drop the dim below PASS.",
+          "issue_id": "PRACTICE_BEFORE_INSTRUCTION",
+          "severity": "major",
+          "quote": "<!-- INJECT_ACTIVITY: act-1 -->",
+          "explanation": "Lesson 1 inserts the question-word quiz before the explanation and model table that teach its answers. Move the existing check after those models; knowing noun gender from the preceding module does not establish knowledge of these new question forms.",
+          "dimension": "pedagogical"
+        },
+        {
+          "issue_id": "CONTRADICTORY_ENGLISH_SUPPORT",
+          "severity": "major",
+          "quote": "| **А цей атлас? Він дорогий?** | And this atlas? What is it like? |",
+          "replacement": "| **А цей атлас? Він дорогий?** | And this atlas? Is it expensive? |",
+          "explanation": "The same Ukrainian turn is translated as 'And this atlas? Is it expensive?' in the preceding dialogue. The breakdown changes its communicative purpose and gives beginners contradictory guidance.",
+          "dimension": "pedagogical"
+        },
+        {
+          "issue_id": "FIRST_USE_VOCABULARY_SUPPORT",
+          "severity": "major",
+          "quote": "**Цікава книга.**",
+          "explanation": "This early Lesson 1 answer has no immediate English gloss, while цікава is allocated to Lesson 3 vocabulary. Similarly, листівка is used in Lesson 1 but allocated to Lesson 2. Later translations partially compensate, but vocabulary allocation should support the lesson where learners first need the meaning.",
+          "dimension": "pedagogical"
+        },
+        {
+          "issue_id": "INLINE_PRACTICE_OVERLOAD",
+          "severity": "moderate",
+          "quote": "Choose the adjective ending that matches the noun.",
+          "explanation": "Lesson 1 act-2 requires ten decisions during theory, and act-3 requires sorting sixteen phrases. Substantial inline drills recur across the three lessons. Their burden resembles workbook practice, interrupting explanation rather than providing quick comprehension checks. This finding concerns instructional pacing, not activity-count compliance.",
           "dimension": "pedagogical"
         }
       ]
     },
     "naturalness": {
-      "score": 9.0,
-      "evidence": "\"Він старий, але корисний.\"",
-      "verdict": "PASS",
+      "score": 7.4,
+      "evidence": "\"прикметники узгоджуються з атлас (чоловічий рід).\"",
+      "verdict": "REVISE",
       "evidence_quotes": [
-        "Він старий, але корисний.",
-        "Кімната велика і світла.",
-        "Стіл новий, а стілець старий."
+        "прикметники узгоджуються з атлас (чоловічий рід).",
+        "Дякую! А це смачний суп.",
+        "Кімната маленька, але гарна."
       ],
-      "rubric_mapping": "Q1 \"Він старий, але корисний.\" — residual naturalness FOR: native predicate-adjective construction with correct masculine agreement (старий→атлас/він) and idiomatic concessive але, using the no-copula present-tense frame a Ukrainian speaker actually uses; not a calqued English 'is ... but' architecture. Q2 \"Кімната велика і світла.\" — FOR: natural coordination of two equal qualities with і, correct feminine agreement (велика/світла→кімната), idiomatic collocation (світла кімната), reads as..."
+      "rubric_mapping": "Quote 1 AGAINST: lesson-3 act-w304 contains wrong government in explanatory prose: an unmarked nominative follows узгоджуються з. The instrumental construction is supported by the [Vakulenko dictionary](https://dntb.gov.ua/wp-content/uploads/2019/01/Slovnyk_fizychnykh_terminiv-synonimiv_2017_Vakulenky.pdf), which records узгоджуватися (з чим). Quote 2 AGAINST: the lesson-3 conversation moves from a book fair to a private room and then soup without a transition; the reply reads as disconnected...",
+      "flags": [
+        "sources_verification_blocked: verify_words, search_definitions and search_heritage returned 'MCP tool call requires...",
+        "heritage_claim_unresolved: the marked красний contrast could not receive the required heritage-context verification; no...",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit"
+      ],
+      "issue_ids": [
+        "DIALOGUE_DISCOURSE_DISCONTINUITY",
+        "UKRAINIAN_GRAMMAR_CALQUE"
+      ],
+      "findings": [
+        {
+          "issue_id": "UKRAINIAN_GRAMMAR_CALQUE",
+          "severity": "major",
+          "quote": "прикметники узгоджуються з атлас (чоловічий рід).",
+          "replacement": "прикметники узгоджуються з іменником «атлас» (чоловічий рід).",
+          "explanation": "Lesson-3 act-w304 leaves атлас in the nominative after з. Use an inflected complement or introduce the cited headword with an appropriately inflected noun. This is an error in the explanation, not an intentional exercise distractor.",
+          "dimension": "naturalness"
+        },
+        {
+          "issue_id": "DIALOGUE_DISCOURSE_DISCONTINUITY",
+          "severity": "moderate",
+          "quote": "Дякую! А це смачний суп.",
+          "explanation": "Lesson 3 explicitly continues the book-fair conversation, then introduces Sofia's lamp, a room compliment, and soup without establishing a move or a meal. The disconnected reply makes the exchange sound assembled to rehearse adjectives. Establish the situation before these turns.",
+          "dimension": "naturalness"
+        }
+      ]
     },
     "decolonization": {
-      "score": 9.4,
-      "evidence": "\"<!-- bad -->вкусний<!-- /bad --> суп | **смачний суп**\"",
-      "verdict": "PASS",
+      "score": 7.5,
+      "evidence": "\"| <!-- bad -->ленивий<!-- /bad --> учень | **лінивий учень** |\"",
+      "verdict": "REVISE",
       "evidence_quotes": [
-        "<!-- bad -->вкусний<!-- /bad --> суп | **смачний суп**",
-        "Keep Ukrainian on its own terms. Do not explain endings through another language, and do not trust look-alike words.",
-        "Use the same gender habit from **мій / моя / моє**."
+        "Adjectives are a common interference zone. Keep Ukrainian on its own terms.",
+        "| <!-- bad -->ленивий<!-- /bad --> учень | **лінивий учень** |",
+        "Use червоний for red in ordinary modern Ukrainian."
       ],
-      "rubric_mapping": "Module TYPE = topic-neutral (A1 grammar: adjective gender agreement + який/яка/яке question words). Per the anchor, a clean canonical grammar lesson clears 9.0+ if (a) Ukrainian-canonical vocabulary throughout, (b) authorized bad-form contrast markers present, and (c) grammar taught on Ukrainian terms — extra anti-colonial rhetoric is NOT required and would politicize a grammar lesson. This module was explicitly authorized for learner-facing contrast (plan Surzhyk drill + wiki..."
+      "rubric_mapping": "TYPE: topic-neutral. Across all three lessons, Ukrainian supplies the grammatical reference point; additional political rhetoric is unnecessary. Quote 1 supports independent Ukrainian framing. Quote 2 raises an unresolved heritage-defense concern: the lesson classifies ленивий as bad without distinguishing contextual preference from historical, regional, or standard status. This is an ungrounded normative exclusion, not a confirmed Russianism or confirmed heritage form. Quote 3 positively...",
+      "flags": [
+        "source_verification_blocked: automatic approval review rejected search_heritage, check_modern_form, and verify_words...",
+        "heritage_classification_unresolved: ленивий",
+        "morphology_verification_unavailable",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit"
+      ],
+      "issue_ids": [
+        "UNVERIFIED_NORMATIVE_EXCLUSION"
+      ],
+      "findings": [
+        {
+          "issue_id": "UNVERIFIED_NORMATIVE_EXCLUSION",
+          "severity": "major",
+          "quote": "| <!-- bad -->ленивий<!-- /bad --> учень | **лінивий учень** |",
+          "explanation": "The bad-form classification requires contextual and heritage verification. The required sources calls were blocked, so the classification remains unresolved. No claim that this word is Russian or Ukrainian heritage can be sustained from the available verification results. Obtain source evidence and distinguish the recommended modern classroom form from any attested alternative uses.",
+          "dimension": "decolonization"
+        }
+      ]
     },
     "engagement": {
-      "score": 8.4,
-      "evidence": "\"Notice the short answers. You do not need **є** here.\"",
-      "verdict": "PASS",
+      "score": 6.5,
+      "evidence": "\"**Тарас**: Яка гарна кімната! Тут чисте вікно і новий стіл.\"",
+      "verdict": "REVISE",
       "evidence_quotes": [
-        "Notice the short answers. You do not need **є** here.",
-        "When you hesitate, do not start with the English adjective.",
-        "At a weekend book fair, Sofia and Taras are looking at a small table:"
+        "Cover the English and answer aloud:",
+        "**Тарас**: Яка гарна кімната! Тут чисте вікно і новий стіл.",
+        "Розподіліть фрази за граматичним родом іменника."
       ],
-      "rubric_mapping": "Residual engagement judgment (presence of callouts + META_NARRATION absence already confirmed by the gate). Quote 1 (\"Notice the short answers. You do not need **є** here.\") is evidence FOR: this is a content-anchored direct-address move tied to the exact grammar point of the lesson (the no-copula nominative frame), not a generic \"notice this\" filler — it warns the learner off the concrete English-shaped calque they are most likely to produce. Quote 2 (\"When you hesitate, do not start with the..."
+      "rubric_mapping": "Quote 1 supports engagement: Lesson 2 gives a concrete retrieval action tied to the preceding dialogue. Quote 2 shows a residual dialogue-coherence defect: Lesson 3's continuing book-fair conversation abruptly becomes a room visit and then introduces soup, without a transition or communicative purpose. Quote 3 illustrates repetitive drill design: Lesson 3 act-304 repeats gender sorting after Lesson 1 act-3, alongside repeated question selection and ending completion. Review is explicitly...",
+      "flags": [
+        "source_verification_blocked: verify_words and search_text returned approval-required errors under approval policy...",
+        "activity_split_audit_missing",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit",
+        "missing_foreshadowing_gloss: Lesson 1 introduces листівка in the question table before its Lesson 2 vocabulary...",
+        "unknown_vocab_unscaffolded: Lesson 3 introduces рідні люди, популярний музикант, активна жінка, талановитий композитор..."
+      ],
+      "issue_ids": [
+        "DIALOGUE_CONTEXT_DISCONTINUITY",
+        "INLINE_DRILL_PACING",
+        "REPETITIVE_PRACTICE_LOW_PAYOFF"
+      ],
+      "findings": [
+        {
+          "issue_id": "DIALOGUE_CONTEXT_DISCONTINUITY",
+          "severity": "major",
+          "quote": "**Тарас**: Яка гарна кімната! Тут чисте вікно і новий стіл.",
+          "explanation": "The final lesson labels this a continuing book-fair conversation, but shifts to a room and then soup without explanation. Characters function as prompts for an object inventory rather than people pursuing a coherent interaction.",
+          "dimension": "engagement"
+        },
+        {
+          "issue_id": "REPETITIVE_PRACTICE_LOW_PAYOFF",
+          "severity": "major",
+          "quote": "Розподіліть фрази за граматичним родом іменника.",
+          "explanation": "Lesson 3 act-304 repeats the gender-classification demand already exercised extensively in Lesson 1. Repeated antonym matching and sentence selection across the lessons similarly add little contextual challenge. Signposted review is appropriate, but the cumulative experience offers insufficient variety or communicative payoff.",
+          "dimension": "engagement"
+        },
+        {
+          "issue_id": "INLINE_DRILL_PACING",
+          "severity": "moderate",
+          "quote": "Choose the adjective ending that matches the noun.",
+          "explanation": "Lesson 1 act-2 places a ten-item ending drill between dialogue segments; act-3 adds sixteen sorting phrases. Later lessons also insert substantial drills. These interruptions resemble workbook practice and weaken the pace of the lesson narrative.",
+          "dimension": "engagement"
+        }
+      ]
     },
     "tone": {
-      "score": 9.0,
-      "evidence": "\"Keep the scope small. Today is not a full adjective-declension lesson. You are training the first visible pattern: noun gender plus adjective ending.\"",
-      "verdict": "PASS",
+      "score": 5.8,
+      "evidence": "\"Доповніть прикметник закінченням, узгодженим із родом іменника.\"",
+      "verdict": "REJECT",
       "evidence_quotes": [
-        "Keep the scope small. Today is not a full adjective-declension lesson. You are training the first visible pattern: noun gender plus adjective ending.",
-        "Notice the short answers. You do not need **є** here.",
-        "Тепер ви можете легко запитати **Який стіл?**, **Яка книга?** або **Яке вікно?** і назвати їхній опис."
+        "Cover the English and answer aloud:",
+        "Do not explain endings through another language, and do not trust look-alike\nwords.",
+        "Доповніть прикметник закінченням, узгодженим із родом іменника."
       ],
-      "rubric_mapping": "Module type for tone: A1 grammar module, bilingual-immersion register (English scaffold receding into Ukrainian), so English task support is expected and not penalized. (1) \"Keep the scope small. Today is not a full adjective-declension lesson. You are training the first visible pattern...\" — evidence FOR #R-SINGLE-VOICE-A1: warm, direct second-person address (\"you\"), peer-not-teacherly, sets honest scope without condescension or emoji/sticker praise; no third-person learner framing (no \"the..."
+      "rubric_mapping": "Quote 1, lesson 2, supports tone: direct, practical guidance respects the adult learner and makes English support optional. Quote 2, lesson 2, works against tone: the voice shifts from helping learners use examples to policing their learning strategy. Its categorical prohibition sounds admonitory rather than explanatory. Quote 3, lesson 3 act-302, demonstrates the broader register discontinuity: accessible English and bilingual coaching in earlier lessons becomes unsupported, abstract Ukrainian...",
+      "flags": [
+        "source_verification_unavailable: all three sources verification calls returned 'MCP tool call requires approval, but...",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit"
+      ],
+      "issue_ids": [
+        "TONE_ADMONITORY",
+        "TONE_REGISTER_SHIFT"
+      ],
+      "findings": [
+        {
+          "issue_id": "TONE_REGISTER_SHIFT",
+          "severity": "high",
+          "quote": "Доповніть прикметник закінченням, узгодженим із родом іменника.",
+          "explanation": "Lesson 3 act-302 adopts compressed Ukrainian grammatical metalanguage without the accessible support used earlier. Similar formal instructions and rule explanations recur throughout lessons 2–3. The teacher's voice becomes an examination register rather than maintaining the warm, clear A1 coaching established in lesson 1.",
+          "dimension": "tone"
+        },
+        {
+          "issue_id": "TONE_ADMONITORY",
+          "severity": "medium",
+          "quote": "Do not explain endings through another language, and do not trust look-alike words.",
+          "explanation": "The lesson addresses the learner as someone who must obey a language-teaching policy. The sweeping prohibition interrupts otherwise concrete guidance about adjective agreement and gives the passage an unnecessarily disciplinary voice.",
+          "dimension": "tone"
+        }
+      ]
     }
   },
   "aggregate": {
-    "verdict": "REVISE",
+    "verdict": "REJECT",
     "terminal_verdict": "PASS",
     "failing_dims": [
-      "pedagogical"
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
     ],
-    "rejected_dims": [],
+    "rejected_dims": [
+      "tone"
+    ],
     "warning_dims": [
-      "pedagogical"
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
     ],
-    "min_score": 8.4,
-    "min_dim": "engagement"
+    "min_score": 5.8,
+    "min_dim": "tone"
   }
 }

@@ -21,7 +21,7 @@
 - lemma: ціка́вий
   translation: interesting, masculine
   pos: adj
-  usage: Це ціка́вий атлас.
+  usage: Це ціка́вий а́тлас.
 - lemma: ціка́ва
   translation: interesting, feminine
   pos: adj
@@ -34,10 +34,10 @@
   translation: tasty, masculine
   pos: adj
   usage: Це смачни́й суп.
-- lemma: правильний
+- lemma: пра́вильний
   translation: correct, masculine
   pos: adj
-  usage: Це правильний приклад.
+  usage: Це пра́вильний при́клад.
 - lemma: розу́мний
   translation: smart, masculine
   pos: adj
@@ -45,4 +45,4 @@
 - lemma: ліни́вий
   translation: lazy, masculine
   pos: adj
-  usage: У́чень ліни́вий.
+  usage: Уче́нь ліни́вий.

@@ -1,5 +1,4 @@
-I have launched the stress annotation verification command and will wait for it to complete.
-````markdown file=module.md
+```markdown file=module.md
 # Який він?
 
 У цьому уроці ви навчитеся описувати речі навколо себе — in this lesson you will learn how to describe things around you:
@@ -58,6 +57,8 @@ At a weekend book fair, Sofia and Taras are looking at a small table:
 Софія: Воно маленьке.
 ```
 
+Support after the Ukrainian lines:
+
 | Українська | English support |
 | --- | --- |
 | **Софія: Дивись, це нова книга.** | Sofia: Look, this is a new book. |
@@ -76,12 +77,12 @@ not a word-for-word English sentence with "is."
 Послухайте ще одну розмову на книжковому ярмарку — listen to another conversation at the book fair:
 
 > **Тарас**: Дивись, ось великий плакат.
-> **Софія**: Який він яскравий!
+> **Софія**: Який гарний плакат!
 > **Тарас**: А ця листівка? Яка вона?
 > **Софія**: Вона маленька, але гарна.
-> **Тарас**: А вікно біля столу?
+> **Тарас**: А вікно? Яке воно?
 > **Софія**: Воно велике і чисте.
-> **Тарас**: Чудово, тут дуже приємно!
+> **Тарас**: Чудово! Тут дуже приємно.
 
 Продовження розмови — the conversation continues:
 
@@ -89,7 +90,7 @@ not a word-for-word English sentence with "is."
 > **Тарас**: Так, ось він.
 > **Софія**: Який він?
 > **Тарас**: Він новий і зручний.
-> **Софія**: А старе фото на столі?
+> **Софія**: А старе фото?
 > **Тарас**: Воно старе, але цікаве.
 > **Софія**: Це дуже гарні речі!
 
@@ -97,12 +98,20 @@ not a word-for-word English sentence with "is."
 
 | Українська | English support |
 | --- | --- |
-| **Дивись, ось великий плакат.** | Look, here is a big poster. |
-| **Вона маленька, але гарна.** | It is small, but nice. |
-| **Воно велике і чисте.** | It is big and clean. |
-| **Він новий і зручний.** | It is new and comfortable. |
-| **Воно старе, але цікаве.** | It is old, but interesting. |
-| **Це дуже гарні речі!** | These are very nice things! |
+| **Тарас: Дивись, ось великий плакат.** | Taras: Look, here is a big poster. |
+| **Софія: Який гарний плакат!** | Sofia: What a nice poster! |
+| **Тарас: А ця листівка? Яка вона?** | Taras: And this postcard? What is it like? |
+| **Софія: Вона маленька, але гарна.** | Sofia: It is small, but nice. |
+| **Тарас: А вікно? Яке воно?** | Taras: And the window? What is it like? |
+| **Софія: Воно велике і чисте.** | Sofia: It is big and clean. |
+| **Тарас: Чудово! Тут дуже приємно.** | Taras: Wonderful! It is very pleasant here. |
+| **Софія: А новий телефон у тебе є?** | Sofia: And do you have a new phone? |
+| **Тарас: Так, ось він.** | Taras: Yes, here it is. |
+| **Софія: Який він?** | Sofia: What is it like? |
+| **Тарас: Він новий і зручний.** | Taras: It is new and comfortable. |
+| **Софія: А старе фото?** | Sofia: And the old photo? |
+| **Тарас: Воно старе, але цікаве.** | Taras: It is old, but interesting. |
+| **Софія: Це дуже гарні речі!** | Sofia: These are very nice things! |
 
 <!-- INJECT_ACTIVITY: act-101 -->
 
@@ -141,13 +150,13 @@ the ending.
 
 <!-- INJECT_ACTIVITY: act-102 -->
 
-### Підсумок уроку
+### Підсумок уроку — Lesson summary
 
-Перевірте себе — check yourself. Поєднайте іменник та прикметник:
-- **стіл** — чоловічий рід: **новий стіл**, **великий стіл**;
-- **книга** — жіночий рід: **нова книга**, **велика книга**;
-- **фото** — середній рід: **нове фото**, **велике фото**;
-- **книги** — множина: **нові книги**, **великі книги**.
+Перевірте себе — check yourself. Поєднайте іменник та прикметник — match the noun and the adjective:
+- **стіл** — чоловічий рід (masculine): **новий стіл**, **великий стіл**;
+- **книга** — жіночий рід (feminine): **нова книга**, **велика книга**;
+- **фото** — середній рід (neuter): **нове фото**, **велике фото**;
+- **книги** — множина (plural): **нові книги**, **великі книги**.
 
 Короткий опис предметів — short description of things:
 
@@ -158,8 +167,8 @@ the ending.
 | **Там чисте вікно.** | Over there is a clean window. |
 | **Це гарні речі.** | These are nice things. |
 
-Тепер ви можете легко запитати **Який стіл?**, **Яка книга?** або **Яке вікно?** і назвати їхній опис.
-````
+Тепер ви можете легко запитати **Який стіл?**, **Яка книга?** або **Яке вікно?** і описати їх — now you can easily ask **Який стіл?**, **Яка книга?**, or **Яке вікно?** and describe them.
+```
 
 ```json file=activities.yaml
 {
@@ -167,7 +176,7 @@ the ending.
     {
       "id": "act-1",
       "type": "quiz",
-      "title": "Яке питальне слово?",
+      "title": "Яке питальне слово? — Which question word?",
       "instruction": "Choose the question word that fits the noun.",
       "items": [
         {
@@ -283,7 +292,7 @@ the ending.
     {
       "id": "act-2",
       "type": "fill-in",
-      "title": "Заверши прикметник",
+      "title": "Заверши прикметник — Complete the adjective",
       "instruction": "Choose the adjective ending that matches the noun.",
       "items": [
         {
@@ -391,8 +400,8 @@ the ending.
     {
       "id": "act-101",
       "type": "match-up",
-      "title": "Питання та переклад",
-      "instruction": "З'єднайте українське питання з англійським перекладом.",
+      "title": "Питання та переклад — Question and translation",
+      "instruction": "З'єднайте українське питання з англійським перекладом. — Match the Ukrainian question with its English translation.",
       "pairs": [
         {
           "left": "Який це стіл?",
@@ -423,7 +432,7 @@ the ending.
     {
       "id": "act-3",
       "type": "group-sort",
-      "title": "Сортуй фрази",
+      "title": "Сортуй фрази — Sort the phrases",
       "instruction": "Sort each adjective-noun phrase by the question it answers.",
       "groups": [
         {
@@ -467,8 +476,8 @@ the ending.
     {
       "id": "act-102",
       "type": "true-false",
-      "title": "Правда чи ні?",
-      "instruction": "Визначте, чи правильне узгодження прикметника з іменником.",
+      "title": "Правда чи ні? — True or false?",
+      "instruction": "Визначте, чи правильне узгодження прикметника з іменником. — Decide whether the adjective agrees correctly with the noun.",
       "statements": [
         {
           "statement": "Стіл новий.",
@@ -512,7 +521,7 @@ the ending.
     {
       "id": "act-w1",
       "type": "quiz",
-      "title": "Модель речення",
+      "title": "Модель речення — Sentence model",
       "instruction": "Choose the natural A1 sentence.",
       "items": [
         {
@@ -628,7 +637,7 @@ the ending.
     {
       "id": "act-w2",
       "type": "fill-in",
-      "title": "Опиши кімнату",
+      "title": "Опиши кімнату — Describe the room",
       "instruction": "Complete the short room lines.",
       "items": [
         {
@@ -696,8 +705,8 @@ the ending.
     {
       "id": "act-w101",
       "type": "quiz",
-      "title": "Обери питання",
-      "instruction": "Оберіть правильне питальне слово для поданого іменника.",
+      "title": "Обери питання — Choose the question",
+      "instruction": "Оберіть правильне питальне слово для поданого іменника. — Choose the correct question word for the given noun.",
       "items": [
         {
           "prompt": "стіл",
@@ -812,8 +821,8 @@ the ending.
     {
       "id": "act-w102",
       "type": "fill-in",
-      "title": "Встав закінчення",
-      "instruction": "Додайте правильне закінчення прикметника.",
+      "title": "Встав закінчення — Insert the ending",
+      "instruction": "Додайте правильне закінчення прикметника. — Add the correct adjective ending.",
       "items": [
         {
           "sentence": "Це нов___ атлас.",
@@ -880,8 +889,8 @@ the ending.
     {
       "id": "act-w103",
       "type": "group-sort",
-      "title": "Розподіли за закінченням",
-      "instruction": "Розподіліть прикметники за закінченням роду.",
+      "title": "Розподіли за закінченням — Sort by ending",
+      "instruction": "Розподіліть прикметники за родовими закінченнями. — Sort the adjectives by gender endings.",
       "groups": [
         {
           "label": "-ий (чоловічий рід)",
@@ -912,8 +921,8 @@ the ending.
     {
       "id": "act-w104",
       "type": "error-correction",
-      "title": "Виправ закінчення",
-      "instruction": "Знайдіть і виправте помилку в узгодженні.",
+      "title": "Виправ закінчення — Fix the ending",
+      "instruction": "Знайдіть і виправте помилку в узгодженні. — Find and fix the agreement mistake.",
       "items": [
         {
           "sentence": "Це велика стіл.",
@@ -986,8 +995,8 @@ the ending.
     {
       "id": "act-w105",
       "type": "translate",
-      "title": "Бонус: переклад",
-      "instruction": "Оберіть правильний переклад українською мовою.",
+      "title": "Бонус: переклад — Bonus: translation",
+      "instruction": "Оберіть правильний переклад українською мовою. — Choose the correct Ukrainian translation.",
       "items": [
         {
           "source": "A new table",
