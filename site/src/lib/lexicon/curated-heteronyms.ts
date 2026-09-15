@@ -15703,6 +15703,2937 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11, 1970–1980). Подано для історичного аналізу радянського редакторського втручання та ідеологічного зміщення."
       }
     }
+  ],
+  "гукнути": [
+    {
+      "lemma": "гукнути",
+      "url_slug": "гукнути",
+      "headword": "гу́кнути",
+      "short_label": "вигукнути, відгукнутися (розм.)",
+      "gloss": "to shout, echo, make an echoing sound, call out casually",
+      "pos": "verb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈɦuknʊtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "гу́кнути",
+        "source": "СУМ-20 (23683)"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "доконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «гукну́ти» (наголос на кінцевому -ну́ти: голосно покликати когось, закликати).",
+      "meaning": {
+        "definitions": [
+          "Однократне до гу́кати; вигукнути, лунко зазвучати."
+        ],
+        "source": "СУМ-20 (23683)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ГУ́КНУ́ТИ, гу́кну́, гу́кне́ш, док., розм. Однокр. до гу́кати.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "гукнути",
+      "url_slug": "гукнути",
+      "headword": "гукну́ти",
+      "short_label": "покликати, закликати когось",
+      "gloss": "to call, shout out to summon someone, invite aloud",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ɦʊkˈnutɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "гукну́ти",
+        "source": "СУМ-20 (23684)"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "доконаний"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «гу́кнути» (наголос на першому складі: однокр. до гу́кати, лунко вигукнути).",
+      "meaning": {
+        "definitions": [
+          "Однократне до гука́ти; покликати, закликати когось."
+        ],
+        "source": "СУМ-20 (23684)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ГУКНУ́ТИ, ну́, не́ш, док., кого і без прям. дод. Однокр. до гука́ти 1.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "гвоздик": [
+    {
+      "lemma": "гвоздик",
+      "url_slug": "гвоздик",
+      "headword": "гво́здик",
+      "short_label": "маленький цвяшок (рідко)",
+      "gloss": "small nail, peg, tack, pin (diminutive of гвоздь)",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈɦwɔzdɪk]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "гво́здик",
+        "source": "СУМ-20 (17109)"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "masculine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «гвозди́к» (наголос на -и́к: квітка гвоздика, Dianthus).",
+      "meaning": {
+        "definitions": [
+          "Зменш. до гвоздь 1; цвяшок."
+        ],
+        "source": "СУМ-20 (17109)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ГВО́ЗДИК, а, ч., рідко. Зменш.-пестл. до гвоздь 1.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "гвоздик",
+      "url_slug": "гвоздик",
+      "headword": "гвозди́к",
+      "short_label": "квітка гвоздика, повняк (бот.)",
+      "gloss": "carnation, pink flower (Dianthus; also clove spice)",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ɦwɔzˈdɪk]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "гвозди́к",
+        "source": "СУМ-20 (17110)"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "masculine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «гво́здик» (наголос на першому складі: цвяшок).",
+      "meaning": {
+        "definitions": [
+          "Те саме, що повня́к; трав'яниста рослина родини гвоздикових із запашними квітками."
+        ],
+        "source": "СУМ-20 (17110) / Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ГВОЗДИ́К, а, ч. (перев. мн. гвоздики, ів). Бот. Те саме, що гвозди́ка.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "дихання": [
+    {
+      "lemma": "дихання",
+      "url_slug": "дихання",
+      "headword": "ди́хання",
+      "short_label": "процес поглинання кисню (фізіол.)",
+      "gloss": "respiration, breathing, inhalation and exhalation",
+      "pos": "noun",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈdɪxɐnʲːɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ди́хання",
+        "source": "СУМ-20 (29813)"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "neuter",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «диха́ння» (наголос на другому складі: діал. / нар.-поет. віддих, подув).",
+      "meaning": {
+        "definitions": [
+          "Процес поглинання кисню і виділення вуглекислоти живими організмами."
+        ],
+        "source": "СУМ-20 (29813)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ДИ́ХАННЯ, я, с. Періодичне вбирання в себе й випускання повітря живими організмами.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "дихання",
+      "url_slug": "дихання",
+      "headword": "диха́ння",
+      "short_label": "віддих, подув (діал., нар.-поет.)",
+      "gloss": "breath, gentle exhalation, poetic breath or gust (attested in Grinchenko 1907)",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-dialectism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[dɪˈxanʲːɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "диха́ння",
+        "source": "СУМ-20 (29814)"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "neuter",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з нормативним літературним «ди́хання» (наголос на першому складі: фізіологічний процес).",
+      "meaning": {
+        "definitions": [
+          "(діал., нар.-поет.) Те саме, що ди́хання; віддих, дихання людини чи вітру."
+        ],
+        "source": "СУМ-20 (29814) / Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ДИХА́ННЯ, я, с., діал. Ди́хання.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "ковтнути": [
+    {
+      "lemma": "ковтнути",
+      "url_slug": "ковтнути",
+      "headword": "ко́втнути",
+      "short_label": "ударити кулаком (діал.)",
+      "gloss": "to punch, strike with a fist (dialectal single blow, related to ко́втати)",
+      "pos": "verb",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-dialectism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈkɔu̯tnʊtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ко́втнути",
+        "source": "СУМ-20 (41381)"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "доконаний"
+        }
+      },
+      "distinction_note": "Не плутати з загальновживаним «ковтну́ти» (наголос на -ну́ти: проковтнути рідину або їжу).",
+      "meaning": {
+        "definitions": [
+          "(діал.) Однократне до ко́втати; вдарити, стукнути кулаком."
+        ],
+        "source": "СУМ-20 (41381)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "КО́ВТНУТИ, ну, неш, док., діал. Однокр. до ко́втати.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "ковтнути",
+      "url_slug": "ковтнути",
+      "headword": "ковтну́ти",
+      "short_label": "проковтнути рідину або їжу",
+      "gloss": "to swallow, take a gulp, drink a mouthful",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[kɔu̯tˈnutɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ковтну́ти",
+        "source": "СУМ-20 (41382)"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "доконаний"
+        }
+      },
+      "distinction_note": "Не плутати з діалектним «ко́втнути» (наголос на першому складі: вдарити кулаком).",
+      "meaning": {
+        "definitions": [
+          "Однократне до ковта́ти; зробити один ковток рідини або їжі; випити."
+        ],
+        "source": "СУМ-20 (41382)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "КОВТНУ́ТИ, ну́, не́ш, док., що, чого і без прям. дод. 1. Однокр. до ковта́ти 1.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "підсумковий": [
+    {
+      "lemma": "підсумковий",
+      "url_slug": "підсумковий",
+      "headword": "підсу́мковий",
+      "short_label": "який підбиває підсумки",
+      "gloss": "summary, final, conclusive, resulting (from підсу́мок - total, summary)",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[pidˈsumkɔwɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "підсу́мковий",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з військовим терміном «підсумко́вий» (наголос на третьому складі: прикм. до пі́дсумок - сумка для набоїв).",
+      "meaning": {
+        "definitions": [
+          "Прикм. до підсу́мок; який містить або підбиває підсумки; завершальний, кінцевий."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ПІДСУ́МКОВИЙ, а, е. Прикм. до підсу́мок.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "підсумковий",
+      "url_slug": "підсумковий",
+      "headword": "підсумко́вий",
+      "short_label": "стосовний до сумки для набоїв (військ.)",
+      "gloss": "related to an ammunition pouch or cartridge box (from пі́дсумок - ammo pouch)",
+      "pos": "adjective",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[pidsʊmˈkɔwɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "підсумко́вий",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з загальним словом «підсу́мковий» (наголос на -су́м-: який підбиває результати чи підсумки).",
+      "meaning": {
+        "definitions": [
+          "(військ., іст.) Прикм. до пі́дсумок (патронташ, сумка для набоїв)."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ПІДСУМКО́ВИЙ, а, е. 1. Прикм. до пі́дсумок. Зустрічаються підсумкові ремені...",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "родовий": [
+    {
+      "lemma": "родовий",
+      "url_slug": "родовий",
+      "headword": "ро́довий",
+      "short_label": "граматичний рід / родовий лад",
+      "gloss": "genitive (grammar case); ancestral, clan-related (belonging to a clan or lineage)",
+      "pos": "adjective",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈrɔdɔwɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ро́довий",
+        "source": "СУМ-20 (89370)"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з медичним терміном «родови́й» (наголос на кінці: стосовний до пологів, народження дитини).",
+      "meaning": {
+        "definitions": [
+          "1. Який стосується роду як предків або громади; родовий лад. 2. Лінгв. Родовий відмінок."
+        ],
+        "source": "СУМ-20 (89370)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "РОДО́ВИ́Й, о́ва́, о́ве́. 1. Який існував під час життя людей родами...",
+        "sovietization_risk": 1,
+        "keywords": [
+          "первісна дородова община",
+          "марксистська формація"
+        ],
+        "historical_note": "СУМ-11 об'єднував наголоси через призму марксистсько-ленінської теорії суспільних формацій."
+      }
+    },
+    {
+      "lemma": "родовий",
+      "url_slug": "родовий",
+      "headword": "родови́й",
+      "short_label": "стосовний до пологів (мед., акуш.)",
+      "gloss": "natal, obstetric, relating to labor and childbirth (e.g. родова травма, родова діяльність)",
+      "pos": "adjective",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[rɔdɔˈwɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "родови́й",
+        "source": "СУМ-20 (89371)"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з граматичним та історичним «ро́довий» (наголос на першому складі: родовий відмінок, родовий лад).",
+      "meaning": {
+        "definitions": [
+          "(мед., акуш.) Стосовний до родів, пологів; зв'язаний з процесом народження дитини."
+        ],
+        "source": "СУМ-20 (89371)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "РОДОВИ́Й, а́, е́, рідко. Стос. до родів (пологів).",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "свячений": [
+    {
+      "lemma": "свячений",
+      "url_slug": "свячений",
+      "headword": "свя́чений",
+      "short_label": "освячений (дієприкм.)",
+      "gloss": "blessed, consecrated, sanctified (passive participle)",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈsʲwɑt͡ʃenɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "свя́чений",
+        "source": "ВТС / Грінченко (1907)"
+      },
+      "morphology": {
+        "pos": "дієприкметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з прикметником/іменником «свяче́ний» (наголос на -че́-: свячена вода, свячене).",
+      "meaning": {
+        "definitions": [
+          "Дієприкм. пас. мин. ч. до святи́ти; освячений обрядом."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СВЯ́ЧЕНИЙ, а, е. Дієпр. пас. мин. ч. до святи́ти.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський період (СУМ-11). Релігійна лексика зазнавала цензурних обмежень у тлумаченнях."
+      }
+    },
+    {
+      "lemma": "свячений",
+      "url_slug": "свячений",
+      "headword": "свяче́ний",
+      "short_label": "свячена вода / свячене (прикм./імен.)",
+      "gloss": "holy, ritual, consecrated (as adjective/substantive: свячена вода - holy water; свячене - blessed Easter food)",
+      "pos": "adjective",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[sʲwɐˈt͡ʃɛnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "свяче́ний",
+        "source": "ВТС / Грінченко (1907)"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з віддієслівним дієприкметником «свя́чений» (наголос на першому складі).",
+      "meaning": {
+        "definitions": [
+          "Прикм. до святити; свячена вода; у знач. ім. свяче́не: освячена великодня їжа."
+        ],
+        "source": "ВТС / Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СВЯЧЕ́НИЙ, а, е. Прикм. до святи́ти. Свячена вода; свячене.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський період (СУМ-11). У радянський час обрядова лексика часто маркувалася як застаріла."
+      }
+    }
+  ],
+  "сіяння": [
+    {
+      "lemma": "сіяння",
+      "url_slug": "сіяння",
+      "headword": "сі́яння",
+      "short_label": "розсівання насіння (агротехн.)",
+      "gloss": "sowing, seeding, spreading grain in field",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈsʲijɐnʲːɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "сі́яння",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "neuter",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з омографом «сія́ння» (наголос на -я́-: сяйво, випромінювання світла).",
+      "meaning": {
+        "definitions": [
+          "Дія за значенням сі́яти; розсівання зерна, насіння у ґрунт."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СІ́ЯННЯ, я, с. Дія за знач. сі́яти 1.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "сіяння",
+      "url_slug": "сіяння",
+      "headword": "сія́ння",
+      "short_label": "сяйво, випромінювання світла (поет.)",
+      "gloss": "radiance, shining, brilliant glow (= ся́ння, from сіяти/сяяти)",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-poetic",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[sʲiˈjanʲːɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "сія́ння",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "neuter",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з агротехнічним терміном «сі́яння» (наголос на першому складі: сівба зерна).",
+      "meaning": {
+        "definitions": [
+          "(поет.) Те саме, що ся́йво, ся́ння; яскраве світло, випромінюване чим-небудь."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СІЯ́ННЯ, я, с., рідко. Дія за знач. сія́ти 2; сяйво.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "сіяти": [
+    {
+      "lemma": "сіяти",
+      "url_slug": "сіяти",
+      "headword": "сі́яти",
+      "short_label": "кидати зерно в ґрунт; розсипати",
+      "gloss": "to sow seeds, scatter grain in ground; drizzle (rain)",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈsʲijɐtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "сі́яти",
+        "source": "ВТС / Грінченко (1907)"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з поетичним омографом «сія́ти» (наголос на -я́-: світити, сяяти).",
+      "meaning": {
+        "definitions": [
+          "Розкидати зерно, насіння по зораній землі; дрібно сипати, накрапати."
+        ],
+        "source": "ВТС / Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СІ́ЯТИ, сію, сієш, недок., перех. і неперех. 1. Розкидати або заробляти в ґрунт насіння для вирощування рослин.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "сіяти",
+      "url_slug": "сіяти",
+      "headword": "сія́ти",
+      "short_label": "випромінювати світло, сяяти (поет.)",
+      "gloss": "to shine, radiate light, gleam, sparkle (= ся́яти, сяти; attested in Grinchenko 1907)",
+      "pos": "verb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "authentic-poetic",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[sʲiˈjɑtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "сія́ти",
+        "source": "ВТС / Грінченко (1907)"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з хліборобським словом «сі́яти» (наголос на першому складі: сіяти хліб).",
+      "meaning": {
+        "definitions": [
+          "(поет., нар.-піс.) Те саме, що ся́яти; випромінювати світло, блищати."
+        ],
+        "source": "ВТС / Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СІЯ́ТИ, я́ю, я́єш, недок., рідко. Те саме, що ся́яти.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "скалити": [
+    {
+      "lemma": "скалити",
+      "url_slug": "скалити",
+      "headword": "ска́лити",
+      "short_label": "показувати зуби, вишкірятися",
+      "gloss": "to bare one's teeth, grin maliciously, sneer (скалити зуби)",
+      "pos": "verb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈskɑlɪtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ска́лити",
+        "source": "ВТС / Грінченко (1907)"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з діалектним «скали́ти» (наголос на -и́-: занозити скалкою).",
+      "meaning": {
+        "definitions": [
+          "Розсуваючи губи, показувати зуби; скалити зуби, глузувати."
+        ],
+        "source": "ВТС / Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СКА́ЛИТИ, лю, лиш, недок., перех. 1. Розсуваючи губи, відкривати, показувати зуби...",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "скалити",
+      "url_slug": "скалити",
+      "headword": "скали́ти",
+      "short_label": "занозити скалкою (діал.)",
+      "gloss": "to get a wood splinter in skin (attested in Grinchenko 1907: 'Ноги собі скалить')",
+      "pos": "verb",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-dialectism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[skɐˈlɪtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "скали́ти",
+        "source": "Грінченко (1907) / ВТС"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з літературним «ска́лити» (наголос на першому складі: скалити зуби).",
+      "meaning": {
+        "definitions": [
+          "(діал.) Занозити шкіру тріскою, скалкою; колоти скалками."
+        ],
+        "source": "Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СКА́ЛИ́ТИ, лю́, ли́ш, недок., діал. Занозити.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "слідувати": [
+    {
+      "lemma": "слідувати",
+      "url_slug": "слідувати",
+      "headword": "слі́дувати",
+      "short_label": "іти слідом, прямувати",
+      "gloss": "to follow behind, accompany, move along a route",
+      "pos": "verb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈsʲlʲidʊwɐtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "слі́дувати",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з діалектним «слідува́ти» (наголос на кінці: слідкувати за слідами). Увага: канцеляризм «слідує зробити» є калькою з рос. 'следует'; правильно: 'слід', 'варто', 'належить'.",
+      "meaning": {
+        "definitions": [
+          "Іти, їхати слідом за кимось; прямувати визначеним шляхом."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СЛІ́ДУВАТИ, дую, дуєш, недок. 1. Іти, їхати, рухатися слідом за ким-, чим-небудь...",
+        "sovietization_risk": 1,
+        "keywords": [
+          "канцелярська калька"
+        ],
+        "historical_note": "У радянський період через вплив російської мови поширилося ненормативне вживання дієслова у безособовому значенні 'слідує' (замість питомих 'слід', 'належить', 'треба')."
+      }
+    },
+    {
+      "lemma": "слідувати",
+      "url_slug": "слідувати",
+      "headword": "слідува́ти",
+      "short_label": "слідкувати за кимось, вистежувати (діал.)",
+      "gloss": "to track down, keep watch, follow tracks closely (attested in Grinchenko 1907)",
+      "pos": "verb",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-dialectism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[sʲlʲidʊˈwɑtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "слідува́ти",
+        "source": "Грінченко (1907) / ВТС"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з літературним «слі́дувати» (наголос на першому складі: прямувати слідом).",
+      "meaning": {
+        "definitions": [
+          "(діал., розм.) Те саме, що слідкува́ти; стежити за кимось, пильнувати сліди."
+        ],
+        "source": "Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СЛІДУВА́ТИ, у́ю, у́єш, недок., розм. Те саме, що слідкува́ти.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "соляний": [
+    {
+      "lemma": "соляний",
+      "url_slug": "соляний",
+      "headword": "соля́ний",
+      "short_label": "соляна кислота (хім.)",
+      "gloss": "hydrochloric (chemistry: соляна кислота - hydrochloric acid)",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[sɔˈlʲɑnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "соля́ний",
+        "source": "ВТС / СУМ-11"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з загальним словом «соляни́й» (наголос на закінченні: соляний стовп, соляні шахти).",
+      "meaning": {
+        "definitions": [
+          "(хім.) У сполученні: соля́на кислота́ (хлористоводнева кислота HCl)."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СОЛЯ́НИЙ, а, е: Соляна кислота...",
+        "sovietization_risk": 1,
+        "keywords": [
+          "термінологічна калька"
+        ],
+        "historical_note": "У сучасній українській хімічній термінології рекомендовано науковий термін 'хлоридна кислота' поряд із традиційним тривіальним 'соляна кислота'."
+      }
+    },
+    {
+      "lemma": "соляний",
+      "url_slug": "соляний",
+      "headword": "соляни́й",
+      "short_label": "стосовний до солі, мінералу (соляні копальні)",
+      "gloss": "saline, salt-bearing, containing salt (e.g. соляний розчин, соляні промисли)",
+      "pos": "adjective",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[sɔlʲɐˈnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "соляни́й",
+        "source": "ВТС / СУМ-11"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з хімічним терміном «соля́ний» (соляна кислота).",
+      "meaning": {
+        "definitions": [
+          "Прикм. до сіль; який містить сіль або призначений для видобутку, зберігання солі."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СОЛЯНИ́Й, а́, е́. 1. Прикм. до сіль 1.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "спірний": [
+    {
+      "lemma": "спірний",
+      "url_slug": "спірний",
+      "headword": "спі́рний",
+      "short_label": "дискусійний, сумнівний, предмет спору",
+      "gloss": "disputed, debatable, contentious, controversial (causing argument/dispute)",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈsʲpirnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "спі́рний",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з народним автентичним «спірни́й» (наголос на кінці: спорий, швидкий, продуктивний у роботі).",
+      "meaning": {
+        "definitions": [
+          "Який викликає спір, суперечку; не вирішений остаточно; дискусійний."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СПІ́РНИЙ, а, е. 1. Який викликає спір...",
+        "sovietization_risk": 1,
+        "keywords": [
+          "партійні суперечки",
+          "ідеологічний контекст"
+        ],
+        "historical_note": "У СУМ-11 ілюстративна база рясніла цитатами про партійні з'їзди та ідеологічні суперечки радянського періоду."
+      }
+    },
+    {
+      "lemma": "спірний",
+      "url_slug": "спірний",
+      "headword": "спірни́й",
+      "short_label": "спорий, швидкий, плідний у праці (фольк.)",
+      "gloss": "swift, efficient, productive, fast-moving in work (e.g. спірний кінь, спірна праця; attested in Grinchenko 1907)",
+      "pos": "adjective",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-folklorism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[sʲpirˈnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "спірни́й",
+        "source": "Грінченко (1907) / ВТС"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з абстрактним юридичним «спі́рний» (наголос на корені: спірне питання).",
+      "meaning": {
+        "definitions": [
+          "(розм., фольк.) Те саме, що спо́рий; швидкий, успішний, продуктивний (про роботу або коня)."
+        ],
+        "source": "Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СПІ́РНИ́Й, а, е, розм. Те саме, що спо́рий.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "сполучний": [
+    {
+      "lemma": "сполучний",
+      "url_slug": "сполучний",
+      "headword": "сполу́чний",
+      "short_label": "з'єднувальний; сполучна тканина (анат.)",
+      "gloss": "connective, connecting, binding (e.g. сполучна тканина - connective tissue)",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[spɔˈlut͡ʃnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "сполу́чний",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з граматичним терміном «сполучни́й» (наголос на кінці: стосовний до сполучника).",
+      "meaning": {
+        "definitions": [
+          "Який скріплює, з'єднує що-небудь; анат. сполучна тканина."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СПОЛУ́ЧНИЙ, а, е. 1. Який скріплює, з’єднує, зв’язує що-небудь...",
+        "sovietization_risk": 1,
+        "keywords": [
+          "радянські будівництва"
+        ],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "сполучний",
+      "url_slug": "сполучний",
+      "headword": "сполучни́й",
+      "short_label": "стосовний до сполучника (лінгв.)",
+      "gloss": "conjunctional, relating to conjunctions in grammar (e.g. сполучний зв'язок)",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[spɔlʊt͡ʃˈnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "сполучни́й",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з анатомічним та фізичним «сполу́чний» (наголос на суфіксі -лу́ч-: сполучна ланка).",
+      "meaning": {
+        "definitions": [
+          "(лінгв.) Прикм. до сполучник; який містить або виражає сполучникові відношення."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СПОЛУЧНИ́Й, а́, е́, лінгв. Прикм. до сполу́чник.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "старший": [
+    {
+      "lemma": "старший",
+      "url_slug": "старший",
+      "headword": "ста́рший",
+      "short_label": "віком більший; головніший за рангом",
+      "gloss": "older, elder; senior in rank or status",
+      "pos": "adjective",
+      "cefr": "A1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈstɑrʃɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ста́рший",
+        "source": "ВТС / Грінченко (1907)"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з іменниковим званням чи посадою «старши́й» (наголос на -ши́й: начальник, козацький ватажок).",
+      "meaning": {
+        "definitions": [
+          "Вищий ступінь до старий; який має більше років; старший за рангом чи становищем."
+        ],
+        "source": "ВТС / Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СТА́РШИЙ, а, е. 1. Вищ. ст. до стари́й 1, 2.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "старший",
+      "url_slug": "старший",
+      "headword": "старши́й",
+      "short_label": "начальник, керівник, ватажок (імен.)",
+      "gloss": "chief, elder, leader, commander, headman (substantive noun; e.g. козацький старший; Grinchenko 1907)",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "authentic-historism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[stɐrˈʃɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "старши́й",
+        "source": "Грінченко (1907) / ВТС"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "masculine",
+          "animacy": "animate"
+        }
+      },
+      "distinction_note": "Не плутати з якісним прикметником «ста́рший» (наголос на першому складі: старший брат).",
+      "meaning": {
+        "definitions": [
+          "(іст., розм.) Начальник, очільник громади або військового загону; козацький старший."
+        ],
+        "source": "Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СТАРШИ́Й, о́го, ч., розм. Те саме, що керівни́к, нача́льник.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "стоянка": [
+    {
+      "lemma": "стоянка",
+      "url_slug": "стоянка",
+      "headword": "сто́янка",
+      "short_label": "відстояне молоко, вершки (розм.)",
+      "gloss": "settled standing milk, layer of cream (attested in Grinchenko 1907)",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-dialectism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈstɔjɐnkɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "сто́янка",
+        "source": "Грінченко (1907) / ВТС"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "feminine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з загальновідомим словом «стоя́нка» (наголос на -я́-: парковка, табір первісних людей).",
+      "meaning": {
+        "definitions": [
+          "(розм., діал.) Відстояне молоко; шар вершків на відстояному молоці."
+        ],
+        "source": "Грінченко (1907) / ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СТО́ЯНКА, и, ж., розм. 1. Те саме, що Відсто́яне молоко́...",
+        "sovietization_risk": 1,
+        "keywords": [
+          "колгоспні цитати"
+        ],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "стоянка",
+      "url_slug": "стоянка",
+      "headword": "стоя́нка",
+      "short_label": "місце зупинки, парковка; табір",
+      "gloss": "parking lot, halting place, camp of ancient humans (archaeology: первісна стоянка)",
+      "pos": "noun",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[stɔˈjɑnkɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "стоя́нка",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "feminine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з побутовим діалектним «сто́янка» (наголос на першому складі: відстояне молоко).",
+      "meaning": {
+        "definitions": [
+          "1. Місце, відведене для паркування транспорту. 2. Археол. Поселення первісної людини."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СТОЯ́НКА, и, ж. 1. Дія за знач. стоя́ти 1, 4, 11...",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "судний": [
+    {
+      "lemma": "судний",
+      "url_slug": "судний",
+      "headword": "су́дний",
+      "short_label": "Судний день; судочинство (заст.)",
+      "gloss": "Judgement Day, Doomsday (реліг. Судний день); judicial, court-related",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈsudnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "су́дний",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з народним «судни́й» (наголос на кінці: придатний, міцний, годящий).",
+      "meaning": {
+        "definitions": [
+          "1. Реліг. Судний день (Страшний суд). 2. Заст. Стосовний до судочинства."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СУ́ДНИЙ, а, е, СУ́ДНІЙ, я, є, заст. 1. Стос. до суду...",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський період (СУМ-11). Релігійні значення супроводжувалися цензурними ремарками."
+      }
+    },
+    {
+      "lemma": "судний",
+      "url_slug": "судний",
+      "headword": "судни́й",
+      "short_label": "придатний, годний, міцний (діал.)",
+      "gloss": "suitable, fit, sturdy, serviceable (attested in Grinchenko 1907: 'полотно судне')",
+      "pos": "adjective",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-dialectism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[sʊdˈnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "судни́й",
+        "source": "Грінченко (1907)"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з релігійним та судовим словом «су́дний» (Судний день).",
+      "meaning": {
+        "definitions": [
+          "(діал.) Годний, придатний для вжитку; міцний (про полотно, одяг чи річ)."
+        ],
+        "source": "Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "СУДНИ́Й, а́, е́, діал. Придатний для вжитку, годящий.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "твердити": [
+    {
+      "lemma": "твердити",
+      "url_slug": "твердити",
+      "headword": "тве́рдити",
+      "short_label": "зміцнювати, робити твердим (діал.)",
+      "gloss": "to harden, fortify, make rigid or durable (attested in Grinchenko 1907)",
+      "pos": "verb",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-dialectism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈtwɛrdɪtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "тве́рдити",
+        "source": "Грінченко (1907) / ВТС"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з літературним «тверди́ти» (наголос на -ди́ти: наполегливо стверджувати, повторювати одне й те саме).",
+      "meaning": {
+        "definitions": [
+          "(діал., заст.) Робити міцним, твердим; укріплювати споруду або ґрунт."
+        ],
+        "source": "Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ТВЕ́РДИТИ, джу, диш, недок., рідко. Робити твердим.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "твердити",
+      "url_slug": "твердити",
+      "headword": "тверди́ти",
+      "short_label": "запевняти, уперто повторювати одне й те саме",
+      "gloss": "to assert, insist, reiterate stubbornly, say repeatedly",
+      "pos": "verb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[twɛrˈdɪtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "тверди́ти",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з архаїчним «тве́рдити» (наголос на корені: робити міцним, гартувати).",
+      "meaning": {
+        "definitions": [
+          "Наполегливо говорити те саме, запевняти; уперто стверджувати."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ТВЕРДИ́ТИ, джу́, ди́ш, недок. 1. Наполегливо говорити те саме...",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "типовий": [
+    {
+      "lemma": "типовий",
+      "url_slug": "типовий",
+      "headword": "типо́вий",
+      "short_label": "характерний, показний, зразковий",
+      "gloss": "typical, characteristic, representative of a group or kind",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[tɪˈpɔwɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "типо́вий",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з технічним терміном «типови́й» (наголос на кінці: спроєктований за зразком, типовий проєкт).",
+      "meaning": {
+        "definitions": [
+          "Який виражає найістотніші риси певної групи людей, явищ; характерний, показовий."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ТИПО́ВИЙ, а, е. 1. Який відзначається ознаками, властивими якій-небудь сукупності осіб, явищ...",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "типовий",
+      "url_slug": "типовий",
+      "headword": "типови́й",
+      "short_label": "стандартизований за зразком (техн.)",
+      "gloss": "standardized, model-based, type-designed (e.g. типовий проєкт будинку)",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[tɪpɔˈwɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "типови́й",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з якісним значенням «типо́вий» (характерний приклад, типовий випадок).",
+      "meaning": {
+        "definitions": [
+          "(техн., спец.) Виконаний за певним зразком, стандартом; серійний (типовий будинок)."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ТИПОВИ́Й, а́, е́. Прикм. до тип 4; серійний, виконаний за зразком.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "уступ": [
+    {
+      "lemma": "уступ",
+      "url_slug": "уступ",
+      "headword": "у́ступ",
+      "short_label": "тераса, виступ, сходинка в скелі",
+      "gloss": "ledge, step, terrace, rock recess, mountain shelf",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈustup]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "у́ступ",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "masculine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з застарілим «усту́п» (наголос на другому складі: вступ, вхід до будівлі чи тексту).",
+      "meaning": {
+        "definitions": [
+          "Виступ, що утворює сходинку на поверхні чого-небудь; тераса в горах чи мурі."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "У́СТУП, у, ч. 1. Виступ, що утворює сходинку на поверхні чого-небудь.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "уступ",
+      "url_slug": "уступ",
+      "headword": "усту́п",
+      "short_label": "вступ, вхід (заст.)",
+      "gloss": "entrance, introductory passage, prelude (attested in Grinchenko 1907: 'Уступ - вступленіе; входъ')",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-historism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ʊsˈtup]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "усту́п",
+        "source": "Грінченко (1907) / ВТС"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "masculine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з геологічним чи архітектурним «у́ступ» (наголос на першому складі: тераса, виступ у скелі).",
+      "meaning": {
+        "definitions": [
+          "(заст.) Вступна частина твору, передмова; вхід до приміщення."
+        ],
+        "source": "Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "УСТУ́П, у, ч., заст. Вступ, початок, вхід.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "хлібець": [
+    {
+      "lemma": "хлібець",
+      "url_slug": "хлібець",
+      "headword": "хлі́бець",
+      "short_label": "маленька хлібина; буханець",
+      "gloss": "small loaf of bread, bun, roll",
+      "pos": "noun",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈxlʲibɛt͡sʲ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "хлі́бець",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "masculine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з ботанічним «хлібе́ць» (наголос на другому складі: плоди мальви чи диких калачиків).",
+      "meaning": {
+        "definitions": [
+          "Зменш.-пестл. до хліб; невелика хлібина, буханець."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ХЛІ́БЕЦЬ, бця, ч. Невелика хлібина...",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "хлібець",
+      "url_slug": "хлібець",
+      "headword": "хлібе́ць",
+      "short_label": "калачики, дика рослина мальва (бот.)",
+      "gloss": "mallow fruit / wild edible plant seed pods (калачики, Malva; often collected by children)",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-botanism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[xlʲiˈbɛt͡sʲ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "хлібе́ць",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "masculine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з кулінарним «хлі́бець» (наголос на першому складі: буханець хліба).",
+      "meaning": {
+        "definitions": [
+          "(бот., розм.) Дикоросла трав'яниста рослина родини мальвових або її дископодібні їстівні плоди (калачики)."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ХЛІБЕ́ЦЬ, бця́, ч. 1. Бот. Дика рослина родини мальвових; калачики.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "хрещений": [
+    {
+      "lemma": "хрещений",
+      "url_slug": "хрещений",
+      "headword": "хре́щений",
+      "short_label": "хрещений батько / хрещена дитина",
+      "gloss": "godparent (хрещений батько / хрещена мати), baptized person; Christian",
+      "pos": "adjective",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈxrɛʃt͡ʃenɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "хре́щений",
+        "source": "ВТС / Грінченко (1907)"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з прикметником «хреще́ний» (наголос на -ще́-: позначений хрестом, перехрещений).",
+      "meaning": {
+        "definitions": [
+          "1. Той, хто пройшов обряд хрещення. 2. Хрещений батько, хрещена мати (духовні батьки)."
+        ],
+        "source": "ВТС / Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ХРЕ́ЩЕНИЙ, а, е. Дієпр. пас. мин. ч. до хрести́ти...",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "хрещений",
+      "url_slug": "хрещений",
+      "headword": "хреще́ний",
+      "short_label": "перехрещений, позначений хрестом",
+      "gloss": "crossed, bearing the sign of a cross, marked with criss-cross pattern",
+      "pos": "adjective",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[xrɛˈʃt͡ʃɛnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "хреще́ний",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з сакральним обрядовим «хре́щений» (хрещений батько).",
+      "meaning": {
+        "definitions": [
+          "(рідко) Позначений або нанесений у вигляді хреста; перехрещений."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ХРЕЩЕ́НИЙ, а́, е́, рідко. Позначений хрестом.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "цілик": [
+    {
+      "lemma": "цілик",
+      "url_slug": "цілик",
+      "headword": "ці́лик",
+      "short_label": "прицільне пристосування на зброї",
+      "gloss": "rear sight, sighting notch on a firearm or artillery barrel",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈt͡sʲilɪk]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ці́лик",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "masculine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з аграрним та гірничим «ціли́к» (наголос на кінці: цілина, незаймана земля).",
+      "meaning": {
+        "definitions": [
+          "(військ., техн.) Пристосування на зброї для наведення на ціль."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ЦІ́ЛИК, а, ч., спец. Найпростіше прицільне пристосування на стволі зброї...",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "цілик",
+      "url_slug": "цілик",
+      "headword": "ціли́к",
+      "short_label": "цілина; непорушений пласт породи",
+      "gloss": "virgin land, unbroken unplowed steppe; pillar of unmined rock (attested in Grinchenko 1907: 'Цілик = цілина')",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-dialectism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[t͡sʲiˈlɪk]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ціли́к",
+        "source": "Грінченко (1907) / ВТС"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "masculine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з прицільним пристроєм «ці́лик» (наголос на першому складі).",
+      "meaning": {
+        "definitions": [
+          "1. Діал. Цілина, незаймана земля. 2. Гірн. Частина пласта корисної копалини, залишена непорушеною."
+        ],
+        "source": "Грінченко (1907) / ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ЦІЛИ́К, а́, ч. 1. гірн. Частина пласта корисної копалини, яку залишають незайманою... 2. діал. Цілина.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "цілити": [
+    {
+      "lemma": "цілити",
+      "url_slug": "цілити",
+      "headword": "ці́лити",
+      "short_label": "наводити зброю в ціль, мітити",
+      "gloss": "to aim at a target, take aim, point a weapon (Цілив у ворону...)",
+      "pos": "verb",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈt͡sʲilɪtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ці́лити",
+        "source": "ВТС / Грінченко (1907)"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з архаїчним «ціли́ти» (наголос на -ли́ти: зцілювати, зціляти рани).",
+      "meaning": {
+        "definitions": [
+          "Спрямовувати зброю або погляд на який-небудь об'єкт; намагатися влучити."
+        ],
+        "source": "ВТС / Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ЦІ́ЛИТИ, лю, лиш, недок. 1. Те саме, що ці́литися.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "цілити",
+      "url_slug": "цілити",
+      "headword": "ціли́ти",
+      "short_label": "зцілювати, лікувати (заст., нар.-поет.)",
+      "gloss": "to heal, cure, restore health (attested in Grinchenko 1907: 'Цілити - исцелять')",
+      "pos": "verb",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-historism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[t͡sʲiˈlɪtɪ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ціли́ти",
+        "source": "Грінченко (1907) / ВТС"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з військовим та побутовим «ці́лити» (наголос на першому складі: цілити в мішень).",
+      "meaning": {
+        "definitions": [
+          "(заст., нар.-поет.) Повертати здоров'я, зцілювати рани чи хвороби; лікувати."
+        ],
+        "source": "Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ЦІЛИ́ТИ, лю́, ли́ш, недок., заст. Лікувати, зціляти.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "україна": [
+    {
+      "lemma": "україна",
+      "url_slug": "україна",
+      "headword": "укра́їна",
+      "short_label": "прикордонна земля, порубіжжя (іст., заст.)",
+      "gloss": "frontier region, border territory (historical appellative used in medieval chronicles)",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-historism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ʊˈkrɑjinɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "укра́їна",
+        "source": "СУМ-11"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "feminine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з власним ім'ям Батьківщини та народнопоетичним загальним словом «украї́на» (наголос на -ї́-: рідна країна, земля народу).",
+      "meaning": {
+        "definitions": [
+          "(іст., заст.) Територія уздовж меж князівства або держави; прикордонний край."
+        ],
+        "source": "СУМ-11"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "УКРА́ЇНА, и, ж., заст. Територія уздовж меж держави, біля її краю.",
+        "sovietization_risk": 2,
+        "keywords": [
+          "імперський міф",
+          "окраина"
+        ],
+        "historical_note": "Російська імперська та радянська історіографія нав'язували тлумачення слова 'Україна' виключно як 'окраїни' Московії/Росії. Насправді у пам'ятках Русі (Київський літопис 1187 р.) та народному мовленні первинним значенням була питома земля, рідний край (украї́на)."
+      }
+    },
+    {
+      "lemma": "україна",
+      "url_slug": "україна",
+      "headword": "украї́на",
+      "short_label": "країна, рідний край (іст., фольк.)",
+      "gloss": "homeland, native land, country of the people (in Ukrainian folk epics and chronicles)",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "authentic-folklorism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ʊkrɐˈjinɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "украї́на",
+        "source": "ВТС / Грінченко (1907)"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "feminine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Загальна назва рідної країни у думах та піснях («в нашій славній україні»), яка стала власною назвою держави Україна.",
+      "meaning": {
+        "definitions": [
+          "(іст., нар.-поет.) Рідний край, земля, батьківщина українського народу."
+        ],
+        "source": "Грінченко (1907) / ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "УКРАЇ́НА, и, ж., нар.-поет. Країна, земля.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "опал": [
+    {
+      "lemma": "опал",
+      "url_slug": "опал",
+      "headword": "о́пал",
+      "short_label": "опалення, паливо (розм., рідко)",
+      "gloss": "heating, fuel for fire (from палити / опалювати)",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈɔpɐl]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "о́пал",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "masculine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з мінералогічним терміном «опа́л» (наголос на другому складі: дорогоцінний камінь).",
+      "meaning": {
+        "definitions": [
+          "(розм., рідко) Те саме, що опа́лення; паливо для обігріву приміщення."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "О́ПАЛ, у, ч., рідко. 1. Те саме, що опа́лення 1. Там йому дають кімнату.. з опалом, з світлом (Сл. Гр.).",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "опал",
+      "url_slug": "опал",
+      "headword": "опа́л",
+      "short_label": "коштовний камінь кремнезему (мінер.)",
+      "gloss": "opal gemstone (hydrated silica mineral with iridescent play of colors)",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ɔˈpɑl]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "опа́л",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "masculine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з віддієслівним побутовим словом «о́пал» (наголос на першому складі: обігрів або паливо).",
+      "meaning": {
+        "definitions": [
+          "(мінер.) Мінерал, напівдорогоцінний камінь із райдужним відблиском світла."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ОПА́Л, у, ч. Мінерал класу силікатів, що є напівдорогоцінним каменем.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "розказ": [
+    {
+      "lemma": "розказ",
+      "url_slug": "розказ",
+      "headword": "ро́зказ",
+      "short_label": "наказ, веління (заст., фольк.)",
+      "gloss": "order, command, mandate, decree (attested in Grinchenko 1907: 'Розказ = наказ')",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-historism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈrɔzkɐz]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ро́зказ",
+        "source": "Грінченко (1907) / ВТС"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "masculine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з розмовним «розка́з» (наголос на кінці: розповідь, казка).",
+      "meaning": {
+        "definitions": [
+          "(заст., фольк.) Те саме, що нака́з; обов'язкове до виконання розпорядження або веління."
+        ],
+        "source": "Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "РО́ЗКАЗ, у, ч., заст. Наказ. Пан не дозволяв і на годину кидати ліса...",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "розказ",
+      "url_slug": "розказ",
+      "headword": "розка́з",
+      "short_label": "розповідь, оповідання (розм.)",
+      "gloss": "tale, narrative, story, telling (colloquial verbal noun from розказувати)",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[rɔzˈkɑz]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "розка́з",
+        "source": "ВТС"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "masculine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з архаїчним «ро́зказ» (наголос на першому складі: розпорядження, наказ).",
+      "meaning": {
+        "definitions": [
+          "(розм.) Дія за знач. розка́зувати; розповідь, оповідка."
+        ],
+        "source": "ВТС"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "РОЗКА́З, у, ч., розм. Дія за знач. розка́зувати.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "відклад": [
+    {
+      "lemma": "відклад",
+      "url_slug": "відклад",
+      "headword": "ві́дклад",
+      "short_label": "геологічний осад, нашарування порід",
+      "gloss": "geological deposit, sediment, stratum (formation of settled rock or minerals)",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈwidkɫɐd]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ві́дклад",
+        "source": "СУМ-20 (14343)"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "masculine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з юридичним та побутовим «відкла́д» (наголос на кінці: перенесення терміну, відстрочка).",
+      "meaning": {
+        "definitions": [
+          "(геол.) Гірська порода або шар мінералів, утворений осадом речовин у воді чи повітрі."
+        ],
+        "source": "СУМ-20 (14343)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ВІ́ДКЛАД, у, ч., спец. Те, що відклалося внаслідок осідання у воді органічних речовин, мінералів...",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "відклад",
+      "url_slug": "відклад",
+      "headword": "відкла́д",
+      "short_label": "відстрочка, перенесення часу (заст.)",
+      "gloss": "postponement, adjournment, delay (attested in Grinchenko 1907: 'Одклад не йде в лад')",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "authentic-historism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[widˈkɫɑd]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "відкла́д",
+        "source": "СУМ-20 (14344) / Грінченко (1907)"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "masculine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з геологічним терміном «ві́дклад» (наголос на першому складі: осад).",
+      "meaning": {
+        "definitions": [
+          "(заст., рідко) Те саме, що відклада́ння; відстрочення виконання якоїсь справи."
+        ],
+        "source": "СУМ-20 (14344) / Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ВІДКЛА́Д, у, ч., рідко. Те саме, що відклада́ння.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "замір": [
+    {
+      "lemma": "замір",
+      "url_slug": "замір",
+      "headword": "за́мір",
+      "short_label": "намір, задум, план",
+      "gloss": "intention, aim, plan, purpose (e.g. здійснити свій замір)",
+      "pos": "noun",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈzɑmir]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "за́мір",
+        "source": "СУМ-20 (33215)"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "masculine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з технічним терміном «замі́р» (наголос на другому складі: дія за значенням заміряти).",
+      "meaning": {
+        "definitions": [
+          "Задум, бажання зробити щось; намір, мета."
+        ],
+        "source": "СУМ-20 (33215)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ЗА́МІР, у, ч. Задум, бажання зробити щось; намір.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "замір",
+      "url_slug": "замір",
+      "headword": "замі́р",
+      "short_label": "вимірювання приладами (техн.)",
+      "gloss": "measurement, gauging, survey, sounding with measuring tools",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[zɐˈmir]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "замі́р",
+        "source": "СУМ-20 (33216)"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "masculine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з загальновживаним словом «за́мір» (наголос на першому складі: життєвий намір чи план).",
+      "meaning": {
+        "definitions": [
+          "(техн., спец.) Визначення величини чого-небудь за допомогою спеціального приладу або мірки."
+        ],
+        "source": "СУМ-20 (33216)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ЗАМІ́Р, у, ч., спец. Дія за знач. замі́ряти.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "логік": [
+    {
+      "lemma": "логік",
+      "url_slug": "логік",
+      "headword": "ло́гік",
+      "short_label": "учений, фахівець із логіки",
+      "gloss": "logician, scholar specializing in formal logic",
+      "pos": "noun",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈlɔɦik]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ло́гік",
+        "source": "СУМ-20 (48197)"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "masculine",
+          "animacy": "animate"
+        }
+      },
+      "distinction_note": "Не плутати з діалектним технічним «логі́к» (наголос на кінці: стічний жолоб для води чи сплаву лісу).",
+      "meaning": {
+        "definitions": [
+          "Учений, фахівець із логіки."
+        ],
+        "source": "СУМ-20 (48197)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ЛО́ГІК, а, ч. Учений, фахівець із логіки.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "логік",
+      "url_slug": "логік",
+      "headword": "логі́к",
+      "short_label": "стічний жолоб, лісосплавний лотік (діал.)",
+      "gloss": "water flume, drainage chute, timber flume (dialectal/technical, genitive: лотока́ / логіка́)",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-dialectism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ɫɔˈɦʲik]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "логі́к",
+        "source": "ВТС / СУМ-11"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "masculine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з назвою професії вченого «ло́гік» (наголос на першому складі).",
+      "meaning": {
+        "definitions": [
+          "(діал., спец.) Відкритий жолоб для стікання води, лісосплавний лотік."
+        ],
+        "source": "ВТС / СУМ-11"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ЛОГІ́К, тока́, ч. 1. Відкритий жолоб для стікання води, зсипання зерна...",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "тучний": [
+    {
+      "lemma": "тучний",
+      "url_slug": "тучний",
+      "headword": "ту́чний",
+      "short_label": "гладкий, вгодований (розм.)",
+      "gloss": "fat, plump, stout (colloquial/Russian-shadowed; native Ukrainian prefers гладкий, вгодований)",
+      "pos": "adjective",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": true,
+        "vesum_attested": true,
+        "warning_severity": "attention"
+      },
+      "pronunciation": {
+        "ipa": "[ˈtut͡ʃnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "ту́чний",
+        "source": "ВТС / Грінченко (1907)"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з автентичним фольклорним «тучни́й» (наголос на кінці: грозовий, дощовий). Для значення 'жирний' природніші українські синоніми: вгодований, гладкий, ситий.",
+      "meaning": {
+        "definitions": [
+          "(розм.) Добре вгодований, жирний, огрядний (перев. про тварин або ґрунт)."
+        ],
+        "source": "ВТС / Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ТУ́ЧНИЙ, а, е, розм. 1. Добре вгодований, гладкий...",
+        "sovietization_risk": 1,
+        "keywords": [
+          "російський вплив",
+          "калька"
+        ],
+        "historical_note": "Слово 'тучний' у значенні 'гладкий/жирний' зазнавало сильного російського лексичного тиску в радянську епоху. Питомі українські відповідники: ситий, гладкий, вгодований."
+      }
+    },
+    {
+      "lemma": "тучний",
+      "url_slug": "тучний",
+      "headword": "тучни́й",
+      "short_label": "грозовий, хмарний (діал., фольк.)",
+      "gloss": "thunderous, heavy-clouded (attested in Grinchenko 1907: 'тучний дощ - сильний дощ із грозою')",
+      "pos": "adjective",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-folklorism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[tʊt͡ʃˈnɪj]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "тучни́й",
+        "source": "Грінченко (1907)"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з «ту́чний» (жирний). Автентична українська народна лексема від 'туча' (грозова хмара).",
+      "meaning": {
+        "definitions": [
+          "(діал., фольк.) Грозовий, зв'язаний із великою хмарою; тучний дощ: злива з грозою."
+        ],
+        "source": "Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ТУЧНИ́Й, а́, е́, діал. Грозовий; тучний дощ.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
+  ],
+  "жалоба": [
+    {
+      "lemma": "жалоба",
+      "url_slug": "жалоба",
+      "headword": "жа́лоба",
+      "short_label": "скарга, невдоволення (заст., прост.)",
+      "gloss": "complaint, grievance, lawsuit (archaic/vernacular, attested in Grinchenko 1907: 'ЖАлоба = скарга')",
+      "pos": "noun",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-archaism",
+        "warning_severity": "treasured",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ˈʒɑlɔbɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "жа́лоба",
+        "source": "СУМ-20 (30528) / Грінченко (1907)"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "feminine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з загальновживаним словом скорботи «жало́ба» (наголос на другому складі: траур, туга за померлим).",
+      "meaning": {
+        "definitions": [
+          "(прост., заст.) Висловлення невдоволення з приводу чогось; скарга, судова претензія."
+        ],
+        "source": "СУМ-20 (30528) / Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ЖА́ЛОБА, и, ж., розм. Висловлення невдоволення з приводу чогось; скарга.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "lemma": "жалоба",
+      "url_slug": "жалоба",
+      "headword": "жало́ба",
+      "short_label": "траур, сум за померлим, чорний одяг",
+      "gloss": "mourning, grief, bereavement, funeral black attire (attested in Grinchenko 1907: 'ЖалОба = траур')",
+      "pos": "noun",
+      "cefr": "A2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": false,
+        "russian_shadow": false,
+        "vesum_attested": true
+      },
+      "pronunciation": {
+        "ipa": "[ʒɐˈlɔbɐ]",
+        "source": "VESUM"
+      },
+      "stress": {
+        "form": "жало́ба",
+        "source": "СУМ-20 (30529) / Грінченко (1907)"
+      },
+      "morphology": {
+        "pos": "іменник",
+        "paradigm": {
+          "kind": "noun",
+          "gender": "feminine",
+          "animacy": "inanimate"
+        }
+      },
+      "distinction_note": "Не плутати з архаїчним словом «жа́лоба» (наголос на першому складі: судова скарга або ремство).",
+      "meaning": {
+        "definitions": [
+          "1. Глибокий сум, туга за померлим; траур. 2. Чорний одяг або пов'язка на знак скорботи."
+        ],
+        "source": "СУМ-20 (30529) / Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ЖАЛО́БА, и, ж. 1. Глибокий сум, скорбота за померлим; траур...",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    }
   ]
 };
 

@@ -110,6 +110,10 @@
         "sha256": "0005a3db8b73b7c884e5934ff2943eec4d49a4d7c7913c834f5d90208d025b69"
       },
       {
+        "path": "scripts/lexicon/curated_heteronyms_batch6.py",
+        "sha256": "b21d40115b23798e36e8ce2a314c034109034f59eb6d6199e1c3f237af7d3d34"
+      },
+      {
         "path": "scripts/lexicon/curated_membership.py",
         "sha256": "45a81e21d503eeed19a770eb367dc794cac40f8dd60314ca51273b60a8b3f149"
       },
@@ -139,7 +143,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_heteronyms.py",
-        "sha256": "31b7fa99cae772525ac0cef9b9eb6d19e3780ec13b7ca7c90c01b388159e49e8"
+        "sha256": "b6c4bd2e5ab6b906fcb528f53bb3d7a732848c606f2277384f11b31f4f58c70e"
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
