@@ -1,7 +1,7 @@
 import { describe, test, expect, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ErrorCorrection, { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import ErrorCorrection, { ErrorCorrectionItem, tokenizeErrorSentence } from '@site/src/components/ErrorCorrection';
 
 // ErrorCorrection is a step machine: identify → fix → complete.
 // The sentence is split into clickable <span> tokens (role="button"
@@ -48,6 +48,63 @@ function retryBtn(container: HTMLElement) {
 }
 
 // ── ErrorCorrectionItem ───────────────────────────────────────────────────────
+
+describe('stressed Ukrainian tokens', () => {
+  test('combining acute stays inside the word instead of becoming a lone apostrophe token', () => {
+    const tokens = tokenizeErrorSentence('Приві́т, па́не профе́соре!');
+    expect(tokens.filter((t) => t.trim() && !/^[,.!]+$/.test(t))).toEqual([
+      'Приві́т',
+      'па́не',
+      'профе́соре',
+    ]);
+    expect(tokens.some((t) => t === '\u0301' || t === "'")).toBe(false);
+    expect(tokenizeErrorSentence("Моє́ ім'я́ Тарас.")).toContain("ім'я́");
+  });
+
+  test('clicking a stressed error word advances to fix', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <ErrorCorrectionItem
+        sentence="Я є студе́нт."
+        errorWord="є"
+        correctForm="—"
+        options={['—', 'є']}
+        explanation="Drop є."
+      />,
+    );
+    await user.click(wordByText(container, 'студе́нт'));
+    expect(itemContainer(container).getAttribute('data-step')).toBe('identify');
+    await user.click(wordByText(container, 'є'));
+    expect(itemContainer(container).getAttribute('data-step')).toBe('fix');
+  });
+});
+
+describe('numeral tokens', () => {
+  test('digits stay inside the word token instead of becoming punctuation', () => {
+    const tokens = tokenizeErrorSentence('Мені 30 років.');
+    expect(tokens.filter((t) => t.trim() && !/^[,.!]+$/.test(t))).toEqual([
+      'Мені',
+      '30',
+      'років',
+    ]);
+  });
+
+  test('clicking a numeral error word advances to fix', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <ErrorCorrectionItem
+        sentence="Мені 30 років."
+        errorWord="30"
+        correctForm="тридцять"
+        options={['тридцять', '30']}
+        explanation="Пишемо числівники словами."
+      />,
+    );
+    expect(itemContainer(container).getAttribute('data-step')).toBe('identify');
+    await user.click(wordByText(container, '30'));
+    expect(itemContainer(container).getAttribute('data-step')).toBe('fix');
+  });
+});
 
 describe('ErrorCorrectionItem (identify step)', () => {
   const baseProps = {

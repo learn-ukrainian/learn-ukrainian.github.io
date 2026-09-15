@@ -42,6 +42,17 @@ export interface ErrorCorrectionItemProps {
 
 type Step = 'identify' | 'fix' | 'complete';
 
+/** Letters + digits + combining stress (U+0301) + Ukrainian apostrophes stay one token. */
+const SENTENCE_TOKENS = /[\p{L}\p{N}\p{M}'’ʼʹ]+|[^\s\p{L}\p{N}\p{M}'’ʼʹ]+|\s+/gu;
+
+export function tokenizeErrorSentence(sentence: string): string[] {
+  return sentence.match(SENTENCE_TOKENS) || [];
+}
+
+export function cleanErrorToken(word: string): string {
+  return word.replace(/[^\p{L}\p{N}\p{M}'’ʼʹ]/gu, '');
+}
+
 export function ErrorCorrectionItem({
   sentence,
   errorWord,
@@ -70,8 +81,8 @@ export function ErrorCorrectionItem({
     }
   };
 
-  // Split sentence into words while preserving punctuation
-  const words = sentence.match(/[\wа-яіїєґА-ЯІЇЄҐ']+|[^\s\wа-яіїєґА-ЯІЇЄҐ']+|\s+/gi) || [];
+  // Split sentence into words while preserving punctuation and combining stress.
+  const words = tokenizeErrorSentence(sentence);
 
   const handleWordKeyDown = (e: React.KeyboardEvent, word: string) => {
     // Enter and Space activate the span-as-button, matching native
@@ -87,12 +98,12 @@ export function ErrorCorrectionItem({
     if (disabled || step !== 'identify') return;
 
     // Clean word for comparison (remove punctuation)
-    const cleanWord = word.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '');
+    const cleanWord = cleanErrorToken(word);
 
     if (errorWord) {
       // For multi-word errors, check if the clicked word is part of the error phrase
       const errorWords = errorWord.split(/\s+/);
-      const cleanErrorWords = errorWords.map(w => w.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '').toLowerCase());
+      const cleanErrorWords = errorWords.map(w => cleanErrorToken(w).toLowerCase());
 
       if (cleanErrorWords.includes(cleanWord.toLowerCase())) {
         // Correct word/phrase identified
@@ -167,10 +178,10 @@ export function ErrorCorrectionItem({
       {/* Sentence with clickable words */}
       <p className={styles.errorSentence} data-activity="error-correction-sentence">
         {words.map((word, idx) => {
-          const cleanWord = word.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '');
+          const cleanWord = cleanErrorToken(word);
 
           // Check if this word is part of a multi-word error
-          const errorWords = errorWord ? errorWord.split(/\s+/).map(w => w.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '').toLowerCase()) : [];
+          const errorWords = errorWord ? errorWord.split(/\s+/).map(w => cleanErrorToken(w).toLowerCase()) : [];
           const isError = errorWords.includes(cleanWord.toLowerCase());
           const isWrongAttempt = wrongAttempts.includes(cleanWord);
           const isSelected = selectedWord && errorWords.includes(cleanWord.toLowerCase()) && step !== 'identify';
@@ -182,7 +193,7 @@ export function ErrorCorrectionItem({
 
           // For complete step, show strikethrough for all error words, replacement after last error word
           const isLastErrorWord = errorWord && isError && idx === words.findLastIndex(w => {
-            const cw = w.replace(/[^\wа-яіїєґА-ЯІЇЄҐ']/gi, '');
+            const cw = cleanErrorToken(w);
             return errorWords.includes(cw.toLowerCase());
           });
 
