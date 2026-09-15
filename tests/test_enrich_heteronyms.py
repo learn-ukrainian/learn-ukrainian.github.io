@@ -677,13 +677,13 @@ def test_batch5_lemmas_not_duplicated_from_earlier_batches():
 
 def test_batch6_semantic_and_stress_distinctions():
     """Verify Batch 6 stress and semantic distinctions against СУМ-20 / ВТС / Grinchenko."""
-    # гвоздик: гво́здик (nail) vs гвозди́к (carnation flower)
-    gvozd = enrich_heteronyms.build_heteronyms_for_lemma("гвоздик")
-    assert gvozd is not None and len(gvozd) == 2
-    assert gvozd[0]["headword"] == "гво́здик"
-    assert "nail" in gvozd[0]["gloss"].lower() or "peg" in gvozd[0]["gloss"].lower()
-    assert gvozd[1]["headword"] == "гвозди́к"
-    assert "carnation" in gvozd[1]["gloss"].lower() or "flower" in gvozd[1]["gloss"].lower()
+    # балувати: ба́лувати (pamper / spoil) vs балува́ти (feast / attend balls)
+    bal = enrich_heteronyms.build_heteronyms_for_lemma("балувати")
+    assert bal is not None and len(bal) == 2
+    assert bal[0]["headword"] == "ба́лувати"
+    assert "pamper" in bal[0]["gloss"].lower() or "spoil" in bal[0]["gloss"].lower()
+    assert bal[1]["headword"] == "балува́ти"
+    assert "ball" in bal[1]["gloss"].lower() or "feast" in bal[1]["gloss"].lower()
 
     # жалоба: жа́лоба (lawsuit / grievance) vs жало́ба (mourning / bereavement)
     zhal = enrich_heteronyms.build_heteronyms_for_lemma("жалоба")
@@ -717,6 +717,62 @@ def test_batch6_semantic_and_stress_distinctions():
     assert zam[1]["headword"] == "замі́р"
     assert "measurement" in zam[1]["gloss"].lower() or "gauging" in zam[1]["gloss"].lower()
 
+    # підсумковий: підсу́мковий (cartridge pouch) vs підсумко́вий (summary / conclusive)
+    pid = enrich_heteronyms.build_heteronyms_for_lemma("підсумковий")
+    assert pid is not None and len(pid) == 2
+    assert pid[0]["headword"] == "підсу́мковий"
+    assert "cartridge" in pid[0]["gloss"].lower() or "pouch" in pid[0]["gloss"].lower()
+    assert pid[1]["headword"] == "підсумко́вий"
+    assert "summary" in pid[1]["gloss"].lower() or "conclusive" in pid[1]["gloss"].lower()
+
+    # родовий: родо́вий (clan / lineage / genitive) vs родови́й (obstetric / labor)
+    rod = enrich_heteronyms.build_heteronyms_for_lemma("родовий")
+    assert rod is not None and len(rod) == 2
+    assert rod[0]["headword"] == "родо́вий"
+    assert "clan" in rod[0]["gloss"].lower() or "genitive" in rod[0]["gloss"].lower()
+    assert rod[1]["headword"] == "родови́й"
+    assert "childbirth" in rod[1]["gloss"].lower() or "obstetric" in rod[1]["gloss"].lower() or "labor" in rod[1]["gloss"].lower()
+
+    # хрещений: хре́щений (baptized participle) vs хреще́ний (godparent)
+    khr = enrich_heteronyms.build_heteronyms_for_lemma("хрещений")
+    assert khr is not None and len(khr) == 2
+    assert khr[0]["headword"] == "хре́щений"
+    assert "baptized" in khr[0]["gloss"].lower() or "christened" in khr[0]["gloss"].lower()
+    assert khr[1]["headword"] == "хреще́ний"
+    assert "godparent" in khr[1]["gloss"].lower()
+
+    # сполучний: сполу́чний (connective / connecting) vs сполучни́й (combinable)
+    spol = enrich_heteronyms.build_heteronyms_for_lemma("сполучний")
+    assert spol is not None and len(spol) == 2
+    assert spol[0]["headword"] == "сполу́чний"
+    assert "connect" in spol[0]["gloss"].lower()
+    assert spol[1]["headword"] == "сполучни́й"
+    assert "combinable" in spol[1]["gloss"].lower() or "compatible" in spol[1]["gloss"].lower()
+
+    # хлібець: хлі́бець (small loaf / bun) vs хлібе́ць (dear bread / young grain in folklore)
+    khl = enrich_heteronyms.build_heteronyms_for_lemma("хлібець")
+    assert khl is not None and len(khl) == 2
+    assert khl[0]["headword"] == "хлі́бець"
+    assert "loaf" in khl[0]["gloss"].lower() or "bun" in khl[0]["gloss"].lower()
+    assert khl[1]["headword"] == "хлібе́ць"
+    assert "bread" in khl[1]["gloss"].lower() or "grain" in khl[1]["gloss"].lower()
+
+    # байковий: ба́йковий (flannelette / baize fabric) vs байко́вий (fable / fabular)
+    bay = enrich_heteronyms.build_heteronyms_for_lemma("байковий")
+    assert bay is not None and len(bay) == 2
+    assert bay[0]["headword"] == "ба́йковий"
+    assert "flannelette" in bay[0]["gloss"].lower() or "baize" in bay[0]["gloss"].lower()
+    assert bay[1]["headword"] == "байко́вий"
+    assert "fable" in bay[1]["gloss"].lower()
+
+    # брикнути: бри́кнути (tumble / fall down) vs брикну́ти (buck / kick with hoof)
+    bryk = enrich_heteronyms.build_heteronyms_for_lemma("брикнути")
+    assert bryk is not None and len(bryk) == 2
+    assert bryk[0]["headword"] == "бри́кнути"
+    assert "tumble" in bryk[0]["gloss"].lower() or "fall" in bryk[0]["gloss"].lower()
+    assert bryk[1]["headword"] == "брикну́ти"
+    assert "buck" in bryk[1]["gloss"].lower() or "kick" in bryk[1]["gloss"].lower()
+
 
 def test_batch6_lemmas_not_duplicated_from_earlier_batches():
     """Verify batch 6's 32 lemmas are net-new and mutually disjoint with batches 1-5."""
@@ -736,12 +792,14 @@ def test_batch6_lemmas_not_duplicated_from_earlier_batches():
         | set(CURATED_HETERONYMS_BATCH_5)
     )
     assert earlier & set(CURATED_HETERONYMS_BATCH_6) == set()
-    assert "гвоздик" in CURATED_HETERONYMS_BATCH_6
+    assert "балувати" in CURATED_HETERONYMS_BATCH_6
     assert "жалоба" in CURATED_HETERONYMS_BATCH_6
     assert "україна" in CURATED_HETERONYMS_BATCH_6
     assert "дихання" in CURATED_HETERONYMS_BATCH_6
     assert "гукнути" in CURATED_HETERONYMS_BATCH_6
     assert "ковтнути" in CURATED_HETERONYMS_BATCH_6
+    assert "байковий" in CURATED_HETERONYMS_BATCH_6
+    assert "брикнути" in CURATED_HETERONYMS_BATCH_6
 
 
 def test_homonyms_with_numeric_suffixes_and_identical_stress_not_treated_as_heteronyms(monkeypatch):

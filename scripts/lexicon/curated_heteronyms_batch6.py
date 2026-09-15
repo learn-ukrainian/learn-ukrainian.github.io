@@ -25,12 +25,12 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈɦuknʊtɪ]",
-        "source": "VESUM"
+        "ipa": "[ˈɦuknʊtɪ]"
       },
       "stress": {
         "form": "гу́кнути",
-        "source": "СУМ-20 (23683)"
+        "source": "СУМ-20 (20522)",
+        "url": "https://sum20ua.com/?wordid=20522"
       },
       "morphology": {
         "pos": "дієслово",
@@ -44,7 +44,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definitions": [
           "Однократне до гу́кати; вигукнути, лунко зазвучати."
         ],
-        "source": "СУМ-20 (23683)"
+        "source": "СУМ-20 (20522)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -67,12 +67,12 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ɦʊkˈnutɪ]",
-        "source": "VESUM"
+        "ipa": "[ɦʊkˈnutɪ]"
       },
       "stress": {
         "form": "гукну́ти",
-        "source": "СУМ-20 (23684)"
+        "source": "СУМ-20 (20523)",
+        "url": "https://sum20ua.com/?wordid=20523"
       },
       "morphology": {
         "pos": "дієслово",
@@ -86,7 +86,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definitions": [
           "Однократне до гука́ти; покликати, закликати когось."
         ],
-        "source": "СУМ-20 (23684)"
+        "source": "СУМ-20 (20523)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -97,55 +97,12 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
       }
     }
   ],
-  "гвоздик": [
+  "балувати": [
     {
-      "headword": "гво́здик",
-      "short_label": "маленький цвяшок (рідко)",
-      "gloss": "small nail, peg, tack, pin (diminutive of гвоздь)",
-      "pos": "noun",
-      "cefr": "B2",
-      "heritage_status": {
-        "classification": "standard",
-        "is_russianism": False,
-        "russian_shadow": False,
-        "vesum_attested": True
-      },
-      "pronunciation": {
-        "ipa": "[ˈɦwɔzdɪk]",
-        "source": "VESUM"
-      },
-      "stress": {
-        "form": "гво́здик",
-        "source": "СУМ-20 (17109)"
-      },
-      "morphology": {
-        "pos": "іменник",
-        "paradigm": {
-          "kind": "noun",
-          "gender": "masculine",
-          "animacy": "inanimate"
-        }
-      },
-      "distinction_note": "Не плутати з омографом «гвозди́к» (наголос на -и́к: квітка гвоздика, Dianthus).",
-      "meaning": {
-        "definitions": [
-          "Зменш. до гвоздь 1; цвяшок."
-        ],
-        "source": "СУМ-20 (17109)"
-      },
-      "soviet_colonization_context": {
-        "source": "СУМ-11 (1970–1980)",
-        "definition": "ГВО́ЗДИК, а, ч., рідко. Зменш.-пестл. до гвоздь 1.",
-        "sovietization_risk": 0,
-        "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
-      }
-    },
-    {
-      "headword": "гвозди́к",
-      "short_label": "квітка гвоздика, повняк (бот.)",
-      "gloss": "carnation, pink flower (Dianthus; also clove spice)",
-      "pos": "noun",
+      "headword": "ба́лувати",
+      "short_label": "пестити, розпещувати, потурати примхам",
+      "gloss": "to pamper, spoil, indulge someone's whims (e.g. балувати дітей)",
+      "pos": "verb",
       "cefr": "B1",
       "heritage_status": {
         "classification": "standard",
@@ -154,34 +111,76 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ɦwɔzˈdɪk]",
-        "source": "VESUM"
+        "ipa": "[ˈbɑlʊwɐtɪ]"
       },
       "stress": {
-        "form": "гвозди́к",
-        "source": "СУМ-20 (17110)"
+        "form": "ба́лувати",
+        "source": "СУМ-20 (2480)",
+        "url": "https://sum20ua.com/?wordid=2480"
       },
       "morphology": {
-        "pos": "іменник",
+        "pos": "дієслово",
         "paradigm": {
-          "kind": "noun",
-          "gender": "masculine",
-          "animacy": "inanimate"
+          "kind": "verb",
+          "aspect": "недоконаний"
         }
       },
-      "distinction_note": "Не плутати з омографом «гво́здик» (наголос на першому складі: цвяшок).",
+      "distinction_note": "Не плутати з омографом «балува́ти» (наголос на -ва́ти: гуляти на балах, бенкетувати).",
       "meaning": {
         "definitions": [
-          "Те саме, що повня́к; трав'яниста рослина родини гвоздикових із запашними квітками."
+          "Надмірно пестити когось, потурати чиїмось бажанням і примхам; виявляти надмірну увагу."
         ],
-        "source": "СУМ-20 (17110) / Грінченко (1907)"
+        "source": "СУМ-20 (2480)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ГВОЗДИ́К, а, ч. (перев. мн. гвоздики, ів). Бот. Те саме, що гвозди́ка.",
+        "definition": "БА́ЛУВАТИ, ую, уєш, недок., перех. 1. Надмірно пестити когось, потурати кому-небудь в його бажаннях і примхах.",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "headword": "балува́ти",
+      "short_label": "гуляти на балах, бенкетувати (заст.)",
+      "gloss": "to revel, feast, attend balls (Хто змолоду балує, той під старість старцює)",
+      "pos": "verb",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "authentic-historism",
+        "warning_severity": "treasured",
+        "is_russianism": False,
+        "russian_shadow": False,
+        "vesum_attested": True
+      },
+      "pronunciation": {
+        "ipa": "[bɐlʊˈwɑtɪ]"
+      },
+      "stress": {
+        "form": "балува́ти",
+        "source": "СУМ-20 (2481)",
+        "url": "https://sum20ua.com/?wordid=2481"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "недоконаний"
+        }
+      },
+      "distinction_note": "Не плутати з дієсловом «ба́лувати» (наголос на першому складі: пестити, розпещувати).",
+      "meaning": {
+        "definitions": [
+          "(розм., заст.) Гуляти на балах; бенкетувати, розкошувати."
+        ],
+        "source": "СУМ-20 (2481) / Грінченко (1907)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "БАЛУВА́ТИ, у́ю, у́єш, недок., розм. Гуляти на балах; бенкетувати.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Збережено в Словнику Бориса Грінченка (1907–1909), виданому всупереч імперським російським заборонам українського слова (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     }
   ],
@@ -199,12 +198,12 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈdɪxɐnʲːɐ]",
-        "source": "VESUM"
+        "ipa": "[ˈdɪxɐnʲːɐ]"
       },
       "stress": {
         "form": "ди́хання",
-        "source": "СУМ-20 (29813)"
+        "source": "СУМ-20 (22439)",
+        "url": "https://sum20ua.com/?wordid=22439"
       },
       "morphology": {
         "pos": "іменник",
@@ -219,7 +218,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definitions": [
           "Процес поглинання кисню і виділення вуглекислоти живими організмами."
         ],
-        "source": "СУМ-20 (29813)"
+        "source": "СУМ-20 (22439)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -243,12 +242,12 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[dɪˈxanʲːɐ]",
-        "source": "VESUM"
+        "ipa": "[dɪˈxanʲːɐ]"
       },
       "stress": {
         "form": "диха́ння",
-        "source": "СУМ-20 (29814)"
+        "source": "СУМ-20 (22440)",
+        "url": "https://sum20ua.com/?wordid=22440"
       },
       "morphology": {
         "pos": "іменник",
@@ -263,14 +262,14 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definitions": [
           "(діал., нар.-поет.) Те саме, що ди́хання; віддих, дихання людини чи вітру."
         ],
-        "source": "СУМ-20 (29814) / Грінченко (1907)"
+        "source": "СУМ-20 (22440) / Грінченко (1907)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
         "definition": "ДИХА́ННЯ, я, с., діал. Ди́хання.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Збережено в Словнику Бориса Грінченка (1907–1909), укладеному всупереч імперським заборонам царської Росії (Емський указ 1876 р., Валуєвський циркуляр 1863 р.)."
       }
     }
   ],
@@ -289,12 +288,12 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈkɔu̯tnʊtɪ]",
-        "source": "VESUM"
+        "ipa": "[ˈkɔu̯tnʊtɪ]"
       },
       "stress": {
         "form": "ко́втнути",
-        "source": "СУМ-20 (41381)"
+        "source": "СУМ-20 (42582)",
+        "url": "https://sum20ua.com/?wordid=42582"
       },
       "morphology": {
         "pos": "дієслово",
@@ -308,7 +307,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definitions": [
           "(діал.) Однократне до ко́втати; вдарити, стукнути кулаком."
         ],
-        "source": "СУМ-20 (41381)"
+        "source": "СУМ-20 (42582)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -331,12 +330,12 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[kɔu̯tˈnutɪ]",
-        "source": "VESUM"
+        "ipa": "[kɔu̯tˈnutɪ]"
       },
       "stress": {
         "form": "ковтну́ти",
-        "source": "СУМ-20 (41382)"
+        "source": "СУМ-20 (42583)",
+        "url": "https://sum20ua.com/?wordid=42583"
       },
       "morphology": {
         "pos": "дієслово",
@@ -350,7 +349,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definitions": [
           "Однократне до ковта́ти; зробити один ковток рідини або їжі; випити."
         ],
-        "source": "СУМ-20 (41382)"
+        "source": "СУМ-20 (42583)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -364,7 +363,47 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
   "підсумковий": [
     {
       "headword": "підсу́мковий",
-      "short_label": "який підбиває підсумки",
+      "short_label": "стосовний до сумки для набоїв (військ., іст.)",
+      "gloss": "related to an ammunition pouch or cartridge box (from пі́дсумок - cartridge pouch)",
+      "pos": "adjective",
+      "cefr": "B2",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": False,
+        "russian_shadow": False,
+        "vesum_attested": True
+      },
+      "pronunciation": {
+        "ipa": "[pidˈsumkɔwɪj]"
+      },
+      "stress": {
+        "form": "підсу́мковий",
+        "source": "СУМ-11 / ВТС"
+      },
+      "morphology": {
+        "pos": "прикметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з «підсумко́вий» (наголос на третьому складі: який підбиває підсумки, заключний).",
+      "meaning": {
+        "definitions": [
+          "(військ., іст.) Прикм. до пі́дсумок (патронташ, сумка для набоїв)."
+        ],
+        "source": "СУМ-11"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ПІДСУ́МКОВИЙ, а, е. Прикм. до підсу́мок (патронташ, сумка для набоїв).",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "headword": "підсумко́вий",
+      "short_label": "який підбиває підсумки; завершальний",
       "gloss": "summary, final, conclusive, resulting (from підсу́мок - total, summary)",
       "pos": "adjective",
       "cefr": "B1",
@@ -375,53 +414,11 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[pidˈsumkɔwɪj]",
-        "source": "VESUM"
-      },
-      "stress": {
-        "form": "підсу́мковий",
-        "source": "ВТС"
-      },
-      "morphology": {
-        "pos": "прикметник",
-        "paradigm": {
-          "kind": "adjective"
-        }
-      },
-      "distinction_note": "Не плутати з військовим терміном «підсумко́вий» (наголос на третьому складі: прикм. до пі́дсумок - сумка для набоїв).",
-      "meaning": {
-        "definitions": [
-          "Прикм. до підсу́мок; який містить або підбиває підсумки; завершальний, кінцевий."
-        ],
-        "source": "ВТС"
-      },
-      "soviet_colonization_context": {
-        "source": "СУМ-11 (1970–1980)",
-        "definition": "ПІДСУ́МКОВИЙ, а, е. Прикм. до підсу́мок.",
-        "sovietization_risk": 0,
-        "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
-      }
-    },
-    {
-      "headword": "підсумко́вий",
-      "short_label": "стосовний до сумки для набоїв (військ.)",
-      "gloss": "related to an ammunition pouch or cartridge box (from пі́дсумок - ammo pouch)",
-      "pos": "adjective",
-      "cefr": "B2",
-      "heritage_status": {
-        "classification": "standard",
-        "is_russianism": False,
-        "russian_shadow": False,
-        "vesum_attested": True
-      },
-      "pronunciation": {
-        "ipa": "[pidsʊmˈkɔwɪj]",
-        "source": "VESUM"
+        "ipa": "[pidsʊmˈkɔwɪj]"
       },
       "stress": {
         "form": "підсумко́вий",
-        "source": "ВТС"
+        "source": "ВТС / СУМ-11"
       },
       "morphology": {
         "pos": "прикметник",
@@ -429,16 +426,16 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з загальним словом «підсу́мковий» (наголос на -су́м-: який підбиває результати чи підсумки).",
+      "distinction_note": "Не плутати з «підсу́мковий» (наголос на другому складі: стосовний до військової сумки для набоїв).",
       "meaning": {
         "definitions": [
-          "(військ., іст.) Прикм. до пі́дсумок (патронташ, сумка для набоїв)."
+          "1. Прикм. до підсу́мок. 2. Який містить або підбиває підсумки; завершальний, заключний (підсумковий звіт)."
         ],
-        "source": "ВТС"
+        "source": "ВТС / СУМ-11"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ПІДСУМКО́ВИЙ, а, е. 1. Прикм. до пі́дсумок. Зустрічаються підсумкові ремені...",
+        "definition": "ПІДСУМКО́ВИЙ, а, е. 1. Прикм. до пі́дсумок... 2. Завершальний, заключний. Підсумковий огляд...",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
@@ -447,9 +444,9 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
   ],
   "родовий": [
     {
-      "headword": "ро́довий",
-      "short_label": "граматичний рід / родовий лад",
-      "gloss": "genitive (grammar case); ancestral, clan-related (belonging to a clan or lineage)",
+      "headword": "родо́вий",
+      "short_label": "родовий лад / родовий відмінок (лінгв.)",
+      "gloss": "clan-related, ancestral; genitive case (grammar: родовий відмінок)",
       "pos": "adjective",
       "cefr": "A2",
       "heritage_status": {
@@ -459,12 +456,12 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈrɔdɔwɪj]",
-        "source": "VESUM"
+        "ipa": "[rɔˈdɔwɪj]"
       },
       "stress": {
-        "form": "ро́довий",
-        "source": "СУМ-20 (89370)"
+        "form": "родо́вий",
+        "source": "СУМ-20 (100032)",
+        "url": "https://sum20ua.com/?wordid=100032"
       },
       "morphology": {
         "pos": "прикметник",
@@ -475,9 +472,9 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
       "distinction_note": "Не плутати з медичним терміном «родови́й» (наголос на кінці: стосовний до пологів, народження дитини).",
       "meaning": {
         "definitions": [
-          "1. Який стосується роду як предків або громади; родовий лад. 2. Лінгв. Родовий відмінок."
+          "1. Який існував під час життя людей родами; родовий лад. 2. Прикм. до рід (родова спадщина). 3. Лінгв. Родовий відмінок."
         ],
-        "source": "СУМ-20 (89370)"
+        "source": "СУМ-20 (100032)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -493,7 +490,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
     {
       "headword": "родови́й",
       "short_label": "стосовний до пологів (мед., акуш.)",
-      "gloss": "natal, obstetric, relating to labor and childbirth (e.g. родова травма, родова діяльність)",
+      "gloss": "natal, obstetric, relating to labor and childbirth (родові травми, родова діяльність)",
       "pos": "adjective",
       "cefr": "B2",
       "heritage_status": {
@@ -503,12 +500,12 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[rɔdɔˈwɪj]",
-        "source": "VESUM"
+        "ipa": "[rɔdɔˈwɪj]"
       },
       "stress": {
         "form": "родови́й",
-        "source": "СУМ-20 (89371)"
+        "source": "СУМ-20 (100033)",
+        "url": "https://sum20ua.com/?wordid=100033"
       },
       "morphology": {
         "pos": "прикметник",
@@ -516,16 +513,16 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з граматичним та історичним «ро́довий» (наголос на першому складі: родовий відмінок, родовий лад).",
+      "distinction_note": "Не плутати з «родо́вий» (наголос на другому складі: родовий відмінок, родовий лад).",
       "meaning": {
         "definitions": [
-          "(мед., акуш.) Стосовний до родів, пологів; зв'язаний з процесом народження дитини."
+          "(мед., акуш.) Стосовний до родів, пологів; зв'язаний із процесом народження дитини."
         ],
-        "source": "СУМ-20 (89371)"
+        "source": "СУМ-20 (100033)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "РОДОВИ́Й, а́, е́, рідко. Стос. до родів (пологів).",
+        "definition": "РОДОВИ́Й, а́, е́. Стос. до родів.",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
@@ -536,7 +533,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
     {
       "headword": "свя́чений",
       "short_label": "освячений (дієприкм.)",
-      "gloss": "blessed, consecrated, sanctified (passive participle)",
+      "gloss": "blessed, consecrated, sanctified (passive participle of святити)",
       "pos": "adjective",
       "cefr": "B1",
       "heritage_status": {
@@ -546,8 +543,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈsʲwɑt͡ʃenɪj]",
-        "source": "VESUM"
+        "ipa": "[ˈsʲwɑt͡ʃenɪj]"
       },
       "stress": {
         "form": "свя́чений",
@@ -559,7 +555,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з прикметником/іменником «свяче́ний» (наголос на -че́-: свячена вода, свячене).",
+      "distinction_note": "Не плутати з прикметником/іменником «свяче́ний» (свячена вода, свячене).",
       "meaning": {
         "definitions": [
           "Дієприкм. пас. мин. ч. до святи́ти; освячений обрядом."
@@ -577,7 +573,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
     {
       "headword": "свяче́ний",
       "short_label": "свячена вода / свячене (прикм./імен.)",
-      "gloss": "holy, ritual, consecrated (as adjective/substantive: свячена вода - holy water; свячене - blessed Easter food)",
+      "gloss": "holy, ritual, consecrated (свячена вода - holy water; свячене - blessed Easter food)",
       "pos": "adjective",
       "cefr": "A2",
       "heritage_status": {
@@ -587,8 +583,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[sʲwɐˈt͡ʃɛnɪj]",
-        "source": "VESUM"
+        "ipa": "[sʲwɐˈt͡ʃɛnɪj]"
       },
       "stress": {
         "form": "свяче́ний",
@@ -612,7 +607,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "СВЯЧЕ́НИЙ, а, е. Прикм. до святи́ти. Свячена вода; свячене.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський період (СУМ-11). У радянський час обрядова лексика часто маркувалася як застаріла."
+        "historical_note": "Збережено в Словнику Бориса Грінченка (1907–1909), створеному в умовах заборон української мови в Російській імперії (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     }
   ],
@@ -630,8 +625,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈsʲijɐnʲːɐ]",
-        "source": "VESUM"
+        "ipa": "[ˈsʲijɐnʲːɐ]"
       },
       "stress": {
         "form": "сі́яння",
@@ -674,8 +668,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[sʲiˈjanʲːɐ]",
-        "source": "VESUM"
+        "ipa": "[sʲiˈjanʲːɐ]"
       },
       "stress": {
         "form": "сія́ння",
@@ -719,8 +712,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈsʲijɐtɪ]",
-        "source": "VESUM"
+        "ipa": "[ˈsʲijɐtɪ]"
       },
       "stress": {
         "form": "сі́яти",
@@ -762,8 +754,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[sʲiˈjɑtɪ]",
-        "source": "VESUM"
+        "ipa": "[sʲiˈjɑtɪ]"
       },
       "stress": {
         "form": "сія́ти",
@@ -788,7 +779,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "СІЯ́ТИ, я́ю, я́єш, недок., рідко. Те саме, що ся́яти.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), врятованому під час жорстоких царських заборон української культури (Емський указ 1876 р.)."
       }
     }
   ],
@@ -806,8 +797,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈskɑlɪtɪ]",
-        "source": "VESUM"
+        "ipa": "[ˈskɑlɪtɪ]"
       },
       "stress": {
         "form": "ска́лити",
@@ -849,8 +839,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[skɐˈlɪtɪ]",
-        "source": "VESUM"
+        "ipa": "[skɐˈlɪtɪ]"
       },
       "stress": {
         "form": "скали́ти",
@@ -875,7 +864,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "СКА́ЛИ́ТИ, лю́, ли́ш, недок., діал. Занозити.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), виданому всупереч імперським цензурним указам Російської імперії."
       }
     }
   ],
@@ -893,8 +882,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈsʲlʲidʊwɐtɪ]",
-        "source": "VESUM"
+        "ipa": "[ˈsʲlʲidʊwɐtɪ]"
       },
       "stress": {
         "form": "слі́дувати",
@@ -938,8 +926,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[sʲlʲidʊˈwɑtɪ]",
-        "source": "VESUM"
+        "ipa": "[sʲlʲidʊˈwɑtɪ]"
       },
       "stress": {
         "form": "слідува́ти",
@@ -964,7 +951,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "СЛІДУВА́ТИ, у́ю, у́єш, недок., розм. Те саме, що слідкува́ти.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), виданому всупереч заборонам української мови в Російській імперії."
       }
     }
   ],
@@ -982,8 +969,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[sɔˈlʲɑnɪj]",
-        "source": "VESUM"
+        "ipa": "[sɔˈlʲɑnɪj]"
       },
       "stress": {
         "form": "соля́ний",
@@ -1025,8 +1011,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[sɔlʲɐˈnɪj]",
-        "source": "VESUM"
+        "ipa": "[sɔlʲɐˈnɪj]"
       },
       "stress": {
         "form": "соляни́й",
@@ -1068,8 +1053,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈsʲpirnɪj]",
-        "source": "VESUM"
+        "ipa": "[ˈsʲpirnɪj]"
       },
       "stress": {
         "form": "спі́рний",
@@ -1113,8 +1097,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[sʲpirˈnɪj]",
-        "source": "VESUM"
+        "ipa": "[sʲpirˈnɪj]"
       },
       "stress": {
         "form": "спірни́й",
@@ -1138,7 +1121,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "СПІ́РНИ́Й, а, е, розм. Те саме, що спо́рий.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Збережено в Словнику Бориса Грінченка (1907–1909), виданому всупереч антиукраїнським імперським указам (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     }
   ],
@@ -1146,9 +1129,9 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
     {
       "headword": "сполу́чний",
       "short_label": "з'єднувальний; сполучна тканина (анат.)",
-      "gloss": "connective, connecting, binding (e.g. сполучна тканина - connective tissue)",
+      "gloss": "connecting, connective, binding; linking (e.g. сполучна тканина - connective tissue, сполучний звук)",
       "pos": "adjective",
-      "cefr": "B1",
+      "cefr": "B2",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": False,
@@ -1156,12 +1139,11 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[spɔˈlut͡ʃnɪj]",
-        "source": "VESUM"
+        "ipa": "[spɔˈlut͡ʃnɪj]"
       },
       "stress": {
         "form": "сполу́чний",
-        "source": "ВТС"
+        "source": "ВТС / СУМ-11"
       },
       "morphology": {
         "pos": "прикметник",
@@ -1169,29 +1151,30 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з граматичним терміном «сполучни́й» (наголос на кінці: стосовний до сполучника).",
+      "distinction_note": "Не плутати з «сполучни́й» (наголос на кінці: сумісний, суміщуваний з чим-небудь).",
       "meaning": {
         "definitions": [
-          "Який скріплює, з'єднує що-небудь; анат. сполучна тканина."
+          "Який скріплює, з'єднує що-небудь; призначений для сполучення (сполучний матеріал, сполучна тканина); грам. сполучний звук, сполучні слова."
         ],
-        "source": "ВТС"
+        "source": "ВТС / СУМ-11"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "СПОЛУ́ЧНИЙ, а, е. 1. Який скріплює, з’єднує, зв’язує що-небудь...",
-        "sovietization_risk": 1,
+        "definition": "СПОЛУ́ЧНИЙ, а, е. 1. Який скріплює, з’єднує, зв’язує що-небудь... 3. уроч. Тісно зближений, згуртований; єдиний. 'Віднині і навіки з Москвою сполучні будьмо!'",
+        "sovietization_risk": 2,
         "keywords": [
-          "радянські будівництва"
+          "ідеологічна пропаганда",
+          "Москва"
         ],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "У СУМ-11 до суто технічного та анатомічного прикметника 'сполучний' було штучно додано урочисте ідеологічне значення братерства з Москвою для радянської політичної індоктринації."
       }
     },
     {
       "headword": "сполучни́й",
-      "short_label": "стосовний до сполучника (лінгв.)",
-      "gloss": "conjunctional, relating to conjunctions in grammar (e.g. сполучний зв'язок)",
+      "short_label": "сумісний, суміщуваний з чим-небудь",
+      "gloss": "combinable, compatible, joinable (able to be connected or reconciled with something)",
       "pos": "adjective",
-      "cefr": "B1",
+      "cefr": "B2",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": False,
@@ -1199,12 +1182,11 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[spɔlʊt͡ʃˈnɪj]",
-        "source": "VESUM"
+        "ipa": "[spɔlʊt͡ʃˈnɪj]"
       },
       "stress": {
         "form": "сполучни́й",
-        "source": "ВТС"
+        "source": "СУМ-11 / ВТС"
       },
       "morphology": {
         "pos": "прикметник",
@@ -1212,19 +1194,21 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з анатомічним та фізичним «сполу́чний» (наголос на суфіксі -лу́ч-: сполучна ланка).",
+      "distinction_note": "Не плутати з «сполу́чний» (наголос на другому складі: який сполучає або скріплює). «Сполучни́й» означає сумісний, суміщуваний, який можна сполучити.",
       "meaning": {
         "definitions": [
-          "(лінгв.) Прикм. до сполучник; який містить або виражає сполучникові відношення."
+          "Який можна поєднувати, суміщати з чим-небудь; сумісний, сполучний із чимось."
         ],
-        "source": "ВТС"
+        "source": "СУМ-11 / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "СПОЛУЧНИ́Й, а́, е́, лінгв. Прикм. до сполу́чник.",
-        "sovietization_risk": 0,
-        "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "definition": "СПОЛУЧНИ́Й, а́, е́. Який можна поєднувати, суміщати з чим-небудь. (Цитата з В. Леніна, т. 25).",
+        "sovietization_risk": 1,
+        "keywords": [
+          "цитата Леніна"
+        ],
+        "historical_note": "У СУМ-11 єдиною ілюстрацією вживання цього слова слугувала цитата з творів В. І. Леніна."
       }
     }
   ],
@@ -1242,8 +1226,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈstɑrʃɪj]",
-        "source": "VESUM"
+        "ipa": "[ˈstɑrʃɪj]"
       },
       "stress": {
         "form": "ста́рший",
@@ -1284,8 +1267,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[stɐrˈʃɪj]",
-        "source": "VESUM"
+        "ipa": "[stɐrˈʃɪj]"
       },
       "stress": {
         "form": "старши́й",
@@ -1311,7 +1293,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "СТАРШИ́Й, о́го, ч., розм. Те саме, що керівни́к, нача́льник.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Збережено в Словнику Бориса Грінченка (1907–1909), виданому всупереч заборонам української мови царською владою (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     }
   ],
@@ -1330,8 +1312,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈstɔjɐnkɐ]",
-        "source": "VESUM"
+        "ipa": "[ˈstɔjɐnkɐ]"
       },
       "stress": {
         "form": "сто́янка",
@@ -1359,7 +1340,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "keywords": [
           "колгоспні цитати"
         ],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Збережено в Словнику Бориса Грінченка (1907–1909), укладеному всупереч імперським цензурним заборонам Російської імперії."
       }
     },
     {
@@ -1375,8 +1356,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[stɔˈjɑnkɐ]",
-        "source": "VESUM"
+        "ipa": "[stɔˈjɑnkɐ]"
       },
       "stress": {
         "form": "стоя́нка",
@@ -1420,8 +1400,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈsudnɪj]",
-        "source": "VESUM"
+        "ipa": "[ˈsudnɪj]"
       },
       "stress": {
         "form": "су́дний",
@@ -1462,8 +1441,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[sʊdˈnɪj]",
-        "source": "VESUM"
+        "ipa": "[sʊdˈnɪj]"
       },
       "stress": {
         "form": "судни́й",
@@ -1487,7 +1465,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "СУДНИ́Й, а́, е́, діал. Придатний для вжитку, годящий.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), виданому всупереч репресивним указам Російської імперії (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     }
   ],
@@ -1506,8 +1484,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈtwɛrdɪtɪ]",
-        "source": "VESUM"
+        "ipa": "[ˈtwɛrdɪtɪ]"
       },
       "stress": {
         "form": "тве́рдити",
@@ -1532,7 +1509,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "ТВЕ́РДИТИ, джу, диш, недок., рідко. Робити твердим.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), врятованому в часи дії Емського указу 1876 року."
       }
     },
     {
@@ -1548,8 +1525,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[twɛrˈdɪtɪ]",
-        "source": "VESUM"
+        "ipa": "[twɛrˈdɪtɪ]"
       },
       "stress": {
         "form": "тверди́ти",
@@ -1584,7 +1560,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
       "short_label": "характерний, показний, зразковий",
       "gloss": "typical, characteristic, representative of a group or kind",
       "pos": "adjective",
-      "cefr": "B1",
+      "cefr": "A2",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": False,
@@ -1592,8 +1568,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[tɪˈpɔwɪj]",
-        "source": "VESUM"
+        "ipa": "[tɪˈpɔwɪj]"
       },
       "stress": {
         "form": "типо́вий",
@@ -1625,7 +1600,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
       "short_label": "стандартизований за зразком (техн.)",
       "gloss": "standardized, model-based, type-designed (e.g. типовий проєкт будинку)",
       "pos": "adjective",
-      "cefr": "B1",
+      "cefr": "A2",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": False,
@@ -1633,8 +1608,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[tɪpɔˈwɪj]",
-        "source": "VESUM"
+        "ipa": "[tɪpɔˈwɪj]"
       },
       "stress": {
         "form": "типови́й",
@@ -1676,8 +1650,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈustup]",
-        "source": "VESUM"
+        "ipa": "[ˈustup]"
       },
       "stress": {
         "form": "у́ступ",
@@ -1720,8 +1693,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ʊsˈtup]",
-        "source": "VESUM"
+        "ipa": "[ʊsˈtup]"
       },
       "stress": {
         "form": "усту́п",
@@ -1747,15 +1719,15 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "УСТУ́П, у, ч., заст. Вступ, початок, вхід.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), виданому всупереч антиукраїнським царським заборонам (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     }
   ],
   "хлібець": [
     {
       "headword": "хлі́бець",
-      "short_label": "маленька хлібина; буханець",
-      "gloss": "small loaf of bread, bun, roll",
+      "short_label": "маленька хлібина, буханець",
+      "gloss": "small loaf of bread, bun, roll (e.g. випікати хлібці)",
       "pos": "noun",
       "cefr": "A2",
       "heritage_status": {
@@ -1765,12 +1737,11 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈxlʲibɛt͡sʲ]",
-        "source": "VESUM"
+        "ipa": "[ˈxlʲibɛt͡sʲ]"
       },
       "stress": {
         "form": "хлі́бець",
-        "source": "ВТС"
+        "source": "СУМ-11 / ВТС"
       },
       "morphology": {
         "pos": "іменник",
@@ -1780,16 +1751,16 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "animacy": "inanimate"
         }
       },
-      "distinction_note": "Не плутати з ботанічним «хлібе́ць» (наголос на другому складі: плоди мальви чи диких калачиків).",
+      "distinction_note": "Не плутати з «хлібе́ць» (родовий хлібця́: пестливе до хліб у народних піснях — зелені посіви зернових на полі).",
       "meaning": {
         "definitions": [
-          "Зменш.-пестл. до хліб; невелика хлібина, буханець."
+          "Невелика хлібина; буханець (також м'ясний хлібець як кулінарний виріб)."
         ],
-        "source": "ВТС"
+        "source": "СУМ-11 / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ХЛІ́БЕЦЬ, бця, ч. Невелика хлібина...",
+        "definition": "ХЛІ́БЕЦЬ, бця, ч. Невелика хлібина; // Невеликий хліб з м’ясного фаршу.",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
@@ -1797,24 +1768,23 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
     },
     {
       "headword": "хлібе́ць",
-      "short_label": "калачики, дика рослина мальва (бот.)",
-      "gloss": "mallow fruit / wild edible plant seed pods (калачики, Malva; often collected by children)",
+      "short_label": "хлібчик, посіви зернових (пестл., фольк.)",
+      "gloss": "dear bread, young standing grain crops in fields (diminutive/poetic, attested in folk songs: 'Хіба зелениться хлібець серед поля')",
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
-        "classification": "authentic-botanism",
+        "classification": "authentic-folklorism",
         "warning_severity": "treasured",
         "is_russianism": False,
         "russian_shadow": False,
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[xlʲiˈbɛt͡sʲ]",
-        "source": "VESUM"
+        "ipa": "[xlʲiˈbɛt͡sʲ]"
       },
       "stress": {
         "form": "хлібе́ць",
-        "source": "ВТС"
+        "source": "СУМ-11"
       },
       "morphology": {
         "pos": "іменник",
@@ -1824,16 +1794,16 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "animacy": "inanimate"
         }
       },
-      "distinction_note": "Не плутати з кулінарним «хлі́бець» (наголос на першому складі: буханець хліба).",
+      "distinction_note": "Не плутати з «хлі́бець» (родовий хлі́бця: окрема невелика хлібина).",
       "meaning": {
         "definitions": [
-          "(бот., розм.) Дикоросла трав'яниста рослина родини мальвових або її дископодібні їстівні плоди (калачики)."
+          "Зменш.-пестл. до хліб; хлібчик, зернові посіви на полі в народнопоетичній творчості."
         ],
-        "source": "ВТС"
+        "source": "СУМ-11"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ХЛІБЕ́ЦЬ, бця́, ч. 1. Бот. Дика рослина родини мальвових; калачики.",
+        "definition": "ХЛІБЕ́ЦЬ, бця́, ч. Зменш.-пестл. до хліб 1-3. Нема, бачите, рідної неньки, нікому було і шматочок хлібця дать небозі... Хіба зелениться Хлібець серед поля.",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
@@ -1843,8 +1813,48 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
   "хрещений": [
     {
       "headword": "хре́щений",
-      "short_label": "хрещений батько / хрещена дитина",
-      "gloss": "godparent (хрещений батько / хрещена мати), baptized person; Christian",
+      "short_label": "охрещений (дієприкм.)",
+      "gloss": "baptized, christened (passive past participle of хрестити; e.g. дитина, ще не хрещена)",
+      "pos": "adjective",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": False,
+        "russian_shadow": False,
+        "vesum_attested": True
+      },
+      "pronunciation": {
+        "ipa": "[ˈxrɛʃt͡ʃenɪj]"
+      },
+      "stress": {
+        "form": "хре́щений",
+        "source": "СУМ-11 / ВТС"
+      },
+      "morphology": {
+        "pos": "дієприкметник",
+        "paradigm": {
+          "kind": "adjective"
+        }
+      },
+      "distinction_note": "Не плутати з прикметником/іменником «хреще́ний» (хрещений батько, хрещена мати).",
+      "meaning": {
+        "definitions": [
+          "Дієприкм. пас. мин. ч. до хрести́ти; над яким здійснено обряд хрещення."
+        ],
+        "source": "СУМ-11"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "ХРЕ́ЩЕНИЙ, а, е. Дієпр. пас. мин. ч. до хрести́ти. Він, браття, ще не хрещений — не сміє благословення вірним уділяти.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський період (СУМ-11). Релігійна обрядова термінологія зазнавала ідеологічної цензури."
+      }
+    },
+    {
+      "headword": "хреще́ний",
+      "short_label": "хрещений батько / мати; християнин",
+      "gloss": "godparent (хрещений батько, хрещена мати), christened Christian person (хрещений люд)",
       "pos": "adjective",
       "cefr": "A2",
       "heritage_status": {
@@ -1854,53 +1864,11 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈxrɛʃt͡ʃenɪj]",
-        "source": "VESUM"
-      },
-      "stress": {
-        "form": "хре́щений",
-        "source": "ВТС / Грінченко (1907)"
-      },
-      "morphology": {
-        "pos": "прикметник",
-        "paradigm": {
-          "kind": "adjective"
-        }
-      },
-      "distinction_note": "Не плутати з прикметником «хреще́ний» (наголос на -ще́-: позначений хрестом, перехрещений).",
-      "meaning": {
-        "definitions": [
-          "1. Той, хто пройшов обряд хрещення. 2. Хрещений батько, хрещена мати (духовні батьки)."
-        ],
-        "source": "ВТС / Грінченко (1907)"
-      },
-      "soviet_colonization_context": {
-        "source": "СУМ-11 (1970–1980)",
-        "definition": "ХРЕ́ЩЕНИЙ, а, е. Дієпр. пас. мин. ч. до хрести́ти...",
-        "sovietization_risk": 0,
-        "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
-      }
-    },
-    {
-      "headword": "хреще́ний",
-      "short_label": "перехрещений, позначений хрестом",
-      "gloss": "crossed, bearing the sign of a cross, marked with criss-cross pattern",
-      "pos": "adjective",
-      "cefr": "B2",
-      "heritage_status": {
-        "classification": "standard",
-        "is_russianism": False,
-        "russian_shadow": False,
-        "vesum_attested": True
-      },
-      "pronunciation": {
-        "ipa": "[xrɛˈʃt͡ʃɛnɪj]",
-        "source": "VESUM"
+        "ipa": "[xrɛˈʃt͡ʃɛnɪj]"
       },
       "stress": {
         "form": "хреще́ний",
-        "source": "ВТС"
+        "source": "СУМ-11 / ВТС / Грінченко (1907)"
       },
       "morphology": {
         "pos": "прикметник",
@@ -1908,19 +1876,19 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з сакральним обрядовим «хре́щений» (хрещений батько).",
+      "distinction_note": "Не плутати з дієприкметником «хре́щений» (наголос на першому складі: охрещений у церкві).",
       "meaning": {
         "definitions": [
-          "(рідко) Позначений або нанесений у вигляді хреста; перехрещений."
+          "1. Який прийняв християнство; православний християнин. 2. У сполученнях: хрещений батько, хрещена мати (духовні батьки)."
         ],
-        "source": "ВТС"
+        "source": "СУМ-11 / ВТС / Грінченко (1907)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ХРЕЩЕ́НИЙ, а́, е́, рідко. Позначений хрестом.",
+        "definition": "ХРЕЩЕ́НИЙ, а́, е́. 1. Який був підданий обряду хрещення... 2. Стос. до обряду хрещення... // у знач. ім. хреще́ні, них, мн. Ті (чоловік і жінка), хто бере участь в обряді хрещення в ролі духовних батька та матері.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Збережено в Словнику Бориса Грінченка (1907–1909), виданому всупереч репресивним заборонам Російської імперії (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     }
   ],
@@ -1938,8 +1906,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈt͡sʲilɪk]",
-        "source": "VESUM"
+        "ipa": "[ˈt͡sʲilɪk]"
       },
       "stress": {
         "form": "ці́лик",
@@ -1982,8 +1949,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[t͡sʲiˈlɪk]",
-        "source": "VESUM"
+        "ipa": "[t͡sʲiˈlɪk]"
       },
       "stress": {
         "form": "ціли́к",
@@ -2006,10 +1972,10 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ЦІЛИ́К, а́, ч. 1. гірн. Частина пласта корисної копалини, яку залишають незайманою... 2. діал. Цілина.",
+        "definition": "ЦІЛИ́К, а́, ч. 1. гірн. Частина пласта корисної копалини... 2. діал. Цілина.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Збережено в Словнику Бориса Грінченка (1907–1909), врятованому всупереч антиукраїнським указам царської Росії (Емський указ 1876 р.)."
       }
     }
   ],
@@ -2027,8 +1993,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈt͡sʲilɪtɪ]",
-        "source": "VESUM"
+        "ipa": "[ˈt͡sʲilɪtɪ]"
       },
       "stress": {
         "form": "ці́лити",
@@ -2070,8 +2035,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[t͡sʲiˈlɪtɪ]",
-        "source": "VESUM"
+        "ipa": "[t͡sʲiˈlɪtɪ]"
       },
       "stress": {
         "form": "ціли́ти",
@@ -2096,7 +2060,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "ЦІЛИ́ТИ, лю́, ли́ш, недок., заст. Лікувати, зціляти.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Збережено в Словнику Бориса Грінченка (1907–1909), укладеному всупереч антиукраїнським царським указам (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     }
   ],
@@ -2104,7 +2068,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
     {
       "headword": "укра́їна",
       "short_label": "прикордонна земля, порубіжжя (іст., заст.)",
-      "gloss": "frontier region, border territory (historical appellative used in medieval chronicles)",
+      "gloss": "frontier region, border territory (historical appellative in medieval chronicles)",
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
@@ -2115,8 +2079,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ʊˈkrɑjinɐ]",
-        "source": "VESUM"
+        "ipa": "[ʊˈkrɑjinɐ]"
       },
       "stress": {
         "form": "укра́їна",
@@ -2130,7 +2093,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "animacy": "inanimate"
         }
       },
-      "distinction_note": "Не плутати з власним ім'ям Батьківщини та народнопоетичним загальним словом «украї́на» (наголос на -ї́-: рідна країна, земля народу).",
+      "distinction_note": "Не плутати з власним ім'ям держави та народнопоетичним загальним словом «украї́на» (наголос на -ї́-: рідна країна, земля народу).",
       "meaning": {
         "definitions": [
           "(іст., заст.) Територія уздовж меж князівства або держави; прикордонний край."
@@ -2145,7 +2108,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "імперський міф",
           "окраина"
         ],
-        "historical_note": "Російська імперська та радянська історіографія нав'язували тлумачення слова 'Україна' виключно як 'окраїни' Московії/Росії. Насправді у пам'ятках Русі (Київський літопис 1187 р.) та народному мовленні первинним значенням була питома земля, рідний край (украї́на)."
+        "historical_note": "Російська імперська та радянська історіографія однобічно абсолютизували значення 'укра́їна = окраїна', намагаючись звести назву цілого народу до периферії Московської держави. У питомій традиції паралельно побутував фольклорний омограф украї́на (країна, рідний край)."
       }
     },
     {
@@ -2162,8 +2125,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ʊkrɐˈjinɐ]",
-        "source": "VESUM"
+        "ipa": "[ʊkrɐˈjinɐ]"
       },
       "stress": {
         "form": "украї́на",
@@ -2180,7 +2142,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
       "distinction_note": "Загальна назва рідної країни у думах та піснях («в нашій славній україні»), яка стала власною назвою держави Україна.",
       "meaning": {
         "definitions": [
-          "(іст., нар.-поет.) Рідний край, земля, батьківщина українського народу."
+          "(іст., нар.-поет.) Рідний край, земля, батьківщина українського народу (у думах: 'в нашій славній україні')."
         ],
         "source": "Грінченко (1907) / ВТС"
       },
@@ -2189,7 +2151,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "УКРАЇ́НА, и, ж., нар.-поет. Країна, земля.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Збережено в Словнику Бориса Грінченка (1907–1909), укладеному в часи дії антиукраїнських урядових заборон Російської імперії (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     }
   ],
@@ -2207,8 +2169,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈɔpɐl]",
-        "source": "VESUM"
+        "ipa": "[ˈɔpɐl]"
       },
       "stress": {
         "form": "о́пал",
@@ -2250,8 +2211,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ɔˈpɑl]",
-        "source": "VESUM"
+        "ipa": "[ɔˈpɑl]"
       },
       "stress": {
         "form": "опа́л",
@@ -2296,8 +2256,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈrɔzkɐz]",
-        "source": "VESUM"
+        "ipa": "[ˈrɔzkɐz]"
       },
       "stress": {
         "form": "ро́зказ",
@@ -2323,7 +2282,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "РО́ЗКАЗ, у, ч., заст. Наказ. Пан не дозволяв і на годину кидати ліса...",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), виданому всупереч репресивним заборонам Російської імперії (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     },
     {
@@ -2339,8 +2298,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[rɔzˈkɑz]",
-        "source": "VESUM"
+        "ipa": "[rɔzˈkɑz]"
       },
       "stress": {
         "form": "розка́з",
@@ -2384,12 +2342,12 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈwidkɫɐd]",
-        "source": "VESUM"
+        "ipa": "[ˈwidkɫɐd]"
       },
       "stress": {
         "form": "ві́дклад",
-        "source": "СУМ-20 (14343)"
+        "source": "СУМ-20 (12717)",
+        "url": "https://sum20ua.com/?wordid=12717"
       },
       "morphology": {
         "pos": "іменник",
@@ -2404,7 +2362,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definitions": [
           "(геол.) Гірська порода або шар мінералів, утворений осадом речовин у воді чи повітрі."
         ],
-        "source": "СУМ-20 (14343)"
+        "source": "СУМ-20 (12717)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -2428,12 +2386,12 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[widˈkɫɑd]",
-        "source": "VESUM"
+        "ipa": "[widˈkɫɑd]"
       },
       "stress": {
         "form": "відкла́д",
-        "source": "СУМ-20 (14344) / Грінченко (1907)"
+        "source": "СУМ-20 (12718)",
+        "url": "https://sum20ua.com/?wordid=12718"
       },
       "morphology": {
         "pos": "іменник",
@@ -2448,14 +2406,14 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definitions": [
           "(заст., рідко) Те саме, що відклада́ння; відстрочення виконання якоїсь справи."
         ],
-        "source": "СУМ-20 (14344) / Грінченко (1907)"
+        "source": "СУМ-20 (12718) / Грінченко (1907)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
         "definition": "ВІДКЛА́Д, у, ч., рідко. Те саме, що відклада́ння.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Збережено в Словнику Бориса Грінченка (1907–1909), укладеному всупереч антиукраїнським указам царської влади (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     }
   ],
@@ -2473,12 +2431,12 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈzɑmir]",
-        "source": "VESUM"
+        "ipa": "[ˈzɑmir]"
       },
       "stress": {
         "form": "за́мір",
-        "source": "СУМ-20 (33215)"
+        "source": "СУМ-20 (30686)",
+        "url": "https://sum20ua.com/?wordid=30686"
       },
       "morphology": {
         "pos": "іменник",
@@ -2493,14 +2451,14 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definitions": [
           "Задум, бажання зробити щось; намір, мета."
         ],
-        "source": "СУМ-20 (33215)"
+        "source": "СУМ-20 (30686)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
         "definition": "ЗА́МІР, у, ч. Задум, бажання зробити щось; намір.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Збережено в Словнику Бориса Грінченка (1907–1909), виданому всупереч репресивним заборонам Російської імперії."
       }
     },
     {
@@ -2516,12 +2474,12 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[zɐˈmir]",
-        "source": "VESUM"
+        "ipa": "[zɐˈmir]"
       },
       "stress": {
         "form": "замі́р",
-        "source": "СУМ-20 (33216)"
+        "source": "СУМ-20 (30687)",
+        "url": "https://sum20ua.com/?wordid=30687"
       },
       "morphology": {
         "pos": "іменник",
@@ -2536,7 +2494,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definitions": [
           "(техн., спец.) Визначення величини чого-небудь за допомогою спеціального приладу або мірки."
         ],
-        "source": "СУМ-20 (33216)"
+        "source": "СУМ-20 (30687)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -2547,12 +2505,12 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
       }
     }
   ],
-  "логік": [
+  "байковий": [
     {
-      "headword": "ло́гік",
-      "short_label": "учений, фахівець із логіки",
-      "gloss": "logician, scholar specializing in formal logic",
-      "pos": "noun",
+      "headword": "ба́йковий",
+      "short_label": "пошитий з байки, м'якої тканини (текст.)",
+      "gloss": "flannelette, baize (soft brushed cotton fabric; e.g. байкова ковдра, байкова сорочка)",
+      "pos": "adjective",
       "cefr": "B1",
       "heritage_status": {
         "classification": "standard",
@@ -2561,164 +2519,156 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈlɔɦik]",
-        "source": "VESUM"
+        "ipa": "[ˈbɑjkɔwɪj]"
       },
       "stress": {
-        "form": "ло́гік",
-        "source": "СУМ-20 (48197)"
+        "form": "ба́йковий",
+        "source": "СУМ-20 (2319)",
+        "url": "https://sum20ua.com/?wordid=2319"
       },
       "morphology": {
-        "pos": "іменник",
+        "pos": "прикметник",
         "paradigm": {
-          "kind": "noun",
-          "gender": "masculine",
-          "animacy": "animate"
+          "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з діалектним технічним «логі́к» (наголос на кінці: стічний жолоб для води чи сплаву лісу).",
+      "distinction_note": "Не плутати з літературознавчим терміном «байко́вий» (наголос на другому складі: стосовний до літературної байки, байкарський).",
       "meaning": {
         "definitions": [
-          "Учений, фахівець із логіки."
+          "Прикм. до ба́йка (м'яка бавовняна тканина з начосом); пошитий із байки."
         ],
-        "source": "СУМ-20 (48197)"
+        "source": "СУМ-20 (2319) / Грінченко (1907)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ЛО́ГІК, а, ч. Учений, фахівець із логіки.",
+        "definition": "БА́ЙКОВИЙ, а, е. Прикм. до ба́йка²; // Зробл., пошитий з байки.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Збережено в Словнику Бориса Грінченка (1907–1909), виданому всупереч антиукраїнським імперським заборонам (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     },
     {
-      "headword": "логі́к",
-      "short_label": "стічний жолоб, лісосплавний лотік (діал.)",
-      "gloss": "water flume, drainage chute, timber flume (dialectal/technical, genitive: лотока́ / логіка́)",
-      "pos": "noun",
+      "headword": "байко́вий",
+      "short_label": "стосовний до байки як літературного жанру (літ.)",
+      "gloss": "fable-related, fabulist (relating to literary fable genre; e.g. байковий сюжет)",
+      "pos": "adjective",
       "cefr": "B2",
       "heritage_status": {
-        "classification": "authentic-dialectism",
-        "warning_severity": "treasured",
+        "classification": "standard",
         "is_russianism": False,
         "russian_shadow": False,
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ɫɔˈɦʲik]",
-        "source": "VESUM"
+        "ipa": "[bɐjˈkɔwɪj]"
       },
       "stress": {
-        "form": "логі́к",
-        "source": "ВТС / СУМ-11"
+        "form": "байко́вий",
+        "source": "СУМ-20 (2320)",
+        "url": "https://sum20ua.com/?wordid=2320"
       },
       "morphology": {
-        "pos": "іменник",
+        "pos": "прикметник",
         "paradigm": {
-          "kind": "noun",
-          "gender": "masculine",
-          "animacy": "inanimate"
+          "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з назвою професії вченого «ло́гік» (наголос на першому складі).",
+      "distinction_note": "Не плутати з текстильним «ба́йковий» (наголос на першому складі: байкова сорочка, байкова тканина).",
       "meaning": {
         "definitions": [
-          "(діал., спец.) Відкритий жолоб для стікання води, лісосплавний лотік."
+          "(літ.) Прикм. до ба́йка (повчальний алегоричний віршований або прозовий твір)."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "СУМ-20 (2320)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ЛОГІ́К, тока́, ч. 1. Відкритий жолоб для стікання води, зсипання зерна...",
+        "definition": "БАЙКО́ВИЙ, а, е. Прикм. до ба́йка¹ 1. Ще в Греції існувала байкова традиція...",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
       }
     }
   ],
-  "тучний": [
+  "брикнути": [
     {
-      "headword": "ту́чний",
-      "short_label": "гладкий, вгодований (розм.)",
-      "gloss": "fat, plump, stout (colloquial/Russian-shadowed; native Ukrainian prefers гладкий, вгодований)",
-      "pos": "adjective",
+      "headword": "бри́кнути",
+      "short_label": "упасти, перекинутися (розм.)",
+      "gloss": "to tumble down, fall over, flop down (colloquial)",
+      "pos": "verb",
       "cefr": "B2",
       "heritage_status": {
         "classification": "standard",
-        "is_russianism": False,
-        "russian_shadow": True,
-        "vesum_attested": True,
-        "warning_severity": "attention"
-      },
-      "pronunciation": {
-        "ipa": "[ˈtut͡ʃnɪj]",
-        "source": "VESUM"
-      },
-      "stress": {
-        "form": "ту́чний",
-        "source": "ВТС / Грінченко (1907)"
-      },
-      "morphology": {
-        "pos": "прикметник",
-        "paradigm": {
-          "kind": "adjective"
-        }
-      },
-      "distinction_note": "Не плутати з автентичним фольклорним «тучни́й» (наголос на кінці: грозовий, дощовий). Для значення 'жирний' природніші українські синоніми: вгодований, гладкий, ситий.",
-      "meaning": {
-        "definitions": [
-          "(розм.) Добре вгодований, жирний, огрядний (перев. про тварин або ґрунт)."
-        ],
-        "source": "ВТС / Грінченко (1907)"
-      },
-      "soviet_colonization_context": {
-        "source": "СУМ-11 (1970–1980)",
-        "definition": "ТУ́ЧНИЙ, а, е, розм. 1. Добре вгодований, гладкий...",
-        "sovietization_risk": 1,
-        "keywords": [
-          "російський вплив",
-          "калька"
-        ],
-        "historical_note": "Слово 'тучний' у значенні 'гладкий/жирний' зазнавало сильного російського лексичного тиску в радянську епоху. Питомі українські відповідники: ситий, гладкий, вгодований."
-      }
-    },
-    {
-      "headword": "тучни́й",
-      "short_label": "грозовий, хмарний (діал., фольк.)",
-      "gloss": "thunderous, heavy-clouded (attested in Grinchenko 1907: 'тучний дощ - сильний дощ із грозою')",
-      "pos": "adjective",
-      "cefr": "B2",
-      "heritage_status": {
-        "classification": "authentic-folklorism",
-        "warning_severity": "treasured",
         "is_russianism": False,
         "russian_shadow": False,
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[tʊt͡ʃˈnɪj]",
-        "source": "VESUM"
+        "ipa": "[ˈbrɪknʊtɪ]"
       },
       "stress": {
-        "form": "тучни́й",
-        "source": "Грінченко (1907)"
+        "form": "бри́кнути",
+        "source": "СУМ-20 (5513)",
+        "url": "https://sum20ua.com/?wordid=5513"
       },
       "morphology": {
-        "pos": "прикметник",
+        "pos": "дієслово",
         "paradigm": {
-          "kind": "adjective"
+          "kind": "verb",
+          "aspect": "доконаний"
         }
       },
-      "distinction_note": "Не плутати з «ту́чний» (жирний). Автентична українська народна лексема від 'туча' (грозова хмара).",
+      "distinction_note": "Не плутати з омографом «брикну́ти» (наголос на -ну́ти: брикнути копитом, хвицати).",
       "meaning": {
         "definitions": [
-          "(діал., фольк.) Грозовий, зв'язаний із великою хмарою; тучний дощ: злива з грозою."
+          "(розм.) Упасти, перекинутися; раптово повалитися додолу."
         ],
-        "source": "Грінченко (1907)"
+        "source": "СУМ-20 (5513)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ТУЧНИ́Й, а́, е́, діал. Грозовий; тучний дощ.",
+        "definition": "БРИ́КНУТИ, ну, неш, док., розм. Упасти, перекинутися.",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+      }
+    },
+    {
+      "headword": "брикну́ти",
+      "short_label": "брикнути ногою чи копитом, хвицнути",
+      "gloss": "to buck, kick out with a hoof or leg once (e.g. кінь брикнув)",
+      "pos": "verb",
+      "cefr": "B1",
+      "heritage_status": {
+        "classification": "standard",
+        "is_russianism": False,
+        "russian_shadow": False,
+        "vesum_attested": True
+      },
+      "pronunciation": {
+        "ipa": "[brɪkˈnutɪ]"
+      },
+      "stress": {
+        "form": "брикну́ти",
+        "source": "СУМ-20 (5514)",
+        "url": "https://sum20ua.com/?wordid=5514"
+      },
+      "morphology": {
+        "pos": "дієслово",
+        "paradigm": {
+          "kind": "verb",
+          "aspect": "доконаний"
+        }
+      },
+      "distinction_note": "Не плутати з розмовним «бри́кнути» (наголос на першому складі: раптово впасти, повалитися).",
+      "meaning": {
+        "definitions": [
+          "Однократне до брика́ти; ударити ногою або копита́ми назад; хвицнути."
+        ],
+        "source": "СУМ-20 (5514)"
+      },
+      "soviet_colonization_context": {
+        "source": "СУМ-11 (1970–1980)",
+        "definition": "БРИКНУ́ТИ, ну́, не́ш, док. Однокр. до брика́ти.",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
@@ -2740,12 +2690,12 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ˈʒɑlɔbɐ]",
-        "source": "VESUM"
+        "ipa": "[ˈʒɑlɔbɐ]"
       },
       "stress": {
         "form": "жа́лоба",
-        "source": "СУМ-20 (30528) / Грінченко (1907)"
+        "source": "СУМ-20 (26713)",
+        "url": "https://sum20ua.com/?wordid=26713"
       },
       "morphology": {
         "pos": "іменник",
@@ -2760,14 +2710,14 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definitions": [
           "(прост., заст.) Висловлення невдоволення з приводу чогось; скарга, судова претензія."
         ],
-        "source": "СУМ-20 (30528) / Грінченко (1907)"
+        "source": "СУМ-20 (26713) / Грінченко (1907)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
         "definition": "ЖА́ЛОБА, и, ж., розм. Висловлення невдоволення з приводу чогось; скарга.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Збережено в Словнику Бориса Грінченка (1907–1909), укладеному всупереч царським указам, що забороняли українську мову (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     },
     {
@@ -2783,12 +2733,12 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "vesum_attested": True
       },
       "pronunciation": {
-        "ipa": "[ʒɐˈlɔbɐ]",
-        "source": "VESUM"
+        "ipa": "[ʒɐˈlɔbɐ]"
       },
       "stress": {
         "form": "жало́ба",
-        "source": "СУМ-20 (30529) / Грінченко (1907)"
+        "source": "СУМ-20 (26714)",
+        "url": "https://sum20ua.com/?wordid=26714"
       },
       "morphology": {
         "pos": "іменник",
@@ -2803,14 +2753,14 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definitions": [
           "1. Глибокий сум, туга за померлим; траур. 2. Чорний одяг або пов'язка на знак скорботи."
         ],
-        "source": "СУМ-20 (30529) / Грінченко (1907)"
+        "source": "СУМ-20 (26714) / Грінченко (1907)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
         "definition": "ЖАЛО́БА, и, ж. 1. Глибокий сум, скорбота за померлим; траур...",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Збережено в Словнику Бориса Грінченка (1907–1909), укладеному в часи дії антиукраїнських урядових заборон Російської імперії."
       }
     }
   ]
