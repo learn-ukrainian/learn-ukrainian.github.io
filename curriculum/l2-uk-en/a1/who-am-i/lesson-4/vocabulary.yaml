@@ -1,0 +1,80 @@
+- lemma: мене́ зва́ти
+  translation: my name is
+  pos: phrase
+  usage: Мене́ зва́ти Марко́.
+- lemma: як тебе́ зва́ти?
+  translation: what is your name? informal
+  pos: phrase
+  usage: Як тебе́ зва́ти?
+- lemma: як вас зва́ти?
+  translation: what is your name? formal
+  pos: phrase
+  usage: Як вас зва́ти?
+- lemma: а тебе́?
+  translation: and yours? informal
+  pos: phrase
+  usage: А тебе́?
+- lemma: а вас?
+  translation: and yours? formal
+  pos: phrase
+  usage: А вас?
+- lemma: ду́же приє́мно
+  translation: pleased to meet you
+  pos: phrase
+  usage: Ду́же приє́мно!
+- lemma: це
+  translation: this is / this
+  pos: pronoun
+  usage: Це Окса́на.
+- lemma: хто
+  translation: who
+  pos: pronoun
+  usage: Хто це?
+- lemma: що
+  translation: what
+  pos: pronoun
+  usage: Що це?
+- lemma: зві́дки
+  translation: where from
+  pos: adverb
+  usage: Зві́дки ти?
+- lemma: студе́нтка
+  translation: female student
+  pos: noun
+  usage: Я — студе́нтка.
+- lemma: лі́карка
+  translation: female doctor
+  pos: noun
+  usage: Во́на — лі́карка.
+- lemma: вчи́телька
+  translation: female teacher
+  pos: noun
+  usage: Во́на — вчи́телька.
+- lemma: дружи́на
+  translation: wife
+  pos: noun
+  usage: Це моя́ дружи́на.
+- lemma: ви́бачте
+  translation: excuse me
+  pos: interjection
+  usage: Ви́бачте, як вас зва́ти?
+- lemma: дя́кую
+  translation: thank you
+  pos: interjection
+  usage: Дя́кую!
+- lemma: теж
+  translation: also / too
+  pos: adverb
+  usage: Мені́ теж приє́мно.
+- lemma: Украї́на
+  translation: Ukraine
+  pos: proper noun
+  usage: Я з Украї́ни.
+- lemma: Кана́да
+  translation: Canada
+  pos: proper noun
+  usage: Я з Кана́ди.
+- lemma: прі́звище
+  translation: surname
+  pos: noun
+  usage: Моє́ прі́звище — Ме́льник.
