@@ -808,7 +808,10 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                 if turns:
                     hits = []
                     for stem, page in (rendered or {}).items():
-                        hits.extend([stem] * _subsequence_count(turns, _dialogue_pairs_from_page(page)))
+                        lid = stem[:-4] if stem.endswith(".mdx") else stem
+                        if lid in {"index", ""}:
+                            continue
+                        hits.extend([lid] * _subsequence_count(turns, _dialogue_pairs_from_page(page)))
                     if len(hits) == 1 and hits[0] == str(n):
                         continue
                     if not hits:

@@ -281,6 +281,22 @@ def test_gold_preservation_activity_and_vocabulary_semantics(gold):
     assert content == []
 
 
+def test_converted_fence_accepts_mdx_filename_keys(gold):
+    module, source, plan = gold
+    from scripts.generate_mdx.converters import _dialogue_box_mdx
+    fence = "```text\nAlice: Hello there my friend!\nBob: Goodbye until next time!\n```"
+    src = source / "module.md"
+    src.write_text(fence + "\n\n" + src.read_text())
+    box = _dialogue_box_mdx(
+        [{"speaker": "Alice", "text": "Hello there my friend!"},
+         {"speaker": "Bob", "text": "Goodbye until next time!"}],
+        "Dialogue",
+    )
+    report = gates.run_lesson_gates(module, source, plan, rendered={"1.mdx": box})
+    assert report["facts"]["preservation"]["misplaced"] == 0
+    assert not any("belongs to lesson" in d for d in report["blocking"])
+
+
 def test_removed_original_paragraph_fails(gold):
     module, source, plan = gold
     paragraph = next(p for p in gates.paragraphs(gates.sections((source / "module.md").read_text())["__intro__"])
