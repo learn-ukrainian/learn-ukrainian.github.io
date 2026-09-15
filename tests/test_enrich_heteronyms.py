@@ -857,6 +857,19 @@ def test_batch7_semantic_and_stress_distinctions():
     assert bur[1]["headword"] == "бури́тися"
     assert "drilled" in bur[1]["gloss"].lower() or "bored" in bur[1]["gloss"].lower()
 
+    # важниця: ва́жниця (person of importance / animate) vs важни́ця (wagon prop / scales / inanimate)
+    vazh = enrich_heteronyms.build_heteronyms_for_lemma("важниця")
+    assert vazh is not None and len(vazh) == 2
+    assert vazh[0]["headword"] == "ва́жниця"
+    assert vazh[0]["morphology"]["paradigm"]["animacy"] == "animate"
+    assert "person" in vazh[0]["gloss"].lower() or "importance" in vazh[0]["gloss"].lower()
+    assert vazh[1]["headword"] == "важни́ця"
+    assert vazh[1]["morphology"]["paradigm"]["animacy"] == "inanimate"
+    assert "wagon" in vazh[1]["gloss"].lower() or "prop" in vazh[1]["gloss"].lower() or "scale" in vazh[1]["gloss"].lower()
+    assert "station" not in vazh[1]["gloss"].lower()
+    assert "вагівниця" not in vazh[1]["soviet_colonization_context"]["definition"]
+    assert "вага́ 5" in vazh[1]["soviet_colonization_context"]["definition"]
+
     # валковий: валко́вий (roller-equipped) vs валкови́й (carter / driver with convoy)
     val = enrich_heteronyms.build_heteronyms_for_lemma("валковий")
     assert val is not None and len(val) == 2
