@@ -105,17 +105,23 @@ pie title data/sources.db Historical & Dialectal Holdings (Records & Chunks)
 ### 4.2 Old East Slavic & Kyivan Rus Chronicles (11th–13th Centuries)
 
 * **Table:** `literary_texts`
-* **Total Chunks:** **10,202 chunks** (17,421,735 characters, verified SQLite snapshot).
-* **Key Monuments:**
-  * **Ipatiev Chronicle (Іпатіївський літопис):** 1,865 chunks — the southern Rus compilation containing the primary text of the Kyiv Chronicle and Galician-Volhynian Chronicle.
-  * **Kyiv Chronicle (Київський літопис, 12th c.):** 1,083 chunks — detailed account of central Ukrainian lands with pervasive vernacular phonology and syntax.
-  * **Primary Chronicle (Повість минулих літ, PVL Ipatiev):** 1,075 chunks — foundational historical narrative.
-  * **Galician-Volhynian Chronicle (Галицько-Волинський літопис, 13th c.):** 1,010 chunks — rich southwestern Ukrainian lexical and grammatical features.
-  * **Laurentian Chronicle (Лаврентіївський літопис):** 1,033 chunks — critical northern comparative witness.
-  * **Novgorod 1st Chronicle (Новгородський перший літопис):** 1,120 chunks — northwest Slavic comparative witness.
-  * **Ruska Pravda (Руська Правда):** 364 chunks — 11th–12th century secular legal code written in East Slavic vernacular legal register.
-  * **Kyiv-Pechersk Paterik (Києво-Печерський патерик):** 361 chunks — Kyivan Church Slavonic prose masterpiece.
-  * **Izbornyk of Sviatoslav 1076:** 18 chunks — moral and philosophical miscellany.
+* **Total Chunks:** **10,202 chunks** (17,421,735 characters, verified SQLite snapshot), disaggregated into two distinct functional strata:
+  * **Original-Language Manuscript Witness Editions (7,469 chunks, 12,350,600 characters):**
+    * **Ipatiev Chronicle (Іпатіївський літопис, `wave12-ipatskyj-litopys`):** 1,865 chunks — southern Rus chronicle compilation (PSRL Vol. 2, 1908 edition) preserving Old East Slavic text with southern Rus linguistic features.
+    * **Primary Chronicle (Повість минулих літ, `wave1-pvl-ipatskyi`):** 1,075 chunks — foundational narrative according to the Ipatiev Codex with early Cyrillic orthography and variant apparatus.
+    * **Laurentian Chronicle (`wave12-lavrentiivskyj-litopys` & `wave1-pvl-lavrentiyivskyi`):** 1,727 chunks (1,033 + 694) — northern comparative witness text.
+    * **Novgorod 1st Chronicle (`wave12-novgorodskyj-litopys-1`):** 1,120 chunks — northwest Slavic comparative witness text.
+    * **Ruska Pravda (`wave5-yushkov-ruska-pravda`):** 364 chunks — 11th–12th century secular legal code in East Slavic vernacular legal register (ed. S. Yushkov).
+    * **Kyiv-Pechersk Paterik (`wave1-pateryk-pechersky` / `wave12-paterikon-pecherskyi`):** 361 chunks — Kyivan Church Slavonic prose text (2nd Cassian recension, 1462).
+    * **Early Rus Literary Excerpts (`wave5-oldukr-xi-xiii-galvol`):** 132 chunks — 11th–13th century Old Rus/Ukrainian manuscript text selections.
+    * **Izbornyk of Sviatoslav 1076 (`wave11-izbornyk-svyatoslava-uryvky`):** 18 chunks — moral and philosophical miscellany.
+    * **Slovo o polku Ihorevim (`wave0-slovo-o-polku` / `wave12-slovo-o-polku-ihorevim`):** 11 chunks — original poetic text.
+  * **Modern Ukrainian Translations & Scholarly Apparatus (2,733 chunks, 5,071,135 characters):**
+    * **Kyiv Chronicle (`wave1-kyivskyi-litopys`):** 1,083 chunks — modern Ukrainian translation and historical-geographical commentary by Leonid Makhnovets (*Літопис руський за Іпатським списком*, Дніпро, 1989).
+    * **Galician-Volhynian Chronicle (`wave1-galytsko-volynskyi` & `wave6-galvol-kostruba`):** 1,270 chunks (1,010 chunks tr. L. Makhnovets, 1989; 260 chunks tr. T. Kostruba, 1936).
+    * **PVL Translations (`wave0-pvl-yaremenko`):** 55 chunks — modern Ukrainian translation by Vasyl Yaremenko.
+    * **Slovo Translations (`wave1-slovo-poetic-translations`):** 325 chunks — 19th–20th century poetic translations.
+  * **Methodological Extraction Invariant:** The 2,733 modern translation and commentary chunks provide semantic alignment pairs and historical-topographical context, but are strictly excluded from medieval phonological and morphological ground-truth extraction. Only the 7,469 original-language witness chunks serve as pre-modern linguistic data.
 
 ### 4.3 Middle Ukrainian & Cossack Baroque Literature (14th–18th Centuries)
 
@@ -158,7 +164,7 @@ Russian imperial and Soviet historiography relied on three linguistic dogmas to 
 * **The Imperial Myth (Mikhail Pogodin, 1856):** Pogodin claimed that prior to the Mongol invasion of 1240, Kyiv was populated by "Great Russians", who purportedly migrated northeast to Vladimir and Moscow, after which ancestors of modern Ukrainians "migrated from the Carpathian mountains into empty Kyiv" in the 14th century.
 * **The Empirical Refutation (Krymsky, Shevelov, Nimchuk):**
   1. Early Kyivan epigraphy (e.g. St. Sophia inscriptions: dative masculine *-ови/-еви* in record #105 / title 133 *помози Мартинови* and record #122 / title 1058 *θедорови*; living vocative case; vernacular calendar form *м(ѣсѧ)ца лоу{того}* in record #229 / title 4776) documents specific South Rus vernacular Ukrainian traits penetrating church formulas in the Kyivan territory.
-  2. These epigraphic attestations corroborate the manuscript tradition (the 12th-century Kyiv Chronicle, 13th-century Galician-Volhynian Chronicle, and 14th–15th century charters in `literary_texts`), where characteristically Ukrainian phonetic and morphological features develop continuously in the South Rus core, refuting Pogodin's 1856 thesis that pre-Mongol Kyivan speech was northern Great Russian that vanished without trace.
+  2. **Scholarly Historical-Linguistic Analysis (Krymskyi, Shevelov, Nimchuk):** In foundational philological works (Ahatanhel Krymskyi, *Украинская грамматика*, 1907; George Y. Shevelov, *A Historical Phonology of the Ukrainian Language*, 1979, §3–§14; Vasyl Nimchuk, *Хрестоматія давньої української мови*, 1983), analysis of pre-modern South Rus manuscript witnesses (including the Ipatiev Codex chronicle text [PSRL Vol. 2], early Rus legal charters, and 14th–15th century chancery Ukrainian charters) established the continuous organic development of Proto-Ukrainian phonetic and morphological features (*g* $\rightarrow$ *[ɦ]*, pleophony *голос/берег*, dative *-ови/-еви*, vocative) in the Kyivan and southwestern Rus lands. This scholarly consensus refutes Pogodin's 1856 thesis that pre-Mongol Kyivan speech was Great Russian that vanished without demographic or linguistic continuity. In our corpus architecture, medieval linguistic evidence is drawn strictly from original-language witness editions (`wave12-ipatskyj-litopys`, `wave1-pvl-ipatskyi`, 14th–15th c. charters) and in situ epigraphy, explicitly separated from modern translation prose (Makhnovets 1989) and editorial commentary.
   3. Epigraphic evidence is evaluated as individual unmediated vernacular attestations alongside securely dated manuscript monuments, acknowledging that broad epigraphic dating brackets and damaged fragments cannot alone establish isolated demographic chronologies. Contested individual readings are strictly quarantined in our evaluation suite.
 
 ### Refutation 2: Deconstruction of the "Common East Slavic Monolith"
@@ -203,7 +209,7 @@ flowchart LR
   * **Gate 4 (Anti-Overstandardization Protection):** Exact zero observed errors ($k = 0$) on dialect ($N = 300$), historical ($N = 200$), and conversational controls ($N = 100$) across the Protection Suite ($N = 600$, one-sided 95% Clopper-Pearson upper bound: $1 - 0.05^{1/600} \le \mathbf{0.499\%}$; per-partition dialect $N = 300 \le 0.994\%$). Zero tolerance for altering regional vocabulary, historical grammar, or authentic spoken norms (*шо*, *всьо*).
   * **Gate 5 (Citation Verification & High-Frequency Calque Floor):**
     1. Dedicated 50-case 100%-recall high-frequency common-calque floor (*приймати участь*, *на протязі*, *в першу чергу*, *попередити хворобу*), priority subset of the 300 calques.
-    2. Zero hallucinated headwords, senses, or fictitious dictionary attributions across all 1,600 evaluation cases (covering citations in both `<thought>` reasoning traces and final answers). Grounding validated against approved authorities in `data/sources.db` (tables `sum20_articles`/`sum20_senses`, `sum11`, `grinchenko`, `style_guide`), `data/vesum.db`, Правопис 2019, УЛІФ, UA-GEC. Missing/unsupported evidence fails closed.
+    2. Zero hallucinated headwords, senses, or fictitious dictionary attributions across all 1,600 evaluation cases (covering citations in both `<thought>` reasoning traces and final answers). Grounding validated against approved positive authorities in `data/sources.db` (tables `sum20_articles`/`sum20_senses`, `grinchenko`, `style_guide`), `data/vesum.db`, Правопис 2019, УЛІФ, UA-GEC. Note: Soviet-era `sum11` is strictly quarantined for Sovietization detection and contrastive calque-reversal reasoning; any positive normative lexical claim citing `sum11` or lacking positive authority grounding fails closed.
 * **Output:** Frozen v0.2 Scorecard published in `docs/reports/uldr_v02_scorecard.md`.
 
 ### 6.2 Phase 5.6: Regional Dialects Mining & Multi-Zone Evaluation (Issue [#8102](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8102))
@@ -215,7 +221,7 @@ flowchart LR
 
 ### 6.3 Phase 5.7: Kyivan Rus Epigraphy & Church Slavonic Diglossia (Issue [#8103](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8103))
 
-* **Data Extraction:** Mine the 2,570 text-bearing St. Sophia inscriptions (`historical_source_records`) and 10,202 OES chronicle chunks (`literary_texts`).
+* **Data Extraction:** Mine the 2,570 text-bearing St. Sophia inscriptions (`historical_source_records`) and 7,469 original-language OES manuscript witness chunks (`literary_texts`, specifically `wave12-ipatskyj-litopys`, `wave1-pvl-ipatskyi`, `wave12-lavrentiivskyj-litopys`, `wave5-yushkov-ruska-pravda`, `wave1-pateryk-pechersky`). The 2,733 modern Ukrainian translation and editorial chunks (`wave1-kyivskyi-litopys` and `wave1-galytsko-volynskyi` tr. Makhnovets 1989; `wave6-galvol-kostruba` tr. Kostruba 1936) are strictly excluded from medieval morphological/phonological training and reserved exclusively for translation alignment.
 * **Evidence-Preserving Paleographic Contract:** Reference the University of Gothenburg [`gu-gridh/sophia-epigraphic-ai`](https://github.com/gu-gridh/sophia-epigraphic-ai) (pinned revision `b6d04301d21ad9bb1f1ac8424fdbe8f7cba6999e`, `scripts/prepare_dataset.py`) for its baseline transcription normalization logic (`clean_transcription` and `is_valid_transcription`). The project-defined early Cyrillic character inventory (`ѣ, ѧ, ѫ, ѡ, ѱ, ѯ, ъ, ь, ҂`) represents the empirical character set extracted across the Saint Sophia epigraphic transcriptions in `data/sources.db`. Enforce immutable retention of raw transcriptions and Epidoc XML in `data/sources.db`, preservation of editorial uncertainty markers (`?`), lacunae brackets (`[...]`), and combining titla as structured metadata, with deterministic normalization verified against test fixtures.
 * **Alignment Trajectories:** SFT reasoning paths explicitly teaching the Kyivan Church Slavonic / Vernacular Diglossia model.
 * **Output:** Model release `v0.4a`.

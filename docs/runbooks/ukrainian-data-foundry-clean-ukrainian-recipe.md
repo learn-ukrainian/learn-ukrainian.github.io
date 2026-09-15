@@ -60,7 +60,7 @@ Ukrainian source material:
 | External articles | 1,205 records | 1,837,518 words |
 | Ukrainian Wikipedia (Interactive only; frozen from training #6958) | 1,029 records | 2,865,506 words |
 | **Middle Ukrainian & Cossack Baroque (14th–18th c.)** | 20,085 chunks | 36,561,300 chars |
-| **Old East Slavic & Kyivan Rus Chronicles (11th–13th c.)** | 10,202 chunks | 17,421,735 chars |
+| **Old East Slavic & Kyivan Rus Chronicles (11th–13th c.)** | 10,202 chunks (7,469 original witness, 2,733 modern tr.) | 17,421,735 chars (12.35M original, 5.07M tr.) |
 | **Saint Sophia of Kyiv Epigraphic Corpus (11th–14th c.)** | 4,157 records | 2,570 usable transcriptions (1,915 translations, 1,382 commentary) |
 | **Borys Grinchenko Regional Field Citations (1907)** | 11,000+ entries | 5 collector zones |
 | **Authentic Ukrainian Idioms & Phraseology** | 24,683 entries | Curated dictionary |
