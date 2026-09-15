@@ -14,9 +14,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import sqlite3
-import subprocess
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -28,29 +28,43 @@ if str(REPO_ROOT) not in sys.path:
 
 import jsonschema
 
+PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
+
+
+def _primary_repo_root() -> Path | None:
+    """Resolve an extra search root from env. Fail closed: no baked host path."""
+    raw = os.environ.get(PRIMARY_REPO_ROOT_ENV, "").strip()
+    if not raw:
+        return None
+    candidate = Path(raw)
+    resolved = candidate.resolve() if candidate.is_absolute() else (Path.cwd() / candidate).resolve()
+    if not resolved.is_dir():
+        raise ValueError(f"{PRIMARY_REPO_ROOT_ENV} is set but is not an existing directory")
+    return resolved
+
 
 def resolve_data_path(rel_path: str) -> Path:
-    """Resolve a relative data path, falling back to git common dir or main repo for gitignored files."""
-    local_p = REPO_ROOT / rel_path
-    if local_p.exists() and local_p.stat().st_size > 0:
-        return local_p
-    try:
-        common = subprocess.check_output(
-            ["git", "rev-parse", "--git-common-dir"],
-            cwd=REPO_ROOT,
-            text=True,
-            stderr=subprocess.DEVNULL,
-            timeout=10,
-        ).strip()
-        main_p = Path(common).resolve().parent / rel_path
-        if main_p.exists() and main_p.stat().st_size > 0:
-            return main_p
-    except Exception:
-        pass
-    fallback = Path("/home/ops/learn-ukrainian") / rel_path
-    if fallback.exists() and fallback.stat().st_size > 0:
-        return fallback
-    return local_p
+    """Resolve a relative data path via REPO_ROOT, cwd, or LEARN_UKRAINIAN_PRIMARY_REPO_ROOT.
+
+    No baked host checkout fallback. Missing inputs return the REPO_ROOT-relative
+    path so callers can report a normal FileNotFoundError.
+    """
+    candidates = [REPO_ROOT / rel_path, Path.cwd() / rel_path]
+    primary = _primary_repo_root()
+    if primary is not None:
+        candidates.append(primary / rel_path)
+    seen: set[Path] = set()
+    for candidate in candidates:
+        try:
+            resolved = candidate.resolve()
+        except OSError:
+            resolved = candidate
+        if resolved in seen:
+            continue
+        seen.add(resolved)
+        if candidate.exists() and candidate.stat().st_size > 0:
+            return candidate
+    return REPO_ROOT / rel_path
 
 
 DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
@@ -661,13 +675,9 @@ def mine_anti_surzhyk_controls(conn: sqlite3.Connection) -> list[dict[str, Any]]
                     break
 
     # Load authentic human-annotated calques from UA-GEC
-    uagec_path = (
-        REPO_ROOT / "data" / "projects" / "open_model_data" / "decolonization" / "mined" / "uagec_mined_calques.jsonl"
+    uagec_path = resolve_data_path(
+        "data/projects/open_model_data/decolonization/mined/uagec_mined_calques.jsonl"
     )
-    if not uagec_path.exists():
-        uagec_path = Path(
-            "/home/ops/learn-ukrainian/data/projects/open_model_data/decolonization/mined/uagec_mined_calques.jsonl"
-        )
 
     if uagec_path.exists():
         with uagec_path.open("r", encoding="utf-8") as f:

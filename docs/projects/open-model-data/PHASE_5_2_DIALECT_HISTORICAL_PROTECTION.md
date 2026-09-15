@@ -4,8 +4,8 @@
 > **Parent Epic:** [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321) (Open Model Data)
 > **Master Plan:** [`PRODUCTION_RELEASE_PLAN.md`](./PRODUCTION_RELEASE_PLAN.md)
 > **Architecture Reference:** [`DECOLONIZATION_EPIC_ARCHITECTURE.md`](./DECOLONIZATION_EPIC_ARCHITECTURE.md) (§2.9 & §7)
-> **Artifact Receipt:** [`dialect_historical_protection_receipt_v1.json`](file:///home/ops/learn-ukrainian/data/projects/open_model_data/decolonization/partitions/dialect_historical_protection_receipt_v1.json)
-> **Dataset File:** [`dialect_historical_protection_suite_600.jsonl`](file:///home/ops/learn-ukrainian/data/projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl)
+> **Artifact Receipt:** [`dialect_historical_protection_receipt_v1.json`](../../../data/projects/open_model_data/decolonization/partitions/dialect_historical_protection_receipt_v1.json)
+> **Dataset File:** [`dialect_historical_protection_suite_600.jsonl`](../../../data/projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl)
 > **SHA-256:** `6e51d3d4e8e6c4aa838d2fb5fe47322b172d78b6354df8597ddc717c2665da37`
 
 ---
@@ -70,7 +70,7 @@ Sourced from human error contexts in UA-GEC (`uagec_mined_calques.jsonl`) and An
 
 ## 3. Evaluation Harness & Statistical Power
 
-The companion evaluator [`v5_dialect_protection_evaluator.py`](file:///home/ops/learn-ukrainian/scripts/projects/open_model_data/v5_dialect_protection_evaluator.py) runs automated scoring with exact Clopper-Pearson confidence limits:
+The companion evaluator [`v5_dialect_protection_evaluator.py`](../../../scripts/projects/open_model_data/v5_dialect_protection_evaluator.py) runs automated scoring with exact Clopper-Pearson confidence limits:
 
 $$\text{Lower Bound} = \text{Beta}(\alpha, k, n - k + 1) \quad (\text{for } k < n)$$
 $$\text{Lower Bound} = \alpha^{1/n} \quad (\text{for } k = n)$$
