@@ -79,6 +79,33 @@ describe('stressed Ukrainian tokens', () => {
   });
 });
 
+describe('numeral tokens', () => {
+  test('digits stay inside the word token instead of becoming punctuation', () => {
+    const tokens = tokenizeErrorSentence('Мені 30 років.');
+    expect(tokens.filter((t) => t.trim() && !/^[,.!]+$/.test(t))).toEqual([
+      'Мені',
+      '30',
+      'років',
+    ]);
+  });
+
+  test('clicking a numeral error word advances to fix', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <ErrorCorrectionItem
+        sentence="Мені 30 років."
+        errorWord="30"
+        correctForm="тридцять"
+        options={['тридцять', '30']}
+        explanation="Пишемо числівники словами."
+      />,
+    );
+    expect(itemContainer(container).getAttribute('data-step')).toBe('identify');
+    await user.click(wordByText(container, '30'));
+    expect(itemContainer(container).getAttribute('data-step')).toBe('fix');
+  });
+});
+
 describe('ErrorCorrectionItem (identify step)', () => {
   const baseProps = {
     sentence: 'I goed to school yesterday.',

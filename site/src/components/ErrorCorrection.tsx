@@ -42,15 +42,15 @@ export interface ErrorCorrectionItemProps {
 
 type Step = 'identify' | 'fix' | 'complete';
 
-/** Letters + combining stress (U+0301) + Ukrainian apostrophes stay one token. */
-const SENTENCE_TOKENS = /[\p{L}\p{M}'’ʼʹ]+|[^\s\p{L}\p{M}'’ʼʹ]+|\s+/gu;
+/** Letters + digits + combining stress (U+0301) + Ukrainian apostrophes stay one token. */
+const SENTENCE_TOKENS = /[\p{L}\p{N}\p{M}'’ʼʹ]+|[^\s\p{L}\p{N}\p{M}'’ʼʹ]+|\s+/gu;
 
 export function tokenizeErrorSentence(sentence: string): string[] {
   return sentence.match(SENTENCE_TOKENS) || [];
 }
 
 export function cleanErrorToken(word: string): string {
-  return word.replace(/[^\p{L}\p{M}'’ʼʹ]/gu, '');
+  return word.replace(/[^\p{L}\p{N}\p{M}'’ʼʹ]/gu, '');
 }
 
 export function ErrorCorrectionItem({
