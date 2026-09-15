@@ -546,8 +546,8 @@ def test_show_pace_line_accepts_epoch_resets():
     assert "pace:" in text
 
 
-def test_gemini_403_tip_does_not_claim_missing_credential():
-    """A Google quota-API 403 with a credential present must not read as 'no credential'."""
+def test_gemini_fail_tip_points_at_agy_cli_not_api_key():
+    """Gemini/AGY is a subscription CLI seat — tip must not imply a Gemini API key."""
     budget = {
         "source": "monitor-api",
         "agents": {
@@ -561,5 +561,8 @@ def test_gemini_403_tip_does_not_claim_missing_credential():
         "api_accounts": {},
     }
     text = usage.format_human(budget)
-    assert "credential IS present" in text
     assert "agy --prompt /usage" in text
+    assert "OpenRouter + DeepSeek" in text
+    assert "API key" in text
+    assert "missing credential" not in text.lower()
+    assert "no credential" not in text.lower()

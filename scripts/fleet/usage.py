@@ -320,11 +320,10 @@ def _lane_tips(lane: str, info: dict[str, Any], *, fail: str) -> list[str]:
             "  tip: Anthropic rate-limited the usage probe (429). Wait and retry "
             "`usage show --fresh`; interactive/agentic caps above are ledger/LKG when burn is unknown."
         )
-    if lane == "gemini" and ("403" in fail or "401" in fail):
+    if lane == "gemini" and fail not in {"-", ""}:
         tips.append(
-            "  tip: Antigravity quota API rejected the token, but a Gemini/AGY credential "
-            "IS present (this is not a missing-credential case). Try `agy --prompt /usage` "
-            "(AGY chat) before re-authenticating."
+            "  tip: Gemini/AGY quota comes from `agy --prompt /usage` (subscription CLI), "
+            "not a Google Cloud API key. Prepaid HTTP keys are only OpenRouter + DeepSeek."
         )
     return tips
 

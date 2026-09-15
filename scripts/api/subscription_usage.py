@@ -11,6 +11,7 @@ import json
 import math
 import os
 import platform
+import shutil
 import subprocess
 import threading
 import time
@@ -1216,94 +1217,143 @@ def _probe_grok_native(*, timeout_s: float) -> dict[str, Any]:
     )
 
 
+def _agy_cli_bin() -> str | None:
+    found = shutil.which("agy")
+    if found:
+        return found
+    fallback = Path.home() / ".local" / "bin" / "agy"
+    return str(fallback) if fallback.is_file() else None
+
+
+def _agy_usage_buckets_by_window(group: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    out: dict[str, dict[str, Any]] = {}
+    buckets = group.get("buckets")
+    if not isinstance(buckets, list):
+        return out
+    for bucket in buckets:
+        if not isinstance(bucket, dict):
+            continue
+        window = str(bucket.get("window") or "").strip().lower()
+        if window:
+            out[window] = bucket
+    return out
+
+
+def _used_pct_from_remaining_fraction(remaining: Any) -> float | None:
+    if not isinstance(remaining, (int, float)) or isinstance(remaining, bool):
+        return None
+    return max(0.0, min(100.0, 100.0 - float(remaining) * 100.0))
+
+
 def _probe_antigravity_native(*, timeout_s: float) -> dict[str, Any]:
-    token_data = _load_antigravity_oauth()
-    if not token_data or not isinstance(token_data.get("access_token"), str):
-        return _normalize_provider_error(
-            "gemini",
-            {"message": "Antigravity OAuth credentials unavailable", "kind": "need_login", "code": "NEED_LOGIN"},
-        )
-    access_token = token_data["access_token"]
-    _, assist_payload, _ = _http_json_request(
-        "POST",
-        "https://daily-cloudcode-pa.googleapis.com/v1internal:loadCodeAssist",
-        headers={"Authorization": f"Bearer {access_token}"},
-        body=json.dumps({"metadata": {"ideType": "ANTIGRAVITY"}}).encode("utf-8"),
-        timeout_s=timeout_s,
-    )
-    project = ""
-    if isinstance(assist_payload, dict):
-        project = str(assist_payload.get("cloudaicompanionProject") or "")
-    status, quota_payload, err = _http_json_request(
-        "POST",
-        "https://daily-cloudcode-pa.googleapis.com/v1internal:retrieveUserQuotaSummary",
-        headers={"Authorization": f"Bearer {access_token}"},
-        body=json.dumps({"project": project} if project else {}).encode("utf-8"),
-        timeout_s=timeout_s,
-    )
-    if status in {401, 403}:
-        # The Google quota API can 403 while `agy --prompt /usage` (AGY chat) still
-        # works fine — a token IS present here, so do not tell the operator to
-        # re-auth as if the credential were missing (docs/guardrails/agent-fleet-tooling.md).
+    """Gemini/AGY lane uses AGY CLI ``/usage`` — not Google Cloud quota APIs.
+
+    Prepaid HTTP API keys are only OpenRouter + DeepSeek. Subscription seats use
+    native CLI/OAuth. ``retrieveUserQuotaSummary`` 403'd while ``agy /usage``
+    showed healthy Gemini weekly/5h remaining.
+    """
+    agy_bin = _agy_cli_bin()
+    if not agy_bin:
         return _normalize_provider_error(
             "gemini",
             {
-                "message": (
-                    f"Antigravity quota API rejected the token (HTTP {status}); "
-                    "AGY chat may still work — try `agy --prompt /usage` before re-authenticating"
-                ),
-                "kind": "provider",
-                "code": status,
+                "message": "agy CLI not found (install AGY; do not probe Google quota APIs)",
+                "kind": "need_login",
+                "code": "NEED_LOGIN",
             },
         )
-    if status != 200 or not isinstance(quota_payload, dict):
+    try:
+        completed = subprocess.run(
+            [agy_bin, "--prompt", "/usage", "--output-format", "json"],
+            capture_output=True,
+            text=True,
+            timeout=max(float(timeout_s), 30.0),
+            check=False,
+        )
+    except subprocess.TimeoutExpired:
+        return _normalize_provider_error(
+            "gemini",
+            {"message": "agy /usage timed out", "kind": "fetch_error", "code": "TIMEOUT"},
+        )
+    except OSError as exc:
+        return _normalize_provider_error(
+            "gemini",
+            {"message": f"agy /usage failed to start: {exc}", "kind": "fetch_error", "code": "SPAWN_ERROR"},
+        )
+    if completed.returncode != 0:
+        err = (completed.stderr or completed.stdout or "").strip()[:300] or f"exit {completed.returncode}"
+        return _normalize_provider_error(
+            "gemini",
+            {"message": f"agy /usage failed: {err}", "kind": "provider", "code": completed.returncode},
+        )
+    try:
+        payload = json.loads(completed.stdout or "")
+    except json.JSONDecodeError:
+        return _normalize_provider_error(
+            "gemini",
+            {"message": "agy /usage returned non-JSON", "kind": "fetch_error", "code": "BAD_JSON"},
+        )
+    if not isinstance(payload, dict):
+        return _normalize_provider_error(
+            "gemini",
+            {"message": "agy /usage JSON root is not an object", "kind": "fetch_error", "code": "BAD_JSON"},
+        )
+    command = payload.get("command") if isinstance(payload.get("command"), dict) else {}
+    data = command.get("data") if isinstance(command.get("data"), dict) else {}
+    groups = data.get("groups") if isinstance(data.get("groups"), list) else []
+    gemini_group: dict[str, Any] | None = None
+    for group in groups:
+        if isinstance(group, dict) and "gemini" in str(group.get("name") or "").lower():
+            gemini_group = group
+            break
+    if gemini_group is None:
         return _normalize_provider_error(
             "gemini",
             {
-                "message": err or f"Antigravity quota HTTP {status}",
+                "message": "agy /usage missing Gemini Models group (login/session may be incomplete)",
+                "kind": "need_login",
+                "code": "NEED_LOGIN",
+            },
+        )
+    by_window = _agy_usage_buckets_by_window(gemini_group)
+    five_h = by_window.get("5h") or by_window.get("five_hour") or by_window.get("session")
+    weekly = by_window.get("weekly")
+    primary = None
+    secondary = None
+    if isinstance(five_h, dict):
+        used = _used_pct_from_remaining_fraction(five_h.get("remaining_fraction"))
+        if used is not None:
+            reset = five_h.get("reset_time")
+            primary = _window_from_used_pct(
+                used,
+                window_minutes=300,
+                resets_at=str(reset) if isinstance(reset, str) else None,
+            )
+    if isinstance(weekly, dict):
+        used = _used_pct_from_remaining_fraction(weekly.get("remaining_fraction"))
+        if used is not None:
+            reset = weekly.get("reset_time")
+            secondary = _window_from_used_pct(
+                used,
+                window_minutes=WEEKLY_WINDOW_MINUTES,
+                resets_at=str(reset) if isinstance(reset, str) else None,
+            )
+    if primary is None and secondary is None:
+        return _normalize_provider_error(
+            "gemini",
+            {
+                "message": "agy /usage Gemini group had no usable 5h/weekly buckets",
                 "kind": "fetch_error",
-                "code": status or "FETCH_ERROR",
+                "code": "EMPTY_BUCKETS",
             },
         )
-    buckets = quota_payload.get("buckets") or quota_payload.get("quotaBuckets") or []
-    pro_remaining = None
-    flash_remaining = None
-    pro_reset = None
-    flash_reset = None
-    if isinstance(buckets, list):
-        for bucket in buckets:
-            if not isinstance(bucket, dict):
-                continue
-            model_id = str(bucket.get("modelId") or bucket.get("model_id") or "").lower()
-            remaining = bucket.get("remainingFraction") or bucket.get("remaining_fraction")
-            if not isinstance(remaining, (int, float)):
-                continue
-            reset = bucket.get("resetTime") or bucket.get("reset_time")
-            if "pro" in model_id and (pro_remaining is None or remaining < pro_remaining):
-                pro_remaining = float(remaining)
-                pro_reset = reset
-            elif "flash" in model_id and (flash_remaining is None or remaining < flash_remaining):
-                flash_remaining = float(remaining)
-                flash_reset = reset
-
-    def _used_from_remaining(rem: float | None) -> float | None:
-        if rem is None:
-            return None
-        return max(0.0, min(100.0, 100.0 - rem * 100.0))
-
-    primary = (
-        _window_from_used_pct(_used_from_remaining(flash_remaining), window_minutes=300, resets_at=flash_reset)
-        if flash_remaining is not None
-        else None
-    )
-    secondary = (
-        _window_from_used_pct(_used_from_remaining(pro_remaining), window_minutes=10080, resets_at=pro_reset)
-        if pro_remaining is not None
-        else None
-    )
     return _normalize_provider_data(
         "gemini",
-        {"provider": "gemini", "source": "antigravity_oauth", "usage": {"primary": primary, "secondary": secondary}},
+        {
+            "provider": "gemini",
+            "source": "agy_cli_usage",
+            "usage": {"primary": primary, "secondary": secondary},
+        },
     )
 
 
