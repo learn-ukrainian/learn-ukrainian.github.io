@@ -5,6 +5,7 @@ from __future__ import annotations
 import io
 import json
 import sys
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -453,3 +454,112 @@ def test_refresh_failure_is_nonzero_and_does_not_echo_exception(monkeypatch, cap
     monkeypatch.setattr(usage, "read_budget", lambda **kw: (_ for _ in ()).throw(RuntimeError("secret-marker")))
     assert usage.main(["refresh"]) == 1
     assert "secret-marker" not in capsys.readouterr().err
+
+
+def test_show_renders_codexbar_pace_line_under_window():
+    """CodexBar-style pace prints under an allotment window well into its cycle."""
+    now = datetime.now(UTC)
+    resets = (now + timedelta(days=2)).isoformat().replace("+00:00", "Z")
+    budget = {
+        "source": "monitor-api",
+        "agents": {
+            "codex": {
+                "status": "cool",
+                "remaining_pct": 20,
+                "codexbar": {
+                    "freshness": "fresh",
+                    "age_s": 1,
+                    "windows": {
+                        "secondary": {
+                            "used_pct": 80.0,
+                            "remaining_pct": 20.0,
+                            "resets_at": resets,
+                            "window_minutes": 10080,
+                        }
+                    },
+                },
+            }
+        },
+        "api_accounts": {},
+    }
+    text = usage.format_human(budget)
+    assert "pace:" in text
+    assert "Expected" in text and "% used" in text
+
+
+def test_show_hides_pace_line_when_window_just_started():
+    """CodexBar hides pace until enough of the window has elapsed (~1% weekly / ~3% session)."""
+    now = datetime.now(UTC)
+    resets = (now + timedelta(minutes=299)).isoformat().replace("+00:00", "Z")  # ~1min into a 5h window
+    budget = {
+        "source": "monitor-api",
+        "agents": {
+            "codex": {
+                "status": "cool",
+                "remaining_pct": 99,
+                "codexbar": {
+                    "freshness": "fresh",
+                    "age_s": 1,
+                    "windows": {
+                        "primary": {
+                            "used_pct": 1.0,
+                            "remaining_pct": 99.0,
+                            "resets_at": resets,
+                            "window_minutes": 300,
+                        }
+                    },
+                },
+            }
+        },
+        "api_accounts": {},
+    }
+    text = usage.format_human(budget)
+    assert "pace:" not in text
+
+
+def test_show_pace_line_accepts_epoch_resets():
+    now = datetime.now(UTC)
+    epoch_resets = int((now + timedelta(days=1)).timestamp())
+    budget = {
+        "source": "monitor-api",
+        "agents": {
+            "codex": {
+                "status": "cool",
+                "remaining_pct": 40,
+                "codexbar": {
+                    "freshness": "fresh",
+                    "age_s": 1,
+                    "windows": {
+                        "secondary": {
+                            "used_pct": 60.0,
+                            "remaining_pct": 40.0,
+                            "resets_at": epoch_resets,
+                            "window_minutes": 10080,
+                        }
+                    },
+                },
+            }
+        },
+        "api_accounts": {},
+    }
+    text = usage.format_human(budget)
+    assert "pace:" in text
+
+
+def test_gemini_403_tip_does_not_claim_missing_credential():
+    """A Google quota-API 403 with a credential present must not read as 'no credential'."""
+    budget = {
+        "source": "monitor-api",
+        "agents": {
+            "gemini": {
+                "status": "unknown",
+                "freshness": "unavailable",
+                "error_kind": "provider",
+                "last_failure_code": 403,
+            }
+        },
+        "api_accounts": {},
+    }
+    text = usage.format_human(budget)
+    assert "credential IS present" in text
+    assert "agy --prompt /usage" in text

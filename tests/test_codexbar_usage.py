@@ -5,9 +5,11 @@ from __future__ import annotations
 import json
 import threading
 import time
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
+
+import pytest
 
 from scripts.analytics.cost_report import CostRecord
 from scripts.api import codexbar_usage as codexbar_usage_mod
@@ -15,6 +17,13 @@ from scripts.api import state_router
 from scripts.api import subscription_usage as subscription_usage_mod
 from scripts.api.codexbar_usage import _normalize_provider_data
 from scripts.api.state_helpers import cache_invalidate
+from scripts.api.subscription_usage import (
+    compute_usage_pace,
+    compute_weekly_pace_delta_pct,
+    format_usage_pace_summary,
+    lane_is_under_weekly_pace,
+    pace_is_visible,
+)
 
 # Real Claude usage JSON snapshot
 CLAUDE_FIXTURE = """[
@@ -1969,3 +1978,141 @@ def test_management_key_missing_uses_short_cache_ttl(monkeypatch):
     result = mod.get_api_account_data("openrouter")
     assert result["freshness"] == "stale_last_good"
     assert called == [True]
+
+
+# --- CodexBar UsagePace port (usage-pace-secrets-v2) -----------------------
+#
+# Ground truth values below are taken verbatim from real CodexBar CLI output
+# fixtures (CLAUDE_FIXTURE / CODEX_FIXTURE `pace` blocks above), not invented,
+# so the port can be checked against the upstream tool byte-for-byte.
+
+
+def test_compute_usage_pace_matches_codexbar_claude_weekly_fixture():
+    """CLAUDE_FIXTURE pace.secondary: expected=47, delta=27, eta=100217s, 'Runs out in 1d 3h'."""
+    now = datetime(2026, 7, 9, 14, 13, 52, tzinfo=UTC)
+    pace = compute_usage_pace(74.0, "2026-07-13T06:59:59Z", window_minutes=10080, now=now)
+    assert pace is not None
+    assert pace["stage"] == "far_ahead"
+    assert round(pace["delta_pct"]) == 27
+    assert round(pace["expected_pct"]) == 47
+    assert pace["will_last_to_reset"] is False
+    assert round(pace["eta_seconds"]) == 100217
+    assert format_usage_pace_summary(pace, kind="weekly") == "27% in deficit | Expected 47% used | Runs out in 1d 3h"
+
+
+def test_compute_usage_pace_matches_codexbar_claude_primary_headroom_fixture():
+    """CLAUDE_FIXTURE pace.primary: expected=61, delta=-54, willLastToReset, headroom hint."""
+    now = datetime(2026, 7, 9, 14, 13, 52, tzinfo=UTC)
+    pace = compute_usage_pace(7.0, "2026-07-09T16:09:59Z", window_minutes=300, now=now)
+    assert pace is not None
+    assert round(pace["delta_pct"]) == -54
+    assert round(pace["expected_pct"]) == 61
+    assert pace["will_last_to_reset"] is True
+    summary = format_usage_pace_summary(pace, kind="session")
+    assert summary == "54% in reserve | Expected 61% used | Lasts until reset | 1.5× headroom"
+
+
+@pytest.mark.parametrize(
+    "delta_pct,stage",
+    [
+        (0.0, "on_track"),
+        (2.0, "on_track"),
+        (-2.0, "on_track"),
+        (6.0, "slightly_ahead"),
+        (-6.0, "slightly_behind"),
+        (12.0, "ahead"),
+        (-12.0, "behind"),
+        (50.0, "far_ahead"),
+        (-50.0, "far_behind"),
+    ],
+)
+def test_pace_stage_thresholds(delta_pct, stage):
+    """|delta|<=2 onTrack; <=6 slight; <=12 ahead/behind; else far* (CodexBar UsagePace.stage)."""
+    now = datetime(2026, 1, 1, tzinfo=UTC)
+    duration_minutes = 10080
+    # Fix elapsed at exactly half the window (expected=50%) so `actual = 50 + delta_pct`
+    # drives the delta directly without tripping the elapsed==0-but-used>0 guard.
+    resets_at = now + timedelta(minutes=duration_minutes / 2)
+    used_pct = max(0.0, min(100.0, 50.0 + delta_pct))
+    pace = compute_usage_pace(
+        used_pct,
+        resets_at.isoformat().replace("+00:00", "Z"),
+        window_minutes=duration_minutes,
+        now=now,
+    )
+    assert pace is not None
+    assert pace["stage"] == stage
+
+
+def test_compute_usage_pace_accepts_epoch_seconds_and_milliseconds():
+    """Codex has emitted raw epoch ints for resetsAt instead of ISO-8601 strings."""
+    now = datetime(2026, 1, 1, tzinfo=UTC)
+    resets_dt = now + timedelta(days=1)
+    epoch_s = int(resets_dt.timestamp())
+    from_str = compute_usage_pace(10.0, resets_dt.isoformat().replace("+00:00", "Z"), window_minutes=10080, now=now)
+    from_epoch_s = compute_usage_pace(10.0, epoch_s, window_minutes=10080, now=now)
+    from_epoch_ms = compute_usage_pace(10.0, epoch_s * 1000, window_minutes=10080, now=now)
+    assert from_str is not None and from_epoch_s is not None and from_epoch_ms is not None
+    assert round(from_str["delta_pct"], 4) == round(from_epoch_s["delta_pct"], 4)
+    assert round(from_str["delta_pct"], 4) == round(from_epoch_ms["delta_pct"], 4)
+
+
+def test_compute_usage_pace_returns_none_for_unparseable_resets_at():
+    now = datetime(2026, 1, 1, tzinfo=UTC)
+    assert compute_usage_pace(10.0, "not-a-date", window_minutes=10080, now=now) is None
+    assert compute_usage_pace(10.0, None, window_minutes=10080, now=now) is None
+
+
+def test_pace_is_visible_hides_below_minimum_expected_pct():
+    """CodexBar hides pace until enough of the window has elapsed (~3% session / ~1% weekly)."""
+    now = datetime(2026, 1, 1, tzinfo=UTC)
+    # 1% of a 5h (300min) session window = 3 minutes elapsed -> expected ~1%, below the 3% session floor.
+    just_started_session = now - timedelta(minutes=3)
+    session_pace = compute_usage_pace(
+        1.0,
+        (just_started_session + timedelta(minutes=300)).isoformat().replace("+00:00", "Z"),
+        window_minutes=300,
+        now=now,
+    )
+    assert session_pace is not None
+    assert not pace_is_visible(session_pace, kind="session")
+
+    # Same elapsed fraction against a weekly window clears the 1% weekly floor.
+    just_started_weekly = now - timedelta(minutes=101)
+    weekly_pace = compute_usage_pace(
+        1.0,
+        (just_started_weekly + timedelta(minutes=10080)).isoformat().replace("+00:00", "Z"),
+        window_minutes=10080,
+        now=now,
+    )
+    assert weekly_pace is not None
+    assert pace_is_visible(weekly_pace, kind="weekly")
+
+
+def test_compute_weekly_pace_delta_pct_is_thin_wrapper_over_compute_usage_pace():
+    now = datetime(2026, 8, 24, 12, 0, tzinfo=UTC)
+    resets_at = (now + timedelta(days=3)).isoformat().replace("+00:00", "Z")
+    delta = compute_weekly_pace_delta_pct(5.0, resets_at, now=now)
+    pace = compute_usage_pace(5.0, resets_at, now=now)
+    assert pace is not None
+    assert delta == pace["delta_pct"]
+
+
+def test_lane_is_under_weekly_pace_still_works_via_wrapper():
+    now = datetime(2026, 8, 24, 12, 0, tzinfo=UTC)
+    resets_at = (now + timedelta(days=3)).isoformat().replace("+00:00", "Z")
+    assert lane_is_under_weekly_pace(5.0, resets_at, now=now)
+    assert not lane_is_under_weekly_pace(90.0, resets_at, now=now)
+
+
+def test_normalize_claude_shape_fallback_pace_uses_codexbar_summary_format():
+    """No `pace` block in the payload -> the manual fallback must still produce a real
+    CodexBar-shaped summary (not the old ad hoc '% pace delta' string)."""
+    raw = json.loads(CLAUDE_FIXTURE)[0]
+    del raw["pace"]
+    res = _normalize_provider_data("claude", raw)
+    assert res["weekly_pace_delta_pct"] is not None
+    if res["pace_summary"] is not None:
+        assert "Expected" in res["pace_summary"]
+        assert "% used" in res["pace_summary"]
+        assert "pace delta" not in res["pace_summary"]
