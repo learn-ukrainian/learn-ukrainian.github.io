@@ -307,17 +307,23 @@ def resolve_target(
     track_dir = curriculum / resolve_content_track(track, slug, curriculum)
     module_dir = track_dir / slug
     content = _single_existing(
-        [module_dir / "module.md", track_dir / f"{slug}.md", *track_dir.glob(f"[0-9]*-{slug}.md")],
+        [
+            module_dir / "module.md",
+            module_dir / "lesson-1" / "module.md",
+            track_dir / f"{slug}.md",
+            *track_dir.glob(f"[0-9]*-{slug}.md"),
+        ],
         "module content",
     )
     if content is None:
         raise ReviewProtocolError(f"No built content for {track}/{slug}")
-    nested = content.name == "module.md" and content.parent == module_dir
+    local_dir = content.parent
+    nested = local_dir != track_dir
     candidates: dict[str, Sequence[Path]] = {
-        "activities": [module_dir / "activities.yaml"] if nested else [track_dir / "activities" / f"{slug}.yaml"],
-        "vocabulary": [module_dir / "vocabulary.yaml"] if nested else [track_dir / "vocabulary" / f"{slug}.yaml"],
-        "resources": [module_dir / "resources.yaml"] if nested else [track_dir / "resources" / f"{slug}.yaml"],
-        "meta": [module_dir / "meta.yaml", track_dir / "meta" / f"{slug}.yaml"],
+        "activities": [local_dir / "activities.yaml"] if nested else [track_dir / "activities" / f"{slug}.yaml"],
+        "vocabulary": [local_dir / "vocabulary.yaml"] if nested else [track_dir / "vocabulary" / f"{slug}.yaml"],
+        "resources": [local_dir / "resources.yaml"] if nested else [track_dir / "resources" / f"{slug}.yaml"],
+        "meta": [local_dir / "meta.yaml", module_dir / "meta.yaml", track_dir / "meta" / f"{slug}.yaml"],
     }
     files: dict[str, str] = {
         "plan": display_path(plan, repo_root),

@@ -1,5 +1,4 @@
 {
-  "target": "a1/sounds-letters-and-hello",
   "expected_family": "core",
   "semantic_result": {
     "verdict": "PASS",
