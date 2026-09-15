@@ -732,3 +732,45 @@ def test_homonyms_with_numeric_suffixes_and_identical_stress_not_treated_as_hete
     assert len(result_diff) == 2
     assert result_diff[0]["headword"] == "ТЕ́СТ"
     assert result_diff[1]["headword"] == "ТЕСТІ́"
+
+
+def test_build_heteronyms_for_lemma_preserves_all_homonyms_when_stresses_differ(monkeypatch):
+    """Verify that when multiple articles share stress but at least one differs, ALL articles are preserved."""
+    from scripts.lexicon import sum20_lookup
+
+    synthetic_three_articles = {
+        "lemma": "синтетичнийтест",
+        "modern_sum20": [
+            {
+                "stressed_headword": "ТЕ́СТ 1",
+                "grammar": "іменник",
+                "senses": [{"definition": "Перше значення тесту"}],
+            },
+            {
+                "stressed_headword": "ТЕ́СТ 2",
+                "grammar": "іменник",
+                "senses": [{"definition": "Друге значення тесту"}],
+            },
+            {
+                "stressed_headword": "ТЕСТІ́ 3",
+                "grammar": "іменник",
+                "senses": [{"definition": "Третє значення тесту"}],
+            },
+        ],
+        "soviet_colonization_context": None,
+    }
+
+    monkeypatch.setattr(
+        sum20_lookup,
+        "lookup_decolonized_heteronym_evidence",
+        lambda lemma: synthetic_three_articles,
+    )
+    result = enrich_heteronyms.build_heteronyms_for_lemma("синтетичнийтест")
+    assert result is not None
+    assert len(result) == 3
+    assert result[0]["headword"] == "ТЕ́СТ"
+    assert result[0]["gloss"] == "Перше значення тесту"
+    assert result[1]["headword"] == "ТЕ́СТ"
+    assert result[1]["gloss"] == "Друге значення тесту"
+    assert result[2]["headword"] == "ТЕСТІ́"
+    assert result[2]["gloss"] == "Третє значення тесту"

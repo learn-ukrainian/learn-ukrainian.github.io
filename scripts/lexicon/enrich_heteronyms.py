@@ -499,32 +499,37 @@ def build_heteronyms_for_lemma(lemma: str) -> list[dict[str, Any]] | None:
         ev = lookup_decolonized_heteronym_evidence(lemma)
         s20 = ev.get("modern_sum20", [])
         if len(s20) >= 2:
-            # Group by unique stress so homonym senses with the same stress (e.g. ТЕ́СТ 1 / ТЕ́СТ 2)
-            # do not create false heteronyms.
-            by_stress: dict[str, dict[str, Any]] = {}
-            for s in s20:
-                clean_head = _clean_stressed_headword(s.get("stressed_headword", ""))
-                if not clean_head:
-                    continue
-                if clean_head not in by_stress:
-                    by_stress[clean_head] = s
-
-            if len(by_stress) >= 2:
+            # Check unique stress patterns across articles. If there are at least two distinct
+            # stress patterns, this is a genuine heteronym pair/set.
+            unique_stresses = {
+                _clean_stressed_headword(s.get("stressed_headword", ""))
+                for s in s20
+                if s.get("stressed_headword")
+            }
+            unique_stresses.discard("")
+            if len(unique_stresses) >= 2:
                 items = []
                 col = ev.get("soviet_colonization_context")
-                for head, s in by_stress.items():
+                for s in s20:
+                    raw_head = s.get("stressed_headword", "")
+                    head = _clean_stressed_headword(raw_head) or raw_head or lemma
                     senses = s.get("senses", [])
                     defn = senses[0]["definition"] if senses else (s.get("definition") or "")
-                    items.append(
-                        {
-                            "headword": head,
-                            "gloss": defn[:120].strip(),
-                            "short_label": s.get("grammar") or s.get("pos") or "",
-                            "pos": "noun" if s.get("pos") in ("ч.", "ж.", "с.") else None,
-                            "distinction_note": f"Омограф зі словом «{lemma}» (наголос: {head}).",
-                            "soviet_colonization_context": col,
+                    item: dict[str, Any] = {
+                        "headword": head,
+                        "gloss": defn[:120].strip(),
+                        "short_label": s.get("grammar") or s.get("pos") or "",
+                        "pos": "noun" if s.get("pos") in ("ч.", "ж.", "с.") else None,
+                        "distinction_note": f"Омограф зі словом «{lemma}» (наголос: {head}).",
+                        "soviet_colonization_context": col,
+                    }
+                    if defn:
+                        source_cite = f"СУМ-20 ({s['wordid']})" if s.get("wordid") else "СУМ-20"
+                        item["meaning"] = {
+                            "definitions": [defn.strip()],
+                            "source": source_cite,
                         }
-                    )
+                    items.append(item)
                 return items
     except Exception as ex:
         print(f"Warning: error looking up decolonized heteronyms for {lemma}: {ex}", file=sys.stderr)
