@@ -21,7 +21,7 @@ the whole word more calmly.
 | --- | --- | --- |
 | **Ма́ма чита́є.** | **Ма-ма чи-та-є.** | Mother is reading. |
 | **Та́то пи́ше.** | **Та-то пи-ше.** | Father is writing. |
-| **Киї́в — столи́ця Украї́ни.** | **Ки-їв — сто-ли-ця У-кра-ї-ни.** | Kyiv is the capital of Ukraine. |
+| **Ки́їв — столи́ця Украї́ни.** | **Ки-їв — сто-ли-ця У-кра-ї-ни.** | Kyiv is the capital of Ukraine. |
 | **Ось моє́ я́блуко.** | **Ось мо-є яб-лу-ко.** | Here is my apple. |
 | **Це на́ша ву́лиця.** | **Це на-ша ву-ли-ця.** | This is our street. |
 | **Луна́є га́рна пі́сня.** | **Лу-на-є гар-на піс-ня.** | A nice song is playing. |
@@ -48,7 +48,7 @@ the whole word more calmly.
 > Оле́на: Яке́ це сло́во? (What word is it?)
 > Тара́с: «Університе́т». Тут п'ять скла́дів! ("University". Five syllables here!)
 > Оле́на: Чудо́во! А ре́чення мо́жеш прочита́ти? (Great! And can you read a sentence?)
-> Тара́с: Так: «Киї́в — краси́ва столи́ця». (Yes: "Kyiv is a beautiful capital".)
+> Тара́с: Так: «Ки́їв — краси́ва столи́ця». (Yes: "Kyiv is a beautiful capital".)
 > Оле́на: Молоде́ць, чита́єш ду́же чи́сто й пла́вно! (Well done, you read very purely and smoothly!)
 
 Розбі́р ре́плік розмо́ви — breakdown of lines:
@@ -60,7 +60,7 @@ the whole word more calmly.
 | **Яке́ це сло́во?** | What word is it? |
 | **«Університе́т». Тут п'ять скла́дів!** | "University". Five syllables here! |
 | **Чудо́во! А ре́чення мо́жеш прочита́ти?** | Great! And can you read a sentence? |
-| **Так: «Киї́в — краси́ва столи́ця».** | Yes: "Kyiv is a beautiful capital". |
+| **Так: «Ки́їв — краси́ва столи́ця».** | Yes: "Kyiv is a beautiful capital". |
 | **Молоде́ць, чита́єш ду́же чи́сто й пла́вно!** | Well done, you read very purely and smoothly! |
 
 <!-- INJECT_ACTIVITY: act-l3-quiz -->

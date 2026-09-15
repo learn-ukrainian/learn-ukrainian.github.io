@@ -45,7 +45,7 @@ Let us examine the most common traps that English speakers encounter when readin
   Ukrainian vowels never reduce to a neutral vowel. Every **о** in **молоко́** (milk) stays a distinct and open **[о]**, whether stressed or unstressed.
 
 - **Лі́тера Ї** (The letter Ї):
-  The letter **ї** always marks two sounds: **[йі]**. In **Украї́на** (Ukraine) and **Киї́в** (Kyiv), pronounce the full **[й]** glide every time.
+  The letter **ї** always marks two sounds: **[йі]**. In **Украї́на** (Ukraine) and **Ки́їв** (Kyiv), pronounce the full **[й]** glide every time.
 
 <!-- INJECT_ACTIVITY: act-traps-match -->
 
@@ -55,7 +55,7 @@ Let us examine the most common traps that English speakers encounter when readin
 
 ## Друк, зо́шит, переві́рка
 
-**Друк:** **ма́ма**, **молоко́**, **день**, **Киї́в**.
+**Друк:** **ма́ма**, **молоко́**, **день**, **Ки́їв**.
 
 **Зо́шит:** the same known words written by you, a teacher, or a tutor.
 
@@ -69,7 +69,7 @@ third-party handwriting sample.
 | **ма́ма** | Which printed word matches the handwritten **ма́ма**? |
 | **молоко́** | Which printed word matches the handwritten **молоко́**? |
 | **день** | Which printed word has the final soft sign? |
-| **Киї́в** | Which printed word has **ї**? |
+| **Ки́їв** | Which printed word has **ї**? |
 
 Use a short partner routine when possible. Student A points to the word.
 Student B says only the number of vowel sounds. Then both students read the
@@ -88,7 +88,7 @@ Practice this partner routine with a fellow learner:
 
 > Оле́на: Подиви́ся на цей за́пис у зо́шиті. Що тут напи́сано? (Look at this entry in the notebook. What is written here?)
 > Тара́с: Тут напи́сано друко́ване сло́во «день». (Here is written the printed word "день".)
-> Оле́на: Пра́вильно! А скі́льки голосни́х зву́ків у сло́ві «Киї́в»? (Correct! And how many vowel sounds in the word "Киї́в"?)
+> Оле́на: Пра́вильно! А скі́льки голосни́х зву́ків у сло́ві «Ки́їв»? (Correct! And how many vowel sounds in the word "Ки́їв"?)
 > Тара́с: Два голосні́ зву́ки: [и] та [і]. Тому́ це два скла́ди! (Two vowel sounds: [и] and [і]. Therefore it is two syllables!)
 > Оле́на: Молоде́ць! А як прочита́ти сло́во «джерело́»? (Well done! And how to read the word "джерело́"?)
 > Тара́с: Буквосполучення «дж» чита́ємо ра́зом: [джерело́]. (The letter combination "дж" is read together: [джерело́].)
@@ -99,7 +99,7 @@ Support after the dialogue:
 | --- | --- |
 | **Подиви́ся на цей за́пис у зо́шиті. Що тут напи́сано?** | Look at this entry in the notebook. What is written here? |
 | **Тут напи́сано друко́ване сло́во «день».** | Here is written the printed word "день". |
-| **Пра́вильно! А скі́льки голосни́х зву́ків у сло́ві «Киї́в»?** | Correct! And how many vowel sounds in the word "Киї́в"? |
+| **Пра́вильно! А скі́льки голосни́х зву́ків у сло́ві «Ки́їв»?** | Correct! And how many vowel sounds in the word "Ки́їв"? |
 | **Два голосні́ зву́ки: [и] та [і]. Тому́ це два скла́ди!** | Two vowel sounds: [и] and [і]. Therefore it is two syllables! |
 | **Молоде́ць! А як прочита́ти сло́во «джерело́»?** | Well done! And how to read the word "джерело́"? |
 | **Буквосполучення «дж» чита́ємо ра́зом: [джерело́].** | The letter combination "дж" is read together: [джерело́]. |

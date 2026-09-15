@@ -163,7 +163,7 @@ Names of Ukrainian cities are also good reading practice:
 
 | Мі́сто | Split | Note |
 | --- | --- | --- |
-| **Киї́в** | 2 syllables | **ї** is **[йі]** |
+| **Ки́їв** | 2 syllables | **ї** is **[йі]** |
 | **Львів** | 1 syllable | one vowel sound |
 | **Оде́са** | 3 syllables | initial **О** can stand alone |
 | **Дніпро́** | 2 syllables | consonant cluster, still two vowels |

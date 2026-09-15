@@ -194,7 +194,7 @@ workbook:
     items:
     - ма́ма
     - та́то
-    - Киї́в
+    - Ки́їв
   - label: Три склади́
     items:
     - молоко́
@@ -216,9 +216,9 @@ workbook:
     - молоко́
     - ву́лиця
     - столи́ця
-    - Киї́в
-    answer: Киї́в
-    explanation: Киї́в ма́є два скла́ди; і́нші слова́ ма́ють три.
+    - Ки́їв
+    answer: Ки́їв
+    explanation: Ки́їв ма́є два скла́ди; і́нші слова́ ма́ють три.
   - words:
     - день
     - Львів
@@ -301,14 +301,14 @@ workbook:
     right: ко
   - left: ву-ли-
     right: ця
-  - left: сто-ли-
-    right: ця
   - left: лю-ди-
     right: на
-  - left: яб-лу-
-    right: ко
   - left: піс-
     right: ня
+  - left: ка-
+    right: ша
+  - left: та-
+    right: то
 - id: act-w-quiz
   type: quiz
   title: Переві́рка чита́ння слів
@@ -332,7 +332,7 @@ workbook:
     - text: 3 скла́ди
       correct: false
     explanation: У сло́ві «Львів» лише́ оди́н голосни́й звук [і], тому́ оди́н склад.
-  - question: Скі́льки скла́дів у на́зві мі́ста «Киї́в»?
+  - question: Скі́льки скла́дів у на́зві мі́ста «Ки́їв»?
     options:
     - text: 2 скла́ди
       correct: true
@@ -359,7 +359,7 @@ workbook:
       correct: false
     - text: small village
       correct: false
-    explanation: Столи́ця — це головне́ мі́сто держа́ви (Киї́в — столи́ця Украї́ни).
+    explanation: Столи́ця — це головне́ мі́сто держа́ви (Ки́їв — столи́ця Украї́ни).
   - question: Як ді́ти вча́ться чита́ти украї́нські слова́?
     options:
     - text: 'по скла́дах: склад за скла́дом'
