@@ -171,6 +171,32 @@ def _lane_has_usable_allotment(info: dict[str, Any]) -> bool:
     )
 
 
+def _pace_line(
+    used_pct: Any,
+    resets_at: Any,
+    *,
+    window_minutes: Any,
+) -> str | None:
+    """CodexBar-style pace line for one allotment window, or ``None`` if not computable."""
+    if not _is_number(used_pct) or resets_at in (None, ""):
+        return None
+    if not isinstance(window_minutes, (int, float)) or isinstance(window_minutes, bool) or window_minutes <= 0:
+        return None
+    from scripts.api.subscription_usage import (
+        SESSION_WINDOW_MAX_MINUTES,
+        compute_usage_pace,
+        format_usage_pace_summary,
+        pace_is_visible,
+    )
+
+    win_mins = int(window_minutes)
+    pace = compute_usage_pace(float(used_pct), resets_at, window_minutes=win_mins)
+    kind = "session" if win_mins <= SESSION_WINDOW_MAX_MINUTES else "weekly"
+    if pace is None or not pace_is_visible(pace, kind=kind):
+        return None
+    return f"    pace: {format_usage_pace_summary(pace, kind=kind)}"
+
+
 def _named_allotments(lane: str, info: dict[str, Any]) -> list[str]:
     """Human lines for weekly/monthly/module pools that actually exist on the payload."""
     lines: list[str] = []
@@ -188,6 +214,9 @@ def _named_allotments(lane: str, info: dict[str, Any]) -> list[str]:
             f"burn={_pct(interactive.get('burn_pct_7d'))} "
             f"spent={_usd(spent)}/{_usd(cap)}"
         )
+        pace = _pace_line(interactive.get("burn_pct_7d"), info.get("resets_at"), window_minutes=10080)
+        if pace:
+            lines.append(pace)
     if agentic is not None:
         spent = agentic.get("spent_cycle_usd")
         cap = agentic.get("monthly_cap_usd")
@@ -219,6 +248,11 @@ def _named_allotments(lane: str, info: dict[str, Any]) -> list[str]:
                 f"rem={_pct(block.get('remaining_pct'))} "
                 f"resets={_resets_text(block.get('resets_at'))}"
             )
+            pace = _pace_line(
+                block.get("used_pct"), block.get("resets_at"), window_minutes=block.get("window_minutes")
+            )
+            if pace:
+                lines.append(pace)
         return lines
 
     # Generic primary/secondary/tertiary windows (Kimi 5h+weekly, Codex, Grok…).
@@ -238,6 +272,9 @@ def _named_allotments(lane: str, info: dict[str, Any]) -> list[str]:
                 f"used={_pct(used)} rem={_pct(rem)} "
                 f"resets={_resets_text(block.get('resets_at'))}"
             )
+            pace = _pace_line(used, block.get("resets_at"), window_minutes=block.get("window_minutes"))
+            if pace:
+                lines.append(pace)
 
     return lines
 
@@ -283,8 +320,11 @@ def _lane_tips(lane: str, info: dict[str, Any], *, fail: str) -> list[str]:
             "  tip: Anthropic rate-limited the usage probe (429). Wait and retry "
             "`usage show --fresh`; interactive/agentic caps above are ledger/LKG when burn is unknown."
         )
-    if lane == "gemini" and ("403" in fail or "rejected" in fail.lower()):
-        tips.append("  tip: Antigravity/AGY OAuth rejected — re-auth the Gemini/AGY credential.")
+    if lane == "gemini" and fail not in {"-", ""}:
+        tips.append(
+            "  tip: Gemini/AGY quota comes from `agy --prompt /usage` (subscription CLI), "
+            "not a Google Cloud API key. Prepaid HTTP keys are only OpenRouter + DeepSeek."
+        )
     return tips
 
 
@@ -401,11 +441,17 @@ def doctor() -> str:
         home / ".config/cursor/auth.json",
         home / ".config/cursor-agent/api.key.env",
         home / ".local/share/opencode/auth.json",
-        home / ".secret/openrouter.key",
-        home / ".secret/openrouter-management.key",
-        home / ".secret/deepseek.key",
-        home / ".secret/deekseep.key",
     ]
+    for name in (
+        "openrouter.key",
+        "openrouter-management.key",
+        "deepseek.key",
+        "deekseep.key",
+        "zai.key",
+    ):
+        # ~/.secrets is the current host layout; ~/.secret is the legacy path.
+        paths.append(home / ".secrets" / name)
+        paths.append(home / ".secret" / name)
     lines = ["Credential presence only (does not verify login or balance):"]
     lines.extend(f"env {name}: {'present' if os.environ.get(name, '').strip() else 'absent'}" for name in env_names)
     for path in paths:

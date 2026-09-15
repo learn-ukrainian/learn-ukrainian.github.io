@@ -11,6 +11,7 @@ import json
 import math
 import os
 import platform
+import shutil
 import subprocess
 import threading
 import time
@@ -39,6 +40,12 @@ WEEKLY_WINDOW_MINUTES = 10080
 # Reject monthly/long windows when no exact weekly window exists (e.g. 43200 min).
 WEEKLY_WINDOW_TOLERANCE_MINUTES = 5040
 PACE_TOLERANCE_PCT = 10.0
+# CodexBar hides pace until enough of the window has elapsed (docs/ui.md).
+PACE_MIN_EXPECTED_PCT_SESSION = 3.0
+PACE_MIN_EXPECTED_PCT_WEEKLY = 1.0
+SESSION_WINDOW_MAX_MINUTES = 300
+HEADROOM_DELTA_PCT = -15.0
+HEADROOM_SPEED_MULTIPLIER = 1.5
 
 try:
     from scripts.common.repo_root import main_checkout_root
@@ -500,19 +507,55 @@ def _load_antigravity_oauth() -> dict[str, Any] | None:
     return None
 
 
+def _load_first_line_secret(path: Path) -> str | None:
+    try:
+        if path.is_file():
+            lines = path.read_text(encoding="utf-8").strip().splitlines()
+            line = lines[0].strip() if lines else ""
+            if line:
+                return line
+    except OSError:
+        pass
+    return None
+
+
+def _secret_file_candidates(name: str) -> list[Path]:
+    """Prefer ``~/.secrets`` (host layout) then legacy ``~/.secret``."""
+    home = Path.home()
+    return [home / ".secrets" / name, home / ".secret" / name]
+
+
+def _load_named_secret_file(name: str) -> str | None:
+    for path in _secret_file_candidates(name):
+        secret = _load_first_line_secret(path)
+        if secret:
+            return secret
+    return None
+
+
+def _load_secret_preferring_secrets_dir(names: tuple[str, ...]) -> str | None:
+    """Prefer ``~/.secrets`` for *any* alias before falling back to ``~/.secret``.
+
+    Filename-first search can pick a stale ``~/.secret/deepseek.key`` over a
+    current ``~/.secrets/deekseep.key``. Directory-first matches operator layout.
+    """
+    home = Path.home()
+    for directory in (home / ".secrets", home / ".secret"):
+        for name in names:
+            secret = _load_first_line_secret(directory / name)
+            if secret:
+                return secret
+    return None
+
+
 def _load_glm_api_key() -> str | None:
     for env_name in ("ZAI_API_KEY", "ZHIPU_API_KEY", "GLM_API_KEY", "BIGMODEL_API_KEY"):
         val = os.environ.get(env_name, "").strip()
         if val:
             return val
-    secret = Path.home() / ".secret" / "zai.key"
-    try:
-        if secret.is_file():
-            line = secret.read_text(encoding="utf-8").strip().splitlines()[0].strip()
-            if line:
-                return line
-    except OSError:
-        pass
+    secret = _load_named_secret_file("zai.key")
+    if secret:
+        return secret
     for path in (
         Path.home() / ".coding-relay" / "glm-api-key",
         Path.home() / ".config" / "bigmodel" / "api_key",
@@ -525,18 +568,6 @@ def _load_glm_api_key() -> str | None:
                     return line
         except OSError:
             continue
-    return None
-
-
-def _load_first_line_secret(path: Path) -> str | None:
-    try:
-        if path.is_file():
-            lines = path.read_text(encoding="utf-8").strip().splitlines()
-            line = lines[0].strip() if lines else ""
-            if line:
-                return line
-    except OSError:
-        pass
     return None
 
 
@@ -560,16 +591,15 @@ def _load_openrouter_api_key() -> str | None:
     key = _load_opencode_provider_key("openrouter")
     if key:
         return key
-    return _load_first_line_secret(Path.home() / ".secret" / "openrouter.key")
+    return _load_named_secret_file("openrouter.key")
 
 
 def _load_openrouter_management_api_key() -> str | None:
     env = os.environ.get("OPENROUTER_MANAGEMENT_API_KEY", "").strip()
     if env:
         return env
-    return (
-        _load_opencode_provider_key("openrouter-management")
-        or _load_first_line_secret(Path.home() / ".secret" / "openrouter-management.key")
+    return _load_opencode_provider_key("openrouter-management") or _load_named_secret_file(
+        "openrouter-management.key"
     )
 
 
@@ -580,14 +610,7 @@ def _load_deepseek_api_key() -> str | None:
     key = _load_opencode_provider_key("deepseek")
     if key:
         return key
-    for path in (
-        Path.home() / ".secret" / "deepseek.key",
-        Path.home() / ".secret" / "deekseep.key",
-    ):
-        secret = _load_first_line_secret(path)
-        if secret:
-            return secret
-    return None
+    return _load_secret_preferring_secrets_dir(("deepseek.key", "deekseep.key"))
 
 
 def _coerce_float(value: Any) -> float | None:
@@ -1017,7 +1040,13 @@ def _probe_codex_native(*, timeout_s: float) -> dict[str, Any]:
     primary = rate.get("primary_window") if isinstance(rate, dict) else None
     secondary = rate.get("secondary_window") if isinstance(rate, dict) else None
 
-    def _map_win(win: dict[str, Any] | None) -> dict[str, Any] | None:
+    def _map_win(win: dict[str, Any] | None, *, default_minutes: int) -> dict[str, Any] | None:
+        """Map ChatGPT wham rate windows; honor ``limit_window_seconds`` (CodexBar).
+
+        Live payloads often omit ``window_minutes`` and only send
+        ``limit_window_seconds`` (e.g. 604800 = weekly). Defaulting that to 300
+        mislabels weekly as 5h and hides pace (reset is days out).
+        """
         if not isinstance(win, dict):
             return None
         used = win.get("used_percent") or win.get("usedPercent")
@@ -1027,20 +1056,53 @@ def _probe_codex_native(*, timeout_s: float) -> dict[str, Any]:
                 used = float(win["used"]) / float(limit) * 100.0
         if not isinstance(used, (int, float)):
             return None
-        return _window_from_used_pct(
-            float(used),
-            window_minutes=int(win.get("window_minutes") or win.get("windowMinutes") or 300),
-            resets_at=win.get("reset_at") or win.get("resetsAt"),
-        )
+        win_mins: int | None = None
+        for key in ("window_minutes", "windowMinutes"):
+            raw = win.get(key)
+            if isinstance(raw, (int, float)) and not isinstance(raw, bool) and raw > 0:
+                win_mins = int(raw)
+                break
+        if win_mins is None:
+            for key in ("limit_window_seconds", "limitWindowSeconds"):
+                raw = win.get(key)
+                if isinstance(raw, (int, float)) and not isinstance(raw, bool) and raw > 0:
+                    win_mins = max(1, int(raw) // 60)
+                    break
+        if win_mins is None:
+            win_mins = default_minutes
+        reset = win.get("reset_at") or win.get("resetsAt") or win.get("resetAt")
+        return _window_from_used_pct(float(used), window_minutes=win_mins, resets_at=reset)
 
-    usage = {
-        "primary": _map_win(primary) or _map_win(rate.get("primary") if isinstance(rate, dict) else None),
-        "secondary": _map_win(secondary) or _map_win(rate.get("secondary") if isinstance(rate, dict) else None),
-    }
+    # CodexBar: primary = session (~5h), secondary = weekly (~7d).
+    primary_mapped = _map_win(primary, default_minutes=300) or _map_win(
+        rate.get("primary") if isinstance(rate, dict) else None, default_minutes=300
+    )
+    secondary_mapped = _map_win(secondary, default_minutes=WEEKLY_WINDOW_MINUTES) or _map_win(
+        rate.get("secondary") if isinstance(rate, dict) else None,
+        default_minutes=WEEKLY_WINDOW_MINUTES,
+    )
+    # When ChatGPT only returns one window, slot it by duration (weekly vs session)
+    # instead of duplicating it as a fake 5h secondary.
+    if primary_mapped is not None and secondary_mapped is None:
+        mins = int(primary_mapped.get("windowMinutes") or 0)
+        if mins > 400:  # longer than a session window → weekly/long
+            secondary_mapped = primary_mapped
+            primary_mapped = None
+    elif secondary_mapped is not None and primary_mapped is None:
+        mins = int(secondary_mapped.get("windowMinutes") or 0)
+        if mins <= 400:
+            primary_mapped = secondary_mapped
+            secondary_mapped = None
+
+    usage = {"primary": primary_mapped, "secondary": secondary_mapped}
     if usage["primary"] is None and usage["secondary"] is None:
         return _normalize_provider_error(
             "codex",
-            {"message": "Codex usage payload missing rate windows", "kind": "unparseable_schema", "code": "UNPARSEABLE_SCHEMA"},
+            {
+                "message": "Codex usage payload missing rate windows",
+                "kind": "unparseable_schema",
+                "code": "UNPARSEABLE_SCHEMA",
+            },
         )
     return _normalize_provider_data(
         "codex",
@@ -1205,83 +1267,150 @@ def _probe_grok_native(*, timeout_s: float) -> dict[str, Any]:
     )
 
 
+def _agy_cli_bin() -> str | None:
+    found = shutil.which("agy")
+    if found:
+        return found
+    fallback = Path.home() / ".local" / "bin" / "agy"
+    return str(fallback) if fallback.is_file() else None
+
+
+def _agy_usage_buckets_by_window(group: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    out: dict[str, dict[str, Any]] = {}
+    buckets = group.get("buckets")
+    if not isinstance(buckets, list):
+        return out
+    for bucket in buckets:
+        if not isinstance(bucket, dict):
+            continue
+        window = str(bucket.get("window") or "").strip().lower()
+        if window:
+            out[window] = bucket
+    return out
+
+
+def _used_pct_from_remaining_fraction(remaining: Any) -> float | None:
+    """Reject non-finite remaining fractions before clamping (NaN/Inf → unknown)."""
+    frac = _coerce_float(remaining)
+    if frac is None:
+        return None
+    return max(0.0, min(100.0, 100.0 - frac * 100.0))
+
+
 def _probe_antigravity_native(*, timeout_s: float) -> dict[str, Any]:
-    token_data = _load_antigravity_oauth()
-    if not token_data or not isinstance(token_data.get("access_token"), str):
-        return _normalize_provider_error(
-            "gemini",
-            {"message": "Antigravity OAuth credentials unavailable", "kind": "need_login", "code": "NEED_LOGIN"},
-        )
-    access_token = token_data["access_token"]
-    _, assist_payload, _ = _http_json_request(
-        "POST",
-        "https://daily-cloudcode-pa.googleapis.com/v1internal:loadCodeAssist",
-        headers={"Authorization": f"Bearer {access_token}"},
-        body=json.dumps({"metadata": {"ideType": "ANTIGRAVITY"}}).encode("utf-8"),
-        timeout_s=timeout_s,
-    )
-    project = ""
-    if isinstance(assist_payload, dict):
-        project = str(assist_payload.get("cloudaicompanionProject") or "")
-    status, quota_payload, err = _http_json_request(
-        "POST",
-        "https://daily-cloudcode-pa.googleapis.com/v1internal:retrieveUserQuotaSummary",
-        headers={"Authorization": f"Bearer {access_token}"},
-        body=json.dumps({"project": project} if project else {}).encode("utf-8"),
-        timeout_s=timeout_s,
-    )
-    if status in {401, 403}:
-        return _normalize_provider_error(
-            "gemini",
-            {"message": "Antigravity OAuth token rejected", "kind": "provider", "code": status},
-        )
-    if status != 200 or not isinstance(quota_payload, dict):
+    """Gemini/AGY lane uses AGY CLI ``/usage`` — not Google Cloud quota APIs.
+
+    Prepaid HTTP API keys are only OpenRouter + DeepSeek. Subscription seats use
+    native CLI/OAuth. ``retrieveUserQuotaSummary`` 403'd while ``agy /usage``
+    showed healthy Gemini weekly/5h remaining.
+    """
+    agy_bin = _agy_cli_bin()
+    if not agy_bin:
         return _normalize_provider_error(
             "gemini",
             {
-                "message": err or f"Antigravity quota HTTP {status}",
-                "kind": "fetch_error",
-                "code": status or "FETCH_ERROR",
+                "message": "agy CLI not found (install AGY; do not probe Google quota APIs)",
+                "kind": "need_login",
+                "code": "NEED_LOGIN",
             },
         )
-    buckets = quota_payload.get("buckets") or quota_payload.get("quotaBuckets") or []
-    pro_remaining = None
-    flash_remaining = None
-    pro_reset = None
-    flash_reset = None
-    if isinstance(buckets, list):
-        for bucket in buckets:
-            if not isinstance(bucket, dict):
-                continue
-            model_id = str(bucket.get("modelId") or bucket.get("model_id") or "").lower()
-            remaining = bucket.get("remainingFraction") or bucket.get("remaining_fraction")
-            if not isinstance(remaining, (int, float)):
-                continue
-            reset = bucket.get("resetTime") or bucket.get("reset_time")
-            if "pro" in model_id and (pro_remaining is None or remaining < pro_remaining):
-                pro_remaining = float(remaining)
-                pro_reset = reset
-            elif "flash" in model_id and (flash_remaining is None or remaining < flash_remaining):
-                flash_remaining = float(remaining)
-                flash_reset = reset
-    def _used_from_remaining(rem: float | None) -> float | None:
-        if rem is None:
-            return None
-        return max(0.0, min(100.0, 100.0 - rem * 100.0))
-
-    primary = (
-        _window_from_used_pct(_used_from_remaining(flash_remaining), window_minutes=300, resets_at=flash_reset)
-        if flash_remaining is not None
-        else None
-    )
-    secondary = (
-        _window_from_used_pct(_used_from_remaining(pro_remaining), window_minutes=10080, resets_at=pro_reset)
-        if pro_remaining is not None
-        else None
-    )
+    try:
+        completed = subprocess.run(
+            [agy_bin, "--prompt", "/usage", "--output-format", "json"],
+            capture_output=True,
+            text=True,
+            timeout=max(float(timeout_s), 30.0),
+            check=False,
+        )
+    except subprocess.TimeoutExpired:
+        return _normalize_provider_error(
+            "gemini",
+            {"message": "agy /usage timed out", "kind": "fetch_error", "code": "TIMEOUT"},
+        )
+    except OSError:
+        return _normalize_provider_error(
+            "gemini",
+            {"message": "agy /usage failed to start", "kind": "fetch_error", "code": "SPAWN_ERROR"},
+        )
+    if completed.returncode != 0:
+        # Never forward raw stdout/stderr into auth_error (routing-budget JSON);
+        # CLI diagnostics can contain credentials or private content.
+        return _normalize_provider_error(
+            "gemini",
+            {
+                "message": f"agy /usage failed (exit {completed.returncode})",
+                "kind": "provider",
+                "code": completed.returncode,
+            },
+        )
+    try:
+        payload = json.loads(completed.stdout or "")
+    except json.JSONDecodeError:
+        return _normalize_provider_error(
+            "gemini",
+            {"message": "agy /usage returned non-JSON", "kind": "fetch_error", "code": "BAD_JSON"},
+        )
+    if not isinstance(payload, dict):
+        return _normalize_provider_error(
+            "gemini",
+            {"message": "agy /usage JSON root is not an object", "kind": "fetch_error", "code": "BAD_JSON"},
+        )
+    command = payload.get("command") if isinstance(payload.get("command"), dict) else {}
+    data = command.get("data") if isinstance(command.get("data"), dict) else {}
+    groups = data.get("groups") if isinstance(data.get("groups"), list) else []
+    gemini_group: dict[str, Any] | None = None
+    for group in groups:
+        if isinstance(group, dict) and "gemini" in str(group.get("name") or "").lower():
+            gemini_group = group
+            break
+    if gemini_group is None:
+        return _normalize_provider_error(
+            "gemini",
+            {
+                "message": "agy /usage missing Gemini Models group (login/session may be incomplete)",
+                "kind": "need_login",
+                "code": "NEED_LOGIN",
+            },
+        )
+    by_window = _agy_usage_buckets_by_window(gemini_group)
+    five_h = by_window.get("5h") or by_window.get("five_hour") or by_window.get("session")
+    weekly = by_window.get("weekly")
+    primary = None
+    secondary = None
+    if isinstance(five_h, dict):
+        used = _used_pct_from_remaining_fraction(five_h.get("remaining_fraction"))
+        if used is not None:
+            reset = five_h.get("reset_time")
+            primary = _window_from_used_pct(
+                used,
+                window_minutes=300,
+                resets_at=str(reset) if isinstance(reset, str) else None,
+            )
+    if isinstance(weekly, dict):
+        used = _used_pct_from_remaining_fraction(weekly.get("remaining_fraction"))
+        if used is not None:
+            reset = weekly.get("reset_time")
+            secondary = _window_from_used_pct(
+                used,
+                window_minutes=WEEKLY_WINDOW_MINUTES,
+                resets_at=str(reset) if isinstance(reset, str) else None,
+            )
+    if primary is None and secondary is None:
+        return _normalize_provider_error(
+            "gemini",
+            {
+                "message": "agy /usage Gemini group had no usable 5h/weekly buckets",
+                "kind": "fetch_error",
+                "code": "EMPTY_BUCKETS",
+            },
+        )
     return _normalize_provider_data(
         "gemini",
-        {"provider": "gemini", "source": "antigravity_oauth", "usage": {"primary": primary, "secondary": secondary}},
+        {
+            "provider": "gemini",
+            "source": "agy_cli_usage",
+            "usage": {"primary": primary, "secondary": secondary},
+        },
     )
 
 
@@ -1397,33 +1526,210 @@ def fetch_codexbar_usage(provider: str, *, timeout_s: float | None = None) -> di
     return fetch_provider_usage(provider, timeout_s=timeout_s)
 
 
+def _parse_resets_at_any(resets_at: str | int | float | None) -> datetime | None:
+    """Parse ISO-8601 strings and epoch seconds/milliseconds.
+
+    Codex has been observed to emit raw epoch ints for ``resetsAt`` instead of
+    the usual ISO-8601 string; accept both so pace math never silently drops
+    that lane.
+    """
+    if resets_at is None or isinstance(resets_at, bool):
+        return None
+    if isinstance(resets_at, (int, float)):
+        ts = float(resets_at)
+        if ts > 1e12:  # milliseconds
+            ts /= 1000.0
+        try:
+            return datetime.fromtimestamp(ts, tz=UTC)
+        except (OverflowError, OSError, ValueError):
+            return None
+    if isinstance(resets_at, str):
+        try:
+            dt_str = resets_at.replace("Z", "+00:00")
+            resets_at_dt = datetime.fromisoformat(dt_str)
+        except (TypeError, ValueError):
+            return None
+        return resets_at_dt.replace(tzinfo=UTC) if resets_at_dt.tzinfo is None else resets_at_dt.astimezone(UTC)
+    return None
+
+
+def compute_usage_pace(
+    used_pct: float,
+    resets_at: str | int | float | None,
+    *,
+    window_minutes: int | None = None,
+    now: datetime | None = None,
+) -> dict[str, Any] | None:
+    """Port of CodexBar's ``UsagePace.weekly``: linear elapsed/duration rate projection.
+
+    Returns ``None`` only when ``resets_at`` cannot be parsed, the window has
+    non-positive duration, or the payload is internally inconsistent (zero
+    elapsed time but nonzero usage already reported).
+    """
+    resets_at_dt = _parse_resets_at_any(resets_at)
+    if resets_at_dt is None:
+        return None
+    win_mins = WEEKLY_WINDOW_MINUTES if window_minutes is None else int(window_minutes)
+    if win_mins <= 0:
+        return None
+    duration = win_mins * 60.0
+    current_time = (now or datetime.now(UTC)).astimezone(UTC)
+    time_until_reset = (resets_at_dt - current_time).total_seconds()
+    # CodexBar UsagePace: require 0 < timeUntilReset <= duration (hide expired /
+    # out-of-window resets instead of clamping to "Expected 100% used").
+    if time_until_reset <= 0 or time_until_reset > duration:
+        return None
+    elapsed = duration - time_until_reset
+    actual = max(0.0, min(100.0, float(used_pct)))
+    if elapsed == 0 and actual > 0:
+        return None
+    expected = max(0.0, min(100.0, (elapsed / duration) * 100.0))
+    delta = actual - expected
+
+    time_remaining = time_until_reset
+    projected_remaining_usage = (actual * time_remaining / elapsed) if elapsed > 0 else 0.0
+    speed_multiplier: float | None = None
+    remaining_capacity = 100.0 - actual
+    if remaining_capacity > 0 and projected_remaining_usage > 0:
+        candidate_multiplier = remaining_capacity / projected_remaining_usage
+        if math.isfinite(candidate_multiplier):
+            speed_multiplier = candidate_multiplier
+
+    eta_seconds: float | None = None
+    will_last_to_reset = False
+    if actual >= 100:
+        eta_seconds = 0.0
+    elif elapsed > 0 and actual > 0:
+        rate = actual / elapsed
+        if rate > 0:
+            remaining = 100.0 - actual
+            candidate = remaining / rate
+            if candidate >= time_remaining:
+                will_last_to_reset = True
+            else:
+                eta_seconds = candidate
+    elif elapsed > 0 and actual == 0:
+        will_last_to_reset = True
+
+    abs_delta = abs(delta)
+    if abs_delta <= 2:
+        stage = "on_track"
+    elif abs_delta <= 6:
+        stage = "slightly_ahead" if delta >= 0 else "slightly_behind"
+    elif abs_delta <= 12:
+        stage = "ahead" if delta >= 0 else "behind"
+    else:
+        stage = "far_ahead" if delta >= 0 else "far_behind"
+
+    return {
+        "stage": stage,
+        "delta_pct": delta,
+        "expected_pct": expected,
+        "actual_pct": actual,
+        "eta_seconds": eta_seconds,
+        "will_last_to_reset": will_last_to_reset,
+        "speed_multiplier": speed_multiplier,
+    }
+
+
+def pace_is_visible(pace: dict[str, Any] | None, *, kind: str = "weekly") -> bool:
+    """CodexBar hides pace until enough of the window has elapsed to be meaningful."""
+    if pace is None:
+        return False
+    minimum = PACE_MIN_EXPECTED_PCT_SESSION if kind == "session" else PACE_MIN_EXPECTED_PCT_WEEKLY
+    return bool(pace["expected_pct"] >= minimum)
+
+
+def _pace_duration_text(seconds: float) -> str:
+    """CodexBar ``resetCountdownDescription`` rounding (ceil minutes; <1s → now)."""
+    if seconds < 1:
+        return "now"
+    total_minutes = max(1, math.ceil(seconds / 60.0))
+    days, rem_minutes = divmod(total_minutes, 1440)
+    hours, minutes = divmod(rem_minutes, 60)
+    if days > 0:
+        if hours > 0:
+            return f"{days}d {hours}h"
+        if minutes > 0:
+            return f"{days}d {minutes}m"
+        return f"{days}d"
+    if hours > 0:
+        return f"{hours}h {minutes}m" if minutes else f"{hours}h"
+    return f"{total_minutes}m"
+
+
+def _pace_left_label(pace: dict[str, Any]) -> str:
+    if pace["stage"] == "on_track":
+        return "On pace"
+    delta_value = round(abs(pace["delta_pct"]))
+    if pace["stage"] in ("slightly_ahead", "ahead", "far_ahead"):
+        return f"{delta_value}% in deficit"
+    return f"{delta_value}% in reserve"
+
+
+def _pace_lasts_label(pace: dict[str, Any], *, show_headroom_hint: bool) -> str:
+    if show_headroom_hint:
+        multiplier = pace.get("speed_multiplier")
+        if (
+            pace["delta_pct"] < HEADROOM_DELTA_PCT
+            and multiplier is not None
+            and multiplier >= HEADROOM_SPEED_MULTIPLIER
+        ):
+            return f"Lasts until reset | {HEADROOM_SPEED_MULTIPLIER}× headroom"
+    return "Lasts until reset"
+
+
+def _pace_right_label(pace: dict[str, Any], *, kind: str, show_headroom_hint: bool) -> str | None:
+    if pace["will_last_to_reset"]:
+        return _pace_lasts_label(pace, show_headroom_hint=show_headroom_hint)
+    eta = pace.get("eta_seconds")
+    if eta is None:
+        return None
+    eta_text = _pace_duration_text(eta)
+    if kind == "session":
+        return "Projected empty now" if eta_text == "now" else f"Projected empty in {eta_text}"
+    return "Runs out now" if eta_text == "now" else f"Runs out in {eta_text}"
+
+
+def format_usage_pace_summary(
+    pace: dict[str, Any],
+    *,
+    kind: str = "weekly",
+    show_headroom_hint: bool = True,
+) -> str:
+    """CodexBar CLIRenderer-style summary: ``{left} | Expected {N}% used | {right}``."""
+    expected = round(pace["expected_pct"])
+    parts = [_pace_left_label(pace), f"Expected {expected}% used"]
+    right = _pace_right_label(pace, kind=kind, show_headroom_hint=show_headroom_hint)
+    if right:
+        parts.append(right)
+    return " | ".join(parts)
+
+
 def compute_weekly_pace_delta_pct(
     used_pct: float,
-    resets_at: str,
+    resets_at: str | int | float | None,
     *,
     window_minutes: int | None = None,
     now: datetime | None = None,
 ) -> float | None:
-    """Reuse the weekly pace formula from CodexBar normalization (r2 #7139)."""
-    try:
-        dt_str = resets_at.replace("Z", "+00:00")
-        resets_at_dt = datetime.fromisoformat(dt_str)
-        resets_at_dt = resets_at_dt.replace(tzinfo=UTC) if resets_at_dt.tzinfo is None else resets_at_dt.astimezone(UTC)
-    except (TypeError, ValueError):
+    """Clamp-style weekly delta for routing alarms (empty-host underused, etc.).
+
+    Keeps the historical clamp-to-[0,1] elapsed fraction so callers are not
+    silenced by :func:`compute_usage_pace` hide guards (expired / out-of-window).
+    """
+    resets_at_dt = _parse_resets_at_any(resets_at)
+    if resets_at_dt is None:
         return None
-    current_time = (now or datetime.now(UTC)).astimezone(UTC)
     win_mins = WEEKLY_WINDOW_MINUTES if window_minutes is None else int(window_minutes)
     if win_mins <= 0:
         return None
-    window_duration_seconds = win_mins * 60
-    window_start_dt = resets_at_dt - timedelta(seconds=window_duration_seconds)
-    elapsed_seconds = (current_time - window_start_dt).total_seconds()
-    if window_duration_seconds <= 0:
-        return None
-    elapsed_fraction = elapsed_seconds / window_duration_seconds
-    elapsed_fraction = max(0.0, min(1.0, elapsed_fraction))
-    expected_pct = elapsed_fraction * 100.0
-    return float(used_pct) - expected_pct
+    duration = win_mins * 60.0
+    current_time = (now or datetime.now(UTC)).astimezone(UTC)
+    window_start = resets_at_dt - timedelta(seconds=duration)
+    elapsed = (current_time - window_start).total_seconds()
+    elapsed_fraction = max(0.0, min(1.0, elapsed / duration))
+    return float(used_pct) - elapsed_fraction * 100.0
 
 
 def lane_is_under_weekly_pace(
@@ -1624,41 +1930,27 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
             will_last_to_reset = bool(will_last_to_reset)
         pace_summary = weekly_pace.get("summary")
     else:
-        # Fallback manual calculation of pace
+        # Fallback: derive pace from the shared CodexBar-style rate-projection formula.
         pace_used = primary_used_pct if lane == "cursor" else weekly_used_pct
         if weekly_resets_at and pace_used is not None:
-            try:
-                dt_str = weekly_resets_at.replace("Z", "+00:00")
-                resets_at_dt = datetime.fromisoformat(dt_str)
-                current_time = datetime.now(UTC)
+            win_mins = 10080
+            if weekly_win and weekly_win.get("windowMinutes") is not None:
+                win_mins = int(weekly_win["windowMinutes"])
+            elif lane == "cursor" and cursor_provider_windows:
+                auto_resets = cursor_provider_windows["auto"].get("resets_at")
+                if auto_resets:
+                    weekly_resets_at = auto_resets
+                win_mins = cursor_provider_windows["auto"].get("window_minutes")
+                if win_mins is not None:
+                    win_mins = int(win_mins)
 
-                win_mins = 10080
-                if weekly_win and weekly_win.get("windowMinutes") is not None:
-                    win_mins = int(weekly_win["windowMinutes"])
-                elif lane == "cursor" and cursor_provider_windows:
-                    auto_resets = cursor_provider_windows["auto"].get("resets_at")
-                    if auto_resets:
-                        weekly_resets_at = auto_resets
-                    win_mins = cursor_provider_windows["auto"].get("window_minutes")
-                    if win_mins is not None:
-                        win_mins = int(win_mins)
-
-                window_duration_seconds = win_mins * 60
-                window_start_dt = resets_at_dt - timedelta(seconds=window_duration_seconds)
-                elapsed_seconds = (current_time - window_start_dt).total_seconds()
-
-                if window_duration_seconds > 0:
-                    elapsed_fraction = elapsed_seconds / window_duration_seconds
-                    elapsed_fraction = max(0.0, min(1.0, elapsed_fraction))
-                    expected_pct = elapsed_fraction * 100.0
-                    weekly_pace_delta_pct = pace_used - expected_pct
-
-                    margin = 10.0
-                    is_in_deficit = pace_used > expected_pct + margin
-                    will_last_to_reset = not is_in_deficit
-                    pace_summary = f"{weekly_pace_delta_pct:.1f}% pace delta | Expected {expected_pct:.1f}% used"
-            except Exception:
-                pass
+            computed_pace = compute_usage_pace(pace_used, weekly_resets_at, window_minutes=win_mins)
+            if computed_pace is not None:
+                weekly_pace_delta_pct = computed_pace["delta_pct"]
+                will_last_to_reset = computed_pace["will_last_to_reset"]
+                pace_kind = "session" if win_mins <= SESSION_WINDOW_MAX_MINUTES else "weekly"
+                if pace_is_visible(computed_pace, kind=pace_kind):
+                    pace_summary = format_usage_pace_summary(computed_pace, kind=pace_kind)
 
     def _window_block(
         win: dict[str, Any] | None,
