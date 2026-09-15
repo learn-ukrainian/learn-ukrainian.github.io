@@ -24,6 +24,7 @@ from tests.audit.test_post_build_review import (
     _raw,
     _reviewer,
 )
+from tests.helpers.archive_slug import pick_archive_only_slug
 
 
 @pytest.fixture(scope="module")
@@ -38,7 +39,7 @@ def malyshko_packet() -> dict:
 
 @pytest.fixture(scope="module")
 def a1_packet() -> dict:
-    return pbr.prepare_review("a1/sounds-letters-and-hello", _reviewer())
+    return pbr.prepare_review(f"a1/{pick_archive_only_slug()}", _reviewer())
 
 
 def test_core_packet_inventories_claimable_learner_statements(a1_packet: dict) -> None:

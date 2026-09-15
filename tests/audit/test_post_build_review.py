@@ -13,6 +13,7 @@ import yaml
 from jsonschema import Draft202012Validator, ValidationError
 
 from scripts.audit import post_build_review as pbr
+from tests.helpers.archive_slug import pick_archive_only_slug
 
 ROOT = Path(__file__).resolve().parents[2]
 SKILL = ROOT / "agents_extensions" / "shared" / "skills" / "post-build-review"
@@ -871,17 +872,18 @@ def test_track_policy_rejects_stale_track_overrides(tmp_path: Path) -> None:
 
 
 def test_target_resolution_routes_core_and_bio_families() -> None:
-    core = pbr.resolve_target("a1/sounds-letters-and-hello")
+    archive_slug = pick_archive_only_slug()
+    core = pbr.resolve_target(f"a1/{archive_slug}")
     seminar = pbr.resolve_target("bio/oleksandr-bilash")
     assert core["semantic_family"] == "core"
     assert seminar["semantic_family"] == "seminar"
-    assert core["files"]["content"].endswith("a1-v1/sounds-letters-and-hello/module.md")
+    assert core["files"]["content"].endswith(f"a1-v1/{archive_slug}/module.md")
     assert seminar["files"]["content"].endswith("bio/oleksandr-bilash/module.md")
 
 
 def test_core_semantic_exemplar_uses_core_family() -> None:
     exemplar = json.loads(CORE_EXEMPLAR.read_text(encoding="utf-8"))
-    target = pbr.resolve_target(exemplar["target"])
+    target = pbr.resolve_target(f"a1/{pick_archive_only_slug()}")
     semantic_input = copy.deepcopy(exemplar["semantic_result"])
     contract = _passing_semantic({"deterministic": {"evidence_requirements": []}})
     semantic_input["alignment_audit"] = contract["alignment_audit"]

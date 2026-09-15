@@ -10,6 +10,7 @@ from scripts.audit.validate_atlas_conformance import _check_cross_links
 from scripts.generate_mdx import core as mdx_core
 from scripts.level_config import resolve_content_track, resolve_manifest_module_track
 from scripts.pipeline import learner_state
+from tests.helpers.archive_slug import pick_archive_only_slug as _pick_archive_only_slug
 
 
 @pytest.mark.parametrize("canonical", [[], ["shared"]])
@@ -93,17 +94,18 @@ def test_slug_lookup_prefers_canonical_even_when_archive_is_first(monkeypatch, c
 
 
 def test_archived_certification_uses_archive_commands_and_base_plan():
-    target = certify_module.parse_target(["a1/sounds-letters-and-hello"])
+    slug = _pick_archive_only_slug()
+    target = certify_module.parse_target([f"a1/{slug}"])
     assert target.content_level == "a1-v1"
-    assert target.module_dir.name == "sounds-letters-and-hello"
+    assert target.module_dir.name == slug
     assert target.mdx_path.is_file()
     checks = {check.name: check.command for check in certify_module.build_checks(
         target, site_build=False, install_site_deps=False,
     )}
-    assert checks["generate MDX"][3:5] == ("a1-v1", "1")
-    assert checks["validate activities"][3:5] == ("a1-v1", "1")
-    assert checks["validate plan config"][-1] == "a1/sounds-letters-and-hello"
-    archive = certify_module.parse_target(["a1-v1/sounds-letters-and-hello"])
+    assert checks["generate MDX"][3:5] == ("a1-v1", str(target.local_num))
+    assert checks["validate activities"][3:5] == ("a1-v1", str(target.local_num))
+    assert checks["validate plan config"][-1] == f"a1/{slug}"
+    archive = certify_module.parse_target([f"a1-v1/{slug}"])
     assert certify_module.plan_source_file(archive).is_file()
     modules = mdx_core.get_modules_from_manifest(target.content_level)
     assert len(modules) == 55
@@ -112,7 +114,7 @@ def test_archived_certification_uses_archive_commands_and_base_plan():
 
 
 def test_pbr_child_audits_select_actual_archive_content():
-    slug = "sounds-letters-and-hello"
+    slug = _pick_archive_only_slug()
     modules = track_deterministic_audit.select_modules("a1", None, {slug})
     assert len(modules) == 1
     assert modules[0].module_md.is_file()
@@ -128,7 +130,8 @@ def test_pbr_child_audits_select_actual_archive_content():
 def test_optional_mdx_audit_invokes_the_resolved_edition(monkeypatch):
     from types import SimpleNamespace
 
-    paths = track_deterministic_audit.select_modules("a1", None, {"sounds-letters-and-hello"})[0]
+    slug = _pick_archive_only_slug()
+    paths = track_deterministic_audit.select_modules("a1", None, {slug})[0]
     commands = []
 
     def run(argv, **kwargs):
@@ -137,7 +140,7 @@ def test_optional_mdx_audit_invokes_the_resolved_edition(monkeypatch):
 
     monkeypatch.setattr(track_deterministic_audit.subprocess, "run", run)
     assert track_deterministic_audit.run_mdx_validate(paths) == []
-    assert commands[0][3:5] == ["a1-v1", "1"]
+    assert commands[0][3:5] == ["a1-v1", str(paths.module_num)]
 
 
 def test_archive_generator_writes_real_module_to_isolated_output(tmp_path, monkeypatch):
