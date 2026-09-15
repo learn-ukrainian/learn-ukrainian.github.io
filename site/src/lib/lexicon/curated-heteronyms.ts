@@ -20343,8 +20343,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "жировий",
       "url_slug": "жировий",
       "headword": "жиро́вий",
-      "short_label": "картярський: трефовий (масть трефа / хрести) / (заст.) позашлюбний",
-      "gloss": "relating to the suit of clubs (cards: club suit, trefoil); (arch.) out of wedlock",
+      "short_label": "картярський: трефовий (масть трефа / хрести)",
+      "gloss": "relating to the suit of clubs (cards: club suit, trefoil)",
       "pos": "adjective",
       "cefr": "B2",
       "heritage_status": {
@@ -20358,7 +20358,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "жиро́вий",
-        "source": "Грінченко (1907) / ВТС",
+        "source": "ВТС / СУМ-11",
         "url": "https://slovnyk.me/dict/vts/жировий"
       },
       "morphology": {
@@ -20367,19 +20367,19 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Картярський прикметник до «жир» (масть трефа / хрести в картах: наприклад, «жировий туз»). У Грінченка також значення: позашлюбний, прижитий («жирова дочка»). Не плутати з біохімічним та анатомічним прикметником «жирови́й» (складений із жиру, багатий на жири).",
+      "distinction_note": "Картярський прикметник до «жир» (масть трефа / хрести в картах: наприклад, «жировий туз»). Не плутати з біохімічним та анатомічним прикметником «жирови́й» (складений із жиру, багатий на жири).",
       "meaning": {
         "definitions": [
-          "Прикметник до жир (картярська масть трефа / хрести); (заст.) позашлюбний, прижитий."
+          "Прикметник до жир (картярська масть трефа / хрести в картах)."
         ],
-        "source": "Грінченко (1907) / ВТС"
+        "source": "ВТС / СУМ-11"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
         "definition": "ЖИРО́ВИЙ, а, е. Прикм. до жир² (картярська масть).",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), укладеному та виданому всупереч антиукраїнським імперським заборонам (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
+        "historical_note": "Зафіксовано в радянський період (СУМ-11) та ВТС як спеціальний картярський термін."
       }
     },
     {
@@ -20962,8 +20962,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "замішка",
       "url_slug": "замішка",
       "headword": "за́мішка",
-      "short_label": "густа борошняна страва, каша з кукурудзяного чи житнього борошна",
-      "gloss": "thick porridge, scalded cornmeal or rye mush (traditional dish)",
+      "short_label": "рідка страва з борошна / напіврідка кормова суміш",
+      "gloss": "liquid flour porridge, traditional thin dish of scalded boiled flour",
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
@@ -20977,7 +20977,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "за́мішка",
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС / СУМ-11",
+        "url": "https://slovnyk.me/dict/vts/замішка"
       },
       "morphology": {
         "pos": "іменник",
@@ -20987,19 +20988,19 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "inanimate"
         }
       },
-      "distinction_note": "Традиційна українська страва: каша з борошна, запареного окропом і звареного в казанку. Не плутати з сум'яттям чи затримкою «замі́шка».",
+      "distinction_note": "Традиційна українська страва: рідка страва з борошна, запареного окропом і звареного (а також напіврідка суміш кормів). Не плутати з сум'яттям чи затримкою «замі́шка».",
       "meaning": {
         "definitions": [
-          "Традиційна народна страва з борошна, завареного окропом і звареного в окропі."
+          "Рідка страва з борошна, запареного окропом і звареного; напіврідка суміш різних кормів для годування худоби."
         ],
         "source": "ВТС / СУМ-11"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ЗА́МІШКА, и, ж. 1. Рідка або густа страва з борошна, запареного окропом і звареного.",
+        "definition": "ЗА́МІШКА, и, ж. 1. Рідка страва з борошна, запареного окропом і звареного. 2. с. г. Напіврідка суміш різних кормів для годування худоби.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в етнографічних джерелах та СУМ-11."
+        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909: «Замішка житна на молоці»), укладеному та виданому всупереч антиукраїнським імперським заборонам (Валуєвський циркуляр 1863 р., Емський указ 1876 р.), а також у СУМ-11."
       }
     },
     {

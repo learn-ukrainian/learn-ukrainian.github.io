@@ -115,7 +115,7 @@
       },
       {
         "path": "scripts/lexicon/curated_heteronyms_batch7.py",
-        "sha256": "3bbcec21039035d882e44dc1ec7a0775343de0b18ba853265255095108a9c6e4"
+        "sha256": "58593d930d844b3232decbb1044f27b744b3fb930735d7571504a83791b145e5"
       },
       {
         "path": "scripts/lexicon/curated_membership.py",
