@@ -7,6 +7,7 @@ import {
   lessonNumberFromDoc,
   moduleSlugFromDoc,
   resolveNavHref,
+  withManifestCopy,
 } from '../../src/lib/a1-lesson-nav';
 
 describe('a1 lesson nav', () => {
@@ -16,6 +17,31 @@ describe('a1 lesson nav', () => {
     expect(isUpgradedModuleLanding('a1/things-have-gender/1', [{ n: 1 }])).toBe(false);
     expect(isUpgradedModuleLanding('a1-v1/things-have-gender', [{ n: 1 }])).toBe(false);
     expect(isUpgradedModuleLanding('a1/things-have-gender', undefined)).toBe(false);
+  });
+
+  it('keeps bilingual title and taglines when a module unlocks', () => {
+    const item = {
+      num: 4,
+      slug: 'stress-and-melody',
+      title: 'Наголос і мелодика',
+      titleEn: 'Stress & Melody',
+      sub: 'Наголос змінює значення, інтонація змінює намір',
+      subEn: 'Stress changes meaning, intonation changes intent',
+    };
+    const card = withManifestCopy(item, {
+      title: 'Наголос і мелодика',
+      sidebar: { order: 4 },
+      lessons: [{ n: 1, title: 'Lesson', minutes: 60, href: '/a1/stress-and-melody/1/' }],
+    });
+    expect(card.titleEn).toBe('Stress & Melody');
+    expect(card.sub).toBe('Наголос змінює значення, інтонація змінює намір');
+    expect(card.subEn).toBe('Stress changes meaning, intonation changes intent');
+    expect(card.status).toBe('active');
+    // Type-level: withManifestCopy must carry a concrete lessons type (not
+    // `unknown`) so callers can pass the result straight into LevelLanding.
+    const [lesson] = card.lessons;
+    expect(lesson.n).toBe(1);
+    expect(lesson.href).toBe('/a1/stress-and-melody/1/');
   });
 
   it('treats a1/{slug}/{n} as a nested lesson', () => {

@@ -13,6 +13,25 @@ export function isUpgradedModuleLanding(id: string, lessons: unknown): boolean {
   return parts[0] === 'a1' && parts.length === 2 && Array.isArray(lessons);
 }
 
+export type ModuleLesson = { n: number; title: string; minutes: number; href: string };
+
+/** Keep bilingual title/sub from the A1 map when a module unlocks. */
+export function withManifestCopy<T extends { title?: string }>(
+  item: { num: number; slug: string; title: string; titleEn: string; sub: string; subEn: string },
+  upgraded: T & { sidebar?: { order?: number }; lessons?: ModuleLesson[] },
+) {
+  return {
+    num: upgraded.sidebar?.order ?? item.num,
+    slug: item.slug,
+    title: (typeof upgraded.title === 'string' && upgraded.title) ? upgraded.title : item.title,
+    titleEn: item.titleEn,
+    sub: item.sub,
+    subEn: item.subEn,
+    status: 'active' as const,
+    lessons: upgraded.lessons,
+  };
+}
+
 export function isUpgradedLesson(id: string): boolean {
   const parts = docParts(id);
   return parts[0] === 'a1' && parts.length === 3 && /^\d+$/.test(parts[2]);
