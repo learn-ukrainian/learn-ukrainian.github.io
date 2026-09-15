@@ -19729,8 +19729,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "вугровий",
       "url_slug": "вугровий",
       "headword": "вугро́вий",
-      "short_label": "пов'язаний з акне / висипанням вугрів на шкірі",
-      "gloss": "acne-related, comedonal, pimple-related (вугровий висип - acne rash)",
+      "short_label": "стосовний до риби вугра (вугровий промисел)",
+      "gloss": "eel-related, anguillid (вугровий промисел — eel fishing, eel trade)",
       "pos": "adjective",
       "cefr": "B2",
       "heritage_status": {
@@ -19744,7 +19744,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "вугро́вий",
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС / СУМ-11",
+        "url": "https://slovnyk.me/dict/vts/вугровий"
       },
       "morphology": {
         "pos": "прикметник",
@@ -19752,27 +19753,27 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Медичний термін: стосовний до шкірних вугрів (акне, запалення сальних залоз: вугровий висип). Не плутати з іхтіологічним «вугрови́й» (пов'язаний з рибою вугром).",
+      "distinction_note": "Іхтіологічний та промисловий прикметник: стосовний до прісноводної або морської риби вугра (вугро́вий промисел, вугро́ве м'ясо). Не плутати з дерматологічним прикметником «вугрови́й» (акне, вугровий висип).",
       "meaning": {
         "definitions": [
-          "Прикметник до вуго́р (запальний вузлик або комедон на шкірі); вугровий висип."
+          "Прикметник до вуго́р¹ (риба зі змієподібним тілом); пов'язаний з виловом або переробкою вугрів."
         ],
         "source": "ВТС / СУМ-11"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ВУГРО́ВИЙ, а, е. Прикм. до вуго́р¹ (висип).",
+        "definition": "ВУГРО́ВИЙ, а, е. Прикм. до вуго́р¹.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський період (СУМ-11)."
+        "historical_note": "Зафіксовано в радянський період (СУМ-11) та ВТС як прикметник до «вуго́р¹» (риба)."
       }
     },
     {
       "lemma": "вугровий",
       "url_slug": "вугровий",
       "headword": "вугрови́й",
-      "short_label": "пов'язаний з рибою вугром (вугровий промисел)",
-      "gloss": "eel-related, anguillid (вугровий промисел - eel fishing, eel industry)",
+      "short_label": "стосовний до шкірних вугрів (акне, вугровий висип)",
+      "gloss": "acne-related, comedonal (вугровий висип — acneiform rash, pimples)",
       "pos": "adjective",
       "cefr": "B2",
       "heritage_status": {
@@ -19786,7 +19787,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "вугрови́й",
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС / СУМ-11",
+        "url": "https://slovnyk.me/dict/vts/вугровий"
       },
       "morphology": {
         "pos": "прикметник",
@@ -19794,19 +19796,19 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Іхтіологічний та промисловий прикметник: стосовний до прісноводної або морської риби вуго́р (вугровий промисел, вугрове м'ясо). Не плутати з дерматологічним «вугро́вий» (акне).",
+      "distinction_note": "Медичний термін: стосовний до шкірних вугрів (акне, запалення сальних залоз: вугрови́й висип). Не плутати з іхтіологічним прикметником «вугро́вий» (пов'язаний з рибою вугром).",
       "meaning": {
         "definitions": [
-          "Прикметник до риби вуго́р; пов'язаний з виловом або переробкою вугрів."
+          "Прикметник до вуго́р² (запальний вузлик або комедон на шкірі); стосовний до вугрового висипу."
         ],
         "source": "ВТС / СУМ-11"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ВУГРОВИ́Й, а́, е́. Прикм. до вуго́р² (риба).",
+        "definition": "ВУГРОВИ́Й, а́, е́. Прикм. до вуго́р².",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський період (СУМ-11)."
+        "historical_note": "Зафіксовано в радянський період (СУМ-11) та ВТС як прикметник до «вуго́р²» (шкірний висип)."
       }
     }
   ],

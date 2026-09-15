@@ -882,13 +882,17 @@ def test_batch7_semantic_and_stress_distinctions():
     assert vidb[1]["headword"] == "відбіга́ти"
     assert "run away" in vidb[1]["gloss"].lower()
 
-    # вугровий: вугро́вий (acne) vs вугрови́й (eel)
+    # вугровий: вугро́вий (eel) vs вугрови́й (acne / pimple)
     vuh = enrich_heteronyms.build_heteronyms_for_lemma("вугровий")
     assert vuh is not None and len(vuh) == 2
     assert vuh[0]["headword"] == "вугро́вий"
-    assert "acne" in vuh[0]["gloss"].lower() or "pimple" in vuh[0]["gloss"].lower()
+    assert "eel" in vuh[0]["gloss"].lower()
+    assert "acne" not in vuh[0]["gloss"].lower()
+    assert "риба" in vuh[0]["meaning"]["definitions"][0].lower() or "вугор¹" in vuh[0]["meaning"]["definitions"][0].lower()
     assert vuh[1]["headword"] == "вугрови́й"
-    assert "eel" in vuh[1]["gloss"].lower()
+    assert "acne" in vuh[1]["gloss"].lower() or "pimple" in vuh[1]["gloss"].lower() or "comedon" in vuh[1]["gloss"].lower()
+    assert "eel" not in vuh[1]["gloss"].lower()
+    assert "вугор²" in vuh[1]["meaning"]["definitions"][0].lower() or "висип" in vuh[1]["meaning"]["definitions"][0].lower()
 
     # гаванський: га́ванський (harbor) vs гава́нський (Havana)
     hav = enrich_heteronyms.build_heteronyms_for_lemma("гаванський")
