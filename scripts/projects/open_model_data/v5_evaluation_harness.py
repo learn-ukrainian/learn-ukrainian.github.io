@@ -47,7 +47,7 @@ DEFAULT_HELDOUT_PATH = (
 APPROVED_CITATION_PATTERNS = [
     re.compile(r"\bвесум(?:у|ом|і|а)?\b", re.IGNORECASE),
     re.compile(r"\bvesum\b", re.IGNORECASE),
-    re.compile(r"\bсум(?:-11|-20)?\b", re.IGNORECASE),
+    re.compile(r"\bсум-20\b", re.IGNORECASE),
     re.compile(r"\bправопис(?:у|ом|і)?(?:\s+(?:2019|1992|1928))?\b", re.IGNORECASE),
     re.compile(r"\bантоненк[оа]-давидович\w*\b", re.IGNORECASE),
     re.compile(r"«?як\s+ми\s+говоримо»?", re.IGNORECASE),
@@ -75,11 +75,11 @@ APPROVED_AUTHORITY_REGEXES = [
         re.IGNORECASE,
     ),
     re.compile(
-        r"^(?:(?:академічн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?|тлумачн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?)\s+)?(?:(?:словник(?:и|ів|ам|ами|ах|а|у|ом|і)?)\s+)?сум(?:-11|-20)?(?:\s+(?:онлайн|on-line|\d+))?$",
+        r"^(?:(?:академічн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?|тлумачн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?)\s+)?(?:(?:словник(?:и|ів|ам|ами|ах|а|у|ом|і)?)\s+)?сум-20(?:\s+(?:онлайн|on-line|\d+))?$",
         re.IGNORECASE,
     ),
     re.compile(
-        r"^(?:академічн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?\s+)?словник\s+української\s+мови(?:\s+(?:в\s+\d+\s+томах|том(?:и|ів|ам|ами|ах|а|у|ом|і)?\s+\d+|(?:19\d{2}|20[0-2]\d)))?$",
+        r"^(?:академічн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?\s+)?словник\s+української\s+мови(?:\s+(?:в\s+20\s+томах|том(?:и|ів|ам|ами|ах|а|у|ом|і)?\s+\d+|20[0-2]\d))?$",
         re.IGNORECASE,
     ),
     re.compile(
@@ -1419,7 +1419,7 @@ def main() -> int:
     parser.add_argument("--min-high-freq-floor", type=int, default=50, help="Minimum high-frequency calques required")
     parser.add_argument("--base-benchmarks", type=Path, default=None, help="Path to base model academic benchmark JSON")
     parser.add_argument("--aligned-benchmarks", type=Path, default=None, help="Path to aligned model academic benchmark JSON")
-    parser.add_argument("--max-degradation-pct", type=float, default=2.0, help="Maximum allowed degradation percentage (default: 2.0%)")
+    parser.add_argument("--max-degradation-pct", type=float, default=2.0, help="Maximum allowed degradation percentage (default: 2.0%%)")
     parser.add_argument("--self-test", action="store_true", help="Run self-test contract verification")
     args = parser.parse_args()
 

@@ -1,0 +1,21 @@
+{
+  "audit_timestamp": "2026-09-15 23:52:22 UTC",
+  "overall_status": "PASSED",
+  "protection_suite_cases": 600,
+  "stratum_counts": {
+    "regional_dialect": 300,
+    "historical_text": 200,
+    "anti_surzhyk_control": 100
+  },
+  "protected_terms_count": 262,
+  "sft_shards_audited": 12,
+  "sft_records_audited": 6000,
+  "sft_contradictions_count": 0,
+  "sft_contradictions": [],
+  "dpo_shards_audited": 6,
+  "dpo_pairs_audited": 3000,
+  "dpo_contradictions_count": 0,
+  "dpo_contradictions": [],
+  "anti_surzhyk_valid": true,
+  "anti_surzhyk_anomalies": []
+}

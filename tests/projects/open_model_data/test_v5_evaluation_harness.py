@@ -384,12 +384,20 @@ def test_citation_whitelist_comma_separated_sources() -> None:
     assert any("Zorblax" in v for v in violations1)
     assert any("ВЕСУМ" in a for a in approved1)
 
+    # Russian-Soviet occupation SUM-11 is quarantined and must be rejected as an unapproved positive authority
     text2 = "За словниками ВЕСУМ, СУМ-11, це правильно."
     is_clean2, approved2, violations2 = verify_citation_whitelist(text2)
-    assert is_clean2 is True
-    assert len(violations2) == 0
+    assert is_clean2 is False
+    assert any("СУМ-11" in v for v in violations2)
     assert any("ВЕСУМ" in a for a in approved2)
-    assert any("СУМ-11" in a for a in approved2)
+
+    # Modern decolonized SUM-20 is approved
+    text3 = "За словниками ВЕСУМ, СУМ-20, це правильно."
+    is_clean3, approved3, violations3 = verify_citation_whitelist(text3)
+    assert is_clean3 is True
+    assert len(violations3) == 0
+    assert any("ВЕСУМ" in a for a in approved3)
+    assert any("СУМ-20" in a for a in approved3)
 
 
 def test_evaluate_prediction_em_dash_copula_condemnation() -> None:
