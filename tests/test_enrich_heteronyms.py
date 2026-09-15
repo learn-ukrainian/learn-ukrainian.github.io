@@ -693,13 +693,13 @@ def test_batch6_semantic_and_stress_distinctions():
     assert zhal[1]["headword"] == "жало́ба"
     assert "mourning" in zhal[1]["gloss"].lower() or "grief" in zhal[1]["gloss"].lower()
 
-    # дихання: ди́хання (respiration) vs диха́ння (breath / sigh)
+    # дихання: ди́хання (standard: respiration, gas exchange, breath) vs диха́ння (dialectal variant)
     dykh = enrich_heteronyms.build_heteronyms_for_lemma("дихання")
     assert dykh is not None and len(dykh) == 2
     assert dykh[0]["headword"] == "ди́хання"
     assert "respiration" in dykh[0]["gloss"].lower() or "breathing" in dykh[0]["gloss"].lower()
     assert dykh[1]["headword"] == "диха́ння"
-    assert "breath" in dykh[1]["gloss"].lower()
+    assert "dialectal" in dykh[1]["gloss"].lower() or "variant" in dykh[1]["gloss"].lower()
 
     # україна: укра́їна (frontier territory) vs украї́на (native country / homeland)
     ukr = enrich_heteronyms.build_heteronyms_for_lemma("україна")
@@ -721,9 +721,25 @@ def test_batch6_semantic_and_stress_distinctions():
     pid = enrich_heteronyms.build_heteronyms_for_lemma("підсумковий")
     assert pid is not None and len(pid) == 2
     assert pid[0]["headword"] == "підсу́мковий"
-    assert "cartridge" in pid[0]["gloss"].lower() or "pouch" in pid[0]["gloss"].lower()
+    assert "pouch" in pid[0]["gloss"].lower() or "cartridge" in pid[0]["gloss"].lower()
     assert pid[1]["headword"] == "підсумко́вий"
     assert "summary" in pid[1]["gloss"].lower() or "conclusive" in pid[1]["gloss"].lower()
+
+    # уступ: у́ступ (text passage / paragraph) vs усту́п (ledge / step / terrace)
+    ust = enrich_heteronyms.build_heteronyms_for_lemma("уступ")
+    assert ust is not None and len(ust) == 2
+    assert ust[0]["headword"] == "у́ступ"
+    assert "passage" in ust[0]["gloss"].lower() or "paragraph" in ust[0]["gloss"].lower()
+    assert ust[1]["headword"] == "усту́п"
+    assert "ledge" in ust[1]["gloss"].lower() or "step" in ust[1]["gloss"].lower() or "terrace" in ust[1]["gloss"].lower()
+
+    # твердити: тве́рдити (assert / assure) vs тверди́ти (repeat repeatedly / rehearse)
+    tve = enrich_heteronyms.build_heteronyms_for_lemma("твердити")
+    assert tve is not None and len(tve) == 2
+    assert tve[0]["headword"] == "тве́рдити"
+    assert "assert" in tve[0]["gloss"].lower() or "assure" in tve[0]["gloss"].lower()
+    assert tve[1]["headword"] == "тверди́ти"
+    assert "repeat" in tve[1]["gloss"].lower() or "rehearse" in tve[1]["gloss"].lower()
 
     # родовий: родо́вий (clan / lineage / genitive) vs родови́й (obstetric / labor)
     rod = enrich_heteronyms.build_heteronyms_for_lemma("родовий")

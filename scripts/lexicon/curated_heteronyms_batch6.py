@@ -1,12 +1,17 @@
-"""Batch heteronyms expansion dataset for #8039 batch 6 (epic #4387).
+"""Curated heteronym dataset (Batch 6) for Word Atlas (#8039, #4387).
 
-Decolonized dictionary evidence: modern Ukrainian standard (СУМ-20 / ВТС),
-authentic pre-Soviet witness (Грінченко 1907 under Tsarist imperial bans),
-and Soviet colonization context (СУМ-11 1970–1980) attached for transparency.
-Expands curated heteronyms SSOT from 168 to 200 lemmas.
+This module defines 32 curated heteronym lemmas (64 distinct variants)
+expanding the curated heteronym SSOT from 168 to 200 lemmas.
+
+Decolonization & Lexicographical Invariants:
+1. Modern standard baseline: Academic СУМ-20 / ВТС / ULIF authorities.
+2. Authentic pre-Soviet witness: Грінченко (1907–1909), compiled/published
+   under Tsarist Russian imperial bans (Valuev Circular 1863, Ems Ukaz 1876).
+3. Soviet colonization context: СУМ-11 (1970–1980) documented transparently
+   under `soviet_colonization_context` with `sovietization_risk` and historical notes
+   without erasing lexical history.
+4. Clean morphology and phonology: Every variant is verified in VESUM (clean view).
 """
-
-from __future__ import annotations
 
 from typing import Any
 
@@ -187,8 +192,8 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
   "дихання": [
     {
       "headword": "ди́хання",
-      "short_label": "процес поглинання кисню (фізіол.)",
-      "gloss": "respiration, breathing, inhalation and exhalation",
+      "short_label": "дихання, газообмін; подих (стандартне літер.)",
+      "gloss": "respiration, breathing process, gas exchange; breath, breeze (standard literary form)",
       "pos": "noun",
       "cefr": "A2",
       "heritage_status": {
@@ -213,16 +218,16 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "animacy": "inanimate"
         }
       },
-      "distinction_note": "Не плутати з омографом «диха́ння» (наголос на другому складі: діал. / нар.-поет. віддих, подув).",
+      "distinction_note": "Стандартний нормативний наголос на першому складі (ди́хання). Охоплює як фізіологічний газообмін, так і значення подиху чи віяння.",
       "meaning": {
         "definitions": [
-          "Процес поглинання кисню і виділення вуглекислоти живими організмами."
+          "1. Процес поглинання кисню і виділення вуглекислоти живими організмами (газообмін). 2. Подих, подув, віяння; наближення, настання чого-небудь."
         ],
         "source": "СУМ-20 (22439)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ДИ́ХАННЯ, я, с. Періодичне вбирання в себе й випускання повітря живими організмами.",
+        "definition": "ДИ́ХАННЯ, я, с. 1. Процес поглинання кисню і виділення вуглекислоти живими організмами; газообмін... 2. Віддих, подих...",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
@@ -230,8 +235,8 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
     },
     {
       "headword": "диха́ння",
-      "short_label": "віддих, подув (діал., нар.-поет.)",
-      "gloss": "breath, gentle exhalation, poetic breath or gust (attested in Grinchenko 1907)",
+      "short_label": "те саме, що ди́хання (діал., заст.)",
+      "gloss": "dialectal accentual variant of ди́хання (same meaning: respiration, breath; attested dialectally and in Grinchenko 1907)",
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
@@ -257,10 +262,10 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "animacy": "inanimate"
         }
       },
-      "distinction_note": "Не плутати з нормативним літературним «ди́хання» (наголос на першому складі: фізіологічний процес).",
+      "distinction_note": "Діалектний наголошений варіант слова «ди́хання» з наголосом на другому складі (СУМ-20, стаття 22440: діал. Ди́хання; зафіксовано також у Грінченка 1907). Не утворює окремого семантичного значення від літературного «ди́хання».",
       "meaning": {
         "definitions": [
-          "(діал., нар.-поет.) Те саме, що ди́хання; віддих, дихання людини чи вітру."
+          "(діал.) Те саме, що ди́хання (акцентний діалектний варіант)."
         ],
         "source": "СУМ-20 (22440) / Грінченко (1907)"
       },
@@ -269,7 +274,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "ДИХА́ННЯ, я, с., діал. Ди́хання.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Збережено в Словнику Бориса Грінченка (1907–1909), укладеному всупереч імперським заборонам царської Росії (Емський указ 1876 р., Валуєвський циркуляр 1863 р.)."
+        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), укладеному та виданому всупереч антиукраїнським імперським заборонам (Валуєвський циркуляр 1863 р., Емський указ 1876 р.), а також у СУМ-11 як діалектний варіант."
       }
     }
   ],
@@ -364,7 +369,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
     {
       "headword": "підсу́мковий",
       "short_label": "стосовний до сумки для набоїв (військ., іст.)",
-      "gloss": "related to an ammunition pouch or cartridge box (from пі́дсумок - cartridge pouch)",
+      "gloss": "related to an ammunition pouch or cartridge box (from підсу́мок - cartridge box, ammo pouch)",
       "pos": "adjective",
       "cefr": "B2",
       "heritage_status": {
@@ -386,12 +391,12 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з «підсумко́вий» (наголос на третьому складі: який підбиває підсумки, заключний).",
+      "distinction_note": "Не плутати з «підсумко́вий» (наголос на третьому складі: який підбиває підсумки, заключний; від пі́дсумок).",
       "meaning": {
         "definitions": [
-          "(військ., іст.) Прикм. до пі́дсумок (патронташ, сумка для набоїв)."
+          "(військ., іст.) Прикм. до підсу́мок (поясна шкіряна сумка для патронів, набоїв)."
         ],
-        "source": "СУМ-11"
+        "source": "СУМ-11 / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -404,7 +409,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
     {
       "headword": "підсумко́вий",
       "short_label": "який підбиває підсумки; завершальний",
-      "gloss": "summary, final, conclusive, resulting (from підсу́мок - total, summary)",
+      "gloss": "summary, final, conclusive, resulting (from пі́дсумок - sum, total, outcome, summary)",
       "pos": "adjective",
       "cefr": "B1",
       "heritage_status": {
@@ -426,16 +431,16 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з «підсу́мковий» (наголос на другому складі: стосовний до військової сумки для набоїв).",
+      "distinction_note": "Не плутати з «підсу́мковий» (наголос на другому складі: стосовний до військової сумки для набоїв — підсу́мка).",
       "meaning": {
         "definitions": [
-          "1. Прикм. до підсу́мок. 2. Який містить або підбиває підсумки; завершальний, заключний (підсумковий звіт)."
+          "1. Прикм. до пі́дсумок (сума, результат). 2. Який містить або підбиває підсумки; завершальний, заключний (підсумковий звіт, підсумкова таблиця)."
         ],
         "source": "ВТС / СУМ-11"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ПІДСУМКО́ВИЙ, а, е. 1. Прикм. до пі́дсумок... 2. Завершальний, заключний. Підсумковий огляд...",
+        "definition": "ПІДСУМКО́ВИЙ, а, е. 1. Прикм. до пі́дсумок. 2. Завершальний, заключний. Підсумковий огляд художньої самодіяльності.",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
@@ -469,7 +474,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з медичним терміном «родови́й» (наголос на кінці: стосовний до пологів, народження дитини).",
+      "distinction_note": "У значенні «стосовний до роду, родовий відмінок» нормативна практика закріпила наголос «родо́вий», хоча академічний СУМ-20 (стаття 100032) фіксує подвійний наголос «РОДО́ВИ́Й 1». Окрема стаття СУМ-20 (100033) фіксує «родови́й 2» (рідко) для пологів.",
       "meaning": {
         "definitions": [
           "1. Який існував під час життя людей родами; родовий лад. 2. Прикм. до рід (родова спадщина). 3. Лінгв. Родовий відмінок."
@@ -478,19 +483,16 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "РОДО́ВИ́Й, о́ва́, о́ве́. 1. Який існував під час життя людей родами...",
-        "sovietization_risk": 1,
-        "keywords": [
-          "первісна дородова община",
-          "марксистська формація"
-        ],
-        "historical_note": "СУМ-11 об'єднував наголоси через призму марксистсько-ленінської теорії суспільних формацій."
+        "definition": "РОДО́ВИ́Й, о́ва́, о́ве́. 1. Який існував під час життя людей родами... 2. Прикм. до рід...",
+        "sovietization_risk": 0,
+        "keywords": [],
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11), де також зафіксовано подвійний наголос (РОДО́ВИ́Й)."
       }
     },
     {
       "headword": "родови́й",
-      "short_label": "стосовний до пологів (мед., акуш.)",
-      "gloss": "natal, obstetric, relating to labor and childbirth (родові травми, родова діяльність)",
+      "short_label": "стосовний до пологів (мед., акуш., рідко)",
+      "gloss": "natal, obstetric, relating to labor and childbirth (родові перейми, пологові)",
       "pos": "adjective",
       "cefr": "B2",
       "heritage_status": {
@@ -513,19 +515,19 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з «родо́вий» (наголос на другому складі: родовий відмінок, родовий лад).",
+      "distinction_note": "Не плутати з «родо́вий» (наголос на другому складі: родовий відмінок, родовий лад). В українській мові для пологів природнішим і рекомендованим є термін «полого́вий» (пологовий будинок, пологова діяльність).",
       "meaning": {
         "definitions": [
-          "(мед., акуш.) Стосовний до родів, пологів; зв'язаний із процесом народження дитини."
+          "(рідко, мед., акуш.) Стосовний до родів, пологів; зв'язаний із процесом народження дитини (родові перейми; частіше: пологовий)."
         ],
         "source": "СУМ-20 (100033)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "РОДОВИ́Й, а́, е́. Стос. до родів.",
+        "definition": "РОДОВИ́Й, а́, е́, рідко. Стос. до родів (у 1 знач.).",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11) з позначкою рідко; у сучасній українській практиці переважає термін полого́вий."
       }
     }
   ],
@@ -567,7 +569,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "СВЯ́ЧЕНИЙ, а, е. Дієпр. пас. мин. ч. до святи́ти.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський період (СУМ-11). Релігійна лексика зазнавала цензурних обмежень у тлумаченнях."
+        "historical_note": "Зафіксовано в радянський період (СУМ-11). Релігійна лексика зазнавала цензурних обмежень у тлумаченнях. Зафіксовано в Словнику Бориса Грінченка (1907–1909), укладеному та виданому всупереч антиукраїнським імперським заборонам (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     },
     {
@@ -737,7 +739,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "СІ́ЯТИ, сію, сієш, недок., перех. і неперех. 1. Розкидати або заробляти в ґрунт насіння для вирощування рослин.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості. Зафіксовано в Словнику Бориса Грінченка (1907–1909), укладеному та виданому всупереч антиукраїнським імперським заборонам (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     },
     {
@@ -779,7 +781,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "СІЯ́ТИ, я́ю, я́єш, недок., рідко. Те саме, що ся́яти.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), врятованому під час жорстоких царських заборон української культури (Емський указ 1876 р.)."
+        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), укладеному та виданому всупереч антиукраїнським імперським заборонам (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     }
   ],
@@ -822,7 +824,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "СКА́ЛИТИ, лю, лиш, недок., перех. 1. Розсуваючи губи, відкривати, показувати зуби...",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості. Зафіксовано в Словнику Бориса Грінченка (1907–1909), укладеному та виданому всупереч антиукраїнським імперським заборонам (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     },
     {
@@ -864,7 +866,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "СКА́ЛИ́ТИ, лю́, ли́ш, недок., діал. Занозити.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), виданому всупереч імперським цензурним указам Російської імперії."
+        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), укладеному та виданому всупереч антиукраїнським імперським заборонам (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     }
   ],
@@ -951,7 +953,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "СЛІДУВА́ТИ, у́ю, у́єш, недок., розм. Те саме, що слідкува́ти.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), виданому всупереч заборонам української мови в Російській імперії."
+        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), укладеному та виданому всупереч антиукраїнським імперським заборонам (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     }
   ],
@@ -1250,7 +1252,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "СТА́РШИЙ, а, е. 1. Вищ. ст. до стари́й 1, 2.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості. Зафіксовано в Словнику Бориса Грінченка (1907–1909), укладеному та виданому всупереч антиукраїнським імперським заборонам (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     },
     {
@@ -1340,7 +1342,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "keywords": [
           "колгоспні цитати"
         ],
-        "historical_note": "Збережено в Словнику Бориса Грінченка (1907–1909), укладеному всупереч імперським цензурним заборонам Російської імперії."
+        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), укладеному та виданому всупереч антиукраїнським імперським заборонам (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     },
     {
@@ -1472,13 +1474,12 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
   "твердити": [
     {
       "headword": "тве́рдити",
-      "short_label": "зміцнювати, робити твердим (діал.)",
-      "gloss": "to harden, fortify, make rigid or durable (attested in Grinchenko 1907)",
+      "short_label": "стверджувати, запевняти в чомусь",
+      "gloss": "to assert, maintain, state confidently, assure (впевнено висловлювати)",
       "pos": "verb",
-      "cefr": "B2",
+      "cefr": "B1",
       "heritage_status": {
-        "classification": "authentic-dialectism",
-        "warning_severity": "treasured",
+        "classification": "standard",
         "is_russianism": False,
         "russian_shadow": False,
         "vesum_attested": True
@@ -1488,7 +1489,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
       },
       "stress": {
         "form": "тве́рдити",
-        "source": "Грінченко (1907) / ВТС"
+        "source": "ВТС / СУМ-11"
       },
       "morphology": {
         "pos": "дієслово",
@@ -1497,25 +1498,25 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "aspect": "недоконаний"
         }
       },
-      "distinction_note": "Не плутати з літературним «тверди́ти» (наголос на -ди́ти: наполегливо стверджувати, повторювати одне й те саме).",
+      "distinction_note": "Не плутати з «тверди́ти» (наголос на другому складі: повторювати одне й те саме, завчати, зубрити).",
       "meaning": {
         "definitions": [
-          "(діал., заст.) Робити міцним, твердим; укріплювати споруду або ґрунт."
+          "Впевнено висловлювати що-небудь, настійливо говорити, запевняючи в чомусь."
         ],
-        "source": "Грінченко (1907)"
+        "source": "ВТС / СУМ-11"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ТВЕ́РДИТИ, джу, диш, недок., рідко. Робити твердим.",
+        "definition": "ТВЕ́РДИТИ, джу, диш, недок., перех., із спол. що. Впевнено висловлювати що-небудь, настійливо говорити, запевняючи в чомусь.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), врятованому в часи дії Емського указу 1876 року."
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
       }
     },
     {
       "headword": "тверди́ти",
-      "short_label": "запевняти, уперто повторювати одне й те саме",
-      "gloss": "to assert, insist, reiterate stubbornly, say repeatedly",
+      "short_label": "повторювати одне й те саме, завчати",
+      "gloss": "to repeat repeatedly, reiterate; recite or rehearse to memorize (завчати, зубрити)",
       "pos": "verb",
       "cefr": "B1",
       "heritage_status": {
@@ -1529,7 +1530,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
       },
       "stress": {
         "form": "тверди́ти",
-        "source": "ВТС"
+        "source": "ВТС / СУМ-11"
       },
       "morphology": {
         "pos": "дієслово",
@@ -1538,16 +1539,16 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "aspect": "недоконаний"
         }
       },
-      "distinction_note": "Не плутати з архаїчним «тве́рдити» (наголос на корені: робити міцним, гартувати).",
+      "distinction_note": "Не плутати з «тве́рдити» (наголос на першому складі: впевнено висловлювати, запевняти в чомусь).",
       "meaning": {
         "definitions": [
-          "Наполегливо говорити те саме, запевняти; уперто стверджувати."
+          "1. Говорити, повторювати те саме. 2. (заст.) Багато разів повторювати що-небудь, щоб вивчити, запам'ятати (завчати, зубрити)."
         ],
-        "source": "ВТС"
+        "source": "ВТС / СУМ-11"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ТВЕРДИ́ТИ, джу́, ди́ш, недок. 1. Наполегливо говорити те саме...",
+        "definition": "ТВЕРДИ́ТИ, джу́, ди́ш, недок., перех. 1. Говорити, повторювати те саме. 2. заст. Багато разів повторювати що-небудь, щоб вивчити, запам’ятати.",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
@@ -1639,10 +1640,10 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
   "уступ": [
     {
       "headword": "у́ступ",
-      "short_label": "тераса, виступ, сходинка в скелі",
-      "gloss": "ledge, step, terrace, rock recess, mountain shelf",
+      "short_label": "частина тексту, уривок, абзац (книжн.)",
+      "gloss": "passage of text, excerpt, paragraph (in a book or article)",
       "pos": "noun",
-      "cefr": "B1",
+      "cefr": "B2",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": False,
@@ -1654,7 +1655,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
       },
       "stress": {
         "form": "у́ступ",
-        "source": "ВТС"
+        "source": "ВТС / СУМ-11"
       },
       "morphology": {
         "pos": "іменник",
@@ -1664,16 +1665,16 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "animacy": "inanimate"
         }
       },
-      "distinction_note": "Не плутати з застарілим «усту́п» (наголос на другому складі: вступ, вхід до будівлі чи тексту).",
+      "distinction_note": "Не плутати з «усту́п» (наголос на другому складі: східець, виступ у скелі чи мурі, уступ у шахті).",
       "meaning": {
         "definitions": [
-          "Виступ, що утворює сходинку на поверхні чого-небудь; тераса в горах чи мурі."
+          "(книжн.) Частина тексту; уривок, абзац."
         ],
-        "source": "ВТС"
+        "source": "ВТС / СУМ-11"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "У́СТУП, у, ч. 1. Виступ, що утворює сходинку на поверхні чого-небудь.",
+        "definition": "У́СТУП, у, ч., книжн. Частина тексту; уривок, абзац.",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
@@ -1681,13 +1682,12 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
     },
     {
       "headword": "усту́п",
-      "short_label": "вступ, вхід (заст.)",
-      "gloss": "entrance, introductory passage, prelude (attested in Grinchenko 1907: 'Уступ - вступленіе; входъ')",
+      "short_label": "виступ, тераса, східець у скелі чи мурі",
+      "gloss": "ledge, step, terrace, rock shelf; bench in mining",
       "pos": "noun",
-      "cefr": "B2",
+      "cefr": "B1",
       "heritage_status": {
-        "classification": "authentic-historism",
-        "warning_severity": "treasured",
+        "classification": "standard",
         "is_russianism": False,
         "russian_shadow": False,
         "vesum_attested": True
@@ -1697,7 +1697,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
       },
       "stress": {
         "form": "усту́п",
-        "source": "Грінченко (1907) / ВТС"
+        "source": "ВТС / СУМ-11"
       },
       "morphology": {
         "pos": "іменник",
@@ -1707,19 +1707,19 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
           "animacy": "inanimate"
         }
       },
-      "distinction_note": "Не плутати з геологічним чи архітектурним «у́ступ» (наголос на першому складі: тераса, виступ у скелі).",
+      "distinction_note": "Не плутати з «у́ступ» (наголос на першому складі: частина тексту, уривок, абзац).",
       "meaning": {
         "definitions": [
-          "(заст.) Вступна частина твору, передмова; вхід до приміщення."
+          "1. Виступ або виїмка в чому-небудь, що нагадує східець (у горах, скелі, мурі). 2. (спец.) Частина вибою."
         ],
-        "source": "Грінченко (1907)"
+        "source": "ВТС / СУМ-11"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "УСТУ́П, у, ч., заст. Вступ, початок, вхід.",
+        "definition": "УСТУ́П, у, ч. 1. Виступ або виїмка в чому-небудь, що нагадує східець... // спец. Частина вибою.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), виданому всупереч антиукраїнським царським заборонам (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
       }
     }
   ],
@@ -1975,7 +1975,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "ЦІЛИ́К, а́, ч. 1. гірн. Частина пласта корисної копалини... 2. діал. Цілина.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Збережено в Словнику Бориса Грінченка (1907–1909), врятованому всупереч антиукраїнським указам царської Росії (Емський указ 1876 р.)."
+        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), укладеному та виданому всупереч антиукраїнським імперським заборонам (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     }
   ],
@@ -2018,7 +2018,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "ЦІ́ЛИТИ, лю, лиш, недок. 1. Те саме, що ці́литися.",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "Зафіксовано в радянський окупаційний період (СУМ-11). Наведено для лексикографічної прозорості. Зафіксовано в Словнику Бориса Грінченка (1907–1909), укладеному та виданому всупереч антиукраїнським імперським заборонам (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     },
     {
@@ -2760,7 +2760,7 @@ CURATED_HETERONYMS_BATCH_6: dict[str, list[dict[str, Any]]] = {
         "definition": "ЖАЛО́БА, и, ж. 1. Глибокий сум, скорбота за померлим; траур...",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Збережено в Словнику Бориса Грінченка (1907–1909), укладеному в часи дії антиукраїнських урядових заборон Російської імперії."
+        "historical_note": "Зафіксовано в Словнику Бориса Грінченка (1907–1909), укладеному та виданому всупереч антиукраїнським імперським заборонам (Валуєвський циркуляр 1863 р., Емський указ 1876 р.)."
       }
     }
   ]
