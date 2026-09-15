@@ -92,6 +92,12 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
   changes is not Claude — Astra or Gemini.
 - **No Chinese lanes** (Kimi, DeepSeek, GLM, Qwen) on this epic — write, QG,
   or CF.
+- **A1 summaries may preview later grammar.** Example: `/a1/what-is-it-like/2/`
+  `Підсумок уроку` names antonym pairs, **і / а / але**, calques, and dropping
+  present-tense **є**. That is a teacher preview, not a defect. Reviewers
+  (Astra/Gemini) must not REQUEST_CHANGES solely because the summary is "too
+  advanced" for A1. Do not add a repeating "we will explain this later" line
+  on every such mention.
 - **Outcome, not engine-on-main:** the unit of done is a published
   `/a1/<slug>/` — content PR, CF, green CI, merge, and manual
   `deploy-pages.yml` cutover (see Merge and live Pages above). Landing the
