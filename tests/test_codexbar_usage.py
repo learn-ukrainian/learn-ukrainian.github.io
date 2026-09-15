@@ -2105,17 +2105,38 @@ def test_lane_is_under_weekly_pace_still_works_via_wrapper():
     assert not lane_is_under_weekly_pace(90.0, resets_at, now=now)
 
 
-def test_normalize_claude_shape_fallback_pace_uses_codexbar_summary_format():
-    """No `pace` block in the payload -> the manual fallback must still produce a real
-    CodexBar-shaped summary (not the old ad hoc '% pace delta' string)."""
-    raw = json.loads(CLAUDE_FIXTURE)[0]
-    del raw["pace"]
+def test_normalize_claude_shape_fallback_pace_uses_codexbar_summary_format(monkeypatch):
+    """No `pace` block -> fallback must produce CodexBar-shaped summary (open window)."""
+    frozen = datetime(2026, 9, 15, 12, 0, tzinfo=UTC)
+    resets = (frozen + timedelta(days=3)).isoformat().replace("+00:00", "Z")
+    raw = {
+        "provider": "claude",
+        "source": "web",
+        "usage": {
+            "primary": {
+                "windowMinutes": 300,
+                "resetsAt": (frozen + timedelta(hours=2)).isoformat().replace("+00:00", "Z"),
+                "usedPercent": 10,
+            },
+            "secondary": {
+                "windowMinutes": 10080,
+                "resetsAt": resets,
+                "usedPercent": 20,
+            },
+        },
+    }
+    real = subscription_usage_mod.compute_usage_pace
+
+    def _paced(used_pct, resets_at, *, window_minutes=None, now=None):
+        return real(used_pct, resets_at, window_minutes=window_minutes, now=now or frozen)
+
+    monkeypatch.setattr(subscription_usage_mod, "compute_usage_pace", _paced)
     res = _normalize_provider_data("claude", raw)
     assert res["weekly_pace_delta_pct"] is not None
-    if res["pace_summary"] is not None:
-        assert "Expected" in res["pace_summary"]
-        assert "% used" in res["pace_summary"]
-        assert "pace delta" not in res["pace_summary"]
+    assert res["pace_summary"] is not None
+    assert "Expected" in res["pace_summary"]
+    assert "% used" in res["pace_summary"]
+    assert "pace delta" not in res["pace_summary"]
 
 
 def test_codex_wham_weekly_only_window_uses_limit_window_seconds(monkeypatch):
@@ -2150,3 +2171,81 @@ def test_codex_wham_weekly_only_window_uses_limit_window_seconds(monkeypatch):
     assert res["pace_summary"] is not None
     assert "Expected" in res["pace_summary"]
     assert res["will_last_to_reset"] is not None
+
+
+def test_agy_nonzero_exit_does_not_leak_stdout_stderr(monkeypatch, tmp_path):
+    from scripts.api import subscription_usage as su
+
+    marker = "PRIVATE_TOKEN_SHOULD_NOT_ESCAPE"
+    fake_bin = tmp_path / "agy"
+    fake_bin.write_text("#!/bin/sh\necho OUT\necho ERR >&2\nexit 7\n", encoding="utf-8")
+    fake_bin.chmod(0o755)
+
+    class Completed:
+        returncode = 7
+        stdout = f"stdout {marker}"
+        stderr = f"stderr {marker}"
+
+    monkeypatch.setattr(su, "_agy_cli_bin", lambda: str(fake_bin))
+    monkeypatch.setattr(
+        su.subprocess,
+        "run",
+        lambda *a, **k: Completed(),
+    )
+    res = su._probe_antigravity_native(timeout_s=5)
+    assert res["status"] == "unavailable"
+    assert marker not in str(res.get("auth_error") or "")
+    assert "exit 7" in str(res.get("auth_error") or "")
+
+
+def test_compute_usage_pace_rejects_expired_and_out_of_window():
+    from datetime import UTC, datetime, timedelta
+
+    from scripts.api.subscription_usage import compute_usage_pace
+
+    now = datetime(2026, 9, 15, 12, 0, 0, tzinfo=UTC)
+    assert (
+        compute_usage_pace(25.0, (now - timedelta(seconds=1)).isoformat(), window_minutes=300, now=now)
+        is None
+    )
+    assert (
+        compute_usage_pace(25.0, (now + timedelta(seconds=301 * 60)).isoformat(), window_minutes=300, now=now)
+        is None
+    )
+    ok = compute_usage_pace(25.0, (now + timedelta(seconds=150 * 60)).isoformat(), window_minutes=300, now=now)
+    assert ok is not None
+
+
+def test_pace_duration_text_matches_codexbar_ceil():
+    from scripts.api.subscription_usage import _pace_duration_text
+
+    assert _pace_duration_text(0.5) == "now"
+    assert _pace_duration_text(40.101) == "1m"
+    assert _pace_duration_text(61) == "2m"
+    assert _pace_duration_text(86460) == "1d 1m"
+
+
+def test_agy_remaining_fraction_rejects_nonfinite():
+    from scripts.api.subscription_usage import _used_pct_from_remaining_fraction
+
+    assert _used_pct_from_remaining_fraction(float("nan")) is None
+    assert _used_pct_from_remaining_fraction(float("inf")) is None
+    assert _used_pct_from_remaining_fraction(1e309) is None
+    assert _used_pct_from_remaining_fraction(1.0) == 0.0
+    assert _used_pct_from_remaining_fraction(0.0) == 100.0
+
+
+def test_deepseek_prefers_secrets_dir_over_secret_alias(monkeypatch, tmp_path):
+    from scripts.api import subscription_usage as su
+
+    secrets = tmp_path / ".secrets"
+    secret = tmp_path / ".secret"
+    secrets.mkdir()
+    secret.mkdir()
+    (secret / "deepseek.key").write_text("OLD_KEY\n", encoding="utf-8")
+    (secrets / "deekseep.key").write_text("NEW_KEY\n", encoding="utf-8")
+    monkeypatch.setenv("HOME", str(tmp_path))
+    for env in ("DEEPSEEK_API_KEY",):
+        monkeypatch.delenv(env, raising=False)
+    monkeypatch.setattr(su, "_load_opencode_provider_key", lambda _p: None)
+    assert su._load_deepseek_api_key() == "NEW_KEY"

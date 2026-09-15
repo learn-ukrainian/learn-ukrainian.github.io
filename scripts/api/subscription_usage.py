@@ -19,7 +19,7 @@ import urllib.error
 import urllib.request
 from collections.abc import Iterable
 from concurrent.futures import ThreadPoolExecutor
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -533,6 +533,21 @@ def _load_named_secret_file(name: str) -> str | None:
     return None
 
 
+def _load_secret_preferring_secrets_dir(names: tuple[str, ...]) -> str | None:
+    """Prefer ``~/.secrets`` for *any* alias before falling back to ``~/.secret``.
+
+    Filename-first search can pick a stale ``~/.secret/deepseek.key`` over a
+    current ``~/.secrets/deekseep.key``. Directory-first matches operator layout.
+    """
+    home = Path.home()
+    for directory in (home / ".secrets", home / ".secret"):
+        for name in names:
+            secret = _load_first_line_secret(directory / name)
+            if secret:
+                return secret
+    return None
+
+
 def _load_glm_api_key() -> str | None:
     for env_name in ("ZAI_API_KEY", "ZHIPU_API_KEY", "GLM_API_KEY", "BIGMODEL_API_KEY"):
         val = os.environ.get(env_name, "").strip()
@@ -595,11 +610,7 @@ def _load_deepseek_api_key() -> str | None:
     key = _load_opencode_provider_key("deepseek")
     if key:
         return key
-    for name in ("deepseek.key", "deekseep.key"):
-        secret = _load_named_secret_file(name)
-        if secret:
-            return secret
-    return None
+    return _load_secret_preferring_secrets_dir(("deepseek.key", "deekseep.key"))
 
 
 def _coerce_float(value: Any) -> float | None:
@@ -1279,9 +1290,11 @@ def _agy_usage_buckets_by_window(group: dict[str, Any]) -> dict[str, dict[str, A
 
 
 def _used_pct_from_remaining_fraction(remaining: Any) -> float | None:
-    if not isinstance(remaining, (int, float)) or isinstance(remaining, bool):
+    """Reject non-finite remaining fractions before clamping (NaN/Inf → unknown)."""
+    frac = _coerce_float(remaining)
+    if frac is None:
         return None
-    return max(0.0, min(100.0, 100.0 - float(remaining) * 100.0))
+    return max(0.0, min(100.0, 100.0 - frac * 100.0))
 
 
 def _probe_antigravity_native(*, timeout_s: float) -> dict[str, Any]:
@@ -1314,16 +1327,21 @@ def _probe_antigravity_native(*, timeout_s: float) -> dict[str, Any]:
             "gemini",
             {"message": "agy /usage timed out", "kind": "fetch_error", "code": "TIMEOUT"},
         )
-    except OSError as exc:
+    except OSError:
         return _normalize_provider_error(
             "gemini",
-            {"message": f"agy /usage failed to start: {exc}", "kind": "fetch_error", "code": "SPAWN_ERROR"},
+            {"message": "agy /usage failed to start", "kind": "fetch_error", "code": "SPAWN_ERROR"},
         )
     if completed.returncode != 0:
-        err = (completed.stderr or completed.stdout or "").strip()[:300] or f"exit {completed.returncode}"
+        # Never forward raw stdout/stderr into auth_error (routing-budget JSON);
+        # CLI diagnostics can contain credentials or private content.
         return _normalize_provider_error(
             "gemini",
-            {"message": f"agy /usage failed: {err}", "kind": "provider", "code": completed.returncode},
+            {
+                "message": f"agy /usage failed (exit {completed.returncode})",
+                "kind": "provider",
+                "code": completed.returncode,
+            },
         )
     try:
         payload = json.loads(completed.stdout or "")
@@ -1557,14 +1575,18 @@ def compute_usage_pace(
     duration = win_mins * 60.0
     current_time = (now or datetime.now(UTC)).astimezone(UTC)
     time_until_reset = (resets_at_dt - current_time).total_seconds()
-    elapsed = max(0.0, min(duration, duration - time_until_reset))
+    # CodexBar UsagePace: require 0 < timeUntilReset <= duration (hide expired /
+    # out-of-window resets instead of clamping to "Expected 100% used").
+    if time_until_reset <= 0 or time_until_reset > duration:
+        return None
+    elapsed = duration - time_until_reset
     actual = max(0.0, min(100.0, float(used_pct)))
     if elapsed == 0 and actual > 0:
         return None
     expected = max(0.0, min(100.0, (elapsed / duration) * 100.0))
     delta = actual - expected
 
-    time_remaining = max(0.0, time_until_reset)
+    time_remaining = time_until_reset
     projected_remaining_usage = (actual * time_remaining / elapsed) if elapsed > 0 else 0.0
     speed_multiplier: float | None = None
     remaining_capacity = 100.0 - actual
@@ -1619,16 +1641,21 @@ def pace_is_visible(pace: dict[str, Any] | None, *, kind: str = "weekly") -> boo
 
 
 def _pace_duration_text(seconds: float) -> str:
-    if seconds < 60:
+    """CodexBar ``resetCountdownDescription`` rounding (ceil minutes; <1s → now)."""
+    if seconds < 1:
         return "now"
-    total_minutes = int(seconds // 60)
+    total_minutes = max(1, math.ceil(seconds / 60.0))
     days, rem_minutes = divmod(total_minutes, 1440)
     hours, minutes = divmod(rem_minutes, 60)
     if days > 0:
-        return f"{days}d {hours}h" if hours else f"{days}d"
+        if hours > 0:
+            return f"{days}d {hours}h"
+        if minutes > 0:
+            return f"{days}d {minutes}m"
+        return f"{days}d"
     if hours > 0:
         return f"{hours}h {minutes}m" if minutes else f"{hours}h"
-    return f"{minutes}m"
+    return f"{total_minutes}m"
 
 
 def _pace_left_label(pace: dict[str, Any]) -> str:
@@ -1681,18 +1708,28 @@ def format_usage_pace_summary(
 
 def compute_weekly_pace_delta_pct(
     used_pct: float,
-    resets_at: str,
+    resets_at: str | int | float | None,
     *,
     window_minutes: int | None = None,
     now: datetime | None = None,
 ) -> float | None:
-    """Reuse the weekly pace formula from CodexBar normalization (r2 #7139).
+    """Clamp-style weekly delta for routing alarms (empty-host underused, etc.).
 
-    Thin wrapper over :func:`compute_usage_pace` — routing consumers only need
-    the raw delta, not the full rate-projection/eta/headroom shape.
+    Keeps the historical clamp-to-[0,1] elapsed fraction so callers are not
+    silenced by :func:`compute_usage_pace` hide guards (expired / out-of-window).
     """
-    pace = compute_usage_pace(used_pct, resets_at, window_minutes=window_minutes, now=now)
-    return pace["delta_pct"] if pace is not None else None
+    resets_at_dt = _parse_resets_at_any(resets_at)
+    if resets_at_dt is None:
+        return None
+    win_mins = WEEKLY_WINDOW_MINUTES if window_minutes is None else int(window_minutes)
+    if win_mins <= 0:
+        return None
+    duration = win_mins * 60.0
+    current_time = (now or datetime.now(UTC)).astimezone(UTC)
+    window_start = resets_at_dt - timedelta(seconds=duration)
+    elapsed = (current_time - window_start).total_seconds()
+    elapsed_fraction = max(0.0, min(1.0, elapsed / duration))
+    return float(used_pct) - elapsed_fraction * 100.0
 
 
 def lane_is_under_weekly_pace(
