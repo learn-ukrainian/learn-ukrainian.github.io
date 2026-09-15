@@ -604,8 +604,23 @@ def test_oes_rejects_html_comments_and_wiki_artifacts() -> None:
 
 
 def test_surzhyk_banned_targets_rejects_sum11_standard_words() -> None:
-    """Standard Ukrainian words in SUM-11 (відмітити, відправитися, любий, гуся, палатка) are banned from anti-surzhyk."""
+    """Standard Ukrainian words and phrases in SUM-11 are strictly banned from anti-surzhyk."""
     for word in (
+        "в цілому",
+        "з точки зору",
+        "точку зору",
+        "точка зору",
+        "в першу чергу",
+        "так як",
+        "в тому числі",
+        "в сторону",
+        "вилка",
+        "вилкою",
+        "вилки",
+        "приговор",
+        "учбовий",
+        "вспівати",
+        "вспіває",
         "відмітив",
         "відмітити",
         "відмічати",
@@ -626,3 +641,54 @@ def test_surzhyk_banned_targets_rejects_sum11_standard_words() -> None:
                 "source_metadata": {"source": "style_guide"},
             }
         )
+
+
+def test_surzhyk_targets_zero_sum11_definitions_and_lemmas() -> None:
+    """Verify that all 100 anti-surzhyk controls have zero SUM-11 headwords, inflected lemmas, or defined subentries."""
+    import re
+    import sqlite3
+
+    sources_db = REPO_ROOT / "data" / "sources.db"
+    vesum_db = REPO_ROOT / "data" / "vesum.db"
+    if not sources_db.exists():
+        pytest.skip("sources.db unavailable")
+
+    c_src = sqlite3.connect(sources_db).cursor()
+    c_ves = sqlite3.connect(vesum_db).cursor() if vesum_db.exists() else None
+
+    assert SUITE_PATH.exists()
+    surz_cases = []
+    with SUITE_PATH.open(encoding="utf-8") as f:
+        for line in f:
+            r = json.loads(line)
+            if r.get("stratum") == "anti_surzhyk_control":
+                surz_cases.append(r)
+
+    assert len(surz_cases) == 100, f"Expected 100 anti-surzhyk controls, got {len(surz_cases)}"
+
+    for case in surz_cases:
+        target = case["target_term"].strip().casefold()
+        # 1. Single word: neither headword nor inflected lemma in sum11
+        if " " not in target:
+            hw = c_src.execute("SELECT 1 FROM sum11 WHERE word = ? COLLATE NOCASE", (target,)).fetchone()
+            assert not hw, f"Target {target!r} is a headword in sum11 ({case['eval_id']})"
+            if c_ves is not None:
+                lemmas = [
+                    row[0]
+                    for row in c_ves.execute(
+                        "SELECT DISTINCT lemma FROM forms_all WHERE word_form = ?", (target,)
+                    ).fetchall()
+                ]
+                for lem in lemmas:
+                    hw_lem = c_src.execute("SELECT 1 FROM sum11 WHERE word = ? COLLATE NOCASE", (lem,)).fetchone()
+                    assert not hw_lem, f"Target {target!r} has lemma {lem!r} in sum11 ({case['eval_id']})"
+
+        # 2. Multi-word phrase: no defined phraseological subentry or idiom in sum11
+        rows = c_src.execute("SELECT text FROM sum11 WHERE text LIKE ?", (f"%{target}%",)).fetchall()
+        for (text,) in rows:
+            m = re.search(
+                rf"(♦[^\n]*\b{re.escape(target)}\b|\b{re.escape(target)}\b\s*[:—]|\b{re.escape(target)}\b\s*—)",
+                text,
+                re.IGNORECASE,
+            )
+            assert not m, f"Target {target!r} is a defined subentry in sum11: {m.group(0)} ({case['eval_id']})"

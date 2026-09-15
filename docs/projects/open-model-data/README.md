@@ -2,7 +2,7 @@
 
 > **Parent Epics:** [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321) (ULDR Open Model Data) & [#7423](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/7423) (Human-Source Dataset Delivery)
 > **Stream Registry:** `open-model-data` (in `scripts/config/issue_streams.yaml`)
-> **Public Hub Dataset:** [`krisztiankoos/uldr-v1-production`](https://huggingface.co/datasets/krisztiankoos/uldr-v1-production)
+> **Public Hub Dataset:** [`krisztiankoos/uldr-v1-production`](https://huggingface.co/datasets/krisztiankoos/uldr-v1-production) *(Exploratory Pilot Canary v0.1; v1.0 Production Release in Phase 5.5)*
 > **Target Alignment Weights:** Google Gemma 3 (4B-it, 12B-it, 27B-it) & Gemma 4 Architectures
 
 ---
@@ -71,7 +71,7 @@ flowchart LR
   - Partition firewall & MinHash near-duplicate isolation.
   - STEM negative controls (1,800 SFT + 900 DPO `PRESERVE`).
   - Automated CoT claim verification against VESUM and dictionaries.
-  - Production assembly: 6,000 SFT + 3,000 DPO packaged and released on Hugging Face at [`krisztiankoos/uldr-v1-production`](https://huggingface.co/datasets/krisztiankoos/uldr-v1-production).
+  - Pilot assembly: 6,000 SFT + 3,000 DPO packaged and released on Hugging Face as exploratory pilot canary v0.1 at [`krisztiankoos/uldr-v1-production`](https://huggingface.co/datasets/krisztiankoos/uldr-v1-production) (Production release v1.0 scheduled for Phase 5.5).
 * **Phase 4 (PR #8038):** Production training recipe and Hugging Face Job runner (`train_gemma3_production.py`) executing QLoRA SFT + DPO on Nvidia A10G.
 
 ### Active Next Phases (Phase 5 Sub-Issues under Epic #6321)
