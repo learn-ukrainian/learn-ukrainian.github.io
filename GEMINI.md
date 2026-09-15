@@ -63,6 +63,8 @@ Shared PR hygiene rules are canonical in `AGENTS.md`: protected config files, ge
 2. **Protect the root.** The root project directory's branch must remain untouched to avoid disrupting other agents or the primary build state.
 3. **PR-first workflow.** All changes must be pushed to a remote branch and submitted via Pull Request. Never commit directly to `main` unless explicitly requested.
 4. **EVERY commit MUST include an `X-Agent` trailer.** This is the only way to distinguish your work from Codex's, Claude-headless's, or orchestrator inline — the git committer field is identical across all locally-dispatched agents. Format: `X-Agent: gemini/<task-id>` (e.g. `X-Agent: gemini/1787-15-handoff-verifier`). Use `git commit --trailer "X-Agent: gemini/<task-id>"` to add it. Verify with `.venv/bin/python scripts/audit/lint_agent_trailer.py` before pushing.
+5. **Orchestrator merge duty.** Workers neither merge nor arm auto-merge, but when acting as the orchestrator, your job is to drive PRs to landing in `main`. Once independent cross-family review approval and required CI pass, the orchestrator MUST enqueue/merge the PR (`gh pr merge <N> --squash`) and perform post-merge worktree and branch cleanup. Never leave an approved, green PR sitting unmerged waiting for the human operator.
+
 
 ### Worktree layout (subtree, not flat)
 

@@ -81,8 +81,11 @@ non-skippable:
   operator tasking.
 - Every commit has an `X-Agent: <agent>/<task-id>` trailer. Change tasks end in
   a pushed PR with CI; never push directly to `main`. Workers neither merge nor
-  arm auto-merge. Before merge, required CI and an independent cross-family
-  exact-head review must both pass; resolve material findings and re-review.
+  arm auto-merge. The accountable orchestrator's job is to ensure approved PRs land
+  in `main`: once required CI and an independent cross-family exact-head review
+  both pass with approval, the orchestrator MUST merge the PR (or enqueue via
+  `gh pr merge <N> --squash`). Never leave an approved, green PR unmerged waiting
+  for operator action. Resolve material findings and re-review before merge.
 - Treat unavailable telemetry as unknown, not policy proof. Do not close
   partial work: state verified outcome, denominator, residual gap, and owner.
 
@@ -117,4 +120,6 @@ non-skippable:
 Before claiming completion, inspect the exact diff and status, run proportionate
 verification, and report changed files, commands/results, final branch status,
 the user-visible outcome, and any residual. Follow the full rules for issue
-linkage, PR state, review routing, merge ownership, and cleanup.
+linkage, PR state, review routing, merge ownership, and cleanup. When acting as
+orchestrator, ensure approved PRs are merged to `main` and post-merge worktree/branch
+cleanup is completed; do not declare a task done while an approved, green PR sits unmerged.

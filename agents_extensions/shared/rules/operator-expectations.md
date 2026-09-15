@@ -31,7 +31,11 @@ tie-breakers.
    scratch directory (like `batch_state/`).
    `core.bare=true` on primary is a **bug** to heal (`git config core.bare false` +
    `extensions.worktreeConfig=true`), never an intentional mode. PRs for everything — no
-   direct commits to main. **After merge, cleanup is mandatory before the next large
+   direct commits to main. **Orchestrator merge duty:** workers neither merge nor arm
+   auto-merge, but the accountable orchestrator must ensure approved PRs land in `main` —
+   once required CI and independent cross-family exact-head review both pass, the orchestrator
+   merges (or enqueues via `gh pr merge <N> --squash`). Never leave an approved, green PR unmerged.
+   **After merge, cleanup is mandatory before the next large
    dispatch** (operator 2026-08-07; ENOSPC is the known failure): (1) confirm MERGED,
    (2) `git worktree remove --force` for that PR's dispatch worktree **before**
    deleting the local branch, (3) delete local + remote branch + `git fetch --prune`
