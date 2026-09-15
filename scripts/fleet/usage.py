@@ -145,12 +145,14 @@ def _lane_has_usable_allotment(info: dict[str, Any]) -> bool:
     provider = info.get("provider_windows")
     if not isinstance(provider, dict):
         provider = native.get("provider_windows")
-    if isinstance(provider, dict):
+    if isinstance(provider, dict) and provider:
         for block in provider.values():
             if not isinstance(block, dict):
                 continue
             if _is_number(block.get("used_pct")) or _is_number(block.get("remaining_pct")):
                 return True
+        # Named Cursor (or similar) shell present with only nulls — not a usable meter.
+        return False
 
     windows = native.get("windows") if isinstance(native.get("windows"), dict) else None
     if isinstance(windows, dict):
@@ -250,9 +252,11 @@ def _display_status(info: dict[str, Any], *, freshness: str) -> str:
     if not probe:
         probe = str(native.get("probe_state") or "")
     error_kind = str(info.get("error_kind") or native.get("error_kind") or "")
-    # API-key dispatch can be "cool" while allotment meters are empty — do not show cool.
-    if probe in {"NEED_PROBE", "NEED_LOGIN"} and not _lane_has_usable_allotment(info):
-        return "unknown" if probe == "NEED_PROBE" else "need_login"
+    # NEED_PROBE / missing session: never show cool from ledger leftovers (e.g. rem=100).
+    if probe == "NEED_LOGIN":
+        return "need_login"
+    if probe == "NEED_PROBE" and not _lane_has_usable_allotment(info):
+        return "unknown"
     if error_kind in {"missing_credentials", "missing_session_token"} and not _lane_has_usable_allotment(
         info
     ):

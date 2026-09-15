@@ -266,6 +266,45 @@ def test_show_does_not_claim_cool_without_allotment_meters():
     assert "CURSOR_API_KEY alone" in text
 
 
+def test_show_does_not_claim_cool_with_retained_remaining_pct():
+    """NEED_PROBE + null provider windows must not keep cool via leftover remaining_pct."""
+    budget = {
+        "source": "monitor-api",
+        "agents": {
+            "cursor": {
+                "status": "cool",
+                "freshness": "fresh",
+                "age_s": 10,
+                "remaining_pct": 100.0,
+                "probe_state": "NEED_PROBE",
+                "login_state": "authenticated",
+                "error_kind": "missing_session_token",
+                "provider_windows": {
+                    "auto": {
+                        "window": "monthly",
+                        "label": "Cursor Models (Auto)",
+                        "used_pct": None,
+                        "remaining_pct": None,
+                        "resets_at": None,
+                    },
+                    "api": {
+                        "window": "monthly",
+                        "label": "Other Models (API)",
+                        "used_pct": None,
+                        "remaining_pct": None,
+                        "resets_at": None,
+                    },
+                },
+            }
+        },
+        "api_accounts": {},
+    }
+    text = usage.format_human(budget)
+    assert "cursor | unknown | unknown |" in text
+    assert "cursor | cool | 100.0 |" not in text
+    assert "agent login" in text
+
+
 def test_show_formats_epoch_resets():
     budget = {
         "source": "monitor-api",
