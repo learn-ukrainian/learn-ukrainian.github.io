@@ -79,6 +79,30 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
   `https://learn-ukrainian.github.io/a1/<slug>/1/`). Do not claim live from
   a skipped deploy job or from `/a1/` index 200 alone.
 
+## Writer / reviewer split (do not swap hats)
+
+- **Content (V7 writer):** one writer, one reviewer. Writer = Gemini 3.8 Flash
+  High (`agy-tools`). Reviewer = Astra @ medium. They do not swap hats on the
+  same module — the writer does not review its own module and the reviewer
+  does not write. Parallelism model: writer on module N+1 while Astra reviews
+  module N, not two content writers running at once.
+- **Machinery:** Claude Sonnet implements this epic's scripts/docs/CI work;
+  Fable advises only if needed. Independent CF of record for machinery
+  changes is not Claude — Astra or Gemini.
+- **No Chinese lanes** (Kimi, DeepSeek, GLM, Qwen) on this epic — write, QG,
+  or CF.
+- **Outcome, not engine-on-main:** the unit of done is a published
+  `/a1/<slug>/` — content PR, CF, green CI, merge, and manual
+  `deploy-pages.yml` cutover (see Merge and live Pages above). Landing the
+  build engine on `main` is not completion. Once gates pass in a worktree,
+  open the scripts-free content PR the same session — do not idle waiting
+  for a prompt.
+- **Auto-finalize must not mix `scripts/` into curriculum PRs.** Content PRs
+  from this epic stay scripts-free; `scripts/` changes are a separate PR.
+  This is a constraint on the existing auto-finalize path in
+  `scripts/delegate.py`, not a new control plane — do not build one to
+  enforce it unless a future revision of this file says otherwise.
+
 ## Epic split (do not thrash sessions)
 
 - Stay in the **hot session** while the machine is warm. Do not cut the
