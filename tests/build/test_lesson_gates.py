@@ -42,6 +42,38 @@ def test_fill_in_blanked_strings_count_as_rendered():
     landing = gates.norm_text('{"instruction":"Example ___."}')
     assert gates._visible_in_render("Example {answer}.", landing)
     assert gates._visible_in_render("де__ (soft sign)", gates.norm_text("де___ (soft sign)"))
+    escaped = gates.unescape_published(
+        'pairs={JSON.parse(`[{"right": "Informal \\\\"Hi!\\\\" for friends and family"}]`)}'
+    )
+    hay = gates.norm_text(escaped)
+    assert gates._visible_in_render('Informal "Hi!" for friends and family', hay)
+    mashed = "Тарас : Привіт, Оксано! — Hi, Oksana! Оксана : Привіт, Тарасе!"
+    assert gates._dialogue_turns(mashed) == [
+        ("Тарас", "Привіт, Оксано!"),
+        ("Оксана", "Привіт, Тарасе!"),
+    ]
+    quoted = "> **Окса́на**: До́брий день!\n> **Іва́н**: До́брий день, вчи́телю!"
+    assert gates._dialogue_turns(quoted) == [
+        ("Оксана", "Добрий день!"),
+        ("Іван", "Добрий день, вчителю!"),
+    ]
+    italic = "> **Тара́с**: Сього́дні свя́то! *(Today is a holiday!)*"
+    assert gates._dialogue_turns(italic) == [("Тарас", "Сьогодні свято!")]
+    clause = "> **Alice:** Keep this complete first sentence — retain this essential second clause too."
+    assert gates._dialogue_turns(clause) == [
+        ("Alice", "Keep this complete first sentence — retain this essential second clause too."),
+    ]
+    hay_full = 'exchanges=[{"speaker":"Alice","text":"Keep this complete first sentence — retain this essential second clause too."}]'
+    hay_cut = 'exchanges=[{"speaker":"Alice","text":"Keep this complete first sentence"}]'
+    spoken = "Keep this complete first sentence — retain this essential second clause too."
+    assert gates._spoken_in_hay(spoken, hay_full)
+    assert not gates._spoken_in_hay(spoken, hay_cut)
+    hay = 'exchanges=[{"speaker":"Тарас","text":"This sentence is retained."}]'
+    assert not gates._spoken_in_hay(
+        "This sentence is retained. This other sentence has disappeared completely.",
+        hay,
+    )
+    assert gates._spoken_in_hay("This sentence is retained.", hay)
 
 
 def test_dialogue_props_ignore_unrelated_prose():
@@ -66,6 +98,98 @@ def test_dialogue_props_ignore_unrelated_prose():
 
 def test_one_syllable_acute_is_not_undeclared_stress():
     assert gates.wrong_stress("ка́ ли́ ко́", set()) == []
+
+
+def test_wrong_stress_option_is_pedagogy_not_an_oracle_failure():
+    """нови́й vs но́вий is a real distractor pair; only the wrong option is exempt."""
+    acts = {
+        "inline": [{"id": "act-stress", "type": "fill-in",
+                    "items": [{"sentence": "Це ___ комп'ютер.", "answer": "нови́й",
+                               "options": ["нови́й", "но́вий"]}]}],
+        "workbook": [],
+    }
+    errors = gates.pedagogical_error_forms(acts)
+    assert any(gates.strip_acute(form) == "новий" and form != "нови́й" for form in errors)
+    skip = {gates.nfc(w).lower() for w in errors}
+    assert gates.wrong_stress("но́вий", set(), exact_skip=skip) == []
+    assert gates.wrong_stress("но́вий", set())  # without skip, the false acute is a miss
+
+
+def test_error_correction_wrong_spellings_are_not_missing_stress():
+    acts = {
+        "inline": [],
+        "workbook": [{
+            "id": "act-err",
+            "type": "error-correction",
+            "items": [{"sentence": "Не пиши сімя без апо́строфа.", "error": "сімя"}],
+        }],
+    }
+    allow = gates.pedagogical_error_forms(acts)
+    assert "сімя" in allow
+    assert "сімя" not in gates.missing_stress("Не пиши сімя без апо́строфа.", allow)
+    gapped = {
+        "inline": [{"id": "act-fill", "type": "fill-in",
+                    "items": [{"sentence": "вчител_.", "answer": "ь"}]}],
+        "workbook": [],
+    }
+    allow2 = gates.pedagogical_error_forms(gapped)
+    assert "вчител" in allow2
+    italic = {
+        "inline": [{"id": "act-i", "type": "fill-in",
+                    "items": [{"sentence": "_книга_ на столі.", "answer": "книга"}]}],
+        "workbook": [],
+    }
+    assert "книга" not in gates.pedagogical_error_forms(italic)
+    quiz = {
+        "inline": [],
+        "workbook": [{
+            "id": "act-q",
+            "type": "quiz",
+            "items": [{"options": [{"text": "сімя", "correct": False},
+                                   {"text": "сім'я́", "correct": True}]}],
+        }],
+    }
+    assert "сімя" in gates.pedagogical_error_forms(quiz)
+    fill_opts = {
+        "inline": [{"id": "act-fo", "type": "fill-in",
+                    "items": [{"sentence": "Це ___.", "answer": "книга",
+                               "options": ["книга", "сімя"]}]}],
+        "workbook": [],
+    }
+    forms = gates.pedagogical_error_forms(fill_opts)
+    assert "сімя" in forms
+    assert "книга" not in forms
+
+
+def test_error_forms_do_not_exempt_the_same_spelling_in_another_activity():
+    """A wrong option in one item must not skip missing-stress on the same token elsewhere."""
+    quiz = {
+        "id": "act-wrong",
+        "type": "quiz",
+        "items": [{"options": [{"text": "книга", "correct": False},
+                               {"text": "кни́га", "correct": True}]}],
+    }
+    prose = {
+        "id": "act-prose",
+        "type": "match",
+        "instruction": "Прочитай: книга на столі.",
+        "items": [{"left": "книга", "right": "book"}],
+    }
+    quiz_allow = gates.pedagogical_error_forms({"inline": [quiz], "workbook": []})
+    prose_allow = gates.pedagogical_error_forms({"inline": [prose], "workbook": []})
+    assert "книга" in quiz_allow
+    assert "книга" not in prose_allow
+    assert "книга" in gates.missing_stress("книга на столі", prose_allow)
+    assert "книга" not in gates.missing_stress("книга на столі", quiz_allow)
+    indexed = {
+        "inline": [{"id": "act-ix", "type": "quiz",
+                    "questions": [{"options": ["книга", "сімя"], "correct": 0}]}],
+        "workbook": [],
+    }
+    allow_ix = gates.pedagogical_error_forms(indexed)
+    assert "сімя" in allow_ix
+    assert "книга" not in allow_ix
+    assert "книга" in gates.missing_stress("книга", allow_ix)
 
 
 def test_hyphenation_models_are_not_missing_stress():
@@ -109,6 +233,27 @@ def test_removed_original_paragraph_fails(gold):
     path.write_text(text)
     report = gates.run_lesson_gates(module, source, plan)
     assert report["facts"]["preservation"]["lost"] > 0
+
+
+def test_copied_archived_name_line_is_not_unattributed(gold):
+    module, source, plan = gold
+    line = "If you want extra listening support, open ULP Season 1."
+    (source / "module.md").write_text((source / "module.md").read_text() + "\n" + line + "\n")
+    path = module / "lesson-1/module.md"
+    path.write_text(path.read_text() + "\n" + line + "\n")
+    report = gates.run_lesson_gates(module, source, plan)
+    assert not any("unattributed reference-name" in d for d in report["blocking"])
+
+
+def test_name_substring_of_archived_citation_is_still_unattributed(gold):
+    module, source, plan = gold
+    (source / "module.md").write_text(
+        (source / "module.md").read_text() + "\nQuoted from Anna Ohoiko.\n"
+    )
+    path = module / "lesson-1/module.md"
+    path.write_text(path.read_text() + "\nAnna\n")
+    report = gates.run_lesson_gates(module, source, plan)
+    assert any("unattributed reference-name" in d for d in report["blocking"])
 
 
 def test_list_shaped_baseline_activities_do_not_crash(gold):

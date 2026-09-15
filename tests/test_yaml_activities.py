@@ -87,6 +87,94 @@ class TestParsing:
         assert len(activities) == 11
         assert activities[0].type == 'quiz'
 
+    def test_questions_alias_fills_items_for_quiz_and_fill_in(self, parser, tmp_path):
+        path = tmp_path / "activities.yaml"
+        path.write_text(
+            """
+- id: act-quiz
+  type: quiz
+  title: Quiz
+  questions:
+  - question: Скільки складів у «ха-та»?
+    options:
+    - text: '2'
+      correct: true
+- id: act-fill
+  type: fill-in
+  title: Fill
+  questions:
+  - sentence: де__ (soft sign)
+    answer: нь
+- id: act-tf
+  type: true-false
+  title: TF
+  questions:
+  - statement: Every syllable has a vowel.
+    is_true: true
+""",
+            encoding="utf-8",
+        )
+        activities = parser.parse(path)
+        assert len(activities[0].items) == 1
+        assert "ха-та" in activities[0].items[0].question
+        assert activities[1].items[0].sentence.startswith("де__")
+        assert activities[1].items[0].answer == "нь"
+        assert "vowel" in activities[2].items[0].statement
+
+    def test_translate_english_ukrainian_questions(self, parser, tmp_path):
+        path = tmp_path / "activities.yaml"
+        path.write_text(
+            """
+- id: act-tr
+  type: translate
+  title: Translate
+  questions:
+  - english: Good day / Hello
+    ukrainian: Добрий день
+""",
+            encoding="utf-8",
+        )
+        activity = parser.parse(path)[0]
+        assert activity.items[0].source == "Good day / Hello"
+        assert any(opt.text == "Добрий день" and opt.correct for opt in activity.items[0].options)
+
+    def test_translate_legacy_uk_en_keeps_ukrainian_source(self, parser, tmp_path):
+        path = tmp_path / "activities.yaml"
+        path.write_text(
+            """
+- id: act-tr
+  type: translate
+  title: Translate
+  items:
+  - uk: Добрий день
+    en: Good day
+""",
+            encoding="utf-8",
+        )
+        activity = parser.parse(path)[0]
+        assert activity.items[0].source == "Добрий день"
+        assert any(opt.text == "Good day" and opt.correct for opt in activity.items[0].options)
+
+    def test_unjumble_scrambled_correct_alias(self, parser, tmp_path):
+        path = tmp_path / "activities.yaml"
+        path.write_text(
+            """
+- id: act-unj
+  type: unjumble
+  title: Unjumble
+  items:
+  - scrambled:
+    - Це
+    - моя́
+    - сім'я
+    correct: Це моя́ сім'я
+""",
+            encoding="utf-8",
+        )
+        activity = parser.parse(path)[0]
+        assert activity.items[0].words == ["Це", "моя́", "сім'я"]
+        assert activity.items[0].answer == "Це моя́ сім'я"
+
     def test_parse_preserves_titles(self, parser, sample_yaml_path):
         """Titles are preserved during parsing."""
         activities = parser.parse(sample_yaml_path)
