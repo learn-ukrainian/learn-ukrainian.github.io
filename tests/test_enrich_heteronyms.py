@@ -931,6 +931,18 @@ def test_batch7_semantic_and_stress_distinctions():
     assert zat[1]["morphology"]["paradigm"]["animacy"] == "animate"
     assert "snail" in zat[1]["gloss"].lower() or "mollusk" in zat[1]["gloss"].lower()
 
+    # жировий: жиро́вий (suit of clubs / trefoil / illegitimate) vs жирови́й (fatty / lipid)
+    zhyr = enrich_heteronyms.build_heteronyms_for_lemma("жировий")
+    assert zhyr is not None and len(zhyr) == 2
+    assert zhyr[0]["headword"] == "жиро́вий"
+    assert "club" in zhyr[0]["gloss"].lower() or "trefoil" in zhyr[0]["gloss"].lower()
+    assert "trump" not in zhyr[0]["gloss"].lower()
+    assert "winning" not in zhyr[0]["gloss"].lower()
+    assert "трефа" in zhyr[0]["meaning"]["definitions"][0].lower() or "хрести" in zhyr[0]["meaning"]["definitions"][0].lower()
+    assert "козир" not in zhyr[0]["meaning"]["definitions"][0].lower()
+    assert zhyr[1]["headword"] == "жирови́й"
+    assert "fat" in zhyr[1]["gloss"].lower() or "lipid" in zhyr[1]["gloss"].lower()
+
 
 def test_batch7_lemmas_not_duplicated_from_earlier_batches():
     """Verify batch 7's 32 lemmas are net-new and mutually disjoint with batches 1-6."""

@@ -20343,8 +20343,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "жировий",
       "url_slug": "жировий",
       "headword": "жиро́вий",
-      "short_label": "картярський термін у народних іграх / масть",
-      "gloss": "trump-suit, winning card suit in folk games; (arch.) out of wedlock",
+      "short_label": "картярський: трефовий (масть трефа / хрести) / (заст.) позашлюбний",
+      "gloss": "relating to the suit of clubs (cards: club suit, trefoil); (arch.) out of wedlock",
       "pos": "adjective",
       "cefr": "B2",
       "heritage_status": {
@@ -20358,7 +20358,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "жиро́вий",
-        "source": "Грінченко (1907) / ВТС"
+        "source": "Грінченко (1907) / ВТС",
+        "url": "https://slovnyk.me/dict/vts/жировий"
       },
       "morphology": {
         "pos": "прикметник",
@@ -20366,10 +20367,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Картярський та етнографічний прикметник до «жир» (масть або виграшна комбінація в картах). У Грінченка також значення: позашлюбний («жирова дочка»). Не плутати з біохімічним «жирови́й» (складений із жиру).",
+      "distinction_note": "Картярський прикметник до «жир» (масть трефа / хрести в картах: наприклад, «жировий туз»). У Грінченка також значення: позашлюбний, прижитий («жирова дочка»). Не плутати з біохімічним та анатомічним прикметником «жирови́й» (складений із жиру, багатий на жири).",
       "meaning": {
         "definitions": [
-          "Прикметник до жир (масть або козир у картярських іграх); фольклорний термін."
+          "Прикметник до жир (картярська масть трефа / хрести); (заст.) позашлюбний, прижитий."
         ],
         "source": "Грінченко (1907) / ВТС"
       },
@@ -20400,7 +20401,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "жирови́й",
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС / СУМ-11",
+        "url": "https://slovnyk.me/dict/vts/жировий"
       },
       "morphology": {
         "pos": "прикметник",
@@ -20408,7 +20410,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Загальновживаний біологічний та кулінарний термін: складений із жиру або багатий на жири (жирова клітковина, жирові відкладення). Не плутати з картярським «жиро́вий».",
+      "distinction_note": "Загальновживаний біологічний та кулінарний термін: складений із жиру або багатий на жири (жирова клітковина, жирові відкладення). Не плутати з картярським прикметником «жиро́вий» (трефовий).",
       "meaning": {
         "definitions": [
           "Складений із жиру або багатий на жири; пов'язаний із ліпідами та їхнім обміном."
