@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import http.client
 import io
 import json
 from urllib.error import URLError
@@ -115,6 +116,50 @@ def test_probe_cursor_grok_bot_failure_is_nonfatal(monkeypatch):
     assert result["provider_windows"]["auto"]["used_pct"] == 1.0
     assert result["provider_windows"]["grok_bot"]["used_pct"] is None
     assert result["provider_windows"]["grok_bot"]["probe_state"] == "NEED_PROBE"
+
+
+def test_probe_cursor_grok_bot_incomplete_read_preserves_monthly(monkeypatch):
+    """IncompleteRead on optional Grok Bot must not discard Auto/API."""
+    monkeypatch.setattr(
+        cursor_mod,
+        "probe_cursor_login",
+        lambda **kw: {"is_authenticated": True, "login_state": "authenticated"},
+    )
+    monkeypatch.setattr(cursor_mod, "_load_cursor_access_token", lambda: "tok")
+
+    class _CM:
+        def __init__(self, payload=None, *, fail=False):
+            self._payload = payload
+            self._fail = fail
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def read(self, *a):
+            if self._fail:
+                raise http.client.IncompleteRead(b"{")
+            return json.dumps(self._payload).encode()
+
+    def urlopen(req, timeout=0):
+        url = getattr(req, "full_url", None) or req.get_full_url()
+        if "GetSandUsageStatus" in url:
+            return _CM(fail=True)
+        return _CM(
+            {
+                "billingCycleEnd": 1767225600000,
+                "planUsage": {"autoPercentUsed": 1.0, "apiPercentUsed": 2.0},
+            }
+        )
+
+    monkeypatch.setattr(cursor_mod.urllib.request, "urlopen", urlopen)
+    result = cursor_mod.probe_cursor_provider_windows(timeout_s=3)
+    assert result["probe_state"] == "healthy"
+    assert result["provider_windows"]["auto"]["used_pct"] == 1.0
+    assert result["provider_windows"]["api"]["used_pct"] == 2.0
+    assert result["provider_windows"]["grok_bot"]["used_pct"] is None
 
 
 def test_empty_windows_always_include_grok_bot_slot(monkeypatch):

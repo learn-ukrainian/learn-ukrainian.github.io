@@ -105,6 +105,54 @@ def _fail_note(info: dict[str, Any]) -> str:
     return "/".join(parts)
 
 
+def _is_number(value: Any) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
+
+
+def _lane_has_usable_allotment(info: dict[str, Any]) -> bool:
+    """True only when a numeric quota or cool/warm pool status is present."""
+    interactive = info.get("interactive") if isinstance(info.get("interactive"), dict) else None
+    agentic = info.get("agentic_pool") if isinstance(info.get("agentic_pool"), dict) else None
+    if interactive is not None:
+        if str(interactive.get("status") or "") in {"cool", "warm", "hot", "near_cap"}:
+            return True
+        # Cap alone with unknown burn is not enough; need spent or burn.
+        if _is_number(interactive.get("burn_pct_7d")) or _is_number(interactive.get("spent_7d_usd")):
+            return True
+    if agentic is not None:
+        if str(agentic.get("status") or "") in {"cool", "warm", "hot", "near_cap"}:
+            return True
+        if _is_number(agentic.get("burn_pct_cycle")) or _is_number(agentic.get("spent_cycle_usd")):
+            return True
+
+    native = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else {}
+    provider = info.get("provider_windows")
+    if not isinstance(provider, dict):
+        provider = native.get("provider_windows")
+    if isinstance(provider, dict):
+        for block in provider.values():
+            if not isinstance(block, dict):
+                continue
+            if _is_number(block.get("used_pct")) or _is_number(block.get("remaining_pct")):
+                return True
+
+    windows = native.get("windows") if isinstance(native.get("windows"), dict) else None
+    if isinstance(windows, dict):
+        for block in windows.values():
+            if not isinstance(block, dict):
+                continue
+            if _is_number(block.get("used_pct")) or _is_number(block.get("remaining_pct")):
+                return True
+
+    freshness, _ = _observation(info)
+    status = str(info.get("status") or "unknown")
+    return (
+        freshness != "unavailable"
+        and status in {"cool", "warm", "hot", "near_cap"}
+        and _is_number(info.get("remaining_pct"))
+    )
+
+
 def _named_allotments(lane: str, info: dict[str, Any]) -> list[str]:
     """Human lines for weekly/monthly/module pools that actually exist on the payload."""
     lines: list[str] = []
@@ -205,13 +253,9 @@ def format_human(budget: dict[str, Any]) -> str:
         allotments = _named_allotments(lane, info)
         if allotments:
             lines.extend(allotments)
-            coolish = any("status=cool" in a or "status=warm" in a for a in allotments)
-            rem_signal = any("rem=" in a and "rem=unknown" not in a for a in allotments)
-            if freshness != "unavailable" or coolish or rem_signal:
-                usable += 1
-        elif freshness != "unavailable" and status in {"cool", "warm", "hot", "near_cap"}:
+        if _lane_has_usable_allotment(info):
             usable += 1
-        elif freshness == "unavailable" and fail == "-":
+        elif freshness == "unavailable" and fail == "-" and not allotments:
             lines.append("  (no allotment windows; probe returned empty)")
 
     lines.extend(["", "Prepaid (USD; key cap remaining is not account balance)"])
@@ -327,13 +371,9 @@ def qa_snapshot(budget: dict[str, Any]) -> tuple[int, str]:
             problems.append(f"{lane}: not an object")
             continue
         freshness, _ = _observation(info)
-        allotments = _named_allotments(lane, info)
-        status = str(info.get("status") or "unknown")
-        if (
-            freshness != "unavailable" and (allotments or status in {"cool", "warm", "hot", "near_cap"})
-        ) or any("status=cool" in a or "status=warm" in a for a in allotments):
+        if _lane_has_usable_allotment(info):
             usable += 1
-        elif freshness == "unavailable" and not _fail_note(info) and not allotments:
+        elif freshness == "unavailable" and not _fail_note(info) and not _named_allotments(lane, info):
             problems.append(f"{lane}: unavailable with no fail= and no pools")
     if usable == 0:
         problems.append("no usable subscription allotment rows (mix-max blind)")

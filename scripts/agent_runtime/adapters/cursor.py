@@ -21,6 +21,7 @@ Issue: #2253 (Phase 2)
 
 from __future__ import annotations
 
+import http.client
 import json
 import logging
 import os
@@ -846,7 +847,16 @@ def _probe_cursor_grok_bot_window(*, token: str, timeout_s: float) -> dict[str, 
         )
         with urllib.request.urlopen(req, timeout=timeout_s) as resp:
             payload = json.loads(resp.read().decode("utf-8"))
-    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, ValueError):
+    except (
+        urllib.error.URLError,
+        TimeoutError,
+        json.JSONDecodeError,
+        ValueError,
+        OSError,
+        http.client.HTTPException,
+    ):
+        # IncompleteRead and other transport truncations must not escape —
+        # optional Grok Bot must never discard a successful Auto/API probe.
         return {**empty, "probe_state": "NEED_PROBE"}
 
     if not isinstance(payload, dict):
@@ -950,7 +960,11 @@ def probe_cursor_provider_windows(*, timeout_s: float = 8.0) -> dict[str, Any]:
         api_pct, label="Other Models (API)", resets_at=resets_at
     )
     grok_timeout = max(2.0, min(timeout_s, 5.0))
-    grok_block = _probe_cursor_grok_bot_window(token=token, timeout_s=grok_timeout)
+    try:
+        grok_block = _probe_cursor_grok_bot_window(token=token, timeout_s=grok_timeout)
+    except Exception:
+        grok_block = _usage_window_block(None, label="Grok Bot", window="weekly", resets_at=None)
+        grok_block["probe_state"] = "NEED_PROBE"
     provider_windows: dict[str, Any] = {
         "auto": auto_block,
         "api": api_block,

@@ -259,6 +259,68 @@ def test_qa_passes_when_allotments_usable(budget, monkeypatch, capsys):
     assert "QA PASS" in capsys.readouterr().out
 
 
+def test_qa_fails_when_only_null_quota_windows(monkeypatch, capsys):
+    """Fresh NEED_PROBE with empty Auto/API percentages must not QA PASS."""
+    blind = {
+        "agents": {
+            "cursor": {
+                "status": "unknown",
+                "freshness": "fresh",
+                "age_s": 1,
+                "probe_state": "NEED_PROBE",
+                "provider_windows": {
+                    "auto": {
+                        "window": "monthly",
+                        "label": "Cursor Models (Auto)",
+                        "used_pct": None,
+                        "remaining_pct": None,
+                        "resets_at": None,
+                    },
+                    "api": {
+                        "window": "monthly",
+                        "label": "Other Models (API)",
+                        "used_pct": None,
+                        "remaining_pct": None,
+                        "resets_at": None,
+                    },
+                    "grok_bot": {
+                        "window": "weekly",
+                        "label": "Grok Bot",
+                        "used_pct": None,
+                        "remaining_pct": None,
+                        "resets_at": None,
+                    },
+                },
+            }
+        },
+        "api_accounts": {},
+    }
+    monkeypatch.setenv("DELEGATE_MONITOR_API", "http://fixture.invalid:8765/")
+    monkeypatch.setattr(
+        usage.urllib.request,
+        "urlopen",
+        lambda *a, **kw: io.StringIO(json.dumps(blind)),
+    )
+    assert usage.main(["qa"]) == 1
+    assert "QA FAIL" in capsys.readouterr().out
+
+
+def test_prepaid_rejects_non_usd_deepseek():
+    from scripts.fleet.prepaid_status import api_lane_status_from_account
+
+    account = {
+        "probe_state": "ok",
+        "freshness": "fresh",
+        "age_s": 1,
+        "currency": "CNY",
+        "total_balance": 25,
+        "is_available": True,
+    }
+    assert api_lane_status_from_account("deepseek", account) == "unknown"
+    account["currency"] = "USD"
+    assert api_lane_status_from_account("deepseek", account) == "cool"
+
+
 def test_doctor_does_not_read_credentials_or_print_values(monkeypatch, tmp_path, capsys):
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
     secret = tmp_path / ".secret/openrouter-management.key"

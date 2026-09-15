@@ -47,7 +47,7 @@ def api_account_cache_ttl_s() -> float:
 
 
 def api_account_remaining_usd(lane: str, account: dict[str, Any]) -> float | None:
-    """OpenRouter: min(key-cap, account balance). DeepSeek: total_balance."""
+    """OpenRouter: min(key-cap, account balance). DeepSeek: USD total_balance only."""
     if lane == "openrouter":
         candidates: list[float] = []
         for key in ("limit_remaining_usd", "account_remaining_usd"):
@@ -55,7 +55,7 @@ def api_account_remaining_usd(lane: str, account: dict[str, Any]) -> float | Non
             if isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value):
                 candidates.append(float(value))
         return min(candidates) if candidates else None
-    if lane == "deepseek":
+    if lane == "deepseek" and str(account.get("currency") or "").upper() == "USD":
         total = account.get("total_balance")
         if isinstance(total, (int, float)) and not isinstance(total, bool) and math.isfinite(total):
             return float(total)
