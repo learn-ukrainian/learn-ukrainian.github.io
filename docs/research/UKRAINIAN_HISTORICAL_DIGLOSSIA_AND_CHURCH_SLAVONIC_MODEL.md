@@ -160,8 +160,8 @@ pie title data/sources.db Historical & Dialectal Holdings (Records & Chunks)
   * *Pavlo Chubynskyi:* 5,433 citations (Polissia, Right-Bank, Chernihiv, Kyiv).
   * *Volodymyr Hnatiuk:* 680 citations (Boyko, Lemko, Transcarpathia).
   * *Slaviano-Serbsk:* 539 citations (Donbas, Luhansk, Siverskyi Donets basin).
-* **Clean Modern Academic Authorities:** **СУМ-20** (modern 20-volume dictionary of independent Ukraine, restoring vocabulary suppressed under Soviet rule), **VESUM** (409K lemmas, 6.7M inflected forms), and **УЛІФ** (National Academy of Sciences).
-* **Quarantined Sovietization Baseline (СУМ-11, 1970–1980):** Quarantined exclusively for Sovietization detection and contrastive calque-reversal analysis (per repo policy in `GEMINI.md`). Never used as a positive authority for authentic Ukrainian vocabulary or dialectal norms.
+* **Clean Modern Academic Authorities:** **СУМ-20** (modern 20-volume dictionary of independent Ukraine, restoring vocabulary suppressed under Russian-Soviet occupation), **VESUM** (409K lemmas, 6.7M inflected forms), and **УЛІФ** (National Academy of Sciences).
+* **Quarantined Russian-Soviet Occupation Baseline (СУМ-11, 1970–1980):** Quarantined exclusively for Sovietization detection and contrastive calque-reversal analysis (per repo policy in `GEMINI.md`). Never used as a positive authority for authentic Ukrainian vocabulary or dialectal norms.
 * **Phraseological Dictionary:** **24,683 authentic Ukrainian idioms**.
 
 ### 4.5 Foundational Linguistic Research Texts in Corpus
@@ -174,7 +174,7 @@ pie title data/sources.db Historical & Dialectal Holdings (Records & Chunks)
 
 ## 5. The Anti-Russian Imperial Refutation Framework
 
-Russian imperial and Soviet historiography relied on three linguistic dogmas to deny the historical continuity of the Ukrainian language. The ULDR training and evaluation pipeline incorporates direct factual refutations:
+Russian imperial and Russian-Soviet occupation historiography relied on three linguistic dogmas to deny the historical continuity of the Ukrainian language. The ULDR training and evaluation pipeline incorporates direct factual refutations:
 
 ### Refutation 1: Deconstruction of the Pogodin-Sobolevsky Myth
 
@@ -226,12 +226,12 @@ flowchart LR
   * **Gate 4 (Anti-Overstandardization Protection):** Exact zero observed errors ($k = 0$) on dialect ($N = 300$), historical ($N = 200$), and conversational controls ($N = 100$) across the Protection Suite ($N = 600$, one-sided 95% Clopper-Pearson upper bound: $1 - 0.05^{1/600} \le \mathbf{0.499\%}$; per-partition dialect $N = 300 \le 0.994\%$). Zero tolerance for altering regional vocabulary, historical grammar, or authentic spoken norms (*шо*, *всьо*).
   * **Gate 5 (Citation Verification & High-Frequency Calque Floor):**
     1. Dedicated 50-case 100%-recall high-frequency common-calque floor (*приймати участь*, *на протязі*, *в першу чергу*, *попередити хворобу*), priority subset of the 300 calques.
-    2. Zero hallucinated headwords, senses, or fictitious dictionary attributions across all 1,600 evaluation cases (covering citations in both `<thought>` reasoning traces and final answers). Grounding validated against approved positive authorities in `data/sources.db` (tables `sum20_articles`/`sum20_senses`, `grinchenko`, `style_guide`), `data/vesum.db`, Правопис 2019, УЛІФ, UA-GEC. Note: Soviet-era `sum11` is strictly quarantined for Sovietization detection and contrastive calque-reversal reasoning; any positive normative lexical claim citing `sum11` or lacking positive authority grounding fails closed.
+    2. Zero hallucinated headwords, senses, or fictitious dictionary attributions across all 1,600 evaluation cases (covering citations in both `<thought>` reasoning traces and final answers). Grounding validated against approved positive authorities in `data/sources.db` (tables `sum20_articles`/`sum20_senses`, `grinchenko`, `style_guide`), `data/vesum.db`, Правопис 2019, УЛІФ, UA-GEC. Note: Russian-Soviet occupation `sum11` is strictly quarantined for Sovietization detection and contrastive calque-reversal reasoning; any positive normative lexical claim citing `sum11` or lacking positive authority grounding fails closed.
 * **Output:** Frozen v0.2 Scorecard published in `docs/reports/uldr_v02_scorecard.md`.
 
 ### 6.2 Phase 5.6: Regional Dialects Mining & Multi-Zone Evaluation (Issue [#8102](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8102))
 
-* **Data Extraction:** Mine 11,000+ Grinchenko (1907) regional field citations across 6 distinct historical-ethnographic zones, cross-referenced with modern decolonized authorities (СУМ-20, VESUM, УЛІФ). Soviet-era СУМ-11 is excluded from positive dialect mining and quarantined exclusively for Sovietization contrastive analysis.
+* **Data Extraction:** Mine 11,000+ Grinchenko (1907) regional field citations across 6 distinct historical-ethnographic zones, cross-referenced with modern decolonized authorities (СУМ-20, VESUM, УЛІФ). Russian-Soviet occupation СУМ-11 is excluded from positive dialect mining and quarantined exclusively for Sovietization contrastive analysis.
 * **Evaluation:** Disaggregated per-zone confusion matrix (Galicia, Polissia, Podillia, Steppe, Slobozhanshchyna, Donbas).
 * **Astra Mixed-Case Invariant:** Test cases must combine dialect forms with real modern spelling errors to ensure the model does not rely on a trivial "do nothing" heuristic.
 * **Output:** Model release `v0.3`.

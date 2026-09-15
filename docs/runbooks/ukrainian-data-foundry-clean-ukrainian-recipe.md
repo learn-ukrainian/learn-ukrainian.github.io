@@ -65,7 +65,7 @@ Ukrainian source material:
 | **Borys Grinchenko Regional Field Citations (1907)** | 11,000+ entries | 5 collector zones |
 | **Authentic Ukrainian Idioms & Phraseology** | 24,683 entries | Curated dictionary |
 | **Clean Modern Dictionaries (СУМ-20, УЛІФ, VESUM)** | Full coverage | Independent academic authorities |
-| *(Quarantined)* **СУМ-11 Sovietization Context** | Contrastive only | Sovietization detection & calque reversal (`GEMINI.md`) |
+| *(Quarantined)* **СУМ-11 Russian-Soviet Occupation Context** | Contrastive only | Sovietization detection & calque reversal (`GEMINI.md`) |
 
 This is recovered Ukrainian source data, mechanically distinct from the
 project's synthetic and translated collections. The
