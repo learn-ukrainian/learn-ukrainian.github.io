@@ -52,8 +52,8 @@ def test_production_colab_notebook_contract_invariants() -> None:
     with open(NOTEBOOK_PATH, encoding="utf-8") as f:
         content = f.read()
 
-    # Must point to the official public production dataset
-    assert "krisztiankoos/uldr-v1-production" in content, "Notebook must reference krisztiankoos/uldr-v1-production"
+    # Must point to the official public pilot dataset
+    assert "krisztiankoos/uldr-v0.1-pilot" in content, "Notebook must reference krisztiankoos/uldr-v0.1-pilot"
     # Must use google/gemma-3-4b-it
     assert "google/gemma-3-4b-it" in content, "Notebook must reference google/gemma-3-4b-it"
     # Must specify QLoRA NF4

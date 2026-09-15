@@ -638,6 +638,13 @@ def test_surzhyk_banned_targets_rejects_sum11_standard_words() -> None:
         "любий",
         "гуся",
         "палатка",
+        "самий кращий",
+        "самий менший",
+        "по середах",
+        "по четвергах",
+        "по вихідних",
+        "самий",
+        "самого",
     ):
         assert word in SURZHYK_BANNED_TARGETS
         assert word not in SURZHYK_TARGET_ALLOWLIST
@@ -652,19 +659,114 @@ def test_surzhyk_banned_targets_rejects_sum11_standard_words() -> None:
         )
 
 
+def _verify_single_surzhyk_target_zero_sum11(case: dict[str, Any], c_src: Any, c_ves: Any) -> None:
+    """Verify one surzhyk case has zero codified senses, headwords, or defined subentries in SUM-11."""
+    import re
+
+    def strip_accents(s: str) -> str:
+        # Strip only combining stress marks (\u0300, \u0301, \u0341, etc.), never decomposing letters like 'й'
+        return re.sub(r"[\u0300\u0301\u0341\u00b4\u02ca]", "", s)
+
+    target = case["target_term"].strip().casefold()
+    eid = case.get("eval_id", "")
+
+    # 1. Banned polysemous / codified stems
+    banned_roots = (
+        "вигляд",
+        "сторон",
+        "поразк",
+        "випадк",
+        "самий",
+        "самого",
+        "самому",
+        "самим",
+        "самих",
+        "саму",
+        "сама",
+        "саме",
+        "самі",
+        "по вихідн",
+        "по вівторк",
+        "по середах",
+        "по четверг",
+        "по п'ятниц",
+        "по понеділк",
+        "по субот",
+        "по неділ",
+    )
+    for root in banned_roots:
+        assert root not in target, f"Target {target!r} contains banned/codified root {root!r} ({eid})"
+
+    # 2. Single-word check: neither headword nor inflected lemma in sum11
+    if " " not in target:
+        hw = c_src.execute("SELECT 1 FROM sum11 WHERE word = ? COLLATE NOCASE", (target,)).fetchone()
+        assert not hw, f"Target {target!r} is a headword in sum11 ({eid})"
+        if c_ves is not None:
+            lemmas = [
+                row[0]
+                for row in c_ves.execute(
+                    "SELECT DISTINCT lemma FROM forms_all WHERE word_form = ?", (target,)
+                ).fetchall()
+            ]
+            for lem in lemmas:
+                hw_lem = c_src.execute("SELECT 1 FROM sum11 WHERE word = ? COLLATE NOCASE", (lem,)).fetchone()
+                assert not hw_lem, f"Target {target!r} has lemma {lem!r} in sum11 ({eid})"
+    else:
+        # 3. Multi-word phrase check: handle inflections, parenthesized subentry variants, and defined idioms
+        words = target.split()
+        cand_words = {}
+        for w in words:
+            cw = {w}
+            if c_ves is not None:
+                for row in c_ves.execute("SELECT DISTINCT lemma FROM forms_all WHERE word_form = ?", (w,)).fetchall():
+                    cw.add(row[0].casefold())
+            # Derivational / participle inflection expansions (e.g. роблячи -> робити)
+            if w.endswith("лячи") or w.endswith("лачи"):
+                cw.add(w[:-4] + "ити")
+                cw.add(w[:-4] + "ати")
+            if w.endswith("ячи") or w.endswith("ачи"):
+                cw.add(w[:-3] + "ити")
+                cw.add(w[:-3] + "ати")
+            if w.endswith("ючи") or w.endswith("учи"):
+                cw.add(w[:-3] + "ти")
+            cand_words[w] = cw
+
+        all_cand_hws = {h for s in cand_words.values() for h in s}
+        for hw in all_cand_hws:
+            row = c_src.execute("SELECT word, text FROM sum11 WHERE word = ? COLLATE NOCASE", (hw,)).fetchone()
+            if not row:
+                continue
+            text_clean = strip_accents(row[1])
+            text_clean = re.sub(r"\([^)]*\)", "", text_clean)  # Strip (зробити) variants
+            text_clean = re.sub(r"\s+", " ", text_clean)
+
+            cand_phrases = {target}
+            if len(words) == 2:
+                for w1 in cand_words[words[0]]:
+                    for w2 in cand_words[words[1]]:
+                        cand_phrases.add(f"{w1} {w2}")
+
+            for cp in cand_phrases:
+                pats = [
+                    rf"[♦◊][^\n]*\b{re.escape(cp)}\b",
+                    rf"[;—–]\s*\b{re.escape(cp)}\b\s*[—–-]\s*[а-яіїєґ]",
+                    rf"\b{re.escape(cp)}\b\s*[—–-]\s*[а-яіїєґ]",
+                ]
+                for pat in pats:
+                    m = re.search(pat, text_clean, re.IGNORECASE)
+                    assert not m, (
+                        f"Target {target!r} (as {cp!r}) is a defined subentry in sum11 ({hw}): {m.group(0)[:80]} ({eid})"
+                    )
+
+
 def test_surzhyk_targets_zero_sum11_definitions_and_lemmas() -> None:
     """Verify that all 100 anti-surzhyk controls have zero SUM-11 headwords, inflected lemmas, or defined subentries."""
-    import re
     import sqlite3
-    import unicodedata
 
     sources_db = REPO_ROOT / "data" / "sources.db"
     vesum_db = REPO_ROOT / "data" / "vesum.db"
     if not sources_db.exists():
         pytest.skip("sources.db unavailable")
-
-    def strip_accents(s: str) -> str:
-        return "".join(ch for ch in unicodedata.normalize("NFD", s) if unicodedata.category(ch) != "Mn")
 
     c_src = sqlite3.connect(sources_db).cursor()
     c_ves = sqlite3.connect(vesum_db).cursor() if vesum_db.exists() else None
@@ -679,36 +781,28 @@ def test_surzhyk_targets_zero_sum11_definitions_and_lemmas() -> None:
 
     assert len(surz_cases) == 100, f"Expected 100 anti-surzhyk controls, got {len(surz_cases)}"
 
+    # Audit all 100 cases
     for case in surz_cases:
-        target = case["target_term"].strip().casefold()
-        # 1. Single word: neither headword nor inflected lemma in sum11
-        if " " not in target:
-            hw = c_src.execute("SELECT 1 FROM sum11 WHERE word = ? COLLATE NOCASE", (target,)).fetchone()
-            assert not hw, f"Target {target!r} is a headword in sum11 ({case['eval_id']})"
-            if c_ves is not None:
-                lemmas = [
-                    row[0]
-                    for row in c_ves.execute(
-                        "SELECT DISTINCT lemma FROM forms_all WHERE word_form = ?", (target,)
-                    ).fetchall()
-                ]
-                for lem in lemmas:
-                    hw_lem = c_src.execute("SELECT 1 FROM sum11 WHERE word = ? COLLATE NOCASE", (lem,)).fetchone()
-                    assert not hw_lem, f"Target {target!r} has lemma {lem!r} in sum11 ({case['eval_id']})"
+        _verify_single_surzhyk_target_zero_sum11(case, c_src, c_ves)
 
-        # 2. Multi-word phrase: no defined phraseological subentry or idiom in sum11
-        words = target.split()
-        like_pat = "%" + "%".join(words) + "%"
-        rows = c_src.execute("SELECT word, text FROM sum11 WHERE text LIKE ?", (like_pat,)).fetchall()
-        for hw_word, text in rows:
-            text_clean = strip_accents(text)
-            pats = [
-                rf"[♦◊][^\n]*\b{re.escape(target)}\b",
-                rf"[;—–]\s*\b{re.escape(target)}\b\s*[—–-]\s*[а-яіїєґ]",
-                rf"\b{re.escape(target)}\b\s*[—–-]\s*[а-яіїєґ]",
-            ]
-            for pat in pats:
-                m = re.search(pat, text_clean, re.IGNORECASE)
-                assert not m, (
-                    f"Target {target!r} is a defined subentry in sum11 ({hw_word}): {m.group(0)[:80]} ({case['eval_id']})"
-                )
+    # Probes: verify the audit strictly rejects known regressions
+    probes = (
+        "роблячи вигляд",
+        "робити вигляд",
+        "зробити вигляд",
+        "самий менший",
+        "самий кращий",
+        "по середах",
+        "по четвергах",
+        "по вихідних",
+        "з іншої сторони",
+        "терпіти поразку",
+    )
+    for probe_term in probes:
+        probe_case = {
+            "eval_id": f"probe_{probe_term}",
+            "target_term": probe_term,
+            "input_text": f"Тестовий контекст {probe_term}.",
+        }
+        with pytest.raises(AssertionError):
+            _verify_single_surzhyk_target_zero_sum11(probe_case, c_src, c_ves)

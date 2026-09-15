@@ -845,36 +845,6 @@ def mine_anti_surzhyk_controls(conn: sqlite3.Connection | None) -> list[dict[str
             "Фразеологічний росіянізм від «попасть впросак». Норма: «потрапити в халепу».",
         ),
         (
-            r"\bпо\s+вихідних\b",
-            "по вихідних",
-            "у вихідні",
-            "Ненормативне вживання «по» за рос. зразком. Норма: «у вихідні».",
-        ),
-        (
-            r"\bпо\s+вівторках\b",
-            "по вівторках",
-            "щовівторка",
-            "Ненормативне вживання «по» за рос. зразком. Норма: «щовівторка».",
-        ),
-        (
-            r"\bпо\s+п'ятницях\b",
-            "по п'ятницях",
-            "щоп'ятниці",
-            "Ненормативне вживання «по» за рос. зразком. Норма: «щоп'ятниці».",
-        ),
-        (
-            r"\bпо\s+середах\b",
-            "по середах",
-            "щосереди",
-            "Ненормативне вживання «по» за рос. зразком. Норма: «щосереди».",
-        ),
-        (
-            r"\bпо\s+четвергах\b",
-            "по четвергах",
-            "щочетверга",
-            "Ненормативне вживання «по» за рос. зразком. Норма: «щочетверга».",
-        ),
-        (
             r"\bзаключатися\s+в\b",
             "заключатися в",
             "полягати в",
@@ -909,30 +879,6 @@ def mine_anti_surzhyk_controls(conn: sqlite3.Connection | None) -> list[dict[str
             "міроприємств",
             "заходів",
             "Російський суржиковий новотвір від «мероприятий». Норма: «заходів».",
-        ),
-        (
-            r"\bсамий\s+кращий\b",
-            "самий кращий",
-            "найкращий",
-            "Ненормативна складена форма найвищого ступеня. Норма: «найкращий».",
-        ),
-        (
-            r"\bсамий\s+важливий\b",
-            "самий важливий",
-            "найважливіший",
-            "Ненормативна складена форма найвищого ступеня. Норма: «найважливіший».",
-        ),
-        (
-            r"\bсамий\s+більший\b",
-            "самий більший",
-            "найбільший",
-            "Ненормативна складена форма найвищого ступеня. Норма: «найбільший».",
-        ),
-        (
-            r"\bсамий\s+менший\b",
-            "самий менший",
-            "найменший",
-            "Ненормативна складена форма найвищого ступеня. Норма: «найменший».",
         ),
         (
             r"\bвздихнув\b",
@@ -1026,22 +972,22 @@ def mine_anti_surzhyk_controls(conn: sqlite3.Connection | None) -> list[dict[str
     # 1. Harvest authentic sentences containing clean calques from literary_texts
     if conn is not None:
         for pat, target, corr, explanation in clean_patterns:
-            if len(records) >= 82:
+            if len(records) >= 80:
                 break
             rows_lit = (
                 conn.cursor()
                 .execute(
-                    "SELECT text, author, work FROM literary_texts WHERE text LIKE ? LIMIT 25",
+                    "SELECT text, author, work FROM literary_texts WHERE text LIKE ? LIMIT 40",
                     (f"%{target}%",),
                 )
                 .fetchall()
             )
             for text, author, work in rows_lit:
-                if len(records) >= 82:
+                if len(records) >= 80:
                     break
                 sentences = extract_sentences(text)
                 for s in sentences:
-                    if len(records) >= 82:
+                    if len(records) >= 80:
                         break
                     if s in seen_surz or len(s) < 30 or len(s) > 280 or is_metalinguistic_control(s):
                         continue
