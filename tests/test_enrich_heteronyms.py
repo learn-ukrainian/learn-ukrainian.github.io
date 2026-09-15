@@ -956,6 +956,23 @@ def test_batch7_semantic_and_stress_distinctions():
     assert zam[1]["headword"] == "замі́шка"
     assert "confusion" in zam[1]["gloss"].lower() or "delay" in zam[1]["gloss"].lower() or "muddle" in zam[1]["gloss"].lower()
 
+    # жабник: жа́бник (pejorative wader / animate) vs жабни́к (plant / inanimate)
+    zhab = enrich_heteronyms.build_heteronyms_for_lemma("жабник")
+    assert zhab is not None and len(zhab) == 2
+    assert zhab[0]["headword"] == "жа́бник"
+    assert zhab[0]["morphology"]["paradigm"]["animacy"] == "animate"
+    assert "wader" in zhab[0]["gloss"].lower() or "paddler" in zhab[0]["gloss"].lower()
+    assert zhab[1]["headword"] == "жабни́к"
+    assert zhab[1]["morphology"]["paradigm"]["animacy"] == "inanimate"
+    assert "plant" in zhab[1]["gloss"].lower() or "marigold" in zhab[1]["gloss"].lower() or "filago" in zhab[1]["gloss"].lower()
+    # verify verbatim SUM-11 definition without bracketed insertions
+    assert "[айстрових]" not in zhab[1]["soviet_colonization_context"]["definition"]
+    assert "родини жовтцевих" in zhab[1]["soviet_colonization_context"]["definition"]
+    # verify separate attribution for Caltha / Filago
+    defs = zhab[1]["meaning"]["definitions"]
+    assert any("caltha" in d.lower() or "калюжниц" in d.lower() for d in defs)
+    assert any("filago" in d.lower() or "айстров" in d.lower() for d in defs)
+
 
 def test_batch7_lemmas_not_duplicated_from_earlier_batches():
     """Verify batch 7's 32 lemmas are net-new and mutually disjoint with batches 1-6."""
