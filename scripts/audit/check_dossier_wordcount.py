@@ -68,9 +68,10 @@ def _is_research_dossier(path: Path) -> bool:
     relative = _repo_relative(path)
     if relative is None or path.suffix != ".md":
         return False
-    if len(relative.parts) < 3 or relative.parts[:2] != ("docs", "research"):
+    # Curriculum dossiers are docs/research/{track}/{slug}.md. A file sitting
+    # directly under docs/research/ is a research note, not a dossier.
+    if len(relative.parts) < 4 or relative.parts[:2] != ("docs", "research"):
         return False
-    # Curriculum dossiers live under a track-named subdir (docs/research/{track}/).
     # Other docs/research/ subdirs hold tooling / research notes that are NOT
     # subject to the 1200-word dossier floor — exclude them so editing e.g. an
     # Atlas calque-triage note doesn't trip the dossier gate.

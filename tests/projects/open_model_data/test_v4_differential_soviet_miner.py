@@ -286,7 +286,7 @@ def test_opsec_no_private_host_paths() -> None:
     validate_no_private_host_paths(clean_data)
 
     dirty_samples = [
-        {"path": "data"},
+        {"path": "/home/ops/learn-ukrainian/data"},
         {"path": "/home/ubuntu/repo"},
         {"path": "/Users/developer/project"},
         {"ip": f"{192}.{168}.1.1"},

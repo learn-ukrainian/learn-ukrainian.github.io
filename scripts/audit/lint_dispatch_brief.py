@@ -105,9 +105,19 @@ def _contexts(text: str) -> list[tuple[int, str, int | None]]:
     return rows
 
 
+_PRIMARY_REPO_ROOT_ENV = (
+    "${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT}",
+    "${LEARN_UKRAINIAN_PRIMARY_REPO_ROOT:-.}",
+    "$LEARN_UKRAINIAN_PRIMARY_REPO_ROOT",
+)
+
+
 def _has_main_cd(line: str) -> bool:
     for match in CD_RE.finditer(line):
         path = match.group(1).strip("\"'")
+        normalized = path.rstrip("/") or "."
+        if normalized in {".", "./", *_PRIMARY_REPO_ROOT_ENV}:
+            return True
         if "learn-ukrainian" in path and ".worktrees/" not in path:
             return True
     return False
