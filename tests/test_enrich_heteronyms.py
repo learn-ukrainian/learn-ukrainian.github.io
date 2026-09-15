@@ -1016,6 +1016,7 @@ def test_batch7_lemmas_not_duplicated_from_earlier_batches():
     from scripts.lexicon.curated_heteronyms_batch7 import CURATED_HETERONYMS_BATCH_7
 
     assert len(CURATED_HETERONYMS_BATCH_7) == 32
+    assert sum(len(v) for v in CURATED_HETERONYMS_BATCH_7.values()) == 65
     earlier = (
         set(CURATED_HETERONYMS_BATCH)
         | set(CURATED_HETERONYMS_BATCH_2)

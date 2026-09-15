@@ -1,6 +1,6 @@
 """Curated heteronym dataset (Batch 7) for Word Atlas (#8039, #4387).
 
-This module defines 32 curated heteronym lemmas (64 distinct variants)
+This module defines 32 curated heteronym lemmas (65 distinct variants)
 expanding the curated heteronym SSOT from 200 to 232 lemmas.
 
 Decolonization & Lexicographical Invariants:
