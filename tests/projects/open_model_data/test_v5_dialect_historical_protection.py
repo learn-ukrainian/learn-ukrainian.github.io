@@ -717,18 +717,31 @@ def _verify_single_surzhyk_target_zero_sum11(case: dict[str, Any], c_src: Any, c
         cand_words = {}
         for w in words:
             cw = {w}
+            # Phonetic alternation: чергування у/в (e.g. взяти <-> узяти, вчити <-> учити)
+            if w.startswith("в") and len(w) > 1:
+                cw.add("у" + w[1:])
+            elif w.startswith("у") and len(w) > 1:
+                cw.add("в" + w[1:])
             if c_ves is not None:
                 for row in c_ves.execute("SELECT DISTINCT lemma FROM forms_all WHERE word_form = ?", (w,)).fetchall():
                     cw.add(row[0].casefold())
-            # Derivational / participle inflection expansions (e.g. роблячи -> робити)
-            if w.endswith("лячи") or w.endswith("лачи"):
-                cw.add(w[:-4] + "ити")
-                cw.add(w[:-4] + "ати")
-            if w.endswith("ячи") or w.endswith("ачи"):
-                cw.add(w[:-3] + "ити")
-                cw.add(w[:-3] + "ати")
-            if w.endswith("ючи") or w.endswith("учи"):
-                cw.add(w[:-3] + "ти")
+                # Adverbial participles: replacing -чи with 3rd-person plural -ть recovers verb infinitive
+                # e.g. беручи -> беруть -> брати, роблячи -> роблять -> робити, ідучи -> ідуть -> іти
+                if w.endswith("чи"):
+                    v_3pl = w[:-2] + "ть"
+                    cw.add(v_3pl)
+                    for row in c_ves.execute(
+                        "SELECT DISTINCT lemma FROM forms_all WHERE word_form = ?", (v_3pl,)
+                    ).fetchall():
+                        cw.add(row[0].casefold())
+                # Past participles: -вши / -ши -> past form / infinitive (e.g. взявши -> взяв -> взяти)
+                if w.endswith("вши"):
+                    cw.add(w[:-3] + "ти")
+                    cw.add(w[:-3] + "в")
+                    for row in c_ves.execute(
+                        "SELECT DISTINCT lemma FROM forms_all WHERE word_form = ?", (w[:-3] + "в",)
+                    ).fetchall():
+                        cw.add(row[0].casefold())
             cand_words[w] = cw
 
         all_cand_hws = {h for s in cand_words.values() for h in s}
@@ -737,8 +750,17 @@ def _verify_single_surzhyk_target_zero_sum11(case: dict[str, Any], c_src: Any, c
             if not row:
                 continue
             text_clean = strip_accents(row[1])
-            text_clean = re.sub(r"\([^)]*\)", "", text_clean)  # Strip (зробити) variants
-            text_clean = re.sub(r"\s+", " ", text_clean)
+            # Preserve parenthesized alternatives in dictionary text:
+            # v0: parenthesized variant removed (outer word preserved, e.g. "Брати (взяти) участь" -> "Брати участь")
+            # v1: parenthesized alternative replaces preceding word (e.g. "Брати (взяти) участь" -> "взяти участь")
+            # v2: parenthesized alternative replaces following word
+            # v3: parentheses stripped as whitespace (both words preserved)
+            variants = [
+                re.sub(r"\s+", " ", re.sub(r"\([^)]*\)", " ", text_clean)),
+                re.sub(r"\s+", " ", re.sub(r"(\b\w+)\s*\(([^)]+)\)", r"\2", text_clean)),
+                re.sub(r"\s+", " ", re.sub(r"\(([^)]+)\)\s*(\b\w+)", r"\1", text_clean)),
+                re.sub(r"\s+", " ", re.sub(r"[()]", " ", text_clean)),
+            ]
 
             cand_phrases = {target}
             if len(words) == 2:
@@ -747,16 +769,19 @@ def _verify_single_surzhyk_target_zero_sum11(case: dict[str, Any], c_src: Any, c
                         cand_phrases.add(f"{w1} {w2}")
 
             for cp in cand_phrases:
+                pat_words = r"\s+".join(re.escape(w) for w in cp.split())
                 pats = [
-                    rf"[♦◊][^\n]*\b{re.escape(cp)}\b",
-                    rf"[;—–]\s*\b{re.escape(cp)}\b\s*[—–-]\s*[а-яіїєґ]",
-                    rf"\b{re.escape(cp)}\b\s*[—–-]\s*[а-яіїєґ]",
+                    rf"[♦◊][^\n]*\b{pat_words}\b",
+                    rf"[;—–]\s*\b{pat_words}\b\s*[—–-]\s*[а-яіїєґ]",
+                    rf"\b{pat_words}\b\s*[—–-]\s*[а-яіїєґ]",
+                    rf"\b{pat_words}\b\s+див\.",
                 ]
-                for pat in pats:
-                    m = re.search(pat, text_clean, re.IGNORECASE)
-                    assert not m, (
-                        f"Target {target!r} (as {cp!r}) is a defined subentry in sum11 ({hw}): {m.group(0)[:80]} ({eid})"
-                    )
+                for v in variants:
+                    for pat in pats:
+                        m = re.search(pat, v, re.IGNORECASE)
+                        assert not m, (
+                            f"Target {target!r} (as {cp!r}) is a defined subentry in sum11 ({hw}): {m.group(0)[:80]} ({eid})"
+                        )
 
 
 def test_surzhyk_targets_zero_sum11_definitions_and_lemmas() -> None:
@@ -785,8 +810,16 @@ def test_surzhyk_targets_zero_sum11_definitions_and_lemmas() -> None:
     for case in surz_cases:
         _verify_single_surzhyk_target_zero_sum11(case, c_src, c_ves)
 
-    # Probes: verify the audit strictly rejects known regressions
+    # Probes: verify the audit strictly rejects both phraseological subentries and banned roots
     probes = (
+        # Phraseological subentries with NO banned roots (testing the phrase matcher directly):
+        "брати участь",
+        "беручи участь",
+        "взяти участь",
+        "грати роль",
+        "відігравати роль",
+        "мати значення",
+        # Banned polysemous / codified roots:
         "роблячи вигляд",
         "робити вигляд",
         "зробити вигляд",
@@ -806,3 +839,60 @@ def test_surzhyk_targets_zero_sum11_definitions_and_lemmas() -> None:
         }
         with pytest.raises(AssertionError):
             _verify_single_surzhyk_target_zero_sum11(probe_case, c_src, c_ves)
+
+
+def test_surzhyk_phrase_matcher_handles_inflections_and_parenthesized_variants() -> None:
+    """Independently verify that the phrase matcher catches participle inflections and parenthesized dictionary variants."""
+    import sqlite3
+
+    sources_db = REPO_ROOT / "data" / "sources.db"
+    vesum_db = REPO_ROOT / "data" / "vesum.db"
+    if not sources_db.exists():
+        pytest.skip("sources.db unavailable")
+
+    c_src = sqlite3.connect(sources_db).cursor()
+    c_ves = sqlite3.connect(vesum_db).cursor() if vesum_db.exists() else None
+
+    # 1. Controlled dictionary entry test with parenthesized alternative: ♦ Бра́ти (взя́ти) у́часть — …
+    class ControlledMockCursor:
+        def __init__(self, entry_text: str) -> None:
+            self.entry_text = entry_text
+
+        def execute(self, q: str, params: tuple[Any, ...]) -> ControlledMockCursor:
+            return self
+
+        def fetchone(self) -> tuple[str, str]:
+            return ("участь", self.entry_text)
+
+    mock_cursor = ControlledMockCursor("♦ Бра́ти (взя́ти) у́часть — брати активну участь у спільній справі.")
+
+    # Both outer word ("брати участь") and inner alternative ("взяти участь") must be rejected
+    with pytest.raises(AssertionError, match="subentry in sum11"):
+        _verify_single_surzhyk_target_zero_sum11(
+            {"eval_id": "test_outer", "target_term": "брати участь"},
+            mock_cursor,
+            c_ves,
+        )
+
+    with pytest.raises(AssertionError, match="subentry in sum11"):
+        _verify_single_surzhyk_target_zero_sum11(
+            {"eval_id": "test_inner", "target_term": "взяти участь"},
+            mock_cursor,
+            c_ves,
+        )
+
+    # 2. Real DB test: adverbial participle expansion "беручи участь" must resolve to "брати участь" in SUM-11
+    with pytest.raises(AssertionError, match="subentry in sum11"):
+        _verify_single_surzhyk_target_zero_sum11(
+            {"eval_id": "test_advp", "target_term": "беручи участь"},
+            c_src,
+            c_ves,
+        )
+
+    # 3. Real DB test: multi-word dictionary subentry with no banned roots "грати роль"
+    with pytest.raises(AssertionError, match="subentry in sum11"):
+        _verify_single_surzhyk_target_zero_sum11(
+            {"eval_id": "test_role", "target_term": "грати роль"},
+            c_src,
+            c_ves,
+        )
