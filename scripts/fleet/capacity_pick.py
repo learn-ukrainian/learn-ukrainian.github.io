@@ -135,6 +135,49 @@ def pace_summary(agent_info: dict[str, Any] | None) -> str:
     return "—"
 
 
+def _has_capacity_signal(info: dict[str, Any]) -> bool:
+    """True when a lane entry carries a real probe reading, not an empty shell."""
+    if not info:
+        return False
+    if str(info.get("status") or "") not in {"", "unknown"}:
+        return True
+    if remaining_pct(info) is not None:
+        return True
+    interactive = info.get("interactive")
+    return isinstance(interactive, dict) and str(interactive.get("status") or "") not in {"", "unknown"}
+
+
+# Live dispatch lanes that share a subscription probe keyed under a retired
+# provider id in routing-budget (PROVIDER_TO_LANE). Do NOT mirror every
+# RETIRED_AGENT_ALIASES entry — e.g. glm→cursor is retirement-only, not a
+# shared Z.AI/Cursor quota pool (CF #8095).
+_SHARED_QUOTA_SOURCES: dict[str, str] = {
+    "agy": "gemini",
+}
+
+
+def _mirror_retired_quota(
+    agents: dict[str, Any], lane: str, info: dict[str, Any]
+) -> tuple[dict[str, Any], str | None]:
+    """Mirror a shared-subscription probe onto its live dispatch lane.
+
+    ``PROVIDER_TO_LANE`` keys AGY usage under ``gemini``, while
+    ``RETIRED_AGENT_ALIASES`` routes dispatch ``gemini`` → ``agy``. Without this
+    mirror the ``agy`` row renders ``unknown`` even when ``agy /usage`` is
+    healthy. Only explicit shared-quota pairs are mirrored — never every
+    retired alias (``glm`` → ``cursor`` must not inherit Z.AI capacity).
+    """
+    if _has_capacity_signal(info):
+        return info, None
+    source_lane = _SHARED_QUOTA_SOURCES.get(lane)
+    if not source_lane:
+        return info, None
+    source = agents.get(source_lane)
+    if isinstance(source, dict) and source:
+        return dict(source), source_lane
+    return info, None
+
+
 def fetch_active_in_flight(*, timeout: float = 2.0) -> dict[str, int]:
     """Fail-open read of /api/delegate/active → agent → count."""
     url = f"{_monitor_base()}/api/delegate/active"
@@ -169,6 +212,7 @@ def build_lane_rows(
     rows: list[dict[str, Any]] = []
     for lane in lanes:
         info = agents.get(lane) if isinstance(agents.get(lane), dict) else {}
+        quota_source: str | None = None
         if lane == "deepseek":
             from scripts.fleet.prepaid_status import api_lane_status_from_account
 
@@ -177,6 +221,8 @@ def build_lane_rows(
             info = {**info, "status": status, "probe_state": account.get("probe_state")}
             if status not in {"cool", "warm"} or account.get("is_available") is False or account.get("status") == "near_cap":
                 info["eligible"] = False
+        else:
+            info, quota_source = _mirror_retired_quota(agents, lane, info)
         if budget.get("transport") == "acp" and info.get("eligible") is not True:
             info = {**info, "eligible": False}
         status = lane_status(info)
@@ -185,6 +231,8 @@ def build_lane_rows(
         avoid = is_avoid_lane(info, lane=lane)
         in_flight = int(active.get(lane, budget_flight.get(lane, 0) or 0) or 0)
         notes: list[str] = []
+        if quota_source:
+            notes.append(f"quota:{quota_source}")
         if avoid:
             notes.append("AVOID")
             if info.get("eligible") is False:
