@@ -113,7 +113,8 @@ Do not stage generated `curriculum/l2-uk-en/**/status/*.json`, `curriculum/l2-uk
 | **Wikipedia** | Ukrainian Wikipedia articles (165 entries) | `data/sources.db` table `wikipedia` |
 | **Wiki articles** | Compiled per-module knowledge (346 articles, 653K words) | `wiki/` directory |
 | **VESUM** | Morphological dictionary (409K lemmas, 6.7M forms) | `data/vesum.db` |
-| **Dictionaries** | СУМ-11, Грінченко, Балла, Ukrajinet, Фразеологічний, etc. | `data/sources.db` |
+| **Dictionaries (Modern)** | СУМ-20, ВТС, slovnyk.me, Горох, Грінченко (1907), ULIF | `data/sources.db`, `sum20ua.com`, `data/ulif_dump_all.db` |
+| **Soviet Colonization Context** | СУМ-11 (1970–1980) — Sovietization detection & contrastive context only | `data/sources.db` table `sum11` |
 
 ### MCP Tools (SQLite-backed, port 8766)
 All `mcp_rag_*` tools now query SQLite FTS5, not Qdrant. Same tool names, same interface:
@@ -123,7 +124,7 @@ All `mcp_rag_*` tools now query SQLite FTS5, not Qdrant. Same tool names, same i
 - `query_pravopys` — Правопис 2019
 - `search_style_guide` — Антоненко-Давидович (calques/Russianisms)
 - `query_cefr_level` — PULS CEFR vocabulary
-- `search_definitions` / `search_grinchenko_1907` / `search_idioms` / `search_synonyms`
+- `query_sum20` / `search_definitions` (СУМ-11 Sovietization context) / `search_grinchenko_1907` / `search_idioms` / `search_synonyms`
 
 ### Build Pipeline (v6)
 ```

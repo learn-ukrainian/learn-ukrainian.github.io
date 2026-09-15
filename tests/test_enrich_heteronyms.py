@@ -309,7 +309,7 @@ def test_muzyka_disambiguation():
 
 
 def test_batch_expansion_count():
-    """Verify batch heteronym expansion admits 136 curated lemmas with exact scan residual.
+    """Verify batch heteronym expansion admits 168 curated lemmas with exact scan residual.
 
     Batch 1 (#8039, PR #8043): 40 curated. Batch 2 (#8039 continuation): +32
     lemmas selected from the atlas.db-approved, A1/A2/B1 tier residual, each
@@ -320,12 +320,15 @@ def test_batch_expansion_count():
     heteronyms, e.g. ВІДВО́ЗИТИ/ВІ́ХА/ДЕРЖА́ВА), so the true denominator is
     422, not the pre-fix 467. Batch 4 (#8039 continuation): +32 lemmas
     selected from the remaining 318 residual candidates, expanding SSOT to 136.
+    Batch 5 (#8039 continuation): +32 lemmas verified against decolonized
+    СУМ-20 / ВТС authorities with СУМ-11 Soviet colonization context attached,
+    expanding SSOT to 168.
     """
     total_curated = len(enrich_heteronyms.CURATED_HETERONYMS)
-    assert total_curated == 136
+    assert total_curated == 168
     # Corrected denominator is 422 true two-way-stress candidates;
-    # residual is 422 - 136 = 286
-    assert 422 - total_curated == 286
+    # residual is 422 - 168 = 254
+    assert 422 - total_curated == 254
 
 
 def test_kredyt_disambiguation():
@@ -549,3 +552,65 @@ def test_batch4_lemmas_not_duplicated_from_earlier_batches():
     assert earlier & set(CURATED_HETERONYMS_BATCH_4) == set()
     assert "лікарський" in CURATED_HETERONYMS_BATCH_4
     assert "парний" in CURATED_HETERONYMS_BATCH_4
+
+
+def test_pokii_disambiguation():
+    """Verify покій peace/tranquility vs chamber/room disambiguation (batch 5)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("покій")
+    assert items is not None
+    assert len(items) == 2
+
+    peace, chamber = items[0], items[1]
+    assert peace["headword"] == "по́кій"
+    assert "peace" in peace["gloss"].lower() or "tranquility" in peace["gloss"].lower()
+    assert chamber["headword"] == "покі́й"
+    assert "room" in chamber["gloss"].lower() or "chamber" in chamber["gloss"].lower()
+    assert "soviet_colonization_context" in peace
+    assert peace["soviet_colonization_context"]["source"] == "СУМ-11 (1970–1980)"
+
+
+def test_sapaty_disambiguation():
+    """Verify сапати wheeze/pant vs hoe/weed disambiguation (batch 5)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("сапати")
+    assert items is not None
+    assert len(items) == 2
+
+    wheeze, hoe = items[0], items[1]
+    assert wheeze["headword"] == "са́пати"
+    assert "breathe" in wheeze["gloss"].lower() or "pant" in wheeze["gloss"].lower()
+    assert hoe["headword"] == "сапа́ти"
+    assert "hoe" in hoe["gloss"].lower() or "weed" in hoe["gloss"].lower()
+
+
+def test_plavnyi_disambiguation():
+    """Verify плавний smooth vs marshland-related disambiguation (batch 5)."""
+    items = enrich_heteronyms.build_heteronyms_for_lemma("плавний")
+    assert items is not None
+    assert len(items) == 2
+
+    smooth, marsh = items[0], items[1]
+    assert smooth["headword"] == "пла́вний"
+    assert "smooth" in smooth["gloss"].lower() or "flowing" in smooth["gloss"].lower()
+    assert marsh["headword"] == "плавни́й"
+    assert "floodplain" in marsh["gloss"].lower() or "marsh" in marsh["gloss"].lower()
+
+
+def test_batch5_lemmas_not_duplicated_from_earlier_batches():
+    """Verify batch 5's 32 lemmas are net-new and mutually disjoint with batches 1-4."""
+    from scripts.lexicon.curated_heteronyms_batch import CURATED_HETERONYMS_BATCH
+    from scripts.lexicon.curated_heteronyms_batch2 import CURATED_HETERONYMS_BATCH_2
+    from scripts.lexicon.curated_heteronyms_batch3 import CURATED_HETERONYMS_BATCH_3
+    from scripts.lexicon.curated_heteronyms_batch4 import CURATED_HETERONYMS_BATCH_4
+    from scripts.lexicon.curated_heteronyms_batch5 import CURATED_HETERONYMS_BATCH_5
+
+    assert len(CURATED_HETERONYMS_BATCH_5) == 32
+    earlier = (
+        set(CURATED_HETERONYMS_BATCH)
+        | set(CURATED_HETERONYMS_BATCH_2)
+        | set(CURATED_HETERONYMS_BATCH_3)
+        | set(CURATED_HETERONYMS_BATCH_4)
+    )
+    assert earlier & set(CURATED_HETERONYMS_BATCH_5) == set()
+    assert "покій" in CURATED_HETERONYMS_BATCH_5
+    assert "сапати" in CURATED_HETERONYMS_BATCH_5
+    assert "плавний" in CURATED_HETERONYMS_BATCH_5

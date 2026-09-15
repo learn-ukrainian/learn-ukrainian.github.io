@@ -38,6 +38,13 @@ export interface LexiconEntry {
   cefr?: string | null;
   morphology?: unknown;
   examples?: unknown;
+  soviet_colonization_context?: {
+    source: string;
+    definition: string;
+    sovietization_risk: number;
+    keywords?: string[];
+    historical_note?: string;
+  } | null;
 }
 
 interface PayloadRow {

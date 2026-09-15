@@ -201,14 +201,14 @@ Every operation must be finished end-to-end in the same commit:
 
 **Every verifiable claim must be backed by a tool call.** The pre-trained guess feels right; it's wrong often enough to break Ukrainian curriculum, code, and orchestration. Skipping the tool = hallucinating with confidence.
 
-The project has VESUM (6.7M forms), СУМ-11 (127K), Грінченко (67K), ЕСУМ, Monitor API, full code corpus, deterministic scripts. **Use them.**
+The project has VESUM (6.7M forms), СУМ-20, ВТС, Грінченко (67K), ЕСУМ, Monitor API, full code corpus, deterministic scripts. **Use them.** (СУМ-11 is strictly for Sovietization detection and contrastive colonization context — NEVER for modern Ukrainian verification).
 
 | Domain | Don't recall — run | |
 |---|---|---|
 | Ukrainian word | `mcp__sources__verify_word(s)`, `verify_lemma`, `check_modern_form` |
 | Russianism / surzhyk | `mcp__sources__search_style_guide`, `check_russian_shadow` |
 | Heritage defense | `mcp__sources__search_heritage` |
-| Definitions / etymology | `search_definitions`, `search_grinchenko_1907`, `search_esum`, `search_slovnyk_me` |
+| Definitions / modern meaning | `query_sum20`, `search_slovnyk_me`, `search_grinchenko_1907`, `search_esum` (`search_definitions` is Soviet СУМ-11: use only for Soviet colonization analysis) |
 | File contents / signatures | `Read`, `grep` / `ugrep`, `wc` |
 | Build status / module gates / git state | Monitor API at `localhost:8765/api/...` |
 | Word counts | `scripts/audit/audit_module.py` + `config.py` |

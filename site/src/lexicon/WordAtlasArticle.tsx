@@ -459,8 +459,30 @@ function WordAtlasArticleBody({
                     {card.definitions.map((definition) => <p key={definition}>{definition}</p>)}
                   </div>
                   {card.flag_note && <div className="def-flag-inline">{card.flag_note}</div>}
+                  {card.id.includes("grinchenko") && (
+                    <div className="def-flag-inline grinchenko-oppression-note">
+                      Доба царських заборон (Валуєвський циркуляр 1863, Емський указ 1876): фіксація живої народної мови, яку імперська влада намагалася стерти.
+                    </div>
+                  )}
                 </div>
               ))}
+              {entry.soviet_colonization_context && (
+                <div className="def-card sum11-flagged soviet-colonization-box">
+                  <div className="def-source">
+                    <span className="src-pill">Радянський окупаційний контекст</span>
+                    <span>{entry.soviet_colonization_context.source}</span>
+                  </div>
+                  <div className="def-text">
+                    <p>{entry.soviet_colonization_context.definition}</p>
+                  </div>
+                  <div className="def-flag-inline">
+                    {entry.soviet_colonization_context.historical_note ?? "Подано для історичного аналізу радянського мовного втручання та ідеологічного зміщення."}
+                    {Boolean(entry.soviet_colonization_context.keywords?.length) && (
+                      <span className="soviet-keywords"> (Маркери: {entry.soviet_colonization_context.keywords?.join(", ")})</span>
+                    )}
+                  </div>
+                </div>
+              )}
               {definitionCards.length === 0 && enrichment?.meaning && (
                 <div className="def-card sum20">
                   <div className="def-source">

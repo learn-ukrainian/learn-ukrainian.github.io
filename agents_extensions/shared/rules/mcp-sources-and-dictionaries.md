@@ -37,7 +37,7 @@ paths:
 - `mcp__sources__search_ua_gec_errors` — UA-GEC (Ukrainian Grammatical Error Corpus, Grammarly UA team, MIT). Returns human-annotated error→correction pairs from 8,937 rows, filtered to russianism-relevant tags (F/Calque, F/Collocation, G/Case, G/Gender). Highest-signal evidence for register/phraseological calques that aren't in Antonenko. Pair with `search_style_guide` (structured Antonenko) and `search_text source=antonenko-davydovych-yak-my-hovorymo` (full-text Antonenko prose) for the complete russianism evidence layer.
 - `mcp__sources__search_style_guide` — Антоненко-Давидович **structured entries** (342 keyed headwords). **Calques and Russianisms.** HIGH PRIORITY. **Pair with `mcp__sources__search_text` against `source_file='antonenko-davydovych-yak-my-hovorymo'`** to also search the **full-book prose corpus (169 chunks)** — the structured index misses extensive rules, examples, and discussion present in the prose. For any Russianism verification, **query BOTH**: a phrase absent from `style_guide` may still be condemned in the prose body. Failing to do so was the H1 prompt bug (`audit/2026-05-17-judge-calibration-h1/COMPARISON.md`) — F1 collapsed because retrieval only hit the structured 342.
 - `mcp__sources__query_cefr_level` — PULS CEFR vocabulary (5.9K words, A1-C1) — check level-appropriateness
-- `mcp__sources__search_definitions` — СУМ-11 (127K entries) — Ukrainian explanatory dictionary. **⚠️ Partially Sovietized for ideological terms** — see "Sovietization caveat" below. Each result row carries `sovietization_risk` (0/1/2) and `sovietization_keywords`.
+- `mcp__sources__search_definitions` — СУМ-11 (127K entries) — Soviet-era explanatory dictionary (1970–1980). **⚠️ NOT a verification authority for modern Ukrainian.** Used for detecting Soviet colonization artifacts (`sovietization_risk` 0/1/2, keywords) and surfacing contrastive Soviet occupation context. For modern meaning, use СУМ-20 / ВТС; for authentic historical Ukrainian, use Грінченко.
 - `mcp__sources__search_grinchenko_1907` — Грінченко (67K entries) — historical Ukrainian dictionary from 1907. Use for pre-Soviet usage attestation; **NOT for word origins/etymology** — that's a separate concern handled by `search_esum` below.
 - `mcp__sources__search_esum` — ЕСУМ etymological dictionary — canonical name for ЕСУМ. Coverage: all 6 volumes (А–Я), ~36K entries (vols 1–6 fully ingested). Optional `volume` filter (1–6); omit to search all. Falls back to a goroh.pp.ua hint if word not found.
 - `mcp__sources__search_slovnyk_me` — slovnyk.me single-source aggregator. Uses curated `sources.db` rows when present and optional live direct-entry `/dict/{slug}/{word}` fallback. Returns URL, dictionary slug, bounded snippet, `is_modern`, `is_dialect`, `is_russianism`, and `sovietization_risk`. Use when slovnyk.me specifically is required; prefer `search_heritage` for archaism-vs-Russianism decisions.
@@ -68,15 +68,34 @@ unfamiliar Ukrainian-looking word as Russianism. The load-bearing example is
 `кобета`/`кобіта`: the tool surfaces Lviv/regional and СУМ-20 evidence and keeps
 `is_russianism=false`.
 
-## Sovietization caveat (СУМ-11) — issue #1659
+## Historical Oppression & Decolonized Lexicography: Grinchenko vs СУМ-11 vs СУМ-20
 
-СУМ-11 (1970–1980) is the only modern-era Ukrainian explanatory dictionary
-in our MCP, but it was published under late-Soviet editorial policy and
-contains ideologically framed definitions for politically loaded headwords.
-Empirically: **7,152 of 127,069 entries (~5.6%) are flagged** by the
-sovietization scan (755 high-risk, 6,397 low-risk). High-risk examples
-include `ленінізм`, `прапор`, `партійний`, `школа`, `центр`, `шлях` —
-even neutral terms have Soviet citations woven into their definitions.
+Our lexicon tools do not erase historical dictionaries; they contextualize them with their historical conditions of production and oppression:
+
+1. **Грінченко (1907–1909) — Tsarist Imperial Oppression:**
+   - Compiled by Borys Hrinchenko in Kyiv under the severe restrictions of the **Valuev Circular (1863)** and the **Ems Ukaz (1876)**, which banned Ukrainian schooling, theater, and publishing.
+   - It recorded living, authentic spoken and literary Ukrainian, rescuing vocabulary that Tsarist imperial policy denied existed.
+   - Surfaced in Word Atlas with the imperial oppression note: *«Пам'ятка живої народної мови, укладена в добу царських заборон українського слова (Валуєвський циркуляр 1863, Емський указ 1876)»*.
+
+2. **СУМ-11 (1970–1980) — Soviet Totalitarian Occupation:**
+   - Compiled under Soviet totalitarian censorship and forced lexical Russification.
+   - Not erased, but surfaced explicitly as `soviet_colonization_context` («Радянський окупаційний контекст») alongside its `sovietization_risk` and markers to teach learners how totalitarian censorship altered vocabulary and promoted Russian convergence.
+
+3. **СУМ-20 (2010–present) / ВТС / ULIF — Independent Ukrainian Standard:**
+   - The authoritative decolonized baseline for contemporary standard Ukrainian.
+
+## Sovietization caveat & Soviet Colonization Context (СУМ-11) — issue #1659
+
+СУМ-11 (1970–1980) was published under Soviet occupation and late-Soviet ideological
+censorship. It contains ideologically framed definitions, Russified stress variants, and
+systematic demotions of authentic Ukrainian vocabulary to "застаріле" or "діалектне".
+Empirically: **7,152 of 127,069 entries (~5.6%) are flagged** by the sovietization
+scan (755 high-risk, 6,397 low-risk).
+
+**Role of СУМ-11 in the project:**
+1. **Sovietization Detection:** Identify ideological framing, Russianisms, and Russian semantic shadow.
+2. **Contrastive Colonization Context:** In Word Atlas / lexicon tools, СУМ-11 entries are surfaced explicitly as `soviet_colonization_context` (`Радянський окупаційний контекст`), showing learners how the Soviet regime distorted meanings, forced Russian calques, or added ideological baggage.
+3. **NEVER a Verification Authority:** Do NOT verify Ukrainian headwords, stress, or definitions with СУМ-11. Modern semantic verification belongs to **СУМ-20** (`sum20ua.com`, `newsum`) and **ВТС** (Великий тлумачний словник); historical authentic grounding belongs to **Грінченко** (1907); stress belongs to **ULIF** and СУМ-20.
 
 Every `search_definitions` result row carries:
 
@@ -86,19 +105,13 @@ Every `search_definitions` result row carries:
 - `sovietization_keywords` — comma-separated stems that triggered the
   flag (e.g. `ленін,радянськ,соціалістичн`).
 
-**When `sovietization_risk > 0` for a curriculum-content lookup:**
+**When `sovietization_risk > 0` or evaluating dictionary entries:**
 
-- Do NOT reproduce the definition verbatim.
-- Prefer Грінченко (`search_grinchenko_1907`) for the same headword if it has
-  pre-Soviet coverage.
-- Prefer `search_heritage` for an evidence merge, or `search_slovnyk_me` /
-  slovnyk.me `newsum` (СУМ-20) for a modern definitional baseline.
-- If neither alternative is available, paraphrase neutrally and flag in
-  reviewer evidence.
-
-СУМ-20 rows are cleaner on sampled neutral words, but not assumed categorically
-clean. `search_slovnyk_me` applies the same `sovietization_risk` /
-`sovietization_keywords` classifier to slovnyk.me rows.
+- Do NOT reproduce the definition verbatim as modern standard Ukrainian.
+- Show it under `soviet_colonization_context` to expose the historical distortion.
+- Prefer СУМ-20 (`query_sum20`, `newsum`) or ВТС for the modern definitional baseline.
+- Prefer Грінченко (`search_grinchenko_1907`) for pre-Soviet authentic coverage.
+- If neither alternative is available, paraphrase neutrally and flag in reviewer evidence.
 
 The scan is reproducible:
 `.venv/bin/python scripts/audit/sum11_sovietization_scan.py --db data/sources.db`.

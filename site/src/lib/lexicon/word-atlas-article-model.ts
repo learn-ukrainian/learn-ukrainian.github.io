@@ -273,6 +273,13 @@ export interface LexiconEntryView {
   distinction_note?: string | null;
   short_label?: string | null;
   headword?: string | null;
+  soviet_colonization_context?: {
+    source: string;
+    definition: string;
+    sovietization_risk: number;
+    keywords?: string[];
+    historical_note?: string;
+  } | null;
 }
 
 /** Minimal canonical article shape needed for learner-facing Atlas backlinks. */
@@ -630,7 +637,8 @@ export function isSovietizedSum11DefinitionCard(card: DefinitionCard) {
 }
 
 export function shouldRenderDefinitionCard(card: DefinitionCard) {
-  return !isSum11DefinitionCard(card);
+  // Retain definition cards (including SUM-11 surfaced as Soviet colonization context)
+  return true;
 }
 
 const RUSALKA_CLASS_LEMMAS = new Set([

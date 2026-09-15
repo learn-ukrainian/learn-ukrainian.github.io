@@ -33,11 +33,13 @@ try:
     from scripts.lexicon.curated_heteronyms_batch2 import CURATED_HETERONYMS_BATCH_2
     from scripts.lexicon.curated_heteronyms_batch3 import CURATED_HETERONYMS_BATCH_3
     from scripts.lexicon.curated_heteronyms_batch4 import CURATED_HETERONYMS_BATCH_4
+    from scripts.lexicon.curated_heteronyms_batch5 import CURATED_HETERONYMS_BATCH_5
 except ModuleNotFoundError:
     from curated_heteronyms_batch import CURATED_HETERONYMS_BATCH
     from curated_heteronyms_batch2 import CURATED_HETERONYMS_BATCH_2
     from curated_heteronyms_batch3 import CURATED_HETERONYMS_BATCH_3
     from curated_heteronyms_batch4 import CURATED_HETERONYMS_BATCH_4
+    from curated_heteronyms_batch5 import CURATED_HETERONYMS_BATCH_5
 
 
 @lru_cache(maxsize=1)
@@ -476,44 +478,44 @@ CURATED_HETERONYMS: dict[str, list[dict[str, Any]]] = {
     **CURATED_HETERONYMS_BATCH_2,
     **CURATED_HETERONYMS_BATCH_3,
     **CURATED_HETERONYMS_BATCH_4,
+    **CURATED_HETERONYMS_BATCH_5,
 }
 
 
 def build_heteronyms_for_lemma(lemma: str) -> list[dict[str, Any]] | None:
-    """Return curated or auto-extracted heteronym definitions for lemma."""
+    """Return curated or decolonized modern heteronym definitions for lemma."""
     if lemma in CURATED_HETERONYMS:
         return CURATED_HETERONYMS[lemma]
 
-    sources_db = _resolve_sources_db()
-    if not sources_db.is_file():
-        return None
-
+    # Decolonized lookup: modern authoritative СУМ-20 / ВТС + Soviet colonization context
     try:
-        conn = sqlite3.connect(sources_db)
-        cur = conn.cursor()
-        row = cur.execute("SELECT definition FROM sum11 WHERE word = ?", (lemma,)).fetchone()
-        conn.close()
-        if not row:
-            return None
-        parsed = parse_sum11_heteronyms(lemma, row[0])
-        if len(parsed) < 2:
-            return None
-        items = []
-        for p in parsed:
-            head = p["head"]
-            items.append(
-                {
-                    "headword": head,
-                    "gloss": p["body"][:120].strip(),
-                    "short_label": p["grammar"],
-                    "pos": "noun" if "ч" in p["grammar"] or "ж" in p["grammar"] or "с" in p["grammar"] else None,
-                    "distinction_note": f"Омограф зі словом «{lemma}» (наголос: {head}).",
-                }
-            )
-        return items
-    except Exception as e:
-        print(f"Warning: error parsing heteronyms for {lemma}: {e}", file=sys.stderr)
-        return None
+        from scripts.lexicon.sum20_lookup import lookup_decolonized_heteronym_evidence
+        ev = lookup_decolonized_heteronym_evidence(lemma)
+        s20 = ev.get("modern_sum20", [])
+        if len(s20) >= 2:
+            unique_stresses = {s["stressed_headword"].replace("̀", "́") for s in s20}
+            if len(unique_stresses) >= 2:
+                items = []
+                col = ev.get("soviet_colonization_context")
+                for s in s20:
+                    head = s["stressed_headword"]
+                    senses = s.get("senses", [])
+                    defn = senses[0]["definition"] if senses else ""
+                    items.append(
+                        {
+                            "headword": head,
+                            "gloss": defn[:120].strip(),
+                            "short_label": s.get("grammar") or s.get("pos") or "",
+                            "pos": "noun" if s.get("pos") in ("ч.", "ж.", "с.") else None,
+                            "distinction_note": f"Омограф зі словом «{lemma}» (наголос: {head}).",
+                            "soviet_colonization_context": col,
+                        }
+                    )
+                return items
+    except Exception as ex:
+        print(f"Warning: error looking up decolonized heteronyms for {lemma}: {ex}", file=sys.stderr)
+
+    return None
 
 
 def _resolve_atlas_db(custom_path: str | Path | None = None) -> Path:
@@ -580,7 +582,10 @@ def apply_heteronyms(
                     payload["pronunciation"] = primary_het["pronunciation"]
                 if primary_het.get("heritage_status"):
                     payload["heritage_status"] = primary_het["heritage_status"]
-                payload["distinction_note"] = primary_het.get("distinction_note")
+                if primary_het.get("distinction_note"):
+                    payload["distinction_note"] = primary_het["distinction_note"]
+                if primary_het.get("soviet_colonization_context"):
+                    payload["soviet_colonization_context"] = primary_het["soviet_colonization_context"]
 
                 if "enrichment" in payload and isinstance(payload["enrichment"], dict):
                     payload["enrichment"]["stress"] = {
@@ -633,7 +638,10 @@ def apply_heteronyms(
                             e["pronunciation"] = primary_het["pronunciation"]
                         if primary_het.get("heritage_status"):
                             e["heritage_status"] = primary_het["heritage_status"]
-                        e["distinction_note"] = primary_het.get("distinction_note")
+                        if primary_het.get("distinction_note"):
+                            e["distinction_note"] = primary_het["distinction_note"]
+                        if primary_het.get("soviet_colonization_context"):
+                            e["soviet_colonization_context"] = primary_het["soviet_colonization_context"]
 
                         if "enrichment" in e and isinstance(e["enrichment"], dict):
                             e["enrichment"]["stress"] = {
