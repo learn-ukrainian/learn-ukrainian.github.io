@@ -675,7 +675,7 @@ Wikisource-Izbornyk source text]
 ## Validation checklist
 
 - [ ] `npx markdownlint-cli2 docs/research/bio/pavlo-pavliuk-but.md`
-- [ ] `.venv/bin/python scripts/audit/lint_bio_dossier_xref.py --paths docs/research/bio/pavlo-pavliuk-but.md`
+- [ ] `/Users/krisztiankoos/projects/learn-ukrainian/.venv/bin/python scripts/audit/lint_bio_dossier_xref.py --paths docs/research/bio/pavlo-pavliuk-but.md`
 - [ ] `git diff --check`
 - [ ] Guard search for out-of-scope terms returns no matches
 - [ ] Protected artifact/config guard confirms only this dossier changed

@@ -56,6 +56,9 @@ _PUBLIC_TREES = (
 _SKIP_NAME_PARTS = (
     "dialect_historical",
     "v5_dialect_protection",
+    # BIO dossier checklist edits fire the Contracts preparation-ready
+    # capsule gate. Leave those host-path leftovers out of this scrub.
+    "docs/research/bio/",
 )
 
 
