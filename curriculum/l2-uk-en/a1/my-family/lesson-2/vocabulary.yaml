@@ -1,0 +1,52 @@
+- lemma: у мене́ є
+  translation: I have
+  pos: phrase
+  usage: У мене́ є брат.
+- lemma: у тебе́ є
+  translation: you have, informal
+  pos: phrase
+  usage: У тебе́ є сестра́?
+- lemma: у вас є
+  translation: you have, formal or plural
+  pos: phrase
+  usage: У вас є ді́ти?
+- lemma: оди́н
+  translation: one, masculine
+  pos: numeral
+  usage: оди́н брат
+- lemma: одна́
+  translation: one, feminine
+  pos: numeral
+  usage: одна́ сестра́
+- lemma: два
+  translation: two, masculine/neuter
+  pos: numeral
+  usage: два брати́
+- lemma: дві
+  translation: two, feminine
+  pos: numeral
+  usage: дві се́стри
+- lemma: ті́льки
+  translation: only
+  pos: adverb
+  usage: У мене́ ті́льки оди́н брат.
+- lemma: мій
+  translation: my, masculine
+  pos: pronoun
+  usage: Це мій брат.
+- lemma: моя́
+  translation: my, feminine
+  pos: pronoun
+  usage: Це моя́ сестра́.
+- lemma: моє́
+  translation: my, neuter
+  pos: pronoun
+  usage: Це моє́ мі́сто.
+- lemma: мої́
+  translation: my, plural
+  pos: pronoun
+  usage: Це мої́ батьки́.
+- lemma: твій
+  translation: your, masculine informal
+  pos: pronoun
+  usage: Це твій брат?

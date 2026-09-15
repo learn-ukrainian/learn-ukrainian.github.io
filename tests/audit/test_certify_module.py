@@ -138,6 +138,9 @@ def test_build_checks_include_standard_certification_guards() -> None:
     assert "agent trailer audit" in names
     assert vocab_check.command[1] == "scripts/validate/validate_vocab_yaml.py"
     assert all("vocabulary.yaml" in arg for arg in vocab_check.command[2:])
+    vocab_files = certify_module.vocabulary_source_files(target)
+    assert vocab_files
+    assert any("lesson-" in path.as_posix() for path in vocab_files)
 
 
 def test_build_checks_do_not_add_vocabulary_validator_for_missing_file() -> None:
