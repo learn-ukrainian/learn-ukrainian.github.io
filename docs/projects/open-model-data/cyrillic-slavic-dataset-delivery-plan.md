@@ -35,7 +35,7 @@ The seven product scopes are:
 2. literary Ukrainian;
 3. living Ukrainian dialect and regional varieties;
 4. archaic, historical, and bookish Ukrainian;
-5. Surzhyk and Ukrainian–Russian mixing;
+5. Surzhyk and Ukrainian–Russian mixing (diagnostic and eradication only: Surzhyk is toxic colonial contamination and Russian linguistic poisoning, never an authentic variety; strictly targeted for diagnosis and eradication into Modern Standard Ukrainian, with zero promotion or validation);
 6. Russian quotation and interference in Ukrainian context; and
 7. evidence-insufficient or unsafe cases, represented by abstention.
 
@@ -45,6 +45,8 @@ each, so the 100-slot pilot has eight strata. Dedicated Belarusian, Bulgarian,
 Macedonian, Serbian, and Montenegrin lanes are removed. Modern Rusyn is
 protected and out of scope: do not silently map it to Ukrainian, Russian, or a
 historical Ukrainian stage.
+
+**Absolute Anti-Surzhyk Invariant:** Surzhyk is not an authentic dialect, regional variety, or acceptable informal register. It is an artificial instrument of Russian imperial linguistic destruction. Datasets and models must never generate, validate, or normalize Surzhyk. In the mixing stratum, Surzhyk is handled solely to diagnose colonial interference and restore clean standard Ukrainian. By contrast, authentic living Ukrainian dialects (Scope 3: Hutsul, Boyko, Lemko, Polissian, Slobozhan) represent genuine cultural heritage and are strictly protected from destruction or flattening.
 
 ## Frozen non-goals
 

@@ -277,13 +277,13 @@ def test_partition_firewall_minhash_isolation(receipt_data: dict[str, Any]) -> N
 
     max_sim = firewall["max_minhash_similarity"]
     assert isinstance(max_sim, (int, float))
-    assert max_sim < 0.80, f"MinHash similarity {max_sim} >= 0.80 threshold"
-    assert max_sim == 0.2188, f"Unexpected MinHash similarity {max_sim}, expected measured value 0.2188"
+    assert max_sim < 0.35, f"MinHash similarity {max_sim} >= 0.35 threshold"
+    assert max_sim == 0.3281, f"Unexpected MinHash similarity {max_sim}, expected measured value 0.3281"
 
     max_jac = firewall["max_token_jaccard_similarity"]
     assert isinstance(max_jac, (int, float))
-    assert max_jac < 0.80, f"Token Jaccard similarity {max_jac} >= 0.80 threshold"
-    assert max_jac == 0.2, f"Unexpected Token Jaccard similarity {max_jac}, expected measured value 0.2000"
+    assert max_jac < 0.35, f"Token Jaccard similarity {max_jac} >= 0.35 threshold"
+    assert max_jac == 0.3000, f"Unexpected Token Jaccard similarity {max_jac}, expected measured value 0.3000"
 
 
 def test_compute_heldout_minhash_similarity_detects_duplicate(tmp_path: Path) -> None:

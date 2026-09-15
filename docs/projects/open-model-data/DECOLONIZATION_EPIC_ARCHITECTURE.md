@@ -15,6 +15,7 @@ Pre-trained foundation models (both commercial frontier systems and open-weight 
 3. **Morphological Blindness:** Morphological engines such as VESUM (409K lemmas, 6.7M forms) verify inflectional existence, not semantic, syntactic, or register appropriateness.
 
 ### 1.1 Milestone Progress Status
+
 - **Milestone 1 (v1 Pilot):** Completed & Shipped. 1,200 SFT trajectories + 1,200 DPO pairs validated across VESUM (100%), textbooks (82.75%), and dictionaries (85.33%).
 - **Milestone 2 (Human Gold Seeds):** **COMPLETED & APPROVED (PR #8002).** Exactly 150 deeply researched, multi-turn, multi-format human gold exemplar seeds covering the 7 core linguistic categories. Validated against schemas and VESUM (100%), passed all 16 CI checks, and received independent cross-family approval (`VERDICT: APPROVED` from Claude).
 - **Milestone 3 (Production Scaling — Active):** Expanding to **6,000 SFT trajectories + 3,000 DPO preference pairs** and a **1,000-case Held-Out Evaluation Suite** grounded 100% in local human-authored corpus assets without synthetic hallucination.
@@ -24,15 +25,18 @@ Pre-trained foundation models (both commercial frontier systems and open-weight 
 ## 2. Core Methodological Paradigm Shifts
 
 ### 2.1 Pinned Target Norm: Modern Standard Ukrainian
+
 The target norm is explicitly anchored to **Modern Standard Ukrainian per the 2019 Orthography (Український правопис 2019) and current MESU school curricula**, cleansed of Soviet lexical leveling and Russian calques.
 - **Historical Candidate Discovery:** 1920s Academy dictionaries (R2U) and 1930s Terminological Purge Bulletins serve strictly as *discovery heuristics* for candidate restoration. Every candidate must be individually adjudicated against modern standard Ukrainian before adoption.
 - **Preventing Archaic Hyper-Purism:** Words from the 1928 Skrypnykivka era that never re-entered the modern standard (e.g. *рівнобіжник* instead of standard *паралелограм*, *терпуг* instead of *напилок*) are rejected as normative targets.
 
 ### 2.2 The Zero-Hallucination Mandate: Source Grounding + Claim Verification
+
 1. **100% Human-Authored Contexts & Error Spans:** Every underlying sentence, attested error span, distractor, and candidate correction originates directly from verified human-authored Ukrainian texts in local storage (`sources.db`, `ua_gec_errors`, `zno_tasks`, `textbooks`, `style_guide`). No sentences or errors may be invented by an LLM.
 2. **Automated CoT Claim-Verification:** Every explanatory statement, dictionary citation (СУМ-11, R2U), inflectional claim (VESUM), and register qualifier (ULIF) is verified against local databases via `v4_verify_trajectory_claims.py`. Unverifiable claims trigger record rejection.
 
 ### 2.3 Semantic Boundary Mechanics for STEM Polysemy
+
 Drawing on **15,563 STEM textbook chunks**, boundary decisions key on **semantic entity type**, not raw textbook subject tags:
 - **`об'єм` vs `обсяг`:** 3D physical spatial volume of a geometric body or fluid capacity (*об'єм піраміди*, *об'єм розчину*) is preserved as standard Ukrainian. Abstract capacity, data volume, and scope of work (*об'єм даних*, *об'єм робіт*) are corrected to *обсяг*.
 - **`рахувати` vs `обчислювати` vs `вважати`:** Discrete counting of items (*рахувати дні*, *порахувати предмети*) is preserved. Mathematical calculation is normalized to *обчислити*. Cognitive opinion (*я рахую, що...*) is corrected to *я вважаю*.
@@ -40,6 +44,7 @@ Drawing on **15,563 STEM textbook chunks**, boundary decisions key on **semantic
 - **Nomenclature Modernization:** True calques (*вуглекислий газ*) are treated as decolonization targets; traditional Ukrainian trivial names (*сірчана кислота*) alongside systematic IUPAC names (*сульфатна кислота*) are categorized as nomenclature modernization, not Soviet calques.
 
 ### 2.4 Minimal-Pair DPO Preference Architecture
+
 To eliminate shortcut learning where DPO separates chosen from rejected based on superficial formatting, length, or lexicographical quotes:
 - **Minimal Pairs:** Chosen and rejected responses share identical length ($\pm 10\%$), identical formatting, and identical CoT scaffolds, isolating the preference signal to linguistic validity.
 - **PRESERVE DPO Pairs (900 pairs):** Sourced via two complementary paths: (a) plausible hyper-puristic over-corrections (e.g. wrongly modifying *об'єм куба* $\rightarrow$ *обсяг куба*), and (b) reframed human correction pairs (taking human-corrected clean text as input + chosen, and the original pre-correction sentence as rejected).
@@ -47,6 +52,7 @@ To eliminate shortcut learning where DPO separates chosen from rejected based on
 - **Caricature Control:** Rejected completions are bounded to realistic error densities (matching the empirical UA-GEC distribution of 1–2 errors per sentence).
 
 ### 2.5 Pre-Extraction Partition Firewall & Pre-Training Contamination Defense
+
 - **Early Source Custody:** Source documents and authors are partitioned into Train vs. Held-Out *before* extraction, feature derivation, or prompt rendering.
 - **MinHash Fuzzy Deduplication:** Near-duplicate passages across splits are eliminated using MinHash / Jaccard similarity ($\ge 0.80$), preventing overlapping chunk boundaries or reprinted textbook editions from leaking.
 - **UA-GEC Test Split Protection:** The official UA-GEC test split is strictly excluded from all training data to preserve independent external evaluation integrity.
@@ -55,11 +61,13 @@ To eliminate shortcut learning where DPO separates chosen from rejected based on
 - **Statistical Power Allocation:** Allocated as **600 PRESERVE cases + 400 CORRECT cases**. On 600 clean cases, observing $\le 1$ harmful edit yields an exact one-sided 95% binomial upper bound of $0.788\%$, guaranteeing rigorous compliance with the $\le 1.0\%$ Harmful-Edit Rate gate.
 
 ### 2.6 Differential Mining Guardrails ("Fighting Fire with Fire")
+
 - **20th-Century Neologism & Internationalism Whitelist:** Maintain an explicit whitelist of modern technical and scientific vocabulary coined after 1930 (e.g. *програмування*, *авіація*, *транзистор*). Absence from 1920s R2U is expected and must not trigger false calque flags.
 - **`r2u_translate` Network vs. Absence Disambiguation:** Differentiate `SOURCE_UNAVAILABLE` (network timeout / HTTP failure) from `NOT_FOUND_WITHIN_VERIFIED_COVERAGE`. Never treat an empty network return as proof of absence.
 - **Semantic Calque Division of Labor:** Lemma-level differential mining cannot detect semantic shifts on existing lemmas (*являтися*, *відмінний*, *зустрічатися*). Semantic calques are strictly mined from UA-GEC, Antonenko-Davydovych, and textbook contrast tables.
 
 ### 2.7 Curriculum Stratification & Error Budget
+
 To prevent high-volume error categories from overwhelming the dataset:
 - **Prepositional Government (`G/Case`):** Capped at $\le 25\%$ of total training records (preventing UA-GEC's 5,024 prepositional errors from dominating).
 - **Lexical Calques & Russianisms (`F/Calque`):** Target $40\%$ of training records.
@@ -68,8 +76,16 @@ To prevent high-volume error categories from overwhelming the dataset:
 - **Phraseological Collocations:** Target $10\%$ of training records.
 
 ### 2.8 Dual-Tier Open Release Policy
+
 - **Public Shards:** Data derived from public domain and open-licensed sources (Grinchenko 1907, 1920s Academy works, UA-GEC CC-BY-4.0) will be released openly on Hugging Face.
 - **Research-Internal Shards:** Shards derived from copyrighted school textbooks and protected 20th-century monographs remain in a *train-only local research partition* with model weights publicly released.
+
+### 2.9 Absolute Anti-Surzhyk Invariant: Eradication, Not Normalization
+
+- **Surzhyk is Toxic Colonial Interference:** Surzhyk is not a dialect, not a legitimate regional variety, and not an acceptable informal register. It is an artificial, destructive instrument of imperial Russian assimilation and linguistic poisoning designed to degrade authentic Ukrainian grammar, morphology, phonology, and lexicon.
+- **Zero Promotion / Zero Validation:** Datasets and trained models must **never** generate, validate, encourage, or normalize Surzhyk. Any completion that presents Surzhyk as acceptable Ukrainian is treated as a critical safety and quality failure.
+- **Diagnosis & Eradication Mechanics:** When Surzhyk is encountered in user prompts or input corpora, the model's mandated role is strictly diagnostic and curative: identify the underlying Russian interference pattern, deconstruct why it violates Ukrainian norms, and restore pristine modern standard Ukrainian without patronizing sermonizing.
+- **Dialect Protection vs. Surzhyk Eradication:** Authentic regional dialects (Hutsul, Boyko, Lemko, Galician, Polissian, Podillian, Slobozhan, Steppe) represent organic, centuries-old Ukrainian cultural heritage and must be preserved, understood, and defended. Models must rigorously distinguish authentic dialectal forms from colonial Surzhyk contamination.
 
 ---
 
@@ -142,6 +158,7 @@ flowchart TD
 ## 5. Model Training, Checkpoint Release & Evaluation Gates
 
 ### 5.1 Two-Stage Alignment Specification
+
 1. **Stage 1: Supervised Fine-Tuning (SFT)**
    - Target Models: Google Gemma 3 (12B-it primary, 4B-it edge) and Gemma 4 architectures.
    - 6,000 SFT reasoning trajectories with multi-format diversity (Quick Tip 40%, Minimal Edit 25%, Contrastive 20%, Deep Analysis 15%).
@@ -151,6 +168,7 @@ flowchart TD
    - 3,000 minimal-pair preference pairs (2,100 anti-Soviet calque pairs + 900 anti-hyper-purist preservation pairs).
 
 ### 5.2 Release & Acceptance Criteria
+
 A model checkpoint is admitted for public Hugging Face release only when satisfying three non-negotiable gates:
 1. **Calque Elimination & Reasoning Gate:** $\ge 90.0\%$ Calque Elimination Rate and $\ge 85.0\%$ Reasoning Grounding Rate on held-out test partitions.
 2. **Harmful-Edit Rate Gate:** Exact one-sided 95% binomial upper bound $< 1.0\%$ on the 600 clean evaluation cases.
@@ -168,3 +186,50 @@ A model checkpoint is admitted for public Hugging Face release only when satisfy
 - **Milestone 3.6 (200-Item Pilot Canary):** Fine-tune Gemma 3 4B on 200 items; confirm calque-elimination and harmful-edit directional success before 6K scaling.
 - **Milestone 3.7 (Production Assembly):** Assemble and validate 6,000 SFT + 3,000 DPO production shards against schemas and cross-family review.
 - **Milestone 4 (Final Checkpoint Training & Publication):** Train Gemma 3/4 production checkpoints, evaluate against the 3 non-negotiable release gates, and publish weights on Hugging Face.
+- **Milestone 5 (Unified 5-Tier AI Lab Suite):** Ingest and package the complete multi-tier stack (Tier 1 clean pretraining stream, Tier 2 full UA-GEC/ZMO/ULP, Tier 4 dialects/history, and Tier 5 turnkey leaderboard harness).
+
+---
+
+## 7. The 5-Tier Ukrainian AI Lab Reinforcement Stack (Pretraining to Post-Training)
+
+To ensure major frontier AI labs (Google, Anthropic, Meta, Mistral, OpenAI) and open-weight model developers actively ingest our work to fundamentally reinforce Ukrainian across the entire model lifecycle, the project expands beyond a standalone alignment adapter into a unified 5-tier training and evaluation stack:
+
+```mermaid
+flowchart TD
+    T5["Tier 5: Turnkey Leaderboard & Evaluation Harness (1-Command Verification)"]
+    T4["Tier 4: Regional Dialect Comprehension & Historical Continuity"]
+    T3["Tier 3: Decolonization & Deep Linguistic Reasoning (ULDR 6K SFT + 3K DPO)"]
+    T2["Tier 2: General Grammar, Punctuation, Syntax & Valency (UA-GEC + ZMO + ULP)"]
+    T1["Tier 1: High-Quality Clean Human Pretraining Stream (Textbooks & Literature)"]
+
+    T1 --> T2 --> T3 --> T4 --> T5
+```
+
+### 7.1 Tier 1: Clean Human Pretraining & Continued Pretraining (CPT Stream)
+
+- **Problem Solved:** Web scrapes (Common Crawl, mC4) used in foundational pretraining are saturated with low-quality machine-translated Russian-to-Ukrainian text, degrading the base model's internal representations.
+- **Assets Delivered:** 150,000+ deduplicated, high-signal chunks from `sources.db` (Ukrainian school textbooks Grades 1–11 spanning all sciences, humanities, and authentic Ukrainian literature), formatted for continued pretraining with zero MT noise.
+
+### 7.2 Tier 2: General Grammar, Punctuation, Syntax & Valency (UA-GEC + ZMO + ULP)
+
+- **Problem Solved:** LLMs frequently make basic grammatical mistakes: case agreement errors, unnatural verbal aspect, missing commas, and Russian-calqued prepositional government (*дякую вас*, *хворіти грипом*).
+- **Assets Delivered:**
+  1. **Full UA-GEC:** ~20,000+ human-annotated sentences across orthography, morphology, syntax, and punctuation.
+  2. **ZMO / NMT Standardized Exam Tasks:** High-school curriculum tasks transformed into step-by-step grammatical reasoning chains.
+  3. **Syntactic Valency Matrix:** Systematic de-Russification of ~500 irregular preposition-case valency patterns.
+  4. **VESUM Lexical Stress Marks (*Наголос*):** Resolving accentual ambiguity on movable stress tokens.
+
+### 7.3 Tier 3: Decolonization & Deep Linguistic Reasoning (ULDR - Active Production Shards)
+
+- **Problem Solved:** Subtle Soviet lexicographic leveling, Russian calques in media/administration, and СУМ-11 ideologized definitions.
+- **Assets Delivered:** 6,000 SFT reasoning trajectories + 3,000 DPO minimal pairs with automated `CoTClaimVerifier` proof, strict length balancing ($\le 10\%$), and 1,800 calibrated negative controls (STEM + polysemic abstention).
+
+### 7.4 Tier 4: Regional Dialect Comprehension & Historical Continuity
+
+- **Problem Solved:** AI models mistaking authentic Ukrainian dialects for broken Ukrainian/Polish, while erasing pre-18th-century Ukrainian literary monuments.
+- **Assets Delivered:** Dialectal comprehension pairs (Hutsul, Boyko, Lemko, Polissian, Slobozhan) paired with the strict Anti-Surzhyk Invariant, plus Ruthenian (Middle Ukrainian) and Cossack chronicle comprehension benchmarks.
+
+### 7.5 Tier 5: Turnkey Leaderboard & Evaluation Harness
+
+- **Problem Solved:** AI labs will not train on data unless an official, reproducible benchmark demonstrates quantifiable model gains on public leaderboards.
+- **Assets Delivered:** A 1-command evaluation harness integrating the 1,000-case held-out suite, ZMO test benchmarks, and clean UA-GEC splits, compatible with `lm-evaluation-harness` and Hugging Face `lighteval`.

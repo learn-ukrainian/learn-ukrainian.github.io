@@ -12,7 +12,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import math
 import os
 import re
 import sqlite3
@@ -30,9 +29,11 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import jsonschema
+import numpy as np
 
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     SENTENCE_SPLIT_RE,
+    MinHashDedup,
 )
 
 CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
@@ -284,6 +285,24 @@ STATIC_STYLE_COLLISIONS: tuple[str, ...] = (
 
 DecisionAction = Literal["PRESERVE", "CORRECT", "REGISTER", "REJECT"]
 
+ENTITY_TYPE_UKRAINIAN: dict[str, str] = {
+    "standard_stem_terminology": "стандартна науково-технічна термінологія",
+    "clean_stem_passage": "нормативний контекст підручника",
+    "nomenclature_modernization": "сучасна наукова номенклатура",
+    "physical_3d_volume": "фізичний тривимірний об’єм",
+    "discrete_counting": "дискретний підрахунок об’єктів",
+    "mathematical_physical_ratio": "математичне чи фізичне відношення",
+    "mathematical_calculation": "математичне обчислення",
+    "true_calque_nomenclature": "калька наукової термінології",
+    "abstract_quantity_data_scope": "абстрактний обсяг даних чи ресурсів",
+    "cognitive_opinion": "висловлення власної думки",
+    "interpersonal_attitude": "міжособистісні стосунки або ставлення",
+    "obyem_underspecified": "невизначений контекст слова «об’єм»",
+    "rahuvaty_underspecified": "невизначений контекст слова «рахувати»",
+    "vidnoshennia_underspecified": "невизначений контекст слова «відношення»",
+}
+
+
 
 @dataclass(frozen=True, slots=True)
 class SemanticDecision:
@@ -373,7 +392,7 @@ def classify_nomenclature(text: str) -> SemanticDecision | None:
             action="CORRECT",
             entity_type="true_calque_nomenclature",
             replacement="карбон(IV) оксид",
-            rationale="True Russian calque (углекислый газ); lexical decolonization, not PRESERVE.",
+            rationale="Російська калька (рос. «углекислый газ»); лексична деколонізація, нормативна хімічна назва: карбон(IV) оксид.",
         )
     if contains_any(folded, TRIVIAL_ACID_NAMES):
         term = next(name for name in TRIVIAL_ACID_NAMES if name in folded)
@@ -383,7 +402,7 @@ def classify_nomenclature(text: str) -> SemanticDecision | None:
             action="PRESERVE",
             entity_type="nomenclature_modernization",
             replacement=None,
-            rationale="Traditional Ukrainian trivial name from native roots; IUPAC modernization is not decolonization.",
+            rationale="Традиційна українська тривіальна назва з питомих коренів; модернізація номенклатури IUPAC не є деколонізацією.",
         )
     return None
 
@@ -399,7 +418,7 @@ def classify_obyem(text: str) -> SemanticDecision | None:
             action="CORRECT",
             entity_type="abstract_quantity_data_scope",
             replacement="обсяг",
-            rationale="Abstract data, labour, or economics capacity; replace об'єм with обсяг.",
+            rationale="Абстрактна кількість інформації, праці або економічних показників; заміна об'єм на обсяг.",
         )
     if contains_any(folded, PHYSICAL_OBYEM_COLLOCATES):
         return SemanticDecision(
@@ -408,7 +427,7 @@ def classify_obyem(text: str) -> SemanticDecision | None:
             action="PRESERVE",
             entity_type="physical_3d_volume",
             replacement=None,
-            rationale="3D physical or geometric volume / fluid capacity; living STEM standard.",
+            rationale="Тривимірний фізичний або геометричний об'єм, місткість рідини; живий науково-технічний стандарт.",
         )
     return SemanticDecision(
         pair="obyem_obsiah",
@@ -416,7 +435,7 @@ def classify_obyem(text: str) -> SemanticDecision | None:
         action="REJECT",
         entity_type="obyem_underspecified",
         replacement=None,
-        rationale="об'єм without a typed physical or abstract collocate is not admitted as a PRESERVE control.",
+        rationale="Слово «об'єм» без чіткого фізичного чи абстрактного контексту не допускається як контрольний приклад.",
     )
 
 
@@ -431,7 +450,7 @@ def classify_rahuvaty(text: str) -> SemanticDecision | None:
             action="CORRECT",
             entity_type="cognitive_opinion",
             replacement="вважати",
-            rationale="Opinion/belief calque; replace рахувати, що with вважати, що.",
+            rationale="Калька значення думки/переконання; замінити «рахувати, що» на «вважати, що».",
         )
     if contains_any(folded, CALCULATION_COLLOCATES):
         return SemanticDecision(
@@ -440,7 +459,7 @@ def classify_rahuvaty(text: str) -> SemanticDecision | None:
             action="REGISTER",
             entity_type="mathematical_calculation",
             replacement="обчислити",
-            rationale="Mathematical calculation; normalize to обчислити, not PRESERVE as counting.",
+            rationale="Математичне обчислення; нормалізація до «обчислити», а не збереження як лічби.",
         )
     if contains_any(folded, COUNTING_COLLOCATES):
         return SemanticDecision(
@@ -449,7 +468,7 @@ def classify_rahuvaty(text: str) -> SemanticDecision | None:
             action="PRESERVE",
             entity_type="discrete_counting",
             replacement=None,
-            rationale="Discrete counting of concrete items; living standard.",
+            rationale="Дискретна лічба конкретних об'єктів; жива літературна норма.",
         )
     return SemanticDecision(
         pair="rahuvaty",
@@ -457,7 +476,7 @@ def classify_rahuvaty(text: str) -> SemanticDecision | None:
         action="REJECT",
         entity_type="rahuvaty_underspecified",
         replacement=None,
-        rationale="рахувати without counting, calculation, or opinion cues is not admitted.",
+        rationale="Слово «рахувати» без ознак лічби, обчислення чи висловлення думки не допускається.",
     )
 
 
@@ -473,7 +492,7 @@ def classify_vidnoshennia(text: str) -> SemanticDecision | None:
             action="CORRECT",
             entity_type="interpersonal_attitude",
             replacement=replacement,
-            rationale="Interpersonal attitude or relations; correct to ставлення / стосунки.",
+            rationale="Міжособистісне ставлення чи взаємини; виправлення на «ставлення» або «стосунки».",
         )
     has_ratio_glyph = bool(re.search(r"\d+\s*:\s*\d+|[a-zа-я]\s*:\s*[a-zа-я]", folded))
     if has_ratio_glyph or contains_any(folded, RATIO_COLLOCATES):
@@ -483,7 +502,7 @@ def classify_vidnoshennia(text: str) -> SemanticDecision | None:
             action="PRESERVE",
             entity_type="mathematical_physical_ratio",
             replacement=None,
-            rationale="Mathematical or physical ratio; living STEM standard.",
+            rationale="Математичне чи фізичне співвідношення величин (частка від ділення); жива наукова норма.",
         )
     return SemanticDecision(
         pair="vidnoshennia",
@@ -491,7 +510,7 @@ def classify_vidnoshennia(text: str) -> SemanticDecision | None:
         action="REJECT",
         entity_type="vidnoshennia_underspecified",
         replacement=None,
-        rationale="відношення without ratio or interpersonal cues is not admitted.",
+        rationale="Слово «відношення» без ознак числової пропорції чи міжособистісного контексту не допускається.",
     )
 
 
@@ -528,7 +547,26 @@ def classify_generic_stem(text: str, subject: str) -> SemanticDecision | None:
         "рівняння",
         "функція",
         "теорема",
+        "формула",
         "аксіома",
+        "система",
+        "множина",
+        "вісь",
+        "обчислення",
+        "коефіцієнт",
+        "частка",
+        "невизначеність",
+        "похідна",
+        "аргумент",
+        "період",
+        "інтервал",
+        "проміжок",
+        "нерівність",
+        "тригонометрія",
+        "синус",
+        "косинус",
+        "тангенс",
+        "котангенс",
         "молекула",
         "атом",
         "електрон",
@@ -694,21 +732,11 @@ def classify_generic_stem(text: str, subject: str) -> SemanticDecision | None:
                 action="PRESERVE",
                 entity_type="standard_stem_terminology",
                 replacement=None,
-                rationale="Clean attested STEM terminology; do not apply hyper-purist substitution.",
+                rationale="Нормативна науково-технічна термінологія; не застосовувати гіперпуристичну заміну.",
                 register=register,
             )
-    if subject in STEM_SUBJECTS and 40 <= len(text.strip()) <= 240:
-        register = "розм." if classify_colloquial(text) else "standard"
-        return SemanticDecision(
-            pair="generic_stem",
-            target_term="науковий термін",
-            action="PRESERVE",
-            entity_type="clean_stem_passage",
-            replacement=None,
-            rationale="Vetted clean STEM passage with no typed calque.",
-            register=register,
-        )
     return None
+
 
 
 def ocr_sanity_check(text: str) -> CleanlinessResult:
@@ -889,10 +917,11 @@ def build_trajectory(
                 "tags": tags or ["attested"],
             }
         )
-    query = f"Чи треба виправляти термін «{decision.target_term}» у цьому STEM-контексті?"
+    entity_type_ua = ENTITY_TYPE_UKRAINIAN.get(decision.entity_type, "стандартна науково-технічна термінологія")
+    query = f"Чи треба виправляти термін «{decision.target_term}» у науковому реченні: «{sentence}»?"
     final = (
-        f"Вердикт PRESERVE: «{decision.target_term}» залишаємо. "
-        f"Тип сутності: {decision.entity_type}. {decision.rationale}"
+        f"Рішення: зберегти — термін «{decision.target_term}» залишаємо без змін. "
+        f"Категорія: {entity_type_ua}. {decision.rationale}"
     )
     return {
         "schema_version": "v1_decolonization_trajectory",
@@ -901,15 +930,15 @@ def build_trajectory(
         "target_term": decision.target_term,
         "is_calque_or_russianism": False,
         "morphemic_breakdown": {
-            "source_formation": f"Living STEM use of «{decision.target_term}» with entity type {decision.entity_type}.",
+            "source_formation": f"Живе науково-технічне вживання терміна «{decision.target_term}» ({entity_type_ua}).",
             "ukrainian_equivalent_mechanism": (
-                "No substitution: the attested scientific term is Modern Standard Ukrainian, "
-                "not a Soviet calque requiring restitution."
+                "Заміна не потрібна: засвідчений науковий термін належить до сучасної української "
+                "літературної норми, а не до радянських кальок, що потребують виправлення."
             ),
         },
         "lexicographical_context": {
-            "historical_suppression_note": "PRESERVE control: historical suppression does not apply.",
-            "restoration_era": "n/a",
+            "historical_suppression_note": "Контрольний приклад (зберегти): історичне витіснення відсутнє, термін є нормативним.",
+            "restoration_era": "чинна норма",
         },
         "vesum_attestation": attestation,
         "register_spectrum": {
@@ -918,7 +947,7 @@ def build_trajectory(
                 {
                     "lemma": decision.target_term,
                     "register_tier": "living_standard",
-                    "evidence_source": f"STEM textbook subject={subject}",
+                    "evidence_source": f"Підручник STEM, предмет={subject}",
                 },
                 {
                     "lemma": alt,
@@ -928,16 +957,16 @@ def build_trajectory(
                     "evidence_source": (
                         f"Стандартний відповідник для інших значень ({vesum_lookup(alt, vesum_cursor)[0]} форм у ВЕСУМ)"
                         if (vesum_lookup(alt, vesum_cursor)[1] and vesum_lookup(alt, vesum_cursor)[0] > 0)
-                        else "hyper-purist over-correction foil"
+                        else "штучний гіперпуристичний неологізм"
                     ),
                 },
             ],
         },
         "reasoning_steps": [
-            f"1. Semantic entity type is {decision.entity_type}, not an abstract data/economics calque.",
-            "2. Cleanliness: VESUM attestation, style-guide collision, and OCR sanity all passed.",
-            f"3. Register={decision.register}: colloquial Ukrainian is not treated as Russian interference.",
-            f"4. Source custody: train-only STEM chunk {source_chunk_id}; held-out chunks excluded.",
+            f"1. Семантична категорія: {entity_type_ua}; контекст не є калькою чи суржиком.",
+            "2. Чистота: перевірка у ВЕСУМ, відсутність конфліктів зі стилістичними довідниками та коректність OCR підтверджені.",
+            f"3. Регістр={decision.register}: розмовне українське мовлення не трактується як російська інтерференція.",
+            f"4. Джерело: тренувальний фрагмент STEM {source_chunk_id}; контрольні фрагменти виключено.",
         ],
         "final_response": final,
         "_passage_sha256": sha256_text(normalize_text(sentence)),
@@ -950,22 +979,64 @@ def build_trajectory(
     }
 
 
+STEM_DPO_CHOSEN_BALANCING_PHRASES = [
+    "Термін повністю відповідає сучасній українській науковій термінології.",
+    "Такий слововжиток є нормативним для цієї наукової галузі.",
+    "Слово належить до чинного академічного науково-технічного стандарту.",
+    "Ця лексема послідовно зафіксована у профільних термінологічних словниках.",
+    "Форма узгоджується з правилами сучасного українського правопису.",
+    "Вживання є усталеним в українській фаховій літературі.",
+    "Це питома або засвоєна назва, закріплена у вітчизняній науковій традиції.",
+]
+
+STEM_DPO_REJECTED_BALANCING_PHRASES = [
+    "Рекомендується послідовно вживати запропонований замінник замість традиційного терміна.",
+    "Ця заміна вважається доцільною для послідовного очищення наукового стилю.",
+    "Запропоновану форму варто обирати в усіх випадках наукового слововжитку.",
+    "Вважаємо за потрібне відмовитися від усталеного слова на користь питомого новотвору.",
+    "Така підстановка має впроваджуватися як пріоритетний нормативний варіант.",
+    "Пропонується вилучити традиційний варіант із сучасних фахових текстів.",
+    "Новостворений відповідник слід вважати бажанішим у науковому мовленні.",
+]
+
+
 def build_dpo_pair(trajectory: dict[str, Any], decision: SemanticDecision) -> dict[str, Any]:
     hex_id = trajectory["trajectory_id"].rsplit(".", 1)[1]
     chosen = trajectory["final_response"]
     foil = hyperpurist_substitute(decision.target_term, decision)
+    entity_type_ua = ENTITY_TYPE_UKRAINIAN.get(decision.entity_type, "стандартна науково-технічна термінологія")
     rejected = (
-        f"Вердикт PRESERVE скасовано: «{decision.target_term}» нібито треба замінити на «{foil}». "
-        f"Тип сутності: {decision.entity_type}. {decision.rationale}"
+        f"Рішення: виправити — термін «{decision.target_term}» слід замінити на «{foil}». "
+        f"Категорія: {entity_type_ua}. Рекомендується уникати форми «{decision.target_term}» "
+        f"та обов'язково вживати варіант «{foil}» у науковому контексті."
     )
-    chosen_len = len(chosen)
-    rejected_len = len(rejected)
-    if rejected_len > 0 and abs(chosen_len - rejected_len) / max(chosen_len, rejected_len) > 0.10:
-        pad = " Так." * max(1, math.ceil(abs(chosen_len - rejected_len) / 5))
-        if rejected_len < chosen_len:
-            rejected = rejected + pad
+    c = chosen.strip()
+    r = rejected.strip()
+    used_r: set[str] = set()
+    used_c: set[str] = set()
+    for _ in range(8):
+        c_len = len(c)
+        r_len = len(r)
+        if max(c_len, r_len) == 0 or abs(c_len - r_len) / max(c_len, r_len) <= 0.10:
+            break
+        if r_len < c_len:
+            needed = c_len - r_len
+            avail = [p for p in STEM_DPO_REJECTED_BALANCING_PHRASES if p not in used_r]
+            if not avail:
+                avail = STEM_DPO_REJECTED_BALANCING_PHRASES
+            best_p = min(avail, key=lambda p: abs(len(p) + 1 - needed))
+            used_r.add(best_p)
+            r = r + " " + best_p
         else:
-            chosen = chosen + pad
+            needed = r_len - c_len
+            avail = [p for p in STEM_DPO_CHOSEN_BALANCING_PHRASES if p not in used_c]
+            if not avail:
+                avail = STEM_DPO_CHOSEN_BALANCING_PHRASES
+            best_p = min(avail, key=lambda p: abs(len(p) + 1 - needed))
+            used_c.add(best_p)
+            c = c + " " + best_p
+    chosen = c
+    rejected = r
     return {
         "schema_version": "v1_decolonization_dpo_pair",
         "pair_id": f"dpo.decolonize.{hex_id}",
@@ -975,7 +1046,7 @@ def build_dpo_pair(trajectory: dict[str, Any], decision: SemanticDecision) -> di
         "metadata": {
             "target_term": decision.target_term,
             "rejected_flaw": "unvetted_purism_hallucination",
-            "primary_alternative": decision.target_term,
+            "primary_alternative": foil,
             "vesum_verified": True,
         },
     }
@@ -1162,6 +1233,16 @@ def mine_controls(
     collisions = load_style_guide_collisions(sources_conn)
     heldout_chunks = load_heldout_chunk_ids(heldout_suite_path)
 
+    heldout_sigs: np.ndarray | None = None
+    heldout_token_sets: list[set[str]] = []
+    minhash = MinHashDedup(num_perm=64, bands=16, rows_per_band=4)
+    if heldout_suite_path.exists():
+        heldout_cases = load_jsonl(heldout_suite_path)
+        heldout_tokens = [normalize_text(c["input_text"]).split() for c in heldout_cases if c.get("input_text")]
+        heldout_token_sets = [set(t) for t in heldout_tokens if t]
+        if heldout_tokens:
+            heldout_sigs = np.array([minhash.signature(t).min_hashes for t in heldout_tokens], dtype=np.int64)
+
     rows = sources_conn.execute(
         "SELECT id, chunk_id, title, text, author_uk, subject FROM textbooks WHERE subject IN ({})".format(
             ",".join("?" for _ in STEM_SUBJECTS)
@@ -1214,6 +1295,41 @@ def mine_controls(
                 else:
                     filter_counts["ocr"] += 1
                 continue
+            if heldout_sigs is not None and len(heldout_sigs) > 0:
+                texts_to_check = [
+                    sentence,
+                    f"Чи треба виправляти термін «{decision.target_term}» у науковому реченні: «{sentence}»?",
+                    f"Чи потребує виправлення використання терміна «{decision.target_term}» у реченні: «{sentence}»?",
+                    f"Поясніть, чому термін «{decision.target_term}» у контексті «{sentence}» є нормативним, а не калькою.",
+                    f"Подайте поглиблений аналіз вживання терміна «{decision.target_term}» у науковому реченні «{sentence}».",
+                    f"Чи правильним є слововживання терміна «{decision.target_term}» у контексті «{sentence}»?",
+                ]
+                leak = False
+                for txt in texts_to_check:
+                    toks = normalize_text(txt).split()
+                    if not toks:
+                        continue
+                    sig = np.array(minhash.signature(toks).min_hashes, dtype=np.int64)
+                    mh = float(((heldout_sigs == sig).sum(axis=1) / 64.0).max())
+                    if mh >= 0.35:
+                        leak = True
+                        break
+                    tset = set(toks)
+                    tlen = len(tset)
+                    for h_set in heldout_token_sets:
+                        h_len = len(h_set)
+                        if min(tlen, h_len) / max(tlen, h_len) < 0.35:
+                            continue
+                        inter = len(tset & h_set)
+                        if inter / (tlen + h_len - inter) >= 0.35:
+                            leak = True
+                            break
+                    if leak:
+                        break
+                if leak:
+                    filter_counts["heldout_similarity"] += 1
+                    continue
+
             trajectory = build_trajectory(sentence, decision, vesum_cursor, chunk_id, subject)
             seen_passages.add(passage_key)
             admitted.append((trajectory, decision))

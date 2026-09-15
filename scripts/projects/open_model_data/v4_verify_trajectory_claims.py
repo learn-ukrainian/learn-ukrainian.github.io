@@ -74,6 +74,10 @@ DEFAULT_RECEIPT_OUTPUT = DEFAULT_TRAJECTORIES_DIR / "cot_claim_verification_rece
 PRIVATE_HOST_RE = re.compile(r"(?:/home/(?:ops|ubuntu)|/Users/|[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3})")
 ACUTE_RE = re.compile(r"[\u0301\u0300]")
 CLEAN_WORD_RE = re.compile(r"^[\"'«»„”“,.:;!?…\s]+|[\"'«»„”“,.:;!?…\s]+$")
+R2U_CITATION_RE = re.compile(
+    r"(?:(?:словник\w*|прац\w*)[^.\n]{0,30}1920|1920-х\s+років\s+словник|R2U|r2u|Кримськ|Голоскевич|Російсько-українськ.*словник)",
+    re.IGNORECASE,
+)
 
 
 def clean_word(w: str) -> str:
@@ -260,6 +264,14 @@ class CoTClaimVerifier:
             cur.execute("SELECT count(*) FROM forms_all WHERE lemma = ?", (lemma.strip(),))
             row = cur.fetchone()
             cnt = row[0] if row else 0
+        if cnt == 0:
+            # Fallback: resolve inflected word_form to canonical lemma
+            cur.execute("SELECT lemma FROM forms_all WHERE word_form = ? LIMIT 1", (norm,))
+            lem_row = cur.fetchone()
+            if lem_row:
+                cur.execute("SELECT count(*) FROM forms_all WHERE lemma = ?", (lem_row[0],))
+                row = cur.fetchone()
+                cnt = row[0] if row else 0
         self._vesum_cache[norm] = cnt
         return cnt
 
@@ -268,6 +280,12 @@ class CoTClaimVerifier:
         cur = self.vesum_conn.cursor()
         cur.execute("SELECT DISTINCT pos, tags FROM forms_all WHERE lemma = ?", (norm,))
         rows = cur.fetchall()
+        if not rows:
+            cur.execute("SELECT lemma FROM forms_all WHERE word_form = ? LIMIT 1", (norm,))
+            lem_row = cur.fetchone()
+            if lem_row:
+                cur.execute("SELECT DISTINCT pos, tags FROM forms_all WHERE lemma = ? OR word_form = ?", (lem_row[0], norm))
+                rows = cur.fetchall()
         if not rows:
             return False
         vesum_vocab = {
@@ -319,6 +337,66 @@ class CoTClaimVerifier:
         )
         row = cur.fetchone()
         if not row:
+            # Fallback 1: resolve inflected form to lemma via VESUM
+            cur_v = self.vesum_conn.cursor()
+            cur_v.execute("SELECT lemma FROM forms_all WHERE word_form = ? LIMIT 1", (norm,))
+            lem_row = cur_v.fetchone()
+            if lem_row:
+                lem = clean_word(lem_row[0])
+                cur.execute(
+                    """
+                    SELECT id, word, definition, text, sovietization_risk, sovietization_keywords
+                    FROM sum11
+                    WHERE word = ? OR word LIKE ? OR word LIKE ? OR word LIKE ?
+                    LIMIT 1
+                    """,
+                    (lem, f"{lem}|%", f"%|{lem}|%", f"%|{lem}"),
+                )
+                row = cur.fetchone()
+
+        if not row and norm.endswith(("ся", "сь")):
+            # Fallback 2: reflexive verb -> base non-reflexive verb
+            base_v = norm[:-2] if norm.endswith("ся") else norm[:-1]
+            cur.execute(
+                """
+                SELECT id, word, definition, text, sovietization_risk, sovietization_keywords
+                FROM sum11
+                WHERE word = ? OR word LIKE ? OR word LIKE ? OR word LIKE ?
+                LIMIT 1
+                """,
+                (base_v, f"{base_v}|%", f"%|{base_v}|%", f"%|{base_v}"),
+            )
+            row = cur.fetchone()
+
+        if not row and " " in norm:
+            # Fallback 3: multi-word phrase -> look up candidate lemmas in VESUM and check sum11 text
+            words = [w.strip() for w in norm.split() if w.strip()]
+            cur_v = self.vesum_conn.cursor()
+            for w in words:
+                cur_v.execute("SELECT DISTINCT lemma FROM forms_all WHERE word_form = ? OR lemma = ?", (w, w))
+                lemmas = [r[0] for r in cur_v.fetchall()]
+                for lem in lemmas:
+                    clean_lem = clean_word(lem)
+                    cur.execute(
+                        """
+                        SELECT id, word, definition, text, sovietization_risk, sovietization_keywords
+                        FROM sum11
+                        WHERE word = ? OR word LIKE ? OR word LIKE ? OR word LIKE ?
+                        LIMIT 1
+                        """,
+                        (clean_lem, f"{clean_lem}|%", f"%|{clean_lem}|%", f"%|{clean_lem}"),
+                    )
+                    candidate_row = cur.fetchone()
+                    if candidate_row:
+                        text_clean = ACUTE_RE.sub("", candidate_row[3]).lower()
+                        other_words = [ow for ow in words if ow != w]
+                        if all(ow in text_clean for ow in other_words):
+                            row = candidate_row
+                            break
+                if row:
+                    break
+
+        if not row:
             self._sum11_cache[norm] = None
             return None
         res = {
@@ -327,7 +405,7 @@ class CoTClaimVerifier:
             "definition": row[2],
             "text": row[3],
             "sovietization_risk": row[4],
-            "sovietization_keywords": row[5] if len(row) > 5 else "",
+            "sovietization_keywords": row[5],
         }
         self._sum11_cache[norm] = res
         return res
@@ -497,7 +575,22 @@ class CoTClaimVerifier:
             # Check СУМ-11 headword citation in suppression note
             if re.search(r"СУМ(?:-11)?", suppression_note):
                 quoted_in_note = re.findall(r"«([^»]+)»", suppression_note)
-                sum_terms = [q for q in quoted_in_note if len(q.split()) <= 2] or ([target_term] if target_term else [])
+                sum_terms = []
+                for q in quoted_in_note:
+                    if len(q.split()) > 2:
+                        continue
+                    # Skip Russian template words / models cited in historical context
+                    if re.search(r"[ёъыэЁЪЫЭ]", q):
+                        continue
+                    if re.search(
+                        rf"(?:шаблон\w*|модел\w*|російськ\w*)\s*(?:з\s+російськ\w*\s+)?«{re.escape(q)}»",
+                        suppression_note,
+                        re.IGNORECASE,
+                    ):
+                        continue
+                    sum_terms.append(q)
+                if not sum_terms and target_term:
+                    sum_terms = [target_term]
                 for s_term in sum_terms:
                     claims.append(
                         ParsedClaim(
@@ -510,9 +603,13 @@ class CoTClaimVerifier:
                     )
 
             # Check Soviet ideological / suppression risk claim
-            if is_calque and any(
-                k in suppression_note.lower()
-                for k in ["радянськ", "канцелярськ", "витісня", "зближення", "урср", "номенклатур"]
+            if (
+                is_calque
+                and re.search(r"СУМ(?:-11)?", suppression_note)
+                and any(
+                    k in suppression_note.lower()
+                    for k in ["радянськ", "канцелярськ", "витісня", "зближення", "урср", "номенклатур"]
+                )
             ):
                 claims.append(
                     ParsedClaim(
@@ -525,7 +622,7 @@ class CoTClaimVerifier:
                 )
 
             # Check 1920s / pre-Soviet Academy dictionary citations in suppression note with polarity detection
-            if re.search(r"1920-х|R2U|r2u|Кримськ|Голоскевич|Російсько-українськ.*словник", suppression_note):
+            if R2U_CITATION_RE.search(suppression_note):
                 quoted_in_note = re.findall(r"«([^»]+)»", suppression_note)
                 r2u_terms = [q for q in quoted_in_note if len(q.split()) <= 2] or ([target_term] if target_term else [])
                 for r_term in r2u_terms:
@@ -617,7 +714,7 @@ class CoTClaimVerifier:
                     )
 
             # Check R2U / 1920s historical dictionary citations with polarity detection
-            if re.search(r"1920-х|R2U|r2u|Кримськ|Голоскевич|Російсько-українськ.*словник", step):
+            if R2U_CITATION_RE.search(step):
                 quoted_in_step = re.findall(r"«([^»]+)»", step)
                 r2u_terms = [q for q in quoted_in_step if len(q.split()) <= 2] or ([target_term] if target_term else [])
                 for r_term in r2u_terms:
@@ -856,7 +953,7 @@ class CoTClaimVerifier:
                     return ClaimVerificationResult(
                         claim, True, f"Living standard verified (VESUM forms={vesum_cnt}, ULIF={ulif_attested})"
                     )
-                words = [w for w in claim.term.split() if len(clean_word(w)) >= 2]
+                words = [w for w in claim.term.split() if clean_word(w)]
                 if len(words) > 1 and all(self.get_vesum_forms_count(w) > 0 for w in words):
                     return ClaimVerificationResult(claim, True, "Living standard phrase verified via words in VESUM")
                 return ClaimVerificationResult(
@@ -869,7 +966,7 @@ class CoTClaimVerifier:
                 vesum_cnt = self.get_vesum_forms_count(claim.term)
                 sum_entry = self.get_sum11_entry(claim.term)
                 if vesum_cnt == 0 and sum_entry is None:
-                    words = [w for w in claim.term.split() if len(clean_word(w)) >= 2]
+                    words = [w for w in claim.term.split() if clean_word(w)]
                     if not (len(words) > 1 and all(self.get_vesum_forms_count(w) > 0 for w in words)):
                         return ClaimVerificationResult(
                             claim,
