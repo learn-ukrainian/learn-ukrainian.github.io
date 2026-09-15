@@ -40,7 +40,7 @@ same six contrast words: **день**, **сім'я́**, **буря́к**, **бу
 
 Запам'ята́йте дві головні́ моде́лі перено́су — remember two main division models:
 - **М'яки́й знак трима́ється з лі́терою пе́ред ним** *(soft sign stays with the letter before it)*: **паль-ці**, **ма-лень-кий**, **вчи-тель**. Ніко́ли не перено́сьте «ь» на нови́й рядо́к окре́мо — never carry "ь" to a new line alone.
-- **Апо́строф трима́ється з лі́терою пе́ред ним** *(apostrophe stays with the letter before it)*: **бур'-ян**, **Мар'-я́на**, **дере́-в'яний**. Не відрива́йте апо́строф від лі́тери пе́ред ним — do not detach the apostrophe from the letter before it.
+- **Апо́строф трима́ється з лі́терою пе́ред ним** *(apostrophe stays with the letter before it)*: **бур'-ян**, **Мар'-я́на**, **дере-в'я́ний**. Не відрива́йте апо́строф від лі́тери пе́ред ним — do not detach the apostrophe from the letter before it.
 
 <!-- INJECT_ACTIVITY: act-302 -->
 
@@ -87,5 +87,5 @@ same six contrast words: **день**, **сім'я́**, **буря́к**, **бу
 - **Впізнава́ти зна́ки — Recognize the signs**: distinguish the soft sign (**ь**) and the apostrophe (**'**) in printed Ukrainian words without confusing their visual shapes.
 - **Розрізня́ти контра́ст — Distinguish the core contrast**: understand why **буря́к** has a soft consonant without an apostrophe, while **бур'я́н** keeps the consonant hard followed by a distinct `[йа]`.
 - **Уника́ти типо́вих пасто́к — Avoid common traps**: remember that **свя́то** and **цвях** do not take an apostrophe, and never insert an invented soft sign into **ло́жка**.
-- **Пра́вильно перено́сити слова́ — Divide words accurately**: keep **ь** and the apostrophe firmly attached to the preceding letter (**паль-ці**, **бур'-ян**, **Мар'-я́на**, **дере́-в'яний**).
+- **Пра́вильно перено́сити слова́ — Divide words accurately**: keep **ь** and the apostrophe firmly attached to the preceding letter (**паль-ці**, **бур'-ян**, **Мар'-я́на**, **дере-в'я́ний**).
 - **Впе́внено чита́ти вго́лос — Read aloud with confidence**: pronounce soft consonants softly (**день**, **сіль**) and iotated vowels after apostrophes with a clear `[й]` sound (**сім'я́**, **комп'ю́тер**).

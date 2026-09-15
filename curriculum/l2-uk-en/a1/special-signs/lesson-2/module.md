@@ -80,7 +80,7 @@ do not leave one single letter alone on a line.
 
 Ко́ли ми ді́лимо слова́ для перено́су *(when we divide words for line breaks)*, запам'ята́йте дві го́ловні моде́лі *(memorize two main models)*:
 1. **М'яки́й знак залиша́ється з лі́терою** *(soft sign stays with the letter)*: **паль-ці** *(fin-gers)*, **ма-лень-кий** *(small)*. Ніко́ли не перено́сьте м'яки́й знак на нови́й рядо́к окре́мо *(never move soft sign to a new line alone)*.
-2. **Апо́строф залиша́ється з лі́терою** *(apostrophe stays with the letter)*: **Мар'-я́на**, **дере́-в'яний** *(wood-en)*, **бур'-ян** *(weed)*. Не відрива́йте апо́строф від лі́тери *(do not detach apostrophe from the letter)*.
+2. **Апо́строф залиша́ється з лі́терою** *(apostrophe stays with the letter)*: **Мар'-я́на**, **дере-в'я́ний** *(wood-en)*, **бур'-ян** *(weed)*. Не відрива́йте апо́строф від лі́тери *(do not detach apostrophe from the letter)*.
 
 Reading before writing: first recognize the printed word, then copy the sign in
 a notebook cue.
