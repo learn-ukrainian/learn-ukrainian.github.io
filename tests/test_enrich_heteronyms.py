@@ -879,6 +879,10 @@ def test_batch7_semantic_and_stress_distinctions():
     assert "station" not in vazh[2]["gloss"].lower()
     assert "вагівниця" not in vazh[2]["soviet_colonization_context"]["definition"]
     assert "вага́ 5" in vazh[2]["soviet_colonization_context"]["definition"]
+    assert "ва́жниць" in vazh[0]["distinction_note"]
+    assert "важни́ць" not in vazh[0]["distinction_note"]
+    assert "ва́жниці" in vazh[1]["distinction_note"]
+    assert "важни́ці" not in vazh[1]["distinction_note"]
 
     # валковий: валко́вий (roller-equipped) vs валкови́й (carter / driver with convoy)
     val = enrich_heteronyms.build_heteronyms_for_lemma("валковий")

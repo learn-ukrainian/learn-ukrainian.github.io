@@ -73,21 +73,45 @@ const { state } = Astro.props as Props;
           function selectHeteronymByHash() {
             const raw = decodeURIComponent(window.location.hash.replace(/^#/, '')).trim().normalize('NFC');
             if (!raw) return;
-            tabs.forEach((tab, i) => {
+
+            // 1. Try exact match on data-heteronym-fragment first
+            for (let i = 0; i < tabs.length; i++) {
+              const tab = tabs[i];
+              const frag = (tab.dataset.heteronymFragment || '').normalize('NFC');
+              if (frag && frag.toLowerCase() === raw.toLowerCase()) {
+                activateHeteronymTab(i);
+                return;
+              }
+            }
+
+            // 2. Try 1-based index or headword+index
+            for (let i = 0; i < tabs.length; i++) {
+              const tab = tabs[i];
+              const hw = (tab.dataset.heteronymHeadword || '').normalize('NFC');
+              if (`${i + 1}` === raw || `${hw}-${i + 1}` === raw) {
+                activateHeteronymTab(i);
+                return;
+              }
+            }
+
+            // 3. Headword match
+            for (let i = 0; i < tabs.length; i++) {
+              const tab = tabs[i];
               const hw = (tab.dataset.heteronymHeadword || '').normalize('NFC');
               const unaccented = hw.replace(/[\u0300-\u036f]/g, '');
-              if (hw === raw || `${i + 1}` === raw || unaccented === raw) {
+              if (hw === raw || unaccented === raw) {
                 activateHeteronymTab(i);
+                return;
               }
-            });
+            }
           }
 
           tabs.forEach((tab, i) => {
             tab.addEventListener('click', () => {
               activateHeteronymTab(i);
-              const hw = tab.dataset.heteronymHeadword;
-              if (hw && window.history?.replaceState) {
-                window.history.replaceState(null, '', `#${encodeURIComponent(hw)}`);
+              const frag = tab.dataset.heteronymFragment || tab.dataset.heteronymHeadword;
+              if (frag && window.history?.replaceState) {
+                window.history.replaceState(null, '', `#${encodeURIComponent(frag)}`);
               }
             });
             tab.addEventListener('keydown', (e) => {

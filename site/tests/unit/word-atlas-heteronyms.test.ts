@@ -4,6 +4,7 @@ import { describe, expect, test } from "vitest";
 import { renderWordAtlasArticle } from "../helpers/render-word-atlas-article";
 import type { EntryRecord } from "@site/src/lib/lexicon/atlas-data-source";
 import { bindHeteronymHandlers } from "@site/src/lexicon/WordAtlasClientShell";
+import { getHeteronymFragment } from "@site/src/lexicon/WordAtlasArticle";
 
 describe("WordAtlasArticle heteronym support (#8022)", () => {
   const heteronymRecord: EntryRecord = {
@@ -632,5 +633,77 @@ describe("bindHeteronymHandlers interactive client wiring (#8022)", () => {
     expect(tabs[0].classList.contains("active")).toBe(true);
 
     container.remove();
+  });
+
+  test("same-headword variants use distinct fragments in URL navigation (#8039)", () => {
+    const container = document.createElement("div");
+    container.innerHTML = `
+      <div class="atlas-heteronym-nav" role="tablist">
+        <button class="atlas-heteronym-tab active" data-heteronym-target="0" data-heteronym-headword="ва́жниця" data-heteronym-fragment="ва́жниця-animate" role="tab" aria-selected="true" tabindex="0">ва́жниця — поважна особа</button>
+        <button class="atlas-heteronym-tab" data-heteronym-target="1" data-heteronym-headword="ва́жниця" data-heteronym-fragment="ва́жниця-inanimate" role="tab" aria-selected="false" tabindex="-1">ва́жниця — важлива справа</button>
+        <button class="atlas-heteronym-tab" data-heteronym-target="2" data-heteronym-headword="важни́ця" data-heteronym-fragment="важни́ця" role="tab" aria-selected="false" tabindex="-1">важни́ця — ваги / віз</button>
+      </div>
+      <div id="heteronym-panel-0" data-heteronym-idx="0" data-heteronym-fragment="ва́жниця-animate" role="tabpanel" style="display: block;">
+        <button data-heteronym-jump="1">Go to важлива справа</button>
+        <p>Поважна особа content</p>
+      </div>
+      <div id="heteronym-panel-1" data-heteronym-idx="1" data-heteronym-fragment="ва́жниця-inanimate" role="tabpanel" style="display: none;" hidden>
+        <button data-heteronym-jump="0">Go to поважна особа</button>
+        <p>Важлива справа content</p>
+      </div>
+      <div id="heteronym-panel-2" data-heteronym-idx="2" data-heteronym-fragment="важни́ця" role="tabpanel" style="display: none;" hidden>
+        <p>Чумацький прилад content</p>
+      </div>
+    `;
+    document.body.appendChild(container);
+
+    const cleanup = bindHeteronymHandlers(container);
+    const tabs = container.querySelectorAll<HTMLElement>(".atlas-heteronym-tab");
+    const panel0 = container.querySelector<HTMLElement>("#heteronym-panel-0")!;
+    const panel1 = container.querySelector<HTMLElement>("#heteronym-panel-1")!;
+    const panel2 = container.querySelector<HTMLElement>("#heteronym-panel-2")!;
+
+    // 1. Click tab 1 ("важлива справа") -> updates hash to distinct #ва́жниця-inanimate
+    tabs[1].click();
+    expect(tabs[1].classList.contains("active")).toBe(true);
+    expect(tabs[0].classList.contains("active")).toBe(false);
+    expect(panel1.style.display).toBe("block");
+    expect(panel0.style.display).toBe("none");
+    expect(decodeURIComponent(window.location.hash)).toBe("#ва́жниця-inanimate");
+
+    // 2. Reinitialize handler from that fragment (simulating page reload with #ва́жниця-inanimate)
+    cleanup();
+    const cleanup2 = bindHeteronymHandlers(container);
+    expect(tabs[1].classList.contains("active")).toBe(true);
+    expect(panel1.style.display).toBe("block");
+    expect(tabs[0].classList.contains("active")).toBe(false);
+
+    // 3. Navigate to third variant #важни́ця via hashchange
+    window.location.hash = "#важни́ця";
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+    expect(tabs[2].classList.contains("active")).toBe(true);
+    expect(panel2.style.display).toBe("block");
+    expect(panel1.style.display).toBe("none");
+
+    // 4. Navigate back to first variant #ва́жниця-animate via hashchange
+    window.location.hash = "#ва́жниця-animate";
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+    expect(tabs[0].classList.contains("active")).toBe(true);
+    expect(panel0.style.display).toBe("block");
+
+    cleanup2();
+    container.remove();
+    window.location.hash = "";
+  });
+
+  test("getHeteronymFragment disambiguates colliding headwords via animacy or index", () => {
+    const entries = [
+      { headword: "ва́жниця", morphology: { paradigm: { animacy: "animate" } } },
+      { headword: "ва́жниця", morphology: { paradigm: { animacy: "inanimate" } } },
+      { headword: "важни́ця", morphology: { paradigm: { animacy: "inanimate" } } },
+    ] as any;
+    expect(getHeteronymFragment(entries[0], 0, entries)).toBe("ва́жниця-animate");
+    expect(getHeteronymFragment(entries[1], 1, entries)).toBe("ва́жниця-inanimate");
+    expect(getHeteronymFragment(entries[2], 2, entries)).toBe("важни́ця");
   });
 });
