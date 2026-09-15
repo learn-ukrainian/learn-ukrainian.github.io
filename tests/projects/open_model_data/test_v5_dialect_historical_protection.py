@@ -527,32 +527,94 @@ def test_homoglyph_near_duplicate_detection() -> None:
 
 
 def test_oes_inauthenticity_rejection() -> None:
-    """Verify that prologue headings and editorial reconstructions are rejected."""
+    """Verify that prologue headings and editorial reconstructions are rejected with valid metadata."""
+    base_meta = {
+        "source": "literary_texts",
+        "author": "Давньоруський книжник",
+        "work": "Повість временних літ",
+        "year": 1113,
+        "language_period": "old_east_slavic",
+    }
+    # Positive control: authentic Laurentian PVL must pass
+    genuine_pvl = {
+        "eval_id": "eval_prot_hist_test_pos",
+        "stratum": "historical_text",
+        "subgroup": "old_east_slavic",
+        "input_text": (
+            "По размЂшеньи же столпа и по раздЂленьи языкъ прияша сынове Симови въсточныя страны, "
+            "а Хамови сынове полуденьныя страны"
+        ),
+        "target_term": "въсточныя",
+        "expected_action": "PRESERVE",
+        "source_metadata": base_meta,
+    }
+    assert oes_record_is_authentic(genuine_pvl)
+
+    # Negative controls: must fail authenticity specifically due to text provenance / commentary
     spaso_prilutsky = {
-        "eval_id": "eval_prot_hist_test",
+        "eval_id": "eval_prot_hist_test_neg1",
+        "stratum": "historical_text",
+        "subgroup": "old_east_slavic",
         "input_text": (
             "Проявленье крещенье русьския земля святого апостола АндрЂя, "
             "како приходилъ в Русь и благословилъ мЂсто и крЂстъ поставилъ идЂже нынЂ градъ Киевъ"
         ),
         "target_term": "АндрЂя",
         "expected_action": "PRESERVE",
-        "source_metadata": {"work": "Повість временних літ", "year": 1113},
+        "source_metadata": base_meta,
     }
     assert not oes_record_is_authentic(spaso_prilutsky)
 
     editorial_reconstruction = {
-        "eval_id": "eval_prot_hist_test",
+        "eval_id": "eval_prot_hist_test_neg2",
+        "stratum": "historical_text",
+        "subgroup": "old_east_slavic",
         "input_text": "сътворихомъ и ва новымъ написаниємъ",
         "target_term": "сътворихомъ",
         "expected_action": "PRESERVE",
-        "source_metadata": {"work": "Повість временних літ", "year": 1113},
+        "source_metadata": base_meta,
     }
     assert not oes_record_is_authentic(editorial_reconstruction)
 
 
+def test_oes_rejects_html_comments_and_wiki_artifacts() -> None:
+    """Verify that OES texts with HTML comments or wiki artifacts are rejected at the authenticity boundary."""
+    base_meta = {
+        "source": "literary_texts",
+        "author": "Давньоруський книжник",
+        "work": "Повість временних літ",
+        "year": 1113,
+        "language_period": "old_east_slavic",
+    }
+    for snippet in (
+        "По размЂшеньи же столпа <!-- VERIFY: currency --> сынове Симови",
+        "По размЂшеньи же столпа &lt;!-- note --&gt; сынове Симови",
+    ):
+        rec = {
+            "eval_id": "eval_prot_hist_test_wrap",
+            "stratum": "historical_text",
+            "subgroup": "old_east_slavic",
+            "input_text": snippet,
+            "target_term": "столпа",
+            "expected_action": "PRESERVE",
+            "source_metadata": base_meta,
+        }
+        assert not oes_record_is_authentic(rec), f"Failed to reject: {snippet}"
+        assert not oes_text_is_diplomatic_excerpt(snippet), f"Failed to reject excerpt: {snippet}"
+
+
 def test_surzhyk_banned_targets_rejects_sum11_standard_words() -> None:
-    """Standard Ukrainian words like відмітити/відмічати (СУМ-11: ставити позначку) must be banned from anti-surzhyk."""
-    for word in ("відмітив", "відмітити", "відмічати", "відмічає", "відмічають"):
+    """Standard Ukrainian words in SUM-11 (відмітити, відправитися, любий, гуся, палатка) are banned from anti-surzhyk."""
+    for word in (
+        "відмітив",
+        "відмітити",
+        "відмічати",
+        "відправився",
+        "відправитися",
+        "любий",
+        "гуся",
+        "палатка",
+    ):
         assert word in SURZHYK_BANNED_TARGETS
         assert word not in SURZHYK_TARGET_ALLOWLIST
         assert not surzhyk_record_is_authentic(
