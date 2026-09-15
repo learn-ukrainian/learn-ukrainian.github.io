@@ -10,6 +10,7 @@ import {
   a1AdjacentHrefs,
   isUpgradedLesson,
   isUpgradedModuleLanding,
+  withManifestCopy,
   lessonNumberFromDoc,
   moduleSlugFromDoc,
   resolveNavHref,
@@ -662,13 +663,11 @@ const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
       items: group.items.map((item) => {
         const upgraded = upgradedBySlug.get(item.slug);
         if (upgraded) {
-          return {
-            num: upgraded.data.sidebar?.order ?? item.num,
-            slug: item.slug,
+          return withManifestCopy(item, {
             title: upgraded.data.title,
-            status: 'active' as const,
+            sidebar: upgraded.data.sidebar,
             lessons: upgraded.data.lessons as { n: number; title: string; minutes: number; href: string }[],
-          };
+          });
         }
         return {
           num: item.num,

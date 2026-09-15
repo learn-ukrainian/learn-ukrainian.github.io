@@ -61,6 +61,9 @@ describe('LevelLanding module cards', () => {
                 num: 1,
                 slug: 'sounds-letters-and-hello',
                 title: 'Звуки, літери та привіт',
+                titleEn: 'Sounds, Letters & Hello',
+                sub: '33 літери, 38 звуків, Привіт!',
+                subEn: '33 letters, 38 sounds, Hello!',
                 status: 'active',
               },
             ],
@@ -71,6 +74,9 @@ describe('LevelLanding module cards', () => {
 
     const link = screen.getByRole('link', { name: /Звуки, літери та привіт/ });
     expect(link).toHaveAttribute('href', '/a1/sounds-letters-and-hello/');
+    expect(screen.getByText(/Sounds, Letters & Hello/)).toBeInTheDocument();
+    expect(screen.getByText('33 літери, 38 звуків, Привіт!')).toBeInTheDocument();
+    expect(screen.getByText('33 letters, 38 sounds, Hello!')).toBeInTheDocument();
     // Status chrome must not become a separate named control inside the link.
     expect(within(link).queryByRole('img')).toBeNull();
   });
