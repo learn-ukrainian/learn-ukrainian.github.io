@@ -37,6 +37,11 @@ describe('a1 lesson nav', () => {
     expect(card.sub).toBe('Наголос змінює значення, інтонація змінює намір');
     expect(card.subEn).toBe('Stress changes meaning, intonation changes intent');
     expect(card.status).toBe('active');
+    // Type-level: withManifestCopy must carry a concrete lessons type (not
+    // `unknown`) so callers can pass the result straight into LevelLanding.
+    const [lesson] = card.lessons;
+    expect(lesson.n).toBe(1);
+    expect(lesson.href).toBe('/a1/stress-and-melody/1/');
   });
 
   it('treats a1/{slug}/{n} as a nested lesson', () => {
