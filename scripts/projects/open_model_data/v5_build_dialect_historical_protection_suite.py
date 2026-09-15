@@ -32,6 +32,7 @@ from scripts.projects.open_model_data.dialect_protection_invariants import (
     LEMKO_BANNED_TARGET_RE,
     MAX_TOLERATED_DIALECT_CORRUPTION,
     MAX_TOLERATED_HISTORICAL_CORRUPTION,
+    OES_GRAPH_RE,
     OES_MAX_YEAR,
     first_lemko_marker,
     infer_oes_work_from_text,
@@ -235,8 +236,10 @@ def _clean_oes_chunk(chunk: str) -> str:
 
 
 def _make_oes_record(text: str, work: str, year: int, target: str | None = None) -> dict[str, Any] | None:
-    target = target or oes_pick_target_term(text)
-    if len(target) < 3:
+    picked = oes_pick_target_term(text)
+    if target is None or len(target) < 2 or not OES_GRAPH_RE.search(target):
+        target = picked
+    if len(target) < 2:
         return None
     notes = (
         f"Давньоруська мовна доба (XI–XIII ст.), пам'ятка «{work}». "

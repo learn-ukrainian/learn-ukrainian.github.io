@@ -19,6 +19,7 @@ from scripts.projects.open_model_data.dialect_protection_invariants import (
     SURZHYK_BANNED_TARGETS,
     SURZHYK_TARGET_ALLOWLIST,
     lemko_record_is_authentic,
+    oes_honest_unique_passages,
     oes_passages_are_near_duplicates,
     oes_record_is_authentic,
     oes_text_is_diplomatic_excerpt,
@@ -361,6 +362,68 @@ def test_oes_predicate_rejects_commentary_recipes_wrappers_and_padding() -> None
     }
     assert not oes_record_is_authentic(slovo_grammar)
 
+    labeled_pravda = {
+        **labeled_pvl,
+        "source_metadata": {
+            **labeled_pvl["source_metadata"],
+            "work": "Руська Правда",
+            "year": 1072,
+        },
+    }
+    later_rejects = [
+        (
+            "аще быхъ челъ / чла / чло: былъ єси / ла / ло: бяше — аще быхомъ чли, бысте, бяху / или быша",
+            "быхъ",
+        ),
+        (
+            "А взяти владыцЂ дару рубль <!-- VERIFY: currency — Рубль is the Russian/Soviet currency, not Ukrainian Canonical form: «гривня",
+            "владыцЂ",
+        ),
+        (
+            "Аще егó опýтаевЂ крáсною дЂви́цею, ни нáма бýдетъ сокольцá, ни нáма крáсны дЂви́це, то почнýть нáю пти́ци би́ти въ пóлЂ Половéцкомъ.",
+            "таевЂ",
+        ),
+        (
+            "Аще же і грЂхъ ıаковъ знайдетсА въ семъ дЂли, разумъ какωв[ъ], самъ вЂси, въ немощном естъ тЂли",
+            "грЂхъ",
+        ),
+        (
+            "попамъ по осми гривенъ сребра, диакону 4 гривны сребра, диаку 3 гривны сребра",
+            "попамъ",
+        ),
+        (
+            "а оброкъ даю попомъ, и диякону, и диаку, и сторожамъ из вЂсу изъ вощаного имати попамъ по осми гривенъ сребра",
+            "оброкъ",
+        ),
+    ]
+    for text, target in later_rejects:
+        rec = {**labeled_pravda, "input_text": text, "target_term": target}
+        assert not oes_record_is_authentic(rec), text
+        assert not oes_text_is_diplomatic_excerpt(text) or not oes_text_matches_named_monument(
+            text, "Руська Правда"
+        )
+
+    garbled_slovo = {
+        **labeled_pvl,
+        "input_text": "свистъ звЂринъ въ стазби; дивъ кличетъ връху древа",
+        "target_term": "свистъ",
+        "source_metadata": {
+            **labeled_pvl["source_metadata"],
+            "work": "Слово о полку Ігоревім",
+            "year": 1187,
+        },
+    }
+    assert not oes_record_is_authentic(garbled_slovo)
+
+    assert oes_passages_are_near_duplicates(
+        "пущашеть 10 соколовь на стадо лебедЂй",
+        "Тогда пущашеть 10 соколовь на стадо лебедЂй: которыи дотечаше, та преди пЂснь пояше",
+    )
+    assert oes_passages_are_near_duplicates(
+        "а дроугое холопьство: поиметь робу, а безъ ряду; поимет ли с рядомъ како ся боудеть рядилъ, на том же и стоитъ",
+        "а дроугое холопьство: поиметь робу, а безъ рѧдоу; поимет ли с рѧдомъ како сѧ боудеть рѧдилъ, на том же и стоитъ",
+    )
+
     genuine = {
         **labeled_pvl,
         "input_text": (
@@ -404,6 +467,10 @@ def test_oes_stratum_is_diplomatic_not_modern_translation(suite_cases: list[dict
                 left["eval_id"],
                 right["eval_id"],
             )
+    unique_passages = oes_honest_unique_passages([c["input_text"] for c in oes])
+    assert len(unique_passages) == len(oes), (
+        f"honest unique passages {len(unique_passages)} != syntactic {len(oes)}"
+    )
 
     mid = [c for c in suite_cases if c["subgroup"] == "middle_ukrainian"]
     assert len(mid) == 100

@@ -138,9 +138,15 @@ OES_COMMENTARY_RE: re.Pattern[str] = re.compile(
     r"синтаксичн|ораторськ|смотрицьк|ужевич|знам[εе]нован|"
     r"спр[аaA]ж[εе]н|вм[Ђѣ]сто|кончащ|начертател|существител|"
     r"раствор|преходящ|прешедш|напр\.?:|граматик[аииу]|"
-    r"атематичн|сигматичн|парадигм",
+    r"атематичн|сигматичн|парадигм|"
+    r"челъ\s*/|/\s*(?:чла|чло|чли|ла\b|ло\b|бысте|бяху|быша)|"
+    r"быхъ\s+челъ|быхомъ\s+чли|бяше\s+[—–-]",
     re.IGNORECASE,
 )
+
+OES_PARADIGM_SLASH_RE: re.Pattern[str] = re.compile(r"/[^/\n]{0,12}/")
+
+OES_GARBLED_RE: re.Pattern[str] = re.compile(r"стазби|въстазби", re.IGNORECASE)
 
 OES_MEDICAL_RE: re.Pattern[str] = re.compile(
     r"хорій|л[Ђѣεе]кар|возми\s+кор|чемериц|порохъ\s+ут|"
@@ -151,7 +157,8 @@ OES_MEDICAL_RE: re.Pattern[str] = re.compile(
 
 OES_WIKI_WRAPPER_RE: re.Pattern[str] = re.compile(
     r"chunk_id|\*\*«|^\*\*|\[\s*S\d+\s*\]|`[0-9a-f]{8}_c\d+|"
-    r"початок розповіді|вступний заголовок|лаврент",
+    r"початок розповіді|вступний заголовок|лаврент|"
+    r"<!--|--&gt;|&lt;!--|VERIFY:|Canonical form",
     re.IGNORECASE | re.MULTILINE,
 )
 
@@ -169,7 +176,8 @@ OES_PVL_TEXT_RE: re.Pattern[str] = re.compile(
     r"руска[ӕѧя]\s+зем|кнѧжит|нарек\s+ю|явЂ\s+будеть|сътворихомъ|"
     r"дъщерию|словеньк|живущем\s+крьщен|киликию|еюпетъ|индикия|"
     r"нирокурия|оудолжишася|свьщания|памъфилию|ефивопья|"
-    r"неятью|съгрЂшениє|клЂн",
+    r"неятью|съгрЂшениє|клЂн|андрЂя|крЂстъ\s+поставилъ|"
+    r"проявленье\s+крещенье",
     re.IGNORECASE,
 )
 
@@ -181,15 +189,24 @@ OES_SLOVO_TEXT_RE: re.Pattern[str] = re.compile(
     r"сула\s+не\s+течет|жемчюжн|ожерел|плъкы|бръзыя|"
     r"чрън|посЂяна|польяна|кая\s+раны|небесЂ|дЂвици|свЂтит|"
     r"жалощам|преклонил|звЂринъ|стязи|вережени|"
-    r"дивъ|ветрило|хинов|чръны",
+    r"дивъ|ветрило|хинов|чръны|веслы|выльяти|роскропити",
     re.IGNORECASE,
 )
 
+# Legal-register Правда. Bare аще/аже/оже is not enough (paradigms, Slovo, homilies).
 OES_PRAVDA_TEXT_RE: re.Pattern[str] = re.compile(
-    r"\bаже\b|\bоже\b|\bаще\b|гривн|холоп|закуп|продаж|вир[ъы]|"
-    r"послух|смерд|челядин|обель|обил|тать|кун[ъы]|задниц|"
-    r"переореть|хлЂва|роба|отариц|наимит|остатъкъ|платити\s+за\s+нь|"
-    r"вирник|поконъ",
+    r"закуп|холоп|гривн|гривен|продаж|вир[ъы]|послух|смерд|челядин|"
+    r"урокъ|търгу|видок|батог|борть|посадник|"
+    r"обель|обил|тать|кун[ъыа]|задниц|переореть|хлЂва|отариц|"
+    r"наимит|остатъкъ|платити\s+за\s+нь|вирник|поконъ|огнищан|"
+    r"рядовиц|головнич|розграб|потокъ|тиун|боярьск",
+    re.IGNORECASE,
+)
+
+# Church ustav / homily / later editorial currency — not Russkaya Pravda.
+OES_PRAVDA_ALIEN_RE: re.Pattern[str] = re.compile(
+    r"диакон|дияк|диак\b|попам|попомъ|попамъ|владыц|оброкъ|"
+    r"рубль|грЂхъ|немощн|тЂли\b|евангел|апостол|църк|церкв",
     re.IGNORECASE,
 )
 
@@ -200,7 +217,8 @@ OES_PATERIK_TEXT_RE: re.Pattern[str] = re.compile(
 )
 
 OES_KYIV_CHRONICLE_TEXT_RE: re.Pattern[str] = re.compile(
-    r"києвьскым|батыєва|заборолом|полЂзоша|цЂлЂ\s+быша",
+    r"києвьскым|батыєва|заборолом|полЂзоша|цЂлЂ\s+быша|"
+    r"наутрЂя|тынцю|гробницю|мьстиславу|мъстиславь|всеволож",
     re.IGNORECASE,
 )
 
@@ -417,15 +435,87 @@ def oes_has_diplomatic_graph(text: str) -> bool:
     return bool(OES_GRAPH_RE.search(text or ""))
 
 
-def oes_passage_fingerprint(text: str) -> str:
-    """Normalize a passage so ellipsis / punctuation / wiki wrappers collapse."""
-    s = unicodedata.normalize("NFKC", text or "").casefold()
-    s = OES_WIKI_WRAPPER_RE.sub(" ", s)
-    s = re.sub(r"\[\s*s\d+\s*\]", " ", s)
-    s = re.sub(r"[*_`«»\"'“”„…·•—–~❙/\\|]+", " ", s)
-    s = re.sub(r"[.,;:!?()\[\]<>]+", " ", s)
+_LATIN_VOWEL_TO_CYRILLIC = str.maketrans(
+    {
+        "a": "а",
+        "e": "е",
+        "i": "і",
+        "o": "о",
+        "u": "у",
+        "y": "у",
+        "A": "А",
+        "E": "Е",
+        "I": "І",
+        "O": "О",
+        "U": "У",
+        "Y": "У",
+    }
+)
+
+
+def oes_strip_combining(text: str) -> str:
+    """Drop printed stresses so Половéцкомъ still matches половец."""
+    s = unicodedata.normalize("NFKC", text or "")
     s = "".join(ch for ch in unicodedata.normalize("NFKD", s) if unicodedata.category(ch) != "Mn")
+    return s.translate(_LATIN_VOWEL_TO_CYRILLIC)
+
+
+def oes_fold_graph_variants(text: str) -> str:
+    """Collapse ѡ/о, ѧ/я, ѣ/е and kin so second-graph reprints match."""
+    s = oes_strip_combining(text).casefold()
+    for src, dst in (
+        ("ѿ", "от"),
+        ("ѡ", "о"),
+        ("ѧ", "я"),
+        ("ѩ", "я"),
+        ("ѫ", "у"),
+        ("ѭ", "ю"),
+        ("ѥ", "е"),
+        ("ѣ", "е"),
+        ("ђ", "е"),
+        ("ӕ", "я"),
+        ("ꙗ", "я"),
+        ("ꙑ", "ы"),
+    ):
+        s = s.replace(src, dst)
+    return s
+
+
+def oes_match_blob(text: str) -> str:
+    """Accent-stripped text for monument regexes (historical letters kept)."""
+    return oes_strip_combining(text)
+
+
+def oes_passage_fingerprint(text: str) -> str:
+    """Normalize a passage so wrappers, accents, and graph variants collapse."""
+    s = oes_fold_graph_variants(text)
+    s = OES_WIKI_WRAPPER_RE.sub(" ", s)
+    s = re.sub(r"<!--.*?-->", " ", s)
+    s = re.sub(r"\[\s*s\d+\s*\]", " ", s)
+    s = re.sub(r"[*_`«»\"'“”„…·•—–~❙/\\|<>=]+", " ", s)
+    s = re.sub(r"[.,;:!?()\[\]<>]+", " ", s)
     return re.sub(r"\s+", " ", s).strip()
+
+
+def _longest_common_token_run(left: str, right: str) -> int:
+    ta = left.split()
+    tb = right.split()
+    if not ta or not tb:
+        return 0
+    best = 0
+    index_b = {tok: [] for tok in set(tb)}
+    for j, tok in enumerate(tb):
+        index_b[tok].append(j)
+    for i, tok in enumerate(ta):
+        for j in index_b.get(tok, ()):
+            k = 0
+            while i + k < len(ta) and j + k < len(tb) and ta[i + k] == tb[j + k]:
+                k += 1
+            if k > best:
+                best = k
+            if best >= 8:
+                return best
+    return best
 
 
 def oes_passages_are_near_duplicates(left: str, right: str) -> bool:
@@ -436,10 +526,11 @@ def oes_passages_are_near_duplicates(left: str, right: str) -> bool:
     if a == b:
         return True
     shorter, longer = (a, b) if len(a) <= len(b) else (b, a)
-    if len(shorter) >= 40 and shorter in longer:
+    if shorter in longer:
         return True
-    prefix = min(56, len(shorter))
-    return prefix >= 40 and longer.startswith(shorter[:prefix])
+    if longer.startswith(shorter):
+        return True
+    return _longest_common_token_run(a, b) >= 8
 
 
 def oes_text_is_diplomatic_excerpt(text: str) -> bool:
@@ -451,11 +542,15 @@ def oes_text_is_diplomatic_excerpt(text: str) -> bool:
         return False
     if OES_COMMENTARY_RE.search(raw):
         return False
+    if OES_PARADIGM_SLASH_RE.search(raw):
+        return False
     if OES_MEDICAL_RE.search(raw):
         return False
     if OES_WIKI_WRAPPER_RE.search(raw):
         return False
     if OES_LATER_SLAVIC_RE.search(raw):
+        return False
+    if OES_GARBLED_RE.search(raw):
         return False
     return not ('"' in raw or "..." in raw)
 
@@ -473,52 +568,72 @@ def oes_work_bucket(work: str) -> str:
     return "other"
 
 
+def _oes_search(pattern: re.Pattern[str], text: str) -> bool:
+    blob = oes_match_blob(text)
+    return bool(pattern.search(text) or pattern.search(blob))
+
+
+def oes_text_is_pravda_legal(text: str) -> bool:
+    if _oes_search(OES_PRAVDA_ALIEN_RE, text):
+        return False
+    if _oes_search(OES_SLOVO_TEXT_RE, text):
+        return False
+    return _oes_search(OES_PRAVDA_TEXT_RE, text)
+
+
 def oes_text_matches_named_monument(text: str, work: str) -> bool:
     """The row's work label must be the monument the excerpt actually is."""
     bucket = oes_work_bucket(work)
     if bucket == "pvl":
-        if OES_PATERIK_TEXT_RE.search(text) and not OES_PVL_TEXT_RE.search(text):
+        if _oes_search(OES_PATERIK_TEXT_RE, text) and not _oes_search(OES_PVL_TEXT_RE, text):
             return False
-        if OES_SLOVO_TEXT_RE.search(text) and not OES_PVL_TEXT_RE.search(text):
+        if _oes_search(OES_SLOVO_TEXT_RE, text) and not _oes_search(OES_PVL_TEXT_RE, text):
             return False
-        return bool(OES_PVL_TEXT_RE.search(text))
+        return _oes_search(OES_PVL_TEXT_RE, text)
     if bucket == "slovo":
-        if OES_COMMENTARY_RE.search(text):
+        if OES_COMMENTARY_RE.search(text) or OES_PARADIGM_SLASH_RE.search(text):
             return False
-        return bool(OES_SLOVO_TEXT_RE.search(text))
+        return _oes_search(OES_SLOVO_TEXT_RE, text)
     if bucket == "pravda":
-        return bool(OES_PRAVDA_TEXT_RE.search(text))
+        return oes_text_is_pravda_legal(text)
     if bucket == "pateryk":
-        return bool(OES_PATERIK_TEXT_RE.search(text))
+        return _oes_search(OES_PATERIK_TEXT_RE, text)
     if "київський літопис" in _norm(work):
-        return bool(OES_KYIV_CHRONICLE_TEXT_RE.search(text))
+        return _oes_search(OES_KYIV_CHRONICLE_TEXT_RE, text)
     if "кирило турівськ" in _norm(work):
-        return bool(OES_KYRYLO_TEXT_RE.search(text))
+        return _oes_search(OES_KYRYLO_TEXT_RE, text)
     return False
 
 
 def infer_oes_work_from_text(text: str) -> tuple[str, int] | None:
     """Assign a monument from the excerpt itself, not from a wiki filename."""
-    if OES_PATERIK_TEXT_RE.search(text) and not OES_PVL_TEXT_RE.search(text):
+    if _oes_search(OES_PATERIK_TEXT_RE, text) and not _oes_search(OES_PVL_TEXT_RE, text):
         return "Патерик Києво-Печерський", 1220
-    if OES_SLOVO_TEXT_RE.search(text):
+    if _oes_search(OES_SLOVO_TEXT_RE, text):
         return "Слово о полку Ігоревім", 1187
-    if OES_PRAVDA_TEXT_RE.search(text):
+    if oes_text_is_pravda_legal(text):
         return "Руська Правда", 1072
-    if OES_PVL_TEXT_RE.search(text):
+    if _oes_search(OES_PVL_TEXT_RE, text):
         return "Повість временних літ", 1113
-    if OES_KYIV_CHRONICLE_TEXT_RE.search(text):
+    if _oes_search(OES_KYIV_CHRONICLE_TEXT_RE, text):
         return "Київський літопис", 1203
-    if OES_KYRYLO_TEXT_RE.search(text):
+    if _oes_search(OES_KYRYLO_TEXT_RE, text):
         return "Кирило Турівський", 1180
     return None
 
 
 def oes_pick_target_term(text: str) -> str:
-    for word in re.findall(r"[А-Яа-яІіЇїЄєҐґѣѢЂђъЪьѧѩѫѭѥѡ]{2,}", text or ""):
+    stripped = oes_strip_combining(text)
+    for word in re.findall(r"[А-Яа-яІіЇїЄєҐґѣѢЂђъЪьѧѩѫѭѥѡ]{2,}", stripped):
         if OES_GRAPH_RE.search(word) and len(word) >= 2:
             return word
     return ""
+
+
+def oes_target_occurs_in_text(target: str, text: str) -> bool:
+    t = oes_strip_combining(target).casefold()
+    s = oes_strip_combining(text).casefold()
+    return len(t) >= 2 and t in s
 
 
 def oes_record_is_authentic(case: dict[str, Any]) -> bool:
@@ -543,7 +658,17 @@ def oes_record_is_authentic(case: dict[str, Any]) -> bool:
         return False
     if len(target) < 2 or not OES_GRAPH_RE.search(target):
         return False
-    return _norm(target) in _norm(text)
+    return oes_target_occurs_in_text(target, text)
+
+
+def oes_honest_unique_passages(texts: list[str]) -> list[str]:
+    """Keep first of each near-duplicate cluster after graph/accent fold."""
+    kept: list[str] = []
+    for text in texts:
+        if any(oes_passages_are_near_duplicates(text, prev) for prev in kept):
+            continue
+        kept.append(text)
+    return kept
 
 
 def normalize_surzhyk_target(target: str) -> str:
