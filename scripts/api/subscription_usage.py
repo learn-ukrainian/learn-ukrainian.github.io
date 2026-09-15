@@ -1523,7 +1523,10 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
         api_win = named_tertiary
         primary_win = auto_win
         weekly_win = None
-        cursor_window_labels = {"secondary": "Auto", "tertiary": "API"}
+        cursor_window_labels = {
+            "secondary": "Cursor Models (Auto)",
+            "tertiary": "Other Models (API)",
+        }
         auto_used = _used_pct(auto_win) if auto_win else _used_pct(named_secondary)
         api_used = _used_pct(api_win) if api_win else _used_pct(named_tertiary)
         resets_at = None
@@ -1536,7 +1539,7 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
         cursor_provider_windows = {
             "auto": {
                 "window": "monthly",
-                "label": "Auto",
+                "label": "Cursor Models (Auto)",
                 "used_pct": auto_used,
                 "remaining_pct": _remaining_pct(auto_used),
                 "resets_at": resets_at,
@@ -1544,11 +1547,18 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
             },
             "api": {
                 "window": "monthly",
-                "label": "API",
+                "label": "Other Models (API)",
                 "used_pct": api_used,
                 "remaining_pct": _remaining_pct(api_used),
                 "resets_at": resets_at,
                 "window_minutes": (api_win or {}).get("windowMinutes"),
+            },
+            "grok_bot": {
+                "window": "weekly",
+                "label": "Grok Bot",
+                "used_pct": None,
+                "remaining_pct": None,
+                "resets_at": None,
             },
         }
 
@@ -1953,8 +1963,27 @@ def _fetch_cursor_lane_usage_live(*, prefer_native: bool = True) -> dict[str, An
             **login,
             "probe_state": "NEED_LOGIN",
             "provider_windows": {
-                "auto": {"window": "monthly", "label": "Auto", "used_pct": None, "remaining_pct": None, "resets_at": None},
-                "api": {"window": "monthly", "label": "API", "used_pct": None, "remaining_pct": None, "resets_at": None},
+                "auto": {
+                    "window": "monthly",
+                    "label": "Cursor Models (Auto)",
+                    "used_pct": None,
+                    "remaining_pct": None,
+                    "resets_at": None,
+                },
+                "api": {
+                    "window": "monthly",
+                    "label": "Other Models (API)",
+                    "used_pct": None,
+                    "remaining_pct": None,
+                    "resets_at": None,
+                },
+                "grok_bot": {
+                    "window": "weekly",
+                    "label": "Grok Bot",
+                    "used_pct": None,
+                    "remaining_pct": None,
+                    "resets_at": None,
+                },
             },
         }
 
@@ -2070,8 +2099,27 @@ def get_cursor_lane_usage(*, prefer_native: bool = True) -> dict[str, Any]:
             "probe_state": "NEED_PROBE",
             "status": "unknown",
             "provider_windows": {
-                "auto": {"window": "monthly", "label": "Auto", "used_pct": None, "remaining_pct": None, "resets_at": None},
-                "api": {"window": "monthly", "label": "API", "used_pct": None, "remaining_pct": None, "resets_at": None},
+                "auto": {
+                    "window": "monthly",
+                    "label": "Cursor Models (Auto)",
+                    "used_pct": None,
+                    "remaining_pct": None,
+                    "resets_at": None,
+                },
+                "api": {
+                    "window": "monthly",
+                    "label": "Other Models (API)",
+                    "used_pct": None,
+                    "remaining_pct": None,
+                    "resets_at": None,
+                },
+                "grok_bot": {
+                    "window": "weekly",
+                    "label": "Grok Bot",
+                    "used_pct": None,
+                    "remaining_pct": None,
+                    "resets_at": None,
+                },
             },
             "fetched_at": None,
             "source": "cursor_native",

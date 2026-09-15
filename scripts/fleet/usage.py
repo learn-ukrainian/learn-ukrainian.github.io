@@ -1,4 +1,8 @@
-"""Operator CLI over the Monitor's native subscription and prepaid probes."""
+"""Operator CLI over the Monitor's native subscription and prepaid probes.
+
+``show`` / ``json`` against a warm Monitor must not import ``state_router`` or
+``learn_ukrainian_v4_runtime`` — notebooks often lack the editable v4 package.
+"""
 
 from __future__ import annotations
 
@@ -12,6 +16,8 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
+
+from scripts.fleet.prepaid_status import api_lane_status_from_account
 
 
 def read_budget(*, fresh: bool = False, transport: str = "dispatch") -> dict[str, Any]:
@@ -27,7 +33,7 @@ def read_budget(*, fresh: bool = False, transport: str = "dispatch") -> dict[str
             ):
                 raise ValueError("invalid routing-budget payload")
             return {**budget, "source": "monitor-api"}
-        except (OSError, urllib.error.URLError, ValueError):
+        except (OSError, urllib.error.URLError, ValueError, json.JSONDecodeError):
             print("Monitor snapshot unavailable; running blocking native probes.", file=sys.stderr)
     from scripts.api.state_router import compute_routing_budget
     from scripts.api.subscription_usage import (
@@ -47,7 +53,7 @@ def read_budget(*, fresh: bool = False, transport: str = "dispatch") -> dict[str
 
 
 def _observation(info: dict[str, Any]) -> tuple[str, Any]:
-    native = info.get("codexbar") or {}
+    native = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else {}
     return str(info.get("freshness") or native.get("freshness") or "unavailable"), info.get(
         "age_s", native.get("age_s")
     )
@@ -57,36 +63,171 @@ def _usd(value: Any) -> str:
     return f"${value:.2f}" if isinstance(value, (int, float)) and not isinstance(value, bool) else "unknown"
 
 
-def format_human(budget: dict[str, Any]) -> str:
-    from scripts.api.state_router import _api_lane_status_from_account
-    from scripts.fleet.capacity_pick import build_lane_rows
+def _pct(value: Any) -> str:
+    return f"{float(value):.1f}%" if isinstance(value, (int, float)) and not isinstance(value, bool) else "unknown"
 
-    agents = budget.get("agents") or {}
+
+def _window_kind(minutes: Any, explicit: Any = None) -> str:
+    if isinstance(explicit, str) and explicit.strip():
+        return explicit.strip()
+    if not isinstance(minutes, (int, float)) or isinstance(minutes, bool):
+        return "window"
+    m = float(minutes)
+    if 200 <= m <= 400:
+        return "5h"
+    if 9000 <= m <= 12000:
+        return "weekly"
+    if 40000 <= m <= 50000:
+        return "monthly"
+    return f"{int(m)}m"
+
+
+def _fail_note(info: dict[str, Any]) -> str:
+    native = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else {}
+    kind = (
+        info.get("failure_kind")
+        or native.get("failure_kind")
+        or info.get("error_kind")
+        or native.get("error_kind")
+    )
+    code = info.get("last_failure_code") or native.get("last_failure_code")
+    probe = info.get("probe_state") or native.get("probe_state")
+    login = info.get("login_state") or native.get("login_state")
+    parts: list[str] = []
+    if kind:
+        parts.append(str(kind))
+    if code is not None:
+        parts.append(str(code))
+    if probe and str(probe).upper() not in {"OK", "HEALTHY", "NONE"}:
+        parts.append(f"probe={probe}")
+    if login and str(login).upper() not in {"AUTHENTICATED", "OK", "NONE", ""}:
+        parts.append(f"login={login}")
+    return "/".join(parts)
+
+
+def _named_allotments(lane: str, info: dict[str, Any]) -> list[str]:
+    """Human lines for weekly/monthly/module pools that actually exist on the payload."""
+    lines: list[str] = []
+    native = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else {}
+
+    # Claude: interactive weekly + agentic monthly (Fable/dispatch burns agentic).
+    interactive = info.get("interactive") if isinstance(info.get("interactive"), dict) else None
+    agentic = info.get("agentic_pool") if isinstance(info.get("agentic_pool"), dict) else None
+    if interactive is not None:
+        spent = interactive.get("spent_7d_usd")
+        cap = interactive.get("weekly_cap_usd")
+        lines.append(
+            "  interactive (weekly): "
+            f"status={interactive.get('status', 'unknown')} "
+            f"burn={_pct(interactive.get('burn_pct_7d'))} "
+            f"spent={_usd(spent)}/{_usd(cap)}"
+        )
+    if agentic is not None:
+        spent = agentic.get("spent_cycle_usd")
+        cap = agentic.get("monthly_cap_usd")
+        lines.append(
+            "  agentic/Fable (monthly): "
+            f"status={agentic.get('status', 'unknown')} "
+            f"burn={_pct(agentic.get('burn_pct_cycle'))} "
+            f"spent={_usd(spent)}/{_usd(cap)} "
+            f"active={agentic.get('active')}"
+        )
+
+    # Cursor / named provider pools (Cursor Models, Other Models, Grok Bot).
+    provider = info.get("provider_windows")
+    if not isinstance(provider, dict):
+        provider = native.get("provider_windows")
+    if isinstance(provider, dict) and provider:
+        # Stable order: auto, api, grok_bot, total, then any extras.
+        order = ["auto", "api", "grok_bot", "total"]
+        keys = [k for k in order if k in provider] + [k for k in provider if k not in order]
+        for key in keys:
+            block = provider.get(key)
+            if not isinstance(block, dict):
+                continue
+            label = str(block.get("label") or key)
+            kind = _window_kind(block.get("window_minutes"), block.get("window"))
+            lines.append(
+                f"  {label} ({kind}): "
+                f"used={_pct(block.get('used_pct'))} "
+                f"rem={_pct(block.get('remaining_pct'))} "
+                f"resets={block.get('resets_at') or 'unknown'}"
+            )
+        return lines
+
+    # Generic primary/secondary/tertiary windows (Kimi 5h+weekly, Codex, Grok…).
+    windows = native.get("windows") if isinstance(native.get("windows"), dict) else None
+    if isinstance(windows, dict):
+        for name, block in windows.items():
+            if not isinstance(block, dict):
+                continue
+            used = block.get("used_pct")
+            rem = block.get("remaining_pct")
+            if used is None and rem is None and block.get("resets_at") is None:
+                continue
+            kind = _window_kind(block.get("window_minutes"), block.get("reset_description") or block.get("window"))
+            label = str(block.get("label") or name)
+            lines.append(
+                f"  {label} ({kind}): "
+                f"used={_pct(used)} rem={_pct(rem)} "
+                f"resets={block.get('resets_at') or 'unknown'}"
+            )
+
+    return lines
+
+
+def format_human(budget: dict[str, Any]) -> str:
+    """Render subscriptions + prepaid without importing Monitor routers."""
+    agents = budget.get("agents") if isinstance(budget.get("agents"), dict) else {}
     lines = [
         f"source: {budget.get('source', 'unknown')}",
-        "Subscriptions",
-        "lane | status | remaining% | freshness | age_s | pace",
+        "Subscriptions (per-lane allotments; blank pools mean the probe did not return them)",
+        "lane | status | remaining% | freshness | age_s | fail",
     ]
-    for row in build_lane_rows(budget, lanes=tuple(agents)):
-        lane = row["lane"]
-        freshness, age = _observation(agents[lane])
-        status = row["status"] if freshness != "unavailable" else "unknown"
-        remaining = row["remaining_pct"]
-        remaining_text = f"{remaining:.1f}" if remaining is not None and freshness != "unavailable" else "unknown"
-        lines.append(
-            f"{lane} | {status} | {remaining_text} | {freshness} | {age if age is not None else 'unknown'} | {row['pace']}"
+    usable = 0
+    for lane in sorted(agents):
+        info = agents.get(lane) if isinstance(agents.get(lane), dict) else {}
+        freshness, age = _observation(info)
+        status = str(info.get("status") or "unknown")
+        if freshness == "unavailable":
+            status = "unknown"
+        rem = info.get("remaining_pct")
+        rem_text = (
+            f"{float(rem):.1f}"
+            if isinstance(rem, (int, float)) and not isinstance(rem, bool) and freshness != "unavailable"
+            else "unknown"
         )
+        fail = _fail_note(info) or "-"
+        lines.append(
+            f"{lane} | {status} | {rem_text} | {freshness} | "
+            f"{age if age is not None else 'unknown'} | {fail}"
+        )
+        allotments = _named_allotments(lane, info)
+        if allotments:
+            lines.extend(allotments)
+            coolish = any("status=cool" in a or "status=warm" in a for a in allotments)
+            rem_signal = any("rem=" in a and "rem=unknown" not in a for a in allotments)
+            if freshness != "unavailable" or coolish or rem_signal:
+                usable += 1
+        elif freshness != "unavailable" and status in {"cool", "warm", "hot", "near_cap"}:
+            usable += 1
+        elif freshness == "unavailable" and fail == "-":
+            lines.append("  (no allotment windows; probe returned empty)")
+
     lines.extend(["", "Prepaid (USD; key cap remaining is not account balance)"])
     for lane, account in (budget.get("api_accounts") or {}).items():
+        if not isinstance(account, dict):
+            continue
         freshness, age = _observation(account)
-        status = _api_lane_status_from_account(lane, account)
+        status = api_lane_status_from_account(lane, account)
         pick = (
             "n/a (funding account)"
             if lane == "openrouter"
             else ("AVOID" if status not in {"cool", "warm"} else "eligible")
         )
         lines.append(
-            f"{lane} | {status} | pick: {pick} | freshness: {freshness} | age_s: {age if age is not None else 'unknown'} | probe: {account.get('probe_state', 'NEED_PROBE')}"
+            f"{lane} | {status} | pick: {pick} | freshness: {freshness} | "
+            f"age_s: {age if age is not None else 'unknown'} | probe: {account.get('probe_state', 'NEED_PROBE')}"
         )
         if lane == "openrouter":
             balance = _usd(account.get("account_remaining_usd"))
@@ -98,12 +239,22 @@ def format_human(budget: dict[str, Any]) -> str:
                 )
             lines.append(f"  balance: {balance} | key cap remaining: {_usd(account.get('limit_remaining_usd'))}")
             lines.append(
-                f"  daily spend: {_usd(account.get('usage_daily_usd'))} | weekly spend: {_usd(account.get('usage_weekly_usd'))} | free tier: {account.get('is_free_tier', False)}"
+                f"  daily spend: {_usd(account.get('usage_daily_usd'))} | "
+                f"weekly spend: {_usd(account.get('usage_weekly_usd'))} | "
+                f"free tier: {account.get('is_free_tier', False)}"
             )
         else:
             lines.append(
-                f"  balance: {account.get('currency') or 'unknown currency'} {account.get('total_balance')} | available: {account.get('is_available')}"
+                f"  balance: {account.get('currency') or 'unknown currency'} "
+                f"{account.get('total_balance')} | available: {account.get('is_available')}"
             )
+
+    if usable == 0 and agents:
+        lines.append("")
+        lines.append(
+            "WARN: no usable subscription allotment rows — mix-max is blind. "
+            "Run: usage doctor && usage show --fresh; check fail= codes above."
+        )
     return "\n".join(lines)
 
 
@@ -152,30 +303,60 @@ def doctor() -> str:
             present = "present" if path.is_file() else "absent"
         except OSError:
             present = "unavailable"
-        # Standard locations stay portable; configured paths are not echoed.
         label = "~/" + str(path.relative_to(home)) if path.is_relative_to(home) else "configured credential path"
         lines.append(f"file {label}: {present}")
     lines.append(
         "OpenCode management entry: openrouter-management (key); presence of auth.json does not verify its entries."
     )
+    lines.append(
+        "Notebook tip: if `usage show --fresh` ImportErrors on learn_ukrainian_v4_runtime, "
+        "run `.venv/bin/pip install -e packages/v4-runtime` (Monitor-backed `show` needs no v4)."
+    )
     return "\n".join(lines)
+
+
+def qa_snapshot(budget: dict[str, Any]) -> tuple[int, str]:
+    """Exit 0 only when at least one subscription lane has a usable allotment signal."""
+    agents = budget.get("agents") if isinstance(budget.get("agents"), dict) else {}
+    if not agents:
+        return 1, "QA FAIL: routing-budget agents missing"
+    problems: list[str] = []
+    usable = 0
+    for lane, info in agents.items():
+        if not isinstance(info, dict):
+            problems.append(f"{lane}: not an object")
+            continue
+        freshness, _ = _observation(info)
+        allotments = _named_allotments(lane, info)
+        status = str(info.get("status") or "unknown")
+        if (
+            freshness != "unavailable" and (allotments or status in {"cool", "warm", "hot", "near_cap"})
+        ) or any("status=cool" in a or "status=warm" in a for a in allotments):
+            usable += 1
+        elif freshness == "unavailable" and not _fail_note(info) and not allotments:
+            problems.append(f"{lane}: unavailable with no fail= and no pools")
+    if usable == 0:
+        problems.append("no usable subscription allotment rows (mix-max blind)")
+    if problems:
+        return 1, "QA FAIL:\n- " + "\n- ".join(problems)
+    return 0, f"QA PASS: {usable} subscription lane(s) have usable allotment signal(s)"
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description=(
             "Inspect native subscription usage and prepaid funding.\n"
-            "Use before routing work; this checks capacity, not model or review eligibility."
+            "Shows per-lane weekly/monthly/module pools when the probe returns them."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
             "  .venv/bin/python -m scripts.fleet.usage show\n"
             "  .venv/bin/python -m scripts.fleet.usage json --fresh\n"
-            "  .venv/bin/python -m scripts.fleet.usage doctor\n\n"
-            "Outputs: stdout table/JSON; refresh updates process-local probe caches.\n"
+            "  .venv/bin/python -m scripts.fleet.usage doctor\n"
+            "  .venv/bin/python -m scripts.fleet.usage qa\n\n"
             "Default: DELEGATE_MONITOR_API (http://127.0.0.1:8765); offline falls back to blocking probes.\n"
-            "Exit codes: 0 snapshot/doctor printed (unknown is explicit); 1 read/refresh failed; 2 invalid arguments.\n"
+            "Exit codes: 0 ok; 1 read/refresh/qa failed; 2 invalid arguments.\n"
             "Related: /api/state/routing-budget; scripts.fleet.capacity_pick; issue #8074."
         ),
     )
@@ -183,13 +364,13 @@ def main(argv: list[str] | None = None) -> int:
         "command",
         nargs="?",
         default="show",
-        choices=("show", "json", "refresh", "doctor"),
-        help="show (default): table; json: snapshot; refresh: blocking refresh/table; doctor: credential presence.",
+        choices=("show", "json", "refresh", "doctor", "qa"),
+        help="show (default); json; refresh; doctor; qa (fail if mix-max-blind).",
     )
     parser.add_argument(
         "--fresh",
         action="store_true",
-        help="Block for native probes in this process (default: read Monitor); e.g. show --fresh.",
+        help="Block for native probes in this process (default: read Monitor).",
     )
     args = parser.parse_args(argv)
     if args.command == "doctor":
@@ -197,8 +378,14 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     try:
         budget = read_budget(fresh=args.fresh or args.command == "refresh")
+        if args.command == "qa":
+            code, message = qa_snapshot(budget)
+            print(message)
+            if code == 0:
+                print(format_human(budget))
+            return code
         print(json.dumps(budget, indent=2, sort_keys=True) if args.command == "json" else format_human(budget))
-    except (OSError, ValueError, RuntimeError):
+    except (OSError, ValueError, RuntimeError, json.JSONDecodeError):
         print("Usage snapshot failed; capacity remains unknown. Run usage doctor.", file=sys.stderr)
         return 1
     return 0

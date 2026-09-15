@@ -222,9 +222,11 @@ def test_normalize_cursor_three_windows():
     assert res["weekly_remaining_pct"] is None
     assert res["provider_windows"]["auto"]["used_pct"] == 36.0
     assert res["provider_windows"]["api"]["used_pct"] == 100.0
-    assert res["windows"]["secondary"]["label"] == "Auto"
-    assert res["windows"]["tertiary"]["label"] == "API"
+    assert res["windows"]["secondary"]["label"] == "Cursor Models (Auto)"
+    assert res["windows"]["tertiary"]["label"] == "Other Models (API)"
     assert res["windows"]["tertiary"]["used_pct"] == 100.0
+    assert "grok_bot" in res["provider_windows"]
+    assert res["provider_windows"]["grok_bot"]["window"] == "weekly"
     assert res["weekly_resets_at"] == "2026-08-01T09:58:38Z"
     assert res["windows"]["secondary"]["used_pct"] == 36.0
 
@@ -869,8 +871,9 @@ def test_dashboard_routing_html_renders_cursor_auto_api_subscriptions():
     """
     res = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True, timeout=30)
     out = res.stdout
-    assert "Auto" in out
-    assert "API" in out
+    assert "Cursor Models" in out
+    assert "Other Models" in out
+    assert "Grok Bot" in out
     assert "23" in out
     assert "40" in out
     assert "77" in out or "60" in out
