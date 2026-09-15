@@ -61,9 +61,9 @@ Ukrainian source material:
 | Ukrainian Wikipedia (Interactive only; frozen from training #6958) | 1,029 records | 2,865,506 words |
 | **Middle Ukrainian & Cossack Baroque (14th–18th c.)** | 20,085 chunks | 36,561,300 chars |
 | **Old East Slavic & Kyivan Rus Chronicles (11th–13th c.)** | 10,202 chunks | 17,421,735 chars |
-| **Saint Sophia of Kyiv Epigraphic Corpus (11th–14th c.)** | 4,157 records | 2,570 text-bearing (2,570 transcriptions, 1,917 translations) |
+| **Saint Sophia of Kyiv Epigraphic Corpus (11th–14th c.)** | 4,157 records | 2,570 usable transcriptions (1,915 translations, 1,382 commentary) |
 | **Borys Grinchenko Regional Field Citations (1907)** | 11,000+ entries | 5 collector zones |
-| **СУМ-11 Verified Dialect Records** | 6,112 entries | Literary citations |
+| **СУМ-11 Verified Dialect Records** | 5,908 entries | Verified dialect markers |
 | **Authentic Ukrainian Idioms & Phraseology** | 24,683 entries | Curated dictionary |
 
 This is recovered Ukrainian source data, mechanically distinct from the
@@ -74,9 +74,14 @@ core metadata, and verified the textbook family against 158 chunk files, 170
 PDFs, the selection ledger, downloader, and page-URL map. The Saint Sophia
 inscriptions are grounded in Dr. Viacheslav Korniyenko's 12-volume monographs
 (7,000+ physical graffiti) and the University of Gothenburg GRIDH portal
-(`https://saintsophia.dh.gu.se/`), accompanied by an evidence-preserving
-paleographic normalization contract that immutably retains raw transcriptions
-and Epidoc XML while preserving editorial uncertainty and abbreviation marks.
+(`https://saintsophia.dh.gu.se/`), tracking 4,157 total records (3,133 with
+parsed EpiDoc XML, 1,917 translations, 2,956 commentaries across the full
+table) and a documented usable-transcription subset of 2,570 records (1,915
+translations, 1,382 commentaries), accompanied by an evidence-preserving
+paleographic normalization contract (referencing `gu-gridh/sophia-epigraphic-ai`
+pinned at `b6d04301d21ad9bb1f1ac8424fdbe8f7cba6999e`) that immutably retains
+raw transcriptions and Epidoc XML while preserving editorial uncertainty and
+abbreviation marks.
 
 The operator has approved retained human-authored families for downstream
 research and model learning toward the project goal, subject to each family’s
