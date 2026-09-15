@@ -53,6 +53,30 @@ class TestOverrides:
         result = verify_stress("любові")
         assert all(not m["override_applied"] for m in result["matches"])
 
+    def test_yiyi_override(self):
+        # #7994: the ULIF trie has no entry for "її" at all (not
+        # ambiguous, not_found) — the annotator then silently dropped
+        # stress on 48 occurrences in my-family. Fixed final-syllable
+        # stress (ї-ї́), same pattern as the other oblique personal-pronoun
+        # forms the trie does cover (мене́, тебе́).
+        result = verify_stress("її")
+        assert result["status"] == "ok"
+        match = result["matches"][0]
+        assert match["stressed_form"] == f"її{STRESS}"
+        assert match["unstressed_form"] == "її"
+        assert match["override_applied"] is True
+
+    def test_yiyi_override_casefolded(self):
+        # Override lookup is exact-string (not casefolded by verify_stress
+        # itself), so the sentence-initial capitalized casing needs its own
+        # override entry — verified directly here, not just via the
+        # annotator's own lowercase-then-transfer path.
+        result = verify_stress("Її")
+        assert result["status"] == "ok"
+        match = result["matches"][0]
+        assert match["stressed_form"] == f"Її{STRESS}"
+        assert match["override_applied"] is True
+
 
 class TestHeteronymEnumeration:
     def test_zamok_enumerates_every_reading(self):

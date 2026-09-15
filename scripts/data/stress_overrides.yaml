@@ -14,3 +14,11 @@
 # pedagogical A1 form (school dual-stress lists; first syllable is preferred).
 завжди: "за́вжди"
 також: "та́кож"
+# ULIF trie has no entry at all for "її" (genitive/accusative of "вона";
+# indeclinable possessive pronoun) in any casing — #7994. Fixed final-syllable
+# stress (ї-ї́), same pattern as other oblique personal-pronoun forms the
+# trie does cover (мене́, тебе́). Override lookup is exact-string, not
+# casefolded (see stress.py's _load_overrides), so both castings are listed
+# explicitly to cover mid-sentence "її" and sentence-initial "Її".
+її: "її́"
+Її: "Її́"
