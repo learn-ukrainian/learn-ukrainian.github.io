@@ -309,7 +309,7 @@ def test_muzyka_disambiguation():
 
 
 def test_batch_expansion_count():
-    """Verify batch heteronym expansion admits 200 curated lemmas with exact scan residual.
+    """Verify batch heteronym expansion admits 232 curated lemmas with exact scan residual.
 
     Batch 1 (#8039, PR #8043): 40 curated. Batch 2 (#8039 continuation): +32
     lemmas selected from the atlas.db-approved, A1/A2/B1 tier residual, each
@@ -326,12 +326,15 @@ def test_batch_expansion_count():
     Batch 6 (#8039 continuation): +32 lemmas selected from atlas.db and high-frequency
     residual, verified against modern standard (СУМ-20 / ВТС) and authentic pre-Soviet
     Grinchenko (1907), expanding SSOT to 200.
+    Batch 7 (#8039 continuation): +32 lemmas selected from academic authorities and
+    Grinchenko (1907) with explicit Tsarist imperial ban citations and Soviet
+    colonization context, expanding SSOT to 232 and dropping residual to 190.
     """
     total_curated = len(enrich_heteronyms.CURATED_HETERONYMS)
-    assert total_curated == 200
+    assert total_curated == 232
     # Corrected denominator is 422 true two-way-stress candidates;
-    # residual is 422 - 200 = 222
-    assert 422 - total_curated == 222
+    # residual is 422 - 232 = 190
+    assert 422 - total_curated == 190
 
 
 def test_kredyt_disambiguation():
@@ -824,6 +827,111 @@ def test_batch6_lemmas_not_duplicated_from_earlier_batches():
     assert "ковтнути" in CURATED_HETERONYMS_BATCH_6
     assert "байковий" in CURATED_HETERONYMS_BATCH_6
     assert "брикнути" in CURATED_HETERONYMS_BATCH_6
+
+
+def test_batch7_semantic_and_stress_distinctions():
+    """Verify Batch 7 stress and semantic distinctions against academic authorities and Grinchenko."""
+    # банник: ба́нник (bore swab) vs банни́к (bathhouse attendant)
+    ban = enrich_heteronyms.build_heteronyms_for_lemma("банник")
+    assert ban is not None and len(ban) == 2
+    assert ban[0]["headword"] == "ба́нник"
+    assert "artillery" in ban[0]["gloss"].lower() or "brush" in ban[0]["gloss"].lower()
+    assert ban[1]["headword"] == "банни́к"
+    assert "bath" in ban[1]["gloss"].lower() or "bather" in ban[1]["gloss"].lower()
+
+    # бережений: бере́жений (participle of берегти) vs береже́ний (cautious, prudent)
+    ber = enrich_heteronyms.build_heteronyms_for_lemma("бережений")
+    assert ber is not None and len(ber) == 2
+    assert ber[0]["headword"] == "бере́жений"
+    assert "guarded" in ber[0]["gloss"].lower() or "kept" in ber[0]["gloss"].lower()
+    assert ber[1]["headword"] == "береже́ний"
+    assert "cautious" in ber[1]["gloss"].lower() or "wary" in ber[1]["gloss"].lower()
+
+    # буритися: бу́ритися (crumble / rage) vs бури́тися (passive of бурити)
+    bur = enrich_heteronyms.build_heteronyms_for_lemma("буритися")
+    assert bur is not None and len(bur) == 2
+    assert bur[0]["headword"] == "бу́ритися"
+    assert "collapse" in bur[0]["gloss"].lower() or "rage" in bur[0]["gloss"].lower()
+    assert bur[1]["headword"] == "бури́тися"
+    assert "drilled" in bur[1]["gloss"].lower() or "bored" in bur[1]["gloss"].lower()
+
+    # виправний: випра́вний (correctable) vs виправни́й (correctional / penal)
+    vyp = enrich_heteronyms.build_heteronyms_for_lemma("виправний")
+    assert vyp is not None and len(vyp) == 2
+    assert vyp[0]["headword"] == "випра́вний"
+    assert "correctable" in vyp[0]["gloss"].lower() or "rectifiable" in vyp[0]["gloss"].lower()
+    assert vyp[1]["headword"] == "виправни́й"
+    assert "correctional" in vyp[1]["gloss"].lower() or "penal" in vyp[1]["gloss"].lower()
+
+    # відбігати: відбі́гати (finish running) vs відбіга́ти (run away)
+    vidb = enrich_heteronyms.build_heteronyms_for_lemma("відбігати")
+    assert vidb is not None and len(vidb) == 2
+    assert vidb[0]["headword"] == "відбі́гати"
+    assert "finish" in vidb[0]["gloss"].lower()
+    assert vidb[1]["headword"] == "відбіга́ти"
+    assert "run away" in vidb[1]["gloss"].lower()
+
+    # вугровий: вугро́вий (acne) vs вугрови́й (eel)
+    vuh = enrich_heteronyms.build_heteronyms_for_lemma("вугровий")
+    assert vuh is not None and len(vuh) == 2
+    assert vuh[0]["headword"] == "вугро́вий"
+    assert "acne" in vuh[0]["gloss"].lower() or "pimple" in vuh[0]["gloss"].lower()
+    assert vuh[1]["headword"] == "вугрови́й"
+    assert "eel" in vuh[1]["gloss"].lower()
+
+    # гаванський: га́ванський (harbor) vs гава́нський (Havana)
+    hav = enrich_heteronyms.build_heteronyms_for_lemma("гаванський")
+    assert hav is not None and len(hav) == 2
+    assert hav[0]["headword"] == "га́ванський"
+    assert "harbor" in hav[0]["gloss"].lower() or "haven" in hav[0]["gloss"].lower()
+    assert hav[1]["headword"] == "гава́нський"
+    assert "havana" in hav[1]["gloss"].lower()
+
+    # гребінник: гребі́нник (grass) vs гребінни́к (comb maker)
+    hreb = enrich_heteronyms.build_heteronyms_for_lemma("гребінник")
+    assert hreb is not None and len(hreb) == 2
+    assert hreb[0]["headword"] == "гребі́нник"
+    assert "grass" in hreb[0]["gloss"].lower()
+    assert hreb[1]["headword"] == "гребінни́к"
+    assert "comb" in hreb[1]["gloss"].lower()
+
+    # значковий: зна́чковий (cartographic symbol) vs значкови́й (Cossack rank)
+    znach = enrich_heteronyms.build_heteronyms_for_lemma("значковий")
+    assert znach is not None and len(znach) == 2
+    assert znach[0]["headword"] == "зна́чковий"
+    assert "symbol" in znach[0]["gloss"].lower() or "badge" in znach[0]["gloss"].lower()
+    assert znach[1]["headword"] == "значкови́й"
+    assert "cossack" in znach[1]["gloss"].lower() or "banner" in znach[1]["gloss"].lower()
+
+
+def test_batch7_lemmas_not_duplicated_from_earlier_batches():
+    """Verify batch 7's 32 lemmas are net-new and mutually disjoint with batches 1-6."""
+    from scripts.lexicon.curated_heteronyms_batch import CURATED_HETERONYMS_BATCH
+    from scripts.lexicon.curated_heteronyms_batch2 import CURATED_HETERONYMS_BATCH_2
+    from scripts.lexicon.curated_heteronyms_batch3 import CURATED_HETERONYMS_BATCH_3
+    from scripts.lexicon.curated_heteronyms_batch4 import CURATED_HETERONYMS_BATCH_4
+    from scripts.lexicon.curated_heteronyms_batch5 import CURATED_HETERONYMS_BATCH_5
+    from scripts.lexicon.curated_heteronyms_batch6 import CURATED_HETERONYMS_BATCH_6
+    from scripts.lexicon.curated_heteronyms_batch7 import CURATED_HETERONYMS_BATCH_7
+
+    assert len(CURATED_HETERONYMS_BATCH_7) == 32
+    earlier = (
+        set(CURATED_HETERONYMS_BATCH)
+        | set(CURATED_HETERONYMS_BATCH_2)
+        | set(CURATED_HETERONYMS_BATCH_3)
+        | set(CURATED_HETERONYMS_BATCH_4)
+        | set(CURATED_HETERONYMS_BATCH_5)
+        | set(CURATED_HETERONYMS_BATCH_6)
+    )
+    assert earlier & set(CURATED_HETERONYMS_BATCH_7) == set()
+    assert "банник" in CURATED_HETERONYMS_BATCH_7
+    assert "бережений" in CURATED_HETERONYMS_BATCH_7
+    assert "буритися" in CURATED_HETERONYMS_BATCH_7
+    assert "важниця" in CURATED_HETERONYMS_BATCH_7
+    assert "валковий" in CURATED_HETERONYMS_BATCH_7
+    assert "виправний" in CURATED_HETERONYMS_BATCH_7
+    assert "випробуваний" in CURATED_HETERONYMS_BATCH_7
+    assert "значковий" in CURATED_HETERONYMS_BATCH_7
 
 
 def test_homonyms_with_numeric_suffixes_and_identical_stress_not_treated_as_heteronyms(monkeypatch):

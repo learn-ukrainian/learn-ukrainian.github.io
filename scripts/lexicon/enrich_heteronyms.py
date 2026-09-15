@@ -35,6 +35,7 @@ try:
     from scripts.lexicon.curated_heteronyms_batch4 import CURATED_HETERONYMS_BATCH_4
     from scripts.lexicon.curated_heteronyms_batch5 import CURATED_HETERONYMS_BATCH_5
     from scripts.lexicon.curated_heteronyms_batch6 import CURATED_HETERONYMS_BATCH_6
+    from scripts.lexicon.curated_heteronyms_batch7 import CURATED_HETERONYMS_BATCH_7
 except ModuleNotFoundError:
     from curated_heteronyms_batch import CURATED_HETERONYMS_BATCH
     from curated_heteronyms_batch2 import CURATED_HETERONYMS_BATCH_2
@@ -42,6 +43,7 @@ except ModuleNotFoundError:
     from curated_heteronyms_batch4 import CURATED_HETERONYMS_BATCH_4
     from curated_heteronyms_batch5 import CURATED_HETERONYMS_BATCH_5
     from curated_heteronyms_batch6 import CURATED_HETERONYMS_BATCH_6
+    from curated_heteronyms_batch7 import CURATED_HETERONYMS_BATCH_7
 
 
 @lru_cache(maxsize=1)
@@ -482,6 +484,7 @@ CURATED_HETERONYMS: dict[str, list[dict[str, Any]]] = {
     **CURATED_HETERONYMS_BATCH_4,
     **CURATED_HETERONYMS_BATCH_5,
     **CURATED_HETERONYMS_BATCH_6,
+    **CURATED_HETERONYMS_BATCH_7,
 }
 
 
