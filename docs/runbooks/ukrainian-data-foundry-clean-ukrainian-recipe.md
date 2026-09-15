@@ -74,14 +74,15 @@ core metadata, and verified the textbook family against 158 chunk files, 170
 PDFs, the selection ledger, downloader, and page-URL map. The Saint Sophia
 inscriptions are grounded in Dr. Viacheslav Korniyenko's 12-volume monographs
 (7,000+ physical graffiti) and the University of Gothenburg GRIDH portal
-(`https://saintsophia.dh.gu.se/`), tracking 4,157 total records (3,133 with
-parsed EpiDoc XML, 1,917 translations, 2,956 commentaries across the full
-table) and a documented usable-transcription subset of 2,570 records (1,915
-translations, 1,382 commentaries), accompanied by an evidence-preserving
+(`https://saintsophia.dh.gu.se/`), tracking 4,157 total records (2,100 records
+with parsed EpiDoc XML [2,100 non-empty `epidoc_text`, 1,033 non-empty
+`epidoc_interpretation`], 1,917 translations, 2,956 commentaries across the
+full table) and a documented usable-transcription subset of 2,570 records
+(1,915 translations, 1,382 commentaries), accompanied by an evidence-preserving
 paleographic normalization contract (referencing `gu-gridh/sophia-epigraphic-ai`
-pinned at `b6d04301d21ad9bb1f1ac8424fdbe8f7cba6999e`) that immutably retains
-raw transcriptions and Epidoc XML while preserving editorial uncertainty and
-abbreviation marks.
+pinned at `b6d04301d21ad9bb1f1ac8424fdbe8f7cba6999e` for baseline cleaning)
+that immutably retains raw transcriptions and Epidoc XML while preserving
+editorial uncertainty and abbreviation marks.
 
 The operator has approved retained human-authored families for downstream
 research and model learning toward the project goal, subject to each family’s
