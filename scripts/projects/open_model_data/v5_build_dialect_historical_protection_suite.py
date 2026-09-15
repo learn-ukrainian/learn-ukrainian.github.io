@@ -28,6 +28,20 @@ if str(REPO_ROOT) not in sys.path:
 
 import jsonschema
 
+from scripts.projects.open_model_data.dialect_protection_invariants import (
+    LEMKO_BANNED_TARGET_RE,
+    MAX_TOLERATED_DIALECT_CORRUPTION,
+    MAX_TOLERATED_HISTORICAL_CORRUPTION,
+    OES_GRAPH_RE,
+    OES_MAX_YEAR,
+    first_lemko_marker,
+    is_metalinguistic_control,
+    lemko_record_is_authentic,
+    oes_record_is_authentic,
+    surzhyk_record_is_authentic,
+    surzhyk_target_allowed,
+)
+
 PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
 
 
@@ -72,6 +86,64 @@ DEFAULT_OUTPUT_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "deco
 DEFAULT_CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
 RECORD_SCHEMA_FILE = DEFAULT_CONTRACTS_DIR / "v1_dialect_historical_protection_record.schema.json"
 RECEIPT_SCHEMA_FILE = DEFAULT_CONTRACTS_DIR / "v1_dialect_historical_protection_receipt.schema.json"
+LEMKO_SEED_FILE = (
+    REPO_ROOT
+    / "data"
+    / "projects"
+    / "open_model_data"
+    / "decolonization"
+    / "seeds"
+    / "lemko_dialect_attested_seeds.jsonl"
+)
+MID_UA_SEED_FILE = (
+    REPO_ROOT
+    / "data"
+    / "projects"
+    / "open_model_data"
+    / "decolonization"
+    / "seeds"
+    / "middle_ukrainian_attested_seeds.jsonl"
+)
+EXISTING_SUITE_FILE = DEFAULT_OUTPUT_DIR / "dialect_historical_protection_suite_600.jsonl"
+OES_WIKI_DIR = REPO_ROOT / "wiki" / "linguistics" / "oes"
+
+OES_STEM_TO_WORK: tuple[tuple[str, str, int], ...] = (
+    ("slovo", "Слово о полку Ігоревім", 1187),
+    ("pvl", "Повість временних літ", 1113),
+    ("law", "Руська Правда", 1072),
+    ("murder", "Руська Правда", 1072),
+    ("zakup", "Руська Правда", 1072),
+    ("cheliadin", "Руська Правда", 1072),
+    ("smerd", "Руська Правда", 1072),
+    ("witness", "Руська Правда", 1072),
+    ("theft", "Руська Правда", 1072),
+    ("assault", "Руська Правда", 1072),
+    ("weaponry", "Руська Правда", 1072),
+    ("inheritance", "Руська Правда", 1072),
+    ("guardianship", "Руська Правда", 1072),
+    ("restitution", "Руська Правда", 1072),
+    ("trade", "Руська Правда", 1072),
+    ("body-injury", "Руська Правда", 1072),
+    ("bankrupt", "Руська Правда", 1072),
+    ("monomakh", "Повчання Володимира Мономаха", 1117),
+    ("pateryk", "Патерик Києво-Печерський", 1220),
+    ("saint", "Патерик Києво-Печерський", 1220),
+    ("building-of-lavra", "Патерик Києво-Печерський", 1073),
+    ("galytsko", "Галицько-Волинський літопис", 1264),
+    ("treaty", "Повість временних літ", 944),
+    ("ilarion", "Слово про Закон і Благодать", 1050),
+    ("kyrylo", "Кирило Турівський", 1180),
+    ("daniel", "Моління Данила Заточника", 1230),
+    ("davni-teksty", "Збірка давніх текстів XI–XIII ст.", 1200),
+    ("ihor-campaign", "Повість временних літ", 1185),
+    ("fall-of-kyiv", "Київський літопис", 1203),
+    ("sack-of-kyiv", "Київський літопис", 1240),
+)
+
+LATER_SLAVIC_REJECT_RE = re.compile(
+    r"рицерского|шляхецкого|литовськ|статут|вольност",
+    re.IGNORECASE,
+)
 
 
 def clean_sentence(s: str) -> str:
@@ -96,9 +168,210 @@ def extract_sentences(text: str) -> list[str]:
     return valid
 
 
-def mine_dialect_sentences(conn: sqlite3.Connection) -> list[dict[str, Any]]:
+def _load_existing_suite() -> list[dict[str, Any]]:
+    if not EXISTING_SUITE_FILE.exists():
+        return []
+    return [
+        json.loads(line)
+        for line in EXISTING_SUITE_FILE.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+
+
+def _reuse_existing_subgroup(subgroup: str, quota: int) -> list[dict[str, Any]]:
+    rows = [c for c in _load_existing_suite() if c.get("subgroup") == subgroup]
+    if subgroup == "middle_ukrainian":
+        rows = [
+            c
+            for c in rows
+            if "життя та творчість" not in (c.get("source_metadata") or {}).get("work", "").lower()
+        ]
+    return rows[:quota]
+
+
+def _oes_work_for_stem(stem: str) -> tuple[str, int] | None:
+    for key, work, year in OES_STEM_TO_WORK:
+        if stem.startswith(key) or key in stem:
+            return work, year
+    return None
+
+
+def mine_lemko_from_seeds(quota: int = 40) -> list[dict[str, Any]]:
+    """Load attested Lemko dialect sentences from the git-grounded seed file."""
+    if not LEMKO_SEED_FILE.exists():
+        raise FileNotFoundError(f"Lemko seed file missing: {LEMKO_SEED_FILE}")
+    records: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for line in LEMKO_SEED_FILE.read_text(encoding="utf-8").splitlines():
+        if len(records) >= quota:
+            break
+        if not line.strip():
+            continue
+        seed = json.loads(line)
+        text = clean_sentence(seed["input_text"])
+        if text in seen:
+            continue
+        marker = first_lemko_marker(text)
+        if marker is None or LEMKO_BANNED_TARGET_RE.search(marker):
+            continue
+        target = str(seed.get("target_term") or marker)
+        if LEMKO_BANNED_TARGET_RE.search(target) or target.casefold() not in text.casefold():
+            target = marker
+        notes = (
+            "Лемківський говір південно-західного наріччя. "
+            f"Лексема «{target}» ({seed.get('definition', 'автентичний лемківський маркер')}). "
+            "Автентична діалектна одиниця української мови та жива культурна спадщина. "
+            "Підлягає безумовному захисту від штучного виправлення, стандартизації або "
+            "хибної класифікації як суржику чи помилки."
+        )
+        rec = {
+            "eval_id": f"eval_prot_dial_{len(records) + 1:04d}",
+            "stratum": "regional_dialect",
+            "subgroup": "southwestern_lemko",
+            "case_type": "PRESERVE",
+            "input_text": text,
+            "target_term": target,
+            "expected_action": "PRESERVE",
+            "expected_replacement": None,
+            "linguistic_notes": notes,
+            "source_metadata": {
+                "source": "literary_texts",
+                "author": seed.get("author") or "Народна пісня",
+                "work": seed.get("work") or "Лемківська народна пісня",
+                "year": int(seed.get("year") or 1929),
+                "language_period": "modern",
+                "region_or_dialect": "southwestern_lemko",
+            },
+        }
+        if not lemko_record_is_authentic(rec):
+            continue
+        seen.add(text)
+        records.append(rec)
+    if len(records) < quota:
+        raise ValueError(f"Lemko seed harvest produced {len(records)} authentic cases, need {quota}")
+    return records[:quota]
+
+
+def mine_oes_from_wiki(quota: int = 100) -> list[dict[str, Any]]:
+    """Mine diplomatic Old East Slavic sentences from wiki/linguistics/oes samples."""
+    if not OES_WIKI_DIR.is_dir():
+        raise FileNotFoundError(f"OES wiki directory missing: {OES_WIKI_DIR}")
+    raw: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for path in sorted(OES_WIKI_DIR.glob("*.md")):
+        mapped = _oes_work_for_stem(path.stem)
+        if mapped is None:
+            continue
+        work, year = mapped
+        text = path.read_text(encoding="utf-8")
+        if "## Мовні зразки" not in text:
+            continue
+        body = text.split("## Мовні зразки", 1)[1]
+        body = re.split(r"\n## ", body, maxsplit=1)[0]
+        candidates = re.findall(r">\s*«?([^<\n]{20,300})", body)
+        candidates += re.findall(r"«([^»]{20,300})»", body)
+        candidates += re.findall(r"`([^`]{20,300})`", body)
+        for chunk in candidates:
+            chunk = re.sub(r"\s+", " ", chunk).strip()
+            chunk = re.sub(r"^[\s«»\"'`>*]+|[\s«»\"'`>]+$", "", chunk)
+            chunk = re.sub(r"\s*\[S\d+\]\s*$", "", chunk)
+            if len(chunk) < 25 or len(chunk.split()) < 4:
+                continue
+            if chunk.casefold() in seen:
+                continue
+            if not OES_GRAPH_RE.search(chunk):
+                continue
+            if LATER_SLAVIC_REJECT_RE.search(chunk):
+                continue
+            if re.search(r"яременк|переклад|чи не гоже було б нам", chunk, re.IGNORECASE):
+                continue
+            target = ""
+            for word in re.findall(r"[А-Яа-яІіЇїЄєҐґѣѢЂђъЪьѧѩѫѭѥѡ]{2,}", chunk):
+                if OES_GRAPH_RE.search(word):
+                    target = word
+                    break
+            if len(target) < 2:
+                continue
+            notes = (
+                f"Давньоруська мовна доба (XI–XIII ст.), пам'ятка «{work}». "
+                f"Історична лексема «{target}» збережена в оригінальній/дипломатичній графіці. "
+                "Автентичний текст літописної спадщини Русі. "
+                "Підлягає збереженню в оригінальному або коментованому вигляді; "
+                "неприпустимо модернізувати під сучасний правопис або оголошувати граматичною помилкою."
+            )
+            rec = {
+                "eval_id": "eval_prot_hist_0000",
+                "stratum": "historical_text",
+                "subgroup": "old_east_slavic",
+                "case_type": "PRESERVE",
+                "input_text": chunk,
+                "target_term": target,
+                "expected_action": "PRESERVE",
+                "expected_replacement": None,
+                "linguistic_notes": notes,
+                "source_metadata": {
+                    "source": "literary_texts",
+                    "author": "Давньоруський книжник",
+                    "work": work,
+                    "year": year if year <= OES_MAX_YEAR else OES_MAX_YEAR,
+                    "language_period": "old_east_slavic",
+                },
+            }
+            if not oes_record_is_authentic(rec):
+                continue
+            seen.add(chunk.casefold())
+            raw.append(rec)
+    if len(raw) < quota:
+        raise ValueError(f"OES wiki harvest produced {len(raw)} authentic cases, need {quota}")
+    ordered = _diversify_oes_monuments(raw, quota)
+    records = []
+    for idx, rec in enumerate(ordered, start=1):
+        rec = dict(rec)
+        rec["eval_id"] = f"eval_prot_hist_{idx:04d}"
+        records.append(rec)
+    return records
+
+
+def _oes_bucket(work: str) -> str:
+    blob = work.casefold()
+    if "слово о полку" in blob:
+        return "slovo"
+    if "руська правда" in blob or "правда руска" in blob:
+        return "pravda"
+    if "повість временних" in blob or "повѣсть" in blob:
+        return "pvl"
+    return "other"
+
+
+def _diversify_oes_monuments(raw: list[dict[str, Any]], quota: int) -> list[dict[str, Any]]:
+    """Reserve diplomatic samples from each #8051 monument, then fill."""
+    buckets: dict[str, list[dict[str, Any]]] = {"slovo": [], "pravda": [], "pvl": [], "other": []}
+    for rec in raw:
+        buckets[_oes_bucket(str(rec["source_metadata"]["work"]))].append(rec)
+    reserved = 20
+    picked: list[dict[str, Any]] = []
+    used: set[str] = set()
+    for key in ("slovo", "pravda", "pvl"):
+        for rec in buckets[key][:reserved]:
+            ident = rec["input_text"]
+            if ident in used:
+                continue
+            used.add(ident)
+            picked.append(rec)
+    for key in ("slovo", "pravda", "pvl", "other"):
+        for rec in buckets[key]:
+            if len(picked) >= quota:
+                break
+            ident = rec["input_text"]
+            if ident in used:
+                continue
+            used.add(ident)
+            picked.append(rec)
+    return picked[:quota]
+
+
+def mine_dialect_sentences(conn: sqlite3.Connection | None) -> list[dict[str, Any]]:
     """Mine 300 authentic regional dialect sentences across Southwestern, Southeastern, and Northern groups."""
-    cur = conn.cursor()
     records: list[dict[str, Any]] = []
 
     # Dialect specifications: (subgroup, query_filter, terms_list, quota)
@@ -148,23 +421,7 @@ def mine_dialect_sentences(conn: sqlite3.Connection) -> list[dict[str, Any]]:
             ],
             45,
         ),
-        # 3. Southwestern - Lemko (40 cases)
-        (
-            "southwestern_lemko",
-            "SELECT author, work, text, year FROM literary_texts WHERE (work LIKE '%Антонич%' OR author LIKE '%Антонич%' OR work LIKE '%Лемк%' OR text LIKE '%лем %' OR text LIKE '% кед %')",
-            [
-                (r"\bлем\b", "лем", "частка «тільки», «лише» — визначальна маркерна лексема лемківського діалекту"),
-                (r"\bкед\b|\bкедь\b", "кед", "лемківський сполучник «якщо», «коли»"),
-                (r"\bєднак\b", "єднак", "лемківський сполучник «однак», «все ж таки»"),
-                (r"\bгойний\w*", "гойний", "щедрий, рясний, багатий у західноукраїнських говірках"),
-                (r"\bхиж\w*", "хижа", "традиційна лемківська селянська хата"),
-                (r"\bґвалт\w*", "ґвалт", "тривожний крик, небезпека або насильство"),
-                (r"\bпаробок\w*", "паробок", "парубок, молодий хлопець у західноукраїнській народній мові"),
-                (r"\bколиск\w*", "колиска", "дерев'яна підвісна колиска для немовляти"),
-                (r"\bзапічк\w*", "запічок", "тепле місце за піччю в традиційній світлиці"),
-            ],
-            40,
-        ),
+        # 3. Southwestern - Lemko is mined from attested seeds, not this regex harvest.
         # 4. Southwestern - Galician/Pokuttia (50 cases)
         (
             "southwestern_galician",
@@ -249,7 +506,26 @@ def mine_dialect_sentences(conn: sqlite3.Connection) -> list[dict[str, Any]]:
     item_idx = 1
     seen_texts: set[str] = set()
 
+    if conn is None:
+        reused: list[dict[str, Any]] = []
+        for subgroup, _query, _terms, quota in subgroups:
+            if subgroup == "southwestern_lemko":
+                continue
+            chunk = _reuse_existing_subgroup(subgroup, quota)
+            if len(chunk) != quota:
+                raise ValueError(f"Existing suite missing {subgroup}: got {len(chunk)}, need {quota}")
+            reused.extend(chunk)
+        lemko = mine_lemko_from_seeds(40)
+        # Re-number dialect eval_ids in harvest order: reused non-Lemko first, then Lemko.
+        all_dialect = reused + lemko
+        for idx, rec in enumerate(all_dialect, start=1):
+            rec["eval_id"] = f"eval_prot_dial_{idx:04d}"
+        return all_dialect
+
+    cur = conn.cursor()
     for subgroup, query, terms, quota in subgroups:
+        if subgroup == "southwestern_lemko":
+            continue
         sub_records: list[dict[str, Any]] = []
         rows = cur.execute(query).fetchall()
 
@@ -311,85 +587,71 @@ def mine_dialect_sentences(conn: sqlite3.Connection) -> list[dict[str, Any]]:
 
         records.extend(sub_records)
 
+    records.extend(mine_lemko_from_seeds(40))
+    for idx, rec in enumerate(records, start=1):
+        rec["eval_id"] = f"eval_prot_dial_{idx:04d}"
     return records
 
 
-def mine_historical_sentences(conn: sqlite3.Connection) -> list[dict[str, Any]]:
+def mine_middle_ua_from_seeds(quota: int) -> list[dict[str, Any]]:
+    """Load attested Middle Ukrainian sentences that replace biography-about-author rows."""
+    if quota <= 0:
+        return []
+    if not MID_UA_SEED_FILE.exists():
+        raise FileNotFoundError(f"Middle Ukrainian seed file missing: {MID_UA_SEED_FILE}")
+    records: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for line in MID_UA_SEED_FILE.read_text(encoding="utf-8").splitlines():
+        if len(records) >= quota:
+            break
+        if not line.strip():
+            continue
+        seed = json.loads(line)
+        text = clean_sentence(seed["input_text"])
+        if text in seen or len(text) < 25:
+            continue
+        target = str(seed["target_term"])
+        if target.casefold() not in text.casefold():
+            continue
+        work = seed.get("work") or "Староукраїнська пам'ятка"
+        notes = (
+            f"Староукраїнська (середньоукраїнська) мовна доба козацького бароко (XVI–XVIII ст.), "
+            f"твір «{work}». Історична лексема «{target}». "
+            "Автентична пам'ятка козацького літописання чи барокової філософії. "
+            "Підлягає історичному захисту; заборонено примусово руйнувати бароковий колорит і граматику."
+        )
+        rec = {
+            "eval_id": "eval_prot_hist_0000",
+            "stratum": "historical_text",
+            "subgroup": "middle_ukrainian",
+            "case_type": "PRESERVE",
+            "input_text": text,
+            "target_term": target,
+            "expected_action": "PRESERVE",
+            "expected_replacement": None,
+            "linguistic_notes": notes,
+            "source_metadata": {
+                "source": "literary_texts",
+                "author": seed.get("author") or "Григорій Сковорода",
+                "work": work,
+                "year": int(seed.get("year") or 1760),
+                "language_period": "middle_ukrainian",
+            },
+        }
+        seen.add(text)
+        records.append(rec)
+    if len(records) < quota:
+        raise ValueError(f"Middle Ukrainian seed harvest produced {len(records)} cases, need {quota}")
+    return records[:quota]
+
+
+def mine_historical_sentences(conn: sqlite3.Connection | None) -> list[dict[str, Any]]:
     """Mine 200 authentic historical sentences (100 Old East Slavic + 100 Middle Ukrainian)."""
-    cur = conn.cursor()
     records: list[dict[str, Any]] = []
 
-    # 1. Old East Slavic (100 cases)
-    oes_terms = [
-        (r"\bкняз\w*", "князь", "правитель князівства або воєначальник Руської держави"),
-        (r"\bдружин\w*", "дружина", "військо князя, військовий стан у давньоруську добу"),
-        (r"\bполк\w*|\bполкъ\w*", "полк", "давньоруське військове формування, похiд або військовий стрій"),
-        (r"\bбоян\w*", "боян", "давньоруський поет-співець, оповідач пісень і слав"),
-        (r"\bстяг\w*", "стяг", "військовий прапор або корогва давньоруського війська"),
-        (r"\bлітописець\w*", "літописець", "укладач історичних хронік та літописів Русі"),
-        (r"\bруськ\w*\s+земл\w*", "Руська земля", "історична назва українських та східнослов'янських земель доби Русі"),
-        (r"\bбратств\w*", "братство", "громада або союз у давньоруських містах і монастирях"),
-        (r"\bпосадник\w*", "посадник", "намісник князя, голова міського врядування"),
-        (r"\bвіче\w*", "віче", "народні збори громадян давньоруського міста для вирішення важливих справ"),
-        (r"\bтиун\w*", "тиун", "управитель князівського господарства або суддя"),
-        (r"\bгривн\w*", "гривна", "грошова та вагова одиниця давньої Русі"),
-        (r"\bкрамол\w*", "крамола", "міжусобиця, змова або бунт у давньоруських літописах"),
-        (r"\bзлат\w*\s+слов\w*", "золоте слово", "образне означення мудрого слова князя Святослава"),
-        (r"\bязиц\w*", "язици", "народи, племена або іноземні війська у літописному вжитку"),
-    ]
-
-    oes_records: list[dict[str, Any]] = []
-    seen_oes: set[str] = set()
-
-    oes_rows = cur.execute(
-        "SELECT author, work, text, year FROM literary_texts WHERE language_period = 'old_east_slavic'"
-    ).fetchall()
-
-    item_idx = 1
-    for author, work, text, year in oes_rows:
-        if len(oes_records) >= 100:
-            break
-        sentences = extract_sentences(text)
-        for s in sentences:
-            if len(oes_records) >= 100:
-                break
-            if s in seen_oes:
-                continue
-
-            for pat, _canon_target, definition in oes_terms:
-                m = re.search(pat, s, re.IGNORECASE)
-                if m:
-                    matched_token = m.group(0)
-                    seen_oes.add(s)
-                    notes = (
-                        f"Давньоруська мовна доба (XI–XIII ст.), пам'ятка «{work}». "
-                        f"Історична лексема «{matched_token}» ({definition}). "
-                        f"Автентичний текст літописної спадщини Русі. "
-                        f"Підлягає збереженню в оригінальному або коментованому вигляді; неприпустимо модернізувати під сучасний правопис або оголошувати граматичною помилкою."
-                    )
-                    rec = {
-                        "eval_id": f"eval_prot_hist_{item_idx:04d}",
-                        "stratum": "historical_text",
-                        "subgroup": "old_east_slavic",
-                        "case_type": "PRESERVE",
-                        "input_text": s,
-                        "target_term": matched_token,
-                        "expected_action": "PRESERVE",
-                        "expected_replacement": None,
-                        "linguistic_notes": notes,
-                        "source_metadata": {
-                            "source": "literary_texts",
-                            "author": author or "Давньоруський літописець",
-                            "work": work or "Давньоруські літописи",
-                            "year": year or 1187,
-                            "language_period": "old_east_slavic",
-                        },
-                    }
-                    oes_records.append(rec)
-                    item_idx += 1
-                    break
-
+    oes_records = mine_oes_from_wiki(100)
     records.extend(oes_records)
+    item_idx = len(oes_records) + 1
 
     # 2. Middle Ukrainian / Cossack Era (100 cases)
     mid_terms = [
@@ -413,10 +675,29 @@ def mine_historical_sentences(conn: sqlite3.Connection) -> list[dict[str, Any]]:
     mid_records: list[dict[str, Any]] = []
     seen_mid: set[str] = set()
 
+    if conn is None:
+        reused_mid = _reuse_existing_subgroup("middle_ukrainian", 100)
+        if len(reused_mid) < 100:
+            reused_mid = reused_mid + mine_middle_ua_from_seeds(100 - len(reused_mid))
+        if len(reused_mid) < 100:
+            raise ValueError(
+                f"Middle Ukrainian harvest produced {len(reused_mid)} cases after "
+                "dropping biography rows, need 100"
+            )
+        for rec in reused_mid:
+            rec = dict(rec)
+            rec["eval_id"] = f"eval_prot_hist_{item_idx:04d}"
+            mid_records.append(rec)
+            item_idx += 1
+        records.extend(mid_records)
+        return records
+
+    cur = conn.cursor()
     mid_rows = cur.execute(
         "SELECT author, work, text, year FROM literary_texts "
         "WHERE language_period = 'middle_ukrainian' AND "
-        "(work LIKE '%Величк%' OR work LIKE '%Грабянк%' OR work LIKE '%Самовидець%' OR author LIKE '%Сковорода%')"
+        "(work LIKE '%Величк%' OR work LIKE '%Грабянк%' OR work LIKE '%Самовидець%' OR author LIKE '%Сковорода%') "
+        "AND work NOT LIKE '%Життя та творчість%'"
     ).fetchall()
 
     for author, work, text, year in mid_rows:
@@ -466,9 +747,8 @@ def mine_historical_sentences(conn: sqlite3.Connection) -> list[dict[str, Any]]:
     return records
 
 
-def mine_anti_surzhyk_controls(conn: sqlite3.Connection) -> list[dict[str, Any]]:
+def mine_anti_surzhyk_controls(conn: sqlite3.Connection | None) -> list[dict[str, Any]]:
     """Mine 100 authentic Anti-Surzhyk Invariant Negative Controls (from style_guide and ua_gec_errors)."""
-    cur = conn.cursor()
     records: list[dict[str, Any]] = []
 
     # Canonical list of pervasive Russian calques / Surzhyk collocations with gold standard corrections
@@ -626,8 +906,10 @@ def mine_anti_surzhyk_controls(conn: sqlite3.Connection) -> list[dict[str, Any]]
         ),
     ]
 
-    # Authentic sentences from style_guide
-    rows_sg = cur.execute("SELECT text FROM style_guide").fetchall()
+    # Authentic sentences from style_guide (skip metalinguistic "правильно сказати … а не")
+    rows_sg: list[tuple[str]] = []
+    if conn is not None:
+        rows_sg = conn.cursor().execute("SELECT text FROM style_guide").fetchall()
     seen_surz: set[str] = set()
     item_idx = 1
 
@@ -638,13 +920,15 @@ def mine_anti_surzhyk_controls(conn: sqlite3.Connection) -> list[dict[str, Any]]
         for s in sentences:
             if len(records) >= 100:
                 break
-            if s in seen_surz:
+            if s in seen_surz or is_metalinguistic_control(s):
                 continue
 
             for pat, _target, corr, explanation in surzhyk_patterns:
                 m = re.search(pat, s, re.IGNORECASE)
                 if m:
                     matched_token = m.group(0)
+                    if not surzhyk_target_allowed(matched_token):
+                        continue
                     seen_surz.add(s)
                     notes = (
                         f"Колоніальний суржик та російська інтерференція: «{matched_token}». {explanation} "
@@ -670,6 +954,9 @@ def mine_anti_surzhyk_controls(conn: sqlite3.Connection) -> list[dict[str, Any]]
                             "standard_replacement": corr,
                         },
                     }
+                    if not surzhyk_record_is_authentic(rec):
+                        seen_surz.discard(s)
+                        continue
                     records.append(rec)
                     item_idx += 1
                     break
@@ -698,6 +985,8 @@ def mine_anti_surzhyk_controls(conn: sqlite3.Connection) -> list[dict[str, Any]]
                     continue
                 if err.lower() not in s.lower():
                     continue
+                if is_metalinguistic_control(s) or not surzhyk_target_allowed(err):
+                    continue
 
                 seen_surz.add(s)
                 notes = (
@@ -723,16 +1012,25 @@ def mine_anti_surzhyk_controls(conn: sqlite3.Connection) -> list[dict[str, Any]]
                         "standard_replacement": corr,
                     },
                 }
+                if not surzhyk_record_is_authentic(rec):
+                    seen_surz.discard(s)
+                    continue
                 records.append(rec)
                 item_idx += 1
 
+    if len(records) < 100:
+        raise ValueError(f"Anti-Surzhyk harvest produced {len(records)} curated calques, need 100")
     return records[:100]
 
 
 def build_suite() -> None:
     """Build the complete 600-case Dialect & Historical Protection Suite."""
-    print("Connecting to database at:", DEFAULT_SOURCES_DB)
-    conn = sqlite3.connect(DEFAULT_SOURCES_DB)
+    conn: sqlite3.Connection | None = None
+    if DEFAULT_SOURCES_DB.exists() and DEFAULT_SOURCES_DB.stat().st_size > 0:
+        print("Connecting to database at:", DEFAULT_SOURCES_DB)
+        conn = sqlite3.connect(DEFAULT_SOURCES_DB)
+    else:
+        print("sources.db unavailable; using git-grounded seeds + existing non-replaced strata")
 
     print("1. Mining 300 Regional Dialect sentences...")
     dialect_cases = mine_dialect_sentences(conn)
@@ -749,7 +1047,8 @@ def build_suite() -> None:
     print(f"   Mined: {len(surzhyk_cases)} anti-surzhyk cases")
     assert len(surzhyk_cases) == 100, f"Expected 100 anti-surzhyk cases, got {len(surzhyk_cases)}"
 
-    conn.close()
+    if conn is not None:
+        conn.close()
 
     all_cases = dialect_cases + historical_cases + surzhyk_cases
     assert len(all_cases) == 600, f"Expected 600 total cases, got {len(all_cases)}"
@@ -800,8 +1099,8 @@ def build_suite() -> None:
             "correct_cases": 100,
             "statistical_power": {
                 "target_non_corruption_gate": ">= 98.0%",
-                "max_tolerated_dialect_corruption": 1,
-                "max_tolerated_historical_corruption": 1,
+                "max_tolerated_dialect_corruption": MAX_TOLERATED_DIALECT_CORRUPTION,
+                "max_tolerated_historical_corruption": MAX_TOLERATED_HISTORICAL_CORRUPTION,
                 "surzhyk_normalization_tolerance": "0.0%",
                 "statistically_sound": True,
             },

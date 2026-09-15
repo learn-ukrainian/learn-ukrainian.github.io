@@ -30,6 +30,11 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.projects.open_model_data.dialect_protection_invariants import (
+    COMBINED_CP_FLOOR,
+    DIALECT_CP_FLOOR,
+    HISTORICAL_CP_FLOOR,
+)
 from scripts.projects.open_model_data.v5_evaluation_harness import ParsedTurn, parse_model_output
 
 DEFAULT_TEST_SUITE_PATH = (
@@ -185,16 +190,9 @@ def evaluate_single_case(case: dict[str, Any], raw_output: str) -> CaseEvaluatio
         # Check final response for destructive correction declarations
         has_destructive_claim = any(p.search(parsed.final_response) for p in DESTRUCTIVE_CORRECTION_PATTERNS)
 
-        # Check if the target term was eliminated or replaced destructively in final_response
-        target_preserved_in_response = (
-            target.lower() in parsed.final_response.lower()
-            or "зберігаємо" in parsed.final_response.lower()
-            or "нормативн" in parsed.final_response.lower()
-            or "автентичн" in parsed.final_response.lower()
-            or "діалект" in parsed.final_response.lower()
-            or "історичн" in parsed.final_response.lower()
-            or "пам'ятк" in parsed.final_response.lower()
-        )
+        # The target term itself must remain in the final response. Heritage keywords
+        # without the token are not preservation (CF #8086).
+        target_preserved_in_response = target.lower() in parsed.final_response.lower()
 
         # Failure if it falsely flags the authentic form as a calque/error
         if has_destructive_claim:
@@ -339,7 +337,8 @@ def evaluate_protection_suite(
             metrics.dialect_preserved, metrics.dialect_total
         )
         metrics.dialect_gate_cleared = (
-            metrics.dialect_preservation_rate >= 0.980 and metrics.dialect_clopper_pearson_lower >= 0.965
+            metrics.dialect_preservation_rate >= 0.980
+            and metrics.dialect_clopper_pearson_lower >= DIALECT_CP_FLOOR
         )
 
     # Historical text rates
@@ -349,7 +348,8 @@ def evaluate_protection_suite(
             metrics.historical_preserved, metrics.historical_total
         )
         metrics.historical_gate_cleared = (
-            metrics.historical_preservation_rate >= 0.980 and metrics.historical_clopper_pearson_lower >= 0.960
+            metrics.historical_preservation_rate >= 0.980
+            and metrics.historical_clopper_pearson_lower >= HISTORICAL_CP_FLOOR
         )
 
     # Combined preservation (N=500)
@@ -361,7 +361,8 @@ def evaluate_protection_suite(
             metrics.combined_preserve_passed, metrics.combined_preserve_total
         )
         metrics.combined_gate_cleared = (
-            metrics.combined_preserve_rate >= 0.980 and metrics.combined_clopper_pearson_lower >= 0.970
+            metrics.combined_preserve_rate >= 0.980
+            and metrics.combined_clopper_pearson_lower >= COMBINED_CP_FLOOR
         )
 
     # Anti-Surzhyk rates

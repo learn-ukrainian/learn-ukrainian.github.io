@@ -10,6 +10,18 @@ from typing import Any
 import jsonschema
 import pytest
 
+from scripts.projects.open_model_data.dialect_protection_invariants import (
+    LEMKO_BANNED_AUTHOR_NEEDLES,
+    LEMKO_BANNED_TARGET_RE,
+    MAX_TOLERATED_DIALECT_CORRUPTION,
+    MAX_TOLERATED_HISTORICAL_CORRUPTION,
+    OES_MAX_YEAR,
+    SURZHYK_BANNED_TARGETS,
+    SURZHYK_TARGET_ALLOWLIST,
+    lemko_record_is_authentic,
+    oes_record_is_authentic,
+    surzhyk_record_is_authentic,
+)
 from scripts.projects.open_model_data.v5_dialect_protection_evaluator import (
     evaluate_protection_suite,
     evaluate_single_case,
@@ -85,6 +97,12 @@ def test_suite_receipt_and_schema_validation(receipt_schema: dict[str, Any]) -> 
     assert inv["dialect_cultural_heritage_protection"] is True
     assert inv["historical_continuity_preservation"] is True
     assert inv["zero_hallucinated_sources"] is True
+
+    power = receipt["suite_summary"]["statistical_power"]
+    assert power["max_tolerated_dialect_corruption"] == MAX_TOLERATED_DIALECT_CORRUPTION
+    assert power["max_tolerated_historical_corruption"] == MAX_TOLERATED_HISTORICAL_CORRUPTION
+    assert power["target_non_corruption_gate"] == ">= 98.0%"
+    assert power["surzhyk_normalization_tolerance"] == "0.0%"
 
     # Check file link in receipt
     file_info = receipt["files"]["test_suite_jsonl"]
@@ -278,6 +296,67 @@ def test_evaluator_catches_surzhyk_normalization(suite_cases: list[dict[str, Any
 
     report = format_protection_report(metrics)
     assert "FAILED" in report
+
+
+def test_lemko_stratum_uses_attested_authors_and_rejects_false_stems(
+    suite_cases: list[dict[str, Any]],
+) -> None:
+    """Lemko quota must be real dialect forms from Lemko sources, not хижий/хижак harvests."""
+    lemko = [c for c in suite_cases if c["subgroup"] == "southwestern_lemko"]
+    assert len(lemko) == 40
+    for case in lemko:
+        assert lemko_record_is_authentic(case), case["eval_id"]
+        author = (case.get("source_metadata") or {}).get("author") or ""
+        assert not any(n in author.casefold() for n in LEMKO_BANNED_AUTHOR_NEEDLES)
+        assert not LEMKO_BANNED_TARGET_RE.search(case["target_term"])
+
+
+def test_oes_stratum_is_diplomatic_not_modern_translation(suite_cases: list[dict[str, Any]]) -> None:
+    """Old East Slavic rows must be original/diplomatic and name the claimed monuments."""
+    oes = [c for c in suite_cases if c["subgroup"] == "old_east_slavic"]
+    assert len(oes) == 100
+    works = {(c.get("source_metadata") or {}).get("work") or "" for c in oes}
+    blob = " ".join(works).casefold()
+    assert "слово о полку" in blob
+    assert "повість временних" in blob or "повѣсть" in blob
+    assert "руська правда" in blob or "правда руска" in blob
+    assert "яременк" not in blob
+    assert "переклад" not in blob
+    for case in oes:
+        assert oes_record_is_authentic(case), case["eval_id"]
+        year = (case.get("source_metadata") or {}).get("year")
+        assert isinstance(year, int) and year <= OES_MAX_YEAR
+
+    mid = [c for c in suite_cases if c["subgroup"] == "middle_ukrainian"]
+    assert len(mid) == 100
+    for case in mid:
+        work = ((case.get("source_metadata") or {}).get("work") or "").casefold()
+        assert "життя та творчість" not in work
+        assert "яременк" not in work
+
+
+def test_surzhyk_controls_are_curated_calques_only(suite_cases: list[dict[str, Any]]) -> None:
+    """Anti-Surzhyk N=100 is allowlisted calques, not standard UA or style-guide metalanguage."""
+    surz = [c for c in suite_cases if c["subgroup"] == "colonial_surzhyk_control"]
+    assert len(surz) == 100
+    for case in surz:
+        assert surzhyk_record_is_authentic(case), case["eval_id"]
+        target = case["target_term"].casefold().rstrip(".,;:")
+        assert target not in SURZHYK_BANNED_TARGETS
+        assert target in SURZHYK_TARGET_ALLOWLIST
+
+
+def test_evaluator_requires_target_token_not_heritage_keywords(suite_cases: list[dict[str, Any]]) -> None:
+    """PRESERVE fails when the model drops the target but keeps 'зберігаємо' / 'діалект'."""
+    preserve_case = next(c for c in suite_cases if c["case_type"] == "PRESERVE")
+    keyword_only = (
+        "<thought>\n1. Аналіз: автентична форма.\n</thought>\n"
+        "Речення нормативне. Форму зберігаємо як діалект і історичну пам'ятку."
+    )
+    res = evaluate_single_case(preserve_case, keyword_only)
+    assert res.is_pass is False
+    assert res.is_corrupted is True
+    assert "unauthorized_standardization" in (res.failure_reason or "")
 
 
 def test_evaluator_detects_malformed_thought_tags(suite_cases: list[dict[str, Any]]) -> None:

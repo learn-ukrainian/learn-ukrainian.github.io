@@ -6,7 +6,7 @@
 > **Architecture Reference:** [`DECOLONIZATION_EPIC_ARCHITECTURE.md`](./DECOLONIZATION_EPIC_ARCHITECTURE.md) (§2.9 & §7)
 > **Artifact Receipt:** [`dialect_historical_protection_receipt_v1.json`](../../../data/projects/open_model_data/decolonization/partitions/dialect_historical_protection_receipt_v1.json)
 > **Dataset File:** [`dialect_historical_protection_suite_600.jsonl`](../../../data/projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl)
-> **SHA-256:** `6e51d3d4e8e6c4aa838d2fb5fe47322b172d78b6354df8597ddc717c2665da37`
+> **SHA-256:** `14dbb23fe24c7acbc6ef8753358128a7f87dca6264e922cbf5044a92aaa3056a`
 
 ---
 
@@ -23,7 +23,7 @@ Phase 5.2 delivers an automated, 600-case held-out evaluation suite enforcing th
 
 ## 2. Partition Composition & Stratification
 
-Every single sentence, target term, and context is 100% grounded in verified human-authored Ukrainian texts in local storage (`sources.db` and `ua_gec_errors`). Zero synthetic or hallucinated sentences are permitted.
+Every sentence, target term, and context is grounded in verified human-authored Ukrainian texts (`sources.db` when present; otherwise git-grounded seeds, `wiki/linguistics/oes` diplomatic samples, the prior non-replaced strata, and `ua_gec_errors`). Zero synthetic or hallucinated sentences are permitted. Content predicates in [`dialect_protection_invariants.py`](../../../scripts/projects/open_model_data/dialect_protection_invariants.py) lock author/work allowlists, banned false stems, OES diplomatic graph/period, and the Surzhyk target allowlist — tests fail on authenticity drift, not only counts or SHA.
 
 ```mermaid
 pie title Phase 5.2 Held-Out Evaluation Suite (600 Cases)
@@ -43,7 +43,7 @@ Spans three major Ukrainian dialect groups, sourced from literary monuments and 
 | :--- | :--- | :--- | :--- | :--- |
 | **Southwestern** | Hutsul | 45 | Михайло Коцюбинський (*Тіні забутих предків*), Юрій Федькович | *плай*, *полонина*, *легінь*, *мольфар*, *крисаня*, *ватаг*, *маржинка*, *царинка*, *арідник*, *босорканя*, *черес*, *трембіта*, *струнга*, *постоли*, *дроб'ята*, *нявка*, *колиба*, *ґазда* |
 | **Southwestern** | Boyko | 45 | Іван Франко (*Борислав сміється*, *Захар Беркут*) | *бескид*, *опришок*, *ватра*, *тутка*, *кичера*, *кошара*, *бердо*, *плаю*, *дебря*, *путівець*, *тухольці*, *звір* |
-| **Southwestern** | Lemko | 40 | Богдан-Ігор Антонич, лемківська література та фольклор | *лем*, *кед*, *єднак*, *гойний*, *хижа*, *ґвалт*, *паробок*, *колиска*, *запічок* |
+| **Southwestern** | Lemko | 40 | Народні пісні Лемківщини (записи Ф. Колесси, О. Гижі, М. Гайворонського, А. Цисляка; антологія лемківської пісні) | *лем*, *юж*, *ци*, *барз*, *вшитко*, *влони*, *мамця*, *гамерици*, *позерат*, *нех* (standard *хижий*/*хижак* rejected) |
 | **Southwestern** | Galician / Pokuttia | 50 | Василь Стефаник (*Камінний хрест*, *Злодій*, *Кленові листки*), Лесь Мартович | *ґазда*, *ґаздиня*, *фамілія*, *кавалок*, *най*, *послі*, *ніц*, *споритися*, *доконче*, *байка*, *стратився* |
 | **Southeastern** | Poltava / Central Dnieper | 45 | Іван Котляревський (*Енеїда*), Іван Нечуй-Левицький, Панас Мирний | *парубоцький*, *вечорниці*, *чумак*, *ледащо*, *байрак*, *курінний*, *оковита*, *досвітки*, *запорожець*, *гайка* |
 | **Southeastern** | Slobozhan | 25 | Микола Хвильовий, Григорій Квітка-Основ'яненко, Панас Мирний | *слобода*, *хутір*, *козир-дівка*, *ярмарок*, *мандрівка* |
@@ -54,16 +54,16 @@ Spans three major Ukrainian dialect groups, sourced from literary monuments and 
 Evaluates whether the model preserves archaic, baroque, and chronicle registers without attempting modern orthographic standardisation:
 
 1. **Old East Slavic ($N = 100$):**
-   * Sourced from 11th–13th century literary monuments: *Повість временних літ*, *Слово о полку Ігоревім*, *Галицько-Волинський літопис*, *Київський літопис*, *Руська Правда*, *Патерик Києво-Печерський*, *Ізборник Святослава*.
-   * Markers: *князь*, *дружина*, *полкъ*, *боянъ*, *стяг*, *літописець*, *руська земля*, *братство*, *посадник*, *віче*, *тиун*, *гривна*, *крамола*, *золоте слово*, *язици*.
+   * Diplomatic / original-graph samples from `wiki/linguistics/oes` «Мовні зразки», reserved across the monuments named in #8051: *Слово о полку Ігоревім*, *Руська Правда*, *Повість временних літ*. Modern Яременко translations are rejected; rows require period `old_east_slavic`, year $\le 1300$, and at least one historical graph (*ѣ/Ђ/ъ/ѧ…*). #8051's orthography-clause drop is therefore **not** taken: the stratum stays labeled `old_east_slavic` because the rebuilt rows are diplomatic, not modernized.
+   * Markers are the diplomatic tokens actually present (e.g. *гривнЂ*, *пълку*, *бяшетъ*), not modern glossary stand-ins.
 2. **Middle Ukrainian / Cossack Baroque ($N = 100$):**
-   * Sourced from 16th–18th century monuments: *Літопис Самійла Величка*, *Літопис Григорія Грабянки*, *Літопис Самовидця*, *Григорій Сковорода* (*Байки Харківські*, філософські трактати), *Іван Величковський*.
+   * Sourced from 16th–18th century monuments: *Літопис Григорія Грабянки*, *Григорій Сковорода* (letters, *Silenus Alcibiadis*, *Благодарный Еродій*, *Алфавіт*). Biography-about-author rows (*Життя та творчість Григорія Сковороди*) are excluded.
    * Markers: *козацтво*, *гетьманство*, *посполиті*, *Військо Запорозьке*, *полковник*, *універсал*, *совість*, *сродна праця*, *булава*, *клейноди*, *знамено*, *маєтність*, *товариство*, *старшина*, *писар*.
 
 ### 2.3 Stratum 3: Absolute Anti-Surzhyk Invariant Controls (100 cases, CORRECT)
 
-Sourced from human error contexts in UA-GEC (`uagec_mined_calques.jsonl`) and Antonenko-Davydovych (*Як ми говоримо*):
-* Evaluates pervasive Russian interference patterns: *приймати участь* $\rightarrow$ *брати участь*, *на протязі* $\rightarrow$ *протягом*, *приймати міри* $\rightarrow$ *вживати заходів*, *рахувати що* $\rightarrow$ *вважати що*, *самий кращий* $\rightarrow$ *найкращий*, *по вихідних* $\rightarrow$ *у вихідні*, *в кінці кінців* $\rightarrow$ *зрештою*, etc.
+Sourced from UA-GEC calques (`uagec_mined_calques.jsonl`) and, when `sources.db` is present, Antonenko-Davydovych (*Як ми говоримо*) usage sentences:
+* Only allowlisted colonial calques (e.g. *приймати участь*, *на протязі*, *являється*, *в першу чергу*, *роблячи вигляд*). Standard Ukrainian flagged as 0.0% CORRECT in UA-GEC (*рідше*, *дозволяє*, *таким чином*) and metalinguistic style-guide sentences (*«Правильно сказати … а не по вівторках»*) are dropped.
 * **The Strategic Boundary:** Surzhyk is strictly recognized as Russian imperial linguistic poisoning designed to degrade authentic Ukrainian grammar and vocabulary. Datasets and models must never generate, validate, encourage, or normalize Surzhyk. Any completion that treats Surzhyk as acceptable Ukrainian or calls it a "діалект" is a critical failure.
 
 ---
@@ -93,6 +93,8 @@ With $n = 300$ dialect cases and $k = 300$, the exact one-sided 95% Clopper-Pear
 ---
 
 ## 4. Verification & Gate Audit Results
+
+The scorecard below is the deterministic `--demo-mode perfect` contract check (the mock preserves every target token and diagnoses every calque). It is **not** a live model run. PRESERVE now fails if the reply drops `target_term` even when heritage keywords (*зберігаємо*, *діалект*, *історичн*) remain. Dialect / historical / combined Clopper-Pearson floors are 0.980 (max tolerated historical corruption = 0).
 
 ```
 # Ukrainian Dialect & Historical Protection Audit Report (Phase 5.2 / #8051)
