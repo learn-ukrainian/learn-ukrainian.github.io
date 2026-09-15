@@ -180,6 +180,8 @@ def vocabulary_source_files(target: ModuleTarget) -> list[Path]:
         target.module_dir / "vocabulary.yaml",
         CURRICULUM_ROOT / target.content_level / "vocabulary" / f"{target.slug}.yaml",
     ]
+    if target.module_dir.is_dir():
+        candidates.extend(sorted(target.module_dir.glob("lesson-*/vocabulary.yaml")))
     return [path for path in candidates if path.exists()]
 
 
