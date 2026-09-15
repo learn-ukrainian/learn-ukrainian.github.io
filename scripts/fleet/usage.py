@@ -14,6 +14,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -65,6 +66,21 @@ def _usd(value: Any) -> str:
 
 def _pct(value: Any) -> str:
     return f"{float(value):.1f}%" if isinstance(value, (int, float)) and not isinstance(value, bool) else "unknown"
+
+
+def _resets_text(value: Any) -> str:
+    """Render reset timestamps; integer epoch seconds/ms → ISO-Z."""
+    if value is None or value == "":
+        return "unknown"
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        ts = float(value)
+        if ts > 1e12:  # ms
+            ts /= 1000.0
+        try:
+            return datetime.fromtimestamp(ts, tz=UTC).isoformat().replace("+00:00", "Z")
+        except (OverflowError, OSError, ValueError):
+            return str(value)
+    return str(value)
 
 
 def _window_kind(minutes: Any, explicit: Any = None) -> str:
@@ -129,12 +145,14 @@ def _lane_has_usable_allotment(info: dict[str, Any]) -> bool:
     provider = info.get("provider_windows")
     if not isinstance(provider, dict):
         provider = native.get("provider_windows")
-    if isinstance(provider, dict):
+    if isinstance(provider, dict) and provider:
         for block in provider.values():
             if not isinstance(block, dict):
                 continue
             if _is_number(block.get("used_pct")) or _is_number(block.get("remaining_pct")):
                 return True
+        # Named Cursor (or similar) shell present with only nulls — not a usable meter.
+        return False
 
     windows = native.get("windows") if isinstance(native.get("windows"), dict) else None
     if isinstance(windows, dict):
@@ -199,7 +217,7 @@ def _named_allotments(lane: str, info: dict[str, Any]) -> list[str]:
                 f"  {label} ({kind}): "
                 f"used={_pct(block.get('used_pct'))} "
                 f"rem={_pct(block.get('remaining_pct'))} "
-                f"resets={block.get('resets_at') or 'unknown'}"
+                f"resets={_resets_text(block.get('resets_at'))}"
             )
         return lines
 
@@ -218,10 +236,56 @@ def _named_allotments(lane: str, info: dict[str, Any]) -> list[str]:
             lines.append(
                 f"  {label} ({kind}): "
                 f"used={_pct(used)} rem={_pct(rem)} "
-                f"resets={block.get('resets_at') or 'unknown'}"
+                f"resets={_resets_text(block.get('resets_at'))}"
             )
 
     return lines
+
+
+def _display_status(info: dict[str, Any], *, freshness: str) -> str:
+    """Allotment-honest status for the CLI (may differ from mix-max dispatch status)."""
+    status = str(info.get("status") or "unknown")
+    if freshness == "unavailable":
+        return "unknown"
+    probe = str(info.get("probe_state") or "")
+    native = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else {}
+    if not probe:
+        probe = str(native.get("probe_state") or "")
+    error_kind = str(info.get("error_kind") or native.get("error_kind") or "")
+    # NEED_PROBE / missing session: never show cool from ledger leftovers (e.g. rem=100).
+    if probe == "NEED_LOGIN":
+        return "need_login"
+    if probe == "NEED_PROBE" and not _lane_has_usable_allotment(info):
+        return "unknown"
+    if error_kind in {"missing_credentials", "missing_session_token"} and not _lane_has_usable_allotment(
+        info
+    ):
+        return "unknown"
+    return status
+
+
+def _lane_tips(lane: str, info: dict[str, Any], *, fail: str) -> list[str]:
+    tips: list[str] = []
+    native = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else {}
+    error_kind = str(info.get("error_kind") or native.get("error_kind") or "")
+    probe = str(info.get("probe_state") or native.get("probe_state") or "")
+    if lane == "cursor" and (
+        error_kind in {"missing_credentials", "missing_session_token"}
+        or (probe == "NEED_PROBE" and not _lane_has_usable_allotment(info))
+    ):
+        tips.append(
+            "  tip: Auto/API/Grok Bot meters need a session JWT from `agent login` "
+            "(writes ~/.config/cursor/auth.json). CURSOR_API_KEY alone is enough for "
+            "dispatch, not for allotment percentages."
+        )
+    if lane == "claude" and ("429" in fail or "rate_limit" in fail.lower()):
+        tips.append(
+            "  tip: Anthropic rate-limited the usage probe (429). Wait and retry "
+            "`usage show --fresh`; interactive/agentic caps above are ledger/LKG when burn is unknown."
+        )
+    if lane == "gemini" and ("403" in fail or "rejected" in fail.lower()):
+        tips.append("  tip: Antigravity/AGY OAuth rejected — re-auth the Gemini/AGY credential.")
+    return tips
 
 
 def format_human(budget: dict[str, Any]) -> str:
@@ -236,13 +300,14 @@ def format_human(budget: dict[str, Any]) -> str:
     for lane in sorted(agents):
         info = agents.get(lane) if isinstance(agents.get(lane), dict) else {}
         freshness, age = _observation(info)
-        status = str(info.get("status") or "unknown")
-        if freshness == "unavailable":
-            status = "unknown"
+        status = _display_status(info, freshness=freshness)
         rem = info.get("remaining_pct")
         rem_text = (
             f"{float(rem):.1f}"
-            if isinstance(rem, (int, float)) and not isinstance(rem, bool) and freshness != "unavailable"
+            if isinstance(rem, (int, float))
+            and not isinstance(rem, bool)
+            and freshness != "unavailable"
+            and status not in {"unknown", "need_login"}
             else "unknown"
         )
         fail = _fail_note(info) or "-"
@@ -253,6 +318,7 @@ def format_human(budget: dict[str, Any]) -> str:
         allotments = _named_allotments(lane, info)
         if allotments:
             lines.extend(allotments)
+        lines.extend(_lane_tips(lane, info, fail=fail))
         if _lane_has_usable_allotment(info):
             usable += 1
         elif freshness == "unavailable" and fail == "-" and not allotments:
@@ -352,6 +418,23 @@ def doctor() -> str:
     lines.append(
         "OpenCode management entry: openrouter-management (key); presence of auth.json does not verify its entries."
     )
+    cursor_auth = home / ".config/cursor/auth.json"
+    cursor_key = home / ".config/cursor-agent/api.key.env"
+    has_session = False
+    if cursor_auth.is_file():
+        try:
+            data = json.loads(cursor_auth.read_text(encoding="utf-8"))
+            tok = data.get("accessToken") if isinstance(data, dict) else None
+            has_session = isinstance(tok, str) and bool(tok.strip())
+        except (OSError, json.JSONDecodeError):
+            has_session = False
+    has_api_key = bool(os.environ.get("CURSOR_API_KEY", "").strip()) or cursor_key.is_file()
+    if has_api_key and not has_session:
+        lines.append(
+            "Cursor tip: CURSOR_API_KEY is present but ~/.config/cursor/auth.json has no accessToken — "
+            "run `agent login` for Auto/API/Grok Bot allotment meters (API key alone cannot call "
+            "GetCurrentPeriodUsage)."
+        )
     lines.append(
         "Notebook tip: if `usage show --fresh` ImportErrors on learn_ukrainian_v4_runtime, "
         "run `.venv/bin/pip install -e packages/v4-runtime` (Monitor-backed `show` needs no v4)."

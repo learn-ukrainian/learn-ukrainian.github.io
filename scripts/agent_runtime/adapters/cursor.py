@@ -914,8 +914,10 @@ def probe_cursor_provider_windows(*, timeout_s: float = 8.0) -> dict[str, Any]:
             "login_state": "authenticated",
             "status": "unknown",
             "provider_windows": _empty_cursor_provider_windows(),
-            "auth_error": "Cursor credentials unavailable for usage probe",
-            "error_kind": "missing_credentials",
+            "auth_error": "Cursor session token unavailable for usage probe "
+            "(need ~/.config/cursor/auth.json from `agent login`; "
+            "CURSOR_API_KEY alone cannot read allotment meters)",
+            "error_kind": "missing_session_token",
             "fetched_at": fetched_at,
         }
 
