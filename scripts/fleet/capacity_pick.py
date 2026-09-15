@@ -170,10 +170,10 @@ def build_lane_rows(
     for lane in lanes:
         info = agents.get(lane) if isinstance(agents.get(lane), dict) else {}
         if lane == "deepseek":
-            from scripts.api.state_router import _api_lane_status_from_account
+            from scripts.fleet.prepaid_status import api_lane_status_from_account
 
             account = (budget.get("api_accounts") or {}).get(lane) or {}
-            status = _api_lane_status_from_account(lane, account)
+            status = api_lane_status_from_account(lane, account)
             info = {**info, "status": status, "probe_state": account.get("probe_state")}
             if status not in {"cool", "warm"} or account.get("is_available") is False or account.get("status") == "near_cap":
                 info["eligible"] = False

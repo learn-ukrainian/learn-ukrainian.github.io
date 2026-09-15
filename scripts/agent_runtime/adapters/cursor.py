@@ -21,6 +21,7 @@ Issue: #2253 (Phase 2)
 
 from __future__ import annotations
 
+import http.client
 import json
 import logging
 import os
@@ -639,6 +640,9 @@ def _extract_concrete_model_from_events(events: list[dict]) -> str | None:
 
 _CURSOR_AUTH_PATH = Path.home() / ".config" / "cursor" / "auth.json"
 _CURSOR_USAGE_URL = "https://api2.cursor.sh/aiserver.v1.DashboardService/GetCurrentPeriodUsage"
+_CURSOR_GROK_BOT_USAGE_URL = (
+    "https://api2.cursor.sh/aiserver.v1.DashboardService/GetSandUsageStatus"
+)
 
 
 def _cursor_cli_binary() -> str:
@@ -790,15 +794,16 @@ def _ms_to_iso_z(raw_ms: object) -> str | None:
     return datetime.fromtimestamp(ms / 1000.0, tz=UTC).isoformat().replace("+00:00", "Z")
 
 
-def _monthly_window_block(
+def _usage_window_block(
     used_pct: float | None,
     *,
     label: str,
+    window: str,
     resets_at: str | None,
 ) -> dict[str, Any]:
     remaining = None if used_pct is None else max(0.0, min(100.0, 100.0 - used_pct))
     return {
-        "window": "monthly",
+        "window": window,
         "label": label,
         "used_pct": used_pct,
         "remaining_pct": remaining,
@@ -806,11 +811,86 @@ def _monthly_window_block(
     }
 
 
+def _monthly_window_block(
+    used_pct: float | None,
+    *,
+    label: str,
+    resets_at: str | None,
+) -> dict[str, Any]:
+    return _usage_window_block(used_pct, label=label, window="monthly", resets_at=resets_at)
+
+
+def _empty_cursor_provider_windows(*, resets_at: str | None = None) -> dict[str, dict[str, Any]]:
+    """Always expose Auto / API / Grok Bot slots (nulls when unprobed)."""
+    return {
+        "auto": _monthly_window_block(None, label="Cursor Models (Auto)", resets_at=resets_at),
+        "api": _monthly_window_block(None, label="Other Models (API)", resets_at=resets_at),
+        "grok_bot": _usage_window_block(
+            None, label="Grok Bot", window="weekly", resets_at=None
+        ),
+    }
+
+
+def _probe_cursor_grok_bot_window(*, token: str, timeout_s: float) -> dict[str, Any]:
+    """Optional Grok Bot weekly pool via GetSandUsageStatus (nonfatal on failure)."""
+    empty = _usage_window_block(None, label="Grok Bot", window="weekly", resets_at=None)
+    try:
+        req = urllib.request.Request(
+            _CURSOR_GROK_BOT_USAGE_URL,
+            data=b"{}",
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json",
+                "Origin": "https://cursor.com",
+            },
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+            payload = json.loads(resp.read().decode("utf-8"))
+    except (
+        urllib.error.URLError,
+        TimeoutError,
+        json.JSONDecodeError,
+        ValueError,
+        OSError,
+        http.client.HTTPException,
+    ):
+        # IncompleteRead and other transport truncations must not escape —
+        # optional Grok Bot must never discard a successful Auto/API probe.
+        return {**empty, "probe_state": "NEED_PROBE"}
+
+    if not isinstance(payload, dict):
+        return {**empty, "probe_state": "NEED_PROBE"}
+    if payload.get("usesPooledEnterpriseAllowance") is True:
+        return {**empty, "probe_state": "pooled_enterprise", "included": False}
+    if payload.get("includedLimitZero") is True or payload.get("hasNonZeroIncludedLimit") is False:
+        return {**empty, "probe_state": "not_included", "included": False}
+
+    used_raw = payload.get("usagePercent")
+    used_pct = float(used_raw) if isinstance(used_raw, (int, float)) and not isinstance(used_raw, bool) else None
+    resets_at = None
+    for key in ("nextResetTimestampUtc", "nextResetAt", "resetsAt"):
+        raw = payload.get(key)
+        if isinstance(raw, str) and raw.strip():
+            resets_at = raw.strip()
+            break
+        iso = _ms_to_iso_z(raw)
+        if iso:
+            resets_at = iso
+            break
+    block = _usage_window_block(used_pct, label="Grok Bot", window="weekly", resets_at=resets_at)
+    block["probe_state"] = "healthy" if used_pct is not None else "NEED_PROBE"
+    block["included"] = True
+    return block
+
+
 def probe_cursor_provider_windows(*, timeout_s: float = 8.0) -> dict[str, Any]:
-    """Read Cursor Auto/API monthly pools from the first-party dashboard API.
+    """Read Cursor Models / Other Models / Grok Bot pools from dashboard APIs.
 
     Never logs or returns access tokens. When credentials are absent, returns
     ``probe_state=NEED_PROBE`` with empty windows (no fabricated percentages).
+    Grok Bot is a separate weekly allotment (GetSandUsageStatus); its failure is
+    nonfatal when Auto/API monthly pools succeed.
     """
     fetched_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     login = probe_cursor_login(timeout_s=min(timeout_s, 5.0))
@@ -821,10 +901,7 @@ def probe_cursor_provider_windows(*, timeout_s: float = 8.0) -> dict[str, Any]:
             "probe_state": "NEED_LOGIN",
             "login_state": "NEED_LOGIN",
             "status": "need_login",
-            "provider_windows": {
-                "auto": _monthly_window_block(None, label="Auto", resets_at=None),
-                "api": _monthly_window_block(None, label="API", resets_at=None),
-            },
+            "provider_windows": _empty_cursor_provider_windows(),
             "fetched_at": fetched_at,
         }
 
@@ -836,10 +913,7 @@ def probe_cursor_provider_windows(*, timeout_s: float = 8.0) -> dict[str, Any]:
             "probe_state": "NEED_PROBE",
             "login_state": "authenticated",
             "status": "unknown",
-            "provider_windows": {
-                "auto": _monthly_window_block(None, label="Auto", resets_at=None),
-                "api": _monthly_window_block(None, label="API", resets_at=None),
-            },
+            "provider_windows": _empty_cursor_provider_windows(),
             "auth_error": "Cursor credentials unavailable for usage probe",
             "error_kind": "missing_credentials",
             "fetched_at": fetched_at,
@@ -864,10 +938,7 @@ def probe_cursor_provider_windows(*, timeout_s: float = 8.0) -> dict[str, Any]:
             "probe_state": "NEED_PROBE",
             "login_state": "authenticated",
             "status": "unknown",
-            "provider_windows": {
-                "auto": _monthly_window_block(None, label="Auto", resets_at=None),
-                "api": _monthly_window_block(None, label="API", resets_at=None),
-            },
+            "provider_windows": _empty_cursor_provider_windows(),
             "auth_error": str(exc)[:200],
             "error_kind": "fetch_error",
             "fetched_at": fetched_at,
@@ -876,12 +947,33 @@ def probe_cursor_provider_windows(*, timeout_s: float = 8.0) -> dict[str, Any]:
     plan = payload.get("planUsage") if isinstance(payload.get("planUsage"), dict) else {}
     auto_used = plan.get("autoPercentUsed")
     api_used = plan.get("apiPercentUsed")
+    total_used = plan.get("totalPercentUsed")
     auto_pct = float(auto_used) if isinstance(auto_used, (int, float)) else None
     api_pct = float(api_used) if isinstance(api_used, (int, float)) else None
+    total_pct = float(total_used) if isinstance(total_used, (int, float)) else None
     resets_at = _ms_to_iso_z(payload.get("billingCycleEnd"))
 
-    auto_block = _monthly_window_block(auto_pct, label="Auto", resets_at=resets_at)
-    api_block = _monthly_window_block(api_pct, label="API", resets_at=resets_at)
+    auto_block = _monthly_window_block(
+        auto_pct, label="Cursor Models (Auto)", resets_at=resets_at
+    )
+    api_block = _monthly_window_block(
+        api_pct, label="Other Models (API)", resets_at=resets_at
+    )
+    grok_timeout = max(2.0, min(timeout_s, 5.0))
+    try:
+        grok_block = _probe_cursor_grok_bot_window(token=token, timeout_s=grok_timeout)
+    except Exception:
+        grok_block = _usage_window_block(None, label="Grok Bot", window="weekly", resets_at=None)
+        grok_block["probe_state"] = "NEED_PROBE"
+    provider_windows: dict[str, Any] = {
+        "auto": auto_block,
+        "api": api_block,
+        "grok_bot": grok_block,
+    }
+    if total_pct is not None:
+        provider_windows["total"] = _monthly_window_block(
+            total_pct, label="Total (included)", resets_at=resets_at
+        )
 
     # Burn/status tracks the Auto-routing pool (operator: pin ``auto`` to spend Auto).
     burn_pct = auto_pct
@@ -905,17 +997,19 @@ def probe_cursor_provider_windows(*, timeout_s: float = 8.0) -> dict[str, Any]:
         "status": lane_status,
         "auto_used_pct": auto_pct,
         "api_used_pct": api_pct,
+        "grok_bot_used_pct": grok_block.get("used_pct"),
         "auto_remaining_pct": auto_block.get("remaining_pct"),
         "api_remaining_pct": api_block.get("remaining_pct"),
+        "grok_bot_remaining_pct": grok_block.get("remaining_pct"),
         "primary_used_pct": auto_pct,
         "primary_remaining_pct": auto_block.get("remaining_pct"),
         "secondary_used_pct": auto_pct,
         "secondary_remaining_pct": auto_block.get("remaining_pct"),
         "tertiary_used_pct": api_pct,
         "tertiary_remaining_pct": api_block.get("remaining_pct"),
-        "weekly_used_pct": None,
-        "weekly_remaining_pct": None,
-        "weekly_resets_at": resets_at,
-        "provider_windows": {"auto": auto_block, "api": api_block},
+        "weekly_used_pct": grok_block.get("used_pct"),
+        "weekly_remaining_pct": grok_block.get("remaining_pct"),
+        "weekly_resets_at": grok_block.get("resets_at") or resets_at,
+        "provider_windows": provider_windows,
         "fetched_at": fetched_at,
     }

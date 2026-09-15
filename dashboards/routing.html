@@ -486,13 +486,15 @@ function renderSubscriptions(routing) {
 
       if (needLogin) {
         windowsHtml = `<span class="pill need_login">NEED_LOGIN</span>
-          ${renderWindowBlock('Auto', { used_pct: null }, { missingLabel: 'NEED_LOGIN', barClass: 'empty' })}
-          ${renderWindowBlock('API', { used_pct: null }, { missingLabel: 'NEED_LOGIN', barClass: 'empty' })}`;
+          ${renderWindowBlock('Cursor Models', { used_pct: null }, { missingLabel: 'NEED_LOGIN', barClass: 'empty' })}
+          ${renderWindowBlock('Other Models', { used_pct: null }, { missingLabel: 'NEED_LOGIN', barClass: 'empty' })}
+          ${renderWindowBlock('Grok Bot', { used_pct: null }, { missingLabel: 'NEED_LOGIN', barClass: 'empty' })}`;
       } else if (isCursor) {
         const pw = agent.provider_windows || {};
         windowsHtml = [
-          renderWindowBlock('Auto', pw.auto || {}, { missingLabel: needProbe ? 'NEED_PROBE' : 'unknown' }),
-          renderWindowBlock('API', pw.api || {}, { missingLabel: needProbe ? 'NEED_PROBE' : 'unknown' }),
+          renderWindowBlock('Cursor Models', pw.auto || {}, { missingLabel: needProbe ? 'NEED_PROBE' : 'unknown' }),
+          renderWindowBlock('Other Models', pw.api || {}, { missingLabel: needProbe ? 'NEED_PROBE' : 'unknown' }),
+          renderWindowBlock('Grok Bot', pw.grok_bot || {}, { missingLabel: needProbe ? 'NEED_PROBE' : 'unknown' }),
         ].join('');
       } else {
         const windows = collectSubscriptionWindows(agent);
