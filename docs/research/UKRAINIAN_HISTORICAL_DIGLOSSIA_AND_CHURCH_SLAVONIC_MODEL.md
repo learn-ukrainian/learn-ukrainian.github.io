@@ -105,23 +105,39 @@ pie title data/sources.db Historical & Dialectal Holdings (Records & Chunks)
 ### 4.2 Old East Slavic & Kyivan Rus Chronicles (11th–13th Centuries)
 
 * **Table:** `literary_texts`
-* **Total Chunks:** **10,202 chunks** (17,421,735 characters, verified SQLite snapshot), disaggregated into two distinct functional strata:
-  * **Original-Language Manuscript Witness Editions (7,469 chunks, 12,350,600 characters):**
-    * **Ipatiev Chronicle (Іпатіївський літопис, `wave12-ipatskyj-litopys`):** 1,865 chunks — southern Rus chronicle compilation (PSRL Vol. 2, 1908 edition) preserving Old East Slavic text with southern Rus linguistic features.
-    * **Primary Chronicle (Повість минулих літ, `wave1-pvl-ipatskyi`):** 1,075 chunks — foundational narrative according to the Ipatiev Codex with early Cyrillic orthography and variant apparatus.
-    * **Laurentian Chronicle (`wave12-lavrentiivskyj-litopys` & `wave1-pvl-lavrentiyivskyi`):** 1,727 chunks (1,033 + 694) — northern comparative witness text.
-    * **Novgorod 1st Chronicle (`wave12-novgorodskyj-litopys-1`):** 1,120 chunks — northwest Slavic comparative witness text.
-    * **Ruska Pravda (`wave5-yushkov-ruska-pravda`):** 364 chunks — 11th–12th century secular legal code in East Slavic vernacular legal register (ed. S. Yushkov).
-    * **Kyiv-Pechersk Paterik (`wave1-pateryk-pechersky` / `wave12-paterikon-pecherskyi`):** 361 chunks — Kyivan Church Slavonic prose text (2nd Cassian recension, 1462).
-    * **Early Rus Literary Excerpts (`wave5-oldukr-xi-xiii-galvol`):** 132 chunks — 11th–13th century Old Rus/Ukrainian manuscript text selections.
-    * **Izbornyk of Sviatoslav 1076 (`wave11-izbornyk-svyatoslava-uryvky`):** 18 chunks — moral and philosophical miscellany.
-    * **Slovo o polku Ihorevim (`wave0-slovo-o-polku` / `wave12-slovo-o-polku-ihorevim`):** 11 chunks — original poetic text.
-  * **Modern Ukrainian Translations & Scholarly Apparatus (2,733 chunks, 5,071,135 characters):**
-    * **Kyiv Chronicle (`wave1-kyivskyi-litopys`):** 1,083 chunks — modern Ukrainian translation and historical-geographical commentary by Leonid Makhnovets (*Літопис руський за Іпатським списком*, Дніпро, 1989).
-    * **Galician-Volhynian Chronicle (`wave1-galytsko-volynskyi` & `wave6-galvol-kostruba`):** 1,270 chunks (1,010 chunks tr. L. Makhnovets, 1989; 260 chunks tr. T. Kostruba, 1936).
-    * **PVL Translations (`wave0-pvl-yaremenko`):** 55 chunks — modern Ukrainian translation by Vasyl Yaremenko.
-    * **Slovo Translations (`wave1-slovo-poetic-translations`):** 325 chunks — 19th–20th century poetic translations.
-  * **Methodological Extraction Invariant:** The 2,733 modern translation and commentary chunks provide semantic alignment pairs and historical-topographical context, but are strictly excluded from medieval phonological and morphological ground-truth extraction. Only the 7,469 original-language witness chunks serve as pre-modern linguistic data.
+* **Candidate Inventory:** **10,202 chunks** (17,421,735 characters across 23 source files, verified SQLite snapshot), categorized into two functional strata:
+  * **Dedicated Modern Translation Collections (5 files, 2,733 chunks, 5,071,135 characters):**
+    * `wave1-kyivskyi-litopys`: 1,083 chunks — modern Ukrainian translation and commentary by Leonid Makhnovets (*Літопис руський за Іпатським списком*, Дніпро, 1989).
+    * `wave1-galytsko-volynskyi`: 1,010 chunks — modern Ukrainian translation by L. Makhnovets (1989).
+    * `wave1-slovo-poetic-translations`: 325 chunks — 19th–20th century poetic translations of Slovo.
+    * `wave6-galvol-kostruba`: 260 chunks — Ukrainian translation by Teofil Kostruba (1936).
+    * `wave0-pvl-yaremenko`: 55 chunks — modern Ukrainian translation by Vasyl Yaremenko.
+    *(Subtotal: 1,083 + 1,010 + 325 + 260 + 55 = 2,733 chunks).*
+  * **Composite Chronicle & Literary Editions (18 files, 7,469 candidate chunks, 12,350,600 characters):**
+    * `wave12-ipatskyj-litopys`: 1,865 chunks — PSRL Vol. 2 (1908) southern Rus chronicle edition.
+    * `wave12-novgorodskyj-litopys-1`: 1,120 chunks — Novgorod 1st Chronicle text with apparatus.
+    * `wave1-pvl-ipatskyi`: 1,075 chunks — Ipatiev PVL text with manuscript variant notes.
+    * `wave12-lavrentiivskyj-litopys`: 1,033 chunks — Laurentian Chronicle text with apparatus.
+    * `wave1-pvl-lavrentiyivskyi`: 694 chunks — Laurentian PVL text with variants.
+    * `wave5-yushkov-ruska-pravda`: 364 chunks — legal articles alongside S. Yushkov's editorial introduction and apparatus.
+    * `wave1-pateryk-pechersky`: 361 chunks — Kyiv-Pechersk Paterik text and commentary.
+    * `wave12-paterikon-pecherskyi`: 361 chunks — duplicate ingest of the 1462 Cassian recension edition.
+    * `wave12-pvl-lavrentiivska`: 154 chunks — PVL Laurentian transcription.
+    * `wave1-pvl-lavrentiyivskyi-rozshyfrovka`: 154 chunks — duplicate transcription ingest.
+    * `wave5-oldukr-xi-xiii-galvol`: 132 chunks — Old Rus literary selections.
+    * `wave5-buhoslavsky-borys-hlib`: 64 chunks — monuments of princes Boris and Gleb.
+    * `wave9-rech-zhydovskoho-1282`: 26 chunks — 1282 linguistic monument.
+    * `wave9-tlkovaniye-1431`: 24 chunks — 1431 gloss monument.
+    * `wave11-izbornyk-svyatoslava-uryvky`: 18 chunks — miscellany excerpts containing modern translations (Franko, Karpilovska, Bondar).
+    * `wave12-slovo-o-polku-ihorevim`: 11 chunks — Slovo original text.
+    * `wave0-slovo-o-polku`: 11 chunks — duplicate ingest of Slovo text.
+    * `wave5-oldukr-xi-xiii`: 2 chunks — Old Rus fragments.
+    *(Subtotal: 1,865 + 1,120 + 1,075 + 1,033 + 694 + 364 + 361 + 361 + 154 + 154 + 132 + 64 + 26 + 24 + 18 + 11 + 11 + 2 = 7,469 chunks).*
+* **Passage-Level Stratification & Admission Filter (Phase 5.7 Invariant):**
+  The 7,469 composite chunks represent raw archival candidate holdings, NOT pre-certified medieval linguistic ground truth. Because these editions interweave primary manuscript witness text with modern editorial introductions (e.g. Yushkov in `wave5-yushkov-ruska-pravda`, PSRL prefaces in `wave12-ipatskyj-litopys`), manuscript apparatus, and embedded modern translations (e.g. in `wave11-izbornyk-svyatoslava-uryvky`), Phase 5.7 enforces an authenticated-passage admission filter:
+  1. Every chunk or span admitted into pre-modern linguistic ground truth must be deterministically classified by source layer, edition, page, and manuscript witness dating.
+  2. Identified primary Old East Slavic witness text is extracted; modern translation prose, editorial apparatus, and commentary are quarantined and strictly excluded from medieval phonological/morphological training.
+  3. All unclassified, mixed, or ambiguous spans fail closed into quarantine.
 
 ### 4.3 Middle Ukrainian & Cossack Baroque Literature (14th–18th Centuries)
 
@@ -221,7 +237,7 @@ flowchart LR
 
 ### 6.3 Phase 5.7: Kyivan Rus Epigraphy & Church Slavonic Diglossia (Issue [#8103](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8103))
 
-* **Data Extraction:** Mine the 2,570 text-bearing St. Sophia inscriptions (`historical_source_records`) and 7,469 original-language OES manuscript witness chunks (`literary_texts`, specifically `wave12-ipatskyj-litopys`, `wave1-pvl-ipatskyi`, `wave12-lavrentiivskyj-litopys`, `wave5-yushkov-ruska-pravda`, `wave1-pateryk-pechersky`). The 2,733 modern Ukrainian translation and editorial chunks (`wave1-kyivskyi-litopys` and `wave1-galytsko-volynskyi` tr. Makhnovets 1989; `wave6-galvol-kostruba` tr. Kostruba 1936) are strictly excluded from medieval morphological/phonological training and reserved exclusively for translation alignment.
+* **Data Extraction:** Mine the 2,570 text-bearing St. Sophia inscriptions (`historical_source_records`) and execute deterministic passage-level stratification over the 10,202 candidate OES chunks in `literary_texts`. Exclude all 2,733 dedicated modern translation chunks (`wave1-kyivskyi-litopys`, `wave1-galytsko-volynskyi`, `wave1-slovo-poetic-translations`, `wave6-galvol-kostruba`, `wave0-pvl-yaremenko`), and filter the 7,469 composite chronicle/literary chunks with an authenticated-passage admission filter that extracts primary medieval manuscript witness text while quarantining modern editorial introductions, apparatus, and embedded translations.
 * **Evidence-Preserving Paleographic Contract:** Reference the University of Gothenburg [`gu-gridh/sophia-epigraphic-ai`](https://github.com/gu-gridh/sophia-epigraphic-ai) (pinned revision `b6d04301d21ad9bb1f1ac8424fdbe8f7cba6999e`, `scripts/prepare_dataset.py`) for its baseline transcription normalization logic (`clean_transcription` and `is_valid_transcription`). The project-defined early Cyrillic character inventory (`ѣ, ѧ, ѫ, ѡ, ѱ, ѯ, ъ, ь, ҂`) represents the empirical character set extracted across the Saint Sophia epigraphic transcriptions in `data/sources.db`. Enforce immutable retention of raw transcriptions and Epidoc XML in `data/sources.db`, preservation of editorial uncertainty markers (`?`), lacunae brackets (`[...]`), and combining titla as structured metadata, with deterministic normalization verified against test fixtures.
 * **Alignment Trajectories:** SFT reasoning paths explicitly teaching the Kyivan Church Slavonic / Vernacular Diglossia model.
 * **Output:** Model release `v0.4a`.
