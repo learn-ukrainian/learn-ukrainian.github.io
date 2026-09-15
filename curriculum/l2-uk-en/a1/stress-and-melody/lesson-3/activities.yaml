@@ -1,0 +1,490 @@
+inline:
+- id: act-301
+  type: match-up
+  title: Па́ри слів із рі́зним на́голосом
+  instruction: З'єдна́й словосполу́чення з відпові́дним зна́ченням.
+  pairs:
+  - left: стари́й за́мок
+    right: old castle (fortress)
+  - left: дверни́й замо́к
+    right: door lock (device for closing)
+  - left: географі́чний а́тлас
+    right: geographical atlas (collection of maps)
+  - left: блиску́чий атла́с
+    right: shiny satin (smooth fabric)
+  - left: важли́вий о́рган
+    right: vital body organ (heart, lung)
+  - left: музи́чний орга́н
+    right: musical pipe organ
+  - left: мале́ сі́м'я
+    right: tiny plant seed
+  - left: весе́ла сім'я́
+    right: happy family
+- id: act-302
+  type: quiz
+  title: Де на́голос у сло́ві
+  instruction: Ви́знач, на яки́й склад па́дає на́голос.
+  items:
+  - prompt: ма́ма
+    options:
+    - text: пе́рший склад
+      correct: true
+    - text: оста́нній склад
+      correct: false
+    explanation: У сло́ві ма́ма на́голос па́дає на пе́рший склад.
+  - prompt: зима́
+    options:
+    - text: оста́нній склад
+      correct: true
+    - text: пе́рший склад
+      correct: false
+    explanation: У сло́ві зима́ на́голос па́дає на оста́нній склад.
+  - prompt: люди́на
+    options:
+    - text: сере́дній склад
+      correct: true
+    - text: пе́рший склад
+      correct: false
+    - text: оста́нній склад
+      correct: false
+    explanation: У сло́ві люди́на на́голос па́дає на сере́дній склад.
+  - prompt: кни́га
+    options:
+    - text: пе́рший склад
+      correct: true
+    - text: оста́нній склад
+      correct: false
+    explanation: У сло́ві кни́га на́голос па́дає на пе́рший склад.
+  - prompt: рука́
+    options:
+    - text: оста́нній склад
+      correct: true
+    - text: пе́рший склад
+      correct: false
+    explanation: У сло́ві рука́ на́голос па́дає на оста́нній склад.
+  - prompt: апте́ка
+    options:
+    - text: сере́дній склад
+      correct: true
+    - text: пе́рший склад
+      correct: false
+    - text: оста́нній склад
+      correct: false
+    explanation: У сло́ві апте́ка на́голос па́дає на сере́дній склад.
+- id: act-303
+  type: quiz
+  title: Розділо́ві зна́ки та інтона́ція
+  instruction: Обери́ пра́вильний розділо́вий знак за змі́стом і мело́дикою ре́чення.
+  items:
+  - prompt: Це апте́ка_
+    options:
+    - text: '? (знак пита́ння)'
+      correct: true
+    - text: . (кра́пка)
+      correct: false
+    - text: '! (знак о́клику)'
+      correct: false
+    explanation: Зага́льне так/ні пита́ння потребу́є зна́ка пита́ння та висхідно́ї інтона́ції.
+  - prompt: Так, це апте́ка_
+    options:
+    - text: . (кра́пка)
+      correct: true
+    - text: '? (знак пита́ння)'
+      correct: false
+    - text: '! (знак о́клику)'
+      correct: false
+    explanation: Тве́рдження закі́нчується кра́пкою та ма́є спадну́ інтона́цію.
+  - prompt: Як га́рно_
+    options:
+    - text: '! (знак о́клику)'
+      correct: true
+    - text: . (кра́пка)
+      correct: false
+    - text: '? (знак пита́ння)'
+      correct: false
+    explanation: Окли́чне ре́чення закі́нчується зна́ком о́клику.
+  - prompt: Де метро́_
+    options:
+    - text: '? (знак пита́ння)'
+      correct: true
+    - text: . (кра́пка)
+      correct: false
+    - text: '! (знак о́клику)'
+      correct: false
+    explanation: Пита́ння з де ма́є знак пита́ння, але́ спадну́ інтона́цію.
+  - prompt: Ось стари́й за́мок_
+    options:
+    - text: . (кра́пка)
+      correct: true
+    - text: '? (знак пита́ння)'
+      correct: false
+    - text: '! (знак о́клику)'
+      correct: false
+    explanation: Розповідне́ ре́чення закі́нчується кра́пкою.
+  - prompt: Це ка́ва_ (пита́ння)
+    options:
+    - text: '? (знак пита́ння)'
+      correct: true
+    - text: . (кра́пка)
+      correct: false
+    - text: '! (знак о́клику)'
+      correct: false
+    explanation: Пита́льне ре́чення закі́нчується зна́ком пита́ння.
+- id: act-304
+  type: quiz
+  title: Інтонаці́йний ко́нтур ре́чення
+  instruction: Обери́ на́прямок мело́дики для ко́жного ти́пу ре́чення.
+  items:
+  - prompt: Це за́мок?
+    options:
+    - text: висхідна́ ↗
+      correct: true
+    - text: спадна́ ↘
+      correct: false
+    explanation: Зага́льне так/ні пита́ння вимовля́ється з висхідно́ю інтона́цією ↗.
+  - prompt: Це за́мок.
+    options:
+    - text: спадна́ ↘
+      correct: true
+    - text: висхідна́ ↗
+      correct: false
+    explanation: Тве́рдження вимовля́ється зі спадно́ю інтона́цією ↘.
+  - prompt: Де апте́ка?
+    options:
+    - text: спадна́ ↘
+      correct: true
+    - text: висхідна́ ↗
+      correct: false
+    explanation: Пита́ння з де ма́є спадну́ інтона́цію ↘.
+  - prompt: Як га́рно!
+    options:
+    - text: сильні́ша спадна́ ↘↘
+      correct: true
+    - text: висхідна́ ↗
+      correct: false
+    explanation: Окли́чне ре́чення ма́є си́льну спадну́ мело́дику ↘↘.
+  - prompt: Що це?
+    options:
+    - text: спадна́ ↘
+      correct: true
+    - text: висхідна́ ↗
+      correct: false
+    explanation: Пита́ння зі сло́вом що ма́є спадну́ інтона́цію ↘.
+  - prompt: А у тебе́?
+    options:
+    - text: висхідна́ ↗
+      correct: true
+    - text: спадна́ ↘
+      correct: false
+    explanation: Зворо́тне пита́ння ма́є висхідну́ інтона́цію ↗.
+- id: act-305
+  type: odd-one-out
+  title: За́йве сло́во за на́голосом
+  instruction: Зна́йди сло́во, у яко́му на́голос па́дає на і́нший склад.
+  items:
+  - options:
+    - text: ма́ма
+      correct: false
+    - text: та́то
+      correct: false
+    - text: кни́га
+      correct: false
+    - text: зима́
+      correct: true
+    explanation: У сло́ві зима́ на́голос на оста́нньому скла́ді, а в і́нших — на пе́ршому.
+  - options:
+    - text: вода́
+      correct: false
+    - text: рука́
+      correct: false
+    - text: кафе́
+      correct: false
+    - text: ра́нок
+      correct: true
+    explanation: У сло́ві ра́нок на́голос на пе́ршому скла́ді, а в і́нших — на оста́нньому.
+  - options:
+    - text: люди́на
+      correct: false
+    - text: столи́ця
+      correct: false
+    - text: апте́ка
+      correct: false
+    - text: ка́ва
+      correct: true
+    explanation: У сло́ві ка́ва на́голос на пе́ршому скла́ді, а в і́нших — на сере́дньому.
+  - options:
+    - text: за́мок
+      correct: false
+    - text: ка́ва
+      correct: false
+    - text: та́то
+      correct: false
+    - text: метро́
+      correct: true
+    explanation: У сло́ві метро́ на́голос на оста́нньому скла́ді, а в і́нших — на пе́ршому.
+  - options:
+    - text: молоко́
+      correct: false
+    - text: зима́
+      correct: false
+    - text: рука́
+      correct: false
+    - text: ма́ма
+      correct: true
+    explanation: У сло́ві ма́ма на́голос на пе́ршому скла́ді, а в і́нших — на оста́нньому.
+  - options:
+    - text: столи́ця
+      correct: false
+    - text: люди́на
+      correct: false
+    - text: апте́ка
+      correct: false
+    - text: вода́
+      correct: true
+    explanation: У сло́ві вода́ на́голос на оста́нньому скла́ді, а в і́нших — на сере́дньому.
+workbook:
+- id: act-w5
+  type: true-false
+  title: Фа́кти про на́голос і мело́дику
+  instruction: Обери́ пра́вда чи непра́вда.
+  items:
+  - statement: Украї́нський на́голос мо́же бу́ти на рі́зних скла́дах.
+    correct: true
+    explanation: На́голос ві́льний, тому́ вчи йо́го ра́зом із ко́жним сло́вом.
+  - statement: Звича́йні украї́нські те́ксти за́вжди ма́ють по́значки на́голосу.
+    correct: false
+    explanation: По́значки на́голосу є в навча́льних матеріа́лах і словника́х, а не в бі́льшості
+      звича́йних те́кстів.
+  - statement: Так/ні пита́ння Це вода́? ма́є висхідну́ мело́дику на A1.
+    correct: true
+    explanation: Так/ні пита́ння ма́є висхідну́ мело́дику.
+  - statement: Пита́ння з де за́вжди потребу́є висхідно́ї мело́дики на A1.
+    correct: false
+    explanation: Пита́ння з пита́льним сло́вом як де ма́є спадну́ мело́дику.
+- id: act-w6
+  type: translate
+  title: Сло́ва з на́голосом
+  instruction: Споча́тку прочита́й украї́нське сло́во, по́тім обери́ англі́йську підка́зку.
+  items:
+  - source: на́голос
+    options:
+    - text: stress / accent
+      correct: true
+    - text: lock
+      correct: false
+    - text: water
+      correct: false
+    explanation: На́голос — stress / accent.
+  - source: ка́ва
+    options:
+    - text: coffee
+      correct: true
+    - text: capital
+      correct: false
+    - text: morning
+      correct: false
+    explanation: Ка́ва — coffee.
+  - source: вода́
+    options:
+    - text: water
+      correct: true
+    - text: photograph
+      correct: false
+    - text: atlas
+      correct: false
+    explanation: Вода́ — water.
+  - source: столи́ця
+    options:
+    - text: capital
+      correct: true
+    - text: metro
+      correct: false
+    - text: family
+      correct: false
+    explanation: Столи́ця — capital.
+- id: act-w301
+  type: fill-in
+  title: Встав пра́вильне сло́во
+  instruction: Обери́ сло́во, яке́ підхо́дить за змі́стом ре́чення.
+  items:
+  - sentence: Де моя́ ___?
+    answer: кни́га
+    options:
+    - кни́га
+    - рука́
+    - ка́ва
+    explanation: У цьому́ ре́ченні за змі́стом підхо́дить сло́во кни́га.
+  - sentence: На дворі́ холо́дна ___ .
+    answer: зима́
+    options:
+    - зима́
+    - ка́ва
+    - вода́
+    explanation: У ре́ченні про холо́дну по́ру ро́ку вжива́ємо сло́во зима́.
+  - sentence: У мене́ боли́ть лі́ва ___ .
+    answer: рука́
+    options:
+    - рука́
+    - голова́
+    - вода́
+    explanation: Сло́во рука́ познача́є части́ну ті́ла.
+  - sentence: Ми йдемо́ пи́ти ка́ву в ___ .
+    answer: кафе́
+    options:
+    - кафе́
+    - метро́
+    - апте́ка
+    explanation: Ка́ву п'ють у кафе́.
+  - sentence: Ко́жна ___ ма́є пра́во на пова́гу.
+    answer: люди́на
+    options:
+    - люди́на
+    - столи́ця
+    - кни́га
+    explanation: Сло́во люди́на назива́є осо́бу.
+  - sentence: Тут працю́є нова́ ___ .
+    answer: апте́ка
+    options:
+    - апте́ка
+    - столи́ця
+    - ка́ва
+    explanation: Лі́ки купу́ють в апте́ці.
+- id: act-w302
+  type: match-up
+  title: Словнико́ві відпові́дності
+  instruction: З'єдна́й украї́нське сло́во з англі́йським пере́кладом.
+  pairs:
+  - left: ма́ма
+    right: mother
+  - left: та́то
+    right: father
+  - left: кни́га
+    right: book
+  - left: зима́
+    right: winter
+  - left: рука́
+    right: hand / arm
+  - left: апте́ка
+    right: pharmacy
+- id: act-w303
+  type: group-sort
+  title: Розпо́діл слів за на́голосом
+  instruction: Розпо́діли слова́ за наголо́шеним скла́дом.
+  groups:
+  - label: Пе́рший склад
+    items:
+    - ма́ма
+    - та́то
+    - кни́га
+    - ка́ва
+    - ра́нок
+  - label: Сере́дній склад
+    items:
+    - люди́на
+    - столи́ця
+    - апте́ка
+    - одина́дцять
+  - label: Оста́нній склад
+    items:
+    - зима́
+    - рука́
+    - кафе́
+    - вода́
+    - метро́
+- id: act-w304
+  type: error-correction
+  title: Ви́прав помилки́ в інтона́ції
+  instruction: Знайди́ та ви́прав непра́вильну інтонаці́йну по́значку.
+  items:
+  - sentence: Це апте́ка ↘
+    error: ↘
+    answer: ↗
+    options:
+    - ↗
+    - ↘
+    - ↘↘
+    explanation: Зага́льне пита́ння (так/ні) ма́є висхідну́ інтона́цію ↗.
+  - sentence: Де метро́ ↗
+    error: ↗
+    answer: ↘
+    options:
+    - ↘
+    - ↗
+    - ↘↘
+    explanation: Пита́ння зі сло́вом де ма́є спадну́ інтона́цію ↘.
+  - sentence: Як га́рно ↗
+    error: ↗
+    answer: ↘↘
+    options:
+    - ↘↘
+    - ↗
+    - ↘
+    explanation: Окли́чне ре́чення ма́є си́льну спадну́ інтона́цію ↘↘.
+  - sentence: Це ка́ва ↗
+    error: ↗
+    answer: ↘
+    options:
+    - ↘
+    - ↗
+    - ↘↘
+    explanation: Тве́рдження ма́є спадну́ інтона́цію ↘.
+  - sentence: Що це ↗
+    error: ↗
+    answer: ↘
+    options:
+    - ↘
+    - ↗
+    - ↘↘
+    explanation: Пита́ння зі сло́вом що ма́є спадну́ інтона́цію ↘.
+  - sentence: А у тебе́ ↘
+    error: ↘
+    answer: ↗
+    options:
+    - ↗
+    - ↘
+    - ↘↘
+    explanation: Зворо́тне так/ні пита́ння ма́є висхідну́ інтона́цію ↗.
+- id: act-w305
+  type: unjumble
+  title: Поря́док слів у ре́ченнях
+  instruction: Розста́в слова́ у пра́вильному поря́дку, щоб утвори́ти ре́чення.
+  items:
+  - words:
+    - Це
+    - апте́ка?
+    - ↗
+    sentence: Це апте́ка? ↗
+    explanation: Це апте́ка? ↗
+  - words:
+    - Так,
+    - це
+    - апте́ка.
+    - ↘
+    sentence: Так, це апте́ка. ↘
+    explanation: Так, це апте́ка. ↘
+  - words:
+    - Як
+    - га́рно!
+    - ↘↘
+    sentence: Як га́рно! ↘↘
+    explanation: Як га́рно! ↘↘
+  - words:
+    - Де
+    - метро́?
+    - ↘
+    sentence: Де метро́? ↘
+    explanation: Де метро́? ↘
+  - words:
+    - Ось
+    - нова́
+    - кни́га.
+    - ↘
+    sentence: Ось нова́ кни́га. ↘
+    explanation: Ось нова́ кни́га. ↘
+  - words:
+    - Це
+    - стари́й
+    - за́мок.
+    - ↘
+    sentence: Це стари́й за́мок. ↘
+    explanation: Це стари́й за́мок. ↘

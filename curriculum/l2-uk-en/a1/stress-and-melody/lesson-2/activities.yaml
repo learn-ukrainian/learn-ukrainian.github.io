@@ -1,0 +1,391 @@
+inline:
+- id: act-201
+  type: quiz
+  title: Наголо́шений склад у до́вгих слова́х
+  instruction: Ви́знач наголо́шений склад у по́даному сло́ві.
+  items:
+  - prompt: украї́нська
+    options:
+    - text: ї́н
+      correct: true
+    - text: у́к
+      correct: false
+    - text: ська́
+      correct: false
+    explanation: У сло́ві украї́нська на́голос па́дає на склад -ї́н-.
+  - prompt: фотогра́фія
+    options:
+    - text: гра́
+      correct: true
+    - text: фо́
+      correct: false
+    - text: фі́
+      correct: false
+    explanation: У сло́ві фотогра́фія наголо́шеним є тре́тій склад -гра́-.
+  - prompt: відпочи́нок
+    options:
+    - text: чи́
+      correct: true
+    - text: ві́д
+      correct: false
+    - text: но́к
+      correct: false
+    explanation: У сло́ві відпочи́нок на́голос па́дає на склад -чи́-.
+  - prompt: одина́дцять
+    options:
+    - text: на́
+      correct: true
+    - text: о́
+      correct: false
+    - text: дцять
+      correct: false
+    explanation: У числі́внику одина́дцять на́голос за́вжди па́дає на склад -на́-.
+  - prompt: чотирна́дцять
+    options:
+    - text: на́
+      correct: true
+    - text: чо́
+      correct: false
+    - text: дцять
+      correct: false
+    explanation: У числі́внику чотирна́дцять на́голос теж па́дає на склад -на́-.
+  - prompt: столи́ця
+    options:
+    - text: ли́
+      correct: true
+    - text: сто́
+      correct: false
+    - text: ця́
+      correct: false
+    explanation: У сло́ві столи́ця наголо́шеним є дру́гий склад -ли́-.
+- id: act-202
+  type: match-up
+  title: Поді́л на скла́ди та на́голос
+  instruction: З'єдна́й сло́во з йо́го складово́ю будо́вою та позна́ченим на́голосом.
+  pairs:
+  - left: украї́нська
+    right: у-кра-ї́н-ська (на́голос на -ї́н-)
+  - left: фотогра́фія
+    right: фо-то-гра́-фі-я (на́голос на -гра́-)
+  - left: відпочи́нок
+    right: від-по-чи́-нок (на́голос на -чи́-)
+  - left: одина́дцять
+    right: о-ди-на́-дцять (на́голос на -на́-)
+  - left: чотирна́дцять
+    right: чо-тир-на́-дцять (на́голос на -на́-)
+  - left: столи́ця
+    right: сто-ли́-ця (на́голос на -ли́-)
+- id: act-5
+  type: fill-in
+  title: Ти́пові пастки́ на́голосу
+  instruction: Обери́ нормати́вну фо́рму з позна́ченим на́голосом.
+  items:
+  - sentence: Це мій ___ комп'ю́тер.
+    answer: нови́й
+    options:
+    - нови́й
+    - но́вий
+    explanation: У сло́ві нови́й на́голос наприкінці́.
+  - sentence: Мій діду́сь ___.
+    answer: стари́й
+    options:
+    - стари́й
+    - ста́рий
+    explanation: У сло́ві стари́й на́голос наприкінці́.
+  - sentence: У мене́ ___ гри́вень.
+    answer: одина́дцять
+    options:
+    - одина́дцять
+    - о́динадцять
+    explanation: Одина́дцять ма́є на́голос на -на́-.
+  - sentence: Я зна́ю ___ нови́х слів.
+    answer: чотирна́дцять
+    options:
+    - чотирна́дцять
+    - чоти́рнадцять
+    explanation: Чотирна́дцять теж ма́є на́голос на -на́-.
+  - sentence: 'Множина́ слова́ голова́: ___.'
+    answer: го́лови
+    options:
+    - го́лови
+    - голови́
+    explanation: У цій словнико́вій па́рі на́голос ру́хається.
+  - sentence: Мене́ зва́ти ___.
+    answer: Марі́я
+    options:
+    - Марі́я
+    - Ма́рія
+    explanation: У цьому́ і́мені на́голос на рі́.
+- id: act-203
+  type: match-up
+  title: Зо́шит і вимо́ва
+  instruction: З'єдна́й сло́во з підка́зкою для пра́вильної вимо́ви.
+  pairs:
+  - left: ка́ва
+    right: на́голос на пе́ршому скла́ді
+  - left: вода́
+    right: на́голос на оста́нньому скла́ді
+  - left: молоко́
+    right: три чіткі́ зву́ки [о]
+  - left: метро́
+    right: наголо́шений голосни́й [о] в кінці́
+  - left: ра́нок
+    right: на́голос на скла́ді ра-
+  - left: нови́й
+    right: наголо́шений закі́нчення -и́й
+- id: act-204
+  type: quiz
+  title: 'Чита́ємо вго́лос: ритм і мело́дика'
+  instruction: Обери́ пра́вильну інтона́цію та характери́стику для ко́жного ре́чення.
+  items:
+  - prompt: Приві́т! Як спра́ви? ↘
+    options:
+    - text: спадна́ інтона́ція (пита́льне сло́во як)
+      correct: true
+    - text: висхідна́ інтона́ція
+      correct: false
+    explanation: Ре́чення з пита́льним сло́вом «як» за пра́вилом вимовля́ється зі спадно́ю
+      інтона́цією.
+  - prompt: До́бре! А у тебе́? ↗
+    options:
+    - text: висхідна́ інтона́ція (зворо́тне пита́ння)
+      correct: true
+    - text: спадна́ інтона́ція
+      correct: false
+    explanation: Зворо́тне пита́ння без пита́льного сло́ва ма́є висхідну́ інтона́цію.
+  - prompt: Це ка́ва? ↗
+    options:
+    - text: висхідна́ інтона́ція (зага́льне пита́ння так/ні)
+      correct: true
+    - text: спадна́ інтона́ція
+      correct: false
+    explanation: Зага́льне пита́ння потребу́є підйо́му то́ну вго́ру.
+  - prompt: Так, це ка́ва. ↘
+    options:
+    - text: спадна́ інтона́ція (розповідне́ тве́рдження)
+      correct: true
+    - text: висхідна́ інтона́ція
+      correct: false
+    explanation: Розповідне́ тве́рдження закі́нчується спадно́ю інтона́цією.
+  - prompt: Де вода́? ↘
+    options:
+    - text: спадна́ інтона́ція (пита́льне сло́во де)
+      correct: true
+    - text: висхідна́ інтона́ція
+      correct: false
+    explanation: Пита́ння з «де» вимовля́ється зі спадни́м ру́хом го́лосу.
+  - prompt: Як га́рно! ↘↘
+    options:
+    - text: сильні́ша спадна́ інтона́ція (о́клик)
+      correct: true
+    - text: висхідна́ інтона́ція
+      correct: false
+    explanation: Окли́чне ре́чення ма́є вира́зну спадну́ інтона́цію.
+workbook:
+- id: act-w3
+  type: group-sort
+  title: Сорту́й за на́голосом
+  instruction: Розпо́діли ко́жне сло́во за позна́ченим наголо́шеним скла́дом.
+  groups:
+  - label: Пе́рший склад
+    items:
+    - ма́ма
+    - та́то
+    - ра́нок
+    - ка́ва
+  - label: Сере́дній склад
+    items:
+    - столи́ця
+    - люди́на
+    - одина́дцять
+    - чотирна́дцять
+  - label: Оста́нній склад
+    items:
+    - вода́
+    - зима́
+    - рука́
+    - метро́
+- id: act-w4
+  type: match-up
+  title: Друк і зо́шит
+  instruction: З'єдна́й друко́ване сло́во з підка́зкою в зо́шиті.
+  pairs:
+  - left: 'друк: ка́ва'
+    right: 'зо́шит: на́голос на пе́ршому скла́ді'
+  - left: 'друк: вода́'
+    right: 'зо́шит: на́голос на оста́нньому скла́ді'
+  - left: 'друк: молоко́'
+    right: 'зо́шит: три чи́сті зву́ки о'
+  - left: 'друк: метро́'
+    right: 'зо́шит: оста́нній наголо́шений голосни́й'
+- id: act-w201
+  type: fill-in
+  title: На́голос у числі́вниках та прикме́тниках
+  instruction: Обери́ пра́вильне сло́во з нормати́вним на́голосом.
+  items:
+  - sentence: Я зна́ю ___ нови́х украї́нських слів.
+    answer: одина́дцять
+    options:
+    - одина́дцять
+    - двана́дцять
+    - де́сять
+    explanation: У числі́внику одина́дцять на́голос па́дає на -на́-.
+  - sentence: У на́шій гру́пі навча́ється ___ студе́нтів.
+    answer: чотирна́дцять
+    options:
+    - чотирна́дцять
+    - трина́дцять
+    - де́сять
+    explanation: У числі́внику чотирна́дцять на́голос па́дає на -на́-.
+  - sentence: Це мій ___ підру́чник.
+    answer: нови́й
+    options:
+    - нови́й
+    - чи́стий
+    - до́брий
+    explanation: Прикме́тник нови́й ма́є на́голос на оста́нньому скла́ді.
+  - sentence: Це наш ___ буди́нок.
+    answer: стари́й
+    options:
+    - стари́й
+    - молоди́й
+    - гарне́нький
+    explanation: Прикме́тник стари́й ма́є на́голос на оста́нньому скла́ді.
+  - sentence: Сього́дні те́плий і со́нячний ___ .
+    answer: ра́нок
+    options:
+    - ра́нок
+    - день
+    - ве́чір
+    explanation: Сло́во ра́нок ма́є на́голос на пе́ршому скла́ді.
+  - sentence: Киї́в — це головна́ ___ Украї́ни.
+    answer: столи́ця
+    options:
+    - столи́ця
+    - ву́лиця
+    - краї́на
+    explanation: У сло́ві столи́ця наголо́шеним є сере́дній склад -ли́-.
+- id: act-w202
+  type: match-up
+  title: Скла́ди та пере́клад слів
+  instruction: З'єдна́й украї́нське сло́во з йо́го англі́йським зна́ченням.
+  pairs:
+  - left: украї́нська
+    right: Ukrainian
+  - left: фотогра́фія
+    right: photograph
+  - left: відпочи́нок
+    right: rest / vacation
+  - left: одина́дцять
+    right: eleven
+  - left: чотирна́дцять
+    right: fourteen
+  - left: столи́ця
+    right: capital
+- id: act-w203
+  type: group-sort
+  title: Групува́ння слів за кі́лькістю скла́дів
+  instruction: Розпо́діли слова́ за кі́лькістю скла́дів.
+  groups:
+  - label: Два скла́ди
+    items:
+    - ка́ва
+    - вода́
+    - ра́нок
+    - зима́
+  - label: Три скла́ди
+    items:
+    - столи́ця
+    - молоко́
+    - люди́на
+  - label: Чоти́ри і бі́льше скла́дів
+    items:
+    - украї́нська
+    - фотогра́фія
+    - відпочи́нок
+    - одина́дцять
+- id: act-w204
+  type: true-false
+  title: Пра́вила вимо́ви та письма́
+  instruction: Ви́знач, чи тве́рдження правди́ве, чи хи́бне.
+  items:
+  - statement: У сло́ві одина́дцять на́голос за́вжди па́дає на склад -на́-.
+    correct: true
+    explanation: Усі́ числі́вники від 11 до 19 ма́ють на́голос на -на́-.
+  - statement: Прикме́тники нови́й і стари́й ма́ють на́голос на пе́ршому скла́ді.
+    correct: false
+    explanation: В украї́нській мо́ві прикме́тники нови́й і стари́й ма́ють на́голос на
+      закі́нченні.
+  - statement: В украї́нській мо́ві ненаголо́шені зву́ки [о] вимовля́ються чи́сто й чі́тко.
+    correct: true
+    explanation: Украї́нські ненаголо́шені [о] не редуку́ються і не перехо́дять в [а].
+  - statement: У сло́ві фотогра́фія наголо́шеним є склад -гра́-.
+    correct: true
+    explanation: 'На́голос у сло́ві фотогра́фія па́дає на тре́тій склад: фо-то-гра́-фі-я.'
+  - statement: Сло́во молоко́ ма́є на́голос на пе́ршому скла́ді.
+    correct: false
+    explanation: 'У сло́ві молоко́ на́голос па́дає на оста́нній склад: мо-ло-ко́.'
+  - statement: На́голос в украї́нській мо́ві мо́же розрізня́ти зна́чення слів (за́мок і
+      замо́к).
+    correct: true
+    explanation: 'Украї́нський на́голос є розрі́знювальним: за́мок — castle, замо́к —
+      lock.'
+- id: act-w205
+  type: translate
+  title: Пере́клад ви́вчених слів уро́ку
+  instruction: Обери́ пра́вильний англі́йський пере́клад для ко́жного украї́нського сло́ва.
+  items:
+  - source: нови́й
+    options:
+    - text: new
+      correct: true
+    - text: old
+      correct: false
+    - text: hot
+      correct: false
+    explanation: Нови́й — new.
+  - source: стари́й
+    options:
+    - text: old
+      correct: true
+    - text: new
+      correct: false
+    - text: young
+      correct: false
+    explanation: Стари́й — old.
+  - source: відпочи́нок
+    options:
+    - text: rest / vacation
+      correct: true
+    - text: work
+      correct: false
+    - text: study
+      correct: false
+    explanation: Відпочи́нок — rest / vacation.
+  - source: молоко́
+    options:
+    - text: milk
+      correct: true
+    - text: water
+      correct: false
+    - text: coffee
+      correct: false
+    explanation: Молоко́ — milk.
+  - source: голова́
+    options:
+    - text: head
+      correct: true
+    - text: hand
+      correct: false
+    - text: face
+      correct: false
+    explanation: Голова́ — head.
+  - source: метро́
+    options:
+    - text: metro
+      correct: true
+    - text: bus
+      correct: false
+    - text: train
+      correct: false
+    explanation: Метро́ — metro.
