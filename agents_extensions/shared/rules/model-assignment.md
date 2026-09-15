@@ -206,13 +206,25 @@ The default reads the same warm Monitor `/api/state/routing-budget` snapshot;
 `refresh` or `--fresh` performs blocking native probes. Inspect `source`,
 per-row `freshness` and `age_s`; unavailable data is unknown capacity.
 Subscription rows expose `remaining_pct` and compatibility `codexbar` metadata
-(`pace_summary`, `weekly_pace_delta_pct`, `will_last_to_reset`) where observed.
-Missing pace is partial evidence, never a guessed reserve. Prepaid DeepSeek
-uses USD thresholds from `agent_budgets.yaml`; OpenRouter is a funding account
-with `pick: n/a`. A key spending cap is distinct from account balance. Run
+(`pace_summary`, `weekly_pace_delta_pct`, `will_last_to_reset`) where observed,
+and each allotment window line is followed by a `pace:` line (used-vs-expected
+delta and whether the window will last to reset) when the window is
+computable. Read pace per lane before widening fan-out: a lane at or ahead of
+pace (positive delta, `will_last_to_reset=False`) is a deficit risk — shed to
+a lane with reserve; negative delta means headroom. `capacity_pick` renders
+the same reading in its `pace` and `will_last` columns. The AGY lane's quota
+is the Gemini subscription row: `PROVIDER_TO_LANE` keys the probe under
+`gemini` (`agy` CLI `/usage`, never Google quota APIs) and
+`RETIRED_AGENT_ALIASES` routes `gemini` dispatch to `agy`; `capacity_pick`
+mirrors that row onto the `agy` lane (`quota:gemini` note). Prepaid API means
+OpenRouter + DeepSeek only. Missing pace is partial evidence, never a guessed
+reserve. Prepaid DeepSeek uses USD thresholds from `agent_budgets.yaml`;
+OpenRouter is a funding account with `pick: n/a`. A key spending cap is
+distinct from account balance. Run
 `python -m scripts.fleet.usage doctor` for credential path/env presence only.
 OpenRouter account balance requires a management key (env, OpenCode's explicit
-`openrouter-management` entry, or `~/.secret/openrouter-management.key`).
+`openrouter-management` entry, or `~/.secrets/openrouter-management.key`;
+`~/.secret/…` is the legacy fallback).
 The CLI reports `balance: needs management key` when it cannot read that balance.
 Follow-up naming debt: retain `CODEXBAR_*` environment and `codexbar` payload keys
 for compatibility; a global rename is outside this change.

@@ -135,6 +135,45 @@ def pace_summary(agent_info: dict[str, Any] | None) -> str:
     return "—"
 
 
+def _has_capacity_signal(info: dict[str, Any]) -> bool:
+    """True when a lane entry carries a real probe reading, not an empty shell."""
+    if not info:
+        return False
+    if str(info.get("status") or "") not in {"", "unknown"}:
+        return True
+    if remaining_pct(info) is not None:
+        return True
+    interactive = info.get("interactive")
+    return isinstance(interactive, dict) and str(interactive.get("status") or "") not in {"", "unknown"}
+
+
+def _mirror_retired_quota(
+    agents: dict[str, Any], lane: str, info: dict[str, Any]
+) -> tuple[dict[str, Any], str | None]:
+    """Mirror a retired provider's quota onto its live substitute lane.
+
+    ``PROVIDER_TO_LANE`` keys usage data under the retired provider
+    (``agy`` → ``gemini``), while ``RETIRED_AGENT_ALIASES`` routes dispatch to
+    the live adapter (``gemini`` → ``agy``). The routing budget therefore has
+    no own ``agy`` entry, and without this mirror the substitute lane renders
+    ``unknown`` even when the shared subscription probe (``agy /usage``) is
+    healthy. The mirror is read-only display: the substitute lane consumes the
+    SAME quota, never a second pool.
+    """
+    if _has_capacity_signal(info):
+        return info, None
+    for retired, target in RETIRED_AGENT_ALIASES.items():
+        if target != lane:
+            continue
+        source = agents.get(retired)
+        # Any non-empty source entry mirrors — including NEED_LOGIN/auth-error
+        # shells: the substitute lane's quota IS the retired provider's probe,
+        # so its explicit failure states are the substitute's failures too.
+        if isinstance(source, dict) and source:
+            return dict(source), retired
+    return info, None
+
+
 def fetch_active_in_flight(*, timeout: float = 2.0) -> dict[str, int]:
     """Fail-open read of /api/delegate/active → agent → count."""
     url = f"{_monitor_base()}/api/delegate/active"
@@ -169,6 +208,7 @@ def build_lane_rows(
     rows: list[dict[str, Any]] = []
     for lane in lanes:
         info = agents.get(lane) if isinstance(agents.get(lane), dict) else {}
+        quota_source: str | None = None
         if lane == "deepseek":
             from scripts.fleet.prepaid_status import api_lane_status_from_account
 
@@ -177,6 +217,8 @@ def build_lane_rows(
             info = {**info, "status": status, "probe_state": account.get("probe_state")}
             if status not in {"cool", "warm"} or account.get("is_available") is False or account.get("status") == "near_cap":
                 info["eligible"] = False
+        else:
+            info, quota_source = _mirror_retired_quota(agents, lane, info)
         if budget.get("transport") == "acp" and info.get("eligible") is not True:
             info = {**info, "eligible": False}
         status = lane_status(info)
@@ -185,6 +227,8 @@ def build_lane_rows(
         avoid = is_avoid_lane(info, lane=lane)
         in_flight = int(active.get(lane, budget_flight.get(lane, 0) or 0) or 0)
         notes: list[str] = []
+        if quota_source:
+            notes.append(f"quota:{quota_source}")
         if avoid:
             notes.append("AVOID")
             if info.get("eligible") is False:

@@ -153,3 +153,83 @@ def test_unavailable_subscription_never_cool():
     budget["agents"]["cursor"]["codexbar"]["freshness"] = "unavailable"
     row = next(row for row in capacity_pick.build_lane_rows(budget) if row["lane"] == "cursor")
     assert row["status"] == "unknown"
+
+
+def _gemini_only_budget() -> dict:
+    """Live-shape budget: PROVIDER_TO_LANE keys AGY quota under 'gemini'; no 'agy' entry."""
+    budget = _fixture_budget()
+    del budget["agents"]["agy"]
+    budget["agents"]["gemini"] = {
+        "status": "cool",
+        "remaining_pct": 92.0,
+        "burn_pct_7d": 8.0,
+        "freshness": "fresh",
+        "codexbar": {
+            "will_last_to_reset": True,
+            "pace_summary": "on pace",
+            "weekly_remaining_pct": 92.0,
+        },
+    }
+    return budget
+
+
+def test_agy_mirrors_retired_gemini_quota():
+    rows = {r["lane"]: r for r in capacity_pick.build_lane_rows(_gemini_only_budget())}
+    agy = rows["agy"]
+    assert agy["status"] == "cool"
+    assert agy["remaining_pct"] == 92.0
+    assert agy["will_last"] is True
+    assert agy["pace"] == "on pace"
+    assert agy["avoid"] is False
+    assert "quota:gemini" in agy["notes"]
+    # The retired source row keeps the same reading for visibility but stays AVOID.
+    gemini = rows["gemini"]
+    assert gemini["avoid"] is True
+    assert "retired→agy" in gemini["notes"]
+    assert gemini["remaining_pct"] == 92.0
+
+
+def test_agy_mirror_is_pickable_and_recommendation_substitutes():
+    budget = _gemini_only_budget()
+    budget["recommendation"]["primary_agent_for_code"] = "gemini"
+    report = capacity_pick.build_report(budget)
+    assert report["recommendation"]["primary_agent_for_code"] == "agy"
+    assert any("substituted" in w for w in report["recommendation"]["warnings"])
+    ranked = [p for p in report["pick_order"] if p["pick"] != "AVOID"]
+    assert "agy" in [p["lane"] for p in ranked]
+    assert "gemini" not in [p["lane"] for p in ranked]
+    assert report["cooler_lanes"] and "agy" in report["cooler_lanes"]
+
+
+def test_agy_own_entry_wins_over_mirror():
+    budget = _gemini_only_budget()
+    budget["agents"]["agy"] = {"status": "warm", "remaining_pct": 55.0}
+    row = next(r for r in capacity_pick.build_lane_rows(budget) if r["lane"] == "agy")
+    assert row["status"] == "warm"
+    assert row["remaining_pct"] == 55.0
+    assert "quota:gemini" not in row["notes"]
+
+
+def test_agy_mirror_propagates_probe_failure():
+    budget = _gemini_only_budget()
+    budget["agents"]["gemini"] = {
+        "status": "unknown",
+        "freshness": "unavailable",
+        "codexbar": {"freshness": "unavailable", "auth_error": "agy /usage failed"},
+    }
+    row = next(r for r in capacity_pick.build_lane_rows(budget) if r["lane"] == "agy")
+    assert row["status"] == "unknown"
+    assert row["remaining_pct"] is None
+    assert "quota:gemini" in row["notes"]
+
+
+def test_agy_mirror_need_login_is_avoid():
+    budget = _gemini_only_budget()
+    budget["agents"]["gemini"] = {
+        "status": "unknown",
+        "login_state": "NEED_LOGIN",
+        "probe_state": "NEED_LOGIN",
+    }
+    row = next(r for r in capacity_pick.build_lane_rows(budget) if r["lane"] == "agy")
+    assert row["avoid"] is True
+    assert "NEED_LOGIN" in row["notes"]
