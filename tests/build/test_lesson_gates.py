@@ -45,6 +45,10 @@ def test_contains_allows_expanded_explanations():
     new["items"][0]["explanation"] = 'У тебе́ є...? asks one familiar person: "Do you have...?"'
     assert gates.contains(orig, new)
     assert not gates.contains(orig, {"items": [{"sentence": "other", "answer": "У"}]})
+    assert not gates.contains({"items": [{"answer": "a"}]}, {"items": [{"answer": "cat"}]})
+    assert not gates.contains({"items": [{"answer": "yes"}]}, {"items": [{"answer": "not yes"}]})
+    assert gates.contains("", "")
+    assert gates.contains("...", "...")
 
 
 def test_fence_dialogue_counts_as_preserved():
@@ -55,6 +59,13 @@ def test_fence_dialogue_counts_as_preserved():
     )
     assert gates._fence_preserved_as_dialogue(para, page)
     assert not gates._fence_preserved_as_dialogue(para, "<p>no box</p>")
+    avoid_md = "| Avoid | Use |\n| --- | --- |\n| вкусний суп | **смачни́й суп** |\n"
+    assert "вкусний" in gates._avoid_table_forms(avoid_md)
+    swapped = (
+        '<DialogueBox exchanges={JSON.parse(`[{"speaker":"Оленка","text":"Привіт!"},'
+        '{"speaker":"Марія","text":"Класно!"}]`)} />'
+    )
+    assert not gates._fence_preserved_as_dialogue(para, swapped)
 
 
 def test_fill_in_blanked_strings_count_as_rendered():

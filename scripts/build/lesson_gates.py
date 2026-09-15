@@ -130,6 +130,35 @@ def _spoken_in_hay(spoken: str, hay: str) -> bool:
     return bool(text) and text in hay
 
 
+def _dialogue_pairs_from_page(page: str) -> list[tuple[str, str]]:
+    hay = unescape_published(" ".join(re.findall(r"<DialogueBox[\s\S]*?/>", strip_comments(page))))
+    pairs = re.findall(r'"speaker"\s*:\s*"([^"]*)"\s*,\s*"text"\s*:\s*"([^"]*)"', hay)
+    return [(md_to_text(speaker), md_to_text(spoken)) for speaker, spoken in pairs]
+
+
+def _avoid_table_forms(md: str) -> set[str]:
+    """Spellings in the Avoid column of a contrast table are error-forms, not lemmas."""
+    forms: set[str] = set()
+    for para in paragraphs(md):
+        if not para.lstrip().startswith("|"):
+            continue
+        header = None
+        for line in para.splitlines():
+            if re.match(r"^\s*\|?\s*:?-{2,}", line) or not line.strip():
+                continue
+            cells = [md_to_text(c) for c in line.strip().strip("|").split("|")]
+            if header is None:
+                header = [c.lower() for c in cells]
+                continue
+            if header and header[0] in {"avoid", "don't", "не кажи", "помилка"} and cells:
+                for tok in _stress_tokens(cells[0]):
+                    key = nfc(tok).lower()
+                    if key:
+                        forms.add(key)
+                        forms.add(strip_acute(tok).lower())
+    return forms
+
+
 def _fence_preserved_as_dialogue(para: str, page: str) -> bool:
     """Assembler turns ```text speaker fences into DialogueBox; that is preservation."""
     raw = para.strip()
@@ -137,12 +166,15 @@ def _fence_preserved_as_dialogue(para: str, page: str) -> bool:
         return False
     body = re.sub(r"^```[^\n]*\n?", "", raw)
     body = re.sub(r"\n?```\s*$", "", body)
-    turns = _dialogue_turns(body)
+    turns = [(md_to_text(speaker), md_to_text(spoken)) for speaker, spoken in _dialogue_turns(body)]
     if not turns:
         return False
-    hay = _dialogue_props_text(page)
-    return all(md_to_text(speaker) in hay and _spoken_in_hay(spoken, hay)
-               for speaker, spoken in turns)
+    remaining = _dialogue_pairs_from_page(page)
+    for turn in turns:
+        if turn not in remaining:
+            return False
+        remaining.remove(turn)
+    return True
 
 
 def _visible_in_render(value: str, literal_text: str) -> bool:
@@ -194,16 +226,20 @@ def _activity_render_strings(act: dict) -> list:
     return leaves(payload, skip)
 
 
-def contains(orig, new) -> bool:
+def contains(orig, new, *, expand_explanations: bool = False) -> bool:
     """orig ⊆ new structurally with multiplicity: dict keys must exist with contained values;
     each orig list element must match a DISTINCT new element; scalars equal modulo stress
-    marks and with the same type (True is not 1)."""
+    marks and with the same type (True is not 1). Explanation strings may grow a gloss."""
     if isinstance(orig, dict):
-        return isinstance(new, dict) and all(k in new and contains(v, new[k]) for k, v in orig.items())
+        return isinstance(new, dict) and all(
+            k in new and contains(v, new[k], expand_explanations=(k == "explanation"))
+            for k, v in orig.items()
+        )
     if isinstance(orig, list):
         if not isinstance(new, list) or len(orig) > len(new):
             return False
-        cand = [[i for i, n in enumerate(new) if contains(o, n)] for o in orig]
+        cand = [[i for i, n in enumerate(new) if contains(o, n, expand_explanations=expand_explanations)]
+                for o in orig]
 
         def match(k: int, used: frozenset) -> bool:   # complete one-to-one assignment (backtracking)
             if k == len(cand):
@@ -214,8 +250,12 @@ def contains(orig, new) -> bool:
         if not isinstance(new, str):
             return False
         old, expanded = norm_md(orig), norm_md(new)
+        if old == expanded:
+            return True
+        if not expand_explanations:
+            return False
         core = old.rstrip(".:;!? ")
-        return bool(core) and (old == expanded or old in expanded or core in expanded)
+        return len(core) >= 12 and (old in expanded or core in expanded)
     return type(orig) is type(new) and orig == new
 
 
@@ -645,7 +685,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             wrong = []
         if wrong:
             block(f"lesson {n}: {len(wrong)} stressed forms contradict the stress dictionary: {wrong[:15]}")
-        bad = sorted(set(missing_stress(lesson_md_clean[n], allow)
+        bad = sorted(set(missing_stress(lesson_md_clean[n], allow | _avoid_table_forms(lesson_md_clean[n]))
                          + missing_stress("\n".join(str(x) for x in leaves(vocab) if isinstance(x, str)), allow)))
         for activity in (acts.get("inline") or []) + (acts.get("workbook") or []):
             if not isinstance(activity, dict):
@@ -807,14 +847,21 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                     continue
             if para.lstrip().startswith("|"):
                 hay = _dialogue_props_text(page) if "<DialogueBox" in page else ""
+                header = None
                 cells_ok = True
                 for line in para.splitlines():
                     if re.match(r"^\s*\|?\s*:?-{2,}", line) or not line.strip():
                         continue
                     cells = [md_to_text(c) for c in line.strip().strip("|").split("|")]
-                    if cells and re.search(r"ukrainian|україн|english|use\b", cells[0], re.I):
+                    if header is None:
+                        header = [c.lower() for c in cells]
                         continue
-                    for cell in cells:
+                    if cells and re.search(r"ukrainian|україн|english", cells[0], re.I):
+                        continue
+                    check = cells
+                    if header and header[0] in {"avoid", "don't", "не кажи", "помилка"}:
+                        check = cells[1:]  # error-form column is not learner text
+                    for cell in check:
                         if len(cell) < 3:
                             continue
                         if cell in visible:
