@@ -1,0 +1,119 @@
+lessons:
+- n: 1
+  title: Читаємо слова
+  sections:
+  - Склади
+  - Голосні літери
+  - Читаємо слова
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress:
+  - ньому
+  - її
+  unverified_lemmas: []
+- n: 2
+  title: Друк, зошит, перевірка
+  sections:
+  - Пастки читання
+  - Друк, зошит, перевірка
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress:
+  - буквосполучення
+  - буквосполученням
+  - буквосполучень
+  - сіма
+  - її
+  unverified_lemmas: []
+- n: 3
+  title: Далі
+  sections:
+  - Далі
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress:
+  - Мініперевірка
+  - ньому
+  unverified_lemmas: []
+closes_module: 3
+provenance:
+- placement: inline
+  index: 0
+  new_id: act-1
+  lesson: 1
+- placement: inline
+  index: 1
+  new_id: act-2
+  lesson: 1
+- placement: inline
+  index: 2
+  new_id: act-3
+  lesson: 1
+- placement: inline
+  index: 3
+  new_id: act-4
+  lesson: 2
+- placement: workbook
+  index: 0
+  new_id: act-w1
+  lesson: 1
+- placement: workbook
+  index: 1
+  new_id: act-w2
+  lesson: 1
+- placement: workbook
+  index: 2
+  new_id: act-w3
+  lesson: 2
+- placement: workbook
+  index: 3
+  new_id: act-w4
+  lesson: 2
+- placement: workbook
+  index: 4
+  new_id: act-w5
+  lesson: 3
+- placement: workbook
+  index: 5
+  new_id: act-5
+  lesson: 3
+items_min_exempt:
+- id: act-4
+  reason: 4-item original activity preserved from baseline
+- id: act-w2
+  reason: 4-item original activity preserved from baseline
+- id: act-w3
+  reason: 4-item original activity preserved from baseline
+- id: act-w4
+  reason: 5-item original activity preserved from baseline
+- id: act-w5
+  reason: 5-item original activity preserved from baseline
+- id: act-5
+  reason: 3-item original activity preserved from baseline
+proper_names:
+- Вашуленко
+- Захарійчук
