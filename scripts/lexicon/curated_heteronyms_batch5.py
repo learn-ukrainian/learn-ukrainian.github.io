@@ -39,7 +39,7 @@ CURATED_HETERONYMS_BATCH_5: dict[str, list[dict[str, Any]]] = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Не плутати з омографом «копни́й» (наголос на другому складі: пов'язаний з копою як мірою снопів або сіна).",
+      "distinction_note": "Не плутати з омографом «копни́й» (наголос на другому складі: не в'їжджений після снігопаду шлях).",
       "meaning": {
         "definitions": ["Громадський, судновий; прикм. до копа́ (традиційний сільський суд громади)."],
         "source": "СУМ-20 (44007)"
@@ -54,8 +54,8 @@ CURATED_HETERONYMS_BATCH_5: dict[str, list[dict[str, Any]]] = {
     },
     {
       "headword": "копни́й",
-      "short_label": "пов'язаний з копою (снопів, сіна)",
-      "gloss": "relating to a shock of sheaves (kopa) or hay mound",
+      "short_label": "не в'їжджений після снігопаду (про шлях)",
+      "gloss": "untravelled after snowfall (of a winter road or path; kopna doroha)",
       "pos": "adjective",
       "cefr": "B2",
       "heritage_status": {
@@ -80,7 +80,7 @@ CURATED_HETERONYMS_BATCH_5: dict[str, list[dict[str, Any]]] = {
       },
       "distinction_note": "Не плутати з омографом «ко́пний» (наголос на першому складі: пов'язаний з копою як традиційною сільською громадою чи копним судом).",
       "meaning": {
-        "definitions": ["Не в'їжджений після снігопаду (про шлях); пов'язаний з копою снопів або сіна."],
+        "definitions": ["Не в'їжджений після снігопаду (про шлях)."],
         "source": "СУМ-20 (44008)"
       },
       "soviet_colonization_context": {

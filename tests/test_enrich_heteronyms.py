@@ -670,3 +670,65 @@ def test_batch5_lemmas_not_duplicated_from_earlier_batches():
     assert "покій" in CURATED_HETERONYMS_BATCH_5
     assert "сапати" in CURATED_HETERONYMS_BATCH_5
     assert "плавний" in CURATED_HETERONYMS_BATCH_5
+
+
+def test_homonyms_with_numeric_suffixes_and_identical_stress_not_treated_as_heteronyms(monkeypatch):
+    """Separate dictionary article numbers from headword before comparing stress (#8039).
+
+    Ensures that homonyms with identical stress but distinct article numbers (e.g. ТЕ́СТ 1 and ТЕ́СТ 2)
+    are not treated as heteronyms, and that numeric suffixes are stripped from headwords.
+    """
+    from scripts.lexicon import sum20_lookup
+
+    synthetic_same_stress = {
+        "lemma": "синтетичнийтест",
+        "modern_sum20": [
+            {
+                "stressed_headword": "ТЕ́СТ 1",
+                "grammar": "іменник",
+                "senses": [{"definition": "Перше значення тесту"}],
+            },
+            {
+                "stressed_headword": "ТЕ́СТ 2",
+                "grammar": "іменник",
+                "senses": [{"definition": "Друге значення тесту"}],
+            },
+        ],
+        "soviet_colonization_context": None,
+    }
+
+    monkeypatch.setattr(
+        sum20_lookup,
+        "lookup_decolonized_heteronym_evidence",
+        lambda lemma: synthetic_same_stress,
+    )
+    result_same = enrich_heteronyms.build_heteronyms_for_lemma("синтетичнийтест")
+    assert result_same is None
+
+    synthetic_diff_stress = {
+        "lemma": "синтетичнийтест",
+        "modern_sum20": [
+            {
+                "stressed_headword": "ТЕ́СТ 1",
+                "grammar": "іменник",
+                "senses": [{"definition": "Перше значення тесту"}],
+            },
+            {
+                "stressed_headword": "ТЕСТІ́ 2",
+                "grammar": "іменник",
+                "senses": [{"definition": "Друге значення тесту"}],
+            },
+        ],
+        "soviet_colonization_context": None,
+    }
+
+    monkeypatch.setattr(
+        sum20_lookup,
+        "lookup_decolonized_heteronym_evidence",
+        lambda lemma: synthetic_diff_stress,
+    )
+    result_diff = enrich_heteronyms.build_heteronyms_for_lemma("синтетичнийтест")
+    assert result_diff is not None
+    assert len(result_diff) == 2
+    assert result_diff[0]["headword"] == "ТЕ́СТ"
+    assert result_diff[1]["headword"] == "ТЕСТІ́"

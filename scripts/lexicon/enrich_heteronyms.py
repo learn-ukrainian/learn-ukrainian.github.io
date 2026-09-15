@@ -482,6 +482,12 @@ CURATED_HETERONYMS: dict[str, list[dict[str, Any]]] = {
 }
 
 
+def _clean_stressed_headword(stressed_headword: str) -> str:
+    """Separate dictionary article numbers from headword and normalize combining accents."""
+    cleaned = re.sub(r"\s+\d+$", "", (stressed_headword or "").strip())
+    return cleaned.replace("̀", "́")
+
+
 def build_heteronyms_for_lemma(lemma: str) -> list[dict[str, Any]] | None:
     """Return curated or decolonized modern heteronym definitions for lemma."""
     if lemma in CURATED_HETERONYMS:
@@ -493,14 +499,22 @@ def build_heteronyms_for_lemma(lemma: str) -> list[dict[str, Any]] | None:
         ev = lookup_decolonized_heteronym_evidence(lemma)
         s20 = ev.get("modern_sum20", [])
         if len(s20) >= 2:
-            unique_stresses = {s["stressed_headword"].replace("̀", "́") for s in s20}
-            if len(unique_stresses) >= 2:
+            # Group by unique stress so homonym senses with the same stress (e.g. ТЕ́СТ 1 / ТЕ́СТ 2)
+            # do not create false heteronyms.
+            by_stress: dict[str, dict[str, Any]] = {}
+            for s in s20:
+                clean_head = _clean_stressed_headword(s.get("stressed_headword", ""))
+                if not clean_head:
+                    continue
+                if clean_head not in by_stress:
+                    by_stress[clean_head] = s
+
+            if len(by_stress) >= 2:
                 items = []
                 col = ev.get("soviet_colonization_context")
-                for s in s20:
-                    head = s["stressed_headword"]
+                for head, s in by_stress.items():
                     senses = s.get("senses", [])
-                    defn = senses[0]["definition"] if senses else ""
+                    defn = senses[0]["definition"] if senses else (s.get("definition") or "")
                     items.append(
                         {
                             "headword": head,
