@@ -1,0 +1,481 @@
+inline:
+- id: act-301
+  type: match-up
+  title: 'Choose the smoother sound: У or В'
+  instruction: Match each phrase to the reason why Ukrainian prefers that sound.
+  pairs:
+  - left: у шко́лі
+    right: starts with 'у' before the consonant cluster 'шк-'
+  - left: в Украї́ні
+    right: starts with 'в' before the vowel sound 'У-'
+  - left: він і вона́
+    right: uses 'і' between consonant and consonant
+  - left: вона́ й він
+    right: uses 'й' between vowel and consonant
+  - left: жи́ти у мі́сті
+    right: uses 'у' after a consonant to prevent a cluster
+  - left: пла́вати в о́зері
+    right: uses 'в' after a vowel before a vowel
+- id: act-302
+  type: quiz
+  title: Principles of Ukrainian euphony
+  instruction: Choose the correct answer about милозву́чність.
+  items:
+  - prompt: What is the main purpose of милозву́чність in Ukrainian?
+    options:
+    - text: To avoid heavy consonant clusters and make speech flow smoothly
+      correct: true
+    - text: To make words longer and more difficult to pronounce
+      correct: false
+    - text: To replace all vowels with consonants
+      correct: false
+    explanation: Милозву́чність is the natural tendency of Ukrainian to avoid awkward
+      consonant clusters and preserve a melodic flow.
+  - prompt: Why do we say «в Украї́ні» rather than «у Украї́ні»?
+    options:
+    - text: Because «Украї́на» starts with a vowel sound, so «в» avoids two vowels
+        clashing
+      correct: true
+    - text: Because «в» is always required with countries
+      correct: false
+    - text: Because «у» is forbidden at the start of sentences
+      correct: false
+    explanation: Having two vowel sounds together creates a pause; «в» provides a
+      smooth transition.
+  - prompt: Why do we say «у шко́лі» rather than «в шко́лі»?
+    options:
+    - text: Because «шк-» is a consonant cluster, and «у» avoids piling up three consonants
+      correct: true
+    - text: Because school words always take «у»
+      correct: false
+    - text: Because «в» cannot be spoken aloud
+      correct: false
+    explanation: Saying [вшк-] would create a difficult cluster of three consonants;
+      «у» makes pronunciation effortless.
+  - prompt: In «Марко́ й А́нна», why is «й» chosen instead of «і»?  # джерело: ULP
+    options:
+    - text: Because «Марко́» ends in a vowel, and «й» smoothly bridges to the next
+        vowel
+      correct: true
+    - text: Because «і» is never used between names
+      correct: false
+    - text: Because «й» is a capital letter
+      correct: false
+    explanation: After a vowel sound, the short glide «й» creates a musical transition
+      between vowels.
+  - prompt: Which pair shows the Ukrainian euphony alternation?
+    options:
+    - text: у / в and і / й
+      correct: true
+    - text: а / о and е / и
+      correct: false
+    - text: п / б and т / д
+      correct: false
+    explanation: The two primary euphony pairs are у/в and і/й.
+  - prompt: When speaking Ukrainian at A1, what is the best beginner mindset toward
+      euphony?
+    options:
+    - text: Notice the pattern and hear that Ukrainian naturally chooses smoother
+        sound options
+      correct: true
+    - text: Memorize complex mathematical rules before saying a word
+      correct: false
+    - text: Ignore all sound differences completely
+      correct: false
+    explanation: 'At A1, awareness comes first: train your ear to hear the smoother
+      choices.'
+- id: act-5
+  type: fill-in
+  title: First conversations
+  instruction: Choose the phrase that completes the line.
+  items:
+  - sentence: ____! Як спра́ви?
+    answer: Приві́т
+    options:
+    - Приві́т
+    - Молоко́
+    - Лі́тера
+  - sentence: ____. А у тебе́?
+    answer: До́бре
+    options:
+    - До́бре
+    - День
+    - Звук
+  - sentence: Як тебе́ ____?
+    answer: зва́ти
+    options:
+    - зва́ти
+    - до́бре
+    - день
+  - sentence: Мене́ ____ А́нна.  # джерело: ULP
+    answer: зва́ти
+    options:
+    - зва́ти
+    - спра́ви
+    - звук
+    джерело́: ULP
+  - sentence: До ____!
+    answer: поба́чення
+    options:
+    - поба́чення
+    - тебе́
+    - ма́ма
+  - sentence: На все ____!
+    answer: до́бре
+    options:
+    - до́бре
+    - лі́тера
+    - звук
+- id: act-303
+  type: match-up
+  title: Ukrainian greetings and farewells
+  instruction: Match each Ukrainian phrase with its natural English equivalent.
+  pairs:
+  - left: Приві́т!
+    right: Hi! (informal greeting)
+  - left: До́брий день!
+    right: Hello! / Good day! (neutral daytime greeting)
+  - left: До́брого ра́нку!
+    right: Good morning! (morning greeting)
+  - left: До́брий ве́чір!
+    right: Good evening! (evening greeting)
+  - left: До поба́чення!
+    right: Goodbye! (neutral or formal farewell)
+  - left: На все до́бре!
+    right: All the best! (warm friendly farewell)
+- id: act-304
+  type: quiz
+  title: First conversation etiquette
+  instruction: Choose the context-appropriate response.
+  items:
+  - prompt: 'Someone asks you: «Як спра́ви?». What is a natural positive reply?'
+    options:
+    - text: До́бре! / Чудо́во!
+      correct: true
+    - text: До поба́чення!
+      correct: false
+    - text: Мене́ зва́ти Марко́.
+      correct: false
+    explanation: «До́бре» (fine) or «Чудо́во» (great) directly answers «Як спра́ви?».
+  - prompt: You just answered «До́бре.». How do you ask the other person how THEY
+      are doing?
+    options:
+    - text: А у тебе́?
+      correct: true
+    - text: А тебе́?
+      correct: false
+    - text: До́брий ве́чір?
+      correct: false
+    explanation: Use «А у тебе́?» to ask about another person's state or well-being.
+  - prompt: 'Someone introduces themselves: «Мене́ зва́ти Марко́.». How do they ask
+      YOUR name?'
+    options:
+    - text: А тебе́?
+      correct: true
+    - text: А у тебе́?
+      correct: false
+    - text: Як спра́ви?
+      correct: false
+    explanation: Use «А тебе́?» (short for «А тебе́ як зва́ти?») when exchanging names.
+  - prompt: Why is «А у тебе́?» wrong when asking for someone's name?
+    options:
+    - text: Because the verb «зва́ти» takes the direct object «тебе́», not «у тебе́»
+      correct: true
+    - text: Because «тебе́» is only for morning greetings
+      correct: false
+    - text: Because «у тебе́» is an English word
+      correct: false
+    explanation: You ask «Як тебе́ зва́ти?», so the elliptical follow-up must be «А
+      тебе́?».
+  - prompt: What should a female speaker say to express gladness to see someone?
+    options:
+    - text: Ра́да тебе́ ба́чити!
+      correct: true
+    - text: Ра́дий тебе́ ба́чити!
+      correct: false
+    - text: Ра́де тебе́ ба́чити!
+      correct: false
+    explanation: Female speakers use the feminine form «Ра́да».
+  - prompt: What should a male speaker say to express gladness to see someone?
+    options:
+    - text: Ра́дий тебе́ ба́чити!
+      correct: true
+    - text: Ра́да тебе́ ба́чити!
+      correct: false
+    - text: До́брого ра́нку!
+      correct: false
+    explanation: Male speakers use the masculine form «Ра́дий».
+workbook:
+- id: act-7
+  type: group-sort
+  title: Vowel or consonant sound?
+  instruction: Sort the sounds, not the letters.
+  groups:
+  - label: Vowel sounds
+    items:
+    - '[а]'
+    - '[о]'
+    - '[у]'
+    - '[е]'
+    - '[и]'
+    - '[і]'
+  - label: Consonant sounds
+    items:
+    - '[п]'
+    - '[р]'
+    - '[в]'
+    - '[т]'
+    - '[м]'
+    - '[н]'
+    - '[к]'
+    - '[с]'
+- id: act-w301
+  type: true-false
+  title: Conversational safety check
+  instruction: Decide whether each statement is true or false.
+  items:
+  - statement: «Приві́т!» is an informal greeting used with friends, family, and peers.
+    answer: true
+    explanation: «Приві́т!» is the standard informal greeting for friends and classmates.
+  - statement: In «До́брого ра́нку!», the unstressed «о» letters turn into «а».
+    answer: false
+    explanation: Ukrainian unstressed [о] stays clean and rounded; it never turns
+      into [а].
+  - statement: You say «А тебе́?» when returning a name question («Як тебе́ зва́ти?»).
+    answer: true
+    explanation: «А тебе́?» is elliptical for «А тебе́ як зва́ти?».
+  - statement: A woman says «Ра́дий тебе́ ба́чити!».
+    answer: false
+    explanation: A female speaker says «Ра́да тебе́ ба́чити!».
+  - statement: «До поба́чення!» means «Goodbye!».
+    answer: true
+    explanation: «До поба́чення!» is the primary neutral goodbye in Ukrainian.
+  - statement: Ukrainian prefers «в Украї́ні» because «Украї́на» starts with a vowel
+      sound.
+    answer: true
+    explanation: Starting with «в» before «У-» prevents an awkward vowel clash.
+- id: act-w302
+  type: fill-in
+  title: Dialogue completion practice
+  instruction: Choose the correct word to complete each exchange.
+  items:
+  - sentence: — Приві́т! Як ____? / — До́бре, дя́кую!
+    answer: спра́ви
+    options:
+    - спра́ви
+    - сло́во
+    - звук
+    explanation: «Як спра́ви?» is the standard friendly question.
+  - sentence: — Мене́ зва́ти Марко́. А ____? / — Мене́ зва́ти Софі́я.
+    answer: тебе́
+    options:
+    - тебе́
+    - у тебе́
+    - ра́нок
+    explanation: Use «А тебе́?» to return a name question.
+  - sentence: — Як спра́ви? / — Чудо́во. А ____? / — Норма́льно.
+    answer: у тебе́
+    options:
+    - у тебе́
+    - тебе́
+    - день
+    explanation: Use «А у тебе́?» to return a status question («Як спра́ви?»).
+  - sentence: — До́брого ____! Наста́в я́сний ра́нок.
+    answer: ра́нку
+    options:
+    - ра́нку
+    - день
+    - ве́чір
+    explanation: «До́брого ра́нку!» is the morning greeting.
+  - sentence: — До ____! / — На все до́бре!
+    answer: поба́чення
+    options:
+    - поба́чення
+    - лі́тера
+    - молоко́
+    explanation: «До поба́чення!» is goodbye.
+  - sentence: 'Софі́я ка́же: «____ тебе́ ба́чити, Марко́!».'
+    answer: Ра́да
+    options:
+    - Ра́да
+    - Ра́дий
+    - До́брий
+    explanation: A female speaker uses «Ра́да».
+- id: act-w303
+  type: group-sort
+  title: Conversational function sort
+  instruction: Sort the phrases by their conversational role.
+  groups:
+  - label: Greetings
+    items:
+    - До́брий день!
+    - До́брого ра́нку!
+    - До́брий ве́чір!
+    - Приві́т!
+  - label: Answers to 'Як спра́ви?'
+    items:
+    - До́бре.
+    - Чудо́во.
+    - Норма́льно.
+  - label: Farewells
+    items:
+    - До поба́чення!
+    - На все до́бре!
+- id: act-w304
+  type: translate
+  title: English to Ukrainian phrase meanings
+  instruction: Choose the Ukrainian phrase that matches the English conversational
+    cue.
+  items:
+  - source: Good morning!
+    options:
+    - text: До́брого ра́нку!
+      correct: true
+    - text: До́брий ве́чір!
+      correct: false
+    - text: До поба́чення!
+      correct: false
+    explanation: «До́брого ра́нку!» is Good morning.
+  - source: Good evening!
+    options:
+    - text: До́брий ве́чір!
+      correct: true
+    - text: До́брого ра́нку!
+      correct: false
+    - text: Приві́т!
+      correct: false
+    explanation: «До́брий ве́чір!» is Good evening.
+  - source: What is your name?
+    options:
+    - text: Як тебе́ зва́ти?
+      correct: true
+    - text: Як спра́ви?
+      correct: false
+    - text: А у тебе́?
+      correct: false
+    explanation: «Як тебе́ зва́ти?» asks for someone's name.
+  - source: My name is Marko.
+    options:
+    - text: Мене́ зва́ти Марко́.
+      correct: true
+    - text: Мене́ зва́ти Софі́я.
+      correct: false
+    - text: Ра́дий тебе́ ба́чити.
+      correct: false
+    explanation: «Мене́ зва́ти Марко́.» is My name is Marko.
+  - source: All the best!
+    options:
+    - text: На все до́бре!
+      correct: true
+    - text: До поба́чення!
+      correct: false
+    - text: До́брий день!
+      correct: false
+    explanation: «На все до́бре!» is All the best!
+  - source: Glad to see you. (male speaker)
+    options:
+    - text: Ра́дий тебе́ ба́чити.
+      correct: true
+    - text: Ра́да тебе́ ба́чити.
+      correct: false
+    - text: Як спра́ви?
+      correct: false
+    explanation: A male speaker says «Ра́дий тебе́ ба́чити.».
+- id: act-w305
+  type: unjumble
+  title: Reorder the conversation lines
+  instruction: Put the words in order to form the correct Ukrainian phrase.
+  items:
+  - sentence: Як тебе́ зва́ти?
+    words:
+    - Як
+    - тебе́
+    - зва́ти?
+    explanation: Як тебе́ зва́ти? is the informal question 'What is your name?'.
+  - sentence: Мене́ зва́ти Софі́я.
+    words:
+    - Мене́
+    - зва́ти
+    - Софі́я.
+    explanation: Мене́ зва́ти Софі́я. means 'My name is Sofia.'.
+  - sentence: До́бре. А у тебе́?
+    words:
+    - До́бре.
+    - А
+    - у
+    - тебе́?
+    explanation: До́бре. А у тебе́? means 'Fine. And you?'.
+  - sentence: Ра́да тебе́ ба́чити.
+    words:
+    - Ра́да
+    - тебе́
+    - ба́чити.
+    explanation: Ра́да тебе́ ба́чити. means 'Glad to see you.' (female speaker).
+  - sentence: На все до́бре!
+    words:
+    - На
+    - все
+    - до́бре!
+    explanation: На все до́бре! means 'All the best!'.
+  - sentence: До́брого ра́нку!
+    words:
+    - До́брого
+    - ра́нку!
+    explanation: До́брого ра́нку! means 'Good morning!'.
+- id: act-w306
+  type: error-correction
+  title: Fix the conversational mistake
+  instruction: Choose the correct Ukrainian phrase to replace the error.
+  items:
+  - sentence: — Мене́ зва́ти Марко́. А у тебе́?
+    error: А у тебе́?
+    answer: А тебе́?
+    options:
+    - А тебе́?
+    - А у тебе́?
+    - Як спра́ви?
+    explanation: After a name exchange («Мене́ зва́ти...»), use «А тебе́?», not «А
+      у тебе́?».
+  - sentence: 'Софі́я ка́же: «Ра́дий тебе́ ба́чити!».'
+    error: Ра́дий
+    answer: Ра́да
+    options:
+    - Ра́да
+    - Ра́дий
+    - До́бре
+    explanation: Sofia is a woman, so she says «Ра́да тебе́ ба́чити!».
+  - sentence: 'Марко́ ка́же: «Ра́да тебе́ ба́чити!».'
+    error: Ра́да
+    answer: Ра́дий
+    options:
+    - Ра́дий
+    - Ра́да
+    - Чудо́во
+    explanation: Marko is a man, so he says «Ра́дий тебе́ ба́чити!».
+  - sentence: — Як спра́ви? — До́бре. А тебе́?
+    error: А тебе́?
+    answer: А у тебе́?
+    options:
+    - А у тебе́?
+    - А тебе́?
+    - На все до́бре!
+    explanation: After asking about state («Як спра́ви? — До́бре.»), return with «А
+      у тебе́?».
+  - sentence: 'Віта́ння вра́нці: До́брий ра́нок!'
+    error: До́брий ра́нок!
+    answer: До́брого ра́нку!
+    options:
+    - До́брого ра́нку!
+    - До́брий ра́нок!
+    - До́брий день!
+    explanation: The canonical Ukrainian morning greeting uses the genitive form «До́брого
+      ра́нку!».
+  - sentence: Він живе́ у Украї́ні.
+    error: у Украї́ні
+    answer: в Украї́ні
+    options:
+    - в Украї́ні
+    - у Украї́ні
+    - й Украї́ні
+    explanation: To avoid hiatus (two vowel sounds colliding), Ukrainian uses «в»
+      before «У-».

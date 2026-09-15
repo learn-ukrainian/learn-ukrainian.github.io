@@ -1,0 +1,317 @@
+inline:
+- id: act-6
+  type: true-false
+  title: Pronunciation safety check
+  instruction: Choose true or false.
+  items:
+  - statement: In молоко́, every о stays clean.
+    correct: true
+    explanation: Ukrainian о does not blur into а in this beginner model.
+  - statement: The letters и and і always sound the same.
+    correct: false
+    explanation: Приві́т contains both [и] and [і].
+  - statement: Ь has no sound of its own.
+    correct: true
+    explanation: Ь softens the previous consonant.
+  - statement: Ї is always [йі].
+    correct: true
+    explanation: Treat Ї as [йі] at this level.
+  - statement: Г and Ґ are the same letter.
+    correct: false
+    explanation: Г is h-like; Ґ is hard g.
+  - statement: Щ is [шч].
+    correct: true
+    explanation: Щ represents two sounds together.
+- id: act-401
+  type: quiz
+  title: Чи́стий звук [о] — Pure [о] in words
+  instruction: Choose the correct answer about Ukrainian sounds.
+  items:
+  - prompt: How is the unstressed о pronounced in the word молоко́?
+    options:
+    - text: As a clean, round [о]
+      correct: true
+    - text: As [а]
+      correct: false
+    - text: As a blurred [ə]
+      correct: false
+    explanation: In Ukrainian, every unstressed о remains a clean [о].
+  - prompt: What happens to unstressed о in Ukrainian compared to English?
+    options:
+    - text: It does not reduce or blur
+      correct: true
+    - text: It always turns into [а]
+      correct: false
+    - text: It becomes silent
+      correct: false
+    explanation: Ukrainian vowels keep their pure quality even when unstressed.
+  - prompt: In the word о́ко, how is the second letter о pronounced?
+    options:
+    - text: As a clear [о]
+      correct: true
+    - text: As [у]
+      correct: false
+    - text: As [і]
+      correct: false
+    explanation: 'Unstressed о stays clean: о́ко.'
+  - prompt: In the greeting До́брого ра́нку, how should you pronounce the ending -го?
+    options:
+    - text: With a clean unstressed [о]
+      correct: true
+    - text: Blurred into [а]
+      correct: false
+    - text: As a silent vowel
+      correct: false
+    explanation: Do not reduce unstressed о to [а] in До́брого.
+  - prompt: Why is keeping [о] clean important in Ukrainian?
+    options:
+    - text: It preserves the natural melody and clarity of speech
+      correct: true
+    - text: It changes consonants into vowels
+      correct: false
+    - text: It makes words shorter
+      correct: false
+    explanation: Clean vowels are a hallmark of standard Ukrainian literary pronunciation.
+  - prompt: Which pronunciation habit is correct for beginners?
+    options:
+    - text: молоко́ with three clean [о] sounds
+      correct: true
+    - text: воду́ with two [у] sounds
+      correct: false
+    - text: чай with a diphthong
+      correct: false
+    explanation: Ukrainian maintains full, open vowel articulation.
+- id: act-402
+  type: match-up
+  title: Зву́ки [и] та [і] — Minimal pairs [и] versus [і]
+  instruction: Match each word with its meaning to notice how [и] and [і] change the
+    word.
+  pairs:
+  - left: лис
+    right: fox ([и], relaxed tongue)
+  - left: ліс
+    right: forest ([і], smiling lips)
+  - left: дим
+    right: smoke ([и])
+  - left: дім
+    right: house / home ([і])
+  - left: сир
+    right: cheese ([и])
+  - left: сіль
+    right: salt ([і])
+- id: act-403
+  type: fill-in
+  title: Безпе́чна вимо́ва — Pronunciation safety check
+  instruction: Choose the correct word to complete each sentence.
+  items:
+  - sentence: У лі́сі живе́ руди́й ____.
+    answer: лис
+    options:
+    - лис
+    - ліс
+  - sentence: Навко́ло села́ росте́ густи́й ____.
+    answer: ліс
+    options:
+    - ліс
+    - лис
+  - sentence: З труби́ йде бі́лий ____.
+    answer: дим
+    options:
+    - дим
+    - дім
+  - sentence: Це наш нови́й і те́плий ____.
+    answer: дім
+    options:
+    - дім
+    - дим
+  - sentence: Ді́ти п'ють сві́же ____ щора́нку.
+    answer: молоко́
+    options:
+    - молоко́
+    - чай
+  - sentence: У ко́шику лежи́ть вели́кий бі́лий ____.
+    answer: гриб
+    options:
+    - гриб
+    - грип
+- id: act-404
+  type: group-sort
+  title: Дзвінкі́ та глухі́ зву́ки — Voiced and voiceless consonants
+  instruction: Sort each consonant into voiced or voiceless.
+  groups:
+  - label: Дзвінкі́ при́голосні (Voiced)
+    items:
+    - '[б]'
+    - '[д]'
+    - '[з]'
+    - '[ж]'
+  - label: Глухі́ при́голосні (Voiceless)
+    items:
+    - '[п]'
+    - '[т]'
+    - '[с]'
+    - '[ш]'
+workbook:
+- id: act-8
+  type: match-up
+  title: See a letter, hear a sound
+  instruction: Match each letter with its beginner sound clue.
+  pairs:
+  - left: А
+    right: '[а]'
+  - left: О
+    right: '[о]'
+  - left: У
+    right: '[у]'
+  - left: М
+    right: '[м]'
+  - left: Н
+    right: '[н]'
+  - left: Г
+    right: h-like [г]
+  - left: Ґ
+    right: hard [g]
+  - left: Ї
+    right: '[йі]'
+  - left: Ь
+    right: no sound
+- id: act-w401
+  type: true-false
+  title: Дзвінкі́ при́голосні в кінці́ слів — Voiced consonants at word end
+  instruction: Choose true or false.
+  items:
+  - statement: In Ukrainian, the final sound in дуб remains a voiced [б].
+    correct: true
+    explanation: Ukrainian does not devoice final voiced consonants into [п].
+  - statement: The word сад sounds identical to сат in standard pronunciation.
+    correct: false
+    explanation: Final [д] keeps its voice and is not devoiced to [т].
+  - statement: In гриб, the final consonant is pronounced as [б].
+    correct: true
+    explanation: 'Final [б] stays voiced: гриб, not грип.'
+  - statement: Voiced consonants lose their voice at the end of every Ukrainian word.
+    correct: false
+    explanation: Standard Ukrainian retains voicing at the end of words.
+  - statement: In ніж, the sound [ж] is voiced.
+    correct: true
+    explanation: Final [ж] remains voiced.
+  - statement: In мед, the final sound is pronounced as [д].
+    correct: true
+    explanation: Final [д] remains voiced in мед.
+- id: act-w402
+  type: group-sort
+  title: Розпо́діл слів за зву́ком — Sort words by vowel [и] or [і]
+  instruction: Sort each word by whether it contains the sound [и] or [і].
+  groups:
+  - label: Звук [и]
+    items:
+    - лис
+    - дим
+    - сир
+  - label: Звук [і]
+    items:
+    - ліс
+    - дім
+    - сіль
+- id: act-w403
+  type: fill-in
+  title: Дзвінкі́ зву́ки у слова́х — Voiced consonants in context
+  instruction: Choose the word with the correct voiced ending consonant.
+  items:
+  - sentence: Бі́ля рі́чки росте́ стари́й ____.
+    answer: дуб
+    options:
+    - дуб
+    - зуб
+  - sentence: У лі́сі ми знайшли́ смачни́й ____.
+    answer: гриб
+    options:
+    - гриб
+    - грип
+  - sentence: Ко́ло ха́ти цвіте́ зеле́ний ____.
+    answer: сад
+    options:
+    - сад
+    - ліс
+  - sentence: На столі́ стої́ть соло́дкий ____.
+    answer: мед
+    options:
+    - мед
+    - сир
+  - sentence: На ку́хні лежи́ть го́стрий ____.
+    answer: ніж
+    options:
+    - ніж
+    - хліб
+  - sentence: Узи́мку на рі́чці лежи́ть товсти́й ____.
+    answer: лід
+    options:
+    - лід
+    - сніг
+- id: act-w404
+  type: odd-one-out
+  title: За́йве сло́во за вимо́вою — Odd one out by sound
+  instruction: Find the word that does not fit the phonetic pattern.
+  items:
+  - words:
+    - молоко́
+    - о́ко
+    - коро́ва
+    - ліс
+    answer: ліс
+    explanation: Ліс contains [і], whereas the others have clean unstressed or stressed
+      [о].
+  - words:
+    - лис
+    - дим
+    - сир
+    - дім
+    answer: дім
+    explanation: Дім has [і] with a softened consonant, while the others have [и].
+  - words:
+    - ліс
+    - дім
+    - сіль
+    - дим
+    answer: дим
+    explanation: Дим has [и], while the others have [і].
+  - words:
+    - дуб
+    - гриб
+    - сад
+    - ка́ска
+    answer: ка́ска
+    explanation: Ка́ска has voiceless consonants, while the others end in voiced consonants.
+  - words:
+    - ґа́нок
+    - ґу́дзик
+    - ґрунт
+    - гора́
+    answer: гора́
+    explanation: Гора́ starts with glottal [ɦ], while the others start with hard [g]
+      (Ґ).
+  - words:
+    - день
+    - сіль
+    - кінь
+    - син
+    answer: син
+    explanation: Син ends in a hard consonant, while the others end with soft sign
+      ь.
+- id: act-w405
+  type: match-up
+  title: Лі́тери Г та Ґ — Words with Г and Ґ
+  instruction: Match each word with its translation and sound type.
+  pairs:
+  - left: гора́
+    right: mountain (h-like [г])
+  - left: го́лос
+    right: voice (h-like [г])
+  - left: до́брий
+    right: good (h-like [г])
+  - left: ґа́нок
+    right: porch (hard [ґ])
+  - left: ґу́дзик
+    right: button (hard [ґ])
+  - left: ґрунт
+    right: soil (hard [ґ])
