@@ -895,13 +895,30 @@ def test_batch7_semantic_and_stress_distinctions():
     assert hreb[1]["headword"] == "гребінни́к"
     assert "comb" in hreb[1]["gloss"].lower()
 
-    # значковий: зна́чковий (cartographic symbol) vs значкови́й (Cossack rank)
+    # домовий: домо́вий (residential / domestic) vs домови́й (house spirit)
+    dom = enrich_heteronyms.build_heteronyms_for_lemma("домовий")
+    assert dom is not None and len(dom) == 2
+    assert dom[0]["headword"] == "домо́вий"
+    assert "residential" in dom[0]["gloss"].lower() or "domestic" in dom[0]["gloss"].lower()
+    assert dom[1]["headword"] == "домови́й"
+    assert "spirit" in dom[1]["gloss"].lower() or "goblin" in dom[1]["gloss"].lower()
+
+    # значковий: значко́вий (cartographic symbol) vs значкови́й (Cossack rank)
     znach = enrich_heteronyms.build_heteronyms_for_lemma("значковий")
     assert znach is not None and len(znach) == 2
-    assert znach[0]["headword"] == "зна́чковий"
+    assert znach[0]["headword"] == "значко́вий"
     assert "symbol" in znach[0]["gloss"].lower() or "badge" in znach[0]["gloss"].lower()
     assert znach[1]["headword"] == "значкови́й"
     assert "cossack" in znach[1]["gloss"].lower() or "banner" in znach[1]["gloss"].lower()
+
+    # затулка: за́тулка (oven damper / inanimate) vs зату́лка (valve snail / animate)
+    zat = enrich_heteronyms.build_heteronyms_for_lemma("затулка")
+    assert zat is not None and len(zat) == 2
+    assert zat[0]["headword"] == "за́тулка"
+    assert zat[0]["morphology"]["paradigm"]["animacy"] == "inanimate"
+    assert zat[1]["headword"] == "зату́лка"
+    assert zat[1]["morphology"]["paradigm"]["animacy"] == "animate"
+    assert "snail" in zat[1]["gloss"].lower() or "mollusk" in zat[1]["gloss"].lower()
 
 
 def test_batch7_lemmas_not_duplicated_from_earlier_batches():
