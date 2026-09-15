@@ -855,6 +855,15 @@ def test_batch7_semantic_and_stress_distinctions():
     assert bur[1]["headword"] == "бури́тися"
     assert "drilled" in bur[1]["gloss"].lower() or "bored" in bur[1]["gloss"].lower()
 
+    # валковий: валко́вий (roller-equipped) vs валкови́й (carter / driver with convoy)
+    val = enrich_heteronyms.build_heteronyms_for_lemma("валковий")
+    assert val is not None and len(val) == 2
+    assert val[0]["headword"] == "валко́вий"
+    assert "roller" in val[0]["gloss"].lower()
+    assert val[1]["headword"] == "валкови́й"
+    assert val[1]["morphology"]["paradigm"]["animacy"] == "animate"
+    assert "carter" in val[1]["gloss"].lower() or "driver" in val[1]["gloss"].lower()
+
     # виправний: випра́вний (correctable) vs виправни́й (correctional / penal)
     vyp = enrich_heteronyms.build_heteronyms_for_lemma("виправний")
     assert vyp is not None and len(vyp) == 2

@@ -18983,8 +18983,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "валковий",
       "url_slug": "валковий",
       "headword": "валкови́й",
-      "short_label": "візник у валці, старший обозу (імен./прикм.)",
-      "gloss": "wagon-train driver, carter, convoy teamster; relating to a wagon train (валка)",
+      "short_label": "візник, який іде з валкою (обозом)",
+      "gloss": "carter, wagon-train driver (a driver travelling with a wagon train / convoy)",
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
@@ -18998,7 +18998,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "валкови́й",
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС / СУМ-11",
+        "url": "https://slovnyk.me/dict/vts/валковий"
       },
       "morphology": {
         "pos": "іменник",
@@ -19008,10 +19009,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "animate"
         }
       },
-      "distinction_note": "Означає візника, що їде з валкою (обозом), або керівника валки возів. Не плутати з технічним «валко́вий» (механізм із циліндрами).",
+      "distinction_note": "Означає візника, який іде з валкою (обозом). Не плутати з технічним прикметником «валко́вий» (механізм із валками/циліндрами).",
       "meaning": {
         "definitions": [
-          "Візник, що рухається з валкою (обозом); той, хто керує рухом валки возів."
+          "Візник, який іде з валкою (обозом)."
         ],
         "source": "ВТС / СУМ-11"
       },
