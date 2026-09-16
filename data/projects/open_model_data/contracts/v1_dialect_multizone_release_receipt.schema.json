@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_dialect_multizone_release_receipt.schema.json",
+  "title": "v1_dialect_multizone_release_receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "issue",
+    "parent_epic",
+    "created_at",
+    "git_commit",
+    "evaluation_benchmark",
+    "sft_training_dataset",
+    "invariants_verified"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v1_dialect_multizone_release_receipt"
+    },
+    "issue": {
+      "type": "integer",
+      "const": 8102
+    },
+    "parent_epic": {
+      "type": "integer",
+      "const": 6321
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "git_commit": {
+      "type": "string"
+    },
+    "evaluation_benchmark": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file_path",
+        "sha256",
+        "total_cases",
+        "preserve_cases",
+        "mixed_error_cases",
+        "macro_zone_counts",
+        "sub_zone_counts"
+      ],
+      "properties": {
+        "file_path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "total_cases": {
+          "type": "integer",
+          "minimum": 1500
+        },
+        "preserve_cases": {
+          "type": "integer"
+        },
+        "mixed_error_cases": {
+          "type": "integer"
+        },
+        "macro_zone_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "southwestern",
+            "northern",
+            "southeastern"
+          ],
+          "properties": {
+            "southwestern": {
+              "type": "integer",
+              "minimum": 600
+            },
+            "northern": {
+              "type": "integer",
+              "minimum": 400
+            },
+            "southeastern": {
+              "type": "integer",
+              "minimum": 500
+            }
+          }
+        },
+        "sub_zone_counts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "sft_training_dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file_path",
+        "sha256",
+        "total_trajectories",
+        "dialect_trajectories",
+        "replay_buffer_trajectories"
+      ],
+      "properties": {
+        "file_path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "total_trajectories": {
+          "type": "integer",
+          "minimum": 500
+        },
+        "dialect_trajectories": {
+          "type": "integer",
+          "minimum": 400
+        },
+        "replay_buffer_trajectories": {
+          "type": "integer",
+          "minimum": 100
+        }
+      }
+    },
+    "invariants_verified": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "zero_train_eval_leakage",
+        "anti_copying_mixed_error_coverage",
+        "bilodid_quarantine_enforced",
+        "all_localities_verified"
+      ],
+      "properties": {
+        "zero_train_eval_leakage": {
+          "type": "boolean",
+          "const": true
+        },
+        "anti_copying_mixed_error_coverage": {
+          "type": "boolean",
+          "const": true
+        },
+        "bilodid_quarantine_enforced": {
+          "type": "boolean",
+          "const": true
+        },
+        "all_localities_verified": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    }
+  }
+}
