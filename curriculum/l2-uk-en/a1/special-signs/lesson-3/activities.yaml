@@ -117,19 +117,19 @@ inline:
     answer: '[ф]'
   - question: Скі́льки зву́ків у сло́ві «борщ»? — How many sounds are in the word «борщ»?
     options:
-    - 5 зву́ків [б-о-р-ш-ч]
-    - чоти́ри зву́ки
-    answer: 5 зву́ків [б-о-р-ш-ч]
+    - 5 зву́ків [б-о-р-ш-ч] — 5 sounds [б-о-р-ш-ч]
+    - чоти́ри зву́ки — four sounds
+    answer: 5 зву́ків [б-о-р-ш-ч] — 5 sounds [б-о-р-ш-ч]
   - question: Скі́льки зву́ків у сло́ві «їжа́к»? — How many sounds are in the word «їжа́к»?
     options:
-    - 5 зву́ків [й-і-ж-а-к]
-    - чоти́ри зву́ки
-    answer: 5 зву́ків [й-і-ж-а-к]
+    - 5 зву́ків [й-і-ж-а-к] — 5 sounds [й-і-ж-а-к]
+    - чоти́ри зву́ки — four sounds
+    answer: 5 зву́ків [й-і-ж-а-к] — 5 sounds [й-і-ж-а-к]
   - question: Скі́льки зву́ків у сло́ві «факт»? — How many sounds are in the word «факт»?
     options:
-    - чоти́ри зву́ки [ф-а-к-т]
-    - 5 зву́ків
-    answer: чоти́ри зву́ки [ф-а-к-т]
+    - чоти́ри зву́ки [ф-а-к-т] — four sounds [ф-а-к-т]
+    - 5 зву́ків — 5 sounds
+    answer: чоти́ри зву́ки [ф-а-к-т] — four sounds [ф-а-к-т]
 - id: act-305
   type: group-sort
   title: Розподілі́ть слова́ за лі́терами — Group Sort
