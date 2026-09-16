@@ -692,8 +692,8 @@ def build_candidates(
             h = heritage_lookup(headword)
             if h and normalised_text(h.get("classification")) not in ("unknown", None):
                 heritage = h
-            elif headword.capitalize() != headword:
-                cap_h = heritage_lookup(headword.capitalize())
+            elif _capitalize_form(headword) != headword:
+                cap_h = heritage_lookup(_capitalize_form(headword))
                 if cap_h and normalised_text(cap_h.get("classification")) not in ("unknown", None):
                     heritage = cap_h
         except Exception:

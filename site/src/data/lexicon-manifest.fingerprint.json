@@ -159,7 +159,7 @@
       },
       {
         "path": "scripts/lexicon/curriculum_atlas_intake.py",
-        "sha256": "89a3b0bc2d727a20d5b74de7f1f908add9f46bd5c2a0536562fa324257b45696"
+        "sha256": "f171d0bb7fd84d09d5bb42a0abe5fe3bb6b4b0e10c14fc6f2593d28e82c0438f"
       },
       {
         "path": "scripts/lexicon/derivational_morphology.py",

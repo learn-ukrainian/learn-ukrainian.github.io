@@ -703,3 +703,41 @@ def test_unresolved_form_checks_heritage_lookup(tmp_path: Path) -> None:
     assert "heritage_attested_non_vesum" in by_lemma["яти"].reasons
     assert by_lemma["яти"].heritage_status is not None
     assert by_lemma["яти"].gloss == "to take / begin"
+
+
+def test_unresolved_hyphenated_form_checks_capitalized_heritage_lookup(tmp_path: Path) -> None:
+    curriculum = tmp_path / "curriculum" / "l2-uk-en"
+    module = curriculum / "a1" / "heritage" / "module.md"
+    module.parent.mkdir(parents=True)
+    module.write_text("# Урок\n\nдівка-бранка тут\n", encoding="utf-8")
+
+    def vesum_empty(forms: list[str]) -> dict[str, list[dict[str, str]]]:
+        return {f: [] for f in forms}
+
+    def mock_heritage(lemma: str) -> dict[str, object]:
+        if lemma == "Дівка-Бранка":
+            return {
+                "classification": "authentic-archaism",
+                "attestation": {"source": "literary", "ref": "Дівка-Бранка", "detail": "фольклорний епос"},
+                "is_russianism": False,
+                "sovietization_risk": 0,
+            }
+        return {"classification": "unknown"}
+
+    result = intake.build_curriculum_intake(
+        curriculum_root=curriculum,
+        project_root=tmp_path,
+        manifest_lemma_keys=set(),
+        existing_ledger_keys=set(),
+        vesum_lookup=vesum_empty,
+        heritage_lookup=mock_heritage,
+        english_lookup=lambda _: "captive maiden",
+    )
+
+    by_lemma = {candidate.lemma: candidate for candidate in result.candidates}
+    assert "дівка-бранка" in by_lemma
+    assert by_lemma["дівка-бранка"].classification == "review_queue"
+    assert "heritage_attested_non_vesum" in by_lemma["дівка-бранка"].reasons
+    assert by_lemma["дівка-бранка"].heritage_status is not None
+    assert by_lemma["дівка-бранка"].heritage_status["classification"] == "authentic-archaism"
+    assert by_lemma["дівка-бранка"].gloss == "captive maiden"
