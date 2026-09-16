@@ -452,14 +452,16 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         r"(?:теж|також|ще|вже)\s+"
         r")?"
         r"(?:"
+        r"\b(?:"
         r"слід|варто|потрібно|необхідно|треба|можна|"
         r"є|це|був|була|було|були|буде|становить|"
         r"потребує|вимагає|"
         r"замініть|замінити|виправте|виправити|уникайте|уникати|вживайте|вживати|"
         r"вважа\w*|визна\w*|назива\w*|"
-        r"не|ні|ані|"
-        r"—|--|-"
-        r")\b"
+        r"не|ні|ані"
+        r")\b|"
+        r"—|--|–|-"
+        r")"
     )
 
     clause_intro_lookahead = (
@@ -475,15 +477,18 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
     )
 
     # Split text into sentence/clause units:
-    # 1. Terminal delimiters (full stop, semicolon, question mark, exclamation mark, newline, em-dash)
+    # 1. Terminal delimiters (full stop, semicolon, question mark, exclamation mark, newline, colon)
     # 2. Adversative conjunctions (але, проте, однак)
     # 3. Commas ONLY when introducing a clause (followed by conjunction, relative word, anaphoric word, or subject+predicate);
-    #    commas separating items in a coordinated list do NOT split clauses (preserving shared directives in R22-F1).
-    # 4. Coordinate conjunctions (та, і, й, а, або, чи) ONLY when followed by a clause introducer / predicate (R22-F1).
+    #    commas separating items in a coordinated list do NOT split clauses (preserving shared directives in R22-F1/R23-F1).
+    # 4. Dashes (—, --, –, -) ONLY when introducing a clause / separated clause, not when serving as a copula
+    #    between subject and predicate (R23-F2).
+    # 5. Coordinate conjunctions (та, і, й, а, або, чи) ONLY when followed by a clause introducer / predicate (R22-F1/R23-F2).
     split_pat = re.compile(
-        r"(?:[.\n;!?:\u2014\u2013]+|"
+        r"(?:[.\n;!?:]+|"
         r"\s+\b(?:але|проте|однак)\b\s+|"
         rf"\s*,\s*(?={clause_intro_lookahead})|"
+        rf"\s+(?:—|--|–|-)\s+(?={clause_intro_lookahead})|"
         rf"\s+\b(?:та|і|й|а|або|чи)\s+(?={clause_intro_lookahead}))",
         re.IGNORECASE,
     )
@@ -497,7 +502,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
             # If target is present ONLY as a replacement destination (e.g. "замінити на «файний»"),
             # it is being recommended, not condemned or replaced.
             is_destination = bool(re.search(rf"\b(?:на|до)\s+[«\"“‘\']?{t_bare}[»\"”’\']?", cl_lower))
-            is_subject = bool(re.search(rf"(?:^|\b(?:щодо\s+слова|слово|словом|вираз|зворот)\s+)?[«\"“‘\']?{t_bare}[»\"”’\']?\s+(?:є|це|не|слід|варто|потрібно|необхідно|треба|можна|—|\-)", cl_lower))
+            is_subject = bool(re.search(rf"(?:^|\b(?:щодо\s+слова|слово|словом|вираз|зворот)\s+)?[«\"“‘\']?{t_bare}[»\"”’\']?\s+(?:є|це|не|слід|варто|потрібно|необхідно|треба|можна|—|--|–|-)", cl_lower))
             current_referent = "OTHER" if is_destination and not is_subject else "TARGET"
         elif quoted:
             first_q = normalize_token(quoted[0])
@@ -509,9 +514,9 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 if subj_m and not re.search(rf"\b(?:на|до)\s+[«\"“‘\']{re.escape(first_q)}[»\"”’\']", cl_lower):
                     current_referent = "OTHER"
         else:
-            # Check for unquoted subject before directives (e.g. "общий слід замінити")
+            # Check for unquoted subject before directives (e.g. "общий слід замінити" or "общий — помилка")
             unquoted_subj_m = re.search(
-                r"(?:^|\b(?:щодо\s+слова|слово|словом|вираз|зворот)\s+)?([а-яА-ЯёЁіІїЇєЄґҐ’'\-]+)\s+(?:слід|варто|потрібно|необхідно|треба|можна|потребує|вимагає|є|не|вважа\w*|визна\w*|назива\w*)",
+                r"(?:^|\b(?:щодо\s+слова|слово|словом|вираз|зворот)\s+)?([а-яА-ЯёЁіІїЇєЄґҐ’'\-]+)\s+(?:слід|варто|потрібно|необхідно|треба|можна|потребує|вимагає|є|не|це|вважа\w*|визна\w*|назива\w*|—|--|–|-)",
                 cl_lower,
             )
             if unquoted_subj_m:
@@ -553,15 +558,16 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 # e.g. `уникайте «гарний»` where `гарний` != `царинками`.
                 # If the directive directly governs an explicit object (not preceded by `на`/`до`),
                 # verify whether that object includes the target.
+                # Support classifiers across all coordinated objects (R23-F1).
                 obj_span_m = re.match(
-                    r"\s*(?:(?:слова|слово|вираз|зворот|термін|слів|виразів)\s+)?"
-                    r"([«\"“‘\'][^»\"”’\']+[»\"”\'](?:\s*(?:,|і|й|та|або|чи)\s*[«\"“‘\'][^»\"”’\']+[»\"”\'])*)",
+                    rf"\s*{ITEM_QUOTED}(?:\s*(?:,|{COORDINATING_CONJUNCTIONS})\s*{ITEM_QUOTED})*",
                     suffix_after_dir,
+                    re.IGNORECASE,
                 )
                 if obj_span_m:
                     dir_quoted_objs = [
                         normalize_token(q)
-                        for q in re.findall(r"[«\"“‘\']([^»\"”’\']+)[»\"”\']", obj_span_m.group(1))
+                        for q in re.findall(r"[«\"“‘\']([^»\"”’\']+)[»\"”\']", obj_span_m.group(0))
                     ]
                     if dir_quoted_objs and t_norm not in dir_quoted_objs:
                         # Directive explicitly governs other object(s), not target
