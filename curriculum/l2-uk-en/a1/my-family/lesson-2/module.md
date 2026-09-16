@@ -1,8 +1,8 @@
 # Мій / моя́
 
-У пе́ршому уро́ці ви познайо́милися з на́звами чле́нів сім'ї́: **ма́ма**, **та́то**, **брат**, **сестра́**, **бабу́ся**, **діду́сь** та **батьки́**. In the first lesson, you learned to identify family members and name the people closest to you.
+In the first lesson, you learned to identify family members and name the people closest to you: **ма́ма**, **та́то**, **брат**, **сестра́**, **бабу́ся**, **діду́сь**, and **батьки́**.
 
-Тепе́р час навчи́тися говори́ти про володі́ння та пока́зувати ро́дичів на фотогра́фіях — now it is time to express possession and identify relatives in family photos:
+Now it is time to express possession and identify relatives in family photos:
 - **У мене́ є...** — express "I have" naturally without translating word-for-word from English;
 - **У тебе́ є...?** — ask friendly, informal questions about brothers, sisters, or family;
 - **Оди́н, одна́, два, дві** — match small numbers with masculine and feminine family words;
@@ -61,15 +61,18 @@ requires more case grammar.
 
 Listen to how two friends talk about their families while looking at photos on a phone:
 
-> Оле́на: Приві́т, Тара́се! У тебе́ є брат чи сестра́? *(Hi, Taras! Do you have a brother or a sister?)*
-> Тара́с: Приві́т, Оле́но! Так, у мене́ є оди́н брат і одна́ сестра́. А в тебе́? *(Hi, Olena! Yes, I have one brother and one sister. And you?)*
-> Оле́на: У мене́ ті́льки оди́н брат. Йо́го зва́ти Бо́гдан. *(I have only one brother. His name is Bohdan.)*
-> Тара́с: Кла́сно! А діду́сь і бабу́ся у вас є? *(Great! And do you have a grandfather and a grandmother?)*
-> Оле́на: Так, у нас є бабу́ся і діду́сь. Вони́ живу́ть у селі́. *(Yes, we have a grandmother and a grandfather. They live in a village.)*
+> **Оле́на**: Приві́т, Тара́се! У тебе́ є брат чи сестра́?
+> **Тара́с**: Приві́т, Оле́но! Так, у мене́ є оди́н брат і одна́ сестра́.
 
-English breakdown after the dialogue:
+> **Тара́с**: А в тебе́?
+> **Оле́на**: У мене́ ті́льки оди́н брат. Йо́го зва́ти Бо́гдан.
 
-| Украї́нська фра́за | English breakdown |
+> **Тара́с**: Кла́сно! А діду́сь і бабу́ся у вас є?
+> **Оле́на**: Так, у нас є бабу́ся і діду́сь. Вони́ живу́ть у селі́.
+
+English support after the Ukrainian dialogue:
+
+| Украї́нська | English support |
 | --- | --- |
 | **У тебе́ є брат чи сестра́?** | Do you have a brother or a sister? |
 | **Так, у мене́ є оди́н брат і одна́ сестра́.** | Yes, I have one brother and one sister. |
@@ -139,16 +142,18 @@ Use **чи** for a choice or a yes/no photo question:
 
 Look at how friends share family photos in a natural conversation:
 
-> Ю́ля: Макси́ме, подиви́сь, це мої́ сіме́йні фотогра́фії! *(Maksym, look, these are my family photos!)*
-> Макси́м: О, як га́рно! Хто це на фо́то? *(Oh, how nice! Who is this in the photo?)*
-> Ю́ля: Це мій та́то Євге́н і моя́ ма́ма Мари́на. *(This is my dad Yevhen and my mom Maryna.)*
-> Макси́м: А це твій моло́дший брат? *(And is this your younger brother?)*
-> Ю́ля: Так, це мій брат Дени́с. А це моє́ рі́дне мі́сто Львів. *(Yes, this is my brother Denys. And this is my native city Lviv.)*
-> Макси́м: Ду́же приє́мно познайо́митися! *(Very nice to meet you!)*
+> **Ю́ля**: Макси́ме, подиви́сь, це мої́ сіме́йні фотогра́фії!
+> **Макси́м**: О, як га́рно! Хто це на фо́то?
 
-English breakdown after the dialogue:
+> **Ю́ля**: Це мій та́то Євге́н і моя́ ма́ма Мари́на.
+> **Макси́м**: А це твій моло́дший брат?
 
-| Украї́нська фра́за | English breakdown |
+> **Ю́ля**: Так, це мій брат Дени́с. А це моє́ рі́дне мі́сто Львів.
+> **Макси́м**: Ду́же приє́мно познайо́митися!
+
+English support after the Ukrainian dialogue:
+
+| Украї́нська | English support |
 | --- | --- |
 | **Подиви́сь, це мої́ сіме́йні фотогра́фії!** | Look, these are my family photos! |
 | **Хто це на фо́то?** | Who is this in the photo? |
@@ -169,14 +174,14 @@ Always look at the ending of the noun to choose the correct possessive form:
 
 <!-- INJECT_ACTIVITY: act-203 -->
 
-### Пі́дсумок уро́ку — Lesson recap
+### Lesson recap
 
-У цьо́му уро́ці ви навчи́лися говори́ти про володі́ння та назива́ти чле́нів роди́ни за допомо́гою присві́йних займе́нників — in this lesson you have mastered key communicative tools for talking about your family:
+In this lesson, you have mastered key communicative tools for talking about your family:
 - **У мене́ є...** — express what family members you have safely and accurately;
 - **У тебе́ є...?** — ask peers friendly questions about their family members;
 - **Оди́н, одна́, два, дві** — match counting numbers with masculine and feminine nouns;
 - **Мій, моя́, моє́, мої́** — select the correct possessive form based on the gender and number of the person or thing you describe.
 
-### Насту́пний крок — Next step
+### Next step
 
 In Lesson 3 (**Слу́хай, фо́то, зо́шит**), you will practice listening to natural spoken dialogues from the Ukrainian Lessons Podcast, reading handwritten family labels in a notebook, and connecting spoken sounds to written Ukrainian forms.

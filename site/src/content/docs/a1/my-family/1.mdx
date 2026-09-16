@@ -1,9 +1,9 @@
 ---
-title: Сім'я
+title: 'Сім''я́: Це моя́ сім''я́ · Family: This Is My Family'
 description: У мене є брат — показуємо фотографії
 sidebar:
   order: 1
-  label: 01. Сім'я
+  label: '01. Сім''я́: Це моя́ сім''я́ · Family: This Is My Family'
 pipeline: v7-upgrade
 build_status: validated
 draft: false
@@ -157,18 +157,39 @@ it as one memorized block before you add family information.
 
 When speaking with friends about photographs, you will often hear natural reactions. Notice how speakers react with genuine interest: **Кла́сно!** — Great!, **Ого́!** — Wow!, and **До́бре!** — Good!
 
-> Оле́кса: Хто це на фотогра́фії? *(Who is this in the photo?)*
-> Богда́н: Це мій брат. Йо́го зва́ти Петро́. *(This is my brother. His name is Petro.)*
-> Оле́кса: Кла́сно! А хто це бі́ля бра́та? *(Great! And who is this next to your brother?)*
-> Богда́н: Це моя́ сестра́ Мари́на. *(This is my sister Maryna.)*
-> Оле́кса: Ого́! Вона́ студе́нтка? *(Wow! Is she a student?)*
-> Богда́н: Так, вона́ студе́нтка. *(Yes, she is a student.)*
-> Оле́кса: А в тебе́ є бабу́ся? *(And do you have a grandmother?)*
-> Богда́н: Так, у мене́ є бабу́ся і діду́сь. *(Yes, I have a grandmother and a grandfather.)*
-> Оле́кса: До́бре! Як їх зва́ти? *(Good! What are their names?)*
-> Богда́н: Бабу́сю зва́ти О́льга, а дідуся́ — Іва́н. *(Grandmother's name is Olha, and grandfather's is Ivan.)*
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Оле́кса","text":"Хто це на фотогра́фії?"},{"speaker":"Богда́н","text":"Це мій брат. Йо́го зва́ти Петро́."}]')}
+/>
 
-| Ре́пліка — Turn | English support |
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Оле́кса","text":"Кла́сно! А хто це бі́ля бра́та?"},{"speaker":"Богда́н","text":"Це моя́ сестра́ Мари́на."}]')}
+/>
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Оле́кса","text":"Ого́! Вона́ студе́нтка?"},{"speaker":"Богда́н","text":"Так, вона́ студе́нтка."}]')}
+/>
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Оле́кса","text":"А в тебе́ є бабу́ся?"},{"speaker":"Богда́н","text":"Так, у мене́ є бабу́ся і діду́сь."}]')}
+/>
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Оле́кса","text":"До́бре! Як їх зва́ти?"},{"speaker":"Богда́н","text":"Бабу́сю зва́ти О́льга, а дідуся́ — Іва́н."}]')}
+/>
+
+English support after the Ukrainian dialogue:
+
+| Украї́нська | English support |
 | --- | --- |
 | **Хто це на фотогра́фії?** | Who is this in the photo? |
 | **Це мій брат. Йо́го зва́ти Петро́.** | This is my brother. His name is Petro. |
