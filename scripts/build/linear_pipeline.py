@@ -11288,6 +11288,8 @@ _HERITAGE_FALLBACK_BLOCKED_SURFACES = frozenset(
 # classifier (classification=standard) and need no entry here.
 _FOLK_EXISTENCE_ACCEPTED_CALQUE_PARTICIPLES = frozenset(
     {
+        "бажаючий",
+        "завідуючий",
         "оточуючий",
         "слідуючий",
     }

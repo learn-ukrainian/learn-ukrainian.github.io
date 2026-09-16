@@ -12,10 +12,13 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
+import sqlite3
 import sys
 from collections import Counter, defaultdict
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass, replace
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Literal
 
@@ -48,6 +51,42 @@ SourceKind = Literal["module", "activity", "vocabulary"]
 Classification = Literal["auto_approve", "review_queue", "reject"]
 VesumLookup = Callable[[list[str]], dict[str, list[dict[str, Any]]]]
 HeritageLookup = Callable[[str], dict[str, Any]]
+EnglishLookup = Callable[[str], str | None]
+
+_STRESS_RE = re.compile("[\u0300\u0301]")
+
+
+@lru_cache(maxsize=1)
+def load_english_translation_dict(sources_db_path: Path | None = None) -> dict[str, str]:
+    target_db = sources_db_path or PROJECT_ROOT / "data" / "sources.db"
+    if not target_db.exists():
+        return {}
+    translations: dict[str, str] = {}
+    try:
+        with sqlite3.connect(f"file:{target_db.resolve()}?mode=ro", uri=True) as conn:
+            cur = conn.execute("SELECT word, translations FROM dmklinger_uk_en")
+            for word, tr_raw in cur.fetchall():
+                clean_word = _STRESS_RE.sub("", word).strip().casefold()
+                if clean_word and clean_word not in translations:
+                    try:
+                        tr_list = json.loads(tr_raw)
+                        if tr_list and isinstance(tr_list, list) and isinstance(tr_list[0], str):
+                            first_tr = tr_list[0].split("(")[0].strip()
+                            if first_tr:
+                                translations[clean_word] = first_tr
+                    except (json.JSONDecodeError, IndexError):
+                        pass
+    except sqlite3.Error:
+        return {}
+    return translations
+
+
+def default_english_lookup(lemma: str, *, project_root: Path = PROJECT_ROOT) -> str | None:
+    db_path = project_root / "data" / "sources.db"
+    if not db_path.exists():
+        return None
+    trans_map = load_english_translation_dict(db_path)
+    return trans_map.get(_lemma_key(lemma))
 
 SOURCE_PATTERNS: tuple[tuple[SourceKind, str, str], ...] = (
     ("module", "*/*/module.md", "module_markdown_token"),
@@ -254,6 +293,7 @@ def build_curriculum_intake(
     existing_ledger_keys: set[str] | None = None,
     vesum_lookup: VesumLookup | None = None,
     heritage_lookup: HeritageLookup = classify_lemma,
+    english_lookup: EnglishLookup | None = None,
     inventory_path: str = DEFAULT_INVENTORY_PATH,
 ) -> CurriculumIntakeResult:
     """Run the complete read-only Phase 1 extraction and classification."""
@@ -268,12 +308,18 @@ def build_curriculum_intake(
         if existing_ledger_keys is not None
         else load_existing_ledger_keys(project_root=project_root)
     )
+    resolved_english_lookup = (
+        english_lookup
+        if english_lookup is not None
+        else lambda lemma: default_english_lookup(lemma, project_root=project_root)
+    )
     candidates = build_candidates(
         occurrences,
         resolutions=resolutions,
         atlas_keys={_lemma_key(lemma) for lemma in atlas_keys},
         ledger_keys={_lemma_key(lemma) for lemma in ledger_keys},
         heritage_lookup=heritage_lookup,
+        english_lookup=resolved_english_lookup,
         inventory_path=inventory_path,
     )
     return CurriculumIntakeResult(
@@ -564,8 +610,24 @@ def compact_occurrences(occurrences: Sequence[TokenOccurrence]) -> list[TokenOcc
     )
 
 
+def _capitalize_form(form: str) -> str:
+    if "-" in form:
+        return "-".join(part.capitalize() for part in form.split("-"))
+    return form.capitalize()
+
+
 def resolve_forms(forms: Sequence[str], *, vesum_lookup: VesumLookup | None) -> dict[str, VesumResolution]:
     matches_by_form = lemmatize_forms(forms) if vesum_lookup is None else lemmatize_forms(forms, vesum_lookup=vesum_lookup)
+    unresolved_forms = [form for form in forms if not matches_by_form.get(form)]
+    if unresolved_forms:
+        cap_candidates = [_capitalize_form(f) for f in unresolved_forms if _capitalize_form(f) != f]
+        if cap_candidates:
+            cap_matches = lemmatize_forms(cap_candidates) if vesum_lookup is None else lemmatize_forms(cap_candidates, vesum_lookup=vesum_lookup)
+            for cap_form, matches in cap_matches.items():
+                if matches:
+                    lower_form = cap_form.lower()
+                    if lower_form in matches_by_form and not matches_by_form[lower_form]:
+                        matches_by_form[lower_form] = matches
     resolutions: dict[str, VesumResolution] = {}
     for form in forms:
         matches = matches_by_form.get(form, [])
@@ -600,6 +662,7 @@ def build_candidates(
     atlas_keys: set[str],
     ledger_keys: set[str],
     heritage_lookup: HeritageLookup,
+    english_lookup: EnglishLookup | None = None,
     inventory_path: str,
 ) -> list[IntakeCandidate]:
     resolved: dict[str, list[TokenOccurrence]] = defaultdict(list)
@@ -616,30 +679,59 @@ def build_candidates(
         atlas_keys=atlas_keys,
         ledger_keys=ledger_keys,
         heritage_lookup=heritage_lookup,
+        english_lookup=english_lookup,
         inventory_path=inventory_path,
     )
     for key, grouped_occurrences in unresolved.items():
         forms = tuple(
             sorted({occurrence.form for occurrence in grouped_occurrences}, key=stable_lemma_sort_key)
         )
+        headword = forms[0]
+        heritage: Mapping[str, Any] | None = None
+        try:
+            h = heritage_lookup(headword)
+            if h and normalised_text(h.get("classification")) not in ("unknown", None):
+                heritage = h
+            elif _capitalize_form(headword) != headword:
+                cap_h = heritage_lookup(_capitalize_form(headword))
+                if cap_h and normalised_text(cap_h.get("classification")) not in ("unknown", None):
+                    heritage = cap_h
+        except Exception:
+            heritage = None
+
+        glosses = {occurrence.explicit_gloss.strip() for occurrence in grouped_occurrences if occurrence.explicit_gloss}
+        gloss = next(iter(glosses)) if len(glosses) == 1 else None
+        if not gloss and english_lookup is not None:
+            gloss = english_lookup(headword)
+
+        reasons = {resolutions[form].reason or "vesum_unresolved" for form in forms}
+        if heritage and normalised_text(heritage.get("classification")) in (
+            "standard",
+            "authentic-archaism",
+            "dialect",
+            "historism",
+            "borrowing",
+        ):
+            reasons.add("heritage_attested_non_vesum")
+
         records = records_for_occurrences(
             grouped_occurrences,
-            lemma=forms[0],
+            lemma=headword,
             pos=None,
-            gloss=None,
+            gloss=gloss,
             inventory_path=inventory_path,
         )
         candidates.append(
             IntakeCandidate(
                 candidate_key=f"form:{key}",
-                lemma=forms[0],
+                lemma=headword,
                 forms=forms,
                 pos=None,
-                gloss=None,
+                gloss=gloss,
                 records=records,
                 classification="review_queue",
-                reasons=tuple(sorted({resolutions[form].reason or "vesum_unresolved" for form in forms})),
-                heritage_status=None,
+                reasons=tuple(sorted(reasons)),
+                heritage_status=heritage,
             )
         )
     return merge_candidate_collisions(candidates)
@@ -743,9 +835,10 @@ def build_resolved_candidates(
     atlas_keys: set[str],
     ledger_keys: set[str],
     heritage_lookup: HeritageLookup,
+    english_lookup: EnglishLookup | None = None,
     inventory_path: str,
 ) -> list[IntakeCandidate]:
-    drafts: list[tuple[str, str, tuple[str, ...], str | None, str | None, tuple[str, ...], tuple[SourceInventoryRecord, ...]]] = []
+    drafts: list[tuple[str, str, tuple[str, ...], str | None, str | None, bool, tuple[str, ...], tuple[SourceInventoryRecord, ...]]] = []
     for key, occurrences in grouped.items():
         forms = tuple(sorted({occurrence.form for occurrence in occurrences}, key=stable_lemma_sort_key))
         lemma = resolutions[forms[0]].lemma
@@ -755,7 +848,10 @@ def build_resolved_candidates(
         resolution_reasons = {resolutions[form].reason for form in forms if resolutions[form].reason}
         pos = next(iter(poss)) if len(poss) == 1 and not resolution_reasons else None
         glosses = {occurrence.explicit_gloss.strip() for occurrence in occurrences if occurrence.explicit_gloss}
-        gloss = next(iter(glosses)) if len(glosses) == 1 else None
+        has_explicit_gloss = len(glosses) == 1
+        gloss = next(iter(glosses)) if has_explicit_gloss else None
+        if gloss is None and english_lookup is not None:
+            gloss = english_lookup(lemma)
         metadata_reasons = set(resolution_reasons)
         if len(poss) > 1:
             metadata_reasons.add("vesum_conflicting_pos")
@@ -768,14 +864,15 @@ def build_resolved_candidates(
             gloss=gloss,
             inventory_path=inventory_path,
         )
-        drafts.append((key, lemma, forms, pos, gloss, tuple(sorted(metadata_reasons)), records))
+        drafts.append((key, lemma, forms, pos, gloss, has_explicit_gloss, tuple(sorted(metadata_reasons)), records))
 
     candidates: list[IntakeCandidate] = []
-    for key, lemma, forms, pos, gloss, metadata_reasons, records in drafts:
+    for key, lemma, forms, pos, gloss, has_explicit_gloss, metadata_reasons, records in drafts:
         classification, reasons, heritage_status = classify_resolved_candidate(
             lemma=lemma,
             pos=pos,
             gloss=gloss,
+            has_explicit_gloss=has_explicit_gloss,
             metadata_reasons=metadata_reasons,
             atlas_keys=atlas_keys,
             ledger_keys=ledger_keys,
@@ -802,6 +899,7 @@ def classify_resolved_candidate(
     lemma: str,
     pos: str | None,
     gloss: str | None,
+    has_explicit_gloss: bool = True,
     metadata_reasons: Sequence[str],
     atlas_keys: set[str],
     ledger_keys: set[str],
@@ -838,7 +936,8 @@ def classify_resolved_candidate(
         return "review_queue", ("heritage_sovietization_risk",), heritage
     if classification != "standard":
         return "review_queue", ("heritage_nonstandard_classification",), heritage
-    return "auto_approve", ("vesum_unique_lemma_pos", "explicit_english_anchor", "heritage_clear"), heritage
+    anchor_reason = "explicit_english_anchor" if has_explicit_gloss else "translated_english_anchor"
+    return "auto_approve", ("vesum_unique_lemma_pos", anchor_reason, "heritage_clear"), heritage
 
 
 def records_for_occurrences(

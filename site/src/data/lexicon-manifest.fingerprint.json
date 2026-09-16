@@ -35,7 +35,7 @@
       },
       {
         "path": "scripts/lexicon/atlas_intake_core.py",
-        "sha256": "61aa4828ae462ccae3918e564fc0af0bc5ba0543291e7acdcc6219058ff490e2"
+        "sha256": "2f03846fdad5127cc99f57eb4da0b2f2f62872500903ea24320411032fbe311e"
       },
       {
         "path": "scripts/lexicon/atlas_wikipedia_intro.py",
@@ -159,7 +159,7 @@
       },
       {
         "path": "scripts/lexicon/curriculum_atlas_intake.py",
-        "sha256": "90dd4f057d58be7adbb994ddb127e719bf01c7910e61c20ee70af28a701ad176"
+        "sha256": "f171d0bb7fd84d09d5bb42a0abe5fe3bb6b4b0e10c14fc6f2593d28e82c0438f"
       },
       {
         "path": "scripts/lexicon/derivational_morphology.py",
@@ -235,7 +235,7 @@
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",
-        "sha256": "59a3680eb2f54c97bcf52720a93ae5d1d8d62215238209dadab1dab8ea27abdb"
+        "sha256": "77cd669ac68372156bbdf39c645c8222425586f18d60542b7bec524de2486329"
       },
       {
         "path": "scripts/lexicon/lemma_normalization.py",

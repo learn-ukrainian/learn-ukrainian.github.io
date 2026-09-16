@@ -293,13 +293,15 @@ or Daily Word, Practice, or Cloze surfaces.
   --reviewed-at 2026-07-14
 ```
 
-The classifier is fail-closed. Missing or ambiguous VESUM data, missing English
-anchors, uncertain heritage results, and conflicting metadata enter
-`review_queue`; only unique VESUM/POS vocabulary candidates with clear heritage
-are `auto_approve`. Existing Atlas or source-ledger heads are `reject`
-dedupes. When `--ledger-out` is supplied, `--inventory-out` must be the same
-project-relative path as `--inventory-path`; this keeps every ledger reference
-valid once the staged inventory is reviewed. The generated decision ledger retains
+The classifier is fail-closed. Missing or ambiguous VESUM data, vocabulary
+lacking an English anchor (either explicit from vocabulary metadata or translated
+via `dmklinger_uk_en`), uncertain heritage results, and conflicting metadata
+enter `review_queue`; only unique VESUM/POS vocabulary candidates with clear
+heritage and an English anchor (explicit or translated) are `auto_approve`.
+Existing Atlas or source-ledger heads are `reject` dedupes. When `--ledger-out`
+is supplied, `--inventory-out` must be the same project-relative path as
+`--inventory-path`; this keeps every ledger reference valid once the staged
+inventory is reviewed. The generated decision ledger retains
 `production_outputs_updated: []`.
 
 ## VESUM form-level shard generation (#5882 residual, Fable GO SHARDED-EXACT)
