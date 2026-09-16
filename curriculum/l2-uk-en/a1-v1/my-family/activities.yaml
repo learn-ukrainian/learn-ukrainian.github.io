@@ -4,7 +4,7 @@ inline:
     title: Питання до фото
     instruction: Обери український рядок для фото-розмови.
     items:
-      - prompt: Ти питаєш одного ровесника про брата.
+      - prompt: Ти питаєш одного ровесника про брата. — You ask a peer about a brother.
         options:
           - text: У тебе є брат?
             correct: true
@@ -13,7 +13,7 @@ inline:
           - text: Це брат?
             correct: false
         explanation: У тебе є...? питає одну знайому людину.
-      - prompt: Ти відповідаєш так і кажеш, що маєш одну сестру.
+      - prompt: Ти відповідаєш так і кажеш, що маєш одну сестру. — You answer yes and say that you have one sister.
         options:
           - text: Так, у мене є одна сестра.
             correct: true
@@ -22,7 +22,7 @@ inline:
           - text: Так, це одна сестра.
             correct: false
         explanation: У мене є... відповідає за себе.
-      - prompt: Ти відповідаєш ні короткою A1-фразою.
+      - prompt: Ти відповідаєш ні короткою A1-фразою. — You answer no with a short A1 phrase.
         options:
           - text: Ні.
             correct: true
@@ -31,7 +31,7 @@ inline:
           - text: Ні є брат.
             correct: false
         explanation: На A1 тримай заперечну відповідь простою.
-      - prompt: Ти питаєш, як його звати.
+      - prompt: Ти питаєш, як його звати. — You ask what his name is.
         options:
           - text: Як його звати?
             correct: true
@@ -40,7 +40,7 @@ inline:
           - text: Що його звати?
             correct: false
         explanation: Його підходить до брата, тата, сина або дідуся.
-      - prompt: Ти показуєш маму на фото.
+      - prompt: Ти показуєш маму на фото. — You point to mom in the photo.
         options:
           - text: Це моя мама.
             correct: true
@@ -49,7 +49,7 @@ inline:
           - text: Це моє мама.
             correct: false
         explanation: Мама — жіночого роду, тому моя.
-      - prompt: Ти показуєш батьків.
+      - prompt: Ти показуєш батьків. — You point to parents.
         options:
           - text: Це мої батьки.
             correct: true
@@ -64,21 +64,21 @@ inline:
     instruction: З'єднай українське слово з українською підказкою.
     pairs:
       - left: мама
-        right: мати
+        right: мати — mother
       - left: тато
-        right: батько
+        right: батько — father
       - left: брат
-        right: син для моїх батьків
+        right: син для моїх батьків — son to my parents
       - left: сестра
-        right: дочка для моїх батьків
+        right: дочка для моїх батьків — daughter to my parents
       - left: бабуся
-        right: мама мами або тата
+        right: мама мами або тата — mother of mom or dad
       - left: дідусь
-        right: тато мами або тата
+        right: тато мами або тата — father of mom or dad
       - left: батьки
-        right: мама і тато
+        right: мама і тато — mom and dad
       - left: родичі
-        right: люди з родини
+        right: люди з родини — people from the family
   - id: act-3
     type: fill-in
     title: Склади У мене є
@@ -306,21 +306,21 @@ workbook:
     title: Один / одна / два / дві
     instruction: Розподіли родинні фрази за числівником.
     groups:
-      - label: один
+      - label: один (one - masc.)
         items:
           - один брат
           - один син
           - один дідусь
-      - label: одна
+      - label: одна (one - fem.)
         items:
           - одна сестра
           - одна дочка
           - одна бабуся
-      - label: два
+      - label: два (two - masc./neut.)
         items:
           - два брати
           - два сини
-      - label: дві
+      - label: дві (two - fem.)
         items:
           - дві сестри
           - дві дочки
@@ -329,13 +329,13 @@ workbook:
     instruction: З'єднай частину формального імені з підказкою. Це тільки впізнавання.
     pairs:
       - left: ім'я
-        right: Марія
+        right: Марія — first name
       - left: прізвище
-        right: Коваленко
+        right: Коваленко — surname
       - left: по батькові
-        right: Василівна
+        right: Василівна — patronymic
       - left: Добрий день, Маріє Василівно!
-        right: формальне звертання
+        right: формальне звертання — formal address
   - type: fill-in
     title: Доповни фотодіалог
     instruction: Обери пропущене слово з родинної розмови.
