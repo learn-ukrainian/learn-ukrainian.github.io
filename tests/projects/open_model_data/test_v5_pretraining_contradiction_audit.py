@@ -2244,3 +2244,139 @@ def test_audit_astra_r19_probes(tmp_path: Path):
     )
     assert passed_f1 is False, "Expected audit failure for coordinated target in second position"
     assert data_f1["dpo_contradictions_count"] == 1
+
+
+def test_audit_astra_r20_probes(tmp_path: Path):
+    """Verify Astra R20 Findings: disjunctive conjunctions (або, чи) and fallback avoidance scan."""
+    # 1. Finding 1: Disjunctive coordination with або / чи
+    assert is_target_condemned_in_text("царинками", "Замість «добрий» або «царинками» вживайте «гарний».") is True
+    assert is_target_condemned_in_text("царинками", "Замість «добрий» чи «царинками» вживайте «гарний».") is True
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» або «добрий» вживайте «гарний».") is True
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» чи «добрий» вживайте «гарний».") is True
+    assert is_target_condemned_in_text("царинками", "Замість «добрий» або «царинками» не слід вживати «гарний».") is False
+    assert is_target_condemned_in_text("царинками", "Замість «добрий» чи «царинками» не слід вживати «гарний».") is False
+
+    # 2. Finding 2: Expanded replacement syntax in fallback avoidance scan
+    assert is_target_condemned_in_text("царинками", "Замість «добрий» і «царинками» уникайте «гарний».") is False
+    assert is_target_condemned_in_text("царинками", "Замість слова «царинками» уникайте «гарний».") is False
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» уникайте «гарний».") is False
+    assert is_target_condemned_in_text("царинками", "Замість «добрий» або «царинками» уникайте «гарний».") is False
+    assert is_target_condemned_in_text("царинками", "Замість «добрий» чи «царинками» уникайте «гарний».") is False
+
+    # 3. Isolated DPO integration tests
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "target_term": "царинками",
+            "category": "dialectal",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sources = tmp_path / "sources.db"
+    conn_s = sqlite3.connect(mock_sources)
+    conn_s.execute("CREATE TABLE sum20 (entry_id INTEGER PRIMARY KEY, lemma TEXT);")
+    conn_s.execute("INSERT INTO sum20 VALUES (1, 'добрий');")
+    conn_s.execute("INSERT INTO sum20 VALUES (2, 'гарний');")
+    conn_s.commit()
+    conn_s.close()
+    mock_vesum = tmp_path / "vesum.db"
+    conn_v = sqlite3.connect(mock_vesum)
+    conn_v.execute("CREATE TABLE vesum (lemma TEXT);")
+    conn_v.execute("INSERT INTO vesum VALUES ('добрий');")
+    conn_v.execute("INSERT INTO vesum VALUES ('гарний');")
+    conn_v.commit()
+    conn_v.close()
+    mock_sft_clean = tmp_path / "sft_clean"
+    mock_sft_clean.mkdir()
+    (mock_sft_clean / "shard.jsonl").write_text(
+        json.dumps({
+            "instruction": "Поясніть вживання слова «царинками».",
+            "response": "«царинками» — автентичне діалектне слово, яке слід зберегти.",
+            "target_term": "царинками",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+
+    # Finding 1 reproducer: або coordination in chosen MUST fail audit
+    dpo_f1_abo = tmp_path / "dpo_r20_f1_abo"
+    dpo_f1_abo.mkdir()
+    (dpo_f1_abo / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "Замість «добрий» або «царинками» вживайте «гарний».",
+            "rejected": "«царинками» — нормативне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_f1_abo, data_f1_abo, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_f1_abo,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r20_f1_abo.md",
+        output_json=tmp_path / "r20_f1_abo.json",
+    )
+    assert passed_f1_abo is False, "Expected audit failure for або coordinated replacement"
+    assert data_f1_abo["dpo_contradictions_count"] == 1
+
+    # Finding 1 reproducer: чи coordination in chosen MUST fail audit
+    dpo_f1_chy = tmp_path / "dpo_r20_f1_chy"
+    dpo_f1_chy.mkdir()
+    (dpo_f1_chy / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "Замість «добрий» чи «царинками» вживайте «гарний».",
+            "rejected": "«царинками» — нормативне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_f1_chy, data_f1_chy, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_f1_chy,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r20_f1_chy.md",
+        output_json=tmp_path / "r20_f1_chy.json",
+    )
+    assert passed_f1_chy is False, "Expected audit failure for чи coordinated replacement"
+    assert data_f1_chy["dpo_contradictions_count"] == 1
+
+    # Finding 2 reproducer: avoided other word does NOT condemn protected target
+    dpo_f2 = tmp_path / "dpo_r20_f2"
+    dpo_f2.mkdir()
+    (dpo_f2 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "Замість «добрий» і «царинками» уникайте «гарний».",
+            "rejected": "«царинками» — помилка.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_f2, data_f2, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_f2,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r20_f2.md",
+        output_json=tmp_path / "r20_f2.json",
+    )
+    assert passed_f2 is True, "Expected audit to pass when avoided word is not protected target"
+    assert data_f2["dpo_contradictions_count"] == 0

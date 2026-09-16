@@ -180,7 +180,7 @@ NEGATION_DIRECTIVE_RE = re.compile(
 )
 
 ADVERSATIVE_CONJUNCTIONS = r"\b(?:але|проте|однак|а|бо|тому що|оскільки|якщо|якби|хоч|хоча|аби|коли)\b"
-COORDINATING_CONJUNCTIONS = r"\b(?:і|й|та)\b"
+COORDINATING_CONJUNCTIONS = r"\b(?:і|й|та|або|чи)\b"
 CONJUNCTIONS = rf"(?:{ADVERSATIVE_CONJUNCTIONS}|{COORDINATING_CONJUNCTIONS})"
 
 DISALLOWED_COORDINATED_TOKENS = (
@@ -446,7 +446,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
     split_pat = re.compile(
         r"(?:[.,\n;!?:\u2014\u2013]+|"
         r"\s+\b(?:але|проте|однак)\b\s+|"
-        r"\s+\b(?:та|і|й|а)\s+(?=[«\"“‘\']|\b(?:його|її|їх|це|цей|цю|цього|цій|цим|слово|термін|вираз|зворот|щодо|для|слід|варто|потрібно|необхідно|треба|можна|не)\b|[а-яА-ЯёЁіІїЇєЄґҐ’\'\-]+\s+(?:слід|варто|потрібно|необхідно|треба|можна|є|не)\b))",
+        r"\s+\b(?:та|і|й|а|або|чи)\s+(?=[«\"“‘\'][^»\"”’\n]+[»\"”’]\s+(?:слід|варто|потрібно|необхідно|треба|можна|є|не)\b|\b(?:його|її|їх|це|цей|цю|цього|цій|цим|слово|термін|вираз|зворот|щодо|для|слід|варто|потрібно|необхідно|треба|можна|не)\b|[а-яА-ЯёЁіІїЇєЄґҐ’\'\-]+\s+(?:слід|варто|потрібно|необхідно|треба|можна|є|не)\b))",
         re.IGNORECASE,
     )
 
@@ -494,7 +494,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
 
         # If target in this clause was governed by замість, it was already evaluated above.
         # Bypass subsequent directives (like unikayte) so they don't falsely condemn target.
-        if re.search(rf"\bзамість\s+[«\"“‘\']?{t_bare}[»\"”’\']?", cl_lower):
+        if zamist_target_re.search(cl_lower):
             continue
 
         # Check replacement / avoidance directives
