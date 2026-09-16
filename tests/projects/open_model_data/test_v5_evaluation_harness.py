@@ -1831,3 +1831,44 @@ def test_citation_whitelist_r29_astra_r11_parenthetical_probes():
     assert ok6 is True
     assert any("СУМ-20" in a for a in app6)
     assert viol6 == []
+
+
+def test_citation_whitelist_r30_astra_r12_cocited_authorities_and_locators():
+    """Verify Astra R12 Finding 1: parenthetical citation locators are bounded and each co-cited authority is validated."""
+    # 1. Astra's exact probe: approved authority with locator followed by unapproved bare СУМ
+    ok1, app1, viol1 = verify_citation_whitelist("Це правильно (ВЕСУМ, с. 25; СУМ).")
+    assert ok1 is False
+    assert any("ВЕСУМ" in a for a in app1)
+    assert any("СУМ" in v for v in viol1)
+
+    # 2. Approved authority with locator followed by prohibited authority (СУМ-11) with locator
+    ok2, app2, viol2 = verify_citation_whitelist("Це правильно (ВЕСУМ, с. 25; СУМ-11, т. 2, с. 10).")
+    assert ok2 is False
+    assert any("ВЕСУМ" in a for a in app2)
+    assert any("СУМ-11" in v or "СУМ 11" in v for v in viol2)
+
+    # 3. Approved authority with locator followed by foreign unapproved authority
+    ok3, app3, viol3 = verify_citation_whitelist("Це правильно (ВЕСУМ, с. 25; Zorblax, с. 10).")
+    assert ok3 is False
+    assert any("ВЕСУМ" in a for a in app3)
+    assert any("Zorblax" in v for v in viol3)
+
+    # 4. Multiple approved co-cited authorities with locators pass
+    ok4, app4, viol4 = verify_citation_whitelist("Це правильно (ВЕСУМ, с. 25; «СУМ-20», с. 10).")
+    assert ok4 is True
+    assert any("ВЕСУМ" in a for a in app4)
+    assert any("СУМ-20" in a for a in app4)
+    assert viol4 == []
+
+    # 5. Prefixed co-citations with unapproved authority fail
+    ok5, app5, viol5 = verify_citation_whitelist("Це правильно (джерело: ВЕСУМ, с. 25; СУМ).")
+    assert ok5 is False
+    assert any("ВЕСУМ" in a for a in app5)
+    assert any("СУМ" in v for v in viol5)
+
+    # 6. Prefixed co-citations with all approved authorities pass
+    ok6, app6, viol6 = verify_citation_whitelist("Це правильно (джерело: ВЕСУМ, с. 25; «СУМ-20», т. 1, с. 5).")
+    assert ok6 is True
+    assert any("ВЕСУМ" in a for a in app6)
+    assert any("СУМ-20" in a for a in app6)
+    assert viol6 == []

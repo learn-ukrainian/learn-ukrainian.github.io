@@ -503,8 +503,16 @@ DIRECT_ZA_PROPER_NAME_RE = (
     r"(?:ом|ем|ям|ою|ею|єю|овим|євим|им|ім|кса|ака|яка|нка|нга|нта|рда|рта|нда|льда|вича|овича|евича|ьова|ьові|ова|ева|ого|ього|ів|ей|ові|єві|а|я|у|ю)\b)"
 )
 
-CITATION_LOCATOR_RE = (
-    r"(?:\s*,\s*(?:[сs]\.?|стор\w*|том\w*|т\.?|vol\w*|p\w*|pp\w*|ч\w*|вип\w*|кн\w*|\d{1,4})\b[^)]*)?"
+LOCATOR_KEYWORD_RE = r"(?:[сs]\.?|стор\w*|том\w*|т\.?|vol\w*|p\w*|pp\w*|ч\w*|вип\w*|кн\w*|пар\w*|параграф\w*|§)"
+LOCATOR_NUM_RE = r"(?:\d+|[IVXLCDMivxlcdm]+)(?:[\s\-–—\u2010-\u2015]+(?:\d+|[IVXLCDMivxlcdm]+))?"
+LOCATOR_PART_RE = rf"(?:{LOCATOR_KEYWORD_RE}\s*{LOCATOR_NUM_RE}|{LOCATOR_NUM_RE}|{LOCATOR_KEYWORD_RE})"
+CITATION_LOCATOR_RE = rf"(?:\s*,\s*{LOCATOR_PART_RE}(?:\s*,\s*{LOCATOR_PART_RE})*)"
+
+PAREN_PREFIX_RE = r"(?:[Дд]жерело|[Дд]ив\.?|[Зз]а|[Зз]гідно\s+(?:з|із|зі)|[Вв]ідповідно\s+до)(?::\s*|\s+)"
+CO_CITED_ENTRY_RE = (
+    rf"(?:{PAREN_PREFIX_RE})?"
+    rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})"
+    rf"(?:{CITATION_LOCATOR_RE})?"
 )
 
 CITATION_MENTION_PATTERNS = [
@@ -544,15 +552,16 @@ CITATION_MENTION_PATTERNS = [
     ),
     # 4a. Explicitly prefixed parenthetical citations: "(джерело: ВЕСУМ)", "(за «Словником»)", "(див. Zorblax)"
     re.compile(
-        rf"\(\s*(?:[Дд]жерело|[Дд]ив\.?|[Зз]а|[Зз]гідно\s+(?:з|із|зі)|[Вв]ідповідно\s+до)(?::\s*|\s+)"
-        rf"({QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})"
-        rf"{CITATION_LOCATOR_RE}\s*\)"
+        rf"\(\s*({PAREN_PREFIX_RE}(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})"
+        rf"(?:{CITATION_LOCATOR_RE})?"
+        rf"(?:\s*;\s*{CO_CITED_ENTRY_RE})*)\s*\)"
     ),
     # 4b. Bare parenthetical citations: "(СУМ-11)", "(ВЕСУМ)", "(Словник української мови)", "(«СУМ-20»)"
     re.compile(
-        rf"\(\s*(?!(?:[Дд]жерело|[Дд]ив\.?|[Зз]а|[Зз]гідно|[Вв]ідповідно)\b)"
-        rf"({QUOTED_AUTHORITY_TITLE_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})"
-        rf"{CITATION_LOCATOR_RE}\s*\)"
+        rf"\(\s*(?!(?:{PAREN_PREFIX_RE})\b)"
+        rf"(((?:{QUOTED_AUTHORITY_TITLE_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})"
+        rf"(?:{CITATION_LOCATOR_RE})?)"
+        rf"(?:\s*;\s*{CO_CITED_ENTRY_RE})*)\s*\)"
     ),
 ]
 
@@ -599,25 +608,33 @@ def verify_citation_whitelist(text: str) -> tuple[bool, list[str], list[str]]:
                     else:
                         found_unapproved.append(full_name)
             else:
-                # E.g. "словник Zorblax", "словниками ВЕСУМ та Zorblax", "словниками ВЕСУМ, Zorblax"
-                clean_span = re.sub(
-                    r"^(?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+",
-                    "",
-                    citation_span,
-                )
-                sub_entities = re.split(r"\s*,\s*|\s+(?:та|і|й|and|or)\s+", clean_span)
-                for ent in sub_entities:
-                    ent = re.sub(
+                # E.g. "словник Zorblax", "словниками ВЕСУМ та Zorblax", parenthetical co-citations "(ВЕСУМ, с. 25; СУМ)"
+                entries = re.split(r"\s*;\s*", citation_span)
+                for entry in entries:
+                    entry = re.sub(
+                        r"^(?:[Дд]жерело|[Дд]ив\.?|[Зз]а|[Зз]гідно\s+(?:з|із|зі)|[Вв]ідповідно\s+до)(?::\s*|\s+)",
+                        "",
+                        entry.strip(),
+                    )
+                    entry = re.sub(rf"{CITATION_LOCATOR_RE}$", "", entry.strip())
+                    clean_span = re.sub(
                         r"^(?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+",
                         "",
-                        ent.strip(),
+                        entry.strip(),
                     )
-                    clean_ent = ent.strip().strip("«»\"'“”‘’")
-                    if clean_ent:
-                        if is_approved_authority(clean_ent) or is_approved_authority(ent.strip()):
-                            found_approved.append(clean_ent)
-                        else:
-                            found_unapproved.append(clean_ent)
+                    sub_entities = re.split(r"\s*,\s*|\s+(?:та|і|й|and|or)\s+", clean_span)
+                    for ent in sub_entities:
+                        ent = re.sub(
+                            r"^(?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+",
+                            "",
+                            ent.strip(),
+                        )
+                        clean_ent = ent.strip().strip("«»\"'“”‘’")
+                        if clean_ent:
+                            if is_approved_authority(clean_ent) or is_approved_authority(ent.strip()):
+                                found_approved.append(clean_ent)
+                            else:
+                                found_unapproved.append(clean_ent)
 
     all_violations = sorted(list(set(found_prohibited + found_unapproved)))
     is_clean = len(all_violations) == 0

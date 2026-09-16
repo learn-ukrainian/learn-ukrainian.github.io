@@ -1451,3 +1451,89 @@ def test_audit_astra_r11_zamist_replacement_probe(
     assert passed is False
     assert data["dpo_contradictions_count"] == 1
     assert data["dpo_contradictions"][0]["target_term"] == "царинками"
+
+
+def test_audit_astra_r12_zamist_negation_probes(tmp_path: Path):
+    """Verify Astra R12 Finding 2: negation scoped to replacement instruction regardless of word order does not falsely condemn preserved targets."""
+    # 1. Astra's exact probe: Negation following target preserves term
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» не слід вживати «гарний».") is False
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» не вживайте «гарний».") is False
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» не варто використовувати «гарний».") is False
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» не можна вживати «гарний».") is False
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» заборонено вживати «гарний».") is False
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» уникайте вживання «гарний».") is False
+
+    # 2. Comma separating prepositional phrase from negated replacement verb
+    assert is_target_condemned_in_text("царинками", "Замість «царинками», не слід вживати «гарний».") is False
+    assert is_target_condemned_in_text("царинками", "Замість «царинками», не вживайте «гарний».") is False
+
+    # 3. Negation preceding target
+    assert is_target_condemned_in_text("царинками", "Не слід вживати «гарний» замість «царинками».") is False
+    assert is_target_condemned_in_text("царинками", "Не вживайте «гарний» замість «царинками».") is False
+
+    # 4. Non-negated replacement instructions continue to condemn target
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» слід вживати «гарний».") is True
+    assert is_target_condemned_in_text("царинками", "Замість «царинками», слід вживати «гарний».") is True
+    assert is_target_condemned_in_text("царинками", "Вживайте «гарний» замість «царинками».") is True
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» — «гарний».") is True
+
+    # 5. Replacement destination term is never condemned
+    assert is_target_condemned_in_text("гарний", "Замість «царинками» не слід вживати «гарний».") is False
+    assert is_target_condemned_in_text("гарний", "Замість «царинками» слід вживати «гарний».") is False
+
+    # 6. Full audit pipeline test confirming preservation pair passes audit
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "target_term": "царинками",
+            "category": "dialectal",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sources = tmp_path / "sources.db"
+    conn_s = sqlite3.connect(mock_sources)
+    conn_s.execute("CREATE TABLE textbooks (chunk_id TEXT PRIMARY KEY, text TEXT)")
+    conn_s.commit()
+    conn_s.close()
+    mock_vesum = tmp_path / "vesum.db"
+    conn_v = sqlite3.connect(mock_vesum)
+    conn_v.execute("CREATE TABLE words (lemma TEXT, form TEXT)")
+    conn_v.commit()
+    conn_v.close()
+    mock_sft_clean = tmp_path / "sft_clean"
+    mock_sft_clean.mkdir()
+    (mock_sft_clean / "shard.jsonl").write_text(
+        json.dumps({
+            "target_term": "царинками",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_dpo_pres = tmp_path / "dpo_pres"
+    mock_dpo_pres.mkdir()
+    (mock_dpo_pres / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як оцінити слово «царинками»?",
+            "chosen": "Замість «царинками» не слід вживати «гарний». Це самобутнє діалектне слово.",
+            "rejected": "Це помилка.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed, data, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=mock_dpo_pres,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r12_rep.md",
+        output_json=tmp_path / "r12_rep.json",
+    )
+    assert passed is True
+    assert data["dpo_contradictions_count"] == 0
+    assert data["dpo_contradictions"] == []

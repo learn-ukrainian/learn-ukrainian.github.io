@@ -235,17 +235,52 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         zamist_m = re.search(rf"\bзамість\s+[«\"“‘\']?{t_bare}[»\"”’\']?", cl_lower)
         if zamist_m:
             zamist_prefix = cl_lower[: zamist_m.start()]
+            zamist_suffix = cl_lower[zamist_m.end() :]
+            # If suffix in clause is short/empty (e.g. separated by comma or clause split), inspect full sentence context
+            if not zamist_suffix.strip() or zamist_suffix.strip() == ",":
+                sent_match = re.search(
+                    rf"(?:^|[.!?;\n])([^.!?;\n]*\bзамість\s+[«\"“‘\']?{t_bare}[»\"”’\']?[^.!?;\n]*)",
+                    text_norm,
+                    re.IGNORECASE,
+                )
+                if sent_match:
+                    sent_lower = sent_match.group(1).lower()
+                    zm_full = re.search(rf"\bзамість\s+[«\"“‘\']?{t_bare}[»\"”’\']?", sent_lower)
+                    if zm_full:
+                        zamist_prefix = sent_lower[: zm_full.start()]
+                        zamist_suffix = sent_lower[zm_full.end() :]
+
             zamist_negated = (
                 bool(re.search(r"\b(?:не|ні|ані)\s*$", zamist_prefix))
                 or bool(
                     re.search(
-                        r"\bне\s+(?:слід|варто|потрібно|необхідно|треба|можна|рекомендовано)?(?:\s+(?:вживати|вжити|використовувати|використати|писати|казати|брати))?\b",
+                        r"\b(?:не\s+(?:слід|варто|потрібно|необхідно|треба|можна|рекомендовано|рекомендується|дозволено|дозволяється|годиться)|заборонено|забороняється|не\s+можна|уникайте|уникати)\b",
                         zamist_prefix,
+                    )
+                )
+                or bool(
+                    re.search(
+                        r"\bне\s+(?:вживати|вжити|вживайте|використовувати|використати|використовуйте|писати|пишіть|казати|кажіть|говорити|говоріть|брати|беріть|застосовувати|застосовуйте|обирати|обирайте|замінювати|замінити|замінюйте)\b",
+                        zamist_prefix,
+                    )
+                )
+                or bool(
+                    re.search(
+                        r"\b(?:не\s+(?:слід|варто|потрібно|необхідно|треба|можна|рекомендовано|рекомендується|дозволено|дозволяється|годиться)|заборонено|забороняється|не\s+можна|уникайте|уникати)\b",
+                        zamist_suffix,
+                    )
+                )
+                or bool(
+                    re.search(
+                        r"\bне\s+(?:вживати|вжити|вживайте|використовувати|використати|використовуйте|писати|пишіть|казати|кажіть|говорити|говоріть|брати|беріть|застосовувати|застосовуйте|обирати|обирайте|замінювати|замінити|замінюйте)\b",
+                        zamist_suffix,
                     )
                 )
             )
             if not zamist_negated:
                 return True
+            else:
+                continue
 
         # Check replacement / avoidance directives
         # A directive is a contradiction unless it is specifically negated
