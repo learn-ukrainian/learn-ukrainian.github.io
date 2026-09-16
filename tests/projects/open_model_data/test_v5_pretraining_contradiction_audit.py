@@ -805,3 +805,112 @@ def test_audit_dpo_astra_r4_probes(tmp_path: Path, mock_dbs: tuple[Path, Path]) 
     )
     assert passed3 is True
     assert data3["dpo_contradictions_count"] == 0
+
+
+def test_audit_dpo_astra_r5_probes(tmp_path: Path, mock_dbs: tuple[Path, Path]) -> None:
+    """Verify Astra R5 Findings 1, 2, & 3: per-directive negation, coordinate clause subject scoping, and modal negation."""
+    mock_sources, mock_vesum = mock_dbs
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "eval_id": "mock_prot_1",
+            "stratum": "regional_dialect",
+            "target_term": "файний",
+            "expected_action": "PRESERVE",
+        }) + "\n" +
+        json.dumps({
+            "eval_id": "mock_prot_2",
+            "stratum": "regional_dialect",
+            "target_term": "царинками",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sft = tmp_path / "sft"
+    mock_sft.mkdir()
+    (mock_sft / "shard.jsonl").write_text(
+        json.dumps({
+            "target_term": "безпечний",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_dpo = tmp_path / "dpo"
+    mock_dpo.mkdir()
+
+    # Finding 1 probe: «файний» не слід замінювати але слід уникати -> MUST fail audit with 1 contradiction
+    (mock_dpo / "shard1.jsonl").write_text(
+        json.dumps({
+            "prompt": "Чи слід уникати «файний»?",
+            "chosen": "«файний» не слід замінювати але слід уникати.",
+            "rejected": "«файний» це красиве слово.",
+            "metadata": {"target_term": "файний", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed1, data1, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft,
+        dpo_dir=mock_dpo,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=2,
+        output_md=tmp_path / "report1.md",
+        output_json=tmp_path / "report1.json",
+    )
+    assert passed1 is False
+    assert data1["dpo_contradictions_count"] == 1
+    assert data1["dpo_contradictions"][0]["target_term"] == "файний"
+
+    # Finding 2 probe: «царинками» слід зберегти та «общий» слід замінити на «спільний». -> MUST PASS audit
+    (mock_dpo / "shard1.jsonl").write_text(
+        json.dumps({
+            "prompt": "Чи слід зберегти «царинками»?",
+            "chosen": "«царинками» слід зберегти та «общий» слід замінити на «спільний».",
+            "rejected": "Обидва слова слід замінити.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed2, data2, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft,
+        dpo_dir=mock_dpo,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=2,
+        output_md=tmp_path / "report2.md",
+        output_json=tmp_path / "report2.json",
+    )
+    assert passed2 is True
+    assert data2["dpo_contradictions_count"] == 0
+
+    # Finding 3 probe: «царинками» не є помилкою. Його не слід вважати помилкою. -> MUST PASS audit
+    (mock_dpo / "shard1.jsonl").write_text(
+        json.dumps({
+            "prompt": "Чи є «царинками» помилкою?",
+            "chosen": "«царинками» не є помилкою. Його не слід вважати помилкою.",
+            "rejected": "Це помилка.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed3, data3, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft,
+        dpo_dir=mock_dpo,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=2,
+        output_md=tmp_path / "report3.md",
+        output_json=tmp_path / "report3.json",
+    )
+    assert passed3 is True
+    assert data3["dpo_contradictions_count"] == 0

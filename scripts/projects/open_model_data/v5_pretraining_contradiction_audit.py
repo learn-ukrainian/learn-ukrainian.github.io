@@ -129,7 +129,15 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
     target_in_text = bool(t_token_re.search(text))
     current_referent = "TARGET" if not target_in_text else None
 
-    clauses = [c.strip() for c in re.split(r"[.,\n;!?]+", text) if c.strip()]
+    # Split text into sentence/clause units by punctuation or coordinate/adversative conjunctions introducing clauses
+    split_pat = re.compile(
+        r"(?:[.,\n;!?:\u2014\u2013]+|"
+        r"\s+\b(?:але|проте|однак)\b\s+|"
+        r"\s+\b(?:та|і|й|а)\s+(?=[«\"“‘\']|\b(?:його|її|їх|це|цей|цю|цього|цій|цим|слово|термін|вираз|зворот|щодо|для|слід|варто|потрібно|необхідно|треба|не)\b))",
+        re.IGNORECASE,
+    )
+
+    clauses = [c.strip() for c in split_pat.split(text) if c.strip()]
     for clause in clauses:
         cl_lower = clause.lower()
         quoted = re.findall(r"[«\"“‘\']([^»\"”’\']+)[»\"”’\']", clause)
@@ -151,23 +159,27 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         if current_referent != "TARGET":
             continue
 
-        has_replace_directive = bool(
-            re.search(
-                r"(?<!не\s)(?<!не\sслід\s)(?<!не\sварто\s)(?<!не\sтреба\s)(?<!не\sпотрібно\s)(?<!не\sнеобхідно\s)"
-                r"(?:(?:слід|варто|потрібно|необхідно|треба)\s+(?:замінити|замінювати|уникати|виправити|виправляти)|"
-                r"(?:замініть|замінити|уникайте|уникати|виправте|виправити)|"
-                r"(?:потребує|вимагає)\s+(?:заміни|виправлення))",
-                cl_lower,
-            )
-        )
-        negates_replace = bool(
-            re.search(
-                r"не\s+(?:слід|варто|потрібно|необхідно|треба)?\s*(?:замінювати|замінити|уникати|виправляти|виправити|потребує\s+заміни)",
-                cl_lower,
-            )
-        )
-        if has_replace_directive and not negates_replace:
-            return True
+        # Check replacement / avoidance directives
+        # A directive is a contradiction unless it is specifically negated
+        replace_dirs = [
+            r"(?:слід|варто|потрібно|необхідно|треба)\s+(?:замінити|замінювати|уникати|виправити|виправляти)",
+            r"\b(?:замініть|замінити|уникайте|уникати|виправте|виправити)\b",
+            r"(?:потребує|вимагає)\s+(?:заміни|виправлення)",
+        ]
+        for rpat in replace_dirs:
+            for match in re.finditer(rpat, cl_lower):
+                start = match.start()
+                prefix = cl_lower[:start]
+                last_ne = prefix.rfind("не ")
+                is_negated = False
+                if last_ne != -1:
+                    after_ne = prefix[last_ne + 3:]
+                    if not re.search(r"\b(?:але|проте|однак)\b", after_ne):
+                        is_negated = bool(
+                            re.search(r"\bне\s+(?:слід|варто|потрібно|необхідно|треба)?\s*$", prefix)
+                        )
+                if not is_negated:
+                    return True
 
         condemn_patterns = [
             r"\bпомилк\w*",
@@ -191,7 +203,8 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                     after_ne = prefix[last_ne + 3:]
                     if not re.search(r"\b(?:але|проте|однак)\b", after_ne):
                         is_negated = bool(
-                            re.search(r"\bне\s+(?:є\s+|це\s+|вважається\s+|було\s+)?$", prefix)
+                            re.search(r"\bне\s+(?:є|це|було|буде|був|була|становить|вважається|визнається|(?:слід|варто|можна|треба|потрібно|необхідно)\s+(?:вважати|називати|визнавати))\s*$", prefix)
+                            or re.search(r"\bне\s*$", prefix)
                             or re.search(r"\bне\s+(?:є\s+|це\s+|вважається\s+|було\s+)?[а-яА-ЯёЁіІїЇєЄґҐ’'\-]+\s+(?:та|і|й)\s+(?:не\s+)?$", prefix)
                         )
                 if not is_negated:
