@@ -1008,6 +1008,20 @@ def test_batch7_semantic_and_stress_distinctions():
     assert any("caltha" in d.lower() or "калюжниц" in d.lower() for d in defs)
     assert any("filago" in d.lower() or "айстров" in d.lower() for d in defs)
 
+    # загукати: загу́кати (resound, hoot) vs загука́ти (shout, call out loudly)
+    zah = enrich_heteronyms.build_heteronyms_for_lemma("загукати")
+    assert zah is not None and len(zah) == 2
+    assert zah[0]["headword"] == "загу́кати"
+    assert zah[1]["headword"] == "загука́ти"
+    assert "Гуляй!" in zah[1]["distinction_note"]
+    assert "повалили" not in zah[1]["distinction_note"]
+
+    # дозвільний: дозві́льний (leisure, free) vs дозвільни́й (permitting)
+    doz = enrich_heteronyms.build_heteronyms_for_lemma("дозвільний")
+    assert doz is not None and len(doz) == 2
+    assert doz[0]["headword"] == "дозві́льний"
+    assert "хвилина" in doz[0]["distinction_note"]
+
 
 def test_batch7_lemmas_not_duplicated_from_earlier_batches():
     """Verify batch 7's 32 lemmas are net-new and mutually disjoint with batches 1-6."""
