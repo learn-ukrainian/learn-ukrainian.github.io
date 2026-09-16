@@ -155,7 +155,7 @@ workbook:
     - ''''
     - ь
     - без зна́ка
-  - sentence: У сло́ві мален_кий потрі́бен ___ .
+  - sentence: мален___кий
     answer: ь
     options:
     - ь

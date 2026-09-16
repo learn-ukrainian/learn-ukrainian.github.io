@@ -39,36 +39,36 @@ inline:
   title: Роль йото́ваних лі́тер — Roles of Iotated Letters
   instruction: Select the correct role of the iotated letter in each given position.
   items:
-  - question: Скі́льки зву́ків познача́є лі́тера «я» на поча́тку сло́ва «я́блуко»?
+  - question: How many sounds does the letter «я» represent at the beginning of «я́блуко»?
     options:
-    - два зву́ки [йа]
-    - оди́н звук [а]
-    answer: два зву́ки [йа]
-  - question: Скі́льки зву́ків познача́є лі́тера «я» у сло́ві «пі́сня» пі́сля при́голосного?
+    - two sounds [йа]
+    - one sound [а]
+    answer: two sounds [йа]
+  - question: How many sounds does the letter «я» represent in «пі́сня» after a consonant?
     options:
-    - оди́н звук [а] та м'я́кість
-    - два зву́ки [йа]
-    answer: оди́н звук [а] та м'я́кість
-  - question: Скі́льки зву́ків познача́є лі́тера «ю» на поча́тку сло́ва «ю́шка»?
+    - one sound [а] and softness
+    - two sounds [йа]
+    answer: one sound [а] and softness
+  - question: How many sounds does the letter «ю» represent at the beginning of «ю́шка»?
     options:
-    - два зву́ки [йу]
-    - оди́н звук [у]
-    answer: два зву́ки [йу]
-  - question: Скі́льки зву́ків познача́є лі́тера «ю» у сло́ві «лю́ди» пі́сля при́голосного?
+    - two sounds [йу]
+    - one sound [у]
+    answer: two sounds [йу]
+  - question: How many sounds does the letter «ю» represent in «лю́ди» after a consonant?
     options:
-    - оди́н звук [у] та м'я́кість
-    - два зву́ки [йу]
-    answer: оди́н звук [у] та м'я́кість
-  - question: Скі́льки зву́ків познача́є лі́тера «є» на поча́тку сло́ва «єно́т»?
+    - one sound [у] and softness
+    - two sounds [йу]
+    answer: one sound [у] and softness
+  - question: How many sounds does the letter «є» represent at the beginning of «єно́т»?
     options:
-    - два зву́ки [йе]
-    - оди́н звук [е]
-    answer: два зву́ки [йе]
-  - question: Яки́м зву́ком є лі́тера Й в украї́нській мо́ві?
+    - two sounds [йе]
+    - one sound [е]
+    answer: two sounds [йе]
+  - question: What kind of sound is the letter Й in Ukrainian?
     options:
-    - напівголосни́м сона́нтом [й]
-    - голосни́м зву́ком
-    answer: напівголосни́м сона́нтом [й]
+    - semivowel sonorant [й]
+    - vowel sound
+    answer: semivowel sonorant [й]
 - id: act-203
   type: quiz
   title: Оди́н чи два зву́ки — One or Two Sounds

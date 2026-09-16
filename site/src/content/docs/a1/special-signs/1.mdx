@@ -121,15 +121,15 @@ These pairs are reading tools. You do not need to use all of them in conversatio
 **ь** points backward. It is a silent instruction for the consonant before it.
 :::
 
-### Що ро́бить ь
+### Що ро́бить ь — What does ь do
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "день", "right": "м'яки́й н у сло́ві день"}, {"left": "кінь", "right": "м'яки́й н у сло́ві кінь"}, {"left": "сіль", "right": "м'яки́й л у сло́ві сіль"}, {"left": "вчи́тель", "right": "м'яки́й л у сло́ві вчи́тель"}, {"left": "м'яки́й знак", "right": "не ма́є вла́сного зву́ка"}]`)} instruction={"З'єдна́й ко́жне сло́во з підка́зкою про м'яки́й знак."} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "день", "right": "soft [n'] in «день»"}, {"left": "кінь", "right": "soft [n'] in «кінь»"}, {"left": "сіль", "right": "soft [l'] in «сіль»"}, {"left": "вчи́тель", "right": "soft [l'] in «вчи́тель»"}, {"left": "ь (soft sign)", "right": "has no sound of its own"}]`)} instruction={"Match each word or sign with what the soft sign does."} isUkrainian={false} />
 
 Ukrainian schoolchildren remember which consonants can be softened with a famous mnemonic phrase: *«Де ти з'їси́ ці лини́?»* (Where will you eat these tench?). The consonants **д, т, з, с, ц, л, н** can take a soft sign. In contrast, consonants made with the lips (**б, п, в, м, ф**) and hushing consonants (**ж, ч, ш, щ**) never take a soft sign in standard Ukrainian spelling.
 
 ### Пра́вила м'яко́го зна́ка та африка́т — True or False
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "М'яки́й знак (ь) ма́є вла́сний голосни́й звук.", "isTrue": false, "explanation": "М'яки́й знак не ма́є вла́сного зву́ка; він лише́ пом'я́кшує попере́дній при́голосний."}, {"statement": "У сло́ві «день» оста́нній звук є м'яки́м.", "isTrue": true, "explanation": "Лі́тера ь ро́бить звук [н] м'яки́м: [ден']."}, {"statement": "Звук [ч] в украї́нській мо́ві є тве́рдим.", "isTrue": true, "explanation": "В украї́нській літерату́рній мо́ві шипля́чий звук [ч] вимовля́ється тве́рдо."}, {"statement": "Лі́тера Ц познача́є африка́ту [т͡с].", "isTrue": true, "explanation": "Ц — це глуха́ свистя́ча африка́та [т͡с]."}, {"statement": "У сло́ві «ціна́» звук [ц] є тве́рдим.", "isTrue": false, "explanation": "Пе́ред голосни́м [і] африка́та [ц] пом'я́кшується."}, {"statement": "Слова́ «бу́ква» та «лі́тера» є сино́німами в украї́нській мо́ві.", "isTrue": true, "explanation": "Оби́два сло́ва означа́ють писе́мний знак абе́тки."}]`)} instruction={"Decide whether each statement is true or false."} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "The soft sign (ь) has its own vowel sound.", "isTrue": false, "explanation": "The soft sign has no sound of its own; it only softens the preceding consonant."}, {"statement": "In the word «день», the final sound is soft.", "isTrue": true, "explanation": "The letter ь makes the sound [н] soft: [ден']."}, {"statement": "In Ukrainian, the sound [ч] is hard.", "isTrue": true, "explanation": "In standard Ukrainian, the affricate [ч] is pronounced hard."}, {"statement": "The letter Ц represents the affricate [т͡с].", "isTrue": true, "explanation": "Ц is a voiceless dental affricate [т͡с]."}, {"statement": "In the word «ціна́», the sound [ц] is hard.", "isTrue": false, "explanation": "Before the vowel [і], the affricate [ц] is softened."}, {"statement": "The words «бу́ква» and «лі́тера» are synonyms in Ukrainian.", "isTrue": true, "explanation": "Both words mean a written letter of the alphabet."}]`)} instruction={"Decide whether each statement is true or false."} isUkrainian={false} />
 
 ## Африка́ти Ц та Ч
 
@@ -141,7 +141,7 @@ The letter **Ц** represents the voiceless alveolar affricate [ts], like the *ts
 
 ### Тверди́й чи м'яки́й звук — Hard or Soft Sound
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Оста́нній звук у сло́ві «день» [н']:", "options": [{"text": "тверди́й", "correct": false}, {"text": "м'яки́й", "correct": true}], "explanation": ""}, {"question": "Оста́нній звук у сло́ві «стан» [н]:", "options": [{"text": "тверди́й", "correct": true}, {"text": "м'яки́й", "correct": false}], "explanation": ""}, {"question": "Звук [ц] у сло́ві «цирк» пе́ред [и]:", "options": [{"text": "тверди́й", "correct": true}, {"text": "м'яки́й", "correct": false}], "explanation": ""}, {"question": "Звук [ц'] у сло́ві «ціна́» пе́ред [і]:", "options": [{"text": "тверди́й", "correct": false}, {"text": "м'яки́й", "correct": true}], "explanation": ""}, {"question": "Звук [ч] у сло́ві «час»:", "options": [{"text": "тверди́й", "correct": true}, {"text": "м'яки́й", "correct": false}], "explanation": ""}, {"question": "Оста́нній звук у сло́ві «сіль» [л']:", "options": [{"text": "тверди́й", "correct": false}, {"text": "м'яки́й", "correct": true}], "explanation": ""}]`)} instruction={"Choose whether the highlighted consonant sound is hard (тверди́й) or soft (м'яки́й)."} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "The final sound in «день» [н']:", "options": [{"text": "hard", "correct": false}, {"text": "soft", "correct": true}], "explanation": ""}, {"question": "The final sound in «стан» [н]:", "options": [{"text": "hard", "correct": true}, {"text": "soft", "correct": false}], "explanation": ""}, {"question": "The sound [ц] in «цирк» before [и]:", "options": [{"text": "hard", "correct": true}, {"text": "soft", "correct": false}], "explanation": ""}, {"question": "The sound [ц'] in «ціна́» before [і]:", "options": [{"text": "hard", "correct": false}, {"text": "soft", "correct": true}], "explanation": ""}, {"question": "The sound [ч] in «час»:", "options": [{"text": "hard", "correct": true}, {"text": "soft", "correct": false}], "explanation": ""}, {"question": "The final sound in «сіль» [л']:", "options": [{"text": "hard", "correct": false}, {"text": "soft", "correct": true}], "explanation": ""}]`)} instruction={"Choose whether the highlighted consonant sound is hard or soft."} isUkrainian={false} />
 
 The letter **Ч** represents the voiceless postalveolar affricate [tʃ], like the *ch* in *chair*. A crucial rule of standard Ukrainian orthoepy is that **ч is always hard** (**тверди́й**). Even when followed by other sounds, keep it firmly unsoftened. Do not pronounce it soft like in some other Slavic languages:
 - **час** — time
@@ -161,7 +161,7 @@ Notice how **па́льці** (fingers) combines both principles: the soft sign 
 
 ### Розподілі́ть слова́ за тве́рдістю зву́ка — Group Sort: Hard vs Soft
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Тверди́й звук — Hard consonant": ["стан", "лан", "рис"], "М'яки́й звук — Soft consonant": ["стань", "лань", "рись"]}`)} instruction={"Sort words into those ending in a hard consonant and those ending in a soft consonant."} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Hard consonant": ["стан", "лан", "рис"], "Soft consonant": ["стань", "лань", "рись"]}`)} instruction={"Sort words into those ending in a hard consonant and those ending in a soft consonant."} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Словник — Vocabulary">
@@ -181,7 +181,7 @@ Notice how **па́льці** (fingers) combines both principles: the soft sign 
 
 *(see lesson, §М'яки́й знак)*
 
-### Що ро́бить ь
+### Що ро́бить ь — What does ь do
 
 *(see lesson, §М'яки́й знак)*
 

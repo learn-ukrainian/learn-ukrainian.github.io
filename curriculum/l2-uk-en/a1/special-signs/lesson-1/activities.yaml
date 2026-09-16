@@ -36,92 +36,90 @@ inline:
     note: Hard affricate [ч] at the beginning of the word.
 - id: act-2
   type: match-up
-  title: Що ро́бить ь
-  instruction: З'єдна́й ко́жне сло́во з підка́зкою про м'яки́й знак.
+  title: Що ро́бить ь — What does ь do
+  instruction: Match each word or sign with what the soft sign does.
   pairs:
   - left: день
-    right: м'яки́й н у сло́ві день
+    right: soft [n'] in «день»
   - left: кінь
-    right: м'яки́й н у сло́ві кінь
+    right: soft [n'] in «кінь»
   - left: сіль
-    right: м'яки́й л у сло́ві сіль
+    right: soft [l'] in «сіль»
   - left: вчи́тель
-    right: м'яки́й л у сло́ві вчи́тель
-  - left: м'яки́й знак
-    right: не ма́є вла́сного зву́ка
+    right: soft [l'] in «вчи́тель»
+  - left: ь (soft sign)
+    right: has no sound of its own
 - id: act-103
   type: true-false
   title: Пра́вила м'яко́го зна́ка та африка́т — True or False
   instruction: Decide whether each statement is true or false.
   items:
-  - statement: М'яки́й знак (ь) ма́є вла́сний голосни́й звук.
+  - statement: The soft sign (ь) has its own vowel sound.
     answer: false
-    explanation: М'яки́й знак не ма́є вла́сного зву́ка; він лише́ пом'я́кшує попере́дній
-      при́голосний.
-  - statement: У сло́ві «день» оста́нній звук є м'яки́м.
+    explanation: The soft sign has no sound of its own; it only softens the preceding
+      consonant.
+  - statement: In the word «день», the final sound is soft.
     answer: true
-    explanation: 'Лі́тера ь ро́бить звук [н] м''яки́м: [ден''].'
-  - statement: Звук [ч] в украї́нській мо́ві є тве́рдим.
+    explanation: 'The letter ь makes the sound [н] soft: [ден''].'
+  - statement: In Ukrainian, the sound [ч] is hard.
     answer: true
-    explanation: В украї́нській літерату́рній мо́ві шипля́чий звук [ч] вимовля́ється
-      тве́рдо.
-  - statement: Лі́тера Ц познача́є африка́ту [т͡с].
+    explanation: In standard Ukrainian, the affricate [ч] is pronounced hard.
+  - statement: The letter Ц represents the affricate [т͡с].
     answer: true
-    explanation: Ц — це глуха́ свистя́ча африка́та [т͡с].
-  - statement: У сло́ві «ціна́» звук [ц] є тве́рдим.
+    explanation: Ц is a voiceless dental affricate [т͡с].
+  - statement: In the word «ціна́», the sound [ц] is hard.
     answer: false
-    explanation: Пе́ред голосни́м [і] африка́та [ц] пом'я́кшується.
-  - statement: Слова́ «бу́ква» та «лі́тера» є сино́німами в украї́нській мо́ві.
+    explanation: Before the vowel [і], the affricate [ц] is softened.
+  - statement: The words «бу́ква» and «лі́тера» are synonyms in Ukrainian.
     answer: true
-    explanation: Оби́два сло́ва означа́ють писе́мний знак абе́тки.
+    explanation: Both words mean a written letter of the alphabet.
 - id: act-104
   type: quiz
   title: Тверди́й чи м'яки́й звук — Hard or Soft Sound
-  instruction: Choose whether the highlighted consonant sound is hard (тверди́й) or
-    soft (м'яки́й).
+  instruction: Choose whether the highlighted consonant sound is hard or soft.
   items:
-  - question: 'Оста́нній звук у сло́ві «день» [н'']:'
+  - question: 'The final sound in «день» [н'']:'
     options:
-    - тверди́й
-    - м'яки́й
-    answer: м'яки́й
-  - question: 'Оста́нній звук у сло́ві «стан» [н]:'
+    - hard
+    - soft
+    answer: soft
+  - question: 'The final sound in «стан» [н]:'
     options:
-    - тверди́й
-    - м'яки́й
-    answer: тверди́й
-  - question: 'Звук [ц] у сло́ві «цирк» пе́ред [и]:'
+    - hard
+    - soft
+    answer: hard
+  - question: 'The sound [ц] in «цирк» before [и]:'
     options:
-    - тверди́й
-    - м'яки́й
-    answer: тверди́й
-  - question: 'Звук [ц''] у сло́ві «ціна́» пе́ред [і]:'
+    - hard
+    - soft
+    answer: hard
+  - question: 'The sound [ц''] in «ціна́» before [і]:'
     options:
-    - тверди́й
-    - м'яки́й
-    answer: м'яки́й
-  - question: 'Звук [ч] у сло́ві «час»:'
+    - hard
+    - soft
+    answer: soft
+  - question: 'The sound [ч] in «час»:'
     options:
-    - тверди́й
-    - м'яки́й
-    answer: тверди́й
-  - question: 'Оста́нній звук у сло́ві «сіль» [л'']:'
+    - hard
+    - soft
+    answer: hard
+  - question: 'The final sound in «сіль» [л'']:'
     options:
-    - тверди́й
-    - м'яки́й
-    answer: м'яки́й
+    - hard
+    - soft
+    answer: soft
 - id: act-105
   type: group-sort
   title: 'Розподілі́ть слова́ за тве́рдістю зву́ка — Group Sort: Hard vs Soft'
   instruction: Sort words into those ending in a hard consonant and those ending in
     a soft consonant.
   groups:
-  - name: Тверди́й звук — Hard consonant
+  - name: Hard consonant
     items:
     - стан
     - лан
     - рис
-  - name: М'яки́й звук — Soft consonant
+  - name: Soft consonant
     items:
     - стань
     - лань

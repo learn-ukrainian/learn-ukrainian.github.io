@@ -84,7 +84,7 @@ explain them.
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-Let us examine the exact nature of the trap in the word **свя́то** (holiday). Why is there no apostrophe here, even though **в** is a labial consonant? The Ukrainian spelling rule (Право́пис §7) states that if a root labial consonant (other than **р**) is preceded by another consonant belonging to the same root (in **свя́то**, the letter **с**), then no apostrophe is written. The consonant [в] simply softens together with the preceding [s']. The exact same rule applies to the word **цвях** (nail), where [ц] precedes the labial [в]. (Note the exception for **р**: if the preceding consonant is **р**, the apostrophe is retained, as in **черв'я́к** and **ве́рб'я**).
+Let us examine the exact nature of the trap in the word **свя́то** (holiday). Why is there no apostrophe here, even though **в** is a labial consonant? The Ukrainian spelling rule (Право́пис §7) states that if a root labial consonant is preceded by another same-root consonant other than **р** (in **свя́то**, the letter **с**), then no apostrophe is written. The consonant [в] simply softens together with the preceding [s']. The exact same rule applies to the word **цвях** (nail), where [ц] precedes the labial [в]. (Note the exception for **р**: if the preceding consonant is **р**, the apostrophe is retained, as in **черв'я́к** and **ве́рб'я**).
 
 <!-- INJECT_ACTIVITY: act-404 -->
 
