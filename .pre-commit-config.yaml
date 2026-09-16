@@ -110,15 +110,19 @@ repos:
       # The project's venv is always at .venv/bin/python — use that
       # instead. The existing enforce-venv.sh hook in Claude Code
       # catches this at runtime; pre-commit catches it at check-in.
+      # Exempts `-m venv` invocations: bootstrapping a *new* virtualenv
+      # (e.g. cursor_cloud_full_pytest.sh's isolated cloud-sandbox venv,
+      # which must not touch or depend on repo .venv/) inherently needs a
+      # system interpreter — there is no project .venv to defer to yet.
       - id: no-bare-python
         name: block bare python/python3 in new scripts
         entry: >-
           bash -c 'files=$(git diff --cached --name-only --diff-filter=AM |
-          grep -E "\.(sh|bash)$" || true); for f in $files; do if grep -nE
-          "(^|[[:space:]])(python|python3)[[:space:]]" "$f" > /dev/null 2>&1;
-          then echo "ERROR: $f uses bare python/python3, use .venv/bin/python
-          instead"; grep -nE "(^|[[:space:]])(python|python3)[[:space:]]" "$f";
-          exit 1; fi; done'
+          grep -E "\.(sh|bash)$" || true); for f in $files; do hits=$(grep -nE
+          "(^|[[:space:]])(python|python3)[[:space:]]" "$f" 2>/dev/null |
+          grep -vE "[[:space:]]-m[[:space:]]+venv([[:space:]]|$)" || true);
+          if [ -n "$hits" ]; then echo "ERROR: $f uses bare python/python3,
+          use .venv/bin/python instead"; echo "$hits"; exit 1; fi; done'
         language: system
         pass_filenames: false
         stages: [pre-commit]

@@ -107,3 +107,23 @@ artifact and run:
 
 Commit the refreshed snapshot (sorted keys, 3-decimal rounding) when shard
 balance measurably drifts — not on every green run.
+
+## Cloud advisory runner dependency parity (#6977 slice A)
+
+`scripts/ci/cursor_cloud_full_pytest.sh` (the offline-verifiable Cursor cloud
+pytest prototype; see `docs/design/2026-09-06-cloud-agent-pytest-advisory.md`)
+mirrors this job's "Install Python deps" and "Hydrate Atlas lexicon manifest"
+steps: same lockfile exclude set (`torch`/`torchvision`/`open_clip_torch`/
+`stanza`), `uv pip` when available, `packages/v4-runtime --no-build-isolation`
++ `build_assets.py`, and an unconditional hard-fail manifest hydrate. It also
+requires `LEARN_UKRAINIAN_CP_PG_DSN` (same fixture creds as this job's
+disposable Postgres service) whenever control-plane tests are selected, and
+detects (never sudo-installs) the Linux native deps this job's "Install
+native mechanism test dependencies" step provisions (`bubblewrap`, `libpq`).
+**When this job's dependency install recipe changes, update the runner
+script to match** — a drifted runner is a false-green risk, not just stale
+docs (the whole point of that runner is offline/local sealed-run parity with
+this job). Runner ↔ CI parity is covered offline by
+`tests/ci/test_cursor_cloud_pytest_verify.py`; artifact transport, live cloud
+qualification and the advisory Check publisher remain open (operator/advisor
+GO required, see the design doc's "Explicit open decision" section).

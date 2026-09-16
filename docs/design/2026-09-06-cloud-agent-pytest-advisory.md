@@ -1,6 +1,16 @@
 # Cloud-agent full pytest advisory
 
 Status: design only; implementation and live qualification remain open. Refs #6977.
+Slice A landed (runner ↔ CI dependency parity, no transport): the runner now
+excludes stanza like `ci.yml`, uses `uv pip` with a documented pip fallback,
+installs `packages/v4-runtime` + `build_assets.py`, requires
+`LEARN_UKRAINIAN_CP_PG_DSN` when control-plane tests are selected (fails
+closed instead of a silent self-skip false-green), detects (never
+sudo-installs) `bubblewrap`/`libpq` on Linux, and hard-fails the Atlas
+manifest hydrate like CI does. See `docs/runbooks/ci-gate.md` § Cloud
+advisory runner dependency parity. Artifact transport, the Check publisher
+and live held-out qualification remain GO-gated and open — this slice does
+not close #6977 or establish that cloud execution is operational.
 
 ## Outcome and fixed policy
 
