@@ -1124,13 +1124,14 @@ def test_batch8_semantic_and_stress_distinctions():
     assert zah[1]["headword"] == "захватни́й"
     assert "exciting" in zah[1]["gloss"].lower() or "thrilling" in zah[1]["gloss"].lower() or "captivating" in zah[1]["gloss"].lower()
 
-    # дякування: дя́кування (thanking / gratitude) vs дякува́ння (serving as deacon / cantor in church)
+    # дякування: дя́кування (thanking / gratitude) vs дякува́ння (serving as parish cantor / church reader)
     diak = enrich_heteronyms.build_heteronyms_for_lemma("дякування")
     assert diak is not None and len(diak) == 2
     assert diak[0]["headword"] == "дя́кування"
     assert "gratitude" in diak[0]["gloss"].lower() or "thank" in diak[0]["gloss"].lower()
     assert diak[1]["headword"] == "дякува́ння"
-    assert "cantor" in diak[1]["gloss"].lower() or "deacon" in diak[1]["gloss"].lower()
+    assert "cantor" in diak[1]["gloss"].lower()
+    assert "deacon" not in diak[1]["gloss"].lower()
 
     # корівник: корі́вник (cowshed / inanim) vs корівни́к (cowherd / anim)
     kor = enrich_heteronyms.build_heteronyms_for_lemma("корівник")

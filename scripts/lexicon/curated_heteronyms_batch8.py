@@ -782,7 +782,7 @@ CURATED_HETERONYMS_BATCH_8: dict[str, list[dict[str, Any]]] = { 'вивозит�
                                                                        'дякувати.'}},
                  { 'headword': 'дякува́ння',
                    'short_label': 'служіння дяком у церкві (дія за знач. дякува́ти, розм., рідко)',
-                   'gloss': 'serving as parish cantor or deacon in a church (rare, colloquial)',
+                   'gloss': 'serving as parish cantor / church reader (rare, colloquial)',
                    'pos': 'noun',
                    'cefr': 'B2',
                    'heritage_status': { 'classification': 'standard',
