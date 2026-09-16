@@ -118,17 +118,21 @@ HELD_OUT_EVAL_WORKS = {
     "ivan_velychkovskyy_tvory",
     "chernihivskyy_litopys_1587_1750",
     "chernihivskyy_litopys",
-    "zyzaniy_leksys_1596",
-    "smotrytskyy_hramatiky_slovenskiya_1619",
 }
 
-# Works excluded as modern 20th-century translations or modern folk collections
+# Works excluded as modern 20th-century studies, translations, or modern folk collections
 EXCLUDED_MODERN_WORKS = {
+    "zyzaniy_leksys_1596",  # 1964 modern research monograph by V. Nimchuk
+    "smotrytskyy_hramatiky_slovenskiya_1619",  # 1979 modern research monograph by V. Nimchuk
     "feofan_prokopovych_filosofski_tvory",  # 1981 Soviet Ukrainian translation from Latin
     "uzhevych_paryzkyy_rukopys_pereklad_1970",  # 1970 translation
     "samiylo_velychko_litopys_1648_1700",  # Valeriy Shevchuk modern translation
     "litopys_velychka",  # Modern translation
     "synopsys_kyyiv_1674",  # Modern 2002 academic edition/study
+    "daniel_krman_podorozhniy_shchodennyk_1708_1709",  # 1999 translation from Latin
+    "mytrofan_dovhalevskyy_poetyka",  # 1973 translation from Latin
+    "ukrayinski_humanisty_epokhy_vidrodzhennya",  # Modern translations of Latin humanists
+    "boplan_opys_ukrayiny_1660",  # Modern translation from French
 }
 
 # Editorial patterns marking academic prefaces, apparatus, and commentaries
@@ -146,7 +150,15 @@ EDITORIAL_PATTERNS = [
         r"до\s+нас\s+у\s+рукописній\s+копії|року\s+помер|народився|ієромонах|"
         r"словник-покажчик|ономастичн\w*|різночитання|див\.\s+фотокопію|"
         r"оригінал\s+не\s+відшуканий|копія\s+xix\s+ст|публікується\s+за\s+копією|"
-        r"зберігається\s+в\s+рукописному|у\s+покажчиках\s+дано|у\s+науковій\s+літературі)",
+        r"зберігається\s+в\s+рукописному|у\s+покажчиках\s+дано|у\s+науковій\s+літературі|"
+        r"в\s+рук\.|в\s+рукопис\w*|у\s+вид\.|в\s+друку|переклад\w*|перекладач\w*|"
+        r"оригінал\w*|художн\w*\s+виразність|реєстров\w*|омонім\w*|словников\w*|"
+        r"іншою\s+рукою|поверх\s+закресленого|закресленого|варіант\w*|примітк\w*|"
+        r"надрядков\w*|знаки\s+відсутн\w*|читається|написано|виправлено|викреслено|"
+        r"дописано|вставлено|в\s+списк\w*|за\s+списк\w*|видав|надруковано|опубліковано|"
+        r"подається|наводиться|порівн\w*|пор\.:|див\.:|див\.\s+також|також:|заголовок|"
+        r"підпис|арк\.|стор\.|с\.\s*\d|вип\.|том\s+[I-V\d]|ч\.\s*\d|№\s*\d|відкриті|"
+        r"видані|изданн\w*|открыт\w*)",
         re.IGNORECASE,
     ),
     re.compile(r"^\s*(?:ЗМІСТ|ПЕРЕДМОВА|ВСТУП|КОМЕНТАР|ПРИМІТКИ|РІЗНОЧИТАННЯ)\s*$", re.IGNORECASE | re.MULTILINE),
@@ -168,7 +180,7 @@ INJECTED_CALQUES = [
     ("за рахунок коштів", "завдяки коштам"),
 ]
 
-# Historical Middle Ukrainian markers
+# Historical Middle Ukrainian distinctive markers (strictly excluding ambiguous modern words)
 MIDDLE_UKRAINIAN_LEXICAL_MARKERS = [
     "панованє",
     "вольности",
@@ -179,42 +191,38 @@ MIDDLE_UKRAINIAN_LEXICAL_MARKERS = [
     "гетман",
     "посполиство",
     "посполитый",
+    "посполитое",
+    "посполитых",
     "котрий",
     "котрого",
     "которому",
+    "которих",
     "албо",
-    "яко",
     "жодный",
     "жодного",
+    "жодному",
     "шаблею",
-    "войско",
-    "войска",
-    "войску",
-    "воиско",
     "понявши",
     "затымъ",
-    "затим",
-    "статут",
-    "статуту",
+    "затимъ",
     "маршалок",
     "воєвода",
-    "шляхта",
-    "полковник",
-    "сотник",
-    "булава",
-    "універсал",
-    "универсал",
+    "панство",
     "листъ",
     "листомъ",
     "свѣдки",
-    "свідки",
-    "князь",
     "кн̃з",
     "сн̃а",
     "лѣто",
     "лѣта",
-    "року",
-    "кг",
+    "се я",
+    "а се я",
+    "дали есмо",
+    "далися есмо",
+    "зостаєт",
+    "маєт",
+    "тежъ",
+    "ижъ",
 ]
 
 
@@ -261,11 +269,15 @@ def is_clean_historical_sentence(sent: str) -> bool:
     """Verify that a sentence is authentic historical Middle Ukrainian, free of modern commentary."""
     if len(sent) < 45 or len(sent) > 300:
         return False
-    if sent.startswith(("*", "[", "/", "\\", "—", "-")):
+    if re.match(r"^[\s\*\\[\]/—\-\d]", sent):
         return False
     if is_editorial_preface(sent):
         return False
-    has_archaic_letters = any(c in sent for c in "ѣъωξѱѳѵѿѧ҂ыєі")
+    if re.search(r"\d+\s+[^\d;]+;\s*\d+\b", sent):
+        return False
+
+    # Archaic Cyrillic characters (strictly excluding ordinary modern letters 'і' and 'є')
+    has_archaic_letters = any(c in sent for c in "ѣъωξѱѳѵѿѧӕ҂ыѕ́̀̃̄̆̈")
     has_lexical_marker = any(m in sent.casefold() for m in MIDDLE_UKRAINIAN_LEXICAL_MARKERS)
     return bool(has_archaic_letters or has_lexical_marker)
 
@@ -284,10 +296,8 @@ def classify_stratum(work_id: str, year: int | None) -> tuple[str, str, str]:
         return STRATA_EARLY_RUTHENIAN, "1350–1400", "Рукопис XIV ст."
 
     # 2. Renaissance & Polemical (1500-1648)
-    if any(
-        k in work_id for k in ["volynskyy_statut", "humanisty", "zyzaniy", "smotrytskyy", "berynda", "azbuka", "bukvar"]
-    ):
-        return STRATA_RENAISSANCE_POLEMICAL, "1566–1627", "Видання XVI–XVII ст."
+    if any(k in work_id for k in ["volynskyy_statut", "berynda", "azbuka", "bukvar", "krekhivskoho", "hustynskyy"]):
+        return STRATA_RENAISSANCE_POLEMICAL, "1566–1648", "Видання/літописи XVI–XVII ст."
     if (
         "ukrayinska_poeziya_kinets_xvi" in work_id
         or "kyyivskyy_litopys_pershoyi" in work_id
@@ -313,6 +323,27 @@ def classify_stratum(work_id: str, year: int | None) -> tuple[str, str, str]:
 
     # 3. High Cossack Baroque (mid 17th-18th c.) - default for remaining 17th-18th c. works
     return STRATA_HIGH_COSSACK_BAROQUE, "1648–1775", "Козацькі літописи та барокові пам'ятки"
+
+
+def is_held_out_chunk(chunk: MiddleUkrainianChunk) -> bool:
+    """Determine if a chunk belongs to the held-out evaluation partition."""
+    if chunk.work_id in HELD_OUT_EVAL_WORKS:
+        return True
+    if chunk.work_id == "hramoty_xiv_st":
+        try:
+            num = int(chunk.chunk_id.split("_c")[-1])
+            # Authentic charters 40 to 90 held out for Early Ruthenian Chancery
+            return 40 <= num <= 90
+        except Exception:
+            return False
+    if chunk.work_id == "druhyy_volynskyy_statut_vkl_1566_roku":
+        try:
+            num = int(chunk.chunk_id.split("_c")[-1])
+            # Chunks 0 to 40 held out for Renaissance & Polemical
+            return num <= 40
+        except Exception:
+            return False
+    return False
 
 
 def load_middle_ukrainian_chunks(sources_db: Path) -> list[MiddleUkrainianChunk]:
@@ -349,6 +380,34 @@ def load_middle_ukrainian_chunks(sources_db: Path) -> list[MiddleUkrainianChunk]
             try:
                 chunk_num = int(chunk_id.split("_c")[-1])
                 if chunk_num < 86:
+                    continue
+            except Exception:
+                pass
+
+        # In Ukrainian Interludes, chunks 0 to 170 are M. K. Hudziy's modern monograph
+        if work_id == "ukrayinski_intermediyi_xvii_xviii_st":
+            try:
+                chunk_num = int(chunk_id.split("_c")[-1])
+                if chunk_num < 171:
+                    continue
+            except Exception:
+                pass
+
+        # In Fables anthology, chunks 0 to 80 are V. I. Krekoten's modern introduction,
+        # and chunks > 240 are modern glossary and apparatus
+        if "bayky_" in work_id:
+            try:
+                chunk_num = int(chunk_id.split("_c")[-1])
+                if chunk_num < 80 or chunk_num > 240:
+                    continue
+            except Exception:
+                pass
+
+        # In hramoty_xiv_st, chunks 0 to 39 are modern introductory study by M. M. Peshchak
+        if work_id == "hramoty_xiv_st":
+            try:
+                chunk_num = int(chunk_id.split("_c")[-1])
+                if chunk_num < 40:
                     continue
             except Exception:
                 pass
@@ -403,20 +462,11 @@ def build_eval_suite(
     """Build held-out evaluation benchmark strictly partitioned by literary work."""
     rng = random.Random(seed)
 
-    # Filter held-out chunks:
-    # 1. Complete held-out works
-    # 2. Dedicated held-out charters from hramoty_xiv_st (chunks c0000 to c0040)
+    # Filter held-out chunks using canonical document-level partition
     eval_candidates: list[MiddleUkrainianChunk] = []
     for c in chunks:
-        if c.work_id in HELD_OUT_EVAL_WORKS:
+        if is_held_out_chunk(c):
             eval_candidates.append(c)
-        elif c.work_id == "hramoty_xiv_st":
-            try:
-                num = int(c.chunk_id.split("_c")[-1])
-                if num <= 40:
-                    eval_candidates.append(c)
-            except Exception:
-                pass
 
     # Group candidates by stratum and interleave round-robin so all 4 strata are represented
     strata_buckets: dict[str, list[MiddleUkrainianChunk]] = {
@@ -544,6 +594,28 @@ def build_eval_suite(
 
     assert len(eval_cases) >= target_quota, f"Insufficient eval cases generated: {len(eval_cases)} < {target_quota}"
     return eval_cases[:target_quota]
+
+
+def query_vesum_lemma_and_count(cur_ves: sqlite3.Cursor, token: str) -> tuple[str, int]:
+    """Query VESUM for lemma and forms count, resolving inflected word forms to lemmas."""
+    t = token.casefold().strip(".,!?:;()[]-—+*✠\"'«»\r\n\t/\\")
+    if not t:
+        return "", 0
+    cur_ves.execute("SELECT count(*) FROM forms_all WHERE lemma = ?", (t,))
+    row = cur_ves.fetchone()
+    if row and row[0] > 0:
+        return t, row[0]
+    cur_ves.execute(
+        "SELECT lemma, count(*) FROM forms_all WHERE word_form = ? GROUP BY lemma ORDER BY count(*) DESC LIMIT 1",
+        (t,),
+    )
+    row = cur_ves.fetchone()
+    if row and row[1] > 0:
+        lemma = row[0]
+        cur_ves.execute("SELECT count(*) FROM forms_all WHERE lemma = ?", (lemma,))
+        full_row = cur_ves.fetchone()
+        return lemma, (full_row[0] if full_row else row[1])
+    return t, 0
 
 
 def load_replay_buffer(vesum_db: Path, quota: int = 200) -> list[dict[str, Any]]:
@@ -758,10 +830,7 @@ def build_sft_dataset(
 
     # Add all text and sentences from all held-out chunks
     for c in chunks:
-        is_held_out = (c.work_id in HELD_OUT_EVAL_WORKS) or (
-            c.work_id == "hramoty_xiv_st" and int(c.chunk_id.split("_c")[-1]) <= 40
-        )
-        if is_held_out:
+        if is_held_out_chunk(c):
             norm_c = normalize_historical_snippet(c.text)
             if len(norm_c) >= 20:
                 held_out_normalized_texts.add(norm_c)
@@ -773,15 +842,8 @@ def build_sft_dataset(
     # 2. Exclude held-out works from training chunks
     train_chunks: list[MiddleUkrainianChunk] = []
     for c in chunks:
-        if c.work_id in HELD_OUT_EVAL_WORKS:
+        if is_held_out_chunk(c):
             continue
-        if c.work_id == "hramoty_xiv_st":
-            try:
-                num = int(c.chunk_id.split("_c")[-1])
-                if num <= 40:
-                    continue
-            except Exception:
-                pass
         train_chunks.append(c)
 
     rng.shuffle(train_chunks)
@@ -834,12 +896,7 @@ def build_sft_dataset(
             words = [w for w in words if len(w) >= 2]
             headword = words[0] if words else "панованє"
 
-            try:
-                cur_ves.execute("SELECT count(*) FROM forms_all WHERE lemma = ?", (headword.casefold(),))
-                v_row = cur_ves.fetchone()
-                v_count = v_row[0] if v_row else 0
-            except Exception:
-                v_count = 0
+            v_lemma, v_count = query_vesum_lemma_and_count(cur_ves, headword)
 
             stratum_title = {
                 STRATA_EARLY_RUTHENIAN: "Рання руська канцелярія (XIV–XV ст.)",
@@ -882,9 +939,9 @@ def build_sft_dataset(
                     },
                     "vesum_attestation": [
                         {
-                            "lemma": headword.casefold(),
+                            "lemma": v_lemma or headword.casefold(),
                             "vesum_forms_count": v_count,
-                            "is_standard_attested": (v_count > 0),
+                            "is_standard_attested": bool(v_count > 0),
                             "tags": ["historical_middle_ukrainian", chunk.stratum],
                         }
                     ],
@@ -911,13 +968,8 @@ def build_sft_dataset(
                 traj_id = f"traj.decolonize.{hashlib.sha256(f'mid_correct_{idx}_{chunk.chunk_id}_{bad_calque}'.encode()).hexdigest()[:16]}"
                 seen_traj_ids.add(traj_id)
 
-                calque_lemma = good_ukr.split()[0].casefold()
-                try:
-                    cur_ves.execute("SELECT count(*) FROM forms_all WHERE lemma = ?", (calque_lemma,))
-                    v_row = cur_ves.fetchone()
-                    v_calque_count = v_row[0] if v_row else 25
-                except Exception:
-                    v_calque_count = 25
+                calque_token = good_ukr.split()[0]
+                v_calque_lemma, v_calque_count = query_vesum_lemma_and_count(cur_ves, calque_token)
 
                 reasoning_correct = [
                     f"1. Вхідний аналіз: у староукраїнський фрагмент пам'ятки «{chunk.work_title}» доби {stratum_title} вкралося неприпустиме спотворення / радянсько-російська калька «{bad_calque}».",
@@ -947,9 +999,9 @@ def build_sft_dataset(
                     },
                     "vesum_attestation": [
                         {
-                            "lemma": calque_lemma,
+                            "lemma": v_calque_lemma or calque_token.casefold(),
                             "vesum_forms_count": v_calque_count,
-                            "is_standard_attested": True,
+                            "is_standard_attested": bool(v_calque_count > 0),
                             "tags": ["historical_correction", chunk.stratum, "decolonization"],
                         }
                     ],
@@ -974,6 +1026,12 @@ def build_sft_dataset(
 
     all_preserve = trajectories_preserve + replay_preserve
     all_correct = trajectories_correct + replay_correct
+
+    # Strict invariant: is_standard_attested must match (vesum_forms_count > 0)
+    for t in all_preserve + all_correct:
+        for att in t.get("vesum_attestation", []):
+            count = att.get("vesum_forms_count", 0)
+            att["is_standard_attested"] = bool(count > 0)
 
     assert len(all_preserve) == target_sft_quota // 2, f"Preserve count {len(all_preserve)} != {target_sft_quota // 2}"
     assert len(all_correct) == target_sft_quota // 2, f"Correct count {len(all_correct)} != {target_sft_quota // 2}"
@@ -1028,11 +1086,15 @@ def evaluate_middle_ukrainian_suite(
         hist_text = c["input_text"].split(" [Вставка:")[0].split(" (Вставка:")[0].strip()
         norm_hist = normalize_historical_snippet(hist_text)
         norm_pred = normalize_historical_snippet(pred)
+        norm_exp = normalize_historical_snippet(c.get("expected_output", ""))
 
         # Corrupted error MUST be removed, authentic replacement MUST be present, and base historical text preserved
         is_error_removed = bool(corrupted and corrupted not in pred.casefold())
         is_replacement_present = bool(repl and repl in pred.casefold())
-        is_hist_preserved = bool(norm_hist and (norm_hist in norm_pred or norm_pred in norm_hist))
+        is_hist_preserved = bool(
+            (norm_pred and norm_pred == norm_exp)
+            or (norm_hist and norm_hist in norm_pred and len(norm_pred) >= len(norm_hist))
+        )
 
         if is_error_removed and is_replacement_present and is_hist_preserved:
             mixed_ok += 1
@@ -1123,6 +1185,12 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=42,
         help="Random seed for reproducible partitioning",
+    )
+    parser.add_argument(
+        "--predictions",
+        type=Path,
+        default=None,
+        help="Optional path to model predictions jsonl file for evaluation",
     )
     parser.add_argument(
         "--git-commit",
@@ -1240,15 +1308,43 @@ def main() -> None:
     (sft_dir / "manifest.json.sha256").write_text(f"{manifest_sha}  manifest.json\n")
     print(f"Written {num_shards} SFT shards to: {sft_dir} (Manifest SHA-256: {manifest_sha})")
 
-    # 4. Evaluate metrics using reference predictions
-    reference_predictions = [{"eval_id": c["eval_id"], "predicted_output": c["expected_output"]} for c in eval_suite]
-    metrics = evaluate_middle_ukrainian_suite(eval_suite, reference_predictions)
-    print("\nEvaluation Benchmark Metrics:")
-    print(f"  Total Cases:               {metrics['total_cases']}")
-    print(f"  Preserve Cases:            {metrics['preserve_count']}")
-    print(f"  Mixed Error Cases:         {metrics['mixed_error_count']}")
-    print(f"  Accuracy:                  {metrics['accuracy'] * 100:.2f}%")
-    print(f"  Clopper-Pearson Lower 95%: {metrics['clopper_pearson_lower_95'] * 100:.2f}%")
+    # 4. Evaluate metrics
+    if args.predictions and args.predictions.is_file():
+        print(f"\nEvaluating benchmark with predictions from: {args.predictions}...")
+        predictions = []
+        with args.predictions.open("r", encoding="utf-8") as f:
+            for line in f:
+                if line.strip():
+                    predictions.append(json.loads(line))
+        metrics = evaluate_middle_ukrainian_suite(eval_suite, predictions)
+        eval_metrics: dict[str, Any] = {
+            "status": "measured",
+            "baseline_v02_frozen_accuracy": 0.992,
+            "v04b_eval_accuracy": metrics["accuracy"],
+            "confidence_interval_95": [metrics["clopper_pearson_lower_95"], 1.0],
+            "regression_against_v02_pct": max(0.0, round(0.992 - metrics["accuracy"], 4)),
+            "model_predictions_file": str(args.predictions),
+            "note": "Measured against held-out model predictions.",
+        }
+        print("Evaluation Benchmark Metrics:")
+        print(f"  Total Cases:               {metrics['total_cases']}")
+        print(f"  Preserve Cases:            {metrics['preserve_count']}")
+        print(f"  Mixed Error Cases:         {metrics['mixed_error_count']}")
+        print(f"  Accuracy:                  {metrics['accuracy'] * 100:.2f}%")
+        print(f"  Clopper-Pearson Lower 95%: {metrics['clopper_pearson_lower_95'] * 100:.2f}%")
+    else:
+        print(
+            "\nEvaluation metrics status: unmeasured (benchmark minted; held-out inference not yet executed on model weights)."
+        )
+        eval_metrics = {
+            "status": "unmeasured",
+            "baseline_v02_frozen_accuracy": 0.992,
+            "v04b_eval_accuracy": None,
+            "confidence_interval_95": None,
+            "regression_against_v02_pct": None,
+            "model_predictions_file": None,
+            "note": "Evaluation benchmark minted; held-out model inference has not yet been executed on uldr_v04b.",
+        }
 
     # Strata breakdown for eval
     eval_strata = Counter(c["historical_stratum"] for c in eval_suite)
@@ -1285,15 +1381,21 @@ def main() -> None:
             else str(eval_path),
             "sha256": eval_sha,
             "total_cases": len(eval_suite),
-            "preserve_cases": metrics["preserve_count"],
-            "mixed_error_cases": metrics["mixed_error_count"],
+            "preserve_cases": sum(1 for c in eval_suite if c["case_type"] == "PRESERVE"),
+            "mixed_error_cases": sum(1 for c in eval_suite if c["case_type"] == "CORRECT"),
             "strata_counts": {
                 "early_ruthenian_chancery": eval_strata.get(STRATA_EARLY_RUTHENIAN, 0),
                 "renaissance_polemical": eval_strata.get(STRATA_RENAISSANCE_POLEMICAL, 0),
                 "high_cossack_baroque": eval_strata.get(STRATA_HIGH_COSSACK_BAROQUE, 0),
                 "transitional_pre_modern": eval_strata.get(STRATA_TRANSITIONAL_PRE_MODERN, 0),
             },
-            "held_out_works": sorted([*HELD_OUT_EVAL_WORKS, "hramoty_xiv_st_c0000_c0040"]),
+            "held_out_works": [
+                "chernihivskyy_litopys",
+                "druhyy_volynskyy_statut_vkl_1566_roku_c0000_c0040",
+                "hramoty_xiv_st_c0040_c0090",
+                "ivan_velychkovskyy_tvory",
+                "symonovskyy_korotkyy_opys_pro_kozatskyy_malorosiyskyy_narod",
+            ],
         },
         "sft_training_dataset": {
             "directory_path": str(sft_dir.resolve().relative_to(REPO_ROOT.resolve()))
@@ -1320,12 +1422,7 @@ def main() -> None:
             "anti_copying_invariant_verified": True,
             "precommit_file_ceiling_satisfied": True,
         },
-        "evaluation_metrics": {
-            "baseline_v02_frozen_accuracy": 0.992,
-            "v04b_eval_accuracy": metrics["accuracy"],
-            "confidence_interval_95": [metrics["clopper_pearson_lower_95"], 1.0],
-            "regression_against_v02_pct": 0.0,
-        },
+        "evaluation_metrics": eval_metrics,
     }
 
     if RECEIPT_SCHEMA_FILE.is_file():

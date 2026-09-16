@@ -2,42 +2,40 @@
   "schema_version": "v1_middle_ukrainian_release_receipt",
   "issue": 8105,
   "parent_epic": 6321,
-  "created_at": "2026-09-16T21:54:46.222534+00:00",
-  "git_commit": "52dcf26c6a446e4150fa29439071f11e996d5289",
+  "created_at": "2026-09-16T22:15:21.843493+00:00",
+  "git_commit": "b964fe04e3ae3cbd808cde1919446bb5f5f1b2d5",
   "evaluation_benchmark": {
     "file_path": "data/projects/open_model_data/release/uldr_v04b_middle_ukrainian/middle_ukrainian_eval.jsonl",
-    "sha256": "e9d4ea7694a43dcf1d8ca7d8c43cece747b35960b47b7103be175baaa8966839",
+    "sha256": "1ac3b39e21f96c03c30791e79d8ab5007e7fb075e6653832b0353dddf5d45fb6",
     "total_cases": 500,
     "preserve_cases": 250,
     "mixed_error_cases": 250,
     "strata_counts": {
-      "early_ruthenian_chancery": 198,
-      "renaissance_polemical": 84,
-      "high_cossack_baroque": 68,
-      "transitional_pre_modern": 150
+      "early_ruthenian_chancery": 38,
+      "renaissance_polemical": 199,
+      "high_cossack_baroque": 122,
+      "transitional_pre_modern": 141
     },
     "held_out_works": [
       "chernihivskyy_litopys",
-      "chernihivskyy_litopys_1587_1750",
-      "hramoty_xiv_st_c0000_c0040",
+      "druhyy_volynskyy_statut_vkl_1566_roku_c0000_c0040",
+      "hramoty_xiv_st_c0040_c0090",
       "ivan_velychkovskyy_tvory",
-      "smotrytskyy_hramatiky_slovenskiya_1619",
-      "symonovskyy_korotkyy_opys_pro_kozatskyy_malorosiyskyy_narod",
-      "zyzaniy_leksys_1596"
+      "symonovskyy_korotkyy_opys_pro_kozatskyy_malorosiyskyy_narod"
     ]
   },
   "sft_training_dataset": {
     "directory_path": "data/projects/open_model_data/release/uldr_v04b_middle_ukrainian/sft",
     "manifest_file": "manifest.json",
-    "manifest_sha256": "2d9322eacd97e49d4c83a980e5f84a3ccddfbcb6b149e5c04f6bc1e3d7d7cbe5",
+    "manifest_sha256": "1dd36d2d12e1bad2ad05800d7a0c03697df201798370b546629ade1d67b5a000",
     "shards_count": 30,
     "total_trajectories": 10000,
-    "max_shard_size_kb": 1318.31,
+    "max_shard_size_kb": 1316.18,
     "strata_trajectories": {
-      "early_ruthenian_chancery": 51,
-      "renaissance_polemical": 1096,
-      "high_cossack_baroque": 6681,
-      "transitional_pre_modern": 1972,
+      "early_ruthenian_chancery": 73,
+      "renaissance_polemical": 890,
+      "high_cossack_baroque": 5865,
+      "transitional_pre_modern": 2972,
       "modern_literary_replay": 200
     },
     "replay_buffer_size": 200
@@ -50,12 +48,12 @@
     "precommit_file_ceiling_satisfied": true
   },
   "evaluation_metrics": {
+    "status": "unmeasured",
     "baseline_v02_frozen_accuracy": 0.992,
-    "v04b_eval_accuracy": 1.0,
-    "confidence_interval_95": [
-      0.9926,
-      1.0
-    ],
-    "regression_against_v02_pct": 0.0
+    "v04b_eval_accuracy": null,
+    "confidence_interval_95": null,
+    "regression_against_v02_pct": null,
+    "model_predictions_file": null,
+    "note": "Evaluation benchmark minted; held-out model inference has not yet been executed on uldr_v04b."
   }
 }

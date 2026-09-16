@@ -6,6 +6,7 @@ Issue: #8105
 
 import ast
 import json
+import re
 from pathlib import Path
 
 import jsonschema
@@ -96,7 +97,8 @@ def test_document_partitioning_disjointness() -> None:
     assert "symonovskyy_korotkyy_opys_pro_kozatskyy_malorosiyskyy_narod" in HELD_OUT_EVAL_WORKS
     assert "ivan_velychkovskyy_tvory" in HELD_OUT_EVAL_WORKS
     assert "chernihivskyy_litopys" in HELD_OUT_EVAL_WORKS
-    assert "zyzaniy_leksys_1596" in HELD_OUT_EVAL_WORKS
+    assert "zyzaniy_leksys_1596" in EXCLUDED_MODERN_WORKS
+    assert "smotrytskyy_hramatiky_slovenskiya_1619" in EXCLUDED_MODERN_WORKS
 
     for w in HELD_OUT_EVAL_WORKS:
         assert w not in EXCLUDED_MODERN_WORKS
@@ -192,7 +194,7 @@ def test_zero_train_eval_leakage_firewall(tmp_path: Path) -> None:
         author="Симоновський П.",
         year=1765,
         genre="prose",
-        text="Секретне речення для перевірки нульового витоку інформації у тренувальний набір. Друге контрольне речення для перевірки збереження лінгвістичних ознак.",
+        text="Секретне речення для перевірки нульового витоку інформації у тренувальний набір панованє. Друге контрольне речення для перевірки збереження лінгвістичних ознак вольности.",
         char_count=300,
         stratum=STRATA_TRANSITIONAL_PRE_MODERN,
         composition_date="1765",
@@ -207,7 +209,7 @@ def test_zero_train_eval_leakage_firewall(tmp_path: Path) -> None:
         author="Ханенко М.",
         year=1754,
         genre="diary",
-        text="Абсолютно незалежний текст щоденника для тренування моделі без витоку даних. Друга частина щоденникових записів про перебіг козацьких справ.",
+        text="Абсолютно незалежний текст щоденника для тренування моделі без витоку даних албо листъ. Друга частина щоденникових записів про перебіг справ гетман.",
         char_count=300,
         stratum=STRATA_HIGH_COSSACK_BAROQUE,
         composition_date="1754",
@@ -340,6 +342,26 @@ def test_evaluator_strictness_and_rejection() -> None:
     )
     assert res["mixed_error_correction_rate"] == 0.0
 
+    # 5b. Adversarial: reject truncated historical text with inserted error correction (Finding 1)
+    res = evaluate_middle_ukrainian_suite(
+        eval_suite,
+        [
+            {
+                "eval_id": "eval_001",
+                "predicted_output": "Се я, князь великий, далъ есмо сесь нашъ листъ земяномъ киевскимъ.",
+            },
+            {
+                "eval_id": "eval_002",
+                "predicted_output": eval_suite[1]["input_text"][0]
+                + " [Вставка: "
+                + eval_suite[1]["expected_replacement"]
+                + "]",
+            },
+        ],
+    )
+    assert res["mixed_error_correction_rate"] == 0.0
+    assert res["accuracy"] == 0.5
+
     # 6. Valid predictions score 100%
     res = evaluate_middle_ukrainian_suite(
         eval_suite,
@@ -367,8 +389,8 @@ def test_sft_dataset_balance_and_interleaving() -> None:
             author="Ханенко М.",
             year=1754,
             genre="diary",
-            text=f"Абсолютно автентичний текст розділу {i} про козацькі справи та звичаї полку. "
-            f"Друге вагоме речення з історичними деталями про військо Запорозьке номер {i}.",
+            text=f"Абсолютно автентичний текст розділу {i} про панованє та звичаї полку албо листъ. "
+            f"Друге вагоме речення з історичними деталями про вольности номер {i} гетман.",
             char_count=350,
             stratum=STRATA_HIGH_COSSACK_BAROQUE,
             composition_date="1754",
@@ -477,3 +499,105 @@ def test_release_dataset_disk_invariants() -> None:
     assert sft_rows_count == 10000
     assert sft_preserve == 5000
     assert sft_correct == 5000
+
+
+def test_no_editorial_apparatus_in_released_artifacts() -> None:
+    """Verify no editorial commentaries, modern studies, or academic prefaces exist in released files."""
+    release_dir = REPO_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v04b_middle_ukrainian"
+    eval_file = release_dir / "middle_ukrainian_eval.jsonl"
+    sft_dir = release_dir / "sft"
+
+    if not eval_file.is_file():
+        pytest.skip("Release artifacts not yet generated on disk")
+
+    forbidden_snippets = [
+        "упорядник",
+        "радянськ",
+        "дослідник",
+        "дисертаці",
+        "монографі",
+        "ЦДІА",
+        "німчук",
+        "пещак",
+        "боплан",
+        "срезневськ",
+    ]
+
+    with eval_file.open("r", encoding="utf-8") as f:
+        for i, line in enumerate(f):
+            row = json.loads(line)
+            inp = row.get("input_text", "")
+            exp = row.get("expected_output", "")
+            for snip in forbidden_snippets:
+                assert snip not in inp.casefold(), f"Editorial snippet '{snip}' found in eval row {i}: {inp}"
+                assert snip not in exp.casefold(), f"Editorial snippet '{snip}' found in eval row {i}: {exp}"
+
+    for shard in sft_dir.glob("sft_shard_*.jsonl"):
+        with shard.open("r", encoding="utf-8") as f:
+            for i, line in enumerate(f):
+                row = json.loads(line)
+                q = row.get("query", "")
+                m = re.search(r"«(.*?)»", q)
+                hist = m.group(1) if m else q
+                for snip in forbidden_snippets:
+                    assert snip not in hist.casefold(), (
+                        f"Editorial snippet '{snip}' found in {shard.name} row {i}: {hist}"
+                    )
+
+
+def test_vesum_attestation_consistency_in_released_artifacts() -> None:
+    """Verify that is_standard_attested strictly equals (vesum_forms_count > 0) across all SFT rows."""
+    release_dir = REPO_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v04b_middle_ukrainian"
+    sft_dir = release_dir / "sft"
+
+    if not sft_dir.is_dir():
+        pytest.skip("Release artifacts not yet generated on disk")
+
+    for shard in sft_dir.glob("sft_shard_*.jsonl"):
+        with shard.open("r", encoding="utf-8") as f:
+            for i, line in enumerate(f):
+                row = json.loads(line)
+                attestations = row.get("vesum_attestation", [])
+                assert len(attestations) > 0, f"Missing attestations in {shard.name} row {i}"
+                for att in attestations:
+                    count = att.get("vesum_forms_count", 0)
+                    is_attested = att.get("is_standard_attested")
+                    assert is_attested == (count > 0), (
+                        f"Inconsistent attestation in {shard.name} row {i}: is_standard_attested={is_attested}, count={count}"
+                    )
+
+
+def test_release_receipt_schema_validation() -> None:
+    """Verify that release_receipt.json strictly validates against the receipt schema contract."""
+    receipt_file = (
+        REPO_ROOT
+        / "data"
+        / "projects"
+        / "open_model_data"
+        / "release"
+        / "uldr_v04b_middle_ukrainian"
+        / "release_receipt.json"
+    )
+    schema_file = (
+        REPO_ROOT
+        / "data"
+        / "projects"
+        / "open_model_data"
+        / "contracts"
+        / "v1_middle_ukrainian_release_receipt.schema.json"
+    )
+
+    if not receipt_file.is_file():
+        pytest.skip("Release receipt not yet generated on disk")
+
+    schema = json.loads(schema_file.read_text(encoding="utf-8"))
+    receipt = json.loads(receipt_file.read_text(encoding="utf-8"))
+
+    validator = jsonschema.Draft202012Validator(schema)
+    validator.validate(receipt)
+
+    assert receipt["evaluation_metrics"]["status"] in ("measured", "unmeasured")
+    if receipt["evaluation_metrics"]["status"] == "unmeasured":
+        assert receipt["evaluation_metrics"]["v04b_eval_accuracy"] is None
+        assert receipt["evaluation_metrics"]["confidence_interval_95"] is None
+        assert receipt["evaluation_metrics"]["regression_against_v02_pct"] is None

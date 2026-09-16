@@ -197,20 +197,25 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "status",
         "baseline_v02_frozen_accuracy",
         "v04b_eval_accuracy",
         "confidence_interval_95",
         "regression_against_v02_pct"
       ],
       "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["measured", "unmeasured"]
+        },
         "baseline_v02_frozen_accuracy": {
           "type": "number"
         },
         "v04b_eval_accuracy": {
-          "type": "number"
+          "type": ["number", "null"]
         },
         "confidence_interval_95": {
-          "type": "array",
+          "type": ["array", "null"],
           "items": {
             "type": "number"
           },
@@ -218,8 +223,14 @@
           "maxItems": 2
         },
         "regression_against_v02_pct": {
-          "type": "number",
+          "type": ["number", "null"],
           "maximum": 0.5
+        },
+        "model_predictions_file": {
+          "type": ["string", "null"]
+        },
+        "note": {
+          "type": "string"
         }
       }
     }
