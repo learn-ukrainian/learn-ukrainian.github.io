@@ -1,0 +1,310 @@
+inline:
+- id: act-401
+  type: order
+  title: "Каноні́чний поря́док лі́тер абе́тки — Canonical alphabet order"
+  instruction: "Розташу́йте сегме́нти украї́нської абе́тки у пра́вильному поря́дку від А до Я."
+  items:
+  - "А, Б, В, Г, Ґ, Д, Е, Є"
+  - "Ж, З, И, І, Ї, Й"
+  - "К, Л, М, Н, О, П"
+  - "Р, С, Т, У, Ф, Х"
+  - "Ц, Ч, Ш, Щ"
+  - "Ь, Ю, Я"
+  correct_order:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+
+- id: act-402
+  type: quiz
+  title: "Фундамента́льні зако́ни абе́тки — Fundamental alphabet laws"
+  instruction: "Обері́ть прави́льну ві́дповідь про бу́кви, лі́тери та зву́ки."
+  items:
+  - prompt: "Скі́льки букв (лі́тер) налі́чує украї́нська абе́тка?"
+    options:
+    - text: "33 бу́кви"
+      correct: true
+    - text: "32 бу́кви"
+      correct: false
+    - text: "38 букв"
+      correct: false
+    explanation: "Украї́нська абе́тка склада́ється з 33 лі́тер."
+  - prompt: "Скі́льки осно́вних зву́ків в украї́нській мо́ві?"
+    options:
+    - text: "38 зву́ків (6 голосни́х і 32 при́голосних)"
+      correct: true
+    - text: "33 зву́ки"
+      correct: false
+    - text: "26 зву́ків"
+      correct: false
+    explanation: "В украї́нській фоноло́гії 6 голосни́х і 32 при́голосних зву́ки."
+  - prompt: "Скі́льки голосни́х зву́ків ма́є украї́нська мо́ва?"
+    options:
+    - text: "6 зву́ків ([а], [о], [у], [е], [и], [і])"
+      correct: true
+    - text: "10 зву́ків"
+      correct: false
+    - text: "5 зву́ків"
+      correct: false
+    explanation: "В украї́нській мо́ві 6 чи́стих голосни́х зву́ків."
+  - prompt: "Скі́льки лі́тер познача́ють голосні́ зву́ки?"
+    options:
+    - text: "10 лі́тер (а, о, у, е, и, і, я, ю, є, ї)"
+      correct: true
+    - text: "6 лі́тер"
+      correct: false
+    - text: "8 лі́тер"
+      correct: false
+    explanation: "Де́сять лі́тер передаю́ть 6 голосни́х зву́ків."
+  - prompt: "Яка́ лі́тера ЗА́ВЖДИ познача́є 2 зву́ки [шч]?"
+    options:
+    - text: "Щ"
+      correct: true
+    - text: "Ч"
+      correct: false
+    - text: "Ш"
+      correct: false
+    explanation: "Лі́тера Щ за́вжди передає́ звукосполу́ку [шч]."
+  - prompt: "Яка́ лі́тера ма́є 0 зву́ків і лише́ пом'я́кшує попере́дній при́голосний?"
+    options:
+    - text: "Ь (знак м'я́кшення)"
+      correct: true
+    - text: "Й"
+      correct: false
+    - text: "Ї"
+      correct: false
+    explanation: "М'яки́й знак Ь не ма́є вла́сного зву́ка."
+
+- id: act-403
+  type: true-false
+  title: "Переві́рка те́ксту «Наш день у Ки́єві» — Reading comprehension check"
+  instruction: "Обері́ть пра́вда чи непра́вда за змі́стом прочи́таного те́ксту."
+  items:
+  - statement: "Ки́їв — це прекра́сна столи́ця Украї́ни на бере́зі Дніпра́."
+    correct: true
+    explanation: "У те́ксті зазна́чено, що Київ — столи́ця Украї́ни на Дніпрі́."
+  - statement: "Марко́ і Марі́я поба́чили нову́ ста́нцію метро́."
+    correct: true
+    explanation: "Марко зверну́в ува́гу Марі́ї на нову́ ста́нцію метро́."
+  - statement: "У собо́рі звуча́в вели́кий старови́нний орга́н."
+    correct: true
+    explanation: "У те́ксті зазна́чено, що в собо́рі гра́є старови́нний орга́н."
+  - statement: "Сло́во «за́мок» у те́ксті означа́ло залі́зний при́стрій на две́рях."
+    correct: false
+    explanation: "У те́ксті «за́мок» — це форте́ця на горі́ (castle)."
+  - statement: "Сло́ва «бу́ква» та «лі́тера» ма́ють цілкови́то рі́зні зна́чення."
+    correct: false
+    explanation: "«Бу́ква» та «лі́тера» є по́вними взаємозамі́нними сино́німами."
+  - statement: "В украї́нській мо́ві ненаголо́шений звук [о] звучи́ть чи́сто без а́кання."
+    correct: true
+    explanation: "Чистота́ ненаголо́шеного [о] — золоте́ пра́вило украї́нської вимо́ви."
+
+- id: act-404
+  type: order
+  title: "Відтво́рення ре́плік діало́гу — Reconstructing the dialogue"
+  instruction: "Розташу́йте ре́пліки підсумко́вого діало́гу у прави́льній послідо́вності."
+  items:
+  - "— До́брий день! Приві́т! ↘↘"
+  - "— До́брий день! ↘ Як спра́ви? ↘"
+  - "— Дя́кую, чудо́во! ↘↘ Мене́ зва́ти Тара́с. А як вас зва́ти? ↘"
+  - "— Мене́ зва́ти Марі́я. Ду́же приє́мно! ↘"
+  - "— Мені́ теж ду́же приє́мно! ↘ Підкажі́ть, будь ла́ска, де найбли́жче метро́? ↘"
+  - "— О́нде ста́нція метро́, а по́руч нова́ апте́ка. ↘"
+  correct_order:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+
+workbook:
+- id: act-w4
+  type: match-up
+  title: "Друк і зо́шит — Print and notebook recognition"
+  instruction: "З'єдна́й друко́ване сло́во з підка́зкою в зо́шиті."
+  pairs:
+  - left: "друк: ка́ва"
+    right: "зо́шит: на́голос на пе́ршому скла́ді"
+  - left: "друк: вода́"
+    right: "зо́шит: на́голос на оста́нньому скла́ді"
+  - left: "друк: молоко́"
+    right: "зо́шит: три чи́сті зву́ки о"
+  - left: "друк: метро́"
+    right: "зо́шит: оста́нній наголо́шений голосни́й"
+  - left: "друк: за́мок"
+    right: "зо́шит: на́голос на пе́ршому скла́ді (castle)"
+  - left: "друк: замо́к"
+    right: "зо́шит: на́голос на оста́нньому скла́ді (lock)"
+
+- id: act-w5
+  type: true-false
+  title: "Фа́кти про на́голос і мело́дику — Facts on stress and melody"
+  instruction: "Обери́ пра́вда чи непра́вда."
+  items:
+  - statement: "Украї́нський на́голос мо́же бу́ти на рі́зних склада́х."
+    correct: true
+    explanation: "На́голос ві́льний, тому́ вчи йо́го ра́зом із ко́жним сло́вом."
+  - statement: "Звича́йні украї́нські те́ксти за́вжди ма́ють по́значки на́голосу."
+    correct: false
+    explanation: "По́значки на́голосу є в навча́льних матеріа́лах і словника́х, а не в бі́льшості звича́йних те́кстів."
+  - statement: "Так/ні пита́ння Це вода́? ма́є висхідну́ мело́дику на A1."
+    correct: true
+    explanation: "Так/ні пита́ння ма́є висхідну́ мело́дику."
+  - statement: "Пита́ння з де за́вжди потребу́є висхідно́ї мело́дики на A1."
+    correct: false
+    explanation: "Пита́ння з пита́льним сло́вом як де ма́є спадну́ мело́дику."
+  - statement: "В украї́нській мо́ві 33 лі́тери передаю́ть 38 зву́ків."
+    correct: true
+    explanation: "Шість голосни́х та 32 при́голосні зву́ки передаю́ться 33 лі́терами абе́тки."
+  - statement: "Лі́тери Щ та Ї за́вжди передаю́ть по два зву́ки."
+    correct: true
+    explanation: "Щ — це за́вжди [шч], а Ї — це за́вжди [йі]."
+
+- id: act-w6
+  type: translate
+  title: "Слова́ з на́голосом — Stressed vocabulary"
+  instruction: "Споча́тку прочита́й украї́нське сло́во, по́тім обери́ англі́йську підка́зку."
+  items:
+  - source: "на́голос"
+    options:
+    - text: "stress / accent"
+      correct: true
+    - text: "lock"
+      correct: false
+    - text: "water"
+      correct: false
+    explanation: "На́голос — stress / accent."
+  - source: "ка́ва"
+    options:
+    - text: "coffee"
+      correct: true
+    - text: "capital"
+      correct: false
+    - text: "morning"
+      correct: false
+    explanation: "Ка́ва — coffee."
+  - source: "вода́"
+    options:
+    - text: "water"
+      correct: true
+    - text: "photograph"
+      correct: false
+    - text: "atlas"
+      correct: false
+    explanation: "Вода́ — water."
+  - source: "столи́ця"
+    options:
+    - text: "capital"
+      correct: true
+    - text: "metro"
+      correct: false
+    - text: "family"
+      correct: false
+    explanation: "Столи́ця — capital."
+  - source: "абе́тка"
+    options:
+    - text: "alphabet"
+      correct: true
+    - text: "dictionary"
+      correct: false
+    - text: "syllable"
+      correct: false
+    explanation: "Абе́тка — alphabet."
+  - source: "діало́г"
+    options:
+    - text: "dialogue"
+      correct: true
+    - text: "monologue"
+      correct: false
+    - text: "sentence"
+      correct: false
+    explanation: "Діало́г — dialogue."
+
+- id: act-w404
+  type: match-up
+  title: "З'єдна́йте етике́тні ви́рази — Match etiquette expressions"
+  instruction: "З'єдна́йте поча́ток і заве́ршення украї́нських мовленнє́вих фо́рмул."
+  pairs:
+  - left: "До́брого"
+    right: "ра́нку! (Good morning!)"
+  - left: "До́брий"
+    right: "день! (Good day!)"
+  - left: "Як"
+    right: "спра́ви? (How are you?)"
+  - left: "Будь"
+    right: "ла́ска! (Please / You are welcome!)"
+  - left: "Щи́ро"
+    right: "дя́кую! (Thank you sincerely!)"
+  - left: "До"
+    right: "поба́чення! (Goodbye!)"
+
+- id: act-w405
+  type: group-sort
+  title: "Звукова́ ва́ртість бу́кв — Sound values of letters"
+  instruction: "Розподілі́ть бу́кви за кі́лькістю зву́ків, які́ вони́ познача́ють."
+  groups:
+  - label: "Оди́н звук (голосни́й або́ при́голосний)"
+    items:
+    - "А"
+    - "Д"
+    - "О"
+  - label: "За́вжди два зву́ки"
+    items:
+    - "Ї ([йі])"
+    - "Щ ([шч])"
+  - label: "Нуль зву́ків (знак пом'я́кшення або́ розділо́вий знак)"
+    items:
+    - "Ь (знак м'я́кшення)"
+    - "Апо́строф (')"
+
+- id: act-w406
+  type: error-correction
+  title: "Ви́правлення помило́к у чита́нні — Correcting reading errors"
+  instruction: "Знайді́ть і ви́правте поми́лку в ко́жному ре́ченні."
+  items:
+  - sentence: "Украї́нська абе́тка ма́є три́дцять чоти́ри лі́тери."
+    error: "чоти́ри"
+    answer: "три"
+    options:
+    - "три"
+    - "чоти́ри"
+    explanation: "В украї́нській абе́тці рі́вно 33 лі́тери."
+  - sentence: "В украї́нській мо́ві є сім голосни́х зву́ків."
+    error: "сім"
+    answer: "шість"
+    options:
+    - "шість"
+    - "сім"
+    explanation: "В украї́нській мо́ві рі́вно шість голосни́х зву́ків."
+  - sentence: "Лі́тера Ї за́вжди передає́ три зву́ки."
+    error: "три"
+    answer: "два"
+    options:
+    - "два"
+    - "три"
+    explanation: "Лі́тера Ї за́вжди познача́є два зву́ки: [йі]."
+  - sentence: "Знак м'я́кшення Ь познача́є тве́рдість при́голосного."
+    error: "тве́рдість"
+    answer: "м'я́кість"
+    options:
+    - "м'я́кість"
+    - "тве́рдість"
+    explanation: "Знак м'я́кшення Ь познача́є м'я́кість при́голосного і не ма́є вла́сного зву́ка."
+  - sentence: "Ма́рія прийшла́ на уро́к вча́сно."
+    error: "Ма́рія"
+    answer: "Марі́я"
+    options:
+    - "Марі́я"
+    - "Ма́рія"
+    explanation: "Пра́вильний на́голос в і́мені: «Марі́я»."
+  - sentence: "Це мій но́вий підру́чник."
+    error: "но́вий"
+    answer: "нови́й"
+    options:
+    - "нови́й"
+    - "но́вий"
+    explanation: "Пра́вильний на́голос прикме́тника: «нови́й»."

@@ -1,0 +1,60 @@
+- lemma: абе́тка
+  translation: Ukrainian alphabet
+  pos: noun
+  usage: Украї́нська абе́тка налі́чує 33 лі́тери.
+- lemma: алфавіт
+  translation: alphabet (synonym of абе́тка)
+  pos: noun
+  usage: По́вний алфа́ві́т ви́вчено від А до Я.
+- lemma: звук
+  translation: sound
+  pos: noun
+  usage: Ко́жен звук ма́є своє́ прави́льне звуча́ння.
+- lemma: приголосний
+  translation: consonant
+  pos: adjective / noun
+  usage: Тверди́й при́голосний звук звучи́ть ви́разно.
+- lemma: чита́ння
+  translation: reading
+  pos: noun
+  usage: Швидке́ чита́ння вго́лос допомага́є ви́мові.
+- lemma: розмо́ва
+  translation: conversation / talk
+  pos: noun
+  usage: Дру́жня розмо́ва розпочина́ється з віта́ння.
+- lemma: знайомство
+  translation: acquaintance / meeting / introduction
+  pos: noun
+  usage: Наше знайо́мство було́ ду́же приє́мним.
+- lemma: приємно
+  translation: pleasantly / pleased
+  pos: adverb
+  usage: Ду́же приє́мно з ва́ми познайо́митися!
+- lemma: ласка
+  translation: favor / kindness
+  pos: noun
+  usage: Будь ла́ска, скажі́ть, котра́ годи́на.
+- lemma: щиро
+  translation: sincerely / genuinely
+  pos: adverb
+  usage: Щи́ро дя́кую за ва́шу щи́рість!
+- lemma: підсу́мок
+  translation: summary / conclusion
+  pos: noun
+  usage: Підсу́мок мо́дуля свідчить про чудо́вий у́спіх.
+- lemma: діало́г
+  translation: dialogue
+  pos: noun
+  usage: Живи́й розмо́вний діало́г звучи́ть мелоді́йно.
+- lemma: українська
+  translation: Ukrainian
+  pos: adjective
+  usage: Украї́нська мо́ва бага́та та милозву́чна.
+- lemma: відпочинок
+  translation: rest / recreation
+  pos: noun
+  usage: Гарний відпочи́нок потрі́бен пі́сля пра́ці.
+- lemma: добре
+  translation: well / fine / all right
+  pos: adverb
+  usage: У на́шому до́мі все до́бре.
