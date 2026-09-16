@@ -2,19 +2,19 @@
   "schema_version": "v1_middle_ukrainian_release_receipt",
   "issue": 8105,
   "parent_epic": 6321,
-  "created_at": "2026-09-16T21:22:08.260803+00:00",
-  "git_commit": "df05fc8073b43b2c99d0cdc9ab737b53a0aa55ed",
+  "created_at": "2026-09-16T21:54:46.222534+00:00",
+  "git_commit": "52dcf26c6a446e4150fa29439071f11e996d5289",
   "evaluation_benchmark": {
     "file_path": "data/projects/open_model_data/release/uldr_v04b_middle_ukrainian/middle_ukrainian_eval.jsonl",
-    "sha256": "cc038ff42fe44c7b225974691ce844a6a67139c1551d6fb2ae75ff84b55ddff8",
+    "sha256": "e9d4ea7694a43dcf1d8ca7d8c43cece747b35960b47b7103be175baaa8966839",
     "total_cases": 500,
     "preserve_cases": 250,
     "mixed_error_cases": 250,
     "strata_counts": {
-      "early_ruthenian_chancery": 10,
-      "renaissance_polemical": 137,
-      "high_cossack_baroque": 167,
-      "transitional_pre_modern": 186
+      "early_ruthenian_chancery": 198,
+      "renaissance_polemical": 84,
+      "high_cossack_baroque": 68,
+      "transitional_pre_modern": 150
     },
     "held_out_works": [
       "chernihivskyy_litopys",
@@ -29,15 +29,15 @@
   "sft_training_dataset": {
     "directory_path": "data/projects/open_model_data/release/uldr_v04b_middle_ukrainian/sft",
     "manifest_file": "manifest.json",
-    "manifest_sha256": "f93aa66771f7e528c1d804c69df6b4d8dbe3906d2b9bd94af393ebc843bf62fb",
+    "manifest_sha256": "2d9322eacd97e49d4c83a980e5f84a3ccddfbcb6b149e5c04f6bc1e3d7d7cbe5",
     "shards_count": 30,
     "total_trajectories": 10000,
-    "max_shard_size_kb": 1320.45,
+    "max_shard_size_kb": 1318.31,
     "strata_trajectories": {
-      "early_ruthenian_chancery": 165,
-      "renaissance_polemical": 733,
-      "high_cossack_baroque": 6955,
-      "transitional_pre_modern": 1947,
+      "early_ruthenian_chancery": 51,
+      "renaissance_polemical": 1096,
+      "high_cossack_baroque": 6681,
+      "transitional_pre_modern": 1972,
       "modern_literary_replay": 200
     },
     "replay_buffer_size": 200

@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 
 import jsonschema
+import pytest
 
 from scripts.projects.open_model_data.v5_mine_middle_ukrainian import (
     DEFAULT_VESUM_DB,
@@ -24,8 +25,10 @@ from scripts.projects.open_model_data.v5_mine_middle_ukrainian import (
     build_sft_dataset,
     classify_stratum,
     clean_text_diplomatic,
+    evaluate_middle_ukrainian_suite,
     exact_clopper_pearson_lower,
     is_editorial_preface,
+    load_replay_buffer,
     normalize_historical_snippet,
 )
 
@@ -256,3 +259,221 @@ def test_subprocess_timeout_guard_in_script() -> None:
             if func_name in ("check_output", "run", "Popen", "check_call"):
                 has_timeout = any(kw.arg == "timeout" for kw in node.keywords)
                 assert has_timeout, f"Subprocess call {func_name} at line {node.lineno} missing timeout="
+
+
+def test_evaluator_strictness_and_rejection() -> None:
+    """Verify that evaluate_middle_ukrainian_suite rejects dummy/uncorrected/incomplete predictions."""
+    eval_suite = [
+        {
+            "eval_id": "eval_001",
+            "case_type": "PRESERVE",
+            "input_text": "Се я, князь великий, далъ есмо сесь нашъ листъ земяномъ киевскимъ.",
+            "expected_output": "Се я, князь великий, далъ есмо сесь нашъ листъ земяномъ киевскимъ.",
+            "has_injected_error": False,
+        },
+        {
+            "eval_id": "eval_002",
+            "case_type": "CORRECT",
+            "input_text": "Се я, князь великий. [Вставка: приймати участь]",
+            "expected_output": "Се я, князь великий. брати участь",
+            "target_term": "приймати участь",
+            "injected_error": "приймати участь",
+            "expected_replacement": "брати участь",
+            "has_injected_error": True,
+        },
+    ]
+
+    # 1. Reject predictions=None
+    with pytest.raises(ValueError, match="predictions must be provided"):
+        evaluate_middle_ukrainian_suite(eval_suite, None)
+
+    # 2. Reject dummy [PRESERVE] prediction
+    res = evaluate_middle_ukrainian_suite(
+        eval_suite,
+        [
+            {"eval_id": "eval_001", "predicted_output": "[PRESERVE]"},
+            {"eval_id": "eval_002", "predicted_output": "Се я, князь великий. брати участь"},
+        ],
+    )
+    assert res["preservation_rate"] == 0.0
+    assert res["mixed_error_correction_rate"] == 1.0
+    assert res["accuracy"] == 0.5
+
+    # 3. Reject uncorrected error in mixed case
+    res = evaluate_middle_ukrainian_suite(
+        eval_suite,
+        [
+            {
+                "eval_id": "eval_001",
+                "predicted_output": "Се я, князь великий, далъ есмо сесь нашъ листъ земяномъ киевскимъ.",
+            },
+            {"eval_id": "eval_002", "predicted_output": "Се я, князь великий. приймати участь"},
+        ],
+    )
+    assert res["preservation_rate"] == 1.0
+    assert res["mixed_error_correction_rate"] == 0.0
+    assert res["accuracy"] == 0.5
+
+    # 4. Reject missing replacement in mixed case
+    res = evaluate_middle_ukrainian_suite(
+        eval_suite,
+        [
+            {
+                "eval_id": "eval_001",
+                "predicted_output": "Се я, князь великий, далъ есмо сесь нашъ листъ земяномъ киевскимъ.",
+            },
+            {"eval_id": "eval_002", "predicted_output": "Се я, князь великий."},
+        ],
+    )
+    assert res["mixed_error_correction_rate"] == 0.0
+
+    # 5. Reject dropped historical text in mixed case
+    res = evaluate_middle_ukrainian_suite(
+        eval_suite,
+        [
+            {
+                "eval_id": "eval_001",
+                "predicted_output": "Се я, князь великий, далъ есмо сесь нашъ листъ земяномъ киевскимъ.",
+            },
+            {"eval_id": "eval_002", "predicted_output": "брати участь"},
+        ],
+    )
+    assert res["mixed_error_correction_rate"] == 0.0
+
+    # 6. Valid predictions score 100%
+    res = evaluate_middle_ukrainian_suite(
+        eval_suite,
+        [
+            {
+                "eval_id": "eval_001",
+                "predicted_output": "Се я, князь великий, далъ есмо сесь нашъ листъ земяномъ киевскимъ.",
+            },
+            {"eval_id": "eval_002", "predicted_output": "Се я, князь великий. брати участь"},
+        ],
+    )
+    assert res["accuracy"] == 1.0
+    assert res["preservation_rate"] == 1.0
+    assert res["mixed_error_correction_rate"] == 1.0
+
+
+def test_sft_dataset_balance_and_interleaving() -> None:
+    """Verify that build_sft_dataset generates a strict 50/50 balance of PRESERVE/CORRECT rows."""
+    mock_chunks = [
+        MiddleUkrainianChunk(
+            id=i + 1,
+            chunk_id=f"train_chunk_{i:04d}",
+            work_id="shchodennyk_mykoly_khanenka_1719_1754",
+            work_title="Щоденник Ханенка",
+            author="Ханенко М.",
+            year=1754,
+            genre="diary",
+            text=f"Абсолютно автентичний текст розділу {i} про козацькі справи та звичаї полку. "
+            f"Друге вагоме речення з історичними деталями про військо Запорозьке номер {i}.",
+            char_count=350,
+            stratum=STRATA_HIGH_COSSACK_BAROQUE,
+            composition_date="1754",
+            manuscript_or_print_date="1884",
+            is_archaic=True,
+        )
+        for i in range(10)
+    ]
+
+    sft_data = build_sft_dataset(
+        mock_chunks,
+        eval_suite=[],
+        vesum_db=DEFAULT_VESUM_DB,
+        target_sft_quota=20,
+        replay_quota=4,
+        seed=42,
+    )
+
+    assert len(sft_data) == 20
+    preserve_count = sum(1 for t in sft_data if not t["is_calque_or_russianism"])
+    correct_count = sum(1 for t in sft_data if t["is_calque_or_russianism"])
+    assert preserve_count == 10
+    assert correct_count == 10
+
+    # Verify interleaving (adjacent items alternate)
+    for i in range(len(sft_data) - 1):
+        assert sft_data[i]["is_calque_or_russianism"] != sft_data[i + 1]["is_calque_or_russianism"]
+
+    # Verify schema compliance for correction rows
+    valid_registers = {"living_standard", "classical_regional", "technical_compound", "purist_neologism"}
+    for t in sft_data:
+        if t["is_calque_or_russianism"]:
+            ctx = t.get("lexicographical_context")
+            assert ctx is not None
+            assert "historical_suppression_note" in ctx
+            alts = t.get("register_spectrum", {}).get("alternatives", [])
+            assert len(alts) > 0
+            for alt in alts:
+                assert alt["register_tier"] in valid_registers
+
+
+def test_replay_buffer_sources_and_attestations() -> None:
+    """Verify that replay buffer loads dialect preservation and modern literary anti-calque rows without medieval v0.4a."""
+    trajectories = load_replay_buffer(DEFAULT_VESUM_DB, quota=20)
+    assert len(trajectories) == 20
+
+    preserve_count = sum(1 for t in trajectories if not t.get("is_calque_or_russianism", False))
+    correct_count = sum(1 for t in trajectories if t.get("is_calque_or_russianism", False))
+    assert preserve_count == 10
+    assert correct_count == 10
+
+    for t in trajectories:
+        # Must not contain medieval Kyivan Rus v0.4a identifiers
+        tid = t.get("trajectory_id", "")
+        assert "kyivan_rus" not in tid
+        assert "v04a" not in tid
+        assert "epigraphy" not in tid
+
+        # VESUM attestations must contain modern_literary_replay tag
+        attestations = t.get("vesum_attestation", [])
+        assert len(attestations) > 0
+        for att in attestations:
+            assert "modern_literary_replay" in att.get("tags", [])
+
+
+def test_release_dataset_disk_invariants() -> None:
+    """Verify on-disk release artifacts strictly meet all quota, balance, and file-size invariants."""
+    release_dir = REPO_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v04b_middle_ukrainian"
+    eval_file = release_dir / "middle_ukrainian_eval.jsonl"
+    manifest_file = release_dir / "sft" / "manifest.json"
+
+    if not eval_file.is_file() or not manifest_file.is_file():
+        pytest.skip("Release artifacts not yet generated on disk")
+
+    # Eval invariants
+    eval_rows = [json.loads(line) for line in eval_file.read_text(encoding="utf-8").splitlines() if line.strip()]
+    assert len(eval_rows) == 500
+    eval_preserve = sum(1 for r in eval_rows if r["case_type"] == "PRESERVE")
+    eval_correct = sum(1 for r in eval_rows if r["case_type"] == "CORRECT")
+    assert eval_preserve == 250
+    assert eval_correct == 250
+
+    # SFT invariants
+    manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
+    assert manifest["total_trajectories"] == 10000
+    assert manifest["total_shards"] == 30
+
+    sft_rows_count = 0
+    sft_preserve = 0
+    sft_correct = 0
+
+    for shard_info in manifest["shards"]:
+        shard_path = release_dir / "sft" / shard_info["file_name"]
+        assert shard_path.is_file()
+        assert shard_path.stat().st_size < 2000 * 1024, f"File {shard_path.name} exceeds 2,000 KB"
+        with shard_path.open("r", encoding="utf-8") as f:
+            for line in f:
+                if line.strip():
+                    row = json.loads(line)
+                    sft_rows_count += 1
+                    if row.get("is_calque_or_russianism", False):
+                        sft_correct += 1
+                    else:
+                        sft_preserve += 1
+
+    assert sft_rows_count == 10000
+    assert sft_preserve == 5000
+    assert sft_correct == 5000
