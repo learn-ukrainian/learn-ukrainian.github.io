@@ -1,0 +1,212 @@
+---
+title: 'За́вжди два зву́ки: Лі́тери Ї, Щ та лі́тера Ф'
+description: Ь, апостроф і три ключові контрасти - день, сім'я, буряк/бур'ян
+sidebar:
+  order: 3
+  label: '03. За́вжди два зву́ки: Лі́тери Ї, Щ та лі́тера Ф'
+pipeline: v7-upgrade
+build_status: validated
+draft: false
+prev: /a1/special-signs/2/
+next: /a1/special-signs/4/
+lesson: 3
+module_slug: special-signs
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords from '@site/src/components/MarkTheWords';
+import { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes from '@site/src/components/HighlightMorphemes';
+import { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок — Lesson">
+
+In this lesson, we complete our survey of Ukrainian letters by examining two letters that **always** represent two separate sounds — **Ї** and **Щ** — as well as the consonant letter **Ф**.
+
+Most letters of the Ukrainian alphabet represent a single sound, and the iotated vowels **Я, Ю, Є** can represent either one or two sounds depending on their environment. However, **Ї** and **Щ** are unique because they have an unchanging two-sound value anywhere they appear.
+
+Understanding these letters connects directly with the core themes of our module. Reading smoothly together (**зли́то**) without pausing awkwardly (**розді́льно**) depends on knowing whether a letter contains a hidden [j] glide. Even a **мале́нький** (small) **знак** (sign) on paper changes how you shape the sounds with your mouth. When reading about a pleasant **день** (day) or a joyful **свя́то** (holiday), our **вчи́тель** (teacher) reminds us that clarity in pronunciation makes communication effortless.
+
+## За́вжди два зву́ки: Ї та Щ
+
+The letter **Ї ї** always represents the combination of the semi-vowel [j] and the vowel [i], pronounced together as **[йі]**. Unlike **Я, Ю, Є**, the letter **Ї** never softens a preceding consonant and never collapses into a single sound:
+- At the beginning of a word: **їжа́к** — hedgehog (pronounced [йі-жа́к]).
+- In the middle of a word after a vowel: **по́їзд** — train (pronounced [по́-йізд]).
+- In the capital city of Ukraine: **Ки́їв** — Kyiv (pronounced [ки́-йів]).
+- In the name of the country: **Украї́на** — Ukraine (pronounced [у-кра-йі́-на]).
+
+### Диві́ться та повто́рюйте: Ї, Щ, Ф — Watch and repeat: Ї, Щ, Ф
+
+<WatchAndRepeat client:only='react' items={JSON.parse(`[{"video": "https://www.youtube.com/watch?v=UcjdjQXhAY8", "letter": "Ї", "word": "їжа́к", "sound": "[йі]", "note": "The letter Ї always represents two sounds: [й] + [і]."}, {"video": "https://www.youtube.com/watch?v=UcjdjQXhAY8", "letter": "Ї", "word": "по́їзд", "sound": "[йі]", "note": "In the middle of a word after a vowel: [по́-йізд]."}, {"video": "https://www.youtube.com/watch?v=UcjdjQXhAY8", "letter": "Ї", "word": "Ки́їв", "sound": "[йі]", "note": "Capital of Ukraine: [ки́-йів]."}, {"video": "https://www.youtube.com/watch?v=QmBLieIuf6Q", "letter": "Щ", "word": "щу́ка", "sound": "[шч]", "note": "The letter Щ always represents two sounds: [ш] + [ч]."}, {"video": "https://www.youtube.com/watch?v=QmBLieIuf6Q", "letter": "Щ", "word": "борщ", "sound": "[шч]", "note": "Famous Ukrainian dish ending in [шч]: [боршч]."}, {"video": "https://www.youtube.com/watch?v=haHRsFFZRQI", "letter": "Ф", "word": "фо́то", "sound": "[ф]", "note": "The letter Ф represents a single voiceless labiodental fricative [f]."}]`)} title="Диві́ться та повто́рюйте: Ї, Щ, Ф — Watch and repeat: Ї, Щ, Ф" instruction={"Watch the pronunciation video and repeat each word aloud."} />
+
+The letter **Щ щ** always represents two hard consonant sounds blended together: **[шч]**. In standard Ukrainian, both parts are pronounced crisply and firmly without softening:
+- **щу́ка** — pike fish (pronounced [шчу́-ка])
+- **борщ** — borscht, the famous Ukrainian beet soup (pronounced [боршч])
+- **кущ** — bush (pronounced [кушч])
+- **що** — what (pronounced [шчо])
+- **ще** — still or yet (pronounced [шче])
+
+### Пра́вила лі́тер Ї, Щ, Ф — True or False
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Лі́тера Ї за́вжди познача́є два зву́ки [йі].", "isTrue": true, "explanation": "Лі́тера Ї ніко́ли не познача́є оди́н звук."}, {"statement": "Лі́тера Щ за́вжди познача́є два зву́ки [шч].", "isTrue": true, "explanation": "В украї́нській мо́ві Щ — це сполу́чення тверди́х зву́ків [ш] та [ч]."}, {"statement": "Лі́тера Ф за́вжди познача́є два зву́ки.", "isTrue": false, "explanation": "Лі́тера Ф познача́є оди́н звук [ф]."}, {"statement": "У сло́ві «борщ» оста́нній звук познача́ється як [шч].", "isTrue": true, "explanation": "Лі́тера щ наприкінці́ сло́ва вимовля́ється як [шч]."}, {"statement": "Лі́тера Ї мо́же пом'я́кшувати попере́дній при́голосний.", "isTrue": false, "explanation": "Лі́тера Ї за́вжди зберіга́є свій напівголосни́й звук [й]."}, {"statement": "Слова́ «бу́ква» та «лі́тера» ма́ють одна́кове зна́чення.", "isTrue": true, "explanation": "Оби́два те́рміни є сино́німами."}]`)} instruction={"Decide whether each statement is true or false."} isUkrainian={false} />
+
+Notice that even when counting beats on your **па́льці** (fingers), each letter **Щ** gives you two consonant sounds [ш] + [ч]. Because Ukrainian does not simplify [шч] into a single long sound, practicing **борщ** and **щу́ка** gives your mouth the exact native muscular habit.
+
+### Оди́н чи два зву́ки: Ї, Щ, Ф — One or Two Sounds
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Лі́тера «ї» у сло́ві «їжа́к»:", "options": [{"text": "два зву́ки [йі]", "correct": true}, {"text": "оди́н звук [і]", "correct": false}], "explanation": ""}, {"question": "Лі́тера «ї» у сло́ві «Ки́їв»:", "options": [{"text": "два зву́ки [йі]", "correct": true}, {"text": "оди́н звук [і]", "correct": false}], "explanation": ""}, {"question": "Лі́тера «щ» у сло́ві «щу́ка»:", "options": [{"text": "два зву́ки [шч]", "correct": true}, {"text": "оди́н звук [ш]", "correct": false}], "explanation": ""}, {"question": "Лі́тера «щ» у сло́ві «борщ»:", "options": [{"text": "два зву́ки [шч]", "correct": true}, {"text": "оди́н звук [ч]", "correct": false}], "explanation": ""}, {"question": "Лі́тера «ф» у сло́ві «фо́то»:", "options": [{"text": "оди́н звук [ф]", "correct": true}, {"text": "два зву́ки", "correct": false}], "explanation": ""}, {"question": "Лі́тера «ф» у сло́ві «факт»:", "options": [{"text": "оди́н звук [ф]", "correct": true}, {"text": "два зву́ки", "correct": false}], "explanation": ""}]`)} instruction={"Choose whether the highlighted letter represents one sound or two sounds."} isUkrainian={false} />
+
+## Бу́ква Ф та по́вний спектр віта́нь
+
+The letter **Ф ф** represents the voiceless labiodental fricative [f]. In native Slavic vocabulary, original Ukrainian words rarely had this sound, so **Ф** appears mostly in borrowed words and international terms that have become fully integrated into modern Ukrainian:
+- **фо́то** — photo
+- **факт** — fact
+- **шарф** — scarf
+
+### Звукове́ зна́чення лі́тер — Sound Values
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Які́ зву́ки познача́є лі́тера Ї?", "options": [{"text": "[йі]", "correct": true}, {"text": "[і]", "correct": false}, {"text": "[й]", "correct": false}], "explanation": ""}, {"question": "Які́ зву́ки познача́є лі́тера Щ?", "options": [{"text": "[шч]", "correct": true}, {"text": "[ш]", "correct": false}, {"text": "[ч]", "correct": false}], "explanation": ""}, {"question": "Яки́й звук познача́є лі́тера Ф?", "options": [{"text": "[ф]", "correct": true}, {"text": "[п]", "correct": false}, {"text": "[в]", "correct": false}], "explanation": ""}, {"question": "Скі́льки зву́ків у сло́ві «борщ»?", "options": [{"text": "5 зву́ків [б-о-р-ш-ч]", "correct": true}, {"text": "чоти́ри зву́ки", "correct": false}], "explanation": ""}, {"question": "Скі́льки зву́ків у сло́ві «їжа́к»?", "options": [{"text": "5 зву́ків [й-і-ж-а-к]", "correct": true}, {"text": "чоти́ри зву́ки", "correct": false}], "explanation": ""}, {"question": "Скі́льки зву́ків у сло́ві «факт»?", "options": [{"text": "чоти́ри зву́ки [ф-а-к-т]", "correct": true}, {"text": "5 зву́ків", "correct": false}], "explanation": ""}]`)} instruction={"Identify the correct phonetic transcription for each letter."} isUkrainian={false} />
+
+Notice how these letters appear in real polite dialogues today (**сього́дні**) when greeting people and discussing family (**сім'я́**):
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Марко́","text":"До́брий день, Окса́но! Ра́дий тебе́ ба́чити."},{"speaker":"Окса́на","text":"До́брий день, Ма́рку! Як твоя́ сім\'я́?"},{"speaker":"Марко́","text":"Дя́кую, усе́ чудо́во! Сього́дні вве́чері ми ї́демо на по́їзді в Ки́їв."},{"speaker":"Окса́на","text":"Щасли́вої доро́ги! На все до́бре!"}]')}
+/>
+
+When practicing Ukrainian pronunciation, remember that each letter gives you a predictable and reliable sound signal. In many languages, letters change drastically depending on subtle surrounding factors, but Ukrainian orthography adheres closely to phonetic principles. By mastering the clear two-sound combinations of **Ї** [йі] and **Щ** [шч], you build an authentic native accent from your very first steps in reading.
+
+Now you can recognize and pronounce **Ї**, **Щ**, and **Ф** with complete confidence.
+
+### Розподілі́ть слова́ за лі́терами — Group Sort
+
+<GroupSort client:only='react' groups={JSON.parse(`{"За́вжди два зву́ки (Ї, Щ) — Always two sounds": ["їжа́к", "щу́ка", "борщ"], "Оди́н звук (Ф) — One sound": ["фо́то", "факт", "шарф"]}`)} instruction={"Sort words according to whether their key letter represents two sounds or one sound."} isUkrainian={false} />
+
+</TabItem>
+<TabItem label="Словник — Vocabulary">
+
+<span id="vocabulary"></span>
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"м'яки́й знак","translation":"soft sign","pos":"noun phrase","example":"Ь - м'яки́й знак.","examples":["Ь - м'яки́й знак."]},{"word":"знак","translation":"sign","pos":"noun","example":"Це знак.","examples":["Це знак."],"atlas_href":"/lexicon/знак/"},{"word":"м'яки́й","translation":"soft","pos":"adjective","example":"Це м'яки́й звук.","examples":["Це м'яки́й звук."],"atlas_href":"/lexicon/м-який/"},{"word":"тверди́й","translation":"hard","pos":"adjective","example":"Це тверди́й звук.","examples":["Це тверди́й звук."],"atlas_href":"/lexicon/твердий/"},{"word":"день","translation":"day","pos":"noun","example":"День.","examples":["День."],"atlas_href":"/lexicon/день/"},{"word":"кінь","translation":"horse","pos":"noun","example":"Кінь.","examples":["Кінь."],"atlas_href":"/lexicon/кінь/"},{"word":"сіль","translation":"salt","pos":"noun","example":"Сіль.","examples":["Сіль."],"atlas_href":"/lexicon/сіль/"},{"word":"вчи́тель","translation":"teacher","pos":"noun","example":"Вчи́тель.","examples":["Вчи́тель."],"atlas_href":"/lexicon/вчитель/"},{"word":"мале́нький","translation":"small","pos":"adjective","example":"Мале́нький знак.","examples":["Мале́нький знак."],"atlas_href":"/lexicon/маленький/"},{"word":"па́льці","translation":"fingers","pos":"noun","example":"Па́льці.","examples":["Па́льці."],"atlas_href":"/lexicon/пальці/"},{"word":"сього́дні","translation":"today","pos":"adverb","example":"Сього́дні свя́то.","examples":["Сього́дні свя́то."],"atlas_href":"/lexicon/сьогодні/"},{"word":"зли́то","translation":"together / smoothly","pos":"adverb","example":"Чита́й зли́то.","examples":["Чита́й зли́то."],"atlas_href":"/lexicon/злито/"},{"word":"розді́льно","translation":"separately","pos":"adverb","example":"Чита́й розді́льно.","examples":["Чита́й розді́льно."],"atlas_href":"/lexicon/роздільно/"},{"word":"йото́ваний","translation":"iotated","pos":"adjective","example":"Я - йото́вана лі́тера.","examples":["Я - йото́вана лі́тера."],"atlas_href":"/lexicon/йотований/"},{"word":"буря́к","translation":"beetroot","pos":"noun","example":"Буря́к.","examples":["Буря́к."],"atlas_href":"/lexicon/буряк/"},{"word":"свя́то","translation":"holiday","pos":"noun","example":"Свя́то.","examples":["Свя́то."],"atlas_href":"/lexicon/свято/"},{"word":"сім'я́","translation":"family","pos":"noun","example":"Сім'я́.","examples":["Сім'я́."],"atlas_href":"/lexicon/сім-я/"}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"м'яки́й знак","back":"soft sign"},{"front":"знак","back":"sign"},{"front":"м'яки́й","back":"soft"},{"front":"тверди́й","back":"hard"},{"front":"день","back":"day"},{"front":"кінь","back":"horse"},{"front":"сіль","back":"salt"},{"front":"вчи́тель","back":"teacher"},{"front":"мале́нький","back":"small"},{"front":"па́льці","back":"fingers"},{"front":"сього́дні","back":"today"},{"front":"зли́то","back":"together / smoothly"},{"front":"розді́льно","back":"separately"},{"front":"йото́ваний","back":"iotated"},{"front":"буря́к","back":"beetroot"},{"front":"свя́то","back":"holiday"},{"front":"сім'я́","back":"family"}]`)} />
+
+</TabItem>
+<TabItem label="Вправи — Activities">
+
+<span id="activities"></span>
+
+### Диві́ться та повто́рюйте: Ї, Щ, Ф — Watch and repeat: Ї, Щ, Ф
+
+*(see lesson, §За́вжди два зву́ки: Ї та Щ)*
+
+### Пра́вила лі́тер Ї, Щ, Ф — True or False
+
+*(see lesson, §За́вжди два зву́ки: Ї та Щ)*
+
+### Оди́н чи два зву́ки: Ї, Щ, Ф — One or Two Sounds
+
+*(see lesson, §За́вжди два зву́ки: Ї та Щ)*
+
+### Звукове́ зна́чення лі́тер — Sound Values
+
+*(see lesson, §Бу́ква Ф та по́вний спектр віта́нь)*
+
+### Розподілі́ть слова́ за лі́терами — Group Sort
+
+*(see lesson, §Бу́ква Ф та по́вний спектр віта́нь)*
+
+### Вста́вте пропу́щене сло́во — Fill in the blank
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У лі́сі біжи́ть колю́чий ___ .", "answer": "їжа́к", "options": ["їжа́к", "кінь", "єно́т"]}, {"sentence": "Столи́ця Украї́ни — це прекра́сне мі́сто ___ .", "answer": "Ки́їв", "options": ["Ки́їв", "день", "по́їзд"]}, {"sentence": "У рі́чці пла́ває вели́ка ___ .", "answer": "щу́ка", "options": ["щу́ка", "кінь", "лань"]}, {"sentence": "На обі́д ма́ма звари́ла смачни́й гаря́чий ___ .", "answer": "борщ", "options": ["борщ", "рис", "чай"]}, {"sentence": "У мене́ в альбо́мі є га́рне сіме́йне ___ .", "answer": "фо́то", "options": ["фо́то", "факт", "шарф"]}, {"sentence": "До Ки́єва щодня́ ї́де швидки́й ___ .", "answer": "по́їзд", "options": ["по́їзд", "їжа́к", "борщ"]}]`)} instruction={"Fill in the blank with the appropriate vocabulary word."} isUkrainian={false} />
+
+### З'єдна́йте слова́ та зна́чення — Match word meanings
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "їжа́к", "right": "hedgehog"}, {"left": "Ки́їв", "right": "Kyiv"}, {"left": "щу́ка", "right": "pike (fish)"}, {"left": "борщ", "right": "borscht"}, {"left": "фо́то", "right": "photo"}, {"left": "по́їзд", "right": "train"}]`)} instruction={"Match each Ukrainian word with its English meaning."} isUkrainian={false} />
+
+### Складі́ть слова́ з лі́тер — Unjumble letters
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "ї / ж / а́ / к", "answer": "їжа́к"}, {"jumbled": "п / о́ / ї / з / д", "answer": "по́їзд"}, {"jumbled": "К / и́ / ї / в", "answer": "Ки́їв"}, {"jumbled": "б / о / р / щ", "answer": "борщ"}, {"jumbled": "к / у / щ", "answer": "кущ"}, {"jumbled": "ф / а / к / т", "answer": "факт"}]`)} instruction={"Arrange the letters to form correct Ukrainian words."} />
+
+### Знайді́ть поми́лку — Spot the error
+
+<ErrorCorrection client:only='react' instruction="Find the spelling error in each sentence." items={JSON.parse(`[{"sentence": "У лі́сі спить мале́нький йіжа́к.", "errorWord": "йіжа́к", "correctForm": "їжа́к", "options": [], "explanation": "Звукосполу́чення [йі] за́вжди познача́ється лі́терою ї: їжа́к."}, {"sentence": "Швидки́й пойи́зд ї́де в столи́цю.", "errorWord": "пойи́зд", "correctForm": "по́їзд", "options": [], "explanation": "Сло́во «по́їзд» пи́шеться з лі́терою ї: по́їзд."}, {"sentence": "Ми ї́демо в мі́сто Кийи́в.", "errorWord": "Кийи́в", "correctForm": "Ки́їв", "options": [], "explanation": "На́зва столи́ці Украї́ни пи́шеться з лі́терою ї: Ки́їв."}, {"sentence": "На обі́д ми їмо́ гаря́чий боршч.", "errorWord": "боршч", "correctForm": "борщ", "options": [], "explanation": "Звукосполу́чення [шч] на письмі́ познача́ється лі́терою щ: борщ."}, {"sentence": "У рі́чці пла́ває вели́ка шчу́ка.", "errorWord": "шчу́ка", "correctForm": "щу́ка", "options": [], "explanation": "Звукосполу́чення [шч] познача́ється одніє́ю лі́терою щ: щу́ка."}, {"sentence": "На столі́ лежи́ть га́рне хво́то.", "errorWord": "хво́то", "correctForm": "фо́то", "options": [], "explanation": "Сло́во «фо́то» пи́шеться з лі́терою ф: фо́то."}]`)} isUkrainian={false} />
+
+### Ви́беріть пра́вильне сло́во — Multiple Choice
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Що означа́є «hedgehog» в украї́нській мо́ві?", "options": [{"text": "їжа́к", "correct": true}, {"text": "кінь", "correct": false}, {"text": "єно́т", "correct": false}], "explanation": ""}, {"question": "Як пра́вильно назива́ється столи́ця Украї́ни?", "options": [{"text": "Ки́їв", "correct": true}, {"text": "день", "correct": false}, {"text": "по́їзд", "correct": false}], "explanation": ""}, {"question": "Що означа́є «borscht» в украї́нській мо́ві?", "options": [{"text": "борщ", "correct": true}, {"text": "рис", "correct": false}, {"text": "чай", "correct": false}], "explanation": ""}, {"question": "Що означа́є «pike (fish)» в украї́нській мо́ві?", "options": [{"text": "щу́ка", "correct": true}, {"text": "кінь", "correct": false}, {"text": "лань", "correct": false}], "explanation": ""}, {"question": "Що означа́є «photo» в украї́нській мо́ві?", "options": [{"text": "фо́то", "correct": true}, {"text": "факт", "correct": false}, {"text": "шарф", "correct": false}], "explanation": ""}, {"question": "Що означа́є «train» в украї́нській мо́ві?", "options": [{"text": "по́їзд", "correct": true}, {"text": "день", "correct": false}, {"text": "свя́то", "correct": false}], "explanation": ""}]`)} instruction={"Select the correctly spelled Ukrainian word."} isUkrainian={false} />
+
+### Ви́бір лі́тери — Letter Choice
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Пе́рша лі́тера у сло́ві «___жа́к»:", "options": [{"text": "Ї", "correct": true}, {"text": "І", "correct": false}], "explanation": ""}, {"question": "Пе́рша лі́тера у сло́ві «___у́ка»:", "options": [{"text": "Щ", "correct": true}, {"text": "Ш", "correct": false}], "explanation": ""}, {"question": "Оста́ння лі́тера у сло́ві «бор___»:", "options": [{"text": "щ", "correct": true}, {"text": "ч", "correct": false}], "explanation": ""}, {"question": "Пе́рша лі́тера у сло́ві «___о́то»:", "options": [{"text": "Ф", "correct": true}, {"text": "Х", "correct": false}], "explanation": ""}, {"question": "Тре́тя лі́тера у сло́ві «Ки́___в»:", "options": [{"text": "ї", "correct": true}, {"text": "і", "correct": false}], "explanation": ""}, {"question": "Тре́тя лі́тера у сло́ві «по́___зд»:", "options": [{"text": "ї", "correct": true}, {"text": "і", "correct": false}], "explanation": ""}]`)} instruction={"Choose the appropriate letter for each word."} isUkrainian={false} />
+
+</TabItem>
+<TabItem label="Ресурси — Resources">
+
+<span id="resources"></span>
+
+:::info[🎧 🔗 External Resources]
+
+**📚 Books:**
+- 📚 [Anna Ohoiko — Pronunciation Video Series (Letter Ф)](https://www.youtube.com/watch?v=haHRsFFZRQI)
+- 📚 [Anna Ohoiko — Pronunciation Video Series (Letter Щ)](https://www.youtube.com/watch?v=QmBLieIuf6Q)
+- 📚 [Anna Ohoiko — Pronunciation Video Series (Letter Ї)](https://www.youtube.com/watch?v=UcjdjQXhAY8)
+- 📚 [Авраменко О. М. — Українська мова. 5 клас](https://pidruchnyk.com.ua/1126-ukrainska-mova-5-klas-avramenko.html)
+- 📚 [Большакова І. О., Пристинська М. С. — Українська мова. Буквар. 1 клас](https://pidruchnyk.com.ua/1179-bukvar-1-klas-bolshakova.html)
+- 📚 [Захарійчук М. Д. — Українська мова. Буквар. 1 клас](https://pidruchnyk.com.ua/1181-bukvar-1-klas-zahariychuk.html)
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
+
+<nav aria-label="Lesson navigation">
+
+[Previous](/a1/special-signs/2/) · [Module](/a1/special-signs/) · [Next](/a1/special-signs/4/)
+
+</nav>
