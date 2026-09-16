@@ -42,15 +42,26 @@ export interface ErrorCorrectionItemProps {
 
 type Step = 'identify' | 'fix' | 'complete';
 
-/** Letters + digits + combining stress (U+0301) + Ukrainian apostrophes stay one token. */
-const SENTENCE_TOKENS = /[\p{L}\p{N}\p{M}'’ʼʹ]+|[^\s\p{L}\p{N}\p{M}'’ʼʹ]+|\s+/gu;
+/**
+ * Letters + digits + combining stress (U+0301) + Ukrainian apostrophes stay
+ * one token. A hyphen flanked by word characters (се-ло) stays inside that
+ * token too, so hyphenated words are one clickable unit; a standalone hyphen
+ * used as a dash (surrounded by spaces or punctuation) still tokenizes alone.
+ */
+const WORD_CHAR = `\\p{L}\\p{N}\\p{M}'’ʼʹ`;
+const SENTENCE_TOKENS = new RegExp(
+  `[${WORD_CHAR}]+(?:-[${WORD_CHAR}]+)*|[^\\s${WORD_CHAR}]+|\\s+`,
+  'gu',
+);
 
 export function tokenizeErrorSentence(sentence: string): string[] {
   return sentence.match(SENTENCE_TOKENS) || [];
 }
 
 export function cleanErrorToken(word: string): string {
-  return word.replace(/[^\p{L}\p{N}\p{M}'’ʼʹ]/gu, '');
+  return word
+    .replace(/[^\p{L}\p{N}\p{M}'’ʼʹ-]/gu, '')
+    .replace(/^-+|-+$/g, '');
 }
 
 export function ErrorCorrectionItem({
