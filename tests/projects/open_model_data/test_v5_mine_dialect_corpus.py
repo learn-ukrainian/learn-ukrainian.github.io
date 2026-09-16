@@ -682,6 +682,48 @@ def test_exact_clopper_pearson_mathematical_bounds() -> None:
     assert abs(perfect_lcl - (0.05 ** (1.0 / 100))) < 1e-6
 
 
+def test_canonical_source_work_equivalence_and_year_preservation() -> None:
+    """Verify canonical_source_work normalizes whitespace, Roman numerals, and punctuation anomalies,
+    preserves publication years, strips page numbers, and maps equivalent volume citations to identical identities.
+    """
+    equivalent_pairs = [
+        # 1. P1 regression from R7/R8 review: internal whitespace difference in Chubynsky Volume 5
+        ("Чуб., V, 1874, 280", "Чуб.,V, 1874, 96"),
+        ("Чуб., V, 1874, 280", "Чуб., V, 1847, 465"),
+        ("Фр., VII, 1951, 10", "Фр., VII, 1851, 10"),
+        ("Фр., VIII, 1952, 246", "Фр., VIII, 1852, 246"),
+        # 2. Publication year preservation across different pages of same volume
+        ("(Черемш., Тв., 1960, 107)", "(Черемш., Тв., 1960, 66)"),
+        ("(Черемш., Тв., 1960)", "(Черемш., Тв., 1960, 100)"),
+        # 3. Arabic vs Roman numeral volume normalization
+        ("Фр., 1, 1955, 69", "Фр., I, 1955, 192"),
+        # 4. Cyrillic lookalikes in Roman numerals (І -> I, У -> V, etc.)
+        ("Фр.,VІІ, 1951, 189", "Фр., VII, 1951, 40"),
+        ("Фр.,УІІІ, 1952,190", "Фр., VIII, 1952, 348"),
+        # 5. Missing whitespace around commas in multi-volume works
+        ("Коб.,ІІІ,1956,19", "Коб., III, 1956, 466"),
+        # 6. Period instead of comma before page number
+        ("Вишня, II, 1956. 145", "Вишня, II, 1956, 131"),
+        # 7. Nomys proverb number stripping with year preservation
+        ("Номис, 1864, .№ 1334", "Номис, 1864, № 10060"),
+        # 8. Grinchenko page stripping vs plain volume
+        ("Чуб. V 818", "Чуб. V"),
+        ("Чуб. 2", "Чуб. II"),
+    ]
+
+    for cit_a, cit_b in equivalent_pairs:
+        norm_a = canonical_source_work(cit_a)
+        norm_b = canonical_source_work(cit_b)
+        assert norm_a == norm_b, f"Equivalent citations failed to map to same work: {cit_a!r} ({norm_a!r}) != {cit_b!r} ({norm_b!r})"
+
+    # Verify that publication years are preserved and not stripped as trailing numbers
+    assert canonical_source_work("Черемш., Тв., 1960") == "Черемш., Тв., 1960"
+    assert canonical_source_work("Черемш., Тв., 1960, 107") == "Черемш., Тв., 1960"
+    assert canonical_source_work("Чуб., V, 1874, 280") == "Чуб., V, 1874"
+    assert canonical_source_work("Чуб.,V, 1874, 96") == "Чуб., V, 1874"
+    assert canonical_source_work("Номис, 1864, № 2062") == "Номис, 1864"
+
+
 def test_find_attested_synonym_rejects_descriptive_and_crossref() -> None:
     """Verify find_attested_synonym rejects descriptive fragments and crossrefs, and validates real synonyms."""
     # Descriptive definition with adjective 'слизький' for noun 'затока'
