@@ -351,12 +351,15 @@ def test_batch_expansion_count():
     Batch 12 (#8039 continuation): +32 lemmas selected from academic authorities and
     Grinchenko (1907) with explicit pre-Soviet witness citations and Soviet
     colonization context, expanding SSOT to 392 and dropping residual to 30.
+    Batch 13 (#8039 final): +28 lemmas selected from academic authorities and
+    Grinchenko (1907) with explicit pre-Soviet witness citations and Soviet
+    colonization context, expanding SSOT to 420 and achieving complete 0 residual.
     """
     total_curated = len(enrich_heteronyms.CURATED_HETERONYMS)
-    assert total_curated == 392
-    # Corrected denominator is 422 true two-way-stress candidates;
-    # residual is 422 - 392 = 30
-    assert 422 - total_curated == 30
+    assert total_curated == 420
+    # True denominator after excluding 2 СУМ-11 OCR errata pseudo-heteronyms (логік, поривний)
+    # is 420 genuine heteronyms; residual is 420 - 420 = 0
+    assert 420 - total_curated == 0
 
 
 def test_kredyt_disambiguation():
@@ -2833,3 +2836,280 @@ def test_build_heteronyms_for_lemma_preserves_all_homonyms_when_stresses_differ(
     assert result[1]["gloss"] == "Друге значення тесту"
     assert result[2]["headword"] == "ТЕСТІ́"
     assert result[2]["gloss"] == "Третє значення тесту"
+
+def test_curated_heteronyms_batch_13():
+    """Verify Batch 13 curated heteronyms semantics, morphology, and witnesses (#8039)."""
+
+    # 1. волохи: во́лохи vs воло́хи
+    var_волохи = enrich_heteronyms.build_heteronyms_for_lemma("волохи")
+    assert var_волохи is not None and len(var_волохи) == 2
+    assert var_волохи[0]["headword"] == "во́лохи"
+    assert var_волохи[1]["headword"] == "воло́хи"
+    assert var_волохи[0]["pre_soviet_witness"] is not None
+    assert "Номис (1864, № 8191)" in var_волохи[0]["pre_soviet_witness"]["witness"]
+    assert var_волохи[1]["pre_soviet_witness"] is not None
+    assert "Т. Шевченко (1845/1851)" in var_волохи[1]["pre_soviet_witness"]["witness"]
+
+    # 2. гвоздик: гво́здик vs гвозди́к
+    var_гвоздик = enrich_heteronyms.build_heteronyms_for_lemma("гвоздик")
+    assert var_гвоздик is not None and len(var_гвоздик) == 2
+    assert var_гвоздик[0]["headword"] == "гво́здик"
+    assert var_гвоздик[1]["headword"] == "гвозди́к"
+    assert var_гвоздик[0]["pre_soviet_witness"] is not None
+    assert "О. Стороженко (1863)" in var_гвоздик[0]["pre_soviet_witness"]["witness"]
+    assert var_гвоздик[1]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_гвоздик[1]["pre_soviet_witness"]["witness"]
+
+    # 3. містовий: мі́стовий vs містови́й
+    var_містовий = enrich_heteronyms.build_heteronyms_for_lemma("містовий")
+    assert var_містовий is not None and len(var_містовий) == 2
+    assert var_містовий[0]["headword"] == "мі́стовий"
+    assert var_містовий[1]["headword"] == "містови́й"
+    assert var_містовий[0]["pre_soviet_witness"] is not None
+    assert "І. Франко" in var_містовий[0]["pre_soviet_witness"]["witness"]
+
+    # 4. навидіти: на́видіти vs нави́діти
+    var_навидіти = enrich_heteronyms.build_heteronyms_for_lemma("навидіти")
+    assert var_навидіти is not None and len(var_навидіти) == 2
+    assert var_навидіти[0]["headword"] == "на́видіти"
+    assert var_навидіти[1]["headword"] == "нави́діти"
+    assert var_навидіти[0]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_навидіти[0]["pre_soviet_witness"]["witness"]
+    assert var_навидіти[1]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_навидіти[1]["pre_soviet_witness"]["witness"]
+
+    # 5. навидітися: на́видітися vs нави́дітися
+    var_навидітися = enrich_heteronyms.build_heteronyms_for_lemma("навидітися")
+    assert var_навидітися is not None and len(var_навидітися) == 2
+    assert var_навидітися[0]["headword"] == "на́видітися"
+    assert var_навидітися[1]["headword"] == "нави́дітися"
+    assert var_навидітися[0]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_навидітися[0]["pre_soviet_witness"]["witness"]
+    assert var_навидітися[1]["pre_soviet_witness"] is not None
+    assert "І. Франко" in var_навидітися[1]["pre_soviet_witness"]["witness"]
+
+    # 6. світок: сві́то́к vs світо́к
+    var_світок = enrich_heteronyms.build_heteronyms_for_lemma("світок")
+    assert var_світок is not None and len(var_світок) == 2
+    assert var_світок[0]["headword"] == "сві́то́к"
+    assert var_світок[1]["headword"] == "світо́к"
+    assert var_світок[0]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_світок[0]["pre_soviet_witness"]["witness"]
+    assert var_світок[1]["pre_soviet_witness"] is not None
+    assert "М. Коцюбинський" in var_світок[1]["pre_soviet_witness"]["witness"]
+
+    # 7. совик: со́вик vs сови́к
+    var_совик = enrich_heteronyms.build_heteronyms_for_lemma("совик")
+    assert var_совик is not None and len(var_совик) == 2
+    assert var_совик[0]["headword"] == "со́вик"
+    assert var_совик[1]["headword"] == "сови́к"
+
+    # 8. типик: ти́пик vs типи́к
+    var_типик = enrich_heteronyms.build_heteronyms_for_lemma("типик")
+    assert var_типик is not None and len(var_типик) == 2
+    assert var_типик[0]["headword"] == "ти́пик"
+    assert var_типик[1]["headword"] == "типи́к"
+    assert var_типик[1]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_типик[1]["pre_soviet_witness"]["witness"]
+
+    # 9. точений: то́чений vs точе́ний
+    var_точений = enrich_heteronyms.build_heteronyms_for_lemma("точений")
+    assert var_точений is not None and len(var_точений) == 2
+    assert var_точений[0]["headword"] == "то́чений"
+    assert var_точений[1]["headword"] == "точе́ний"
+    assert var_точений[0]["pre_soviet_witness"] is not None
+    assert "М. Зеров" in var_точений[0]["pre_soviet_witness"]["witness"]
+    assert var_точений[1]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_точений[1]["pre_soviet_witness"]["witness"]
+
+    # 10. требувати: тре́бувати vs требува́ти
+    var_требувати = enrich_heteronyms.build_heteronyms_for_lemma("требувати")
+    assert var_требувати is not None and len(var_требувати) == 2
+    assert var_требувати[0]["headword"] == "тре́бувати"
+    assert var_требувати[1]["headword"] == "требува́ти"
+    assert var_требувати[0]["pre_soviet_witness"] is not None
+    assert "Панас Мирний" in var_требувати[0]["pre_soviet_witness"]["witness"]
+    assert var_требувати[1]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_требувати[1]["pre_soviet_witness"]["witness"]
+
+    # 11. трухнути: тру́хнути vs трухну́ти
+    var_трухнути = enrich_heteronyms.build_heteronyms_for_lemma("трухнути")
+    assert var_трухнути is not None and len(var_трухнути) == 2
+    assert var_трухнути[0]["headword"] == "тру́хнути"
+    assert var_трухнути[1]["headword"] == "трухну́ти"
+    assert var_трухнути[0]["pre_soviet_witness"] is not None
+    assert "Ганна Барвінок (1902)" in var_трухнути[0]["pre_soviet_witness"]["witness"]
+    assert var_трухнути[1]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_трухнути[1]["pre_soviet_witness"]["witness"]
+
+    # 12. тряхнути: тря́хнути vs тряхну́ти
+    var_тряхнути = enrich_heteronyms.build_heteronyms_for_lemma("тряхнути")
+    assert var_тряхнути is not None and len(var_тряхнути) == 2
+    assert var_тряхнути[0]["headword"] == "тря́хнути"
+    assert var_тряхнути[1]["headword"] == "тряхну́ти"
+
+    # 13. тріпання: трі́пання vs тріпа́ння
+    var_тріпання = enrich_heteronyms.build_heteronyms_for_lemma("тріпання")
+    assert var_тріпання is not None and len(var_тріпання) == 2
+    assert var_тріпання[0]["headword"] == "трі́пання"
+    assert var_тріпання[1]["headword"] == "тріпа́ння"
+    assert var_тріпання[0]["pre_soviet_witness"] is not None
+    assert "І. Нечуй-Левицький" in var_тріпання[0]["pre_soviet_witness"]["witness"]
+
+    # 14. тріпати: трі́пати vs тріпа́ти
+    var_тріпати = enrich_heteronyms.build_heteronyms_for_lemma("тріпати")
+    assert var_тріпати is not None and len(var_тріпати) == 2
+    assert var_тріпати[0]["headword"] == "трі́пати"
+    assert var_тріпати[1]["headword"] == "тріпа́ти"
+    assert var_тріпати[0]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_тріпати[0]["pre_soviet_witness"]["witness"]
+
+    # 15. тріпатися: трі́патися vs тріпа́тися
+    var_тріпатися = enrich_heteronyms.build_heteronyms_for_lemma("тріпатися")
+    assert var_тріпатися is not None and len(var_тріпатися) == 2
+    assert var_тріпатися[0]["headword"] == "трі́патися"
+    assert var_тріпатися[1]["headword"] == "тріпа́тися"
+    assert var_тріпатися[0]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_тріпатися[0]["pre_soviet_witness"]["witness"]
+    assert var_тріпатися[1]["pre_soviet_witness"] is not None
+    assert "Марко Вовчок" in var_тріпатися[1]["pre_soviet_witness"]["witness"]
+
+    # 16. тріпнути: трі́пнути vs тріпну́ти
+    var_тріпнути = enrich_heteronyms.build_heteronyms_for_lemma("тріпнути")
+    assert var_тріпнути is not None and len(var_тріпнути) == 2
+    assert var_тріпнути[0]["headword"] == "трі́пнути"
+    assert var_тріпнути[1]["headword"] == "тріпну́ти"
+    assert var_тріпнути[0]["pre_soviet_witness"] is not None
+    assert "Народна казка / Словник" in var_тріпнути[0]["pre_soviet_witness"]["witness"]
+
+    # 17. тупик: ту́пик vs тупи́к
+    var_тупик = enrich_heteronyms.build_heteronyms_for_lemma("тупик")
+    assert var_тупик is not None and len(var_тупик) == 2
+    assert var_тупик[0]["headword"] == "ту́пик"
+    assert var_тупик[1]["headword"] == "тупи́к"
+    assert var_тупик[1]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_тупик[1]["pre_soviet_witness"]["witness"]
+
+    # 18. тупиковий: ту́пиковий vs тупико́вий
+    var_тупиковий = enrich_heteronyms.build_heteronyms_for_lemma("тупиковий")
+    assert var_тупиковий is not None and len(var_тупиковий) == 2
+    assert var_тупиковий[0]["headword"] == "ту́пиковий"
+    assert var_тупиковий[1]["headword"] == "тупико́вий"
+
+    # 19. тучний: ту́чний vs тучни́й
+    var_тучний = enrich_heteronyms.build_heteronyms_for_lemma("тучний")
+    assert var_тучний is not None and len(var_тучний) == 2
+    assert var_тучний[0]["headword"] == "ту́чний"
+    assert var_тучний[1]["headword"] == "тучни́й"
+    assert var_тучний[0]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_тучний[0]["pre_soviet_witness"]["witness"]
+    assert var_тучний[1]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_тучний[1]["pre_soviet_witness"]["witness"]
+
+    # 20. ферула: фе́рула vs феру́ла
+    var_ферула = enrich_heteronyms.build_heteronyms_for_lemma("ферула")
+    assert var_ферула is not None and len(var_ферула) == 2
+    assert var_ферула[0]["headword"] == "фе́рула"
+    assert var_ферула[1]["headword"] == "феру́ла"
+
+    # 21. філер: фі́лер vs філе́р
+    var_філер = enrich_heteronyms.build_heteronyms_for_lemma("філер")
+    assert var_філер is not None and len(var_філер) == 2
+    assert var_філер[0]["headword"] == "фі́лер"
+    assert var_філер[1]["headword"] == "філе́р"
+
+    # 22. фірман: фі́рман vs фірма́н
+    var_фірман = enrich_heteronyms.build_heteronyms_for_lemma("фірман")
+    assert var_фірман is not None and len(var_фірман) == 2
+    assert var_фірман[0]["headword"] == "фі́рман"
+    assert var_фірман[1]["headword"] == "фірма́н"
+    assert var_фірман[0]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_фірман[0]["pre_soviet_witness"]["witness"]
+
+    # 23. характерність: хара́ктерність vs характе́рність
+    var_характерність = enrich_heteronyms.build_heteronyms_for_lemma("характерність")
+    assert var_характерність is not None and len(var_характерність) == 2
+    assert var_характерність[0]["headword"] == "хара́ктерність"
+    assert var_характерність[1]["headword"] == "характе́рність"
+
+    # 24. хлиснути: хли́снути vs хлисну́ти
+    var_хлиснути = enrich_heteronyms.build_heteronyms_for_lemma("хлиснути")
+    assert var_хлиснути is not None and len(var_хлиснути) == 2
+    assert var_хлиснути[0]["headword"] == "хли́снути"
+    assert var_хлиснути[1]["headword"] == "хлисну́ти"
+    assert var_хлиснути[1]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_хлиснути[1]["pre_soviet_witness"]["witness"]
+
+    # 25. шабаш: ша́баш vs шаба́ш
+    var_шабаш = enrich_heteronyms.build_heteronyms_for_lemma("шабаш")
+    assert var_шабаш is not None and len(var_шабаш) == 2
+    assert var_шабаш[0]["headword"] == "ша́баш"
+    assert var_шабаш[1]["headword"] == "шаба́ш"
+    assert var_шабаш[0]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_шабаш[0]["pre_soviet_witness"]["witness"]
+    assert var_шабаш[1]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_шабаш[1]["pre_soviet_witness"]["witness"]
+
+    # 26. шаровий: ша́ровий vs шарови́й
+    var_шаровий = enrich_heteronyms.build_heteronyms_for_lemma("шаровий")
+    assert var_шаровий is not None and len(var_шаровий) == 2
+    assert var_шаровий[0]["headword"] == "ша́ровий"
+    assert var_шаровий[1]["headword"] == "шарови́й"
+
+    # 27. явлений: я́влений vs явле́ний
+    var_явлений = enrich_heteronyms.build_heteronyms_for_lemma("явлений")
+    assert var_явлений is not None and len(var_явлений) == 2
+    assert var_явлений[0]["headword"] == "я́влений"
+    assert var_явлений[1]["headword"] == "явле́ний"
+    assert var_явлений[0]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_явлений[0]["pre_soviet_witness"]["witness"]
+    assert var_явлений[1]["pre_soviet_witness"] is not None
+    assert "Словник / Церковні джерела" in var_явлений[1]["pre_soviet_witness"]["witness"]
+
+    # 28. яловий: я́ловий vs яло́вий
+    var_яловий = enrich_heteronyms.build_heteronyms_for_lemma("яловий")
+    assert var_яловий is not None and len(var_яловий) == 2
+    assert var_яловий[0]["headword"] == "я́ловий"
+    assert var_яловий[1]["headword"] == "яло́вий"
+    assert var_яловий[0]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_яловий[0]["pre_soviet_witness"]["witness"]
+    assert var_яловий[1]["pre_soviet_witness"] is not None
+    assert "Грінченко (1907–1909)" in var_яловий[1]["pre_soviet_witness"]["witness"]
+
+def test_batch13_lemmas_not_duplicated_from_earlier_batches():
+    """Ensure Batch 13 lemmas do not collide with earlier batches or core set."""
+    from scripts.lexicon.curated_heteronyms_batch import CURATED_HETERONYMS_BATCH
+    from scripts.lexicon.curated_heteronyms_batch2 import CURATED_HETERONYMS_BATCH_2
+    from scripts.lexicon.curated_heteronyms_batch3 import CURATED_HETERONYMS_BATCH_3
+    from scripts.lexicon.curated_heteronyms_batch4 import CURATED_HETERONYMS_BATCH_4
+    from scripts.lexicon.curated_heteronyms_batch5 import CURATED_HETERONYMS_BATCH_5
+    from scripts.lexicon.curated_heteronyms_batch6 import CURATED_HETERONYMS_BATCH_6
+    from scripts.lexicon.curated_heteronyms_batch7 import CURATED_HETERONYMS_BATCH_7
+    from scripts.lexicon.curated_heteronyms_batch8 import CURATED_HETERONYMS_BATCH_8
+    from scripts.lexicon.curated_heteronyms_batch9 import CURATED_HETERONYMS_BATCH_9
+    from scripts.lexicon.curated_heteronyms_batch10 import CURATED_HETERONYMS_BATCH_10
+    from scripts.lexicon.curated_heteronyms_batch11 import CURATED_HETERONYMS_BATCH_11
+    from scripts.lexicon.curated_heteronyms_batch12 import CURATED_HETERONYMS_BATCH_12
+    from scripts.lexicon.curated_heteronyms_batch13 import CURATED_HETERONYMS_BATCH_13
+
+    earlier = (
+        set(CURATED_HETERONYMS_BATCH)
+        | set(CURATED_HETERONYMS_BATCH_2)
+        | set(CURATED_HETERONYMS_BATCH_3)
+        | set(CURATED_HETERONYMS_BATCH_4)
+        | set(CURATED_HETERONYMS_BATCH_5)
+        | set(CURATED_HETERONYMS_BATCH_6)
+        | set(CURATED_HETERONYMS_BATCH_7)
+        | set(CURATED_HETERONYMS_BATCH_8)
+        | set(CURATED_HETERONYMS_BATCH_9)
+        | set(CURATED_HETERONYMS_BATCH_10)
+        | set(CURATED_HETERONYMS_BATCH_11)
+        | set(CURATED_HETERONYMS_BATCH_12)
+    )
+    assert earlier & set(CURATED_HETERONYMS_BATCH_13) == set()
+    assert len(CURATED_HETERONYMS_BATCH_13) == 28
+    # Decolonization check: no normative СУМ-11 citations outside soviet_colonization_context
+    for lemma, variants in CURATED_HETERONYMS_BATCH_13.items():
+        for v in variants:
+            assert "СУМ-11" not in v["meaning"]["source"], f"Found СУМ-11 in meaning.source for {lemma}"
+            assert "СУМ-11" not in v["stress"]["source"], f"Found СУМ-11 in stress.source for {lemma}"
