@@ -3335,3 +3335,187 @@ def test_audit_r27_findings_adjunct_placement_and_usage_prohibitions(tmp_path: P
     )
     assert passed_f2_2 is False, "Expected audit to fail when chosen response explicitly prohibits target via 'заборонено вживати'"
     assert data_f2_2["dpo_contradictions_count"] == 1
+
+
+def test_audit_r28_findings_zamist_and_trailing_adverbs(tmp_path: Path) -> None:
+    """Verify Astra R28 findings:
+
+    1. R28-F1: замість does not grant clause-wide immunity against explicit prohibitions
+       governing target.
+    2. R28-F2: Trailing adverbs (e.g. взагалі, зовсім, ніколи) are not mistaken for non-target
+       direct objects.
+    """
+    # 1. Finding 1 (R28-F1): замість and substitution direction in explicit prohibitions
+    # Astra probe:
+    assert is_target_condemned_in_text("царинками", "Не вживайте «царинками» замість «полями».") is True
+    # Order variants:
+    assert is_target_condemned_in_text("царинками", "Замість «полями» не вживайте «царинками».") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» замість «полями» не слід вживати.") is True
+
+    # Controls where target is in замість clause (defended or replaced):
+    assert is_target_condemned_in_text("царинками", "Не вживайте «полями» замість «царинками».") is False
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» не слід вживати «гарний».") is False
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» вживайте «полями».") is True
+
+    # 2. Finding 2 (R28-F2): Trailing adverbs modifying verbs are not objects
+    # Astra probe:
+    assert is_target_condemned_in_text("царинками", "«царинками» не слід вживати взагалі.") is True
+    # Variations across modals and adverbs:
+    assert is_target_condemned_in_text("царинками", "«царинками» заборонено вживати взагалі.") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» вживати заборонено взагалі.") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» не слід вживати зовсім.") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» не слід вживати ніколи.") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» не слід вживати категорично.") is True
+    assert is_target_condemned_in_text("царинками", "Не вживайте «царинками» взагалі.") is True
+    assert is_target_condemned_in_text("царинками", "Не слід вживати взагалі «царинками».") is True
+
+    # Prohibitions governing non-target objects with adverbs do NOT condemn target:
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Не вживайте слова общий взагалі.") is False
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Не вживайте взагалі слова общий.") is False
+
+    # 3. Isolated DPO integration tests
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "target_term": "царинками",
+            "category": "dialectal",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sources = tmp_path / "sources.db"
+    conn_s = sqlite3.connect(mock_sources)
+    conn_s.execute("CREATE TABLE sum20 (entry_id INTEGER PRIMARY KEY, lemma TEXT);")
+    conn_s.execute("INSERT INTO sum20 VALUES (1, 'добрий');")
+    conn_s.execute("INSERT INTO sum20 VALUES (2, 'гарний');")
+    conn_s.execute("INSERT INTO sum20 VALUES (3, 'общий');")
+    conn_s.commit()
+    conn_s.close()
+    mock_vesum = tmp_path / "vesum.db"
+    conn_v = sqlite3.connect(mock_vesum)
+    conn_v.execute("CREATE TABLE vesum (lemma TEXT);")
+    conn_v.execute("INSERT INTO vesum VALUES ('добрий');")
+    conn_v.execute("INSERT INTO vesum VALUES ('гарний');")
+    conn_v.execute("INSERT INTO vesum VALUES ('общий');")
+    conn_v.commit()
+    conn_v.close()
+    mock_sft_clean = tmp_path / "sft_clean"
+    mock_sft_clean.mkdir()
+    (mock_sft_clean / "shard.jsonl").write_text(
+        json.dumps({
+            "instruction": "Поясніть вживання слова «царинками».",
+            "response": "«царинками» — автентичне діалектне слово, яке слід зберегти.",
+            "target_term": "царинками",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+
+    # R28-F1 probe: Explicit prohibition in chosen with замість -> MUST fail audit
+    dpo_f1 = tmp_path / "dpo_r28_f1"
+    dpo_f1.mkdir()
+    (dpo_f1 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "Не вживайте «царинками» замість «полями».",
+            "rejected": "«царинками» — нормативне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_f1, data_f1, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_f1,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r28_f1.md",
+        output_json=tmp_path / "r28_f1.json",
+    )
+    assert passed_f1 is False, "Expected audit to fail when chosen prohibits target in 'Не вживайте <target> замість <other>'"
+    assert data_f1["dpo_contradictions_count"] == 1
+
+    # R28-F2 probe: Explicit prohibition in chosen with trailing adverb -> MUST fail audit
+    dpo_f2 = tmp_path / "dpo_r28_f2"
+    dpo_f2.mkdir()
+    (dpo_f2 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "«царинками» не слід вживати взагалі.",
+            "rejected": "«царинками» — нормативне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_f2, data_f2, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_f2,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r28_f2.md",
+        output_json=tmp_path / "r28_f2.json",
+    )
+    assert passed_f2 is False, "Expected audit to fail when chosen prohibits target with trailing adverb 'взагалі'"
+    assert data_f2["dpo_contradictions_count"] == 1
+
+    # Preservation control 1: Target defended in замість clause -> MUST pass audit
+    dpo_ctrl1 = tmp_path / "dpo_r28_ctrl1"
+    dpo_ctrl1.mkdir()
+    (dpo_ctrl1 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "Не вживайте «полями» замість «царинками».",
+            "rejected": "«царинками» — помилка.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_ctrl1, data_ctrl1, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_ctrl1,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r28_ctrl1.md",
+        output_json=tmp_path / "r28_ctrl1.json",
+    )
+    assert passed_ctrl1 is True, "Expected audit pass when target is preserved in замість frame"
+    assert data_ctrl1["dpo_contradictions_count"] == 0
+
+    # Preservation control 2: Non-target object prohibited with trailing adverb -> MUST pass audit
+    dpo_ctrl2 = tmp_path / "dpo_r28_ctrl2"
+    dpo_ctrl2.mkdir()
+    (dpo_ctrl2 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "«царинками» — нормативне слово. Не вживайте слова общий взагалі.",
+            "rejected": "«царинками» — помилка.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_ctrl2, data_ctrl2, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_ctrl2,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r28_ctrl2.md",
+        output_json=tmp_path / "r28_ctrl2.json",
+    )
+    assert passed_ctrl2 is True, "Expected audit pass when non-target object is prohibited with trailing adverb"
+    assert data_ctrl2["dpo_contradictions_count"] == 0
