@@ -59,7 +59,9 @@ export function tokenizeErrorSentence(sentence: string): string[] {
 }
 
 export function cleanErrorToken(word: string): string {
-  return word.replace(/[^\p{L}\p{N}\p{M}'’ʼʹ]/gu, '');
+  return word
+    .replace(/[^\p{L}\p{N}\p{M}'’ʼʹ-]/gu, '')
+    .replace(/^-+|-+$/g, '');
 }
 
 export function ErrorCorrectionItem({

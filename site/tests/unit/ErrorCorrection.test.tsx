@@ -108,6 +108,28 @@ describe('hyphenated tokens', () => {
     await user.click(wordByText(container, 'се-ло'));
     expect(itemContainer(container).getAttribute('data-step')).toBe('fix');
   });
+
+  test('regression: the unhyphenated token is not conflated with its hyphenated look-alike', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <ErrorCorrectionItem
+        sentence="село се-ло"
+        errorWord="се-ло"
+        correctForm="село"
+        options={['село', 'се-ло']}
+        explanation="Без дефіса."
+      />,
+    );
+
+    expect(wordByText(container, 'село').getAttribute('data-is-error')).toBe('false');
+    expect(wordByText(container, 'се-ло').getAttribute('data-is-error')).toBe('true');
+
+    await user.click(wordByText(container, 'село'));
+    expect(itemContainer(container).getAttribute('data-step')).toBe('identify');
+
+    await user.click(wordByText(container, 'се-ло'));
+    expect(itemContainer(container).getAttribute('data-step')).toBe('fix');
+  });
 });
 
 describe('numeral tokens', () => {
