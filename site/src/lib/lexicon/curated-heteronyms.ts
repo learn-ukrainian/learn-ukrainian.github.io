@@ -36217,8 +36217,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "складуватися",
       "url_slug": "складуватися",
       "headword": "скла́дуватися",
-      "short_label": "зосереджуватися на складі, зберігатися складським способом (недок.)",
-      "gloss": "be stored in a warehouse, accumulate in storage (imperf.)",
+      "short_label": "складатися, формуватися, утворюватися з окремих частин (рідко, недок.)",
+      "gloss": "be formed, consist of, be composed of elements (rare, imperf.)",
       "pos": "verb",
       "cefr": "B2",
       "heritage_status": {
@@ -36242,10 +36242,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "недоконаний"
         }
       },
-      "distinction_note": "Означає накопичуватися або розміщуватися на складі (вантажі складуються на рампі). Не плутати з формуванням життєвих обставин «складува́тися».",
+      "distinction_note": "Рідкісний варіант до «склада́тися» (утворюватися з частин, формуватися). Не плутати зі складуванням вантажів або товарів на складі «складува́тися».",
       "meaning": {
         "definitions": [
-          "Зосереджуватися на складі; зберігатися в складі."
+          "Те саме, що склада́тися (формуватися, утворюватися з окремих частин; рідко)."
         ],
         "source": "ВТС"
       },
@@ -36262,8 +36262,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "складуватися",
       "url_slug": "складуватися",
       "headword": "складува́тися",
-      "short_label": "формуватися з елементів, виникати як результат обставин (недок.)",
-      "gloss": "take shape, form, develop out of elements or conditions (imperf.)",
+      "short_label": "розміщуватися на складі, штабелюватися (пас. до складува́ти, спец., недок.)",
+      "gloss": "be warehoused, stacked, stored in a storage facility (spec., pass., imperf.)",
       "pos": "verb",
       "cefr": "B2",
       "heritage_status": {
@@ -36287,10 +36287,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "недоконаний"
         }
       },
-      "distinction_note": "Означає формуватися з частин, набирати вигляду (погляди складуються, обставини складуються). Не плутати з розміщенням на складі «скла́дуватися».",
+      "distinction_note": "Виробничо-складський термін: пасивний стан до дієслова «складува́ти» (розміщуватися в сховищі, штабелюватися на складі). Не плутати з формуванням або утворенням «скла́дуватися».",
       "meaning": {
         "definitions": [
-          "Формуватися, утворюватися з окремих частин; розвиватися."
+          "Пасивний стан до дієслова складува́ти (розміщуватися на складі, штабелюватися; спец.)."
         ],
         "source": "ВТС"
       },
@@ -36496,8 +36496,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "сопуха",
       "url_slug": "сопуха",
       "headword": "со́пу́ха",
-      "short_label": "отвір у печі або димарі для очищення сажі (пічний отвір)",
-      "gloss": "soot door, chimney cleaning hole, flue cleanout",
+      "short_label": "сажа, кіптява в печі або сморід (діал.)",
+      "gloss": "soot, lampblack, or foul stench/fumes (dialectal)",
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
@@ -36519,6 +36519,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "paradigm": {
           "kind": "noun",
           "gender": "жіночий",
+          "animacy": "inanimate",
           "cases": {
             "називний": {
               "singular": "со́пуха",
@@ -36551,10 +36552,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           }
         }
       },
-      "distinction_note": "Побутове значення: отвір у комині чи печі для вигрібання сажі. Не плутати з їдким чадним димом або лайливим словом «сопу́ха».",
+      "distinction_note": "Діалектне та етнографічне позначення пічної сажі, кіптяви або їдкого чадного смороду. Не плутати з позначенням людини «сопу́ха» (жіночий рід до сопу́н).",
       "meaning": {
         "definitions": [
-          "Отвір у димарі або печі для вигрібання сажі."
+          "1. Сажа. 2. Сморід (діал.)."
         ],
         "source": "ВТС"
       },
@@ -36575,8 +36576,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "сопуха",
       "url_slug": "сопуха",
       "headword": "сопу́ха",
-      "short_label": "густий їдкий дим, кіптява, або неохайна замурзана людина (розм.)",
-      "gloss": "acrid smoke, soot cloud, or dirty disheveled person (colloq.)",
+      "short_label": "жінка, що важко сопе, або сердита, сердито сопуча особа (жін. до сопун, розм.)",
+      "gloss": "female snorter, wheezer; sulking or huffing woman (colloq.)",
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
@@ -36598,6 +36599,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "paradigm": {
           "kind": "noun",
           "gender": "жіночий",
+          "animacy": "animate",
           "cases": {
             "називний": {
               "singular": "сопу́ха",
@@ -36613,7 +36615,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
             },
             "знахідний": {
               "singular": "сопу́ху",
-              "plural": "сопу́хи / сопу́х"
+              "plural": "сопу́х"
             },
             "орудний": {
               "singular": "сопу́хою",
@@ -36630,10 +36632,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           }
         }
       },
-      "distinction_note": "Означає їдкий дим або забруднену сажею неохайну особу (перен., лайл.). Не плутати з отвором у димарі «со́пу́ха».",
+      "distinction_note": "Розмовне найменування жінки або дівчини, яка важко сопе чи сердито пирхає/дмухає (жіночий відповідник до «сопу́н»). Не плутати з пічною сажею «со́пу́ха».",
       "meaning": {
         "definitions": [
-          "Густий їдкий дим, сморід або засмальцьована людина."
+          "Жіночий рід до сопу́н (розмовне позначення особи, що голосно сопе або пирхає від злості чи втоми)."
         ],
         "source": "ВТС"
       },
@@ -36652,8 +36654,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "сосковий",
       "url_slug": "сосковий",
       "headword": "со́сковий",
-      "short_label": "стосовний до соска грудної залози (анат.)",
-      "gloss": "nipple-related, mammillary, papillary (anat.)",
+      "short_label": "стосовний до соски (напувалки для молодняку або соски для немовлят)",
+      "gloss": "feeder-teat related, teat-cup or pacifier-related",
       "pos": "adj",
       "cefr": "B2",
       "heritage_status": {
@@ -36676,10 +36678,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Анатомічний термін: стосовний до грудного соска (соскова лінія, сосковий відросток). Не плутати з технічною деталлю доїльного апарата «соско́вий».",
+      "distinction_note": "Похідний прикметник від «со́ска» (гумова насадка для годування немовлят або соскова напувалка для випоювання молодняку тварин). Не плутати з анатомічним терміном від сосо́к «соско́вий».",
       "meaning": {
         "definitions": [
-          "Стосовний до соска тіла."
+          "Прикметник до со́ска (гумовий виріб для випоювання тварин або годування немовлят)."
         ],
         "source": "ВТС"
       },
@@ -36696,8 +36698,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "сосковий",
       "url_slug": "сосковий",
       "headword": "соско́вий",
-      "short_label": "стосовний до соска як насадки доїльного апарата (техн.)",
-      "gloss": "teat-cup related (agricultural machinery)",
+      "short_label": "стосовний до грудного соска або анатомічного відростка (анат.)",
+      "gloss": "mammillary, papillary, nipple-related, mastoid (anat.)",
       "pos": "adj",
       "cefr": "B2",
       "heritage_status": {
@@ -36720,10 +36722,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Сільськогосподарський технічний термін: стосовний до насадок апарата машинного доїння (соскова гума). Не плутати з анатомічним терміном «со́сковий».",
+      "distinction_note": "Анатомічний термін від «сосо́к» (сосок грудної залози, сосковий відросток скроневої кістки, сосочки язика чи шкіри). Не плутати з прикметником від штучної соски «со́сковий».",
       "meaning": {
         "definitions": [
-          "Прикметник до сосок (технічна деталь у тваринництві)."
+          "Прикметник до сосо́к (анатомічне утворення: сосок грудей, сосковий відросток тощо)."
         ],
         "source": "ВТС"
       },
@@ -37750,8 +37752,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "сунутися",
       "url_slug": "сунутися",
       "headword": "су́нутися",
-      "short_label": "рухатися повільно, повзти всією масою або пересуватися (недок.)",
-      "gloss": "move slowly, creep forward, advance in bulk (imperf.)",
+      "short_label": "повільно рухатися або лізти кудись небажано чи недоречно (недок.)",
+      "gloss": "move slowly, crawl along, or push into unwelcoming places (imperf.)",
       "pos": "verb",
       "cefr": "B1",
       "heritage_status": {
@@ -37775,10 +37777,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "недоконаний"
         }
       },
-      "distinction_note": "Означає повільно або суцільною масою посуватися вперед (хмари сунуться, віз сунеться). Не плутати з недоречним утручанням «суну́тися».",
+      "distinction_note": "Недоконаний вид: означає повільно або через силу рухатися чи пересуватися («сани ледве сунулись»), а також розмовно лізти чи втручатися («не сунься у воду, не спитавши броду»). Не плутати з доконаним раптовим кидком «суну́тися».",
       "meaning": {
         "definitions": [
-          "Повільно рухатися, посуватися вперед."
+          "1. Повільно рухатися, посуватися вперед. 2. Лізти, потикатися кудись без потреби; утручатися (розм.)."
         ],
         "source": "ВТС"
       },
@@ -37799,10 +37801,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "сунутися",
       "url_slug": "сунутися",
       "headword": "суну́тися",
-      "short_label": "лізти, пхатися кудись недоречно, утручатися в чужі справи (розм.)",
-      "gloss": "meddle, poke one's nose, push into unwelcoming places (colloq.)",
+      "short_label": "раптово кинутися, ринутися до когось або чогось (док.)",
+      "gloss": "dash, rush, charge forward suddenly at someone or something (perf.)",
       "pos": "verb",
-      "cefr": "B1",
+      "cefr": "B2",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": false,
@@ -37821,13 +37823,13 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "pos": "дієслово",
         "paradigm": {
           "kind": "verb",
-          "aspect": "недоконаний"
+          "aspect": "доконаний"
         }
       },
-      "distinction_note": "Експресивне позначення настирливого або недоречного вторгнення («не сунься у воду, не знаючи броду»). Не плутати з повільним рухом «су́нутися».",
+      "distinction_note": "Доконаний вид: позначає одноразовий раптовий кидок уперед, напад чи ривок («офіцери сунулись до нього», «кинутися, ринутися»). Не плутати з тривалим повільним пересуванням або розмовним утручанням «су́нутися» (недок. вид).",
       "meaning": {
         "definitions": [
-          "Лізти, потикатися кудись без потреби; утручатися."
+          "Кинутися, ринутися до кого-, чого-небудь (доконаний вид)."
         ],
         "source": "ВТС"
       },
@@ -37936,8 +37938,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "схрипнути",
       "url_slug": "схрипнути",
       "headword": "схри́пнути",
-      "short_label": "стати хрипким, захрипнути від крику або застуди (док.)",
-      "gloss": "become hoarse, lose clear voice through shouting or cold (perf.)",
+      "short_label": "стати охриплим, втратити чистоту голосу (док., розм.)",
+      "gloss": "become hoarse, turn raspy from shouting or cold (perf.)",
       "pos": "verb",
       "cefr": "B2",
       "heritage_status": {
@@ -37961,10 +37963,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "доконаний"
         }
       },
-      "distinction_note": "Означає втратити чистоту голосу (голос схрип). Не плутати з варіантним кінцевим наголосом «схрипну́ти».",
+      "distinction_note": "Позначає перехід у стан охриплості (голос схрип, охрипнути). Не плутати з однократним видаванням хрипкого звуку «схрипну́ти».",
       "meaning": {
         "definitions": [
-          "Втратити чистоту голосу, стати охриплим."
+          "Те саме, що охри́пнути (втратити чистоту голосу, стати охриплим; розм.)."
         ],
         "source": "ВТС"
       },
@@ -37981,8 +37983,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "схрипнути",
       "url_slug": "схрипнути",
       "headword": "схрипну́ти",
-      "short_label": "захрипнути, втратити дзвінкість голосу (варіантний наголос)",
-      "gloss": "turn raspy, hoarsen (variant stress)",
+      "short_label": "видати однократний хрипкий звук, хрипнути один раз (однокр., док.)",
+      "gloss": "emit a single hoarse sound, let out a raspy wheeze once (semelfactive, perf.)",
       "pos": "verb",
       "cefr": "B2",
       "heritage_status": {
@@ -38006,10 +38008,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "доконаний"
         }
       },
-      "distinction_note": "Кінцевонаголошений варіант до дієслова схрипнути. Не плутати з нормативним кореневим «схри́пнути».",
+      "distinction_note": "Однократна дія: видати короткий хрипкий або сиплий звук (однократне до «схри́пувати»). Не плутати зі станом повної охриплості «схри́пнути».",
       "meaning": {
         "definitions": [
-          "Те саме, що схри́пнути (варіант наголосу)."
+          "Однократне до схри́пувати (видати однократний хрипкий звук)."
         ],
         "source": "ВТС"
       },

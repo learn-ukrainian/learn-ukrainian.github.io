@@ -688,8 +688,8 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                                 '(Ленін).'},
                           'pre_soviet_witness': None}],
     'складуватися': [   {   'headword': 'скла́дуватися',
-                            'short_label': 'зосереджуватися на складі, зберігатися складським способом (недок.)',
-                            'gloss': 'be stored in a warehouse, accumulate in storage (imperf.)',
+                            'short_label': 'складатися, формуватися, утворюватися з окремих частин (рідко, недок.)',
+                            'gloss': 'be formed, consist of, be composed of elements (rare, imperf.)',
                             'pos': 'verb',
                             'cefr': 'B2',
                             'heritage_status': {   'classification': 'standard',
@@ -701,10 +701,9 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                           'source': 'ВТС',
                                           'url': 'https://slovnyk.me/dict/vts/складуватися'},
                             'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'недоконаний'}},
-                            'distinction_note': 'Означає накопичуватися або розміщуватися на складі (вантажі '
-                                                'складуються на рампі). Не плутати з формуванням життєвих обставин '
-                                                '«складува́тися».',
-                            'meaning': {   'definitions': ['Зосереджуватися на складі; зберігатися в складі.'],
+                            'distinction_note': 'Рідкісний варіант до «склада́тися» (утворюватися з частин, формуватися). '
+                                                'Не плутати зі складуванням вантажів або товарів на складі «складува́тися».',
+                            'meaning': {   'definitions': ['Те саме, що склада́тися (формуватися, утворюватися з окремих частин; рідко).'],
                                            'source': 'ВТС'},
                             'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                                'definition': 'СКЛА́ДУВАТИСЯ, уюся, уєшся, недок., '
@@ -724,8 +723,8 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                                   'лексикографічної прозорості.'},
                             'pre_soviet_witness': None},
                         {   'headword': 'складува́тися',
-                            'short_label': 'формуватися з елементів, виникати як результат обставин (недок.)',
-                            'gloss': 'take shape, form, develop out of elements or conditions (imperf.)',
+                            'short_label': 'розміщуватися на складі, штабелюватися (пас. до складува́ти, спец., недок.)',
+                            'gloss': 'be warehoused, stacked, stored in a storage facility (spec., pass., imperf.)',
                             'pos': 'verb',
                             'cefr': 'B2',
                             'heritage_status': {   'classification': 'standard',
@@ -737,10 +736,10 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                           'source': 'ВТС',
                                           'url': 'https://slovnyk.me/dict/vts/складуватися'},
                             'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'недоконаний'}},
-                            'distinction_note': 'Означає формуватися з частин, набирати вигляду (погляди складуються, '
-                                                'обставини складуються). Не плутати з розміщенням на складі '
-                                                '«скла́дуватися».',
-                            'meaning': {   'definitions': ['Формуватися, утворюватися з окремих частин; розвиватися.'],
+                            'distinction_note': 'Виробничо-складський термін: пасивний стан до дієслова «складува́ти» '
+                                                '(розміщуватися в сховищі, штабелюватися на складі). Не плутати з '
+                                                'формуванням або утворенням «скла́дуватися».',
+                            'meaning': {   'definitions': ['Пасивний стан до дієслова складува́ти (розміщуватися на складі, штабелюватися; спец.).'],
                                            'source': 'ВТС'},
                             'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                                'definition': 'СКЛАДУВА́ТИСЯ, у́ється, недок., спец. '
@@ -903,8 +902,8 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                               'прозорості.'},
                         'pre_soviet_witness': None}],
     'сопуха': [   {   'headword': 'со́пу́ха',
-                      'short_label': 'отвір у печі або димарі для очищення сажі (пічний отвір)',
-                      'gloss': 'soot door, chimney cleaning hole, flue cleanout',
+                      'short_label': 'сажа, кіптява в печі або сморід (діал.)',
+                      'gloss': 'soot, lampblack, or foul stench/fumes (dialectal)',
                       'pos': 'noun',
                       'cefr': 'B2',
                       'heritage_status': {   'classification': 'standard',
@@ -916,6 +915,7 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                       'morphology': {   'pos': 'іменник',
                                         'paradigm': {   'kind': 'noun',
                                                         'gender': 'жіночий',
+                                                        'animacy': 'inanimate',
                                                         'cases': {   'називний': {   'singular': 'со́пуха',
                                                                                      'plural': 'со́пухи'},
                                                                      'родовий': {   'singular': 'со́пухи',
@@ -930,9 +930,9 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                                      'plural': 'со́пухах'},
                                                                      'кличний': {   'singular': 'со́пухо',
                                                                                     'plural': 'со́пухи'}}}},
-                      'distinction_note': 'Побутове значення: отвір у комині чи печі для вигрібання сажі. Не плутати з '
-                                          'їдким чадним димом або лайливим словом «сопу́ха».',
-                      'meaning': {'definitions': ['Отвір у димарі або печі для вигрібання сажі.'], 'source': 'ВТС'},
+                      'distinction_note': 'Діалектне та етнографічне позначення пічної сажі, кіптяви або їдкого чадного '
+                                          'смороду. Не плутати з позначенням людини «сопу́ха» (жіночий рід до сопу́н).',
+                      'meaning': {'definitions': ['1. Сажа. 2. Сморід (діал.).'], 'source': 'ВТС'},
                       'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                          'definition': 'СО́ПУ́ХА, и, ж., діал. 1. Сажа. — Якби не він, '
                                                                        'та й би мене аж на весні найшли, якби сопуха з '
@@ -953,8 +953,8 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                    'імперських указів (Валуєвського циркуляра 1863 р. '
                                                                    'та Емського указу 1876 р.).'}},
                   {   'headword': 'сопу́ха',
-                      'short_label': 'густий їдкий дим, кіптява, або неохайна замурзана людина (розм.)',
-                      'gloss': 'acrid smoke, soot cloud, or dirty disheveled person (colloq.)',
+                      'short_label': 'жінка, що важко сопе, або сердита, сердито сопуча особа (жін. до сопун, розм.)',
+                      'gloss': 'female snorter, wheezer; sulking or huffing woman (colloq.)',
                       'pos': 'noun',
                       'cefr': 'B2',
                       'heritage_status': {   'classification': 'standard',
@@ -966,6 +966,7 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                       'morphology': {   'pos': 'іменник',
                                         'paradigm': {   'kind': 'noun',
                                                         'gender': 'жіночий',
+                                                        'animacy': 'animate',
                                                         'cases': {   'називний': {   'singular': 'сопу́ха',
                                                                                      'plural': 'сопу́хи'},
                                                                      'родовий': {   'singular': 'сопу́хи',
@@ -973,16 +974,17 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                      'давальний': {   'singular': 'сопу́сі',
                                                                                       'plural': 'сопу́хам'},
                                                                      'знахідний': {   'singular': 'сопу́ху',
-                                                                                      'plural': 'сопу́хи / сопу́х'},
+                                                                                      'plural': 'сопу́х'},
                                                                      'орудний': {   'singular': 'сопу́хою',
                                                                                     'plural': 'сопу́хами'},
                                                                      'місцевий': {   'singular': 'сопу́сі',
                                                                                      'plural': 'сопу́хах'},
                                                                      'кличний': {   'singular': 'сопу́хо',
                                                                                     'plural': 'сопу́хи'}}}},
-                      'distinction_note': 'Означає їдкий дим або забруднену сажею неохайну особу (перен., лайл.). Не '
-                                          'плутати з отвором у димарі «со́пу́ха».',
-                      'meaning': {   'definitions': ['Густий їдкий дим, сморід або засмальцьована людина.'],
+                      'distinction_note': 'Розмовне найменування жінки або дівчини, яка важко сопе чи сердито пирхає/дмухає '
+                                          '(жіночий відповідник до «сопу́н»). Не плутати з пічною сажею «со́пу́ха».',
+                      'meaning': {   'definitions': ['Жіночий рід до сопу́н (розмовне позначення особи, що голосно сопе '
+                                                     'або пирхає від злості чи втоми).'],
                                      'source': 'ВТС'},
                       'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                          'definition': 'СОПУ́ХА, и, ж., розм. Жін. до сопу́н.',
@@ -993,8 +995,8 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                             'прозорості.'},
                       'pre_soviet_witness': None}],
     'сосковий': [   {   'headword': 'со́сковий',
-                        'short_label': 'стосовний до соска грудної залози (анат.)',
-                        'gloss': 'nipple-related, mammillary, papillary (anat.)',
+                        'short_label': 'стосовний до соски (напувалки для молодняку або соски для немовлят)',
+                        'gloss': 'feeder-teat related, teat-cup or pacifier-related',
                         'pos': 'adj',
                         'cefr': 'B2',
                         'heritage_status': {   'classification': 'standard',
@@ -1004,9 +1006,10 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                         'pronunciation': {'ipa': '[ˈsɔskɔwɪj]'},
                         'stress': {'form': 'со́сковий', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/сосковий'},
                         'morphology': {'pos': 'прикметник', 'paradigm': {'kind': 'adjective'}},
-                        'distinction_note': 'Анатомічний термін: стосовний до грудного соска (соскова лінія, сосковий '
-                                            'відросток). Не плутати з технічною деталлю доїльного апарата «соско́вий».',
-                        'meaning': {'definitions': ['Стосовний до соска тіла.'], 'source': 'ВТС'},
+                        'distinction_note': 'Похідний прикметник від «со́ска» (гумова насадка для годування немовлят або '
+                                            'соскова напувалка для випоювання молодняку тварин). Не плутати з анатомічним '
+                                            'терміном від сосо́к «соско́вий».',
+                        'meaning': {'definitions': ['Прикметник до со́ска (гумовий виріб для випоювання тварин або годування немовлят).'], 'source': 'ВТС'},
                         'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                            'definition': 'СО́СКОВИЙ, а, е. Прикм. до со́ска. Через 40 '
                                                                          '—50 хвилин після народження телят випоювали '
@@ -1019,8 +1022,8 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                               'прозорості.'},
                         'pre_soviet_witness': None},
                     {   'headword': 'соско́вий',
-                        'short_label': 'стосовний до соска як насадки доїльного апарата (техн.)',
-                        'gloss': 'teat-cup related (agricultural machinery)',
+                        'short_label': 'стосовний до грудного соска або анатомічного відростка (анат.)',
+                        'gloss': 'mammillary, papillary, nipple-related, mastoid (anat.)',
                         'pos': 'adj',
                         'cefr': 'B2',
                         'heritage_status': {   'classification': 'standard',
@@ -1030,10 +1033,10 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                         'pronunciation': {'ipa': '[sɔˈskɔwɪj]'},
                         'stress': {'form': 'соско́вий', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/сосковий'},
                         'morphology': {'pos': 'прикметник', 'paradigm': {'kind': 'adjective'}},
-                        'distinction_note': 'Сільськогосподарський технічний термін: стосовний до насадок апарата '
-                                            'машинного доїння (соскова гума). Не плутати з анатомічним терміном '
-                                            '«со́сковий».',
-                        'meaning': {   'definitions': ['Прикметник до сосок (технічна деталь у тваринництві).'],
+                        'distinction_note': 'Анатомічний термін від «сосо́к» (сосок грудної залози, сосковий відросток '
+                                            'скроневої кістки, сосочки язика чи шкіри). Не плутати з прикметником від '
+                                            'штучної соски «со́сковий».',
+                        'meaning': {   'definitions': ['Прикметник до сосо́к (анатомічне утворення: сосок грудей, сосковий відросток тощо).'],
                                        'source': 'ВТС'},
                         'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                            'definition': 'СОСКО́ВИЙ, а, е. Прикм. до сосо́к.',
@@ -1762,8 +1765,8 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                       'імперських указів (Валуєвського циркуляра 1863 '
                                                                       'р. та Емського указу 1876 р.).'}}],
     'сунутися': [   {   'headword': 'су́нутися',
-                        'short_label': 'рухатися повільно, повзти всією масою або пересуватися (недок.)',
-                        'gloss': 'move slowly, creep forward, advance in bulk (imperf.)',
+                        'short_label': 'повільно рухатися або лізти кудись небажано чи недоречно (недок.)',
+                        'gloss': 'move slowly, crawl along, or push into unwelcoming places (imperf.)',
                         'pos': 'verb',
                         'cefr': 'B1',
                         'heritage_status': {   'classification': 'standard',
@@ -1773,9 +1776,10 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                         'pronunciation': {'ipa': '[ˈsunutɪsʲɐ]'},
                         'stress': {'form': 'су́нутися', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/сунутися'},
                         'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'недоконаний'}},
-                        'distinction_note': 'Означає повільно або суцільною масою посуватися вперед (хмари сунуться, '
-                                            'віз сунеться). Не плутати з недоречним утручанням «суну́тися».',
-                        'meaning': {'definitions': ['Повільно рухатися, посуватися вперед.'], 'source': 'ВТС'},
+                        'distinction_note': 'Недоконаний вид: означає повільно або через силу рухатися чи пересуватися '
+                                            '(«сани ледве сунулись»), а також розмовно лізти чи втручатися («не сунься у '
+                                            'воду, не спитавши броду»). Не плутати з доконаним раптовим кидком «суну́тися».',
+                        'meaning': {'definitions': ['1. Повільно рухатися, посуватися вперед. 2. Лізти, потикатися кудись без потреби; утручатися (розм.).'], 'source': 'ВТС'},
                         'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                            'definition': 'СУ́НУТИСЯ, нуся, нешся, недок. 1. Іти, '
                                                                          'рухатися, пересуватися, перев. повільно або '
@@ -1900,21 +1904,21 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                      'імперських указів (Валуєвського циркуляра 1863 '
                                                                      'р. та Емського указу 1876 р.).'}},
                     {   'headword': 'суну́тися',
-                        'short_label': 'лізти, пхатися кудись недоречно, утручатися в чужі справи (розм.)',
-                        'gloss': "meddle, poke one's nose, push into unwelcoming places (colloq.)",
+                        'short_label': 'раптово кинутися, ринутися до когось або чогось (док.)',
+                        'gloss': 'dash, rush, charge forward suddenly at someone or something (perf.)',
                         'pos': 'verb',
-                        'cefr': 'B1',
+                        'cefr': 'B2',
                         'heritage_status': {   'classification': 'standard',
                                                'is_russianism': False,
                                                'russian_shadow': False,
                                                'vesum_attested': True},
                         'pronunciation': {'ipa': '[suˈnutɪsʲɐ]'},
                         'stress': {'form': 'суну́тися', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/сунутися'},
-                        'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'недоконаний'}},
-                        'distinction_note': 'Експресивне позначення настирливого або недоречного вторгнення («не '
-                                            'сунься у воду, не знаючи броду»). Не плутати з повільним рухом '
-                                            '«су́нутися».',
-                        'meaning': {   'definitions': ['Лізти, потикатися кудись без потреби; утручатися.'],
+                        'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'доконаний'}},
+                        'distinction_note': 'Доконаний вид: позначає одноразовий раптовий кидок уперед, напад чи ривок '
+                                            '(«офіцери сунулись до нього», «кинутися, ринутися»). Не плутати з тривалим '
+                                            'повільним пересуванням або розмовним утручанням «су́нутися» (недок. вид).',
+                        'meaning': {   'definitions': ['Кинутися, ринутися до кого-, чого-небудь (доконаний вид).'],
                                        'source': 'ВТС'},
                         'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                            'definition': 'СУНУ́ТИСЯ, ну́ся, не́шся, док. 1. Кинутися '
@@ -2022,8 +2026,8 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                              'прозорості.'},
                        'pre_soviet_witness': None}],
     'схрипнути': [   {   'headword': 'схри́пнути',
-                         'short_label': 'стати хрипким, захрипнути від крику або застуди (док.)',
-                         'gloss': 'become hoarse, lose clear voice through shouting or cold (perf.)',
+                         'short_label': 'стати охриплим, втратити чистоту голосу (док., розм.)',
+                         'gloss': 'become hoarse, turn raspy from shouting or cold (perf.)',
                          'pos': 'verb',
                          'cefr': 'B2',
                          'heritage_status': {   'classification': 'standard',
@@ -2035,9 +2039,9 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                        'source': 'ВТС',
                                        'url': 'https://slovnyk.me/dict/vts/схрипнути'},
                          'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'доконаний'}},
-                         'distinction_note': 'Означає втратити чистоту голосу (голос схрип). Не плутати з варіантним '
-                                             'кінцевим наголосом «схрипну́ти».',
-                         'meaning': {'definitions': ['Втратити чистоту голосу, стати охриплим.'], 'source': 'ВТС'},
+                         'distinction_note': 'Позначає перехід у стан охриплості (голос схрип, охрипнути). Не плутати з '
+                                             'однократним видаванням хрипкого звуку «схрипну́ти».',
+                         'meaning': {'definitions': ['Те саме, що охри́пнути (втратити чистоту голосу, стати охриплим; розм.).'], 'source': 'ВТС'},
                          'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                             'definition': 'СХРИ́ПНУТИ, ну, неш; мин. ч. схрип і '
                                                                           'схри́пнув, ла, ло; док., розм. Те саме, що '
@@ -2050,8 +2054,8 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                                'лексикографічної прозорості.'},
                          'pre_soviet_witness': None},
                      {   'headword': 'схрипну́ти',
-                         'short_label': 'захрипнути, втратити дзвінкість голосу (варіантний наголос)',
-                         'gloss': 'turn raspy, hoarsen (variant stress)',
+                         'short_label': 'видати однократний хрипкий звук, хрипнути один раз (однокр., док.)',
+                         'gloss': 'emit a single hoarse sound, let out a raspy wheeze once (semelfactive, perf.)',
                          'pos': 'verb',
                          'cefr': 'B2',
                          'heritage_status': {   'classification': 'standard',
@@ -2063,9 +2067,9 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                        'source': 'ВТС',
                                        'url': 'https://slovnyk.me/dict/vts/схрипнути'},
                          'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'доконаний'}},
-                         'distinction_note': 'Кінцевонаголошений варіант до дієслова схрипнути. Не плутати з '
-                                             'нормативним кореневим «схри́пнути».',
-                         'meaning': {'definitions': ['Те саме, що схри́пнути (варіант наголосу).'], 'source': 'ВТС'},
+                         'distinction_note': 'Однократна дія: видати короткий хрипкий або сиплий звук (однократне до '
+                                             '«схри́пувати»). Не плутати зі станом повної охриплості «схри́пнути».',
+                         'meaning': {'definitions': ['Однократне до схри́пувати (видати однократний хрипкий звук).'], 'source': 'ВТС'},
                          'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                             'definition': 'СХРИПНУ́ТИ, ну́, не́ш, док. Однокр. до '
                                                                           'схри́пувати.',
