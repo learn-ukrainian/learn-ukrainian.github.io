@@ -1609,3 +1609,119 @@ def test_audit_astra_r13_multi_sentence_zamist_probes(tmp_path: Path):
     assert passed is False
     assert data["dpo_contradictions_count"] == 1
     assert data["dpo_contradictions"][0]["target_term"] == "царинками"
+
+
+def test_audit_astra_r14_multi_clause_zamist_probes(tmp_path: Path):
+    """Verify Astra R14 Finding 1: negation in another clause does not suppress affirmative replacement instruction for both orders."""
+    # 1. Astra's exact reproducer: negation in first clause does not hide affirmative replacement in second clause
+    text1 = "Не слід вживати «гарний», але вживайте «добрий» замість «царинками»."
+    assert is_target_condemned_in_text("царинками", text1) is True
+
+    # 2. Reversed order: affirmative replacement in first clause is not suppressed by negation in second clause
+    text2 = "Вживайте «добрий» замість «царинками», але не слід вживати «гарний»."
+    assert is_target_condemned_in_text("царинками", text2) is True
+
+    # 3. Asyndetic coordination (without conjunctions)
+    assert is_target_condemned_in_text("царинками", "Не слід вживати «гарний», вживайте «добрий» замість «царинками».") is True
+    assert is_target_condemned_in_text("царинками", "Вживайте «добрий» замість «царинками», не слід вживати «гарний».") is True
+
+    # 4. Order 2 with other clauses
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» вживайте «добрий», але не слід вживати «гарний».") is True
+    assert is_target_condemned_in_text("царинками", "Не слід вживати «гарний», але замість «царинками» вживайте «добрий».") is True
+
+    # 5. Negated replacement remains defended across clauses
+    assert is_target_condemned_in_text("царинками", "Не слід вживати «гарний», але замість «царинками» не слід вживати «добрий».") is False
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» не слід вживати «гарний», але й «добрий» не слід вживати замість «царинками».") is False
+
+    # 6. Parentheticals with comma
+    assert is_target_condemned_in_text("царинками", "Замість «царинками», безумовно, не слід вживати «гарний».") is False
+    assert is_target_condemned_in_text("царинками", "Замість «царинками», безумовно, слід вживати «добрий».") is True
+
+    # 7. Full integration audit on Astra R14 reproducer in chosen text
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "target_term": "царинками",
+            "category": "dialectal",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sources = tmp_path / "sources.db"
+    conn_s = sqlite3.connect(mock_sources)
+    conn_s.execute("CREATE TABLE sum20 (entry_id INTEGER PRIMARY KEY, lemma TEXT);")
+    conn_s.execute("INSERT INTO sum20 VALUES (1, 'добрий');")
+    conn_s.commit()
+    conn_s.close()
+    mock_vesum = tmp_path / "vesum.db"
+    conn_v = sqlite3.connect(mock_vesum)
+    conn_v.execute("CREATE TABLE vesum (lemma TEXT);")
+    conn_v.execute("INSERT INTO vesum VALUES ('добрий');")
+    conn_v.commit()
+    conn_v.close()
+    mock_sft_clean = tmp_path / "sft_clean"
+    mock_sft_clean.mkdir()
+    (mock_sft_clean / "shard.jsonl").write_text(
+        json.dumps({
+            "instruction": "Поясніть вживання слова «царинками».",
+            "response": "«царинками» — автентичне діалектне слово, яке слід зберегти.",
+            "target_term": "царинками",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_dpo_f1 = tmp_path / "dpo_f1"
+    mock_dpo_f1.mkdir()
+    (mock_dpo_f1 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": text1,
+            "rejected": "«царинками» — чудове слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed, data, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=mock_dpo_f1,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r14_rep.md",
+        output_json=tmp_path / "r14_rep.json",
+    )
+    assert passed is False
+    assert data["dpo_contradictions_count"] == 1
+    assert data["dpo_contradictions"][0]["target_term"] == "царинками"
+
+    # Also verify reversed reproducer in integration audit
+    mock_dpo_f2 = tmp_path / "dpo_f2"
+    mock_dpo_f2.mkdir()
+    (mock_dpo_f2 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": text2,
+            "rejected": "«царинками» — чудове слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed2, data2, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=mock_dpo_f2,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r14_rep2.md",
+        output_json=tmp_path / "r14_rep2.json",
+    )
+    assert passed2 is False
+    assert data2["dpo_contradictions_count"] == 1
+    assert data2["dpo_contradictions"][0]["target_term"] == "царинками"

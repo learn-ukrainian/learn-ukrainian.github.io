@@ -147,6 +147,30 @@ ANAPHORIC_WORDS = frozenset({
     "значення", "значенням", "значенні",
 })
 
+DIRECTIVE_VERBS = (
+    r"(?:вживати|вжити|вживайте|використовувати|використати|використовуйте|"
+    r"писати|пишіть|казати|кажіть|говорити|говоріть|брати|беріть|"
+    r"застосовувати|застосовуйте|обирати|обирайте|замінювати|замінити|замінюйте)"
+)
+
+DIRECTIVE_MODALS = (
+    r"(?:слід|варто|потрібно|необхідно|треба|можна|рекомендовано|рекомендується|"
+    r"дозволено|дозволяється|краще|правильно|доречно|бажано|годиться|"
+    r"заборонено|забороняється|уникайте|уникати)"
+)
+
+ANY_DIRECTIVE_RE = re.compile(rf"\b(?:{DIRECTIVE_VERBS}|{DIRECTIVE_MODALS})\b", re.IGNORECASE)
+
+NEGATION_DIRECTIVE_RE = re.compile(
+    rf"(?:"
+    rf"\b(?:не|ні|ані)\s*$|"
+    rf"\b(?:не\s+(?:слід|варто|потрібно|необхідно|треба|можна|рекомендовано|рекомендується|дозволено|дозволяється|годиться|краще|правильно|доречно|бажано)|"
+    rf"заборонено|забороняється|не\s+можна|уникайте|уникати)\b|"
+    rf"\bне\s+{DIRECTIVE_VERBS}\b"
+    rf")",
+    re.IGNORECASE,
+)
+
 
 def is_target_condemned_in_text(target_term: str, text: str) -> bool:
     """Check if the text explicitly condemns or directs replacement of the protected target term."""
@@ -183,7 +207,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
 
     # Check all explicit replacement instructions involving target:
     # e.g. "Замість <target> слід/варто... вживати <other>" or "вживайте <other> замість <target>"
-    # Sentence context is bound strictly to EACH individual occurrence.
+    # Syntactic clause context is bound strictly to EACH individual occurrence.
     zamist_target_re = re.compile(rf"\bзамість\s+[«\"“‘\']?{t_bare}[»\"”’\']?", re.IGNORECASE)
     for zm in zamist_target_re.finditer(text_norm):
         sent_start = 0
@@ -198,37 +222,70 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
             if pos != -1 and pos < sent_end:
                 sent_end = pos
 
-        sent_prefix = text_norm[sent_start:zm.start()].lower()
-        sent_suffix = text_norm[zm.end():sent_end].lower()
+        sent_text = text_norm[sent_start:sent_end]
+        zm_in_sent_start = zm.start() - sent_start
+        zm_in_sent_end = zm.end() - sent_start
+
+        prefix = sent_text[:zm_in_sent_start]
+        suffix = sent_text[zm_in_sent_end:]
+
+        boundary_pat = (
+            r"[,;:\u2014\u2013]+\s*(?:\b(?:але|проте|однак|а|бо|тому що|оскільки|якщо|якби|хоч|хоча|аби|коли)\b\s*)?|"
+            r"\s+\b(?:але|проте|однак|бо|тому що|оскільки|якщо|якби|хоч|хоча|аби|коли)\b\s+"
+        )
+        boundary_matches = list(re.finditer(boundary_pat, prefix, re.IGNORECASE))
+        clause_start_in_sent = 0
+        if boundary_matches:
+            for bm in reversed(boundary_matches):
+                chunk = prefix[bm.end():]
+                if ANY_DIRECTIVE_RE.search(chunk):
+                    clause_start_in_sent = bm.end()
+                    break
+                if ANY_DIRECTIVE_RE.search(prefix[:bm.start()]):
+                    clause_start_in_sent = bm.end()
+                    break
+            else:
+                clause_start_in_sent = boundary_matches[-1].end()
+
+        had_preceding_directive = bool(ANY_DIRECTIVE_RE.search(sent_text[clause_start_in_sent:zm_in_sent_start]))
+
+        suffix_boundaries = list(re.finditer(boundary_pat, suffix, re.IGNORECASE))
+        clause_end_in_sent = len(sent_text)
+        if had_preceding_directive:
+            if suffix_boundaries:
+                clause_end_in_sent = zm_in_sent_end + suffix_boundaries[0].start()
+        else:
+            dir_m = ANY_DIRECTIVE_RE.search(suffix)
+            if dir_m:
+                for bm in suffix_boundaries:
+                    if bm.start() > dir_m.end():
+                        clause_end_in_sent = zm_in_sent_end + bm.start()
+                        break
+                else:
+                    clause_end_in_sent = len(sent_text)
+            else:
+                clause_end_in_sent = len(sent_text)
+
+        cl_text = sent_text[clause_start_in_sent:clause_end_in_sent].strip()
+        cl_lower = cl_text.lower()
+        zm_in_cl = zamist_target_re.search(cl_lower)
+        if not zm_in_cl:
+            continue
+
+        cl_prefix = cl_lower[:zm_in_cl.start()]
+        cl_suffix = cl_lower[zm_in_cl.end():]
 
         is_negated = (
-            bool(re.search(r"\b(?:не|ні|ані)\s*$", sent_prefix))
-            or bool(
-                re.search(
-                    r"\b(?:не\s+(?:слід|варто|потрібно|необхідно|треба|можна|рекомендовано|рекомендується|дозволено|дозволяється|годиться)|заборонено|забороняється|не\s+можна|уникайте|уникати)\b",
-                    sent_prefix,
-                )
-            )
-            or bool(
-                re.search(
-                    r"\bне\s+(?:вживати|вжити|вживайте|використовувати|використати|використовуйте|писати|пишіть|казати|кажіть|говорити|говоріть|брати|беріть|застосовувати|застосовуйте|обирати|обирайте|замінювати|замінити|замінюйте)\b",
-                    sent_prefix,
-                )
-            )
-            or bool(
-                re.search(
-                    r"\b(?:не\s+(?:слід|варто|потрібно|необхідно|треба|можна|рекомендовано|рекомендується|дозволено|дозволяється|годиться)|заборонено|забороняється|не\s+можна|уникайте|уникати)\b",
-                    sent_suffix,
-                )
-            )
-            or bool(
-                re.search(
-                    r"\bне\s+(?:вживати|вжити|вживайте|використовувати|використати|використовуйте|писати|пишіть|казати|кажіть|говорити|говоріть|брати|беріть|застосовувати|застосовуйте|обирати|обирайте|замінювати|замінити|замінюйте)\b",
-                    sent_suffix,
-                )
-            )
+            bool(re.search(r"\b(?:не|ні|ані)\s*$", cl_prefix))
+            or bool(NEGATION_DIRECTIVE_RE.search(cl_prefix))
+            or bool(NEGATION_DIRECTIVE_RE.search(cl_suffix))
         )
-        if not is_negated:
+
+        has_affirmative_directive = (
+            bool(ANY_DIRECTIVE_RE.search(cl_lower))
+            or bool(re.search(r"—|--", cl_suffix))
+        )
+        if has_affirmative_directive and not is_negated:
             return True
 
     # Split text into sentence/clause units by punctuation or coordinate/adversative conjunctions introducing clauses
