@@ -1476,13 +1476,14 @@ def test_batch9_semantic_and_stress_distinctions():
     assert prv[1]["headword"] == "перевози́ти"
     assert prv[1]["morphology"]["paradigm"]["aspect"] == "доконаний"
 
-    # перекладка: пере́кладка (crossbar/strut) vs перекла́дка (repositioning/translating)
+    # перекладка: пере́кладка (crossbar/strut) vs перекла́дка (repositioning/relaying)
     prk = enrich_heteronyms.build_heteronyms_for_lemma("перекладка")
     assert prk is not None and len(prk) == 2
     assert prk[0]["headword"] == "пере́кладка"
     assert "crossbar" in prk[0]["gloss"].lower() or "crossbeam" in prk[0]["gloss"].lower()
     assert prk[1]["headword"] == "перекла́дка"
-    assert "translating" in prk[1]["gloss"].lower() or "repositioning" in prk[1]["gloss"].lower()
+    assert "repositioning" in prk[1]["gloss"].lower() or "shifting" in prk[1]["gloss"].lower()
+    assert "translat" not in prk[1]["gloss"].lower()
 
     # переливний: перели́вний (iridescent) vs переливни́й (overflow/spillway)
     prl = enrich_heteronyms.build_heteronyms_for_lemma("переливний")
@@ -1548,13 +1549,15 @@ def test_batch9_semantic_and_stress_distinctions():
     assert ryb[1]["headword"] == "рябе́ць"
     assert "grouse" in ryb[1]["gloss"].lower() or "tetrastes" in ryb[1]["gloss"].lower()
 
-    # травник: тра́вник (herbarium / herbal book) vs травни́к (herbal tincture / lawn)
+    # травник: тра́вник (herbarium / herbal book) vs травни́к (grassy plot / lawn)
     trv = enrich_heteronyms.build_heteronyms_for_lemma("травник")
     assert trv is not None and len(trv) == 2
     assert trv[0]["headword"] == "тра́вник"
     assert "herbarium" in trv[0]["gloss"].lower() or "herbal" in trv[0]["gloss"].lower()
     assert trv[1]["headword"] == "травни́к"
-    assert "tincture" in trv[1]["gloss"].lower() or "lawn" in trv[1]["gloss"].lower() or "grassy" in trv[1]["gloss"].lower()
+    assert "lawn" in trv[1]["gloss"].lower() or "grassy" in trv[1]["gloss"].lower()
+    assert "tincture" not in trv[1]["gloss"].lower()
+    assert trv[1]["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "травника́"
 
 
 def test_batch9_lemmas_not_duplicated_from_earlier_batches():
@@ -1626,11 +1629,13 @@ def test_batch9_lemmas_not_duplicated_from_earlier_batches():
     assert "обід" in obidets[0]["pre_soviet_witness"]["quote"].lower()
     assert "Ободок" in obidets[1]["pre_soviet_witness"]["quote"]
 
-    # Morphology check: лупання must be singular-only, переруб genitive must be пере́рубу
+    # Morphology check: лупання must be singular-only, переруб genitive must be пере́рубу, травник genitive must be травника́
     assert "plural" not in lupannya[0]["morphology"]["paradigm"]["cases"]["називний"]
     assert "plural" not in lupannya[1]["morphology"]["paradigm"]["cases"]["називний"]
     pererub = CURATED_HETERONYMS_BATCH_9["переруб"]
     assert pererub[0]["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "пере́рубу"
+    travnik = CURATED_HETERONYMS_BATCH_9["травник"]
+    assert travnik[1]["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "травника́"
 
     # Decolonization check: no normative СУМ-11 citations outside soviet_colonization_context
     for lemma, variants in CURATED_HETERONYMS_BATCH_9.items():

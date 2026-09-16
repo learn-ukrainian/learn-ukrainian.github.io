@@ -1940,8 +1940,10 @@ CURATED_HETERONYMS_BATCH_9: dict[str, list[dict[str, Any]]] = {'лупання':
                                                            'указів (Валуєвського циркуляра 1863 р. '
                                                            'та Емського указу 1876 р.).'}},
                 {'headword': 'перекла́дка',
-                 'short_label': 'процес перекладання речей або переклад тексту',
-                 'gloss': 'process of repositioning, rearranging or translating text (verbal noun)',
+                 'short_label': 'дія за значенням перекладати (переміщення, перекладання речей на '
+                                'інше місце)',
+                 'gloss': 'shifting, moving, relaying or rearranging objects from one place to '
+                          'another (action)',
                  'pos': 'noun',
                  'cefr': 'B1',
                  'heritage_status': {'classification': 'standard',
@@ -1970,11 +1972,13 @@ CURATED_HETERONYMS_BATCH_9: dict[str, list[dict[str, Any]]] = {'лупання':
                                                                     'plural': 'перекла́дках'},
                                                        'кличний': {'singular': 'перекла́дко',
                                                                    'plural': 'перекла́дки'}}}},
-                 'distinction_note': 'Означає «дія за значенням перекласти, перекладати '
-                                     '(перекладання речей чи переклад тексту)». Не плутати з '
-                                     'предметним іменником «пере́кладка» (перекладина).',
+                 'distinction_note': 'Означає «дія за значенням перекласти, перекладати 1 '
+                                     '(перекладання речей, зміна розташування)». Не плутати з '
+                                     'предметним іменником «пере́кладка» (перекладина, брус або '
+                                     'прошарок).',
                  'meaning': {'definitions': ['Дія за значенням перекла́сти, переклада́ти '
-                                             '(переміщення на інше місце або переклад тексту).'],
+                                             '(переміщення або перекладання на інше місце; '
+                                             'рідко).'],
                              'source': 'ВТС'},
                  'soviet_colonization_context': {'source': 'СУМ-11 (1970–1980)',
                                                  'definition': 'ПЕРЕКЛА́ДКА, и, ж., рідко. Дія за '
@@ -2728,8 +2732,8 @@ CURATED_HETERONYMS_BATCH_9: dict[str, list[dict[str, Any]]] = {'лупання':
                                                                  '(СУМ-11). Наведено для '
                                                                  'лексикографічної прозорості.'}},
              {'headword': 'травни́к',
-              'short_label': "трав'яна настоянка на горілці або ділянка, поросла травою",
-              'gloss': 'herbal tincture / liqueur or grassy plot / lawn (colloquial)',
+              'short_label': 'місце або ділянка, поросла густою травою; моріг (діал.)',
+              'gloss': 'grassy place, grassy plot, lawn or meadow patch (folklore, dialectal)',
               'pos': 'noun',
               'cefr': 'B2',
               'heritage_status': {'classification': 'standard',
@@ -2746,7 +2750,7 @@ CURATED_HETERONYMS_BATCH_9: dict[str, list[dict[str, Any]]] = {'лупання':
                                           'animacy': 'inanimate',
                                           'cases': {'називний': {'singular': 'травни́к',
                                                                  'plural': 'травники́'},
-                                                    'родовий': {'singular': 'травнику́',
+                                                    'родовий': {'singular': 'травника́',
                                                                 'plural': 'травникі́в'},
                                                     'давальний': {'singular': 'травнику́',
                                                                   'plural': 'травника́м'},
@@ -2758,10 +2762,10 @@ CURATED_HETERONYMS_BATCH_9: dict[str, list[dict[str, Any]]] = {'лупання':
                                                                  'plural': 'травника́х'},
                                                     'кличний': {'singular': 'травнику́',
                                                                 'plural': 'травники́'}}}},
-              'distinction_note': 'Означає «настоянка на цілющих травах (розм.) або ділянка, густо '
-                                  'вкрита травою (моріг)». Не плутати з книгою/гербарієм '
-                                  '«тра́вник».',
-              'meaning': {'definitions': ['Настоянка на травах (розм.); місце, поросле травою.'],
+              'distinction_note': 'Означає «місце, поросле густою травою; заросла травою ділянка '
+                                  '(моріг)». Не плутати з книгою про лікарські рослини «тра́вник».',
+              'meaning': {'definitions': ['Місце, поросле травою; заросла травою ділянка (рідко, '
+                                          'діал.).'],
                           'source': 'Грінченко (1907) / ВТС'},
               'soviet_colonization_context': {'source': 'СУМ-11 (1970–1980)',
                                               'definition': 'ТРАВНИ́К, ч., розм. 1. род. у́. '
