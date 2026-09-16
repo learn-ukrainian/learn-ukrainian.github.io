@@ -914,3 +914,28 @@ def test_audit_dpo_astra_r5_probes(tmp_path: Path, mock_dbs: tuple[Path, Path]) 
     )
     assert passed3 is True
     assert data3["dpo_contradictions_count"] == 0
+
+    # Probe 4 (Fable recommendation): target is recommended replacement for another word -> MUST PASS audit
+    (mock_dpo / "shard1.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як виправити слово «нормальний»?",
+            "chosen": "«нормальний» слід замінити на «файний».",
+            "rejected": "Це нормальне слово.",
+            "metadata": {"target_term": "файний", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed4, data4, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft,
+        dpo_dir=mock_dpo,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=2,
+        output_md=tmp_path / "report4.md",
+        output_json=tmp_path / "report4.json",
+    )
+    assert passed4 is True
+    assert data4["dpo_contradictions_count"] == 0
