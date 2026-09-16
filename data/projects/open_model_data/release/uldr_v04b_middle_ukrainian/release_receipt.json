@@ -1,0 +1,61 @@
+{
+  "schema_version": "v1_middle_ukrainian_release_receipt",
+  "issue": 8105,
+  "parent_epic": 6321,
+  "created_at": "2026-09-16T21:22:08.260803+00:00",
+  "git_commit": "df05fc8073b43b2c99d0cdc9ab737b53a0aa55ed",
+  "evaluation_benchmark": {
+    "file_path": "data/projects/open_model_data/release/uldr_v04b_middle_ukrainian/middle_ukrainian_eval.jsonl",
+    "sha256": "cc038ff42fe44c7b225974691ce844a6a67139c1551d6fb2ae75ff84b55ddff8",
+    "total_cases": 500,
+    "preserve_cases": 250,
+    "mixed_error_cases": 250,
+    "strata_counts": {
+      "early_ruthenian_chancery": 10,
+      "renaissance_polemical": 137,
+      "high_cossack_baroque": 167,
+      "transitional_pre_modern": 186
+    },
+    "held_out_works": [
+      "chernihivskyy_litopys",
+      "chernihivskyy_litopys_1587_1750",
+      "hramoty_xiv_st_c0000_c0040",
+      "ivan_velychkovskyy_tvory",
+      "smotrytskyy_hramatiky_slovenskiya_1619",
+      "symonovskyy_korotkyy_opys_pro_kozatskyy_malorosiyskyy_narod",
+      "zyzaniy_leksys_1596"
+    ]
+  },
+  "sft_training_dataset": {
+    "directory_path": "data/projects/open_model_data/release/uldr_v04b_middle_ukrainian/sft",
+    "manifest_file": "manifest.json",
+    "manifest_sha256": "f93aa66771f7e528c1d804c69df6b4d8dbe3906d2b9bd94af393ebc843bf62fb",
+    "shards_count": 30,
+    "total_trajectories": 10000,
+    "max_shard_size_kb": 1320.45,
+    "strata_trajectories": {
+      "early_ruthenian_chancery": 165,
+      "renaissance_polemical": 733,
+      "high_cossack_baroque": 6955,
+      "transitional_pre_modern": 1947,
+      "modern_literary_replay": 200
+    },
+    "replay_buffer_size": 200
+  },
+  "invariants_verified": {
+    "zero_train_eval_leakage": true,
+    "document_partitioning_enforced": true,
+    "translation_segregation_enforced": true,
+    "anti_copying_invariant_verified": true,
+    "precommit_file_ceiling_satisfied": true
+  },
+  "evaluation_metrics": {
+    "baseline_v02_frozen_accuracy": 0.992,
+    "v04b_eval_accuracy": 1.0,
+    "confidence_interval_95": [
+      0.9926,
+      1.0
+    ],
+    "regression_against_v02_pct": 0.0
+  }
+}

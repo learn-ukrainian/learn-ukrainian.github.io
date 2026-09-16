@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_middle_ukrainian_eval_record.schema.json",
+  "title": "v1_middle_ukrainian_eval_record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "eval_id",
+    "historical_stratum",
+    "work_id",
+    "work_title",
+    "author",
+    "dating",
+    "case_type",
+    "input_text",
+    "target_term",
+    "target_features",
+    "expected_action",
+    "expected_output",
+    "has_injected_error",
+    "injected_error_type",
+    "linguistic_notes",
+    "source_metadata"
+  ],
+  "properties": {
+    "eval_id": {
+      "type": "string",
+      "pattern": "^eval_mid_ukr_[a-f0-9]{8}$"
+    },
+    "historical_stratum": {
+      "type": "string",
+      "enum": [
+        "early_ruthenian_chancery",
+        "renaissance_polemical",
+        "high_cossack_baroque",
+        "transitional_pre_modern"
+      ]
+    },
+    "work_id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "work_title": {
+      "type": "string",
+      "minLength": 3
+    },
+    "author": {
+      "type": "string",
+      "minLength": 2
+    },
+    "dating": {
+      "type": "string",
+      "minLength": 4
+    },
+    "case_type": {
+      "type": "string",
+      "enum": [
+        "PRESERVE",
+        "CORRECT"
+      ]
+    },
+    "input_text": {
+      "type": "string",
+      "minLength": 3
+    },
+    "target_term": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_features": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "expected_action": {
+      "type": "string",
+      "enum": [
+        "PRESERVE",
+        "CORRECT_INJECTED_ERROR"
+      ]
+    },
+    "expected_replacement": {
+      "type": ["string", "null"]
+    },
+    "expected_output": {
+      "type": "string",
+      "minLength": 3
+    },
+    "has_injected_error": {
+      "type": "boolean"
+    },
+    "injected_error_type": {
+      "type": ["string", "null"]
+    },
+    "injected_error_details": {
+      "type": ["string", "null"]
+    },
+    "linguistic_notes": {
+      "type": "string",
+      "minLength": 5
+    },
+    "source_metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "source",
+        "partition"
+      ],
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "partition": {
+          "type": "string",
+          "enum": ["held_out_eval", "sft_train"]
+        },
+        "chunk_id": {
+          "type": ["string", "null"]
+        },
+        "composition_date": {
+          "type": ["string", "null"]
+        },
+        "print_or_ms_date": {
+          "type": ["string", "null"]
+        }
+      }
+    }
+  }
+}

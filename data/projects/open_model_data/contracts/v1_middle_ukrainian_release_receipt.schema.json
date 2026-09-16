@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_middle_ukrainian_release_receipt.schema.json",
+  "title": "v1_middle_ukrainian_release_receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "issue",
+    "parent_epic",
+    "created_at",
+    "git_commit",
+    "evaluation_benchmark",
+    "sft_training_dataset",
+    "invariants_verified",
+    "evaluation_metrics"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v1_middle_ukrainian_release_receipt"
+    },
+    "issue": {
+      "type": "integer",
+      "const": 8105
+    },
+    "parent_epic": {
+      "type": "integer",
+      "const": 6321
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "git_commit": {
+      "type": "string"
+    },
+    "evaluation_benchmark": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file_path",
+        "sha256",
+        "total_cases",
+        "preserve_cases",
+        "mixed_error_cases",
+        "strata_counts",
+        "held_out_works"
+      ],
+      "properties": {
+        "file_path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "total_cases": {
+          "type": "integer",
+          "minimum": 500
+        },
+        "preserve_cases": {
+          "type": "integer"
+        },
+        "mixed_error_cases": {
+          "type": "integer"
+        },
+        "strata_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "early_ruthenian_chancery",
+            "renaissance_polemical",
+            "high_cossack_baroque",
+            "transitional_pre_modern"
+          ],
+          "properties": {
+            "early_ruthenian_chancery": {
+              "type": "integer"
+            },
+            "renaissance_polemical": {
+              "type": "integer"
+            },
+            "high_cossack_baroque": {
+              "type": "integer"
+            },
+            "transitional_pre_modern": {
+              "type": "integer"
+            }
+          }
+        },
+        "held_out_works": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "sft_training_dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "directory_path",
+        "manifest_file",
+        "manifest_sha256",
+        "shards_count",
+        "total_trajectories",
+        "max_shard_size_kb",
+        "strata_trajectories",
+        "replay_buffer_size"
+      ],
+      "properties": {
+        "directory_path": {
+          "type": "string"
+        },
+        "manifest_file": {
+          "type": "string"
+        },
+        "manifest_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "shards_count": {
+          "type": "integer",
+          "const": 30
+        },
+        "total_trajectories": {
+          "type": "integer",
+          "const": 10000
+        },
+        "max_shard_size_kb": {
+          "type": "number",
+          "maximum": 2000.0
+        },
+        "strata_trajectories": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "early_ruthenian_chancery",
+            "renaissance_polemical",
+            "high_cossack_baroque",
+            "transitional_pre_modern",
+            "modern_literary_replay"
+          ],
+          "properties": {
+            "early_ruthenian_chancery": {
+              "type": "integer"
+            },
+            "renaissance_polemical": {
+              "type": "integer"
+            },
+            "high_cossack_baroque": {
+              "type": "integer"
+            },
+            "transitional_pre_modern": {
+              "type": "integer"
+            },
+            "modern_literary_replay": {
+              "type": "integer"
+            }
+          }
+        },
+        "replay_buffer_size": {
+          "type": "integer",
+          "minimum": 200
+        }
+      }
+    },
+    "invariants_verified": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "zero_train_eval_leakage",
+        "document_partitioning_enforced",
+        "translation_segregation_enforced",
+        "anti_copying_invariant_verified",
+        "precommit_file_ceiling_satisfied"
+      ],
+      "properties": {
+        "zero_train_eval_leakage": {
+          "const": true
+        },
+        "document_partitioning_enforced": {
+          "const": true
+        },
+        "translation_segregation_enforced": {
+          "const": true
+        },
+        "anti_copying_invariant_verified": {
+          "const": true
+        },
+        "precommit_file_ceiling_satisfied": {
+          "const": true
+        }
+      }
+    },
+    "evaluation_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "baseline_v02_frozen_accuracy",
+        "v04b_eval_accuracy",
+        "confidence_interval_95",
+        "regression_against_v02_pct"
+      ],
+      "properties": {
+        "baseline_v02_frozen_accuracy": {
+          "type": "number"
+        },
+        "v04b_eval_accuracy": {
+          "type": "number"
+        },
+        "confidence_interval_95": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "regression_against_v02_pct": {
+          "type": "number",
+          "maximum": 0.5
+        }
+      }
+    }
+  }
+}
