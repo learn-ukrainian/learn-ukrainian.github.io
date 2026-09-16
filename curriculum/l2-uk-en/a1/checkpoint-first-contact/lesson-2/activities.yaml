@@ -1,0 +1,405 @@
+inline:
+- id: act-5
+  type: fill-in
+  title: Про́пуски в діало́зі · Gaps in the Dialogue
+  instruction: Допо́вни діало́г на мо́вних ку́рсах · Complete the dialogue at the language course.
+  items:
+  - sentence: ___! Мене́ зва́ти Богда́н.
+    answer: Приві́т
+    options:
+    - Приві́т
+    - Прі́звище
+    - Ро́ків
+    explanation: Приві́т відкрива́є розмо́ву рове́сників.
+  - sentence: Приві́т, ___! Мене́ зва́ти Соломі́я.
+    answer: Богда́не
+    options:
+    - Богда́не
+    - Богда́н
+    - Богда́на
+    explanation: Богда́не — кли́чна фо́рма прямо́го зверта́ння.
+  - sentence: Ду́же приє́мно, ___.
+    answer: Соломі́є
+    options:
+    - Соломі́є
+    - Соломі́я
+    - Соломі́ю
+    explanation: Соломі́є — кли́чна фо́рма прямо́го зверта́ння.
+  - sentence: ___ ти? Я з Дніпра́.
+    answer: Зві́дки
+    options:
+    - Зві́дки
+    - Хто
+    - Де
+    explanation: Зві́дки ти? пита́є, зві́дки люди́на.
+  - sentence: Моя́ майбу́тня ___ — вчи́телька.
+    answer: профе́сія
+    options:
+    - профе́сія
+    - прі́звище
+    - знайо́мство
+    explanation: Профе́сія назива́є фа́х або́ заня́ття.
+  - sentence: У мене́ є сестра́. ___ зва́ти Іри́на.
+    answer: Її́
+    options:
+    - Її́
+    - Йо́го
+    - Я
+    explanation: Її́ підхо́дить до сестри́.
+  - sentence: У мене́ є брат. ___ зва́ти Наза́р.
+    answer: Йо́го
+    options:
+    - Йо́го
+    - Її́
+    - Вона́
+    explanation: Йо́го підхо́дить до бра́та.
+  - sentence: Ду́же приє́мно ___!
+    answer: познайо́митися
+    options:
+    - познайо́митися
+    - похо́дження
+    - допомогти́
+    explanation: Ду́же приє́мно познайо́митися заве́ршує пе́ршу зу́стріч.
+- id: act-6
+  type: quiz
+  title: Поря́док знайо́мства · Conversation Flow
+  instruction: Обери́ насту́пний рядо́к у розмо́ві · Choose the next line in the conversation.
+  items:
+  - prompt: 'Пе́рший рядо́к: Приві́т! Мене́ зва́ти Богда́н. · First line: "Hello! My name is Bohdan."'
+    options:
+    - text: Приві́т, Богда́не! Мене́ зва́ти Соломі́я.
+      correct: true
+    - text: До поба́чення!
+      correct: false
+    - text: Мені́ 20 ро́ків.
+      correct: false
+    explanation: І́нша люди́на відповіда́є привіта́нням та і́менем.
+  - prompt: 'Рядо́к: Ду́же приє́мно, Соломі́є. · Next line: "Nice to meet you, Solomiia."'
+    options:
+    - text: Мені́ теж. Зві́дки ти?
+      correct: true
+    - text: Моє́ ім'я́ є Соломі́я.
+      correct: false
+    - text: Моя́ фамі́лія Сміт.
+      correct: false
+    explanation: Мені́ теж дає́ взає́мну ві́дповідь і ру́хає розмо́ву да́лі.
+  - prompt: 'Рядо́к: Я з Дніпра́. А ти? · Next line: "I am from Dnipro. And you?"'
+    options:
+    - text: Я з Терно́поля.
+      correct: true
+    - text: Йо́го зва́ти Наза́р.
+      correct: false
+    - text: Це мій брат.
+      correct: false
+    explanation: А ти? поверта́є пита́ння про похо́дження.
+  - prompt: 'Рядо́к: У мене́ є брат. · Next line: "I have a brother."'
+    options:
+    - text: Ду́же приє́мно. До поба́чення!
+      correct: true
+    - text: Моє́ ім'я́ є брат.
+      correct: false
+    - text: Я ма́ю брат ро́ків.
+      correct: false
+    explanation: Пі́сля роди́нного рядка́ пасу́є вві́чливе заве́ршення.
+- id: act-201
+  type: true-false
+  title: Слу́хання та письмо́ · Listening & Handwriting Skills
+  instruction: Ви́знач, чи пра́вильне тве́рдження · Determine whether each statement is true or false.
+  statements:
+  - statement: 'Слу́хаючи ро́зповідь, кори́сно повто́рювати знайо́мі фра́зи вго́лос · While listening, it is useful to repeat known phrases aloud.'
+    correct: true
+    explanation: 'Повто́рення вго́лос трену́є артикуля́цію та впе́вненість у мо́вленні.'
+  - statement: 'Для рукопи́сної ка́ртки важли́во розрізня́ти друко́вані й письмо́ві лі́тери · For a handwriting card, distinguish print from cursive.'
+    correct: true
+    explanation: 'Украї́нський курси́в ма́є відмі́нні фо́рми для багатьо́х лі́тер.'
+  - statement: 'У неформа́льному ча́ті ку́рсу вві́чливо почина́ти з коро́ткого привіта́ння · In a course chat, start with a brief greeting.'
+    correct: true
+    explanation: 'Привіта́ння (Приві́т) — обов''язко́ва части́на культу́ри спілкува́ння.'
+  - statement: 'В онла́йн-листува́нні кра́ще писа́ти лише́ емо́дзі замі́сть слі́в · In online texting, use only emoji instead of words.'
+    correct: false
+    explanation: 'Мо́вна пра́ктика вимага́є вжива́ння реа́льних слі́в та ре́чень.'
+  - statement: 'У зверта́ннях «Богда́не!» та «Соломі́є!» закі́нчення виража́ють кли́чну фо́рму · Endings in "Бо́гдане!" and "Соломі́є!" mark direct address.'
+    correct: true
+    explanation: 'Кли́чна фо́рма познача́є пряме́ зверта́ння до співрозмо́вника.'
+  - statement: 'За́мість украї́нського сло́ва «прі́звище» в анке́тах вжива́ють «фамі́лія» · Forms use "фамі́лія" instead of "прі́звище".'
+    correct: false
+    explanation: '«Фамі́лія» — су́ржиковий варіа́нт; станда́ртне сло́во — «прі́звище».'
+- id: act-202
+  type: match-up
+  title: Ре́пліки та ві́дповіді · Dialogue Turns & Responses
+  instruction: З'єдна́й ре́пліку з приро́дною ві́дповіддю в діало́зі · Match each line with its natural response.
+  pairs:
+  - left: Приві́т! Мене́ зва́ти Богда́н.
+    right: Приві́т, Богда́не! Мене́ зва́ти Соломі́я.
+  - left: Зві́дки ти?
+    right: Я з Дніпра́. А ти?
+  - left: Ти студе́нтка?
+    right: Так, я студе́нтка.
+  - left: У тебе́ є брати́ чи се́стри?
+    right: Так, у мене́ є сестра́.
+  - left: Ду́же приє́мно познайо́митися.
+    right: Мені́ теж. До поба́чення!
+  - left: Приві́т, Лі́но! Мене́ зва́ти Том.
+    right: Ду́же приє́мно!
+workbook:
+- id: act-w2
+  type: match-up
+  title: Ка́рта ле́ксики · Vocabulary Map
+  instruction: З'єдна́й украї́нське контро́льне сло́во з англі́йською підка́зкою · Match the Ukrainian term to its English gloss.
+  pairs:
+  - left: ім'я́
+    right: first name
+  - left: прі́звище
+    right: surname
+  - left: знайо́мство
+    right: acquaintance or introduction
+  - left: профе́сія
+    right: profession
+  - left: націона́льність
+    right: nationality
+  - left: похо́дження
+    right: origin
+  - left: Ду́же приє́мно
+    right: very nice to meet you
+  - left: Мені́ теж
+    right: me too
+- id: act-w201
+  type: quiz
+  title: 'Розмо́вний регі́стр: Ти чи Ви? · Register: Informal (Ти) vs Formal (Ви)'
+  instruction: Обери́ нале́жну ре́пліку для ко́жної ситуа́ції · Choose the appropriate remark for each setting.
+  items:
+  - prompt: 'Знайо́мство з рове́сником на пере́рві мо́вного ку́рсу · Meeting a peer at course break:'
+    options:
+    - text: Приві́т! Як тебе́ зва́ти?
+      correct: true
+    - text: До́брий день! Як вас зва́ти?
+      correct: false
+    - text: До поба́чення!
+      correct: false
+    explanation: У студе́нтському середо́вищі з рове́сниками вжива́ємо ти-регі́стр.
+  - prompt: 'Зверта́ння до викладача́ пе́ред заня́ттям · Addressing a teacher before class:'
+    options:
+    - text: До́брий день! Як вас зва́ти?
+      correct: true
+    - text: Приві́т! Як тебе́ зва́ти?
+      correct: false
+    - text: Бува́й!
+      correct: false
+    explanation: До викладача́ зверта́ємося вві́чливо у Ви-регі́стрі.
+  - prompt: 'Ві́дповідь рове́сникові пі́сля «Ду́же приє́мно» · Answering a peer after "Ду́же приє́мно":'
+    options:
+    - text: Мені́ теж!
+      correct: true
+    - text: Моє́ ім'я́ є студе́нт.
+      correct: false
+    - text: До поба́чення!
+      correct: false
+    explanation: «Мені́ теж» — приро́дна взає́мна ві́дповідь.
+  - prompt: 'Рове́сник запи́тує: «Зві́дки ти?» · A peer asks "Where are you from?":'
+    options:
+    - text: Я з Терно́поля. А ти?
+      correct: true
+    - text: Я є Терно́піль.
+      correct: false
+    - text: Мені́ 20 ро́ків.
+      correct: false
+    explanation: «Я з...» виража́є похо́дження, а «А ти?» поверта́є запита́ння.
+  - prompt: 'Дру́жнє проща́ння з одноку́рсником · Friendly farewell to a classmate:'
+    options:
+    - text: Бува́й!
+      correct: true
+    - text: Добри́день!
+      correct: false
+    - text: Мене́ зва́ти!
+      correct: false
+    explanation: «Бува́й!» — неви́мушене проща́ння для дру́зів та рове́сників.
+  - prompt: 'Вві́чливе проща́ння з викладаче́м · Polite farewell to a teacher:'
+    options:
+    - text: До поба́чення!
+      correct: true
+    - text: Бува́й!
+      correct: false
+    - text: Приві́т!
+      correct: false
+    explanation: «До поба́чення!» — нейтра́льна станда́ртна фо́рма проща́ння.
+- id: act-w202
+  type: fill-in
+  title: Моноло́г-презента́ція · Self-Presentation Monologue
+  instruction: Допо́вни ре́чення в ро́зповіді про себе́ · Complete the sentences in the self-introduction.
+  items:
+  - sentence: Приві́т! Мене́ ___ Оле́на · Hi! My name is Olena.
+    answer: зва́ти
+    options:
+    - зва́ти
+    - ім'я́
+    - є
+    explanation: «Мене́ зва́ти...» — станда́ртна моде́ль предста́влення.
+  - sentence: Моє́ ___ — Ме́льник · My surname is Melnyk.
+    answer: прі́звище
+    options:
+    - прі́звище
+    - фамі́лія
+    - роди́на
+    explanation: «Прі́звище» — станда́ртне украї́нське сло́во.
+  - sentence: Я з Кана́ди. Я ___ · I am from Canada. I am Canadian.
+    answer: кана́дка
+    options:
+    - кана́дка
+    - кана́дка є
+    - мене́ кана́дка
+    explanation: на́зва націона́льності жіно́чого ро́ду — кана́дка.
+  - sentence: Моя́ майбу́тня ___ — лі́карка · My future profession is doctor.
+    answer: профе́сія
+    options:
+    - профе́сія
+    - знайо́мство
+    - роди́на
+    explanation: Профе́сія познача́є спеціа́льність або́ рід заня́ть.
+  - sentence: Моя́ ма́ма — вчи́телька, а мій та́то — ___ · My mom is a teacher, and my dad is an engineer.
+    answer: інжене́р
+    options:
+    - інжене́р
+    - інжене́рка
+    - студе́нт
+    explanation: Для та́та вжива́ємо фо́рму чолові́чого ро́ду — інжене́р.
+  - sentence: Ду́же приє́мно ___! · Very nice to meet you!
+    answer: познайо́митися
+    options:
+    - познайо́митися
+    - похо́дження
+    - знайо́мство
+    explanation: «Ду́же приє́мно познайо́митися!» заве́ршує знайо́мство.
+- id: act-w203
+  type: true-false
+  title: Етике́т знайо́мства · Etiquette of Meeting People
+  instruction: Ви́знач, чи пра́вильне тве́рдження про спілкува́ння · Determine if the communication statement is true.
+  statements:
+  - statement: 'У рівнопра́вному студе́нтському середо́вищі вжива́ють ти-регі́стр · In a student setting, the informal register is natural.'
+    correct: true
+    explanation: 'Рове́сники на мо́вних ку́рсах спілку́ються на «ти».'
+  - statement: 'Нормати́вна украї́нська фо́рма взає́мної ві́дповіді — «Мені́ теж» · The natural reciprocal reply is "Мені́ теж".'
+    correct: true
+    explanation: '«Мені́ теж» вжива́ють у ві́дповідь на «Ду́же приє́мно».'
+  - statement: 'Запита́ння «У тебе́ є брати́ чи се́стри?» є доре́чним у розмо́ві про роди́ну · Asking about siblings is natural in family talk.'
+    correct: true
+    explanation: 'У неформа́льній розмо́ві про роди́ну це станда́ртне запита́ння.'
+  - statement: 'Коли́ запи́тують ім''я́, станда́ртно каза́ти «Моє́ ім''я́ є...» · When asked your name, it is standard to say "Моє́ ім''я́ є...".'
+    correct: false
+    explanation: '«Моє́ ім''я́ є...» — дослі́вний перекла́д з англі́йської; кажи́ «Мене́ зва́ти...».'
+  - statement: 'Фо́рма «До поба́чення» підхо́дить для станда́ртного вві́чливого проща́ння · "До поба́чення" is standard for polite goodbyes.'
+    correct: true
+    explanation: '«До поба́чення» — універса́льне вві́чливе проща́ння.'
+  - statement: 'У розмо́ві з одно́літком потрі́бно пості́йно змі́шувати «ти» та «Ви» · In talking to a peer, constantly mix "ти" and "Ви".'
+    correct: false
+    explanation: 'ва́рто дотри́муватися одно́го регі́стру про́тягом розмо́ви.'
+- id: act-w204
+  type: unjumble
+  title: Ре́пліки діало́гу · Dialogue Phrases
+  instruction: Склади́ ре́чення у пра́вильному поря́дку · Put the words in the right order.
+  items:
+  - sentence: Мене́ зва́ти Соломі́я.
+    words:
+    - Мене́
+    - зва́ти
+    - Соломі́я.
+  - sentence: Зві́дки ти ро́дом?
+    words:
+    - Зві́дки
+    - ти
+    - ро́дом?
+  - sentence: Я з Терно́поля.
+    words:
+    - Я
+    - з
+    - Терно́поля.
+  - sentence: Моя́ профе́сія — вчи́телька.
+    words:
+    - Моя́
+    - профе́сія
+    - —
+    - вчи́телька.
+  - sentence: У мене́ є брат.
+    words:
+    - У
+    - мене́
+    - є
+    - брат.
+  - sentence: Ду́же приє́мно познайо́митися.
+    words:
+    - Ду́же
+    - приє́мно
+    - познайо́митися.
+- id: act-w205
+  type: group-sort
+  title: Грамати́чний рід слі́в · Grammatical Gender of Words
+  instruction: Розподіли́ слова́ за ро́дом · Categorize the nouns by gender.
+  groups:
+  - name: Чолові́чий рід (Masculine)
+    items:
+    - брат
+    - інжене́р
+    - студе́нт
+  - name: Жіно́чий рід (Feminine)
+    items:
+    - сестра́
+    - вчи́телька
+    - студе́нтка
+- id: act-w206
+  type: quiz
+  title: 'Культу́ра мо́влення: Ви́бір фо́рми · Culture of Speech: Choosing the Form'
+  instruction: Обери́ станда́ртний украї́нський ви́раз · Pick the standard Ukrainian expression.
+  items:
+  - prompt: 'Як пра́вильно запита́ти ім''я́ рове́сника? · How to ask a peer''s name?'
+    options:
+    - text: Як тебе́ зва́ти?
+      correct: true
+    - text: Як твоє́ ім'я́ є?
+      correct: false
+    - text: Хто твоє́ зва́ти?
+      correct: false
+    explanation: «Як тебе́ зва́ти?» — станда́ртне пита́ння до рове́сника.
+  - prompt: 'Як пра́вильно запита́ти прі́звище в анке́ті? · How to ask for surname on a form?'
+    options:
+    - text: Як твоє́ прі́звище?
+      correct: true
+    - text: Як твоя́ фамі́лія?
+      correct: false
+    - text: Яке́ твоє́ ім'я́?
+      correct: false
+    explanation: В украї́нській мо́ві родове́ ім'я́ — це прі́звище.
+  - prompt: 'Як повідо́мити про свій фа́х? · How to state your profession?'
+    options:
+    - text: Я — інжене́р.
+      correct: true
+    - text: Я є інжене́р.
+      correct: false
+    - text: Моє́ інжене́р є.
+      correct: false
+    explanation: Прості́ ре́чення іденти́чності вжива́ються без дієсло́ва «є».
+  - prompt: 'Як повідо́мити свій ві́к? · How to state your age?'
+    options:
+    - text: Мені́ 20 ро́ків.
+      correct: true
+    - text: Я ма́ю 20 ро́ків.
+      correct: false
+    - text: Моє́ 20 ро́ків.
+      correct: false
+    explanation: «Мені́ ... ро́ків» — приро́дна украї́нська моде́ль.
+  - prompt: 'Як сказа́ти про ная́вність бра́та? · How to say you have a brother?'
+    options:
+    - text: У мене́ є брат.
+      correct: true
+    - text: Я ма́ю брат.
+      correct: false
+    - text: Мене́ є брат.
+      correct: false
+    explanation: «У мене́ є...» — станда́ртна ба́зова констру́кція володі́ння.
+  - prompt: 'Як вві́чливо подя́кувати та попроща́тися? · How to politely thank and say goodbye?'
+    options:
+    - text: Дя́кую! До поба́чення!
+      correct: true
+    - text: Приві́т! Бува́й!
+      correct: false
+    - text: Бува́й здоро́в!
+      correct: false
+    explanation: «Дя́кую!» та «До поба́чення!» — станда́ртні літерату́рні фо́рми.
