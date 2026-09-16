@@ -1918,3 +1918,52 @@ def test_citation_whitelist_r31_astra_r13_dotted_locators_and_unmatched_handling
     assert ok7 is False
     assert any("ВЕСУМ" in a for a in app7)
     assert any("СУМ" in v for v in viol7)
+
+
+def test_citation_whitelist_r32_astra_r27_transliteration_and_glosses():
+    """Verify Astra R27 Finding 3: ordinary parenthetical text (transliterations, glosses) passes Gate 4 cleanly."""
+    # 1. Astra's exact probe: lowercase Latin transliteration
+    ok1, app1, viol1 = verify_citation_whitelist("«царинками» (tsarynkamy) слід зберегти.")
+    assert ok1 is True
+    assert app1 == []
+    assert viol1 == []
+
+    # 2. Lowercase grammatical and linguistic glosses
+    ok2, app2, viol2 = verify_citation_whitelist("«царинками» (noun) слід зберегти.")
+    assert ok2 is True
+    assert app2 == []
+    assert viol2 == []
+
+    ok3, app3, viol3 = verify_citation_whitelist("Слово «ходити» (verb) належить до питомої лексики.")
+    assert ok3 is True
+    assert app3 == []
+    assert viol3 == []
+
+    # 3. Parenthetical abbreviations
+    ok4, app4, viol4 = verify_citation_whitelist("Це діалектні слова (e.g., царинками).")
+    assert ok4 is True
+    assert app4 == []
+    assert viol4 == []
+
+    # 4. evaluate_prediction does not record transliteration as hallucinated citation
+    eval_case = {
+        "eval_id": "test_r27_translit",
+        "case_type": "PRESERVE",
+        "target_term": "царинками",
+        "input_text": "«царинками» слід зберегти.",
+    }
+    raw_response = "<judgment>PRESERVE</judgment>\n<explanation>«царинками» (tsarynkamy) слід зберегти.</explanation>"
+    eval_res = evaluate_prediction(eval_case, raw_response)
+    assert eval_res.citation_clean is True
+    assert eval_res.hallucinated_citations == []
+
+    # 5. Contrastive: Capitalized Latin authorities in bare parentheticals continue to be detected
+    ok5, app5, viol5 = verify_citation_whitelist("Це правильно (Zorblax).")
+    assert ok5 is False
+    assert app5 == []
+    assert any("Zorblax" in v for v in viol5)
+
+    ok6, app6, viol6 = verify_citation_whitelist("Це правильно (VESUM).")
+    assert ok6 is True
+    assert any("ВЕСУМ" in a or "VESUM" in a for a in app6)
+    assert viol6 == []
