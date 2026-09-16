@@ -2364,26 +2364,37 @@ def test_batch12_semantic_and_stress_distinctions():
     assert var_натяжка is not None and len(var_натяжка) == 2
     assert var_натяжка[0]["headword"] == "на́тя́жка"
     assert var_натяжка[1]["headword"] == "натя́жка"
+    assert var_натяжка[0]["soviet_colonization_context"]["sovietization_risk"] == 1
+    assert "радянськ" in var_натяжка[0]["soviet_colonization_context"]["keywords"]
     assert var_натяжка[0]["morphology"]["paradigm"]["cases"]["називний"]["singular"] == "на́тя́жка"
     assert var_натяжка[0]["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "на́тя́жки"
     assert var_натяжка[1]["morphology"]["paradigm"]["cases"]["називний"]["singular"] == "натя́жка"
     assert var_натяжка[1]["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "натя́жки"
 
-    # 4. недіючий: неді́ючий vs недію́чий
+    # 4. недіючий: неді́ючий vs недію́чий (:bad calque in VESUM, standard alternatives recommended)
     var_недіючий = enrich_heteronyms.build_heteronyms_for_lemma("недіючий")
     assert var_недіючий is not None and len(var_недіючий) == 2
     assert var_недіючий[0]["headword"] == "неді́ючий"
     assert var_недіючий[1]["headword"] == "недію́чий"
+    assert var_недіючий[0]["heritage_status"]["classification"] == "calque"
+    assert var_недіючий[1]["heritage_status"]["classification"] == "calque"
+    assert var_недіючий[0]["heritage_status"]["is_russianism"] is True
 
-    # 5. обладувати: обла́дувати vs обла́дува́ти
+    # 5. обладувати: обла́дувати (володіти, arch.) vs обла́дува́ти (спорядити, arch.)
     var_обладувати = enrich_heteronyms.build_heteronyms_for_lemma("обладувати")
     assert var_обладувати is not None and len(var_обладувати) == 2
     assert var_обладувати[0]["headword"] == "обла́дувати"
     assert var_обладувати[1]["headword"] == "обла́дува́ти"
+    assert var_обладувати[0]["heritage_status"]["classification"] == "authentic-archaism"
+    assert var_обладувати[1]["heritage_status"]["classification"] == "authentic-archaism"
+    assert "possess" in var_обладувати[0]["gloss"].lower() or "ownership" in var_обладувати[0]["gloss"].lower()
+    assert "equip" in var_обладувати[1]["gloss"].lower() or "furnish" in var_обладувати[1]["gloss"].lower()
     assert var_обладувати[0]["pre_soviet_witness"] is not None
     assert "Грінченко" in var_обладувати[0]["pre_soviet_witness"]["witness"]
+    assert "полем" in var_обладувати[0]["pre_soviet_witness"]["quote"]
     assert var_обладувати[1]["pre_soviet_witness"] is not None
     assert "Грінченко" in var_обладувати[1]["pre_soviet_witness"]["witness"]
+    assert "вози в дорогу" in var_обладувати[1]["pre_soviet_witness"]["quote"]
 
     # 6. поливка: по́ли́вка vs поли́вка
     var_поливка = enrich_heteronyms.build_heteronyms_for_lemma("поливка")
@@ -2402,16 +2413,22 @@ def test_batch12_semantic_and_stress_distinctions():
     assert var_помісний is not None and len(var_помісний) == 2
     assert var_помісний[0]["headword"] == "по́місни́й"
     assert var_помісний[1]["headword"] == "помі́сний"
+    assert var_помісний[1]["soviet_colonization_context"]["sovietization_risk"] == 1
+    assert "срср" in var_помісний[1]["soviet_colonization_context"]["keywords"]
 
-    # 8. поставляти: поста́вляти vs поставля́ти
+    # 8. поставляти: поста́вляти (arch. distributive) vs поставля́ти (calque, :bad)
     var_поставляти = enrich_heteronyms.build_heteronyms_for_lemma("поставляти")
     assert var_поставляти is not None and len(var_поставляти) == 2
     assert var_поставляти[0]["headword"] == "поста́вляти"
     assert var_поставляти[1]["headword"] == "поставля́ти"
+    assert var_поставляти[0]["heritage_status"]["classification"] == "authentic-archaism"
+    assert var_поставляти[1]["heritage_status"]["classification"] == "calque"
+    assert var_поставляти[1]["heritage_status"]["is_russianism"] is True
+    assert var_поставляти[1]["soviet_colonization_context"]["sovietization_risk"] == 1
+    assert "ленін" in var_поставляти[1]["soviet_colonization_context"]["keywords"]
     assert var_поставляти[0]["pre_soviet_witness"] is not None
     assert "Грінченко" in var_поставляти[0]["pre_soviet_witness"]["witness"]
-    assert var_поставляти[1]["pre_soviet_witness"] is not None
-    assert "Грінченко" in var_поставляти[1]["pre_soviet_witness"]["witness"]
+    assert var_поставляти[1]["pre_soviet_witness"] is None
 
     # 9. складуватися: скла́дуватися vs складува́тися
     var_складуватися = enrich_heteronyms.build_heteronyms_for_lemma("складуватися")
@@ -2419,19 +2436,25 @@ def test_batch12_semantic_and_stress_distinctions():
     assert var_складуватися[0]["headword"] == "скла́дуватися"
     assert var_складуватися[1]["headword"] == "складува́тися"
 
-    # 10. склепувати: скле́пувати vs склепува́ти
+    # 10. склепувати: скле́пувати (rivet) vs склепува́ти (build crypt/vault, dial.)
     var_склепувати = enrich_heteronyms.build_heteronyms_for_lemma("склепувати")
     assert var_склепувати is not None and len(var_склепувати) == 2
     assert var_склепувати[0]["headword"] == "скле́пувати"
     assert var_склепувати[1]["headword"] == "склепува́ти"
-    assert var_склепувати[0]["pre_soviet_witness"] is not None
-    assert "Грінченко" in var_склепувати[0]["pre_soviet_witness"]["witness"]
+    assert "rivet" in var_склепувати[0]["gloss"].lower()
+    assert "vault" in var_склепувати[1]["gloss"].lower() or "crypt" in var_склепувати[1]["gloss"].lower()
+    assert var_склепувати[0]["pre_soviet_witness"] is None
+    assert var_склепувати[1]["pre_soviet_witness"] is not None
+    assert "Грінченко" in var_склепувати[1]["pre_soviet_witness"]["witness"]
+    assert "склеп" in var_склепувати[1]["pre_soviet_witness"]["quote"]
 
-    # 11. совковий: со́вковий vs совко́вий
+    # 11. совковий: со́вковий (owlet moth, Noctuidae) vs совко́вий (scoop/dustpan & colloq. Soviet)
     var_совковий = enrich_heteronyms.build_heteronyms_for_lemma("совковий")
     assert var_совковий is not None and len(var_совковий) == 2
     assert var_совковий[0]["headword"] == "со́вковий"
     assert var_совковий[1]["headword"] == "совко́вий"
+    assert "moth" in var_совковий[0]["gloss"].lower() or "noctuidae" in var_совковий[0]["gloss"].lower()
+    assert "dustpan" in var_совковий[1]["gloss"].lower() or "scoop" in var_совковий[1]["gloss"].lower() or "soviet" in var_совковий[1]["gloss"].lower()
 
     # 12. сопуха: со́пу́ха vs сопу́ха
     var_сопуха = enrich_heteronyms.build_heteronyms_for_lemma("сопуха")
@@ -2451,13 +2474,16 @@ def test_batch12_semantic_and_stress_distinctions():
     assert var_сосковий[0]["headword"] == "со́сковий"
     assert var_сосковий[1]["headword"] == "соско́вий"
 
-    # 14. співанка: спі́ванка vs спі́ва́нка
+    # 14. співанка: спі́ванка (choir rehearsal) vs спі́ва́нка (folk song/kolomyika)
     var_співанка = enrich_heteronyms.build_heteronyms_for_lemma("співанка")
     assert var_співанка is not None and len(var_співанка) == 2
     assert var_співанка[0]["headword"] == "спі́ванка"
     assert var_співанка[1]["headword"] == "спі́ва́нка"
-    assert var_співанка[0]["pre_soviet_witness"] is not None
-    assert "Грінченко" in var_співанка[0]["pre_soviet_witness"]["witness"]
+    assert "rehearsal" in var_співанка[0]["gloss"].lower() or "хор" in var_співанка[0]["short_label"].lower()
+    assert "song" in var_співанка[1]["gloss"].lower() or "пісня" in var_співанка[1]["short_label"].lower()
+    assert var_співанка[0]["pre_soviet_witness"] is None
+    assert var_співанка[1]["pre_soviet_witness"] is not None
+    assert "Грінченко" in var_співанка[1]["pre_soviet_witness"]["witness"]
     assert var_співанка[0]["morphology"]["paradigm"]["cases"]["називний"]["singular"] == "спі́ванка"
     assert var_співанка[0]["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "спі́ванки"
     assert var_співанка[1]["morphology"]["paradigm"]["cases"]["називний"]["singular"] == "співа́нка"
@@ -2473,35 +2499,40 @@ def test_batch12_semantic_and_stress_distinctions():
     assert var_споритися[1]["pre_soviet_witness"] is not None
     assert "Грінченко" in var_споритися[1]["pre_soviet_witness"]["witness"]
 
-    # 16. справниця: спра́вниця vs справни́ця
+    # 16. справниця: спра́вниця (wife of district police chief) vs справни́ця (courtroom / administrative office)
     var_справниця = enrich_heteronyms.build_heteronyms_for_lemma("справниця")
     assert var_справниця is not None and len(var_справниця) == 2
     assert var_справниця[0]["headword"] == "спра́вниця"
     assert var_справниця[1]["headword"] == "справни́ця"
+    assert var_справниця[0]["pre_soviet_witness"] is None
     assert var_справниця[1]["pre_soviet_witness"] is not None
     assert "Грінченко" in var_справниця[1]["pre_soviet_witness"]["witness"]
+    assert "присутствен" in var_справниця[1]["pre_soviet_witness"]["quote"].lower() or "присутствен" in var_справниця[1]["meaning"]["definitions"][0].lower()
     assert var_справниця[0]["morphology"]["paradigm"]["cases"]["називний"]["singular"] == "спра́вниця"
     assert var_справниця[0]["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "спра́вниці"
     assert var_справниця[1]["morphology"]["paradigm"]["cases"]["називний"]["singular"] == "справни́ця"
     assert var_справниця[1]["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "справни́ці"
+    assert var_справниця[1]["morphology"]["paradigm"]["cases"]["знахідний"]["plural"] == "справни́ці"
 
-    # 17. становий: ста́новий vs ста́нови́й
+    # 17. становий: ста́новий (grammatical voice) vs ста́нови́й (spinal/vertebral, class/estate)
     var_становий = enrich_heteronyms.build_heteronyms_for_lemma("становий")
     assert var_становий is not None and len(var_становий) == 2
     assert var_становий[0]["headword"] == "ста́новий"
     assert var_становий[1]["headword"] == "ста́нови́й"
+    assert var_становий[1]["soviet_colonization_context"]["sovietization_risk"] == 1
+    assert "кпрс" in var_становий[1]["soviet_colonization_context"]["keywords"]
     assert var_становий[1]["pre_soviet_witness"] is not None
     assert "Грінченко" in var_становий[1]["pre_soviet_witness"]["witness"]
 
-    # 18. степний: сте́пний vs степни́й
+    # 18. степний: сте́пний vs степни́й (authentic folk-poetic variant of степовий)
     var_степний = enrich_heteronyms.build_heteronyms_for_lemma("степний")
     assert var_степний is not None and len(var_степний) == 2
     assert var_степний[0]["headword"] == "сте́пний"
     assert var_степний[1]["headword"] == "степни́й"
-    assert var_степний[0]["pre_soviet_witness"] is not None
-    assert "Грінченко" in var_степний[0]["pre_soviet_witness"]["witness"]
+    assert var_степний[0]["pre_soviet_witness"] is None
+    assert var_степний[1]["pre_soviet_witness"] is None
 
-    # 19. стовпище: сто́впище vs стовпи́ще
+    # 19. стовпище: сто́впище (crowd, throng) vs стовпи́ще (giant post)
     var_стовпище = enrich_heteronyms.build_heteronyms_for_lemma("стовпище")
     assert var_стовпище is not None and len(var_стовпище) == 2
     assert var_стовпище[0]["headword"] == "сто́впище"
@@ -2523,11 +2554,13 @@ def test_batch12_semantic_and_stress_distinctions():
     assert var_стожище[1]["morphology"]["paradigm"]["cases"]["називний"]["singular"] == "стожи́ще"
     assert var_стожище[1]["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "стожи́ща"
 
-    # 21. струхнути: стру́хнути vs струхну́ти
+    # 21. струхнути: стру́хнути (rot/decay) vs струхну́ти (shake/jerk)
     var_струхнути = enrich_heteronyms.build_heteronyms_for_lemma("струхнути")
     assert var_струхнути is not None and len(var_струхнути) == 2
     assert var_струхнути[0]["headword"] == "стру́хнути"
     assert var_струхнути[1]["headword"] == "струхну́ти"
+    assert "rot" in var_струхнути[0]["gloss"].lower() or "decay" in var_струхнути[0]["gloss"].lower()
+    assert "shake" in var_струхнути[1]["gloss"].lower() or "jerk" in var_струхнути[1]["gloss"].lower()
     assert var_струхнути[0]["pre_soviet_witness"] is not None
     assert "Грінченко" in var_струхнути[0]["pre_soviet_witness"]["witness"]
     assert var_струхнути[1]["pre_soviet_witness"] is not None
@@ -2540,8 +2573,7 @@ def test_batch12_semantic_and_stress_distinctions():
     assert var_сунутися[1]["headword"] == "суну́тися"
     assert var_сунутися[0]["pre_soviet_witness"] is not None
     assert "Грінченко" in var_сунутися[0]["pre_soviet_witness"]["witness"]
-    assert var_сунутися[1]["pre_soviet_witness"] is not None
-    assert "Грінченко" in var_сунутися[1]["pre_soviet_witness"]["witness"]
+    assert var_сунутися[1]["pre_soviet_witness"] is None
 
     # 23. сушений: су́шений vs суше́ний
     var_сушений = enrich_heteronyms.build_heteronyms_for_lemma("сушений")
@@ -2555,13 +2587,13 @@ def test_batch12_semantic_and_stress_distinctions():
     assert var_схрипнути[0]["headword"] == "схри́пнути"
     assert var_схрипнути[1]["headword"] == "схрипну́ти"
 
-    # 25. тамбур: та́мбур vs тамбу́р
+    # 25. тамбур: та́мбур (railway platform/vestibule) vs тамбу́р (embroidery stitch/drum)
     var_тамбур = enrich_heteronyms.build_heteronyms_for_lemma("тамбур")
     assert var_тамбур is not None and len(var_тамбур) == 2
     assert var_тамбур[0]["headword"] == "та́мбур"
     assert var_тамбур[1]["headword"] == "тамбу́р"
-    assert var_тамбур[1]["pre_soviet_witness"] is not None
-    assert "Грінченко" in var_тамбур[1]["pre_soviet_witness"]["witness"]
+    assert var_тамбур[0]["pre_soviet_witness"] is None
+    assert var_тамбур[1]["pre_soviet_witness"] is None
     assert var_тамбур[0]["morphology"]["paradigm"]["cases"]["називний"]["singular"] == "та́мбур"
     assert var_тамбур[0]["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "та́мбура"
     assert var_тамбур[1]["morphology"]["paradigm"]["cases"]["називний"]["singular"] == "тамбу́р"
@@ -2573,11 +2605,13 @@ def test_batch12_semantic_and_stress_distinctions():
     assert var_танковий[0]["headword"] == "та́нковий"
     assert var_танковий[1]["headword"] == "та́нко́вий"
 
-    # 27. темник: те́мник vs темни́к
+    # 27. темник: те́мник (media guidance/directive) vs темни́к (dark cellar/dungeon)
     var_темник = enrich_heteronyms.build_heteronyms_for_lemma("темник")
     assert var_темник is not None and len(var_темник) == 2
     assert var_темник[0]["headword"] == "те́мник"
     assert var_темник[1]["headword"] == "темни́к"
+    assert var_темник[0]["soviet_colonization_context"]["sovietization_risk"] == 1
+    assert "срср" in var_темник[0]["soviet_colonization_context"]["keywords"]
     assert var_темник[1]["pre_soviet_witness"] is not None
     assert "Грінченко" in var_темник[1]["pre_soviet_witness"]["witness"]
     assert var_темник[0]["morphology"]["paradigm"]["cases"]["називний"]["singular"] == "те́мник"
@@ -2591,7 +2625,7 @@ def test_batch12_semantic_and_stress_distinctions():
     assert var_товчений[0]["headword"] == "то́вчений"
     assert var_товчений[1]["headword"] == "товче́ний"
 
-    # 29. тікання: ті́кання vs тіка́ння
+    # 29. тікання: ті́кання vs тіка́ння (singulare tantum in VESUM)
     var_тікання = enrich_heteronyms.build_heteronyms_for_lemma("тікання")
     assert var_тікання is not None and len(var_тікання) == 2
     assert var_тікання[0]["headword"] == "ті́кання"
@@ -2602,6 +2636,9 @@ def test_batch12_semantic_and_stress_distinctions():
     assert var_тікання[0]["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "ті́кання"
     assert var_тікання[1]["morphology"]["paradigm"]["cases"]["називний"]["singular"] == "тіка́ння"
     assert var_тікання[1]["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "тіка́ння"
+    # Uncountable action noun: singular-only paradigm attested in VESUM
+    assert "plural" not in var_тікання[0]["morphology"]["paradigm"]["cases"]["називний"]
+    assert "plural" not in var_тікання[1]["morphology"]["paradigm"]["cases"]["називний"]
 
     # 30. тіпання: ті́пання vs тіпа́ння
     var_тіпання = enrich_heteronyms.build_heteronyms_for_lemma("тіпання")

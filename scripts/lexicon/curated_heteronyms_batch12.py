@@ -215,11 +215,11 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                         '118); Читач суворий: він ніколи не простить '
                                                                         'письменникові натяжки, фальші, брехні '
                                                                         '(Смолич, Перша книга, 1951, 39).',
-                                                          'sovietization_risk': 0,
-                                                          'keywords': [],
+                                                          'sovietization_risk': 1,
+                                                          'keywords': ['радянськ'],
                                                           'historical_note': 'Зафіксовано в радянський період '
                                                                              '(СУМ-11). Наведено для лексикографічної '
-                                                                             'прозорості.'},
+                                                                             'прозорості; цитує радянську поезію.'},
                        'pre_soviet_witness': None},
                    {   'headword': 'натя́жка',
                        'short_label': 'необґрунтоване твердження, притягнутий за вуха висновок (перен.)',
@@ -269,20 +269,25 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                              'прозорості.'},
                        'pre_soviet_witness': None}],
     'недіючий': [   {   'headword': 'неді́ючий',
-                        'short_label': 'який перебуває в стані спокою або бездіяльності',
-                        'gloss': 'inactive, inoperative, dormant (volcano, factory)',
+                        'short_label': 'який перебуває в стані спокою або бездіяльності (калька, :bad)',
+                        'gloss': 'inactive, inoperative, dormant (volcano, factory; calque)',
                         'pos': 'adj',
                         'cefr': 'B2',
-                        'heritage_status': {   'classification': 'standard',
-                                               'is_russianism': False,
-                                               'russian_shadow': False,
-                                               'vesum_attested': True},
+                        'heritage_status': {   'classification': 'calque',
+                                               'is_russianism': True,
+                                               'russian_shadow': True,
+                                               'vesum_attested': True,
+                                               'warning_severity': 'caution',
+                                               'calque_warning': {   'standard_alternatives': [   'недієвий',
+                                                                                                  'нечинний',
+                                                                                                  'непрацюючий']}},
                         'pronunciation': {'ipa': '[nɛˈdʲijut͡ʃɪj]'},
                         'stress': {'form': 'неді́ючий', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/недіючий'},
                         'morphology': {'pos': 'прикметник', 'paradigm': {'kind': 'adjective'}},
-                        'distinction_note': "Означає об'єкт, який фактично не працює, законсервований або спить "
-                                            '(недіючий вулкан, недіюча шахта). Не плутати з юридично скасованим актом '
-                                            '«недію́чий».',
+                        'distinction_note': "Калька з рос. «недействующий», маркована у ВЕСУМ як :bad. Означає об'єкт, "
+                                            'який фактично не працює, законсервований або спить (недіючий вулкан). У '
+                                            'сучасній нормі рекомендовано вживати «непрацюючий», «згаслий» або '
+                                            '«недієвий». Не плутати з «недію́чий».',
                         'meaning': {'definitions': ['Який не діє, перебуває в стані спокою.'], 'source': 'ВТС'},
                         'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                            'definition': 'НЕДІ́ЮЧИЙ, а, е. Який не діє, не працює в '
@@ -303,20 +308,22 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                               'прозорості.'},
                         'pre_soviet_witness': None},
                     {   'headword': 'недію́чий',
-                        'short_label': 'який утратив юридичну чи нормативну чинність, нечинний',
-                        'gloss': 'no longer valid, void, inoperative (law, rule)',
+                        'short_label': 'який утратив юридичну чинність, нечинний (калька, :bad)',
+                        'gloss': 'no longer valid, void, inoperative (law, rule; calque, nonstandard)',
                         'pos': 'adj',
                         'cefr': 'B2',
-                        'heritage_status': {   'classification': 'standard',
-                                               'is_russianism': False,
-                                               'russian_shadow': False,
-                                               'vesum_attested': True},
+                        'heritage_status': {   'classification': 'calque',
+                                               'is_russianism': True,
+                                               'russian_shadow': True,
+                                               'vesum_attested': True,
+                                               'warning_severity': 'caution',
+                                               'calque_warning': {'standard_alternatives': ['нечинний', 'недієвий']}},
                         'pronunciation': {'ipa': '[nɛdʲiˈjut͡ʃɪj]'},
                         'stress': {'form': 'недію́чий', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/недіючий'},
                         'morphology': {'pos': 'прикметник', 'paradigm': {'kind': 'adjective'}},
-                        'distinction_note': 'Юридичний і діловий термін: такий, що втратив законну силу (нечинний; '
-                                            '«недіючий закон, недіюча постанова»). Не плутати з фізично бездіяльним '
-                                            '«неді́ючий».',
+                        'distinction_note': 'Калька з рос. «недействующий», маркована у ВЕСУМ як :bad. Означає '
+                                            'нормативний акт, що втратив юридичну силу. У сучасній літературній мові '
+                                            'рекомендовано вживати нормативне «нечинний». Не плутати з «неді́ючий».',
                         'meaning': {   'definitions': ['Який утратив чинність (про нормативний акт, закон тощо).'],
                                        'source': 'ВТС'},
                         'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
@@ -335,22 +342,25 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                               'прозорості.'},
                         'pre_soviet_witness': None}],
     'обладувати': [   {   'headword': 'обла́дувати',
-                          'short_label': 'споряджати, приводити до належного стану, обладнувати (недок.)',
-                          'gloss': 'equip, fit out, arrange properly (imperf.)',
+                          'short_label': 'володіти, порядкувати чим-небудь (арх., недок.)',
+                          'gloss': 'possess, hold ownership of, rule or manage (arch., imperf.)',
                           'pos': 'verb',
                           'cefr': 'B2',
-                          'heritage_status': {   'classification': 'standard',
+                          'heritage_status': {   'classification': 'authentic-archaism',
                                                  'is_russianism': False,
                                                  'russian_shadow': False,
-                                                 'vesum_attested': True},
+                                                 'vesum_attested': True,
+                                                 'warning_severity': 'treasured'},
                           'pronunciation': {'ipa': '[ɔˈblɑduwɐtɪ]'},
                           'stress': {   'form': 'обла́дувати',
                                         'source': 'ВТС',
                                         'url': 'https://slovnyk.me/dict/vts/обладувати'},
                           'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'недоконаний'}},
-                          'distinction_note': 'Означає опоряджати, ладнати, забезпечувати необхідним устаткуванням чи '
-                                              'збруєю. Не плутати з подвійним наголосом «обла́дува́ти».',
-                          'meaning': {'definitions': ['Опоряджати, ладнати, споряджати.'], 'source': 'ВТС'},
+                          'distinction_note': 'Застаріле значення: володіти, порядкувати, управляти чим-небудь («Мій '
+                                              'брат буде обладувати полем»). Марковане у ВЕСУМ як :arch. Не плутати з '
+                                              '«обла́дува́ти» (спорядити, вирядити в дорогу).',
+                          'meaning': {   'definitions': ['Застаріле: володіти, порядкувати, управляти чим-небудь.'],
+                                         'source': 'Грінченко'},
                           'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                              'definition': 'ОБЛА́ДУВАТИ, ую, уєш, недок., чим, заст. '
                                                                            'Володіти. Мій брат буде обладувати полем '
@@ -372,23 +382,25 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                        '(Валуєвського циркуляра 1863 р. та Емського '
                                                                        'указу 1876 р.).'}},
                       {   'headword': 'обла́дува́ти',
-                          'short_label': 'споряджати, виряджати в дорогу (розм., варіантний наголос)',
-                          'gloss': 'equip, pack up for travel (colloq., variant stress)',
+                          'short_label': 'обладнати, спорядити, вирядити в дорогу (арх., док., варіантний наголос)',
+                          'gloss': 'equip, fit out, prepare and furnish for a journey (arch., perf.)',
                           'pos': 'verb',
                           'cefr': 'B2',
-                          'heritage_status': {   'classification': 'standard',
+                          'heritage_status': {   'classification': 'authentic-archaism',
                                                  'is_russianism': False,
                                                  'russian_shadow': False,
-                                                 'vesum_attested': True},
+                                                 'vesum_attested': True,
+                                                 'warning_severity': 'treasured'},
                           'pronunciation': {'ipa': '[ɔblɐduˈwɑtɪ]'},
                           'stress': {   'form': 'обла́дува́ти',
                                         'source': 'ВТС',
                                         'url': 'https://slovnyk.me/dict/vts/обладувати'},
-                          'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'недоконаний'}},
-                          'distinction_note': 'Розмовна форма спорядження та готування до виїзду (вози, коней: '
-                                              '«обладували вози в дорогу»). Не плутати з основним літературним '
-                                              'наголосом «обла́дувати».',
-                          'meaning': {'definitions': ['Споряджати, виряджати; готувати до виїзду.'], 'source': 'ВТС'},
+                          'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'доконаний'}},
+                          'distinction_note': 'Застаріле значення: спорядити або підготувати до виїзду (вози, коней: '
+                                              '«Обладували вози в дорогу»). Марковане у ВЕСУМ як :arch. Не плутати з '
+                                              '«обла́дувати» (володіти чим-небудь).',
+                          'meaning': {   'definitions': ['Застаріле: обладнати, спорядити, підготувати до виїзду.'],
+                                         'source': 'Грінченко'},
                           'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                              'definition': 'ОБЛА́ДУВА́ТИ, у́ю, у́єш, док., перех., '
                                                                            'заст. Обладнати, спорядити. Обладували '
@@ -527,7 +539,9 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                         'distinction_note': 'Церковний термін: прикметник до помісна церква, Помісний собор '
                                             '(національний церковний собор). Не плутати з феодальним поміщицьким '
                                             'володінням «помі́сний».',
-                        'meaning': {'definitions': ['Стосовний до помісної церкви; соборний.'], 'source': 'ВТС'},
+                        'meaning': {   'definitions': [   'Стосовний до помісної церкви; соборний; також прикм. до '
+                                                          'помісь.'],
+                                       'source': 'ВТС'},
                         'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                            'definition': 'ПО́МІСНИ́Й, по́місна́, по́місне́. Прикм. до '
                                                                          'по́місь 1. З одержанням у результаті '
@@ -562,29 +576,31 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                          'боярськими та монастирськими вотчинами '
                                                                          'виникло помісне землеволодіння (Іст. СРСР, '
                                                                          'І, 1957, 96).',
-                                                           'sovietization_risk': 0,
-                                                           'keywords': [],
+                                                           'sovietization_risk': 1,
+                                                           'keywords': ['срср'],
                                                            'historical_note': 'Зафіксовано в радянський період '
                                                                               '(СУМ-11). Наведено для лексикографічної '
-                                                                              'прозорості.'},
+                                                                              'прозорості; цитує радянські джерела з '
+                                                                              'історії СРСР.'},
                         'pre_soviet_witness': None}],
     'поставляти': [   {   'headword': 'поста́вляти',
-                          'short_label': 'поставити багато предметів, розставити по місцях (док.)',
-                          'gloss': 'place, put or arrange many items in their places (perf.)',
+                          'short_label': 'поставити багато предметів, розставити по місцях (док., заст.)',
+                          'gloss': 'place, put or arrange many items in their places (perf., arch.)',
                           'pos': 'verb',
                           'cefr': 'B1',
-                          'heritage_status': {   'classification': 'standard',
+                          'heritage_status': {   'classification': 'authentic-archaism',
                                                  'is_russianism': False,
                                                  'russian_shadow': False,
-                                                 'vesum_attested': True},
+                                                 'vesum_attested': True,
+                                                 'warning_severity': 'treasured'},
                           'pronunciation': {'ipa': '[pɔˈstɑu̯lʲɐtɪ]'},
                           'stress': {   'form': 'поста́вляти',
                                         'source': 'ВТС',
                                         'url': 'https://slovnyk.me/dict/vts/поставляти'},
                           'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'доконаний'}},
-                          'distinction_note': 'Означає розставити велику кількість речей на поверхні (посуд на стіл, '
-                                              'стільці в кімнаті; док. вид). Не плутати з регулярним постачанням '
-                                              'продукції «поставля́ти».',
+                          'distinction_note': 'Застаріле доконане дієслово: розставити велику кількість речей на '
+                                              'поверхні (посуд на стіл, стільці в кімнаті; док. вид). Не плутати з '
+                                              'калькованим «поставля́ти».',
                           'meaning': {   'definitions': ['Поставити все або багато чого-небудь (доконаний вид).'],
                                          'source': 'ВТС'},
                           'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
@@ -616,23 +632,26 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                        '(Валуєвського циркуляра 1863 р. та Емського '
                                                                        'указу 1876 р.).'}},
                       {   'headword': 'поставля́ти',
-                          'short_label': 'доставляти продукцію, постачати товари за договором (недок.)',
-                          'gloss': 'supply, deliver goods/commodities under contract (imperf.)',
+                          'short_label': 'доставляти продукцію, постачати товари за договором (калька, :bad)',
+                          'gloss': 'supply, deliver goods/commodities under contract (imperf.; calque)',
                           'pos': 'verb',
                           'cefr': 'B1',
-                          'heritage_status': {   'classification': 'standard',
-                                                 'is_russianism': False,
-                                                 'russian_shadow': False,
-                                                 'vesum_attested': True},
+                          'heritage_status': {   'classification': 'calque',
+                                                 'is_russianism': True,
+                                                 'russian_shadow': True,
+                                                 'vesum_attested': True,
+                                                 'warning_severity': 'caution',
+                                                 'calque_warning': {'standard_alternatives': ['постачати']}},
                           'pronunciation': {'ipa': '[pɔstɐu̯ˈlʲɑtɪ]'},
                           'stress': {   'form': 'поставля́ти',
                                         'source': 'ВТС',
                                         'url': 'https://slovnyk.me/dict/vts/поставляти'},
                           'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'недоконаний'}},
-                          'distinction_note': 'Означає постачати товари або сировину (постачати за контрактом; недок. '
-                                              'вид). Не плутати з одномоментним розставленням предметів «поста́вляти».',
+                          'distinction_note': 'Економічно-канцелярська калька з рос. «поставлять», маркована у ВЕСУМ '
+                                              'як :bad. У сучасній літературній нормі рекомендовано вживати питоме '
+                                              '«постачати». Не плутати з питомим доконаним «поста́вляти».',
                           'meaning': {   'definitions': [   'Здійснювати поставку, постачати що-небудь за договором '
-                                                            '(недоконаний вид).'],
+                                                            '(недоконаний вид; нерекомендоване).'],
                                          'source': 'ВТС'},
                           'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                              'definition': 'ПОСТАВЛЯ́ТИ, я́ю, я́єш, недок., '
@@ -660,23 +679,14 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                            'поставити для будівництва Мавзолею В. І. '
                                                                            'Леніна великі моноліти (Наука.., 4, 1962, '
                                                                            '5).',
-                                                             'sovietization_risk': 0,
-                                                             'keywords': [],
+                                                             'sovietization_risk': 1,
+                                                             'keywords': ['ленін', 'радянськ'],
                                                              'historical_note': 'Зафіксовано в радянський період '
                                                                                 '(СУМ-11). Наведено для '
-                                                                                'лексикографічної прозорості.'},
-                          'pre_soviet_witness': {   'witness': 'Грінченко (1907–1909)',
-                                                    'quote': 'Поставлятися, -лЯюся, -єшся, сов. в. постАвитися, '
-                                                             '-влюся, -вишся, гл. Доставлять, доставить, подавать, '
-                                                             'подать. Торбо, поставляйсь. Рудч. Ск. II. 137. Як почав '
-                                                             'поставляться: вино, наливка, мед, пиво, — сказано увесь '
-                                                             'стіл застановив пляшками. Лебед. у. Хоч застався, а '
-                                                             'постався. Ном. № 11932.',
-                                                    'historical_note': 'Автентичне народне мововживання, зафіксоване '
-                                                                       'Борисом Грінченком в умовах дії '
-                                                                       'антиукраїнських імперських указів '
-                                                                       '(Валуєвського циркуляра 1863 р. та Емського '
-                                                                       'указу 1876 р.).'}}],
+                                                                                'лексикографічної прозорості; містить '
+                                                                                'радянські ідеологізовані цитати '
+                                                                                '(Ленін).'},
+                          'pre_soviet_witness': None}],
     'складуватися': [   {   'headword': 'скла́дуватися',
                             'short_label': 'зосереджуватися на складі, зберігатися складським способом (недок.)',
                             'gloss': 'be stored in a warehouse, accumulate in storage (imperf.)',
@@ -756,8 +766,11 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                         'url': 'https://slovnyk.me/dict/vts/склепувати'},
                           'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'недоконаний'}},
                           'distinction_note': "Технічне значення: з'єднувати металеві листи чи клепки бочки "
-                                              'заклепками. Не плутати зі стулянням повік чи очей «склепува́ти».',
-                          'meaning': {'definitions': ["З'єднувати деталі заклепками або клепками."], 'source': 'ВТС'},
+                                              'заклепками. Не плутати з «склепува́ти» (діал. мурувати склеп або '
+                                              'склепіння).',
+                          'meaning': {   'definitions': [   "Клепаючи, з'єднувати, скріплювати що-небудь заклепками "
+                                                            'або клепками.'],
+                                         'source': 'СУМ-20'},
                           'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                              'definition': 'СКЛЕ́ПУВАТИ, ую, уєш, недок., СКЛЕПА́ТИ, '
                                                                            'склепа́ю, склепа́єш і склеплю́, скле́плеш; '
@@ -787,32 +800,28 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                              'historical_note': 'Зафіксовано в радянський період '
                                                                                 '(СУМ-11). Наведено для '
                                                                                 'лексикографічної прозорості.'},
-                          'pre_soviet_witness': {   'witness': 'Грінченко (1907–1909)',
-                                                    'quote': 'Склепувати, -пую, -єш, гл. = склепити. Ой же казав пан '
-                                                             'Каньовський ще й склеп склепувати. Чуб. V. 428.',
-                                                    'historical_note': 'Автентичне народне мововживання, зафіксоване '
-                                                                       'Борисом Грінченком в умовах дії '
-                                                                       'антиукраїнських імперських указів '
-                                                                       '(Валуєвського циркуляра 1863 р. та Емського '
-                                                                       'указу 1876 р.).'}},
+                          'pre_soviet_witness': None},
                       {   'headword': 'склепува́ти',
-                          'short_label': 'стуляти повіки, очі при засинанні (недок., перен.)',
-                          'gloss': "close one's eyes/eyelids in sleep (imperf., fig.)",
+                          'short_label': 'будувати склеп, мурувати склепіння (діал., недок.)',
+                          'gloss': 'build a vault, build a crypt or vaulted ceiling (dialectal, imperf.)',
                           'pos': 'verb',
                           'cefr': 'B2',
-                          'heritage_status': {   'classification': 'standard',
+                          'heritage_status': {   'classification': 'authentic-dialectism',
                                                  'is_russianism': False,
                                                  'russian_shadow': False,
-                                                 'vesum_attested': True},
+                                                 'vesum_attested': True,
+                                                 'warning_severity': 'treasured'},
                           'pronunciation': {'ipa': '[sklɛpuˈwɑtɪ]'},
                           'stress': {   'form': 'склепува́ти',
                                         'source': 'ВТС',
                                         'url': 'https://slovnyk.me/dict/vts/склепувати'},
                           'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'недоконаний'}},
-                          'distinction_note': 'Образне мовлення: стуляти очі або повіки від утоми чи сну («не '
-                                              'склепувати очей цілу ніч»). Не плутати зі слюсарним клепанням '
-                                              '«скле́пувати».',
-                          'meaning': {'definitions': ['Стуляти очі або повіки; засинати.'], 'source': 'ВТС'},
+                          'distinction_note': "Діалектне значення: мурувати підземний склеп або кам'яне склепіння "
+                                              '(«казав пан Каньовський ще й склеп склепувати»). Не плутати зі '
+                                              'слюсарним клепанням заклепками «скле́пувати».',
+                          'meaning': {   'definitions': [   'Діалектне або застаріле: будувати склеп, мурувати '
+                                                            'склепіння.'],
+                                         'source': 'СУМ-20'},
                           'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                              'definition': 'СКЛЕПУВА́ТИ, у́ю, у́єш, недок., перех., '
                                                                            'діал. Будувати склеп (у 1 знач.). Ой же '
@@ -824,10 +833,17 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                              'historical_note': 'Зафіксовано в радянський період '
                                                                                 '(СУМ-11). Наведено для '
                                                                                 'лексикографічної прозорості.'},
-                          'pre_soviet_witness': None}],
+                          'pre_soviet_witness': {   'witness': 'Грінченко (1907–1909)',
+                                                    'quote': 'Склепувати, -пую, -єш, гл. = склепити. Ой же казав пан '
+                                                             'Каньовський ще й склеп склепувати. Чуб. V. 428.',
+                                                    'historical_note': 'Автентичне народне мововживання, зафіксоване '
+                                                                       'Борисом Грінченком в умовах дії '
+                                                                       'антиукраїнських імперських указів '
+                                                                       '(Валуєвського циркуляра 1863 р. та Емського '
+                                                                       'указу 1876 р.).'}}],
     'совковий': [   {   'headword': 'со́вковий',
-                        'short_label': 'стосовний до совка (ручної лопатки для сміття чи сипких матеріалів)',
-                        'gloss': 'dustpan-related, scoop-shaped (physical tool)',
+                        'short_label': 'стосовний до со́вки (нічного метелика родини Noctuidae)',
+                        'gloss': 'pertaining to the owlet moth (Noctuidae moth family)',
                         'pos': 'adj',
                         'cefr': 'B2',
                         'heritage_status': {   'classification': 'standard',
@@ -837,10 +853,12 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                         'pronunciation': {'ipa': '[ˈsɔu̯kɔwɪj]'},
                         'stress': {'form': 'со́вковий', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/совковий'},
                         'morphology': {'pos': 'прикметник', 'paradigm': {'kind': 'adjective'}},
-                        'distinction_note': 'Пряме значення: стосовний до совка як господарського знаряддя (совкова '
-                                            'лопата, совковий держак). Не плутати з жаргонною зневажливою '
-                                            'характеристикою «совко́вий».',
-                        'meaning': {'definitions': ['Прикметник до совок (ручний інструмент).'], 'source': 'ВТС'},
+                        'distinction_note': 'Ентомологічний термін: стосовний до совки (нічного метелика родини '
+                                            'совок). Не плутати з совком як ручним інструментом або радянщиною '
+                                            '«совко́вий».',
+                        'meaning': {   'definitions': [   'Прикметник до совка (нічний метелик родини совок); '
+                                                          'стосовний до цієї родини комах.'],
+                                       'source': 'СУМ-20'},
                         'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                            'definition': 'СО́ВКОВИЙ, а, е. 1. Прикм. до со́вка. 2. у '
                                                                          'знач. ім. со́вкові, вих, мн. Назва родини '
@@ -853,8 +871,8 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                               'прозорості.'},
                         'pre_soviet_witness': None},
                     {   'headword': 'совко́вий',
-                        'short_label': "пов'язаний із радянськими порядками або менталітетом (жарг., зневажл.)",
-                        'gloss': 'Soviet-style, homo sovieticus, totalitarian mindset (slang, disparaging)',
+                        'short_label': 'стосовний до совка (лопатки) або перен. радянський (зневажл.)',
+                        'gloss': 'pertaining to a dustpan / scoop, or colloq. Soviet-style',
                         'pos': 'adj',
                         'cefr': 'B2',
                         'heritage_status': {   'classification': 'standard',
@@ -864,12 +882,13 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                         'pronunciation': {'ipa': '[sɔu̯ˈkɔwɪj]'},
                         'stress': {'form': 'совко́вий', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/совковий'},
                         'morphology': {'pos': 'прикметник', 'paradigm': {'kind': 'adjective'}},
-                        'distinction_note': 'Жаргонне, іронічне позначення радянських звичок, бюрократії, зрівнялівки '
-                                            '(«совковий підхід, совковий сервіс»). Не плутати з господарським совком '
-                                            '«со́вковий».',
-                        'meaning': {   'definitions': [   'Жаргонне позначення радянського мислення, стереотипів або '
-                                                          'застарілих практик.'],
-                                       'source': 'ВТС'},
+                        'distinction_note': "Пов'язаний із совком як господарським знаряддям (совкова лопата) або "
+                                            'розмовне зневажливе позначення радянських порядків чи менталітету. Не '
+                                            'плутати з нічним метеликом «со́вковий».',
+                        'meaning': {   'definitions': [   'Прикметник до совок (лопатка або совок); перен. розм. '
+                                                          'іронічне позначення радянського способу життя або '
+                                                          'мислення.'],
+                                       'source': 'СУМ-20'},
                         'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                            'definition': 'СОВКО́ВИЙ, а, е. Прикм. до сово́к; // Який '
                                                                          'формою нагадує совок, зробл. у вигляді '
@@ -1025,8 +1044,8 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                               'прозорості.'},
                         'pre_soviet_witness': None}],
     'співанка': [   {   'headword': 'спі́ванка',
-                        'short_label': 'коротка народна пісня, коломийка (фольк.)',
-                        'gloss': 'folk ditty, short traditional song, kolomyika (folk.)',
+                        'short_label': 'репетиція хору, спільна репетиція хорового колективу',
+                        'gloss': 'choir rehearsal, choral practice session',
                         'pos': 'noun',
                         'cefr': 'B1',
                         'heritage_status': {   'classification': 'standard',
@@ -1052,10 +1071,10 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                                        'plural': 'спі́ванках'},
                                                                        'кличний': {   'singular': 'спі́ванко',
                                                                                       'plural': 'спі́ванки'}}}},
-                        'distinction_note': 'Традиційний фольклорний жанр: коротка пісня, приспівка, коломийка '
-                                            '(гуцульська співанка). Не плутати зі збірником пісень або багатоголосим '
-                                            'співом «спі́ва́нка».',
-                        'meaning': {'definitions': ['Коротка пісня; коломийка.'], 'source': 'ВТС'},
+                        'distinction_note': 'Означає репетицію хору або заняття співацького колективу (вечорами ходив '
+                                            'на співанки до школи). Не плутати з народною піснею чи коломийкою '
+                                            '«спі́ва́нка».',
+                        'meaning': {'definitions': ['Репетиція хору.'], 'source': 'ВТС'},
                         'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                            'definition': 'СПІ́ВАНКА, и, ж. Репетиція хору. Серафима '
                                                                          'Миколаївна, помітивши мій голос і слух, '
@@ -1070,16 +1089,10 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                            'historical_note': 'Зафіксовано в радянський період '
                                                                               '(СУМ-11). Наведено для лексикографічної '
                                                                               'прозорості.'},
-                        'pre_soviet_witness': {   'witness': 'Грінченко (1907–1909)',
-                                                  'quote': 'Співанка, -ки, ж. Песнь. Не співанку я співала. Гол. І. '
-                                                           '172. Ум. співаночка. Лукаш. 146.',
-                                                  'historical_note': 'Автентичне народне мововживання, зафіксоване '
-                                                                     'Борисом Грінченком в умовах дії антиукраїнських '
-                                                                     'імперських указів (Валуєвського циркуляра 1863 '
-                                                                     'р. та Емського указу 1876 р.).'}},
+                        'pre_soviet_witness': None},
                     {   'headword': 'спі́ва́нка',
-                        'short_label': 'пісенник, збірник пісень або урочисте хорове виконання',
-                        'gloss': 'songbook, hymnal, or ceremonial group singing',
+                        'short_label': 'народна пісня, коломийка, пісенний твір (фольк.)',
+                        'gloss': 'song, folk song, kolomyika, traditional tune (folk.)',
                         'pos': 'noun',
                         'cefr': 'B1',
                         'heritage_status': {   'classification': 'standard',
@@ -1107,9 +1120,10 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                                        'plural': 'співа́нках'},
                                                                        'кличний': {   'singular': 'співа́нко',
                                                                                       'plural': 'співа́нки'}}}},
-                        'distinction_note': 'Позначає збірку пісень або процес спільного виконання (пісенний збірник). '
-                                            'Не плутати з окремим куплетом чи коломийкою «спі́ванка».',
-                        'meaning': {'definitions': ['Збірник пісень або хоровий спів.'], 'source': 'ВТС'},
+                        'distinction_note': 'Традиційний фольклорний жанр: народна пісня, приспівка, коломийка '
+                                            '(колискова співанка). Не плутати з хоровою репетицією «спі́ванка».',
+                        'meaning': {   'definitions': ['Те саме, що пісня; коротка пісня, коломийка; пісенні звуки.'],
+                                       'source': 'ВТС'},
                         'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                            'definition': 'СПІ́ВА́НКА, и, ж. Те саме, що пі́сня. Вона '
                                                                          'тоненьким голосом затягнула колискову '
@@ -1131,7 +1145,13 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                            'historical_note': 'Зафіксовано в радянський період '
                                                                               '(СУМ-11). Наведено для лексикографічної '
                                                                               'прозорості.'},
-                        'pre_soviet_witness': None}],
+                        'pre_soviet_witness': {   'witness': 'Грінченко (1907–1909)',
+                                                  'quote': 'Співанка, -ки, ж. Песнь. Не співанку я співала. Гол. І. '
+                                                           '172. Ум. співаночка. Лукаш. 146.',
+                                                  'historical_note': 'Автентичне народне мововживання, зафіксоване '
+                                                                     'Борисом Грінченком в умовах дії антиукраїнських '
+                                                                     'імперських указів (Валуєвського циркуляра 1863 '
+                                                                     'р. та Емського указу 1876 р.).'}}],
     'споритися': [   {   'headword': 'спо́ритися',
                          'short_label': 'вести словесну суперечку, сперечатися (розм., недок.)',
                          'gloss': 'argue, dispute, bicker with words (colloq., imperf.)',
@@ -1214,14 +1234,15 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                       'імперських указів (Валуєвського циркуляра 1863 '
                                                                       'р. та Емського указу 1876 р.).'}}],
     'справниця': [   {   'headword': 'спра́вниця',
-                         'short_label': 'дружина або дочка повітового справника (іст.)',
+                         'short_label': 'дружина або дочка повітового справника (іст., дорев.)',
                          'gloss': "district police chief's wife or daughter (hist.)",
                          'pos': 'noun',
                          'cefr': 'B2',
-                         'heritage_status': {   'classification': 'standard',
+                         'heritage_status': {   'classification': 'authentic-historism',
                                                 'is_russianism': False,
                                                 'russian_shadow': False,
-                                                'vesum_attested': True},
+                                                'vesum_attested': True,
+                                                'warning_severity': 'treasured'},
                          'pronunciation': {'ipa': '[ˈsprɑu̯nɪt͡sʲɐ]'},
                          'stress': {   'form': 'спра́вниця',
                                        'source': 'ВТС',
@@ -1243,8 +1264,9 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                                         'plural': 'спра́вницях'},
                                                                         'кличний': {   'singular': 'спра́внице',
                                                                                        'plural': 'спра́вниці'}}}},
-                         'distinction_note': 'Історичний соціальний статус: жінка або дочка повітового справника. Не '
-                                             'плутати з працьовитою моторною господинею «справни́ця».',
+                         'distinction_note': 'Історичний соціальний статус: жінка або дочка повітового справника '
+                                             '(дореволюційної поліції). Не плутати з судово-адміністративною установою '
+                                             '«справни́ця».',
                          'meaning': {'definitions': ['Дружина або дочка справника.'], 'source': 'ВТС'},
                          'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                             'definition': 'СПРА́ВНИЦЯ, і, ж., дорев. Дружина '
@@ -1256,14 +1278,15 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                                'лексикографічної прозорості.'},
                          'pre_soviet_witness': None},
                      {   'headword': 'справни́ця',
-                         'short_label': 'роботяща, моторна, тямуща жінка чи господиня (розм.)',
-                         'gloss': 'hardworking, capable, efficient woman or homemaker (colloq.)',
+                         'short_label': 'присутствене місце, судова або адміністративна установа (іст., дорев.)',
+                         'gloss': 'courtroom, administrative office, governmental bureau (hist.)',
                          'pos': 'noun',
                          'cefr': 'B2',
-                         'heritage_status': {   'classification': 'standard',
+                         'heritage_status': {   'classification': 'authentic-historism',
                                                 'is_russianism': False,
                                                 'russian_shadow': False,
-                                                'vesum_attested': True},
+                                                'vesum_attested': True,
+                                                'warning_severity': 'treasured'},
                          'pronunciation': {'ipa': '[sprɐu̯ˈnɪt͡sʲɐ]'},
                          'stress': {   'form': 'справни́ця',
                                        'source': 'ВТС',
@@ -1278,16 +1301,18 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                         'давальний': {   'singular': 'справни́ці',
                                                                                          'plural': 'справни́цям'},
                                                                         'знахідний': {   'singular': 'справни́цю',
-                                                                                         'plural': 'справни́ць'},
+                                                                                         'plural': 'справни́ці'},
                                                                         'орудний': {   'singular': 'справни́цею',
                                                                                        'plural': 'справни́цями'},
                                                                         'місцевий': {   'singular': 'справни́ці',
                                                                                         'plural': 'справни́цях'},
                                                                         'кличний': {   'singular': 'справни́це',
                                                                                        'plural': 'справни́ці'}}}},
-                         'distinction_note': 'Народна характеристика працьовитої, вмілої та спритної господині («оце '
-                                             'так справниця!»). Не плутати з чиновницьким статусом «спра́вниця».',
-                         'meaning': {'definitions': ['Старанна, вміла, роботяща жінка.'], 'source': 'ВТС'},
+                         'distinction_note': 'Історичний термін на позначення судової чи адміністративної установи '
+                                             '(присутствене місце: «В справниці осталися судці з авдитором»). Не '
+                                             'плутати зі статусом дружини справника «спра́вниця».',
+                         'meaning': {   'definitions': ['Історичне: присутствене місце (канцелярія, судова установа).'],
+                                        'source': 'Грінченко'},
                          'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                             'definition': 'СПРАВНИ́ЦЯ, і, ж., дорев. Присутствене '
                                                                           'місце. В справниці осталися судці з '
@@ -1305,8 +1330,8 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                       'імперських указів (Валуєвського циркуляра 1863 '
                                                                       'р. та Емського указу 1876 р.).'}}],
     'становий': [   {   'headword': 'ста́новий',
-                        'short_label': "пов'язаний із соціальним станом, суспільними верствами",
-                        'gloss': 'social-estate related, class-based (caste, estate)',
+                        'short_label': "пов'язаний із граматичним станом дієслова (лінгв., грамат.)",
+                        'gloss': 'voice-related, grammatical voice (linguistics)',
                         'pos': 'adj',
                         'cefr': 'B2',
                         'heritage_status': {   'classification': 'standard',
@@ -1316,11 +1341,10 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                         'pronunciation': {'ipa': '[ˈstɑnɔwɪj]'},
                         'stress': {'form': 'ста́новий', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/становий'},
                         'morphology': {'pos': 'прикметник', 'paradigm': {'kind': 'adjective'}},
-                        'distinction_note': 'Позначає соціальну організацію та феодальні верстви (становий устрій, '
-                                            'станові привілеї). Не плутати з анатомічним хребтом чи жилою «ста́нови́й» '
-                                            '/ «станови́й».',
-                        'meaning': {   'definitions': ['Прикметник до стан (соціальна група, суспільний прошарок).'],
-                                       'source': 'ВТС'},
+                        'distinction_note': 'Спеціальний мовознавчий термін: стосовний до категорії стану дієслова '
+                                            '(становий суфікс, станові відношення). Не плутати з осьовим або '
+                                            'соціальним «ста́нови́й».',
+                        'meaning': {'definitions': ['Стосовний до граматичного стану дієслова.'], 'source': 'ВТС'},
                         'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                            'definition': 'СТА́НОВИЙ, а, е, лінгв. Стос. до стану ( '
                                                                          'див. стан³ 5). Станові відношення в '
@@ -1413,11 +1437,12 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                          'загартування людей — серцевина, становий '
                                                                          'хребет ідеологічної роботи (Ком. Укр., 1, '
                                                                          '1964, 69).',
-                                                           'sovietization_risk': 0,
-                                                           'keywords': [],
+                                                           'sovietization_risk': 1,
+                                                           'keywords': ['кпрс'],
                                                            'historical_note': 'Зафіксовано в радянський період '
                                                                               '(СУМ-11). Наведено для лексикографічної '
-                                                                              'прозорості.'},
+                                                                              'прозорості; цитує матеріали Програми '
+                                                                              'КПРС.'},
                         'pre_soviet_witness': {   'witness': 'Грінченко (1907–1909)',
                                                   'quote': 'Становий, -вого, м. Становой приставь. Вони були становими '
                                                            'в одному стані. Грин. ІІ. 332.',
@@ -1449,13 +1474,7 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                           'historical_note': 'Зафіксовано в радянський період '
                                                                              '(СУМ-11). Наведено для лексикографічної '
                                                                              'прозорості.'},
-                       'pre_soviet_witness': {   'witness': 'Грінченко (1907–1909)',
-                                                 'quote': 'Степний, -а, -е. Способный, умеющій. Моя ще цицьку тіки '
-                                                          'сце, а їсти не степна. Канев. у.',
-                                                 'historical_note': 'Автентичне народне мововживання, зафіксоване '
-                                                                    'Борисом Грінченком в умовах дії антиукраїнських '
-                                                                    'імперських указів (Валуєвського циркуляра 1863 р. '
-                                                                    'та Емського указу 1876 р.).'}},
+                       'pre_soviet_witness': None},
                    {   'headword': 'степни́й',
                        'short_label': 'степовий (діал., фольк., варіантний кінцевий наголос)',
                        'gloss': 'steppe-dwelling, wild steppe (dialectal/folk, end-stressed)',
@@ -1666,8 +1685,8 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                              'прозорості.'},
                        'pre_soviet_witness': None}],
     'струхнути': [   {   'headword': 'стру́хнути',
-                         'short_label': 'раптово здригнутися або злякатися від несподіванки (док.)',
-                         'gloss': 'startle, flinch with fear, shake unexpectedly (perf.)',
+                         'short_label': 'струхлявіти, згнити, розсипатися на порохню (док., розм.)',
+                         'gloss': 'rot away, decay into dust, crumble from rot (perf., colloq.)',
                          'pos': 'verb',
                          'cefr': 'B2',
                          'heritage_status': {   'classification': 'standard',
@@ -1679,9 +1698,9 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                        'source': 'ВТС',
                                        'url': 'https://slovnyk.me/dict/vts/струхнути'},
                          'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'доконаний'}},
-                         'distinction_note': 'Означає злякатися, здригнутися чи стрепенутися від страху (однокр. до '
-                                             'трухнути 1). Не плутати з гниттям дерева «струхну́ти».',
-                         'meaning': {   'definitions': ['Однократне до трухнути 1; злякатися, здригнутися.'],
+                         'distinction_note': 'Означає струхлявіти, зотліти або перетворитися на трухлявину. Не плутати '
+                                             'з різким струшуванням чи потрушуванням «струхну́ти».',
+                         'meaning': {   'definitions': ['Те саме, що струхлявіти; згнити, розсипатися на порохню.'],
                                         'source': 'ВТС'},
                          'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                             'definition': 'СТРУ́ХНУТИ, не, док., розм. Те саме, що '
@@ -1694,15 +1713,16 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                                '(СУМ-11). Наведено для '
                                                                                'лексикографічної прозорості.'},
                          'pre_soviet_witness': {   'witness': 'Грінченко (1907–1909)',
-                                                   'quote': 'Струхнути, -хну, -неш, гл. = струснути. Коли б струхнув '
-                                                            'хоть головою. Котл. Ен. II. 31.',
+                                                   'quote': 'Струхнути 2, -хну, -неш, гл. Сгнить. Корінь його струхне. '
+                                                            'К. Іов. 30. Галя може струхла там у землі. Рудч. Ск. І. '
+                                                            '138.',
                                                    'historical_note': 'Автентичне народне мововживання, зафіксоване '
                                                                       'Борисом Грінченком в умовах дії антиукраїнських '
                                                                       'імперських указів (Валуєвського циркуляра 1863 '
                                                                       'р. та Емського указу 1876 р.).'}},
                      {   'headword': 'струхну́ти',
-                         'short_label': 'перетворитися на порохню, струхлявіти, зотліти (док.)',
-                         'gloss': 'decay into dust, rot away, crumble from rot (perf.)',
+                         'short_label': 'струснути, скинути різким струсом або потрусити (док., рідко)',
+                         'gloss': 'shake off, jerk, shake or toss with a quick movement (perf., rare)',
                          'pos': 'verb',
                          'cefr': 'B2',
                          'heritage_status': {   'classification': 'standard',
@@ -1714,9 +1734,10 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                        'source': 'ВТС',
                                        'url': 'https://slovnyk.me/dict/vts/струхнути'},
                          'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'доконаний'}},
-                         'distinction_note': 'Означає струхлявіти, перетворитися на трухлявину від вогкості або '
-                                             'давності (про дерево, пень). Не плутати зі страхом «стру́хнути».',
-                         'meaning': {'definitions': ['Стати трухлявим; зотліти, струхлявіти.'], 'source': 'ВТС'},
+                         'distinction_note': 'Означає скинути струсом або різко струснути (струхнути сигарету, '
+                                             'струхнути іній). Не плутати з гниттям деревини «стру́хнути».',
+                         'meaning': {   'definitions': ['Те саме, що струснути; скинути або струснути різким рухом.'],
+                                        'source': 'ВТС'},
                          'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
                                                             'definition': 'СТРУХНУ́ТИ, ну́, не́ш, док., перех. і '
                                                                           'неперех., рідко. Те саме, що струсну́ти. '
@@ -1734,9 +1755,8 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                                                '(СУМ-11). Наведено для '
                                                                                'лексикографічної прозорості.'},
                          'pre_soviet_witness': {   'witness': 'Грінченко (1907–1909)',
-                                                   'quote': 'Струхнути 2, -хну, -неш, гл. Сгнить. Корінь його струхне. '
-                                                            'К. Іов. 30. Галя може струхла там у землі. Рудч. Ск. І. '
-                                                            '138.',
+                                                   'quote': 'Струхнути, -хну, -неш, гл. = струснути. Коли б струхнув '
+                                                            'хоть головою. Котл. Ен. II. 31.',
                                                    'historical_note': 'Автентичне народне мововживання, зафіксоване '
                                                                       'Борисом Грінченком в умовах дії антиукраїнських '
                                                                       'імперських указів (Валуєвського циркуляра 1863 '
@@ -1941,16 +1961,7 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                            'historical_note': 'Зафіксовано в радянський період '
                                                                               '(СУМ-11). Наведено для лексикографічної '
                                                                               'прозорості.'},
-                        'pre_soviet_witness': {   'witness': 'Грінченко (1907–1909)',
-                                                  'quote': 'Сунутися 2, -нуся, -нешся, гл. Броситься, ринуться. '
-                                                           'Сунулись тії тури в пущу, так і виваляли дерево; а князь '
-                                                           'за ними знай пускає стрілку за стрілкою. К. (ЗОЮР. II. '
-                                                           '204). Він до челяді сунеться, — і челядь пропала. Шевч. '
-                                                           'ІІ. 28.',
-                                                  'historical_note': 'Автентичне народне мововживання, зафіксоване '
-                                                                     'Борисом Грінченком в умовах дії антиукраїнських '
-                                                                     'імперських указів (Валуєвського циркуляра 1863 '
-                                                                     'р. та Емського указу 1876 р.).'}}],
+                        'pre_soviet_witness': None}],
     'сушений': [   {   'headword': 'су́шений',
                        'short_label': 'який зазнав процесу сушіння, висушений (дієприкметник)',
                        'gloss': 'dried, desiccated through a process of drying (participle)',
@@ -2169,13 +2180,7 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                          'historical_note': 'Зафіксовано в радянський період (СУМ-11). '
                                                                             'Наведено для лексикографічної '
                                                                             'прозорості.'},
-                      'pre_soviet_witness': {   'witness': 'Грінченко (1907–1909)',
-                                                'quote': 'Тамбур, -ру, м. Водяное растеніе = куширь? Бодай тоті да й '
-                                                         'річечки тамбуром заросли. ЗЮЗО. II. 467.',
-                                                'historical_note': 'Автентичне народне мововживання, зафіксоване '
-                                                                   'Борисом Грінченком в умовах дії антиукраїнських '
-                                                                   'імперських указів (Валуєвського циркуляра 1863 р. '
-                                                                   'та Емського указу 1876 р.).'}}],
+                      'pre_soviet_witness': None}],
     'танковий': [   {   'headword': 'та́нковий',
                         'short_label': 'стосовний до броньованої бойової машини — танка (військ.)',
                         'gloss': 'tank-related, armored, panzer (military)',
@@ -2285,13 +2290,29 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {   'бовтну
                                                         "щодо обов'язкового висвітлення певних тем."],
                                      'source': 'ВТС'},
                       'soviet_colonization_context': {   'source': 'СУМ-11 (1970–1980)',
-                                                         'definition': 'ТЕ́МНИ́К, те́мника́, ч. Те саме, що зимівни́к '
-                                                                       '1.',
-                                                         'sovietization_risk': 0,
-                                                         'keywords': [],
+                                                         'definition': 'ТЕ́МНИК¹, а, ч., розм. Список або збірник тем '
+                                                                       'для рефератів, досліджень і т. ін. Ще в 1958 '
+                                                                       'році, коли на «Укркабелі» склали темник для '
+                                                                       'раціоналізаторів і винахідників, включили до '
+                                                                       'нього й таку тему: «Запропонуйте спосіб '
+                                                                       'пофарбування лаків для одержання кольорових '
+                                                                       'світлостійких лакованих дротів» (Рад. Укр., '
+                                                                       '20.VІІІ 1961, 3). ТЕ́МНИК², а, ч., іст. '
+                                                                       'Татарський військовий начальник, який '
+                                                                       'командував десятитисячним військом. Кожне '
+                                                                       'володіння повинно було давати Чингіс-ханові '
+                                                                       'певну кількість воїнів. Тому володіння ці мали '
+                                                                       'назви за чисельністю загонів, що вони '
+                                                                       'виставляли: сотня, тисяча, тьма (десять '
+                                                                       'тисяч), і васали поділялися на сотників, '
+                                                                       'тисячників і темників (Іст. СРСР, І, 1956, '
+                                                                       '74).',
+                                                         'sovietization_risk': 1,
+                                                         'keywords': ['срср'],
                                                          'historical_note': 'Зафіксовано в радянський період (СУМ-11). '
-                                                                            'Наведено для лексикографічної '
-                                                                            'прозорості.'},
+                                                                            'Наведено для лексикографічної прозорості; '
+                                                                            'цитує радянську пресу та історичні '
+                                                                            'джерела СРСР.'},
                       'pre_soviet_witness': None},
                   {   'headword': 'темни́к',
                       'short_label': 'темне приміщення, льох або тюрма; заст. темний підвал (розм.)',
