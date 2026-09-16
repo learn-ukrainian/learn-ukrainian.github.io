@@ -183,11 +183,23 @@ ADVERSATIVE_CONJUNCTIONS = r"\b(?:але|проте|однак|а|бо|тому 
 COORDINATING_CONJUNCTIONS = r"\b(?:і|й|та|або|чи)\b"
 CONJUNCTIONS = rf"(?:{ADVERSATIVE_CONJUNCTIONS}|{COORDINATING_CONJUNCTIONS})"
 
+DISALLOWED_PREPOSITIONS = (
+    r"замість|на|до|в|у|з|із|зі|від|для|про|при|через|без|під|над|перед|після|по|за|із-за|з-під|з-над"
+)
+DISALLOWED_PRONOUNS = (
+    r"він|вона|воно|вони|його|йому|ним|ньому|нього|її|їй|нею|ній|неї|їх|їм|ними|них|"
+    r"це|цей|ця|ці|цього|цієї|цьому|цій|цим|цими|цих|"
+    r"то|той|та|ті|того|тієї|тому|тій|тим|тими|тих|ту|"
+    r"який|яка|яке|які|якого|якої|якому|якій|яким|якою|яких|якими|яку|"
+    r"котрий|котра|котре|котрі|котрого|котрої|котрому|котрій|котрим|котрою|котрих|котрими|котру"
+)
+DISALLOWED_COPULAS = r"є|це|був|була|було|були|буде|становить"
+
 DISALLOWED_COORDINATED_TOKENS = (
     rf"(?:не|ні|ані|{DIRECTIVE_VERBS}|{DIRECTIVE_MODALS}|{ADVERSATIVE_CONJUNCTIONS}|{COORDINATING_CONJUNCTIONS}|"
-    r"що|щоб|як|ніби|наче|неначе|мов)"
+    rf"що|щоб|як|ніби|наче|неначе|мов|{DISALLOWED_PREPOSITIONS}|{DISALLOWED_PRONOUNS}|{DISALLOWED_COPULAS})"
 )
-ITEM_CLASSIFIER = r"(?:(?:слово|слова|слів|термін\w*|вираз\w*|зворот\w*|форм\w*|лексем\w*)\s+)?"
+ITEM_CLASSIFIER = r"(?:(?:слово|слова|слів|термін\w*|вираз\w*|зворот\w*|форм\w*|лексем\w*|вживанн\w*|використанн\w*|застосуванн\w*|написанн\w*)\s+)?"
 ITEM_QUOTED = rf"{ITEM_CLASSIFIER}[«\"“‘\'][^»\"”’\n]+[»\"”’]"
 ITEM_UNQUOTED = rf"{ITEM_CLASSIFIER}(?!\b{DISALLOWED_COORDINATED_TOKENS}\b)[А-Яа-яЇїІіЄєҐґ’'ʼ\w\-]+"
 COORDINATED_ITEM = rf"(?:{ITEM_QUOTED}|{ITEM_UNQUOTED})"
@@ -447,19 +459,24 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
     # identity for subsequent relative clauses / condemnations (Astra R22-F2).
     fallback_text = text_norm
 
-    predicate_lookahead = (
-        r"(?:"
-        r"(?:теж|також|ще|вже)\s+"
-        r")?"
-        r"(?:"
-        r"\b(?:"
-        r"слід|варто|потрібно|необхідно|треба|можна|"
+    PREDICATE_WORDS = (
+        r"слід|варто|потрібно|необхідно|треба|можна|краще|доречно|бажано|годиться|"
+        r"заборонено|забороняється|дозволено|дозволяється|рекомендовано|рекомендується|"
         r"є|це|був|була|було|були|буде|становить|"
         r"потребує|вимагає|"
-        r"замініть|замінити|виправте|виправити|уникайте|уникати|вживайте|вживати|"
-        r"вважа\w*|визна\w*|назива\w*|"
-        r"не|ні|ані"
-        r")\b|"
+        r"замініть|замінити|виправте|виправити|уникайте|уникати|вживайте|вживати|застосовуйте|застосовувати|пишіть|писати|"
+        r"вважа\w*|визна\w*|назива\w*|означа\w*|має|належ\w*|"
+        r"не|ні|ані|"
+        r"помилк\w*|кальк\w*|росіянізм\w*|русизм\w*|суржик\w*|ненормативн\w*|неправильн\w*|варваризм\w*|помилков\w*|недоречн\w*|неприпустим\w*|зайв\w*|"
+        r"норма|норм\w*|нормативн\w*|правильн\w*|питом\w*|літературн\w*|доречн\w*|припустим\w*"
+    )
+
+    predicate_lookahead = (
+        r"(?:"
+        r"(?:теж|також|ще|вже|цілком|абсолютно|справді|дійсно)\s+"
+        r")?"
+        r"(?:"
+        rf"\b(?:{PREDICATE_WORDS})\b|"
         r"—|--|–|-"
         r")"
     )
@@ -470,9 +487,9 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         rf"як(?:ий|а|е|і|ого|ої|ому|ій|им|ою|их|ими|у)|"
         rf"котр(?:ий|а|е|і|ого|ої|ому|ій|им|ою|их|ими|у)|"
         rf"де|коли)\b|"
-        rf"\b(?:його|її|їх|це|цей|цю|цього|цій|цим|слово|термін|вираз|зворот|щодо|для|слід|варто|потрібно|необхідно|треба|можна|не)\b|"
-        rf"[«\"“‘\'][^»\"”’\n]+[»\"”’]\s+{predicate_lookahead}|"
-        rf"[а-яА-ЯёЁіІїЇєЄґҐ’\'\-]+\s+{predicate_lookahead}"
+        rf"\b(?:його|її|їх|це|цей|цю|цього|цій|цим|щодо|для|слід|варто|потрібно|необхідно|треба|можна)\b|"
+        rf"{ITEM_CLASSIFIER}[«\"“‘\'][^»\"”’\n]+[»\"”’]\s+{predicate_lookahead}|"
+        rf"{ITEM_CLASSIFIER}(?!\b{DISALLOWED_COORDINATED_TOKENS}\b)[а-яА-ЯёЁіІїЇєЄґҐ’\'\-]+\s+{predicate_lookahead}"
         rf")"
     )
 
@@ -483,13 +500,13 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
     #    commas separating items in a coordinated list do NOT split clauses (preserving shared directives in R22-F1/R23-F1).
     # 4. Dashes (—, --, –, -) ONLY when introducing a clause / separated clause, not when serving as a copula
     #    between subject and predicate (R23-F2).
-    # 5. Coordinate conjunctions (та, і, й, а, або, чи) ONLY when followed by a clause introducer / predicate (R22-F1/R23-F2).
+    # 5. Coordinate conjunctions (та, і, й, а, або, чи) ONLY when followed by a clause introducer / predicate (R22-F1/R23-F2/R24-F2).
     split_pat = re.compile(
         r"(?:[.\n;!?:]+|"
         r"\s+\b(?:але|проте|однак)\b\s+|"
         rf"\s*,\s*(?={clause_intro_lookahead})|"
         rf"\s+(?:—|--|–|-)\s+(?={clause_intro_lookahead})|"
-        rf"\s+\b(?:та|і|й|а|або|чи)\s+(?={clause_intro_lookahead}))",
+        rf"\s*(?:,\s*)?\b(?:та|і|й|а|або|чи)\b\s+(?={clause_intro_lookahead}))",
         re.IGNORECASE,
     )
 
@@ -502,21 +519,26 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
             # If target is present ONLY as a replacement destination (e.g. "замінити на «файний»"),
             # it is being recommended, not condemned or replaced.
             is_destination = bool(re.search(rf"\b(?:на|до)\s+[«\"“‘\']?{t_bare}[»\"”’\']?", cl_lower))
-            is_subject = bool(re.search(rf"(?:^|\b(?:щодо\s+слова|слово|словом|вираз|зворот)\s+)?[«\"“‘\']?{t_bare}[»\"”’\']?\s+(?:є|це|не|слід|варто|потрібно|необхідно|треба|можна|—|--|–|-)", cl_lower))
+            is_subject = bool(re.search(
+                rf"(?:^|\b{ITEM_CLASSIFIER})[«\"“‘\']?{t_bare}[»\"”’\']?\s+"
+                rf"(?:(?:теж|також|ще|вже|цілком|абсолютно|справді|дійсно)\s+)?(?:\b(?:{PREDICATE_WORDS})\b|—|--|–|-)",
+                cl_lower,
+            ))
             current_referent = "OTHER" if is_destination and not is_subject else "TARGET"
         elif quoted:
             first_q = normalize_token(quoted[0])
             if first_q != t_norm:
                 subj_m = re.search(
-                    rf"(?:^|\b(?:щодо\s+слова|слово|словом|вираз|зворот)\s+)?[«\"“‘\']{re.escape(first_q)}[»\"”’\']",
+                    rf"(?:^|\b{ITEM_CLASSIFIER})[«\"“‘\']{re.escape(first_q)}[»\"”’\']",
                     cl_lower,
                 )
                 if subj_m and not re.search(rf"\b(?:на|до)\s+[«\"“‘\']{re.escape(first_q)}[»\"”’\']", cl_lower):
                     current_referent = "OTHER"
         else:
-            # Check for unquoted subject before directives (e.g. "общий слід замінити" or "общий — помилка")
+            # Check for unquoted subject before directives/predicates (e.g. "общий слід замінити", "общий — помилка", or implicit copula "общий помилка")
             unquoted_subj_m = re.search(
-                r"(?:^|\b(?:щодо\s+слова|слово|словом|вираз|зворот)\s+)?([а-яА-ЯёЁіІїЇєЄґҐ’'\-]+)\s+(?:слід|варто|потрібно|необхідно|треба|можна|потребує|вимагає|є|не|це|вважа\w*|визна\w*|назива\w*|—|--|–|-)",
+                rf"(?:^|\b{ITEM_CLASSIFIER})(?!\b{DISALLOWED_COORDINATED_TOKENS}\b)([а-яА-ЯёЁіІїЇєЄґҐ’'\-]+)\s+"
+                rf"(?:(?:теж|також|ще|вже|цілком|абсолютно|справді|дійсно)\s+)?(?:\b(?:{PREDICATE_WORDS})\b|—|--|–|-)",
                 cl_lower,
             )
             if unquoted_subj_m:
@@ -554,22 +576,30 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 prefix = cl_lower[:start]
                 suffix_after_dir = cl_lower[end:]
 
-                # Check if this directive governs an explicit non-target quoted object:
+                # Check if this directive governs an explicit non-target object:
                 # e.g. `уникайте «гарний»` where `гарний` != `царинками`.
-                # If the directive directly governs an explicit object (not preceded by `на`/`до`),
-                # verify whether that object includes the target.
-                # Support classifiers across all coordinated objects (R23-F1).
+                # If the directive directly governs an explicit object list (not preceded by `на`/`до`),
+                # verify whether that object list includes the target.
+                # Support mixed quoted/unquoted objects and classifiers across all coordinated objects (R23-F1, R24-F1).
                 obj_span_m = re.match(
-                    rf"\s*{ITEM_QUOTED}(?:\s*(?:,|{COORDINATING_CONJUNCTIONS})\s*{ITEM_QUOTED})*",
+                    rf"\s*(?:(?:теж|також|завжди|обов'язково|зовсім|категорично)\s+)?"
+                    rf"{COORDINATED_ITEM}(?:\s*{COORDINATED_SEP}\s*{COORDINATED_ITEM})*",
                     suffix_after_dir,
                     re.IGNORECASE,
                 )
                 if obj_span_m:
-                    dir_quoted_objs = [
-                        normalize_token(q)
-                        for q in re.findall(r"[«\"“‘\']([^»\"”’\']+)[»\"”\']", obj_span_m.group(0))
-                    ]
-                    if dir_quoted_objs and t_norm not in dir_quoted_objs:
+                    dir_objs: list[str] = []
+                    for item_m in re.finditer(COORDINATED_ITEM, obj_span_m.group(0), re.IGNORECASE):
+                        raw_item = item_m.group(0)
+                        q_match = re.search(r"[«\"“‘\']([^»\"”’\']+)[»\"”\']", raw_item)
+                        if q_match:
+                            dir_objs.append(normalize_token(q_match.group(1)))
+                        else:
+                            clean_item = re.sub(rf"^{ITEM_CLASSIFIER}", "", raw_item, flags=re.IGNORECASE).strip()
+                            if clean_item:
+                                dir_objs.append(normalize_token(clean_item))
+                    target_in_objs = (t_norm in dir_objs) or bool(t_token_re.search(obj_span_m.group(0)))
+                    if dir_objs and not target_in_objs:
                         # Directive explicitly governs other object(s), not target
                         continue
 
