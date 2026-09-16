@@ -117,18 +117,34 @@ def verify_replacement_attestation(
 
 
 ANAPHORIC_WORDS = frozenset({
+    # Personal pronouns
     "він", "вона", "воно", "вони",
     "його", "йому", "ним", "ньому", "нього",
     "її", "їй", "нею", "ній", "неї",
     "їх", "їм", "ними", "них",
+    # Demonstrative pronouns
     "це", "цей", "ця", "ці",
     "цього", "цієї", "цьому", "цій", "цим", "цими", "цих", "цю",
-    "слово", "слова", "словом", "слові",
-    "термін", "терміна", "терміном", "терміні",
-    "вираз", "виразу", "виразом", "виразі",
-    "зворот", "звороту", "зворотом", "звороті",
-    "форма", "форми", "формою", "формі",
-    "лексема", "лексеми", "лексемою", "лексемі",
+    "то", "той", "та", "ті", "того", "тієї", "тому", "тій", "тим", "тими", "тих", "ту",
+    # Relative pronouns
+    "який", "яка", "яке", "які",
+    "якого", "якої", "якому", "якій", "яким", "якою", "яких", "якими", "яку",
+    "котрий", "котра", "котре", "котрі",
+    "котрого", "котрої", "котрому", "котрій", "котрим", "котрою", "котрих", "котрими", "котру",
+    "що",
+    # Metalinguistic nouns and usage nouns
+    "слово", "слова", "словом", "слові", "слів", "словах",
+    "термін", "терміна", "терміну", "терміном", "терміні", "терміни", "термінів",
+    "вираз", "виразу", "виразом", "виразі", "вирази", "виразів",
+    "зворот", "звороту", "зворотом", "звороті", "звороти", "зворотів",
+    "форма", "форми", "формою", "формі", "форм", "формах",
+    "лексема", "лексеми", "лексемою", "лексемі", "лексем",
+    "вживання", "вживанням", "вживанні", "вжитку", "вжиток",
+    "використання", "використанням", "використанні",
+    "застосування", "застосуванням", "застосуванні",
+    "написання", "написанням", "написанні",
+    "вимова", "вимовою", "вимові",
+    "значення", "значенням", "значенні",
 })
 
 
@@ -147,8 +163,13 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         r"її|їй|нею|ній|неї|"
         r"їх|їм|ними|них|"
         r"це|цей|ця|ці|цього|цієї|цьому|цій|цим|цими|цих|цю|"
+        r"то|той|ті|того|тієї|тому|тій|тим|тими|тих|ту|"
+        r"як(?:ий|а|е|і|ого|ої|ому|ій|им|ою|их|ими|у)|"
+        r"котр(?:ий|а|е|і|ого|ої|ому|ій|им|ою|их|ими|у)|"
+        r"що|"
         r"слово|слова|словом|слові|"
-        r"термін\w*|вираз\w*|зворот\w*|форм\w*|лексем\w*"
+        r"термін\w*|вираз\w*|зворот\w*|форм\w*|лексем\w*|"
+        r"вживан\w*|вжит\w*|використан\w*|застосуван\w*|написан\w*|вимов\w*|значен\w*"
         r")\b",
         re.IGNORECASE,
     )
@@ -192,8 +213,10 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
             )
             if unquoted_subj_m:
                 uq_word = unquoted_subj_m.group(1).strip()
-                if uq_word in ANAPHORIC_WORDS or anaphoric_re.fullmatch(uq_word):
-                    # Anaphoric reference (його, її, це, etc.): preserve active referent from preceding clause
+                prefix_to_subj = cl_lower[:unquoted_subj_m.start(1)]
+                has_anaphoric_det = bool(anaphoric_re.search(prefix_to_subj))
+                if uq_word in ANAPHORIC_WORDS or anaphoric_re.fullmatch(uq_word) or has_anaphoric_det:
+                    # Anaphoric reference (його, її, це, яку, його вживання, etc.): preserve active referent
                     pass
                 elif uq_word != t_lower and not re.search(rf"\b(?:на|замість|до)\s+{re.escape(uq_word)}", cl_lower):
                     current_referent = "OTHER"
@@ -215,14 +238,17 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
             for match in re.finditer(rpat, cl_lower):
                 start = match.start()
                 prefix = cl_lower[:start]
-                last_ne = prefix.rfind("не ")
                 is_negated = False
-                if last_ne != -1:
-                    after_ne = prefix[last_ne + 3:]
-                    if not re.search(r"\b(?:але|проте|однак)\b", after_ne):
-                        is_negated = bool(
-                            re.search(r"\bне\s+(?:слід|варто|потрібно|необхідно|треба|можна)?\s*$", prefix)
-                        )
+                if re.search(r"\b(?:ні|ані)\s*$", prefix):
+                    is_negated = True
+                else:
+                    last_ne = prefix.rfind("не ")
+                    if last_ne != -1:
+                        after_ne = prefix[last_ne + 3:]
+                        if not re.search(r"\b(?:але|проте|однак)\b", after_ne):
+                            is_negated = bool(
+                                re.search(r"\bне\s+(?:слід|варто|потрібно|необхідно|треба|можна)?(?:\s+(?:ні|ані))?\s*$", prefix)
+                            )
                 if not is_negated:
                     return True
 
@@ -242,16 +268,23 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
             for match in re.finditer(cpat, cl_lower):
                 start = match.start()
                 prefix = cl_lower[:start]
-                last_ne = prefix.rfind("не ")
                 is_negated = False
-                if last_ne != -1:
-                    after_ne = prefix[last_ne + 3:]
-                    if not re.search(r"\b(?:але|проте|однак)\b", after_ne):
-                        is_negated = bool(
-                            re.search(r"\bне\s+(?:є|це|було|буде|був|була|становить|вважається|визнається|(?:слід|варто|можна|треба|потрібно|необхідно)\s+(?:вважати|називати|визнавати))\s*$", prefix)
-                            or re.search(r"\bне\s*$", prefix)
-                            or re.search(r"\bне\s+(?:є\s+|це\s+|вважається\s+|було\s+)?[а-яА-ЯёЁіІїЇєЄґҐ’'\-]+\s+(?:та|і|й)\s+(?:не\s+)?$", prefix)
-                        )
+                # 1. Correlative / coordinated negation: "ні калькою", "ані калькою", "ні є помилкою"
+                if (
+                    re.search(r"\b(?:ні|ані)\s+(?:є\s+|це\s+|вважається\s+)?(?:жодн\w*\s+|ніяк\w*\s+)?$", prefix)
+                    or re.search(r"\b(?:ні|ані)\s*$", prefix)
+                ):
+                    is_negated = True
+                else:
+                    last_ne = prefix.rfind("не ")
+                    if last_ne != -1:
+                        after_ne = prefix[last_ne + 3:]
+                        if not re.search(r"\b(?:але|проте|однак)\b", after_ne):
+                            is_negated = bool(
+                                re.search(r"\bне\s+(?:є|це|було|буде|був|була|становить|вважається|визнається|(?:слід|варто|можна|треба|потрібно|необхідно)\s+(?:вважати|називати|визнавати))(?:\s+(?:ні|ані|жодн\w*|ніяк\w*|зовсім|анітрохи))*\s*$", prefix)
+                                or re.search(r"\bне\s*$", prefix)
+                                or re.search(r"\bне\s+(?:є\s+|це\s+|вважається\s+|було\s+)?[а-яА-ЯёЁіІїЇєЄґҐ’'\-]+(?:\s*,\s*|\s+(?:та|і|й|чи|або|ні|ані)\s+)(?:не\s+|ні\s+|ані\s+)?$", prefix)
+                            )
                 if not is_negated:
                     return True
 
