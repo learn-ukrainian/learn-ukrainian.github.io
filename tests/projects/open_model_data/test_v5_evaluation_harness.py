@@ -1648,3 +1648,43 @@ def test_citation_whitelist_r25_astra_r6_typographic_sum11():
     assert is_approved_authority("СУМ–11") is False
     assert is_approved_authority("СУМ‑11") is False
     assert is_approved_authority("СУМ—11") is False
+
+
+def test_citation_whitelist_r26_astra_r7_sum11_quarantine_variants():
+    """Verify Astra R7 Finding 2: space-separated SUM 11 and 'у 11 томах' variants fail Gate 4."""
+    # 1. Space-separated: За СУМ 11, це правильно.
+    ok1, app1, viol1 = verify_citation_whitelist("За СУМ 11, це правильно.")
+    assert ok1 is False
+    assert app1 == []
+    assert any("СУМ 11" in v for v in viol1)
+
+    # 2. Prepositional phrase with 'у 11 томах': За Словником української мови у 11 томах, це правильно.
+    ok2, app2, viol2 = verify_citation_whitelist("За Словником української мови у 11 томах, це правильно.")
+    assert ok2 is False
+    assert app2 == []
+    assert any("Словник" in v or "11" in v for v in viol2)
+
+    # 3. Parenthetical citation: Це правильно (Словник української мови у 11 томах).
+    ok3, app3, viol3 = verify_citation_whitelist("Це правильно (Словник української мови у 11 томах).")
+    assert ok3 is False
+    assert app3 == []
+    assert any("Словник" in v or "11" in v for v in viol3)
+
+    # 4. Parenthetical citation with space: Це правильно (СУМ 11).
+    ok4, app4, viol4 = verify_citation_whitelist("Це правильно (СУМ 11).")
+    assert ok4 is False
+    assert app4 == []
+    assert any("СУМ 11" in v for v in viol4)
+
+    # 5. is_approved_authority checks
+    assert is_approved_authority("СУМ 11") is False
+    assert is_approved_authority("Словник української мови у 11 томах") is False
+    assert is_approved_authority("Словник української мови в 11 томах") is False
+
+    # 6. Approved authorities with 20 volumes remain fully approved
+    assert is_approved_authority("СУМ-20") is True
+    assert is_approved_authority("Словник української мови у 20 томах") is True
+    ok_app, app, viol = verify_citation_whitelist("За Словником української мови у 20 томах, це нормативно.")
+    assert ok_app is True
+    assert len(app) >= 1
+    assert viol == []

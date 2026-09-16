@@ -14,6 +14,7 @@ from scripts.projects.open_model_data.v5_pretraining_contradiction_audit import 
     DEFAULT_SFT_DIR,
     DEFAULT_SOURCES_DB,
     DEFAULT_VESUM_DB,
+    is_target_condemned_in_text,
     resolve_data_path,
     run_pretraining_audit,
     verify_replacement_attestation,
@@ -1049,3 +1050,89 @@ def test_audit_dpo_astra_r6_probes(tmp_path: Path, mock_dbs: tuple[Path, Path]) 
     assert passed3 is False
     assert data3["dpo_contradictions_count"] == 1
     assert data3["dpo_contradictions"][0]["target_term"] == "царинками"
+
+
+def test_audit_dpo_astra_r7_probes(tmp_path: Path, mock_dbs: tuple[Path, Path]) -> None:
+    """Verify Astra R7 Finding 1: anaphoric pronoun and noun references ('його', 'це') trigger contradiction audit."""
+    # 1. Unit checks on is_target_condemned_in_text
+    assert is_target_condemned_in_text("царинками", "«царинками» — діалектна форма. Його слід замінити.") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» — діалектна форма. Це є помилкою.") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» не є помилкою. Його не слід вважати помилкою.") is False
+    assert is_target_condemned_in_text("царинками", "«царинками» слід зберегти та общий слід замінити на спільний.") is False
+    assert is_target_condemned_in_text("царинками", "«царинками» не можна замінити.") is False
+
+    # 2. Integration audit runs
+    mock_sources, mock_vesum = mock_dbs
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "eval_id": "mock_prot_1",
+            "stratum": "regional_dialect",
+            "target_term": "царинками",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sft = tmp_path / "sft"
+    mock_sft.mkdir()
+    (mock_sft / "shard.jsonl").write_text(
+        json.dumps({
+            "target_term": "безпечний",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_dpo1 = tmp_path / "dpo1"
+    mock_dpo1.mkdir()
+    (mock_dpo1 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як оцінити слово «царинками»?",
+            "chosen": "«царинками» — діалектна форма. Його слід замінити.",
+            "rejected": "Це нормальне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed1, data1, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft,
+        dpo_dir=mock_dpo1,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r7_rep1.md",
+        output_json=tmp_path / "r7_rep1.json",
+    )
+    assert passed1 is False
+    assert data1["dpo_contradictions_count"] == 1
+    assert data1["dpo_contradictions"][0]["target_term"] == "царинками"
+
+    mock_dpo2 = tmp_path / "dpo2"
+    mock_dpo2.mkdir()
+    (mock_dpo2 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як оцінити слово «царинками»?",
+            "chosen": "«царинками» — діалектна форма. Це є помилкою.",
+            "rejected": "Це нормальне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed2, data2, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft,
+        dpo_dir=mock_dpo2,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r7_rep2.md",
+        output_json=tmp_path / "r7_rep2.json",
+    )
+    assert passed2 is False
+    assert data2["dpo_contradictions_count"] == 1
+    assert data2["dpo_contradictions"][0]["target_term"] == "царинками"

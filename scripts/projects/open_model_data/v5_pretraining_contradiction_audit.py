@@ -116,6 +116,22 @@ def verify_replacement_attestation(
     return True
 
 
+ANAPHORIC_WORDS = frozenset({
+    "він", "вона", "воно", "вони",
+    "його", "йому", "ним", "ньому", "нього",
+    "її", "їй", "нею", "ній", "неї",
+    "їх", "їм", "ними", "них",
+    "це", "цей", "ця", "ці",
+    "цього", "цієї", "цьому", "цій", "цим", "цими", "цих", "цю",
+    "слово", "слова", "словом", "слові",
+    "термін", "терміна", "терміном", "терміні",
+    "вираз", "виразу", "виразом", "виразі",
+    "зворот", "звороту", "зворотом", "звороті",
+    "форма", "форми", "формою", "формі",
+    "лексема", "лексеми", "лексемою", "лексемі",
+})
+
+
 def is_target_condemned_in_text(target_term: str, text: str) -> bool:
     """Check if the text explicitly condemns or directs replacement of the protected target term."""
     t_lower = target_term.lower().strip()
@@ -124,7 +140,18 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
 
     t_bare = re.escape(t_lower)
     t_token_re = re.compile(rf"(?:[«\"“‘\']{t_bare}[»\"”’\']|\b{t_bare}\b|слово\s+\b{t_bare}\b)", re.IGNORECASE)
-    anaphoric_re = re.compile(r"\b(?:його|її|їх|це|цей|цю|цього|цій|цим|слово|термін|вираз|зворот)\b", re.IGNORECASE)
+    anaphoric_re = re.compile(
+        r"\b(?:"
+        r"він|вона|воно|вони|"
+        r"його|йому|ним|ньому|нього|"
+        r"її|їй|нею|ній|неї|"
+        r"їх|їм|ними|них|"
+        r"це|цей|ця|ці|цього|цієї|цьому|цій|цим|цими|цих|цю|"
+        r"слово|слова|словом|слові|"
+        r"термін\w*|вираз\w*|зворот\w*|форм\w*|лексем\w*"
+        r")\b",
+        re.IGNORECASE,
+    )
 
     target_in_text = bool(t_token_re.search(text))
     current_referent = "TARGET" if not target_in_text else None
@@ -160,12 +187,15 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         else:
             # Check for unquoted subject before directives (e.g. "общий слід замінити")
             unquoted_subj_m = re.search(
-                r"(?:^|\b(?:щодо\s+слова|слово|словом|вираз|зворот)\s+)?([а-яА-ЯёЁіІїЇєЄґҐ’'\-]+)\s+(?:слід|варто|потрібно|необхідно|треба|можна|потребує|вимагає|є|не)",
+                r"(?:^|\b(?:щодо\s+слова|слово|словом|вираз|зворот)\s+)?([а-яА-ЯёЁіІїЇєЄґҐ’'\-]+)\s+(?:слід|варто|потрібно|необхідно|треба|можна|потребує|вимагає|є|не|вважа\w*|визна\w*|назива\w*)",
                 cl_lower,
             )
             if unquoted_subj_m:
                 uq_word = unquoted_subj_m.group(1).strip()
-                if uq_word != t_lower and not re.search(rf"\b(?:на|замість|до)\s+{re.escape(uq_word)}", cl_lower):
+                if uq_word in ANAPHORIC_WORDS or anaphoric_re.fullmatch(uq_word):
+                    # Anaphoric reference (його, її, це, etc.): preserve active referent from preceding clause
+                    pass
+                elif uq_word != t_lower and not re.search(rf"\b(?:на|замість|до)\s+{re.escape(uq_word)}", cl_lower):
                     current_referent = "OTHER"
             elif anaphoric_re.search(clause) and current_referent is not None:
                 # Anaphoric reference (його, її, це, etc.): preserve active referent from preceding clause
