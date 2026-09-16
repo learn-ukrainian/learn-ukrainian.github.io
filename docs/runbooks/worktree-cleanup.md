@@ -134,24 +134,33 @@ new dispatch.
 
 ## Immediate cleanup after merge
 
-The merge owner removes the exact worktree as soon as GitHub reports the PR
-`MERGED`. Run this from a separate shell after every agent, editor, server, and
-terminal has left the target worktree:
+The merge owner closes out the exact PR as soon as GitHub reports it `MERGED`, using
+`scripts.orchestration.merge_closeout` — not the P0 reaper directly. This is the one
+command that proves the PR MERGED, finds every worktree tied to it (by branch or by
+exact merged head SHA, including detached review-checkout siblings), reaps each one
+through the P0 reaper, and proves the remote and local branch are both gone. Run it
+from a separate shell after every agent, editor, server, and terminal has left the
+target worktree(s):
 
 ```bash
 PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
 cd "$PRIMARY_REPO"
 
-"$PRIMARY_REPO/.venv/bin/python" scripts/orchestration/reap_worktrees.py \
-  --repo-root "$PRIMARY_REPO" \
-  --apply \
-  --merged \
-  --worktree "$EXACT_WORKTREE_PATH"
+"$PRIMARY_REPO/.venv/bin/python" -m scripts.orchestration.merge_closeout <PR_NUMBER> --apply
 ```
 
-The command validates GitHub PR state, PR-head or origin-branch-gone evidence, local HEAD,
-cleanliness, task state, and process activity. A skipped result is a blocker,
-not permission to retry with `--force`.
+Default is dry-run; pass `--apply` to actually reap and delete. `--json` emits a
+machine-readable payload. `merge_closeout` introduces no second deletion hand for the
+worktree step: it delegates removal to `scripts.orchestration.reap_worktrees` with
+`--merged`/`merged_pr_only` and an exact `--worktree` target per match — never
+`--force`, never a second ad hoc `git worktree remove`. It exits non-zero if the PR
+cannot be proven `MERGED`, if any reap fails, or if the remote or local branch is
+still present after `--apply` ran (residual branches are reported, never
+force-deleted past an exact-head-match proof).
+
+The underlying reap step validates GitHub PR state, PR-head or origin-branch-gone
+evidence, local HEAD, cleanliness, task state, and process activity. A skipped
+worktree is a blocker, not permission to retry with `--force`.
 
 The live-process check intentionally includes the invoking process tree. A
 cleanup launched from inside the target worktree therefore self-protects and
@@ -222,9 +231,12 @@ repository. Standard output contains the same summary as the receipt.
 ## Linux systemd default
 
 The shipped `packaging/systemd/learn-ukrainian-worktree-gc.service` passes
-`--apply`, the same as macOS launchd. Its daily timer uses the existing cleanup
-wrapper and P0 reaper; this adds no daemon or cleanup class. See
-`packaging/systemd/README.md` for enable and disable instructions.
+`--apply`, the same as macOS launchd. Its timer fires every 4 hours
+(`OnUnitActiveSec=4h`, matching the launchd cadence below) using the existing
+cleanup wrapper and P0 reaper; this adds no daemon or cleanup class, and the
+denser cadence does not loosen the dirty/open-PR/unreadable-GitHub-state
+guards. See `packaging/systemd/README.md` for enable and disable
+instructions.
 
 ## Inspect the LaunchAgent
 

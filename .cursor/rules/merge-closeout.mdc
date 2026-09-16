@@ -9,18 +9,26 @@ alwaysApply: true
 
 ## Every merge (universal)
 
-Finish all three before claiming the merge closed:
-
-1. **Remote branch gone** — `git ls-remote --heads origin <branch>` empty (delete if GitHub did not).
-2. **Local branch gone** — no leftover `refs/heads/<branch>` (including worktree-linked refs).
-3. **Worktree reaped** — from the primary checkout, after every process has left the tree:
+Run this one command from the primary checkout, after every process has left the
+target worktree(s):
 
 ```bash
-.venv/bin/python scripts/orchestration/reap_worktrees.py \
-  --repo-root "$(pwd)" --apply --merged --worktree "<exact-worktree>"
+.venv/bin/python -m scripts.orchestration.merge_closeout <PR_NUMBER> --apply
 ```
 
-Canonical: `docs/runbooks/worktree-cleanup.md` § Immediate cleanup after merge. A skip is a blocker, not permission for `--force`.
+It proves the PR is `MERGED`, finds every worktree tied to it (by branch or exact
+merged head SHA — detached review-checkout siblings included), reaps each through the
+P0 reaper (`--merged`/`merged_pr_only`, exact `--worktree`, no second deletion hand, no
+`--force`), and proves both the remote and local branch are gone. All three closeout
+facts must hold before claiming the merge closed:
+
+1. **Remote branch gone** — `git ls-remote --heads origin <branch>` empty.
+2. **Local branch gone** — no leftover `refs/heads/<branch>` (including worktree-linked refs).
+3. **Worktree reaped** — no registered worktree left for that PR's head.
+
+`merge_closeout` exits non-zero on any residual. Canonical:
+`docs/runbooks/worktree-cleanup.md` § Immediate cleanup after merge. A non-zero exit is
+a blocker, not permission for `--force`.
 
 Do not copy the last task’s leftovers into this list.
 
