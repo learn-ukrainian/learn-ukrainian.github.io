@@ -13,6 +13,7 @@ import jsonschema
 import pytest
 
 from scripts.projects.open_model_data.v5_mine_middle_ukrainian import (
+    DEFAULT_SOURCES_DB,
     DEFAULT_VESUM_DB,
     EVAL_SCHEMA_FILE,
     EXCLUDED_MODERN_WORKS,
@@ -29,6 +30,7 @@ from scripts.projects.open_model_data.v5_mine_middle_ukrainian import (
     evaluate_middle_ukrainian_suite,
     exact_clopper_pearson_lower,
     is_editorial_preface,
+    load_middle_ukrainian_chunks,
     load_replay_buffer,
     normalize_historical_snippet,
 )
@@ -601,3 +603,70 @@ def test_release_receipt_schema_validation() -> None:
         assert receipt["evaluation_metrics"]["v04b_eval_accuracy"] is None
         assert receipt["evaluation_metrics"]["confidence_interval_95"] is None
         assert receipt["evaluation_metrics"]["regression_against_v02_pct"] is None
+
+
+def test_regression_velychkovsky_and_mytsyk_commentary_excluded() -> None:
+    """Verify that specific Round 3 commentary leaks (Velychkovsky c0057, Mytsyk c0004) are excluded."""
+    release_dir = REPO_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v04b_middle_ukrainian"
+    eval_file = release_dir / "middle_ukrainian_eval.jsonl"
+    sft_dir = release_dir / "sft"
+
+    if not eval_file.is_file():
+        pytest.skip("Release artifacts not yet generated on disk")
+
+    leaked_strings = [
+        "поет славить «добра воина»",
+        "поет славить",
+        "несообразностями, они дают ряд интересных фактов",
+        "несообразностями",
+        "они дают ряд интересных фактов",
+    ]
+
+    with eval_file.open("r", encoding="utf-8") as f:
+        for i, line in enumerate(f):
+            row = json.loads(line)
+            inp = row.get("input_text", "").casefold()
+            exp = row.get("expected_output", "").casefold()
+            for s in leaked_strings:
+                assert s not in inp, f"Leaked string '{s}' found in eval row {i}: {inp}"
+                assert s not in exp, f"Leaked string '{s}' found in eval row {i}: {exp}"
+            assert row.get("source_metadata", {}).get("chunk_id") != "1b7685d5_c0057"
+            assert row.get("source_metadata", {}).get("chunk_id") != "5f2476e8_c0004"
+
+    for shard in sft_dir.glob("sft_shard_*.jsonl"):
+        with shard.open("r", encoding="utf-8") as f:
+            for i, line in enumerate(f):
+                row = json.loads(line)
+                q = row.get("query", "").casefold()
+                resp = row.get("final_response", "").casefold()
+                for s in leaked_strings:
+                    assert s not in q, f"Leaked string '{s}' found in {shard.name} row {i}: {q}"
+                    assert s not in resp, f"Leaked string '{s}' found in {shard.name} row {i}: {resp}"
+
+
+def test_source_boundaries_and_work_exclusions() -> None:
+    """Verify that source boundaries are strictly enforced and excluded works are never admitted."""
+    assert "litopystsi_krokovskoho_ta_yasynskoho" in EXCLUDED_MODERN_WORKS
+    assert "suspilno_politychna_dumka_xvi_xvii_st" in EXCLUDED_MODERN_WORKS
+    assert "sherer_litopys_malorosiyi_1788" in EXCLUDED_MODERN_WORKS
+    assert "shevalye_istoriya_viyny_kozakiv_proty_polshchi_1663" in EXCLUDED_MODERN_WORKS
+    assert "pivdennoruski_litopysy_bilozerskyy" in EXCLUDED_MODERN_WORKS
+    assert "feodosiy_sofonovych_khronika_z_litopystsiv_starodavnikh" in EXCLUDED_MODERN_WORKS
+    assert "rihelman_litopysna_opovid_pro_malu_rosiyu" in EXCLUDED_MODERN_WORKS
+
+    if DEFAULT_SOURCES_DB.is_file():
+        chunks = load_middle_ukrainian_chunks(DEFAULT_SOURCES_DB)
+        for c in chunks:
+            assert c.work_id not in EXCLUDED_MODERN_WORKS
+            if c.work_id == "ivan_velychkovskyy_tvory":
+                num = int(c.chunk_id.split("_c")[-1])
+                assert 71 <= num <= 146, f"Invalid Velychkovsky chunk admitted: {c.chunk_id}"
+            elif c.work_id == "hramoty_xiv_st":
+                num = int(c.chunk_id.split("_c")[-1])
+                assert 40 <= num <= 90, f"Invalid hramoty_xiv_st chunk admitted: {c.chunk_id}"
+            elif c.work_id == "ukrayinski_intermediyi_xvii_xviii_st":
+                num = int(c.chunk_id.split("_c")[-1])
+                assert num >= 171, f"Invalid intermediyi chunk admitted: {c.chunk_id}"
+            elif "bayky_" in c.work_id:
+                num = int(c.chunk_id.split("_c")[-1])
+                assert 80 <= num <= 240, f"Invalid bayky chunk admitted: {c.chunk_id}"

@@ -133,17 +133,33 @@ EXCLUDED_MODERN_WORKS = {
     "mytrofan_dovhalevskyy_poetyka",  # 1973 translation from Latin
     "ukrayinski_humanisty_epokhy_vidrodzhennya",  # Modern translations of Latin humanists
     "boplan_opys_ukrayiny_1660",  # Modern translation from French
+    "litopystsi_krokovskoho_ta_yasynskoho",  # 1978 Russian article by Yu. A. Mytsyk
+    "suspilno_politychna_dumka_xvi_xvii_st",  # Modern translations
+    "sherer_litopys_malorosiyi_1788",  # Modern translation
+    "shevalye_istoriya_viyny_kozakiv_proty_polshchi_1663",  # Modern translation
+    "pivdennoruski_litopysy_bilozerskyy",  # 1856 Russian study/edition
+    "feodosiy_sofonovych_khronika_z_litopystsiv_starodavnikh",  # 1992 modern edition/study
+    "rihelman_litopysna_opovid_pro_malu_rosiyu",  # 1994 modern edition/study
+    "ukrayinska_poeziya_kinets_xvi_seredyna_xvii_st",  # Modern anthology with pervasive apparatus
+    "ukrayinska_poeziya_xvi_xvii_st",  # Modern anthology with pervasive apparatus
+    "ukrayinska_literatura_xiv_xvi_st",  # Modern anthology with apparatus
+    "ukrayinska_literatura_xvii_st",  # Modern anthology with apparatus
+    "ukrayinska_literatura_xviii_st",  # Modern anthology with apparatus
+    "lytovsko_biloruski_litopysy_ta_khroniky",  # Modern chronicle study/apparatus
+    "dobirka_litopysiv_kyyivska_arkheohrafichna_komisiya",  # Archaeographic apparatus
 }
 
 # Editorial patterns marking academic prefaces, apparatus, and commentaries
 EDITORIAL_PATTERNS = [
     re.compile(
-        r"(?:упорядник\w*|радянськ\w*|дослідник\w*|видання\w*|рукопис\w*|дисертаці\w*|"
+        r"(?:упорядник\w*|радянськ\w*|дослідник\w*|дослідження|видання\w*|рукопис\w*|дисертаці\w*|"
         r"монографі\w*|інститут\w*|академі\w*|університет\w*|бібліографі\w*|ЦДІА|"
-        r"ДПБ|ЦДАДА|ІР\s*НБУВ|публікаці\w*|редакці\w*|науков\w*\s+виданн\w*|вступн\w*\s+статт\w*|"
+        r"ДПБ|ЦДАДА|ІР\s*НБУВ|публікаці\w*|редакці\w*|науков\w*\s+виданн\w*|наукова\s+думка|вступн\w*\s+статт\w*|"
         r"археографічн\w*|джерелознав\w*|текстологічн\w*|боплан\w*|бопланова\s+карта|"
         r"срезневськ\w*|пещак\w*|востоков\w*|кримськ\w*|житецьк\w*|соболевськ\w*|"
-        r"зубрицьк\w*|передруковується|опублікований|описана|розділові\s+знаки|"
+        r"зубрицьк\w*|крекотень|колосова|гудзій|мицик|шевчук|німчук|поет\s+славить|наслідуючи|"
+        r"водян\w*\s+знак\w*|філігран\w*|пагінаці\w*|словничок|поетичн\w*\s+твор\w*|пам’ятки\s+давньої|"
+        r"передруковується|опублікований|описана|розділові\s+знаки|"
         r"не\s+збігаються|передаються\s+через|приклади\s+з\s+грамоти|мовознавчих\s+дослідженнях|"
         r"записки\s+наукового\s+товариства|ім\.\s*шевченка|ім\.\s*потебні|ан\s+урср|нан\s+україни|"
         r"підготовчу\s+роботу|примірник\s+цієї\s+книжки|нам\s+не\s+пощастило|"
@@ -158,7 +174,11 @@ EDITORIAL_PATTERNS = [
         r"дописано|вставлено|в\s+списк\w*|за\s+списк\w*|видав|надруковано|опубліковано|"
         r"подається|наводиться|порівн\w*|пор\.:|див\.:|див\.\s+також|також:|заголовок|"
         r"підпис|арк\.|стор\.|с\.\s*\d|вип\.|том\s+[I-V\d]|ч\.\s*\d|№\s*\d|відкриті|"
-        r"видані|изданн\w*|открыт\w*)",
+        r"видані|изданн\w*|открыт\w*|"
+        r"является|являются|исследования|исследователь|советск\w*|стать\w*|"
+        r"отметим|свидетельства|событий|истории\s+украины|произведени\w*|"
+        r"несообразност\w*|интересных\s+фактов|деятел\w*|в\s+частности|"
+        r"однако|потому\s+что|несмотря\s+на|таким\s+образом|в\s+течение|как\s+известно|в\s+большинстве|например)",
         re.IGNORECASE,
     ),
     re.compile(r"^\s*(?:ЗМІСТ|ПЕРЕДМОВА|ВСТУП|КОМЕНТАР|ПРИМІТКИ|РІЗНОЧИТАННЯ)\s*$", re.IGNORECASE | re.MULTILINE),
@@ -276,8 +296,8 @@ def is_clean_historical_sentence(sent: str) -> bool:
     if re.search(r"\d+\s+[^\d;]+;\s*\d+\b", sent):
         return False
 
-    # Archaic Cyrillic characters (strictly excluding ordinary modern letters 'і' and 'є')
-    has_archaic_letters = any(c in sent for c in "ѣъωξѱѳѵѿѧӕ҂ыѕ́̀̃̄̆̈")
+    # Archaic Cyrillic characters (strictly excluding modern letters and Russian 'ы')
+    has_archaic_letters = any(c in sent for c in "ѣъωξѱѳѵѿѧӕ҂ѕ́̀̃̄̆̈")
     has_lexical_marker = any(m in sent.casefold() for m in MIDDLE_UKRAINIAN_LEXICAL_MARKERS)
     return bool(has_archaic_letters or has_lexical_marker)
 
@@ -403,11 +423,23 @@ def load_middle_ukrainian_chunks(sources_db: Path) -> list[MiddleUkrainianChunk]
             except Exception:
                 pass
 
-        # In hramoty_xiv_st, chunks 0 to 39 are modern introductory study by M. M. Peshchak
+        # In hramoty_xiv_st, chunks 0 to 39 are modern introductory study by M. M. Peshchak,
+        # and chunks > 90 are modern index and apparatus
         if work_id == "hramoty_xiv_st":
             try:
                 chunk_num = int(chunk_id.split("_c")[-1])
-                if chunk_num < 40:
+                if chunk_num < 40 or chunk_num > 90:
+                    continue
+            except Exception:
+                pass
+
+        # In ivan_velychkovskyy_tvory, chunks 0 to 70 are V. P. Kolosova & V. I. Krekoten's
+        # modern introductory monograph, and chunks > 146 are modern textual notes/glossary.
+        # Authentic poetry is strictly in chunks 71 to 146.
+        if work_id == "ivan_velychkovskyy_tvory":
+            try:
+                chunk_num = int(chunk_id.split("_c")[-1])
+                if chunk_num < 71 or chunk_num > 146:
                     continue
             except Exception:
                 pass
