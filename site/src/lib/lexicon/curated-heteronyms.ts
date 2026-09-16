@@ -19220,7 +19220,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "classification": "standard",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[wɪˈprɔbʊwɐnɪj]"

@@ -1068,6 +1068,10 @@ def test_batch7_lemmas_not_duplicated_from_earlier_batches():
     zakupka = CURATED_HETERONYMS_BATCH_7["закупка"]
     assert zakupka[0]["heritage_status"]["classification"] == "authentic-archaism"
 
+    vyprobuvanyi = CURATED_HETERONYMS_BATCH_7["випробуваний"]
+    assert vyprobuvanyi[0]["heritage_status"]["vesum_attested"] is True
+    assert vyprobuvanyi[1]["heritage_status"]["vesum_attested"] is False
+
 
 def test_homonyms_with_numeric_suffixes_and_identical_stress_not_treated_as_heteronyms(monkeypatch):
     """Separate dictionary article numbers from headword before comparing stress (#8039).

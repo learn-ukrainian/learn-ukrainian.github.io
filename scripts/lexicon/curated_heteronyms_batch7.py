@@ -626,7 +626,7 @@ CURATED_HETERONYMS_BATCH_7: dict[str, list[dict[str, Any]]] = {
         "classification": "standard",
         "is_russianism": False,
         "russian_shadow": False,
-        "vesum_attested": True
+        "vesum_attested": False
       },
       "pronunciation": {
         "ipa": "[wɪˈprɔbʊwɐnɪj]"
