@@ -9,18 +9,20 @@ Validates:
      - Northern >= 400
      - Southeastern >= 500 (Slobozhanshchyna >= 250, Steppe >= 250)
   4. Anti-copying mixed-error coverage (>= 30% across all macro zones).
-  5. Strict 0% train/eval leakage firewall (zero sentence or passage overlap).
+  5. Strict 0% train/eval leakage firewall (zero sentence, passage, citation, or lemma overlap).
   6. SFT training dataset validation (>= 500 trajectories, Draft 2020-12 schema, unique IDs).
-  7. Calibrated replay buffer (>= 100 modern literary / anti-calque trajectories from v0.2).
-  8. Permanent quarantine of Bilodid's СУМ-11 editorial apparatus.
-  9. Multi-zone evaluation scorer, disaggregated confusion matrices, and Clopper-Pearson bounds.
- 10. Modern literary non-regression check against frozen v0.2 benchmark (<= 0.5% regression).
+  7. Real VESUM attestation and real dictionary evidence (zero dummy placeholders).
+  8. Calibrated replay buffer (>= 100 modern literary / anti-calque trajectories from v0.2).
+  9. Permanent quarantine of Bilodid's СУМ-11 editorial apparatus.
+ 10. Multi-zone evaluation scorer with strict full-sentence preservation (rejects destructive probes).
+ 11. Modern literary non-regression check against frozen v0.2 benchmark (<= 0.5% regression).
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import sqlite3
 from typing import Any
 
 import jsonschema
@@ -28,14 +30,18 @@ import pytest
 
 from scripts.projects.open_model_data.v5_mine_dialect_corpus import (
     DEFAULT_RELEASE_DIR,
+    DEFAULT_VESUM_DB,
     EVAL_SCHEMA_FILE,
     RECEIPT_SCHEMA_FILE,
+    RU_CHARS_RE,
+    RU_GLOSS_RE,
     TRAJECTORY_SCHEMA_FILE,
     V02_BASELINE_SUITE_PATH,
     clean_headword,
     clean_sentence,
     evaluate_multizone_benchmark,
     exact_clopper_pearson_lower,
+    normalize_for_eval,
     normalize_lookup_token,
     passage_fingerprint,
     verify_modern_literary_regression,
@@ -209,7 +215,6 @@ def test_anti_copying_mixed_error_coverage(eval_cases: list[dict[str, Any]]) -> 
     mixed_pct = mixed_total / total
     assert mixed_pct >= 0.30, f"Overall mixed error percentage too low: {mixed_pct:.2%}"
 
-    # Check each macro zone has >= 25% mixed error cases
     for mz in ["southwestern", "northern", "southeastern"]:
         mz_cases = [c for c in eval_cases if c["macro_zone"] == mz]
         mz_mixed = sum(1 for c in mz_cases if c["case_type"] == "CORRECT_MIXED")
@@ -231,15 +236,13 @@ def test_anti_copying_case_properties(eval_cases: list[dict[str, Any]]) -> None:
             assert c["expected_replacement"] is not None
             assert c["input_text"] != c["expected_output"]
             assert c["has_injected_error"] is True
-            assert c["injected_error_type"] in {"colonial_calque", "punctuation", "agreement"}
+            assert c["injected_error_type"] in {"colonial_calque", "punctuation"}
 
-            # Crucial invariant: dialect marker stem MUST be preserved in expected_output!
             marker = c["dialect_marker"]
             stem = marker[: max(3, len(marker) - 2)].casefold()
             assert stem in c["expected_output"].casefold(), (
                 f"Dialect marker stem '{stem}' ({marker}) lost from expected_output in {c['eval_id']}"
             )
-            # Crucial invariant: expected replacement MUST be present in expected_output!
             assert c["expected_replacement"].casefold() in c["expected_output"].casefold()
 
 
@@ -251,31 +254,34 @@ def test_strict_zero_train_eval_leakage_firewall(
     eval_cases: list[dict[str, Any]],
     sft_trajectories: list[dict[str, Any]],
 ) -> None:
-    """Verify complete passage-level, sentence-level, and citation-level isolation between eval and train."""
-    eval_fingerprints = {passage_fingerprint(c["input_text"]) for c in eval_cases}
-    eval_raw_fingerprints = {passage_fingerprint(c.get("source_metadata", {}).get("citation", "")) for c in eval_cases}
+    """Verify complete passage-level, sentence-level, citation-level, and lemma isolation between eval and train."""
+    eval_lemmas = {c["dialect_marker"].casefold() for c in eval_cases}
+    sft_dialect_lemmas = {
+        t["target_term"].casefold()
+        for t in sft_trajectories
+        if not t.get("is_calque_or_russianism")
+    }
 
-    for idx, t in enumerate(sft_trajectories, 1):
-        q = t["query"]
-        steps = " ".join(t.get("reasoning_steps", []))
-        resp = t.get("final_response", "")
+    # 1. Zero lemma overlap
+    lemma_overlap = eval_lemmas & sft_dialect_lemmas
+    assert not lemma_overlap, f"Lemma overlap between eval and SFT detected: {lemma_overlap}"
 
-        q_fp = passage_fingerprint(q)
-        assert q_fp not in eval_fingerprints, f"Trajectory {idx} query leaks into evaluation benchmark!"
+    # 2. Complete sentence and passage containment check
+    sft_blobs = []
+    for t in sft_trajectories:
+        sft_blobs.append(t["query"])
+        sft_blobs.append(t.get("final_response", ""))
+        sft_blobs.extend(t.get("reasoning_steps", []))
+    full_sft_corpus = normalize_for_eval(" ".join(sft_blobs))
 
-        for c in eval_cases:
-            # Check for verbatim sentence leakage in reasoning or response
-            raw_sent = c["input_text"]
-            if c["case_type"] == "CORRECT_MIXED":
-                # Also check base sentence without injected error
-                raw_sent = c["input_text"].split(", і ")[0]
-            if len(raw_sent) >= 30:
-                assert raw_sent not in steps, f"Trajectory {idx} steps leak evaluation sentence: '{raw_sent}'"
-                assert raw_sent not in resp, f"Trajectory {idx} response leaks evaluation sentence: '{raw_sent}'"
+    for c in eval_cases:
+        eval_sent_norm = normalize_for_eval(c["input_text"])
+        assert len(eval_sent_norm) >= 20
+        assert eval_sent_norm not in full_sft_corpus, f"Eval sentence leaked into SFT corpus: '{eval_sent_norm}'"
 
 
 # ==============================================================================
-# 5. SFT Dataset Schema, Quotas & Replay Buffer Verification
+# 5. SFT Dataset Schema, Quotas, Real VESUM Evidence & Replay Buffer
 # ==============================================================================
 
 def test_sft_dataset_schema_validation(
@@ -297,24 +303,55 @@ def test_sft_dataset_quotas_and_unique_ids(sft_trajectories: list[dict[str, Any]
     traj_ids = [t["trajectory_id"] for t in sft_trajectories]
     assert len(traj_ids) == len(set(traj_ids)), "Duplicate trajectory IDs detected in SFT dataset!"
 
-    # Dialect defense trajectories: is_calque_or_russianism == False
     dialect_trajs = [t for t in sft_trajectories if t.get("is_calque_or_russianism") is False]
     assert len(dialect_trajs) >= 450, f"Expected >= 450 dialect defense trajectories, got {len(dialect_trajs)}"
 
-    # Replay buffer trajectories: is_calque_or_russianism == True (from modern literary v0.2 baseline)
     replay_trajs = [t for t in sft_trajectories if t.get("is_calque_or_russianism") is True]
     assert len(replay_trajs) >= 100, f"Expected >= 100 modern literary replay trajectories, got {len(replay_trajs)}"
 
 
+def test_sft_dataset_real_vesum_attestation_and_no_placeholders(
+    sft_trajectories: list[dict[str, Any]],
+) -> None:
+    """Verify that SFT trajectories contain real VESUM attestation and no dummy placeholders."""
+    con_ves = sqlite3.connect(DEFAULT_VESUM_DB)
+    cur_ves = con_ves.cursor()
+
+    banned_placeholders = ["літературний аналог", "літературний синонім", "placeholder", "dummy"]
+
+    for t in sft_trajectories:
+        if t.get("is_calque_or_russianism"):
+            continue
+
+        raw_str = json.dumps(t, ensure_ascii=False)
+        for ph in banned_placeholders:
+            assert ph not in raw_str, f"Found placeholder '{ph}' in SFT trajectory {t['trajectory_id']}"
+
+        # Verify that vesum_attestation entries are backed by real database facts
+        for att in t["vesum_attestation"]:
+            lemma = att["lemma"]
+            cur_ves.execute("SELECT count(*) FROM forms_all WHERE lemma = ?", (lemma,))
+            row = cur_ves.fetchone()
+            actual_count = row[0] if row else 0
+
+            if att.get("is_standard_attested"):
+                assert actual_count > 0, f"Lemma '{lemma}' declared standard_attested but has 0 forms in VESUM"
+                assert att["vesum_forms_count"] == actual_count, (
+                    f"Count mismatch for '{lemma}': declared={att['vesum_forms_count']}, actual={actual_count}"
+                )
+
+    con_ves.close()
+
+
 # ==============================================================================
-# 6. Bilodid Quarantine & Dialect Authenticity Invariants
+# 6. Bilodid Quarantine & Dialect Sentence Integrity
 # ==============================================================================
 
 def test_bilodid_quarantine_enforced(
     eval_cases: list[dict[str, Any]],
     sft_trajectories: list[dict[str, Any]],
 ) -> None:
-    """Ensure Bilodid's СУМ-11 editorial content is quarantined and never cited as authority."""
+    """Ensure Bilodid's editorial apparatus is quarantined and never cited as authority."""
     banned_needles = ["Білодід", "І. К. Білодід", "ред. колегія І. К. Білодіда", "СУМ-11 як норма"]
 
     for c in eval_cases:
@@ -334,9 +371,20 @@ def test_bilodid_quarantine_enforced(
             assert needle not in resp, f"Banned authority needle '{needle}' in SFT response {t['trajectory_id']}"
 
 
-def test_collector_and_locality_authenticity(eval_cases: list[dict[str, Any]]) -> None:
-    """Verify every evaluation record has grounded regional locality and authentic collector/author."""
+def test_sentence_integrity_and_no_dictionary_glosses(eval_cases: list[dict[str, Any]]) -> None:
+    """Verify that evaluation sentences are genuine quotations without unclosed parentheses or dictionary glosses."""
     for c in eval_cases:
+        s = c["input_text"]
+        # Balanced parentheses and brackets
+        assert s.count("(") == s.count(")"), f"Unbalanced parentheses in {c['eval_id']}: '{s}'"
+        assert s.count("[") == s.count("]"), f"Unbalanced brackets in {c['eval_id']}: '{s}'"
+        assert not s.endswith("("), f"Sentence ends with open parenthesis in {c['eval_id']}: '{s}'"
+
+        # No Russian characters or dictionary glosses
+        assert not RU_CHARS_RE.search(s), f"Russian characters found in {c['eval_id']}: '{s}'"
+        assert not RU_GLOSS_RE.search(s), f"Russian dictionary gloss found in {c['eval_id']}: '{s}'"
+
+        # Verified metadata
         assert c["locality"], f"Missing locality in {c['eval_id']}"
         assert c["collector_or_author"], f"Missing collector/author in {c['eval_id']}"
         assert c["source_work"], f"Missing source work in {c['eval_id']}"
@@ -344,7 +392,7 @@ def test_collector_and_locality_authenticity(eval_cases: list[dict[str, Any]]) -
 
 
 # ==============================================================================
-# 7. Multi-Zone Evaluation Engine & Scorer Testing
+# 7. Multi-Zone Evaluation Engine & Scorer Testing (Full-Sentence Preservation)
 # ==============================================================================
 
 def test_multizone_evaluation_golden_predictions(eval_cases: list[dict[str, Any]]) -> None:
@@ -363,18 +411,40 @@ def test_multizone_evaluation_golden_predictions(eval_cases: list[dict[str, Any]
         assert metrics["clopper_pearson_lower"] >= 0.98
 
 
-def test_multizone_evaluation_corrupted_predictions(eval_cases: list[dict[str, Any]]) -> None:
-    """Verify that corrupt predictions (standardizing dialect marker or failing to fix calque) are caught."""
-    # Corrupt predictions for first 10 cases by stripping dialect markers
-    corrupt_predictions: dict[str, str] = {}
-    for c in eval_cases[:10]:
-        corrupt_predictions[c["eval_id"]] = "Стандартизоване загальнолітературне речення без жодних особливостей."
+def test_multizone_evaluation_probe_destructive_rejection(eval_cases: list[dict[str, Any]]) -> None:
+    """Verify that destructive/truncated outputs (e.g. marker + replacement only) are strictly rejected."""
+    # Probe supplies only truncated marker plus replacement, deleting the rest of the sentence
+    truncated_probe_predictions: dict[str, str] = {}
+    for c in eval_cases:
+        marker = c["dialect_marker"]
+        rep = c.get("expected_replacement") or marker
+        truncated_probe_predictions[c["eval_id"]] = f"{marker} {rep}"
 
-    results = evaluate_multizone_benchmark(eval_cases, predictions=corrupt_predictions)
-    sw_metrics = results["southwestern"]
-    # Southwestern has cases in first 10, so it should fail those
-    assert sw_metrics["failed_cases"] > 0
-    assert sw_metrics["accuracy"] < 1.0
+    results = evaluate_multizone_benchmark(eval_cases, predictions=truncated_probe_predictions)
+    for zone, metrics in results.items():
+        assert metrics["accuracy"] == 0.0, f"Zone '{zone}' accepted truncated probe predictions!"
+        assert metrics["failed_cases"] == metrics["total_cases"]
+        assert metrics["gate_cleared"] is False
+
+
+def test_multizone_evaluation_fail_closed_on_empty_zone() -> None:
+    """Verify that the evaluation engine fails closed when a zone is empty."""
+    dummy_cases = [
+        {
+            "eval_id": "eval_mz_dial_9999",
+            "macro_zone": "southwestern",
+            "sub_zone": "southwestern_boyko",
+            "dialect_marker": "тест",
+            "case_type": "PRESERVE",
+            "input_text": "Тестове речення без помилок.",
+            "expected_output": "Тестове речення без помилок.",
+        }
+    ]
+    results = evaluate_multizone_benchmark(dummy_cases, predictions={"eval_mz_dial_9999": "Тестове речення без помилок."})
+    # Northern and Southeastern zones have 0 cases, so they must fail closed
+    assert results["northern"]["gate_cleared"] is False
+    assert results["southeastern_slobozhan"]["gate_cleared"] is False
+    assert results["southeastern_steppe"]["gate_cleared"] is False
 
 
 def test_modern_literary_non_regression() -> None:
@@ -423,5 +493,4 @@ def test_exact_clopper_pearson_mathematical_bounds() -> None:
 
     perfect_lcl = exact_clopper_pearson_lower(100, 100, alpha=0.05)
     assert 0.95 <= perfect_lcl <= 1.0
-    # Formula for successes == total is alpha ** (1 / total)
     assert abs(perfect_lcl - (0.05 ** (1.0 / 100))) < 1e-6
