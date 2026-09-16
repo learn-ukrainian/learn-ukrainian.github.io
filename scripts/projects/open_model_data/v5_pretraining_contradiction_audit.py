@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sqlite3
 import subprocess
 import sys
@@ -70,13 +71,20 @@ def load_protection_suite(path: Path) -> list[dict[str, Any]]:
     return cases
 
 
+def normalize_lookup_token(token: str) -> str:
+    """Normalize acute stress marks, apostrophes, and casing for lexical lookup."""
+    normalized = re.sub(r"[\u0300\u0301\u0341\u0306]", "", str(token or "").strip().lower())
+    return normalized.replace("’", "'").replace("`", "'").replace("‘", "'")
+
+
 def verify_replacement_attestation(
     term: str,
     vesum_conn: sqlite3.Connection,
     sources_conn: sqlite3.Connection,
 ) -> bool:
     """Verify that every content word of the replacement term is attested in positive authorities."""
-    words = [w.strip(".,;:!?\"«»“”()—–-") for w in term.lower().split() if w.strip(".,;:!?\"«»“”()—–-")]
+    raw_words = [w.strip(".,;:!?\"«»“”()—–-") for w in term.lower().split() if w.strip(".,;:!?\"«»“”()—–-")]
+    words = [normalize_lookup_token(w) for w in raw_words if normalize_lookup_token(w)]
     if not words:
         return False
     for w in words:
@@ -120,10 +128,6 @@ def run_pretraining_audit(
         raise FileNotFoundError(f"SFT directory does not exist: {sft_dir} (resolved: {resolved_sft})")
     if not resolved_dpo.exists():
         raise FileNotFoundError(f"DPO directory does not exist: {dpo_dir} (resolved: {resolved_dpo})")
-    if not resolved_sources.exists():
-        raise FileNotFoundError(f"Sources database does not exist: {sources_db_path} (resolved: {resolved_sources})")
-    if not resolved_vesum.exists():
-        raise FileNotFoundError(f"VESUM database does not exist: {vesum_db_path} (resolved: {resolved_vesum})")
 
     sft_files = sorted(resolved_sft.glob("*.jsonl"))
     if not sft_files:
@@ -132,6 +136,11 @@ def run_pretraining_audit(
     dpo_files = sorted(resolved_dpo.glob("*.jsonl"))
     if not dpo_files:
         raise ValueError(f"No DPO shards found in {dpo_dir} (resolved: {resolved_dpo})")
+
+    if not resolved_sources.exists():
+        raise FileNotFoundError(f"Sources database does not exist: {sources_db_path} (resolved: {resolved_sources})")
+    if not resolved_vesum.exists():
+        raise FileNotFoundError(f"VESUM database does not exist: {vesum_db_path} (resolved: {resolved_vesum})")
 
     cases = load_protection_suite(resolved_protection)
     total_cases = len(cases)
