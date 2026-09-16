@@ -10,4 +10,4 @@ By the end of this module, you can:
 - Keep Ukrainian sibilants **Ж [ʒ]** and **Ш [ʃ]** strictly hard in standard pronunciation (**жа́ба**, **шко́ла**, **ка́ша**);
 - Confidently decode your first authentic greetings: **Приві́т!** and **До́брого ра́нку!**;
 - Read multi-syllable Ukrainian words (**університе́т**) and Ukrainian cities (**Оде́са**, **Ха́рків**, **Дніпро́**, **Полта́ва**);
-- Participate in your first reading dialogue: greeting, introducing yourself (**Мене́ зва́ти...**), asking a name (**А те́бе?**), and saying goodbye (**На все до́бре!**).
+- Participate in your first reading dialogue: greeting, introducing yourself (**Мене́ зва́ти...**), asking a name (**А тебе́?**), and saying goodbye (**На все до́бре!**).

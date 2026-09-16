@@ -59,25 +59,25 @@ Listen to Anna Ohoiko demonstrate these sounds (джерело́: А́нна О�
 
 ---
 
-## За́вжди тверді́ шипля́чі: Бу́кви Ж і Ш
+## Тверді́ шипля́чі: Бу́кви Ж і Ш
 
-Ukrainian phonology features an immutable phonetic rule regarding its two primary sibilants:
+In Ukrainian standard pronunciation, the two primary sibilants are pronounced firmly and without iotated softening before open vowels:
 
-| Бу́ква — Letter | На́зва — Name | Звук — Sound | Пра́вило — Golden rule |
+| Бу́ква — Letter | На́зва — Name | Звук — Sound | Пра́вило — Reading rule |
 | --- | --- | --- | --- |
-| **Ж, ж** | же | **[ʒ]** | Дзвінки́й шипля́чий — **За́вжди тверди́й** |
-| **Ш, ш** | ша | **[ʃ]** | Глухи́й шипля́чий — **За́вжди тверди́й** |
+| **Ж, ж** | же | **[ʒ]** | Дзвінки́й шипля́чий — **Тверди́й пе́ред а, о, у, е, и** |
+| **Ш, ш** | ша | **[ʃ]** | Глухи́й шипля́чий — **Тверди́й пе́ред а, о, у, е, и** |
 
 :::important
-**Шипля́чі в украї́нській мо́ві не пом'я́кшуються!**
-In standard Ukrainian literary pronunciation, **Ж** and **Ш** are strictly hard consonants. When they appear before vowels like **а**, **о**, **у**, **е**, or **и**, your tongue tip stays lowered and firm:
+**Тверді́ шипля́чі пе́ред голосними́ [а], [о], [у], [е], [и]**
+In standard Ukrainian literary pronunciation, **Ж** and **Ш** are strictly hard consonants when followed by vowels like **а**, **о**, **у**, **е**, or **и**. In all our lesson examples, keep your tongue tip lowered and firm:
 - **жа́-ба = жа́ба** (frog);
 - **шко́-ла = шко́ла** (school);
 - **ка́-ша = ка́ша** (porridge);
 - **ти́-ша = ти́ша** (quiet / silence);
 - **наш** (our, 1 syllable).
 
-Never pronounce **ка́ша** or **жа́ба** with soft, slushy sibilants. Keep them deep, firm, and resonant!
+Never pronounce **ка́ша** or **жа́ба** with soft, slushy sibilants. Keep them deep, firm, and resonant! (Before **і**, slight contextual softening occurs in later vocabulary, but before **а**, **о**, **у**, **е**, **и** they are always hard.)
 :::
 
 <!-- INJECT_ACTIVITY: act-232 -->

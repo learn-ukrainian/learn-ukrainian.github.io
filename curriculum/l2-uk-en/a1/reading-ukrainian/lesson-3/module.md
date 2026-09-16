@@ -101,6 +101,6 @@ Let us read full sentences combining all 18 unlocked letters (**А, О, У, М, 
 - **Он гора́ і поті́к.** — Over there is a mountain and a stream.
 - **Он Дніпро́ і Полта́ва.** — Over there are Dnipro and Poltava.
 - **Вона́ ра́да.** — She is glad.
-- **Тут наш друг.** (wait: друг — friend). **Тут мій друг.** -> **Тут брат і друг.**
+- **Тут брат і друг.** — Brother and friend are here.
 
 <!-- INJECT_ACTIVITY: act-223 -->
