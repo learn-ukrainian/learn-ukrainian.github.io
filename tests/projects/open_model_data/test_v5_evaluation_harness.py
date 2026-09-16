@@ -12,6 +12,7 @@ from scripts.projects.open_model_data.v5_evaluation_harness import (
     exact_clopper_pearson_upper,
     extract_benchmark_score,
     format_markdown_report,
+    is_approved_authority,
     parse_model_output,
     run_evaluation_suite,
     verify_citation_whitelist,
@@ -1524,3 +1525,51 @@ def test_citation_whitelist_r21_findings():
     assert ok3 is True
     assert app3 == ["ВЕСУМ"]
     assert viol3 == []
+
+
+def test_citation_whitelist_r22_findings_sum11_quarantine_and_unambiguous_sum20():
+    """Verify permanent quarantine of Bilodid's СУМ-11 and unambiguous 20-volume СУМ requirement (Astra Finding 3)."""
+    # 1. Bilodid's Russian-Soviet occupation СУМ-11 positive citations must be rejected
+    ok1, _, viol1 = verify_citation_whitelist("За СУМ-11, це правильно.")
+    assert ok1 is False
+    assert "СУМ-11" in viol1
+
+    ok2, _, viol2 = verify_citation_whitelist("Це правильно (СУМ-11).")
+    assert ok2 is False
+    assert "СУМ-11" in viol2
+
+    ok3, _, _ = verify_citation_whitelist("Згідно зі Словником української мови в 11 томах, це правильно.")
+    assert ok3 is False
+
+    ok4, _, _ = verify_citation_whitelist("За Білодідом, це правильно.")
+    assert ok4 is False
+
+    # 2. Ambiguous bare 'Словник української мови' or 'СУМ' without 20 volumes must be rejected
+    assert is_approved_authority("Словник української мови") is False
+    assert is_approved_authority("академічний словник української мови") is False
+    assert is_approved_authority("СУМ") is False
+    assert is_approved_authority("СУМ-11") is False
+
+    ok5, _, _ = verify_citation_whitelist("За Словником української мови, це правильно.")
+    assert ok5 is False
+
+    # 3. Unambiguous modern decolonized СУМ-20 and VESUM must be approved
+    assert is_approved_authority("СУМ-20") is True
+    assert is_approved_authority("Словник української мови в 20 томах") is True
+    assert is_approved_authority("академічний Словник української мови в 20 томах") is True
+    assert is_approved_authority("ВЕСУМ") is True
+
+    ok6, app6, viol6 = verify_citation_whitelist("За СУМ-20, це правильно.")
+    assert ok6 is True
+    assert "СУМ-20" in app6
+    assert viol6 == []
+
+    ok7, app7, viol7 = verify_citation_whitelist("Це правильно (ВЕСУМ).")
+    assert ok7 is True
+    assert "ВЕСУМ" in app7
+    assert viol7 == []
+
+    ok8, app8, viol8 = verify_citation_whitelist("За Словником української мови в 20 томах, це правильно.")
+    assert ok8 is True
+    assert any("20 томах" in a for a in app8)
+    assert viol8 == []

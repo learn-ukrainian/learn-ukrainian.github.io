@@ -82,23 +82,32 @@ def test_audit_fails_when_below_min_records(tmp_path: Path, mock_dbs: tuple[Path
     mock_prot.write_text(
         json.dumps({
             "eval_id": "p1",
-            "stratum": "anti_surzhyk_control",
-            "target_term": "тест",
-            "replacement": "принаймні",
-            "expected_action": "CORRECT",
+            "stratum": "regional_dialect",
+            "target_term": "файний",
+            "expected_action": "PRESERVE",
         }) + "\n",
         encoding="utf-8",
     )
     mock_sft = tmp_path / "sft"
     mock_sft.mkdir()
     (mock_sft / "shard1.jsonl").write_text(
-        json.dumps({"input_text": "тест", "target_term": "невідомий", "action": "PRESERVE"}) + "\n",
+        json.dumps({
+            "query": "тест",
+            "target_term": "невідомий",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+        }) + "\n",
         encoding="utf-8",
     )
     mock_dpo = tmp_path / "dpo"
     mock_dpo.mkdir()
     (mock_dpo / "shard1.jsonl").write_text(
-        json.dumps({"prompt": "тест", "metadata": {"target_term": "невідомий", "pair_type": "standard"}}) + "\n",
+        json.dumps({
+            "prompt": "тест",
+            "chosen": "нормативний текст",
+            "rejected": "ненормативний текст",
+            "metadata": {"target_term": "невідомий", "pair_type": "standard"},
+        }) + "\n",
         encoding="utf-8",
     )
     out_md = tmp_path / "report.md"
@@ -113,6 +122,7 @@ def test_audit_fails_when_below_min_records(tmp_path: Path, mock_dbs: tuple[Path
         vesum_db_path=mock_vesum,
         min_sft_records=6000,
         min_dpo_pairs=3000,
+        min_cases=1,
         output_md=out_md,
         output_json=out_json,
     )
@@ -146,7 +156,7 @@ def test_verify_replacement_attestation_real_databases() -> None:
 
 
 def test_audit_detects_sft_contradiction(tmp_path: Path, mock_dbs: tuple[Path, Path]) -> None:
-    """Audit must detect when an SFT shard penalizes a protected term (Fable Finding 4)."""
+    """Audit must detect when an SFT shard penalizes a protected term (Fable Finding 4 / Astra Finding 1)."""
     mock_sources, mock_vesum = mock_dbs
     mock_prot = tmp_path / "protection.jsonl"
     mock_prot.write_text(
@@ -158,13 +168,14 @@ def test_audit_detects_sft_contradiction(tmp_path: Path, mock_dbs: tuple[Path, P
         }) + "\n",
         encoding="utf-8",
     )
-    # SFT shard attempts to CORRECT 'файний'
+    # SFT shard flags 'файний' with is_calque_or_russianism=True
     mock_sft = tmp_path / "sft"
     mock_sft.mkdir()
     (mock_sft / "shard.jsonl").write_text(
         json.dumps({
-            "input_text": "Це файний день.",
+            "query": "Це файний день.",
             "target_term": "файний",
+            "is_calque_or_russianism": True,
             "action": "CORRECT",
         }) + "\n",
         encoding="utf-8",
@@ -174,6 +185,8 @@ def test_audit_detects_sft_contradiction(tmp_path: Path, mock_dbs: tuple[Path, P
     (mock_dpo / "shard.jsonl").write_text(
         json.dumps({
             "prompt": "test",
+            "chosen": "безпечний текст",
+            "rejected": "небезпечний текст",
             "metadata": {"target_term": "безпечний", "pair_type": "standard"},
         }) + "\n",
         encoding="utf-8",
@@ -187,17 +200,195 @@ def test_audit_detects_sft_contradiction(tmp_path: Path, mock_dbs: tuple[Path, P
         vesum_db_path=mock_vesum,
         min_sft_records=1,
         min_dpo_pairs=1,
+        min_cases=1,
         output_md=tmp_path / "report.md",
         output_json=tmp_path / "report.json",
     )
     assert passed is False
     assert data["sft_contradictions_count"] == 1
     assert data["sft_contradictions"][0]["target_term"] == "файний"
-    assert data["sft_contradictions"][0]["action"] == "CORRECT"
+    assert data["sft_contradictions"][0]["is_calque_or_russianism"] is True
 
 
-def test_audit_production_data_passes() -> None:
-    """Audit over full production data must pass with 0 contradictions and 100% authority attestation."""
+def test_audit_detects_dpo_preference_contradiction(tmp_path: Path, mock_dbs: tuple[Path, Path]) -> None:
+    """Audit must detect when a DPO pair condemns a protected dialect term in chosen text (Astra Finding 1)."""
+    mock_sources, mock_vesum = mock_dbs
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "eval_id": "mock_prot_1",
+            "stratum": "regional_dialect",
+            "target_term": "файний",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sft = tmp_path / "sft"
+    mock_sft.mkdir()
+    (mock_sft / "shard.jsonl").write_text(
+        json.dumps({
+            "query": "Тестовий запит.",
+            "target_term": "безпечний",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    # DPO pair has target_term 'файний' but chosen condemns it as an error/calque
+    mock_dpo = tmp_path / "dpo"
+    mock_dpo.mkdir()
+    (mock_dpo / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Чи можна казати «файний»?",
+            "chosen": "Ні, це помилка і калька, треба гарний.",
+            "rejected": "Так, файний це діалектне слово.",
+            "metadata": {"target_term": "файний", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+
+    passed, data, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft,
+        dpo_dir=mock_dpo,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "report.md",
+        output_json=tmp_path / "report.json",
+    )
+    assert passed is False
+    assert data["dpo_contradictions_count"] == 1
+    assert data["dpo_contradictions"][0]["target_term"] == "файний"
+
+
+def test_audit_fails_on_invalid_preservation_action(tmp_path: Path, mock_dbs: tuple[Path, Path]) -> None:
+    """Protection suite must reject non-PRESERVE actions on dialect/historical cases (Astra Finding 2)."""
+    mock_sources, mock_vesum = mock_dbs
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "eval_id": "mock_prot_1",
+            "stratum": "regional_dialect",
+            "target_term": "файний",
+            "expected_action": "CORRECT",  # INVALID: dialect cases must be PRESERVE
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sft = tmp_path / "sft"
+    mock_sft.mkdir()
+    (mock_sft / "shard.jsonl").write_text(
+        json.dumps({"target_term": "безпечний", "is_calque_or_russianism": False}) + "\n",
+        encoding="utf-8",
+    )
+    mock_dpo = tmp_path / "dpo"
+    mock_dpo.mkdir()
+    (mock_dpo / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "t",
+            "chosen": "c",
+            "rejected": "r",
+            "metadata": {"target_term": "безпечний"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="Protection suite has non-PRESERVE dialect/historical cases"):
+        run_pretraining_audit(
+            protection_path=mock_prot,
+            sft_dir=mock_sft,
+            dpo_dir=mock_dpo,
+            sources_db_path=mock_sources,
+            vesum_db_path=mock_vesum,
+            min_cases=1,
+        )
+
+
+def test_audit_fails_on_sft_schema_missing_fields(tmp_path: Path, mock_dbs: tuple[Path, Path]) -> None:
+    """SFT records lacking required schema fields must raise ValueError (Astra Finding 1)."""
+    mock_sources, mock_vesum = mock_dbs
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "eval_id": "mock_prot_1",
+            "stratum": "regional_dialect",
+            "target_term": "файний",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sft = tmp_path / "sft"
+    mock_sft.mkdir()
+    # Record lacks target_term
+    (mock_sft / "shard.jsonl").write_text(
+        json.dumps({"query": "тест", "is_calque_or_russianism": False}) + "\n",
+        encoding="utf-8",
+    )
+    mock_dpo = tmp_path / "dpo"
+    mock_dpo.mkdir()
+    (mock_dpo / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "t",
+            "chosen": "c",
+            "rejected": "r",
+            "metadata": {"target_term": "безпечний"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="lacks required 'target_term'"):
+        run_pretraining_audit(
+            protection_path=mock_prot,
+            sft_dir=mock_sft,
+            dpo_dir=mock_dpo,
+            sources_db_path=mock_sources,
+            vesum_db_path=mock_vesum,
+            min_cases=1,
+        )
+
+
+def test_audit_fails_on_dpo_schema_missing_fields(tmp_path: Path, mock_dbs: tuple[Path, Path]) -> None:
+    """DPO records lacking required schema fields must raise ValueError (Astra Finding 1)."""
+    mock_sources, mock_vesum = mock_dbs
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "eval_id": "mock_prot_1",
+            "stratum": "regional_dialect",
+            "target_term": "файний",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sft = tmp_path / "sft"
+    mock_sft.mkdir()
+    (mock_sft / "shard.jsonl").write_text(
+        json.dumps({"target_term": "безпечний", "is_calque_or_russianism": False}) + "\n",
+        encoding="utf-8",
+    )
+    mock_dpo = tmp_path / "dpo"
+    mock_dpo.mkdir()
+    # DPO record lacks chosen and rejected
+    (mock_dpo / "shard.jsonl").write_text(
+        json.dumps({"prompt": "t", "metadata": {"target_term": "безпечний"}}) + "\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="lacks required prompt/chosen/rejected"):
+        run_pretraining_audit(
+            protection_path=mock_prot,
+            sft_dir=mock_sft,
+            dpo_dir=mock_dpo,
+            sources_db_path=mock_sources,
+            vesum_db_path=mock_vesum,
+            min_cases=1,
+        )
+
+
+def test_audit_production_data_passes(tmp_path: Path) -> None:
+    """Audit over full production data must pass with 0 contradictions and 100% authority attestation (Astra Finding 4)."""
     protection_p = resolve_data_path(DEFAULT_PROTECTION_SUITE)
     sft_p = resolve_data_path(DEFAULT_SFT_DIR)
     dpo_p = resolve_data_path(DEFAULT_DPO_DIR)
@@ -221,6 +412,8 @@ def test_audit_production_data_passes() -> None:
         vesum_db_path=vesum_p,
         min_sft_records=6000,
         min_dpo_pairs=3000,
+        output_md=tmp_path / "report.md",
+        output_json=tmp_path / "report.json",
     )
     assert passed is True
     assert data["protection_suite_cases"] == 600

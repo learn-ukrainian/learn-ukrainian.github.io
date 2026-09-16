@@ -115,6 +115,7 @@ def run_pretraining_audit(
     output_json: Path = DEFAULT_OUTPUT_JSON,
     min_sft_records: int = 6000,
     min_dpo_pairs: int = 3000,
+    min_cases: int = 600,
 ) -> tuple[bool, dict[str, Any], str]:
     # Resolve all data paths (supporting worktrees and shared common git checkouts)
     resolved_protection = resolve_data_path(protection_path)
@@ -151,12 +152,30 @@ def run_pretraining_audit(
     surzhyk_cases = [c for c in cases if c.get("stratum") == "anti_surzhyk_control"]
 
     # 3. Collect protected terms (must be PRESERVE)
+    invalid_preservations = [
+        c.get("eval_id")
+        for c in dialect_cases + historical_cases
+        if c.get("expected_action") != "PRESERVE"
+    ]
+    if invalid_preservations:
+        raise ValueError(
+            f"Protection suite has non-PRESERVE dialect/historical cases: {invalid_preservations}"
+        )
+
     protected_cases = [c for c in cases if c.get("expected_action") == "PRESERVE"]
+    expected_min_preservations = 500 if min_cases >= 600 else 1
+    if len(protected_cases) < expected_min_preservations:
+        raise ValueError(
+            f"Insufficient protected preservation cases: expected >= {expected_min_preservations}, got {len(protected_cases)}"
+        )
+
     protected_terms: set[str] = {
         c["target_term"].lower().strip() for c in protected_cases if c.get("target_term")
     }
+    if not protected_terms:
+        raise ValueError("No valid protected terms extracted from protection suite")
 
-    # 4. Cross-audit SFT shards
+    # 4. Cross-audit SFT shards (Validating production schema and labels)
     sft_contradictions: list[dict[str, Any]] = []
     sft_total_count = 0
 
@@ -167,17 +186,32 @@ def run_pretraining_audit(
             sft_total_count += 1
             item = json.loads(line)
             target = (item.get("target_term") or "").lower().strip()
+            if not target:
+                raise ValueError(
+                    f"SFT record at line {line_idx+1} in {sft_file.name} lacks required 'target_term'"
+                )
+
+            is_calque = item.get("is_calque_or_russianism")
             action = (item.get("action") or item.get("case_type") or "").upper()
-            if target in protected_terms and action in ("CORRECT", "REPLACE"):
+            if is_calque is None and not action:
+                raise ValueError(
+                    f"SFT record at line {line_idx+1} in {sft_file.name} lacks required label field "
+                    f"('is_calque_or_russianism' or 'action')"
+                )
+
+            # In production SFT, is_calque_or_russianism is True when the target term is flagged as an error/calque
+            is_condemned = (is_calque is True) or (action in ("CORRECT", "REPLACE"))
+            if target in protected_terms and is_condemned:
                 sft_contradictions.append({
                     "shard": sft_file.name,
                     "line": line_idx + 1,
                     "target_term": target,
+                    "is_calque_or_russianism": is_calque,
                     "action": action,
-                    "prompt": item.get("input_text") or item.get("prompt"),
+                    "prompt": item.get("query") or item.get("input_text") or item.get("prompt"),
                 })
 
-    # 5. Cross-audit DPO shards
+    # 5. Cross-audit DPO shards (Validating production schema and preference direction)
     dpo_contradictions: list[dict[str, Any]] = []
     dpo_total_count = 0
 
@@ -187,18 +221,42 @@ def run_pretraining_audit(
                 continue
             dpo_total_count += 1
             item = json.loads(line)
-            metadata = item.get("metadata", {})
+            prompt = item.get("prompt")
+            chosen = item.get("chosen")
+            rejected = item.get("rejected")
+            if not prompt or not chosen or not rejected:
+                raise ValueError(
+                    f"DPO record at line {line_idx+1} in {dpo_file.name} lacks required prompt/chosen/rejected"
+                )
+
+            metadata = item.get("metadata")
+            if not isinstance(metadata, dict):
+                raise ValueError(
+                    f"DPO record at line {line_idx+1} in {dpo_file.name} lacks valid 'metadata' dict"
+                )
+
             target = (metadata.get("target_term") or "").lower().strip()
+            if not target:
+                raise ValueError(
+                    f"DPO record at line {line_idx+1} in {dpo_file.name} lacks 'metadata.target_term'"
+                )
+
             pair_type = metadata.get("pair_type", "")
             # If target in protected terms and pair penalizes it as an error
-            if target in protected_terms and pair_type != "anti_hyper_purist_preservation_pairs":
+            if target in protected_terms and (
+                pair_type != "anti_hyper_purist_preservation_pairs"
+                or any(
+                    err_phr in chosen.lower()
+                    for err_phr in ("це помилка", "неправильно", "калька", "русизм")
+                )
+            ):
                 dpo_contradictions.append({
-                    "shard": dpo_file.name,
-                    "line": line_idx + 1,
-                    "target_term": target,
-                    "pair_type": pair_type,
-                    "prompt": item.get("prompt"),
-                })
+                        "shard": dpo_file.name,
+                        "line": line_idx + 1,
+                        "target_term": target,
+                        "pair_type": pair_type,
+                        "prompt": prompt,
+                    })
 
     # 6. Surzhyk control validation against positive authorities (Finding 2)
     surzhyk_valid = True
@@ -231,10 +289,22 @@ def run_pretraining_audit(
 
     # 7. Overall audit determination (Hard Non-Vacuous Gates)
     passed = (
-        len(cases) == 600
-        and len(dialect_cases) == 300
-        and len(historical_cases) == 200
-        and len(surzhyk_cases) == 100
+        (
+            (
+                len(cases) == 600
+                and len(dialect_cases) == 300
+                and len(historical_cases) == 200
+                and len(surzhyk_cases) == 100
+                and len(protected_cases) == 500
+                and len(protected_terms) >= 250
+            )
+            if min_cases >= 600
+            else (
+                len(cases) >= min_cases
+                and len(protected_cases) >= expected_min_preservations
+                and len(protected_terms) >= 1
+            )
+        )
         and len(sft_files) > 0
         and sft_total_count >= min_sft_records
         and len(dpo_files) > 0
@@ -255,6 +325,7 @@ def run_pretraining_audit(
             "historical_text": len(historical_cases),
             "anti_surzhyk_control": len(surzhyk_cases),
         },
+        "protected_cases_count": len(protected_cases),
         "protected_terms_count": len(protected_terms),
         "sft_shards_audited": len(sft_files),
         "sft_records_audited": sft_total_count,
@@ -270,7 +341,32 @@ def run_pretraining_audit(
         "anti_surzhyk_anomalies": surzhyk_anomalies,
     }
 
-    # Format Markdown report
+    # Format Markdown report (Evidence-grounded, no unconditional success claims)
+    details_lines = [
+        "## 2. Invariant Verification Details",
+        "",
+        "1. **False Penalization Scan of Dialect & Historical Forms:**",
+        f"   - **{len(protected_terms)}** unique protected regional and historical terms were checked across {sft_total_count:,} SFT records and {dpo_total_count:,} DPO pairs.",
+    ]
+    if len(sft_contradictions) == 0 and len(dpo_contradictions) == 0:
+        details_lines.append("   - **Result:** Zero training examples penalize protected forms as errors or attempt to normalize them into contemporary standard Ukrainian.")
+    else:
+        details_lines.append(f"   - **Result:** Contradictions detected: {len(sft_contradictions)} in SFT, {len(dpo_contradictions)} in DPO.")
+        for sc in sft_contradictions[:10]:
+            details_lines.append(f"     - [SFT] {sc['shard']}:{sc['line']} target '{sc['target_term']}' condemned")
+        for dc in dpo_contradictions[:10]:
+            details_lines.append(f"     - [DPO] {dc['shard']}:{dc['line']} target '{dc['target_term']}' pair '{dc['pair_type']}'")
+
+    details_lines.extend([
+        "",
+        "2. **Anti-Surzhyk Exclusivity & Linguistic Grounding:**",
+        "   - All 100 anti-surzhyk control cases exclusively target undeniable Russianisms and colonial calques.",
+        f"   - Attestation verification against positive Ukrainian authorities: {len(surzhyk_cases) - len(surzhyk_anomalies)} / {len(surzhyk_cases)} verified.",
+    ])
+    if surzhyk_anomalies:
+        for sa in surzhyk_anomalies[:10]:
+            details_lines.append(f"     - [Anomaly] {sa.get('eval_id')}: {sa.get('reason')}")
+
     md_lines = [
         "# ULDR v0.2 Pre-Training Contradiction Audit Report",
         "",
@@ -299,18 +395,7 @@ def run_pretraining_audit(
         "",
         "---",
         "",
-        "## 2. Invariant Verification Details",
-        "",
-        "1. **Zero False Penalization of Dialect & Historical Forms:**",
-        f"   - **{len(protected_terms)}** unique protected regional and historical terms were checked across the entire training corpus.",
-        "   - Zero training examples penalize these forms as errors or attempt to normalize them into contemporary standard Ukrainian.",
-        "",
-        "2. **Anti-Surzhyk Exclusivity & Linguistic Grounding:**",
-        "   - All 100 anti-surzhyk control cases exclusively target undeniable Russianisms and colonial calques.",
-        "   - Every target replacement term is strictly validated against positive Ukrainian authorities (СУМ-20, VESUM, Grinchenko 1907).",
-        "",
-        "3. **Training Gradient Safety:**",
-        "   - Gradient updates during v0.2 alignment will NOT penalize future v0.3 (regional dialects) or v0.4 (Kyivan Rus & Baroque) linguistic capabilities.",
+        *details_lines,
         "",
         "---",
         "",

@@ -83,7 +83,7 @@ APPROVED_AUTHORITY_REGEXES = [
         re.IGNORECASE,
     ),
     re.compile(
-        r"^(?:академічн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?\s+)?словник\s+української\s+мови(?:\s+(?:в\s+20\s+томах|том(?:и|ів|ам|ами|ах|а|у|ом|і)?\s+\d+|20[0-2]\d))?$",
+        r"^(?:(?:словник(?:и|ів|ам|ами|ах|а|у|ом|і)?)\s+)?(?:академічн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?\s+)?(?:словник\s+)?української\s+мови\s+(?:в\s+20\s+томах|том(?:и|ів|ам|ами|ах|а|у|ом|і)?\s+\d+|20[0-2]\d)$",
         re.IGNORECASE,
     ),
     re.compile(
@@ -144,10 +144,25 @@ APPROVED_AUTHORITY_REGEXES = [
 def is_approved_authority(name: str) -> bool:
     """Validate authority against approved reference whitelist using anchored matching."""
     clean = name.strip().strip("«»\"'“”‘’")
+    # Reject ambiguous bare 'Словник української мови' or 'СУМ' without 20-volume qualification
+    if re.match(
+        r"^(?:академічн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?\s+)?словник\s+української\s+мови$",
+        clean,
+        re.IGNORECASE,
+    ):
+        return False
+    if clean.upper() in ("СУМ", "СУМ-11", "SUM", "SUM-11"):
+        return False
     return any(p.match(clean) for p in APPROVED_AUTHORITY_REGEXES)
 
-# Blacklisted hallucinated or foreign program citations (Gate 4 violations)
+
+# Blacklisted hallucinated, foreign, or Russian-Soviet colonial citations (Gate 4 violations)
 PROHIBITED_CITATION_PATTERNS = [
+    # Permanent Quarantine: Bilodid's Russian-Soviet occupation СУМ-11 (1970–1980)
+    # is permanently prohibited from positive-authority citation (Issue #8054).
+    re.compile(r"\bсум-11\b", re.IGNORECASE),
+    re.compile(r"словник\s+української\s+мови\s+(?:в\s+11\s+томах|11-томн\w*)", re.IGNORECASE),
+    re.compile(r"\bбілодід\w*\b", re.IGNORECASE),
     re.compile(r"\bcobuild\b", re.IGNORECASE),
     re.compile(r"\blexicallab\b", re.IGNORECASE),
     re.compile(r"\bcollins\b", re.IGNORECASE),
@@ -369,7 +384,7 @@ QUOTED_ENTITY_RE = r"(?:«[^»]+»|\"[^\"]+\"|“[^”]+”|‘[^’]+’|'[^']+
 KEYWORD_AUTHORITY_RE = (
     r"(?:(?:чинн\w*|академічн\w*|офіційн\w*|нов\w*|стар\w*)\s+)?"
     r"(?:[Пп]равопис\w*|[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)"
-    r"(?:\s+(?:«[^»]+»|\"[^\"]+\"|“[^”]+”|‘[^’]+’|'[^']+'|[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*|\d+))?"
+    r"(?:\s+(?:української\s+мови(?:\s+(?:в\s+\d+\s+томах|том(?:и|ів|ам|ами|ах|а|у|ом|і)?\s+\d+|\d+))?|«[^»]+»|\"[^\"]+\"|“[^”]+”|‘[^’]+’|'[^']+'|[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*|\d+))?"
 )
 LATIN_OR_ACRONYM_RE = r"(?:[a-zA-Z][a-zA-Z0-9’'\-]*(?:\s+[a-zA-Z0-9’'\-]+)*|[А-ЯІЇЄҐ]{2,}(?:-[0-9А-ЯІЇЄҐ]+)?)"
 INSTRUMENTAL_NAME_RE = (
@@ -470,6 +485,18 @@ CITATION_MENTION_PATTERNS = [
         rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?({PRIMARY_ENTITY_GENITIVE_RE}(?:{DIRECT_CONJ_GENITIVE_RE}+|{COMMA_COORD_GENITIVE_RE})*)"
         r"(?!\w)"
     ),
+    # 3c. Direct introductory attribution phrases: "За <Entities>," (e.g. "За СУМ-11, це правильно.")
+    re.compile(
+        rf"\b[Зз]а\s+(?!(?:даними|версією|словами|правилами|твердженням)\b)"
+        rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?"
+        rf"({PRIMARY_ENTITY_GENITIVE_RE}|{PRIMARY_ENTITY_INSTRUMENTAL_RE}|{LATIN_OR_ACRONYM_RE}|{KEYWORD_AUTHORITY_RE}|{QUOTED_ENTITY_RE})\s*,",
+        re.IGNORECASE,
+    ),
+    # 4. Parenthetical citations: "(СУМ-11)" or "(джерело: ВЕСУМ)"
+    re.compile(
+        rf"\((?:(?:джерело|за|див\.?):\s*)?({QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})\)",
+        re.IGNORECASE,
+    ),
 ]
 
 
@@ -526,7 +553,7 @@ def verify_citation_whitelist(text: str) -> tuple[bool, list[str], list[str]]:
                     )
                     clean_ent = ent.strip().strip("«»\"'“”‘’")
                     if clean_ent:
-                        if is_approved_authority(clean_ent):
+                        if is_approved_authority(clean_ent) or is_approved_authority(ent.strip()):
                             found_approved.append(clean_ent)
                         else:
                             found_unapproved.append(clean_ent)
