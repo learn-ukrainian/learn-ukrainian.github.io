@@ -805,6 +805,9 @@ def find_attested_synonym(defn: str, word: str, vesum_db: Path) -> tuple[str, in
     Cross-references ('див.') and multi-word descriptive phrases are strictly rejected.
     Returns None if no attested literary synonym can be extracted. Never returns dummy fallbacks.
     """
+    if not vesum_db.is_file() or vesum_db.stat().st_size == 0:
+        return None
+
     con_ves = sqlite3.connect(vesum_db)
     cur = con_ves.cursor()
 
@@ -860,6 +863,8 @@ def find_attested_synonym(defn: str, word: str, vesum_db: Path) -> tuple[str, in
                 if row and row[0] > 0:
                     return cand, row[0]
 
+        return None
+    except sqlite3.OperationalError:
         return None
     finally:
         con_ves.close()
