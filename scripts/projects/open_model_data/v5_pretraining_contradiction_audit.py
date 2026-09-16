@@ -341,7 +341,8 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         rf"\bзамість\s+(?:{ITEM_CLASSIFIER})?{PRE_COORDINATED_ITEMS}{target_item}{POST_COORDINATED_ITEMS}",
         re.IGNORECASE,
     )
-    for zm in zamist_target_re.finditer(text_norm):
+    evaluated_zm_matches = list(zamist_target_re.finditer(text_norm))
+    for zm in evaluated_zm_matches:
         sent_start = 0
         for delim in (".", "!", "?", ";", "\n"):
             pos = text_norm.rfind(delim, 0, zm.start())
@@ -442,15 +443,24 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         if dash_m:
             return True
 
+    # Fallback clause split:
+    # Target occurrences that were already evaluated under `замість` above were not condemned.
+    # Mask those evaluated `замість` complements so subsequent clause splitting and directive scanning
+    # (e.g. `уникайте <other>`) cannot falsely condemn the protected target.
+    fallback_text = text_norm
+    if evaluated_zm_matches:
+        for zm in reversed(evaluated_zm_matches):
+            fallback_text = fallback_text[:zm.start()] + "замість «_EVALUATED_TARGET_»" + fallback_text[zm.end():]
+
     # Split text into sentence/clause units by punctuation or coordinate/adversative conjunctions introducing clauses
     split_pat = re.compile(
         r"(?:[.,\n;!?:\u2014\u2013]+|"
         r"\s+\b(?:але|проте|однак)\b\s+|"
-        r"\s+\b(?:та|і|й|а|або|чи)\s+(?=[«\"“‘\'][^»\"”’\n]+[»\"”’]\s+(?:слід|варто|потрібно|необхідно|треба|можна|є|не)\b|\b(?:його|її|їх|це|цей|цю|цього|цій|цим|слово|термін|вираз|зворот|щодо|для|слід|варто|потрібно|необхідно|треба|можна|не)\b|[а-яА-ЯёЁіІїЇєЄґҐ’\'\-]+\s+(?:слід|варто|потрібно|необхідно|треба|можна|є|не)\b))",
+        r"\s+\b(?:та|і|й|а|або|чи)\s+(?=[«\"“‘\']|\b(?:його|її|їх|це|цей|цю|цього|цій|цим|слово|термін|вираз|зворот|щодо|для|слід|варто|потрібно|необхідно|треба|можна|не)\b|[а-яА-ЯёЁіІїЇєЄґҐ’\'\-]+\s+(?:слід|варто|потрібно|необхідно|треба|можна|є|не)\b))",
         re.IGNORECASE,
     )
 
-    clauses = [c.strip() for c in split_pat.split(text_norm) if c.strip()]
+    clauses = [c.strip() for c in split_pat.split(fallback_text) if c.strip()]
     for clause in clauses:
         cl_lower = clause.lower()
         quoted = re.findall(r"[«\"“‘\']([^»\"”’\']+)[»\"”’\']", clause)
