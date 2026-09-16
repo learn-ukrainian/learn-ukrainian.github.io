@@ -193,19 +193,19 @@ workbook:
   groups:
   - label: "CVC (оди́н закри́тий склад) — CVC (one closed syllable)"
     items:
-    - сон
-    - сом
-    - сам
-    - лан
-    - мул
-    - лом
+    - "сон (sleep / dream)"
+    - "сом (catfish)"
+    - "сам (alone / by oneself)"
+    - "лан (field)"
+    - "мул (silt)"
+    - "лом (crowbar)"
   - label: "Двоскладо́ві слова́ — Two-syllable words"
     items:
-    - оса́
-    - сосна́
-    - ма́ма
-    - ма́ло
-    - мала́
+    - "оса́ (wasp)"
+    - "сосна́ (pine tree)"
+    - "ма́ма (mother)"
+    - "ма́ло (little / few)"
+    - "мала́ (small)"
 
 - id: act-305
   type: match-up
@@ -235,31 +235,37 @@ workbook:
     - с
     - о
     - н
+    hint: "сон — sleep / dream"
   - answer: сом
     words:
     - с
     - о
     - м
+    hint: "сом — catfish"
   - answer: сам
     words:
     - с
     - а
     - м
+    hint: "сам — alone / by oneself"
   - answer: лан
     words:
     - л
     - а
     - н
+    hint: "лан — field"
   - answer: нас
     words:
     - н
     - а
     - с
+    hint: "нас — us"
   - answer: лом
     words:
     - л
     - о
     - м
+    hint: "лом — crowbar"
 
 - id: act-307
   type: fill-in
@@ -316,51 +322,51 @@ workbook:
   items:
   - sentence: "У лі́сі росте́ сасна́. — A pine tree grows in the forest."
     error: сасна́
-    answer: сосна́
+    answer: "сосна́ (pine tree)"
     options:
-    - сосна́
-    - сасна́
-    - сусна́
+    - "сосна́ (pine tree)"
+    - "сасна́ (misspelled with 'а')"
+    - "сусна́ (misspelled with 'у')"
     explanation: "В украї́нській мо́ві ненаголо́шений [о] залиша́ється чи́стим [о] у сло́ві сосна́. — Unstressed o remains clear in сосна́ without reduction."
   - sentence: "У рі́чці пла́ває вели́кий сон. — A large dream swims in the river."
     error: сон
-    answer: сом
+    answer: "сом (catfish)"
     options:
-    - сом
-    - сон
-    - сам
+    - "сом (catfish)"
+    - "сон (sleep / dream)"
+    - "сам (alone / by oneself)"
     explanation: "Ри́ба — це сом, а не сон. — The fish is сом (catfish), not сон (dream)."
   - sentence: "Він стої́ть там сом. — He stands there catfish."
     error: сом
-    answer: сам
+    answer: "сам (alone / by oneself)"
     options:
-    - сам
-    - сом
-    - сон
+    - "сам (alone / by oneself)"
+    - "сом (catfish)"
+    - "сон (sleep / dream)"
     explanation: "Само́тньо — це сам. — Alone / by oneself is сам."
   - sentence: "Он зеле́ний лон. — Over there is a green lon."
     error: лон
-    answer: лан
+    answer: "лан (field)"
     options:
-    - лан
-    - лон
-    - лун
+    - "лан (field)"
+    - "лон (misspelled with 'о')"
+    - "лун (misspelled with 'у')"
     explanation: "По́ле — це лан, а не лон. — The field is лан, not лон."
   - sentence: "Он лети́ть аса́. — Look, an asa is flying."
     error: аса́
-    answer: оса́
+    answer: "оса́ (wasp)"
     options:
-    - оса́
-    - аса́
-    - уса́
+    - "оса́ (wasp)"
+    - "аса́ (misspelled with 'а')"
+    - "уса́ (misspelled with 'у')"
     explanation: "Кома́ха — це оса́. — The wasp is оса́."
   - sentence: "Він кли́че нос. — He calls nos."
     error: нос
-    answer: нас
+    answer: "нас (us)"
     options:
-    - нас
-    - нос
-    - ніс
+    - "нас (us)"
+    - "нос (misspelled with 'о')"
+    - "ніс (nose)"
     explanation: "Він кли́че нас. — He calls us is «нас»."
 
 - id: act-309

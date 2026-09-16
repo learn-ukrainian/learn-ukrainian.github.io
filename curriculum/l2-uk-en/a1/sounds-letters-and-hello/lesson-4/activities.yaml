@@ -295,51 +295,51 @@ workbook:
   items:
   - sentence: "У лі́сі росте́ висо́ка сасна́. — A tall pine tree grows in the forest."
     error: сасна́
-    answer: сосна́
+    answer: "сосна́ (pine tree)"
     options:
-    - сосна́
-    - сасна́
-    - сосно́
+    - "сосна́ (pine tree)"
+    - "сасна́ (misspelled with 'а')"
+    - "сосно́ (incorrect form)"
     explanation: "В украї́нській мо́ві ненаголо́шений о не редуку́ється до а: «сосна́». — Ukrainian unstressed о does not reduce to а: «сосна́»."
   - sentence: "На хліб нама́зали сві́же масло́. — They spread fresh butter on the bread."
     error: масло́
-    answer: ма́сло
+    answer: "ма́сло (butter — stress on 1st syllable)"
     options:
-    - ма́сло
-    - масло́
-    - маслі́
+    - "ма́сло (butter — stress on 1st syllable)"
+    - "масло́ (wrong stress on 2nd syllable)"
+    - "ма́слі (locative form with 'і')"
     explanation: "У сло́ві «ма́сло» на́голос па́дає на пе́рший склад: «ма́сло». — The stress in butter is on the first syllable: «ма́сло»."
   - sentence: "Он лети́ть мала оса́. — Look, a small wasp is flying."
     error: мала
-    answer: мала́
+    answer: "мала́ (small — feminine adjective)"
     options:
-    - мала́
-    - ма́ла
-    - ма́ло
+    - "мала́ (small — feminine adjective)"
+    - "ма́ла (had — past feminine verb)"
+    - "ма́ло (little / few — adverb)"
     explanation: "Прикме́тник жіно́чого ро́ду ма́є на́голос на кінці́: «мала́». — The feminine adjective for small is stressed on the end: «мала́»."
   - sentence: "Він з'їв сало́ з хлі́бом. — He ate salo with bread."
     error: сало́
-    answer: са́ло
+    answer: "са́ло (salo — stress on 1st syllable)"
     options:
-    - са́ло
-    - сало́
-    - са́ла
+    - "са́ло (salo — stress on 1st syllable)"
+    - "сало́ (wrong stress on 2nd syllable)"
+    - "са́ла (genitive / plural form)"
     explanation: "Сло́во «са́ло» наголо́шене на пе́ршому скла́ді: «са́ло». — Salo is stressed on the first syllable: «са́ло»."
   - sentence: "Оле́г гукну́в: «Ма́ма, ходи́ сюди́!». — Oleh called out: «Mum, come here!». "
     error: Ма́ма
-    answer: Ма́мо
+    answer: "Ма́мо (Mother! — vocative for direct address)"
     options:
-    - Ма́мо
-    - Ма́ма
-    - Мала́
+    - "Ма́мо (Mother! — vocative for direct address)"
+    - "Ма́ма (Mother — nominative form)"
+    - "Мала́ (Small — feminine adjective)"
     explanation: "Пряме́ зверта́ння вимага́є кли́чного відмі́нка: «Ма́мо!». — Direct address requires the vocative form: «Ма́мо!»."
   - sentence: "На корі́ сосни́ ви́ступила смала́. — Resin appeared on the pine bark."
     error: смала́
-    answer: смола́
+    answer: "смола́ (resin / pitch)"
     options:
-    - смола́
-    - смала́
-    - смо́ла
+    - "смола́ (resin / pitch)"
+    - "смала́ (misspelled with 'а')"
+    - "смо́ла (wrong stress on 1st syllable)"
     explanation: "Ненаголо́шений о залиша́ється чи́стим [о]: «смола́». — Unstressed о remains pure: «смола́»."
 
 - id: act-405
@@ -349,19 +349,19 @@ workbook:
   groups:
   - label: "На́голос на пе́ршому скла́ді — Stress on first syllable"
     items:
-    - ма́ма
-    - ма́мо
-    - ма́ло
-    - са́ма
-    - ма́сло
-    - са́ло
+    - "ма́ма (mother)"
+    - "ма́мо (mother! — vocative)"
+    - "ма́ло (little / few)"
+    - "са́ма (the very)"
+    - "ма́сло (butter)"
+    - "са́ло (salo)"
   - label: "На́голос на дру́гому скла́ді — Stress on second syllable"
     items:
-    - мала́
-    - сама́
-    - оса́
-    - сосна́
-    - смола́
+    - "мала́ (small)"
+    - "сама́ (alone / by oneself)"
+    - "оса́ (wasp)"
+    - "сосна́ (pine tree)"
+    - "смола́ (resin)"
 
 - id: act-406
   type: unjumble
@@ -372,27 +372,33 @@ workbook:
     words:
     - "Он"
     - "лан."
+    hint: "Он лан. — Over there is a field."
   - answer: "Он сом."
     words:
     - "Он"
     - "сом."
+    hint: "Он сом. — Over there is a catfish."
   - answer: "Он сосна́."
     words:
     - "Он"
     - "сосна́."
+    hint: "Он сосна́. — Over there is a pine tree."
   - answer: "Оса́ мала́."
     words:
     - "Оса́"
     - "мала́."
+    hint: "Оса́ мала́. — The wasp is small."
   - answer: "Ма́ма сама́."
     words:
     - "Ма́ма"
     - "сама́."
+    hint: "Ма́ма сама́. — Mother is alone."
   - answer: "У нас ма́ло."
     words:
     - "У"
     - "нас"
     - "ма́ло."
+    hint: "У нас ма́ло. — We have little."
 
 - id: act-407
   type: fill-in
