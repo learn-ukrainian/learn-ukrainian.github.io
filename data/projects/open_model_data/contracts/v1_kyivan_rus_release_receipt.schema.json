@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_kyivan_rus_release_receipt.schema.json",
+  "title": "v1_kyivan_rus_release_receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "issue",
+    "parent_epic",
+    "created_at",
+    "git_commit",
+    "evaluation_benchmark",
+    "sft_training_dataset",
+    "invariants_verified",
+    "evaluation_metrics"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v1_kyivan_rus_release_receipt"
+    },
+    "issue": {
+      "type": "integer",
+      "const": 8103
+    },
+    "parent_epic": {
+      "type": "integer",
+      "const": 6321
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "git_commit": {
+      "type": "string"
+    },
+    "evaluation_benchmark": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file_path",
+        "sha256",
+        "total_cases",
+        "graffiti_cases",
+        "chronicle_cases",
+        "preserve_cases",
+        "mixed_error_cases",
+        "register_counts"
+      ],
+      "properties": {
+        "file_path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "total_cases": {
+          "type": "integer",
+          "minimum": 500
+        },
+        "graffiti_cases": {
+          "type": "integer"
+        },
+        "chronicle_cases": {
+          "type": "integer"
+        },
+        "preserve_cases": {
+          "type": "integer"
+        },
+        "mixed_error_cases": {
+          "type": "integer"
+        },
+        "register_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "church_slavonic_liturgical",
+            "vernacular_secular",
+            "mixed_diglossic"
+          ],
+          "properties": {
+            "church_slavonic_liturgical": {
+              "type": "integer"
+            },
+            "vernacular_secular": {
+              "type": "integer"
+            },
+            "mixed_diglossic": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    "sft_training_dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "directory_path",
+        "shards_count",
+        "total_trajectories",
+        "epigraphy_trajectories",
+        "chronicle_trajectories",
+        "replay_buffer_trajectories",
+        "manifest_sha256"
+      ],
+      "properties": {
+        "directory_path": {
+          "type": "string"
+        },
+        "shards_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "total_trajectories": {
+          "type": "integer",
+          "minimum": 10000
+        },
+        "epigraphy_trajectories": {
+          "type": "integer"
+        },
+        "chronicle_trajectories": {
+          "type": "integer"
+        },
+        "replay_buffer_trajectories": {
+          "type": "integer"
+        },
+        "manifest_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "invariants_verified": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "zero_train_eval_leakage",
+        "symmetric_translation_purge",
+        "church_slavonic_formula_protection",
+        "diplomatic_fidelity_verified",
+        "monument_room_partitioning_enforced",
+        "clopper_pearson_eval_pass"
+      ],
+      "properties": {
+        "zero_train_eval_leakage": {
+          "type": "boolean"
+        },
+        "symmetric_translation_purge": {
+          "type": "boolean"
+        },
+        "church_slavonic_formula_protection": {
+          "type": "boolean"
+        },
+        "diplomatic_fidelity_verified": {
+          "type": "boolean"
+        },
+        "monument_room_partitioning_enforced": {
+          "type": "boolean"
+        },
+        "clopper_pearson_eval_pass": {
+          "type": "boolean"
+        }
+      }
+    },
+    "evaluation_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "accuracy",
+        "preservation_rate",
+        "mixed_error_correction_rate",
+        "clopper_pearson_lower_95"
+      ],
+      "properties": {
+        "accuracy": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "preservation_rate": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "mixed_error_correction_rate": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "clopper_pearson_lower_95": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        }
+      }
+    }
+  }
+}

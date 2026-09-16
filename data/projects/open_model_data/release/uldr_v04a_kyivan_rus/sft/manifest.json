@@ -1,0 +1,157 @@
+{
+  "dataset": "sft_kyivan_rus_continuity_10k",
+  "total_count": 10000,
+  "shards_count": 30,
+  "shards": [
+    {
+      "filename": "sft_shard_001_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "3ffefcaaa0f9b8753f0b1ecb934bc43f3f45f4ab7d4c2e0afbd581fdbf41662c"
+    },
+    {
+      "filename": "sft_shard_002_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "4e6f8ef05baa9b4591f9d61d9a4dee08c663647d5110fcbd4f284030045cc79b"
+    },
+    {
+      "filename": "sft_shard_003_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "360a44662d4918890208e704f0902242e62dda91a94c5de87b9bb466c9b68272"
+    },
+    {
+      "filename": "sft_shard_004_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "ebe43bebc573942c9c6d64247e00cbd1ce7e457fc06e13ca02c1b9144eaf3263"
+    },
+    {
+      "filename": "sft_shard_005_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "b2ecea47acf8fd4f7ec2bdf24585845dcf64468cd58deb7ad6dcde0312a8b8bc"
+    },
+    {
+      "filename": "sft_shard_006_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "ba65024aef075b0f771015bdeeee9dbf716ff8358ea21f2ebab1491631a95397"
+    },
+    {
+      "filename": "sft_shard_007_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "5efe8e6ddc361a68fe2abfe25ef40e1b0a951793931cfa78d53b2946ab99b201"
+    },
+    {
+      "filename": "sft_shard_008_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "a821d9f425a7e201a84942ccc5dd6d9cf791b9bc53fd693fc962ba786b4a80d0"
+    },
+    {
+      "filename": "sft_shard_009_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "d7e9e0f82cd540bf8ec64c2481c262e9d1e223c782129cdd78f83740c62d5fc2"
+    },
+    {
+      "filename": "sft_shard_010_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "639ccb94e3b26b7c16f9a6cf6a9abab875d8a02b514aebcbf76e5cff575088db"
+    },
+    {
+      "filename": "sft_shard_011_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "7ecd5f6a0fdbeb4e368198e8c8c3467c02b79725a3ebab61dd5475279da6aff6"
+    },
+    {
+      "filename": "sft_shard_012_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "73a49e56afcc5837805b9df081a7405e0531876fe5d153b47ed31eccb13cfd16"
+    },
+    {
+      "filename": "sft_shard_013_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "9375c78f43d079b388fafb8f6480aaaaf843c73c829660bb832122b7a694dfb5"
+    },
+    {
+      "filename": "sft_shard_014_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "b706ebdb24e18cf09198d764026ddc045c97652745a7b61be3735c28759758f4"
+    },
+    {
+      "filename": "sft_shard_015_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "dd18ddc1c844fa6758150aff591b0a4ce4d40a050d3342fdb9150016d4926163"
+    },
+    {
+      "filename": "sft_shard_016_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "4de97ac93c80fc6f2f7e412ace8c5ba4adfb6117e79ea8c4087e8f9f3510682d"
+    },
+    {
+      "filename": "sft_shard_017_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "d556b181627c5574605619e5281a63c8a797a9b3d4b0b5a4ae5a808aa69a459e"
+    },
+    {
+      "filename": "sft_shard_018_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "98f5b63226efb44d3004a8caf5aaf82d7d2d41e3e00fb9c2ff02b5727056e78c"
+    },
+    {
+      "filename": "sft_shard_019_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "cbde9457b208cebf0e3ec310c8f17ec2e01502f21101c0290371883be59a3275"
+    },
+    {
+      "filename": "sft_shard_020_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "6001ce3c3333b96b620e3dc9ac5d01022ee6bcd494fc6dd9da58e39e7e02ce62"
+    },
+    {
+      "filename": "sft_shard_021_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "57824b0481038463fa9fc375c9dbeeb023e3c05747c42f9313bbb4498631a19b"
+    },
+    {
+      "filename": "sft_shard_022_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "f4f7a40a5c660cadd822ad6758d2317d953ec3695955631ca7319f0025a3731b"
+    },
+    {
+      "filename": "sft_shard_023_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "d632395bab41c3bae30d2f9de5de6749e036a872a806d8370c81aca60e71d50d"
+    },
+    {
+      "filename": "sft_shard_024_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "bf2437ca12f75bb0be3aad56b64032b686e02702e257861839886a30c9604032"
+    },
+    {
+      "filename": "sft_shard_025_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "ade6a3879a7f53593d13f7158c3f4b516d2d5c70bfd4692bd48badb3b7365c31"
+    },
+    {
+      "filename": "sft_shard_026_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "2dd044409d72ad7bf7c243168c96a6a2823eca075283c574cc25b75754e9c167"
+    },
+    {
+      "filename": "sft_shard_027_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "4eef5bb97a2c7d4764b9af2e3b851b177dc381a7dd7706d2ee43142e4d8fd03e"
+    },
+    {
+      "filename": "sft_shard_028_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "9afb1fa4c0192340542b6609f46c343375c14d4d3d1c20e2365c10c343c1c49a"
+    },
+    {
+      "filename": "sft_shard_029_of_030.jsonl",
+      "record_count": 334,
+      "sha256": "da10861e05bc5785227ba9dc112d46484d26c9b4b05b1515eb6850d4ad9d8727"
+    },
+    {
+      "filename": "sft_shard_030_of_030.jsonl",
+      "record_count": 314,
+      "sha256": "4db98d7f5d17deca161d44673dfce243e06c38bb3cf4ce2c75dd4eac4d64506c"
+    }
+  ]
+}
