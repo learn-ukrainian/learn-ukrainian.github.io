@@ -59,6 +59,26 @@ def test_contains_allows_expanded_explanations():
     )
 
 
+def test_contains_allows_expanded_prompts_and_statements():
+    orig = {"items": [{"prompt": "Ти студент?", "statement": "Він лікар."}]}
+    new = {"items": [{"prompt": "Ти студе́нт? Are you a student?",
+                      "statement": "Він лі́кар. He is a doctor."}]}
+    assert gates.contains(orig, new)
+    assert not gates.contains(
+        {"items": [{"prompt": "Ти студент?"}]},
+        {"items": [{"prompt": "Хто ти?"}]},
+    )
+
+
+def test_contains_allows_short_gloss_and_middle_dot_continuation():
+    assert gates.contains(
+        {"prompt": "Так."}, {"prompt": "Так · Yes."}
+    )
+    assert not gates.contains(
+        {"prompt": "So."}, {"prompt": "Sonar."}
+    )
+
+
 def test_fence_dialogue_counts_as_preserved():
     para = "```text\nМарія: Привіт!\nОленка: Класно!\n```"
     page = (
