@@ -35,7 +35,7 @@ inline:
   - id: act-2
     type: match-up
     title: Що робить ь
-    instruction: Match each word or sign with what the soft sign does.
+    instruction: З'єднай кожне слово з підказкою про м'яки́й знак.
     pairs:
       - left: день
         right: soft [n'] in «день»
@@ -230,50 +230,50 @@ workbook:
         options:
           - "'"
           - ь
-          - без знака
+          - без знака — no sign
       - sentence: комп___ютер
         answer: "'"
         options:
           - "'"
           - ь
-          - без знака
+          - без знака — no sign
       - sentence: ім___я
         answer: "'"
         options:
           - "'"
           - ь
-          - без знака
-      - sentence: У слові мален_кий потрібен ___ . — In the word "мален_кий", ___ is needed.
+          - без знака — no sign
+      - sentence: У слові мален_кий потрібен ___ . — In the word "мален_кий", […] is needed.
         answer: ь
         options:
           - ь
           - "'"
-          - без знака
-      - sentence: У слові цвях правильний вибір — ___ . — In the word "цвях", the correct choice is ___ .
-        answer: без знака
+          - без знака — no sign
+      - sentence: У слові цвях правильний вибір — ___ . — In the word "цвях", the correct choice is […].
+        answer: без знака — no sign
         options:
-          - без знака
+          - без знака — no sign
           - "'"
           - ь
   - type: quiz
     title: Правильна форма
     instruction: Обери правильно написане слово.
     items:
-      - prompt: Сім'я́ — яка форма правильна?
+      - prompt: Сім'я́ — яка́ фо́рма пра́вильна? — Сім'я́ — which form is correct?
         options:
           - text: сім'я́
             correct: true
           - text: сімя
             correct: false
         explanation: Сім'я́ потребує апо́строфа.
-      - prompt: День — яка форма правильна?
+      - prompt: День — яка́ фо́рма пра́вильна? — День — which form is correct?
         options:
           - text: ден
             correct: false
           - text: день
             correct: true
         explanation: День потребує м'якого знака.
-      - prompt: Слово без апо́строфа?
+      - prompt: Сло́во без апо́строфа? — Which word is without an apostrophe?
         options:
           - text: св'ято
             correct: false

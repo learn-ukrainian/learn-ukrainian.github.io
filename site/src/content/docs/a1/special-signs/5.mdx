@@ -85,9 +85,9 @@ do not leave one single letter alone on a line.
 
 Pay attention to the two standard prohibitions when hyphenating words across lines in Ukrainian. The soft sign (**м'яки́й знак**) and the apostrophe (**апо́строф**) are never separated from the preceding consonant. They belong to the letter before them: we hyphenate `паль-ці` (not `пал-ьці`) and `Мар'-яна` (not `Мар-'яна`). Furthermore, a single letter cannot be left alone at the end of a line or carried alone to the next line.
 
-### Пра́ктика перено́су слів
+### Пра́ктика перено́су слів — Hyphenation practice
 
-<DivideWords client:only='react' instruction={"Обери́ підгото́влену моде́ль перено́су."} items={JSON.parse(`[{"word": "Мар'я́на", "answer": "Мар'-яна"}, {"word": "дерев'я́ний", "answer": "дере-в'яний"}, {"word": "бур'я́н", "answer": "бур'-ян"}, {"word": "па́льці", "answer": "паль-ці"}]`)} />
+<DivideWords client:only='react' instruction={"Обери́ підгото́влену моде́ль перено́су. — Choose the prepared hyphenation model."} items={JSON.parse(`[{"word": "Мар'я́на", "answer": "Мар'-яна"}, {"word": "дерев'я́ний", "answer": "дере-в'яний"}, {"word": "бур'я́н", "answer": "бур'-ян"}, {"word": "па́льці", "answer": "паль-ці"}]`)} />
 
 Reading before writing: first recognize the printed word, then copy the sign in
 a notebook cue.
@@ -106,7 +106,7 @@ Notice how common objects follow these exact patterns. A **дерев'я́ний
 
 ### Пра́вила перено́су: нови́й спектр слів — Hyphenation rules: New words
 
-<DivideWords client:only='react' instruction={"Обері́ть пра́вильний варіа́нт перено́су для ко́жного сло́ва."} items={JSON.parse(`[{"word": "вчи́тель", "answer": "вчи-тель"}, {"word": "мале́нький", "answer": "малень-кий"}, {"word": "комп'ю́тер", "answer": "комп'-ютер"}, {"word": "здоро́в'я", "answer": "здо-ров'я"}, {"word": "я́блуко", "answer": "яб-луко"}, {"word": "по́їзд", "answer": "по-їзд"}]`)} />
+<DivideWords client:only='react' instruction={"Обері́ть пра́вильний варіа́нт перено́су для ко́жного сло́ва. — Choose the correct hyphenation option for each word."} items={JSON.parse(`[{"word": "вчи́тель", "answer": "вчи-тель"}, {"word": "мале́нький", "answer": "малень-кий"}, {"word": "комп'ю́тер", "answer": "комп'-ютер"}, {"word": "здоро́в'я", "answer": "здо-ров'я"}, {"word": "я́блуко", "answer": "яб-луко"}, {"word": "по́їзд", "answer": "по-їзд"}]`)} />
 
 ## Да́лі
 
@@ -137,7 +137,7 @@ same six contrast words: **день**, **сім'я́**, **буря́к**, **бу
 
 ### Етике́тні ви́рази та проща́ння — Etiquette formulas and farewells
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "До поба́чення!", "right": "Goodbye!"}, {"left": "На все до́бре!", "right": "All the best!"}, {"left": "Щи́ро дя́кую!", "right": "Thank you very much!"}, {"left": "Будь ла́ска!", "right": "You are welcome! / Please!"}, {"left": "Як спра́ви?", "right": "How are things?"}, {"left": "Чудо́во, дя́кую!", "right": "Wonderful, thank you!"}]`)} instruction={"З'єдна́йте украї́нську фо́рмулу з її́ англі́йським пере́кладом."} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "До поба́чення!", "right": "Goodbye!"}, {"left": "На все до́бре!", "right": "All the best!"}, {"left": "Щи́ро дя́кую!", "right": "Thank you very much!"}, {"left": "Будь ла́ска!", "right": "You are welcome! / Please!"}, {"left": "Як спра́ви?", "right": "How are things?"}, {"left": "Чудо́во, дя́кую!", "right": "Wonderful, thank you!"}]`)} instruction={"З'єдна́йте украї́нську фо́рмулу з її́ англі́йським пере́кладом. — Match the Ukrainian formula with its English translation."} isUkrainian={false} />
 
 ### Етике́тний діало́г: розумі́ння розмо́ви — Etiquette dialogue check
 
@@ -173,7 +173,7 @@ English support after the dialogue:
 
 ### Си́нтез: класифіка́ція за зна́ками — Synthesis: Classification by signs
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Знак Ь (пом'я́кшення)": ["день", "кінь", "сіль", "вчи́тель"], "Апо́строф (розді́льність)": ["сім'я́", "м'я́со", "п'ять", "бур'я́н"], "Бу́кви Ї та Щ (два зву́ки)": ["їжа́к", "по́їзд", "щу́ка", "борщ"]}`)} instruction={"Розподілі́ть слова́ у три гру́пи за ї́хньою фонети́чною структу́рою."} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Знак Ь (пом'я́кшення) — Soft sign Ь (softening)": ["день", "кінь", "сіль", "вчи́тель"], "Апо́строф (розді́льність) — Apostrophe (separation)": ["сім'я́", "м'я́со", "п'ять", "бур'я́н"], "Бу́кви Ї та Щ (два зву́ки) — Letters Ї and Щ (two sounds)": ["їжа́к", "по́їзд", "щу́ка", "борщ"]}`)} instruction={"Розподілі́ть слова́ у три гру́пи за ї́хньою фонети́чною структу́рою. — Sort the words into three groups by their phonetic structure."} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Словник — Vocabulary">
@@ -189,7 +189,7 @@ English support after the dialogue:
 
 <span id="activities"></span>
 
-### Пра́ктика перено́су слів
+### Пра́ктика перено́су слів — Hyphenation practice
 
 *(see lesson, §Перено́с і письмо́)*
 
@@ -209,21 +209,21 @@ English support after the dialogue:
 
 *(see lesson, §Підсу́мок мо́дуля — Module summary)*
 
-### Дода́й знак у нови́х слова́х
+### Дода́й знак у нови́х слова́х — Add a sign in new words
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "бур___ян", "answer": "'", "options": ["'", "ь", "без зна́ка"]}, {"sentence": "комп___ютер", "answer": "'", "options": ["'", "ь", "без зна́ка"]}, {"sentence": "ім___я", "answer": "'", "options": ["'", "ь", "без зна́ка"]}, {"sentence": "У сло́ві мален_кий потрі́бен ___ . — In the word \\"мален_кий\\", ___ is needed.", "answer": "ь", "options": ["ь", "'", "без зна́ка"]}, {"sentence": "У сло́ві цвях пра́вильний ви́бір — ___ . — In the word \\"цвях\\", the correct choice is ___ .", "answer": "без зна́ка", "options": ["без зна́ка", "'", "ь"]}]`)} instruction={"Обери́ ь, апо́строф або́ без зна́ка."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "бур___ян", "answer": "'", "options": ["'", "ь", "без зна́ка — no sign"]}, {"sentence": "комп___ютер", "answer": "'", "options": ["'", "ь", "без зна́ка — no sign"]}, {"sentence": "ім___я", "answer": "'", "options": ["'", "ь", "без зна́ка — no sign"]}, {"sentence": "У сло́ві мален_кий потрі́бен ___ . — In the word \\"мален_кий\\", […] is needed.", "answer": "ь", "options": ["ь", "'", "без зна́ка — no sign"]}, {"sentence": "У сло́ві цвях пра́вильний ви́бір — ___ . — In the word \\"цвях\\", the correct choice is […].", "answer": "без зна́ка — no sign", "options": ["без зна́ка — no sign", "'", "ь"]}]`)} instruction={"Обери́ ь, апо́строф або́ без зна́ка. — Choose ь, an apostrophe, or no sign."} isUkrainian={false} />
 
-### Пра́вильна фо́рма
+### Пра́вильна фо́рма — Correct form
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Сім'я́ — яка́ фо́рма пра́вильна?", "options": [{"text": "сім'я́", "correct": true}, {"text": "сімя", "correct": false}], "explanation": "Сім'я́ потребу́є апо́строфа."}, {"question": "День — яка́ фо́рма пра́вильна?", "options": [{"text": "ден", "correct": false}, {"text": "день", "correct": true}], "explanation": "День потребу́є м'яко́го зна́ка."}, {"question": "Сло́во без апо́строфа?", "options": [{"text": "св'ято", "correct": false}, {"text": "свя́то", "correct": true}], "explanation": "У сло́ві свя́то нема́є апо́строфа."}]`)} instruction={"Обери́ пра́вильно напи́сане сло́во."} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Сім'я́ — яка́ фо́рма пра́вильна? — Сім'я́ — which form is correct?", "options": [{"text": "сім'я́", "correct": true}, {"text": "сімя", "correct": false}], "explanation": "Сім'я́ потребу́є апо́строфа. — Сім'я́ requires an apostrophe."}, {"question": "День — яка́ фо́рма пра́вильна? — День — which form is correct?", "options": [{"text": "ден", "correct": false}, {"text": "день", "correct": true}], "explanation": "День потребу́є м'яко́го зна́ка. — День requires a soft sign."}, {"question": "Сло́во без апо́строфа? — Which word is without an apostrophe?", "options": [{"text": "св'ято", "correct": false}, {"text": "свя́то", "correct": true}], "explanation": "У сло́ві свя́то нема́є апо́строфа. — In the word свя́то there is no apostrophe."}]`)} instruction={"Обери́ пра́вильно напи́сане сло́во. — Choose the correctly spelled word."} isUkrainian={false} />
 
-### За́йве за зна́ком
+### За́йве за зна́ком — Odd sign out
 
-<OddOneOut client:only='react' instruction={"Обери́ сло́во, яке́ не ма́є тако́го са́мого зна́ка, як і́нші."} items={JSON.parse(`[{"words": ["сім'я́", "м'я́со", "п'ять", "буря́к"], "correct": 3, "explanation": "Буря́к без апо́строфа; і́нші слова́ ма́ють апо́строф."}, {"words": ["день", "кінь", "сіль", "свя́то"], "correct": 3, "explanation": "Свя́то без ь; і́нші слова́ ма́ють м'яки́й знак."}, {"words": ["буря́к", "свя́то", "цвях", "бур'я́н"], "correct": 3, "explanation": "Бур'я́н ма́є апо́строф; і́нші слова́ тут без зна́ка."}]`)} />
+<OddOneOut client:only='react' instruction={"Обери́ сло́во, яке́ не ма́є тако́го са́мого зна́ка, як і́нші. — Choose the word that does not have the same sign as the others."} items={JSON.parse(`[{"words": ["сім'я́", "м'я́со", "п'ять", "буря́к"], "correct": 3, "explanation": "Буря́к без апо́строфа; і́нші слова́ ма́ють апо́строф. — Буря́к is without an apostrophe; the other words have an apostrophe."}, {"words": ["день", "кінь", "сіль", "свя́то"], "correct": 3, "explanation": "Свя́то без ь; і́нші слова́ ма́ють м'яки́й знак. — Свя́то is without ь; the other words have a soft sign."}, {"words": ["буря́к", "свя́то", "цвях", "бур'я́н"], "correct": 3, "explanation": "Бур'я́н ма́є апо́строф; і́нші слова́ тут без зна́ка. — Бур'я́н has an apostrophe; the other words here have no sign."}]`)} />
 
 ### Складі́ть односкладо́ві слова́ — Unjumble: Single-syllable words
 
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "д / е / н / ь", "answer": "день"}, {"jumbled": "к / і / н / ь", "answer": "кінь"}, {"jumbled": "с / і / л / ь", "answer": "сіль"}, {"jumbled": "б / о / р / щ", "answer": "борщ"}, {"jumbled": "к / у / щ", "answer": "кущ"}, {"jumbled": "ч / а / с", "answer": "час"}]`)} instruction={"Складі́ть пра́вильні украї́нські слова́ з по́даних лі́тер."} />
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "д / е / н / ь", "answer": "день"}, {"jumbled": "к / і / н / ь", "answer": "кінь"}, {"jumbled": "с / і / л / ь", "answer": "сіль"}, {"jumbled": "б / о / р / щ", "answer": "борщ"}, {"jumbled": "к / у / щ", "answer": "кущ"}, {"jumbled": "ч / а / с", "answer": "час"}]`)} instruction={"Складі́ть пра́вильні украї́нські слова́ з по́даних лі́тер. — Form correct Ukrainian words from the given letters."} />
 
 ### Підсумко́ві те́зи мо́дуля — Final module statements
 

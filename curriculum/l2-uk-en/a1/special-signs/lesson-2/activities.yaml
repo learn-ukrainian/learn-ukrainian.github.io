@@ -167,37 +167,37 @@ workbook:
   title: Вста́вте пропу́щене сло́во — Fill in the blank
   instruction: Fill in the blank with the appropriate word.
   items:
-  - sentence: У ча́шці гаря́чий ___ . — In the cup is hot ___ .
+  - sentence: У ча́шці гаря́чий ___ . — In the cup is hot […].
     answer: чай
     options:
     - чай
     - рис
     - час
-  - sentence: На столі́ лежи́ть сві́же сокови́те ___ . — On the table lies fresh juicy ___ .
+  - sentence: На столі́ лежи́ть сві́же сокови́те ___ . — On the table lies fresh juicy […].
     answer: я́блуко
     options:
     - я́блуко
     - ю́шка
     - єно́т
-  - sentence: У зоопа́рку живе́ смуга́стий ___ . — In the zoo lives a striped ___ .
+  - sentence: У зоопа́рку живе́ смуга́стий ___ . — In the zoo lives a striped […].
     answer: єно́т
     options:
     - єно́т
     - кінь
     - лань
-  - sentence: Сього́дні в селі́ весе́ле ___ . — Today in the village there is a merry ___ .
+  - sentence: Сього́дні в селі́ весе́ле ___ . — Today in the village there is a merry […].
     answer: свя́то
     options:
     - свя́то
     - день
     - чай
-  - sentence: У ба́бці на горо́ді росте́ черво́ний ___ . — In grandma's garden grows red ___ .
+  - sentence: У ба́бці на горо́ді росте́ черво́ний ___ . — In grandma's garden grows red […].
     answer: буря́к
     options:
     - буря́к
     - я́блуко
     - ю́шка
-  - sentence: Наш ___ пока́зує ціка́вий малю́нок. — Our ___ is showing an interesting drawing.
+  - sentence: Наш ___ пока́зує ціка́вий малю́нок. — Our […] is showing an interesting drawing.
     answer: вчи́тель
     options:
     - вчи́тель

@@ -1,8 +1,8 @@
 inline:
 - id: act-5
   type: divide-words
-  title: Пра́ктика перено́су слів
-  instruction: Обери́ підгото́влену моде́ль перено́су.
+  title: Пра́ктика перено́су слів — Hyphenation practice
+  instruction: Обери́ підгото́влену моде́ль перено́су. — Choose the prepared hyphenation model.
   items:
   - word: Мар'я́на
     answer: Мар'-яна
@@ -15,7 +15,7 @@ inline:
 - id: act-502
   type: divide-words
   title: 'Пра́вила перено́су: нови́й спектр слів — Hyphenation rules: New words'
-  instruction: Обері́ть пра́вильний варіа́нт перено́су для ко́жного сло́ва.
+  instruction: Обері́ть пра́вильний варіа́нт перено́су для ко́жного сло́ва. — Choose the correct hyphenation option for each word.
   items:
   - word: вчи́тель
     answer: вчи-тель
@@ -32,7 +32,7 @@ inline:
 - id: act-503
   type: match-up
   title: Етике́тні ви́рази та проща́ння — Etiquette formulas and farewells
-  instruction: З'єдна́йте украї́нську фо́рмулу з її́ англі́йським пере́кладом.
+  instruction: З'єдна́йте украї́нську фо́рмулу з її́ англі́йським пере́кладом. — Match the Ukrainian formula with its English translation.
   pairs:
   - left: До поба́чення!
     right: Goodbye!
@@ -108,95 +108,95 @@ inline:
 - id: act-505
   type: group-sort
   title: 'Си́нтез: класифіка́ція за зна́ками — Synthesis: Classification by signs'
-  instruction: Розподілі́ть слова́ у три гру́пи за ї́хньою фонети́чною структу́рою.
+  instruction: Розподілі́ть слова́ у три гру́пи за ї́хньою фонети́чною структу́рою. — Sort the words into three groups by their phonetic structure.
   groups:
-  - label: Знак Ь (пом'я́кшення)
+  - label: Знак Ь (пом'я́кшення) — Soft sign Ь (softening)
     items:
     - день
     - кінь
     - сіль
     - вчи́тель
-    name: Знак Ь (пом'я́кшення)
-  - label: Апо́строф (розді́льність)
+    name: Знак Ь (пом'я́кшення) — Soft sign Ь (softening)
+  - label: Апо́строф (розді́льність) — Apostrophe (separation)
     items:
     - сім'я́
     - м'я́со
     - п'ять
     - бур'я́н
-    name: Апо́строф (розді́льність)
-  - label: Бу́кви Ї та Щ (два зву́ки)
+    name: Апо́строф (розді́льність) — Apostrophe (separation)
+  - label: Бу́кви Ї та Щ (два зву́ки) — Letters Ї and Щ (two sounds)
     items:
     - їжа́к
     - по́їзд
     - щу́ка
     - борщ
-    name: Бу́кви Ї та Щ (два зву́ки)
+    name: Бу́кви Ї та Щ (два зву́ки) — Letters Ї and Щ (two sounds)
 workbook:
 - id: act-w5
   type: fill-in
-  title: Дода́й знак у нови́х слова́х
-  instruction: Обери́ ь, апо́строф або́ без зна́ка.
+  title: Дода́й знак у нови́х слова́х — Add a sign in new words
+  instruction: Обери́ ь, апо́строф або́ без зна́ка. — Choose ь, an apostrophe, or no sign.
   items:
   - sentence: бур___ян
     answer: ''''
     options:
     - ''''
     - ь
-    - без зна́ка
+    - без зна́ка — no sign
   - sentence: комп___ютер
     answer: ''''
     options:
     - ''''
     - ь
-    - без зна́ка
+    - без зна́ка — no sign
   - sentence: ім___я
     answer: ''''
     options:
     - ''''
     - ь
-    - без зна́ка
-  - sentence: У сло́ві мален_кий потрі́бен ___ . — In the word "мален_кий", ___ is needed.
+    - без зна́ка — no sign
+  - sentence: У сло́ві мален_кий потрі́бен ___ . — In the word "мален_кий", […] is needed.
     answer: ь
     options:
     - ь
     - ''''
-    - без зна́ка
-  - sentence: У сло́ві цвях пра́вильний ви́бір — ___ . — In the word "цвях", the correct choice is ___ .
-    answer: без зна́ка
+    - без зна́ка — no sign
+  - sentence: У сло́ві цвях пра́вильний ви́бір — ___ . — In the word "цвях", the correct choice is […].
+    answer: без зна́ка — no sign
     options:
-    - без зна́ка
+    - без зна́ка — no sign
     - ''''
     - ь
 - id: act-w6
   type: quiz
-  title: Пра́вильна фо́рма
-  instruction: Обери́ пра́вильно напи́сане сло́во.
+  title: Пра́вильна фо́рма — Correct form
+  instruction: Обери́ пра́вильно напи́сане сло́во. — Choose the correctly spelled word.
   items:
-  - prompt: Сім'я́ — яка́ фо́рма пра́вильна?
+  - prompt: Сім'я́ — яка́ фо́рма пра́вильна? — Сім'я́ — which form is correct?
     options:
     - text: сім'я́
       correct: true
     - text: сімя
       correct: false
-    explanation: Сім'я́ потребу́є апо́строфа.
-  - prompt: День — яка́ фо́рма пра́вильна?
+    explanation: Сім'я́ потребу́є апо́строфа. — Сім'я́ requires an apostrophe.
+  - prompt: День — яка́ фо́рма пра́вильна? — День — which form is correct?
     options:
     - text: ден
       correct: false
     - text: день
       correct: true
-    explanation: День потребу́є м'яко́го зна́ка.
-  - prompt: Сло́во без апо́строфа?
+    explanation: День потребу́є м'яко́го зна́ка. — День requires a soft sign.
+  - prompt: Сло́во без апо́строфа? — Which word is without an apostrophe?
     options:
     - text: св'ято
       correct: false
     - text: свя́то
       correct: true
-    explanation: У сло́ві свя́то нема́є апо́строфа.
+    explanation: У сло́ві свя́то нема́є апо́строфа. — In the word свя́то there is no apostrophe.
 - id: act-w7
   type: odd-one-out
-  title: За́йве за зна́ком
-  instruction: Обери́ сло́во, яке́ не ма́є тако́го са́мого зна́ка, як і́нші.
+  title: За́йве за зна́ком — Odd sign out
+  instruction: Обери́ сло́во, яке́ не ма́є тако́го са́мого зна́ка, як і́нші. — Choose the word that does not have the same sign as the others.
   items:
   - words:
     - сім'я́
@@ -204,25 +204,25 @@ workbook:
     - п'ять
     - буря́к
     answer: буря́к
-    explanation: Буря́к без апо́строфа; і́нші слова́ ма́ють апо́строф.
+    explanation: Буря́к без апо́строфа; і́нші слова́ ма́ють апо́строф. — Буря́к is without an apostrophe; the other words have an apostrophe.
   - words:
     - день
     - кінь
     - сіль
     - свя́то
     answer: свя́то
-    explanation: Свя́то без ь; і́нші слова́ ма́ють м'яки́й знак.
+    explanation: Свя́то без ь; і́нші слова́ ма́ють м'яки́й знак. — Свя́то is without ь; the other words have a soft sign.
   - words:
     - буря́к
     - свя́то
     - цвях
     - бур'я́н
     answer: бур'я́н
-    explanation: Бур'я́н ма́є апо́строф; і́нші слова́ тут без зна́ка.
+    explanation: Бур'я́н ма́є апо́строф; і́нші слова́ тут без зна́ка. — Бур'я́н has an apostrophe; the other words here have no sign.
 - id: act-506
   type: unjumble
   title: 'Складі́ть односкладо́ві слова́ — Unjumble: Single-syllable words'
-  instruction: Складі́ть пра́вильні украї́нські слова́ з по́даних лі́тер.
+  instruction: Складі́ть пра́вильні украї́нські слова́ з по́даних лі́тер. — Form correct Ukrainian words from the given letters.
   items:
   - words:
     - д
