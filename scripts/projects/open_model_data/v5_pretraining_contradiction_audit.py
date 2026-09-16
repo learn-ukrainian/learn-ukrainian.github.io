@@ -227,7 +227,8 @@ DISALLOWED_ADVERBS = (
     r"зараз|тепер|скрізь|всюди|навіть|разом|окремо|знову|вже|ще|щоразу|щоденно|"
     r"раніше|потім|тоді|зазвичай|здебільшого|переважно|передусім|насамперед|"
     r"навмисно|випадково|наразі|поки|досі|відтепер|спершу|спочатку|"
-    r"безперечно|дійсно|справді|певно|мабуть|можливо|напевно|очевидно"
+    r"безперечно|дійсно|справді|певно|мабуть|можливо|напевно|очевидно|"
+    r"регулярно|періодично|тривало|активно|завше"
 )
 DISALLOWED_ADVERBS_SET = set(DISALLOWED_ADVERBS.split("|"))
 
@@ -592,8 +593,9 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
 
         # Check replacement / avoidance directives
         # A directive is a contradiction unless it is specifically negated
+        intervening_modifier = r"(?:(?:[«\"“‘\'][^»\"”’\n]+[»\"”’]|[А-Яа-яЇїІіЄєҐґ’'ʼ\w\-]+)\s+){0,3}"
         replace_dirs = [
-            r"(?:слід|варто|потрібно|необхідно|треба|можна)\s+(?:замінити|замінювати|уникати|виправити|виправляти)",
+            rf"(?:слід|варто|потрібно|необхідно|треба|можна)\s+{intervening_modifier}(?:замінити|замінювати|уникати|виправити|виправляти)",
             r"\b(?:замініть|замінюйте|замінити|замінювати|уникайте|уникати|виправте|виправляйте|виправити|виправляти)\b",
             r"(?:потребує|вимагає)\s+(?:заміни|виправлення)",
         ]
@@ -602,7 +604,8 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         adjunct_adverbs = (
             r"(?:тут|зараз|надалі|завжди|теж|також|обов'язково|зовсім|категорично|"
             r"взагалі|безумовно|абсолютно|цілком|повністю|ніколи|ніяк|ніде|анітрохи|більше|"
-            r"постійно|часто|рідко|там|тепер|скрізь|всюди|навіть|знову|вже|ще)"
+            r"постійно|часто|рідко|там|тепер|скрізь|всюди|навіть|знову|вже|ще|"
+            r"регулярно|періодично|тривало|активно|завше)"
         )
         adjunct_re = re.compile(
             rf"^\s*(?:"
@@ -656,9 +659,17 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 )[0]
                 has_pronominal_anaphora = bool(PRONOMINAL_ANAPHORA.search(gov_span))
                 has_quoted_term = bool(re.search(r"[«\"“‘\'][^»\"”’\n]+[»\"”’]", gov_span))
+                has_post_nominal_mention = bool(
+                    re.search(
+                        r"\b(?:слово|слова|слів|термін\w*|вираз\w*|зворот\w*|форм\w*|лексем\w*)\s+"
+                        r"(?:цей|ця|це|ці|цього|цієї|цьому|цій|цим|цими|цих|цю|той|та|те|ті|того|тієї|тому|тій|тим|тими|тих|ту)\b",
+                        gov_span,
+                        re.IGNORECASE,
+                    )
+                )
                 gov_tokens = [normalize_token(t) for t in re.findall(r"[А-Яа-яЇїІіЄєҐґ’'ʼ\w\-]+", gov_span)]
                 has_lexical_obj = any(t and t not in ANAPHORIC_WORDS and t != t_norm for t in gov_tokens)
-                is_anaphoric_obj = has_pronominal_anaphora and not has_quoted_term and not has_lexical_obj
+                is_anaphoric_obj = has_pronominal_anaphora and not has_quoted_term and not has_post_nominal_mention and not has_lexical_obj
 
                 if not is_replacement_dest and not is_anaphoric_obj:
                     # Check if this directive governs an explicit non-target object:
@@ -677,7 +688,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                         has_established_non_target_obj = False
                         for item_m in re.finditer(COORDINATED_ITEM, obj_span_m.group(0), re.IGNORECASE):
                             raw_item = item_m.group(0)
-                            q_match = re.search(r"[«\"“‘\']([^»\"”’\']+)[»\"”\']", raw_item)
+                            q_match = re.search(r"[«\"“‘\']([^»\"”’\']+)[»\"”’]", raw_item)
                             has_classifier = bool(re.match(rf"^\s*{ITEM_CLASSIFIER_REQ}", raw_item, re.IGNORECASE))
                             if q_match:
                                 term = normalize_token(q_match.group(1))
@@ -688,7 +699,9 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                                 is_lexical = has_classifier
                             if term:
                                 dir_objs.append(term)
-                                if term not in ANAPHORIC_WORDS and term != t_norm and (is_lexical or term not in DISALLOWED_ADVERBS_SET):
+                                if term != t_norm and (
+                                    is_lexical or (term not in ANAPHORIC_WORDS and term not in DISALLOWED_ADVERBS_SET)
+                                ):
                                     has_established_non_target_obj = True
                         target_in_objs = (t_norm in dir_objs) or bool(t_token_re.search(obj_span_m.group(0)))
                         if has_established_non_target_obj and not target_in_objs:
@@ -714,21 +727,20 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 if not is_negated:
                     return True
 
-        # Check explicit usage prohibitions on target term (R27-F2, R28-F1, R28-F2):
+        # Check explicit usage prohibitions on target term (R27-F2, R28-F1, R28-F2, R30-F1, R30-F2):
         # Unlike replacement directives (where negation defends target),
         # usage prohibitions (e.g. "не вживайте", "заборонено вживати", "не слід писати")
         # directly condemn the target unless they explicitly govern a different, non-target object.
         usage_infinitives = r"(?:вживати|вжити|використовувати|використати|писати|написати|застосовувати|застосувати)"
         usage_finites = r"(?:вжива\w+|вжий\w*|використову\w+|використай\w*|пиш\w+|напиш\w+|застосову\w+|застосуй\w*)"
-        adverb_filler = rf"(?:(?:теж|також|завжди|обов'язково|зовсім|категорично|безумовно|тут|зараз|надалі|{FOCUSING_PARTICLES}|{DISALLOWED_ADVERBS})\s+)*"
         prohibition_modals = (
             r"(?:не\s+(?:слід|варто|потрібно|необхідно|треба|можна|рекомендовано|рекомендується|"
             r"дозволено|дозволяється|доречно|бажано|годиться)|заборонено|забороняється|не\s+можна)"
         )
         usage_prohibition_patterns = [
-            rf"\b{prohibition_modals}\s+{adverb_filler}{usage_infinitives}\b",
-            rf"\b{usage_infinitives}\s+{adverb_filler}{prohibition_modals}\b",
-            rf"\bне\s+{adverb_filler}{usage_finites}\b",
+            rf"\b{prohibition_modals}\s+{intervening_modifier}{usage_infinitives}\b",
+            rf"\b{usage_infinitives}\s+{intervening_modifier}{prohibition_modals}\b",
+            rf"\bне\s+(?!\b(?:слід|варто|потрібно|необхідно|треба|можна|рекомендовано|дозволено|доречно|бажано|годиться)\b){intervening_modifier}{usage_finites}\b",
         ]
         for upat in usage_prohibition_patterns:
             for match in re.finditer(upat, cl_lower):
@@ -752,9 +764,17 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 )[0]
                 has_pronominal_anaphora = bool(PRONOMINAL_ANAPHORA.search(gov_span))
                 has_quoted_term = bool(re.search(r"[«\"“‘\'][^»\"”’\n]+[»\"”’]", gov_span))
+                has_post_nominal_mention = bool(
+                    re.search(
+                        r"\b(?:слово|слова|слів|термін\w*|вираз\w*|зворот\w*|форм\w*|лексем\w*)\s+"
+                        r"(?:цей|ця|це|ці|цього|цієї|цьому|цій|цим|цими|цих|цю|той|та|те|ті|того|тієї|тому|тій|тим|тими|тих|ту)\b",
+                        gov_span,
+                        re.IGNORECASE,
+                    )
+                )
                 gov_tokens = [normalize_token(t) for t in re.findall(r"[А-Яа-яЇїІіЄєҐґ’'ʼ\w\-]+", gov_span)]
                 has_lexical_obj = any(t and t not in ANAPHORIC_WORDS and t != t_norm for t in gov_tokens)
-                is_anaphoric_obj = has_pronominal_anaphora and not has_quoted_term and not has_lexical_obj
+                is_anaphoric_obj = has_pronominal_anaphora and not has_quoted_term and not has_post_nominal_mention and not has_lexical_obj
 
                 if is_anaphoric_obj:
                     if current_referent == "TARGET":
@@ -762,39 +782,43 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                     continue
 
                 # Check explicit governed objects: e.g. "не вживайте «царинками»" vs "не вживайте слова общий"
-                obj_span_m = re.match(
-                    rf"\s*(?:(?:теж|також|завжди|обов'язково|зовсім|категорично|{FOCUSING_PARTICLES})\s+)?"
-                    rf"{COORDINATED_ITEM}(?:\s*{COORDINATED_SEP}\s*{COORDINATED_ITEM})*",
-                    suffix_core,
-                    re.IGNORECASE,
-                )
-                if obj_span_m:
-                    dir_objs: list[str] = []
-                    has_established_non_target_obj = False
-                    for item_m in re.finditer(COORDINATED_ITEM, obj_span_m.group(0), re.IGNORECASE):
-                        raw_item = item_m.group(0)
-                        q_match = re.search(r"[«\"“‘\']([^»\"”’\']+)[»\"”\']", raw_item)
-                        has_classifier = bool(re.match(rf"^\s*{ITEM_CLASSIFIER_REQ}", raw_item, re.IGNORECASE))
-                        if q_match:
-                            term = normalize_token(q_match.group(1))
-                            is_lexical = True
-                        else:
-                            clean_item = re.sub(rf"^{ITEM_CLASSIFIER}", "", raw_item, flags=re.IGNORECASE).strip()
-                            term = normalize_token(clean_item) if clean_item else ""
-                            is_lexical = has_classifier
-                        if term:
-                            dir_objs.append(term)
-                            if term not in ANAPHORIC_WORDS and term != t_norm and (
-                                is_lexical or (not t_token_re.search(prefix) and term not in DISALLOWED_ADVERBS_SET)
-                            ):
-                                has_established_non_target_obj = True
+                lexical_obj_item = rf"(?:{ITEM_QUOTED}|{ITEM_CLASSIFIER_REQ}[А-Яа-яЇїІіЄєҐґ’'ʼ\w\-]+|{target_item})"
+                prep_prefix_re = re.compile(rf"\b(?:{DISALLOWED_PREPOSITIONS})\s+$", re.IGNORECASE)
 
-                    target_in_objs = (t_norm in dir_objs) or bool(t_token_re.search(obj_span_m.group(0)))
-                    if has_established_non_target_obj and not target_in_objs:
-                        # Prohibition explicitly governs other object(s), not target (e.g. "не вживайте слова общий", "не вживайте слово ніколи")
+                has_established_non_target_obj = False
+                target_in_objs = False
+
+                for obj_m in re.finditer(lexical_obj_item, suffix_after_dir, re.IGNORECASE):
+                    before_obj = suffix_after_dir[:obj_m.start()]
+                    # Check if governed by a preposition (prepositional adjunct, not direct object)
+                    if prep_prefix_re.search(before_obj):
                         continue
-                    if target_in_objs:
-                        return True
+                    # Also check clause boundary before obj
+                    if re.search(r"[.;!?\n]", before_obj):
+                        break
+
+                    raw_item = obj_m.group(0)
+                    q_match = re.search(r"[«\"“‘\']([^»\"”’\']+)[»\"”\']", raw_item)
+                    has_classifier = bool(re.match(rf"^\s*{ITEM_CLASSIFIER_REQ}", raw_item, re.IGNORECASE))
+                    if q_match:
+                        term = normalize_token(q_match.group(1))
+                        is_lexical = True
+                    else:
+                        clean_item = re.sub(rf"^{ITEM_CLASSIFIER}", "", raw_item, flags=re.IGNORECASE).strip()
+                        term = normalize_token(clean_item) if clean_item else ""
+                        is_lexical = has_classifier or (term == t_norm)
+
+                    if term:
+                        if term == t_norm:
+                            target_in_objs = True
+                        elif is_lexical:
+                            has_established_non_target_obj = True
+
+                if has_established_non_target_obj and not target_in_objs:
+                    # Prohibition explicitly governs other object(s), not target (e.g. "не вживайте слова общий", "не вживайте «це»", "не вживайте слово це")
+                    continue
+                if target_in_objs:
+                    return True
 
                 # If target was explicitly fronted before the prohibition and no established non-target object follows in suffix,
                 # the target is the governed object/subject (e.g. "«царинками» не слід вживати регулярно", "«царинками» не слід вживати поряд із «полями»")

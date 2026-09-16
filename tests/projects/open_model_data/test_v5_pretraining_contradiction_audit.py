@@ -3670,3 +3670,195 @@ def test_audit_r29_findings_trailing_modifiers_and_modal_prohibitions(tmp_path: 
     )
     assert passed_ctrl1 is True, "Expected audit pass when classifier-bearing lexical object is prohibited"
     assert data_ctrl1["dpo_contradictions_count"] == 0
+
+
+def test_audit_r30_findings_modifier_placement_and_anaphoric_lexical_objects(tmp_path: Path):
+    """
+    R30 regression tests:
+    1. R30-F1: Explicit prohibitions bypass audit when modifier position changes
+       - "Не слід вживати регулярно «царинками»." -> condemned (True)
+       - "«царинками» не слід регулярно вживати." -> condemned (True)
+    2. R30-F2: Explicit lexical objects discarded when text matches anaphoric vocabulary
+       - "«царинками» — нормативне слово. Не вживайте «це»." -> preserved (False)
+       - "«царинками» — нормативне слово. Не вживайте слово це." -> preserved (False)
+       - "«царинками» — нормативне слово. Уникайте «слово»." -> preserved (False)
+    """
+    # 1. R30-F1 unit probes: modifier position variations in explicit prohibitions
+    assert is_target_condemned_in_text("царинками", "Не слід вживати регулярно «царинками».") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» не слід регулярно вживати.") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» заборонено регулярно вживати.") is True
+    assert is_target_condemned_in_text("царинками", "Не можна ніколи вживати «царинками».") is True
+
+    # 2. R30-F2 unit probes: quoted/classified lexical objects matching anaphoric vocabulary
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Не вживайте «це».") is False
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Не вживайте слово це.") is False
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Уникайте «слово».") is False
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Уникайте «це».") is False
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Замініть слово це.") is False
+
+    # 3. Full audit pipeline tests
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "target_term": "царинками",
+            "category": "dialectal",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sources = tmp_path / "sources.db"
+    conn_s = sqlite3.connect(mock_sources)
+    conn_s.execute("CREATE TABLE textbooks (chunk_id TEXT PRIMARY KEY, text TEXT)")
+    conn_s.commit()
+    conn_s.close()
+    mock_vesum = tmp_path / "vesum.db"
+    conn_v = sqlite3.connect(mock_vesum)
+    conn_v.execute("CREATE TABLE words (lemma TEXT, form TEXT)")
+    conn_v.commit()
+    conn_v.close()
+    mock_sft_clean = tmp_path / "sft_clean"
+    mock_sft_clean.mkdir()
+    (mock_sft_clean / "shard.jsonl").write_text(
+        json.dumps({
+            "target_term": "царинками",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+            "chosen": "Слово «царинками» є питомим.",
+        }) + "\n",
+        encoding="utf-8",
+    )
+
+    # DPO probe 1: R30-F1 trailing object with intervening modifier -> MUST fail audit
+    dpo_fail1 = tmp_path / "dpo_r30_fail1"
+    dpo_fail1.mkdir()
+    (dpo_fail1 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "Не слід вживати регулярно «царинками».",
+            "rejected": "«царинками» — нормативне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_fail1, data_fail1, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_fail1,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r30_fail1.md",
+        output_json=tmp_path / "r30_fail1.json",
+    )
+    assert passed_fail1 is False, "Expected audit failure for intervening modifier before target"
+    assert data_fail1["dpo_contradictions_count"] == 1
+
+    # DPO probe 2: R30-F1 fronted target with intervening modifier -> MUST fail audit
+    dpo_fail2 = tmp_path / "dpo_r30_fail2"
+    dpo_fail2.mkdir()
+    (dpo_fail2 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "«царинками» не слід регулярно вживати.",
+            "rejected": "«царинками» — нормативне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_fail2, data_fail2, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_fail2,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r30_fail2.md",
+        output_json=tmp_path / "r30_fail2.json",
+    )
+    assert passed_fail2 is False, "Expected audit failure for fronted target with intervening modifier"
+    assert data_fail2["dpo_contradictions_count"] == 1
+
+    # DPO control 1: R30-F2 quoted anaphoric vocabulary word -> MUST pass audit
+    dpo_ctrl1 = tmp_path / "dpo_r30_ctrl1"
+    dpo_ctrl1.mkdir()
+    (dpo_ctrl1 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "«царинками» — нормативне слово. Не вживайте «це».",
+            "rejected": "«царинками» — помилка.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_ctrl1, data_ctrl1, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_ctrl1,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r30_ctrl1.md",
+        output_json=tmp_path / "r30_ctrl1.json",
+    )
+    assert passed_ctrl1 is True, "Expected audit pass when quoted term matches anaphoric word"
+    assert data_ctrl1["dpo_contradictions_count"] == 0
+
+    # DPO control 2: R30-F2 classified anaphoric vocabulary word -> MUST pass audit
+    dpo_ctrl2 = tmp_path / "dpo_r30_ctrl2"
+    dpo_ctrl2.mkdir()
+    (dpo_ctrl2 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "«царинками» — нормативне слово. Не вживайте слово це.",
+            "rejected": "«царинками» — помилка.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_ctrl2, data_ctrl2, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_ctrl2,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r30_ctrl2.md",
+        output_json=tmp_path / "r30_ctrl2.json",
+    )
+    assert passed_ctrl2 is True, "Expected audit pass when classified term matches anaphoric word"
+    assert data_ctrl2["dpo_contradictions_count"] == 0
+
+    # DPO control 3: R30-F2 avoidance with quoted anaphoric word -> MUST pass audit
+    dpo_ctrl3 = tmp_path / "dpo_r30_ctrl3"
+    dpo_ctrl3.mkdir()
+    (dpo_ctrl3 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "«царинками» — нормативне слово. Уникайте «слово».",
+            "rejected": "«царинками» — помилка.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_ctrl3, data_ctrl3, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_ctrl3,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r30_ctrl3.md",
+        output_json=tmp_path / "r30_ctrl3.json",
+    )
+    assert passed_ctrl3 is True, "Expected audit pass when avoidance directive targets quoted term"
+    assert data_ctrl3["dpo_contradictions_count"] == 0
