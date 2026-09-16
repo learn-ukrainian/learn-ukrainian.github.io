@@ -155,7 +155,7 @@ CURATED_HETERONYMS_BATCH_7: dict[str, list[dict[str, Any]]] = {
         "classification": "standard",
         "is_russianism": False,
         "russian_shadow": False,
-        "vesum_attested": True
+        "vesum_attested": False
       },
       "pronunciation": {
         "ipa": "[bereˈʒɛnɪj]"
@@ -2198,7 +2198,7 @@ CURATED_HETERONYMS_BATCH_7: dict[str, list[dict[str, Any]]] = {
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ЗА́ЗНАНИЙ, а, е. Дієпр. пас. мин. ч. до зазна́ти. Вона лежала і сподівалася, що воно прийде знов, те чисте, зазнане в юності кохання.",
+        "definition": "ЗА́ЗНАНИЙ, а, е. Дієпр. пас. мин. ч. до зазна́ти. Вона лежала і сподівалася, що воно прийде знов, те чисте, зазнане в дитинстві почуття (Коцюб., 1, 1955, 325).",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський період (СУМ-11)."
@@ -2214,7 +2214,7 @@ CURATED_HETERONYMS_BATCH_7: dict[str, list[dict[str, Any]]] = {
         "classification": "standard",
         "is_russianism": False,
         "russian_shadow": False,
-        "vesum_attested": True
+        "vesum_attested": False
       },
       "pronunciation": {
         "ipa": "[zɐzˈnɑnɪj]"
@@ -2238,7 +2238,7 @@ CURATED_HETERONYMS_BATCH_7: dict[str, list[dict[str, Any]]] = {
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ЗАЗНА́НИЙ, а, е, розм. Який виявляє зазнайство. — Бачились ми не раз і не два. Я була боязка: багатир!.. А він мені, було, й кричить: «Геть з дороги!» Отакий зазнаний був!",
+        "definition": "ЗАЗНА́НИЙ, а, е, розм. Який виявляє зазнайство. — Бачились ми не раз і не два. Я була боязка: багатир!.. А він мені, було, каже, що я горда, що я зазнана (Барв., Опов.., 1902, 386).",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський період (СУМ-11)."

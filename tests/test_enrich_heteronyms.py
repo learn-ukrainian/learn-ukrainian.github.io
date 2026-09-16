@@ -1072,6 +1072,18 @@ def test_batch7_lemmas_not_duplicated_from_earlier_batches():
     assert vyprobuvanyi[0]["heritage_status"]["vesum_attested"] is True
     assert vyprobuvanyi[1]["heritage_status"]["vesum_attested"] is False
 
+    berezhenyi = CURATED_HETERONYMS_BATCH_7["бережений"]
+    assert berezhenyi[0]["heritage_status"]["vesum_attested"] is True
+    assert berezhenyi[1]["heritage_status"]["vesum_attested"] is False
+
+    zaznanyi = CURATED_HETERONYMS_BATCH_7["зазнаний"]
+    assert zaznanyi[0]["heritage_status"]["vesum_attested"] is True
+    assert zaznanyi[1]["heritage_status"]["vesum_attested"] is False
+    assert "дитинстві" in zaznanyi[0]["soviet_colonization_context"]["definition"]
+    assert "юності" not in zaznanyi[0]["soviet_colonization_context"]["definition"]
+    assert "Барв." in zaznanyi[1]["soviet_colonization_context"]["definition"]
+    assert "Геть з дороги" not in zaznanyi[1]["soviet_colonization_context"]["definition"]
+
 
 def test_homonyms_with_numeric_suffixes_and_identical_stress_not_treated_as_heteronyms(monkeypatch):
     """Separate dictionary article numbers from headword before comparing stress (#8039).
