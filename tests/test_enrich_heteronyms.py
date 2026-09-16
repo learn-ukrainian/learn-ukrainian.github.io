@@ -900,6 +900,10 @@ def test_batch7_semantic_and_stress_distinctions():
     assert "correctable" in vyp[0]["gloss"].lower() or "rectifiable" in vyp[0]["gloss"].lower()
     assert vyp[1]["headword"] == "виправни́й"
     assert "correctional" in vyp[1]["gloss"].lower() or "penal" in vyp[1]["gloss"].lower()
+    assert vyp[1]["soviet_colonization_context"] is not None
+    assert "Виправна колонія" in vyp[1]["soviet_colonization_context"]["definition"]
+    assert "виправно-трудовий" not in vyp[1]["soviet_colonization_context"]["definition"]
+    assert vyp[1]["soviet_colonization_context"]["keywords"] == ["виправна колонія"]
 
     # відбігати: відбі́гати (finish running) vs відбіга́ти (run away)
     vidb = enrich_heteronyms.build_heteronyms_for_lemma("відбігати")
