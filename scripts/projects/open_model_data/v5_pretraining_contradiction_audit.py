@@ -182,6 +182,9 @@ NEGATION_DIRECTIVE_RE = re.compile(
 ADVERSATIVE_CONJUNCTIONS = r"\b(?:але|проте|однак|а|бо|тому що|оскільки|якщо|якби|хоч|хоча|аби|коли)\b"
 COORDINATING_CONJUNCTIONS = r"\b(?:і|й|та)\b"
 CONJUNCTIONS = rf"(?:{ADVERSATIVE_CONJUNCTIONS}|{COORDINATING_CONJUNCTIONS})"
+PARENTHETICAL_WORDS = (
+    r"(?:безумовно|звісно|безперечно|будь ласка|напевне|певне|може|мабуть|справді|правда|як відомо|зокрема|наприклад)"
+)
 
 
 def find_clause_start_in_prefix(prefix: str, dir_match: re.Match) -> int:
@@ -190,23 +193,31 @@ def find_clause_start_in_prefix(prefix: str, dir_match: re.Match) -> int:
     dir_word = dir_match.group(0).lower()
     d_prefix = prefix[:dir_start]
 
-    # If the directive is an infinitive, check if it is governed by a preceding modal across parentheticals
-    # (e.g. "Не слід, безумовно, вживати").
-    # This only applies if:
-    # 1. dir_word is an infinitive
-    # 2. between the modal and the infinitive there is NO other verb and NO clause conjunction
+    # If the directive is an infinitive, check if it is governed by a preceding modal auxiliary,
+    # either across parentheticals ("Не слід, безумовно, вживати") or across coordinated infinitives
+    # ("Не слід вживати «добрий» і використовувати «гарний»")
     search_prefix_end = dir_start
     if re.fullmatch(DIRECTIVE_INFINITIVES, dir_word, re.IGNORECASE):
         modal_matches = list(re.finditer(rf"\b{DIRECTIVE_MODALS}\b", d_prefix, re.IGNORECASE))
         if modal_matches:
             last_modal = modal_matches[-1]
             between = d_prefix[last_modal.end() :]
-            # Must not contain another verb or clause boundary
-            if not ANY_DIRECTIVE_RE.search(between) and not re.search(
-                rf"\b{ADVERSATIVE_CONJUNCTIONS}\b|\b{COORDINATING_CONJUNCTIONS}\s+(?:не\b|ні\b|ані\b|{DIRECTIVE_VERBS}\b|{DIRECTIVE_MODALS}\b)",
-                between,
-                re.IGNORECASE,
-            ):
+            has_adversative = bool(
+                re.search(
+                    rf"(?:[,;:\u2014\u2013]*\s*{ADVERSATIVE_CONJUNCTIONS}\b|[;:\u2014\u2013]+)",
+                    between,
+                    re.IGNORECASE,
+                )
+            )
+            has_new_neg = bool(
+                re.search(
+                    rf"\b{COORDINATING_CONJUNCTIONS}\s+(?:не|ні|ані)\b",
+                    between,
+                    re.IGNORECASE,
+                )
+            )
+            has_finite = bool(re.search(rf"\b{DIRECTIVE_FINITES}\b", between, re.IGNORECASE))
+            if not has_adversative and not has_new_neg and not has_finite:
                 search_prefix_end = last_modal.start()
 
     search_prefix = prefix[:search_prefix_end]
@@ -227,14 +238,21 @@ def find_clause_start_in_prefix(prefix: str, dir_match: re.Match) -> int:
         re.IGNORECASE,
     ):
         after_conj = prefix[m.end() :].lstrip()
-        if re.search(rf"^(?:не\b|ні\b|ані\b|{DIRECTIVE_VERBS}\b|{DIRECTIVE_MODALS}\b)", after_conj, re.IGNORECASE):
+        is_finite_or_modal = bool(
+            re.search(rf"^(?:не\b|ні\b|ані\b|{DIRECTIVE_FINITES}\b|{DIRECTIVE_MODALS}\b)", after_conj, re.IGNORECASE)
+        )
+        is_unbound_infinitive = (
+            search_prefix_end == dir_start
+            and bool(re.search(rf"^{DIRECTIVE_INFINITIVES}\b", after_conj, re.IGNORECASE))
+        )
+        if is_finite_or_modal or is_unbound_infinitive:
             boundaries.append(m.end())
 
     # 3. Commas: if preceded by another directive in search_prefix AND followed by directive/negation in prefix
     for m in re.finditer(r",\s*", search_prefix):
         if ANY_DIRECTIVE_RE.search(search_prefix[: m.start()]):
             after_comma = prefix[m.end() :].lstrip()
-            if re.search(rf"^(?:не\b|ні\b|ані\b|{DIRECTIVE_VERBS}\b|{DIRECTIVE_MODALS}\b)", after_comma, re.IGNORECASE):
+            if re.search(rf"^(?:не\b|ні\b|ані\b|{DIRECTIVE_FINITES}\b|{DIRECTIVE_MODALS}\b)", after_comma, re.IGNORECASE):
                 boundaries.append(m.end())
 
     return max(boundaries)
@@ -371,19 +389,42 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 continue
 
         # Order 2: directive follows zm (e.g. "замість <target> не слід вживати...")
-        dir_in_suffix = next(ANY_DIRECTIVE_RE.finditer(suffix), None)
-        if dir_in_suffix is not None:
-            cl_end = find_clause_end_in_suffix(suffix, dir_in_suffix.end())
+        # Bound the directive search to the clause containing замість (Astra R17 Finding 2).
+        directive_found = False
+        for d_m in ANY_DIRECTIVE_RE.finditer(suffix):
+            between_zm_and_dir = suffix[: d_m.start()]
+            if re.search(
+                rf"(?:[,;:\u2014\u2013]*\s*{ADVERSATIVE_CONJUNCTIONS}\b|[;:]+)",
+                between_zm_and_dir,
+                re.IGNORECASE,
+            ):
+                break
+            if re.search(rf"\b{COORDINATING_CONJUNCTIONS}\b", between_zm_and_dir, re.IGNORECASE):
+                break
+            clean_between = re.sub(
+                rf",?\s*{PARENTHETICAL_WORDS}\s*,?", "", between_zm_and_dir, flags=re.IGNORECASE
+            ).strip()
+            if "," in clean_between:
+                parts = clean_between.split(",", 1)
+                if parts[0].strip() and not re.search(r"^(?:не|ні|ані)$", parts[0].strip(), re.IGNORECASE):
+                    break
+
+            directive_found = True
+            cl_end = find_clause_end_in_suffix(suffix, d_m.end())
             clause_span = suffix[:cl_end].lower()
 
             is_negated = bool(NEGATION_DIRECTIVE_RE.search(clause_span))
             if not is_negated:
                 return True
             else:
-                continue
+                # Negated directive in this clause defends target; do not look for later directives
+                break
+
+        if directive_found:
+            continue
 
         # Check em-dash shorthand (e.g. "замість <target> — <replacement>")
-        dash_m = re.match(r"^\s*(?:—|--)\s*[«\"“‘\']?[^»\"”’\']+[»\"”’\']?", suffix)
+        dash_m = re.match(r"^\s*(?:—|--)\s*[«\"“‘\']?([А-Яа-яЇїІіЄєҐґ’'ʼ\w\s]+)[»\"”’\']?", suffix)
         if dash_m:
             return True
 
