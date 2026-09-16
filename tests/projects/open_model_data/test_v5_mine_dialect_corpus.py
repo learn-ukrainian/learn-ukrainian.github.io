@@ -704,11 +704,16 @@ def test_canonical_source_work_equivalence_and_year_preservation() -> None:
         ("Коб.,ІІІ,1956,19", "Коб., III, 1956, 466"),
         # 6. Period instead of comma before page number
         ("Вишня, II, 1956. 145", "Вишня, II, 1956, 131"),
-        # 7. Nomys proverb number stripping with year preservation
+        # 7. Nomys proverb number stripping with year preservation (including period after №)
         ("Номис, 1864, .№ 1334", "Номис, 1864, № 10060"),
-        # 8. Grinchenko page stripping vs plain volume
+        ("(Номис, 1864, №. 3788)", "Номис, 1864, № 10060"),
+        ("(Номис, 1864, №. 3788)", "Номис, 1864, № 2062"),
+        # 8. Grinchenko page stripping vs plain volume and Arabic vs Roman volume with page
         ("Чуб. V 818", "Чуб. V"),
+        ("Чуб. 5 818", "Чуб. V 818"),
         ("Чуб. 2", "Чуб. II"),
+        # 9. Cyrillic lookalikes in Roman numerals with pre-1860 OCR typo correction
+        ("Фр., VІІ, 1851, 10", "Фр., VII, 1951, 10"),
     ]
 
     for cit_a, cit_b in equivalent_pairs:

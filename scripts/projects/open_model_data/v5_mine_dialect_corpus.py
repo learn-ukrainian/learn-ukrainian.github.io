@@ -484,45 +484,46 @@ def canonical_source_work(cit: str, collector: str = "") -> str:
     # Normalize dot followed by number at end: e.g. "1956. 145" -> "1956, 145"
     s = re.sub(r"(\b\d{4})\.\s*(\d+)\.?$", r"\1, \2", s)
 
-    # Strip Nomys proverb numbers (strictly requiring №): e.g. ", № 10060", ", .№ 1334", " № 2062"
-    s = re.sub(r"(?:,\s*\.?№\s*|\s+№\s*)\d+\.?$", "", s).strip()
+    # Strip Nomys proverb numbers (strictly requiring №): e.g. ", № 10060", ", .№ 1334", ", №. 3788", " № 2062"
+    s = re.sub(r"(?:,\s*|\s+)\.?№\.?\s*\d+\.?$", "", s).strip()
 
-    # Scope OCR typographical year corrections strictly to documented source/volume editions
-    if "Чуб" in s and re.search(r"\bV\b", s, re.IGNORECASE):
-        s = re.sub(r"\b1847\b", "1874", s)
-    if "Фр" in s and re.search(r"\bVII\b", s, re.IGNORECASE):
-        s = re.sub(r"\b1851\b", "1951", s)
-    if "Фр" in s and re.search(r"\bVIII\b", s, re.IGNORECASE):
-        s = re.sub(r"\b1852\b", "1952", s)
-        s = re.sub(r"\b19Г,\s*2\b", "1952", s)
-
-    # Strip trailing page numbers FIRST before numeral normalization:
-    # A. SUM-11 format: Year followed by Page (e.g. ", 1956, 9" -> ", 1956", ", 1956, 80" -> ", 1956")
-    s = re.sub(r"(,\s*(?:18\d\d|19\d\d|20\d\d))(?:,\s*(?:с\.\s*)?|\.\s*|\s+)\d+(?:-\d+)?\.?$", r"\1", s).strip()
-
-    # B. Grinchenko format: Roman numeral volume followed by page (e.g. "Чуб. V 818" -> "Чуб. V")
-    s = re.sub(r"(\b[IІVУВХXLCDMіувхсlcdm]+\b)\s+\d+\.?$", r"\1", s).strip()
-
-    # C. Zhelekhivsky format: "Желех. 6" -> "Желех."
-    s = re.sub(r"^(Желех\.)\s+\d+\.?$", r"\1", s).strip()
-
-    # Standardize Arabic numeral volume fields in SUM-11 format: ", 1, 1955" -> ", I, 1955"
-    s = re.sub(r",\s*([1-9]|10)\s*,", lambda m: f", {ARABIC_TO_ROMAN[m.group(1)]},", s)
-
-    # Standardize Arabic numeral volumes in Grinchenko format: "Чуб. 2" -> "Чуб. II", "Чуб. 5" -> "Чуб. V"
-    s = re.sub(
-        r"\b(Чуб\.|Котл\.|Федьк\.|Шух\.|Шейк\.|Харьк\.)\s*([1-9]|10)\b",
-        lambda m: f"{m.group(1)} {ARABIC_TO_ROMAN[m.group(2)]}",
-        s,
-    )
-
-    # Convert Cyrillic lookalikes in Roman numerals to Latin
+    # 1. Volume normalization FIRST (so OCR rules and page-stripping see canonical Roman volumes):
+    # A. Convert Cyrillic lookalikes in Roman numerals to Latin
     def norm_roman(m: re.Match) -> str:
         tok = m.group(1)
         table = str.maketrans("ІіХхСсУуВв", "IiXxCcVvVv")
         return tok.translate(table).upper()
 
     s = re.sub(r"(?<=[,\s])([IІVУВХXLCDMіувхсlcdm]+)(?=[,\s\.]|$)", norm_roman, s)
+
+    # B. Standardize Arabic numeral volume fields in SUM-11 format: ", 1, 1955" -> ", I, 1955"
+    s = re.sub(r",\s*([1-9]|10)\s*,\s*(?=(?:18|19|20)\d{2})", lambda m: f", {ARABIC_TO_ROMAN[m.group(1)]}, ", s)
+
+    # C. Standardize Arabic numeral volumes in Grinchenko format: "Чуб. 2" -> "Чуб. II", "Чуб. 5 818" -> "Чуб. V 818"
+    s = re.sub(
+        r"\b(Чуб\.|Котл\.|Федьк\.|Шух\.|Шейк\.|Харьк\.)\s*([1-9]|10)\b",
+        lambda m: f"{m.group(1)} {ARABIC_TO_ROMAN[m.group(2)]}",
+        s,
+    )
+
+    # 2. Scope OCR typographical year corrections strictly to documented source/volume editions:
+    if ("Чуб" in s or "Чубинський" in collector) and re.search(r"\bV\b", s):
+        s = re.sub(r"\b1847\b", "1874", s)
+    if ("Фр" in s or "Франко" in collector) and re.search(r"\bVII\b", s):
+        s = re.sub(r"\b1851\b", "1951", s)
+    if ("Фр" in s or "Франко" in collector) and re.search(r"\bVIII\b", s):
+        s = re.sub(r"\b1852\b", "1952", s)
+        s = re.sub(r"\b19Г,\s*2\b", "1952", s)
+
+    # 3. Strip trailing page numbers (after volume normalization and OCR):
+    # A. SUM-11 format: Year followed by Page (e.g. ", 1956, 9" -> ", 1956", ", 1956, 80" -> ", 1956")
+    s = re.sub(r"(,\s*(?:18\d\d|19\d\d|20\d\d))(?:,\s*(?:с\.\s*)?|\.\s*|\s+)\d+(?:-\d+)?\.?$", r"\1", s).strip()
+
+    # B. Grinchenko format: Roman numeral volume followed by page (e.g. "Чуб. V 818" -> "Чуб. V")
+    s = re.sub(r"(\b[IVXLCDM]+\b)\s+\d+\.?$", r"\1", s).strip()
+
+    # C. Zhelekhivsky format: "Желех. 6" -> "Желех."
+    s = re.sub(r"^(Желех\.)\s+\d+\.?$", r"\1", s).strip()
 
     s = s.strip(" .,")
     return f"{collector}:{s}" if collector else s

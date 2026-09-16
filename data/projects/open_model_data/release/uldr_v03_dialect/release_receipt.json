@@ -2,11 +2,11 @@
   "schema_version": "v1_dialect_multizone_release_receipt",
   "issue": 8102,
   "parent_epic": 6321,
-  "created_at": "2026-09-16T12:30:33.140376+00:00",
+  "created_at": "2026-09-16T12:36:49.800024+00:00",
   "git_commit": "gemini/8102-dialect-mining",
   "evaluation_benchmark": {
     "file_path": "data/projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
-    "sha256": "ac2919e216a75c557c866094d9be01eac9e04266fa12d3738d49f526b742a4a2",
+    "sha256": "ab444fdc9f2563aa261713e3c3f4712142daa2889626d9cabf105d9195ddc085",
     "total_cases": 1500,
     "preserve_cases": 998,
     "mixed_error_cases": 502,
