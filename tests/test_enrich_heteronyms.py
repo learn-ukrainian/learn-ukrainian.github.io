@@ -2529,18 +2529,27 @@ def test_batch12_semantic_and_stress_distinctions():
     assert var_становий[0]["headword"] == "ста́новий"
     assert var_становий[1]["headword"] == "ста́нови́й"
     assert "суспільн" in var_становий[1]["short_label"] or "стан" in var_становий[1]["short_label"]
+    assert "осьов" not in var_становий[0]["distinction_note"]
+    assert "осьов" not in var_становий[1]["distinction_note"]
+    assert "соціальн" in var_становий[0]["distinction_note"]
+    assert "граматичн" in var_становий[1]["distinction_note"]
     assert var_становий[1]["soviet_colonization_context"]["sovietization_risk"] == 1
     assert "кпрс" in var_становий[1]["soviet_colonization_context"]["keywords"]
     assert var_становий[1]["pre_soviet_witness"] is not None
     assert "Грінченко" in var_становий[1]["pre_soviet_witness"]["witness"]
 
-    # 18. степний: сте́пний vs степни́й (authentic folk-poetic variant of степовий)
+    # 18. степний: сте́пний (capable/talented) vs степни́й (steppe-related)
     var_степний = enrich_heteronyms.build_heteronyms_for_lemma("степний")
     assert var_степний is not None and len(var_степний) == 2
     assert var_степний[0]["headword"] == "сте́пний"
     assert var_степний[1]["headword"] == "степни́й"
-    assert var_степний[0]["pre_soviet_witness"] is None
+    assert "здібний" in var_степний[0]["short_label"] or "тямущий" in var_степний[0]["short_label"]
+    assert "степов" in var_степний[1]["short_label"]
+    assert var_степний[0]["pre_soviet_witness"] is not None
+    assert "Грінченко" in var_степний[0]["pre_soviet_witness"]["witness"]
     assert var_степний[1]["pre_soviet_witness"] is None
+    assert "степни́й" in var_степний[0]["distinction_note"]
+    assert "сте́пний" in var_степний[1]["distinction_note"]
 
     # 19. стовпище: сто́впище (crowd, throng) vs стовпи́ще (giant post)
     var_стовпище = enrich_heteronyms.build_heteronyms_for_lemma("стовпище")
@@ -2604,6 +2613,8 @@ def test_batch12_semantic_and_stress_distinctions():
     assert var_тамбур[0]["headword"] == "та́мбур"
     assert var_тамбур[1]["headword"] == "тамбу́р"
     assert "барабан" in var_тамбур[1]["short_label"]
+    assert "тамбу́ра" in var_тамбур[1]["distinction_note"]
+    assert "тамбура́" not in var_тамбур[1]["distinction_note"]
     assert var_тамбур[0]["pre_soviet_witness"] is None
     assert var_тамбур[1]["pre_soviet_witness"] is None
     assert var_тамбур[0]["morphology"]["paradigm"]["cases"]["називний"]["singular"] == "та́мбур"

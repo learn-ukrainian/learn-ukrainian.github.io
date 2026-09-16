@@ -1488,7 +1488,7 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {
             "stress": {"form": "ста́новий", "source": "ВТС", "url": "https://slovnyk.me/dict/vts/становий"},
             "morphology": {"pos": "прикметник", "paradigm": {"kind": "adjective"}},
             "distinction_note": "Спеціальний мовознавчий термін: стосовний до категорії стану дієслова (становий "
-            "суфікс, станові відношення). Не плутати з осьовим або соціальним «ста́нови́й».",
+            "суфікс, станові відношення). Не плутати з соціальним «ста́нови́й».",
             "meaning": {"definitions": ["Стосовний до граматичного стану дієслова."], "source": "ВТС"},
             "soviet_colonization_context": {
                 "source": "СУМ-11 (1970–1980)",
@@ -1517,7 +1517,7 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {
             "morphology": {"pos": "прикметник", "paradigm": {"kind": "adjective"}},
             "distinction_note": "Історичний та соціологічний термін: зумовлений поділом суспільства на стани "
             "(станові привілеї, станова нерівність, станова солідарність). Не плутати з "
-            "граматичним станом дієслова «ста́новий» або головним/опорним «станови́й».",
+            "граматичним станом дієслова «ста́новий».",
             "meaning": {
                 "definitions": ["Стосовний до суспільного стану; зумовлений приналежністю до певного стану."],
                 "source": "ВТС",
@@ -1593,8 +1593,8 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {
     "степний": [
         {
             "headword": "сте́пний",
-            "short_label": "степовий, притаманний широкому степу (нар.-поет., фольк.)",
-            "gloss": "steppe, prairial (folk-poetic, authentic)",
+            "short_label": "розм. здібний, тямущий, здатний до чого-небудь",
+            "gloss": "capable, talented, adept, skillful (colloq.)",
             "pos": "adj",
             "cefr": "B2",
             "heritage_status": {
@@ -1606,9 +1606,8 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {
             "pronunciation": {"ipa": "[ˈstɛpnɪj]"},
             "stress": {"form": "сте́пний", "source": "ВТС", "url": "https://slovnyk.me/dict/vts/степний"},
             "morphology": {"pos": "прикметник", "paradigm": {"kind": "adjective"}},
-            "distinction_note": "Поетична й народнопісенна форма до «степовий» («степний вітер, орел степний»). Не "
-            "плутати з акцентним варіантом «степни́й».",
-            "meaning": {"definitions": ["Те саме, що степови́й (народнопоетичне)."], "source": "ВТС"},
+            "distinction_note": "Розмовний прикметник: здібний, тямущий, здатний до якоїсь справи («до всього степна», наголос на корені: сте́пний). Не плутати зі степовим «степни́й».",
+            "meaning": {"definitions": ["Розм. Те саме, що зді́бний (тямущий, здатний до чого-небудь)."], "source": "ВТС"},
             "soviet_colonization_context": {
                 "source": "СУМ-11 (1970–1980)",
                 "definition": "СТЕ́ПНИЙ, а, е, розм. Те саме, що здíбний. — Старша "
@@ -1619,12 +1618,18 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {
                 "historical_note": "Зафіксовано в радянський період (СУМ-11). Наведено "
                 "для лексикографічної прозорості.",
             },
-            "pre_soviet_witness": None,
+            "pre_soviet_witness": {
+                "witness": "Грінченко (1907–1909)",
+                "quote": "Степний, -а, -е. Способный, умеющій. Моя ще цицьку тіки сце, а їсти не степна. Канев. у.",
+                "historical_note": "Автентичне народне мововживання, зафіксоване Борисом "
+                "Грінченком в умовах дії антиукраїнських імперських указів "
+                "(Валуєвського циркуляра 1863 р. та Емського указу 1876 р.).",
+            },
         },
         {
             "headword": "степни́й",
-            "short_label": "степовий (діал., фольк., варіантний кінцевий наголос)",
-            "gloss": "steppe-dwelling, wild steppe (dialectal/folk, end-stressed)",
+            "short_label": "рідко, поет. те саме, що степовий (пов'язаний зі степом)",
+            "gloss": "steppe-related, prairial (rare, poetic)",
             "pos": "adj",
             "cefr": "B2",
             "heritage_status": {
@@ -1636,9 +1641,8 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {
             "pronunciation": {"ipa": "[stɛpˈnɪj]"},
             "stress": {"form": "степни́й", "source": "ВТС", "url": "https://slovnyk.me/dict/vts/степний"},
             "morphology": {"pos": "прикметник", "paradigm": {"kind": "adjective"}},
-            "distinction_note": "Кінцевонаголошений варіант у діалектному та пісенному вжитку. Не плутати з "
-            "кореневим наголосом «сте́пний».",
-            "meaning": {"definitions": ["Те саме, що степови́й (варіантний наголос)."], "source": "ВТС"},
+            "distinction_note": "Рідкісний поетичний прикметник: стосовний до степу, степовий («степні лісосмуги», наголос на закінченні: степни́й). Не плутати зі здібним/тямущим «сте́пний».",
+            "meaning": {"definitions": ["Рідко. Те саме, що степови́й."], "source": "ВТС"},
             "soviet_colonization_context": {
                 "source": "СУМ-11 (1970–1980)",
                 "definition": "СТЕПНИ́Й, а́, е́, рідко. Те саме, що степови́й. А навколо "
@@ -2350,8 +2354,8 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {
                     },
                 },
             },
-            "distinction_note": "Музичний історичний термін: старовинний барабан (наголос на суфіксі: тамбу́р, "
-            "тамбура́). Не плутати з вагонним майданчиком або вишиванням петельками «та́мбур».",
+            "distinction_note": "Музичний історичний термін: старовинний барабан (наголос на другому складі: тамбу́р, "
+            "тамбу́ра). Не плутати з вагонним майданчиком або вишиванням петельками «та́мбур».",
             "meaning": {"definitions": ["Муз., заст. Барабан."], "source": "ВТС"},
             "soviet_colonization_context": {
                 "source": "СУМ-11 (1970–1980)",
