@@ -1681,6 +1681,7 @@ def test_batch10_semantic_and_stress_distinctions():
     mag = enrich_heteronyms.build_heteronyms_for_lemma("магістерський")
     assert mag is not None and len(mag) == 2
     assert mag[0]["headword"] == "магі́стерський"
+    assert mag[0]["pronunciation"]["ipa"] == "[mɐˈɦistɛrsʲkɪj]"
     assert "master" in mag[0]["gloss"].lower() and "chivalric" in mag[0]["gloss"].lower()
     assert mag[1]["headword"] == "магісте́рський"
     assert "academic" in mag[1]["gloss"].lower() or "degree" in mag[1]["gloss"].lower()
@@ -1697,6 +1698,8 @@ def test_batch10_semantic_and_stress_distinctions():
     nag = enrich_heteronyms.build_heteronyms_for_lemma("нагніт")
     assert nag is not None and len(nag) == 2
     assert nag[0]["headword"] == "на́гніт"
+    assert nag[0]["soviet_colonization_context"]["sovietization_risk"] == 1
+    assert "глитай" in nag[0]["soviet_colonization_context"]["keywords"]
     assert "oppression" in nag[0]["gloss"].lower() or "tyranny" in nag[0]["gloss"].lower()
     assert nag[1]["headword"] == "нагні́т"
     assert "gall" in nag[1]["gloss"].lower() or "sore" in nag[1]["gloss"].lower() or "withers" in nag[1]["gloss"].lower()
@@ -1741,13 +1744,15 @@ def test_batch10_semantic_and_stress_distinctions():
     assert nevy[1]["headword"] == "невигі́дність"
     assert "unprofitability" in nevy[1]["gloss"].lower() or "disadvantage" in nevy[1]["gloss"].lower()
 
-    # нівідки: ні́відки vs ніві́дки (adverb variants)
+    # нівідки: ні́відки (absence of source, dial.) vs ніві́дки (from no place, dial./lit.)
     niv = enrich_heteronyms.build_heteronyms_for_lemma("нівідки")
     assert niv is not None and len(niv) == 2
     assert niv[0]["headword"] == "ні́відки"
     assert niv[0]["pos"] == "adv"
+    assert "source" in niv[0]["gloss"].lower() or "obtain" in niv[0]["gloss"].lower() or "nowhere to get" in niv[0]["gloss"].lower()
     assert niv[1]["headword"] == "ніві́дки"
     assert niv[1]["pos"] == "adv"
+    assert "no place" in niv[1]["gloss"].lower() or "nowhere" in niv[1]["gloss"].lower()
 
     # обрость: о́брость (biofouling/water organisms) vs обро́сть (young shoots/offspring)
     obr = enrich_heteronyms.build_heteronyms_for_lemma("обрость")
@@ -1757,13 +1762,13 @@ def test_batch10_semantic_and_stress_distinctions():
     assert obr[1]["headword"] == "обро́сть"
     assert "shoots" in obr[1]["gloss"].lower() or "offspring" in obr[1]["gloss"].lower()
 
-    # перекочування: переко́чування (rolling across) vs перекочува́ння (rumbling thunder/waves)
+    # перекочування: переко́чування (rolling across) vs перекочува́ння (relocation / nomadic migration)
     per = enrich_heteronyms.build_heteronyms_for_lemma("перекочування")
     assert per is not None and len(per) == 2
     assert per[0]["headword"] == "переко́чування"
     assert "rolling" in per[0]["gloss"].lower()
     assert per[1]["headword"] == "перекочува́ння"
-    assert "rumbling" in per[1]["gloss"].lower() or "prolonged" in per[1]["gloss"].lower()
+    assert "relocation" in per[1]["gloss"].lower() or "migration" in per[1]["gloss"].lower()
 
     # переплавний: перепла́вний (Mid-Pentecost) vs переплавни́й (remelted/smelted)
     pep = enrich_heteronyms.build_heteronyms_for_lemma("переплавний")
@@ -1861,13 +1866,13 @@ def test_batch10_semantic_and_stress_distinctions():
     assert pzb[1]["headword"] == "позбіга́ти"
     assert "drain" in pzb[1]["gloss"].lower() or "gather" in pzb[1]["gloss"].lower()
 
-    # позорювати: позо́рювати (plough fields) vs позорюва́ти (gaze at stars)
+    # позорювати: позо́рювати (plough fields) vs позорюва́ти (spend night outdoors / dawn sleep)
     pzo = enrich_heteronyms.build_heteronyms_for_lemma("позорювати")
     assert pzo is not None and len(pzo) == 2
     assert pzo[0]["headword"] == "позо́рювати"
     assert "plough" in pzo[0]["gloss"].lower()
     assert pzo[1]["headword"] == "позорюва́ти"
-    assert "stars" in pzo[1]["gloss"].lower()
+    assert "outdoors" in pzo[1]["gloss"].lower() or "dawn" in pzo[1]["gloss"].lower() or "night" in pzo[1]["gloss"].lower()
 
     # покрапати: покра́пати (perf., drizzle for a while) vs покрапа́ти (imperf., drip intermittently)
     pkr = enrich_heteronyms.build_heteronyms_for_lemma("покрапати")

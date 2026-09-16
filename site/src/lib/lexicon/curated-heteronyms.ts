@@ -28437,7 +28437,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "vesum_attested": true
       },
       "pronunciation": {
-        "ipa": "[mɐˈɦisтɛrsʲkɪj]"
+        "ipa": "[mɐˈɦistɛrsʲkɪj]"
       },
       "stress": {
         "form": "магі́стерський",
@@ -28737,9 +28737,12 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
         "definition": "НА́ГНІТ, у, ч., діал. Гноблення. В часах пониження й неволі, І нагніту, і темноти.. Родився, ріс і виріс ти (Фр., X, 1954, 265); Середняки, збуваючись глитайського нагніту, стали поводитися вільніше (Епік, Тв., 1958, 235).",
-        "sovietization_risk": 0,
-        "keywords": [],
-        "historical_note": "Зафіксовано в радянський період (СУМ-11). Наведено для лексикографічної прозорості."
+        "sovietization_risk": 1,
+        "keywords": [
+          "глитай",
+          "середняк"
+        ],
+        "historical_note": "Радянський академічний словник СУМ-11 ілюструє діалектне слово через класово-ідеологічне кліше радянської пропаганди про «глитайський нагніт» і «середняків»."
       },
       "pre_soviet_witness": {
         "witness": "Грінченко (1907–1909)",
@@ -29405,10 +29408,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "нівідки",
       "url_slug": "нівідки",
       "headword": "ні́відки",
-      "short_label": "з жодного місця, невідомо звідки (присл.)",
-      "gloss": "from nowhere, out of nowhere, from no place (adverb)",
+      "short_label": "нема звідки взяти, відсутність джерела (діал.)",
+      "gloss": "nowhere to get or obtain from, absence of source (dialectal)",
       "pos": "adv",
-      "cefr": "B1",
+      "cefr": "B2",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": false,
@@ -29426,10 +29429,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "morphology": {
         "pos": "прислівник"
       },
-      "distinction_note": "Літературний прислівник місця: з жодного місця, нізвідки (наголос на першому складі). Не плутати з діалектним варіантом «ніві́дки».",
+      "distinction_note": "Діалектний прислівник: означає відсутність джерела, звідки можна щось узяти чи дістати (те саме, що ні́відкіля / ні́звідки; наголос на першому складі). Не плутати з «ніві́дки» (ні з якого місця).",
       "meaning": {
         "definitions": [
-          "З жодного місця; нізвідки (прислівник)."
+          "Немає звідки взяти, дістати; те саме, що ні́відкіля (діал.)."
         ],
         "source": "ВТС"
       },
@@ -29446,8 +29449,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "нівідки",
       "url_slug": "нівідки",
       "headword": "ніві́дки",
-      "short_label": "варіантний наголос до ні́відки (діал., літ.)",
-      "gloss": "variant dialectal/literary stress form of ні́відки (from nowhere)",
+      "short_label": "ні з якого місця, нізвідки (діал., літ.)",
+      "gloss": "from no place, from nowhere, out of nowhere (dialectal/literary)",
       "pos": "adv",
       "cefr": "B2",
       "heritage_status": {
@@ -29467,10 +29470,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "morphology": {
         "pos": "прислівник"
       },
-      "distinction_note": "Варіант прислівника «ні́відки» з наголосом на другому складі, зафіксований у класичній літературі (Панас Мирний). Не плутати зі стандартним наголосом «ні́відки».",
+      "distinction_note": "Діалектний та класичний літературний прислівник місця: ні з якого місця, нізвідки (те саме, що нівідкіля́ / нізві́дки; наголос на другому складі, як у Панаса Мирного). Не плутати з «ні́відки» (нема звідки взяти).",
       "meaning": {
         "definitions": [
-          "Те саме, що ні́відки (варіантний наголос; діал., літ.)."
+          "Ні з якого місця, ні з якого боку; те саме, що нівідкіля́ (діал., літ.)."
         ],
         "source": "ВТС"
       },
@@ -29703,7 +29706,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           }
         }
       },
-      "distinction_note": "Означає переміщення конкретних предметів (бочки, колоди) чи рослин-перекотиполе перекочуванням з місця на місце. Не плутати з «перекочува́ння» (тривалий перекотистий гуркіт або переливання хвиль).",
+      "distinction_note": "Означає переміщення предметів (бочки, колоди) чи рослин коченням з одного місця на інше (від переко́чувати). Не плутати з «перекочува́ння» (переселення, перекочовування).",
       "meaning": {
         "definitions": [
           "Дія за значенням переко́чувати (переміщення коченням з одного місця на інше)."
@@ -29723,8 +29726,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "перекочування",
       "url_slug": "перекочування",
       "headword": "перекочува́ння",
-      "short_label": "тривале перекочування, перекочування звуків чи хвиль",
-      "gloss": "prolonged rolling, rumbling across (of thunder/waves/sounds)",
+      "short_label": "переселення, зміна місця перебування (перекочовування)",
+      "gloss": "relocation, seasonal migration, nomadic moving from place to place (action)",
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
@@ -29779,10 +29782,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           }
         }
       },
-      "distinction_note": "Означає тривалу повторювану дію кочення, накочування хвиль або розкотисте перекочування грому в небі. Не плутати з предметним «переко́чування» (переміщення речі коченням).",
+      "distinction_note": "Означає переселення, зміну місця перебування чи пасовища разом з майном і худобою (дія за значенням перекочува́ти = перекочо́вувати). Не плутати з коченням предметів «переко́чування».",
       "meaning": {
         "definitions": [
-          "Дія за значенням перекочува́ти (тривале кочення або розкочування звуків, хвиль)."
+          "Дія за значенням перекочува́ти (перекочо́вувати — переселення, перехід на інше місце)."
         ],
         "source": "ВТС"
       },
@@ -31146,7 +31149,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "доконаний"
         }
       },
-      "distinction_note": "Сільськогосподарське значення: зорати все поле або багато ділянок землі у багатьох місцях (доконаний вид від орати). Не плутати з «позорюва́ти» (милуватися зорями чи ночувати під зорями).",
+      "distinction_note": "Сільськогосподарське значення: зорати все поле або багато ділянок землі у багатьох місцях (доконаний вид від орати). Не плутати з «позорюва́ти» (ночувати просто неба чи спати на світанку).",
       "meaning": {
         "definitions": [
           "Зорати все або багато чого-небудь у багатьох місцях (доконаний вид)."
@@ -31170,8 +31173,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "позорювати",
       "url_slug": "позорювати",
       "headword": "позорюва́ти",
-      "short_label": "зорювати або милуватися зорями якийсь час (док.)",
-      "gloss": "gaze at stars, daydream or stay up under the stars for a while (perf.)",
+      "short_label": "ночувати просто неба, спати на світанку якийсь час (док.)",
+      "gloss": "spend the night outdoors, sleep at dawn, or stay awake through the night for a while (perf.)",
       "pos": "verb",
       "cefr": "B2",
       "heritage_status": {
@@ -31195,10 +31198,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "доконаний"
         }
       },
-      "distinction_note": "Поетичне та розмовне значення: провести якийсь час під зорями, ночувати просто неба чи споглядати зорі (доконаний вид від зорюва́ти). Не плутати з оранням землі «позо́рювати».",
+      "distinction_note": "Означає ночувати просто неба, спати на світанку або не спати вночі якийсь час (доконаний вид від зорюва́ти). Не плутати з оранням землі «позо́рювати».",
       "meaning": {
         "definitions": [
-          "Зорювати (милуватися зорями чи не спати вночі на свіжому повітрі) якийсь час (доконаний вид)."
+          "Зорювати (ночувати просто неба, спати на світанку або не спати вночі) якийсь час (доконаний вид)."
         ],
         "source": "ВТС"
       },
