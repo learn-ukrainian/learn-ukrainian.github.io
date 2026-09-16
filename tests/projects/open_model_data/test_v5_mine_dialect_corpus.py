@@ -642,3 +642,36 @@ def test_dialect_variant_headers_exclude_standard_quotations(
     for t in sft_trajectories:
         for bs in banned_substrings:
             assert bs not in t["query"].casefold(), f"Banned quotation fragment '{bs}' found in SFT {t['trajectory_id']}"
+
+
+def test_sub_sense_boundary_and_synonym_binding(
+    eval_cases: list[dict[str, Any]],
+    sft_trajectories: list[dict[str, Any]],
+) -> None:
+    """Verify that quotations following sub-senses (// or ◇) extract the exact sub-sense synonym."""
+    # 1. Direct unit test of sub-sense extraction for загирити and заголомшити
+    defn_zagiriti_sub1 = "// Закинути, загубити. Панотець наробив крику, що.. загирили йому одно важне письмо (Март., Тв., 1954, 233);"
+    res_zagiriti_sub1 = find_attested_synonym(defn_zagiriti_sub1, "загирити", DEFAULT_VESUM_DB)
+    assert res_zagiriti_sub1 is not None
+    assert res_zagiriti_sub1[0] == "закинути"
+
+    defn_zagolomshiti_sub1 = "// Заспокоїти, затамувати. — Я рвалася до роботи, аби заголомшити в собі той біль, що мені під серце підступав (Март., Тв., 1954, 155)."
+    res_zagolomshiti_sub1 = find_attested_synonym(defn_zagolomshiti_sub1, "заголомшити", DEFAULT_VESUM_DB)
+    assert res_zagolomshiti_sub1 is not None
+    assert res_zagolomshiti_sub1[0] == "заспокоїти"
+
+    # 2. Check SFT trajectories: if загирити or заголомшити are in SFT, ensure no sense crossing occurred
+    for t in sft_trajectories:
+        q = t.get("query", "").casefold()
+        lemmas = [att["lemma"].casefold() for att in t.get("vesum_attestation", [])]
+        equiv_mech = t.get("morphemic_breakdown", {}).get("ukrainian_equivalent_mechanism", "").casefold()
+
+        if "загирили йому одно важне письмо" in q:
+            assert "закинути" in lemmas or "загубити" in lemmas
+            assert "розтратити" not in lemmas
+            assert "розтратити" not in equiv_mech
+
+        if "заголомшити в собі той біль" in q:
+            assert "заспокоїти" in lemmas or "затамувати" in lemmas
+            assert "приголомшити" not in lemmas
+            assert "приголомшити" not in equiv_mech

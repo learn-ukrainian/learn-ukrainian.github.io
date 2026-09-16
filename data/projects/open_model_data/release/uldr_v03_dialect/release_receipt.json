@@ -2,11 +2,11 @@
   "schema_version": "v1_dialect_multizone_release_receipt",
   "issue": 8102,
   "parent_epic": 6321,
-  "created_at": "2026-09-16T11:37:24.255800+00:00",
+  "created_at": "2026-09-16T11:51:04.910952+00:00",
   "git_commit": "gemini/8102-dialect-mining",
   "evaluation_benchmark": {
     "file_path": "data/projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
-    "sha256": "ce335ae4f06a64cad0cd4f0292bc1980f1f40d8bcedd500e09e04be07facee00",
+    "sha256": "b7cea35aa76613cd71f98ce2987af90a1b76e2826830786b2dfc300652dfcad7",
     "total_cases": 1500,
     "preserve_cases": 998,
     "mixed_error_cases": 502,
@@ -16,9 +16,9 @@
       "southeastern": 500
     },
     "sub_zone_counts": {
-      "southwestern_boyko": 243,
+      "southwestern_boyko": 244,
       "southwestern_bukovina": 114,
-      "southwestern_pokuttia": 76,
+      "southwestern_pokuttia": 75,
       "southwestern_hutsul": 167,
       "northern_polissian": 400,
       "southeastern_slobozhan": 250,
@@ -27,7 +27,7 @@
   },
   "sft_training_dataset": {
     "file_path": "data/projects/open_model_data/release/uldr_v03_dialect/sft_dialect_protection_500.jsonl",
-    "sha256": "3ea296f488a5b5c96e776242cfdc47e9762db7f50b88a53f8be9718a396dc57a",
+    "sha256": "014b81f0e66b70fd296c01cb3db8562aab247e3a82e962e4ac88161753a9d0b0",
     "total_trajectories": 550,
     "dialect_trajectories": 450,
     "replay_buffer_trajectories": 100

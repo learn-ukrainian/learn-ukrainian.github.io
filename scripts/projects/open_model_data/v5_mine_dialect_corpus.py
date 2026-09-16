@@ -200,11 +200,14 @@ AUTHORS_MAP = {
         "Манжура": ("southeastern_steppe", "Степова Україна (Придніпров'я)", "Іван Манжура", "Степові думи"),
         "Кроп.": ("southeastern_steppe", "Степова Україна (Єлисаветградщина)", "Марко Кропивницький", "Драми"),
         "Кропивницький": ("southeastern_steppe", "Степова Україна (Єлисаветградщина)", "Марко Кропивницький", "Драми"),
+        "К.-Карий": ("southeastern_steppe", "Степова Україна (Єлисаветградщина)", "Іван Карпенко-Карий", "Драми"),
         "Горд.": ("southeastern_steppe", "Запоріжжя та Придніпров'я", "Кость Гордієнко", "Повісті"),
         "Кучер": ("southeastern_steppe", "Степова Україна (Причорномор'я)", "Василь Кучер", "Чорноморці"),
         "Эварн.": ("southeastern_steppe", "Запоріжжя та Степ", "Дмитро Яворницький", "Запорожжя"),
         "Еварн.": ("southeastern_steppe", "Запоріжжя та Степ", "Дмитро Яворницький", "Запорожжя"),
         "Яворн.": ("southeastern_steppe", "Запоріжжя та Степ", "Дмитро Яворницький", "Запорожжя"),
+        "Екатериносл.": ("southeastern_steppe", "Степова Україна (Катеринославщина)", "Степові народні записи", "Матеріали"),
+        "Херсон.": ("southeastern_steppe", "Степова Україна (Херсонщина)", "Степові народні записи", "Матеріали"),
     },
 }
 
@@ -304,7 +307,7 @@ def mine_all_candidate_sentences(db_path: Path = DEFAULT_SOURCES_DB) -> list[Min
             continue
         stem = w_clean[: max(3, len(w_clean) - 2)].casefold()
 
-        full_text = f"{defn} {txt}"
+        full_text = defn or txt
         # Split into senses to ensure quotations are only taken from dialect-marked senses
         senses = re.split(r"(?<=\s)([1-9][0-9]?\.)\s+", full_text)
         header = senses[0]
@@ -328,62 +331,64 @@ def mine_all_candidate_sentences(db_path: Path = DEFAULT_SOURCES_DB) -> list[Min
                 dialect_sections.append(full_text)
 
         for section in dialect_sections:
-            for m in CIT_RE.finditer(section):
-                auth_raw = m.group(1).strip()
-                matched = None
-                for macro_key, amap in AUTHORS_MAP.items():
-                    for k, (sz, loc, author_name, _default_work) in amap.items():
-                        if k in auth_raw:
-                            mz = "southeastern" if macro_key.startswith("southeastern") else macro_key
-                            cit_str = m.group(0).strip()
-                            work = f"{author_name}. Твори {cit_str}"
-                            matched = (sz, mz, macro_key, loc, author_name, work)
+            sub_sections = re.split(r"(?<=\s)(?=(?://|◇)\s+)", section)
+            for sub_sec in sub_sections:
+                for m in CIT_RE.finditer(sub_sec):
+                    auth_raw = m.group(1).strip()
+                    matched = None
+                    for macro_key, amap in AUTHORS_MAP.items():
+                        for k, (sz, loc, author_name, _default_work) in amap.items():
+                            if k in auth_raw:
+                                mz = "southeastern" if macro_key.startswith("southeastern") else macro_key
+                                cit_str = m.group(0).strip()
+                                work = f"{author_name}. Твори {cit_str}"
+                                matched = (sz, mz, macro_key, loc, author_name, work)
+                                break
+                        if matched:
                             break
-                    if matched:
-                        break
 
-                if not matched:
-                    continue
+                    if not matched:
+                        continue
 
-                sz, mz, bkt, locality, author_name, work = matched
-                prefix = section[:m.start()].rstrip(" .")
-                sents = re.split(r"(?:(?<=[.!?])\s+(?=[А-ЯЄІЇҐ«—]))|(?:;\s+)", prefix)
-                if not sents:
-                    continue
+                    sz, mz, bkt, locality, author_name, work = matched
+                    prefix = sub_sec[:m.start()].rstrip(" .")
+                    sents = re.split(r"(?:(?<=[.!?])\s+(?=[А-ЯЄІЇҐ«—]))|(?:;\s+)", prefix)
+                    if not sents:
+                        continue
 
-                s = clean_sentence(sents[-1])
-                if len(s) < 28 or len(s) > 230 or len(s.split()) < 4:
-                    continue
-                # Must have balanced parentheses and brackets, and not end on an open bracket
-                if s.count("(") != s.count(")") or s.count("[") != s.count("]"):
-                    continue
-                if s.endswith("(") or s.endswith("["):
-                    continue
-                if LATIN_CHARS_RE.search(s) or RU_CHARS_RE.search(s):
-                    continue
-                if RU_GLOSS_RE.search(s) or CROSSREF_RE.search(s):
-                    continue
-                if stem not in s.casefold():
-                    continue
+                    s = clean_sentence(sents[-1])
+                    if len(s) < 28 or len(s) > 230 or len(s.split()) < 4:
+                        continue
+                    # Must have balanced parentheses and brackets, and not end on an open bracket
+                    if s.count("(") != s.count(")") or s.count("[") != s.count("]"):
+                        continue
+                    if s.endswith("(") or s.endswith("["):
+                        continue
+                    if LATIN_CHARS_RE.search(s) or RU_CHARS_RE.search(s):
+                        continue
+                    if RU_GLOSS_RE.search(s) or CROSSREF_RE.search(s):
+                        continue
+                    if stem not in s.casefold():
+                        continue
 
-                fp = passage_fingerprint(s)
-                if fp not in seen_fingerprints:
-                    seen_fingerprints.add(fp)
-                    candidates.append(
-                        MinedSentence(
-                            word=w_clean,
-                            sentence=s,
-                            citation=m.group(0).strip(),
-                            macro_zone=mz,
-                            sub_zone=sz,
-                            bucket=bkt,
-                            locality=locality,
-                            collector=author_name,
-                            work=work,
-                            source_db="sum11_literary_citation",
-                            raw_definition=section,
+                    fp = passage_fingerprint(s)
+                    if fp not in seen_fingerprints:
+                        seen_fingerprints.add(fp)
+                        candidates.append(
+                            MinedSentence(
+                                word=w_clean,
+                                sentence=s,
+                                citation=m.group(0).strip(),
+                                macro_zone=mz,
+                                sub_zone=sz,
+                                bucket=bkt,
+                                locality=locality,
+                                collector=author_name,
+                                work=work,
+                                source_db="sum11_literary_citation",
+                                raw_definition=sub_sec,
+                            )
                         )
-                    )
 
     # 2. Mine Grinchenko authentic sentences with dialect/regional collector citations
     cur.execute("SELECT word, definition FROM grinchenko")
@@ -703,6 +708,27 @@ def find_attested_synonym(defn: str, word: str, vesum_db: Path) -> tuple[str, in
                 row = cur.fetchone()
                 if row and row[0] > 0:
                     return cand, row[0]
+
+        # Check sub-sense gloss pattern (e.g. "// Закинути, загубити." or "Заспокоїти, затамувати.")
+        m_sub = re.match(
+            r"^(?:(?://|◇)\s*)?(?:[а-яіїєґ\.\s,\(\)\u0301-]{0,50}\s+)?([А-ЯЄІЇҐ][а-яіїєґ\']{2,}(?:,\s*[а-яіїєґ\']{2,})*)\s*(?:[.;]|\(див\.)",
+            defn.strip(),
+        )
+        if m_sub:
+            for cand in [w.strip().casefold() for w in m_sub.group(1).split(",")]:
+                if cand in banned or cand == word.casefold() or len(cand) < 2:
+                    continue
+                cur.execute("SELECT DISTINCT pos FROM forms_all WHERE lemma = ?", (cand,))
+                cand_poses = {r[0] for r in cur.fetchall()}
+                if not cand_poses:
+                    continue
+                if word_poses and not (word_poses & cand_poses):
+                    continue
+                cur.execute("SELECT count(*) FROM forms_all WHERE lemma = ?", (cand,))
+                row = cur.fetchone()
+                if row and row[0] > 0:
+                    return cand, row[0]
+
         return None
     finally:
         con_ves.close()
