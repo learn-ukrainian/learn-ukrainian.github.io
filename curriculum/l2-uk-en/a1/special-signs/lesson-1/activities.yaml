@@ -1,0 +1,338 @@
+inline:
+- id: act-101
+  type: watch-and-repeat
+  title: 'Диві́ться та повто́рюйте: Ь, Ц, Ч — Watch and repeat: Ь, Ц, Ч'
+  instruction: Watch the pronunciation video and repeat each word aloud.
+  items:
+  - word: день
+    letter: Ь
+    sound: '[н'']'
+    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    note: The soft sign has no sound of its own; it softens the preceding consonant.
+  - word: кінь
+    letter: Ь
+    sound: '[н'']'
+    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    note: 'Soft ending: pronounce [кін''].'
+  - word: цирк
+    letter: Ц
+    sound: '[т͡с]'
+    video: https://www.youtube.com/watch?v=u44eCjR2Oz8
+    note: Voiceless dental affricate; hard before [и].
+  - word: ціна́
+    letter: Ц
+    sound: '[т͡с'']'
+    video: https://www.youtube.com/watch?v=u44eCjR2Oz8
+    note: Soft dental affricate before [і].
+  - word: час
+    letter: Ч
+    sound: '[т͡ʃ]'
+    video: https://www.youtube.com/watch?v=UsJkbdsY2RA
+    note: Voiceless postalveolar affricate; always hard in standard Ukrainian.
+  - word: ча́шка
+    letter: Ч
+    sound: '[т͡ʃ]'
+    video: https://www.youtube.com/watch?v=UsJkbdsY2RA
+    note: Hard affricate [ч] at the beginning of the word.
+- id: act-2
+  type: match-up
+  title: Що ро́бить ь — What does ь do
+  instruction: Match each word or sign with what the soft sign does.
+  pairs:
+  - left: день
+    right: soft [n'] in «день»
+  - left: кінь
+    right: soft [n'] in «кінь»
+  - left: сіль
+    right: soft [l'] in «сіль»
+  - left: вчи́тель
+    right: soft [l'] in «вчи́тель»
+  - left: ь (soft sign)
+    right: has no sound of its own
+- id: act-103
+  type: true-false
+  title: Пра́вила м'яко́го зна́ка та африка́т — True or False
+  instruction: Decide whether each statement is true or false.
+  items:
+  - statement: The soft sign (ь) has its own vowel sound.
+    answer: false
+    explanation: The soft sign has no sound of its own; it only softens the preceding
+      consonant.
+  - statement: In the word «день», the final sound is soft.
+    answer: true
+    explanation: 'The letter ь makes the sound [н] soft: [ден''].'
+  - statement: In Ukrainian, the sound [ч] is hard.
+    answer: true
+    explanation: In standard Ukrainian, the affricate [ч] is pronounced hard.
+  - statement: The letter Ц represents the affricate [т͡с].
+    answer: true
+    explanation: Ц is a voiceless dental affricate [т͡с].
+  - statement: In the word «ціна́», the sound [ц] is hard.
+    answer: false
+    explanation: Before the vowel [і], the affricate [ц] is softened.
+  - statement: The words «бу́ква» and «лі́тера» are synonyms in Ukrainian.
+    answer: true
+    explanation: Both words mean a written letter of the alphabet.
+- id: act-104
+  type: quiz
+  title: Тверди́й чи м'яки́й звук — Hard or Soft Sound
+  instruction: Choose whether the highlighted consonant sound is hard or soft.
+  items:
+  - question: 'The final sound in «день» [н'']:'
+    options:
+    - hard
+    - soft
+    answer: soft
+  - question: 'The final sound in «стан» [н]:'
+    options:
+    - hard
+    - soft
+    answer: hard
+  - question: 'The sound [ц] in «цирк» before [и]:'
+    options:
+    - hard
+    - soft
+    answer: hard
+  - question: 'The sound [ц''] in «ціна́» before [і]:'
+    options:
+    - hard
+    - soft
+    answer: soft
+  - question: 'The sound [ч] in «час»:'
+    options:
+    - hard
+    - soft
+    answer: hard
+  - question: 'The final sound in «сіль» [л'']:'
+    options:
+    - hard
+    - soft
+    answer: soft
+- id: act-105
+  type: group-sort
+  title: 'Розподілі́ть слова́ за тве́рдістю зву́ка — Group Sort: Hard vs Soft'
+  instruction: Sort words into those ending in a hard consonant and those ending in
+    a soft consonant.
+  groups:
+  - name: Hard consonant
+    items:
+    - стан
+    - лан
+    - рис
+  - name: Soft consonant
+    items:
+    - стань
+    - лань
+    - рись
+workbook:
+- id: act-106
+  type: quiz
+  title: Ви́беріть пра́вильне зна́чення — Choose the correct meaning
+  instruction: Select the correct English translation for each Ukrainian word.
+  items:
+  - question: What is the meaning of «день»?
+    options:
+    - day
+    - horse
+    - salt
+    - teacher
+    answer: day
+  - question: What is the meaning of «кінь»?
+    options:
+    - horse
+    - day
+    - salt
+    - spoon
+    answer: horse
+  - question: What is the meaning of «сіль»?
+    options:
+    - salt
+    - price
+    - cup
+    - circus
+    answer: salt
+  - question: What is the meaning of «вчи́тель»?
+    options:
+    - teacher
+    - student
+    - circus
+    - family
+    answer: teacher
+  - question: What is the meaning of «ціна́»?
+    options:
+    - price
+    - time
+    - circus
+    - cup
+    answer: price
+  - question: What is the meaning of «па́льці»?
+    options:
+    - fingers
+    - hands
+    - eyes
+    - feet
+    answer: fingers
+- id: act-107
+  type: fill-in
+  title: Вста́вте пропу́щене сло́во — Fill in the blank
+  instruction: Fill in the blanks with the correct vocabulary word.
+  items:
+  - sentence: Світи́ть со́нце, наста́в ___ .
+    answer: день
+    options:
+    - день
+    - кінь
+    - сіль
+  - sentence: У селі́ на по́лі біжи́ть ___ .
+    answer: кінь
+    options:
+    - кінь
+    - день
+    - вчи́тель
+  - sentence: На столі́ лежи́ть бі́ла ___ .
+    answer: сіль
+    options:
+    - сіль
+    - ціна́
+    - ча́шка
+  - sentence: Наш ___ пи́ше те́кст.
+    answer: вчи́тель
+    options:
+    - вчи́тель
+    - кінь
+    - день
+  - sentence: Чи висо́ка тут ___ на хліб?
+    answer: ціна́
+    options:
+    - ціна́
+    - сіль
+    - ча́шка
+  - sentence: Ось рука́, а на руці́ — ___ .
+    answer: па́льці
+    options:
+    - па́льці
+    - ча́шка
+    - вчи́тель
+- id: act-108
+  type: unjumble
+  title: Складі́ть слова́ з лі́тер — Unjumble letters
+  instruction: Arrange the letters to form correct Ukrainian words.
+  items:
+  - words:
+    - д
+    - е
+    - н
+    - ь
+    answer: день
+  - words:
+    - к
+    - і
+    - н
+    - ь
+    answer: кінь
+  - words:
+    - с
+    - і
+    - л
+    - ь
+    answer: сіль
+  - words:
+    - ц
+    - и
+    - р
+    - к
+    answer: цирк
+  - words:
+    - ц
+    - і
+    - н
+    - а́
+    answer: ціна́
+  - words:
+    - ч
+    - а
+    - с
+    answer: час
+- id: act-109
+  type: match-up
+  title: З'єдна́йте па́ри слів — Match word pairs
+  instruction: Match each Ukrainian word with its contrast pair or English meaning.
+  pairs:
+  - left: день
+    right: day
+  - left: кінь
+    right: horse
+  - left: сіль
+    right: salt
+  - left: вчи́тель
+    right: teacher
+  - left: ціна́
+    right: price
+  - left: па́льці
+    right: fingers
+- id: act-110
+  type: error-correction
+  title: Знайді́ть поми́лку — Spot the error
+  instruction: Identify which word is written incorrectly according to Ukrainian soft
+    sign rules.
+  items:
+  - sentence: У сло́ві ден написа́ли без зна́ка ь.
+    error: ден
+    correction: день
+    explanation: 'Пе́ред па́узою сло́во «день» пи́шеться з м''яки́м зна́ком: день.'
+  - sentence: На по́лі біжи́ть кін без зна́ка.
+    error: кін
+    correction: кінь
+    explanation: 'Сло́во «кінь» закі́нчується на м''яки́й знак: кінь.'
+  - sentence: У су́пі лежи́ть сіл без зна́ка.
+    error: сіл
+    correction: сіль
+    explanation: 'Сло́во «сіль» ма́є м''яки́й [л''] і пи́шеться з ь: сіль.'
+  - sentence: Наш вчител пи́ше те́кст.
+    error: вчител
+    correction: вчи́тель
+    explanation: 'Іме́нник «вчи́тель» ма́є м''яки́й кінце́вий [л'']: вчи́тель.'
+  - sentence: У сло́ві чьас помилко́во написа́ли ь.
+    error: чьас
+    correction: час
+    explanation: 'Звук [ч] в украї́нській мо́ві тверди́й; пі́сля ч знак ь не ста́виться:
+      час.'
+  - sentence: У сло́ві палці написа́ли без зна́ка ь.
+    error: палці
+    correction: па́льці
+    explanation: 'У сло́ві «па́льці» пі́сля лі́тери л пи́шеться м''яки́й знак: па́льці.'
+- id: act-111
+  type: quiz
+  title: Знак ь чи без зна́ка — Soft sign or no sign
+  instruction: Choose whether the word ends in a soft sign (ь) or hard consonant.
+  items:
+  - question: 'In Ukrainian, the word for “day” is:'
+    options:
+    - день
+    - стан
+    answer: день
+  - question: 'In Ukrainian, the word for “horse” is:'
+    options:
+    - кінь
+    - лан
+    answer: кінь
+  - question: 'In Ukrainian, the word for “salt” is:'
+    options:
+    - сіль
+    - рис
+    answer: сіль
+  - question: 'The command «stand up» (with soft [n'']):'
+    options:
+    - стань
+    - стан
+    answer: стань
+  - question: 'The animal «doe / hind» (with soft [n'']):'
+    options:
+    - лань
+    - лан
+    answer: лань
+  - question: 'The animal «lynx» (with soft [s'']):'
+    options:
+    - рись
+    - рис
+    answer: рись
