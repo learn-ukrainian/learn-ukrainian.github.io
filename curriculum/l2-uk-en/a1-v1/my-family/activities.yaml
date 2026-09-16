@@ -242,8 +242,8 @@ workbook:
           - Це мій брат.
           - Це є мій брат.
         explanation: У простому фото-реченні є не потрібне.
-      - sentence: Батьки (у значенні батька)
-        error: Батьки (у значенні батька)
+      - sentence: Батьки (у значенні батька / meaning father)
+        error: Батьки (у значенні батька / meaning father)
         correction: Тато / батько
         options:
           - Тато / батько

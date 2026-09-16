@@ -230,8 +230,8 @@ workbook:
     - Це мій брат.
     - Це є мій брат.
     explanation: У просто́му фо́то-ре́ченні є не потрі́бне. — In a simple photo sentence, "є" is not needed.
-  - sentence: Батьки́ (у зна́ченні ба́тька)
-    error: Батьки́ (у зна́ченні ба́тька)
+  - sentence: Батьки́ (у зна́ченні ба́тька / meaning father)
+    error: Батьки́ (у зна́ченні ба́тька / meaning father)
     correction: Та́то / ба́тько
     options:
     - Та́то / ба́тько

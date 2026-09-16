@@ -369,17 +369,17 @@ workbook:
   instruction: З'єдна́й роди́нне запита́ння з пра́вильною ві́дповіддю. — Match the family question with the correct answer.
   pairs:
   - left: Хто таки́й дя́дько? — Who is an uncle?
-    right: Це брат мами́ або́ та́та. — This is the brother of mom or dad.
+    right: Це брат мами́ або́ та́та.
   - left: Хто та́ка ті́тка? — Who is an aunt?
-    right: Це сестра́ мами́ або́ та́та. — This is the sister of mom or dad.
+    right: Це сестра́ мами́ або́ та́та.
   - left: Хто та́ка дружи́на? — Who is a wife?
-    right: Це замі́жня жі́нка для свого́ чолові́ка. — This is a married woman to her husband.
+    right: Це замі́жня жі́нка для свого́ чолові́ка.
   - left: Хто таки́й чолові́к? — Who is a husband?
-    right: Це одру́жений партне́р для своє́ї дружи́ни. — This is the married partner to his wife.
+    right: Це одру́жений партне́р для своє́ї дружи́ни.
   - left: Хто такі́ ро́дичі? — Who are relatives?
-    right: Це всі близькі́ лю́ди з вели́кої роди́ни. — These are all close people from an extended family.
+    right: Це всі близькі́ лю́ди з вели́кої роди́ни.
   - left: Хто таки́й інжене́р? — Who is an engineer?
-    right: Це профе́сія мого́ та́та. — This is my dad's profession.
+    right: Це профе́сія мого́ та́та.
 - id: act-w404
   type: unjumble
   title: Скла́ди ре́чення про роди́ну — Build sentences about family
