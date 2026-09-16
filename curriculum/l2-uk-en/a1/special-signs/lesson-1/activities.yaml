@@ -268,8 +268,8 @@ workbook:
     right: teacher
   - left: ціна́
     right: price
-  - left: мале́нький
-    right: small
+  - left: па́льці
+    right: fingers
 - id: act-110
   type: error-correction
   title: Знайді́ть поми́лку — Spot the error
@@ -297,10 +297,10 @@ workbook:
     correction: час
     explanation: 'Звук [ч] в украї́нській мо́ві тверди́й; пі́сля ч знак ь не ста́виться:
       час.'
-  - sentence: Це маленкий знак на столі́.
-    error: маленкий
-    correction: мале́нький
-    explanation: 'У су́фіксі -еньк- пи́шеться м''яки́й знак: мале́нький.'
+  - sentence: У сло́ві палці написа́ли без зна́ка ь.
+    error: палці
+    correction: па́льці
+    explanation: 'У сло́ві «па́льці» пі́сля лі́тери л пи́шеться м''яки́й знак: па́льці.'
 - id: act-111
   type: quiz
   title: Знак ь чи без зна́ка — Soft sign or no sign

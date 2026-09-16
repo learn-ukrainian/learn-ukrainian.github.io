@@ -110,37 +110,36 @@ inline:
   title: Пра́вила йото́ваних лі́тер — True or False
   instruction: Decide whether each statement is true or false.
   items:
-  - statement: Лі́тера Й познача́є напівголосни́й звук [й].
+  - statement: The letter Й represents the semivowel sound [й].
     answer: true
-    explanation: Й — це звукови́й напівголосни́й сона́нт.
-  - statement: На поча́тку сло́ва лі́тери Я, Ю, Є за́вжди познача́ють два зву́ки.
+    explanation: Й is a semivowel sonorant sound.
+  - statement: At the beginning of a word, the letters Я, Ю, Є always represent two sounds.
     answer: true
-    explanation: На поча́тку сло́ва чу́ємо [й] та голосни́й звук.
-  - statement: Пі́сля при́голосного без апо́строфа лі́тера Я познача́є два зву́ки.
+    explanation: At the beginning of a word, we hear [й] and a vowel sound.
+  - statement: After a consonant without an apostrophe, the letter Я represents two sounds.
     answer: false
-    explanation: Пі́сля при́голосного лі́тера Я познача́є оди́н звук [а] та пом'я́кшує
-      при́голосний.
-  - statement: У сло́ві «чай» оста́нній звук — це голосни́й звук.
+    explanation: After a consonant, the letter Я represents one sound [а] and softens the consonant.
+  - statement: In the word «чай», the final sound is a vowel.
     answer: false
-    explanation: Оста́нній звук — це напівголосни́й сона́нт [й].
-  - statement: У сло́ві «буря́к» лі́тера я пом'я́кшує зву́к [р].
+    explanation: The final sound is the semivowel sonorant [й].
+  - statement: In the word «буря́к», the letter я softens the sound [р].
     answer: true
-    explanation: У сло́ві «буря́к» звук [р'] м'яки́й, без апо́строфа.
-  - statement: У сло́ві «сього́дні» є м'яки́й знак.
+    explanation: In the word «буря́к», the sound [р'] is soft, without an apostrophe.
+  - statement: In the word «сього́дні», there is a soft sign.
     answer: true
-    explanation: Бу́ква ь познача́є м'я́кість [с'].
+    explanation: The letter ь indicates the softness of [с'].
 - id: act-205
   type: group-sort
   title: Розподілі́ть слова́ за кі́лькістю зву́ків — Group Sort
   instruction: Sort words based on whether the iotated vowel represents two sounds
     or one sound.
   groups:
-  - name: Два зву́ки [й] + голосни́й — Two sounds
+  - name: Two sounds
     items:
     - я́блуко
     - ю́шка
     - єно́т
-  - name: Оди́н звук + м'я́кість — One sound
+  - name: One sound
     items:
     - пі́сня
     - лю́ди
