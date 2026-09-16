@@ -10,7 +10,7 @@ Decolonization & Lexicographical Invariants:
 3. Soviet colonization context: СУМ-11 (1970–1980) documented transparently
    under `soviet_colonization_context` with `sovietization_risk` and historical notes
    without erasing lexical history.
-4. Clean morphology and phonology: Every variant is verified in VESUM (clean view).
+4. Clean morphology and phonology: Every variant is morphologically verified against VESUM where present, with explicit `vesum_attested: false` where academic dictionaries (ВТС / СУМ-20 / Грінченко) attest substantivized nouns or dialectal variants not registered in VESUM's core lemma list.
 """
 
 from typing import Any
@@ -67,10 +67,10 @@ CURATED_HETERONYMS_BATCH_7: dict[str, list[dict[str, Any]]] = {
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-dialectism",
         "is_russianism": False,
         "russian_shadow": False,
-        "vesum_attested": True
+        "vesum_attested": False
       },
       "pronunciation": {
         "ipa": "[bɐnˈnɪk]"
@@ -194,7 +194,7 @@ CURATED_HETERONYMS_BATCH_7: dict[str, list[dict[str, Any]]] = {
       "pos": "verb",
       "cefr": "B2",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-dialectism",
         "is_russianism": False,
         "russian_shadow": False,
         "vesum_attested": True
@@ -366,7 +366,7 @@ CURATED_HETERONYMS_BATCH_7: dict[str, list[dict[str, Any]]] = {
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-historism",
         "is_russianism": False,
         "russian_shadow": False,
         "vesum_attested": True
@@ -451,10 +451,10 @@ CURATED_HETERONYMS_BATCH_7: dict[str, list[dict[str, Any]]] = {
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-historism",
         "is_russianism": False,
         "russian_shadow": False,
-        "vesum_attested": True
+        "vesum_attested": False
       },
       "pronunciation": {
         "ipa": "[wɐlkɔˈwɪj]"
@@ -1119,7 +1119,7 @@ CURATED_HETERONYMS_BATCH_7: dict[str, list[dict[str, Any]]] = {
       "pos": "adjective",
       "cefr": "B2",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-historism",
         "is_russianism": False,
         "russian_shadow": False,
         "vesum_attested": True
@@ -1536,10 +1536,10 @@ CURATED_HETERONYMS_BATCH_7: dict[str, list[dict[str, Any]]] = {
       "pos": "noun",
       "cefr": "B1",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-folklorism",
         "is_russianism": False,
         "russian_shadow": False,
-        "vesum_attested": True
+        "vesum_attested": False
       },
       "pronunciation": {
         "ipa": "[dɔmɔˈwɪj]"
@@ -2253,7 +2253,7 @@ CURATED_HETERONYMS_BATCH_7: dict[str, list[dict[str, Any]]] = {
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-archaism",
         "is_russianism": False,
         "russian_shadow": False,
         "vesum_attested": True
@@ -2726,7 +2726,7 @@ CURATED_HETERONYMS_BATCH_7: dict[str, list[dict[str, Any]]] = {
       "pos": "noun",
       "cefr": "B1",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-historism",
         "is_russianism": False,
         "russian_shadow": False,
         "vesum_attested": True

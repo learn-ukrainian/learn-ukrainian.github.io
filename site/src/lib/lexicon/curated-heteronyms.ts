@@ -18635,10 +18635,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-dialectism",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[bɐnˈnɪk]"
@@ -18768,7 +18768,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "pos": "verb",
       "cefr": "B2",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-dialectism",
         "is_russianism": false,
         "russian_shadow": false,
         "vesum_attested": true
@@ -18948,7 +18948,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-historism",
         "is_russianism": false,
         "russian_shadow": false,
         "vesum_attested": true
@@ -19037,10 +19037,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-historism",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[wɐlkɔˈwɪj]"
@@ -19737,7 +19737,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "pos": "adjective",
       "cefr": "B2",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-historism",
         "is_russianism": false,
         "russian_shadow": false,
         "vesum_attested": true
@@ -20174,10 +20174,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "pos": "noun",
       "cefr": "B1",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-folklorism",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[dɔmɔˈwɪj]"
@@ -20925,7 +20925,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-archaism",
         "is_russianism": false,
         "russian_shadow": false,
         "vesum_attested": true
@@ -21420,7 +21420,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "pos": "noun",
       "cefr": "B1",
       "heritage_status": {
-        "classification": "standard",
+        "classification": "authentic-historism",
         "is_russianism": false,
         "russian_shadow": false,
         "vesum_attested": true

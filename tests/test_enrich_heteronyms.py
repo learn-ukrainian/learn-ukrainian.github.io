@@ -1035,6 +1035,39 @@ def test_batch7_lemmas_not_duplicated_from_earlier_batches():
     assert "випробуваний" in CURATED_HETERONYMS_BATCH_7
     assert "значковий" in CURATED_HETERONYMS_BATCH_7
 
+    # Verify accurate per-variant heritage classifications and VESUM attestations (#8039)
+    bannik = CURATED_HETERONYMS_BATCH_7["банник"]
+    assert bannik[0]["heritage_status"]["vesum_attested"] is True
+    assert bannik[1]["heritage_status"]["vesum_attested"] is False
+    assert bannik[1]["heritage_status"]["classification"] == "authentic-dialectism"
+
+    valkovyi = CURATED_HETERONYMS_BATCH_7["валковий"]
+    assert valkovyi[0]["heritage_status"]["vesum_attested"] is True
+    assert valkovyi[1]["heritage_status"]["vesum_attested"] is False
+    assert valkovyi[1]["heritage_status"]["classification"] == "authentic-historism"
+
+    domovyi = CURATED_HETERONYMS_BATCH_7["домовий"]
+    assert domovyi[0]["heritage_status"]["vesum_attested"] is True
+    assert domovyi[1]["heritage_status"]["vesum_attested"] is False
+    assert domovyi[1]["heritage_status"]["classification"] == "authentic-folklorism"
+
+    znachkovyi = CURATED_HETERONYMS_BATCH_7["значковий"]
+    assert znachkovyi[0]["heritage_status"]["classification"] == "standard"
+    assert znachkovyi[1]["heritage_status"]["classification"] == "authentic-historism"
+    assert znachkovyi[1]["heritage_status"]["vesum_attested"] is True
+
+    burytysya = CURATED_HETERONYMS_BATCH_7["буритися"]
+    assert burytysya[0]["heritage_status"]["classification"] == "authentic-dialectism"
+
+    vazhnytsya = CURATED_HETERONYMS_BATCH_7["важниця"]
+    assert vazhnytsya[2]["heritage_status"]["classification"] == "authentic-historism"
+
+    vidrubnyi = CURATED_HETERONYMS_BATCH_7["відрубний"]
+    assert vidrubnyi[1]["heritage_status"]["classification"] == "authentic-historism"
+
+    zakupka = CURATED_HETERONYMS_BATCH_7["закупка"]
+    assert zakupka[0]["heritage_status"]["classification"] == "authentic-archaism"
+
 
 def test_homonyms_with_numeric_suffixes_and_identical_stress_not_treated_as_heteronyms(monkeypatch):
     """Separate dictionary article numbers from headword before comparing stress (#8039).
