@@ -513,26 +513,51 @@ def canonical_source_work(cit: str, collector: str = "") -> str:
         s,
     )
 
-    # D. Standardize author name aliases in citation body to standard abbreviations
-    if "Кобилянська" in collector or "Коб" in s:
-        s = re.sub(r"\b(?:Ольга\s+)?Кобилянська\b", "Коб.", s)
-    if "Хоткевич" in collector or "Хотк" in s:
-        s = re.sub(r"\b(?:Гнат\s+)?Хоткевич\b", "Хотк.", s)
-        s = re.sub(r"\bДов-буш\b", "Довбуш", s)
-    if "Нечуй" in collector or "Н.-Лев" in s:
-        s = re.sub(r"\b(?:Іван\s+)?Нечуй(?:-Левицький)?\b", "Н.-Лев.", s)
-    if "Франко" in collector or "Фр" in s:
-        s = re.sub(r"\b(?:Іван\s+)?Франко\b", "Фр.", s)
-    if "Стефаник" in collector or "Стеф" in s:
-        s = re.sub(r"\b(?:Василь\s+)?Стефаник\b", "Стеф.", s)
-    if "Черемшина" in collector or "Черемш" in s:
-        s = re.sub(r"\b(?:Марко\s+)?Черемшина\b", "Черемш.", s)
-    if "Федькович" in collector or "Федьк" in s:
-        s = re.sub(r"\b(?:Юрій\s+)?Федькович\b", "Федьк.", s)
-    if "Котляревський" in collector or "Котл" in s:
-        s = re.sub(r"\b(?:Іван\s+)?Котляревський\b", "Котл.", s)
-    if "Чубинський" in collector or "Чуб" in s:
-        s = re.sub(r"\b(?:Павло\s+)?Чубинський\b", "Чуб.", s)
+    # Standardize work title abbreviations & typography (e.g. 'Тв„ 1960' or 'Вибр., 1954' -> 'Тв., 1960')
+    s = re.sub(r"\b(?:Вибр(?:\.|ані(?:\s+твори)?|ане)?|Твори)\b\.?", "Тв.", s)
+    s = re.sub(r"\b(Тв|Опов|Пов|Пр|Мат)[\.,\s]+(?=(?:18|19|20)\d{2})", r"\1., ", s)
+
+    # Standardize author name aliases in both citation body and collector to canonical abbreviations
+    AUTHOR_ALIASES: list[tuple[str, str]] = [
+        (r"\b(?:Леся\s+Українка|Л\.\s*Українка|Лесі\s+Українки)\b", "Л. Укр."),
+        (r"\b(?:Ольга\s+Кобилянська|О\.\s*Кобилянська|Кобилянська)\b", "Коб."),
+        (r"\b(?:Іван\s+Франко|Ів\.\s*Франко|Франко)\b", "Фр."),
+        (r"\b(?:Василь\s+Стефаник|В\.\s*Стефаник|Стефаник)\b", "Стеф."),
+        (r"\b(?:Іван\s+Нечуй-Левицький|І\.\s*Нечуй-Левицький|Нечуй-Левицький|Нечуй)\b", "Н.-Лев."),
+        (r"\b(?:Гнат\s+Хоткевич|Гн\.\s*Хоткевич|Хоткевич)\b", "Хотк."),
+        (r"\b(?:Юрій\s+Федькович|Ю\.\s*Федькович|Федькович)\b", "Федьк."),
+        (r"\b(?:Володимир\s+Шухевич|В\.\s*Шухевич|Шухевич)\b", "Шух."),
+        (r"\b(?:Павло\s+Чубинський|П\.\s*Чубинський|Чубинський)\b", "Чуб."),
+        (r"\b(?:Іван\s+Котляревський|І\.\s*Котляревський|Котляревський)\b", "Котл."),
+        (r"\b(?:Григорій\s+Квітка-Основ'яненко|Г\.\s*Квітка-Основ'яненко|Квітка-Основ'яненко|Квітка)\b", "Кв.-Осн."),
+        (r"\b(?:Григір\s+Тютюнник|Гр\.\s*Тютюнник|Тютюнник)\b", "Тют."),
+        (r"\b(?:Юрій\s+Яновський|Ю\.\s*Яновський|Яновський|Ю\.\s*Янов\.)\b", "Янов."),
+        (r"\b(?:Іван\s+Манжура|І\.\s*Манжура|Манжура|Манжур)\b", "Манж."),
+        (r"\b(?:Марко\s+Кропивницький|М\.\s*Кропивницький|Кропивницький)\b", "Кроп."),
+        (r"\b(?:Іван\s+Карпенко-Карий|І\.\s*Карпенко-Карий|Карпенко-Карий)\b", "К.-Карий"),
+        (r"\b(?:Кость\s+Гордієнко|К\.\s*Гордієнко|Гордієнко)\b", "Горд."),
+        (r"\b(?:Дмитро\s+Яворницький|Д\.\s*Яворницький|Яворницький|Эварн\.|Еварн\.)\b", "Яворн."),
+        (r"\b(?:К\.\s*Шейковський|Шейковський)\b", "Шейк."),
+        (r"\b(?:Лесь\s+Мартович|Л\.\s*Мартович|Мартович)\b", "Март."),
+        (r"\b(?:Марко\s+Черемшина|М\.\s*Черемшина|Черемшина)\b", "Черемш."),
+        (r"\b(?:Микола\s+Хвильовий|М\.\s*Хвильовий|Хвильовий)\b", "Хвиль"),
+        (r"\b(?:Панас\s+Мирний|П\.\s*Мирний)\b", "Мирний"),
+        (r"\b(?:Олесь\s+Гончар|О\.\s*Гончар)\b", "Гончар"),
+        (r"\b(?:Василь\s+Кучер|В\.\s*Кучер)\b", "Кучер"),
+        (r"\b(?:Улас\s+Самчук|У\.\s*Самчук)\b", "Самчук"),
+        (r"\b(?:Андрій\s+Головко|А\.\s*Головко)\b", "Головко"),
+        (r"\b(?:Остап\s+Вишня|О\.\s*Вишня)\b", "Вишня"),
+        (r"\b(?:Матвій\s+Номис|М\.\s*Номис)\b", "Номис"),
+        (r"\b(?:Євген\s+Желехівський|Желехівський)\b", "Желех."),
+        (r"\b(?:Іван\s+Верхратський|Верхратський)\b", "Вх."),
+        (r"\b(?:Володимир\s+Гнатюк|Гнатюк)\b", "Гнат."),
+    ]
+    for pat, repl in AUTHOR_ALIASES:
+        s = re.sub(pat, repl, s)
+        if collector:
+            collector = re.sub(pat, repl, collector)
+
+    s = re.sub(r"\bДов-буш\b", "Довбуш", s)
 
     # E. Multi-volume works canonicalization:
     # If a citation specifies a Roman numeral volume (e.g. Коб., III, 1956 or Фр., II, 1950 or Чуб. III or Стеф., I, 1949),
@@ -552,7 +577,9 @@ def canonical_source_work(cit: str, collector: str = "") -> str:
     # Clean empty comma sequences (e.g. "(Фр., IV, , )" -> "Фр., IV")
     s = re.sub(r",\s*,", ",", s)
     s = s.strip(" .,")
-    return f"{collector}:{s}" if collector else s
+    if collector and not s.startswith(collector):
+        s = f"{collector}, {s}"
+    return s
 
 
 def partition_candidates_by_lemma(
@@ -574,6 +601,12 @@ def partition_candidates_by_lemma(
     sft_works: set[str] = set()
 
     for w_id, c_list in work_cands.items():
+        is_nomys = "номис" in w_id.casefold() or any("номис" in c.citation.casefold() for c in c_list)
+        if is_nomys:
+            # Matviy Nomys ethnographic proverb collection is reserved strictly for SFT defense trajectories
+            sft_works.add(w_id)
+            continue
+
         h = int(hashlib.sha256(w_id.encode()).hexdigest()[:8], 16) % 100
         has_steppe = any(c.bucket == "southeastern_steppe" for c in c_list)
         has_slobozhan = any(c.bucket == "southeastern_slobozhan" for c in c_list)

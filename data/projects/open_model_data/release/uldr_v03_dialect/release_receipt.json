@@ -2,11 +2,11 @@
   "schema_version": "v1_dialect_multizone_release_receipt",
   "issue": 8102,
   "parent_epic": 6321,
-  "created_at": "2026-09-16T12:59:17.079164+00:00",
+  "created_at": "2026-09-16T13:11:55.694914+00:00",
   "git_commit": "gemini/8102-dialect-mining",
   "evaluation_benchmark": {
     "file_path": "data/projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
-    "sha256": "ef4ba580cf583b9f5aed7d64a79cc186ec1f193dc8aa826069c896a16b28fc8e",
+    "sha256": "364f95befefd885f3af49e2b9f2a3eea42d8e47b31866d7846ed1a13d0650c00",
     "total_cases": 1500,
     "preserve_cases": 998,
     "mixed_error_cases": 502,
@@ -16,10 +16,10 @@
       "southeastern": 500
     },
     "sub_zone_counts": {
-      "southwestern_pokuttia": 47,
-      "southwestern_boyko": 260,
-      "southwestern_bukovina": 148,
-      "southwestern_hutsul": 145,
+      "southwestern_pokuttia": 129,
+      "southwestern_bukovina": 147,
+      "southwestern_boyko": 231,
+      "southwestern_hutsul": 93,
       "northern_polissian": 400,
       "southeastern_slobozhan": 250,
       "southeastern_steppe": 250
@@ -27,7 +27,7 @@
   },
   "sft_training_dataset": {
     "file_path": "data/projects/open_model_data/release/uldr_v03_dialect/sft_dialect_protection_500.jsonl",
-    "sha256": "9f01c6af96f037a2ee45a34b181986f31e825b101dc149e4e50811cd282b7b3b",
+    "sha256": "2f3260cb108c1c9b0a3a684f190ad4376b6ca428519b10386ab4b23155ed5eab",
     "total_trajectories": 550,
     "dialect_trajectories": 450,
     "replay_buffer_trajectories": 100

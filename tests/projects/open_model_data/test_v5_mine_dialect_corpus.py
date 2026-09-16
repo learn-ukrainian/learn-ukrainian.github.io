@@ -41,6 +41,7 @@ from scripts.projects.open_model_data.v5_mine_dialect_corpus import (
     TRAJECTORY_SCHEMA_FILE,
     V02_BASELINE_SUITE_PATH,
     ZONE_MINIMUM_QUOTAS,
+    MinedSentence,
     canonical_source_work,
     clean_headword,
     clean_sentence,
@@ -49,6 +50,7 @@ from scripts.projects.open_model_data.v5_mine_dialect_corpus import (
     find_attested_synonym,
     normalize_for_eval,
     normalize_lookup_token,
+    partition_candidates_by_lemma,
     passage_fingerprint,
     verify_modern_literary_regression,
 )
@@ -311,62 +313,104 @@ def test_strict_zero_train_eval_leakage_firewall(
     assert not (eval_works_no_auth & sft_works_no_auth), f"Canonical citation work overlap detected: {eval_works_no_auth & sft_works_no_auth}"
 
     # 2c. Independent author-volume cross-split isolation (independent of canonical_source_work)
+    INDEPENDENT_AUTHORS_TABLE = [
+        ("Леся Українка", ["Леся Українка", "Л. Укр", "Л. Українка"]),
+        ("Ольга Кобилянська", ["Кобилянська", "Коб."]),
+        ("Іван Франко", ["Франко", "Фр."]),
+        ("Василь Стефаник", ["Стефаник", "Стеф."]),
+        ("Іван Нечуй-Левицький", ["Нечуй-Левицький", "Нечуй", "Н.-Лев."]),
+        ("Гнат Хоткевич", ["Хоткевич", "Хотк."]),
+        ("Юрій Федькович", ["Федькович", "Федьк."]),
+        ("Володимир Шухевич", ["Шухевич", "Шух."]),
+        ("Павло Чубинський", ["Чубинський", "Чуб."]),
+        ("Іван Котляревський", ["Котляревський", "Котл."]),
+        ("Григорій Квітка-Основ'яненко", ["Квітка-Основ'яненко", "Кв.-Осн.", "Квітка"]),
+        ("Григір Тютюнник", ["Тютюнник", "Тют."]),
+        ("Юрій Яновський", ["Яновський", "Ю. Янов.", "Янов."]),
+        ("Іван Манжура", ["Манжура", "Манжур", "Манж."]),
+        ("Марко Кропивницький", ["Кропивницький", "Кроп."]),
+        ("Іван Карпенко-Карий", ["Карпенко-Карий", "К.-Карий"]),
+        ("Кость Гордієнко", ["Гордієнко", "Горд."]),
+        ("Дмитро Яворницький", ["Яворницький", "Яворн.", "Эварн.", "Еварн."]),
+        ("К. Шейковський", ["Шейковський", "Шейк."]),
+        ("Лесь Мартович", ["Мартович", "Март."]),
+        ("Марко Черемшина", ["Черемшина", "Черемш."]),
+        ("Микола Хвильовий", ["Хвильовий", "Хвиль"]),
+        ("Панас Мирний", ["Мирний"]),
+        ("Олесь Гончар", ["Гончар"]),
+        ("Василь Кучер", ["Кучер"]),
+        ("Улас Самчук", ["Самчук"]),
+        ("Андрій Головко", ["Головко"]),
+        ("Остап Вишня", ["Вишня"]),
+        ("Матвій Номис", ["Номис"]),
+        ("Євген Желехівський", ["Желехівський", "Желех."]),
+        ("Іван Верхратський", ["Верхратський", "Вх."]),
+        ("Володимир Гнатюк", ["Гнатюк", "Гнат."]),
+        ("Слобідські народні записи", ["Харьк.", "Лебед.", "Слобідські"]),
+        ("Степові народні записи", ["Екатериносл.", "Херсон.", "Степові"]),
+    ]
+
     def independent_extract_author_and_volume(text: str) -> tuple[str, str]:
         auth = ""
-        for a in [
-            "Чубинський", "Чуб.", "Леся Українка", "Л. Укр", "Кобилянська", "Коб.",
-            "Хоткевич", "Хотк.", "Котляревський", "Котл.", "Стефаник", "Стеф.",
-            "Мирний", "Франко", "Фр.", "Гончар", "Нечуй", "Н.-Лев.",
-        ]:
-            if a in text:
-                auth = a
+        for canonical_name, patterns in INDEPENDENT_AUTHORS_TABLE:
+            for p in patterns:
+                if p in text:
+                    auth = canonical_name
+                    break
+            if auth:
                 break
         if not auth:
             return ("", "")
-        auth_base = {
-            "Чуб.": "Чубинський", "Чубинський": "Чубинський",
-            "Л. Укр": "Леся Українка", "Леся Українка": "Леся Українка",
-            "Коб.": "Кобилянська", "Кобилянська": "Кобилянська",
-            "Хотк.": "Хоткевич", "Хоткевич": "Хоткевич",
-            "Котл.": "Котляревський", "Котляревський": "Котляревський",
-            "Стеф.": "Стефаник", "Стефаник": "Стефаник",
-            "Мирний": "Мирний", "Франко": "Франко", "Фр.": "Франко",
-            "Гончар": "Гончар", "Н.-Лев.": "Нечуй", "Нечуй": "Нечуй",
-        }[auth]
 
         if re.search(r",\s*(?:НІ|HI|111)\s*,\s*(?=(?:18|19|20)\d{2})", text):
-            return (auth_base, "III")
+            return (auth, "III")
         m = re.search(r"\b([IІVУВХXLCDMіувхсlcdm]+)\b", text)
         if m:
             table = str.maketrans("ІіХхСсУуВв", "IiXxCcVvVv")
-            return (auth_base, m.group(1).translate(table).upper())
+            return (auth, m.group(1).translate(table).upper())
         m_ar = re.search(r",\s*([1-9]|10)\s*,", text)
         if m_ar:
             ar_to_ro = {
                 "1": "I", "2": "II", "3": "III", "4": "IV", "5": "V",
                 "6": "VI", "7": "VII", "8": "VIII", "9": "IX", "10": "X",
             }
-            return (auth_base, ar_to_ro[m_ar.group(1)])
-        return (auth_base, "")
+            return (auth, ar_to_ro[m_ar.group(1)])
 
-    independent_eval_vols = {
-        independent_extract_author_and_volume(f"{c.get('collector_or_author', '')} {c['source_metadata']['citation']}")
-        for c in eval_cases
-    } - {("", "")}
+        m_yr = re.search(r"\b((?:18|19|20)\d{2})\b", text)
+        if m_yr:
+            return (auth, m_yr.group(1))
+        return (auth, "single_work")
 
-    independent_sft_vols = set()
+    independent_eval_vols: set[tuple[str, str]] = set()
+    independent_eval_works: set[tuple[str, str]] = set()
+    for c in eval_cases:
+        raw = f"{c.get('collector_or_author', '')} {c['source_metadata']['citation']}"
+        av = independent_extract_author_and_volume(raw)
+        assert av[0] != "", f"Unresolved author identity in eval case {c.get('eval_id')}: {raw}"
+        if av[1] in {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"}:
+            independent_eval_vols.add(av)
+        independent_eval_works.add(av)
+
+    independent_sft_vols: set[tuple[str, str]] = set()
+    independent_sft_works: set[tuple[str, str]] = set()
     for t in sft_trajectories:
         if not t.get("is_calque_or_russianism"):
+            found = False
             for alt in t.get("register_spectrum", {}).get("alternatives", []):
                 src = alt.get("evidence_source", "")
-                av = independent_extract_author_and_volume(src)
-                if av != ("", ""):
-                    independent_sft_vols.add(av)
+                if " («" in src:
+                    av = independent_extract_author_and_volume(src)
+                    assert av[0] != "", f"Unresolved author identity in dialect SFT trajectory {t.get('trajectory_id')}: {src}"
+                    if av[1] in {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"}:
+                        independent_sft_vols.add(av)
+                    independent_sft_works.add(av)
+                    found = True
+            assert found, f"No evidence source with citation in dialect SFT trajectory {t.get('trajectory_id')}"
 
     # Specific hard regression assertions:
     # A. Chubynsky Vol III: zero cross-split leakage
     assert not (
-        ("Чубинський", "III") in independent_eval_vols and ("Чубинський", "III") in independent_sft_vols
+        ("Павло Чубинський", "III") in independent_eval_vols and ("Павло Чубинський", "III") in independent_sft_vols
     ), "Chubynsky Vol III leaked across train/eval partition"
     # B. Lesya Ukrainka Vol III: zero cross-split leakage
     assert not (
@@ -378,9 +422,13 @@ def test_strict_zero_train_eval_leakage_firewall(
         if "Номис" in c.get("collector_or_author", "") or "Номис" in c["source_metadata"]["citation"]
     ]
     assert not nomys_eval, f"Nomys leaked into eval cases: {len(nomys_eval)}"
-    # D. Independent volume-level collision check across all authors
-    vol_overlap = {av for av in (independent_eval_vols & independent_sft_vols) if av[1] != ""}
+
+    # D. Independent volume-level and work-level collision check across ALL authors without silent drops
+    vol_overlap = independent_eval_vols & independent_sft_vols
     assert not vol_overlap, f"Independent author-volume overlap detected between eval and SFT: {vol_overlap}"
+
+    work_overlap = independent_eval_works & independent_sft_works
+    assert not work_overlap, f"Independent author-work overlap detected between eval and SFT: {work_overlap}"
 
     # 3. Complete sentence and passage containment check
     sft_blobs = []
@@ -818,6 +866,94 @@ def test_canonical_source_work_equivalence_and_year_preservation() -> None:
     assert canonical_source_work("Шевч., 1847") == "Шевч., 1847"
     assert canonical_source_work("Куліш, 1851") == "Куліш, 1851"
     assert canonical_source_work("Костомаров, 1852") == "Костомаров, 1852"
+
+    # P1: Author alias normalization across collector and citation body
+    assert canonical_source_work("Леся Українка, V, 1952, 10", "Леся Українка") == "Л. Укр. V"
+    assert canonical_source_work("Л. Укр., V, 1952, 40", "Леся Українка") == "Л. Укр. V"
+    assert canonical_source_work("Леся Українка, V, 1952, 10") == "Л. Укр. V"
+    assert canonical_source_work("Л. Укр., V, 1952, 40") == "Л. Укр. V"
+    assert canonical_source_work("Ольга Кобилянська, I, 1956, 112", "Ольга Кобилянська") == "Коб. I"
+    assert canonical_source_work("Коб., І, 1956, 9", "Ольга Кобилянська") == "Коб. I"
+    assert canonical_source_work("Черемш., Тв„ 1960, 215", "Марко Черемшина") == "Черемш., Тв., 1960"
+    assert canonical_source_work("Черемш., Тв., 1960, 66", "Марко Черемшина") == "Черемш., Тв., 1960"
+    assert canonical_source_work("Март., Вибр., 1954, 151", "Лесь Мартович") == "Март., Тв., 1954"
+    assert canonical_source_work("Март., Тв., 1954, 35", "Лесь Мартович") == "Март., Тв., 1954"
+    assert canonical_source_work("Федьк., І, 1960, 57", "Юрій Федькович") == "Федьк. I"
+    assert canonical_source_work("Юрій Федькович, I, 1960, 10", "Юрій Федькович") == "Федьк. I"
+    assert canonical_source_work("Шух. I 22", "Володимир Шухевич") == "Шух. I"
+    assert canonical_source_work("Володимир Шухевич, I, 1899, 50", "Володимир Шухевич") == "Шух. I"
+    assert canonical_source_work("Янов., II, 1958, 20", "Юрій Яновський") == "Янов. II"
+    assert canonical_source_work("Юрій Яновський, II, 1958, 5", "Юрій Яновський") == "Янов. II"
+
+
+def test_partition_author_alias_leakage_regression() -> None:
+    """Verify that equivalent citations with different author aliases partition to the exact same split."""
+    pairs = [
+        # Lesya Ukrainka Vol V
+        (
+            MinedSentence(
+                word="бевзень", sentence="Тест 1", citation="(Леся Українка, V, 1952, 10)",
+                macro_zone="northern", sub_zone="northern_polissian", bucket="northern",
+                locality="Волинь", collector="Леся Українка", work="Леся Українка. Твори", source_db="sum11",
+            ),
+            MinedSentence(
+                word="бевзень", sentence="Тест 2", citation="(Л. Укр., V, 1952, 40)",
+                macro_zone="northern", sub_zone="northern_polissian", bucket="northern",
+                locality="Волинь", collector="Леся Українка", work="Леся Українка. Твори", source_db="sum11",
+            ),
+        ),
+        # Kobylyanska Vol I
+        (
+            MinedSentence(
+                word="файний", sentence="Тест 3", citation="(Ольга Кобилянська, I, 1956, 112)",
+                macro_zone="southwestern", sub_zone="southwestern_bukovina", bucket="southwestern",
+                locality="Буковина", collector="Ольга Кобилянська", work="Ольга Кобилянська. Твори", source_db="sum11",
+            ),
+            MinedSentence(
+                word="файний", sentence="Тест 4", citation="(Коб., І, 1956, 9)",
+                macro_zone="southwestern", sub_zone="southwestern_bukovina", bucket="southwestern",
+                locality="Буковина", collector="Ольга Кобилянська", work="Ольга Кобилянська. Твори", source_db="sum11",
+            ),
+        ),
+        # Cheremshyna 1960 (with OCR low-quote artifact)
+        (
+            MinedSentence(
+                word="легінь", sentence="Тест 5", citation="(Черемш., Тв„ 1960, 215)",
+                macro_zone="southwestern", sub_zone="southwestern_pokuttia", bucket="southwestern",
+                locality="Покуття", collector="Марко Черемшина", work="Марко Черемшина. Твори", source_db="sum11",
+            ),
+            MinedSentence(
+                word="легінь", sentence="Тест 6", citation="(Черемш., Тв., 1960, 66)",
+                macro_zone="southwestern", sub_zone="southwestern_pokuttia", bucket="southwestern",
+                locality="Покуття", collector="Марко Черемшина", work="Марко Черемшина. Твори", source_db="sum11",
+            ),
+        ),
+        # Martovych 1954 (Vybr. vs Tv.)
+        (
+            MinedSentence(
+                word="швагро", sentence="Тест 7", citation="(Март., Вибр., 1954, 151)",
+                macro_zone="southwestern", sub_zone="southwestern_pokuttia", bucket="southwestern",
+                locality="Покуття", collector="Лесь Мартович", work="Лесь Мартович. Твори", source_db="sum11",
+            ),
+            MinedSentence(
+                word="швагро", sentence="Тест 8", citation="(Март., Тв., 1954, 35)",
+                macro_zone="southwestern", sub_zone="southwestern_pokuttia", bucket="southwestern",
+                locality="Покуття", collector="Лесь Мартович", work="Лесь Мартович. Твори", source_db="sum11",
+            ),
+        ),
+    ]
+
+    for c_a, c_b in pairs:
+        w_a = canonical_source_work(c_a.citation, c_a.collector)
+        w_b = canonical_source_work(c_b.citation, c_b.collector)
+        assert w_a == w_b, f"Work canonicalization mismatch: {w_a!r} != {w_b!r}"
+
+        # Test partition with pair
+        eval_res, sft_res = partition_candidates_by_lemma([c_a, c_b])
+        # Either both in eval, or both in SFT; NEVER split across the firewall!
+        assert (len(eval_res) == 2 and len(sft_res) == 0) or (len(eval_res) == 0 and len(sft_res) == 2), (
+            f"Author alias caused firewall split: eval={eval_res}, sft={sft_res}"
+        )
 
 
 def test_find_attested_synonym_rejects_descriptive_and_crossref() -> None:
