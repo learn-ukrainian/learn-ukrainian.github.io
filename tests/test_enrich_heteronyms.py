@@ -2987,8 +2987,8 @@ def test_curated_heteronyms_batch_13():
     assert var_тупик is not None and len(var_тупик) == 2
     assert var_тупик[0]["headword"] == "ту́пик"
     assert var_тупик[1]["headword"] == "тупи́к"
-    assert var_тупик[1]["pre_soviet_witness"] is not None
-    assert "Грінченко (1907–1909)" in var_тупик[1]["pre_soviet_witness"]["witness"]
+    assert var_тупик[0]["pre_soviet_witness"] is None
+    assert var_тупик[1]["pre_soviet_witness"] is None
 
     # 18. тупиковий: ту́пиковий vs тупико́вий
     var_тупиковий = enrich_heteronyms.build_heteronyms_for_lemma("тупиковий")
@@ -3047,8 +3047,7 @@ def test_curated_heteronyms_batch_13():
     assert var_шабаш[1]["headword"] == "шаба́ш"
     assert var_шабаш[0]["pre_soviet_witness"] is not None
     assert "Грінченко (1907–1909)" in var_шабаш[0]["pre_soviet_witness"]["witness"]
-    assert var_шабаш[1]["pre_soviet_witness"] is not None
-    assert "Грінченко (1907–1909)" in var_шабаш[1]["pre_soviet_witness"]["witness"]
+    assert var_шабаш[1]["pre_soviet_witness"] is None
 
     # 26. шаровий: ша́ровий vs шарови́й
     var_шаровий = enrich_heteronyms.build_heteronyms_for_lemma("шаровий")
@@ -3061,10 +3060,9 @@ def test_curated_heteronyms_batch_13():
     assert var_явлений is not None and len(var_явлений) == 2
     assert var_явлений[0]["headword"] == "я́влений"
     assert var_явлений[1]["headword"] == "явле́ний"
-    assert var_явлений[0]["pre_soviet_witness"] is not None
-    assert "Грінченко (1907–1909)" in var_явлений[0]["pre_soviet_witness"]["witness"]
+    assert var_явлений[0]["pre_soviet_witness"] is None
     assert var_явлений[1]["pre_soviet_witness"] is not None
-    assert "Словник / Церковні джерела" in var_явлений[1]["pre_soviet_witness"]["witness"]
+    assert "Грінченко (1907–1909)" in var_явлений[1]["pre_soviet_witness"]["witness"]
 
     # 28. яловий: я́ловий vs яло́вий
     var_яловий = enrich_heteronyms.build_heteronyms_for_lemma("яловий")
@@ -3113,3 +3111,18 @@ def test_batch13_lemmas_not_duplicated_from_earlier_batches():
         for v in variants:
             assert "СУМ-11" not in v["meaning"]["source"], f"Found СУМ-11 in meaning.source for {lemma}"
             assert "СУМ-11" not in v["stress"]["source"], f"Found СУМ-11 in stress.source for {lemma}"
+
+
+def test_batch13_vesum_attestation_and_witness_integrity():
+    """Ensure Batch 13 has accurate vesum_attested flags and verified Grinchenko quotes."""
+    from scripts.lexicon.curated_heteronyms_batch13 import CURATED_HETERONYMS_BATCH_13
+
+    # Lemmas without base lemma entries in VESUM
+    unattested = {"містовий", "навидіти", "навидітися", "світок", "совик", "типик", "гвоздик"}
+    for lem in unattested:
+        for v in CURATED_HETERONYMS_BATCH_13[lem]:
+            assert v["heritage_status"]["vesum_attested"] is False, f"Expected {lem} to have vesum_attested=False"
+
+    # волохи: воло́хи (ethnonym) is attested as plural of волох, but во́лохи (body hairs) is not
+    assert CURATED_HETERONYMS_BATCH_13["волохи"][0]["heritage_status"]["vesum_attested"] is False
+    assert CURATED_HETERONYMS_BATCH_13["волохи"][1]["heritage_status"]["vesum_attested"] is True

@@ -26,7 +26,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
              'heritage_status': {'classification': 'standard',
                                  'is_russianism': False,
                                  'russian_shadow': False,
-                                 'vesum_attested': True},
+                                 'vesum_attested': False},
              'pronunciation': {'ipa': '[ˈwɔlɔxɪ]'},
              'stress': {'form': 'во́лохи', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/волохи'},
              'morphology': {'pos': 'іменник',
@@ -93,7 +93,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
               'heritage_status': {'classification': 'standard',
                                   'is_russianism': False,
                                   'russian_shadow': False,
-                                  'vesum_attested': True},
+                                  'vesum_attested': False},
               'pronunciation': {'ipa': '[ˈɦwɔzdɪk]'},
               'stress': {'form': 'гво́здик', 'source': 'СУМ-20', 'url': 'https://sum20ua.com/?wordid=17942'},
               'morphology': {'pos': 'іменник',
@@ -126,7 +126,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
               'heritage_status': {'classification': 'standard',
                                   'is_russianism': False,
                                   'russian_shadow': False,
-                                  'vesum_attested': True},
+                                  'vesum_attested': False},
               'pronunciation': {'ipa': '[ɦwɔˈzdɪk]'},
               'stress': {'form': 'гвозди́к', 'source': 'СУМ-20', 'url': 'https://sum20ua.com/?wordid=17943'},
               'morphology': {'pos': 'іменник',
@@ -152,9 +152,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                                                                  'для лексикографічної прозорості.'},
               'pre_soviet_witness': {'witness': 'Грінченко (1907–1909)',
                                      'quote': 'Гвоздик, -ка, м. 1) Раст. а) Гвоздика, Dianthus. Вх. Пч. І. 10. (Вінки) '
-                                              'з гвоздиків та чорнобривців. Левиц. І. 188. б) мн. Tagetes erecta L. '
-                                              'ЗЮЗО. І. 138. 2) Пряность: гвоздика, caryophyllus aromaticus. МУЕ. I. '
-                                              '109.',
+                                              'з гвоздите та чорнобривців. Левиц. І. 188.',
                                      'historical_note': 'Автентична фіксація народної ботанічної номенклатури у '
                                                         'Словнику Бориса Грінченка.'}}],
  'містовий': [{'headword': 'мі́стовий',
@@ -165,7 +163,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                'heritage_status': {'classification': 'standard',
                                    'is_russianism': False,
                                    'russian_shadow': False,
-                                   'vesum_attested': True},
+                                   'vesum_attested': False},
                'pronunciation': {'ipa': '[ˈm⁽ʲ⁾istɔwɪj]'},
                'stress': {'form': 'мі́стовий', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/містовий'},
                'morphology': {'pos': 'прикметник', 'paradigm': {'kind': 'adjective'}},
@@ -192,7 +190,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                'heritage_status': {'classification': 'standard',
                                    'is_russianism': False,
                                    'russian_shadow': False,
-                                   'vesum_attested': True},
+                                   'vesum_attested': False},
                'pronunciation': {'ipa': '[m⁽ʲ⁾istɔˈwɪj]'},
                'stress': {'form': 'містови́й', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/містовий'},
                'morphology': {'pos': 'прикметник', 'paradigm': {'kind': 'adjective'}},
@@ -219,7 +217,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                'heritage_status': {'classification': 'standard',
                                    'is_russianism': False,
                                    'russian_shadow': False,
-                                   'vesum_attested': True},
+                                   'vesum_attested': False},
                'pronunciation': {'ipa': '[ˈnɑwɪd⁽ʲ⁾itɪ]'},
                'stress': {'form': 'на́видіти', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/навидіти'},
                'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'недоконаний'}},
@@ -251,7 +249,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                'heritage_status': {'classification': 'standard',
                                    'is_russianism': False,
                                    'russian_shadow': False,
-                                   'vesum_attested': True},
+                                   'vesum_attested': False},
                'pronunciation': {'ipa': '[nɐˈwɪd⁽ʲ⁾itɪ]'},
                'stress': {'form': 'нави́діти', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/навидіти'},
                'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'недоконаний'}},
@@ -279,7 +277,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                  'heritage_status': {'classification': 'standard',
                                      'is_russianism': False,
                                      'russian_shadow': False,
-                                     'vesum_attested': True},
+                                     'vesum_attested': False},
                  'pronunciation': {'ipa': '[ˈnɑwɪd⁽ʲ⁾itɪsʲɐ]'},
                  'stress': {'form': 'на́видітися', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/навидітися'},
                  'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'недоконаний'}},
@@ -306,7 +304,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                  'heritage_status': {'classification': 'standard',
                                      'is_russianism': False,
                                      'russian_shadow': False,
-                                     'vesum_attested': True},
+                                     'vesum_attested': False},
                  'pronunciation': {'ipa': '[nɐˈwɪd⁽ʲ⁾itɪsʲɐ]'},
                  'stress': {'form': 'нави́дітися', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/навидітися'},
                  'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'доконаний'}},
@@ -333,7 +331,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
              'heritage_status': {'classification': 'standard',
                                  'is_russianism': False,
                                  'russian_shadow': False,
-                                 'vesum_attested': True},
+                                 'vesum_attested': False},
              'pronunciation': {'ipa': '[ˈsʲwitɔk]'},
              'stress': {'form': 'сві́то́к', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/світок'},
              'morphology': {'pos': 'іменник',
@@ -366,7 +364,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
              'heritage_status': {'classification': 'standard',
                                  'is_russianism': False,
                                  'russian_shadow': False,
-                                 'vesum_attested': True},
+                                 'vesum_attested': False},
              'pronunciation': {'ipa': '[sʲw⁽ʲ⁾iˈtɔk]'},
              'stress': {'form': 'світо́к', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/світок'},
              'morphology': {'pos': 'іменник',
@@ -399,7 +397,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
             'heritage_status': {'classification': 'standard',
                                 'is_russianism': False,
                                 'russian_shadow': False,
-                                'vesum_attested': True},
+                                'vesum_attested': False},
             'pronunciation': {'ipa': '[ˈsɔwɪk]'},
             'stress': {'form': 'со́вик', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/совик'},
             'morphology': {'pos': 'іменник',
@@ -427,7 +425,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
             'heritage_status': {'classification': 'standard',
                                 'is_russianism': False,
                                 'russian_shadow': False,
-                                'vesum_attested': True},
+                                'vesum_attested': False},
             'pronunciation': {'ipa': '[sɔˈwɪk]'},
             'stress': {'form': 'сови́к', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/совик'},
             'morphology': {'pos': 'іменник',
@@ -457,7 +455,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
             'heritage_status': {'classification': 'standard',
                                 'is_russianism': False,
                                 'russian_shadow': False,
-                                'vesum_attested': True},
+                                'vesum_attested': False},
             'pronunciation': {'ipa': '[ˈtɪpɪk]'},
             'stress': {'form': 'ти́пик', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/типик'},
             'morphology': {'pos': 'іменник',
@@ -485,7 +483,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
             'heritage_status': {'classification': 'standard',
                                 'is_russianism': False,
                                 'russian_shadow': False,
-                                'vesum_attested': True},
+                                'vesum_attested': False},
             'pronunciation': {'ipa': '[tɪˈpɪk]'},
             'stress': {'form': 'типи́к', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/типик'},
             'morphology': {'pos': 'іменник',
@@ -621,8 +619,8 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                                                 'historical_note': 'Зафіксовано в радянський період (СУМ-11). Наведено '
                                                                    'для лексикографічної прозорості.'},
                 'pre_soviet_witness': {'witness': 'Грінченко (1907–1909)',
-                                       'quote': 'Требувати, -бУю, -єш, гл... 3) — чОго, чим. Нуждаться, иметь '
-                                                'необходимость в чем. Пана сі не бою, війтом не требую. Шух. І. 199.',
+                                       'quote': '3) — чОго, чим. Нуждаться, иметь необходимость в чем. Вх. Зн. 70. '
+                                                'Пана сі не бою, війтом не требую. Шух. І. 199.',
                                        'historical_note': 'Фіксація гуцульського мововживання у Словнику Бориса '
                                                           'Грінченка.'}}],
  'трухнути': [{'headword': 'тру́хнути',
@@ -677,7 +675,9 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                                                'historical_note': 'Зафіксовано в радянський період (СУМ-11). Наведено '
                                                                   'для лексикографічної прозорості.'},
                'pre_soviet_witness': {'witness': 'Грінченко (1907–1909)',
-                                      'quote': 'Яблука поспіли; він трухнув [дерево], — всі осипались.',
+                                      'quote': 'Трухнути 2, -нУ, -нЕш, гл. Тряхнуть. Як трухнуть, а гроші й '
+                                               'посипались. Грин. І. 43. Яблука поспіли; він трухнув, — всі осипались. '
+                                               'Драг. 131.',
                                       'historical_note': 'Фіксація у Словнику Бориса Грінченка.'}}],
  'тряхнути': [{'headword': 'тря́хнути',
                'short_label': 'підсихати, ставати цупкішим і сухішим (про вологу землю, білизну) (недок.)',
@@ -817,8 +817,9 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                                               'historical_note': 'Зафіксовано в радянський період (СУМ-11). Наведено '
                                                                  'для лексикографічної прозорості.'},
               'pre_soviet_witness': {'witness': 'Грінченко (1907–1909)',
-                                     'quote': 'Тріпати, -паю... гл. 1) Трясти... 2) Трясти, трепетать... Крильцями '
-                                              'тріпа. По під мостом, мостом трепле риба хвостом.',
+                                     'quote': '2) Трясти, трепетать, шлепать, хлопать (крыльями, хвостом и пр.). '
+                                              'Крильцями тріпа. Мнж. 8. По під мостом, мостом трепле риба хвостом. '
+                                              'Мет. 302.',
                                      'historical_note': 'Фіксація у Словнику Бориса Грінченка.'}},
              {'headword': 'тріпа́ти',
               'short_label': 'із силою шарпати, бити (про вітер, бурю); тіпати волокно; цокотіти (недок.)',
@@ -875,10 +876,8 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                                                 'historical_note': 'Зафіксовано в радянський період (СУМ-11). Наведено '
                                                                    'для лексикографічної прозорості.'},
                 'pre_soviet_witness': {'witness': 'Грінченко (1907–1909)',
-                                       'quote': 'ТрІпатися, -паюся, -єшся, гл. 1) Биться. Риба... тріпалась, '
-                                                'побивалась в сітці. Левиц. I. 109. 2) Встряхиваться, трепетать... 3) '
-                                                'Горячиться, сердиться... Не тріпайся, а попереду розпитайся, хто '
-                                                'винен.',
+                                       'quote': 'ТрІпатися, -паюся, -єшся, гл. 1) Биться. Риба блищала проти місяця '
+                                                'білою як срібло лускою, тріпалась, побивалась в сітці. Левиц. I. 109.',
                                        'historical_note': 'Автентичне мововживання, зафіксоване Борисом Грінченком.'}},
                {'headword': 'тріпа́тися',
                 'short_label': 'розвіватися, коливатися від подиху вітру (про коси, прапори, папери)',
@@ -1021,9 +1020,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                                             'keywords': [],
                                             'historical_note': 'Зафіксовано в радянський період (СУМ-11). Наведено для '
                                                                'лексикографічної прозорості.'},
-            'pre_soviet_witness': {'witness': 'Грінченко (1907–1909)',
-                                   'quote': 'Тупик, -ка, м. Тупой ножъ. Желех.',
-                                   'historical_note': 'Фіксація у Словнику Бориса Грінченка.'}}],
+            'pre_soviet_witness': None}],
  'тупиковий': [{'headword': 'ту́пиковий',
                 'short_label': 'стосовний птаха тупика (орнітол.)',
                 'gloss': 'puffin (relating to the puffin bird, ornithological)',
@@ -1096,7 +1093,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                                              'historical_note': 'Зафіксовано в радянський період (СУМ-11). Наведено '
                                                                 'для лексикографічної прозорості.'},
              'pre_soviet_witness': {'witness': 'Грінченко (1907–1909)',
-                                    'quote': 'Тучний, -а, -е. Жирный, тучный. Тучна свиня.',
+                                    'quote': 'Тучний 1, -а, -е. 1) Жирный. Тучні ягнята. К. Псал. 263.',
                                     'historical_note': 'Фіксація у Словнику Бориса Грінченка.'}},
             {'headword': 'тучни́й',
              'short_label': 'великий, рясний, грозовий (про літній дощ) (рідко)',
@@ -1122,7 +1119,8 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                                              'historical_note': 'Зафіксовано в радянський період (СУМ-11). Наведено '
                                                                 'для лексикографічної прозорості.'},
              'pre_soviet_witness': {'witness': 'Грінченко (1907–1909)',
-                                    'quote': 'Тучний 2, -а, -е. (О дождѣ): тучный, обильный. Дощ тучний. Канев. у.',
+                                    'quote': 'Тучний 2, -а, -е. Грозовый. тучний дощ. Сильный, но кратковременный '
+                                             'дождь с грозою. Ой ідуть дощі усе тучнії. Грин. III. 637.',
                                     'historical_note': 'Фіксація у Словнику Бориса Грінченка.'}}],
  'ферула': [{'headword': 'фе́рула',
              'short_label': 'багаторічна зонтична рослина (Ferula, ботан.)',
@@ -1263,8 +1261,9 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                                              'historical_note': 'Зафіксовано в радянський період (СУМ-11). Наведено '
                                                                 'для лексикографічної прозорості.'},
              'pre_soviet_witness': {'witness': 'Грінченко (1907–1909)',
-                                    'quote': 'Фірман, -на, м. Кучеръ, возница. Желех.',
-                                    'historical_note': 'Фіксація у Словнику Бориса Грінченка.'}},
+                                    'quote': 'Фірман, -на, м. = фурман. Kolb. I. 68.',
+                                    'historical_note': 'Фіксація у Словнику Бориса Грінченка (діалектна назва '
+                                                       'візника).'}},
             {'headword': 'фірма́н',
              'short_label': 'султанський указ, едикт правителя в мусульманських країнах (іст.)',
              'gloss': 'firman (royal mandate or decree issued by an Islamic sovereign)',
@@ -1407,9 +1406,10 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                                                'historical_note': 'Зафіксовано в радянський період (СУМ-11). Наведено '
                                                                   'для лексикографічної прозорості.'},
                'pre_soviet_witness': {'witness': 'Грінченко (1907–1909)',
-                                      'quote': 'ХлиснУти, -нУ, -нЕш, гл. 1) Однокр. отъ хлистати. 2) Быстро пойти, '
-                                               'побѣжать. Хлиснув прямо додому.',
-                                      'historical_note': 'Фіксація у Словнику Бориса Грінченка.'}}],
+                                      'quote': 'Хлиснути, -ну, -неш, гл. Хлебнуть. Левиц. Пов. 160. А деякі так так '
+                                               'хлиснули, що де упали, там заснули. Котл. Ен.',
+                                      'historical_note': 'Фіксація у Словнику Бориса Грінченка (значення «хлебнуть, '
+                                                         'жадібно ковтнути»).'}}],
  'шабаш': [{'headword': 'ша́баш',
             'short_label': 'суботній релігійний спочинок в юдаїзмі; відьомське збіговисько',
             'gloss': 'Sabbath (Jewish day of rest); witches’ Sabbath',
@@ -1438,7 +1438,8 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                                             'historical_note': 'Зафіксовано в радянський період (СУМ-11). Наведено для '
                                                                'лексикографічної прозорості.'},
             'pre_soviet_witness': {'witness': 'Грінченко (1907–1909)',
-                                   'quote': 'Шабаш, -шу, м. Шабашъ (еврейскій праздникъ). Стор. М. Пр. 23.',
+                                   'quote': 'Шабаш, -шу, м. Празднованіе субботняго дня у евреев. Поспіша, як жид на '
+                                            'шабаш. Ном. № 11429.',
                                    'historical_note': 'Фіксація у Словнику Бориса Грінченка.'}},
            {'headword': 'шаба́ш',
             'short_label': 'розм. закінчення роботи, перерва; виг. кінець, годі!',
@@ -1468,10 +1469,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                                             'keywords': [],
                                             'historical_note': 'Зафіксовано в радянський період (СУМ-11). Наведено для '
                                                                'лексикографічної прозорості.'},
-            'pre_soviet_witness': {'witness': 'Грінченко (1907–1909)',
-                                   'quote': 'ШабАш, межд. Конецъ! шабашъ! гобзинь. Шабаш хлопці! шабаш! не бийте! Мир. '
-                                            'ХРВ. 257.',
-                                   'historical_note': 'Фіксація у Словнику Бориса Грінченка.'}}],
+            'pre_soviet_witness': None}],
  'шаровий': [{'headword': 'ша́ровий',
               'short_label': 'сіро-димчастий, сталево-попелястий (про колір) (діал.)',
               'gloss': 'slate-gray, smoky gray, battleship-gray (dial.)',
@@ -1543,9 +1541,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                                               'keywords': [],
                                               'historical_note': 'Зафіксовано в радянський період (СУМ-11). Наведено '
                                                                  'для лексикографічної прозорості.'},
-              'pre_soviet_witness': {'witness': 'Грінченко (1907–1909)',
-                                     'quote': 'Явлений, -а, -е. Явившійся.',
-                                     'historical_note': 'Фіксація у Словнику Бориса Грінченка.'}},
+              'pre_soviet_witness': None},
              {'headword': 'явле́ний',
               'short_label': 'церк. заст. чудодійний, відкритий божественним явленням (про ікону)',
               'gloss': 'miraculous, revealed by divine vision/miracle (of an icon, church archaic)',
@@ -1570,10 +1566,10 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                                               'keywords': [],
                                               'historical_note': 'Зафіксовано в радянський період (СУМ-11). Наведено '
                                                                  'для лексикографічної прозорості.'},
-              'pre_soviet_witness': {'witness': 'Словник / Церковні джерела',
-                                     'quote': 'З явленою іконою трапилась неприємна оказія: на неї почав претендувати '
-                                              'піп з другого приходу...',
-                                     'historical_note': 'Традиційний релігійно-культовий епітет.'}}],
+              'pre_soviet_witness': {'witness': 'Грінченко (1907–1909)',
+                                     'quote': 'Явлений, -а, -е. Явленный, чудесный. Явлена ікона. Грин. І. 62.',
+                                     'historical_note': 'Фіксація у Словнику Бориса Грінченка (чудодійний, відкритий '
+                                                        'божественним явленням).'}}],
  'яловий': [{'headword': 'я́ловий',
              'short_label': 'який не дає плоду, безплідний (про самиць худоби або ґрунт); холостий',
              'gloss': 'barren, sterile (cow/livestock), fallow (soil), idle',
@@ -1599,7 +1595,8 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                                              'historical_note': 'Зафіксовано в радянський період (СУМ-11). Наведено '
                                                                 'для лексикографічної прозорості.'},
              'pre_soviet_witness': {'witness': 'Грінченко (1907–1909)',
-                                    'quote': 'Яловий, -а, -е. 1) Безплодный, яловый (о скотѣ). Ялова корова.',
+                                    'quote': 'Яловий, -а, -е. 1) Безплодный (о скоте), гулевой. Ялова кобила. Вас. '
+                                             '197. В убогого одна корова, та й та ялова. Мнж. 169.',
                                     'historical_note': 'Фіксація у Словнику Бориса Грінченка.'}},
             {'headword': 'яло́вий',
              'short_label': 'ялиновий, смерековий, зі смереки/ялини (діал.)',
@@ -1624,5 +1621,5 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                                              'historical_note': 'Зафіксовано в радянський період (СУМ-11). Наведено '
                                                                 'для лексикографічної прозорості.'},
              'pre_soviet_witness': {'witness': 'Грінченко (1907–1909)',
-                                    'quote': 'Яловий 2, -а, -е = Ялиновий. Вх. Пч. II. 34.',
+                                    'quote': 'Яловий 2, -а, -е. = ялиновий. Будуй, мати, дім яловий. Гол. І. 99.',
                                     'historical_note': 'Фіксація діалектного значення у Словнику Бориса Грінченка.'}}]}

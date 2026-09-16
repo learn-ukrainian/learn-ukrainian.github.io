@@ -39026,7 +39026,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "classification": "standard",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[ˈwɔlɔxɪ]"
@@ -39130,7 +39130,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "classification": "standard",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[ˈɦwɔzdɪk]"
@@ -39181,7 +39181,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "classification": "standard",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[ɦwɔˈzdɪk]"
@@ -39216,7 +39216,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "pre_soviet_witness": {
         "witness": "Грінченко (1907–1909)",
-        "quote": "Гвоздик, -ка, м. 1) Раст. а) Гвоздика, Dianthus. Вх. Пч. І. 10. (Вінки) з гвоздиків та чорнобривців. Левиц. І. 188. б) мн. Tagetes erecta L. ЗЮЗО. І. 138. 2) Пряность: гвоздика, caryophyllus aromaticus. МУЕ. I. 109.",
+        "quote": "Гвоздик, -ка, м. 1) Раст. а) Гвоздика, Dianthus. Вх. Пч. І. 10. (Вінки) з гвоздите та чорнобривців. Левиц. І. 188.",
         "historical_note": "Автентична фіксація народної ботанічної номенклатури у Словнику Бориса Грінченка."
       }
     }
@@ -39234,7 +39234,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "classification": "standard",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[ˈm⁽ʲ⁾istɔwɪj]"
@@ -39282,7 +39282,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "classification": "standard",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[m⁽ʲ⁾istɔˈwɪj]"
@@ -39328,7 +39328,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "classification": "standard",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[ˈnɑwɪd⁽ʲ⁾itɪ]"
@@ -39377,7 +39377,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "classification": "standard",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[nɐˈwɪd⁽ʲ⁾itɪ]"
@@ -39428,7 +39428,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "classification": "standard",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[ˈnɑwɪd⁽ʲ⁾itɪsʲɐ]"
@@ -39477,7 +39477,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "classification": "standard",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[nɐˈwɪd⁽ʲ⁾itɪsʲɐ]"
@@ -39528,7 +39528,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "classification": "standard",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[ˈsʲwitɔk]"
@@ -39579,7 +39579,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "classification": "standard",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[sʲw⁽ʲ⁾iˈtɔk]"
@@ -39632,7 +39632,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "classification": "standard",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[ˈsɔwɪk]"
@@ -39679,7 +39679,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "classification": "standard",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[sɔˈwɪk]"
@@ -39728,7 +39728,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "classification": "standard",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[ˈtɪpɪk]"
@@ -39775,7 +39775,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "classification": "standard",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[tɪˈpɪk]"
@@ -40008,7 +40008,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "pre_soviet_witness": {
         "witness": "Грінченко (1907–1909)",
-        "quote": "Требувати, -бУю, -єш, гл... 3) — чОго, чим. Нуждаться, иметь необходимость в чем. Пана сі не бою, війтом не требую. Шух. І. 199.",
+        "quote": "3) — чОго, чим. Нуждаться, иметь необходимость в чем. Вх. Зн. 70. Пана сі не бою, війтом не требую. Шух. І. 199.",
         "historical_note": "Фіксація гуцульського мововживання у Словнику Бориса Грінченка."
       }
     }
@@ -40108,7 +40108,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "pre_soviet_witness": {
         "witness": "Грінченко (1907–1909)",
-        "quote": "Яблука поспіли; він трухнув [дерево], — всі осипались.",
+        "quote": "Трухнути 2, -нУ, -нЕш, гл. Тряхнуть. Як трухнуть, а гроші й посипались. Грин. І. 43. Яблука поспіли; він трухнув, — всі осипались. Драг. 131.",
         "historical_note": "Фіксація у Словнику Бориса Грінченка."
       }
     }
@@ -40351,7 +40351,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "pre_soviet_witness": {
         "witness": "Грінченко (1907–1909)",
-        "quote": "Тріпати, -паю... гл. 1) Трясти... 2) Трясти, трепетать... Крильцями тріпа. По під мостом, мостом трепле риба хвостом.",
+        "quote": "2) Трясти, трепетать, шлепать, хлопать (крыльями, хвостом и пр.). Крильцями тріпа. Мнж. 8. По під мостом, мостом трепле риба хвостом. Мет. 302.",
         "historical_note": "Фіксація у Словнику Бориса Грінченка."
       }
     },
@@ -40447,7 +40447,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "pre_soviet_witness": {
         "witness": "Грінченко (1907–1909)",
-        "quote": "ТрІпатися, -паюся, -єшся, гл. 1) Биться. Риба... тріпалась, побивалась в сітці. Левиц. I. 109. 2) Встряхиваться, трепетать... 3) Горячиться, сердиться... Не тріпайся, а попереду розпитайся, хто винен.",
+        "quote": "ТрІпатися, -паюся, -єшся, гл. 1) Биться. Риба блищала проти місяця білою як срібло лускою, тріпалась, побивалась в сітці. Левиц. I. 109.",
         "historical_note": "Автентичне мововживання, зафіксоване Борисом Грінченком."
       }
     },
@@ -40690,11 +40690,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "keywords": [],
         "historical_note": "Зафіксовано в радянський період (СУМ-11). Наведено для лексикографічної прозорості."
       },
-      "pre_soviet_witness": {
-        "witness": "Грінченко (1907–1909)",
-        "quote": "Тупик, -ка, м. Тупой ножъ. Желех.",
-        "historical_note": "Фіксація у Словнику Бориса Грінченка."
-      }
+      "pre_soviet_witness": null
     }
   ],
   "тупиковий": [
@@ -40832,7 +40828,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "pre_soviet_witness": {
         "witness": "Грінченко (1907–1909)",
-        "quote": "Тучний, -а, -е. Жирный, тучный. Тучна свиня.",
+        "quote": "Тучний 1, -а, -е. 1) Жирный. Тучні ягнята. К. Псал. 263.",
         "historical_note": "Фіксація у Словнику Бориса Грінченка."
       }
     },
@@ -40880,7 +40876,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "pre_soviet_witness": {
         "witness": "Грінченко (1907–1909)",
-        "quote": "Тучний 2, -а, -е. (О дождѣ): тучный, обильный. Дощ тучний. Канев. у.",
+        "quote": "Тучний 2, -а, -е. Грозовый. тучний дощ. Сильный, но кратковременный дождь с грозою. Ой ідуть дощі усе тучнії. Грин. III. 637.",
         "historical_note": "Фіксація у Словнику Бориса Грінченка."
       }
     }
@@ -41125,8 +41121,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "pre_soviet_witness": {
         "witness": "Грінченко (1907–1909)",
-        "quote": "Фірман, -на, м. Кучеръ, возница. Желех.",
-        "historical_note": "Фіксація у Словнику Бориса Грінченка."
+        "quote": "Фірман, -на, м. = фурман. Kolb. I. 68.",
+        "historical_note": "Фіксація у Словнику Бориса Грінченка (діалектна назва візника)."
       }
     },
     {
@@ -41364,8 +41360,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "pre_soviet_witness": {
         "witness": "Грінченко (1907–1909)",
-        "quote": "ХлиснУти, -нУ, -нЕш, гл. 1) Однокр. отъ хлистати. 2) Быстро пойти, побѣжать. Хлиснув прямо додому.",
-        "historical_note": "Фіксація у Словнику Бориса Грінченка."
+        "quote": "Хлиснути, -ну, -неш, гл. Хлебнуть. Левиц. Пов. 160. А деякі так так хлиснули, що де упали, там заснули. Котл. Ен.",
+        "historical_note": "Фіксація у Словнику Бориса Грінченка (значення «хлебнуть, жадібно ковтнути»)."
       }
     }
   ],
@@ -41417,7 +41413,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "pre_soviet_witness": {
         "witness": "Грінченко (1907–1909)",
-        "quote": "Шабаш, -шу, м. Шабашъ (еврейскій праздникъ). Стор. М. Пр. 23.",
+        "quote": "Шабаш, -шу, м. Празднованіе субботняго дня у евреев. Поспіша, як жид на шабаш. Ном. № 11429.",
         "historical_note": "Фіксація у Словнику Бориса Грінченка."
       }
     },
@@ -41466,11 +41462,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "keywords": [],
         "historical_note": "Зафіксовано в радянський період (СУМ-11). Наведено для лексикографічної прозорості."
       },
-      "pre_soviet_witness": {
-        "witness": "Грінченко (1907–1909)",
-        "quote": "ШабАш, межд. Конецъ! шабашъ! гобзинь. Шабаш хлопці! шабаш! не бийте! Мир. ХРВ. 257.",
-        "historical_note": "Фіксація у Словнику Бориса Грінченка."
-      }
+      "pre_soviet_witness": null
     }
   ],
   "шаровий": [
@@ -41606,11 +41598,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "keywords": [],
         "historical_note": "Зафіксовано в радянський період (СУМ-11). Наведено для лексикографічної прозорості."
       },
-      "pre_soviet_witness": {
-        "witness": "Грінченко (1907–1909)",
-        "quote": "Явлений, -а, -е. Явившійся.",
-        "historical_note": "Фіксація у Словнику Бориса Грінченка."
-      }
+      "pre_soviet_witness": null
     },
     {
       "lemma": "явлений",
@@ -41655,9 +41643,9 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "historical_note": "Зафіксовано в радянський період (СУМ-11). Наведено для лексикографічної прозорості."
       },
       "pre_soviet_witness": {
-        "witness": "Словник / Церковні джерела",
-        "quote": "З явленою іконою трапилась неприємна оказія: на неї почав претендувати піп з другого приходу...",
-        "historical_note": "Традиційний релігійно-культовий епітет."
+        "witness": "Грінченко (1907–1909)",
+        "quote": "Явлений, -а, -е. Явленный, чудесный. Явлена ікона. Грин. І. 62.",
+        "historical_note": "Фіксація у Словнику Бориса Грінченка (чудодійний, відкритий божественним явленням)."
       }
     }
   ],
@@ -41706,7 +41694,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "pre_soviet_witness": {
         "witness": "Грінченко (1907–1909)",
-        "quote": "Яловий, -а, -е. 1) Безплодный, яловый (о скотѣ). Ялова корова.",
+        "quote": "Яловий, -а, -е. 1) Безплодный (о скоте), гулевой. Ялова кобила. Вас. 197. В убогого одна корова, та й та ялова. Мнж. 169.",
         "historical_note": "Фіксація у Словнику Бориса Грінченка."
       }
     },
@@ -41754,7 +41742,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "pre_soviet_witness": {
         "witness": "Грінченко (1907–1909)",
-        "quote": "Яловий 2, -а, -е = Ялиновий. Вх. Пч. II. 34.",
+        "quote": "Яловий 2, -а, -е. = ялиновий. Будуй, мати, дім яловий. Гол. І. 99.",
         "historical_note": "Фіксація діалектного значення у Словнику Бориса Грінченка."
       }
     }
