@@ -63,25 +63,28 @@ inline:
     explanation: Вікно́ — сере́днього ро́ду (воно́). — "Вікно́" is neuter (воно́).
 - id: act-2
   type: group-sort
-  title: Сорту́й слова́ за ро́дом — Sort the words by gender
+  title: Сорту́й предме́ти за ро́дом — Sort objects by gender
   instruction: 'Розподілі́ть іме́нники за ро́дом: він, вона́ чи воно́. — Sort each
     noun by its safest A1 gender phrase.'
   groups:
   - label: він / мій (masculine)
     items:
     - стіл
-    - та́то
-    - ба́тько
-    - соба́ка
+    - стіле́ць
+    - телефо́н
+    - комп'ю́тер
   - label: вона́ / моя́ (feminine)
     items:
     - кни́га
-    - сестра́
-    - ма́ма
+    - кімна́та
+    - ла́мпа
+    - ру́чка
   - label: воно́ / моє́ (neuter)
     items:
     - вікно́
-    - мі́сто
+    - лі́жко
+    - крі́сло
+    - дзе́ркало
 - id: act-3
   type: quiz
   title: Він, вона́ чи воно́? — Masculine, feminine, or neuter?
@@ -356,18 +359,24 @@ workbook:
   - label: він / мій (masculine)
     items:
     - стіл
+    - телефо́н
+    - зо́шит
+    - ключ
     - та́то
-    - ба́тько
-    - брат
   - label: вона́ / моя́ (feminine)
     items:
     - кни́га
+    - ла́мпа
+    - кімна́та
+    - ру́чка
     - сестра́
-    - ма́ма
   - label: воно́ / моє́ (neuter)
     items:
     - вікно́
-    - мі́сто
+    - лі́жко
+    - крі́сло
+    - дзе́ркало
+    - фо́то
 - id: act-w2
   type: match-up
   title: Слова́ для кімна́ти й су́мки — Words for the room and bag
