@@ -1,56 +1,68 @@
-- lemma: склад
-  translation: syllable
+- lemma: рука́
+  translation: hand / arm
   pos: noun
-  usage: У сло́ві ма́ма два склади́.
-- lemma: голосни́й звук
-  translation: vowel sound
-  pos: noun phrase
-  usage: А - голосни́й звук.
-- lemma: при́голосний звук
-  translation: consonant sound
-  pos: noun phrase
-  usage: М - при́голосний звук.
-- lemma: чита́ти
-  translation: to read
-  pos: verb
-  usage: Я чита́ю сло́во.
-- lemma: писа́ти
-  translation: to write
-  pos: verb
-  usage: Я пишу́ лі́теру.
-- lemma: ма́ма
-  translation: mother
+  usage: Он рука́.
+- lemma: рак
+  translation: crayfish
   pos: noun
-  usage: Ма́ма.
-- lemma: та́то
-  translation: father
+  usage: Он рак.
+- lemma: со́рок
+  translation: forty
+  pos: numeral
+  usage: Нам со́рок.
+- lemma: мак
+  translation: poppy
   pos: noun
-  usage: Та́то.
-- lemma: молоко́
-  translation: milk
+  usage: У нас мак.
+- lemma: си́ла
+  translation: strength / power
   pos: noun
-  usage: Молоко́.
-- lemma: я́блуко
-  translation: apple
+  usage: У нас си́ла.
+- lemma: ри́нок
+  translation: market
   pos: noun
-  usage: Я́блуко.
-- lemma: люди́на
-  translation: person
+  usage: Он ри́нок.
+- lemma: кран
+  translation: crane / tap
   pos: noun
-  usage: Люди́на.
-- lemma: ву́лиця
-  translation: street
+  usage: Он кран.
+- lemma: крик
+  translation: shout / cry
   pos: noun
-  usage: Ву́лиця.
-- lemma: столи́ця
-  translation: capital
+  usage: Он крик.
+- lemma: кора́
+  translation: bark
   pos: noun
-  usage: Ки́їв - столи́ця Украї́ни.
-- lemma: ка́ша
-  translation: porridge
+  usage: Он кора́ сосни́.
+- lemma: нора́
+  translation: burrow
   pos: noun
-  usage: Ка́ша.
-- lemma: пі́сня
-  translation: song
+  usage: Он нора́.
+- lemma: кум
+  translation: godfather
   pos: noun
-  usage: Пі́сня.
+  usage: Он кум.
+- lemma: кума́
+  translation: godmother
+  pos: noun
+  usage: Он кума́.
+- lemma: смак
+  translation: taste
+  pos: noun
+  usage: У нас смак.
+- lemma: коса́
+  translation: braid / scythe
+  pos: noun
+  usage: Он коса́.
+- lemma: сукно́
+  translation: cloth
+  pos: noun
+  usage: У нас сукно́.
+- lemma: син
+  translation: son
+  pos: noun
+  usage: Он син.
+- lemma: ко́ло
+  translation: circle
+  pos: noun
+  usage: Он ко́ло.

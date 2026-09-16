@@ -1,375 +1,320 @@
 inline:
-- id: act-l3-sent-match
-  type: match-up
-  title: З'єдна́й ре́чення з пере́кладом
-  instruction: З'єдна́й просте́ украї́нське ре́чення з йо́го англі́йським пере́кладом.
-  pairs:
-  - left: Ма́ма чита́є.
-    right: Mother is reading.
-  - left: Та́то пи́ше.
-    right: Father is writing.
-  - left: Ки́їв — столи́ця Украї́ни.
-    right: Kyiv is the capital of Ukraine.
-  - left: Ось моє́ я́блуко.
-    right: Here is my apple.
-  - left: Це на́ша ву́лиця.
-    right: This is our street.
-  - left: Луна́є га́рна пі́сня.
-    right: A nice song is playing.
-- id: act-l3-syllables-count
-  type: count-syllables
-  title: Пораху́й скла́ди у до́вгих слова́х
-  instruction: Пораху́й голосні́ зву́ки та ви́знач кі́лькість скла́дів.
-  maxCount: 6
-  items:
-  - word: бібліоте́ка
-    correct: 5
-  - word: університе́т
-    correct: 5
-  - word: фотогра́фія
-    correct: 5
-  - word: шокола́д
-    correct: 3
-  - word: абе́тка
-    correct: 3
-  - word: ре́чення
-    correct: 3
-- id: act-l3-divide
+- id: act-3
   type: divide-words
-  title: Поді́ли слова́ на скла́ди
-  instruction: Поді́ли ко́жне сло́во на скла́ди за голосни́ми зву́ками.
+  title: "Поділі́ть слова́ на склади́ — Divide words into syllables"
+  instruction: "Введі́ть сло́во, розділи́вши його́ на склади́ че́рез пробі́л."
   items:
-  - word: кни́га
-    answer: кни га
-  - word: шокола́д
-    answer: шо ко лад
-  - word: абе́тка
-    answer: а бе тка
-  - word: столи́ця
-    answer: сто ли ця
-  - word: пі́сня
-    answer: піс ня
-  - word: джерело́
-    answer: дже ре ло
-- id: act-l3-quiz
-  type: quiz
-  title: Пра́вила та кро́ки чита́ння
-  instruction: Обери́ пра́вильну ві́дповідь про чита́ння слів і ре́чень.
-  items:
-  - prompt: З чого́ почина́ється чита́ння незнайо́мого сло́ва?
-    options:
-    - text: З по́шуку голосни́х зву́ків і по́ділу на скла́ди
-      correct: true
-    - text: З чита́ння ко́жної окре́мої лі́тери по́спіль
-      correct: false
-    - text: З запам'ято́вування фо́рми сло́ва без чита́ння
-      correct: false
-    explanation: Голосні́ зву́ки визнача́ють кі́лькість скла́дів і допомага́ють прочита́ти
-      сло́во пла́вно.
-  - prompt: Скі́льки скла́дів у сло́ві «університе́т»?
-    options:
-    - text: '5'
-      correct: true
-    - text: '4'
-      correct: false
-    - text: '6'
-      correct: false
-    explanation: У сло́ві «університе́т» п'ять голосни́х зву́ків (у, і, е, и, е), тому́
-      п'ять скла́дів.
-  - prompt: Як пра́вильно прочита́ти ре́чення «Ма́ма чита́є»?
-    options:
-    - text: Прочита́ти ко́жне сло́во по скла́дах і з'єдна́ти у фра́зу
-      correct: true
-    - text: Назва́ти окре́мо ко́жну лі́теру ко́жного сло́ва
-      correct: false
-    - text: Пропусти́ти голосні́ зву́ки
-      correct: false
-    explanation: Чита́ння по скла́дах допомага́є об'єдна́ти зву́ки у пла́вне осми́слене ре́чення.
-  - prompt: Що допомага́є переві́рити кі́лькість скла́дів під час вимо́ви?
-    options:
-    - text: Доло́ня під підборі́ддям на ко́жному голосно́му по́штовху
-      correct: true
-    - text: Рахува́ння при́голосних лі́тер
-      correct: false
-    - text: Закрива́ння оче́й під час мо́влення
-      correct: false
-    explanation: Ко́жен до́тик підборі́ддя до доло́ні відповіда́є одно́му голосно́му зву́ку
-      і скла́ду.
-  - prompt: Яке́ сло́во склада́ється з трьох відкри́тих скла́дів?
-    options:
-    - text: молоко́
-      correct: true
-    - text: день
-      correct: false
-    - text: Львів
-      correct: false
-    explanation: 'Сло́во «молоко́» ма́є три відкри́ті скла́ди: мо-ло-ко.'
-  - prompt: Як чита́ємо ре́чення з лі́терою «ї» в сло́ві «Украї́на»?
-    options:
-    - text: Чі́тко вимовля́ємо [йі] у скла́ді «ї»
-      correct: true
-    - text: Чита́ємо як просте́ [і]
-      correct: false
-    - text: Пропуска́ємо цю лі́теру
-      correct: false
-    explanation: Лі́тера Ї за́вжди познача́є два зву́ки [йі].
-- id: act-l3-tf
-  type: true-false
-  title: Фа́кти про пла́вне чита́ння
-  instruction: Ви́знач, чи є тве́рдження пра́вильним.
-  items:
-  - statement: У сло́ві рі́вно сті́льки скла́дів, скі́льки в ньому голосни́х зву́ків.
-    correct: true
-    explanation: Це осно́вне пра́вило украї́нського складопо́ділу.
-  - statement: При́голосний звук сам по собі́ мо́же утвори́ти склад.
-    correct: false
-    explanation: При́голосний звук без голосно́го не утво́рює скла́ду.
-  - statement: До́вгі слова́ ле́гше чита́ти, якщо́ споча́тку розби́ти їх на скла́ди.
-    correct: true
-    explanation: Поскладо́ве чита́ння запобіга́є помилка́м у багатоскладо́вих слова́х.
-  - statement: Під час чита́ння ре́чення слова́ слід об'є́днувати у пла́вний поті́к.
-    correct: true
-    explanation: Пла́вне інтонува́ння ро́бить мо́влення приро́дним і зрозумі́лим.
-  - statement: Сло́во «бібліоте́ка» ма́є три скла́ди.
-    correct: false
-    explanation: 'Сло́во «бібліоте́ка» ма́є п''ять голосни́х і п''ять скла́дів: бі-блі-о-те-ка.'
-  - statement: Тест із доло́нею під підборі́ддям пока́зує ко́жен голосни́й і́мпульс.
-    correct: true
-    explanation: Опуска́ння ще́лепи відбу́вається на ко́жному відкри́тому голосно́му зву́ці.
-workbook:
-- id: act-w5
+  - word: та́то
+    answer: та́ то
+  - word: па́ста
+    answer: па́с та
+  - word: ка́рта
+    answer: ка́р та
+  - word: гора́
+    answer: го ра́
+  - word: горо́д
+    answer: го ро́д
+  - word: поті́к
+    answer: по ті́к
+
+- id: act-221
   type: watch-and-repeat
-  title: Повто́р голосни́х
-  instruction: Подиви́ся о́гляд абе́тки ще раз, по́тім повто́ри прості́ голосні́.
+  title: "Диві́ться та повто́рюйте: Бу́кви П, Т, Г, Ґ — Watch and repeat: Letters П, Т, Г, Ґ"
+  instruction: "Подиві́ться коро́тке ві́део про вимо́ву лі́тери (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос."
   items:
-  - letter: А
-    sound: '[а]'
-    word: ма́ма
-    video: https://www.youtube.com/watch?v=ksXIXj7CXwc
-  - letter: О
-    sound: '[о]'
-    word: молоко́
-    video: https://www.youtube.com/watch?v=ksXIXj7CXwc
-  - letter: У
-    sound: '[у]'
-    word: ву́лиця
-    video: https://www.youtube.com/watch?v=ksXIXj7CXwc
-  - letter: И
-    sound: '[и]'
-    word: ми
-    video: https://www.youtube.com/watch?v=ksXIXj7CXwc
-  - letter: І
-    sound: '[і]'
-    word: пі́сня
-    video: https://www.youtube.com/watch?v=ksXIXj7CXwc
-- id: act-5
-  type: quiz
-  title: Мініперевірка чита́ння
-  instruction: Обери́ пра́вильну ві́дповідь.
+  - letter: П
+    word: парк
+    video: https://www.youtube.com/watch?v=JksSjjxyW5Y
+  - letter: Т
+    word: торт
+    video: https://www.youtube.com/watch?v=m-jcLR_gK0k
+  - letter: Г
+    word: гора́
+    video: https://www.youtube.com/watch?v=gVnclpSI0DU
+  - letter: Ґ
+    word: ґа́ва
+    video: https://www.youtube.com/watch?v=gNjHqjTW9WQ
+  - letter: Б
+    word: брат
+    video: https://www.youtube.com/watch?v=V1hxBE_JbGg
+  - letter: Д
+    word: друг
+    video: https://www.youtube.com/watch?v=g4Bh-lqzd48
+
+- id: act-222
+  type: count-syllables
+  title: "Раху́йте склади́: Геогра́фія та побу́т — Count syllables: Geography and everyday life"
+  instruction: "Пораху́йте голосні́ зву́ки у сло́ві. Кі́лькість голосни́х дорі́внює кі́лькості складів."
+  maxCount: 5
   items:
-  - prompt: Склад — що це?
-    options:
-    - text: лі́тера
-      correct: false
-    - text: syllable
-      correct: true
-    - text: greeting
-      correct: false
-    explanation: Склад — це части́на сло́ва з голосни́м зву́ком.
-  - prompt: Молоко́ — скі́льки скла́дів?
-    options:
-    - text: '2'
-      correct: false
-    - text: '3'
-      correct: true
-    - text: '1'
-      correct: false
-    explanation: Молоко́ ма́є три голосні́ зву́ки й три склади́.
-  - prompt: Я́ка лі́тера за́вжди [йі]?
-    options:
-    - text: І
-      correct: false
-    - text: И
-      correct: false
-    - text: Ї
-      correct: true
-    explanation: Ї за́вжди чита́ємо як [йі].
-- id: act-l3-wb-odd
-  type: odd-one-out
-  title: За́йве сло́во за кі́лькістю скла́дів
-  instruction: Зна́йди сло́во, яке́ відрізня́ється кі́лькістю скла́дів від ре́шти слів у
-    рядку́.
-  items:
-  - words:
-    - ма́ма
-    - та́то
-    - ка́ша
-    - день
-    answer: день
-    explanation: День ма́є оди́н склад, тоді́ як і́нші слова́ ма́ють два скла́ди.
-  - words:
-    - молоко́
-    - ву́лиця
-    - столи́ця
-    - Ки́їв
-    answer: Ки́їв
-    explanation: Ки́їв ма́є два скла́ди, а і́нші слова́ ма́ють по три скла́ди.
-  - words:
-    - університе́т
-    - бібліоте́ка
-    - фотогра́фія
-    - ка́ша
-    answer: ка́ша
-    explanation: Ка́ша ма́є два скла́ди, а і́нші слова́ ма́ють по п'ять скла́дів.
-  - words:
-    - Львів
-    - сон
-    - ліс
-    - вода́
-    answer: вода́
-    explanation: Вода́ ма́є два скла́ди, а слова́ Львів, сон і ліс — односкладо́ві.
-  - words:
-    - люди́на
-    - апте́ка
-    - пі́сня
-    - маши́на
-    answer: пі́сня
-    explanation: Пі́сня ма́є два скла́ди, а люди́на, апте́ка і маши́на — трискладо́ві слова́.
-  - words:
-    - так
-    - ні
-    - дім
-    - та́то
-    answer: та́то
-    explanation: Та́то ма́є два скла́ди, а і́нші слова́ ма́ють лише́ оди́н склад.
-- id: act-l3-wb-sort
-  type: group-sort
-  title: Групува́ння слів за кі́лькістю скла́дів
-  instruction: Розпо́діли слова́ за кі́лькістю скла́дів.
-  groups:
-  - label: Оди́н склад
-    items:
-    - день
-    - Львів
-    - хліб
-  - label: Два скла́ди
-    items:
-    - ма́ма
-    - та́то
-    - ка́ша
-  - label: Три скла́ди
-    items:
-    - молоко́
-    - ву́лиця
-    - столи́ця
-- id: act-l3-wb-fill
-  type: fill-in
-  title: Встав пропу́щене сло́во в ре́чення
-  instruction: Запо́вни про́пуск відпові́дним сло́вом, яке́ підхо́дить за змі́стом.
-  items:
-  - sentence: Ки́їв — це головна́ {столи́ця} Украї́ни.
-    options:
-    - столи́ця
-    - ка́ша
-    - пі́сня
-    explanation: Ки́їв є столи́цею Украї́ни.
-  - sentence: У сло́ві {молоко́} три відкри́ті скла́ди.
-    options:
-    - молоко́
-    - день
-    - Львів
-    explanation: 'Молоко́ ма́є три скла́ди: мо-ло-ко.'
-  - sentence: Ма́ма чита́є чудо́ве {сло́во} у кни́зі.
-    options:
-    - сло́во
-    - ка́ша
-    - так
-    explanation: Ма́ма чита́є сло́во.
-  - sentence: На столі́ лежи́ть сві́же сокови́те {я́блуко}.
-    options:
-    - я́блуко
-    - ву́лиця
-    - абе́тка
-    explanation: Я́блуко лежи́ть на столі́.
-  - sentence: Це на́ша рі́дна міська́ {ву́лиця}.
-    options:
-    - ву́лиця
-    - молоко́
-    - ні
-    explanation: Ву́лиця — на́зва місько́го шля́ху.
-  - sentence: З ра́діо луна́є га́рна украї́нська {пі́сня}.
-    options:
-    - пі́сня
-    - та́то
-    - день
-    explanation: Пі́сня луна́є з ра́діо.
-- id: act-l3-wb-match
+  - word: парк
+    correct: 1
+  - word: торт
+    correct: 1
+  - word: та́то
+    correct: 2
+  - word: гора́
+    correct: 2
+  - word: Дніпро́
+    correct: 2
+  - word: Полта́ва
+    correct: 3
+
+- id: act-223
   type: match-up
-  title: З'єдна́й сло́во з моде́ллю чита́ння
-  instruction: З'єдна́й сло́во з йо́го поскладо́вою моде́ллю чита́ння.
+  title: "Зна́чення слів: Мініма́льні па́ри — Word meanings: Minimal pairs"
+  instruction: "З'єдна́йте украї́нське сло́во з його́ зна́ченням."
   pairs:
-  - left: ка́ша
-    right: два скла́ди (ка-ша)
-  - left: молоко́
-    right: три відкри́ті скла́ди (мо-ло-ко)
-  - left: люди́на
-    right: три скла́ди з йото́ваною ю (лю-ди-на)
-  - left: університе́т
-    right: п'ять скла́дів (у-ні-вер-си-тет)
-  - left: день
-    right: оди́н склад із м'яки́м зна́ком (день)
-  - left: я́блуко
-    right: три скла́ди, я познача́є [йа] (яб-лу-ко)
-- id: act-l3-wb-translate
-  type: translate
-  title: Чита́ємо та розумі́ємо слова́
-  instruction: Прочита́й украї́нське сло́во та обери́ пра́вильний пере́клад.
+  - left: кит
+    right: whale
+  - left: кіт
+    right: cat
+  - left: та́то
+    right: dad / father
+  - left: брат
+    right: brother
+  - left: друг
+    right: friend
+  - left: гриб
+    right: mushroom
+
+workbook:
+- id: act-w3
+  type: true-false
+  title: "Пра́вда чи непра́вда: Бу́кви П, Т, Г, Ґ — True or False: Letters П, Т, Г, Ґ"
+  instruction: "Ви́значте, чи є тве́рдження пра́вильним."
   items:
-  - source: столи́ця
-    target: capital
+  - statement: "Бу́ква Г познача́є фаринга́льний щіли́нний звук [ɦ]."
+    correct: true
+    explanation: "Украї́нський звук [г] утво́рюється гли́боко в горта́ні."
+  - statement: "Бу́ква Ґ познача́є вибухови́й задньоязико́вий звук [ɡ]."
+    correct: true
+    explanation: "Бу́ква Ґ вимовля́ється як вибухови́й звук [ɡ] у сло́ві «ґа́ва»."
+  - statement: "Слова́ «кит» і «кіт» означа́ють одне́ й те са́ме."
+    correct: false
+    explanation: "«Кит» — це whale, а «кіт» — це cat."
+  - statement: "У сло́ві «Полта́ва» три склади́."
+    correct: true
+    explanation: "У сло́ві «Полта́ва» три голосни́х зву́ки, то́му три склади́."
+  - statement: "Бу́ква П є дзвінки́м зву́ком."
+    correct: false
+    explanation: "Бу́ква П познача́є глухи́й проривни́й звук."
+  - statement: "Сло́во «ґрунт» ма́є оди́н склад."
+    correct: true
+    explanation: "У сло́ві «ґрунт» оди́н голосни́й [у], отже́ оди́н склад."
+
+- id: act-w221
+  type: quiz
+  title: "Факти про зву́ки П, Т, Г, Ґ — Facts about sounds П, Т, Г, Ґ"
+  instruction: "Обері́ть одну́ прави́льну ві́дповідь."
+  items:
+  - prompt: "Яка́ бу́ква є глухо́ю па́рою до Б?"
     options:
-    - capital
-    - street
-    - city
-    - country
-    explanation: Столи́ця означа́є capital.
-  - source: люди́на
-    target: person
+    - text: "Бу́ква П"
+      correct: true
+    - text: "Бу́ква Т"
+      correct: false
+    - text: "Бу́ква К"
+      correct: false
+    explanation: "Глухи́й парний звук до [б] — це [п]."
+  - prompt: "Чим відрізня́ються бу́кви Г і Ґ?"
     options:
-    - person
-    - people
-    - teacher
-    - student
-    explanation: Люди́на переклада́ється як person.
-  - source: ву́лиця
-    target: street
+    - text: "Г — фаринга́льний щіли́нний [ɦ], а Ґ — вибухови́й [ɡ]"
+      correct: true
+    - text: "Г — це голосни́й, а Ґ — при́голосний"
+      correct: false
+    - text: "Між ни́ми нема́є жо́дної різни́ці"
+      correct: false
+    explanation: "Г вимовля́ється гли́боко й м'я́ко [ɦ], а Ґ — вибухо́во [ɡ]."
+  - prompt: "Скі́льки складів у на́зві мі́ста «Дніпро́»?"
     options:
-    - street
-    - house
-    - room
-    - city
-    explanation: Ву́лиця означа́є street.
-  - source: я́блуко
-    target: apple
+    - text: "Два склади́: Дні-про́"
+      correct: true
+    - text: "Оди́н склад"
+      correct: false
+    - text: "Три склади́"
+      correct: false
+    explanation: "У сло́ві «Дніпро́» два голосни́х [і] та [о], отже́ два склади́."
+  - prompt: "Що означа́є сло́во «ґа́ва»?"
     options:
-    - apple
-    - bread
-    - milk
-    - water
-    explanation: Я́блуко переклада́ється як apple.
-  - source: пі́сня
-    target: song
+    - text: "Crow (птах)"
+      correct: true
+    - text: "Coffee (напі́й)"
+      correct: false
+    - text: "Mountain (гора́)"
+      correct: false
+    explanation: "«Ґа́ва» — це птах (crow); не плу́тайте з ка́вою."
+  - prompt: "Яке́ сло́во ма́є закри́тий склад?"
     options:
-    - song
-    - story
-    - book
-    - letter
-    explanation: Пі́сня означа́є song.
-  - source: абе́тка
-    target: alphabet
+    - text: "парк"
+      correct: true
+    - text: "гора́"
+      correct: false
+    - text: "вода́"
+      correct: false
+    explanation: "Сло́во «парк» закінчу́ється на при́голосний і є закри́тим скла́дом."
+  - prompt: "Що означа́є ви́раз «Вона́ ра́да»?"
     options:
-    - alphabet
-    - word
-    - sound
-    - syllable
-    explanation: Абе́тка переклада́ється як alphabet.
+    - text: "She is glad"
+      correct: true
+    - text: "She is at home"
+      correct: false
+    - text: "She is alone"
+      correct: false
+    explanation: "«Ра́да» — це коро́тка фо́рма ста́ну (glad)."
+
+- id: act-w222
+  type: group-sort
+  title: "Розподілі́ть слова́ за початко́вою бу́квою — Sort words by initial letter"
+  instruction: "Розподілі́ть слова́ за початко́вим при́голосним."
+  groups:
+  - name: "Слова́ на бу́кву П"
+    items:
+    - парк
+    - па́ста
+    - поті́к
+  - name: "Слова́ на бу́кву Т"
+    items:
+    - та́то
+    - торт
+  - name: "Слова́ на бу́кву Г"
+    items:
+    - гора́
+    - горо́д
+    - гриб
+
+- id: act-w223
+  type: odd-one-out
+  title: "За́йве сло́во за звуково́ю будо́вою — Odd word out"
+  instruction: "Знайді́ть за́йве сло́во в ко́жному рядку́."
+  items:
+  - words:
+    - гора́
+    - горо́д
+    - гриб
+    - ґа́ва
+    correct: 3
+    explanation: "Сло́во «ґа́ва» почина́ється з лі́тери Ґ, а ре́шта — з Г."
+  - words:
+    - та́то
+    - па́ста
+    - ка́рта
+    - торт
+    correct: 3
+    explanation: "Сло́во «торт» односкладо́ве, а ре́шта — двоскладо́ві."
+  - words:
+    - Дніпро́
+    - Полта́ва
+    - парк
+    - брат
+    correct: 1
+    explanation: "Сло́во «Полта́ва» має три склади́, а ре́шта — один або́ два."
+  - words:
+    - кит
+    - кіт
+    - гриб
+    - гора́
+    correct: 3
+    explanation: "Сло́во «гора́» двоскладо́ве, а ре́шта слів — односкладо́ві."
+  - words:
+    - брат
+    - друг
+    - та́то
+    - ґрунт
+    correct: 2
+    explanation: "Сло́во «та́то» двоскладо́ве, а ре́шта слів мають по одному́ скла́ду."
+  - words:
+    - поті́к
+    - па́ста
+    - парк
+    - та́то
+    correct: 3
+    explanation: "Сло́во «та́то» почина́ється з Т, а ре́шта слів — з П."
+
+- id: act-w224
+  type: fill-in
+  title: "Вста́вте пропу́щену лі́теру — Fill in the missing letter"
+  instruction: "Обері́ть прави́льну лі́теру на мі́сці про́пуску ___ ."
+  items:
+  - sentence: "Тут ___а́то."
+    options:
+    - т
+    - п
+    - г
+    answer: т
+    explanation: "Сло́во «та́то» почина́ється з лі́тери т."
+  - sentence: "Он ___арк."
+    options:
+    - п
+    - т
+    - б
+    answer: п
+    explanation: "Сло́во «парк» почина́ється з лі́тери п."
+  - sentence: "Он ___ора́."
+    options:
+    - г
+    - ґ
+    - к
+    answer: г
+    explanation: "Сло́во «гора́» почина́ється з лі́тери г."
+  - sentence: "Он ___а́ва."
+    options:
+    - ґ
+    - г
+    - к
+    answer: ґ
+    explanation: "Сло́во «ґа́ва» (crow) пи́шеться з лі́терою ґ."
+  - sentence: "Он ___ніпро́."
+    options:
+    - д
+    - т
+    - п
+    answer: д
+    explanation: "Сло́во «Дніпро́» почина́ється з лі́тери д."
+  - sentence: "Вона́ ___а́да."
+    options:
+    - р
+    - п
+    - т
+    answer: р
+    explanation: "Сло́во «ра́да» почина́ється з лі́тери р."
+
+- id: act-w225
+  type: unjumble
+  title: "Склади́ сло́во з лі́тер — Unjumble the word"
+  instruction: "Поста́вте лі́тери в прави́льному поря́дку, щоб утвори́ти сло́во."
+  items:
+  - letters:
+    - п
+    - а
+    - р
+    - к
+    answer: парк
+  - letters:
+    - т
+    - о
+    - р
+    - т
+    answer: торт
+  - letters:
+    - б
+    - р
+    - а
+    - т
+    answer: брат
+  - letters:
+    - д
+    - р
+    - у
+    - г
+    answer: друг
+  - letters:
+    - к
+    - і
+    - т
+    answer: кіт
+  - letters:
+    - к
+    - и
+    - т
+    answer: кит
