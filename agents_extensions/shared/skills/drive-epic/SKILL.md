@@ -525,19 +525,24 @@ After `MERGED`, follow the numbered order below: reaper first, then branch delet
 **Order after `gh pr view <N>` shows `MERGED`:**
 
 1. **Confirm** merge SHA.
-2. **P0 reaper first** — after all processes have left the target worktree, run:
+2. **`merge_closeout` first** — after all processes have left the target worktree(s), run:
    ```bash
-   .venv/bin/python -m scripts.orchestration.reap_worktrees --apply --merged \
-     --worktree .worktrees/dispatch/<agent>/<task>
+   .venv/bin/python -m scripts.orchestration.merge_closeout <N> --apply
    ```
-   This closed loop removes only a clean worktree whose PR is `MERGED` at its exact head.
-3. **Manual fallback only** — if the reaper cannot run, follow
+   This one command proves the PR is `MERGED`, finds every worktree tied to it (by
+   branch or exact merged head SHA — detached review-checkout siblings included),
+   reaps each through the P0 reaper (`--merged`/`merged_pr_only`, exact `--worktree`,
+   no second deletion hand, no `--force`), and proves the remote and local branch are
+   both gone. It exits non-zero on any residual — treat that exit as a blocker, not
+   permission to retry with `--force`.
+3. **Manual fallback only** — if `merge_closeout` cannot run, follow
    [`worktree-cleanup.md`](../../../../docs/runbooks/worktree-cleanup.md) for the
    kill switch, rescue restore, and allowlisted dual paths before using
    `git worktree remove`.
-4. **Branches** — after the worktree is reaped, **verify** the local branch is gone
-   (`--merged` reaper already deletes it). Delete manually only if it remains (fallback).
-   Confirm the remote is gone; then run `git fetch --prune` and `git worktree prune`.
+4. **Branches** — `merge_closeout --apply` already proves and, where needed, deletes
+   both the remote and local branch (exact-head-match only). Delete manually only if
+   its output reports a residual (fallback); then run `git fetch --prune` and
+   `git worktree prune`.
 5. **Prove** — `df -h /` and `git worktree list` show no zombie for that PR.
 
 **Do not** treat merge alone as closeout. **Do not** run sealed formal CF.
