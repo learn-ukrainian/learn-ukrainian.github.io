@@ -12,6 +12,7 @@ from scripts.projects.open_model_data.v5_evaluation_harness import (
     exact_clopper_pearson_upper,
     extract_benchmark_score,
     format_markdown_report,
+    is_approved_authority,
     parse_model_output,
     run_evaluation_suite,
     verify_citation_whitelist,
@@ -384,12 +385,20 @@ def test_citation_whitelist_comma_separated_sources() -> None:
     assert any("Zorblax" in v for v in violations1)
     assert any("ВЕСУМ" in a for a in approved1)
 
+    # Russian-Soviet occupation SUM-11 is quarantined and must be rejected as an unapproved positive authority
     text2 = "За словниками ВЕСУМ, СУМ-11, це правильно."
     is_clean2, approved2, violations2 = verify_citation_whitelist(text2)
-    assert is_clean2 is True
-    assert len(violations2) == 0
+    assert is_clean2 is False
+    assert any("СУМ-11" in v for v in violations2)
     assert any("ВЕСУМ" in a for a in approved2)
-    assert any("СУМ-11" in a for a in approved2)
+
+    # Modern decolonized SUM-20 is approved
+    text3 = "За словниками ВЕСУМ, СУМ-20, це правильно."
+    is_clean3, approved3, violations3 = verify_citation_whitelist(text3)
+    assert is_clean3 is True
+    assert len(violations3) == 0
+    assert any("ВЕСУМ" in a for a in approved3)
+    assert any("СУМ-20" in a for a in approved3)
 
 
 def test_evaluate_prediction_em_dash_copula_condemnation() -> None:
@@ -827,12 +836,22 @@ def test_evaluate_prediction_r9_f4_condemnation_with_unrelated_negation() -> Non
 
 def test_citation_whitelist_r9_f5_cyrillic_cocitation_list() -> None:
     """Verify introductory attribution flags unapproved titlecase Cyrillic co-citations (R9-F5)."""
-    text = "Згідно з ВЕСУМ, Зорблаксом та СУМ, це правильно."
+    # When citing modern decolonized СУМ-20 alongside ВЕСУМ and an unapproved authority
+    text = "Згідно з ВЕСУМ, Зорблаксом та СУМ-20, це правильно."
     is_clean, app, viol = verify_citation_whitelist(text)
     assert is_clean is False
     assert "Зорблаксом" in viol
-    assert any("ВЕСУМ" in a for a in app)
-    assert any("СУМ" in a for a in app)
+    assert "ВЕСУМ" in app
+    assert "СУМ-20" in app
+
+    # Verify bare unversioned СУМ is rejected as ambiguous/unapproved (neither -11 nor bare is allowed)
+    bare_text = "Згідно з ВЕСУМ, Зорблаксом та СУМ, це правильно."
+    bare_clean, bare_app, bare_viol = verify_citation_whitelist(bare_text)
+    assert bare_clean is False
+    assert "Зорблаксом" in bare_viol
+    assert "СУМ" in bare_viol
+    assert "ВЕСУМ" in bare_app
+    assert "СУМ" not in bare_app
 
 
 def test_citation_whitelist_r9_f6_fabricated_composite_authority_rejected() -> None:
@@ -1506,3 +1525,396 @@ def test_citation_whitelist_r21_findings():
     assert ok3 is True
     assert app3 == ["ВЕСУМ"]
     assert viol3 == []
+
+
+def test_citation_whitelist_r22_findings_sum11_quarantine_and_unambiguous_sum20():
+    """Verify permanent quarantine of Bilodid's СУМ-11 and unambiguous 20-volume СУМ requirement (Astra Finding 3)."""
+    # 1. Bilodid's Russian-Soviet occupation СУМ-11 positive citations must be rejected
+    ok1, _, viol1 = verify_citation_whitelist("За СУМ-11, це правильно.")
+    assert ok1 is False
+    assert "СУМ-11" in viol1
+
+    ok2, _, viol2 = verify_citation_whitelist("Це правильно (СУМ-11).")
+    assert ok2 is False
+    assert "СУМ-11" in viol2
+
+    ok3, _, _ = verify_citation_whitelist("Згідно зі Словником української мови в 11 томах, це правильно.")
+    assert ok3 is False
+
+    ok4, _, _ = verify_citation_whitelist("За Білодідом, це правильно.")
+    assert ok4 is False
+
+    # 2. Ambiguous bare 'Словник української мови' or 'СУМ' without 20 volumes must be rejected
+    assert is_approved_authority("Словник української мови") is False
+    assert is_approved_authority("академічний словник української мови") is False
+    assert is_approved_authority("СУМ") is False
+    assert is_approved_authority("СУМ-11") is False
+
+    ok5, _, _ = verify_citation_whitelist("За Словником української мови, це правильно.")
+    assert ok5 is False
+
+    # 3. Unambiguous modern decolonized СУМ-20 and VESUM must be approved
+    assert is_approved_authority("СУМ-20") is True
+    assert is_approved_authority("Словник української мови в 20 томах") is True
+    assert is_approved_authority("академічний Словник української мови в 20 томах") is True
+    assert is_approved_authority("ВЕСУМ") is True
+
+    ok6, app6, viol6 = verify_citation_whitelist("За СУМ-20, це правильно.")
+    assert ok6 is True
+    assert "СУМ-20" in app6
+    assert viol6 == []
+
+    ok7, app7, viol7 = verify_citation_whitelist("Це правильно (ВЕСУМ).")
+    assert ok7 is True
+    assert "ВЕСУМ" in app7
+    assert viol7 == []
+
+    ok8, app8, viol8 = verify_citation_whitelist("За Словником української мови в 20 томах, це правильно.")
+    assert ok8 is True
+    assert any("20 томах" in a for a in app8)
+    assert viol8 == []
+
+
+def test_citation_whitelist_r23_astra_r2_probes():
+    """Verify Astra R2 probes for ambiguous dictionary titles and ordinary prose phrases."""
+    # Finding 3: Ambiguous dictionary titles must NOT bypass СУМ-20 requirement
+    assert is_approved_authority("Словник української мови том 11") is False
+    assert is_approved_authority("Словник української мови 2020") is False
+
+    ok1, _, viol1 = verify_citation_whitelist("Це правильно (Словник української мови том 11).")
+    assert ok1 is False
+    assert any("української мови том 11" in v for v in viol1)
+
+    ok2, _, viol2 = verify_citation_whitelist("Це правильно (Словник української мови 2020).")
+    assert ok2 is False
+    assert any("української мови 2020" in v for v in viol2)
+
+    # Finding 4: Ordinary prose introductory phrases must not fail Gate 4
+    ok3, app3, viol3 = verify_citation_whitelist("За потреби, збережіть слово.")
+    assert ok3 is True
+    assert app3 == []
+    assert viol3 == []
+
+    ok4, app4, viol4 = verify_citation_whitelist("За бажанням, збережіть слово.")
+    assert ok4 is True
+    assert app4 == []
+    assert viol4 == []
+
+    ok5, app5, viol5 = verify_citation_whitelist("За наявності, збережіть слово.")
+    assert ok5 is True
+    assert app5 == []
+    assert viol5 == []
+
+    ok6, app6, viol6 = verify_citation_whitelist("За замовчуванням, збережіть слово.")
+    assert ok6 is True
+    assert app6 == []
+    assert viol6 == []
+
+
+def test_citation_whitelist_r24_astra_r3_parenthetical_prose():
+    """Verify Astra R3 Finding 3: ordinary parenthetical Cyrillic prose does not fail Gate 4."""
+    ok1, app1, viol1 = verify_citation_whitelist("Це слово (діалектизм) слід зберегти.")
+    assert ok1 is True
+    assert app1 == []
+    assert viol1 == []
+
+    ok2, app2, viol2 = verify_citation_whitelist("Пояснення (приклад вживання) наведено нижче.")
+    assert ok2 is True
+    assert app2 == []
+    assert viol2 == []
+
+
+def test_citation_whitelist_r25_astra_r6_typographic_sum11():
+    """Verify Astra R6 Finding 1: typographic hyphens/dashes in SUM-11 are quarantined and fail Gate 4."""
+    # 1. En-dash: U+2013 (–)
+    ok1, app1, viol1 = verify_citation_whitelist("За СУМ–11, це правильно.")
+    assert ok1 is False
+    assert app1 == []
+    assert any("СУМ" in v for v in viol1)
+
+    # 2. Non-breaking hyphen: U+2011 (‑)
+    ok2, app2, viol2 = verify_citation_whitelist("За СУМ‑11, це правильно.")
+    assert ok2 is False
+    assert app2 == []
+    assert any("СУМ" in v for v in viol2)
+
+    # 3. Em-dash: U+2014 (—)
+    ok3, app3, viol3 = verify_citation_whitelist("За СУМ—11, це правильно.")
+    assert ok3 is False
+    assert app3 == []
+    assert any("СУМ" in v for v in viol3)
+
+    # 4. is_approved_authority rejects all typographic hyphen variants
+    assert is_approved_authority("СУМ–11") is False
+    assert is_approved_authority("СУМ‑11") is False
+    assert is_approved_authority("СУМ—11") is False
+
+
+def test_citation_whitelist_r26_astra_r7_sum11_quarantine_variants():
+    """Verify Astra R7 Finding 2: space-separated SUM 11 and 'у 11 томах' variants fail Gate 4."""
+    # 1. Space-separated: За СУМ 11, це правильно.
+    ok1, app1, viol1 = verify_citation_whitelist("За СУМ 11, це правильно.")
+    assert ok1 is False
+    assert app1 == []
+    assert any("СУМ 11" in v for v in viol1)
+
+    # 2. Prepositional phrase with 'у 11 томах': За Словником української мови у 11 томах, це правильно.
+    ok2, app2, viol2 = verify_citation_whitelist("За Словником української мови у 11 томах, це правильно.")
+    assert ok2 is False
+    assert app2 == []
+    assert any("Словник" in v or "11" in v for v in viol2)
+
+    # 3. Parenthetical citation: Це правильно (Словник української мови у 11 томах).
+    ok3, app3, viol3 = verify_citation_whitelist("Це правильно (Словник української мови у 11 томах).")
+    assert ok3 is False
+    assert app3 == []
+    assert any("Словник" in v or "11" in v for v in viol3)
+
+    # 4. Parenthetical citation with space: Це правильно (СУМ 11).
+    ok4, app4, viol4 = verify_citation_whitelist("Це правильно (СУМ 11).")
+    assert ok4 is False
+    assert app4 == []
+    assert any("СУМ 11" in v for v in viol4)
+
+    # 5. is_approved_authority checks
+    assert is_approved_authority("СУМ 11") is False
+    assert is_approved_authority("Словник української мови у 11 томах") is False
+    assert is_approved_authority("Словник української мови в 11 томах") is False
+
+    # 6. Approved authorities with 20 volumes remain fully approved
+    assert is_approved_authority("СУМ-20") is True
+    assert is_approved_authority("Словник української мови у 20 томах") is True
+    ok_app, app, viol = verify_citation_whitelist("За Словником української мови у 20 томах, це нормативно.")
+    assert ok_app is True
+    assert len(app) >= 1
+    assert viol == []
+
+
+def test_citation_whitelist_r27_astra_r9_ordinary_quoted_example():
+    """Verify Astra R9 Finding 2: ordinary quoted lexical examples in parentheses do not fail Gate 4."""
+    # 1. Quoted dialectal example in parentheses: 'Це слово («царинками») слід зберегти.'
+    ok1, app1, viol1 = verify_citation_whitelist("Це слово («царинками») слід зберегти.")
+    assert ok1 is True
+    assert app1 == []
+    assert viol1 == []
+
+    # 2. Quoted lexical example with other quotes and words
+    ok2, app2, viol2 = verify_citation_whitelist("Слово («файний») належить до діалектних слів.")
+    assert ok2 is True
+    assert app2 == []
+    assert viol2 == []
+
+    # 3. Quoted authority titles in parentheses still fail when unapproved or quarantined
+    ok3, app3, viol3 = verify_citation_whitelist("Це правильно («СУМ 11»).")
+    assert ok3 is False
+    assert app3 == []
+    assert any("СУМ 11" in v for v in viol3)
+
+    ok4, app4, viol4 = verify_citation_whitelist("Це правильно («Словник української мови у 11 томах»).")
+    assert ok4 is False
+    assert app4 == []
+    assert any("Словник" in v or "11" in v for v in viol4)
+
+    ok5, app5, viol5 = verify_citation_whitelist("Це правильно («Словник Zorblax»).")
+    assert ok5 is False
+    assert app5 == []
+    assert any("Zorblax" in v for v in viol5)
+
+    ok6, app6, viol6 = verify_citation_whitelist("Це правильно (джерело: «Zorblax»).")
+    assert ok6 is False
+    assert app6 == []
+    assert any("Zorblax" in v for v in viol6)
+
+    # 4. Bare parenthetical citations of unapproved authorities still fail
+    ok7, app7, viol7 = verify_citation_whitelist("Це правильно (СУМ 11).")
+    assert ok7 is False
+    assert app7 == []
+    assert any("СУМ 11" in v for v in viol7)
+
+    # 5. Quoted and bare approved authorities in parentheses pass
+    ok8, app8, viol8 = verify_citation_whitelist("Це правильно («СУМ-20»).")
+    assert ok8 is True
+    assert any("СУМ-20" in a for a in app8)
+    assert viol8 == []
+
+    ok9, app9, viol9 = verify_citation_whitelist("Це правильно (ВЕСУМ).")
+    assert ok9 is True
+    assert any("ВЕСУМ" in a for a in app9)
+    assert viol9 == []
+
+    ok10, app10, viol10 = verify_citation_whitelist("Це правильно (джерело: ВЕСУМ).")
+    assert ok10 is True
+    assert any("ВЕСУМ" in a for a in app10)
+    assert viol10 == []
+
+
+def test_citation_whitelist_r28_astra_r10_probes():
+    """Verify Astra R10 Findings 1 & 2: quoted bare СУМ fails Gate 4; ordinary quoted adjectives do not fail Gate 4."""
+    # 1. Quoted bare ambiguous СУМ fails Gate 4
+    ok1, app1, viol1 = verify_citation_whitelist("Це правильно («СУМ»).")
+    assert ok1 is False
+    assert app1 == []
+    assert any("СУМ" in v for v in viol1)
+
+    # 2. Bare unquoted ambiguous СУМ fails Gate 4
+    ok2, app2, viol2 = verify_citation_whitelist("Це правильно (СУМ).")
+    assert ok2 is False
+    assert app2 == []
+    assert any("СУМ" in v for v in viol2)
+
+    # 3. Quoted ordinary adjectives matching broad stems (базовий, словниковий, etc.) pass Gate 4
+    ok3, app3, viol3 = verify_citation_whitelist("Це слово («базовий») слід зберегти.")
+    assert ok3 is True
+    assert app3 == []
+    assert viol3 == []
+
+    ok4, app4, viol4 = verify_citation_whitelist("Це слово («словниковий») слід зберегти.")
+    assert ok4 is True
+    assert app4 == []
+    assert viol4 == []
+
+    ok5, app5, viol5 = verify_citation_whitelist("Це слово («корпусний») слід зберегти.")
+    assert ok5 is True
+    assert app5 == []
+    assert viol5 == []
+
+    ok6, app6, viol6 = verify_citation_whitelist("Це слово («довідниковий») слід зберегти.")
+    assert ok6 is True
+    assert app6 == []
+    assert viol6 == []
+
+    ok7, app7, viol7 = verify_citation_whitelist("Це слово («граматичний») слід зберегти.")
+    assert ok7 is True
+    assert app7 == []
+    assert viol7 == []
+
+    ok8, app8, viol8 = verify_citation_whitelist("Це слово («правописний») слід зберегти.")
+    assert ok8 is True
+    assert app8 == []
+    assert viol8 == []
+
+
+def test_citation_whitelist_r29_astra_r11_parenthetical_probes():
+    """Verify Astra R11 Finding 1: parenthetical citations with surrounding whitespace or citation locators are recognized and validated."""
+    # 1. Surrounding whitespace with quoted unapproved authority
+    ok1, app1, viol1 = verify_citation_whitelist("Це правильно ( «СУМ» ).")
+    assert ok1 is False
+    assert app1 == []
+    assert any("СУМ" in v for v in viol1)
+
+    # 2. Citation locator (e.g. page number) with unquoted unapproved authority
+    ok2, app2, viol2 = verify_citation_whitelist("Це правильно (СУМ, с. 25).")
+    assert ok2 is False
+    assert app2 == []
+    assert any("СУМ" in v for v in viol2)
+
+    # 3. Both surrounding whitespace and citation locator
+    ok3, app3, viol3 = verify_citation_whitelist("Це правильно ( «СУМ», с. 25 ).")
+    assert ok3 is False
+    assert app3 == []
+    assert any("СУМ" in v for v in viol3)
+
+    # 4. Approved authority with citation locator passes
+    ok4, app4, viol4 = verify_citation_whitelist("Це правильно (ВЕСУМ, с. 25).")
+    assert ok4 is True
+    assert any("ВЕСУМ" in a for a in app4)
+    assert viol4 == []
+
+    # 5. Approved authority with surrounding whitespace passes
+    ok5, app5, viol5 = verify_citation_whitelist("Це правильно ( «ВЕСУМ» ).")
+    assert ok5 is True
+    assert any("ВЕСУМ" in a for a in app5)
+    assert viol5 == []
+
+    # 6. Approved multi-word authority with locator passes
+    ok6, app6, viol6 = verify_citation_whitelist("Це правильно («СУМ-20», с. 10).")
+    assert ok6 is True
+    assert any("СУМ-20" in a for a in app6)
+    assert viol6 == []
+
+
+def test_citation_whitelist_r30_astra_r12_cocited_authorities_and_locators():
+    """Verify Astra R12 Finding 1: parenthetical citation locators are bounded and each co-cited authority is validated."""
+    # 1. Astra's exact probe: approved authority with locator followed by unapproved bare СУМ
+    ok1, app1, viol1 = verify_citation_whitelist("Це правильно (ВЕСУМ, с. 25; СУМ).")
+    assert ok1 is False
+    assert any("ВЕСУМ" in a for a in app1)
+    assert any("СУМ" in v for v in viol1)
+
+    # 2. Approved authority with locator followed by prohibited authority (СУМ-11) with locator
+    ok2, app2, viol2 = verify_citation_whitelist("Це правильно (ВЕСУМ, с. 25; СУМ-11, т. 2, с. 10).")
+    assert ok2 is False
+    assert any("ВЕСУМ" in a for a in app2)
+    assert any("СУМ-11" in v or "СУМ 11" in v for v in viol2)
+
+    # 3. Approved authority with locator followed by foreign unapproved authority
+    ok3, app3, viol3 = verify_citation_whitelist("Це правильно (ВЕСУМ, с. 25; Zorblax, с. 10).")
+    assert ok3 is False
+    assert any("ВЕСУМ" in a for a in app3)
+    assert any("Zorblax" in v for v in viol3)
+
+    # 4. Multiple approved co-cited authorities with locators pass
+    ok4, app4, viol4 = verify_citation_whitelist("Це правильно (ВЕСУМ, с. 25; «СУМ-20», с. 10).")
+    assert ok4 is True
+    assert any("ВЕСУМ" in a for a in app4)
+    assert any("СУМ-20" in a for a in app4)
+    assert viol4 == []
+
+    # 5. Prefixed co-citations with unapproved authority fail
+    ok5, app5, viol5 = verify_citation_whitelist("Це правильно (джерело: ВЕСУМ, с. 25; СУМ).")
+    assert ok5 is False
+    assert any("ВЕСУМ" in a for a in app5)
+    assert any("СУМ" in v for v in viol5)
+
+    # 6. Prefixed co-citations with all approved authorities pass
+    ok6, app6, viol6 = verify_citation_whitelist("Це правильно (джерело: ВЕСУМ, с. 25; «СУМ-20», т. 1, с. 5).")
+    assert ok6 is True
+    assert any("ВЕСУМ" in a for a in app6)
+    assert any("СУМ-20" in a for a in app6)
+    assert viol6 == []
+
+
+def test_citation_whitelist_r31_astra_r13_dotted_locators_and_unmatched_handling():
+    """Verify Astra R13 Finding 1: dotted locators (p., стор., vol.) are recognized and do not suppress validation of co-cited authorities."""
+    # 1. Astra's exact probe 1: 'p. 25' with unapproved bare СУМ
+    ok1, app1, viol1 = verify_citation_whitelist("Це правильно (ВЕСУМ, p. 25; СУМ).")
+    assert ok1 is False
+    assert any("ВЕСУМ" in a for a in app1)
+    assert any("СУМ" in v for v in viol1)
+
+    # 2. Astra's exact probe 2: 'стор. 25' with unapproved foreign authority Zorblax
+    ok2, app2, viol2 = verify_citation_whitelist("Це правильно (ВЕСУМ, стор. 25; Zorblax).")
+    assert ok2 is False
+    assert any("ВЕСУМ" in a for a in app2)
+    assert any("Zorblax" in v for v in viol2)
+
+    # 3. Approved authority with 'p. 25' passes Gate 4 cleanly
+    ok3, app3, viol3 = verify_citation_whitelist("Це правильно (ВЕСУМ, p. 25).")
+    assert ok3 is True
+    assert any("ВЕСУМ" in a for a in app3)
+    assert viol3 == []
+
+    # 4. Approved authority with 'стор. 25' passes Gate 4 cleanly
+    ok4, app4, viol4 = verify_citation_whitelist("Це правильно (ВЕСУМ, стор. 25).")
+    assert ok4 is True
+    assert any("ВЕСУМ" in a for a in app4)
+    assert viol4 == []
+
+    # 5. Multiple approved authorities with dotted locators pass cleanly
+    ok5, app5, viol5 = verify_citation_whitelist("Це правильно (ВЕСУМ, vol. 1, pp. 20-22; «СУМ-20», т. 2, стор. 10).")
+    assert ok5 is True
+    assert any("ВЕСУМ" in a for a in app5)
+    assert any("СУМ-20" in a for a in app5)
+    assert viol5 == []
+
+    # 6. Prefixed citation with dotted locator and unapproved authority fails cleanly
+    ok6, app6, viol6 = verify_citation_whitelist("Це правильно (джерело: ВЕСУМ, p. 25; СУМ).")
+    assert ok6 is False
+    assert any("ВЕСУМ" in a for a in app6)
+    assert any("СУМ" in v for v in viol6)
+
+    # 7. Arbitrary unmatched locator in first entity does not suppress validation of second unapproved entity
+    ok7, app7, viol7 = verify_citation_whitelist("Це правильно (ВЕСУМ, sec. 5; СУМ).")
+    assert ok7 is False
+    assert any("ВЕСУМ" in a for a in app7)
+    assert any("СУМ" in v for v in viol7)

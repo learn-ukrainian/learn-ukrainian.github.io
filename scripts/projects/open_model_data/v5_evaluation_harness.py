@@ -47,7 +47,10 @@ DEFAULT_HELDOUT_PATH = (
 APPROVED_CITATION_PATTERNS = [
     re.compile(r"\bвесум(?:у|ом|і|а)?\b", re.IGNORECASE),
     re.compile(r"\bvesum\b", re.IGNORECASE),
-    re.compile(r"\bсум(?:-11|-20)?\b", re.IGNORECASE),
+    # Modern decolonized СУМ-20 only. Bilodid's Russian-Soviet occupation СУМ-11 (1970–1980)
+    # is permanently quarantined for contrastive Sovietization analysis only; never accepted
+    # as an approved positive authority for authentic Ukrainian vocabulary (Issue #8054).
+    re.compile(r"\bсум-20\b", re.IGNORECASE),
     re.compile(r"\bправопис(?:у|ом|і)?(?:\s+(?:2019|1992|1928))?\b", re.IGNORECASE),
     re.compile(r"\bантоненк[оа]-давидович\w*\b", re.IGNORECASE),
     re.compile(r"«?як\s+ми\s+говоримо»?", re.IGNORECASE),
@@ -74,12 +77,13 @@ APPROVED_AUTHORITY_REGEXES = [
         r"^(?:(?:словник(?:и|а|у|ом|і)?|корпус(?:и|а|у|ом|і)?|довідник(?:и|а|у|ом|і)?|баз(?:а|и|і|ою|ами|ах)?(?:\s+даних)?)\s+)?(?:весум(?:у|ом|і|а)?|vesum)(?:\s+(?:онлайн|on-line|\d+))?$",
         re.IGNORECASE,
     ),
+    # Modern decolonized СУМ-20 only (Bilodid's Russian-Soviet occupation СУМ-11 permanently purged, Issue #8054).
     re.compile(
-        r"^(?:(?:академічн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?|тлумачн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?)\s+)?(?:(?:словник(?:и|ів|ам|ами|ах|а|у|ом|і)?)\s+)?сум(?:-11|-20)?(?:\s+(?:онлайн|on-line|\d+))?$",
+        r"^(?:(?:академічн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?|тлумачн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?)\s+)?(?:(?:словник(?:и|ів|ам|ами|ах|а|у|ом|і)?)\s+)?(?:сум|sum)[\s\-–—\u2010-\u2015]*20(?:\s+(?:онлайн|on-line|\d+))?$",
         re.IGNORECASE,
     ),
     re.compile(
-        r"^(?:академічн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?\s+)?словник\s+української\s+мови(?:\s+(?:в\s+\d+\s+томах|том(?:и|ів|ам|ами|ах|а|у|ом|і)?\s+\d+|(?:19\d{2}|20[0-2]\d)))?$",
+        r"^(?:(?:словник(?:и|ів|ам|ами|ах|а|у|ом|і)?)\s+)?(?:академічн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?\s+)?(?:словник\s+)?української\s+мови\s+(?:[ву]\s+20\s+томах|20[-–—\u2010-\u2015]?томн\w*)$",
         re.IGNORECASE,
     ),
     re.compile(
@@ -140,10 +144,47 @@ APPROVED_AUTHORITY_REGEXES = [
 def is_approved_authority(name: str) -> bool:
     """Validate authority against approved reference whitelist using anchored matching."""
     clean = name.strip().strip("«»\"'“”‘’")
-    return any(p.match(clean) for p in APPROVED_AUTHORITY_REGEXES)
+    clean_norm = re.sub(r"[\u2010\u2011\u2012\u2013\u2014\u2015]", "-", clean).strip()
+    # Reject ambiguous bare 'Словник української мови' or 'СУМ' without 20-volume qualification
+    if re.match(
+        r"^(?:академічн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?\s+)?словник\s+української\s+мови$",
+        clean_norm,
+        re.IGNORECASE,
+    ):
+        return False
+    if clean_norm.upper() in ("СУМ", "SUM") or re.match(r"^(?:СУМ|SUM)[\s\-–—\u2010-\u2015]*11$", clean_norm, re.IGNORECASE):
+        return False
+    if re.match(
+        r"^(?:академічн\w*\s+)?словник\w*\s+української\s+мови\s+(?:[ву]\s+(?:11|одинадцят\w*)\s+том\w*|11[\s\-–—\u2010-\u2015]?томн\w*|одинадцятитомн\w*|\((?:[ву]\s+)?11\s+том\w*\))$",
+        clean_norm,
+        re.IGNORECASE,
+    ):
+        return False
+    if re.match(
+        r"^(?:11[\s\-–—\u2010-\u2015]?томн\w*|одинадцятитомн\w*)\s+(?:академічн\w*\s+)?словник\w*\s+української\s+мови$",
+        clean_norm,
+        re.IGNORECASE,
+    ):
+        return False
+    return any(p.match(clean) or p.match(clean_norm) for p in APPROVED_AUTHORITY_REGEXES)
 
-# Blacklisted hallucinated or foreign program citations (Gate 4 violations)
+
+# Blacklisted hallucinated, foreign, or Russian-Soviet occupation citations (Gate 4 violations)
 PROHIBITED_CITATION_PATTERNS = [
+    # Permanent Quarantine: Bilodid's Russian-Soviet occupation СУМ-11 (1970–1980)
+    # is permanently prohibited from positive-authority citation (Issue #8054).
+    re.compile(r"\b(?:сум|sum)[\s\-–—\u2010-\u2015]*11\b", re.IGNORECASE),
+    re.compile(
+        r"\b(?:академічн\w*\s+)?"
+        r"словник\w*\s+української\s+мови"
+        r"\s+(?:[ву]\s+(?:11|одинадцят\w*)\s+том\w*|11[\s\-–—\u2010-\u2015]?томн\w*|одинадцятитомн\w*|\((?:[ву]\s+)?11\s+том\w*\))",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(?:11[\s\-–—\u2010-\u2015]?томн\w*|одинадцятитомн\w*)\s+(?:академічн\w*\s+)?словник\w*\s+української\s+мови\b",
+        re.IGNORECASE,
+    ),
+    re.compile(r"\bбілодід\w*\b", re.IGNORECASE),
     re.compile(r"\bcobuild\b", re.IGNORECASE),
     re.compile(r"\blexicallab\b", re.IGNORECASE),
     re.compile(r"\bcollins\b", re.IGNORECASE),
@@ -362,12 +403,31 @@ def check_span_integrity(input_text: str, output_text: str, target_term: str) ->
 
 
 QUOTED_ENTITY_RE = r"(?:«[^»]+»|\"[^\"]+\"|“[^”]+”|‘[^’]+’|'[^']+')"
+QUOTED_AUTHORITY_TITLE_RE = (
+    r"(?:[«\"“‘\']"
+    r"(?:[^»\"”’\']*(?:"
+    r"\b[Пп]равопис(?:[уеі]|ом|ів|ам|ами|ах)?\b|\b[Сс]ловник(?:[ауеіи]|ом|ів|ам|ами|ах)?\b|"
+    r"\b[Кк]орпус(?:[ауеіи]|ом|ів|ам|ами|ах)?\b|\b[Дд]овідник(?:[ауеіи]|ом|ів|ам|ами|ах)?\b|"
+    r"\b[Бб]аз(?:[аиіе]|ою|ам|ами|ах)?\s+даних\b|\b[Бб]аз[аи]\b|"
+    r"\b[Гг]раматик(?:[аиіеу]|ою|ам|ами|ах)?\b|\b[Лл]ексикон(?:[ауеіи]|ом|ів|ам|ами|ах)?\b|"
+    r"\b[Сс]ловар(?:[яеі]|ем|ям|ями|ях|ів)?\b|"
+    r"\b(?:[Dd]ictionary|[Cc]orpus|[Ll]exicon|[Gg]rammar)\b|"
+    r"[Яя]к\s+ми\s+говоримо|[Кк]ультура\s+слова|"
+    r"\b(?:[Сс][Уу][Мм]|[Ss][Uu][Mm])(?:[\s\-–—\u2010-\u2015]*\d+)?\b|"
+    r"\b(?:[Вв][Ее][Сс][Уу][Мм]|[Vv][Ee][Ss][Uu][Mm]|[Уу][Лл][Іі][Фф]|[Uu][Ll][Ii][Ff])\b|"
+    r"\b(?:[Гг]рінченк\w*|[Аа]нтоненк[оа]-давидович\w*|[Пп]ономар\w*|[Кк]араванськ\w*|[Бб]ілодід\w*)\b"
+    r")[^»\"”’\']*)"
+    r"[»\"”’\'])"
+)
 KEYWORD_AUTHORITY_RE = (
     r"(?:(?:чинн\w*|академічн\w*|офіційн\w*|нов\w*|стар\w*)\s+)?"
-    r"(?:[Пп]равопис\w*|[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)"
-    r"(?:\s+(?:«[^»]+»|\"[^\"]+\"|“[^”]+”|‘[^’]+’|'[^']+'|[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*|\d+))?"
+    r"(?:[Пп]равопис(?:[уеі]|ом|ів|ам|ами|ах)?|[Сс]ловник(?:[ауеіи]|ом|ів|ам|ами|ах)?|[Кк]орпус(?:[ауеіи]|ом|ів|ам|ами|ах)?|[Дд]овідник(?:[ауеіи]|ом|ів|ам|ами|ах)?|[Бб]аз(?:[аиіе]|ою|ам|ами|ах)?(?:\s+даних)?)"
+    r"(?:\s+(?:української\s+мови(?:\s+(?:[ву]\s+\d+\s+томах|том(?:и|ів|ам|ами|ах|а|у|ом|і)?\s+\d+|\d+))?|«[^»]+»|\"[^\"]+\"|“[^”]+”|‘[^’]+’|'[^']+'|[A-ZА-ЯІЇЄҐa-zA-Z][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*|\d+))?"
 )
-LATIN_OR_ACRONYM_RE = r"(?:[a-zA-Z][a-zA-Z0-9’'\-]*(?:\s+[a-zA-Z0-9’'\-]+)*|[А-ЯІЇЄҐ]{2,}(?:-[0-9А-ЯІЇЄҐ]+)?)"
+LATIN_OR_ACRONYM_RE = (
+    r"(?:[a-zA-Z][a-zA-Z0-9’'\-]*(?:\s+[a-zA-Z0-9’'\-]+)*|"
+    r"[А-ЯІЇЄҐ]{2,}(?:[\s\-–—\u2010-\u2015]+[0-9А-ЯІЇЄҐ]+)?)"
+)
 INSTRUMENTAL_NAME_RE = (
     r"(?:[A-ZА-ЯІЇЄҐ][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*(?:ом|ем|ям|ою|ею|єю|овим|євим|им|ім)\b)"
 )
@@ -437,6 +497,26 @@ COMMA_COORD_GENITIVE_RE = (
     rf"(?=\s*,\s*(?!\s)))"
 )
 
+DIRECT_ZA_ACRONYM_RE = r"(?:[A-ZА-ЯІЇЄҐ]{2,}(?:[\s\-–—\u2010-\u2015]+[0-9A-ZА-ЯІЇЄҐ]+)?)"
+DIRECT_ZA_PROPER_NAME_RE = (
+    r"(?:[A-ZА-ЯІЇЄҐ][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*"
+    r"(?:ом|ем|ям|ою|ею|єю|овим|євим|им|ім|кса|ака|яка|нка|нга|нта|рда|рта|нда|льда|вича|овича|евича|ьова|ьові|ова|ева|ого|ього|ів|ей|ові|єві|а|я|у|ю)\b)"
+)
+
+LOCATOR_KEYWORD_RE = (
+    r"(?:[сs]\.?|стор\w*\.?|том\w*\.?|т\.?|vol\w*\.?|p\w*\.?|pp\w*\.?|ч\w*\.?|вип\w*\.?|кн\w*\.?|пар\w*\.?|параграф\w*\.?|§|№|#)"
+)
+LOCATOR_NUM_RE = r"(?:\d+|[IVXLCDMivxlcdm]+)(?:[\s\-–—\u2010-\u2015]+(?:\d+|[IVXLCDMivxlcdm]+))?"
+LOCATOR_PART_RE = rf"(?:{LOCATOR_KEYWORD_RE}\s*{LOCATOR_NUM_RE}|{LOCATOR_NUM_RE}|{LOCATOR_KEYWORD_RE})"
+CITATION_LOCATOR_RE = rf"(?:\s*,\s*{LOCATOR_PART_RE}(?:\s*,\s*{LOCATOR_PART_RE})*)"
+
+PAREN_PREFIX_RE = r"(?:[Дд]жерело|[Дд]ив\.?|[Зз]а|[Зз]гідно\s+(?:з|із|зі)|[Вв]ідповідно\s+до)(?::\s*|\s+)"
+CO_CITED_ENTRY_RE = (
+    rf"(?:{PAREN_PREFIX_RE})?"
+    rf"(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})"
+    rf"(?:{CITATION_LOCATOR_RE})?"
+)
+
 CITATION_MENTION_PATTERNS = [
     # 1. "... dictionary" or "... словник" (case-insensitive name preceding dictionary keyword)
     re.compile(
@@ -466,6 +546,21 @@ CITATION_MENTION_PATTERNS = [
         rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?({PRIMARY_ENTITY_GENITIVE_RE}(?:{DIRECT_CONJ_GENITIVE_RE}+|{COMMA_COORD_GENITIVE_RE})*)"
         r"(?!\w)"
     ),
+    # 3c. Direct introductory attribution phrases: "За <Entities>," (e.g. "За СУМ-11, це правильно.")
+    re.compile(
+        rf"\b[Зз]а\s+(?!(?:даними|версією|словами|правилами|твердженням|потреби|бажанням|наявності|замовчуванням|змоги|необхідності)\b)"
+        rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?"
+        rf"({QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{DIRECT_ZA_ACRONYM_RE}|{DIRECT_ZA_PROPER_NAME_RE})\s*,"
+    ),
+    # 4a. Explicitly prefixed parenthetical citations: "(джерело: ВЕСУМ)", "(за «Словником»)", "(див. Zorblax)"
+    re.compile(
+        rf"\(\s*({PAREN_PREFIX_RE}[^()]+)\s*\)"
+    ),
+    # 4b. Bare parenthetical citations: "(СУМ-11)", "(ВЕСУМ)", "(Словник української мови)", "(«СУМ-20»)", "(ВЕСУМ, p. 25; СУМ)"
+    re.compile(
+        rf"\(\s*(?!(?:{PAREN_PREFIX_RE})\b)"
+        rf"((?:{QUOTED_AUTHORITY_TITLE_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})[^()]*)\s*\)"
+    ),
 ]
 
 
@@ -475,10 +570,14 @@ def verify_citation_whitelist(text: str) -> tuple[bool, list[str], list[str]]:
     found_prohibited: list[str] = []
     found_unapproved: list[str] = []
 
+    norm_text = re.sub(r"[\u2010\u2011\u2012\u2013\u2014\u2015]", "-", text)
     for pat in PROHIBITED_CITATION_PATTERNS:
         m = pat.findall(text)
         if m:
             found_prohibited.extend(m)
+        m_norm = pat.findall(norm_text)
+        if m_norm:
+            found_prohibited.extend(m_norm)
 
     for pat in APPROVED_CITATION_PATTERNS:
         m = pat.findall(text)
@@ -507,25 +606,33 @@ def verify_citation_whitelist(text: str) -> tuple[bool, list[str], list[str]]:
                     else:
                         found_unapproved.append(full_name)
             else:
-                # E.g. "словник Zorblax", "словниками ВЕСУМ та Zorblax", "словниками ВЕСУМ, Zorblax"
-                clean_span = re.sub(
-                    r"^(?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+",
-                    "",
-                    citation_span,
-                )
-                sub_entities = re.split(r"\s*,\s*|\s+(?:та|і|й|and|or)\s+", clean_span)
-                for ent in sub_entities:
-                    ent = re.sub(
+                # E.g. "словник Zorblax", "словниками ВЕСУМ та Zorblax", parenthetical co-citations "(ВЕСУМ, с. 25; СУМ)"
+                entries = re.split(r"\s*;\s*", citation_span)
+                for entry in entries:
+                    entry = re.sub(
+                        r"^(?:[Дд]жерело|[Дд]ив\.?|[Зз]а|[Зз]гідно\s+(?:з|із|зі)|[Вв]ідповідно\s+до)(?::\s*|\s+)",
+                        "",
+                        entry.strip(),
+                    )
+                    entry = re.sub(rf"{CITATION_LOCATOR_RE}$", "", entry.strip())
+                    clean_span = re.sub(
                         r"^(?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+",
                         "",
-                        ent.strip(),
+                        entry.strip(),
                     )
-                    clean_ent = ent.strip().strip("«»\"'“”‘’")
-                    if clean_ent:
-                        if is_approved_authority(clean_ent):
-                            found_approved.append(clean_ent)
-                        else:
-                            found_unapproved.append(clean_ent)
+                    sub_entities = re.split(r"\s*,\s*|\s+(?:та|і|й|and|or)\s+", clean_span)
+                    for ent in sub_entities:
+                        ent = re.sub(
+                            r"^(?:[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)\s+",
+                            "",
+                            ent.strip(),
+                        )
+                        clean_ent = ent.strip().strip("«»\"'“”‘’")
+                        if clean_ent:
+                            if is_approved_authority(clean_ent) or is_approved_authority(ent.strip()):
+                                found_approved.append(clean_ent)
+                            else:
+                                found_unapproved.append(clean_ent)
 
     all_violations = sorted(list(set(found_prohibited + found_unapproved)))
     is_clean = len(all_violations) == 0
@@ -1419,7 +1526,7 @@ def main() -> int:
     parser.add_argument("--min-high-freq-floor", type=int, default=50, help="Minimum high-frequency calques required")
     parser.add_argument("--base-benchmarks", type=Path, default=None, help="Path to base model academic benchmark JSON")
     parser.add_argument("--aligned-benchmarks", type=Path, default=None, help="Path to aligned model academic benchmark JSON")
-    parser.add_argument("--max-degradation-pct", type=float, default=2.0, help="Maximum allowed degradation percentage (default: 2.0%)")
+    parser.add_argument("--max-degradation-pct", type=float, default=2.0, help="Maximum allowed degradation percentage (default: 2.0%%)")
     parser.add_argument("--self-test", action="store_true", help="Run self-test contract verification")
     args = parser.parse_args()
 
