@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import styles from './Activities.module.css';
+import { toGraphemes } from './graphemes';
+
+/** Characters treated as a syllable break inside an `answer` string. */
+const SPLIT_MARKER = /^[-\s·]$/;
 
 interface DivideWordsItem {
   /**
@@ -47,14 +51,15 @@ export default function DivideWords({ instruction, items }: DivideWordsProps) {
   if (!items || items.length === 0) return null;
 
   const current = items[currentIndex];
-  const letters = current.word.split('');
+  const letters = toGraphemes(current.word);
 
-  // Parse correct split positions from answer like "мо-ло-ко"
+  // Parse correct split positions from an answer like "мо-ло-ко", "ру ка́",
+  // or "ру·ка́" — hyphen, space, and middle dot all mark a syllable break.
   const getCorrectSplits = (): Set<number> => {
     const result = new Set<number>();
     let pos = 0;
-    for (const ch of current.answer) {
-      if (ch === '-') {
+    for (const g of toGraphemes(current.answer)) {
+      if (SPLIT_MARKER.test(g)) {
         result.add(pos);
       } else {
         pos++;
@@ -129,7 +134,7 @@ export default function DivideWords({ instruction, items }: DivideWordsProps) {
   }
 
   return (
-    <div className={styles.activityContainer}>
+    <div className={styles.activityContainer} data-activity="divide-words">
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>✂️</span>
         <span className={styles.activityTitle}>Поділи на склади</span>
@@ -145,26 +150,32 @@ export default function DivideWords({ instruction, items }: DivideWordsProps) {
         {currentIndex + 1} / {items.length} — Натисни між літерами, щоб розділити на склади
       </p>
 
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '0',
-        flexWrap: 'wrap',
-        margin: '1.5rem 0',
-      }}>
+      <div
+        data-activity="divide-words-letters"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '0',
+          flexWrap: 'wrap',
+          margin: '1.5rem 0',
+        }}>
         {letters.map((letter, idx) => (
           <React.Fragment key={idx}>
-            <span style={{
-              fontSize: '2rem',
-              fontWeight: 700,
-              padding: '0.25rem 0.15rem',
-              userSelect: 'none',
-            }}>
+            <span
+              data-activity="divide-words-letter"
+              style={{
+                fontSize: '2rem',
+                fontWeight: 700,
+                padding: '0.25rem 0.15rem',
+                userSelect: 'none',
+              }}>
               {letter}
             </span>
             {idx < letters.length - 1 && (
               <button
+                data-activity="divide-words-split"
+                data-split-index={idx + 1}
                 onClick={() => toggleSplit(idx + 1)}
                 style={{
                   width: '24px',
@@ -219,7 +230,6 @@ export default function DivideWords({ instruction, items }: DivideWordsProps) {
         <button
           className={styles.submitButton}
           onClick={checkAnswer}
-          disabled={splits.size === 0}
         >
           Перевірити
         </button>
