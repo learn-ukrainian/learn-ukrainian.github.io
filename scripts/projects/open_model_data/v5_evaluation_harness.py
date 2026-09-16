@@ -83,7 +83,7 @@ APPROVED_AUTHORITY_REGEXES = [
         re.IGNORECASE,
     ),
     re.compile(
-        r"^(?:(?:словник(?:и|ів|ам|ами|ах|а|у|ом|і)?)\s+)?(?:академічн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?\s+)?(?:словник\s+)?української\s+мови\s+(?:в\s+20\s+томах|том(?:и|ів|ам|ами|ах|а|у|ом|і)?\s+\d+|20[0-2]\d)$",
+        r"^(?:(?:словник(?:и|ів|ам|ами|ах|а|у|ом|і)?)\s+)?(?:академічн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?\s+)?(?:словник\s+)?української\s+мови\s+(?:в\s+20\s+томах|20-томн\w*)$",
         re.IGNORECASE,
     ),
     re.compile(
@@ -156,7 +156,7 @@ def is_approved_authority(name: str) -> bool:
     return any(p.match(clean) for p in APPROVED_AUTHORITY_REGEXES)
 
 
-# Blacklisted hallucinated, foreign, or Russian-Soviet colonial citations (Gate 4 violations)
+# Blacklisted hallucinated, foreign, or Russian-Soviet occupation citations (Gate 4 violations)
 PROHIBITED_CITATION_PATTERNS = [
     # Permanent Quarantine: Bilodid's Russian-Soviet occupation СУМ-11 (1970–1980)
     # is permanently prohibited from positive-authority citation (Issue #8054).
@@ -456,6 +456,12 @@ COMMA_COORD_GENITIVE_RE = (
     rf"(?=\s*,\s*(?!\s)))"
 )
 
+DIRECT_ZA_ACRONYM_RE = r"(?:[A-ZА-ЯІЇЄҐ]{2,}(?:-[0-9A-ZА-ЯІЇЄҐ]+)?)"
+DIRECT_ZA_PROPER_NAME_RE = (
+    r"(?:[A-ZА-ЯІЇЄҐ][a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9’'\-]*"
+    r"(?:ом|ем|ям|ою|ею|єю|овим|євим|им|ім|кса|ака|яка|нка|нга|нта|рда|рта|нда|льда|вича|овича|евича|ьова|ьові|ова|ева|ого|ього|ів|ей|ові|єві|а|я|у|ю)\b)"
+)
+
 CITATION_MENTION_PATTERNS = [
     # 1. "... dictionary" or "... словник" (case-insensitive name preceding dictionary keyword)
     re.compile(
@@ -487,10 +493,9 @@ CITATION_MENTION_PATTERNS = [
     ),
     # 3c. Direct introductory attribution phrases: "За <Entities>," (e.g. "За СУМ-11, це правильно.")
     re.compile(
-        rf"\b[Зз]а\s+(?!(?:даними|версією|словами|правилами|твердженням)\b)"
+        rf"\b[Зз]а\s+(?!(?:даними|версією|словами|правилами|твердженням|потреби|бажанням|наявності|замовчуванням|змоги|необхідності)\b)"
         rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?"
-        rf"({PRIMARY_ENTITY_GENITIVE_RE}|{PRIMARY_ENTITY_INSTRUMENTAL_RE}|{LATIN_OR_ACRONYM_RE}|{KEYWORD_AUTHORITY_RE}|{QUOTED_ENTITY_RE})\s*,",
-        re.IGNORECASE,
+        rf"({QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{DIRECT_ZA_ACRONYM_RE}|{DIRECT_ZA_PROPER_NAME_RE})\s*,"
     ),
     # 4. Parenthetical citations: "(СУМ-11)" or "(джерело: ВЕСУМ)"
     re.compile(

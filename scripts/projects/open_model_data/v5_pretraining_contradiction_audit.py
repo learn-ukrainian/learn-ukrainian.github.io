@@ -8,7 +8,7 @@ Executes an automated contradiction audit before gradient updates begin:
 2. Ensures 0 regionalisms, phonological variants, or historical archaic forms are penalized
    as 'errors' in the 6,000 SFT shards or 3,000 DPO pairs. Fails closed if shards are missing
    or empty.
-3. Verifies that the 100 anti-surzhyk/anti-calque controls exclusively target authentic colonial
+3. Verifies that the 100 anti-surzhyk/anti-calque controls exclusively target authentic Russian-Soviet occupation
    Russianisms and calques, with every replacement term verified against positive decolonized
    authorities (СУМ-20, Grinchenko 1907, VESUM).
 4. Generates a certified Markdown audit report and JSON metrics.
@@ -51,6 +51,7 @@ def resolve_data_path(rel_path: str | Path) -> Path:
     return local_p
 
 
+# Default paths relative to project root
 DEFAULT_PROTECTION_SUITE = Path("data/projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl")
 DEFAULT_SFT_DIR = Path("data/projects/open_model_data/release/uldr_v1_production/sft")
 DEFAULT_DPO_DIR = Path("data/projects/open_model_data/release/uldr_v1_production/dpo")
@@ -61,33 +62,43 @@ DEFAULT_OUTPUT_JSON = Path("docs/reports/uldr_v02_pretraining_contradiction_audi
 
 
 def load_protection_suite(path: Path) -> list[dict[str, Any]]:
+    """Load and validate the 600-case protection suite."""
     resolved_path = resolve_data_path(path)
     if not resolved_path.exists():
-        raise FileNotFoundError(f"Protection suite not found at {path} (resolved: {resolved_path})")
-    cases = []
-    for line in resolved_path.read_text(encoding="utf-8").splitlines():
-        if line.strip():
+        raise FileNotFoundError(f"Protection suite not found: {path} (resolved: {resolved_path})")
+    cases: list[dict[str, Any]] = []
+    with resolved_path.open(encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
             cases.append(json.loads(line))
     return cases
 
 
-def normalize_lookup_token(token: str) -> str:
-    """Normalize acute stress marks, apostrophes, and casing for lexical lookup."""
-    normalized = re.sub(r"[\u0300\u0301\u0341\u0306]", "", str(token or "").strip().lower())
-    return normalized.replace("’", "'").replace("`", "'").replace("‘", "'")
+def normalize_token(token: str) -> str:
+    """Normalize Ukrainian word token by stripping stress marks and unifying apostrophes."""
+    # Strip acute and grave combining accents (stress marks)
+    norm = re.sub(r"[\u0300\u0301]", "", str(token or ""))
+    # Normalize curly/typographic apostrophes to standard straight apostrophe
+    norm = re.sub(r"[’'`‘ʼ]", "'", norm)
+    return norm.lower().strip()
 
 
 def verify_replacement_attestation(
-    term: str,
+    replacement: str,
     vesum_conn: sqlite3.Connection,
     sources_conn: sqlite3.Connection,
 ) -> bool:
-    """Verify that every content word of the replacement term is attested in positive authorities."""
-    raw_words = [w.strip(".,;:!?\"«»“”()—–-") for w in term.lower().split() if w.strip(".,;:!?\"«»“”()—–-")]
-    words = [normalize_lookup_token(w) for w in raw_words if normalize_lookup_token(w)]
+    """Check if all tokens of the replacement word/phrase are attested in approved Ukrainian authorities."""
+    clean = replacement.strip().strip("–—\"'«» .,")
+    raw_words = re.findall(r"[А-Яа-яЇїІіЄєҐґ’'ʼ\u0300\u0301]+", clean)
+    words = [normalize_token(w) for w in raw_words if normalize_token(w)]
     if not words:
         return False
+
     for w in words:
+        # VESUM lemma or inflected form
         in_vesum = vesum_conn.execute(
             "SELECT 1 FROM forms_all WHERE word_form = ? OR lemma = ? LIMIT 1",
             (w, w),
@@ -103,6 +114,62 @@ def verify_replacement_attestation(
         if not (in_vesum or in_sum20 or in_grinchenko):
             return False
     return True
+
+
+def is_target_condemned_in_text(target_term: str, text: str) -> bool:
+    """Check if the text explicitly condemns or directs replacement of the protected target term."""
+    t_lower = target_term.lower().strip()
+    if not t_lower or not text:
+        return False
+
+    t_quoted = rf"[«\"“‘\']{re.escape(t_lower)}[»\"”’\']"
+    t_bare = rf"\b{re.escape(t_lower)}\b"
+    t_token = rf"(?:{t_quoted}|{t_bare}|слово\s+{t_bare})"
+
+    target_in_text = bool(re.search(t_token, text.lower()))
+    clauses = [c.strip() for c in re.split(r"[.,\n;!?]+", text.lower()) if c.strip()]
+    for clause in clauses:
+        if target_in_text and not re.search(t_token, clause):
+            continue
+
+        has_replace_directive = bool(
+            re.search(
+                r"(?<!не\s)(?<!не\sслід\s)(?<!не\sварто\s)(?<!не\sтреба\s)(?<!не\sпотрібно\s)(?<!не\sнеобхідно\s)"
+                r"(?:(?:слід|варто|потрібно|необхідно|треба)\s+(?:замінити|замінювати|уникати|виправити|виправляти)|"
+                r"(?:замініть|замінити|уникайте|уникати|виправте|виправити)|"
+                r"(?:потребує|вимагає)\s+(?:заміни|виправлення))",
+                clause,
+            )
+        )
+        negates_replace = bool(
+            re.search(
+                r"не\s+(?:слід|варто|потрібно|необхідно|треба)?\s*(?:замінювати|замінити|уникати|виправляти|виправити|потребує\s+заміни)",
+                clause,
+            )
+        )
+        if has_replace_directive and not negates_replace:
+            return True
+
+        has_copula_condemn = bool(
+            re.search(
+                r"(?:(?:—|–|-|:)\s*(?:(?:це|є)\s+)?|(?:є|було|вважається|становить)\s+)?(?:помилк\w*|кальк\w*|росіянізм\w*|русизм\w*|суржик\w*|ненормативн\w*|неправильн\w*)",
+                clause,
+            )
+        )
+        negates_condemn = bool(
+            re.search(
+                r"не\s+(?:є\s+)?(?:помилк\w*|кальк\w*|росіянізм\w*|русизм\w*|суржик\w*|ненормативн\w*|неправильн\w*)",
+                clause,
+            )
+        )
+        if (
+            has_copula_condemn
+            and not negates_condemn
+            and not any(pos in clause for pos in ("збережіть", "зберегти", "нормативн", "діалектн", "автентичн", "правильн"))
+        ):
+            return True
+
+    return False
 
 
 def run_pretraining_audit(
@@ -172,8 +239,11 @@ def run_pretraining_audit(
     protected_terms: set[str] = {
         c["target_term"].lower().strip() for c in protected_cases if c.get("target_term")
     }
-    if not protected_terms:
-        raise ValueError("No valid protected terms extracted from protection suite")
+    expected_min_terms = 250 if min_cases >= 600 else 1
+    if len(protected_terms) < expected_min_terms:
+        raise ValueError(
+            f"Insufficient unique protected terms: expected >= {expected_min_terms}, got {len(protected_terms)}"
+        )
 
     # 4. Cross-audit SFT shards (Validating production schema and labels)
     sft_contradictions: list[dict[str, Any]] = []
@@ -192,7 +262,27 @@ def run_pretraining_audit(
                 )
 
             is_calque = item.get("is_calque_or_russianism")
-            action = (item.get("action") or item.get("case_type") or "").upper()
+            if is_calque is not None and not isinstance(is_calque, bool):
+                raise ValueError(
+                    f"SFT record at line {line_idx+1} in {sft_file.name} has invalid 'is_calque_or_russianism': "
+                    f"expected boolean True/False, got {type(is_calque).__name__} ({is_calque!r})"
+                )
+
+            raw_action = item.get("action") or item.get("case_type")
+            if raw_action is not None:
+                if not isinstance(raw_action, str):
+                    raise ValueError(
+                        f"SFT record at line {line_idx+1} in {sft_file.name} has non-string action label: {raw_action!r}"
+                    )
+                action = raw_action.strip().upper()
+                if action not in ("PRESERVE", "CORRECT", "REPLACE"):
+                    raise ValueError(
+                        f"SFT record at line {line_idx+1} in {sft_file.name} has unrecognized action: {raw_action!r}. "
+                        f"Recognized actions are: ('PRESERVE', 'CORRECT', 'REPLACE')"
+                    )
+            else:
+                action = ""
+
             if is_calque is None and not action:
                 raise ValueError(
                     f"SFT record at line {line_idx+1} in {sft_file.name} lacks required label field "
@@ -242,21 +332,19 @@ def run_pretraining_audit(
                 )
 
             pair_type = metadata.get("pair_type", "")
-            # If target in protected terms and pair penalizes it as an error
+            # If target in protected terms and pair penalizes it as an error or directs replacement
             if target in protected_terms and (
                 pair_type != "anti_hyper_purist_preservation_pairs"
-                or any(
-                    err_phr in chosen.lower()
-                    for err_phr in ("це помилка", "неправильно", "калька", "русизм")
-                )
+                or is_target_condemned_in_text(target, chosen)
             ):
                 dpo_contradictions.append({
-                        "shard": dpo_file.name,
-                        "line": line_idx + 1,
-                        "target_term": target,
-                        "pair_type": pair_type,
-                        "prompt": prompt,
-                    })
+                    "shard": dpo_file.name,
+                    "line": line_idx + 1,
+                    "target_term": target,
+                    "pair_type": pair_type,
+                    "prompt": prompt,
+                    "chosen": chosen,
+                })
 
     # 6. Surzhyk control validation against positive authorities (Finding 2)
     surzhyk_valid = True
@@ -357,11 +445,12 @@ def run_pretraining_audit(
         for dc in dpo_contradictions[:10]:
             details_lines.append(f"     - [DPO] {dc['shard']}:{dc['line']} target '{dc['target_term']}' pair '{dc['pair_type']}'")
 
+    verified_controls = len(surzhyk_cases) - len(surzhyk_anomalies)
     details_lines.extend([
         "",
-        "2. **Anti-Surzhyk Exclusivity & Linguistic Grounding:**",
-        "   - All 100 anti-surzhyk control cases exclusively target undeniable Russianisms and colonial calques.",
-        f"   - Attestation verification against positive Ukrainian authorities: {len(surzhyk_cases) - len(surzhyk_anomalies)} / {len(surzhyk_cases)} verified.",
+        "2. **Anti-Surzhyk Control Verification against Positive Authorities:**",
+        f"   - Observed anti-surzhyk control cases: {len(surzhyk_cases)} cases targeting Russianisms and Russian-Soviet occupation calques.",
+        f"   - Attestation verification against positive Ukrainian authorities (СУМ-20, VESUM, Grinchenko 1907): {verified_controls} / {len(surzhyk_cases)} verified.",
     ])
     if surzhyk_anomalies:
         for sa in surzhyk_anomalies[:10]:

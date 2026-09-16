@@ -426,3 +426,199 @@ def test_audit_production_data_passes(tmp_path: Path) -> None:
     assert data["dpo_contradictions_count"] == 0
     assert data["anti_surzhyk_valid"] is True
     assert len(data["anti_surzhyk_anomalies"]) == 0
+
+
+def test_audit_dpo_preservation_intent_probes(tmp_path: Path, mock_dbs: tuple[Path, Path]) -> None:
+    """Verify Astra R2 Finding 1: validate target-specific preservation/replacement intent, including negation."""
+    mock_sources, mock_vesum = mock_dbs
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "eval_id": "mock_prot_1",
+            "stratum": "regional_dialect",
+            "target_term": "файний",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sft = tmp_path / "sft"
+    mock_sft.mkdir()
+    (mock_sft / "shard.jsonl").write_text(
+        json.dumps({
+            "target_term": "безпечний",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_dpo = tmp_path / "dpo"
+    mock_dpo.mkdir()
+
+    # Probe 1: Chosen replaces protected target term -> MUST fail audit with 1 contradiction
+    (mock_dpo / "shard1.jsonl").write_text(
+        json.dumps({
+            "prompt": "Чи нормативне слово «файний»?",
+            "chosen": "Слово «файний» слід замінити на літературний відповідник.",
+            "rejected": "«файний» це діалектне слово.",
+            "metadata": {"target_term": "файний", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed1, data1, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft,
+        dpo_dir=mock_dpo,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "report1.md",
+        output_json=tmp_path / "report1.json",
+    )
+    assert passed1 is False
+    assert data1["dpo_contradictions_count"] == 1
+    assert data1["dpo_contradictions"][0]["target_term"] == "файний"
+
+    # Probe 2: Chosen defends protected target term with negation -> MUST pass audit with 0 contradictions
+    (mock_dpo / "shard1.jsonl").write_text(
+        json.dumps({
+            "prompt": "Чи є слово «файний» калькою?",
+            "chosen": "«файний» — не калька і не русизм; збережіть це діалектне слово.",
+            "rejected": "Слово «файний» треба замінити.",
+            "metadata": {"target_term": "файний", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed2, data2, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft,
+        dpo_dir=mock_dpo,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "report2.md",
+        output_json=tmp_path / "report2.json",
+    )
+    assert passed2 is True
+    assert data2["dpo_contradictions_count"] == 0
+
+
+def test_audit_sft_schema_type_and_action_validation(tmp_path: Path, mock_dbs: tuple[Path, Path]) -> None:
+    """Verify Astra R2 Finding 2: SFT schema rejects non-boolean flags and invalid action labels."""
+    mock_sources, mock_vesum = mock_dbs
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "eval_id": "mock_prot_1",
+            "stratum": "regional_dialect",
+            "target_term": "файний",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_dpo = tmp_path / "dpo"
+    mock_dpo.mkdir()
+    (mock_dpo / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "t",
+            "chosen": "c",
+            "rejected": "r",
+            "metadata": {"target_term": "безпечний"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+
+    # Sub-test 1: String boolean "true" must be rejected with ValueError
+    mock_sft1 = tmp_path / "sft1"
+    mock_sft1.mkdir()
+    (mock_sft1 / "shard.jsonl").write_text(
+        json.dumps({
+            "target_term": "безпечний",
+            "is_calque_or_russianism": "true",  # INVALID: string instead of boolean
+            "action": "CORRECT",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="invalid 'is_calque_or_russianism'"):
+        run_pretraining_audit(
+            protection_path=mock_prot,
+            sft_dir=mock_sft1,
+            dpo_dir=mock_dpo,
+            sources_db_path=mock_sources,
+            vesum_db_path=mock_vesum,
+            min_cases=1,
+        )
+
+    # Sub-test 2: Unrecognized action "INVALID" must be rejected with ValueError
+    mock_sft2 = tmp_path / "sft2"
+    mock_sft2.mkdir()
+    (mock_sft2 / "shard.jsonl").write_text(
+        json.dumps({
+            "target_term": "безпечний",
+            "is_calque_or_russianism": False,
+            "action": "INVALID",  # INVALID: recognized are PRESERVE, CORRECT, REPLACE
+        }) + "\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="unrecognized action"):
+        run_pretraining_audit(
+            protection_path=mock_prot,
+            sft_dir=mock_sft2,
+            dpo_dir=mock_dpo,
+            sources_db_path=mock_sources,
+            vesum_db_path=mock_vesum,
+            min_cases=1,
+        )
+
+
+def test_audit_fails_on_insufficient_unique_protected_terms(tmp_path: Path, mock_dbs: tuple[Path, Path]) -> None:
+    """Verify Astra R2 Finding 7: audit enforces unique terms floor (>= 250) before shard scanning."""
+    mock_sources, mock_vesum = mock_dbs
+    mock_prot = tmp_path / "protection.jsonl"
+    # Create 600 records with only 1 unique term
+    records = [
+        json.dumps({
+            "eval_id": f"mock_prot_{i}",
+            "stratum": "regional_dialect" if i < 300 else ("historical_text" if i < 500 else "anti_surzhyk_control"),
+            "target_term": "файний" if i < 500 else "суржик",
+            "expected_action": "PRESERVE" if i < 500 else "CORRECT",
+            "expected_replacement": "правильне" if i >= 500 else None,
+        })
+        for i in range(600)
+    ]
+    mock_prot.write_text("\n".join(records) + "\n", encoding="utf-8")
+
+    mock_sft = tmp_path / "sft"
+    mock_sft.mkdir()
+    (mock_sft / "shard.jsonl").write_text(
+        json.dumps({
+            "target_term": "безпечний",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_dpo = tmp_path / "dpo"
+    mock_dpo.mkdir()
+    (mock_dpo / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "t",
+            "chosen": "c",
+            "rejected": "r",
+            "metadata": {"target_term": "безпечний"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="Insufficient unique protected terms"):
+        run_pretraining_audit(
+            protection_path=mock_prot,
+            sft_dir=mock_sft,
+            dpo_dir=mock_dpo,
+            sources_db_path=mock_sources,
+            vesum_db_path=mock_vesum,
+            min_cases=600,
+        )

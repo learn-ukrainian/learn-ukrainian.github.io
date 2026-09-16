@@ -1573,3 +1573,39 @@ def test_citation_whitelist_r22_findings_sum11_quarantine_and_unambiguous_sum20(
     assert ok8 is True
     assert any("20 томах" in a for a in app8)
     assert viol8 == []
+
+
+def test_citation_whitelist_r23_astra_r2_probes():
+    """Verify Astra R2 probes for ambiguous dictionary titles and ordinary prose phrases."""
+    # Finding 3: Ambiguous dictionary titles must NOT bypass СУМ-20 requirement
+    assert is_approved_authority("Словник української мови том 11") is False
+    assert is_approved_authority("Словник української мови 2020") is False
+
+    ok1, _, viol1 = verify_citation_whitelist("Це правильно (Словник української мови том 11).")
+    assert ok1 is False
+    assert any("української мови том 11" in v for v in viol1)
+
+    ok2, _, viol2 = verify_citation_whitelist("Це правильно (Словник української мови 2020).")
+    assert ok2 is False
+    assert any("української мови 2020" in v for v in viol2)
+
+    # Finding 4: Ordinary prose introductory phrases must not fail Gate 4
+    ok3, app3, viol3 = verify_citation_whitelist("За потреби, збережіть слово.")
+    assert ok3 is True
+    assert app3 == []
+    assert viol3 == []
+
+    ok4, app4, viol4 = verify_citation_whitelist("За бажанням, збережіть слово.")
+    assert ok4 is True
+    assert app4 == []
+    assert viol4 == []
+
+    ok5, app5, viol5 = verify_citation_whitelist("За наявності, збережіть слово.")
+    assert ok5 is True
+    assert app5 == []
+    assert viol5 == []
+
+    ok6, app6, viol6 = verify_citation_whitelist("За замовчуванням, збережіть слово.")
+    assert ok6 is True
+    assert app6 == []
+    assert viol6 == []
