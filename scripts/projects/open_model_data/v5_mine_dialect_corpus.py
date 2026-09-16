@@ -454,66 +454,66 @@ def mine_all_candidate_sentences(db_path: Path = DEFAULT_SOURCES_DB) -> list[Min
     return candidates
 
 
+def canonical_source_work(cit: str, collector: str = "") -> str:
+    """Extract canonical source work/volume identity by stripping page numbers and parens.
+
+    Ensures that different pages of the same publication volume (e.g. Черемш., Тв., 1960, 107
+    vs Черемш., Тв., 1960, 66) map to the exact same canonical work identity so they cannot enter
+    opposite train/eval partitions.
+    """
+    s = cit.strip("() \t\n\r")
+    s = s.replace("„", "").replace("“", "").replace("»", "").replace("«", "")
+    s = s.replace("І", "I").replace("і", "i").replace("Х", "X").replace("х", "x").replace("С", "C").replace("с", "c")
+    s = re.sub(r"(?:,\s*(?:с\.\s*)?|\.\s*|\s+)\d+(?:-\d+)?\.?$", "", s)
+    s = re.sub(r"\s+\d+$", "", s)
+    s = s.strip(" .,")
+    return f"{collector}:{s}" if collector else s
+
+
 def partition_candidates_by_lemma(
     candidates: list[MinedSentence],
 ) -> tuple[list[MinedSentence], list[MinedSentence]]:
     """Partition candidates deterministically into mutually exclusive eval and SFT pools.
 
-    Constructs connected components across (lemma, citation) pairs so that any shared lemma OR
-    citation moves as an atomic unit. Enforces 0% lemma, 0% citation, and 0% sentence leakage.
+    Enforces 0% work/volume overlap, 0% citation overlap, 0% sentence overlap, and 0% lemma overlap.
+    All citations from the same literary volume or ethnographic collector/informant remain on the
+    exact same side of the train/eval firewall.
     """
-    adj: dict[tuple[str, str], set[tuple[str, str]]] = defaultdict(set)
+    # Group candidates by canonical work/volume
+    work_cands: dict[str, list[MinedSentence]] = defaultdict(list)
     for c in candidates:
-        lem_node = ("L", c.word)
-        cit_node = ("C", c.citation)
-        adj[lem_node].add(cit_node)
-        adj[cit_node].add(lem_node)
+        w_id = canonical_source_work(c.citation, c.collector)
+        work_cands[w_id].append(c)
 
-    visited: set[tuple[str, str]] = set()
-    components: list[list[tuple[str, str]]] = []
-    for node in list(adj.keys()):
-        if node not in visited:
-            comp: list[tuple[str, str]] = []
-            stack = [node]
-            visited.add(node)
-            while stack:
-                curr = stack.pop()
-                comp.append(curr)
-                for neigh in adj[curr]:
-                    if neigh not in visited:
-                        visited.add(neigh)
-                        stack.append(neigh)
-            components.append(comp)
+    eval_works: set[str] = set()
+    sft_works: set[str] = set()
 
-    comp_map: dict[tuple[str, str], int] = {}
-    for idx, comp in enumerate(components):
-        for node in comp:
-            comp_map[node] = idx
-
-    comp_cands: dict[int, list[MinedSentence]] = defaultdict(list)
-    for c in candidates:
-        idx = comp_map[("L", c.word)]
-        comp_cands[idx].append(c)
-
-    eval_candidates: list[MinedSentence] = []
-    sft_candidates: list[MinedSentence] = []
-
-    for idx, c_list in comp_cands.items():
-        first_node = min(str(n) for n in components[idx])
-        h = int(hashlib.sha256(first_node.encode()).hexdigest()[:8], 16) % 100
+    for w_id, c_list in work_cands.items():
+        h = int(hashlib.sha256(w_id.encode()).hexdigest()[:8], 16) % 100
         has_steppe = any(c.bucket == "southeastern_steppe" for c in c_list)
         has_slobozhan = any(c.bucket == "southeastern_slobozhan" for c in c_list)
+
         if has_steppe:
+            # All steppe works must go to eval to satisfy the strict >= 250 evaluation quota
             threshold = 100
         elif has_slobozhan:
-            threshold = 68
+            threshold = 65
         else:
-            threshold = 45
+            threshold = 50
 
         if h < threshold:
-            eval_candidates.extend(c_list)
+            eval_works.add(w_id)
         else:
-            sft_candidates.extend(c_list)
+            sft_works.add(w_id)
+
+    eval_candidates: list[MinedSentence] = [c for c in candidates if canonical_source_work(c.citation, c.collector) in eval_works]
+    eval_lemmas = {c.word.casefold() for c in eval_candidates}
+
+    # SFT pool consists exclusively of sentences from sft_works whose lemmas NEVER appear in eval
+    sft_candidates: list[MinedSentence] = [
+        c for c in candidates
+        if canonical_source_work(c.citation, c.collector) in sft_works and c.word.casefold() not in eval_lemmas
+    ]
 
     return eval_candidates, sft_candidates
 
@@ -920,8 +920,26 @@ def evaluate_multizone_benchmark(
 
     results: dict[str, ZoneMetrics] = {}
 
-    for zone_key, cases in zones.items():
-        total = len(cases)
+    for zone_key, raw_cases in zones.items():
+        # Enforce unique case IDs and unique source sentences before computing denominator
+        unique_cases: list[dict[str, Any]] = []
+        seen_eids: set[str] = set()
+        seen_fingerprints: set[str] = set()
+
+        for c in raw_cases:
+            eid = c["eval_id"]
+            if eid in seen_eids:
+                # Reject duplicate case ID from denominator
+                continue
+            fp = passage_fingerprint(c["input_text"])
+            if fp in seen_fingerprints:
+                # Reject repeated source sentence from denominator
+                continue
+            seen_eids.add(eid)
+            seen_fingerprints.add(fp)
+            unique_cases.append(c)
+
+        total = len(unique_cases)
         passed = 0
         clean_total = 0
         clean_passed = 0
@@ -946,7 +964,7 @@ def evaluate_multizone_benchmark(
             )
             continue
 
-        for c in cases:
+        for c in unique_cases:
             eid = c["eval_id"]
             pred = predictions.get(eid) if predictions is not None else c["expected_output"]
 

@@ -38,6 +38,7 @@ from scripts.projects.open_model_data.v5_mine_dialect_corpus import (
     TRAJECTORY_SCHEMA_FILE,
     V02_BASELINE_SUITE_PATH,
     ZONE_MINIMUM_QUOTAS,
+    canonical_source_work,
     clean_headword,
     clean_sentence,
     evaluate_multizone_benchmark,
@@ -283,6 +284,30 @@ def test_strict_zero_train_eval_leakage_firewall(
 
     citation_overlap = eval_cits & sft_cits
     assert not citation_overlap, f"Citation overlap between eval and SFT detected: {citation_overlap}"
+
+    # 2b. Zero source work / publication volume overlap
+    eval_works = {
+        canonical_source_work(c["source_metadata"]["citation"], c.get("collector_or_author", ""))
+        for c in eval_cases
+    }
+    sft_works = set()
+    for t in sft_trajectories:
+        if not t.get("is_calque_or_russianism"):
+            for alt in t.get("register_spectrum", {}).get("alternatives", []):
+                src = alt.get("evidence_source", "")
+                import re
+                m = re.search(r"\(([^\(\)]+)\)", src)
+                if m:
+                    cit = m.group(1).strip()
+                    author = src.split(" («")[0].strip() if " («" in src else ""
+                    sft_works.add(canonical_source_work(cit, author))
+
+    work_overlap = eval_works & sft_works
+    assert not work_overlap, f"Source work overlap between eval and SFT detected: {work_overlap}"
+
+    eval_works_no_auth = {canonical_source_work(c["source_metadata"]["citation"]) for c in eval_cases}
+    sft_works_no_auth = {canonical_source_work(cit) for cit in sft_cits}
+    assert not (eval_works_no_auth & sft_works_no_auth), f"Canonical citation work overlap detected: {eval_works_no_auth & sft_works_no_auth}"
 
     # 3. Complete sentence and passage containment check
     sft_blobs = []
@@ -540,6 +565,39 @@ def test_multizone_evaluation_enforces_zone_denominators() -> None:
         assert metrics["total_cases"] == 1
         min_q = ZONE_MINIMUM_QUOTAS[zone]
         assert metrics["gate_cleared"] is False, f"Zone '{zone}' cleared gate with 1 case (min quota {min_q})!"
+
+
+def test_multizone_evaluation_rejects_duplicate_rows_in_denominator() -> None:
+    """Verify that duplicating cases (same eval_id or repeated input_text) does not inflate denominator to clear quotas."""
+    base_sw_case = {
+        "eval_id": "eval_sw_base",
+        "macro_zone": "southwestern",
+        "sub_zone": "southwestern_pokuttia",
+        "dialect_marker": "плай",
+        "case_type": "PRESERVE",
+        "input_text": "Він ішов крутим плаєм у далекі гори.",
+        "expected_output": "Він ішов крутим плаєм у далекі гори.",
+    }
+
+    # 1. 600 copies with distinct eval_ids but identical input text (repeated sentence probe)
+    probes_same_text = [
+        {**base_sw_case, "eval_id": f"eval_sw_probe_{i}"}
+        for i in range(600)
+    ]
+    preds_text = {c["eval_id"]: c["expected_output"] for c in probes_same_text}
+    res_text = evaluate_multizone_benchmark(probes_same_text, predictions=preds_text)
+    assert res_text["southwestern"]["total_cases"] == 1
+    assert res_text["southwestern"]["gate_cleared"] is False
+
+    # 2. 600 copies with identical eval_id (duplicate ID probe)
+    probes_same_id = [
+        {**base_sw_case, "input_text": f"Речення номер {i} у горах.", "expected_output": f"Речення номер {i} у горах."}
+        for i in range(600)
+    ]
+    preds_id = {c["eval_id"]: c["expected_output"] for c in probes_same_id}
+    res_id = evaluate_multizone_benchmark(probes_same_id, predictions=preds_id)
+    assert res_id["southwestern"]["total_cases"] == 1
+    assert res_id["southwestern"]["gate_cleared"] is False
 
 
 def test_modern_literary_non_regression() -> None:
