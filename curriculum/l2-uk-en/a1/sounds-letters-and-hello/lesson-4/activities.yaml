@@ -6,7 +6,7 @@ inline:
   items:
   - statement: "In Ukrainian, moving the stress mark can change the meaning of a word."
     answer: true
-    explanation: "Stress is phonemic in Ukrainian: «ма́ло» (few) vs «мала́» (small)."
+    explanation: "Stress is phonemic in Ukrainian: «са́ма» (the very) vs «сама́» (alone) differ only by stress, while pairs like «ма́ло» and «мала́» change both stress and the final vowel."
   - statement: "The vocative form to directly address mother is «Ма́мо!»."
     answer: true
     explanation: "Ukrainian uses the vocative case for direct address: «Ма́мо!»."
