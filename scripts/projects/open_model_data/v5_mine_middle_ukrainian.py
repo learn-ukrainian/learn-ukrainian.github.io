@@ -168,7 +168,7 @@ EDITORIAL_PATTERNS = [
         r"зберігається\s+в\s+рукописному|у\s+покажчиках\s+дано|у\s+науковій\s+літературі|"
         r"у\s+вид\.|в\s+друку|переклад\w*\s+(?:з|із|від)|перекладач\w*|"
         r"художн\w*\s+виразність|реєстров\w*|омонім\w*|словников\w*|"
-        r"іншою\s+рукою|поверх\s+закресленого|закресленого|примітк\w*|"
+        r"іншою\s+рукою|поверх\s+закресленого|закресленого|закресл\w*|примітк\w*|"
         r"надрядков\w*|знаки\s+відсутн\w*|виправлено\s+на|викреслено\s+в|"
         r"дописано\s+в|вставлено\s+в|в\s+списк\w*|за\s+списк\w*|опубліковано\s+в|"
         r"порівн\w*\s+з|пор\.:|див\.:|див\.\s+також|також:|заголовок\s+у\s+списку|"
@@ -177,7 +177,10 @@ EDITORIAL_PATTERNS = [
         r"является|являются|исследования|исследователь|советск\w*|стать\w*|"
         r"отметим|свидетельства|событий|истории\s+украины|произведени\w*|"
         r"несообразност\w*|интересных\s+фактов|деятел\w*|в\s+частности|"
-        r"однако|потому\s+что|несмотря\s+на|таким\s+образом|в\s+течение|как\s+известно|в\s+большинстве|например)",
+        r"однако|потому\s+что|несмотря\s+на|таким\s+образом|в\s+течение|как\s+известно|в\s+большинстве|например|"
+        r"можна\s+прочитати|починаючи\s+з|написані\s+різними\s+почерками|на\s+нижніх\s+полях|"
+        r"на\s+арк\.\s*\d+|рукописи,\s+съ\s+которой\s+печатается|этотъ\s+памятникъ|всЂ\s+наступні|"
+        r"початковою\s+літерою|різними\s+почерками|рукопис\s+пошкоджено)",
         re.IGNORECASE,
     ),
     re.compile(r"^\s*(?:ЗМІСТ|ПЕРЕДМОВА|ВСТУП|КОМЕНТАР|ПРИМІТКИ|РІЗНОЧИТАННЯ)\s*$", re.IGNORECASE | re.MULTILINE),
@@ -194,7 +197,8 @@ RUSSIAN_EDITORIAL_RE = re.compile(
     r"уЂзда\b|уЂздЂ\b|уЂздъ\b|губерніи\b|губернск\w*|авторъ\s+„дневника“|дневникъ\s+генеральнаго|"
     r"село\s+\w+\s+уЂзда|въ\s+библіотекЂ|археологическаго\s+музея|духовной\s+академіи|"
     r"по\s+семейному\s+преданію|въ\s+фамильномъ\s+архивЂ|генеральное\s+слЂдствіе|"
-    r"русскомъ\s+архивЂ|рукописный\s+журналъ)",
+    r"русскомъ\s+архивЂ|рукописный\s+журналъ|"
+    r"рукописи,\s+съ\s+которой|этотъ\s+памятникъ|предисловія\s+къ\s+этому|дневнику\s+г\.\s+лазаревскій)",
     re.IGNORECASE,
 )
 
@@ -288,7 +292,25 @@ def clean_text_diplomatic(text: str) -> str:
     t = re.sub(r"\|[^\|]*арк\.[^\|]*\|", " ", t, flags=re.IGNORECASE)
     t = re.sub(r"\[[^\]]*арк\.[^\]]*\]", " ", t, flags=re.IGNORECASE)
     t = re.sub(r"/(?:арк\.[^/]+|\d+)/", " ", t, flags=re.IGNORECASE)
-    # Strip footnote paragraphs and editorial apparatus lines
+    # Strip footnote paragraphs and editorial apparatus blocks
+    t = re.sub(
+        r"(?ms)^\s*\d+[\s\.\)]+(?:Починаючи|Попередньо|На\s+арк\.|Поряд|Унизу|У\s+рукопису|"
+        r"Тут|Так|Слово|Первісно|Дописано|В\s+оригіналі|Пропущено|Закреслено|У\s+списку|Далі|"
+        r"Вписано|Переправлено|Сія\s+книжица|Акти|Село|Указом|Черниговскаго|Стародубскій|"
+        r"Збоку|Зверху|Квадратні\s+дужки|Круглі\s+дужки|Кінець\s+приповістк|Ледь\s+помітн|"
+        r"Між\s+слов|Між\s+цим|На\s+полі|На\s+березі|Над\s+двом|Над\s+друг|Над\s+слов|Над\s+ціє|"
+        r"Праворуч|Приповістк|Проти\s+ци|Проти\s+цьо|Під\s+цим|Після\s+слов|Після\s+цьо|"
+        r"Рядок|Середин|Спочатку\s+було|Сторінк|У\s+кінці|У\s+самому\s+низу|У\s+цьому\s+ж\s+ряд|"
+        r"Увесь|Уперше|Усі\s+наступн|Це\s+латинськ|Це\s+має\s+бути|Цей\s+рядок|Цей\s+і\s+наступн|"
+        r"Цього\s+видання|Цю\s+приповістк|Ця\s+приповістк|Ці\s+два|Ще\s+приписано|Явна\s+описка|"
+        r"Іншим|Автор\s+помилково|В\s+нижній|В\s+основу|Виділені\s+літер|Вираз|Внизу|Вставка|"
+        r"Від\s+цієї|Відділ\s+рукописів|Вірш\s+без\s+початку|Вірш\s+написано|Друга\s+частина|"
+        r"Другу\s+приповістку|Дуже\s+важко|Дужки).*?(?=\n\s*\n|\Z)",
+        " ",
+        t,
+    )
+    t = re.sub(r"(?ms)^\s*(?:Переклад|Текст\s+перекладу)\b.*?(?=\n\s*\n|\Z)", " ", t)
+    t = re.sub(r"(?ms)\bПереклад\b.*?(?=\n\s*\n|\Z)", " ", t)
     t = re.sub(r"(?ms)^\s*\d+\)\s+.*?(?=\n\s*\n|\Z)", " ", t)
     t = re.sub(r"(?m)^\s*\d+\s+У\s+рукопису.*$", " ", t)
     t = re.sub(r"[ \t\r\f\v]+", " ", t)
@@ -316,6 +338,14 @@ def is_clean_historical_sentence(sent: str) -> bool:
     if is_editorial_preface(sent):
         return False
     if re.search(r"\d+\s+[^\d;]+;\s*\d+\b", sent):
+        return False
+    if re.search(
+        r"(?:закресл\w*|можна\s+прочитати|починаючи\s+з|написані\s+різними\s+почерками|на\s+нижніх\s+полях|"
+        r"на\s+арк\.\s*\d+|рукописи,\s+съ\s+которой\s+печатается|этотъ\s+памятникъ|всЂ\s+наступні|"
+        r"початковою\s+літерою|різними\s+почерками|рукопис\s+пошкоджено|переклад\w*)",
+        sent,
+        re.IGNORECASE,
+    ):
         return False
 
     # Archaic Cyrillic characters (strictly excluding modern letters and Russian 'ы')
@@ -456,23 +486,25 @@ def load_middle_ukrainian_chunks(sources_db: Path) -> list[MiddleUkrainianChunk]
                 pass
 
         # In ivan_velychkovskyy_tvory, chunks 0 to 69 are V. P. Kolosova & V. I. Krekoten's
-        # modern introductory monograph, and chunks >= 146 are modern textual notes/glossary.
-        # Authentic baroque poetry is strictly in chunks 70 to 145.
+        # modern introductory monograph, chunks 77 and 78 contain Polish poetry and modern
+        # Ukrainian translation, and chunks >= 146 are modern textual notes/glossary.
+        # Authentic baroque poetry is strictly in chunks 70 to 145 (excluding 77 and 78).
         if work_id == "ivan_velychkovskyy_tvory":
             try:
                 chunk_num = int(chunk_id.split("_c")[-1])
-                if chunk_num < 70 or chunk_num > 145:
+                if chunk_num < 70 or chunk_num in (77, 78) or chunk_num > 145:
                     continue
             except Exception:
                 pass
 
         # In shchodennyk_mykoly_khanenka_1719_1754, chunks 0 to 16 are O. Lazarevsky's
-        # 1884 introductory study, chunks 635 to 647 are O. Bodyansky's 1858 preface,
+        # 1884 introductory study, chunks 594 to 606 are 1847-1848 editorial correspondence
+        # and Lazarevsky preface note, chunks 635 to 647 are O. Bodyansky's 1858 preface,
         # and standalone footnote chunks start with digits and a closing parenthesis.
         if work_id == "shchodennyk_mykoly_khanenka_1719_1754":
             try:
                 chunk_num = int(chunk_id.split("_c")[-1])
-                if chunk_num <= 16 or (635 <= chunk_num <= 647):
+                if chunk_num <= 16 or (594 <= chunk_num <= 606) or (635 <= chunk_num <= 647):
                     continue
             except Exception:
                 pass

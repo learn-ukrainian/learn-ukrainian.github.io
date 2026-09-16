@@ -107,7 +107,7 @@ def test_document_partitioning_disjointness() -> None:
 
 
 def test_clean_text_diplomatic() -> None:
-    """Verify diplomatic cleaning preserves historical Cyrillic characters and strips markup/page numbers."""
+    """Verify diplomatic cleaning preserves historical Cyrillic characters and strips markup, apparatus, and translation blocks."""
     raw = "<p>Се я, кн̃зь <b>Олександр</b>\\47\\ [12] далъ листъ&nbsp;свой.</p>"
     cleaned = clean_text_diplomatic(raw)
     assert "<p>" not in cleaned
@@ -116,6 +116,28 @@ def test_clean_text_diplomatic() -> None:
     assert "[12]" not in cleaned
     assert "кн̃зь" in cleaned
     assert "листъ свой" in cleaned
+
+    # Verify apparatus footnotes with bare numeric prefixes are stripped
+    raw_apparatus = (
+        "500. Ла́знA в калу̀ стои(т) да людε(и) мы́εтъ.\n\n"
+        "1 Поряд дописано було якусь фразу і ретельно\n"
+        "закреслεно, можна прочитати лише два слова: Такъ личко...\n\n"
+        "2 Унизу аркуша дописана приповістка:\n\n"
+        "Либь па(н)ка в(ъ) око ажь ву́н(ъ) нε бачи(ш)."
+    )
+    cleaned_app = clean_text_diplomatic(raw_apparatus)
+    assert "Такъ личко" not in cleaned_app
+    assert "закресл" not in cleaned_app
+    assert "Ла́знA в калу̀" in cleaned_app
+    assert "Либь па(н)ка" in cleaned_app
+
+    # Verify modern translation blocks are stripped
+    raw_translation = (
+        "Переклад\nБачачи святобливість Вашу з високої архімандрії Печерської...\n\nБо просто як. и стрЂлà..."
+    )
+    cleaned_trans = clean_text_diplomatic(raw_translation)
+    assert "Бачачи святобливість" not in cleaned_trans
+    assert "Бо просто як" in cleaned_trans
 
 
 def test_normalize_historical_snippet() -> None:
@@ -606,7 +628,7 @@ def test_release_receipt_schema_validation() -> None:
 
 
 def test_regression_velychkovsky_and_mytsyk_commentary_excluded() -> None:
-    """Verify that specific Round 3 and Round 4 commentary leaks (Velychkovsky, Mytsyk, Khanenko) are excluded."""
+    """Verify that specific Round 3, Round 4, and Round 5 commentary leaks (Velychkovsky, Mytsyk, Khanenko, Zinoviyiv) are excluded."""
     release_dir = REPO_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v04b_middle_ukrainian"
     eval_file = release_dir / "middle_ukrainian_eval.jsonl"
     sft_dir = release_dir / "sft"
@@ -627,6 +649,16 @@ def test_regression_velychkovsky_and_mytsyk_commentary_excluded() -> None:
         "село волосковичи",
         "считается стефанъ ханенко, запорожецъ",
         "стефанъ ханенко",
+        "рукописи, съ которой печатается теперь этотъ памятникъ",
+        "рукописи, съ которой печатается",
+        "этотъ памятникъ",
+        "закреслεно, можна прочитати лише два слова",
+        "можна прочитати лише два слова: такъ личко",
+        "можна прочитати лише два слова",
+        "такъ личко",
+        "починаючи з цієї приповістки",
+        "всі наступні з початковою літерою",
+        "переклад",
     ]
 
     eval_rows = []
@@ -639,8 +671,13 @@ def test_regression_velychkovsky_and_mytsyk_commentary_excluded() -> None:
             for s in leaked_strings:
                 assert s not in inp, f"Leaked string '{s}' found in eval row {i}: {inp}"
                 assert s not in exp, f"Leaked string '{s}' found in eval row {i}: {exp}"
-            assert row.get("source_metadata", {}).get("chunk_id") != "1b7685d5_c0057"
-            assert row.get("source_metadata", {}).get("chunk_id") != "5f2476e8_c0004"
+            assert row.get("source_metadata", {}).get("chunk_id") not in (
+                "1b7685d5_c0057",
+                "1b7685d5_c0077",
+                "1b7685d5_c0078",
+                "5f2476e8_c0004",
+                "c07247b6_c0594",
+            )
 
     # Verify Ivan Velychkovsky is actively represented in the held-out evaluation benchmark
     v_eval_rows = [r for r in eval_rows if r.get("work_id") == "ivan_velychkovskyy_tvory"]
@@ -671,16 +708,17 @@ def test_source_boundaries_and_work_exclusions() -> None:
         chunks = load_middle_ukrainian_chunks(DEFAULT_SOURCES_DB)
 
         v_chunks = [c for c in chunks if c.work_id == "ivan_velychkovskyy_tvory"]
-        assert len(v_chunks) == 76, f"Expected 76 Velychkovsky chunks (70-145), got {len(v_chunks)}"
+        assert len(v_chunks) == 74, f"Expected 74 Velychkovsky chunks (70-145 excluding 77, 78), got {len(v_chunks)}"
         for c in v_chunks:
             num = int(c.chunk_id.split("_c")[-1])
-            assert 70 <= num <= 145, f"Invalid Velychkovsky chunk admitted: {c.chunk_id}"
+            assert 70 <= num <= 145 and num not in (77, 78), f"Invalid Velychkovsky chunk admitted: {c.chunk_id}"
 
         k_chunks = [c for c in chunks if c.work_id == "shchodennyk_mykoly_khanenka_1719_1754"]
         assert len(k_chunks) > 0, "Expected Khanenko diary chunks to be loaded"
         for c in k_chunks:
             num = int(c.chunk_id.split("_c")[-1])
             assert num > 16, f"Lazarevsky intro chunk admitted: {c.chunk_id}"
+            assert not (594 <= num <= 606), f"Khanenko 19th c. correspondence chunk admitted: {c.chunk_id}"
             assert not (635 <= num <= 647), f"Bodyansky preface chunk admitted: {c.chunk_id}"
             assert not re.match(r"^\s*\d+\)\s+", c.text), f"Footnote chunk admitted: {c.chunk_id}"
 
