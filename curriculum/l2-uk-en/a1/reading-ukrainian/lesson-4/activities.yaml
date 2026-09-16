@@ -4,13 +4,13 @@ inline:
   title: "Па́стки чита́ння: Безпе́чні украї́нські зви́чки — Reading traps: Safer Ukrainian habits"
   instruction: "Знайді́ть і ви́правте поми́лку в ко́жному ре́ченні."
   items:
-  - sentence: "Он се-ло."
-    error: "се-ло"
+  - sentence: "Он се́ло."
+    error: "се́ло"
     answer: "село́"
     options:
     - "село́"
-    - "се-ло"
-    explanation: "Пи́шемо ці́ле сло́во «село́» без дефі́са: се-ло́ = село́."
+    - "се́ло"
+    explanation: "У сло́ві «село́» на́голос па́дає на дру́гий склад: се-ло́."
   - sentence: "Он наш дуп."
     error: "дуп"
     answer: "дуб"

@@ -7,7 +7,7 @@ By the end of this module, you can:
 - Master the relaxed front vowel **[и]** and contrast it with high **[і]** (**дим** vs **дім**, **лис** vs **ліс**, **бик** vs **бік**);
 - Preserve voiced consonants at the end of words without devoicing (**дуб** [дуб], **сад** [сад], **дід** [дід]);
 - Distinguish the pharyngeal fricative **Г [ɦ]** from the velar plosive **Ґ [ɡ]** (**гора́** vs **ґа́ва**, **ґрунт**);
-- Keep Ukrainian sibilants **Ж [ʒ]** and **Ш [ʃ]** strictly hard in standard pronunciation (**жа́ба**, **шко́ла**, **ка́ша**);
+- Keep Ukrainian sibilants **Ж [ʒ]** and **Ш [ʃ]** hard before vowels in taught examples (**жа́ба**, **шко́ла**, **ка́ша**);
 - Confidently decode your first authentic greetings: **Приві́т!** and **До́брого ра́нку!**;
 - Read multi-syllable Ukrainian words (**університе́т**) and Ukrainian cities (**Оде́са**, **Ха́рків**, **Дніпро́**, **Полта́ва**);
 - Participate in your first reading dialogue: greeting, introducing yourself (**Мене́ зва́ти...**), asking a name (**А тебе́?**), and saying goodbye (**На все до́бре!**).
