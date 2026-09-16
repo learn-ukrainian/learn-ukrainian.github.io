@@ -1477,8 +1477,10 @@ def test_audit_astra_r12_zamist_negation_probes(tmp_path: Path):
     assert is_target_condemned_in_text("царинками", "Вживайте «гарний» замість «царинками».") is True
     assert is_target_condemned_in_text("царинками", "Замість «царинками» — «гарний».") is True
 
-    # 5. Replacement destination term is never condemned
-    assert is_target_condemned_in_text("гарний", "Замість «царинками» не слід вживати «гарний».") is False
+    # 5. Replacement destination term behavior in comparative substitution frames
+    # Negated directive ("не слід вживати «гарний»") condemns its direct object "гарний" (R29-F3)
+    assert is_target_condemned_in_text("гарний", "Замість «царинками» не слід вживати «гарний».") is True
+    # Positive directive ("слід вживати «гарний»") recommends destination term "гарний", so it is not condemned
     assert is_target_condemned_in_text("гарний", "Замість «царинками» слід вживати «гарний».") is False
 
     # 6. Full audit pipeline test confirming preservation pair passes audit
@@ -3519,3 +3521,152 @@ def test_audit_r28_findings_zamist_and_trailing_adverbs(tmp_path: Path) -> None:
     )
     assert passed_ctrl2 is True, "Expected audit pass when non-target object is prohibited with trailing adverb"
     assert data_ctrl2["dpo_contradictions_count"] == 0
+
+
+def test_audit_r29_findings_trailing_modifiers_and_modal_prohibitions(tmp_path: Path):
+    """
+    R29 regression tests:
+    1. R29-F1: Trailing Modifiers Still Hide Explicit Prohibitions
+       - "«царинками» не слід вживати регулярно." -> condemned (True)
+       - "«царинками» не слід вживати поряд із «полями»." -> condemned (True)
+       - "«царинками» не слід вживати взагалі." -> condemned (True)
+    2. R29-F2: Adverb Filtering Discards Explicit Lexical Objects
+       - "«царинками» — нормативне слово. Не вживайте слово ніколи." -> preserved (False)
+       - "«царинками» — нормативне слово. Не вживайте «ніколи»." -> preserved (False)
+       - "«царинками» — нормативне слово. Не вживайте ніколи." -> condemned (True)
+    3. R29-F3: Destination Immunity Suppresses Modal Prohibitions
+       - "Замість «полями» не слід вживати «царинками»." -> condemned (True)
+       - "Замість «полями» слід вживати «царинками»." -> preserved (False)
+       - "Замість «царинками» не слід вживати «гарний»." -> target царинками defended (False), target гарний condemned (True)
+    """
+    # 1. R29-F1 unit probes: trailing modifiers do not bypass fronted target prohibitions
+    assert is_target_condemned_in_text("царинками", "«царинками» не слід вживати регулярно.") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» не слід вживати поряд із «полями».") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» не слід вживати взагалі.") is True
+    assert is_target_condemned_in_text("царинками", "Слово «царинками» заборонено вживати на практиці.") is True
+
+    # 2. R29-F2 unit probes: classifier/quoted lexical objects preserved from adverb filtering
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Не вживайте слово ніколи.") is False
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Не вживайте «ніколи».") is False
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Не вживайте ніколи.") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Уникайте термін часто.") is False
+
+    # 3. R29-F3 unit probes: modal prohibitions condemn their objects in comparative substitution frames
+    assert is_target_condemned_in_text("царинками", "Замість «полями» не слід вживати «царинками».") is True
+    assert is_target_condemned_in_text("царинками", "Замість «полями» не вживайте «царинками».") is True
+    assert is_target_condemned_in_text("царинками", "Замість «полями» слід вживати «царинками».") is False
+    assert is_target_condemned_in_text("гарний", "Замість «царинками» не слід вживати «гарний».") is True
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» не слід вживати «гарний».") is False
+
+    # 4. Full audit pipeline tests
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "target_term": "царинками",
+            "category": "dialectal",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sources = tmp_path / "sources.db"
+    conn_s = sqlite3.connect(mock_sources)
+    conn_s.execute("CREATE TABLE textbooks (chunk_id TEXT PRIMARY KEY, text TEXT)")
+    conn_s.commit()
+    conn_s.close()
+    mock_vesum = tmp_path / "vesum.db"
+    conn_v = sqlite3.connect(mock_vesum)
+    conn_v.execute("CREATE TABLE words (lemma TEXT, form TEXT)")
+    conn_v.commit()
+    conn_v.close()
+    mock_sft_clean = tmp_path / "sft_clean"
+    mock_sft_clean.mkdir()
+    (mock_sft_clean / "shard.jsonl").write_text(
+        json.dumps({
+            "target_term": "царинками",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+            "chosen": "Слово «царинками» є питомим.",
+        }) + "\n",
+        encoding="utf-8",
+    )
+
+    # DPO probe 1: R29-F1 trailing modifier "регулярно" -> MUST fail audit
+    dpo_fail1 = tmp_path / "dpo_r29_fail1"
+    dpo_fail1.mkdir()
+    (dpo_fail1 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "«царинками» не слід вживати регулярно.",
+            "rejected": "«царинками» — нормативне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_fail1, data_fail1, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_fail1,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r29_fail1.md",
+        output_json=tmp_path / "r29_fail1.json",
+    )
+    assert passed_fail1 is False, "Expected audit failure for trailing modifier prohibition"
+    assert data_fail1["dpo_contradictions_count"] == 1
+
+    # DPO probe 2: R29-F3 modal prohibition in comparative frame -> MUST fail audit
+    dpo_fail2 = tmp_path / "dpo_r29_fail2"
+    dpo_fail2.mkdir()
+    (dpo_fail2 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "Замість «полями» не слід вживати «царинками».",
+            "rejected": "«царинками» — нормативне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_fail2, data_fail2, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_fail2,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r29_fail2.md",
+        output_json=tmp_path / "r29_fail2.json",
+    )
+    assert passed_fail2 is False, "Expected audit failure for modal prohibition in comparative frame"
+    assert data_fail2["dpo_contradictions_count"] == 1
+
+    # DPO control 1: R29-F2 lexical object with classifier -> MUST pass audit
+    dpo_ctrl1 = tmp_path / "dpo_r29_ctrl1"
+    dpo_ctrl1.mkdir()
+    (dpo_ctrl1 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "«царинками» — нормативне слово. Не вживайте слово ніколи.",
+            "rejected": "«царинками» — помилка.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_ctrl1, data_ctrl1, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_ctrl1,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r29_ctrl1.md",
+        output_json=tmp_path / "r29_ctrl1.json",
+    )
+    assert passed_ctrl1 is True, "Expected audit pass when classifier-bearing lexical object is prohibited"
+    assert data_ctrl1["dpo_contradictions_count"] == 0

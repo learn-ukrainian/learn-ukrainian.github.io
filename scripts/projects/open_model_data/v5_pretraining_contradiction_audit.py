@@ -542,12 +542,10 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         quoted = re.findall(r"[«\"“‘\']([^»\"”’\']+)[»\"”’\']", clause)
 
         if t_token_re.search(clause):
-            # If target is present ONLY as a replacement destination (e.g. "замінити на «файний»", "замінити словом «файний»",
-            # or in a comparative substitution frame "Замість X [не] слід вживати «гарний»"),
-            # it is being recommended or compared, not condemned or replaced.
+            # If target is present ONLY as a replacement destination (e.g. "замінити на «файний»", "замінити словом «файний»"),
+            # it is being recommended, not condemned or replaced.
             is_destination = bool(
                 re.search(rf"\b(?:на|до|(?:словом|терміном|виразом|зворотом|формою|лексемою))\s+[«\"“‘\']?{t_bare}[»\"”’\']?", cl_lower)
-                or re.search(rf"\bзамість\s+(?!{target_item}\b)[«\"“‘\']?[А-Яа-яЇїІіЄєҐґ’'ʼ\w\-]+[»\"”’\']?\s*,?\s*(?:не\s+)?(?:слід|варто|потрібно|необхідно|треба|можна)\s+(?:вживати|вжити|використовувати|використати)\s+[«\"“‘\']?{t_bare}[»\"”’\']?", cl_lower)
             )
             is_subject = bool(re.search(
                 rf"(?:^|\b{ITEM_CLASSIFIER})[«\"“‘\']?{t_bare}[»\"”’\']?\s+"
@@ -676,18 +674,24 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                     )
                     if obj_span_m:
                         dir_objs: list[str] = []
+                        has_established_non_target_obj = False
                         for item_m in re.finditer(COORDINATED_ITEM, obj_span_m.group(0), re.IGNORECASE):
                             raw_item = item_m.group(0)
                             q_match = re.search(r"[«\"“‘\']([^»\"”’\']+)[»\"”\']", raw_item)
+                            has_classifier = bool(re.match(rf"^\s*{ITEM_CLASSIFIER_REQ}", raw_item, re.IGNORECASE))
                             if q_match:
-                                dir_objs.append(normalize_token(q_match.group(1)))
+                                term = normalize_token(q_match.group(1))
+                                is_lexical = True
                             else:
                                 clean_item = re.sub(rf"^{ITEM_CLASSIFIER}", "", raw_item, flags=re.IGNORECASE).strip()
-                                if clean_item:
-                                    dir_objs.append(normalize_token(clean_item))
+                                term = normalize_token(clean_item) if clean_item else ""
+                                is_lexical = has_classifier
+                            if term:
+                                dir_objs.append(term)
+                                if term not in ANAPHORIC_WORDS and term != t_norm and (is_lexical or term not in DISALLOWED_ADVERBS_SET):
+                                    has_established_non_target_obj = True
                         target_in_objs = (t_norm in dir_objs) or bool(t_token_re.search(obj_span_m.group(0)))
-                        non_anaphoric_objs = [o for o in dir_objs if o not in ANAPHORIC_WORDS and o not in DISALLOWED_ADVERBS_SET]
-                        if non_anaphoric_objs and not target_in_objs:
+                        if has_established_non_target_obj and not target_in_objs:
                             # Directive explicitly governs other object(s), not target
                             continue
 
@@ -766,22 +770,39 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 )
                 if obj_span_m:
                     dir_objs: list[str] = []
+                    has_established_non_target_obj = False
                     for item_m in re.finditer(COORDINATED_ITEM, obj_span_m.group(0), re.IGNORECASE):
                         raw_item = item_m.group(0)
                         q_match = re.search(r"[«\"“‘\']([^»\"”’\']+)[»\"”\']", raw_item)
+                        has_classifier = bool(re.match(rf"^\s*{ITEM_CLASSIFIER_REQ}", raw_item, re.IGNORECASE))
                         if q_match:
-                            dir_objs.append(normalize_token(q_match.group(1)))
+                            term = normalize_token(q_match.group(1))
+                            is_lexical = True
                         else:
                             clean_item = re.sub(rf"^{ITEM_CLASSIFIER}", "", raw_item, flags=re.IGNORECASE).strip()
-                            if clean_item:
-                                dir_objs.append(normalize_token(clean_item))
+                            term = normalize_token(clean_item) if clean_item else ""
+                            is_lexical = has_classifier
+                        if term:
+                            dir_objs.append(term)
+                            if term not in ANAPHORIC_WORDS and term != t_norm and (
+                                is_lexical or (not t_token_re.search(prefix) and term not in DISALLOWED_ADVERBS_SET)
+                            ):
+                                has_established_non_target_obj = True
+
                     target_in_objs = (t_norm in dir_objs) or bool(t_token_re.search(obj_span_m.group(0)))
-                    non_anaphoric_objs = [o for o in dir_objs if o not in ANAPHORIC_WORDS and o not in DISALLOWED_ADVERBS_SET]
-                    if non_anaphoric_objs and not target_in_objs:
-                        # Prohibition explicitly governs other object(s), not target (e.g. "не вживайте слова общий")
+                    if has_established_non_target_obj and not target_in_objs:
+                        # Prohibition explicitly governs other object(s), not target (e.g. "не вживайте слова общий", "не вживайте слово ніколи")
                         continue
                     if target_in_objs:
                         return True
+
+                # If target was explicitly fronted before the prohibition and no established non-target object follows in suffix,
+                # the target is the governed object/subject (e.g. "«царинками» не слід вживати регулярно", "«царинками» не слід вживати поряд із «полями»")
+                if t_token_re.search(prefix) and not re.search(
+                    rf"\b(?:про|щодо|для|від|до|з|зі|із|у|в|при)\s+(?:{ITEM_CLASSIFIER})?[«\"“‘\']?{t_bare}\b",
+                    prefix,
+                ):
+                    return True
 
                 # If no explicit object follows in suffix, target is condemned if it was the referent/subject
                 # (e.g. "«царинками» заборонено вживати", "«царинками» не слід вживати")
