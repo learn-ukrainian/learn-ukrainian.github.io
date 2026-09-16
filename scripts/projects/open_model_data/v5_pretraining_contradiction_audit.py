@@ -171,6 +171,50 @@ NEGATION_DIRECTIVE_RE = re.compile(
     re.IGNORECASE,
 )
 
+CONJUNCTIONS = r"\b(?:але|проте|однак|а|бо|тому що|оскільки|якщо|якби|хоч|хоча|аби|коли|і|й|та)\b"
+
+
+def find_clause_start_in_prefix(prefix: str, dir_start: int) -> int:
+    """Find the start of the clause containing the directive at dir_start in prefix."""
+    d_prefix = prefix[:dir_start]
+    boundaries = [0]
+    for m in re.finditer(
+        rf"(?:[,;:\u2014\u2013]+\s*{CONJUNCTIONS}\b|\s+{CONJUNCTIONS}\s+|[;:\u2014\u2013]+)",
+        d_prefix,
+        re.IGNORECASE,
+    ):
+        boundaries.append(m.end())
+
+    for m in re.finditer(r",", d_prefix):
+        if ANY_DIRECTIVE_RE.search(d_prefix[: m.start()]):
+            boundaries.append(m.end())
+
+    return max(boundaries)
+
+
+def find_clause_end_in_suffix(suffix: str, dir_end: int = 0) -> int:
+    """Find the end of the clause in suffix, starting at or after dir_end."""
+    boundaries: list[int] = []
+    for m in re.finditer(
+        rf"(?:[,;:\u2014\u2013]+\s*{CONJUNCTIONS}\b|\s+{CONJUNCTIONS}\s+|[;:\u2014\u2013]+)",
+        suffix,
+        re.IGNORECASE,
+    ):
+        if m.start() >= dir_end:
+            boundaries.append(m.start())
+
+    for m in re.finditer(r",", suffix):
+        if m.start() >= dir_end:
+            rest = suffix[m.end() :]
+            if re.search(
+                rf"^\s*(?:{CONJUNCTIONS}\b|не\b|ні\b|ані\b|{DIRECTIVE_VERBS}\b|{DIRECTIVE_MODALS}\b)",
+                rest,
+                re.IGNORECASE,
+            ):
+                boundaries.append(m.start())
+
+    return min(boundaries) if boundaries else len(suffix)
+
 
 def is_target_condemned_in_text(target_term: str, text: str) -> bool:
     """Check if the text explicitly condemns or directs replacement of the protected target term."""
@@ -229,63 +273,53 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         prefix = sent_text[:zm_in_sent_start]
         suffix = sent_text[zm_in_sent_end:]
 
-        boundary_pat = (
-            r"[,;:\u2014\u2013]+\s*(?:\b(?:але|проте|однак|а|бо|тому що|оскільки|якщо|якби|хоч|хоча|аби|коли)\b\s*)?|"
-            r"\s+\b(?:але|проте|однак|бо|тому що|оскільки|якщо|якби|хоч|хоча|аби|коли)\b\s+"
-        )
-        boundary_matches = list(re.finditer(boundary_pat, prefix, re.IGNORECASE))
-        clause_start_in_sent = 0
-        if boundary_matches:
-            for bm in reversed(boundary_matches):
-                chunk = prefix[bm.end():]
-                if ANY_DIRECTIVE_RE.search(chunk):
-                    clause_start_in_sent = bm.end()
-                    break
-                if ANY_DIRECTIVE_RE.search(prefix[:bm.start()]):
-                    clause_start_in_sent = bm.end()
-                    break
+        # Check if there is a preceding directive in the same clause (Order 1)
+        dir_matches = list(ANY_DIRECTIVE_RE.finditer(prefix))
+        gov_dir_order1 = None
+        if dir_matches:
+            last_d = dir_matches[-1]
+            between = prefix[last_d.end() :]
+            sep_between = re.search(
+                rf"(?:[,;:\u2014\u2013]+\s*{CONJUNCTIONS}\b|\s+{CONJUNCTIONS}\s+|[;:\u2014\u2013]+)",
+                between,
+                re.IGNORECASE,
+            )
+            if not sep_between:
+                gov_dir_order1 = last_d
+
+        if gov_dir_order1 is not None:
+            # Order 1: directive precedes zm.
+            cl_start = find_clause_start_in_prefix(prefix, gov_dir_order1.start())
+            clause_span = prefix[cl_start : gov_dir_order1.end()].lower()
+
+            # Check negation governing this directive
+            is_negated = bool(NEGATION_DIRECTIVE_RE.search(clause_span))
+            # Also check if modal negation follows zm in suffix before the clause ends
+            cl_end_s = find_clause_end_in_suffix(suffix, 0)
+            suffix_clause = suffix[:cl_end_s]
+            if NEGATION_DIRECTIVE_RE.search(suffix_clause):
+                is_negated = True
+
+            if not is_negated:
+                return True
             else:
-                clause_start_in_sent = boundary_matches[-1].end()
+                continue
 
-        had_preceding_directive = bool(ANY_DIRECTIVE_RE.search(sent_text[clause_start_in_sent:zm_in_sent_start]))
+        # Order 2: directive follows zm (e.g. "замість <target> не слід вживати...")
+        dir_in_suffix = next(ANY_DIRECTIVE_RE.finditer(suffix), None)
+        if dir_in_suffix is not None:
+            cl_end = find_clause_end_in_suffix(suffix, dir_in_suffix.end())
+            clause_span = suffix[:cl_end].lower()
 
-        suffix_boundaries = list(re.finditer(boundary_pat, suffix, re.IGNORECASE))
-        clause_end_in_sent = len(sent_text)
-        if had_preceding_directive:
-            if suffix_boundaries:
-                clause_end_in_sent = zm_in_sent_end + suffix_boundaries[0].start()
-        else:
-            dir_m = ANY_DIRECTIVE_RE.search(suffix)
-            if dir_m:
-                for bm in suffix_boundaries:
-                    if bm.start() > dir_m.end():
-                        clause_end_in_sent = zm_in_sent_end + bm.start()
-                        break
-                else:
-                    clause_end_in_sent = len(sent_text)
+            is_negated = bool(NEGATION_DIRECTIVE_RE.search(clause_span))
+            if not is_negated:
+                return True
             else:
-                clause_end_in_sent = len(sent_text)
+                continue
 
-        cl_text = sent_text[clause_start_in_sent:clause_end_in_sent].strip()
-        cl_lower = cl_text.lower()
-        zm_in_cl = zamist_target_re.search(cl_lower)
-        if not zm_in_cl:
-            continue
-
-        cl_prefix = cl_lower[:zm_in_cl.start()]
-        cl_suffix = cl_lower[zm_in_cl.end():]
-
-        is_negated = (
-            bool(re.search(r"\b(?:не|ні|ані)\s*$", cl_prefix))
-            or bool(NEGATION_DIRECTIVE_RE.search(cl_prefix))
-            or bool(NEGATION_DIRECTIVE_RE.search(cl_suffix))
-        )
-
-        has_affirmative_directive = (
-            bool(ANY_DIRECTIVE_RE.search(cl_lower))
-            or bool(re.search(r"—|--", cl_suffix))
-        )
-        if has_affirmative_directive and not is_negated:
+        # Check em-dash shorthand (e.g. "замість <target> — <replacement>")
+        dash_m = re.match(r"^\s*(?:—|--)\s*[«\"“‘\']?[^»\"”’\']+[»\"”’\']?", suffix)
+        if dash_m:
             return True
 
     # Split text into sentence/clause units by punctuation or coordinate/adversative conjunctions introducing clauses
