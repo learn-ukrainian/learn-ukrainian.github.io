@@ -6,202 +6,220 @@ inline:
   items:
   - prompt: Що ми чу́ємо і вимовля́ємо? — What do we hear and pronounce?
     options:
-    - text: Звук
+    - text: Звук — Sound
       correct: true
-    - text: Бу́ква
+    - text: Бу́ква — Letter
       correct: false
-    - text: Зо́шит
+    - text: Зо́шит — Notebook
       correct: false
-    explanation: Звук нале́жить до слу́ху та мо́влення — ми його́ чу́ємо й вимовля́ємо.
+    explanation: "Звук нале́жить до слу́ху та мо́влення — ми йо́го чу́ємо й вимовля́ємо. — A sound belongs to hearing and speech: we hear and pronounce it."
   - prompt: Що ми ба́чимо і пи́шемо? — What do we see and write?
     options:
-    - text: Бу́ква або́ лі́тера
+    - text: Бу́ква або́ лі́тера — Letter
       correct: true
-    - text: Звук
+    - text: Звук — Sound
       correct: false
-    - text: Го́лос
+    - text: Го́лос — Voice
       correct: false
-    explanation: Бу́кву (лі́теру) ми ба́чимо очи́ма й пи́шемо руко́ю.
+    explanation: Бу́кву (лі́теру) ми ба́чимо очи́ма й пи́шемо руко́ю. — A letter we see with our eyes and write with our hand.
   - prompt: Скі́льки лі́тер в украї́нській абе́тці? — How many letters are in the Ukrainian alphabet?
     options:
-    - text: '33'
+    - text: '33 — 33'
       correct: true
-    - text: '38'
+    - text: '38 — 38'
       correct: false
-    - text: '6'
+    - text: '6 — 6'
       correct: false
-    explanation: В украї́нській абе́тці рі́вно 33 лі́тери.
+    explanation: В украї́нській абе́тці рі́вно 33 лі́тери. — In the Ukrainian alphabet there are exactly 33 letters.
   - prompt: Скі́льки зву́ків в украї́нській мо́ві? — How many sounds are in the Ukrainian language?
     options:
-    - text: '38'
+    - text: '38 — 38'
       correct: true
-    - text: '33'
+    - text: '33 — 33'
       correct: false
-    - text: '10'
+    - text: '10 — 10'
       correct: false
-    explanation: В украї́нській мо́ві нарахо́вують 38 зву́ків.
+    explanation: В украї́нській мо́ві нарахо́вують 38 зву́ків. — In the Ukrainian language there are 38 sounds.
   - prompt: Скі́льки голосни́х зву́ків в украї́нській мо́ві? — How many vowel sounds are there in Ukrainian?
     options:
-    - text: '6'
+    - text: '6 — 6'
       correct: true
-    - text: '10'
+    - text: '10 — 10'
       correct: false
-    - text: '33'
+    - text: '33 — 33'
       correct: false
-    explanation: 'В украї́нській мо́ві 6 голосни́х зву́ків: [а], [о], [у], [е], [и], [і].'
+    explanation: 'В украї́нській мо́ві 6 голосни́х зву́ків: [а], [о], [у], [е], [и], [і]. — In Ukrainian there are 6 vowel sounds: [a], [o], [u], [e], [y], [i].'
   - prompt: Чи ма́є м'яки́й знак (ь) вла́сний звук? — Does the soft sign (ь) have its own sound?
     options:
-    - text: Ні, він не ма́є вла́сного зву́ка
+    - text: Ні, він не ма́є вла́сного зву́ка — No, it has no sound of its own
       correct: true
-    - text: Так, звук [й]
+    - text: Так, звук [й] — Yes, the sound [y]
       correct: false
-    - text: Так, голосни́й звук
+    - text: Так, голосни́й звук — Yes, a vowel sound
       correct: false
-    explanation: М'яки́й знак — це графі́чний знак, що не познача́є окре́мого зву́ка.
+    explanation: М'яки́й знак — це графі́чний знак, що не познача́є окре́мого зву́ка. — The soft sign is a graphic sign that does not represent a separate sound.
 
 - id: act-101
   type: watch-and-repeat
   title: "Диві́ться та повто́рюйте: А, О, У — Watch and repeat: А, О, У"
-  instruction: "Подиві́ться коро́тке ві́део про вимо́ву лі́тери (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос."
+  instruction: "Подиві́ться коро́тке ві́део про вимо́ву лі́тери (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос. — Watch a short video on pronouncing the letter (source: Anna Ohoiko, Ukrainian Lessons) and repeat aloud."
   items:
-  - video: https://www.youtube.com/watch?v=hvB3VpcR3ZE
-    letter: А
-    word: а́рка
+  - letter: А
+    video: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    word: а́рка — arch
     sound: '[а]'
     note: Відкри́тий рот, язи́к унизу́ — Open mouth wide, tongue low.
-  - video: https://www.youtube.com/watch?v=gJFxRIPRZbI
-    letter: О
-    word: о́ко
+  - letter: О
+    video: https://www.youtube.com/watch?v=gJFxRIPRZbI
+    word: о́ко — eye
     sound: '[о]'
-    note: Окру́глені гу́би, зву́чне чи́сте о — Rounded lips, pure resonant o.
-  - video: https://www.youtube.com/watch?v=VB1O6PmtYRU
-    letter: У
-    word: Украї́на
+    note: Окру́глені гу́би, чи́стий звук — Rounded lips, pure resonant o.
+  - letter: У
+    video: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    word: Украї́на — Ukraine
     sound: '[у]'
     note: Гу́би ви́тягнуті в тру́бочку — Lips pushed forward into a tight circle.
-  - video: https://www.youtube.com/watch?v=hvB3VpcR3ZE
-    letter: А-У
-    word: а-у
+  - letter: А-У
+    video: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    word: а-у — yoo-hoo
     sound: '[а-у]'
-    note: Клич у лі́сі — Calling in the forest.
-  - video: https://www.youtube.com/watch?v=VB1O6PmtYRU
-    letter: У-А
-    word: у-а
+    note: По́клик у лі́сі — Calling in the forest.
+  - letter: У-А
+    video: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    word: у-а — wah-wah
     sound: '[у-а]'
     note: Плач дити́ни — Baby crying sound.
-  - video: https://www.youtube.com/watch?v=gJFxRIPRZbI
-    letter: А-О-У
-    word: а-о-у
+  - letter: А-О-У
+    video: https://www.youtube.com/watch?v=gJFxRIPRZbI
+    word: а-о-у — a-o-u
     sound: '[а-о-у]'
     note: Голосни́й ланцюжо́к — Vowel sequence blend.
 
+- id: act-109
+  type: match-up
+  title: З'єдна́йте бу́кву та о́пис вимо́ви — Match the letter and pronunciation description
+  instruction: З'єдна́йте бу́кву або́ сполу́ку з її́ о́писом. — Match the letter or combination with its description.
+  pairs:
+  - left: А — Letter A
+    right: відкри́тий рот, язи́к унизу́ — open mouth wide, tongue low
+  - left: О — Letter O
+    right: окру́глені гу́би, чи́стий звук — rounded lips, pure sound
+  - left: У — Letter U
+    right: гу́би ви́тягнуті в тру́бочку — lips pushed forward into a tight circle
+  - left: а-у — a-u
+    right: по́клик у лі́сі — call in the forest
+  - left: у-а — u-a
+    right: плач дити́ни — baby crying sound
+  - left: а-о-у — a-o-u
+    right: голосни́й ланцюжо́к — vowel sequence blend
+
 - id: act-102
   type: quiz
-  title: Чи́сте [о] без а́кання — Pure [о] without akannya
+  title: "Чи́сте [о]: Ненаголо́шений [о] залиша́ється [о] — Pure [o]: Unstressed [o] stays [o]"
   instruction: Обері́ть пра́вильне тве́рдження про украї́нську вимо́ву. — Choose the correct statement about Ukrainian pronunciation.
   items:
   - prompt: Як вимовля́ється ненаголо́шений звук [о] в украї́нській мо́ві? — How is unstressed [о] pronounced in Ukrainian?
     options:
-    - text: Чі́тко і кру́гло як [о]
+    - text: Чі́тко і кру́гло як [о] — Clearly and rounded as [o]
       correct: true
-    - text: Посла́блено як [а]
+    - text: Посла́блено як [а] — Weakened as [a]
       correct: false
-    - text: Як звук [у]
+    - text: Як звук [у] — As the sound [u]
       correct: false
-    explanation: В украї́нській мо́ві нема́є а́кання — [о] за́вжди залиша́ється чи́стим.
+    explanation: В украї́нській мо́ві ненаголо́шений [о] за́вжди залиша́ється чи́стим [о]. — In Ukrainian, unstressed [o] always remains pure [o].
   - prompt: Скі́льки зву́ків [о] вимовля́ється у сло́ві «молоко́»? — How many [о] sounds are pronounced in молоко́?
     options:
-    - text: Три чи́сті зву́ки [о]
+    - text: Три чи́сті зву́ки [о] — Three pure [o] sounds
       correct: true
-    - text: Оди́н звук [о] і два зву́ки [а]
+    - text: Оди́н звук [о] і два зву́ки [а] — One [o] sound and two [a] sounds
       correct: false
-    - text: Ті́льки оди́н звук [о]
+    - text: Ті́льки оди́н звук [о] — Only one [o] sound
       correct: false
-    explanation: Усі́ три бу́кви о у сло́ві молоко́ вимовля́ються як чи́стий звук [о].
+    explanation: Усі́ три бу́кви о у сло́ві молоко́ вимовля́ються як чи́стий звук [о]. — All three letters o in молоко́ are pronounced as a pure [o] sound.
   - prompt: Як пра́вильно ви́мовити пе́рший склад у сло́ві «сосна́»? — How to correctly pronounce the first syllable in сосна́?
     options:
-    - text: "З чи́стим зву́ком [о]: [сос-]"
+    - text: "З чи́стим зву́ком [о]: [сос-] — With a pure [o] sound: [sos-]"
       correct: true
-    - text: "Зі зву́ком [а]: [сас-]"
+    - text: "Зі зву́ком [а]: [сас-] — With an [a] sound: [sas-]"
       correct: false
-    - text: "Зі зву́ком [и]: [сис-]"
+    - text: "Зі зву́ком [и]: [сис-] — With a [y] sound: [sys-]"
       correct: false
-    explanation: Пе́рший ненаголо́шений склад слова́ сосна́ ма́є чітки́й звук [о].
+    explanation: Пе́рший ненаголо́шений склад сло́ва сосна́ ма́є чітки́й звук [о]. — The first unstressed syllable of the word сосна́ has a clear [o] sound.
   - prompt: Чим утво́рюються голосні́ зву́ки? — How are vowel sounds formed?
     options:
-    - text: Лише́ го́лосом без перешко́д
+    - text: Лише́ го́лосом без перешко́д — Only by voice without obstacles
       correct: true
-    - text: Го́лосом і шу́мом із перешко́дою
+    - text: Го́лосом і шу́мом із перешко́дою — By voice and noise with an obstacle
       correct: false
-    - text: Ті́льки шу́мом
+    - text: Ті́льки шу́мом — Only by noise
       correct: false
-    explanation: Голосні́ зву́ки утво́рюються ви́ключно го́лосом без перешко́д у ро́ті.
+    explanation: Голосні́ зву́ки утво́рюються ви́ключно го́лосом без перешко́д у ро́ті. — Vowel sounds are formed exclusively by voice without obstacles in the mouth.
   - prompt: Яки́м зна́ком познача́ють голосни́й звук у звукови́х схе́мах? — What symbol marks a vowel sound in diagrams?
     options:
-    - text: Круже́чком [●]
+    - text: Круже́чком [●] — Circle [●]
       correct: true
-    - text: Ри́скою [—]
+    - text: Ри́скою [—] — Dash [—]
       correct: false
-    - text: Двома́ ри́сками [=]
+    - text: Двома́ ри́сками [=] — Two dashes [=]
       correct: false
-    explanation: Голосни́й звук познача́ється круже́чком [●].
+    explanation: Голосни́й звук познача́ється круже́чком [●]. — A vowel sound is indicated by a circle [●].
   - prompt: Яка́ головна́ особли́вість украї́нської вимо́ви голосни́х? — What is the main feature of Ukrainian vowel pronunciation?
     options:
-    - text: Чі́ткість і повнозву́чність без реду́кції
+    - text: Чі́ткість і повнозву́чність без реду́кції — Clarity and full resonance without reduction
       correct: true
-    - text: Зни́щення ненаголо́шених зву́ків
+    - text: Зни́щення ненаголо́шених зву́ків — Destruction of unstressed sounds
       correct: false
-    - text: Перетво́рення [о] на [а]
+    - text: Перетво́рення [о] на [а] — Changing [o] into [a]
       correct: false
-    explanation: Украї́нські голосні́ повнозву́чні й ніко́ли не редуку́ються.
+    explanation: Украї́нські голосні́ повнозву́чні й ніко́ли не редуку́ються. — Ukrainian vowels are fully resonant and never reduced.
 
 - id: act-103
   type: fill-in
   title: Пе́рше чита́ння — First reading
   instruction: Допо́вніть звукові́ сполу́ки пра́вильними голосни́ми бу́квами. — Complete the vowel combinations with the correct letters.
   items:
-  - sentence: 'У лі́сі ми гука́ємо: «а-___»!'
+  - sentence: 'У лі́сі ми гука́ємо: «а-___»! — In the forest we call out: "a-___"!'
     answer: у
     options:
     - у
     - о
     - а
-    explanation: 'У лі́сі кли́чуть: «а-у!». Традиці́йний по́клик склада́ється з голосни́х а та у.'
-  - sentence: 'Маля́ пла́че: «___-а»!'
+    explanation: 'У лі́сі кли́чуть: «а-у!». Традиці́йний по́клик склада́ється з голосни́х а та у. — In the forest people call: "a-u!". The traditional call consists of the vowels a and u.'
+  - sentence: 'Маля́ пла́че: «___-а»! — The baby cries: "___-a"!'
     answer: у
     options:
     - у
     - о
     - а
-    explanation: 'Маля́ пла́че: «у-а!». Почина́ється зі зву́ка [у].'
-  - sentence: 'Коли́ диву́ємося, ми ка́жемо: «___!»'
+    explanation: 'Маля́ пла́че: «у-а!». Почина́ється зі зву́ка [у]. — The baby cries: "u-a!". It begins with the sound [u].'
+  - sentence: 'Коли́ диву́ємося, ми ка́жемо: «___!» — When we are surprised, we say: "___!"'
     answer: о
     options:
     - о
     - у
     - а
-    explanation: Ви́гук по́диву або́ ра́дості — «о!».
-  - sentence: Бу́ква пі́сля А у ви́гуку «а-у» — це бу́ква ___.
+    explanation: 'Ви́гук по́диву або́ ра́дості — «о!». — The exclamation of surprise or joy is "o!".'
+  - sentence: 'Бу́ква пі́сля А у ви́гуку «а-у» — це бу́ква ___. — The letter after A in the exclamation "a-u" is the letter ___.'
     answer: у
     options:
     - у
     - о
     - а
-    explanation: Сло́во а-у закі́нчується бу́квою у.
-  - sentence: У сло́ві «о́ко» пе́рша бу́ква — це ___.
+    explanation: 'Сло́во а-у закі́нчується бу́квою у. — The word a-u ends with the letter u.'
+  - sentence: 'У сло́ві «о́ко» пе́рша бу́ква — це ___. — In the word "о́ко" the first letter is ___.'
     answer: о
     options:
     - о
     - а
     - у
-    explanation: Сло́во о́ко почина́ється бу́квою о.
-  - sentence: У сло́ві «а́рка» пе́рша бу́ква — це ___.
+    explanation: 'Сло́во о́ко почина́ється бу́квою о. — The word о́ко begins with the letter o.'
+  - sentence: 'У сло́ві «а́рка» пе́рша бу́ква — це ___. — In the word "а́рка" the first letter is ___.'
     answer: а
     options:
     - а
     - о
     - у
-    explanation: Сло́во а́рка почина́ється бу́квою а.
+    explanation: 'Сло́во а́рка почина́ється бу́квою а. — The word а́рка begins with the letter a.'
 
 workbook:
 - id: act-2
@@ -211,100 +229,100 @@ workbook:
   items:
   - prompt: Чи є тото́жними поня́ття «звук» і «бу́ква»? — Are sound and letter the same concept?
     options:
-    - text: Ні, це рі́зні поня́ття
+    - text: Ні, це рі́зні поня́ття — No, they are different concepts
       correct: true
-    - text: Так, це одне́ й те са́ме
+    - text: Так, це одне́ й те са́ме — Yes, they are the same thing
       correct: false
-    - text: Лише́ в англі́йській мо́ві
+    - text: Лише́ в англі́йській мо́ві — Only in the English language
       correct: false
-    explanation: Звук ми чу́ємо і вимовля́ємо, а бу́кву ба́чимо й пи́шемо.
+    explanation: Звук ми чу́ємо і вимовля́ємо, а бу́кву ба́чимо й пи́шемо. — We hear and pronounce a sound, but we see and write a letter.
   - prompt: Яке́ сло́во є сино́німом до сло́ва «бу́ква»? — Which word is a synonym for бу́ква?
     options:
-    - text: лі́тера
+    - text: лі́тера — letter
       correct: true
-    - text: звук
+    - text: звук — sound
       correct: false
-    - text: абе́тка
+    - text: абе́тка — alphabet
       correct: false
-    explanation: Бу́ква та лі́тера — абсолю́тні сино́німи в украї́нській мо́ві.
+    explanation: Бу́ква та лі́тера — абсолю́тні сино́німи в украї́нській мо́ві. — Бу́ква and лі́тера are absolute synonyms in Ukrainian.
   - prompt: Скі́льки лі́тер у сло́ві «а-у»? — How many letters are in the word а-у?
     options:
-    - text: дві
+    - text: дві — two
       correct: true
-    - text: одна́
+    - text: одна́ — one
       correct: false
-    - text: три
+    - text: три — three
       correct: false
-    explanation: У сло́ві а-у дві лі́тери — а та у.
+    explanation: "У сло́ві а-у дві лі́тери — а та у. — In the word a-u there are two letters: a and u."
   - prompt: Чи мо́жна проспіва́ти голосни́й звук? — Can you sing a vowel sound?
     options:
-    - text: Так, голосні́ ле́гко співа́ються
+    - text: Так, голосні́ ле́гко співа́ються — Yes, vowels are easily sung
       correct: true
-    - text: Ні, ніко́ли
+    - text: Ні, ніко́ли — No, never
       correct: false
-    - text: Ті́льки при́голосні
+    - text: Ті́льки при́голосні — Only consonants
       correct: false
-    explanation: Голосні́ зву́ки утво́рюються чи́стим го́лосом і ле́гко співа́ються.
+    explanation: Голосні́ зву́ки утво́рюються чи́стим го́лосом і ле́гко співа́ються. — Vowel sounds are formed by pure voice and are easily sung.
   - prompt: Що познача́є бу́ква О? — What does the letter О represent?
     options:
-    - text: голосни́й звук [о]
+    - text: голосни́й звук [о] — vowel sound [o]
       correct: true
-    - text: при́голосний звук
+    - text: при́голосний звук — consonant sound
       correct: false
-    - text: два зву́ки
+    - text: два зву́ки — two sounds
       correct: false
-    explanation: Бу́ква О познача́є голосни́й звук [о].
+    explanation: Бу́ква О познача́є голосни́й звук [о]. — The letter O represents the vowel sound [o].
   - prompt: Що означа́є ви́гук «а-у»? — What does the exclamation а-у mean?
     options:
-    - text: по́клик у лі́сі
+    - text: по́клик у лі́сі — call in the forest
       correct: true
-    - text: проща́ння
+    - text: проща́ння — farewell
       correct: false
-    - text: запита́ння
+    - text: запита́ння — question
       correct: false
-    explanation: А-у — традиці́йний по́клик, коли́ кли́чуть кого́сь у лі́сі.
+    explanation: А-у — традиці́йний по́клик, коли́ кли́чуть люди́ну в лі́сі. — A-u is the traditional call when calling out to a person in the forest.
 
 - id: act-104
   type: true-false
   title: "Пра́вда чи непра́вда: Зву́ки і бу́кви — True or False: Sounds and letters"
   instruction: Ви́значте, чи є тве́рдження пра́вильним. — Determine if the statement is true.
   items:
-  - statement: Зву́ки ми чу́ємо й вимовля́ємо, а бу́кви ба́чимо й пи́шемо.
+  - statement: Зву́ки ми чу́ємо й вимовля́ємо, а бу́кви ба́чимо й пи́шемо. — We hear and pronounce sounds, but see and write letters.
     answer: true
-    explanation: Це золоте́ пра́вило украї́нської фоне́тики з підру́чника Заболо́тного.
-  - statement: В украї́нській абе́тці 38 лі́тер.
+    explanation: Це золоте́ пра́вило украї́нської фоне́тики з підру́чника Заболо́тного. — This is the golden rule of Ukrainian phonetics from Zabolotnyi's textbook.
+  - statement: В украї́нській абе́тці 38 лі́тер. — In the Ukrainian alphabet there are 38 letters.
     answer: false
-    explanation: В абе́тці 33 лі́тери, а 38 — це кі́лькість зву́ків у мо́ві.
-  - statement: Слова́ «бу́ква» та «лі́тера» ма́ють одна́кове зна́чення.
+    explanation: В абе́тці 33 лі́тери, а 38 — це кі́лькість зву́ків у мо́ві. — There are 33 letters in the alphabet, while 38 is the number of sounds in the language.
+  - statement: Слова́ «бу́ква» та «лі́тера» ма́ють одна́кове зна́чення. — The words "бу́ква" and "лі́тера" have the same meaning.
     answer: true
-    explanation: Бу́ква і лі́тера — по́вні сино́німи.
-  - statement: В украї́нській мо́ві ненаголо́шений звук [о] вимовля́ється як [а].
+    explanation: Бу́ква і лі́тера — по́вні сино́німи. — "Бу́ква" and "лі́тера" are full synonyms.
+  - statement: В украї́нській мо́ві ненаголо́шений звук [о] вимовля́ється як [а]. — In Ukrainian, the unstressed sound [o] is pronounced as [a].
     answer: false
-    explanation: В украї́нській мо́ві нема́є а́кання; [о] за́вжди залиша́ється чи́стим.
-  - statement: Голосні́ зву́ки утво́рюються лише́ го́лосом без перешко́д.
+    explanation: В украї́нській мо́ві ненаголо́шений [о] за́вжди залиша́ється чи́стим [о]. — In Ukrainian, unstressed [o] always remains pure [o].
+  - statement: Голосні́ зву́ки утво́рюються лише́ го́лосом без перешко́д. — Vowel sounds are formed only by voice without obstacles.
     answer: true
-    explanation: Пові́тря ві́льно прохо́дить крізь рот під час вимо́ви голосни́х.
-  - statement: У сло́ві «о́ко» два голосни́х зву́ки.
+    explanation: Пові́тря ві́льно прохо́дить крізь рот під час вимо́ви голосни́х. — Air passes freely through the mouth during the pronunciation of vowels.
+  - statement: У сло́ві «о́ко» два голосни́х зву́ки. — In the word "о́ко" there are two vowel sounds.
     answer: true
-    explanation: У сло́ві о́ко два зву́ки [о].
+    explanation: У сло́ві о́ко два зву́ки [о]. — In the word о́ко there are two [o] sounds.
 
 - id: act-105
   type: match-up
   title: З'єдна́йте поня́ття — Match concepts
-  instruction: З'єдна́йте украї́нське поня́ття з його́ зна́ченням. — Match the Ukrainian concept with its meaning.
+  instruction: З'єдна́йте украї́нське поня́ття з йо́го зна́ченням. — Match the Ukrainian concept with its meaning.
   pairs:
-  - left: звук
-    right: те, що чу́ємо й вимовля́ємо
-  - left: бу́ква
-    right: те, що ба́чимо й пи́шемо
-  - left: абе́тка
-    right: три́дцять три лі́тери
-  - left: голосни́й
-    right: утво́рюється лише́ го́лосом
-  - left: а-у
-    right: по́клик у лі́сі
-  - left: у-а
-    right: плач дити́ни
+  - left: звук — sound
+    right: те, що чу́ємо й вимовля́ємо — that which we hear and pronounce
+  - left: бу́ква — letter
+    right: те, що ба́чимо й пи́шемо — that which we see and write
+  - left: абе́тка — alphabet
+    right: три́дцять три лі́тери — thirty-three letters
+  - left: голосни́й — vowel
+    right: утво́рюється лише́ го́лосом — formed only by voice
+  - left: а-у — a-u
+    right: по́клик у лі́сі — call in the forest
+  - left: у-а — u-a
+    right: плач дити́ни — baby crying sound
 
 - id: act-106
   type: odd-one-out
@@ -312,107 +330,107 @@ workbook:
   instruction: Знайді́ть за́йвий елеме́нт у ко́жній гру́пі. — Find the odd element in each group.
   items:
   - words:
-    - '[а]'
-    - '[о]'
-    - '[у]'
-    - бу́ква
+    - '[а] — sound [a]'
+    - '[о] — sound [o]'
+    - '[у] — sound [u]'
+    - бу́ква — letter
     correct: 3
-    explanation: Бу́ква — це графі́чний знак на письмі́, а ре́шта — це зву́ки.
+    explanation: Бу́ква — це графі́чний знак на письмі́, а ре́шта — це зву́ки. — A letter is a graphic sign in writing, while the rest are sounds.
   - words:
-    - А
-    - О
-    - У
-    - '[о]'
+    - А — Letter A
+    - О — Letter O
+    - У — Letter U
+    - '[о] — sound [o]'
     correct: 3
-    explanation: '[о] у дужка́х — це звук, а ре́шта — друко́вані бу́кви.'
+    explanation: '[о] у дужка́х — це звук, а ре́шта — друко́вані бу́кви. — [o] in brackets is a sound, while the rest are printed letters.'
   - words:
-    - бу́ква
-    - лі́тера
-    - знак
-    - звук
+    - бу́ква — letter
+    - лі́тера — letter
+    - знак — sign
+    - звук — sound
     correct: 3
-    explanation: Звук нале́жить до у́сного мо́влення, а ре́шта — до писе́много.
+    explanation: Звук нале́жить до у́сного мо́влення, а ре́шта — до писе́много. — Sound belongs to spoken speech, while the rest belong to written language.
   - words:
     - '33'
-    - абе́тка
-    - лі́тери
+    - абе́тка — alphabet
+    - лі́тери — letters
     - '38'
     correct: 3
-    explanation: '38 — це кі́лькість зву́ків, тоді́ як абе́тка ма́є 33 лі́тери.'
+    explanation: '38 — це кі́лькість зву́ків, тоді́ як абе́тка ма́є 33 лі́тери. — 38 is the number of sounds, whereas the alphabet has 33 letters.'
   - words:
-    - о́ко
-    - молоко́
-    - сосна́
-    - а́кання
+    - о́ко — eye
+    - молоко́ — milk
+    - сосна́ — pine tree
+    - реду́кція — vowel reduction
     correct: 3
-    explanation: А́кання — це по́милка вимо́ви, а ре́шта — при́клади слів із чи́стим [о].
+    explanation: Реду́кція — це я́вище і́ншої мо́ви, а в украї́нській мо́ві [о] за́вжди чи́сте. — Vowel reduction is a phenomenon of another language, while in Ukrainian [o] is always pure.
   - words:
-    - а-у
-    - у-а
-    - о-а
-    - зо́шит
+    - а-у — a-u
+    - у-а — u-a
+    - о-а — o-a
+    - зо́шит — notebook
     correct: 3
-    explanation: Зо́шит — це речови́й іме́нник, а ре́шта — звукови́гуки.
+    explanation: Зо́шит — це речови́й іме́нник, а ре́шта — звукови́гуки. — Notebook is a physical noun, while the rest are sound exclamations.
 
 - id: act-107
   type: fill-in
   title: Вста́вте те́рмін — Insert the term
   instruction: Запо́вніть про́пуск відпові́дним сло́вом. — Fill in the blank with the appropriate word.
   items:
-  - sentence: Ми чу́ємо і вимовля́ємо ___.
-    answer: звук
+  - sentence: Ми чу́ємо і вимовля́ємо ___. — We hear and pronounce ___.
+    answer: "звук (sound)"
     options:
-    - звук
-    - бу́кву
-    - зо́шит
-    explanation: Звук нале́жить до слу́ху та вимо́ви.
-  - sentence: Ми ба́чимо і пи́шемо ___.
-    answer: бу́кву
+    - "звук (sound)"
+    - "бу́кву (letter)"
+    - "зо́шит (notebook)"
+    explanation: Звук нале́жить до слу́ху та вимо́ви. — A sound belongs to hearing and pronunciation.
+  - sentence: Ми ба́чимо і пи́шемо ___. — We see and write ___.
+    answer: "бу́кву (letter)"
     options:
-    - бу́кву
-    - звук
-    - го́лос
-    explanation: Бу́кву ми ба́чимо очи́ма та пи́шемо.
-  - sentence: Украї́нська ___ ма́є 33 лі́тери.
-    answer: абе́тка
+    - "бу́кву (letter)"
+    - "звук (sound)"
+    - "го́лос (voice)"
+    explanation: Бу́кву ми ба́чимо очи́ма та пи́шемо. — We see a letter with our eyes and write it.
+  - sentence: Украї́нська ___ ма́є 33 лі́тери. — The Ukrainian ___ has 33 letters.
+    answer: "абе́тка (alphabet)"
     options:
-    - абе́тка
-    - мо́ва
-    - пі́сня
-    explanation: Абе́тка — це суку́пність усі́́х 33 лі́тер.
-  - sentence: В украї́нській мо́ві є шість ___ зву́ків.
-    answer: голосни́х
+    - "абе́тка (alphabet)"
+    - "мо́ва (language)"
+    - "пі́сня (song)"
+    explanation: Абе́тка — це суку́пність усі́х 33 лі́тер. — The alphabet is the collection of all 33 letters.
+  - sentence: В украї́нській мо́ві є шість ___ зву́ків. — In the Ukrainian language there are six ___ sounds.
+    answer: "голосни́х (vowel)"
     options:
-    - голосни́х
-    - писе́мних
-    - ти́хих
-    explanation: В украї́нській мо́ві 6 голосни́х зву́ків.
-  - sentence: Сино́німом до сло́ва бу́ква є сло́во ___.
-    answer: лі́тера
+    - "голосни́х (vowel)"
+    - "писе́мних (written)"
+    - "ти́хих (quiet)"
+    explanation: В украї́нській мо́ві 6 голосни́х зву́ків. — In the Ukrainian language there are 6 vowel sounds.
+  - sentence: Сино́німом до сло́ва бу́ква є сло́во ___. — A synonym for the word бу́ква is the word ___.
+    answer: "лі́тера (letter)"
     options:
-    - лі́тера
-    - склад
-    - звук
-    explanation: Лі́тера — то́чний сино́нім до сло́ва бу́ква.
-  - sentence: 'У лі́сі луна́є по́клик «___-у!».'
-    answer: а
+    - "лі́тера (letter)"
+    - "склад (syllable)"
+    - "звук (sound)"
+    explanation: Лі́тера — то́чний сино́нім до сло́ва бу́ква. — Лі́тера is an exact synonym for the word бу́ква.
+  - sentence: 'По́клик «а-у!» почина́ється з лі́тери ___. — The call "a-u!" begins with the letter ___.'
+    answer: "а (letter А)"
     options:
-    - а
-    - о
-    - у
-    explanation: Традиці́йний по́клик у лі́сі — «а-у!».
+    - "а (letter А)"
+    - "о (letter О)"
+    - "у (letter У)"
+    explanation: 'Традиці́йний по́клик у лі́сі почина́ється бу́квою «а»: «а-у!». — The traditional forest call begins with letter «а»: "a-u!".'
 
 - id: act-108
   type: order
-  title: Впорядку́йте зву́ки — Order the sounds
-  instruction: Розташу́йте пе́рші ви́вчені бу́кви за алфа́ві́тним поря́дком. — Put the first studied letters in alphabetical order.
+  title: Впорядку́йте бу́кви — Order the letters
+  instruction: Розташу́йте пе́рші ви́вчені бу́кви за алфаві́тним поря́дком. — Put the first studied letters in alphabetical order.
   items:
-  - А
-  - О
-  - У
-  - Е
-  - И
-  - І
+  - А — Letter A
+  - О — Letter O
+  - У — Letter U
+  - Е — Letter E
+  - И — Letter Y
+  - І — Letter I
   correct_order:
   - 0
   - 1

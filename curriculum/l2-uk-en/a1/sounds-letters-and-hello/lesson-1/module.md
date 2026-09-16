@@ -1,4 +1,4 @@
-# А О У: Зву́ки та бу́кви
+# А О У: Зву́ки та бу́кви — A, O, U: Sounds and Letters
 
 Ласка́во про́симо до перви́нного ку́рсу украї́нської мо́ви! — Welcome to the introductory course of the Ukrainian language! In this first lesson, you take your very first steps into Ukrainian sounds and letters. You will discover how Ukrainian speech works, why the alphabet has 33 letters while the spoken language has 38 sounds, and how to pronounce and read your first three vowels: **А**, **О**, and **У**.
 
@@ -8,12 +8,12 @@ By the end of this 60-minute lesson, you will be able to:
 - **Вжива́ти слова́ бу́ква та лі́тера** — use both Ukrainian terms for "letter": **бу́ква** and **лі́тера**;
 - **Зна́ти склад абе́тки** — know that the Ukrainian alphabet has 33 letters and 38 sounds;
 - **Вимовля́ти голосні́ зву́ки [а], [о], [у]** — pronounce the vowel sounds [а], [о], [у] accurately;
-- **Уника́ти а́кання** — keep the unstressed [о] pure and rounded without reducing it to [а];
+- **Чи́стий звук [о]** — keep the unstressed [о] pure and rounded without vowel reduction;
 - **Чита́ти пе́рші звукосполу́ки** — read aloud the very first vocal combinations: **а-у** and **у-а**.
 
 ---
 
-## Звуки та бу́кви: Що ми чу́ємо і що пи́шемо
+## Зву́ки та бу́кви: Що ми чу́ємо і що пи́шемо — Sounds and Letters: What We Hear and What We Write
 
 When learning Ukrainian, keep this golden distinction in mind from your very first minute:
 
@@ -44,7 +44,7 @@ Why are there more sounds than letters? Because several Ukrainian letters perfor
 
 ---
 
-## Голосні́ зву́ки та три пе́рші бу́кви: А, О, У
+## Голосні́ зву́ки та три пе́рші бу́кви: А, О, У — Vowel Sounds and the First Three Letters: A, O, U
 
 What is a vowel sound? In Ukrainian, a vowel sound is called a **голосни́й звук** (from **го́лос** — voice). Vowels are formed exclusively by voice. When you pronounce a vowel, the air stream passes freely through your mouth without meeting any obstacle from your teeth, lips, or tongue.
 
@@ -77,15 +77,19 @@ Watch the video demonstrations prepared by Ukrainian teacher Anna Ohoiko (дже
 
 <!-- INJECT_ACTIVITY: act-101 -->
 
+Практику́йте розпізнава́ння зву́ків та лі́тер: — Practice recognizing sounds and letters:
+
+<!-- INJECT_ACTIVITY: act-109 -->
+
 ---
 
-## Чи́сте [о] без а́кання
+## Чи́сте [о]: Ненаголо́шений [о] залиша́ється [о] — Pure [o]: Unstressed [o] Stays [o]
 
 One of the most important phonetic rules in the Ukrainian language is the preservation of unstressed vowels:
 
-> **В украї́нській мо́ві нема́є а́кання.** — There is no akannya in Ukrainian.
+> **В украї́нській мо́ві ненаголо́шений [о] залиша́ється [о]:** In Ukrainian, unstressed [o] always stays [o].
 
-In some neighbouring Slavic languages (such as Russian or Belarusian), an unstressed letter **о** weakens and changes into an **[а]** sound (a phenomenon called *akannya*). In standard Ukrainian, this never happens. Ukrainian pronunciation is deeply phonetic:
+In some neighbouring Slavic languages (such as Russian or Belarusian), an unstressed letter **о** weakens and changes into an **[а]** sound (a phenomenon called vowel reduction). In standard Ukrainian, this never happens. Ukrainian pronunciation is deeply phonetic:
 
 - An **[о]** is always pronounced as a clean, rounded **[о]**, whether it is stressed or unstressed.
 - When an Ukrainian speaker says a word with several **о** letters, every single **о** rings clearly.
@@ -96,13 +100,13 @@ Compare how the sound behaves:
 - **молоко́** — milk (all three **о** sounds are fully pronounced as [о]);
 - **сосна́** — pine tree (the first unstressed syllable has a crisp [о]: [с о с н а́]).
 
-Training your ear and mouth to avoid *akannya* right from lesson 1 will instantly give you authentic Ukrainian pronunciation.
+Training your ear and mouth to avoid vowel reduction right from lesson 1 will instantly give you authentic Ukrainian pronunciation.
 
 <!-- INJECT_ACTIVITY: act-102 -->
 
 ---
 
-## Пе́рше чита́ння: а-у та у-а
+## Пе́рше чита́ння: а-у та у-а — First Reading: a-u and u-a
 
 Now that you know the letters **А**, **О**, and **У**, you can read your very first Ukrainian vocal combinations!
 
@@ -111,7 +115,7 @@ In Ukrainian folklore, everyday speech, and nature, single vowels and vowel pair
 - **А!** — an exclamation of understanding or sudden realization: *Ah!*
 - **О!** — an exclamation of surprise or wonder: *Oh!*
 - **У!** — an exclamation of warning, fright, or awe: *Ooh!*
-- **А-у́!** — the traditional call used when calling someone in the woods or looking for a lost friend: *Halloo! Anyone there?*
+- **А-у́!** — the traditional call used when calling someone in the woods or looking for a lost friend: *Yoo-hoo! Calling out!*
 - **У-а́!** — the universal sound of a newborn baby crying: *Wah-wah!*
 - **О-а́!** — a sound of amazement or discovery.
 
@@ -122,19 +126,19 @@ Notice how the voice glides smoothly from one vowel to the next when reading hyp
 
 Here is a short outdoor dialogue between two friends hiking in a Ukrainian forest:
 
-> **Марко́:** А-у́!
-> **Оле́г:** А-у́!
-> **Марко́:** О! Оле́г!
-> **Оле́г:** А-у́, Марко́!
+> **Марко́:** А-у́! — Yoo-hoo! (Calling out!)
+> **Оле́г:** А-у́! — Yoo-hoo! (Calling out!)
+> **Марко́:** О! Оле́г! — Oh! Oleh!
+> **Оле́г:** А-у́, Марко́! — Yoo-hoo, Marko!
 
 Support after the dialogue:
 
 | Украї́нська ре́пліка — Ukrainian line | Англі́йський пере́клад — English translation |
 | --- | --- |
-| **Марко́: А-у́!** | Marko: Halloo! |
-| **Оле́г: А-у́!** | Oleh: Halloo! |
+| **Марко́: А-у́!** | Marko: Yoo-hoo! (Calling out!) |
+| **Оле́г: А-у́!** | Oleh: Yoo-hoo! (Calling out!) |
 | **Марко́: О! Оле́г!** | Marko: Oh! Oleh! |
-| **Оле́г: А-у́, Марко́!** | Oleh: Halloo, Marko! |
+| **Оле́г: А-у́, Марко́!** | Oleh: Yoo-hoo, Marko! |
 
 <!-- INJECT_ACTIVITY: act-103 -->
 

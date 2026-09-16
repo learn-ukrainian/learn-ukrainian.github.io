@@ -1,11 +1,11 @@
-# М Л: Пе́рші при́голосні та склади́
+# М, Л: Склади́ та сло́во ма́ма — M and L: Syllables and the Word ма́ма
 
-У пе́ршому уро́ці ви ви́вчили голосні́ зву́ки [а], [о], [у] та дізна́лися, що зву́ки ми чу́ємо, а бу́кви пи́шемо. Тепе́р час познайо́митися з пе́ршими при́голосними зву́ками та ї́хніми бу́квами — **М** та **Л**, навчи́тися злива́ти зву́ки у склади́ та прочита́ти найважливі́ше пе́рше сло́во — **ма́ма**!
+У пе́ршому уро́ці ви ви́вчили голосні́ зву́ки [а], [о], [у] та дізна́лися, що зву́ки ми чу́ємо, а бу́кви пи́шемо. — In the first lesson, you learned the vowel sounds [a], [o], [u] and discovered that we hear sounds but write letters. Тепе́р час познайо́митися з при́голосними бу́квами **М** та **Л**, навчи́тися злива́ти зву́ки у склади́ та прочита́ти найважливі́ше пе́рше сло́во — **ма́ма**! — Now it is time to meet the consonant letters **М** and **Л**, learn to blend sounds into syllables, and read our most important first word: **ма́ма**!
 
 By the end of this 60-minute lesson, you will be able to:
 
 - **Розумі́ти тво́рення при́голосних** — understand how consonant sounds are produced with an obstacle in the mouth;
-- **Вимовля́ти бу́кви М та Л** — pronounce the labial sonorant [м] and lingual sonorant [л] correctly;
+- **Вимовля́ти бу́кви М та Л** — pronounce the labial sound [м] and lingual sound [л] correctly;
 - **Зна́ти золоте́ пра́вило складопо́ділу** — apply the golden syllable rule: a word has as many syllables as it has vowels;
 - **Розрізня́ти відкри́ті та закри́ті склади́** — distinguish between open syllables (CV: **ма**, **ла**) and closed syllables (VC: **ам**, **ал**);
 - **Роби́ти звукови́й ана́ліз сло́ва ма́ма** — perform a phonetic breakdown of the word **ма́ма**;
@@ -13,7 +13,7 @@ By the end of this 60-minute lesson, you will be able to:
 
 ---
 
-## Приголосні́ зву́ки: Тво́рення з перешко́дою
+## При́голосні зву́ки: Тво́рення з перешко́дою — Consonant Sounds: Creation with an Obstacle
 
 In the previous lesson, you learned that vowel sounds (**голосні́ зву́ки**) flow freely on your voice without meeting any physical barriers. Consonant sounds behave in the opposite way.
 
@@ -21,7 +21,7 @@ In Ukrainian, a consonant is called a **при́голосний звук** (lit
 
 Ukrainian primary school textbooks describe this contrast clearly:
 
-> «Приголосні́ зву́ки утво́рюються за допомо́гою го́лосу й шу́му або́ ли́ше шу́му. Пові́тря в ро́ті натрапля́є на перешко́ду» (quoted from: Большакова, 1 клас, с. 24).
+> «При́голосні зву́ки утво́рюються за допомо́гою го́лосу й шу́му або́ лише́ шу́му. Пові́тря в ро́ті натрапля́є на перешко́ду» (quoted from: Большакова, 1 клас, с. 24).
 > 
 > "Consonant sounds are formed with the help of voice and noise or noise alone. The air in the mouth meets an obstacle."
 
@@ -38,14 +38,14 @@ In Ukrainian phonetic analysis, a hard consonant sound is symbolized by a single
 
 ---
 
-## Бу́кви М та Л: Губни́й і язико́вий сона́нти
+## Бу́кви М та Л: Тво́рення зву́ків — Letters M and L: Sound Formation
 
-Our first two consonant letters are **М** and **Л**. Both of them represent sonorant sounds (**сона́нти**) — pleasant, musical consonants where voice prevails over noise.
+Our first two consonant letters are **М** and **Л**. Both of them represent pleasant, resonant sounds where voice prevails over noise.
 
 | Вели́ка бу́ква — Capital | Мала́ бу́ква — Lowercase | Звук — Sound | Спо́сіб тво́рення — Articulation method |
 | --- | --- | --- | --- |
-| **М** | **м** | **[м]** | **Губни́й сона́нт** (labial sonorant). Press your upper and lower lips firmly together and release the voice through your nose. |
-| **Л** | **л** | **[л]** | **Язико́вий бокови́й сона́нт** (lingual lateral sonorant). Touch the tip of your tongue to the back of your upper teeth while air escapes freely along the sides. |
+| **М** | **м** | **[м]** | **Губни́й звук** (labial sound). Press your upper and lower lips firmly together and release the voice through your nose. |
+| **Л** | **л** | **[л]** | **Язико́вий бокови́й звук** (lingual lateral sound). Touch the tip of your tongue to the back of your upper teeth while air escapes freely along the sides. |
 
 Listen to the pronunciation guide recorded by Ukrainian teacher Anna Ohoiko (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons). Repeat each letter and model word aloud after her.
 
@@ -53,7 +53,7 @@ Listen to the pronunciation guide recorded by Ukrainian teacher Anna Ohoiko (д�
 
 ---
 
-## Будо́ва скла́ду: Відкри́ті та закри́ті склади́
+## Будо́ва скла́ду: Відкри́ті та закри́ті склади́ — Syllable Structure: Open and Closed Syllables
 
 What is a syllable in Ukrainian? A syllable is called a **склад**. A syllable is a natural phonetic unit pronounced with a single push of breath.
 
@@ -93,9 +93,13 @@ Practice reading these syllables aloud, alternating between the open CV pairs an
 
 <!-- INJECT_ACTIVITY: act-202 -->
 
+Практику́йте розрі́знення відкри́тих і закри́тих складі́в: — Practice distinguishing open and closed syllables:
+
+<!-- INJECT_ACTIVITY: act-209 -->
+
 ---
 
-## Пе́рше сло́во: ма́ма
+## Пе́рше сло́во: ма́ма — First Word: ма́ма
 
 By joining two open syllables together, we unlock the most universally cherished word in human language:
 
@@ -103,13 +107,13 @@ By joining two open syllables together, we unlock the most universally cherished
 
 Let us examine the phonetic anatomy of **ма́ма**:
 
-1. **Кі́лькість лі́тер**: 4 лі́тери (**м**, **а**, **м**, **а**).
-2. **Кі́лькість зву́ків**: 4 зву́ки ([м], [а], [м], [а]).
-3. **Голосні́ зву́ки**: два зву́ки [а] (`[●]`, `[●]`).
-4. **Приголосні́ зву́ки**: два тверди́х зву́ки [м] (`[—]`, `[—]`).
-5. **Склади́**: два склади́ (**ма-ма**).
-6. **На́голос**: на́голос па́дає на пе́рший склад — **ма́-ма**.
-7. **Звукова́ схе́ма**: `[— ● — ●]`.
+1. **Кі́лькість лі́тер — Number of letters:** 4 лі́тери — 4 letters (**м**, **а**, **м**, **а**).
+2. **Кі́лькість зву́ків — Number of sounds:** 4 зву́ки — 4 sounds ([м], [а], [м], [а]).
+3. **Голосні́ зву́ки — Vowels:** два зву́ки [а] — two sounds [a] (`[●]`, `[●]`).
+4. **При́голосні зву́ки — Consonants:** два тверди́х зву́ки [м] — two hard sounds [m] (`[—]`, `[—]`).
+5. **Склади́ — Syllables:** два склади́ — two syllables (**ма-ма**).
+6. **На́голос — Stress:** на́голос па́дає на пе́рший склад — stress falls on the first syllable (**ма́-ма**).
+7. **Звукова́ схе́ма — Sound pattern:** `[— ● — ●]`.
 
 From the letters **А**, **О**, **У**, **М**, **Л**, you can already read several authentic Ukrainian words:
 
@@ -131,10 +135,10 @@ They do not differ by stress alone: the final vowel also changes from **-о** to
 
 Here is a simple domestic dialogue between two brothers calling their mother:
 
-> **Марко́:** Ма́ма!
-> **Оле́г:** Ма́ма тут!
-> **Марко́:** Ма́мо!
-> **Оле́г:** Нам ма́ло!
+> **Марко́:** Ма́ма! — Mom!
+> **Оле́г:** Ма́ма тут! — Mom is here!
+> **Марко́:** Ма́мо! — Mum!
+> **Оле́г:** Нам ма́ло! — We have little!
 
 Support after the dialogue:
 

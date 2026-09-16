@@ -1,99 +1,99 @@
 inline:
 - id: act-3
   type: quiz
-  title: Приголосні́ зву́ки — Consonant sounds
+  title: При́голосні зву́ки — Consonant sounds
   instruction: Обері́ть пра́вильне тве́рдження про при́голосні зву́ки. — Choose the correct statement about consonant sounds.
   items:
-  - prompt: Що ство́рюють о́ргани мо́влення під час ви́мови при́голосних? — What do speech organs create when pronouncing consonants?
+  - prompt: Що ство́рюють о́ргани мо́влення під час вимо́ви при́голосних? — What do speech organs create when pronouncing consonants?
     options:
-    - text: Перешко́ду
+    - text: Перешко́ду — Obstacle
       correct: true
-    - text: Порожне́чу
+    - text: Порожне́чу — Void
       correct: false
-    - text: Му́зику
+    - text: Му́зику — Music
       correct: false
-    explanation: При́голосні зву́ки тво́ряться з перешко́дою в ро́ті (гу́би, зу́би, язи́к).
+    explanation: При́голосні зву́ки тво́ряться з перешко́дою в ро́ті (гу́би, зу́би, язи́к). — Consonant sounds are formed with an obstacle in the mouth (lips, teeth, tongue).
   - prompt: Яки́м зна́ком у звукови́х схе́мах познача́ють тверди́й при́голосний? — What symbol marks a hard consonant in diagrams?
     options:
-    - text: Ри́скою [—]
+    - text: Ри́скою [—] — Dash [—]
       correct: true
-    - text: Круже́чком [●]
+    - text: Круже́чком [●] — Circle [●]
       correct: false
-    - text: Хре́стиком
+    - text: Хре́стиком — Cross
       correct: false
-    explanation: Тверди́й при́голосний познача́ють одніє́ю ри́скою [—].
-  - prompt: Яки́й о́рган мо́влення бере́ уча́сть у тво́ренні зву́ка [м]? — What speech organ forms the sound [м]?
+    explanation: Тверди́й при́голосний познача́ють одніє́ю ри́скою [—]. — A hard consonant is indicated by a single dash [—].
+  - prompt: Яки́й о́рган мо́влення бере́ у́часть у тво́ренні зву́ка [м]? — What speech organ forms the sound [м]?
     options:
-    - text: Гу́би
+    - text: Гу́би — Lips
       correct: true
-    - text: Зу́би
+    - text: Зу́би — Teeth
       correct: false
-    - text: Лише́ язи́к
+    - text: Лише́ язи́к — Only tongue
       correct: false
-    explanation: Звук [м] — це губни́й сона́нт, де гу́би щі́льно сту́лені.
-  - prompt: До якого́ ти́пу при́голосних нале́жать зву́ки [м] та [л]? — What type of consonants are [м] and [л]?
+    explanation: Звук [м] — це губни́й звук, де гу́би щі́льно сту́лені. — The sound [m] is a lip sound where the lips are firmly closed.
+  - prompt: До яко́го ти́пу при́голосних нале́жать зву́ки [м] та [л]? — What type of consonants are [м] and [л]?
     options:
-    - text: Сона́нти
+    - text: Сона́нти — Sonorants
       correct: true
-    - text: Шумні́ глухі́
+    - text: Шу́мні глухі́ — Voiceless obstruents
       correct: false
-    - text: Шипля́чі
+    - text: Шипля́чі — Sibilants
       correct: false
-    explanation: '[м] та [л] — соно́рні при́голосні зву́ки.'
+    explanation: "[м] та [л] — соно́рні при́голосні зву́ки. — [m] and [l] are resonant sonorant consonant sounds."
   - prompt: Чи мо́жна утвори́ти склад без голосно́го зву́ка? — Can you make a syllable without a vowel sound?
     options:
-    - text: Ні, голосни́й звук є ядро́м скла́ду
+    - text: Ні, голосни́й звук є ядро́м скла́ду — No, a vowel sound is the core of a syllable
       correct: true
-    - text: Так, за́вжди
+    - text: Так, за́вжди — Yes, always
       correct: false
-    - text: Лише́ в коро́тких слова́х
+    - text: Лише́ в коро́тких слова́х — Only in short words
       correct: false
-    explanation: Ко́жен украї́нський склад обов'язко́во мі́стить голосни́й звук.
-  - prompt: Скі́льки лі́тер у сло́ві «ма́ма»? — How many letters are in the word мама?
+    explanation: Ко́жен украї́нський склад обов'язко́во мі́стить голосни́й звук. — Every Ukrainian syllable necessarily contains a vowel sound.
+  - prompt: Скі́льки лі́тер у сло́ві «ма́ма»? — How many letters are in the word «ма́ма»?
     options:
-    - text: Чоти́ри лі́тери
+    - text: Чоти́ри лі́тери — Four letters
       correct: true
-    - text: Дві лі́тери
+    - text: Дві лі́тери — Two letters
       correct: false
-    - text: Три лі́тери
+    - text: Три лі́тери — Three letters
       correct: false
-    explanation: У сло́ві ма́ма чоти́ри лі́тери (м, а, м, а).
+    explanation: У сло́ві ма́ма чоти́ри лі́тери (м, а, м, а). — In the word «ма́ма» there are four letters (m, a, m, a).
 
 - id: act-201
   type: watch-and-repeat
   title: "Диві́ться та повто́рюйте: М, Л — Watch and repeat: М, Л"
-  instruction: "Подиві́ться коро́тке ві́део про вимо́ву лі́тер (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос."
+  instruction: "Подиві́ться коро́тке ві́део про вимо́ву лі́тер (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос. — Watch a short video on pronouncing the letters (source: Anna Ohoiko, Ukrainian Lessons) and repeat aloud."
   items:
-  - video: https://www.youtube.com/watch?v=Ez95H4ibuJo
-    letter: М
-    word: ма́ма
+  - letter: М
+    video: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    word: ма́ма — mom
     sound: '[м]'
     note: Сту́лені гу́би, го́лос вихо́дить крізь ніс — Closed lips, nasal airflow.
-  - video: https://www.youtube.com/watch?v=v6-3Xg52Buk
-    letter: Л
-    word: лом
+  - letter: Л
+    video: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    word: лом — crowbar
     sound: '[л]'
     note: Кі́нчик язика́ торка́ється ве́рхніх зубі́в — Tongue tip touches upper teeth.
-  - video: https://www.youtube.com/watch?v=Ez95H4ibuJo
-    letter: МА
-    word: ма
+  - letter: МА
+    video: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    word: ма — ma
     sound: '[ма]'
     note: Відкри́тий склад — Open syllable blend.
-  - video: https://www.youtube.com/watch?v=Ez95H4ibuJo
-    letter: МУ
-    word: му
+  - letter: МУ
+    video: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    word: му — mu
     sound: '[му]'
     note: Злиття́ сона́нта [м] та [у] — Blend of sonorant [m] and [u].
-  - video: https://www.youtube.com/watch?v=v6-3Xg52Buk
-    letter: ЛА
-    word: ла
+  - letter: ЛА
+    video: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    word: ла — la
     sound: '[ла]'
     note: Тверди́й склад — Hard open syllable.
-  - video: https://www.youtube.com/watch?v=v6-3Xg52Buk
-    letter: ЛО
-    word: ло
+  - letter: ЛО
+    video: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    word: ло — lo
     sound: '[ло]'
-    note: Чи́сте [о] після [л] — Pure [o] after [l].
+    note: Чи́сте [о] пі́сля [л] — Pure [o] after [l].
 
 - id: act-202
   type: count-syllables
@@ -120,97 +120,157 @@ inline:
     correct: 2
     translation: eye
 
+- id: act-209
+  type: quiz
+  title: Відкри́ті та закри́ті склади́ — Open and closed syllables
+  instruction: Обері́ть пра́вильний тип скла́ду. — Choose the correct syllable type.
+  items:
+  - prompt: Яки́м є склад «ма»? — What type of syllable is "ма"?
+    options:
+    - text: відкри́тий — open
+      correct: true
+    - text: закри́тий — closed
+      correct: false
+    - text: глухи́й — voiceless
+      correct: false
+    explanation: Склад «ма» закі́нчується на голосни́й звук [а], тому́ є відкри́тим. — Syllable "ма" ends with vowel sound [a], so it is open.
+  - prompt: Яки́м є склад «ам»? — What type of syllable is "ам"?
+    options:
+    - text: закри́тий — closed
+      correct: true
+    - text: відкри́тий — open
+      correct: false
+    - text: голосни́й — vowel
+      correct: false
+    explanation: Склад «ам» закі́нчується на при́голосний звук [м], тому́ є закри́тим. — Syllable "ам" ends with consonant sound [m], so it is closed.
+  - prompt: Яки́м є склад «ло»? — What type of syllable is "ло"?
+    options:
+    - text: відкри́тий — open
+      correct: true
+    - text: закри́тий — closed
+      correct: false
+    - text: соно́рний — sonorant
+      correct: false
+    explanation: Склад «ло» закі́нчується на голосни́й звук [о], тому́ є відкри́тим. — Syllable "ло" ends with vowel sound [o], so it is open.
+  - prompt: Яки́м є склад «ол»? — What type of syllable is "ол"?
+    options:
+    - text: закри́тий — closed
+      correct: true
+    - text: відкри́тий — open
+      correct: false
+    - text: дзвінки́й — voiced
+      correct: false
+    explanation: Склад «ол» закі́нчується на при́голосний звук [л], тому́ є закри́тим. — Syllable "ол" ends with consonant sound [l], so it is closed.
+  - prompt: Яки́м є склад «му»? — What type of syllable is "му"?
+    options:
+    - text: відкри́тий — open
+      correct: true
+    - text: закри́тий — closed
+      correct: false
+    - text: м'яки́й — soft
+      correct: false
+    explanation: Склад «му» закі́нчується на голосни́й звук [у], тому́ є відкри́тим. — Syllable "му" ends with vowel sound [u], so it is open.
+  - prompt: Яки́м є склад «ул»? — What type of syllable is "ул"?
+    options:
+    - text: закри́тий — closed
+      correct: true
+    - text: відкри́тий — open
+      correct: false
+    - text: тверди́й — hard
+      correct: false
+    explanation: Склад «ул» закі́нчується на при́голосний звук [л], тому́ є закри́тим. — Syllable "ул" ends with consonant sound [l], so it is closed.
+
 - id: act-203
   type: fill-in
   title: Пе́рші склади́ та слова́ — First syllables and words
   instruction: Допо́вніть склади́ або́ слова́ відпові́дними лі́терами. — Complete the syllables or words with appropriate letters.
   items:
-  - sentence: Скла́вши м та а, ма́ємо склад ___а.
+  - sentence: 'Скла́вши м та а, ма́ємо склад ___а. — Combining м and а, we get syllable ___а.'
     answer: м
     options:
     - м
     - л
     - о
-    explanation: Склад ма утво́рюється з лі́тер м та а.
-  - sentence: Сло́во «ма́___а» озна́чає найдоро́жчу люди́ну.
+    explanation: 'Склад ма утво́рюється з лі́тер м та а. — Syllable ма is formed from letters м and а.'
+  - sentence: 'Сло́во «ма́___а» означа́є найдоро́жчу люди́ну. — The word "ма́___а" means the dearest person.'
     answer: м
     options:
     - м
     - л
     - у
-    explanation: Сло́во ма́ма пи́шеться з двома́ бу́квами м.
-  - sentence: Скла́вши л та о, ма́ємо склад ___о.
+    explanation: 'Сло́во ма́ма пи́шеться з двома́ бу́квами м. — The word «ма́ма» is written with two letters м.'
+  - sentence: 'Скла́вши л та о, ма́ємо склад ___о. — Combining л and о, we get syllable ___о.'
     answer: л
     options:
     - л
     - м
     - а
-    explanation: Склад ло склада́ється з лі́тер л та о.
-  - sentence: У сло́ві «м___ло» на́голос па́дає на пе́рший склад.
+    explanation: 'Склад ло склада́ється з лі́тер л та о. — Syllable ло consists of letters л and о.'
+  - sentence: 'У сло́ві «м___ло» на́голос па́дає на пе́рший склад. — In the word "м___ло" stress falls on the first syllable.'
     answer: а
     options:
     - а
     - у
     - о
-    explanation: Сло́во ма́ло означа́є «небага́то».
-  - sentence: У сло́ві «мал___» на́голос па́дає на дру́гий склад.
+    explanation: 'Сло́во ма́ло означа́є «небага́то». — The word «ма́ло» means "not much".'
+  - sentence: 'У сло́ві «мал___» на́голос па́дає на дру́гий склад. — In the word "мал___" stress falls on the second syllable.'
     answer: а
     options:
     - а
     - о
     - у
-    explanation: Сло́во мала́ — це прикме́тник жіно́чого ро́ду.
-  - sentence: Сло́во «м___л» склада́ється з трьох лі́тер і одного́ скла́ду.
+    explanation: 'Сло́во мала́ — це прикме́тник жіно́чого ро́ду. — The word мала́ is a feminine adjective.'
+  - sentence: 'Сло́во «м___л» склада́ється з трьох лі́тер і одного́ скла́ду. — The word "м___л" consists of three letters and one syllable.'
     answer: у
     options:
     - у
     - а
     - о
-    explanation: Сло́во мул ма́є голосни́й звук у.
+    explanation: 'Сло́во мул ма́є голосни́й звук у. — The word мул has vowel sound у.'
 
 workbook:
 - id: act-4
   type: quiz
   title: Будо́ва скла́ду та слова́ — Syllable and word structure
-  instruction: Обері́ть пра́вильну відпо́відь. — Choose the correct answer.
+  instruction: Обері́ть пра́вильну ві́дповідь. — Choose the correct answer.
   items:
-  - prompt: Скі́льки складі́в у сло́ві ма́ма? — How many syllables in мама?
+  - prompt: Скі́льки складі́в у сло́ві ма́ма? — How many syllables in «ма́ма»?
     options:
-    - text: два
+    - text: два — two
       correct: true
-    - text: три
+    - text: три — three
       correct: false
-    - text: оди́н
+    - text: оди́н — one
       correct: false
-    explanation: Два склади́ (ма-ма), бо два голосни́х зву́ки.
+    explanation: Два склади́ (ма-ма), бо два голосни́х зву́ки. — Two syllables (ma-ma), because there are two vowel sounds.
   - prompt: Як назива́ється склад, що закі́нчується на голосни́й звук? — What is a syllable ending in a vowel called?
     options:
-    - text: відкри́тий
+    - text: відкри́тий — open
       correct: true
-    - text: закри́тий
+    - text: закри́тий — closed
       correct: false
-    - text: соно́рний
+    - text: соно́рний — sonorant
       correct: false
-    explanation: Відкри́тий склад закі́нчується на голосни́й звук.
-  - prompt: До якого́ ти́пу нале́жить склад «ам»? — What type is the syllable ам?
+    explanation: Відкри́тий склад закі́нчується на голосни́й звук. — An open syllable ends in a vowel sound.
+  - prompt: До яко́го ти́пу нале́жить склад «ам»? — What type is the syllable ам?
     options:
-    - text: закри́тий зворо́тний
+    - text: закри́тий зворо́тний — closed reverse
       correct: true
-    - text: відкри́тий прями́й
+    - text: відкри́тий прями́й — open direct
       correct: false
-    - text: глухи́й
+    - text: глухи́й — voiceless
       correct: false
-    explanation: Склад ам закі́нчується на при́голосний, о́тже він закри́тий.
+    explanation: Склад ам закі́нчується на при́голосний, о́тже він закри́тий. — Syllable ам ends in a consonant, hence it is closed.
   - prompt: Скі́льки голосни́х зву́ків у сло́ві «лом»? — How many vowel sounds in лом?
     options:
-    - text: оди́н
+    - text: оди́н — one
       correct: true
-    - text: два
+    - text: два — two
       correct: false
-    - text: три
+    - text: три — three
       correct: false
-    explanation: У сло́ві лом оди́н голосни́й звук [о].
-  - prompt: Яка́ звукова́ схе́ма сло́ва «ма́ма»? — What is the phonetic diagram of мама?
+    explanation: У сло́ві лом оди́н голосни́й звук [о]. — In the word лом there is one vowel sound [o].
+  - prompt: Яка́ звукова́ схе́ма сло́ва «ма́ма»? — What is the phonetic diagram of «ма́ма»?
     options:
     - text: '[— ● — ●]'
       correct: true
@@ -218,124 +278,130 @@ workbook:
       correct: false
     - text: '[— — ● ●]'
       correct: false
-    explanation: Схе́ма сло́ва ма́ма — при́голосний, голосни́й, при́голосний, голосни́й.
-  - prompt: Чим відрізня́ються слова́ «ма́ло» та «мала́»? — How do мало and мала differ?
+    explanation: "Схе́ма сло́ва ма́ма — при́голосний, голосни́й, при́голосний, голосни́й. — Diagram of word «ма́ма»: consonant, vowel, consonant, vowel."
+  - prompt: Чим відрізня́ються слова́ «ма́ло» та «мала́»? — How do «ма́ло» and «мала́» differ?
     options:
-    - text: "на́голосом, кінце́вою голосно́ю (о/а) та зна́ченням"
+    - text: "на́голосом, кінце́вою голосно́ю (о/а) та зна́ченням — by stress, final vowel (o/a), and meaning"
       correct: true
-    - text: кі́лькістю лі́тер
+    - text: кі́лькістю лі́тер — by number of letters
       correct: false
-    - text: зву́ком [м]
+    - text: зву́ком [м] — by sound [m]
       correct: false
-    explanation: "Вони́ відрізня́ються на́голосом та кінце́вою голосно́ю (о/а): ма́ло — прислі́вник, мала́ — прикме́тник."
+    explanation: "Вони́ відрізня́ються на́голосом та кінце́вою голосно́ю (о/а): ма́ло — прислі́вник, мала́ — прикме́тник. — They differ by stress and final vowel (o/a): «ма́ло» is an adverb, «мала́» is an adjective."
 
 - id: act-204
   type: divide-words
   title: Поділі́ть слова́ на склади́ — Divide words into syllables
-  instruction: Поділі́ть пода́ні слова́ дефі́сом на склади́. — Divide the words into syllables using a hyphen.
+  instruction: Поділі́ть по́дані слова́ дефі́сом на склади́. — Divide the given words into syllables using a hyphen.
   items:
-  - word: мама
-    answer: ма-ма
-  - word: мало
-    answer: ма-ло
-  - word: мала
-    answer: ма-ла
+  - word: ма́ма
+    answer: ма́-ма
+    hint: "ма́ма — mother / mom"
+  - word: ма́ло
+    answer: ма́-ло
+    hint: "ма́ло — little / few"
+  - word: мала́
+    answer: ма-ла́
+    hint: "мала́ — small (fem.)"
   - word: мул
     answer: мул
+    hint: "мул — silt"
   - word: лом
     answer: лом
-  - word: око
-    answer: о-ко
+    hint: "лом — crowbar"
+  - word: о́ко
+    answer: о́-ко
+    hint: "о́ко — eye"
 
 - id: act-205
   type: true-false
   title: "Пра́вда чи непра́вда: При́голосні та склади́ — True or False: Consonants and syllables"
   instruction: Ви́значте, чи є тве́рдження пра́вильним. — Determine if the statement is true.
   items:
-  - statement: У сло́ві сті́льки складі́в, скі́льки в ньо́му голосни́х зву́ків.
+  - statement: У сло́ві сті́льки складі́в, скі́льки в ньо́му голосни́х зву́ків. — A word has as many syllables as it has vowel sounds.
     answer: true
-    explanation: Це золоте́ пра́вило украї́нського складопо́ділу.
-  - statement: Бу́ква М познача́є голосни́й звук.
+    explanation: Це золоте́ пра́вило украї́нського складопо́ділу. — This is the golden rule of Ukrainian syllabification.
+  - statement: Бу́ква М познача́є голосни́й звук. — The letter M represents a vowel sound.
     answer: false
-    explanation: М — це при́голосна бу́ква (сона́нт).
-  - statement: Склад «ма» є відкри́тим скла́дом.
+    explanation: М — це при́голосна бу́ква (сона́нт). — M is a consonant letter (sonorant).
+  - statement: Склад «ма» є відкри́тим скла́дом. — Syllable "ма" is an open syllable.
     answer: true
-    explanation: Склад ма закі́нчується на голосни́й звук [а].
-  - statement: Сло́во «лом» ма́є два склади́.
+    explanation: Склад ма закі́нчується на голосни́й звук [а]. — Syllable ма ends in vowel sound [a].
+  - statement: Сло́во «лом» ма́є два склади́. — The word "лом" has two syllables.
     answer: false
-    explanation: У сло́ві лом оди́н голосни́й звук [о], о́тже оди́н склад.
-  - statement: У сло́ві «ма́ма» на́голос па́дає на пе́рший склад.
+    explanation: У сло́ві лом оди́н голосни́й звук [о], о́тже оди́н склад. — In the word лом there is one vowel sound [o], hence one syllable.
+  - statement: У сло́ві «ма́ма» на́голос па́дає на пе́рший склад. — In the word "ма́ма" stress falls on the first syllable.
     answer: true
-    explanation: Пра́вильний на́голос — ма́ма.
-  - statement: Зву́ки [м] та [л] утво́рюються з перешко́дою в ро́ті.
+    explanation: Пра́вильний на́голос — ма́ма. — The correct stress is ма́ма.
+  - statement: Зву́ки [м] та [л] утво́рюються з перешко́дою в ро́ті. — Sounds [м] and [л] are formed with an obstacle in the mouth.
     answer: true
-    explanation: При́голосні зву́ки за́вжди тво́ряться з перешко́дою.
+    explanation: При́голосні зву́ки за́вжди тво́ряться з перешко́дою. — Consonant sounds are always formed with an obstacle.
 
 - id: act-206
   type: match-up
-  title: З'єдна́йте склади́ у слова́ — Combine syllables into words
-  instruction: З'єдна́йте части́ни слів та ї́хні зна́чення. — Combine parts of words and their meanings.
+  title: З'єдна́йте слова́ та складову́ будо́ву — Match words and syllable structure
+  instruction: З'єдна́йте сло́во зі складово́ю будо́вою. — Match the word with its syllable structure.
   pairs:
-  - left: ма́-
-    right: -ма (ма́ма)
-  - left: ма-
-    right: -ло (ма́ло)
-  - left: ла-
-    right: -па (ла́па)
-  - left: му-
-    right: -л (мул)
-  - left: ло-
-    right: -м (лом)
-  - left: склад
-    right: части́на сло́ва
+  - left: ма́ма — mom
+    right: ма́-ма (два склади́) — two syllables
+  - left: ма́ло — little, few
+    right: ма́-ло (два склади́) — two syllables
+  - left: мала́ — small
+    right: ма-ла́ (два склади́) — two syllables
+  - left: мул — silt
+    right: мул (оди́н склад) — one syllable
+  - left: лом — crowbar
+    right: лом (оди́н склад) — one syllable
+  - left: склад — syllable
+    right: части́на сло́ва — part of a word
 
 - id: act-207
   type: fill-in
   title: Вста́вте пропу́щену бу́кву — Insert the missing letter
   instruction: Впиші́ть пропу́щену лі́теру в слова́. — Fill in the missing letter in the words.
   items:
-  - sentence: Пе́рше сло́во дити́ни — ___а́ма.
+  - sentence: 'Пе́рше сло́во дити́ни — ___а́ма. — The child’s first word is ___а́ма.'
     answer: м
     options:
     - м
     - л
     - о
-    explanation: Сло́во ма́ма почина́ється з лі́тери м.
-  - sentence: У лі́сі ду́же ___а́ло зву́ків.
+    explanation: 'Сло́во ма́ма почина́ється з лі́тери м. — The word «ма́ма» begins with the letter м.'
+  - sentence: 'У лі́сі ду́же ___а́ло зву́ків. — In the forest there are very few sounds.'
     answer: м
     options:
     - м
     - л
     - у
-    explanation: Сло́во ма́ло пи́шеться з лі́терою м.
-  - sentence: Дити́на ще ___ала́.
+    explanation: 'Сло́во ма́ло пи́шеться з лі́терою м. — The word «ма́ло» is written with the letter м.'
+  - sentence: 'Дити́на ще ___ала́. — The child is still small.'
     answer: м
     options:
     - м
     - л
     - а
-    explanation: Сло́во мала́ пи́шеться з лі́терою м.
-  - sentence: На бе́резі рі́чки є чорни́й ___ул.
+    explanation: 'Сло́во мала́ пи́шеться з лі́терою м. — The word мала́ is written with the letter м.'
+  - sentence: 'На бе́резі рі́чки є чо́рний ___ул. — On the riverbank there is black silt.'
     answer: м
     options:
     - м
     - л
     - о
-    explanation: Сло́во мул озна́чає о́сад на дні.
-  - sentence: Стари́й залі́зний ___ом лежи́ть у дворі́.
+    explanation: 'Сло́во мул означа́є о́сад на дні. — The word мул means sediment at the bottom.'
+  - sentence: 'Стари́й залі́зний ___ом лежи́ть у дворі́. — An old iron crowbar lies in the yard.'
     answer: л
     options:
     - л
     - м
     - у
-    explanation: Сло́во лом почина́ється з лі́тери л.
-  - sentence: Відкри́тий склад закі́нчується на ___олосни́й звук.
+    explanation: 'Сло́во лом почина́ється з лі́тери л. — The word лом begins with the letter л.'
+  - sentence: 'Відкри́тий склад закі́нчується на ___олосни́й звук. — An open syllable ends in a vowel sound.'
     answer: г
     options:
     - г
     - п
     - м
-    explanation: Відкри́тий склад закі́нчується на голосни́й звук.
+    explanation: 'Відкри́тий склад закі́нчується на голосни́й звук. — An open syllable ends with a vowel sound.'
 
 - id: act-208
   type: odd-one-out
@@ -343,44 +409,44 @@ workbook:
   instruction: Знайді́ть за́йве сло́во або́ звук у ко́жній гру́пі. — Find the odd word or sound in each group.
   items:
   - words:
-    - '[м]'
-    - '[л]'
-    - '[а]'
-    - '[н]'
+    - '[м] — sound [m]'
+    - '[л] — sound [l]'
+    - '[а] — sound [a]'
+    - '[н] — sound [n]'
     correct: 2
-    explanation: '[а] — це голосни́й звук, а ре́шта — при́голосні.'
+    explanation: '[а] — це голосни́й звук, а ре́шта — при́голосні. — [a] is a vowel sound, while the rest are consonants.'
   - words:
-    - ма
-    - ла
-    - ло
-    - ам
+    - ма — ma
+    - ла — la
+    - ло — lo
+    - ам — am
     correct: 3
-    explanation: ам — це закри́тий склад, а ре́шта — відкри́ті склади́.
+    explanation: ам — це закри́тий склад, а ре́шта — відкри́ті склади́. — ам is a closed syllable, while the rest are open syllables.
   - words:
-    - ма́ма
-    - ма́ло
-    - мала́
-    - лом
+    - ма́ма — mom
+    - ма́ло — few
+    - мала́ — small
+    - лом — crowbar
     correct: 3
-    explanation: лом ма́є оди́н склад, а ре́шта слів — два склади́.
+    explanation: лом ма́є оди́н склад, а ре́шта слів — два склади́. — лом has one syllable, while the other words have two.
   - words:
-    - ам
-    - ом
-    - ум
-    - ма
+    - ам — am
+    - ом — om
+    - ум — um
+    - ма — ma
     correct: 3
-    explanation: ма — це відкри́тий прями́й склад, а ре́шта — закри́ті зворо́тні.
+    explanation: ма — це відкри́тий прями́й склад, а ре́шта — закри́ті зворо́тні. — ма is an open direct syllable, while the rest are closed reverse syllables.
   - words:
-    - М
-    - Л
-    - А
-    - С
+    - М — letter M
+    - Л — letter L
+    - А — letter A
+    - С — letter S
     correct: 2
-    explanation: А — голосна́ бу́ква, а ре́шта — при́голосні.
+    explanation: А — голосна́ бу́ква, а ре́шта — при́голосні. — A is a vowel letter, while the rest are consonants.
   - words:
-    - мул
-    - лом
-    - сом
-    - ма́ма
+    - мул — silt
+    - лом — crowbar
+    - сом — catfish
+    - ма́ма — mom
     correct: 3
-    explanation: ма́ма — двоскладо́ве сло́во, а ре́шта — односкладо́ві.
+    explanation: ма́ма — двоскладо́ве сло́во, а ре́шта — односкладо́ві. — «ма́ма» is a two-syllable word, while the rest are single-syllable.

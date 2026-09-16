@@ -22,10 +22,10 @@
   translation: alone / by oneself (feminine)
   pos: pronoun
   usage: Вона́ там стої́ть сама́.
-- lemma: са́ма
-  translation: the very (feminine, emphatic form)
-  pos: pronoun
-  usage: Тепе́р са́ма пора́.
+- lemma: текст
+  translation: text / connected reading
+  pos: noun
+  usage: Ми чита́ємо пе́рший зв'я́зний текст.
 - lemma: ма́ма
   translation: mother
   pos: noun

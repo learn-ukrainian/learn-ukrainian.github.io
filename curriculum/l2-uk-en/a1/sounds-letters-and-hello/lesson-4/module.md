@@ -1,6 +1,6 @@
-# Си́нтез семи́ лі́тер та пе́рші те́ксти
+# Си́нтез семи́ лі́тер та пе́рші те́ксти — Synthesis of Seven Letters and First Texts
 
-Віта́ємо на підсумко́вому уро́ці пе́ршого мо́дуля! Про́тягом пе́рших трьох уро́ків ви ви́вчили сім фундамента́льних лі́тер украї́нської абе́тки: три голосні́ (**А**, **О**, **У**) та чоти́ри тверді́ при́голосні (**М**, **Л**, **С**, **Н**). У цьо́му уро́ці ми не вивча́ємо жо́дної ново́ї лі́тери (0 new letters!). На́ша мета́ — си́нтез: ми поєдна́ємо всі сім зву́ків, дослі́димо си́лу украї́нського на́голосу, засво́їмо кли́чну фо́рму **ма́мо!** та прочита́ємо пе́рші спра́вжні мікроте́ксти без жо́дних шабло́нних привіта́нь.
+Віта́ємо на підсумко́вому уро́ці пе́ршого мо́дуля! — Welcome to the concluding lesson of Module 1! Про́тягом пе́рших трьох уро́ків ви ви́вчили сім фундамента́льних лі́тер украї́нської абе́тки: три голосні́ (**А**, **О**, **У**) та чоти́ри тверді́ при́голосні (**М**, **Л**, **С**, **Н**). Over the first three lessons, you mastered seven core letters. У цьо́му уро́ці ми не вивча́ємо жо́дної ново́ї лі́тери (0 new letters!). Our goal is synthesis: we combine all seven sounds, explore the power of Ukrainian stress, learn the vocative form **ма́мо!**, and read authentic short connected texts (**коро́ткі те́ксти**) without robotic scripts.
 
 By the end of this 60-minute lesson, you will be able to:
 
@@ -8,11 +8,11 @@ By the end of this 60-minute lesson, you will be able to:
 - **Розрізня́ти наголо́шені па́ри та фо́рми слів** — distinguish meaning and grammar shifts driven by stress and vowel endings: **са́ма** vs **сама́** (strict stress shift), **ма́ло** vs **мала́** (stress shift with vowel ending change);
 - **Вжива́ти кли́чну фо́рму ма́мо!** — call your mother using the natural vocative case ending **-о**;
 - **Чита́ти побуто́ві слова́** — read real vocabulary for household and nature: **ма́сло**, **са́ло**, **смола́**;
-- **Чита́ти пе́рші мікроте́ксти** — confidently read short connected Ukrainian sentences using pointer **он**.
+- **Чита́ти пе́рші коро́ткі те́ксти** — confidently read short connected Ukrainian sentences using pointer **он**.
 
 ---
 
-## Сім лі́тер: Звукови́й фунда́мент
+## Сім лі́тер: Звукови́й фунда́мент — Seven Letters: Sound Foundation
 
 Let us review the complete inventory of the seven letters mastered in this module. Every letter corresponds to a distinct, reliable sound:
 
@@ -32,13 +32,13 @@ With these seven building blocks, you control three open vowels and four robust 
 
 ---
 
-## Си́ла на́голосу: Розрі́знення слів
+## Си́ла на́голосу: Розрі́знення слів — The Power of Stress: Distinguishing Words
 
 In Lesson 2, you learned that Ukrainian stress (**на́голос**) is free and dynamic: it can fall on any syllable of a word. But stress is not merely about volume; in Ukrainian, **на́голос розрізня́є зна́чення слів** (stress distinguishes the meanings of words). Moving the stress mark from one vowel to another completely alters what the word means and its grammatical role.
 
 Let us examine two crucial pairs built exclusively from our seven letters:
 
-### 1. Пара́ ма́ло та мала́
+### 1. Па́ра ма́ло та мала́ — 1. The pair ма́ло and мала́
 
 Note that **ма́ло** and **мала́** do not differ by stress alone: they also change their ending vowel from **-о** to **-а** (**о** $\rightarrow$ **а**). The stress shifts from the first syllable to the second, matching the change from an adverb (**ма́ло**) to a feminine adjective (**мала́**):
 
@@ -52,7 +52,7 @@ Note that **ма́ло** and **мала́** do not differ by stress alone: they 
   - **При́клад**: **Он мала́ оса́.** — Over there is a small wasp.
   - **Вимо́ва**: the initial **[м-а]** is shorter; the vocal weight lands fully on the final **[-ла́]**.
 
-### 2. Пара́ са́ма та сама́
+### 2. Па́ра са́ма та сама́ — 2. The pair са́ма and сама́
 
 By contrast, the pair **са́ма** and **сама́** is spelled with the exact same letters (с-а-м-а), where stress position alone distinguishes the two words:
 
@@ -64,13 +64,13 @@ By contrast, the pair **са́ма** and **сама́** is spelled with the exac
   - **Части́на мо́ви**: підси́лювальний займе́нник (emphatic pronoun, feminine) — the very, the exact.
   - **При́клад**: **Тепе́р са́ма пора́.** — Now is the very time (high time).
 
-> **Пора́да мо́вця — Speaker's tip**: Whenever you see an acute accent mark (`́`) over a Ukrainian vowel, give that syllable slightly more pitch, duration, and energy. It is the key that unlocks the word's true meaning!
+> **Пора́да мо́вця — Speaker's tip:** Whenever you see an acute accent mark (`́`) over a Ukrainian vowel, give that syllable slightly more pitch, duration, and energy. It is the key that unlocks the word's true meaning!
 
 <!-- INJECT_ACTIVITY: act-401 -->
 
 ---
 
-## Кли́чний відмі́нок: Ма́мо!
+## Кли́чний відмі́нок: Ма́мо! — The Vocative Case: Ма́мо!
 
 In many languages, when you call out to someone, you simply shout their dictionary name: "Mother!". But Ukrainian has a dedicated grammatical case specifically for direct address: **кли́чний відмі́нок** (the vocative case).
 
@@ -91,11 +91,11 @@ This ending is uniquely Ukrainian and gives spoken Ukrainian its musical cadence
 
 ---
 
-## Но́ві слова́ із семи́ лі́тер: ма́сло, са́ло, смола́
+## Нові́ слова́ із семи́ лі́тер: ма́сло, са́ло, смола́ — New Words from Seven Letters: ма́сло, са́ло, смола́
 
 Using only our seven letters (**А**, **О**, **У**, **М**, **Л**, **С**, **Н**), we can expand our vocabulary with essential Ukrainian cultural and natural terms:
 
-### 1. Сло́во ма́сло (butter)
+### 1. Сло́во ма́сло — The word ма́сло (butter)
 
 - **Звукови́й склад**: **[м а́ с л о]** — 5 sounds, 5 letters.
 - **Склади́**: **мас-ло** (два склади́ / two syllables: закри́тий **мас-** + відкри́тий **-ло**).
@@ -103,7 +103,7 @@ Using only our seven letters (**А**, **О**, **У**, **М**, **Л**, **С**, **
 - **Зна́чення**: butter (dairy product made from churned cream).
 - **При́клад**: **Он сві́же ма́сло.** — Over there is fresh butter.
 
-### 2. Сло́во са́ло (salo / cured pork fatback)
+### 2. Сло́во са́ло — The word са́ло (salo / cured pork fatback)
 
 - **Звукови́й склад**: **[с а́ л о]** — 4 sounds, 4 letters.
 - **Склади́**: **са-ло** (два склади́ / two syllables: відкри́тий **са-** + відкри́тий **-ло**).
@@ -111,7 +111,7 @@ Using only our seven letters (**А**, **О**, **У**, **М**, **Л**, **С**, **
 - **Зна́чення**: salo, a traditional and iconic Ukrainian food (cured pork fatback, seasoned with salt and spices).
 - **При́клад**: **Он бі́ле са́ло.** — Look, white salo.
 
-### 3. Сло́во смола́ (resin / pitch)
+### 3. Сло́во смола́ — The word смола́ (resin / pitch)
 
 - **Звукови́й склад**: **[с м о л а́]** — 5 sounds, 5 letters.
 - **Склади́**: **смо-ла́** (два склади́ / two syllables: відкри́тий **смо-** + відкри́тий **-ла́**).
@@ -132,7 +132,7 @@ Using only our seven letters (**А**, **О**, **У**, **М**, **Л**, **С**, **
 
 ---
 
-## Пе́рші зв'я́зні мікроте́ксти
+## Пе́рші зв'я́зні коро́ткі те́ксти — First Connected Short Texts
 
 Now you are ready for the ultimate milestone of Module 1: reading connected Ukrainian sentences without needing transliteration. Every single word in these reading selections is constructed strictly from our seven letters (**А**, **О**, **У**, **М**, **Л**, **С**, **Н**).
 
@@ -182,7 +182,7 @@ Congratulations on completing Module 1! You have established an unshakeable foun
 
 - **Сім лі́тер абе́тки — Seven alphabet letters**: you mastered three core vowels (**А**, **О**, **У**) and four reliable consonants (**М**, **Л**, **С**, **Н**).
 - **Звук та бу́ква — Sound vs letter**: you know that sounds are spoken and heard (38 sounds), while letters are seen and written (33 letters).
-- **Жо́дного а́кання — No akannya**: you learned that unstressed Ukrainian **[о]** never reduces to **[а]**, keeping words like **сосна́** and **молоко́** pure and rounded.
+- **Чи́стий звук [о] — Pure [o]**: you learned that unstressed Ukrainian **[о]** never reduces to **[а]**, keeping words like **сосна́** and **молоко́** pure and rounded.
 - **Будо́ва складі́в — Syllable structures**: you assemble open syllables (CV: **ма**, **са**), closed syllables (VC: **ам**, **ул**), and three-letter words (CVC: **сон**, **сом**, **сам**, **лан**).
 - **Си́ла на́голосу — The power of stress**: you distinguish words by stress placement and vowel endings (**са́ма** = the very vs **сама́** = alone; **ма́ло** = little vs **мала́** = small).
 - **Кли́чний відмі́нок — The vocative case**: you know how to call out with affection using **Ма́мо!**.

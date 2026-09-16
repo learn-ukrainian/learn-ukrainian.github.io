@@ -3,7 +3,7 @@ Ukrainian writing is built on a clear, phonetic principle: sounds are spoken and
 By the end, you can:
 
 - Distinguish Ukrainian **звук** (sound) from **бу́ква** (letter) across the 33-letter alphabet;
-- Pronounce vowels **А**, **О**, **У** cleanly, avoiding vowel reduction (**жо́дного а́кання**);
+- Pronounce vowels **А**, **О**, **У** cleanly, avoiding vowel reduction (unstressed **о** stays **о**);
 - Blend consonants **М**, **Л**, **С**, **Н** into open (**ма**, **са**) and closed (**сон**, **лан**) syllables;
 - Understand how stress (**на́голос**) and vowel endings shape word meaning (**са́ма** vs **сама́**, **ма́ло** vs **мала́**);
 - Address mother affectionately using the vocative case form **Ма́мо!**;
