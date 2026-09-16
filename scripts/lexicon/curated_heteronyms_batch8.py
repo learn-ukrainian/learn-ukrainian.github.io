@@ -1219,9 +1219,9 @@ CURATED_HETERONYMS_BATCH_8: dict[str, list[dict[str, Any]]] = { 'вивозит�
                                                                       'Бориса Грінченка '
                                                                       '(1907–1909) та СУМ-11.'}}],
   'значитися': [ { 'headword': 'зна́читися',
-                   'short_label': 'бути внесеним до списку, числитися; важити (недок.)',
-                   'gloss': 'be registered/listed, be on a roster; signify, have meaning '
-                            '(imperfective)',
+                    'short_label': 'бути внесеним до списку, числитися, зазначатися (недок.)',
+                    'gloss': 'be registered/listed, appear on a roster, be indicated '
+                             '(imperfective)',
                    'pos': 'verb',
                    'cefr': 'B1',
                    'heritage_status': { 'classification': 'standard',
@@ -1234,11 +1234,11 @@ CURATED_HETERONYMS_BATCH_8: dict[str, list[dict[str, Any]]] = { 'вивозит�
                                'url': 'https://slovnyk.me/dict/vts/значитися'},
                    'morphology': { 'pos': 'дієслово',
                                    'paradigm': {'kind': 'verb', 'aspect': 'недоконаний'}},
-                   'distinction_note': 'Означає «бути внесеним до списку, числитися десь» або '
-                                       '«мати значення, важити» (недоконаний вид). Не плутати з '
-                                       '«значи́тися» (виділятися, помічатися).',
-                   'meaning': { 'definitions': [ 'Бути записаним, внесеним до якогось реєстру чи '
-                                                 'списку; мати певне значення.'],
+                   'distinction_note': 'Означає «бути внесеним до списку чи реєстру, числитися, '
+                                       'зазначатися» (недоконаний вид). Не плутати з '
+                                       '«значи́тися» (позначатися, помічатися, вирізнятися).',
+                   'meaning': { 'definitions': [ 'Бути записаним, внесеним до списку чи реєстру; '
+                                                 'числитися, зазначатися.'],
                                 'source': 'ВТС / СУМ-11'},
                    'soviet_colonization_context': { 'source': 'СУМ-11 (1970–1980)',
                                                     'definition': 'ЗНА́ЧИТИСЯ, чуся, чишся, недок. '
@@ -1318,7 +1318,7 @@ CURATED_HETERONYMS_BATCH_8: dict[str, list[dict[str, Any]]] = { 'вивозит�
                                    'paradigm': {'kind': 'verb', 'aspect': 'недоконаний'}},
                    'distinction_note': 'Означає «позначатися, вирізнятися на тлі, бути помітним» '
                                        '(рідко, недоконаний вид). Не плутати з «зна́читися» '
-                                       '(числитися в списках).',
+                                       '(бути внесеним до списку, числитися).',
                    'meaning': { 'definitions': [ 'Виділятися, виразно помічатися або позначатися '
                                                  'на чому-небудь.'],
                                 'source': 'ВТС / СУМ-11'},
@@ -1354,7 +1354,7 @@ CURATED_HETERONYMS_BATCH_8: dict[str, list[dict[str, Any]]] = { 'вивозит�
                                                'animacy': 'inanimate'}},
                  'distinction_note': 'Археологічний термін: «курганоподібний насип з попелом, '
                                      'золою та рештками побуту стародавніх городищ». Не плутати з '
-                                     'виробничим резервуаром чи піддувалом «зольни́к».',
+                                     'технічним терміном «зольни́к» (піддувало під топкою).',
                  'meaning': { 'definitions': [ 'Особливий тип археологічних пам’яток у вигляді '
                                                'курганоподібних насипів із шарами попелу.'],
                               'source': 'ВТС / СУМ-11'},
@@ -1374,9 +1374,8 @@ CURATED_HETERONYMS_BATCH_8: dict[str, list[dict[str, Any]]] = { 'вивозит�
                                                                      'для лексикографічної '
                                                                      'прозорості.'}},
                { 'headword': 'зольни́к',
-                 'short_label': 'чан для вимочування шкіри в золі або піддувало печі',
-                 'gloss': 'ash-pit in furnace / tanning vat containing lye or ash for soaking '
-                          'hides',
+                 'short_label': 'нижня частина топки, піддувало (техн.)',
+                 'gloss': 'ash-pit in furnace, ash-pan under fire grate (technical)',
                  'pos': 'noun',
                  'cefr': 'B2',
                  'heritage_status': { 'classification': 'standard',
@@ -1391,13 +1390,11 @@ CURATED_HETERONYMS_BATCH_8: dict[str, list[dict[str, Any]]] = { 'вивозит�
                                  'paradigm': { 'kind': 'noun',
                                                'gender': 'masculine',
                                                'animacy': 'inanimate'}},
-                 'distinction_note': 'Спеціальний термін: «чан, яма з розчином вапна або золи для '
-                                     'зоління шкір у кушнірстві» або «піддувало, камера під '
-                                     'колосниками для збирання попелу». Не плутати з археологічним '
-                                     'курганом «зо́льник».',
-                 'meaning': { 'definitions': [ 'Яма чи резервуар для обробки шкір золою (у '
-                                               'чинбарстві); бункер або отвір під топкою для збору '
-                                               'попелу.'],
+                 'distinction_note': 'Технічний термін: «нижня частина топки, що міститься під '
+                                     'колосниковою решіткою; піддувало для збирання попелу». Не '
+                                     'плутати з археологічним курганом «зо́льник».',
+                 'meaning': { 'definitions': [ 'Нижня частина топки під колосниковою решіткою; '
+                                               'піддувало.'],
                               'source': 'ВТС / СУМ-11'},
                  'soviet_colonization_context': { 'source': 'СУМ-11 (1970–1980)',
                                                   'definition': 'ЗОЛЬНИ́К, а́, ч., техн. Нижня '

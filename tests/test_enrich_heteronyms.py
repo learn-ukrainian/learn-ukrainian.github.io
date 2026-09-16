@@ -1225,6 +1225,25 @@ def test_batch8_semantic_and_stress_distinctions():
     assert "graduate" not in kon[1]["gloss"].lower() and "teacher" not in kon[1]["gloss"].lower()
     assert "викладачка" not in kon[1]["meaning"]["definitions"][0] and "випускниця" not in kon[1]["meaning"]["definitions"][0]
 
+    # значитися: зна́читися (be listed/registered, imperf.) vs значи́тися (be marked/stand out, imperf.)
+    zn = enrich_heteronyms.build_heteronyms_for_lemma("значитися")
+    assert zn is not None and len(zn) == 2
+    assert zn[0]["headword"] == "зна́читися"
+    assert "signify" not in zn[0]["gloss"].lower() and "have meaning" not in zn[0]["gloss"].lower()
+    assert "важити" not in zn[0]["distinction_note"] and "мати значення" not in zn[0]["distinction_note"]
+    assert "списк" in zn[0]["meaning"]["definitions"][0] or "реєстр" in zn[0]["meaning"]["definitions"][0]
+    assert zn[1]["headword"] == "значи́тися"
+
+    # зольник: зо́льник (archaeological ash mound) vs зольни́к (furnace ash-pit, tech.)
+    zol = enrich_heteronyms.build_heteronyms_for_lemma("зольник")
+    assert zol is not None and len(zol) == 2
+    assert zol[0]["headword"] == "зо́льник"
+    assert "archaeological" in zol[0]["gloss"].lower() or "mound" in zol[0]["gloss"].lower()
+    assert zol[1]["headword"] == "зольни́к"
+    assert "tanning" not in zol[1]["gloss"].lower() and "hide" not in zol[1]["gloss"].lower()
+    assert "шкір" not in zol[1]["meaning"]["definitions"][0] and "чинбар" not in zol[1]["meaning"]["definitions"][0]
+    assert "піддувало" in zol[1]["meaning"]["definitions"][0] or "топк" in zol[1]["meaning"]["definitions"][0]
+
 
 def test_batch8_lemmas_not_duplicated_from_earlier_batches():
     """Verify batch 8's 32 lemmas are net-new and mutually disjoint with batches 1-7."""
