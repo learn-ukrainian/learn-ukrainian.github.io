@@ -38128,8 +38128,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "тамбу́р",
-        "source": "ВТС",
-        "url": "https://slovnyk.me/dict/vts/тамбур"
+        "source": "СУМ-20",
+        "url": "https://slovnyk.me/dict/newsum/тамбур"
       },
       "morphology": {
         "pos": "іменник",
@@ -38173,7 +38173,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Муз., заст. Барабан."
         ],
-        "source": "ВТС"
+        "source": "СУМ-20"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",

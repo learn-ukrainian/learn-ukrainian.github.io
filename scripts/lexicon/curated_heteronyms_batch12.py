@@ -2337,7 +2337,7 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {
                 "vesum_attested": True,
             },
             "pronunciation": {"ipa": "[tɐmˈbur]"},
-            "stress": {"form": "тамбу́р", "source": "ВТС", "url": "https://slovnyk.me/dict/vts/тамбур"},
+            "stress": {"form": "тамбу́р", "source": "СУМ-20", "url": "https://slovnyk.me/dict/newsum/тамбур"},
             "morphology": {
                 "pos": "іменник",
                 "paradigm": {
@@ -2356,7 +2356,7 @@ CURATED_HETERONYMS_BATCH_12: dict[str, list[dict[str, Any]]] = {
             },
             "distinction_note": "Музичний історичний термін: старовинний барабан (наголос на другому складі: тамбу́р, "
             "тамбу́ра). Не плутати з вагонним майданчиком або вишиванням петельками «та́мбур».",
-            "meaning": {"definitions": ["Муз., заст. Барабан."], "source": "ВТС"},
+            "meaning": {"definitions": ["Муз., заст. Барабан."], "source": "СУМ-20"},
             "soviet_colonization_context": {
                 "source": "СУМ-11 (1970–1980)",
                 "definition": "ТАМБУ́Р, а, ч., муз., заст. Барабан (у 1 знач.).",

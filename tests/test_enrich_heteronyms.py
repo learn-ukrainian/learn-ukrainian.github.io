@@ -2621,6 +2621,8 @@ def test_batch12_semantic_and_stress_distinctions():
     assert var_тамбур[0]["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "та́мбура"
     assert var_тамбур[1]["morphology"]["paradigm"]["cases"]["називний"]["singular"] == "тамбу́р"
     assert var_тамбур[1]["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "тамбу́ра"
+    assert var_тамбур[1]["stress"]["source"] == "СУМ-20"
+    assert var_тамбур[1]["meaning"]["source"] == "СУМ-20"
 
     # 26. танковий: та́нковий vs танко́ви́й
     var_танковий = enrich_heteronyms.build_heteronyms_for_lemma("танковий")
