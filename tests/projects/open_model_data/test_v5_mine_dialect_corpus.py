@@ -37,6 +37,7 @@ from scripts.projects.open_model_data.v5_mine_dialect_corpus import (
     RU_GLOSS_RE,
     TRAJECTORY_SCHEMA_FILE,
     V02_BASELINE_SUITE_PATH,
+    ZONE_MINIMUM_QUOTAS,
     clean_headword,
     clean_sentence,
     evaluate_multizone_benchmark,
@@ -468,6 +469,77 @@ def test_multizone_evaluation_fail_closed_on_empty_zone() -> None:
     assert results["northern"]["gate_cleared"] is False
     assert results["southeastern_slobozhan"]["gate_cleared"] is False
     assert results["southeastern_steppe"]["gate_cleared"] is False
+    # Southwestern has only 1 case, violating the 600 quota, so it must also fail closed
+    assert results["southwestern"]["gate_cleared"] is False
+
+
+def test_multizone_evaluation_rejects_punctuation_corruption(eval_cases: list[dict[str, Any]]) -> None:
+    """Verify that mutating punctuation in expected outputs is strictly rejected across all zones."""
+    # Add a comma after the first word of every expected output
+    corrupt_comma_predictions: dict[str, str] = {}
+    for c in eval_cases:
+        parts = c["expected_output"].split(maxsplit=1)
+        if len(parts) > 1:
+            corrupt_comma_predictions[c["eval_id"]] = f"{parts[0]}, {parts[1]}"
+        else:
+            corrupt_comma_predictions[c["eval_id"]] = f"{parts[0]},"
+
+    results = evaluate_multizone_benchmark(eval_cases, predictions=corrupt_comma_predictions)
+    for zone, metrics in results.items():
+        assert metrics["passed_cases"] == 0, f"Zone '{zone}' passed corrupted comma predictions!"
+        assert metrics["gate_cleared"] is False, f"Zone '{zone}' cleared gate on corrupted punctuation!"
+
+
+def test_multizone_evaluation_enforces_zone_denominators() -> None:
+    """Verify that evaluation gates fail closed when zone quotas (600/400/250/250) are not met."""
+    # Provide 1 perfect case per zone
+    sample_cases = [
+        {
+            "eval_id": "eval_sw_1",
+            "macro_zone": "southwestern",
+            "sub_zone": "southwestern_boyko",
+            "dialect_marker": "тест",
+            "case_type": "PRESERVE",
+            "input_text": "Тестове речення без помилок.",
+            "expected_output": "Тестове речення без помилок.",
+        },
+        {
+            "eval_id": "eval_north_1",
+            "macro_zone": "northern",
+            "sub_zone": "northern",
+            "dialect_marker": "тест",
+            "case_type": "PRESERVE",
+            "input_text": "Тестове речення без помилок.",
+            "expected_output": "Тестове речення без помилок.",
+        },
+        {
+            "eval_id": "eval_slob_1",
+            "macro_zone": "southeastern",
+            "sub_zone": "southeastern_slobozhan",
+            "dialect_marker": "тест",
+            "case_type": "PRESERVE",
+            "input_text": "Тестове речення без помилок.",
+            "expected_output": "Тестове речення без помилок.",
+        },
+        {
+            "eval_id": "eval_steppe_1",
+            "macro_zone": "southeastern",
+            "sub_zone": "southeastern_steppe",
+            "dialect_marker": "тест",
+            "case_type": "PRESERVE",
+            "input_text": "Тестове речення без помилок.",
+            "expected_output": "Тестове речення без помилок.",
+        },
+    ]
+    preds = {c["eval_id"]: c["expected_output"] for c in sample_cases}
+    results = evaluate_multizone_benchmark(sample_cases, predictions=preds)
+
+    # All zones have 100% accuracy on their 1 case, but NONE may clear the gate due to quota enforcement
+    for zone, metrics in results.items():
+        assert metrics["accuracy"] == 1.0
+        assert metrics["total_cases"] == 1
+        min_q = ZONE_MINIMUM_QUOTAS[zone]
+        assert metrics["gate_cleared"] is False, f"Zone '{zone}' cleared gate with 1 case (min quota {min_q})!"
 
 
 def test_modern_literary_non_regression() -> None:

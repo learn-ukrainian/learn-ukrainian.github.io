@@ -252,10 +252,15 @@ def passage_fingerprint(text: str) -> str:
 
 
 def normalize_for_eval(text: str) -> str:
-    """Normalize string for strict complete-output preservation evaluation."""
-    norm = clean_sentence(text).casefold()
-    norm = re.sub(r"[^\w\s]", "", norm)
-    return " ".join(norm.split())
+    """Normalize string for strict complete-output preservation evaluation.
+
+    Standardizes unicode apostrophes, quotes, and whitespace, while strictly
+    preserving all punctuation (commas, colons, periods, semicolons, dashes)
+    so that punctuation mutations and corruptions are caught and rejected.
+    """
+    norm = normalize_lookup_token(text).casefold()
+    norm = re.sub(r"[\s\u00a0]+", " ", norm).strip()
+    return norm
 
 
 @dataclass
@@ -877,6 +882,14 @@ class ZoneMetrics:
     gate_cleared: bool
 
 
+ZONE_MINIMUM_QUOTAS: dict[str, int] = {
+    "southwestern": 600,
+    "northern": 400,
+    "southeastern_slobozhan": 250,
+    "southeastern_steppe": 250,
+}
+
+
 def evaluate_multizone_benchmark(
     eval_cases: list[dict[str, Any]],
     predictions: dict[str, str] | None = None,
@@ -977,8 +990,9 @@ def evaluate_multizone_benchmark(
         acc = passed / total if total > 0 else 0.0
         err_rate = (total - passed) / total if total > 0 else 1.0
         cp_lower = exact_clopper_pearson_lower(passed, total, alpha=0.05)
-        # Gate cleared if error rate <= 1.0% (accuracy >= 99.0%) and total >= quota
-        gate_cleared = (total > 0 and err_rate <= 0.010)
+        # Gate cleared ONLY IF total satisfies required quota and error rate <= 1.0% (accuracy >= 99.0%)
+        min_quota = ZONE_MINIMUM_QUOTAS.get(zone_key, 250)
+        gate_cleared = (total >= min_quota and err_rate <= 0.010)
 
         results[zone_key] = ZoneMetrics(
             zone_name=zone_key,
