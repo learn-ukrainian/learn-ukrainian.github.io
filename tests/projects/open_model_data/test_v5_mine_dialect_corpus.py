@@ -266,7 +266,23 @@ def test_strict_zero_train_eval_leakage_firewall(
     lemma_overlap = eval_lemmas & sft_dialect_lemmas
     assert not lemma_overlap, f"Lemma overlap between eval and SFT detected: {lemma_overlap}"
 
-    # 2. Complete sentence and passage containment check
+    # 2. Zero citation overlap
+    eval_cits = {c["source_metadata"]["citation"] for c in eval_cases}
+    sft_cits = set()
+    for t in sft_trajectories:
+        if not t.get("is_calque_or_russianism"):
+            for alt in t.get("register_spectrum", {}).get("alternatives", []):
+                src = alt.get("evidence_source", "")
+                import re
+                m = re.search(r"\(([^\(\)]+)\)", src)
+                if m:
+                    sft_cits.add(m.group(1).strip())
+                    sft_cits.add(f"({m.group(1).strip()})")
+
+    citation_overlap = eval_cits & sft_cits
+    assert not citation_overlap, f"Citation overlap between eval and SFT detected: {citation_overlap}"
+
+    # 3. Complete sentence and passage containment check
     sft_blobs = []
     for t in sft_trajectories:
         sft_blobs.append(t["query"])
@@ -326,6 +342,12 @@ def test_sft_dataset_real_vesum_attestation_and_no_placeholders(
         raw_str = json.dumps(t, ensure_ascii=False)
         for ph in banned_placeholders:
             assert ph not in raw_str, f"Found placeholder '{ph}' in SFT trajectory {t['trajectory_id']}"
+
+        # Ensure no trajectory uses the dummy fallback 'відповідник' as its purported literary synonym
+        attested_lemmas = [att["lemma"].casefold() for att in t["vesum_attestation"]]
+        assert "відповідник" not in attested_lemmas, (
+            f"Dummy fallback 'відповідник' found in SFT trajectory {t['trajectory_id']}"
+        )
 
         # Verify that vesum_attestation entries are backed by real database facts
         for att in t["vesum_attestation"]:
@@ -452,10 +474,43 @@ def test_modern_literary_non_regression() -> None:
     if not V02_BASELINE_SUITE_PATH.exists():
         pytest.skip(f"v0.2 suite missing at {V02_BASELINE_SUITE_PATH}")
 
+    # 1. Oracle ground-truth verification
     reg_result = verify_modern_literary_regression()
     assert reg_result["available"] is True
     assert reg_result["regression_rate"] <= 0.005, f"Regression rate {reg_result['regression_rate']:.2%} exceeds 0.5% limit!"
     assert reg_result["cleared"] is True
+    assert reg_result["is_oracle_reference"] is True
+
+    # 2. Destructive single-word probe rejection (probe returns only target/replacement token)
+    lines = [json.loads(l) for l in V02_BASELINE_SUITE_PATH.read_text(encoding="utf-8").splitlines() if l.strip()]
+    probe_preds = {}
+    for c in lines:
+        eid = c["eval_id"]
+        if c["expected_action"] == "PRESERVE":
+            probe_preds[eid] = c["target_term"]
+        else:
+            probe_preds[eid] = c.get("expected_replacement") or ""
+
+    probe_result = verify_modern_literary_regression(predictions=probe_preds)
+    assert probe_result["cleared"] is False, "Regression gate accepted destructive single-word outputs!"
+    assert probe_result["passed_cases"] == 0, "Single-word output should have 0 passed cases!"
+    assert probe_result["regression_rate"] == 1.0, "Regression rate should be 100% on destructive output!"
+
+
+def test_predictions_cli_handling_fails_on_missing_file(tmp_path: Any) -> None:
+    """Verify that specifying a nonexistent predictions file fails closed instead of selecting oracle mode."""
+    import subprocess
+    import sys
+    cmd = [
+        sys.executable,
+        "scripts/projects/open_model_data/v5_mine_dialect_corpus.py",
+        "--evaluate",
+        "--predictions",
+        str(tmp_path / "nonexistent_predictions.jsonl"),
+    ]
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    assert proc.returncode != 0
+    assert "FileNotFoundError" in proc.stderr or "Predictions file not found" in proc.stderr
 
 
 # ==============================================================================

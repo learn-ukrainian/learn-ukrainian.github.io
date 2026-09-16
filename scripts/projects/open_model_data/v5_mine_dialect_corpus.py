@@ -162,7 +162,6 @@ AUTHORS_MAP = {
         "Федьк.": ("southwestern_bukovina", "Буковина (Вижниця)", "Юрій Федькович", "Повісті"),
         "Хотк.": ("southwestern_hutsul", "Гуцульщина (Верховина)", "Гнат Хоткевич", "Камінна душа"),
         "Хоткевич": ("southwestern_hutsul", "Гуцульщина (Верховина)", "Гнат Хоткевич", "Камінна душа"),
-        "Коцюб.": ("southwestern_hutsul", "Гуцульщина («Тіні забутих предків»)", "Михайло Коцюбинський", "Тіні забутих предків"),
         "Вх.": ("southwestern_boyko", "Бойківщина та Галичина", "Іван Верхратський", "Етнографічні матеріали"),
         "Гнат.": ("southwestern_boyko", "Галичина", "Володимир Гнатюк", "Етнографічні матеріали"),
         "Шух.": ("southwestern_hutsul", "Гуцульщина", "Володимир Шухевич", "Гуцульщина"),
@@ -184,17 +183,28 @@ AUTHORS_MAP = {
         "Тютюнник": ("southeastern_slobozhan", "Слобожанщина та Полтавщина", "Григір Тютюнник", "Оповідання"),
         "Вишня": ("southeastern_slobozhan", "Слобожанщина (Охтирщина)", "Остап Вишня", "Усмішки"),
         "Хвиль": ("southeastern_slobozhan", "Слобожанщина (Харків)", "Микола Хвильовий", "Новели"),
+        "Мирний": ("southeastern_slobozhan", "Полтавщина (Миргородщина)", "Панас Мирний", "Твори"),
+        "Котл.": ("southeastern_slobozhan", "Полтавщина", "Іван Котляревський", "Твори"),
+        "Номис": ("southeastern_slobozhan", "Полтавщина (Лубенщина)", "Матвій Номис", "Приказки та прислів'я"),
+        "Головко": ("southeastern_slobozhan", "Полтавщина", "Андрій Головко", "Твори"),
         "Харьк.": ("southeastern_slobozhan", "Слобожанщина (Харківський повіт)", "Слобідські народні записи", "Матеріали"),
         "Лебед.": ("southeastern_slobozhan", "Слобожанщина (Лебединщина)", "Слобідські народні записи", "Матеріали"),
     },
     "southeastern_steppe": {
-        "Манжур": ("southeastern_steppe", "Степова Україна (Придніпров'я)", "Іван Манжура", "Степові думи"),
-        "Манжура": ("southeastern_steppe", "Степова Україна (Придніпров'я)", "Іван Манжура", "Степові думи"),
         "Гончар": ("southeastern_steppe", "Степова Україна (Придніпров'я)", "Олесь Гончар", "Твори"),
+        "Ю. Янов.": ("southeastern_steppe", "Степова Україна (Кіровоградщина)", "Юрій Яновський", "Вершники"),
         "Янов.": ("southeastern_steppe", "Степова Україна (Кіровоградщина)", "Юрій Яновський", "Вершники"),
         "Яновський": ("southeastern_steppe", "Степова Україна (Кіровоградщина)", "Юрій Яновський", "Вершники"),
+        "Манж.": ("southeastern_steppe", "Степова Україна (Придніпров'я)", "Іван Манжура", "Степові думи"),
+        "Манжур": ("southeastern_steppe", "Степова Україна (Придніпров'я)", "Іван Манжура", "Степові думи"),
+        "Манжура": ("southeastern_steppe", "Степова Україна (Придніпров'я)", "Іван Манжура", "Степові думи"),
+        "Кроп.": ("southeastern_steppe", "Степова Україна (Єлисаветградщина)", "Марко Кропивницький", "Драми"),
+        "Кропивницький": ("southeastern_steppe", "Степова Україна (Єлисаветградщина)", "Марко Кропивницький", "Драми"),
+        "Горд.": ("southeastern_steppe", "Запоріжжя та Придніпров'я", "Кость Гордієнко", "Повісті"),
+        "Кучер": ("southeastern_steppe", "Степова Україна (Причорномор'я)", "Василь Кучер", "Чорноморці"),
         "Эварн.": ("southeastern_steppe", "Запоріжжя та Степ", "Дмитро Яворницький", "Запорожжя"),
         "Еварн.": ("southeastern_steppe", "Запоріжжя та Степ", "Дмитро Яворницький", "Запорожжя"),
+        "Яворн.": ("southeastern_steppe", "Запоріжжя та Степ", "Дмитро Яворницький", "Запорожжя"),
     },
 }
 
@@ -283,60 +293,78 @@ def mine_all_candidate_sentences(db_path: Path) -> list[MinedSentence]:
         stem = w_clean[: max(3, len(w_clean) - 2)].casefold()
 
         full_text = f"{defn} {txt}"
-        for m in CIT_RE.finditer(full_text):
-            auth_raw = m.group(1).strip()
-            matched = None
-            for macro_key, amap in AUTHORS_MAP.items():
-                for k, (sz, loc, author_name, work) in amap.items():
-                    if k in auth_raw:
-                        mz = "southeastern" if macro_key.startswith("southeastern") else macro_key
-                        matched = (sz, mz, macro_key, loc, author_name, work)
+        # Split into senses to ensure quotations are only taken from dialect-marked senses
+        senses = re.split(r"(?<=\s)([1-9]\.)\s+", full_text)
+        dialect_sections = []
+        if len(senses) > 1:
+            pre = senses[0]
+            if "діал." in pre or "зах." in pre:
+                dialect_sections.append(pre)
+            for i in range(1, len(senses), 2):
+                s_body = senses[i + 1]
+                if "діал." in s_body or "зах." in s_body or ("діал." in pre and not re.search(r"^[а-яіїєґ\s]+;", s_body)):
+                    dialect_sections.append(s_body)
+        else:
+            if "діал." in full_text or "зах." in full_text:
+                dialect_sections.append(full_text)
+
+        for section in dialect_sections:
+            for m in CIT_RE.finditer(section):
+                auth_raw = m.group(1).strip()
+                matched = None
+                for macro_key, amap in AUTHORS_MAP.items():
+                    for k, (sz, loc, author_name, _default_work) in amap.items():
+                        if k in auth_raw:
+                            mz = "southeastern" if macro_key.startswith("southeastern") else macro_key
+                            cit_str = m.group(0).strip()
+                            work = f"{author_name}. Твори {cit_str}"
+                            matched = (sz, mz, macro_key, loc, author_name, work)
+                            break
+                    if matched:
                         break
-                if matched:
-                    break
 
-            if not matched:
-                continue
+                if not matched:
+                    continue
 
-            sz, mz, bkt, locality, author_name, work = matched
-            prefix = full_text[:m.start()].rstrip(" .")
-            sents = re.split(r"(?:(?<=[.!?])\s+(?=[А-ЯЄІЇҐ«—]))|(?:;\s+)", prefix)
-            if not sents:
-                continue
+                sz, mz, bkt, locality, author_name, work = matched
+                prefix = section[:m.start()].rstrip(" .")
+                sents = re.split(r"(?:(?<=[.!?])\s+(?=[А-ЯЄІЇҐ«—]))|(?:;\s+)", prefix)
+                if not sents:
+                    continue
 
-            s = clean_sentence(sents[-1])
-            if len(s) < 28 or len(s) > 230 or len(s.split()) < 4:
-                continue
-            # Must have balanced parentheses and brackets, and not end on an open bracket
-            if s.count("(") != s.count(")") or s.count("[") != s.count("]"):
-                continue
-            if s.endswith("(") or s.endswith("["):
-                continue
-            if LATIN_CHARS_RE.search(s) or RU_CHARS_RE.search(s):
-                continue
-            if RU_GLOSS_RE.search(s) or CROSSREF_RE.search(s):
-                continue
-            if stem not in s.casefold():
-                continue
+                s = clean_sentence(sents[-1])
+                if len(s) < 28 or len(s) > 230 or len(s.split()) < 4:
+                    continue
+                # Must have balanced parentheses and brackets, and not end on an open bracket
+                if s.count("(") != s.count(")") or s.count("[") != s.count("]"):
+                    continue
+                if s.endswith("(") or s.endswith("["):
+                    continue
+                if LATIN_CHARS_RE.search(s) or RU_CHARS_RE.search(s):
+                    continue
+                if RU_GLOSS_RE.search(s) or CROSSREF_RE.search(s):
+                    continue
+                if stem not in s.casefold():
+                    continue
 
-            fp = passage_fingerprint(s)
-            if fp not in seen_fingerprints:
-                seen_fingerprints.add(fp)
-                candidates.append(
-                    MinedSentence(
-                        word=w_clean,
-                        sentence=s,
-                        citation=m.group(0).strip(),
-                        macro_zone=mz,
-                        sub_zone=sz,
-                        bucket=bkt,
-                        locality=locality,
-                        collector=author_name,
-                        work=work,
-                        source_db="sum11_literary_citation",
-                        raw_definition=defn,
+                fp = passage_fingerprint(s)
+                if fp not in seen_fingerprints:
+                    seen_fingerprints.add(fp)
+                    candidates.append(
+                        MinedSentence(
+                            word=w_clean,
+                            sentence=s,
+                            citation=m.group(0).strip(),
+                            macro_zone=mz,
+                            sub_zone=sz,
+                            bucket=bkt,
+                            locality=locality,
+                            collector=author_name,
+                            work=work,
+                            source_db="sum11_literary_citation",
+                            raw_definition=defn,
+                        )
                     )
-                )
 
     # 2. Mine Grinchenko authentic sentences with dialect/regional collector citations
     cur.execute("SELECT word, definition FROM grinchenko")
@@ -347,7 +375,7 @@ def mine_all_candidate_sentences(db_path: Path) -> list[MinedSentence]:
         stem = w_clean[: max(3, len(w_clean) - 2)].casefold()
 
         for macro_key, amap in AUTHORS_MAP.items():
-            for cit_needle, (sz, loc, author_name, work) in amap.items():
+            for cit_needle, (sz, loc, author_name, _default_work) in amap.items():
                 if f"{cit_needle}." in defn or f"{cit_needle} " in defn:
                     m = re.search(re.escape(cit_needle) + r"(?:\s*[IІVХXLCDM]+)?(?:\s*\d+)?\b", defn)
                     if not m:
@@ -374,11 +402,13 @@ def mine_all_candidate_sentences(db_path: Path) -> list[MinedSentence]:
                     if fp not in seen_fingerprints:
                         seen_fingerprints.add(fp)
                         mz = "southeastern" if macro_key.startswith("southeastern") else macro_key
+                        cit_str = m.group(0).strip()
+                        work = f"{author_name}. Твори ({cit_str})"
                         candidates.append(
                             MinedSentence(
                                 word=w_clean,
                                 sentence=s,
-                                citation=m.group(0).strip(),
+                                citation=cit_str,
                                 macro_zone=mz,
                                 sub_zone=sz,
                                 bucket=macro_key,
@@ -398,31 +428,58 @@ def mine_all_candidate_sentences(db_path: Path) -> list[MinedSentence]:
 def partition_candidates_by_lemma(
     candidates: list[MinedSentence],
 ) -> tuple[list[MinedSentence], list[MinedSentence]]:
-    """Partition candidates deterministically by lemma into mutually exclusive eval and SFT pools.
+    """Partition candidates deterministically into mutually exclusive eval and SFT pools.
 
-    Enforces 0% lemma, passage, and sentence leakage between evaluation and training sets.
+    Constructs connected components across (lemma, citation) pairs so that any shared lemma OR
+    citation moves as an atomic unit. Enforces 0% lemma, 0% citation, and 0% sentence leakage.
     """
-    lemmas = sorted({c.word for c in candidates})
-    eval_lemmas: set[str] = set()
-    sft_lemmas: set[str] = set()
-
-    # Bucket candidates by lemma
-    by_lemma: dict[str, list[MinedSentence]] = defaultdict(list)
+    adj: dict[tuple[str, str], set[tuple[str, str]]] = defaultdict(set)
     for c in candidates:
-        by_lemma[c.word].append(c)
+        lem_node = ("L", c.word)
+        cit_node = ("C", c.citation)
+        adj[lem_node].add(cit_node)
+        adj[cit_node].add(lem_node)
 
-    for lemma in lemmas:
-        h = int(hashlib.sha256(lemma.encode()).hexdigest()[:8], 16) % 100
-        # For Slobozhanshchyna lemmas, use 75% eval quota; for others, use 65%
-        is_slobozhan = any(it.bucket == "southeastern_slobozhan" for it in by_lemma[lemma])
-        threshold = 75 if is_slobozhan else 65
+    visited: set[tuple[str, str]] = set()
+    components: list[list[tuple[str, str]]] = []
+    for node in list(adj.keys()):
+        if node not in visited:
+            comp: list[tuple[str, str]] = []
+            stack = [node]
+            visited.add(node)
+            while stack:
+                curr = stack.pop()
+                comp.append(curr)
+                for neigh in adj[curr]:
+                    if neigh not in visited:
+                        visited.add(neigh)
+                        stack.append(neigh)
+            components.append(comp)
+
+    comp_map: dict[tuple[str, str], int] = {}
+    for idx, comp in enumerate(components):
+        for node in comp:
+            comp_map[node] = idx
+
+    comp_cands: dict[int, list[MinedSentence]] = defaultdict(list)
+    for c in candidates:
+        idx = comp_map[("L", c.word)]
+        comp_cands[idx].append(c)
+
+    eval_candidates: list[MinedSentence] = []
+    sft_candidates: list[MinedSentence] = []
+
+    for idx, c_list in comp_cands.items():
+        first_node = min(str(n) for n in components[idx])
+        h = int(hashlib.sha256(first_node.encode()).hexdigest()[:8], 16) % 100
+        has_steppe = any(c.bucket == "southeastern_steppe" for c in c_list)
+        has_slobozhan = any(c.bucket == "southeastern_slobozhan" for c in c_list)
+        threshold = 68 if (has_steppe or has_slobozhan) else 55
+
         if h < threshold:
-            eval_lemmas.add(lemma)
+            eval_candidates.extend(c_list)
         else:
-            sft_lemmas.add(lemma)
-
-    eval_candidates = [c for c in candidates if c.word in eval_lemmas]
-    sft_candidates = [c for c in candidates if c.word in sft_lemmas]
+            sft_candidates.extend(c_list)
 
     return eval_candidates, sft_candidates
 
@@ -555,33 +612,38 @@ def build_evaluation_benchmark(
     return eval_cases
 
 
-def find_attested_synonym(defn: str, vesum_db: Path) -> tuple[str, int]:
-    """Extract a genuine Ukrainian literary synonym from dictionary definition verified in VESUM."""
+def find_attested_synonym(defn: str, word: str, vesum_db: Path) -> tuple[str, int] | None:
+    """Extract a genuine Ukrainian literary synonym from dictionary definition verified in VESUM.
+
+    Returns None if no attested literary synonym can be extracted. Never returns dummy fallbacks.
+    """
     con_ves = sqlite3.connect(vesum_db)
     cur = con_ves.cursor()
 
-    # Search for words in definition after markers like "діал.", "—", or initial definitions
-    sub_text = defn
-    m = re.search(r"(?:діал\.|—|=)\s+([^.;\(\)—\n]+)", defn)
-    if m:
-        sub_text = m.group(1)
+    patterns = [
+        r"діал\.\s+(?:Те\s+саме,\s+що\s+)?([А-ЯЄІЇҐа-яіїєґ\']+)",
+        r"зах\.\s+(?:Те\s+саме,\s+що\s+)?([А-ЯЄІЇҐа-яіїєґ\']+)",
+        r"=\s*([А-ЯЄІЇҐа-яіїєґ\']+)",
+        r"\bдив\.\s+([а-яіїєґ\']+)",
+    ]
+    banned = {
+        "те", "саме", "що", "як", "який", "яка", "яке", "які", "хто", "при", "для",
+        "вид", "рід", "знач", "пор", "див", "уживається", "порівн", "відповідник"
+    }
 
-    tokens = re.findall(r"[а-яіїєґ]+", sub_text.lower())
-    banned = {"те", "саме", "що", "який", "яка", "яке", "які", "хто", "при", "для", "вид", "рід", "знач", "уживається"}
-
-    for token in tokens:
-        if len(token) >= 3 and token not in banned:
-            cur.execute("SELECT count(*) FROM forms_all WHERE lemma = ?", (token,))
-            row = cur.fetchone()
-            if row and row[0] > 0:
-                con_ves.close()
-                return token, row[0]
-
-    cur.execute("SELECT count(*) FROM forms_all WHERE lemma = 'відповідник'")
-    row = cur.fetchone()
-    default_cnt = row[0] if row else 33
-    con_ves.close()
-    return "відповідник", default_cnt
+    try:
+        for pat in patterns:
+            for m in re.finditer(pat, defn, re.IGNORECASE):
+                cand = m.group(1).casefold()
+                if cand in banned or cand == word.casefold() or len(cand) < 2:
+                    continue
+                cur.execute("SELECT count(*) FROM forms_all WHERE lemma = ?", (cand,))
+                row = cur.fetchone()
+                if row and row[0] > 0:
+                    return cand, row[0]
+        return None
+    finally:
+        con_ves.close()
 
 
 def build_sft_dialect_dataset(
@@ -591,17 +653,20 @@ def build_sft_dialect_dataset(
     replay_quota: int = 100,
 ) -> list[dict[str, Any]]:
     """Build SFT dialect defense trajectories grounded in real VESUM attestations and dictionary evidence."""
-    if len(sft_candidates) < sft_dialect_quota:
-        raise ValueError(f"Insufficient SFT candidates: found {len(sft_candidates)}, required {sft_dialect_quota}")
-
     con_ves = sqlite3.connect(vesum_db)
     cur_ves = con_ves.cursor()
 
     sft_trajectories: list[dict[str, Any]] = []
 
-    for idx, item in enumerate(sft_candidates[:sft_dialect_quota]):
-        traj_hash = hashlib.sha256(f"sft_dial_{item.sentence}_{idx}".encode()).hexdigest()[:16]
-        traj_id = f"traj.decolonize.{traj_hash}"
+    for idx, item in enumerate(sft_candidates):
+        if len(sft_trajectories) >= sft_dialect_quota:
+            break
+
+        # Extract authentic literary synonym verified in VESUM; skip candidate if none exists
+        syn_result = find_attested_synonym(item.raw_definition, item.word, vesum_db)
+        if syn_result is None:
+            continue
+        syn_word, syn_forms_cnt = syn_result
 
         # Real VESUM count for dialect headword
         cur_ves.execute("SELECT count(*) FROM forms_all WHERE lemma = ?", (item.word,))
@@ -609,8 +674,8 @@ def build_sft_dialect_dataset(
         dialect_forms_cnt = row[0] if row else 0
         is_dial_attested = (dialect_forms_cnt > 0)
 
-        # Real literary synonym verified in VESUM
-        syn_word, syn_forms_cnt = find_attested_synonym(item.raw_definition, vesum_db)
+        traj_hash = hashlib.sha256(f"sft_dial_{item.sentence}_{idx}_{item.word}".encode()).hexdigest()[:16]
+        traj_id = f"traj.decolonize.{traj_hash}"
 
         query = f"Чи правильно казати «{item.word}» у вислові «{item.sentence}»? Чи це суржик або помилка?"
         traj = {
@@ -622,7 +687,7 @@ def build_sft_dialect_dataset(
             "is_calque_or_russianism": False,
             "morphemic_breakdown": {
                 "source_formation": f"Діалектна одиниця ({item.locality}, {item.sub_zone}).",
-                "ukrainian_equivalent_mechanism": "Питома українська народна деривація.",
+                "ukrainian_equivalent_mechanism": f"Питома українська народна деривація; загальномовний еквівалент: «{syn_word}».",
             },
             "vesum_attestation": [
                 {
@@ -649,25 +714,31 @@ def build_sft_dialect_dataset(
                     {
                         "lemma": syn_word,
                         "register_tier": "living_standard",
-                        "evidence_source": f"СУМ-20 / СУМ-11 (стандартний відповідник «{syn_word}»)",
+                        "evidence_source": f"СУМ-20 / СУМ-11 (лексема «{syn_word}»)",
                     },
                 ],
             },
             "reasoning_steps": [
-                f"1. Локалізація: лексема «{item.word}» зафіксована у праці «{item.work}» ({item.locality}).",
-                "2. Аналіз: це питома діалектна форма говору, а не суржик чи колоніальна калька.",
-                "3. Принцип захисту: автентичні регіоналізми підлягають захисту від стандартизації.",
-                "4. Норма: вживання у відповідному контексті є повністю правильним.",
+                f"1. Локалізація: лексема «{item.word}» зафіксована у джерелі {item.collector} («{item.work}», {item.locality}).",
+                f"2. Семантика: відповідає загальнолітературному «{syn_word}», є питомою регіональною формою говору.",
+                "3. Принцип захисту: автентичні регіоналізми підлягають захисту від стандартизації та штучної заміни.",
+                "4. Норма: вживання у відповідному художньому чи діалектному контексті є повністю правильним.",
             ],
             "final_response": (
                 f"Слово «{item.word}» у цьому реченні вжите правильно. "
                 f"Це автентична регіональна форма ({item.locality}), зафіксована {item.collector} («{item.work}»). "
-                "Вона відображає багатство наріч і не потребує виправлення чи стандартизації."
+                f"У загальнолітературній мові їй відповідає «{syn_word}». "
+                "Вона відображає багатство наріч і не є суржиком чи помилкою."
             ),
         }
         sft_trajectories.append(traj)
 
     con_ves.close()
+
+    if len(sft_trajectories) < sft_dialect_quota:
+        raise ValueError(
+            f"Insufficient SFT dialect trajectories with verified synonyms: found {len(sft_trajectories)}, required {sft_dialect_quota}"
+        )
 
     # Add calibrated replay buffer from v0.2 baseline
     replay_count = 0
@@ -854,18 +925,23 @@ def verify_modern_literary_regression(
     passed = 0
     for c in lines:
         eid = c["eval_id"]
-        pred = predictions.get(eid) if predictions is not None else (c.get("expected_replacement") or c["input_text"])
-        if pred is None:
-            continue
-        target = c["target_term"]
         action = c["expected_action"]
         if action == "PRESERVE":
-            if target.casefold() in pred.casefold():
-                passed += 1
+            expected = c["input_text"]
         else:
-            rep = c.get("expected_replacement")
-            if rep and rep.casefold() in pred.casefold():
-                passed += 1
+            rep = c.get("expected_replacement") or ""
+            expected = c["input_text"].replace(c["target_term"], rep)
+
+        if predictions is not None:
+            pred = predictions.get(eid)
+            if pred is None:
+                continue
+        else:
+            pred = expected
+
+        # Strictly require full normalized sentence preservation (rejects single-word/destructive outputs)
+        if normalize_for_eval(pred) == normalize_for_eval(expected):
+            passed += 1
 
     regression_rate = (total - passed) / total if total > 0 else 1.0
     return {
@@ -1021,7 +1097,9 @@ def main() -> None:
         cases = [json.loads(l) for l in eval_path.read_text(encoding="utf-8").splitlines() if l.strip()]
 
         preds = None
-        if args.predictions and args.predictions.exists():
+        if args.predictions is not None:
+            if not args.predictions.exists():
+                raise FileNotFoundError(f"Predictions file not found: {args.predictions}")
             preds = {}
             for line in args.predictions.read_text(encoding="utf-8").splitlines():
                 if line.strip():
