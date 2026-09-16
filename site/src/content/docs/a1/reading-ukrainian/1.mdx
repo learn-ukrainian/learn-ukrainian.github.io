@@ -1,9 +1,9 @@
 ---
-title: Складопо́діл та бу́кви К, И, Р
+title: Складопо́діл та бу́кви К, И, Р — Syllables and the Letters К, И, Р
 description: Від літер до слів та речень
 sidebar:
   order: 1
-  label: 01. Складопо́діл та бу́кви К, И, Р
+  label: 01. Складопо́діл та бу́кви К, И, Р — Syllables and the Letters К, И, Р
 pipeline: v7-upgrade
 build_status: validated
 draft: false
@@ -66,14 +66,14 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 Ласка́во про́симо до дру́гого мо́дуля на́шого ку́рсу! — Welcome to the second module of our Ukrainian reading course! In Module 1, you met your first seven letters: the three core vowels **А**, **О**, **У** and the four reliable consonants **М**, **Л**, **С**, **Н**. You also learned that sounds join together to build syllables.
 
-In this lesson, you take an essential step in your reading journey. You will master three new letters: the relaxed front vowel **И** and the two energetic consonants **К** and **Р**. You will also learn the fundamental rule of Ukrainian syllables that every schoolchild in Ukraine discovers in first grade: how to count and divide syllables accurately without guessing.
+In this lesson, you take an essential step in your reading journey. You will master three new letters: the relaxed vowel **И** and the two energetic consonants **К** and **Р**. You will also learn the fundamental rule of Ukrainian syllables that every schoolchild in Ukraine discovers in first grade: count the **vowels** to find how many **beats** (склади́ / syllables) the word has.
 
 By the end of this 60-minute lesson, you will be able to:
 
-- **Застосо́вувати золоте́ пра́вило складопо́ділу** — apply the golden rule: count the vowels to determine the exact number of syllables;
-- **Використо́вувати кінестети́чний тест підборі́ддя** — use the hands-under-chin check to physically feel syllable pulses;
-- **Вимовля́ти чи́стий голосни́й [и]** — pronounce the Ukrainian vowel [и] cleanly without confusing it with other vowels;
-- **Розрізня́ти бу́кви К і Р** — articulate the voiceless stop [k] and the vibrant trill [r];
+- **Рахува́ти склади́ за голосни́ми** — count the **vowels**. That is how many **beats** (склади́ / syllables) the word has;
+- **Використо́вувати кінестети́чний тест підборі́ддя** — use the hands-under-chin check to physically feel the beats of the word;
+- **Вимовля́ти звук И** — hear and say **и** as a relaxed “ih”; **і** is “ee”. Pair: **дим / дім**;
+- **Розрізня́ти бу́кви К і Р** — articulate the crisp voiceless sound [k] and the vibrant trill [r];
 - **Вжива́ти те́рміни бу́ква та лі́тера** — understand that both **бу́ква** and **лі́тера** are standard Ukrainian terms for a written letter;
 - **Будува́ти та чита́ти складові́ ланцюжки́** — assemble consonant-vowel combinations into smooth reading chains;
 - **Чита́ти пе́рші повноці́нні слова́** — read real Ukrainian words such as **рука́**, **рак**, **со́рок**, **мак**, and **си́ла**.
@@ -82,19 +82,19 @@ By the end of this 60-minute lesson, you will be able to:
 
 ## Склади́: Що таке́ склад і як йо́го порахува́ти
 
-What is a syllable in Ukrainian? A syllable is called a **склад**. In Ukrainian phonetics, the syllable is the fundamental building block of reading. Unlike English, where spelling often hides silent letters or irregular vowel combinations, Ukrainian orthography is strictly phonetic.
+What is a syllable in Ukrainian? A syllable is called a **склад** — it is a single rhythmic **beat of the word**. In Ukrainian phonetics, syllables are the fundamental building blocks of reading. Unlike English, where spelling often hides silent letters or irregular vowel combinations, Ukrainian orthography is strictly phonetic.
 
-Every Ukrainian syllable is built around a single vowel sound. A consonant cannot form a syllable by itself. A vowel sound, on the other hand, can form an entire syllable all on its own.
+Count the **vowels**. That is how many **beats** (склади́ / syllables) the word has. A consonant cannot form a syllable by itself. A vowel sound, on the other hand, can form an entire syllable all on its own.
 
 In Ukrainian primary schools, children learn this immutable law on their very first day of reading instruction:
 
 > «У сло́ві сті́льки складі́в, скі́льки в ньо́му голосни́х зву́ків» (quoted from: Большако́ва, 1 клас, с. 25).
 >
-> "In a word there are as many syllables as there are vowel sounds in it."
+> "In a word there are as many syllables (beats) as there are vowel sounds in it."
 
-This rule is absolute. It has no exceptions in standard Ukrainian. If a word has one vowel sound, it has exactly one syllable. If it has two vowel sounds, it has exactly two syllables. If it has three vowel sounds, it has three syllables.
+This rule is absolute. It has no exceptions in standard Ukrainian. If a word has one vowel sound, it has exactly one syllable beat. If it has two vowel sounds, it has exactly two beats. If it has three vowel sounds, it has three beats.
 
-| Сло́во — Word | Голосні́ зву́ки — Vowel sounds | Кі́лькість складі́в — Syllables | Поді́л на склади́ — Syllable split |
+| Сло́во — Word | Голосні́ зву́ки — Vowel sounds | Кі́лькість складі́в — Syllables (beats) | Поді́л на склади́ — Syllable split |
 | --- | --- | --- | --- |
 | **рак** | [а] | 1 | **рак** |
 | **мак** | [а] | 1 | **мак** |
@@ -114,21 +114,23 @@ Each time your mouth opens to produce a resonant vowel sound, your lower jaw dro
 
 ### Раху́йте склади́ — Count syllables
 
-<CountSyllables client:only='react' instruction={"Пораху́йте голосні́ зву́ки у сло́ві. Кі́лькість голосни́х дорі́внює кі́лькості складі́в."} items={JSON.parse(`[{"word": "рак", "correct": 1}, {"word": "мак", "correct": 1}, {"word": "рука́", "correct": 2}, {"word": "со́рок", "correct": 2}, {"word": "си́ла", "correct": 2}, {"word": "молоко́", "correct": 3}]`)} maxCount={5} />
+<CountSyllables client:only='react' instruction={"Пораху́йте голосні́ зву́ки у сло́ві. Кі́лькість голосни́х дорі́внює кі́лькості складі́в. — Count the vowel sounds in the word. The number of vowels equals the number of syllables."} items={JSON.parse(`[{"word": "рак", "correct": 1, "translation": "crayfish"}, {"word": "мак", "correct": 1, "translation": "poppy"}, {"word": "рука́", "correct": 2, "translation": "hand / arm"}, {"word": "со́рок", "correct": 2, "translation": "forty"}, {"word": "си́ла", "correct": 2, "translation": "strength / power"}, {"word": "молоко́", "correct": 3, "translation": "milk"}]`)} maxCount={5} />
 
 ---
 
-## Голосни́й звук [и] та бу́ква И
+## Голосна́ лі́тера И — Vowel Letter И
 
 In this lesson, we welcome our fourth Ukrainian vowel letter: **И**.
 
 In the Ukrainian alphabet, both terms — **бу́ква И** and **лі́тера И** — are completely standard and widely used by native speakers and educators alike. A **бу́ква** or **лі́тера** is the graphic mark on paper, whereas **звук** is what you articulate with your voice and perceive with your ears.
 
-The sound **[и]** is a relaxed, close-mid front vowel. To pronounce it authentically:
+To master this vowel from day one: **и** is a relaxed “ih”; **і** is “ee”. Minimal pair: **дим / дім** (smoke vs house).
+
+To pronounce **и** authentically:
 
 - Keep your lips unrounded and relaxed, parted slightly wider than for [і].
-- Your tongue sits in the middle-front part of your mouth, neither pulled back into the throat nor pushed high against the hard palate.
-- The voice sounds warm, relaxed, and open.
+- Your tongue sits comfortably in the middle-front of your mouth, neither pulled back into the throat nor pushed high against the hard palate.
+- The voice sounds warm, relaxed, and open (phonetically classified as a close-mid front vowel [ɪ]).
 
 :::important
 Do not confuse Ukrainian **[и]** with the heavy, retracted sound found in some other Slavic languages. In Ukrainian, **[и]** is pronounced in the front part of the mouth and sounds softer, lighter, and more open. It is also completely distinct from Ukrainian **[і]**, which is a high, smiling front vowel that softens the preceding consonant.
@@ -138,7 +140,7 @@ Listen to the authentic pronunciation demonstrated by Ukrainian educator Anna Oh
 
 ### Диві́ться та повто́рюйте: Бу́кви К, И, Р — Watch and repeat: Letters К, И, Р
 
-<WatchAndRepeat client:only='react' items={JSON.parse(`[{"video": "https://www.youtube.com/watch?v=J7sGEI4-xJo", "letter": "К", "word": "рука́"}, {"video": "https://www.youtube.com/watch?v=W-1rCu0indE", "letter": "И", "word": "си́ла"}, {"video": "https://www.youtube.com/watch?v=fMGsQ5KPQgg", "letter": "Р", "word": "рак"}, {"video": "https://www.youtube.com/watch?v=hvB3VpcR3ZE", "letter": "А", "word": "ма́ма"}, {"video": "https://www.youtube.com/watch?v=gJFxRIPRZbI", "letter": "О", "word": "со́рок"}, {"video": "https://www.youtube.com/watch?v=VB1O6PmtYRU", "letter": "У", "word": "кума́"}]`)} title="Диві́ться та повто́рюйте: Бу́кви К, И, Р — Watch and repeat: Letters К, И, Р" instruction={"Подиві́ться коро́тке ві́део про вимо́ву лі́тери (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос."} />
+<WatchAndRepeat client:only='react' items={JSON.parse(`[{"video": "https://www.youtube.com/watch?v=J7sGEI4-xJo", "letter": "К", "word": "рука́ — hand / arm"}, {"video": "https://www.youtube.com/watch?v=W-1rCu0indE", "letter": "И", "word": "си́ла — strength / power"}, {"video": "https://www.youtube.com/watch?v=fMGsQ5KPQgg", "letter": "Р", "word": "рак — crayfish"}, {"video": "https://www.youtube.com/watch?v=hvB3VpcR3ZE", "letter": "А", "word": "ма́ма — mother / mom"}, {"video": "https://www.youtube.com/watch?v=gJFxRIPRZbI", "letter": "О", "word": "со́рок — forty"}, {"video": "https://www.youtube.com/watch?v=VB1O6PmtYRU", "letter": "У", "word": "кума́ — godmother"}]`)} title="Диві́ться та повто́рюйте: Бу́кви К, И, Р — Watch and repeat: Letters К, И, Р" instruction={"Подиві́ться коро́тке ві́део про вимо́ву лі́тери (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос. — Watch a short video on pronouncing the letter (source: Anna Ohoiko, Ukrainian Lessons) and repeat aloud."} />
 
 ---
 
@@ -146,10 +148,10 @@ Listen to the authentic pronunciation demonstrated by Ukrainian educator Anna Oh
 
 Now let us meet two powerful consonant letters: **К** and **Р**.
 
-| Бу́ква — Letter | На́зва лі́тери — Name | Звук — Sound | Фонети́чна характери́стика — Phonetic nature |
+| Бу́ква — Letter | На́зва лі́тери — Name | Звук — Sound | Звуча́ння та о́пис — How it sounds |
 | --- | --- | --- | --- |
-| **К, к** | ка | **[k]** | Глухи́й задньоязико́вий проривни́й — Voiceless velar stop |
-| **Р, р** | ер | **[r]** | Дрижа́чий передньоязико́вий сона́нт — Alveolar trill sonorant |
+| **К, к** | ка | **[k]** | Глухи́й звук [k] (crisp k) — Voiceless velar stop |
+| **Р, р** | ер | **[r]** | Дрижа́чий звук [r] (rolled r) — Alveolar trill sonorant |
 
 The letter **К** represents a clean, crisp [k] sound made by pressing the back of your tongue against the soft palate and releasing it with a neat puff of air: **ка**, **ко**, **ку**, **ки**.
 
@@ -180,7 +182,7 @@ By linking these syllable chains, you can read entire words in steady, confident
 
 ### З'єдна́йте склади́ у слова́ — Join syllables into words
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "ру", "right": "ка́ (рука́)"}, {"left": "си́", "right": "ла (си́ла)"}, {"left": "ко", "right": "ра́ (кора́)"}, {"left": "со́", "right": "рок (со́рок)"}, {"left": "ку", "right": "ма́ (кума́)"}, {"left": "ри́", "right": "нок (ри́нок)"}]`)} instruction={"З'єдна́йте пе́рший склад із дру́гим, щоб утвори́ти знайо́ме сло́во."} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "ру — ru", "right": "ка́ (рука́ — hand / arm)"}, {"left": "си́ — sy", "right": "ла (си́ла — strength)"}, {"left": "ко — ko", "right": "ра́ (кора́ — bark)"}, {"left": "со́ — so", "right": "рок (со́рок — forty)"}, {"left": "ку — ku", "right": "ма́ (кума́ — godmother)"}, {"left": "ри́ — ry", "right": "нок (ри́нок — market)"}]`)} instruction={"З'єдна́йте пе́рший склад із дру́гим, щоб утвори́ти знайо́ме сло́во. — Join the first syllable with the second to form a familiar word."} isUkrainian={false} />
 
 ---
 
@@ -211,7 +213,7 @@ Notice that single-syllable words such as **рак**, **мак**, **син**, **
 
 ### Поділі́ть слова́ на склади́ — Divide words into syllables
 
-<DivideWords client:only='react' instruction={"Введі́ть сло́во, розділи́вши його́ на склади́ че́рез пробі́л."} items={JSON.parse(`[{"word": "рука́", "answer": "ру ка́"}, {"word": "со́рок", "answer": "со́ рок"}, {"word": "си́ла", "answer": "си́ ла"}, {"word": "ри́нок", "answer": "ри́ нок"}, {"word": "кора́", "answer": "ко ра́"}, {"word": "молоко́", "answer": "мо ло ко́"}]`)} />
+<DivideWords client:only='react' instruction={"Введі́ть сло́во, розділи́вши його́ на склади́ че́рез пробі́л. — Enter the word divided into syllables with a space."} items={JSON.parse(`[{"word": "рука́", "answer": "ру ка́", "hint": "рука́ — hand / arm"}, {"word": "со́рок", "answer": "со́ рок", "hint": "со́рок — forty"}, {"word": "си́ла", "answer": "си́ ла", "hint": "си́ла — strength"}, {"word": "ри́нок", "answer": "ри́ нок", "hint": "ри́нок — market"}, {"word": "кора́", "answer": "ко ра́", "hint": "кора́ — bark"}, {"word": "молоко́", "answer": "мо ло ко́", "hint": "молоко́ — milk"}]`)} />
 
 </TabItem>
 <TabItem label="Словник — Vocabulary">
@@ -233,7 +235,7 @@ Notice that single-syllable words such as **рак**, **мак**, **син**, **
 
 ### Диві́ться та повто́рюйте: Бу́кви К, И, Р — Watch and repeat: Letters К, И, Р
 
-*(see lesson, §Голосни́й звук [и] та бу́ква И)*
+*(see lesson, §Голосна́ лі́тера И — Vowel Letter И)*
 
 ### З'єдна́йте склади́ у слова́ — Join syllables into words
 
@@ -245,27 +247,27 @@ Notice that single-syllable words such as **рак**, **мак**, **син**, **
 
 ### Розподілі́ть за кі́лькістю складів — Sort by syllable count
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Оди́н склад": ["рак", "мак", "кран", "син", "смак", "кум"], "Два склади́": ["рука́", "со́рок", "си́ла", "кора́", "нора́", "кума́"], "Три склади́": ["молоко́"]}`)} instruction={"Розподілі́ть слова́ за кі́лькістю складів."} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Оди́н склад — One syllable": ["рак (crayfish)", "мак (poppy)", "кран (crane / tap)", "син (son)", "смак (taste)", "кум (godfather)"], "Два склади́ — Two syllables": ["рука́ (hand / arm)", "со́рок (forty)", "си́ла (strength)", "кора́ (bark)", "нора́ (burrow)", "кума́ (godmother)"], "Три склади́ — Three syllables": ["молоко́ (milk)"]}`)} instruction={"Розподілі́ть слова́ за кі́лькістю складів. — Sort words by the number of syllables."} isUkrainian={false} />
 
 ### Факти про склади́ та зву́ки — Facts about syllables and sounds
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Як порахува́ти склади́ в украї́нському сло́ві?", "options": [{"text": "Порахува́ти голосні́ зву́ки", "correct": true}, {"text": "Порахува́ти при́голосні зву́ки", "correct": false}, {"text": "Порахува́ти всі бу́кви", "correct": false}], "explanation": "У сло́ві сті́льки складів, скі́льки в ньо́му голосних зву́ків."}, {"question": "Скі́льки складі́в у сло́ві «со́рок»?", "options": [{"text": "Два склади́", "correct": true}, {"text": "Оди́н склад", "correct": false}, {"text": "Три склади́", "correct": false}], "explanation": "У сло́ві «со́рок» два голосни́х зву́ки [о], то́му два склади́."}, {"question": "Який голосни́й звук познача́є лі́тера И?", "options": [{"text": "Ненапру́жений передні́й звук [и]", "correct": true}, {"text": "Задньоязико́вий звук [у]", "correct": false}, {"text": "Лабіалізо́ваний звук [о]", "correct": false}], "explanation": "Бу́ква И познача́є чи́стий ненапру́жений голосни́й звук [и]."}, {"question": "Який звук познача́є бу́ква Р?", "options": [{"text": "Дрижа́чий сона́нт [r]", "correct": true}, {"text": "Глухи́й проривни́й [k]", "correct": false}, {"text": "Носови́й сона́нт [m]", "correct": false}], "explanation": "Бу́ква Р познача́є язико́вий дрижа́чий сона́нт [r]."}, {"question": "Що пока́зує кінестети́чний тест підборі́ддя?", "options": [{"text": "Ко́жен рух підборі́ддя вниз відпові́дає голосно́му зву́ку й скла́ду", "correct": true}, {"text": "Він пока́зує наголо́шений при́голосний", "correct": false}, {"text": "Він вимі́рює си́лу го́лосу", "correct": false}], "explanation": "Ще́лепа опу́скається під час тво́рення голосних зву́ків."}, {"question": "Чи є слова́ «бу́ква» та «лі́тера» сино́німами?", "options": [{"text": "Так, це то́чні сино́німи для графі́чного зна́ка", "correct": true}, {"text": "Ні, бу́ква — це звук, а лі́тера — знак", "correct": false}, {"text": "Ні, це зовсі́м рі́зні поня́ття", "correct": false}], "explanation": "Оби́два те́рміни станда́ртні в украї́нській осві́ті та познача́ють графем́у."}]`)} instruction={"Обері́ть одну́ прави́льну ві́дповідь."} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Як порахува́ти склади́ в украї́нському сло́ві? — How do you count syllables in a Ukrainian word?", "options": [{"text": "Порахува́ти голосні́ зву́ки — Count the vowel sounds", "correct": true}, {"text": "Порахува́ти при́голосні зву́ки — Count the consonant sounds", "correct": false}, {"text": "Порахува́ти всі бу́кви — Count all letters", "correct": false}], "explanation": "У сло́ві сті́льки складів, скі́льки в ньо́му голосних зву́ків. — In a word there are as many syllables (beats) as there are vowel sounds."}, {"question": "Скі́льки складі́в у сло́ві «со́рок»? — How many syllables are in the word \\"со́рок\\"?", "options": [{"text": "Два склади́ — Two syllables", "correct": true}, {"text": "Оди́н склад — One syllable", "correct": false}, {"text": "Три склади́ — Three syllables", "correct": false}], "explanation": "У сло́ві «со́рок» два голосни́х зву́ки [о], то́му два склади́. — In the word «со́рок» there are two vowel sounds [о], so two syllables."}, {"question": "Який голосни́й звук познача́є лі́тера И? — What vowel sound does the letter И represent?", "options": [{"text": "Розсла́блений передні́й звук «ih» — Relaxed front sound \\"ih\\"", "correct": true}, {"text": "Задньоязико́вий звук «oo» — Back tongue sound \\"oo\\"", "correct": false}, {"text": "Округле́ний звук «oh» — Rounded sound \\"oh\\"", "correct": false}], "explanation": "Бу́ква И познача́є розсла́блений голосни́й звук «ih» (як у дим). — Letter И represents the relaxed vowel sound \\"ih\\" (as in дим)."}, {"question": "Який звук познача́є бу́ква Р? — What sound does the letter Р represent?", "options": [{"text": "Дрижа́чий звук «r» (rolled r) — Rolled r-sound [r]", "correct": true}, {"text": "Глухи́й звук «k» — Voiceless sound \\"k\\"", "correct": false}, {"text": "Носови́й звук «m» — Nasal sound \\"m\\"", "correct": false}], "explanation": "Бу́ква Р познача́є розко́тистий дрижа́чий звук [r]. — Letter Р represents the rolled r-sound [r]."}, {"question": "Що пока́зує кінестети́чний тест підборі́ддя? — What does the chin test show?", "options": [{"text": "Ко́жен рух підборі́ддя вниз відпові́дає голосно́му й скла́ду — Each chin drop marks a vowel and a syllable", "correct": true}, {"text": "Він пока́зує наголо́шений при́голосний — It shows the stressed consonant", "correct": false}, {"text": "Він вимі́рює си́лу го́лосу — It measures the volume of voice", "correct": false}], "explanation": "Підборі́ддя опу́скається при ко́жному голосно́му зву́ку (скла́ді). — The chin drops on every vowel sound (syllable)."}, {"question": "Чи є слова́ «бу́ква» та «лі́тера» сино́німами? — Are the words \\"бу́ква\\" and \\"лі́тера\\" synonyms?", "options": [{"text": "Так, це то́чні сино́німи для зна́ка — Yes, they are exact synonyms for a letter", "correct": true}, {"text": "Ні, бу́ква — це звук, а лі́тера — знак — No, бу́ква is a sound and лі́тера is a letter", "correct": false}, {"text": "Ні, це зовсі́м рі́зні поня́ття — No, they are completely different concepts", "correct": false}], "explanation": "Оби́два те́рміни означа́ють письмови́й знак для зву́ка. — Both terms mean a written character for a sound."}]`)} instruction={"Обері́ть одну́ прави́льну ві́дповідь. — Choose one correct answer."} isUkrainian={false} />
 
 ### За́йве сло́во за кі́лькістю складів — Odd word out by syllable count
 
-<OddOneOut client:only='react' instruction={"Знайді́ть у ко́жному рядку́ сло́во, яке́ ма́є і́ншу кі́лькість складів."} items={JSON.parse(`[{"words": ["рак", "мак", "рука́", "син"], "correct": 2, "explanation": "Сло́во «рука́» ма́є два склади́, а ре́шта слів — оди́н склад."}, {"words": ["со́рок", "си́ла", "кора́", "кран"], "correct": 3, "explanation": "Сло́во «кран» односкладо́ве, а ре́шта — двоскладо́ві."}, {"words": ["молоко́", "рука́", "нора́", "кума́"], "correct": 0, "explanation": "Сло́во «молоко́» ма́є три склади́, а ре́шта — два склади́."}, {"words": ["смак", "ри́нок", "син", "кум"], "correct": 1, "explanation": "Сло́во «ри́нок» ма́є два склади́, а ре́шта слів — оди́н склад."}, {"words": ["кума́", "сукно́", "коса́", "рак"], "correct": 3, "explanation": "Сло́во «рак» ма́є оди́н склад, а ре́шта слів — два склади́."}, {"words": ["син", "кран", "рак", "сосна́"], "correct": 3, "explanation": "Сло́во «сосна́» ма́є два склади́, а і́нші слова́ — оди́н склад."}]`)} />
+<OddOneOut client:only='react' instruction={"Знайді́ть у ко́жному рядку́ сло́во, яке́ ма́є і́ншу кі́лькість складів. — Find the word in each row with a different syllable count."} items={JSON.parse(`[{"words": ["рак — crayfish (1)", "мак — poppy (1)", "рука́ — hand / arm (2)", "син — son (1)"], "correct": 2, "explanation": "Сло́во «рука́» ма́є два склади́, а ре́шта слів — оди́н склад. — The word «рука́» has two syllables, while the rest have one."}, {"words": ["со́рок — forty (2)", "си́ла — strength (2)", "кора́ — bark (2)", "кран — crane / tap (1)"], "correct": 3, "explanation": "Сло́во «кран» односкладо́ве, а ре́шта — двоскладо́ві. — The word «кран» has one syllable, while the rest have two."}, {"words": ["молоко́ — milk (3)", "рука́ — hand / arm (2)", "нора́ — burrow (2)", "кума́ — godmother (2)"], "correct": 0, "explanation": "Сло́во «молоко́» ма́є три склади́, а ре́шта — два склади́. — The word «молоко́» has three syllables, while the rest have two."}, {"words": ["смак — taste (1)", "ри́нок — market (2)", "син — son (1)", "кум — godfather (1)"], "correct": 1, "explanation": "Сло́во «ри́нок» ма́є два склади́, а ре́шта слів — оди́н склад. — The word «ри́нок» has two syllables, while the rest have one."}, {"words": ["кума́ — godmother (2)", "сукно́ — cloth (2)", "коса́ — braid / scythe (2)", "рак — crayfish (1)"], "correct": 3, "explanation": "Сло́во «рак» ма́є оди́н склад, а ре́шта слів — два склади́. — The word «рак» has one syllable, while the rest have two."}, {"words": ["син — son (1)", "кран — crane / tap (1)", "рак — crayfish (1)", "сосна́ — pine tree (2)"], "correct": 3, "explanation": "Сло́во «сосна́» ма́є два склади́, а і́нші слова́ — оди́н склад. — The word «сосна́» has two syllables, while the other words have one."}]`)} />
 
 ### Пра́вда чи непра́вда: Зву́ки та склади́ — True or False: Sounds and syllables
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "У ко́жному украї́нському скла́ді обов'язко́во є голосни́й звук.", "isTrue": true, "explanation": "Голосни́й звук — це верхови́на й осно́ва ко́жного скла́ду."}, {"statement": "У сло́ві «со́рок» три склади́.", "isTrue": false, "explanation": "У сло́ві «со́рок» два голосни́х зву́ки [о], то́му в ньо́му два склади́."}, {"statement": "Звук [и] нале́жить до шести́ голосних зву́ків украї́нської мо́ви.", "isTrue": true, "explanation": "В украї́нській мо́ві шість голосних зву́ків, і [и] — оди́н із них."}, {"statement": "Бу́ква К познача́є сона́нт.", "isTrue": false, "explanation": "Бу́ква К познача́є глухи́й проривни́й звук [k], а сона́нт познача́є Р."}, {"statement": "Слова́ «бу́ква» та «лі́тера» є сино́німами в украї́нській мо́ві.", "isTrue": true, "explanation": "Оби́два слова́ станда́ртні й означа́ють графі́чний знак для зву́ка."}, {"statement": "Кі́лькість складів у сло́ві зале́жить від кі́лькості при́голосних.", "isTrue": false, "explanation": "Кі́лькість складів зале́жить ви́ключно від кі́лькості голосних."}]`)} instruction={"Ви́значте, чи пра́вильне тве́рдження."} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "У ко́жному украї́нському скла́ді обов'язко́во є голосни́й звук. — Every Ukrainian syllable must contain a vowel sound.", "isTrue": true, "explanation": "Голосни́й звук — це осно́ва ко́жного скла́ду (биття́ сло́ва). — A vowel sound is the core of every syllable (beat of the word)."}, {"statement": "У сло́ві «со́рок» три склади́. — In the word \\"со́рок\\" there are three syllables.", "isTrue": false, "explanation": "У сло́ві «со́рок» два голосни́х зву́ки [о], то́му в ньо́му два склади́. — In «со́рок» there are two vowel sounds [о], so two syllables."}, {"statement": "Звук [и] нале́жить до шести́ голосних зву́ків украї́нської мо́ви. — The sound [и] is one of the six vowel sounds of Ukrainian.", "isTrue": true, "explanation": "В украї́нській мо́ві шість голосних: [а], [о], [у], [е], [и], [і]. — In Ukrainian there are six vowel sounds: [a], [o], [u], [e], [y], [i]."}, {"statement": "Бу́ква К познача́є сона́нт. — The letter К represents a sonorant.", "isTrue": false, "explanation": "Бу́ква К познача́є глухи́й звук [k], а сона́нт — це Р. — Letter К represents the voiceless sound [k], while Р is a sonorant."}, {"statement": "Слова́ «бу́ква» та «лі́тера» є сино́німами в украї́нській мо́ві. — The words \\"бу́ква\\" and \\"лі́тера\\" are synonyms in Ukrainian.", "isTrue": true, "explanation": "Оби́два слова́ означа́ють графі́чний знак для зву́ка. — Both words mean a graphic character for a sound."}, {"statement": "Кі́лькість складів у сло́ві зале́жить від кі́лькості при́голосних. — The number of syllables in a word depends on the number of consonants.", "isTrue": false, "explanation": "Кі́лькість складів зале́жить ви́ключно від кі́лькості голосних. — The number of syllables depends exclusively on the number of vowels."}]`)} instruction={"Ви́значте, чи пра́вильне тве́рдження. — Determine whether the statement is true or false."} isUkrainian={false} />
 
 ### Встав пропу́щену лі́теру — Fill in the missing letter
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Он ___ука́.", "answer": "р", "options": ["р", "к", "м"], "explanation": "Сло́во «рука́» почина́ється з лі́тери р."}, {"sentence": "Он со́___ок.", "answer": "р", "options": ["р", "к", "с"], "explanation": "Сло́во «со́рок» ма́є лі́теру р у дру́гому скла́ді."}, {"sentence": "У нас с___ла.", "answer": "и", "options": ["и", "у", "а"], "explanation": "Сло́во «си́ла» ма́є голосни́й звук [и]."}, {"sentence": "Он ___и́нок.", "answer": "р", "options": ["р", "к", "н"], "explanation": "Сло́во «ри́нок» почина́ється з лі́тери р."}, {"sentence": "Он ко___а́ сосни́.", "answer": "р", "options": ["р", "к", "м"], "explanation": "Сло́во «кора́» ма́є лі́теру р."}, {"sentence": "У нас с___ак.", "answer": "м", "options": ["м", "н", "р"], "explanation": "Сло́во «смак» ма́є сона́нт м."}]`)} instruction={"Обері́ть прави́льну лі́теру на мі́сці про́пуску ___ ."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Он ___ука́. — Over there is a hand / arm.", "answer": "р", "options": ["р", "к", "м"], "explanation": "Сло́во «рука́» (hand) почина́ється з лі́тери р. — The word «рука́» begins with the letter р."}, {"sentence": "Он со́___ок. — Over there is forty.", "answer": "р", "options": ["р", "к", "с"], "explanation": "Сло́во «со́рок» (forty) ма́є лі́теру р у дру́гому скла́ді. — The word «со́рок» has the letter р in the second syllable."}, {"sentence": "У нас с___ла. — We have strength.", "answer": "и", "options": ["и", "у", "а"], "explanation": "Сло́во «си́ла» (strength) ма́є лі́теру и. — The word «си́ла» has the letter и."}, {"sentence": "Он ___и́нок. — Over there is the market.", "answer": "р", "options": ["р", "к", "н"], "explanation": "Сло́во «ри́нок» (market) почина́ється з лі́тери р. — The word «ри́нок» begins with the letter р."}, {"sentence": "Он ко___а́ сосни́. — Over there is the bark of a pine tree.", "answer": "р", "options": ["р", "к", "м"], "explanation": "Сло́во «кора́» (bark) ма́є лі́теру р. — The word «кора́» has the letter р."}, {"sentence": "У нас с___ак. — We have taste.", "answer": "м", "options": ["м", "н", "р"], "explanation": "Сло́во «смак» (taste) ма́є лі́теру м. — The word «смак» has the letter м."}]`)} instruction={"Обері́ть прави́льну лі́теру на мі́сці про́пуску ___ . — Choose the correct letter for the blank ___ ."} isUkrainian={false} />
 
 ### Склади́ сло́во з лі́тер — Unjumble the word
 
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "р / а / к", "answer": "рак"}, {"jumbled": "м / а / к", "answer": "мак"}, {"jumbled": "к / р / а / н", "answer": "кран"}, {"jumbled": "с / и / н", "answer": "син"}, {"jumbled": "к / у / м", "answer": "кум"}, {"jumbled": "с / м / а / к", "answer": "смак"}]`)} instruction={"Поста́вте лі́тери в прави́льному поря́дку, щоб утвори́ти сло́во."} />
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "р / а / к", "answer": "рак", "hint": "рак — crayfish"}, {"jumbled": "м / а / к", "answer": "мак", "hint": "мак — poppy"}, {"jumbled": "к / р / а / н", "answer": "кран", "hint": "кран — crane / tap"}, {"jumbled": "с / и / н", "answer": "син", "hint": "син — son"}, {"jumbled": "к / у / м", "answer": "кум", "hint": "кум — godfather"}, {"jumbled": "с / м / а / к", "answer": "смак", "hint": "смак — taste"}]`)} instruction={"Поста́вте лі́тери в прави́льному поря́дку, щоб утвори́ти сло́во. — Arrange the letters in the correct order to form the word."} />
 
 </TabItem>
 <TabItem label="Ресурси — Resources">

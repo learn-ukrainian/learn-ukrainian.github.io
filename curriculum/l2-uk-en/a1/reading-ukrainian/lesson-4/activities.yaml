@@ -2,286 +2,292 @@ inline:
 - id: act-4
   type: error-correction
   title: "Па́стки чита́ння: Безпе́чні украї́нські зви́чки — Reading traps: Safer Ukrainian habits"
-  instruction: "Знайді́ть і ви́правте поми́лку в ко́жному ре́ченні."
+  instruction: "Знайді́ть і ви́правте поми́лку в ко́жному ре́ченні. — Find and fix the error in each sentence."
   items:
-  - sentence: "Он се́ло."
+  - sentence: "Он се́ло. — Over there is a village."
     error: "се́ло"
-    answer: "село́"
+    answer: "село́ (village)"
     options:
-    - "село́"
-    - "се́ло"
-    explanation: "У сло́ві «село́» на́голос па́дає на дру́гий склад: се-ло́."
-  - sentence: "Он наш дуп."
+    - "село́ (village)"
+    - "се́ло (misplaced stress)"
+    explanation: "У сло́ві «село́» на́голос па́дає на дру́гий склад: се-ло́. — In the word «село́» the stress falls on the second syllable: се-ло́."
+  - sentence: "Он наш дуп. — Over there is our oak."
     error: "дуп"
-    answer: "дуб"
+    answer: "дуб (oak)"
     options:
-    - "дуб"
-    - "дуп"
-    explanation: "В украї́нській мо́ві дзвінкі́ при́голосні в кінці́ слів не оглу́шуються: вимовля́ємо [дуб]."
-  - sentence: "Он ка́са."
+    - "дуб (oak)"
+    - "дуп (misspelled with voiceless п)"
+    explanation: "В украї́нській мо́ві кінце́ве «б» у сло́ві «дуб» звучи́ть як [б], а не [п]. — In Ukrainian, final «б» in «дуб» still sounds like «б», not «п»."
+  - sentence: "Он ка́са. — Over there is porridge."
     error: "ка́са"
-    answer: "ка́ша"
+    answer: "ка́ша (porridge)"
     options:
-    - "ка́ша"
-    - "ка́са"
-    explanation: "У сло́ві «ка́ша» (porridge) пи́шемо тверди́й шипля́чий звук [ш], а не [с]."
-  - sentence: "Он ха́та і дім."
+    - "ка́ша (porridge)"
+    - "ка́са (cash register / misspelled)"
+    explanation: "У сло́ві «ка́ша» (porridge) звучи́ть тверди́й звук [ш], а не [с]. — In «ка́ша» (porridge) we use the firm \"sh\" sound [ш], not [с]."
+  - sentence: "Он ха́та і дім. — Over there is a cottage and smoke."
     error: "дім"
-    answer: "дим"
+    answer: "дим (smoke)"
     options:
-    - "дим"
-    - "дім"
-    explanation: "«Ха́та і дим»: у сло́ві «дим» (smoke) вимовля́ємо чи́стий звук [и], а «дім» — це house."
-  - sentence: "При́віт! Он наш дім."
+    - "дим (smoke)"
+    - "дім (house)"
+    explanation: "«Ха́та і дим»: «дим» — це smoke з розсла́бленим [и], а «дім» — це house з посмі́хненим [і]. — «Ха́та і дим»: «дим» is smoke with relaxed \"ih\" [и], while «дім» is house with smiling \"ee\" [і]."
+  - sentence: "При́віт! Он наш дім. — Hi! Over there is our house."
     error: "При́віт"
-    answer: "Приві́т"
+    answer: "Приві́т (Hi!)"
     options:
-    - "Приві́т"
-    - "При́віт"
-    explanation: "У віта́нні «Приві́т!» на́голос па́дає на дру́гий склад (на лі́теру і): При-ві́т!"
-  - sentence: "Доброго́ ра́нку!"
+    - "Приві́т (Hi!)"
+    - "При́віт (misplaced stress)"
+    explanation: "У віта́нні «Приві́т!» на́голос па́дає на дру́гий склад: При-ві́т! — In the greeting «Приві́т!» the stress is on the second syllable: При-ві́т!"
+  - sentence: "Доброго́ ра́нку! — Good morning!"
     error: "Доброго́"
-    answer: "До́брого"
+    answer: "До́брого (Good)"
     options:
-    - "До́брого"
-    - "Доброго́"
-    explanation: "У сло́ві «До́брого» на́голос па́дає на пе́рший склад: До́б-ро-го."
+    - "До́брого (Good)"
+    - "Доброго́ (misplaced stress)"
+    explanation: "У сло́ві «До́брого» на́голос па́дає на пе́рший склад: До́б-ро-го. — In «До́брого» the stress is on the first syllable: До́б-ро-го."
 
 - id: act-231
   type: watch-and-repeat
   title: "Диві́ться та повто́рюйте: Бу́кви Е, З, Ж, Ш, Х — Watch and repeat: Letters Е, З, Ж, Ш, Х"
-  instruction: "Подиві́ться коро́тке ві́део про вимо́ву лі́тери (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос."
+  instruction: "Подиві́ться коро́тке ві́део про вимо́ву лі́тери (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос. — Watch a short video on pronouncing the letter (source: Anna Ohoiko, Ukrainian Lessons) and repeat aloud."
   items:
   - letter: Е
-    word: леле́ка
+    word: "леле́ка — stork"
     video: https://www.youtube.com/watch?v=KFlsroBW0dk
   - letter: З
-    word: зуб
+    word: "зуб — tooth"
     video: https://www.youtube.com/watch?v=BhASNxitC1A
   - letter: Ж
-    word: жа́ба
+    word: "жа́ба — frog"
     video: https://www.youtube.com/watch?v=dIrGVcqPwqM
   - letter: Ш
-    word: шко́ла
+    word: "шко́ла — school"
     video: https://www.youtube.com/watch?v=1D-6MIw3OXY
   - letter: Х
-    word: хліб
+    word: "хліб — bread"
     video: https://www.youtube.com/watch?v=vpr58zJSJKc
   - letter: С
-    word: село́
+    word: "село́ — village"
     video: https://www.youtube.com/watch?v=7UsFBgSL91E
 
 - id: act-232
   type: divide-words
   title: "Поділі́ть слова́ на склади́ — Divide words into syllables"
-  instruction: "Введі́ть сло́во, розділи́вши його́ на склади́ че́рез пробі́л."
+  instruction: "Введі́ть сло́во, розділи́вши його́ на склади́ (уда́ри сло́ва) че́рез пробі́л. — Enter the word divided into syllables with a space."
   items:
   - word: леле́ка
-    answer: ле ле́ ка
+    answer: "ле ле́ ка"
+    hint: "леле́ка — stork"
   - word: жа́ба
-    answer: жа́ ба
+    answer: "жа́ ба"
+    hint: "жа́ба — frog"
   - word: ка́ша
-    answer: ка́ ша
+    answer: "ка́ ша"
+    hint: "ка́ша — porridge"
   - word: ти́ша
-    answer: ти́ ша
+    answer: "ти́ ша"
+    hint: "ти́ша — quiet / silence"
   - word: ха́та
-    answer: ха́ та
+    answer: "ха́ та"
+    hint: "ха́та — house / cottage"
   - word: шко́ла
-    answer: шко́ ла
+    answer: "шко́ ла"
+    hint: "шко́ла — school"
 
 - id: act-233
   type: match-up
   title: "Зна́чення слів та віта́нь — Meanings of words and greetings"
-  instruction: "З'єдна́йте украї́нське сло́во або́ віта́ння з його́ перекла́дом."
+  instruction: "З'єдна́йте украї́нське сло́во або́ віта́ння з його́ перекла́дом. — Match the Ukrainian word or greeting with its translation."
   pairs:
   - left: "Приві́т!"
     right: "Hi! / Hello! (informal)"
   - left: "До́брого ра́нку!"
-    right: "Good morning!"
-  - left: ха́та
-    right: "house / cottage"
-  - left: шко́ла
-    right: school
-  - left: ка́ша
-    right: porridge
-  - left: хліб
-    right: bread
+    right: "Good morning! (universal morning greeting)"
+  - left: "ха́та"
+    right: "traditional house / cottage"
+  - left: "шко́ла"
+    right: "school"
+  - left: "ка́ша"
+    right: "porridge"
+  - left: "хліб"
+    right: "bread"
 
 workbook:
 - id: act-w4
   type: match-up
   title: "З'єдна́йте поня́ття та слова́ — Match concepts and words"
-  instruction: "З'єдна́йте украї́нське сло́во з відпові́дним опи́сом або́ перекла́дом."
+  instruction: "З'єдна́йте украї́нське сло́во з його́ перекла́дом. — Match the Ukrainian word with its translation."
   pairs:
-  - left: жа́ба
-    right: frog
-  - left: ти́ша
+  - left: "жа́ба"
+    right: "frog"
+  - left: "ти́ша"
     right: "silence / quiet"
-  - left: зуб
-    right: tooth
-  - left: село́
-    right: village
-  - left: мо́ре
-    right: sea
-  - left: не́бо
-    right: sky
+  - left: "зуб"
+    right: "tooth"
+  - left: "село́"
+    right: "village"
+  - left: "мо́ре"
+    right: "sea"
+  - left: "не́бо"
+    right: "sky"
 
 - id: act-w231
   type: quiz
   title: "Факти про бу́кви Е, З, Ж, Ш, Х — Facts about letters Е, З, Ж, Ш, Х"
-  instruction: "Обері́ть одну́ прави́льну ві́дповідь."
+  instruction: "Обері́ть одну́ прави́льну ві́дповідь. — Choose the one correct answer."
   items:
-  - prompt: "Яка́ особли́вість украї́нських шипля́чих Ж та Ш у слова́х цьо́го уро́ку?"
+  - prompt: "Яка́ особли́вість украї́нських зву́ків Ж та Ш у слова́х цьо́го уро́ку? — How are Ukrainian Ж and Ш pronounced in this lesson's words?"
     options:
-    - text: "Вони́ є тверди́ми пе́ред а, о, у, е, и"
+    - text: "Вони́ лиша́ються тверди́ми: «zh» і «sh» (не пом'я́кшуються) — They stay hard: “zh” and “sh” (do not go soft)"
       correct: true
-    - text: "Вони́ за́вжди м'які́"
+    - text: "Вони́ за́вжди м'які́ — They are always soft"
       correct: false
-    - text: "Вони́ вимовля́ються як голосні́"
+    - text: "Вони́ вимовля́ються як голосні́ — They are pronounced as vowels"
       correct: false
-    explanation: "У прикла́дах цьо́го уро́ку (жа́ба, ка́ша, ти́ша, шко́ла) шипля́чі [ж] та [ш] пе́ред голосними́ а, о, у, е, и вимовля́ються твердо́."
-  - prompt: "Скі́льки складів у сло́ві «Приві́т»?"
+    explanation: "У прикла́дах цьо́го уро́ку (жа́ба, ка́ша, ти́ша, шко́ла) ж і ш лиша́ються тверди́ми «zh» та «sh». — In this lesson's examples (жа́ба, ка́ша, ти́ша, шко́ла), ж and ш stay hard “zh” and “sh”."
+  - prompt: "Скі́льки складів (уда́рів) у сло́ві «Приві́т»? — How many syllables (beats) does «Приві́т» have?"
     options:
-    - text: "Два склади́: При-ві́т"
+    - text: "Два склади́: При-ві́т — Two beats / syllables: При-ві́т"
       correct: true
-    - text: "Оди́н склад"
+    - text: "Оди́н склад — One beat / syllable"
       correct: false
-    - text: "Три склади́"
+    - text: "Три склади́ — Three beats / syllables"
       correct: false
-    explanation: "У сло́ві «Приві́т» два голосни́х [и] та [і], то́му два склади́."
-  - prompt: "Як вимовля́ється кінце́вий звук у сло́ві «хліб»?"
+    explanation: "Раху́ємо голосні́: [и] та [і] — два голосни́х, отже́ два склади́ (уда́ри): При-ві́т. — Count the vowels: [и] and [і] — two vowels mean two beats (syllables): При-ві́т."
+  - prompt: "Як звучи́ть кінце́вий звук у сло́ві «хліб»? — How does the final sound in «хліб» sound?"
     options:
-    - text: "Дзвінко́ як [б], без оглу́шення"
+    - text: "Звучи́ть як [б], а не [п] — Sounds like [б], not [п]"
       correct: true
-    - text: "Глу́хо як [п]"
+    - text: "Звучи́ть глу́хо як [п] — Sounds voiceless like [п]"
       correct: false
-    - text: "Не вимовля́ється взага́лі"
+    - text: "Не вимовля́ється вза́галі — Is not pronounced at all"
       correct: false
-    explanation: "В украї́нській мо́ві дзвінкі́ при́голосні в кінці́ слів не оглу́шуються."
-  - prompt: "Скі́льки складів у сло́ві «леле́ка»?"
+    explanation: "Кінце́вий звук «б» у сло́ві «хліб» (як і в «дуб») звучи́ть чі́тко як [б], а не [п]. — Final «б» in «хліб» (just like in «дуб») still sounds like «б», not «п»."
+  - prompt: "Скі́льки складів у сло́ві «леле́ка»? — How many syllables (beats) does «леле́ка» have?"
     options:
-    - text: "Три склади́: ле-ле́-ка"
+    - text: "Три склади́: ле-ле́-ка — Three beats / syllables: ле-ле́-ка"
       correct: true
-    - text: "Два склади́"
+    - text: "Два склади́ — Two beats / syllables"
       correct: false
-    - text: "Чоти́ри склади́"
+    - text: "Чоти́ри склади́ — Four beats / syllables"
       correct: false
-    explanation: "У сло́ві три голосни́х зву́ки [е], [е], [а], отже́ три склади́."
-  - prompt: "Коли́ вжива́ється віта́ння «До́брого ра́нку!»?"
+    explanation: "Раху́ємо голосні́: е, е, а — три голосни́х, то́му три уда́ри (склади́). — Count the vowels: е, е, а — three vowels, so three beats (syllables)."
+  - prompt: "Коли́ вжива́ється віта́ння «До́брого ра́нку!»? — When is the greeting «До́брого ра́нку!» used?"
     options:
-    - text: "Ура́нці при зу́стрічі з будь-ки́м"
+    - text: "Ура́нці при зу́стрічі з будь-ки́м — In the morning when greeting anyone"
       correct: true
-    - text: "Лише́ уве́чері"
+    - text: "Лише́ уве́чері — Only in the evening"
       correct: false
-    - text: "Лише́ при проща́нні"
+    - text: "Лише́ при проща́нні — Only when saying goodbye"
       correct: false
-    explanation: "«До́брого ра́нку!» — це універса́льне ра́нішнє віта́ння."
-  - prompt: "Який звук познача́є бу́ква Х?"
+    explanation: "«До́брого ра́нку!» — це універса́льне ра́нішнє віта́ння. — «До́брого ра́нку!» is Ukraine's universal morning greeting."
+  - prompt: "Який звук познача́є бу́ква Х? — What sound does the letter Х represent?"
     options:
-    - text: "Глухи́й задньоязико́вий щіли́нний [x]"
+    - text: "М'яки́й глухи́й звук [х] (як у сло́ві Bach або loch) — Soft throat-hiss [x] (like in Bach or Scottish loch)"
       correct: true
-    - text: "Дзвінки́й проривни́й [g]"
+    - text: "Дзвінки́й звук [ґ] (як у сло́ві go) — Hard g sound [g] (like in go)"
       correct: false
-    - text: "Дрижа́чий сона́нт [r]"
+    - text: "Дрижа́чий звук [р] (як у сло́ві run) — Rolled sound [r]"
       correct: false
-    explanation: "Бу́ква Х познача́є глухи́й щіли́нний звук [x]."
+    explanation: "Бу́ква Х познача́є м'яки́й по́дих/горлови́й звук [х], як у шотла́ндському «loch» чи німе́цькому «Bach». — The letter Х represents a voiceless throat sound [x], like in Scottish «loch» or German «Bach»."
 
 - id: act-w232
   type: group-sort
   title: "Розподілі́ть слова́ за при́голосними зву́ками — Sort words by consonants"
-  instruction: "Розподілі́ть слова́ за катего́ріями при́голосних зву́ків."
+  instruction: "Розподілі́ть слова́ за катего́ріями при́голосних зву́ків. — Sort the words into categories of consonant sounds."
   groups:
-  - name: "Слова́ з тверди́ми шипля́чими Ж, Ш"
+  - name: "Тверді́ шипля́чі Ж, Ш — Firm “zh” and “sh”"
     items:
-    - жа́ба
-    - шко́ла
-    - ка́ша
-    - ти́ша
-  - name: "Слова́ зі зву́ком Х"
+    - "жа́ба (frog)"
+    - "шко́ла (school)"
+    - "ка́ша (porridge)"
+    - "ти́ша (quiet / silence)"
+  - name: "М'яки́й горлови́й по́дих Х — Soft throat-hiss Х"
     items:
-    - хліб
-    - ха́та
-  - name: "Слова́ зі зву́ком З"
+    - "хліб (bread)"
+    - "ха́та (cottage)"
+  - name: "Дзвінки́й свист З — Buzzing Z"
     items:
-    - зуб
-    - зеле́на
+    - "зуб (tooth)"
+    - "зеле́на (green)"
 
 - id: act-w233
   type: true-false
   title: "Пра́вда чи непра́вда: Зву́ки та віта́ння — True or False: Sounds and greetings"
-  instruction: "Ви́значте, чи є тве́рдження пра́вильним."
+  instruction: "Ви́значте, чи є тве́рдження пра́вильним. — Decide whether the statement is true or false."
   items:
-  - statement: "У слова́х «жа́ба», «ка́ша» та «ти́ша» шипля́чі [ж] та [ш] вимовля́ються твердо́."
+  - statement: "У слова́х «жа́ба», «ка́ша» та «ти́ша» бу́кви ж і ш лиша́ються тверди́ми: «zh» і «sh». — In «жа́ба», «ка́ша», and «ти́ша», letters ж and ш stay “zh” and “sh”."
     correct: true
-    explanation: "Пе́ред голосними́ [а], [о], [у], [е], [и] шипля́чі в прикла́дах цьо́го уро́ку є тверди́ми."
-  - statement: "Сло́во «Приві́т!» склада́ється з лі́тер, які́ вже ви́вчено в ку́рсі."
+    explanation: "Пра́вильно: пе́ред голосними́ [а], [и] шипля́чі зву́ки вимовля́ються твердо́. — Correct: ж and ш stay “zh” and “sh” before vowels like а, о, у, е, и."
+  - statement: "Сло́во «Приві́т!» склада́ється лише́ з лі́тер, які́ ви вже ви́вчили. — The word «Приві́т!» consists only of letters you have already learned."
     correct: true
-    explanation: "Усі лі́тери П, Р, И, В, І, Т успі́шно опано́вано."
-  - statement: "Голосни́й [е] після при́голосних вимовля́ється як [йе]."
+    explanation: "Пра́вильно: усі́ лі́тери П, Р, И, В, І, Т уже опано́вано. — Correct: all letters П, Р, И, В, І, Т have been learned."
+  - statement: "Украї́нський голосни́й [е] після при́голосних ма́є звук «й» (як [йе]). — Ukrainian vowel [е] after consonants has a “y” glide (like [ye])."
     correct: false
-    explanation: "В украї́нській мо́ві [е] чи́стий і відкри́тий, без [й]."
-  - statement: "Сло́во «хліб» ма́є два склади́."
+    explanation: "Непра́вильно: в украї́нській мо́ві [е] — чи́стий і відкри́тий звук без «й» (се-ло́, не́-бо). — False: in Ukrainian, [е] is a clean, open vowel with no “y”-glide (се-ло́, не́-бо)."
+  - statement: "Сло́во «хліб» ма́є два склади́ (два уда́ри). — The word «хліб» has two syllables (two beats)."
     correct: false
-    explanation: "У сло́ві «хліб» оди́н голосни́й [і], то́му оди́н склад."
-  - statement: "Бу́ква З є па́рою до глухо́го зву́ка С."
+    explanation: "Непра́вильно: у сло́ві «хліб» оди́н голосни́й [і], то́му оди́н склад (оди́н уда́р). — False: «хліб» has one vowel [і], so it has only one syllable (beat)."
+  - statement: "Бу́ква З є дзвінко́ю па́рою до глухо́го зву́ка С. — The letter З is the voiced partner of the voiceless sound С."
     correct: true
-    explanation: "З — дзвінки́й, С — глухи́й свистя́чий при́голосний."
-  - statement: "У сло́ві «село́» на́голос стої́ть на дру́гому скла́ді."
+    explanation: "Пра́вильно: З — дзвінки́й звук [z], а С — глухи́й звук [s]. — Correct: З is voiced [z], and С is voiceless [s]."
+  - statement: "У сло́ві «село́» на́голос стої́ть на дру́гому скла́ді (се-ло́). — In the word «село́» the stress is on the second syllable (се-ло́)."
     correct: true
-    explanation: "Пра́вильний на́голос — село́."
+    explanation: "Пра́вильно: на́голос па́дає на о: се-ло́. — Correct: the stress falls on о: се-ло́."
 
 - id: act-w234
   type: fill-in
   title: "Вста́вте пропу́щену лі́теру — Fill in the missing letter"
-  instruction: "Обері́ть прави́льну лі́теру на мі́сці про́пуску ___ ."
+  instruction: "Обері́ть прави́льну лі́теру на мі́сці про́пуску ___ . — Choose the correct letter to fill in the blank ___ ."
   items:
-  - sentence: "___риві́т!"
+  - sentence: "___риві́т! — Hi!"
     options:
     - П
     - Т
     - Б
     answer: П
-    explanation: "Сло́во «Приві́т» почина́ється з лі́тери П."
-  - sentence: "До́брого ___а́нку!"
+    explanation: "Віта́ння «Приві́т» почина́ється з лі́тери П: «Приві́т!». — The greeting «Приві́т» starts with the letter П: «Приві́т!»."
+  - sentence: "До́брого ___а́нку! — Good morning!"
     options:
     - р
     - к
     - с
     answer: р
-    explanation: "Сло́во «ра́нку» почина́ється з лі́тери р."
-  - sentence: "Он жа́___а."
+    explanation: "Сло́во «ра́нку» почина́ється з лі́тери р: «До́брого ра́нку!». — The word «ра́нку» starts with the letter р: «До́брого ра́нку!»."
+  - sentence: "Он жа́___а. — Over there is a frog."
     options:
     - б
     - п
     - в
     answer: б
-    explanation: "Сло́во «жа́ба» ма́є лі́теру б."
-  - sentence: "Он ка́___а."
+    explanation: "Сло́во «жа́ба» (frog) пи́шеться з лі́терою б. — The word «жа́ба» (frog) is spelled with the letter б."
+  - sentence: "Он ка́___а. — Over there is porridge."
     options:
     - ш
     - ж
     - с
     answer: ш
-    explanation: "Сло́во «ка́ша» ма́є шипля́чу лі́теру ш."
-  - sentence: "У нас х___іб."
+    explanation: "Сло́во «ка́ша» (porridge) ма́є звук ш: «ка́ша». — The word «ка́ша» (porridge) has the sound ш: «ка́ша»."
+  - sentence: "У нас х___іб. — We have bread."
     options:
     - л
     - м
     - н
     answer: л
-    explanation: "Сло́во «хліб» ма́є сона́нт л пе́ред і."
-  - sentence: "Он ха́___а."
+    explanation: "Сло́во «хліб» (bread) пи́шеться з лі́терою л: «хліб». — The word «хліб» (bread) is spelled with the letter л: «хліб»."
+  - sentence: "Он ха́___а. — Over there is a cottage."
     options:
     - т
     - п
     - к
     answer: т
-    explanation: "Сло́во «ха́та» ма́є глухи́й звук [т]."
+    explanation: "Сло́во «ха́та» (cottage) пи́шеться з лі́терою т: «ха́та». — The word «ха́та» (cottage) is spelled with the letter т: «ха́та»."
 
 - id: act-w235
   type: unjumble
   title: "Склади́ сло́во з лі́тер — Unjumble the word"
-  instruction: "Поста́вте лі́тери в прави́льному поря́дку, щоб утвори́ти сло́во."
+  instruction: "Поста́вте лі́тери в прави́льному поря́дку, щоб утвори́ти сло́во. — Arrange the letters in the correct order to form the word."
   items:
   - letters:
     - х
@@ -289,32 +295,38 @@ workbook:
     - і
     - б
     answer: хліб
+    hint: "хліб — bread"
   - letters:
     - ж
     - а
     - б
     - а
     answer: жаба
+    hint: "жа́ба — frog"
   - letters:
     - к
     - а
     - ш
     - а
     answer: каша
+    hint: "ка́ша — porridge"
   - letters:
     - х
     - а
     - т
     - а
     answer: хата
+    hint: "ха́та — house / cottage"
   - letters:
     - з
     - у
     - б
     answer: зуб
+    hint: "зуб — tooth"
   - letters:
     - т
     - и
     - ш
     - а
     answer: тиша
+    hint: "ти́ша — quiet / silence"

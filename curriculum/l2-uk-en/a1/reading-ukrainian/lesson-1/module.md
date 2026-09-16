@@ -1,15 +1,15 @@
-# Складопо́діл та бу́кви К, И, Р
+# Складопо́діл та бу́кви К, И, Р — Syllables and the Letters К, И, Р
 
 Ласка́во про́симо до дру́гого мо́дуля на́шого ку́рсу! — Welcome to the second module of our Ukrainian reading course! In Module 1, you met your first seven letters: the three core vowels **А**, **О**, **У** and the four reliable consonants **М**, **Л**, **С**, **Н**. You also learned that sounds join together to build syllables.
 
-In this lesson, you take an essential step in your reading journey. You will master three new letters: the relaxed front vowel **И** and the two energetic consonants **К** and **Р**. You will also learn the fundamental rule of Ukrainian syllables that every schoolchild in Ukraine discovers in first grade: how to count and divide syllables accurately without guessing.
+In this lesson, you take an essential step in your reading journey. You will master three new letters: the relaxed vowel **И** and the two energetic consonants **К** and **Р**. You will also learn the fundamental rule of Ukrainian syllables that every schoolchild in Ukraine discovers in first grade: count the **vowels** to find how many **beats** (склади́ / syllables) the word has.
 
 By the end of this 60-minute lesson, you will be able to:
 
-- **Застосо́вувати золоте́ пра́вило складопо́ділу** — apply the golden rule: count the vowels to determine the exact number of syllables;
-- **Використо́вувати кінестети́чний тест підборі́ддя** — use the hands-under-chin check to physically feel syllable pulses;
-- **Вимовля́ти чи́стий голосни́й [и]** — pronounce the Ukrainian vowel [и] cleanly without confusing it with other vowels;
-- **Розрізня́ти бу́кви К і Р** — articulate the voiceless stop [k] and the vibrant trill [r];
+- **Рахува́ти склади́ за голосни́ми** — count the **vowels**. That is how many **beats** (склади́ / syllables) the word has;
+- **Використо́вувати кінестети́чний тест підборі́ддя** — use the hands-under-chin check to physically feel the beats of the word;
+- **Вимовля́ти звук И** — hear and say **и** as a relaxed “ih”; **і** is “ee”. Pair: **дим / дім**;
+- **Розрізня́ти бу́кви К і Р** — articulate the crisp voiceless sound [k] and the vibrant trill [r];
 - **Вжива́ти те́рміни бу́ква та лі́тера** — understand that both **бу́ква** and **лі́тера** are standard Ukrainian terms for a written letter;
 - **Будува́ти та чита́ти складові́ ланцюжки́** — assemble consonant-vowel combinations into smooth reading chains;
 - **Чита́ти пе́рші повноці́нні слова́** — read real Ukrainian words such as **рука́**, **рак**, **со́рок**, **мак**, and **си́ла**.
@@ -18,19 +18,19 @@ By the end of this 60-minute lesson, you will be able to:
 
 ## Склади́: Що таке́ склад і як йо́го порахува́ти
 
-What is a syllable in Ukrainian? A syllable is called a **склад**. In Ukrainian phonetics, the syllable is the fundamental building block of reading. Unlike English, where spelling often hides silent letters or irregular vowel combinations, Ukrainian orthography is strictly phonetic.
+What is a syllable in Ukrainian? A syllable is called a **склад** — it is a single rhythmic **beat of the word**. In Ukrainian phonetics, syllables are the fundamental building blocks of reading. Unlike English, where spelling often hides silent letters or irregular vowel combinations, Ukrainian orthography is strictly phonetic.
 
-Every Ukrainian syllable is built around a single vowel sound. A consonant cannot form a syllable by itself. A vowel sound, on the other hand, can form an entire syllable all on its own.
+Count the **vowels**. That is how many **beats** (склади́ / syllables) the word has. A consonant cannot form a syllable by itself. A vowel sound, on the other hand, can form an entire syllable all on its own.
 
 In Ukrainian primary schools, children learn this immutable law on their very first day of reading instruction:
 
 > «У сло́ві сті́льки складі́в, скі́льки в ньо́му голосни́х зву́ків» (quoted from: Большако́ва, 1 клас, с. 25).
 >
-> "In a word there are as many syllables as there are vowel sounds in it."
+> "In a word there are as many syllables (beats) as there are vowel sounds in it."
 
-This rule is absolute. It has no exceptions in standard Ukrainian. If a word has one vowel sound, it has exactly one syllable. If it has two vowel sounds, it has exactly two syllables. If it has three vowel sounds, it has three syllables.
+This rule is absolute. It has no exceptions in standard Ukrainian. If a word has one vowel sound, it has exactly one syllable beat. If it has two vowel sounds, it has exactly two beats. If it has three vowel sounds, it has three beats.
 
-| Сло́во — Word | Голосні́ зву́ки — Vowel sounds | Кі́лькість складі́в — Syllables | Поді́л на склади́ — Syllable split |
+| Сло́во — Word | Голосні́ зву́ки — Vowel sounds | Кі́лькість складі́в — Syllables (beats) | Поді́л на склади́ — Syllable split |
 | --- | --- | --- | --- |
 | **рак** | [а] | 1 | **рак** |
 | **мак** | [а] | 1 | **мак** |
@@ -52,17 +52,19 @@ Each time your mouth opens to produce a resonant vowel sound, your lower jaw dro
 
 ---
 
-## Голосни́й звук [и] та бу́ква И
+## Голосна́ лі́тера И — Vowel Letter И
 
 In this lesson, we welcome our fourth Ukrainian vowel letter: **И**.
 
 In the Ukrainian alphabet, both terms — **бу́ква И** and **лі́тера И** — are completely standard and widely used by native speakers and educators alike. A **бу́ква** or **лі́тера** is the graphic mark on paper, whereas **звук** is what you articulate with your voice and perceive with your ears.
 
-The sound **[и]** is a relaxed, close-mid front vowel. To pronounce it authentically:
+To master this vowel from day one: **и** is a relaxed “ih”; **і** is “ee”. Minimal pair: **дим / дім** (smoke vs house).
+
+To pronounce **и** authentically:
 
 - Keep your lips unrounded and relaxed, parted slightly wider than for [і].
-- Your tongue sits in the middle-front part of your mouth, neither pulled back into the throat nor pushed high against the hard palate.
-- The voice sounds warm, relaxed, and open.
+- Your tongue sits comfortably in the middle-front of your mouth, neither pulled back into the throat nor pushed high against the hard palate.
+- The voice sounds warm, relaxed, and open (phonetically classified as a close-mid front vowel [ɪ]).
 
 :::important
 Do not confuse Ukrainian **[и]** with the heavy, retracted sound found in some other Slavic languages. In Ukrainian, **[и]** is pronounced in the front part of the mouth and sounds softer, lighter, and more open. It is also completely distinct from Ukrainian **[і]**, which is a high, smiling front vowel that softens the preceding consonant.
@@ -78,10 +80,10 @@ Listen to the authentic pronunciation demonstrated by Ukrainian educator Anna Oh
 
 Now let us meet two powerful consonant letters: **К** and **Р**.
 
-| Бу́ква — Letter | На́зва лі́тери — Name | Звук — Sound | Фонети́чна характери́стика — Phonetic nature |
+| Бу́ква — Letter | На́зва лі́тери — Name | Звук — Sound | Звуча́ння та о́пис — How it sounds |
 | --- | --- | --- | --- |
-| **К, к** | ка | **[k]** | Глухи́й задньоязико́вий проривни́й — Voiceless velar stop |
-| **Р, р** | ер | **[r]** | Дрижа́чий передньоязико́вий сона́нт — Alveolar trill sonorant |
+| **К, к** | ка | **[k]** | Глухи́й звук [k] (crisp k) — Voiceless velar stop |
+| **Р, р** | ер | **[r]** | Дрижа́чий звук [r] (rolled r) — Alveolar trill sonorant |
 
 The letter **К** represents a clean, crisp [k] sound made by pressing the back of your tongue against the soft palate and releasing it with a neat puff of air: **ка**, **ко**, **ку**, **ки**.
 

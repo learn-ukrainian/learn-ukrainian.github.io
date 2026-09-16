@@ -2,51 +2,63 @@ inline:
 - id: act-241
   type: count-syllables
   title: "Схо́динки чита́ння: Раху́йте склади́ — Syllable ladder: Count syllables"
-  instruction: "Пораху́йте голосні́ зву́ки у сло́ві. Кі́лькість голосни́х дорі́внює кі́лькості складі́в."
+  instruction: "Пораху́йте голосні́ зву́ки у сло́ві. Кі́лькість голосни́х дорі́внює кі́лькості складі́в (уда́рів). — Count the vowel sounds in the word. The number of vowels equals the number of beats (syllables)."
   maxCount: 5
   items:
   - word: дім
     correct: 1
+    translation: "house / home"
   - word: парк
     correct: 1
+    translation: "park"
   - word: та́то
     correct: 2
+    translation: "dad / father"
   - word: соба́ка
     correct: 3
+    translation: "dog"
   - word: апте́ка
     correct: 3
+    translation: "pharmacy"
   - word: університе́т
     correct: 5
+    translation: "university"
 
 - id: act-242
   type: divide-words
   title: "Поділі́ть слова́ на склади́ — Divide words into syllables"
-  instruction: "Введі́ть сло́во, розділи́вши його́ на склади́ че́рез пробі́л."
+  instruction: "Введі́ть сло́во, розділи́вши його́ на склади́ (уда́ри сло́ва) че́рез пробі́л. — Enter the word divided into syllables with a space."
   items:
   - word: Оде́са
-    answer: О де́ са
+    answer: "О де́ са"
+    hint: "Оде́са — Odesa (seaport city)"
   - word: Ха́рків
-    answer: Ха́р ків
+    answer: "Ха́р ків"
+    hint: "Ха́рків — Kharkiv (northeastern city)"
   - word: Дніпро́
-    answer: Дні про́
+    answer: "Дні про́"
+    hint: "Дніпро́ — Dnipro (central river city)"
   - word: Полта́ва
-    answer: Пол та́ ва
+    answer: "Пол та́ ва"
+    hint: "Полта́ва — Poltava (historic central city)"
   - word: апте́ка
-    answer: ап те́ ка
+    answer: "ап те́ ка"
+    hint: "апте́ка — pharmacy"
   - word: маши́на
-    answer: ма ши́ на
+    answer: "ма ши́ на"
+    hint: "маши́на — car / machine"
 
 - id: act-243
   type: order
   title: "Відтворі́ть пе́рший діало́г — Recreate the first dialogue"
-  instruction: "Розташу́йте ре́пліки діало́гу Марка́ та Окса́ни в прави́льному поря́дку."
+  instruction: "Розташу́йте ре́пліки діало́гу Марка́ та Окса́ни в прави́льному поря́дку. — Arrange the dialogue lines between Marko and Oksana in the correct order."
   items:
-  - "— До́брого ра́нку! Приві́т!"
-  - "— Приві́т!"
-  - "— Мене́ зва́ти Марко́. А тебе́?"
-  - "— Мене́ зва́ти Окса́на."
-  - "— Тут наш дім, а там парк і сад."
-  - "— На все до́бре!"
+  - "— До́брого ра́нку! Приві́т! — Good morning! Hi!"
+  - "— Приві́т! — Hi!"
+  - "— Мене́ зва́ти Марко́. А тебе́? — My name is Marko. And you?"
+  - "— Мене́ зва́ти Окса́на. — My name is Oksana."
+  - "— Тут наш дім, а там парк і сад. — Here is our house, and over there are the park and garden."
+  - "— На все до́бре! — All the best! / Goodbye!"
   correct_order:
   - 0
   - 1
@@ -58,7 +70,7 @@ inline:
 - id: act-244
   type: match-up
   title: "Мовленнє́ві фо́рмули — Conversational formulas"
-  instruction: "З'єдна́йте украї́нську мовленнє́ву фо́рмулу з її зна́ченням."
+  instruction: "З'єдна́йте украї́нську мовленнє́ву фо́рмулу з її зна́ченням. — Match the Ukrainian conversational formula with its meaning."
   pairs:
   - left: "Мене́ зва́ти..."
     right: "My name is..."
@@ -77,51 +89,51 @@ workbook:
 - id: act-w5
   type: watch-and-repeat
   title: "Підсумко́вий повто́р вимо́ви — Final pronunciation review"
-  instruction: "Подиві́ться коро́тке ві́део про вимо́ву лі́тери (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос."
+  instruction: "Подиві́ться коро́тке ві́део про вимо́ву лі́тери (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос. — Watch a short video on pronouncing the letter (source: Anna Ohoiko, Ukrainian Lessons) and repeat aloud."
   items:
   - letter: Д
-    word: дім
+    word: "дім — house / home"
     video: https://www.youtube.com/watch?v=g4Bh-lqzd48
   - letter: Г
-    word: гора́
+    word: "гора́ — mountain"
     video: https://www.youtube.com/watch?v=gVnclpSI0DU
   - letter: Х
-    word: хліб
+    word: "хліб — bread"
     video: https://www.youtube.com/watch?v=vpr58zJSJKc
   - letter: Ж
-    word: жа́ба
+    word: "жа́ба — frog"
     video: https://www.youtube.com/watch?v=dIrGVcqPwqM
   - letter: О
-    word: молоко́
+    word: "молоко́ — milk"
     video: https://www.youtube.com/watch?v=gJFxRIPRZbI
   - letter: П
-    word: Полта́ва
+    word: "Полта́ва — Poltava"
     video: https://www.youtube.com/watch?v=JksSjjxyW5Y
 
 - id: act-5
   type: quiz
   title: "Підсумко́ва переві́рка чита́ння — Final reading quiz"
-  instruction: "Обері́ть одну́ прави́льну ві́дповідь."
+  instruction: "Обері́ть одну́ прави́льну ві́дповідь. — Choose the one correct answer."
   items:
-  - prompt: "Скі́льки лі́тер опано́вано до кінця́ дру́гого мо́дуля?"
+  - prompt: "Скі́льки лі́тер опано́вано до кінця́ дру́гого мо́дуля? — How many letters have you mastered by the end of Module 2?"
     options:
-    - text: "23 лі́тери"
+    - text: "23 лі́тери — 23 letters"
       correct: true
-    - text: "33 лі́тери"
+    - text: "33 лі́тери — 33 letters"
       correct: false
-    - text: "10 лі́тер"
+    - text: "10 лі́тер — 10 letters"
       correct: false
-    explanation: "Опано́вано 6 голосних та 17 при́голосних — ра́зом 23 лі́тери."
-  - prompt: "Скі́льки складів у сло́ві «університе́т»?"
+    explanation: "Опано́вано 6 голосних та 17 при́голосних — ра́зом 23 лі́тери. — You have mastered 6 vowels and 17 consonants — 23 letters in total."
+  - prompt: "Скі́льки складів (уда́рів) у сло́ві «університе́т»? — How many syllables (beats) does «університе́т» have?"
     options:
-    - text: "П'ять складів: у-ні-вер-си-те́т"
+    - text: "П'ять складів: у-ні-вер-си-те́т — Five beats: у-ні-вер-си-те́т"
       correct: true
-    - text: "Чоти́ри склади́"
+    - text: "Чоти́ри склади́ — Four beats"
       correct: false
-    - text: "Шість складів"
+    - text: "Шість складів — Six beats"
       correct: false
-    explanation: "У сло́ві п'ять голосних зву́ків, отже́ п'ять складів."
-  - prompt: "Що означа́є фра́за «Мене́ зва́ти Марко́»?"
+    explanation: "Раху́ємо голосні́: у, і, е, и, е — 5 голосних, отже́ 5 складів (уда́рів). — Count the vowels: у, і, е, и, е — 5 vowels mean 5 beats (syllables)."
+  - prompt: "Що означа́є фра́за «Мене́ зва́ти Марко́»? — What does the phrase «Мене́ зва́ти Марко́» mean?"
     options:
     - text: "My name is Marko"
       correct: true
@@ -129,141 +141,141 @@ workbook:
       correct: false
     - text: "Marko is at home"
       correct: false
-    explanation: "«Мене́ зва́ти...» — це станда́ртна фо́рмула знайо́мства."
-  - prompt: "Яка́ фра́за є вві́чливим побажа́нням при проща́нні?"
+    explanation: "«Мене́ зва́ти...» — це станда́ртна фо́рмула знайо́мства. — «Мене́ зва́ти...» is the standard formula for introducing yourself."
+  - prompt: "Яка́ фра́за є вві́чливим побажа́нням при проща́нні? — Which phrase is a polite farewell wish?"
     options:
-    - text: "На все до́бре!"
+    - text: "На все до́бре! — All the best! / Goodbye!"
       correct: true
-    - text: "Приві́т!"
+    - text: "Приві́т! — Hi!"
       correct: false
-    - text: "До́брого ра́нку!"
+    - text: "До́брого ра́нку! — Good morning!"
       correct: false
-    explanation: "«На все до́бре!» вжива́ється при проща́нні."
-  - prompt: "Скі́льки складів у на́зві мі́ста «Оде́са»?"
+    explanation: "«На все до́бре!» вжива́ється при проща́нні. — «На все до́бре!» is used when parting as a polite goodbye."
+  - prompt: "Скі́льки складів (уда́рів) у на́зві мі́ста «Оде́са»? — How many syllables (beats) does the city name «Оде́са» have?"
     options:
-    - text: "Три склади́: О-де́-са"
+    - text: "Три склади́: О-де́-са — Three beats: О-де́-са"
       correct: true
-    - text: "Два склади́"
+    - text: "Два склади́ — Two beats"
       correct: false
-    - text: "Оди́н склад"
+    - text: "Оди́н склад — One beat"
       correct: false
-    explanation: "У сло́ві «Оде́са» три голосни́х [о], [е], [а], то́му три склади́."
-  - prompt: "Як пра́вильно поділи́ти на склади́ сло́во «апте́ка»?"
+    explanation: "У сло́ві «Оде́са» три голосни́х [о], [е], [а], то́му три склади́ (уда́ри). — «Оде́са» has three vowels [о], [е], [а], so it has three beats."
+  - prompt: "Як пра́вильно поділи́ти на склади́ сло́во «апте́ка»? — How is the word «апте́ка» correctly divided into syllables?"
     options:
-    - text: "ап-те́-ка"
+    - text: "ап-те́-ка — ap-te-ka"
       correct: true
-    - text: "а-пте-ка"
+    - text: "а-пте-ка — a-pte-ka"
       correct: false
-    - text: "апт-е-ка"
+    - text: "апт-е-ка — apt-e-ka"
       correct: false
-    explanation: "Сло́во «апте́ка» ді́литься на склади́ як ап-те́-ка."
+    explanation: "Сло́во «апте́ка» ді́литься на склади́ як ап-те́-ка (3 склади́). — The word «апте́ка» divides as ап-те́-ка (3 syllables)."
 
 - id: act-w241
   type: group-sort
   title: "Схо́динки складі́в — Syllable steps"
-  instruction: "Розподілі́ть слова́ за кі́лькістю складів."
+  instruction: "Розподілі́ть слова́ за кі́лькістю складів (уда́рів). — Sort words by the number of syllables (beats)."
   groups:
-  - name: "Оди́н склад"
+  - name: "Оди́н склад (1 beat)"
     items:
-    - дім
-    - ліс
-    - хліб
-    - сад
-    - сон
-    - парк
-  - name: "Два склади́"
+    - "дім (house)"
+    - "ліс (forest)"
+    - "хліб (bread)"
+    - "сад (garden)"
+    - "сон (dream)"
+    - "парк (park)"
+  - name: "Два склади́ (2 beats)"
     items:
-    - ма́ма
-    - та́то
-    - вода́
-    - рука́
-    - ха́та
-    - ка́ша
-  - name: "Три склади́"
+    - "ма́ма (mom)"
+    - "та́то (dad)"
+    - "вода́ (water)"
+    - "рука́ (hand)"
+    - "ха́та (cottage)"
+    - "ка́ша (porridge)"
+  - name: "Три склади́ (3 beats)"
     items:
-    - апте́ка
-    - молоко́
-    - соба́ка
-    - маши́на
-    - Оде́са
-    - Полта́ва
+    - "апте́ка (pharmacy)"
+    - "молоко́ (milk)"
+    - "соба́ка (dog)"
+    - "маши́на (car)"
+    - "Оде́са (Odesa)"
+    - "Полта́ва (Poltava)"
 
 - id: act-w242
   type: true-false
   title: "Пра́вда чи непра́вда: Підсу́мок чита́ння — True or False: Reading summary"
-  instruction: "Ви́значте, чи є тве́рдження пра́вильним."
+  instruction: "Ви́значте, чи є тве́рдження пра́вильним. — Decide whether the statement is true or false."
   items:
-  - statement: "У сло́ві «Оде́са» на́голос стої́ть на дру́гому скла́ді."
+  - statement: "У сло́ві «Оде́са» на́голос стої́ть на дру́гому скла́ді (О-де́-са). — In «Оде́са», the stress is on the second syllable (О-де́-са)."
     correct: true
-    explanation: "Пра́вильний на́голос — Оде́са."
-  - statement: "Сло́во «Ха́рків» ма́є два склади́."
+    explanation: "Пра́вильно: на́голос па́дає на е: О-де́-са. — Correct: the stress falls on е: О-де́-са."
+  - statement: "Сло́во «Ха́рків» ма́є два склади́ (два уда́ри). — The word «Ха́рків» has two syllables (two beats)."
     correct: true
-    explanation: "У сло́ві «Ха́рків» два голосни́х [а] та [і], отже́ два склади́."
-  - statement: "Фра́за «А тебе́?» вжива́ється, щоб дізна́тися ім'я́ співрозмо́вника."
+    explanation: "Пра́вильно: у сло́ві два голосни́х [а] та [і], отже́ два склади́. — Correct: the word has two vowels [а] and [і], so two beats."
+  - statement: "Фра́за «А тебе́?» означа́є «And you?». — The phrase «А тебе́?» means «And you?»."
     correct: true
-    explanation: "Це реципро́кне запита́ння: «And you?»."
-  - statement: "У сло́ві «хліб» кінце́вий звук [б] оглу́шується на [п]."
+    explanation: "Пра́вильно: «А тебе́?» — це зворотне запита́ння про ім'я́. — Correct: «А тебе́?» is the reciprocal question «And you?»."
+  - statement: "У сло́ві «хліб» кінце́вий звук звучи́ть як [п], а не [б]. — In the word «хліб» the final sound sounds like [п], not [б]."
     correct: false
-    explanation: "В украї́нській мо́ві дзвінкі́ при́голосні в кінці́ слів не оглу́шуються."
-  - statement: "У сло́ві «університе́т» п'ять складів."
+    explanation: "Непра́вильно: кінце́ве «б» у сло́ві «хліб» (як і в «дуб») до́сі звучи́ть чі́тко як [б], а не [п]. — False: final «б» in «хліб» (just like in «дуб») still sounds like «б», not [п]."
+  - statement: "У сло́ві «університе́т» п'ять складів (п'ять уда́рів). — The word «університе́т» has five syllables (five beats)."
     correct: true
-    explanation: "У сло́ві п'ять голосних зву́ків, то́му п'ять складів."
-  - statement: "Слова́ «бу́ква» та «лі́тера» познача́ють одне́ й те са́ме."
+    explanation: "Пра́вильно: у сло́ві 5 голосних (у, і, е, и, е), то́му 5 складів. — Correct: the word has 5 vowels, so 5 syllables."
+  - statement: "Слова́ «бу́ква» та «лі́тера» познача́ють одне́ й те са́ме (letter). — The words «бу́ква» and «лі́тера» both mean letter."
     correct: true
-    explanation: "Це то́чні сино́німи в украї́нській мо́ві."
+    explanation: "Пра́вильно: це то́чні сино́німи в украї́нській мо́ві. — Correct: they are exact synonyms in Ukrainian."
 
 - id: act-w243
   type: fill-in
   title: "Вста́вте пропу́щену лі́теру у фо́рмулах — Fill in the missing letter in formulas"
-  instruction: "Обері́ть прави́льну лі́теру на мі́сці про́пуску ___ ."
+  instruction: "Обері́ть прави́льну лі́теру на мі́сці про́пуску ___ . — Choose the correct letter to fill in the blank ___ ."
   items:
-  - sentence: "Мене́ ___ва́ти Марко́."
+  - sentence: "Мене́ ___ва́ти Марко́. — My name is Marko."
     options:
     - з
     - с
     - д
     answer: з
-    explanation: "Сло́во «зва́ти» пи́шеться з лі́терою з."
-  - sentence: "А ___ебе́?"
+    explanation: "Сло́во «зва́ти» пи́шеться з лі́терою з: «Мене́ зва́ти Марко́». — The word «зва́ти» is spelled with the letter з: «Мене́ зва́ти Марко́»."
+  - sentence: "А ___ебе́? — And you?"
     options:
     - т
     - д
     - п
     answer: т
-    explanation: "Сло́во «тебе́» почина́ється з лі́тери т."
-  - sentence: "На ___се до́бре!"
+    explanation: "Сло́во «тебе́» почина́ється з лі́тери т: «А тебе́?». — The word «тебе́» starts with the letter т: «А тебе́?»."
+  - sentence: "На ___се до́бре! — All the best! / Goodbye!"
     options:
     - в
     - б
     - с
     answer: в
-    explanation: "Сло́во «все» почина́ється з лі́тери в."
-  - sentence: "Тут наш ___."
+    explanation: "Сло́во «все» почина́ється з лі́тери в: «На все до́бре!». — The word «все» starts with the letter в: «На все до́бре!»."
+  - sentence: "Тут наш ___ . — Here is our house."
     options:
     - дім
     - сад
     - парк
     answer: дім
-    explanation: "У ре́пліці Марка́ вжива́ється сло́во «дім»."
-  - sentence: "До́брого ___а́нку!"
+    explanation: "У ре́пліці Марка́ вжива́ється сло́во «дім» (house): «Тут наш дім...». — In Marko's line the word «дім» (house) is used."
+  - sentence: "До́брого ___а́нку! — Good morning!"
     options:
     - р
     - к
     - с
     answer: р
-    explanation: "Сло́во «ра́нку» почина́ється з лі́тери р."
-  - sentence: "Все ___бре."
+    explanation: "Сло́во «ра́нку» почина́ється з лі́тери р: «До́брого ра́нку!». — The word «ра́нку» starts with the letter р: «До́брого ра́нку!»."
+  - sentence: "Все ___бре. — Everything is good."
     options:
     - до́
     - да́
     - де́
     answer: до́
-    explanation: "Сло́во «до́бре» почина́ється зі скла́ду до́."
+    explanation: "Сло́во «до́бре» почина́ється зі скла́ду до́: «Все до́бре». — The word «до́бре» starts with the syllable до́: «Все до́бре»."
 
 - id: act-w244
   type: unjumble
   title: "Склади́ сло́во з лі́тер — Unjumble the word"
-  instruction: "Поста́вте лі́тери в прави́льному поря́дку, щоб утвори́ти сло́во."
+  instruction: "Поста́вте лі́тери в прави́льному поря́дку, щоб утвори́ти сло́во. — Arrange the letters in the correct order to form the word."
   items:
   - letters:
     - д
@@ -272,6 +284,7 @@ workbook:
     - р
     - е
     answer: добре
+    hint: "до́бре — fine / good"
   - letters:
     - з
     - в
@@ -279,18 +292,21 @@ workbook:
     - т
     - и
     answer: звати
+    hint: "зва́ти — to call / to be named"
   - letters:
     - м
     - е
     - н
     - е
     answer: мене
+    hint: "мене́ — me"
   - letters:
     - т
     - е
     - б
     - е
     answer: тебе
+    hint: "тебе́ — you"
   - letters:
     - м
     - а
@@ -298,6 +314,7 @@ workbook:
     - к
     - о
     answer: марко
+    hint: "Марко́ — Marko (name)"
   - letters:
     - о
     - к
@@ -306,3 +323,4 @@ workbook:
     - н
     - а
     answer: оксана
+    hint: "Окса́на — Oksana (name)"
