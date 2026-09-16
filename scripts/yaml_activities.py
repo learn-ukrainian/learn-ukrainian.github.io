@@ -141,6 +141,7 @@ class GroupSortActivity:
 class UnjumbleItem:
     words: list[str]
     answer: str
+    hint: str | None = None
 
 
 @dataclass
@@ -923,7 +924,8 @@ class ActivityParser:
                     answer = str(correct_order)
             if answer is None:
                 raise KeyError(f"unjumble item {item_index} missing one of: answer, correct_order")
-            items.append(UnjumbleItem(words=words, answer=answer))
+            hint = item_data.get('hint')
+            items.append(UnjumbleItem(words=words, answer=answer, hint=hint))
         return UnjumbleActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
 
     def _unjumble_words(self, item_data: dict, item_index: int) -> list[str]:
@@ -1927,7 +1929,12 @@ class ActivityParser:
 
     def _unjumble_to_mdx(self, activity: UnjumbleActivity) -> str:
         heading = activity.title or 'Unjumble'
-        items = [{'jumbled': ' / '.join(str(w) for w in i.words), 'answer': str(i.answer)} for i in activity.items]
+        items = []
+        for i in activity.items:
+            item = {'jumbled': ' / '.join(str(w) for w in i.words), 'answer': str(i.answer)}
+            if i.hint:
+                item['hint'] = str(i.hint)
+            items.append(item)
         return f"### {self._escape_jsx(heading)}\n\n<Unjumble client:only='react' items={{JSON.parse(`{self._dump_safe_json(items)}`)}}{self._instruction_prop(activity.instruction)} />"
 
     def _error_correction_to_mdx(self, activity: ErrorCorrectionActivity, is_ukrainian_forced: bool = False) -> str:

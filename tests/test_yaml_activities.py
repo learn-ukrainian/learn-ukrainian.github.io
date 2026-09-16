@@ -793,6 +793,37 @@ class TestUnjumbleParsing:
         assert "Я / вранці / читаю" in mdx
         assert "Я читаю вранці" in mdx
 
+    def test_parse_unjumble_hint_round_trips_to_mdx(self, parser, tmp_path):
+        yaml_file = tmp_path / "unjumble_hint.yaml"
+        yaml_file.write_text(
+            "- id: act-306\n"
+            "  type: unjumble\n"
+            "  title: Складіть речення\n"
+            "  items:\n"
+            "    - jumbled: [сон]\n"
+            "      answer: сон\n"
+            "      hint: сон — dream\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert activities[0].items[0].hint == "сон — dream"
+        mdx = parser.to_mdx(activities)
+        assert "сон — dream" in mdx
+
+    def test_parse_unjumble_without_hint_omits_hint_key(self, parser, tmp_path):
+        yaml_file = tmp_path / "unjumble_no_hint.yaml"
+        yaml_file.write_text(
+            "- id: act-406\n"
+            "  type: unjumble\n"
+            "  title: Складіть речення\n"
+            "  items:\n"
+            "    - jumbled: [я, читаю]\n"
+            "      answer: я читаю\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert activities[0].items[0].hint is None
+        mdx = parser.to_mdx(activities)
+        assert '"hint"' not in mdx
+
     def test_parse_unjumble_bad_shape_raises_with_context(self, parser, tmp_path):
         yaml_file = tmp_path / "unjumble_bad.yaml"
         yaml_file.write_text(
