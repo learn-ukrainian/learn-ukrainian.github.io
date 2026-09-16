@@ -1053,7 +1053,7 @@ def compute_sha256(path: Path) -> str:
 def get_git_commit(repo_root: Path) -> str:
     """Resolve current git commit SHA."""
     try:
-        return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo_root, text=True).strip()
+        return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo_root, text=True, timeout=30).strip()
     except Exception:
         return "unknown"
 
