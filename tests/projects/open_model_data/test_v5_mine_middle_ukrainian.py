@@ -666,6 +666,14 @@ def test_regression_velychkovsky_and_mytsyk_commentary_excluded() -> None:
         "написання ор замість ръ — ωскорблАю (298)",
         "написання ор замість ръ",
         "ωскорблАю",
+        "фоліантъ въ нЂсколько сотъ страницъ и врядъ ли скоро дождется изданія",
+        "фоліантъ въ нЂсколько сотъ страницъ",
+        "врядъ ли скоро дождется изданія",
+        "рукою автора: ба́вити(с), уточнεння до слова «хотЂти», на що вказують",
+        "рукою автора: ба́вити",
+        "уточнεння до слова «хотЂти»",
+        "червоним чорнилом: ω дню́ пя(т)нично(м) іщи ли(ст) р̃па",
+        "червоним чорнилом",
     ]
 
     eval_rows = []
@@ -683,7 +691,10 @@ def test_regression_velychkovsky_and_mytsyk_commentary_excluded() -> None:
                 "1b7685d5_c0077",
                 "1b7685d5_c0078",
                 "5f2476e8_c0004",
+                "c07247b6_c0593",
                 "c07247b6_c0594",
+                "c07247b6_c0743",
+                "c07247b6_c0744",
                 "6e771b02_c0000",
                 "065fed7f_c0030",
             )
@@ -742,8 +753,9 @@ def test_source_boundaries_and_work_exclusions() -> None:
         for c in k_chunks:
             num = int(c.chunk_id.split("_c")[-1])
             assert num > 16, f"Lazarevsky intro chunk admitted: {c.chunk_id}"
-            assert not (594 <= num <= 606), f"Khanenko 19th c. correspondence chunk admitted: {c.chunk_id}"
+            assert not (593 <= num <= 606), f"Khanenko 19th c. correspondence chunk admitted: {c.chunk_id}"
             assert not (635 <= num <= 647), f"Bodyansky preface chunk admitted: {c.chunk_id}"
+            assert not (743 <= num <= 744), f"Lazarevsky journal intro chunk admitted: {c.chunk_id}"
             assert not re.match(r"^\s*\d+\)\s+", c.text), f"Footnote chunk admitted: {c.chunk_id}"
 
         for c in chunks:

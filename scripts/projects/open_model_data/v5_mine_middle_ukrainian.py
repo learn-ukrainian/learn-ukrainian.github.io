@@ -219,7 +219,10 @@ RUSSIAN_EDITORIAL_RE = re.compile(
     r"рукописи,\s+съ\s+которой|этотъ\s+памятникъ|предисловія\s+къ\s+этому|дневнику\s+г\.\s+лазаревскій|"
     r"въ\s+числЂ\s+бумагъ|найдены\s+нами|пріобрЂтенныхъ|современномъ\s+спискЂ|настоящія\s+лЂтописныя|"
     r"печатаемый\s+дневникъ|заключая\s+въ\s+себЂ|печатаемый\s+ниже\s+переводъ|переводъ\s+дневника|"
-    r"сдЂланъ\s+былъ\s+еще|въ\s+30-хъ\s+годахъ)",
+    r"сдЂланъ\s+былъ\s+еще|въ\s+30-хъ\s+годахъ|"
+    r"фоліантъ\s+въ|врядъ\s+ли\s+скоро|дождется\s+изданія|діаріушЂ\s+помЂщены|"
+    r"а\.\s*лазаревскій|лазаревскій|бодянскій|титовъ\b|"
+    r"общее\s+заглавіе|имЂетъ\s+вся\s+рукопись)",
     re.IGNORECASE,
 )
 
@@ -327,7 +330,7 @@ def clean_text_diplomatic(text: str) -> str:
     )
     # Strip footnote paragraphs and editorial apparatus blocks
     t = re.sub(
-        r"(?ms)^\s*\d+[\s\.\)]+(?:Починаючи|Попередньо|На\s+арк\.|Поряд|Унизу|У\s+рукопису|"
+        r"(?ms)^\s*\d+[\s\.\)]+(?:З\s+(?:лівого|правого|обох)\s+бок\w*|Напроти|Навпроти|Починаючи|Попередньо|На\s+арк\.|Поряд|Унизу|У\s+рукопису|"
         r"Тут|Так|Слово|Первісно|Дописано|В\s+оригіналі|Пропущено|Закреслено|У\s+списку|Далі|"
         r"Вписано|Переправлено|Сія\s+книжица|Акти|Село|Указом|Черниговскаго|Стародубскій|"
         r"Збоку|Зверху|Квадратні\s+дужки|Круглі\s+дужки|Кінець\s+приповістк|Ледь\s+помітн|"
@@ -340,7 +343,15 @@ def clean_text_diplomatic(text: str) -> str:
         r"Від\s+цієї|Відділ\s+рукописів|Вірш\s+без\s+початку|Вірш\s+написано|Друга\s+частина|"
         r"Другу\s+приповістку|Дуже\s+важко|Дужки|У\s+сп\.|У\s+вид\.|У\s+праці|Там\s+же|Помилково|"
         r"Очевидно|Має\s+бути|Написання|Слова|По\s+ПВЛ|У\s+тексті|В\s+с\.\s*сп\.|У\s+с\.\s*сп\.|"
+        r"Уточнення|Приписк\w*|Вказівк\w*|Відповідні\s+значки|"
         r"Следует|Следуетъ|Прилож\.|Сборн\.).*?(?=\n\s*\n|\Z)",
+        " ",
+        t,
+    )
+    # Strip unnumbered editorial apparatus paragraphs
+    t = re.sub(
+        r"(?ms)^\s*(?:З\s+(?:лівого|правого|обох)\s+бок\w*|Напроти\s+останньої|В\.\s*Перетц|Перетц\b|"
+        r"Почерк\s+автора|Уточнення\s+до\s+слова|Відповідні\s+значки|Кількарядкові\s+приписки).*?(?=\n\s*\n|\Z)",
         " ",
         t,
     )
@@ -384,7 +395,14 @@ def is_clean_historical_sentence(sent: str) -> bool:
         r"написання\s+\w+\s+замість|переходу\s+\w+\s+в\s+\w+|поплутання|артикуляці\w*|"
         r"риси\s+живої|асимілятивн\w*|дисимілятивн\w*|суфікс\w*|словотвор\w*|"
         r"чергуванн\w*|фонетичн\w*|морфологічн\w*|семантичн\w*|діалектн\w*|"
-        r"пам’ятк\w*\s+мови|писемност\w*|рукописн\w*\s+книг\w*)",
+        r"пам’ятк\w*\s+мови|писемност\w*|рукописн\w*\s+книг\w*|"
+        r"рукою\s+автора|почерк\s+автора|почерком\s+автора|уточнен\w*\s+до\s+слова|"
+        r"на\s+що\s+вказують|значки,\s+зроблені|червоним\s+чорнилом|блідим\s+чорнилом|"
+        r"чорнилом|на\s+полі\s+проти|з\s+(?:правого|лівого|обох)\s+бок\w*|на\s+полі\s+рукою|"
+        r"квадратні\s+дужки|круглі\s+дужки|стоять\s+у\s+рукопису|перетц\b|"
+        r"напроти\s+останньої|приписк\w*\s+рукою|будемо\s+подавати|"
+        r"фоліантъ|дождется\s+изданія|лазаревск\w*|бодянск\w*|титов\w*|"
+        r"киевск\w*\s+старин\w*|чтені\w*\s+въ\s+историческомъ|обществЂ\s+нестора)",
         sent,
         re.IGNORECASE,
     ):
@@ -540,13 +558,19 @@ def load_middle_ukrainian_chunks(sources_db: Path) -> list[MiddleUkrainianChunk]
                 pass
 
         # In shchodennyk_mykoly_khanenka_1719_1754, chunks 0 to 16 are O. Lazarevsky's
-        # 1884 introductory study, chunks 594 to 606 are 1847-1848 editorial correspondence
-        # and Lazarevsky preface note, chunks 635 to 647 are O. Bodyansky's 1858 preface,
+        # 1884 introductory study, chunks 593 to 606 are 1847-1848 editorial correspondence,
+        # Titov's 1896 preface, and Lazarevsky note, chunks 635 to 647 are O. Bodyansky's 1858 preface,
+        # chunks 743 to 744 are Lazarevsky's 1884/1898 introductory notes to the Chancery Journal,
         # and standalone footnote chunks start with digits and a closing parenthesis.
         if work_id == "shchodennyk_mykoly_khanenka_1719_1754":
             try:
                 chunk_num = int(chunk_id.split("_c")[-1])
-                if chunk_num <= 16 or (594 <= chunk_num <= 606) or (635 <= chunk_num <= 647):
+                if (
+                    chunk_num <= 16
+                    or (593 <= chunk_num <= 606)
+                    or (635 <= chunk_num <= 647)
+                    or (743 <= chunk_num <= 744)
+                ):
                     continue
             except Exception:
                 pass
@@ -707,9 +731,7 @@ def load_middle_ukrainian_chunks(sources_db: Path) -> list[MiddleUkrainianChunk]
             continue
 
         stratum, comp_date, ms_date = classify_stratum(work_id, year)
-        is_arch = any(c in clean_t for c in "ѣъωξѱѳѵєы") or bool(
-            MIDDLE_UKRAINIAN_LEXICAL_RE.search(clean_t)
-        )
+        is_arch = any(c in clean_t for c in "ѣъωξѱѳѵєы") or bool(MIDDLE_UKRAINIAN_LEXICAL_RE.search(clean_t))
 
         chunks.append(
             MiddleUkrainianChunk(

@@ -2,8 +2,8 @@
   "schema_version": "v1_middle_ukrainian_release_receipt",
   "issue": 8105,
   "parent_epic": 6321,
-  "created_at": "2026-09-16T23:24:58.379016+00:00",
-  "git_commit": "6054e09a58395909d368625588a81c477f7290ec",
+  "created_at": "2026-09-16T23:39:20.586414+00:00",
+  "git_commit": "817aab945751d86a9b23343497cae195ba32fc82",
   "evaluation_benchmark": {
     "file_path": "data/projects/open_model_data/release/uldr_v04b_middle_ukrainian/middle_ukrainian_eval.jsonl",
     "sha256": "bc3f263ea5e9708bbe44ffaeb5dbdea838687be17a749e7149f49a0e006cd871",
@@ -27,15 +27,15 @@
   "sft_training_dataset": {
     "directory_path": "data/projects/open_model_data/release/uldr_v04b_middle_ukrainian/sft",
     "manifest_file": "manifest.json",
-    "manifest_sha256": "c6117bdeed422a2b6e2e4ea9e396fef5dcb25f3201642d21c098605bd1f1ad74",
+    "manifest_sha256": "9e7036c78923b7597960f524d17b37b642e519d8fb58d81dc25a8c0903b39d6a",
     "shards_count": 30,
     "total_trajectories": 10000,
-    "max_shard_size_kb": 1298.83,
+    "max_shard_size_kb": 1299.52,
     "strata_trajectories": {
       "early_ruthenian_chancery": 0,
-      "renaissance_polemical": 1809,
-      "high_cossack_baroque": 6234,
-      "transitional_pre_modern": 1757,
+      "renaissance_polemical": 1752,
+      "high_cossack_baroque": 6231,
+      "transitional_pre_modern": 1817,
       "modern_literary_replay": 200
     },
     "replay_buffer_size": 200
