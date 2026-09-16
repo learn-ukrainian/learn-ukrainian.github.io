@@ -2,13 +2,13 @@
 
 Ласка́во про́симо до четве́ртого уро́ку! — Welcome to the fourth lesson! Over the first three lessons, you mastered 18 letters (**А, О, У, М, Л, С, Н, К, И, Р, Б, В, Д, І, П, Т, Г, Ґ**) and learned to decode words smoothly by counting vowels and dividing syllables.
 
-In this lesson, you add five essential letters: the pure front vowel **Е**, the voiced sibilant **З**, the two strictly hard sibilants **Ж** and **Ш**, and the velar fricative **Х**. This expands your reading repertoire to 23 letters — more than two thirds of the Ukrainian alphabet! Most excitingly, every single letter required to read Ukraine's two most cherished everyday greetings — **Приві́т!** and **До́брого ра́нку!** — is now fully unlocked.
+In this lesson, you add five essential letters: the pure front vowel **Е**, the voiced sibilant **З**, the two sibilants **Ж** and **Ш** (hard before vowels in taught examples), and the velar fricative **Х**. This expands your reading repertoire to 23 letters — more than two thirds of the Ukrainian alphabet! Most excitingly, every single letter required to read Ukraine's two most cherished everyday greetings — **Приві́т!** and **До́брого ра́нку!** — is now fully unlocked.
 
 By the end of this 60-minute lesson, you will be able to:
 
 - **Вимовля́ти чи́стий голосни́й [е]** — pronounce an authentic, open Ukrainian [е] without iotating or gliding after consonants;
 - **Розрізня́ти дзвінки́й свистя́чий [з] та глухи́й задньоязико́вий [х]** — articulate the voiced sibilant [з] and the voiceless velar fricative [х];
-- **Дотри́муватися станда́рту тверди́х шипля́чих [ж] та [ш]** — keep Ukrainian sibilants strictly hard before vowels (**жа́ба**, **ка́ша**, **шко́ла**, **ти́ша**);
+- **Дотри́муватися станда́рту тверди́х шипля́чих [ж] та [ш]** — keep Ukrainian sibilants hard before vowels in taught examples (**жа́ба**, **ка́ша**, **шко́ла**, **ти́ша**);
 - **Чита́ти та вжива́ти пе́рші лега́льні віта́ння** — confidently read, pronounce, and understand **Приві́т!** and **До́брого ра́нку!**;
 - **Чита́ти нови́й пласт побуто́вої ле́ксики** — decode common Ukrainian words like **хліб**, **ха́та**, **зуб**, **село́**, **мо́ре**, **не́бо**, and **зеле́на**.
 
