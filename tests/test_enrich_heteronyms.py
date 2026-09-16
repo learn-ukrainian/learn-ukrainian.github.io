@@ -336,12 +336,15 @@ def test_batch_expansion_count():
     Batch 7 (#8039 continuation): +32 lemmas selected from academic authorities and
     Grinchenko (1907) with explicit Tsarist imperial ban citations and Soviet
     colonization context, expanding SSOT to 232 and dropping residual to 190.
+    Batch 8 (#8039 continuation): +32 lemmas selected from academic authorities and
+    Grinchenko (1907) with explicit pre-Soviet witness citations and Soviet
+    colonization context, expanding SSOT to 264 and dropping residual to 158.
     """
     total_curated = len(enrich_heteronyms.CURATED_HETERONYMS)
-    assert total_curated == 232
+    assert total_curated == 264
     # Corrected denominator is 422 true two-way-stress candidates;
-    # residual is 422 - 232 = 190
-    assert 422 - total_curated == 190
+    # residual is 422 - 264 = 158
+    assert 422 - total_curated == 158
 
 
 def test_kredyt_disambiguation():
@@ -1101,6 +1104,125 @@ def test_batch7_lemmas_not_duplicated_from_earlier_batches():
     assert "юності" not in zaznanyi[0]["soviet_colonization_context"]["definition"]
     assert "Барв." in zaznanyi[1]["soviet_colonization_context"]["definition"]
     assert "Геть з дороги" not in zaznanyi[1]["soviet_colonization_context"]["definition"]
+
+
+def test_batch8_semantic_and_stress_distinctions():
+    """Verify Batch 8 stress and semantic distinctions against academic authorities and Grinchenko."""
+    # вивозитися: ви́возитися (get dirty, perf.) vs виво́зитися (be exported, imperf.)
+    vyv = enrich_heteronyms.build_heteronyms_for_lemma("вивозитися")
+    assert vyv is not None and len(vyv) == 2
+    assert vyv[0]["headword"] == "ви́возитися"
+    assert "dirty" in vyv[0]["gloss"].lower() or "soil" in vyv[0]["gloss"].lower()
+    assert vyv[1]["headword"] == "виво́зитися"
+    assert "export" in vyv[1]["gloss"].lower() or "transport" in vyv[1]["gloss"].lower()
+
+    # захватний: захва́тний (predatory / conquest) vs захватни́й (clamping / gripping, tech.)
+    zah = enrich_heteronyms.build_heteronyms_for_lemma("захватний")
+    assert zah is not None and len(zah) == 2
+    assert zah[0]["headword"] == "захва́тний"
+    assert "conquest" in zah[0]["gloss"].lower() or "predatory" in zah[0]["gloss"].lower() or "seizure" in zah[0]["gloss"].lower()
+    assert zah[1]["headword"] == "захватни́й"
+    assert "gripping" in zah[1]["gloss"].lower() or "clamping" in zah[1]["gloss"].lower()
+
+    # корівник: корі́вник (cowshed / inanim) vs корівни́к (cowherd / anim)
+    kor = enrich_heteronyms.build_heteronyms_for_lemma("корівник")
+    assert kor is not None and len(kor) == 2
+    assert kor[0]["headword"] == "корі́вник"
+    assert kor[0]["morphology"]["paradigm"]["animacy"] == "inanimate"
+    assert kor[0]["heritage_status"]["vesum_attested"] is True
+    assert kor[1]["headword"] == "корівни́к"
+    assert kor[1]["morphology"]["paradigm"]["animacy"] == "animate"
+    assert kor[1]["heritage_status"]["vesum_attested"] is False
+
+    # ламповий: ла́мповий (adj: tube/lamp) vs лампови́й (noun: mine lamp-tender)
+    lam = enrich_heteronyms.build_heteronyms_for_lemma("ламповий")
+    assert lam is not None and len(lam) == 2
+    assert lam[0]["headword"] == "ла́мповий"
+    assert lam[0]["pos"] == "adj"
+    assert lam[0]["heritage_status"]["vesum_attested"] is True
+    assert lam[1]["headword"] == "лампови́й"
+    assert lam[1]["pos"] == "noun"
+    assert lam[1]["heritage_status"]["vesum_attested"] is False
+
+    # лупати: лу́пати (blink eyelids) vs лупа́ти (hew rock: Franko "Каменярі")
+    lup = enrich_heteronyms.build_heteronyms_for_lemma("лупати")
+    assert lup is not None and len(lup) == 2
+    assert lup[0]["headword"] == "лу́пати"
+    assert "blink" in lup[0]["gloss"].lower()
+    assert lup[1]["headword"] == "лупа́ти"
+    assert "hew" in lup[1]["gloss"].lower() or "break" in lup[1]["gloss"].lower() or "chip" in lup[1]["gloss"].lower()
+    assert "Лупайте сю скалу" in lup[1]["pre_soviet_witness"]["quote"]
+
+    # креснути: кре́снути (ice cracking/moving, imperf.) vs кресну́ти (strike spark, perf.)
+    kre = enrich_heteronyms.build_heteronyms_for_lemma("креснути")
+    assert kre is not None and len(kre) == 2
+    assert kre[0]["headword"] == "кре́снути"
+    assert kre[0]["morphology"]["paradigm"]["aspect"] == "недоконаний"
+    assert kre[1]["headword"] == "кресну́ти"
+    assert kre[1]["morphology"]["paradigm"]["aspect"] == "доконаний"
+
+    # находитися: нахо́дитися (be found / born, imperf.) vs находи́тися (walk plenty, perf.)
+    nah = enrich_heteronyms.build_heteronyms_for_lemma("находитися")
+    assert nah is not None and len(nah) == 2
+    assert nah[0]["headword"] == "нахо́дитися"
+    assert nah[0]["morphology"]["paradigm"]["aspect"] == "недоконаний"
+    assert nah[1]["headword"] == "находи́тися"
+    assert nah[1]["morphology"]["paradigm"]["aspect"] == "доконаний"
+
+    # зорювати: зо́рювати (plow) vs зорюва́ти (sleep outdoors under stars, Grinchenko)
+    zor = enrich_heteronyms.build_heteronyms_for_lemma("зорювати")
+    assert zor is not None and len(zor) == 2
+    assert zor[0]["headword"] == "зо́рювати"
+    assert "plow" in zor[0]["gloss"].lower()
+    assert zor[1]["headword"] == "зорюва́ти"
+    assert "outdoors" in zor[1]["gloss"].lower() or "stars" in zor[1]["gloss"].lower()
+
+
+def test_batch8_lemmas_not_duplicated_from_earlier_batches():
+    """Verify batch 8's 32 lemmas are net-new and mutually disjoint with batches 1-7."""
+    from scripts.lexicon.curated_heteronyms_batch import CURATED_HETERONYMS_BATCH
+    from scripts.lexicon.curated_heteronyms_batch2 import CURATED_HETERONYMS_BATCH_2
+    from scripts.lexicon.curated_heteronyms_batch3 import CURATED_HETERONYMS_BATCH_3
+    from scripts.lexicon.curated_heteronyms_batch4 import CURATED_HETERONYMS_BATCH_4
+    from scripts.lexicon.curated_heteronyms_batch5 import CURATED_HETERONYMS_BATCH_5
+    from scripts.lexicon.curated_heteronyms_batch6 import CURATED_HETERONYMS_BATCH_6
+    from scripts.lexicon.curated_heteronyms_batch7 import CURATED_HETERONYMS_BATCH_7
+    from scripts.lexicon.curated_heteronyms_batch8 import CURATED_HETERONYMS_BATCH_8
+
+    assert len(CURATED_HETERONYMS_BATCH_8) == 32
+    assert sum(len(v) for v in CURATED_HETERONYMS_BATCH_8.values()) == 64
+    earlier = (
+        set(CURATED_HETERONYMS_BATCH)
+        | set(CURATED_HETERONYMS_BATCH_2)
+        | set(CURATED_HETERONYMS_BATCH_3)
+        | set(CURATED_HETERONYMS_BATCH_4)
+        | set(CURATED_HETERONYMS_BATCH_5)
+        | set(CURATED_HETERONYMS_BATCH_6)
+        | set(CURATED_HETERONYMS_BATCH_7)
+    )
+    assert earlier & set(CURATED_HETERONYMS_BATCH_8) == set()
+    assert "вивозитися" in CURATED_HETERONYMS_BATCH_8
+    assert "зорювати" in CURATED_HETERONYMS_BATCH_8
+    assert "колонковий" in CURATED_HETERONYMS_BATCH_8
+    assert "комірний" in CURATED_HETERONYMS_BATCH_8
+    assert "ламповий" in CURATED_HETERONYMS_BATCH_8
+    assert "лупати" in CURATED_HETERONYMS_BATCH_8
+    assert "нарізний" in CURATED_HETERONYMS_BATCH_8
+    assert "находитися" in CURATED_HETERONYMS_BATCH_8
+
+    # Check pre-Soviet witnesses and author citations
+    konservatorka = CURATED_HETERONYMS_BATCH_8["консерваторка"]
+    assert "Леся Українка" in konservatorka[1]["pre_soviet_witness"]["witness"]
+    assert "У мене сестра консерваторка" in konservatorka[1]["pre_soviet_witness"]["quote"]
+
+    nahodytysya = CURATED_HETERONYMS_BATCH_8["находитися"]
+    assert "Грінченко" in nahodytysya[0]["pre_soviet_witness"]["witness"]
+    assert "Шевч." in nahodytysya[0]["pre_soviet_witness"]["quote"]
+
+    logik = CURATED_HETERONYMS_BATCH_8["логік"]
+    assert logik[0]["heritage_status"]["vesum_attested"] is True
+    assert logik[1]["heritage_status"]["vesum_attested"] is False
+
 
 
 def test_homonyms_with_numeric_suffixes_and_identical_stress_not_treated_as_heteronyms(monkeypatch):
