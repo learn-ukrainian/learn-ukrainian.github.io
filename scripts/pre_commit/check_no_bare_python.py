@@ -29,37 +29,36 @@ _SHELL_SUFFIX = frozenset({".sh", ".bash"})
 def _strip_shell_comment(line: str) -> str:
     """Drop a bash ``# …`` comment tail so comments cannot launder exemptions.
 
-    Bash only starts a comment when ``#`` begins a word (start of line or after
-    whitespace / ``;|&()``). Mid-token hashes (``foo#bar``) and escaped hashes
-    (``\\#``) stay literal — stripping those would hide a later bare-python
-    command on the same line.
+    Bash starts a comment only when ``#`` begins a word (start of line, or after
+    an *unescaped* whitespace / ``;|&()``). Mid-token hashes (``foo#bar``),
+    escaped hashes (``\\#``), and hashes after escaped separators
+    (``foo\\ #bar``, ``foo\\;#bar``) stay literal.
     """
 
     in_single = False
     in_double = False
     escaped = False
+    at_word_start = True
     for index, char in enumerate(line):
         if escaped:
             escaped = False
+            at_word_start = False
             continue
         if char == "\\" and not in_single:
-            # Outside single quotes, backslash escapes the next character for
-            # comment detection (so ``\#`` is literal ``#``, not a comment).
+            # Outside single quotes, backslash escapes the next character.
             escaped = True
             continue
         if char == "'" and not in_double:
             in_single = not in_single
+            at_word_start = False
             continue
         if char == '"' and not in_single:
             in_double = not in_double
+            at_word_start = False
             continue
-        if (
-            char == "#"
-            and not in_single
-            and not in_double
-            and (index == 0 or line[index - 1] in " \t;|&()")
-        ):
+        if char == "#" and not in_single and not in_double and at_word_start:
             return line[:index]
+        at_word_start = char in " \t;|&()" and not in_single and not in_double
     return line
 
 

@@ -53,6 +53,9 @@ def test_allows_venv_bootstrap_and_project_interpreter(checker, script: str) -> 
         # the bare-python command that follows on the same line.
         ("echo foo#bar; python3 scripts/build.py\n", 1),
         (r"echo \#; python3 scripts/build.py" + "\n", 1),
+        # Escaped whitespace / semicolon are not word boundaries before #.
+        (r"echo foo\ #bar; python3 scripts/build.py" + "\n", 1),
+        (r"echo foo\;#bar; python3 scripts/build.py" + "\n", 1),
     ],
 )
 def test_rejects_bare_python_including_venv_laundering(
