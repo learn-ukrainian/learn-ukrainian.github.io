@@ -1,14 +1,14 @@
-# Дзвінкі́ при́голосні та звук [і]: Бу́кви Б, В, Д, І
+# Дзвінкі́ при́голосні та голосна́ І: Бу́кви Б, В, Д, І — Voiced Consonants and Vowel І: Letters Б, В, Д, І
 
 Ласка́во про́симо до дру́гого уро́ку! — Welcome to the second lesson! In Lesson 1, you learned the golden syllable rule and unlocked the letters **К**, **И**, and **Р**, bringing your alphabet inventory to 10 letters (**А, О, У, М, Л, С, Н, К, И, Р**).
 
-In this lesson, you add four indispensable letters: the voiced consonants **Б**, **В**, **Д** and the softening vowel **І**. You will discover a crucial phonetic rule that distinguishes Ukrainian from many neighboring languages: Ukrainian voiced consonants never lose their voice at the end of a word or before voiceless consonants. You will also master critical minimal pairs where the difference between relaxed **[и]** and smiling **[і]** completely changes the meaning of a word.
+In this lesson, you add four indispensable letters: the voiced consonants **Б**, **В**, **Д** and the softening vowel **І**. You will discover a crucial phonetic rule that distinguishes Ukrainian from many neighboring languages: Ukrainian voiced consonants never lose their voice at the end of a word or before voiceless consonants. Final **б** in **дуб** still sounds like **б**, not **п**! You will also master critical word pairs where **и** is a relaxed “ih” and **і** is “ee” (**дим / дім**).
 
 By the end of this 60-minute lesson, you will be able to:
 
-- **Вимовля́ти дзвінкі́ при́голосні без оглу́шення** — pronounce voiced consonants [б], [в], [д] cleanly without devoicing them at the end of words (**дуб**, **сад**, **дід**);
-- **Розрізня́ти зву́ки [и] та [і]** — clearly contrast the relaxed front vowel [и] with the high front vowel [і];
-- **Пом'я́кшувати при́голосні пе́ред [і]** — articulate softened consonants before [і] and recognize them in syllable schemes with two bars `[=]`;
+- **Вимовля́ти дзвінкі́ при́голосні без оглу́шення** — keep voiced endings strong: final **б** in **дуб** still sounds like **б**, not **п** (just like **сад** and **дід**);
+- **Розрізня́ти зву́ки И та І** — hear and say **и** vs **і**: **и** is a relaxed “ih”; **і** is “ee”. Pair: **дим / дім**;
+- **Пом'я́кшувати при́голосні пе́ред І** — articulate softened consonants before [і] and recognize them in syllable schemes with two bars `[=]`;
 - **Чита́ти фундамента́льні мініма́льні па́ри** — read semantic contrast pairs such as **дим** vs **дім**, **лис** vs **ліс**, and **бик** vs **бік**;
 - **Чита́ти двоскладо́ві та трискладо́ві слова́** — decode words like **во-да́**, **ри́-ба**, **со-ба́-ка**, **но-ві́**, and **о-ди́н**;
 - **Будува́ти та чита́ти пе́рші ре́чення** — read complete sentences such as **Він сам**, **Вона́ сама́**, **Вони́ самі́**, and **Он дім і сад**.
@@ -19,20 +19,20 @@ By the end of this 60-minute lesson, you will be able to:
 
 Ukrainian consonants are divided into voiced (**дзвінкі́**) and voiceless (**глухі́**) pairs. When pronouncing a voiced consonant, your vocal cords vibrate actively.
 
-| Бу́ква — Letter | На́зва — Name | Звук — Sound | Фонети́чна характери́стика — Phonetic nature |
+| Бу́ква — Letter | На́зва — Name | Звук — Sound | Звуча́ння та о́пис — How it sounds |
 | --- | --- | --- | --- |
-| **Б, б** | бе | **[b]** | Дзвінки́й губни́й проривни́й — Voiced bilabial stop |
-| **В, в** | ве | **[v] / [w]** | Губно-губни́й або́ губно-зубни́й сона́нт — Labial sonorant |
-| **Д, д** | де | **[d]** | Дзвінки́й передньоязико́вий проривни́й — Voiced alveolar stop |
+| **Б, б** | бе | **[b]** | Дзвінки́й звук [b] (voiced b) — Voiced bilabial stop |
+| **В, в** | ве | **[v] / [w]** | Губни́й звук [v] / [w] (voiced v/w) — Labial sonorant |
+| **Д, д** | де | **[d]** | Дзвінки́й звук [d] (voiced d) — Voiced alveolar stop |
 
 :::important
-**Золоте́ фонети́чне пра́вило: жо́дного оглу́шення!**
+**Золоте́ фонети́чне пра́вило: кінце́вий б у сло́ві дуб звучи́ть як б, а не п!**
 In many languages (including German, Polish, and Russian), voiced consonants at the end of words or before voiceless consonants turn into their voiceless counterparts (for example, final *d* turns into *t*, final *b* turns into *p*).
 
 In standard Ukrainian, **this never happens**. Voiced consonants remain fully voiced in all positions:
-- **дуб** is pronounced [дуб], never [дуп];
-- **сад** is pronounced [сад], never [сат];
-- **дід** is pronounced [дід], never [діт];
+- Final **б** in **дуб** still sounds like **б**, not **п** (pronounced [дуб], never [дуп]);
+- Final **д** in **сад** still sounds like **д**, not **т** (pronounced [сад], never [сат]);
+- Final **д** in **дід** still sounds like **д**, not **т** (pronounced [дід], never [діт]);
 - **бік** is pronounced [бік] with a ringing initial [б].
 
 Keep your vocal cords vibrating right through to the final release of the sound!
@@ -42,18 +42,17 @@ Keep your vocal cords vibrating right through to the final release of the sound!
 
 ---
 
-## Голосни́й звук [і] та пом'я́кшення при́голосних
+## Голосна́ лі́тера І та пом'я́кшення при́голосних — Vowel Letter І and Softened Consonants
 
 Now let us meet our fifth vowel letter: **І**.
 
-| Бу́ква — Letter | На́зва — Name | Звук — Sound | Характери́стика — Nature |
+| Бу́ква — Letter | На́зва — Name | Звук — Sound | Звуча́ння та о́пис — How it sounds |
 | --- | --- | --- | --- |
-| **І, і** | і | **[i]** | Голосни́й висо́кого підняття́ — High front vowel |
+| **І, і** | і | **[i]** | Голосна́ «ee» (smiling front vowel) — High front vowel |
 
 To pronounce Ukrainian **[і]**:
 - Spread your lips into a wide, relaxed smile.
-- Arch the middle of your tongue high against the hard palate.
-- Produce a clear, bright sound like the *ee* in English *meet*, but without turning it into a diphthong.
+- **і** is “ee” as in English *meet*, but without turning it into a diphthong. Pair: **дим / дім**.
 
 In Ukrainian phonetics, **[і] has a special power: it softens the consonant that comes before it**. In school textbooks (Захарі́йчук, 1 клас, с. 15), a soft consonant is marked with a double horizontal line `[=]`, whereas a hard consonant is marked with a single line `[—]`:
 

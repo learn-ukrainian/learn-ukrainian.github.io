@@ -2,140 +2,152 @@ inline:
 - id: act-3
   type: divide-words
   title: "Поділі́ть слова́ на склади́ — Divide words into syllables"
-  instruction: "Введі́ть сло́во, розділи́вши його́ на склади́ че́рез пробі́л."
+  instruction: "Введі́ть сло́во, розділи́вши його́ на склади́ че́рез пробі́л. — Enter the word divided into syllables with a space."
   items:
   - word: та́то
-    answer: та́ то
+    answer: "та́ то"
+    hint: "та́то — dad / father"
   - word: па́ста
-    answer: па́с та
+    answer: "па́с та"
+    hint: "па́ста — paste"
   - word: ка́рта
-    answer: ка́р та
+    answer: "ка́р та"
+    hint: "ка́рта — map"
   - word: гора́
-    answer: го ра́
+    answer: "го ра́"
+    hint: "гора́ — mountain"
   - word: горо́д
-    answer: го ро́д
+    answer: "го ро́д"
+    hint: "горо́д — vegetable garden"
   - word: поті́к
-    answer: по ті́к
+    answer: "по ті́к"
+    hint: "поті́к — stream / brook"
 
 - id: act-221
   type: watch-and-repeat
   title: "Диві́ться та повто́рюйте: Бу́кви П, Т, Г, Ґ — Watch and repeat: Letters П, Т, Г, Ґ"
-  instruction: "Подиві́ться коро́тке ві́део про вимо́ву лі́тери (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос."
+  instruction: "Подиві́ться коро́тке ві́део про вимо́ву лі́тери (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос. — Watch a short video on pronouncing the letter (source: Anna Ohoiko, Ukrainian Lessons) and repeat aloud."
   items:
   - letter: П
-    word: парк
+    word: "парк — park"
     video: https://www.youtube.com/watch?v=JksSjjxyW5Y
   - letter: Т
-    word: торт
+    word: "торт — cake"
     video: https://www.youtube.com/watch?v=m-jcLR_gK0k
   - letter: Г
-    word: гора́
+    word: "гора́ — mountain"
     video: https://www.youtube.com/watch?v=gVnclpSI0DU
   - letter: Ґ
-    word: ґа́ва
+    word: "ґа́ва — crow"
     video: https://www.youtube.com/watch?v=gNjHqjTW9WQ
   - letter: Б
-    word: брат
+    word: "брат — brother"
     video: https://www.youtube.com/watch?v=V1hxBE_JbGg
   - letter: Д
-    word: друг
+    word: "друг — friend"
     video: https://www.youtube.com/watch?v=g4Bh-lqzd48
 
 - id: act-222
   type: count-syllables
   title: "Раху́йте склади́: Геогра́фія та побу́т — Count syllables: Geography and everyday life"
-  instruction: "Пораху́йте голосні́ зву́ки у сло́ві. Кі́лькість голосни́х дорі́внює кі́лькості складів."
+  instruction: "Пораху́йте голосні́ зву́ки у сло́ві. Кі́лькість голосни́х дорі́внює кі́лькості складів. — Count the vowel sounds in the word. The number of vowels equals the number of syllables."
   maxCount: 5
   items:
   - word: парк
     correct: 1
+    translation: park
   - word: торт
     correct: 1
+    translation: cake
   - word: та́то
     correct: 2
+    translation: dad / father
   - word: гора́
     correct: 2
+    translation: mountain
   - word: Дніпро́
     correct: 2
+    translation: Dnipro (city / river)
   - word: Полта́ва
     correct: 3
+    translation: Poltava (city)
 
 - id: act-223
   type: match-up
   title: "Зна́чення слів: Мініма́льні па́ри — Word meanings: Minimal pairs"
-  instruction: "З'єдна́йте украї́нське сло́во з його́ зна́ченням."
+  instruction: "З'єдна́йте украї́нське сло́во з його́ зна́ченням. — Match the Ukrainian word with its meaning."
   pairs:
-  - left: кит
-    right: whale
-  - left: кіт
-    right: cat
-  - left: та́то
-    right: dad / father
-  - left: брат
-    right: brother
-  - left: друг
-    right: friend
-  - left: гриб
-    right: mushroom
+  - left: "кит — kyt"
+    right: "whale (relaxed «ih»)"
+  - left: "кіт — kit"
+    right: "cat (smiling «ee»)"
+  - left: "та́то — tato"
+    right: "dad / father"
+  - left: "брат — brat"
+    right: "brother"
+  - left: "друг — druh"
+    right: "friend"
+  - left: "гриб — hryb"
+    right: "mushroom"
 
 workbook:
 - id: act-w3
   type: true-false
   title: "Пра́вда чи непра́вда: Бу́кви П, Т, Г, Ґ — True or False: Letters П, Т, Г, Ґ"
-  instruction: "Ви́значте, чи є тве́рдження пра́вильним."
+  instruction: "Ви́значте, чи є тве́рдження пра́вильним. — Determine whether the statement is true or false."
   items:
-  - statement: "Бу́ква Г познача́є фаринга́льний щіли́нний звук [ɦ]."
+  - statement: "Бу́ква Г познача́є м'яки́й горта́нний звук [г]. — Letter Г represents a soft throat sound [h]."
     correct: true
-    explanation: "Украї́нський звук [г] утво́рюється гли́боко в горта́ні."
-  - statement: "Бу́ква Ґ познача́є вибухови́й задньоязико́вий звук [ɡ]."
+    explanation: "Бу́ква Г — це м'яки́й горта́нний звук (гора́), а Ґ — тверди́й [g] (ґа́ва). — Letter Г is a soft throat sound (гора́); Ґ is hard g like English go (ґа́ва)."
+  - statement: "Бу́ква Ґ познача́є тверди́й звук [g] як в англі́йському «go». — Letter Ґ represents a hard g sound like in English \"go\"."
     correct: true
-    explanation: "Бу́ква Ґ вимовля́ється як вибухови́й звук [ɡ] у сло́ві «ґа́ва»."
-  - statement: "Слова́ «кит» і «кіт» означа́ють одне́ й те са́ме."
+    explanation: "Бу́ква Ґ вимовля́ється твердо́ як «g» у сло́ві «ґа́ва». — Letter Ґ is pronounced as a hard g sound in «ґа́ва»."
+  - statement: "Слова́ «кит» і «кіт» означа́ють одне́ й те са́ме. — The words \"кит\" and \"кіт\" have the same meaning."
     correct: false
-    explanation: "«Кит» — це whale, а «кіт» — це cat."
-  - statement: "У сло́ві «Полта́ва» три склади́."
+    explanation: "«Кит» — це whale, а «кіт» — це cat. — «Кит» means whale, while «кіт» means cat."
+  - statement: "У сло́ві «Полта́ва» три склади́. — In the word \"Полта́ва\" there are three syllables."
     correct: true
-    explanation: "У сло́ві «Полта́ва» три голосни́х зву́ки, то́му три склади́."
-  - statement: "Бу́ква П є дзвінки́м зву́ком."
+    explanation: "У сло́ві «Полта́ва» три голосни́х зву́ки, то́му три склади́. — In «Полта́ва» there are three vowel sounds, so three syllables."
+  - statement: "Бу́ква П є дзвінки́м зву́ком. — The letter П is a voiced sound."
     correct: false
-    explanation: "Бу́ква П познача́є глухи́й проривни́й звук."
-  - statement: "Сло́во «ґрунт» ма́є оди́н склад."
+    explanation: "Бу́ква П познача́є глухи́й звук, па́рний до дзвінко́го Б. — Letter П represents a voiceless sound, paired with voiced Б."
+  - statement: "Сло́во «ґрунт» ма́є оди́н склад. — The word \"ґрунт\" has one syllable."
     correct: true
-    explanation: "У сло́ві «ґрунт» оди́н голосни́й [у], отже́ оди́н склад."
+    explanation: "У сло́ві «ґрунт» оди́н голосни́й [у], отже́ оди́н склад. — In «ґрунт» there is one vowel [у], hence one syllable."
 
 - id: act-w221
   type: quiz
   title: "Факти про зву́ки П, Т, Г, Ґ — Facts about sounds П, Т, Г, Ґ"
-  instruction: "Обері́ть одну́ прави́льну ві́дповідь."
+  instruction: "Обері́ть одну́ прави́льну ві́дповідь. — Choose one correct answer."
   items:
-  - prompt: "Яка́ бу́ква є глухо́ю па́рою до Б?"
+  - prompt: "Яка́ бу́ква є глухо́ю па́рою до Б? — Which letter is the voiceless partner to Б?"
     options:
-    - text: "Бу́ква П"
+    - text: "Бу́ква П — Letter П"
       correct: true
-    - text: "Бу́ква Т"
+    - text: "Бу́ква Т — Letter Т"
       correct: false
-    - text: "Бу́ква К"
+    - text: "Бу́ква К — Letter К"
       correct: false
-    explanation: "Глухи́й парний звук до [б] — це [п]."
-  - prompt: "Чим відрізня́ються бу́кви Г і Ґ?"
+    explanation: "Глухи́й парний звук до [б] — це [п]. — The voiceless paired sound to [б] is [п]."
+  - prompt: "Чим відрізня́ються бу́кви Г і Ґ? — How do letters Г and Ґ differ?"
     options:
-    - text: "Г — фаринга́льний щіли́нний [ɦ], а Ґ — вибухови́й [ɡ]"
+    - text: "Г — м'яки́й горта́нний звук, а Ґ — тверди́й [g] як у «go» — Г is a soft throat sound, and Ґ is a hard g like \"go\""
       correct: true
-    - text: "Г — це голосни́й, а Ґ — при́голосний"
+    - text: "Г — це голосни́й, а Ґ — при́голосний — Г is a vowel, and Ґ is a consonant"
       correct: false
-    - text: "Між ни́ми нема́є жо́дної різни́ці"
+    - text: "Між ни́ми нема́є жо́дної різни́ці — There is no difference between them"
       correct: false
-    explanation: "Г вимовля́ється гли́боко й м'я́ко [ɦ], а Ґ — вибухо́во [ɡ]."
-  - prompt: "Скі́льки складів у на́зві мі́ста «Дніпро́»?"
+    explanation: "Г — це м'яки́й горта́нний звук (гора́), а Ґ — тверди́й [g] (ґа́ва). — Г is a soft throat sound (гора́); Ґ is hard g like English go (ґа́ва)."
+  - prompt: "Скі́льки складів у на́зві мі́ста «Дніпро́»? — How many syllables are in the city name \"Дніпро́\"?"
     options:
-    - text: "Два склади́: Дні-про́"
+    - text: "Два склади́: Дні-про́ — Two syllables: Дні-про́"
       correct: true
-    - text: "Оди́н склад"
+    - text: "Оди́н склад — One syllable"
       correct: false
-    - text: "Три склади́"
+    - text: "Три склади́ — Three syllables"
       correct: false
-    explanation: "У сло́ві «Дніпро́» два голосни́х [і] та [о], отже́ два склади́."
-  - prompt: "Що означа́є сло́во «ґа́ва»?"
+    explanation: "У сло́ві «Дніпро́» два голосни́х [і] та [о], отже́ два склади́. — In «Дніпро́» there are two vowels [і] and [о], hence two syllables."
+  - prompt: "Що означа́є сло́во «ґа́ва»? — What does the word \"ґа́ва\" mean?"
     options:
     - text: "Crow (птах)"
       correct: true
@@ -143,17 +155,17 @@ workbook:
       correct: false
     - text: "Mountain (гора́)"
       correct: false
-    explanation: "«Ґа́ва» — це птах (crow); не плу́тайте з ка́вою."
-  - prompt: "Яке́ сло́во ма́є закри́тий склад?"
+    explanation: "«Ґа́ва» — це птах (crow); не плу́тайте з ка́вою. — «Ґа́ва» is a bird (crow); do not confuse it with coffee (ка́ва)."
+  - prompt: "Яке́ сло́во ма́є закри́тий склад? — Which word has a closed syllable?"
     options:
-    - text: "парк"
+    - text: "парк — park"
       correct: true
-    - text: "гора́"
+    - text: "гора́ — mountain"
       correct: false
-    - text: "вода́"
+    - text: "вода́ — water"
       correct: false
-    explanation: "Сло́во «парк» закінчу́ється на при́голосний і є закри́тим скла́дом."
-  - prompt: "Що означа́є ви́раз «Вона́ ра́да»?"
+    explanation: "Сло́во «парк» закінчу́ється на при́голосний і є закри́тим скла́дом. — The word «парк» ends in a consonant and is a closed syllable."
+  - prompt: "Що означа́є ви́раз «Вона́ ра́да»? — What does the expression \"Вона́ ра́да\" mean?"
     options:
     - text: "She is glad"
       correct: true
@@ -161,128 +173,128 @@ workbook:
       correct: false
     - text: "She is alone"
       correct: false
-    explanation: "«Ра́да» — це коро́тка фо́рма ста́ну (glad)."
+    explanation: "«Ра́да» — це коро́тка фо́рма ста́ну (glad). — «Ра́да» means glad (short state form)."
 
 - id: act-w222
   type: group-sort
   title: "Розподілі́ть слова́ за початко́вою бу́квою — Sort words by initial letter"
-  instruction: "Розподілі́ть слова́ за початко́вим при́голосним."
+  instruction: "Розподілі́ть слова́ за початко́вим при́голосним. — Sort words by their initial consonant."
   groups:
-  - name: "Слова́ на бу́кву П"
+  - name: "Слова́ на бу́кву П — Words with letter П"
     items:
-    - парк
-    - па́ста
-    - поті́к
-  - name: "Слова́ на бу́кву Т"
+    - "парк (park)"
+    - "па́ста (paste)"
+    - "поті́к (stream)"
+  - name: "Слова́ на бу́кву Т — Words with letter Т"
     items:
-    - та́то
-    - торт
-  - name: "Слова́ на бу́кву Г"
+    - "та́то (dad)"
+    - "торт (cake)"
+  - name: "Слова́ на бу́кву Г — Words with letter Г"
     items:
-    - гора́
-    - горо́д
-    - гриб
+    - "гора́ (mountain)"
+    - "горо́д (garden)"
+    - "гриб (mushroom)"
 
 - id: act-w223
   type: odd-one-out
-  title: "За́йве сло́во за звуково́ю будо́вою — Odd word out"
-  instruction: "Знайді́ть за́йве сло́во в ко́жному рядку́."
+  title: "За́йве сло́во за звуково́ю будо́вою — Odd word out by sound structure"
+  instruction: "Знайді́ть за́йве сло́во в ко́жному рядку́. — Find the odd word in each row."
   items:
   - words:
-    - гора́
-    - горо́д
-    - гриб
-    - ґа́ва
+    - "гора́ — mountain"
+    - "горо́д — garden"
+    - "гриб — mushroom"
+    - "ґа́ва — crow"
     correct: 3
-    explanation: "Сло́во «ґа́ва» почина́ється з лі́тери Ґ, а ре́шта — з Г."
+    explanation: "«Ґа́ва» почина́ється з Ґ (hard g), а ре́шта — з Г (soft throat sound). — «Ґа́ва» begins with Ґ, while the rest begin with Г."
   - words:
-    - та́то
-    - па́ста
-    - ка́рта
-    - торт
+    - "та́то — dad"
+    - "па́ста — paste"
+    - "ка́рта — map"
+    - "торт — cake"
     correct: 3
-    explanation: "Сло́во «торт» односкладо́ве, а ре́шта — двоскладо́ві."
+    explanation: "«То́рт» односкладо́ве, а ре́шта — двоскладо́ві. — «То́рт» has one syllable, while the rest have two."
   - words:
-    - Дніпро́
-    - Полта́ва
-    - парк
-    - брат
+    - "Дніпро́ — Dnipro"
+    - "Полта́ва — Poltava"
+    - "парк — park"
+    - "брат — brother"
     correct: 1
-    explanation: "Сло́во «Полта́ва» має три склади́, а ре́шта — один або́ два."
+    explanation: "«Полта́ва» ма́є три склади́, а ре́шта — один або́ два. — «Полта́ва» has three syllables, while the rest have one or two."
   - words:
-    - кит
-    - кіт
-    - гриб
-    - гора́
+    - "кит — whale"
+    - "кіт — cat"
+    - "гриб — mushroom"
+    - "гора́ — mountain"
     correct: 3
-    explanation: "Сло́во «гора́» двоскладо́ве, а ре́шта слів — односкладо́ві."
+    explanation: "«Гора́» двоскладо́ве, а ре́шта слів — односкладо́ві. — «Гора́» has two syllables, while the rest have one."
   - words:
-    - брат
-    - друг
-    - та́то
-    - ґрунт
+    - "брат — brother"
+    - "друг — friend"
+    - "та́то — dad"
+    - "ґрунт — soil"
     correct: 2
-    explanation: "Сло́во «та́то» двоскладо́ве, а ре́шта слів мають по одному́ скла́ду."
+    explanation: "«Та́то» двоскладо́ве, а ре́шта слів мають по одному́ скла́ду. — «Та́то» has two syllables, while the others have one."
   - words:
-    - поті́к
-    - па́ста
-    - парк
-    - та́то
+    - "поті́к — stream"
+    - "па́ста — paste"
+    - "парк — park"
+    - "та́то — dad"
     correct: 3
-    explanation: "Сло́во «та́то» почина́ється з Т, а ре́шта слів — з П."
+    explanation: "«Та́то» почина́ється з Т, а ре́шта слів — з П. — «Та́то» begins with Т, while the rest begin with П."
 
 - id: act-w224
   type: fill-in
   title: "Вста́вте пропу́щену лі́теру — Fill in the missing letter"
-  instruction: "Обері́ть прави́льну лі́теру на мі́сці про́пуску ___ ."
+  instruction: "Обері́ть прави́льну лі́теру на мі́сці про́пуску ___ . — Choose the correct letter for the blank ___ ."
   items:
-  - sentence: "Тут ___а́то."
+  - sentence: "Тут ___а́то. — Here is dad."
     options:
     - т
     - п
     - г
     answer: т
-    explanation: "Сло́во «та́то» почина́ється з лі́тери т."
-  - sentence: "Он ___арк."
+    explanation: "Сло́во «та́то» (dad) почина́ється з лі́тери т. — The word «та́то» begins with the letter т."
+  - sentence: "Он ___арк. — Over there is a park."
     options:
     - п
     - т
     - б
     answer: п
-    explanation: "Сло́во «парк» почина́ється з лі́тери п."
-  - sentence: "Он ___ора́."
+    explanation: "Сло́во «парк» (park) почина́ється з лі́тери п. — The word «парк» begins with the letter п."
+  - sentence: "Он ___ора́. — Over there is a mountain."
     options:
     - г
     - ґ
     - к
     answer: г
-    explanation: "Сло́во «гора́» почина́ється з лі́тери г."
-  - sentence: "Он ___а́ва."
+    explanation: "Сло́во «гора́» (mountain) почина́ється з лі́тери г. — The word «гора́» begins with the letter г."
+  - sentence: "Он ___а́ва. — Over there is a crow."
     options:
     - ґ
     - г
     - к
     answer: ґ
-    explanation: "Сло́во «ґа́ва» (crow) пи́шеться з лі́терою ґ."
-  - sentence: "Он ___ніпро́."
+    explanation: "Сло́во «ґа́ва» (crow) пи́шеться з лі́терою ґ. — The word «ґа́ва» is written with the letter ґ."
+  - sentence: "Он ___ніпро́. — Over there is Dnipro."
     options:
     - д
     - т
     - п
     answer: д
-    explanation: "Сло́во «Дніпро́» почина́ється з лі́тери д."
-  - sentence: "Вона́ ___а́да."
+    explanation: "Сло́во «Дніпро́» (Dnipro) почина́ється з лі́тери д. — The word «Дніпро́» begins with the letter д."
+  - sentence: "Вона́ ___а́да. — She is glad."
     options:
     - р
     - п
     - т
     answer: р
-    explanation: "Сло́во «ра́да» почина́ється з лі́тери р."
+    explanation: "Сло́во «ра́да» (glad) почина́ється з лі́тери р. — The word «ра́да» begins with the letter р."
 
 - id: act-w225
   type: unjumble
   title: "Склади́ сло́во з лі́тер — Unjumble the word"
-  instruction: "Поста́вте лі́тери в прави́льному поря́дку, щоб утвори́ти сло́во."
+  instruction: "Поста́вте лі́тери в прави́льному поря́дку, щоб утвори́ти сло́во. — Arrange the letters in the correct order to form the word."
   items:
   - letters:
     - п
@@ -290,31 +302,37 @@ workbook:
     - р
     - к
     answer: парк
+    hint: "парк — park"
   - letters:
     - т
     - о
     - р
     - т
     answer: торт
+    hint: "торт — cake"
   - letters:
     - б
     - р
     - а
     - т
     answer: брат
+    hint: "брат — brother"
   - letters:
     - д
     - р
     - у
     - г
     answer: друг
+    hint: "друг — friend"
   - letters:
     - к
     - і
     - т
     answer: кіт
+    hint: "кіт — cat"
   - letters:
     - к
     - и
     - т
     answer: кит
+    hint: "кит — whale"

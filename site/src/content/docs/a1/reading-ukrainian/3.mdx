@@ -1,9 +1,11 @@
 ---
-title: Глухі́ па́ри, фаринга́льний звук та бу́кви П, Т, Г, Ґ
+title: Глухі́ па́ри, зву́ки Г і Ґ та бу́кви П, Т, Г, Ґ — Voiceless Pairs, Sounds Г
+  and Ґ, and Letters П, Т, Г, Ґ
 description: Від літер до слів та речень
 sidebar:
   order: 3
-  label: 03. Глухі́ па́ри, фаринга́льний звук та бу́кви П, Т, Г, Ґ
+  label: 03. Глухі́ па́ри, зву́ки Г і Ґ та бу́кви П, Т, Г, Ґ — Voiceless Pairs, Sounds
+    Г and Ґ, and Letters П, Т, Г, Ґ
 pipeline: v7-upgrade
 build_status: validated
 draft: false
@@ -64,15 +66,14 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <Tabs syncKey="module-tab">
 <TabItem label="Урок — Lesson">
 
-Ласка́во про́симо до тре́тього уро́ку! — Welcome to the third lesson! In Lessons 1 and 2, you mastered the golden syllable rule and built a solid repertoire of 14 letters (**А, О, У, М, Л, С, Н, К, И, Р, Б, В, Д, І**), including the voiced stops **Б** and **Д** and the softening vowel **І**.
+Ласка́во про́симо до тре́тього уро́ку! — Welcome to the third lesson! In Lessons 1 and 2, you mastered counting vowels for syllable beats and built a solid repertoire of 14 letters (**А, О, У, М, Л, С, Н, К, И, Р, Б, В, Д, І**), including the voiced stops **Б** and **Д** and the softening vowel **І**.
 
-In this lesson, you add four crucial consonant letters: **П**, **Т**, **Г**, and **Ґ**, bringing your reading toolkit to 18 letters. You will pair the voiced stops [б] and [д] with their voiceless partners [п] and [т]. You will also discover one of the most distinctive features of Ukrainian phonetics: the difference between the deep, warm pharyngeal fricative **Г [ɦ]** and the crisp velar plosive **Ґ [ɡ]**. Finally, you will decode authentic Ukrainian city names (**Дніпро́**, **Полта́ва**) and your first legal state formula (**Ра́да**).
+In this lesson, you add four crucial consonant letters: **П**, **Т**, **Г**, and **Ґ**, bringing your reading toolkit to 18 letters. You will pair the voiced stops [б] and [д] with their voiceless partners [п] and [т]. You will also discover one of the most distinctive sound contrasts in Ukrainian: **Г** is a soft throat sound, while **Ґ** is a hard **g** like English *go* (**гора́** vs **ґа́ва**). Finally, you will decode authentic Ukrainian city names (**Дніпро́**, **Полта́ва**) and your first legal state formula (**Ра́да**).
 
 By the end of this 60-minute lesson, you will be able to:
 
-- **Розрізня́ти па́рні глухі́ проривні́ [п] та [т]** — articulate the voiceless stops [п] (partner to [б]) and [т] (partner to [д]);
-- **Вимовля́ти фаринга́льний звук [г]** — produce the authentic Ukrainian voiced pharyngeal fricative [ɦ] without harsh rasping;
-- **Розпізнава́ти та чита́ти рі́дкісну лі́теру Ґ** — identify and pronounce the plosive stop [ɡ] in words such as **ґа́ва** and **ґрунт**;
+- **Розрізня́ти па́рні глухі́ при́голосні [п] та [т]** — articulate the voiceless stops [п] (partner to [б]) and [т] (partner to [д]);
+- **Розрізня́ти та вимовля́ти зву́ки Г та Ґ** — tell **Г** and **Ґ** apart: **Г** is a soft throat sound; **Ґ** is a hard **g** like English *go*. **гора́** vs **ґа́ва** (and **ґрунт**);
 - **Чита́ти географі́чні на́зви** — accurately decode Ukrainian cities such as **Дні-про́** and **Пол-та́-ва**;
 - **Розпізнава́ти коро́тку фо́рму ста́ну** — read and understand the word **Ра́да** (glad / council);
 - **Чита́ти нові́ мініма́льні па́ри та закри́ті склади́** — distinguish pairs such as **кит** vs **кіт** and read robust monosyllables like **парк**, **торт**, **брат**, and **друг**.
@@ -103,28 +104,30 @@ These two letters unlock a rich collection of everyday Ukrainian vocabulary:
 
 ### Поділі́ть слова́ на склади́ — Divide words into syllables
 
-<DivideWords client:only='react' instruction={"Введі́ть сло́во, розділи́вши його́ на склади́ че́рез пробі́л."} items={JSON.parse(`[{"word": "та́то", "answer": "та́ то"}, {"word": "па́ста", "answer": "па́с та"}, {"word": "ка́рта", "answer": "ка́р та"}, {"word": "гора́", "answer": "го ра́"}, {"word": "горо́д", "answer": "го ро́д"}, {"word": "поті́к", "answer": "по ті́к"}]`)} />
+<DivideWords client:only='react' instruction={"Введі́ть сло́во, розділи́вши його́ на склади́ че́рез пробі́л. — Enter the word divided into syllables with a space."} items={JSON.parse(`[{"word": "та́то", "answer": "та́ то", "hint": "та́то — dad / father"}, {"word": "па́ста", "answer": "па́с та", "hint": "па́ста — paste"}, {"word": "ка́рта", "answer": "ка́р та", "hint": "ка́рта — map"}, {"word": "гора́", "answer": "го ра́", "hint": "гора́ — mountain"}, {"word": "горо́д", "answer": "го ро́д", "hint": "горо́д — vegetable garden"}, {"word": "поті́к", "answer": "по ті́к", "hint": "поті́к — stream / brook"}]`)} />
 
 ---
 
-## Фаринга́льний Г та вибухо́вий Ґ: Рі́дкісна й важли́ва бу́ква
+## Бу́кви Г і Ґ: М'яки́й горта́нний звук та тверди́й вибухови́й — Letters Г and Ґ: Soft Throat Sound and Hard G
 
 One of the most defining characteristics of standard Ukrainian is its two distinct g-letters: **Г** and **Ґ**.
 
-| Бу́ква — Letter | На́зва — Name | Звук — Sound | Характери́стика — Phonetic nature |
+| Бу́ква — Letter | На́зва — Name | Звук — Sound | Звуча́ння та о́пис — How it sounds |
 | --- | --- | --- | --- |
-| **Г, г** | ге | **[ɦ]** | Дзвінки́й горта́нний / фаринга́льний щіли́нний — Voiced pharyngeal fricative |
-| **Ґ, ґ** | ґе | **[ɡ]** | Дзвінки́й задньоязико́вий проривни́й — Voiced velar plosive |
+| **Г, г** | ге | **[ɦ]** | М'яки́й горта́нний звук (soft throat sound [ɦ]) — Voiced pharyngeal fricative |
+| **Ґ, ґ** | ґе | **[ɡ]** | Тверди́й вибухови́й звук (hard g [ɡ] like *go*) — Voiced velar plosive |
 
 :::tip
-**Як вимовля́ти украї́нський [г]:**
-Ukrainian **Г** is not the English *g* in *go*. It is a voiced, breathy sound produced deep down in the throat, similar to the *h* in English *behind* or *ahead*, but with active vocal cord vibration:
+**Як розрізня́ти Г та Ґ — Telling Г and Ґ apart:**
+**Г** is a soft throat sound; **Ґ** is a hard **g** like English *go*. Pair: **гора́** vs **ґа́ва**.
+
+Ukrainian **Г** is a voiced, breathy sound produced deep down in the throat, similar to the *h* in English *behind* or *ahead*, but with active vocal cord vibration:
 - **го-ра́ = гора́** (mountain);
 - **го-ро́д = горо́д** (vegetable garden);
 - **гриб** (mushroom).
 
 **Рі́дкісна бу́ква Ґ:**
-The letter **Ґ** with its upward-turned hook represents the crisp plosive [ɡ] (like *g* in *garden*). It is used in a small, traditional group of native Ukrainian words:
+The letter **Ґ** with its upward-turned hook represents the crisp plosive [ɡ] (like *g* in English *go* or *garden*). It is used in a small, traditional group of native Ukrainian words:
 - **ґа́-ва = ґа́ва** (crow);
 - **ґрунт** (soil / earth).
 :::
@@ -133,7 +136,7 @@ Watch the mouth position and listen to the authentic pronunciation demonstrated 
 
 ### Диві́ться та повто́рюйте: Бу́кви П, Т, Г, Ґ — Watch and repeat: Letters П, Т, Г, Ґ
 
-<WatchAndRepeat client:only='react' items={JSON.parse(`[{"video": "https://www.youtube.com/watch?v=JksSjjxyW5Y", "letter": "П", "word": "парк"}, {"video": "https://www.youtube.com/watch?v=m-jcLR_gK0k", "letter": "Т", "word": "торт"}, {"video": "https://www.youtube.com/watch?v=gVnclpSI0DU", "letter": "Г", "word": "гора́"}, {"video": "https://www.youtube.com/watch?v=gNjHqjTW9WQ", "letter": "Ґ", "word": "ґа́ва"}, {"video": "https://www.youtube.com/watch?v=V1hxBE_JbGg", "letter": "Б", "word": "брат"}, {"video": "https://www.youtube.com/watch?v=g4Bh-lqzd48", "letter": "Д", "word": "друг"}]`)} title="Диві́ться та повто́рюйте: Бу́кви П, Т, Г, Ґ — Watch and repeat: Letters П, Т, Г, Ґ" instruction={"Подиві́ться коро́тке ві́део про вимо́ву лі́тери (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос."} />
+<WatchAndRepeat client:only='react' items={JSON.parse(`[{"video": "https://www.youtube.com/watch?v=JksSjjxyW5Y", "letter": "П", "word": "парк — park"}, {"video": "https://www.youtube.com/watch?v=m-jcLR_gK0k", "letter": "Т", "word": "торт — cake"}, {"video": "https://www.youtube.com/watch?v=gVnclpSI0DU", "letter": "Г", "word": "гора́ — mountain"}, {"video": "https://www.youtube.com/watch?v=gNjHqjTW9WQ", "letter": "Ґ", "word": "ґа́ва — crow"}, {"video": "https://www.youtube.com/watch?v=V1hxBE_JbGg", "letter": "Б", "word": "брат — brother"}, {"video": "https://www.youtube.com/watch?v=g4Bh-lqzd48", "letter": "Д", "word": "друг — friend"}]`)} title="Диві́ться та повто́рюйте: Бу́кви П, Т, Г, Ґ — Watch and repeat: Letters П, Т, Г, Ґ" instruction={"Подиві́ться коро́тке ві́део про вимо́ву лі́тери (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос. — Watch a short video on pronouncing the letter (source: Anna Ohoiko, Ukrainian Lessons) and repeat aloud."} />
 
 ---
 
@@ -154,7 +157,7 @@ All four letters (**Р**, **А**, **Д**, **А**) are now completely familiar.
 
 ### Раху́йте склади́: Геогра́фія та побу́т — Count syllables: Geography and everyday life
 
-<CountSyllables client:only='react' instruction={"Пораху́йте голосні́ зву́ки у сло́ві. Кі́лькість голосни́х дорі́внює кі́лькості складів."} items={JSON.parse(`[{"word": "парк", "correct": 1}, {"word": "торт", "correct": 1}, {"word": "та́то", "correct": 2}, {"word": "гора́", "correct": 2}, {"word": "Дніпро́", "correct": 2}, {"word": "Полта́ва", "correct": 3}]`)} maxCount={5} />
+<CountSyllables client:only='react' instruction={"Пораху́йте голосні́ зву́ки у сло́ві. Кі́лькість голосни́х дорі́внює кі́лькості складів. — Count the vowel sounds in the word. The number of vowels equals the number of syllables."} items={JSON.parse(`[{"word": "парк", "correct": 1, "translation": "park"}, {"word": "торт", "correct": 1, "translation": "cake"}, {"word": "та́то", "correct": 2, "translation": "dad / father"}, {"word": "гора́", "correct": 2, "translation": "mountain"}, {"word": "Дніпро́", "correct": 2, "translation": "Dnipro (city / river)"}, {"word": "Полта́ва", "correct": 3, "translation": "Poltava (city)"}]`)} maxCount={5} />
 
 ---
 
@@ -175,7 +178,7 @@ Let us read full sentences combining all 18 unlocked letters (**А, О, У, М, 
 
 ### Зна́чення слів: Мініма́льні па́ри — Word meanings: Minimal pairs
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "кит", "right": "whale"}, {"left": "кіт", "right": "cat"}, {"left": "та́то", "right": "dad / father"}, {"left": "брат", "right": "brother"}, {"left": "друг", "right": "friend"}, {"left": "гриб", "right": "mushroom"}]`)} instruction={"З'єдна́йте украї́нське сло́во з його́ зна́ченням."} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "кит — kyt", "right": "whale (relaxed «ih»)"}, {"left": "кіт — kit", "right": "cat (smiling «ee»)"}, {"left": "та́то — tato", "right": "dad / father"}, {"left": "брат — brat", "right": "brother"}, {"left": "друг — druh", "right": "friend"}, {"left": "гриб — hryb", "right": "mushroom"}]`)} instruction={"З'єдна́йте украї́нське сло́во з його́ зна́ченням. — Match the Ukrainian word with its meaning."} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Словник — Vocabulary">
@@ -197,7 +200,7 @@ Let us read full sentences combining all 18 unlocked letters (**А, О, У, М, 
 
 ### Диві́ться та повто́рюйте: Бу́кви П, Т, Г, Ґ — Watch and repeat: Letters П, Т, Г, Ґ
 
-*(see lesson, §Фаринга́льний Г та вибухо́вий Ґ: Рі́дкісна й важли́ва бу́ква)*
+*(see lesson, §Бу́кви Г і Ґ: М'яки́й горта́нний звук та тверди́й вибухови́й — Letters Г and Ґ: Soft Throat Sound and Hard G)*
 
 ### Раху́йте склади́: Геогра́фія та побу́т — Count syllables: Geography and everyday life
 
@@ -209,27 +212,27 @@ Let us read full sentences combining all 18 unlocked letters (**А, О, У, М, 
 
 ### Пра́вда чи непра́вда: Бу́кви П, Т, Г, Ґ — True or False: Letters П, Т, Г, Ґ
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Бу́ква Г познача́є фаринга́льний щіли́нний звук [ɦ].", "isTrue": true, "explanation": "Украї́нський звук [г] утво́рюється гли́боко в горта́ні."}, {"statement": "Бу́ква Ґ познача́є вибухови́й задньоязико́вий звук [ɡ].", "isTrue": true, "explanation": "Бу́ква Ґ вимовля́ється як вибухови́й звук [ɡ] у сло́ві «ґа́ва»."}, {"statement": "Слова́ «кит» і «кіт» означа́ють одне́ й те са́ме.", "isTrue": false, "explanation": "«Кит» — це whale, а «кіт» — це cat."}, {"statement": "У сло́ві «Полта́ва» три склади́.", "isTrue": true, "explanation": "У сло́ві «Полта́ва» три голосни́х зву́ки, то́му три склади́."}, {"statement": "Бу́ква П є дзвінки́м зву́ком.", "isTrue": false, "explanation": "Бу́ква П познача́є глухи́й проривни́й звук."}, {"statement": "Сло́во «ґрунт» ма́є оди́н склад.", "isTrue": true, "explanation": "У сло́ві «ґрунт» оди́н голосни́й [у], отже́ оди́н склад."}]`)} instruction={"Ви́значте, чи є тве́рдження пра́вильним."} isUkrainian={false} />
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Бу́ква Г познача́є м'яки́й горта́нний звук [г]. — Letter Г represents a soft throat sound [h].", "isTrue": true, "explanation": "Бу́ква Г — це м'яки́й горта́нний звук (гора́), а Ґ — тверди́й [g] (ґа́ва). — Letter Г is a soft throat sound (гора́); Ґ is hard g like English go (ґа́ва)."}, {"statement": "Бу́ква Ґ познача́є тверди́й звук [g] як в англі́йському «go». — Letter Ґ represents a hard g sound like in English \\"go\\".", "isTrue": true, "explanation": "Бу́ква Ґ вимовля́ється твердо́ як «g» у сло́ві «ґа́ва». — Letter Ґ is pronounced as a hard g sound in «ґа́ва»."}, {"statement": "Слова́ «кит» і «кіт» означа́ють одне́ й те са́ме. — The words \\"кит\\" and \\"кіт\\" have the same meaning.", "isTrue": false, "explanation": "«Кит» — це whale, а «кіт» — це cat. — «Кит» means whale, while «кіт» means cat."}, {"statement": "У сло́ві «Полта́ва» три склади́. — In the word \\"Полта́ва\\" there are three syllables.", "isTrue": true, "explanation": "У сло́ві «Полта́ва» три голосни́х зву́ки, то́му три склади́. — In «Полта́ва» there are three vowel sounds, so three syllables."}, {"statement": "Бу́ква П є дзвінки́м зву́ком. — The letter П is a voiced sound.", "isTrue": false, "explanation": "Бу́ква П познача́є глухи́й звук, па́рний до дзвінко́го Б. — Letter П represents a voiceless sound, paired with voiced Б."}, {"statement": "Сло́во «ґрунт» ма́є оди́н склад. — The word \\"ґрунт\\" has one syllable.", "isTrue": true, "explanation": "У сло́ві «ґрунт» оди́н голосни́й [у], отже́ оди́н склад. — In «ґрунт» there is one vowel [у], hence one syllable."}]`)} instruction={"Ви́значте, чи є тве́рдження пра́вильним. — Determine whether the statement is true or false."} isUkrainian={false} />
 
 ### Факти про зву́ки П, Т, Г, Ґ — Facts about sounds П, Т, Г, Ґ
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Яка́ бу́ква є глухо́ю па́рою до Б?", "options": [{"text": "Бу́ква П", "correct": true}, {"text": "Бу́ква Т", "correct": false}, {"text": "Бу́ква К", "correct": false}], "explanation": "Глухи́й парний звук до [б] — це [п]."}, {"question": "Чим відрізня́ються бу́кви Г і Ґ?", "options": [{"text": "Г — фаринга́льний щіли́нний [ɦ], а Ґ — вибухови́й [ɡ]", "correct": true}, {"text": "Г — це голосни́й, а Ґ — при́голосний", "correct": false}, {"text": "Між ни́ми нема́є жо́дної різни́ці", "correct": false}], "explanation": "Г вимовля́ється гли́боко й м'я́ко [ɦ], а Ґ — вибухо́во [ɡ]."}, {"question": "Скі́льки складів у на́зві мі́ста «Дніпро́»?", "options": [{"text": "Два склади́: Дні-про́", "correct": true}, {"text": "Оди́н склад", "correct": false}, {"text": "Три склади́", "correct": false}], "explanation": "У сло́ві «Дніпро́» два голосни́х [і] та [о], отже́ два склади́."}, {"question": "Що означа́є сло́во «ґа́ва»?", "options": [{"text": "Crow (птах)", "correct": true}, {"text": "Coffee (напі́й)", "correct": false}, {"text": "Mountain (гора́)", "correct": false}], "explanation": "«Ґа́ва» — це птах (crow); не плу́тайте з ка́вою."}, {"question": "Яке́ сло́во ма́є закри́тий склад?", "options": [{"text": "парк", "correct": true}, {"text": "гора́", "correct": false}, {"text": "вода́", "correct": false}], "explanation": "Сло́во «парк» закінчу́ється на при́голосний і є закри́тим скла́дом."}, {"question": "Що означа́є ви́раз «Вона́ ра́да»?", "options": [{"text": "She is glad", "correct": true}, {"text": "She is at home", "correct": false}, {"text": "She is alone", "correct": false}], "explanation": "«Ра́да» — це коро́тка фо́рма ста́ну (glad)."}]`)} instruction={"Обері́ть одну́ прави́льну ві́дповідь."} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Яка́ бу́ква є глухо́ю па́рою до Б? — Which letter is the voiceless partner to Б?", "options": [{"text": "Бу́ква П — Letter П", "correct": true}, {"text": "Бу́ква Т — Letter Т", "correct": false}, {"text": "Бу́ква К — Letter К", "correct": false}], "explanation": "Глухи́й парний звук до [б] — це [п]. — The voiceless paired sound to [б] is [п]."}, {"question": "Чим відрізня́ються бу́кви Г і Ґ? — How do letters Г and Ґ differ?", "options": [{"text": "Г — м'яки́й горта́нний звук, а Ґ — тверди́й [g] як у «go» — Г is a soft throat sound, and Ґ is a hard g like \\"go\\"", "correct": true}, {"text": "Г — це голосни́й, а Ґ — при́голосний — Г is a vowel, and Ґ is a consonant", "correct": false}, {"text": "Між ни́ми нема́є жо́дної різни́ці — There is no difference between them", "correct": false}], "explanation": "Г — це м'яки́й горта́нний звук (гора́), а Ґ — тверди́й [g] (ґа́ва). — Г is a soft throat sound (гора́); Ґ is hard g like English go (ґа́ва)."}, {"question": "Скі́льки складів у на́зві мі́ста «Дніпро́»? — How many syllables are in the city name \\"Дніпро́\\"?", "options": [{"text": "Два склади́: Дні-про́ — Two syllables: Дні-про́", "correct": true}, {"text": "Оди́н склад — One syllable", "correct": false}, {"text": "Три склади́ — Three syllables", "correct": false}], "explanation": "У сло́ві «Дніпро́» два голосни́х [і] та [о], отже́ два склади́. — In «Дніпро́» there are two vowels [і] and [о], hence two syllables."}, {"question": "Що означа́є сло́во «ґа́ва»? — What does the word \\"ґа́ва\\" mean?", "options": [{"text": "Crow (птах)", "correct": true}, {"text": "Coffee (напі́й)", "correct": false}, {"text": "Mountain (гора́)", "correct": false}], "explanation": "«Ґа́ва» — це птах (crow); не плу́тайте з ка́вою. — «Ґа́ва» is a bird (crow); do not confuse it with coffee (ка́ва)."}, {"question": "Яке́ сло́во ма́є закри́тий склад? — Which word has a closed syllable?", "options": [{"text": "парк — park", "correct": true}, {"text": "гора́ — mountain", "correct": false}, {"text": "вода́ — water", "correct": false}], "explanation": "Сло́во «парк» закінчу́ється на при́голосний і є закри́тим скла́дом. — The word «парк» ends in a consonant and is a closed syllable."}, {"question": "Що означа́є ви́раз «Вона́ ра́да»? — What does the expression \\"Вона́ ра́да\\" mean?", "options": [{"text": "She is glad", "correct": true}, {"text": "She is at home", "correct": false}, {"text": "She is alone", "correct": false}], "explanation": "«Ра́да» — це коро́тка фо́рма ста́ну (glad). — «Ра́да» means glad (short state form)."}]`)} instruction={"Обері́ть одну́ прави́льну ві́дповідь. — Choose one correct answer."} isUkrainian={false} />
 
 ### Розподілі́ть слова́ за початко́вою бу́квою — Sort words by initial letter
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Слова́ на бу́кву П": ["парк", "па́ста", "поті́к"], "Слова́ на бу́кву Т": ["та́то", "торт"], "Слова́ на бу́кву Г": ["гора́", "горо́д", "гриб"]}`)} instruction={"Розподілі́ть слова́ за початко́вим при́голосним."} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"Слова́ на бу́кву П — Words with letter П": ["парк (park)", "па́ста (paste)", "поті́к (stream)"], "Слова́ на бу́кву Т — Words with letter Т": ["та́то (dad)", "торт (cake)"], "Слова́ на бу́кву Г — Words with letter Г": ["гора́ (mountain)", "горо́д (garden)", "гриб (mushroom)"]}`)} instruction={"Розподілі́ть слова́ за початко́вим при́голосним. — Sort words by their initial consonant."} isUkrainian={false} />
 
-### За́йве сло́во за звуково́ю будо́вою — Odd word out
+### За́йве сло́во за звуково́ю будо́вою — Odd word out by sound structure
 
-<OddOneOut client:only='react' instruction={"Знайді́ть за́йве сло́во в ко́жному рядку́."} items={JSON.parse(`[{"words": ["гора́", "горо́д", "гриб", "ґа́ва"], "correct": 3, "explanation": "Сло́во «ґа́ва» почина́ється з лі́тери Ґ, а ре́шта — з Г."}, {"words": ["та́то", "па́ста", "ка́рта", "торт"], "correct": 3, "explanation": "Сло́во «торт» односкладо́ве, а ре́шта — двоскладо́ві."}, {"words": ["Дніпро́", "Полта́ва", "парк", "брат"], "correct": 1, "explanation": "Сло́во «Полта́ва» має три склади́, а ре́шта — один або́ два."}, {"words": ["кит", "кіт", "гриб", "гора́"], "correct": 3, "explanation": "Сло́во «гора́» двоскладо́ве, а ре́шта слів — односкладо́ві."}, {"words": ["брат", "друг", "та́то", "ґрунт"], "correct": 2, "explanation": "Сло́во «та́то» двоскладо́ве, а ре́шта слів мають по одному́ скла́ду."}, {"words": ["поті́к", "па́ста", "парк", "та́то"], "correct": 3, "explanation": "Сло́во «та́то» почина́ється з Т, а ре́шта слів — з П."}]`)} />
+<OddOneOut client:only='react' instruction={"Знайді́ть за́йве сло́во в ко́жному рядку́. — Find the odd word in each row."} items={JSON.parse(`[{"words": ["гора́ — mountain", "горо́д — garden", "гриб — mushroom", "ґа́ва — crow"], "correct": 3, "explanation": "«Ґа́ва» почина́ється з Ґ (hard g), а ре́шта — з Г (soft throat sound). — «Ґа́ва» begins with Ґ, while the rest begin with Г."}, {"words": ["та́то — dad", "па́ста — paste", "ка́рта — map", "торт — cake"], "correct": 3, "explanation": "«То́рт» односкладо́ве, а ре́шта — двоскладо́ві. — «То́рт» has one syllable, while the rest have two."}, {"words": ["Дніпро́ — Dnipro", "Полта́ва — Poltava", "парк — park", "брат — brother"], "correct": 1, "explanation": "«Полта́ва» ма́є три склади́, а ре́шта — один або́ два. — «Полта́ва» has three syllables, while the rest have one or two."}, {"words": ["кит — whale", "кіт — cat", "гриб — mushroom", "гора́ — mountain"], "correct": 3, "explanation": "«Гора́» двоскладо́ве, а ре́шта слів — односкладо́ві. — «Гора́» has two syllables, while the rest have one."}, {"words": ["брат — brother", "друг — friend", "та́то — dad", "ґрунт — soil"], "correct": 2, "explanation": "«Та́то» двоскладо́ве, а ре́шта слів мають по одному́ скла́ду. — «Та́то» has two syllables, while the others have one."}, {"words": ["поті́к — stream", "па́ста — paste", "парк — park", "та́то — dad"], "correct": 3, "explanation": "«Та́то» почина́ється з Т, а ре́шта слів — з П. — «Та́то» begins with Т, while the rest begin with П."}]`)} />
 
 ### Вста́вте пропу́щену лі́теру — Fill in the missing letter
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Тут ___а́то.", "answer": "т", "options": ["т", "п", "г"], "explanation": "Сло́во «та́то» почина́ється з лі́тери т."}, {"sentence": "Он ___арк.", "answer": "п", "options": ["п", "т", "б"], "explanation": "Сло́во «парк» почина́ється з лі́тери п."}, {"sentence": "Он ___ора́.", "answer": "г", "options": ["г", "ґ", "к"], "explanation": "Сло́во «гора́» почина́ється з лі́тери г."}, {"sentence": "Он ___а́ва.", "answer": "ґ", "options": ["ґ", "г", "к"], "explanation": "Сло́во «ґа́ва» (crow) пи́шеться з лі́терою ґ."}, {"sentence": "Он ___ніпро́.", "answer": "д", "options": ["д", "т", "п"], "explanation": "Сло́во «Дніпро́» почина́ється з лі́тери д."}, {"sentence": "Вона́ ___а́да.", "answer": "р", "options": ["р", "п", "т"], "explanation": "Сло́во «ра́да» почина́ється з лі́тери р."}]`)} instruction={"Обері́ть прави́льну лі́теру на мі́сці про́пуску ___ ."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Тут ___а́то. — Here is dad.", "answer": "т", "options": ["т", "п", "г"], "explanation": "Сло́во «та́то» (dad) почина́ється з лі́тери т. — The word «та́то» begins with the letter т."}, {"sentence": "Он ___арк. — Over there is a park.", "answer": "п", "options": ["п", "т", "б"], "explanation": "Сло́во «парк» (park) почина́ється з лі́тери п. — The word «парк» begins with the letter п."}, {"sentence": "Он ___ора́. — Over there is a mountain.", "answer": "г", "options": ["г", "ґ", "к"], "explanation": "Сло́во «гора́» (mountain) почина́ється з лі́тери г. — The word «гора́» begins with the letter г."}, {"sentence": "Он ___а́ва. — Over there is a crow.", "answer": "ґ", "options": ["ґ", "г", "к"], "explanation": "Сло́во «ґа́ва» (crow) пи́шеться з лі́терою ґ. — The word «ґа́ва» is written with the letter ґ."}, {"sentence": "Он ___ніпро́. — Over there is Dnipro.", "answer": "д", "options": ["д", "т", "п"], "explanation": "Сло́во «Дніпро́» (Dnipro) почина́ється з лі́тери д. — The word «Дніпро́» begins with the letter д."}, {"sentence": "Вона́ ___а́да. — She is glad.", "answer": "р", "options": ["р", "п", "т"], "explanation": "Сло́во «ра́да» (glad) почина́ється з лі́тери р. — The word «ра́да» begins with the letter р."}]`)} instruction={"Обері́ть прави́льну лі́теру на мі́сці про́пуску ___ . — Choose the correct letter for the blank ___ ."} isUkrainian={false} />
 
 ### Склади́ сло́во з лі́тер — Unjumble the word
 
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "п / а / р / к", "answer": "парк"}, {"jumbled": "т / о / р / т", "answer": "торт"}, {"jumbled": "б / р / а / т", "answer": "брат"}, {"jumbled": "д / р / у / г", "answer": "друг"}, {"jumbled": "к / і / т", "answer": "кіт"}, {"jumbled": "к / и / т", "answer": "кит"}]`)} instruction={"Поста́вте лі́тери в прави́льному поря́дку, щоб утвори́ти сло́во."} />
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "п / а / р / к", "answer": "парк", "hint": "парк — park"}, {"jumbled": "т / о / р / т", "answer": "торт", "hint": "торт — cake"}, {"jumbled": "б / р / а / т", "answer": "брат", "hint": "брат — brother"}, {"jumbled": "д / р / у / г", "answer": "друг", "hint": "друг — friend"}, {"jumbled": "к / і / т", "answer": "кіт", "hint": "кіт — cat"}, {"jumbled": "к / и / т", "answer": "кит", "hint": "кит — whale"}]`)} instruction={"Поста́вте лі́тери в прави́льному поря́дку, щоб утвори́ти сло́во. — Arrange the letters in the correct order to form the word."} />
 
 </TabItem>
 <TabItem label="Ресурси — Resources">

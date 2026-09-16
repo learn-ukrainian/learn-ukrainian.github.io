@@ -1,14 +1,14 @@
-# Си́нтез чита́ння: Від слів до пе́ршого діало́гу
+# Си́нтез чита́ння: Від слів до пе́ршого діало́гу — Reading Synthesis: From Words to First Dialogue
 
 Ласка́во про́симо до фіна́льного уро́ку дру́гого мо́дуля! — Welcome to the final synthesis lesson of Module 2! Across the first four lessons of this module and Module 1, you unlocked a grand total of 23 Ukrainian letters:
 - **Голосні́ (6 лі́тер):** **А, О, У, И, І, Е**
 - **При́голосні (17 лі́тер):** **М, Л, С, Н, К, Р, Б, В, Д, П, Т, Г, Ґ, З, Ж, Ш, Х**
 
-In this lesson, there are **0 new letters**. Instead, you integrate everything you have learned into fluent, confident reading. You will climb the progressive syllable ladder from single-syllable beats to five-syllable powerhouses like **у-ні-вер-си-те́т**. You will decode prominent Ukrainian cities (**Оде́са**, **Ха́рків**, **Дніпро́**, **Полта́ва**). Finally, you will take part in your very first authentic Ukrainian dialogue: greeting a partner, introducing yourself (**Мене́ зва́ти...**), asking a name (**А тебе́?**), and bidding a polite farewell (**На все до́бре!**).
+In this lesson, there are **0 new letters**. Instead, you integrate everything you have learned into fluent, confident reading. You will climb the progressive syllable ladder from single-beat words to five-beat powerhouses like **у-ні-вер-си-те́т**. You will decode prominent Ukrainian cities (**Оде́са**, **Ха́рків**, **Дніпро́**, **Полта́ва**). Finally, you will take part in your very first authentic Ukrainian dialogue: greeting a partner, introducing yourself (**Мене́ зва́ти...**), asking a name (**А тебе́?**), and bidding a polite farewell (**На все до́бре!**).
 
 By the end of this 60-minute lesson, you will be able to:
 
-- **Чита́ти слова́ за зроста́ючою скла́дністю** — decode Ukrainian words from 1 to 5 syllables without stumbling or guessing;
+- **Чита́ти слова́ за зроста́ючою скла́дністю** — read Ukrainian words from 1 to 5 beats (syllables) without stumbling or guessing;
 - **Впе́внено чита́ти на́зви украї́нських міст** — accurately read **О-де́-са**, **Ха́р-ків**, **Дні-про́**, and **Пол-та́-ва**;
 - **Володі́ти пе́ршими комунікати́вними фо́рмулами** — express identity and farewells with **Мене́ зва́ти...**, **А тебе́?**, **До́бре**, and **На все до́бре!**;
 - **Розі́грувати повноці́нний автенти́чний діало́г** — read and perform a real spoken exchange with partners;
@@ -18,46 +18,46 @@ By the end of this 60-minute lesson, you will be able to:
 
 ## Схо́динки чита́ння: Від одного́ до п'яти́ складі́в
 
-In Ukrainian classrooms, children master reading speed and accuracy through a graduated syllable ladder (**схо́динки чита́ння**). Because every vowel equals one syllable, you can always determine the rhythmic structure of any word before uttering a single sound:
+In Ukrainian classrooms, children master reading speed and accuracy through a graduated syllable ladder (**схо́динки чита́ння**). Count the **vowels**. That is how many **beats** (склади́ / syllables) the word has. Because every vowel creates one beat, you can always determine the rhythm of any word before uttering a single sound:
 
-### 1. Односкладо́ві слова́ (1 склад — 1 голосни́й звук)
-Single-syllable words provide the rhythmic pulse of Ukrainian speech. Pronounce them cleanly without dragging out or swallowing consonants:
+### 1. Односкладо́ві слова́ (1 beat — 1 vowel)
+Single-beat words provide the rhythmic pulse of Ukrainian speech. Pronounce them cleanly without dragging out or swallowing consonants:
 - **дім** (house / home);
 - **ліс** (forest);
-- **хліб** (bread; note final [б] remains voiced);
-- **сад** (garden; note final [д] remains voiced);
+- **хліб** (bread; note final **б** still sounds like **б**, not **п**);
+- **сад** (garden; note final **д** still sounds like **д**, not **т**);
 - **сон** (dream / sleep);
 - **брат** (brother);
 - **парк** (park);
 - **торт** (cake);
-- **зуб** (tooth);
+- **зуб** (tooth; final **б** still sounds like **б**, not **п**);
 - **наш** (our).
 
-### 2. Двоскладо́ві слова́ (2 склади́ — 2 голосни́х зву́ки)
-Two-syllable words introduce the essential rhythm of stressed versus unstressed syllables:
-- **ма́-ма = ма́ма**
-- **та́-то = та́то**
-- **во-да́ = вода́**
-- **ру-ка́ = рука́**
-- **ха́-та = ха́та**
-- **ка́-ша = ка́ша**
-- **се-ло́ = село́**
-- **ри́-нок = ри́нок**
-- **со́-рок = со́рок**
-- **си́-ла = си́ла**
-- **ґа́-ва = ґа́ва**
+### 2. Двоскладо́ві слова́ (2 beats — 2 vowels)
+Two-beat words introduce the essential rhythm of stressed versus unstressed syllables:
+- **ма́-ма = ма́ма** (mom)
+- **та́-то = та́то** (dad)
+- **во-да́ = вода́** (water)
+- **ру-ка́ = рука́** (hand / arm)
+- **ха́-та = ха́та** (cottage)
+- **ка́-ша = ка́ша** (porridge)
+- **се-ло́ = село́** (village)
+- **ри́-нок = ри́нок** (market)
+- **со́-рок = со́рок** (forty)
+- **си́-ла = си́ла** (strength)
+- **ґа́-ва = ґа́ва** (crow)
 
-### 3. Трискладо́ві слова́ (3 склади́ — 3 голосни́х зву́ки)
-Three-syllable words require smooth rhythmic transitions between syllables:
+### 3. Трискладо́ві слова́ (3 beats — 3 vowels)
+Three-beat words require smooth rhythmic transitions between syllables:
 - **ап-те́-ка = апте́ка** (pharmacy);
-- **мо-ло-ко́ = молоко́** (milk; keep every **о** pure!);
+- **мо-ло-ко́ = молоко́** (milk; unstressed **о** stays **о**!);
 - **со-ба́-ка = соба́ка** (dog);
 - **ма-ши́-на = маши́на** (car / machine);
 - **ле-ле́-ка = леле́ка** (stork).
 
-### 4. Багатоскладо́ві слова́ (5 складі́в)
+### 4. Багатоскладо́ві слова́ (5 beats)
 Long words look intimidating only when read letter by letter. When segmented into syllable beats, they become effortless:
-- **у-ні-вер-си-те́т = університе́т** (5 vowels = 5 syllables: university).
+- **у-ні-вер-си-те́т = університе́т** (5 vowels = 5 beats / syllables: university).
 
 <!-- INJECT_ACTIVITY: act-241 -->
 
@@ -67,12 +67,12 @@ Long words look intimidating only when read letter by letter. When segmented int
 
 Ukrainian proper nouns follow the exact same phonetic laws as common words. Let us read four major Ukrainian regional centers unlocked by our 23 letters:
 
-| Мі́сто — City | Складопо́діл — Syllables | На́голос — Stress |
+| Мі́сто — City | Складопо́діл — Syllables (beats) | На́голос — Stress |
 | --- | --- | --- |
-| **Оде́са** | **О-де́-са** (3 syllables) | На дру́гому скла́ді (**де́**) |
-| **Ха́рків** | **Ха́р-ків** (2 syllables) | На пе́ршому скла́ді (**Ха́р**) |
-| **Дніпро́** | **Дні-про́** (2 syllables) | На дру́гому скла́ді (**про́**) |
-| **Полта́ва** | **Пол-та́-ва** (3 syllables) | На дру́гому скла́ді (**та́**) |
+| **Оде́са** | **О-де́-са** (3 beats) | На дру́гому скла́ді (**де́**) — On the 2nd beat |
+| **Ха́рків** | **Ха́р-ків** (2 beats) | На пе́ршому скла́ді (**Ха́р**) — On the 1st beat |
+| **Дніпро́** | **Дні-про́** (2 beats) | На дру́гому скла́ді (**про́**) — On the 2nd beat |
+| **Полта́ва** | **Пол-та́-ва** (3 beats) | На дру́гому скла́ді (**та́**) — On the 2nd beat |
 
 :::note
 You may wonder why the capital city **Ки́їв** and the western cultural center **Львів** are not included in this lesson. **Ки́їв** contains the unique letter **Ї**, and **Львів** contains the soft sign **Ь**. Both letters belong to Module 3 (**special-signs**). By keeping our lessons strictly staged, we ensure you read only what you have systematically learned!
@@ -99,19 +99,19 @@ All the letters needed for basic conversational etiquette are now in your hands:
 
 Now read and perform the first real dialogue of our course between **Марко́** (Marko) and **Окса́на** (Oksana):
 
-> **Марко́:** — До́брого ра́нку! Приві́т!
+> **Марко́:** — До́брого ра́нку! Приві́т! *(Good morning! Hi!)*
 >
-> **Окса́на:** — Приві́т!
+> **Окса́на:** — Приві́т! *(Hi!)*
 >
-> **Марко́:** — Мене́ зва́ти Марко́. А тебе́?
+> **Марко́:** — Мене́ зва́ти Марко́. А тебе́? *(My name is Marko. And you?)*
 >
-> **Окса́на:** — Мене́ зва́ти Окса́на.
+> **Окса́на:** — Мене́ зва́ти Окса́на. *(My name is Oksana.)*
 >
-> **Марко́:** — Тут наш дім, а там парк і сад.
+> **Марко́:** — Тут наш дім, а там парк і сад. *(Here is our house, and over there are the park and garden.)*
 >
-> **Окса́на:** — На все до́бре!
+> **Окса́на:** — На все до́бре! *(All the best! / Goodbye!)*
 >
-> **Марко́:** — На все до́бре!
+> **Марко́:** — На все до́бре! *(All the best! / Goodbye!)*
 
 Every single letter, syllable, and word in this dialogue has been taught and practiced step by step. You are no longer sounding out isolated letters — you are reading Ukrainian!
 
@@ -123,16 +123,18 @@ Every single letter, syllable, and word in this dialogue has been taught and pra
 
 Віта́ємо з успі́шним заве́ршенням дру́гого мо́дуля! — Congratulations on completing Module 2! Over these five lessons, you have achieved a momentous breakthrough in your Ukrainian language literacy:
 
-- You mastered the universal syllable rule: **«У сло́ві сті́льки складі́в, скі́льки в ньо́му голосни́х зву́ків»**.
+- Count the **vowels**. That is how many **beats** (склади́ / syllables) the word has.
 - You learned to use the hands-under-chin test to verify syllable counts without hesitation.
 - You unlocked **16 new letters**, bringing your working inventory to **23 letters**:
   - 6 pure vowels: **А, О, У, Е, И, І**
   - 17 consonants: **М, Л, С, Н, К, Р, Б, В, Д, П, Т, Г, Ґ, З, Ж, Ш, Х**
-- You discovered vital phonetic laws:
-  - **No final devoicing:** Ukrainian voiced consonants stay voiced (**дуб**, **сад**, **дід**, **хліб**);
-  - **Hard sibilants:** **Ж** and **Ш** are hard before vowels in taught examples (**жа́ба**, **шко́ла**, **ка́ша**);
-  - **Vowel purity:** Ukrainian vowels never diphthongize or blur into lazy schwas.
-- You can now read multi-syllable words up to five syllables (**університе́т**), decode major Ukrainian cities (**Оде́са**, **Ха́рків**, **Дніпро́**, **Полта́ва**), and carry out your first complete dialogue!
+- You discovered vital phonetic rules:
+  - **Final consonants stay voiced:** Final **б** in **дуб** and **хліб** still sounds like **б**, not **п** (and final **д** in **сад** sounds like **д**, not **т**);
+  - **Firm sounds:** **ж** and **ш** stay “zh” and “sh”; they do not go soft in these words (**жа́ба**, **шко́ла**, **ка́ша**);
+  - **Unstressed vowels:** Unstressed **о** stays **о** (no slurring into *a*);
+  - **Distinct vowel sounds:** **и** is a relaxed “ih”; **і** is “ee”. Pair: **дим / дім**;
+  - **Throat sound vs hard g:** **Г** is a soft throat sound; **Ґ** is a hard **g** like English *go*. **гора́** vs **ґа́ва**.
+- You can now read multi-syllable words up to five beats (**університе́т**), decode major Ukrainian cities (**Оде́са**, **Ха́рків**, **Дніпро́**, **Полта́ва**), and carry out your first complete dialogue!
 
 ### Що да́лі? — What lies ahead in Module 3?
 In Module 3 (**special-signs**), you will meet the remaining letters and signs of the Ukrainian alphabet:
