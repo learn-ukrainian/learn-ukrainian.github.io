@@ -339,12 +339,15 @@ def test_batch_expansion_count():
     Batch 8 (#8039 continuation): +32 lemmas selected from academic authorities and
     Grinchenko (1907) with explicit pre-Soviet witness citations and Soviet
     colonization context, expanding SSOT to 264 and dropping residual to 158.
+    Batch 9 (#8039 continuation): +32 lemmas selected from academic authorities and
+    Grinchenko (1907) with explicit pre-Soviet witness citations and Soviet
+    colonization context, expanding SSOT to 296 and dropping residual to 126.
     """
     total_curated = len(enrich_heteronyms.CURATED_HETERONYMS)
-    assert total_curated == 264
+    assert total_curated == 296
     # Corrected denominator is 422 true two-way-stress candidates;
-    # residual is 422 - 264 = 158
-    assert 422 - total_curated == 158
+    # residual is 422 - 296 = 126
+    assert 422 - total_curated == 126
 
 
 def test_kredyt_disambiguation():
@@ -1294,6 +1297,333 @@ def test_batch8_lemmas_not_duplicated_from_earlier_batches():
     assert lutnevyi[0]["heritage_status"]["vesum_attested"] is True
     assert lutnevyi[1]["heritage_status"]["vesum_attested"] is True
 
+
+def test_batch9_semantic_and_stress_distinctions():
+    """Verify Batch 9 stress and semantic distinctions against academic authorities and Grinchenko."""
+    # лупання: лу́пання (blinking eyelids) vs лупа́ння (chipping rock/ore)
+    lup = enrich_heteronyms.build_heteronyms_for_lemma("лупання")
+    assert lup is not None and len(lup) == 2
+    assert lup[0]["headword"] == "лу́пання"
+    assert "blinking" in lup[0]["gloss"].lower()
+    assert lup[1]["headword"] == "лупа́ння"
+    assert "peeling" in lup[1]["gloss"].lower() or "chipping" in lup[1]["gloss"].lower() or "quarrying" in lup[1]["gloss"].lower()
+
+    # люстровий: лю́стровий (chandelier) vs люстро́вий (lustrine fabric / mirror)
+    lus = enrich_heteronyms.build_heteronyms_for_lemma("люстровий")
+    assert lus is not None and len(lus) == 2
+    assert lus[0]["headword"] == "лю́стровий"
+    assert "chandelier" in lus[0]["gloss"].lower()
+    assert lus[1]["headword"] == "люстро́вий"
+    assert "lustrine" in lus[1]["gloss"].lower() or "mirror" in lus[1]["gloss"].lower()
+
+    # маячний: мая́чний (lighthouse/beacon) vs маячни́й (delirious/hallucinatory)
+    may = enrich_heteronyms.build_heteronyms_for_lemma("маячний")
+    assert may is not None and len(may) == 2
+    assert may[0]["headword"] == "мая́чний"
+    assert "lighthouse" in may[0]["gloss"].lower() or "beacon" in may[0]["gloss"].lower()
+    assert may[1]["headword"] == "маячни́й"
+    assert "delirious" in may[1]["gloss"].lower() or "feverish" in may[1]["gloss"].lower()
+
+    # набігати: набі́гати (perf., acquire by running) vs набіга́ти (imperf., surge/rush onto)
+    nab = enrich_heteronyms.build_heteronyms_for_lemma("набігати")
+    assert nab is not None and len(nab) == 2
+    assert nab[0]["headword"] == "набі́гати"
+    assert nab[0]["morphology"]["paradigm"]["aspect"] == "доконаний"
+    assert nab[1]["headword"] == "набіга́ти"
+    assert nab[1]["morphology"]["paradigm"]["aspect"] == "недоконаний"
+
+    # набухати: набу́хати (perf., pour/dump plenty) vs набуха́ти (imperf., swell up)
+    nbh = enrich_heteronyms.build_heteronyms_for_lemma("набухати")
+    assert nbh is not None and len(nbh) == 2
+    assert nbh[0]["headword"] == "набу́хати"
+    assert nbh[0]["morphology"]["paradigm"]["aspect"] == "доконаний"
+    assert nbh[1]["headword"] == "набуха́ти"
+    assert nbh[1]["morphology"]["paradigm"]["aspect"] == "недоконаний"
+
+    # наварний: нава́рний (rich broth) vs наварни́й (welded-on, tech.)
+    nav = enrich_heteronyms.build_heteronyms_for_lemma("наварний")
+    assert nav is not None and len(nav) == 2
+    assert nav[0]["headword"] == "нава́рний"
+    assert "broth" in nav[0]["gloss"].lower() or "rich" in nav[0]["gloss"].lower()
+    assert nav[1]["headword"] == "наварни́й"
+    assert "welded" in nav[1]["gloss"].lower()
+
+    # навозити: наво́зити (imperf., cart in quantity) vs навози́ти (perf., haul multiple trips or fertilize)
+    nvz = enrich_heteronyms.build_heteronyms_for_lemma("навозити")
+    assert nvz is not None and len(nvz) == 2
+    assert nvz[0]["headword"] == "наво́зити"
+    assert nvz[0]["morphology"]["paradigm"]["aspect"] == "недоконаний"
+    assert nvz[1]["headword"] == "навози́ти"
+    assert nvz[1]["morphology"]["paradigm"]["aspect"] == "доконаний"
+
+    # назубок: назу́бок (noun: special file) vs назубо́к (adv: by heart, thoroughly)
+    naz = enrich_heteronyms.build_heteronyms_for_lemma("назубок")
+    assert naz is not None and len(naz) == 2
+    assert naz[0]["headword"] == "назу́бок"
+    assert naz[0]["pos"] == "noun"
+    assert naz[1]["headword"] == "назубо́к"
+    assert naz[1]["pos"] == "adv"
+
+    # наслухати: наслу́хати (perf., hear through rumors) vs наслуха́ти (imperf., listen intently)
+    nsl = enrich_heteronyms.build_heteronyms_for_lemma("наслухати")
+    assert nsl is not None and len(nsl) == 2
+    assert nsl[0]["headword"] == "наслу́хати"
+    assert nsl[0]["morphology"]["paradigm"]["aspect"] == "доконаний"
+    assert nsl[1]["headword"] == "наслуха́ти"
+    assert nsl[1]["morphology"]["paradigm"]["aspect"] == "недоконаний"
+
+    # настильний: насти́льний (flat-trajectory, mil.) vs настильни́й (flooring/decking)
+    nas = enrich_heteronyms.build_heteronyms_for_lemma("настильний")
+    assert nas is not None and len(nas) == 2
+    assert nas[0]["headword"] == "насти́льний"
+    assert "trajectory" in nas[0]["gloss"].lower() or "flat" in nas[0]["gloss"].lower()
+    assert nas[1]["headword"] == "настильни́й"
+    assert "flooring" in nas[1]["gloss"].lower() or "decking" in nas[1]["gloss"].lower()
+
+    # невигода: неви́года (material loss) vs невиго́да (inconvenience, discomfort)
+    nev = enrich_heteronyms.build_heteronyms_for_lemma("невигода")
+    assert nev is not None and len(nev) == 2
+    assert nev[0]["headword"] == "неви́года"
+    assert "loss" in nev[0]["gloss"].lower() or "profit" in nev[0]["gloss"].lower()
+    assert nev[1]["headword"] == "невиго́да"
+    assert "inconvenience" in nev[1]["gloss"].lower() or "discomfort" in nev[1]["gloss"].lower()
+
+    # неперехідний: неперехі́дний (impassable) vs неперехідни́й (intransitive / eternal)
+    nep = enrich_heteronyms.build_heteronyms_for_lemma("неперехідний")
+    assert nep is not None and len(nep) == 2
+    assert nep[0]["headword"] == "неперехі́дний"
+    assert "impassable" in nep[0]["gloss"].lower() or "uncrossable" in nep[0]["gloss"].lower()
+    assert nep[1]["headword"] == "неперехідни́й"
+    assert "intransitive" in nep[1]["gloss"].lower() or "enduring" in nep[1]["gloss"].lower()
+
+    # неповоротний: неповоро́тний (irreversible) vs неповоротни́й (clumsy/unwieldy)
+    npv = enrich_heteronyms.build_heteronyms_for_lemma("неповоротний")
+    assert npv is not None and len(npv) == 2
+    assert npv[0]["headword"] == "неповоро́тний"
+    assert "irreversible" in npv[0]["gloss"].lower() or "irrevocable" in npv[0]["gloss"].lower()
+    assert npv[1]["headword"] == "неповоротни́й"
+    assert "clumsy" in npv[1]["gloss"].lower() or "unwieldy" in npv[1]["gloss"].lower()
+
+    # оббігати: оббі́гати (perf., visit many places) vs оббіга́ти (imperf., run around in circle)
+    obb = enrich_heteronyms.build_heteronyms_for_lemma("оббігати")
+    assert obb is not None and len(obb) == 2
+    assert obb[0]["headword"] == "оббі́гати"
+    assert obb[0]["morphology"]["paradigm"]["aspect"] == "доконаний"
+    assert obb[1]["headword"] == "оббіга́ти"
+    assert obb[1]["morphology"]["paradigm"]["aspect"] == "недоконаний"
+
+    # обводити: обво́дити (imperf., outline/lead around) vs обводи́ти (perf., take someone everywhere)
+    obv = enrich_heteronyms.build_heteronyms_for_lemma("обводити")
+    assert obv is not None and len(obv) == 2
+    assert obv[0]["headword"] == "обво́дити"
+    assert obv[0]["morphology"]["paradigm"]["aspect"] == "недоконаний"
+    assert obv[1]["headword"] == "обводи́ти"
+    assert obv[1]["morphology"]["paradigm"]["aspect"] == "доконаний"
+
+    # обідець: обі́дець (small rim/hoop) vs обіде́ць (small nice dinner/meal)
+    obi = enrich_heteronyms.build_heteronyms_for_lemma("обідець")
+    assert obi is not None and len(obi) == 2
+    assert obi[0]["headword"] == "обі́дець"
+    assert "rim" in obi[0]["gloss"].lower() or "hoop" in obi[0]["gloss"].lower()
+    assert obi[1]["headword"] == "обіде́ць"
+    assert "dinner" in obi[1]["gloss"].lower() or "meal" in obi[1]["gloss"].lower()
+
+    # обрізання: обрі́зання (circumcision rite) vs обріза́ння (pruning/trimming)
+    obr = enrich_heteronyms.build_heteronyms_for_lemma("обрізання")
+    assert obr is not None and len(obr) == 2
+    assert obr[0]["headword"] == "обрі́зання"
+    assert "circumcision" in obr[0]["gloss"].lower()
+    assert obr[1]["headword"] == "обріза́ння"
+    assert "pruning" in obr[1]["gloss"].lower() or "trimming" in obr[1]["gloss"].lower()
+
+    # окісний: о́кісний (culinary, gammon/ham) vs окі́сний (anatomy, periosteal)
+    oki = enrich_heteronyms.build_heteronyms_for_lemma("окісний")
+    assert oki is not None and len(oki) == 2
+    assert oki[0]["headword"] == "о́кісний"
+    assert "ham" in oki[0]["gloss"].lower() or "gammon" in oki[0]["gloss"].lower()
+    assert oki[1]["headword"] == "окі́сний"
+    assert "periosteal" in oki[1]["gloss"].lower()
+
+    # окружний: окру́жний (roundabout/detour) vs окружни́й (district/regional)
+    okr = enrich_heteronyms.build_heteronyms_for_lemma("окружний")
+    assert okr is not None and len(okr) == 2
+    assert okr[0]["headword"] == "окру́жний"
+    assert "roundabout" in okr[0]["gloss"].lower() or "circuitous" in okr[0]["gloss"].lower()
+    assert okr[1]["headword"] == "окружни́й"
+    assert "district" in okr[1]["gloss"].lower() or "regional" in okr[1]["gloss"].lower()
+
+    # описка: о́писка (potter's clay pigment) vs опи́ска (slip of the pen)
+    opy = enrich_heteronyms.build_heteronyms_for_lemma("описка")
+    assert opy is not None and len(opy) == 2
+    assert opy[0]["headword"] == "о́писка"
+    assert "clay" in opy[0]["gloss"].lower() or "potter" in opy[0]["gloss"].lower()
+    assert opy[1]["headword"] == "опи́ска"
+    assert "pen" in opy[1]["gloss"].lower() or "writing" in opy[1]["gloss"].lower()
+
+    # пахолок: па́холок (withers of horse) vs пахо́лок (page, squire, servant lad)
+    pah = enrich_heteronyms.build_heteronyms_for_lemma("пахолок")
+    assert pah is not None and len(pah) == 2
+    assert pah[0]["headword"] == "па́холок"
+    assert pah[0]["morphology"]["paradigm"]["animacy"] == "inanimate"
+    assert pah[1]["headword"] == "пахо́лок"
+    assert pah[1]["morphology"]["paradigm"]["animacy"] == "animate"
+
+    # перевозити: перево́зити (imperf.) vs перевози́ти (perf.)
+    prv = enrich_heteronyms.build_heteronyms_for_lemma("перевозити")
+    assert prv is not None and len(prv) == 2
+    assert prv[0]["headword"] == "перево́зити"
+    assert prv[0]["morphology"]["paradigm"]["aspect"] == "недоконаний"
+    assert prv[1]["headword"] == "перевози́ти"
+    assert prv[1]["morphology"]["paradigm"]["aspect"] == "доконаний"
+
+    # перекладка: пере́кладка (crossbar/strut) vs перекла́дка (repositioning/translating)
+    prk = enrich_heteronyms.build_heteronyms_for_lemma("перекладка")
+    assert prk is not None and len(prk) == 2
+    assert prk[0]["headword"] == "пере́кладка"
+    assert "crossbar" in prk[0]["gloss"].lower() or "crossbeam" in prk[0]["gloss"].lower()
+    assert prk[1]["headword"] == "перекла́дка"
+    assert "translating" in prk[1]["gloss"].lower() or "repositioning" in prk[1]["gloss"].lower()
+
+    # переливний: перели́вний (iridescent) vs переливни́й (overflow/spillway)
+    prl = enrich_heteronyms.build_heteronyms_for_lemma("переливний")
+    assert prl is not None and len(prl) == 2
+    assert prl[0]["headword"] == "перели́вний"
+    assert "iridescent" in prl[0]["gloss"].lower() or "shimmering" in prl[0]["gloss"].lower()
+    assert prl[1]["headword"] == "переливни́й"
+    assert "overflow" in prl[1]["gloss"].lower() or "spillway" in prl[1]["gloss"].lower()
+
+    # переруб: пере́руб (grain bin, dial.) vs переру́б (overlogging, forestry)
+    prr = enrich_heteronyms.build_heteronyms_for_lemma("переруб")
+    assert prr is not None and len(prr) == 2
+    assert prr[0]["headword"] == "пере́руб"
+    assert "bin" in prr[0]["gloss"].lower() or "granary" in prr[0]["gloss"].lower()
+    assert prr[1]["headword"] == "переру́б"
+    assert "overlogging" in prr[1]["gloss"].lower() or "cut" in prr[1]["gloss"].lower()
+
+    # попадати: попа́дати (perf., fall down) vs попада́ти (imperf., hit target)
+    pop = enrich_heteronyms.build_heteronyms_for_lemma("попадати")
+    assert pop is not None and len(pop) == 2
+    assert pop[0]["headword"] == "попа́дати"
+    assert pop[0]["morphology"]["paradigm"]["aspect"] == "доконаний"
+    assert pop[1]["headword"] == "попада́ти"
+    assert pop[1]["morphology"]["paradigm"]["aspect"] == "недоконаний"
+
+    # посипатися: поси́патися (perf., tumble down) vs посипа́тися (imperf., be sprinkled)
+    pos = enrich_heteronyms.build_heteronyms_for_lemma("посипатися")
+    assert pos is not None and len(pos) == 2
+    assert pos[0]["headword"] == "поси́патися"
+    assert pos[0]["morphology"]["paradigm"]["aspect"] == "доконаний"
+    assert pos[1]["headword"] == "посипа́тися"
+    assert pos[1]["morphology"]["paradigm"]["aspect"] == "недоконаний"
+
+    # пригар: при́гар (burnt smell/taste, dial.) vs прига́р (burnt sand crust on casting, tech.)
+    pri = enrich_heteronyms.build_heteronyms_for_lemma("пригар")
+    assert pri is not None and len(pri) == 2
+    assert pri[0]["headword"] == "при́гар"
+    assert "burnt" in pri[0]["gloss"].lower() or "scorched" in pri[0]["gloss"].lower()
+    assert pri[1]["headword"] == "прига́р"
+    assert "casting" in pri[1]["gloss"].lower() or "scab" in pri[1]["gloss"].lower()
+
+    # провозити: прово́зити (imperf.) vs провози́ти (perf.)
+    prv2 = enrich_heteronyms.build_heteronyms_for_lemma("провозити")
+    assert prv2 is not None and len(prv2) == 2
+    assert prv2[0]["headword"] == "прово́зити"
+    assert prv2[0]["morphology"]["paradigm"]["aspect"] == "недоконаний"
+    assert prv2[1]["headword"] == "провози́ти"
+    assert prv2[1]["morphology"]["paradigm"]["aspect"] == "доконаний"
+
+    # розбігатися: розбі́гатися (perf., bustle about) vs розбіга́тися (imperf., scatter)
+    roz = enrich_heteronyms.build_heteronyms_for_lemma("розбігатися")
+    assert roz is not None and len(roz) == 2
+    assert roz[0]["headword"] == "розбі́гатися"
+    assert roz[0]["morphology"]["paradigm"]["aspect"] == "доконаний"
+    assert roz[1]["headword"] == "розбіга́тися"
+    assert roz[1]["morphology"]["paradigm"]["aspect"] == "недоконаний"
+
+    # рябець: ря́бець (kite bird) vs рябе́ць (grouse, Tetrastes bonasia)
+    ryb = enrich_heteronyms.build_heteronyms_for_lemma("рябець")
+    assert ryb is not None and len(ryb) == 2
+    assert ryb[0]["headword"] == "ря́бець"
+    assert "kite" in ryb[0]["gloss"].lower() or "prey" in ryb[0]["gloss"].lower()
+    assert ryb[1]["headword"] == "рябе́ць"
+    assert "grouse" in ryb[1]["gloss"].lower() or "tetrastes" in ryb[1]["gloss"].lower()
+
+    # травник: тра́вник (herbarium / herbal book) vs травни́к (herbal tincture / lawn)
+    trv = enrich_heteronyms.build_heteronyms_for_lemma("травник")
+    assert trv is not None and len(trv) == 2
+    assert trv[0]["headword"] == "тра́вник"
+    assert "herbarium" in trv[0]["gloss"].lower() or "herbal" in trv[0]["gloss"].lower()
+    assert trv[1]["headword"] == "травни́к"
+    assert "tincture" in trv[1]["gloss"].lower() or "lawn" in trv[1]["gloss"].lower() or "grassy" in trv[1]["gloss"].lower()
+
+
+def test_batch9_lemmas_not_duplicated_from_earlier_batches():
+    """Verify batch 9's 32 lemmas are net-new and mutually disjoint with batches 1-8."""
+    from scripts.lexicon.curated_heteronyms_batch import CURATED_HETERONYMS_BATCH
+    from scripts.lexicon.curated_heteronyms_batch2 import CURATED_HETERONYMS_BATCH_2
+    from scripts.lexicon.curated_heteronyms_batch3 import CURATED_HETERONYMS_BATCH_3
+    from scripts.lexicon.curated_heteronyms_batch4 import CURATED_HETERONYMS_BATCH_4
+    from scripts.lexicon.curated_heteronyms_batch5 import CURATED_HETERONYMS_BATCH_5
+    from scripts.lexicon.curated_heteronyms_batch6 import CURATED_HETERONYMS_BATCH_6
+    from scripts.lexicon.curated_heteronyms_batch7 import CURATED_HETERONYMS_BATCH_7
+    from scripts.lexicon.curated_heteronyms_batch8 import CURATED_HETERONYMS_BATCH_8
+    from scripts.lexicon.curated_heteronyms_batch9 import CURATED_HETERONYMS_BATCH_9
+
+    assert len(CURATED_HETERONYMS_BATCH_9) == 32
+    assert sum(len(v) for v in CURATED_HETERONYMS_BATCH_9.values()) == 64
+    earlier = (
+        set(CURATED_HETERONYMS_BATCH)
+        | set(CURATED_HETERONYMS_BATCH_2)
+        | set(CURATED_HETERONYMS_BATCH_3)
+        | set(CURATED_HETERONYMS_BATCH_4)
+        | set(CURATED_HETERONYMS_BATCH_5)
+        | set(CURATED_HETERONYMS_BATCH_6)
+        | set(CURATED_HETERONYMS_BATCH_7)
+        | set(CURATED_HETERONYMS_BATCH_8)
+    )
+    assert earlier & set(CURATED_HETERONYMS_BATCH_9) == set()
+    assert "лупання" in CURATED_HETERONYMS_BATCH_9
+    assert "люстровий" in CURATED_HETERONYMS_BATCH_9
+    assert "маячний" in CURATED_HETERONYMS_BATCH_9
+    assert "набігати" in CURATED_HETERONYMS_BATCH_9
+    assert "набухати" in CURATED_HETERONYMS_BATCH_9
+    assert "наварний" in CURATED_HETERONYMS_BATCH_9
+    assert "навозити" in CURATED_HETERONYMS_BATCH_9
+    assert "назубок" in CURATED_HETERONYMS_BATCH_9
+    assert "наслухати" in CURATED_HETERONYMS_BATCH_9
+    assert "настильний" in CURATED_HETERONYMS_BATCH_9
+    assert "невигода" in CURATED_HETERONYMS_BATCH_9
+    assert "неперехідний" in CURATED_HETERONYMS_BATCH_9
+    assert "неповоротний" in CURATED_HETERONYMS_BATCH_9
+    assert "оббігати" in CURATED_HETERONYMS_BATCH_9
+    assert "обводити" in CURATED_HETERONYMS_BATCH_9
+    assert "обідець" in CURATED_HETERONYMS_BATCH_9
+    assert "обрізання" in CURATED_HETERONYMS_BATCH_9
+    assert "окісний" in CURATED_HETERONYMS_BATCH_9
+    assert "окружний" in CURATED_HETERONYMS_BATCH_9
+    assert "описка" in CURATED_HETERONYMS_BATCH_9
+    assert "пахолок" in CURATED_HETERONYMS_BATCH_9
+    assert "перевозити" in CURATED_HETERONYMS_BATCH_9
+    assert "перекладка" in CURATED_HETERONYMS_BATCH_9
+    assert "переливний" in CURATED_HETERONYMS_BATCH_9
+    assert "переруб" in CURATED_HETERONYMS_BATCH_9
+    assert "попадати" in CURATED_HETERONYMS_BATCH_9
+    assert "посипатися" in CURATED_HETERONYMS_BATCH_9
+    assert "пригар" in CURATED_HETERONYMS_BATCH_9
+    assert "провозити" in CURATED_HETERONYMS_BATCH_9
+    assert "розбігатися" in CURATED_HETERONYMS_BATCH_9
+    assert "рябець" in CURATED_HETERONYMS_BATCH_9
+    assert "травник" in CURATED_HETERONYMS_BATCH_9
+
+    # Check pre-Soviet witnesses
+    lupannya = CURATED_HETERONYMS_BATCH_9["лупання"]
+    assert "Грінченко" in lupannya[0]["pre_soviet_witness"]["witness"]
+    assert "Миганіе" in lupannya[0]["pre_soviet_witness"]["quote"]
+    assert "Откалываніе" in lupannya[1]["pre_soviet_witness"]["quote"]
+
+    obidets = CURATED_HETERONYMS_BATCH_9["обідець"]
+    assert "Грінченко" in obidets[0]["pre_soviet_witness"]["witness"]
+    assert "Ободок" in obidets[0]["pre_soviet_witness"]["quote"]
 
 
 def test_homonyms_with_numeric_suffixes_and_identical_stress_not_treated_as_heteronyms(monkeypatch):
