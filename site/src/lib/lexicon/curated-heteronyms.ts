@@ -29265,10 +29265,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "невигідність",
       "url_slug": "невигідність",
       "headword": "неви́гідність",
-      "short_label": "незручність, дискомфорт, брак побутових вигод",
-      "gloss": "inconvenience, discomfort or lack of ease",
+      "short_label": "збитковість, фінансова або практична невигода",
+      "gloss": "unprofitability, economic disadvantage or unfavourableness",
       "pos": "noun",
-      "cefr": "B1",
+      "cefr": "B2",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": false,
@@ -29314,10 +29314,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           }
         }
       },
-      "distinction_note": "Позначає брак побутових або фізичних зручностей (незручне помешкання, незручний графік). Не плутати з «невигі́дність» (збитковість, відсутність матеріальної вигоди).",
+      "distinction_note": "Позначає економічну невигоду, втратність чи збитковість справи або праці (від неви́гідний — безприбутковий, невигідний). Не плутати з побутовою незручністю «невигі́дність».",
       "meaning": {
         "definitions": [
-          "Властивість за значенням неви́гідний (позбавлений зручностей, незручний)."
+          "Властивість за значенням неви́гідний (який не дає прибутку, вигоди; збитковий, невигідний)."
         ],
         "source": "ВТС"
       },
@@ -29337,8 +29337,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "невигідність",
       "url_slug": "невигідність",
       "headword": "невигі́дність",
-      "short_label": "збитковість, фінансова або практична невигода",
-      "gloss": "unprofitability, economic disadvantage or unfavourableness",
+      "short_label": "незручність, дискомфорт, брак побутових вигод (розм.)",
+      "gloss": "inconvenience, discomfort or lack of ease (colloquial)",
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
@@ -29386,10 +29386,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           }
         }
       },
-      "distinction_note": "Позначає економічну або практичну невигоду, збитковість угоди чи справи (від невигі́дний — безприбутковий). Не плутати з побутовою незручністю «неви́гідність».",
+      "distinction_note": "Позначає брак побутових або фізичних зручностей (незручне приміщення, графік тощо; розмовне, від невигі́дний — незручний). Не плутати з економічною збитковістю «неви́гідність».",
       "meaning": {
         "definitions": [
-          "Властивість за значенням невигі́дний (який не дає прибутку, збитковий)."
+          "Властивість за значенням невигі́дний (позбавлений вигод, зручностей; незручний; розм.)."
         ],
         "source": "ВТС"
       },
@@ -30286,7 +30286,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "url_slug": "пікірувати",
       "headword": "пікірува́ти",
       "short_label": "пересаджувати сіянці рослин із підрізанням головного кореня (агро)",
-      "gloss": "prick out, transplant seedlings with root pinching",
+      "gloss": "prick out, transplant seedlings with root pinching (imperf. and perf.)",
       "pos": "verb",
       "cefr": "B2",
       "heritage_status": {
@@ -30307,7 +30307,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "pos": "дієслово",
         "paradigm": {
           "kind": "verb",
-          "aspect": "недоконаний"
+          "aspect": "недоконаний і доконаний"
         }
       },
       "distinction_note": "Агрономічний термін: пересаджувати молоді сіянці за допомогою спеціального кілочка (піки) з прищипуванням кореня. Не плутати з авіаційним «пікі́рувати» (круто знижуватися в польоті).",
@@ -31053,7 +31053,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "доконаний"
         }
       },
-      "distinction_note": "Означає швидко обійти, оббігати якусь територію чи багатьох сусідів («позбігати стежечки, оббігати всіх подруг»; док. вид). Не плутати з «позбіга́ти» (зійтися звідусіль або стекти докупи).",
+      "distinction_note": "Означає швидко обійти, оббігати якусь територію чи багатьох сусідів («позбігати стежечки, оббігати всіх подруг»; док. вид). Не плутати з «позбіга́ти» (стекти донизу або повтікати).",
       "meaning": {
         "definitions": [
           "Швидко обходити або оббігати якусь територію, побувати скрізь (доконаний вид)."
@@ -31073,8 +31073,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "позбігати",
       "url_slug": "позбігати",
       "headword": "позбіга́ти",
-      "short_label": "стекти донизу, зійтися або зібратися докупи (про багатьох, док.)",
-      "gloss": "run down, drain off (liquids) or gather together in crowds (perf.)",
+      "short_label": "стекти донизу, збігти або повтікати (про багатьох, док.)",
+      "gloss": "drain off, flow down (of liquids) or run off in numbers (perf.)",
       "pos": "verb",
       "cefr": "B1",
       "heritage_status": {
@@ -31098,10 +31098,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "доконаний"
         }
       },
-      "distinction_note": "Означає збігтися разом багатьом людям чи тваринам, або стекти воді після танення снігу («позбігалися води, позбігали люди»; док. вид). Не плутати з дією оббігання «позбі́гати».",
+      "distinction_note": "Означає стекти донизу (про воду, піт) або збігти, повтікати кудись багатьом істотам («позбігали собаки, позбігала вода»; неперехідне, не плутати з рефлексивним позбігатися). Не плутати з дією оббігання «позбі́гати».",
       "meaning": {
         "definitions": [
-          "Стекти донизу або зібратися звідусіль разом (про багатьох людей або рідину; доконаний вид)."
+          "Стекти донизу в багатьох місцях (про рідину) або збігти, повтікати кудись (про багатьох істот; доконаний вид)."
         ],
         "source": "Грінченко (1907) / ВТС"
       },

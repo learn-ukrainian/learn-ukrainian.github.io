@@ -637,10 +637,10 @@ CURATED_HETERONYMS_BATCH_10: dict[str, list[dict[str, Any]]] = {'виїмков�
                                                                   'для лексикографічної прозорості.'},
                'pre_soviet_witness': None}],
  'невигідність': [{'headword': 'неви́гідність',
-                   'short_label': 'незручність, дискомфорт, брак побутових вигод',
-                   'gloss': 'inconvenience, discomfort or lack of ease',
+                   'short_label': 'збитковість, фінансова або практична невигода',
+                   'gloss': 'unprofitability, economic disadvantage or unfavourableness',
                    'pos': 'noun',
-                   'cefr': 'B1',
+                   'cefr': 'B2',
                    'heritage_status': {'classification': 'standard',
                                        'is_russianism': False,
                                        'russian_shadow': False,
@@ -660,11 +660,11 @@ CURATED_HETERONYMS_BATCH_10: dict[str, list[dict[str, Any]]] = {'виїмков�
                                                          'орудний': {'singular': 'неви́гідністю'},
                                                          'місцевий': {'singular': 'неви́гідності'},
                                                          'кличний': {'singular': 'неви́гідносте'}}}},
-                   'distinction_note': 'Позначає брак побутових або фізичних зручностей (незручне помешкання, '
-                                       'незручний графік). Не плутати з «невигі́дність» (збитковість, відсутність '
-                                       'матеріальної вигоди).',
-                   'meaning': {'definitions': ['Властивість за значенням неви́гідний (позбавлений зручностей, '
-                                               'незручний).'],
+                   'distinction_note': 'Позначає економічну невигоду, втратність чи збитковість справи або праці (від '
+                                       'неви́гідний — безприбутковий, невигідний). Не плутати з побутовою незручністю '
+                                       '«невигі́дність».',
+                   'meaning': {'definitions': ['Властивість за значенням неви́гідний (який не дає прибутку, вигоди; '
+                                               'збитковий, невигідний).'],
                                'source': 'ВТС'},
                    'soviet_colonization_context': {'source': 'СУМ-11 (1970–1980)',
                                                    'definition': 'НЕВИ́ГІДНІСТЬ, ності, ж. Абстр. ім. до неви́гідний. '
@@ -682,8 +682,8 @@ CURATED_HETERONYMS_BATCH_10: dict[str, list[dict[str, Any]]] = {'виїмков�
                                                                       'колгоспах.'},
                    'pre_soviet_witness': None},
                   {'headword': 'невигі́дність',
-                   'short_label': 'збитковість, фінансова або практична невигода',
-                   'gloss': 'unprofitability, economic disadvantage or unfavourableness',
+                   'short_label': 'незручність, дискомфорт, брак побутових вигод (розм.)',
+                   'gloss': 'inconvenience, discomfort or lack of ease (colloquial)',
                    'pos': 'noun',
                    'cefr': 'B2',
                    'heritage_status': {'classification': 'standard',
@@ -705,11 +705,11 @@ CURATED_HETERONYMS_BATCH_10: dict[str, list[dict[str, Any]]] = {'виїмков�
                                                          'орудний': {'singular': 'невигі́дністю'},
                                                          'місцевий': {'singular': 'невигі́дності'},
                                                          'кличний': {'singular': 'невигі́дносте'}}}},
-                   'distinction_note': 'Позначає економічну або практичну невигоду, збитковість угоди чи справи (від '
-                                       'невигі́дний — безприбутковий). Не плутати з побутовою незручністю '
-                                       '«неви́гідність».',
-                   'meaning': {'definitions': ['Властивість за значенням невигі́дний (який не дає прибутку, '
-                                               'збитковий).'],
+                   'distinction_note': 'Позначає брак побутових або фізичних зручностей (незручне приміщення, графік '
+                                       'тощо; розмовне, від невигі́дний — незручний). Не плутати з економічною '
+                                       'збитковістю «неви́гідність».',
+                   'meaning': {'definitions': ['Властивість за значенням невигі́дний (позбавлений вигод, зручностей; '
+                                               'незручний; розм.).'],
                                'source': 'ВТС'},
                    'soviet_colonization_context': {'source': 'СУМ-11 (1970–1980)',
                                                    'definition': 'НЕВИГІ́ДНІСТЬ, ності, ж., розм. Абстр. ім. до '
@@ -1284,7 +1284,7 @@ CURATED_HETERONYMS_BATCH_10: dict[str, list[dict[str, Any]]] = {'виїмков�
                  'pre_soviet_witness': None},
                 {'headword': 'пікірува́ти',
                  'short_label': 'пересаджувати сіянці рослин із підрізанням головного кореня (агро)',
-                 'gloss': 'prick out, transplant seedlings with root pinching',
+                 'gloss': 'prick out, transplant seedlings with root pinching (imperf. and perf.)',
                  'pos': 'verb',
                  'cefr': 'B2',
                  'heritage_status': {'classification': 'standard',
@@ -1293,7 +1293,7 @@ CURATED_HETERONYMS_BATCH_10: dict[str, list[dict[str, Any]]] = {'виїмков�
                                      'vesum_attested': True},
                  'pronunciation': {'ipa': '[pikirʊˈwɑtɪ]'},
                  'stress': {'form': 'пікірува́ти', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/пікірувати'},
-                 'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'недоконаний'}},
+                 'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'недоконаний і доконаний'}},
                  'distinction_note': 'Агрономічний термін: пересаджувати молоді сіянці за допомогою спеціального '
                                      'кілочка (піки) з прищипуванням кореня. Не плутати з авіаційним «пікі́рувати» '
                                      '(круто знижуватися в польоті).',
@@ -1753,8 +1753,8 @@ CURATED_HETERONYMS_BATCH_10: dict[str, list[dict[str, Any]]] = {'виїмков�
                 'stress': {'form': 'позбі́гати', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/позбігати'},
                 'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'доконаний'}},
                 'distinction_note': 'Означає швидко обійти, оббігати якусь територію чи багатьох сусідів («позбігати '
-                                    'стежечки, оббігати всіх подруг»; док. вид). Не плутати з «позбіга́ти» (зійтися '
-                                    'звідусіль або стекти докупи).',
+                                    'стежечки, оббігати всіх подруг»; док. вид). Не плутати з «позбіга́ти» (стекти '
+                                    'донизу або повтікати).',
                 'meaning': {'definitions': ['Швидко обходити або оббігати якусь територію, побувати скрізь (доконаний '
                                             'вид).'],
                             'source': 'ВТС'},
@@ -1770,8 +1770,8 @@ CURATED_HETERONYMS_BATCH_10: dict[str, list[dict[str, Any]]] = {'виїмков�
                                                                    'для лексикографічної прозорості.'},
                 'pre_soviet_witness': None},
                {'headword': 'позбіга́ти',
-                'short_label': 'стекти донизу, зійтися або зібратися докупи (про багатьох, док.)',
-                'gloss': 'run down, drain off (liquids) or gather together in crowds (perf.)',
+                'short_label': 'стекти донизу, збігти або повтікати (про багатьох, док.)',
+                'gloss': 'drain off, flow down (of liquids) or run off in numbers (perf.)',
                 'pos': 'verb',
                 'cefr': 'B1',
                 'heritage_status': {'classification': 'standard',
@@ -1783,11 +1783,11 @@ CURATED_HETERONYMS_BATCH_10: dict[str, list[dict[str, Any]]] = {'виїмков�
                            'source': 'Грінченко (1907) / ВТС',
                            'url': 'https://slovnyk.me/dict/vts/позбігати'},
                 'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'доконаний'}},
-                'distinction_note': 'Означає збігтися разом багатьом людям чи тваринам, або стекти воді після танення '
-                                    'снігу («позбігалися води, позбігали люди»; док. вид). Не плутати з дією оббігання '
-                                    '«позбі́гати».',
-                'meaning': {'definitions': ['Стекти донизу або зібратися звідусіль разом (про багатьох людей або '
-                                            'рідину; доконаний вид).'],
+                'distinction_note': 'Означає стекти донизу (про воду, піт) або збігти, повтікати кудись багатьом '
+                                    'істотам («позбігали собаки, позбігала вода»; неперехідне, не плутати з '
+                                    'рефлексивним позбігатися). Не плутати з дією оббігання «позбі́гати».',
+                'meaning': {'definitions': ['Стекти донизу в багатьох місцях (про рідину) або збігти, повтікати кудись '
+                                            '(про багатьох істот; доконаний вид).'],
                             'source': 'Грінченко (1907) / ВТС'},
                 'soviet_colonization_context': {'source': 'СУМ-11 (1970–1980)',
                                                 'definition': 'ПОЗБІГА́ТИ, а́є, а́ємо, а́єте, док. 1. Стекти скрізь '

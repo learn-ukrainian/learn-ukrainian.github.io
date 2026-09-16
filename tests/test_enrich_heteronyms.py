@@ -1736,13 +1736,13 @@ def test_batch10_semantic_and_stress_distinctions():
     assert nat[1]["headword"] == "натру́ска"
     assert "sprinkling" in nat[1]["gloss"].lower() or "reprimand" in nat[1]["gloss"].lower()
 
-    # невигідність: неви́гідність (inconvenience/discomfort) vs невигі́дність (unprofitability)
+    # невигідність: неви́гідність (unprofitability) vs невигі́дність (inconvenience/discomfort)
     nevy = enrich_heteronyms.build_heteronyms_for_lemma("невигідність")
     assert nevy is not None and len(nevy) == 2
     assert nevy[0]["headword"] == "неви́гідність"
-    assert "inconvenience" in nevy[0]["gloss"].lower() or "discomfort" in nevy[0]["gloss"].lower()
+    assert "unprofitability" in nevy[0]["gloss"].lower() or "disadvantage" in nevy[0]["gloss"].lower()
     assert nevy[1]["headword"] == "невигі́дність"
-    assert "unprofitability" in nevy[1]["gloss"].lower() or "disadvantage" in nevy[1]["gloss"].lower()
+    assert "inconvenience" in nevy[1]["gloss"].lower() or "discomfort" in nevy[1]["gloss"].lower()
 
     # нівідки: ні́відки (absence of source, dial.) vs ніві́дки (from no place, dial./lit.)
     niv = enrich_heteronyms.build_heteronyms_for_lemma("нівідки")
@@ -1809,6 +1809,7 @@ def test_batch10_semantic_and_stress_distinctions():
     assert "dive" in pkv[0]["gloss"].lower()
     assert pkv[1]["headword"] == "пікірува́ти"
     assert "transplant" in pkv[1]["gloss"].lower() or "prick out" in pkv[1]["gloss"].lower()
+    assert pkv[1]["morphology"]["paradigm"]["aspect"] == "недоконаний і доконаний"
 
     # пікіруватися: пікі́руватися (bicker/spar) vs пікірува́тися (be transplanted)
     pks = enrich_heteronyms.build_heteronyms_for_lemma("пікіруватися")
@@ -1858,13 +1859,14 @@ def test_batch10_semantic_and_stress_distinctions():
     assert pzhr[1]["headword"] == "пожари́ще"
     assert "site" in pzhr[1]["gloss"].lower() or "ruins" in pzhr[1]["gloss"].lower()
 
-    # позбігати: позбі́гати (run around everywhere) vs позбіга́ти (drain off / gather)
+    # позбігати: позбі́гати (run around everywhere) vs позбіга́ти (drain off / run off)
     pzb = enrich_heteronyms.build_heteronyms_for_lemma("позбігати")
     assert pzb is not None and len(pzb) == 2
     assert pzb[0]["headword"] == "позбі́гати"
     assert "run around" in pzb[0]["gloss"].lower()
     assert pzb[1]["headword"] == "позбіга́ти"
-    assert "drain" in pzb[1]["gloss"].lower() or "gather" in pzb[1]["gloss"].lower()
+    assert "drain" in pzb[1]["gloss"].lower() or "run off" in pzb[1]["gloss"].lower()
+    assert "gather" not in pzb[1]["gloss"].lower()
 
     # позорювати: позо́рювати (plough fields) vs позорюва́ти (spend night outdoors / dawn sleep)
     pzo = enrich_heteronyms.build_heteronyms_for_lemma("позорювати")
