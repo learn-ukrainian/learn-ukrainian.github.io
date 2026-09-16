@@ -606,7 +606,7 @@ def test_release_receipt_schema_validation() -> None:
 
 
 def test_regression_velychkovsky_and_mytsyk_commentary_excluded() -> None:
-    """Verify that specific Round 3 commentary leaks (Velychkovsky c0057, Mytsyk c0004) are excluded."""
+    """Verify that specific Round 3 and Round 4 commentary leaks (Velychkovsky, Mytsyk, Khanenko) are excluded."""
     release_dir = REPO_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v04b_middle_ukrainian"
     eval_file = release_dir / "middle_ukrainian_eval.jsonl"
     sft_dir = release_dir / "sft"
@@ -620,11 +620,20 @@ def test_regression_velychkovsky_and_mytsyk_commentary_excluded() -> None:
         "несообразностями, они дают ряд интересных фактов",
         "несообразностями",
         "они дают ряд интересных фактов",
+        "авторъ „дневника“ — генеральный хоружій николай",
+        "авторъ „дневника“",
+        "генеральный хоружій николай",
+        "въ первой половинЂ xvii село волосковичи",
+        "село волосковичи",
+        "считается стефанъ ханенко, запорожецъ",
+        "стефанъ ханенко",
     ]
 
+    eval_rows = []
     with eval_file.open("r", encoding="utf-8") as f:
         for i, line in enumerate(f):
             row = json.loads(line)
+            eval_rows.append(row)
             inp = row.get("input_text", "").casefold()
             exp = row.get("expected_output", "").casefold()
             for s in leaked_strings:
@@ -632,6 +641,10 @@ def test_regression_velychkovsky_and_mytsyk_commentary_excluded() -> None:
                 assert s not in exp, f"Leaked string '{s}' found in eval row {i}: {exp}"
             assert row.get("source_metadata", {}).get("chunk_id") != "1b7685d5_c0057"
             assert row.get("source_metadata", {}).get("chunk_id") != "5f2476e8_c0004"
+
+    # Verify Ivan Velychkovsky is actively represented in the held-out evaluation benchmark
+    v_eval_rows = [r for r in eval_rows if r.get("work_id") == "ivan_velychkovskyy_tvory"]
+    assert len(v_eval_rows) > 0, "Evaluation suite must contain records from Ivan Velychkovsky"
 
     for shard in sft_dir.glob("sft_shard_*.jsonl"):
         with shard.open("r", encoding="utf-8") as f:
@@ -656,12 +669,24 @@ def test_source_boundaries_and_work_exclusions() -> None:
 
     if DEFAULT_SOURCES_DB.is_file():
         chunks = load_middle_ukrainian_chunks(DEFAULT_SOURCES_DB)
+
+        v_chunks = [c for c in chunks if c.work_id == "ivan_velychkovskyy_tvory"]
+        assert len(v_chunks) == 76, f"Expected 76 Velychkovsky chunks (70-145), got {len(v_chunks)}"
+        for c in v_chunks:
+            num = int(c.chunk_id.split("_c")[-1])
+            assert 70 <= num <= 145, f"Invalid Velychkovsky chunk admitted: {c.chunk_id}"
+
+        k_chunks = [c for c in chunks if c.work_id == "shchodennyk_mykoly_khanenka_1719_1754"]
+        assert len(k_chunks) > 0, "Expected Khanenko diary chunks to be loaded"
+        for c in k_chunks:
+            num = int(c.chunk_id.split("_c")[-1])
+            assert num > 16, f"Lazarevsky intro chunk admitted: {c.chunk_id}"
+            assert not (635 <= num <= 647), f"Bodyansky preface chunk admitted: {c.chunk_id}"
+            assert not re.match(r"^\s*\d+\)\s+", c.text), f"Footnote chunk admitted: {c.chunk_id}"
+
         for c in chunks:
             assert c.work_id not in EXCLUDED_MODERN_WORKS
-            if c.work_id == "ivan_velychkovskyy_tvory":
-                num = int(c.chunk_id.split("_c")[-1])
-                assert 71 <= num <= 146, f"Invalid Velychkovsky chunk admitted: {c.chunk_id}"
-            elif c.work_id == "hramoty_xiv_st":
+            if c.work_id == "hramoty_xiv_st":
                 num = int(c.chunk_id.split("_c")[-1])
                 assert 40 <= num <= 90, f"Invalid hramoty_xiv_st chunk admitted: {c.chunk_id}"
             elif c.work_id == "ukrayinski_intermediyi_xvii_xviii_st":

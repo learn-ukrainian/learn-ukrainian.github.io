@@ -152,29 +152,28 @@ EXCLUDED_MODERN_WORKS = {
 # Editorial patterns marking academic prefaces, apparatus, and commentaries
 EDITORIAL_PATTERNS = [
     re.compile(
-        r"(?:упорядник\w*|радянськ\w*|дослідник\w*|дослідження|видання\w*|рукопис\w*|дисертаці\w*|"
+        r"(?:упорядник\w*|радянськ\w*|дослідник\w*|дослідження|дисертаці\w*|"
         r"монографі\w*|інститут\w*|академі\w*|університет\w*|бібліографі\w*|ЦДІА|"
         r"ДПБ|ЦДАДА|ІР\s*НБУВ|публікаці\w*|редакці\w*|науков\w*\s+виданн\w*|наукова\s+думка|вступн\w*\s+статт\w*|"
         r"археографічн\w*|джерелознав\w*|текстологічн\w*|боплан\w*|бопланова\s+карта|"
         r"срезневськ\w*|пещак\w*|востоков\w*|кримськ\w*|житецьк\w*|соболевськ\w*|"
         r"зубрицьк\w*|крекотень|колосова|гудзій|мицик|шевчук|німчук|поет\s+славить|наслідуючи|"
-        r"водян\w*\s+знак\w*|філігран\w*|пагінаці\w*|словничок|поетичн\w*\s+твор\w*|пам’ятки\s+давньої|"
-        r"передруковується|опублікований|описана|розділові\s+знаки|"
+        r"водян\w*\s+знак\w*|філігран\w*|пагінаці\w*|словничок|пам’ятки\s+давньої|"
+        r"передруковується|опублікований|розділові\s+знаки|"
         r"не\s+збігаються|передаються\s+через|приклади\s+з\s+грамоти|мовознавчих\s+дослідженнях|"
         r"записки\s+наукового\s+товариства|ім\.\s*шевченка|ім\.\s*потебні|ан\s+урср|нан\s+україни|"
         r"підготовчу\s+роботу|примірник\s+цієї\s+книжки|нам\s+не\s+пощастило|"
-        r"до\s+нас\s+у\s+рукописній\s+копії|року\s+помер|народився|ієромонах|"
-        r"словник-покажчик|ономастичн\w*|різночитання|див\.\s+фотокопію|"
+        r"до\s+нас\s+у\s+рукописній\s+копії|словник-покажчик|ономастичн\w*|різночитання|див\.\s+фотокопію|"
         r"оригінал\s+не\s+відшуканий|копія\s+xix\s+ст|публікується\s+за\s+копією|"
         r"зберігається\s+в\s+рукописному|у\s+покажчиках\s+дано|у\s+науковій\s+літературі|"
-        r"в\s+рук\.|в\s+рукопис\w*|у\s+вид\.|в\s+друку|переклад\w*|перекладач\w*|"
-        r"оригінал\w*|художн\w*\s+виразність|реєстров\w*|омонім\w*|словников\w*|"
-        r"іншою\s+рукою|поверх\s+закресленого|закресленого|варіант\w*|примітк\w*|"
-        r"надрядков\w*|знаки\s+відсутн\w*|читається|написано|виправлено|викреслено|"
-        r"дописано|вставлено|в\s+списк\w*|за\s+списк\w*|видав|надруковано|опубліковано|"
-        r"подається|наводиться|порівн\w*|пор\.:|див\.:|див\.\s+також|також:|заголовок|"
-        r"підпис|арк\.|стор\.|с\.\s*\d|вип\.|том\s+[I-V\d]|ч\.\s*\d|№\s*\d|відкриті|"
-        r"видані|изданн\w*|открыт\w*|"
+        r"у\s+вид\.|в\s+друку|переклад\w*\s+(?:з|із|від)|перекладач\w*|"
+        r"художн\w*\s+виразність|реєстров\w*|омонім\w*|словников\w*|"
+        r"іншою\s+рукою|поверх\s+закресленого|закресленого|примітк\w*|"
+        r"надрядков\w*|знаки\s+відсутн\w*|виправлено\s+на|викреслено\s+в|"
+        r"дописано\s+в|вставлено\s+в|в\s+списк\w*|за\s+списк\w*|опубліковано\s+в|"
+        r"порівн\w*\s+з|пор\.:|див\.:|див\.\s+також|також:|заголовок\s+у\s+списку|"
+        r"вип\.\s*\d|том\s+[I-V\d]|ч\.\s*\d|№\s*\d|відкриті\s+пам’ятки|"
+        r"видані\s+документи|изданн\w*|открыт\w*|"
         r"является|являются|исследования|исследователь|советск\w*|стать\w*|"
         r"отметим|свидетельства|событий|истории\s+украины|произведени\w*|"
         r"несообразност\w*|интересных\s+фактов|деятел\w*|в\s+частности|"
@@ -185,6 +184,19 @@ EDITORIAL_PATTERNS = [
     re.compile(r"\b(?:1[89]\d\d|20[0-2]\d)\s*(?:р\.|року|роках|рр\.)?\b"),
     re.compile(r"\b(?:XIX|XX|XXI)\s*ст\b"),
 ]
+
+# Pre-reform Imperial Russian academic commentary / apparatus markers (e.g. Lazarevsky 1884, Bodyansky 1858)
+RUSSIAN_EDITORIAL_RE = re.compile(
+    r"\b(?:какъ\s+видно|въ\s+(?:это|то|сей)\s+время|"
+    r"въ\s+первой\s+половинЂ|первой\s+половины|прошедшаго\s+столЂтія|принадлежалъ\s+къ|"
+    r"слЂдуетъ\s+думать|между\s+тЂмъ|сочинитель|считается|существовали|"
+    r"числу\s+образованнЂйшихъ|людей\s+своего\s+времени|повидимому|несомнЂнно|"
+    r"уЂзда\b|уЂздЂ\b|уЂздъ\b|губерніи\b|губернск\w*|авторъ\s+„дневника“|дневникъ\s+генеральнаго|"
+    r"село\s+\w+\s+уЂзда|въ\s+библіотекЂ|археологическаго\s+музея|духовной\s+академіи|"
+    r"по\s+семейному\s+преданію|въ\s+фамильномъ\s+архивЂ|генеральное\s+слЂдствіе|"
+    r"русскомъ\s+архивЂ|рукописный\s+журналъ)",
+    re.IGNORECASE,
+)
 
 # Injected calques for anti-copying mixed-error evaluation
 INJECTED_CALQUES = [
@@ -270,9 +282,15 @@ def clean_text_diplomatic(text: str) -> str:
     t = re.sub(r"</?(?:p|span|div|b|i|sup|sub)[^>]*>", " ", text)
     t = html.unescape(t)
     t = t.replace("\xa0", " ")
-    # Clean page markers like \47\, [123], etc.
+    # Clean page markers like \47\, [123], /105/, folio markers |арк. 12|, [арк. 12 зв.], etc.
     t = re.sub(r"\\\d+\\", " ", t)
     t = re.sub(r"\[\d+\]", " ", t)
+    t = re.sub(r"\|[^\|]*арк\.[^\|]*\|", " ", t, flags=re.IGNORECASE)
+    t = re.sub(r"\[[^\]]*арк\.[^\]]*\]", " ", t, flags=re.IGNORECASE)
+    t = re.sub(r"/(?:арк\.[^/]+|\d+)/", " ", t, flags=re.IGNORECASE)
+    # Strip footnote paragraphs and editorial apparatus lines
+    t = re.sub(r"(?ms)^\s*\d+\)\s+.*?(?=\n\s*\n|\Z)", " ", t)
+    t = re.sub(r"(?m)^\s*\d+\s+У\s+рукопису.*$", " ", t)
     t = re.sub(r"[ \t\r\f\v]+", " ", t)
     t = re.sub(r"\n\s*\n+", "\n", t)
     return t.strip()
@@ -290,6 +308,10 @@ def is_clean_historical_sentence(sent: str) -> bool:
     if len(sent) < 45 or len(sent) > 300:
         return False
     if re.match(r"^[\s\*\\[\]/—\-\d]", sent):
+        return False
+    if RUSSIAN_EDITORIAL_RE.search(sent):
+        return False
+    if re.search(r"^\s*\d+\)\s+", sent) or re.search(r"\b\d+\)\s+[А-ЯЁІЂ]", sent):
         return False
     if is_editorial_preface(sent):
         return False
@@ -433,19 +455,41 @@ def load_middle_ukrainian_chunks(sources_db: Path) -> list[MiddleUkrainianChunk]
             except Exception:
                 pass
 
-        # In ivan_velychkovskyy_tvory, chunks 0 to 70 are V. P. Kolosova & V. I. Krekoten's
-        # modern introductory monograph, and chunks > 146 are modern textual notes/glossary.
-        # Authentic poetry is strictly in chunks 71 to 146.
+        # In ivan_velychkovskyy_tvory, chunks 0 to 69 are V. P. Kolosova & V. I. Krekoten's
+        # modern introductory monograph, and chunks >= 146 are modern textual notes/glossary.
+        # Authentic baroque poetry is strictly in chunks 70 to 145.
         if work_id == "ivan_velychkovskyy_tvory":
             try:
                 chunk_num = int(chunk_id.split("_c")[-1])
-                if chunk_num < 71 or chunk_num > 146:
+                if chunk_num < 70 or chunk_num > 145:
                     continue
             except Exception:
                 pass
 
-        # Detect and exclude modern editorial prefaces
-        if is_editorial_preface(clean_t):
+        # In shchodennyk_mykoly_khanenka_1719_1754, chunks 0 to 16 are O. Lazarevsky's
+        # 1884 introductory study, chunks 635 to 647 are O. Bodyansky's 1858 preface,
+        # and standalone footnote chunks start with digits and a closing parenthesis.
+        if work_id == "shchodennyk_mykoly_khanenka_1719_1754":
+            try:
+                chunk_num = int(chunk_id.split("_c")[-1])
+                if chunk_num <= 16 or (635 <= chunk_num <= 647):
+                    continue
+            except Exception:
+                pass
+            if re.match(r"^\s*\d+\)\s+", clean_t):
+                continue
+
+        # Detect and exclude modern editorial prefaces in unbounded works
+        bounded_works = {
+            "ivan_velychkovskyy_tvory",
+            "hramoty_xiv_st",
+            "hryhoriy_skovoroda_povne_zibrannya_tvoriv",
+            "ukrayinski_intermediyi_xvii_xviii_st",
+            "bayky_v_ukrayinskiy_literaturi_xvii_xviii_st",
+            "bayky_xvii_xviii_st",
+            "shchodennyk_mykoly_khanenka_1719_1754",
+        }
+        if work_id not in bounded_works and is_editorial_preface(clean_t):
             continue
 
         stratum, comp_date, ms_date = classify_stratum(work_id, year)
@@ -500,30 +544,21 @@ def build_eval_suite(
         if is_held_out_chunk(c):
             eval_candidates.append(c)
 
-    # Group candidates by stratum and interleave round-robin so all 4 strata are represented
-    strata_buckets: dict[str, list[MiddleUkrainianChunk]] = {
-        STRATA_EARLY_RUTHENIAN: [],
-        STRATA_RENAISSANCE_POLEMICAL: [],
-        STRATA_HIGH_COSSACK_BAROQUE: [],
-        STRATA_TRANSITIONAL_PRE_MODERN: [],
-    }
+    # Group candidates by work_id to ensure every held-out work is fairly represented
+    work_buckets: dict[str, list[MiddleUkrainianChunk]] = {}
     for c in eval_candidates:
-        strata_buckets.setdefault(c.stratum, []).append(c)
+        work_buckets.setdefault(c.work_id, []).append(c)
 
-    for b in strata_buckets.values():
+    for b in work_buckets.values():
         rng.shuffle(b)
 
     ordered_candidates: list[MiddleUkrainianChunk] = []
-    max_len = max(len(b) for b in strata_buckets.values())
+    max_len = max(len(b) for b in work_buckets.values())
+    works_list = sorted(work_buckets.keys())
     for i in range(max_len):
-        for s in [
-            STRATA_EARLY_RUTHENIAN,
-            STRATA_RENAISSANCE_POLEMICAL,
-            STRATA_HIGH_COSSACK_BAROQUE,
-            STRATA_TRANSITIONAL_PRE_MODERN,
-        ]:
-            if i < len(strata_buckets[s]):
-                ordered_candidates.append(strata_buckets[s][i])
+        for w in works_list:
+            if i < len(work_buckets[w]):
+                ordered_candidates.append(work_buckets[w][i])
 
     eval_cases: list[dict[str, Any]] = []
     seen_norm: set[str] = set()
@@ -533,13 +568,16 @@ def build_eval_suite(
             break
 
         sents = extract_sentences(chunk.text)
+        chunk_added = 0
+        max_sents_per_chunk = 3 if target_quota > 20 else 50
         for sent in sents:
-            if len(eval_cases) >= target_quota:
+            if len(eval_cases) >= target_quota or chunk_added >= max_sents_per_chunk:
                 break
             norm = normalize_historical_snippet(sent)
             if not norm or norm in seen_norm:
                 continue
             seen_norm.add(norm)
+            chunk_added += 1
 
             case_idx = len(eval_cases) + 1
             eval_id = f"eval_mid_ukr_{hashlib.sha256(f'mid_{case_idx}_{norm}'.encode()).hexdigest()[:8]}"
