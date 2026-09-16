@@ -723,6 +723,8 @@ def _vesum_attestation(
             from scripts.verification.vesum import verify_word
 
             matches = verify_word(term, db_path=vesum_db_path)
+            if not matches and term.capitalize() != term:
+                matches = verify_word(term.capitalize(), db_path=vesum_db_path)
             if not matches:
                 return None
             lemmas = sorted({str(match.get("lemma") or "") for match in matches if match.get("lemma")})
@@ -735,6 +737,8 @@ def _vesum_attestation(
         from scripts.verification.vesum import verify_lemma, verify_word
 
         forms = verify_lemma(term, db_path=vesum_db_path)
+        if not forms and term.capitalize() != term:
+            forms = verify_lemma(term.capitalize(), db_path=vesum_db_path)
         if forms:
             return {
                 "source": "VESUM",
@@ -742,6 +746,8 @@ def _vesum_attestation(
                 "detail": f"lemma match ({len(forms)} forms)",
             }
         matches = verify_word(term, db_path=vesum_db_path)
+        if not matches and term.capitalize() != term:
+            matches = verify_word(term.capitalize(), db_path=vesum_db_path)
         if matches:
             lemmas = sorted({str(match.get("lemma") or "") for match in matches if match.get("lemma")})
             return {

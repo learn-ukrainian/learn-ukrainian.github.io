@@ -159,7 +159,7 @@
       },
       {
         "path": "scripts/lexicon/curriculum_atlas_intake.py",
-        "sha256": "90dd4f057d58be7adbb994ddb127e719bf01c7910e61c20ee70af28a701ad176"
+        "sha256": "77ddefc1be8224f3ad41404208e7bbe343616fb61f4f069f4f9636ebd903afc4"
       },
       {
         "path": "scripts/lexicon/derivational_morphology.py",
@@ -235,7 +235,7 @@
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",
-        "sha256": "59a3680eb2f54c97bcf52720a93ae5d1d8d62215238209dadab1dab8ea27abdb"
+        "sha256": "98cc420017ae99c8c42e56409c3fbdd29df4d96bb37ed43be17bca7e0af237b2"
       },
       {
         "path": "scripts/lexicon/lemma_normalization.py",
