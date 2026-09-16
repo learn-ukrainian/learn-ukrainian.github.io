@@ -503,6 +503,10 @@ DIRECT_ZA_PROPER_NAME_RE = (
     r"(?:ом|ем|ям|ою|ею|єю|овим|євим|им|ім|кса|ака|яка|нка|нга|нта|рда|рта|нда|льда|вича|овича|евича|ьова|ьові|ова|ева|ого|ього|ів|ей|ові|єві|а|я|у|ю)\b)"
 )
 
+CITATION_LOCATOR_RE = (
+    r"(?:\s*,\s*(?:[сs]\.?|стор\w*|том\w*|т\.?|vol\w*|p\w*|pp\w*|ч\w*|вип\w*|кн\w*|\d{1,4})\b[^)]*)?"
+)
+
 CITATION_MENTION_PATTERNS = [
     # 1. "... dictionary" or "... словник" (case-insensitive name preceding dictionary keyword)
     re.compile(
@@ -540,13 +544,15 @@ CITATION_MENTION_PATTERNS = [
     ),
     # 4a. Explicitly prefixed parenthetical citations: "(джерело: ВЕСУМ)", "(за «Словником»)", "(див. Zorblax)"
     re.compile(
-        rf"\((?:[Дд]жерело|[Дд]ив\.?|[Зз]а|[Зз]гідно\s+(?:з|із|зі)|[Вв]ідповідно\s+до)(?::\s*|\s+)"
-        rf"({QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})\)"
+        rf"\(\s*(?:[Дд]жерело|[Дд]ив\.?|[Зз]а|[Зз]гідно\s+(?:з|із|зі)|[Вв]ідповідно\s+до)(?::\s*|\s+)"
+        rf"({QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})"
+        rf"{CITATION_LOCATOR_RE}\s*\)"
     ),
     # 4b. Bare parenthetical citations: "(СУМ-11)", "(ВЕСУМ)", "(Словник української мови)", "(«СУМ-20»)"
     re.compile(
-        rf"\((?!(?:[Дд]жерело|[Дд]ив\.?|[Зз]а|[Зз]гідно|[Вв]ідповідно)\b)"
-        rf"({QUOTED_AUTHORITY_TITLE_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})\)"
+        rf"\(\s*(?!(?:[Дд]жерело|[Дд]ив\.?|[Зз]а|[Зз]гідно|[Вв]ідповідно)\b)"
+        rf"({QUOTED_AUTHORITY_TITLE_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})"
+        rf"{CITATION_LOCATOR_RE}\s*\)"
     ),
 ]
 

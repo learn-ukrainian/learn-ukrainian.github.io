@@ -1390,3 +1390,64 @@ def test_audit_astra_r9_stress_marks_normalization(
     assert passed3 is False
     assert data3["sft_contradictions_count"] == 1
     assert data3["sft_contradictions"][0]["target_term"] == "царинками"
+
+
+def test_audit_astra_r11_zamist_replacement_probe(
+    tmp_path: Path, mock_dbs: tuple[Path, Path]
+) -> None:
+    """Verify Astra R11 Finding 2: explicit replacement instructions 'Замість <target> слід вживати <other>' trigger contradictions."""
+    mock_sources, mock_vesum = mock_dbs
+
+    # 1. Direct function checks
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» слід вживати «гарний».") is True
+    assert is_target_condemned_in_text("царинками", "Вживайте «гарний» замість «царинками».") is True
+    assert is_target_condemned_in_text("царинками", "Не слід вживати «гарний» замість «царинками».") is False
+    assert is_target_condemned_in_text("царинками", "«царинками» — діалектне слово, вживайте його замість «гарний».") is False
+
+    # 2. Integration DPO audit check
+    mock_prot = tmp_path / "prot_zamist.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "eval_id": "p_r11_zamist",
+            "stratum": "regional_dialect",
+            "target_term": "царинками",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sft_clean = tmp_path / "sft_clean"
+    mock_sft_clean.mkdir()
+    (mock_sft_clean / "shard.jsonl").write_text(
+        json.dumps({
+            "target_term": "безпечний",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_dpo_zamist = tmp_path / "dpo_zamist"
+    mock_dpo_zamist.mkdir()
+    (mock_dpo_zamist / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як оцінити слово «царинками»?",
+            "chosen": "Замість «царинками» слід вживати «гарний».",
+            "rejected": "Це нормальне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed, data, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=mock_dpo_zamist,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r11_rep.md",
+        output_json=tmp_path / "r11_rep.json",
+    )
+    assert passed is False
+    assert data["dpo_contradictions_count"] == 1
+    assert data["dpo_contradictions"][0]["target_term"] == "царинками"

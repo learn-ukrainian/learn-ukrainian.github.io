@@ -197,7 +197,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         if t_token_re.search(clause):
             # If target is present ONLY as a replacement destination (e.g. "замінити на «файний»"),
             # it is being recommended, not condemned or replaced.
-            is_destination = bool(re.search(rf"\b(?:на|замість|до)\s+[«\"“‘\']?{t_bare}[»\"”’\']?", cl_lower))
+            is_destination = bool(re.search(rf"\b(?:на|до)\s+[«\"“‘\']?{t_bare}[»\"”’\']?", cl_lower))
             is_subject = bool(re.search(rf"(?:^|\b(?:щодо\s+слова|слово|словом|вираз|зворот)\s+)?[«\"“‘\']?{t_bare}[»\"”’\']?\s+(?:є|це|не|слід|варто|потрібно|необхідно|треба|можна|—|\-)", cl_lower))
             current_referent = "OTHER" if is_destination and not is_subject else "TARGET"
         elif quoted:
@@ -207,7 +207,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                     rf"(?:^|\b(?:щодо\s+слова|слово|словом|вираз|зворот)\s+)?[«\"“‘\']{re.escape(first_q)}[»\"”’\']",
                     cl_lower,
                 )
-                if subj_m and not re.search(rf"\b(?:на|замість|до)\s+[«\"“‘\']{re.escape(first_q)}[»\"”’\']", cl_lower):
+                if subj_m and not re.search(rf"\b(?:на|до)\s+[«\"“‘\']{re.escape(first_q)}[»\"”’\']", cl_lower):
                     current_referent = "OTHER"
         else:
             # Check for unquoted subject before directives (e.g. "общий слід замінити")
@@ -222,7 +222,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 if uq_word in ANAPHORIC_WORDS or anaphoric_re.fullmatch(uq_word) or has_anaphoric_det:
                     # Anaphoric reference (його, її, це, яку, його вживання, etc.): preserve active referent
                     pass
-                elif uq_word != t_norm and not re.search(rf"\b(?:на|замість|до)\s+{re.escape(uq_word)}", cl_lower):
+                elif uq_word != t_norm and not re.search(rf"\b(?:на|до)\s+{re.escape(uq_word)}", cl_lower):
                     current_referent = "OTHER"
             elif anaphoric_re.search(clause) and current_referent is not None:
                 # Anaphoric reference (його, її, це, etc.): preserve active referent from preceding clause
@@ -230,6 +230,22 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
 
         if current_referent != "TARGET":
             continue
+
+        # Check explicit replacement instruction: "Замість <target> слід/варто... вживати <other>" or "вживайте <other> замість <target>"
+        zamist_m = re.search(rf"\bзамість\s+[«\"“‘\']?{t_bare}[»\"”’\']?", cl_lower)
+        if zamist_m:
+            zamist_prefix = cl_lower[: zamist_m.start()]
+            zamist_negated = (
+                bool(re.search(r"\b(?:не|ні|ані)\s*$", zamist_prefix))
+                or bool(
+                    re.search(
+                        r"\bне\s+(?:слід|варто|потрібно|необхідно|треба|можна|рекомендовано)?(?:\s+(?:вживати|вжити|використовувати|використати|писати|казати|брати))?\b",
+                        zamist_prefix,
+                    )
+                )
+            )
+            if not zamist_negated:
+                return True
 
         # Check replacement / avoidance directives
         # A directive is a contradiction unless it is specifically negated

@@ -1792,3 +1792,42 @@ def test_citation_whitelist_r28_astra_r10_probes():
     assert ok8 is True
     assert app8 == []
     assert viol8 == []
+
+
+def test_citation_whitelist_r29_astra_r11_parenthetical_probes():
+    """Verify Astra R11 Finding 1: parenthetical citations with surrounding whitespace or citation locators are recognized and validated."""
+    # 1. Surrounding whitespace with quoted unapproved authority
+    ok1, app1, viol1 = verify_citation_whitelist("Це правильно ( «СУМ» ).")
+    assert ok1 is False
+    assert app1 == []
+    assert any("СУМ" in v for v in viol1)
+
+    # 2. Citation locator (e.g. page number) with unquoted unapproved authority
+    ok2, app2, viol2 = verify_citation_whitelist("Це правильно (СУМ, с. 25).")
+    assert ok2 is False
+    assert app2 == []
+    assert any("СУМ" in v for v in viol2)
+
+    # 3. Both surrounding whitespace and citation locator
+    ok3, app3, viol3 = verify_citation_whitelist("Це правильно ( «СУМ», с. 25 ).")
+    assert ok3 is False
+    assert app3 == []
+    assert any("СУМ" in v for v in viol3)
+
+    # 4. Approved authority with citation locator passes
+    ok4, app4, viol4 = verify_citation_whitelist("Це правильно (ВЕСУМ, с. 25).")
+    assert ok4 is True
+    assert any("ВЕСУМ" in a for a in app4)
+    assert viol4 == []
+
+    # 5. Approved authority with surrounding whitespace passes
+    ok5, app5, viol5 = verify_citation_whitelist("Це правильно ( «ВЕСУМ» ).")
+    assert ok5 is True
+    assert any("ВЕСУМ" in a for a in app5)
+    assert viol5 == []
+
+    # 6. Approved multi-word authority with locator passes
+    ok6, app6, viol6 = verify_citation_whitelist("Це правильно («СУМ-20», с. 10).")
+    assert ok6 is True
+    assert any("СУМ-20" in a for a in app6)
+    assert viol6 == []
