@@ -80,13 +80,18 @@ def bare_python_hits(text: str) -> list[tuple[int, str]]:
 def staged_shell_files(repo_root: Path) -> list[Path]:
     """Return staged added/modified shell scripts under ``repo_root``."""
 
-    result = subprocess.run(
-        ["git", "diff", "--cached", "--name-only", "--diff-filter=AM"],
-        cwd=repo_root,
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    try:
+        result = subprocess.run(
+            ["git", "diff", "--cached", "--name-only", "--diff-filter=AM"],
+            cwd=repo_root,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+    except subprocess.TimeoutExpired:
+        print("git diff --cached timed out after 30s", file=sys.stderr)
+        raise SystemExit(2) from None
     if result.returncode != 0:
         print(result.stderr or result.stdout or "git diff --cached failed", file=sys.stderr)
         raise SystemExit(2)
