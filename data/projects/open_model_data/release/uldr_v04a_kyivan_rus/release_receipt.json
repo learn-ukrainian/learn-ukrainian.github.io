@@ -1,0 +1,44 @@
+{
+  "schema_version": "v1_kyivan_rus_release_receipt",
+  "issue": 8103,
+  "parent_epic": 6321,
+  "created_at": "2026-09-16T20:34:00.034388+00:00",
+  "git_commit": "9037a839120e14e0d0da7f8c1510f21e4fa59fac",
+  "evaluation_benchmark": {
+    "file_path": "data/projects/open_model_data/release/uldr_v04a_kyivan_rus/kyivan_rus_epigraphic_eval.jsonl",
+    "sha256": "fca7ab4e66167f65e9a94b0008a738e9eca5226e251b4799c30e6ebc9035d4a1",
+    "total_cases": 500,
+    "graffiti_cases": 188,
+    "chronicle_cases": 312,
+    "preserve_cases": 330,
+    "mixed_error_cases": 170,
+    "register_counts": {
+      "church_slavonic_liturgical": 6,
+      "vernacular_secular": 486,
+      "mixed_diglossic": 8
+    }
+  },
+  "sft_training_dataset": {
+    "directory_path": "data/projects/open_model_data/release/uldr_v04a_kyivan_rus/sft",
+    "shards_count": 30,
+    "total_trajectories": 10000,
+    "epigraphy_trajectories": 876,
+    "chronicle_trajectories": 8924,
+    "replay_buffer_trajectories": 200,
+    "manifest_sha256": "ae2f095c450e86306b1a686772bd8b6e2b82ffc58bbe036363500228fbfa362a"
+  },
+  "invariants_verified": {
+    "zero_train_eval_leakage": true,
+    "symmetric_translation_purge": true,
+    "church_slavonic_formula_protection": true,
+    "diplomatic_fidelity_verified": true,
+    "monument_room_partitioning_enforced": true,
+    "clopper_pearson_eval_pass": true
+  },
+  "evaluation_metrics": {
+    "accuracy": 1.0,
+    "preservation_rate": 1.0,
+    "mixed_error_correction_rate": 1.0,
+    "clopper_pearson_lower_95": 0.994
+  }
+}

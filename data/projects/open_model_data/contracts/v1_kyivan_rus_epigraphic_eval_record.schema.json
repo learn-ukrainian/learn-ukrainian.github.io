@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_kyivan_rus_epigraphic_eval_record.schema.json",
+  "title": "v1_kyivan_rus_epigraphic_eval_record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "eval_id",
+    "monument_type",
+    "monument_name",
+    "dating",
+    "language_register",
+    "case_type",
+    "input_text",
+    "target_term",
+    "target_features",
+    "expected_action",
+    "expected_output",
+    "has_injected_error",
+    "injected_error_type",
+    "linguistic_notes",
+    "source_metadata"
+  ],
+  "properties": {
+    "eval_id": {
+      "type": "string",
+      "pattern": "^eval_krus_(?:epig|chron)_[a-f0-9]{8}$"
+    },
+    "monument_type": {
+      "type": "string",
+      "enum": [
+        "cathedral_graffiti",
+        "chronicle"
+      ]
+    },
+    "monument_name": {
+      "type": "string",
+      "minLength": 3
+    },
+    "dating": {
+      "type": "string",
+      "minLength": 4
+    },
+    "language_register": {
+      "type": "string",
+      "enum": [
+        "church_slavonic_liturgical",
+        "vernacular_secular",
+        "mixed_diglossic"
+      ]
+    },
+    "case_type": {
+      "type": "string",
+      "enum": [
+        "PRESERVE",
+        "CORRECT"
+      ]
+    },
+    "input_text": {
+      "type": "string",
+      "minLength": 3
+    },
+    "target_term": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_features": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "expected_action": {
+      "type": "string",
+      "enum": [
+        "PRESERVE",
+        "CORRECT_INJECTED_ERROR"
+      ]
+    },
+    "expected_replacement": {
+      "type": ["string", "null"]
+    },
+    "expected_output": {
+      "type": "string",
+      "minLength": 3
+    },
+    "has_injected_error": {
+      "type": "boolean"
+    },
+    "injected_error_type": {
+      "type": ["string", "null"]
+    },
+    "injected_error_details": {
+      "type": ["string", "null"]
+    },
+    "linguistic_notes": {
+      "type": "string",
+      "minLength": 10
+    },
+    "source_metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "source",
+        "partition"
+      ],
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "partition": {
+          "type": "string",
+          "enum": ["held_out_eval", "sft_train"]
+        },
+        "source_record_id": {
+          "type": ["integer", "string", "null"]
+        },
+        "chunk_id": {
+          "type": ["string", "null"]
+        },
+        "room_or_panel": {
+          "type": ["string", "null"]
+        },
+        "academic_edition": {
+          "type": ["string", "null"]
+        }
+      }
+    }
+  }
+}
