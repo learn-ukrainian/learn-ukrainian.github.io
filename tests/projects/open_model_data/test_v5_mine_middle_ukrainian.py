@@ -7,6 +7,7 @@ Issue: #8105
 import ast
 import json
 import re
+import sqlite3
 from pathlib import Path
 
 import jsonschema
@@ -14,7 +15,6 @@ import pytest
 
 from scripts.projects.open_model_data.v5_mine_middle_ukrainian import (
     DEFAULT_SOURCES_DB,
-    DEFAULT_VESUM_DB,
     EVAL_SCHEMA_FILE,
     EXCLUDED_MODERN_WORKS,
     HELD_OUT_EVAL_WORKS,
@@ -36,6 +36,22 @@ from scripts.projects.open_model_data.v5_mine_middle_ukrainian import (
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+
+
+@pytest.fixture
+def mock_vesum_db(tmp_path: Path) -> Path:
+    """Provide a hermetic mock VESUM database for tests so uncommitted data/vesum.db is never touched."""
+    db = tmp_path / "mock_vesum.db"
+    conn = sqlite3.connect(db)
+    conn.execute("CREATE TABLE forms_all (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
+    conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
+    conn.execute("INSERT INTO forms_all VALUES ('чоловіка', 'чоловік', 'noun', 'anim')")
+    conn.execute("INSERT INTO forms_all VALUES ('чоловік', 'чоловік', 'noun', 'anim')")
+    conn.execute("INSERT INTO forms VALUES ('чоловіка', 'чоловік', 'noun', 'anim')")
+    conn.execute("INSERT INTO forms VALUES ('чоловік', 'чоловік', 'noun', 'anim')")
+    conn.commit()
+    conn.close()
+    return db
 
 
 def test_strata_classification_and_date_disambiguation() -> None:
@@ -208,7 +224,7 @@ def test_eval_suite_generation_and_schema() -> None:
     assert correct_count == 2
 
 
-def test_zero_train_eval_leakage_firewall(tmp_path: Path) -> None:
+def test_zero_train_eval_leakage_firewall(mock_vesum_db: Path) -> None:
     """Verify that no held-out eval sentences leak into training trajectories."""
     mock_eval_chunk = MiddleUkrainianChunk(
         id=1,
@@ -245,7 +261,7 @@ def test_zero_train_eval_leakage_firewall(tmp_path: Path) -> None:
     sft_data = build_sft_dataset(
         [mock_train_chunk],
         eval_suite=eval_suite,
-        vesum_db=DEFAULT_VESUM_DB,
+        vesum_db=mock_vesum_db,
         target_sft_quota=4,
         replay_quota=2,
         seed=42,
@@ -402,7 +418,7 @@ def test_evaluator_strictness_and_rejection() -> None:
     assert res["mixed_error_correction_rate"] == 1.0
 
 
-def test_sft_dataset_balance_and_interleaving() -> None:
+def test_sft_dataset_balance_and_interleaving(mock_vesum_db: Path) -> None:
     """Verify that build_sft_dataset generates a strict 50/50 balance of PRESERVE/CORRECT rows."""
     mock_chunks = [
         MiddleUkrainianChunk(
@@ -427,7 +443,7 @@ def test_sft_dataset_balance_and_interleaving() -> None:
     sft_data = build_sft_dataset(
         mock_chunks,
         eval_suite=[],
-        vesum_db=DEFAULT_VESUM_DB,
+        vesum_db=mock_vesum_db,
         target_sft_quota=20,
         replay_quota=4,
         seed=42,
@@ -456,9 +472,9 @@ def test_sft_dataset_balance_and_interleaving() -> None:
                 assert alt["register_tier"] in valid_registers
 
 
-def test_replay_buffer_sources_and_attestations() -> None:
+def test_replay_buffer_sources_and_attestations(mock_vesum_db: Path) -> None:
     """Verify that replay buffer loads dialect preservation and modern literary anti-calque rows without medieval v0.4a."""
-    trajectories = load_replay_buffer(DEFAULT_VESUM_DB, quota=20)
+    trajectories = load_replay_buffer(mock_vesum_db, quota=20)
     assert len(trajectories) == 20
 
     preserve_count = sum(1 for t in trajectories if not t.get("is_calque_or_russianism", False))

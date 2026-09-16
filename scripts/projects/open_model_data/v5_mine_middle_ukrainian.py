@@ -35,6 +35,7 @@ Implements all Advisor Controls:
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import html
 import json
@@ -902,25 +903,34 @@ def build_eval_suite(
     return eval_cases[:target_quota]
 
 
-def query_vesum_lemma_and_count(cur_ves: sqlite3.Cursor, token: str) -> tuple[str, int]:
+def query_vesum_lemma_and_count(cur_ves: sqlite3.Cursor | None, token: str) -> tuple[str, int]:
     """Query VESUM for lemma and forms count, resolving inflected word forms to lemmas."""
+    if not cur_ves:
+        return token, 0
     t = token.casefold().strip(".,!?:;()[]-—+*✠\"'«»\r\n\t/\\")
     if not t:
         return "", 0
-    cur_ves.execute("SELECT count(*) FROM forms_all WHERE lemma = ?", (t,))
-    row = cur_ves.fetchone()
-    if row and row[0] > 0:
-        return t, row[0]
-    cur_ves.execute(
-        "SELECT lemma, count(*) FROM forms_all WHERE word_form = ? GROUP BY lemma ORDER BY count(*) DESC LIMIT 1",
-        (t,),
-    )
-    row = cur_ves.fetchone()
-    if row and row[1] > 0:
-        lemma = row[0]
-        cur_ves.execute("SELECT count(*) FROM forms_all WHERE lemma = ?", (lemma,))
-        full_row = cur_ves.fetchone()
-        return lemma, (full_row[0] if full_row else row[1])
+    for table in ("forms_all", "forms"):
+        try:
+            cur_ves.execute(f"SELECT count(*) FROM {table} WHERE lemma = ?", (t,))
+            row = cur_ves.fetchone()
+            if row and row[0] > 0:
+                return t, row[0]
+            cur_ves.execute(
+                f"SELECT lemma, count(*) FROM {table} WHERE word_form = ? GROUP BY lemma ORDER BY count(*) DESC LIMIT 1",
+                (t,),
+            )
+            row = cur_ves.fetchone()
+            if row and row[1] > 0:
+                lemma = row[0]
+                cur_ves.execute(f"SELECT count(*) FROM {table} WHERE lemma = ?", (lemma,))
+                full_row = cur_ves.fetchone()
+                return lemma, (full_row[0] if full_row else row[1])
+            return t, 0
+        except sqlite3.OperationalError:
+            continue
+        except Exception:
+            break
     return t, 0
 
 
@@ -1154,8 +1164,15 @@ def build_sft_dataset(
 
     rng.shuffle(train_chunks)
 
-    conn_ves = sqlite3.connect(vesum_db)
-    cur_ves = conn_ves.cursor()
+    conn_ves = None
+    cur_ves = None
+    if vesum_db and Path(vesum_db).is_file() and Path(vesum_db).stat().st_size > 1000:
+        try:
+            conn_ves = sqlite3.connect(f"file:{Path(vesum_db).resolve()}?mode=ro", uri=True)
+            cur_ves = conn_ves.cursor()
+        except Exception:
+            conn_ves = None
+            cur_ves = None
 
     # Load replay buffer (100 preserve dialect + 100 correct modern anti-calque)
     replay = load_replay_buffer(vesum_db, quota=replay_quota)
@@ -1348,6 +1365,10 @@ def build_sft_dataset(
         full_dataset.append(c_traj)
 
     assert len(full_dataset) == target_sft_quota, f"SFT quota mismatch: {len(full_dataset)} != {target_sft_quota}"
+
+    if conn_ves:
+        with contextlib.suppress(Exception):
+            conn_ves.close()
 
     return full_dataset
 
