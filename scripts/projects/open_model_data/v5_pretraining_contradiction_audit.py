@@ -164,7 +164,7 @@ PREDICATE_WORDS = (
     r"заборонено|забороняється|дозволено|дозволяється|рекомендовано|рекомендується|"
     r"є|це|був|була|було|були|буде|становить|"
     r"потребує|вимагає|"
-    r"замініть|замінити|виправте|виправити|уникайте|уникати|вживайте|вживати|застосовуйте|застосовувати|пишіть|писати|"
+    r"замініть|замінюйте|замінити|замінювати|виправте|виправляйте|виправити|виправляти|уникайте|уникати|вживайте|вживати|застосовуйте|застосовувати|пишіть|писати|"
     r"вважа\w*|визна\w*|назива\w*|означа\w*|має|належ\w*|"
     r"не|ні|ані|"
     r"помилк\w*|кальк\w*|росіянізм\w*|русизм\w*|суржик\w*|ненормативн\w*|неправильн\w*|варваризм\w*|помилков\w*|недоречн\w*|неприпустим\w*|зайв\w*|"
@@ -220,11 +220,12 @@ DISALLOWED_PRONOUNS = (
     r"котрий|котра|котре|котрі|котрого|котрої|котрому|котрій|котрим|котрою|котрих|котрими|котру"
 )
 DISALLOWED_COPULAS = r"є|це|був|була|було|були|буде|становить"
+FOCUSING_PARTICLES = r"саме|лише|тільки|виключно|власне|насамперед|краще|обов'язково|прямо"
 
 DISALLOWED_COORDINATED_TOKENS = (
     rf"(?:не|ні|ані|{DIRECTIVE_VERBS}|{DIRECTIVE_MODALS}|{ADVERSATIVE_CONJUNCTIONS}|{COORDINATING_CONJUNCTIONS}|"
     rf"що|щоб|як|ніби|наче|неначе|мов|{DISALLOWED_PREPOSITIONS}|{DISALLOWED_PRONOUNS}|{DISALLOWED_COPULAS}|"
-    rf"{PREDICATE_WORDS})"
+    rf"{PREDICATE_WORDS}|{FOCUSING_PARTICLES})"
 )
 ITEM_CLASSIFIER = r"(?:(?:слово|слова|слів|термін\w*|вираз\w*|зворот\w*|форм\w*|лексем\w*|вживанн\w*|використанн\w*|застосуванн\w*|написанн\w*)\s+)?"
 ITEM_QUOTED = rf"{ITEM_CLASSIFIER}[«\"“‘\'][^»\"”’\n]+[»\"”’]"
@@ -581,7 +582,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         # A directive is a contradiction unless it is specifically negated
         replace_dirs = [
             r"(?:слід|варто|потрібно|необхідно|треба|можна)\s+(?:замінити|замінювати|уникати|виправити|виправляти)",
-            r"\b(?:замініть|замінити|уникайте|уникати|виправте|виправити)\b",
+            r"\b(?:замініть|замінюйте|замінити|замінювати|уникайте|уникати|виправте|виправляйте|виправити|виправляти)\b",
             r"(?:потребує|вимагає)\s+(?:заміни|виправлення)",
         ]
         for rpat in replace_dirs:
@@ -592,22 +593,31 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 suffix_after_dir = cl_lower[end:]
 
                 # Check replacement destination complement:
-                # e.g. "слід замінити словом «добрий»", "замінити на «добрий»", "замінити формою «добрий»"
-                # If introduced by на/до or instrumental classifier, it specifies the replacement destination,
-                # NOT the object being replaced.
+                # e.g. "слід замінити словом «добрий»", "слід замінити саме словом «добрий»", "замінити на «добрий»", "замінити формою «добрий»"
+                # If introduced by optional focusing particle + на/до or instrumental classifier, it specifies the replacement destination,
+                # NOT the object being replaced (R25-F1, R26-F3).
                 is_replacement_dest = bool(
                     re.match(
-                        r"^\s*(?:на|до|(?:словом|терміном|виразом|зворотом|формою|лексемою))\s+[«\"“‘\']?[А-Яа-яЇїІіЄєҐґ’'ʼ\w\-]+",
+                        rf"^\s*(?:(?:{FOCUSING_PARTICLES})\s+)?(?:на|до|(?:словом|терміном|виразом|зворотом|формою|лексемою))\s+[«\"“‘\']?[А-Яа-яЇїІіЄєҐґ’'ʼ\w\-]+",
                         suffix_after_dir,
+                        re.IGNORECASE,
                     )
                 )
 
-                # Check anaphoric object:
-                # e.g. "уникайте вживання цього слова", "замініть це слово", "уникайте його", "уникайте її"
-                # Contains pronominal anaphora (його, її, це, цей, цю, цього, тощо) and no distinct non-target quoted term.
-                has_pronominal_anaphora = bool(PRONOMINAL_ANAPHORA.search(suffix_after_dir))
-                has_quoted_term = bool(re.search(r"[«\"“‘\'][^»\"”’\n]+[»\"”’]", suffix_after_dir))
-                is_anaphoric_obj = has_pronominal_anaphora and not has_quoted_term
+                # Check anaphoric direct object:
+                # Scoped to the immediate governed object span (before any prepositional adjuncts like "у цьому реченні"
+                # or clause delimiters), ensuring that pronouns in prepositional adjuncts do not falsely make a lexical
+                # object appear anaphoric (R25-F1, R26-F2).
+                gov_span = re.split(
+                    rf"(?:[.,;!?:\n]|\s+\b(?:{DISALLOWED_PREPOSITIONS}|{CONJUNCTIONS})\b)",
+                    suffix_after_dir,
+                    maxsplit=1,
+                )[0]
+                has_pronominal_anaphora = bool(PRONOMINAL_ANAPHORA.search(gov_span))
+                has_quoted_term = bool(re.search(r"[«\"“‘\'][^»\"”’\n]+[»\"”’]", gov_span))
+                gov_tokens = [normalize_token(t) for t in re.findall(r"[А-Яа-яЇїІіЄєҐґ’'ʼ\w\-]+", gov_span)]
+                has_lexical_obj = any(t and t not in ANAPHORIC_WORDS and t != t_norm for t in gov_tokens)
+                is_anaphoric_obj = has_pronominal_anaphora and not has_quoted_term and not has_lexical_obj
 
                 if not is_replacement_dest and not is_anaphoric_obj:
                     # Check if this directive governs an explicit non-target object:
@@ -616,7 +626,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                     # verify whether that object list includes the target.
                     # Support mixed quoted/unquoted objects and classifiers across all coordinated objects (R23-F1, R24-F1).
                     obj_span_m = re.match(
-                        rf"\s*(?:(?:теж|також|завжди|обов'язково|зовсім|категорично)\s+)?"
+                        rf"\s*(?:(?:теж|також|завжди|обов'язково|зовсім|категорично|{FOCUSING_PARTICLES})\s+)?"
                         rf"{COORDINATED_ITEM}(?:\s*{COORDINATED_SEP}\s*{COORDINATED_ITEM})*",
                         suffix_after_dir,
                         re.IGNORECASE,

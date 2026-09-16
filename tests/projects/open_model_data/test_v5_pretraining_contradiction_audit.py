@@ -3034,3 +3034,143 @@ def test_audit_r25_findings_replacement_complements_and_imperatives(tmp_path: Pa
     )
     assert passed_ctrl is True, "Expected audit to pass when target is destination in replacement complement"
     assert data_ctrl["dpo_contradictions_count"] == 0
+
+
+def test_audit_r26_findings_imperfectives_adjuncts_and_focusing_particles(tmp_path: Path) -> None:
+    """Verify Astra R26 Findings: imperfective imperatives, scoped anaphora vs adjuncts, and focusing particles."""
+    # 1. Finding 1: Imperfective imperatives замінюйте and виправляйте (R26-F1)
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Замінюйте це слово.") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Виправляйте це слово.") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Замінюйте його.") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Виправляйте його.") is True
+
+    # 2. Finding 2: Scoped anaphora vs prepositional adjuncts containing pronouns (R26-F2)
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Уникайте слова общий у цьому реченні.") is False
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Уникайте слова «общий» у цьому реченні.") is False
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Замініть слово общий у цьому тексті.") is False
+
+    # 3. Finding 3: Focusing particles before replacement destination complement (R26-F3)
+    assert is_target_condemned_in_text("царинками", "«царинками» слід замінити саме словом «добрий».") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» слід замінити лише словом «добрий».") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» слід замінити тільки словом «добрий».") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» слід замінити саме на «добрий».") is True
+
+    # 4. Isolated DPO integration tests
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "target_term": "царинками",
+            "category": "dialectal",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sources = tmp_path / "sources.db"
+    conn_s = sqlite3.connect(mock_sources)
+    conn_s.execute("CREATE TABLE sum20 (entry_id INTEGER PRIMARY KEY, lemma TEXT);")
+    conn_s.execute("INSERT INTO sum20 VALUES (1, 'добрий');")
+    conn_s.execute("INSERT INTO sum20 VALUES (2, 'гарний');")
+    conn_s.execute("INSERT INTO sum20 VALUES (3, 'общий');")
+    conn_s.commit()
+    conn_s.close()
+    mock_vesum = tmp_path / "vesum.db"
+    conn_v = sqlite3.connect(mock_vesum)
+    conn_v.execute("CREATE TABLE vesum (lemma TEXT);")
+    conn_v.execute("INSERT INTO vesum VALUES ('добрий');")
+    conn_v.execute("INSERT INTO vesum VALUES ('гарний');")
+    conn_v.execute("INSERT INTO vesum VALUES ('общий');")
+    conn_v.commit()
+    conn_v.close()
+    mock_sft_clean = tmp_path / "sft_clean"
+    mock_sft_clean.mkdir()
+    (mock_sft_clean / "shard.jsonl").write_text(
+        json.dumps({
+            "instruction": "Поясніть вживання слова «царинками».",
+            "response": "«царинками» — автентичне діалектне слово, яке слід зберегти.",
+            "target_term": "царинками",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+
+    # R26-F1: imperfective imperative замінюйте in chosen response -> MUST fail audit
+    dpo_f1 = tmp_path / "dpo_r26_f1"
+    dpo_f1.mkdir()
+    (dpo_f1 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "«царинками» — нормативне слово. Замінюйте це слово.",
+            "rejected": "«царинками» — нормативне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_f1, data_f1, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_f1,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r26_f1.md",
+        output_json=tmp_path / "r26_f1.json",
+    )
+    assert passed_f1 is False, "Expected audit to fail when chosen response condemns target via imperfective imperative"
+    assert data_f1["dpo_contradictions_count"] == 1
+
+    # R26-F2: other unquoted object with prepositional adjunct containing pronoun -> MUST pass audit
+    dpo_f2 = tmp_path / "dpo_r26_f2"
+    dpo_f2.mkdir()
+    (dpo_f2 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "«царинками» — нормативне слово. Уникайте слова общий у цьому реченні.",
+            "rejected": "«царинками» — помилка.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_f2, data_f2, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_f2,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r26_f2.md",
+        output_json=tmp_path / "r26_f2.json",
+    )
+    assert passed_f2 is True, "Expected audit to pass when other unquoted word is avoided despite pronoun in adjunct"
+    assert data_f2["dpo_contradictions_count"] == 0
+
+    # R26-F3: focusing particle before replacement destination complement -> MUST fail audit
+    dpo_f3 = tmp_path / "dpo_r26_f3"
+    dpo_f3.mkdir()
+    (dpo_f3 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "«царинками» слід замінити саме словом «добрий».",
+            "rejected": "«царинками» — нормативне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_f3, data_f3, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_f3,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r26_f3.md",
+        output_json=tmp_path / "r26_f3.json",
+    )
+    assert passed_f3 is False, "Expected audit to fail when chosen response condemns target with focusing particle"
+    assert data_f3["dpo_contradictions_count"] == 1
