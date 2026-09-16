@@ -1116,13 +1116,21 @@ def test_batch8_semantic_and_stress_distinctions():
     assert vyv[1]["headword"] == "виво́зитися"
     assert "export" in vyv[1]["gloss"].lower() or "transport" in vyv[1]["gloss"].lower()
 
-    # захватний: захва́тний (predatory / conquest) vs захватни́й (clamping / gripping, tech.)
+    # захватний: захва́тний (clamping / gripping, tech.) vs захватни́й (exciting / thrilling / captivating)
     zah = enrich_heteronyms.build_heteronyms_for_lemma("захватний")
     assert zah is not None and len(zah) == 2
     assert zah[0]["headword"] == "захва́тний"
-    assert "conquest" in zah[0]["gloss"].lower() or "predatory" in zah[0]["gloss"].lower() or "seizure" in zah[0]["gloss"].lower()
+    assert "gripping" in zah[0]["gloss"].lower() or "clamping" in zah[0]["gloss"].lower()
     assert zah[1]["headword"] == "захватни́й"
-    assert "gripping" in zah[1]["gloss"].lower() or "clamping" in zah[1]["gloss"].lower()
+    assert "exciting" in zah[1]["gloss"].lower() or "thrilling" in zah[1]["gloss"].lower() or "captivating" in zah[1]["gloss"].lower()
+
+    # дякування: дя́кування (thanking / gratitude) vs дякува́ння (serving as deacon / cantor in church)
+    diak = enrich_heteronyms.build_heteronyms_for_lemma("дякування")
+    assert diak is not None and len(diak) == 2
+    assert diak[0]["headword"] == "дя́кування"
+    assert "gratitude" in diak[0]["gloss"].lower() or "thank" in diak[0]["gloss"].lower()
+    assert diak[1]["headword"] == "дякува́ння"
+    assert "cantor" in diak[1]["gloss"].lower() or "deacon" in diak[1]["gloss"].lower()
 
     # корівник: корі́вник (cowshed / inanim) vs корівни́к (cowherd / anim)
     kor = enrich_heteronyms.build_heteronyms_for_lemma("корівник")
@@ -1153,6 +1161,14 @@ def test_batch8_semantic_and_stress_distinctions():
     assert "hew" in lup[1]["gloss"].lower() or "break" in lup[1]["gloss"].lower() or "chip" in lup[1]["gloss"].lower()
     assert "Лупайте сю скалу" in lup[1]["pre_soviet_witness"]["quote"]
 
+    # лютневий: лю́тневий (relating to lute) vs лютне́вий (February / winter)
+    lut = enrich_heteronyms.build_heteronyms_for_lemma("лютневий")
+    assert lut is not None and len(lut) == 2
+    assert lut[0]["headword"] == "лю́тневий"
+    assert "lute" in lut[0]["gloss"].lower()
+    assert lut[1]["headword"] == "лютне́вий"
+    assert "february" in lut[1]["gloss"].lower()
+
     # креснути: кре́снути (ice cracking/moving, imperf.) vs кресну́ти (strike spark, perf.)
     kre = enrich_heteronyms.build_heteronyms_for_lemma("креснути")
     assert kre is not None and len(kre) == 2
@@ -1161,11 +1177,13 @@ def test_batch8_semantic_and_stress_distinctions():
     assert kre[1]["headword"] == "кресну́ти"
     assert kre[1]["morphology"]["paradigm"]["aspect"] == "доконаний"
 
-    # находитися: нахо́дитися (be found / born, imperf.) vs находи́тися (walk plenty, perf.)
+    # находитися: нахо́дитися (be found / present, imperf., no birth sense) vs находи́тися (walk plenty, perf.)
     nah = enrich_heteronyms.build_heteronyms_for_lemma("находитися")
     assert nah is not None and len(nah) == 2
     assert nah[0]["headword"] == "нахо́дитися"
     assert nah[0]["morphology"]["paradigm"]["aspect"] == "недоконаний"
+    assert "born" not in nah[0]["gloss"].lower()
+    assert "народжуватися" not in nah[0]["meaning"]["definitions"][0]
     assert nah[1]["headword"] == "находи́тися"
     assert nah[1]["morphology"]["paradigm"]["aspect"] == "доконаний"
 
@@ -1202,10 +1220,13 @@ def test_batch8_lemmas_not_duplicated_from_earlier_batches():
     )
     assert earlier & set(CURATED_HETERONYMS_BATCH_8) == set()
     assert "вивозитися" in CURATED_HETERONYMS_BATCH_8
+    assert "дякування" in CURATED_HETERONYMS_BATCH_8
+    assert "захватний" in CURATED_HETERONYMS_BATCH_8
     assert "зорювати" in CURATED_HETERONYMS_BATCH_8
     assert "колонковий" in CURATED_HETERONYMS_BATCH_8
     assert "комірний" in CURATED_HETERONYMS_BATCH_8
     assert "ламповий" in CURATED_HETERONYMS_BATCH_8
+    assert "лютневий" in CURATED_HETERONYMS_BATCH_8
     assert "лупати" in CURATED_HETERONYMS_BATCH_8
     assert "нарізний" in CURATED_HETERONYMS_BATCH_8
     assert "находитися" in CURATED_HETERONYMS_BATCH_8
@@ -1219,9 +1240,9 @@ def test_batch8_lemmas_not_duplicated_from_earlier_batches():
     assert "Грінченко" in nahodytysya[0]["pre_soviet_witness"]["witness"]
     assert "Шевч." in nahodytysya[0]["pre_soviet_witness"]["quote"]
 
-    logik = CURATED_HETERONYMS_BATCH_8["логік"]
-    assert logik[0]["heritage_status"]["vesum_attested"] is True
-    assert logik[1]["heritage_status"]["vesum_attested"] is False
+    lutnevyi = CURATED_HETERONYMS_BATCH_8["лютневий"]
+    assert lutnevyi[0]["heritage_status"]["vesum_attested"] is True
+    assert lutnevyi[1]["heritage_status"]["vesum_attested"] is True
 
 
 
