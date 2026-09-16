@@ -1872,3 +1872,49 @@ def test_citation_whitelist_r30_astra_r12_cocited_authorities_and_locators():
     assert any("ВЕСУМ" in a for a in app6)
     assert any("СУМ-20" in a for a in app6)
     assert viol6 == []
+
+
+def test_citation_whitelist_r31_astra_r13_dotted_locators_and_unmatched_handling():
+    """Verify Astra R13 Finding 1: dotted locators (p., стор., vol.) are recognized and do not suppress validation of co-cited authorities."""
+    # 1. Astra's exact probe 1: 'p. 25' with unapproved bare СУМ
+    ok1, app1, viol1 = verify_citation_whitelist("Це правильно (ВЕСУМ, p. 25; СУМ).")
+    assert ok1 is False
+    assert any("ВЕСУМ" in a for a in app1)
+    assert any("СУМ" in v for v in viol1)
+
+    # 2. Astra's exact probe 2: 'стор. 25' with unapproved foreign authority Zorblax
+    ok2, app2, viol2 = verify_citation_whitelist("Це правильно (ВЕСУМ, стор. 25; Zorblax).")
+    assert ok2 is False
+    assert any("ВЕСУМ" in a for a in app2)
+    assert any("Zorblax" in v for v in viol2)
+
+    # 3. Approved authority with 'p. 25' passes Gate 4 cleanly
+    ok3, app3, viol3 = verify_citation_whitelist("Це правильно (ВЕСУМ, p. 25).")
+    assert ok3 is True
+    assert any("ВЕСУМ" in a for a in app3)
+    assert viol3 == []
+
+    # 4. Approved authority with 'стор. 25' passes Gate 4 cleanly
+    ok4, app4, viol4 = verify_citation_whitelist("Це правильно (ВЕСУМ, стор. 25).")
+    assert ok4 is True
+    assert any("ВЕСУМ" in a for a in app4)
+    assert viol4 == []
+
+    # 5. Multiple approved authorities with dotted locators pass cleanly
+    ok5, app5, viol5 = verify_citation_whitelist("Це правильно (ВЕСУМ, vol. 1, pp. 20-22; «СУМ-20», т. 2, стор. 10).")
+    assert ok5 is True
+    assert any("ВЕСУМ" in a for a in app5)
+    assert any("СУМ-20" in a for a in app5)
+    assert viol5 == []
+
+    # 6. Prefixed citation with dotted locator and unapproved authority fails cleanly
+    ok6, app6, viol6 = verify_citation_whitelist("Це правильно (джерело: ВЕСУМ, p. 25; СУМ).")
+    assert ok6 is False
+    assert any("ВЕСУМ" in a for a in app6)
+    assert any("СУМ" in v for v in viol6)
+
+    # 7. Arbitrary unmatched locator in first entity does not suppress validation of second unapproved entity
+    ok7, app7, viol7 = verify_citation_whitelist("Це правильно (ВЕСУМ, sec. 5; СУМ).")
+    assert ok7 is False
+    assert any("ВЕСУМ" in a for a in app7)
+    assert any("СУМ" in v for v in viol7)

@@ -503,7 +503,9 @@ DIRECT_ZA_PROPER_NAME_RE = (
     r"(?:ом|ем|ям|ою|ею|єю|овим|євим|им|ім|кса|ака|яка|нка|нга|нта|рда|рта|нда|льда|вича|овича|евича|ьова|ьові|ова|ева|ого|ього|ів|ей|ові|єві|а|я|у|ю)\b)"
 )
 
-LOCATOR_KEYWORD_RE = r"(?:[сs]\.?|стор\w*|том\w*|т\.?|vol\w*|p\w*|pp\w*|ч\w*|вип\w*|кн\w*|пар\w*|параграф\w*|§)"
+LOCATOR_KEYWORD_RE = (
+    r"(?:[сs]\.?|стор\w*\.?|том\w*\.?|т\.?|vol\w*\.?|p\w*\.?|pp\w*\.?|ч\w*\.?|вип\w*\.?|кн\w*\.?|пар\w*\.?|параграф\w*\.?|§|№|#)"
+)
 LOCATOR_NUM_RE = r"(?:\d+|[IVXLCDMivxlcdm]+)(?:[\s\-–—\u2010-\u2015]+(?:\d+|[IVXLCDMivxlcdm]+))?"
 LOCATOR_PART_RE = rf"(?:{LOCATOR_KEYWORD_RE}\s*{LOCATOR_NUM_RE}|{LOCATOR_NUM_RE}|{LOCATOR_KEYWORD_RE})"
 CITATION_LOCATOR_RE = rf"(?:\s*,\s*{LOCATOR_PART_RE}(?:\s*,\s*{LOCATOR_PART_RE})*)"
@@ -552,16 +554,12 @@ CITATION_MENTION_PATTERNS = [
     ),
     # 4a. Explicitly prefixed parenthetical citations: "(джерело: ВЕСУМ)", "(за «Словником»)", "(див. Zorblax)"
     re.compile(
-        rf"\(\s*({PAREN_PREFIX_RE}(?:{QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})"
-        rf"(?:{CITATION_LOCATOR_RE})?"
-        rf"(?:\s*;\s*{CO_CITED_ENTRY_RE})*)\s*\)"
+        rf"\(\s*({PAREN_PREFIX_RE}[^()]+)\s*\)"
     ),
-    # 4b. Bare parenthetical citations: "(СУМ-11)", "(ВЕСУМ)", "(Словник української мови)", "(«СУМ-20»)"
+    # 4b. Bare parenthetical citations: "(СУМ-11)", "(ВЕСУМ)", "(Словник української мови)", "(«СУМ-20»)", "(ВЕСУМ, p. 25; СУМ)"
     re.compile(
         rf"\(\s*(?!(?:{PAREN_PREFIX_RE})\b)"
-        rf"(((?:{QUOTED_AUTHORITY_TITLE_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})"
-        rf"(?:{CITATION_LOCATOR_RE})?)"
-        rf"(?:\s*;\s*{CO_CITED_ENTRY_RE})*)\s*\)"
+        rf"((?:{QUOTED_AUTHORITY_TITLE_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})[^()]*)\s*\)"
     ),
 ]
 

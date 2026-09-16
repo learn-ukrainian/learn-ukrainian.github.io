@@ -181,6 +181,56 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
     target_in_text = bool(t_token_re.search(text_norm))
     current_referent = "TARGET" if not target_in_text else None
 
+    # Check all explicit replacement instructions involving target:
+    # e.g. "Замість <target> слід/варто... вживати <other>" or "вживайте <other> замість <target>"
+    # Sentence context is bound strictly to EACH individual occurrence.
+    zamist_target_re = re.compile(rf"\bзамість\s+[«\"“‘\']?{t_bare}[»\"”’\']?", re.IGNORECASE)
+    for zm in zamist_target_re.finditer(text_norm):
+        sent_start = 0
+        for delim in (".", "!", "?", ";", "\n"):
+            pos = text_norm.rfind(delim, 0, zm.start())
+            if pos != -1 and pos + 1 > sent_start:
+                sent_start = pos + 1
+
+        sent_end = len(text_norm)
+        for delim in (".", "!", "?", ";", "\n"):
+            pos = text_norm.find(delim, zm.end())
+            if pos != -1 and pos < sent_end:
+                sent_end = pos
+
+        sent_prefix = text_norm[sent_start:zm.start()].lower()
+        sent_suffix = text_norm[zm.end():sent_end].lower()
+
+        is_negated = (
+            bool(re.search(r"\b(?:не|ні|ані)\s*$", sent_prefix))
+            or bool(
+                re.search(
+                    r"\b(?:не\s+(?:слід|варто|потрібно|необхідно|треба|можна|рекомендовано|рекомендується|дозволено|дозволяється|годиться)|заборонено|забороняється|не\s+можна|уникайте|уникати)\b",
+                    sent_prefix,
+                )
+            )
+            or bool(
+                re.search(
+                    r"\bне\s+(?:вживати|вжити|вживайте|використовувати|використати|використовуйте|писати|пишіть|казати|кажіть|говорити|говоріть|брати|беріть|застосовувати|застосовуйте|обирати|обирайте|замінювати|замінити|замінюйте)\b",
+                    sent_prefix,
+                )
+            )
+            or bool(
+                re.search(
+                    r"\b(?:не\s+(?:слід|варто|потрібно|необхідно|треба|можна|рекомендовано|рекомендується|дозволено|дозволяється|годиться)|заборонено|забороняється|не\s+можна|уникайте|уникати)\b",
+                    sent_suffix,
+                )
+            )
+            or bool(
+                re.search(
+                    r"\bне\s+(?:вживати|вжити|вживайте|використовувати|використати|використовуйте|писати|пишіть|казати|кажіть|говорити|говоріть|брати|беріть|застосовувати|застосовуйте|обирати|обирайте|замінювати|замінити|замінюйте)\b",
+                    sent_suffix,
+                )
+            )
+        )
+        if not is_negated:
+            return True
+
     # Split text into sentence/clause units by punctuation or coordinate/adversative conjunctions introducing clauses
     split_pat = re.compile(
         r"(?:[.,\n;!?:\u2014\u2013]+|"
@@ -231,56 +281,10 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         if current_referent != "TARGET":
             continue
 
-        # Check explicit replacement instruction: "Замість <target> слід/варто... вживати <other>" or "вживайте <other> замість <target>"
-        zamist_m = re.search(rf"\bзамість\s+[«\"“‘\']?{t_bare}[»\"”’\']?", cl_lower)
-        if zamist_m:
-            zamist_prefix = cl_lower[: zamist_m.start()]
-            zamist_suffix = cl_lower[zamist_m.end() :]
-            # If suffix in clause is short/empty (e.g. separated by comma or clause split), inspect full sentence context
-            if not zamist_suffix.strip() or zamist_suffix.strip() == ",":
-                sent_match = re.search(
-                    rf"(?:^|[.!?;\n])([^.!?;\n]*\bзамість\s+[«\"“‘\']?{t_bare}[»\"”’\']?[^.!?;\n]*)",
-                    text_norm,
-                    re.IGNORECASE,
-                )
-                if sent_match:
-                    sent_lower = sent_match.group(1).lower()
-                    zm_full = re.search(rf"\bзамість\s+[«\"“‘\']?{t_bare}[»\"”’\']?", sent_lower)
-                    if zm_full:
-                        zamist_prefix = sent_lower[: zm_full.start()]
-                        zamist_suffix = sent_lower[zm_full.end() :]
-
-            zamist_negated = (
-                bool(re.search(r"\b(?:не|ні|ані)\s*$", zamist_prefix))
-                or bool(
-                    re.search(
-                        r"\b(?:не\s+(?:слід|варто|потрібно|необхідно|треба|можна|рекомендовано|рекомендується|дозволено|дозволяється|годиться)|заборонено|забороняється|не\s+можна|уникайте|уникати)\b",
-                        zamist_prefix,
-                    )
-                )
-                or bool(
-                    re.search(
-                        r"\bне\s+(?:вживати|вжити|вживайте|використовувати|використати|використовуйте|писати|пишіть|казати|кажіть|говорити|говоріть|брати|беріть|застосовувати|застосовуйте|обирати|обирайте|замінювати|замінити|замінюйте)\b",
-                        zamist_prefix,
-                    )
-                )
-                or bool(
-                    re.search(
-                        r"\b(?:не\s+(?:слід|варто|потрібно|необхідно|треба|можна|рекомендовано|рекомендується|дозволено|дозволяється|годиться)|заборонено|забороняється|не\s+можна|уникайте|уникати)\b",
-                        zamist_suffix,
-                    )
-                )
-                or bool(
-                    re.search(
-                        r"\bне\s+(?:вживати|вжити|вживайте|використовувати|використати|використовуйте|писати|пишіть|казати|кажіть|говорити|говоріть|брати|беріть|застосовувати|застосовуйте|обирати|обирайте|замінювати|замінити|замінюйте)\b",
-                        zamist_suffix,
-                    )
-                )
-            )
-            if not zamist_negated:
-                return True
-            else:
-                continue
+        # If target in this clause was governed by замість, it was already evaluated above.
+        # Bypass subsequent directives (like unikayte) so they don't falsely condemn target.
+        if re.search(rf"\bзамість\s+[«\"“‘\']?{t_bare}[»\"”’\']?", cl_lower):
+            continue
 
         # Check replacement / avoidance directives
         # A directive is a contradiction unless it is specifically negated

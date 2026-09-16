@@ -1537,3 +1537,75 @@ def test_audit_astra_r12_zamist_negation_probes(tmp_path: Path):
     assert passed is True
     assert data["dpo_contradictions_count"] == 0
     assert data["dpo_contradictions"] == []
+
+
+def test_audit_astra_r13_multi_sentence_zamist_probes(tmp_path: Path):
+    """Verify Astra R13 Finding 2: earlier negation in one sentence does not hide later replacement instruction in another sentence."""
+    # 1. Astra's exact probe: earlier negated sentence does not hide later unnegated replacement instruction
+    text1 = "Замість «царинками» не слід вживати «гарний».\nВживайте «добрий» замість «царинками»."
+    assert is_target_condemned_in_text("царинками", text1) is True
+
+    # 2. Reversed order: earlier unnegated replacement instruction followed by later negated replacement
+    text2 = "Вживайте «добрий» замість «царинками».\nЗамість «царинками» не слід вживати «гарний»."
+    assert is_target_condemned_in_text("царинками", text2) is True
+
+    # 3. Both sentences negated: term remains defended and preserved
+    text3 = "Замість «царинками» не слід вживати «гарний».\nНе слід вживати «добрий» замість «царинками»."
+    assert is_target_condemned_in_text("царинками", text3) is False
+
+    # 4. Integration probe: DPO pair with unnegated replacement following negated replacement fails audit
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "target_term": "царинками",
+            "category": "dialectal",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sources = tmp_path / "sources.db"
+    conn_s = sqlite3.connect(mock_sources)
+    conn_s.execute("CREATE TABLE textbooks (chunk_id TEXT PRIMARY KEY, text TEXT)")
+    conn_s.commit()
+    conn_s.close()
+    mock_vesum = tmp_path / "vesum.db"
+    conn_v = sqlite3.connect(mock_vesum)
+    conn_v.execute("CREATE TABLE words (lemma TEXT, form TEXT)")
+    conn_v.commit()
+    conn_v.close()
+    mock_sft_clean = tmp_path / "sft_clean"
+    mock_sft_clean.mkdir()
+    (mock_sft_clean / "shard.jsonl").write_text(
+        json.dumps({
+            "target_term": "царинками",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_dpo_contradict = tmp_path / "dpo_contradict"
+    mock_dpo_contradict.mkdir()
+    (mock_dpo_contradict / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як оцінити слово «царинками»?",
+            "chosen": "Замість «царинками» не слід вживати «гарний». Вживайте «добрий» замість «царинками».",
+            "rejected": "Це нормальне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed, data, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=mock_dpo_contradict,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r13_rep.md",
+        output_json=tmp_path / "r13_rep.json",
+    )
+    assert passed is False
+    assert data["dpo_contradictions_count"] == 1
+    assert data["dpo_contradictions"][0]["target_term"] == "царинками"
