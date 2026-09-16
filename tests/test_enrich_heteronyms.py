@@ -2002,13 +2002,15 @@ def test_batch11_semantic_and_stress_distinctions():
     assert popr[1]["headword"] == "поправни́й"
     assert "correctional" in popr[1]["gloss"].lower() or "coefficient" in popr[1]["gloss"].lower()
 
-    # 3. поривний: пори́вний (gusty/impulsive) vs поривни́й (rupturing/tearing, spec.)
-    pory = enrich_heteronyms.build_heteronyms_for_lemma("поривний")
-    assert pory is not None and len(pory) == 2
-    assert pory[0]["headword"] == "пори́вний"
-    assert "gusty" in pory[0]["gloss"].lower() or "impulsive" in pory[0]["gloss"].lower()
-    assert pory[1]["headword"] == "поривни́й"
-    assert "rupturing" in pory[1]["gloss"].lower() or "tearing" in pory[1]["gloss"].lower()
+    # 3. скликання: скли́кання (convocation/cohort) vs склика́ння (convening/gathering)
+    sklyk = enrich_heteronyms.build_heteronyms_for_lemma("скликання")
+    assert sklyk is not None and len(sklyk) == 2
+    assert sklyk[0]["headword"] == "скли́кання"
+    assert "convocation" in sklyk[0]["gloss"].lower() or "session" in sklyk[0]["gloss"].lower() or "assembly" in sklyk[0]["gloss"].lower()
+    assert sklyk[0]["soviet_colonization_context"]["sovietization_risk"] == 1
+    assert "ленін" in sklyk[0]["soviet_colonization_context"]["keywords"]
+    assert sklyk[1]["headword"] == "склика́ння"
+    assert "convening" in sklyk[1]["gloss"].lower() or "gathering" in sklyk[1]["gloss"].lower()
 
     # 4. посвататися: посва́татися (propose marriage) vs посвата́тися (become in-laws)
     posv = enrich_heteronyms.build_heteronyms_for_lemma("посвататися")
@@ -2084,21 +2086,23 @@ def test_batch11_semantic_and_stress_distinctions():
     assert prod[1]["headword"] == "продиха́ти"
     assert "breeze" in prod[1]["gloss"].lower() or "breathe" in prod[1]["gloss"].lower()
 
-    # 13. продублювати: проду́блювати (tan leather/harden skin) vs продублюва́ти (duplicate/dub film)
+    # 13. продублювати: проду́блювати (tan leather/harden skin) vs продублюва́ти (duplicate/dub film, Sovietization risk 1: Aurora)
     pdub = enrich_heteronyms.build_heteronyms_for_lemma("продублювати")
     assert pdub is not None and len(pdub) == 2
     assert pdub[0]["headword"] == "проду́блювати"
     assert "tan" in pdub[0]["gloss"].lower() or "leather" in pdub[0]["gloss"].lower()
     assert pdub[1]["headword"] == "продублюва́ти"
     assert "duplicate" in pdub[1]["gloss"].lower() or "dub" in pdub[1]["gloss"].lower()
+    assert pdub[1]["soviet_colonization_context"]["sovietization_risk"] == 1
+    assert "аврора" in pdub[1]["soviet_colonization_context"]["keywords"]
 
-    # 14. прозірний: прозі́рний (translucent/clear) vs прозірни́й (perspicacious/foresighted)
+    # 14. прозірний: прозі́рний (transparent/limpid) vs прозірни́й (penetrable by sight/see-through)
     proz = enrich_heteronyms.build_heteronyms_for_lemma("прозірний")
     assert proz is not None and len(proz) == 2
     assert proz[0]["headword"] == "прозі́рний"
-    assert "translucent" in proz[0]["gloss"].lower() or "clear" in proz[0]["gloss"].lower()
+    assert "transparent" in proz[0]["gloss"].lower() or "clear" in proz[0]["gloss"].lower() or "limpid" in proz[0]["gloss"].lower()
     assert proz[1]["headword"] == "прозірни́й"
-    assert "perspicacious" in proz[1]["gloss"].lower() or "far-sighted" in proz[1]["gloss"].lower()
+    assert "penetrable" in proz[1]["gloss"].lower() or "see-through" in proz[1]["gloss"].lower() or "sight" in proz[1]["gloss"].lower()
 
     # 15. проповзати: пропо́взати (perf., crawl a while) vs проповза́ти (imperf., creep through)
     prop = enrich_heteronyms.build_heteronyms_for_lemma("проповзати")
@@ -2124,15 +2128,15 @@ def test_batch11_semantic_and_stress_distinctions():
     assert rozb[1]["headword"] == "розбірни́й"
     assert "demountable" in rozb[1]["gloss"].lower() or "collapsible" in rozb[1]["gloss"].lower()
 
-    # 18. розвідниця: розві́дниця (reconnaissance scout) vs розвідни́ця (divorced woman, dial.)
+    # 18. розвідниця: розві́дниця (reconnaissance scout) vs розвідни́ця (female saw-tooth setter)
     rozv = enrich_heteronyms.build_heteronyms_for_lemma("розвідниця")
     assert rozv is not None and len(rozv) == 2
     assert rozv[0]["headword"] == "розві́дниця"
     assert "scout" in rozv[0]["gloss"].lower() or "intelligence" in rozv[0]["gloss"].lower()
     assert rozv[1]["headword"] == "розвідни́ця"
-    assert "divorced" in rozv[1]["gloss"].lower() or "divorce" in rozv[1]["gloss"].lower()
+    assert "saw" in rozv[1]["gloss"].lower() or "teeth" in rozv[1]["gloss"].lower() or "tooth" in rozv[1]["gloss"].lower() or "setter" in rozv[1]["gloss"].lower()
 
-    # 19. розвозитися: розво́зитися (passive delivery) vs розвози́тися (dally fussing / cry)
+    # 19. розвозитися: розво́зитися (passive delivery) vs розвози́тися (dally fussing / dawdling)
     rozvo = enrich_heteronyms.build_heteronyms_for_lemma("розвозитися")
     assert rozvo is not None and len(rozvo) == 2
     assert rozvo[0]["headword"] == "розво́зитися"
@@ -2275,20 +2279,20 @@ def test_batch11_lemmas_not_duplicated_from_earlier_batches():
     )
     assert earlier & set(CURATED_HETERONYMS_BATCH_11) == set()
     for lemma in [
-        "попереносити", "поправний", "поривний", "посвататися", "потикати",
+        "попереносити", "поправний", "посвататися", "потикати",
         "потіпати", "потріпати", "пречудний", "припадковий", "присікання",
         "провозитися", "продихати", "продублювати", "прозірний", "проповзати",
         "прополювати", "розбірний", "розвідниця", "розвозитися", "розкидання",
         "розпаювати", "розповзатися", "розсадний", "розсильний", "розсипка",
         "романець", "сажковий", "сапання", "свататися", "сипнути",
-        "складування", "складувати",
+        "складування", "складувати", "скликання",
     ]:
         assert lemma in CURATED_HETERONYMS_BATCH_11
 
     # Check pre-Soviet witnesses
-    potyk = CURATED_HETERONYMS_BATCH_11["потикати"]
-    assert "Грінченко" in potyk[0]["pre_soviet_witness"]["witness"]
-    assert "Потикатися" in potyk[0]["pre_soviet_witness"]["quote"]
+    sklyk = CURATED_HETERONYMS_BATCH_11["скликання"]
+    assert "Грінченко" in sklyk[0]["pre_soviet_witness"]["witness"]
+    assert "Скликання" in sklyk[0]["pre_soviet_witness"]["quote"]
 
     potip = CURATED_HETERONYMS_BATCH_11["потіпати"]
     assert "Грінченко" in potip[1]["pre_soviet_witness"]["witness"]
