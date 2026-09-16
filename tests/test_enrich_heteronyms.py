@@ -2009,8 +2009,14 @@ def test_batch11_semantic_and_stress_distinctions():
     assert "convocation" in sklyk[0]["gloss"].lower() or "session" in sklyk[0]["gloss"].lower() or "assembly" in sklyk[0]["gloss"].lower()
     assert sklyk[0]["soviet_colonization_context"]["sovietization_risk"] == 1
     assert "ленін" in sklyk[0]["soviet_colonization_context"]["keywords"]
+    assert sklyk[0]["morphology"]["paradigm"]["cases"]["називний"]["singular"] == "скли́кання"
+    assert sklyk[0]["morphology"]["paradigm"]["cases"]["родовий"]["plural"] == "скли́кань"
+    assert sklyk[0]["morphology"]["paradigm"]["cases"]["орудний"]["singular"] == "скли́канням"
     assert sklyk[1]["headword"] == "склика́ння"
     assert "convening" in sklyk[1]["gloss"].lower() or "gathering" in sklyk[1]["gloss"].lower()
+    assert sklyk[1]["morphology"]["paradigm"]["cases"]["називний"]["singular"] == "склика́ння"
+    assert sklyk[1]["morphology"]["paradigm"]["cases"]["родовий"]["plural"] == "склика́нь"
+    assert sklyk[1]["morphology"]["paradigm"]["cases"]["орудний"]["singular"] == "склика́нням"
 
     # 4. посвататися: посва́татися (propose marriage) vs посвата́тися (become in-laws)
     posv = enrich_heteronyms.build_heteronyms_for_lemma("посвататися")
