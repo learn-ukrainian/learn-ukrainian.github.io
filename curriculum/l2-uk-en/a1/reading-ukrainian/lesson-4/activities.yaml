@@ -9,22 +9,22 @@ inline:
     answer: "село́ (village)"
     options:
     - "село́ (village)"
-    - "се́ло (misplaced stress)"
-    explanation: "У сло́ві «село́» на́голос па́дає на дру́гий склад: се-ло́. — In the word «село́» the stress falls on the second syllable: се-ло́."
+    - "се́ло (village)"
+    explanation: "У сло́ві «село́» на́голос па́дає на дру́гий склад: се-ло́. Наголо́шувати пе́рший склад («се́ло») — помилко́вий на́голос. — In the word «село́» the stress falls on the second syllable: се-ло́. Stressing the first syllable («се́ло») is a misplaced stress."
   - sentence: "Он наш дуп. — Over there is our oak."
     error: "дуп"
     answer: "дуб (oak)"
     options:
     - "дуб (oak)"
-    - "дуп (misspelled with voiceless п)"
-    explanation: "В украї́нській мо́ві кінце́ве «б» у сло́ві «дуб» звучи́ть як [б], а не [п]. — In Ukrainian, final «б» in «дуб» still sounds like «б», not «п»."
+    - "дуп (oak)"
+    explanation: "В украї́нській мо́ві кінце́ве «б» у сло́ві «дуб» звучи́ть як [б], а не [п]; написа́ння «дуп» із лі́терою «п» — поми́лка. — In Ukrainian, final «б» in «дуб» sounds like «б», not «п»; writing «дуп» with letter «п» is misspelled."
   - sentence: "Он ка́са. — Over there is porridge."
     error: "ка́са"
     answer: "ка́ша (porridge)"
     options:
     - "ка́ша (porridge)"
-    - "ка́са (cash register / misspelled)"
-    explanation: "У сло́ві «ка́ша» (porridge) звучи́ть тверди́й звук [ш], а не [с]. — In «ка́ша» (porridge) we use the firm \"sh\" sound [ш], not [с]."
+    - "ка́са (cash register)"
+    explanation: "У сло́ві «ка́ша» (porridge) звучи́ть тверди́й звук [ш], а не [с] («ка́са» означа́є cash register). — In «ка́ша» (porridge) we use the firm \"sh\" sound [ш], not [с] («ка́са» means cash register)."
   - sentence: "Он ха́та і дім. — Over there is a cottage and smoke."
     error: "дім"
     answer: "дим (smoke)"
@@ -37,15 +37,15 @@ inline:
     answer: "Приві́т (Hi!)"
     options:
     - "Приві́т (Hi!)"
-    - "При́віт (misplaced stress)"
-    explanation: "У віта́нні «Приві́т!» на́голос па́дає на дру́гий склад: При-ві́т! — In the greeting «Приві́т!» the stress is on the second syllable: При-ві́т!"
+    - "При́віт (Hi!)"
+    explanation: "У віта́нні «Приві́т!» на́голос па́дає на дру́гий склад: При-ві́т! Наголо́шувати пе́рший склад («При́віт») — помилко́вий на́голос. — In the greeting «Приві́т!» the stress is on the second syllable: При-ві́т! Stressing the first syllable («При́віт») is a misplaced stress."
   - sentence: "Доброго́ ра́нку! — Good morning!"
     error: "Доброго́"
     answer: "До́брого (Good)"
     options:
     - "До́брого (Good)"
-    - "Доброго́ (misplaced stress)"
-    explanation: "У сло́ві «До́брого» на́голос па́дає на пе́рший склад: До́б-ро-го. — In «До́брого» the stress is on the first syllable: До́б-ро-го."
+    - "Доброго́ (Good)"
+    explanation: "У сло́ві «До́брого» на́голос па́дає на пе́рший склад: До́б-ро-го. Наголо́шувати оста́нній склад («Доброго́») — помилко́вий на́голос. — In «До́брого» the stress is on the first syllable: До́б-ро-го. Stressing the final syllable («Доброго́») is a misplaced stress."
 
 - id: act-231
   type: watch-and-repeat

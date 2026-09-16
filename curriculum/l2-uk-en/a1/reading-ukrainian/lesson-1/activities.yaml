@@ -182,47 +182,47 @@ workbook:
   instruction: "Знайді́ть у ко́жному рядку́ сло́во, яке́ ма́є і́ншу кі́лькість складів. — Find the word in each row with a different syllable count."
   items:
   - words:
-    - "рак — crayfish (1)"
-    - "мак — poppy (1)"
-    - "рука́ — hand / arm (2)"
-    - "син — son (1)"
+    - "рак — crayfish"
+    - "мак — poppy"
+    - "рука́ — hand / arm"
+    - "син — son"
     correct: 2
-    explanation: "Сло́во «рука́» ма́є два склади́, а ре́шта слів — оди́н склад. — The word «рука́» has two syllables, while the rest have one."
+    explanation: "Сло́во «рука́» ма́є два склади́ (2), а ре́шта слів — оди́н склад (1). — The word «рука́» has two syllables (2), while the rest have one (1)."
   - words:
-    - "со́рок — forty (2)"
-    - "си́ла — strength (2)"
-    - "кора́ — bark (2)"
-    - "кран — crane / tap (1)"
+    - "со́рок — forty"
+    - "си́ла — strength"
+    - "кора́ — bark"
+    - "кран — crane / tap"
     correct: 3
-    explanation: "Сло́во «кран» односкладо́ве, а ре́шта — двоскладо́ві. — The word «кран» has one syllable, while the rest have two."
+    explanation: "Сло́во «кран» ма́є оди́н склад (1), а ре́шта — два склади́ (2). — The word «кран» has one syllable (1), while the rest have two (2)."
   - words:
-    - "молоко́ — milk (3)"
-    - "рука́ — hand / arm (2)"
-    - "нора́ — burrow (2)"
-    - "кума́ — godmother (2)"
+    - "молоко́ — milk"
+    - "рука́ — hand / arm"
+    - "нора́ — burrow"
+    - "кума́ — godmother"
     correct: 0
-    explanation: "Сло́во «молоко́» ма́є три склади́, а ре́шта — два склади́. — The word «молоко́» has three syllables, while the rest have two."
+    explanation: "Сло́во «молоко́» ма́є три склади́ (3), а ре́шта — два склади́ (2). — The word «молоко́» has three syllables (3), while the rest have two (2)."
   - words:
-    - "смак — taste (1)"
-    - "ри́нок — market (2)"
-    - "син — son (1)"
-    - "кум — godfather (1)"
+    - "смак — taste"
+    - "ри́нок — market"
+    - "син — son"
+    - "кум — godfather"
     correct: 1
-    explanation: "Сло́во «ри́нок» ма́є два склади́, а ре́шта слів — оди́н склад. — The word «ри́нок» has two syllables, while the rest have one."
+    explanation: "Сло́во «ри́нок» ма́є два склади́ (2), а ре́шта слів — оди́н склад (1). — The word «ри́нок» has two syllables (2), while the rest have one (1)."
   - words:
-    - "кума́ — godmother (2)"
-    - "сукно́ — cloth (2)"
-    - "коса́ — braid / scythe (2)"
-    - "рак — crayfish (1)"
+    - "кума́ — godmother"
+    - "сукно́ — cloth"
+    - "коса́ — braid / scythe"
+    - "рак — crayfish"
     correct: 3
-    explanation: "Сло́во «рак» ма́є оди́н склад, а ре́шта слів — два склади́. — The word «рак» has one syllable, while the rest have two."
+    explanation: "Сло́во «рак» ма́є оди́н склад (1), а ре́шта слів — два склади́ (2). — The word «рак» has one syllable (1), while the rest have two (2)."
   - words:
-    - "син — son (1)"
-    - "кран — crane / tap (1)"
-    - "рак — crayfish (1)"
-    - "сосна́ — pine tree (2)"
+    - "син — son"
+    - "кран — crane / tap"
+    - "рак — crayfish"
+    - "сосна́ — pine tree"
     correct: 3
-    explanation: "Сло́во «сосна́» ма́є два склади́, а і́нші слова́ — оди́н склад. — The word «сосна́» has two syllables, while the other words have one."
+    explanation: "Сло́во «сосна́» ма́є два склади́ (2), а і́нші слова́ — оди́н склад (1). — The word «сосна́» has two syllables (2), while the other words have one (1)."
 
 - id: act-w203
   type: true-false
