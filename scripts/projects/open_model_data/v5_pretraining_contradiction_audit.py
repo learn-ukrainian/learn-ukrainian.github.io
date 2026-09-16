@@ -183,6 +183,18 @@ ADVERSATIVE_CONJUNCTIONS = r"\b(?:але|проте|однак|а|бо|тому 
 COORDINATING_CONJUNCTIONS = r"\b(?:і|й|та)\b"
 CONJUNCTIONS = rf"(?:{ADVERSATIVE_CONJUNCTIONS}|{COORDINATING_CONJUNCTIONS})"
 
+DISALLOWED_COORDINATED_TOKENS = (
+    rf"(?:не|ні|ані|{DIRECTIVE_VERBS}|{DIRECTIVE_MODALS}|{ADVERSATIVE_CONJUNCTIONS}|{COORDINATING_CONJUNCTIONS}|"
+    r"що|щоб|як|ніби|наче|неначе|мов)"
+)
+ITEM_CLASSIFIER = r"(?:(?:слово|слова|слів|термін\w*|вираз\w*|зворот\w*|форм\w*|лексем\w*)\s+)?"
+ITEM_QUOTED = rf"{ITEM_CLASSIFIER}[«\"“‘\'][^»\"”’\n]+[»\"”’]"
+ITEM_UNQUOTED = rf"{ITEM_CLASSIFIER}(?!\b{DISALLOWED_COORDINATED_TOKENS}\b)[А-Яа-яЇїІіЄєҐґ’'ʼ\w\-]+"
+COORDINATED_ITEM = rf"(?:{ITEM_QUOTED}|{ITEM_UNQUOTED})"
+COORDINATED_SEP = rf"(?:,\s*(?:{COORDINATING_CONJUNCTIONS}\s+)?|\s+{COORDINATING_CONJUNCTIONS}\s+)"
+PRE_COORDINATED_ITEMS = rf"(?:{COORDINATED_ITEM}\s*{COORDINATED_SEP})*"
+POST_COORDINATED_ITEMS = rf"(?:\s*{COORDINATED_SEP}{COORDINATED_ITEM})*"
+
 
 def find_clause_start_in_prefix(prefix: str, dir_match: re.Match) -> int:
     """Find the start of the clause containing the directive in prefix."""
@@ -324,7 +336,11 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
     # Check all explicit replacement instructions involving target:
     # e.g. "Замість <target> слід/варто... вживати <other>" or "вживайте <other> замість <target>"
     # Syntactic clause context is bound strictly to EACH individual occurrence.
-    zamist_target_re = re.compile(rf"\bзамість\s+[«\"“‘\']?{t_bare}[»\"”’\']?", re.IGNORECASE)
+    target_item = rf"{ITEM_CLASSIFIER}[«\"“‘\']?{t_bare}[»\"”’\']?"
+    zamist_target_re = re.compile(
+        rf"\bзамість\s+(?:{ITEM_CLASSIFIER})?{PRE_COORDINATED_ITEMS}{target_item}{POST_COORDINATED_ITEMS}",
+        re.IGNORECASE,
+    )
     for zm in zamist_target_re.finditer(text_norm):
         sent_start = 0
         for delim in (".", "!", "?", ";", "\n"):

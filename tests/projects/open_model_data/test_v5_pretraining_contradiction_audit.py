@@ -2152,3 +2152,95 @@ def test_audit_astra_r18_probes(tmp_path: Path):
     )
     assert passed_f2 is False, "Expected audit failure for parenthetical replacement"
     assert data_f2["dpo_contradictions_count"] == 1
+
+
+def test_audit_astra_r19_probes(tmp_path: Path):
+    """Verify Astra R19 Findings: coordinated replacement targets in second or later positions."""
+    # 1. Finding 1: coordinated targets in second/later positions detected correctly
+    assert is_target_condemned_in_text("царинками", "Замість «добрий» і «царинками» вживайте «гарний».") is True
+    assert is_target_condemned_in_text("царинками", "Замість «добрий» та «царинками» вживайте «гарний».") is True
+    assert is_target_condemned_in_text("царинками", "Замість «добрий» й «царинками» вживайте «гарний».") is True
+    assert is_target_condemned_in_text("царинками", "Замість «добрий», «файний» та «царинками» вживайте «гарний».") is True
+    assert is_target_condemned_in_text("царинками", "Замість «добрий», «царинками» і «файний» вживайте «гарний».") is True
+
+    # 2. Item classifiers and collective nouns
+    assert is_target_condemned_in_text("царинками", "Замість «добрий» і слова «царинками» вживайте «гарний».") is True
+    assert is_target_condemned_in_text("царинками", "Замість слів «добрий» і «царинками» вживайте «гарний».") is True
+    assert is_target_condemned_in_text("царинками", "Замість слова «царинками» вживайте «гарний».") is True
+
+    # 3. Order 1 (directive precedes) with coordinated targets
+    assert is_target_condemned_in_text("царинками", "Вживайте «гарний» замість «добрий» і «царинками».") is True
+    assert is_target_condemned_in_text("царинками", "Вживайте «гарний» замість слів «добрий» і «царинками».") is True
+
+    # 4. Negated replacement protects target
+    assert is_target_condemned_in_text("царинками", "Замість «добрий» і «царинками» не слід вживати «гарний».") is False
+    assert is_target_condemned_in_text("царинками", "Замість «добрий» і «царинками» не вживайте «гарний».") is False
+    assert is_target_condemned_in_text("царинками", "Замість слів «добрий» і «царинками» не слід вживати «гарний».") is False
+    assert is_target_condemned_in_text("царинками", "Вживайте «добрий» замість «царинками», але не слід вживати «гарний».") is True
+
+    # 5. Em-dash shorthand with coordinated targets
+    assert is_target_condemned_in_text("царинками", "Замість «добрий» і «царинками» — «гарний».") is True
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» і «добрий» — «гарний».") is True
+
+    # 6. DPO integration test with R19 reproducer
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "target_term": "царинками",
+            "category": "dialectal",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sources = tmp_path / "sources.db"
+    conn_s = sqlite3.connect(mock_sources)
+    conn_s.execute("CREATE TABLE sum20 (entry_id INTEGER PRIMARY KEY, lemma TEXT);")
+    conn_s.execute("INSERT INTO sum20 VALUES (1, 'добрий');")
+    conn_s.execute("INSERT INTO sum20 VALUES (2, 'гарний');")
+    conn_s.commit()
+    conn_s.close()
+    mock_vesum = tmp_path / "vesum.db"
+    conn_v = sqlite3.connect(mock_vesum)
+    conn_v.execute("CREATE TABLE vesum (lemma TEXT);")
+    conn_v.execute("INSERT INTO vesum VALUES ('добрий');")
+    conn_v.execute("INSERT INTO vesum VALUES ('гарний');")
+    conn_v.commit()
+    conn_v.close()
+    mock_sft_clean = tmp_path / "sft_clean"
+    mock_sft_clean.mkdir()
+    (mock_sft_clean / "shard.jsonl").write_text(
+        json.dumps({
+            "instruction": "Поясніть вживання слова «царинками».",
+            "response": "«царинками» — автентичне діалектне слово, яке слід зберегти.",
+            "target_term": "царинками",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+
+    dpo_f1 = tmp_path / "dpo_r19_f1"
+    dpo_f1.mkdir()
+    (dpo_f1 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "Замість «добрий» і «царинками» вживайте «гарний».",
+            "rejected": "«царинками» — нормативне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_f1, data_f1, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_f1,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r19_f1_rep.md",
+        output_json=tmp_path / "r19_f1_rep.json",
+    )
+    assert passed_f1 is False, "Expected audit failure for coordinated target in second position"
+    assert data_f1["dpo_contradictions_count"] == 1
