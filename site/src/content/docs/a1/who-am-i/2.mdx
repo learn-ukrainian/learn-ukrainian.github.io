@@ -1,9 +1,9 @@
 ---
-title: Я — студент
+title: Хто це? Я — студе́нт · Who Is This? I Am a Student
 description: Мене звати... — ваша перша справжня розмова
 sidebar:
   order: 2
-  label: 02. Я — студент
+  label: 02. Хто це? Я — студе́нт · Who Is This? I Am a Student
 pipeline: v7-upgrade
 build_status: validated
 draft: false
@@ -66,7 +66,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Це...
 
-У пе́ршому уро́ці ви навчи́лися віта́тися та назива́ти своє́ ім'я́. In the first lesson, you learned how to greet people and say your name. Тепе́р ми вчимо́ся вка́зувати на ре́чі та люде́й навко́ло нас — now we learn how to point to objects and people around us in everyday life.
+In the first lesson, you learned how to greet people and say your name. Now we learn how to point to objects and people around us in everyday life.
 
 **Це** is the fast pointing word. It can introduce a thing, a city, or a
 person:
@@ -100,12 +100,18 @@ person is: **Це Андрі́й. Він зі Льво́ва.** **Це Окса�
 
 <MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Це Андрі́й.", "right": "предста́вити люди́ну"}, {"left": "Це Окса́на.", "right": "предста́вити і́ншу люди́ну"}, {"left": "Хто це?", "right": "запита́ти про люди́ну"}, {"left": "Що це?", "right": "запита́ти про річ"}, {"left": "Це ка́ва.", "right": "назва́ти річ"}]`)} instruction={"З'єдна́й украї́нський рядо́к із йо́го робо́тою."} isUkrainian={false} />
 
-Послу́хайте коро́тку розмо́ву в університе́ті — listen to a short conversation at the university:
+Listen to a short conversation at the university:
 
 <DialogueBox
   client:only="react"
   title="Діалог"
-  exchanges={JSON.parse('[{"speaker":"Тара́с","text":"Приві́т! Що це? (Hi! What is this?)"},{"speaker":"Окса́на","text":"Приві́т! Це ка́ва. А хто це? (Hi! This is coffee. And who is this?)"},{"speaker":"Тара́с","text":"Це Андрі́й. Він — студе́нт. (This is Andrii. He is a student.)"},{"speaker":"Окса́на","text":"Ду́же приє́мно! А це хто? (Nice to meet you! And who is this?)"},{"speaker":"Тара́с","text":"Це Софі́я. Вона́ — студе́нтка. (This is Sofiia. She is a student.)"},{"speaker":"Окса́на","text":"Ду́же приє́мно! (Nice to meet you!)"}]')}
+  exchanges={JSON.parse('[{"speaker":"Тара́с","text":"Приві́т! Що це?"},{"speaker":"Окса́на","text":"Приві́т! Це ка́ва. А хто це?"},{"speaker":"Тара́с","text":"Це Андрі́й. Він — студе́нт."}]')}
+/>
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Окса́на","text":"Ду́же приє́мно! А це хто?"},{"speaker":"Тара́с","text":"Це Софі́я. Вона́ — студе́нтка."},{"speaker":"Окса́на","text":"Ду́же приє́мно!"}]')}
 />
 
 English support after the Ukrainian dialogue:
@@ -116,12 +122,12 @@ English support after the Ukrainian dialogue:
 | **Це ка́ва.** | This is coffee. |
 | **А хто це?** | And who is this? |
 | **Це Андрі́й.** | This is Andrii. |
-| **Він — студе́нт.** | He is a male student. |
+| **Він — студе́нт.** | He is a student. |
 | **Це Софі́я.** | This is Sofiia. |
-| **Вона́ — студе́нтка.** | She is a female student. |
+| **Вона́ — студе́нтка.** | She is a student. |
 | **Ду́же приє́мно!** | Pleased to meet you! |
 
-Коли́ ви пока́зуєте на річ, запи́туйте **Що це?** — when you point to a thing, ask **Що це?**. Коли́ ви пока́зуєте на люди́ну, запи́туйте **Хто це?** — when you point to a person, ask **Хто це?**.
+When you point to a thing, ask **Що це?**. When you point to a person, ask **Хто це?**.
 
 ### Хто це чи що це?
 
@@ -162,12 +168,12 @@ recognize **Ви** when you see it.
 
 <Quiz client:only='react' questions={JSON.parse(`[{"question": "Мо́вець гово́рить про себе́.", "options": [{"text": "я", "correct": true}, {"text": "ти", "correct": false}, {"text": "вони́", "correct": false}], "explanation": "Я — це мо́вець."}, {"question": "Оди́н друг або́ близьки́й одноку́рсник.", "options": [{"text": "ти", "correct": true}, {"text": "ви", "correct": false}, {"text": "він", "correct": false}], "explanation": "Ти — оди́н неформа́льний співрозмо́вник."}, {"question": "Оди́н незнайо́мий доро́слий або́ форма́льна ситуа́ція.", "options": [{"text": "ви", "correct": true}, {"text": "ти", "correct": false}, {"text": "вона́", "correct": false}], "explanation": "Ви — форма́льно до одніє́ї люди́ни, а та́кож множина́."}, {"question": "Жі́нка або́ дівчи́на вже ві́дома в розмо́ві.", "options": [{"text": "вона́", "correct": true}, {"text": "він", "correct": false}, {"text": "я", "correct": false}], "explanation": "Вона́ вка́зує на жі́нку або́ дівчи́ну."}]`)} instruction={"Обери́ займе́нник для украї́нської ситуа́ції."} isUkrainian={false} />
 
-Послу́хайте, як мо́вці обира́ють фо́рму зверта́ння — listen to how speakers choose the form of address:
+Notice how speakers choose the formal form of address:
 
 <DialogueBox
   client:only="react"
   title="Діалог"
-  exchanges={JSON.parse('[{"speaker":"Марко́","text":"До́брий день! Як вас зва́ти? (Good afternoon! What is your name?)"},{"speaker":"Петро́","text":"До́брий день! Мене́ зва́ти Петро́. А вас? (Good afternoon! My name is Petro. And yours?)"},{"speaker":"Марко́","text":"Мене́ зва́ти Марко́. Я — студе́нт. (My name is Marko. I am a student.)"},{"speaker":"Петро́","text":"Ду́же приє́мно! (Pleased to meet you!)"}]')}
+  exchanges={JSON.parse('[{"speaker":"Марко́","text":"До́брий день! Як вас зва́ти?"},{"speaker":"Петро́","text":"До́брий день! Мене́ зва́ти Петро́. А вас?"},{"speaker":"Марко́","text":"Мене́ зва́ти Марко́. Я — студе́нт."},{"speaker":"Петро́","text":"Ду́же приє́мно!"}]')}
 />
 
 English support after the Ukrainian dialogue:
@@ -177,10 +183,10 @@ English support after the Ukrainian dialogue:
 | **До́брий день!** | Good afternoon! / Hello! |
 | **Як вас зва́ти?** | What is your name? formal |
 | **А вас?** | And yours? formal |
-| **Я — студе́нт.** | I am a male student. |
+| **Я — студе́нт.** | I am a student. |
 | **Ду́же приє́мно!** | Pleased to meet you! |
 
-Зверні́ть ува́гу на різни́цю між займе́нниками — pay attention to the difference between pronouns:
+Notice the distinction between personal pronouns:
 - **я** — I (the speaker refers to oneself);
 - **ти** — you (informal, one peer, child, or close friend);
 - **він** — he (a male person);
@@ -233,29 +239,35 @@ Use profession pairs as pairs:
 The feminine form is the primary form for a woman. **Окса́на — лі́карка.**
 **Софі́я — студе́нтка.** **Ната́лка — інжене́рка.**
 
-Послу́хайте коро́тку розмо́ву в день знайо́мства — listen to a short conversation on orientation day:
+Listen to a short conversation on orientation day:
 
 <DialogueBox
   client:only="react"
   title="Діалог"
-  exchanges={JSON.parse('[{"speaker":"Андрі́й","text":"Приві́т! Мене́ зва́ти Андрі́й. Я — студе́нт. А тебе́? (Hi! My name is Andrii. I am a student. And yours?)"},{"speaker":"Оле́на","text":"Приві́т! Мене́ зва́ти Оле́на. Я теж студе́нтка. (Hi! My name is Olena. I am also a student.)"},{"speaker":"Андрі́й","text":"Ду́же приє́мно! (Nice to meet you!)"},{"speaker":"Оле́на","text":"Ду́же приє́мно! (Nice to meet you!)"}]')}
+  exchanges={JSON.parse('[{"speaker":"Андрі́й","text":"Приві́т! Мене́ зва́ти Андрі́й. Я — студе́нт. А тебе́?"},{"speaker":"Оле́на","text":"Приві́т! Мене́ зва́ти Оле́на. Я теж студе́нтка."}]')}
+/>
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Андрі́й","text":"Ду́же приє́мно!"},{"speaker":"Оле́на","text":"Ду́же приє́мно!"}]')}
 />
 
 English support after the Ukrainian dialogue:
 
 | Украї́нська | English support |
 | --- | --- |
-| **Я — студе́нт.** | I am a male student. |
-| **Я теж студе́нтка.** | I am also a female student. |
+| **Я — студе́нт.** | I am a student. |
+| **Я теж студе́нтка.** | I am also a student. |
 | **Ду́же приє́мно!** | Pleased to meet you! |
 
-В украї́нській мо́ві вжива́йте приро́дні фемініти́ви для жіно́к — in Ukrainian, use natural feminine forms for women: **лі́карка**, **вчи́телька**, **програмі́стка**, **інжене́рка**, **студе́нтка**. Ця моде́ль є пито́мою та літерату́рною — this pattern is native and standard in Ukrainian.
+In Ukrainian, use natural feminine forms for women: **лі́карка**, **вчи́телька**, **програмі́стка**, **інжене́рка**, **студе́нтка**. This pattern is native and standard in Ukrainian.
 
 ### Він чи вона́: профе́сії
 
 <FillIn client:only='react' items={JSON.parse(`[{"sentence": "Окса́на працю́є в ліка́рні. Вона́ — ___.", "answer": "лі́карка", "options": ["лі́карка", "лі́кар"], "explanation": "Для жінки́ вжива́й станда́ртну жіно́чу фо́рму: лі́карка."}, {"sentence": "Тара́с навча́ється в університе́ті. Він — ___.", "answer": "студе́нт", "options": ["студе́нт", "студе́нтка"], "explanation": "Для чолові́ка вжива́й чолові́чу фо́рму: студе́нт."}, {"sentence": "Марі́я виклада́є в шко́лі. Вона́ — ___.", "answer": "вчи́телька", "options": ["вчи́телька", "вчи́тель"], "explanation": "Для жінки́ вжива́й жіно́чу фо́рму: вчи́телька."}, {"sentence": "Марко́ ство́рює комп'ю́терні про́грами. Він — ___.", "answer": "програмі́ст", "options": ["програмі́ст", "програмі́стка"], "explanation": "Для чолові́ка вжива́й чолові́чу фо́рму: програмі́ст."}, {"sentence": "Софі́я проєкту́є мости́. Вона́ — ___.", "answer": "інжене́рка", "options": ["інжене́рка", "інжене́р"], "explanation": "Для жінки́ вжива́й станда́ртну жіно́чу фо́рму: інжене́рка."}, {"sentence": "Андрі́й народи́вся в Украї́ні. Він — ___.", "answer": "украї́нець", "options": ["украї́нець", "украї́нка"], "explanation": "Для чолові́ка вжива́й фо́рму: украї́нець."}]`)} instruction={"Обери́ пра́вильну чолові́чу або́ жіно́чу фо́рму профе́сії."} isUkrainian={false} />
 
-У цьо́му уро́ці ви навчи́лися вка́зувати на ре́чі та люде́й — in this lesson you learned how to point to things and people (**Це ка́ва**, **Це мій та́то**), ста́вити запита́ння — ask questions (**Хто це?**, **Що це?**), розрізня́ти зверта́ння **ти** та **ви** — distinguish informal and formal address, будува́ти ре́чення іденти́чності — build identity lines (**Я — студе́нт**, **Вона́ — лі́карка**), та вжива́ти украї́нські фемініти́ви — and use standard Ukrainian feminine forms. Насту́пного уро́ку ми слу́хатимемо розмо́ви та відповіда́тимемо на запита́ння **Зві́дки ти?** — next lesson we will practice listening and answering where you are from.
+In this lesson, you learned how to point to things and people (**Це ка́ва**, **Це мій та́то**), ask questions (**Хто це?**, **Що це?**), distinguish informal and formal address (**ти** and **ви**), build identity lines (**Я — студе́нт**, **Вона́ — лі́карка**), and use standard Ukrainian feminine forms. In the next lesson, we will practice listening and answering where you are from (**Зві́дки ти?**).
 
 </TabItem>
 <TabItem label="Словник — Vocabulary">
