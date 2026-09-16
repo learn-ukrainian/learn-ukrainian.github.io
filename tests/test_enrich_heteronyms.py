@@ -1484,6 +1484,12 @@ def test_batch9_semantic_and_stress_distinctions():
     assert prk[1]["headword"] == "перекла́дка"
     assert "repositioning" in prk[1]["gloss"].lower() or "shifting" in prk[1]["gloss"].lower()
     assert "translat" not in prk[1]["gloss"].lower()
+    for v in prk:
+        assert "переклад тексту" not in v["distinction_note"].lower()
+        assert "translat" not in v["gloss"].lower()
+        assert "переклад тексту" not in v["short_label"].lower()
+        for d in v["meaning"]["definitions"]:
+            assert "переклад тексту" not in d.lower()
 
     # переливний: перели́вний (iridescent) vs переливни́й (overflow/spillway)
     prl = enrich_heteronyms.build_heteronyms_for_lemma("переливний")
@@ -1558,6 +1564,12 @@ def test_batch9_semantic_and_stress_distinctions():
     assert "lawn" in trv[1]["gloss"].lower() or "grassy" in trv[1]["gloss"].lower()
     assert "tincture" not in trv[1]["gloss"].lower()
     assert trv[1]["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "травника́"
+    for v in trv:
+        assert "настоянк" not in v["distinction_note"].lower()
+        assert "tincture" not in v["gloss"].lower()
+        assert "настоянк" not in v["short_label"].lower()
+        for d in v["meaning"]["definitions"]:
+            assert "настоянк" not in d.lower()
 
 
 def test_batch9_lemmas_not_duplicated_from_earlier_batches():
