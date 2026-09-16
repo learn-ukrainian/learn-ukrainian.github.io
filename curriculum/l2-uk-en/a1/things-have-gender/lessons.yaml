@@ -1,6 +1,6 @@
 lessons:
 - n: 1
-  title: Він, вона, воно
+  title: Він, вона́, воно́ · He, She, It
   sections:
   - Діалоги
   - Він, вона, воно
@@ -17,7 +17,7 @@ lessons:
   unverified_stress: []
   unverified_lemmas: []
 - n: 2
-  title: Предмети навколо
+  title: Предме́ти навко́ло · Objects Around Us
   sections:
   - Предмети навколо
   minutes: 60
@@ -33,7 +33,7 @@ lessons:
   unverified_stress: []
   unverified_lemmas: []
 - n: 3
-  title: Підсумок
+  title: Підсу́мок і самопереві́рка · Summary & Self-Check
   sections:
   - Підсумок
   - Імена, пастки й самоперевірка

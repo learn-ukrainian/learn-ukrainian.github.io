@@ -2,9 +2,10 @@ inline:
 - id: act-1
   type: quiz
   title: Хто чи що? — Who or what?
-  instruction: Choose the question or pronoun that fits the noun.
+  instruction: Обери́ пита́ння або́ займе́нник, що підхо́дить до іме́нника. — Choose
+    the question or pronoun that fits the noun.
   items:
-  - prompt: та́то
+  - prompt: та́то (dad)
     options:
     - text: Хто це?
       correct: true
@@ -12,8 +13,9 @@ inline:
       correct: false
     - text: Воно́?
       correct: false
-    explanation: Та́то is a person word, so ask Хто це?
-  - prompt: стіл
+    explanation: Та́то — це на́зва люди́ни, тому́ запи́туємо «Хто це?». — "Та́то" is
+      a person word, so ask "Хто це?".
+  - prompt: стіл (table)
     options:
     - text: Що це?
       correct: true
@@ -21,8 +23,9 @@ inline:
       correct: false
     - text: Вона́?
       correct: false
-    explanation: Стіл is a thing word, so ask Що це?
-  - prompt: сестра́
+    explanation: Стіл — це на́зва предме́та, тому́ запи́туємо «Що це?». — "Стіл" is
+      a thing word, so ask "Що це?".
+  - prompt: сестра́ (sister)
     options:
     - text: вона́
       correct: true
@@ -30,8 +33,8 @@ inline:
       correct: false
     - text: воно́
       correct: false
-    explanation: Сестра́ is feminine.
-  - prompt: брат
+    explanation: Сестра́ — жіно́чого ро́ду (вона́). — "Сестра́" is feminine (вона́).
+  - prompt: брат (brother)
     options:
     - text: він
       correct: true
@@ -39,8 +42,8 @@ inline:
       correct: false
     - text: воно́
       correct: false
-    explanation: Брат is masculine.
-  - prompt: кни́га
+    explanation: Брат — чолові́чого ро́ду (він). — "Брат" is masculine (він).
+  - prompt: кни́га (book)
     options:
     - text: вона́
       correct: true
@@ -48,8 +51,8 @@ inline:
       correct: false
     - text: воно́
       correct: false
-    explanation: Кни́га is feminine.
-  - prompt: вікно́
+    explanation: Кни́га — жіно́чого ро́ду (вона́). — "Кни́га" is feminine (вона́).
+  - prompt: вікно́ (window)
     options:
     - text: воно́
       correct: true
@@ -57,33 +60,38 @@ inline:
       correct: false
     - text: він
       correct: false
-    explanation: Вікно́ is neuter.
+    explanation: Вікно́ — сере́днього ро́ду (воно́). — "Вікно́" is neuter (воно́).
 - id: act-2
   type: group-sort
-  title: Сорту́й слова́ за ро́дом — Sort the words by gender
-  instruction: Sort each noun by its safest A1 gender phrase.
+  title: Сорту́й предме́ти за ро́дом — Sort objects by gender
+  instruction: 'Розподілі́ть іме́нники за ро́дом: він, вона́ чи воно́. — Sort each
+    noun by its safest A1 gender phrase.'
   groups:
-  - label: він / мій
+  - label: він / мій (masculine)
     items:
     - стіл
-    - та́то
-    - ба́тько
-    - соба́ка
-  - label: вона́ / моя́
+    - стіле́ць
+    - телефо́н
+    - комп'ю́тер
+  - label: вона́ / моя́ (feminine)
     items:
     - кни́га
-    - сестра́
-    - ма́ма
-  - label: воно́ / моє́
+    - кімна́та
+    - ла́мпа
+    - ру́чка
+  - label: воно́ / моє́ (neuter)
     items:
     - вікно́
-    - мі́сто
+    - лі́жко
+    - крі́сло
+    - дзе́ркало
 - id: act-5
   type: quiz
   title: Закі́нчення підка́зує рід — The ending hints at the gender
-  instruction: Choose the usual gender signal from the noun ending.
+  instruction: Обери́ прави́льний рід за закі́нченням іме́нника. — Choose the usual
+    gender signal from the noun ending.
   items:
-  - prompt: стіл закі́нчується на при́голосний.
+  - prompt: стіл закі́нчується на при́голосний. — "Стіл" ends in a consonant.
     options:
     - text: він / мій
       correct: true
@@ -91,8 +99,9 @@ inline:
       correct: false
     - text: воно́ / моє́
       correct: false
-    explanation: A clear consonant ending is usually masculine.
-  - prompt: брат закі́нчується на при́голосний.
+    explanation: Чітке́ закі́нчення на при́голосний — це звича́йно чолові́чий рід
+      (він / мій). — A clear consonant ending is usually masculine.
+  - prompt: брат закі́нчується на при́голосний. — "Брат" ends in a consonant.
     options:
     - text: він / мій
       correct: true
@@ -100,8 +109,9 @@ inline:
       correct: false
     - text: воно́ / моє́
       correct: false
-    explanation: Брат ends in a consonant and is masculine.
-  - prompt: кни́га закі́нчується на -а.
+    explanation: «Брат» закі́нчується на при́голосний і є чолові́чим ро́дом (він /
+      мій). — "Брат" ends in a consonant and is masculine.
+  - prompt: кни́га закі́нчується на -а. — "Кни́га" ends in -а.
     options:
     - text: вона́ / моя́
       correct: true
@@ -109,8 +119,9 @@ inline:
       correct: false
     - text: воно́ / моє́
       correct: false
-    explanation: A clear -а ending is usually feminine.
-  - prompt: сестра́ закі́нчується на -а.
+    explanation: Чітке́ закі́нчення на -а — це звича́йно жіно́чий рід (вона́ / моя́).
+      — A clear -а ending is usually feminine.
+  - prompt: сестра́ закі́нчується на -а. — "Сестра́" ends in -а.
     options:
     - text: вона́ / моя́
       correct: true
@@ -118,8 +129,9 @@ inline:
       correct: false
     - text: воно́ / моє́
       correct: false
-    explanation: Сестра́ ends in -а and is feminine.
-  - prompt: вікно́ закі́нчується на -о.
+    explanation: «Сестра́» закі́нчується на -а і є жіно́чим ро́дом (вона́ / моя́).
+      — "Сестра́" ends in -а and is feminine.
+  - prompt: вікно́ закі́нчується на -о. — "Вікно́" ends in -о.
     options:
     - text: воно́ / моє́
       correct: true
@@ -127,8 +139,9 @@ inline:
       correct: false
     - text: вона́ / моя́
       correct: false
-    explanation: A clear -о ending is usually neuter.
-  - prompt: мі́сто закі́нчується на -о.
+    explanation: Чітке́ закі́нчення на -о — це звича́йно сере́дній рід (воно́ / моє́).
+      — A clear -о ending is usually neuter.
+  - prompt: мі́сто закі́нчується на -о. — "Мі́сто" ends in -о.
     options:
     - text: воно́ / моє́
       correct: true
@@ -136,13 +149,15 @@ inline:
       correct: false
     - text: він / мій
       correct: false
-    explanation: Мі́сто ends in -о and is neuter.
+    explanation: «Мі́сто» закі́нчується на -о і є сере́днім ро́дом (воно́ / моє́).
+      — "Мі́сто" ends in -о and is neuter.
 - id: act-3
   type: quiz
   title: Він, вона́ чи воно́? — Masculine, feminine, or neuter?
-  instruction: Choose the Ukrainian gender-test word.
+  instruction: Обери́ украї́нський займе́нник для переві́рки ро́ду. — Choose the Ukrainian
+    gender-test word.
   items:
-  - prompt: стіл
+  - prompt: стіл (table)
     options:
     - text: він
       correct: true
@@ -150,8 +165,9 @@ inline:
       correct: false
     - text: воно́
       correct: false
-    explanation: Стіл ends in a consonant and is masculine.
-  - prompt: кни́га
+    explanation: Стіл закі́нчується на при́голосний і нале́жить до чолові́чого ро́ду.
+      — "Стіл" ends in a consonant and is masculine.
+  - prompt: кни́га (book)
     options:
     - text: вона́
       correct: true
@@ -159,8 +175,9 @@ inline:
       correct: false
     - text: воно́
       correct: false
-    explanation: Кни́га is feminine.
-  - prompt: вікно́
+    explanation: Кни́га закі́нчується на -а і нале́жить до жіно́чого ро́ду. — "Кни́га"
+      ends in -а and is feminine.
+  - prompt: вікно́ (window)
     options:
     - text: воно́
       correct: true
@@ -168,8 +185,9 @@ inline:
       correct: false
     - text: вона́
       correct: false
-    explanation: Вікно́ is neuter.
-  - prompt: ба́тько
+    explanation: Вікно́ закі́нчується на -о і нале́жить до сере́днього ро́ду. — "Вікно́"
+      ends in -о and is neuter.
+  - prompt: ба́тько (father)
     options:
     - text: він
       correct: true
@@ -177,8 +195,9 @@ inline:
       correct: false
     - text: воно́
       correct: false
-    explanation: Ба́тько is masculine because it names a male person.
-  - prompt: сестра́
+    explanation: Ба́тько — чолові́чого ро́ду, бо назива́є чолові́ка. — "Ба́тько" is
+      masculine because it names a male person.
+  - prompt: сестра́ (sister)
     options:
     - text: вона́
       correct: true
@@ -186,8 +205,8 @@ inline:
       correct: false
     - text: він
       correct: false
-    explanation: Сестра́ is feminine.
-  - prompt: мі́сто
+    explanation: Сестра́ нале́жить до жіно́чого ро́ду. — "Сестра́" is feminine.
+  - prompt: мі́сто (city)
     options:
     - text: воно́
       correct: true
@@ -195,8 +214,9 @@ inline:
       correct: false
     - text: він
       correct: false
-    explanation: Мі́сто is neuter.
-  - prompt: та́то
+    explanation: Мі́сто закі́нчується на -о і нале́жить до сере́днього ро́ду. — "Мі́сто"
+      is neuter.
+  - prompt: та́то (dad)
     options:
     - text: він
       correct: true
@@ -204,8 +224,9 @@ inline:
       correct: false
     - text: вона́
       correct: false
-    explanation: Та́то is masculine because it names a male person.
-  - prompt: Мико́ла
+    explanation: Та́то — чолові́чого ро́ду, бо назива́є чолові́ка. — "Та́то" is masculine
+      because it names a male person.
+  - prompt: Мико́ла (Mykola - male name)
     options:
     - text: він
       correct: true
@@ -213,52 +234,78 @@ inline:
       correct: false
     - text: воно́
       correct: false
-    explanation: Мико́ла is a masculine name.
+    explanation: Мико́ла — чолові́че ім'я́. — "Мико́ла" is a masculine name.
 workbook:
-- type: group-sort
+- id: act-w1
+  type: group-sort
   title: Сорту́й за ро́дом — Sort by gender
-  instruction: Sort each noun by its A1 gender signal.
+  instruction: Розподілі́ть іме́нники за озна́кою ро́ду. — Sort each noun by its A1
+    gender signal.
   groups:
-  - label: він / мій
+  - label: він / мій (masculine)
     items:
     - стіл
+    - телефо́н
+    - зо́шит
+    - ключ
     - та́то
-    - ба́тько
-    - брат
-  - label: вона́ / моя́
+  - label: вона́ / моя́ (feminine)
     items:
     - кни́га
+    - ла́мпа
+    - кімна́та
+    - ру́чка
     - сестра́
-    - ма́ма
-  - label: воно́ / моє́
+  - label: воно́ / моє́ (neuter)
     items:
     - вікно́
-    - мі́сто
-  id: act-w1
+    - лі́жко
+    - крі́сло
+    - дзе́ркало
+    - фо́то
 - id: act-101
   type: true-false
   title: Пра́вда чи ні? — True or false?
-  instruction: Ви́значте, чи пра́вильне тве́рдження про рід іме́нника. —
-    Decide whether the statement about the gender of the noun is correct.
+  instruction: Ви́значте, чи пра́вильне тве́рдження про рід іме́нника. — Decide whether
+    the statement about the gender of the noun is correct.
   statements:
-  - statement: «Стіл» — це іме́нник чолові́чого ро́ду (він).
+  - statement: «Стіл» — це іме́нник чолові́чого ро́ду (він). — "Стіл" is a masculine
+      noun (він).
     correct: true
-  - statement: «Кни́га» — це іме́нник чолові́чого ро́ду (він).
+    explanation: Стіл закі́нчується на при́голосний і є чолові́чим ро́дом. — "Стіл"
+      ends in a consonant and is masculine.
+  - statement: «Кни́га» — це іме́нник чолові́чого ро́ду (він). — "Кни́га" is a masculine
+      noun (він).
     correct: false
-  - statement: «Вікно́» — це іме́нник сере́днього ро́ду (воно́).
+    explanation: Кни́га закі́нчується на -а і нале́жить до жіно́чого ро́ду. — "Кни́га"
+      ends in -а and is feminine.
+  - statement: «Вікно́» — це іме́нник сере́днього ро́ду (воно́). — "Вікно́" is a neuter
+      noun (воно́).
     correct: true
-  - statement: «Та́то» — це іме́нник жіно́чого ро́ду (вона́).
+    explanation: Вікно́ закі́нчується на -о і є сере́днім ро́дом. — "Вікно́" ends
+      in -о and is neuter.
+  - statement: «Та́то» — це іме́нник жіно́чого ро́ду (вона́). — "Та́то" is a feminine
+      noun (вона́).
     correct: false
-  - statement: «Мі́сто» — це іме́нник сере́днього ро́ду (воно́).
+    explanation: Та́то назива́є чолові́ка, тому́ це чолові́чий рід (він). — "Та́то"
+      names a male person, so it is masculine (він).
+  - statement: «Мі́сто» — це іме́нник сере́днього ро́ду (воно́). — "Мі́сто" is a neuter
+      noun (воно́).
     correct: true
-  - statement: «Ба́тько» — це іме́нник чолові́чого ро́ду (він).
+    explanation: Мі́сто закі́нчується на -о і є сере́днім ро́дом. — "Мі́сто" ends
+      in -о and is neuter.
+  - statement: «Ба́тько» — це іме́нник чолові́чого ро́ду (він). — "Ба́тько" is a masculine
+      noun (він).
     correct: true
+    explanation: Ба́тько назива́є чолові́ка, тому́ це чолові́чий рід (він). — "Ба́тько"
+      names a male person, so it is masculine (він).
 - id: act-102
   type: quiz
   title: Він, вона́ чи воно́? — Masculine, feminine, or neuter?
-  instruction: Ви́беріть прави́льний займе́нник для ко́жного іме́нника. — Choose the correct pronoun for each noun.
+  instruction: Ви́беріть прави́льний займе́нник для ко́жного іме́нника. — Choose the
+    correct pronoun for each noun.
   items:
-  - prompt: стіл
+  - prompt: стіл — table
     options:
     - text: він
       correct: true
@@ -266,7 +313,8 @@ workbook:
       correct: false
     - text: воно́
       correct: false
-  - prompt: кни́га
+    explanation: Стіл — чолові́чий рід (він). — "Стіл" is masculine (він).
+  - prompt: кни́га — book
     options:
     - text: вона́
       correct: true
@@ -274,7 +322,8 @@ workbook:
       correct: false
     - text: воно́
       correct: false
-  - prompt: вікно́
+    explanation: Кни́га — жіно́чий рід (вона́). — "Кни́га" is feminine (вона́).
+  - prompt: вікно́ — window
     options:
     - text: воно́
       correct: true
@@ -282,7 +331,8 @@ workbook:
       correct: false
     - text: вона́
       correct: false
-  - prompt: та́то
+    explanation: Вікно́ — сере́дній рід (воно́). — "Вікно́" is neuter (воно́).
+  - prompt: та́то — dad
     options:
     - text: він
       correct: true
@@ -290,7 +340,8 @@ workbook:
       correct: false
     - text: воно́
       correct: false
-  - prompt: ма́ма
+    explanation: Та́то — чолові́чий рід (він). — "Та́то" is masculine (він).
+  - prompt: ма́ма — mom
     options:
     - text: вона́
       correct: true
@@ -298,7 +349,8 @@ workbook:
       correct: false
     - text: воно́
       correct: false
-  - prompt: мі́сто
+    explanation: Ма́ма — жіно́чий рід (вона́). — "Ма́ма" is feminine (вона́).
+  - prompt: мі́сто — city
     options:
     - text: воно́
       correct: true
@@ -306,11 +358,12 @@ workbook:
       correct: false
     - text: вона́
       correct: false
+    explanation: Мі́сто — сере́дній рід (воно́). — "Мі́сто" is neuter (воно́).
 - id: act-103
   type: fill-in
   title: Вста́вте мій, моя́ чи моє́ — Fill in мій, моя́, or моє́
-  instruction: Ви́беріть прави́льний присві́йний займе́нник до ко́жного іме́нника. —
-    Choose the correct possessive pronoun for each noun.
+  instruction: Ви́беріть прави́льний присві́йний займе́нник до ко́жного іме́нника.
+    — Choose the correct possessive pronoun for each noun.
   items:
   - sentence: Це ___ стіл.
     answer: мій
@@ -318,88 +371,118 @@ workbook:
     - мій
     - моя́
     - моє́
+    explanation: Стіл — чолові́чий рід, тому́ «мій стіл». — "Стіл" is masculine, therefore
+      "мій стіл".
   - sentence: Це ___ кни́га.
     answer: моя́
     options:
     - моя́
     - мій
     - моє́
+    explanation: Кни́га — жіно́чий рід, тому́ «моя́ кни́га». — "Кни́га" is feminine,
+      therefore "моя́ кни́га".
   - sentence: Це ___ вікно́.
     answer: моє́
     options:
     - моє́
     - мій
     - моя́
+    explanation: Вікно́ — сере́дній рід, тому́ «моє́ вікно́». — "Вікно́" is neuter,
+      therefore "моє́ вікно́".
   - sentence: Це ___ та́то.
     answer: мій
     options:
     - мій
     - моя́
     - моє́
+    explanation: Та́то — чолові́к, тому́ «мій та́то». — "Та́то" is male, therefore
+      "мій та́то".
   - sentence: Це ___ ма́ма.
     answer: моя́
     options:
     - моя́
     - мій
     - моє́
+    explanation: Ма́ма — жі́нка, тому́ «моя́ ма́ма». — "Ма́ма" is female, therefore
+      "моя́ ма́ма".
   - sentence: Це ___ мі́сто.
     answer: моє́
     options:
     - моє́
     - мій
     - моя́
+    explanation: Мі́сто — сере́дній рід, тому́ «моє́ мі́сто». — "Мі́сто" is neuter,
+      therefore "моє́ мі́сто".
 - id: act-104
   type: unjumble
   title: Складі́ть ре́чення — Build the sentence
-  instruction: Розташу́йте слова́ у прави́льному поря́дку, щоб утвори́ти ре́чення. —
-    Put the words in the correct order to form a sentence.
+  instruction: Розташу́йте слова́ у прави́льному поря́дку, щоб утвори́ти ре́чення.
+    — Put the words in the correct order to form a sentence.
   words:
   - words:
     - Це
     - мій
     - стіл
     answer: Це мій стіл.
+    hint: This is my table.
   - words:
     - Це
     - моя́
     - кни́га
     answer: Це моя́ кни́га.
+    hint: This is my book.
   - words:
     - Це
     - моє́
     - вікно́
     answer: Це моє́ вікно́.
+    hint: This is my window.
   - words:
     - Ось
     - мій
     - та́то
     answer: Ось мій та́то.
+    hint: Here is my dad.
   - words:
     - Ось
     - моя́
     - ма́ма
     answer: Ось моя́ ма́ма.
+    hint: Here is my mom.
   - words:
     - Це
     - моє́
     - мі́сто
     answer: Це моє́ мі́сто.
+    hint: This is my city.
 - id: act-105
   type: translate
   bonus: true
   title: 'Бо́нус: перекладі́ть ре́чення — Bonus: translate the sentences'
-  instruction: Перекладі́ть ре́чення з англі́йської мо́ви на украї́нську. —
-    Translate the sentences from English into Ukrainian.
+  instruction: Перекладі́ть ре́чення з англі́йської мо́ви на украї́нську. — Translate
+    the sentences from English into Ukrainian.
   items:
   - sentence: This is my table.
     answer: Це мій стіл.
+    explanation: Стіл — чолові́чий рід (Це мій стіл). — "Стіл" is masculine (Це мій
+      стіл).
   - sentence: This is my book.
     answer: Це моя́ кни́га.
+    explanation: Кни́га — жіно́чий рід (Це моя́ кни́га). — "Кни́га" is feminine (Це
+      моя́ кни́га).
   - sentence: This is my window.
     answer: Це моє́ вікно́.
+    explanation: Вікно́ — сере́дній рід (Це моє́ вікно́). — "Вікно́" is neuter (Це
+      моє́ вікно́).
   - sentence: My brother is here.
     answer: Мій брат тут.
+    explanation: Брат — чолові́чий рід (Мій брат тут). — "Брат" is masculine (Мій
+      брат тут).
   - sentence: My mother is there.
     answer: Моя́ ма́ма там.
+    explanation: Ма́ма — жіно́чий рід (Моя́ ма́ма там). — "Ма́ма" is feminine (Моя́
+      ма́ма там).
   - sentence: This is my city.
     answer: Це моє́ мі́сто.
+    explanation: Мі́сто — сере́дній рід (Це моє́ мі́сто). — "Мі́сто" is neuter (Це
+      моє́ мі́сто).
