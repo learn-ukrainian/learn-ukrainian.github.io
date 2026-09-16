@@ -11,7 +11,7 @@ By the end of this lesson, you can:
 - Apply the unbreakable rule of Ukrainian numerals ending in **-на́дцять** (11–19), keeping stress fixed on the **-на́-** syllable (**одина́дцять**, **чотирна́дцять**);
 - Confidently pronounce high-frequency adjectives with authentic end-syllable stress (**нови́й**, **стари́й**, **мали́й**, **важки́й**, **прости́й**);
 - Navigate mobile stress in common nouns between singular and plural forms (**голова́** → **го́лови**, **рука́** → **ру́ки**, **село́** → **се́ла**, **зима́** → **зими́**);
-- Correctly stress female proper names ending in the suffix **-і́я** (**Марі́я**, **Софі́я**);
+- Correctly stress female proper names ending in **-ія**, distinguishing names with stressed **-і́я** (**Марі́я**, **Софі́я**) from stem-stressed names like **Ната́лія**;
 - Deepen your command of grammatical terminology, using **бу́ква** and **лі́тера** interchangeably to explain sound-spelling correspondences;
 - Read sentences, practical everyday calculations, and conversational dialogues with natural Ukrainian rhythm.
 
@@ -33,13 +33,13 @@ Numbers from eleven to nineteen in Ukrainian are formed with the historical suff
 - **вісімна́дцять** [ві-сім-на́д-цять] — eighteen (18);
 - **дев'ятна́дцять** [дев'ят-на́д-цять] — nineteen (19).
 
-Why is this an L2 trap? In English, eleven stresses the second syllable (*e-LE-ven*). In Russian, the equivalent word shifts stress to the root (*o-DI-nnadtsat'*). Learners who do not pay attention automatically misplace the stress as `одина́дцять` or `чотирна́дцять`.
+Why is this an L2 trap? In English, eleven stresses the second syllable (*e-LE-ven*). In Russian, the equivalent word shifts stress to the root (*o-DI-nnadtsat'*). Learners who do not pay attention automatically misplace the stress on the root (*о́динадцять*, *чоти́рнадцять*).
 
 In Ukrainian, you must emphasize **-на́-**:
 *«У мене́ є одина́дцять гри́вень — I have eleven hryvnias.»*
 *«Він чита́є чотирна́дцять сторіно́к — He reads fourteen pages.»*
 
-Notice also the spelling: each **бу́ква** or **лі́тера** in **-на́дцять** reflects historical contraction, and the soft sign **Ь** at the end softens the affricate **Ц**.
+Notice also the spelling: each **бу́ква** or **лі́тера** in **-на́дцять** reflects historical contraction: the vowel letter **Я** softens the preceding affricate **Ц** ([ц′]), while the soft sign **Ь** at the end softens the final **Т** ([т′]).
 
 | Число́ — Number | Числі́вник — Numeral | Складопо́діл — Syllables |
 | --- | --- | --- |
@@ -103,7 +103,8 @@ Ukrainian stress is not only free, but also mobile (**рухо́мий на́г�
 
 4. **зима́** (one winter) → **зими́** (winters):
    - Singular: *«Прийшла́ холо́дна зима́ — Cold winter has arrived.»* (stress on **-ма́**)
-   - Plural: *«Тут бува́ють сні́жні зими́ — Snowy winters happen here.»* (stress on **зи́-**)
+   - Plural: *«Тут бува́ють сні́жні зими́ — Snowy winters happen here.»* (stress on **-ми́**)
+   *(Note: unlike Russian with root-stressed зи́мы, standard Ukrainian preserves end stress in the nominative plural: **зими́**.)*
 
 5. **гора́** (one mountain) → **го́ри** (mountains):
    - Singular: *«Висо́ка гора́ вкри́та лі́сом — The high mountain is covered in forest.»* (stress on **-ра́**)
@@ -115,13 +116,13 @@ This rhythmic alternation is a hallmark of authentic Ukrainian speech. By observ
 
 ---
 
-## Імена́ на -і́я та чита́ння діало́гу
+## Імена́ на -ія та чита́ння діало́гу
 
-A third classic trap arises with proper female names ending in **-і́я**. In English and Western European languages, names like *Mary* or *Maria* often place stress on the initial or penultimate vowel without elongation. In standard Ukrainian, names with the suffix **-і́я** preserve the stress directly on the letter **і**:
+A third classic trap arises with proper female names ending in **-ія**. In English and Western European languages, names like *Mary* or *Maria* often place stress on the initial or penultimate vowel without elongation. In standard Ukrainian, many traditional female names ending in **-ія** preserve the stress directly on the letter **і** (**-і́я**). However, you must qualify this pattern: stem-stressed names such as **Ната́лія** [На-та́-лі-я] maintain root stress on **-та́-** rather than the suffix:
 
 - **Марі́я** [Ма-рі́-я] (stress firmly on -і́-);
 - **Софі́я** [Со-фі́-я] (stress firmly on -і́-);
-- **Ната́лія** [На-та́-лі-я].
+- **Ната́лія** [На-та́-лі-я] (stress on root -та́-).
 
 Now let us synthesize numerals, end-stressed adjectives, mobile noun forms, and proper names in a practical shopping and orientation dialogue between **Марі́я** and **Тара́с**:
 
@@ -133,7 +134,7 @@ Now let us synthesize numerals, end-stressed adjectives, mobile noun forms, and 
 >
 > **Марі́я:** — Він кошту́є одина́дцять гри́вень.
 >
-> **Тара́с:** — А скі́льки кошту́є олівці́?
+> **Тара́с:** — А скі́льки кошту́ють олівці́?
 >
 > **Марі́я:** — Набі́р олівці́в кошту́є чотирна́дцять гри́вень.
 >
