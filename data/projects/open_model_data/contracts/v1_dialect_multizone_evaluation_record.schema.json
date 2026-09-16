@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_dialect_multizone_evaluation_record.schema.json",
+  "title": "v1_dialect_multizone_evaluation_record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "eval_id",
+    "macro_zone",
+    "sub_zone",
+    "locality",
+    "collector_or_author",
+    "source_work",
+    "dialect_marker",
+    "case_type",
+    "input_text",
+    "target_term",
+    "expected_action",
+    "expected_replacement",
+    "expected_output",
+    "has_injected_error",
+    "injected_error_type",
+    "injected_error_details",
+    "linguistic_notes",
+    "source_metadata"
+  ],
+  "properties": {
+    "eval_id": {
+      "type": "string",
+      "pattern": "^eval_mz_dial_\\d{4}$"
+    },
+    "macro_zone": {
+      "type": "string",
+      "enum": [
+        "southwestern",
+        "northern",
+        "southeastern"
+      ]
+    },
+    "sub_zone": {
+      "type": "string",
+      "enum": [
+        "southwestern_hutsul",
+        "southwestern_boyko",
+        "southwestern_lemko",
+        "southwestern_galician",
+        "southwestern_bukovina",
+        "southwestern_pokuttia",
+        "southwestern_transcarpathian",
+        "southwestern_podillia",
+        "northern_polissian",
+        "southeastern_slobozhan",
+        "southeastern_steppe",
+        "southeastern_poltava"
+      ]
+    },
+    "locality": {
+      "type": "string",
+      "minLength": 3
+    },
+    "collector_or_author": {
+      "type": "string",
+      "minLength": 3
+    },
+    "source_work": {
+      "type": "string",
+      "minLength": 5
+    },
+    "dialect_marker": {
+      "type": "string",
+      "minLength": 1
+    },
+    "case_type": {
+      "type": "string",
+      "enum": [
+        "PRESERVE",
+        "CORRECT_MIXED"
+      ]
+    },
+    "input_text": {
+      "type": "string",
+      "minLength": 10
+    },
+    "target_term": {
+      "type": "string",
+      "minLength": 1
+    },
+    "expected_action": {
+      "type": "string",
+      "enum": [
+        "PRESERVE",
+        "CORRECT"
+      ]
+    },
+    "expected_replacement": {
+      "type": ["string", "null"]
+    },
+    "expected_output": {
+      "type": "string",
+      "minLength": 10
+    },
+    "has_injected_error": {
+      "type": "boolean"
+    },
+    "injected_error_type": {
+      "type": ["string", "null"],
+      "enum": [
+        null,
+        "colonial_calque",
+        "punctuation",
+        "grammatical_agreement"
+      ]
+    },
+    "injected_error_details": {
+      "type": ["string", "null"]
+    },
+    "linguistic_notes": {
+      "type": "string",
+      "minLength": 15
+    },
+    "source_metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "source"
+      ],
+      "properties": {
+        "source": { "type": "string" },
+        "author": { "type": "string" },
+        "work": { "type": "string" },
+        "locality": { "type": "string" },
+        "citation": { "type": "string" },
+        "language_period": { "type": "string" }
+      }
+    }
+  }
+}
