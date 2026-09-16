@@ -159,6 +159,34 @@ def test_yaml_activity_correction_label_in_value_still_fails(tmp_path) -> None:
     )
 
 
+def test_latex_math_arrow_fails() -> None:
+    text = """
+Notice the vowel change: **о** $\\rightarrow$ **а**.
+
+**Я чекаю на автобус.**
+"""
+    report = scan_surface_text(text, level="a1")
+
+    assert report["passed"] is False
+    assert report["verdict"] == "FAIL"
+    assert any(
+        finding["type"] == "latex_math" and finding["severity"] == "critical"
+        for finding in report["findings"]
+    )
+
+
+def test_unicode_arrow_passes() -> None:
+    text = """
+Notice the vowel change: **о** → **а**.
+
+**Я чекаю на автобус.**
+"""
+    report = scan_surface_text(text, level="a1")
+
+    assert report["passed"] is True
+    assert not any(finding["type"] == "latex_math" for finding in report["findings"])
+
+
 def test_markdown_correction_label_still_fails() -> None:
     text = """
 Correction: rewrite this draft before publishing.

@@ -128,6 +128,13 @@ PATHOS_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = tuple(
     )
 )
 
+LATEX_MATH_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = tuple(
+    (re.compile(pattern), label)
+    for pattern, label in (
+        (r"\$\\[a-zA-Z]+\$", "raw LaTeX math (e.g. $\\rightarrow$) — Astro/MDX does not render KaTeX here"),
+    )
+)
+
 UKRAINIAN_GRAMMAR_CALQUE_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = tuple(
     (re.compile(pattern, re.IGNORECASE), label)
     for pattern, label in (
@@ -341,6 +348,15 @@ def scan_surface_text(
             prose_masked,
             patterns=UKRAINIAN_GRAMMAR_CALQUE_PATTERNS,
             kind="ukrainian_grammar_calque",
+            severity="critical",
+            source=source,
+        )
+    )
+    findings.extend(
+        _pattern_findings(
+            prose_masked,
+            patterns=LATEX_MATH_PATTERNS,
+            kind="latex_math",
             severity="critical",
             source=source,
         )
