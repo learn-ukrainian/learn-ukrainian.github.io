@@ -1,0 +1,429 @@
+inline:
+- id: act-1
+  type: quiz
+  title: "Де на́голос — Where is the stress"
+  instruction: "Обери́ склад із позна́ченим на́голосом."
+  items:
+  - prompt: "Чита́й: ка́ва. Де на́голос?"
+    options:
+    - text: "пе́рший склад"
+      correct: true
+    - text: "оста́нній склад"
+      correct: false
+    - text: "нема́є на́голосу"
+      correct: false
+    explanation: "У сло́ві ка́ва на́голос на ка́."
+  - prompt: "Чита́й: вода́. Де на́голос?"
+    options:
+    - text: "оста́нній склад"
+      correct: true
+    - text: "пе́рший склад"
+      correct: false
+    - text: "усі́ склади́ одна́кові"
+      correct: false
+    explanation: "У сло́ві вода́ на́голос на да́."
+  - prompt: "Чита́й: столи́ця. Де на́голос?"
+    options:
+    - text: "сере́дній склад"
+      correct: true
+    - text: "пе́рший склад"
+      correct: false
+    - text: "оста́нній склад"
+      correct: false
+    explanation: "У сло́ві столи́ця на́голос на ли́."
+  - prompt: "Молоко́: що ро́бимо з ненаголо́шеними голосни́ми?"
+    options:
+    - text: "трима́ємо ко́жен голосни́й чи́стим"
+      correct: true
+    - text: "пропуска́ємо пе́рший голосни́й"
+      correct: false
+    - text: "чита́ємо ко́жне о як а"
+      correct: false
+    explanation: "Украї́нські ненаголо́шені голосні́ залиша́ються чи́стими."
+  - prompt: "Чита́й: ра́нок. Де на́голос?"
+    options:
+    - text: "пе́рший склад"
+      correct: true
+    - text: "дру́гий склад"
+      correct: false
+    - text: "оби́два склади́ одна́кові"
+      correct: false
+    explanation: "У сло́ві ра́нок наголо́шений пе́рший склад: ра́-нок."
+  - prompt: "Чита́й: метро́. Де на́голос?"
+    options:
+    - text: "оста́нній склад"
+      correct: true
+    - text: "пе́рший склад"
+      correct: false
+    - text: "нема́є на́голосу"
+      correct: false
+    explanation: "У сло́ві метро́ на́голос па́дає на голосну́ о: мет-ро́."
+
+- id: act-3
+  type: quiz
+  title: "Швидки́й контра́ст — Quick contrast"
+  instruction: "Обери́ коро́тку англі́йську підка́зку."
+  items:
+  - prompt: "за́мок"
+    options:
+    - text: "castle"
+      correct: true
+    - text: "lock"
+      correct: false
+    explanation: "За́мок із на́голосом на пе́ршому скла́ді — castle."
+  - prompt: "замо́к"
+    options:
+    - text: "lock"
+      correct: true
+    - text: "castle"
+      correct: false
+    explanation: "Замо́к із на́голосом на оста́нньому скла́ді — lock."
+  - prompt: "сім'я́"
+    options:
+    - text: "family"
+      correct: true
+    - text: "seed"
+      correct: false
+    explanation: "Сім'я́ з фіна́льним на́голосом — family."
+  - prompt: "а́тлас"
+    options:
+    - text: "atlas (collection of maps)"
+      correct: true
+    - text: "satin (fabric)"
+      correct: false
+    explanation: "А́тлас із на́голосом на пе́ршому скла́ді — це збі́рка географі́чних карт."
+  - prompt: "атла́с"
+    options:
+    - text: "satin (fabric)"
+      correct: true
+    - text: "atlas (maps)"
+      correct: false
+    explanation: "Атла́с із на́голосом на оста́нньому скла́ді — це блиску́ча гладка́ ткани́на."
+  - prompt: "о́рган"
+    options:
+    - text: "body organ (e.g. heart)"
+      correct: true
+    - text: "musical instrument"
+      correct: false
+    explanation: "О́рган із початко́вим на́голосом — части́на органі́зму."
+
+- id: act-103
+  type: true-false
+  title: "Пра́вила вимо́ви та терміноло́гія — Pronunciation rules and terminology"
+  instruction: "Обері́ть пра́вда чи непра́вда."
+  items:
+  - statement: "В украї́нській мо́ві ненаголо́шений звук [о] ніко́ли не редуку́ється до [а]."
+    correct: true
+    explanation: "В украї́нській мо́ві зву́ки [о] за́вжди залиша́ються чи́стими та окру́глими."
+  - statement: "Сло́ва «бу́ква» та «лі́тера» є по́вними сино́німами."
+    correct: true
+    explanation: "Оби́два те́рміни познача́ють графі́чний знак абе́тки для за́пису зву́ка."
+  - statement: "В украї́нській мо́ві на́голос за́вжди па́дає лише́ на оста́нній склад."
+    correct: false
+    explanation: "Украї́нський на́голос є ві́льним: він мо́же па́дати на будь-яки́й склад."
+  - statement: "Змі́на на́голосу в сло́ві «замок» змі́нює йо́го лекси́чне зна́чення."
+    correct: true
+    explanation: "«За́мок» — це форте́ця (castle), а «замо́к» — при́стрій на две́рях (lock)."
+  - statement: "У сло́ві «молоко́» пе́рші дві бу́кви о вимовля́ються як [а]."
+    correct: false
+    explanation: "Це поши́рена поми́лка: в украї́нській лінгвісти́чній но́рмі звучи́ть чи́сте [мо-ло-ко́]."
+  - statement: "На́голос в украї́нській мо́ві мо́же ру́хатися між фо́рмами одного́ сло́ва."
+    correct: true
+    explanation: "Украї́нський на́голос є не лише́ ві́льним, а й рухо́мим: «голова́» — «го́лови»."
+
+- id: act-104
+  type: fill-in
+  title: "Конте́кст і зна́чення — Context and meaning"
+  instruction: "Вста́вте пра́вильну фо́рму слова́ в ре́чення."
+  items:
+  - sentence: "На висо́кій горі́ стої́ть старови́нний ___."
+    answer: "за́мок"
+    options:
+    - "за́мок"
+    - "замо́к"
+    explanation: "Форте́ця або́ пала́ц — це «за́мок»."
+  - sentence: "На залі́зних две́рях виси́ть міцни́й ___."
+    answer: "замо́к"
+    options:
+    - "замо́к"
+    - "за́мок"
+    explanation: "При́стрій для замика́ння — це «замо́к»."
+  - sentence: "На уро́ці геогра́фії ми відкрива́ємо ___."
+    answer: "а́тлас"
+    options:
+    - "а́тлас"
+    - "атла́с"
+    explanation: "Збі́рка карт — це «а́тлас»."
+  - sentence: "Ма́ма купи́ла су́кню з блиску́чого ___."
+    answer: "атла́су"
+    options:
+    - "атла́су"
+    - "а́тласу"
+    explanation: "Ткани́на у родово́му відмі́нку — «атла́су»."
+  - sentence: "Се́рце — це головни́й життє́вий ___ люди́ни."
+    answer: "о́рган"
+    options:
+    - "о́рган"
+    - "орга́н"
+    explanation: "Анатомі́чна части́на ті́ла — це «о́рган»."
+  - sentence: "У старови́нному собо́рі щодня́ гра́є вели́кий ___."
+    answer: "орга́н"
+    options:
+    - "орга́н"
+    - "о́рган"
+    explanation: "Музи́чний кла́вішний інструме́нт — це «орга́н»."
+
+workbook:
+- id: act-w2
+  type: match-up
+  title: "На́голос змі́нює зна́чення — Stress changes meaning"
+  instruction: "З'єдна́й наголо́шене сло́во з коро́ткою англі́йською підка́зкою."
+  pairs:
+  - left: "за́мок"
+    right: "castle"
+  - left: "замо́к"
+    right: "lock"
+  - left: "а́тлас"
+    right: "atlas"
+  - left: "атла́с"
+    right: "satin"
+  - left: "о́рган"
+    right: "body organ"
+  - left: "орга́н"
+    right: "musical instrument"
+  - left: "сі́м'я"
+    right: "seed"
+  - left: "сім'я́"
+    right: "family"
+
+- id: act-w3
+  type: group-sort
+  title: "Сорту́й за на́голосом — Sort by stress position"
+  instruction: "Розподіли́ ко́жне сло́во за позна́ченим наголо́шеним скла́дом."
+  groups:
+  - label: "Пе́рший склад"
+    items:
+    - "ма́ма"
+    - "та́то"
+    - "ра́нок"
+    - "ка́ва"
+  - label: "Сере́дній склад"
+    items:
+    - "столи́ця"
+    - "люди́на"
+    - "одина́дцять"
+    - "чотирна́дцять"
+  - label: "Оста́нній склад"
+    items:
+    - "вода́"
+    - "зима́"
+    - "рука́"
+    - "метро́"
+
+- id: act-w103
+  type: error-correction
+  title: "Ви́правлення помилко́вого на́голосу — Correcting stress errors"
+  instruction: "Знайді́ть і ви́правте помилко́вий на́голос у ко́жному ре́ченні."
+  items:
+  - sentence: "Ось наді́йний за́мок на вхідни́х две́рях."
+    error: "за́мок"
+    answer: "замо́к"
+    options:
+    - "замо́к"
+    - "за́мок"
+    explanation: "На две́рях виси́ть «замо́к» (lock), а не форте́ця."
+  - sentence: "На висо́кій горі́ стої́ть старови́нний замо́к."
+    error: "замо́к"
+    answer: "за́мок"
+    options:
+    - "за́мок"
+    - "замо́к"
+    explanation: "Форте́ця на горі́ — це «за́мок» (castle)."
+  - sentence: "У́чневі потрі́бен географі́чний атла́с із ма́пами."
+    error: "атла́с"
+    answer: "а́тлас"
+    options:
+    - "а́тлас"
+    - "атла́с"
+    explanation: "Збі́рка географі́чних карт — це «а́тлас»."
+  - sentence: "У теа́трі гра́є стари́й о́рган."
+    error: "о́рган"
+    answer: "орга́н"
+    options:
+    - "орга́н"
+    - "о́рган"
+    explanation: "Музи́чний інструме́нт — це «орга́н»."
+  - sentence: "У на́шому до́мі живе́ вели́ка сі́м'я."
+    error: "сі́м'я"
+    answer: "сім'я́"
+    options:
+    - "сім'я́"
+    - "сі́м'я"
+    explanation: "Роди́на люде́й — це «сім'я́»."
+  - sentence: "Пта́шка клює́ дрібне́ сім'я́ со́няшника."
+    error: "сім'я́"
+    answer: "сі́м'я"
+    options:
+    - "сі́м'я"
+    - "сім'я́"
+    explanation: "Зерня́тко росли́ни — це «сі́м'я»."
+
+- id: act-w104
+  type: quiz
+  title: "Чи́стий ненаголо́шений [о] — Pure unstressed [о]"
+  instruction: "Обері́ть прави́льну лінгвісти́чну ві́дповідь."
+  items:
+  - prompt: "Як пра́вильно ви́мовити сло́во «молоко́»?"
+    options:
+    - text: "з усіма́ трьома́ чи́стими зву́ками [о]"
+      correct: true
+    - text: "замі́нюючи пе́рші два зву́ки [о] на [а]"
+      correct: false
+    - text: "пропуска́ючи пе́рший голосни́й"
+      correct: false
+    explanation: "В украї́нській мо́ві ненаголо́шені [о] ніко́ли не перетво́рюються на [а]."
+  - prompt: "Скі́льки чи́стих зву́ків [о] звучи́ть у сло́ві «до́брого»?"
+    options:
+    - text: "два зву́ки [о]"
+      correct: true
+    - text: "жо́дного зву́ка [о]"
+      correct: false
+    - text: "три зву́ки [а]"
+      correct: false
+    explanation: "У сло́ві «до́брого» оби́дві бу́кви о вимовля́ються як чи́сті зву́ки [о]."
+  - prompt: "Яке́ я́вище суво́ро заборо́нене в украї́нській літерату́рній но́рмі?"
+    options:
+    - text: "а́кання (вимо́ва ненаголо́шеного [о] як [а])"
+      correct: true
+    - text: "чітке́ вимовля́ння кінце́вих при́голосних"
+      correct: false
+    - text: "спада́ння то́ну в кінці́ тве́рдження"
+      correct: false
+    explanation: "А́кання є гру́бою вимо́вною поми́лкою в украї́нській мо́ві."
+  - prompt: "Яке́ сло́во є суча́сною літерату́рною но́рмою для позна́чення «flour»?"
+    options:
+    - text: "бо́рошно"
+      correct: true
+    - text: "мука́"
+      correct: false
+    - text: "ка́ша"
+      correct: false
+    explanation: "Суча́сна украї́нська но́рма для бо́рошна — «бо́рошно»."
+  - prompt: "Що означа́є сло́во «му́ка» з на́голосом на пе́ршому скла́ді?"
+    options:
+    - text: "стражда́ння, торту́ри (torment / suffering)"
+      correct: true
+    - text: "подрі́бнене зерно́ для випіка́ння хлі́ба"
+      correct: false
+    - text: "музи́чний інструме́нт"
+      correct: false
+    explanation: "«Му́ка» — це стражда́ння; бо́рошно для ви́пічки назива́ється «бо́рошно»."
+  - prompt: "Чи є різни́ця між те́рмінами «бу́ква» та «лі́тера»?"
+    options:
+    - text: "ні, це по́вні сино́німи для позна́чення графі́чного зна́ка"
+      correct: true
+    - text: "так, бу́ква познача́є ті́льки голосні́ зву́ки"
+      correct: false
+    - text: "так, лі́тера — це звук, а бу́ква — це склад"
+      correct: false
+    explanation: "«Бу́ква» та «лі́тера» — абсолю́тні сино́німи в украї́нській мо́ві."
+
+- id: act-w105
+  type: unjumble
+  title: "Склада́ння ре́чень — Sentence unjumble"
+  instruction: "Розташу́йте слова́ у пра́вильному поря́дку, щоб утвори́ти ре́чення."
+  items:
+  - sentence: "Це старови́нний за́мок."
+    words:
+    - "Це"
+    - "старови́нний"
+    - "за́мок."
+  - sentence: "Де ключ від замка́?"
+    words:
+    - "Де"
+    - "ключ"
+    - "від"
+    - "замка́?"
+  - sentence: "Ось наді́йний замо́к."
+    words:
+    - "Ось"
+    - "наді́йний"
+    - "замо́к."
+  - sentence: "Тут географі́чний а́тлас."
+    words:
+    - "Тут"
+    - "географі́чний"
+    - "а́тлас."
+  - sentence: "На́ша сім'я́ п'є молоко́."
+    words:
+    - "На́ша"
+    - "сім'я́"
+    - "п'є"
+    - "молоко́."
+  - sentence: "Се́рце — це важли́вий о́рган."
+    words:
+    - "Се́рце"
+    - "—"
+    - "це"
+    - "важли́вий"
+    - "о́рган."
+
+- id: act-w106
+  type: translate
+  title: "Перекла́д ре́чень — Sentence translation"
+  instruction: "Обері́ть то́чний англі́йський перекла́д ре́чення."
+  items:
+  - source: "Це старови́нний за́мок."
+    options:
+    - text: "This is an ancient castle."
+      correct: true
+    - text: "This is a new door lock."
+      correct: false
+    - text: "This is an ancient atlas."
+      correct: false
+    explanation: "За́мок — castle."
+  - source: "Ось наді́йний замо́к."
+    options:
+    - text: "Here is a reliable lock."
+      correct: true
+    - text: "Here is a reliable castle."
+      correct: false
+    - text: "Here is fresh milk."
+      correct: false
+    explanation: "Замо́к — lock."
+  - source: "Де географі́чний а́тлас?"
+    options:
+    - text: "Where is the geographical atlas?"
+      correct: true
+    - text: "Where is the satin dress?"
+      correct: false
+    - text: "Where is the ancient organ?"
+      correct: false
+    explanation: "А́тлас — atlas (collection of maps)."
+  - source: "Це чи́сте бі́ле бо́рошно."
+    options:
+    - text: "This is pure white flour."
+      correct: true
+    - text: "This is painful suffering."
+      correct: false
+    - text: "This is fresh cow milk."
+      correct: false
+    explanation: "Бо́рошно — flour."
+  - source: "На́ша сім'я́ дру́жня."
+    options:
+    - text: "Our family is friendly and united."
+      correct: true
+    - text: "Our seed is very small."
+      correct: false
+    - text: "Our capital is large."
+      correct: false
+    explanation: "Сім'я́ — family."
+  - source: "У собо́рі гра́є вели́кий орга́н."
+    options:
+    - text: "A grand pipe organ plays in the cathedral."
+      correct: true
+    - text: "The heart is an important organ."
+      correct: false
+    - text: "The cathedral has a broken lock."
+      correct: false
+    explanation: "Орга́н — pipe organ (musical instrument)."

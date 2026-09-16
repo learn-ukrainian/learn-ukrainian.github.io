@@ -1,0 +1,156 @@
+lessons:
+- n: 1
+  title: "Ві́льний і рухо́мий на́голос: Па́ри, що змі́нюють зна́чення"
+  sections:
+  - Наголос
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress:
+  - сім'я
+  unverified_lemmas: []
+- n: 2
+  title: "Па́стки на́голосу для L2: Числі́вники, прикме́тники та рухо́мі фо́рми"
+  sections:
+  - Читаємо вголос
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress: []
+  unverified_lemmas: []
+- n: 3
+  title: "Інтона́ція та мело́дика ре́чення: Тве́рдження, пита́ння, о́клик"
+  sections:
+  - Мелодика
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress: []
+  unverified_lemmas: []
+- n: 4
+  title: "Чита́ємо вго́лос та підсу́мок А1.1: Вся абе́тка (А–Я) та фіна́льний діало́г"
+  sections:
+  - Друк, зошит, голос
+  - Перевірка
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress:
+  - звукосполуку
+  - вами
+  unverified_lemmas: []
+closes_module: 4
+provenance:
+- placement: inline
+  index: 0
+  new_id: act-1
+  lesson: 1
+- placement: inline
+  index: 1
+  new_id: act-2
+  lesson: 3
+- placement: inline
+  index: 2
+  new_id: act-3
+  lesson: 1
+- placement: inline
+  index: 3
+  new_id: act-4
+  lesson: 3
+- placement: inline
+  index: 4
+  new_id: act-5
+  lesson: 2
+- placement: workbook
+  index: 0
+  new_id: act-w1
+  lesson: 2
+- placement: workbook
+  index: 1
+  new_id: act-w2
+  lesson: 1
+- placement: workbook
+  index: 2
+  new_id: act-w3
+  lesson: 1
+- placement: workbook
+  index: 3
+  new_id: act-w4
+  lesson: 4
+- placement: workbook
+  index: 4
+  new_id: act-w5
+  lesson: 4
+- placement: workbook
+  index: 5
+  new_id: act-w6
+  lesson: 4
+items_min_exempt:
+- id: act-1
+  reason: 4-item original activity preserved from baseline
+- id: act-2
+  reason: 4-item original activity preserved from baseline
+- id: act-3
+  reason: 3-item original activity preserved from baseline
+- id: act-4
+  reason: 5-item original activity preserved from baseline
+- id: act-w2
+  reason: 4-item original activity preserved from baseline
+- id: act-w4
+  reason: 4-item original activity preserved from baseline
+- id: act-w5
+  reason: 4-item original activity preserved from baseline
+- id: act-w6
+  reason: 4-item original activity preserved from baseline
+proper_names:
+- Київ
+- Києві
+- Україна
+- України
+- Україні
+- Марко
+- Марку
+- Марка
+- Оксана
+- Оксано
+- Тарас
+- Тарасе
+- Марія
+- Маріє
+- Марії
+- Софія
+- Софіє
+- Заболотний
+- Авраменко
+- Огойко
+- Анна
+- Дніпро
+- Дніпрі
