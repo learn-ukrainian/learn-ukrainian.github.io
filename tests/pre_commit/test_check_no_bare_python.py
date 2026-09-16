@@ -49,6 +49,10 @@ def test_allows_venv_bootstrap_and_project_interpreter(checker, script: str) -> 
         ("python3 scripts/build.py # -m venv\n", 1),
         ("python3 -m venv /tmp/demo && python3 scripts/build.py\n", 1),
         ("cmd; python3 scripts/build.py\n", 1),
+        # Mid-token / escaped hashes are NOT comments in bash — must still catch
+        # the bare-python command that follows on the same line.
+        ("echo foo#bar; python3 scripts/build.py\n", 1),
+        (r"echo \#; python3 scripts/build.py" + "\n", 1),
     ],
 )
 def test_rejects_bare_python_including_venv_laundering(

@@ -27,7 +27,13 @@ _SHELL_SUFFIX = frozenset({".sh", ".bash"})
 
 
 def _strip_shell_comment(line: str) -> str:
-    """Drop an unquoted ``# …`` tail so comments cannot launder exemptions."""
+    """Drop a bash ``# …`` comment tail so comments cannot launder exemptions.
+
+    Bash only starts a comment when ``#`` begins a word (start of line or after
+    whitespace / ``;|&()``). Mid-token hashes (``foo#bar``) and escaped hashes
+    (``\\#``) stay literal — stripping those would hide a later bare-python
+    command on the same line.
+    """
 
     in_single = False
     in_double = False
@@ -36,7 +42,9 @@ def _strip_shell_comment(line: str) -> str:
         if escaped:
             escaped = False
             continue
-        if char == "\\" and in_double:
+        if char == "\\" and not in_single:
+            # Outside single quotes, backslash escapes the next character for
+            # comment detection (so ``\#`` is literal ``#``, not a comment).
             escaped = True
             continue
         if char == "'" and not in_double:
@@ -45,7 +53,12 @@ def _strip_shell_comment(line: str) -> str:
         if char == '"' and not in_single:
             in_double = not in_double
             continue
-        if char == "#" and not in_single and not in_double:
+        if (
+            char == "#"
+            and not in_single
+            and not in_double
+            and (index == 0 or line[index - 1] in " \t;|&()")
+        ):
             return line[:index]
     return line
 
