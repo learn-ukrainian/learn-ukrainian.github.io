@@ -51,9 +51,9 @@ inline:
   - statement: У сло́ві «борщ» оста́нній звук познача́ється як [шч].
     answer: true
     explanation: Лі́тера щ наприкінці́ сло́ва вимовля́ється як [шч].
-  - statement: Лі́тера Ї мо́же пом'я́кшувати попере́дній при́голосний.
+  - statement: The letter Ї can soften the preceding consonant.
     answer: false
-    explanation: Лі́тера Ї за́вжди зберіга́є свій напівголосни́й звук [й].
+    explanation: The letter Ї always keeps its semivowel sound [й].
   - statement: Слова́ «бу́ква» та «лі́тера» ма́ють одна́кове зна́чення.
     answer: true
     explanation: Оби́два те́рміни є сино́німами.
