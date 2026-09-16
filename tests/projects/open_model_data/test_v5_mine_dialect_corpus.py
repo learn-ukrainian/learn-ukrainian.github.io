@@ -41,6 +41,7 @@ from scripts.projects.open_model_data.v5_mine_dialect_corpus import (
     clean_sentence,
     evaluate_multizone_benchmark,
     exact_clopper_pearson_lower,
+    find_attested_synonym,
     normalize_for_eval,
     normalize_lookup_token,
     passage_fingerprint,
@@ -549,3 +550,53 @@ def test_exact_clopper_pearson_mathematical_bounds() -> None:
     perfect_lcl = exact_clopper_pearson_lower(100, 100, alpha=0.05)
     assert 0.95 <= perfect_lcl <= 1.0
     assert abs(perfect_lcl - (0.05 ** (1.0 / 100))) < 1e-6
+
+
+def test_find_attested_synonym_rejects_descriptive_and_crossref() -> None:
+    """Verify find_attested_synonym rejects descriptive fragments and crossrefs, and validates real synonyms."""
+    # Descriptive definition with adjective 'слизький' for noun 'затока'
+    defn_zatoka = "ЗА́ТОКА, и, ж., діал. Слизький схил, боковий спад дороги, куди сповзають сани."
+    assert find_attested_synonym(defn_zatoka, "затока", DEFAULT_VESUM_DB) is None
+
+    # Descriptive definition with adjective 'безладний' for noun 'сутолока'
+    defn_sutoloka = "СУ́ТОЛОКА, и, ж., діал. Безладний рух, штовхання в тісноті, в натовпі."
+    assert find_attested_synonym(defn_sutoloka, "сутолока", DEFAULT_VESUM_DB) is None
+
+    # Cross-reference 'див.' for 'чотири'
+    defn_chotyry = "ЧОТИ́РИ, рьо́х, числ. 1. Назва числа 4... // див. сидіти; див. іти."
+    assert find_attested_synonym(defn_chotyry, "чотири", DEFAULT_VESUM_DB) is None
+
+    # Valid noun-noun synonyms
+    defn_barabolya = "БАРАБО́ЛЯ, і, ж., діал. Картопля."
+    res_barabolya = find_attested_synonym(defn_barabolya, "бараболя", DEFAULT_VESUM_DB)
+    assert res_barabolya is not None
+    assert res_barabolya[0] == "картопля"
+
+    defn_boz = "Боз, зу, м. = бузок."
+    res_boz = find_attested_synonym(defn_boz, "боз", DEFAULT_VESUM_DB)
+    assert res_boz is not None
+    assert res_boz[0] == "бузок"
+
+    defn_hazdynya = "ГА́ЗДИНЯ, і, ж., зах. Господарка."
+    res_hazdynya = find_attested_synonym(defn_hazdynya, "газдиня", DEFAULT_VESUM_DB)
+    assert res_hazdynya is not None
+    assert res_hazdynya[0] == "господарка"
+
+
+def test_standard_headwords_with_nested_idioms_excluded(
+    eval_cases: list[dict[str, Any]],
+    sft_trajectories: list[dict[str, Any]],
+) -> None:
+    """Verify that standard headwords with nested dialect idioms (like чотири) are completely excluded."""
+    eval_markers = {c["dialect_marker"].casefold() for c in eval_cases}
+    sft_targets = {t["target_term"].casefold() for t in sft_trajectories}
+
+    assert "чотири" not in eval_markers, "'чотири' leaked into evaluation dialect markers!"
+    assert "чотири" not in sft_targets, "'чотири' leaked into SFT dialect targets!"
+
+    # Ensure no sentence in eval or SFT contains standard quotes for чотири
+    banned_substring = "поруч з джерихою сиділи чотири молодиці"
+    for c in eval_cases:
+        assert banned_substring not in c["input_text"].casefold()
+    for t in sft_trajectories:
+        assert banned_substring not in t["query"].casefold()

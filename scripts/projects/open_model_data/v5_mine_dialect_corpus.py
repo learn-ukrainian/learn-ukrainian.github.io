@@ -285,6 +285,7 @@ def mine_all_candidate_sentences(db_path: Path) -> list[MinedSentence]:
     cur.execute("""
         SELECT word, definition, text FROM sum11
         WHERE definition LIKE '%діал.%' OR text LIKE '%діал.%'
+           OR definition LIKE '%зах.%' OR text LIKE '%зах.%'
     """)
     for raw_word, defn, txt in cur.fetchall():
         w_clean = clean_headword(raw_word)
@@ -294,18 +295,25 @@ def mine_all_candidate_sentences(db_path: Path) -> list[MinedSentence]:
 
         full_text = f"{defn} {txt}"
         # Split into senses to ensure quotations are only taken from dialect-marked senses
-        senses = re.split(r"(?<=\s)([1-9]\.)\s+", full_text)
+        senses = re.split(r"(?<=\s)([1-9][0-9]?\.)\s+", full_text)
+        header = senses[0]
+        header_is_dialect = bool(re.search(r"\b(?:діал\.|зах\.)", header))
+
         dialect_sections = []
         if len(senses) > 1:
-            pre = senses[0]
-            if "діал." in pre or "зах." in pre:
-                dialect_sections.append(pre)
-            for i in range(1, len(senses), 2):
-                s_body = senses[i + 1]
-                if "діал." in s_body or "зах." in s_body or ("діал." in pre and not re.search(r"^[а-яіїєґ\s]+;", s_body)):
-                    dialect_sections.append(s_body)
+            if header_is_dialect:
+                # Whole word is marked dialectal; quotations across numbered senses belong to this dialect headword
+                for i in range(1, len(senses), 2):
+                    dialect_sections.append(senses[i + 1])
+            else:
+                # Word is standard or polysemous; only take senses that specifically start with dialect qualifiers
+                for i in range(1, len(senses), 2):
+                    s_body = senses[i + 1]
+                    if re.match(r"^(?:[а-яіїєґ\.\s,\(\)\u0301-]{0,50}\b)?(?:діал\.|зах\.)", s_body.strip()):
+                        dialect_sections.append(s_body)
         else:
-            if "діал." in full_text or "зах." in full_text:
+            # Single-sense entry: prefix before definition text must contain dialect marker
+            if re.match(r"^[А-ЯЄІЇҐа-яіїєґ\s\',./;0-9\(\)\u0301\-]+?\b(?:діал\.|зах\.)", full_text[:120]):
                 dialect_sections.append(full_text)
 
         for section in dialect_sections:
@@ -474,7 +482,12 @@ def partition_candidates_by_lemma(
         h = int(hashlib.sha256(first_node.encode()).hexdigest()[:8], 16) % 100
         has_steppe = any(c.bucket == "southeastern_steppe" for c in c_list)
         has_slobozhan = any(c.bucket == "southeastern_slobozhan" for c in c_list)
-        threshold = 68 if (has_steppe or has_slobozhan) else 55
+        if has_steppe:
+            threshold = 95
+        elif has_slobozhan:
+            threshold = 68
+        else:
+            threshold = 48
 
         if h < threshold:
             eval_candidates.extend(c_list)
@@ -612,19 +625,46 @@ def build_evaluation_benchmark(
     return eval_cases
 
 
+def infer_definition_pos(defn: str) -> set[str]:
+    """Infer grammatical part of speech from early dictionary definition tags."""
+    prefix = defn[:80]
+    poses: set[str] = set()
+    if re.search(r"\b(?:ч\.|ж\.|с\.|мн\.|імен\.)", prefix):
+        poses.add("noun")
+    if re.search(r"\b(?:недок\.|док\.|дієсл\.)", prefix):
+        poses.add("verb")
+    if re.search(r"\bприкм\.", prefix):
+        poses.add("adj")
+    if re.search(r"\bприсл\.", prefix):
+        poses.add("adv")
+    if re.search(r"\bвиг\.", prefix):
+        poses.add("intj")
+    if re.search(r"\bчаст\.", prefix):
+        poses.add("part")
+    if re.search(r"\bспол\.", prefix):
+        poses.add("conj")
+    if re.search(r"\bчисл\.", prefix):
+        poses.add("numr")
+    if re.search(r"\bзайм\.", prefix):
+        poses.add("pron")
+    return poses
+
+
 def find_attested_synonym(defn: str, word: str, vesum_db: Path) -> tuple[str, int] | None:
     """Extract a genuine Ukrainian literary synonym from dictionary definition verified in VESUM.
 
+    Requires strict lexicographical formulas ('=', 'Те саме, що', or direct single-word gloss)
+    and enforces part-of-speech (POS) agreement between dialect lemma and synonym.
+    Cross-references ('див.') and multi-word descriptive phrases are strictly rejected.
     Returns None if no attested literary synonym can be extracted. Never returns dummy fallbacks.
     """
     con_ves = sqlite3.connect(vesum_db)
     cur = con_ves.cursor()
 
     patterns = [
-        r"діал\.\s+(?:Те\s+саме,\s+що\s+)?([А-ЯЄІЇҐа-яіїєґ\']+)",
-        r"зах\.\s+(?:Те\s+саме,\s+що\s+)?([А-ЯЄІЇҐа-яіїєґ\']+)",
         r"=\s*([А-ЯЄІЇҐа-яіїєґ\']+)",
-        r"\bдив\.\s+([а-яіїєґ\']+)",
+        r"(?:діал\.|зах\.)\s+Те\s+саме,\s+що\s+([А-ЯЄІЇҐа-яіїєґ\']+)",
+        r"(?:діал\.|зах\.)\s+([А-ЯЄІЇҐа-яіїєґ\']+)\s*(?:[.;]|\(див\.)",
     ]
     banned = {
         "те", "саме", "що", "як", "який", "яка", "яке", "які", "хто", "при", "для",
@@ -632,10 +672,21 @@ def find_attested_synonym(defn: str, word: str, vesum_db: Path) -> tuple[str, in
     }
 
     try:
+        cur.execute("SELECT DISTINCT pos FROM forms_all WHERE lemma = ?", (word.casefold(),))
+        word_poses = {r[0] for r in cur.fetchall()}
+        if not word_poses:
+            word_poses = infer_definition_pos(defn)
+
         for pat in patterns:
             for m in re.finditer(pat, defn, re.IGNORECASE):
                 cand = m.group(1).casefold()
                 if cand in banned or cand == word.casefold() or len(cand) < 2:
+                    continue
+                cur.execute("SELECT DISTINCT pos FROM forms_all WHERE lemma = ?", (cand,))
+                cand_poses = {r[0] for r in cur.fetchall()}
+                if not cand_poses:
+                    continue
+                if word_poses and not (word_poses & cand_poses):
                     continue
                 cur.execute("SELECT count(*) FROM forms_all WHERE lemma = ?", (cand,))
                 row = cur.fetchone()
