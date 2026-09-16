@@ -123,25 +123,32 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         return False
 
     t_bare = re.escape(t_lower)
-    t_token = rf"(?:[«\"“‘\']{t_bare}[»\"”’\']|\b{t_bare}\b|слово\s+\b{t_bare}\b)"
-    target_or_anaphoric = rf"(?:{t_token}|\b(?:його|її|їх|це|цей|цю|цього|цій|цим|слово|вираз|зворот|термін)\b)"
+    t_token_re = re.compile(rf"(?:[«\"“‘\']{t_bare}[»\"”’\']|\b{t_bare}\b|слово\s+\b{t_bare}\b)", re.IGNORECASE)
+    anaphoric_re = re.compile(r"\b(?:його|її|їх|це|цей|цю|цього|цій|цим|слово|термін|вираз|зворот)\b", re.IGNORECASE)
 
-    target_in_text = bool(re.search(t_token, text.lower()))
-    clauses = [c.strip() for c in re.split(r"[.,\n;!?]+", text.lower()) if c.strip()]
+    target_in_text = bool(t_token_re.search(text))
+    current_referent = "TARGET" if not target_in_text else None
+
+    clauses = [c.strip() for c in re.split(r"[.,\n;!?]+", text) if c.strip()]
     for clause in clauses:
-        is_relevant_clause = (
-            not target_in_text
-            or bool(re.search(target_or_anaphoric, clause))
-            or bool(
-                re.search(
-                    r"(?:(?:слід|варто|потрібно|необхідно|треба)\s+(?:замінити|замінювати|уникати|виправити|виправляти)|"
-                    r"(?:замініть|замінити|уникайте|уникати|виправте|виправити)|"
-                    r"(?:потребує|вимагає)\s+(?:заміни|виправлення))",
-                    clause,
+        cl_lower = clause.lower()
+        quoted = re.findall(r"[«\"“‘\']([^»\"”’\']+)[»\"”’\']", clause)
+
+        if t_token_re.search(clause):
+            current_referent = "TARGET"
+        elif quoted:
+            first_q = quoted[0].strip().lower()
+            if first_q != t_lower:
+                subj_m = re.search(
+                    rf"(?:^|\b(?:щодо\s+слова|слово|словом|вираз|зворот)\s+)?[«\"“‘\']{re.escape(first_q)}[»\"”’\']",
+                    cl_lower,
                 )
-            )
-        )
-        if not is_relevant_clause:
+                if subj_m and not re.search(rf"\b(?:на|замість|до)\s+[«\"“‘\']{re.escape(first_q)}[»\"”’\']", cl_lower):
+                    current_referent = "OTHER"
+        elif anaphoric_re.search(clause) and current_referent is not None:
+            pass
+
+        if current_referent != "TARGET":
             continue
 
         has_replace_directive = bool(
@@ -150,40 +157,45 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 r"(?:(?:слід|варто|потрібно|необхідно|треба)\s+(?:замінити|замінювати|уникати|виправити|виправляти)|"
                 r"(?:замініть|замінити|уникайте|уникати|виправте|виправити)|"
                 r"(?:потребує|вимагає)\s+(?:заміни|виправлення))",
-                clause,
+                cl_lower,
             )
         )
         negates_replace = bool(
             re.search(
                 r"не\s+(?:слід|варто|потрібно|необхідно|треба)?\s*(?:замінювати|замінити|уникати|виправляти|виправити|потребує\s+заміни)",
-                clause,
+                cl_lower,
             )
         )
         if has_replace_directive and not negates_replace:
             return True
 
-        has_copula_condemn = bool(
-            re.search(
-                r"(?:(?:—|–|-|:)\s*(?:(?:це|є)\s+)?|(?:є|було|вважається|становить)\s+)?(?:помилк\w*|кальк\w*|росіянізм\w*|русизм\w*|суржик\w*|ненормативн\w*|неправильн\w*)|"
-                r"не\s+(?:є\s+)?(?:нормативн\w*|правильн\w*)",
-                clause,
-            )
-        )
-        negates_condemn = bool(
-            re.search(
-                r"не\s+(?:є\s+)?(?:помилк\w*|кальк\w*|росіянізм\w*|русизм\w*|суржик\w*|ненормативн\w*|неправильн\w*)",
-                clause,
-            )
-        )
-        has_positive_defense = bool(
-            re.search(
-                r"\b(?:збережіть|зберегти|діалектн\w*|автентичн\w*)\b|"
-                r"(?<!не\s)(?<!не\sє\s)(?<!не)(?:\bнормативн\w*|\bправильн\w*)",
-                clause,
-            )
-        )
-        if has_copula_condemn and not negates_condemn and not has_positive_defense:
-            return True
+        condemn_patterns = [
+            r"\bпомилк\w*",
+            r"\bкальк\w*",
+            r"\bросіянізм\w*",
+            r"\bрусизм\w*",
+            r"\bсуржик\w*",
+            r"\bненормативн\w*",
+            r"\bнеправильн\w*",
+            r"не\s+(?:є\s+)?нормативн\w*",
+            r"не\s+(?:є\s+)?правильн\w*",
+        ]
+
+        for cpat in condemn_patterns:
+            for match in re.finditer(cpat, cl_lower):
+                start = match.start()
+                prefix = cl_lower[:start]
+                last_ne = prefix.rfind("не ")
+                is_negated = False
+                if last_ne != -1:
+                    after_ne = prefix[last_ne + 3:]
+                    if not re.search(r"\b(?:але|проте|однак)\b", after_ne):
+                        is_negated = bool(
+                            re.search(r"\bне\s+(?:є\s+|це\s+|вважається\s+|було\s+)?$", prefix)
+                            or re.search(r"\bне\s+(?:є\s+|це\s+|вважається\s+|було\s+)?[а-яА-ЯёЁіІїЇєЄґҐ’'\-]+\s+(?:та|і|й)\s+(?:не\s+)?$", prefix)
+                        )
+                if not is_negated:
+                    return True
 
     return False
 
