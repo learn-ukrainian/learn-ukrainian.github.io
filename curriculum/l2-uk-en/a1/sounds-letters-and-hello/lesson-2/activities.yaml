@@ -1,389 +1,386 @@
 inline:
-- id: act-201
-  type: count-syllables
-  title: Count the syllables (склади́)
-  instruction: Count how many vowel sounds create syllables in each word.
-  items:
-  - word: дім
-    syllables: 1
-  - word: ніс
-    syllables: 1
-  - word: сон
-    syllables: 1
-  - word: день
-    syllables: 1
-  - word: ма́ма
-    syllables: 2
-  - word: та́то
-    syllables: 2
-  - word: о́ко
-    syllables: 2
-  - word: молоко́
-    syllables: 3
-- id: act-202
-  type: match-up
-  title: Match letters with sounds
-  instruction: Match each Ukrainian letter or sign with its pronunciation role.
-  pairs:
-  - left: Г
-    right: Ukrainian voiced h-like sound [г]
-  - left: Ґ
-    right: Hard [g] sound
-  - left: Щ
-    right: 'Two consonant sounds merged: [шч]'
-  - left: Ь
-    right: 'Soft sign: softens preceding consonant, no sound alone'
-  - left: Ї
-    right: 'Always two sounds: [йі]'
-  - left: ''' (апо́строф)'
-    right: 'Separation mark: keeps consonant hard'
 - id: act-3
-  type: watch-and-repeat
-  title: Full alphabet pronunciation pass
-  instruction: Watch each video clip, listen to the letter name and the example word,
-    then repeat.
-  items:
-  - letter: А
-    word: анана́с
-    video: https://www.youtube.com/watch?v=hvB3VpcR3ZE
-  - letter: Б
-    word: бана́н
-    video: https://www.youtube.com/watch?v=V1hxBE_JbGg
-  - letter: В
-    word: вода́
-    video: https://www.youtube.com/watch?v=aFcvYfvQ2X4
-  - letter: Г
-    word: гора́
-    video: https://www.youtube.com/watch?v=gVnclpSI0DU
-  - letter: Ґ
-    word: ґу́дзик
-    video: https://www.youtube.com/watch?v=gNjHqjTW9WQ
-  - letter: Д
-    word: дім
-    video: https://www.youtube.com/watch?v=g4Bh-lqzd48
-  - letter: Е
-    word: екра́н
-    video: https://www.youtube.com/watch?v=KFlsroBW0dk
-  - letter: Є
-    word: єно́т
-    video: https://www.youtube.com/watch?v=O0bwRyyBQSc
-  - letter: Ж
-    word: жук
-    video: https://www.youtube.com/watch?v=dIrGVcqPwqM
-  - letter: З
-    word: зуб
-    video: https://www.youtube.com/watch?v=BhASNxitC1A
-  - letter: И
-    word: сир
-    video: https://www.youtube.com/watch?v=W-1rCu0indE
-  - letter: І
-    word: ім'я́
-    video: https://www.youtube.com/watch?v=Z9TH0H4ShGo
-  - letter: Ї
-    word: їжа́к
-    video: https://www.youtube.com/watch?v=UcjdjQXhAY8
-  - letter: Й
-    word: йо́гурт
-    video: https://www.youtube.com/watch?v=aq0cjB90s3w
-  - letter: К
-    word: кіт
-    video: https://www.youtube.com/watch?v=J7sGEI4-xJo
-  - letter: Л
-    word: лимо́н
-    video: https://www.youtube.com/watch?v=v6-3Xg52Buk
-  - letter: М
-    word: ма́ма
-    video: https://www.youtube.com/watch?v=Ez95H4ibuJo
-  - letter: Н
-    word: ніс
-    video: https://www.youtube.com/watch?v=vNUfiKHPYaU
-  - letter: О
-    word: о́ко
-    video: https://www.youtube.com/watch?v=gJFxRIPRZbI
-  - letter: П
-    word: пес
-    video: https://www.youtube.com/watch?v=JksSjjxyW5Y
-  - letter: Р
-    word: рука́
-    video: https://www.youtube.com/watch?v=fMGsQ5KPQgg
-  - letter: С
-    word: сон
-    video: https://www.youtube.com/watch?v=7UsFBgSL91E
-  - letter: Т
-    word: та́то
-    video: https://www.youtube.com/watch?v=m-jcLR_gK0k
-  - letter: У
-    word: уро́к
-    video: https://www.youtube.com/watch?v=VB1O6PmtYRU
-  - letter: Ф
-    word: фо́то
-    video: https://www.youtube.com/watch?v=haHRsFFZRQI
-  - letter: Х
-    word: ха́та
-    video: https://www.youtube.com/watch?v=vpr58zJSJKc
-  - letter: Ц
-    word: цу́кор
-    video: https://www.youtube.com/watch?v=u44eCjR2Oz8
-  - letter: Ч
-    word: час
-    video: https://www.youtube.com/watch?v=UsJkbdsY2RA
-  - letter: Ш
-    word: шко́ла
-    video: https://www.youtube.com/watch?v=1D-6MIw3OXY
-  - letter: Щ
-    word: щу́ка
-    video: https://www.youtube.com/watch?v=QmBLieIuf6Q
-  - letter: Ь
-    word: день
-    video: https://www.youtube.com/watch?v=cJlal8XKBxo
-  - letter: Ю
-    word: ю́шка
-    video: https://www.youtube.com/watch?v=9JdIBYCTWGw
-  - letter: Я
-    word: я́блуко
-    video: https://www.youtube.com/watch?v=yhSAf41LX8I
-- id: act-203
-  type: match-up
-  title: False friends vs familiar letters
-  instruction: Match each letter to its correct sound description.
-  pairs:
-  - left: В (false friend)
-    right: Sounds like English V, not B
-  - left: Н (false friend)
-    right: Sounds like English N, not H
-  - left: Р (false friend)
-    right: Sounds like rolled R, not P
-  - left: С (false friend)
-    right: Sounds like English S, not C
-  - left: У (false friend)
-    right: Sounds like [u], not English Y
-  - left: Х (false friend)
-    right: Sounds like throaty [kh], not English X
-- id: act-204
   type: quiz
-  title: Mastering word stress
-  instruction: Select the correct stressed syllable or meaning for each question.
+  title: Приголосні́ зву́ки — Consonant sounds
+  instruction: Обері́ть пра́вильне тве́рдження про при́голосні зву́ки. — Choose the correct statement about consonant sounds.
   items:
-  - question: Which syllable is stressed in молоко́?
+  - prompt: Що ство́рюють о́ргани мо́влення під час ви́мови при́голосних? — What do speech organs create when pronouncing consonants?
     options:
-    - Third syllable (ко)
-    - First syllable (мо)
-    - Second syllable (ло)
-    correct: 0
-    explanation: 'In молоко́, the stress is on the final syllable: ко.'
-  - question: What does за́мок mean (stress on the first syllable)?
+    - text: Перешко́ду
+      correct: true
+    - text: Порожне́чу
+      correct: false
+    - text: Му́зику
+      correct: false
+    explanation: При́голосні зву́ки тво́ряться з перешко́дою в ро́ті (гу́би, зу́би, язи́к).
+  - prompt: Яки́м зна́ком у звукови́х схе́мах познача́ють тверди́й при́голосний? — What symbol marks a hard consonant in diagrams?
     options:
-    - Castle
-    - Lock
-    - Key
-    correct: 0
-    explanation: За́мок means castle. With stress on the second syllable, замо́к means
-      lock.
-  - question: What does замо́к mean (stress on the second syllable)?
+    - text: Ри́скою [—]
+      correct: true
+    - text: Круже́чком [●]
+      correct: false
+    - text: Хре́стиком
+      correct: false
+    explanation: Тверди́й при́голосний познача́ють одніє́ю ри́скою [—].
+  - prompt: Яки́й о́рган мо́влення бере́ уча́сть у тво́ренні зву́ка [м]? — What speech organ forms the sound [м]?
     options:
-    - Lock
-    - Castle
-    - House
-    correct: 0
-    explanation: Замо́к means lock.
-  - question: Which syllable carries stress in the greeting До́брий день?
+    - text: Гу́би
+      correct: true
+    - text: Зу́би
+      correct: false
+    - text: Лише́ язи́к
+      correct: false
+    explanation: Звук [м] — це губни́й сона́нт, де гу́би щі́льно сту́лені.
+  - prompt: До якого́ ти́пу при́голосних нале́жать зву́ки [м] та [л]? — What type of consonants are [м] and [л]?
     options:
-    - First syllable of До́брий
-    - Second syllable of До́брий
-    - Word день
-    correct: 0
-    explanation: 'In До́брий, stress falls on the first syllable: До́-.'
-  - question: Which syllable carries stress in the greeting До́брого ра́нку?
+    - text: Сона́нти
+      correct: true
+    - text: Шумні́ глухі́
+      correct: false
+    - text: Шипля́чі
+      correct: false
+    explanation: '[м] та [л] — соно́рні при́голосні зву́ки.'
+  - prompt: Чи мо́жна утвори́ти склад без голосно́го зву́ка? — Can you make a syllable without a vowel sound?
     options:
-    - First syllable of both words
-    - Last syllable of both words
-    - Second syllable of both words
-    correct: 0
-    explanation: Both До́брого and ра́нку are stressed on their first syllable.
-  - question: What happens to unstressed [о] in Ukrainian words like молоко́?
+    - text: Ні, голосни́й звук є ядро́м скла́ду
+      correct: true
+    - text: Так, за́вжди
+      correct: false
+    - text: Лише́ в коро́тких слова́х
+      correct: false
+    explanation: Ко́жен украї́нський склад обов'язко́во мі́стить голосни́й звук.
+  - prompt: Скі́льки лі́тер у сло́ві «ма́ма»? — How many letters are in the word мама?
     options:
-    - It stays a clean [о]
-    - It turns into [а]
-    - It becomes silent
-    correct: 0
-    explanation: 'Ukrainian vowels do not reduce: unstressed [о] stays clearly pronounced
-      as [о].'
+    - text: Чоти́ри лі́тери
+      correct: true
+    - text: Дві лі́тери
+      correct: false
+    - text: Три лі́тери
+      correct: false
+    explanation: У сло́ві ма́ма чоти́ри лі́тери (м, а, м, а).
+
+- id: act-201
+  type: watch-and-repeat
+  title: "Диві́ться та повто́рюйте: М, Л — Watch and repeat: М, Л"
+  instruction: "Подиві́ться коро́тке ві́део про вимо́ву лі́тер (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос."
+  items:
+  - video: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    letter: М
+    word: ма́ма
+    sound: '[м]'
+    note: Сту́лені гу́би, го́лос вихо́дить крізь ніс — Closed lips, nasal airflow.
+  - video: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    letter: Л
+    word: лом
+    sound: '[л]'
+    note: Кі́нчик язика́ торка́ється ве́рхніх зубі́в — Tongue tip touches upper teeth.
+  - video: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    letter: МА
+    word: ма
+    sound: '[ма]'
+    note: Відкри́тий склад — Open syllable blend.
+  - video: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    letter: МУ
+    word: му
+    sound: '[му]'
+    note: Злиття́ сона́нта [м] та [у] — Blend of sonorant [m] and [u].
+  - video: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    letter: ЛА
+    word: ла
+    sound: '[ла]'
+    note: Тверди́й склад — Hard open syllable.
+  - video: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    letter: ЛО
+    word: ло
+    sound: '[ло]'
+    note: Чи́сте [о] після [л] — Pure [o] after [l].
+
+- id: act-202
+  type: count-syllables
+  title: Пораху́йте склади́ — Count syllables
+  instruction: Ви́значте кі́лькість складі́в у ко́жному сло́ві за золоти́м пра́вилом. — Count the syllables using the golden rule.
+  maxCount: 3
+  items:
+  - word: ма́ма
+    correct: 2
+    translation: mother
+  - word: ма́ло
+    correct: 2
+    translation: little, few
+  - word: мала́
+    correct: 2
+    translation: small
+  - word: мул
+    correct: 1
+    translation: silt
+  - word: лом
+    correct: 1
+    translation: crowbar
+  - word: о́ко
+    correct: 2
+    translation: eye
+
+- id: act-203
+  type: fill-in
+  title: Пе́рші склади́ та слова́ — First syllables and words
+  instruction: Допо́вніть склади́ або́ слова́ відпові́дними лі́терами. — Complete the syllables or words with appropriate letters.
+  items:
+  - sentence: Скла́вши м та а, ма́ємо склад ___а.
+    answer: м
+    options:
+    - м
+    - л
+    - о
+    explanation: Склад ма утво́рюється з лі́тер м та а.
+  - sentence: Сло́во «ма́___а» озна́чає найдоро́жчу люди́ну.
+    answer: м
+    options:
+    - м
+    - л
+    - у
+    explanation: Сло́во ма́ма пи́шеться з двома́ бу́квами м.
+  - sentence: Скла́вши л та о, ма́ємо склад ___о.
+    answer: л
+    options:
+    - л
+    - м
+    - а
+    explanation: Склад ло склада́ється з лі́тер л та о.
+  - sentence: У сло́ві «м___ло» на́голос па́дає на пе́рший склад.
+    answer: а
+    options:
+    - а
+    - у
+    - о
+    explanation: Сло́во ма́ло означа́є «небага́то».
+  - sentence: У сло́ві «мал___» на́голос па́дає на дру́гий склад.
+    answer: а
+    options:
+    - а
+    - о
+    - у
+    explanation: Сло́во мала́ — це прикме́тник жіно́чого ро́ду.
+  - sentence: Сло́во «м___л» склада́ється з трьох лі́тер і одного́ скла́ду.
+    answer: у
+    options:
+    - у
+    - а
+    - о
+    explanation: Сло́во мул ма́є голосни́й звук у.
+
 workbook:
 - id: act-4
   type: quiz
-  title: Find the useful letters
-  instruction: Choose the letter or sign that matches the clue.
+  title: Будо́ва скла́ду та слова́ — Syllable and word structure
+  instruction: Обері́ть пра́вильну відпо́відь. — Choose the correct answer.
   items:
-  - question: Which letter is the hard g sound?
+  - prompt: Скі́льки складі́в у сло́ві ма́ма? — How many syllables in мама?
     options:
-    - Ґ
-    - Г
-    - Ї
-    correct: 0
-    explanation: Ґ is the hard g sound; Г is the Ukrainian h-like sound.
-  - question: Which letter is always [йі]?
+    - text: два
+      correct: true
+    - text: три
+      correct: false
+    - text: оди́н
+      correct: false
+    explanation: Два склади́ (ма-ма), бо два голосни́х зву́ки.
+  - prompt: Як назива́ється склад, що закі́нчується на голосни́й звук? — What is a syllable ending in a vowel called?
     options:
-    - Ї
-    - І
-    - И
-    correct: 0
-    explanation: Ї is always [йі]. І is the plain [і] vowel.
-  - question: Which sign has no sound of its own?
+    - text: відкри́тий
+      correct: true
+    - text: закри́тий
+      correct: false
+    - text: соно́рний
+      correct: false
+    explanation: Відкри́тий склад закі́нчується на голосни́й звук.
+  - prompt: До якого́ ти́пу нале́жить склад «ам»? — What type is the syllable ам?
     options:
-    - Ь
-    - Й
-    - Я
-    correct: 0
-    explanation: Ь is the soft sign; it changes the previous consonant.
-  - question: Which letter is the clean [о] sound in молоко́?
+    - text: закри́тий зворо́тний
+      correct: true
+    - text: відкри́тий прями́й
+      correct: false
+    - text: глухи́й
+      correct: false
+    explanation: Склад ам закі́нчується на при́голосний, о́тже він закри́тий.
+  - prompt: Скі́льки голосни́х зву́ків у сло́ві «лом»? — How many vowel sounds in лом?
     options:
-    - О
-    - А
-    - У
-    correct: 0
-    explanation: Ukrainian О stays clean in молоко́.
-  - question: In Приві́т, which two letters mark different vowel sounds?
+    - text: оди́н
+      correct: true
+    - text: два
+      correct: false
+    - text: три
+      correct: false
+    explanation: У сло́ві лом оди́н голосни́й звук [о].
+  - prompt: Яка́ звукова́ схе́ма сло́ва «ма́ма»? — What is the phonetic diagram of мама?
     options:
-    - И and І
-    - О and У
-    - А and Е
-    correct: 0
-    explanation: Приві́т contains both И [и] and І [і].
-- id: act-w201
-  type: group-sort
-  title: Sort by syllable count
-  instruction: Sort the words into one-syllable and two-syllable groups.
-  groups:
-  - label: 1 syllable
-    items:
-    - день
-    - дім
-    - ніс
-    - сон
-    - жук
-    - пес
-  - label: 2 syllables
-    items:
-    - ма́ма
-    - та́то
-    - о́ко
-    - рука́
-    - ха́та
-    - шко́ла
-- id: act-w202
-  type: fill-in
-  title: Fill in the missing letter
-  instruction: Complete each word with the correct letter from today's lesson.
-  questions:
-  - sentence: де__ (soft sign completes the word day)
-    answer: нь
-  - sentence: __у́дзик (hard g letter)
-    answer: ґ
-  - sentence: __ора́ (Ukrainian h-like sound)
-    answer: г
-  - sentence: __у́ка (two merged consonant sounds [шч])
-    answer: щ
-  - sentence: __жа́к (always two sounds [йі])
-    answer: ї
-  - sentence: ім__я́ (separation mark)
-    answer: ''''
-- id: act-w203
-  type: match-up
-  title: Stress pairs meaning
-  instruction: Match each stressed word to its correct English definition.
-  pairs:
-  - left: за́мок (stress on first syllable)
-    right: castle
-  - left: замо́к (stress on second syllable)
-    right: lock
-  - left: бра́ти (stress on first syllable)
-    right: brothers
-  - left: брати́ (stress on second syllable)
-    right: to take
-  - left: ма́ма (stress on first syllable)
-    right: mother
-  - left: та́то (stress on first syllable)
-    right: father
-- id: act-w204
+    - text: '[— ● — ●]'
+      correct: true
+    - text: '[● — ● —]'
+      correct: false
+    - text: '[— — ● ●]'
+      correct: false
+    explanation: Схе́ма сло́ва ма́ма — при́голосний, голосни́й, при́голосний, голосни́й.
+  - prompt: Чим відрізня́ються слова́ «ма́ло» та «мала́»? — How do мало and мала differ?
+    options:
+    - text: "на́голосом, кінце́вою голосно́ю (о/а) та зна́ченням"
+      correct: true
+    - text: кі́лькістю лі́тер
+      correct: false
+    - text: зву́ком [м]
+      correct: false
+    explanation: "Вони́ відрізня́ються на́голосом та кінце́вою голосно́ю (о/а): ма́ло — прислі́вник, мала́ — прикме́тник."
+
+- id: act-204
+  type: divide-words
+  title: Поділі́ть слова́ на склади́ — Divide words into syllables
+  instruction: Поділі́ть пода́ні слова́ дефі́сом на склади́. — Divide the words into syllables using a hyphen.
+  items:
+  - word: мама
+    answer: ма-ма
+  - word: мало
+    answer: ма-ло
+  - word: мала
+    answer: ма-ла
+  - word: мул
+    answer: мул
+  - word: лом
+    answer: лом
+  - word: око
+    answer: о-ко
+
+- id: act-205
   type: true-false
-  title: Rules of sounds and letters
-  instruction: Decide whether each statement is true or false.
-  questions:
-  - statement: Every syllable in Ukrainian must have a vowel sound.
-    is_true: true
-    explanation: Vowels are the heart of syllables; a word has as many syllables as
-      vowel sounds.
-  - statement: The soft sign Ь has its own independent vowel sound.
-    is_true: false
-    explanation: Ь never has a sound of its own; it only softens the preceding consonant.
-  - statement: 'The letter Ї always represents two sounds: [й] + [і].'
-    is_true: true
-    explanation: Ї is consistently pronounced [йі].
-  - statement: Ukrainian unstressed O is reduced to an A sound.
-    is_true: false
-    explanation: Ukrainian O is always clean [о], even when unstressed.
-  - statement: Changing stress in Ukrainian can change the meaning of a word.
-    is_true: true
-    explanation: For example, за́мок is castle, but замо́к is lock.
-  - statement: The letter Щ represents a single simple sound.
-    is_true: false
-    explanation: 'Щ always represents two consonant sounds merged: [шч].'
-- id: act-w205
-  type: translate
-  title: Translate everyday phrases
-  instruction: Match each English phrase with its Ukrainian equivalent.
-  questions:
-  - english: Good day / Hello
-    ukrainian: До́брий день
-  - english: Good morning
-    ukrainian: До́брого ра́нку
-  - english: Good evening
-    ukrainian: До́брий ве́чір
-  - english: How are you?
-    ukrainian: Як спра́ви?
-  - english: Fine / Good
-    ukrainian: До́бре
-  - english: Great / Wonderful
-    ukrainian: Чудо́во
-- id: act-w206
-  type: unjumble
-  title: Spell the one-syllable words
-  instruction: Arrange the scrambled letters in the correct order to spell the word.
+  title: "Пра́вда чи непра́вда: При́голосні та склади́ — True or False: Consonants and syllables"
+  instruction: Ви́значте, чи є тве́рдження пра́вильним. — Determine if the statement is true.
   items:
-  - letters:
-    - д
-    - і
+  - statement: У сло́ві сті́льки складі́в, скі́льки в ньо́му голосни́х зву́ків.
+    answer: true
+    explanation: Це золоте́ пра́вило украї́нського складопо́ділу.
+  - statement: Бу́ква М познача́є голосни́й звук.
+    answer: false
+    explanation: М — це при́голосна бу́ква (сона́нт).
+  - statement: Склад «ма» є відкри́тим скла́дом.
+    answer: true
+    explanation: Склад ма закі́нчується на голосни́й звук [а].
+  - statement: Сло́во «лом» ма́є два склади́.
+    answer: false
+    explanation: У сло́ві лом оди́н голосни́й звук [о], о́тже оди́н склад.
+  - statement: У сло́ві «ма́ма» на́голос па́дає на пе́рший склад.
+    answer: true
+    explanation: Пра́вильний на́голос — ма́ма.
+  - statement: Зву́ки [м] та [л] утво́рюються з перешко́дою в ро́ті.
+    answer: true
+    explanation: При́голосні зву́ки за́вжди тво́ряться з перешко́дою.
+
+- id: act-206
+  type: match-up
+  title: З'єдна́йте склади́ у слова́ — Combine syllables into words
+  instruction: З'єдна́йте части́ни слів та ї́хні зна́чення. — Combine parts of words and their meanings.
+  pairs:
+  - left: ма́-
+    right: -ма (ма́ма)
+  - left: ма-
+    right: -ло (ма́ло)
+  - left: ла-
+    right: -па (ла́па)
+  - left: му-
+    right: -л (мул)
+  - left: ло-
+    right: -м (лом)
+  - left: склад
+    right: части́на сло́ва
+
+- id: act-207
+  type: fill-in
+  title: Вста́вте пропу́щену бу́кву — Insert the missing letter
+  instruction: Впиші́ть пропу́щену лі́теру в слова́. — Fill in the missing letter in the words.
+  items:
+  - sentence: Пе́рше сло́во дити́ни — ___а́ма.
+    answer: м
+    options:
     - м
-    word: дім
-    translation: house / home
-  - letters:
-    - н
-    - і
-    - с
-    word: ніс
-    translation: nose
-  - letters:
-    - с
+    - л
     - о
-    - н
-    word: сон
-    translation: sleep / dream
-  - letters:
-    - д
-    - е
-    - н
-    - ь
-    word: день
-    translation: day
-  - letters:
-    - ж
+    explanation: Сло́во ма́ма почина́ється з лі́тери м.
+  - sentence: У лі́сі ду́же ___а́ло зву́ків.
+    answer: м
+    options:
+    - м
+    - л
     - у
-    - к
-    word: жук
-    translation: beetle / bug
-  - letters:
+    explanation: Сло́во ма́ло пи́шеться з лі́терою м.
+  - sentence: Дити́на ще ___ала́.
+    answer: м
+    options:
+    - м
+    - л
+    - а
+    explanation: Сло́во мала́ пи́шеться з лі́терою м.
+  - sentence: На бе́резі рі́чки є чорни́й ___ул.
+    answer: м
+    options:
+    - м
+    - л
+    - о
+    explanation: Сло́во мул озна́чає о́сад на дні.
+  - sentence: Стари́й залі́зний ___ом лежи́ть у дворі́.
+    answer: л
+    options:
+    - л
+    - м
+    - у
+    explanation: Сло́во лом почина́ється з лі́тери л.
+  - sentence: Відкри́тий склад закі́нчується на ___олосни́й звук.
+    answer: г
+    options:
+    - г
     - п
-    - е
-    - с
-    word: пес
-    translation: dog
+    - м
+    explanation: Відкри́тий склад закі́нчується на голосни́й звук.
+
+- id: act-208
+  type: odd-one-out
+  title: За́йве поня́ття — Odd one out
+  instruction: Знайді́ть за́йве сло́во або́ звук у ко́жній гру́пі. — Find the odd word or sound in each group.
+  items:
+  - words:
+    - '[м]'
+    - '[л]'
+    - '[а]'
+    - '[н]'
+    correct: 2
+    explanation: '[а] — це голосни́й звук, а ре́шта — при́голосні.'
+  - words:
+    - ма
+    - ла
+    - ло
+    - ам
+    correct: 3
+    explanation: ам — це закри́тий склад, а ре́шта — відкри́ті склади́.
+  - words:
+    - ма́ма
+    - ма́ло
+    - мала́
+    - лом
+    correct: 3
+    explanation: лом ма́є оди́н склад, а ре́шта слів — два склади́.
+  - words:
+    - ам
+    - ом
+    - ум
+    - ма
+    correct: 3
+    explanation: ма — це відкри́тий прями́й склад, а ре́шта — закри́ті зворо́тні.
+  - words:
+    - М
+    - Л
+    - А
+    - С
+    correct: 2
+    explanation: А — голосна́ бу́ква, а ре́шта — при́голосні.
+  - words:
+    - мул
+    - лом
+    - сом
+    - ма́ма
+    correct: 3
+    explanation: ма́ма — двоскладо́ве сло́во, а ре́шта — односкладо́ві.

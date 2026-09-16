@@ -1,64 +1,56 @@
-- lemma: А у тебе́?
-  translation: And you? (after How are you?)
-  pos: phrase
-  usage: До́бре. А у тебе́?
-- lemma: Як тебе́ зва́ти?
-  translation: What is your name?
-  pos: phrase
-  usage: Як тебе́ зва́ти?
-- lemma: Мене́ зва́ти ...
-  translation: My name is ...
-  pos: phrase
-  usage: Мене́ зва́ти А́нна.
-- lemma: А тебе́?
-  translation: And you? (after a name question)
-  pos: phrase
-  usage: Мене́ зва́ти Софі́я. А тебе́?
-- lemma: До поба́чення
-  translation: Goodbye
-  pos: phrase
-  usage: До поба́чення!
-- lemma: На все до́бре
-  translation: All the best
-  pos: phrase
-  usage: На все до́бре!
-- lemma: Ра́дий тебе́ ба́чити
-  translation: Glad to see you (male speaker)
-  pos: phrase
-  usage: Ра́дий тебе́ ба́чити.
-- lemma: Ра́да тебе́ ба́чити
-  translation: Glad to see you (female speaker)
-  pos: phrase
-  usage: Ра́да тебе́ ба́чити.
-- lemma: Приві́т
-  translation: Hi
-  pos: phrase
-  usage: Приві́т!
-- lemma: До́брий день
-  translation: Hello / Good day
-  pos: phrase
-  usage: До́брий день!
-- lemma: До́брого ра́нку
-  translation: Good morning
-  pos: phrase
-  usage: До́брого ра́нку!
-- lemma: До́брий ве́чір
-  translation: Good evening
-  pos: phrase
-  usage: До́брий ве́чір!
-- lemma: Як спра́ви?
-  translation: How are you?
-  pos: phrase
-  usage: Як спра́ви?
-- lemma: До́бре
-  translation: Fine / good
-  pos: phrase
-  usage: До́бре.
-- lemma: Чудо́во
-  translation: Great / wonderful
-  pos: phrase
-  usage: Чудо́во.
-- lemma: Норма́льно
-  translation: Okay / normal
-  pos: phrase
-  usage: Норма́льно.
+- lemma: сон
+  translation: sleep / dream
+  pos: noun
+  usage: Це мій спокі́йний сон.
+- lemma: сом
+  translation: catfish
+  pos: noun
+  usage: У воді́ пла́ває вели́кий сом.
+- lemma: сам
+  translation: alone / by oneself (masculine)
+  pos: pronoun
+  usage: Він стої́ть там сам.
+- lemma: лан
+  translation: field
+  pos: noun
+  usage: Он золоти́й лан.
+- lemma: оса́
+  translation: wasp
+  pos: noun
+  usage: Он лети́ть мала́ оса́.
+- lemma: сосна́
+  translation: pine tree
+  pos: noun
+  usage: Он росте́ висо́ка сосна́.
+- lemma: он
+  translation: there / over there (pointing)
+  pos: particle
+  usage: Он сосна́ і лан.
+- lemma: нас
+  translation: us (genitive/accusative)
+  pos: pronoun
+  usage: Він чека́є нас.
+- lemma: нам
+  translation: to us (dative)
+  pos: pronoun
+  usage: Він пока́зує нам лан.
+- lemma: ніс
+  translation: nose
+  pos: noun
+  usage: Це мій ніс.
+- lemma: закри́тий склад
+  translation: closed syllable
+  pos: noun phrase
+  usage: Склад [сон] — це закри́тий склад.
+- lemma: відкри́тий склад
+  translation: open syllable
+  pos: noun phrase
+  usage: Склад [ма] — це відкри́тий склад.
+- lemma: свистя́чий звук
+  translation: sibilant / whistling sound
+  pos: noun phrase
+  usage: '[с] — це глухи́й свистя́чий звук.'
+- lemma: носови́й звук
+  translation: nasal sound
+  pos: noun phrase
+  usage: '[н] — це носови́й звук.'

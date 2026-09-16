@@ -1,6 +1,6 @@
 lessons:
 - n: 1
-  title: Six Vowel Sounds, Ten Letters
+  title: "Голосні́ зву́ки А, О, У та пе́рші звукосполу́ки"
   sections:
   - Sound First, Letter Second
   - Your First Word
@@ -15,10 +15,12 @@ lessons:
     workbook:
     - 6
     - 9
-  unverified_stress: []
+  unverified_stress:
+  - звукосполуки
+  - звуковигуки
   unverified_lemmas: []
 - n: 2
-  title: 'Stress: Наголос'
+  title: "Сона́нти М, Л: Склади́ та сло́во ма́ма"
   sections:
   - What Is a Склад?
   - Consonant Sounds
@@ -37,7 +39,7 @@ lessons:
   unverified_stress: []
   unverified_lemmas: []
 - n: 3
-  title: Your First Conversation
+  title: "С, Н: Свистя́чі, носові́ та закри́тий склад"
   sections:
   - 'Euphony: У/В and І/Й'
   - Your First Conversation
@@ -51,27 +53,13 @@ lessons:
     workbook:
     - 6
     - 9
-  unverified_stress: []
+  unverified_stress:
+  - сасна
   unverified_lemmas: []
 - n: 4
-  title: First Pronunciation Traps
+  title: "Си́нтез семи́ лі́тер та пе́рші те́ксти"
   sections:
   - First Pronunciation Traps
-  minutes: 60
-  word_target: 550
-  activities:
-    total: 10
-    inline:
-    - 4
-    - 6
-    workbook:
-    - 6
-    - 9
-  unverified_stress: []
-  unverified_lemmas: []
-- n: 5
-  title: Textbook Check
-  sections:
   - Textbook Check
   minutes: 60
   word_target: 550
@@ -83,9 +71,10 @@ lessons:
     workbook:
     - 6
     - 9
-  unverified_stress: []
+  unverified_stress:
+  - смала
   unverified_lemmas: []
-closes_module: 5
+closes_module: 4
 provenance:
 - placement: inline
   index: 0
@@ -122,16 +111,24 @@ provenance:
 - placement: workbook
   index: 4
   new_id: act-9
-  lesson: 5
+  lesson: 4
 - placement: workbook
   index: 5
   new_id: act-10
-  lesson: 5
+  lesson: 4
 items_min_exempt:
 - id: act-2
   reason: 4-item original activity preserved from baseline
 - id: act-4
   reason: 5-item original activity preserved from baseline
 - id: act-10
-  reason: 5-item original activity preserved from baseline
-proper_names: []
+  reason: original activity preserved from baseline
+proper_names:
+- Большакова
+- Заболотний
+- Захарійчук
+- Огойко
+- Літвінова
+- Марко
+- Олег
+- Софія
