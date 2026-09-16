@@ -1020,7 +1020,7 @@ def test_batch7_semantic_and_stress_distinctions():
     doz = enrich_heteronyms.build_heteronyms_for_lemma("дозвільний")
     assert doz is not None and len(doz) == 2
     assert doz[0]["headword"] == "дозві́льний"
-    assert "хвилина" in doz[0]["distinction_note"]
+    assert "Бо не було дозвільної хвилини" in doz[0]["distinction_note"]
 
 
 def test_batch7_lemmas_not_duplicated_from_earlier_batches():
