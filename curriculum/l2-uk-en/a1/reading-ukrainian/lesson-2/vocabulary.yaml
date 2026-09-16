@@ -1,52 +1,68 @@
-- lemma: день
-  translation: day
+- lemma: вода́
+  translation: water
   pos: noun
-  usage: День.
-- lemma: о́сінь
-  translation: autumn
+  usage: У нас вода́.
+- lemma: дім
+  translation: house / home
   pos: noun
-  usage: О́сінь.
-- lemma: ба́тько
-  translation: father
+  usage: Он дім.
+- lemma: ліс
+  translation: forest / woods
   pos: noun
-  usage: Ба́тько.
-- lemma: вчи́тель
-  translation: teacher
+  usage: Он ліс.
+- lemma: дуб
+  translation: oak
   pos: noun
-  usage: Вчи́тель.
-- lemma: джерело́
-  translation: source / spring
+  usage: Он дуб.
+- lemma: сад
+  translation: garden / orchard
   pos: noun
-  usage: Джерело́.
-- lemma: дзе́ркало
-  translation: mirror
+  usage: Он сад.
+- lemma: дід
+  translation: grandfather
   pos: noun
-  usage: Дзе́ркало.
-- lemma: абе́тка
-  translation: alphabet
+  usage: Он дід.
+- lemma: два
+  translation: two
+  pos: numeral
+  usage: У нас два дуби́.
+- lemma: оди́н
+  translation: one
+  pos: numeral
+  usage: Он оди́н дім.
+- lemma: він
+  translation: he
+  pos: pronoun
+  usage: Він сам.
+- lemma: вона́
+  translation: she
+  pos: pronoun
+  usage: Вона́ сама́.
+- lemma: вони́
+  translation: they
+  pos: pronoun
+  usage: Вони́ самі́.
+- lemma: ри́ба
+  translation: fish
   pos: noun
-  usage: Украї́нська абе́тка.
-- lemma: м'яки́й знак
-  translation: soft sign
-  pos: noun phrase
-  usage: Ь - м'яки́й знак.
-- lemma: апо́строф
-  translation: apostrophe
+  usage: Он ри́ба.
+- lemma: соба́ка
+  translation: dog
   pos: noun
-  usage: У сло́ві «сім'я́» є апо́строф.
-- lemma: Ки́їв
-  translation: Kyiv
-  pos: proper noun
-  usage: Ки́їв - столи́ця Украї́ни.
-- lemma: Украї́на
-  translation: Ukraine
-  pos: proper noun
-  usage: Украї́на.
-- lemma: так
-  translation: yes / like this
-  pos: adverb
-  usage: Так.
-- lemma: ні
-  translation: 'no'
-  pos: particle
-  usage: Ні.
+  usage: Он соба́ка.
+- lemma: нові́
+  translation: new (plural)
+  pos: adjective
+  usage: Он нові́ сади́.
+- lemma: бик
+  translation: bull
+  pos: noun
+  usage: Он бик.
+- lemma: бік
+  translation: side
+  pos: noun
+  usage: Он бік.
+- lemma: дим
+  translation: smoke
+  pos: noun
+  usage: Он дим.

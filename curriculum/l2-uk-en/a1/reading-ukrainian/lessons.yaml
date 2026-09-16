@@ -1,10 +1,8 @@
 lessons:
 - n: 1
-  title: Читаємо слова
+  title: "Складопо́діл та бу́кви К, И, Р"
   sections:
   - Склади
-  - Голосні літери
-  - Читаємо слова
   minutes: 60
   word_target: 550
   activities:
@@ -17,13 +15,11 @@ lessons:
     - 9
   unverified_stress:
   - ньому
-  - її
   unverified_lemmas: []
 - n: 2
-  title: Друк, зошит, перевірка
+  title: "Дзвінкі́ при́голосні та звук [і]: Бу́кви Б, В, Д, І"
   sections:
-  - Пастки читання
-  - Друк, зошит, перевірка
+  - Голосні літери
   minutes: 60
   word_target: 550
   activities:
@@ -34,16 +30,44 @@ lessons:
     workbook:
     - 6
     - 9
-  unverified_stress:
-  - буквосполучення
-  - буквосполученням
-  - буквосполучень
-  - сіма
-  - її
+  unverified_stress: []
   unverified_lemmas: []
 - n: 3
-  title: Далі
+  title: "Глухі́ па́ри, фаринга́льний звук та бу́кви П, Т, Г, Ґ"
   sections:
+  - Читаємо слова
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress: []
+  unverified_lemmas: []
+- n: 4
+  title: "Голосна́ Е, шипля́чі та пе́рші віта́ння: Бу́кви Е, З, Ж, Ш, Х"
+  sections:
+  - Пастки читання
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress: []
+  unverified_lemmas: []
+- n: 5
+  title: "Си́нтез чита́ння: Від слів до пе́ршого діало́гу"
+  sections:
+  - Друк, зошит, перевірка
   - Далі
   minutes: 60
   word_target: 550
@@ -56,10 +80,9 @@ lessons:
     - 6
     - 9
   unverified_stress:
-  - Мініперевірка
   - ньому
   unverified_lemmas: []
-closes_module: 3
+closes_module: 5
 provenance:
 - placement: inline
   index: 0
@@ -68,15 +91,15 @@ provenance:
 - placement: inline
   index: 1
   new_id: act-2
-  lesson: 1
+  lesson: 2
 - placement: inline
   index: 2
   new_id: act-3
-  lesson: 1
+  lesson: 3
 - placement: inline
   index: 3
   new_id: act-4
-  lesson: 2
+  lesson: 4
 - placement: workbook
   index: 0
   new_id: act-w1
@@ -84,23 +107,23 @@ provenance:
 - placement: workbook
   index: 1
   new_id: act-w2
-  lesson: 1
+  lesson: 2
 - placement: workbook
   index: 2
   new_id: act-w3
-  lesson: 2
+  lesson: 3
 - placement: workbook
   index: 3
   new_id: act-w4
-  lesson: 2
+  lesson: 4
 - placement: workbook
   index: 4
   new_id: act-w5
-  lesson: 3
+  lesson: 5
 - placement: workbook
   index: 5
   new_id: act-5
-  lesson: 3
+  lesson: 5
 items_min_exempt:
 - id: act-4
   reason: 4-item original activity preserved from baseline
@@ -115,6 +138,18 @@ items_min_exempt:
 - id: act-5
   reason: 3-item original activity preserved from baseline
 proper_names:
+- Большакова
 - Вашуленко
+- Дніпро
+- Заболотний
 - Захарійчук
 - Київ
+- Кравцова
+- Літвінова
+- Львів
+- Марко
+- Огойко
+- Одеса
+- Оксана
+- Полтава
+- Харків

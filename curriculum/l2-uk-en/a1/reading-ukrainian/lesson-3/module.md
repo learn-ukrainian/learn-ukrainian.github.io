@@ -1,87 +1,106 @@
-# Да́лі
+# Глухі́ па́ри, фаринга́льний звук та бу́кви П, Т, Г, Ґ
 
-У пе́рших двох уро́ках ви дізна́лися, що голосні́ зву́ки є це́нтром ко́жного скла́ду: **ма́ма**, **молоко́**, **ву́лиця**. In the first two lessons you learned that vowel sounds are the center of every syllable: **ма́ма** (mother), **молоко́** (milk), **ву́лиця** (street). Ви та́кож навчи́лися розпізнава́ти знак м'я́кшення **ь**, апостро́ф, йото́вані лі́тери та зли́ті зву́ки **дж** і **дз**. You also learned to recognize the soft sign **ь**, the apostrophe, iotated letters, and the fused sounds **дж** and **дз**.
+Ласка́во про́симо до тре́тього уро́ку! — Welcome to the third lesson! In Lessons 1 and 2, you mastered the golden syllable rule and built a solid repertoire of 14 letters (**А, О, У, М, Л, С, Н, К, И, Р, Б, В, Д, І**), including the voiced stops **Б** and **Д** and the softening vowel **І**.
 
-Тепе́р ми перехо́димо до пла́вного чита́ння ці́лих ре́чень і багатоскладо́вих слів — now we move to the smooth reading of full sentences and multi-syllable words:
-- **Чита́ти пла́вно від сло́ва до ре́чення** — read connected phrases and simple sentences smoothly;
-- **Діли́ти багатоскладо́ві слова́ на скла́ди** — split long words into manageable syllable beats;
-- **Застосо́вувати наді́йну чита́цьку рути́ну** — use a four-step decoding check before reading aloud.
+In this lesson, you add four crucial consonant letters: **П**, **Т**, **Г**, and **Ґ**, bringing your reading toolkit to 18 letters. You will pair the voiced stops [б] and [д] with their voiceless partners [п] and [т]. You will also discover one of the most distinctive features of Ukrainian phonetics: the difference between the deep, warm pharyngeal fricative **Г [ɦ]** and the crisp velar plosive **Ґ [ɡ]**. Finally, you will decode authentic Ukrainian city names (**Дніпро́**, **Полта́ва**) and your first legal state formula (**Ра́да**).
 
-## Да́лі
+By the end of this 60-minute lesson, you will be able to:
 
-Тепе́р перехо́дь до словника́ й вправ. You can now look at a printed Ukrainian
-word, find the letters that mark vowel sounds, count the syllables, and read
-the whole word more calmly.
+- **Розрізня́ти па́рні глухі́ проривні́ [п] та [т]** — articulate the voiceless stops [п] (partner to [б]) and [т] (partner to [д]);
+- **Вимовля́ти фаринга́льний звук [г]** — produce the authentic Ukrainian voiced pharyngeal fricative [ɦ] without harsh rasping;
+- **Розпізнава́ти та чита́ти рі́дкісну лі́теру Ґ** — identify and pronounce the plosive stop [ɡ] in words such as **ґа́ва** and **ґрунт**;
+- **Чита́ти географі́чні на́зви** — accurately decode Ukrainian cities such as **Дні-про́** and **Пол-та́-ва**;
+- **Розпізнава́ти коро́тку фо́рму ста́ну** — read and understand the word **Ра́да** (glad / council);
+- **Чита́ти нові́ мініма́льні па́ри та закри́ті склади́** — distinguish pairs such as **кит** vs **кіт** and read robust monosyllables like **парк**, **торт**, **брат**, and **друг**.
 
-Ко́ли окре́мі скла́ди стаю́ть знайо́мими, об'є́днуйте їх у слова́, а слова́ — у пе́рші прості́ ре́чення. When separate syllables become familiar, combine them into words, and words into your first simple sentences. Пам'ята́йте золоте́ пра́вило украї́нської фоне́тики: «Скі́льки у сло́ві голосни́х зву́ків, сті́льки й скла́дів» (quoted from: Большако́ва, буква́р 1 клас, p. 25). Ко́жен склад ма́є оди́н голосни́й і́мпульс.
+---
 
-Спро́буйте прочита́ти прості́ ре́чення за скла́дами — try reading simple sentences syllable by syllable:
+## Па́рні глухі́ при́голосні: Бу́кви П і Т
 
-| Ре́чення | Поскладо́ве чита́ння | English support |
+In Lesson 2, you met the voiced stops **Б [b]** and **Д [d]**. Today we meet their direct voiceless partners: **П [p]** and **Т [t]**.
+
+| Бу́ква — Letter | На́зва — Name | Звук — Sound | Фонети́чна па́ра — Voicing pair |
+| --- | --- | --- | --- |
+| **П, п** | пе | **[p]** | Глухи́й па́рний до **Б** — Voiceless partner to [b] |
+| **Т, т** | те | **[t]** | Глухи́й па́рний до **Д** — Voiceless partner to [d] |
+
+When pronouncing **П** and **Т**, no vocal cord vibration takes place. The sound is created purely by the crisp release of air pressure:
+- **па — по — пу — пи — пі**
+- **та — то — ту — ти — ті**
+
+These two letters unlock a rich collection of everyday Ukrainian vocabulary:
+- **та́-то = та́то** (dad / father);
+- **па́с-та = па́ста** (paste);
+- **ка́р-та = ка́рта** (map);
+- **по-ті́к = поті́к** (stream / brook);
+- **парк** (park, 1 syllable);
+- **торт** (cake, 1 syllable);
+- **брат** (brother, 1 syllable).
+
+<!-- INJECT_ACTIVITY: act-3 -->
+
+---
+
+## Фаринга́льний Г та вибухо́вий Ґ: Рі́дкісна й важли́ва бу́ква
+
+One of the most defining characteristics of standard Ukrainian is its two distinct g-letters: **Г** and **Ґ**.
+
+| Бу́ква — Letter | На́зва — Name | Звук — Sound | Характери́стика — Phonetic nature |
+| --- | --- | --- | --- |
+| **Г, г** | ге | **[ɦ]** | Дзвінки́й горта́нний / фаринга́льний щіли́нний — Voiced pharyngeal fricative |
+| **Ґ, ґ** | ґе | **[ɡ]** | Дзвінки́й задньоязико́вий проривни́й — Voiced velar plosive |
+
+:::tip
+**Як вимовля́ти украї́нський [г]:**
+Ukrainian **Г** is not the English *g* in *go*. It is a voiced, breathy sound produced deep down in the throat, similar to the *h* in English *behind* or *ahead*, but with active vocal cord vibration:
+- **го-ра́ = гора́** (mountain);
+- **го-ро́д = горо́д** (vegetable garden);
+- **гриб** (mushroom).
+
+**Рі́дкісна бу́ква Ґ:**
+The letter **Ґ** with its upward-turned hook represents the crisp plosive [ɡ] (like *g* in *garden*). It is used in a small, traditional group of native Ukrainian words:
+- **ґа́-ва = ґа́ва** (crow);
+- **ґрунт** (soil / earth).
+:::
+
+Watch the mouth position and listen to the authentic pronunciation demonstrated by Anna Ohoiko (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons):
+
+<!-- INJECT_ACTIVITY: act-221 -->
+
+---
+
+## Чита́ння географі́чних назв: Дніпро́ та Полта́ва
+
+Reading geographical proper names is an excellent way to practice syllable division. Let us decode two famous Ukrainian cities:
+
+| Мі́сто — City | Лі́тери — Letters | Складопо́діл — Syllables |
 | --- | --- | --- |
-| **Ма́ма чита́є.** | **Ма-ма чи-та-є.** | Mother is reading. |
-| **Та́то пи́ше.** | **Та-то пи-ше.** | Father is writing. |
-| **Ки́їв — столи́ця Украї́ни.** | **Ки-їв — сто-ли-ця У-кра-ї-ни.** | Kyiv is the capital of Ukraine. |
-| **Ось моє́ я́блуко.** | **Ось мо-є яб-лу-ко.** | Here is my apple. |
-| **Це на́ша ву́лиця.** | **Це на-ша ву-ли-ця.** | This is our street. |
-| **Луна́є га́рна пі́сня.** | **Лу-на-є гар-на піс-ня.** | A nice song is playing. |
+| **Дніпро́** | Д-н-і-п-р-о | **Дні-про́** (2 syllables, stress on the second) |
+| **Полта́ва** | П-о-л-т-а-в-а | **Пол-та́-ва** (3 syllables, stress on the second) |
 
-<!-- INJECT_ACTIVITY: act-l3-sent-match -->
+Notice how the syllable boundary falls naturally between consonants: in **Пол-та́-ва**, the first syllable ends with the sonorant **л**, and the second begins with the stop **т**.
 
-Під час чита́ння до́вших слів не поспіша́йте й не назива́йте окре́мі лі́тери: «Під час чита́ння по скла́дах не робі́ть па́уз між лі́терами одно́го скла́ду, а злива́йте при́голосний з голосни́м» (quoted from: Вашуленко, Украї́нська мо́ва 2 клас, p. 23-27). Розби́йте сло́во на відкри́ті та закри́ті части́ни:
+In this lesson, we also unlock the short state word **Ра́да**:
+- **ра́-да = ра́да** (glad / council / parliament).
+All four letters (**Р**, **А**, **Д**, **А**) are now completely familiar.
 
-- **бі-блі-о-те-ка** (library) — п'ять голосни́х зву́ків, п'ять скла́дів (бібліоте́ка — five vowels, five syllables);
-- **у-ні-вер-си-тет** (university) — п'ять голосни́х зву́ків, п'ять скла́дів (університе́т — five vowels, five syllables);
-- **фо-то-гра-фі-я** (photo) — п'ять голосни́х зву́ків, п'ять скла́дів (фотогра́фія — five vowels, five syllables);
-- **шо-ко-лад** (chocolate) — три голосні́ зву́ки, три скла́ди (шокола́д — three vowels, three syllables).
+<!-- INJECT_ACTIVITY: act-222 -->
 
-Якщо́ ви сумніва́єтеся в кі́лькості скла́дів, скориста́йтеся прости́м тіле́сним те́стом: «Покладі́ть доло́ню під підборі́ддя: ко́жен до́тик — це оди́н голосни́й звук і оди́н склад» (quoted from: Кравцо́ва, Украї́нська мо́ва 2 клас, p. 13).
+---
 
-<!-- INJECT_ACTIVITY: act-l3-syllables-count -->
+## Пра́ктика чита́ння та нові́ мініма́льні па́ри
 
-<!-- INJECT_ACTIVITY: act-l3-divide -->
+Now observe another critical minimal pair that contrasts **И** and **І**:
+- **кит** (whale, with relaxed [и]);
+- **кіт** (cat, with high smiling [і] and softened [k′]).
 
-Послу́хайте розмо́ву двох у́чнів про чита́ння нови́х слів і ре́чень — listen to a conversation between two learners about reading new words and sentences:
+Let us read full sentences combining all 18 unlocked letters (**А, О, У, М, Л, С, Н, К, И, Р, Б, В, Д, І, П, Т, Г, Ґ**):
 
-> Оле́на: Що ти чита́єш? (What are you reading?)
-> Тара́с: Я чита́ю нове́ сло́во. (I am reading a new word.)
-> Оле́на: Яке́ це сло́во? (What word is it?)
-> Тара́с: «Університе́т». Тут п'ять скла́дів! ("University". Five syllables here!)
-> Оле́на: Чудо́во! А ре́чення мо́жеш прочита́ти? (Great! And can you read a sentence?)
-> Тара́с: Так: «Ки́їв — краси́ва столи́ця». (Yes: "Kyiv is a beautiful capital".)
-> Оле́на: Молоде́ць, чита́єш ду́же чи́сто й пла́вно! (Well done, you read very purely and smoothly!)
+- **Тут та́то і брат.** — Dad and brother are here.
+- **Там парк і сад.** — There is a park and a garden over there.
+- **Он гора́ і поті́к.** — Over there is a mountain and a stream.
+- **Он Дніпро́ і Полта́ва.** — Over there are Dnipro and Poltava.
+- **Вона́ ра́да.** — She is glad.
+- **Тут брат і друг.** — Brother and friend are here.
 
-Розбі́р ре́плік розмо́ви — breakdown of lines:
-
-| Украї́нська | English support |
-| --- | --- |
-| **Що ти чита́єш?** | What are you reading? |
-| **Я чита́ю нове́ сло́во.** | I am reading a new word. |
-| **Яке́ це сло́во?** | What word is it? |
-| **«Університе́т». Тут п'ять скла́дів!** | "University". Five syllables here! |
-| **Чудо́во! А ре́чення мо́жеш прочита́ти?** | Great! And can you read a sentence? |
-| **Так: «Ки́їв — краси́ва столи́ця».** | Yes: "Kyiv is a beautiful capital". |
-| **Молоде́ць, чита́єш ду́же чи́сто й пла́вно!** | Well done, you read very purely and smoothly! |
-
-<!-- INJECT_ACTIVITY: act-l3-quiz -->
-
-Пе́ред тим як чита́ти будь-яки́й нови́й текст уго́лос — before reading any new text aloud, apply this four-step self-check routine:
-
-1. **Голосні́ зву́ки** — find all letters marking vowel sounds.
-2. **Кі́лькість скла́дів** — count the syllables (as many syllables as vowel sounds).
-3. **Особли́ві зна́ки** — notice **ь**, apostrophe, **ї**, **дж**, or **дз**.
-4. **Пла́вне злиття́** — read word by word in syllables, then smooth into a phrase.
-
-<!-- INJECT_ACTIVITY: act-l3-tf -->
-
-### Пі́дсумок мо́дуля — Module summary
-
-Підіб'ємо́ пі́дсумки всьо́го мо́дуля — module summary:
-- **Рахува́ти скла́ди за голосни́ми зву́ками** — count syllables accurately by identifying vowel sounds in any Ukrainian word;
-- **Чита́ти відкри́ті та закри́ті скла́ди** — smoothly blend consonants and vowels into open and closed syllables without letter-by-letter spelling;
-- **Розрізня́ти всі 10 голосни́х лі́тер** — read the six simple vowels (**а, о, у, е, и, і**) and know what iotated vowels (**я, ю, є, ї**) do in different positions;
-- **Уника́ти типо́вих чита́цьких пасто́к** — keep unstressed **о** pure, pronounce **дж** and **дз** as single fused sounds, and correctly decode the soft sign **ь** and apostrophe;
-- **Чита́ти багатоскладо́ві слова́ та пе́рші ре́чення** — break down long words into syllables and read connected Ukrainian sentences with natural cadence;
-- **З'є́днувати друк і зо́шит** — recognize printed vocabulary in handwritten notebook forms before copying or writing.
-
-Віта́ємо з успі́шним заве́ршенням мо́дуля! — Congratulations on successfully completing the module! Тепе́р ви володі́єте наді́йним чита́цьким інструме́нтом і мо́жете впе́внено перехо́дити до насту́пних кро́ків у ви́вченні украї́нської мо́ви. — Now you have a reliable reading tool and can confidently take your next steps in Ukrainian.
+<!-- INJECT_ACTIVITY: act-223 -->

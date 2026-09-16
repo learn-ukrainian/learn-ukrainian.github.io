@@ -1,56 +1,72 @@
-- lemma: склад
-  translation: syllable
-  pos: noun
-  usage: У сло́ві ма́ма два склади́.
-- lemma: голосни́й звук
-  translation: vowel sound
-  pos: noun phrase
-  usage: А - голосни́й звук.
-- lemma: при́голосний звук
-  translation: consonant sound
-  pos: noun phrase
-  usage: М - при́голосний звук.
-- lemma: чита́ти
-  translation: to read
-  pos: verb
-  usage: Я чита́ю сло́во.
-- lemma: писа́ти
-  translation: to write
-  pos: verb
-  usage: Я пишу́ лі́теру.
-- lemma: ма́ма
-  translation: mother
-  pos: noun
-  usage: Ма́ма.
 - lemma: та́то
-  translation: father
+  translation: dad / father
   pos: noun
-  usage: Та́то.
-- lemma: молоко́
-  translation: milk
+  usage: Тут та́то.
+- lemma: парк
+  translation: park
   pos: noun
-  usage: Молоко́.
-- lemma: я́блуко
-  translation: apple
+  usage: Он парк.
+- lemma: торт
+  translation: cake
   pos: noun
-  usage: Я́блуко.
-- lemma: люди́на
-  translation: person
+  usage: У нас торт.
+- lemma: гора́
+  translation: mountain
   pos: noun
-  usage: Люди́на.
-- lemma: ву́лиця
-  translation: street
+  usage: Он гора́.
+- lemma: горо́д
+  translation: vegetable garden
   pos: noun
-  usage: Ву́лиця.
-- lemma: столи́ця
-  translation: capital
+  usage: Он горо́д.
+- lemma: ґа́ва
+  translation: crow
   pos: noun
-  usage: Ки́їв - столи́ця Украї́ни.
-- lemma: день
-  translation: day
+  usage: Он ґа́ва.
+- lemma: ґрунт
+  translation: soil / earth
   pos: noun
-  usage: День.
-- lemma: абе́тка
-  translation: alphabet
+  usage: Тут ґрунт.
+- lemma: па́ста
+  translation: paste
   pos: noun
-  usage: Украї́нська абе́тка.
+  usage: Тут па́ста.
+- lemma: ка́рта
+  translation: map
+  pos: noun
+  usage: Он ка́рта.
+- lemma: брат
+  translation: brother
+  pos: noun
+  usage: Тут брат.
+- lemma: друг
+  translation: friend
+  pos: noun
+  usage: Тут друг.
+- lemma: кіт
+  translation: cat
+  pos: noun
+  usage: Он кіт.
+- lemma: кит
+  translation: whale
+  pos: noun
+  usage: Он кит.
+- lemma: гриб
+  translation: mushroom
+  pos: noun
+  usage: Он гриб.
+- lemma: поті́к
+  translation: stream / brook
+  pos: noun
+  usage: Он поті́к.
+- lemma: ра́да
+  translation: glad / council
+  pos: adjective
+  usage: Вона́ ра́да.
+- lemma: тут
+  translation: here
+  pos: adverb
+  usage: Тут та́то і брат.
+- lemma: там
+  translation: there
+  pos: adverb
+  usage: Там парк і сад.
