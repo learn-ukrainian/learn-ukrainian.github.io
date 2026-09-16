@@ -929,14 +929,13 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
                'soviet_colonization_context': {'source': 'СУМ-11 (1970–1980)',
                                                'definition': 'ТРІ́ПНУТИ, ну, неш, док., перех. і неперех. Однокр. до '
                                                              'трі́пати. Підскочив [горобчик], тріпнув крильцем, '
-                                                             'цвірінькнув та й геть.',
+                                                             'цвірінькнув та й геть полетів (Л. Укр., III, 1952, '
+                                                             '480)...',
                                                'sovietization_risk': 0,
                                                'keywords': [],
                                                'historical_note': 'Зафіксовано в радянський період (СУМ-11). Наведено '
                                                                   'для лексикографічної прозорості.'},
-               'pre_soviet_witness': {'witness': 'Народна казка / Словник',
-                                      'quote': 'Підскочив [горобчик], тріпнув крильцем, цвірінькнув та й геть.',
-                                      'historical_note': 'Народнопоетичний вжиток.'}},
+               'pre_soviet_witness': None},
               {'headword': 'тріпну́ти',
                'short_label': 'розм. однокр. до тріпа́ти; ляснути, ударити по плечу, шарпнути (док.)',
                'gloss': 'shove or pat sharply on shoulder, buffet once (perf., colloq. semelfactive)',
@@ -971,7 +970,7 @@ CURATED_HETERONYMS_BATCH_13: dict[str, list[dict[str, Any]]] = {'волохи': 
             'heritage_status': {'classification': 'standard',
                                 'is_russianism': False,
                                 'russian_shadow': False,
-                                'vesum_attested': True},
+                                'vesum_attested': False},
             'pronunciation': {'ipa': '[ˈtupɪk]'},
             'stress': {'form': 'ту́пик', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/тупик'},
             'morphology': {'pos': 'іменник',

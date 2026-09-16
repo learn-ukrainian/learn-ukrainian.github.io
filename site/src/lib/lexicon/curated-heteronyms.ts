@@ -40540,16 +40540,12 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ТРІ́ПНУТИ, ну, неш, док., перех. і неперех. Однокр. до трі́пати. Підскочив [горобчик], тріпнув крильцем, цвірінькнув та й геть.",
+        "definition": "ТРІ́ПНУТИ, ну, неш, док., перех. і неперех. Однокр. до трі́пати. Підскочив [горобчик], тріпнув крильцем, цвірінькнув та й геть полетів (Л. Укр., III, 1952, 480)...",
         "sovietization_risk": 0,
         "keywords": [],
         "historical_note": "Зафіксовано в радянський період (СУМ-11). Наведено для лексикографічної прозорості."
       },
-      "pre_soviet_witness": {
-        "witness": "Народна казка / Словник",
-        "quote": "Підскочив [горобчик], тріпнув крильцем, цвірінькнув та й геть.",
-        "historical_note": "Народнопоетичний вжиток."
-      }
+      "pre_soviet_witness": null
     },
     {
       "lemma": "тріпнути",
@@ -40610,7 +40606,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "classification": "standard",
         "is_russianism": false,
         "russian_shadow": false,
-        "vesum_attested": true
+        "vesum_attested": false
       },
       "pronunciation": {
         "ipa": "[ˈtupɪk]"

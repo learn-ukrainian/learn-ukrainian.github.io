@@ -2979,8 +2979,8 @@ def test_curated_heteronyms_batch_13():
     assert var_тріпнути is not None and len(var_тріпнути) == 2
     assert var_тріпнути[0]["headword"] == "трі́пнути"
     assert var_тріпнути[1]["headword"] == "тріпну́ти"
-    assert var_тріпнути[0]["pre_soviet_witness"] is not None
-    assert "Народна казка / Словник" in var_тріпнути[0]["pre_soviet_witness"]["witness"]
+    assert var_тріпнути[0]["pre_soviet_witness"] is None
+    assert var_тріпнути[1]["pre_soviet_witness"] is None
 
     # 17. тупик: ту́пик vs тупи́к
     var_тупик = enrich_heteronyms.build_heteronyms_for_lemma("тупик")
@@ -3126,3 +3126,7 @@ def test_batch13_vesum_attestation_and_witness_integrity():
     # волохи: воло́хи (ethnonym) is attested as plural of волох, but во́лохи (body hairs) is not
     assert CURATED_HETERONYMS_BATCH_13["волохи"][0]["heritage_status"]["vesum_attested"] is False
     assert CURATED_HETERONYMS_BATCH_13["волохи"][1]["heritage_status"]["vesum_attested"] is True
+
+    # тупик: тупи́к (inanim dead end) is attested in VESUM, but ту́пик (anim puffin bird) is not
+    assert CURATED_HETERONYMS_BATCH_13["тупик"][0]["heritage_status"]["vesum_attested"] is False
+    assert CURATED_HETERONYMS_BATCH_13["тупик"][1]["heritage_status"]["vesum_attested"] is True
