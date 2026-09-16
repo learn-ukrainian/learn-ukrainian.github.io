@@ -167,37 +167,37 @@ workbook:
   title: Вста́вте пропу́щене сло́во — Fill in the blank
   instruction: Fill in the blank with the appropriate word.
   items:
-  - sentence: У ча́шці гаря́чий ___ .
+  - sentence: У ча́шці гаря́чий ___ . — In the cup is hot ___ .
     answer: чай
     options:
     - чай
     - рис
     - час
-  - sentence: На столі́ лежи́ть сві́же сокови́те ___ .
+  - sentence: На столі́ лежи́ть сві́же сокови́те ___ . — On the table lies fresh juicy ___ .
     answer: я́блуко
     options:
     - я́блуко
     - ю́шка
     - єно́т
-  - sentence: У зоопа́рку живе́ смуга́стий ___ .
+  - sentence: У зоопа́рку живе́ смуга́стий ___ . — In the zoo lives a striped ___ .
     answer: єно́т
     options:
     - єно́т
     - кінь
     - лань
-  - sentence: Сього́дні в селі́ весе́ле ___ .
+  - sentence: Сього́дні в селі́ весе́ле ___ . — Today in the village there is a merry ___ .
     answer: свя́то
     options:
     - свя́то
     - день
     - чай
-  - sentence: У ба́бці на горо́ді росте́ черво́ний ___ .
+  - sentence: У ба́бці на горо́ді росте́ черво́ний ___ . — In grandma's garden grows red ___ .
     answer: буря́к
     options:
     - буря́к
     - я́блуко
     - ю́шка
-  - sentence: Наш ___ пока́зує ціка́вий малю́нок.
+  - sentence: Наш ___ пока́зує ціка́вий малю́нок. — Our ___ is showing an interesting drawing.
     answer: вчи́тель
     options:
     - вчи́тель
@@ -251,27 +251,27 @@ workbook:
   title: Знайді́ть поми́лку — Spot the error
   instruction: Find the spelling error in each sentence.
   items:
-  - sentence: Вра́нці я пив чаі з лимо́ном.
+  - sentence: Вра́нці я пив чаі з лимо́ном. — In the morning I drank tea with lemon.
     error: чаі
     correction: чай
     explanation: 'Напівголосни́й звук [й] познача́ється лі́терою й: чай. — The semivowel sound [j] is written with letter й: чай.'
-  - sentence: На столі́ лежи́ть смачне́ йа́блуко.
+  - sentence: На столі́ лежи́ть смачне́ йа́блуко. — On the table lies a tasty apple.
     error: йа́блуко
     correction: я́блуко
     explanation: 'Сполу́ка зву́ків [йа] на поча́тку сло́ва познача́ється лі́терою я: я́блуко. — The sound blend [ja] at the word start is written with letter я: я́блуко.'
-  - sentence: У тарі́лці те́пла йу́шка.
+  - sentence: У тарі́лці те́пла йу́шка. — In the plate is warm broth.
     error: йу́шка
     correction: ю́шка
     explanation: 'Сполу́ка зву́ків [йу] на поча́тку сло́ва познача́ється лі́терою ю: ю́шка. — The sound blend [ju] at the word start is written with letter ю: ю́шка.'
-  - sentence: У лі́сі живе́ смуга́стий йено́т.
+  - sentence: У лі́сі живе́ смуга́стий йено́т. — In the forest lives a striped raccoon.
     error: йено́т
     correction: єно́т
     explanation: 'Сполу́ка зву́ків [йе] на поча́тку сло́ва познача́ється лі́терою є: єно́т. — The sound blend [je] at the word start is written with letter є: єно́т.'
-  - sentence: На по́лі росте́ сокови́тий буряік.
+  - sentence: На по́лі росте́ сокови́тий буряік. — In the field grows juicy beetroot.
     error: буряік
     correction: буря́к
     explanation: 'Сло́во «буря́к» пи́шеться з лі́терою я: буря́к. — The word «буря́к» is written with the letter я: буря́к.'
-  - sentence: Сього́дні в мі́сті вели́ке свиа́то.
+  - sentence: Сього́дні в мі́сті вели́ке свиа́то. — Today in town there is a big holiday.
     error: свиа́то
     correction: свя́то
     explanation: 'Сло́во «свя́то» пи́шеться з лі́терою я без апо́строфа: свя́то. — The word «свя́то» is written with letter я without an apostrophe: свя́то.'

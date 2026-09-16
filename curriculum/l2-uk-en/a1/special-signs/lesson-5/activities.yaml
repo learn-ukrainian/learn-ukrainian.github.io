@@ -71,22 +71,22 @@ inline:
     explanation: На віта́ння «До́брий день!» відповіда́ють «До́брий день!». — The response to "До́брий день!" is "До́брий день!".
   - prompt: Як Окса́на (жі́нка) ка́же, що ра́да ба́чити співрозмо́вника? — How does Oksana (female) say she is glad to see someone?
     options:
-    - text: Ра́да тебе́ ба́чити! — Glad to see you (female speaker)!
+    - text: Ра́да тебе́ ба́чити! — Glad to see you!
       correct: true
-    - text: Ра́дий тебе́ ба́чити! — Glad to see you (male speaker)!
+    - text: Ра́дий тебе́ ба́чити! — Glad to see you!
       correct: false
-    - text: Ра́ді тебе́ ба́чити! — Glad to see you (plural)!
+    - text: Ра́ді тебе́ ба́чити! — Glad to see you!
       correct: false
-    explanation: Жіно́чий рід вимага́є фо́рму «ра́да». — Feminine grammatical gender requires the form "ра́да".
+    explanation: Жіно́чий рід вимага́є фо́рму «ра́да» (female speaker). — Feminine grammatical gender requires the form "ра́да" (female speaker).
   - prompt: Як Марко́ (чолові́к) ка́же, що ра́дий ба́чити співрозмо́вницю? — How does Marko (male) say he is glad to see someone?
     options:
-    - text: Ра́дий тебе́ ба́чити! — Glad to see you (male speaker)!
+    - text: Ра́дий тебе́ ба́чити! — Glad to see you!
       correct: true
-    - text: Ра́да тебе́ ба́чити! — Glad to see you (female speaker)!
+    - text: Ра́да тебе́ ба́чити! — Glad to see you!
       correct: false
-    - text: Ра́до тебе́ ба́чити! — Glad to see you (neuter)!
+    - text: Ра́до тебе́ ба́чити! — Glad to see you!
       correct: false
-    explanation: Чолові́чий рід вимага́є фо́рму «ра́дий». — Masculine grammatical gender requires the form "ра́дий".
+    explanation: Чолові́чий рід вимага́є фо́рму «ра́дий» (male speaker). — Masculine grammatical gender requires the form "ра́дий" (male speaker).
   - prompt: Що ка́жуть співрозмо́вники під час вві́чливого проща́ння? — What do speakers say during polite parting?
     options:
     - text: До поба́чення! На все до́бре! — Goodbye! All the best!
@@ -155,13 +155,13 @@ workbook:
     - ''''
     - ь
     - без зна́ка
-  - sentence: У сло́ві мален_кий потрі́бен ___ .
+  - sentence: У сло́ві мален_кий потрі́бен ___ . — In the word "мален_кий", ___ is needed.
     answer: ь
     options:
     - ь
     - ''''
     - без зна́ка
-  - sentence: У сло́ві цвях пра́вильний ви́бір — ___ .
+  - sentence: У сло́ві цвях пра́вильний ви́бір — ___ . — In the word "цвях", the correct choice is ___ .
     answer: без зна́ка
     options:
     - без зна́ка

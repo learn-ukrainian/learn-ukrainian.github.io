@@ -40,15 +40,15 @@ inline:
   instruction: З'єдна́йте ко́жне сло́во з підка́зкою про м'яки́й знак. — Match each word or sign with what the soft sign does.
   pairs:
   - left: день
-    right: м'яки́й н у сло́ві день
+    right: soft [n'] in «день»
   - left: кінь
-    right: м'яки́й н у сло́ві кінь
+    right: soft [n'] in «кінь»
   - left: сіль
-    right: м'яки́й л у сло́ві сіль
+    right: soft [l'] in «сіль»
   - left: вчи́тель
-    right: м'яки́й л у сло́ві вчи́тель
-  - left: м'яки́й знак
-    right: не ма́є вла́сного зву́ка
+    right: soft [l'] in «вчи́тель»
+  - left: ь (soft sign)
+    right: has no sound of its own
 - id: act-103
   type: true-false
   title: Пра́вила м'яко́го зна́ка та африка́т — True or False
@@ -177,37 +177,37 @@ workbook:
   title: Вста́вте пропу́щене сло́во — Fill in the blank
   instruction: Fill in the blanks with the correct vocabulary word.
   items:
-  - sentence: Світи́ть со́нце, наста́в ___ .
+  - sentence: Світи́ть со́нце, наста́в ___ . — The sun shines, ___ has arrived.
     answer: день
     options:
     - день
     - кінь
     - сіль
-  - sentence: У селі́ на по́лі біжи́ть ___ .
+  - sentence: У селі́ на по́лі біжи́ть ___ . — In the village in the field runs a ___ .
     answer: кінь
     options:
     - кінь
     - день
     - вчи́тель
-  - sentence: На столі́ лежи́ть бі́ла ___ .
+  - sentence: На столі́ лежи́ть бі́ла ___ . — On the table lies white ___ .
     answer: сіль
     options:
     - сіль
     - ціна́
     - ча́шка
-  - sentence: Наш ___ пи́ше те́кст.
+  - sentence: Наш ___ пи́ше те́кст. — Our ___ is writing a text.
     answer: вчи́тель
     options:
     - вчи́тель
     - кінь
     - день
-  - sentence: Чи висо́ка тут ___ на хліб?
+  - sentence: Чи висо́ка тут ___ на хліб? — Is the ___ for bread high here?
     answer: ціна́
     options:
     - ціна́
     - сіль
     - ча́шка
-  - sentence: Ось рука́, а на руці́ — ___ .
+  - sentence: Ось рука́, а на руці́ — ___ . — Here is a hand, and on the hand are ___ .
     answer: па́льці
     options:
     - па́льці
@@ -276,28 +276,28 @@ workbook:
   instruction: Identify which word is written incorrectly according to Ukrainian soft
     sign rules.
   items:
-  - sentence: У сло́ві ден написа́ли без зна́ка ь.
+  - sentence: У сло́ві ден написа́ли без зна́ка ь. — In the word "ден" they wrote without the sign ь.
     error: ден
     correction: день
     explanation: 'Пе́ред па́узою сло́во «день» пи́шеться з м''яки́м зна́ком: день.'
-  - sentence: На по́лі біжи́ть кін без зна́ка.
+  - sentence: На по́лі біжи́ть кін без зна́ка. — In the field runs "кін" without a sign.
     error: кін
     correction: кінь
     explanation: 'Сло́во «кінь» закі́нчується на м''яки́й знак: кінь.'
-  - sentence: У су́пі лежи́ть сіл без зна́ка.
+  - sentence: У су́пі лежи́ть сіл без зна́ка. — In the soup lies "сіл" without a sign.
     error: сіл
     correction: сіль
     explanation: 'Сло́во «сіль» ма́є м''яки́й [л''] і пи́шеться з ь: сіль.'
-  - sentence: Наш вчител пи́ше те́кст.
+  - sentence: Наш вчител пи́ше те́кст. — Our "вчител" is writing a text.
     error: вчител
     correction: вчи́тель
     explanation: 'Іме́нник «вчи́тель» ма́є м''яки́й кінце́вий [л'']: вчи́тель.'
-  - sentence: У сло́ві чьас помилко́во написа́ли ь.
+  - sentence: У сло́ві чьас помилко́во написа́ли ь. — In the word "чьас" they mistakenly wrote ь.
     error: чьас
     correction: час
     explanation: 'Звук [ч] в украї́нській мо́ві тверди́й; пі́сля ч знак ь не ста́виться:
       час.'
-  - sentence: У сло́ві палці написа́ли без зна́ка ь.
+  - sentence: У сло́ві палці написа́ли без зна́ка ь. — In the word "палці" they wrote without the sign ь.
     error: палці
     correction: па́льці
     explanation: 'У сло́ві «па́льці» пі́сля лі́тери л пи́шеться м''яки́й знак: па́льці.'

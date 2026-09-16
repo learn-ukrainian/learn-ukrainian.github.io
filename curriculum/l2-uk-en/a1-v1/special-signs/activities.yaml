@@ -35,18 +35,18 @@ inline:
   - id: act-2
     type: match-up
     title: Що робить ь
-    instruction: З'єднай кожне слово з підказкою про м'яки́й знак.
+    instruction: Match each word or sign with what the soft sign does.
     pairs:
       - left: день
-        right: м'який н у слові день
+        right: soft [n'] in «день»
       - left: кінь
-        right: м'який н у слові кінь
+        right: soft [n'] in «кінь»
       - left: сіль
-        right: м'який л у слові сіль
+        right: soft [l'] in «сіль»
       - left: вчи́тель
-        right: м'який л у слові вчи́тель
-      - left: м'яки́й знак
-        right: не має власного звука
+        right: soft [l'] in «вчи́тель»
+      - left: ь (soft sign)
+        right: has no sound of its own
   - id: act-3
     type: fill-in
     title: Додай знак
@@ -243,13 +243,13 @@ workbook:
           - "'"
           - ь
           - без знака
-      - sentence: У слові мален_кий потрібен ___ .
+      - sentence: У слові мален_кий потрібен ___ . — In the word "мален_кий", ___ is needed.
         answer: ь
         options:
           - ь
           - "'"
           - без знака
-      - sentence: У слові цвях правильний вибір — ___ .
+      - sentence: У слові цвях правильний вибір — ___ . — In the word "цвях", the correct choice is ___ .
         answer: без знака
         options:
           - без знака
