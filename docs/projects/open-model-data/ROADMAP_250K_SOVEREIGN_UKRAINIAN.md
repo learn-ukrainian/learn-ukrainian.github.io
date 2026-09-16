@@ -63,15 +63,22 @@ To train an open model that possesses true sovereign Ukrainian intelligence, we 
   - Full-sentence context transformations, not isolated word swaps.
   - Rigorous minimal-pair DPO training to penalize Soviet bureaucratic jargon (*«приймати міри»* $\rightarrow$ *«вживати заходів»*, *«нанести шкоду»* $\rightarrow$ *«завдати шкоди»*, *«в кінці кінців»* $\rightarrow$ *«зрештою / кінець кінцем»*).
 
-### Track 4: Comprehensive Regional Dialect Vernacular
-* **Goal**: Expand beyond the Phase 5.6 seed (550 trajectories) to capture the living vernacular of all Ukrainian dialect macro-zones as protected cultural heritage.
+### Track 4: Comprehensive Regional Dialect Vernacular (Historical & Modern)
+* **Goal**: Expand beyond the Phase 5.6 seed (550 trajectories) to capture the living vernacular of all three Ukrainian dialect macro-zones (Southwestern, Northern, Southeastern) as protected cultural heritage, spanning both historical field collections and modern 20th–21st century dialectology.
 * **Source Material**:
-  - The complete **11,000+ regional field citations in Borys Grinchenko’s 1907 dictionary** (Shukhevych, Chubynskyi, Hnatiuk, Manzhura).
-  - Regional dictionaries from `slovnyk.me` (Bukovina, Galicia, Lviv, Hutsul).
-* **Target Scale**: **25,000 multi-turn dialect defense trajectories**.
+  - **Modern Academic Dialectology (Institute of the Ukrainian Language of NASU)**:
+    - Materials from the **Atlas of the Ukrainian Language (АУМ / Atlas Ukrainskoi Movy)** across Northern (Polissian), Southwestern (Hutsul, Boyko, Lemko, Transcarpathian, Podolian, Bukovinian-Pokuttian, Dniester, Volhynian), and Southeastern (Middle Dnieper, Slobozhan, Steppe) dialect groups.
+    - Specialized modern regional dictionaries (e.g., Словник бойківських говірок / Онишкевич, Словник поліських говорів / Лисенко, Гуцульські говірки, Словник буковинських говірок, Лемківський словник).
+  - **Modern Regional Lexica & Living Vernacular**:
+    - Regional dialect dictionaries digitized on `slovnyk.me` (Bukovina, Galicia, Lviv, Hutsul, Transcarpathia).
+    - Contemporary dialectological field records, regional literary prose, and memoirs in `data/sources.db`.
+  - **Historical Foundation**:
+    - The complete **11,000+ regional field citations in Borys Grinchenko’s 1907 dictionary** (Shukhevych, Chubynskyi, Hnatiuk, Manzhura, etc.).
+* **Target Scale**: **25,000 multi-turn dialect defense trajectories** (~11,000 historical Grinchenko + ~14,000 modern regional/academic dialect entries).
 * **Key Invariants**:
-  - **Anti-Copying Mixed-Error Coverage ($\ge 30\%$)**: Dialect sentences pair authentic regional vocabulary with real grammatical or calque errors, forcing the model to fix the error while defending the dialect marker.
-  - **Absolute Anti-Surzhyk Invariant**: Surzhyk is strictly diagnosed as Russian imperial linguistic poisoning and eradicated; authentic regional vernacular (Boyko, Lemko, Hutsul, Polissian, Slobozhan, Steppe) is fiercely protected.
+  - **Living Dialects vs. Archaic Form Preservation**: The model must understand contemporary living dialects as well as classical 19th-century regionalisms, without treating modern dialect speakers as archaic or uneducated.
+  - **Anti-Copying Mixed-Error Coverage ($\ge 30\%$)**: Dialect sentences pair authentic regional vocabulary with real grammatical, punctuation, or calque errors, forcing the model to fix the error while strictly defending the dialect marker.
+  - **Absolute Anti-Surzhyk Invariant**: Surzhyk is strictly diagnosed as Russian imperial linguistic degradation and eradicated; authentic regional vernacular across all three macro-zones is fiercely defended with linguistic etymology and dialectological citations.
 
 ### Track 5: Historical Continuity (Kyivan Rus Epigraphy & Cossack Baroque)
 * **Goal**: Reclaim 1,000 years of unbroken Ukrainian written continuity from Russian imperial appropriation.
@@ -110,7 +117,7 @@ flowchart TD
     subgraph Days8to16["Sprint 2: Days 8–16 (ULIF Completion & Calque Expansion)"]
         B1["Full ULIF Ingestion: 45,000 Idiomatic & Phraseological Pairs"]
         B2["Expand Decolonization Corpus to 50,000 SFT + 25,000 DPO"]
-        B3["Expand Grinchenko Dialect Mining across all 11,000+ Citations"]
+        B3["Expand Dialect Mining: Grinchenko (11k) +\nModern Regional Dictionaries & AUM (14k) to 25k SFT"]
     end
 
     subgraph Days16to30["Sprint 3: Days 16–30 (Textbook STEM Synthesis & Model Training)"]
