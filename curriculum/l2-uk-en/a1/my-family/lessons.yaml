@@ -1,6 +1,6 @@
 lessons:
 - n: 1
-  title: Сім'я
+  title: "Сім'я́: Це моя́ сім'я́ · Family: This Is My Family"
   sections:
   - Діалоги
   - Сім'я
@@ -19,7 +19,7 @@ lessons:
   - О́ля
   unverified_lemmas: []
 - n: 2
-  title: Мій / моя
+  title: "У мене́ є: Мій і моя́ · I Have: Masculine & Feminine My"
   sections:
   - У мене є
   - Мій / моя
@@ -46,7 +46,7 @@ lessons:
   - родственників
   unverified_lemmas: []
 - n: 3
-  title: Слухай, фото, зошит
+  title: "Слу́хай, фо́то, зо́шит · Listen, Photos & Notebook"
   sections:
   - Слухай, фото, зошит
   minutes: 60
@@ -63,7 +63,7 @@ lessons:
   - її́
   unverified_lemmas: []
 - n: 4
-  title: Самоперевірка
+  title: "Самопереві́рка: Ро́зповідь про сім'ю́ · Self-Check: Introducing Your Family"
   sections:
   - Самоперевірка
   minutes: 60

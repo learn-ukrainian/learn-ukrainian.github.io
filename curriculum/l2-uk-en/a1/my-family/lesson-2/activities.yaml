@@ -1,8 +1,8 @@
 inline:
 - id: act-3
   type: fill-in
-  title: Скла́ди У мене́ є
-  instruction: Обери́ сло́во або́ фра́зу для роди́нного ре́чення.
+  title: Скла́ди У мене́ є — Build I have
+  instruction: Обери́ сло́во або́ фра́зу для роди́нного ре́чення. — Choose the word or phrase for a family sentence.
   items:
   - sentence: ___ мене́ є брат.
     answer: У
@@ -10,60 +10,60 @@ inline:
     - У
     - Це
     - Хто
-    explanation: У мене́ є... — ці́лий блок, щоб сказа́ти, що хтось або́ щось є в мене́.
+    explanation: У мене́ є... — ці́лий блок, щоб сказа́ти, що хтось або́ щось є в мене́. — "У мене́ є..." is a set phrase meaning "I have...".
   - sentence: У ___ є сестра́.
     answer: мене́
     options:
     - мене́
     - мій
     - це
-    explanation: У мене́ є... відповіда́є за себе́.
+    explanation: У мене́ є... відповіда́є за себе́. — "У мене́ є..." speaks for oneself.
   - sentence: У ___ є брат?
     answer: тебе́
     options:
     - тебе́
     - мене́
     - він
-    explanation: У тебе́ є...? пита́є одну́ знайо́му люди́ну.
+    explanation: У тебе́ є...? пита́є одну́ знайо́му люди́ну. — "У тебе́ є...?" asks one person you know.
   - sentence: У ___ є ді́ти?
     answer: вас
     options:
     - вас
     - твій
     - вона́
-    explanation: У вас є...? — форма́льно або́ множина́.
+    explanation: У вас є...? — форма́льно або́ множина́. — "У вас є...?" is formal or plural.
   - sentence: У мене́ є ___ брат.
     answer: оди́н
     options:
     - оди́н
     - одна́
     - дві
-    explanation: Брат — чолові́чого ро́ду, тому́ оди́н.
+    explanation: Брат — чолові́чого ро́ду, тому́ оди́н. — "Брат" is masculine, therefore "оди́н".
   - sentence: У мене́ є ___ сестра́.
     answer: одна́
     options:
     - одна́
     - оди́н
     - два
-    explanation: Сестра́ — жіно́чого ро́ду, тому́ одна́.
+    explanation: Сестра́ — жіно́чого ро́ду, тому́ одна́. — "Сестра́" is feminine, therefore "одна́".
   - sentence: У мене́ є ___ брати́.
     answer: два
     options:
     - два
     - дві
     - одна́
-    explanation: Брати́ вжива́ємо з два.
+    explanation: Брати́ вжива́ємо з два. — "Брати́" is used with "два".
   - sentence: У мене́ є ___ се́стри.
     answer: дві
     options:
     - дві
     - два
     - оди́н
-    explanation: Зі сло́вом се́стри тут ужива́ємо дві.
+    explanation: Зі сло́вом се́стри тут ужива́ємо дві. — With the word "се́стри" we use "дві".
 - id: act-201
   type: match-up
-  title: Скі́льки у тебе́ ро́дичів?
-  instruction: З'єдна́й фра́зу про роди́ну з перекла́дом.
+  title: Скі́льки у тебе́ ро́дичів? — How many relatives do you have?
+  instruction: З'єдна́й фра́зу про роди́ну з перекла́дом. — Match the family phrase with its translation.
   pairs:
   - left: оди́н брат
     right: one brother
@@ -79,8 +79,8 @@ inline:
     right: one daughter
 - id: act-4
   type: fill-in
-  title: Мій чи моя́?
-  instruction: Обери́ присві́йний займе́нник до роди́нного слова́.
+  title: Мій чи моя́? — Мій or моя́?
+  instruction: Обери́ присві́йний займе́нник до роди́нного слова́. — Choose the possessive pronoun for the family word.
   items:
   - sentence: Це ___ брат.
     answer: мій
@@ -89,7 +89,7 @@ inline:
     - моя́
     - моє́
     - мої́
-    explanation: Брат — чолові́чого ро́ду.
+    explanation: Брат — чолові́чого ро́ду. — "Брат" is masculine.
   - sentence: Це ___ ма́ма.
     answer: моя́
     options:
@@ -97,7 +97,7 @@ inline:
     - мій
     - моє́
     - мої́
-    explanation: Ма́ма — жіно́чого ро́ду.
+    explanation: Ма́ма — жіно́чого ро́ду. — "Ма́ма" is feminine.
   - sentence: Це ___ мі́сто.
     answer: моє́
     options:
@@ -105,7 +105,7 @@ inline:
     - мій
     - моя́
     - мої́
-    explanation: Мі́сто — сере́днього ро́ду.
+    explanation: Мі́сто — сере́днього ро́ду. — "Мі́сто" is neuter.
   - sentence: Це ___ батьки́.
     answer: мої́
     options:
@@ -113,7 +113,7 @@ inline:
     - мій
     - моя́
     - моє́
-    explanation: Батьки́ — множина́.
+    explanation: Батьки́ — множина́. — "Батьки́" is plural.
   - sentence: Це ___ та́то?
     answer: твій
     options:
@@ -121,7 +121,7 @@ inline:
     - твоя́
     - твоє́
     - твої́
-    explanation: Та́то — чолові́чого ро́ду, хоча́ сло́во закі́нчується на -о.
+    explanation: Та́то — чолові́чого ро́ду, хоча́ сло́во закі́нчується на -о. — "Та́то" is masculine, although the word ends in -о.
   - sentence: Це ___ сестра́?
     answer: твоя́
     options:
@@ -129,7 +129,7 @@ inline:
     - твій
     - твоє́
     - твої́
-    explanation: Сестра́ — жіно́чого ро́ду.
+    explanation: Сестра́ — жіно́чого ро́ду. — "Сестра́" is feminine.
   - sentence: Це ___ прі́звище?
     answer: твоє́
     options:
@@ -137,7 +137,7 @@ inline:
     - твій
     - твоя́
     - твої́
-    explanation: Прі́звище — сере́днього ро́ду.
+    explanation: Прі́звище — сере́днього ро́ду. — "Прі́звище" is neuter.
   - sentence: Це ___ ро́дичі?
     answer: твої́
     options:
@@ -145,13 +145,13 @@ inline:
     - твій
     - твоя́
     - твоє́
-    explanation: Ро́дичі — множина́.
+    explanation: Ро́дичі — множина́. — "Ро́дичі" is plural.
 - id: act-202
   type: quiz
-  title: Чия́ це річ або́ люди́на?
-  instruction: Обери́ пра́вильний займе́нник для ко́жного ви́падку.
+  title: Чия́ це річ або́ люди́на? — Whose thing or person is this?
+  instruction: Обери́ пра́вильний займе́нник для ко́жного ви́падку. — Choose the correct pronoun for each case.
   items:
-  - prompt: Брат — це він (чолові́чий рід). Як сказа́ти «my brother»?
+  - prompt: Брат — це він (чолові́чий рід). Як сказа́ти «my brother»? — "Брат" is masculine (він). How do you say "my brother"?
     options:
     - text: мій брат
       correct: true
@@ -159,8 +159,8 @@ inline:
       correct: false
     - text: моє́ брат
       correct: false
-    explanation: Брат — чолові́чого ро́ду, тому́ вжива́ємо мій.
-  - prompt: Сестра́ — це вона́ (жіно́чий рід). Як сказа́ти «my sister»?
+    explanation: Брат — чолові́чого ро́ду, тому́ вжива́ємо мій. — "Брат" is masculine, therefore we use "мій".
+  - prompt: Сестра́ — це вона́ (жіно́чий рід). Як сказа́ти «my sister»? — "Сестра́" is feminine (вона́). How do you say "my sister"?
     options:
     - text: моя́ сестра́
       correct: true
@@ -168,8 +168,8 @@ inline:
       correct: false
     - text: мої́ сестра́
       correct: false
-    explanation: Сестра́ — жіно́чого ро́ду, тому́ вжива́ємо моя́.
-  - prompt: Мі́сто — це воно́ (сере́дній рід). Як сказа́ти «my city»?
+    explanation: Сестра́ — жіно́чого ро́ду, тому́ вжива́ємо моя́. — "Сестра́" is feminine, therefore we use "моя́".
+  - prompt: Мі́сто — це воно́ (сере́дній рід). Як сказа́ти «my city»? — "Мі́сто" is neuter (воно́). How do you say "my city"?
     options:
     - text: моє́ мі́сто
       correct: true
@@ -177,8 +177,8 @@ inline:
       correct: false
     - text: моя́ мі́сто
       correct: false
-    explanation: Мі́сто — сере́днього ро́ду (закі́нчення -о), тому́ вжива́ємо моє́.
-  - prompt: Батьки́ — це вони́ (множина́). Як сказа́ти «my parents»?
+    explanation: Мі́сто — сере́днього ро́ду (закі́нчення -о), тому́ вжива́ємо моє́. — "Мі́сто" is neuter (ends in -о), therefore we use "моє́".
+  - prompt: Батьки́ — це вони́ (множина́). Як сказа́ти «my parents»? — "Батьки́" is plural (вони́). How do you say "my parents"?
     options:
     - text: мої́ батьки́
       correct: true
@@ -186,8 +186,8 @@ inline:
       correct: false
     - text: моя́ батьки́
       correct: false
-    explanation: Батьки́ — множина́, тому́ вжива́ємо мої́.
-  - prompt: Та́то — чолові́чий рід. Як спита́ти дру́га «your dad»?
+    explanation: Батьки́ — множина́, тому́ вжива́ємо мої́. — "Батьки́" is plural, therefore we use "мої́".
+  - prompt: Та́то — чолові́чий рід. Як спита́ти дру́га «your dad»? — "Та́то" is masculine. How do you ask a friend "your dad"?
     options:
     - text: твій та́то
       correct: true
@@ -195,8 +195,8 @@ inline:
       correct: false
     - text: твоє́ та́то
       correct: false
-    explanation: Та́то — чолові́чого ро́ду, тому́ твій.
-  - prompt: Ма́ма — жіно́чий рід. Як спита́ти дру́га «your mom»?
+    explanation: Та́то — чолові́чого ро́ду, тому́ твій. — "Та́то" is masculine, therefore "твій".
+  - prompt: Ма́ма — жіно́чий рід. Як спита́ти дру́га «your mom»? — "Ма́ма" is feminine. How do you ask a friend "your mom"?
     options:
     - text: твоя́ ма́ма
       correct: true
@@ -204,107 +204,105 @@ inline:
       correct: false
     - text: твої́ ма́ма
       correct: false
-    explanation: Ма́ма — жіно́чого ро́ду, тому́ твоя́.
+    explanation: Ма́ма — жіно́чого ро́ду, тому́ твоя́. — "Ма́ма" is feminine, therefore "твоя́".
 - id: act-203
   type: true-false
-  title: Переві́р узго́дження слів
-  instruction: Ви́знач, чи грамати́чно пра́вильно побудо́вано фра́зу.
+  title: Переві́р узго́дження слів — Check word agreement
+  instruction: Ви́знач, чи грамати́чно пра́вильно побудо́вано фра́зу. — Determine whether the phrase is grammatically correct.
   items:
-  - statement: Фра́за «мій брат» є пра́вильною.
+  - statement: Фра́за «мій брат» є пра́вильною. — The phrase "мій брат" is correct.
     correct: true
-    explanation: Брат — чолові́чого ро́ду, тому́ займе́нник мій пра́вильний.
-  - statement: Фра́за «мій ма́ма» є пра́вильною.
+    explanation: Брат — чолові́чого ро́ду, тому́ займе́нник мій пра́вильний. — "Брат" is masculine, so the pronoun "мій" is correct.
+  - statement: Фра́за «мій ма́ма» є пра́вильною. — The phrase "мій ма́ма" is correct.
     correct: false
-    explanation: Ма́ма — жіно́чого ро́ду, тому́ тре́ба сказа́ти «моя́ ма́ма».
-  - statement: Фра́за «моє́ мі́сто» є пра́вильною.
+    explanation: Ма́ма — жіно́чого ро́ду, тому́ тре́ба сказа́ти «моя́ ма́ма». — "Ма́ма" is feminine, so one must say "моя́ ма́ма".
+  - statement: Фра́за «моє́ мі́сто» є пра́вильною. — The phrase "моє́ мі́сто" is correct.
     correct: true
-    explanation: Мі́сто — сере́днього ро́ду, тому́ моє́ пра́вильне.
-  - statement: Фра́за «два се́стри» є пра́вильною.
+    explanation: Мі́сто — сере́днього ро́ду, тому́ моє́ пра́вильне. — "Мі́сто" is neuter, so "моє́" is correct.
+  - statement: Фра́за «два се́стри» є пра́вильною. — The phrase "два се́стри" is correct.
     correct: false
-    explanation: З іме́нниками жіно́чого ро́ду вжива́ємо дві — «дві се́стри».
-  - statement: Фра́за «одна́ дочка́» є пра́вильною.
+    explanation: З іме́нниками жіно́чого ро́ду вжива́ємо дві — «дві се́стри». — With feminine nouns we use "дві" — "дві се́стри".
+  - statement: Фра́за «одна́ дочка́» є пра́вильною. — The phrase "одна́ дочка́" is correct.
     correct: true
-    explanation: Дочка́ — жіно́чого ро́ду, тому́ одна́ дочка́.
-  - statement: Фра́за «мої́ батьки́» є пра́вильною.
+    explanation: Дочка́ — жіно́чого ро́ду, тому́ одна́ дочка́. — "Дочка́" is feminine, therefore "одна́ дочка́".
+  - statement: Фра́за «мої́ батьки́» є пра́вильною. — The phrase "мої́ батьки́" is correct.
     correct: true
-    explanation: Батьки́ — множина́, тому́ мої́ батьки́.
+    explanation: Батьки́ — множина́, тому́ мої́ батьки́. — "Батьки́" is plural, therefore "мої́ батьки́".
 workbook:
 - id: act-w2
   type: fill-in
-  title: Обери́ украї́нську роди́нну но́рму
-  instruction: Обери́ украї́нське сло́во для звича́йної роди́нної розмо́ви.
+  title: Обери́ украї́нську роди́нну но́рму — Choose authentic Ukrainian family words
+  instruction: Обери́ украї́нське сло́во для звича́йної роди́нної розмо́ви. — Choose the authentic Ukrainian word for everyday family conversation.
   items:
   - sentence: Моя́ ___ — вчи́телька.
     answer: дружи́на
     options:
     - дружи́на
     - жена
-    explanation: Для wife вжива́й дружи́на; жена — росі́йська фо́рма.
+    explanation: Для wife вжива́й дружи́на; жена — росі́йська фо́рма. — For wife use "дружи́на"; "жена" is a Russian form.
   - sentence: Мій ___ працю́є в ліка́рні.
     answer: чолові́к
     options:
     - чолові́к
     - муж
-    explanation: У звича́йній роди́нній розмо́ві вжива́й чолові́к; муж — ста́рше або́ підне́сене
-      сло́во.
+    explanation: У звича́йній роди́нній розмо́ві вжива́й чолові́к; муж — ста́рше або́ підне́сене сло́во. — In ordinary family talk use "чолові́к"; "муж" is archaic or elevated.
   - sentence: Це моя́ ___ Тетя́на.
     answer: бабу́ся
     options:
     - бабу́ся
     - бабушка
-    explanation: Бабу́ся — украї́нське сло́во для grandmother.
+    explanation: Бабу́ся — украї́нське сло́во для grandmother. — "Бабу́ся" is the Ukrainian word for grandmother.
   - sentence: У нас ве́лика роди́на — бли́зько десяти́ ___.
     answer: ро́дичів
     options:
     - ро́дичів
     - родственників
-    explanation: Ро́дичі — украї́нське сло́во для relatives; у цьому́ ре́ченні фо́рма ро́дичів
-      уже́ да́на як гото́вий блок.
+    explanation: Ро́дичі — украї́нське сло́во для relatives; у цьому́ ре́ченні фо́рма ро́дичів уже́ да́на як гото́вий блок. — "Ро́дичі" is the Ukrainian word for relatives; here "ро́дичів" is given as a ready form.
   - sentence: Це ще мале́нька ___.
     answer: дити́на
     options:
     - дити́на
     - ребьонок
-    explanation: Дити́на — украї́нське сло́во для child.
+    explanation: Дити́на — украї́нське сло́во для child. — "Дити́на" is the Ukrainian word for child.
   - sentence: Це мій ___ брат.
     answer: моло́дший
     options:
     - моло́дший
     - младший
-    explanation: Моло́дший означа́є ме́нший за ві́ком.
+    explanation: Моло́дший означа́є ме́нший за ві́ком. — "Моло́дший" means younger in age.
   - sentence: Мій ста́рший брат уже́ ___.
     answer: одру́жений
     options:
     - одру́жений
     - женатий
-    explanation: Для married у цьому́ роди́нному ре́ченні вжива́й одру́жений.
+    explanation: Для married у цьому́ роди́нному ре́ченні вжива́й одру́жений. — For married in this family sentence, use "одру́жений".
 - id: act-w3
   type: group-sort
-  title: Оди́н / одна́ / два / дві
-  instruction: Розпо́діли роди́нні фра́зи за числі́вником.
+  title: Оди́н / одна́ / два / дві — One / two (masculine & feminine)
+  instruction: Розпо́діли роди́нні фра́зи за числі́вником. — Sort family phrases by numeral.
   groups:
-  - label: оди́н
+  - label: оди́н (one - masc.)
     items:
     - оди́н брат
     - оди́н син
     - оди́н діду́сь
-  - label: одна́
+  - label: одна́ (one - fem.)
     items:
     - одна́ сестра́
     - одна́ дочка́
     - одна́ бабу́ся
-  - label: два
+  - label: два (two - masc./neut.)
     items:
     - два брати́
     - два сини́
-  - label: дві
+  - label: дві (two - fem.)
     items:
     - дві се́стри
     - дві до́чки
 - id: act-w201
   type: fill-in
-  title: У мене́ є чи у тебе́ є?
-  instruction: Допо́вни ре́чення пра́вильною фо́рмою ви́разу володі́ння.
+  title: У мене́ є чи у тебе́ є? — I have or you have?
+  instruction: Допо́вни ре́чення пра́вильною фо́рмою ви́разу володі́ння. — Complete the sentence with the correct possession form.
   items:
   - sentence: — Чи ___ тебе́ є брат? — Так, є.
     answer: у
@@ -312,46 +310,46 @@ workbook:
     - у
     - це
     - на
-    explanation: Запита́ння почина́ється з прийме́нника у.
+    explanation: Запита́ння почина́ється з прийме́нника у. — The question begins with the preposition "у".
   - sentence: 'У ___ є дві се́стри: О́ля і Катя́.'
     answer: мене́
     options:
     - мене́
     - мій
     - я
-    explanation: Відповіда́ючи про себе́, ка́жемо «У мене́ є».
+    explanation: Відповіда́ючи про себе́, ка́жемо «У мене́ є». — Answering about oneself, we say "У мене́ є".
   - sentence: У тебе́ є ___ брат?
     answer: оди́н
     options:
     - оди́н
     - одна́
     - одне́
-    explanation: Брат — чолові́чого ро́ду, тому́ оди́н.
+    explanation: Брат — чолові́чого ро́ду, тому́ оди́н. — "Брат" is masculine, therefore "оди́н".
   - sentence: Так, у мене́ є ті́льки ___ сестра́.
     answer: одна́
     options:
     - одна́
     - оди́н
     - дво́є
-    explanation: Сестра́ — жіно́чого ро́ду, тому́ одна́.
+    explanation: Сестра́ — жіно́чого ро́ду, тому́ одна́. — "Сестра́" is feminine, therefore "одна́".
   - sentence: Чи у вас ___ ді́ти?
     answer: є
     options:
     - є
     - ма́є
     - був
-    explanation: У ста́лій фо́рмі тепе́рішнього ча́су вжива́ємо є.
+    explanation: У ста́лій фо́рмі тепе́рішнього ча́су вжива́ємо є. — In the fixed present tense form we use "є".
   - sentence: 'У мене́ є ___ брати́: Іва́н і Дени́с.'
     answer: два
     options:
     - два
     - дві
     - оди́н
-    explanation: Зі сло́вом брати́ вжива́ємо числі́вник два.
+    explanation: Зі сло́вом брати́ вжива́ємо числі́вник два. — With the word "брати́" we use the numeral "два".
 - id: act-w202
   type: match-up
-  title: Присві́йні займе́нники та іме́нники
-  instruction: З'єдна́й займе́нник із відпові́дним іме́нником.
+  title: Присві́йні займе́нники та іме́нники — Possessive pronouns and nouns
+  instruction: З'єдна́й займе́нник із відпові́дним іме́нником. — Match the pronoun with the appropriate noun.
   pairs:
   - left: мій
     right: діду́сь
@@ -367,27 +365,27 @@ workbook:
     right: до́нька
 - id: act-w203
   type: group-sort
-  title: 'Розпо́діли за ро́дом: мій, моя́, моє́ чи мої́?'
-  instruction: Розпо́діли слова́ за займе́нником, з яки́м вони́ вжива́ються.
+  title: 'Розпо́діли за ро́дом: мій, моя́, моє́ чи мої́? — Sort by gender: мій, моя́, моє́ or мої́?'
+  instruction: Розпо́діли слова́ за займе́нником, з яки́м вони́ вжива́ються. — Sort the words by the pronoun used with them.
   groups:
-  - label: мій (він)
+  - label: мій (він / masculine)
     items:
     - та́то
     - брат
     - син
     - діду́сь
-  - label: моя́ (вона́)
+  - label: моя́ (вона́ / feminine)
     items:
     - ма́ма
     - сестра́
     - дочка́
     - бабу́ся
-  - label: моє́ (воно́)
+  - label: моє́ (воно́ / neuter)
     items:
     - мі́сто
     - село́
     - прі́звище
-  - label: мої́ (вони́)
+  - label: мої́ (вони́ / plural)
     items:
     - батьки́
     - ро́дичі
@@ -395,8 +393,8 @@ workbook:
     - се́стри
 - id: act-w204
   type: error-correction
-  title: Випра́в грамати́чні помилки́ в роді
-  instruction: Зна́йди поми́лку в узго́дженні та обери́ пра́вильний варіа́нт.
+  title: Випра́в грамати́чні помилки́ в роді — Correct grammar mistakes in gender
+  instruction: Зна́йди поми́лку в узго́дженні та обери́ пра́вильний варіа́нт. — Find the agreement error and choose the correct option.
   items:
   - sentence: Це мій ма́ма.
     error: мій
@@ -404,46 +402,46 @@ workbook:
     options:
     - моя́
     - мій
-    explanation: Ма́ма — жіно́чого ро́ду, тому́ моя́ ма́ма.
+    explanation: Ма́ма — жіно́чого ро́ду, тому́ моя́ ма́ма. — "Ма́ма" is feminine, therefore "моя́ ма́ма".
   - sentence: Це твоя́ та́то.
     error: твоя́
     correction: твій
     options:
     - твій
     - твоя́
-    explanation: Та́то — чолові́чого ро́ду, тому́ твій та́то.
+    explanation: Та́то — чолові́чого ро́ду, тому́ твій та́то. — "Та́то" is masculine, therefore "твій та́то".
   - sentence: У мене́ є дві брати́.
     error: дві
     correction: два
     options:
     - два
     - дві
-    explanation: Брат — чолові́чого ро́ду, у множині́ два брати́.
+    explanation: Брат — чолові́чого ро́ду, у множині́ два брати́. — "Брат" is masculine, in plural "два брати́".
   - sentence: У мене́ є оди́н сестра́.
     error: оди́н
     correction: одна́
     options:
     - одна́
     - оди́н
-    explanation: Сестра́ — жіно́чого ро́ду, тому́ одна́ сестра́.
+    explanation: Сестра́ — жіно́чого ро́ду, тому́ одна́ сестра́. — "Сестра́" is feminine, therefore "одна́ сестра́".
   - sentence: Це моє́ батьки́.
     error: моє́
     correction: мої́
     options:
     - мої́
     - моє́
-    explanation: Батьки́ — множина́, тому́ мої́ батьки́.
+    explanation: Батьки́ — множина́, тому́ мої́ батьки́. — "Батьки́" is plural, therefore "мої́ батьки́".
   - sentence: Це мій мі́сто.
     error: мій
     correction: моє́
     options:
     - моє́
     - мій
-    explanation: Мі́сто — сере́днього ро́ду, тому́ моє́ мі́сто.
+    explanation: Мі́сто — сере́днього ро́ду, тому́ моє́ мі́сто. — "Мі́сто" is neuter, therefore "моє́ мі́сто".
 - id: act-w205
   type: translate
-  title: Пере́клад ба́зових роди́нних фраз
-  instruction: Обери́ то́чний англі́йський пере́клад украї́нського ви́разу.
+  title: Пере́клад ба́зових роди́нних фраз — Translation of basic family phrases
+  instruction: Обери́ то́чний англі́йський пере́клад украї́нського ви́разу. — Choose the exact English translation of the Ukrainian expression.
   items:
   - source: У мене́ є брат.
     options:
@@ -453,7 +451,7 @@ workbook:
       correct: false
     - text: This is my brother.
       correct: false
-    explanation: У мене́ є... означа́є «I have...».
+    explanation: У мене́ є... означа́є «I have...». — "У мене́ є..." means "I have...".
   - source: У тебе́ є сестра́?
     options:
     - text: Do you have a sister?
@@ -462,7 +460,7 @@ workbook:
       correct: false
     - text: I have a sister.
       correct: false
-    explanation: У тебе́ є...? означа́є «Do you have...?» (informal).
+    explanation: У тебе́ є...? означа́є «Do you have...?» (informal). — "У тебе́ є...?" means "Do you have...?" (informal).
   - source: Це мій та́то.
     options:
     - text: This is my dad.
@@ -471,7 +469,7 @@ workbook:
       correct: false
     - text: He has a dad.
       correct: false
-    explanation: Мій та́то означа́є «my dad».
+    explanation: Мій та́то означа́є «my dad». — "Мій та́то" means "my dad".
   - source: Це моя́ ма́ма.
     options:
     - text: This is my mom.
@@ -480,7 +478,7 @@ workbook:
       correct: false
     - text: She is my mom.
       correct: false
-    explanation: Моя́ ма́ма означа́є «my mom».
+    explanation: Моя́ ма́ма означа́є «my mom». — "Моя́ ма́ма" means "my mom".
   - source: Це мої́ батьки́.
     options:
     - text: These are my parents.
@@ -489,7 +487,7 @@ workbook:
       correct: false
     - text: I have parents.
       correct: false
-    explanation: Мої́ батьки́ означа́є «my parents».
+    explanation: Мої́ батьки́ означа́є «my parents». — "Мої́ батьки́" means "my parents".
   - source: У мене́ ті́льки оди́н брат.
     options:
     - text: I only have one brother.
@@ -498,4 +496,4 @@ workbook:
       correct: false
     - text: He has one brother.
       correct: false
-    explanation: Ті́льки оди́н означа́є «only one».
+    explanation: Ті́льки оди́н означа́є «only one». — "Ті́льки оди́н" means "only one".
