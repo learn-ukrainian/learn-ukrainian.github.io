@@ -22,7 +22,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import sqlite3
+import subprocess
+import sys
 from typing import Any
 
 import jsonschema
@@ -276,7 +279,6 @@ def test_strict_zero_train_eval_leakage_firewall(
         if not t.get("is_calque_or_russianism"):
             for alt in t.get("register_spectrum", {}).get("alternatives", []):
                 src = alt.get("evidence_source", "")
-                import re
                 m = re.search(r"\(([^\(\)]+)\)", src)
                 if m:
                     sft_cits.add(m.group(1).strip())
@@ -295,7 +297,6 @@ def test_strict_zero_train_eval_leakage_firewall(
         if not t.get("is_calque_or_russianism"):
             for alt in t.get("register_spectrum", {}).get("alternatives", []):
                 src = alt.get("evidence_source", "")
-                import re
                 m = re.search(r"\(([^\(\)]+)\)", src)
                 if m:
                     cit = m.group(1).strip()
@@ -630,8 +631,6 @@ def test_modern_literary_non_regression() -> None:
 
 def test_predictions_cli_handling_fails_on_missing_file(tmp_path: Any) -> None:
     """Verify that specifying a nonexistent predictions file fails closed instead of selecting oracle mode."""
-    import subprocess
-    import sys
     cmd = [
         sys.executable,
         "scripts/projects/open_model_data/v5_mine_dialect_corpus.py",
@@ -687,7 +686,8 @@ def test_canonical_source_work_equivalence_and_year_preservation() -> None:
     preserves publication years, strips page numbers, and maps equivalent volume citations to identical identities.
     """
     equivalent_pairs = [
-        # 1. P1 regression from R7/R8 review: internal whitespace difference in Chubynsky Volume 5
+        # 1. P1 regression from R7/R8/R9 review: single-digit page vs multi-digit page in same volume
+        ("Коб., І, 1956, 9", "Коб., І, 1956, 80"),
         ("Чуб., V, 1874, 280", "Чуб.,V, 1874, 96"),
         ("Чуб., V, 1874, 280", "Чуб., V, 1847, 465"),
         ("Фр., VII, 1951, 10", "Фр., VII, 1851, 10"),
@@ -722,6 +722,11 @@ def test_canonical_source_work_equivalence_and_year_preservation() -> None:
     assert canonical_source_work("Чуб., V, 1874, 280") == "Чуб., V, 1874"
     assert canonical_source_work("Чуб.,V, 1874, 96") == "Чуб., V, 1874"
     assert canonical_source_work("Номис, 1864, № 2062") == "Номис, 1864"
+
+    # P2: Verify that OCR corrections are strictly scoped and unrelated 1847/1851/1852 citations remain unchanged
+    assert canonical_source_work("Шевч., 1847") == "Шевч., 1847"
+    assert canonical_source_work("Куліш, 1851") == "Куліш, 1851"
+    assert canonical_source_work("Костомаров, 1852") == "Костомаров, 1852"
 
 
 def test_find_attested_synonym_rejects_descriptive_and_crossref() -> None:

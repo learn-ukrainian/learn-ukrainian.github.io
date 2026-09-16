@@ -454,14 +454,23 @@ def mine_all_candidate_sentences(db_path: Path = DEFAULT_SOURCES_DB) -> list[Min
     return candidates
 
 
+ARABIC_TO_ROMAN = {
+    "1": "I", "2": "II", "3": "III", "4": "IV", "5": "V",
+    "6": "VI", "7": "VII", "8": "VIII", "9": "IX", "10": "X",
+}
+
+
 def canonical_source_work(cit: str, collector: str = "") -> str:
     """Extract canonical source work/volume identity by stripping page numbers and parens.
 
     Ensures that different pages of the same publication volume (e.g. Черемш., Тв., 1960, 107
-    vs Черемш., Тв., 1960, 66 or Чуб., V, 1874, 280 vs Чуб.,V, 1874, 96) map to the exact same
-    canonical work identity so they cannot enter opposite train/eval partitions.
+    vs Черемш., Тв., 1960, 66 or Чуб., V, 1874, 280 vs Чуб.,V, 1874, 96 or Коб., І, 1956, 9
+    vs Коб., І, 1956, 80) map to the exact same canonical work identity so they cannot enter
+    opposite train/eval partitions.
+
     Normalizes internal whitespace around punctuation, converts Cyrillic lookalikes in Roman numerals,
-    preserves publication years (1800-2099), and strips trailing page/item numbers.
+    preserves publication years (1800-2099), strips trailing page/item numbers before numeral conversion,
+    and restricts OCR typographical corrections to documented source/volume editions.
     """
     s = cit.strip("()[] \t\n\r")
     for q in ("„", "“", "»", "«", '"', "'", "`", "’"):
@@ -472,46 +481,48 @@ def canonical_source_work(cit: str, collector: str = "") -> str:
     s = re.sub(r"\s*;\s*", "; ", s)
     s = re.sub(r"\s+", " ", s).strip()
 
-    # Normalize known OCR year typos in 19th/20th century dictionary citations:
-    # 1847 -> 1874 for Chubynsky Volume V (1874)
-    # 1851 -> 1951 for Franko Volume VII (1951)
-    # 1852 -> 1952 for Franko Volume VIII (1952)
-    s = re.sub(r"\b1847\b", "1874", s)
-    s = re.sub(r"\b1851\b", "1951", s)
-    s = re.sub(r"\b1852\b", "1952", s)
-
     # Normalize dot followed by number at end: e.g. "1956. 145" -> "1956, 145"
     s = re.sub(r"(\b\d{4})\.\s*(\d+)\.?$", r"\1, \2", s)
+
+    # Strip Nomys proverb numbers (strictly requiring №): e.g. ", № 10060", ", .№ 1334", " № 2062"
+    s = re.sub(r"(?:,\s*\.?№\s*|\s+№\s*)\d+\.?$", "", s).strip()
+
+    # Scope OCR typographical year corrections strictly to documented source/volume editions
+    if "Чуб" in s and re.search(r"\bV\b", s, re.IGNORECASE):
+        s = re.sub(r"\b1847\b", "1874", s)
+    if "Фр" in s and re.search(r"\bVII\b", s, re.IGNORECASE):
+        s = re.sub(r"\b1851\b", "1951", s)
+    if "Фр" in s and re.search(r"\bVIII\b", s, re.IGNORECASE):
+        s = re.sub(r"\b1852\b", "1952", s)
+        s = re.sub(r"\b19Г,\s*2\b", "1952", s)
+
+    # Strip trailing page numbers FIRST before numeral normalization:
+    # A. SUM-11 format: Year followed by Page (e.g. ", 1956, 9" -> ", 1956", ", 1956, 80" -> ", 1956")
+    s = re.sub(r"(,\s*(?:18\d\d|19\d\d|20\d\d))(?:,\s*(?:с\.\s*)?|\.\s*|\s+)\d+(?:-\d+)?\.?$", r"\1", s).strip()
+
+    # B. Grinchenko format: Roman numeral volume followed by page (e.g. "Чуб. V 818" -> "Чуб. V")
+    s = re.sub(r"(\b[IІVУВХXLCDMіувхсlcdm]+\b)\s+\d+\.?$", r"\1", s).strip()
+
+    # C. Zhelekhivsky format: "Желех. 6" -> "Желех."
+    s = re.sub(r"^(Желех\.)\s+\d+\.?$", r"\1", s).strip()
+
+    # Standardize Arabic numeral volume fields in SUM-11 format: ", 1, 1955" -> ", I, 1955"
+    s = re.sub(r",\s*([1-9]|10)\s*,", lambda m: f", {ARABIC_TO_ROMAN[m.group(1)]},", s)
+
+    # Standardize Arabic numeral volumes in Grinchenko format: "Чуб. 2" -> "Чуб. II", "Чуб. 5" -> "Чуб. V"
+    s = re.sub(
+        r"\b(Чуб\.|Котл\.|Федьк\.|Шух\.|Шейк\.|Харьк\.)\s*([1-9]|10)\b",
+        lambda m: f"{m.group(1)} {ARABIC_TO_ROMAN[m.group(2)]}",
+        s,
+    )
 
     # Convert Cyrillic lookalikes in Roman numerals to Latin
     def norm_roman(m: re.Match) -> str:
         tok = m.group(1)
         table = str.maketrans("ІіХхСсУуВв", "IiXxCcVvVv")
-        t = tok.translate(table).upper()
-        arabic_to_roman = {
-            "1": "I", "2": "II", "3": "III", "4": "IV", "5": "V",
-            "6": "VI", "7": "VII", "8": "VIII", "9": "IX", "10": "X",
-        }
-        return arabic_to_roman.get(t, t)
+        return tok.translate(table).upper()
 
-    s = re.sub(r"(?<=[,\s])([IІVУВХXLCDMіувхсlcdm]+|\b[1-9]\b)(?=[,\s\.]|$)", norm_roman, s)
-
-    # Strip Nomys proverb numbers: e.g. ", № 10060", ", .№ 1334", " № 2062"
-    s = re.sub(r"(?:,\s*\.?№\s*|\s+№\s*)\d+\.?$", "", s).strip()
-
-    # Handle trailing page numbers vs publication years
-    m_page = re.search(r"(?:,\s*(?:с\.\s*)?|\.\s*|\s+)(\d+(?:-\d+)?)\.?$", s)
-    if m_page:
-        trailing_num = m_page.group(1)
-        prefix = s[:m_page.start()].strip()
-        prefix_has_year = bool(re.search(r"\b(18\d\d|19\d\d|20\d\d)\b", prefix))
-
-        if prefix_has_year:
-            s = prefix
-        else:
-            is_year = bool(re.match(r"^(?:18\d\d|19\d\d|20\d\d)$", trailing_num))
-            if not is_year:
-                s = prefix
+    s = re.sub(r"(?<=[,\s])([IІVУВХXLCDMіувхсlcdm]+)(?=[,\s\.]|$)", norm_roman, s)
 
     s = s.strip(" .,")
     return f"{collector}:{s}" if collector else s
