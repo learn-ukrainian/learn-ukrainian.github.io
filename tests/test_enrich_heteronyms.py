@@ -1994,13 +1994,14 @@ def test_batch11_semantic_and_stress_distinctions():
     assert pop[1]["headword"] == "попереноси́ти"
     assert "around" in pop[1]["gloss"].lower() or "some time" in pop[1]["gloss"].lower()
 
-    # 2. поправний: попра́вний (correctable/reformatory) vs поправни́й (correction coefficient, spec.)
+    # 2. поправний: попра́вний (correctable/remediable) vs поправни́й (correctional/reformatory/coefficient)
     popr = enrich_heteronyms.build_heteronyms_for_lemma("поправний")
     assert popr is not None and len(popr) == 2
     assert popr[0]["headword"] == "попра́вний"
-    assert "correctable" in popr[0]["gloss"].lower() or "reformatory" in popr[0]["gloss"].lower()
+    assert "correctable" in popr[0]["gloss"].lower() or "remediable" in popr[0]["gloss"].lower()
+    assert "reformatory" not in popr[0]["gloss"].lower()
     assert popr[1]["headword"] == "поправни́й"
-    assert "correctional" in popr[1]["gloss"].lower() or "coefficient" in popr[1]["gloss"].lower()
+    assert "reformatory" in popr[1]["gloss"].lower() or "correctional" in popr[1]["gloss"].lower() or "coefficient" in popr[1]["gloss"].lower()
 
     # 3. скликання: скли́кання (convocation/cohort) vs склика́ння (convening/gathering)
     sklyk = enrich_heteronyms.build_heteronyms_for_lemma("скликання")

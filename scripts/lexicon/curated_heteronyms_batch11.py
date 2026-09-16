@@ -78,8 +78,8 @@ CURATED_HETERONYMS_BATCH_11: dict[str, list[dict[str, Any]]] = {'поперен�
                                                                       'Наведено для лексикографічної прозорості.'},
                    'pre_soviet_witness': None}],
  'поправний': [{'headword': 'попра́вний',
-                'short_label': 'який можна виправити, виправний або поліпшувальний',
-                'gloss': 'correctable, reformatory or improvable',
+                'short_label': 'який можна виправити, піддатний виправленню',
+                'gloss': 'correctable, remediable or improvable',
                 'pos': 'adj',
                 'cefr': 'B2',
                 'heritage_status': {'classification': 'standard',
@@ -89,10 +89,10 @@ CURATED_HETERONYMS_BATCH_11: dict[str, list[dict[str, Any]]] = {'поперен�
                 'pronunciation': {'ipa': '[pɔˈprɑu̯nɪj]'},
                 'stress': {'form': 'попра́вний', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/поправний'},
                 'morphology': {'pos': 'прикметник', 'paradigm': {'kind': 'adjective'}},
-                'distinction_note': 'Означає такий, що піддається виправленню або служить для виправлення (поправні '
-                                    'заходи, поправний будинок). Не плутати з розрахунковим технічним терміном '
-                                    '«поправни́й».',
-                'meaning': {'definitions': ['Який можна виправити; виправний.'], 'source': 'ВТС'},
+                'distinction_note': 'Означає такий, що піддається виправленню або може бути полагоджений чи виправлений '
+                                    '(поправна помилка, поправне становище). Рідше — правильний, вправний. Не плутати '
+                                    'з «поправни́й» (виправний, реформаторський або коригувальний коефіцієнт).',
+                'meaning': {'definitions': ['Який можна виправити; піддатний виправленню.'], 'source': 'ВТС'},
                 'soviet_colonization_context': {'source': 'СУМ-11 (1970–1980)',
                                                 'definition': 'ПОПРА́ВНИЙ, а, е. 1. Те саме, що випра́вний; // Якого '
                                                               'можна поповнити чим-небудь. Думки її, наче рої жалючих '
@@ -113,8 +113,8 @@ CURATED_HETERONYMS_BATCH_11: dict[str, list[dict[str, Any]]] = {'поперен�
                                                                    'для лексикографічної прозорості.'},
                 'pre_soviet_witness': None},
                {'headword': 'поправни́й',
-                'short_label': 'призначений для внесення поправок, коригувальний (спец.)',
-                'gloss': 'correctional, adjusting (spec., e.g. correction coefficient)',
+                'short_label': 'виправний (заклад, роботи) або коригувальний (спец.)',
+                'gloss': 'correctional, reformatory (penal/institution); adjusting, correction (coefficient)',
                 'pos': 'adj',
                 'cefr': 'B2',
                 'heritage_status': {'classification': 'standard',
@@ -124,11 +124,12 @@ CURATED_HETERONYMS_BATCH_11: dict[str, list[dict[str, Any]]] = {'поперен�
                 'pronunciation': {'ipa': '[pɔprɐu̯ˈnɪj]'},
                 'stress': {'form': 'поправни́й', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/поправний'},
                 'morphology': {'pos': 'прикметник', 'paradigm': {'kind': 'adjective'}},
-                'distinction_note': 'Спеціальний науково-технічний термін: призначений для обчислення чи введення '
-                                    'поправок (поправний коефіцієнт, поправна таблиця). Не плутати з якісним значенням '
-                                    '«попра́вний».',
-                'meaning': {'definitions': ['Призначений для внесення поправок у розрахунки чи показники вимірювальних '
-                                            'приладів (поправний коефіцієнт; спец.).'],
+                'distinction_note': 'Позначає виправний характер установ чи заходів (поправний заклад, поправний будинок), '
+                                    'а також науково-технічний розрахунковий термін внесення поправок (поправний коефіцієнт). '
+                                    'Не плутати з якісним значенням «попра́вний» (піддатний виправленню).',
+                'meaning': {'definitions': ['1. Те саме, що виправни́й (поправний заклад, поправні роботи; рідко). '
+                                            '2. Призначений для внесення поправок у розрахунки чи вимірювання (поправний '
+                                            'коефіцієнт; спец.).'],
                             'source': 'ВТС'},
                 'soviet_colonization_context': {'source': 'СУМ-11 (1970–1980)',
                                                 'definition': 'ПОПРАВНИ́Й, а́, е́, рідко. Те саме, що виправни́й. '
