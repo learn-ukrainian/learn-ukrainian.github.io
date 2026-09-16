@@ -1746,3 +1746,49 @@ def test_citation_whitelist_r27_astra_r9_ordinary_quoted_example():
     assert ok10 is True
     assert any("ВЕСУМ" in a for a in app10)
     assert viol10 == []
+
+
+def test_citation_whitelist_r28_astra_r10_probes():
+    """Verify Astra R10 Findings 1 & 2: quoted bare СУМ fails Gate 4; ordinary quoted adjectives do not fail Gate 4."""
+    # 1. Quoted bare ambiguous СУМ fails Gate 4
+    ok1, app1, viol1 = verify_citation_whitelist("Це правильно («СУМ»).")
+    assert ok1 is False
+    assert app1 == []
+    assert any("СУМ" in v for v in viol1)
+
+    # 2. Bare unquoted ambiguous СУМ fails Gate 4
+    ok2, app2, viol2 = verify_citation_whitelist("Це правильно (СУМ).")
+    assert ok2 is False
+    assert app2 == []
+    assert any("СУМ" in v for v in viol2)
+
+    # 3. Quoted ordinary adjectives matching broad stems (базовий, словниковий, etc.) pass Gate 4
+    ok3, app3, viol3 = verify_citation_whitelist("Це слово («базовий») слід зберегти.")
+    assert ok3 is True
+    assert app3 == []
+    assert viol3 == []
+
+    ok4, app4, viol4 = verify_citation_whitelist("Це слово («словниковий») слід зберегти.")
+    assert ok4 is True
+    assert app4 == []
+    assert viol4 == []
+
+    ok5, app5, viol5 = verify_citation_whitelist("Це слово («корпусний») слід зберегти.")
+    assert ok5 is True
+    assert app5 == []
+    assert viol5 == []
+
+    ok6, app6, viol6 = verify_citation_whitelist("Це слово («довідниковий») слід зберегти.")
+    assert ok6 is True
+    assert app6 == []
+    assert viol6 == []
+
+    ok7, app7, viol7 = verify_citation_whitelist("Це слово («граматичний») слід зберегти.")
+    assert ok7 is True
+    assert app7 == []
+    assert viol7 == []
+
+    ok8, app8, viol8 = verify_citation_whitelist("Це слово («правописний») слід зберегти.")
+    assert ok8 is True
+    assert app8 == []
+    assert viol8 == []
