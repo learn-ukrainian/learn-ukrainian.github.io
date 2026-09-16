@@ -133,7 +133,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
     split_pat = re.compile(
         r"(?:[.,\n;!?:\u2014\u2013]+|"
         r"\s+\b(?:але|проте|однак)\b\s+|"
-        r"\s+\b(?:та|і|й|а)\s+(?=[«\"“‘\']|\b(?:його|її|їх|це|цей|цю|цього|цій|цим|слово|термін|вираз|зворот|щодо|для|слід|варто|потрібно|необхідно|треба|не)\b))",
+        r"\s+\b(?:та|і|й|а)\s+(?=[«\"“‘\']|\b(?:його|її|їх|це|цей|цю|цього|цій|цим|слово|термін|вираз|зворот|щодо|для|слід|варто|потрібно|необхідно|треба|можна|не)\b|[а-яА-ЯёЁіІїЇєЄґҐ’\'\-]+\s+(?:слід|варто|потрібно|необхідно|треба|можна|є|не)\b))",
         re.IGNORECASE,
     )
 
@@ -146,7 +146,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
             # If target is present ONLY as a replacement destination (e.g. "замінити на «файний»"),
             # it is being recommended, not condemned or replaced.
             is_destination = bool(re.search(rf"\b(?:на|замість|до)\s+[«\"“‘\']?{t_bare}[»\"”’\']?", cl_lower))
-            is_subject = bool(re.search(rf"(?:^|\b(?:щодо\s+слова|слово|словом|вираз|зворот)\s+)?[«\"“‘\']?{t_bare}[»\"”’\']?\s+(?:є|це|не|слід|варто|потрібно|необхідно|треба|—|\-)", cl_lower))
+            is_subject = bool(re.search(rf"(?:^|\b(?:щодо\s+слова|слово|словом|вираз|зворот)\s+)?[«\"“‘\']?{t_bare}[»\"”’\']?\s+(?:є|це|не|слід|варто|потрібно|необхідно|треба|можна|—|\-)", cl_lower))
             current_referent = "OTHER" if is_destination and not is_subject else "TARGET"
         elif quoted:
             first_q = quoted[0].strip().lower()
@@ -157,9 +157,19 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 )
                 if subj_m and not re.search(rf"\b(?:на|замість|до)\s+[«\"“‘\']{re.escape(first_q)}[»\"”’\']", cl_lower):
                     current_referent = "OTHER"
-        elif anaphoric_re.search(clause) and current_referent is not None:
-            # Anaphoric reference (його, її, це, etc.): preserve active referent from preceding clause
-            pass
+        else:
+            # Check for unquoted subject before directives (e.g. "общий слід замінити")
+            unquoted_subj_m = re.search(
+                r"(?:^|\b(?:щодо\s+слова|слово|словом|вираз|зворот)\s+)?([а-яА-ЯёЁіІїЇєЄґҐ’'\-]+)\s+(?:слід|варто|потрібно|необхідно|треба|можна|потребує|вимагає|є|не)",
+                cl_lower,
+            )
+            if unquoted_subj_m:
+                uq_word = unquoted_subj_m.group(1).strip()
+                if uq_word != t_lower and not re.search(rf"\b(?:на|замість|до)\s+{re.escape(uq_word)}", cl_lower):
+                    current_referent = "OTHER"
+            elif anaphoric_re.search(clause) and current_referent is not None:
+                # Anaphoric reference (його, її, це, etc.): preserve active referent from preceding clause
+                pass
 
         if current_referent != "TARGET":
             continue
@@ -167,7 +177,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         # Check replacement / avoidance directives
         # A directive is a contradiction unless it is specifically negated
         replace_dirs = [
-            r"(?:слід|варто|потрібно|необхідно|треба)\s+(?:замінити|замінювати|уникати|виправити|виправляти)",
+            r"(?:слід|варто|потрібно|необхідно|треба|можна)\s+(?:замінити|замінювати|уникати|виправити|виправляти)",
             r"\b(?:замініть|замінити|уникайте|уникати|виправте|виправити)\b",
             r"(?:потребує|вимагає)\s+(?:заміни|виправлення)",
         ]
@@ -181,7 +191,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                     after_ne = prefix[last_ne + 3:]
                     if not re.search(r"\b(?:але|проте|однак)\b", after_ne):
                         is_negated = bool(
-                            re.search(r"\bне\s+(?:слід|варто|потрібно|необхідно|треба)?\s*$", prefix)
+                            re.search(r"\bне\s+(?:слід|варто|потрібно|необхідно|треба|можна)?\s*$", prefix)
                         )
                 if not is_negated:
                     return True

@@ -42,16 +42,23 @@ def mock_dbs(tmp_path: Path) -> tuple[Path, Path]:
 def test_audit_fails_on_missing_sft_dir(tmp_path: Path) -> None:
     """Audit must fail closed with FileNotFoundError if SFT dir does not exist (Fable Finding 1)."""
     fake_sft = tmp_path / "nonexistent_sft"
+    dpo = tmp_path / "dpo"
+    dpo.mkdir()
+    (dpo / "shard.jsonl").write_text("{}\n", encoding="utf-8")
     with pytest.raises(FileNotFoundError, match="SFT directory does not exist"):
-        run_pretraining_audit(sft_dir=fake_sft)
+        run_pretraining_audit(sft_dir=fake_sft, dpo_dir=dpo)
 
 
 def test_audit_fails_on_empty_sft_dir(tmp_path: Path) -> None:
     """Audit must fail closed with ValueError if SFT dir has zero jsonl files (Fable Finding 1)."""
     empty_sft = tmp_path / "empty_sft"
     empty_sft.mkdir()
+    dpo = tmp_path / "dpo"
+    dpo.mkdir()
+    (dpo / "shard.jsonl").write_text("{}\n", encoding="utf-8")
     with pytest.raises(ValueError, match="No SFT shards found"):
-        run_pretraining_audit(sft_dir=empty_sft)
+        run_pretraining_audit(sft_dir=empty_sft, dpo_dir=dpo)
+
 
 
 def test_audit_fails_on_missing_dpo_dir(tmp_path: Path) -> None:
@@ -939,3 +946,106 @@ def test_audit_dpo_astra_r5_probes(tmp_path: Path, mock_dbs: tuple[Path, Path]) 
     )
     assert passed4 is True
     assert data4["dpo_contradictions_count"] == 0
+
+
+def test_audit_dpo_astra_r6_probes(tmp_path: Path, mock_dbs: tuple[Path, Path]) -> None:
+    """Verify Astra R6 Findings 2 & 3: modal negation 'не можна замінити' and unquoted coordinate subjects."""
+    mock_sources, mock_vesum = mock_dbs
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "eval_id": "mock_prot_1",
+            "stratum": "regional_dialect",
+            "target_term": "царинками",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sft = tmp_path / "sft"
+    mock_sft.mkdir()
+    (mock_sft / "shard.jsonl").write_text(
+        json.dumps({
+            "target_term": "безпечний",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_dpo = tmp_path / "dpo"
+    mock_dpo.mkdir()
+
+    # Finding 2 probe: «царинками» не можна замінити -> MUST PASS audit with 0 contradictions
+    (mock_dpo / "shard1.jsonl").write_text(
+        json.dumps({
+            "prompt": "Чи можна замінити «царинками»?",
+            "chosen": "«царинками» не можна замінити.",
+            "rejected": "Це нормальне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed1, data1, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft,
+        dpo_dir=mock_dpo,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "report1.md",
+        output_json=tmp_path / "report1.json",
+    )
+    assert passed1 is True
+    assert data1["dpo_contradictions_count"] == 0
+
+    # Finding 3 probe: «царинками» слід зберегти та общий слід замінити на спільний -> MUST PASS audit (unquoted 'общий')
+    (mock_dpo / "shard1.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слова «царинками» та «общий»?",
+            "chosen": "«царинками» слід зберегти та общий слід замінити на спільний.",
+            "rejected": "Обидва слова слід замінити.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed2, data2, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft,
+        dpo_dir=mock_dpo,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "report2.md",
+        output_json=tmp_path / "report2.json",
+    )
+    assert passed2 is True
+    assert data2["dpo_contradictions_count"] == 0
+
+    # Negative control for modal replacement: «царинками» можна замінити на щось -> MUST FAIL audit with 1 contradiction
+    (mock_dpo / "shard1.jsonl").write_text(
+        json.dumps({
+            "prompt": "Чи можна замінити «царинками»?",
+            "chosen": "«царинками» можна замінити на інше слово.",
+            "rejected": "Це нормальне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed3, data3, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft,
+        dpo_dir=mock_dpo,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "report3.md",
+        output_json=tmp_path / "report3.json",
+    )
+    assert passed3 is False
+    assert data3["dpo_contradictions_count"] == 1
+    assert data3["dpo_contradictions"][0]["target_term"] == "царинками"

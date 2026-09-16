@@ -1622,3 +1622,29 @@ def test_citation_whitelist_r24_astra_r3_parenthetical_prose():
     assert ok2 is True
     assert app2 == []
     assert viol2 == []
+
+
+def test_citation_whitelist_r25_astra_r6_typographic_sum11():
+    """Verify Astra R6 Finding 1: typographic hyphens/dashes in SUM-11 are quarantined and fail Gate 4."""
+    # 1. En-dash: U+2013 (–)
+    ok1, app1, viol1 = verify_citation_whitelist("За СУМ–11, це правильно.")
+    assert ok1 is False
+    assert app1 == []
+    assert any("СУМ" in v for v in viol1)
+
+    # 2. Non-breaking hyphen: U+2011 (‑)
+    ok2, app2, viol2 = verify_citation_whitelist("За СУМ‑11, це правильно.")
+    assert ok2 is False
+    assert app2 == []
+    assert any("СУМ" in v for v in viol2)
+
+    # 3. Em-dash: U+2014 (—)
+    ok3, app3, viol3 = verify_citation_whitelist("За СУМ—11, це правильно.")
+    assert ok3 is False
+    assert app3 == []
+    assert any("СУМ" in v for v in viol3)
+
+    # 4. is_approved_authority rejects all typographic hyphen variants
+    assert is_approved_authority("СУМ–11") is False
+    assert is_approved_authority("СУМ‑11") is False
+    assert is_approved_authority("СУМ—11") is False

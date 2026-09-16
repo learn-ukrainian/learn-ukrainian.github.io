@@ -144,24 +144,25 @@ APPROVED_AUTHORITY_REGEXES = [
 def is_approved_authority(name: str) -> bool:
     """Validate authority against approved reference whitelist using anchored matching."""
     clean = name.strip().strip("«»\"'“”‘’")
+    clean_norm = re.sub(r"[\u2010\u2011\u2012\u2013\u2014\u2015]", "-", clean).strip()
     # Reject ambiguous bare 'Словник української мови' or 'СУМ' without 20-volume qualification
     if re.match(
         r"^(?:академічн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?\s+)?словник\s+української\s+мови$",
-        clean,
+        clean_norm,
         re.IGNORECASE,
     ):
         return False
-    if clean.upper() in ("СУМ", "СУМ-11", "SUM", "SUM-11"):
+    if clean_norm.upper() in ("СУМ", "СУМ-11", "SUM", "SUM-11") or re.match(r"^(?:СУМ|SUM)[-]?11$", clean_norm, re.IGNORECASE):
         return False
-    return any(p.match(clean) for p in APPROVED_AUTHORITY_REGEXES)
+    return any(p.match(clean) or p.match(clean_norm) for p in APPROVED_AUTHORITY_REGEXES)
 
 
 # Blacklisted hallucinated, foreign, or Russian-Soviet occupation citations (Gate 4 violations)
 PROHIBITED_CITATION_PATTERNS = [
     # Permanent Quarantine: Bilodid's Russian-Soviet occupation СУМ-11 (1970–1980)
     # is permanently prohibited from positive-authority citation (Issue #8054).
-    re.compile(r"\bсум-11\b", re.IGNORECASE),
-    re.compile(r"словник\s+української\s+мови\s+(?:в\s+11\s+томах|11-томн\w*)", re.IGNORECASE),
+    re.compile(r"\b(?:сум|sum)[-–—\u2010-\u2015]?11\b", re.IGNORECASE),
+    re.compile(r"словник\s+української\s+мови\s+(?:в\s+11\s+томах|11[-–—\u2010-\u2015]?томн\w*)", re.IGNORECASE),
     re.compile(r"\bбілодід\w*\b", re.IGNORECASE),
     re.compile(r"\bcobuild\b", re.IGNORECASE),
     re.compile(r"\blexicallab\b", re.IGNORECASE),
@@ -510,10 +511,14 @@ def verify_citation_whitelist(text: str) -> tuple[bool, list[str], list[str]]:
     found_prohibited: list[str] = []
     found_unapproved: list[str] = []
 
+    norm_text = re.sub(r"[\u2010\u2011\u2012\u2013\u2014\u2015]", "-", text)
     for pat in PROHIBITED_CITATION_PATTERNS:
         m = pat.findall(text)
         if m:
             found_prohibited.extend(m)
+        m_norm = pat.findall(norm_text)
+        if m_norm:
+            found_prohibited.extend(m_norm)
 
     for pat in APPROVED_CITATION_PATTERNS:
         m = pat.findall(text)
