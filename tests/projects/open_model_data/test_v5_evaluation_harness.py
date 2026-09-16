@@ -835,12 +835,22 @@ def test_evaluate_prediction_r9_f4_condemnation_with_unrelated_negation() -> Non
 
 def test_citation_whitelist_r9_f5_cyrillic_cocitation_list() -> None:
     """Verify introductory attribution flags unapproved titlecase Cyrillic co-citations (R9-F5)."""
-    text = "Згідно з ВЕСУМ, Зорблаксом та СУМ, це правильно."
+    # When citing modern decolonized СУМ-20 alongside ВЕСУМ and an unapproved authority
+    text = "Згідно з ВЕСУМ, Зорблаксом та СУМ-20, це правильно."
     is_clean, app, viol = verify_citation_whitelist(text)
     assert is_clean is False
     assert "Зорблаксом" in viol
-    assert any("ВЕСУМ" in a for a in app)
-    assert any("СУМ" in a for a in app)
+    assert "ВЕСУМ" in app
+    assert "СУМ-20" in app
+
+    # Verify bare unversioned СУМ is rejected as ambiguous/unapproved (neither -11 nor bare is allowed)
+    bare_text = "Згідно з ВЕСУМ, Зорблаксом та СУМ, це правильно."
+    bare_clean, bare_app, bare_viol = verify_citation_whitelist(bare_text)
+    assert bare_clean is False
+    assert "Зорблаксом" in bare_viol
+    assert "СУМ" in bare_viol
+    assert "ВЕСУМ" in bare_app
+    assert "СУМ" not in bare_app
 
 
 def test_citation_whitelist_r9_f6_fabricated_composite_authority_rejected() -> None:

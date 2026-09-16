@@ -47,6 +47,9 @@ DEFAULT_HELDOUT_PATH = (
 APPROVED_CITATION_PATTERNS = [
     re.compile(r"\bвесум(?:у|ом|і|а)?\b", re.IGNORECASE),
     re.compile(r"\bvesum\b", re.IGNORECASE),
+    # Modern decolonized СУМ-20 only. Bilodid's Russian-Soviet occupation СУМ-11 (1970–1980)
+    # is permanently quarantined for contrastive Sovietization analysis only; never accepted
+    # as an approved positive authority for authentic Ukrainian vocabulary (Issue #8054).
     re.compile(r"\bсум-20\b", re.IGNORECASE),
     re.compile(r"\bправопис(?:у|ом|і)?(?:\s+(?:2019|1992|1928))?\b", re.IGNORECASE),
     re.compile(r"\bантоненк[оа]-давидович\w*\b", re.IGNORECASE),
@@ -74,6 +77,7 @@ APPROVED_AUTHORITY_REGEXES = [
         r"^(?:(?:словник(?:и|а|у|ом|і)?|корпус(?:и|а|у|ом|і)?|довідник(?:и|а|у|ом|і)?|баз(?:а|и|і|ою|ами|ах)?(?:\s+даних)?)\s+)?(?:весум(?:у|ом|і|а)?|vesum)(?:\s+(?:онлайн|on-line|\d+))?$",
         re.IGNORECASE,
     ),
+    # Modern decolonized СУМ-20 only (Bilodid's Russian-Soviet occupation СУМ-11 permanently purged, Issue #8054).
     re.compile(
         r"^(?:(?:академічн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?|тлумачн(?:ий|ого|ому|им|ім|і|их|ними|а|ої|ій|у|ою|е)?)\s+)?(?:(?:словник(?:и|ів|ам|ами|ах|а|у|ом|і)?)\s+)?сум-20(?:\s+(?:онлайн|on-line|\d+))?$",
         re.IGNORECASE,
