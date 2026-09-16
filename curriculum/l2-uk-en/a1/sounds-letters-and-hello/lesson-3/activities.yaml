@@ -119,46 +119,46 @@ inline:
   instruction: "Обері́ть пра́вильне сло́во для ко́жного ре́чення. — Choose the correct word for each sentence."
   items:
   - sentence: "У рі́чці пла́ває вели́кий ___. — In the river swims a big ___."
-    answer: сом
+    answer: "сом (catfish)"
     options:
-    - сом
-    - сон
-    - оса́
+    - "сом (catfish)"
+    - "сон (sleep / dream)"
+    - "оса́ (wasp)"
     explanation: "Сом — це ри́ба, яка́ живе́ у воді́. — Сом is a catfish living in water."
   - sentence: "Ти́хий нічни́й ___. — Quiet nightly ___."
-    answer: сон
+    answer: "сон (sleep / dream)"
     options:
-    - сон
-    - сом
-    - лан
+    - "сон (sleep / dream)"
+    - "сом (catfish)"
+    - "лан (field)"
     explanation: "Сон означа́є стан сну або́ сновиді́ння. — Сон means sleep or dream."
   - sentence: "Він стої́ть там ___. — He stands there ___."
-    answer: сам
+    answer: "сам (alone / by oneself)"
     options:
-    - сам
-    - сом
-    - сон
+    - "сам (alone / by oneself)"
+    - "сом (catfish)"
+    - "сон (sleep / dream)"
     explanation: "Сам означа́є «само́тній» або́ «без і́нших». — Сам means alone or by oneself."
   - sentence: "Он золоти́й широ́кий ___. — Over there is a golden wide ___."
-    answer: лан
+    answer: "лан (field)"
     options:
-    - лан
-    - сон
-    - сом
+    - "лан (field)"
+    - "сон (sleep / dream)"
+    - "сом (catfish)"
     explanation: "Лан означа́є вели́ке по́ле. — Лан means a wide field."
   - sentence: "Над кві́ткою лети́ть ___. — Above the flower flies a ___."
-    answer: оса́
+    answer: "оса́ (wasp)"
     options:
-    - оса́
-    - сосна́
-    - ма́ма
+    - "оса́ (wasp)"
+    - "сосна́ (pine tree)"
+    - "ма́ма (mother)"
     explanation: "Оса́ — це кома́ха, що літа́є. — Оса́ is a flying wasp."
   - sentence: "У лі́сі росте́ висо́ка ___. — In the forest grows a tall ___."
-    answer: сосна́
+    answer: "сосна́ (pine tree)"
     options:
-    - сосна́
-    - оса́
-    - лан
+    - "сосна́ (pine tree)"
+    - "оса́ (wasp)"
+    - "лан (field)"
     explanation: "Сосна́ — це хво́йне де́рево. — Сосна́ is a pine tree growing in the forest."
 
 - id: act-304
@@ -267,46 +267,46 @@ workbook:
   instruction: "Вста́вте пра́вильне сло́во. — Fill in the correct word."
   items:
   - sentence: "___ сосна́ і лан. — ___ are a pine tree and a field."
-    answer: Он
+    answer: "Он (Look / over there)"
     options:
-    - Он
-    - Нам
-    - Нас
+    - "Он (Look / over there)"
+    - "Нам (To us)"
+    - "Нас (Us)"
     explanation: "«Он» вка́зує на об'є́кти в по́лі зо́ру. — «Он» points out objects in view."
   - sentence: "Він чека́є ___. — He waits for ___."
-    answer: нас
+    answer: "нас (us)"
     options:
-    - нас
-    - нам
-    - он
+    - "нас (us)"
+    - "нам (to us)"
+    - "он (look / over there)"
     explanation: "«Чека́є нас» — waits for us."
   - sentence: "Він допомага́є ___. — He helps ___."
-    answer: нам
+    answer: "нам (to us)"
     options:
-    - нам
-    - нас
-    - он
+    - "нам (to us)"
+    - "нас (us)"
+    - "он (look / over there)"
     explanation: "«Допомага́є нам» — helps us."
   - sentence: "Он лети́ть ___. — Look, a ___ is flying."
-    answer: оса́
+    answer: "оса́ (wasp)"
     options:
-    - оса́
-    - лан
-    - сом
+    - "оса́ (wasp)"
+    - "лан (field)"
+    - "сом (catfish)"
     explanation: "«Лети́ть оса́» — the wasp is flying."
   - sentence: "Он пливе́ ___. — Look, a ___ is swimming."
-    answer: сом
+    answer: "сом (catfish)"
     options:
-    - сом
-    - сон
-    - лан
+    - "сом (catfish)"
+    - "сон (sleep / dream)"
+    - "лан (field)"
     explanation: "«Пливе́ сом» — the catfish is swimming."
   - sentence: "Це мій спокі́йний ___. — This is my peaceful ___."
-    answer: сон
+    answer: "сон (sleep / dream)"
     options:
-    - сон
-    - сом
-    - сам
+    - "сон (sleep / dream)"
+    - "сом (catfish)"
+    - "сам (alone / by oneself)"
     explanation: "«Спокі́йний сон» — peaceful sleep."
 
 - id: act-308

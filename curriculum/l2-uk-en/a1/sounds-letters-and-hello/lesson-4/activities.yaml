@@ -57,11 +57,11 @@ inline:
     explanation: "«Сама́» з на́голосом на дру́гому скла́ді означа́є «alone / by herself». — «Сама́» with stress on the second syllable means alone or by herself."
   - prompt: "У які́й фра́зі оби́два слова́ ма́ють на́голос на кінце́вому скла́ді? — In which phrase do both words carry stress on the final syllable?"
     options:
-    - text: "Он мала́ оса́. (оби́два слова́: мала́ та оса́)"
+    - text: "Он мала́ оса́. — Over there is a small wasp. (both words: мала́ and оса́)"
       correct: true
-    - text: "Он ма́ма. (лише́ пе́рший склад)"
+    - text: "Он ма́ма. — Over there is mother. (only the first syllable)"
       correct: false
-    - text: "У нас ма́ло. (жо́дного на кінці́)"
+    - text: "У нас ма́ло. — We have little. (neither on the final syllable)"
       correct: false
     explanation: "В оби́двох слова́х «мала́» та «оса́» на́голос па́дає на кінце́вий звук -а́. — In both «мала́» and «оса́», stress falls on the final -а́."
   - prompt: "Скі́льки голосни́х зву́ків у сло́ві «ма́сло»? — How many vowel sounds are in the word «ма́сло»?"
@@ -89,46 +89,46 @@ inline:
   instruction: "Обері́ть пра́вильне сло́во для зверта́ння. — Choose the correct word for direct address."
   items:
   - sentence: "___, подиви́ся сюди́! — ___, look here!"
-    answer: Ма́мо
+    answer: "Ма́мо (Mother! — vocative)"
     options:
-    - Ма́мо
-    - Ма́ма
-    - Ма́сло
+    - "Ма́мо (Mother! — vocative)"
+    - "Ма́ма (Mother — nominative)"
+    - "Ма́сло (Butter)"
     explanation: "Для прямо́го зверта́ння вжива́йте кли́чну фо́рму «Ма́мо!». — Use the vocative «Ма́мо!» when addressing mother directly."
   - sentence: "___! Он росте́ висо́ка сосна́! — ___! Look, a tall pine tree is growing!"
-    answer: Ма́мо
+    answer: "Ма́мо (Mother! — vocative)"
     options:
-    - Ма́мо
-    - Ма́ма
-    - Мала́
+    - "Ма́мо (Mother! — vocative)"
+    - "Ма́ма (Mother — nominative)"
+    - "Мала́ (Small — feminine)"
     explanation: "Прями́й ви́гук вимага́є кли́чного відмі́нка: «Ма́мо!». — Direct call uses the vocative: «Ма́мо!»."
   - sentence: "Он іде́ на́ша ___. — Over there comes our ___."
-    answer: ма́ма
+    answer: "ма́ма (mother — nominative)"
     options:
-    - ма́ма
-    - ма́мо
-    - мала́
+    - "ма́ма (mother — nominative)"
+    - "ма́мо (mother! — vocative)"
+    - "мала́ (small — feminine)"
     explanation: "Констата́ція фа́кту (хто іде́) потребу́є називно́го відмі́нка: «ма́ма». — Stating who is coming uses the nominative: «ма́ма»."
   - sentence: "Оле́г гука́є: «___!». — Oleh calls out: «___!»."
-    answer: Ма́мо
+    answer: "Ма́мо (Mother! — vocative)"
     options:
-    - Ма́мо
-    - Ма́ма
-    - Ма́ло
+    - "Ма́мо (Mother! — vocative)"
+    - "Ма́ма (Mother — nominative)"
+    - "Ма́ло (Little / few)"
     explanation: "Зверта́ння до ма́тері потребу́є фо́рми «Ма́мо!». — Calling mother requires the vocative form «Ма́мо!»."
   - sentence: "Там стої́ть на́ша до́бра ___. — Over there stands our good ___."
-    answer: ма́ма
+    answer: "ма́ма (mother — nominative)"
     options:
-    - ма́ма
-    - ма́мо
-    - сама́
+    - "ма́ма (mother — nominative)"
+    - "ма́мо (mother! — vocative)"
+    - "сама́ (alone / by herself)"
     explanation: "Пі́дмет у ре́ченні стої́ть у називно́му відмі́нку: «ма́ма». — The subject of the sentence uses the nominative: «ма́ма»."
   - sentence: "«___, он сом у рі́чці!» — сказа́в Марко́. — «___, look, a catfish in the river!» said Marko."
-    answer: Ма́мо
+    answer: "Ма́мо (Mother! — vocative)"
     options:
-    - Ма́мо
-    - Ма́ма
-    - Са́ло
+    - "Ма́мо (Mother! — vocative)"
+    - "Ма́ма (Mother — nominative)"
+    - "Са́ло (Salo / pork fatback)"
     explanation: "Пряме́ зверта́ння вимага́є «Ма́мо!». — Calling mother directly requires «Ма́мо!»."
 
 - id: act-403
@@ -293,7 +293,7 @@ workbook:
   title: "Фонети́чні та орфографі́чні па́стки — Phonetic and spelling traps"
   instruction: "Знайді́ть поми́лку та обері́ть прави́льний варіа́нт. — Identify the mistake and choose the correct form."
   items:
-  - sentence: "У лі́сі росте́ висо́ка сасна́."
+  - sentence: "У лі́сі росте́ висо́ка сасна́. — A tall pine tree grows in the forest."
     error: сасна́
     answer: сосна́
     options:
@@ -301,7 +301,7 @@ workbook:
     - сасна́
     - сосно́
     explanation: "В украї́нській мо́ві ненаголо́шений о не редуку́ється до а: «сосна́». — Ukrainian unstressed о does not reduce to а: «сосна́»."
-  - sentence: "На хліб нама́зали сві́же масло́."
+  - sentence: "На хліб нама́зали сві́же масло́. — They spread fresh butter on the bread."
     error: масло́
     answer: ма́сло
     options:
@@ -309,7 +309,7 @@ workbook:
     - масло́
     - маслі́
     explanation: "У сло́ві «ма́сло» на́голос па́дає на пе́рший склад: «ма́сло». — The stress in butter is on the first syllable: «ма́сло»."
-  - sentence: "Он лети́ть мала оса́."
+  - sentence: "Он лети́ть мала оса́. — Look, a small wasp is flying."
     error: мала
     answer: мала́
     options:
@@ -317,7 +317,7 @@ workbook:
     - ма́ла
     - ма́ло
     explanation: "Прикме́тник жіно́чого ро́ду ма́є на́голос на кінці́: «мала́». — The feminine adjective for small is stressed on the end: «мала́»."
-  - sentence: "Він з'їв сало́ з хлі́бом."
+  - sentence: "Він з'їв сало́ з хлі́бом. — He ate salo with bread."
     error: сало́
     answer: са́ло
     options:
@@ -325,7 +325,7 @@ workbook:
     - сало́
     - са́ла
     explanation: "Сло́во «са́ло» наголо́шене на пе́ршому скла́ді: «са́ло». — Salo is stressed on the first syllable: «са́ло»."
-  - sentence: "Оле́г гукну́в: «Ма́ма, ходи́ сюди́!»."
+  - sentence: "Оле́г гукну́в: «Ма́ма, ходи́ сюди́!». — Oleh called out: «Mum, come here!». "
     error: Ма́ма
     answer: Ма́мо
     options:
@@ -333,7 +333,7 @@ workbook:
     - Ма́ма
     - Мала́
     explanation: "Пряме́ зверта́ння вимага́є кли́чного відмі́нка: «Ма́мо!». — Direct address requires the vocative form: «Ма́мо!»."
-  - sentence: "На корі́ сосни́ ви́ступила смала́."
+  - sentence: "На корі́ сосни́ ви́ступила смала́. — Resin appeared on the pine bark."
     error: смала́
     answer: смола́
     options:
@@ -400,44 +400,44 @@ workbook:
   instruction: "Вста́вте пра́вильне сло́во за змі́стом ре́чення. — Fill in the word that fits the context."
   items:
   - sentence: "Он золоти́й широ́кий ___. — Over there is a golden wide ___."
-    answer: лан
+    answer: "лан (field)"
     options:
-    - лан
-    - лом
-    - сом
+    - "лан (field)"
+    - "лом (crowbar)"
+    - "сом (catfish)"
     explanation: "«Лан» означа́є вели́ке по́ле. — «Лан» means field."
   - sentence: "У рі́чці пла́ває вели́кий ___. — In the river swims a big ___."
-    answer: сом
+    answer: "сом (catfish)"
     options:
-    - сом
-    - сон
-    - сам
+    - "сом (catfish)"
+    - "сон (sleep / dream)"
+    - "сам (alone / by oneself)"
     explanation: "«Сом» — це вели́ка ри́ба. — «Сом» is catfish."
   - sentence: "Он лети́ть мала́ ___. — Over there flies a small ___."
-    answer: оса́
+    answer: "оса́ (wasp)"
     options:
-    - оса́
-    - сосна́
-    - смола́
+    - "оса́ (wasp)"
+    - "сосна́ (pine tree)"
+    - "смола́ (resin / pitch)"
     explanation: "«Оса́» — це кома́ха. — «Оса́» is wasp."
   - sentence: "У лі́сі росте́ стара́ ___. — In the forest grows an old ___."
-    answer: сосна́
+    answer: "сосна́ (pine tree)"
     options:
-    - сосна́
-    - оса́
-    - ма́сло
+    - "сосна́ (pine tree)"
+    - "оса́ (wasp)"
+    - "ма́сло (butter)"
     explanation: "«Сосна́» — це хво́йне де́рево. — «Сосна́» is pine tree."
   - sentence: "Ма́ма там стої́ть ___. — Mother stands there ___."
-    answer: сама́
+    answer: "сама́ (alone / by herself)"
     options:
-    - сама́
-    - са́ма
-    - ма́ло
+    - "сама́ (alone / by herself)"
+    - "са́ма (the very / self)"
+    - "ма́ло (little / few)"
     explanation: "«Сама́» означа́є без і́нших (alone / by herself). — «Сама́» means alone / by herself."
   - sentence: "На столі́ лежи́ть сві́же ___ і са́ло. — On the table lies fresh ___ and salo."
-    answer: ма́сло
+    answer: "ма́сло (butter)"
     options:
-    - ма́сло
-    - смола́
-    - оса́
+    - "ма́сло (butter)"
+    - "смола́ (resin / pitch)"
+    - "оса́ (wasp)"
     explanation: "«Ма́сло» — вершко́ве ма́сло до ї́жі. — «Ма́сло» means butter."
