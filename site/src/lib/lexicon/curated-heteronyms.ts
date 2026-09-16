@@ -24398,7 +24398,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "лу́пання",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/лупання"
       },
       "morphology": {
@@ -24409,32 +24409,25 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "inanimate",
           "cases": {
             "називний": {
-              "singular": "лу́пання",
-              "plural": "лу́пання"
+              "singular": "лу́пання"
             },
             "родовий": {
-              "singular": "лу́пання",
-              "plural": "лу́пань"
+              "singular": "лу́пання"
             },
             "давальний": {
-              "singular": "лу́панню",
-              "plural": "лу́панням"
+              "singular": "лу́панню"
             },
             "знахідний": {
-              "singular": "лу́пання",
-              "plural": "лу́пання"
+              "singular": "лу́пання"
             },
             "орудний": {
-              "singular": "лу́панням",
-              "plural": "лу́паннями"
+              "singular": "лу́панням"
             },
             "місцевий": {
-              "singular": "лу́панні",
-              "plural": "лу́паннях"
+              "singular": "лу́панні"
             },
             "кличний": {
-              "singular": "лу́пання",
-              "plural": "лу́пання"
+              "singular": "лу́пання"
             }
           }
         }
@@ -24444,7 +24437,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Дія за значенням лу́пати: швидке кліпання, моргання очима."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -24478,7 +24471,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "лупа́ння",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/лупання"
       },
       "morphology": {
@@ -24489,32 +24482,25 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "animacy": "inanimate",
           "cases": {
             "називний": {
-              "singular": "лупа́ння",
-              "plural": "лупа́ння"
+              "singular": "лупа́ння"
             },
             "родовий": {
-              "singular": "лупа́ння",
-              "plural": "лупа́нь"
+              "singular": "лупа́ння"
             },
             "давальний": {
-              "singular": "лупа́нню",
-              "plural": "лупа́нням"
+              "singular": "лупа́нню"
             },
             "знахідний": {
-              "singular": "лупа́ння",
-              "plural": "лупа́ння"
+              "singular": "лупа́ння"
             },
             "орудний": {
-              "singular": "лупа́нням",
-              "plural": "лупа́ннями"
+              "singular": "лупа́нням"
             },
             "місцевий": {
-              "singular": "лупа́нні",
-              "plural": "лупа́ннях"
+              "singular": "лупа́нні"
             },
             "кличний": {
-              "singular": "лупа́ння",
-              "plural": "лупа́ння"
+              "singular": "лупа́ння"
             }
           }
         }
@@ -24524,7 +24510,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Дія за значенням лупа́ти: очищення від шкаралупи, відколювання пластів каменю, породи."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -24560,7 +24546,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "лю́стровий",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/люстровий"
       },
       "morphology": {
@@ -24580,7 +24566,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Прикметник до лю́стра: пов'язаний із підвісним світильником, люстровою лампою."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -24629,7 +24615,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Люстриновий (з глянсової тканини); дзеркальний."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -24665,7 +24651,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "мая́чний",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/маячний"
       },
       "morphology": {
@@ -24685,7 +24671,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Те саме, що маяко́вий: пов'язаний із маяком, маячною баштою."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -24714,7 +24700,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "маячни́й",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/маячний"
       },
       "morphology": {
@@ -24734,7 +24720,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Стосовний до маячення, марення у хворобливому стані або безтямі."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -24780,7 +24766,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Багато бігаючи, дістати що-небудь або зазнати чогось (доконаний вид)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -24829,7 +24815,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Наскакувати, натикатися з розбігу; насуватися, напливати (про хвилі, хмари, сльози)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -24880,7 +24866,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Накласти, накидати або налити багато чого-небудь (розм., доконаний вид)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -24914,7 +24900,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "набуха́ти",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/набухати"
       },
       "morphology": {
@@ -24929,7 +24915,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Збільшуватися в об'ємі, набрякати, розпухати від вологи, рідини або соків."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -24960,7 +24946,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "нава́рний",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/наварний"
       },
       "morphology": {
@@ -24980,7 +24966,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Те саме, що нава́ристий: густий, багатий наваром."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -25009,7 +24995,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "наварни́й",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/наварний"
       },
       "morphology": {
@@ -25029,7 +25015,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Прироблений або зміцнений за допомогою зварювального наплавлення (техн.)."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -25070,12 +25056,12 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "недоконаний"
         }
       },
-      "distinction_note": "Означає «доставляти або звозити транспортом у великій кількості (недок. до навезти)». Не плутати з доконаним «навози́ти» (за кілька рейсів доставити багато чогось або угноювати ниву).",
+      "distinction_note": "Означає «доставляти або звозити транспортом у великій кількості (недок. до навезти)». Не плутати з доконаним «навози́ти» (за кілька рейсів доставити багато чогось).",
       "meaning": {
         "definitions": [
           "Привозити кого-, що-небудь у великій кількості (недоконаний вид)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -25094,8 +25080,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "навозити",
       "url_slug": "навозити",
       "headword": "навози́ти",
-      "short_label": "доставити за кілька рейсів (док.) або удобрити гноєм",
-      "gloss": "haul in multiple cartloads (perf.) or fertilize with manure",
+      "short_label": "доставити за кілька рейсів у великій кількості (док.)",
+      "gloss": "haul, transport or bring in multiple cartloads / trips (perfective)",
       "pos": "verb",
       "cefr": "B2",
       "heritage_status": {
@@ -25119,12 +25105,12 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "доконаний"
         }
       },
-      "distinction_note": "Означає «за кілька заходів привезти що-небудь у великій кількості (док.) або удобрити поле гноєм». Не плутати з недоконаним «наво́зити».",
+      "distinction_note": "Означає «за кілька заходів привезти що-небудь у великій кількості (доконаний вид)». Не плутати з недоконаним «наво́зити».",
       "meaning": {
         "definitions": [
-          "За кілька заходів привезти що-небудь у великій кількості (доконаний вид); удобрити гноєм."
+          "За кілька заходів привезти що-небудь у великій кількості (доконаний вид)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -25160,7 +25146,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "назу́бок",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/назубок"
       },
       "morphology": {
@@ -25206,7 +25192,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Напилок, яким випилюють зубці, роблять насічку, зазублини тощо."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -25235,7 +25221,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "назубо́к",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/назубок"
       },
       "morphology": {
@@ -25249,7 +25235,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Дуже добре, ґрунтовно, напам'ять (розм.)."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -25295,7 +25281,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Довідатися з розповідей або чуток про що-небудь; прочути (розм., док.)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -25344,7 +25330,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Напружуючи слух, старатися почути що-небудь; уважно прислухатися (недоконаний вид)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -25380,7 +25366,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "насти́льний",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/настильний"
       },
       "morphology": {
@@ -25400,7 +25386,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Який рухається паралельно до поверхні землі на незначній висоті (про політ куль чи снарядів)."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -25429,7 +25415,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "настильни́й",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/настильний"
       },
       "morphology": {
@@ -25449,7 +25435,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Стосовний до настилання долівки, покрівлі, помосту."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -25480,7 +25466,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "неви́года",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/невигода"
       },
       "morphology": {
@@ -25526,7 +25512,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Матеріальні збитки, втрата вигоди."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -25601,7 +25587,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Те саме, що незру́чність: брак зручностей, дискомфорт."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -25637,7 +25623,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "неперехі́дний",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/неперехідний"
       },
       "morphology": {
@@ -25652,12 +25638,12 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           }
         }
       },
-      "distinction_note": "Означає «якого важко або неможливо перейти; непрохідний (гори, болота)». Не плутати з «неперехідни́й» (граматичний термін: дієслово без прямого додатка; або вічний, неминущий).",
+      "distinction_note": "Означає «якого важко або неможливо перейти; непрохідний (гори, болота, ріки)». Не плутати з граматичним «неперехідни́й» (дія якого не переходить на прямий додаток).",
       "meaning": {
         "definitions": [
           "Якого важко, неможливо перейти (про гори, ліси, ріки тощо)."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -25671,8 +25657,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "неперехідний",
       "url_slug": "неперехідний",
       "headword": "неперехідни́й",
-      "short_label": "граматично неперехідний (без додатка) або вічний",
-      "gloss": "intransitive (grammatical term) or enduring, lasting, imperishable",
+      "short_label": "граматичний термін: дієслово без прямого додатка",
+      "gloss": "intransitive (grammatical term for verbs that do not take a direct object)",
       "pos": "adj",
       "cefr": "B1",
       "heritage_status": {
@@ -25686,7 +25672,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "неперехідни́й",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/неперехідний"
       },
       "morphology": {
@@ -25701,12 +25687,12 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           }
         }
       },
-      "distinction_note": "Означає «грам. дієслово, дія якого не переходить на прямий додаток» або переносно «вічний, неминущий». Не плутати з географічним «неперехі́дний» (непрохідний).",
+      "distinction_note": "Означає «граматичний термін: дієслово, дія якого не переходить на прямий додаток». Не плутати з «неперехі́дний» (непрохідний, якого не можна перейти: гори, болота).",
       "meaning": {
         "definitions": [
-          "Який позначає дію, що не переходить на об'єкт (грам.); вічний, постійний."
+          "Який позначає дію, що не переходить на прямий об'єкт (про дієслово в граматиці)."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -25737,7 +25723,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "неповоро́тний",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/неповоротний"
       },
       "morphology": {
@@ -25757,7 +25743,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Який не повернеться, не повториться; незворотний."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -25809,7 +25795,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Те саме, що неповоротки́й: вайлуватий, повільний, незграбний."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -25860,7 +25846,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Бігаючи, побувати по черзі в багатьох місцях, відвідати багатьох осіб (доконаний вид)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -25909,7 +25895,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Біжучи навкруги чого-небудь, описувати замкнуте коло; оминати перешкоду бігом."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -25960,7 +25946,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Ведучи кого-небудь, обходити з ним навколо чогось; креслити лінію довкола."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -25994,7 +25980,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "обводи́ти",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/обводити"
       },
       "morphology": {
@@ -26009,7 +25995,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Водячи кого-небудь, побувати з ним у багатьох місцях (доконаний вид)."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -26025,10 +26011,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "обідець",
       "url_slug": "обідець",
       "headword": "обі́дець",
-      "short_label": "ободок, невелика дужка або обруч колеса",
-      "gloss": "small rim, hoop, bezel or circlet (diminutive of обід - rim/hoop)",
+      "short_label": "пестлива назва обідньої трапези (невеликий обід)",
+      "gloss": "midday meal, small or light dinner (affectionate diminutive of обід)",
       "pos": "noun",
-      "cefr": "B2",
+      "cefr": "B1",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": false,
@@ -26040,7 +26026,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "обі́дець",
-        "source": "Грінченко (1907) / ВТС",
+        "source": "Орфографічний словник / ВТС",
         "url": "https://slovnyk.me/dict/vts/обідець"
       },
       "morphology": {
@@ -26081,23 +26067,23 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           }
         }
       },
-      "distinction_note": "Означає «зменшене до обід (дужка, ободок колеса, обруч)». Не плутати з «обіде́ць» (пестливе до обід — денна трапеза, прийом їжі).",
+      "distinction_note": "Означає «пестливе, зменшене до обід (денна трапеза, прийом їжі)». Не плутати з «обіде́ць» (зменшене до обід — обруч колеса, ободок, дужка).",
       "meaning": {
         "definitions": [
-          "Зменшене до обід (обруч, ободок, дужка колеса чи решета)."
+          "Зменшено-пестливе до обід (прийом їжі в середині дня, обідня трапеза)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "ВТС / Грінченко (1907)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ОБІ́ДЕЦЬ, дця́, ч. Зменш. до обі́д 2. Батькові очі круглі, з червоними обідцями від безсоння (Донч., Вибр., 1948, 62).",
+        "definition": "ОБІДЕ́ЦЬ, дця, ч. Зменш.-пестл. до обі́д 1, 2. — Знаєш, братчику, маю тобі щось важне повісти, — сказала раз Зоня до Тараса, коли скінчили свій смирненький обідець (Ков., Світ.., 1960, 65); Прийде кумець на обідець, а ложки не буде (Номис, 1864, № 11899); — Сьогодні й обідцю за тебе ніхто не зробить (Стеф., Вибр., 1945, 86).",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "У СУМ-11 зафіксовано форму «ОБІДЕ́ЦЬ» зі зміщеним наголосом для значення трапези; сучасні академічні норми та орфографічний словник закріплюють кореневий наголос «обі́дець» (від «обі́д»)."
       },
       "pre_soviet_witness": {
         "witness": "Грінченко (1907–1909)",
-        "quote": "Обідець 2, -дця, м. 1) Ум. от обід. Ободок. 2) Кольцо, колечко.",
+        "quote": "Обідець 1, -дця, м. Ум. от обід.",
         "historical_note": "Автентичне народне мововживання, зафіксоване Борисом Грінченком в умовах дії антиукраїнських імперських указів (Валуєвського циркуляра 1863 р. та Емського указу 1876 р.)."
       }
     },
@@ -26105,10 +26091,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "обідець",
       "url_slug": "обідець",
       "headword": "обіде́ць",
-      "short_label": "пестлива назва обідньої трапези (невеликий обід)",
-      "gloss": "nice midday meal, small dinner (affectionate diminutive of обід - meal)",
+      "short_label": "ободок, невелика дужка або обруч колеса (зменш. до обід)",
+      "gloss": "small rim, hoop, bezel, circlet or ring (diminutive of обід - rim/hoop)",
       "pos": "noun",
-      "cefr": "B1",
+      "cefr": "B2",
       "heritage_status": {
         "classification": "standard",
         "is_russianism": false,
@@ -26120,7 +26106,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "обіде́ць",
-        "source": "Грінченко (1907) / ВТС",
+        "source": "Орфографічний словник / ВТС",
         "url": "https://slovnyk.me/dict/vts/обідець"
       },
       "morphology": {
@@ -26135,11 +26121,11 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
               "plural": "обідці́"
             },
             "родовий": {
-              "singular": "обі́дця",
+              "singular": "обідця́",
               "plural": "обідці́в"
             },
             "давальний": {
-              "singular": "обі́дцю",
+              "singular": "обідцю́",
               "plural": "обідця́м"
             },
             "знахідний": {
@@ -26147,37 +26133,37 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
               "plural": "обідці́"
             },
             "орудний": {
-              "singular": "обі́дцем",
+              "singular": "обідце́м",
               "plural": "обідця́ми"
             },
             "місцевий": {
-              "singular": "обі́дці",
+              "singular": "обідці́",
               "plural": "обідця́х"
             },
             "кличний": {
-              "singular": "обі́дцю",
+              "singular": "обідцю́",
               "plural": "обідці́"
             }
           }
         }
       },
-      "distinction_note": "Означає «зменшено-пестливе до обід (денна трапеза, обід)». Не плутати з «обі́дець» (ободок, дужка колеса).",
+      "distinction_note": "Означає «зменшене до обід (обруч колеса, дужка, ободок чи кільце)». Не плутати з «обі́дець» (зменшене до обід — денна трапеза).",
       "meaning": {
         "definitions": [
-          "Зменшено-пестливе до обід (трапеза, полуденок)."
+          "Зменшене до обід (дужка, ободок, обруч колеса, решета або кільце)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "ВТС / Грінченко (1907)"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
-        "definition": "ОБІДЕ́ЦЬ, дця, ч. Зменш.-пестл. до обі́д 1, 2.",
+        "definition": "ОБІ́ДЕЦЬ, дця́, ч. Зменш. до обі́д 2. Батькові очі круглі, з червоними обідцями від безсоння (Донч., Вибр., 1948, 62).",
         "sovietization_risk": 0,
         "keywords": [],
-        "historical_note": "Зафіксовано в радянський період (СУМ-11). Наведено для лексикографічної прозорості."
+        "historical_note": "У СУМ-11 зафіксовано форму «ОБІ́ДЕЦЬ» з кореневим наголосом; сучасні нормативні словники (ВТС, Орфографічний словник) закріплюють для значення обода/обруча наголос на суфіксі: «обіде́ць», родовий «обідця́» (як і у Голоскевича 1929 р. та СУМ-20)."
       },
       "pre_soviet_witness": {
         "witness": "Грінченко (1907–1909)",
-        "quote": "Обідець 1, -дця, м. Ум. от обід.",
+        "quote": "Обідець 2, -дця, м. 1) Ум. от обід. Ободок. 2) Кольцо, колечко.",
         "historical_note": "Автентичне народне мововживання, зафіксоване Борисом Грінченком в умовах дії антиукраїнських імперських указів (Валуєвського циркуляра 1863 р. та Емського указу 1876 р.)."
       }
     }
@@ -26202,7 +26188,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "обрі́зання",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/обрізання"
       },
       "morphology": {
@@ -26248,7 +26234,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Релігійний обряд відсікання крайньої плоті."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -26277,7 +26263,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "обріза́ння",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/обрізання"
       },
       "morphology": {
@@ -26323,7 +26309,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Дія за значенням обріза́ти: підрізування гілок, обрізання країв тощо."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -26354,7 +26340,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "о́кісний",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/окісний"
       },
       "morphology": {
@@ -26374,7 +26360,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Прикметник до о́кіст: пов'язаний із м'ясним окостом."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -26403,7 +26389,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "окі́сний",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/окісний"
       },
       "morphology": {
@@ -26423,7 +26409,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Прикметник до окі́стя (сполучнотканинна оболонка кістки)."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -26454,7 +26440,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "окру́жний",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/окружний"
       },
       "morphology": {
@@ -26474,7 +26460,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Прикметник до округа: навколишній; обхідний, кружний (про шлях)."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -26503,7 +26489,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "окружни́й",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/окружний"
       },
       "morphology": {
@@ -26523,7 +26509,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Прикметник до о́круг: повітовий, районний, окружний суд."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -26600,7 +26586,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Бура від окисів заліза глина, яку гончарі використовували як фарбу (спец.)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -26634,7 +26620,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "опи́ска",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/описка"
       },
       "morphology": {
@@ -26680,7 +26666,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Помилка в написаному тексті через неуважність (механічний огріх)."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -26757,7 +26743,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Діалектна назва холки у тварини, коня."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -26837,7 +26823,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Хлопець, підліток, молодший слуга при панові чи козацькому старшині (іст.)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -26888,7 +26874,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Везучи, переправляти через що-небудь (воду, гори і т. ін.); транспортувати (недок.)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -26922,7 +26908,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "перевози́ти",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/перевозити"
       },
       "morphology": {
@@ -26937,7 +26923,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Везучи, по черзі перемістити куди-небудь усіх чи багато чого-небудь (доконаний вид)."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -27014,7 +27000,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Те саме, що перекла́дина: поперечний брус, планка, траверса."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -27048,7 +27034,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "перекла́дка",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/перекладка"
       },
       "morphology": {
@@ -27094,7 +27080,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Дія за значенням перекла́сти, переклада́ти (переміщення на інше місце або переклад тексту)."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -27125,7 +27111,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "перели́вний",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/переливний"
       },
       "morphology": {
@@ -27145,7 +27131,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Стосовний до переливу барв чи звуків; мінливий, райдужний."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -27174,7 +27160,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "переливни́й",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/переливний"
       },
       "morphology": {
@@ -27194,7 +27180,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Пов'язаний із переливанням рідини через перешкоду чи край резервуара (гідрол., техн.)."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -27240,7 +27226,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
               "plural": "пере́руби"
             },
             "родовий": {
-              "singular": "пере́руба",
+              "singular": "пере́рубу",
               "plural": "пере́рубів"
             },
             "давальний": {
@@ -27271,7 +27257,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Засік у стодолі чи коморі (зах.)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -27305,7 +27291,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "переру́б",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/переруб"
       },
       "morphology": {
@@ -27351,7 +27337,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Надмірне, понад затверджену норму вирубування лісових масивів."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -27397,7 +27383,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Упасти один за одним або всім разом (про багатьох осіб чи предмети; доконаний вид)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -27446,7 +27432,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Кидаючи щось або стріляючи, досягати цілі, влучати; опинятися в певних умовах."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -27497,7 +27483,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Почати сипатися, вільно падати (про сипкі або дрібні предмети; доконаний вид)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -27531,7 +27517,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "посипа́тися",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/посипатися"
       },
       "morphology": {
@@ -27546,7 +27532,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Пасивний стан до посипа́ти: покриватися зверху сипкою речовиною."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -27623,7 +27609,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Те саме, що прига́ра: запах, присмак або шматочки пригорілої їжі."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -27657,7 +27643,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "прига́р",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/пригар"
       },
       "morphology": {
@@ -27703,7 +27689,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Те, що пригоріло, пристало до поверхні металу при плавленні чи варінні (техн.)."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -27749,7 +27735,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Везучи, переміщати кого-, що-небудь повз якийсь пункт чи через кордон (недок.)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -27783,7 +27769,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "провози́ти",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/провозити"
       },
       "morphology": {
@@ -27798,7 +27784,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Возити якийсь час або певну кількість (доконаний вид)."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -27844,7 +27830,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Почати багато бігати, метушитися (розм., доконаний вид)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -27893,7 +27879,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Рушати, розходитися або розлітатися з одного місця в різні боки (недоконаний вид)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -27975,7 +27961,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Те саме, що шулі́ка (хижий птах); вид метелика (розм.)."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -28009,7 +27995,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "рябе́ць",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/рябець"
       },
       "morphology": {
@@ -28055,7 +28041,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Те саме, що ря́бчик: лісовий дикий птах."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -28086,7 +28072,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "тра́вник",
-        "source": "ВТС / СУМ-11",
+        "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/травник"
       },
       "morphology": {
@@ -28132,7 +28118,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Гербарій; старовинна книга з описом цілющих рослин та ліків."
         ],
-        "source": "ВТС / СУМ-11"
+        "source": "ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
@@ -28207,7 +28193,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "definitions": [
           "Настоянка на травах (розм.); місце, поросле травою."
         ],
-        "source": "Грінченко (1907) / ВТС / СУМ-11"
+        "source": "Грінченко (1907) / ВТС"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",

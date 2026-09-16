@@ -1388,13 +1388,13 @@ def test_batch9_semantic_and_stress_distinctions():
     assert nev[1]["headword"] == "невиго́да"
     assert "inconvenience" in nev[1]["gloss"].lower() or "discomfort" in nev[1]["gloss"].lower()
 
-    # неперехідний: неперехі́дний (impassable) vs неперехідни́й (intransitive / eternal)
+    # неперехідний: неперехі́дний (impassable) vs неперехідни́й (intransitive)
     nep = enrich_heteronyms.build_heteronyms_for_lemma("неперехідний")
     assert nep is not None and len(nep) == 2
     assert nep[0]["headword"] == "неперехі́дний"
     assert "impassable" in nep[0]["gloss"].lower() or "uncrossable" in nep[0]["gloss"].lower()
     assert nep[1]["headword"] == "неперехідни́й"
-    assert "intransitive" in nep[1]["gloss"].lower() or "enduring" in nep[1]["gloss"].lower()
+    assert "intransitive" in nep[1]["gloss"].lower()
 
     # неповоротний: неповоро́тний (irreversible) vs неповоротни́й (clumsy/unwieldy)
     npv = enrich_heteronyms.build_heteronyms_for_lemma("неповоротний")
@@ -1420,13 +1420,13 @@ def test_batch9_semantic_and_stress_distinctions():
     assert obv[1]["headword"] == "обводи́ти"
     assert obv[1]["morphology"]["paradigm"]["aspect"] == "доконаний"
 
-    # обідець: обі́дець (small rim/hoop) vs обіде́ць (small nice dinner/meal)
+    # обідець: обі́дець (small nice dinner/meal) vs обіде́ць (small rim/hoop)
     obi = enrich_heteronyms.build_heteronyms_for_lemma("обідець")
     assert obi is not None and len(obi) == 2
     assert obi[0]["headword"] == "обі́дець"
-    assert "rim" in obi[0]["gloss"].lower() or "hoop" in obi[0]["gloss"].lower()
+    assert "dinner" in obi[0]["gloss"].lower() or "meal" in obi[0]["gloss"].lower()
     assert obi[1]["headword"] == "обіде́ць"
-    assert "dinner" in obi[1]["gloss"].lower() or "meal" in obi[1]["gloss"].lower()
+    assert "rim" in obi[1]["gloss"].lower() or "hoop" in obi[1]["gloss"].lower()
 
     # обрізання: обрі́зання (circumcision rite) vs обріза́ння (pruning/trimming)
     obr = enrich_heteronyms.build_heteronyms_for_lemma("обрізання")
@@ -1623,7 +1623,20 @@ def test_batch9_lemmas_not_duplicated_from_earlier_batches():
 
     obidets = CURATED_HETERONYMS_BATCH_9["обідець"]
     assert "Грінченко" in obidets[0]["pre_soviet_witness"]["witness"]
-    assert "Ободок" in obidets[0]["pre_soviet_witness"]["quote"]
+    assert "обід" in obidets[0]["pre_soviet_witness"]["quote"].lower()
+    assert "Ободок" in obidets[1]["pre_soviet_witness"]["quote"]
+
+    # Morphology check: лупання must be singular-only, переруб genitive must be пере́рубу
+    assert "plural" not in lupannya[0]["morphology"]["paradigm"]["cases"]["називний"]
+    assert "plural" not in lupannya[1]["morphology"]["paradigm"]["cases"]["називний"]
+    pererub = CURATED_HETERONYMS_BATCH_9["переруб"]
+    assert pererub[0]["morphology"]["paradigm"]["cases"]["родовий"]["singular"] == "пере́рубу"
+
+    # Decolonization check: no normative СУМ-11 citations outside soviet_colonization_context
+    for lemma, variants in CURATED_HETERONYMS_BATCH_9.items():
+        for v in variants:
+            assert "СУМ-11" not in v["meaning"]["source"], f"Found СУМ-11 in meaning.source for {lemma}"
+            assert "СУМ-11" not in v["stress"]["source"], f"Found СУМ-11 in stress.source for {lemma}"
 
 
 def test_homonyms_with_numeric_suffixes_and_identical_stress_not_treated_as_heteronyms(monkeypatch):
