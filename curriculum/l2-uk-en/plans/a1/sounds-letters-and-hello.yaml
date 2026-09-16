@@ -13,8 +13,8 @@ review_notes: 'Review-and-lock pass per the #1412 rubric template (docs/best-pra
   (c) no calques in vocabulary_hints (all VESUM-verified); (d) no plan-internal contradictions (word_target
   sum 300+250+250+250+150 = 1200); (e) added back-reference to LOCKED wiki in references[]. Paired wiki
   is LOCKED at 9/10 across all 5 dimensions (wiki/.reviews/pedagogy/a1/sounds-letters-and-hello-review-LOCKED.md).'
-title: Звуки, літери та привіт
-subtitle: 33 літери, 38 звуків, Привіт!
+title: Звуки та літери
+subtitle: 33 літери, 38 звуків
 focus: phonetics
 pedagogy: PPP
 phase: A1.1 [Звуки, літери та перший контакт]

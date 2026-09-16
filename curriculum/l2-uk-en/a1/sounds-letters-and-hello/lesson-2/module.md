@@ -121,14 +121,20 @@ From the letters **А**, **О**, **У**, **М**, **Л**, you can already read se
 | **мул** | **мул** | `[— ● —]` | silt, river mud / mule (noun) |
 | **лом** | **лом** | `[— ● —]` | scrap metal, crowbar (noun) |
 
-Notice the contrast between **ма́ло** (stress on the first syllable: *little/few*) and **мала́** (stress on the second syllable: *she is small*). In Ukrainian, shifting the stress changes both grammar and meaning!
+Notice the contrast between **ма́ло** and **мала́**:
+- **ма́ло** (adverb: *little, few*) has stress on the first syllable (**ма́-**) and ends in **-о**;
+- **мала́** (feminine adjective: *small, little*) has stress on the second syllable (**-ла́**) and ends in **-а**.
 
-Here is a simple domestic dialogue between two brothers talking about their mother:
+They do not differ by stress alone: the final vowel also changes from **-о** to **-а** (**о** $\rightarrow$ **а**), altering both the stress position and grammatical role:
+- **ма́ло** (прислі́вник / adverb): **Нам ма́ло.** — We have little / Not enough for us.
+- **мала́** (прикме́тник / feminine adjective): **Вона́ мала́.** — She is small / little.
+
+Here is a simple domestic dialogue between two brothers calling their mother:
 
 > **Марко́:** Ма́ма!
 > **Оле́г:** Ма́ма тут!
 > **Марко́:** Ма́мо!
-> **Оле́г:** Ма́ма ма́ла.
+> **Оле́г:** Нам ма́ло!
 
 Support after the dialogue:
 
@@ -137,7 +143,7 @@ Support after the dialogue:
 | **Марко́: Ма́ма!** | Marko: Mom! |
 | **Оле́г: Ма́ма тут!** | Oleh: Mom is here! |
 | **Марко́: Ма́мо!** | Marko: Mum! |
-| **Оле́г: Ма́ма ма́ла.** | Oleh: Mom was little. |
+| **Оле́г: Нам ма́ло!** | Oleh: We have little! |
 
 <!-- INJECT_ACTIVITY: act-203 -->
 

@@ -1,9 +1,9 @@
 ---
-title: Звуки, літери та привіт
-description: 33 літери, 38 звуків, Привіт!
+title: Звуки та літери
+description: 33 літери, 38 звуків
 sidebar:
   order: 1
-  label: 01. Звуки, літери та привіт
+  label: 01. Звуки та літери
 pipeline: v7-upgrade
 build_status: validated
 draft: false
@@ -84,7 +84,7 @@ By the end, you can:
 - Distinguish Ukrainian **звук** (sound) from **бу́ква** (letter) across the 33-letter alphabet;
 - Pronounce vowels **А**, **О**, **У** cleanly, avoiding vowel reduction (**жо́дного а́кання**);
 - Blend consonants **М**, **Л**, **С**, **Н** into open (**ма**, **са**) and closed (**сон**, **лан**) syllables;
-- Understand how free stress (**на́голос**) alters word meaning (**ма́ло** vs **мала́**);
+- Understand how stress (**на́голос**) and vowel endings shape word meaning (**са́ма** vs **сама́**, **ма́ло** vs **мала́**);
 - Address mother affectionately using the vocative case form **Ма́мо!**;
 - Read authentic beginner Ukrainian microtexts using the pointer **он**.
 
@@ -137,7 +137,7 @@ Keep the scope small. This module focuses exclusively on mastering your first se
 
 ### Будо́ва скла́ду та слова́ — Syllable and word structure
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Скі́льки складі́в у сло́ві ма́ма? — How many syllables in мама?", "options": [{"text": "два", "correct": true}, {"text": "три", "correct": false}, {"text": "оди́н", "correct": false}], "explanation": "Два склади́ (ма-ма), бо два голосни́х зву́ки."}, {"question": "Як назива́ється склад, що закі́нчується на голосни́й звук? — What is a syllable ending in a vowel called?", "options": [{"text": "відкри́тий", "correct": true}, {"text": "закри́тий", "correct": false}, {"text": "соно́рний", "correct": false}], "explanation": "Відкри́тий склад закі́нчується на голосни́й звук."}, {"question": "До якого́ ти́пу нале́жить склад «ам»? — What type is the syllable ам?", "options": [{"text": "закри́тий зворо́тний", "correct": true}, {"text": "відкри́тий прями́й", "correct": false}, {"text": "глухи́й", "correct": false}], "explanation": "Склад ам закі́нчується на при́голосний, о́тже він закри́тий."}, {"question": "Скі́льки голосни́х зву́ків у сло́ві «лом»? — How many vowel sounds in лом?", "options": [{"text": "оди́н", "correct": true}, {"text": "два", "correct": false}, {"text": "три", "correct": false}], "explanation": "У сло́ві лом оди́н голосни́й звук [о]."}, {"question": "Яка́ звукова́ схе́ма сло́ва «ма́ма»? — What is the phonetic diagram of мама?", "options": [{"text": "[— ● — ●]", "correct": true}, {"text": "[● — ● —]", "correct": false}, {"text": "[— — ● ●]", "correct": false}], "explanation": "Схе́ма сло́ва ма́ма — при́голосний, голосни́й, при́голосний, голосни́й."}, {"question": "Чим відрізня́ються слова́ «ма́ло» та «мала́»? — How do мало and мала differ?", "options": [{"text": "на́голосом та зна́ченням", "correct": true}, {"text": "кі́лькістю лі́тер", "correct": false}, {"text": "зву́ком [м]", "correct": false}], "explanation": "На́голос міня́є зна́чення: ма́ло (прислі́вник) та мала́ (прикме́тник)."}]`)} instruction={"Обері́ть пра́вильну відпо́відь. — Choose the correct answer."} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Скі́льки складі́в у сло́ві ма́ма? — How many syllables in мама?", "options": [{"text": "два", "correct": true}, {"text": "три", "correct": false}, {"text": "оди́н", "correct": false}], "explanation": "Два склади́ (ма-ма), бо два голосни́х зву́ки."}, {"question": "Як назива́ється склад, що закі́нчується на голосни́й звук? — What is a syllable ending in a vowel called?", "options": [{"text": "відкри́тий", "correct": true}, {"text": "закри́тий", "correct": false}, {"text": "соно́рний", "correct": false}], "explanation": "Відкри́тий склад закі́нчується на голосни́й звук."}, {"question": "До якого́ ти́пу нале́жить склад «ам»? — What type is the syllable ам?", "options": [{"text": "закри́тий зворо́тний", "correct": true}, {"text": "відкри́тий прями́й", "correct": false}, {"text": "глухи́й", "correct": false}], "explanation": "Склад ам закі́нчується на при́голосний, о́тже він закри́тий."}, {"question": "Скі́льки голосни́х зву́ків у сло́ві «лом»? — How many vowel sounds in лом?", "options": [{"text": "оди́н", "correct": true}, {"text": "два", "correct": false}, {"text": "три", "correct": false}], "explanation": "У сло́ві лом оди́н голосни́й звук [о]."}, {"question": "Яка́ звукова́ схе́ма сло́ва «ма́ма»? — What is the phonetic diagram of мама?", "options": [{"text": "[— ● — ●]", "correct": true}, {"text": "[● — ● —]", "correct": false}, {"text": "[— — ● ●]", "correct": false}], "explanation": "Схе́ма сло́ва ма́ма — при́голосний, голосни́й, при́голосний, голосни́й."}, {"question": "Чим відрізня́ються слова́ «ма́ло» та «мала́»? — How do мало and мала differ?", "options": [{"text": "на́голосом, кінце́вою голосно́ю (о/а) та зна́ченням", "correct": true}, {"text": "кі́лькістю лі́тер", "correct": false}, {"text": "зву́ком [м]", "correct": false}], "explanation": "Вони́ відрізня́ються на́голосом та кінце́вою голосно́ю (о/а): ма́ло — прислі́вник, мала́ — прикме́тник."}]`)} instruction={"Обері́ть пра́вильну відпо́відь. — Choose the correct answer."} isUkrainian={false} />
 
 ### Поділі́ть слова́ на склади́ — Divide words into syllables
 
@@ -169,7 +169,7 @@ Keep the scope small. This module focuses exclusively on mastering your first se
 
 ### Утворі́ть слова́ з лі́тер та складі́в — Build words from letters and syllables
 
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "с / о / н", "answer": "сон"}, {"jumbled": "с / о / м", "answer": "сом"}, {"jumbled": "с / а / м", "answer": "сам"}, {"jumbled": "л / а / н", "answer": "лан"}, {"jumbled": "о / с / а", "answer": "оса́"}, {"jumbled": "с / о / с / н / а", "answer": "сосна́"}]`)} instruction={"Розташу́йте елеме́нти у пра́вильному поря́дку, щоб утвори́ти сло́во. — Put elements in the correct order to form the word."} />
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "с / о / н", "answer": "сон"}, {"jumbled": "с / о / м", "answer": "сом"}, {"jumbled": "с / а / м", "answer": "сам"}, {"jumbled": "л / а / н", "answer": "лан"}, {"jumbled": "о / с / а", "answer": "оса"}, {"jumbled": "с / о / с / н / а", "answer": "сосна"}]`)} instruction={"Розташу́йте елеме́нти у пра́вильному поря́дку, щоб утвори́ти сло́во. — Put elements in the correct order to form the word."} />
 
 ### Ре́чення зі слова́ми-помічника́ми — Sentences with helper words
 
@@ -201,7 +201,7 @@ Keep the scope small. This module focuses exclusively on mastering your first se
 
 ### Складі́ть слова́ із лі́тер — Unjumble words from letters
 
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "м / а / с / л / о", "answer": "ма́сло"}, {"jumbled": "с / а / л / о", "answer": "са́ло"}, {"jumbled": "с / м / о / л / а", "answer": "смола́"}, {"jumbled": "м / а / м / а", "answer": "ма́ма"}, {"jumbled": "с / о / с / н / а", "answer": "сосна́"}, {"jumbled": "с / о / н", "answer": "сон"}]`)} instruction={"Розташу́йте лі́тери у пра́вильному поря́дку, щоб утвори́ти сло́во. — Arrange letters in the correct order to form the Ukrainian word."} />
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "м / а / с / л / о", "answer": "масло"}, {"jumbled": "с / а / л / о", "answer": "сало"}, {"jumbled": "с / м / о / л / а", "answer": "смола"}, {"jumbled": "м / а / м / а", "answer": "мама"}, {"jumbled": "с / о / с / н / а", "answer": "сосна"}, {"jumbled": "с / о / н", "answer": "сон"}]`)} instruction={"Розташу́йте лі́тери у пра́вильному поря́дку, щоб утвори́ти сло́во. — Arrange letters in the correct order to form the Ukrainian word."} />
 
 ### Чита́ння ре́чень — Reading practice fill-in
 

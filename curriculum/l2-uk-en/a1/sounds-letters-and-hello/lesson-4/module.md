@@ -5,7 +5,7 @@
 By the end of this 60-minute lesson, you will be able to:
 
 - **Синтезува́ти сім лі́тер** — effortlessly combine **А**, **О**, **У**, **М**, **Л**, **С**, **Н** into whole words;
-- **Розрізня́ти наголо́шені па́ри** — distinguish meaning changes driven strictly by stress position: **ма́ло** vs **мала́**, **са́ма** vs **сама́**;
+- **Розрізня́ти наголо́шені па́ри та фо́рми слів** — distinguish meaning and grammar shifts driven by stress and vowel endings: **са́ма** vs **сама́** (strict stress shift), **ма́ло** vs **мала́** (stress shift with vowel ending change);
 - **Вжива́ти кли́чну фо́рму ма́мо!** — call your mother using the natural vocative case ending **-о**;
 - **Чита́ти побуто́ві слова́** — read real vocabulary for household and nature: **ма́сло**, **са́ло**, **смола́**;
 - **Чита́ти пе́рші мікроте́ксти** — confidently read short connected Ukrainian sentences using pointer **он**.
@@ -40,25 +40,29 @@ Let us examine two crucial pairs built exclusively from our seven letters:
 
 ### 1. Пара́ ма́ло та мала́
 
-- **ма́ло** (stress on the first syllable **ма́-**):
+Note that **ма́ло** and **мала́** do not differ by stress alone: they also change their ending vowel from **-о** to **-а** (**о** $\rightarrow$ **а**). The stress shifts from the first syllable to the second, matching the change from an adverb (**ма́ло**) to a feminine adjective (**мала́**):
+
+- **ма́ло** (stress on the first syllable **ма́-**, ending in **-о**):
   - **Части́на мо́ви**: прислі́вник (adverb) — little, few, not much.
   - **При́клад**: **У нас ма́ло.** — We have little / Not much for us.
   - **Вимо́ва**: the first **[а]** is strong and held longer; the second syllable **[-ло]** has a clean, relaxed, rounded **[о]**.
 
-- **мала́** (stress on the second syllable **-ла́**):
+- **мала́** (stress on the second syllable **-ла́**, ending in **-а**):
   - **Части́на мо́ви**: прикме́тник жіно́чого ро́ду (feminine adjective) — small, little, young.
   - **При́клад**: **Он мала́ оса́.** — Over there is a small wasp.
   - **Вимо́ва**: the initial **[м-а]** is shorter; the vocal weight lands fully on the final **[-ла́]**.
 
 ### 2. Пара́ са́ма та сама́
 
+By contrast, the pair **са́ма** and **сама́** is spelled with the exact same letters (с-а-м-а), where stress position alone distinguishes the two words:
+
 - **сама́** (stress on the second syllable **-ма́**):
   - **Части́на мо́ви**: займе́нник жіно́чого ро́ду (feminine pronoun) — alone, by herself, on her own.
-  - **При́клад**: **Ма́ма там сама́.** — Mother is there alone / by herself.
+  - **При́клад**: **Ма́ма сама́.** — Mother is alone / by herself.
 
 - **са́ма** (stress on the first syllable **са́-**):
-  - **Части́на мо́ви**: підси́лювальний займе́нник (emphatic / superlative particle or pronoun) — the very, the most.
-  - **При́клад**: **Вона́ прийшла́ в са́ма той час.** — She arrived at the very right time.
+  - **Части́на мо́ви**: підси́лювальний займе́нник (emphatic pronoun, feminine) — the very, the exact.
+  - **При́клад**: **Тепе́р са́ма пора́.** — Now is the very time (high time).
 
 > **Пора́да мо́вця — Speaker's tip**: Whenever you see an acute accent mark (`́`) over a Ukrainian vowel, give that syllable slightly more pitch, duration, and energy. It is the key that unlocks the word's true meaning!
 
@@ -150,8 +154,8 @@ A family observation during a walk:
 
 > **Он ма́ма.** — Over there is mother.  
 > **Ма́мо! Он сосна́!** — Mother! Look, a pine tree!  
-> **Ма́ма там сама́.** — Mother is there by herself.  
-> **Он ма́сло і са́ло.** — Look, butter and salo.  
+> **Ма́ма сама́.** — Mother is alone.
+> **Он ма́сло. Он са́ло.** — Look, butter. Look, salo.
 > **У нас ма́ло.** — We have little.  
 
 Line-by-line pronunciation and vocabulary support:
@@ -162,8 +166,9 @@ Line-by-line pronunciation and vocabulary support:
 | **Он лан.** | Он [лан] | Look, there is a field. |
 | **Он сом.** | Он [сом] | Over there is a catfish. |
 | **Ма́мо!** | [Ма́-мо] (кли́чний відмі́нок) | Mother! (vocative address) |
-| **Ма́ма там сама́.** | [Ма́-ма] там [са-ма́] | Mother is there by herself. |
-| **Он ма́сло і са́ло.** | Он [ма́с-ло] і [са́-ло] | Look, butter and salo. |
+| **Ма́ма сама́.** | [Ма́-ма] [са-ма́] | Mother is alone. |
+| **Он ма́сло.** | Он [ма́с-ло] | Look, butter. |
+| **Он са́ло.** | Он [са́-ло] | Look, salo. |
 
 You have read real Ukrainian sentences independently, relying purely on phonics, syllable blending, and authentic vocabulary!
 
@@ -179,7 +184,7 @@ Congratulations on completing Module 1! You have established an unshakeable foun
 - **Звук та бу́ква — Sound vs letter**: you know that sounds are spoken and heard (38 sounds), while letters are seen and written (33 letters).
 - **Жо́дного а́кання — No akannya**: you learned that unstressed Ukrainian **[о]** never reduces to **[а]**, keeping words like **сосна́** and **молоко́** pure and rounded.
 - **Будо́ва складі́в — Syllable structures**: you assemble open syllables (CV: **ма**, **са**), closed syllables (VC: **ам**, **ул**), and three-letter words (CVC: **сон**, **сом**, **сам**, **лан**).
-- **Си́ла на́голосу — The power of stress**: you distinguish words by stress placement (**ма́ло** = little vs **мала́** = small; **са́ма** vs **сама́** = alone).
+- **Си́ла на́голосу — The power of stress**: you distinguish words by stress placement and vowel endings (**са́ма** = the very vs **сама́** = alone; **ма́ло** = little vs **мала́** = small).
 - **Кли́чний відмі́нок — The vocative case**: you know how to call out with affection using **Ма́мо!**.
 - **Пе́рше чита́ння — First reading**: you read real phrases and mini-dialogues using pointer **он** without phonetic crutches.
 

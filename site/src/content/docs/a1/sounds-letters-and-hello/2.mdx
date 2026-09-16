@@ -1,6 +1,6 @@
 ---
 title: 'Сона́нти М, Л: Склади́ та сло́во ма́ма'
-description: 33 літери, 38 звуків, Привіт!
+description: 33 літери, 38 звуків
 sidebar:
   order: 2
   label: '02. Сона́нти М, Л: Склади́ та сло́во ма́ма'
@@ -191,14 +191,20 @@ From the letters **А**, **О**, **У**, **М**, **Л**, you can already read se
 | **мул** | **мул** | `[— ● —]` | silt, river mud / mule (noun) |
 | **лом** | **лом** | `[— ● —]` | scrap metal, crowbar (noun) |
 
-Notice the contrast between **ма́ло** (stress on the first syllable: *little/few*) and **мала́** (stress on the second syllable: *she is small*). In Ukrainian, shifting the stress changes both grammar and meaning!
+Notice the contrast between **ма́ло** and **мала́**:
+- **ма́ло** (adverb: *little, few*) has stress on the first syllable (**ма́-**) and ends in **-о**;
+- **мала́** (feminine adjective: *small, little*) has stress on the second syllable (**-ла́**) and ends in **-а**.
 
-Here is a simple domestic dialogue between two brothers talking about their mother:
+They do not differ by stress alone: the final vowel also changes from **-о** to **-а** (**о** $\rightarrow$ **а**), altering both the stress position and grammatical role:
+- **ма́ло** (прислі́вник / adverb): **Нам ма́ло.** — We have little / Not enough for us.
+- **мала́** (прикме́тник / feminine adjective): **Вона́ мала́.** — She is small / little.
+
+Here is a simple domestic dialogue between two brothers calling their mother:
 
 <DialogueBox
   client:only="react"
   title="Діалог"
-  exchanges={JSON.parse('[{"speaker":"Марко́","text":"Ма́ма!"},{"speaker":"Оле́г","text":"Ма́ма тут!"},{"speaker":"Марко́","text":"Ма́мо!"},{"speaker":"Оле́г","text":"Ма́ма ма́ла."}]')}
+  exchanges={JSON.parse('[{"speaker":"Марко́","text":"Ма́ма!"},{"speaker":"Оле́г","text":"Ма́ма тут!"},{"speaker":"Марко́","text":"Ма́мо!"},{"speaker":"Оле́г","text":"Нам ма́ло!"}]')}
 />
 
 Support after the dialogue:
@@ -208,7 +214,7 @@ Support after the dialogue:
 | **Марко́: Ма́ма!** | Marko: Mom! |
 | **Оле́г: Ма́ма тут!** | Oleh: Mom is here! |
 | **Марко́: Ма́мо!** | Marko: Mum! |
-| **Оле́г: Ма́ма ма́ла.** | Oleh: Mom was little. |
+| **Оле́г: Нам ма́ло!** | Oleh: We have little! |
 
 ### Пе́рші склади́ та слова́ — First syllables and words
 
@@ -248,7 +254,7 @@ You have learned to merge consonants with vowels into open and closed syllables,
 
 ### Будо́ва скла́ду та слова́ — Syllable and word structure
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Скі́льки складі́в у сло́ві ма́ма? — How many syllables in мама?", "options": [{"text": "два", "correct": true}, {"text": "три", "correct": false}, {"text": "оди́н", "correct": false}], "explanation": "Два склади́ (ма-ма), бо два голосни́х зву́ки."}, {"question": "Як назива́ється склад, що закі́нчується на голосни́й звук? — What is a syllable ending in a vowel called?", "options": [{"text": "відкри́тий", "correct": true}, {"text": "закри́тий", "correct": false}, {"text": "соно́рний", "correct": false}], "explanation": "Відкри́тий склад закі́нчується на голосни́й звук."}, {"question": "До якого́ ти́пу нале́жить склад «ам»? — What type is the syllable ам?", "options": [{"text": "закри́тий зворо́тний", "correct": true}, {"text": "відкри́тий прями́й", "correct": false}, {"text": "глухи́й", "correct": false}], "explanation": "Склад ам закі́нчується на при́голосний, о́тже він закри́тий."}, {"question": "Скі́льки голосни́х зву́ків у сло́ві «лом»? — How many vowel sounds in лом?", "options": [{"text": "оди́н", "correct": true}, {"text": "два", "correct": false}, {"text": "три", "correct": false}], "explanation": "У сло́ві лом оди́н голосни́й звук [о]."}, {"question": "Яка́ звукова́ схе́ма сло́ва «ма́ма»? — What is the phonetic diagram of мама?", "options": [{"text": "[— ● — ●]", "correct": true}, {"text": "[● — ● —]", "correct": false}, {"text": "[— — ● ●]", "correct": false}], "explanation": "Схе́ма сло́ва ма́ма — при́голосний, голосни́й, при́голосний, голосни́й."}, {"question": "Чим відрізня́ються слова́ «ма́ло» та «мала́»? — How do мало and мала differ?", "options": [{"text": "на́голосом та зна́ченням", "correct": true}, {"text": "кі́лькістю лі́тер", "correct": false}, {"text": "зву́ком [м]", "correct": false}], "explanation": "На́голос міня́є зна́чення: ма́ло (прислі́вник) та мала́ (прикме́тник)."}]`)} instruction={"Обері́ть пра́вильну відпо́відь. — Choose the correct answer."} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Скі́льки складі́в у сло́ві ма́ма? — How many syllables in мама?", "options": [{"text": "два", "correct": true}, {"text": "три", "correct": false}, {"text": "оди́н", "correct": false}], "explanation": "Два склади́ (ма-ма), бо два голосни́х зву́ки."}, {"question": "Як назива́ється склад, що закі́нчується на голосни́й звук? — What is a syllable ending in a vowel called?", "options": [{"text": "відкри́тий", "correct": true}, {"text": "закри́тий", "correct": false}, {"text": "соно́рний", "correct": false}], "explanation": "Відкри́тий склад закі́нчується на голосни́й звук."}, {"question": "До якого́ ти́пу нале́жить склад «ам»? — What type is the syllable ам?", "options": [{"text": "закри́тий зворо́тний", "correct": true}, {"text": "відкри́тий прями́й", "correct": false}, {"text": "глухи́й", "correct": false}], "explanation": "Склад ам закі́нчується на при́голосний, о́тже він закри́тий."}, {"question": "Скі́льки голосни́х зву́ків у сло́ві «лом»? — How many vowel sounds in лом?", "options": [{"text": "оди́н", "correct": true}, {"text": "два", "correct": false}, {"text": "три", "correct": false}], "explanation": "У сло́ві лом оди́н голосни́й звук [о]."}, {"question": "Яка́ звукова́ схе́ма сло́ва «ма́ма»? — What is the phonetic diagram of мама?", "options": [{"text": "[— ● — ●]", "correct": true}, {"text": "[● — ● —]", "correct": false}, {"text": "[— — ● ●]", "correct": false}], "explanation": "Схе́ма сло́ва ма́ма — при́голосний, голосни́й, при́голосний, голосни́й."}, {"question": "Чим відрізня́ються слова́ «ма́ло» та «мала́»? — How do мало and мала differ?", "options": [{"text": "на́голосом, кінце́вою голосно́ю (о/а) та зна́ченням", "correct": true}, {"text": "кі́лькістю лі́тер", "correct": false}, {"text": "зву́ком [м]", "correct": false}], "explanation": "Вони́ відрізня́ються на́голосом та кінце́вою голосно́ю (о/а): ма́ло — прислі́вник, мала́ — прикме́тник."}]`)} instruction={"Обері́ть пра́вильну відпо́відь. — Choose the correct answer."} isUkrainian={false} />
 
 ### Поділі́ть слова́ на склади́ — Divide words into syllables
 

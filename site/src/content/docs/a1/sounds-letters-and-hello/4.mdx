@@ -1,6 +1,6 @@
 ---
 title: Си́нтез семи́ лі́тер та пе́рші те́ксти
-description: 33 літери, 38 звуків, Привіт!
+description: 33 літери, 38 звуків
 sidebar:
   order: 4
   label: 04. Си́нтез семи́ лі́тер та пе́рші те́ксти
@@ -69,7 +69,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 By the end of this 60-minute lesson, you will be able to:
 
 - **Синтезува́ти сім лі́тер** — effortlessly combine **А**, **О**, **У**, **М**, **Л**, **С**, **Н** into whole words;
-- **Розрізня́ти наголо́шені па́ри** — distinguish meaning changes driven strictly by stress position: **ма́ло** vs **мала́**, **са́ма** vs **сама́**;
+- **Розрізня́ти наголо́шені па́ри та фо́рми слів** — distinguish meaning and grammar shifts driven by stress and vowel endings: **са́ма** vs **сама́** (strict stress shift), **ма́ло** vs **мала́** (stress shift with vowel ending change);
 - **Вжива́ти кли́чну фо́рму ма́мо!** — call your mother using the natural vocative case ending **-о**;
 - **Чита́ти побуто́ві слова́** — read real vocabulary for household and nature: **ма́сло**, **са́ло**, **смола́**;
 - **Чита́ти пе́рші мікроте́ксти** — confidently read short connected Ukrainian sentences using pointer **он**.
@@ -106,31 +106,35 @@ Let us examine two crucial pairs built exclusively from our seven letters:
 
 ### 1. Пара́ ма́ло та мала́
 
-- **ма́ло** (stress on the first syllable **ма́-**):
+Note that **ма́ло** and **мала́** do not differ by stress alone: they also change their ending vowel from **-о** to **-а** (**о** $\rightarrow$ **а**). The stress shifts from the first syllable to the second, matching the change from an adverb (**ма́ло**) to a feminine adjective (**мала́**):
+
+- **ма́ло** (stress on the first syllable **ма́-**, ending in **-о**):
   - **Части́на мо́ви**: прислі́вник (adverb) — little, few, not much.
   - **При́клад**: **У нас ма́ло.** — We have little / Not much for us.
   - **Вимо́ва**: the first **[а]** is strong and held longer; the second syllable **[-ло]** has a clean, relaxed, rounded **[о]**.
 
-- **мала́** (stress on the second syllable **-ла́**):
+- **мала́** (stress on the second syllable **-ла́**, ending in **-а**):
   - **Части́на мо́ви**: прикме́тник жіно́чого ро́ду (feminine adjective) — small, little, young.
   - **При́клад**: **Он мала́ оса́.** — Over there is a small wasp.
   - **Вимо́ва**: the initial **[м-а]** is shorter; the vocal weight lands fully on the final **[-ла́]**.
 
 ### 2. Пара́ са́ма та сама́
 
+By contrast, the pair **са́ма** and **сама́** is spelled with the exact same letters (с-а-м-а), where stress position alone distinguishes the two words:
+
 - **сама́** (stress on the second syllable **-ма́**):
   - **Части́на мо́ви**: займе́нник жіно́чого ро́ду (feminine pronoun) — alone, by herself, on her own.
-  - **При́клад**: **Ма́ма там сама́.** — Mother is there alone / by herself.
+  - **При́клад**: **Ма́ма сама́.** — Mother is alone / by herself.
 
 - **са́ма** (stress on the first syllable **са́-**):
-  - **Части́на мо́ви**: підси́лювальний займе́нник (emphatic / superlative particle or pronoun) — the very, the most.
-  - **При́клад**: **Вона́ прийшла́ в са́ма той час.** — She arrived at the very right time.
+  - **Части́на мо́ви**: підси́лювальний займе́нник (emphatic pronoun, feminine) — the very, the exact.
+  - **При́клад**: **Тепе́р са́ма пора́.** — Now is the very time (high time).
 
 > **Пора́да мо́вця — Speaker's tip:** Whenever you see an acute accent mark (`́`) over a Ukrainian vowel, give that syllable slightly more pitch, duration, and energy. It is the key that unlocks the word's true meaning!
 
 ### Си́ла на́голосу — The power of stress
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "What does «ма́ло» mean with stress on the first syllable?", "options": [{"text": "Little / few (adverb)", "correct": true}, {"text": "Small / little (feminine adjective)", "correct": false}, {"text": "Mother", "correct": false}], "explanation": "«Ма́ло» with stress on the first syllable is an adverb meaning little or few."}, {"question": "What does «мала́» mean with stress on the second syllable?", "options": [{"text": "Small / little (feminine adjective)", "correct": true}, {"text": "Little / few (adverb)", "correct": false}, {"text": "Catfish", "correct": false}], "explanation": "«Мала́» with stress on the second syllable is a feminine adjective (e.g. «мала́ оса́»)."}, {"question": "In the sentence «Ма́ма там сама́.», what does «сама́» mean?", "options": [{"text": "Alone / by herself", "correct": true}, {"text": "The very", "correct": false}, {"text": "Together", "correct": false}], "explanation": "«Сама́» with stress on the second syllable means alone or by oneself."}, {"question": "In the phrase «Он мала́ оса́.», which word carries stress on its final syllable?", "options": [{"text": "Both мала́ and оса́", "correct": true}, {"text": "Only он", "correct": false}, {"text": "Neither word", "correct": false}], "explanation": "Both «мала́» and «оса́» carry stress on the final -а́."}, {"question": "How many vowel sounds are there in the word «ма́сло»?", "options": [{"text": "2", "correct": true}, {"text": "3", "correct": false}, {"text": "1", "correct": false}], "explanation": "«Ма́сло» has two vowels ([а] and [о]) and therefore two syllables."}, {"question": "What happens to the vowels in «ма́сло» when spoken aloud?", "options": [{"text": "Both [а] and [о] are pronounced clearly and distinctly", "correct": true}, {"text": "The final [о] becomes [а]", "correct": false}, {"text": "The vowel [а] is silent", "correct": false}], "explanation": "Ukrainian preserves pure vowel quality without reduction."}]`)} instruction={"Обері́ть пра́вильне зна́чення ви́діленого сло́ва. — Choose the correct meaning for the highlighted word."} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "What does «ма́ло» mean with stress on the first syllable?", "options": [{"text": "Little / few (adverb)", "correct": true}, {"text": "Small / little (feminine adjective)", "correct": false}, {"text": "Mother", "correct": false}], "explanation": "«Ма́ло» with stress on the first syllable is an adverb meaning little or few."}, {"question": "What does «мала́» mean with stress on the second syllable?", "options": [{"text": "Small / little (feminine adjective)", "correct": true}, {"text": "Little / few (adverb)", "correct": false}, {"text": "Catfish", "correct": false}], "explanation": "«Мала́» with stress on the second syllable is a feminine adjective (e.g. «мала́ оса́»)."}, {"question": "In the sentence «Ма́ма сама́.», what does «сама́» mean?", "options": [{"text": "Alone / by herself", "correct": true}, {"text": "The very", "correct": false}, {"text": "Together", "correct": false}], "explanation": "«Сама́» with stress on the second syllable means alone or by oneself."}, {"question": "In the phrase «Он мала́ оса́.», which word carries stress on its final syllable?", "options": [{"text": "Both мала́ and оса́", "correct": true}, {"text": "Only он", "correct": false}, {"text": "Neither word", "correct": false}], "explanation": "Both «мала́» and «оса́» carry stress on the final -а́."}, {"question": "How many vowel sounds are there in the word «ма́сло»?", "options": [{"text": "2", "correct": true}, {"text": "3", "correct": false}, {"text": "1", "correct": false}], "explanation": "«Ма́сло» has two vowels ([а] and [о]) and therefore two syllables."}, {"question": "What happens to the vowels in «ма́сло» when spoken aloud?", "options": [{"text": "Both [а] and [о] are pronounced clearly and distinctly", "correct": true}, {"text": "The final [о] becomes [а]", "correct": false}, {"text": "The vowel [а] is silent", "correct": false}], "explanation": "Ukrainian preserves pure vowel quality without reduction."}]`)} instruction={"Обері́ть пра́вильне зна́чення ви́діленого сло́ва. — Choose the correct meaning for the highlighted word."} isUkrainian={false} />
 
 ---
 
@@ -222,8 +226,8 @@ A family observation during a walk:
 
 > **Он ма́ма.** — Over there is mother.
 > **Ма́мо! Он сосна́!** — Mother! Look, a pine tree!
-> **Ма́ма там сама́.** — Mother is there by herself.
-> **Он ма́сло і са́ло.** — Look, butter and salo.
+> **Ма́ма сама́.** — Mother is alone.
+> **Он ма́сло. Он са́ло.** — Look, butter. Look, salo.
 > **У нас ма́ло.** — We have little.
 
 Line-by-line pronunciation and vocabulary support:
@@ -234,14 +238,15 @@ Line-by-line pronunciation and vocabulary support:
 | **Он лан.** | Он [лан] | Look, there is a field. |
 | **Он сом.** | Он [сом] | Over there is a catfish. |
 | **Ма́мо!** | [Ма́-мо] (кли́чний відмі́нок) | Mother! (vocative address) |
-| **Ма́ма там сама́.** | [Ма́-ма] там [са-ма́] | Mother is there by herself. |
-| **Он ма́сло і са́ло.** | Он [ма́с-ло] і [са́-ло] | Look, butter and salo. |
+| **Ма́ма сама́.** | [Ма́-ма] [са-ма́] | Mother is alone. |
+| **Он ма́сло.** | Он [ма́с-ло] | Look, butter. |
+| **Он са́ло.** | Он [са́-ло] | Look, salo. |
 
 You have read real Ukrainian sentences independently, relying purely on phonics, syllable blending, and authentic vocabulary!
 
 ### Розумі́ння мікроте́кстів — Reading comprehension
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "In Text 1, what is pointed out near the pine tree?", "options": [{"text": "A field, a catfish, and a wasp", "correct": true}, {"text": "A car and a house", "correct": false}, {"text": "Milk and bread", "correct": false}], "explanation": "Text 1 lists «сосна́», «лан», «сом», and «оса́»."}, {"question": "In Text 2, who is outdoors by herself?", "options": [{"text": "Mother («Ма́ма там сама́.»)", "correct": true}, {"text": "Oleh", "correct": false}, {"text": "Marko", "correct": false}], "explanation": "The text states: «Ма́ма там сама́.»."}, {"question": "What foods are mentioned in Text 2?", "options": [{"text": "Butter and salo («ма́сло і са́ло»)", "correct": true}, {"text": "Apples and honey", "correct": false}, {"text": "Fish and soup", "correct": false}], "explanation": "Text 2 mentions: «Он ма́сло і са́ло.»."}, {"question": "What pointer word is used to direct attention in both texts?", "options": [{"text": "он", "correct": true}, {"text": "ми", "correct": false}, {"text": "як", "correct": false}], "explanation": "«Он» points out objects in view («Он сосна́», «Он ма́ма»)."}, {"question": "How does the speaker address mother in Text 2?", "options": [{"text": "Ма́мо!", "correct": true}, {"text": "Ма́ма!", "correct": false}, {"text": "Мала́!", "correct": false}], "explanation": "The speaker calls: «Ма́мо! Он сосна́!»."}, {"question": "What is the size of the wasp in Text 1?", "options": [{"text": "Small («Оса́ мала́.»)", "correct": true}, {"text": "Large", "correct": false}, {"text": "Enormous", "correct": false}], "explanation": "The text says: «Оса́ мала́.»."}]`)} instruction={"Да́йте ві́дповідь на запита́ння до те́кстів. — Answer the question based on the reading texts."} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "In Text 1, what is pointed out near the pine tree?", "options": [{"text": "A field, a catfish, and a wasp", "correct": true}, {"text": "A car and a house", "correct": false}, {"text": "Milk and bread", "correct": false}], "explanation": "Text 1 lists «сосна́», «лан», «сом», and «оса́»."}, {"question": "In Text 2, who is outdoors alone?", "options": [{"text": "Mother («Ма́ма сама́.»)", "correct": true}, {"text": "Oleh", "correct": false}, {"text": "Marko", "correct": false}], "explanation": "The text states: «Ма́ма сама́.»."}, {"question": "What foods are mentioned in Text 2?", "options": [{"text": "Butter and salo («ма́сло», «са́ло»)", "correct": true}, {"text": "Apples and honey", "correct": false}, {"text": "Fish and soup", "correct": false}], "explanation": "Text 2 mentions «ма́сло» and «са́ло»."}, {"question": "What pointer word is used to direct attention in both texts?", "options": [{"text": "он", "correct": true}, {"text": "ми", "correct": false}, {"text": "як", "correct": false}], "explanation": "«Он» points out objects in view («Он сосна́», «Он ма́ма»)."}, {"question": "How does the speaker address mother in Text 2?", "options": [{"text": "Ма́мо!", "correct": true}, {"text": "Ма́ма!", "correct": false}, {"text": "Мала́!", "correct": false}], "explanation": "The speaker calls: «Ма́мо! Он сосна́!»."}, {"question": "What is the size of the wasp in Text 1?", "options": [{"text": "Small («Оса́ мала́.»)", "correct": true}, {"text": "Large", "correct": false}, {"text": "Enormous", "correct": false}], "explanation": "The text says: «Оса́ мала́.»."}]`)} instruction={"Да́йте ві́дповідь на запита́ння до те́кстів. — Answer the question based on the reading texts."} isUkrainian={false} />
 
 ---
 
@@ -253,7 +258,7 @@ Congratulations on completing Module 1! You have established an unshakeable foun
 - **Звук та бу́ква — Sound vs letter**: you know that sounds are spoken and heard (38 sounds), while letters are seen and written (33 letters).
 - **Жо́дного а́кання — No akannya**: you learned that unstressed Ukrainian **[о]** never reduces to **[а]**, keeping words like **сосна́** and **молоко́** pure and rounded.
 - **Будо́ва складі́в — Syllable structures**: you assemble open syllables (CV: **ма**, **са**), closed syllables (VC: **ам**, **ул**), and three-letter words (CVC: **сон**, **сом**, **сам**, **лан**).
-- **Си́ла на́голосу — The power of stress**: you distinguish words by stress placement (**ма́ло** = little vs **мала́** = small; **са́ма** vs **сама́** = alone).
+- **Си́ла на́голосу — The power of stress**: you distinguish words by stress placement and vowel endings (**са́ма** = the very vs **сама́** = alone; **ма́ло** = little vs **мала́** = small).
 - **Кли́чний відмі́нок — The vocative case**: you know how to call out with affection using **Ма́мо!**.
 - **Пе́рше чита́ння — First reading**: you read real phrases and mini-dialogues using pointer **он** without phonetic crutches.
 
@@ -311,7 +316,7 @@ In Module 2, we expand your phonetic palette with new vowels and consonants, ope
 
 ### Складі́ть слова́ із лі́тер — Unjumble words from letters
 
-<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "м / а / с / л / о", "answer": "ма́сло"}, {"jumbled": "с / а / л / о", "answer": "са́ло"}, {"jumbled": "с / м / о / л / а", "answer": "смола́"}, {"jumbled": "м / а / м / а", "answer": "ма́ма"}, {"jumbled": "с / о / с / н / а", "answer": "сосна́"}, {"jumbled": "с / о / н", "answer": "сон"}]`)} instruction={"Розташу́йте лі́тери у пра́вильному поря́дку, щоб утвори́ти сло́во. — Arrange letters in the correct order to form the Ukrainian word."} />
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "м / а / с / л / о", "answer": "масло"}, {"jumbled": "с / а / л / о", "answer": "сало"}, {"jumbled": "с / м / о / л / а", "answer": "смола"}, {"jumbled": "м / а / м / а", "answer": "мама"}, {"jumbled": "с / о / с / н / а", "answer": "сосна"}, {"jumbled": "с / о / н", "answer": "сон"}]`)} instruction={"Розташу́йте лі́тери у пра́вильному поря́дку, щоб утвори́ти сло́во. — Arrange letters in the correct order to form the Ukrainian word."} />
 
 ### Чита́ння ре́чень — Reading practice fill-in
 

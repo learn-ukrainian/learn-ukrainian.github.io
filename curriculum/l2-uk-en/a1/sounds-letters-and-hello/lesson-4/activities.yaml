@@ -46,7 +46,7 @@ inline:
     - text: "Catfish"
       correct: false
     explanation: "«Мала́» with stress on the second syllable is a feminine adjective (e.g. «мала́ оса́»)."
-  - prompt: "In the sentence «Ма́ма там сама́.», what does «сама́» mean?"
+  - prompt: "In the sentence «Ма́ма сама́.», what does «сама́» mean?"
     options:
     - text: "Alone / by herself"
       correct: true
@@ -163,24 +163,24 @@ inline:
     - text: "Milk and bread"
       correct: false
     explanation: "Text 1 lists «сосна́», «лан», «сом», and «оса́»."
-  - prompt: "In Text 2, who is outdoors by herself?"
+  - prompt: "In Text 2, who is outdoors alone?"
     options:
-    - text: "Mother («Ма́ма там сама́.»)"
+    - text: "Mother («Ма́ма сама́.»)"
       correct: true
     - text: "Oleh"
       correct: false
     - text: "Marko"
       correct: false
-    explanation: "The text states: «Ма́ма там сама́.»."
+    explanation: "The text states: «Ма́ма сама́.»."
   - prompt: "What foods are mentioned in Text 2?"
     options:
-    - text: "Butter and salo («ма́сло і са́ло»)"
+    - text: "Butter and salo («ма́сло», «са́ло»)"
       correct: true
     - text: "Apples and honey"
       correct: false
     - text: "Fish and soup"
       correct: false
-    explanation: "Text 2 mentions: «Он ма́сло і са́ло.»."
+    explanation: "Text 2 mentions «ма́сло» and «са́ло»."
   - prompt: "What pointer word is used to direct attention in both texts?"
     options:
     - text: он
@@ -368,33 +368,33 @@ workbook:
   title: "Складі́ть слова́ із лі́тер — Unjumble words from letters"
   instruction: "Розташу́йте лі́тери у пра́вильному поря́дку, щоб утвори́ти сло́во. — Arrange letters in the correct order to form the Ukrainian word."
   items:
-  - answer: ма́сло
+  - answer: масло
     words:
     - м
     - а
     - с
     - л
     - о
-  - answer: са́ло
+  - answer: сало
     words:
     - с
     - а
     - л
     - о
-  - answer: смола́
+  - answer: смола
     words:
     - с
     - м
     - о
     - л
     - а
-  - answer: ма́ма
+  - answer: мама
     words:
     - м
     - а
     - м
     - а
-  - answer: сосна́
+  - answer: сосна
     words:
     - с
     - о

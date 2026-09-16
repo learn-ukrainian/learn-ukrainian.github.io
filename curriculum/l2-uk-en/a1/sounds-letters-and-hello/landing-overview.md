@@ -5,7 +5,7 @@ By the end, you can:
 - Distinguish Ukrainian **звук** (sound) from **бу́ква** (letter) across the 33-letter alphabet;
 - Pronounce vowels **А**, **О**, **У** cleanly, avoiding vowel reduction (**жо́дного а́кання**);
 - Blend consonants **М**, **Л**, **С**, **Н** into open (**ма**, **са**) and closed (**сон**, **лан**) syllables;
-- Understand how free stress (**на́голос**) alters word meaning (**ма́ло** vs **мала́**);
+- Understand how stress (**на́голос**) and vowel endings shape word meaning (**са́ма** vs **сама́**, **ма́ло** vs **мала́**);
 - Address mother affectionately using the vocative case form **Ма́мо!**;
 - Read authentic beginner Ukrainian microtexts using the pointer **он**.
 
