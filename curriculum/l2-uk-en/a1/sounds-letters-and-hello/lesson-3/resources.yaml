@@ -1,53 +1,20 @@
-- title: ULP Season 1, Episode 1 — Informal Greetings
-  role: podcast
-  url: https://www.ukrainianlessons.com/episode1/
-  notes: 'Plan reference: Приві́т, Як спра́ви?, response models.'
-- title: Anna Ohoiko — Ukrainian alphabet overview
-  role: youtube
-  url: https://www.youtube.com/watch?v=ksXIXj7CXwc
-  channel: Ukrainian Lessons
-  notes: 'Plan pronunciation video: overview for the full Ukrainian alphabet.'
-- title: Anna Ohoiko — Ukrainian alphabet pronunciation playlist
-  role: youtube
-  url: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
-  channel: Ukrainian Lessons
-  notes: 'Plan pronunciation video: playlist for per-letter Ukrainian pronunciation
-    practice.'
-- title: Заболо́тний 5 клас, p. 83
-  role: textbook
-  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0084
-  notes: 'Plan reference: «Зву́ки ми чу́ємо й вимовля́ємо, а бу́кви ба́чимо й пи́шемо.»'
-- title: Захарійчук, буква́р 1 клас (НУШ 2025), p. 13
-  role: textbook
-  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0002
-  notes: 'Plan reference: [•] голосни́й, [–] тверди́й при́голосний, [=] м''яки́й при́голосний.'
-- title: Anna Ohoiko — Letter П pronunciation
-  role: youtube
-  url: https://www.youtube.com/watch?v=JksSjjxyW5Y
-  channel: Ukrainian Lessons
-  notes: 'Plan pronunciation video: П.'
-- title: Anna Ohoiko — Letter Р pronunciation
-  role: youtube
-  url: https://www.youtube.com/watch?v=fMGsQ5KPQgg
-  channel: Ukrainian Lessons
-  notes: 'Plan pronunciation video: Р.'
-- title: Anna Ohoiko — Letter И pronunciation
-  role: youtube
-  url: https://www.youtube.com/watch?v=W-1rCu0indE
-  channel: Ukrainian Lessons
-  notes: 'Plan pronunciation video: И.'
-- title: Anna Ohoiko — Letter В pronunciation
-  role: youtube
-  url: https://www.youtube.com/watch?v=aFcvYfvQ2X4
-  channel: Ukrainian Lessons
-  notes: 'Plan pronunciation video: В.'
-- title: Anna Ohoiko — Letter І pronunciation
-  role: youtube
-  url: https://www.youtube.com/watch?v=Z9TH0H4ShGo
-  channel: Ukrainian Lessons
-  notes: 'Plan pronunciation video: І.'
-- title: Anna Ohoiko — Letter Т pronunciation
-  role: youtube
-  url: https://www.youtube.com/watch?v=m-jcLR_gK0k
-  channel: Ukrainian Lessons
-  notes: 'Plan pronunciation video: Т.'
+- title: Українська мова. Буквар. 1 клас
+  author: Большакова І. О., Пристинська М. С.
+  year: 2018
+  publisher: Ранок
+  url: https://pidruchnyk.com.ua/1179-bukvar-1-klas-bolshakova.html
+- title: Українська мова. Буквар. 1 клас
+  author: Захарійчук М. Д.
+  year: 2018
+  publisher: Грамота
+  url: https://pidruchnyk.com.ua/1181-bukvar-1-klas-zahariychuk.html
+- title: Pronunciation Video Series (Letter С)
+  author: Anna Ohoiko
+  year: 2020
+  publisher: Ukrainian Lessons
+  url: https://www.youtube.com/watch?v=7UsFBgSL91E
+- title: Pronunciation Video Series (Letter Н)
+  author: Anna Ohoiko
+  year: 2020
+  publisher: Ukrainian Lessons
+  url: https://www.youtube.com/watch?v=vNUfiKHPYaU

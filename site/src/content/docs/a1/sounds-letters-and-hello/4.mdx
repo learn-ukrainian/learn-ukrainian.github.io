@@ -1,14 +1,14 @@
 ---
-title: First Pronunciation Traps
+title: Си́нтез семи́ лі́тер та пе́рші те́ксти
 description: 33 літери, 38 звуків, Привіт!
 sidebar:
   order: 4
-  label: 04. First Pronunciation Traps
+  label: 04. Си́нтез семи́ лі́тер та пе́рші те́ксти
 pipeline: v7-upgrade
 build_status: validated
 draft: false
 prev: /a1/sounds-letters-and-hello/3/
-next: /a1/sounds-letters-and-hello/5/
+next: /a1/sounds-letters-and-hello/
 lesson: 4
 module_slug: sounds-letters-and-hello
 ---
@@ -64,211 +64,258 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 <Tabs syncKey="module-tab">
 <TabItem label="Урок — Lesson">
 
-Повто́рення з пе́рших трьох уро́ків — retrieval from Lessons 1–3:
-У пе́рших трьох уро́ках ви познайо́милися з украї́нською абе́ткою, шістьма́ голосни́ми зву́ками, на́голосом та пе́ршими щоде́нними привіта́ннями. In the first three lessons, you met the Ukrainian alphabet, the six basic vowel sounds, word stress, and your first daily greetings:
-- **Звук та лі́тера** — sound is what we hear and say (**звук**), letter is what we see and write (**лі́тера**);
-- **Чи́сті голосні́** — six open vowel sounds: **[а]**, **[о]**, **[у]**, **[е]**, **[и]**, **[і]**;
-- **Склад та на́голос** — every syllable (**склад**) needs a vowel, and stress (**на́голос**) gives words rhythm;
-- **Привіта́ння** — daily phrases: **Приві́т!**, **До́брий день!**, **Як спра́ви?**, **До поба́чення!**
+Віта́ємо на підсумко́вому уро́ці пе́ршого мо́дуля! Про́тягом пе́рших трьох уро́ків ви ви́вчили сім фундамента́льних лі́тер украї́нської абе́тки: три голосні́ (**А**, **О**, **У**) та чоти́ри тверді́ при́голосні (**М**, **Л**, **С**, **Н**). У цьо́му уро́ці ми не вивча́ємо жо́дної ново́ї лі́тери (0 new letters!). На́ша мета́ — си́нтез: ми поєдна́ємо всі сім зву́ків, дослі́димо си́лу украї́нського на́голосу, засво́їмо кли́чну фо́рму **ма́мо!** та прочита́ємо пе́рші спра́вжні мікроте́ксти без жо́дних шабло́нних привіта́нь.
 
-Сього́дні час збудува́ти наді́йні зви́чки вимо́ви — today it is time to build reliable pronunciation habits.
-Ко́жна мо́ва ма́є вла́сну мело́дію та артикуля́цію — each language has its own melody and articulation:
-- **Чи́стий звук [о]** — keep every unstressed **[о]** rounded and clear without blurring;
-- **Зву́ки [и] та [і]** — distinguish the relaxed vowel **[и]** from the smiling vowel **[і]**;
-- **М'яки́й знак** — remember that **ь** has no voice of its own and only softens the preceding consonant;
-- **Дзвінкі́ зву́ки** — keep voiced consonants voiced at the end of words and before voiceless sounds.
+By the end of this 60-minute lesson, you will be able to:
 
-## First Pronunciation Traps
+- **Синтезува́ти сім лі́тер** — effortlessly combine **А**, **О**, **У**, **М**, **Л**, **С**, **Н** into whole words;
+- **Розрізня́ти наголо́шені па́ри** — distinguish meaning changes driven strictly by stress position: **ма́ло** vs **мала́**, **са́ма** vs **сама́**;
+- **Вжива́ти кли́чну фо́рму ма́мо!** — call your mother using the natural vocative case ending **-о**;
+- **Чита́ти побуто́ві слова́** — read real vocabulary for household and nature: **ма́сло**, **са́ло**, **смола́**;
+- **Чита́ти пе́рші мікроте́ксти** — confidently read short connected Ukrainian sentences using pointer **он**.
 
-Use these as safety checks:
+---
 
-| Trap | Safer habit |
-| --- | --- |
-| Blurring **о** in **молоко́** | Keep every **о** clean: **мо-ло-ко** |
-| Mixing **и** and **і** | In **Приві́т**, **и** and **і** are different |
-| Pronouncing **ь** as a separate sound | In **день**, **ь** only softens **н** |
-| Saying final voiced consonants as voiceless | Keep the written voiced sound; do not automatically devoice it |
-| Treating **Ї** like **І** | **Ї** is **[йі]** |
-| Mixing **Г** and **Ґ** | **Г** is h-like; **Ґ** is hard **g** |
+## Сім лі́тер: Звукови́й фунда́мент
 
-Keep Ukrainian sound categories independent. Do not use another language as the shortcut for **И**, **Е**, **О**, or **Г**. Use the Ukrainian mouth model here: **И** has its own position, unstressed **О** stays **О**, **До́брий день** is the neutral greeting, **Приві́т** is the everyday informal greeting, and **Г** is the Ukrainian h-like sound.
+Let us review the complete inventory of the seven letters mastered in this module. Every letter corresponds to a distinct, reliable sound:
 
-### Pronunciation safety check
-
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "In молоко́, every о stays clean.", "isTrue": true, "explanation": "Ukrainian о does not blur into а in this beginner model."}, {"statement": "The letters и and і always sound the same.", "isTrue": false, "explanation": "Приві́т contains both [и] and [і]."}, {"statement": "Ь has no sound of its own.", "isTrue": true, "explanation": "Ь softens the previous consonant."}, {"statement": "Ї is always [йі].", "isTrue": true, "explanation": "Treat Ї as [йі] at this level."}, {"statement": "Г and Ґ are the same letter.", "isTrue": false, "explanation": "Г is h-like; Ґ is hard g."}, {"statement": "Щ is [шч].", "isTrue": true, "explanation": "Щ represents two sounds together."}]`)} instruction={"Choose true or false."} isUkrainian={false} />
-
-### Чи́стий ненаголо́шений звук [о] — Pure unstressed [о]
-
-В англі́йській мо́ві ненаголо́шені голосні́ ча́сто розмива́ються та стаю́ть схо́жими на невира́зний звук «uh». In English and some other languages, unstressed vowels frequently reduce or blur into a neutral schwa. В украї́нській мо́ві цього́ роби́ти не мо́жна — in Ukrainian, you must not do this:
-«Голосни́й [о] вимовля́ється вира́зно, я́сно як під на́голосом, так і в бі́льшості ненаголо́шених пози́цій, зокре́ма він ніко́ли не заступа́ється зву́ком [а]» (quoted from: Pohribnyi 1992, p. 7).
-
-Зверні́ть ува́гу на різни́цю між украї́нською та і́ншими мо́вами — notice the difference between Ukrainian and other languages:
-
-| Сло́во — Word | Вимо́ва — Pronunciation | Що помі́тити — What to notice |
-| --- | --- | --- |
-| **молоко́** | `[мо-ло-ко́]` | three clean, rounded [о] sounds, never blurred into [а] |
-| **о́ко** | `[о́-ко]` | both the stressed and unstressed [о] remain fully round |
-| **коро́ва** | `[ко-ро́-ва]` | both unstressed and stressed [о] keep their pure shape |
-| **до́бро** | `[до́-бро]` | final unstressed [о] remains distinct and open |
-| **До́брого ра́нку!** | `[до́-бро-го ра́н-ку]` | unstressed [о] endings stay clean in polite greetings |
-
-### Чи́стий звук [о] — Pure [о] in words
-
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "How is the unstressed о pronounced in the word молоко́?", "options": [{"text": "As a clean, round [о]", "correct": true}, {"text": "As [а]", "correct": false}, {"text": "As a blurred [ə]", "correct": false}], "explanation": "In Ukrainian, every unstressed о remains a clean [о]."}, {"question": "What happens to unstressed о in Ukrainian compared to English?", "options": [{"text": "It does not reduce or blur", "correct": true}, {"text": "It always turns into [а]", "correct": false}, {"text": "It becomes silent", "correct": false}], "explanation": "Ukrainian vowels keep their pure quality even when unstressed."}, {"question": "In the word о́ко, how is the second letter о pronounced?", "options": [{"text": "As a clear [о]", "correct": true}, {"text": "As [у]", "correct": false}, {"text": "As [і]", "correct": false}], "explanation": "Unstressed о stays clean: о́ко."}, {"question": "In the greeting До́брого ра́нку, how should you pronounce the ending -го?", "options": [{"text": "With a clean unstressed [о]", "correct": true}, {"text": "Blurred into [а]", "correct": false}, {"text": "As a silent vowel", "correct": false}], "explanation": "Do not reduce unstressed о to [а] in До́брого."}, {"question": "Why is keeping [о] clean important in Ukrainian?", "options": [{"text": "It preserves the natural melody and clarity of speech", "correct": true}, {"text": "It changes consonants into vowels", "correct": false}, {"text": "It makes words shorter", "correct": false}], "explanation": "Clean vowels are a hallmark of standard Ukrainian literary pronunciation."}, {"question": "Which pronunciation habit is correct for beginners?", "options": [{"text": "молоко́ with three clean [о] sounds", "correct": true}, {"text": "воду́ with two [у] sounds", "correct": false}, {"text": "чай with a diphthong", "correct": false}], "explanation": "Ukrainian maintains full, open vowel articulation."}]`)} instruction={"Choose the correct answer about Ukrainian sounds."} isUkrainian={false} />
-
-### Зву́ки [и] та [і] — The contrast between [и] and [і]
-
-Зву́ки **[и]** та **[і]** — це дві зо́всім рі́зні фоне́ми, які́ змі́нюють зна́чення украї́нських слів. The vowels **[и]** and **[і]** are two entirely distinct phonemes that change the meaning of Ukrainian words.
-- **Звук [и]** — гу́би спокі́йні, язи́к зле́гка відтя́гнутий наза́д (relaxed lips, tongue back); звук гли́бший та розсла́блений — a deeper, relaxed sound.
-- **Звук [і]** — гу́би розтя́гнуті в по́смішку (smiling lips), язи́к підня́тий висо́ко впере́д (tongue high); при́голосний пе́ред **[і]** пом'я́кшується — preceding consonant softens.
-
-У на́шому пе́ршому сло́ві **Приві́т** звучи́ть споча́тку **[и]** (тверди́й склад — hard syllable), а по́тім **[і]** (м'яки́й склад — soft syllable): `[при-в'і́т]`. In our first word **Приві́т**, you hear relaxed **[и]** first, followed by smiling **[і]**.
-
-Мініма́льні па́ри слів — minimal pairs showing how vowel choice changes meaning:
-
-| Звук [и] (розсла́блений) | Зна́чення — Meaning | Звук [і] (по́смішка) | Зна́чення — Meaning |
+| Бу́ква — Letter | Звук — Sound | Тип зву́ка — Sound type | При́клад сло́ва — Example word |
 | --- | --- | --- | --- |
-| **лис** | fox (relaxed tongue) | **ліс** | forest (smiling lips) |
-| **дим** | smoke (relaxed tongue) | **дім** | house / home (softened [д']) |
-| **сир** | cheese (relaxed tongue) | **сіль** | salt (softened [с']) |
-| **ти** | you (informal pronoun) | **ті** | those (demonstrative) |
-| **син** | son (family member) | **сі́но** | hay (dried grass) |
-| **би́ти** | to hit (action) | **бі́гти** | to run (motion) |
+| **А а** | **[а]** | голосни́й (vowel, wide open) | **а́рка** — arch |
+| **О о** | **[о]** | голосни́й (vowel, rounded lips) | **о́ко** — eye |
+| **У у** | **[у]** | голосни́й (vowel, pursed lips) | **Украї́на** — Ukraine |
+| **М м** | **[м]** | губни́й сона́нт (bilabial nasal sonorant) | **ма́ма** — mother |
+| **Л л** | **[л]** | язи́чно-зубни́й сона́нт (dental lateral sonorant) | **лан** — field |
+| **С с** | **[с]** | глухи́й свистя́чий при́голосний (voiceless sibilant) | **сон** — sleep / dream |
+| **Н н** | **[н]** | носови́й сона́нт (dental nasal sonorant) | **ніс** — nose |
 
-### Зву́ки [и] та [і] — Minimal pairs [и] versus [і]
+With these seven building blocks, you control three open vowels and four robust consonants. Review the alphabet overview video by teacher Anna Ohoiko (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) to refresh the sounds before continuing.
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "лис", "right": "fox ([и], relaxed tongue)"}, {"left": "ліс", "right": "forest ([і], smiling lips)"}, {"left": "дим", "right": "smoke ([и])"}, {"left": "дім", "right": "house / home ([і])"}, {"left": "сир", "right": "cheese ([и])"}, {"left": "сіль", "right": "salt ([і])"}]`)} instruction={"Match each word with its meaning to notice how [и] and [і] change the word."} isUkrainian={false} />
+### Переві́рка знань семи́ лі́тер — Seven-letter safety check
 
-### Дзвінкі́ при́голосні в кінці́ слів — Voiced consonants never devoice
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "In Ukrainian, moving the stress mark can change the meaning of a word.", "isTrue": true, "explanation": "Stress is phonemic in Ukrainian: «ма́ло» (few) vs «мала́» (small)."}, {"statement": "The vocative form to directly address mother is «Ма́мо!».", "isTrue": true, "explanation": "Ukrainian uses the vocative case for direct address: «Ма́мо!»."}, {"statement": "The Ukrainian unstressed [о] sound is pronounced as [а], like in Russian.", "isTrue": false, "explanation": "Ukrainian has no akanye: unstressed [о] stays pure and rounded."}, {"statement": "The word «ма́сло» means butter in Ukrainian.", "isTrue": true, "explanation": "«Ма́сло» means butter."}, {"statement": "The word «са́ло» is stressed on the second syllable: «сало́».", "isTrue": false, "explanation": "«Са́ло» is stressed on the first syllable: «са́-ло»."}, {"statement": "In Ukrainian, the letter Н represents a nasal sonorant sound.", "isTrue": true, "explanation": "Letter Н represents [n], a nasal sonorant."}]`)} instruction={"Ви́значте, чи твер́дження пра́вильне. — Decide whether each statement is true or false."} isUkrainian={false} />
 
-У багатьо́х мо́вах дзвінкі́ при́голосні наприкінці́ слів втрача́ють свій го́лос і стаю́ть глухи́ми. In many neighboring languages, voiced consonants at the end of a word automatically lose their voice. В украї́нській літерату́рній мо́ві цього́ оглу́шення нема́є — in standard Ukrainian, this devoicing does not occur:
-«в украї́нській літерату́рній мо́ві вимовля́ються дзві́нко: [дуб], [гриб], [сад], [лід], [мед], [ніж]» (quoted from: Pohribnyi 1992, p. 11).
+---
 
-Коли́ ви вимовля́єте кіне́ць украї́нського сло́ва, трима́йте голосові́ зв'я́зки вклю́ченими — keep your vocal cords vibrating until the sound ends:
+## Си́ла на́голосу: Розрі́знення слів
 
-| Сло́во — Word | Прави́льна вимо́ва — Correct habit | Па́стка, яко́ї слід уника́ти — Trap to avoid |
-| --- | --- | --- |
-| **дуб** | keep final voiced [б] vibrating | do not say [дуп] |
-| **гриб** | keep final voiced [б] vibrating | do not confuse with [грип] (flu) |
-| **сад** | keep final voiced [д] vibrating | do not say [сат] |
-| **мед** | keep final voiced [д] vibrating | do not say [мет] |
-| **ніж** | keep final voiced [ж] vibrating | do not say [ніш] |
-| **ка́зка** | keep voiced [з] before voiceless [к] | do not say [ка́ска] (helmet) |
+In Lesson 2, you learned that Ukrainian stress (**на́голос**) is free and dynamic: it can fall on any syllable of a word. But stress is not merely about volume; in Ukrainian, **на́голос розрізня́є зна́чення слів** (stress distinguishes the meanings of words). Moving the stress mark from one vowel to another completely alters what the word means and its grammatical role.
 
-### Безпе́чна вимо́ва — Pronunciation safety check
+Let us examine two crucial pairs built exclusively from our seven letters:
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "У лі́сі живе́ руди́й ____.", "answer": "лис", "options": ["лис", "ліс"]}, {"sentence": "Навко́ло села́ росте́ густи́й ____.", "answer": "ліс", "options": ["ліс", "лис"]}, {"sentence": "З труби́ йде бі́лий ____.", "answer": "дим", "options": ["дим", "дім"]}, {"sentence": "Це наш нови́й і те́плий ____.", "answer": "дім", "options": ["дім", "дим"]}, {"sentence": "Ді́ти п'ють сві́же ____ щора́нку.", "answer": "молоко́", "options": ["молоко́", "чай"]}, {"sentence": "У ко́шику лежи́ть вели́кий бі́лий ____.", "answer": "гриб", "options": ["гриб", "грип"]}]`)} instruction={"Choose the correct word to complete each sentence."} isUkrainian={false} />
+### 1. Пара́ ма́ло та мала́
 
-### Лі́тери Г, Ґ та м'яки́й знак — The letters Г versus Ґ, and Ь
+- **ма́ло** (stress on the first syllable **ма́-**):
+  - **Части́на мо́ви**: прислі́вник (adverb) — little, few, not much.
+  - **При́клад**: **У нас ма́ло.** — We have little / Not much for us.
+  - **Вимо́ва**: the first **[а]** is strong and held longer; the second syllable **[-ло]** has a clean, relaxed, rounded **[о]**.
 
-В украї́нській абе́тці є дві рі́зні лі́тери для задньоязико́вих зву́ків — in the Ukrainian alphabet, there are two distinct letters for guttural sounds:
-- **Г, г** — горта́нний звук [ɦ], м'яки́й по́дих те́плого пові́тря (like *ahead*, *hotel* in English).
-- **Ґ, ґ** — тверди́й вибухо́вий звук [g] (like *go*, *get* in English).
+- **мала́** (stress on the second syllable **-ла́**):
+  - **Части́на мо́ви**: прикме́тник жіно́чого ро́ду (feminine adjective) — small, little, young.
+  - **При́клад**: **Он мала́ оса́.** — Over there is a small wasp.
+  - **Вимо́ва**: the initial **[м-а]** is shorter; the vocal weight lands fully on the final **[-ла́]**.
 
-А лі́тера **Ь** (**м'яки́й знак**) взагалі́ не познача́є окре́мого зву́ка — the soft sign **ь** does not represent a sound of its own. Вона́ лише́ вка́зує на те, що попере́дній при́голосний вимовля́ється м'я́ко — it only indicates that the preceding consonant is pronounced softly. У сло́ві **день** ми вимовля́ємо м'яки́й `[н']` і зупиня́ємося — we pronounce a soft `[н']` and stop, не додаючи́ жо́дного за́йвого зву́ка — without adding any extra vowel!
+### 2. Пара́ са́ма та сама́
 
-| Лі́тера — Letter | Звук — Sound | При́клад — Example | Зна́чення — Meaning |
+- **сама́** (stress on the second syllable **-ма́**):
+  - **Части́на мо́ви**: займе́нник жіно́чого ро́ду (feminine pronoun) — alone, by herself, on her own.
+  - **При́клад**: **Ма́ма там сама́.** — Mother is there alone / by herself.
+
+- **са́ма** (stress on the first syllable **са́-**):
+  - **Части́на мо́ви**: підси́лювальний займе́нник (emphatic / superlative particle or pronoun) — the very, the most.
+  - **При́клад**: **Вона́ прийшла́ в са́ма той час.** — She arrived at the very right time.
+
+> **Пора́да мо́вця — Speaker's tip:** Whenever you see an acute accent mark (`́`) over a Ukrainian vowel, give that syllable slightly more pitch, duration, and energy. It is the key that unlocks the word's true meaning!
+
+### Си́ла на́голосу — The power of stress
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "What does «ма́ло» mean with stress on the first syllable?", "options": [{"text": "Little / few (adverb)", "correct": true}, {"text": "Small / little (feminine adjective)", "correct": false}, {"text": "Mother", "correct": false}], "explanation": "«Ма́ло» with stress on the first syllable is an adverb meaning little or few."}, {"question": "What does «мала́» mean with stress on the second syllable?", "options": [{"text": "Small / little (feminine adjective)", "correct": true}, {"text": "Little / few (adverb)", "correct": false}, {"text": "Catfish", "correct": false}], "explanation": "«Мала́» with stress on the second syllable is a feminine adjective (e.g. «мала́ оса́»)."}, {"question": "In the sentence «Ма́ма там сама́.», what does «сама́» mean?", "options": [{"text": "Alone / by herself", "correct": true}, {"text": "The very", "correct": false}, {"text": "Together", "correct": false}], "explanation": "«Сама́» with stress on the second syllable means alone or by oneself."}, {"question": "In the phrase «Он мала́ оса́.», which word carries stress on its final syllable?", "options": [{"text": "Both мала́ and оса́", "correct": true}, {"text": "Only он", "correct": false}, {"text": "Neither word", "correct": false}], "explanation": "Both «мала́» and «оса́» carry stress on the final -а́."}, {"question": "How many vowel sounds are there in the word «ма́сло»?", "options": [{"text": "2", "correct": true}, {"text": "3", "correct": false}, {"text": "1", "correct": false}], "explanation": "«Ма́сло» has two vowels ([а] and [о]) and therefore two syllables."}, {"question": "What happens to the vowels in «ма́сло» when spoken aloud?", "options": [{"text": "Both [а] and [о] are pronounced clearly and distinctly", "correct": true}, {"text": "The final [о] becomes [а]", "correct": false}, {"text": "The vowel [а] is silent", "correct": false}], "explanation": "Ukrainian preserves pure vowel quality without reduction."}]`)} instruction={"Обері́ть пра́вильне зна́чення ви́діленого сло́ва. — Choose the correct meaning for the highlighted word."} isUkrainian={false} />
+
+---
+
+## Кли́чний відмі́нок: Ма́мо!
+
+In many languages, when you call out to someone, you simply shout their dictionary name: "Mother!". But Ukrainian has a dedicated grammatical case specifically for direct address: **кли́чний відмі́нок** (the vocative case).
+
+When speaking directly to your mother, Ukrainian transforms the dictionary form into an affectionate, resonant call:
+
+- **Називни́й відмі́нок** (Nominative case — who is it?): **ма́ма** — mother.
+  - **Он на́ша ма́ма.** — Over there is our mother.
+- **Кли́чний відмі́нок** (Vocative case — addressing her directly!): **ма́мо!** — Mother! Mum!
+  - **Ма́мо, подиви́ся сюди́!** — Mother, look here!
+  - **Ма́мо! Он сосна́!** — Mother! Look, a pine tree!
+
+Notice how the final **-а** changes to a melodic **-о**:
+- `ма́м-а` (stating a fact) $\rightarrow$ `ма́м-о!` (calling her with warmth and respect).
+
+This ending is uniquely Ukrainian and gives spoken Ukrainian its musical cadence. You will hear children and adults alike across Ukraine calling: **«Ма́мо!»**.
+
+### Кли́чний відмі́нок: Зверта́ння — Vocative address
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___, подиви́ся сюди́!", "answer": "Ма́мо", "options": ["Ма́мо", "Ма́ма", "Ма́сло"], "explanation": "Use the vocative «Ма́мо!» when addressing mother directly."}, {"sentence": "___! Он росте́ висо́ка сосна́!", "answer": "Ма́мо", "options": ["Ма́мо", "Ма́ма", "Мала́"], "explanation": "Direct call uses «Ма́мо!»."}, {"sentence": "Он іде́ на́ша ___.", "answer": "ма́ма", "options": ["ма́ма", "ма́мо", "мала́"], "explanation": "Stating who is coming uses the nominative «ма́ма»."}, {"sentence": "Оле́г гука́є: «___!».", "answer": "Ма́мо", "options": ["Ма́мо", "Ма́ма", "Ма́ло"], "explanation": "Calling out requires the vocative form «Ма́мо!»."}, {"sentence": "Там стої́ть на́ша до́бра ___.", "answer": "ма́ма", "options": ["ма́ма", "ма́мо", "сама́"], "explanation": "Subject of sentence is nominative «ма́ма»."}, {"sentence": "«___, он сом у рі́чці!» — сказа́в Марко́.", "answer": "Ма́мо", "options": ["Ма́мо", "Ма́ма", "Са́ло"], "explanation": "Calling mother directly requires «Ма́мо!»."}]`)} instruction={"Обері́ть пра́вильне сло́во для зверта́ння. — Choose the correct word for direct address."} isUkrainian={false} />
+
+---
+
+## Но́ві слова́ із семи́ лі́тер: ма́сло, са́ло, смола́
+
+Using only our seven letters (**А**, **О**, **У**, **М**, **Л**, **С**, **Н**), we can expand our vocabulary with essential Ukrainian cultural and natural terms:
+
+### 1. Сло́во ма́сло (butter)
+
+- **Звукови́й склад**: **[м а́ с л о]** — 5 sounds, 5 letters.
+- **Склади́**: **мас-ло** (два склади́ / two syllables: закри́тий **мас-** + відкри́тий **-ло**).
+- **На́голос**: на пе́ршому скла́ді — **ма́с-ло**.
+- **Зна́чення**: butter (dairy product made from churned cream).
+- **При́клад**: **Он сві́же ма́сло.** — Over there is fresh butter.
+
+### 2. Сло́во са́ло (salo / cured pork fatback)
+
+- **Звукови́й склад**: **[с а́ л о]** — 4 sounds, 4 letters.
+- **Склади́**: **са-ло** (два склади́ / two syllables: відкри́тий **са-** + відкри́тий **-ло**).
+- **На́голос**: на пе́ршому скла́ді — **са́-ло**.
+- **Зна́чення**: salo, a traditional and iconic Ukrainian food (cured pork fatback, seasoned with salt and spices).
+- **При́клад**: **Он бі́ле са́ло.** — Look, white salo.
+
+### 3. Сло́во смола́ (resin / pitch)
+
+- **Звукови́й склад**: **[с м о л а́]** — 5 sounds, 5 letters.
+- **Склади́**: **смо-ла́** (два склади́ / two syllables: відкри́тий **смо-** + відкри́тий **-ла́**).
+- **Збіг при́голосних**: note the initial consonant cluster **см-** ([sm-]). Pronounce [с] crisp and move smoothly into [м]: [см-].
+- **На́голос**: на дру́гому скла́ді — **смо-ла́**.
+- **Зна́чення**: tree resin, sticky pine sap, or pitch.
+- **При́клад**: **На сосні́ блищи́ть смола́.** — On the pine tree, resin glitters.
+
+| Сло́во — Word | Склади́ — Syllables | На́голос — Stress | Зна́чення — English meaning |
 | --- | --- | --- | --- |
-| **Г** | `[ɦ]` (горта́нний ви́дих) | **гора́** | mountain |
-| **Г** | `[ɦ]` (горта́нний ви́дих) | **го́лос** | voice |
-| **Ґ** | `[g]` (тверди́й ви́бух) | **ґа́нок** | porch |
-| **Ґ** | `[g]` (тверди́й ви́бух) | **ґу́дзик** | button |
-| **Ь** | пом'я́кшує при́голосний | **день** | day (softened [н']) |
-| **Ь** | пом'я́кшує при́голосний | **сіль** | salt (softened [л']) |
+| **ма́сло** | мас-ло | на пе́рший склад | butter |
+| **са́ло** | са-ло | на пе́рший склад | salo (cured fatback) |
+| **смола́** | смо-ла́ | на дру́гий склад | resin, pine pitch |
+| **сосна́** | сос-на́ | на дру́гий склад | pine tree |
+| **оса́** | о-са́ | на дру́гий склад | wasp |
 
-### Дзвінкі́ та глухі́ зву́ки — Voiced and voiceless consonants
+### Побуто́ві слова́ та приро́да — Everyday and nature words
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Дзвінкі́ при́голосні (Voiced)": ["[б]", "[д]", "[з]", "[ж]"], "Глухі́ при́голосні (Voiceless)": ["[п]", "[т]", "[с]", "[ш]"]}`)} instruction={"Sort each consonant into voiced or voiceless."} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "ма́сло", "right": "butter"}, {"left": "са́ло", "right": "salo (cured fatback)"}, {"left": "смола́", "right": "tree resin / pitch"}, {"left": "сосна́", "right": "pine tree"}, {"left": "оса́", "right": "wasp"}, {"left": "лан", "right": "field"}]`)} instruction={"З'єдна́йте украї́нське сло́во з його́ зна́ченням. — Match the Ukrainian word to its meaning."} isUkrainian={false} />
 
-### Практи́чна розмо́ва — Practical dialogue
+---
 
-Послу́хайте та прочита́йте розмо́ву між Тара́сом та Окса́ною про пра́вила вимо́ви — listen to and read the dialogue between Taras and Oksana about pronunciation rules:
+## Пе́рші зв'я́зні мікроте́ксти
 
-<DialogueBox
-  client:only="react"
-  title="Діалог"
-  exchanges={JSON.parse('[{"speaker":"Тара́с","text":"Приві́т, Окса́но! — Hi, Oksana!"},{"speaker":"Окса́на","text":"Приві́т, Тара́се! Як твоя́ вимо́ва сього́дні? — Hi, Taras! How is your pronunciation today?"},{"speaker":"Тара́с","text":"Я слу́хаю сло́во «молоко́». Тут три чи́стих зву́ки [о]? — I am listening to the word \\"milk\\". Are there three pure [o] sounds here?"},{"speaker":"Окса́на","text":"Так, всі три зву́ки [о] чи́сті: «молоко́». Не кажи́ [а]! — Yes, all three [o] sounds are pure: \\"milk\\". Don\'t say [a]!"},{"speaker":"Тара́с","text":"А в кінці́ слів? Напри́клад, сло́во «сад» чи «гриб»? — And at the end of words? For example, the word \\"garden\\" or \\"mushroom\\"?"},{"speaker":"Окса́на","text":"За́вжди залиша́й дзвінкі́ зву́ки дзвінки́ми: «сад», «гриб», «дуб». — Always keep voiced sounds voiced: \\"garden\\", \\"mushroom\\", \\"oak\\"."},{"speaker":"Тара́с","text":"Дя́кую! Тепе́р я розумі́ю пра́вило. — Thank you! Now I understand the rule."}]')}
-/>
+Now you are ready for the ultimate milestone of Module 1: reading connected Ukrainian sentences without needing transliteration. Every single word in these reading selections is constructed strictly from our seven letters (**А**, **О**, **У**, **М**, **Л**, **С**, **Н**).
 
-Розбі́р розмо́ви — breakdown of the conversation:
+Notice how Ukrainian builds meaning with simple pointer words (**он**), nouns, and pronouns:
 
-| Украї́нська | English support |
-| --- | --- |
-| **Тара́с: Приві́т, Окса́но!** | Taras: Hi, Oksana! |
-| **Окса́на: Приві́т, Тара́се! Як твоя́ вимо́ва сього́дні?** | Oksana: Hi, Taras! How is your pronunciation today? |
-| **Тара́с: Я слу́хаю сло́во «молоко́». Тут три чи́стих зву́ки [о]?** | Taras: I am listening to the word "milk". Are there three pure [o] sounds here? |
-| **Окса́на: Так, всі три зву́ки [о] чи́сті: «молоко́». Не кажи́ [а]!** | Oksana: Yes, all three [o] sounds are pure: "milk". Don't say [a]! |
-| **Тара́с: А в кінці́ слів? Напри́клад, сло́во «сад» чи «гриб»?** | Taras: And at the end of words? For example, the word "garden" or "mushroom"? |
-| **Окса́на: За́вжди залиша́й дзвінкі́ зву́ки дзвінки́ми: «сад», «гриб», «дуб».** | Oksana: Always keep voiced sounds voiced: "garden", "mushroom", "oak". |
-| **Тара́с: Дя́кую! Тепе́р я розумі́ю пра́вило.** | Taras: Thank you! Now I understand the rule. |
+### Текст 1: Бі́ля сосни́ — By the Pine Tree
 
-### Що ми дізна́лися та насту́пний крок — Lesson recap and next step
+Read this short natural scene aloud:
 
-Сього́дні ви опанува́ли чоти́ри головні́ зви́чки безпе́чної украї́нської вимо́ви — today you mastered four essential habits of authentic Ukrainian pronunciation:
-1. **Чи́стий [о]** — keep unstressed **[о]** round and pure (**молоко́**, **о́ко**, **коро́ва**).
-2. **Розрі́знення [и] та [і]** — distinguish relaxed **[и]** from smiling **[і]** (**лис** / **ліс**, **дим** / **дім**).
-3. **Дзвінкі́ при́голосні** — do not devoice voiced consonants at the end of words (**дуб**, **гриб**, **сад**, **ніж**).
-4. **Лі́тери Г, Ґ та Ь** — distinguish throaty **Г** from hard **Ґ**, and treat **ь** as a sign of softness.
+> **Он сосна́.** — Over there is a pine tree.
+> **Он лан.** — Look, there is a field.
+> **Он сом.** — Over there is a catfish.
+> **Он оса́!** — Look, a wasp!
+> **Оса́ мала́.** — The wasp is small.
 
-Насту́пний уро́к — **Textbook Check** (Уро́к 5), де ви підсуму́єте всі знання́ мо́дуля та переві́рите свій по́ступ! Next lesson is the Textbook Check (Lesson 5), where you will summarize all module knowledge and check your progress!
+### Текст 2: Ма́ма на приро́ді — Mother Outdoors
+
+A family observation during a walk:
+
+> **Он ма́ма.** — Over there is mother.
+> **Ма́мо! Он сосна́!** — Mother! Look, a pine tree!
+> **Ма́ма там сама́.** — Mother is there by herself.
+> **Он ма́сло і са́ло.** — Look, butter and salo.
+> **У нас ма́ло.** — We have little.
+
+Line-by-line pronunciation and vocabulary support:
+
+| Украї́нське ре́чення — Ukrainian sentence | Склади́ та на́голос — Breakdown | Англі́йський пере́клад — English gloss |
+| --- | --- | --- |
+| **Он сосна́.** | Он [сос-на́] | Over there is a pine tree. |
+| **Он лан.** | Он [лан] | Look, there is a field. |
+| **Он сом.** | Он [сом] | Over there is a catfish. |
+| **Ма́мо!** | [Ма́-мо] (кли́чний відмі́нок) | Mother! (vocative address) |
+| **Ма́ма там сама́.** | [Ма́-ма] там [са-ма́] | Mother is there by herself. |
+| **Он ма́сло і са́ло.** | Он [ма́с-ло] і [са́-ло] | Look, butter and salo. |
+
+You have read real Ukrainian sentences independently, relying purely on phonics, syllable blending, and authentic vocabulary!
+
+### Розумі́ння мікроте́кстів — Reading comprehension
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "In Text 1, what is pointed out near the pine tree?", "options": [{"text": "A field, a catfish, and a wasp", "correct": true}, {"text": "A car and a house", "correct": false}, {"text": "Milk and bread", "correct": false}], "explanation": "Text 1 lists «сосна́», «лан», «сом», and «оса́»."}, {"question": "In Text 2, who is outdoors by herself?", "options": [{"text": "Mother («Ма́ма там сама́.»)", "correct": true}, {"text": "Oleh", "correct": false}, {"text": "Marko", "correct": false}], "explanation": "The text states: «Ма́ма там сама́.»."}, {"question": "What foods are mentioned in Text 2?", "options": [{"text": "Butter and salo («ма́сло і са́ло»)", "correct": true}, {"text": "Apples and honey", "correct": false}, {"text": "Fish and soup", "correct": false}], "explanation": "Text 2 mentions: «Он ма́сло і са́ло.»."}, {"question": "What pointer word is used to direct attention in both texts?", "options": [{"text": "он", "correct": true}, {"text": "ми", "correct": false}, {"text": "як", "correct": false}], "explanation": "«Он» points out objects in view («Он сосна́», «Он ма́ма»)."}, {"question": "How does the speaker address mother in Text 2?", "options": [{"text": "Ма́мо!", "correct": true}, {"text": "Ма́ма!", "correct": false}, {"text": "Мала́!", "correct": false}], "explanation": "The speaker calls: «Ма́мо! Он сосна́!»."}, {"question": "What is the size of the wasp in Text 1?", "options": [{"text": "Small («Оса́ мала́.»)", "correct": true}, {"text": "Large", "correct": false}, {"text": "Enormous", "correct": false}], "explanation": "The text says: «Оса́ мала́.»."}]`)} instruction={"Да́йте ві́дповідь на запита́ння до те́кстів. — Answer the question based on the reading texts."} isUkrainian={false} />
+
+---
+
+### Підсу́мок мо́дуля — Module summary
+
+Congratulations on completing Module 1! You have established an unshakeable foundation for Ukrainian pronunciation and literacy.
+
+- **Сім лі́тер абе́тки — Seven alphabet letters**: you mastered three core vowels (**А**, **О**, **У**) and four reliable consonants (**М**, **Л**, **С**, **Н**).
+- **Звук та бу́ква — Sound vs letter**: you know that sounds are spoken and heard (38 sounds), while letters are seen and written (33 letters).
+- **Жо́дного а́кання — No akannya**: you learned that unstressed Ukrainian **[о]** never reduces to **[а]**, keeping words like **сосна́** and **молоко́** pure and rounded.
+- **Будо́ва складі́в — Syllable structures**: you assemble open syllables (CV: **ма**, **са**), closed syllables (VC: **ам**, **ул**), and three-letter words (CVC: **сон**, **сом**, **сам**, **лан**).
+- **Си́ла на́голосу — The power of stress**: you distinguish words by stress placement (**ма́ло** = little vs **мала́** = small; **са́ма** vs **сама́** = alone).
+- **Кли́чний відмі́нок — The vocative case**: you know how to call out with affection using **Ма́мо!**.
+- **Пе́рше чита́ння — First reading**: you read real phrases and mini-dialogues using pointer **он** without phonetic crutches.
+
+In Module 2, we expand your phonetic palette with new vowels and consonants, opening the door to even richer Ukrainian conversations and stories!
 
 </TabItem>
 <TabItem label="Словник — Vocabulary">
 
 <span id="vocabulary"></span>
 
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"звук","translation":"sound","pos":"noun","example":"Це звук [а].","examples":["Це звук [а]."],"atlas_href":"/lexicon/звук/"},{"word":"лі́тера","translation":"letter","pos":"noun","example":"Це лі́тера П.","examples":["Це лі́тера П."],"atlas_href":"/lexicon/літера/"},{"word":"абе́тка","translation":"alphabet","pos":"noun","example":"Украї́нська абе́тка ма́є 33 лі́тери.","examples":["Украї́нська абе́тка ма́є 33 лі́тери."],"atlas_href":"/lexicon/абетка/"},{"word":"голосни́й звук","translation":"vowel sound","pos":"noun phrase","example":"[а] - голосни́й звук.","examples":["[а] - голосни́й звук."]},{"word":"при́голосний звук","translation":"consonant sound","pos":"noun phrase","example":"[п] - при́голосний звук.","examples":["[п] - при́голосний звук."]},{"word":"склад","translation":"syllable","pos":"noun","example":"У сло́ві ма́ма два склади́.","examples":["У сло́ві ма́ма два склади́."],"atlas_href":"/lexicon/склад/"},{"word":"м'яки́й знак","translation":"soft sign","pos":"noun phrase","example":"Ь - м'яки́й знак.","examples":["Ь - м'яки́й знак."]},{"word":"Приві́т","translation":"Hi","pos":"phrase","example":"Приві́т!","examples":["Приві́т!"],"atlas_href":"/lexicon/привіт/"},{"word":"ма́ма","translation":"mother","pos":"noun","example":"Ма́ма.","examples":["Ма́ма."],"atlas_href":"/lexicon/мама/"},{"word":"та́то","translation":"father","pos":"noun","example":"Та́то.","examples":["Та́то."],"atlas_href":"/lexicon/тато/"},{"word":"молоко́","translation":"milk","pos":"noun","example":"Молоко́.","examples":["Молоко́."],"atlas_href":"/lexicon/молоко/"},{"word":"о́ко","translation":"eye","pos":"noun","example":"О́ко.","examples":["О́ко."],"atlas_href":"/lexicon/око/"},{"word":"на́голос","translation":"stress","pos":"noun","example":"У сло́ві Приві́т на́голос на і.","examples":["У сло́ві Приві́т на́голос на і."],"atlas_href":"/lexicon/наголос/"},{"word":"апо́строф","translation":"apostrophe","pos":"noun","example":"У сло́ві «ім'я́» є апо́строф.","examples":["У сло́ві «ім'я́» є апо́строф."],"atlas_href":"/lexicon/апостроф/"},{"word":"дім","translation":"house / home","pos":"noun","example":"Дім.","examples":["Дім."],"atlas_href":"/lexicon/дім/"},{"word":"ніс","translation":"nose","pos":"noun","example":"Ніс.","examples":["Ніс."],"atlas_href":"/lexicon/ніс/"},{"word":"сон","translation":"sleep / dream","pos":"noun","example":"Сон.","examples":["Сон."],"atlas_href":"/lexicon/сон/"},{"word":"До́брий день","translation":"Hello / Good day","pos":"phrase","example":"До́брий день!","examples":["До́брий день!"],"atlas_href":"/lexicon/добрий-день/"},{"word":"До́брого ра́нку","translation":"Good morning","pos":"phrase","example":"До́брого ра́нку!","examples":["До́брого ра́нку!"],"atlas_href":"/lexicon/доброго-ранку/"},{"word":"До́брий ве́чір","translation":"Good evening","pos":"phrase","example":"До́брий ве́чір!","examples":["До́брий ве́чір!"],"atlas_href":"/lexicon/добрий-вечір/"},{"word":"Як спра́ви?","translation":"How are you?","pos":"phrase","example":"Як спра́ви?","examples":["Як спра́ви?"],"atlas_href":"/lexicon/як-справи/"},{"word":"До́бре","translation":"Fine / good","pos":"phrase","example":"До́бре.","examples":["До́бре."],"atlas_href":"/lexicon/добре/"},{"word":"Чудо́во","translation":"Great / wonderful","pos":"phrase","example":"Чудо́во.","examples":["Чудо́во."],"atlas_href":"/lexicon/чудово/"},{"word":"Норма́льно","translation":"Okay / normal","pos":"phrase","example":"Норма́льно.","examples":["Норма́льно."],"atlas_href":"/lexicon/нормально/"},{"word":"А у тебе́?","translation":"And you? (after How are you?)","pos":"phrase","example":"До́бре. А у тебе́?","examples":["До́бре. А у тебе́?"]},{"word":"Як тебе́ зва́ти?","translation":"What is your name?","pos":"phrase","example":"Як тебе́ зва́ти?","examples":["Як тебе́ зва́ти?"],"atlas_href":"/lexicon/як-тебе-звати/"},{"word":"Мене́ зва́ти ...","translation":"My name is ...","pos":"phrase","example":"Мене́ зва́ти А́нна.","examples":["Мене́ зва́ти А́нна."]},{"word":"А тебе́?","translation":"And you? (after a name question)","pos":"phrase","example":"Мене́ зва́ти Софі́я. А тебе́?","examples":["Мене́ зва́ти Софі́я. А тебе́?"]},{"word":"До поба́чення","translation":"Goodbye","pos":"phrase","example":"До поба́чення!","examples":["До поба́чення!"]},{"word":"На все до́бре","translation":"All the best","pos":"phrase","example":"На все до́бре!","examples":["На все до́бре!"],"atlas_href":"/lexicon/на-все-добре/"},{"word":"Ра́дий тебе́ ба́чити","translation":"Glad to see you (male speaker)","pos":"phrase","example":"Ра́дий тебе́ ба́чити.","examples":["Ра́дий тебе́ ба́чити."]},{"word":"Ра́да тебе́ ба́чити","translation":"Glad to see you (female speaker)","pos":"phrase","example":"Ра́да тебе́ ба́чити.","examples":["Ра́да тебе́ ба́чити."]}]`)} title="Vocabulary" />
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"звук","translation":"sound","pos":"noun","example":"Ми чу́ємо і вимовля́ємо звук.","examples":["Ми чу́ємо і вимовля́ємо звук."],"atlas_href":"/lexicon/звук/"},{"word":"бу́ква","translation":"letter","pos":"noun","example":"Бу́ква А — це графі́чний знак.","examples":["Бу́ква А — це графі́чний знак."],"atlas_href":"/lexicon/буква/"},{"word":"лі́тера","translation":"letter","pos":"noun","example":"В украї́нській абе́тці є 33 лі́тери.","examples":["В украї́нській абе́тці є 33 лі́тери."],"atlas_href":"/lexicon/літера/"},{"word":"абе́тка","translation":"alphabet","pos":"noun","example":"Украї́нська абе́тка ма́є 33 бу́кви.","examples":["Украї́нська абе́тка ма́є 33 бу́кви."],"atlas_href":"/lexicon/абетка/"},{"word":"голосни́й звук","translation":"vowel sound","pos":"noun phrase","example":"[а] — це голосни́й звук.","examples":["[а] — це голосни́й звук."]},{"word":"а-у","translation":"halloo / forest call","pos":"interjection","example":"У лі́сі ми гука́ємо: «А-у́!».","examples":["У лі́сі ми гука́ємо: «А-у́!»."]},{"word":"у-а","translation":"baby's cry","pos":"interjection","example":"Маля́ пла́че: «У-а́!».","examples":["Маля́ пла́че: «У-а́!»."]},{"word":"а́рка","translation":"arch","pos":"noun","example":"Он стої́ть кам'яна́ а́рка.","examples":["Он стої́ть кам'яна́ а́рка."],"atlas_href":"/lexicon/арка/"},{"word":"о́ко","translation":"eye","pos":"noun","example":"Це людське́ о́ко.","examples":["Це людське́ о́ко."],"atlas_href":"/lexicon/око/"},{"word":"Украї́на","translation":"Ukraine","pos":"noun","example":"Украї́на — на́ша рідна земля́.","examples":["Украї́на — на́ша рідна земля́."],"atlas_href":"/lexicon/україна/"},{"word":"мо́ва","translation":"language","pos":"noun","example":"Ми вивча́ємо украї́нську мо́ву.","examples":["Ми вивча́ємо украї́нську мо́ву."],"atlas_href":"/lexicon/мова/"},{"word":"го́лос","translation":"voice","pos":"noun","example":"У співака́ гарний го́лос.","examples":["У співака́ гарний го́лос."],"atlas_href":"/lexicon/голос/"},{"word":"рот","translation":"mouth","pos":"noun","example":"Відкри́йте рот для зву́ка [а].","examples":["Відкри́йте рот для зву́ка [а]."],"atlas_href":"/lexicon/рот/"},{"word":"слух","translation":"hearing","pos":"noun","example":"Зву́ки ми сприйма́ємо через слух.","examples":["Зву́ки ми сприйма́ємо через слух."],"atlas_href":"/lexicon/слух/"},{"word":"при́голосний звук","translation":"consonant sound","pos":"noun phrase","example":"[м] — це при́голосний звук.","examples":["[м] — це при́голосний звук."]},{"word":"склад","translation":"syllable","pos":"noun","example":"У сло́ві ма́ма два склади́.","examples":["У сло́ві ма́ма два склади́."],"atlas_href":"/lexicon/склад/"},{"word":"ма́ма","translation":"mother / mom","pos":"noun","example":"Ма́ма тут.","examples":["Ма́ма тут."],"atlas_href":"/lexicon/мама/"},{"word":"ма́ло","translation":"little / few","pos":"adverb","example":"Нам ма́ло.","examples":["Нам ма́ло."],"atlas_href":"/lexicon/мало/"},{"word":"мала́","translation":"little / small (feminine)","pos":"adjective","example":"Вона́ мала́.","examples":["Вона́ мала́."]},{"word":"мул","translation":"silt / river mud","pos":"noun","example":"На дні є мул.","examples":["На дні є мул."],"atlas_href":"/lexicon/мул/"},{"word":"лом","translation":"scrap metal / crowbar","pos":"noun","example":"Тут є лом.","examples":["Тут є лом."],"atlas_href":"/lexicon/лом/"},{"word":"сона́нт","translation":"sonorant consonant","pos":"noun","example":"[м] та [л] — це сона́нти.","examples":["[м] та [л] — це сона́нти."]},{"word":"гу́би","translation":"lips","pos":"noun","example":"Стулі́ть гу́би для зву́ка [м].","examples":["Стулі́ть гу́би для зву́ка [м]."],"atlas_href":"/lexicon/губи/"},{"word":"язи́к","translation":"tongue","pos":"noun","example":"Піднімі́ть язи́к до піднебі́ння.","examples":["Піднімі́ть язи́к до піднебі́ння."],"atlas_href":"/lexicon/язик/"},{"word":"зуб","translation":"tooth","pos":"noun","example":"Язи́к торка́ється верхніх зубі́в.","examples":["Язи́к торка́ється верхніх зубі́в."],"atlas_href":"/lexicon/зуб/"},{"word":"сло́во","translation":"word","pos":"noun","example":"Ма́ма — на́ше пе́рше сло́во.","examples":["Ма́ма — на́ше пе́рше сло́во."],"atlas_href":"/lexicon/слово/"},{"word":"ма́мо","translation":"mother! (vocative case form)","pos":"noun","example":"Ма́мо, ходи́ сюди́!","examples":["Ма́мо, ходи́ сюди́!"],"atlas_href":"/lexicon/мамо/"},{"word":"шум","translation":"noise","pos":"noun","example":"Шу́мні зву́ки утво́рюють шум.","examples":["Шу́мні зву́ки утво́рюють шум."],"atlas_href":"/lexicon/шум/"},{"word":"сон","translation":"sleep / dream","pos":"noun","example":"Це мій спокі́йний сон.","examples":["Це мій спокі́йний сон."],"atlas_href":"/lexicon/сон/"},{"word":"сом","translation":"catfish","pos":"noun","example":"У воді́ пла́ває вели́кий сом.","examples":["У воді́ пла́ває вели́кий сом."],"atlas_href":"/lexicon/сом/"},{"word":"сам","translation":"alone / by oneself (masculine)","pos":"pronoun","example":"Він стої́ть там сам.","examples":["Він стої́ть там сам."],"atlas_href":"/lexicon/сам/"},{"word":"лан","translation":"field","pos":"noun","example":"Он золоти́й лан.","examples":["Он золоти́й лан."],"atlas_href":"/lexicon/лан/"},{"word":"оса́","translation":"wasp","pos":"noun","example":"Он лети́ть мала́ оса́.","examples":["Он лети́ть мала́ оса́."],"atlas_href":"/lexicon/оса/"},{"word":"сосна́","translation":"pine tree","pos":"noun","example":"Он росте́ висо́ка сосна́.","examples":["Он росте́ висо́ка сосна́."],"atlas_href":"/lexicon/сосна/"},{"word":"он","translation":"there / over there (pointing)","pos":"particle","example":"Он сосна́ і лан.","examples":["Он сосна́ і лан."],"atlas_href":"/lexicon/он/"},{"word":"нас","translation":"us (genitive/accusative)","pos":"pronoun","example":"Він чека́є нас.","examples":["Він чека́є нас."],"atlas_href":"/lexicon/нас/"},{"word":"нам","translation":"to us (dative)","pos":"pronoun","example":"Він пока́зує нам лан.","examples":["Він пока́зує нам лан."],"atlas_href":"/lexicon/нам/"},{"word":"ніс","translation":"nose","pos":"noun","example":"Це мій ніс.","examples":["Це мій ніс."],"atlas_href":"/lexicon/ніс/"},{"word":"закри́тий склад","translation":"closed syllable","pos":"noun phrase","example":"Склад [сон] — це закри́тий склад.","examples":["Склад [сон] — це закри́тий склад."]},{"word":"відкри́тий склад","translation":"open syllable","pos":"noun phrase","example":"Склад [ма] — це відкри́тий склад.","examples":["Склад [ма] — це відкри́тий склад."]},{"word":"свистя́чий звук","translation":"sibilant / whistling sound","pos":"noun phrase","example":"[с] — це глухи́й свистя́чий звук.","examples":["[с] — це глухи́й свистя́чий звук."]},{"word":"носови́й звук","translation":"nasal sound","pos":"noun phrase","example":"[н] — це носови́й звук.","examples":["[н] — це носови́й звук."]},{"word":"на́голос","translation":"stress / accent","pos":"noun","example":"На́голос па́дає на пе́рший склад.","examples":["На́голос па́дає на пе́рший склад."],"atlas_href":"/lexicon/наголос/"},{"word":"ма́сло","translation":"butter","pos":"noun","example":"На столі́ лежи́ть сві́же ма́сло.","examples":["На столі́ лежи́ть сві́же ма́сло."],"atlas_href":"/lexicon/масло/"},{"word":"са́ло","translation":"salo / cured pork fat","pos":"noun","example":"Це смачне́ украї́нське са́ло.","examples":["Це смачне́ украї́нське са́ло."],"atlas_href":"/lexicon/сало/"},{"word":"смола́","translation":"resin / pitch","pos":"noun","example":"На сосні́ блищи́ть смола́.","examples":["На сосні́ блищи́ть смола́."],"atlas_href":"/lexicon/смола/"},{"word":"сама́","translation":"alone / by oneself (feminine)","pos":"pronoun","example":"Вона́ там стої́ть сама́.","examples":["Вона́ там стої́ть сама́."],"atlas_href":"/lexicon/сама/"}]`)} title="Vocabulary" />
 
-<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"звук","back":"sound"},{"front":"лі́тера","back":"letter"},{"front":"абе́тка","back":"alphabet"},{"front":"голосни́й звук","back":"vowel sound"},{"front":"при́голосний звук","back":"consonant sound"},{"front":"склад","back":"syllable"},{"front":"м'яки́й знак","back":"soft sign"},{"front":"Приві́т","back":"Hi"},{"front":"ма́ма","back":"mother"},{"front":"та́то","back":"father"},{"front":"молоко́","back":"milk"},{"front":"о́ко","back":"eye"},{"front":"на́голос","back":"stress"},{"front":"апо́строф","back":"apostrophe"},{"front":"дім","back":"house / home"},{"front":"ніс","back":"nose"},{"front":"сон","back":"sleep / dream"},{"front":"До́брий день","back":"Hello / Good day"},{"front":"До́брого ра́нку","back":"Good morning"},{"front":"До́брий ве́чір","back":"Good evening"},{"front":"Як спра́ви?","back":"How are you?"},{"front":"До́бре","back":"Fine / good"},{"front":"Чудо́во","back":"Great / wonderful"},{"front":"Норма́льно","back":"Okay / normal"},{"front":"А у тебе́?","back":"And you? (after How are you?)"},{"front":"Як тебе́ зва́ти?","back":"What is your name?"},{"front":"Мене́ зва́ти ...","back":"My name is ..."},{"front":"А тебе́?","back":"And you? (after a name question)"},{"front":"До поба́чення","back":"Goodbye"},{"front":"На все до́бре","back":"All the best"},{"front":"Ра́дий тебе́ ба́чити","back":"Glad to see you (male speaker)"},{"front":"Ра́да тебе́ ба́чити","back":"Glad to see you (female speaker)"}]`)} />
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"звук","back":"sound"},{"front":"бу́ква","back":"letter"},{"front":"лі́тера","back":"letter"},{"front":"абе́тка","back":"alphabet"},{"front":"голосни́й звук","back":"vowel sound"},{"front":"а-у","back":"halloo / forest call"},{"front":"у-а","back":"baby's cry"},{"front":"а́рка","back":"arch"},{"front":"о́ко","back":"eye"},{"front":"Украї́на","back":"Ukraine"},{"front":"мо́ва","back":"language"},{"front":"го́лос","back":"voice"},{"front":"рот","back":"mouth"},{"front":"слух","back":"hearing"},{"front":"при́голосний звук","back":"consonant sound"},{"front":"склад","back":"syllable"},{"front":"ма́ма","back":"mother / mom"},{"front":"ма́ло","back":"little / few"},{"front":"мала́","back":"little / small (feminine)"},{"front":"мул","back":"silt / river mud"},{"front":"лом","back":"scrap metal / crowbar"},{"front":"сона́нт","back":"sonorant consonant"},{"front":"гу́би","back":"lips"},{"front":"язи́к","back":"tongue"},{"front":"зуб","back":"tooth"},{"front":"сло́во","back":"word"},{"front":"ма́мо","back":"mother! (vocative case form)"},{"front":"шум","back":"noise"},{"front":"сон","back":"sleep / dream"},{"front":"сом","back":"catfish"},{"front":"сам","back":"alone / by oneself (masculine)"},{"front":"лан","back":"field"},{"front":"оса́","back":"wasp"},{"front":"сосна́","back":"pine tree"},{"front":"он","back":"there / over there (pointing)"},{"front":"нас","back":"us (genitive/accusative)"},{"front":"нам","back":"to us (dative)"},{"front":"ніс","back":"nose"},{"front":"закри́тий склад","back":"closed syllable"},{"front":"відкри́тий склад","back":"open syllable"},{"front":"свистя́чий звук","back":"sibilant / whistling sound"},{"front":"носови́й звук","back":"nasal sound"},{"front":"на́голос","back":"stress / accent"},{"front":"ма́сло","back":"butter"},{"front":"са́ло","back":"salo / cured pork fat"},{"front":"смола́","back":"resin / pitch"},{"front":"сама́","back":"alone / by oneself (feminine)"}]`)} />
 
 </TabItem>
 <TabItem label="Вправи — Activities">
 
 <span id="activities"></span>
 
-### Pronunciation safety check
+### Переві́рка знань семи́ лі́тер — Seven-letter safety check
 
-*(see lesson, §First Pronunciation Traps)*
+*(see lesson, §Сім лі́тер: Звукови́й фунда́мент)*
 
-### Чи́стий звук [о] — Pure [о] in words
+### Си́ла на́голосу — The power of stress
 
-*(see lesson, §Чи́стий ненаголо́шений звук [о] — Pure unstressed [о])*
+*(see lesson, §2. Пара́ са́ма та сама́)*
 
-### Зву́ки [и] та [і] — Minimal pairs [и] versus [і]
+### Кли́чний відмі́нок: Зверта́ння — Vocative address
 
-*(see lesson, §Зву́ки [и] та [і] — The contrast between [и] and [і])*
+*(see lesson, §Кли́чний відмі́нок: Ма́мо!)*
 
-### Безпе́чна вимо́ва — Pronunciation safety check
+### Побуто́ві слова́ та приро́да — Everyday and nature words
 
-*(see lesson, §Дзвінкі́ при́голосні в кінці́ слів — Voiced consonants never devoice)*
+*(see lesson, §3. Сло́во смола́ (resin / pitch))*
 
-### Дзвінкі́ та глухі́ зву́ки — Voiced and voiceless consonants
+### Розумі́ння мікроте́кстів — Reading comprehension
 
-*(see lesson, §Лі́тери Г, Ґ та м'яки́й знак — The letters Г versus Ґ, and Ь)*
+*(see lesson, §Текст 2: Ма́ма на приро́ді — Mother Outdoors)*
 
-### See a letter, hear a sound
+### Сім лі́тер та їхні зву́ки — Seven letters and their sounds
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "А", "right": "[а]"}, {"left": "О", "right": "[о]"}, {"left": "У", "right": "[у]"}, {"left": "М", "right": "[м]"}, {"left": "Н", "right": "[н]"}, {"left": "Г", "right": "h-like [г]"}, {"left": "Ґ", "right": "hard [g]"}, {"left": "Ї", "right": "[йі]"}, {"left": "Ь", "right": "no sound"}]`)} instruction={"Match each letter with its beginner sound clue."} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "А", "right": "відкри́тий голосни́й [а] — open vowel [a]"}, {"left": "О", "right": "окру́глений голосни́й [о] — rounded vowel [o]"}, {"left": "У", "right": "лабіалізо́ваний голосни́й [у] — pursed vowel [u]"}, {"left": "М", "right": "губни́й носови́й сона́нт [м] — bilabial nasal sonorant [m]"}, {"left": "Л", "right": "бокови́й сона́нт [л] — lateral sonorant [l]"}, {"left": "С", "right": "глухи́й свистя́чий при́голосний [с] — voiceless sibilant [s]"}]`)} instruction={"З'єдна́йте лі́теру з її́ звуково́ю характери́стикою. — Match the letter with its phonetic property."} isUkrainian={false} />
 
-### Дзвінкі́ при́голосні в кінці́ слів — Voiced consonants at word end
+### Пере́клад слів мо́дуля — Module vocabulary translation
 
-<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "In Ukrainian, the final sound in дуб remains a voiced [б].", "isTrue": true, "explanation": "Ukrainian does not devoice final voiced consonants into [п]."}, {"statement": "The word сад sounds identical to сат in standard pronunciation.", "isTrue": false, "explanation": "Final [д] keeps its voice and is not devoiced to [т]."}, {"statement": "In гриб, the final consonant is pronounced as [б].", "isTrue": true, "explanation": "Final [б] stays voiced: гриб, not грип."}, {"statement": "Voiced consonants lose their voice at the end of every Ukrainian word.", "isTrue": false, "explanation": "Standard Ukrainian retains voicing at the end of words."}, {"statement": "In ніж, the sound [ж] is voiced.", "isTrue": true, "explanation": "Final [ж] remains voiced."}, {"statement": "In мед, the final sound is pronounced as [д].", "isTrue": true, "explanation": "Final [д] remains voiced in мед."}]`)} instruction={"Choose true or false."} isUkrainian={false} />
+<Translate client:only='react' questions={JSON.parse(`[{"source": "ма́ма", "options": [{"text": "mother", "correct": true}, {"text": "father", "correct": false}, {"text": "butter", "correct": false}], "explanation": "«Ма́ма» is mother."}, {"source": "ма́мо", "options": [{"text": "Mother! (vocative address)", "correct": true}, {"text": "small (fem.)", "correct": false}, {"text": "alone", "correct": false}], "explanation": "«Ма́мо» is the vocative form used when calling mother."}, {"source": "ма́сло", "options": [{"text": "butter", "correct": true}, {"text": "salo", "correct": false}, {"text": "resin", "correct": false}], "explanation": "«Ма́сло» is butter."}, {"source": "са́ло", "options": [{"text": "salo (cured fatback)", "correct": true}, {"text": "butter", "correct": false}, {"text": "field", "correct": false}], "explanation": "«Са́ло» is cured pork fatback."}, {"source": "смола́", "options": [{"text": "resin / pitch", "correct": true}, {"text": "catfish", "correct": false}, {"text": "wasp", "correct": false}], "explanation": "«Смола́» is pine resin or pitch."}, {"source": "сон", "options": [{"text": "sleep / dream", "correct": true}, {"text": "catfish", "correct": false}, {"text": "pine tree", "correct": false}], "explanation": "«Сон» is sleep or dream."}]`)} instruction={"Обері́ть пра́вильний англі́йський пере́клад. — Choose the correct English translation."} isUkrainian={false} />
 
-### Розпо́діл слів за зву́ком — Sort words by vowel [и] or [і]
+### Фонети́чні та орфографі́чні па́стки — Phonetic and spelling traps
 
-<GroupSort client:only='react' groups={JSON.parse(`{"Звук [и]": ["лис", "дим", "сир"], "Звук [і]": ["ліс", "дім", "сіль"]}`)} instruction={"Sort each word by whether it contains the sound [и] or [і]."} isUkrainian={false} />
+<ErrorCorrection client:only='react' instruction="Знайді́ть поми́лку та обері́ть прави́льний варіа́нт. — Identify the mistake and choose the correct form." items={JSON.parse(`[{"sentence": "У лі́сі росте́ висо́ка сасна́.", "errorWord": "сасна́", "correctForm": "сосна́", "options": ["сосна́", "сасна́", "сосно́"], "explanation": "Ukrainian unstressed о does not reduce to а: «сосна́»."}, {"sentence": "На хліб нама́зали сві́же масло́.", "errorWord": "масло́", "correctForm": "ма́сло", "options": ["ма́сло", "масло́", "маслі́"], "explanation": "The stress in butter is on the first syllable: «ма́сло»."}, {"sentence": "Он лети́ть мала оса́.", "errorWord": "мала", "correctForm": "мала́", "options": ["мала́", "ма́ла", "ма́ло"], "explanation": "The feminine adjective for small is stressed on the end: «мала́»."}, {"sentence": "Він з'їв сало́ з хлі́бом.", "errorWord": "сало́", "correctForm": "са́ло", "options": ["са́ло", "сало́", "са́ла"], "explanation": "Salo is stressed on the first syllable: «са́ло»."}, {"sentence": "Оле́г гукну́в: «Ма́ма, ходи́ сюди́!».", "errorWord": "Ма́ма", "correctForm": "Ма́мо", "options": ["Ма́мо", "Ма́ма", "Мала́"], "explanation": "Direct address requires the vocative form: «Ма́мо!»."}, {"sentence": "На корі́ сосни́ ви́ступила смала́.", "errorWord": "смала́", "correctForm": "смола́", "options": ["смола́", "смала́", "смо́ла"], "explanation": "Unstressed о remains pure: «смола́»."}]`)} isUkrainian={false} />
 
-### Дзвінкі́ зву́ки у слова́х — Voiced consonants in context
+### Класифіка́ція за на́голосом — Sort by stress position
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Бі́ля рі́чки росте́ стари́й ____.", "answer": "дуб", "options": ["дуб", "зуб"]}, {"sentence": "У лі́сі ми знайшли́ смачни́й ____.", "answer": "гриб", "options": ["гриб", "грип"]}, {"sentence": "Ко́ло ха́ти цвіте́ зеле́ний ____.", "answer": "сад", "options": ["сад", "ліс"]}, {"sentence": "На столі́ стої́ть соло́дкий ____.", "answer": "мед", "options": ["мед", "сир"]}, {"sentence": "На ку́хні лежи́ть го́стрий ____.", "answer": "ніж", "options": ["ніж", "хліб"]}, {"sentence": "Узи́мку на рі́чці лежи́ть товсти́й ____.", "answer": "лід", "options": ["лід", "сніг"]}]`)} instruction={"Choose the word with the correct voiced ending consonant."} isUkrainian={false} />
+<GroupSort client:only='react' groups={JSON.parse(`{"На́голос на пе́ршому скла́ді": ["ма́ма", "ма́мо", "ма́ло", "са́ма", "ма́сло", "са́ло"], "На́голос на дру́гому скла́ді": ["мала́", "сама́", "оса́", "сосна́", "смола́"]}`)} instruction={"Розподілі́ть слова́ зале́жно від того́, на яки́й склад па́дає на́голос. — Sort the words by stress: first syllable or second syllable."} isUkrainian={false} />
 
-### За́йве сло́во за вимо́вою — Odd one out by sound
+### Складі́ть слова́ із лі́тер — Unjumble words from letters
 
-<OddOneOut client:only='react' instruction={"Find the word that does not fit the phonetic pattern."} items={JSON.parse(`[{"words": ["молоко́", "о́ко", "коро́ва", "ліс"], "correct": 3, "explanation": "Ліс contains [і], whereas the others have clean unstressed or stressed [о]."}, {"words": ["лис", "дим", "сир", "дім"], "correct": 3, "explanation": "Дім has [і] with a softened consonant, while the others have [и]."}, {"words": ["ліс", "дім", "сіль", "дим"], "correct": 3, "explanation": "Дим has [и], while the others have [і]."}, {"words": ["дуб", "гриб", "сад", "ка́ска"], "correct": 3, "explanation": "Ка́ска has voiceless consonants, while the others end in voiced consonants."}, {"words": ["ґа́нок", "ґу́дзик", "ґрунт", "гора́"], "correct": 3, "explanation": "Гора́ starts with glottal [ɦ], while the others start with hard [g] (Ґ)."}, {"words": ["день", "сіль", "кінь", "син"], "correct": 3, "explanation": "Син ends in a hard consonant, while the others end with soft sign ь."}]`)} />
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "м / а / с / л / о", "answer": "ма́сло"}, {"jumbled": "с / а / л / о", "answer": "са́ло"}, {"jumbled": "с / м / о / л / а", "answer": "смола́"}, {"jumbled": "м / а / м / а", "answer": "ма́ма"}, {"jumbled": "с / о / с / н / а", "answer": "сосна́"}, {"jumbled": "с / о / н", "answer": "сон"}]`)} instruction={"Розташу́йте лі́тери у пра́вильному поря́дку, щоб утвори́ти сло́во. — Arrange letters in the correct order to form the Ukrainian word."} />
 
-### Лі́тери Г та Ґ — Words with Г and Ґ
+### Чита́ння ре́чень — Reading practice fill-in
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "гора́", "right": "mountain (h-like [г])"}, {"left": "го́лос", "right": "voice (h-like [г])"}, {"left": "га́рний", "right": "fine, good (h-like [г])"}, {"left": "ґа́нок", "right": "porch (hard [ґ])"}, {"left": "ґу́дзик", "right": "button (hard [ґ])"}, {"left": "ґрунт", "right": "soil (hard [ґ])"}]`)} instruction={"Match each word with its translation and sound type."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Он золоти́й широ́кий ___.", "answer": "лан", "options": ["лан", "лом", "сом"], "explanation": "«Лан» means field."}, {"sentence": "У рі́чці пла́ває вели́кий ___.", "answer": "сом", "options": ["сом", "сон", "сам"], "explanation": "«Сом» is catfish."}, {"sentence": "Он лети́ть мала́ ___.", "answer": "оса́", "options": ["оса́", "сосна́", "смола́"], "explanation": "«Оса́» is wasp."}, {"sentence": "У лі́сі росте́ стара́ ___.", "answer": "сосна́", "options": ["сосна́", "оса́", "ма́сло"], "explanation": "«Сосна́» is pine tree."}, {"sentence": "Ма́ма там стої́ть ___.", "answer": "сама́", "options": ["сама́", "са́ма", "ма́ло"], "explanation": "«Сама́» means alone / by herself."}, {"sentence": "На столі́ лежи́ть сві́же ___ і са́ло.", "answer": "ма́сло", "options": ["ма́сло", "смола́", "оса́"], "explanation": "«Ма́сло» means butter."}]`)} instruction={"Вста́вте пра́вильне сло́во за змі́стом ре́чення. — Fill in the word that fits the context."} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Ресурси — Resources">
@@ -278,19 +325,9 @@ Keep Ukrainian sound categories independent. Do not use another language as the 
 :::info[🎧 🔗 External Resources]
 
 **📚 Books:**
-- 📚 **Заболо́тний 5 клас, p. 83**
-  Фоне́тика, зву́ки та бу́кви.
-
-**📺 Videos:**
-- 📺 [Anna Ohoiko — Letter Г pronunciation](https://www.youtube.com/watch?v=gVnclpSI0DU) — Voiced glottal fricative [ɦ].
-- 📺 [Anna Ohoiko — Letter И pronunciation](https://www.youtube.com/watch?v=W-1rCu0indE) — Pronunciation of vowel [и].
-- 📺 [Anna Ohoiko — Letter О pronunciation](https://www.youtube.com/watch?v=gJFxRIPRZbI) — Clean unstressed [о] practice.
-- 📺 [Anna Ohoiko — Letter Ь pronunciation](https://www.youtube.com/watch?v=cJlal8XKBxo) — Soft sign softening role.
-- 📺 [Anna Ohoiko — Letter І pronunciation](https://www.youtube.com/watch?v=Z9TH0H4ShGo) — Pronunciation of vowel [і].
-- 📺 [Anna Ohoiko — Letter Ґ pronunciation](https://www.youtube.com/watch?v=gNjHqjTW9WQ) — Voiced velar plosive [g].
-
-**🔗 Online resources:**
-- 🔗 **Погрібни́й М. І., «Украї́нська літерату́рна вимо́ва» (1992), с. 7, 11-12** — Но́рми літерату́рної вимо́ви: ненаголо́шений [о] та збере́ження дзві́нкості кінце́вих при́голосних.
+- 📚 [Anna Ohoiko — Ukrainian Alphabet Overview](https://www.youtube.com/watch?v=ksXIXj7CXwc)
+- 📚 [Большакова І. О., Пристинська М. С. — Українська мова. Буквар. 1 клас](https://pidruchnyk.com.ua/1179-bukvar-1-klas-bolshakova.html)
+- 📚 [Захарійчук М. Д. — Українська мова. Буквар. 1 клас](https://pidruchnyk.com.ua/1181-bukvar-1-klas-zahariychuk.html)
 :::
 
 </TabItem>
@@ -300,6 +337,6 @@ Keep Ukrainian sound categories independent. Do not use another language as the 
 
 <nav aria-label="Lesson navigation">
 
-[Previous](/a1/sounds-letters-and-hello/3/) · [Module](/a1/sounds-letters-and-hello/) · [Next](/a1/sounds-letters-and-hello/5/)
+[Previous](/a1/sounds-letters-and-hello/3/) · [Module](/a1/sounds-letters-and-hello/) · [Next](/a1/sounds-letters-and-hello/)
 
 </nav>

@@ -1,163 +1,161 @@
-# Ва́ша пе́рша розмо́ва — Your First Conversation
+# С Н: Свистя́чі, носові́ та закри́тий склад
 
-Повто́рення з пе́рших уро́ків — retrieval from Lessons 1 and 2:
-У пе́рших двох уро́ках ви познайо́милися з голосни́ми та при́голосними зву́ками, абе́ткою та на́голосом — in the first two lessons you explored vowel and consonant sounds, the alphabet, and word stress:
-- **Звук та лі́тера** — sound is what we hear and say (**звук**), letter is what we see and write (**лі́тера**);
-- **Чи́сті голосні́** — six clean vowel sounds: **[а]**, **[о]**, **[у]**, **[е]**, **[и]**, **[і]**;
-- **Склад** — every syllable (**склад**) has a vowel sound at its core;
-- **На́голос** — stress (**на́голос**) gives words rhythm and can change meaning.
+У пе́рших двох уро́ках ви опанува́ли голосні́ зву́ки **А**, **О**, **У** та сона́нти **М**, **Л**, з'є́днували їх у склади́ та прочита́ли сло́во **ма́ма**. Сього́дні ми ро́бимо вели́кий крок упере́д: вивча́ємо дві нові́ при́голосні бу́кви — **С** та **Н**, відкрива́ємо структу́ру закри́того скла́ду **CVC** та вчимо́ся чита́ти повноці́нні коро́ткі слова́: **сон**, **сом**, **сам**, **лан**, **оса́**, **сосна́**.
 
-Сього́дні ви навчите́ся вести́ пе́ршу спра́вжню розмо́ву украї́нською мо́вою — today you will learn to hold your first real conversation in Ukrainian:
-- **Милозву́чність** — discover how Ukrainian alternates **у/в** and **і/й** for a smooth, melodic flow;
-- **Віта́ння та проща́ння** — master essential phrases: **Приві́т!**, **До́брий день!**, **До поба́чення!**;
-- **Як спра́ви?** — ask how someone is doing and reply with **До́бре**, **Чудо́во**, or **Норма́льно**;
-- **Знайо́мство** — introduce yourself (**Мене́ зва́ти...**) and ask a partner's name (**Як тебе́ зва́ти?**).
+By the end of this 60-minute lesson, you will be able to:
 
-## Euphony: У/В and І/Й
+- **Вимовля́ти свистя́чий звук [с]** — articulate the voiceless sibilant consonant [с] with a crisp hiss;
+- **Вимовля́ти носови́й сона́нт [н]** — articulate the nasal sonorant [н] through the nose;
+- **Будува́ти закри́ті склади́ CVC** — assemble and read closed consonant-vowel-consonant syllables: **сон**, **сом**, **сам**, **лан**;
+- **Чита́ти двоскладо́ві слова́** — read two-syllable words built from learned letters: **оса́** and **сосна́**;
+- **Зберіга́ти чи́сте [о] у сло́ві сосна́** — maintain a pure unstressed [о] in **сосна́** without akannya;
+- **Вжива́ти вказівну́ ча́стку он** — use the demonstrative pointer **он** ("over there") in your first reading sentences.
 
-Ukrainian likes smooth sound flow. This is called **милозву́чність**. At A1, you only need to recognize two common pairs:
+---
 
-| Pair | Beginner idea |
-| --- | --- |
-| **у / в** | Ukrainian may choose the smoother one for the sounds around it |
-| **і / й** | Ukrainian may choose the smoother one for the sounds around it |
+## Бу́кви С та Н: Шу́мний свистя́чий та носови́й сона́нт
 
-You do not need to choose them alone yet. Just notice the idea: Ukrainian often avoids heavy sound piles.
+Consonants in Ukrainian fall into two primary sonic groups:
 
-Two tiny examples:
+1. **Сона́нти** (sonorants) — consonants where resonant voice predominates. You already know **М** and **Л**. In this lesson, you meet another sonorant: **Н**.
+2. **Шу́мні при́голосні** (noisy consonants) — consonants where turbulent noise or friction predominates. Our first noisy consonant is **С**.
 
-| Pair | What to notice |
-| --- | --- |
-| **у / в** | **у шко́лі** starts with **у** before **шк-**; **в Украї́ні** starts with **в** before **У-** |
-| **і / й** | **Марко́ й А́нна** puts short **й** between vowel sounds |
+Let us examine how to form each letter's sound:
 
-Do not memorize these as a rule today. Just hear that Ukrainian has smoother sound choices.
+### 1. Бу́ква С — звук [с]
 
-Милозву́чність допомага́є мо́ві звуча́ти приє́мно та ле́гко — euphony helps the language sound pleasant and effortless:
+The letter **С** represents the voiceless sibilant fricative **[с]** (глухи́й свистя́чий звук).
 
-| Ото́чення — Sound context | Варіа́нт — Choice | При́клад — Example | Чому́ так — Why it works |
+- **Язи́к** (Tongue): the tip of your tongue rests firmly against the base of your lower front teeth.
+- **Зуби́** (Teeth): your upper and lower front teeth are brought very close together.
+- **Стру́мінь пові́тря** (Airstream): a focused, narrow stream of air rushes along the middle groove of the tongue, producing a sharp, clean hiss, like air escaping a bicycle valve.
+- **Го́лос** (Voice): the vocal cords do not vibrate; this is a purely voiceless, whispering sound.
+
+### 2. Бу́ква Н — звук [н]
+
+The letter **Н** represents the dental nasal sonorant **[н]** (носови́й сона́нт).
+
+- **Язи́к** (Tongue): the broad front of your tongue presses against the back of your upper teeth and gums, completely blocking the oral exit.
+- **М'яке́ піднебі́ння** (Soft palate): lowers, directing the resonant vocal stream entirely through your nose.
+- **Го́лос** (Voice): your vocal cords vibrate freely. You can hum the sound [н] continuously: *nnnnn*.
+
+| Вели́ка бу́ква — Capital | Мала́ бу́ква — Lowercase | Звук — Sound | Характери́стика — Phonetic property |
 | --- | --- | --- | --- |
-| Пе́ред двома́ при́голосними | **у** | **у шко́лі** | avoids a heavy pile of three consonants |
-| Пе́ред голосни́м зву́ком | **в** | **в Украї́ні** | avoids two vowel sounds clashing (hiatus) |
-| Між двома́ голосни́ми | **й** | **Марко́ й А́нна** | short glide smoothly bridges the open vowels |
-| Між при́голосними зву́ками | **і** | **він і вона́** | full vowel sound separates the consonants |
+| **С** | **с** | **[с]** | глухи́й свистя́чий — voiceless sibilant |
+| **Н** | **н** | **[н]** | соно́рний носови́й — nasal sonorant |
 
-Коли́ ви слу́хаєте украї́нську мо́ву, зверта́йте ува́гу на цей м'яки́й перехі́д — when you listen to Ukrainian, notice this soft transition. Скла́дного тут нема́є: мо́ва про́сто обира́є те, що ле́гше ви́мовити ва́шому ро́ту.
+Watch the video lessons by Anna Ohoiko (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons). Practice her mouth positions and repeat the sounds aloud.
 
 <!-- INJECT_ACTIVITY: act-301 -->
 
-<!-- INJECT_ACTIVITY: act-302 -->
+---
 
-## Your First Conversation
+## Склади́ з С та Н: Відкри́ті склади́ СА, СО, НА, НО
 
-Learn these as whole phrases.
+Before assembling full three-letter words, let us combine our new consonants **С** and **Н** with the vowel sounds **[а]** and **[о]** into direct open syllables (CV):
 
-| Ukrainian | English | Use |
-| --- | --- | --- |
-| **Приві́т!** | Hi! | informal |
-| **До́брий день!** | Hello! / Good day! | neutral |
-| **До́брого ра́нку!** | Good morning! | morning |
-| **До́брий ве́чір!** | Good evening! | evening |
-| **Як спра́ви?** | How are you? | friendly |
-| **До́бре.** | Fine. | simple answer |
-| **Чудо́во.** | Great. | positive answer |
-| **Норма́льно.** | Okay. | neutral answer |
-| **А у тебе́?** | And you? | after **Як спра́ви?** |
-| **Як тебе́ зва́ти?** | What is your name? | informal |
-| **Мене́ зва́ти А́нна.** | My name is Anna. | name answer | <!-- джерело: ULP -->
-| **А тебе́?** | And you? | after a name question |
-| **До поба́чення!** | Goodbye! | leaving |
-| **На все до́бре!** | All the best! | friendly goodbye |
+- **С + А = СА** (as in **сам** — alone, by oneself)
+- **С + О = СО** (as in **сом** — catfish)
+- **Н + А = НА** (as in **нас** — us, or preposition **на** — on)
+- **Н + О = НО** (as in the final syllable of **воно́** — it)
 
-Use the neutral version when you are not sure whether **Приві́т** is too informal:
+Notice that in Ukrainian, consonants before **А**, **О**, **У** remain firmly hard (залиша́ються тверди́ми). Keep your tongue body relaxed without arching toward the hard palate:
 
-```text
-А́нна: До́брий день!
-Марко́: До́брий день!
-А́нна: Як спра́ви?
-Марко́: До́бре. А у тебе́?
-```
-
-Read the dialogue. Then say it aloud twice: once as Anna, once as Marko. <!-- джерело: ULP -->
-
-```text
-А́нна: Приві́т!
-Марко́: Приві́т!
-А́нна: Як спра́ви?
-Марко́: До́бре. А у тебе́?
-А́нна: Чудо́во.
-```
-
-Support after the dialogue:
-
-| Ukrainian | English |
-| --- | --- |
-| **А́нна: Приві́т!** | Anna: Hi! | <!-- джерело: ULP -->
-| **Марко́: Приві́т!** | Marko: Hi! |
-| **А́нна: Як спра́ви?** | Anna: How are you? | <!-- джерело: ULP -->
-| **Марко́: До́бре. А у тебе́?** | Marko: Fine. And you? |
-| **А́нна: Чудо́во.** | Anna: Great. | <!-- джерело: ULP -->
-
-Now read the name exchange.
-
-```text
-Марко́: Як тебе́ зва́ти?
-Софі́я: Мене́ зва́ти Софі́я. А тебе́?
-Марко́: Мене́ зва́ти Марко́.
-```
-
-Support after the name exchange:
-
-| Ukrainian | English |
-| --- | --- |
-| **Марко́: Як тебе́ зва́ти?** | Marko: What is your name? |
-| **Софі́я: Мене́ зва́ти Софі́я. А тебе́?** | Sofia: My name is Sofia. And you? |
-| **Марко́: Мене́ зва́ти Марко́.** | Marko: My name is Marko. |
-
-Use **А у тебе́?** after **Як спра́ви?** because you are asking about the other person's state. Use **А тебе́?** after **Як тебе́ зва́ти?** because you are asking for the other person's name.
-
-You may also hear:
-
-| Ukrainian | English | Who says it? |
-| --- | --- | --- |
-| **Ра́дий тебе́ ба́чити.** | Glad to see you. | a male speaker |
-| **Ра́да тебе́ ба́чити.** | Glad to see you. | a female speaker |
-
-Do not build grammar from this yet. Just notice that Ukrainian sometimes changes a word depending on who is speaking: use **Ра́дий тебе́ ба́чити** if the speaker is male, and **Ра́да тебе́ ба́чити** if the speaker is female.
-
-The word **Приві́т** is useful for your first tiny sound analysis: **П-р-и-в-і-т**, four consonant sounds and two vowel sounds.
+- In **СА**, keep [с] crisp and hiss directly into open [а]: [с-а].
+- In **СО**, keep [с] distinct, immediately rounding your lips into pure [о]: [с-о].
+- In **НА**, touch the upper gums with [н] and release into [а]: [н-а].
+- In **НО**, release the nasal hum directly into rounded [о]: [н-о].
 
 <!-- INJECT_ACTIVITY: act-5 -->
 
-Послу́хайте розмо́ву двох нови́х знайо́мих пе́ред уро́ком — listen to a conversation between two new acquaintances before class:
+---
 
-> **Марко́**: До́брого ра́нку, Софі́є! — Good morning, Sofia!
-> **Софі́я**: До́брого ра́нку, Марко́! Як спра́ви? — Good morning, Marko! How are you?
-> **Марко́**: Чудо́во, дя́кую! А у тебе́? — Great, thank you! And you?
-> **Софі́я**: Теж до́бре. Ра́да тебе́ ба́чити! — Also fine. Glad to see you!
-> **Марко́**: Ра́дий тебе́ ба́чити! — Glad to see you!
+## Закри́тий склад CVC: сон, сом, сам, лан
 
-Розбі́р розмо́ви — breakdown of the dialogue:
+In Lesson 2, you explored open syllables (CV: **ма**, **ла**) and simple closed syllables (VC: **ам**, **ал**). Now we combine all three positions into a **CVC** structure:
 
-| Украї́нська | English support |
-| --- | --- |
-| **Марко́: До́брого ра́нку, Софі́є!** | Marko: Good morning, Sofia! |
-| **Софі́я: До́брого ра́нку, Марко́! Як спра́ви?** | Sofia: Good morning, Marko! How are you? |
-| **Марко́: Чудо́во, дя́кую! А у тебе́?** | Marko: Great, thank you! And you? |
-| **Софі́я: Теж до́бре. Ра́да тебе́ ба́чити!** | Sofia: Also fine. Glad to see you! |
-| **Марко́: Ра́дий тебе́ ба́чити!** | Marko: Glad to see you! |
+> **При́голосний + Голосни́й + При́голосний** — Consonant + Vowel + Consonant (CVC)
 
-Зверні́ть ува́гу на культу́рні подро́биці — notice the cultural details:
-- **Час доби́** — time of day: вра́нці ка́жуть **До́брого ра́нку!**, вдень — **До́брий день!**, вве́чері — **До́брий ве́чір!**;
-- **Чи́стий ненаголо́шений [о]** — in **До́брого ра́нку**, keep both **о** vowels rounded and clean; do not blur them into [а];
-- **Два запита́ння «А тебе́?»** — two different follow-up questions: after **Як спра́ви?** say **А у тебе́?** (how are things *with you*?); after **Як тебе́ зва́ти?** say **А тебе́?** (how do they call *you*?).
+A CVC syllable begins with an initial consonant, resonates on a central vowel core, and firmly closes on a final consonant. In Ukrainian phonetic diagrams, a CVC word is depicted as:
+
+> `[— ● —]` (тверди́й при́голосний + голосни́й + тверди́й при́голосний — hard consonant + vowel + hard consonant)
+
+Using our seven letters (**А**, **О**, **У**, **М**, **Л**, **С**, **Н**), we can build authentic Ukrainian one-syllable words:
+
+| Сло́во — Word | Зву́ки — Sounds | Схе́ма — Pattern | Зна́чення — Meaning |
+| --- | --- | --- | --- |
+| **сон** | [с] [о] [н] | `[— ● —]` | sleep, dream (noun, masculine) |
+| **сом** | [с] [о] [м] | `[— ● —]` | European catfish (*Silurus glanis*) |
+| **сам** | [с] [а] [м] | `[— ● —]` | alone, oneself (pronoun/adjective, masculine) |
+| **лан** | [л] [а] [н] | `[— ● —]` | fertile field, expansive arable land (noun, masculine) |
+
+Notice how distinct each word sounds:
+
+- **сон** ends with the nasal resonance of **[н]**.
+- **сом** ends with the closed-lip resonance of **[м]**.
+- **сам** opens wide on **[а]** in the middle and closes with **[м]**.
+- **лан** begins with the clear lateral **[л]** and closes on **[н]**.
+
+<!-- INJECT_ACTIVITY: act-302 -->
+
+---
+
+## Двоскладо́ві слова́: оса́, сосна́
+
+Now we combine our consonants and vowels into longer, two-syllable Ukrainian words:
+
+### 1. Сло́во оса́ (wasp)
+
+- **Склади́** (Syllables): **о-са́** (два склади́ / two syllables: **о-** and **-са́**).
+- **Будо́ва** (Structure): пе́рший склад відкри́тий з одного́ голосно́го (V: **о-**), дру́гий склад відкри́тий прями́й (CV: **-са́**).
+- **Звукова́ схе́ма** (Sound scheme): `[● — ●]`.
+- **На́голос** (Stress): на́голос па́дає на дру́гий склад — **о-са́**.
+
+### 2. Сло́во сосна́ (pine tree)
+
+- **Склади́** (Syllables): **сос-на́** (два склади́ / two syllables: закри́тий **сос-** and відкри́тий **-на́**).
+- **Будо́ва** (Structure): пе́рший склад CVC (**сос-**), дру́гий склад CV (**-на́**).
+- **Звукова́ схе́ма** (Sound scheme): `[— ● — — ●]`.
+- **На́голос** (Stress): на́голос па́дає на дру́гий склад — **сос-на́**.
+
+> **Важли́ва вимо́вна вимо́га — Important pronunciation rule**: у сло́ві **сосна́** (pine tree) пе́рший ненаголо́шений склад ма́є абсолю́тно чи́стий звук **[о]**: [с о с н а́]. Не вимовля́йте йо́го як «сасна́»! В украї́нській мо́ві ненаголо́шене **о** за́вжди залиша́ється кру́глим і зву́чним.
+
+A brief note on vocabulary choice: in older foreigner textbooks, learners sometimes encounter the poetic word **луна́**. In standard Ukrainian, **луна́** means an echo or reverberation, whereas the celestial moon is **мі́сяць** (introduced in later lessons). We focus strictly on the natural, undisputed words built from our seven letters: **сон**, **сом**, **оса́**, and **сосна́**.
 
 <!-- INJECT_ACTIVITY: act-303 -->
 
+---
+
+## Слова́-помічники́: он, нас, нам
+
+To build real reading sentences, Ukrainian uses short, expressive grammatical helper words:
+
+- **он** — a demonstrative particle meaning "over there", "look there", or "yonder". It points someone's attention toward an object or person:
+  - **Он сон.** — There is sleep / Look, a dream.
+  - **Он сом.** — Over there is a catfish.
+  - **Он сосна́.** — Over there is a pine tree.
+  - **Он оса́!** — Look, a wasp!
+- **нас** — the genitive/accusative form of **ми** (we/us), used in the possessive construction:
+  - **У нас...** — We have... / By us...
+- **нам** — the dative form of **ми** (to us / for us):
+  - **Нам ма́ло.** — It is too little for us / We have few.
+
+Here is a natural outdoor dialogue by a river between two friends observing wildlife and nature:
+
+> **Марко́:** Он сом! — Marko: Look, a catfish!
+> **Оле́г:** Он сосна́! — Oleh: Look, a pine tree!
+> **Марко́:** Он оса́! — Marko: Look, a wasp!
+> **Оле́г:** Сам сом там! — Oleh: The catfish itself is there!
+
+Support after the dialogue:
+
+| Украї́нська ре́пліка — Ukrainian line | Англі́йський пере́клад — English translation |
+| --- | --- |
+| **Марко́: Он сом!** | Marko: Look, a catfish! |
+| **Оле́г: Он сосна́!** | Oleh: Look, a pine tree! |
+| **Марко́: Он оса́!** | Marko: Look, a wasp! |
+| **Оле́г: Сам сом там!** | Oleh: The catfish itself is there! |
+
 <!-- INJECT_ACTIVITY: act-304 -->
 
-Підсу́мок уро́ку — lesson recap:
-Тепе́р ви вмі́єте віта́тися рі́зними спо́собами, запи́тувати про спра́ви та знайо́митися — now you can greet people in different ways, ask how they are, and introduce yourself:
-- **Приві́т!** та **До́брий день!** — everyday greetings for friends and neutral situations;
-- **Як тебе́ зва́ти?** — asking names without confusing **А у тебе́?** and **А тебе́?**;
-- **Милозву́чність** — understanding why Ukrainian flows smoothly with **у/в** and **і/й**.
+You have mastered the noisy sibilant **С**, the nasal sonorant **Н**, closed **CVC** words, and reading with the pointer **он**. In Lesson 4, we bring all seven letters together for our comprehensive first-module reading synthesis!

@@ -1,317 +1,456 @@
 inline:
 - id: act-6
   type: true-false
-  title: Pronunciation safety check
-  instruction: Choose true or false.
+  title: "Переві́рка знань семи́ лі́тер — Seven-letter safety check"
+  instruction: "Ви́значте, чи твер́дження пра́вильне. — Decide whether each statement is true or false."
   items:
-  - statement: In молоко́, every о stays clean.
-    correct: true
-    explanation: Ukrainian о does not blur into а in this beginner model.
-  - statement: The letters и and і always sound the same.
-    correct: false
-    explanation: Приві́т contains both [и] and [і].
-  - statement: Ь has no sound of its own.
-    correct: true
-    explanation: Ь softens the previous consonant.
-  - statement: Ї is always [йі].
-    correct: true
-    explanation: Treat Ї as [йі] at this level.
-  - statement: Г and Ґ are the same letter.
-    correct: false
-    explanation: Г is h-like; Ґ is hard g.
-  - statement: Щ is [шч].
-    correct: true
-    explanation: Щ represents two sounds together.
+  - statement: "In Ukrainian, moving the stress mark can change the meaning of a word."
+    answer: true
+    explanation: "Stress is phonemic in Ukrainian: «ма́ло» (few) vs «мала́» (small)."
+  - statement: "The vocative form to directly address mother is «Ма́мо!»."
+    answer: true
+    explanation: "Ukrainian uses the vocative case for direct address: «Ма́мо!»."
+  - statement: "The Ukrainian unstressed [о] sound is pronounced as [а], like in Russian."
+    answer: false
+    explanation: "Ukrainian has no akanye: unstressed [о] stays pure and rounded."
+  - statement: "The word «ма́сло» means butter in Ukrainian."
+    answer: true
+    explanation: "«Ма́сло» means butter."
+  - statement: "The word «са́ло» is stressed on the second syllable: «сало́»."
+    answer: false
+    explanation: "«Са́ло» is stressed on the first syllable: «са́-ло»."
+  - statement: "In Ukrainian, the letter Н represents a nasal sonorant sound."
+    answer: true
+    explanation: "Letter Н represents [n], a nasal sonorant."
+
 - id: act-401
   type: quiz
-  title: Чи́стий звук [о] — Pure [о] in words
-  instruction: Choose the correct answer about Ukrainian sounds.
+  title: "Си́ла на́голосу — The power of stress"
+  instruction: "Обері́ть пра́вильне зна́чення ви́діленого сло́ва. — Choose the correct meaning for the highlighted word."
   items:
-  - prompt: How is the unstressed о pronounced in the word молоко́?
+  - prompt: "What does «ма́ло» mean with stress on the first syllable?"
     options:
-    - text: As a clean, round [о]
+    - text: "Little / few (adverb)"
       correct: true
-    - text: As [а]
+    - text: "Small / little (feminine adjective)"
       correct: false
-    - text: As a blurred [ə]
+    - text: "Mother"
       correct: false
-    explanation: In Ukrainian, every unstressed о remains a clean [о].
-  - prompt: What happens to unstressed о in Ukrainian compared to English?
+    explanation: "«Ма́ло» with stress on the first syllable is an adverb meaning little or few."
+  - prompt: "What does «мала́» mean with stress on the second syllable?"
     options:
-    - text: It does not reduce or blur
+    - text: "Small / little (feminine adjective)"
       correct: true
-    - text: It always turns into [а]
+    - text: "Little / few (adverb)"
       correct: false
-    - text: It becomes silent
+    - text: "Catfish"
       correct: false
-    explanation: Ukrainian vowels keep their pure quality even when unstressed.
-  - prompt: In the word о́ко, how is the second letter о pronounced?
+    explanation: "«Мала́» with stress on the second syllable is a feminine adjective (e.g. «мала́ оса́»)."
+  - prompt: "In the sentence «Ма́ма там сама́.», what does «сама́» mean?"
     options:
-    - text: As a clear [о]
+    - text: "Alone / by herself"
       correct: true
-    - text: As [у]
+    - text: "The very"
       correct: false
-    - text: As [і]
+    - text: "Together"
       correct: false
-    explanation: 'Unstressed о stays clean: о́ко.'
-  - prompt: In the greeting До́брого ра́нку, how should you pronounce the ending -го?
+    explanation: "«Сама́» with stress on the second syllable means alone or by oneself."
+  - prompt: "In the phrase «Он мала́ оса́.», which word carries stress on its final syllable?"
     options:
-    - text: With a clean unstressed [о]
+    - text: Both мала́ and оса́
       correct: true
-    - text: Blurred into [а]
+    - text: Only он
       correct: false
-    - text: As a silent vowel
+    - text: Neither word
       correct: false
-    explanation: Do not reduce unstressed о to [а] in До́брого.
-  - prompt: Why is keeping [о] clean important in Ukrainian?
+    explanation: "Both «мала́» and «оса́» carry stress on the final -а́."
+  - prompt: "How many vowel sounds are there in the word «ма́сло»?"
     options:
-    - text: It preserves the natural melody and clarity of speech
+    - text: '2'
       correct: true
-    - text: It changes consonants into vowels
+    - text: '3'
       correct: false
-    - text: It makes words shorter
+    - text: '1'
       correct: false
-    explanation: Clean vowels are a hallmark of standard Ukrainian literary pronunciation.
-  - prompt: Which pronunciation habit is correct for beginners?
+    explanation: "«Ма́сло» has two vowels ([а] and [о]) and therefore two syllables."
+  - prompt: "What happens to the vowels in «ма́сло» when spoken aloud?"
     options:
-    - text: молоко́ with three clean [о] sounds
+    - text: "Both [а] and [о] are pronounced clearly and distinctly"
       correct: true
-    - text: воду́ with two [у] sounds
+    - text: "The final [о] becomes [а]"
       correct: false
-    - text: чай with a diphthong
+    - text: "The vowel [а] is silent"
       correct: false
-    explanation: Ukrainian maintains full, open vowel articulation.
+    explanation: "Ukrainian preserves pure vowel quality without reduction."
+
 - id: act-402
-  type: match-up
-  title: Зву́ки [и] та [і] — Minimal pairs [и] versus [і]
-  instruction: Match each word with its meaning to notice how [и] and [і] change the
-    word.
-  pairs:
-  - left: лис
-    right: fox ([и], relaxed tongue)
-  - left: ліс
-    right: forest ([і], smiling lips)
-  - left: дим
-    right: smoke ([и])
-  - left: дім
-    right: house / home ([і])
-  - left: сир
-    right: cheese ([и])
-  - left: сіль
-    right: salt ([і])
-- id: act-403
   type: fill-in
-  title: Безпе́чна вимо́ва — Pronunciation safety check
-  instruction: Choose the correct word to complete each sentence.
+  title: "Кли́чний відмі́нок: Зверта́ння — Vocative address"
+  instruction: "Обері́ть пра́вильне сло́во для зверта́ння. — Choose the correct word for direct address."
   items:
-  - sentence: У лі́сі живе́ руди́й ____.
-    answer: лис
+  - sentence: "___, подиви́ся сюди́!"
+    answer: Ма́мо
     options:
-    - лис
-    - ліс
-  - sentence: Навко́ло села́ росте́ густи́й ____.
-    answer: ліс
+    - Ма́мо
+    - Ма́ма
+    - Ма́сло
+    explanation: "Use the vocative «Ма́мо!» when addressing mother directly."
+  - sentence: "___! Он росте́ висо́ка сосна́!"
+    answer: Ма́мо
     options:
-    - ліс
-    - лис
-  - sentence: З труби́ йде бі́лий ____.
-    answer: дим
+    - Ма́мо
+    - Ма́ма
+    - Мала́
+    explanation: "Direct call uses «Ма́мо!»."
+  - sentence: "Он іде́ на́ша ___."
+    answer: ма́ма
     options:
-    - дим
-    - дім
-  - sentence: Це наш нови́й і те́плий ____.
-    answer: дім
+    - ма́ма
+    - ма́мо
+    - мала́
+    explanation: "Stating who is coming uses the nominative «ма́ма»."
+  - sentence: "Оле́г гука́є: «___!»."
+    answer: Ма́мо
     options:
-    - дім
-    - дим
-  - sentence: Ді́ти п'ють сві́же ____ щора́нку.
-    answer: молоко́
+    - Ма́мо
+    - Ма́ма
+    - Ма́ло
+    explanation: "Calling out requires the vocative form «Ма́мо!»."
+  - sentence: "Там стої́ть на́ша до́бра ___."
+    answer: ма́ма
     options:
-    - молоко́
-    - чай
-  - sentence: У ко́шику лежи́ть вели́кий бі́лий ____.
-    answer: гриб
+    - ма́ма
+    - ма́мо
+    - сама́
+    explanation: "Subject of sentence is nominative «ма́ма»."
+  - sentence: "«___, он сом у рі́чці!» — сказа́в Марко́."
+    answer: Ма́мо
     options:
-    - гриб
-    - грип
+    - Ма́мо
+    - Ма́ма
+    - Са́ло
+    explanation: "Calling mother directly requires «Ма́мо!»."
+
+- id: act-403
+  type: match-up
+  title: "Побуто́ві слова́ та приро́да — Everyday and nature words"
+  instruction: "З'єдна́йте украї́нське сло́во з його́ зна́ченням. — Match the Ukrainian word to its meaning."
+  pairs:
+  - left: ма́сло
+    right: butter
+  - left: са́ло
+    right: salo (cured fatback)
+  - left: смола́
+    right: tree resin / pitch
+  - left: сосна́
+    right: pine tree
+  - left: оса́
+    right: wasp
+  - left: лан
+    right: field
+
 - id: act-404
-  type: group-sort
-  title: Дзвінкі́ та глухі́ зву́ки — Voiced and voiceless consonants
-  instruction: Sort each consonant into voiced or voiceless.
-  groups:
-  - label: Дзвінкі́ при́голосні (Voiced)
-    items:
-    - '[б]'
-    - '[д]'
-    - '[з]'
-    - '[ж]'
-  - label: Глухі́ при́голосні (Voiceless)
-    items:
-    - '[п]'
-    - '[т]'
-    - '[с]'
-    - '[ш]'
+  type: quiz
+  title: "Розумі́ння мікроте́кстів — Reading comprehension"
+  instruction: "Да́йте ві́дповідь на запита́ння до те́кстів. — Answer the question based on the reading texts."
+  items:
+  - prompt: "In Text 1, what is pointed out near the pine tree?"
+    options:
+    - text: "A field, a catfish, and a wasp"
+      correct: true
+    - text: "A car and a house"
+      correct: false
+    - text: "Milk and bread"
+      correct: false
+    explanation: "Text 1 lists «сосна́», «лан», «сом», and «оса́»."
+  - prompt: "In Text 2, who is outdoors by herself?"
+    options:
+    - text: "Mother («Ма́ма там сама́.»)"
+      correct: true
+    - text: "Oleh"
+      correct: false
+    - text: "Marko"
+      correct: false
+    explanation: "The text states: «Ма́ма там сама́.»."
+  - prompt: "What foods are mentioned in Text 2?"
+    options:
+    - text: "Butter and salo («ма́сло і са́ло»)"
+      correct: true
+    - text: "Apples and honey"
+      correct: false
+    - text: "Fish and soup"
+      correct: false
+    explanation: "Text 2 mentions: «Он ма́сло і са́ло.»."
+  - prompt: "What pointer word is used to direct attention in both texts?"
+    options:
+    - text: он
+      correct: true
+    - text: ми
+      correct: false
+    - text: як
+      correct: false
+    explanation: "«Он» points out objects in view («Он сосна́», «Он ма́ма»)."
+  - prompt: "How does the speaker address mother in Text 2?"
+    options:
+    - text: Ма́мо!
+      correct: true
+    - text: Ма́ма!
+      correct: false
+    - text: Мала́!
+      correct: false
+    explanation: "The speaker calls: «Ма́мо! Он сосна́!»."
+  - prompt: "What is the size of the wasp in Text 1?"
+    options:
+    - text: "Small («Оса́ мала́.»)"
+      correct: true
+    - text: "Large"
+      correct: false
+    - text: "Enormous"
+      correct: false
+    explanation: "The text says: «Оса́ мала́.»."
+
 workbook:
 - id: act-8
   type: match-up
-  title: See a letter, hear a sound
-  instruction: Match each letter with its beginner sound clue.
+  title: "Сім лі́тер та їхні зву́ки — Seven letters and their sounds"
+  instruction: "З'єдна́йте лі́теру з її́ звуково́ю характери́стикою. — Match the letter with its phonetic property."
   pairs:
   - left: А
-    right: '[а]'
+    right: "відкри́тий голосни́й [а] — open vowel [a]"
   - left: О
-    right: '[о]'
+    right: "окру́глений голосни́й [о] — rounded vowel [o]"
   - left: У
-    right: '[у]'
+    right: "лабіалізо́ваний голосни́й [у] — pursed vowel [u]"
   - left: М
-    right: '[м]'
-  - left: Н
-    right: '[н]'
-  - left: Г
-    right: h-like [г]
-  - left: Ґ
-    right: hard [g]
-  - left: Ї
-    right: '[йі]'
-  - left: Ь
-    right: no sound
-- id: act-w401
-  type: true-false
-  title: Дзвінкі́ при́голосні в кінці́ слів — Voiced consonants at word end
-  instruction: Choose true or false.
+    right: "губни́й носови́й сона́нт [м] — bilabial nasal sonorant [m]"
+  - left: Л
+    right: "бокови́й сона́нт [л] — lateral sonorant [l]"
+  - left: С
+    right: "глухи́й свистя́чий при́голосний [с] — voiceless sibilant [s]"
+
+- id: act-9
+  type: translate
+  title: "Пере́клад слів мо́дуля — Module vocabulary translation"
+  instruction: "Обері́ть пра́вильний англі́йський пере́клад. — Choose the correct English translation."
   items:
-  - statement: In Ukrainian, the final sound in дуб remains a voiced [б].
-    correct: true
-    explanation: Ukrainian does not devoice final voiced consonants into [п].
-  - statement: The word сад sounds identical to сат in standard pronunciation.
-    correct: false
-    explanation: Final [д] keeps its voice and is not devoiced to [т].
-  - statement: In гриб, the final consonant is pronounced as [б].
-    correct: true
-    explanation: 'Final [б] stays voiced: гриб, not грип.'
-  - statement: Voiced consonants lose their voice at the end of every Ukrainian word.
-    correct: false
-    explanation: Standard Ukrainian retains voicing at the end of words.
-  - statement: In ніж, the sound [ж] is voiced.
-    correct: true
-    explanation: Final [ж] remains voiced.
-  - statement: In мед, the final sound is pronounced as [д].
-    correct: true
-    explanation: Final [д] remains voiced in мед.
-- id: act-w402
+  - source: ма́ма
+    options:
+    - text: mother
+      correct: true
+    - text: father
+      correct: false
+    - text: butter
+      correct: false
+    explanation: "«Ма́ма» is mother."
+  - source: ма́мо
+    options:
+    - text: "Mother! (vocative address)"
+      correct: true
+    - text: "small (fem.)"
+      correct: false
+    - text: "alone"
+      correct: false
+    explanation: "«Ма́мо» is the vocative form used when calling mother."
+  - source: ма́сло
+    options:
+    - text: butter
+      correct: true
+    - text: salo
+      correct: false
+    - text: resin
+      correct: false
+    explanation: "«Ма́сло» is butter."
+  - source: са́ло
+    options:
+    - text: salo (cured fatback)
+      correct: true
+    - text: butter
+      correct: false
+    - text: field
+      correct: false
+    explanation: "«Са́ло» is cured pork fatback."
+  - source: смола́
+    options:
+    - text: resin / pitch
+      correct: true
+    - text: catfish
+      correct: false
+    - text: wasp
+      correct: false
+    explanation: "«Смола́» is pine resin or pitch."
+  - source: сон
+    options:
+    - text: sleep / dream
+      correct: true
+    - text: catfish
+      correct: false
+    - text: pine tree
+      correct: false
+    explanation: "«Сон» is sleep or dream."
+
+- id: act-10
+  type: error-correction
+  title: "Фонети́чні та орфографі́чні па́стки — Phonetic and spelling traps"
+  instruction: "Знайді́ть поми́лку та обері́ть прави́льний варіа́нт. — Identify the mistake and choose the correct form."
+  items:
+  - sentence: "У лі́сі росте́ висо́ка сасна́."
+    error: сасна́
+    answer: сосна́
+    options:
+    - сосна́
+    - сасна́
+    - сосно́
+    explanation: "Ukrainian unstressed о does not reduce to а: «сосна́»."
+  - sentence: "На хліб нама́зали сві́же масло́."
+    error: масло́
+    answer: ма́сло
+    options:
+    - ма́сло
+    - масло́
+    - маслі́
+    explanation: "The stress in butter is on the first syllable: «ма́сло»."
+  - sentence: "Он лети́ть мала оса́."
+    error: мала
+    answer: мала́
+    options:
+    - мала́
+    - ма́ла
+    - ма́ло
+    explanation: "The feminine adjective for small is stressed on the end: «мала́»."
+  - sentence: "Він з'їв сало́ з хлі́бом."
+    error: сало́
+    answer: са́ло
+    options:
+    - са́ло
+    - сало́
+    - са́ла
+    explanation: "Salo is stressed on the first syllable: «са́ло»."
+  - sentence: "Оле́г гукну́в: «Ма́ма, ходи́ сюди́!»."
+    error: Ма́ма
+    answer: Ма́мо
+    options:
+    - Ма́мо
+    - Ма́ма
+    - Мала́
+    explanation: "Direct address requires the vocative form: «Ма́мо!»."
+  - sentence: "На корі́ сосни́ ви́ступила смала́."
+    error: смала́
+    answer: смола́
+    options:
+    - смола́
+    - смала́
+    - смо́ла
+    explanation: "Unstressed о remains pure: «смола́»."
+
+- id: act-405
   type: group-sort
-  title: Розпо́діл слів за зву́ком — Sort words by vowel [и] or [і]
-  instruction: Sort each word by whether it contains the sound [и] or [і].
+  title: "Класифіка́ція за на́голосом — Sort by stress position"
+  instruction: "Розподілі́ть слова́ зале́жно від того́, на яки́й склад па́дає на́голос. — Sort the words by stress: first syllable or second syllable."
   groups:
-  - label: Звук [и]
+  - label: "На́голос на пе́ршому скла́ді"
     items:
-    - лис
-    - дим
-    - сир
-  - label: Звук [і]
+    - ма́ма
+    - ма́мо
+    - ма́ло
+    - са́ма
+    - ма́сло
+    - са́ло
+  - label: "На́голос на дру́гому скла́ді"
     items:
-    - ліс
-    - дім
-    - сіль
-- id: act-w403
+    - мала́
+    - сама́
+    - оса́
+    - сосна́
+    - смола́
+
+- id: act-406
+  type: unjumble
+  title: "Складі́ть слова́ із лі́тер — Unjumble words from letters"
+  instruction: "Розташу́йте лі́тери у пра́вильному поря́дку, щоб утвори́ти сло́во. — Arrange letters in the correct order to form the Ukrainian word."
+  items:
+  - answer: ма́сло
+    words:
+    - м
+    - а
+    - с
+    - л
+    - о
+  - answer: са́ло
+    words:
+    - с
+    - а
+    - л
+    - о
+  - answer: смола́
+    words:
+    - с
+    - м
+    - о
+    - л
+    - а
+  - answer: ма́ма
+    words:
+    - м
+    - а
+    - м
+    - а
+  - answer: сосна́
+    words:
+    - с
+    - о
+    - с
+    - н
+    - а
+  - answer: сон
+    words:
+    - с
+    - о
+    - н
+
+- id: act-407
   type: fill-in
-  title: Дзвінкі́ зву́ки у слова́х — Voiced consonants in context
-  instruction: Choose the word with the correct voiced ending consonant.
+  title: "Чита́ння ре́чень — Reading practice fill-in"
+  instruction: "Вста́вте пра́вильне сло́во за змі́стом ре́чення. — Fill in the word that fits the context."
   items:
-  - sentence: Бі́ля рі́чки росте́ стари́й ____.
-    answer: дуб
+  - sentence: "Он золоти́й широ́кий ___."
+    answer: лан
     options:
-    - дуб
-    - зуб
-  - sentence: У лі́сі ми знайшли́ смачни́й ____.
-    answer: гриб
+    - лан
+    - лом
+    - сом
+    explanation: "«Лан» means field."
+  - sentence: "У рі́чці пла́ває вели́кий ___."
+    answer: сом
     options:
-    - гриб
-    - грип
-  - sentence: Ко́ло ха́ти цвіте́ зеле́ний ____.
-    answer: сад
+    - сом
+    - сон
+    - сам
+    explanation: "«Сом» is catfish."
+  - sentence: "Он лети́ть мала́ ___."
+    answer: оса́
     options:
-    - сад
-    - ліс
-  - sentence: На столі́ стої́ть соло́дкий ____.
-    answer: мед
+    - оса́
+    - сосна́
+    - смола́
+    explanation: "«Оса́» is wasp."
+  - sentence: "У лі́сі росте́ стара́ ___."
+    answer: сосна́
     options:
-    - мед
-    - сир
-  - sentence: На ку́хні лежи́ть го́стрий ____.
-    answer: ніж
+    - сосна́
+    - оса́
+    - ма́сло
+    explanation: "«Сосна́» is pine tree."
+  - sentence: "Ма́ма там стої́ть ___."
+    answer: сама́
     options:
-    - ніж
-    - хліб
-  - sentence: Узи́мку на рі́чці лежи́ть товсти́й ____.
-    answer: лід
+    - сама́
+    - са́ма
+    - ма́ло
+    explanation: "«Сама́» means alone / by herself."
+  - sentence: "На столі́ лежи́ть сві́же ___ і са́ло."
+    answer: ма́сло
     options:
-    - лід
-    - сніг
-- id: act-w404
-  type: odd-one-out
-  title: За́йве сло́во за вимо́вою — Odd one out by sound
-  instruction: Find the word that does not fit the phonetic pattern.
-  items:
-  - words:
-    - молоко́
-    - о́ко
-    - коро́ва
-    - ліс
-    answer: ліс
-    explanation: Ліс contains [і], whereas the others have clean unstressed or stressed
-      [о].
-  - words:
-    - лис
-    - дим
-    - сир
-    - дім
-    answer: дім
-    explanation: Дім has [і] with a softened consonant, while the others have [и].
-  - words:
-    - ліс
-    - дім
-    - сіль
-    - дим
-    answer: дим
-    explanation: Дим has [и], while the others have [і].
-  - words:
-    - дуб
-    - гриб
-    - сад
-    - ка́ска
-    answer: ка́ска
-    explanation: Ка́ска has voiceless consonants, while the others end in voiced consonants.
-  - words:
-    - ґа́нок
-    - ґу́дзик
-    - ґрунт
-    - гора́
-    answer: гора́
-    explanation: Гора́ starts with glottal [ɦ], while the others start with hard [g]
-      (Ґ).
-  - words:
-    - день
-    - сіль
-    - кінь
-    - син
-    answer: син
-    explanation: Син ends in a hard consonant, while the others end with soft sign
-      ь.
-- id: act-w405
-  type: match-up
-  title: Лі́тери Г та Ґ — Words with Г and Ґ
-  instruction: Match each word with its translation and sound type.
-  pairs:
-  - left: гора́
-    right: mountain (h-like [г])
-  - left: го́лос
-    right: voice (h-like [г])
-  - left: га́рний
-    right: fine, good (h-like [г])
-  - left: ґа́нок
-    right: porch (hard [ґ])
-  - left: ґу́дзик
-    right: button (hard [ґ])
-  - left: ґрунт
-    right: soil (hard [ґ])
+    - ма́сло
+    - смола́
+    - оса́
+    explanation: "«Ма́сло» means butter."

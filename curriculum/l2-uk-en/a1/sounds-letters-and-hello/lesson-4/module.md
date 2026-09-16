@@ -1,141 +1,186 @@
-# Пе́рші па́стки вимо́ви — First Pronunciation Traps
+# Си́нтез семи́ лі́тер та пе́рші те́ксти
 
-Повто́рення з пе́рших трьох уро́ків — retrieval from Lessons 1–3:
-У пе́рших трьох уро́ках ви познайо́милися з украї́нською абе́ткою, шістьма́ голосни́ми зву́ками, на́голосом та пе́ршими щоде́нними привіта́ннями. In the first three lessons, you met the Ukrainian alphabet, the six basic vowel sounds, word stress, and your first daily greetings:
-- **Звук та лі́тера** — sound is what we hear and say (**звук**), letter is what we see and write (**лі́тера**);
-- **Чи́сті голосні́** — six open vowel sounds: **[а]**, **[о]**, **[у]**, **[е]**, **[и]**, **[і]**;
-- **Склад та на́голос** — every syllable (**склад**) needs a vowel, and stress (**на́голос**) gives words rhythm;
-- **Привіта́ння** — daily phrases: **Приві́т!**, **До́брий день!**, **Як спра́ви?**, **До поба́чення!**
+Віта́ємо на підсумко́вому уро́ці пе́ршого мо́дуля! Про́тягом пе́рших трьох уро́ків ви ви́вчили сім фундамента́льних лі́тер украї́нської абе́тки: три голосні́ (**А**, **О**, **У**) та чоти́ри тверді́ при́голосні (**М**, **Л**, **С**, **Н**). У цьо́му уро́ці ми не вивча́ємо жо́дної ново́ї лі́тери (0 new letters!). На́ша мета́ — си́нтез: ми поєдна́ємо всі сім зву́ків, дослі́димо си́лу украї́нського на́голосу, засво́їмо кли́чну фо́рму **ма́мо!** та прочита́ємо пе́рші спра́вжні мікроте́ксти без жо́дних шабло́нних привіта́нь.
 
-Сього́дні час збудува́ти наді́йні зви́чки вимо́ви — today it is time to build reliable pronunciation habits.
-Ко́жна мо́ва ма́є вла́сну мело́дію та артикуля́цію — each language has its own melody and articulation:
-- **Чи́стий звук [о]** — keep every unstressed **[о]** rounded and clear without blurring;
-- **Зву́ки [и] та [і]** — distinguish the relaxed vowel **[и]** from the smiling vowel **[і]**;
-- **М'яки́й знак** — remember that **ь** has no voice of its own and only softens the preceding consonant;
-- **Дзвінкі́ зву́ки** — keep voiced consonants voiced at the end of words and before voiceless sounds.
+By the end of this 60-minute lesson, you will be able to:
 
-## First Pronunciation Traps
+- **Синтезува́ти сім лі́тер** — effortlessly combine **А**, **О**, **У**, **М**, **Л**, **С**, **Н** into whole words;
+- **Розрізня́ти наголо́шені па́ри** — distinguish meaning changes driven strictly by stress position: **ма́ло** vs **мала́**, **са́ма** vs **сама́**;
+- **Вжива́ти кли́чну фо́рму ма́мо!** — call your mother using the natural vocative case ending **-о**;
+- **Чита́ти побуто́ві слова́** — read real vocabulary for household and nature: **ма́сло**, **са́ло**, **смола́**;
+- **Чита́ти пе́рші мікроте́ксти** — confidently read short connected Ukrainian sentences using pointer **он**.
 
-Use these as safety checks:
+---
 
-| Trap | Safer habit |
-| --- | --- |
-| Blurring **о** in **молоко́** | Keep every **о** clean: **мо-ло-ко** |
-| Mixing **и** and **і** | In **Приві́т**, **и** and **і** are different |
-| Pronouncing **ь** as a separate sound | In **день**, **ь** only softens **н** |
-| Saying final voiced consonants as voiceless | Keep the written voiced sound; do not automatically devoice it |
-| Treating **Ї** like **І** | **Ї** is **[йі]** |
-| Mixing **Г** and **Ґ** | **Г** is h-like; **Ґ** is hard **g** |
+## Сім лі́тер: Звукови́й фунда́мент
 
-Keep Ukrainian sound categories independent. Do not use another language as the shortcut for **И**, **Е**, **О**, or **Г**. Use the Ukrainian mouth model here: **И** has its own position, unstressed **О** stays **О**, **До́брий день** is the neutral greeting, **Приві́т** is the everyday informal greeting, and **Г** is the Ukrainian h-like sound.
+Let us review the complete inventory of the seven letters mastered in this module. Every letter corresponds to a distinct, reliable sound:
+
+| Бу́ква — Letter | Звук — Sound | Тип зву́ка — Sound type | При́клад сло́ва — Example word |
+| --- | --- | --- | --- |
+| **А а** | **[а]** | голосни́й (vowel, wide open) | **а́рка** — arch |
+| **О о** | **[о]** | голосни́й (vowel, rounded lips) | **о́ко** — eye |
+| **У у** | **[у]** | голосни́й (vowel, pursed lips) | **Украї́на** — Ukraine |
+| **М м** | **[м]** | губни́й сона́нт (bilabial nasal sonorant) | **ма́ма** — mother |
+| **Л л** | **[л]** | язи́чно-зубни́й сона́нт (dental lateral sonorant) | **лан** — field |
+| **С с** | **[с]** | глухи́й свистя́чий при́голосний (voiceless sibilant) | **сон** — sleep / dream |
+| **Н н** | **[н]** | носови́й сона́нт (dental nasal sonorant) | **ніс** — nose |
+
+With these seven building blocks, you control three open vowels and four robust consonants. Review the alphabet overview video by teacher Anna Ohoiko (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) to refresh the sounds before continuing.
 
 <!-- INJECT_ACTIVITY: act-6 -->
 
-### Чи́стий ненаголо́шений звук [о] — Pure unstressed [о]
+---
 
-В англі́йській мо́ві ненаголо́шені голосні́ ча́сто розмива́ються та стаю́ть схо́жими на невира́зний звук «uh». In English and some other languages, unstressed vowels frequently reduce or blur into a neutral schwa. В украї́нській мо́ві цього́ роби́ти не мо́жна — in Ukrainian, you must not do this:
-«Голосни́й [о] вимовля́ється вира́зно, я́сно як під на́голосом, так і в бі́льшості ненаголо́шених пози́цій, зокре́ма він ніко́ли не заступа́ється зву́ком [а]» (quoted from: Pohribnyi 1992, p. 7).
+## Си́ла на́голосу: Розрі́знення слів
 
-Зверні́ть ува́гу на різни́цю між украї́нською та і́ншими мо́вами — notice the difference between Ukrainian and other languages:
+In Lesson 2, you learned that Ukrainian stress (**на́голос**) is free and dynamic: it can fall on any syllable of a word. But stress is not merely about volume; in Ukrainian, **на́голос розрізня́є зна́чення слів** (stress distinguishes the meanings of words). Moving the stress mark from one vowel to another completely alters what the word means and its grammatical role.
 
-| Сло́во — Word | Вимо́ва — Pronunciation | Що помі́тити — What to notice |
-| --- | --- | --- |
-| **молоко́** | `[мо-ло-ко́]` | three clean, rounded [о] sounds, never blurred into [а] |
-| **о́ко** | `[о́-ко]` | both the stressed and unstressed [о] remain fully round |
-| **коро́ва** | `[ко-ро́-ва]` | both unstressed and stressed [о] keep their pure shape |
-| **до́бро** | `[до́-бро]` | final unstressed [о] remains distinct and open |
-| **До́брого ра́нку!** | `[до́-бро-го ра́н-ку]` | unstressed [о] endings stay clean in polite greetings |
+Let us examine two crucial pairs built exclusively from our seven letters:
+
+### 1. Пара́ ма́ло та мала́
+
+- **ма́ло** (stress on the first syllable **ма́-**):
+  - **Части́на мо́ви**: прислі́вник (adverb) — little, few, not much.
+  - **При́клад**: **У нас ма́ло.** — We have little / Not much for us.
+  - **Вимо́ва**: the first **[а]** is strong and held longer; the second syllable **[-ло]** has a clean, relaxed, rounded **[о]**.
+
+- **мала́** (stress on the second syllable **-ла́**):
+  - **Части́на мо́ви**: прикме́тник жіно́чого ро́ду (feminine adjective) — small, little, young.
+  - **При́клад**: **Он мала́ оса́.** — Over there is a small wasp.
+  - **Вимо́ва**: the initial **[м-а]** is shorter; the vocal weight lands fully on the final **[-ла́]**.
+
+### 2. Пара́ са́ма та сама́
+
+- **сама́** (stress on the second syllable **-ма́**):
+  - **Части́на мо́ви**: займе́нник жіно́чого ро́ду (feminine pronoun) — alone, by herself, on her own.
+  - **При́клад**: **Ма́ма там сама́.** — Mother is there alone / by herself.
+
+- **са́ма** (stress on the first syllable **са́-**):
+  - **Части́на мо́ви**: підси́лювальний займе́нник (emphatic / superlative particle or pronoun) — the very, the most.
+  - **При́клад**: **Вона́ прийшла́ в са́ма той час.** — She arrived at the very right time.
+
+> **Пора́да мо́вця — Speaker's tip**: Whenever you see an acute accent mark (`́`) over a Ukrainian vowel, give that syllable slightly more pitch, duration, and energy. It is the key that unlocks the word's true meaning!
 
 <!-- INJECT_ACTIVITY: act-401 -->
 
-### Зву́ки [и] та [і] — The contrast between [и] and [і]
+---
 
-Зву́ки **[и]** та **[і]** — це дві зо́всім рі́зні фоне́ми, які́ змі́нюють зна́чення украї́нських слів. The vowels **[и]** and **[і]** are two entirely distinct phonemes that change the meaning of Ukrainian words.
-- **Звук [и]** — гу́би спокі́йні, язи́к зле́гка відтя́гнутий наза́д (relaxed lips, tongue back); звук гли́бший та розсла́блений — a deeper, relaxed sound.
-- **Звук [і]** — гу́би розтя́гнуті в по́смішку (smiling lips), язи́к підня́тий висо́ко впере́д (tongue high); при́голосний пе́ред **[і]** пом'я́кшується — preceding consonant softens.
+## Кли́чний відмі́нок: Ма́мо!
 
-У на́шому пе́ршому сло́ві **Приві́т** звучи́ть споча́тку **[и]** (тверди́й склад — hard syllable), а по́тім **[і]** (м'яки́й склад — soft syllable): `[при-в'і́т]`. In our first word **Приві́т**, you hear relaxed **[и]** first, followed by smiling **[і]**.
+In many languages, when you call out to someone, you simply shout their dictionary name: "Mother!". But Ukrainian has a dedicated grammatical case specifically for direct address: **кли́чний відмі́нок** (the vocative case).
 
-Мініма́льні па́ри слів — minimal pairs showing how vowel choice changes meaning:
+When speaking directly to your mother, Ukrainian transforms the dictionary form into an affectionate, resonant call:
 
-| Звук [и] (розсла́блений) | Зна́чення — Meaning | Звук [і] (по́смішка) | Зна́чення — Meaning |
-| --- | --- | --- | --- |
-| **лис** | fox (relaxed tongue) | **ліс** | forest (smiling lips) |
-| **дим** | smoke (relaxed tongue) | **дім** | house / home (softened [д']) |
-| **сир** | cheese (relaxed tongue) | **сіль** | salt (softened [с']) |
-| **ти** | you (informal pronoun) | **ті** | those (demonstrative) |
-| **син** | son (family member) | **сі́но** | hay (dried grass) |
-| **би́ти** | to hit (action) | **бі́гти** | to run (motion) |
+- **Називни́й відмі́нок** (Nominative case — who is it?): **ма́ма** — mother.
+  - **Он на́ша ма́ма.** — Over there is our mother.
+- **Кли́чний відмі́нок** (Vocative case — addressing her directly!): **ма́мо!** — Mother! Mum!
+  - **Ма́мо, подиви́ся сюди́!** — Mother, look here!
+  - **Ма́мо! Он сосна́!** — Mother! Look, a pine tree!
+
+Notice how the final **-а** changes to a melodic **-о**:
+- `ма́м-а` (stating a fact) $\rightarrow$ `ма́м-о!` (calling her with warmth and respect).
+
+This ending is uniquely Ukrainian and gives spoken Ukrainian its musical cadence. You will hear children and adults alike across Ukraine calling: **«Ма́мо!»**.
 
 <!-- INJECT_ACTIVITY: act-402 -->
 
-### Дзвінкі́ при́голосні в кінці́ слів — Voiced consonants never devoice
+---
 
-У багатьо́х мо́вах дзвінкі́ при́голосні наприкінці́ слів втрача́ють свій го́лос і стаю́ть глухи́ми. In many neighboring languages, voiced consonants at the end of a word automatically lose their voice. В украї́нській літерату́рній мо́ві цього́ оглу́шення нема́є — in standard Ukrainian, this devoicing does not occur:
-«в украї́нській літерату́рній мо́ві вимовля́ються дзві́нко: [дуб], [гриб], [сад], [лід], [мед], [ніж]» (quoted from: Pohribnyi 1992, p. 11).
+## Но́ві слова́ із семи́ лі́тер: ма́сло, са́ло, смола́
 
-Коли́ ви вимовля́єте кіне́ць украї́нського сло́ва, трима́йте голосові́ зв'я́зки вклю́ченими — keep your vocal cords vibrating until the sound ends:
+Using only our seven letters (**А**, **О**, **У**, **М**, **Л**, **С**, **Н**), we can expand our vocabulary with essential Ukrainian cultural and natural terms:
 
-| Сло́во — Word | Прави́льна вимо́ва — Correct habit | Па́стка, яко́ї слід уника́ти — Trap to avoid |
-| --- | --- | --- |
-| **дуб** | keep final voiced [б] vibrating | do not say [дуп] |
-| **гриб** | keep final voiced [б] vibrating | do not confuse with [грип] (flu) |
-| **сад** | keep final voiced [д] vibrating | do not say [сат] |
-| **мед** | keep final voiced [д] vibrating | do not say [мет] |
-| **ніж** | keep final voiced [ж] vibrating | do not say [ніш] |
-| **ка́зка** | keep voiced [з] before voiceless [к] | do not say [ка́ска] (helmet) |
+### 1. Сло́во ма́сло (butter)
+
+- **Звукови́й склад**: **[м а́ с л о]** — 5 sounds, 5 letters.
+- **Склади́**: **мас-ло** (два склади́ / two syllables: закри́тий **мас-** + відкри́тий **-ло**).
+- **На́голос**: на пе́ршому скла́ді — **ма́с-ло**.
+- **Зна́чення**: butter (dairy product made from churned cream).
+- **При́клад**: **Он сві́же ма́сло.** — Over there is fresh butter.
+
+### 2. Сло́во са́ло (salo / cured pork fatback)
+
+- **Звукови́й склад**: **[с а́ л о]** — 4 sounds, 4 letters.
+- **Склади́**: **са-ло** (два склади́ / two syllables: відкри́тий **са-** + відкри́тий **-ло**).
+- **На́голос**: на пе́ршому скла́ді — **са́-ло**.
+- **Зна́чення**: salo, a traditional and iconic Ukrainian food (cured pork fatback, seasoned with salt and spices).
+- **При́клад**: **Он бі́ле са́ло.** — Look, white salo.
+
+### 3. Сло́во смола́ (resin / pitch)
+
+- **Звукови́й склад**: **[с м о л а́]** — 5 sounds, 5 letters.
+- **Склади́**: **смо-ла́** (два склади́ / two syllables: відкри́тий **смо-** + відкри́тий **-ла́**).
+- **Збіг при́голосних**: note the initial consonant cluster **см-** ([sm-]). Pronounce [с] crisp and move smoothly into [м]: [см-].
+- **На́голос**: на дру́гому скла́ді — **смо-ла́**.
+- **Зна́чення**: tree resin, sticky pine sap, or pitch.
+- **При́клад**: **На сосні́ блищи́ть смола́.** — On the pine tree, resin glitters.
+
+| Сло́во — Word | Склади́ — Syllables | На́голос — Stress | Зна́чення — English meaning |
+| --- | --- | --- | --- |
+| **ма́сло** | мас-ло | на пе́рший склад | butter |
+| **са́ло** | са-ло | на пе́рший склад | salo (cured fatback) |
+| **смола́** | смо-ла́ | на дру́гий склад | resin, pine pitch |
+| **сосна́** | сос-на́ | на дру́гий склад | pine tree |
+| **оса́** | о-са́ | на дру́гий склад | wasp |
 
 <!-- INJECT_ACTIVITY: act-403 -->
 
-### Лі́тери Г, Ґ та м'яки́й знак — The letters Г versus Ґ, and Ь
+---
 
-В украї́нській абе́тці є дві рі́зні лі́тери для задньоязико́вих зву́ків — in the Ukrainian alphabet, there are two distinct letters for guttural sounds:
-- **Г, г** — горта́нний звук [ɦ], м'яки́й по́дих те́плого пові́тря (like *ahead*, *hotel* in English).
-- **Ґ, ґ** — тверди́й вибухо́вий звук [g] (like *go*, *get* in English).
+## Пе́рші зв'я́зні мікроте́ксти
 
-А лі́тера **Ь** (**м'яки́й знак**) взагалі́ не познача́є окре́мого зву́ка — the soft sign **ь** does not represent a sound of its own. Вона́ лише́ вка́зує на те, що попере́дній при́голосний вимовля́ється м'я́ко — it only indicates that the preceding consonant is pronounced softly. У сло́ві **день** ми вимовля́ємо м'яки́й `[н']` і зупиня́ємося — we pronounce a soft `[н']` and stop, не додаючи́ жо́дного за́йвого зву́ка — without adding any extra vowel!
+Now you are ready for the ultimate milestone of Module 1: reading connected Ukrainian sentences without needing transliteration. Every single word in these reading selections is constructed strictly from our seven letters (**А**, **О**, **У**, **М**, **Л**, **С**, **Н**).
 
-| Лі́тера — Letter | Звук — Sound | При́клад — Example | Зна́чення — Meaning |
-| --- | --- | --- | --- |
-| **Г** | `[ɦ]` (горта́нний ви́дих) | **гора́** | mountain |
-| **Г** | `[ɦ]` (горта́нний ви́дих) | **го́лос** | voice |
-| **Ґ** | `[g]` (тверди́й ви́бух) | **ґа́нок** | porch |
-| **Ґ** | `[g]` (тверди́й ви́бух) | **ґу́дзик** | button |
-| **Ь** | пом'я́кшує при́голосний | **день** | day (softened [н']) |
-| **Ь** | пом'я́кшує при́голосний | **сіль** | salt (softened [л']) |
+Notice how Ukrainian builds meaning with simple pointer words (**он**), nouns, and pronouns:
+
+### Текст 1: Бі́ля сосни́ — By the Pine Tree
+
+Read this short natural scene aloud:
+
+> **Он сосна́.** — Over there is a pine tree.  
+> **Он лан.** — Look, there is a field.  
+> **Он сом.** — Over there is a catfish.  
+> **Он оса́!** — Look, a wasp!  
+> **Оса́ мала́.** — The wasp is small.  
+
+### Текст 2: Ма́ма на приро́ді — Mother Outdoors
+
+A family observation during a walk:
+
+> **Он ма́ма.** — Over there is mother.  
+> **Ма́мо! Он сосна́!** — Mother! Look, a pine tree!  
+> **Ма́ма там сама́.** — Mother is there by herself.  
+> **Он ма́сло і са́ло.** — Look, butter and salo.  
+> **У нас ма́ло.** — We have little.  
+
+Line-by-line pronunciation and vocabulary support:
+
+| Украї́нське ре́чення — Ukrainian sentence | Склади́ та на́голос — Breakdown | Англі́йський пере́клад — English gloss |
+| --- | --- | --- |
+| **Он сосна́.** | Он [сос-на́] | Over there is a pine tree. |
+| **Он лан.** | Он [лан] | Look, there is a field. |
+| **Он сом.** | Он [сом] | Over there is a catfish. |
+| **Ма́мо!** | [Ма́-мо] (кли́чний відмі́нок) | Mother! (vocative address) |
+| **Ма́ма там сама́.** | [Ма́-ма] там [са-ма́] | Mother is there by herself. |
+| **Он ма́сло і са́ло.** | Он [ма́с-ло] і [са́-ло] | Look, butter and salo. |
+
+You have read real Ukrainian sentences independently, relying purely on phonics, syllable blending, and authentic vocabulary!
 
 <!-- INJECT_ACTIVITY: act-404 -->
 
-### Практи́чна розмо́ва — Practical dialogue
+---
 
-Послу́хайте та прочита́йте розмо́ву між Тара́сом та Окса́ною про пра́вила вимо́ви — listen to and read the dialogue between Taras and Oksana about pronunciation rules:
+### Підсу́мок мо́дуля — Module summary
 
-> **Тара́с**: Приві́т, Окса́но! — Hi, Oksana!
-> **Окса́на**: Приві́т, Тара́се! Як твоя́ вимо́ва сього́дні? — Hi, Taras! How is your pronunciation today?
-> **Тара́с**: Я слу́хаю сло́во «молоко́». Тут три чи́стих зву́ки [о]? — I am listening to the word "milk". Are there three pure [o] sounds here?
-> **Окса́на**: Так, всі три зву́ки [о] чи́сті: «молоко́». Не кажи́ [а]! — Yes, all three [o] sounds are pure: "milk". Don't say [a]!
-> **Тара́с**: А в кінці́ слів? Напри́клад, сло́во «сад» чи «гриб»? — And at the end of words? For example, the word "garden" or "mushroom"?
-> **Окса́на**: За́вжди залиша́й дзвінкі́ зву́ки дзвінки́ми: «сад», «гриб», «дуб». — Always keep voiced sounds voiced: "garden", "mushroom", "oak".
-> **Тара́с**: Дя́кую! Тепе́р я розумі́ю пра́вило. — Thank you! Now I understand the rule.
+Congratulations on completing Module 1! You have established an unshakeable foundation for Ukrainian pronunciation and literacy.
 
-Розбі́р розмо́ви — breakdown of the conversation:
+- **Сім лі́тер абе́тки — Seven alphabet letters**: you mastered three core vowels (**А**, **О**, **У**) and four reliable consonants (**М**, **Л**, **С**, **Н**).
+- **Звук та бу́ква — Sound vs letter**: you know that sounds are spoken and heard (38 sounds), while letters are seen and written (33 letters).
+- **Жо́дного а́кання — No akannya**: you learned that unstressed Ukrainian **[о]** never reduces to **[а]**, keeping words like **сосна́** and **молоко́** pure and rounded.
+- **Будо́ва складі́в — Syllable structures**: you assemble open syllables (CV: **ма**, **са**), closed syllables (VC: **ам**, **ул**), and three-letter words (CVC: **сон**, **сом**, **сам**, **лан**).
+- **Си́ла на́голосу — The power of stress**: you distinguish words by stress placement (**ма́ло** = little vs **мала́** = small; **са́ма** vs **сама́** = alone).
+- **Кли́чний відмі́нок — The vocative case**: you know how to call out with affection using **Ма́мо!**.
+- **Пе́рше чита́ння — First reading**: you read real phrases and mini-dialogues using pointer **он** without phonetic crutches.
 
-| Украї́нська | English support |
-| --- | --- |
-| **Тара́с: Приві́т, Окса́но!** | Taras: Hi, Oksana! |
-| **Окса́на: Приві́т, Тара́се! Як твоя́ вимо́ва сього́дні?** | Oksana: Hi, Taras! How is your pronunciation today? |
-| **Тара́с: Я слу́хаю сло́во «молоко́». Тут три чи́стих зву́ки [о]?** | Taras: I am listening to the word "milk". Are there three pure [o] sounds here? |
-| **Окса́на: Так, всі три зву́ки [о] чи́сті: «молоко́». Не кажи́ [а]!** | Oksana: Yes, all three [o] sounds are pure: "milk". Don't say [a]! |
-| **Тара́с: А в кінці́ слів? Напри́клад, сло́во «сад» чи «гриб»?** | Taras: And at the end of words? For example, the word "garden" or "mushroom"? |
-| **Окса́на: За́вжди залиша́й дзвінкі́ зву́ки дзвінки́ми: «сад», «гриб», «дуб».** | Oksana: Always keep voiced sounds voiced: "garden", "mushroom", "oak". |
-| **Тара́с: Дя́кую! Тепе́р я розумі́ю пра́вило.** | Taras: Thank you! Now I understand the rule. |
-
-### Що ми дізна́лися та насту́пний крок — Lesson recap and next step
-
-Сього́дні ви опанува́ли чоти́ри головні́ зви́чки безпе́чної украї́нської вимо́ви — today you mastered four essential habits of authentic Ukrainian pronunciation:
-1. **Чи́стий [о]** — keep unstressed **[о]** round and pure (**молоко́**, **о́ко**, **коро́ва**).
-2. **Розрі́знення [и] та [і]** — distinguish relaxed **[и]** from smiling **[і]** (**лис** / **ліс**, **дим** / **дім**).
-3. **Дзвінкі́ при́голосні** — do not devoice voiced consonants at the end of words (**дуб**, **гриб**, **сад**, **ніж**).
-4. **Лі́тери Г, Ґ та Ь** — distinguish throaty **Г** from hard **Ґ**, and treat **ь** as a sign of softness.
-
-Насту́пний уро́к — **Textbook Check** (Уро́к 5), де ви підсуму́єте всі знання́ мо́дуля та переві́рите свій по́ступ! Next lesson is the Textbook Check (Lesson 5), where you will summarize all module knowledge and check your progress!
+In Module 2, we expand your phonetic palette with new vowels and consonants, opening the door to even richer Ukrainian conversations and stories!

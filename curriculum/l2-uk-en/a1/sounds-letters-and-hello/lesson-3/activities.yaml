@@ -1,481 +1,426 @@
 inline:
 - id: act-301
+  type: watch-and-repeat
+  title: "Диві́ться та повто́рюйте: С, Н — Watch and repeat: С, Н"
+  instruction: "Подиві́ться коро́тке ві́део про вимо́ву лі́тер (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос."
+  items:
+  - letter: С
+    word: сон
+    sound: '[с]'
+    video: https://www.youtube.com/watch?v=7UsFBgSL91E
+    note: "Глухи́й свистя́чий при́голосний — Voiceless sibilant consonant."
+  - letter: Н
+    word: ніс
+    sound: '[н]'
+    video: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    note: "Тверди́й носови́й сона́нт — Hard nasal sonorant."
+  - letter: СА
+    word: сам
+    sound: '[са]'
+    video: https://www.youtube.com/watch?v=7UsFBgSL91E
+    note: "Злиття́ зву́ків [с] та [а] — Syllable blend of [s] and [a]."
+  - letter: СО
+    word: сом
+    sound: '[со]'
+    video: https://www.youtube.com/watch?v=7UsFBgSL91E
+    note: "Чи́сте окру́глене [о] після [с] — Pure rounded [o] after [s]."
+  - letter: НА
+    word: нас
+    sound: '[на]'
+    video: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    note: "Злиття́ зву́ків [н] та [а] — Syllable blend of [n] and [a]."
+  - letter: НО
+    word: сон
+    sound: '[но]'
+    video: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    note: "Злиття́ зву́ків [н] та [о] — Syllable blend of [n] and [o]."
+
+- id: act-5
   type: match-up
-  title: 'Choose the smoother sound: У or В'
-  instruction: Match each phrase to the reason why Ukrainian prefers that sound.
+  title: "Слова́ та зна́чення — Words and meanings"
+  instruction: "З'єдна́йте украї́нське сло́во з його́ англі́йським пере́кладом. — Match the Ukrainian word to its English translation."
   pairs:
-  - left: у шко́лі
-    right: starts with 'у' before the consonant cluster 'шк-'
-  - left: в Украї́ні
-    right: starts with 'в' before the vowel sound 'У-'
-  - left: він і вона́
-    right: uses 'і' between consonant and consonant
-  - left: вона́ й він
-    right: uses 'й' between vowel and consonant
-  - left: він у мі́сті
-    right: uses 'у' after a consonant to prevent a cluster
-  - left: пла́вати в о́зері
-    right: uses 'в' after a vowel before a vowel
+  - left: сон
+    right: sleep / dream
+  - left: сом
+    right: catfish
+  - left: сам
+    right: alone / by oneself (m)
+  - left: лан
+    right: field
+  - left: оса́
+    right: wasp
+  - left: сосна́
+    right: pine tree
+
 - id: act-302
   type: quiz
-  title: Principles of Ukrainian euphony
-  instruction: Choose the correct answer about милозву́чність.
+  title: "Будо́ва скла́ду CVC та зву́ки — Syllable structure and sounds"
+  instruction: "Обері́ть пра́вильну ві́дповідь. — Choose the correct answer."
   items:
-  - prompt: What is the main purpose of милозву́чність in Ukrainian?
+  - prompt: "What is a closed syllable (закри́тий склад) in Ukrainian?"
     options:
-    - text: To avoid heavy consonant clusters and make speech flow smoothly
+    - text: "A syllable that ends in a consonant sound"
       correct: true
-    - text: To make words longer and more difficult to pronounce
+    - text: "A syllable that has no vowels"
       correct: false
-    - text: To replace all vowels with consonants
+    - text: "A syllable that is stressed"
       correct: false
-    explanation: Милозву́чність is the natural tendency of Ukrainian to avoid awkward
-      consonant clusters and preserve a melodic flow.
-  - prompt: Why do we say «в Украї́ні» rather than «у Украї́ні»?
+    explanation: "A closed syllable (закри́тий склад) ends with a consonant sound, such as [сон] or [лан]."
+  - prompt: "Which of the following words consists of a single closed syllable (CVC)?"
     options:
-    - text: Because «Украї́на» starts with a vowel sound, so «в» avoids two vowels
-        clashing
+    - text: сон
       correct: true
-    - text: Because «в» is always required with countries
+    - text: оса́
       correct: false
-    - text: Because «у» is forbidden at the start of sentences
+    - text: ма́ма
       correct: false
-    explanation: Having two vowel sounds together creates a pause; «в» provides a
-      smooth transition.
-  - prompt: Why do we say «у шко́лі» rather than «в шко́лі»?
+    explanation: "«Сон» is a single CVC syllable: consonant [с] + vowel [о] + consonant [н]."
+  - prompt: "What phonetic type of consonant is the letter С?"
     options:
-    - text: Because «шк-» is a consonant cluster, and «у» avoids piling up three consonants
+    - text: "A voiceless sibilant consonant (глухи́й свистя́чий)"
       correct: true
-    - text: Because school words always take «у»
+    - text: "A nasal sonorant consonant"
       correct: false
-    - text: Because «в» cannot be spoken aloud
+    - text: "A voiced plosive consonant"
       correct: false
-    explanation: Saying [вшк-] would create a difficult cluster of three consonants;
-      «у» makes pronunciation effortless.
-  - prompt: In «Марко́ й А́нна», why is «й» chosen instead of «і»?  # джерело: ULP
+    explanation: "Letter С represents [s], a voiceless dental sibilant consonant."
+  - prompt: "What phonetic type of consonant is the letter Н?"
     options:
-    - text: Because «Марко́» ends in a vowel, and «й» smoothly bridges to the next
-        vowel
+    - text: "A nasal sonorant consonant (носови́й сона́нт)"
       correct: true
-    - text: Because «і» is never used between names
+    - text: "A voiceless sibilant consonant"
       correct: false
-    - text: Because «й» is a capital letter
+    - text: "A rounded vowel sound"
       correct: false
-    explanation: After a vowel sound, the short glide «й» creates a musical transition
-      between vowels.
-  - prompt: Which pair shows the Ukrainian euphony alternation?
+    explanation: "Letter Н represents [n], an airflow-through-the-nose sonorant consonant."
+  - prompt: "In the word «сосна́», how is the unstressed «о» pronounced?"
     options:
-    - text: у / в and і / й
+    - text: "As a pure, clear [o] without reduction to [a]"
       correct: true
-    - text: а / о and е / и
+    - text: "As [a], exactly like Russian akanye"
       correct: false
-    - text: п / б and т / д
+    - text: "It is completely silent"
       correct: false
-    explanation: The two primary euphony pairs are у/в and і/й.
-  - prompt: When speaking Ukrainian at A1, what is the best beginner mindset toward
-      euphony?
+    explanation: "Ukrainian unstressed «о» is never reduced to «а»; it remains clean and rounded."
+  - prompt: "What does the pointing word «он» mean?"
     options:
-    - text: Notice the pattern and hear that Ukrainian naturally chooses smoother
-        sound options
+    - text: "There / over there (pointing out an object in view)"
       correct: true
-    - text: Memorize complex mathematical rules before saying a word
+    - text: "Here (in my hand)"
       correct: false
-    - text: Ignore all sound differences completely
+    - text: "Goodbye"
       correct: false
-    explanation: 'At A1, awareness comes first: train your ear to hear the smoother
-      choices.'
-- id: act-5
-  type: fill-in
-  title: First conversations
-  instruction: Choose the phrase that completes the line.
-  items:
-  - sentence: ____! Як спра́ви?
-    answer: Приві́т
-    options:
-    - Приві́т
-    - Молоко́
-    - Лі́тера
-  - sentence: ____. А у тебе́?
-    answer: До́бре
-    options:
-    - До́бре
-    - День
-    - Звук
-  - sentence: Як тебе́ ____?
-    answer: зва́ти
-    options:
-    - зва́ти
-    - до́бре
-    - день
-  - sentence: Мене́ ____ А́нна.  # джерело: ULP
-    answer: зва́ти
-    options:
-    - зва́ти
-    - спра́ви
-    - звук
-    джерело́: ULP
-  - sentence: До ____!
-    answer: поба́чення
-    options:
-    - поба́чення
-    - тебе́
-    - ма́ма
-  - sentence: На все ____!
-    answer: до́бре
-    options:
-    - до́бре
-    - лі́тера
-    - звук
+    explanation: "«Он» is a pointing particle meaning 'there / yonder' (e.g. «Он сосна́»)."
+
 - id: act-303
-  type: match-up
-  title: Ukrainian greetings and farewells
-  instruction: Match each Ukrainian phrase with its natural English equivalent.
-  pairs:
-  - left: Приві́т!
-    right: Hi! (informal greeting)
-  - left: До́брий день!
-    right: Hello! / Good day! (neutral daytime greeting)
-  - left: До́брого ра́нку!
-    right: Good morning! (morning greeting)
-  - left: До́брий ве́чір!
-    right: Good evening! (evening greeting)
-  - left: До поба́чення!
-    right: Goodbye! (neutral or formal farewell)
-  - left: На все до́бре!
-    right: All the best! (warm friendly farewell)
-- id: act-304
-  type: quiz
-  title: First conversation etiquette
-  instruction: Choose the context-appropriate response.
+  type: fill-in
+  title: "Вста́вте пропу́щене сло́во — Fill in the missing word"
+  instruction: "Обері́ть пра́вильне сло́во для ко́жного ре́чення. — Choose the correct word for each sentence."
   items:
-  - prompt: 'Someone asks you: «Як спра́ви?». What is a natural positive reply?'
+  - sentence: "У рі́чці пла́ває вели́кий ___."
+    answer: сом
     options:
-    - text: До́бре! / Чудо́во!
-      correct: true
-    - text: До поба́чення!
-      correct: false
-    - text: Мене́ зва́ти Марко́.
-      correct: false
-    explanation: «До́бре» (fine) or «Чудо́во» (great) directly answers «Як спра́ви?».
-  - prompt: You just answered «До́бре.». How do you ask the other person how THEY
-      are doing?
+    - сом
+    - сон
+    - оса́
+    explanation: "Сом is a catfish living in water."
+  - sentence: "Ти́хий нічни́й ___."
+    answer: сон
     options:
-    - text: А у тебе́?
-      correct: true
-    - text: А тебе́?
-      correct: false
-    - text: До́брий ве́чір?
-      correct: false
-    explanation: Use «А у тебе́?» to ask about another person's state or well-being.
-  - prompt: 'Someone introduces themselves: «Мене́ зва́ти Марко́.». How do they ask
-      YOUR name?'
+    - сон
+    - сом
+    - лан
+    explanation: "Сон means sleep or dream."
+  - sentence: "Він стої́ть там ___."
+    answer: сам
     options:
-    - text: А тебе́?
-      correct: true
-    - text: А у тебе́?
-      correct: false
-    - text: Як спра́ви?
-      correct: false
-    explanation: Use «А тебе́?» (short for «А тебе́ як зва́ти?») when exchanging names.
-  - prompt: Why is «А у тебе́?» wrong when asking for someone's name?
+    - сам
+    - сом
+    - сон
+    explanation: "Сам means alone or by oneself."
+  - sentence: "Он золоти́й широ́кий ___."
+    answer: лан
     options:
-    - text: Because the verb «зва́ти» takes the direct object «тебе́», not «у тебе́»
-      correct: true
-    - text: Because «тебе́» is only for morning greetings
-      correct: false
-    - text: Because «у тебе́» is an English word
-      correct: false
-    explanation: You ask «Як тебе́ зва́ти?», so the elliptical follow-up must be «А
-      тебе́?».
-  - prompt: What should a female speaker say to express gladness to see someone?
+    - лан
+    - сон
+    - сом
+    explanation: "Лан means a wide field."
+  - sentence: "Над кві́ткою лети́ть ___."
+    answer: оса́
     options:
-    - text: Ра́да тебе́ ба́чити!
-      correct: true
-    - text: Ра́дий тебе́ ба́чити!
-      correct: false
-    - text: Ра́де тебе́ ба́чити!
-      correct: false
-    explanation: Female speakers use the feminine form «Ра́да».
-  - prompt: What should a male speaker say to express gladness to see someone?
+    - оса́
+    - сосна́
+    - ма́ма
+    explanation: "Оса́ is a flying wasp."
+  - sentence: "У лі́сі росте́ висо́ка ___."
+    answer: сосна́
     options:
-    - text: Ра́дий тебе́ ба́чити!
-      correct: true
-    - text: Ра́да тебе́ ба́чити!
-      correct: false
-    - text: До́брого ра́нку!
-      correct: false
-    explanation: Male speakers use the masculine form «Ра́дий».
+    - сосна́
+    - оса́
+    - лан
+    explanation: "Сосна́ is a pine tree growing in the forest."
+
+- id: act-304
+  type: true-false
+  title: "Пра́вда чи непра́вда? — True or false?"
+  instruction: "Ви́значте, чи твер́дження пра́вильне. — Decide whether each statement is true or false."
+  items:
+  - statement: "Letter С represents the voiceless sibilant sound [s]."
+    answer: true
+    explanation: "С corresponds to [s], a voiceless sibilant sound."
+  - statement: "The word «сосна́» consists of two syllables: closed [сос-] and open [-на́]."
+    answer: true
+    explanation: "Сос-на́ has two syllables: CVC + CV."
+  - statement: "In Ukrainian, unstressed «о» in «сосна́» turns into «а»."
+    answer: false
+    explanation: "Ukrainian has no akanye; unstressed [o] remains rounded and clear."
+  - statement: "In standard Ukrainian, the common word for the celestial moon is «сон»."
+    answer: false
+    explanation: "«Сон» means sleep or dream; the moon is «мі́сяць»."
+  - statement: "The word «он» is used to point to something at a distance."
+    answer: true
+    explanation: "«Он» is a pointing particle meaning 'yonder / over there'."
+  - statement: "Letter Н represents a nasal sonorant sound [n]."
+    answer: true
+    explanation: "Н is a nasal sonorant [n]."
+
 workbook:
 - id: act-7
   type: group-sort
-  title: Vowel or consonant sound?
-  instruction: Sort the sounds, not the letters.
+  title: "Класифіка́ція слів за структу́рою — Word structure sort"
+  instruction: "Розподілі́ть слова́ за структу́рою: односкладо́ві CVC чи двоскладо́ві. — Sort the words by structure: single CVC syllable or two syllables."
   groups:
-  - label: Vowel sounds
+  - label: "CVC (один закри́тий склад)"
     items:
-    - '[а]'
-    - '[о]'
-    - '[у]'
-    - '[е]'
-    - '[и]'
-    - '[і]'
-  - label: Consonant sounds
+    - сон
+    - сом
+    - сам
+    - лан
+    - мул
+    - лом
+  - label: "Двоскладо́ві слова́"
     items:
-    - '[п]'
-    - '[р]'
-    - '[в]'
-    - '[т]'
-    - '[м]'
-    - '[н]'
-    - '[к]'
-    - '[с]'
-- id: act-w301
-  type: true-false
-  title: Conversational safety check
-  instruction: Decide whether each statement is true or false.
-  items:
-  - statement: «Приві́т!» is an informal greeting used with friends, family, and peers.
-    answer: true
-    explanation: «Приві́т!» is the standard informal greeting for friends and classmates.
-  - statement: In «До́брого ра́нку!», the unstressed «о» letters turn into «а».
-    answer: false
-    explanation: Ukrainian unstressed [о] stays clean and rounded; it never turns
-      into [а].
-  - statement: You say «А тебе́?» when returning a name question («Як тебе́ зва́ти?»).
-    answer: true
-    explanation: «А тебе́?» is elliptical for «А тебе́ як зва́ти?».
-  - statement: A woman says «Ра́дий тебе́ ба́чити!».
-    answer: false
-    explanation: A female speaker says «Ра́да тебе́ ба́чити!».
-  - statement: «До поба́чення!» means «Goodbye!».
-    answer: true
-    explanation: «До поба́чення!» is the primary neutral goodbye in Ukrainian.
-  - statement: Ukrainian prefers «в Украї́ні» because «Украї́на» starts with a vowel
-      sound.
-    answer: true
-    explanation: Starting with «в» before «У-» prevents an awkward vowel clash.
-- id: act-w302
-  type: fill-in
-  title: Dialogue completion practice
-  instruction: Choose the correct word to complete each exchange.
-  items:
-  - sentence: — Приві́т! Як ____? / — До́бре, дя́кую!
-    answer: спра́ви
-    options:
-    - спра́ви
-    - сло́во
-    - звук
-    explanation: «Як спра́ви?» is the standard friendly question.
-  - sentence: — Мене́ зва́ти Марко́. А ____? / — Мене́ зва́ти Софі́я.
-    answer: тебе́
-    options:
-    - тебе́
-    - у тебе́
-    - ра́нок
-    explanation: Use «А тебе́?» to return a name question.
-  - sentence: — Як спра́ви? / — Чудо́во. А ____? / — Норма́льно.
-    answer: у тебе́
-    options:
-    - у тебе́
-    - тебе́
-    - день
-    explanation: Use «А у тебе́?» to return a status question («Як спра́ви?»).
-  - sentence: — До́брого ____! Наста́в я́сний ра́нок.
-    answer: ра́нку
-    options:
-    - ра́нку
-    - день
-    - ве́чір
-    explanation: «До́брого ра́нку!» is the morning greeting.
-  - sentence: — До ____! / — На все до́бре!
-    answer: поба́чення
-    options:
-    - поба́чення
-    - лі́тера
-    - молоко́
-    explanation: «До поба́чення!» is goodbye.
-  - sentence: 'Софі́я ка́же: «____ тебе́ ба́чити, Марко́!».'
-    answer: Ра́да
-    options:
-    - Ра́да
-    - Ра́дий
-    - До́брий
-    explanation: A female speaker uses «Ра́да».
-- id: act-w303
-  type: group-sort
-  title: Conversational function sort
-  instruction: Sort the phrases by their conversational role.
-  groups:
-  - label: Greetings
-    items:
-    - До́брий день!
-    - До́брого ра́нку!
-    - До́брий ве́чір!
-    - Приві́т!
-  - label: Answers to 'Як спра́ви?'
-    items:
-    - До́бре.
-    - Чудо́во.
-    - Норма́льно.
-  - label: Farewells
-    items:
-    - До поба́чення!
-    - На все до́бре!
-- id: act-w304
-  type: translate
-  title: English to Ukrainian phrase meanings
-  instruction: Choose the Ukrainian phrase that matches the English conversational
-    cue.
-  items:
-  - source: Good morning!
-    options:
-    - text: До́брого ра́нку!
-      correct: true
-    - text: До́брий ве́чір!
-      correct: false
-    - text: До поба́чення!
-      correct: false
-    explanation: «До́брого ра́нку!» is Good morning.
-  - source: Good evening!
-    options:
-    - text: До́брий ве́чір!
-      correct: true
-    - text: До́брого ра́нку!
-      correct: false
-    - text: Приві́т!
-      correct: false
-    explanation: «До́брий ве́чір!» is Good evening.
-  - source: What is your name?
-    options:
-    - text: Як тебе́ зва́ти?
-      correct: true
-    - text: Як спра́ви?
-      correct: false
-    - text: А у тебе́?
-      correct: false
-    explanation: «Як тебе́ зва́ти?» asks for someone's name.
-  - source: My name is Marko.
-    options:
-    - text: Мене́ зва́ти Марко́.
-      correct: true
-    - text: Мене́ зва́ти Софі́я.
-      correct: false
-    - text: Ра́дий тебе́ ба́чити.
-      correct: false
-    explanation: «Мене́ зва́ти Марко́.» is My name is Marko.
-  - source: All the best!
-    options:
-    - text: На все до́бре!
-      correct: true
-    - text: До поба́чення!
-      correct: false
-    - text: До́брий день!
-      correct: false
-    explanation: «На все до́бре!» is All the best!
-  - source: Glad to see you. (male speaker)
-    options:
-    - text: Ра́дий тебе́ ба́чити.
-      correct: true
-    - text: Ра́да тебе́ ба́чити.
-      correct: false
-    - text: Як спра́ви?
-      correct: false
-    explanation: A male speaker says «Ра́дий тебе́ ба́чити.».
-- id: act-w305
+    - оса́
+    - сосна́
+    - ма́ма
+    - ма́ло
+    - мала́
+
+- id: act-305
+  type: match-up
+  title: "Слова́-помічники́ та зна́чення — Helper words and meanings"
+  instruction: "З'єдна́йте украї́нське сло́во з англі́йським зна́ченням. — Match each helper word or noun with its meaning."
+  pairs:
+  - left: он
+    right: there / over there (pointing)
+  - left: нас
+    right: us (genitive / accusative)
+  - left: нам
+    right: to us (dative)
+  - left: ніс
+    right: nose
+  - left: лан
+    right: field
+  - left: сом
+    right: catfish
+
+- id: act-306
   type: unjumble
-  title: Reorder the conversation lines
-  instruction: Put the words in order to form the correct Ukrainian phrase.
+  title: "Утворі́ть слова́ з лі́тер та складі́в — Build words from letters and syllables"
+  instruction: "Розташу́йте елеме́нти у пра́вильному поря́дку, щоб утвори́ти сло́во. — Put elements in the correct order to form the word."
   items:
-  - sentence: Як тебе́ зва́ти?
+  - answer: сон
     words:
-    - Як
-    - тебе́
-    - зва́ти?
-    explanation: Як тебе́ зва́ти? is the informal question 'What is your name?'.
-  - sentence: Мене́ зва́ти Софі́я.
+    - с
+    - о
+    - н
+  - answer: сом
     words:
-    - Мене́
-    - зва́ти
-    - Софі́я.
-    explanation: Мене́ зва́ти Софі́я. means 'My name is Sofia.'.
-  - sentence: До́бре. А у тебе́?
+    - с
+    - о
+    - м
+  - answer: сам
     words:
-    - До́бре.
-    - А
-    - у
-    - тебе́?
-    explanation: До́бре. А у тебе́? means 'Fine. And you?'.
-  - sentence: Ра́да тебе́ ба́чити.
+    - с
+    - а
+    - м
+  - answer: лан
     words:
-    - Ра́да
-    - тебе́
-    - ба́чити.
-    explanation: Ра́да тебе́ ба́чити. means 'Glad to see you.' (female speaker).
-  - sentence: На все до́бре!
+    - л
+    - а
+    - н
+  - answer: оса́
     words:
-    - На
-    - все
-    - до́бре!
-    explanation: На все до́бре! means 'All the best!'.
-  - sentence: До́брого ра́нку!
+    - о
+    - с
+    - а
+  - answer: сосна́
     words:
-    - До́брого
-    - ра́нку!
-    explanation: До́брого ра́нку! means 'Good morning!'.
-- id: act-w306
+    - с
+    - о
+    - с
+    - н
+    - а
+
+- id: act-307
+  type: fill-in
+  title: "Ре́чення зі слова́ми-помічника́ми — Sentences with helper words"
+  instruction: "Вста́вте пра́вильне сло́во. — Fill in the correct word."
+  items:
+  - sentence: "___ сосна́ і лан."
+    answer: Он
+    options:
+    - Он
+    - Нам
+    - Нас
+    explanation: "«Он» points out objects in view."
+  - sentence: "Він чека́є ___."
+    answer: нас
+    options:
+    - нас
+    - нам
+    - он
+    explanation: "«Чека́є нас» — waits for us."
+  - sentence: "Він допомага́є ___."
+    answer: нам
+    options:
+    - нам
+    - нас
+    - он
+    explanation: "«Допомага́є нам» — helps us."
+  - sentence: "Он лети́ть ___."
+    answer: оса́
+    options:
+    - оса́
+    - лан
+    - сом
+    explanation: "«Лети́ть оса́» — the wasp is flying."
+  - sentence: "Он пливе́ ___."
+    answer: сом
+    options:
+    - сом
+    - сон
+    - лан
+    explanation: "«Пливе́ сом» — the catfish is swimming."
+  - sentence: "Це мій спокі́йний ___."
+    answer: сон
+    options:
+    - сон
+    - сом
+    - сам
+    explanation: "«Спокі́йний сон» — peaceful sleep."
+
+- id: act-308
   type: error-correction
-  title: Fix the conversational mistake
-  instruction: Choose the correct Ukrainian phrase to replace the error.
+  title: "Ви́правте поми́лку у сло́ві — Correct the spelling mistake"
+  instruction: "Знайді́ть поми́лку у ви́діленому сло́ві та ви́беріть пра́вильний варіа́нт. — Find the error in the underlined word and choose the correct form."
   items:
-  - sentence: — Мене́ зва́ти Марко́. А у тебе́?
-    error: А у тебе́?
-    answer: А тебе́?
+  - sentence: "У лі́сі росте́ сасна́."
+    error: сасна́
+    answer: сосна́
     options:
-    - А тебе́?
-    - А у тебе́?
-    - Як спра́ви?
-    explanation: After a name exchange («Мене́ зва́ти...»), use «А тебе́?», not «А
-      у тебе́?».
-  - sentence: 'Софі́я ка́же: «Ра́дий тебе́ ба́чити!».'
-    error: Ра́дий
-    answer: Ра́да
+    - сосна́
+    - сасна́
+    - сусна́
+    explanation: "Ukrainian has no akanye: unstressed o remains clear in сосна́."
+  - sentence: "У рі́чці пла́ває вели́кий сон."
+    error: сон
+    answer: сом
     options:
-    - Ра́да
-    - Ра́дий
-    - До́бре
-    explanation: Sofia is a woman, so she says «Ра́да тебе́ ба́чити!».
-  - sentence: 'Марко́ ка́же: «Ра́да тебе́ ба́чити!».'
-    error: Ра́да
-    answer: Ра́дий
+    - сом
+    - сон
+    - сам
+    explanation: "The fish is сом (catfish), not сон (dream)."
+  - sentence: "Він стої́ть там сом."
+    error: сом
+    answer: сам
     options:
-    - Ра́дий
-    - Ра́да
-    - Чудо́во
-    explanation: Marko is a man, so he says «Ра́дий тебе́ ба́чити!».
-  - sentence: — Як спра́ви? — До́бре. А тебе́?
-    error: А тебе́?
-    answer: А у тебе́?
+    - сам
+    - сом
+    - сон
+    explanation: "Alone / by oneself is сам."
+  - sentence: "Он зеле́ний лон."
+    error: лон
+    answer: лан
     options:
-    - А у тебе́?
-    - А тебе́?
-    - На все до́бре!
-    explanation: After asking about state («Як спра́ви? — До́бре.»), return with «А
-      у тебе́?».
-  - sentence: 'Віта́ння вра́нці: До́брий ра́нок!'
-    error: До́брий ра́нок!
-    answer: До́брого ра́нку!
+    - лан
+    - лон
+    - лун
+    explanation: "The field is лан, not лон."
+  - sentence: "Он лети́ть аса́."
+    error: аса́
+    answer: оса́
     options:
-    - До́брого ра́нку!
-    - До́брий ра́нок!
-    - До́брий день!
-    explanation: The canonical Ukrainian morning greeting uses the genitive form «До́брого
-      ра́нку!».
-  - sentence: Він живе́ у Украї́ні.
-    error: у Украї́ні
-    answer: в Украї́ні
+    - оса́
+    - аса́
+    - уса́
+    explanation: "Wasp is оса́."
+  - sentence: "Він кли́че нос."
+    error: нос
+    answer: нас
     options:
-    - в Украї́ні
-    - у Украї́ні
-    - й Украї́ні
-    explanation: To avoid hiatus (two vowel sounds colliding), Ukrainian uses «в»
-      before «У-».
+    - нас
+    - нос
+    - ніс
+    explanation: "He calls us is «нас»."
+
+- id: act-309
+  type: translate
+  title: "Пере́клад слів — Translate the words"
+  instruction: "Обері́ть пра́вильний украї́нський пере́клад. — Choose the correct Ukrainian translation for each English cue."
+  items:
+  - source: catfish
+    options:
+    - text: сом
+      correct: true
+    - text: сон
+      correct: false
+    - text: сам
+      correct: false
+    explanation: "«Сом» is catfish."
+  - source: sleep / dream
+    options:
+    - text: сон
+      correct: true
+    - text: сом
+      correct: false
+    - text: лан
+      correct: false
+    explanation: "«Сон» is sleep or dream."
+  - source: alone / by oneself (m)
+    options:
+    - text: сам
+      correct: true
+    - text: сом
+      correct: false
+    - text: сон
+      correct: false
+    explanation: "«Сам» is alone / by oneself."
+  - source: field
+    options:
+    - text: лан
+      correct: true
+    - text: лом
+      correct: false
+    - text: мул
+      correct: false
+    explanation: "«Лан» is field."
+  - source: wasp
+    options:
+    - text: оса́
+      correct: true
+    - text: сосна́
+      correct: false
+    - text: ма́ма
+      correct: false
+    explanation: "«Оса́» is wasp."
+  - source: pine tree
+    options:
+    - text: сосна́
+      correct: true
+    - text: оса́
+      correct: false
+    - text: лан
+      correct: false
+    explanation: "«Сосна́» is pine tree."

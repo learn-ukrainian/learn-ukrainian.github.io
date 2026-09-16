@@ -1,52 +1,20 @@
-- title: Большако́ва, буква́р 1 клас, p. 24
-  role: textbook
-  chunk_id: 1-klas-bukvar-bolshakova-2018-1_s0023
-  notes: 'Plan reference: голосні́/при́голосні че́рез вірші́.'
-- title: Захарійчук, буква́р 1 клас (НУШ 2025), p. 13
-  role: textbook
-  chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0002
-  notes: 'Plan reference: [•] голосни́й, [–] тверди́й при́голосний, [=] м''яки́й при́голосний.'
-- title: Заболо́тний 5 клас, p. 83
-  role: textbook
-  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0084
-  notes: 'Plan reference: «Зву́ки ми чу́ємо й вимовля́ємо, а бу́кви ба́чимо й пи́шемо.»'
-- title: Літвінова 5 клас, p. 130
-  role: textbook
-  chunk_id: 5-klas-ukrmova-litvinova-2022_s0135
-  notes: 'Plan reference: пита́ння про «голосна́ лі́тера» / «при́голосна лі́тера» and sound-letter
-    distinction.'
-- title: Anna Ohoiko — Ukrainian alphabet overview
-  role: youtube
-  url: https://www.youtube.com/watch?v=ksXIXj7CXwc
-  channel: Ukrainian Lessons
-  notes: 'Plan pronunciation video: overview for the full Ukrainian alphabet.'
-- title: Anna Ohoiko — Letter А pronunciation
-  role: youtube
-  url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
-  channel: Ukrainian Lessons
-  notes: 'Plan pronunciation video: А.'
-- title: Anna Ohoiko — Letter О pronunciation
-  role: youtube
+- title: Українська мова. 5 клас
+  author: Заболотний О. В., Заболотний В. В.
+  year: 2018
+  publisher: Генеза
+  url: https://pidruchnyk.com.ua/1138-ukrainska-mova-5-klas-zabolotnyy.html
+- title: Українська мова. Буквар. 1 клас
+  author: Большакова І. О., Пристинська М. С.
+  year: 2018
+  publisher: Ранок
+  url: https://pidruchnyk.com.ua/1179-bukvar-1-klas-bolshakova.html
+- title: Українська мова. Буквар. 1 клас
+  author: Захарійчук М. Д.
+  year: 2018
+  publisher: Грамота
+  url: https://pidruchnyk.com.ua/1181-bukvar-1-klas-zahariychuk.html
+- title: Pronunciation Video Series (Letters А, О, У)
+  author: Anna Ohoiko
+  year: 2020
+  publisher: Ukrainian Lessons
   url: https://www.youtube.com/watch?v=gJFxRIPRZbI
-  channel: Ukrainian Lessons
-  notes: 'Activity pronunciation video: О.'
-- title: Anna Ohoiko — Letter У pronunciation
-  role: youtube
-  url: https://www.youtube.com/watch?v=VB1O6PmtYRU
-  channel: Ukrainian Lessons
-  notes: 'Plan pronunciation video: У.'
-- title: Anna Ohoiko — Letter Е pronunciation
-  role: youtube
-  url: https://www.youtube.com/watch?v=KFlsroBW0dk
-  channel: Ukrainian Lessons
-  notes: 'Plan pronunciation video: Е.'
-- title: Anna Ohoiko — Letter И pronunciation
-  role: youtube
-  url: https://www.youtube.com/watch?v=W-1rCu0indE
-  channel: Ukrainian Lessons
-  notes: 'Plan pronunciation video: И.'
-- title: Anna Ohoiko — Letter І pronunciation
-  role: youtube
-  url: https://www.youtube.com/watch?v=Z9TH0H4ShGo
-  channel: Ukrainian Lessons
-  notes: 'Plan pronunciation video: І.'

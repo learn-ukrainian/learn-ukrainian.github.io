@@ -1,64 +1,56 @@
-- lemma: молоко́
-  translation: milk
-  pos: noun
-  usage: Молоко́.
-- lemma: о́ко
-  translation: eye
-  pos: noun
-  usage: О́ко.
-- lemma: Приві́т
-  translation: Hi
-  pos: phrase
-  usage: Приві́т!
-- lemma: дім
-  translation: house / home
-  pos: noun
-  usage: Дім.
-- lemma: ніс
-  translation: nose
-  pos: noun
-  usage: Ніс.
-- lemma: сон
-  translation: sleep / dream
-  pos: noun
-  usage: Сон.
-- lemma: м'яки́й знак
-  translation: soft sign
-  pos: noun phrase
-  usage: Ь - м'яки́й знак.
-- lemma: голосни́й звук
-  translation: vowel sound
-  pos: noun phrase
-  usage: '[а] - голосни́й звук.'
-- lemma: при́голосний звук
-  translation: consonant sound
-  pos: noun phrase
-  usage: '[п] - при́голосний звук.'
-- lemma: звук
-  translation: sound
-  pos: noun
-  usage: Це звук [а].
-- lemma: лі́тера
-  translation: letter
-  pos: noun
-  usage: Це лі́тера П.
 - lemma: на́голос
-  translation: stress
+  translation: stress / accent
   pos: noun
-  usage: У сло́ві Приві́т на́голос на і.
-- lemma: апо́строф
-  translation: apostrophe
+  usage: На́голос па́дає на пе́рший склад.
+- lemma: ма́мо
+  translation: mother! (vocative case form of ма́ма)
   pos: noun
-  usage: У сло́ві «ім'я́» є апо́строф.
-- lemma: До́брий день
-  translation: Hello / Good day
-  pos: phrase
-  usage: До́брий день!
+  usage: Ма́мо, подиви́ся сюди́!
+- lemma: ма́сло
+  translation: butter
+  pos: noun
+  usage: На столі́ лежи́ть сві́же ма́сло.
+- lemma: са́ло
+  translation: salo / cured pork fat
+  pos: noun
+  usage: Це смачне́ украї́нське са́ло.
+- lemma: смола́
+  translation: resin / pitch
+  pos: noun
+  usage: На сосні́ блищи́ть смола́.
+- lemma: сама́
+  translation: alone / by oneself (feminine)
+  pos: pronoun
+  usage: Вона́ там стої́ть сама́.
+- lemma: са́ма
+  translation: the very (feminine, emphatic form)
+  pos: pronoun
+  usage: Вона́ прийшла́ в са́ма той час.
 - lemma: ма́ма
   translation: mother
   pos: noun
-  usage: Ма́ма.
-- lemma: та́то
-  translation: father
+  usage: Он іде́ на́ша ма́ма.
+- lemma: ма́ло
+  translation: little / few
+  pos: adverb
+  usage: У нас ма́ло ча́су.
+- lemma: мала́
+  translation: little / small (feminine)
+  pos: adjective
+  usage: Он лети́ть мала́ оса́.
+- lemma: сон
+  translation: sleep / dream
   pos: noun
-  usage: Та́то.
+  usage: У дити́ни спокі́йний сон.
+- lemma: сосна́
+  translation: pine tree
+  pos: noun
+  usage: Он росте́ стара́ сосна́.
+- lemma: оса́
+  translation: wasp
+  pos: noun
+  usage: Он гуде́ мала́ оса́.
+- lemma: лан
+  translation: field
+  pos: noun
+  usage: Он золоти́й украї́нський лан.
