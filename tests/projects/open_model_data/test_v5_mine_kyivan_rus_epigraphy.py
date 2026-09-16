@@ -56,6 +56,7 @@ from scripts.projects.open_model_data.v5_mine_kyivan_rus_epigraphy import (
     clean_html_diplomatic,
     detect_features,
     evaluate_epigraphic_suite,
+    normalize_historical_snippet,
 )
 
 EVAL_BENCHMARK_PATH = DEFAULT_RELEASE_DIR / "kyivan_rus_epigraphic_eval.jsonl"
@@ -216,13 +217,25 @@ def test_zero_train_eval_leakage_firewall(
                 assert m not in t["query"], f"SFT trajectory leaked held-out chronicle monument: {m}"
                 assert m not in t["final_response"], f"SFT response leaked held-out chronicle monument: {m}"
 
-    # 3. Verbatim text leakage: no eval text must occur verbatim in training queries
-    eval_texts = {c["input_text"].strip().casefold() for c in eval_cases}
-    eval_texts |= {c["expected_output"].strip().casefold() for c in eval_cases}
+    # 3. Verbatim text leakage: no eval text must occur verbatim or as historical snippet in training
+    eval_snippets = {normalize_historical_snippet(c["input_text"]) for c in eval_cases}
+    eval_snippets |= {normalize_historical_snippet(c["expected_output"]) for c in eval_cases}
+    eval_snippets = {s for s in eval_snippets if s}
+
     for t in sft_trajectories:
-        for et in eval_texts:
-            if len(et) >= 30:
-                assert et not in t["query"].casefold(), f"Verbatim eval text leaked into SFT query: {et[:60]}"
+        q_norm = normalize_historical_snippet(t["query"])
+        r_norm = normalize_historical_snippet(t["final_response"])
+        for es in eval_snippets:
+            assert es != q_norm, f"Verbatim eval text leaked into SFT query: {es}"
+            assert es != r_norm, f"Verbatim eval text leaked into SFT response: {es}"
+            assert es not in q_norm, f"Eval snippet leaked into SFT query: {es}"
+
+    # Specific regression tests for F5 / F5a-r3: ensure "Г(оспод)и по{мози}" and "рѣшън" are not in training
+    for t in sft_trajectories:
+        q_clean = t["query"].casefold()
+        q_norm = normalize_historical_snippet(t["query"])
+        assert "г(оспод)и по{мози}" not in q_clean, "F5 regression: 'Г(оспод)и по{мози}' leaked into training query"
+        assert "рѣшън" not in q_norm, "F5a-r3 regression: 'рѣшън' leaked into training query"
 
 
 def test_sft_dataset_volume_and_schema(
@@ -315,12 +328,16 @@ def test_editorial_and_translation_purge(
     for c in eval_cases:
         for snip in banned_editorial_snippets:
             assert snip not in c["input_text"], f"Editorial noise found in eval input: {c['input_text'][:100]}"
-            assert snip not in c["expected_output"], f"Editorial noise found in eval output: {c['expected_output'][:100]}"
+            assert snip not in c["expected_output"], (
+                f"Editorial noise found in eval output: {c['expected_output'][:100]}"
+            )
 
     for t in sft_trajectories:
         for snip in banned_editorial_snippets:
             assert snip not in t["query"], f"Editorial noise found in SFT query: {t['query'][:100]}"
-            assert snip not in t["final_response"], f"Editorial noise found in SFT response: {t['final_response'][:100]}"
+            assert snip not in t["final_response"], (
+                f"Editorial noise found in SFT response: {t['final_response'][:100]}"
+            )
 
 
 def test_tokenizer_historical_graphemes() -> None:
@@ -371,3 +388,36 @@ def test_eval_suite_metrics_and_prediction_scoring(eval_cases: list[dict[str, An
     bad_metrics = evaluate_epigraphic_suite(eval_cases, predictions=bad_preds)
     assert bad_metrics["accuracy"] == 0.0
     assert bad_metrics["clopper_pearson_lower_95"] == 0.0
+
+    # 4. Probe that discards historical text and returns only expected_replacement must FAIL
+    truncated_preds = {c["eval_id"]: c.get("expected_replacement", "") for c in eval_cases if c["has_injected_error"]}
+    for c in eval_cases:
+        if not c["has_injected_error"]:
+            truncated_preds[c["eval_id"]] = c["expected_output"]
+    trunc_metrics = evaluate_epigraphic_suite(eval_cases, predictions=truncated_preds)
+    assert trunc_metrics["mixed_error_successes"] == 0, "Probe discarding historical text must score 0 on mixed errors"
+    assert trunc_metrics["accuracy"] < 0.70
+
+
+def test_editorial_and_commentary_purge(
+    eval_cases: list[dict[str, Any]],
+    sft_trajectories: list[dict[str, Any]],
+) -> None:
+    """Test 13: Absolute purge of modern editorial commentary, Soviet publications, and Russian vocabulary."""
+    # Check eval cases
+    for c in eval_cases:
+        inp = c["input_text"]
+        out = c["expected_output"]
+        assert not re.search(r"[эёЭЁ]", inp), f"Russian letter in eval input: {inp}"
+        assert not re.search(r"[эёЭЁ]", out), f"Russian letter in eval output: {out}"
+        assert not re.search(
+            r"\b(?:рукопис\w*|списк\w*|издани\w*|виданн\w*|вариант\w*|исследован\w*|досліджен\w*|юридическом|социальных|трехсот)\b",
+            inp,
+            re.I,
+        ), f"Editorial word in eval input: {inp}"
+        assert c["monument_name"] != "Руська Правда (Юшков)", "Yushkov 1935 edition must not be in eval"
+
+    # Check SFT queries for modern Russian letters
+    for t in sft_trajectories:
+        q = t["query"]
+        assert not re.search(r"[эёЭЁ]", q), f"Russian letter in SFT query: {q}"

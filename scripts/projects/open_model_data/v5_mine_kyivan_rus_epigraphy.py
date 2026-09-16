@@ -117,26 +117,53 @@ HELD_OUT_GRAFFITI_ROOMS = {"121", "110"}
 # Old East Slavic monuments designated for held-out evaluation (0% text leakage)
 HELD_OUT_CHRONICLE_MONUMENTS = {
     "Новгородський перший літопис",
-    "Руська Правда (Юшков)",
+}
+
+# Excluded source files containing modern scholarship or collation apparatus rather than primary text
+EXCLUDED_CHRONICLE_SOURCE_FILES = {
+    "wave5-yushkov-ruska-pravda",
+    "wave5-buhoslavsky-borys-hlib",
+    "wave8-biletsky-ruska-pravda-tekst",
 }
 
 # Editorial noise patterns to purge modern website introductory notes, prefaces, and variant apparatus
 EDITORIAL_PATTERNS = [
+    re.compile(r"[эёЭЁ]"),
     re.compile(
-        r"(?:Передмов|Введение|Вступ|Академия Наук|Академія Наук|Институт истории|ІНСТИТУТ ІСТОРІЇ|"
-        r"Шрифт|ПОЛНОЕ СОБРАНІЕ|ПСРЛ|Археографическ|Археографіч|ПРИЛОЖЕНИЕ|Б\. Клосс|"
-        r"Склав та підготував|наукового видання|Повне зібрання|Видавництво|репринтн|"
-        r"ленінградськ|изводов\. —|стлб\.|Litopys New Roman)",
+        r"\b(?:Передмов\w*|Введение\w*|Вступ\w*|Академия\w*|Академія\w*|Институт\w*|ІНСТИТУТ\w*|"
+        r"Шрифт\w*|ПОЛНОЕ СОБРАН\w*|ПСРЛ\w*|Археограф\w*|ПРИЛОЖЕНИЕ\w*|Б\. Клосс|"
+        r"Склав\w*|науков\w*|Повне зібрання|Видавництво\w*|Издательство\w*|Наука\w*|"
+        r"репринтн\w*|ленінградськ\w*|изводов\w*|стлб\.|Litopys New Roman|"
+        r"СПб|Ленинград\w*|Ленінград\w*|Москва\w*|Киев\w*|Київ\w*|Второе издание)\b",
         re.IGNORECASE,
     ),
     re.compile(
-        r"^(?:Варіанты|Примѣчанія|Можно прочесть|В строке|Букв[а-я] [а-я] неясн|В рукописи|Сице родословят)",
+        r"\b(?:это|этого|этому|этом|эти|этих|этим|этими|является|являлось|являлись|"
+        r"поскольку|поэтому|чтобы|само собой разумеется|таким образом|вследствие|"
+        r"заподозривать|утверждения|разыскания|исчерпывающим образом)\b",
         re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(?:рукопис\w*|списк\w*|издани\w*|виданн\w*|вариант\w*|варіант\w*|разночтен\w*|"
+        r"исследован\w*|досліджен\w*|публикаци\w*|памятник\w*|редакци\w*|комментар\w*|"
+        r"коментар\w*|примечани\w*|примітк\w*|текстолог\w*|сноск\w*|строк\w*|рядк\w*|"
+        r"страниц\w*|сторінк\w*|археограф\w*|академи\w*|академі\w*|ссср|урср|почерк\w*|"
+        r"чернил\w*|вставка\w*|глосса\w*|титл\w*|літератур\w*|бібліографі\w*|вибран\w*|"
+        r"довідник\w*|покажчик\w*|розвідк\w*|уставная грамота)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\d+\s*,\s*\d+\s*,\s*\d+|\d+\s*[-—–+]\s*[а-яѣЂ]+|^\s*\d+\s*(?:Можно|В строке|Букв|В рукописи)",
+        re.IGNORECASE | re.MULTILINE,
     ),
     re.compile(
         r"(?:Акад\. Н\.|Іст\. Муз\.|Кормчая, 1°|арк\. \d+ зв|лл\. \d+ об|"
         r"\b(?:1[89]\d\d|20\d\d)\b|\b(?:XVIII|XIX|XX|XXI)\s*(?:в\.|ст\.|вв\.|ст\.)|"
         r"\b(?:СССР|УРСР|АН УССР|Ленинград|Ленінград|СПб\.|М\.-Л\.)\b)",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"(?:—\s*\d{4}\s*\(\d+|\bдив\.\s+також\b|\bпокажчик\b|\bуказатель\b|\bза виданням\b|\b[А-Яа-я]\.\s+[А-Яа-я]+,\s*(?:м\.|р\.|кн\.|посадн\.))",
         re.IGNORECASE,
     ),
 ]
@@ -262,6 +289,13 @@ def is_editorial_text(text: str) -> bool:
     return any(pat.search(text) for pat in EDITORIAL_PATTERNS)
 
 
+def normalize_historical_snippet(text: str) -> str:
+    """Normalize a snippet by stripping injected notes, whitespace, and punctuation for strict leak detection."""
+    t = text.split(" [Примітка:")[0].split(" (Вставка:")[0]
+    t = re.sub(r"[\s\.\,\!\?\:\;\(\)\[\]\{\}\-\—\+\*\✠\"\'\«\»\/\\]+", "", t)
+    return t.casefold()
+
+
 def detect_features(text: str) -> tuple[str, list[str]]:
     """Classify language register (church_slavonic_liturgical vs mixed_diglossic vs vernacular_secular)."""
     features: list[str] = []
@@ -338,23 +372,19 @@ def load_epigraphy_records(sources_db: Path) -> list[EpigraphyRecord]:
                 p = sr.get("panel")
                 if isinstance(p, dict):
                     room = str(p.get("room") or "unknown")
-                    panel_title = str(p.get("title") or "")
+                    panel_title = str(p.get("panel_title") or "")
             except Exception:
                 pass
 
-        lang = (lang_label or "").strip()
-        is_cs = (lang == "Church Slavonic") or any(
-            pat.search(primary_text) for pat in CHURCH_SLAVONIC_LITURGICAL_PATTERNS
-        )
-
+        is_cs = (lang_label or "").lower() == "church slavonic"
         records.append(
             EpigraphyRecord(
                 id=rec_id,
                 source_record_id=str(src_rec_id or rec_id),
-                title=str(title or f"Inscr_{rec_id}"),
+                title=title or f"Inscription {src_rec_id}",
                 clean_text=primary_text,
                 interpretative_text=clean_interp,
-                language_label=lang or ("Church Slavonic" if is_cs else "Ukrainian"),
+                language_label=lang_label or "Old East Slavic",
                 min_year=min_y,
                 max_year=max_y,
                 room=room,
@@ -372,26 +402,37 @@ def load_chronicle_records(sources_db: Path) -> list[ChronicleRecord]:
     """Load Old East Slavic chronicle text chunks, strictly excluding modern translations and editorial prefaces."""
     import sqlite3
 
+    excluded_files = tuple(EXCLUDED_CHRONICLE_SOURCE_FILES)
+    placeholders = ",".join("?" for _ in excluded_files)
+
     conn = sqlite3.connect(sources_db)
     cur = conn.cursor()
-    query = """
+    query = f"""
     SELECT chunk_id, work, author, year, text, source_file
     FROM literary_texts
     WHERE language_period = 'old_east_slavic'
       AND source_file NOT LIKE 'wave1-%'
       AND source_file NOT LIKE 'wave6-%'
       AND source_file NOT LIKE 'wave0-pvl-yaremenko%'
+      AND source_file NOT IN ({placeholders})
       AND work NOT LIKE '%переклад%'
     """
-    cur.execute(query)
+    cur.execute(query, excluded_files)
+    PURE_EDITORIAL_CHUNK_RE = re.compile(
+        r"^\s*(?:\[?ПСРЛ|Передмов|Введение|Вступ|Варіанты|Примѣчанія|ПРИЛОЖЕНИЕ|\[За виданням)|"
+        r"—\s*\d{4}\s*\(\d+|\bпокажчик\b|\bуказатель\b",
+        re.IGNORECASE,
+    )
     records: list[ChronicleRecord] = []
     for chunk_id, work, author, year, text, _source_file in cur.fetchall():
-        if is_editorial_text(text or ""):
+        if not text or len(text.strip()) < 40:
             continue
-        clean = clean_html_diplomatic(text or "")
+        if PURE_EDITORIAL_CHUNK_RE.match(text):
+            continue
+        clean = clean_html_diplomatic(text)
         if len(clean) < 40:
             continue
-        if is_editorial_text(clean):
+        if PURE_EDITORIAL_CHUNK_RE.match(clean):
             continue
         records.append(
             ChronicleRecord(
@@ -407,7 +448,7 @@ def load_chronicle_records(sources_db: Path) -> list[ChronicleRecord]:
     return records
 
 
-def split_into_passages(text: str, min_len: int = 40, max_len: int = 350) -> list[str]:
+def split_into_passages(text: str, min_len: int = 35, max_len: int = 220) -> list[str]:
     """Split chronicle text into self-contained sentences or small passage units, purging editorial apparatus."""
     raw_sentences = re.split(r"(?<=[.!?…])\s+|\n+", text)
     passages: list[str] = []
@@ -573,7 +614,7 @@ def build_eval_suite(
                     "source": "literary_texts",
                     "partition": "held_out_eval",
                     "chunk_id": c_rec.chunk_id,
-                    "academic_edition": "ПСРЛ / Юшков",
+                    "academic_edition": "ПСРЛ (Новгородський перший літопис)",
                 },
             }
         )
@@ -598,24 +639,22 @@ def build_sft_dataset(
     seen_traj_ids: set[str] = set()
     seen_texts: set[str] = set()
 
-    # Collect all verbatim texts from eval suite to enforce 0% verbatim text leakage
-    eval_verbatim_texts: set[str] = set()
+    # Collect all verbatim and normalized snippets from eval suite to enforce 0% text leakage
+    eval_normalized_snippets: set[str] = set()
     for c in eval_suite:
-        eval_verbatim_texts.add(c["input_text"].strip().casefold())
-        eval_verbatim_texts.add(c["expected_output"].strip().casefold())
-        if "target_term" in c and len(c["target_term"]) > 20:
-            eval_verbatim_texts.add(c["target_term"].strip().casefold())
+        inp = c["input_text"]
+        out = c["expected_output"]
+        for t in (inp, out):
+            norm = normalize_historical_snippet(t)
+            if norm:
+                eval_normalized_snippets.add(norm)
 
     con_ves = sqlite3.connect(vesum_db)
     cur_ves = con_ves.cursor()
 
-    # 1. Training graffiti (strictly excluding held-out rooms 121, 110 and eval verbatim texts)
+    # 1. Training graffiti (strictly excluding held-out rooms 121, 110 and all eval normalized texts)
     train_inscr = [
-        r
-        for r in epigraphy
-        if r.room not in HELD_OUT_GRAFFITI_ROOMS
-        and not is_editorial_text(r.clean_text)
-        and r.clean_text.strip().casefold() not in eval_verbatim_texts
+        r for r in epigraphy if r.room not in HELD_OUT_GRAFFITI_ROOMS and not is_editorial_text(r.clean_text)
     ]
     rng.shuffle(train_inscr)
 
@@ -625,6 +664,14 @@ def build_sft_dataset(
         text_key = rec.clean_text.strip().casefold()
         if text_key in seen_texts:
             continue
+
+        norm_rec = normalize_historical_snippet(rec.clean_text)
+        if not norm_rec or norm_rec in eval_normalized_snippets:
+            continue
+        # Substring/containment check: strict zero-leakage across all snippet lengths
+        if any(norm_rec in es or es in norm_rec for es in eval_normalized_snippets):
+            continue
+
         seen_texts.add(text_key)
 
         reg, feats = detect_features(rec.clean_text)
@@ -639,7 +686,9 @@ def build_sft_dataset(
 
         # Unique trajectory ID with guaranteed index uniqueness
         idx = len(trajectories) + 1
-        traj_id = f"traj.decolonize.{hashlib.sha256(f'traj_{idx:05d}_epig_{rec.id}_{headword}'.encode()).hexdigest()[:16]}"
+        traj_id = (
+            f"traj.decolonize.{hashlib.sha256(f'traj_{idx:05d}_epig_{rec.id}_{headword}'.encode()).hexdigest()[:16]}"
+        )
         assert traj_id not in seen_traj_ids
         seen_traj_ids.add(traj_id)
 
@@ -647,10 +696,10 @@ def build_sft_dataset(
             analysis_lead = "Високий літургійний церковнослов'янський ізвод київської редакції"
             reg_desc = "літургійного церковнослов'янського регістру київського ізводу"
         elif reg == "mixed_diglossic":
-            analysis_lead = (
-                "Органічний синтез києво-руської диглосії: сакральна церковнослов'янська мова у сполученні з живими давньоукраїнськими розмовними формами"
+            analysis_lead = "Органічний синтез києво-руської диглосії: сакральна церковнослов'янська мова у сполученні з живими давньоукраїнськими розмовними формами"
+            reg_desc = (
+                "органічного поєднання літургійної церковнослов'янської формульності та живого розмовного мовлення"
             )
-            reg_desc = "органічного поєднання літургійної церковнослов'янської формульності та живого розмовного мовлення"
         else:
             analysis_lead = "Жива розмовна давньоруська/ранньоукраїнська мовна стихія Києва"
             reg_desc = "світського розмовного мовлення середньовічного Києва"
@@ -703,7 +752,7 @@ def build_sft_dataset(
         }
         trajectories.append(traj)
 
-    # 2. Training chronicles (strictly excluding Novgorod I, Ruska Pravda, and eval verbatim texts)
+    # 2. Training chronicles (strictly excluding Novgorod I and all eval normalized texts)
     train_chron = [
         c
         for c in chronicles
@@ -719,8 +768,12 @@ def build_sft_dataset(
                 and not is_editorial_text(p)
                 and not EDITORIAL_NOISE_RE.search(p)
                 and not any(m in p for m in HELD_OUT_CHRONICLE_MONUMENTS)
-                and p.strip().casefold() not in eval_verbatim_texts
             ):
+                norm_p = normalize_historical_snippet(p)
+                if not norm_p or norm_p in eval_normalized_snippets:
+                    continue
+                if any(norm_p in es or es in norm_p for es in eval_normalized_snippets):
+                    continue
                 chron_passages.append((c, p))
 
     rng.shuffle(chron_passages)
@@ -924,6 +977,7 @@ def evaluate_epigraphic_suite(
             calque_info = c.get("injected_error_details") or ""
             # Extract calque string from details if present: "Injected calque: XYZ"
             calque_word = calque_info.split(": ", 1)[-1] if ": " in calque_info else None
+            hist_text = inp.split(" [Примітка:")[0].split(" (Вставка:")[0].strip()
 
             if (
                 c["expected_action"] == "CORRECT_INJECTED_ERROR"
@@ -932,6 +986,8 @@ def evaluate_epigraphic_suite(
                 and exp_out != inp
                 and exp_out != "DESTROYED"
                 and (calque_word is None or calque_word not in exp_out)
+                and hist_text in exp_out
+                and len(exp_out) >= len(hist_text)
             ):
                 mixed_ok += 1
     else:
@@ -956,8 +1012,14 @@ def evaluate_epigraphic_suite(
             repl = c.get("expected_replacement", "")
             calque_info = c.get("injected_error_details") or ""
             calque_word = calque_info.split(": ", 1)[-1] if ": " in calque_info else None
+            hist_text = c["input_text"].split(" [Примітка:")[0].split(" (Вставка:")[0].strip()
 
-            if repl and repl in pred and (calque_word is None or calque_word not in pred):
+            # Must contain replacement, reject calque, and preserve historical text verbatim
+            # Discarding historical text or returning only replacement must FAIL
+            preserves_history = (
+                hist_text in pred and len(pred.strip()) >= len(hist_text) and pred.strip() != repl.strip()
+            )
+            if repl and repl in pred and (calque_word is None or calque_word not in pred) and preserves_history:
                 mixed_ok += 1
 
     total_ok = preserve_ok + mixed_ok
@@ -1004,6 +1066,7 @@ def main() -> None:
     parser.add_argument("--eval-quota", type=int, default=500, help="Target held-out eval cases")
     parser.add_argument("--sft-quota", type=int, default=10000, help="Target SFT trajectories")
     parser.add_argument("--replay-quota", type=int, default=200, help="Modern literary replay buffer quota")
+    parser.add_argument("--git-commit", type=str, default=None, help="Explicit git commit SHA for provenance receipt")
     parser.add_argument("--seed", type=int, default=42, help="Deterministic random seed")
     args = parser.parse_args()
 
@@ -1089,11 +1152,13 @@ def main() -> None:
             for traj in shard_trajs:
                 f.write(json.dumps(traj, ensure_ascii=False) + "\n")
         sha = compute_sha256(shard_path)
-        manifest_entries.append({
-            "filename": shard_name,
-            "record_count": len(shard_trajs),
-            "sha256": sha,
-        })
+        manifest_entries.append(
+            {
+                "filename": shard_name,
+                "record_count": len(shard_trajs),
+                "sha256": sha,
+            }
+        )
 
     manifest_data = {
         "dataset": "sft_kyivan_rus_continuity_10k",
@@ -1131,7 +1196,7 @@ def main() -> None:
     )
     chron_sft = len(sft_dataset) - epig_sft - replay_sft
 
-    git_commit_sha = get_git_commit(REPO_ROOT)
+    git_commit_sha = args.git_commit or get_git_commit(REPO_ROOT)
 
     # 5. Build release receipt
     receipt: dict[str, Any] = {
@@ -1141,7 +1206,7 @@ def main() -> None:
         "created_at": datetime.now(UTC).isoformat(),
         "git_commit": git_commit_sha,
         "evaluation_benchmark": {
-            "file_path": str(eval_path.relative_to(REPO_ROOT)),
+            "file_path": str(eval_path.resolve().relative_to(REPO_ROOT.resolve())),
             "sha256": eval_sha,
             "total_cases": len(eval_suite),
             "graffiti_cases": sum(1 for c in eval_suite if c["monument_type"] == "cathedral_graffiti"),
@@ -1155,7 +1220,7 @@ def main() -> None:
             },
         },
         "sft_training_dataset": {
-            "directory_path": str(sft_dir.relative_to(REPO_ROOT)),
+            "directory_path": str(sft_dir.resolve().relative_to(REPO_ROOT.resolve())),
             "shards_count": num_shards,
             "total_trajectories": len(sft_dataset),
             "epigraphy_trajectories": epig_sft,
