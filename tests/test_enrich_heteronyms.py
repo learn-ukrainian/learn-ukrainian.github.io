@@ -1986,22 +1986,23 @@ def test_batch10_lemmas_not_duplicated_from_earlier_batches():
 
 def test_batch11_semantic_and_stress_distinctions():
     """Verify Batch 11 stress and semantic distinctions against academic authorities and Grinchenko."""
-    # 1. попереносити: поперено́сити (carry/postpone many items) vs попереноси́ти (carry around for a while)
+    # 1. попереносити: поперено́сити (carry/transfer many items) vs попереноси́ти (carry many things over an extended period)
     pop = enrich_heteronyms.build_heteronyms_for_lemma("попереносити")
     assert pop is not None and len(pop) == 2
     assert pop[0]["headword"] == "поперено́сити"
     assert "carry" in pop[0]["gloss"].lower() or "transfer" in pop[0]["gloss"].lower()
     assert pop[1]["headword"] == "попереноси́ти"
-    assert "around" in pop[1]["gloss"].lower() or "some time" in pop[1]["gloss"].lower()
+    assert "extended period" in pop[1]["gloss"].lower() or "many things" in pop[1]["gloss"].lower() or "haul" in pop[1]["gloss"].lower()
 
-    # 2. поправний: попра́вний (correctable/remediable) vs поправни́й (correctional/reformatory/coefficient)
+    # 2. поправний: попра́вний (correctable/remediable) vs поправни́й (correctional/reformatory penal institution)
     popr = enrich_heteronyms.build_heteronyms_for_lemma("поправний")
     assert popr is not None and len(popr) == 2
     assert popr[0]["headword"] == "попра́вний"
     assert "correctable" in popr[0]["gloss"].lower() or "remediable" in popr[0]["gloss"].lower()
     assert "reformatory" not in popr[0]["gloss"].lower()
     assert popr[1]["headword"] == "поправни́й"
-    assert "reformatory" in popr[1]["gloss"].lower() or "correctional" in popr[1]["gloss"].lower() or "coefficient" in popr[1]["gloss"].lower()
+    assert "reformatory" in popr[1]["gloss"].lower() or "correctional" in popr[1]["gloss"].lower()
+    assert "coefficient" not in popr[1]["gloss"].lower()
 
     # 3. скликання: скли́кання (convocation/cohort) vs склика́ння (convening/gathering)
     sklyk = enrich_heteronyms.build_heteronyms_for_lemma("скликання")

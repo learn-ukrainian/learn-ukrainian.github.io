@@ -48,24 +48,24 @@ CURATED_HETERONYMS_BATCH_11: dict[str, list[dict[str, Any]]] = {'поперен�
                                                    'historical_note': 'Зафіксовано в радянський період (СУМ-11). '
                                                                       'Наведено для лексикографічної прозорості.'},
                    'pre_soviet_witness': None},
-                  {'headword': 'попереноси́ти',
-                   'short_label': 'переносити якийсь час туди й сюди (док., розм.)',
-                   'gloss': 'carry things around for some time (colloq., perf.)',
-                   'pos': 'verb',
-                   'cefr': 'B2',
-                   'heritage_status': {'classification': 'standard',
-                                       'is_russianism': False,
-                                       'russian_shadow': False,
-                                       'vesum_attested': True},
-                   'pronunciation': {'ipa': '[pɔpɛrɛnɔˈsɪtɪ]'},
-                   'stress': {'form': 'попереноси́ти',
-                              'source': 'ВТС',
-                              'url': 'https://slovnyk.me/dict/vts/попереносити'},
-                   'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'доконаний'}},
-                   'distinction_note': 'Позначає дію перенесення, що тривала певний обмежений час («попереносити трохи '
-                                       'мішки»; док. вид). Не плутати з «поперено́сити» (перенести всі предмети до '
-                                       'кінця).',
-                   'meaning': {'definitions': ['Переносити щось якийсь час (доконаний вид).'], 'source': 'ВТС'},
+                   {'headword': 'попереноси́ти',
+                    'short_label': 'переносити багато чого-небудь за довгий час (док.)',
+                    'gloss': 'carry or haul many things over an extended period of time (perf.)',
+                    'pos': 'verb',
+                    'cefr': 'B2',
+                    'heritage_status': {'classification': 'standard',
+                                        'is_russianism': False,
+                                        'russian_shadow': False,
+                                        'vesum_attested': True},
+                    'pronunciation': {'ipa': '[pɔpɛrɛnɔˈsɪtɪ]'},
+                    'stress': {'form': 'попереноси́ти',
+                               'source': 'ВТС',
+                               'url': 'https://slovnyk.me/dict/vts/попереносити'},
+                    'morphology': {'pos': 'дієслово', 'paradigm': {'kind': 'verb', 'aspect': 'доконаний'}},
+                    'distinction_note': 'Позначає кумулятивну дію перенесення великої кількості речей протягом тривалого '
+                                        'часу («скільки дідова спина попереносила за життя»; док. вид). Не плутати '
+                                        'з «поперено́сити» (перенести всі або багато предметів в інше місце чи на інший строк).',
+                    'meaning': {'definitions': ['Переносити багато чого-небудь за довгий час (доконаний вид).'], 'source': 'ВТС'},
                    'soviet_colonization_context': {'source': 'СУМ-11 (1970–1980)',
                                                    'definition': 'ПОПЕРЕНОСИ́ТИ, ошу́, о́сиш, док., перех. Переноси́ти '
                                                                  'багато чого-небудь за довгий час. А скільки ж оті '
@@ -112,25 +112,21 @@ CURATED_HETERONYMS_BATCH_11: dict[str, list[dict[str, Any]]] = {'поперен�
                                                 'historical_note': 'Зафіксовано в радянський період (СУМ-11). Наведено '
                                                                    'для лексикографічної прозорості.'},
                 'pre_soviet_witness': None},
-               {'headword': 'поправни́й',
-                'short_label': 'виправний (заклад, роботи) або коригувальний (спец.)',
-                'gloss': 'correctional, reformatory (penal/institution); adjusting, correction (coefficient)',
-                'pos': 'adj',
-                'cefr': 'B2',
-                'heritage_status': {'classification': 'standard',
-                                    'is_russianism': False,
-                                    'russian_shadow': False,
-                                    'vesum_attested': True},
-                'pronunciation': {'ipa': '[pɔprɐu̯ˈnɪj]'},
-                'stress': {'form': 'поправни́й', 'source': 'ВТС', 'url': 'https://slovnyk.me/dict/vts/поправний'},
-                'morphology': {'pos': 'прикметник', 'paradigm': {'kind': 'adjective'}},
-                'distinction_note': 'Позначає виправний характер установ чи заходів (поправний заклад, поправний будинок), '
-                                    'а також науково-технічний розрахунковий термін внесення поправок (поправний коефіцієнт). '
-                                    'Не плутати з якісним значенням «попра́вний» (піддатний виправленню).',
-                'meaning': {'definitions': ['1. Те саме, що виправни́й (поправний заклад, поправні роботи; рідко). '
-                                            '2. Призначений для внесення поправок у розрахунки чи вимірювання (поправний '
-                                            'коефіцієнт; спец.).'],
-                            'source': 'ВТС'},
+                {'headword': 'поправни́й',
+                 'short_label': 'виправний (заклад, роботи; рідко)',
+                 'gloss': 'correctional, reformatory (penal/institution, e.g. correctional facility)',
+                 'pos': 'adj',
+                 'cefr': 'B2',
+                 'heritage_status': {'classification': 'standard',
+                                     'is_russianism': False,
+                                     'russian_shadow': False,
+                                     'vesum_attested': True},
+                 'pronunciation': {'ipa': '[pɔprɐu̯ˈnɪj]'},
+                 'stress': {'form': 'поправни́й', 'source': 'СУМ-20', 'url': 'https://slovnyk.me/dict/newsum/поправний'},
+                 'morphology': {'pos': 'прикметник', 'paradigm': {'kind': 'adjective'}},
+                 'distinction_note': 'Позначає виправний характер установ чи заходів (поправний заклад, поправні роботи). '
+                                     'Не плутати з якісним значенням «попра́вний» (піддатний виправленню).',
+                 'meaning': {'definitions': ['Те саме, що виправни́й (поправний заклад, поправні роботи; рідко).'], 'source': 'СУМ-20'},
                 'soviet_colonization_context': {'source': 'СУМ-11 (1970–1980)',
                                                 'definition': 'ПОПРАВНИ́Й, а́, е́, рідко. Те саме, що виправни́й. '
                                                               'По-новому висвітлює дослідник зв’язки письменниці '

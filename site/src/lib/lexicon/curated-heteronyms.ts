@@ -31969,8 +31969,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "попереносити",
       "url_slug": "попереносити",
       "headword": "попереноси́ти",
-      "short_label": "переносити якийсь час туди й сюди (док., розм.)",
-      "gloss": "carry things around for some time (colloq., perf.)",
+      "short_label": "переносити багато чого-небудь за довгий час (док.)",
+      "gloss": "carry or haul many things over an extended period of time (perf.)",
       "pos": "verb",
       "cefr": "B2",
       "heritage_status": {
@@ -31994,10 +31994,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "доконаний"
         }
       },
-      "distinction_note": "Позначає дію перенесення, що тривала певний обмежений час («попереносити трохи мішки»; док. вид). Не плутати з «поперено́сити» (перенести всі предмети до кінця).",
+      "distinction_note": "Позначає кумулятивну дію перенесення великої кількості речей протягом тривалого часу («скільки дідова спина попереносила за життя»; док. вид). Не плутати з «поперено́сити» (перенести всі або багато предметів в інше місце чи на інший строк).",
       "meaning": {
         "definitions": [
-          "Переносити щось якийсь час (доконаний вид)."
+          "Переносити багато чого-небудь за довгий час (доконаний вид)."
         ],
         "source": "ВТС"
       },
@@ -32060,8 +32060,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "поправний",
       "url_slug": "поправний",
       "headword": "поправни́й",
-      "short_label": "виправний (заклад, роботи) або коригувальний (спец.)",
-      "gloss": "correctional, reformatory (penal/institution); adjusting, correction (coefficient)",
+      "short_label": "виправний (заклад, роботи; рідко)",
+      "gloss": "correctional, reformatory (penal/institution, e.g. correctional facility)",
       "pos": "adj",
       "cefr": "B2",
       "heritage_status": {
@@ -32075,8 +32075,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "stress": {
         "form": "поправни́й",
-        "source": "ВТС",
-        "url": "https://slovnyk.me/dict/vts/поправний"
+        "source": "СУМ-20",
+        "url": "https://slovnyk.me/dict/newsum/поправний"
       },
       "morphology": {
         "pos": "прикметник",
@@ -32084,12 +32084,12 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Позначає виправний характер установ чи заходів (поправний заклад, поправний будинок), а також науково-технічний розрахунковий термін внесення поправок (поправний коефіцієнт). Не плутати з якісним значенням «попра́вний» (піддатний виправленню).",
+      "distinction_note": "Позначає виправний характер установ чи заходів (поправний заклад, поправні роботи). Не плутати з якісним значенням «попра́вний» (піддатний виправленню).",
       "meaning": {
         "definitions": [
-          "1. Те саме, що виправни́й (поправний заклад, поправні роботи; рідко). 2. Призначений для внесення поправок у розрахунки чи вимірювання (поправний коефіцієнт; спец.)."
+          "Те саме, що виправни́й (поправний заклад, поправні роботи; рідко)."
         ],
-        "source": "ВТС"
+        "source": "СУМ-20"
       },
       "soviet_colonization_context": {
         "source": "СУМ-11 (1970–1980)",
