@@ -29,10 +29,10 @@ export const A1_UNITS: A1UnitGroup[] = [
   {
     unit: "A1.1 [Звуки, літери та перший контакт · Sounds, Letters, and First Contact]",
     items: [
-      { num: 1, slug: "sounds-letters-and-hello", title: "Звуки, літери та привіт", titleEn: "Sounds, Letters & Hello", sub: "33 літери, 38 звуків, Привіт!", subEn: "33 letters, 38 sounds, Hello!" },
-      { num: 2, slug: "reading-ukrainian", title: "Читаємо українською", titleEn: "Reading Ukrainian", sub: "Від літер до слів та речень", subEn: "From letters to words and sentences" },
-      { num: 3, slug: "special-signs", title: "Особливі знаки", titleEn: "Special Signs", sub: "Ь, апостроф і три ключові контрасти — день, сім'я, буряк/бур'ян", subEn: "Soft sign, apostrophe, and three key contrasts" },
-      { num: 4, slug: "stress-and-melody", title: "Наголос і мелодика", titleEn: "Stress & Melody", sub: "Наголос змінює значення, інтонація змінює намір", subEn: "Stress changes meaning, intonation changes intent" },
+      { num: 1, slug: "sounds-letters-and-hello", title: "Звуки та перші літери", titleEn: "Sounds and First Letters", sub: "Перші 7 літер (А, О, У, М, Л, С, Н), відкриті й закриті склади та перші слова", subEn: "First 7 letters (А, О, У, М, Л, С, Н), open and closed syllables, and first words" },
+      { num: 2, slug: "reading-ukrainian", title: "Читаємо українською та перші вітання", titleEn: "Reading Ukrainian & First Greetings", sub: "16 нових літер, склади, тверді й глухі пари та перші вітання", subEn: "16 new letters, syllables, consonant pairs, and first greetings" },
+      { num: 3, slug: "special-signs", title: "Особливі знаки та повна абетка", titleEn: "Special Signs & The Full Alphabet", sub: "М'який знак, йотовані літери, апостроф і всі 33 літери", subEn: "Soft sign, iotated vowels, apostrophe, and the complete 33 letters" },
+      { num: 4, slug: "stress-and-melody", title: "Наголос і мелодика", titleEn: "Stress & Melody", sub: "Вільний наголос, смислові пари, інтонація речень та живий діалог", subEn: "Free stress, meaning pairs, sentence intonation, and spoken dialogue" },
       { num: 5, slug: "who-am-i", title: "Хто я?", titleEn: "Who Am I?", sub: "Мене звати… — ваша перша справжня розмова", subEn: "My name is… — your first real conversation" },
       { num: 6, slug: "my-family", title: "Моя сім'я", titleEn: "My Family", sub: "У мене є брат — показуємо фотографії", subEn: "I have a brother — sharing photos" },
       { num: 7, slug: "checkpoint-first-contact", title: "Підсумок: Перший контакт", titleEn: "Checkpoint: First Contact", sub: "Чи вмієте ви читати, вітатися та розповідати про себе?", subEn: "Can you read, greet, and introduce yourself?" },

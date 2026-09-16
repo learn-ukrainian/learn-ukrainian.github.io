@@ -2,188 +2,188 @@ inline:
 - id: act-301
   type: watch-and-repeat
   title: "Диві́ться та повто́рюйте: С, Н — Watch and repeat: С, Н"
-  instruction: "Подиві́ться коро́тке ві́део про вимо́ву лі́тер (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос."
+  instruction: "Подиві́ться коро́тке ві́део про вимо́ву лі́тер (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос. — Watch a short video on pronouncing the letters (source: Anna Ohoiko, Ukrainian Lessons) and repeat aloud."
   items:
   - letter: С
-    word: сон
-    sound: '[с]'
     video: https://www.youtube.com/watch?v=7UsFBgSL91E
+    word: сон — sleep
+    sound: '[с]'
     note: "Глухи́й свистя́чий при́голосний — Voiceless sibilant consonant."
   - letter: Н
-    word: ніс
-    sound: '[н]'
     video: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    word: ніс — nose
+    sound: '[н]'
     note: "Тверди́й носови́й сона́нт — Hard nasal sonorant."
   - letter: СА
-    word: сам
-    sound: '[са]'
     video: https://www.youtube.com/watch?v=7UsFBgSL91E
+    word: сам — alone
+    sound: '[са]'
     note: "Злиття́ зву́ків [с] та [а] — Syllable blend of [s] and [a]."
   - letter: СО
-    word: сом
-    sound: '[со]'
     video: https://www.youtube.com/watch?v=7UsFBgSL91E
-    note: "Чи́сте окру́глене [о] після [с] — Pure rounded [o] after [s]."
+    word: сом — catfish
+    sound: '[со]'
+    note: "Чи́сте окру́глене [о] пі́сля [с] — Pure rounded [o] after [s]."
   - letter: НА
-    word: нас
-    sound: '[на]'
     video: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    word: нас — us
+    sound: '[на]'
     note: "Злиття́ зву́ків [н] та [а] — Syllable blend of [n] and [a]."
   - letter: НО
-    word: сон
-    sound: '[но]'
     video: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    word: сон — sleep
+    sound: '[но]'
     note: "Злиття́ зву́ків [н] та [о] — Syllable blend of [n] and [o]."
 
 - id: act-5
   type: match-up
   title: "Слова́ та зна́чення — Words and meanings"
-  instruction: "З'єдна́йте украї́нське сло́во з його́ англі́йським пере́кладом. — Match the Ukrainian word to its English translation."
+  instruction: "З'єдна́йте украї́нське сло́во з йо́го англі́йським пере́кладом. — Match the Ukrainian word to its English translation."
   pairs:
-  - left: сон
-    right: sleep / dream
-  - left: сом
-    right: catfish
-  - left: сам
-    right: alone / by oneself (m)
-  - left: лан
-    right: field
-  - left: оса́
-    right: wasp
-  - left: сосна́
-    right: pine tree
+  - left: "сон — sleep / dream"
+    right: "сон (стан сну) — sleep (state of sleep)"
+  - left: "сом — catfish"
+    right: "сом (вели́ка ри́ба) — catfish (large fish)"
+  - left: "сам — alone (m)"
+    right: "сам (оди́н) — alone (by oneself)"
+  - left: "лан — field"
+    right: "лан (вели́ке по́ле) — field (large field)"
+  - left: "оса́ — wasp"
+    right: "оса́ (кома́ха) — wasp (insect)"
+  - left: "сосна́ — pine tree"
+    right: "сосна́ (де́рево) — pine tree (tree)"
 
 - id: act-302
   type: quiz
   title: "Будо́ва скла́ду CVC та зву́ки — Syllable structure and sounds"
   instruction: "Обері́ть пра́вильну ві́дповідь. — Choose the correct answer."
   items:
-  - prompt: "What is a closed syllable (закри́тий склад) in Ukrainian?"
+  - prompt: "Що таке́ закри́тий склад в украї́нській мо́ві? — What is a closed syllable in Ukrainian?"
     options:
-    - text: "A syllable that ends in a consonant sound"
+    - text: "Склад, що закі́нчується на при́голосний звук — A syllable that ends in a consonant sound"
       correct: true
-    - text: "A syllable that has no vowels"
+    - text: "Склад без голосни́х зву́ків — A syllable that has no vowels"
       correct: false
-    - text: "A syllable that is stressed"
+    - text: "Склад, на яки́й па́дає на́голос — A syllable that is stressed"
       correct: false
-    explanation: "A closed syllable (закри́тий склад) ends with a consonant sound, such as [сон] or [лан]."
-  - prompt: "Which of the following words consists of a single closed syllable (CVC)?"
+    explanation: "Закри́тий склад закі́нчується на при́голосний звук (сон, лан). — A closed syllable ends with a consonant sound, such as сон or лан."
+  - prompt: "Яке́ з цих слів склада́ється з одного́ закри́того скла́ду (CVC)? — Which of these words consists of a single closed syllable (CVC)?"
     options:
-    - text: сон
+    - text: "сон — sleep"
       correct: true
-    - text: оса́
+    - text: "оса́ — wasp"
       correct: false
-    - text: ма́ма
+    - text: "ма́ма — mom"
       correct: false
-    explanation: "«Сон» is a single CVC syllable: consonant [с] + vowel [о] + consonant [н]."
-  - prompt: "What phonetic type of consonant is the letter С?"
+    explanation: "Сло́во «сон» — це оди́н склад CVC (при́голосний [с] + голосни́й [о] + при́голосний [н]). — «Сон» is a single CVC syllable: consonant [s] + vowel [o] + consonant [n]."
+  - prompt: "До яко́го ти́пу при́голосних нале́жить бу́ква С? — What phonetic type of consonant is the letter С?"
     options:
-    - text: "A voiceless sibilant consonant (глухи́й свистя́чий)"
+    - text: "Глухи́й свистя́чий при́голосний — A voiceless sibilant consonant"
       correct: true
-    - text: "A nasal sonorant consonant"
+    - text: "Носови́й соно́рний при́голосний — A nasal sonorant consonant"
       correct: false
-    - text: "A voiced plosive consonant"
+    - text: "Дзвінки́й проривни́й при́голосний — A voiced plosive consonant"
       correct: false
-    explanation: "Letter С represents [s], a voiceless dental sibilant consonant."
-  - prompt: "What phonetic type of consonant is the letter Н?"
+    explanation: "Бу́ква С познача́є глухи́й свистя́чий звук [с]. — Letter С represents [s], a voiceless dental sibilant consonant."
+  - prompt: "До яко́го ти́пу при́голосних нале́жить бу́ква Н? — What phonetic type of consonant is the letter Н?"
     options:
-    - text: "A nasal sonorant consonant (носови́й сона́нт)"
+    - text: "Носови́й соно́рний при́голосний — A nasal sonorant consonant"
       correct: true
-    - text: "A voiceless sibilant consonant"
+    - text: "Глухи́й свистя́чий при́голосний — A voiceless sibilant consonant"
       correct: false
-    - text: "A rounded vowel sound"
+    - text: "Окру́глений голосни́й звук — A rounded vowel sound"
       correct: false
-    explanation: "Letter Н represents [n], an airflow-through-the-nose sonorant consonant."
-  - prompt: "In the word «сосна́», how is the unstressed «о» pronounced?"
+    explanation: "Бу́ква Н познача́є носови́й сона́нт [н]. — Letter Н represents [n], an airflow-through-the-nose sonorant consonant."
+  - prompt: "Як вимовля́ється ненаголо́шений [о] у сло́ві «сосна́»? — In the word «сосна́», how is the unstressed «о» pronounced?"
     options:
-    - text: "As a pure, clear [o] without reduction to [a]"
+    - text: "Як чи́стий [о] без реду́кції до [а] — As a pure, clear [o] without reduction to [a]"
       correct: true
-    - text: "As [a], exactly like Russian akanye"
+    - text: "Як звук [а] — As [a], with vowel reduction"
       correct: false
-    - text: "It is completely silent"
+    - text: "Він зо́всім не вимовля́ється — It is completely silent"
       correct: false
-    explanation: "Ukrainian unstressed «о» is never reduced to «а»; it remains clean and rounded."
-  - prompt: "What does the pointing word «он» mean?"
+    explanation: "В украї́нській мо́ві ненаголо́шений [о] за́вжди залиша́ється чи́стим [о]. — Ukrainian unstressed «о» is never reduced to «а»; it remains clean and rounded."
+  - prompt: "Що означа́є вказівне́ сло́во «он»? — What does the pointing word «он» mean?"
     options:
-    - text: "There / over there (pointing out an object in view)"
+    - text: "Он / ген там (пока́зує на предме́т) — There / over there (pointing out an object in view)"
       correct: true
-    - text: "Here (in my hand)"
+    - text: "Тут (у руці́) — Here (in my hand)"
       correct: false
-    - text: "Goodbye"
+    - text: "До поба́чення — Goodbye"
       correct: false
-    explanation: "«Он» is a pointing particle meaning 'there / yonder' (e.g. «Он сосна́»)."
+    explanation: "Ча́стка «он» пока́зує на предме́т у по́лі зо́ру. — «Он» is a pointing particle meaning 'there / yonder'."
 
 - id: act-303
   type: fill-in
   title: "Вста́вте пропу́щене сло́во — Fill in the missing word"
   instruction: "Обері́ть пра́вильне сло́во для ко́жного ре́чення. — Choose the correct word for each sentence."
   items:
-  - sentence: "У рі́чці пла́ває вели́кий ___."
+  - sentence: "У рі́чці пла́ває вели́кий ___. — In the river swims a big ___."
     answer: сом
     options:
     - сом
     - сон
     - оса́
-    explanation: "Сом is a catfish living in water."
-  - sentence: "Ти́хий нічни́й ___."
+    explanation: "Сом — це ри́ба, яка́ живе́ у воді́. — Сом is a catfish living in water."
+  - sentence: "Ти́хий нічни́й ___. — Quiet nightly ___."
     answer: сон
     options:
     - сон
     - сом
     - лан
-    explanation: "Сон means sleep or dream."
-  - sentence: "Він стої́ть там ___."
+    explanation: "Сон означа́є стан сну або́ сновиді́ння. — Сон means sleep or dream."
+  - sentence: "Він стої́ть там ___. — He stands there ___."
     answer: сам
     options:
     - сам
     - сом
     - сон
-    explanation: "Сам means alone or by oneself."
-  - sentence: "Он золоти́й широ́кий ___."
+    explanation: "Сам означа́є «само́тній» або́ «без і́нших». — Сам means alone or by oneself."
+  - sentence: "Он золоти́й широ́кий ___. — Over there is a golden wide ___."
     answer: лан
     options:
     - лан
     - сон
     - сом
-    explanation: "Лан means a wide field."
-  - sentence: "Над кві́ткою лети́ть ___."
+    explanation: "Лан означа́є вели́ке по́ле. — Лан means a wide field."
+  - sentence: "Над кві́ткою лети́ть ___. — Above the flower flies a ___."
     answer: оса́
     options:
     - оса́
     - сосна́
     - ма́ма
-    explanation: "Оса́ is a flying wasp."
-  - sentence: "У лі́сі росте́ висо́ка ___."
+    explanation: "Оса́ — це кома́ха, що літа́є. — Оса́ is a flying wasp."
+  - sentence: "У лі́сі росте́ висо́ка ___. — In the forest grows a tall ___."
     answer: сосна́
     options:
     - сосна́
     - оса́
     - лан
-    explanation: "Сосна́ is a pine tree growing in the forest."
+    explanation: "Сосна́ — це хво́йне де́рево. — Сосна́ is a pine tree growing in the forest."
 
 - id: act-304
   type: true-false
   title: "Пра́вда чи непра́вда? — True or false?"
-  instruction: "Ви́значте, чи твер́дження пра́вильне. — Decide whether each statement is true or false."
+  instruction: "Ви́значте, чи тве́рдження пра́вильне. — Decide whether each statement is true or false."
   items:
-  - statement: "Letter С represents the voiceless sibilant sound [s]."
+  - statement: "Бу́ква С познача́є глухи́й свистя́чий звук [с]. — Letter С represents the voiceless sibilant sound [s]."
     answer: true
-    explanation: "С corresponds to [s], a voiceless sibilant sound."
-  - statement: "The word «сосна́» consists of two syllables: closed [сос-] and open [-на́]."
+    explanation: "С познача́є глухи́й свистя́чий звук [с]. — С corresponds to [s], a voiceless sibilant sound."
+  - statement: "Сло́во «сосна́» ма́є два склади́: закри́тий [сос-] та відкри́тий [-на́]. — The word «сосна́» consists of two syllables: closed [сос-] and open [-на́]."
     answer: true
-    explanation: "Сос-на́ has two syllables: CVC + CV."
-  - statement: "In Ukrainian, unstressed «о» in «сосна́» turns into «а»."
+    explanation: "Сос-на́ ма́є два склади́ (CVC + CV). — Сос-на́ has two syllables: CVC + CV."
+  - statement: "В украї́нській мо́ві ненаголо́шений [о] у сло́ві «сосна́» перетво́рюється на [а]. — In Ukrainian, unstressed «о» in «сосна́» turns into «а»."
     answer: false
-    explanation: "Ukrainian has no akanye; unstressed [o] remains rounded and clear."
-  - statement: "In standard Ukrainian, the common word for the celestial moon is «сон»."
+    explanation: "В украї́нській мо́ві нема́є реду́кції [о] на [а]. — Ukrainian has no vowel reduction; unstressed [o] remains rounded and clear."
+  - statement: "В украї́нській мо́ві сло́во «сон» означа́є нічне́ світи́ло на не́бі. — In Ukrainian, the word «сон» means the celestial body in the sky."
     answer: false
-    explanation: "«Сон» means sleep or dream; the moon is «мі́сяць»."
-  - statement: "The word «он» is used to point to something at a distance."
+    explanation: "«Сон» означа́є стан сну; нічне́ світи́ло — це «мі́сяць». — «Сон» means sleep or dream; the moon is «мі́сяць»."
+  - statement: "Сло́во «он» вжива́ється для вка́зування на предме́т удалині́. — The word «он» is used to point to something at a distance."
     answer: true
-    explanation: "«Он» is a pointing particle meaning 'yonder / over there'."
-  - statement: "Letter Н represents a nasal sonorant sound [n]."
+    explanation: "«Он» — це вказівна́ ча́стка. — «Он» is a pointing particle meaning 'yonder / over there'."
+  - statement: "Бу́ква Н познача́є носови́й сона́нт [н]. — Letter Н represents a nasal sonorant sound [n]."
     answer: true
-    explanation: "Н is a nasal sonorant [n]."
+    explanation: "Н — це носови́й соно́рний при́голосний. — Н is a nasal sonorant [n]."
 
 workbook:
 - id: act-7
@@ -191,7 +191,7 @@ workbook:
   title: "Класифіка́ція слів за структу́рою — Word structure sort"
   instruction: "Розподілі́ть слова́ за структу́рою: односкладо́ві CVC чи двоскладо́ві. — Sort the words by structure: single CVC syllable or two syllables."
   groups:
-  - label: "CVC (один закри́тий склад)"
+  - label: "CVC (оди́н закри́тий склад) — CVC (one closed syllable)"
     items:
     - сон
     - сом
@@ -199,7 +199,7 @@ workbook:
     - лан
     - мул
     - лом
-  - label: "Двоскладо́ві слова́"
+  - label: "Двоскладо́ві слова́ — Two-syllable words"
     items:
     - оса́
     - сосна́
@@ -212,18 +212,18 @@ workbook:
   title: "Слова́-помічники́ та зна́чення — Helper words and meanings"
   instruction: "З'єдна́йте украї́нське сло́во з англі́йським зна́ченням. — Match each helper word or noun with its meaning."
   pairs:
-  - left: он
-    right: there / over there (pointing)
-  - left: нас
-    right: us (genitive / accusative)
-  - left: нам
-    right: to us (dative)
-  - left: ніс
-    right: nose
-  - left: лан
-    right: field
-  - left: сом
-    right: catfish
+  - left: "он — over there"
+    right: "он (у по́лі зо́ру) — over there (in view)"
+  - left: "нас — us"
+    right: "нас (про нас) — us (about us)"
+  - left: "нам — to us"
+    right: "нам (для нас) — to us (for us)"
+  - left: "ніс — nose"
+    right: "ніс (на обли́ччі) — nose (on the face)"
+  - left: "лан — field"
+    right: "лан (по́ле) — field (arable land)"
+  - left: "сом — catfish"
+    right: "сом (у воді́) — catfish (in water)"
 
 - id: act-306
   type: unjumble
@@ -250,60 +250,58 @@ workbook:
     - л
     - а
     - н
-  - answer: оса
+  - answer: нас
     words:
-    - о
-    - с
-    - а
-  - answer: сосна
-    words:
-    - с
-    - о
-    - с
     - н
     - а
+    - с
+  - answer: лом
+    words:
+    - л
+    - о
+    - м
 
 - id: act-307
   type: fill-in
   title: "Ре́чення зі слова́ми-помічника́ми — Sentences with helper words"
   instruction: "Вста́вте пра́вильне сло́во. — Fill in the correct word."
   items:
-  - sentence: "___ сосна́ і лан."
+  - sentence: "___ сосна́ і лан. — ___ are a pine tree and a field."
     answer: Он
     options:
     - Он
     - Нам
     - Нас
-    explanation: "«Он» points out objects in view."
-  - sentence: "Він чека́є ___."
+    explanation: "«Он» вка́зує на об'є́кти в по́лі зо́ру. — «Он» points out objects in view."
+  - sentence: "Він чека́є ___. — He waits for ___."
     answer: нас
     options:
     - нас
     - нам
     - он
     explanation: "«Чека́є нас» — waits for us."
-  - sentence: "Він допомага́є ___."
+  - sentence: "Він допомага́є ___. — He helps ___."
     answer: нам
     options:
     - нам
     - нас
     - он
     explanation: "«Допомага́є нам» — helps us."
-  - sentence: "Он лети́ть ___."
+  - sentence: "Он лети́ть ___. — Look, a ___ is flying."
     answer: оса́
     options:
     - оса́
     - лан
     - сом
     explanation: "«Лети́ть оса́» — the wasp is flying."
-  - sentence: "Он пливе́ ___."
+  - sentence: "Он пливе́ ___. — Look, a ___ is swimming."
     answer: сом
     options:
     - сом
     - сон
     - лан
     explanation: "«Пливе́ сом» — the catfish is swimming."
-  - sentence: "Це мій спокі́йний ___."
+  - sentence: "Це мій спокі́йний ___. — This is my peaceful ___."
     answer: сон
     options:
     - сон
@@ -316,54 +314,54 @@ workbook:
   title: "Ви́правте поми́лку у сло́ві — Correct the spelling mistake"
   instruction: "Знайді́ть поми́лку у ви́діленому сло́ві та ви́беріть пра́вильний варіа́нт. — Find the error in the underlined word and choose the correct form."
   items:
-  - sentence: "У лі́сі росте́ сасна́."
+  - sentence: "У лі́сі росте́ сасна́. — A pine tree grows in the forest."
     error: сасна́
     answer: сосна́
     options:
     - сосна́
     - сасна́
     - сусна́
-    explanation: "Ukrainian has no akanye: unstressed o remains clear in сосна́."
-  - sentence: "У рі́чці пла́ває вели́кий сон."
+    explanation: "В украї́нській мо́ві ненаголо́шений [о] залиша́ється чи́стим [о] у сло́ві сосна́. — Unstressed o remains clear in сосна́ without reduction."
+  - sentence: "У рі́чці пла́ває вели́кий сон. — A large dream swims in the river."
     error: сон
     answer: сом
     options:
     - сом
     - сон
     - сам
-    explanation: "The fish is сом (catfish), not сон (dream)."
-  - sentence: "Він стої́ть там сом."
+    explanation: "Ри́ба — це сом, а не сон. — The fish is сом (catfish), not сон (dream)."
+  - sentence: "Він стої́ть там сом. — He stands there catfish."
     error: сом
     answer: сам
     options:
     - сам
     - сом
     - сон
-    explanation: "Alone / by oneself is сам."
-  - sentence: "Он зеле́ний лон."
+    explanation: "Само́тньо — це сам. — Alone / by oneself is сам."
+  - sentence: "Он зеле́ний лон. — Over there is a green lon."
     error: лон
     answer: лан
     options:
     - лан
     - лон
     - лун
-    explanation: "The field is лан, not лон."
-  - sentence: "Он лети́ть аса́."
+    explanation: "По́ле — це лан, а не лон. — The field is лан, not лон."
+  - sentence: "Он лети́ть аса́. — Look, an asa is flying."
     error: аса́
     answer: оса́
     options:
     - оса́
     - аса́
     - уса́
-    explanation: "Wasp is оса́."
-  - sentence: "Він кли́че нос."
+    explanation: "Кома́ха — це оса́. — The wasp is оса́."
+  - sentence: "Він кли́че нос. — He calls nos."
     error: нос
     answer: нас
     options:
     - нас
     - нос
     - ніс
-    explanation: "He calls us is «нас»."
+    explanation: "Він кли́че нас. — He calls us is «нас»."
 
 - id: act-309
   type: translate
@@ -372,55 +370,55 @@ workbook:
   items:
   - source: catfish
     options:
-    - text: сом
+    - text: "сом — catfish"
       correct: true
-    - text: сон
+    - text: "сон — sleep"
       correct: false
-    - text: сам
+    - text: "сам — alone"
       correct: false
-    explanation: "«Сом» is catfish."
+    explanation: "«Сом» означа́є catfish. — «Сом» is catfish."
   - source: sleep / dream
     options:
-    - text: сон
+    - text: "сон — sleep / dream"
       correct: true
-    - text: сом
+    - text: "сом — catfish"
       correct: false
-    - text: лан
+    - text: "лан — field"
       correct: false
-    explanation: "«Сон» is sleep or dream."
+    explanation: "«Сон» означа́є sleep / dream. — «Сон» is sleep or dream."
   - source: alone / by oneself (m)
     options:
-    - text: сам
+    - text: "сам — alone / by oneself"
       correct: true
-    - text: сом
+    - text: "сом — catfish"
       correct: false
-    - text: сон
+    - text: "сон — sleep"
       correct: false
-    explanation: "«Сам» is alone / by oneself."
+    explanation: "«Сам» означа́є alone / by oneself. — «Сам» is alone / by oneself."
   - source: field
     options:
-    - text: лан
+    - text: "лан — field"
       correct: true
-    - text: лом
+    - text: "лом — crowbar"
       correct: false
-    - text: мул
+    - text: "мул — silt"
       correct: false
-    explanation: "«Лан» is field."
+    explanation: "«Лан» означа́є field. — «Лан» is field."
   - source: wasp
     options:
-    - text: оса́
+    - text: "оса́ — wasp"
       correct: true
-    - text: сосна́
+    - text: "сосна́ — pine tree"
       correct: false
-    - text: ма́ма
+    - text: "ма́ма — mom"
       correct: false
-    explanation: "«Оса́» is wasp."
+    explanation: "«Оса́» означа́є wasp. — «Оса́» is wasp."
   - source: pine tree
     options:
-    - text: сосна́
+    - text: "сосна́ — pine tree"
       correct: true
-    - text: оса́
+    - text: "оса́ — wasp"
       correct: false
-    - text: лан
+    - text: "лан — field"
       correct: false
-    explanation: "«Сосна́» is pine tree."
+    explanation: "«Сосна́» означа́є pine tree. — «Сосна́» is pine tree."

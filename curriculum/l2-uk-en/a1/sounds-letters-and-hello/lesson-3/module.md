@@ -1,6 +1,6 @@
-# С Н: Свистя́чі, носові́ та закри́тий склад
+# С, Н: Закри́тий склад та пе́рші слова́ — S, N: Closed Syllables and First Words
 
-У пе́рших двох уро́ках ви опанува́ли голосні́ зву́ки **А**, **О**, **У** та сона́нти **М**, **Л**, з'є́днували їх у склади́ та прочита́ли сло́во **ма́ма**. Сього́дні ми ро́бимо вели́кий крок упере́д: вивча́ємо дві нові́ при́голосні бу́кви — **С** та **Н**, відкрива́ємо структу́ру закри́того скла́ду **CVC** та вчимо́ся чита́ти повноці́нні коро́ткі слова́: **сон**, **сом**, **сам**, **лан**, **оса́**, **сосна́**.
+У пе́рших двох уро́ках ви опанува́ли голосні́ зву́ки **А**, **О**, **У** та лі́тери **М**, **Л**, з'є́днували їх у склади́ та прочита́ли сло́во **ма́ма**. — In the first two lessons, you mastered the vowels **А**, **О**, **У** and consonants **М**, **Л**, combined them into syllables, and read the word **ма́ма**. Сього́дні ми вивча́ємо дві нові́ лі́тери — **С** та **Н**, відкрива́ємо структу́ру закри́того скла́ду **CVC** та чита́ємо слова́: **сон**, **сом**, **сам**, **лан**, **оса́**, **сосна́**! — Today we learn two new letters — **С** and **Н**, explore closed CVC syllables, and read our first short words: **сон**, **сом**, **сам**, **лан**, **оса́**, **сосна́**!
 
 By the end of this 60-minute lesson, you will be able to:
 
@@ -8,12 +8,12 @@ By the end of this 60-minute lesson, you will be able to:
 - **Вимовля́ти носови́й сона́нт [н]** — articulate the nasal sonorant [н] through the nose;
 - **Будува́ти закри́ті склади́ CVC** — assemble and read closed consonant-vowel-consonant syllables: **сон**, **сом**, **сам**, **лан**;
 - **Чита́ти двоскладо́ві слова́** — read two-syllable words built from learned letters: **оса́** and **сосна́**;
-- **Зберіга́ти чи́сте [о] у сло́ві сосна́** — maintain a pure unstressed [о] in **сосна́** without akannya;
+- **Зберіга́ти чи́сте [о] у сло́ві сосна́** — maintain a pure unstressed [о] in **сосна́** without vowel reduction;
 - **Вжива́ти вказівну́ ча́стку он** — use the demonstrative pointer **он** ("over there") in your first reading sentences.
 
 ---
 
-## Бу́кви С та Н: Шу́мний свистя́чий та носови́й сона́нт
+## Бу́кви С та Н: Зву́ки [с] та [н] — Letters S and N: Sounds [s] and [n]
 
 Consonants in Ukrainian fall into two primary sonic groups:
 
@@ -50,7 +50,7 @@ Watch the video lessons by Anna Ohoiko (джерело́: А́нна Ого́й�
 
 ---
 
-## Склади́ з С та Н: Відкри́ті склади́ СА, СО, НА, НО
+## Склади́ з С та Н: Відкри́ті склади́ СА, СО, НА, НО — Syllables with S and N: Open Syllables SA, SO, NA, NO
 
 Before assembling full three-letter words, let us combine our new consonants **С** and **Н** with the vowel sounds **[а]** and **[о]** into direct open syllables (CV):
 
@@ -70,7 +70,7 @@ Notice that in Ukrainian, consonants before **А**, **О**, **У** remain firmly
 
 ---
 
-## Закри́тий склад CVC: сон, сом, сам, лан
+## Закри́тий склад CVC: сон, сом, сам, лан — Closed CVC Syllables: сон, сом, сам, лан
 
 In Lesson 2, you explored open syllables (CV: **ма**, **ла**) and simple closed syllables (VC: **ам**, **ал**). Now we combine all three positions into a **CVC** structure:
 
@@ -100,7 +100,7 @@ Notice how distinct each word sounds:
 
 ---
 
-## Двоскладо́ві слова́: оса́, сосна́
+## Двоскладо́ві слова́: оса́, сосна́ — Two-Syllable Words: оса́, сосна́
 
 Now we combine our consonants and vowels into longer, two-syllable Ukrainian words:
 
@@ -118,7 +118,7 @@ Now we combine our consonants and vowels into longer, two-syllable Ukrainian wor
 - **Звукова́ схе́ма** (Sound scheme): `[— ● — — ●]`.
 - **На́голос** (Stress): на́голос па́дає на дру́гий склад — **сос-на́**.
 
-> **Важли́ва вимо́вна вимо́га — Important pronunciation rule**: у сло́ві **сосна́** (pine tree) пе́рший ненаголо́шений склад ма́є абсолю́тно чи́стий звук **[о]**: [с о с н а́]. Не вимовля́йте йо́го як «сасна́»! В украї́нській мо́ві ненаголо́шене **о** за́вжди залиша́ється кру́глим і зву́чним.
+> **Важли́ва вимо́вна вимо́га — Important pronunciation rule:** у сло́ві **сосна́** (pine tree) пе́рший ненаголо́шений склад ма́є абсолю́тно чи́стий звук **[о]**: [с о с н а́]. Не вимовля́йте йо́го як «сасна́»! В украї́нській мо́ві ненаголо́шений **о** за́вжди залиша́ється чи́стим [о].
 
 A brief note on vocabulary choice: in older foreigner textbooks, learners sometimes encounter the poetic word **луна́**. In standard Ukrainian, **луна́** means an echo or reverberation, whereas the celestial moon is **мі́сяць** (introduced in later lessons). We focus strictly on the natural, undisputed words built from our seven letters: **сон**, **сом**, **оса́**, and **сосна́**.
 
@@ -126,7 +126,7 @@ A brief note on vocabulary choice: in older foreigner textbooks, learners someti
 
 ---
 
-## Слова́-помічники́: он, нас, нам
+## Слова́-помічники́: он, нас, нам — Helper Words: он, нас, нам
 
 To build real reading sentences, Ukrainian uses short, expressive grammatical helper words:
 

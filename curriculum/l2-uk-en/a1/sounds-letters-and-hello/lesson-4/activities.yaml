@@ -2,230 +2,230 @@ inline:
 - id: act-6
   type: true-false
   title: "Переві́рка знань семи́ лі́тер — Seven-letter safety check"
-  instruction: "Ви́значте, чи твер́дження пра́вильне. — Decide whether each statement is true or false."
+  instruction: "Ви́значте, чи тве́рдження пра́вильне. — Decide whether each statement is true or false."
   items:
-  - statement: "In Ukrainian, moving the stress mark can change the meaning of a word."
+  - statement: "В украї́нській мо́ві змі́на на́голосу мо́же змі́нювати зна́чення сло́ва. — In Ukrainian, moving the stress mark can change the meaning of a word."
     answer: true
-    explanation: "Stress is phonemic in Ukrainian: «са́ма» (the very) vs «сама́» (alone) differ only by stress, while pairs like «ма́ло» and «мала́» change both stress and the final vowel."
-  - statement: "The vocative form to directly address mother is «Ма́мо!»."
+    explanation: "На́голос в украї́нській мо́ві розрізня́є зна́чення: «са́ма» (підси́лення) та «сама́» (одна́). — Stress distinguishes meaning in Ukrainian: «са́ма» (the very) vs «сама́» (alone)."
+  - statement: "Кли́чна фо́рма для зверта́ння до ма́ми — «Ма́мо!». — The vocative form to directly address mother is «Ма́мо!»."
     answer: true
-    explanation: "Ukrainian uses the vocative case for direct address: «Ма́мо!»."
-  - statement: "The Ukrainian unstressed [о] sound is pronounced as [а], like in Russian."
+    explanation: "В украї́нській мо́ві для прямо́го зверта́ння вжива́ють кли́чний відмі́нок: «Ма́мо!». — Ukrainian uses the vocative case for direct address: «Ма́мо!»."
+  - statement: "Украї́нський ненаголо́шений звук [о] вимовля́ється як [а]. — The Ukrainian unstressed [о] sound is pronounced as [а]."
     answer: false
-    explanation: "Ukrainian has no akanye: unstressed [о] stays pure and rounded."
-  - statement: "The word «ма́сло» means butter in Ukrainian."
+    explanation: "В украї́нській мо́ві ненаголо́шений [о] залиша́ється чи́стим [о]. — In Ukrainian, unstressed [o] remains a clean, pure [o] and never reduces to [a]."
+  - statement: "Украї́нське сло́во «ма́сло» означа́є «butter». — The Ukrainian word «ма́сло» means butter."
     answer: true
-    explanation: "«Ма́сло» means butter."
-  - statement: "The word «са́ло» is stressed on the second syllable: «сало́»."
+    explanation: "«Ма́сло» — це вершко́ве ма́сло (butter). — «Ма́сло» means butter."
+  - statement: "У сло́ві «са́ло» на́голос па́дає на дру́гий склад. — In the word «са́ло», stress falls on the second syllable."
     answer: false
-    explanation: "«Са́ло» is stressed on the first syllable: «са́-ло»."
-  - statement: "In Ukrainian, the letter Н represents a nasal sonorant sound."
+    explanation: "У сло́ві «са́ло» на́голос па́дає на пе́рший склад: «са́-ло». — In the word «са́ло», stress falls on the first syllable: «са́-ло»."
+  - statement: "В украї́нській мо́ві лі́тера Н познача́є носови́й при́голосний звук [н]. — In Ukrainian, the letter Н represents a nasal consonant sound [n]."
     answer: true
-    explanation: "Letter Н represents [n], a nasal sonorant."
+    explanation: "Лі́тера Н познача́є носови́й сона́нт [н]. — Letter Н represents the nasal sonorant [n]."
 
 - id: act-401
   type: quiz
   title: "Си́ла на́голосу — The power of stress"
   instruction: "Обері́ть пра́вильне зна́чення ви́діленого сло́ва. — Choose the correct meaning for the highlighted word."
   items:
-  - prompt: "What does «ма́ло» mean with stress on the first syllable?"
+  - prompt: "Що означа́є сло́во «ма́ло» з на́голосом на пе́ршому скла́ді? — What does «ма́ло» mean with stress on the first syllable?"
     options:
-    - text: "Little / few (adverb)"
+    - text: "ма́ло — little / few (adverb)"
       correct: true
-    - text: "Small / little (feminine adjective)"
+    - text: "мала́ — small / little (feminine adjective)"
       correct: false
-    - text: "Mother"
+    - text: "ма́ма — mother"
       correct: false
-    explanation: "«Ма́ло» with stress on the first syllable is an adverb meaning little or few."
-  - prompt: "What does «мала́» mean with stress on the second syllable?"
+    explanation: "«Ма́ло» з на́голосом на пе́ршому скла́ді — це прислі́вник (little / few). — «Ма́ло» with stress on the first syllable is an adverb meaning little or few."
+  - prompt: "Що означа́є сло́во «мала́» з на́голосом на дру́гому скла́ді? — What does «мала́» mean with stress on the second syllable?"
     options:
-    - text: "Small / little (feminine adjective)"
+    - text: "мала́ — small / little (feminine adjective)"
       correct: true
-    - text: "Little / few (adverb)"
+    - text: "ма́ло — little / few (adverb)"
       correct: false
-    - text: "Catfish"
+    - text: "сом — catfish"
       correct: false
-    explanation: "«Мала́» with stress on the second syllable is a feminine adjective (e.g. «мала́ оса́»)."
-  - prompt: "In the sentence «Ма́ма сама́.», what does «сама́» mean?"
+    explanation: "«Мала́» з на́голосом на дру́гому скла́ді — це прикме́тник жіно́чого ро́ду (small). — «Мала́» with stress on the second syllable is a feminine adjective meaning small."
+  - prompt: "Що означа́є «сама́» у ре́ченні «Ма́ма сама́.»? — In the sentence «Ма́ма сама́.», what does «сама́» mean?"
     options:
-    - text: "Alone / by herself"
+    - text: "сама́ — alone / by herself"
       correct: true
-    - text: "The very"
+    - text: "са́ма — the very"
       correct: false
-    - text: "Together"
+    - text: "ра́зом — together"
       correct: false
-    explanation: "«Сама́» with stress on the second syllable means alone or by oneself."
-  - prompt: "In the phrase «Он мала́ оса́.», which word carries stress on its final syllable?"
+    explanation: "«Сама́» з на́голосом на дру́гому скла́ді означа́є «alone / by herself». — «Сама́» with stress on the second syllable means alone or by herself."
+  - prompt: "У які́й фра́зі оби́два слова́ ма́ють на́голос на кінце́вому скла́ді? — In which phrase do both words carry stress on the final syllable?"
     options:
-    - text: Both мала́ and оса́
+    - text: "Он мала́ оса́. (оби́два слова́: мала́ та оса́)"
       correct: true
-    - text: Only он
+    - text: "Он ма́ма. (лише́ пе́рший склад)"
       correct: false
-    - text: Neither word
+    - text: "У нас ма́ло. (жо́дного на кінці́)"
       correct: false
-    explanation: "Both «мала́» and «оса́» carry stress on the final -а́."
-  - prompt: "How many vowel sounds are there in the word «ма́сло»?"
+    explanation: "В оби́двох слова́х «мала́» та «оса́» на́голос па́дає на кінце́вий звук -а́. — In both «мала́» and «оса́», stress falls on the final -а́."
+  - prompt: "Скі́льки голосни́х зву́ків у сло́ві «ма́сло»? — How many vowel sounds are in the word «ма́сло»?"
     options:
-    - text: '2'
+    - text: "2 голосні́ зву́ки ([а], [о]) — 2 vowel sounds"
       correct: true
-    - text: '3'
+    - text: "3 голосні́ зву́ки — 3 vowel sounds"
       correct: false
-    - text: '1'
+    - text: "1 голосни́й звук — 1 vowel sound"
       correct: false
-    explanation: "«Ма́сло» has two vowels ([а] and [о]) and therefore two syllables."
-  - prompt: "What happens to the vowels in «ма́сло» when spoken aloud?"
+    explanation: "У сло́ві «ма́сло» два голосні́ зву́ки ([а] та [о]), то́му два склади́. — «Ма́сло» has two vowel sounds ([а] and [о]) and two syllables."
+  - prompt: "Як вимовля́ються голосні́ у сло́ві «ма́сло»? — How are the vowels pronounced in «ма́сло»?"
     options:
-    - text: "Both [а] and [о] are pronounced clearly and distinctly"
+    - text: "Оби́два зву́ки [а] та [о] вимовля́ються чі́тко й чи́сто — Both vowels are pronounced clearly and purely"
       correct: true
-    - text: "The final [о] becomes [а]"
+    - text: "Кінце́вий [о] перетво́рюється на [а] — The final [o] turns into [a]"
       correct: false
-    - text: "The vowel [а] is silent"
+    - text: "Голосни́й [а] не вимовля́ється — The vowel [a] is silent"
       correct: false
-    explanation: "Ukrainian preserves pure vowel quality without reduction."
+    explanation: "В украї́нській мо́ві ненаголо́шений [о] не редуку́ється й залиша́ється чи́стим [о]. — Ukrainian preserves pure vowel quality: unstressed [o] never reduces to [a]."
 
 - id: act-402
   type: fill-in
   title: "Кли́чний відмі́нок: Зверта́ння — Vocative address"
   instruction: "Обері́ть пра́вильне сло́во для зверта́ння. — Choose the correct word for direct address."
   items:
-  - sentence: "___, подиви́ся сюди́!"
+  - sentence: "___, подиви́ся сюди́! — ___, look here!"
     answer: Ма́мо
     options:
     - Ма́мо
     - Ма́ма
     - Ма́сло
-    explanation: "Use the vocative «Ма́мо!» when addressing mother directly."
-  - sentence: "___! Он росте́ висо́ка сосна́!"
+    explanation: "Для прямо́го зверта́ння вжива́йте кли́чну фо́рму «Ма́мо!». — Use the vocative «Ма́мо!» when addressing mother directly."
+  - sentence: "___! Он росте́ висо́ка сосна́! — ___! Look, a tall pine tree is growing!"
     answer: Ма́мо
     options:
     - Ма́мо
     - Ма́ма
     - Мала́
-    explanation: "Direct call uses «Ма́мо!»."
-  - sentence: "Он іде́ на́ша ___."
+    explanation: "Прями́й ви́гук вимага́є кли́чного відмі́нка: «Ма́мо!». — Direct call uses the vocative: «Ма́мо!»."
+  - sentence: "Он іде́ на́ша ___. — Over there comes our ___."
     answer: ма́ма
     options:
     - ма́ма
     - ма́мо
     - мала́
-    explanation: "Stating who is coming uses the nominative «ма́ма»."
-  - sentence: "Оле́г гука́є: «___!»."
+    explanation: "Констата́ція фа́кту (хто іде́) потребу́є називно́го відмі́нка: «ма́ма». — Stating who is coming uses the nominative: «ма́ма»."
+  - sentence: "Оле́г гука́є: «___!». — Oleh calls out: «___!»."
     answer: Ма́мо
     options:
     - Ма́мо
     - Ма́ма
     - Ма́ло
-    explanation: "Calling out requires the vocative form «Ма́мо!»."
-  - sentence: "Там стої́ть на́ша до́бра ___."
+    explanation: "Зверта́ння до ма́тері потребу́є фо́рми «Ма́мо!». — Calling mother requires the vocative form «Ма́мо!»."
+  - sentence: "Там стої́ть на́ша до́бра ___. — Over there stands our good ___."
     answer: ма́ма
     options:
     - ма́ма
     - ма́мо
     - сама́
-    explanation: "Subject of sentence is nominative «ма́ма»."
-  - sentence: "«___, он сом у рі́чці!» — сказа́в Марко́."
+    explanation: "Пі́дмет у ре́ченні стої́ть у називно́му відмі́нку: «ма́ма». — The subject of the sentence uses the nominative: «ма́ма»."
+  - sentence: "«___, он сом у рі́чці!» — сказа́в Марко́. — «___, look, a catfish in the river!» said Marko."
     answer: Ма́мо
     options:
     - Ма́мо
     - Ма́ма
     - Са́ло
-    explanation: "Calling mother directly requires «Ма́мо!»."
+    explanation: "Пряме́ зверта́ння вимага́є «Ма́мо!». — Calling mother directly requires «Ма́мо!»."
 
 - id: act-403
   type: match-up
   title: "Побуто́ві слова́ та приро́да — Everyday and nature words"
-  instruction: "З'єдна́йте украї́нське сло́во з його́ зна́ченням. — Match the Ukrainian word to its meaning."
+  instruction: "З'єдна́йте украї́нське сло́во з йо́го зна́ченням. — Match the Ukrainian word to its meaning."
   pairs:
-  - left: ма́сло
-    right: butter
-  - left: са́ло
-    right: salo (cured fatback)
-  - left: смола́
-    right: tree resin / pitch
-  - left: сосна́
-    right: pine tree
-  - left: оса́
-    right: wasp
-  - left: лан
-    right: field
+  - left: "ма́сло"
+    right: "butter (вершко́ве ма́сло)"
+  - left: "са́ло"
+    right: "salo (традиці́йне са́ло)"
+  - left: "смола́"
+    right: "tree resin / pitch (сосно́ва смола́)"
+  - left: "сосна́"
+    right: "pine tree (хво́йне де́рево)"
+  - left: "оса́"
+    right: "wasp (кома́ха оса́)"
+  - left: "лан"
+    right: "field (широ́ке по́ле)"
 
 - id: act-404
   type: quiz
-  title: "Розумі́ння мікроте́кстів — Reading comprehension"
+  title: "Розумі́ння коро́тких те́кстів — Short text comprehension"
   instruction: "Да́йте ві́дповідь на запита́ння до те́кстів. — Answer the question based on the reading texts."
   items:
-  - prompt: "In Text 1, what is pointed out near the pine tree?"
+  - prompt: "Що вка́зується бі́ля сосни́ у Те́ксті 1? — In Text 1, what is pointed out near the pine tree?"
     options:
-    - text: "A field, a catfish, and a wasp"
+    - text: "лан, сом та оса́ — A field, a catfish, and a wasp"
       correct: true
-    - text: "A car and a house"
+    - text: "авто́ та дім — A car and a house"
       correct: false
-    - text: "Milk and bread"
+    - text: "молоко́ та хліб — Milk and bread"
       correct: false
-    explanation: "Text 1 lists «сосна́», «лан», «сом», and «оса́»."
-  - prompt: "In Text 2, who is outdoors alone?"
+    explanation: "У Те́ксті 1 зазна́чено: «лан», «сом», «оса́». — Text 1 lists «сосна́», «лан», «сом», and «оса́»."
+  - prompt: "Хто знахо́диться на приро́ді сама́ у Те́ксті 2? — In Text 2, who is outdoors alone?"
     options:
-    - text: "Mother («Ма́ма сама́.»)"
+    - text: "Ма́ма («Ма́ма сама́.») — Mother"
       correct: true
-    - text: "Oleh"
+    - text: "Оле́г — Oleh"
       correct: false
-    - text: "Marko"
+    - text: "Марко́ — Marko"
       correct: false
-    explanation: "The text states: «Ма́ма сама́.»."
-  - prompt: "What foods are mentioned in Text 2?"
+    explanation: "У те́ксті напи́сано: «Ма́ма сама́.». — The text states: «Ма́ма сама́.»."
+  - prompt: "Які́ проду́кти зга́дуються у Те́ксті 2? — What foods are mentioned in Text 2?"
     options:
-    - text: "Butter and salo («ма́сло», «са́ло»)"
+    - text: "ма́сло та са́ло — Butter and salo"
       correct: true
-    - text: "Apples and honey"
+    - text: "я́блука та мед — Apples and honey"
       correct: false
-    - text: "Fish and soup"
+    - text: "ри́ба та суп — Fish and soup"
       correct: false
-    explanation: "Text 2 mentions «ма́сло» and «са́ло»."
-  - prompt: "What pointer word is used to direct attention in both texts?"
+    explanation: "У Те́ксті 2 ска́зано: «Он ма́сло. Он са́ло.». — Text 2 mentions «ма́сло» and «са́ло»."
+  - prompt: "Яке́ вказівне́ сло́во спрямо́вує ува́гу в обо́х те́кстах? — What pointer word is used to direct attention in both texts?"
     options:
-    - text: он
+    - text: "он (ось там) — look / over there"
       correct: true
-    - text: ми
+    - text: "ми — we"
       correct: false
-    - text: як
+    - text: "як — how"
       correct: false
-    explanation: "«Он» points out objects in view («Он сосна́», «Он ма́ма»)."
-  - prompt: "How does the speaker address mother in Text 2?"
+    explanation: "Сло́во «он» вка́зує на предме́ти в по́лі зо́ру («Он сосна́», «Он ма́ма»). — «Он» points out objects in view («Он сосна́», «Он ма́ма»)."
+  - prompt: "Як мо́вець зверта́ється до ма́ми у Те́ксті 2? — How does the speaker address mother in Text 2?"
     options:
-    - text: Ма́мо!
+    - text: "Ма́мо! (кли́чний відмі́нок) — Mother! (vocative)"
       correct: true
-    - text: Ма́ма!
+    - text: "Ма́ма! (називни́й відмі́нок) — Mother! (nominative)"
       correct: false
-    - text: Мала́!
+    - text: "Мала́! — Small!"
       correct: false
-    explanation: "The speaker calls: «Ма́мо! Он сосна́!»."
-  - prompt: "What is the size of the wasp in Text 1?"
+    explanation: "Мо́вець гука́є: «Ма́мо! Он сосна́!». — The speaker calls: «Ма́мо! Он сосна́!»."
+  - prompt: "Яки́й ро́змір ма́є оса́ у Те́ксті 1? — What is the size of the wasp in Text 1?"
     options:
-    - text: "Small («Оса́ мала́.»)"
+    - text: "мала́ («Оса́ мала́.») — small"
       correct: true
-    - text: "Large"
+    - text: "вели́ка — large"
       correct: false
-    - text: "Enormous"
+    - text: "величе́зна — enormous"
       correct: false
-    explanation: "The text says: «Оса́ мала́.»."
+    explanation: "У те́ксті зазна́чено: «Оса́ мала́.». — The text says: «Оса́ мала́.»."
 
 workbook:
 - id: act-8
   type: match-up
-  title: "Сім лі́тер та їхні зву́ки — Seven letters and their sounds"
+  title: "Сім лі́тер та ї́хні зву́ки — Seven letters and their sounds"
   instruction: "З'єдна́йте лі́теру з її́ звуково́ю характери́стикою. — Match the letter with its phonetic property."
   pairs:
-  - left: А
+  - left: "Лі́тера А — Letter А"
     right: "відкри́тий голосни́й [а] — open vowel [a]"
-  - left: О
+  - left: "Лі́тера О — Letter О"
     right: "окру́глений голосни́й [о] — rounded vowel [o]"
-  - left: У
+  - left: "Лі́тера У — Letter У"
     right: "лабіалізо́ваний голосни́й [у] — pursed vowel [u]"
-  - left: М
+  - left: "Лі́тера М — Letter М"
     right: "губни́й носови́й сона́нт [м] — bilabial nasal sonorant [m]"
-  - left: Л
+  - left: "Лі́тера Л — Letter Л"
     right: "бокови́й сона́нт [л] — lateral sonorant [l]"
-  - left: С
+  - left: "Лі́тера С — Letter С"
     right: "глухи́й свистя́чий при́голосний [с] — voiceless sibilant [s]"
 
 - id: act-9
@@ -233,60 +233,60 @@ workbook:
   title: "Пере́клад слів мо́дуля — Module vocabulary translation"
   instruction: "Обері́ть пра́вильний англі́йський пере́клад. — Choose the correct English translation."
   items:
-  - source: ма́ма
+  - source: "ма́ма"
     options:
-    - text: mother
+    - text: "mother (ма́ти)"
       correct: true
-    - text: father
+    - text: "father (та́то)"
       correct: false
-    - text: butter
+    - text: "butter (ма́сло)"
       correct: false
-    explanation: "«Ма́ма» is mother."
-  - source: ма́мо
+    explanation: "«Ма́ма» означа́є «mother». — «Ма́ма» is mother."
+  - source: "ма́мо"
     options:
-    - text: "Mother! (vocative address)"
+    - text: "Mother! (кли́чна фо́рма / vocative address)"
       correct: true
-    - text: "small (fem.)"
+    - text: "small (мала́ / fem.)"
       correct: false
-    - text: "alone"
+    - text: "alone (сама́)"
       correct: false
-    explanation: "«Ма́мо» is the vocative form used when calling mother."
-  - source: ма́сло
+    explanation: "«Ма́мо» — це кли́чна фо́рма при зверта́нні до ма́ми. — «Ма́мо» is the vocative form used when calling mother."
+  - source: "ма́сло"
     options:
-    - text: butter
+    - text: "butter (вершко́ве ма́сло)"
       correct: true
-    - text: salo
+    - text: "salo (са́ло)"
       correct: false
-    - text: resin
+    - text: "resin (смола́)"
       correct: false
-    explanation: "«Ма́сло» is butter."
-  - source: са́ло
+    explanation: "«Ма́сло» означа́є «butter». — «Ма́сло» is butter."
+  - source: "са́ло"
     options:
-    - text: salo (cured fatback)
+    - text: "salo (традиці́йне са́ло / cured fatback)"
       correct: true
-    - text: butter
+    - text: "butter (ма́сло)"
       correct: false
-    - text: field
+    - text: "field (лан)"
       correct: false
-    explanation: "«Са́ло» is cured pork fatback."
-  - source: смола́
+    explanation: "«Са́ло» — традиці́йний украї́нський проду́кт (cured fatback). — «Са́ло» is cured pork fatback."
+  - source: "смола́"
     options:
-    - text: resin / pitch
+    - text: "resin / pitch (сосно́ва смола́)"
       correct: true
-    - text: catfish
+    - text: "catfish (сом)"
       correct: false
-    - text: wasp
+    - text: "wasp (оса́)"
       correct: false
-    explanation: "«Смола́» is pine resin or pitch."
-  - source: сон
+    explanation: "«Смола́» — смола́ хво́ї або́ де́рева (pine resin). — «Смола́» is pine resin or pitch."
+  - source: "сон"
     options:
-    - text: sleep / dream
+    - text: "sleep / dream (стан сну)"
       correct: true
-    - text: catfish
+    - text: "catfish (сом)"
       correct: false
-    - text: pine tree
+    - text: "pine tree (сосна́)"
       correct: false
-    explanation: "«Сон» is sleep or dream."
+    explanation: "«Сон» означа́є стан сну або́ сновиді́ння. — «Сон» is sleep or dream."
 
 - id: act-10
   type: error-correction
@@ -300,7 +300,7 @@ workbook:
     - сосна́
     - сасна́
     - сосно́
-    explanation: "Ukrainian unstressed о does not reduce to а: «сосна́»."
+    explanation: "В украї́нській мо́ві ненаголо́шений о не редуку́ється до а: «сосна́». — Ukrainian unstressed о does not reduce to а: «сосна́»."
   - sentence: "На хліб нама́зали сві́же масло́."
     error: масло́
     answer: ма́сло
@@ -308,7 +308,7 @@ workbook:
     - ма́сло
     - масло́
     - маслі́
-    explanation: "The stress in butter is on the first syllable: «ма́сло»."
+    explanation: "У сло́ві «ма́сло» на́голос па́дає на пе́рший склад: «ма́сло». — The stress in butter is on the first syllable: «ма́сло»."
   - sentence: "Он лети́ть мала оса́."
     error: мала
     answer: мала́
@@ -316,7 +316,7 @@ workbook:
     - мала́
     - ма́ла
     - ма́ло
-    explanation: "The feminine adjective for small is stressed on the end: «мала́»."
+    explanation: "Прикме́тник жіно́чого ро́ду ма́є на́голос на кінці́: «мала́». — The feminine adjective for small is stressed on the end: «мала́»."
   - sentence: "Він з'їв сало́ з хлі́бом."
     error: сало́
     answer: са́ло
@@ -324,7 +324,7 @@ workbook:
     - са́ло
     - сало́
     - са́ла
-    explanation: "Salo is stressed on the first syllable: «са́ло»."
+    explanation: "Сло́во «са́ло» наголо́шене на пе́ршому скла́ді: «са́ло». — Salo is stressed on the first syllable: «са́ло»."
   - sentence: "Оле́г гукну́в: «Ма́ма, ходи́ сюди́!»."
     error: Ма́ма
     answer: Ма́мо
@@ -332,7 +332,7 @@ workbook:
     - Ма́мо
     - Ма́ма
     - Мала́
-    explanation: "Direct address requires the vocative form: «Ма́мо!»."
+    explanation: "Пряме́ зверта́ння вимага́є кли́чного відмі́нка: «Ма́мо!». — Direct address requires the vocative form: «Ма́мо!»."
   - sentence: "На корі́ сосни́ ви́ступила смала́."
     error: смала́
     answer: смола́
@@ -340,14 +340,14 @@ workbook:
     - смола́
     - смала́
     - смо́ла
-    explanation: "Unstressed о remains pure: «смола́»."
+    explanation: "Ненаголо́шений о залиша́ється чи́стим [о]: «смола́». — Unstressed о remains pure: «смола́»."
 
 - id: act-405
   type: group-sort
   title: "Класифіка́ція за на́голосом — Sort by stress position"
   instruction: "Розподілі́ть слова́ зале́жно від того́, на яки́й склад па́дає на́голос. — Sort the words by stress: first syllable or second syllable."
   groups:
-  - label: "На́голос на пе́ршому скла́ді"
+  - label: "На́голос на пе́ршому скла́ді — Stress on first syllable"
     items:
     - ма́ма
     - ма́мо
@@ -355,7 +355,7 @@ workbook:
     - са́ма
     - ма́сло
     - са́ло
-  - label: "На́голос на дру́гому скла́ді"
+  - label: "На́голос на дру́гому скла́ді — Stress on second syllable"
     items:
     - мала́
     - сама́
@@ -365,92 +365,79 @@ workbook:
 
 - id: act-406
   type: unjumble
-  title: "Складі́ть слова́ із лі́тер — Unjumble words from letters"
-  instruction: "Розташу́йте лі́тери у пра́вильному поря́дку, щоб утвори́ти сло́во. — Arrange letters in the correct order to form the Ukrainian word."
+  title: "Складі́ть ре́чення зі слів — Unjumble sentences from words"
+  instruction: "Розташу́йте слова́ у пра́вильному поря́дку, щоб скла́сти ре́чення. — Arrange words in the correct order to form the sentence."
   items:
-  - answer: масло
+  - answer: "Он лан."
     words:
-    - м
-    - а
-    - с
-    - л
-    - о
-  - answer: сало
+    - "Он"
+    - "лан."
+  - answer: "Он сом."
     words:
-    - с
-    - а
-    - л
-    - о
-  - answer: смола
+    - "Он"
+    - "сом."
+  - answer: "Он сосна́."
     words:
-    - с
-    - м
-    - о
-    - л
-    - а
-  - answer: мама
+    - "Он"
+    - "сосна́."
+  - answer: "Оса́ мала́."
     words:
-    - м
-    - а
-    - м
-    - а
-  - answer: сосна
+    - "Оса́"
+    - "мала́."
+  - answer: "Ма́ма сама́."
     words:
-    - с
-    - о
-    - с
-    - н
-    - а
-  - answer: сон
+    - "Ма́ма"
+    - "сама́."
+  - answer: "У нас ма́ло."
     words:
-    - с
-    - о
-    - н
+    - "У"
+    - "нас"
+    - "ма́ло."
 
 - id: act-407
   type: fill-in
   title: "Чита́ння ре́чень — Reading practice fill-in"
   instruction: "Вста́вте пра́вильне сло́во за змі́стом ре́чення. — Fill in the word that fits the context."
   items:
-  - sentence: "Он золоти́й широ́кий ___."
+  - sentence: "Он золоти́й широ́кий ___. — Over there is a golden wide ___."
     answer: лан
     options:
     - лан
     - лом
     - сом
-    explanation: "«Лан» means field."
-  - sentence: "У рі́чці пла́ває вели́кий ___."
+    explanation: "«Лан» означа́є вели́ке по́ле. — «Лан» means field."
+  - sentence: "У рі́чці пла́ває вели́кий ___. — In the river swims a big ___."
     answer: сом
     options:
     - сом
     - сон
     - сам
-    explanation: "«Сом» is catfish."
-  - sentence: "Он лети́ть мала́ ___."
+    explanation: "«Сом» — це вели́ка ри́ба. — «Сом» is catfish."
+  - sentence: "Он лети́ть мала́ ___. — Over there flies a small ___."
     answer: оса́
     options:
     - оса́
     - сосна́
     - смола́
-    explanation: "«Оса́» is wasp."
-  - sentence: "У лі́сі росте́ стара́ ___."
+    explanation: "«Оса́» — це кома́ха. — «Оса́» is wasp."
+  - sentence: "У лі́сі росте́ стара́ ___. — In the forest grows an old ___."
     answer: сосна́
     options:
     - сосна́
     - оса́
     - ма́сло
-    explanation: "«Сосна́» is pine tree."
-  - sentence: "Ма́ма там стої́ть ___."
+    explanation: "«Сосна́» — це хво́йне де́рево. — «Сосна́» is pine tree."
+  - sentence: "Ма́ма там стої́ть ___. — Mother stands there ___."
     answer: сама́
     options:
     - сама́
     - са́ма
     - ма́ло
-    explanation: "«Сама́» means alone / by herself."
-  - sentence: "На столі́ лежи́ть сві́же ___ і са́ло."
+    explanation: "«Сама́» означа́є без і́нших (alone / by herself). — «Сама́» means alone / by herself."
+  - sentence: "На столі́ лежи́ть сві́же ___ і са́ло. — On the table lies fresh ___ and salo."
     answer: ма́сло
     options:
     - ма́сло
     - смола́
     - оса́
-    explanation: "«Ма́сло» means butter."
+    explanation: "«Ма́сло» — вершко́ве ма́сло до ї́жі. — «Ма́сло» means butter."

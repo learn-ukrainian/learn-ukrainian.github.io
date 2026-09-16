@@ -19,7 +19,7 @@
   pos: noun phrase
   usage: '[а] — це голосни́й звук.'
 - lemma: а-у
-  translation: halloo / forest call
+  translation: yoo-hoo / forest call (calling out)
   pos: interjection
   usage: 'У лі́сі ми гука́ємо: «А-у́!».'
 - lemma: у-а
@@ -37,7 +37,7 @@
 - lemma: Украї́на
   translation: Ukraine
   pos: noun
-  usage: Украї́на — на́ша рідна земля́.
+  usage: Украї́на — на́ша рі́дна земля́.
 - lemma: мо́ва
   translation: language
   pos: noun
@@ -45,7 +45,7 @@
 - lemma: го́лос
   translation: voice
   pos: noun
-  usage: У співака́ гарний го́лос.
+  usage: У співака́ га́рний го́лос.
 - lemma: рот
   translation: mouth
   pos: noun
@@ -53,4 +53,4 @@
 - lemma: слух
   translation: hearing
   pos: noun
-  usage: Зву́ки ми сприйма́ємо через слух.
+  usage: Зву́ки ми сприйма́ємо че́рез слух.

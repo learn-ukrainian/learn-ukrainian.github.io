@@ -3,7 +3,7 @@ Welcome to the final foundational module of Stage A1.1: **На́голос і м
 By the end of this module, you can:
 
 - Master the free and mobile nature of Ukrainian word stress (**ві́льний та рухо́мий на́голос**), understanding how stress can distinguish entirely different lexical meanings (**за́мок** vs **замо́к**, **а́тлас** vs **атла́с**, **о́рган** vs **орга́н**, **сім'я́** vs **сі́м'я**);
-- Preserve clean unstressed vowels without vowel reduction or "akanye", keeping unstressed **[о]** pure and distinct (**молоко́**, **до́брого ра́нку**, **коро́ва**);
+- Preserve clean unstressed vowels without vowel reduction (unstressed **о** stays **о**), keeping unstressed **[о]** pure and distinct (**молоко́**, **до́брого ра́нку**, **коро́ва**);
 - Confidently navigate common L2 stress traps, mastering the fixed stress on the **-на́-** syllable in numerals 11–19 (**одина́дцять**, **чотирна́дцять**), the end-stressed pattern of common adjectives (**нови́й**, **стари́й**), mobile noun shifts (**голова́** → **го́лови**, **рука́** → **ру́ки**), and feminine proper names ending in **-і́я** (**Марі́я**, **Софі́я**);
 - Apply the four primary melodic contours of Ukrainian sentences: neutral falling statements (**Це ка́ва. ↘**), rising yes/no questions (**Це ка́ва? ↗**), falling question-word inquiries (**Як спра́ви? ↘**, **Де метро́? ↘**), and expressive exclamations and greetings (**Приві́т! ↘↘**, **До́брий день! ↘**, **Дя́кую! ↘↘**);
 - Synthesize all 33 letters of the Ukrainian alphabet (**від А до Я**) and understand how 33 letters (**бу́кви / лі́тери**) represent 38 sounds (**зву́ки**);
