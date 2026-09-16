@@ -884,6 +884,14 @@ def test_canonical_source_work_equivalence_and_year_preservation() -> None:
     assert canonical_source_work("Володимир Шухевич, I, 1899, 50", "Володимир Шухевич") == "Шух. I"
     assert canonical_source_work("Янов., II, 1958, 20", "Юрій Яновський") == "Янов. II"
     assert canonical_source_work("Юрій Яновський, II, 1958, 5", "Юрій Яновський") == "Янов. II"
+    assert canonical_source_work("Ю. Янов., II, 1958, 20", "Юрій Яновський") == "Янов. II"
+    assert canonical_source_work("Ю. Янов., II, 1958, 20") == "Янов. II"
+    assert canonical_source_work("Кв.-Осн., II, 1956, 10", "Григорій Квітка-Основ'яненко") == "Кв.-Осн. II"
+    assert canonical_source_work("Григорій Квітка-Основ'яненко, II, 1956, 20", "Григорій Квітка-Основ'яненко") == "Кв.-Осн. II"
+    assert canonical_source_work("Кв.-Осн., II, 1956, 10", "Григорій Квітка-Основ’яненко") == "Кв.-Осн. II"
+    assert canonical_source_work("Григорій Квітка-Основ’яненко, II, 1956, 20", "Григорій Квітка-Основ’яненко") == "Кв.-Осн. II"
+    assert canonical_source_work("Кв.-Осн., II, 1956, 10") == "Кв.-Осн. II"
+    assert canonical_source_work("(Григорій Квітка-Основ'яненко, II, 1956, 20)") == "Кв.-Осн. II"
 
 
 def test_partition_author_alias_leakage_regression() -> None:
@@ -939,6 +947,32 @@ def test_partition_author_alias_leakage_regression() -> None:
                 word="швагро", sentence="Тест 8", citation="(Март., Тв., 1954, 35)",
                 macro_zone="southwestern", sub_zone="southwestern_pokuttia", bucket="southwestern",
                 locality="Покуття", collector="Лесь Мартович", work="Лесь Мартович. Твори", source_db="sum11",
+            ),
+        ),
+        # Kvitka-Osnovyanenko Vol II (full surname with apostrophe vs abbreviation)
+        (
+            MinedSentence(
+                word="бевзень", sentence="Тест 9", citation="(Григорій Квітка-Основ'яненко, II, 1956, 20)",
+                macro_zone="southeastern", sub_zone="southeastern_slobozhan", bucket="southeastern_slobozhan",
+                locality="Харків", collector="Григорій Квітка-Основ'яненко", work="Твори", source_db="sum11",
+            ),
+            MinedSentence(
+                word="бевзень", sentence="Тест 10", citation="Кв.-Осн., II, 1956, 10",
+                macro_zone="southeastern", sub_zone="southeastern_slobozhan", bucket="southeastern_slobozhan",
+                locality="Харків", collector="Григорій Квітка-Основ'яненко", work="Твори", source_db="sum11",
+            ),
+        ),
+        # Yanovsky Vol II (initials with punctuation vs full name)
+        (
+            MinedSentence(
+                word="байрак", sentence="Тест 11", citation="Ю. Янов., II, 1958, 20",
+                macro_zone="southeastern", sub_zone="southeastern_steppe", bucket="southeastern_steppe",
+                locality="Кіровоградщина", collector="Юрій Яновський", work="Вершники", source_db="sum11",
+            ),
+            MinedSentence(
+                word="байрак", sentence="Тест 12", citation="(Юрій Яновський, II, 1958, 5)",
+                macro_zone="southeastern", sub_zone="southeastern_steppe", bucket="southeastern_steppe",
+                locality="Кіровоградщина", collector="Юрій Яновський", work="Вершники", source_db="sum11",
             ),
         ),
     ]
