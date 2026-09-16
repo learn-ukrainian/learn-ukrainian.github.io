@@ -310,6 +310,78 @@ def test_strict_zero_train_eval_leakage_firewall(
     sft_works_no_auth = {canonical_source_work(cit) for cit in sft_cits}
     assert not (eval_works_no_auth & sft_works_no_auth), f"Canonical citation work overlap detected: {eval_works_no_auth & sft_works_no_auth}"
 
+    # 2c. Independent author-volume cross-split isolation (independent of canonical_source_work)
+    def independent_extract_author_and_volume(text: str) -> tuple[str, str]:
+        auth = ""
+        for a in [
+            "Чубинський", "Чуб.", "Леся Українка", "Л. Укр", "Кобилянська", "Коб.",
+            "Хоткевич", "Хотк.", "Котляревський", "Котл.", "Стефаник", "Стеф.",
+            "Мирний", "Франко", "Фр.", "Гончар", "Нечуй", "Н.-Лев.",
+        ]:
+            if a in text:
+                auth = a
+                break
+        if not auth:
+            return ("", "")
+        auth_base = {
+            "Чуб.": "Чубинський", "Чубинський": "Чубинський",
+            "Л. Укр": "Леся Українка", "Леся Українка": "Леся Українка",
+            "Коб.": "Кобилянська", "Кобилянська": "Кобилянська",
+            "Хотк.": "Хоткевич", "Хоткевич": "Хоткевич",
+            "Котл.": "Котляревський", "Котляревський": "Котляревський",
+            "Стеф.": "Стефаник", "Стефаник": "Стефаник",
+            "Мирний": "Мирний", "Франко": "Франко", "Фр.": "Франко",
+            "Гончар": "Гончар", "Н.-Лев.": "Нечуй", "Нечуй": "Нечуй",
+        }[auth]
+
+        if re.search(r",\s*(?:НІ|HI|111)\s*,\s*(?=(?:18|19|20)\d{2})", text):
+            return (auth_base, "III")
+        m = re.search(r"\b([IІVУВХXLCDMіувхсlcdm]+)\b", text)
+        if m:
+            table = str.maketrans("ІіХхСсУуВв", "IiXxCcVvVv")
+            return (auth_base, m.group(1).translate(table).upper())
+        m_ar = re.search(r",\s*([1-9]|10)\s*,", text)
+        if m_ar:
+            ar_to_ro = {
+                "1": "I", "2": "II", "3": "III", "4": "IV", "5": "V",
+                "6": "VI", "7": "VII", "8": "VIII", "9": "IX", "10": "X",
+            }
+            return (auth_base, ar_to_ro[m_ar.group(1)])
+        return (auth_base, "")
+
+    independent_eval_vols = {
+        independent_extract_author_and_volume(f"{c.get('collector_or_author', '')} {c['source_metadata']['citation']}")
+        for c in eval_cases
+    } - {("", "")}
+
+    independent_sft_vols = set()
+    for t in sft_trajectories:
+        if not t.get("is_calque_or_russianism"):
+            for alt in t.get("register_spectrum", {}).get("alternatives", []):
+                src = alt.get("evidence_source", "")
+                av = independent_extract_author_and_volume(src)
+                if av != ("", ""):
+                    independent_sft_vols.add(av)
+
+    # Specific hard regression assertions:
+    # A. Chubynsky Vol III: zero cross-split leakage
+    assert not (
+        ("Чубинський", "III") in independent_eval_vols and ("Чубинський", "III") in independent_sft_vols
+    ), "Chubynsky Vol III leaked across train/eval partition"
+    # B. Lesya Ukrainka Vol III: zero cross-split leakage
+    assert not (
+        ("Леся Українка", "III") in independent_eval_vols and ("Леся Українка", "III") in independent_sft_vols
+    ), "Lesya Ukrainka Vol III leaked across train/eval partition"
+    # C. Matviy Nomys 1864: zero eval cases
+    nomys_eval = [
+        c for c in eval_cases
+        if "Номис" in c.get("collector_or_author", "") or "Номис" in c["source_metadata"]["citation"]
+    ]
+    assert not nomys_eval, f"Nomys leaked into eval cases: {len(nomys_eval)}"
+    # D. Independent volume-level collision check across all authors
+    vol_overlap = {av for av in (independent_eval_vols & independent_sft_vols) if av[1] != ""}
+    assert not vol_overlap, f"Independent author-volume overlap detected between eval and SFT: {vol_overlap}"
+
     # 3. Complete sentence and passage containment check
     sft_blobs = []
     for t in sft_trajectories:
@@ -712,8 +784,17 @@ def test_canonical_source_work_equivalence_and_year_preservation() -> None:
         ("Чуб. V 818", "Чуб. V"),
         ("Чуб. 5 818", "Чуб. V 818"),
         ("Чуб. 2", "Чуб. II"),
+        ("Чуб., III, 1872, 425", "Чуб. III"),
+        ("Чуб., V, 1874, 280", "Чуб. V 818"),
         # 9. Cyrillic lookalikes in Roman numerals with pre-1860 OCR typo correction
         ("Фр., VІІ, 1851, 10", "Фр., VII, 1951, 10"),
+        # 10. OCR corruptions in Roman volumes (НІ and 111 for III)
+        ("(Л. Укр., НІ, 1952, 419)", "Л. Укр., III, 1952, 663"),
+        ("(Л. Укр., 111, 1952, 224)", "Л. Укр., III, 1952, 663"),
+        # 11. Full author names vs standard abbreviations
+        ("(Ольга Кобилянська, II, 1956, 251)", "(Коб., II, 1956, 10)"),
+        ("(Гнат Хоткевич, II, 1966, 241)", "(Хотк., II, 1966, 31)"),
+        ("Котл. 2", "Котл., II, 1953, 56"),
     ]
 
     for cit_a, cit_b in equivalent_pairs:
@@ -721,11 +802,16 @@ def test_canonical_source_work_equivalence_and_year_preservation() -> None:
         norm_b = canonical_source_work(cit_b)
         assert norm_a == norm_b, f"Equivalent citations failed to map to same work: {cit_a!r} ({norm_a!r}) != {cit_b!r} ({norm_b!r})"
 
-    # Verify that publication years are preserved and not stripped as trailing numbers
+    # Verify that publication years are preserved for standard works and not stripped as trailing numbers
     assert canonical_source_work("Черемш., Тв., 1960") == "Черемш., Тв., 1960"
     assert canonical_source_work("Черемш., Тв., 1960, 107") == "Черемш., Тв., 1960"
-    assert canonical_source_work("Чуб., V, 1874, 280") == "Чуб., V, 1874"
-    assert canonical_source_work("Чуб.,V, 1874, 96") == "Чуб., V, 1874"
+    assert canonical_source_work("Чуб., V, 1874, 280") == "Чуб. V"
+    assert canonical_source_work("Чуб.,V, 1874, 96") == "Чуб. V"
+    assert canonical_source_work("Чуб. V 818") == "Чуб. V"
+    assert canonical_source_work("Чуб., III, 1872, 425") == "Чуб. III"
+    assert canonical_source_work("Чуб. III") == "Чуб. III"
+    assert canonical_source_work("Л. Укр., НІ, 1952, 419") == "Л. Укр. III"
+    assert canonical_source_work("Л. Укр., 111, 1952, 224") == "Л. Укр. III"
     assert canonical_source_work("Номис, 1864, № 2062") == "Номис, 1864"
 
     # P2: Verify that OCR corrections are strictly scoped and unrelated 1847/1851/1852 citations remain unchanged

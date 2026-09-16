@@ -463,14 +463,14 @@ ARABIC_TO_ROMAN = {
 def canonical_source_work(cit: str, collector: str = "") -> str:
     """Extract canonical source work/volume identity by stripping page numbers and parens.
 
-    Ensures that different pages of the same publication volume (e.g. Черемш., Тв., 1960, 107
-    vs Черемш., Тв., 1960, 66 or Чуб., V, 1874, 280 vs Чуб.,V, 1874, 96 or Коб., І, 1956, 9
-    vs Коб., І, 1956, 80) map to the exact same canonical work identity so they cannot enter
-    opposite train/eval partitions.
+    Ensures that different pages or editions of the same publication volume (e.g. Черемш., Тв., 1960, 107
+    vs Черемш., Тв., 1960, 66; Чуб., V, 1874, 280 vs Чуб. V 818; Коб., І, 1956, 9 vs Ольга Кобилянська, I, 1956, 112;
+    Л. Укр., III, 1952, 663 vs Л. Укр., НІ, 1952, 419) map to the exact same canonical work identity so they
+    cannot enter opposite train/eval partitions.
 
-    Normalizes internal whitespace around punctuation, converts Cyrillic lookalikes in Roman numerals,
-    preserves publication years (1800-2099), strips trailing page/item numbers before numeral conversion,
-    and restricts OCR typographical corrections to documented source/volume editions.
+    Normalizes internal whitespace around punctuation, converts Cyrillic lookalikes and OCR misreadings in
+    Roman numerals, resolves source-backed author and volume aliases, preserves publication years, strips
+    trailing page/item numbers, and restricts OCR typographical corrections to documented source/volume editions.
     """
     s = cit.strip("()[] \t\n\r")
     for q in ("„", "“", "»", "«", '"', "'", "`", "’"):
@@ -479,15 +479,22 @@ def canonical_source_work(cit: str, collector: str = "") -> str:
     # Normalize whitespace around commas and semicolons
     s = re.sub(r"\s*,\s*", ", ", s)
     s = re.sub(r"\s*;\s*", "; ", s)
+    s = re.sub(r"\.{2,}", ".", s)
     s = re.sub(r"\s+", " ", s).strip()
 
     # Normalize dot followed by number at end: e.g. "1956. 145" -> "1956, 145"
     s = re.sub(r"(\b\d{4})\.\s*(\d+)\.?$", r"\1, \2", s)
 
+    # Insert missing comma before 4-digit year if preceded by word characters or dot (e.g. "Тв 1960", "Вир 1960")
+    s = re.sub(r"([а-яіїєґA-Za-z\.]+)\s+((?:18|19|20)\d{2})\b", r"\1, \2", s)
+
     # Strip Nomys proverb numbers (strictly requiring №): e.g. ", № 10060", ", .№ 1334", ", №. 3788", " № 2062"
     s = re.sub(r"(?:,\s*|\s+)\.?№\.?\s*\d+\.?$", "", s).strip()
 
-    # 1. Volume normalization FIRST (so OCR rules and page-stripping see canonical Roman volumes):
+    # Normalize OCR volume misreadings (e.g. "Л. Укр., НІ, 1952" or "Л. Укр., 111, 1952" -> ", III, 1952")
+    s = re.sub(r",\s*(?:НІ|HI|111)\s*,\s*(?=(?:18|19|20)\d{2})", ", III, ", s)
+
+    # 1. Volume normalization FIRST:
     # A. Convert Cyrillic lookalikes in Roman numerals to Latin
     def norm_roman(m: re.Match) -> str:
         tok = m.group(1)
@@ -506,25 +513,44 @@ def canonical_source_work(cit: str, collector: str = "") -> str:
         s,
     )
 
-    # 2. Scope OCR typographical year corrections strictly to documented source/volume editions:
-    if ("Чуб" in s or "Чубинський" in collector) and re.search(r"\bV\b", s):
-        s = re.sub(r"\b1847\b", "1874", s)
-    if ("Фр" in s or "Франко" in collector) and re.search(r"\bVII\b", s):
-        s = re.sub(r"\b1851\b", "1951", s)
-    if ("Фр" in s or "Франко" in collector) and re.search(r"\bVIII\b", s):
-        s = re.sub(r"\b1852\b", "1952", s)
-        s = re.sub(r"\b19Г,\s*2\b", "1952", s)
+    # D. Standardize author name aliases in citation body to standard abbreviations
+    if "Кобилянська" in collector or "Коб" in s:
+        s = re.sub(r"\b(?:Ольга\s+)?Кобилянська\b", "Коб.", s)
+    if "Хоткевич" in collector or "Хотк" in s:
+        s = re.sub(r"\b(?:Гнат\s+)?Хоткевич\b", "Хотк.", s)
+        s = re.sub(r"\bДов-буш\b", "Довбуш", s)
+    if "Нечуй" in collector or "Н.-Лев" in s:
+        s = re.sub(r"\b(?:Іван\s+)?Нечуй(?:-Левицький)?\b", "Н.-Лев.", s)
+    if "Франко" in collector or "Фр" in s:
+        s = re.sub(r"\b(?:Іван\s+)?Франко\b", "Фр.", s)
+    if "Стефаник" in collector or "Стеф" in s:
+        s = re.sub(r"\b(?:Василь\s+)?Стефаник\b", "Стеф.", s)
+    if "Черемшина" in collector or "Черемш" in s:
+        s = re.sub(r"\b(?:Марко\s+)?Черемшина\b", "Черемш.", s)
+    if "Федькович" in collector or "Федьк" in s:
+        s = re.sub(r"\b(?:Юрій\s+)?Федькович\b", "Федьк.", s)
+    if "Котляревський" in collector or "Котл" in s:
+        s = re.sub(r"\b(?:Іван\s+)?Котляревський\b", "Котл.", s)
+    if "Чубинський" in collector or "Чуб" in s:
+        s = re.sub(r"\b(?:Павло\s+)?Чубинський\b", "Чуб.", s)
 
-    # 3. Strip trailing page numbers (after volume normalization and OCR):
-    # A. SUM-11 format: Year followed by Page (e.g. ", 1956, 9" -> ", 1956", ", 1956, 80" -> ", 1956")
-    s = re.sub(r"(,\s*(?:18\d\d|19\d\d|20\d\d))(?:,\s*(?:с\.\s*)?|\.\s*|\s+)\d+(?:-\d+)?\.?$", r"\1", s).strip()
+    # E. Multi-volume works canonicalization:
+    # If a citation specifies a Roman numeral volume (e.g. Коб., III, 1956 or Фр., II, 1950 or Чуб. III or Стеф., I, 1949),
+    # the canonical work identity is defined by the Author and Volume. This prevents different printings or editions
+    # of the same volume (e.g. Коб., III, 1955 vs Коб., III, 1956 or Мирний, IV, 1954 vs Мирний, IV, 1955) from splitting
+    # across the train/eval firewall.
+    m_vol = re.search(r"\b([IVXLCDM]+)\b", s)
+    if m_vol:
+        vol = m_vol.group(1)
+        author_prefix = s[:m_vol.start()].rstrip(" ,")
+        s = f"{author_prefix} {vol}".replace(", ", " ").strip()
+    else:
+        # Strip trailing page numbers from year-based citations without volume (e.g. "Черемш., Тв., 1960, 107" -> "Черемш., Тв., 1960")
+        s = re.sub(r"(,\s*(?:18\d\d|19\d\d|20\d\d))(?:,\s*(?:с\.\s*)?|\.\s*|\s+)\d+(?:-\d+)?\.?$", r"\1", s).strip()
+        s = re.sub(r"^(Желех\.)\s+\d+\.?$", r"\1", s).strip()
 
-    # B. Grinchenko format: Roman numeral volume followed by page (e.g. "Чуб. V 818" -> "Чуб. V")
-    s = re.sub(r"(\b[IVXLCDM]+\b)\s+\d+\.?$", r"\1", s).strip()
-
-    # C. Zhelekhivsky format: "Желех. 6" -> "Желех."
-    s = re.sub(r"^(Желех\.)\s+\d+\.?$", r"\1", s).strip()
-
+    # Clean empty comma sequences (e.g. "(Фр., IV, , )" -> "Фр., IV")
+    s = re.sub(r",\s*,", ",", s)
     s = s.strip(" .,")
     return f"{collector}:{s}" if collector else s
 
@@ -551,12 +577,15 @@ def partition_candidates_by_lemma(
         h = int(hashlib.sha256(w_id.encode()).hexdigest()[:8], 16) % 100
         has_steppe = any(c.bucket == "southeastern_steppe" for c in c_list)
         has_slobozhan = any(c.bucket == "southeastern_slobozhan" for c in c_list)
+        has_sw = any(c.macro_zone == "southwestern" for c in c_list)
 
         if has_steppe:
             # All steppe works must go to eval to satisfy the strict >= 250 evaluation quota
             threshold = 100
         elif has_slobozhan:
             threshold = 70
+        elif has_sw:
+            threshold = 55
         else:
             threshold = 45
 
