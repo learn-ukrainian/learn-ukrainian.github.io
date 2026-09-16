@@ -124,8 +124,23 @@ HELD_OUT_EVAL_WORKS = {
 EXCLUDED_MODERN_WORKS = {
     "zyzaniy_leksys_1596",  # 1964 modern research monograph by V. Nimchuk
     "smotrytskyy_hramatiky_slovenskiya_1619",  # 1979 modern research monograph by V. Nimchuk
-    "feofan_prokopovych_filosofski_tvory",  # 1981 Soviet Ukrainian translation from Latin
+    "berynda_leksykon_slovenoroskyy_1627",  # 1961 modern research monograph by V. V. Nimchuk
+    "lvivskyy_ta_ostrozkyy_litopystsi_1498_1649",  # 1970 modern edition by O. A. Bevzo with pervasive apparatus
+    "litopys_hadyatskoho_polkovnyka_hryhoriya_hrabyanky_do_1709",  # 1992 modern Ukrainian translation by R. H. Ivanchenko
+    "litopys_hrabyanky",  # 1992 modern Ukrainian translation by R. H. Ivanchenko
+    "shchodennyk_khayenka",  # 1895 Kievskaya Starina Russian translation of Petro Apostol's French diary
+    "fedorovych_bukvar_1574",  # 1975 modern study by V. Nimchuk
+    "ivan_fedorovych_azbuka_ostroh_1578",  # 1974 modern study by Ya. Zapasko
+    "tymofiy_verbytskyy_bukvar_kyyiv_1627",  # 1995 modern study by O. Dzyuba and V. Frys
+    "ivan_uzhevych_hramatyka_slovyanska_1643_1645",  # 1970 modern preface by I. K. Bilodid and page list
     "uzhevych_paryzkyy_rukopys_pereklad_1970",  # 1970 translation
+    "starovynnyy_pysmovnyk",  # 1901 library stamp and printing cost appendix
+    "keresturska_khronika",  # 1903 ZNTSH article, fragments, and Drahomanov 1894 speech
+    "ukrayinski_hramoty_xv_st",  # Modern DjVu publication announcement
+    "volynski_hramoty_xvi_st",  # Modern DjVu publication announcement
+    "litopysni_zamitky_pro_novorosiyu",  # 1890 Kievskaya Starina Russian chronicle notes
+    "litopysni_zamitky_1783_1811",  # 1897 Kievskaya Starina Russian chronicle notes
+    "feofan_prokopovych_filosofski_tvory",  # 1981 Soviet Ukrainian translation from Latin
     "samiylo_velychko_litopys_1648_1700",  # Valeriy Shevchuk modern translation
     "litopys_velychka",  # Modern translation
     "synopsys_kyyiv_1674",  # Modern 2002 academic edition/study
@@ -180,7 +195,10 @@ EDITORIAL_PATTERNS = [
         r"однако|потому\s+что|несмотря\s+на|таким\s+образом|в\s+течение|как\s+известно|в\s+большинстве|например|"
         r"можна\s+прочитати|починаючи\s+з|написані\s+різними\s+почерками|на\s+нижніх\s+полях|"
         r"на\s+арк\.\s*\d+|рукописи,\s+съ\s+которой\s+печатается|этотъ\s+памятникъ|всЂ\s+наступні|"
-        r"початковою\s+літерою|різними\s+почерками|рукопис\s+пошкоджено)",
+        r"початковою\s+літерою|різними\s+почерками|рукопис\s+пошкоджено|"
+        r"жодному\s+з\s+попередніх\s+видань|попередніх\s+видань\s+літопису|"
+        r"це\s+одне\s+з|у\s+рукопису\s+це|у\s+всіх\s+попередніх|так\s+в\s+рукопису|"
+        r"написання\s+ор\s+замість|замість\s+ръ|не\s+відтворювалися)",
         re.IGNORECASE,
     ),
     re.compile(r"^\s*(?:ЗМІСТ|ПЕРЕДМОВА|ВСТУП|КОМЕНТАР|ПРИМІТКИ|РІЗНОЧИТАННЯ)\s*$", re.IGNORECASE | re.MULTILINE),
@@ -198,7 +216,10 @@ RUSSIAN_EDITORIAL_RE = re.compile(
     r"село\s+\w+\s+уЂзда|въ\s+библіотекЂ|археологическаго\s+музея|духовной\s+академіи|"
     r"по\s+семейному\s+преданію|въ\s+фамильномъ\s+архивЂ|генеральное\s+слЂдствіе|"
     r"русскомъ\s+архивЂ|рукописный\s+журналъ|"
-    r"рукописи,\s+съ\s+которой|этотъ\s+памятникъ|предисловія\s+къ\s+этому|дневнику\s+г\.\s+лазаревскій)",
+    r"рукописи,\s+съ\s+которой|этотъ\s+памятникъ|предисловія\s+къ\s+этому|дневнику\s+г\.\s+лазаревскій|"
+    r"въ\s+числЂ\s+бумагъ|найдены\s+нами|пріобрЂтенныхъ|современномъ\s+спискЂ|настоящія\s+лЂтописныя|"
+    r"печатаемый\s+дневникъ|заключая\s+въ\s+себЂ|печатаемый\s+ниже\s+переводъ|переводъ\s+дневника|"
+    r"сдЂланъ\s+былъ\s+еще|въ\s+30-хъ\s+годахъ)",
     re.IGNORECASE,
 )
 
@@ -219,33 +240,31 @@ INJECTED_CALQUES = [
 # Historical Middle Ukrainian distinctive markers (strictly excluding ambiguous modern words)
 MIDDLE_UKRAINIAN_LEXICAL_MARKERS = [
     "панованє",
+    "панованя",
     "вольности",
     "вольностии",
     "привилеї",
     "привилей",
+    "привилея",
     "гетьманъ",
     "гетман",
+    "гетмана",
+    "гетману",
+    "гетманом",
     "посполиство",
     "посполитый",
     "посполитое",
     "посполитых",
-    "котрий",
-    "котрого",
-    "которому",
-    "которих",
+    "посполитым",
     "албо",
     "жодный",
-    "жодного",
-    "жодному",
-    "шаблею",
     "понявши",
     "затымъ",
     "затимъ",
     "маршалок",
-    "воєвода",
-    "панство",
     "листъ",
     "листомъ",
+    "листовъ",
     "свѣдки",
     "кн̃з",
     "сн̃а",
@@ -256,10 +275,17 @@ MIDDLE_UKRAINIAN_LEXICAL_MARKERS = [
     "дали есмо",
     "далися есмо",
     "зостаєт",
+    "зостает",
     "маєт",
+    "мает",
     "тежъ",
     "ижъ",
 ]
+
+MIDDLE_UKRAINIAN_LEXICAL_RE = re.compile(
+    r"\b(?:" + "|".join(re.escape(m) for m in MIDDLE_UKRAINIAN_LEXICAL_MARKERS) + r")\b",
+    re.IGNORECASE,
+)
 
 
 @dataclass
@@ -292,6 +318,13 @@ def clean_text_diplomatic(text: str) -> str:
     t = re.sub(r"\|[^\|]*арк\.[^\|]*\|", " ", t, flags=re.IGNORECASE)
     t = re.sub(r"\[[^\]]*арк\.[^\]]*\]", " ", t, flags=re.IGNORECASE)
     t = re.sub(r"/(?:арк\.[^/]+|\d+)/", " ", t, flags=re.IGNORECASE)
+    # Strip Cyrillic letter footnote paragraphs and apparatus notes
+    t = re.sub(
+        r"(?ms)^\s*[А-ЯЁІЇЄ]\s+(?:В\s+рукопису|У\s+рукопису|Це\s+одне|У\s+всіх|У\s+попередніх|Очевидно|"
+        r"Так\s+в|Тобто|Має\s+бути|Це\s+слово|У\s+вид\.|Написання|Слова|В|У|У\s+сп\.|У\s+праці).*?(?=\n\s*\n|\Z)",
+        " ",
+        t,
+    )
     # Strip footnote paragraphs and editorial apparatus blocks
     t = re.sub(
         r"(?ms)^\s*\d+[\s\.\)]+(?:Починаючи|Попередньо|На\s+арк\.|Поряд|Унизу|У\s+рукопису|"
@@ -305,7 +338,9 @@ def clean_text_diplomatic(text: str) -> str:
         r"Цього\s+видання|Цю\s+приповістк|Ця\s+приповістк|Ці\s+два|Ще\s+приписано|Явна\s+описка|"
         r"Іншим|Автор\s+помилково|В\s+нижній|В\s+основу|Виділені\s+літер|Вираз|Внизу|Вставка|"
         r"Від\s+цієї|Відділ\s+рукописів|Вірш\s+без\s+початку|Вірш\s+написано|Друга\s+частина|"
-        r"Другу\s+приповістку|Дуже\s+важко|Дужки).*?(?=\n\s*\n|\Z)",
+        r"Другу\s+приповістку|Дуже\s+важко|Дужки|У\s+сп\.|У\s+вид\.|У\s+праці|Там\s+же|Помилково|"
+        r"Очевидно|Має\s+бути|Написання|Слова|По\s+ПВЛ|У\s+тексті|В\s+с\.\s*сп\.|У\s+с\.\s*сп\.|"
+        r"Следует|Следуетъ|Прилож\.|Сборн\.).*?(?=\n\s*\n|\Z)",
         " ",
         t,
     )
@@ -339,10 +374,17 @@ def is_clean_historical_sentence(sent: str) -> bool:
         return False
     if re.search(r"\d+\s+[^\d;]+;\s*\d+\b", sent):
         return False
+    # Academic page citations, footnote refs, and verse numbers
+    if re.search(r"\(\d{1,4}\)", sent) or re.search(r"\(с\.\s*\d+\)", sent, re.IGNORECASE):
+        return False
     if re.search(
         r"(?:закресл\w*|можна\s+прочитати|починаючи\s+з|написані\s+різними\s+почерками|на\s+нижніх\s+полях|"
         r"на\s+арк\.\s*\d+|рукописи,\s+съ\s+которой\s+печатается|этотъ\s+памятникъ|всЂ\s+наступні|"
-        r"початковою\s+літерою|різними\s+почерками|рукопис\s+пошкоджено|переклад\w*)",
+        r"початковою\s+літерою|різними\s+почерками|рукопис\s+пошкоджено|переклад\w*|"
+        r"написання\s+\w+\s+замість|переходу\s+\w+\s+в\s+\w+|поплутання|артикуляці\w*|"
+        r"риси\s+живої|асимілятивн\w*|дисимілятивн\w*|суфікс\w*|словотвор\w*|"
+        r"чергуванн\w*|фонетичн\w*|морфологічн\w*|семантичн\w*|діалектн\w*|"
+        r"пам’ятк\w*\s+мови|писемност\w*|рукописн\w*\s+книг\w*)",
         sent,
         re.IGNORECASE,
     ):
@@ -350,7 +392,7 @@ def is_clean_historical_sentence(sent: str) -> bool:
 
     # Archaic Cyrillic characters (strictly excluding modern letters and Russian 'ы')
     has_archaic_letters = any(c in sent for c in "ѣъωξѱѳѵѿѧӕ҂ѕ́̀̃̄̆̈")
-    has_lexical_marker = any(m in sent.casefold() for m in MIDDLE_UKRAINIAN_LEXICAL_MARKERS)
+    has_lexical_marker = bool(MIDDLE_UKRAINIAN_LEXICAL_RE.search(sent))
     return bool(has_archaic_letters or has_lexical_marker)
 
 
@@ -511,6 +553,145 @@ def load_middle_ukrainian_chunks(sources_db: Path) -> list[MiddleUkrainianChunk]
             if re.match(r"^\s*\d+\)\s+", clean_t):
                 continue
 
+        # In litopys_samovydtsya, chunks 0 to 50 are Ya. Dzyra's 1971 modern introduction
+        if work_id == "litopys_samovydtsya":
+            try:
+                chunk_num = int(chunk_id.split("_c")[-1])
+                if chunk_num < 51:
+                    continue
+            except Exception:
+                pass
+
+        # In litopys_samovydtsya_1648_1702, chunks 0 to 51 are modern study
+        if work_id == "litopys_samovydtsya_1648_1702":
+            try:
+                chunk_num = int(chunk_id.split("_c")[-1])
+                if chunk_num < 52:
+                    continue
+            except Exception:
+                pass
+
+        # In litopys_yana_binvilskoho, chunks 0 to 9 are Yu. A. Mytsyk's study,
+        # chunks 34 to 48 are modern commentary notes, authentic text is in 10..33 and 49..50
+        if work_id == "litopys_yana_binvilskoho":
+            try:
+                chunk_num = int(chunk_id.split("_c")[-1])
+                if chunk_num < 10 or (34 <= chunk_num <= 48):
+                    continue
+            except Exception:
+                pass
+
+        # In litopys_krekhivskoho_monastyrya, only chunk 1 is authentic chronicle fragment
+        if work_id == "litopys_krekhivskoho_monastyrya":
+            try:
+                chunk_num = int(chunk_id.split("_c")[-1])
+                if chunk_num != 1:
+                    continue
+            except Exception:
+                pass
+
+        # In huklyvskyy_litopys, chunks < 3 are Bilenkyy's study, chunks >= 10 are notes / other articles
+        if work_id == "huklyvskyy_litopys":
+            try:
+                chunk_num = int(chunk_id.split("_c")[-1])
+                if chunk_num < 3 or chunk_num in (10, 11) or chunk_num >= 13:
+                    continue
+            except Exception:
+                pass
+
+        # In hustynskyy_monastyrskyy_litopys, chunks 0 to 7 are Bodyansky 1848 Russian preface
+        if work_id == "hustynskyy_monastyrskyy_litopys":
+            try:
+                chunk_num = int(chunk_id.split("_c")[-1])
+                if chunk_num < 8:
+                    continue
+            except Exception:
+                pass
+
+        # In kyyivskyy_litopys_pershoyi_chverti_xvii_st, chunk 0 is 1989 journal preface
+        if work_id == "kyyivskyy_litopys_pershoyi_chverti_xvii_st":
+            try:
+                chunk_num = int(chunk_id.split("_c")[-1])
+                if chunk_num == 0:
+                    continue
+            except Exception:
+                pass
+
+        # In povist_pro_ukrayinu_pid_lytvoyu, chunks 0 to 2 are Bodyansky 1848 preface
+        if work_id == "povist_pro_ukrayinu_pid_lytvoyu":
+            try:
+                chunk_num = int(chunk_id.split("_c")[-1])
+                if chunk_num <= 2:
+                    continue
+            except Exception:
+                pass
+
+        # In likarski_poradnyky_xviii_st, chunks 0 to 19 are Peredriyenko 1984 preface
+        if work_id == "likarski_poradnyky_xviii_st":
+            try:
+                chunk_num = int(chunk_id.split("_c")[-1])
+                if chunk_num < 20:
+                    continue
+            except Exception:
+                pass
+
+        # In likarski_ta_hospodarski_poradnyky_xviii_st, chunks 0 to 20 are preface
+        if work_id == "likarski_ta_hospodarski_poradnyky_xviii_st":
+            try:
+                chunk_num = int(chunk_id.split("_c")[-1])
+                if chunk_num < 21:
+                    continue
+            except Exception:
+                pass
+
+        # In chernihivskyy_litopys, chunks 0 to 6 are Bilozersky/Zamlynsky study
+        if work_id == "chernihivskyy_litopys":
+            try:
+                chunk_num = int(chunk_id.split("_c")[-1])
+                if chunk_num < 7:
+                    continue
+            except Exception:
+                pass
+
+        # In chernihivskyy_litopys_1587_1750, chunks 0 to 7 are Bilozersky/Apanovych study
+        if work_id == "chernihivskyy_litopys_1587_1750":
+            try:
+                chunk_num = int(chunk_id.split("_c")[-1])
+                if chunk_num < 8:
+                    continue
+            except Exception:
+                pass
+
+        # In konstytutsiya_pylypa_orlyka, strictly retain authentic Old Ukrainian charter chunks
+        if work_id == "konstytutsiya_pylypa_orlyka":
+            authentic_orlyk = {
+                "ws_Конституція_Пилипа_Орлика_c002",
+                "ws_Конституція_Пилипа_Орлика_c004",
+                "ws_Конституція_Пилипа_Орлика_c006",
+                "ws_Конституція_Пилипа_Орлика_c008",
+                "ws_Конституція_Пилипа_Орлика_c010",
+                "ws_Конституція_Пилипа_Орлика_c011",
+                "ws_Конституція_Пилипа_Орлика_c014",
+                "ws_Конституція_Пилипа_Орлика_c016",
+                "ws_Конституція_Пилипа_Орлика_c017",
+                "ws_Конституція_Пилипа_Орлика_c019",
+                "ws_Конституція_Пилипа_Орлика_c021",
+                "ws_Конституція_Пилипа_Орлика_c022",
+                "ws_Конституція_Пилипа_Орлика_c023",
+                "ws_Конституція_Пилипа_Орлика_c024",
+                "ws_Конституція_Пилипа_Орлика_c028",
+                "ws_Конституція_Пилипа_Орлика_c030",
+                "ws_Конституція_Пилипа_Орлика_c031",
+                "ws_Конституція_Пилипа_Орлика_c034",
+                "ws_Конституція_Пилипа_Орлика_c035",
+                "ws_Конституція_Пилипа_Орлика_c038",
+                "ws_Конституція_Пилипа_Орлика_c041",
+                "ws_Конституція_Пилипа_Орлика_c045",
+                "ws_Конституція_Пилипа_Орлика_c047",
+            }
+            if chunk_id not in authentic_orlyk:
+                continue
+
         # Detect and exclude modern editorial prefaces in unbounded works
         bounded_works = {
             "ivan_velychkovskyy_tvory",
@@ -520,13 +701,14 @@ def load_middle_ukrainian_chunks(sources_db: Path) -> list[MiddleUkrainianChunk]
             "bayky_v_ukrayinskiy_literaturi_xvii_xviii_st",
             "bayky_xvii_xviii_st",
             "shchodennyk_mykoly_khanenka_1719_1754",
+            "konstytutsiya_pylypa_orlyka",
         }
         if work_id not in bounded_works and is_editorial_preface(clean_t):
             continue
 
         stratum, comp_date, ms_date = classify_stratum(work_id, year)
-        is_arch = any(c in clean_t for c in "ѣъωξѱѳѵєы") or any(
-            m in clean_t.casefold() for m in MIDDLE_UKRAINIAN_LEXICAL_MARKERS
+        is_arch = any(c in clean_t for c in "ѣъωξѱѳѵєы") or bool(
+            MIDDLE_UKRAINIAN_LEXICAL_RE.search(clean_t)
         )
 
         chunks.append(

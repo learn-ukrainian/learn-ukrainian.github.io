@@ -659,6 +659,13 @@ def test_regression_velychkovsky_and_mytsyk_commentary_excluded() -> None:
         "починаючи з цієї приповістки",
         "всі наступні з початковою літерою",
         "переклад",
+        "жодному з попередніх видань літопису не відтворювалися, хоч мають істотне",
+        "жодному з попередніх видань",
+        "попередніх видань літопису",
+        "не відтворювалися, хоч мають істотне",
+        "написання ор замість ръ — ωскорблАю (298)",
+        "написання ор замість ръ",
+        "ωскорблАю",
     ]
 
     eval_rows = []
@@ -677,6 +684,8 @@ def test_regression_velychkovsky_and_mytsyk_commentary_excluded() -> None:
                 "1b7685d5_c0078",
                 "5f2476e8_c0004",
                 "c07247b6_c0594",
+                "6e771b02_c0000",
+                "065fed7f_c0030",
             )
 
     # Verify Ivan Velychkovsky is actively represented in the held-out evaluation benchmark
@@ -703,6 +712,21 @@ def test_source_boundaries_and_work_exclusions() -> None:
     assert "pivdennoruski_litopysy_bilozerskyy" in EXCLUDED_MODERN_WORKS
     assert "feodosiy_sofonovych_khronika_z_litopystsiv_starodavnikh" in EXCLUDED_MODERN_WORKS
     assert "rihelman_litopysna_opovid_pro_malu_rosiyu" in EXCLUDED_MODERN_WORKS
+    assert "berynda_leksykon_slovenoroskyy_1627" in EXCLUDED_MODERN_WORKS
+    assert "lvivskyy_ta_ostrozkyy_litopystsi_1498_1649" in EXCLUDED_MODERN_WORKS
+    assert "litopys_hadyatskoho_polkovnyka_hryhoriya_hrabyanky_do_1709" in EXCLUDED_MODERN_WORKS
+    assert "litopys_hrabyanky" in EXCLUDED_MODERN_WORKS
+    assert "shchodennyk_khayenka" in EXCLUDED_MODERN_WORKS
+    assert "fedorovych_bukvar_1574" in EXCLUDED_MODERN_WORKS
+    assert "ivan_fedorovych_azbuka_ostroh_1578" in EXCLUDED_MODERN_WORKS
+    assert "tymofiy_verbytskyy_bukvar_kyyiv_1627" in EXCLUDED_MODERN_WORKS
+    assert "ivan_uzhevych_hramatyka_slovyanska_1643_1645" in EXCLUDED_MODERN_WORKS
+    assert "starovynnyy_pysmovnyk" in EXCLUDED_MODERN_WORKS
+    assert "keresturska_khronika" in EXCLUDED_MODERN_WORKS
+    assert "ukrayinski_hramoty_xv_st" in EXCLUDED_MODERN_WORKS
+    assert "volynski_hramoty_xvi_st" in EXCLUDED_MODERN_WORKS
+    assert "litopysni_zamitky_pro_novorosiyu" in EXCLUDED_MODERN_WORKS
+    assert "litopysni_zamitky_1783_1811" in EXCLUDED_MODERN_WORKS
 
     if DEFAULT_SOURCES_DB.is_file():
         chunks = load_middle_ukrainian_chunks(DEFAULT_SOURCES_DB)
@@ -733,3 +757,39 @@ def test_source_boundaries_and_work_exclusions() -> None:
             elif "bayky_" in c.work_id:
                 num = int(c.chunk_id.split("_c")[-1])
                 assert 80 <= num <= 240, f"Invalid bayky chunk admitted: {c.chunk_id}"
+            elif c.work_id == "litopys_samovydtsya":
+                num = int(c.chunk_id.split("_c")[-1])
+                assert num >= 51, f"Invalid Samovydets chunk admitted: {c.chunk_id}"
+            elif c.work_id == "litopys_samovydtsya_1648_1702":
+                num = int(c.chunk_id.split("_c")[-1])
+                assert num >= 52, f"Invalid Samovydets 1648-1702 chunk admitted: {c.chunk_id}"
+            elif c.work_id == "litopys_yana_binvilskoho":
+                num = int(c.chunk_id.split("_c")[-1])
+                assert (10 <= num <= 33) or (49 <= num <= 50), f"Invalid Binvilsky chunk admitted: {c.chunk_id}"
+            elif c.work_id == "litopys_krekhivskoho_monastyrya":
+                num = int(c.chunk_id.split("_c")[-1])
+                assert num == 1, f"Invalid Krekhiv chunk admitted: {c.chunk_id}"
+            elif c.work_id == "huklyvskyy_litopys":
+                num = int(c.chunk_id.split("_c")[-1])
+                assert (3 <= num <= 9) or (num == 12), f"Invalid Huklyvskyy chunk admitted: {c.chunk_id}"
+            elif c.work_id == "hustynskyy_monastyrskyy_litopys":
+                num = int(c.chunk_id.split("_c")[-1])
+                assert num >= 8, f"Invalid Hustynskyy chunk admitted: {c.chunk_id}"
+            elif c.work_id == "kyyivskyy_litopys_pershoyi_chverti_xvii_st":
+                num = int(c.chunk_id.split("_c")[-1])
+                assert num > 0, f"Invalid Kyiv chronicle chunk admitted: {c.chunk_id}"
+            elif c.work_id == "povist_pro_ukrayinu_pid_lytvoyu":
+                num = int(c.chunk_id.split("_c")[-1])
+                assert num > 2, f"Invalid Povist pro Ukrayinu chunk admitted: {c.chunk_id}"
+            elif c.work_id == "likarski_poradnyky_xviii_st":
+                num = int(c.chunk_id.split("_c")[-1])
+                assert num >= 20, f"Invalid Likarski poradnyky chunk admitted: {c.chunk_id}"
+            elif c.work_id == "likarski_ta_hospodarski_poradnyky_xviii_st":
+                num = int(c.chunk_id.split("_c")[-1])
+                assert num >= 21, f"Invalid Likarski ta hospodarski poradnyky chunk admitted: {c.chunk_id}"
+            elif c.work_id == "chernihivskyy_litopys":
+                num = int(c.chunk_id.split("_c")[-1])
+                assert num >= 7, f"Invalid Chernihiv chronicle chunk admitted: {c.chunk_id}"
+            elif c.work_id == "chernihivskyy_litopys_1587_1750":
+                num = int(c.chunk_id.split("_c")[-1])
+                assert num >= 8, f"Invalid Chernihiv 1587-1750 chronicle chunk admitted: {c.chunk_id}"
