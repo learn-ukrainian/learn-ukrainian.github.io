@@ -610,11 +610,17 @@ def compact_occurrences(occurrences: Sequence[TokenOccurrence]) -> list[TokenOcc
     )
 
 
+def _capitalize_form(form: str) -> str:
+    if "-" in form:
+        return "-".join(part.capitalize() for part in form.split("-"))
+    return form.capitalize()
+
+
 def resolve_forms(forms: Sequence[str], *, vesum_lookup: VesumLookup | None) -> dict[str, VesumResolution]:
     matches_by_form = lemmatize_forms(forms) if vesum_lookup is None else lemmatize_forms(forms, vesum_lookup=vesum_lookup)
     unresolved_forms = [form for form in forms if not matches_by_form.get(form)]
     if unresolved_forms:
-        cap_candidates = [f.capitalize() for f in unresolved_forms if f.capitalize() != f]
+        cap_candidates = [_capitalize_form(f) for f in unresolved_forms if _capitalize_form(f) != f]
         if cap_candidates:
             cap_matches = lemmatize_forms(cap_candidates) if vesum_lookup is None else lemmatize_forms(cap_candidates, vesum_lookup=vesum_lookup)
             for cap_form, matches in cap_matches.items():

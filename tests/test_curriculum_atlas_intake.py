@@ -623,16 +623,20 @@ def test_capitalized_proper_nouns_resolve_to_canonical_lemma() -> None:
         data = {
             "Олена": [{"lemma": "Олена", "pos": "noun"}],
             "Львів": [{"lemma": "Львів", "pos": "noun"}],
+            "Івано-Франківськ": [{"lemma": "Івано-Франківськ", "pos": "noun"}],
         }
         return {form: data.get(form, []) for form in forms}
 
-    resolutions = intake.resolve_forms(["олена", "львів", "невідоме"], vesum_lookup=fake_cap_vesum)
+    resolutions = intake.resolve_forms(["олена", "львів", "івано-франківськ", "невідоме"], vesum_lookup=fake_cap_vesum)
     assert resolutions["олена"].lemma == "Олена"
     assert resolutions["олена"].pos == "noun"
     assert resolutions["олена"].reason is None
     assert resolutions["львів"].lemma == "Львів"
     assert resolutions["львів"].pos == "noun"
     assert resolutions["львів"].reason is None
+    assert resolutions["івано-франківськ"].lemma == "Івано-Франківськ"
+    assert resolutions["івано-франківськ"].pos == "noun"
+    assert resolutions["івано-франківськ"].reason is None
     assert resolutions["невідоме"].lemma is None
     assert resolutions["невідоме"].reason == "vesum_unrecognized"
 
