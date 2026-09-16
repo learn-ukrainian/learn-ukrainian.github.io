@@ -712,6 +712,12 @@ def _extract_vesum_lemmas(vesum: dict[str, Any] | None) -> list[str]:
     return [part.strip() for part in ref.split(",") if part.strip()]
 
 
+def _capitalize_term(term: str) -> str:
+    if "-" in term:
+        return "-".join(part.capitalize() for part in term.split("-"))
+    return term.capitalize()
+
+
 def _vesum_attestation(
     term: str,
     *,
@@ -719,10 +725,13 @@ def _vesum_attestation(
     vesum_db_path: str | Path | None = None,
 ) -> dict[str, Any] | None:
     try:
+        cap_term = _capitalize_term(term)
         if surface:
             from scripts.verification.vesum import verify_word
 
             matches = verify_word(term, db_path=vesum_db_path)
+            if not matches and cap_term != term:
+                matches = verify_word(cap_term, db_path=vesum_db_path)
             if not matches:
                 return None
             lemmas = sorted({str(match.get("lemma") or "") for match in matches if match.get("lemma")})
@@ -735,6 +744,8 @@ def _vesum_attestation(
         from scripts.verification.vesum import verify_lemma, verify_word
 
         forms = verify_lemma(term, db_path=vesum_db_path)
+        if not forms and cap_term != term:
+            forms = verify_lemma(cap_term, db_path=vesum_db_path)
         if forms:
             return {
                 "source": "VESUM",
@@ -742,6 +753,8 @@ def _vesum_attestation(
                 "detail": f"lemma match ({len(forms)} forms)",
             }
         matches = verify_word(term, db_path=vesum_db_path)
+        if not matches and cap_term != term:
+            matches = verify_word(cap_term, db_path=vesum_db_path)
         if matches:
             lemmas = sorted({str(match.get("lemma") or "") for match in matches if match.get("lemma")})
             return {

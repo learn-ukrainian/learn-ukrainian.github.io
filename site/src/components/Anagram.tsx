@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
 import { shuffleNotCorrect } from './utils';
+import { toGraphemes } from './graphemes';
 
 // Generate consistent colors for letters
 const LETTER_COLORS = [
@@ -43,7 +44,7 @@ export function AnagramQuestion({ scrambled, answer, hint, isUkrainian }: Anagra
   // Parse scrambled letters (space-separated) and shuffle so they're never in correct order
   const letters = useMemo(() => {
     const rawLetters = scrambled.split(' ').filter(l => l.trim());
-    const correctOrder = answer.split('');
+    const correctOrder = toGraphemes(answer);
 
     // Shuffle ensuring letters are NOT in the correct answer order
     const shuffled = shuffleNotCorrect(rawLetters, correctOrder);

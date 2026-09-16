@@ -79,6 +79,59 @@ describe('stressed Ukrainian tokens', () => {
   });
 });
 
+describe('hyphenated tokens', () => {
+  test('a hyphenated word is one token, not split at the hyphen', () => {
+    const tokens = tokenizeErrorSentence('Це се-ло гарне.');
+    expect(tokens.filter((t) => t.trim() && !/^[,.!]+$/.test(t))).toEqual([
+      'Це',
+      'се-ло',
+      'гарне',
+    ]);
+  });
+
+  test('a standalone dash (surrounded by spaces) stays its own token', () => {
+    const tokens = tokenizeErrorSentence('Слово - інше слово.');
+    expect(tokens).toContain('-');
+  });
+
+  test('clicking a hyphenated error word advances to fix as one click', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <ErrorCorrectionItem
+        sentence="Це се-ло гарне."
+        errorWord="се-ло"
+        correctForm="село"
+        options={['село', 'се-ло']}
+        explanation="Без дефіса."
+      />,
+    );
+    await user.click(wordByText(container, 'се-ло'));
+    expect(itemContainer(container).getAttribute('data-step')).toBe('fix');
+  });
+
+  test('regression: the unhyphenated token is not conflated with its hyphenated look-alike', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <ErrorCorrectionItem
+        sentence="село се-ло"
+        errorWord="се-ло"
+        correctForm="село"
+        options={['село', 'се-ло']}
+        explanation="Без дефіса."
+      />,
+    );
+
+    expect(wordByText(container, 'село').getAttribute('data-is-error')).toBe('false');
+    expect(wordByText(container, 'се-ло').getAttribute('data-is-error')).toBe('true');
+
+    await user.click(wordByText(container, 'село'));
+    expect(itemContainer(container).getAttribute('data-step')).toBe('identify');
+
+    await user.click(wordByText(container, 'се-ло'));
+    expect(itemContainer(container).getAttribute('data-step')).toBe('fix');
+  });
+});
+
 describe('numeral tokens', () => {
   test('digits stay inside the word token instead of becoming punctuation', () => {
     const tokens = tokenizeErrorSentence('Мені 30 років.');

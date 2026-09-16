@@ -35,7 +35,7 @@
       },
       {
         "path": "scripts/lexicon/atlas_intake_core.py",
-        "sha256": "61aa4828ae462ccae3918e564fc0af0bc5ba0543291e7acdcc6219058ff490e2"
+        "sha256": "2f03846fdad5127cc99f57eb4da0b2f2f62872500903ea24320411032fbe311e"
       },
       {
         "path": "scripts/lexicon/atlas_wikipedia_intro.py",
@@ -106,6 +106,10 @@
         "sha256": "12dfd5ec7f6b83f631168cc9313f26a3a9391ea3ff6ace3911e00c478cfe83cb"
       },
       {
+        "path": "scripts/lexicon/curated_heteronyms_batch13.py",
+        "sha256": "c7072820df7215ad156ea55f60295436b7c7e29a4b5d22affa05cc6a3f40abdf"
+      },
+      {
         "path": "scripts/lexicon/curated_heteronyms_batch2.py",
         "sha256": "a4a8d18eacdda3d64c489a0fc65a218488768a28146ffd5afb62ca26f9319784"
       },
@@ -155,7 +159,7 @@
       },
       {
         "path": "scripts/lexicon/curriculum_atlas_intake.py",
-        "sha256": "90dd4f057d58be7adbb994ddb127e719bf01c7910e61c20ee70af28a701ad176"
+        "sha256": "f171d0bb7fd84d09d5bb42a0abe5fe3bb6b4b0e10c14fc6f2593d28e82c0438f"
       },
       {
         "path": "scripts/lexicon/derivational_morphology.py",
@@ -167,11 +171,11 @@
       },
       {
         "path": "scripts/lexicon/enrich_heteronyms.py",
-        "sha256": "f8c383bf8d05461ac2db9199bec90fa26b77c06dae27dae6bdf35b18911a9dca"
+        "sha256": "40b113b751438d812304fd559cc0c241c58e0783fe243d2ea77a02f251882fde"
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "6a34987784b0338a4d7fad9a3d0788d969dc5eefea3c0fd1666f7cb3bb2ac16e"
+        "sha256": "274ee627190538d236ceaf5400325020bde51855a1009e6b14452785ab42e46a"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -231,7 +235,7 @@
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",
-        "sha256": "59a3680eb2f54c97bcf52720a93ae5d1d8d62215238209dadab1dab8ea27abdb"
+        "sha256": "77cd669ac68372156bbdf39c645c8222425586f18d60542b7bec524de2486329"
       },
       {
         "path": "scripts/lexicon/lemma_normalization.py",

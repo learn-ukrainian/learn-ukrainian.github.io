@@ -6932,3 +6932,129 @@ def test_usage_notes_cache_only_cli_writes_separate_candidate(tmp_path, monkeypa
             "--write", "--usage-notes-cache-only", "--output", str(baseline),
         ])
     assert baseline.read_bytes() == original
+
+
+@pytest.fixture
+def hub_cache(tmp_path, monkeypatch):
+    """Reuse the existing parser fixtures as offline cache input."""
+    monkeypatch.setattr(enrich_manifest_module, "SLOVNYK_CACHE", tmp_path)
+    cache = {
+        "schema_version": 4, "lookup_word": "свіжий",
+        "lookups": {
+            "proverbs": {
+                "word": "свіжий",
+                "text": "Свіжий, як сироїжка. Має свіжий вигляд.",
+                "paragraphs": [
+                    {"text": "Свіжий, як сироїжка.", "strong": True},
+                    {"text": "Має свіжий вигляд.", "strong": False},
+                ],
+            },
+            "synonyms": {
+                "word": "свіжий",
+                "text": "СВІ́ЖИЙ (про хліб), ГАРЯ́ЧИЙ, ТЕ́ПЛИЙ, М'ЯКИ́Й.",
+            },
+            "davydov": {
+                "word": "свіжий",
+                "text": "свіжий " + "Cached essay fixture for extraction and preservation. " * 8,
+            },
+        },
+    }
+    path = tmp_path / "свіжий.json"
+    path.write_text(json.dumps(cache), encoding="utf-8")
+    return path
+
+
+@pytest.mark.parametrize("section,key,applicator", [
+    ("proverbs", "items", "apply_cached_proverbs"),
+    ("synonyms", "synsets", "apply_cached_synsets"),
+])
+def test_cached_hub_layers_populate_preserve_and_clear_gate(hub_cache, monkeypatch, section, key, applicator):
+    import copy
+    import socket
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("offline applicator attempted fetching or hydration")
+
+    monkeypatch.setattr(socket, "socket", forbidden)
+    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_cache", forbidden)
+    monkeypatch.setattr(manifest_io, "load_manifest", forbidden)
+    existing = {key: [{"preserved": True}]}
+    manifest = {"entries": [
+        {"lemma": "свіжий", "gate_provenance": {section: "skipped-offline", "other": "retained"}},
+        {"lemma": "свіжий", "sections": {section: existing}},
+        {"lemma": "missing"},
+    ]}
+    before = copy.deepcopy(manifest)
+    cache_bytes = hub_cache.read_bytes()
+    apply = getattr(enrich_manifest_module, applicator)
+    assert apply(manifest) == 1
+    block = manifest["entries"][0]["sections"][section]
+    assert block[key]
+    if section == "proverbs":
+        assert block["items"][0]["text"] == "Свіжий, як сироїжка"
+    else:
+        assert "гарячий" in block["items"]
+        assert block["synsets"][0]["members"][0]["lemma"] == "гарячий"
+    assert manifest["entries"][0]["gate_provenance"] == {"other": "retained"}
+    assert manifest["entries"][1:] == before["entries"][1:]
+    assert apply(manifest) == 0
+    assert hub_cache.read_bytes() == cache_bytes
+
+
+@pytest.mark.parametrize("override", [{"schema_version": 3}, {"lookup_word": "other"}])
+@pytest.mark.parametrize("applicator", ["apply_cached_proverbs", "apply_cached_synsets"])
+def test_cached_hub_layers_reject_incompatible_cache(hub_cache, override, applicator):
+    cache = json.loads(hub_cache.read_text())
+    cache.update(override)
+    hub_cache.write_text(json.dumps(cache))
+    manifest = {"entries": [{"lemma": "свіжий"}]}
+    assert getattr(enrich_manifest_module, applicator)(manifest) == 0
+    assert manifest == {"entries": [{"lemma": "свіжий"}]}
+
+
+@pytest.mark.parametrize("items", [[], ["existing synonym"]])
+def test_cached_synsets_preserve_flat_synonyms(hub_cache, items):
+    synonyms = {"items": items, "source": "original", "source_urls": ["original-url"], "extra": True}
+    original = dict(synonyms)
+    manifest = {"entries": [{"lemma": "свіжий", "sections": {"synonyms": synonyms}}]}
+    assert enrich_manifest_module.apply_cached_synsets(manifest) == 1
+    assert synonyms["synsets"]
+    assert {k: synonyms[k] for k in original} == original
+
+
+@pytest.mark.parametrize("flag,expected", [
+    ("--hub-cache-only", {"usage_notes", "proverbs", "synonyms"}),
+    ("--proverbs-cache-only", {"proverbs"}),
+    ("--synsets-cache-only", {"synonyms"}),
+])
+def test_hub_cache_only_cli_writes_offline_candidate(hub_cache, tmp_path, monkeypatch, flag, expected):
+    import socket
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("offline CLI attempted network, hydration or full enrichment")
+
+    monkeypatch.setattr(socket, "socket", forbidden)
+    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_cache", forbidden)
+    monkeypatch.setattr(manifest_io, "load_manifest", forbidden)
+    monkeypatch.setattr(enrich_manifest_module, "enrich", forbidden)
+    baseline = tmp_path / "baseline.json"
+    baseline.write_text('{"entries": [{"lemma": "свіжий"}]}', encoding="utf-8")
+    original = baseline.read_bytes()
+    monkeypatch.setattr(enrich_manifest_module, "MANIFEST", baseline)
+    output = tmp_path / "candidate.json"
+    assert enrich_manifest_module.main(["--write", flag, "--output", str(output)]) == 0
+    sections = json.loads(output.read_text())["entries"][0]["sections"]
+    assert set(sections) == expected
+    for section in expected:
+        assert sections[section]["synsets" if section == "synonyms" else "items"]
+    assert baseline.read_bytes() == original
+    with pytest.raises(SystemExit):
+        enrich_manifest_module.main([flag, "--output", str(output)])
+    with pytest.raises(SystemExit):
+        enrich_manifest_module.main(["--write", flag, "--output", str(baseline)])
+    assert baseline.read_bytes() == original
+    monkeypatch.setattr(enrich_manifest_module, "MANIFEST", tmp_path / "missing.json")
+    missing_output = tmp_path / "must-not-exist.json"
+    with pytest.raises(FileNotFoundError):
+        enrich_manifest_module.main(["--write", flag, "--output", str(missing_output)])
+    assert not missing_output.exists()

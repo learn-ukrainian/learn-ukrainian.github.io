@@ -1,14 +1,13 @@
-# Глухі́ па́ри, фаринга́льний звук та бу́кви П, Т, Г, Ґ
+# Глухі́ па́ри, зву́ки Г і Ґ та бу́кви П, Т, Г, Ґ — Voiceless Pairs, Sounds Г and Ґ, and Letters П, Т, Г, Ґ
 
-Ласка́во про́симо до тре́тього уро́ку! — Welcome to the third lesson! In Lessons 1 and 2, you mastered the golden syllable rule and built a solid repertoire of 14 letters (**А, О, У, М, Л, С, Н, К, И, Р, Б, В, Д, І**), including the voiced stops **Б** and **Д** and the softening vowel **І**.
+Ласка́во про́симо до тре́тього уро́ку! — Welcome to the third lesson! In Lessons 1 and 2, you mastered counting vowels for syllable beats and built a solid repertoire of 14 letters (**А, О, У, М, Л, С, Н, К, И, Р, Б, В, Д, І**), including the voiced stops **Б** and **Д** and the softening vowel **І**.
 
-In this lesson, you add four crucial consonant letters: **П**, **Т**, **Г**, and **Ґ**, bringing your reading toolkit to 18 letters. You will pair the voiced stops [б] and [д] with their voiceless partners [п] and [т]. You will also discover one of the most distinctive features of Ukrainian phonetics: the difference between the deep, warm pharyngeal fricative **Г [ɦ]** and the crisp velar plosive **Ґ [ɡ]**. Finally, you will decode authentic Ukrainian city names (**Дніпро́**, **Полта́ва**) and your first legal state formula (**Ра́да**).
+In this lesson, you add four crucial consonant letters: **П**, **Т**, **Г**, and **Ґ**, bringing your reading toolkit to 18 letters. You will pair the voiced stops [б] and [д] with their voiceless partners [п] and [т]. You will also discover one of the most distinctive sound contrasts in Ukrainian: **Г** is a soft throat sound, while **Ґ** is a hard **g** like English *go* (**гора́** vs **ґа́ва**). Finally, you will decode authentic Ukrainian city names (**Дніпро́**, **Полта́ва**) and your first legal state formula (**Ра́да**).
 
 By the end of this 60-minute lesson, you will be able to:
 
-- **Розрізня́ти па́рні глухі́ проривні́ [п] та [т]** — articulate the voiceless stops [п] (partner to [б]) and [т] (partner to [д]);
-- **Вимовля́ти фаринга́льний звук [г]** — produce the authentic Ukrainian voiced pharyngeal fricative [ɦ] without harsh rasping;
-- **Розпізнава́ти та чита́ти рі́дкісну лі́теру Ґ** — identify and pronounce the plosive stop [ɡ] in words such as **ґа́ва** and **ґрунт**;
+- **Розрізня́ти па́рні глухі́ при́голосні [п] та [т]** — articulate the voiceless stops [п] (partner to [б]) and [т] (partner to [д]);
+- **Розрізня́ти та вимовля́ти зву́ки Г та Ґ** — tell **Г** and **Ґ** apart: **Г** is a soft throat sound; **Ґ** is a hard **g** like English *go*. **гора́** vs **ґа́ва** (and **ґрунт**);
 - **Чита́ти географі́чні на́зви** — accurately decode Ukrainian cities such as **Дні-про́** and **Пол-та́-ва**;
 - **Розпізнава́ти коро́тку фо́рму ста́ну** — read and understand the word **Ра́да** (glad / council);
 - **Чита́ти нові́ мініма́льні па́ри та закри́ті склади́** — distinguish pairs such as **кит** vs **кіт** and read robust monosyllables like **парк**, **торт**, **брат**, and **друг**.
@@ -41,24 +40,26 @@ These two letters unlock a rich collection of everyday Ukrainian vocabulary:
 
 ---
 
-## Фаринга́льний Г та вибухо́вий Ґ: Рі́дкісна й важли́ва бу́ква
+## Бу́кви Г і Ґ: М'яки́й горта́нний звук та тверди́й вибухови́й — Letters Г and Ґ: Soft Throat Sound and Hard G
 
 One of the most defining characteristics of standard Ukrainian is its two distinct g-letters: **Г** and **Ґ**.
 
-| Бу́ква — Letter | На́зва — Name | Звук — Sound | Характери́стика — Phonetic nature |
+| Бу́ква — Letter | На́зва — Name | Звук — Sound | Звуча́ння та о́пис — How it sounds |
 | --- | --- | --- | --- |
-| **Г, г** | ге | **[ɦ]** | Дзвінки́й горта́нний / фаринга́льний щіли́нний — Voiced pharyngeal fricative |
-| **Ґ, ґ** | ґе | **[ɡ]** | Дзвінки́й задньоязико́вий проривни́й — Voiced velar plosive |
+| **Г, г** | ге | **[ɦ]** | М'яки́й горта́нний звук (soft throat sound [ɦ]) — Voiced pharyngeal fricative |
+| **Ґ, ґ** | ґе | **[ɡ]** | Тверди́й вибухови́й звук (hard g [ɡ] like *go*) — Voiced velar plosive |
 
 :::tip
-**Як вимовля́ти украї́нський [г]:**
-Ukrainian **Г** is not the English *g* in *go*. It is a voiced, breathy sound produced deep down in the throat, similar to the *h* in English *behind* or *ahead*, but with active vocal cord vibration:
+**Як розрізня́ти Г та Ґ — Telling Г and Ґ apart:**
+**Г** is a soft throat sound; **Ґ** is a hard **g** like English *go*. Pair: **гора́** vs **ґа́ва**.
+
+Ukrainian **Г** is a voiced, breathy sound produced deep down in the throat, similar to the *h* in English *behind* or *ahead*, but with active vocal cord vibration:
 - **го-ра́ = гора́** (mountain);
 - **го-ро́д = горо́д** (vegetable garden);
 - **гриб** (mushroom).
 
 **Рі́дкісна бу́ква Ґ:**
-The letter **Ґ** with its upward-turned hook represents the crisp plosive [ɡ] (like *g* in *garden*). It is used in a small, traditional group of native Ukrainian words:
+The letter **Ґ** with its upward-turned hook represents the crisp plosive [ɡ] (like *g* in English *go* or *garden*). It is used in a small, traditional group of native Ukrainian words:
 - **ґа́-ва = ґа́ва** (crow);
 - **ґрунт** (soil / earth).
 :::

@@ -1,12 +1,12 @@
 # Слу́хай, фо́то, зо́шит
 
-У пе́рших двох уро́ках ви познайо́милися з на́звами чле́нів сім'ї́ та навчи́лися говори́ти про володі́ння: **У мене́ є...**, **Це мій брат**, **Це моя́ сестра́**. In the first two lessons, you practiced identifying family members and expressing relationships with **у мене́ є** and possessive pronouns.
+In the first two lessons, you practiced identifying family members and expressing relationships with **у мене́ є** and possessive pronouns (**Це мій брат**, **Це моя́ сестра́**).
 
-Тепе́р час поєдна́ти ці на́вички в реа́льних ситуа́ціях спілкува́ння — now it is time to connect these skills in everyday contexts:
-- **Слу́хати живе́ мо́влення** — listen to authentic Ukrainian family speech and understand questions about relatives;
-- **Розпізнава́ти пі́дписи до фо́то** — read captions on family snapshots using **твій**, **твоя́**, **твоє́**, **твої́**, **йо́го**, and **її́**;
-- **Працюва́ти з зо́шитом** — connect printed and handwritten Ukrainian labels for core family words;
-- **Розпізнава́ти офіці́йні імена́** — recognize the three parts of full Ukrainian names (**ім'я́**, **по ба́тькові**, **прі́звище**) as polite cultural markers.
+Now it is time to connect these skills in everyday contexts:
+- **Listening to family speech** — listen to authentic Ukrainian family speech and understand questions about relatives;
+- **Reading photo labels** — read captions on family snapshots using **твій**, **твоя́**, **твоє́**, **твої́**, **йо́го**, and **її́**;
+- **Working with a notebook** — connect printed and handwritten Ukrainian labels for core family words;
+- **Recognizing formal names** — recognize the three parts of full Ukrainian names (**ім'я́**, **по ба́тькові**, **прі́звище**) as polite cultural markers.
 
 ### Розми́нка — Warm-up and retrieval
 
@@ -42,17 +42,19 @@ Listening to natural Ukrainian speech trains your ear to recognize family words 
 
 Listen to how two friends look through a digital photo gallery on a smartphone:
 
-> Софі́я: Подиви́сь, це мої́ старі́ сіме́йні фотогра́фії! *(Look, these are my old family photos!)*
-> Рома́н: Ду́же ціка́во! Хто це на фо́то? *(Very interesting! Who is this in the photo?)*
-> Софі́я: Це моя́ бабу́ся Тетя́на і мій діду́сь Васи́ль. *(This is my grandmother Tetiana and my grandfather Vasyl.)*
-> Рома́н: А це твій та́то? *(And is this your dad?)*
-> Софі́я: Так, це мій та́то Євге́н, а по́руч — йо́го сестра́ Окса́на. Це моя́ ті́тка. *(Yes, this is my dad Yevhen, and next to him is his sister Oksana. This is my aunt.)*
-> Рома́н: Як га́рно! А чи є в тебе́ фотогра́фія бра́та? *(How nice! And do you have a photo of your brother?)*
-> Софі́я: Так, ось мій бра́т Ко́ля. Йо́го зва́ти Мико́ла, але́ ми ка́жемо Ко́ля. *(Yes, here is my brother Kolia. His name is Mykola, but we say Kolia.)*
+> **Софі́я**: Подиви́сь, це мої́ старі́ сіме́йні фотогра́фії!
+> **Рома́н**: Ду́же ціка́во! Хто це на фо́то?
+> **Софі́я**: Це моя́ бабу́ся Тетя́на і мій діду́сь Васи́ль.
 
-English breakdown after the Ukrainian dialogue:
+> **Рома́н**: А це твій та́то?
+> **Софі́я**: Так, це мій та́то Євге́н, а по́руч — йо́го сестра́ Окса́на. Це моя́ ті́тка.
 
-| Украї́нська фра́за | English breakdown |
+> **Рома́н**: Як га́рно! А чи є в тебе́ фотогра́фія бра́та?
+> **Софі́я**: Так, ось мій бра́т Ко́ля. Йо́го зва́ти Мико́ла, але́ ми ка́жемо Ко́ля.
+
+English support after the Ukrainian dialogue:
+
+| Украї́нська | English support |
 | --- | --- |
 | **Подиви́сь, це мої́ старі́ сіме́йні фотогра́фії!** | Look, these are my old family photos! |
 | **Хто це на фо́то?** | Who is this in the photo? |
@@ -149,17 +151,21 @@ When meeting an official, teacher, or doctor, you will hear formal greetings usi
 
 Review how notebook notes and photos come together when students discuss a completed assignment:
 
-> Марко́: Оле́но, чий це зо́шит на столі́? *(Olena, whose notebook is this on the table?)*
-> Оле́на: Це мій зо́шит для уро́ків украї́нської мо́ви. *(This is my notebook for Ukrainian language lessons.)*
-> Марко́: А що тут напи́сано бі́ля фотогра́фії? *(And what is written here next to the photo?)*
-> Оле́на: Тут напи́сано: «Моя́ сім'я́». Ось моє́ ім'я́, а це моє́ рі́дне мі́сто Полта́ва. *(Here it says: "My family". Here is my name, and this is my native city Poltava.)*
-> Марко́: Ду́же акура́тно! А хто це вгорі́ на зні́мку? *(Very neat! And who is this at the top of the picture?)*
-> Оле́на: Це моя́ бабу́ся Тетя́на і її́ сестра́ Наді́я. Вони́ живу́ть у селі́. *(This is my grandmother Tetiana and her sister Nadiia. They live in a village.)*
-> Марко́: Дя́кую! Тепе́р я теж офо́рмлю свій сіме́йний зо́шит. *(Thank you! Now I will also decorate my family notebook.)*
+> **Марко́**: Оле́но, чий це зо́шит на столі́?
+> **Оле́на**: Це мій зо́шит для уро́ків украї́нської мо́ви.
 
-Side-by-side English support for the dialogue:
+> **Марко́**: А що тут напи́сано бі́ля фотогра́фії?
+> **Оле́на**: Тут напи́сано: «Моя́ сім'я́». Ось моє́ ім'я́, а це моє́ рі́дне мі́сто Полта́ва.
 
-| Украї́нська ре́пліка | English support |
+> **Марко́**: Ду́же акура́тно! А хто це вгорі́ на зні́мку?
+> **Оле́на**: Це моя́ бабу́ся Тетя́на і її́ сестра́ Наді́я.
+
+> **Оле́на**: Вони́ живу́ть у селі́.
+> **Марко́**: Дя́кую! Тепе́р я теж офо́рмлю свій сіме́йний зо́шит.
+
+English support after the Ukrainian dialogue:
+
+| Украї́нська | English support |
 | --- | --- |
 | **Чий це зо́шит на столі́?** | Whose notebook is this on the table? |
 | **Це мій зо́шит для уро́ків украї́нської мо́ви.** | This is my notebook for Ukrainian language lessons. |
@@ -170,15 +176,15 @@ Side-by-side English support for the dialogue:
 | **Це моя́ бабу́ся Тетя́на і її́ сестра́ Наді́я.** | This is my grandmother Tetiana and her sister Nadiia. |
 | **Тепе́р я теж офо́рмлю свій сіме́йний зо́шит.** | Now I will also set up my family notebook. |
 
-### Пі́дсумок уро́ку — Lesson recap
+### Lesson recap
 
-У цьо́му уро́ці ви навчи́лися поє́днувати слу́хання, чита́ння пі́дписів до фотогра́фій та робо́ту з рукопи́сним зо́шитом — in this lesson you have developed key multimedia and observational skills for family communication:
-- **Слу́хати живе́ мо́влення** — understand natural questions and descriptions from podcast audio when people discuss family snapshots;
-- **Вжива́ти твій, твоя́, твоє́, твої́** — select the correct possessive form based on the gender and number of the noun in questions and captions;
-- **Розпізнава́ти йо́го та її́** — identify third-person possessives as invariable markers (*йо́го брат*, *її́ сестра́*);
-- **Розрізня́ти друко́вані й рукопи́сні фо́рми** — connect cursive and printed letters for core family words (**ма́ма**, **та́то**, **бра́т**, **сестра́**, **бабу́ся**, **сім'я́**);
-- **Розпізнава́ти три скла́дники і́мені** — identify given name (**ім'я́**), patronymic (**по ба́тькові**), and surname (**прі́звище**) as polite formal signals.
+In this lesson, you have developed key multimedia and observational skills for family communication:
+- **Listening to authentic speech** — understand natural questions and descriptions from podcast audio when people discuss family snapshots;
+- **Using possessives** — select the correct possessive form (**твій**, **твоя́**, **твоє́**, **твої́**) based on the gender and number of the noun in questions and captions;
+- **Recognizing invariable pronouns** — identify third-person possessives as invariable markers (*йо́го брат*, *її́ сестра́*);
+- **Distinguishing print and cursive** — connect cursive and printed letters for core family words (**ма́ма**, **та́то**, **бра́т**, **сестра́**, **бабу́ся**, **сім'я́**);
+- **Recognizing formal full names** — identify given name (**ім'я́**), patronymic (**по ба́тькові**), and surname (**прі́звище**) as polite formal signals.
 
-### Насту́пний крок — Next step
+### Next step
 
 In Lesson 4 (**Самопереві́рка**), you will complete the module by bringing together all family terms, possessive pronouns, and descriptive sentences to introduce your entire family in a confident, connected Ukrainian presentation.

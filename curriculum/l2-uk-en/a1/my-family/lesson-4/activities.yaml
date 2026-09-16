@@ -1,10 +1,10 @@
 inline:
 - id: act-401
   type: quiz
-  title: Швидка́ переві́рка ре́чень
-  instruction: Обери́ пра́вильний украї́нський рядо́к для роди́нної розмо́ви про фо́то.
+  title: Швидка́ переві́рка ре́чень — Quick sentence check
+  instruction: Обери́ пра́вильний украї́нський рядо́к для роди́нної розмо́ви про фо́то. — Choose the correct Ukrainian line for a family photo conversation.
   items:
-  - prompt: Ти пока́зуєш фо́то своє́ї мами́ дру́гові.
+  - prompt: Ти пока́зуєш фо́то своє́ї мами́ дру́гові. — You show a photo of your mom to a friend.
     options:
     - text: Це моя́ ма́ма.
       correct: true
@@ -12,8 +12,8 @@ inline:
       correct: false
     - text: Це моє́ ма́ма.
       correct: false
-    explanation: Ма́ма — жіно́чого ро́ду, тому́ вжива́ємо моя́.
-  - prompt: Ти запи́туєш дру́га про бра́та.
+    explanation: Ма́ма — жіно́чого ро́ду, тому́ вжива́ємо моя́. — "Ма́ма" is feminine, therefore we use "моя́".
+  - prompt: Ти запи́туєш дру́га про бра́та. — You ask a friend about a brother.
     options:
     - text: У тебе́ є брат?
       correct: true
@@ -21,8 +21,8 @@ inline:
       correct: false
     - text: Це є твій брат?
       correct: false
-    explanation: У тебе́ є...? — приро́дне запита́ння про ная́вність ро́дича.
-  - prompt: Ти ка́жеш, що ма́єш двох сесте́р.
+    explanation: У тебе́ є...? — приро́дне запита́ння про ная́вність ро́дича. — "У тебе́ є...?" is the natural question asking if someone has a relative.
+  - prompt: Ти ка́жеш, що ма́єш двох сесте́р. — You say that you have two sisters.
     options:
     - text: У мене́ є дві се́стри.
       correct: true
@@ -30,8 +30,8 @@ inline:
       correct: false
     - text: У мене́ є одна́ се́стри.
       correct: false
-    explanation: Зі сло́вом се́стри (жіно́чий рід) вжива́ємо дві.
-  - prompt: Ти представля́єш свого́ ста́ршого бра́та.
+    explanation: Зі сло́вом се́стри (жіно́чий рід) вжива́ємо дві. — With the word "се́стри" (feminine) we use "дві".
+  - prompt: Ти представля́єш свого́ ста́ршого бра́та. — You introduce your older brother.
     options:
     - text: Це мій ста́рший брат.
       correct: true
@@ -39,8 +39,8 @@ inline:
       correct: false
     - text: Це моє́ ста́рший брат.
       correct: false
-    explanation: Брат — чолові́чого ро́ду, тому́ мій ста́рший брат.
-  - prompt: Ти розповіда́єш про профе́сію мами́.
+    explanation: Брат — чолові́чого ро́ду, тому́ мій ста́рший брат. — "Брат" is masculine, therefore "мій ста́рший брат".
+  - prompt: Ти розповіда́єш про профе́сію мами́. — You talk about mom's profession.
     options:
     - text: Моя́ ма́ма — вчи́телька.
       correct: true
@@ -48,9 +48,8 @@ inline:
       correct: false
     - text: Моя́ ма́ма є вчи́телька.
       correct: false
-    explanation: В украї́нській мо́ві зв'я́зка є зазвича́й опуска́ється в тепе́рішньому
-      ча́сі.
-  - prompt: Ти представля́єш усі́х свої́х ро́дичів на фо́то.
+    explanation: В украї́нській мо́ві зв'я́зка є зазвича́й опуска́ється в тепе́рішньому ча́сі. — In Ukrainian, the copula "є" is usually omitted in the present tense.
+  - prompt: Ти представля́єш усі́х свої́х ро́дичів на фо́то. — You introduce all your relatives in the photo.
     options:
     - text: Це всі мої́ ро́дичі.
       correct: true
@@ -58,55 +57,55 @@ inline:
       correct: false
     - text: Це всі моя́ ро́дичі.
       correct: false
-    explanation: Ро́дичі — множина́, тому́ вжива́ємо мої́.
+    explanation: Ро́дичі — множина́, тому́ вжива́ємо мої́. — "Ро́дичі" is plural, therefore we use "мої́".
 - id: act-402
   type: match-up
-  title: Роди́нні зв'я́зки
-  instruction: З'єдна́й украї́нське сло́во з йо́го зна́ченням.
+  title: Роди́нні зв'я́зки — Family relationships
+  instruction: З'єдна́й украї́нське сло́во з йо́го зна́ченням. — Match the Ukrainian word with its meaning.
   pairs:
   - left: дя́дько
-    right: брат мами́ або́ та́та
+    right: брат мами́ або́ та́та — brother of mom or dad
   - left: ті́тка
-    right: сестра́ мами́ або́ та́та
+    right: сестра́ мами́ або́ та́та — sister of mom or dad
   - left: дружи́на
-    right: жі́нка у шлю́бі
+    right: жі́нка у шлю́бі — wife / woman in marriage
   - left: чолові́к
-    right: чолові́к у шлю́бі
+    right: чолові́к у шлю́бі — husband / man in marriage
   - left: дити́на
-    right: мале́нький син або́ до́нька
+    right: мале́нький син або́ до́нька — child / young son or daughter
   - left: моло́дший брат
-    right: брат, яки́й ме́нший за ві́ком
+    right: брат, яки́й ме́нший за ві́ком — younger brother
   - left: ста́рший брат
-    right: брат, яки́й бі́льший за ві́ком
+    right: брат, яки́й бі́льший за ві́ком — older brother
   - left: одру́жений
-    right: чолові́к, яки́й ма́є дружи́ну
+    right: чолові́к, яки́й ма́є дружи́ну — married man
 - id: act-403
   type: true-false
-  title: Переві́рка розумі́ння розмо́ви
-  instruction: Позна́ч, чи тве́рдження пра́вильне (Так) чи непра́вильне (Ні).
+  title: Переві́рка розумі́ння розмо́ви — Dialogue comprehension check
+  instruction: Позна́ч, чи тве́рдження пра́вильне (Так) чи непра́вильне (Ні). — Mark whether the statement is true (Так) or false (Ні).
   items:
-  - statement: Да́ша пока́зує Андрі́ю фотогра́фії свої́х ро́дичів.
+  - statement: Да́ша пока́зує Андрі́ю фотогра́фії свої́х ро́дичів. — Dasha shows Andrii photos of her relatives.
     correct: true
-    explanation: Да́ша пока́зує фотогра́фії своє́ї роди́ни.
-  - statement: Бо́гдан — це діду́сь Да́ші.
+    explanation: Да́ша пока́зує фотогра́фії своє́ї роди́ни. — Dasha is showing photos of her family.
+  - statement: Бо́гдан — це діду́сь Да́ші. — Bohdan is Dasha's grandfather.
     correct: false
-    explanation: Бо́гдан — це дя́дько Да́ші.
-  - statement: Окса́на — це ті́тка Да́ші.
+    explanation: Бо́гдан — це дя́дько Да́ші. — Bohdan is Dasha's uncle.
+  - statement: Окса́на — це ті́тка Да́ші. — Oksana is Dasha's aunt.
     correct: true
-    explanation: Окса́на — це ті́тка Да́ші на фо́то.
-  - statement: Ста́рший брат Макси́м уже́ одру́жений.
+    explanation: Окса́на — це ті́тка Да́ші на фо́то. — Oksana is Dasha's aunt in the photo.
+  - statement: Ста́рший брат Макси́м уже́ одру́жений. — Older brother Maksym is already married.
     correct: true
-    explanation: Да́ша ка́же, що Макси́м уже́ одру́жений.
-  - statement: Дружи́на Макси́ма працю́є інжене́ром.
+    explanation: Да́ша ка́же, що Макси́м уже́ одру́жений. — Dasha says that Maksym is already married.
+  - statement: Дружи́на Макси́ма працю́є інжене́ром. — Maksym's wife works as an engineer.
     correct: false
-    explanation: Дружи́на Макси́ма — вчи́телька; інжене́ром працю́є чолові́к Да́ші.
-  - statement: Да́ша та її чолові́к працю́ють у мі́сті.
+    explanation: Дружи́на Макси́ма — вчи́телька; інжене́ром працю́є чолові́к Да́ші. — Maksym's wife is a teacher; Dasha's husband works as an engineer.
+  - statement: Да́ша та її чолові́к працю́ють у мі́сті. — Dasha and her husband work in the city.
     correct: true
-    explanation: 'Да́ша ка́же: Ми працю́ємо тут, у на́шому мі́сті.'
+    explanation: 'Да́ша ка́же: Ми працю́ємо тут, у на́шому мі́сті. — Dasha says: "We work here, in our city."'
 - id: act-404
   type: fill-in
-  title: Скла́ди ро́зповідь про сім'ю́
-  instruction: Обери́ пра́вильне сло́во для ко́жного рядка́ ро́зповіді.
+  title: Скла́ди ро́зповідь про сім'ю́ — Build a story about family
+  instruction: Обери́ пра́вильне сло́во для ко́жного рядка́ ро́зповіді. — Choose the correct word for each line of the story.
   items:
   - sentence: Мене́ ___ Марко́.
     answer: зва́ти
@@ -114,46 +113,46 @@ inline:
     - зва́ти
     - ім'я́
     - прі́звище
-    explanation: Мене́ зва́ти... — приро́дна моде́ль знайо́мства.
+    explanation: Мене́ зва́ти... — приро́дна моде́ль знайо́мства. — "Мене́ зва́ти..." is the natural pattern for introducing oneself.
   - sentence: Це моя́ ___ на фотогра́фії.
     answer: роди́на
     options:
     - роди́на
     - ро́дичі
     - батьки́
-    explanation: Сло́во роди́на жіно́чого ро́ду в однині́ підхо́дить до моя́.
+    explanation: Сло́во роди́на жіно́чого ро́ду в однині́ підхо́дить до моя́. — The singular feminine noun "роди́на" agrees with "моя́".
   - sentence: Моя́ ма́ма — ___.
     answer: вчи́телька
     options:
     - вчи́телька
     - працюва́ти
     - інжене́р
-    explanation: Вчи́телька — жіно́чий рід профе́сії.
+    explanation: Вчи́телька — жіно́чий рід профе́сії. — "Вчи́телька" is the feminine form of the profession.
   - sentence: Мій та́то — ___.
     answer: інжене́р
     options:
     - інжене́р
     - вчи́телька
     - дити́на
-    explanation: Інжене́р — на́зва профе́сії та́та.
+    explanation: Інжене́р — на́зва профе́сії та́та. — "Інжене́р" is dad's profession.
   - sentence: У мене́ є ___ брат Тара́с.
     answer: моло́дший
     options:
     - моло́дший
     - одру́жений
     - дружи́на
-    explanation: Моло́дший узго́джується зі сло́вом брат.
+    explanation: Моло́дший узго́джується зі сло́вом брат. — "Моло́дший" agrees with the word "брат".
   - sentence: Мій ста́рший брат уже́ ___.
     answer: одру́жений
     options:
     - одру́жений
     - моло́дший
     - ті́льки
-    explanation: Одру́жений означа́є, що чолові́к ма́є дружи́ну.
+    explanation: Одру́жений означа́є, що чолові́к ма́є дружи́ну. — "Одру́жений" means that a man has a wife.
 - id: act-405
   type: odd-one-out
-  title: За́йве сло́во в роди́нному колі́
-  instruction: Обери́ сло́во, яке́ не підхо́дить до гру́пи за змі́стом або́ грамати́чним ро́дом.
+  title: За́йве сло́во в роди́нному колі́ — Odd word out in the family circle
+  instruction: Обери́ сло́во, яке́ не підхо́дить до гру́пи за змі́стом або́ грамати́чним ро́дом. — Choose the word that does not fit the group by meaning or grammatical gender.
   items:
   - words:
     - ма́ма
@@ -162,7 +161,7 @@ inline:
     - дя́дько
     answer: дя́дько
     correct: 3
-    explanation: Дя́дько — чолові́чого ро́ду, а ма́ма, сестра́, ті́тка — жіно́чого.
+    explanation: Дя́дько — чолові́чого ро́ду, а ма́ма, сестра́, ті́тка — жіно́чого. — "Дя́дько" is masculine, while "ма́ма", "сестра́", and "ті́тка" are feminine.
   - words:
     - та́то
     - брат
@@ -170,7 +169,7 @@ inline:
     - дружи́на
     answer: дружи́на
     correct: 3
-    explanation: Дружи́на — жіно́чого ро́ду, а та́то, брат, син — чолові́чого.
+    explanation: Дружи́на — жіно́чого ро́ду, а та́то, брат, син — чолові́чого. — "Дружи́на" is feminine, while "та́то", "брат", and "син" are masculine.
   - words:
     - вчи́телька
     - інжене́р
@@ -178,7 +177,7 @@ inline:
     - мі́сто
     answer: мі́сто
     correct: 3
-    explanation: Мі́сто — насе́лений пункт, і́нші слова́ — профе́сії люде́й.
+    explanation: Мі́сто — насе́лений пункт, і́нші слова́ — профе́сії люде́й. — "Мі́сто" is a city, while other words are professions of people.
   - words:
     - оди́н
     - одна́
@@ -186,7 +185,7 @@ inline:
     - дити́на
     answer: дити́на
     correct: 3
-    explanation: Дити́на — іме́нник, і́нші слова́ — числі́вники.
+    explanation: Дити́на — іме́нник, і́нші слова́ — числі́вники. — "Дити́на" is a noun, while other words are numerals.
   - words:
     - моло́дший
     - ста́рший
@@ -194,7 +193,7 @@ inline:
     - працюва́ти
     answer: працюва́ти
     correct: 3
-    explanation: Працюва́ти — дієсло́во, і́нші слова́ — прикме́тники.
+    explanation: Працюва́ти — дієсло́во, і́нші слова́ — прикме́тники. — "Працюва́ти" is a verb, while other words are adjectives.
   - words:
     - батьки́
     - ро́дичі
@@ -202,12 +201,12 @@ inline:
     - чолові́к
     answer: чолові́к
     correct: 3
-    explanation: Чолові́к — сло́во в однині́, і́нші слова́ — у множині́.
+    explanation: Чолові́к — сло́во в однині́, і́нші слова́ — у множині́. — "Чолові́к" is singular, while other words are plural.
 workbook:
 - id: act-w5
   type: fill-in
-  title: Допо́вни фотодіало́г
-  instruction: Обери́ пропу́щене сло́во з роди́нної розмо́ви.
+  title: Допо́вни фотодіало́г — Complete the photo dialogue
+  instruction: Обери́ пропу́щене сло́во з роди́нної розмо́ви. — Choose the missing word from the family conversation.
   items:
   - sentence: Це ___ сім'я́ на фотогра́фії.
     answer: моя́
@@ -215,39 +214,39 @@ workbook:
     - моя́
     - мій
     - моє́
-    explanation: Сім'я́ — жіно́чого ро́ду.
+    explanation: Сім'я́ — жіно́чого ро́ду. — "Сім'я́" is feminine.
   - sentence: ___ це? Це мій та́то.
     answer: Хто
     options:
     - Хто
     - Що
     - Де
-    explanation: Для люди́ни вжива́й хто.
+    explanation: Для люди́ни вжива́й хто. — For a person use "хто".
   - sentence: Це моя́ сестра́. ___ зва́ти Катя́.
     answer: Її
     options:
     - Її
     - Йо́го
     - Вони́
-    explanation: Її підхо́дить до се́стри.
+    explanation: Її підхо́дить до се́стри. — "Її" fits a sister.
   - sentence: Це мій брат. ___ зва́ти Ко́ля.
     answer: Йо́го
     options:
     - Йо́го
     - Її
     - Вона́
-    explanation: Йо́го підхо́дить до бра́та.
+    explanation: Йо́го підхо́дить до бра́та. — "Йо́го" fits a brother.
   - sentence: А це ___ бабу́ся?
     answer: твоя́
     options:
     - твоя́
     - твій
     - твоє́
-    explanation: Бабу́ся — жіно́чого ро́ду.
+    explanation: Бабу́ся — жіно́чого ро́ду. — "Бабу́ся" is feminine.
 - id: act-w6
   type: translate
-  title: Швидка́ переві́рка роди́нної ле́ксики
-  instruction: Обери́ англі́йське зна́чення.
+  title: Швидка́ переві́рка роди́нної ле́ксики — Quick family vocabulary check
+  instruction: Обери́ англі́йське зна́чення. — Choose the English meaning.
   items:
   - source: сім'я́
     options:
@@ -257,7 +256,7 @@ workbook:
       correct: false
     - text: profession
       correct: false
-    explanation: Сім'я́ — сло́во для близько́ї роди́ни.
+    explanation: Сім'я́ — сло́во для близько́ї роди́ни. — "Сім'я́" is the word for close household / family.
   - source: роди́на
     options:
     - text: family or kin
@@ -266,7 +265,7 @@ workbook:
       correct: false
     - text: first name
       correct: false
-    explanation: Роди́на ча́сто звучи́ть ши́рше, ніж сім'я́.
+    explanation: Роди́на ча́сто звучи́ть ши́рше, ніж сім'я́. — "Роди́на" often sounds broader than "сім'я́" (extended family / kin).
   - source: У мене́ є брат.
     options:
     - text: I have a brother.
@@ -275,7 +274,7 @@ workbook:
       correct: false
     - text: This is my brother.
       correct: false
-    explanation: У мене́ є... — блок, щоб сказа́ти, що щось або́ хтось є в мене́.
+    explanation: У мене́ є... — блок, щоб сказа́ти, що щось або́ хтось є в мене́. — "У мене́ є..." is the set pattern to say that one has something or someone.
   - source: Це моя́ сестра́.
     options:
     - text: This is my sister.
@@ -284,7 +283,7 @@ workbook:
       correct: false
     - text: This is her sister.
       correct: false
-    explanation: Моя́ узго́джується зі сло́вом сестра́.
+    explanation: Моя́ узго́джується зі сло́вом сестра́. — "Моя́" agrees with the word "сестра́".
   - source: Це мій та́то.
     options:
     - text: This is my dad.
@@ -293,11 +292,11 @@ workbook:
       correct: false
     - text: Do you have a brother?
       correct: false
-    explanation: Мій узго́джується зі сло́вом та́то.
+    explanation: Мій узго́джується зі сло́вом та́то. — "Мій" agrees with the word "та́то".
 - id: act-w401
   type: fill-in
-  title: Нові́ слова́ про ро́дичів
-  instruction: Обери́ пропу́щене сло́во про роди́ну.
+  title: Нові́ слова́ про ро́дичів — New words about relatives
+  instruction: Обери́ пропу́щене сло́во про роди́ну. — Choose the missing family word.
   items:
   - sentence: Це мій ___, брат мого́ та́та.
     answer: дя́дько
@@ -305,60 +304,60 @@ workbook:
     - дя́дько
     - ті́тка
     - дити́на
-    explanation: Дя́дько — брат батькі́в.
+    explanation: Дя́дько — брат батькі́в. — "Дя́дько" is the brother of parents.
   - sentence: Це моя́ ___, сестра́ моє́ї мами́.
     answer: ті́тка
     options:
     - ті́тка
     - дя́дько
     - чолові́к
-    explanation: Ті́тка — сестра́ батькі́в.
+    explanation: Ті́тка — сестра́ батькі́в. — "Ті́тка" is the sister of parents.
   - sentence: Моя́ ___ — чудо́ва вчи́телька.
     answer: дружи́на
     options:
     - дружи́на
     - чолові́к
     - брат
-    explanation: Дружи́на — жіно́чий рід (wife).
+    explanation: Дружи́на — жіно́чий рід (wife). — "Дружи́на" is feminine (wife).
   - sentence: Мій ___ працю́є в ліка́рні.
     answer: чолові́к
     options:
     - чолові́к
     - дружи́на
     - сестра́
-    explanation: Чолові́к — чолові́чий рід (husband).
+    explanation: Чолові́к — чолові́чий рід (husband). — "Чолові́к" is masculine (husband).
   - sentence: У них ще зо́всім мале́нька ___.
     answer: дити́на
     options:
     - дити́на
     - ро́дичі
     - батьки́
-    explanation: Дити́на — це малю́к (child).
+    explanation: Дити́на — це малю́к (child). — "Дити́на" is a child.
   - sentence: На свя́то зібра́лися всі на́ші ___.
     answer: ро́дичі
     options:
     - ро́дичі
     - дити́на
     - дя́дько
-    explanation: Ро́дичі — множина́ (relatives).
+    explanation: Ро́дичі — множина́ (relatives). — "Ро́дичі" is plural (relatives).
 - id: act-w402
   type: group-sort
-  title: Чолові́чий рід, жіно́чий рід чи множина́?
-  instruction: Розпо́діли слова́ про роди́ну та профе́сії за грамати́чним ро́дом або́ число́м.
+  title: Чолові́чий рід, жіно́чий рід чи множина́? — Masculine, feminine, or plural?
+  instruction: Розпо́діли слова́ про роди́ну та профе́сії за грамати́чним ро́дом або́ число́м. — Sort family and profession words by grammatical gender or number.
   groups:
-  - label: чолові́чий рід
+  - label: чолові́чий рід (masculine)
     items:
     - дя́дько
     - чолові́к
     - інжене́р
     - син
-  - label: жіно́чий рід
+  - label: жіно́чий рід (feminine)
     items:
     - ті́тка
     - дружи́на
     - вчи́телька
     - дочка́
-  - label: множина́
+  - label: множина́ (plural)
     items:
     - ро́дичі
     - батьки́
@@ -366,25 +365,25 @@ workbook:
     - брати́
 - id: act-w403
   type: match-up
-  title: Хто ко́му хто?
-  instruction: З'єдна́й роди́нне запита́ння з пра́вильною ві́дповіддю.
+  title: Хто ко́му хто? — Who is who to whom?
+  instruction: З'єдна́й роди́нне запита́ння з пра́вильною ві́дповіддю. — Match the family question with the correct answer.
   pairs:
-  - left: Хто таки́й дя́дько?
+  - left: Хто таки́й дя́дько? — Who is an uncle?
     right: Це брат мами́ або́ та́та.
-  - left: Хто та́ка ті́тка?
+  - left: Хто та́ка ті́тка? — Who is an aunt?
     right: Це сестра́ мами́ або́ та́та.
-  - left: Хто та́ка дружи́на?
+  - left: Хто та́ка дружи́на? — Who is a wife?
     right: Це замі́жня жі́нка для свого́ чолові́ка.
-  - left: Хто таки́й чолові́к?
+  - left: Хто таки́й чолові́к? — Who is a husband?
     right: Це одру́жений партне́р для своє́ї дружи́ни.
-  - left: Хто такі́ ро́дичі?
+  - left: Хто такі́ ро́дичі? — Who are relatives?
     right: Це всі близькі́ лю́ди з вели́кої роди́ни.
-  - left: Хто таки́й інжене́р?
+  - left: Хто таки́й інжене́р? — Who is an engineer?
     right: Це профе́сія мого́ та́та.
 - id: act-w404
   type: unjumble
-  title: Скла́ди ре́чення про роди́ну
-  instruction: Розста́в слова́ у пра́вильному поря́дку, щоб утвори́ти ре́чення.
+  title: Скла́ди ре́чення про роди́ну — Build sentences about family
+  instruction: Розста́в слова́ у пра́вильному поря́дку, щоб утвори́ти ре́чення. — Arrange words in the correct order to form a sentence.
   items:
   - words:
     - Це
@@ -392,34 +391,39 @@ workbook:
     - ста́рший
     - брат.
     answer: Це мій ста́рший брат.
+    hint: This is my older brother.
   - words:
     - Моя́
     - дружи́на
     - —
     - вчи́телька.
     answer: Моя́ дружи́на — вчи́телька.
+    hint: My wife is a teacher.
   - words:
     - Мій
     - чолові́к
     - —
     - інжене́р.
     answer: Мій чолові́к — інжене́р.
+    hint: My husband is an engineer.
   - words:
     - У
     - мене́
     - ве́лика
     - роди́на.
     answer: У мене́ ве́лика роди́на.
+    hint: I have a big family.
   - words:
     - Це
     - мої́
     - улю́блені
     - ро́дичі.
     answer: Це мої́ улю́блені ро́дичі.
+    hint: These are my favorite relatives.
   - words:
     - Мій
     - брат
     - уже́
     - одру́жений.
     answer: Мій брат уже́ одру́жений.
-
+    hint: My brother is already married.

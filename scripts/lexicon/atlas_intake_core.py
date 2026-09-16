@@ -196,8 +196,24 @@ def load_committed_inventory_keys(
     return {_lemma_key(record.lemma) for record in records}
 
 
+def _capitalize_form(form: str) -> str:
+    if "-" in form:
+        return "-".join(part.capitalize() for part in form.split("-"))
+    return form.capitalize()
+
+
 def resolve_forms(forms: Sequence[str], *, vesum_lookup: VesumLookup | None) -> dict[str, VesumResolution]:
     matches_by_form = lemmatize_forms(forms) if vesum_lookup is None else lemmatize_forms(forms, vesum_lookup=vesum_lookup)
+    unresolved_forms = [form for form in forms if not matches_by_form.get(form)]
+    if unresolved_forms:
+        cap_candidates = [_capitalize_form(f) for f in unresolved_forms if _capitalize_form(f) != f]
+        if cap_candidates:
+            cap_matches = lemmatize_forms(cap_candidates) if vesum_lookup is None else lemmatize_forms(cap_candidates, vesum_lookup=vesum_lookup)
+            for cap_form, matches in cap_matches.items():
+                if matches:
+                    lower_form = cap_form.lower()
+                    if lower_form in matches_by_form and not matches_by_form[lower_form]:
+                        matches_by_form[lower_form] = matches
     resolutions: dict[str, VesumResolution] = {}
     for form in forms:
         matches = matches_by_form.get(form, [])

@@ -41,6 +41,7 @@ try:
     from scripts.lexicon.curated_heteronyms_batch10 import CURATED_HETERONYMS_BATCH_10
     from scripts.lexicon.curated_heteronyms_batch11 import CURATED_HETERONYMS_BATCH_11
     from scripts.lexicon.curated_heteronyms_batch12 import CURATED_HETERONYMS_BATCH_12
+    from scripts.lexicon.curated_heteronyms_batch13 import CURATED_HETERONYMS_BATCH_13
 except ModuleNotFoundError:
     from curated_heteronyms_batch import CURATED_HETERONYMS_BATCH
     from curated_heteronyms_batch2 import CURATED_HETERONYMS_BATCH_2
@@ -54,6 +55,7 @@ except ModuleNotFoundError:
     from curated_heteronyms_batch10 import CURATED_HETERONYMS_BATCH_10
     from curated_heteronyms_batch11 import CURATED_HETERONYMS_BATCH_11
     from curated_heteronyms_batch12 import CURATED_HETERONYMS_BATCH_12
+    from curated_heteronyms_batch13 import CURATED_HETERONYMS_BATCH_13
 
 
 @lru_cache(maxsize=1)
@@ -94,9 +96,19 @@ def _resolve_vesum_db() -> Path:
     return local
 
 
+# СУМ-11 OCR errata: digitized text contains pseudo-heteronyms resulting from OCR scanning
+# misrecognitions of distinct Ukrainian words.
+# - ЛОГІ́К (тока́, ч.) is an OCR misrecognition of ЛОТІ́К (лотік, chute/gutter)
+# - ПОРИВНИ́Й (а́, е́) is an OCR misrecognition of ПРОРИВНИ́Й (проривний, plosive/breakthrough)
+# Neither is a genuine Ukrainian heteronym; they are excluded from heteronym scanning.
+SUM11_OCR_PSEUDO_HETERONYMS = frozenset({"логік", "поривний"})
+
+
 def parse_sum11_heteronyms(lemma: str, definition: str) -> list[dict[str, Any]]:
     """Extract distinct stressed heads and their definitions from a СУМ-11 block."""
     clean_lemma = lemma.lower().replace("-", "").strip()
+    if clean_lemma in SUM11_OCR_PSEUDO_HETERONYMS:
+        return []
     matches = list(
         re.finditer(
             rf"(?:^|[\n.!?]\s*)(?P<head>[А-ЯҐІЇЄ\u0300\u0301-]{{{len(clean_lemma)},}})\b\s*,\s*(?P<grammar>[^.]+)\.\s*(?P<body>.*?)(?=(?:[\n.!?]\s*[А-ЯҐІЇЄ\u0300\u0301-]{{{len(clean_lemma)},}}\b\s*,\s*[^.]+\.|$))",
@@ -500,6 +512,7 @@ CURATED_HETERONYMS: dict[str, list[dict[str, Any]]] = {
     **CURATED_HETERONYMS_BATCH_10,
     **CURATED_HETERONYMS_BATCH_11,
     **CURATED_HETERONYMS_BATCH_12,
+    **CURATED_HETERONYMS_BATCH_13,
 }
 
 
@@ -735,6 +748,8 @@ def main() -> int:
         rows = cur.execute("SELECT word, definition FROM sum11").fetchall()
         heteronym_count = 0
         for w, defn in rows:
+            if w in SUM11_OCR_PSEUDO_HETERONYMS:
+                continue
             parsed = parse_sum11_heteronyms(w, defn)
             if len(parsed) < 2:
                 continue

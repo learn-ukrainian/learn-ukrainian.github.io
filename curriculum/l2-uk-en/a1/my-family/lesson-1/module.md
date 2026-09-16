@@ -97,18 +97,24 @@ it as one memorized block before you add family information.
 
 When speaking with friends about photographs, you will often hear natural reactions. Notice how speakers react with genuine interest: **Кла́сно!** — Great!, **Ого́!** — Wow!, and **До́бре!** — Good!
 
-> Оле́кса: Хто це на фотогра́фії? *(Who is this in the photo?)*
-> Богда́н: Це мій брат. Йо́го зва́ти Петро́. *(This is my brother. His name is Petro.)*
-> Оле́кса: Кла́сно! А хто це бі́ля бра́та? *(Great! And who is this next to your brother?)*
-> Богда́н: Це моя́ сестра́ Мари́на. *(This is my sister Maryna.)*
-> Оле́кса: Ого́! Вона́ студе́нтка? *(Wow! Is she a student?)*
-> Богда́н: Так, вона́ студе́нтка. *(Yes, she is a student.)*
-> Оле́кса: А в тебе́ є бабу́ся? *(And do you have a grandmother?)*
-> Богда́н: Так, у мене́ є бабу́ся і діду́сь. *(Yes, I have a grandmother and a grandfather.)*
-> Оле́кса: До́бре! Як їх зва́ти? *(Good! What are their names?)*
-> Богда́н: Бабу́сю зва́ти О́льга, а дідуся́ — Іва́н. *(Grandmother's name is Olha, and grandfather's is Ivan.)*
+> **Оле́кса**: Хто це на фотогра́фії?
+> **Богда́н**: Це мій брат. Йо́го зва́ти Петро́.
 
-| Ре́пліка — Turn | English support |
+> **Оле́кса**: Кла́сно! А хто це бі́ля бра́та?
+> **Богда́н**: Це моя́ сестра́ Мари́на.
+
+> **Оле́кса**: Ого́! Вона́ студе́нтка?
+> **Богда́н**: Так, вона́ студе́нтка.
+
+> **Оле́кса**: А в тебе́ є бабу́ся?
+> **Богда́н**: Так, у мене́ є бабу́ся і діду́сь.
+
+> **Оле́кса**: До́бре! Як їх зва́ти?
+> **Богда́н**: Бабу́сю зва́ти О́льга, а дідуся́ — Іва́н.
+
+English support after the Ukrainian dialogue:
+
+| Украї́нська | English support |
 | --- | --- |
 | **Хто це на фотогра́фії?** | Who is this in the photo? |
 | **Це мій брат. Йо́го зва́ти Петро́.** | This is my brother. His name is Petro. |

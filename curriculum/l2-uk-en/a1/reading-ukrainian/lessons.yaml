@@ -1,6 +1,6 @@
 lessons:
 - n: 1
-  title: "Складопо́діл та бу́кви К, И, Р"
+  title: "Складопо́діл та бу́кви К, И, Р — Syllables and the Letters К, И, Р"
   sections:
   - Склади
   minutes: 60
@@ -17,7 +17,7 @@ lessons:
   - ньому
   unverified_lemmas: []
 - n: 2
-  title: "Дзвінкі́ при́голосні та звук [і]: Бу́кви Б, В, Д, І"
+  title: "Дзвінкі́ при́голосні та голосна́ І: Бу́кви Б, В, Д, І — Voiced Consonants and Vowel І: Letters Б, В, Д, І"
   sections:
   - Голосні літери
   minutes: 60
@@ -33,7 +33,7 @@ lessons:
   unverified_stress: []
   unverified_lemmas: []
 - n: 3
-  title: "Глухі́ па́ри, фаринга́льний звук та бу́кви П, Т, Г, Ґ"
+  title: "Глухі́ па́ри, зву́ки Г і Ґ та бу́кви П, Т, Г, Ґ — Voiceless Pairs, Sounds Г and Ґ, and Letters П, Т, Г, Ґ"
   sections:
   - Читаємо слова
   minutes: 60
@@ -49,7 +49,7 @@ lessons:
   unverified_stress: []
   unverified_lemmas: []
 - n: 4
-  title: "Голосна́ Е, шипля́чі та пе́рші віта́ння: Бу́кви Е, З, Ж, Ш, Х"
+  title: "Голосна́ Е, шипля́чі та пе́рші віта́ння: Бу́кви Е, З, Ж, Ш, Х — Vowel Е, Hushing Sounds, and First Greetings: Letters Е, З, Ж, Ш, Х"
   sections:
   - Пастки читання
   minutes: 60
@@ -65,7 +65,7 @@ lessons:
   unverified_stress: []
   unverified_lemmas: []
 - n: 5
-  title: "Си́нтез чита́ння: Від слів до пе́ршого діало́гу"
+  title: "Си́нтез чита́ння: Від слів до пе́ршого діало́гу — Reading Synthesis: From Words to First Dialogue"
   sections:
   - Друк, зошит, перевірка
   - Далі

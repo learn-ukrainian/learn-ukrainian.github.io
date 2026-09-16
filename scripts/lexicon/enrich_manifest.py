@@ -8630,9 +8630,54 @@ def apply_cached_usage_notes(manifest: dict[str, Any]) -> int:
     return added
 
 
+def apply_cached_proverbs(manifest: dict[str, Any]) -> int:
+    """Fill empty proverbs from matching current caches without fetching."""
+    added = 0
+    for entry in manifest["entries"]:
+        sections = entry.get("sections") or {}
+        if (sections.get("proverbs") or {}).get("items"):
+            continue
+        lemma = entry["lemma"]
+        cache = _load_current_slovnyk_cache_file(_slovnyk_cache_path(lemma))
+        if not cache or cache.get("lookup_word") != _slovnyk_lookup_word(lemma):
+            continue
+        proverbs = _proverbs_slovnyk(lemma, cache)
+        if proverbs and proverbs.get("items"):
+            sections["proverbs"] = proverbs
+            entry["sections"] = sections
+            entry.get("gate_provenance", {}).pop("proverbs", None)
+            added += 1
+    return added
+
+
+def apply_cached_synsets(manifest: dict[str, Any]) -> int:
+    """Fill empty sense groups, preserving existing flat synonyms and metadata."""
+    added = 0
+    for entry in manifest["entries"]:
+        sections = entry.get("sections") or {}
+        synonyms = sections.get("synonyms") or {}
+        if synonyms.get("synsets"):
+            continue
+        lemma = entry["lemma"]
+        cache = _load_current_slovnyk_cache_file(_slovnyk_cache_path(lemma))
+        if not cache or cache.get("lookup_word") != _slovnyk_lookup_word(lemma):
+            continue
+        synsets = _synonyms_slovnyk_sense_groups(lemma, cache)
+        if synsets and synsets.get("synsets"):
+            synonyms["synsets"] = synsets["synsets"]
+            for key in ("items", "source", "source_urls"):
+                if key not in synonyms and key in synsets:
+                    synonyms[key] = synsets[key]
+            sections["synonyms"] = synonyms
+            entry["sections"] = sections
+            entry.get("gate_provenance", {}).pop("synonyms", None)
+            added += 1
+    return added
+
+
 def build_parser() -> argparse.ArgumentParser:
     """CLI parser for enrich_manifest (``#5393`` argv guard)."""
-    return argparse.ArgumentParser(
+    parser = argparse.ArgumentParser(
         description=(
             "Enrich the Word Atlas lexicon-manifest.json with source-verified dictionary data "
             "(VESUM morphology, СУМ definitions, CEFR, synonyms, etymology, etc.). "
@@ -8645,12 +8690,12 @@ def build_parser() -> argparse.ArgumentParser:
             "Examples:\n"
             "  # Print usage without touching any files\n"
             "  .venv/bin/python scripts/lexicon/enrich_manifest.py --help\n\n"
-            "  # Fill usage notes offline into a separate candidate\n"
-            "  .venv/bin/python scripts/lexicon/enrich_manifest.py --write --usage-notes-cache-only\n\n"
+            "  # Fill all three hub layers offline into a separate candidate\n"
+            "  .venv/bin/python scripts/lexicon/enrich_manifest.py --write --hub-cache-only\n\n"
             "  # Run full enrichment (rewrites lexicon-manifest.json)\n"
             "  .venv/bin/python scripts/lexicon/enrich_manifest.py --write\n\n"
             "Outputs (only with --write):\n"
-            "  --usage-notes-cache-only: --output candidate only; no hydration or network\n"
+            "  Cache-only flags: --output candidate only; no hydration or network\n"
             "  site/src/data/lexicon-manifest.json  — rewritten with enrichment blocks\n"
             "  site/src/data/lexicon-manifest.fingerprint.json  — refreshed fingerprint\n"
             "  data/lexicon/side/*.sqlite, data/lexicon/runner_work/  — staging side DBs\n\n"
@@ -8664,14 +8709,6 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
 
-
-def main(argv: Sequence[str] | None = None) -> int:
-    """Parse CLI args and run enrichment only when ``--write`` is given.
-
-    Bare invocation and unknown flags must not call :func:`enrich` or touch
-    ``lexicon-manifest.json`` (``#5393``).
-    """
-    parser = build_parser()
     parser.add_argument(
         "--write",
         action="store_true",
@@ -8684,29 +8721,64 @@ def main(argv: Sequence[str] | None = None) -> int:
         "--usage-notes-cache-only", action="store_true",
         help="Fill only empty usage notes from local v4 caches, without network access (default: full enrichment).",
     )
+    for section in ("proverbs", "synsets", "hub"):
+        parser.add_argument(
+            f"--{section}-cache-only", action="store_true",
+            help=(
+                f"Fill empty {section} layers from local current caches without network access "
+                "(hub applies usage notes, proverbs and synsets; default: full enrichment)."
+            ),
+        )
     parser.add_argument(
         "--output", type=Path,
-        help="Candidate JSON path for --usage-notes-cache-only (default: site/src/data/lexicon-manifest.usage-notes.json).",
+        help="Candidate JSON path for cache-only modes (default: lexicon-manifest.usage-notes.json for usage notes alone, otherwise lexicon-manifest.hub.json beside the baseline).",
     )
+    return parser
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    """Parse CLI args and run enrichment only when ``--write`` is given.
+
+    Bare invocation and unknown flags must not call :func:`enrich` or touch
+    ``lexicon-manifest.json`` (``#5393``).
+    """
+    parser = build_parser()
     args = parser.parse_args(argv)
-    if args.output and not args.usage_notes_cache_only:
-        parser.error("--output requires --usage-notes-cache-only")
+    cache_only = (
+        args.usage_notes_cache_only or args.proverbs_cache_only
+        or args.synsets_cache_only or args.hub_cache_only
+    )
+    if args.output and not cache_only:
+        parser.error("--output requires a cache-only flag")
     if not args.write:
         parser.error(
             "refusing to run enrichment without --write "
             "(rewrites site/src/data/lexicon-manifest.json; pass --write to proceed)"
         )
 
-    if args.usage_notes_cache_only:
-        output = args.output or MANIFEST.with_name("lexicon-manifest.usage-notes.json")
+    if cache_only:
+        usage_only = args.usage_notes_cache_only and not (
+            args.proverbs_cache_only or args.synsets_cache_only or args.hub_cache_only
+        )
+        output = args.output or MANIFEST.with_name(
+            "lexicon-manifest.usage-notes.json" if usage_only else "lexicon-manifest.hub.json"
+        )
         if output.resolve() == MANIFEST.resolve():
             parser.error("cache-only output must differ from the baseline manifest")
         # Deliberately bypass load_manifest: a missing local input must fail,
         # never hydrate a release or replace a richer candidate.
         manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
-        added = apply_cached_usage_notes(manifest)
+        counts = {}
+        for selected, name, apply in (
+            (args.usage_notes_cache_only, "usage_notes", apply_cached_usage_notes),
+            (args.proverbs_cache_only, "proverbs", apply_cached_proverbs),
+            (args.synsets_cache_only, "synsets", apply_cached_synsets),
+        ):
+            if selected or args.hub_cache_only:
+                counts[name] = apply(manifest)
         output.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        print(f"usage_notes: {added} newly non-empty / {len(manifest['entries'])} entries; candidate: {output}")
+        for name, added in counts.items():
+            print(f"{name}: {added} newly non-empty / {len(manifest['entries'])} entries; candidate: {output}")
         return 0
 
     enriched, total = enrich()

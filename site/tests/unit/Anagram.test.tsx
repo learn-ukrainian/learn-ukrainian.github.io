@@ -130,6 +130,34 @@ describe('AnagramQuestion', () => {
     expect(feedback).toBeInTheDocument();
   });
 
+  test('combining acute stress mark is treated as part of its letter tile, not a separate tile', () => {
+    // "рука́" = р, у, к, а́ (4 graphemes). If answer.split('') were used
+    // instead of a grapheme split, the combining acute would count as a
+    // 5th "letter" and the tile count here would be wrong.
+    const { container } = render(
+      <AnagramQuestion scrambled="р у к а́" answer="рука́" />,
+    );
+    expect(tilesIn(container, 'letter-bank').length).toBe(4);
+  });
+
+  test('reassembling a stressed grapheme tile reproduces the exact answer string', async () => {
+    // Two identical "а́" tiles remove shuffle-order ambiguity: whichever
+    // order they're clicked in, the joined answer is the same string, so
+    // this deterministically exercises the grapheme-aware comparison
+    // against a combining-mark answer.
+    const user = userEvent.setup();
+    const { container } = render(
+      <AnagramQuestion scrambled="а́ а́" answer="а́а́" />,
+    );
+    while (tilesIn(container, 'letter-bank').length > 0) {
+      await user.click(tilesIn(container, 'letter-bank')[0]);
+    }
+    await user.click(submitBtn(container));
+
+    const feedback = container.querySelector('[data-activity="feedback"]');
+    expect(feedback?.getAttribute('data-correct')).toBe('true');
+  });
+
   test('Reset button restores the initial state', async () => {
     const user = userEvent.setup();
     const { container } = render(<AnagramQuestion {...props} />);

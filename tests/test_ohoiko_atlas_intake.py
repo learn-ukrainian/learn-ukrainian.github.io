@@ -468,3 +468,22 @@ def test_cli_rejects_ledger_output_outside_source_inventory_directory(
 
     assert result == 2
     assert "data/lexicon/source-inventory" in capsys.readouterr().err
+
+
+def test_core_resolve_forms_capitalized_and_hyphenated_proper_nouns() -> None:
+    def fake_cap_vesum(forms: list[str]) -> dict[str, list[dict[str, str]]]:
+        data = {
+            "Олена": [{"lemma": "Олена", "pos": "noun"}],
+            "Івано-Франківськ": [{"lemma": "Івано-Франківськ", "pos": "noun"}],
+        }
+        return {form: data.get(form, []) for form in forms}
+
+    resolutions = core.resolve_forms(["олена", "івано-франківськ", "невідоме"], vesum_lookup=fake_cap_vesum)
+    assert resolutions["олена"].lemma == "Олена"
+    assert resolutions["олена"].pos == "noun"
+    assert resolutions["олена"].reason is None
+    assert resolutions["івано-франківськ"].lemma == "Івано-Франківськ"
+    assert resolutions["івано-франківськ"].pos == "noun"
+    assert resolutions["івано-франківськ"].reason is None
+    assert resolutions["невідоме"].lemma is None
+    assert resolutions["невідоме"].reason == "vesum_unrecognized"

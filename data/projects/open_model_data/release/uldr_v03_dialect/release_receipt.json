@@ -1,0 +1,41 @@
+{
+  "schema_version": "v1_dialect_multizone_release_receipt",
+  "issue": 8102,
+  "parent_epic": 6321,
+  "created_at": "2026-09-16T13:18:53.417884+00:00",
+  "git_commit": "gemini/8102-dialect-mining",
+  "evaluation_benchmark": {
+    "file_path": "data/projects/open_model_data/release/uldr_v03_dialect/dialect_corpus_expanded_1500.jsonl",
+    "sha256": "364f95befefd885f3af49e2b9f2a3eea42d8e47b31866d7846ed1a13d0650c00",
+    "total_cases": 1500,
+    "preserve_cases": 998,
+    "mixed_error_cases": 502,
+    "macro_zone_counts": {
+      "southwestern": 600,
+      "northern": 400,
+      "southeastern": 500
+    },
+    "sub_zone_counts": {
+      "southwestern_pokuttia": 129,
+      "southwestern_bukovina": 147,
+      "southwestern_boyko": 231,
+      "southwestern_hutsul": 93,
+      "northern_polissian": 400,
+      "southeastern_slobozhan": 250,
+      "southeastern_steppe": 250
+    }
+  },
+  "sft_training_dataset": {
+    "file_path": "data/projects/open_model_data/release/uldr_v03_dialect/sft_dialect_protection_500.jsonl",
+    "sha256": "2f3260cb108c1c9b0a3a684f190ad4376b6ca428519b10386ab4b23155ed5eab",
+    "total_trajectories": 550,
+    "dialect_trajectories": 450,
+    "replay_buffer_trajectories": 100
+  },
+  "invariants_verified": {
+    "zero_train_eval_leakage": true,
+    "anti_copying_mixed_error_coverage": true,
+    "bilodid_quarantine_enforced": true,
+    "all_localities_verified": true
+  }
+}

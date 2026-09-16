@@ -2,322 +2,340 @@ inline:
 - id: act-1
   type: count-syllables
   title: "Раху́йте склади́ — Count syllables"
-  instruction: "Пораху́йте голосні́ зву́ки у сло́ві. Кі́лькість голосни́х дорі́внює кі́лькості складі́в."
+  instruction: "Пораху́йте голосні́ зву́ки у сло́ві. Кі́лькість голосни́х дорі́внює кі́лькості складі́в. — Count the vowel sounds in the word. The number of vowels equals the number of syllables."
   maxCount: 5
   items:
   - word: рак
     correct: 1
+    translation: crayfish
   - word: мак
     correct: 1
+    translation: poppy
   - word: рука́
     correct: 2
+    translation: hand / arm
   - word: со́рок
     correct: 2
+    translation: forty
   - word: си́ла
     correct: 2
+    translation: strength / power
   - word: молоко́
     correct: 3
+    translation: milk
 
 - id: act-201
   type: watch-and-repeat
   title: "Диві́ться та повто́рюйте: Бу́кви К, И, Р — Watch and repeat: Letters К, И, Р"
-  instruction: "Подиві́ться коро́тке ві́део про вимо́ву лі́тери (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос."
+  instruction: "Подиві́ться коро́тке ві́део про вимо́ву лі́тери (джерело́: А́нна Ого́йко / source: Anna Ohoiko, Ukrainian Lessons) та повторі́ть уго́лос. — Watch a short video on pronouncing the letter (source: Anna Ohoiko, Ukrainian Lessons) and repeat aloud."
   items:
   - letter: К
-    word: рука́
+    word: "рука́ — hand / arm"
     video: https://www.youtube.com/watch?v=J7sGEI4-xJo
   - letter: И
-    word: си́ла
+    word: "си́ла — strength / power"
     video: https://www.youtube.com/watch?v=W-1rCu0indE
   - letter: Р
-    word: рак
+    word: "рак — crayfish"
     video: https://www.youtube.com/watch?v=fMGsQ5KPQgg
   - letter: А
-    word: ма́ма
+    word: "ма́ма — mother / mom"
     video: https://www.youtube.com/watch?v=hvB3VpcR3ZE
   - letter: О
-    word: со́рок
+    word: "со́рок — forty"
     video: https://www.youtube.com/watch?v=gJFxRIPRZbI
   - letter: У
-    word: кума́
+    word: "кума́ — godmother"
     video: https://www.youtube.com/watch?v=VB1O6PmtYRU
 
 - id: act-202
   type: match-up
   title: "З'єдна́йте склади́ у слова́ — Join syllables into words"
-  instruction: "З'єдна́йте пе́рший склад із дру́гим, щоб утвори́ти знайо́ме сло́во."
+  instruction: "З'єдна́йте пе́рший склад із дру́гим, щоб утвори́ти знайо́ме сло́во. — Join the first syllable with the second to form a familiar word."
   pairs:
-  - left: ру
-    right: ка́ (рука́)
-  - left: си́
-    right: ла (си́ла)
-  - left: ко
-    right: ра́ (кора́)
-  - left: со́
-    right: рок (со́рок)
-  - left: ку
-    right: ма́ (кума́)
-  - left: ри́
-    right: нок (ри́нок)
+  - left: "ру — ru"
+    right: "ка́ (рука́ — hand / arm)"
+  - left: "си́ — sy"
+    right: "ла (си́ла — strength)"
+  - left: "ко — ko"
+    right: "ра́ (кора́ — bark)"
+  - left: "со́ — so"
+    right: "рок (со́рок — forty)"
+  - left: "ку — ku"
+    right: "ма́ (кума́ — godmother)"
+  - left: "ри́ — ry"
+    right: "нок (ри́нок — market)"
 
 - id: act-203
   type: divide-words
   title: "Поділі́ть слова́ на склади́ — Divide words into syllables"
-  instruction: "Введі́ть сло́во, розділи́вши його́ на склади́ че́рез пробі́л."
+  instruction: "Введі́ть сло́во, розділи́вши його́ на склади́ че́рез пробі́л. — Enter the word divided into syllables with a space."
   items:
   - word: рука́
-    answer: ру ка́
+    answer: "ру ка́"
+    hint: "рука́ — hand / arm"
   - word: со́рок
-    answer: со́ рок
+    answer: "со́ рок"
+    hint: "со́рок — forty"
   - word: си́ла
-    answer: си́ ла
+    answer: "си́ ла"
+    hint: "си́ла — strength"
   - word: ри́нок
-    answer: ри́ нок
+    answer: "ри́ нок"
+    hint: "ри́нок — market"
   - word: кора́
-    answer: ко ра́
+    answer: "ко ра́"
+    hint: "кора́ — bark"
   - word: молоко́
-    answer: мо ло ко́
+    answer: "мо ло ко́"
+    hint: "молоко́ — milk"
 
 workbook:
 - id: act-w1
   type: group-sort
   title: "Розподілі́ть за кі́лькістю складів — Sort by syllable count"
-  instruction: "Розподілі́ть слова́ за кі́лькістю складів."
+  instruction: "Розподілі́ть слова́ за кі́лькістю складів. — Sort words by the number of syllables."
   groups:
-  - name: "Оди́н склад"
+  - name: "Оди́н склад — One syllable"
     items:
-    - рак
-    - мак
-    - кран
-    - син
-    - смак
-    - кум
-  - name: "Два склади́"
+    - "рак (crayfish)"
+    - "мак (poppy)"
+    - "кран (crane / tap)"
+    - "син (son)"
+    - "смак (taste)"
+    - "кум (godfather)"
+  - name: "Два склади́ — Two syllables"
     items:
-    - рука́
-    - со́рок
-    - си́ла
-    - кора́
-    - нора́
-    - кума́
-  - name: "Три склади́"
+    - "рука́ (hand / arm)"
+    - "со́рок (forty)"
+    - "си́ла (strength)"
+    - "кора́ (bark)"
+    - "нора́ (burrow)"
+    - "кума́ (godmother)"
+  - name: "Три склади́ — Three syllables"
     items:
-    - молоко́
+    - "молоко́ (milk)"
 
 - id: act-w201
   type: quiz
   title: "Факти про склади́ та зву́ки — Facts about syllables and sounds"
-  instruction: "Обері́ть одну́ прави́льну ві́дповідь."
+  instruction: "Обері́ть одну́ прави́льну ві́дповідь. — Choose one correct answer."
   items:
-  - prompt: "Як порахува́ти склади́ в украї́нському сло́ві?"
+  - prompt: "Як порахува́ти склади́ в украї́нському сло́ві? — How do you count syllables in a Ukrainian word?"
     options:
-    - text: "Порахува́ти голосні́ зву́ки"
+    - text: "Порахува́ти голосні́ зву́ки — Count the vowel sounds"
       correct: true
-    - text: "Порахува́ти при́голосні зву́ки"
+    - text: "Порахува́ти при́голосні зву́ки — Count the consonant sounds"
       correct: false
-    - text: "Порахува́ти всі бу́кви"
+    - text: "Порахува́ти всі бу́кви — Count all letters"
       correct: false
-    explanation: "У сло́ві сті́льки складів, скі́льки в ньо́му голосних зву́ків."
-  - prompt: "Скі́льки складі́в у сло́ві «со́рок»?"
+    explanation: "У сло́ві сті́льки складів, скі́льки в ньо́му голосних зву́ків. — In a word there are as many syllables (beats) as there are vowel sounds."
+  - prompt: "Скі́льки складі́в у сло́ві «со́рок»? — How many syllables are in the word \"со́рок\"?"
     options:
-    - text: "Два склади́"
+    - text: "Два склади́ — Two syllables"
       correct: true
-    - text: "Оди́н склад"
+    - text: "Оди́н склад — One syllable"
       correct: false
-    - text: "Три склади́"
+    - text: "Три склади́ — Three syllables"
       correct: false
-    explanation: "У сло́ві «со́рок» два голосни́х зву́ки [о], то́му два склади́."
-  - prompt: "Який голосни́й звук познача́є лі́тера И?"
+    explanation: "У сло́ві «со́рок» два голосни́х зву́ки [о], то́му два склади́. — In the word «со́рок» there are two vowel sounds [о], so two syllables."
+  - prompt: "Який голосни́й звук познача́є лі́тера И? — What vowel sound does the letter И represent?"
     options:
-    - text: "Ненапру́жений передні́й звук [и]"
+    - text: "Розсла́блений передні́й звук «ih» — Relaxed front sound \"ih\""
       correct: true
-    - text: "Задньоязико́вий звук [у]"
+    - text: "Задньоязико́вий звук «oo» — Back tongue sound \"oo\""
       correct: false
-    - text: "Лабіалізо́ваний звук [о]"
+    - text: "Округле́ний звук «oh» — Rounded sound \"oh\""
       correct: false
-    explanation: "Бу́ква И познача́є чи́стий ненапру́жений голосни́й звук [и]."
-  - prompt: "Який звук познача́є бу́ква Р?"
+    explanation: "Бу́ква И познача́є розсла́блений голосни́й звук «ih» (як у дим). — Letter И represents the relaxed vowel sound \"ih\" (as in дим)."
+  - prompt: "Який звук познача́є бу́ква Р? — What sound does the letter Р represent?"
     options:
-    - text: "Дрижа́чий сона́нт [r]"
+    - text: "Дрижа́чий звук «r» (rolled r) — Rolled r-sound [r]"
       correct: true
-    - text: "Глухи́й проривни́й [k]"
+    - text: "Глухи́й звук «k» — Voiceless sound \"k\""
       correct: false
-    - text: "Носови́й сона́нт [m]"
+    - text: "Носови́й звук «m» — Nasal sound \"m\""
       correct: false
-    explanation: "Бу́ква Р познача́є язико́вий дрижа́чий сона́нт [r]."
-  - prompt: "Що пока́зує кінестети́чний тест підборі́ддя?"
+    explanation: "Бу́ква Р познача́є розко́тистий дрижа́чий звук [r]. — Letter Р represents the rolled r-sound [r]."
+  - prompt: "Що пока́зує кінестети́чний тест підборі́ддя? — What does the chin test show?"
     options:
-    - text: "Ко́жен рух підборі́ддя вниз відпові́дає голосно́му зву́ку й скла́ду"
+    - text: "Ко́жен рух підборі́ддя вниз відпові́дає голосно́му й скла́ду — Each chin drop marks a vowel and a syllable"
       correct: true
-    - text: "Він пока́зує наголо́шений при́голосний"
+    - text: "Він пока́зує наголо́шений при́голосний — It shows the stressed consonant"
       correct: false
-    - text: "Він вимі́рює си́лу го́лосу"
+    - text: "Він вимі́рює си́лу го́лосу — It measures the volume of voice"
       correct: false
-    explanation: "Ще́лепа опу́скається під час тво́рення голосних зву́ків."
-  - prompt: "Чи є слова́ «бу́ква» та «лі́тера» сино́німами?"
+    explanation: "Підборі́ддя опу́скається при ко́жному голосно́му зву́ку (скла́ді). — The chin drops on every vowel sound (syllable)."
+  - prompt: "Чи є слова́ «бу́ква» та «лі́тера» сино́німами? — Are the words \"бу́ква\" and \"лі́тера\" synonyms?"
     options:
-    - text: "Так, це то́чні сино́німи для графі́чного зна́ка"
+    - text: "Так, це то́чні сино́німи для зна́ка — Yes, they are exact synonyms for a letter"
       correct: true
-    - text: "Ні, бу́ква — це звук, а лі́тера — знак"
+    - text: "Ні, бу́ква — це звук, а лі́тера — знак — No, бу́ква is a sound and лі́тера is a letter"
       correct: false
-    - text: "Ні, це зовсі́м рі́зні поня́ття"
+    - text: "Ні, це зовсі́м рі́зні поня́ття — No, they are completely different concepts"
       correct: false
-    explanation: "Оби́два те́рміни станда́ртні в украї́нській осві́ті та познача́ють графем́у."
+    explanation: "Оби́два те́рміни означа́ють письмови́й знак для зву́ка. — Both terms mean a written character for a sound."
 
 - id: act-w202
   type: odd-one-out
   title: "За́йве сло́во за кі́лькістю складів — Odd word out by syllable count"
-  instruction: "Знайді́ть у ко́жному рядку́ сло́во, яке́ ма́є і́ншу кі́лькість складів."
+  instruction: "Знайді́ть у ко́жному рядку́ сло́во, яке́ ма́є і́ншу кі́лькість складів. — Find the word in each row with a different syllable count."
   items:
   - words:
-    - рак
-    - мак
-    - рука́
-    - син
+    - "рак — crayfish"
+    - "мак — poppy"
+    - "рука́ — hand / arm"
+    - "син — son"
     correct: 2
-    explanation: "Сло́во «рука́» ма́є два склади́, а ре́шта слів — оди́н склад."
+    explanation: "Сло́во «рука́» ма́є два склади́ (2), а ре́шта слів — оди́н склад (1). — The word «рука́» has two syllables (2), while the rest have one (1)."
   - words:
-    - со́рок
-    - си́ла
-    - кора́
-    - кран
+    - "со́рок — forty"
+    - "си́ла — strength"
+    - "кора́ — bark"
+    - "кран — crane / tap"
     correct: 3
-    explanation: "Сло́во «кран» односкладо́ве, а ре́шта — двоскладо́ві."
+    explanation: "Сло́во «кран» ма́є оди́н склад (1), а ре́шта — два склади́ (2). — The word «кран» has one syllable (1), while the rest have two (2)."
   - words:
-    - молоко́
-    - рука́
-    - нора́
-    - кума́
+    - "молоко́ — milk"
+    - "рука́ — hand / arm"
+    - "нора́ — burrow"
+    - "кума́ — godmother"
     correct: 0
-    explanation: "Сло́во «молоко́» ма́є три склади́, а ре́шта — два склади́."
+    explanation: "Сло́во «молоко́» ма́є три склади́ (3), а ре́шта — два склади́ (2). — The word «молоко́» has three syllables (3), while the rest have two (2)."
   - words:
-    - смак
-    - ри́нок
-    - син
-    - кум
+    - "смак — taste"
+    - "ри́нок — market"
+    - "син — son"
+    - "кум — godfather"
     correct: 1
-    explanation: "Сло́во «ри́нок» ма́є два склади́, а ре́шта слів — оди́н склад."
+    explanation: "Сло́во «ри́нок» ма́є два склади́ (2), а ре́шта слів — оди́н склад (1). — The word «ри́нок» has two syllables (2), while the rest have one (1)."
   - words:
-    - кума́
-    - сукно́
-    - коса́
-    - рак
+    - "кума́ — godmother"
+    - "сукно́ — cloth"
+    - "коса́ — braid / scythe"
+    - "рак — crayfish"
     correct: 3
-    explanation: "Сло́во «рак» ма́є оди́н склад, а ре́шта слів — два склади́."
+    explanation: "Сло́во «рак» ма́є оди́н склад (1), а ре́шта слів — два склади́ (2). — The word «рак» has one syllable (1), while the rest have two (2)."
   - words:
-    - син
-    - кран
-    - рак
-    - сосна́
+    - "син — son"
+    - "кран — crane / tap"
+    - "рак — crayfish"
+    - "сосна́ — pine tree"
     correct: 3
-    explanation: "Сло́во «сосна́» ма́є два склади́, а і́нші слова́ — оди́н склад."
+    explanation: "Сло́во «сосна́» ма́є два склади́ (2), а і́нші слова́ — оди́н склад (1). — The word «сосна́» has two syllables (2), while the other words have one (1)."
 
 - id: act-w203
   type: true-false
   title: "Пра́вда чи непра́вда: Зву́ки та склади́ — True or False: Sounds and syllables"
-  instruction: "Ви́значте, чи пра́вильне тве́рдження."
+  instruction: "Ви́значте, чи пра́вильне тве́рдження. — Determine whether the statement is true or false."
   items:
-  - statement: "У ко́жному украї́нському скла́ді обов'язко́во є голосни́й звук."
+  - statement: "У ко́жному украї́нському скла́ді обов'язко́во є голосни́й звук. — Every Ukrainian syllable must contain a vowel sound."
     correct: true
-    explanation: "Голосни́й звук — це верхови́на й осно́ва ко́жного скла́ду."
-  - statement: "У сло́ві «со́рок» три склади́."
+    explanation: "Голосни́й звук — це осно́ва ко́жного скла́ду (биття́ сло́ва). — A vowel sound is the core of every syllable (beat of the word)."
+  - statement: "У сло́ві «со́рок» три склади́. — In the word \"со́рок\" there are three syllables."
     correct: false
-    explanation: "У сло́ві «со́рок» два голосни́х зву́ки [о], то́му в ньо́му два склади́."
-  - statement: "Звук [и] нале́жить до шести́ голосних зву́ків украї́нської мо́ви."
+    explanation: "У сло́ві «со́рок» два голосни́х зву́ки [о], то́му в ньо́му два склади́. — In «со́рок» there are two vowel sounds [о], so two syllables."
+  - statement: "Звук [и] нале́жить до шести́ голосних зву́ків украї́нської мо́ви. — The sound [и] is one of the six vowel sounds of Ukrainian."
     correct: true
-    explanation: "В украї́нській мо́ві шість голосних зву́ків, і [и] — оди́н із них."
-  - statement: "Бу́ква К познача́є сона́нт."
+    explanation: "В украї́нській мо́ві шість голосних: [а], [о], [у], [е], [и], [і]. — In Ukrainian there are six vowel sounds: [a], [o], [u], [e], [y], [i]."
+  - statement: "Бу́ква К познача́є сона́нт. — The letter К represents a sonorant."
     correct: false
-    explanation: "Бу́ква К познача́є глухи́й проривни́й звук [k], а сона́нт познача́є Р."
-  - statement: "Слова́ «бу́ква» та «лі́тера» є сино́німами в украї́нській мо́ві."
+    explanation: "Бу́ква К познача́є глухи́й звук [k], а сона́нт — це Р. — Letter К represents the voiceless sound [k], while Р is a sonorant."
+  - statement: "Слова́ «бу́ква» та «лі́тера» є сино́німами в украї́нській мо́ві. — The words \"бу́ква\" and \"лі́тера\" are synonyms in Ukrainian."
     correct: true
-    explanation: "Оби́два слова́ станда́ртні й означа́ють графі́чний знак для зву́ка."
-  - statement: "Кі́лькість складів у сло́ві зале́жить від кі́лькості при́голосних."
+    explanation: "Оби́два слова́ означа́ють графі́чний знак для зву́ка. — Both words mean a graphic character for a sound."
+  - statement: "Кі́лькість складів у сло́ві зале́жить від кі́лькості при́голосних. — The number of syllables in a word depends on the number of consonants."
     correct: false
-    explanation: "Кі́лькість складів зале́жить ви́ключно від кі́лькості голосних."
+    explanation: "Кі́лькість складів зале́жить ви́ключно від кі́лькості голосних. — The number of syllables depends exclusively on the number of vowels."
 
 - id: act-w204
   type: fill-in
   title: "Встав пропу́щену лі́теру — Fill in the missing letter"
-  instruction: "Обері́ть прави́льну лі́теру на мі́сці про́пуску ___ ."
+  instruction: "Обері́ть прави́льну лі́теру на мі́сці про́пуску ___ . — Choose the correct letter for the blank ___ ."
   items:
-  - sentence: "Он ___ука́."
+  - sentence: "Он ___ука́. — Over there is a hand / arm."
     options:
     - р
     - к
     - м
     answer: р
-    explanation: "Сло́во «рука́» почина́ється з лі́тери р."
-  - sentence: "Он со́___ок."
+    explanation: "Сло́во «рука́» (hand) почина́ється з лі́тери р. — The word «рука́» begins with the letter р."
+  - sentence: "Он со́___ок. — Over there is forty."
     options:
     - р
     - к
     - с
     answer: р
-    explanation: "Сло́во «со́рок» ма́є лі́теру р у дру́гому скла́ді."
-  - sentence: "У нас с___ла."
+    explanation: "Сло́во «со́рок» (forty) ма́є лі́теру р у дру́гому скла́ді. — The word «со́рок» has the letter р in the second syllable."
+  - sentence: "У нас с___ла. — We have strength."
     options:
     - и
     - у
     - а
     answer: и
-    explanation: "Сло́во «си́ла» ма́є голосни́й звук [и]."
-  - sentence: "Он ___и́нок."
+    explanation: "Сло́во «си́ла» (strength) ма́є лі́теру и. — The word «си́ла» has the letter и."
+  - sentence: "Он ___и́нок. — Over there is the market."
     options:
     - р
     - к
     - н
     answer: р
-    explanation: "Сло́во «ри́нок» почина́ється з лі́тери р."
-  - sentence: "Он ко___а́ сосни́."
+    explanation: "Сло́во «ри́нок» (market) почина́ється з лі́тери р. — The word «ри́нок» begins with the letter р."
+  - sentence: "Он ко___а́ сосни́. — Over there is the bark of a pine tree."
     options:
     - р
     - к
     - м
     answer: р
-    explanation: "Сло́во «кора́» ма́є лі́теру р."
-  - sentence: "У нас с___ак."
+    explanation: "Сло́во «кора́» (bark) ма́є лі́теру р. — The word «кора́» has the letter р."
+  - sentence: "У нас с___ак. — We have taste."
     options:
     - м
     - н
     - р
     answer: м
-    explanation: "Сло́во «смак» ма́є сона́нт м."
+    explanation: "Сло́во «смак» (taste) ма́є лі́теру м. — The word «смак» has the letter м."
 
 - id: act-w205
   type: unjumble
   title: "Склади́ сло́во з лі́тер — Unjumble the word"
-  instruction: "Поста́вте лі́тери в прави́льному поря́дку, щоб утвори́ти сло́во."
+  instruction: "Поста́вте лі́тери в прави́льному поря́дку, щоб утвори́ти сло́во. — Arrange the letters in the correct order to form the word."
   items:
   - letters:
     - р
     - а
     - к
     answer: рак
+    hint: "рак — crayfish"
   - letters:
     - м
     - а
     - к
     answer: мак
+    hint: "мак — poppy"
   - letters:
     - к
     - р
     - а
     - н
     answer: кран
+    hint: "кран — crane / tap"
   - letters:
     - с
     - и
     - н
     answer: син
+    hint: "син — son"
   - letters:
     - к
     - у
     - м
     answer: кум
+    hint: "кум — godfather"
   - letters:
     - с
     - м
     - а
     - к
     answer: смак
+    hint: "смак — taste"
