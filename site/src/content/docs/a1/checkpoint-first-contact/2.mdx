@@ -1,0 +1,289 @@
+---
+title: 'Пе́рша розмо́ва: Діало́г та зв''я́зне мо́влення · First Conversation: Dialogue
+  & Connected Speech'
+description: Чи вмієте ви читати, вітатися та розповідати про себе?
+sidebar:
+  order: 2
+  label: '02. Пе́рша розмо́ва: Діало́г та зв''я́зне мо́влення · First Conversation:
+    Dialogue & Connected Speech'
+pipeline: v7-upgrade
+build_status: validated
+draft: false
+prev: /a1/checkpoint-first-contact/1/
+next: /a1/checkpoint-first-contact/3/
+lesson: 2
+module_slug: checkpoint-first-contact
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords from '@site/src/components/MarkTheWords';
+import { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes from '@site/src/components/HighlightMorphemes';
+import { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок — Lesson">
+
+This lesson brings all conversational pieces together in live dialogue. At the
+A1.1 stage, communication is practical, friendly, and grounded in standard
+phrases. You will practice an authentic exchange between two students meeting
+for the first time, deliver your own self-introduction monologue, and observe
+etiquette in modern text chat.
+
+By the end of this lesson, you can:
+
+- maintain a complete peer introduction in the **ти**-register from greeting to
+  farewell;
+- ask and answer questions about origin, student roles, and family;
+- deliver a coherent five-sentence monologue introducing yourself;
+- greet and introduce yourself politely in written online chats.
+
+## Діало́г
+
+This is the full first-contact task. Read it once for meaning, then read it
+again aloud. The setting is a break on the first day of Ukrainian courses, so
+both people use **ти**.
+
+**Діало́г 1 — Пе́рша части́на**
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Богда́н","text":"Приві́т! Мене́ зва́ти Богда́н."},{"speaker":"Соломі́я","text":"Приві́т, Богда́не! Мене́ зва́ти Соломі́я."},{"speaker":"Богда́н","text":"Ду́же приє́мно, Соломі́є."},{"speaker":"Соломі́я","text":"Мені́ теж. Зві́дки ти?"},{"speaker":"Богда́н","text":"Я з Дніпра́. А ти?"},{"speaker":"Соломі́я","text":"Я з Терно́поля."},{"speaker":"Богда́н","text":"Ти студе́нтка?"}]')}
+/>
+
+The dialogue continues with study plans and family:
+
+**Діало́г 2 — Профе́сії та сім'я́**
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Соломі́я","text":"Так, я студе́нтка. Моя́ майбу́тня профе́сія — вчи́телька."},{"speaker":"Богда́н","text":"Кла́сно. Я студе́нт, майбу́тній інжене́р."},{"speaker":"Соломі́я","text":"У тебе́ є брати́ чи се́стри?"}]')}
+/>
+
+They share family details and close the conversation:
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Богда́н","text":"Так, у мене́ є сестра́. Її́ зва́ти Іри́на."},{"speaker":"Соломі́я","text":"У мене́ є брат. Йо́го зва́ти Наза́р."},{"speaker":"Богда́н","text":"Ду́же приє́мно познайо́митися."},{"speaker":"Соломі́я","text":"Мені́ теж. До поба́чення!"}]')}
+/>
+
+English support after the Ukrainian dialogue:
+
+| Украї́нська | English support |
+| --- | --- |
+| **Приві́т, Богда́не!** | Hi, Bohdan! |
+| **Ду́же приє́мно, Соломі́є.** | Very nice to meet you, Solomiia. |
+| **Я з Дніпра́.** | I am from Dnipro. |
+| **У тебе́ є брати́ чи се́стри?** | Do you have brothers or sisters? |
+| **До поба́чення!** | Goodbye! |
+
+Notice how smoothly the conversation flows from greeting to name, origin,
+profession, and family. Direct address uses comfortable vocative forms:
+**Богда́не!** and **Соломі́є!**. When responding to **Ду́же приє́мно**, the natural
+Ukrainian answer is **Мені́ теж** (me too).
+
+### Ре́пліки та ві́дповіді · Dialogue Turns & Responses
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Приві́т! Мене́ зва́ти Богда́н.", "right": "Приві́т, Богда́не! Мене́ зва́ти Соломі́я."}, {"left": "Зві́дки ти?", "right": "Я з Дніпра́. А ти?"}, {"left": "Ти студе́нтка?", "right": "Так, я студе́нтка."}, {"left": "У тебе́ є брати́ чи се́стри?", "right": "Так, у мене́ є сестра́."}, {"left": "Ду́же приє́мно познайо́митися.", "right": "Мені́ теж. До поба́чення!"}, {"left": "Приві́т, Лі́но! Мене́ зва́ти Том.", "right": "Ду́же приє́мно!"}]`)} instruction={"З'єдна́й ре́пліку з приро́дною ві́дповіддю в діало́зі · Match each line with its natural response."} isUkrainian={false} />
+
+Use this as your graduation speech for A1.1:
+
+- **Приві́т! Мене́ зва́ти Оле́на.**
+- **Моє́ прі́звище Ме́льник.**
+- **Я з Кана́ди. Я кана́дка.**
+- **Я студе́нтка. Моя́ майбу́тня профе́сія — лі́карка.**
+- **Моя́ ма́ма — вчи́телька, а мій та́то — інжене́р.**
+- **У мене́ є одна́ сестра́.**
+- **Ду́же приє́мно познайо́митися!**
+
+If you want a shorter answer, keep five sentences: name, origin, role, one
+family line, and closing. That is enough for the checkpoint.
+
+:::tip
+Your five-sentence answer can stay simple. If it has **Мене́ зва́ти...**,
+**Я з...**, one identity line, one family line, and a polite closing, it is doing
+the job.
+:::
+
+### Про́пуски в діало́зі · Gaps in the Dialogue
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "___! Мене́ зва́ти Богда́н.", "answer": "Приві́т", "options": ["Приві́т", "Прі́звище", "Ро́ків"], "explanation": "Приві́т відкрива́є розмо́ву рове́сників."}, {"sentence": "Приві́т, ___! Мене́ зва́ти Соломі́я.", "answer": "Богда́не", "options": ["Богда́не", "Богда́н", "Богда́на"], "explanation": "Богда́не — кли́чна фо́рма прямо́го зверта́ння."}, {"sentence": "Ду́же приє́мно, ___.", "answer": "Соломі́є", "options": ["Соломі́є", "Соломі́я", "Соломі́ю"], "explanation": "Соломі́є — кли́чна фо́рма прямо́го зверта́ння."}, {"sentence": "___ ти? Я з Дніпра́.", "answer": "Зві́дки", "options": ["Зві́дки", "Хто", "Де"], "explanation": "Зві́дки ти? пита́є, зві́дки люди́на."}, {"sentence": "Моя́ майбу́тня ___ — вчи́телька.", "answer": "профе́сія", "options": ["профе́сія", "прі́звище", "знайо́мство"], "explanation": "Профе́сія назива́є фа́х або́ заня́ття."}, {"sentence": "У мене́ є сестра́. ___ зва́ти Іри́на.", "answer": "Її́", "options": ["Її́", "Йо́го", "Я"], "explanation": "Її́ підхо́дить до сестри́."}, {"sentence": "У мене́ є брат. ___ зва́ти Наза́р.", "answer": "Йо́го", "options": ["Йо́го", "Її́", "Вона́"], "explanation": "Йо́го підхо́дить до бра́та."}, {"sentence": "Ду́же приє́мно ___!", "answer": "познайо́митися", "options": ["познайо́митися", "похо́дження", "допомогти́"], "explanation": "Ду́же приє́мно познайо́митися заве́ршує пе́ршу зу́стріч."}]`)} instruction={"Допо́вни діало́г на мо́вних ку́рсах · Complete the dialogue at the language course."} isUkrainian={false} />
+
+### Пе́рше знайо́мство в ча́ті
+
+A modern first contact may happen in a course chat. The same etiquette applies:
+start with a greeting, name yourself, ask one clear question, and close
+politely. Do not hide behind emoji-only messages when the task is language
+practice.
+
+**Діало́г 3 — Курсови́й ча́т**
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Лі́на","text":"Приві́т! Мене́ зва́ти Лі́на. Я з Оде́си. А тебе́?"},{"speaker":"Том","text":"Приві́т, Лі́но! Мене́ зва́ти Том. Я з Кана́ди."},{"speaker":"Лі́на","text":"Ду́же приє́мно!"},{"speaker":"Том","text":"Мені́ теж."}]')}
+/>
+
+English support after the Ukrainian chat:
+
+| Украї́нська | English support |
+| --- | --- |
+| **А тебе́?** | And you? |
+| **Приві́т, Лі́но!** | Hi, Lina! |
+| **Мені́ теж.** | Me too. |
+
+This online task also reviews the borrowed-word habit from the wiki brief:
+modern Ukrainian can use international words, but your core first-contact
+grammar should stay Ukrainian. In a course chat, still say **Мене́ зва́ти...**,
+**Я з...**, and **До поба́чення**.
+
+### Поря́док знайо́мства · Conversation Flow
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Пе́рший рядо́к: Приві́т! Мене́ зва́ти Богда́н.", "options": [{"text": "Приві́т, Богда́не! Мене́ зва́ти Соломі́я.", "correct": true}, {"text": "До поба́чення!", "correct": false}, {"text": "Мені́ 20 ро́ків.", "correct": false}], "explanation": "І́нша люди́на відповіда́є привіта́нням та і́менем."}, {"question": "Рядо́к: Ду́же приє́мно, Соломі́є.", "options": [{"text": "Мені́ теж. Зві́дки ти?", "correct": true}, {"text": "Моє́ ім'я́ є Соломі́я.", "correct": false}, {"text": "Моя́ фамі́лія Сміт.", "correct": false}], "explanation": "Мені́ теж дає́ взає́мну ві́дповідь і ру́хає розмо́ву да́лі."}, {"question": "Рядо́к: Я з Дніпра́. А ти?", "options": [{"text": "Я з Терно́поля.", "correct": true}, {"text": "Йо́го зва́ти Наза́р.", "correct": false}, {"text": "Це мій брат.", "correct": false}], "explanation": "А ти? поверта́є пита́ння про похо́дження."}, {"question": "Рядо́к: У мене́ є брат.", "options": [{"text": "Ду́же приє́мно. До поба́чення!", "correct": true}, {"text": "Моє́ ім'я́ є брат.", "correct": false}, {"text": "Я ма́ю брат ро́ків.", "correct": false}], "explanation": "Пі́сля роди́нного рядка́ пасу́є вві́чливе заве́ршення."}]`)} instruction={"Обери́ насту́пний рядо́к у розмо́ві · Choose the next line in the conversation."} isUkrainian={false} />
+
+## Слу́хай, зо́шит, підсу́мок
+
+For lawful listening, use Ukrainian Lessons Podcast Episode 10 as listen-only
+review support. Listen for short phrases you already know, repeat them, and
+return to this page. Do not copy or transcribe paid material.
+
+For handwriting recognition, ask a teacher, tutor, or classmate to write an
+original five-line card with **ім'я́**, **прі́звище**, **Кана́да**,
+**сестра́**, and **До поба́чення**. First compare the notebook card with the
+printed model; then write your own final card.
+
+Regular listening practice reinforces natural Ukrainian melodic contour and
+vowel purity. In handwriting, Ukrainian cursive forms for letters like **в**,
+**д**, **т**, and **м** differ distinctively from their printed counterparts.
+Writing cards by hand bridges visual recognition with productive motor memory.
+
+### Слу́хання та письмо́ · Listening & Handwriting Skills
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "Слу́хаючи ро́зповідь, кори́сно повто́рювати знайо́мі фра́зи вго́лос · While listening, it is useful to repeat known phrases aloud.", "isTrue": true, "explanation": "Повто́рення вго́лос трену́є артикуля́цію та впе́вненість у мо́вленні."}, {"statement": "Для рукопи́сної ка́ртки важли́во розрізня́ти друко́вані й письмо́ві лі́тери · For a handwriting card, distinguish print from cursive.", "isTrue": true, "explanation": "Украї́нський курси́в ма́є відмі́нні фо́рми для багатьо́х лі́тер."}, {"statement": "У неформа́льному ча́ті ку́рсу вві́чливо почина́ти з коро́ткого привіта́ння · In a course chat, start with a brief greeting.", "isTrue": true, "explanation": "Привіта́ння (Приві́т) — обов'язко́ва части́на культу́ри спілкува́ння."}, {"statement": "В онла́йн-листува́нні кра́ще писа́ти лише́ емо́дзі замі́сть слі́в · In online texting, use only emoji instead of words.", "isTrue": false, "explanation": "Мо́вна пра́ктика вимага́є вжива́ння реа́льних слі́в та ре́чень."}, {"statement": "У зверта́ннях «Богда́не!» та «Соломі́є!» закі́нчення виража́ють кли́чну фо́рму · Endings in \\"Бо́гдане!\\" and \\"Соломі́є!\\" mark direct address.", "isTrue": true, "explanation": "Кли́чна фо́рма познача́є пряме́ зверта́ння до співрозмо́вника."}, {"statement": "За́мість украї́нського сло́ва «прі́звище» в анке́тах вжива́ють «фамі́лія» · Forms use \\"фамі́лія\\" instead of \\"прі́звище\\".", "isTrue": false, "explanation": "«Фамі́лія» — су́ржиковий варіа́нт; станда́ртне сло́во — «прі́звище»."}]`)} instruction={"Ви́знач, чи пра́вильне тве́рдження · Determine whether each statement is true or false."} isUkrainian={false} />
+
+</TabItem>
+<TabItem label="Словник — Vocabulary">
+
+<span id="vocabulary"></span>
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"ім'я́","translation":"first name","pos":"noun","example":"Моє́ ім'я́ Оле́на.","examples":["Моє́ ім'я́ Оле́на."],"atlas_href":"/lexicon/ім-я/"},{"word":"прі́звище","translation":"surname","pos":"noun","example":"Моє́ прі́звище Ме́льник.","examples":["Моє́ прі́звище Ме́льник."],"atlas_href":"/lexicon/прізвище/"},{"word":"Мене́ зва́ти","translation":"my name is","pos":"phrase","example":"Мене́ зва́ти Бо́гдан.","examples":["Мене́ зва́ти Бо́гдан."],"atlas_href":"/lexicon/мене-звати/"},{"word":"Як тебе́ зва́ти?","translation":"what is your name? informal","pos":"phrase","example":"Як тебе́ зва́ти?","examples":["Як тебе́ зва́ти?"],"atlas_href":"/lexicon/як-тебе-звати/"},{"word":"Зві́дки ти?","translation":"where are you from? informal","pos":"phrase","example":"Зві́дки ти?","examples":["Зві́дки ти?"],"atlas_href":"/lexicon/звідки-ти/"},{"word":"Я з","translation":"I am from","pos":"phrase","example":"Я з Кана́ди.","examples":["Я з Кана́ди."]},{"word":"Мені́ 20 рокі́в","translation":"I am 20 years old","pos":"phrase","example":"Мені́ 20 рокі́в.","examples":["Мені́ 20 рокі́в."]},{"word":"У мене́ є","translation":"I have","pos":"phrase","example":"У мене́ є сестра́.","examples":["У мене́ є сестра́."]},{"word":"студе́нт","translation":"male student","pos":"noun","example":"Я студе́нт.","examples":["Я студе́нт."],"atlas_href":"/lexicon/студент/"},{"word":"вчи́телька","translation":"female teacher","pos":"noun","example":"Во́на вчи́телька.","examples":["Во́на вчи́телька."],"atlas_href":"/lexicon/вчителька/"},{"word":"інжене́р","translation":"engineer","pos":"noun","example":"Мій та́то — інжене́р.","examples":["Мій та́то — інжене́р."],"atlas_href":"/lexicon/інженер/"},{"word":"мій","translation":"my, masculine","pos":"pronoun","example":"Це мій брат.","examples":["Це мій брат."],"atlas_href":"/lexicon/мій/"},{"word":"моя́","translation":"my, feminine","pos":"pronoun","example":"Це моя́ ма́ма.","examples":["Це моя́ ма́ма."],"atlas_href":"/lexicon/моя/"},{"word":"моє́","translation":"my, neuter","pos":"pronoun","example":"Це моє́ прі́звище.","examples":["Це моє́ прі́звище."],"atlas_href":"/lexicon/моє/"},{"word":"мої́","translation":"my, plural","pos":"pronoun","example":"Це мої́ батьки́.","examples":["Це мої́ батьки́."],"atlas_href":"/lexicon/мої/"},{"word":"знайо́мство","translation":"acquaintance / introduction","pos":"noun","example":"Це пе́рше знайо́мство.","examples":["Це пе́рше знайо́мство."],"atlas_href":"/lexicon/знайомство/"},{"word":"познайо́митися","translation":"to meet / get acquainted","pos":"verb","example":"Ду́же приє́мно познайо́митися!","examples":["Ду́же приє́мно познайо́митися!"],"atlas_href":"/lexicon/познайомитися/"},{"word":"профе́сія","translation":"profession","pos":"noun","example":"Моя́ профе́сія — вчи́телька.","examples":["Моя́ профе́сія — вчи́телька."],"atlas_href":"/lexicon/професія/"},{"word":"націона́льність","translation":"nationality","pos":"noun","example":"Моя́ націона́льність — кана́дка.","examples":["Моя́ націона́льність — кана́дка."],"atlas_href":"/lexicon/національність/"},{"word":"похо́дження","translation":"origin","pos":"noun","example":"Похо́дження відповіда́є на пита́ння Зві́дки ти?","examples":["Похо́дження відповіда́є на пита́ння Зві́дки ти?"],"atlas_href":"/lexicon/походження/"},{"word":"Віта́ю","translation":"hello / greetings","pos":"interjection","example":"Віта́ю! Мене́ зва́ти Оле́на.","examples":["Віта́ю! Мене́ зва́ти Оле́на."],"atlas_href":"/lexicon/вітаю/"},{"word":"Ду́же приє́мно","translation":"very nice to meet you","pos":"phrase","example":"Ду́же приє́мно!","examples":["Ду́же приє́мно!"],"atlas_href":"/lexicon/дуже-приємно/"},{"word":"Мені́ теж","translation":"me too","pos":"phrase","example":"Мені́ теж.","examples":["Мені́ теж."]},{"word":"У тебе́ є","translation":"do you have / you have","pos":"phrase","example":"У тебе́ є брат?","examples":["У тебе́ є брат?"]},{"word":"студе́нтка","translation":"female student","pos":"noun","example":"Я студе́нтка.","examples":["Я студе́нтка."],"atlas_href":"/lexicon/студентка/"},{"word":"украї́нка","translation":"Ukrainian woman","pos":"noun","example":"Оле́на — украї́нка.","examples":["Оле́на — украї́нка."],"atlas_href":"/lexicon/українка/"},{"word":"кана́дка","translation":"Canadian woman","pos":"noun","example":"Оле́на — кана́дка.","examples":["Оле́на — кана́дка."],"atlas_href":"/lexicon/канадка/"},{"word":"брат","translation":"brother","pos":"noun","example":"У мене́ є брат.","examples":["У мене́ є брат."],"atlas_href":"/lexicon/брат/"},{"word":"сестра́","translation":"sister","pos":"noun","example":"У мене́ є сестра́.","examples":["У мене́ є сестра́."],"atlas_href":"/lexicon/сестра/"},{"word":"йо́го","translation":"his / him","pos":"pronoun","example":"Йо́го зва́ти Наза́р.","examples":["Йо́го зва́ти Наза́р."],"atlas_href":"/lexicon/його/"},{"word":"її́","translation":"her","pos":"pronoun","example":"Її́ зва́ти Іри́на.","examples":["Її́ зва́ти Іри́на."],"atlas_href":"/lexicon/її/"}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"ім'я́","back":"first name"},{"front":"прі́звище","back":"surname"},{"front":"Мене́ зва́ти","back":"my name is"},{"front":"Як тебе́ зва́ти?","back":"what is your name? informal"},{"front":"Зві́дки ти?","back":"where are you from? informal"},{"front":"Я з","back":"I am from"},{"front":"Мені́ 20 рокі́в","back":"I am 20 years old"},{"front":"У мене́ є","back":"I have"},{"front":"студе́нт","back":"male student"},{"front":"вчи́телька","back":"female teacher"},{"front":"інжене́р","back":"engineer"},{"front":"мій","back":"my, masculine"},{"front":"моя́","back":"my, feminine"},{"front":"моє́","back":"my, neuter"},{"front":"мої́","back":"my, plural"},{"front":"знайо́мство","back":"acquaintance / introduction"},{"front":"познайо́митися","back":"to meet / get acquainted"},{"front":"профе́сія","back":"profession"},{"front":"націона́льність","back":"nationality"},{"front":"похо́дження","back":"origin"},{"front":"Віта́ю","back":"hello / greetings"},{"front":"Ду́же приє́мно","back":"very nice to meet you"},{"front":"Мені́ теж","back":"me too"},{"front":"У тебе́ є","back":"do you have / you have"},{"front":"студе́нтка","back":"female student"},{"front":"украї́нка","back":"Ukrainian woman"},{"front":"кана́дка","back":"Canadian woman"},{"front":"брат","back":"brother"},{"front":"сестра́","back":"sister"},{"front":"йо́го","back":"his / him"},{"front":"її́","back":"her"}]`)} />
+
+</TabItem>
+<TabItem label="Вправи — Activities">
+
+<span id="activities"></span>
+
+### Про́пуски в діало́зі · Gaps in the Dialogue
+
+*(see lesson, §Діало́г)*
+
+### Поря́док знайо́мства · Conversation Flow
+
+*(see lesson, §Пе́рше знайо́мство в ча́ті)*
+
+### Слу́хання та письмо́ · Listening & Handwriting Skills
+
+*(see lesson, §Слу́хай, зо́шит, підсу́мок)*
+
+### Ре́пліки та ві́дповіді · Dialogue Turns & Responses
+
+*(see lesson, §Діало́г)*
+
+### Ка́рта ле́ксики · Vocabulary Map
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "ім'я́", "right": "first name"}, {"left": "прі́звище", "right": "surname"}, {"left": "знайо́мство", "right": "acquaintance or introduction"}, {"left": "профе́сія", "right": "profession"}, {"left": "націона́льність", "right": "nationality"}, {"left": "похо́дження", "right": "origin"}, {"left": "Ду́же приє́мно", "right": "very nice to meet you"}, {"left": "Мені́ теж", "right": "me too"}]`)} instruction={"З'єдна́й украї́нське контро́льне сло́во з англі́йською підка́зкою · Match the Ukrainian term to its English gloss."} isUkrainian={false} />
+
+### Розмо́вний регі́стр: Ти чи Ви? · Register: Informal (Ти) vs Formal (Ви)
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Знайо́мство з рове́сником на пере́рві мо́вного ку́рсу · Meeting a peer at course break:", "options": [{"text": "Приві́т! Як тебе́ зва́ти?", "correct": true}, {"text": "До́брий день! Як вас зва́ти?", "correct": false}, {"text": "До поба́чення!", "correct": false}], "explanation": "У студе́нтському середо́вищі з рове́сниками вжива́ємо ти-регі́стр."}, {"question": "Зверта́ння до викладача́ пе́ред заня́ттям · Addressing a teacher before class:", "options": [{"text": "До́брий день! Як вас зва́ти?", "correct": true}, {"text": "Приві́т! Як тебе́ зва́ти?", "correct": false}, {"text": "Бува́й!", "correct": false}], "explanation": "До викладача́ зверта́ємося вві́чливо у Ви-регі́стрі."}, {"question": "Ві́дповідь рове́сникові пі́сля «Ду́же приє́мно» · Answering a peer after \\"Ду́же приє́мно\\":", "options": [{"text": "Мені́ теж!", "correct": true}, {"text": "Моє́ ім'я́ є студе́нт.", "correct": false}, {"text": "До поба́чення!", "correct": false}], "explanation": "«Мені́ теж» — приро́дна взає́мна ві́дповідь."}, {"question": "Рове́сник запи́тує: «Зві́дки ти?» · A peer asks \\"Where are you from?\\":", "options": [{"text": "Я з Терно́поля. А ти?", "correct": true}, {"text": "Я є Терно́піль.", "correct": false}, {"text": "Мені́ 20 ро́ків.", "correct": false}], "explanation": "«Я з...» виража́є похо́дження, а «А ти?» поверта́є запита́ння."}, {"question": "Дру́жнє проща́ння з одноку́рсником · Friendly farewell to a classmate:", "options": [{"text": "Бува́й!", "correct": true}, {"text": "Добри́день!", "correct": false}, {"text": "Мене́ зва́ти!", "correct": false}], "explanation": "«Бува́й!» — неви́мушене проща́ння для дру́зів та рове́сників."}, {"question": "Вві́чливе проща́ння з викладаче́м · Polite farewell to a teacher:", "options": [{"text": "До поба́чення!", "correct": true}, {"text": "Бува́й!", "correct": false}, {"text": "Приві́т!", "correct": false}], "explanation": "«До поба́чення!» — нейтра́льна станда́ртна фо́рма проща́ння."}]`)} instruction={"Обери́ нале́жну ре́пліку для ко́жної ситуа́ції · Choose the appropriate remark for each setting."} isUkrainian={false} />
+
+### Моноло́г-презента́ція · Self-Presentation Monologue
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Приві́т! Мене́ ___ Оле́на · Hi! My name is Olena.", "answer": "зва́ти", "options": ["зва́ти", "ім'я́", "є"], "explanation": "«Мене́ зва́ти...» — станда́ртна моде́ль предста́влення."}, {"sentence": "Моє́ ___ — Ме́льник · My surname is Melnyk.", "answer": "прі́звище", "options": ["прі́звище", "фамі́лія", "роди́на"], "explanation": "«Прі́звище» — станда́ртне украї́нське сло́во."}, {"sentence": "Я з Кана́ди. Я ___ · I am from Canada. I am Canadian.", "answer": "кана́дка", "options": ["кана́дка", "кана́дка є", "мене́ кана́дка"], "explanation": "на́зва націона́льності жіно́чого ро́ду — кана́дка."}, {"sentence": "Моя́ майбу́тня ___ — лі́карка · My future profession is doctor.", "answer": "профе́сія", "options": ["профе́сія", "знайо́мство", "роди́на"], "explanation": "Профе́сія познача́є спеціа́льність або́ рід заня́ть."}, {"sentence": "Моя́ ма́ма — вчи́телька, а мій та́то — ___ · My mom is a teacher, and my dad is an engineer.", "answer": "інжене́р", "options": ["інжене́р", "інжене́рка", "студе́нт"], "explanation": "Для та́та вжива́ємо фо́рму чолові́чого ро́ду — інжене́р."}, {"sentence": "Ду́же приє́мно ___! · Very nice to meet you!", "answer": "познайо́митися", "options": ["познайо́митися", "похо́дження", "знайо́мство"], "explanation": "«Ду́же приє́мно познайо́митися!» заве́ршує знайо́мство."}]`)} instruction={"Допо́вни ре́чення в ро́зповіді про себе́ · Complete the sentences in the self-introduction."} isUkrainian={false} />
+
+### Етике́т знайо́мства · Etiquette of Meeting People
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "У рівнопра́вному студе́нтському середо́вищі вжива́ють ти-регі́стр · In a student setting, the informal register is natural.", "isTrue": true, "explanation": "Рове́сники на мо́вних ку́рсах спілку́ються на «ти»."}, {"statement": "Нормати́вна украї́нська фо́рма взає́мної ві́дповіді — «Мені́ теж» · The natural reciprocal reply is \\"Мені́ теж\\".", "isTrue": true, "explanation": "«Мені́ теж» вжива́ють у ві́дповідь на «Ду́же приє́мно»."}, {"statement": "Запита́ння «У тебе́ є брати́ чи се́стри?» є доре́чним у розмо́ві про роди́ну · Asking about siblings is natural in family talk.", "isTrue": true, "explanation": "У неформа́льній розмо́ві про роди́ну це станда́ртне запита́ння."}, {"statement": "Коли́ запи́тують ім'я́, станда́ртно каза́ти «Моє́ ім'я́ є...» · When asked your name, it is standard to say \\"Моє́ ім'я́ є...\\".", "isTrue": false, "explanation": "«Моє́ ім'я́ є...» — дослі́вний перекла́д з англі́йської; кажи́ «Мене́ зва́ти...»."}, {"statement": "Фо́рма «До поба́чення» підхо́дить для станда́ртного вві́чливого проща́ння · \\"До поба́чення\\" is standard for polite goodbyes.", "isTrue": true, "explanation": "«До поба́чення» — універса́льне вві́чливе проща́ння."}, {"statement": "У розмо́ві з одно́літком потрі́бно пості́йно змі́шувати «ти» та «Ви» · In talking to a peer, constantly mix \\"ти\\" and \\"Ви\\".", "isTrue": false, "explanation": "ва́рто дотри́муватися одно́го регі́стру про́тягом розмо́ви."}]`)} instruction={"Ви́знач, чи пра́вильне тве́рдження про спілкува́ння · Determine if the communication statement is true."} isUkrainian={false} />
+
+### Ре́пліки діало́гу · Dialogue Phrases
+
+<Unjumble client:only='react' items={JSON.parse(`[{"jumbled": "Мене́ / зва́ти / Соломі́я.", "answer": "Мене́ зва́ти Соломі́я."}, {"jumbled": "Зві́дки / ти / ро́дом?", "answer": "Зві́дки ти ро́дом?"}, {"jumbled": "Я / з / Терно́поля.", "answer": "Я з Терно́поля."}, {"jumbled": "Моя́ / профе́сія / — / вчи́телька.", "answer": "Моя́ профе́сія — вчи́телька."}, {"jumbled": "У / мене́ / є / брат.", "answer": "У мене́ є брат."}, {"jumbled": "Ду́же / приє́мно / познайо́митися.", "answer": "Ду́же приє́мно познайо́митися."}]`)} instruction={"Склади́ ре́чення у пра́вильному поря́дку · Put the words in the right order."} />
+
+### Грамати́чний рід слі́в · Grammatical Gender of Words
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Чолові́чий рід (Masculine)": ["брат", "інжене́р", "студе́нт"], "Жіно́чий рід (Feminine)": ["сестра́", "вчи́телька", "студе́нтка"]}`)} instruction={"Розподіли́ слова́ за ро́дом · Categorize the nouns by gender."} isUkrainian={false} />
+
+### Культу́ра мо́влення: Ви́бір фо́рми · Culture of Speech: Choosing the Form
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Як пра́вильно запита́ти ім'я́ рове́сника? · How to ask a peer's name?", "options": [{"text": "Як тебе́ зва́ти?", "correct": true}, {"text": "Як твоє́ ім'я́ є?", "correct": false}, {"text": "Хто твоє́ зва́ти?", "correct": false}], "explanation": "«Як тебе́ зва́ти?» — станда́ртне пита́ння до рове́сника."}, {"question": "Як пра́вильно запита́ти прі́звище в анке́ті? · How to ask for surname on a form?", "options": [{"text": "Як твоє́ прі́звище?", "correct": true}, {"text": "Як твоя́ фамі́лія?", "correct": false}, {"text": "Яке́ твоє́ ім'я́?", "correct": false}], "explanation": "В украї́нській мо́ві родове́ ім'я́ — це прі́звище."}, {"question": "Як повідо́мити про свій фа́х? · How to state your profession?", "options": [{"text": "Я — інжене́р.", "correct": true}, {"text": "Я є інжене́р.", "correct": false}, {"text": "Моє́ інжене́р є.", "correct": false}], "explanation": "Прості́ ре́чення іденти́чності вжива́ються без дієсло́ва «є»."}, {"question": "Як повідо́мити свій ві́к? · How to state your age?", "options": [{"text": "Мені́ 20 ро́ків.", "correct": true}, {"text": "Я ма́ю 20 ро́ків.", "correct": false}, {"text": "Моє́ 20 ро́ків.", "correct": false}], "explanation": "«Мені́ ... ро́ків» — приро́дна украї́нська моде́ль."}, {"question": "Як сказа́ти про ная́вність бра́та? · How to say you have a brother?", "options": [{"text": "У мене́ є брат.", "correct": true}, {"text": "Я ма́ю брат.", "correct": false}, {"text": "Мене́ є брат.", "correct": false}], "explanation": "«У мене́ є...» — станда́ртна ба́зова констру́кція володі́ння."}, {"question": "Як вві́чливо подя́кувати та попроща́тися? · How to politely thank and say goodbye?", "options": [{"text": "Дя́кую! До поба́чення!", "correct": true}, {"text": "Приві́т! Бува́й!", "correct": false}, {"text": "Бува́й здоро́в!", "correct": false}], "explanation": "«Дя́кую!» та «До поба́чення!» — станда́ртні літерату́рні фо́рми."}]`)} instruction={"Обери́ станда́ртний украї́нський ви́раз · Pick the standard Ukrainian expression."} isUkrainian={false} />
+
+</TabItem>
+<TabItem label="Ресурси — Resources">
+
+<span id="resources"></span>
+
+:::info[🎧 🔗 External Resources]
+
+**🎧 Audio:**
+- 🎧 [Ukrainian Lessons Podcast Season 1, Episode 10 — Review 1-9](https://www.ukrainianlessons.com/episode10/) — connected review speech about myself and my family.
+- 🎧 [Ukrainian Lessons Podcast Season 1, Episode 7 — Where Are You From?](https://www.ukrainianlessons.com/episode7/) — Countries, nationalities, and asking Зві́дки ти? with Я з...
+- 🎧 [Ukrainian Lessons Podcast Season 1, Episode 9 — My Family in Ukrainian](https://www.ukrainianlessons.com/episode9/) — Family vocabulary, У мене́ є, and possessive pronouns мій, моя́.
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
+
+<nav aria-label="Lesson navigation">
+
+[Previous](/a1/checkpoint-first-contact/1/) · [Module](/a1/checkpoint-first-contact/) · [Next](/a1/checkpoint-first-contact/3/)
+
+</nav>
