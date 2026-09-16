@@ -2,7 +2,7 @@
 
 **Я Ю Є Ї** — the four special vowel letters.
 
-Module 2 already introduced these letters. Here you only need the quick review that makes **ь** and apostrophe readable.
+Earlier lessons introduced basic vowel letters. Here you only need the quick review that makes **ь** and apostrophe readable.
 
 In this lesson, we study the letters **Й, Я, Ю, Є** in detail. The letter **Й** is a semi-vowel sonant [j], while **Я, Ю, Є** are iotated letters (**йото́ваний**) that carry two different reading jobs depending on where they sit in a word. Understanding these jobs will make both the soft sign (**м'яки́й знак**) and the apostrophe (**апо́строф**) intuitive to read.
 

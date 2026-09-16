@@ -36,25 +36,25 @@ inline:
   title: Дода́й знак
   instruction: Обери́ ь, апо́строф або́ без зна́ка.
   items:
-  - sentence: сім_я
+  - sentence: сім___я
     answer: ''''
     options:
     - ''''
     - ь
     - без зна́ка
-  - sentence: ден_
+  - sentence: ден___
     answer: ь
     options:
     - ь
     - ''''
     - без зна́ка
-  - sentence: п_ять
+  - sentence: п___ять
     answer: ''''
     options:
     - ''''
     - ь
     - без зна́ка
-  - sentence: У сло́ві свя́то пра́вильний ви́бір — ____.
+  - sentence: У сло́ві свя́то пра́вильний ви́бір — ___ .
     answer: без зна́ка
     options:
     - без зна́ка

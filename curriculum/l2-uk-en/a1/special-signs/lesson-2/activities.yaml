@@ -7,32 +7,32 @@ inline:
   - word: чай
     letter: Й
     sound: '[й]'
-    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    video: https://www.youtube.com/watch?v=aq0cjB90s3w
     note: Semi-vowel [j] at the end of a syllable.
   - word: я́блуко
     letter: Я
     sound: '[йа]'
-    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    video: https://www.youtube.com/watch?v=yhSAf41LX8I
     note: Two sounds [йа] at the beginning of a word.
   - word: ю́шка
     letter: Ю
     sound: '[йу]'
-    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    video: https://www.youtube.com/watch?v=9JdIBYCTWGw
     note: Two sounds [йу] at the beginning of a word.
   - word: єно́т
     letter: Є
     sound: '[йе]'
-    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    video: https://www.youtube.com/watch?v=O0bwRyyBQSc
     note: Two sounds [йе] at the beginning of a word.
   - word: пі́сня
     letter: Я
     sound: '[а]'
-    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    video: https://www.youtube.com/watch?v=yhSAf41LX8I
     note: One vowel sound [а] after a soft consonant [н'].
   - word: лю́ди
     letter: Ю
     sound: '[у]'
-    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    video: https://www.youtube.com/watch?v=9JdIBYCTWGw
     note: One vowel sound [у] after a soft consonant [л'].
 - id: act-202
   type: quiz
@@ -168,37 +168,37 @@ workbook:
   title: Вста́вте пропу́щене сло́во — Fill in the blank
   instruction: Fill in the blank with the appropriate word.
   items:
-  - sentence: Вра́нці на сніда́нок я п'ю гаря́чий {чай}.
+  - sentence: У ча́шці гаря́чий ___ .
     answer: чай
     options:
     - чай
     - рис
     - час
-  - sentence: На столі́ лежи́ть сві́же сокови́те {я́блуко}.
+  - sentence: На столі́ лежи́ть сві́же сокови́те ___ .
     answer: я́блуко
     options:
     - я́блуко
     - ю́шка
     - єно́т
-  - sentence: У зоопа́рку живе́ смуга́стий {єно́т}.
+  - sentence: У зоопа́рку живе́ смуга́стий ___ .
     answer: єно́т
     options:
     - єно́т
     - кінь
     - лань
-  - sentence: Сього́дні в селі́ весе́ле {свя́то}.
+  - sentence: Сього́дні в селі́ весе́ле ___ .
     answer: свя́то
     options:
     - свя́то
     - день
     - чай
-  - sentence: У ба́бці на горо́ді росте́ черво́ний {буря́к}.
+  - sentence: У ба́бці на горо́ді росте́ черво́ний ___ .
     answer: буря́к
     options:
     - буря́к
     - я́блуко
     - ю́шка
-  - sentence: Наш {вчи́тель} пока́зує ціка́вий малю́нок.
+  - sentence: Наш ___ пока́зує ціка́вий малю́нок.
     answer: вчи́тель
     options:
     - вчи́тель
@@ -217,31 +217,31 @@ workbook:
   - words:
     - є
     - н
-    - о
+    - о́
     - т
     answer: єно́т
   - words:
-    - ю
+    - ю́
     - ш
     - к
     - а
     answer: ю́шка
   - words:
     - п
-    - і
+    - і́
     - с
     - н
     - я
     answer: пі́сня
   - words:
     - л
-    - ю
+    - ю́
     - д
     - и
     answer: лю́ди
   - words:
     - й
-    - о
+    - о́
     - г
     - у
     - р
@@ -284,37 +284,37 @@ workbook:
   title: Ви́беріть пра́вильне сло́во — Multiple Choice
   instruction: Select the correct Ukrainian vocabulary word.
   items:
-  - question: Що означа́є «tea» в украї́нській мо́ві?
+  - question: What is the Ukrainian word for “tea”?
     options:
     - чай
     - час
     - рис
     answer: чай
-  - question: Що означа́є «apple» в украї́нській мо́ві?
+  - question: What is the Ukrainian word for “apple”?
     options:
     - я́блуко
     - ю́шка
     - єно́т
     answer: я́блуко
-  - question: Що означа́є «soup / broth» в украї́нській мо́ві?
+  - question: What is the Ukrainian word for “soup / broth”?
     options:
     - ю́шка
     - я́блуко
     - єно́т
     answer: ю́шка
-  - question: Що означа́є «raccoon» в украї́нській мо́ві?
+  - question: What is the Ukrainian word for “raccoon”?
     options:
     - єно́т
     - кінь
     - лань
     answer: єно́т
-  - question: Що означа́є «beetroot» в украї́нській мо́ві?
+  - question: What is the Ukrainian word for “beetroot”?
     options:
     - буря́к
-    - бур'я́н
+    - я́блуко
     - свя́то
     answer: буря́к
-  - question: Що означа́є «holiday» в украї́нській мо́ві?
+  - question: What is the Ukrainian word for “holiday”?
     options:
     - свя́то
     - буря́к

@@ -132,42 +132,42 @@ workbook:
   title: Ви́беріть пра́вильне зна́чення — Choose the correct meaning
   instruction: Select the correct English translation for each Ukrainian word.
   items:
-  - question: Що означа́є сло́во «день»?
+  - question: What is the meaning of «день»?
     options:
     - day
     - horse
     - salt
     - teacher
     answer: day
-  - question: Що означа́є сло́во «кінь»?
+  - question: What is the meaning of «кінь»?
     options:
     - horse
     - day
     - salt
     - spoon
     answer: horse
-  - question: Що означа́є сло́во «сіль»?
+  - question: What is the meaning of «сіль»?
     options:
     - salt
     - price
     - cup
     - circus
     answer: salt
-  - question: Що означа́є сло́во «вчи́тель»?
+  - question: What is the meaning of «вчи́тель»?
     options:
     - teacher
     - student
     - circus
     - family
     answer: teacher
-  - question: Що означа́є сло́во «ціна́»?
+  - question: What is the meaning of «ціна́»?
     options:
     - price
     - time
     - circus
     - cup
     answer: price
-  - question: Що означа́є сло́во «па́льці»?
+  - question: What is the meaning of «па́льці»?
     options:
     - fingers
     - hands
@@ -179,42 +179,42 @@ workbook:
   title: Вста́вте пропу́щене сло́во — Fill in the blank
   instruction: Fill in the blanks with the correct vocabulary word.
   items:
-  - sentence: Сього́дні те́плий со́нячний {день}.
+  - sentence: Світи́ть со́нце, наста́в ___ .
     answer: день
     options:
     - день
     - кінь
     - сіль
-  - sentence: У селі́ на по́лі пасе́ться га́рний бі́лий {кінь}.
+  - sentence: У селі́ на по́лі біжи́ть ___ .
     answer: кінь
     options:
     - кінь
     - день
     - вчи́тель
-  - sentence: На столі́ стої́ть бі́ла {сіль}.
+  - sentence: На столі́ лежи́ть бі́ла ___ .
     answer: сіль
     options:
     - сіль
     - ціна́
     - ча́шка
-  - sentence: Наш {вчи́тель} чита́є ціка́вий те́кст.
+  - sentence: Наш ___ пи́ше те́кст.
     answer: вчи́тель
     options:
     - вчи́тель
     - кінь
     - день
-  - sentence: Яка́ {ціна́} на цей сві́жий рис?
+  - sentence: Чи висо́ка тут ___ на хліб?
     answer: ціна́
     options:
     - ціна́
     - сіль
     - ча́шка
-  - sentence: У мене́ на руці́ п'ять {па́льців}.
-    answer: па́льців
+  - sentence: Ось рука́, а на руці́ — ___ .
+    answer: па́льці
     options:
-    - па́льців
-    - дні́в
-    - ко́ней
+    - па́льці
+    - ча́шка
+    - вчи́тель
 - id: act-108
   type: unjumble
   title: Складі́ть слова́ з лі́тер — Unjumble letters
@@ -248,7 +248,7 @@ workbook:
     - ц
     - і
     - н
-    - а
+    - а́
     answer: ціна́
   - words:
     - ч
@@ -278,7 +278,7 @@ workbook:
   instruction: Identify which word is written incorrectly according to Ukrainian soft
     sign rules.
   items:
-  - sentence: У сло́ві ден написа́ли без зна́ка м'я́кшення.
+  - sentence: У сло́ві ден написа́ли без зна́ка ь.
     error: ден
     correction: день
     explanation: 'Пе́ред па́узою сло́во «день» пи́шеться з м''яки́м зна́ком: день.'
@@ -286,15 +286,15 @@ workbook:
     error: кін
     correction: кінь
     explanation: 'Сло́во «кінь» закі́нчується на м''яки́й знак: кінь.'
-  - sentence: У су́пі є сіл без зна́ка.
+  - sentence: У су́пі лежи́ть сіл без зна́ка.
     error: сіл
     correction: сіль
     explanation: 'Сло́во «сіль» ма́є м''яки́й [л''] і пи́шеться з ь: сіль.'
-  - sentence: Наш вчител чита́є кни́гу.
+  - sentence: Наш вчител пи́ше те́кст.
     error: вчител
     correction: вчи́тель
     explanation: 'Іме́нник «вчи́тель» ма́є м''яки́й кінце́вий [л'']: вчи́тель.'
-  - sentence: В украї́нській мо́ві написа́ли чьас із м'яки́м зна́ком.
+  - sentence: У сло́ві чьас помилко́во написа́ли ь.
     error: чьас
     correction: час
     explanation: 'Звук [ч] в украї́нській мо́ві тверди́й; пі́сля ч знак ь не ста́виться:
@@ -308,32 +308,32 @@ workbook:
   title: Знак ь чи без зна́ка — Soft sign or no sign
   instruction: Choose whether the word ends in a soft sign (ь) or hard consonant.
   items:
-  - question: 'Сло́во «day» в украї́нській мо́ві:'
+  - question: 'In Ukrainian, the word for “day” is:'
     options:
     - день
     - стан
     answer: день
-  - question: 'Сло́во «horse» в украї́нській мо́ві:'
+  - question: 'In Ukrainian, the word for “horse” is:'
     options:
     - кінь
     - лан
     answer: кінь
-  - question: 'Сло́во «salt» в украї́нській мо́ві:'
+  - question: 'In Ukrainian, the word for “salt” is:'
     options:
     - сіль
     - рис
     answer: сіль
-  - question: 'Кома́нда «stand up» (м''яки́й [н'']):'
+  - question: 'The command «stand up» (with soft [n'']):'
     options:
     - стань
     - стан
     answer: стань
-  - question: 'Твари́на «doe / hind» (м''яки́й [н'']):'
+  - question: 'The animal «doe / hind» (with soft [n'']):'
     options:
     - лань
     - лан
     answer: лань
-  - question: 'Твари́на «lynx» (м''яки́й [с'']):'
+  - question: 'The animal «lynx» (with soft [s'']):'
     options:
     - рись
     - рис

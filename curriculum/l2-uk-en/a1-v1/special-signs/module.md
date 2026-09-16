@@ -38,7 +38,7 @@ By the end, you can:
 
 **Я Ю Є Ї** — the four special vowel letters.
 
-Module 2 already introduced these letters. Here you only need the quick review
+Earlier lessons introduced basic vowel letters. Here you only need the quick review
 that makes **ь** and apostrophe readable.
 
 At beginner level, use this rule:

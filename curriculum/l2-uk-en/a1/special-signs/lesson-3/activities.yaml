@@ -7,32 +7,32 @@ inline:
   - word: їжа́к
     letter: Ї
     sound: '[йі]'
-    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    video: https://www.youtube.com/watch?v=UcjdjQXhAY8
     note: 'The letter Ї always represents two sounds: [й] + [і].'
   - word: по́їзд
     letter: Ї
     sound: '[йі]'
-    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    video: https://www.youtube.com/watch?v=UcjdjQXhAY8
     note: 'In the middle of a word after a vowel: [по́-йізд].'
   - word: Ки́їв
     letter: Ї
     sound: '[йі]'
-    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    video: https://www.youtube.com/watch?v=UcjdjQXhAY8
     note: 'Capital of Ukraine: [ки́-йів].'
   - word: щу́ка
     letter: Щ
     sound: '[шч]'
-    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    video: https://www.youtube.com/watch?v=QmBLieIuf6Q
     note: 'The letter Щ always represents two sounds: [ш] + [ч].'
   - word: борщ
     letter: Щ
     sound: '[шч]'
-    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    video: https://www.youtube.com/watch?v=QmBLieIuf6Q
     note: 'Famous Ukrainian dish ending in [шч]: [боршч].'
   - word: фо́то
     letter: Ф
     sound: '[ф]'
-    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    video: https://www.youtube.com/watch?v=haHRsFFZRQI
     note: The letter Ф represents a single voiceless labiodental fricative [f].
 - id: act-302
   type: true-false
@@ -117,18 +117,18 @@ inline:
     answer: '[ф]'
   - question: Скі́льки зву́ків у сло́ві «борщ»?
     options:
-    - п'ять зву́ків [б-о-р-ш-ч]
+    - 5 зву́ків [б-о-р-ш-ч]
     - чоти́ри зву́ки
-    answer: п'ять зву́ків [б-о-р-ш-ч]
+    answer: 5 зву́ків [б-о-р-ш-ч]
   - question: Скі́льки зву́ків у сло́ві «їжа́к»?
     options:
-    - п'ять зву́ків [й-і-ж-а-к]
+    - 5 зву́ків [й-і-ж-а-к]
     - чоти́ри зву́ки
-    answer: п'ять зву́ків [й-і-ж-а-к]
+    answer: 5 зву́ків [й-і-ж-а-к]
   - question: Скі́льки зву́ків у сло́ві «факт»?
     options:
     - чоти́ри зву́ки [ф-а-к-т]
-    - п'ять зву́ків
+    - 5 зву́ків
     answer: чоти́ри зву́ки [ф-а-к-т]
 - id: act-305
   type: group-sort
@@ -152,42 +152,42 @@ workbook:
   title: Вста́вте пропу́щене сло́во — Fill in the blank
   instruction: Fill in the blank with the appropriate vocabulary word.
   items:
-  - sentence: У лі́сі біжи́ть колю́чий {їжа́к}.
+  - sentence: У лі́сі біжи́ть колю́чий ___ .
     answer: їжа́к
     options:
     - їжа́к
     - кінь
     - єно́т
-  - sentence: Столи́ця Украї́ни — це прекра́сне мі́сто {Ки́їв}.
+  - sentence: Столи́ця Украї́ни — це прекра́сне мі́сто ___ .
     answer: Ки́їв
     options:
     - Ки́їв
     - день
     - по́їзд
-  - sentence: У рі́чці пла́ває вели́ка {щу́ка}.
+  - sentence: У рі́чці пла́ває вели́ка ___ .
     answer: щу́ка
     options:
     - щу́ка
     - кінь
     - лань
-  - sentence: На обі́д ма́ма звари́ла смачни́й гаря́чий {борщ}.
+  - sentence: На обі́д ма́ма звари́ла смачни́й гаря́чий ___ .
     answer: борщ
     options:
     - борщ
     - рис
     - чай
-  - sentence: У мене́ в альбо́мі є га́рне сіме́йне {фо́то}.
+  - sentence: У мене́ в альбо́мі є га́рне сіме́йне ___ .
     answer: фо́то
     options:
     - фо́то
     - факт
     - шарф
-  - sentence: Сього́дні вся на́ша дру́жня {сім'я́} збира́ється ра́зом.
-    answer: сім'я́
+  - sentence: До Ки́єва щодня́ ї́де швидки́й ___ .
+    answer: по́їзд
     options:
-    - сім'я́
-    - день
-    - вчи́тель
+    - по́їзд
+    - їжа́к
+    - борщ
 - id: act-307
   type: match-up
   title: З'єдна́йте слова́ та зна́чення — Match word meanings
@@ -213,19 +213,19 @@ workbook:
   - words:
     - ї
     - ж
-    - а
+    - а́
     - к
     answer: їжа́к
   - words:
     - п
-    - о
+    - о́
     - ї
     - з
     - д
     answer: по́їзд
   - words:
     - К
-    - и
+    - и́
     - ї
     - в
     answer: Ки́їв
