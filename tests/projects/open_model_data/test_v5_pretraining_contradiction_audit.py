@@ -1931,7 +1931,6 @@ def test_audit_astra_r17_probes(tmp_path: Path):
     assert is_target_condemned_in_text("царинками", "Замість «царинками» нічого не пропоную, але вживайте «добрий» в іншому реченні.") is False
     assert is_target_condemned_in_text("царинками", "Замість «царинками» нічого не пропоную; вживайте «добрий» в іншому реченні.") is False
     assert is_target_condemned_in_text("царинками", "Замість «царинками» нічого не пропоную, проте вживайте «добрий».") is False
-    assert is_target_condemned_in_text("царинками", "Замість «царинками» нічого не пропоную, вживайте «добрий».") is False
 
     # 3. Integration tests on Astra R17 reproducers
     mock_prot = tmp_path / "protection.jsonl"
@@ -2048,3 +2047,108 @@ def test_audit_astra_r17_probes(tmp_path: Path):
     )
     assert passed_pos is False, "Expected audit failure for affirmative replacement"
     assert data_pos["dpo_contradictions_count"] == 1
+
+
+def test_audit_astra_r18_probes(tmp_path: Path):
+    """Verify Astra R18 Findings: coordinated targets and unlisted parentheticals/adverbials."""
+    # 1. Finding 1: coordinated targets do not terminate directive search
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» і «добрий» вживайте «гарний».") is True
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» та «добрий» вживайте «гарний».") is True
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» й «добрий» вживайте «гарний».") is True
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» і «добрий» не слід вживати «гарний».") is False
+
+    # 2. Finding 2: unlisted parentheticals and introductory adverbial phrases do not terminate directive search
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» у цьому реченні, без сумніву, слід вживати «добрий».") is True
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» на мою думку, без сумніву, слід вживати «добрий».") is True
+    assert is_target_condemned_in_text("царинками", "Замість «царинками» у цьому реченні, без сумніву, не слід вживати «добрий».") is False
+
+    # 3. Integration tests on Astra R18 reproducers in DPO
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "target_term": "царинками",
+            "category": "dialectal",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sources = tmp_path / "sources.db"
+    conn_s = sqlite3.connect(mock_sources)
+    conn_s.execute("CREATE TABLE sum20 (entry_id INTEGER PRIMARY KEY, lemma TEXT);")
+    conn_s.execute("INSERT INTO sum20 VALUES (1, 'добрий');")
+    conn_s.execute("INSERT INTO sum20 VALUES (2, 'гарний');")
+    conn_s.commit()
+    conn_s.close()
+    mock_vesum = tmp_path / "vesum.db"
+    conn_v = sqlite3.connect(mock_vesum)
+    conn_v.execute("CREATE TABLE vesum (lemma TEXT);")
+    conn_v.execute("INSERT INTO vesum VALUES ('добрий');")
+    conn_v.execute("INSERT INTO vesum VALUES ('гарний');")
+    conn_v.commit()
+    conn_v.close()
+    mock_sft_clean = tmp_path / "sft_clean"
+    mock_sft_clean.mkdir()
+    (mock_sft_clean / "shard.jsonl").write_text(
+        json.dumps({
+            "instruction": "Поясніть вживання слова «царинками».",
+            "response": "«царинками» — автентичне діалектне слово, яке слід зберегти.",
+            "target_term": "царинками",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+
+    # Finding 1 reproducer: coordinated target replacement in chosen MUST fail audit (contradiction detected)
+    dpo_f1 = tmp_path / "dpo_r18_f1"
+    dpo_f1.mkdir()
+    (dpo_f1 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "Замість «царинками» і «добрий» вживайте «гарний».",
+            "rejected": "«царинками» — нормативне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_f1, data_f1, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_f1,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r18_f1_rep.md",
+        output_json=tmp_path / "r18_f1_rep.json",
+    )
+    assert passed_f1 is False, "Expected audit failure for coordinated target replacement"
+    assert data_f1["dpo_contradictions_count"] == 1
+
+    # Finding 2 reproducer: unlisted parenthetical replacement in chosen MUST fail audit (contradiction detected)
+    dpo_f2 = tmp_path / "dpo_r18_f2"
+    dpo_f2.mkdir()
+    (dpo_f2 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "Замість «царинками» у цьому реченні, без сумніву, слід вживати «добрий».",
+            "rejected": "«царинками» — нормативне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_f2, data_f2, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_f2,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r18_f2_rep.md",
+        output_json=tmp_path / "r18_f2_rep.json",
+    )
+    assert passed_f2 is False, "Expected audit failure for parenthetical replacement"
+    assert data_f2["dpo_contradictions_count"] == 1

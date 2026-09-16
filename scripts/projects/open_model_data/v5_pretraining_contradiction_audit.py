@@ -182,9 +182,6 @@ NEGATION_DIRECTIVE_RE = re.compile(
 ADVERSATIVE_CONJUNCTIONS = r"\b(?:але|проте|однак|а|бо|тому що|оскільки|якщо|якби|хоч|хоча|аби|коли)\b"
 COORDINATING_CONJUNCTIONS = r"\b(?:і|й|та)\b"
 CONJUNCTIONS = rf"(?:{ADVERSATIVE_CONJUNCTIONS}|{COORDINATING_CONJUNCTIONS})"
-PARENTHETICAL_WORDS = (
-    r"(?:безумовно|звісно|безперечно|будь ласка|напевне|певне|може|мабуть|справді|правда|як відомо|зокрема|наприклад)"
-)
 
 
 def find_clause_start_in_prefix(prefix: str, dir_match: re.Match) -> int:
@@ -389,25 +386,26 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 continue
 
         # Order 2: directive follows zm (e.g. "замість <target> не слід вживати...")
-        # Bound the directive search to the clause containing замість (Astra R17 Finding 2).
+        # Suffix directive only belongs to this clause if no clause boundary
+        # (adversative conjunction, semicolon/colon) separates замість <target> from the directive.
+        # Coordinating conjunctions only separate if introducing a directive/negation.
         directive_found = False
         for d_m in ANY_DIRECTIVE_RE.finditer(suffix):
             between_zm_and_dir = suffix[: d_m.start()]
+            # 1. Adversative conjunctions or semicolon/colon strictly separate clauses
             if re.search(
                 rf"(?:[,;:\u2014\u2013]*\s*{ADVERSATIVE_CONJUNCTIONS}\b|[;:]+)",
                 between_zm_and_dir,
                 re.IGNORECASE,
             ):
                 break
-            if re.search(rf"\b{COORDINATING_CONJUNCTIONS}\b", between_zm_and_dir, re.IGNORECASE):
+            # 2. Coordinating conjunctions ONLY separate clauses if followed by a directive/negation
+            if re.search(
+                rf"\b{COORDINATING_CONJUNCTIONS}\s+(?:не\b|ні\b|ані\b|{DIRECTIVE_VERBS}\b|{DIRECTIVE_MODALS}\b)",
+                between_zm_and_dir,
+                re.IGNORECASE,
+            ):
                 break
-            clean_between = re.sub(
-                rf",?\s*{PARENTHETICAL_WORDS}\s*,?", "", between_zm_and_dir, flags=re.IGNORECASE
-            ).strip()
-            if "," in clean_between:
-                parts = clean_between.split(",", 1)
-                if parts[0].strip() and not re.search(r"^(?:не|ні|ані)$", parts[0].strip(), re.IGNORECASE):
-                    break
 
             directive_found = True
             cl_end = find_clause_end_in_suffix(suffix, d_m.end())
