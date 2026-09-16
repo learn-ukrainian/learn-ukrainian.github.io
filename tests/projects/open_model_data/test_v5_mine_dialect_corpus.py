@@ -600,3 +600,45 @@ def test_standard_headwords_with_nested_idioms_excluded(
         assert banned_substring not in c["input_text"].casefold()
     for t in sft_trajectories:
         assert banned_substring not in t["query"].casefold()
+
+
+def test_sft_synonyms_strictly_bound_to_quotation_sense(
+    sft_trajectories: list[dict[str, Any]],
+) -> None:
+    """Verify that synonyms in SFT trajectories are bound strictly to the quoted sense."""
+    for t in sft_trajectories:
+        q = t.get("query", "")
+        lemmas = [att["lemma"].casefold() for att in t.get("vesum_attestation", [])]
+
+        if "служащий хліб добрий, та тільки вимовний" in q.casefold():
+            assert "докірливий" in lemmas, f"Expected sense synonym 'докірливий' for вимовний quote, got {lemmas}"
+            assert "красномовний" not in lemmas, f"Incorrect cross-sense synonym 'красномовний' in {lemmas}"
+
+        if "минув уже рік з окладом" in q.casefold():
+            assert "лишок" in lemmas, f"Expected sense synonym 'лишок' for оклад quote, got {lemmas}"
+            assert "компрес" not in lemmas, f"Incorrect cross-sense synonym 'компрес' in {lemmas}"
+
+
+def test_dialect_variant_headers_exclude_standard_quotations(
+    eval_cases: list[dict[str, Any]],
+    sft_trajectories: list[dict[str, Any]],
+) -> None:
+    """Verify that headwords with dialect variant markers (приймати, затикати) are not admitted."""
+    eval_markers = {c["dialect_marker"].casefold() for c in eval_cases}
+    sft_targets = {t.get("target_term", "").casefold() for t in sft_trajectories}
+
+    banned_words = {"приймати", "затикати", "чотири", "антихрист"}
+    assert not (eval_markers & banned_words), f"Banned words leaked into eval markers: {eval_markers & banned_words}"
+    assert not (sft_targets & banned_words), f"Banned words leaked into SFT targets: {sft_targets & banned_words}"
+
+    banned_substrings = [
+        "не прийматимуть їх до вищих шкіл",
+        "нервово затикала голкою",
+        "поруч з джерихою сиділи чотири молодиці",
+    ]
+    for c in eval_cases:
+        for bs in banned_substrings:
+            assert bs not in c["input_text"].casefold(), f"Banned quotation fragment '{bs}' found in eval {c['eval_id']}"
+    for t in sft_trajectories:
+        for bs in banned_substrings:
+            assert bs not in t["query"].casefold(), f"Banned quotation fragment '{bs}' found in SFT {t['trajectory_id']}"

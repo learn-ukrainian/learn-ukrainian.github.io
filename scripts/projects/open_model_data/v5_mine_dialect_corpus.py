@@ -270,7 +270,18 @@ class MinedSentence:
     raw_definition: str = ""
 
 
-def mine_all_candidate_sentences(db_path: Path) -> list[MinedSentence]:
+def is_true_dialect_header(header: str) -> bool:
+    """Check if header qualifies the headword itself as dialectal, rejecting dialect variant markers."""
+    # Reject variant introductions like 'і діал. ПРИЙМИ́ТИ', 'або діал. ЗАТКА́ТИ'
+    if re.search(r"\b(?:і|або|та)\s+(?:рідко\s+)?(?:діал\.|зах\.)", header):
+        return False
+    # Reject dialect label qualifying an uppercase variant like 'діал. АНЦИ́ХРИСТ'
+    if re.search(r"(?:діал\.|зах\.)\s+[А-ЯЄІЇҐ\u0301\']{3,}", header):
+        return False
+    return bool(re.search(r"\b(?:діал\.|зах\.)", header))
+
+
+def mine_all_candidate_sentences(db_path: Path = DEFAULT_SOURCES_DB) -> list[MinedSentence]:
     """Mine genuine dialect sentences with author attribution from sum11 and grinchenko."""
     if not db_path.exists() or db_path.stat().st_size == 0:
         raise FileNotFoundError(f"Database missing or empty: {db_path}")
@@ -297,7 +308,7 @@ def mine_all_candidate_sentences(db_path: Path) -> list[MinedSentence]:
         # Split into senses to ensure quotations are only taken from dialect-marked senses
         senses = re.split(r"(?<=\s)([1-9][0-9]?\.)\s+", full_text)
         header = senses[0]
-        header_is_dialect = bool(re.search(r"\b(?:діал\.|зах\.)", header))
+        header_is_dialect = is_true_dialect_header(header)
 
         dialect_sections = []
         if len(senses) > 1:
@@ -312,8 +323,8 @@ def mine_all_candidate_sentences(db_path: Path) -> list[MinedSentence]:
                     if re.match(r"^(?:[а-яіїєґ\.\s,\(\)\u0301-]{0,50}\b)?(?:діал\.|зах\.)", s_body.strip()):
                         dialect_sections.append(s_body)
         else:
-            # Single-sense entry: prefix before definition text must contain dialect marker
-            if re.match(r"^[А-ЯЄІЇҐа-яіїєґ\s\',./;0-9\(\)\u0301\-]+?\b(?:діал\.|зах\.)", full_text[:120]):
+            # Single-sense entry: header prefix before definition text must contain genuine dialect marker
+            if is_true_dialect_header(full_text[:140]):
                 dialect_sections.append(full_text)
 
         for section in dialect_sections:
@@ -370,7 +381,7 @@ def mine_all_candidate_sentences(db_path: Path) -> list[MinedSentence]:
                             collector=author_name,
                             work=work,
                             source_db="sum11_literary_citation",
-                            raw_definition=defn,
+                            raw_definition=section,
                         )
                     )
 
@@ -483,11 +494,11 @@ def partition_candidates_by_lemma(
         has_steppe = any(c.bucket == "southeastern_steppe" for c in c_list)
         has_slobozhan = any(c.bucket == "southeastern_slobozhan" for c in c_list)
         if has_steppe:
-            threshold = 95
+            threshold = 100
         elif has_slobozhan:
             threshold = 68
         else:
-            threshold = 48
+            threshold = 45
 
         if h < threshold:
             eval_candidates.extend(c_list)
@@ -499,10 +510,10 @@ def partition_candidates_by_lemma(
 
 def build_evaluation_benchmark(
     eval_candidates: list[MinedSentence],
-    sw_quota: int = 620,
-    north_quota: int = 420,
-    slobozhan_quota: int = 260,
-    steppe_quota: int = 260,
+    sw_quota: int = 600,
+    north_quota: int = 400,
+    slobozhan_quota: int = 250,
+    steppe_quota: int = 250,
 ) -> list[dict[str, Any]]:
     """Build the held-out evaluation benchmark with anti-copying mixed-error test cases."""
     bucketed: dict[str, list[MinedSentence]] = defaultdict(list)
@@ -1024,10 +1035,10 @@ def execute_mining_and_release(
     print("Building Held-Out Multi-Zone Evaluation Benchmark (>= 1,500 sentences)...")
     eval_cases = build_evaluation_benchmark(
         eval_candidates,
-        sw_quota=620,
-        north_quota=420,
-        slobozhan_quota=260,
-        steppe_quota=260,
+        sw_quota=600,
+        north_quota=400,
+        slobozhan_quota=250,
+        steppe_quota=250,
     )
     print(f"Constructed {len(eval_cases)} evaluation cases.")
 
