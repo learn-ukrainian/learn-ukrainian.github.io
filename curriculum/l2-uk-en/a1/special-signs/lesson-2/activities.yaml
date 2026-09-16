@@ -1,0 +1,357 @@
+inline:
+- id: act-201
+  type: watch-and-repeat
+  title: 'Диві́ться та повто́рюйте: Й, Я, Ю, Є — Watch and repeat: Й, Я, Ю, Є'
+  instruction: Watch the pronunciation video and repeat each word aloud.
+  items:
+  - word: чай
+    letter: Й
+    sound: '[й]'
+    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    note: Semi-vowel [j] at the end of a syllable.
+  - word: я́блуко
+    letter: Я
+    sound: '[йа]'
+    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    note: Two sounds [йа] at the beginning of a word.
+  - word: ю́шка
+    letter: Ю
+    sound: '[йу]'
+    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    note: Two sounds [йу] at the beginning of a word.
+  - word: єно́т
+    letter: Є
+    sound: '[йе]'
+    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    note: Two sounds [йе] at the beginning of a word.
+  - word: пі́сня
+    letter: Я
+    sound: '[а]'
+    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    note: One vowel sound [а] after a soft consonant [н'].
+  - word: лю́ди
+    letter: Ю
+    sound: '[у]'
+    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    note: One vowel sound [у] after a soft consonant [л'].
+- id: act-202
+  type: quiz
+  title: Роль йото́ваних лі́тер — Roles of Iotated Letters
+  instruction: Select the correct role of the iotated letter in each given position.
+  items:
+  - question: Скі́льки зву́ків познача́є лі́тера «я» на поча́тку сло́ва «я́блуко»?
+    options:
+    - два зву́ки [йа]
+    - оди́н звук [а]
+    answer: два зву́ки [йа]
+  - question: Скі́льки зву́ків познача́є лі́тера «я» у сло́ві «пі́сня» пі́сля при́голосного?
+    options:
+    - оди́н звук [а] та м'я́кість
+    - два зву́ки [йа]
+    answer: оди́н звук [а] та м'я́кість
+  - question: Скі́льки зву́ків познача́є лі́тера «ю» на поча́тку сло́ва «ю́шка»?
+    options:
+    - два зву́ки [йу]
+    - оди́н звук [у]
+    answer: два зву́ки [йу]
+  - question: Скі́льки зву́ків познача́є лі́тера «ю» у сло́ві «лю́ди» пі́сля при́голосного?
+    options:
+    - оди́н звук [у] та м'я́кість
+    - два зву́ки [йу]
+    answer: оди́н звук [у] та м'я́кість
+  - question: Скі́льки зву́ків познача́є лі́тера «є» на поча́тку сло́ва «єно́т»?
+    options:
+    - два зву́ки [йе]
+    - оди́н звук [е]
+    answer: два зву́ки [йе]
+  - question: Яки́м зву́ком є лі́тера Й в украї́нській мо́ві?
+    options:
+    - напівголосни́м сона́нтом [й]
+    - голосни́м зву́ком
+    answer: напівголосни́м сона́нтом [й]
+- id: act-203
+  type: quiz
+  title: Оди́н чи два зву́ки — One or Two Sounds
+  instruction: Determine whether the highlighted iotated vowel represents one or two
+    sounds.
+  items:
+  - question: 'Лі́тера «я» у сло́ві «я́блуко»:'
+    options:
+    - два зву́ки [йа]
+    - оди́н звук [а]
+    answer: два зву́ки [йа]
+  - question: 'Лі́тера «я» у сло́ві «пі́сня»:'
+    options:
+    - оди́н звук [а]
+    - два зву́ки [йа]
+    answer: оди́н звук [а]
+  - question: 'Лі́тера «ю» у сло́ві «ю́шка»:'
+    options:
+    - два зву́ки [йу]
+    - оди́н звук [у]
+    answer: два зву́ки [йу]
+  - question: 'Лі́тера «ю» у сло́ві «лю́ди»:'
+    options:
+    - оди́н звук [у]
+    - два зву́ки [йу]
+    answer: оди́н звук [у]
+  - question: 'Лі́тера «є» у сло́ві «єно́т»:'
+    options:
+    - два зву́ки [йе]
+    - оди́н звук [е]
+    answer: два зву́ки [йе]
+  - question: 'Лі́тера «я» у сло́ві «буря́к»:'
+    options:
+    - оди́н звук [а]
+    - два зву́ки [йа]
+    answer: оди́н звук [а]
+- id: act-204
+  type: true-false
+  title: Пра́вила йото́ваних лі́тер — True or False
+  instruction: Decide whether each statement is true or false.
+  items:
+  - statement: Лі́тера Й познача́є напівголосни́й звук [й].
+    answer: true
+    explanation: Й — це звукови́й напівголосни́й сона́нт.
+  - statement: На поча́тку сло́ва лі́тери Я, Ю, Є за́вжди познача́ють два зву́ки.
+    answer: true
+    explanation: На поча́тку сло́ва чу́ємо [й] та голосни́й звук.
+  - statement: Пі́сля при́голосного без апо́строфа лі́тера Я познача́є два зву́ки.
+    answer: false
+    explanation: Пі́сля при́голосного лі́тера Я познача́є оди́н звук [а] та пом'я́кшує
+      при́голосний.
+  - statement: У сло́ві «чай» оста́нній звук — це голосни́й звук.
+    answer: false
+    explanation: Оста́нній звук — це напівголосни́й сона́нт [й].
+  - statement: У сло́ві «буря́к» лі́тера я пом'я́кшує зву́к [р].
+    answer: true
+    explanation: У сло́ві «буря́к» звук [р'] м'яки́й, без апо́строфа.
+  - statement: У сло́ві «сього́дні» є м'яки́й знак.
+    answer: true
+    explanation: Бу́ква ь познача́є м'я́кість [с'].
+- id: act-205
+  type: group-sort
+  title: Розподілі́ть слова́ за кі́лькістю зву́ків — Group Sort
+  instruction: Sort words based on whether the iotated vowel represents two sounds
+    or one sound.
+  groups:
+  - name: Два зву́ки [й] + голосни́й — Two sounds
+    items:
+    - я́блуко
+    - ю́шка
+    - єно́т
+  - name: Оди́н звук + м'я́кість — One sound
+    items:
+    - пі́сня
+    - лю́ди
+    - буря́к
+workbook:
+- id: act-206
+  type: match-up
+  title: З'єдна́йте слова́ та зна́чення — Match word meanings
+  instruction: Match each Ukrainian word or phrase with its English meaning.
+  pairs:
+  - left: чай
+    right: tea
+  - left: я́блуко
+    right: apple
+  - left: ю́шка
+    right: soup / broth
+  - left: єно́т
+    right: raccoon
+  - left: буря́к
+    right: beetroot
+  - left: свя́то
+    right: holiday
+- id: act-207
+  type: fill-in
+  title: Вста́вте пропу́щене сло́во — Fill in the blank
+  instruction: Fill in the blank with the appropriate word.
+  items:
+  - sentence: Вра́нці на сніда́нок я п'ю гаря́чий {чай}.
+    answer: чай
+    options:
+    - чай
+    - рис
+    - час
+  - sentence: На столі́ лежи́ть сві́же сокови́те {я́блуко}.
+    answer: я́блуко
+    options:
+    - я́блуко
+    - ю́шка
+    - єно́т
+  - sentence: У зоопа́рку живе́ смуга́стий {єно́т}.
+    answer: єно́т
+    options:
+    - єно́т
+    - кінь
+    - лань
+  - sentence: Сього́дні в селі́ весе́ле {свя́то}.
+    answer: свя́то
+    options:
+    - свя́то
+    - день
+    - чай
+  - sentence: У ба́бці на горо́ді росте́ черво́ний {буря́к}.
+    answer: буря́к
+    options:
+    - буря́к
+    - я́блуко
+    - ю́шка
+  - sentence: Наш {вчи́тель} пока́зує ціка́вий малю́нок.
+    answer: вчи́тель
+    options:
+    - вчи́тель
+    - кінь
+    - єно́т
+- id: act-208
+  type: unjumble
+  title: Складі́ть слова́ з лі́тер — Unjumble letters
+  instruction: Arrange the letters to form correct Ukrainian words.
+  items:
+  - words:
+    - ч
+    - а
+    - й
+    answer: чай
+  - words:
+    - є
+    - н
+    - о
+    - т
+    answer: єно́т
+  - words:
+    - ю
+    - ш
+    - к
+    - а
+    answer: ю́шка
+  - words:
+    - п
+    - і
+    - с
+    - н
+    - я
+    answer: пі́сня
+  - words:
+    - л
+    - ю
+    - д
+    - и
+    answer: лю́ди
+  - words:
+    - й
+    - о
+    - г
+    - у
+    - р
+    - т
+    answer: йо́гурт
+- id: act-209
+  type: error-correction
+  title: Знайді́ть поми́лку — Spot the error
+  instruction: Find the spelling error in each sentence.
+  items:
+  - sentence: Вра́нці я пив чаі з лимо́ном.
+    error: чаі
+    correction: чай
+    explanation: 'Напівголосни́й звук [й] познача́ється лі́терою й: чай.'
+  - sentence: На столі́ лежи́ть смачне́ йа́блуко.
+    error: йа́блуко
+    correction: я́блуко
+    explanation: 'Сполу́ка зву́ків [йа] на поча́тку сло́ва познача́ється лі́терою
+      я: я́блуко.'
+  - sentence: У тарі́лці те́пла йу́шка.
+    error: йу́шка
+    correction: ю́шка
+    explanation: 'Сполу́ка зву́ків [йу] на поча́тку сло́ва познача́ється лі́терою
+      ю: ю́шка.'
+  - sentence: У лі́сі живе́ смуга́стий йено́т.
+    error: йено́т
+    correction: єно́т
+    explanation: 'Сполу́ка зву́ків [йе] на поча́тку сло́ва познача́ється лі́терою
+      є: єно́т.'
+  - sentence: На по́лі росте́ сокови́тий буряік.
+    error: буряік
+    correction: буря́к
+    explanation: 'Сло́во «буря́к» пи́шеться з лі́терою я: буря́к.'
+  - sentence: Сього́дні в мі́сті вели́ке свиа́то.
+    error: свиа́то
+    correction: свя́то
+    explanation: 'Сло́во «свя́то» пи́шеться з лі́терою я без апо́строфа: свя́то.'
+- id: act-210
+  type: quiz
+  title: Ви́беріть пра́вильне сло́во — Multiple Choice
+  instruction: Select the correct Ukrainian vocabulary word.
+  items:
+  - question: Що означа́є «tea» в украї́нській мо́ві?
+    options:
+    - чай
+    - час
+    - рис
+    answer: чай
+  - question: Що означа́є «apple» в украї́нській мо́ві?
+    options:
+    - я́блуко
+    - ю́шка
+    - єно́т
+    answer: я́блуко
+  - question: Що означа́є «soup / broth» в украї́нській мо́ві?
+    options:
+    - ю́шка
+    - я́блуко
+    - єно́т
+    answer: ю́шка
+  - question: Що означа́є «raccoon» в украї́нській мо́ві?
+    options:
+    - єно́т
+    - кінь
+    - лань
+    answer: єно́т
+  - question: Що означа́є «beetroot» в украї́нській мо́ві?
+    options:
+    - буря́к
+    - бур'я́н
+    - свя́то
+    answer: буря́к
+  - question: Що означа́є «holiday» в украї́нській мо́ві?
+    options:
+    - свя́то
+    - буря́к
+    - день
+    answer: свя́то
+- id: act-211
+  type: quiz
+  title: Ви́бір лі́тери — Letter Choice
+  instruction: Choose the appropriate letter for each word.
+  items:
+  - question: 'Пе́рша лі́тера у сло́ві «___блуко»:'
+    options:
+    - Я
+    - Й
+    answer: Я
+  - question: 'Пе́рша лі́тера у сло́ві «___шка»:'
+    options:
+    - Ю
+    - Й
+    answer: Ю
+  - question: 'Пе́рша лі́тера у сло́ві «___но́т»:'
+    options:
+    - Є
+    - Й
+    answer: Є
+  - question: 'Оста́ння лі́тера у сло́ві «ча___»:'
+    options:
+    - й
+    - і
+    answer: й
+  - question: 'Лі́тера пі́сля «р» у сло́ві «бур___к»:'
+    options:
+    - я
+    - і
+    answer: я
+  - question: 'Лі́тера пі́сля «в» у сло́ві «св___то»:'
+    options:
+    - я
+    - і
+    answer: я

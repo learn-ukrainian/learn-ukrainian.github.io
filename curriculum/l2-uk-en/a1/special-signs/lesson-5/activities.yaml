@@ -1,0 +1,322 @@
+inline:
+- id: act-5
+  type: divide-words
+  title: Пра́ктика перено́су слів
+  instruction: Обери́ підгото́влену моде́ль перено́су.
+  items:
+  - word: Мар'я́на
+    answer: Мар'-яна
+  - word: дерев'я́ний
+    answer: дере-в'яний
+  - word: бур'я́н
+    answer: бур'-ян
+  - word: па́льці
+    answer: паль-ці
+- id: act-502
+  type: divide-words
+  title: 'Пра́вила перено́су: нови́й спектр слів — Hyphenation rules: New words'
+  instruction: Обері́ть пра́вильний варіа́нт перено́су для ко́жного сло́ва.
+  items:
+  - word: вчи́тель
+    answer: вчи-тель
+  - word: мале́нький
+    answer: малень-кий
+  - word: комп'ю́тер
+    answer: комп'-ютер
+  - word: здоро́в'я
+    answer: здо-ров'я
+  - word: я́блуко
+    answer: яб-луко
+  - word: по́їзд
+    answer: по-їзд
+- id: act-503
+  type: match-up
+  title: Етике́тні ви́рази та проща́ння — Etiquette formulas and farewells
+  instruction: З'єдна́йте украї́нську фо́рмулу з її́ англі́йським пере́кладом.
+  pairs:
+  - left: До поба́чення!
+    right: Goodbye!
+  - left: На все до́бре!
+    right: All the best!
+  - left: Щи́ро дя́кую!
+    right: Thank you very much!
+  - left: Будь ла́ска!
+    right: You are welcome! / Please!
+  - left: Як спра́ви?
+    right: How are things?
+  - left: Чудо́во, дя́кую!
+    right: Wonderful, thank you!
+- id: act-504
+  type: quiz
+  title: 'Етике́тний діало́г: розумі́ння розмо́ви — Etiquette dialogue check'
+  instruction: Обері́ть пра́вильний варіа́нт ві́дповіді за конте́кстом діало́гу.
+  items:
+  - prompt: Як Марко́ віта́є Окса́ну вде́нь?
+    options:
+    - text: До́брий день!
+      correct: true
+    - text: До́брий ве́чір!
+      correct: false
+    - text: До поба́чення!
+      correct: false
+    explanation: «До́брий день!» — станда́ртне де́нне віта́ння.
+  - prompt: Що відповіда́є Окса́на на віта́ння «До́брий день!»?
+    options:
+    - text: До́брий день!
+      correct: true
+    - text: На все до́бре!
+      correct: false
+    - text: Будь ла́ска!
+      correct: false
+    explanation: На віта́ння «До́брий день!» відповіда́ють «До́брий день!».
+  - prompt: Як Окса́на (жі́нка) ка́же, що ра́да ба́чити співрозмо́вника?
+    options:
+    - text: Ра́да тебе́ ба́чити!
+      correct: true
+    - text: Ра́дий тебе́ ба́чити!
+      correct: false
+    - text: Ра́ді тебе́ ба́чити!
+      correct: false
+    explanation: Жіно́чий рід вимага́є фо́рму «ра́да».
+  - prompt: Як Марко́ (чолові́к) ка́же, що ра́дий ба́чити співрозмо́вницю?
+    options:
+    - text: Ра́дий тебе́ ба́чити!
+      correct: true
+    - text: Ра́да тебе́ ба́чити!
+      correct: false
+    - text: Ра́до тебе́ ба́чити!
+      correct: false
+    explanation: Чолові́чий рід вимага́є фо́рму «ра́дий».
+  - prompt: Що ка́жуть співрозмо́вники під час вві́чливого проща́ння?
+    options:
+    - text: До поба́чення! На все до́бре!
+      correct: true
+    - text: До́брий день! Дя́кую!
+      correct: false
+    - text: Як спра́ви? Чудо́во!
+      correct: false
+    explanation: «До поба́чення!» та «На все до́бре!» — фо́рмули проща́ння.
+  - prompt: Яке́ сло́во вжива́ється для ви́словлення по́вної та щи́рої подя́ки?
+    options:
+    - text: Дя́кую!
+      correct: true
+    - text: Свя́то!
+      correct: false
+    - text: Перено́с!
+      correct: false
+    explanation: «Дя́кую!» — головне́ сло́во вдя́чності в украї́нській мо́ві.
+- id: act-505
+  type: group-sort
+  title: 'Си́нтез: класифіка́ція за зна́ками — Synthesis: Classification by signs'
+  instruction: Розподілі́ть слова́ у три гру́пи за ї́хньою фонети́чною структу́рою.
+  groups:
+  - label: Знак Ь (пом'я́кшення)
+    items:
+    - день
+    - кінь
+    - сіль
+    - вчи́тель
+    name: Знак Ь (пом'я́кшення)
+  - label: Апо́строф (розді́льність)
+    items:
+    - сім'я́
+    - м'я́со
+    - п'ять
+    - бур'я́н
+    name: Апо́строф (розді́льність)
+  - label: Бу́кви Ї та Щ (два зву́ки)
+    items:
+    - їжа́к
+    - по́їзд
+    - щу́ка
+    - борщ
+    name: Бу́кви Ї та Щ (два зву́ки)
+workbook:
+- id: act-w5
+  type: fill-in
+  title: Дода́й знак у нови́х слова́х
+  instruction: Обери́ ь, апо́строф або́ без зна́ка.
+  items:
+  - sentence: бур_ян
+    answer: ''''
+    options:
+    - ''''
+    - ь
+    - без зна́ка
+  - sentence: комп_ютер
+    answer: ''''
+    options:
+    - ''''
+    - ь
+    - без зна́ка
+  - sentence: ім_я
+    answer: ''''
+    options:
+    - ''''
+    - ь
+    - без зна́ка
+  - sentence: У сло́ві мален_кий потрі́бен ____.
+    answer: ь
+    options:
+    - ь
+    - ''''
+    - без зна́ка
+  - sentence: У сло́ві цвях пра́вильний ви́бір — ____.
+    answer: без зна́ка
+    options:
+    - без зна́ка
+    - ''''
+    - ь
+- id: act-w6
+  type: quiz
+  title: Пра́вильна фо́рма
+  instruction: Обери́ пра́вильно напи́сане сло́во.
+  items:
+  - prompt: Сім'я́ — яка́ фо́рма пра́вильна?
+    options:
+    - text: сім'я́
+      correct: true
+    - text: сімя
+      correct: false
+    explanation: Сім'я́ потребу́є апо́строфа.
+  - prompt: День — яка́ фо́рма пра́вильна?
+    options:
+    - text: ден
+      correct: false
+    - text: день
+      correct: true
+    explanation: День потребу́є м'яко́го зна́ка.
+  - prompt: Сло́во без апо́строфа?
+    options:
+    - text: св'ято
+      correct: false
+    - text: свя́то
+      correct: true
+    explanation: У сло́ві свя́то нема́є апо́строфа.
+- id: act-w7
+  type: odd-one-out
+  title: За́йве за зна́ком
+  instruction: Обери́ сло́во, яке́ не ма́є тако́го са́мого зна́ка, як і́нші.
+  items:
+  - words:
+    - сім'я́
+    - м'я́со
+    - п'ять
+    - буря́к
+    answer: буря́к
+    explanation: Буря́к без апо́строфа; і́нші слова́ ма́ють апо́строф.
+  - words:
+    - день
+    - кінь
+    - сіль
+    - свя́то
+    answer: свя́то
+    explanation: Свя́то без ь; і́нші слова́ ма́ють м'яки́й знак.
+  - words:
+    - буря́к
+    - свя́то
+    - цвях
+    - бур'я́н
+    answer: бур'я́н
+    explanation: Бур'я́н ма́є апо́строф; і́нші слова́ тут без зна́ка.
+- id: act-506
+  type: unjumble
+  title: 'Складі́ть односкладо́ві слова́ — Unjumble: Single-syllable words'
+  instruction: Складі́ть пра́вильні украї́нські слова́ з по́даних лі́тер.
+  items:
+  - words:
+    - д
+    - е
+    - н
+    - ь
+    answer: день
+  - words:
+    - к
+    - і
+    - н
+    - ь
+    answer: кінь
+  - words:
+    - с
+    - і
+    - л
+    - ь
+    answer: сіль
+  - words:
+    - б
+    - о
+    - р
+    - щ
+    answer: борщ
+  - words:
+    - к
+    - у
+    - щ
+    answer: кущ
+  - words:
+    - ч
+    - а
+    - с
+    answer: час
+- id: act-507
+  type: true-false
+  title: Підсумко́ві те́зи мо́дуля — Final module statements
+  instruction: Ви́значте, чи пра́вильне ко́жне тве́рдження про украї́нські зна́ки.
+  items:
+  - statement: Знак Ь ніко́ли не відрива́ється від попере́дньої лі́тери при перено́сі.
+    correct: true
+    explanation: Знак Ь за́вжди залиша́ється з попере́днім при́голосним.
+  - statement: Апо́строф при перено́сі за́вжди залиша́ється з попере́дньою лі́терою.
+    correct: true
+    explanation: Апо́строф не перено́ситься на насту́пний рядо́к.
+  - statement: Мо́жна залиша́ти одну́ лі́теру на рядку́ при перено́сі сло́ва.
+    correct: false
+    explanation: Одну́ лі́теру ніко́ли не залиша́ють і не перево́дять на і́нший рядо́к.
+  - statement: 'Лі́тера Ї за́вжди познача́є два зву́ки: [й] + [і].'
+    correct: true
+    explanation: Лі́тера Ї за будь-яки́х умо́в ма́є два зву́ки.
+  - statement: Бу́ква Щ в украї́нській мо́ві вимовля́ється як м'яки́й звук.
+    correct: false
+    explanation: Щ — це ви́ключно тверда́ сполу́ка [ш] та [ч].
+  - statement: У сло́ві «свя́то» пи́шеться апо́строф.
+    correct: false
+    explanation: У сло́ві «свя́то» апо́строфа нема́є, бо пе́ред [в] стої́ть [с].
+- id: act-508
+  type: quiz
+  title: Си́нтез пра́вил мо́дуля — Module Synthesis Quiz
+  instruction: Test your mastery of the special signs, rules of hyphenation, and pronunciation.
+  items:
+  - question: Чи мо́жна відрива́ти апо́строф від попере́дньої бу́кви при перено́сі?
+    options:
+    - ні, не мо́жна
+    - так, за́вжди мо́жна
+    answer: ні, не мо́жна
+  - question: Чи мо́жна відрива́ти м'яки́й знак від попере́дньої бу́кви при перено́сі?
+    options:
+    - ні, не мо́жна
+    - так, за́вжди мо́жна
+    answer: ні, не мо́жна
+  - question: Як пра́вильно перенести́ сло́во «па́льці»?
+    options:
+    - паль-ці
+    - пал-ьці
+    - па-льці
+    answer: паль-ці
+  - question: Як пра́вильно перенести́ сло́во «Мар'я́на»?
+    options:
+    - Мар'-яна
+    - Мар-'яна
+    - Ма-р'яна
+    answer: Мар'-яна
+  - question: Як пра́вильно перенести́ сло́во «бур'я́н»?
+    options:
+    - бур'-ян
+    - бур-'ян
+    - бу-р'ян
+    answer: бур'-ян
+  - question: Як пра́вильно перенести́ сло́во «дерев'я́ний»?
+    options:
+    - дере-в'яний
+    - дерев-'яний
+    - де-рев'яний
+    answer: дере-в'яний

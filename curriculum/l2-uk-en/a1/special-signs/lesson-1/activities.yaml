@@ -1,0 +1,340 @@
+inline:
+- id: act-101
+  type: watch-and-repeat
+  title: 'Диві́ться та повто́рюйте: Ь, Ц, Ч — Watch and repeat: Ь, Ц, Ч'
+  instruction: Watch the pronunciation video and repeat each word aloud.
+  items:
+  - word: день
+    letter: Ь
+    sound: '[н'']'
+    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    note: The soft sign has no sound of its own; it softens the preceding consonant.
+  - word: кінь
+    letter: Ь
+    sound: '[н'']'
+    video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    note: 'Soft ending: pronounce [кін''].'
+  - word: цирк
+    letter: Ц
+    sound: '[т͡с]'
+    video: https://www.youtube.com/watch?v=u44eCjR2Oz8
+    note: Voiceless dental affricate; hard before [и].
+  - word: ціна́
+    letter: Ц
+    sound: '[т͡с'']'
+    video: https://www.youtube.com/watch?v=u44eCjR2Oz8
+    note: Soft dental affricate before [і].
+  - word: час
+    letter: Ч
+    sound: '[т͡ʃ]'
+    video: https://www.youtube.com/watch?v=UsJkbdsY2RA
+    note: Voiceless postalveolar affricate; always hard in standard Ukrainian.
+  - word: ча́шка
+    letter: Ч
+    sound: '[т͡ʃ]'
+    video: https://www.youtube.com/watch?v=UsJkbdsY2RA
+    note: Hard affricate [ч] at the beginning of the word.
+- id: act-2
+  type: match-up
+  title: Що ро́бить ь
+  instruction: З'єдна́й ко́жне сло́во з підка́зкою про м'яки́й знак.
+  pairs:
+  - left: день
+    right: м'яки́й н у сло́ві день
+  - left: кінь
+    right: м'яки́й н у сло́ві кінь
+  - left: сіль
+    right: м'яки́й л у сло́ві сіль
+  - left: вчи́тель
+    right: м'яки́й л у сло́ві вчи́тель
+  - left: м'яки́й знак
+    right: не ма́є вла́сного зву́ка
+- id: act-103
+  type: true-false
+  title: Пра́вила м'яко́го зна́ка та африка́т — True or False
+  instruction: Decide whether each statement is true or false.
+  items:
+  - statement: М'яки́й знак (ь) ма́є вла́сний голосни́й звук.
+    answer: false
+    explanation: М'яки́й знак не ма́є вла́сного зву́ка; він лише́ пом'я́кшує попере́дній
+      при́голосний.
+  - statement: У сло́ві «день» оста́нній звук є м'яки́м.
+    answer: true
+    explanation: 'Лі́тера ь ро́бить звук [н] м''яки́м: [ден''].'
+  - statement: Звук [ч] в украї́нській мо́ві є тве́рдим.
+    answer: true
+    explanation: В украї́нській літерату́рній мо́ві шипля́чий звук [ч] вимовля́ється
+      тве́рдо.
+  - statement: Лі́тера Ц познача́є африка́ту [т͡с].
+    answer: true
+    explanation: Ц — це глуха́ свистя́ча африка́та [т͡с].
+  - statement: У сло́ві «ціна́» звук [ц] є тве́рдим.
+    answer: false
+    explanation: Пе́ред голосни́м [і] африка́та [ц] пом'я́кшується.
+  - statement: Слова́ «бу́ква» та «лі́тера» є сино́німами в украї́нській мо́ві.
+    answer: true
+    explanation: Оби́два сло́ва означа́ють писе́мний знак абе́тки.
+- id: act-104
+  type: quiz
+  title: Тверди́й чи м'яки́й звук — Hard or Soft Sound
+  instruction: Choose whether the highlighted consonant sound is hard (тверди́й) or
+    soft (м'яки́й).
+  items:
+  - question: 'Оста́нній звук у сло́ві «день» [н'']:'
+    options:
+    - тверди́й
+    - м'яки́й
+    answer: м'яки́й
+  - question: 'Оста́нній звук у сло́ві «стан» [н]:'
+    options:
+    - тверди́й
+    - м'яки́й
+    answer: тверди́й
+  - question: 'Звук [ц] у сло́ві «цирк» пе́ред [и]:'
+    options:
+    - тверди́й
+    - м'яки́й
+    answer: тверди́й
+  - question: 'Звук [ц''] у сло́ві «ціна́» пе́ред [і]:'
+    options:
+    - тверди́й
+    - м'яки́й
+    answer: м'яки́й
+  - question: 'Звук [ч] у сло́ві «час»:'
+    options:
+    - тверди́й
+    - м'яки́й
+    answer: тверди́й
+  - question: 'Оста́нній звук у сло́ві «сіль» [л'']:'
+    options:
+    - тверди́й
+    - м'яки́й
+    answer: м'яки́й
+- id: act-105
+  type: group-sort
+  title: 'Розподілі́ть слова́ за тве́рдістю зву́ка — Group Sort: Hard vs Soft'
+  instruction: Sort words into those ending in a hard consonant and those ending in
+    a soft consonant.
+  groups:
+  - name: Тверди́й звук — Hard consonant
+    items:
+    - стан
+    - лан
+    - рис
+  - name: М'яки́й звук — Soft consonant
+    items:
+    - стань
+    - лань
+    - рись
+workbook:
+- id: act-106
+  type: quiz
+  title: Ви́беріть пра́вильне зна́чення — Choose the correct meaning
+  instruction: Select the correct English translation for each Ukrainian word.
+  items:
+  - question: Що означа́є сло́во «день»?
+    options:
+    - day
+    - horse
+    - salt
+    - teacher
+    answer: day
+  - question: Що означа́є сло́во «кінь»?
+    options:
+    - horse
+    - day
+    - salt
+    - spoon
+    answer: horse
+  - question: Що означа́є сло́во «сіль»?
+    options:
+    - salt
+    - price
+    - cup
+    - circus
+    answer: salt
+  - question: Що означа́є сло́во «вчи́тель»?
+    options:
+    - teacher
+    - student
+    - circus
+    - family
+    answer: teacher
+  - question: Що означа́є сло́во «ціна́»?
+    options:
+    - price
+    - time
+    - circus
+    - cup
+    answer: price
+  - question: Що означа́є сло́во «па́льці»?
+    options:
+    - fingers
+    - hands
+    - eyes
+    - feet
+    answer: fingers
+- id: act-107
+  type: fill-in
+  title: Вста́вте пропу́щене сло́во — Fill in the blank
+  instruction: Fill in the blanks with the correct vocabulary word.
+  items:
+  - sentence: Сього́дні те́плий со́нячний {день}.
+    answer: день
+    options:
+    - день
+    - кінь
+    - сіль
+  - sentence: У селі́ на по́лі пасе́ться га́рний бі́лий {кінь}.
+    answer: кінь
+    options:
+    - кінь
+    - день
+    - вчи́тель
+  - sentence: На столі́ стої́ть бі́ла {сіль}.
+    answer: сіль
+    options:
+    - сіль
+    - ціна́
+    - ча́шка
+  - sentence: Наш {вчи́тель} чита́є ціка́вий те́кст.
+    answer: вчи́тель
+    options:
+    - вчи́тель
+    - кінь
+    - день
+  - sentence: Яка́ {ціна́} на цей сві́жий рис?
+    answer: ціна́
+    options:
+    - ціна́
+    - сіль
+    - ча́шка
+  - sentence: У мене́ на руці́ п'ять {па́льців}.
+    answer: па́льців
+    options:
+    - па́льців
+    - дні́в
+    - ко́ней
+- id: act-108
+  type: unjumble
+  title: Складі́ть слова́ з лі́тер — Unjumble letters
+  instruction: Arrange the letters to form correct Ukrainian words.
+  items:
+  - words:
+    - д
+    - е
+    - н
+    - ь
+    answer: день
+  - words:
+    - к
+    - і
+    - н
+    - ь
+    answer: кінь
+  - words:
+    - с
+    - і
+    - л
+    - ь
+    answer: сіль
+  - words:
+    - ц
+    - и
+    - р
+    - к
+    answer: цирк
+  - words:
+    - ц
+    - і
+    - н
+    - а
+    answer: ціна́
+  - words:
+    - ч
+    - а
+    - с
+    answer: час
+- id: act-109
+  type: match-up
+  title: З'єдна́йте па́ри слів — Match word pairs
+  instruction: Match each Ukrainian word with its contrast pair or English meaning.
+  pairs:
+  - left: день
+    right: day
+  - left: кінь
+    right: horse
+  - left: сіль
+    right: salt
+  - left: вчи́тель
+    right: teacher
+  - left: ціна́
+    right: price
+  - left: мале́нький
+    right: small
+- id: act-110
+  type: error-correction
+  title: Знайді́ть поми́лку — Spot the error
+  instruction: Identify which word is written incorrectly according to Ukrainian soft
+    sign rules.
+  items:
+  - sentence: У сло́ві ден написа́ли без зна́ка м'я́кшення.
+    error: ден
+    correction: день
+    explanation: 'Пе́ред па́узою сло́во «день» пи́шеться з м''яки́м зна́ком: день.'
+  - sentence: На по́лі біжи́ть кін без зна́ка.
+    error: кін
+    correction: кінь
+    explanation: 'Сло́во «кінь» закі́нчується на м''яки́й знак: кінь.'
+  - sentence: У су́пі є сіл без зна́ка.
+    error: сіл
+    correction: сіль
+    explanation: 'Сло́во «сіль» ма́є м''яки́й [л''] і пи́шеться з ь: сіль.'
+  - sentence: Наш вчител чита́є кни́гу.
+    error: вчител
+    correction: вчи́тель
+    explanation: 'Іме́нник «вчи́тель» ма́є м''яки́й кінце́вий [л'']: вчи́тель.'
+  - sentence: В украї́нській мо́ві написа́ли чьас із м'яки́м зна́ком.
+    error: чьас
+    correction: час
+    explanation: 'Звук [ч] в украї́нській мо́ві тверди́й; пі́сля ч знак ь не ста́виться:
+      час.'
+  - sentence: Це маленкий знак на столі́.
+    error: маленкий
+    correction: мале́нький
+    explanation: 'У су́фіксі -еньк- пи́шеться м''яки́й знак: мале́нький.'
+- id: act-111
+  type: quiz
+  title: Знак ь чи без зна́ка — Soft sign or no sign
+  instruction: Choose whether the word ends in a soft sign (ь) or hard consonant.
+  items:
+  - question: 'Сло́во «day» в украї́нській мо́ві:'
+    options:
+    - день
+    - стан
+    answer: день
+  - question: 'Сло́во «horse» в украї́нській мо́ві:'
+    options:
+    - кінь
+    - лан
+    answer: кінь
+  - question: 'Сло́во «salt» в украї́нській мо́ві:'
+    options:
+    - сіль
+    - рис
+    answer: сіль
+  - question: 'Кома́нда «stand up» (м''яки́й [н'']):'
+    options:
+    - стань
+    - стан
+    answer: стань
+  - question: 'Твари́на «doe / hind» (м''яки́й [н'']):'
+    options:
+    - лань
+    - лан
+    answer: лань
+  - question: 'Твари́на «lynx» (м''яки́й [с'']):'
+    options:
+    - рись
+    - рис
+    answer: рись
