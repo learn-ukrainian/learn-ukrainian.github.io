@@ -107,21 +107,21 @@ inline:
   title: Ситуа́ції та ре́пліки · Situations & Appropriate Phrases
   instruction: З'єдна́й комунікати́вну ситуа́цію з відпові́дною ре́плікою · Pair each communicative situation with its line.
   pairs:
-  - left: Знайо́мство з рове́сником на ку́рсі
+  - left: Знайо́мство з рове́сником на ку́рсі · Meeting a peer in a course
     right: Приві́т! Мене́ зва́ти...
-  - left: Запита́ння про мі́сто похо́дження
+  - left: Запита́ння про мі́сто похо́дження · Asking about city of origin
     right: Зві́дки ти?
-  - left: Ві́дповідь про своє́ похо́дження
+  - left: Ві́дповідь про своє́ похо́дження · Stating your origin
     right: Я з Ки́єва.
-  - left: Запита́ння про браті́в чи се́тер
+  - left: Запита́ння про браті́в чи сесте́р · Asking about brothers or sisters
     right: У тебе́ є брати́ чи се́стри?
-  - left: Ві́дповідь на «Ду́же приє́мно!»
+  - left: Ві́дповідь на «Ду́же приє́мно!» · Response to "Nice to meet you!"
     right: Мені́ теж!
-  - left: Нейтра́льне віта́ння викладача́
+  - left: Нейтра́льне віта́ння викладача́ · Neutral greeting to a teacher
     right: До́брий день!
-  - left: Станда́ртне вві́чливе проща́ння
+  - left: Станда́ртне вві́чливе проща́ння · Standard polite farewell
     right: До поба́чення!
-  - left: Неформа́льне дру́жнє проща́ння
+  - left: Неформа́льне дру́жнє проща́ння · Informal friendly farewell
     right: Бува́й!
 - id: act-304
   type: fill-in
@@ -365,42 +365,42 @@ workbook:
   title: Гото́вність до рі́вня А1.2 · Readiness for Level A1.2
   instruction: Переві́р свою́ гото́вність руша́ти да́лі · Check your readiness to advance to A1.2.
   items:
-  - prompt: 'Чи мо́жеш ти розповісти́ про себе́ в 5 ре́ченнях? · Can you describe yourself in 5 sentences?'
+  - prompt: 'Яка́ фра́за пра́вильно розпочина́є розмо́ву про себе́? · Which phrase correctly begins introducing yourself?'
     options:
-    - text: 'Так: ім''я́, похо́дження, профе́сія, ві́к, роди́на.'
+    - text: Мене́ зва́ти Богда́н, я з Ки́єва.
       correct: true
-    - text: 'Ні, лише́ за допомо́гою перекладача́.'
+    - text: Моє́ ім'я́ є Богда́н, я у Ки́їв.
       correct: false
-    - text: Ті́льки англі́йською мо́вою.
+    - text: Я зва́ти Богда́н, мене́ Ки́їв.
       correct: false
-    explanation: П'ять ба́зових фра́з по́вністю покрива́ють ці́лі рі́вня А1.1.
-  - prompt: 'Чи розрізня́єш ти 33 лі́тери та 38 зву́ків? · Do you distinguish 33 letters and 38 sounds?'
+    explanation: Констру́кція «Мене́ зва́ти...» та прийме́нник «з» виража́ють ім'я́ та похо́дження.
+  - prompt: 'У яко́му сло́ві пи́шеться апо́строф? · In which word is an apostrophe written?'
     options:
-    - text: 'Так: зна́ю лі́тери, зву́ки, м''яки́й зна́к та апо́строф.'
+    - text: сім'я́
       correct: true
-    - text: Ні, плу́таю з і́ншими абе́тками.
+    - text: день
       correct: false
-    - text: Зна́ю лише́ 10 голосни́х.
+    - text: брат
       correct: false
-    explanation: Абетко́ва гра́мотність — фунда́мент усьо́го ку́рсу А1.
-  - prompt: 'Чи пам''ята́єш ти, що украї́нські іме́нники ма́ють рі́д? · Do you remember nouns have gender?'
+    explanation: Сло́во «сім'я́» пи́шеться з апо́строфом пі́сля губно́го зву́ка пе́ред «я».
+  - prompt: 'Обери́ пра́вильне поєдна́ння присві́йного займе́нника з іме́нником: · Choose the correct combination of possessive pronoun and noun:'
     options:
-    - text: 'Так: чолові́чий, жіно́чий та сере́дній рі́д.'
+    - text: мій брат і моя́ сестра́
       correct: true
-    - text: Ні, в украї́нській мо́ві нема́є ро́ду.
+    - text: моя́ брат і мій сестра́
       correct: false
-    - text: Усі́ слова́ спі́льного ро́ду.
+    - text: моє́ брат і моє́ сестра́
       correct: false
-    explanation: Катего́рія ро́ду — ключ до узго́дження присві́йних слів (мій, моя́, моє́).
-  - prompt: 'Чи вмі́єш ти назва́ти чле́нів своє́ї роди́ни? · Can you name your family members?'
+    explanation: Іме́нник «брат» — чолові́чого ро́ду (мій), а «сестра́» — жіно́чого (моя́).
+  - prompt: 'Як станда́ртно повідо́мити про ная́вність сестри́? · How do you standardly say you have a sister?'
     options:
-    - text: 'Так: ма́ма, та́то, брат, сестра́, роди́на.'
+    - text: У мене́ є сестра́.
       correct: true
-    - text: Ті́льки че́рез зага́льне сло́во «лю́ди».
+    - text: Я ма́ю є сестра́.
       correct: false
-    - text: Ні, ще не зна́ю роди́нних слів.
+    - text: Мене́ є сестра́.
       correct: false
-    explanation: Ба́зова роди́нна ле́ксика засво́єна в мо́дулі 6.
+    explanation: Ная́вність в А1 виража́ємо ба́зовим бло́ком «У мене́ є...».
   - prompt: 'Як ти вві́чливо заверши́ш розмо́ву? · How will you politely close a conversation?'
     options:
     - text: Ду́же приє́мно познайо́митися. До поба́чення!

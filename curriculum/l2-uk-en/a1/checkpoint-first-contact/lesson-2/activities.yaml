@@ -65,7 +65,7 @@ inline:
   title: Поря́док знайо́мства · Conversation Flow
   instruction: Обери́ насту́пний рядо́к у розмо́ві · Choose the next line in the conversation.
   items:
-  - prompt: 'Пе́рший рядо́к: Приві́т! Мене́ зва́ти Богда́н.'
+  - prompt: 'Пе́рший рядо́к: Приві́т! Мене́ зва́ти Богда́н. · First line: "Hello! My name is Bohdan."'
     options:
     - text: Приві́т, Богда́не! Мене́ зва́ти Соломі́я.
       correct: true
@@ -74,7 +74,7 @@ inline:
     - text: Мені́ 20 ро́ків.
       correct: false
     explanation: І́нша люди́на відповіда́є привіта́нням та і́менем.
-  - prompt: 'Рядо́к: Ду́же приє́мно, Соломі́є.'
+  - prompt: 'Рядо́к: Ду́же приє́мно, Соломі́є. · Next line: "Nice to meet you, Solomiia."'
     options:
     - text: Мені́ теж. Зві́дки ти?
       correct: true
@@ -83,7 +83,7 @@ inline:
     - text: Моя́ фамі́лія Сміт.
       correct: false
     explanation: Мені́ теж дає́ взає́мну ві́дповідь і ру́хає розмо́ву да́лі.
-  - prompt: 'Рядо́к: Я з Дніпра́. А ти?'
+  - prompt: 'Рядо́к: Я з Дніпра́. А ти? · Next line: "I am from Dnipro. And you?"'
     options:
     - text: Я з Терно́поля.
       correct: true
@@ -92,7 +92,7 @@ inline:
     - text: Це мій брат.
       correct: false
     explanation: А ти? поверта́є пита́ння про похо́дження.
-  - prompt: 'Рядо́к: У мене́ є брат.'
+  - prompt: 'Рядо́к: У мене́ є брат. · Next line: "I have a brother."'
     options:
     - text: Ду́же приє́мно. До поба́чення!
       correct: true

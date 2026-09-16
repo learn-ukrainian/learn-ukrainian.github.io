@@ -1,23 +1,22 @@
 # Переві́рка знань та підсу́мок А1.1 · Skills Check & A1.1 Checkpoint
 
-This lesson is your final diagnostic and consolidation station for the A1.1
-sub-level. You have traveled across six foundational modules: sounds and
-letters, decoding printed words, mastering special signs, discovering mobile
-stress, introducing your identity, and speaking about your family.
+This lesson is your final review checkpoint for stage A1.1. You have
+completed six foundational modules: sounds and letters, reading words,
+special signs, stress and melody, introducing yourself, and speaking about
+your family.
 
-Here, you evaluate your active mastery. Check each skill calmly and
-systematically: if you can read Cyrillic script fluently, exchange basic
-greetings, introduce yourself, and share a family detail, your foundation is
-solid.
+Here, you review and practice your active skills: reading Ukrainian script
+fluently, exchanging basic greetings, introducing yourself, and sharing a
+simple family detail.
 
 By the end of this checkpoint lesson, you can:
 
 - confirm full control over the 33 letters and 38 sounds of Ukrainian;
 - recognize and produce core communicative phrases without relying on English
   word order;
-- assess your oral and written readiness for the next sub-level (A1.2: My World);
-- deliver a comprehensive graduation speech combining identity, origin, and
-  kinship.
+- check your speaking and writing skills before moving on to A1.2;
+- introduce yourself smoothly in a short graduation monologue with your name,
+  origin, profession, and family.
 
 ## Пі́дсумок
 

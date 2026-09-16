@@ -4,7 +4,7 @@ inline:
   title: Гото́вність до знайо́мства · Readiness for Introductions
   instruction: Обери́ безпе́чний украї́нський рядо́к для ситуа́ції · Choose the safe Ukrainian line for the situation.
   items:
-  - prompt: Ти віта́єш рове́сника на поча́тку заня́ття.
+  - prompt: Ти віта́єш рове́сника на поча́тку заня́ття · You greet a peer at the start of class.
     options:
     - text: Приві́т!
       correct: true
@@ -13,7 +13,7 @@ inline:
     - text: Мені́ теж.
       correct: false
     explanation: Приві́т — неформа́льне привіта́ння для рове́сника.
-  - prompt: Ти нейтра́льно віта́єш викладача́ або́ адміністра́тора.
+  - prompt: Ти нейтра́льно віта́єш викладача́ або́ адміністра́тора · You neutrally greet a teacher or administrator.
     options:
     - text: До́брий день!
       correct: true
@@ -22,7 +22,7 @@ inline:
     - text: Мене́ зва́ти!
       correct: false
     explanation: До́брий день — безпе́чне нейтра́льне форма́льне привіта́ння.
-  - prompt: Ти назива́єш своє́ ім'я́.
+  - prompt: Ти назива́єш своє́ ім'я́ · You say your name.
     options:
     - text: Мене́ зва́ти Оле́на.
       correct: true
@@ -31,7 +31,7 @@ inline:
     - text: Я зва́ти Оле́на.
       correct: false
     explanation: Мене́ зва́ти... — головни́й бло́к для і́мені.
-  - prompt: Ти ка́жеш, що ти студе́нт.
+  - prompt: Ти ка́жеш, що ти студе́нт · You say that you are a student.
     options:
     - text: Я студе́нт.
       correct: true
@@ -40,7 +40,7 @@ inline:
     - text: Мене́ студе́нт.
       correct: false
     explanation: У тако́му ре́ченні украї́нська зазвича́й не додає́ є.
-  - prompt: Ти ка́жеш свій ві́к.
+  - prompt: Ти ка́жеш свій ві́к · You state your age.
     options:
     - text: Мені́ 20 ро́ків.
       correct: true
@@ -49,7 +49,7 @@ inline:
     - text: Я 20 ро́ки.
       correct: false
     explanation: Ві́к подаємо́ бло́ком Мені́ ... ро́ків.
-  - prompt: Скі́льки лі́тер в украї́нській абе́тці?
+  - prompt: Скі́льки лі́тер в украї́нській абе́тці? · How many letters are in the Ukrainian alphabet?
     options:
     - text: '33'
       correct: true
@@ -58,7 +58,7 @@ inline:
     - text: '32'
       correct: false
     explanation: Украї́нська абе́тка ма́є 33 лі́тери.
-  - prompt: Скі́льки зву́ків в украї́нській мо́ві?
+  - prompt: Скі́льки зву́ків в украї́нській мо́ві? · How many sounds are in the Ukrainian language?
     options:
     - text: '38'
       correct: true
@@ -67,7 +67,7 @@ inline:
     - text: '10'
       correct: false
     explanation: У ба́зовому підраху́нку ку́рсу украї́нська ма́є 38 зву́ків.
-  - prompt: Що ро́бить м'яки́й зна́к у сло́ві день?
+  - prompt: Що ро́бить м'яки́й зна́к у сло́ві день? · What does the soft sign do in the word "день"?
     options:
     - text: Пом'я́кшує попере́дній при́голосний.
       correct: true
@@ -76,7 +76,7 @@ inline:
     - text: Замі́нює апо́строф.
       correct: false
     explanation: Ь не ма́є вла́сного зву́ка; він пом'я́кшує попере́дній при́голосний.
-  - prompt: Яке́ написа́ння з апо́строфом пра́вильне?
+  - prompt: Яке́ написа́ння з апо́строфом пра́вильне? · Which spelling with an apostrophe is correct?
     options:
     - text: сім'я́
       correct: true
@@ -85,7 +85,7 @@ inline:
     - text: сімья
       correct: false
     explanation: Ви́вчений роди́нний при́клад пи́шемо сім'я́.
-  - prompt: Де позна́чено на́голос?
+  - prompt: Де позна́чено на́голос? · Where is stress marked?
     options:
     - text: Приві́т
       correct: true
@@ -94,7 +94,7 @@ inline:
     - text: Прівіт
       correct: false
     explanation: По́значка над голосно́ю пока́зує наголо́шений скла́д.
-  - prompt: Ти додає́ш одну́ роди́нну фра́зу.
+  - prompt: Ти додає́ш одну́ роди́нну фра́зу · You add one family sentence.
     options:
     - text: У мене́ є ма́ма і та́то.
       correct: true
@@ -103,7 +103,7 @@ inline:
     - text: Я зва́ти ма́ма і та́то.
       correct: false
     explanation: У мене́ є... — безпе́чний бло́к для роди́ни.
-  - prompt: Ти вві́чливо заве́ршуєш пе́рше знайо́мство.
+  - prompt: Ти вві́чливо заве́ршуєш пе́рше знайо́мство · You politely conclude a first introduction.
     options:
     - text: Ду́же приє́мно. До поба́чення!
       correct: true
@@ -199,56 +199,56 @@ inline:
   title: Ви́прав A1.1 па́стки · Avoid A1.1 Traps
   instruction: Обери́ нормати́вну украї́нську фо́рму · Choose the standard Ukrainian phrasing.
   items:
-  - prompt: Предста́влення і́мені
+  - prompt: Предста́влення і́мені · Stating your name
     options:
     - text: Мене́ зва́ти Джон.
       correct: true
     - text: Моє́ ім'я́ є Джон.
       correct: false
     explanation: Украї́нська представля́є ім'я́ че́рез Мене́ зва́ти...
-  - prompt: Ре́чення іденти́чності
+  - prompt: Ре́чення іденти́чності · Identity sentence
     options:
     - text: Я студе́нт.
       correct: true
     - text: Я є студе́нт.
       correct: false
     explanation: Тепе́рішня іденти́чність зазвича́й не додає́ є.
-  - prompt: Ре́чення про вік
+  - prompt: Ре́чення про вік · Stating age
     options:
     - text: Мені́ 20 ро́ків.
       correct: true
     - text: Я ма́ю 20 ро́ків.
       correct: false
     explanation: Ві́к подаємо́ бло́ком Мені́ ... ро́ків.
-  - prompt: Пряме́ зверта́ння
+  - prompt: Пряме́ зверта́ння · Direct address
     options:
     - text: Приві́т, Макси́ме!
       correct: true
     - text: Приві́т, Макси́м!
       correct: false
     explanation: Пряме́ зверта́ння ма́є кли́чну фо́рму в безпе́чному при́кладі.
-  - prompt: Безпе́чне привіта́ння
+  - prompt: Безпе́чне привіта́ння · Safe greeting
     options:
     - text: До́брий день! Мене́ зва́ти Окса́на.
       correct: true
     - text: Здра́стуйте! Мене́ зва́ти Окса́на.
       correct: false
     explanation: До́брий день — безпе́чне станда́ртне привіта́ння.
-  - prompt: Прі́звище
+  - prompt: Прі́звище · Surname
     options:
     - text: Моє́ прі́звище Сміт.
       correct: true
     - text: Моя́ фамі́лія Сміт.
       correct: false
     explanation: Прі́звище — станда́ртне украї́нське сло́во.
-  - prompt: Проща́ння
+  - prompt: Проща́ння · Farewell
     options:
     - text: До поба́чення!
       correct: true
     - text: Пока!
       correct: false
     explanation: До поба́чення — безпе́чне станда́ртне проща́ння.
-  - prompt: Зви́чка до ро́ду іме́нника
+  - prompt: Зви́чка до ро́ду іме́нника · Habit for noun gender
     options:
     - text: Ви́вчення слова́ ра́зом із йо́го ро́дом
       correct: true
@@ -493,7 +493,7 @@ workbook:
     explanation: «Прі́звище» — це родове́ ім'я́, а не профе́сія.
   - prompt: Міста́ Украї́ни · Ukrainian cities
     options:
-    - Киї́в
+    - Ки́їв
     - Льві́в
     - студе́нт
     correct: 2

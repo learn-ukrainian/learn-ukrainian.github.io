@@ -128,7 +128,7 @@ Now check the reading decisions.
 
 - In **прі́звище**, keep **и** and **і** separate.
 - In **сім'я́**, the apostrophe tells you to keep the **м** and **я** apart.
-- In **Киї́в**, do not flatten **ї**.
+- In **Ки́їв**, do not flatten **ї**.
 - In **вчи́телька**, read slowly; the word is useful, but the profession table
   is still small.
 - In direct address, **Бо́гдан** becomes **Бо́гдане** and **Соломі́я** becomes

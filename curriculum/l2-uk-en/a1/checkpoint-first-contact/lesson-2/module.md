@@ -125,9 +125,10 @@ original five-line card with **ім'я́**, **прі́звище**, **Кана́
 **сестра́**, and **До поба́чення**. First compare the notebook card with the
 printed model; then write your own final card.
 
-Regular listening practice reinforces natural Ukrainian melodic contour and
-vowel purity. In handwriting, Ukrainian cursive forms for letters like **в**,
-**д**, **т**, and **м** differ distinctively from their printed counterparts.
-Writing cards by hand bridges visual recognition with productive motor memory.
+Listening often helps you catch the natural rhythm of full sentences and
+keep vowels clear without blending them. In handwriting, Ukrainian cursive
+forms for letters like **в**, **д**, **т**, and **м** differ distinctively
+from their printed counterparts. Writing cards by hand helps you recognize
+them quickly when reading and write them smoothly yourself.
 
 <!-- INJECT_ACTIVITY: act-201 -->
