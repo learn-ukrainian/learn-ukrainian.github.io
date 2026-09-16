@@ -2,8 +2,8 @@
   "schema_version": "v1_kyivan_rus_release_receipt",
   "issue": 8103,
   "parent_epic": 6321,
-  "created_at": "2026-09-16T20:32:52.733123+00:00",
-  "git_commit": "379768ee845a004edbd405d72f6c01e40ec59ffd",
+  "created_at": "2026-09-16T20:34:00.034388+00:00",
+  "git_commit": "9037a839120e14e0d0da7f8c1510f21e4fa59fac",
   "evaluation_benchmark": {
     "file_path": "data/projects/open_model_data/release/uldr_v04a_kyivan_rus/kyivan_rus_epigraphic_eval.jsonl",
     "sha256": "fca7ab4e66167f65e9a94b0008a738e9eca5226e251b4799c30e6ebc9035d4a1",
