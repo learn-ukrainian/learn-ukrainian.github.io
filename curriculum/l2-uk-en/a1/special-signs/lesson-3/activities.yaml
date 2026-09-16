@@ -39,93 +39,93 @@ inline:
   title: Пра́вила лі́тер Ї, Щ, Ф — True or False
   instruction: Decide whether each statement is true or false.
   items:
-  - statement: Лі́тера Ї за́вжди познача́є два зву́ки [йі].
+  - statement: Лі́тера Ї за́вжди познача́є два зву́ки [йі]. — The letter Ї always represents two sounds [йі].
     answer: true
-    explanation: Лі́тера Ї ніко́ли не познача́є оди́н звук.
-  - statement: Лі́тера Щ за́вжди познача́є два зву́ки [шч].
+    explanation: Лі́тера Ї ніко́ли не познача́є оди́н звук. — The letter Ї never represents just one sound.
+  - statement: Лі́тера Щ за́вжди познача́є два зву́ки [шч]. — The letter Щ always represents two sounds [шч].
     answer: true
-    explanation: В украї́нській мо́ві Щ — це сполу́чення тверди́х зву́ків [ш] та [ч].
-  - statement: Лі́тера Ф за́вжди познача́є два зву́ки.
+    explanation: В украї́нській мо́ві Щ — це сполу́чення тверди́х зву́ків [ш] та [ч]. — In Ukrainian, Щ is a blend of hard sounds [ш] and [ч].
+  - statement: Лі́тера Ф за́вжди познача́є два зву́ки. — The letter Ф always represents two sounds.
     answer: false
-    explanation: Лі́тера Ф познача́є оди́н звук [ф].
-  - statement: У сло́ві «борщ» оста́нній звук познача́ється як [шч].
+    explanation: Лі́тера Ф познача́є оди́н звук [ф]. — The letter Ф represents one sound [ф].
+  - statement: У сло́ві «борщ» оста́нній звук познача́ється як [шч]. — In the word «борщ», the final letter represents [шч].
     answer: true
-    explanation: Лі́тера щ наприкінці́ сло́ва вимовля́ється як [шч].
+    explanation: Лі́тера щ наприкінці́ сло́ва вимовля́ється як [шч]. — The letter щ at the end of a word is pronounced [шч].
   - statement: The letter Ї can soften the preceding consonant.
     answer: false
     explanation: The letter Ї always keeps its semivowel sound [й].
-  - statement: Слова́ «бу́ква» та «лі́тера» ма́ють одна́кове зна́чення.
+  - statement: Слова́ «бу́ква» та «лі́тера» ма́ють одна́кове зна́чення. — The words «бу́ква» and «лі́тера» have the same meaning.
     answer: true
-    explanation: Оби́два те́рміни є сино́німами.
+    explanation: Оби́два те́рміни є сино́німами. — Both terms are synonyms.
 - id: act-303
   type: quiz
   title: 'Оди́н чи два зву́ки: Ї, Щ, Ф — One or Two Sounds'
   instruction: Choose whether the highlighted letter represents one sound or two sounds.
   items:
-  - question: 'Лі́тера «ї» у сло́ві «їжа́к»:'
+  - question: 'Лі́тера «ї» у сло́ві «їжа́к»: — The letter «ї» in «їжа́к» (hedgehog):'
     options:
-    - два зву́ки [йі]
-    - оди́н звук [і]
-    answer: два зву́ки [йі]
-  - question: 'Лі́тера «ї» у сло́ві «Ки́їв»:'
+    - два зву́ки [йі] — two sounds [йі]
+    - оди́н звук [і] — one sound [і]
+    answer: два зву́ки [йі] — two sounds [йі]
+  - question: 'Лі́тера «ї» у сло́ві «Ки́їв»: — The letter «ї» in «Ки́їв» (Kyiv):'
     options:
-    - два зву́ки [йі]
-    - оди́н звук [і]
-    answer: два зву́ки [йі]
-  - question: 'Лі́тера «щ» у сло́ві «щу́ка»:'
+    - два зву́ки [йі] — two sounds [йі]
+    - оди́н звук [і] — one sound [і]
+    answer: два зву́ки [йі] — two sounds [йі]
+  - question: 'Лі́тера «щ» у сло́ві «щу́ка»: — The letter «щ» in «щу́ка» (pike):'
     options:
-    - два зву́ки [шч]
-    - оди́н звук [ш]
-    answer: два зву́ки [шч]
-  - question: 'Лі́тера «щ» у сло́ві «борщ»:'
+    - два зву́ки [шч] — two sounds [шч]
+    - оди́н звук [ш] — one sound [ш]
+    answer: два зву́ки [шч] — two sounds [шч]
+  - question: 'Лі́тера «щ» у сло́ві «борщ»: — The letter «щ» in «борщ» (borscht):'
     options:
-    - два зву́ки [шч]
-    - оди́н звук [ч]
-    answer: два зву́ки [шч]
-  - question: 'Лі́тера «ф» у сло́ві «фо́то»:'
+    - два зву́ки [шч] — two sounds [шч]
+    - оди́н звук [ч] — one sound [ч]
+    answer: два зву́ки [шч] — two sounds [шч]
+  - question: 'Лі́тера «ф» у сло́ві «фо́то»: — The letter «ф» in «фо́то» (photo):'
     options:
-    - оди́н звук [ф]
-    - два зву́ки
-    answer: оди́н звук [ф]
-  - question: 'Лі́тера «ф» у сло́ві «факт»:'
+    - оди́н звук [ф] — one sound [ф]
+    - два зву́ки — two sounds
+    answer: оди́н звук [ф] — one sound [ф]
+  - question: 'Лі́тера «ф» у сло́ві «факт»: — The letter «ф» in «факт» (fact):'
     options:
-    - оди́н звук [ф]
-    - два зву́ки
-    answer: оди́н звук [ф]
+    - оди́н звук [ф] — one sound [ф]
+    - два зву́ки — two sounds
+    answer: оди́н звук [ф] — one sound [ф]
 - id: act-304
   type: quiz
   title: Звукове́ зна́чення лі́тер — Sound Values
   instruction: Identify the correct phonetic transcription for each letter.
   items:
-  - question: Які́ зву́ки познача́є лі́тера Ї?
+  - question: Які́ зву́ки познача́є лі́тера Ї? — Which sounds does the letter Ї represent?
     options:
     - '[йі]'
     - '[і]'
     - '[й]'
     answer: '[йі]'
-  - question: Які́ зву́ки познача́є лі́тера Щ?
+  - question: Які́ зву́ки познача́є лі́тера Щ? — Which sounds does the letter Щ represent?
     options:
     - '[шч]'
     - '[ш]'
     - '[ч]'
     answer: '[шч]'
-  - question: Яки́й звук познача́є лі́тера Ф?
+  - question: Яки́й звук познача́є лі́тера Ф? — Which sound does the letter Ф represent?
     options:
     - '[ф]'
     - '[п]'
     - '[в]'
     answer: '[ф]'
-  - question: Скі́льки зву́ків у сло́ві «борщ»?
+  - question: Скі́льки зву́ків у сло́ві «борщ»? — How many sounds are in the word «борщ»?
     options:
     - 5 зву́ків [б-о-р-ш-ч]
     - чоти́ри зву́ки
     answer: 5 зву́ків [б-о-р-ш-ч]
-  - question: Скі́льки зву́ків у сло́ві «їжа́к»?
+  - question: Скі́льки зву́ків у сло́ві «їжа́к»? — How many sounds are in the word «їжа́к»?
     options:
     - 5 зву́ків [й-і-ж-а-к]
     - чоти́ри зву́ки
     answer: 5 зву́ків [й-і-ж-а-к]
-  - question: Скі́льки зву́ків у сло́ві «факт»?
+  - question: Скі́льки зву́ків у сло́ві «факт»? — How many sounds are in the word «факт»?
     options:
     - чоти́ри зву́ки [ф-а-к-т]
     - 5 зву́ків
@@ -254,63 +254,63 @@ workbook:
   - sentence: У лі́сі спить мале́нький йіжа́к.
     error: йіжа́к
     correction: їжа́к
-    explanation: 'Звукосполу́чення [йі] за́вжди познача́ється лі́терою ї: їжа́к.'
+    explanation: 'Звукосполу́чення [йі] за́вжди познача́ється лі́терою ї: їжа́к. — The sound blend [ji] is always written with letter ї: їжа́к.'
   - sentence: Швидки́й пойи́зд ї́де в столи́цю.
     error: пойи́зд
     correction: по́їзд
-    explanation: 'Сло́во «по́їзд» пи́шеться з лі́терою ї: по́їзд.'
+    explanation: 'Сло́во «по́їзд» пи́шеться з лі́терою ї: по́їзд. — The word «по́їзд» is written with the letter ї: по́їзд.'
   - sentence: Ми ї́демо в мі́сто Кийи́в.
     error: Кийи́в
     correction: Ки́їв
-    explanation: 'На́зва столи́ці Украї́ни пи́шеться з лі́терою ї: Ки́їв.'
+    explanation: 'На́зва столи́ці Украї́ни пи́шеться з лі́терою ї: Ки́їв. — The capital of Ukraine is written with the letter ї: Ки́їв.'
   - sentence: На обі́д ми їмо́ гаря́чий боршч.
     error: боршч
     correction: борщ
-    explanation: 'Звукосполу́чення [шч] на письмі́ познача́ється лі́терою щ: борщ.'
+    explanation: 'Звукосполу́чення [шч] на письмі́ познача́ється лі́терою щ: борщ. — The sound blend [шч] is written with the letter щ: борщ.'
   - sentence: У рі́чці пла́ває вели́ка шчу́ка.
     error: шчу́ка
     correction: щу́ка
-    explanation: 'Звукосполу́чення [шч] познача́ється одніє́ю лі́терою щ: щу́ка.'
+    explanation: 'Звукосполу́чення [шч] познача́ється одніє́ю лі́терою щ: щу́ка. — The sound blend [шч] is written with single letter щ: щу́ка.'
   - sentence: На столі́ лежи́ть га́рне хво́то.
     error: хво́то
     correction: фо́то
-    explanation: 'Сло́во «фо́то» пи́шеться з лі́терою ф: фо́то.'
+    explanation: 'Сло́во «фо́то» пи́шеться з лі́терою ф: фо́то. — The word «фо́то» is written with the letter ф: фо́то.'
 - id: act-310
   type: quiz
   title: Ви́беріть пра́вильне сло́во — Multiple Choice
   instruction: Select the correctly spelled Ukrainian word.
   items:
-  - question: Що означа́є «hedgehog» в украї́нській мо́ві?
+  - question: Що означа́є «hedgehog» в украї́нській мо́ві? — What is the Ukrainian word for "hedgehog"?
     options:
     - їжа́к
     - кінь
     - єно́т
     answer: їжа́к
-  - question: Як пра́вильно назива́ється столи́ця Украї́ни?
+  - question: Як пра́вильно назива́ється столи́ця Украї́ни? — What is the correct name of Ukraine's capital?
     options:
     - Ки́їв
     - день
     - по́їзд
     answer: Ки́їв
-  - question: Що означа́є «borscht» в украї́нській мо́ві?
+  - question: Що означа́є «borscht» в украї́нській мо́ві? — What is the Ukrainian word for "borscht"?
     options:
     - борщ
     - рис
     - чай
     answer: борщ
-  - question: Що означа́є «pike (fish)» в украї́нській мо́ві?
+  - question: Що означа́є «pike (fish)» в украї́нській мо́ві? — What is the Ukrainian word for "pike (fish)"?
     options:
     - щу́ка
     - кінь
     - лань
     answer: щу́ка
-  - question: Що означа́є «photo» в украї́нській мо́ві?
+  - question: Що означа́є «photo» в украї́нській мо́ві? — What is the Ukrainian word for "photo"?
     options:
     - фо́то
     - факт
     - шарф
     answer: фо́то
-  - question: Що означа́є «train» в украї́нській мо́ві?
+  - question: Що означа́є «train» в украї́нській мо́ві? — What is the Ukrainian word for "train"?
     options:
     - по́їзд
     - день
@@ -321,32 +321,32 @@ workbook:
   title: Ви́бір лі́тери — Letter Choice
   instruction: Choose the appropriate letter for each word.
   items:
-  - question: 'Пе́рша лі́тера у сло́ві «___жа́к»:'
+  - question: 'Пе́рша лі́тера у сло́ві «___жа́к»: — First letter in «___жа́к» (hedgehog):'
     options:
     - Ї
     - І
     answer: Ї
-  - question: 'Пе́рша лі́тера у сло́ві «___у́ка»:'
+  - question: 'Пе́рша лі́тера у сло́ві «___у́ка»: — First letter in «___у́ка» (pike):'
     options:
     - Щ
     - Ш
     answer: Щ
-  - question: 'Оста́ння лі́тера у сло́ві «бор___»:'
+  - question: 'Оста́ння лі́тера у сло́ві «бор___»: — Last letter in «бор___» (borscht):'
     options:
     - щ
     - ч
     answer: щ
-  - question: 'Пе́рша лі́тера у сло́ві «___о́то»:'
+  - question: 'Пе́рша лі́тера у сло́ві «___о́то»: — First letter in «___о́то» (photo):'
     options:
     - Ф
     - Х
     answer: Ф
-  - question: 'Тре́тя лі́тера у сло́ві «Ки́___в»:'
+  - question: 'Тре́тя лі́тера у сло́ві «Ки́___в»: — Third letter in «Ки́___в» (Kyiv):'
     options:
     - ї
     - і
     answer: ї
-  - question: 'Тре́тя лі́тера у сло́ві «по́___зд»:'
+  - question: 'Тре́тя лі́тера у сло́ві «по́___зд»: — Third letter in «по́___зд» (train):'
     options:
     - ї
     - і

@@ -1,4 +1,4 @@
-# Пра́вила перено́су слів та си́нтез особли́вих зна́ків
+# Пра́вила перено́су слів та си́нтез особли́вих зна́ків · Word Hyphenation Rules and Special Signs Synthesis
 
 You have now met all the letters of the Ukrainian alphabet and the punctuation mark of the apostrophe (**апо́строф**). You can confidently read Ukrainian words, distinguish hard (**тверди́й**) and soft (**м'яки́й**) consonants, and apply the correct pronunciation to iotated vowels and affricates. Today (**сього́дні**) our **вчи́тель** (teacher) guides us through hyphenation rules for line breaks, handwriting cues, and synthesis of the entire module.
 
@@ -83,5 +83,16 @@ Whether reading about a bright sunny **день** (day), an authentic Ukrainian 
 > **Мар'я́на:** До́брий день, вчи́телю! Дя́кую за ціка́вий уро́к. *(Good day, teacher! Thank you for the interesting lesson.)*
 > **Вчи́тель:** До́брий день, Мар'я́но! Ти сього́дні чудо́во працюва́ла. *(Good day, Mariana! You worked wonderfully today.)*
 > **Мар'я́на:** На все до́бре! До поба́чення! *(All the best! Goodbye!)*
+
+English support after the dialogue:
+
+| Ukrainian | English |
+| --- | --- |
+| **До́брий день, вчи́телю!** | Good day, teacher! |
+| **Дя́кую за ціка́вий уро́к.** | Thank you for the interesting lesson. |
+| **До́брий день, Мар'я́но!** | Good day, Mariana! |
+| **Ти сього́дні чудо́во працюва́ла.** | You worked wonderfully today. |
+| **На все до́бре!** | All the best! |
+| **До поба́чення!** | Goodbye! |
 
 <!-- INJECT_ACTIVITY: act-505 -->

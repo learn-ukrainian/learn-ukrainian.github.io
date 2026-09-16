@@ -1,4 +1,4 @@
-# Апо́строф і три ключові́ контра́сти: буря́к, бур'я́н, свя́то
+# Апо́строф і три ключові́ контра́сти: буря́к, бур'я́н, свя́то · The Apostrophe and Three Key Contrasts: буря́к, бур'я́н, свя́то
 
 In this lesson, we study the most distinctive punctuation mark in Ukrainian orthography: the **апо́строф** (apostrophe). Unlike alphabet letters, the apostrophe has no sound of its own, but it plays a crucial role in shaping pronunciation: it forbids softening of the preceding consonant and instructs you to pronounce the following iotated vowel with a full, crisp [j] glide.
 

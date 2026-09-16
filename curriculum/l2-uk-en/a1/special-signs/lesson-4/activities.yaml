@@ -96,82 +96,82 @@ inline:
 - id: act-404
   type: match-up
   title: 'Зіста́влення слів та зна́ків — Match-up: Words and signs'
-  instruction: З'єдна́йте украї́нське сло́во з йо́го фо́рмою та зна́ченням.
+  instruction: З'єдна́йте украї́нське сло́во з йо́го фо́рмою та зна́ченням. — Match each Ukrainian word with its phonetic role and meaning.
   pairs:
   - left: сім'я́
-    right: 'роди́на: тверди́й [м] та [йа]'
+    right: 'роди́на: тверди́й [м] та [йа] — family: hard [m] and [йа]'
   - left: м'я́со
-    right: 'ї́жа: тверди́й [м] та [йа]'
+    right: 'ї́жа: тверди́й [м] та [йа] — food / meat: hard [m] and [йа]'
   - left: п'ять
-    right: 'число́: тверди́й [п] та [йа]'
+    right: 'число́: тверди́й [п] та [йа] — number five: hard [p] and [йа]'
   - left: буря́к
-    right: 'о́воч: м''яки́й [р''] пе́ред [а]'
+    right: 'о́воч: м''яки́й [р''] пе́ред [а] — vegetable: soft [р''] before [а]'
   - left: бур'я́н
-    right: 'трава́: тверди́й [р] та [йа]'
+    right: 'трава́: тверди́й [р] та [йа] — weed: hard [р] and [йа]'
   - left: свя́то
-    right: 'ра́дість: губни́й [в] пі́сля [с]'
+    right: 'ра́дість: губни́й [в] пі́сля [с] — holiday: labial [в] after [с]'
 - id: act-405
   type: quiz
   title: Пра́вила вжива́ння апо́строфа — Rules of apostrophe usage
-  instruction: Обері́ть пра́вильний варіа́нт ві́дповіді на ко́жне запита́ння.
+  instruction: Обері́ть пра́вильний варіа́нт ві́дповіді на ко́жне запита́ння. — Choose the correct answer to each question.
   items:
-  - prompt: Пі́сля яки́х лі́тер за́вжди пи́шеться апо́строф пе́ред я, ю, є, ї?
+  - prompt: Пі́сля яки́х лі́тер за́вжди пи́шеться апо́строф пе́ред я, ю, є, ї? — After which letters is an apostrophe always written before я, ю, є, ї?
     options:
-    - text: Пі́сля губни́х б, п, в, м, ф та пі́сля р
+    - text: Пі́сля губни́х б, п, в, м, ф та пі́сля р — After labials б, п, в, м, ф and after р
       correct: true
-    - text: Пі́сля будь-яки́х при́голосних
+    - text: Пі́сля будь-яки́х при́голосних — After any consonants
       correct: false
-    - text: Ті́льки пі́сля голосни́х
+    - text: Ті́льки пі́сля голосни́х — Only after vowels
       correct: false
     explanation: Апо́строф вжива́ється пі́сля губни́х при́голосних (б, п, в, м, ф)
-      та р пе́ред я, ю, є, ї.
-  - prompt: Чому́ в сло́ві «буря́к» нема́є апо́строфа?
+      та р пе́ред я, ю, є, ї. — The apostrophe is used after labial consonants (б, п, в, м, ф) and р before я, ю, є, ї.
+  - prompt: Чому́ в сло́ві «буря́к» нема́є апо́строфа? — Why is there no apostrophe in the word «буря́к»?
     options:
-    - text: Тому́ що [р'] м'яки́й і нема́є розді́льної вимо́ви
+    - text: Тому́ що [р'] м'яки́й і нема́є розді́льної вимо́ви — Because [р'] is soft and there is no separated pronunciation
       correct: true
-    - text: Тому́ що це поми́лка
+    - text: Тому́ що це поми́лка — Because it is an error
       correct: false
-    - text: Тому́ що я мовчи́ть
+    - text: Тому́ що я мовчи́ть — Because я is silent
       correct: false
     explanation: У сло́ві «буря́к» при́голосний [р'] пом'я́кшується пе́ред [а], тому́
-      апо́строф не потрі́бен.
-  - prompt: Чому́ в сло́ві «свя́то» нема́є апо́строфа?
+      апо́строф не потрі́бен. — In the word «буря́к», the consonant [р'] softens before [а], so no apostrophe is needed.
+  - prompt: Чому́ в сло́ві «свя́то» нема́є апо́строфа? — Why is there no apostrophe in the word «свя́то»?
     options:
-    - text: Тому́ що пе́ред губни́м в стої́ть при́голосний с
+    - text: Тому́ що пе́ред губни́м в стої́ть при́голосний с — Because before labial в stands consonant с
       correct: true
-    - text: Тому́ що в сло́ві лише́ три лі́тери
+    - text: Тому́ що в сло́ві лише́ три лі́тери — Because the word has only three letters
       correct: false
-    - text: Тому́ що в за́вжди м'яки́й
+    - text: Тому́ що в за́вжди м'яки́й — Because в is always soft
       correct: false
     explanation: Пе́ред губни́м [в] є і́нший корене́вий при́голосний [с], тому́ апо́строф
-      не ста́виться.
-  - prompt: Як пра́вильно чита́ти сло́во «комп'ю́тер»?
+      не ста́виться. — Before labial [в] there is another root consonant [с], so no apostrophe is written.
+  - prompt: Як пра́вильно чита́ти сло́во «комп'ю́тер»? — How do you correctly read the word «комп'ю́тер»?
     options:
-    - text: З розді́льною вимо́вою твердо́го [п] та [йу]
+    - text: З розді́льною вимо́вою твердо́го [п] та [йу] — With separated pronunciation of hard [п] and [йу]
       correct: true
-    - text: З пом'я́кшеним п
+    - text: З пом'я́кшеним п — With softened п
       correct: false
-    - text: Без зву́ка п
+    - text: Без зву́ка п — Without sound п
       correct: false
-    explanation: Апо́строф зберіга́є розді́льну вимо́ву [йу] пі́сля твердо́го [п].
-  - prompt: Скі́льки зву́ків познача́є лі́тера я у сло́ві «ім'я́»?
+    explanation: Апо́строф зберіга́є розді́льну вимо́ву [йу] пі́сля твердо́го [п]. — The apostrophe preserves the separated pronunciation [ju] after hard [p].
+  - prompt: Скі́льки зву́ків познача́є лі́тера я у сло́ві «ім'я́»? — How many sounds does the letter я represent in «ім'я́»?
     options:
-    - text: 'Два зву́ки: [й] + [а]'
+    - text: 'Два зву́ки: [й] + [а] — Two sounds: [й] + [а]'
       correct: true
-    - text: 'Оди́н звук: [а]'
+    - text: 'Оди́н звук: [а] — One sound: [а]'
       correct: false
-    - text: Жо́дного зву́ка
+    - text: Жо́дного зву́ка — No sound
       correct: false
-    explanation: Пі́сля апо́строфа лі́тери я, ю, є за́вжди познача́ють два зву́ки.
-  - prompt: Яку́ роль відігра́є апо́строф в украї́нській мо́ві?
+    explanation: Пі́сля апо́строфа лі́тери я, ю, є за́вжди познача́ють два зву́ки. — After an apostrophe, letters я, ю, є always represent two sounds.
+  - prompt: Яку́ роль відігра́є апо́строф в украї́нській мо́ві? — What role does the apostrophe play in Ukrainian?
     options:
-    - text: Він є розді́льним зна́ком і не ма́є вла́сного зву́ка
+    - text: Він є розді́льним зна́ком і не ма́є вла́сного зву́ка — It is a separation mark and has no sound of its own
       correct: true
-    - text: Він познача́є окре́мий голосни́й звук
+    - text: Він познача́є окре́мий голосни́й звук — It represents a separate vowel sound
       correct: false
-    - text: Він пом'я́кшує попере́дній при́голосний
+    - text: Він пом'я́кшує попере́дній при́голосний — It softens the preceding consonant
       correct: false
-    explanation: Апо́строф — це графі́чний розді́льний знак, яки́й сам зву́ка не познача́є.
+    explanation: Апо́строф — це графі́чний розді́льний знак, яки́й сам зву́ка не познача́є. — The apostrophe is a graphic separation mark that has no sound of its own.
 workbook:
 - id: act-w1
   type: group-sort
@@ -321,37 +321,37 @@ workbook:
   title: Знак чи без зна́ка — Apostrophe or no apostrophe
   instruction: Select the correctly spelled form for each item.
   items:
-  - question: Як пра́вильно написа́ти «family»?
+  - question: Як пра́вильно написа́ти «family»? — How do you correctly spell "family"?
     options:
     - сім'я́
     - сімя́
     - сімья́
     answer: сім'я́
-  - question: Як пра́вильно написа́ти «beetroot»?
+  - question: Як пра́вильно написа́ти «beetroot»? — How do you correctly spell "beetroot"?
     options:
     - буря́к
     - бур'я́к
     - буріак
     answer: буря́к
-  - question: Як пра́вильно написа́ти «weed»?
+  - question: Як пра́вильно написа́ти «weed»? — How do you correctly spell "weed"?
     options:
     - бур'я́н
     - буря́н
     - буріан
     answer: бур'я́н
-  - question: Як пра́вильно написа́ти «holiday»?
+  - question: Як пра́вильно написа́ти «holiday»? — How do you correctly spell "holiday"?
     options:
     - свя́то
     - св'я́то
     - сьвя́то
     answer: свя́то
-  - question: Як пра́вильно написа́ти «nail»?
+  - question: Як пра́вильно написа́ти «nail»? — How do you correctly spell "nail"?
     options:
     - цвях
     - цв'ях
     - цьвях
     answer: цвях
-  - question: Як пра́вильно написа́ти «meat»?
+  - question: Як пра́вильно написа́ти «meat»? — How do you correctly spell "meat"?
     options:
     - м'я́со
     - мя́со
