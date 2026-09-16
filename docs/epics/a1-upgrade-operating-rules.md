@@ -109,6 +109,16 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
   This is a constraint on the existing auto-finalize path in
   `scripts/delegate.py`, not a new control plane — do not build one to
   enforce it unless a future revision of this file says otherwise.
+- **A1 module titles and lesson names are bilingual.** Landing cards (`title`
+  + `titleEn`, `sub` + `subEn`) and the lesson list on each module landing
+  (`lessons.yaml` titles + generated `index.mdx`) must show Ukrainian **and**
+  English. Titles must match what the redesigned module actually teaches (no
+  leftover Hello on module 1 after greetings moved). **English density in
+  activities:** modules that teach letters before the learner can read (A1.1
+  1–4) need English next to every learner-facing stem/option/explanation.
+  From `who-am-i` onward, keep original A1 immersion (UA first, English
+  support — not an English course). Site **left nav** is a separate later
+  problem; do not block module PRs on it.
 
 ## Epic split (do not thrash sessions)
 

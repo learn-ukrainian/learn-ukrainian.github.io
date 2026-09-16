@@ -3,6 +3,9 @@
 > **BUDGET: 150 lines (hard limit 200).** Trim BEFORE adding anything.
 > **WHAT BELONGS:** Hard-won behavioral lessons only. Reference content → topic files in `memory/`.
 
+## #M-7 — A1 MODULE TITLES AND LESSON NAMES ARE BILINGUAL (2026-09-16)
+General A1 rule, not just the redesigned modules. Landing cards (`title` + `titleEn`, `sub` + `subEn`) and the per-module lesson list (`lessons.yaml` titles + generated `index.mdx`) must show Ukrainian **and** English, and titles must match what the module actually teaches (e.g. no leftover "Hello" title on module 1 after greetings moved elsewhere). Letter-stage modules (A1.1 1–4, before the learner can read) need English next to every learner-facing stem/option/explanation; from `who-am-i` onward, keep standard A1 immersion (UA first, English support only — not an English course). Site left nav is a separate later problem — do not block module PRs on it. Full text: `docs/epics/a1-upgrade-operating-rules.md` § Writer / reviewer split.
+
 ## #M-6 — СУМ-11 IS OCCUPATION LEXICOGRAPHY — NEVER FOR MEANING (2026-09-15)
 СУМ-11 (~127–135k lemmas) was compiled under Soviet occupation. It is **not** modern Ukrainian. Modern dicts are much richer: **СУМ-20**, **ВТС**, **ULIF**. Never `search_definitions` / `vet_vocabulary` glosses / СУМ-11 for meaning, stress, or “is this a word.” If `query_sum20` has no ingested article, query **ВТС** (`vts`) then **ULIF**. If those return `not_found` / `unavailable`, report **unresolved** — do not invent a gloss and do **not** fall back to СУМ-11. SUM-11 is only sovietization *contrast*. Encoded after driver cited SUM-11 for `луна́`.
 
