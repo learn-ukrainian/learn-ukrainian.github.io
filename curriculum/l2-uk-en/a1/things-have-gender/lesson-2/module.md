@@ -33,9 +33,9 @@ Support after the dialogue:
 
 Read the object lines again and notice the pronoun:
 
-- **Де стіл? Він тут.** — Where is the table? It is here.
-- **Де кни́га? Вона́ тут.** — Where is the book? It is here.
-- **Де вікно́? Воно́ тут.** — Where is the window? It is here.
+- **Де стіл? Він тут.**
+- **Де кни́га? Вона́ тут.**
+- **Де вікно́? Воно́ тут.**
 
 English uses "it" for all three. Ukrainian does not. Let the Ukrainian noun
 choose the pronoun.
@@ -83,9 +83,9 @@ The possessive word follows the noun (that is, its form follows the noun's gramm
 
 This is the same habit from family:
 
-- **мій брат**, **мій та́то**, **мій стіл** — my brother, my dad, my table
-- **моя́ сестра́**, **моя́ ма́ма**, **моя́ кни́га** — my sister, my mom, my book
-- **моє́ мі́сто**, **моє́ прі́звище**, **моє́ вікно́** — my city, my surname, my window
+- **мій брат**, **мій та́то**, **мій стіл**
+- **моя́ сестра́**, **моя́ ма́ма**, **моя́ кни́га**
+- **моє́ мі́сто**, **моє́ прі́звище**, **моє́ вікно́**
 
 If you want to say "my room," use **моя́ кімна́та**. If you want to say "my
 chair," use **мій стіле́ць**. If you want to say "my bed," use **моє́ лі́жко**.
