@@ -291,10 +291,10 @@ def _activity_render_strings(act: dict) -> list:
 def contains(orig, new, *, expand_explanations: bool = False) -> bool:
     """orig ⊆ new structurally with multiplicity: dict keys must exist with contained values;
     each orig list element must match a DISTINCT new element; scalars equal modulo stress
-    marks and with the same type (True is not 1). Explanation and prompt strings may grow a gloss."""
+    marks and with the same type (True is not 1). Explanation strings may grow a gloss."""
     if isinstance(orig, dict):
         return isinstance(new, dict) and all(
-            k in new and contains(v, new[k], expand_explanations=(k in ("explanation", "prompt", "statement")))
+            k in new and contains(v, new[k], expand_explanations=(k == "explanation"))
             for k, v in orig.items()
         )
     if isinstance(orig, list):
@@ -317,14 +317,14 @@ def contains(orig, new, *, expand_explanations: bool = False) -> bool:
         if not expand_explanations:
             return False
         core = old.rstrip(".:;!? ")
-        if len(core) < 3:
+        if len(core) < 12:
             return False
 
         def continues(prefix: str) -> bool:
             if not expanded.startswith(prefix):
                 return False
             rest = expanded[len(prefix):]
-            return not rest or rest[0] in " \t:;—–,·"
+            return not rest or rest[0] in " \t:;—–,"
 
         return continues(old) or continues(core)
     return type(orig) is type(new) and orig == new
