@@ -97,9 +97,11 @@ export function bindHeteronymHandlers(root: ParentNode | null): () => void {
         panel.setAttribute("hidden", "true");
       }
     });
-    const headword = tabs[index]?.getAttribute("data-heteronym-headword");
-    if (updateHash && headword) {
-      history.replaceState(null, "", `#${headword}`);
+    const fragment =
+      tabs[index]?.getAttribute("data-heteronym-fragment") ||
+      tabs[index]?.getAttribute("data-heteronym-headword");
+    if (updateHash && fragment) {
+      history.replaceState(null, "", `#${fragment}`);
     }
   };
 
@@ -157,7 +159,25 @@ export function bindHeteronymHandlers(root: ParentNode | null): () => void {
     const clean = (s: string) => s.normalize("NFC").replace(/[\u0300\u0301]/g, "").toLowerCase();
     const cleanTarget = clean(rawHash);
 
-    // 1. Try exact NFC headword match first
+    // 1. Try exact NFC match on data-heteronym-fragment first (disambiguates same-headword variants)
+    for (let i = 0; i < tabs.length; i++) {
+      const frag = tabs[i]?.getAttribute("data-heteronym-fragment") || "";
+      if (frag && frag.normalize("NFC") === rawHash.normalize("NFC")) {
+        activateTab(i, false);
+        return;
+      }
+    }
+
+    // 2. Try matching by 1-based index (#1, #2) or headword+index (#ва́жниця-1, #ва́жниця-2)
+    for (let i = 0; i < tabs.length; i++) {
+      const hw = tabs[i]?.getAttribute("data-heteronym-headword") || "";
+      if (`${i + 1}` === rawHash || `${hw}-${i + 1}` === rawHash) {
+        activateTab(i, false);
+        return;
+      }
+    }
+
+    // 3. Try exact NFC headword match (first match wins)
     for (let i = 0; i < tabs.length; i++) {
       const hw = tabs[i]?.getAttribute("data-heteronym-headword") || "";
       if (hw.normalize("NFC") === rawHash.normalize("NFC")) {
@@ -166,10 +186,11 @@ export function bindHeteronymHandlers(root: ParentNode | null): () => void {
       }
     }
 
-    // 2. Fallback: match without combining stress marks (first match wins)
+    // 4. Fallback: match without combining stress marks
     for (let i = 0; i < tabs.length; i++) {
+      const frag = tabs[i]?.getAttribute("data-heteronym-fragment") || "";
       const hw = tabs[i]?.getAttribute("data-heteronym-headword") || "";
-      if (clean(hw) === cleanTarget) {
+      if (clean(frag) === cleanTarget || clean(hw) === cleanTarget) {
         activateTab(i, false);
         return;
       }

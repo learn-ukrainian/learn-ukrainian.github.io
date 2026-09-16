@@ -189,6 +189,28 @@ function getEffectiveHeteronymRecord(
   };
 }
 
+export function getHeteronymFragment(
+  h: LexiconEntry,
+  idx: number,
+  allHeteronyms?: LexiconEntry[] | null,
+): string {
+  const baseTitle = h.headword || h.lemma || `Варіант ${idx + 1}`;
+  if (!allHeteronyms || allHeteronyms.length <= 1) {
+    return baseTitle;
+  }
+  const duplicates = allHeteronyms.filter(
+    (item) => (item.headword || item.lemma) === baseTitle,
+  );
+  if (duplicates.length <= 1) {
+    return baseTitle;
+  }
+  const animacy = (h.morphology as any)?.paradigm?.animacy;
+  if (animacy) {
+    return `${baseTitle}-${animacy}`;
+  }
+  return `${baseTitle}-${idx + 1}`;
+}
+
 interface WordAtlasArticleBodyProps {
   record: EntryRecord;
   view: ReturnType<typeof buildWordAtlasArticleView>;
@@ -343,10 +365,11 @@ function WordAtlasArticleBody({
                       {heteronyms.map((hOther, otherIdx) => {
                         if (otherIdx === currentHeteronymIdx) return null;
                         const targetTitle = hOther.headword || hOther.lemma;
+                        const targetFrag = getHeteronymFragment(hOther, otherIdx, heteronyms);
                         return (
                           <a
-                            key={targetTitle}
-                            href={`#${encodeURIComponent(targetTitle)}`}
+                            key={`${targetTitle}-${otherIdx}`}
+                            href={`#${encodeURIComponent(targetFrag)}`}
                             className="atlas-heteronym-hatnote-btn"
                             data-heteronym-jump={otherIdx}
                           >
@@ -1463,9 +1486,10 @@ export default function WordAtlasArticle({
             {heteronyms!.map((h, idx) => {
               const isSelected = idx === 0;
               const title = h.headword || h.lemma || `Варіант ${idx + 1}`;
+              const fragment = getHeteronymFragment(h, idx, heteronyms);
               return (
                 <button
-                  key={title}
+                  key={`${title}-${idx}`}
                   type="button"
                   role="tab"
                   id={`heteronym-tab-${idx}`}
@@ -1474,6 +1498,7 @@ export default function WordAtlasArticle({
                   tabIndex={isSelected ? 0 : -1}
                   data-heteronym-target={idx}
                   data-heteronym-headword={title}
+                  data-heteronym-fragment={fragment}
                   className={`atlas-heteronym-tab ${isSelected ? "active" : ""}`}
                 >
                   <strong className="atlas-heteronym-tab-headword">{title}</strong>
@@ -1493,6 +1518,7 @@ export default function WordAtlasArticle({
         heteronyms!.map((h, idx) => {
           const isSelected = idx === 0;
           const title = h.headword || h.lemma || `Варіант ${idx + 1}`;
+          const fragment = getHeteronymFragment(h, idx, heteronyms);
           const effectiveRecord = getEffectiveHeteronymRecord(record, h);
           const heteronymView = buildWordAtlasArticleView(
             effectiveRecord,
@@ -1503,12 +1529,13 @@ export default function WordAtlasArticle({
           );
           return (
             <div
-              key={title}
+              key={`${title}-${idx}`}
               id={`heteronym-panel-${idx}`}
               role="tabpanel"
               aria-labelledby={`heteronym-tab-${idx}`}
               data-heteronym-idx={idx}
               data-heteronym-headword={title}
+              data-heteronym-fragment={fragment}
               className="atlas-heteronym-panel"
               style={isSelected ? undefined : { display: "none" }}
             >
