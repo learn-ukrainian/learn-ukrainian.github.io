@@ -1021,3 +1021,20 @@ class TestEmbedYoutubeVideoLinks:
         body = '- Short: https://youtu.be/hvB3VpcR3ZE'
         result = embed_youtube_video_links(body)
         assert '<YouTubeVideo' in result
+
+
+class TestProcessStorySections:
+    def test_preserves_contiguous_tables(self):
+        from generate_mdx.converters import process_story_sections
+
+        content = (
+            "### Dialogue breakdown\n"
+            "\n"
+            "Intro paragraph\n"
+            "\n"
+            "| Step | Phrase |\n"
+            "| --- | --- |\n"
+            "| 1 | Test |\n"
+        )
+        result = process_story_sections(content)
+        assert "| Step | Phrase |\n| --- | --- |\n| 1 | Test |" in result

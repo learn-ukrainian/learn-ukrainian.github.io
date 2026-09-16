@@ -1,6 +1,6 @@
 lessons:
 - n: 1
-  title: Мене звати...
+  title: "Мене́ зва́ти... · My Name Is..."
   sections:
   - Діалоги
   - Мене звати...
@@ -17,7 +17,7 @@ lessons:
   unverified_stress: []
   unverified_lemmas: []
 - n: 2
-  title: Я — студент
+  title: "Хто це? Я — студе́нт · Who Is This? I Am a Student"
   sections:
   - Це...
   - Особові займeнники
@@ -36,7 +36,7 @@ lessons:
   - фемініти́в
   unverified_lemmas: []
 - n: 3
-  title: Слухай і записуй
+  title: "Зві́дки ти? Слу́хай і запи́суй · Where Are You From? Listen & Write"
   sections:
   - Звідки?
   - Слухай і записуй
@@ -57,7 +57,7 @@ lessons:
   - її́
   unverified_lemmas: []
 - n: 4
-  title: Самоперевірка
+  title: "Самопереві́рка: Пе́рша розмо́ва · Self-Check: Your First Conversation"
   sections:
   - Самоперевірка
   minutes: 60

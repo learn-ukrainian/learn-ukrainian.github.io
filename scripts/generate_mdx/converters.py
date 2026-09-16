@@ -584,15 +584,22 @@ def process_story_sections(content: str) -> str:
                 result.append(current_line)
 
                 # Look ahead - if next line is non-blank content (not a header, not blank),
-                # add a blank line after current line UNLESS both lines are dialog lines
+                # add a blank line after current line UNLESS both lines are dialog lines or table rows
                 if i + 1 < len(lines):
                     next_stripped = lines[i + 1].strip()
                     current_is_dialog = current_stripped.startswith('\u2014')
                     next_is_dialog = next_stripped.startswith('\u2014')
+                    current_is_table = current_stripped.startswith('|')
+                    next_is_table = next_stripped.startswith('|')
 
-                    # Add blank line only if NOT both dialog lines
-                    if next_stripped and not any_header_pattern.match(next_stripped) and not (current_is_dialog and next_is_dialog):
-                            result.append('')
+                    # Add blank line only if NOT both dialog lines and NOT both table rows
+                    if (
+                        next_stripped
+                        and not any_header_pattern.match(next_stripped)
+                        and not (current_is_dialog and next_is_dialog)
+                        and not (current_is_table and next_is_table)
+                    ):
+                        result.append('')
 
                 i += 1
         else:
