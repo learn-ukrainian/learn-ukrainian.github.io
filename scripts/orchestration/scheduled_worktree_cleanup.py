@@ -222,18 +222,25 @@ def _origin_heads(repo_root: Path) -> list[tuple[str, str]]:
     return heads
 
 
-def _live_origin_head(repo_root: Path, branch: str) -> str | None:
+def _live_origin_head(repo_root: Path, branch: str) -> tuple[str | None, str | None]:
+    """Return ``(sha, error)``.
+
+    ``(None, None)`` means ``git ls-remote`` succeeded and origin genuinely
+    has no such branch. ``(None, error)`` means the lookup itself failed
+    (unreachable origin, auth failure, timeout) -- callers must never read
+    that as "branch is gone", since it is not proof of absence.
+    """
     proc = _run_git(repo_root, "ls-remote", "--heads", "origin", branch)
     if proc.returncode != 0:
-        return None
+        return None, _failure(proc)
     for line in (proc.stdout or "").splitlines():
         parts = line.split()
         if len(parts) != 2:
             continue
         sha, ref = parts
         if ref == f"refs/heads/{branch}":
-            return sha
-    return None
+            return sha, None
+    return None, None
 
 
 def _delete_origin_branch(
@@ -242,7 +249,9 @@ def _delete_origin_branch(
     branch: str,
     expected_head: str,
 ) -> str | None:
-    live_head = _live_origin_head(repo_root, branch)
+    live_head, live_error = _live_origin_head(repo_root, branch)
+    if live_error is not None:
+        return f"cannot verify origin HEAD: {live_error}"
     if live_head is None:
         return "origin HEAD disappeared during cleanup"
     if live_head != expected_head:

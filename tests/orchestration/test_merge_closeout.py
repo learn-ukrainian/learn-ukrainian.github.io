@@ -313,6 +313,98 @@ def test_apply_reports_residual_when_branch_head_diverges(
     assert git(repo, "ls-remote", "--heads", "origin", "codex/diverged") != ""
 
 
+def test_apply_exits_nonzero_when_matched_worktree_stays_dirty(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A dirty matched worktree the reaper retains (action=skipped) must not
+    report a successful closeout -- CF F1."""
+    repo = init_repo(tmp_path)
+    head_sha = commit_on_branch(repo, "codex/dirty-retained", "note.txt")
+    review_worktree = add_detached_worktree(repo, "pr-707", head_sha)
+    (review_worktree / "scratch.txt").write_text("uncommitted\n", encoding="utf-8")
+
+    patch_gh(
+        monkeypatch,
+        pr_number=707,
+        state="MERGED",
+        head_ref_name="codex/dirty-retained",
+        head_sha=head_sha,
+        sha_prs={head_sha: [{"number": 707, "state": "MERGED"}]},
+    )
+
+    exit_code = mc.main(["707", "--repo-root", str(repo), "--apply", "--json"])
+
+    assert review_worktree.exists()
+    payload = json.loads(capsys.readouterr().out)
+    assert [entry["action"] for entry in payload["reap_results"]] == ["skipped"]
+    assert payload["ok"] is False
+    assert any("still registered after reap" in error for error in payload["errors"])
+    assert exit_code == 1
+
+
+def test_apply_fails_closed_when_origin_is_unreachable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A failed ``git ls-remote`` (unreachable/auth-failing origin) must never
+    be read as "branch already gone" -- CF F2."""
+    repo = init_repo(tmp_path)
+    head_sha = commit_on_branch(repo, "codex/origin-down", "note.txt")
+    # No worktree remains for this branch.
+
+    patch_gh(
+        monkeypatch,
+        pr_number=808,
+        state="MERGED",
+        head_ref_name="codex/origin-down",
+        head_sha=head_sha,
+    )
+    git(repo, "remote", "set-url", "origin", str(tmp_path / "does-not-exist.git"))
+
+    result = mc.run_merge_closeout(repo, 808, apply=True, live_cwds=set())
+
+    assert result.branch_status is not None
+    assert result.branch_status.remote_gone is False
+    assert result.branch_status.remote_error is not None
+    assert result.ok is False
+
+
+def test_apply_refuses_fallback_branch_delete_when_open_pr_exists(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A same-branch OPEN PR must block the fallback branch delete even when
+    no worktree remains to run the reaper's own open-PR guard -- CF F3."""
+    repo = init_repo(tmp_path)
+    head_sha = commit_on_branch(repo, "codex/reused-branch", "note.txt")
+    # No worktree remains for this branch.
+
+    patch_gh(
+        monkeypatch,
+        pr_number=42,
+        state="MERGED",
+        head_ref_name="codex/reused-branch",
+        head_sha=head_sha,
+        branch_prs={
+            "codex/reused-branch": [
+                {"number": 42, "state": "MERGED", "headRefOid": head_sha},
+                {"number": 43, "state": "OPEN", "headRefOid": head_sha},
+            ]
+        },
+    )
+
+    result = mc.run_merge_closeout(repo, 42, apply=True, live_cwds=set())
+
+    assert result.branch_status is not None
+    assert result.branch_status.remote_gone is False
+    assert result.branch_status.local_gone is False
+    assert result.branch_status.remote_error is not None
+    assert "open PR" in result.branch_status.remote_error
+    assert result.branch_status.local_error is not None
+    assert "open PR" in result.branch_status.local_error
+    assert result.ok is False
+    assert git(repo, "ls-remote", "--heads", "origin", "codex/reused-branch") != ""
+    assert git(repo, "rev-parse", "--verify", "codex/reused-branch")
+
+
 def test_main_exits_nonzero_and_prints_json_when_pr_not_merged(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:

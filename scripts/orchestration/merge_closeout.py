@@ -164,6 +164,43 @@ def reap_matched_worktrees(
     )
 
 
+def _guard_branch_not_open(repo_root: Path, branch: str) -> str | None:
+    """Return an error message when it is unsafe to delete ``branch``.
+
+    Reuses the P0 reaper's ``gh pr list`` guard (``rw._query_pr_states``).
+    When no worktree remains, the reaper's own guard never runs, so this
+    fallback path must re-run it: a branch with a currently OPEN PR -- even
+    one opened after the merged PR this closeout targets -- must never be
+    deleted, and a failed guard query must fail closed rather than be read
+    as "no open PR".
+    """
+    prs, pr_error = rw._query_pr_states(repo_root, branch)
+    if pr_error is not None:
+        return f"PR guard unavailable; refusing to delete: {pr_error}"
+    for pr_state in prs:
+        if pr_state.state == "OPEN":
+            return f"branch has an open PR (#{pr_state.number}); refusing to delete"
+    return None
+
+
+def _local_branch_head(repo_root: Path, branch: str) -> tuple[str | None, str | None]:
+    """Return ``(sha, error)`` for a local branch ref.
+
+    ``--quiet`` suppresses git's error message only when the ref genuinely
+    does not exist, so a nonzero exit with no stderr means "absent" and a
+    nonzero exit with stderr means the lookup itself failed -- the latter
+    must never be read as "branch is gone".
+    """
+    proc = rw._run(
+        ["git", "rev-parse", "--verify", "--quiet", f"refs/heads/{branch}"],
+        cwd=repo_root,
+    )
+    if proc.returncode == 0:
+        return (proc.stdout or "").strip(), None
+    stderr = (proc.stderr or "").strip()
+    return (None, stderr) if stderr else (None, None)
+
+
 def verify_branch_gone(
     repo_root: Path,
     pr: PullRequestInfo,
@@ -173,33 +210,56 @@ def verify_branch_gone(
     """Prove the merged PR's remote and local branch are gone.
 
     Only ever deletes a branch whose live head exactly matches the merged PR
-    head -- the same exact-head proof the P0 reaper requires. This is a
-    fallback for whatever the reap step above did not already clean up.
+    head -- the same exact-head proof the P0 reaper requires -- and only
+    when the reaper's open-PR guard clears it. This is a fallback for
+    whatever the reap step above did not already clean up. A failed lookup
+    (unreachable origin, failed gh call) is never read as "branch is gone";
+    it leaves the branch alone and is reported as an error.
     """
     branch = pr.head_ref_name
     if not branch:
         return None
     expected_head = pr.head_sha
 
+    guard_error: str | None = None
+    if apply and expected_head is not None:
+        guard_error = _guard_branch_not_open(repo_root, branch)
+
     remote_error: str | None = None
-    live_remote = swc._live_origin_head(repo_root, branch)
-    if apply and live_remote is not None:
+    live_remote, live_remote_error = swc._live_origin_head(repo_root, branch)
+    if live_remote_error is not None:
+        remote_error = f"cannot verify origin HEAD: {live_remote_error}"
+    elif apply and live_remote is not None:
         if expected_head is not None and live_remote == expected_head:
-            remote_error = swc._delete_origin_branch(repo_root, branch=branch, expected_head=expected_head)
+            remote_error = guard_error or swc._delete_origin_branch(
+                repo_root, branch=branch, expected_head=expected_head
+            )
         else:
             remote_error = "origin head does not match merged PR head; refusing to delete"
-    remote_gone = swc._live_origin_head(repo_root, branch) is None
+    remote_after, remote_after_error = swc._live_origin_head(repo_root, branch)
+    if remote_after_error is not None:
+        remote_gone = False
+        remote_error = remote_error or f"cannot verify origin HEAD: {remote_after_error}"
+    else:
+        remote_gone = remote_after is None
 
     local_error: str | None = None
-    local_proc = rw._run(["git", "rev-parse", "--verify", f"refs/heads/{branch}"], cwd=repo_root)
-    local_head = (local_proc.stdout or "").strip() if local_proc.returncode == 0 else None
-    if apply and local_head is not None:
+    local_head, local_lookup_error = _local_branch_head(repo_root, branch)
+    if local_lookup_error is not None:
+        local_error = f"cannot verify local branch: {local_lookup_error}"
+    elif apply and local_head is not None:
         if expected_head is not None and local_head == expected_head:
-            local_error = rw._prune_branch(repo_root, branch, force=True, expected_head=expected_head)
+            local_error = guard_error or rw._prune_branch(
+                repo_root, branch, force=True, expected_head=expected_head
+            )
         else:
             local_error = "local head does not match merged PR head; refusing to delete"
-    local_after = rw._run(["git", "rev-parse", "--verify", f"refs/heads/{branch}"], cwd=repo_root)
-    local_gone = local_after.returncode != 0
+    local_after, local_after_error = _local_branch_head(repo_root, branch)
+    if local_after_error is not None:
+        local_gone = False
+        local_error = local_error or f"cannot verify local branch: {local_after_error}"
+    else:
+        local_gone = local_after is None
 
     return BranchStatus(
         branch=branch,
@@ -225,11 +285,26 @@ def run_merge_closeout(
     matches = find_matching_worktrees(repo_root, pr)
     reap_results = reap_matched_worktrees(repo_root, matches, apply=apply, live_cwds=live_cwds)
 
+    errored_paths = {result.path for result in reap_results if result.action == "error"}
     errors: list[str] = [
         f"{result.path}: {result.error or result.reason}"
         for result in reap_results
         if result.action == "error"
     ]
+
+    # A worktree the reaper left retained/skipped (dirty, active dispatch, PR
+    # guard, etc.) is not an ``error`` action -- it must still block success,
+    # or a retained dirty worktree reports a clean closeout. Re-enumerate the
+    # live worktrees rather than trusting the reap actions alone.
+    worktree_residuals: list[str] = []
+    if apply and matches:
+        still_present = {str(info.path) for info in rw.list_git_worktrees(repo_root)}
+        for info in matches:
+            path_str = str(info.path)
+            if path_str in still_present:
+                worktree_residuals.append(path_str)
+                if path_str not in errored_paths:
+                    errors.append(f"{path_str}: worktree still registered after reap (not removed)")
 
     branch_status = verify_branch_gone(repo_root, pr, apply=apply)
     if branch_status is not None:
@@ -238,10 +313,9 @@ def run_merge_closeout(
         if branch_status.local_error:
             errors.append(f"local branch {branch_status.branch}: {branch_status.local_error}")
 
-    residual = (
-        apply
-        and branch_status is not None
-        and not (branch_status.remote_gone and branch_status.local_gone)
+    residual = apply and (
+        bool(worktree_residuals)
+        or (branch_status is not None and not (branch_status.remote_gone and branch_status.local_gone))
     )
 
     return CloseoutResult(
