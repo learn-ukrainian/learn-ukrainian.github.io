@@ -147,16 +147,42 @@ ANAPHORIC_WORDS = frozenset({
     "значення", "значенням", "значенні",
 })
 
+PRONOMINAL_ANAPHORA = re.compile(
+    r"\b(?:"
+    r"він|вона|воно|вони|"
+    r"його|йому|ним|ньому|нього|"
+    r"її|їй|нею|ній|неї|"
+    r"їх|їм|ними|них|"
+    r"це|цей|ця|ці|цього|цієї|цьому|цій|цим|цими|цих|цю|"
+    r"то|той|ті|того|тієї|тому|тій|тим|тими|тих|ту"
+    r")\b",
+    re.IGNORECASE,
+)
+
+PREDICATE_WORDS = (
+    r"слід|варто|потрібно|необхідно|треба|можна|краще|доречно|бажано|годиться|"
+    r"заборонено|забороняється|дозволено|дозволяється|рекомендовано|рекомендується|"
+    r"є|це|був|була|було|були|буде|становить|"
+    r"потребує|вимагає|"
+    r"замініть|замінити|виправте|виправити|уникайте|уникати|вживайте|вживати|застосовуйте|застосовувати|пишіть|писати|"
+    r"вважа\w*|визна\w*|назива\w*|означа\w*|має|належ\w*|"
+    r"не|ні|ані|"
+    r"помилк\w*|кальк\w*|росіянізм\w*|русизм\w*|суржик\w*|ненормативн\w*|неправильн\w*|варваризм\w*|помилков\w*|недоречн\w*|неприпустим\w*|зайв\w*|"
+    r"норма|норм\w*|нормативн\w*|правильн\w*|питом\w*|літературн\w*|доречн\w*|припустим\w*"
+)
+
 DIRECTIVE_INFINITIVES = (
     r"(?:вживати|вжити|використовувати|використати|"
-    r"писати|казати|говорити|брати|"
-    r"застосовувати|обирати|замінювати|замінити)"
+    r"писати|написати|казати|сказати|говорити|брати|взяти|"
+    r"застосовувати|застосувати|обирати|обрати|"
+    r"замінювати|замінити|виправляти|виправити|уникати)"
 )
 
 DIRECTIVE_FINITES = (
-    r"(?:вживайте|використовуйте|"
-    r"пишіть|кажіть|говоріть|беріть|"
-    r"застосовуйте|обирайте|замінюйте)"
+    r"(?:вживайте|вжий\w*|використовуйте|використай\w*|"
+    r"пишіть|напишіть|кажіть|скажіть|говоріть|беріть|візьміть|"
+    r"застосовуйте|застосуйте|обирайте|оберіть|"
+    r"замінюйте|замініть|виправляйте|виправте|уникайте)"
 )
 
 DIRECTIVE_VERBS = rf"(?:{DIRECTIVE_INFINITIVES}|{DIRECTIVE_FINITES})"
@@ -197,7 +223,8 @@ DISALLOWED_COPULAS = r"є|це|був|була|було|були|буде|ста
 
 DISALLOWED_COORDINATED_TOKENS = (
     rf"(?:не|ні|ані|{DIRECTIVE_VERBS}|{DIRECTIVE_MODALS}|{ADVERSATIVE_CONJUNCTIONS}|{COORDINATING_CONJUNCTIONS}|"
-    rf"що|щоб|як|ніби|наче|неначе|мов|{DISALLOWED_PREPOSITIONS}|{DISALLOWED_PRONOUNS}|{DISALLOWED_COPULAS})"
+    rf"що|щоб|як|ніби|наче|неначе|мов|{DISALLOWED_PREPOSITIONS}|{DISALLOWED_PRONOUNS}|{DISALLOWED_COPULAS}|"
+    rf"{PREDICATE_WORDS})"
 )
 ITEM_CLASSIFIER = r"(?:(?:слово|слова|слів|термін\w*|вираз\w*|зворот\w*|форм\w*|лексем\w*|вживанн\w*|використанн\w*|застосуванн\w*|написанн\w*)\s+)?"
 ITEM_QUOTED = rf"{ITEM_CLASSIFIER}[«\"“‘\'][^»\"”’\n]+[»\"”’]"
@@ -459,18 +486,6 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
     # identity for subsequent relative clauses / condemnations (Astra R22-F2).
     fallback_text = text_norm
 
-    PREDICATE_WORDS = (
-        r"слід|варто|потрібно|необхідно|треба|можна|краще|доречно|бажано|годиться|"
-        r"заборонено|забороняється|дозволено|дозволяється|рекомендовано|рекомендується|"
-        r"є|це|був|була|було|були|буде|становить|"
-        r"потребує|вимагає|"
-        r"замініть|замінити|виправте|виправити|уникайте|уникати|вживайте|вживати|застосовуйте|застосовувати|пишіть|писати|"
-        r"вважа\w*|визна\w*|назива\w*|означа\w*|має|належ\w*|"
-        r"не|ні|ані|"
-        r"помилк\w*|кальк\w*|росіянізм\w*|русизм\w*|суржик\w*|ненормативн\w*|неправильн\w*|варваризм\w*|помилков\w*|недоречн\w*|неприпустим\w*|зайв\w*|"
-        r"норма|норм\w*|нормативн\w*|правильн\w*|питом\w*|літературн\w*|доречн\w*|припустим\w*"
-    )
-
     predicate_lookahead = (
         r"(?:"
         r"(?:теж|також|ще|вже|цілком|абсолютно|справді|дійсно)\s+"
@@ -516,9 +531,9 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         quoted = re.findall(r"[«\"“‘\']([^»\"”’\']+)[»\"”’\']", clause)
 
         if t_token_re.search(clause):
-            # If target is present ONLY as a replacement destination (e.g. "замінити на «файний»"),
+            # If target is present ONLY as a replacement destination (e.g. "замінити на «файний»" or "замінити словом «файний»"),
             # it is being recommended, not condemned or replaced.
-            is_destination = bool(re.search(rf"\b(?:на|до)\s+[«\"“‘\']?{t_bare}[»\"”’\']?", cl_lower))
+            is_destination = bool(re.search(rf"\b(?:на|до|(?:словом|терміном|виразом|зворотом|формою|лексемою))\s+[«\"“‘\']?{t_bare}[»\"”’\']?", cl_lower))
             is_subject = bool(re.search(
                 rf"(?:^|\b{ITEM_CLASSIFIER})[«\"“‘\']?{t_bare}[»\"”’\']?\s+"
                 rf"(?:(?:теж|також|ще|вже|цілком|абсолютно|справді|дійсно)\s+)?(?:\b(?:{PREDICATE_WORDS})\b|—|--|–|-)",
@@ -532,7 +547,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                     rf"(?:^|\b{ITEM_CLASSIFIER})[«\"“‘\']{re.escape(first_q)}[»\"”’\']",
                     cl_lower,
                 )
-                if subj_m and not re.search(rf"\b(?:на|до)\s+[«\"“‘\']{re.escape(first_q)}[»\"”’\']", cl_lower):
+                if subj_m and not re.search(rf"\b(?:на|до|(?:словом|терміном|виразом|зворотом|формою|лексемою))\s+[«\"“‘\']{re.escape(first_q)}[»\"”’\']", cl_lower):
                     current_referent = "OTHER"
         else:
             # Check for unquoted subject before directives/predicates (e.g. "общий слід замінити", "общий — помилка", or implicit copula "общий помилка")
@@ -548,7 +563,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 if uq_word in ANAPHORIC_WORDS or anaphoric_re.fullmatch(uq_word) or has_anaphoric_det:
                     # Anaphoric reference (його, її, це, яку, його вживання, etc.): preserve active referent
                     pass
-                elif uq_word != t_norm and not re.search(rf"\b(?:на|до)\s+{re.escape(uq_word)}", cl_lower):
+                elif uq_word != t_norm and not re.search(rf"\b(?:на|до|(?:словом|терміном|виразом|зворотом|формою|лексемою))\s+{re.escape(uq_word)}", cl_lower):
                     current_referent = "OTHER"
             elif anaphoric_re.search(clause) and current_referent is not None:
                 # Anaphoric reference (його, її, це, etc.): preserve active referent from preceding clause
@@ -576,32 +591,52 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 prefix = cl_lower[:start]
                 suffix_after_dir = cl_lower[end:]
 
-                # Check if this directive governs an explicit non-target object:
-                # e.g. `уникайте «гарний»` where `гарний` != `царинками`.
-                # If the directive directly governs an explicit object list (not preceded by `на`/`до`),
-                # verify whether that object list includes the target.
-                # Support mixed quoted/unquoted objects and classifiers across all coordinated objects (R23-F1, R24-F1).
-                obj_span_m = re.match(
-                    rf"\s*(?:(?:теж|також|завжди|обов'язково|зовсім|категорично)\s+)?"
-                    rf"{COORDINATED_ITEM}(?:\s*{COORDINATED_SEP}\s*{COORDINATED_ITEM})*",
-                    suffix_after_dir,
-                    re.IGNORECASE,
+                # Check replacement destination complement:
+                # e.g. "слід замінити словом «добрий»", "замінити на «добрий»", "замінити формою «добрий»"
+                # If introduced by на/до or instrumental classifier, it specifies the replacement destination,
+                # NOT the object being replaced.
+                is_replacement_dest = bool(
+                    re.match(
+                        r"^\s*(?:на|до|(?:словом|терміном|виразом|зворотом|формою|лексемою))\s+[«\"“‘\']?[А-Яа-яЇїІіЄєҐґ’'ʼ\w\-]+",
+                        suffix_after_dir,
+                    )
                 )
-                if obj_span_m:
-                    dir_objs: list[str] = []
-                    for item_m in re.finditer(COORDINATED_ITEM, obj_span_m.group(0), re.IGNORECASE):
-                        raw_item = item_m.group(0)
-                        q_match = re.search(r"[«\"“‘\']([^»\"”’\']+)[»\"”\']", raw_item)
-                        if q_match:
-                            dir_objs.append(normalize_token(q_match.group(1)))
-                        else:
-                            clean_item = re.sub(rf"^{ITEM_CLASSIFIER}", "", raw_item, flags=re.IGNORECASE).strip()
-                            if clean_item:
-                                dir_objs.append(normalize_token(clean_item))
-                    target_in_objs = (t_norm in dir_objs) or bool(t_token_re.search(obj_span_m.group(0)))
-                    if dir_objs and not target_in_objs:
-                        # Directive explicitly governs other object(s), not target
-                        continue
+
+                # Check anaphoric object:
+                # e.g. "уникайте вживання цього слова", "замініть це слово", "уникайте його", "уникайте її"
+                # Contains pronominal anaphora (його, її, це, цей, цю, цього, тощо) and no distinct non-target quoted term.
+                has_pronominal_anaphora = bool(PRONOMINAL_ANAPHORA.search(suffix_after_dir))
+                has_quoted_term = bool(re.search(r"[«\"“‘\'][^»\"”’\n]+[»\"”’]", suffix_after_dir))
+                is_anaphoric_obj = has_pronominal_anaphora and not has_quoted_term
+
+                if not is_replacement_dest and not is_anaphoric_obj:
+                    # Check if this directive governs an explicit non-target object:
+                    # e.g. `уникайте «гарний»` where `гарний` != `царинками`.
+                    # If the directive directly governs an explicit object list (not preceded by `на`/`до`),
+                    # verify whether that object list includes the target.
+                    # Support mixed quoted/unquoted objects and classifiers across all coordinated objects (R23-F1, R24-F1).
+                    obj_span_m = re.match(
+                        rf"\s*(?:(?:теж|також|завжди|обов'язково|зовсім|категорично)\s+)?"
+                        rf"{COORDINATED_ITEM}(?:\s*{COORDINATED_SEP}\s*{COORDINATED_ITEM})*",
+                        suffix_after_dir,
+                        re.IGNORECASE,
+                    )
+                    if obj_span_m:
+                        dir_objs: list[str] = []
+                        for item_m in re.finditer(COORDINATED_ITEM, obj_span_m.group(0), re.IGNORECASE):
+                            raw_item = item_m.group(0)
+                            q_match = re.search(r"[«\"“‘\']([^»\"”’\']+)[»\"”\']", raw_item)
+                            if q_match:
+                                dir_objs.append(normalize_token(q_match.group(1)))
+                            else:
+                                clean_item = re.sub(rf"^{ITEM_CLASSIFIER}", "", raw_item, flags=re.IGNORECASE).strip()
+                                if clean_item:
+                                    dir_objs.append(normalize_token(clean_item))
+                        target_in_objs = (t_norm in dir_objs) or bool(t_token_re.search(obj_span_m.group(0)))
+                        non_anaphoric_objs = [o for o in dir_objs if o not in ANAPHORIC_WORDS]
+                        if non_anaphoric_objs and not target_in_objs:
+                            # Directive explicitly governs other object(s), not target
+                            continue
 
                 is_negated = False
                 if re.search(r"\b(?:ні|ані)\s*$", prefix):

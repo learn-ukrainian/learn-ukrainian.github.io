@@ -2866,3 +2866,171 @@ def test_audit_r24_findings_mixed_quoted_unquoted_and_implicit_copulas(tmp_path:
     )
     assert passed_f2_b is True, "Expected audit to pass when unquoted other subject with implicit copula is condemned"
     assert data_f2_b["dpo_contradictions_count"] == 0
+
+
+def test_audit_r25_findings_replacement_complements_and_imperatives(tmp_path: Path) -> None:
+    """Verify Astra R25 Findings: instrumental replacement complements and imperative directives with anaphoric objects."""
+    # 1. Finding 1: Instrumental replacement complements and anaphoric usage nouns (R25-F1)
+    assert is_target_condemned_in_text("царинками", "«царинками» слід замінити словом «добрий».") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» слід замінити на «добрий».") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» варто замінити виразом «добрий».") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» потрібно замінити формою «добрий».") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Уникайте вживання цього слова.") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Уникайте його.") is True
+
+    # 2. Finding 2: Replacement and correction imperatives with pronominal anaphora (R25-F2)
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Замініть це слово.") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Виправте це слово.") is True
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Замініть його.") is True
+
+    # 3. Negative controls: target as replacement destination or directive governing another term
+    assert is_target_condemned_in_text("царинками", "«общий» слід замінити словом «царинками».") is False
+    assert is_target_condemned_in_text("царинками", "«царинками» є нормативним словом і «общий» слід замінити словом «добрий».") is False
+    assert is_target_condemned_in_text("царинками", "«царинками» — нормативне слово. Замініть слово «общий».") is False
+
+    # 4. Isolated DPO integration tests
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "target_term": "царинками",
+            "category": "dialectal",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sources = tmp_path / "sources.db"
+    conn_s = sqlite3.connect(mock_sources)
+    conn_s.execute("CREATE TABLE sum20 (entry_id INTEGER PRIMARY KEY, lemma TEXT);")
+    conn_s.execute("INSERT INTO sum20 VALUES (1, 'добрий');")
+    conn_s.execute("INSERT INTO sum20 VALUES (2, 'гарний');")
+    conn_s.execute("INSERT INTO sum20 VALUES (3, 'общий');")
+    conn_s.commit()
+    conn_s.close()
+    mock_vesum = tmp_path / "vesum.db"
+    conn_v = sqlite3.connect(mock_vesum)
+    conn_v.execute("CREATE TABLE vesum (lemma TEXT);")
+    conn_v.execute("INSERT INTO vesum VALUES ('добрий');")
+    conn_v.execute("INSERT INTO vesum VALUES ('гарний');")
+    conn_v.execute("INSERT INTO vesum VALUES ('общий');")
+    conn_v.commit()
+    conn_v.close()
+    mock_sft_clean = tmp_path / "sft_clean"
+    mock_sft_clean.mkdir()
+    (mock_sft_clean / "shard.jsonl").write_text(
+        json.dumps({
+            "instruction": "Поясніть вживання слова «царинками».",
+            "response": "«царинками» — автентичне діалектне слово, яке слід зберегти.",
+            "target_term": "царинками",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+
+    # R25-F1: replacement destination complement in chosen response -> MUST fail audit
+    dpo_f1_a = tmp_path / "dpo_r25_f1_a"
+    dpo_f1_a.mkdir()
+    (dpo_f1_a / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "«царинками» слід замінити словом «добрий».",
+            "rejected": "«царинками» — нормативне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_f1_a, data_f1_a, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_f1_a,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r25_f1_a.md",
+        output_json=tmp_path / "r25_f1_a.json",
+    )
+    assert passed_f1_a is False, "Expected audit to fail when chosen condemns target via replacement complement"
+    assert data_f1_a["dpo_contradictions_count"] == 1
+
+    # R25-F1: anaphoric usage noun avoidance in chosen response -> MUST fail audit
+    dpo_f1_b = tmp_path / "dpo_r25_f1_b"
+    dpo_f1_b.mkdir()
+    (dpo_f1_b / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "«царинками» — нормативне слово. Уникайте вживання цього слова.",
+            "rejected": "«царинками» — нормативне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_f1_b, data_f1_b, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_f1_b,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r25_f1_b.md",
+        output_json=tmp_path / "r25_f1_b.json",
+    )
+    assert passed_f1_b is False, "Expected audit to fail when chosen condemns target via anaphoric usage noun"
+    assert data_f1_b["dpo_contradictions_count"] == 1
+
+    # R25-F2: replacement imperative with anaphora in chosen response -> MUST fail audit
+    dpo_f2 = tmp_path / "dpo_r25_f2"
+    dpo_f2.mkdir()
+    (dpo_f2 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "«царинками» — нормативне слово. Замініть це слово.",
+            "rejected": "«царинками» — нормативне слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_f2, data_f2, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_f2,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r25_f2.md",
+        output_json=tmp_path / "r25_f2.json",
+    )
+    assert passed_f2 is False, "Expected audit to fail when chosen condemns target via replacement imperative"
+    assert data_f2["dpo_contradictions_count"] == 1
+
+    # Negative control: target is destination in replacement complement -> MUST pass audit
+    dpo_ctrl = tmp_path / "dpo_r25_ctrl"
+    dpo_ctrl.mkdir()
+    (dpo_ctrl / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "«общий» слід замінити словом «царинками».",
+            "rejected": "«царинками» — помилка.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_ctrl, data_ctrl, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_ctrl,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r25_ctrl.md",
+        output_json=tmp_path / "r25_ctrl.json",
+    )
+    assert passed_ctrl is True, "Expected audit to pass when target is destination in replacement complement"
+    assert data_ctrl["dpo_contradictions_count"] == 0
