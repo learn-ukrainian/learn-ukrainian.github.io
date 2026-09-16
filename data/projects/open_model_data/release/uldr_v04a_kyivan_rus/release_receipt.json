@@ -2,30 +2,30 @@
   "schema_version": "v1_kyivan_rus_release_receipt",
   "issue": 8103,
   "parent_epic": 6321,
-  "created_at": "2026-09-16T19:15:11.978642+00:00",
-  "git_commit": "HEAD",
+  "created_at": "2026-09-16T19:52:04.767410+00:00",
+  "git_commit": "6141061e6e96bf6a9c15295e1b1f543ea114b9ea",
   "evaluation_benchmark": {
     "file_path": "data/projects/open_model_data/release/uldr_v04a_kyivan_rus/kyivan_rus_epigraphic_eval.jsonl",
-    "sha256": "3dc381e48b9a919dfd0667d2b6d01efb145b906e4a5444dc83f3a85d858efa23",
+    "sha256": "0cac3c98441b0347122b60651cdf0b8be674e9a724fb2e7f25d2d3af522a544c",
     "total_cases": 500,
-    "graffiti_cases": 236,
-    "chronicle_cases": 264,
-    "preserve_cases": 332,
-    "mixed_error_cases": 168,
+    "graffiti_cases": 188,
+    "chronicle_cases": 312,
+    "preserve_cases": 310,
+    "mixed_error_cases": 190,
     "register_counts": {
       "church_slavonic_liturgical": 6,
-      "vernacular_secular": 481,
-      "mixed_diglossic": 13
+      "vernacular_secular": 483,
+      "mixed_diglossic": 11
     }
   },
   "sft_training_dataset": {
     "directory_path": "data/projects/open_model_data/release/uldr_v04a_kyivan_rus/sft",
     "shards_count": 30,
     "total_trajectories": 10000,
-    "epigraphy_trajectories": 1582,
-    "chronicle_trajectories": 8220,
-    "replay_buffer_trajectories": 198,
-    "manifest_sha256": "9e1c0827f1fd3e84ce0fd728ddde966b564b983f6b7303f7e65be7c248e029db"
+    "epigraphy_trajectories": 1162,
+    "chronicle_trajectories": 8638,
+    "replay_buffer_trajectories": 200,
+    "manifest_sha256": "7497f5bcce17a702d24c93f873e276e54dca171d41274028a65c5decca7ddd84"
   },
   "invariants_verified": {
     "zero_train_eval_leakage": true,

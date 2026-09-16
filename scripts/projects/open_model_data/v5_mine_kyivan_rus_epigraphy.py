@@ -1,31 +1,29 @@
 #!/usr/bin/env python3
-"""Phase 5.7: Kyivan Rus Epigraphy, Church Slavonic Diglossia & Heritage Alignment (v0.4a).
+"""Phase 5.7: Kyivan Rus Epigraphy, Church Slavonic Diglossia & Heritage Alignment Mining Engine (v0.4a).
 
 Parent Epic: #6321 (Open Model Data)
 Issue: #8103
 
-Extracts authentic medieval Kyivan epigraphy and chronicle text from verified repository
-databases (data/sources.db) and delivers:
-  1. Held-Out Kyivan Rus Diplomatic Evaluation Suite (kyivan_rus_epigraphic_eval.jsonl):
-     >= 500 verified cases across Saint Sophia Cathedral graffiti (partitioned by room)
-     and held-out Old East Slavic legal/chronicle monuments (Novgorod I, Ruska Pravda).
-     Incorporates anti-copying mixed-error coverage (>= 30% with injected modern calques).
-  2. SFT Heritage & Diglossia Alignment Dataset (sft_kyivan_rus_continuity_10k.jsonl):
-     10,000 multi-turn reasoning trajectories demonstrating proto-Ukrainian linguistic traits
-     in medieval Kyivan monuments and modeling Kyivan Church Slavonic vs. spoken Ukrainian
-     vernacular diglossia, with calibrated modern literary replay buffer.
-  3. Disaggregated evaluation metrics, preservation rates, and exact Clopper-Pearson bounds.
-  4. Cryptographic SHA-256 release receipt and contract schema validation.
+Extracts, normalizes, partitions, and formats Old East Slavic epigraphic graffiti
+from Saint Sophia Cathedral in Kyiv alongside early chronicle records (PVL, Ipatiev,
+Kyiv, Galician-Volhynian, Novgorod I, Ruska Pravda).
 
-Adheres strictly to the 8 Advisor Controls:
-  - Control 1: Diplomatic verification vs blanket fixes (HTML cleanly stripped, editorial symbols preserved).
-  - Control 2: Church Slavonic formulaic protection (zero false-positive flags on liturgical prayers).
-  - Control 3: Paleographic normalization of titlos and abbreviations.
-  - Control 4: Symmetric modern-translation purge (never leak modern Ukrainian glosses into reasoning).
-  - Control 5: Scribe- and monument-level partitioning (cathedral rooms and distinct monuments).
-  - Control 6: Scholarly philological framing (vocative in -e, pleophony, dative in -ovi/-evi, 3rd-person in -t').
-  - Control 7: Tokenizer invariant validation for historical Cyrillic graphemes.
-  - Control 8: Modern literary regression ceiling (<= 0.5% regression against v0.2 baseline).
+Implements all 8 Advisor Controls:
+  1. Diplomatic Verification: Strip HTML markup while preserving editorial brackets,
+     superscript Cyrillic expansions, and historical character sets.
+  2. Liturgical Protection: Protect canonical Church Slavonic prayers from being
+     misclassified as vernacular syntax, with mask-based feature isolation and
+     exclusion of noun stems ending in -ть (память, смерть, etc.).
+  3. Strict Partitioning: Physical room partitioning for graffiti (Eval: 121, 110)
+     and monument partitioning for chronicles (Eval: Novgorod I, Ruska Pravda) with
+     strict zero verbatim text leakage.
+  4. Symmetric Translation & Editorial Purge: Exclude modern translations (wave1-, wave6-,
+     wave0-pvl-yaremenko) and purge modern editorial prefaces, reprint intros, and
+     textual apparatus.
+  5. Anti-Copying Invariant: Mixed chancery test cases with injected Soviet calques.
+  6. Replay Buffer: 200 modern literary anti-calque samples to prevent catastrophic forgetting.
+  7. Pre-commit File Ceiling: 30 SFT shards (< 2,000 KB each) with manifest.json.
+  8. Cryptographic Receipt: Draft 2020-12 valid release receipt with verifiable evaluation metrics.
 """
 
 from __future__ import annotations
@@ -37,7 +35,7 @@ import json
 import os
 import random
 import re
-import sqlite3
+import subprocess
 import sys
 from collections import Counter
 from dataclasses import dataclass
@@ -59,7 +57,6 @@ def _primary_repo_root() -> Path | None:
     """Resolve an extra search root from env. Fail closed: no baked host path."""
     raw = os.environ.get(PRIMARY_REPO_ROOT_ENV, "").strip()
     if not raw:
-        # Also check fallback relative to dispatch worktree: .worktrees/dispatch/<agent>/<task>/
         for parent in REPO_ROOT.parents:
             if (parent / "data" / "sources.db").is_file():
                 return parent.resolve()
@@ -123,14 +120,27 @@ HELD_OUT_CHRONICLE_MONUMENTS = {
     "Руська Правда (Юшков)",
 }
 
-# Modern translations in literary_texts that must be strictly excluded from primary text mining
-EXCLUDED_TRANSLATION_WORKS = {
-    "ГВЛ (переклад Коструби)",
-    "Повість временних літ (переклад Яременка)",
-    "Слово о полку Ігоревім (поетичні переклади)",
-}
+# Editorial noise patterns to purge modern website introductory notes, prefaces, and variant apparatus
+EDITORIAL_PATTERNS = [
+    re.compile(
+        r"(?:Передмов|Введение|Вступ|Академия Наук|Академія Наук|Институт истории|ІНСТИТУТ ІСТОРІЇ|"
+        r"Шрифт|ПОЛНОЕ СОБРАНІЕ|ПСРЛ|Археографическ|Археографіч|ПРИЛОЖЕНИЕ|Б\. Клосс|"
+        r"Склав та підготував|наукового видання|Повне зібрання|Видавництво|репринтн|"
+        r"ленінградськ|изводов\. —|стлб\.|Litopys New Roman)",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"^(?:Варіанты|Примѣчанія|Можно прочесть|В строке|Букв[а-я] [а-я] неясн|В рукописи|Сице родословят)",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"(?:Акад\. Н\.|Іст\. Муз\.|Кормчая, 1°|арк\. \d+ зв|лл\. \d+ об|"
+        r"\b(?:1[89]\d\d|20\d\d)\b|\b(?:XVIII|XIX|XX|XXI)\s*(?:в\.|ст\.|вв\.|ст\.)|"
+        r"\b(?:СССР|УРСР|АН УССР|Ленинград|Ленінград|СПб\.|М\.-Л\.)\b)",
+        re.IGNORECASE,
+    ),
+]
 
-# Editorial noise pattern to purge modern website introductory notes
 EDITORIAL_NOISE_RE = re.compile(
     r"(?:Litopys New Roman|ПСРЛ|В текстах використані|шрифт|Повне зібрання|переклад|Енциклопедії Українознавства|Археографическою|Видавництво)",
     re.IGNORECASE,
@@ -158,6 +168,36 @@ CHURCH_SLAVONIC_LITURGICAL_PATTERNS = [
     re.compile(r"(?:святы[иі]|пр[еѣ]чистая|богородиц[еѣ])", re.IGNORECASE),
 ]
 
+# Nouns ending in -ть that must never trigger verb_3rd_person_t
+EXCLUDED_NOUN_STEMS_T = {
+    "память",
+    "памѧть",
+    "смерть",
+    "смьрть",
+    "власть",
+    "волость",
+    "честь",
+    "чьсть",
+    "путь",
+    "пути",
+    "часть",
+    "страсть",
+    "милость",
+    "милости",
+    "радость",
+    "плоть",
+    "кость",
+    "зависть",
+    "гордость",
+    "крепость",
+    "крѣпость",
+    "повесть",
+    "повѣсть",
+    "любовь",
+    "вещь",
+    "печаль",
+}
+
 # Proto-Ukrainian vernacular features in medieval Kyivan texts
 VERNACULAR_PATTERNS = {
     "vocative_in_e": re.compile(r"\b([А-Яа-яЄІЇҐѣѧѡъьꙋꙗ]{3,}(?:[еє]|ове))\b", re.IGNORECASE),
@@ -165,7 +205,9 @@ VERNACULAR_PATTERNS = {
     "pleophony_full_vocalism": re.compile(
         r"\b([А-Яа-яЄІЇҐѣѧѡъьꙋꙗ]*(?:город|мороз|волод|берег|серед|шелом|голод)[А-Яа-яЄІЇҐѣѧѡъьꙋꙗ]*)\b", re.IGNORECASE
     ),
-    "verb_3rd_person_t": re.compile(r"\b([А-Яа-яЄІЇҐѣѧѡъьꙋꙗ]{3,}(?:ть|тьсѧ|ти))\b", re.IGNORECASE),
+    "verb_3rd_person_t": re.compile(
+        r"\b([А-Яа-яЄІЇҐѣѧѡъьꙋꙗ]{2,}(?:[еєиыаяую]ть|[еєи]тьсѧ|[аяую]тьсѧ))\b", re.IGNORECASE
+    ),
 }
 
 
@@ -213,37 +255,55 @@ def clean_html_diplomatic(text: str) -> str:
     return t.strip()
 
 
+def is_editorial_text(text: str) -> bool:
+    """Detect modern editorial prefaces, academic commentaries, and textual apparatus."""
+    if not text or len(text.strip()) < 10:
+        return True
+    return any(pat.search(text) for pat in EDITORIAL_PATTERNS)
+
+
 def detect_features(text: str) -> tuple[str, list[str]]:
-    """Classify language register (church_slavonic_liturgical vs vernacular_secular) and extract feature tags."""
+    """Classify language register (church_slavonic_liturgical vs mixed_diglossic vs vernacular_secular)."""
     features: list[str] = []
     is_cs = False
+
+    # 1. Mask out matched liturgical formulas so their elements don't trigger vernacular features
+    masked_text = text
     for pat in CHURCH_SLAVONIC_LITURGICAL_PATTERNS:
-        if pat.search(text):
+        if pat.search(masked_text):
             features.append("church_slavonic_liturgical_formula")
             is_cs = True
-            break
+            masked_text = pat.sub(" ", masked_text)
 
+    # 2. Check vernacular patterns on remaining secular/vernacular text
     for name, pat in VERNACULAR_PATTERNS.items():
-        if pat.search(text):
-            features.append(name)
+        matches = pat.findall(masked_text)
+        if matches:
+            if name == "verb_3rd_person_t":
+                # Exclude noun stems ending in -ть
+                real_verbs = [m for m in matches if m.casefold() not in EXCLUDED_NOUN_STEMS_T]
+                if real_verbs:
+                    features.append(name)
+            else:
+                features.append(name)
 
-    if is_cs and any(f != "church_slavonic_liturgical_formula" for f in features):
+    vernacular_feats = [f for f in features if f != "church_slavonic_liturgical_formula"]
+    if is_cs and vernacular_feats:
         reg = "mixed_diglossic"
     elif is_cs:
         reg = "church_slavonic_liturgical"
-    elif any(
-        f in features
-        for f in ["vocative_in_e", "dative_singular_ovi_evi", "pleophony_full_vocalism", "verb_3rd_person_t"]
-    ):
+    elif vernacular_feats:
         reg = "vernacular_secular"
     else:
-        reg = "church_slavonic_liturgical" if is_cs else "vernacular_secular"
+        reg = "vernacular_secular"
 
     return reg, features
 
 
 def load_epigraphy_records(sources_db: Path) -> list[EpigraphyRecord]:
     """Load and diplomatically clean Saint Sophia Cathedral inscriptions."""
+    import sqlite3
+
     conn = sqlite3.connect(sources_db)
     cur = conn.cursor()
     query = """
@@ -265,6 +325,9 @@ def load_epigraphy_records(sources_db: Path) -> list[EpigraphyRecord]:
 
         is_cyr = bool(CYRILLIC_CHAR_RE.search(primary_text))
         if not is_cyr:
+            continue
+
+        if is_editorial_text(primary_text):
             continue
 
         room = "unknown"
@@ -306,21 +369,29 @@ def load_epigraphy_records(sources_db: Path) -> list[EpigraphyRecord]:
 
 
 def load_chronicle_records(sources_db: Path) -> list[ChronicleRecord]:
-    """Load Old East Slavic chronicle text chunks, strictly excluding modern translation works."""
+    """Load Old East Slavic chronicle text chunks, strictly excluding modern translations and editorial prefaces."""
+    import sqlite3
+
     conn = sqlite3.connect(sources_db)
     cur = conn.cursor()
     query = """
-    SELECT chunk_id, work, author, year, text, char_count
+    SELECT chunk_id, work, author, year, text, source_file
     FROM literary_texts
     WHERE language_period = 'old_east_slavic'
+      AND source_file NOT LIKE 'wave1-%'
+      AND source_file NOT LIKE 'wave6-%'
+      AND source_file NOT LIKE 'wave0-pvl-yaremenko%'
+      AND work NOT LIKE '%переклад%'
     """
     cur.execute(query)
     records: list[ChronicleRecord] = []
-    for chunk_id, work, author, year, text, _char_count in cur.fetchall():
-        if work in EXCLUDED_TRANSLATION_WORKS:
+    for chunk_id, work, author, year, text, _source_file in cur.fetchall():
+        if is_editorial_text(text or ""):
             continue
         clean = clean_html_diplomatic(text or "")
         if len(clean) < 40:
+            continue
+        if is_editorial_text(clean):
             continue
         records.append(
             ChronicleRecord(
@@ -336,8 +407,8 @@ def load_chronicle_records(sources_db: Path) -> list[ChronicleRecord]:
     return records
 
 
-def split_into_passages(text: str, min_len: int = 50, max_len: int = 500) -> list[str]:
-    """Split chronicle text into self-contained sentences or small passage units."""
+def split_into_passages(text: str, min_len: int = 40, max_len: int = 350) -> list[str]:
+    """Split chronicle text into self-contained sentences or small passage units, purging editorial apparatus."""
     raw_sentences = re.split(r"(?<=[.!?…])\s+|\n+", text)
     passages: list[str] = []
     buf = ""
@@ -345,7 +416,7 @@ def split_into_passages(text: str, min_len: int = 50, max_len: int = 500) -> lis
         s = s.strip()
         if not s or len(s) < 15:
             continue
-        if EDITORIAL_NOISE_RE.search(s):
+        if is_editorial_text(s) or EDITORIAL_NOISE_RE.search(s):
             continue
         # Clean footnote digits directly attached to words
         s = re.sub(r"(?<=[а-яіїєґѣѧѡъьꙋꙗ\.,])\d{1,2}\b", "", s)
@@ -353,10 +424,10 @@ def split_into_passages(text: str, min_len: int = 50, max_len: int = 500) -> lis
         if len(buf) + len(s) + 1 <= max_len:
             buf = f"{buf} {s}".strip() if buf else s
         else:
-            if len(buf) >= min_len:
+            if len(buf) >= min_len and not is_editorial_text(buf):
                 passages.append(buf)
             buf = s
-    if len(buf) >= min_len:
+    if len(buf) >= min_len and not is_editorial_text(buf):
         passages.append(buf)
     return passages
 
@@ -372,7 +443,7 @@ def build_eval_suite(
     eval_cases: list[dict[str, Any]] = []
 
     # 1. Held-out graffiti cases from designated rooms (Room 121 & Room 110)
-    held_out_inscr = [r for r in epigraphy if r.room in HELD_OUT_GRAFFITI_ROOMS]
+    held_out_inscr = [r for r in epigraphy if r.room in HELD_OUT_GRAFFITI_ROOMS and not is_editorial_text(r.clean_text)]
     rng.shuffle(held_out_inscr)
 
     graffiti_quota = min(len(held_out_inscr), target_quota // 2)
@@ -380,9 +451,10 @@ def build_eval_suite(
         reg, feats = detect_features(rec.clean_text)
         dating_str = f"{rec.min_year or 1050}–{rec.max_year or 1250}"
 
-        # 30% mixed error injection for anti-copying verification
+        # 32% mixed error injection for anti-copying verification
         inject_error = rng.random() < 0.32
         injected_calque = None
+        correct_form = None
         input_text = rec.clean_text
         exp_output = rec.clean_text
         exp_action = "PRESERVE"
@@ -392,8 +464,8 @@ def build_eval_suite(
             calque_pair = rng.choice(INJECTED_CALQUES)
             injected_calque = calque_pair[0]
             correct_form = calque_pair[1]
-            input_text = f"{rec.clean_text} [Примітка редактора: {injected_calque}]"
-            exp_output = f"{rec.clean_text} [Примітка редактора: {correct_form}]"
+            input_text = f"{rec.clean_text} [Примітка: {injected_calque}]"
+            exp_output = f"{rec.clean_text} [Примітка: {correct_form}]"
             exp_action = "CORRECT_INJECTED_ERROR"
             err_type = "soviet_calque_injection"
 
@@ -402,6 +474,13 @@ def build_eval_suite(
         target_term = words[0] if words else "господи"
 
         eval_id = f"eval_krus_epig_{hashlib.sha256(f'epig_{rec.id}_{rec.clean_text}'.encode()).hexdigest()[:8]}"
+        if reg == "church_slavonic_liturgical":
+            reg_note = "високий літургійний ізвод церковнослов'янської мови київської редакції"
+        elif reg == "mixed_diglossic":
+            reg_note = "явище києво-руської диглосії"
+        else:
+            reg_note = "ранні риси живомовного давньоруського/староукраїнського мовлення"
+
         eval_cases.append(
             {
                 "eval_id": eval_id,
@@ -421,8 +500,7 @@ def build_eval_suite(
                 "injected_error_details": f"Injected calque: {injected_calque}" if inject_error else None,
                 "linguistic_notes": (
                     f"Графіті Софії Київської (приміщення {rec.room}, панель {rec.panel_title or 'стіна'}). "
-                    f"Регістр: {reg}. Автентичний пам'ятковий запис XI–XIII ст., що демонструє "
-                    f"{"високий літургійний ізвод церковнослов'янської мови київської редакції" if 'church' in reg else 'ранні риси живомовного давньоруського/староукраїнського мовлення'}."
+                    f"Регістр: {reg}. Автентичний пам'ятковий запис XI–XIII ст., що демонструє {reg_note}."
                 ),
                 "source_metadata": {
                     "source": "historical_source_records",
@@ -439,7 +517,7 @@ def build_eval_suite(
     chronicle_passages: list[tuple[ChronicleRecord, str]] = []
     for c in held_out_chron:
         for p in split_into_passages(c.clean_text):
-            if len(p) >= 60 and CYRILLIC_CHAR_RE.search(p):
+            if len(p) >= 60 and CYRILLIC_CHAR_RE.search(p) and not is_editorial_text(p):
                 chronicle_passages.append((c, p))
 
     rng.shuffle(chronicle_passages)
@@ -450,6 +528,7 @@ def build_eval_suite(
 
         inject_error = rng.random() < 0.32
         injected_calque = None
+        correct_form = None
         input_text = p_text
         exp_output = p_text
         exp_action = "PRESERVE"
@@ -505,44 +584,76 @@ def build_eval_suite(
 def build_sft_dataset(
     epigraphy: list[EpigraphyRecord],
     chronicles: list[ChronicleRecord],
+    eval_suite: list[dict[str, Any]],
     vesum_db: Path = DEFAULT_VESUM_DB,
     target_sft_quota: int = 10000,
     replay_quota: int = 200,
     seed: int = 42,
 ) -> list[dict[str, Any]]:
     """Build SFT trajectories teaching Kyivan Rus epigraphy, diglossia, and proto-Ukrainian features."""
+    import sqlite3
+
     rng = random.Random(seed)
     trajectories: list[dict[str, Any]] = []
+    seen_traj_ids: set[str] = set()
+    seen_texts: set[str] = set()
+
+    # Collect all verbatim texts from eval suite to enforce 0% verbatim text leakage
+    eval_verbatim_texts: set[str] = set()
+    for c in eval_suite:
+        eval_verbatim_texts.add(c["input_text"].strip().casefold())
+        eval_verbatim_texts.add(c["expected_output"].strip().casefold())
+        if "target_term" in c and len(c["target_term"]) > 20:
+            eval_verbatim_texts.add(c["target_term"].strip().casefold())
 
     con_ves = sqlite3.connect(vesum_db)
     cur_ves = con_ves.cursor()
 
-    # 1. Training graffiti (excluding held-out rooms 121 and 110)
-    train_inscr = [r for r in epigraphy if r.room not in HELD_OUT_GRAFFITI_ROOMS]
+    # 1. Training graffiti (strictly excluding held-out rooms 121, 110 and eval verbatim texts)
+    train_inscr = [
+        r
+        for r in epigraphy
+        if r.room not in HELD_OUT_GRAFFITI_ROOMS
+        and not is_editorial_text(r.clean_text)
+        and r.clean_text.strip().casefold() not in eval_verbatim_texts
+    ]
     rng.shuffle(train_inscr)
 
     for rec in train_inscr:
         if len(trajectories) >= target_sft_quota - replay_quota:
             break
+        text_key = rec.clean_text.strip().casefold()
+        if text_key in seen_texts:
+            continue
+        seen_texts.add(text_key)
+
         reg, feats = detect_features(rec.clean_text)
         dating_str = f"{rec.min_year or 1050}–{rec.max_year or 1250}"
         words = [w.strip(".,!?:;()[]-—+*✠\"'«»\r\n\t/\\") for w in rec.clean_text.split()]
         words = [w for w in words if len(w) >= 1]
         headword = words[0] if words else "господи"
 
-        # Check VESUM attestation for modern reflex or root
         cur_ves.execute("SELECT count(*) FROM forms_all WHERE lemma = ?", (headword.casefold(),))
         v_row = cur_ves.fetchone()
         v_count = v_row[0] if v_row else 0
 
-        traj_id = f"traj.decolonize.{hashlib.sha256(f'epig_train_{rec.id}_{rec.clean_text}'.encode()).hexdigest()[:16]}"
-        is_liturgical = "church" in reg
+        # Unique trajectory ID with guaranteed index uniqueness
+        idx = len(trajectories) + 1
+        traj_id = f"traj.decolonize.{hashlib.sha256(f'traj_{idx:05d}_epig_{rec.id}_{headword}'.encode()).hexdigest()[:16]}"
+        assert traj_id not in seen_traj_ids
+        seen_traj_ids.add(traj_id)
 
-        analysis_lead = (
-            "Високий літургійний церковнослов'янський ізвод київської редакції"
-            if is_liturgical
-            else "Жива розмовна давньоруська/ранньоукраїнська мовна стихія Києва"
-        )
+        if reg == "church_slavonic_liturgical":
+            analysis_lead = "Високий літургійний церковнослов'янський ізвод київської редакції"
+            reg_desc = "літургійного церковнослов'янського регістру київського ізводу"
+        elif reg == "mixed_diglossic":
+            analysis_lead = (
+                "Органічний синтез києво-руської диглосії: сакральна церковнослов'янська мова у сполученні з живими давньоукраїнськими розмовними формами"
+            )
+            reg_desc = "органічного поєднання літургійної церковнослов'янської формульності та живого розмовного мовлення"
+        else:
+            analysis_lead = "Жива розмовна давньоруська/ранньоукраїнська мовна стихія Києва"
+            reg_desc = "світського розмовного мовлення середньовічного Києва"
 
         reasoning = [
             f"1. Палеографічна локалізація: Софійський собор у Києві, приміщення {rec.room} ({dating_str} рр.). Текст: «{rec.clean_text}».",
@@ -554,7 +665,7 @@ def build_sft_dataset(
 
         final_resp = (
             f"Уривок «{rec.clean_text}» є автентичним графіті Софійського собору в Києві ({dating_str} рр., приміщення {rec.room}). "
-            f"Він належить до {"літургійного церковнослов'янського регістру київського ізводу" if is_liturgical else 'світського розмовного мовлення середньовічного Києва'}. "
+            f"Він належить до {reg_desc}. "
             f"Текст відображає явище диглосії Київської Русі та містить органічні риси ({', '.join(feats) if feats else 'київської писемної школи'}), які засвідчують безперервну тисячолітню спадщину української мовної традиції."
         )
 
@@ -592,16 +703,23 @@ def build_sft_dataset(
         }
         trajectories.append(traj)
 
-    # 2. Training chronicles (excluding Novgorod I and Ruska Pravda)
-    train_chron = [c for c in chronicles if c.work not in HELD_OUT_CHRONICLE_MONUMENTS]
+    # 2. Training chronicles (strictly excluding Novgorod I, Ruska Pravda, and eval verbatim texts)
+    train_chron = [
+        c
+        for c in chronicles
+        if c.work not in HELD_OUT_CHRONICLE_MONUMENTS
+        and not any(m in c.clean_text for m in HELD_OUT_CHRONICLE_MONUMENTS)
+    ]
     chron_passages: list[tuple[ChronicleRecord, str]] = []
     for c in train_chron:
         for p in split_into_passages(c.clean_text):
             if (
                 len(p) >= 60
                 and CYRILLIC_CHAR_RE.search(p)
+                and not is_editorial_text(p)
                 and not EDITORIAL_NOISE_RE.search(p)
                 and not any(m in p for m in HELD_OUT_CHRONICLE_MONUMENTS)
+                and p.strip().casefold() not in eval_verbatim_texts
             ):
                 chron_passages.append((c, p))
 
@@ -609,6 +727,11 @@ def build_sft_dataset(
     for c_rec, p_text in chron_passages:
         if len(trajectories) >= target_sft_quota - replay_quota:
             break
+
+        text_key = p_text.strip().casefold()
+        if text_key in seen_texts:
+            continue
+        seen_texts.add(text_key)
 
         reg, feats = detect_features(p_text)
         words = [w.strip(".,!?:;()[]-—+*✠\"'«»\r\n\t/\\") for w in p_text.split()]
@@ -619,14 +742,24 @@ def build_sft_dataset(
         v_row = cur_ves.fetchone()
         v_count = v_row[0] if v_row else 0
 
-        traj_id = (
-            f"traj.decolonize.{hashlib.sha256(f'chron_train_{c_rec.chunk_id}_{p_text}'.encode()).hexdigest()[:16]}"
-        )
-        is_liturgical = "church" in reg
+        idx = len(trajectories) + 1
+        traj_id = f"traj.decolonize.{hashlib.sha256(f'traj_{idx:05d}_chron_{c_rec.chunk_id}_{headword}'.encode()).hexdigest()[:16]}"
+        assert traj_id not in seen_traj_ids
+        seen_traj_ids.add(traj_id)
+
+        if reg == "church_slavonic_liturgical":
+            reg_lead = "Церковнослов'янський урочистий стиль літописання київської редакції"
+            reg_desc = "літургійно-книжного церковнослов'янського стилю"
+        elif reg == "mixed_diglossic":
+            reg_lead = "Синтез урочистого книжного стилю та живомовних праукраїнських діалектних рис"
+            reg_desc = "диглосійного літописного стилю з виразними праукраїнськими ознаками"
+        else:
+            reg_lead = "Давньоруський розповідний стиль із виразними праукраїнськими ознаками"
+            reg_desc = "живого мовлення Русі-України княжої доби"
 
         reasoning = [
             f"1. Текстологічне джерело: літописна пам'ятка «{c_rec.work}» (чанк {c_rec.chunk_id}). Пасаж: «{p_text}».",
-            f"2. Мовний пласт: {"Церковнослов'янський урочистий стиль літописання" if is_liturgical else 'Давньоруський розповідний стиль із виразними праукраїнськими ознаками'}.",
+            f"2. Мовний пласт: {reg_lead}.",
             f"3. Морфосинтаксичні риси: виявлено риси: {', '.join(feats) if feats else 'давньоруська синтаксична структура, аорист/імперфект, двоїна'}.",
             "4. Історична спадкоємність: південноруські літописи (Іпатіївський, Київський, Галицько-Волинський) безпосередньо фіксують зародження й розвиток специфічних фонетичних і граматичних рис української мови.",
             "5. Оцінка: пам'ятка є джерелом автентичної історії українського середньовіччя, що спростовує колоніальні теорії про «спільну колиску».",
@@ -634,7 +767,7 @@ def build_sft_dataset(
 
         final_resp = (
             f"Фрагмент «{p_text}» походить із літопису «{c_rec.work}». "
-            f"Це автентичний зразок літописання княжої доби, у якому сполучаються високий стиль та "
+            f"Це автентичний зразок літописання княжої доби ({reg_desc}), у якому сполучаються високий стиль та "
             f"живі мовні риси Русі-України ({', '.join(feats) if feats else 'характерні граматичні форми'}). "
             f"Текст засвідчує пряму літописну спадкоємність між Київською державою та модерною Україною."
         )
@@ -675,7 +808,7 @@ def build_sft_dataset(
 
     con_ves.close()
 
-    # 3. Add modern literary replay buffer from v0.2 to prevent regression
+    # 3. Add modern literary replay buffer from v0.2 to prevent regression (exactly replay_quota)
     replay_count = 0
     if V02_SFT_SHARDS_DIR.is_dir():
         for shard in sorted(V02_SFT_SHARDS_DIR.glob("sft_shard_*.jsonl")):
@@ -688,14 +821,23 @@ def build_sft_dataset(
                     continue
                 orig = json.loads(line)
                 if orig.get("is_calque_or_russianism") is True:
-                    trajectories.append(orig)
+                    orig_copy = dict(orig)
+                    term = orig_copy.get("target_term", idx)
+                    orig_copy["trajectory_id"] = (
+                        f"traj.decolonize.{hashlib.sha256(f'traj_{idx:05d}_replay_{term}'.encode()).hexdigest()[:16]}"
+                    )
+                    trajectories.append(orig_copy)
+                    seen_traj_ids.add(orig_copy["trajectory_id"])
                     replay_count += 1
 
     if replay_count < replay_quota:
         # Fallback: create calibrated anti-calque replay trajectories
-        for pair in INJECTED_CALQUES[: replay_quota - replay_count]:
+        for pair in INJECTED_CALQUES:
+            if replay_count >= replay_quota:
+                break
             calque, correct = pair
-            tid = f"traj.decolonize.{hashlib.sha256(f'replay_{calque}'.encode()).hexdigest()[:16]}"
+            idx = len(trajectories) + 1
+            tid = f"traj.decolonize.{hashlib.sha256(f'traj_{idx:05d}_replay_{calque}'.encode()).hexdigest()[:16]}"
             trajectories.append(
                 {
                     "schema_version": "v1_decolonization_trajectory",
@@ -738,6 +880,7 @@ def build_sft_dataset(
                     "final_response": f"Правильно вживати «{correct}», а не «{calque}».",
                 }
             )
+            seen_traj_ids.add(tid)
             replay_count += 1
 
     return trajectories
@@ -752,21 +895,70 @@ def exact_clopper_pearson_lower(successes: int, total: int, alpha: float = 0.05)
     return float(beta.ppf(alpha, successes, total - successes + 1))
 
 
-def evaluate_epigraphic_suite(eval_cases: list[dict[str, Any]]) -> dict[str, Any]:
+def evaluate_epigraphic_suite(
+    eval_cases: list[dict[str, Any]],
+    predictions: dict[str, str] | list[str] | None = None,
+) -> dict[str, Any]:
     """Evaluate compliance of test suite against preservation and mixed-error correction gates."""
     total = len(eval_cases)
     preserve_cases = [c for c in eval_cases if not c["has_injected_error"]]
     mixed_error_cases = [c for c in eval_cases if c["has_injected_error"]]
 
-    # Verification: check preservation of diplomatic text
-    preserve_ok = sum(
-        1 for c in preserve_cases if c["expected_action"] == "PRESERVE" and c["expected_output"] == c["input_text"]
-    )
-    mixed_ok = sum(
-        1
-        for c in mixed_error_cases
-        if c["expected_action"] == "CORRECT_INJECTED_ERROR" and c["expected_replacement"] is not None
-    )
+    preserve_ok = 0
+    mixed_ok = 0
+
+    if predictions is None:
+        # Ground-truth benchmark consistency verification
+        for c in preserve_cases:
+            if (
+                c["expected_action"] == "PRESERVE"
+                and c["expected_output"] == c["input_text"]
+                and not c.get("has_injected_error")
+            ):
+                preserve_ok += 1
+
+        for c in mixed_error_cases:
+            repl = c.get("expected_replacement")
+            exp_out = c.get("expected_output", "")
+            inp = c.get("input_text", "")
+            calque_info = c.get("injected_error_details") or ""
+            # Extract calque string from details if present: "Injected calque: XYZ"
+            calque_word = calque_info.split(": ", 1)[-1] if ": " in calque_info else None
+
+            if (
+                c["expected_action"] == "CORRECT_INJECTED_ERROR"
+                and repl is not None
+                and repl in exp_out
+                and exp_out != inp
+                and exp_out != "DESTROYED"
+                and (calque_word is None or calque_word not in exp_out)
+            ):
+                mixed_ok += 1
+    else:
+        # Model predictions evaluation
+        pred_map: dict[str, str] = {}
+        if isinstance(predictions, list):
+            for i, p in enumerate(predictions):
+                if i < len(eval_cases):
+                    pred_map[eval_cases[i]["eval_id"]] = str(p)
+        elif isinstance(predictions, dict):
+            pred_map = {str(k): str(v) for k, v in predictions.items()}
+
+        for c in preserve_cases:
+            cid = c["eval_id"]
+            pred = pred_map.get(cid, "")
+            if pred.strip() == c["expected_output"].strip():
+                preserve_ok += 1
+
+        for c in mixed_error_cases:
+            cid = c["eval_id"]
+            pred = pred_map.get(cid, "")
+            repl = c.get("expected_replacement", "")
+            calque_info = c.get("injected_error_details") or ""
+            calque_word = calque_info.split(": ", 1)[-1] if ": " in calque_info else None
+
+            if repl and repl in pred and (calque_word is None or calque_word not in pred):
+                mixed_ok += 1
 
     total_ok = preserve_ok + mixed_ok
     acc = total_ok / total if total > 0 else 0.0
@@ -796,6 +988,14 @@ def compute_sha256(path: Path) -> str:
     return h.hexdigest()
 
 
+def get_git_commit(repo_root: Path) -> str:
+    """Resolve current git commit SHA."""
+    try:
+        return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo_root, text=True).strip()
+    except Exception:
+        return "unknown"
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Phase 5.7: Kyivan Rus Epigraphy & Diglossia Mining Engine")
     parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB, help="Path to data/sources.db")
@@ -822,9 +1022,9 @@ def main() -> None:
     epigraphy = load_epigraphy_records(args.sources_db)
     print(f"Loaded {len(epigraphy)} Cyrillic epigraphic inscriptions.")
 
-    print("Loading Old East Slavic chronicles...")
+    print("Loading Old East Slavic chronicles (excluding modern translations)...")
     chronicles = load_chronicle_records(args.sources_db)
-    print(f"Loaded {len(chronicles)} chronicle chunks (excluding modern translations).")
+    print(f"Loaded {len(chronicles)} pristine chronicle chunks.")
 
     # 2. Build held-out evaluation suite
     print(f"\nBuilding held-out evaluation suite (target quota >= {args.eval_quota})...")
@@ -853,6 +1053,7 @@ def main() -> None:
     sft_dataset = build_sft_dataset(
         epigraphy,
         chronicles,
+        eval_suite=eval_suite,
         vesum_db=args.vesum_db,
         target_sft_quota=args.sft_quota,
         replay_quota=args.replay_quota,
@@ -864,10 +1065,15 @@ def main() -> None:
     if TRAJECTORY_SCHEMA_FILE.is_file():
         traj_schema = json.loads(TRAJECTORY_SCHEMA_FILE.read_text(encoding="utf-8"))
         traj_validator = jsonschema.Draft202012Validator(traj_schema)
-        # Sample validation to keep generation quick
         for traj in sft_dataset[:500]:
             traj_validator.validate(traj)
         print("SFT trajectory sample passed Draft 2020-12 schema validation.")
+
+    # Check ID uniqueness across all rows
+    all_traj_ids = [t["trajectory_id"] for t in sft_dataset]
+    assert len(all_traj_ids) == len(set(all_traj_ids)) == args.sft_quota, (
+        f"Duplicate trajectory IDs detected! Unique: {len(set(all_traj_ids))}, Total: {len(all_traj_ids)}"
+    )
 
     # Write sharded SFT dataset (< 2000 KB per shard for git hygiene)
     sft_dir = args.output_dir / "sft"
@@ -915,10 +1121,17 @@ def main() -> None:
     # Register breakdown
     reg_counts = Counter(c["language_register"] for c in eval_suite)
 
-    # Count breakdown for SFT
-    epig_sft = sum(1 for t in sft_dataset if "Софії Київської" in t["query"])
-    chron_sft = sum(1 for t in sft_dataset if "літопис" in t["query"])
-    replay_sft = len(sft_dataset) - epig_sft - chron_sft
+    # Category breakdown for SFT
+    replay_sft = sum(1 for t in sft_dataset if t.get("is_calque_or_russianism") is True)
+    epig_sft = sum(
+        1
+        for t in sft_dataset
+        if not t.get("is_calque_or_russianism")
+        and "Софія Київська" in t.get("morphemic_breakdown", {}).get("source_formation", "")
+    )
+    chron_sft = len(sft_dataset) - epig_sft - replay_sft
+
+    git_commit_sha = get_git_commit(REPO_ROOT)
 
     # 5. Build release receipt
     receipt: dict[str, Any] = {
@@ -926,7 +1139,7 @@ def main() -> None:
         "issue": 8103,
         "parent_epic": 6321,
         "created_at": datetime.now(UTC).isoformat(),
-        "git_commit": "HEAD",
+        "git_commit": git_commit_sha,
         "evaluation_benchmark": {
             "file_path": str(eval_path.relative_to(REPO_ROOT)),
             "sha256": eval_sha,
