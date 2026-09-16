@@ -11,11 +11,19 @@
 #   writes exclusively under `artifacts/<nonce>/`.
 # - Takes --build-id <id> (required, non-empty; may be supplied via BUILD_ID env);
 #   fails closed before the expensive test suite if missing or empty.
-# - Installs CI venv like `ci.yml` (lockfile + CPU torch 2.13.0 carve-out) in a
-#   temporary directory outside the git worktree (never overwriting repo .venv).
+# - Installs CI venv exactly like `ci.yml`'s "Install Python deps" step
+#   (lockfile minus torch/torchvision/open_clip_torch/stanza, `uv pip` when
+#   available else a documented pip fallback, then `packages/v4-runtime`
+#   `--no-build-isolation` + `build_assets.py`) in a temporary directory
+#   outside the git worktree (never overwriting repo .venv).
+# - Detects Linux native sandbox deps (bubblewrap + the AppArmor
+#   unprivileged-userns grant CI's bwrap smoke test relies on, libpq); never
+#   sudo-installs in the cloud sandbox -- fails with an actionable message.
+# - Requires `LEARN_UKRAINIAN_CP_PG_DSN` (same fixture creds as `ci.yml`'s
+#   disposable Postgres service) when control-plane tests are in the
+#   selection; fails closed instead of letting them silently self-skip.
 # - Asserts Node 22 (`node -v` is v22); runs `npm ci --ignore-scripts` only if
 #   ACP test is in shard.
-# - Runs Stanza provision with 3-attempt 10s/30s fail-closed retry.
 # - Unsets ZNO_LIVE, RUN_BRIDGE_INBOX_INTEGRATION, ENFORCE_LATENCY_ASSERTIONS;
 #   sets CI=true and GITHUB_ACTIONS=true.
 # - Runs 4 duration-balanced shards via `scripts/ci/pytest_shards.py` (fixed 4-shard plane).
@@ -182,23 +190,54 @@ export GITHUB_ACTIONS=true
 export PYTEST_BREADCRUMB_DIR="${ARTIFACT_ROOT}/.pytest_breadcrumbs"
 mkdir -p "${PYTEST_BREADCRUMB_DIR}"
 
-# 5. Python virtual environment setup (write confinement: default outside git worktree)
+# 5. Detect Linux native sandbox deps (bubblewrap, libpq); never sudo-install
+# in a cloud sandbox -- detect-and-fail-actionable only, matching ci.yml's
+# `apt-get install -y bubblewrap postgresql-16 libpq-dev apparmor` package set
+# without attempting any privileged install here.
+if [[ "$(uname -s)" == "Linux" ]]; then
+  if ! command -v bwrap >/dev/null 2>&1; then
+    echo "Error: bubblewrap (bwrap) is not installed; required for sandbox tests (matches ci.yml's 'apt-get install -y bubblewrap'). Provision it in the cloud image -- this script never sudo-installs packages." >&2
+    exit 1
+  fi
+  if ! bwrap --unshare-user --unshare-pid --ro-bind / / -- /usr/bin/true >/dev/null 2>&1; then
+    echo "Error: bwrap --unshare-user smoke test failed; the sandbox likely needs the unprivileged-userns AppArmor grant ci.yml installs via apparmor_parser. Provision it in the cloud image -- this script never sudo-installs profiles." >&2
+    exit 1
+  fi
+  if ! command -v pg_config >/dev/null 2>&1 && ! { ldconfig -p 2>/dev/null | grep -q 'libpq\.so'; }; then
+    echo "Error: libpq is not installed (no pg_config, no libpq.so); required for Postgres-backed sandbox tests (matches ci.yml's 'apt-get install -y libpq-dev'). Provision it in the cloud image -- this script never sudo-installs packages." >&2
+    exit 1
+  fi
+fi
+
+# 6. Python virtual environment setup (write confinement: default outside git worktree)
 VENV_DIR="${VENV_PATH:-${RUNNER_TEMP:-${TMPDIR:-/tmp}}/cursor-cloud-ci-venv-${NONCE}}"
 if [[ ! -d "${VENV_DIR}" ]]; then
   python3 -m venv "${VENV_DIR}"
 fi
 PYTHON="${VENV_DIR}/bin/python"
 
-# 6. Install CI venv dependencies (lockfile + CPU torch 2.13.0 carve-out)
+# 7. Install CI venv dependencies exactly like ci.yml's "Install Python deps"
+# step: lockfile minus torch/torchvision/open_clip_torch/stanza (the unit
+# suite does not import them and they blow the time budget -- ci.yml drops
+# stanza too, so a runner that still provisioned it would install an
+# environment CI never has), `uv pip` when available (documented pip
+# fallback otherwise), then packages/v4-runtime --no-build-isolation +
+# build_assets.py.
 if [[ -f "requirements-lock.txt" ]]; then
   REQS_CI="${VENV_DIR}/requirements-ci.txt"
-  grep -viE '^(torch|torchvision|open_clip_torch)==' requirements-lock.txt > "${REQS_CI}"
+  grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt > "${REQS_CI}"
+  if command -v uv >/dev/null 2>&1; then
+    INSTALL_CMD=(uv pip install --python "${PYTHON}")
+  else
+    echo "Warning: 'uv' not found on PATH; falling back to '${PYTHON} -m pip install' (ci.yml installs via astral-sh/setup-uv's uv -- install uv for closer dependency-resolution parity: https://docs.astral.sh/uv/)" >&2
+    "${PYTHON}" -m pip install --upgrade pip
+    INSTALL_CMD=("${PYTHON}" -m pip install)
+  fi
   for attempt in 1 2 3; do
-    echo "CI dependencies pip install attempt ${attempt}/3"
-    if "${PYTHON}" -m pip install --upgrade pip \
-      && "${PYTHON}" -m pip install --no-deps -r "${REQS_CI}" \
-      && "${PYTHON}" -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu torch==2.13.0 \
-      && "${PYTHON}" -m pip install --no-deps multiprocess==0.70.18 huggingface-hub==1.24.0; then
+    echo "CI dependencies install attempt ${attempt}/3"
+    if "${INSTALL_CMD[@]}" --no-deps -r "${REQS_CI}" \
+      && "${PYTHON}" -m pip install --no-deps --no-build-isolation packages/v4-runtime \
+      && "${PYTHON}" packages/v4-runtime/build_assets.py; then
       break
     fi
     case "${attempt}" in
@@ -212,26 +251,11 @@ if [[ -f "requirements-lock.txt" ]]; then
   done
 fi
 
-# 7. Stanza Ukrainian model provisioning with 3-attempt retry (R5)
-for attempt in 1 2 3; do
-  echo "stanza provision attempt ${attempt}/3"
-  if "${PYTHON}" -c "from scripts.pipeline.stress_annotator import annotate_stress; annotate_stress('Мама читає книжку.')" >/dev/null 2>&1; then
-    break
-  fi
-  case "${attempt}" in
-    1) sleep 10 ;;
-    2) sleep 30 ;;
-    3)
-      echo "Error: Stanza provision failed after 3 attempts" >&2
-      exit 1
-      ;;
-  esac
-done
-
-# 8. Verify Atlas manifest if pointer exists
-if [[ -f "site/src/data/lexicon-manifest.pointer.json" ]]; then
-  "${PYTHON}" -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified')" || true
-fi
+# 8. Hydrate Atlas lexicon manifest -- matches ci.yml's "Hydrate Atlas lexicon
+# manifest" step exactly: unconditional and hard-fail. A full checkout (this
+# script's documented precondition) always has the pointer file; CI treats a
+# load failure as fatal, not advisory, so this must too.
+"${PYTHON}" -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
 
 # 9. Plan pytest shards (fixed 4-shard plane)
 PLAN_DIR="${ARTIFACT_ROOT}/plans"
@@ -243,7 +267,33 @@ elif [[ -f "ci-artifacts/pytest-durations.json" ]]; then
 fi
 "${PLAN_ARGS[@]}"
 
-# 10. Execute each planned shard
+# 10. Fail closed if the selection includes control-plane tests that require
+# LEARN_UKRAINIAN_CP_PG_DSN (same fixture creds as ci.yml's disposable
+# Postgres service: postgresql://postgres:postgres@localhost:5432/lu) but the
+# DSN is unset. Those tests self-skip (pytest.skip) rather than fail when the
+# DSN is absent, so silently omitting it would report a false-green pass for
+# a suite that never actually ran against Postgres.
+PG_DSN="${LEARN_UKRAINIAN_CP_PG_DSN:-}"
+if [[ -z "${PG_DSN//[[:space:]]/}" ]]; then
+  CP_TEST_FILES=""
+  for shard in 1 2 3 4; do
+    shard_nodeids_file="${PLAN_DIR}/pytest-shard-${shard}/test-nodeids.txt"
+    [[ -f "${shard_nodeids_file}" ]] || continue
+    while IFS= read -r nodeid_file; do
+      [[ -z "${nodeid_file}" ]] && continue
+      if [[ -f "${nodeid_file}" ]] && grep -q 'LEARN_UKRAINIAN_CP_PG_DSN' "${nodeid_file}" 2>/dev/null; then
+        CP_TEST_FILES+="${nodeid_file}"$'\n'
+      fi
+    done < <(cut -d: -f1 "${shard_nodeids_file}" | sort -u)
+  done
+  if [[ -n "${CP_TEST_FILES}" ]]; then
+    echo "Error: LEARN_UKRAINIAN_CP_PG_DSN is unset but the selected suite includes control-plane tests that require it; those tests self-skip instead of failing, which would be a false-green pass. Fail UNKNOWN/INFRA. Set it to a local disposable Postgres using the same fixture creds as ci.yml: postgresql://postgres:postgres@localhost:5432/lu. Affected files:" >&2
+    echo "${CP_TEST_FILES}" | sort -u >&2
+    exit 1
+  fi
+fi
+
+# 11. Execute each planned shard
 OVERALL_EXIT=0
 
 for shard in 1 2 3 4; do
@@ -337,7 +387,7 @@ for shard in 1 2 3 4; do
   fi
 done
 
-# 11. Final dirty-tree check (allowlist only artifacts/<nonce>/; any other untracked/tracked dirty -> fail)
+# 12. Final dirty-tree check (allowlist only artifacts/<nonce>/; any other untracked/tracked dirty -> fail)
 # >>> dirty-tree-allowlist-filter (extracted and executed by tests/ci/test_cursor_cloud_pytest_verify.py)
 # Prints porcelain lines that are NOT allowlisted. Allowlist: untracked ('??') entries
 # whose path equals artifacts/<nonce> or sits under artifacts/<nonce>/, matched by
@@ -373,7 +423,7 @@ if [[ -n "${DIRTY_ENTRIES}" ]]; then
   exit 1
 fi
 
-# 12. Write bundle metadata
+# 13. Write bundle metadata
 cat > "${ARTIFACT_ROOT}/metadata.json" <<METADATA_EOF
 {
   "build_id": "${BUILD_ID}",

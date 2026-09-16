@@ -1130,3 +1130,152 @@ def test_dirty_tree_filter_allowlists_only_untracked_nonce_prefix(tmp_path: Path
     assert '?? "artifacts/token123/weird file.log"' not in proc.stdout
     for line in reported.splitlines():
         assert line in proc.stdout
+
+
+# =============================================================================
+# 7. Slice A Extensions (#6977 runner ↔ CI parity): truncated bundle, omitted
+# nodeids, outer failure without PASS override, stale nonce/head mismatches.
+# =============================================================================
+
+def test_truncated_bundle_empty_exit_code_file_rejected(tmp_path: Path) -> None:
+    """A write cut off before any bytes were flushed (cloud VM preemption
+    mid-run) leaves an empty exit_code file -- distinct from mutation (c)'s
+    non-empty corrupted content, but it must fail closed the same way, never
+    silently treated as exit 0."""
+    bundle = create_synthetic_bundle(tmp_path)
+    (bundle / "pytest-shard-3" / "exit_code").write_text("", encoding="utf-8")
+
+    result = verify_cloud_artifacts(
+        artifact_dir=bundle,
+        requested_sha=TEST_SHA,
+        expected_runner_blob_sha256=TEST_RUNNER_SHA,
+        nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
+    )
+    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
+    assert result.is_pass is False
+    assert any("invalid or non-integer exit_code" in r for r in result.reasons)
+
+
+def test_truncated_bundle_empty_metadata_json_rejected(tmp_path: Path) -> None:
+    """A zero-byte metadata.json (interrupted before any content was written)
+    fails closed the same way as a missing or corrupted one."""
+    bundle = create_synthetic_bundle(tmp_path)
+    (bundle / "metadata.json").write_text("", encoding="utf-8")
+
+    result = verify_cloud_artifacts(
+        artifact_dir=bundle,
+        requested_sha=TEST_SHA,
+        expected_runner_blob_sha256=TEST_RUNNER_SHA,
+        nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
+    )
+    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
+    assert result.is_pass is False
+    assert any("corrupted or unparseable metadata.json" in r for r in result.reasons)
+
+
+def test_swapped_nodeid_same_count_rejected_by_anchor(tmp_path: Path) -> None:
+    """A shard that silently swaps one anchored node ID for an unrelated one
+    still fails closed even though the swap keeps the *count* self-consistent
+    (an omission disguised as an unrelated substitution): the trusted
+    partition check rejects the now-inconsistent plan/JUnit content before
+    the anchored node-ID inventory comparison is even reached."""
+    bundle = create_synthetic_bundle(tmp_path)
+    real_nodeid = "tests/test_module_4.py::test_case_b"
+    fake_nodeid = "tests/test_module_4.py::test_case_fake"
+
+    plan4_path = bundle / "pytest-shard-4" / "plan.json"
+    plan4 = json.loads(plan4_path.read_text(encoding="utf-8"))
+    plan4["assigned_nodeids"] = [
+        fake_nodeid if n == real_nodeid else n for n in plan4["assigned_nodeids"]
+    ]
+    plan4["assigned_digest"] = _sha256_digest(plan4["assigned_nodeids"])
+    plan4_path.write_text(json.dumps(plan4), encoding="utf-8")
+    (bundle / "pytest-shard-4" / "test-nodeids.txt").write_text(
+        "\n".join(plan4["assigned_nodeids"]) + "\n", encoding="utf-8"
+    )
+    junit4_path = bundle / "pytest-shard-4" / "main-junit.xml"
+    junit4_path.write_text(
+        junit4_path.read_text(encoding="utf-8").replace("test_case_b", "test_case_fake"),
+        encoding="utf-8",
+    )
+
+    result = verify_cloud_artifacts(
+        artifact_dir=bundle,
+        requested_sha=TEST_SHA,
+        expected_runner_blob_sha256=TEST_RUNNER_SHA,
+        nonce=TEST_NONCE,
+        expected_nodeids=TEST_ALL_NODEIDS,
+    )
+    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
+    assert result.is_pass is False
+    assert any(
+        "shard partition verification failed" in r or "does not match anchored suite" in r
+        for r in result.reasons
+    )
+
+
+def test_outer_failure_not_overridden_by_green_junit(tmp_path: Path) -> None:
+    """A nonzero shard exit_code (an outer/pipeline failure -- e.g. `tee`
+    losing pytest's own crashed exit status under `pipefail`) must produce
+    FAIL even when that shard's JUnit XML reports zero failures/errors.
+    Design contract: 'An outer failure or incomplete bundle cannot be
+    overridden by green shard XML.'"""
+    bundle = create_synthetic_bundle(
+        tmp_path,
+        shard_exit_codes={1: 0, 2: 1, 3: 0, 4: 0},
+        shard_failures={1: 0, 2: 0, 3: 0, 4: 0},  # fully green JUnit despite exit_code=1
+    )
+    result = verify_cloud_artifacts(
+        artifact_dir=bundle,
+        requested_sha=TEST_SHA,
+        expected_runner_blob_sha256=TEST_RUNNER_SHA,
+        nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
+    )
+    assert result.outcome == VerificationOutcome.FAIL
+    assert result.is_fail is True
+    assert result.is_pass is False
+    shard2 = next(sr for sr in result.shard_results if sr.shard_id == 2)
+    assert shard2.exit_code == 1
+    assert shard2.failures == 0
+    assert shard2.errors == 0
+    assert shard2.passed is False
+    assert any("shard 2 failed" in r and "exit_code=1" in r for r in result.reasons)
+
+
+def test_stale_nonce_and_head_reuse_rejected(tmp_path: Path) -> None:
+    """A stale bundle from a previous session (old nonce, old candidate SHA)
+    renamed into the *current* nonce's directory is still rejected: the
+    directory name passes, but metadata's nonce (and git_head) are stale and
+    must fail closed. A stale run stays attached to its original SHA/nonce
+    and is never reusable as evidence for a new candidate."""
+    old_nonce = "old-session-nonce"
+    old_sha = "1111111111111111111111111111111111111111"
+    bundle = create_synthetic_bundle(tmp_path, nonce=old_nonce, sha=old_sha)
+
+    # Reuse attempt: rename the stale bundle directory to the *new* nonce
+    # without regenerating metadata.
+    renamed_bundle = tmp_path / TEST_NONCE
+    bundle.rename(renamed_bundle)
+
+    result = verify_cloud_artifacts(
+        artifact_dir=renamed_bundle,
+        requested_sha=TEST_SHA,  # current candidate, different from stale old_sha
+        expected_runner_blob_sha256=TEST_RUNNER_SHA,
+        nonce=TEST_NONCE,
+        expected_collected_count=TEST_COLLECTED_COUNT,
+    )
+    assert result.outcome == VerificationOutcome.UNKNOWN_INFRA
+    assert result.is_pass is False
+    assert any("nonce mismatch" in r for r in result.reasons)
+
+    exit_code = verifier_main([
+        "--artifact-dir", str(renamed_bundle),
+        "--requested-sha", TEST_SHA,
+        "--expected-runner-sha", TEST_RUNNER_SHA,
+        "--nonce", TEST_NONCE,
+        "--expected-collected-count", str(TEST_COLLECTED_COUNT),
+    ])
+    assert exit_code == 2
