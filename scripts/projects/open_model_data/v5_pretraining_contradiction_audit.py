@@ -150,11 +150,15 @@ ANAPHORIC_WORDS = frozenset({
 
 def is_target_condemned_in_text(target_term: str, text: str) -> bool:
     """Check if the text explicitly condemns or directs replacement of the protected target term."""
-    t_lower = target_term.lower().strip()
-    if not t_lower or not text:
+    t_norm = normalize_token(target_term)
+    if not t_norm or not text:
         return False
 
-    t_bare = re.escape(t_lower)
+    # Normalize text by stripping combining accents (stress marks) and unifying apostrophes
+    text_norm = re.sub(r"[\u0300\u0301]", "", text)
+    text_norm = re.sub(r"[’'`‘ʼ]", "'", text_norm)
+
+    t_bare = re.escape(t_norm)
     t_token_re = re.compile(rf"(?:[«\"“‘\']{t_bare}[»\"”’\']|\b{t_bare}\b|слово\s+\b{t_bare}\b)", re.IGNORECASE)
     anaphoric_re = re.compile(
         r"\b(?:"
@@ -174,7 +178,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         re.IGNORECASE,
     )
 
-    target_in_text = bool(t_token_re.search(text))
+    target_in_text = bool(t_token_re.search(text_norm))
     current_referent = "TARGET" if not target_in_text else None
 
     # Split text into sentence/clause units by punctuation or coordinate/adversative conjunctions introducing clauses
@@ -185,7 +189,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         re.IGNORECASE,
     )
 
-    clauses = [c.strip() for c in split_pat.split(text) if c.strip()]
+    clauses = [c.strip() for c in split_pat.split(text_norm) if c.strip()]
     for clause in clauses:
         cl_lower = clause.lower()
         quoted = re.findall(r"[«\"“‘\']([^»\"”’\']+)[»\"”’\']", clause)
@@ -197,8 +201,8 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
             is_subject = bool(re.search(rf"(?:^|\b(?:щодо\s+слова|слово|словом|вираз|зворот)\s+)?[«\"“‘\']?{t_bare}[»\"”’\']?\s+(?:є|це|не|слід|варто|потрібно|необхідно|треба|можна|—|\-)", cl_lower))
             current_referent = "OTHER" if is_destination and not is_subject else "TARGET"
         elif quoted:
-            first_q = quoted[0].strip().lower()
-            if first_q != t_lower:
+            first_q = normalize_token(quoted[0])
+            if first_q != t_norm:
                 subj_m = re.search(
                     rf"(?:^|\b(?:щодо\s+слова|слово|словом|вираз|зворот)\s+)?[«\"“‘\']{re.escape(first_q)}[»\"”’\']",
                     cl_lower,
@@ -212,13 +216,13 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 cl_lower,
             )
             if unquoted_subj_m:
-                uq_word = unquoted_subj_m.group(1).strip()
+                uq_word = normalize_token(unquoted_subj_m.group(1))
                 prefix_to_subj = cl_lower[:unquoted_subj_m.start(1)]
                 has_anaphoric_det = bool(anaphoric_re.search(prefix_to_subj))
                 if uq_word in ANAPHORIC_WORDS or anaphoric_re.fullmatch(uq_word) or has_anaphoric_det:
                     # Anaphoric reference (його, її, це, яку, його вживання, etc.): preserve active referent
                     pass
-                elif uq_word != t_lower and not re.search(rf"\b(?:на|замість|до)\s+{re.escape(uq_word)}", cl_lower):
+                elif uq_word != t_norm and not re.search(rf"\b(?:на|замість|до)\s+{re.escape(uq_word)}", cl_lower):
                     current_referent = "OTHER"
             elif anaphoric_re.search(clause) and current_referent is not None:
                 # Anaphoric reference (його, її, це, etc.): preserve active referent from preceding clause
@@ -356,7 +360,7 @@ def run_pretraining_audit(
         )
 
     protected_terms: set[str] = {
-        c["target_term"].lower().strip() for c in protected_cases if c.get("target_term")
+        normalize_token(c["target_term"]) for c in protected_cases if c.get("target_term")
     }
     expected_min_terms = 250 if min_cases >= 600 else 1
     if len(protected_terms) < expected_min_terms:
@@ -374,7 +378,8 @@ def run_pretraining_audit(
                 continue
             sft_total_count += 1
             item = json.loads(line)
-            target = (item.get("target_term") or "").lower().strip()
+            raw_target = item.get("target_term") or ""
+            target = normalize_token(raw_target)
             if not target:
                 raise ValueError(
                     f"SFT record at line {line_idx+1} in {sft_file.name} lacks required 'target_term'"
@@ -444,7 +449,8 @@ def run_pretraining_audit(
                     f"DPO record at line {line_idx+1} in {dpo_file.name} lacks valid 'metadata' dict"
                 )
 
-            target = (metadata.get("target_term") or "").lower().strip()
+            raw_target = metadata.get("target_term") or ""
+            target = normalize_token(raw_target)
             if not target:
                 raise ValueError(
                     f"DPO record at line {line_idx+1} in {dpo_file.name} lacks 'metadata.target_term'"

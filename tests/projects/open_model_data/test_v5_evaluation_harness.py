@@ -1688,3 +1688,61 @@ def test_citation_whitelist_r26_astra_r7_sum11_quarantine_variants():
     assert ok_app is True
     assert len(app) >= 1
     assert viol == []
+
+
+def test_citation_whitelist_r27_astra_r9_ordinary_quoted_example():
+    """Verify Astra R9 Finding 2: ordinary quoted lexical examples in parentheses do not fail Gate 4."""
+    # 1. Quoted dialectal example in parentheses: 'Це слово («царинками») слід зберегти.'
+    ok1, app1, viol1 = verify_citation_whitelist("Це слово («царинками») слід зберегти.")
+    assert ok1 is True
+    assert app1 == []
+    assert viol1 == []
+
+    # 2. Quoted lexical example with other quotes and words
+    ok2, app2, viol2 = verify_citation_whitelist("Слово («файний») належить до діалектних слів.")
+    assert ok2 is True
+    assert app2 == []
+    assert viol2 == []
+
+    # 3. Quoted authority titles in parentheses still fail when unapproved or quarantined
+    ok3, app3, viol3 = verify_citation_whitelist("Це правильно («СУМ 11»).")
+    assert ok3 is False
+    assert app3 == []
+    assert any("СУМ 11" in v for v in viol3)
+
+    ok4, app4, viol4 = verify_citation_whitelist("Це правильно («Словник української мови у 11 томах»).")
+    assert ok4 is False
+    assert app4 == []
+    assert any("Словник" in v or "11" in v for v in viol4)
+
+    ok5, app5, viol5 = verify_citation_whitelist("Це правильно («Словник Zorblax»).")
+    assert ok5 is False
+    assert app5 == []
+    assert any("Zorblax" in v for v in viol5)
+
+    ok6, app6, viol6 = verify_citation_whitelist("Це правильно (джерело: «Zorblax»).")
+    assert ok6 is False
+    assert app6 == []
+    assert any("Zorblax" in v for v in viol6)
+
+    # 4. Bare parenthetical citations of unapproved authorities still fail
+    ok7, app7, viol7 = verify_citation_whitelist("Це правильно (СУМ 11).")
+    assert ok7 is False
+    assert app7 == []
+    assert any("СУМ 11" in v for v in viol7)
+
+    # 5. Quoted and bare approved authorities in parentheses pass
+    ok8, app8, viol8 = verify_citation_whitelist("Це правильно («СУМ-20»).")
+    assert ok8 is True
+    assert any("СУМ-20" in a for a in app8)
+    assert viol8 == []
+
+    ok9, app9, viol9 = verify_citation_whitelist("Це правильно (ВЕСУМ).")
+    assert ok9 is True
+    assert any("ВЕСУМ" in a for a in app9)
+    assert viol9 == []
+
+    ok10, app10, viol10 = verify_citation_whitelist("Це правильно (джерело: ВЕСУМ).")
+    assert ok10 is True
+    assert any("ВЕСУМ" in a for a in app10)
+    assert viol10 == []

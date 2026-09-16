@@ -403,6 +403,17 @@ def check_span_integrity(input_text: str, output_text: str, target_term: str) ->
 
 
 QUOTED_ENTITY_RE = r"(?:«[^»]+»|\"[^\"]+\"|“[^”]+”|‘[^’]+’|'[^']+')"
+QUOTED_AUTHORITY_TITLE_RE = (
+    r"(?:[«\"“‘\']"
+    r"(?:[^»\"”’\']*(?:"
+    r"[Пп]равопис\w*|[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*|[Гг]раматик\w*|[Лл]ексикон\w*|[Сс]ловар\w*|"
+    r"[Dd]ictionary|[Cc]orpus|[Ll]exicon|[Gg]rammar|"
+    r"[Яя]к\s+ми\s+говоримо|[Кк]ультура\s+слова|"
+    r"(?:[Сс][Уу][Мм]|[Ss][Uu][Mm])[\s\-–—\u2010-\u2015]*\d+|[Вв][Ее][Сс][Уу][Мм]|[Vv][Ee][Ss][Uu][Mm]|[Уу][Лл][Іі][Фф]|[Uu][Ll][Ii][Ff]|"
+    r"[Гг]рінченк\w*|[Аа]нтоненк[оа]-давидович\w*|[Пп]ономар\w*|[Кк]араванськ\w*|[Бб]ілодід\w*"
+    r")[^»\"”’\']*)"
+    r"[»\"”’\'])"
+)
 KEYWORD_AUTHORITY_RE = (
     r"(?:(?:чинн\w*|академічн\w*|офіційн\w*|нов\w*|стар\w*)\s+)?"
     r"(?:[Пп]равопис\w*|[Сс]ловник\w*|[Кк]орпус\w*|[Дд]овідник\w*|[Бб]аз\w*)"
@@ -522,9 +533,15 @@ CITATION_MENTION_PATTERNS = [
         rf"(?:(?:словник\w*|корпус\w*|довідник\w*|баз\w*)\s+)?"
         rf"({QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{DIRECT_ZA_ACRONYM_RE}|{DIRECT_ZA_PROPER_NAME_RE})\s*,"
     ),
-    # 4. Parenthetical citations: "(СУМ-11)" or "(джерело: ВЕСУМ)"
+    # 4a. Explicitly prefixed parenthetical citations: "(джерело: ВЕСУМ)", "(за «Словником»)", "(див. Zorblax)"
     re.compile(
-        rf"\((?:(?:[Дд]жерело|[Зз]а|[Дд]ив\.?):\s*)?({QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})\)"
+        rf"\((?:[Дд]жерело|[Дд]ив\.?|[Зз]а|[Зз]гідно\s+(?:з|із|зі)|[Вв]ідповідно\s+до)(?::\s*|\s+)"
+        rf"({QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})\)"
+    ),
+    # 4b. Bare parenthetical citations: "(СУМ-11)", "(ВЕСУМ)", "(Словник української мови)", "(«СУМ-20»)"
+    re.compile(
+        rf"\((?!(?:[Дд]жерело|[Дд]ив\.?|[Зз]а|[Зз]гідно|[Вв]ідповідно)\b)"
+        rf"({QUOTED_AUTHORITY_TITLE_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})\)"
     ),
 ]
 

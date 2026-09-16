@@ -1253,3 +1253,140 @@ def test_audit_dpo_astra_r8_probes(tmp_path: Path, mock_dbs: tuple[Path, Path]) 
     )
     assert passed3 is True
     assert data3["dpo_contradictions_count"] == 0
+
+
+def test_audit_astra_r9_stress_marks_normalization(
+    tmp_path: Path, mock_dbs: tuple[Path, Path]
+) -> None:
+    """Verify Astra R9 Finding 1: stress marks (combining acute/grave) normalize consistently across SFT, DPO, and text matching."""
+    mock_sources, mock_vesum = mock_dbs
+
+    # 1. Direct function checks: combining acute U+0301 on target or text
+    assert is_target_condemned_in_text("царинка́ми", "«царинка́ми» є помилкою.") is True
+    assert is_target_condemned_in_text("царинками", "«царинка́ми» є помилкою.") is True
+    assert is_target_condemned_in_text("царинка́ми", "«царинками» є помилкою.") is True
+    assert is_target_condemned_in_text("царинка́ми", "«царинка́ми» не є помилкою.") is False
+    assert is_target_condemned_in_text("царинками", "«царинка́ми» не є помилкою.") is False
+
+    # 2. SFT shard with stress marks on target_term matches un-accented protection suite
+    mock_prot = tmp_path / "prot_unaccented.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "eval_id": "p_r9_1",
+            "stratum": "regional_dialect",
+            "target_term": "царинками",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sft1 = tmp_path / "sft1"
+    mock_sft1.mkdir()
+    (mock_sft1 / "shard.jsonl").write_text(
+        json.dumps({
+            "target_term": "царинка́ми",
+            "is_calque_or_russianism": True,
+            "action": "CORRECT",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_dpo_empty = tmp_path / "dpo_empty"
+    mock_dpo_empty.mkdir()
+    (mock_dpo_empty / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як оцінити слово «безпечний»?",
+            "chosen": "Це нормативне слово.",
+            "rejected": "Це помилка.",
+            "metadata": {"target_term": "безпечний", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed1, data1, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft1,
+        dpo_dir=mock_dpo_empty,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r9_rep1.md",
+        output_json=tmp_path / "r9_rep1.json",
+    )
+    assert passed1 is False
+    assert data1["sft_contradictions_count"] == 1
+    assert data1["sft_contradictions"][0]["target_term"] == "царинками"
+
+    # 3. DPO shard with stress marks on metadata.target_term and chosen text
+    mock_sft_clean = tmp_path / "sft_clean"
+    mock_sft_clean.mkdir()
+    (mock_sft_clean / "shard.jsonl").write_text(
+        json.dumps({
+            "target_term": "безпечний",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_dpo1 = tmp_path / "dpo1"
+    mock_dpo1.mkdir()
+    (mock_dpo1 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як оцінити слово «царинка́ми»?",
+            "chosen": "«царинка́ми» — діалектна форма, яку слід замінити.",
+            "rejected": "Це нормальне слово.",
+            "metadata": {"target_term": "царинка́ми", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed2, data2, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=mock_dpo1,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r9_rep2.md",
+        output_json=tmp_path / "r9_rep2.json",
+    )
+    assert passed2 is False
+    assert data2["dpo_contradictions_count"] == 1
+    assert data2["dpo_contradictions"][0]["target_term"] == "царинками"
+
+    # 4. Reverse: accented protection term matches unaccented SFT shard
+    mock_prot_accented = tmp_path / "prot_accented.jsonl"
+    mock_prot_accented.write_text(
+        json.dumps({
+            "eval_id": "p_r9_2",
+            "stratum": "regional_dialect",
+            "target_term": "царинка́ми",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sft_unaccented = tmp_path / "sft_unaccented"
+    mock_sft_unaccented.mkdir()
+    (mock_sft_unaccented / "shard.jsonl").write_text(
+        json.dumps({
+            "target_term": "царинками",
+            "is_calque_or_russianism": True,
+            "action": "CORRECT",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed3, data3, _ = run_pretraining_audit(
+        protection_path=mock_prot_accented,
+        sft_dir=mock_sft_unaccented,
+        dpo_dir=mock_dpo_empty,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r9_rep3.md",
+        output_json=tmp_path / "r9_rep3.json",
+    )
+    assert passed3 is False
+    assert data3["sft_contradictions_count"] == 1
+    assert data3["sft_contradictions"][0]["target_term"] == "царинками"
