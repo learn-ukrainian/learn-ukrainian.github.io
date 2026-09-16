@@ -837,8 +837,8 @@ CURATED_HETERONYMS_BATCH_8: dict[str, list[dict[str, Any]]] = { 'вивозит�
                                     'paradigm': {'kind': 'verb', 'aspect': 'недоконаний'}},
                     'distinction_note': 'Означає «зачинятися на замок» або «ставати '
                                         'відлюдькуватим, зосереджуватися на собі» (недоконаний '
-                                        'вид). Не плутати з доконаним розмовним «зами́катися» '
-                                        '(втомитися від блукання).',
+                                        'вид). Не плутати з доконаним діалектним «зами́катися» '
+                                        '(заметатися, заметушитися).',
                     'meaning': { 'definitions': [ 'Зачинятися на замок або засув; зосереджуватися '
                                                   'в собі, усамітнюватися.'],
                                  'source': 'ВТС / СУМ-11'},
@@ -951,9 +951,9 @@ CURATED_HETERONYMS_BATCH_8: dict[str, list[dict[str, Any]]] = { 'вивозит�
                                                                         'для лексикографічної '
                                                                         'прозорості.'}},
                   { 'headword': 'зами́катися',
-                    'short_label': 'втомитися від тривалого блукання (розм., док.)',
-                    'gloss': 'exhaust oneself by prolonged wandering/roaming, wear oneself out '
-                             'tramping (colloquial, perf.)',
+                    'short_label': 'заметатися, заметушитися (діал., док.)',
+                    'gloss': 'start rushing about in agitation, bustle/dart around restlessly '
+                             '(dialectal, perf.)',
                     'pos': 'verb',
                     'cefr': 'B2',
                     'heritage_status': { 'classification': 'authentic-dialectism',
@@ -962,16 +962,16 @@ CURATED_HETERONYMS_BATCH_8: dict[str, list[dict[str, Any]]] = { 'вивозит�
                                          'vesum_attested': True},
                     'pronunciation': {'ipa': '[zɐˈmɪkɐtɪsʲɐ]'},
                     'stress': { 'form': 'зами́катися',
-                                'source': 'Грінченко (1907) / ВТС',
+                                'source': 'ВТС / СУМ-11',
                                 'url': 'https://slovnyk.me/dict/vts/замикатися'},
                     'morphology': { 'pos': 'дієслово',
                                     'paradigm': {'kind': 'verb', 'aspect': 'доконаний'}},
-                    'distinction_note': 'Означає «довго блукаючи, микаючись, втомитися» (від '
-                                        'дієслова микатися; розм., доконаний вид). Не плутати з '
-                                        '«замика́тися» (замикати замок).',
-                    'meaning': { 'definitions': [ 'Блукаючи, микаючись по різних місцях, '
-                                                  'знесилитися або втомитися.'],
-                                 'source': 'Грінченко (1907) / ВТС'},
+                    'distinction_note': 'Означає «заметатися, заметушитися» (діал., доконаний вид: '
+                                        '«вона замикалась по хаті»). Не плутати з недоконаним '
+                                        '«замика́тися» (зачинятися на замок або в собі).',
+                    'meaning': { 'definitions': [ 'Заметатися, заметушитися (почати неспокійно '
+                                                  'рухатися, кидатися в різні боки).'],
+                                 'source': 'ВТС / СУМ-11'},
                     'soviet_colonization_context': { 'source': 'СУМ-11 (1970–1980)',
                                                      'definition': 'ЗАМИ́КАТИСЯ, аюся, аєшся, '
                                                                    'дох., діал. Заметатися. Харита '
@@ -982,9 +982,10 @@ CURATED_HETERONYMS_BATCH_8: dict[str, list[dict[str, Any]]] = { 'вивозит�
                                                                    '(Панч, І, 1956, 544)',
                                                      'sovietization_risk': 0,
                                                      'keywords': [],
-                                                     'historical_note': 'Зафіксовано в Словнику '
-                                                                        'Бориса Грінченка '
-                                                                        '(1907–1909) та СУМ-11.'}}],
+                                                     'historical_note': 'Діалектне слово, '
+                                                                        'зафіксоване в СУМ-11 та '
+                                                                        'ВТС зі значенням '
+                                                                        '«заметатися».'}}],
   'заспоритися': [ { 'headword': 'заспо́ритися',
                      'short_label': 'почати сперечатися, завести суперечку (док.)',
                      'gloss': 'begin arguing, start disputing/quarreling with someone (perfective)',
@@ -1607,9 +1608,9 @@ CURATED_HETERONYMS_BATCH_8: dict[str, list[dict[str, Any]]] = { 'вивозит�
                                                                        'СУМ-11; наведено класичний '
                                                                        'приклад зі Стороженка.'}}],
   'колонковий': [ { 'headword': 'коло́нковий',
-                    'short_label': 'стосовний до колонки (техн., друк.)',
-                    'gloss': 'relating to a column (mechanical, geological core drill, newspaper '
-                             'column)',
+                    'short_label': 'стосовний до колонки (техн., пристрою у формі циліндра/бура)',
+                    'gloss': 'relating to a cylindrical apparatus, dispenser, or core drill '
+                             '(drilling column)',
                     'pos': 'adj',
                     'cefr': 'B2',
                     'heritage_status': { 'classification': 'standard',
@@ -1621,12 +1622,14 @@ CURATED_HETERONYMS_BATCH_8: dict[str, list[dict[str, Any]]] = { 'вивозит�
                                 'source': 'ВТС / СУМ-11',
                                 'url': 'https://slovnyk.me/dict/vts/колонковий'},
                     'morphology': {'pos': 'прикметник', 'paradigm': {'kind': 'adjective'}},
-                    'distinction_note': 'Прикметник до «колонка» (технічна або друкарська колонка, '
-                                        'бурове колонкове буріння тощо). Не плутати з '
+                    'distinction_note': 'Прикметник до «колонка» у значенні пристосування у формі '
+                                        'видовженого циліндра (колонковий бур, колонкове буріння, '
+                                        'водорозбірна колонка тощо). Не плутати з '
                                         '«колонко́вий» (прикметник до «колоно́к» — сибірський '
                                         'хутровий звірок).',
-                    'meaning': { 'definitions': [ 'Стосовний до колонки (технічної, бурової або '
-                                                  'друкарської).'],
+                    'meaning': { 'definitions': [ 'Стосовний до колонки (пристосування у формі '
+                                                  'видовженого циліндра: бурового інструмента, '
+                                                  'водонагрівача, роздавальної колонки).'],
                                  'source': 'ВТС / СУМ-11'},
                     'soviet_colonization_context': { 'source': 'СУМ-11 (1970–1980)',
                                                      'definition': 'КОЛО́НКОВИЙ, а, е. Стос. до '
@@ -1634,7 +1637,9 @@ CURATED_HETERONYMS_BATCH_8: dict[str, list[dict[str, Any]]] = { 'вивозит�
                                                      'sovietization_risk': 0,
                                                      'keywords': [],
                                                      'historical_note': 'Технічний термін, '
-                                                                        'зафіксований у СУМ-11.'}},
+                                                                        'зафіксований у СУМ-11 '
+                                                                        '(до колонка у 3 '
+                                                                        'значенні).'}},
                   { 'headword': 'колонко́вий',
                     'short_label': 'стосовний до тварини колонок або його хутра',
                     'gloss': 'relating to the Siberian weasel (kolonok) or its fur',
@@ -1651,7 +1656,8 @@ CURATED_HETERONYMS_BATCH_8: dict[str, list[dict[str, Any]]] = { 'вивозит�
                     'morphology': {'pos': 'прикметник', 'paradigm': {'kind': 'adjective'}},
                     'distinction_note': 'Прикметник до зоологічної назви хижака «колоно́к» (родини '
                                         'куницевих): колонкове хутро, колонковий пензель. Не '
-                                        'плутати з «коло́нковий» (від колонка).',
+                                        'плутати з «коло́нковий» (від колонка — циліндричний '
+                                        'пристрій чи бур).',
                     'meaning': { 'definitions': [ 'Прикметник до колонок; виготовлений із хутра '
                                                   'колонка.'],
                                  'source': 'ВТС / СУМ-11'},
@@ -1863,8 +1869,7 @@ CURATED_HETERONYMS_BATCH_8: dict[str, list[dict[str, Any]]] = { 'вивозит�
                        'distinction_note': 'Жіночий відповідник до «консерва́тор»: прихильниця '
                                            'політичного чи світоглядного консерватизму, '
                                            'прихильниця збереження традиційних підвалин. Не '
-                                           'плутати з «консервато́рка» (студентка або викладачка '
-                                           'консерваторії).',
+                                           'плутати з «консервато́рка» (студентка консерваторії).',
                        'meaning': { 'definitions': [ 'Жінка консервативних поглядів; прихильниця '
                                                      'консерватизму (жін. до консерва́тор).'],
                                     'source': 'ВТС / СУМ-11'},
@@ -1877,8 +1882,8 @@ CURATED_HETERONYMS_BATCH_8: dict[str, list[dict[str, Any]]] = { 'вивозит�
                                                                            'термін, зафіксований у '
                                                                            'СУМ-11.'}},
                      { 'headword': 'консервато́рка',
-                       'short_label': 'студентка або вихованка консерваторії (розм.)',
-                       'gloss': 'female conservatory student or graduate (colloquial)',
+                       'short_label': 'студентка консерваторії (розм.)',
+                       'gloss': 'female conservatory student (colloquial)',
                        'pos': 'noun',
                        'cefr': 'B2',
                        'heritage_status': { 'classification': 'standard',
@@ -1893,14 +1898,12 @@ CURATED_HETERONYMS_BATCH_8: dict[str, list[dict[str, Any]]] = { 'вивозит�
                                        'paradigm': { 'kind': 'noun',
                                                      'gender': 'feminine',
                                                      'animacy': 'animate'}},
-                       'distinction_note': 'Розмовне слово: студентка або випускниця музичної '
-                                           'консерваторії (жін. до «консервато́рець»). Засвідчено '
-                                           'у класичній літературі: Леся Українка («У мене сестра '
-                                           'консерваторка»). Не плутати з «консерва́торка» '
-                                           '(прихильниця консерватизму).',
-                       'meaning': { 'definitions': [ 'Студентка або викладачка вищого музичного '
-                                                     'навчального закладу — консерваторії (розм., '
-                                                     'жін. до консервато́рець).'],
+                       'distinction_note': 'Розмовне слово: студентка музичної консерваторії (жін. '
+                                           'до «консервато́рець»). Засвідчено у класичній літературі: '
+                                           'Леся Українка («У мене сестра консерваторка»). Не '
+                                           'плутати з «консерва́торка» (прихильниця консерватизму).',
+                       'meaning': { 'definitions': [ 'Студентка вищого музичного навчального закладу — '
+                                                     'консерваторії (розм., жін. до консервато́рець).'],
                                     'source': 'ВТС / СУМ-11'},
                        'pre_soviet_witness': { 'witness': 'Леся Українка (1902)',
                                                'quote': '— У мене сестра консерваторка (Л. Укр., '

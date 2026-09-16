@@ -1195,6 +1195,36 @@ def test_batch8_semantic_and_stress_distinctions():
     assert zor[1]["headword"] == "зорюва́ти"
     assert "outdoors" in zor[1]["gloss"].lower() or "stars" in zor[1]["gloss"].lower()
 
+    # замикатися: замика́тися (lock / withdraw, imperf.) vs зами́катися (bustle restlessly, dial., perf.)
+    zam = enrich_heteronyms.build_heteronyms_for_lemma("замикатися")
+    assert zam is not None and len(zam) == 2
+    assert zam[0]["headword"] == "замика́тися"
+    assert zam[0]["morphology"]["paradigm"]["aspect"] == "недоконаний"
+    assert zam[1]["headword"] == "зами́катися"
+    assert zam[1]["morphology"]["paradigm"]["aspect"] == "доконаний"
+    assert "заметатися" in zam[1]["meaning"]["definitions"][0] or "заметушитися" in zam[1]["meaning"]["definitions"][0]
+    assert "exhaust" not in zam[1]["gloss"].lower() and "wandering" not in zam[1]["gloss"].lower()
+    assert "грінченко" not in zam[1]["stress"]["source"].lower()
+
+    # колонковий: коло́нковий (cylindrical device / drill, tech.) vs колонко́вий (weasel / fur)
+    kol = enrich_heteronyms.build_heteronyms_for_lemma("колонковий")
+    assert kol is not None and len(kol) == 2
+    assert kol[0]["headword"] == "коло́нковий"
+    assert "newspaper" not in kol[0]["gloss"].lower() and "print" not in kol[0]["gloss"].lower()
+    assert "друк" not in kol[0]["meaning"]["definitions"][0]
+    assert kol[1]["headword"] == "колонко́вий"
+    assert "weasel" in kol[1]["gloss"].lower() or "fur" in kol[1]["gloss"].lower()
+
+    # консерваторка: консерва́торка (conservative woman) vs консервато́рка (female conservatory student)
+    kon = enrich_heteronyms.build_heteronyms_for_lemma("консерваторка")
+    assert kon is not None and len(kon) == 2
+    assert kon[0]["headword"] == "консерва́торка"
+    assert "conservative" in kon[0]["gloss"].lower()
+    assert kon[1]["headword"] == "консервато́рка"
+    assert "student" in kon[1]["gloss"].lower()
+    assert "graduate" not in kon[1]["gloss"].lower() and "teacher" not in kon[1]["gloss"].lower()
+    assert "викладачка" not in kon[1]["meaning"]["definitions"][0] and "випускниця" not in kon[1]["meaning"]["definitions"][0]
+
 
 def test_batch8_lemmas_not_duplicated_from_earlier_batches():
     """Verify batch 8's 32 lemmas are net-new and mutually disjoint with batches 1-7."""
