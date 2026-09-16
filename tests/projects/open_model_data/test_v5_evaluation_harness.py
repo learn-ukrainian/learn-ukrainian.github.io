@@ -1609,3 +1609,16 @@ def test_citation_whitelist_r23_astra_r2_probes():
     assert ok6 is True
     assert app6 == []
     assert viol6 == []
+
+
+def test_citation_whitelist_r24_astra_r3_parenthetical_prose():
+    """Verify Astra R3 Finding 3: ordinary parenthetical Cyrillic prose does not fail Gate 4."""
+    ok1, app1, viol1 = verify_citation_whitelist("Це слово (діалектизм) слід зберегти.")
+    assert ok1 is True
+    assert app1 == []
+    assert viol1 == []
+
+    ok2, app2, viol2 = verify_citation_whitelist("Пояснення (приклад вживання) наведено нижче.")
+    assert ok2 is True
+    assert app2 == []
+    assert viol2 == []

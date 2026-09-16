@@ -499,8 +499,7 @@ CITATION_MENTION_PATTERNS = [
     ),
     # 4. Parenthetical citations: "(СУМ-11)" or "(джерело: ВЕСУМ)"
     re.compile(
-        rf"\((?:(?:джерело|за|див\.?):\s*)?({QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})\)",
-        re.IGNORECASE,
+        rf"\((?:(?:[Дд]жерело|[Зз]а|[Дд]ив\.?):\s*)?({QUOTED_ENTITY_RE}|{KEYWORD_AUTHORITY_RE}|{LATIN_OR_ACRONYM_RE})\)"
     ),
 ]
 

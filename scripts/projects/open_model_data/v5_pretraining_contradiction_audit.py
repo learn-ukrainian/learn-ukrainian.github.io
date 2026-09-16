@@ -122,14 +122,26 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
     if not t_lower or not text:
         return False
 
-    t_quoted = rf"[«\"“‘\']{re.escape(t_lower)}[»\"”’\']"
-    t_bare = rf"\b{re.escape(t_lower)}\b"
-    t_token = rf"(?:{t_quoted}|{t_bare}|слово\s+{t_bare})"
+    t_bare = re.escape(t_lower)
+    t_token = rf"(?:[«\"“‘\']{t_bare}[»\"”’\']|\b{t_bare}\b|слово\s+\b{t_bare}\b)"
+    target_or_anaphoric = rf"(?:{t_token}|\b(?:його|її|їх|це|цей|цю|цього|цій|цим|слово|вираз|зворот|термін)\b)"
 
     target_in_text = bool(re.search(t_token, text.lower()))
     clauses = [c.strip() for c in re.split(r"[.,\n;!?]+", text.lower()) if c.strip()]
     for clause in clauses:
-        if target_in_text and not re.search(t_token, clause):
+        is_relevant_clause = (
+            not target_in_text
+            or bool(re.search(target_or_anaphoric, clause))
+            or bool(
+                re.search(
+                    r"(?:(?:слід|варто|потрібно|необхідно|треба)\s+(?:замінити|замінювати|уникати|виправити|виправляти)|"
+                    r"(?:замініть|замінити|уникайте|уникати|виправте|виправити)|"
+                    r"(?:потребує|вимагає)\s+(?:заміни|виправлення))",
+                    clause,
+                )
+            )
+        )
+        if not is_relevant_clause:
             continue
 
         has_replace_directive = bool(
@@ -152,7 +164,8 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
 
         has_copula_condemn = bool(
             re.search(
-                r"(?:(?:—|–|-|:)\s*(?:(?:це|є)\s+)?|(?:є|було|вважається|становить)\s+)?(?:помилк\w*|кальк\w*|росіянізм\w*|русизм\w*|суржик\w*|ненормативн\w*|неправильн\w*)",
+                r"(?:(?:—|–|-|:)\s*(?:(?:це|є)\s+)?|(?:є|було|вважається|становить)\s+)?(?:помилк\w*|кальк\w*|росіянізм\w*|русизм\w*|суржик\w*|ненормативн\w*|неправильн\w*)|"
+                r"не\s+(?:є\s+)?(?:нормативн\w*|правильн\w*)",
                 clause,
             )
         )
@@ -162,11 +175,14 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
                 clause,
             )
         )
-        if (
-            has_copula_condemn
-            and not negates_condemn
-            and not any(pos in clause for pos in ("збережіть", "зберегти", "нормативн", "діалектн", "автентичн", "правильн"))
-        ):
+        has_positive_defense = bool(
+            re.search(
+                r"\b(?:збережіть|зберегти|діалектн\w*|автентичн\w*)\b|"
+                r"(?<!не\s)(?<!не\sє\s)(?<!не)(?:\bнормативн\w*|\bправильн\w*)",
+                clause,
+            )
+        )
+        if has_copula_condemn and not negates_condemn and not has_positive_defense:
             return True
 
     return False
