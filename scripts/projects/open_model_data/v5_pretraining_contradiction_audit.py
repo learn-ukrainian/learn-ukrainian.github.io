@@ -443,20 +443,48 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         if dash_m:
             return True
 
-    # Fallback clause split:
-    # Target occurrences that were already evaluated under `замість` above were not condemned.
-    # Mask those evaluated `замість` complements so subsequent clause splitting and directive scanning
-    # (e.g. `уникайте <other>`) cannot falsely condemn the protected target.
+    # Fallback clause split: NO masking of evaluated target to preserve target antecedent
+    # identity for subsequent relative clauses / condemnations (Astra R22-F2).
     fallback_text = text_norm
-    if evaluated_zm_matches:
-        for zm in reversed(evaluated_zm_matches):
-            fallback_text = fallback_text[:zm.start()] + "замість «_EVALUATED_TARGET_»" + fallback_text[zm.end():]
 
-    # Split text into sentence/clause units by punctuation or coordinate/adversative conjunctions introducing clauses
+    predicate_lookahead = (
+        r"(?:"
+        r"(?:теж|також|ще|вже)\s+"
+        r")?"
+        r"(?:"
+        r"слід|варто|потрібно|необхідно|треба|можна|"
+        r"є|це|був|була|було|були|буде|становить|"
+        r"потребує|вимагає|"
+        r"замініть|замінити|виправте|виправити|уникайте|уникати|вживайте|вживати|"
+        r"вважа\w*|визна\w*|назива\w*|"
+        r"не|ні|ані|"
+        r"—|--|-"
+        r")\b"
+    )
+
+    clause_intro_lookahead = (
+        rf"(?:"
+        rf"\b(?:а|але|проте|однак|бо|тому\s+що|оскільки|якщо|хоч|хоча|щоб|що|"
+        rf"як(?:ий|а|е|і|ого|ої|ому|ій|им|ою|их|ими|у)|"
+        rf"котр(?:ий|а|е|і|ого|ої|ому|ій|им|ою|их|ими|у)|"
+        rf"де|коли)\b|"
+        rf"\b(?:його|її|їх|це|цей|цю|цього|цій|цим|слово|термін|вираз|зворот|щодо|для|слід|варто|потрібно|необхідно|треба|можна|не)\b|"
+        rf"[«\"“‘\'][^»\"”’\n]+[»\"”’]\s+{predicate_lookahead}|"
+        rf"[а-яА-ЯёЁіІїЇєЄґҐ’\'\-]+\s+{predicate_lookahead}"
+        rf")"
+    )
+
+    # Split text into sentence/clause units:
+    # 1. Terminal delimiters (full stop, semicolon, question mark, exclamation mark, newline, em-dash)
+    # 2. Adversative conjunctions (але, проте, однак)
+    # 3. Commas ONLY when introducing a clause (followed by conjunction, relative word, anaphoric word, or subject+predicate);
+    #    commas separating items in a coordinated list do NOT split clauses (preserving shared directives in R22-F1).
+    # 4. Coordinate conjunctions (та, і, й, а, або, чи) ONLY when followed by a clause introducer / predicate (R22-F1).
     split_pat = re.compile(
-        r"(?:[.,\n;!?:\u2014\u2013]+|"
+        r"(?:[.\n;!?:\u2014\u2013]+|"
         r"\s+\b(?:але|проте|однак)\b\s+|"
-        r"\s+\b(?:та|і|й|а|або|чи)\s+(?=[«\"“‘\']|\b(?:його|її|їх|це|цей|цю|цього|цій|цим|слово|термін|вираз|зворот|щодо|для|слід|варто|потрібно|необхідно|треба|можна|не)\b|[а-яА-ЯёЁіІїЇєЄґҐ’\'\-]+\s+(?:слід|варто|потрібно|необхідно|треба|можна|є|не)\b))",
+        rf"\s*,\s*(?={clause_intro_lookahead})|"
+        rf"\s+\b(?:та|і|й|а|або|чи)\s+(?={clause_intro_lookahead}))",
         re.IGNORECASE,
     )
 
@@ -517,7 +545,28 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         for rpat in replace_dirs:
             for match in re.finditer(rpat, cl_lower):
                 start = match.start()
+                end = match.end()
                 prefix = cl_lower[:start]
+                suffix_after_dir = cl_lower[end:]
+
+                # Check if this directive governs an explicit non-target quoted object:
+                # e.g. `уникайте «гарний»` where `гарний` != `царинками`.
+                # If the directive directly governs an explicit object (not preceded by `на`/`до`),
+                # verify whether that object includes the target.
+                obj_span_m = re.match(
+                    r"\s*(?:(?:слова|слово|вираз|зворот|термін|слів|виразів)\s+)?"
+                    r"([«\"“‘\'][^»\"”’\']+[»\"”\'](?:\s*(?:,|і|й|та|або|чи)\s*[«\"“‘\'][^»\"”’\']+[»\"”\'])*)",
+                    suffix_after_dir,
+                )
+                if obj_span_m:
+                    dir_quoted_objs = [
+                        normalize_token(q)
+                        for q in re.findall(r"[«\"“‘\']([^»\"”’\']+)[»\"”\']", obj_span_m.group(1))
+                    ]
+                    if dir_quoted_objs and t_norm not in dir_quoted_objs:
+                        # Directive explicitly governs other object(s), not target
+                        continue
+
                 is_negated = False
                 if re.search(r"\b(?:ні|ані)\s*$", prefix):
                     is_negated = True
