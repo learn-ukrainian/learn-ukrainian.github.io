@@ -147,11 +147,19 @@ ANAPHORIC_WORDS = frozenset({
     "значення", "значенням", "значенні",
 })
 
-DIRECTIVE_VERBS = (
-    r"(?:вживати|вжити|вживайте|використовувати|використати|використовуйте|"
-    r"писати|пишіть|казати|кажіть|говорити|говоріть|брати|беріть|"
-    r"застосовувати|застосовуйте|обирати|обирайте|замінювати|замінити|замінюйте)"
+DIRECTIVE_INFINITIVES = (
+    r"(?:вживати|вжити|використовувати|використати|"
+    r"писати|казати|говорити|брати|"
+    r"застосовувати|обирати|замінювати|замінити)"
 )
+
+DIRECTIVE_FINITES = (
+    r"(?:вживайте|використовуйте|"
+    r"пишіть|кажіть|говоріть|беріть|"
+    r"застосовуйте|обирайте|замінюйте)"
+)
+
+DIRECTIVE_VERBS = rf"(?:{DIRECTIVE_INFINITIVES}|{DIRECTIVE_FINITES})"
 
 DIRECTIVE_MODALS = (
     r"(?:слід|варто|потрібно|необхідно|треба|можна|рекомендовано|рекомендується|"
@@ -171,23 +179,63 @@ NEGATION_DIRECTIVE_RE = re.compile(
     re.IGNORECASE,
 )
 
-CONJUNCTIONS = r"\b(?:але|проте|однак|а|бо|тому що|оскільки|якщо|якби|хоч|хоча|аби|коли|і|й|та)\b"
+ADVERSATIVE_CONJUNCTIONS = r"\b(?:але|проте|однак|а|бо|тому що|оскільки|якщо|якби|хоч|хоча|аби|коли)\b"
+COORDINATING_CONJUNCTIONS = r"\b(?:і|й|та)\b"
+CONJUNCTIONS = rf"(?:{ADVERSATIVE_CONJUNCTIONS}|{COORDINATING_CONJUNCTIONS})"
 
 
-def find_clause_start_in_prefix(prefix: str, dir_start: int) -> int:
-    """Find the start of the clause containing the directive at dir_start in prefix."""
+def find_clause_start_in_prefix(prefix: str, dir_match: re.Match) -> int:
+    """Find the start of the clause containing the directive in prefix."""
+    dir_start = dir_match.start()
+    dir_word = dir_match.group(0).lower()
     d_prefix = prefix[:dir_start]
+
+    # If the directive is an infinitive, check if it is governed by a preceding modal across parentheticals
+    # (e.g. "Не слід, безумовно, вживати").
+    # This only applies if:
+    # 1. dir_word is an infinitive
+    # 2. between the modal and the infinitive there is NO other verb and NO clause conjunction
+    search_prefix_end = dir_start
+    if re.fullmatch(DIRECTIVE_INFINITIVES, dir_word, re.IGNORECASE):
+        modal_matches = list(re.finditer(rf"\b{DIRECTIVE_MODALS}\b", d_prefix, re.IGNORECASE))
+        if modal_matches:
+            last_modal = modal_matches[-1]
+            between = d_prefix[last_modal.end() :]
+            # Must not contain another verb or clause boundary
+            if not ANY_DIRECTIVE_RE.search(between) and not re.search(
+                rf"\b{ADVERSATIVE_CONJUNCTIONS}\b|\b{COORDINATING_CONJUNCTIONS}\s+(?:не\b|ні\b|ані\b|{DIRECTIVE_VERBS}\b|{DIRECTIVE_MODALS}\b)",
+                between,
+                re.IGNORECASE,
+            ):
+                search_prefix_end = last_modal.start()
+
+    search_prefix = prefix[:search_prefix_end]
+
     boundaries = [0]
+    # 1. Adversative conjunctions and semicolons/colons/dashes
     for m in re.finditer(
-        rf"(?:[,;:\u2014\u2013]+\s*{CONJUNCTIONS}\b|\s+{CONJUNCTIONS}\s+|[;:\u2014\u2013]+)",
-        d_prefix,
+        rf"(?:[,;:\u2014\u2013]*\s*{ADVERSATIVE_CONJUNCTIONS}\b|[;:\u2014\u2013]+)",
+        search_prefix,
         re.IGNORECASE,
     ):
         boundaries.append(m.end())
 
-    for m in re.finditer(r",", d_prefix):
-        if ANY_DIRECTIVE_RE.search(d_prefix[: m.start()]):
+    # 2. Coordinating conjunctions (і, й, та): check if followed by negation or directive in prefix
+    for m in re.finditer(
+        rf"[,;:\u2014\u2013]*\s*{COORDINATING_CONJUNCTIONS}\s+",
+        search_prefix,
+        re.IGNORECASE,
+    ):
+        after_conj = prefix[m.end() :].lstrip()
+        if re.search(rf"^(?:не\b|ні\b|ані\b|{DIRECTIVE_VERBS}\b|{DIRECTIVE_MODALS}\b)", after_conj, re.IGNORECASE):
             boundaries.append(m.end())
+
+    # 3. Commas: if preceded by another directive in search_prefix AND followed by directive/negation in prefix
+    for m in re.finditer(r",\s*", search_prefix):
+        if ANY_DIRECTIVE_RE.search(search_prefix[: m.start()]):
+            after_comma = prefix[m.end() :].lstrip()
+            if re.search(rf"^(?:не\b|ні\b|ані\b|{DIRECTIVE_VERBS}\b|{DIRECTIVE_MODALS}\b)", after_comma, re.IGNORECASE):
+                boundaries.append(m.end())
 
     return max(boundaries)
 
@@ -195,23 +243,32 @@ def find_clause_start_in_prefix(prefix: str, dir_start: int) -> int:
 def find_clause_end_in_suffix(suffix: str, dir_end: int = 0) -> int:
     """Find the end of the clause in suffix, starting at or after dir_end."""
     boundaries: list[int] = []
+    # 1. Adversative conjunctions and semicolons/colons/dashes
     for m in re.finditer(
-        rf"(?:[,;:\u2014\u2013]+\s*{CONJUNCTIONS}\b|\s+{CONJUNCTIONS}\s+|[;:\u2014\u2013]+)",
+        rf"(?:[,;:\u2014\u2013]*\s*{ADVERSATIVE_CONJUNCTIONS}\b|[;:\u2014\u2013]+)",
         suffix,
         re.IGNORECASE,
     ):
         if m.start() >= dir_end:
             boundaries.append(m.start())
 
-    for m in re.finditer(r",", suffix):
+    # 2. Coordinating conjunctions (і, й, та): only when followed by directive or negation
+    for m in re.finditer(
+        rf"[,;:\u2014\u2013]*\s*{COORDINATING_CONJUNCTIONS}\s+(?=(?:не\b|ні\b|ані\b|{DIRECTIVE_VERBS}\b|{DIRECTIVE_MODALS}\b))",
+        suffix,
+        re.IGNORECASE,
+    ):
         if m.start() >= dir_end:
-            rest = suffix[m.end() :]
-            if re.search(
-                rf"^\s*(?:{CONJUNCTIONS}\b|не\b|ні\b|ані\b|{DIRECTIVE_VERBS}\b|{DIRECTIVE_MODALS}\b)",
-                rest,
-                re.IGNORECASE,
-            ):
-                boundaries.append(m.start())
+            boundaries.append(m.start())
+
+    # 3. Commas followed by directive or negation
+    for m in re.finditer(
+        rf",\s*(?=(?:не\b|ні\b|ані\b|{DIRECTIVE_VERBS}\b|{DIRECTIVE_MODALS}\b))",
+        suffix,
+        re.IGNORECASE,
+    ):
+        if m.start() >= dir_end:
+            boundaries.append(m.start())
 
     return min(boundaries) if boundaries else len(suffix)
 
@@ -279,17 +336,24 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
         if dir_matches:
             last_d = dir_matches[-1]
             between = prefix[last_d.end() :]
-            sep_between = re.search(
-                rf"(?:[,;:\u2014\u2013]+\s*{CONJUNCTIONS}\b|\s+{CONJUNCTIONS}\s+|[;:\u2014\u2013]+)",
-                between,
-                re.IGNORECASE,
+            # A separator between last_d and zm means last_d is in a different clause.
+            # Coordinating conjunctions (і, й, та) only separate if followed by a directive/negation!
+            sep_between = bool(
+                re.search(
+                    rf"(?:[,;:\u2014\u2013]*\s*{ADVERSATIVE_CONJUNCTIONS}\b|"
+                    rf"[;:\u2014\u2013]+|"
+                    rf"[,;:\u2014\u2013]*\s*{COORDINATING_CONJUNCTIONS}\s+(?:не\b|ні\b|ані\b|{DIRECTIVE_VERBS}\b|{DIRECTIVE_MODALS}\b)|"
+                    rf",\s*(?:не\b|ні\b|ані\b|{DIRECTIVE_VERBS}\b|{DIRECTIVE_MODALS}\b))",
+                    between,
+                    re.IGNORECASE,
+                )
             )
             if not sep_between:
                 gov_dir_order1 = last_d
 
         if gov_dir_order1 is not None:
             # Order 1: directive precedes zm.
-            cl_start = find_clause_start_in_prefix(prefix, gov_dir_order1.start())
+            cl_start = find_clause_start_in_prefix(prefix, gov_dir_order1)
             clause_span = prefix[cl_start : gov_dir_order1.end()].lower()
 
             # Check negation governing this directive
@@ -303,6 +367,7 @@ def is_target_condemned_in_text(target_term: str, text: str) -> bool:
             if not is_negated:
                 return True
             else:
+                # Negated replacement: target is defended
                 continue
 
         # Order 2: directive follows zm (e.g. "замість <target> не слід вживати...")

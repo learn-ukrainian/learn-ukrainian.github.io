@@ -1809,3 +1809,111 @@ def test_audit_astra_r15_probes(tmp_path: Path):
         assert passed is False, f"Expected audit failure for: {repro_text}"
         assert data["dpo_contradictions_count"] == 1
         assert data["dpo_contradictions"][0]["target_term"] == "царинками"
+
+
+def test_audit_astra_r16_probes(tmp_path: Path):
+    """Verify Astra R16 Findings: coordinated replacement words and parenthetical modal negation."""
+    # 1. Finding 1: coordinated replacement words do not split the governing directive clause
+    assert is_target_condemned_in_text("царинками", "Вживайте «добрий» і «гарний» замість «царинками».") is True
+    assert is_target_condemned_in_text("царинками", "Вживайте «добрий» та «гарний» замість «царинками».") is True
+    assert is_target_condemned_in_text("царинками", "Не вживайте «добрий» і «гарний» замість «царинками».") is False
+
+    # 2. Finding 2: parenthetical commas do not discard the governing modal negation
+    assert is_target_condemned_in_text("царинками", "Не слід, безумовно, вживати «добрий» замість «царинками».") is False
+    assert is_target_condemned_in_text("царинками", "Не варто, безперечно, використовувати «добрий» замість «царинками».") is False
+    assert is_target_condemned_in_text("царинками", "Слід, безумовно, вживати «добрий» замість «царинками».") is True
+
+    # 3. Integration tests on Astra R16 reproducers
+    mock_prot = tmp_path / "protection.jsonl"
+    mock_prot.write_text(
+        json.dumps({
+            "target_term": "царинками",
+            "category": "dialectal",
+            "expected_action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+    mock_sources = tmp_path / "sources.db"
+    conn_s = sqlite3.connect(mock_sources)
+    conn_s.execute("CREATE TABLE sum20 (entry_id INTEGER PRIMARY KEY, lemma TEXT);")
+    conn_s.execute("INSERT INTO sum20 VALUES (1, 'добрий');")
+    conn_s.commit()
+    conn_s.close()
+    mock_vesum = tmp_path / "vesum.db"
+    conn_v = sqlite3.connect(mock_vesum)
+    conn_v.execute("CREATE TABLE vesum (lemma TEXT);")
+    conn_v.execute("INSERT INTO vesum VALUES ('добрий');")
+    conn_v.commit()
+    conn_v.close()
+    mock_sft_clean = tmp_path / "sft_clean"
+    mock_sft_clean.mkdir()
+    (mock_sft_clean / "shard.jsonl").write_text(
+        json.dumps({
+            "instruction": "Поясніть вживання слова «царинками».",
+            "response": "«царинками» — автентичне діалектне слово, яке слід зберегти.",
+            "target_term": "царинками",
+            "is_calque_or_russianism": False,
+            "action": "PRESERVE",
+        }) + "\n",
+        encoding="utf-8",
+    )
+
+    # Finding 1 reproducers: coordinated words in replacement instruction should trigger contradiction
+    f1_reproducers = [
+        "Вживайте «добрий» і «гарний» замість «царинками».",
+        "Вживайте «добрий» та «гарний» замість «царинками».",
+    ]
+    for idx, repro_text in enumerate(f1_reproducers, 1):
+        dpo_dir = tmp_path / f"dpo_r16_f1_{idx}"
+        dpo_dir.mkdir()
+        (dpo_dir / "shard.jsonl").write_text(
+            json.dumps({
+                "prompt": "Як вживати слово «царинками»?",
+                "chosen": repro_text,
+                "rejected": "«царинками» — чудове слово.",
+                "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+            }) + "\n",
+            encoding="utf-8",
+        )
+        passed, data, _ = run_pretraining_audit(
+            protection_path=mock_prot,
+            sft_dir=mock_sft_clean,
+            dpo_dir=dpo_dir,
+            sources_db_path=mock_sources,
+            vesum_db_path=mock_vesum,
+            min_sft_records=1,
+            min_dpo_pairs=1,
+            min_cases=1,
+            output_md=tmp_path / f"r16_f1_rep_{idx}.md",
+            output_json=tmp_path / f"r16_f1_rep_{idx}.json",
+        )
+        assert passed is False, f"Expected audit failure for: {repro_text}"
+        assert data["dpo_contradictions_count"] == 1
+        assert data["dpo_contradictions"][0]["target_term"] == "царинками"
+
+    # Finding 2 reproducer: modal negation with parenthetical commas should NOT trigger contradiction
+    dpo_f2 = tmp_path / "dpo_r16_f2"
+    dpo_f2.mkdir()
+    (dpo_f2 / "shard.jsonl").write_text(
+        json.dumps({
+            "prompt": "Як вживати слово «царинками»?",
+            "chosen": "Не слід, безумовно, вживати «добрий» замість «царинками».",
+            "rejected": "«царинками» — помилкове слово.",
+            "metadata": {"target_term": "царинками", "pair_type": "anti_hyper_purist_preservation_pairs"},
+        }) + "\n",
+        encoding="utf-8",
+    )
+    passed_f2, data_f2, _ = run_pretraining_audit(
+        protection_path=mock_prot,
+        sft_dir=mock_sft_clean,
+        dpo_dir=dpo_f2,
+        sources_db_path=mock_sources,
+        vesum_db_path=mock_vesum,
+        min_sft_records=1,
+        min_dpo_pairs=1,
+        min_cases=1,
+        output_md=tmp_path / "r16_f2_rep.md",
+        output_json=tmp_path / "r16_f2_rep.json",
+    )
+    assert passed_f2 is True, "Expected audit pass for negated modal replacement"
+    assert data_f2["dpo_contradictions_count"] == 0
