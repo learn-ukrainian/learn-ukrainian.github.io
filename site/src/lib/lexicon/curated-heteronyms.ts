@@ -35406,8 +35406,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "гуконути",
       "url_slug": "гуконути",
       "headword": "гуко́ну́ти",
-      "short_label": "голосно крикнути, покликати з силою (док.)",
-      "gloss": "shout loudly, call out with strength (perf.)",
+      "short_label": "гучно залунати, прогучати, відгукнутися луною (про дзвін тощо) (док., розм.)",
+      "gloss": "boom out, resound loudly, ring out with resonance (perf., colloq.)",
       "pos": "verb",
       "cefr": "B2",
       "heritage_status": {
@@ -35431,10 +35431,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "доконаний"
         }
       },
-      "distinction_note": "Означає голосно або з силою крикнути, гукнути когось (однокр. до гукати 1, 2). Не плутати з шумовим значенням або вигуками в танці «гукону́ти».",
+      "distinction_note": "Означає зично й гучно залунати, прогучати луною (про дзвін, постріл тощо; підсил. до гу́кнути). Не плутати з гучним покликом людини «гукону́ти».",
       "meaning": {
         "definitions": [
-          "Однократне до гукати 1, 2; голосно гукнути, покликати."
+          "Підсил. до гу́кнути; зично та гучно пролунати, прогучати."
         ],
         "source": "ВТС"
       },
@@ -35447,16 +35447,16 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       },
       "pre_soviet_witness": {
         "witness": "Грінченко (1907–1909)",
-        "quote": "ГукОнУти, -ну, -неш, гл. То же, что и гукнУти, но с силой. Грізно гуконув Грицько. Мир. Пов. І. 116. А чоловік з борозни: «а куди?» як гуконе! Драг. 15. Гуконула гаківниця. Мир. ХРВ. 126.",
-        "historical_note": "Автентичне народне мововживання, зафіксоване Борисом Грінченком в умовах дії антиукраїнських імперських указів (Валуєвського циркуляра 1863 р. та Емського указу 1876 р.)."
+        "quote": "ГукОнУти, -ну, -неш, гл. То же, что и гукнУти, но с силой... Гуконула гаківниця. Мир. ХРВ. 126.",
+        "historical_note": "Автентичне мововживання, зафіксоване Борисом Грінченком у Словнику української мови (1907–1909)."
       }
     },
     {
       "lemma": "гуконути",
       "url_slug": "гуконути",
       "headword": "гукону́ти",
-      "short_label": "гучно пролунати, загриміти або крикнути в танці (док., розм.)",
-      "gloss": "boom, roar, thunder or shout in dance (perf., colloq.)",
+      "short_label": "голосно крикнути, щосили покликати когось (док., розм.)",
+      "gloss": "shout loudly, call out to someone with strength (perf., colloq.)",
       "pos": "verb",
       "cefr": "B2",
       "heritage_status": {
@@ -35480,10 +35480,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "aspect": "доконаний"
         }
       },
-      "distinction_note": "Означає гучно прогриміти, пролунати (про вибух, грім) або весело вигукнути під час танцю (однокр. до гукати 3, 4). Не плутати зі зверненням до когось «гуко́ну́ти».",
+      "distinction_note": "Означає щосили крикнути, покликати когось на ім’я чи подати голос (підсил. до гукну́ти). Не плутати з резонансним лунанням дзвону «гуко́ну́ти».",
       "meaning": {
         "definitions": [
-          "Однократне до гукати 3, 4; гучно загриміти, пролунати."
+          "Підсил. до гукну́ти; голосно покликати, щосили крикнути."
         ],
         "source": "ВТС"
       },
@@ -35494,7 +35494,11 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "keywords": [],
         "historical_note": "Зафіксовано в радянський період (СУМ-11). Наведено для лексикографічної прозорості."
       },
-      "pre_soviet_witness": null
+      "pre_soviet_witness": {
+        "witness": "Грінченко (1907–1909)",
+        "quote": "ГукОнУти, -ну, -неш, гл. То же, что и гукнУти, но с силой. Грізно гуконув Грицько. Мир. Пов. І. 116. А чоловік з борозни: «а куди?» як гуконе! Драг. 15.",
+        "historical_note": "Автентичне мововживання, зафіксоване Борисом Грінченком у Словнику української мови (1907–1909)."
+      }
     }
   ],
   "натяжка": [
@@ -35502,8 +35506,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "натяжка",
       "url_slug": "натяжка",
       "headword": "на́тя́жка",
-      "short_label": "дія з натягання або сила натягування мотузки, тканини тощо",
-      "gloss": "stretching, tensioning (mechanical action)",
+      "short_label": "неправомірне припущення, штучність, фальш у висновках (перен.)",
+      "gloss": "far-fetched assumption, stretch, strained interpretation (fig.)",
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
@@ -35557,10 +35561,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           }
         }
       },
-      "distinction_note": "Означає фізичну дію натягання дроту, полотна або ступінь їхнього натягу. Не плутати з переносним значенням логічної необґрунтованості «натя́жка».",
+      "distinction_note": "Переносне значення: необґрунтоване твердження, притягнутий за вуха висновок або штучність («твердження з натяжкою»). Не плутати з фізичним натягуванням троса/гусениць «натя́жка».",
       "meaning": {
         "definitions": [
-          "Дія за значенням натягати, натягти."
+          "Неправомірне допущення чого-небудь, штучність."
         ],
         "source": "ВТС"
       },
@@ -35579,8 +35583,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "натяжка",
       "url_slug": "натяжка",
       "headword": "натя́жка",
-      "short_label": "необґрунтоване твердження, притягнутий за вуха висновок (перен.)",
-      "gloss": "far-fetched assumption, stretch, strained interpretation (fig.)",
+      "short_label": "дія з натягання або сила натягування мотузки, гусениць, тканини",
+      "gloss": "stretching, tensioning, tightening (mechanical action or state)",
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
@@ -35634,10 +35638,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           }
         }
       },
-      "distinction_note": "Переносне значення: штучно притягнуте тлумачення, необґрунтований здогад або перебільшення («твердження з натяжкою»). Не плутати з фізичним натягуванням «на́тя́жка».",
+      "distinction_note": "Означає фізичну дію натягання дроту, троса чи гусениць або ступінь їхнього механічного натягу. Не плутати з логічною штучністю або натягнутістю «на́тя́жка».",
       "meaning": {
         "definitions": [
-          "Необґрунтоване твердження, припущення; натягнутість."
+          "Дія і стан за значенням натягати, натягти."
         ],
         "source": "ВТС"
       },
@@ -35656,8 +35660,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "недіючий",
       "url_slug": "недіючий",
       "headword": "неді́ючий",
-      "short_label": "який перебуває в стані спокою або бездіяльності (калька, :bad)",
-      "gloss": "inactive, inoperative, dormant (volcano, factory; calque)",
+      "short_label": "який перебуває в стані спокою, тимчасово не працює (калька, :bad)",
+      "gloss": "inactive, inoperative, dormant (volcano, appliance; calque)",
       "pos": "adj",
       "cefr": "B2",
       "heritage_status": {
@@ -35688,10 +35692,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Калька з рос. «недействующий», маркована у ВЕСУМ як :bad. Означає об'єкт, який фактично не працює, законсервований або спить (недіючий вулкан). У сучасній нормі рекомендовано вживати «непрацюючий», «згаслий» або «недієвий». Не плутати з «недію́чий».",
+      "distinction_note": "Калька з рос. «недействующий», маркована у ВЕСУМ як :bad. Означає об'єкт або апарат, який фактично не працює в даний момент або перебуває у стані спокою (недіючий вентилятор, недіючий вулкан). У сучасній нормі рекомендовано вживати «непрацюючий», «згаслий» або «недієвий». Не плутати з «недію́чий».",
       "meaning": {
         "definitions": [
-          "Який не діє, перебуває в стані спокою."
+          "Який не діє, не працює в даний момент (про прилади, вулкан тощо)."
         ],
         "source": "ВТС"
       },
@@ -35708,8 +35712,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "недіючий",
       "url_slug": "недіючий",
       "headword": "недію́чий",
-      "short_label": "який утратив юридичну чинність, нечинний (калька, :bad)",
-      "gloss": "no longer valid, void, inoperative (law, rule; calque, nonstandard)",
+      "short_label": "позбавлений активності, бездіяльний, пасивний (калька, :bad)",
+      "gloss": "passive, inactive, lacking vitality/energy (calque, nonstandard)",
       "pos": "adj",
       "cefr": "B2",
       "heritage_status": {
@@ -35739,10 +35743,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Калька з рос. «недействующий», маркована у ВЕСУМ як :bad. Означає нормативний акт, що втратив юридичну силу. У сучасній літературній мові рекомендовано вживати нормативне «нечинний». Не плутати з «неді́ючий».",
+      "distinction_note": "Калька з рос. «недействующий», маркована у ВЕСУМ як :bad. Означає позбавлений активності, пасивний, бездіяльний за своєю природою (недіючий голос). У сучасній літературній мові рекомендовано вживати «пасивний», «бездіяльний», «неактивний». Не плутати з «неді́ючий».",
       "meaning": {
         "definitions": [
-          "Який утратив чинність (про нормативний акт, закон тощо)."
+          "Позбавлений активності; пасивний."
         ],
         "source": "ВТС"
       },
@@ -35863,8 +35867,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "поливка",
       "url_slug": "поливка",
       "headword": "по́ли́вка",
-      "short_label": "тонка глазур або полива на гончарних чи кулінарних виробах",
-      "gloss": "glaze, icing (on ceramics or pastry)",
+      "short_label": "рідка приправа, соус або діал. суп, юшка",
+      "gloss": "sauce, gravy, dressing; dialectal soup, broth",
       "pos": "noun",
       "cefr": "B1",
       "heritage_status": {
@@ -35918,10 +35922,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           }
         }
       },
-      "distinction_note": "Означає склоподібну або цукрову глазур (поливу) на посуді або випічці. Не плутати з традиційною першою стравою «поли́вка».",
+      "distinction_note": "Означає кулінарну рідку приправу (соус, підливу до страви) або в діалектах юшку чи суп («куряча поливка»). Не плутати з дією зрошення рослин водою «поли́вка».",
       "meaning": {
         "definitions": [
-          "Те саме, що поли́ва (глянсове покриття)."
+          "Рідка приправа (соус, підлива); діал. юшка, суп."
         ],
         "source": "ВТС"
       },
@@ -35932,14 +35936,18 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "keywords": [],
         "historical_note": "Зафіксовано в радянський період (СУМ-11). Наведено для лексикографічної прозорості."
       },
-      "pre_soviet_witness": null
+      "pre_soviet_witness": {
+        "witness": "Грінченко (1907–1909)",
+        "quote": "Поливка, -ки, ж. 1) Соус, подливка. Вже двірської поливки хлиснув, а оброкового хліба покушав. Ном. № 1312. 2) Суп. Вх. Уг. 261. 3) Каша с тертым конопляным семенем. Мнж. 190. Ум. поливочка. Усядь, брате, на лавичку, сербай добру поливочку. Гол. I. 209.",
+        "historical_note": "Автентичне народне мововживання, зафіксоване Борисом Грінченком в умовах дії антиукраїнських імперських указів (Валуєвського циркуляра 1863 р. та Емського указу 1876 р.)."
+      }
     },
     {
       "lemma": "поливка",
       "url_slug": "поливка",
       "headword": "поли́вка",
-      "short_label": "рідка традиційна страва, юшка або грибний/овочевий суп",
-      "gloss": "traditional soup, broth, clear vegetable or mushroom soup",
+      "short_label": "розм. те саме, що поливання; зрошення (квітів, дерев)",
+      "gloss": "watering, sprinkling, irrigation (of plants, garden) (colloq.)",
       "pos": "noun",
       "cefr": "B1",
       "heritage_status": {
@@ -35993,10 +36001,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           }
         }
       },
-      "distinction_note": "Автентична українська назва першої рідкої страви (юшки, супу; «поливка з грибами, поливка з вушками»). Не плутати з глазур'ю «по́ли́вка».",
+      "distinction_note": "Розмовна дія: поливання водою дерев, квітів, городини (вечірня поливка квітів, зволожена від поливки земля). Не плутати з кулінарною стравою чи соусом «по́ли́вка».",
       "meaning": {
         "definitions": [
-          "Рідка страва; юшка, суп."
+          "Розм. Те саме, що поливання."
         ],
         "source": "ВТС"
       },
@@ -36007,11 +36015,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "keywords": [],
         "historical_note": "Зафіксовано в радянський період (СУМ-11). Наведено для лексикографічної прозорості."
       },
-      "pre_soviet_witness": {
-        "witness": "Грінченко (1907–1909)",
-        "quote": "Поливка, -ки, ж. 1) Соус, подливка. Вже двірської поливки хлиснув, а оброкового хліба покушав. Ном. № 1312. 2) Суп. Вх. Уг. 261. 3) Каша с тертым конопляным семенем. Мнж. 190. Ум. поливочка. Усядь, брате, на лавичку, сербай добру поливочку. Гол. I. 209.",
-        "historical_note": "Автентичне народне мововживання, зафіксоване Борисом Грінченком в умовах дії антиукраїнських імперських указів (Валуєвського циркуляра 1863 р. та Емського указу 1876 р.)."
-      }
+      "pre_soviet_witness": null
     }
   ],
   "помісний": [
@@ -36019,8 +36023,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "помісний",
       "url_slug": "помісний",
       "headword": "по́місни́й",
-      "short_label": "стосовний до собору помісної православної церкви (церк.)",
-      "gloss": "local, autocephalous (church council, local church)",
+      "short_label": "одержаний від схрещування порід, гібридний (про тварин) (прикм. до по́місь)",
+      "gloss": "crossbred, hybrid, of mixed breed (animals, poultry)",
       "pos": "adj",
       "cefr": "B2",
       "heritage_status": {
@@ -36043,10 +36047,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Церковний термін: прикметник до помісна церква, Помісний собор (національний церковний собор). Не плутати з феодальним поміщицьким володінням «помі́сний».",
+      "distinction_note": "Селекційний термін: прикметник до «по́місь» (одержаний від схрещування різних порід: помісні тварини, помісні курчата). Не плутати з маєтковим або церковним терміном «помі́сний».",
       "meaning": {
         "definitions": [
-          "Стосовний до помісної церкви; соборний; також прикм. до помісь."
+          "Прикметник до по́місь; одержаний у результаті схрещування різних порід."
         ],
         "source": "ВТС"
       },
@@ -36063,8 +36067,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "помісний",
       "url_slug": "помісний",
       "headword": "помі́сний",
-      "short_label": "пов'язаний із дворянським маєтком, помістям або поміщиками (іст.)",
-      "gloss": "manorial, landed estate, estate-based (hist., feudal)",
+      "short_label": "стосовний до помістя (маєтковий); церк. помісний (Помісна церква, Помісний собор)",
+      "gloss": "manorial, landed estate; ecclesiastical autocephalous/local (Local Church, Council)",
       "pos": "adj",
       "cefr": "B2",
       "heritage_status": {
@@ -36087,10 +36091,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Історичний соціально-економічний термін: пов'язаний із земельним помістям дворян (помісна система, помісне дворянство). Не плутати з церковним «по́місни́й».",
+      "distinction_note": "Означає пов'язаний із земельним помістям дворян (помісне землеволодіння, помісна шляхта) або церковний термін (Помісна церква, Помісний собор). Не плутати із селекційним «по́місни́й» (від по́місь).",
       "meaning": {
         "definitions": [
-          "Пов'язаний з помістям, землеволодінням."
+          "Пов'язаний з помістям, землеволодінням; церк. стосовний до помісної церкви."
         ],
         "source": "ВТС"
       },
@@ -37202,8 +37206,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "становий",
       "url_slug": "становий",
       "headword": "ста́нови́й",
-      "short_label": "осьовий, опорний (хребет); головна жила; іст. поліцейський пристав",
-      "gloss": "vertebral, main spinal (ridge, aorta); hist. police officer",
+      "short_label": "зумовлений приналежністю до суспільного стану (станові привілеї, станова нерівність)",
+      "gloss": "estate-based, class-based, social-estate (privileges, inequality)",
       "pos": "adj",
       "cefr": "B2",
       "heritage_status": {
@@ -37226,10 +37230,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Анатомічне та опорне значення (становий хребет, станова жила; іст. становий пристав). Не плутати з суспільними верствами «ста́новий».",
+      "distinction_note": "Історичний та соціологічний термін: зумовлений поділом суспільства на стани (станові привілеї, станова нерівність, станова солідарність). Не плутати з граматичним станом дієслова «ста́новий» або головним/опорним «станови́й».",
       "meaning": {
         "definitions": [
-          "Хребетний, опорний; головний (про жилу або хребет)."
+          "Стосовний до суспільного стану; зумовлений приналежністю до певного стану."
         ],
         "source": "ВТС"
       },
@@ -37500,8 +37504,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "стожище",
       "url_slug": "стожище",
       "headword": "сто́жище",
-      "short_label": "місце, де ставлять або стояли стоги сіна чи соломи; стіговище",
-      "gloss": "haystack ground, rick-yard, place where stacks stand",
+      "short_label": "підкладка, підстилка під стіг від сирості знизу; підстіжжя",
+      "gloss": "bedding or base under a haystack protecting it from dampness; under-stack",
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
@@ -37555,10 +37559,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           }
         }
       },
-      "distinction_note": "Локативне значення: поле чи ділянка подвір'я, де зводять стоги (стіговище). Не плутати з величезним стогом «стожи́ще».",
+      "distinction_note": "Означає хмиз, солому, жердини тощо, які підкладають під стіг сіна для захисту від ґрунтової вологи знизу (підстіжжя). Не плутати з велетенським стогом «стожи́ще».",
       "meaning": {
         "definitions": [
-          "Місце, де стоять або стояли стоги."
+          "Підкладка, підстилка під стіг для збереження його від сирості знизу; підстіжжя."
         ],
         "source": "ВТС"
       },
@@ -38030,8 +38034,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "тамбур",
       "url_slug": "тамбур",
       "headword": "та́мбур",
-      "short_label": "закритий майданчик пасажирського вагона або вхідний шлюз будівлі",
-      "gloss": "vestibule, entrance platform of railway carriage, airlock foyer",
+      "short_label": "закритий майданчик вагона, вхідний шлюз будівлі або тамбурний шов (вишивка)",
+      "gloss": "vestibule, railway carriage entrance platform; chain-stitch embroidery",
       "pos": "noun",
       "cefr": "B1",
       "heritage_status": {
@@ -38085,10 +38089,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           }
         }
       },
-      "distinction_note": "Транспортний і архітектурний термін: сіни вагона або прибудова при вході для захисту від холоду. Не плутати з вишивальним швом чи барабаном «тамбу́р».",
+      "distinction_note": "Означає вхідний майданчик залізничного вагона чи сіни приміщення, а також вид вишивання або плетіння ланцюжком (та́мбурний шов, та́мбур). Не плутати зі старовинним музичним барабаном «тамбу́р».",
       "meaning": {
         "definitions": [
-          "Закритий майданчик залізничного вагона біля вхідних дверей; прибудова біля входу в будівлю."
+          "Закритий майданчик вагона або прибудова при вході; також вид вишивання ланцюжком."
         ],
         "source": "ВТС"
       },
@@ -38105,8 +38109,8 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
       "lemma": "тамбур",
       "url_slug": "тамбур",
       "headword": "тамбу́р",
-      "short_label": "ланцюжковий вишивальний шов або круглі п'яльця для вишивання (спец.)",
-      "gloss": "tambour embroidery stitch, tambour frame; hist. drum",
+      "short_label": "старовинний барабан (муз., заст.)",
+      "gloss": "tambour (archaic drum, musical instrument)",
       "pos": "noun",
       "cefr": "B2",
       "heritage_status": {
@@ -38160,10 +38164,10 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           }
         }
       },
-      "distinction_note": "Мистецький термін: особливий шов петельками (ланцюжком) або п'яльця (вишивати тамбуром; муз. старовинний барабан). Не плутати з тамбуром вагона «та́мбур».",
+      "distinction_note": "Музичний історичний термін: старовинний барабан (наголос на суфіксі: тамбу́р, тамбура́). Не плутати з вагонним майданчиком або вишиванням петельками «та́мбур».",
       "meaning": {
         "definitions": [
-          "Особливий шов для вишивання у вигляді ланцюжка; круглі п'яльця."
+          "Муз., заст. Барабан."
         ],
         "source": "ВТС"
       },
@@ -38225,7 +38229,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
     {
       "lemma": "танковий",
       "url_slug": "танковий",
-      "headword": "та́нко́вий",
+      "headword": "танко́ви́й",
       "short_label": "стосовний до народного танцю, хороводу або танкових співів (фольк.)",
       "gloss": "dance-related, folk-dance, choreographic (folk-music)",
       "pos": "adj",
@@ -38240,7 +38244,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
         "ipa": "[tɐnˈkɔwɪj]"
       },
       "stress": {
-        "form": "та́нко́вий",
+        "form": "танко́ви́й",
         "source": "ВТС",
         "url": "https://slovnyk.me/dict/vts/танковий"
       },
@@ -38250,7 +38254,7 @@ export const CURATED_HETERONYMS: Record<string, LexiconEntry[]> = {
           "kind": "adjective"
         }
       },
-      "distinction_note": "Фольклорний термін: прикметник до танок (танець, хоровод: танкова пісня, танковий крок). Не плутати з бронетехнікою «та́нковий».",
+      "distinction_note": "Фольклорний термін: прикметник до танок (танець, хоровод: танкова пісня, танковий крок, танковий ритм; наголос на суфіксі: танко́ви́й). Не плутати з бронетехнікою «та́нковий».",
       "meaning": {
         "definitions": [
           "Прикметник до танок (танець, хоровод)."
