@@ -71,16 +71,16 @@ CLEAN_TGT_RE = re.compile(r"\{[^{}=]*?=>([^{}]*?):::error_type=[^}]+\}")
 # Ukrainian abbreviation and initials protection
 COMPOUND_ABBREVIATIONS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"\bв\.\s*о\.", re.IGNORECASE), "в§DOT§ о§DOT§"),
-    (re.compile(r"\bр\.\s*н\.(?=\s+[А-ЯІЇЄҐA-Z«\"„])", re.IGNORECASE), "р§DOT§ н."),
+    (re.compile(r"\bр\.\s*н\.(?=\s+[А-ЯІЇЄҐA-Z«\"„])", re.IGNORECASE), "р§DOT§ н§SENT_DOT§"),
     (re.compile(r"\bр\.\s*н\.", re.IGNORECASE), "р§DOT§ н§DOT§"),
     (re.compile(r"\bт\.\s*зв\.", re.IGNORECASE), "т§DOT§ зв§DOT§"),
-    (re.compile(r"\bі\s+т\.\s*д\.(?=\s+[А-ЯІЇЄҐA-Z«\"„])", re.IGNORECASE), "і т§DOT§ д."),
+    (re.compile(r"\bі\s+т\.\s*д\.(?=\s+[А-ЯІЇЄҐA-Z«\"„])", re.IGNORECASE), "і т§DOT§ д§SENT_DOT§"),
     (re.compile(r"\bі\s+т\.\s*д\.", re.IGNORECASE), "і т§DOT§ д§DOT§"),
-    (re.compile(r"\bі\s+т\.\s*п\.(?=\s+[А-ЯІЇЄҐA-Z«\"„])", re.IGNORECASE), "і т§DOT§ п."),
+    (re.compile(r"\bі\s+т\.\s*п\.(?=\s+[А-ЯІЇЄҐA-Z«\"„])", re.IGNORECASE), "і т§DOT§ п§SENT_DOT§"),
     (re.compile(r"\bі\s+т\.\s*п\.", re.IGNORECASE), "і т§DOT§ п§DOT§"),
-    (re.compile(r"\bт\.\s*ін\.(?=\s+[А-ЯІЇЄҐA-Z«\"„])", re.IGNORECASE), "т§DOT§ ін."),
+    (re.compile(r"\bт\.\s*ін\.(?=\s+[А-ЯІЇЄҐA-Z«\"„])", re.IGNORECASE), "т§DOT§ ін§SENT_DOT§"),
     (re.compile(r"\bт\.\s*ін\.", re.IGNORECASE), "т§DOT§ ін§DOT§"),
-    (re.compile(r"\bм\.\s*п\.(?=\s+[А-ЯІЇЄҐA-Z«\"„])", re.IGNORECASE), "м§DOT§ п."),
+    (re.compile(r"\bм\.\s*п\.(?=\s+[А-ЯІЇЄҐA-Z«\"„])", re.IGNORECASE), "м§DOT§ п§SENT_DOT§"),
     (re.compile(r"\bм\.\s*п\.", re.IGNORECASE), "м§DOT§ п§DOT§"),
 ]
 INLINE_ABBREVIATIONS = (
@@ -110,11 +110,12 @@ def protect_abbreviations(text: str) -> str:
     text = INLINE_ABBR_PATTERN.sub(r"\1§DOT§", text)
     text = TITLE_PREFIX_PATTERN.sub(r"\1§DOT§", text)
     text = INITIAL_PATTERN.sub(r"\1§DOT§", text)
+    text = text.replace("§SENT_DOT§", ".")
     return text
 
 
 def unprotect_abbreviations(text: str) -> str:
-    return text.replace("§DOT§", ".")
+    return text.replace("§SENT_DOT§", ".").replace("§DOT§", ".")
 
 
 # Syntactic validation patterns for pristine sentence quality
@@ -129,6 +130,24 @@ UNCLOSED_TOBTO_RE = re.compile(
 SUBJECT_COMMA_PRED_RE = re.compile(
     r'^[^\,]+,\s*(?:ні|і|або)\s+[^\,]+,\s*(?:ні|і|або)\s+[^\,]+,\s*(?:не\s+)?(?:дозволили|могли|змогли|повинн|стали|були|мають)\b',
     re.IGNORECASE,
+)
+SENTENCE_INITIAL_CONJUNCTION_COMMA_RE = re.compile(
+    r"^(?:Однак|Проте|Втім|Утім|Адже|Тож|Отож),\s+",
+    re.IGNORECASE,
+)
+NON_PARENTHETICAL_ISOLATION_RE = re.compile(
+    r"(?:^|,\s*)(?:насамперед|передусім|перш\s+за\s+все|водночас|разом\s+з\s+тим|до\s+того\s+ж|"
+    r"тим\s+не\s+менше|між\s+тим|принаймні|в\s+основному|в\s+кінцевому\s+підсумку|"
+    r"все\s+ж\s+таки|все-таки|майже|навіть|зокрема|тим\s+часом|насправді|при\s+цьому|"
+    r"тим\s+більше|по\s+суті|адже|фактично|буквально),\s+",
+    re.IGNORECASE,
+)
+BROKEN_PAIRED_CONJUNCTION_RE = re.compile(
+    r"\bяк\s+[^,]+,\s+так\s+(?!і\b|й\b)[а-яіїєґА-ЯІЇЄҐ]",
+    re.IGNORECASE,
+)
+MULTI_SENTENCE_COMPOUND_ABBR_RE = re.compile(
+    r"\b(?:р\.\s*н\.|і\s+т\.\s*д\.|і\s+т\.\s*п\.|т\.\s*ін\.|м\.\s*п\.)\s+[А-ЯІЇЄҐA-Z«\"„]",
 )
 PREDICATE_WORDS = {
     "є", "це", "немає", "нема", "треба", "можна", "слід", "варто", "необхідно",
@@ -207,6 +226,14 @@ def split_clean_ukrainian_sentences(
             continue
         if SUBJECT_COMMA_PRED_RE.search(s):
             continue
+        if SENTENCE_INITIAL_CONJUNCTION_COMMA_RE.search(s):
+            continue
+        if NON_PARENTHETICAL_ISOLATION_RE.search(s):
+            continue
+        if BROKEN_PAIRED_CONJUNCTION_RE.search(s):
+            continue
+        if MULTI_SENTENCE_COMPOUND_ABBR_RE.search(s):
+            continue
         clean_sents.append(s)
     return clean_sents
 
@@ -258,25 +285,19 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
         return False
 
     # 3. Sentence-initial conjunction with erroneous comma (Pravopys 2019, §158)
-    if re.search(r"^(?:Однак|Проте),\s+", s):
+    if SENTENCE_INITIAL_CONJUNCTION_COMMA_RE.search(s):
         return False
 
     # 4. Non-parenthetical adverbs, particles, and conjunctions erroneously isolated by commas (Horodenska; Pravopys 2019)
-    if re.search(
-        r"(?:^|,\s*)(?:насамперед|передусім|перш\s+за\s+все|водночас|разом\s+з\s+тим|до\s+того\s+ж|"
-        r"тим\s+не\s+менше|між\s+тим|принаймні|в\s+основному|в\s+кінцевому\s+підсумку|"
-        r"все\s+ж\s+таки|все-таки|майже|навіть|зокрема),\s+",
-        s,
-        re.IGNORECASE,
-    ):
+    if NON_PARENTHETICAL_ISOLATION_RE.search(s):
         return False
 
     # 5. Broken paired conjunctions, e.g. 'як ..., так ...' omitting 'і/й' (Pravopys 2019, §158.I.5)
-    if re.search(r"\bяк\s+[^,]+,\s+так\s+(?!і\b|й\b)[а-яіїєґА-ЯІЇЄҐ]", s, re.IGNORECASE):
+    if BROKEN_PAIRED_CONJUNCTION_RE.search(s):
         return False
 
     # 6. Compound abbreviation hiding an internal sentence boundary (e.g. '1972 р. н. З діагнозом')
-    if re.search(r"\b(?:р\.\s*н\.|і\s+т\.\s*д\.|і\s+т\.\s*п\.|т\.\s*ін\.)\s+[А-ЯІЇЄҐA-Z«\"„]", s):
+    if MULTI_SENTENCE_COMPOUND_ABBR_RE.search(s):
         return False
 
     # 4. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)
@@ -600,21 +621,20 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
     },
     {
         "verb": "знущатися",
-        "category": "F/Calque",
+        "category": "F/Style",
         "correct_pattern": "знущатися (з кого/чого? з + родовий відмінок)",
         "incorrect_pattern": "знущатися (над ким/чим? над + орудний відмінок)",
         "explanation": (
-            "В українській літературній мові традиційним і стилістично зразковим є керування прийменником «з» "
-            "із родовим відмінком: «знущатися з когось», «сміятися з когось», «глузувати з когось» (О. Пономарів «Культура слова», "
-            "Є. Чак «Складні випадки українського слововживання»). Конструкція з прийменником «над» («знущатися над ким»), "
-            "хоч і фіксувалася в радянському СУМ-11 (1970–1980) поруч із «з кого», виникла як синтаксична калька російської моделі "
-            "(«издеваться над кем»). Сучасні норми культури української мови розрізняють ці варіанти: модель «з кого» є стилістично зразковою "
-            "та рекомендованою літературною нормою, тоді як «над ким» розглядається як небажаний контактний паралелізм."
+            "Звичайно дієслово «знущатися» вимагає після себе додатка в родовому відмінку з прийменником «з»: "
+            "«знущатися з когось», «глузувати з когось» (Є. Чак «Складні випадки українського слововживання»). "
+            "Варіант керування з прийменником «над» («знущатися над ким») трапляється в художній літературі "
+            "(Т. Шевченко, Леся Українка) та розмовному мовленні, проте в сучасній українській літературній мові "
+            "усталеною і стилістично зразковою нормою є конструкція з родовим відмінком («знущатися з кого»)."
         ),
         "critique": (
-            "Хоча словник радянської доби СУМ-11 фіксував паралельні форми «з кого» та «над ким» без диференціації, "
-            "сучасна нормативна стилістика (О. Пономарів) розрізняє стилістичну перевагу: питома модель з родовим відмінком "
-            "(«знущатися з кого») є рекомендованою літературною нормою, тоді як вживання прийменника «над» є контактною синтаксичною калькою."
+            "Хоча варіант з орудним відмінком («знущатися над ким») трапляється в класичній художній літературі "
+            "(Т. Шевченко, Леся Українка) та зафіксований у словниках, сучасною стилістичною нормою та "
+            "зразковим літературним вибором є модель із родовим відмінком («знущатися з кого») (Є. Чак)."
         ),
         "examples": [
             ("Правозахисники зафіксували численні факти того, як ворог знущався з полонених.", "Правозахисники зафіксували численні факти того, як ворог знущався над полоненими."),
@@ -960,33 +980,41 @@ def build_valency_trajectories(cur_ves: sqlite3.Cursor | None = None) -> list[di
 
             cat = frame.get("category", "G/Case")
             subt = frame.get("subtype", "valency_government")
-            is_calque = cat in ("F/Calque", "F/Style")
-
-            query = (
-                f"Відредагуйте речення та поясніть синтаксично-стилістичні норми слововживання: «{incorrect_sent}»"
-                if is_calque
-                else f"Відредагуйте речення та поясніть синтаксичні норми відмінкового керування: «{incorrect_sent}»"
-            )
             target_term = verb
-            reasoning = [
-                (
-                    f"1. Аналіз синтаксичної конструкції: у реченні «{incorrect_sent}» вжито контактну кальковану модель при слові «{verb}»."
-                    if is_calque
-                    else f"1. Аналіз граматичного зв'язку: у реченні «{incorrect_sent}» наявне порушення норми відмінкового керування при слові «{verb}»."
-                ),
-                (
-                    f"2. Стилістично-синтаксична норма: в українській літературній мові рекомендованою є модель {frame['correct_pattern']}."
-                    if is_calque
-                    else f"2. Правило синтаксичного керування: в українській літературній мові нормативною є модель {frame['correct_pattern']}."
-                ),
-                f"3. Оцінка помилкової моделі: {frame['critique']}",
-                f"4. Нормативна редакція: «{correct_sent}».",
-            ]
-            final_response = (
-                f"У реченні допущено стилістично небажану синтаксичну кальку. Рекомендований літературний варіант: «{correct_sent}».\n\nПояснення: {frame['explanation']}"
-                if is_calque
-                else f"Речення містить помилку відмінкового керування. Нормативний варіант: «{correct_sent}».\n\nПояснення: {frame['explanation']}"
-            )
+
+            if cat == "F/Style":
+                query = f"Відредагуйте речення з огляду на стилістичні норми української літературної мови: «{incorrect_sent}»"
+                reasoning = [
+                    f"1. Аналіз стилістичної сполучуваності: у реченні «{incorrect_sent}» вжито варіантну модель керування при слові «{verb}».",
+                    f"2. Стилістична норма слововживання: в сучасній українській літературній мові усталеною і рекомендованою є модель {frame['correct_pattern']}.",
+                    f"3. Оцінка помилкової моделі: {frame['critique']}",
+                    f"4. Нормативна редакція: «{correct_sent}».",
+                ]
+                final_response = (
+                    f"Для зразкового літературного стилю рекомендовано вжити модель з родовим відмінком: «{correct_sent}».\n\nПояснення: {frame['explanation']}"
+                )
+            elif cat == "F/Calque":
+                query = f"Відредагуйте речення та поясніть синтаксично-стилістичні норми слововживання: «{incorrect_sent}»"
+                reasoning = [
+                    f"1. Аналіз синтаксичної конструкції: у реченні «{incorrect_sent}» вжито контактну кальковану модель при слові «{verb}».",
+                    f"2. Стилістично-синтаксична норма: в українській літературній мові рекомендованою є модель {frame['correct_pattern']}.",
+                    f"3. Оцінка помилкової моделі: {frame['critique']}",
+                    f"4. Нормативна редакція: «{correct_sent}».",
+                ]
+                final_response = (
+                    f"У реченні допущено стилістично небажану синтаксичну кальку. Рекомендований літературний варіант: «{correct_sent}».\n\nПояснення: {frame['explanation']}"
+                )
+            else:
+                query = f"Відредагуйте речення та поясніть синтаксичні норми відмінкового керування: «{incorrect_sent}»"
+                reasoning = [
+                    f"1. Аналіз граматичного зв'язку: у реченні «{incorrect_sent}» наявне порушення норми відмінкового керування при слові «{verb}».",
+                    f"2. Правило синтаксичного керування: в українській літературній мові нормативною є модель {frame['correct_pattern']}.",
+                    f"3. Оцінка помилкової моделі: {frame['critique']}",
+                    f"4. Нормативна редакція: «{correct_sent}».",
+                ]
+                final_response = (
+                    f"Речення містить помилку відмінкового керування. Нормативний варіант: «{correct_sent}».\n\nПояснення: {frame['explanation']}"
+                )
             trajectories.append({
                 "schema_version": "v1_grammar_valency_trajectory",
                 "trajectory_id": f"traj.valency.{hashlib.sha256(incorrect_sent.encode()).hexdigest()[:16]}",

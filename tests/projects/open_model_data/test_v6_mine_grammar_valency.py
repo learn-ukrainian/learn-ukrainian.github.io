@@ -9,6 +9,7 @@ import glob
 import json
 from pathlib import Path
 
+import pytest
 from jsonschema import validate
 
 from scripts.projects.open_model_data import v6_mine_grammar_valency as miner
@@ -234,8 +235,24 @@ def test_sentence_splitting_rejects_unbalanced_and_defective_punctuation() -> No
     assert sents_abbr[0] == "З діагнозом «відкритий перелом лівої гомілки» потерпілого госпіталізовано до обласної клінічної лікарні."
 
 
+@pytest.mark.parametrize(
+    ("probe", "expected_suffix"),
+    [
+        ("1972 р. н. З діагнозом", "н. З діагнозом"),
+        ("і т. д. З діагнозом", "д. З діагнозом"),
+        ("і т. п. З діагнозом", "п. З діагнозом"),
+        ("т. ін. З діагнозом", "ін. З діагнозом"),
+        ("м. п. З діагнозом", "п. З діагнозом"),
+    ],
+)
+def test_compound_abbreviations_preserve_terminal_dot_boundary(probe: str, expected_suffix: str) -> None:
+    """Ensure compound abbreviations preserve terminal dot before uppercase letters for sentence splitting."""
+    protected = miner.protect_abbreviations(probe)
+    assert protected.endswith(expected_suffix)
+
+
 def test_valency_explanations_codification_nuance() -> None:
-    """Verify valency explanations cite modern literary codification (СУМ, Правопис 2019)."""
+    """Verify valency explanations cite modern literary codification (СУМ, Правопис 2019, Чак)."""
     frames = {f["verb"]: f for f in miner.VALENCY_FRAMES}
     assert "докоряти" in frames
     assert "навчатися" in frames
@@ -252,12 +269,12 @@ def test_valency_explanations_codification_nuance() -> None:
     assert "Правопис 2019" in navch_expl or "СУМ" in navch_expl
     assert "синтаксичною калькою з російської" not in navch_expl
 
-    # znushchatysia explanation must cite modern authorities (Ponomariv/Chak), SUM-11 context, and F/Calque category
+    # znushchatysia explanation must cite Chak, classical literary allowance, and F/Style category
     assert "знущатися" in frames
     znushch_frame = frames["знущатися"]
-    assert "Пономарів" in znushch_frame["explanation"] or "Чак" in znushch_frame["explanation"]
-    assert "СУМ-11" in znushch_frame["explanation"] or "СУМ-11" in znushch_frame["critique"]
-    assert znushch_frame["category"] == "F/Calque"
+    assert "Чак" in znushch_frame["explanation"]
+    assert "Шевченко" in znushch_frame["explanation"] or "Леся Українка" in znushch_frame["explanation"]
+    assert znushch_frame["category"] == "F/Style"
 
     # All frames must have nuanced critique
     for frame in miner.VALENCY_FRAMES:
@@ -347,6 +364,24 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     # Defect 14 (Round 6): Multi-sentence fragment across compound abbreviation
     frag_multisents = "В селі Лисець Тисменицького району травмовано чоловіка, 1972 р. н. З діагнозом «відкритий перелом лівої гомілки» потерпілого госпіталізовано до обласної клінічної лікарні."
     assert not miner.is_pristine_eval_sentence(frag_multisents, cur_ves=cur)
+
+    # Defect 15 (Round 7): Non-parenthetical adverbial time phrase isolated with comma (Yermolenko, p. 39)
+    frag_time_adv = "Тим часом, перед стійкою реєстрації утворилася черга."
+    assert not miner.is_pristine_eval_sentence(frag_time_adv, cur_ves=cur)
+
+    # Defect 16 (Round 7): Non-parenthetical adverb isolated with comma (Horodenska, p. 58)
+    frag_naspravdi = "Насправді, для частини учасників цей переплив став лише розминкою."
+    assert not miner.is_pristine_eval_sentence(frag_naspravdi, cur_ves=cur)
+
+    # Defect 17 (Round 7): Sentence-initial conjunction 'Втім' / 'Утім' with erroneous comma
+    frag_vtim = "Втім, такі проблеми актуальні й сьогодні: у Конча-Заспі намивається пісок."
+    assert not miner.is_pristine_eval_sentence(frag_vtim, cur_ves=cur)
+    frag_utim = "Утім, далеко не лише ці двоє політиків почали активно рекламувати себе."
+    assert not miner.is_pristine_eval_sentence(frag_utim, cur_ves=cur)
+
+    # Defect 18 (Round 7): Compound abbreviation m. p. preceding sentence boundary
+    frag_mp = "Документ було скріплено печаткою організації м. п. За цим розпорядженням створено комісію."
+    assert not miner.is_pristine_eval_sentence(frag_mp, cur_ves=cur)
 
 
 def test_release_receipt_schema_and_checksum() -> None:
