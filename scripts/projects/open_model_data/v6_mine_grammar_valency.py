@@ -1132,10 +1132,12 @@ SUBORDINATE_CONJUNCTIONS = {
     "де", "коли", "якщо", "хоч", "хоча", "бо", "тому що", "куди", "звідки", "доки", "поки", "як",
 }
 
-PREP_RELATIVE_PATTERN = (
-    r"(?:(?:з|зі|із|до|про|на|у|в|за|під|над|перед|після|через|для|без|від|при|по|між|серед|біля|коло|щодо|заради|завдяки)\s+)?"
-    r"(?:який|яка|яке|які|якого|якій|яким|яких|якої|якому|яку|якими|котрий|котра|котре|котрі|котрого|котрій|котрим|котрих|котрої|котрому|котру|котрими|хто|кого|кому|ким|кім|що|чого|чому|чим|чім)"
+RELATIVE_PRONOUN_PATTERN = (
+    r"(?:який|яка|яке|які|якого|якій|яким|яких|якої|якому|яку|якими|"
+    r"котрий|котра|котре|котрі|котрого|котрій|котрим|котрих|котрої|котрому|котру|котрими|"
+    r"хто|кого|кому|ким|кім|що|чого|чому|чим|чім)"
 )
+PREP_RELATIVE_PATTERN = rf"(?:(?:[а-яіїєґА-ЯІЇЄҐ\'-]+\s+){{0,3}}{RELATIVE_PRONOUN_PATTERN})"
 SUB_CONJ_PATTERN = r"де|коли|якщо|хоч|хоча|бо|тому що|куди|звідки|доки|поки"
 SUBORDINATE_CLAUSE_INTRO_PATTERN = rf"(?:{SUB_CONJ_PATTERN}|{PREP_RELATIVE_PATTERN})"
 
@@ -1165,8 +1167,8 @@ def strip_quoted_spans(text: str) -> str:
 def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor | None = None) -> bool:
     """Verify that all subordinate clauses opened in unquoted_inside are complete and not severed across end_dash.
 
-    Under Правопис 2019 §158.3, §161.I.1, and §161.I.10, subordinate clauses may be sequential or nested,
-    including preposition-led relative clauses (e.g. 'де для глядачів, з якими він говорив, вдалою режисерською знахідкою').
+    Under Правопис 2019 §37, §158.3, §161.I.1, and §161.I.10, subordinate clauses may be sequential or nested,
+    including multiword preposition-led relative clauses (e.g. 'де для глядачів, поруч з якими він говорив, вдалою режисерською знахідкою').
     A predicate in a closed nested relative clause (e.g. 'говорив') cannot satisfy the enclosing clause ('де ...').
     Each opened subordinate clause must have its own predicate outside nested clauses and cannot remain unclosed at end_dash.
     """
@@ -1186,28 +1188,24 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                     pass
         return False
 
-    def is_prep(w: str) -> bool:
-        if cur:
-            try:
-                cur.execute("SELECT 1 FROM forms_all WHERE word_form = ? AND pos = 'prep' LIMIT 1", (w,))
-                if cur.fetchone():
-                    return True
-            except Exception:
-                pass
-        return False
-
     parts = unquoted_inside.split(",")
     stack: list[dict[str, Any]] = []
     all_clauses: list[dict[str, Any]] = []
 
     for idx, part in enumerate(parts):
         words = [w.lower() for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", part)]
-        m = DASH_SUBORDINATE_START_RE.match(part)
-        is_sub = bool(m)
-        marker = m.group(0).strip() if m else ""
-        if not is_sub and len(words) >= 2 and words[1] in RELATIVE_PRONOUNS and is_prep(words[0]):
-            is_sub = True
-            marker = f"{words[0]} {words[1]}"
+        is_sub = False
+        marker = ""
+        if words:
+            if words[0] in SUBORDINATE_CONJUNCTIONS or part.strip().lower().startswith("тому що"):
+                is_sub = True
+                marker = "тому що" if part.strip().lower().startswith("тому що") else words[0]
+            else:
+                for k in range(min(4, len(words))):
+                    if words[k] in RELATIVE_PRONOUNS:
+                        is_sub = True
+                        marker = " ".join(words[: k + 1])
+                        break
 
         if is_sub:
             while stack and words_have_predicate(stack[-1]["words"]):
@@ -1248,7 +1246,7 @@ def extract_dash_apposition_spans(s: str, cur_ves: sqlite3.Cursor | None = None)
     - Appositive dash pairs enclose parenthetical explanatory phrases within a single clause,
       without severing unclosed subordinate clauses across delimiter boundaries (Правопис 2019 §158.3, §161.I.1, §161.I.10).
       Subordinate clause completeness tracking accounts for sequential and nested clause boundaries, including
-      preposition-led relative clauses (e.g. 'з якими він говорив'), ensuring predicates in nested or earlier relative
+      multiword preposition-led relative clauses (e.g. 'поруч з якими він говорив'), ensuring predicates in nested or earlier relative
       clauses do not falsely satisfy enclosing clauses.
     - Quoted spans are excluded before both subordinate-marker detection and predicate detection
       (Правопис 2019 §154, §164), preserving quoted-title boundaries so that subordinate markers inside
