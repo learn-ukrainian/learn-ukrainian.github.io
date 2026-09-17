@@ -16,6 +16,7 @@ from tests.build.upgrade_fixtures import ORIGINAL, UPGRADED, extract_upgrade_fix
 
 @pytest.fixture
 def upgrade_root(tmp_path, monkeypatch):
+    from scripts.build import cf_preflight
     from scripts.generate_mdx import atlas_links
 
     atlas = tmp_path / "atlas.json"
@@ -24,6 +25,11 @@ def upgrade_root(tmp_path, monkeypatch):
     extract_upgrade_fixtures(tmp_path, "baseline")
     monkeypatch.setattr(v7_build, "PROJECT_ROOT", tmp_path)
     monkeypatch.setattr(linear_pipeline, "plan_path_for", lambda level, slug: tmp_path / "curriculum/l2-uk-en/plans/a1" / f"{slug}.yaml")
+    # Isolated fixture roots are not git checkouts; seed exact-head clearance so
+    # paid-upgrade tests exercise writer/review contracts past CF preflight.
+    head = "a" * 40
+    monkeypatch.setattr(cf_preflight, "git_head", lambda _root: head)
+    cf_preflight.write_clearance_file(tmp_path / "cf_clearance.json", head=head)
     return tmp_path
 
 
@@ -146,6 +152,30 @@ def test_same_family_upgrade_review_fails_before_writer(upgrade_root, monkeypatc
     monkeypatch.setattr(linear_pipeline, "invoke_writer", writer)
     args = v7_build.parse_args(["a1", "things-have-gender", "--upgrade", "--writer", "codex-tools", "--reviewer", "codex-tools"])
     assert v7_build._run(args) == 1
+    writer.assert_not_called()
+
+
+def test_upgrade_without_cf_clearance_blocks_writer(upgrade_root, monkeypatch):
+    from scripts.build import cf_preflight
+
+    writer = Mock(side_effect=AssertionError("must not call writer without CF"))
+    monkeypatch.setattr(linear_pipeline, "invoke_writer", writer)
+    (upgrade_root / "cf_clearance.json").unlink()
+    monkeypatch.setattr(cf_preflight, "git_head", lambda _root: "b" * 40)
+    args = v7_build.parse_args(["a1", "things-have-gender", "--upgrade", "--writer", "gemini-tools"])
+    assert v7_build._run(args) == cf_preflight.CfPreflightError.exit_code
+    writer.assert_not_called()
+
+
+def test_upgrade_stale_cf_clearance_blocks_writer(upgrade_root, monkeypatch):
+    from scripts.build import cf_preflight
+
+    writer = Mock(side_effect=AssertionError("must not call writer with stale CF"))
+    monkeypatch.setattr(linear_pipeline, "invoke_writer", writer)
+    cf_preflight.write_clearance_file(upgrade_root / "cf_clearance.json", head="c" * 40)
+    monkeypatch.setattr(cf_preflight, "git_head", lambda _root: "d" * 40)
+    args = v7_build.parse_args(["a1", "things-have-gender", "--upgrade", "--writer", "gemini-tools"])
+    assert v7_build._run(args) == cf_preflight.CfPreflightError.exit_code
     writer.assert_not_called()
 
 

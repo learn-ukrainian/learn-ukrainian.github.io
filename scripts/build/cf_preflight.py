@@ -13,11 +13,11 @@ import re
 import subprocess
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 _SHA40 = re.compile(r"^[0-9a-f]{40}$", re.I)
-# Accept formal COMMENT fallbacks and sealed publication wording.
 _APPROVE = re.compile(
     r"(?im)(?:reviewer\s+)?verdict\s*:\s*(?:approve|approved)\b"
     r"|\bVERDICT\s*:\s*(?:APPROVE|APPROVED)\b"
@@ -26,10 +26,14 @@ _REQUEST_CHANGES = re.compile(
     r"(?im)(?:reviewer\s+)?verdict\s*:\s*request[_ -]?changes\b"
     r"|\bVERDICT\s*:\s*(?:CHANGES_REQUESTED|REQUEST_CHANGES)\b"
 )
-_HEAD_IN_BODY = re.compile(
+# Unambiguous explicit head bindings only — not any SHA that appears in prose.
+_EXPLICIT_HEAD = re.compile(
     r"(?im)\b(?:exact\s+)?head(?:\s+sha)?\s*[:=]\s*`?([0-9a-f]{40})`?"
-    r"|\b([0-9a-f]{40})\b"
 )
+_REVIEW_STATE_APPROVED = frozenset({"APPROVED"})
+_REVIEW_STATE_CHANGES = frozenset({"CHANGES_REQUESTED"})
+_REVIEW_STATE_DISMISSED = frozenset({"DISMISSED"})
+_REVIEW_STATE_COMMENT = frozenset({"COMMENTED", "PENDING", ""})
 
 
 @dataclass(frozen=True)
@@ -40,6 +44,17 @@ class CfPreflightResult:
     reason: str
     head: str | None = None
     source: str | None = None
+
+
+@dataclass(frozen=True)
+class CfEvidenceEvent:
+    """One ordered CF evidence event from GitHub (comment or review)."""
+
+    kind: str  # approve | request_changes
+    head: str
+    when: datetime
+    source: str  # comment | review
+    state: str | None = None
 
 
 class CfPreflightError(RuntimeError):
@@ -56,10 +71,9 @@ def normalize_head(value: object) -> str | None:
 
 
 def verdict_kind(body: str) -> str | None:
-    """Return ``approve``, ``request_changes``, or None for one comment/review body."""
+    """Return ``approve``, ``request_changes``, or None for one body."""
     if not isinstance(body, str) or not body.strip():
         return None
-    # Prefer the more specific REQUEST_CHANGES when both appear (reviewer quotes).
     req = _REQUEST_CHANGES.search(body)
     appr = _APPROVE.search(body)
     if req and appr:
@@ -71,15 +85,60 @@ def verdict_kind(body: str) -> str | None:
     return None
 
 
-def head_mentioned(body: str, head: str) -> bool:
+def explicit_heads_in_body(body: str) -> list[str]:
+    """Return explicitly bound head SHAs (``Exact head:`` / ``head:`` only)."""
     if not isinstance(body, str):
-        return False
-    target = head.lower()
-    for match in _HEAD_IN_BODY.finditer(body):
-        for group in match.groups():
-            if isinstance(group, str) and group.lower() == target:
-                return True
-    return target in body.lower()
+        return []
+    out: list[str] = []
+    for match in _EXPLICIT_HEAD.finditer(body):
+        head = normalize_head(match.group(1))
+        if head and head not in out:
+            out.append(head)
+    return out
+
+
+def _parse_timestamp(value: object) -> datetime | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return parsed
+
+
+def evaluate_evidence_events(
+    events: Sequence[CfEvidenceEvent],
+    *,
+    head: str,
+) -> CfPreflightResult:
+    """CF is clear only when the latest event for ``head`` is APPROVE."""
+    head_n = normalize_head(head)
+    if head_n is None:
+        return CfPreflightResult(False, "cf_preflight: head must be a 40-char hex SHA", head=None)
+
+    relevant = [event for event in events if event.head == head_n]
+    if not relevant:
+        return CfPreflightResult(
+            False,
+            "cf_preflight: no exact-head CF APPROVE found — do not start a paid build",
+            head=head_n,
+            source="events",
+        )
+    latest = max(relevant, key=lambda event: event.when)
+    if latest.kind == "approve":
+        return CfPreflightResult(
+            True,
+            f"cf_preflight: APPROVE on exact head ({latest.source})",
+            head=head_n,
+            source=latest.source,
+        )
+    return CfPreflightResult(
+        False,
+        "cf_preflight: REQUEST_CHANGES still open on exact head — fix and re-CF before build",
+        head=head_n,
+        source=latest.source,
+    )
 
 
 def evaluate_comment_bodies(
@@ -87,34 +146,26 @@ def evaluate_comment_bodies(
     *,
     head: str,
 ) -> CfPreflightResult:
-    """CF is clear only when an APPROVE for ``head`` is not superseded by REQUEST_CHANGES."""
-    head_n = normalize_head(head)
-    if head_n is None:
-        return CfPreflightResult(False, "cf_preflight: head must be a 40-char hex SHA", head=None)
-
-    last_for_head: str | None = None
-    for body in bodies:
-        if not head_mentioned(body, head_n):
-            continue
+    """Backward-compatible helper for tests: bodies alone, synthetic chronology."""
+    events: list[CfEvidenceEvent] = []
+    base = datetime.fromisoformat("2000-01-01T00:00:00+00:00")
+    for index, body in enumerate(bodies):
         kind = verdict_kind(body)
-        if kind is not None:
-            last_for_head = kind
-
-    if last_for_head == "approve":
-        return CfPreflightResult(True, "cf_preflight: APPROVE on exact head", head=head_n, source="comments")
-    if last_for_head == "request_changes":
-        return CfPreflightResult(
-            False,
-            "cf_preflight: REQUEST_CHANGES still open on exact head — fix and re-CF before build",
-            head=head_n,
-            source="comments",
+        heads = explicit_heads_in_body(body)
+        if kind is None or not heads:
+            continue
+        # Ambiguous multi-head prose is not clearance for any mentioned SHA.
+        if len(heads) != 1:
+            continue
+        events.append(
+            CfEvidenceEvent(
+                kind=kind,
+                head=heads[0],
+                when=base.replace(microsecond=index),
+                source="comment",
+            )
         )
-    return CfPreflightResult(
-        False,
-        "cf_preflight: no exact-head CF APPROVE found — do not start a paid build",
-        head=head_n,
-        source="comments",
-    )
+    return evaluate_evidence_events(events, head=head)
 
 
 def load_clearance_file(path: Path) -> CfPreflightResult:
@@ -137,6 +188,18 @@ def load_clearance_file(path: Path) -> CfPreflightResult:
             source=str(path),
         )
     return CfPreflightResult(True, f"cf_preflight: clearance file OK ({path})", head=head, source=str(path))
+
+
+def write_clearance_file(path: Path, *, head: str, verdict: str = "APPROVE") -> None:
+    """Write a clearance file for fixtures / post-CF handoff."""
+    head_n = normalize_head(head)
+    if head_n is None:
+        raise ValueError("head must be a 40-char hex SHA")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps({"head": head_n, "verdict": verdict.upper()}, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
 
 def git_head(repo_root: Path) -> str | None:
@@ -172,8 +235,102 @@ def _gh_json(args: list[str]) -> Any | None:
         return None
 
 
-def github_pr_comment_bodies(*, repo: str | None = None) -> list[str]:
-    """Best-effort: bodies from the open PR for the current branch."""
+def events_from_github_payloads(
+    *,
+    comments: Sequence[Mapping[str, Any]] | None,
+    reviews: Sequence[Mapping[str, Any]] | None,
+) -> list[CfEvidenceEvent]:
+    """Build ordered CF events from GitHub comment + review payloads."""
+    events: list[CfEvidenceEvent] = []
+
+    for row in comments or ():
+        if not isinstance(row, Mapping):
+            continue
+        body = row.get("body")
+        when = _parse_timestamp(row.get("created_at") or row.get("updated_at"))
+        if when is None or not isinstance(body, str):
+            continue
+        kind = verdict_kind(body)
+        heads = explicit_heads_in_body(body)
+        if kind is None or len(heads) != 1:
+            continue
+        events.append(
+            CfEvidenceEvent(kind=kind, head=heads[0], when=when, source="comment")
+        )
+
+    for row in reviews or ():
+        if not isinstance(row, Mapping):
+            continue
+        state = str(row.get("state") or "").upper()
+        if state in _REVIEW_STATE_DISMISSED:
+            continue
+        when = _parse_timestamp(
+            row.get("submitted_at") or row.get("submittedAt") or row.get("created_at")
+        )
+        if when is None:
+            continue
+        commit_id = normalize_head(row.get("commit_id") or row.get("commitId"))
+        body = row.get("body") if isinstance(row.get("body"), str) else ""
+
+        if state in _REVIEW_STATE_APPROVED:
+            if commit_id is None:
+                continue
+            events.append(
+                CfEvidenceEvent(
+                    kind="approve",
+                    head=commit_id,
+                    when=when,
+                    source="review",
+                    state=state,
+                )
+            )
+            continue
+
+        if state in _REVIEW_STATE_CHANGES:
+            if commit_id is None:
+                continue
+            events.append(
+                CfEvidenceEvent(
+                    kind="request_changes",
+                    head=commit_id,
+                    when=when,
+                    source="review",
+                    state=state,
+                )
+            )
+            continue
+
+        # COMMENT / PENDING fallbacks: textual verdict + explicit head (or commit_id).
+        if state not in _REVIEW_STATE_COMMENT and state:
+            continue
+        kind = verdict_kind(body)
+        if kind is None:
+            continue
+        heads = explicit_heads_in_body(body)
+        if len(heads) == 1:
+            bound = heads[0]
+        elif commit_id is not None and not heads:
+            bound = commit_id
+        else:
+            continue
+        if commit_id is not None and heads and commit_id not in heads:
+            # Body claims a different head than the review binding — reject.
+            continue
+        events.append(
+            CfEvidenceEvent(
+                kind=kind,
+                head=bound,
+                when=when,
+                source="review",
+                state=state or "COMMENTED",
+            )
+        )
+
+    return events
+
+
+def github_pr_evidence_events(*, repo: str | None = None) -> list[CfEvidenceEvent]:
+    """Best-effort: ordered CF events from the open PR for the current branch."""
     view_args = ["pr", "view", "--json", "number,url"]
     if repo:
         view_args.extend(["-R", repo])
@@ -181,37 +338,24 @@ def github_pr_comment_bodies(*, repo: str | None = None) -> list[str]:
     if not isinstance(viewed, Mapping) or not viewed.get("number"):
         return []
     number = int(viewed["number"])
-    comment_args = [
-        "api",
-        f"repos/{{owner}}/{{repo}}/issues/{number}/comments",
-        "--paginate",
-    ]
     if repo:
-        # Explicit repo form for api
-        owner_repo = repo
-        comment_args = [
-            "api",
-            f"repos/{owner_repo}/issues/{number}/comments",
-            "--paginate",
-        ]
-    payload = _gh_json(comment_args)
-    # Also pull review bodies (APPROVE events + COMMENT fallbacks).
-    review_args = ["api", f"repos/{repo}/pulls/{number}/reviews", "--paginate"] if repo else [
-        "api",
-        f"repos/{{owner}}/{{repo}}/pulls/{number}/reviews",
-        "--paginate",
-    ]
-    reviews = _gh_json(review_args)
-    bodies: list[str] = []
-    if isinstance(payload, list):
-        for row in payload:
-            if isinstance(row, Mapping) and isinstance(row.get("body"), str):
-                bodies.append(row["body"])
-    if isinstance(reviews, list):
-        for row in reviews:
-            if isinstance(row, Mapping) and isinstance(row.get("body"), str):
-                bodies.append(row["body"])
-    return bodies
+        comments = _gh_json(
+            ["api", f"repos/{repo}/issues/{number}/comments", "--paginate"]
+        )
+        reviews = _gh_json(
+            ["api", f"repos/{repo}/pulls/{number}/reviews", "--paginate"]
+        )
+    else:
+        comments = _gh_json(
+            ["api", f"repos/{{owner}}/{{repo}}/issues/{number}/comments", "--paginate"]
+        )
+        reviews = _gh_json(
+            ["api", f"repos/{{owner}}/{{repo}}/pulls/{number}/reviews", "--paginate"]
+        )
+    return events_from_github_payloads(
+        comments=comments if isinstance(comments, list) else None,
+        reviews=reviews if isinstance(reviews, list) else None,
+    )
 
 
 def check_cf_preflight(
@@ -222,6 +366,7 @@ def check_cf_preflight(
     module_dir: Path | None = None,
     allow_github: bool = True,
     github_repo: str | None = None,
+    github_events: Sequence[CfEvidenceEvent] | None = None,
 ) -> CfPreflightResult:
     """Return whether a paid content build may start for ``head``."""
     resolved_head = normalize_head(head) or git_head(repo_root)
@@ -257,9 +402,11 @@ def check_cf_preflight(
         "true",
         "yes",
     }:
-        bodies = github_pr_comment_bodies(repo=github_repo)
-        if bodies:
-            return evaluate_comment_bodies(bodies, head=resolved_head)
+        events = list(github_events) if github_events is not None else github_pr_evidence_events(
+            repo=github_repo
+        )
+        if events:
+            return evaluate_evidence_events(events, head=resolved_head)
 
     return CfPreflightResult(
         False,
