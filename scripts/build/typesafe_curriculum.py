@@ -78,6 +78,33 @@ DISTRACTOR_FAMILY_PARENTS: dict[str, str] = {
 }
 
 
+
+def _question_primitives():
+    """Return Choice/Noul/Score classes; stub when SDK absent (hermetic CI)."""
+    try:
+        from typesafe_sdk import Choice, Noul, Score
+
+        return Choice, Noul, Score
+    except ImportError:  # pragma: no cover - exercised in CI without extra-index
+        class _Q:
+            def __init__(self, **kwargs):
+                self.kwargs = kwargs
+
+        class Noul(_Q):
+            def __init__(self, instructions="", **kwargs):
+                super().__init__(instructions=instructions, **kwargs)
+
+        class Choice(_Q):
+            def __init__(self, instructions="", criteria=None, **kwargs):
+                super().__init__(instructions=instructions, criteria=criteria or {}, **kwargs)
+
+        class Score(_Q):
+            def __init__(self, instructions="", criteria=None, **kwargs):
+                super().__init__(instructions=instructions, criteria=criteria or [], **kwargs)
+
+        return Choice, Noul, Score
+
+
 class _SystemOneClient(Protocol):
     def system_one(
         self,
@@ -564,7 +591,7 @@ def propose_and_run_verify(
     verify_stress_fn: Callable[[str], Mapping[str, Any]] | None = None,
 ) -> VerifyToolProposal:
     """#8196 — Choice over closed tools, then optional local execution."""
-    from typesafe_sdk import Choice
+    Choice, _Noul, _Score = _question_primitives()
 
     state = {
         "word": word,
@@ -630,7 +657,7 @@ def pick_preparsed_value(
     model: str | None = None,
 ) -> PreparsedPick:
     """#8208 — Choice picks a verbatim regex/heuristic candidate."""
-    from typesafe_sdk import Choice, Noul
+    Choice, Noul, _Score = _question_primitives()
 
     cands = [str(c) for c in candidates if str(c).strip()]
     # Cap criteria size; TypeSafe Choice needs a closed set
@@ -695,7 +722,7 @@ def evaluate_upgrade_io_guardrails(
     model: str | None = None,
 ) -> GuardrailEvaluation:
     """#8209 — screen writer/QG I/O (complement to #8184 tone gates)."""
-    from typesafe_sdk import Noul, Score
+    _Choice, Noul, Score = _question_primitives()
 
     level_l = (level or "").strip().lower()
     state = {
@@ -763,7 +790,7 @@ def evaluate_ec_item(
     model: str | None = None,
 ) -> EcItemEvaluation:
     """#8177 — one batched system_one over a Find-and-Fix / EC item."""
-    from typesafe_sdk import Choice, Noul, Score
+    Choice, Noul, Score = _question_primitives()
 
     opts = [str(o) for o in options]
     level_l = (level or "").strip().lower()
@@ -851,7 +878,7 @@ def evaluate_vocab_row(
     model: str | None = None,
 ) -> VocabRowEvaluation:
     """#8178 — label one vocab candidate. Suspect ≠ VESUM fact."""
-    from typesafe_sdk import Choice, Noul, Score
+    Choice, Noul, Score = _question_primitives()
 
     state = {
         "lemma": lemma,
@@ -939,7 +966,7 @@ def evaluate_lesson_readiness(
     model: str | None = None,
 ) -> LessonReadinessEvaluation:
     """#8179 — cheap readiness labels before paid QG / CF."""
-    from typesafe_sdk import Choice, Noul, Score
+    Choice, Noul, Score = _question_primitives()
 
     state = {
         "level": (level or "").strip().lower(),
