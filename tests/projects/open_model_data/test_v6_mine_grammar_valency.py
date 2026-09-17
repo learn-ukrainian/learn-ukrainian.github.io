@@ -461,6 +461,24 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.check_unpunctuated_compound_sentence(frag_valid_acc_object, cur_ves=cur)
     assert not miner.has_homogeneous_verb_comma(frag_valid_acc_object, cur_ves=cur)
 
+    # Defect 33 (Round 13 P1): Detached apposition lacking closing comma before matrix verb (Правопис 2019 §158 I.14)
+    frag_unclosed_appos = (
+        "Тому на всі свята сім'я іванофранківчанки, прес-секретаря апеляційного суду "
+        "Івано-Франківської області Людмили Безусової-Попович їде до Брошнева, до мами та бабусі Олени."
+    )
+    assert not miner.is_pristine_eval_sentence(frag_unclosed_appos, cur_ves=cur)
+    assert miner.has_unclosed_appositive_comma(frag_unclosed_appos, cur_ves=cur)
+
+    # Positive control 1 (Round 13 P2): Coordinated subordinate clauses sharing main clause predicate (Правопис 2019 §158 II.3 примітка 2)
+    frag_subordinate_coord = "Я знаю, що він читає книжку і вона пише листа."
+    assert not miner.check_unpunctuated_compound_sentence(frag_subordinate_coord, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_subordinate_coord, cur_ves=cur)
+
+    # Positive control 2 (Round 13 P2): Closing parenthetical comma before coordinating conjunction (Правопис 2019 §158 I.11)
+    frag_parenthetical_closing = "Він читає цікаву книжку, наприклад, і пише довгого листа."
+    assert not miner.has_homogeneous_verb_comma(frag_parenthetical_closing, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_parenthetical_closing, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:

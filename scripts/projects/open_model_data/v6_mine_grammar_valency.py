@@ -315,7 +315,7 @@ PRONOUNS_NAZ = {"я", "ти", "він", "вона", "воно", "ми", "ви", 
 PERSON_NUMBER_TAGS = (":s:1", ":s:2", ":s:3", ":p:1", ":p:2", ":p:3")
 SUBORDINATE_MARKERS = {
     "що", "щоб", "як", "яка", "який", "яке", "які", "якого", "якій", "яким", "яких", "якої",
-    "де", "куди", "звідки", "коли", "бо", "оскільки", "хоч", "хоча", "якщо", "якби",
+    "де", "куди", "звідки", "коли", "бо", "оскільки", "хоч", "хоча", "якщо", "якби", "чи",
 }
 COMMON_PREPOSITIONS = {
     "в", "у", "до", "на", "з", "із", "зі", "за", "під", "над", "перед", "при", "по",
@@ -412,6 +412,33 @@ def check_verb_agreement(tags1: list[str], tags2: list[str]) -> bool:
     return False
 
 
+PARENTHETICAL_WORDS = {
+    "наприклад", "зокрема", "мабуть", "можливо", "певне", "певно", "безперечно", "безумовно",
+    "очевидно", "справді", "дійсно", "правда", "кажуть", "скажімо", "значить", "отже",
+    "навпаки", "до речі", "між іншим", "на жаль", "на щастя", "по-перше", "по-друге",
+    "по-третє", "з одного боку", "з другого боку", "коротше кажучи", "взагалі",
+}
+
+
+def is_parenthetical_segment(seg: str, cur_ves: sqlite3.Cursor | None) -> bool:
+    """Check whether a comma-delimited text segment is a parenthetical word or phrase (Правопис 2019 §158 I.11)."""
+    seg_clean = seg.strip().lower()
+    if seg_clean in PARENTHETICAL_WORDS:
+        return True
+    words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\x27\u2019\-]+", seg_clean)
+    if not words or len(words) > 4:
+        return False
+    if any(w in PARENTHETICAL_WORDS for w in words):
+        return True
+    if cur_ves:
+        for w in words:
+            cur_ves.execute("SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?)", (w, w.capitalize()))
+            for r in cur_ves.fetchall():
+                if ":insert" in r[0]:
+                    return True
+    return False
+
+
 def has_homogeneous_verb_comma(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
     """Reject erroneous comma separating homogeneous predicates joined by single coordinating conjunction (Правопис 2019 §158.1)."""
     if not cur_ves:
@@ -420,6 +447,11 @@ def has_homogeneous_verb_comma(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
         before = s[:m.start()]
         segments = [c.strip() for c in before.split(",") if c.strip()]
         if not segments:
+            continue
+
+        # If the segment immediately preceding ', і' is parenthetical (e.g. ', наприклад,'),
+        # the comma before 'і' is a closing parenthetical comma under Правопис 2019 §158 I.11
+        if is_parenthetical_segment(segments[-1], cur_ves):
             continue
 
         finite1_list = []
@@ -546,6 +578,13 @@ def check_unpunctuated_compound_sentence(s: str, cur_ves: sqlite3.Cursor | None)
         if words_before[-1].lower() in CORRELATIVE_PARTICLES:
             continue
 
+        # Distinguish independent compound clauses from coordinated homogeneous subordinate clauses
+        # (Правопис 2019 §158 II.3 примітка 2: no comma before single 'і' joining homogeneous subordinate clauses)
+        last_clause_before = before.split(",")[-1]
+        words_last_clause = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\x27\u2019]+", last_clause_before.lower())
+        if any(marker in words_last_clause[:2] for marker in SUBORDINATE_MARKERS):
+            continue
+
         first_w = words_before[0]
         if first_w.lower() in COMMON_PREPOSITIONS:
             continue
@@ -618,6 +657,93 @@ def check_unpunctuated_compound_sentence(s: str, cur_ves: sqlite3.Cursor | None)
                 continue
             return True
 
+    return False
+
+
+def has_unclosed_appositive_comma(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
+    """Reject unclosed detached appositions lacking closing comma before matrix verb (Правопис 2019 §158 I.14)."""
+    if not cur_ves:
+        return False
+    for m in re.finditer(r",", s):
+        before = s[:m.start()].strip()
+        after = s[m.end():].strip()
+
+        # If there's already a comma in before, skip to avoid flagging list items
+        if "," in before:
+            continue
+
+        words_before = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\x27\u2019\-]+", before)
+        if not words_before:
+            continue
+
+        # If there is already a finite verb before comma, matrix subject already has predicate
+        if any(get_verb_finite_tags(w, cur_ves) for w in words_before):
+            continue
+
+        # Look for the last noun before comma
+        last_before = words_before[-1].lower()
+        cur_ves.execute(
+            "SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?) AND pos = 'noun'",
+            (last_before, last_before.capitalize()),
+        )
+        last_tags = [r[0] for r in cur_ves.fetchall()]
+        if not last_tags:
+            continue
+
+        # Look for nominative subject in words_before
+        s_candidates = []
+        for i, w in enumerate(words_before):
+            if i > 0 and words_before[i - 1].lower() in COMMON_PREPOSITIONS:
+                continue
+            s_tags = get_subj_nominative_tags(w, cur_ves)
+            if s_tags:
+                s_candidates.append((w, s_tags))
+        if not s_candidates:
+            continue
+
+        seg_after = re.split(r"[,:;]", after)[0].strip()
+        words_seg = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\x27\u2019\-]+", seg_after)
+        if len(words_seg) < 3:
+            continue
+
+        first_w = words_seg[0].lower()
+        if first_w in PRONOUNS_NAZ:
+            continue
+        if first_w in SUBORDINATE_MARKERS or first_w in {"і", "й", "та", "а", "але", "або", "чи"}:
+            continue
+        if first_w in COMMON_PREPOSITIONS:
+            continue
+
+        cur_ves.execute(
+            "SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?) AND pos = 'noun'",
+            (first_w, first_w.capitalize()),
+        )
+        first_tags = [r[0] for r in cur_ves.fetchall()]
+        if not first_tags:
+            continue
+
+        shared_oblique = False
+        for case in ["v_rod", "v_dav", "v_oru", "v_mis"]:
+            if any(case in t1 for t1 in last_tags) and any(case in t2 for t2 in first_tags):
+                shared_oblique = True
+                break
+        if not shared_oblique:
+            continue
+
+        # Check for finite verb in words_seg
+        v_idx = -1
+        v_tags_found = []
+        for idx, w in enumerate(words_seg[1:], start=1):
+            vt = get_verb_finite_tags(w, cur_ves)
+            if vt:
+                v_idx = idx
+                v_tags_found = vt
+                break
+
+        if v_idx >= 2:
+            for _s_w, s_tags in s_candidates:
+                if any(check_subj_verb_agreement(st, vt) for st in s_tags for vt in v_tags_found):
+                    return True
     return False
 
 
@@ -710,6 +836,10 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
 
     # 13. Unpunctuated compound sentence lacking comma before 'і/й/та' (Правопис 2019 §158.2)
     if check_unpunctuated_compound_sentence(s, cur_ves):
+        return False
+
+    # 14. Unclosed detached apposition lacking closing comma before matrix verb (Правопис 2019 §158 I.14)
+    if has_unclosed_appositive_comma(s, cur_ves):
         return False
 
     # 4. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)
