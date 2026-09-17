@@ -294,6 +294,22 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert sents[0] == "Згідно з документом надходження складуть 890 мільйонів гривень."
     assert sents[1] == "90,5 відсотка грошового наповнення забезпечать субвенції."
 
+    # Defect 5 (Round 4): Detached fragment with relative clause lacking matrix predicate
+    frag_rel = "Насамперед, через деякі законодавчі прогалини, які даються взнаки на цьому етапі."
+    assert not miner.is_pristine_eval_sentence(frag_rel, cur_ves=cur)
+
+    # Defect 6 (Round 4): Dangling speech reporting verb without coordinated subject pronoun
+    dangling_speech = "За словами мера, цей проект після доопрацювання погоджувальна рада розгляне знову, й додав, мовляв, таке зволікання зумовлене тим, що муніципалітет не хоче ускладнювати ситуацію в місті."
+    assert not miner.is_pristine_eval_sentence(dangling_speech, cur_ves=cur)
+
+    # Defect 7 (Round 4): Unclosed subordinate clause before coordinating conjunction joining matrix predicates (Pravopys §158)
+    unclosed_coord = "Він наголосив, що «Fit for Partnership with Germany» суттєво допомагає при налагодженні контактів з потенційними партнерами і закликав усіх охочих приєднуватися."
+    assert not miner.is_pristine_eval_sentence(unclosed_coord, cur_ves=cur)
+
+    # Defect 8 (Round 4): Erroneous comma before single 'або' joining homogeneous complements (Pravopys §158)
+    comma_abo = "Тоді водний транспорт у Києві, як каже Олександр Михайлик, був зручнішим за наземний, відтак на Русанівські сади до 1960-х їздили на міському катері, або на човні."
+    assert not miner.is_pristine_eval_sentence(comma_abo, cur_ves=cur)
+
 
 def test_release_receipt_schema_and_checksum() -> None:
     """Validate release receipt against JSON schema and sha256 checksum."""

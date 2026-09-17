@@ -126,8 +126,10 @@ SUBJECT_COMMA_PRED_RE = re.compile(
     re.IGNORECASE,
 )
 PREDICATE_WORDS = {
-    "є", "немає", "нема", "треба", "можна", "слід", "варто", "необхідно",
+    "є", "це", "немає", "нема", "треба", "можна", "слід", "варто", "необхідно",
     "потрібно", "жаль", "сором", "пора", "час", "досить", "відомо", "зрозуміло",
+    "логічно", "показово", "важливо", "цікаво", "прикро", "дивно", "небезпечно",
+    "певно", "ясно", "чутно", "видно",
 }
 
 
@@ -204,48 +206,88 @@ def split_clean_ukrainian_sentences(
     return clean_sents
 
 
-def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
-    """Verify that a negative control candidate has an explicit predicate and valid subordinate clauses."""
-    words = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", s.lower())
-    if not words:
-        return False
-    has_pred = False
+def check_has_predicate(text: str, cur_ves: sqlite3.Cursor | None) -> bool:
+    """Check whether a text fragment contains an active predicate (verb, predicative, or copula)."""
+    words = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", text.lower())
     for w in words:
         if w in PREDICATE_WORDS:
-            has_pred = True
-            break
+            return True
         if cur_ves:
             try:
                 cur_ves.execute("SELECT 1 FROM forms_all WHERE word_form = ? AND pos = 'verb' LIMIT 1", (w,))
                 if cur_ves.fetchone():
-                    has_pred = True
-                    break
+                    return True
             except Exception:
                 pass
-        else:
-            has_pred = True
-            break
-    if not has_pred:
+        elif any(w.endswith(sfx) for sfx in ("ти", "тися", "ться", "ло", "ла", "ли", "в", "ють", "ять", "уть", "ать", "ить")):
+            return True
+    return False
+
+
+def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
+    """Verify that a negative control candidate is a complete, pristine literary sentence.
+
+    Guarantees:
+    - Matrix clause has an explicit predicate (rejects detached relative/prepositional fragments).
+    - Subordinate clauses introduced by conjunctions have an active predicate.
+    - Punctuation follows Pravopys 2019 (§158):
+      - No unclosed subordinate clauses before coordinating conjunctions joining matrix verbs.
+      - No comma before a single 'або' or 'чи' joining homogeneous complements.
+      - No dangling speech reporting verbs (, й додав) without coordinated subject.
+      - Relative clauses and appositives are properly enclosed in commas.
+    """
+    words = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", s.lower())
+    if len(words) < 5 or len(s) < 40 or len(s) > 220:
         return False
 
-    # Check subordinate clause completeness if present at end of sentence
-    m_sub = re.search(r',\s*(?:що|щоб|якщо|якби|оскільки|бо),?\s+([^.!?…]{3,150})[.!?…»\"]$', s, re.IGNORECASE)
-    if m_sub and cur_ves:
-        sub_words = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", m_sub.group(1).lower())
-        sub_has_pred = any(w in PREDICATE_WORDS for w in sub_words)
-        if not sub_has_pred:
-            for w in sub_words:
-                try:
-                    cur_ves.execute("SELECT 1 FROM forms_all WHERE word_form = ? AND pos = 'verb' LIMIT 1", (w,))
-                    if cur_ves.fetchone():
-                        sub_has_pred = True
-                        break
-                except Exception:
-                    pass
-        if not sub_has_pred:
+    # 1. Overall predicate check
+    if not check_has_predicate(s, cur_ves):
+        return False
+
+    # 2. Structural defects
+    if UNCLOSED_RELATIVE_CLAUSE_RE.search(s):
+        return False
+    if UNCLOSED_TOBTO_RE.search(s):
+        return False
+    if SUBJECT_COMMA_PRED_RE.search(s):
+        return False
+
+    # 3. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)
+    if re.search(r",\s+(?:й|і|та)\s+(?:додав|зазначив|підкреслив|нагадав|наголосив|уточнив)\b", s, re.IGNORECASE):
+        return False
+
+    # 4. Erroneous comma before single 'або' or 'чи' joining homogeneous parts (Pravopys 2019, §158)
+    if re.search(r",\s+(?:або|чи)\s+(?:на|у|в|до|з|із|зі|за|під|над|по|про|для|від|без|через|при|між|перед)\s+[^\,]+[.!?…»\"]$", s, re.IGNORECASE):
+        return False
+    m_abo_end = re.search(r",\s+(?:або|чи)\s+([а-яіїєґА-ЯІЇЄҐ']+)\s+([а-яіїєґА-ЯІЇЄҐ']+)[.!?…»\"]$", s, re.IGNORECASE)
+    if m_abo_end and not (check_has_predicate(m_abo_end.group(1), cur_ves) or check_has_predicate(m_abo_end.group(2), cur_ves)):
+        return False
+
+    # 5. Unclosed subordinate clause before coordinating conjunction joining matrix predicates
+    # e.g., 'Він наголосив, що ... допомагає ... і закликав' (missing comma before 'і')
+    m_unclosed = re.search(r",\s+(?:що|щоб|якщо|якби|оскільки|бо)\b([^,]+?)\s+(?:і|й|та)\s+([а-яіїєґА-ЯІЇЄҐ']+)\b", s, re.IGNORECASE)
+    if m_unclosed:
+        sub_body = m_unclosed.group(1)
+        v_next = m_unclosed.group(2).lower()
+        if check_has_predicate(v_next, cur_ves) and check_has_predicate(sub_body, cur_ves) and check_has_predicate(s[:m_unclosed.start()], cur_ves):
             return False
 
-    return True
+    # 6. Subordinate clause completeness at end
+    m_sub_end = re.search(r",\s*(?:що|щоб|якщо|якби|оскільки|бо),?\s+([^.!?…]{3,150})[.!?…»\"]$", s, re.IGNORECASE)
+    if m_sub_end and not check_has_predicate(m_sub_end.group(1), cur_ves):
+        return False
+
+    # 7. Matrix clause completeness: ensure matrix clause has a predicate when relative/subordinate clause extends to end
+    m_rel_end = re.search(r",\s*(?:який|яка|яке|які|якого|якій|яким|яких|якої|де|куди|звідки|тому що)\s+([^.!?…]+)[.!?…»\"]$", s, re.IGNORECASE)
+    if m_rel_end and not check_has_predicate(s[:m_rel_end.start()], cur_ves):
+        return False
+
+    # 8. Prepositional fragment starting with phrase followed by relative clause
+    if re.search(r"^[^,.!?…]+,\s*через\s+[^,]+,\s*які\b", s, re.IGNORECASE):
+        return False
+
+    # 9. No dangling trailing punctuation
+    return not (s.endswith("...") or s.endswith("—") or s.endswith(" -"))
 
 
 def query_vesum_lemma_and_count(cur_ves: sqlite3.Cursor | None, token: str) -> tuple[str, int, bool]:
