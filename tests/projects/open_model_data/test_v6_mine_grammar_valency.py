@@ -1575,6 +1575,53 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_na_yiyi_chest, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_na_yiyi_chest)) == 0
 
+    # Defect 184 / Negative regression (Round 76 Codex P2): Intervening adjective between duration modifier and event noun ('всю довгу виставу') does not count as direct object (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_vsiu_dovhu_vystavu = (
+        "Театр — місце, де я після купівлі мила всю довгу виставу вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_vsiu_dovhu_vystavu, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_vsiu_dovhu_vystavu, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_vsiu_dovhu_vystavu)) == 0
+
+    # Defect 185 / Negative regression (Round 76 Codex P2): Syncretic noun 'пані' cannot fill both subject and direct object roles simultaneously (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_pani_syncretic = (
+        "Театр — місце, де пані після купівлі мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_pani_syncretic, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_pani_syncretic, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_pani_syncretic)) == 0
+
+    # Defect 186 / Negative regression (Round 76 Fable P2): Numeral modifier 'двох' (numr) inside PP does not break PP boundary (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_dvoch_kupivel = (
+        "Театр — місце, де після двох купівель мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_dvoch_kupivel, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dvoch_kupivel, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dvoch_kupivel)) == 0
+
+    # Defect 187 / Negative regression (Round 76 Fable P2): Quantified direct object 'багато посуду' preserves finite predicate completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
+    frag_discordant_apposition_bahato_posudu = (
+        "Він говорив із сестрою — дівчиною, що після роботи мила багато посуду — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_bahato_posudu, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_bahato_posudu, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_bahato_posudu)) == 0
+
+    # Defect 188 / Negative regression (Round 76 Fable P2): Quantified direct objects with numerals 'п'ять чашок' and quantifiers 'кілька тарілок' preserve finite verb completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
+    frag_discordant_apposition_pyat_chashok = (
+        "Він говорив із сестрою — дівчиною, що після роботи мила п'ять чашок — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_pyat_chashok, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_pyat_chashok, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_pyat_chashok)) == 0
+
+    frag_discordant_apposition_kilka_tarilok = (
+        "Він говорив із сестрою — дівчиною, що після роботи мила кілька тарілок — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_kilka_tarilok, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_kilka_tarilok, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_kilka_tarilok)) == 0
+
 
 
 

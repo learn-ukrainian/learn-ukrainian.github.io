@@ -1196,7 +1196,7 @@ def get_vesum_pos(word: str, cur: sqlite3.Cursor | None = None) -> set[str]:
 def is_modifier_or_adv(word: str, cur: sqlite3.Cursor | None = None) -> bool:
     """Check whether a word is an adjectival modifier, pronoun, numeral, adverb, or particle."""
     tags = get_vesum_pos(word, cur)
-    return bool(tags & {"adj", "pron", "num", "adv", "part"})
+    return bool(tags & {"adj", "pron", "num", "numr", "adv", "part"})
 
 
 def words_can_agree(adj_word: str, noun_word: str, cur: sqlite3.Cursor | None = None) -> bool:
@@ -1332,17 +1332,21 @@ TIME_DURATION_NOUNS = {
 }
 
 
-def clause_has_agreeing_nominative_subject(words: list[str], verb_idx: int, cur: sqlite3.Cursor | None = None) -> bool:
-    """Check whether the clause contains a nominative feminine or common-gender subject agreeing with words[verb_idx]."""
+def get_clause_agreeing_subject_indices(words: list[str], verb_idx: int, cur: sqlite3.Cursor | None = None) -> list[int]:
+    """Return indices of words in the clause that can serve as agreeing nominative subjects for words[verb_idx]."""
     if not cur:
-        return False
+        return []
     try:
         cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (words[verb_idx].lower(),))
         v_rows = cur.fetchall()
         is_fem_past = any(":past:f" in r[0] for r in v_rows)
         if not is_fem_past:
-            return True
+            return [
+                i for i in range(len(words))
+                if i != verb_idx and not is_in_direct_or_enclosing_pp(words, i, cur) and not is_preposition(words[i].lower(), cur)
+            ]
 
+        subj_indices: list[int] = []
         for i, w in enumerate(words):
             if i == verb_idx:
                 continue
@@ -1352,7 +1356,8 @@ def clause_has_agreeing_nominative_subject(words: list[str], verb_idx: int, cur:
             if is_preposition(w_lower, cur):
                 continue
             if w_lower in {"яка", "котра", "вона", "та", "що", "я", "ти", "ця"}:
-                return True
+                subj_indices.append(i)
+                continue
             cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w_lower,))
             rows = cur.fetchall()
             for r in rows:
@@ -1363,10 +1368,16 @@ def clause_has_agreeing_nominative_subject(words: list[str], verb_idx: int, cur:
                         or "rel" in tag_parts
                         or (("pers" in tag_parts or "1" in tag_parts or "2" in tag_parts) and "s" in tag_parts)
                     ):
-                        return True
+                        subj_indices.append(i)
+                        break
+        return subj_indices
     except Exception:
-        pass
-    return False
+        return []
+
+
+def clause_has_agreeing_nominative_subject(words: list[str], verb_idx: int, cur: sqlite3.Cursor | None = None) -> bool:
+    """Check whether the clause contains a nominative feminine or common-gender subject agreeing with words[verb_idx]."""
+    return bool(get_clause_agreeing_subject_indices(words, verb_idx, cur))
 
 
 EVENT_DURATION_NOUNS = {
@@ -1392,33 +1403,77 @@ DURATION_MODIFIERS = {
     "кожний", "кожну", "кожне", "кожні", "кожен",
 }
 
+QUANTITY_WORDS = {
+    "багато", "кілька", "декілька", "скільки", "стільки",
+    "чимало", "трохи", "мало", "немало",
+}
 
-def clause_has_direct_object(words: list[str], verb_idx: int, cur: sqlite3.Cursor | None = None) -> bool:
-    """Check whether the clause containing words[verb_idx] has an accusative direct object outside prepositional phrases."""
+
+def get_clause_direct_object_indices(words: list[str], verb_idx: int, cur: sqlite3.Cursor | None = None) -> list[int]:
+    """Return indices of words in the clause that can serve as direct objects for words[verb_idx]."""
     if not cur:
-        return False
+        return []
+    obj_indices: list[int] = []
     for i, w in enumerate(words):
         if i == verb_idx:
             continue
         if is_in_direct_or_enclosing_pp(words, i, cur):
             continue
-        if is_preposition(w, cur):
+        w_lower = w.lower()
+        if is_preposition(w_lower, cur):
             continue
-        if w in {"який", "яка", "яке", "які", "котрий", "котра", "котре", "котрі", "хто", "що"}:
+        if w_lower in {"який", "яка", "яке", "які", "котрий", "котра", "котре", "котрі", "хто", "що"}:
             continue
-        if w in TIME_DURATION_NOUNS:
+        if w_lower in TIME_DURATION_NOUNS:
             continue
-        # Event duration nouns modified by universal quantifiers (e.g. 'всю виставу') are duration adverbials, not direct objects
-        if w.lower() in EVENT_DURATION_NOUNS and i > 0 and words[i - 1].lower() in DURATION_MODIFIERS:
-            continue
+        # Event duration nouns modified by universal quantifiers with optional intervening adjectives
+        # (e.g. 'всю виставу', 'всю довгу виставу', 'цілу першу годину') are duration adverbials, not direct objects
+        if w_lower in EVENT_DURATION_NOUNS:
+            prev_k = i - 1
+            while prev_k >= 0 and is_modifier_or_adv(words[prev_k], cur) and not is_preposition(words[prev_k], cur):
+                if words[prev_k].lower() in DURATION_MODIFIERS:
+                    break
+                prev_k -= 1
+            if prev_k >= 0 and words[prev_k].lower() in DURATION_MODIFIERS:
+                continue
+
+        # Check if w is a numeral or quantity word (e.g. 'багато посуду', 'п'ять чашок', 'кілька тарілок')
+        is_quantifier = (
+            w_lower in QUANTITY_WORDS
+            or bool(get_vesum_pos(w_lower, cur) & {"numr"})
+        )
+        if is_quantifier:
+            # Check if this numeral/quantifier quantifies a duration noun (e.g. 'п'ять годин', 'дві вистави')
+            next_k = i + 1
+            while next_k < len(words) and is_modifier_or_adv(words[next_k], cur) and not is_preposition(words[next_k], cur):
+                next_k += 1
+            if next_k < len(words):
+                head_w = words[next_k].lower()
+                if head_w in TIME_DURATION_NOUNS or head_w in EVENT_DURATION_NOUNS:
+                    continue  # Duration adverbial, not direct object
+
+            try:
+                cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w_lower,))
+                rows = cur.fetchall()
+                if any(r[0] in ("numr", "noun", "pron") and "v_zna" in r[1] for r in rows) or w_lower in QUANTITY_WORDS:
+                    obj_indices.append(i)
+                    continue
+            except Exception:
+                pass
+
         try:
-            cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w,))
+            cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w_lower,))
             rows = cur.fetchall()
-            if any(r[0] in ("noun", "pron") and "v_zna" in r[1] for r in rows):
-                return True
+            if any(r[0] in ("noun", "pron", "numr") and "v_zna" in r[1] for r in rows):
+                obj_indices.append(i)
         except Exception:
             pass
-    return False
+    return obj_indices
+
+
+def clause_has_direct_object(words: list[str], verb_idx: int, cur: sqlite3.Cursor | None = None) -> bool:
+    """Check whether the clause containing words[verb_idx] has an accusative direct object outside prepositional phrases."""
+    return bool(get_clause_direct_object_indices(words, verb_idx, cur))
 
 
 def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor | None = None) -> bool:
@@ -1470,9 +1525,17 @@ def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor |
                     pass
             if has_finite:
                 # If clause has no agreeing nominative subject, a past feminine verb cannot be a predicate
-                if not clause_has_agreeing_nominative_subject(words, idx, cur):
+                subj_indices = get_clause_agreeing_subject_indices(words, idx, cur)
+                if not subj_indices:
                     return True
-                return not clause_has_direct_object(words, idx, cur)
+                obj_indices = get_clause_direct_object_indices(words, idx, cur)
+                # Subject and direct object must be represented by distinct tokens (or reflexive 'себе')
+                has_distinct_object = any(
+                    s != o or words[o].lower() == "себе"
+                    for s in subj_indices
+                    for o in obj_indices
+                )
+                return not has_distinct_object
             return True
 
     return False
