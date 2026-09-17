@@ -145,10 +145,12 @@ def test_cli_identical_outputs_schema_and_output_guard(repo):
 
 def test_reference_definitions_encoding_and_config(repo):
     put(repo, 'docs/space name.md', '# Space\n')
-    put(repo, 'docs/links.md', '[ref][x]\n\n[x]: <space%20name.md#heading>\n'
+    put(repo, 'docs/links.md', '**Supersedes:** [previous](space%20name.md)\n'
+                             '[ref][x]\n\n[x]: <space%20name.md#heading>\n'
                              '`scripts/config/policy.yaml`\n'
                              '```md\n[fake](b.md)\n```\n')
     git(repo, 'add', 'docs/space name.md', 'docs/links.md')
     _, graph = build(repo)
     edges = [e for e in graph['edges'] if e['source'] == 'docs/links.md']
+    assert {'source': 'docs/links.md', 'target': 'docs/space name.md', 'kind': 'supersedes'} in edges
     assert {e['target'] for e in edges} == {'docs/space name.md', 'scripts/config/policy.yaml'}

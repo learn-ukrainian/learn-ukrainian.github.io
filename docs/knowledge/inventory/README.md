@@ -74,8 +74,8 @@ Files over 512 KiB and non-UTF-8 files retain hashes, sizes, lines, and history,
 but skip semantic analysis with a visible reason. Frontmatter is limited to
 16 KiB, 2,049 tokens, and depth 32; aliases, duplicate/non-string keys, invalid
 YAML and invalid field types produce stable diagnostics. Accepted lifecycle
-values are `draft`, `active`, `superseded`, and `archive`. Supersession metadata
-resolves only to permitted tracked targets. Leading bold authority field labels
+values are `draft`, `active`, `superseded`, and `archive`. Supersession metadata and links in leading bold `Supersedes` /
+`Superseded by` fields resolve only to permitted tracked targets. Leading bold authority field labels
 are recorded without their potentially sensitive values. Archive location is
 only a low-confidence candidate; no inferred age-based obsolescence is claimed.
 Exact duplicates use content SHA-256; whitespace-normalized duplicates are

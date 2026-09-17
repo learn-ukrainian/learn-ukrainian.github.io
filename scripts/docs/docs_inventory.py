@@ -268,6 +268,12 @@ def build(repo: Path) -> tuple[dict, dict]:
                 row['authority_markers'] = sorted({match.lower() for match in re.findall(
                     r'(?im)^\*\*(Status|Authority|Frozen by|Deciders):?\*\*\s*:?', text[:METADATA_LIMIT])})
                 refs = references(text) if row['type'] in {'md', 'mdx'} else []
+                for marker, body in re.findall(
+                    r'(?im)^\*\*(Supersedes|Superseded by):?\*\*\s*:?([^\n]*)',
+                    text[:METADATA_LIMIT],
+                ):
+                    kind = marker.lower().replace(' ', '_')
+                    refs.extend((kind, raw) for _, raw in references(body))
                 for key in ('supersedes', 'superseded_by'):
                     refs.extend((key, item) for item in facts.get(key, []))
                 # Root instruction bodies are classified, not included in the graph.
