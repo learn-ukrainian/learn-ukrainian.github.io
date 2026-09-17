@@ -241,9 +241,58 @@ def test_valency_explanations_codification_nuance() -> None:
 
     # navchatysia explanation must cite Pravopys 2019 / SUM and genitive government
     navch_expl = frames["навчатися"]["explanation"]
-    assert "родовим відмінком" in navch_expl
+    assert "родово" in navch_expl
     assert "Правопис 2019" in navch_expl or "СУМ" in navch_expl
     assert "синтаксичною калькою з російської" not in navch_expl
+
+    # All frames must have nuanced critique
+    for frame in miner.VALENCY_FRAMES:
+        assert "critique" in frame
+        assert len(frame["critique"]) > 20
+
+
+def test_valency_trajectories_critique_step() -> None:
+    """Verify that valency trajectories use tailored critique instead of generic calque assertion."""
+    trajectories = miner.build_valency_trajectories()
+    for t in trajectories:
+        step3 = t["reasoning_steps"][2]
+        assert step3.startswith("3. Оцінка помилкової моделі: ")
+        assert "Спростування помилкової моделі: конструкція" not in step3
+
+
+def test_vesum_query_fail_closed_when_cursor_none() -> None:
+    """Verify query_vesum_lemma_and_count returns attested=False when cursor is None."""
+    lemma, count, attested = miner.query_vesum_lemma_and_count(None, "перевірка")
+    assert lemma == "перевірка"
+    assert count == 1
+    assert attested is False
+
+
+def test_negative_controls_filtering_rejects_defective_structures() -> None:
+    """Verify that incomplete subordinate clauses, comma before predicate, and unclosed appositives are rejected."""
+    import sqlite3
+
+    conn = sqlite3.connect(f"file:{miner.DEFAULT_VESUM_DB}?mode=ro", uri=True)
+    cur = conn.cursor()
+
+    # Defect 1: Incomplete subordinate clause lacking predicate
+    frag = "Зрозуміло, що після надання коментарів відповідними керівниками та службами обласного автодору."
+    assert not miner.is_pristine_eval_sentence(frag, cur_ves=cur)
+
+    # Defect 2: Comma separating coordinate subjects from predicate
+    comma_pred = "Ні знімок обличчя вбивці, ні детальне відео злочину, ні свідчення десятків людей, не дозволили правоохоронцям зробити подвиг."
+    assert len(miner.split_clean_ukrainian_sentences(comma_pred)) == 0
+
+    # Defect 3: Unclosed тобто appositive before predicate
+    unclosed_tobto = "Вважають, що ті вимоги, які практикують, тобто писання заяви про вступ, здавання фотографій на документи, навіть сплата членських внесків нагадує партійний стиль облікування своїх членів."
+    assert len(miner.split_clean_ukrainian_sentences(unclosed_tobto)) == 0
+
+    # Defect 4: Digit-starting sentence split cleanly
+    two_sents = "Згідно з документом надходження складуть 890 мільйонів гривень. 90,5 відсотка грошового наповнення забезпечать субвенції."
+    sents = miner.split_clean_ukrainian_sentences(two_sents)
+    assert len(sents) == 2
+    assert sents[0] == "Згідно з документом надходження складуть 890 мільйонів гривень."
+    assert sents[1] == "90,5 відсотка грошового наповнення забезпечать субвенції."
 
 
 def test_release_receipt_schema_and_checksum() -> None:

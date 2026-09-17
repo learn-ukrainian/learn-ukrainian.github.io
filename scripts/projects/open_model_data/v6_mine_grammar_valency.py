@@ -69,6 +69,15 @@ CLEAN_SRC_RE = re.compile(r"\{([^{}=]*?)=>[^{}]*?:::error_type=[^}]+\}")
 CLEAN_TGT_RE = re.compile(r"\{[^{}=]*?=>([^{}]*?):::error_type=[^}]+\}")
 
 # Ukrainian abbreviation and initials protection
+COMPOUND_ABBREVIATIONS: list[tuple[re.Pattern[str], str]] = [
+    (re.compile(r"\bв\.\s*о\.", re.IGNORECASE), "в§DOT§ о§DOT§"),
+    (re.compile(r"\bр\.\s*н\.", re.IGNORECASE), "р§DOT§ н§DOT§"),
+    (re.compile(r"\bт\.\s*зв\.", re.IGNORECASE), "т§DOT§ зв§DOT§"),
+    (re.compile(r"\bі\s+т\.\s*д\.", re.IGNORECASE), "і т§DOT§ д§DOT§"),
+    (re.compile(r"\bі\s+т\.\s*п\.", re.IGNORECASE), "і т§DOT§ п§DOT§"),
+    (re.compile(r"\bт\.\s*ін\.", re.IGNORECASE), "т§DOT§ ін§DOT§"),
+    (re.compile(r"\bм\.\s*п\.", re.IGNORECASE), "м§DOT§ п§DOT§"),
+]
 INLINE_ABBREVIATIONS = (
     "тис", "млн", "млрд", "р", "рр", "ст", "грн", "коп",
     "обл", "рай", "вид", "рис", "табл", "ін", "д",
@@ -91,6 +100,8 @@ INITIAL_PATTERN = re.compile(
 
 def protect_abbreviations(text: str) -> str:
     """Protect periods in abbreviations and initials from triggering sentence breaks."""
+    for pat, repl in COMPOUND_ABBREVIATIONS:
+        text = pat.sub(repl, text)
     text = INLINE_ABBR_PATTERN.sub(r"\1§DOT§", text)
     text = TITLE_PREFIX_PATTERN.sub(r"\1§DOT§", text)
     text = INITIAL_PATTERN.sub(r"\1§DOT§", text)
@@ -101,11 +112,23 @@ def unprotect_abbreviations(text: str) -> str:
     return text.replace("§DOT§", ".")
 
 
-# Unclosed subordinate relative clause missing closing comma before main predicate (Правопис 2019 §158)
+# Syntactic validation patterns for pristine sentence quality
 UNCLOSED_RELATIVE_CLAUSE_RE = re.compile(
     r',\s+(?:на\s+яку|в\s+які[йм]|у\s+які[йм]|яка|який|яке|які|якого|якій|яким|яких|якої|котри[йаеі])\s+[^,]{3,60}?\s+(?:обов\'язково\s+)?(?:повинн[аиое]|необхідно|варто|мусит[ьь]|має|є)\b',
     re.IGNORECASE,
 )
+UNCLOSED_TOBTO_RE = re.compile(
+    r',\s+(?:тобто|а\s+саме)\s+(?:[^,]+,\s*)*(?:[^,]+?)\s+(?:нагаду[єє]|повинн[аиое]|необхідно|варто|мусит[ьь]|має|є)\b',
+    re.IGNORECASE,
+)
+SUBJECT_COMMA_PRED_RE = re.compile(
+    r'^[^\,]+,\s*(?:ні|і|або)\s+[^\,]+,\s*(?:ні|і|або)\s+[^\,]+,\s*(?:не\s+)?(?:дозволили|могли|змогли|повинн|стали|були|мають)\b',
+    re.IGNORECASE,
+)
+PREDICATE_WORDS = {
+    "є", "немає", "нема", "треба", "можна", "слід", "варто", "необхідно",
+    "потрібно", "жаль", "сором", "пора", "час", "досить", "відомо", "зрозуміло",
+}
 
 
 def split_clean_ukrainian_sentences(
@@ -117,14 +140,15 @@ def split_clean_ukrainian_sentences(
     """Split text into complete, well-formed Ukrainian sentences.
 
     Guarantees:
-    - Abbreviations (2 тис. грн, рр., ст.) do not split across sentences.
+    - Abbreviations (2 тис. грн, рр., ст., в. о., р. н.) do not split across sentences.
     - Initials (Т. Шевченко, «А.) do not split across sentences.
+    - Multi-sentence records are rejected.
     - Fragments ending in abbreviations or dangling quotes are rejected.
     - Balanced punctuation (parentheses, brackets, braces, quotes) is enforced.
-    - Sentences with unclosed subordinate relative clauses are rejected.
+    - Sentences with unclosed subordinate relative clauses or comma errors are rejected.
     """
     protected = protect_abbreviations(text)
-    raw_sents = re.split(r"(?<=[.!?…])\s+(?=[А-ЯІЇЄҐA-Z«\"„—])", protected)
+    raw_sents = re.split(r"(?<=[.!?…])\s+(?=[А-ЯІЇЄҐA-Z0-9«\"„—])", protected)
     clean_sents: list[str] = []
     for raw in raw_sents:
         s = unprotect_abbreviations(raw).strip()
@@ -136,8 +160,8 @@ def split_clean_ukrainian_sentences(
             continue
         if s.startswith("#") or "\n" in s:
             continue
-        # Must start with uppercase Cyrillic letter, quote or dash
-        if not re.match(r"^[А-ЯІЇЄҐ«\"„—]", s):
+        # Must start with uppercase Cyrillic letter, digit, quote or dash
+        if not re.match(r"^[А-ЯІЇЄҐ«\"„—\d]", s):
             continue
         # Must end with sentence-final punctuation
         if not re.search(r"[.!?…»\"]$", s):
@@ -158,17 +182,70 @@ def split_clean_ukrainian_sentences(
             continue
         if s.count('"') % 2 != 0:
             continue
+        # Multi-sentence rejector: verify no unquoted internal sentence boundary
+        s_prot = protect_abbreviations(s)
+        s_trim = re.sub(r"[.!?…»\"]+$", "", s_prot)
+        if re.search(r"[.!?…]\s+[А-ЯІЇЄҐA-Z0-9«\"„—]", s_trim):
+            continue
         # Reject invalid double punctuation
         if re.search(r"(?<!\.)\.\.(?!\.)|,,|;;", s):
             continue
         # Reject dangling non-terminal punctuation
         if re.search(r"[,;:\-–—]\s*$", s):
             continue
-        # Reject sentences with unclosed subordinate relative clause missing closing comma (Правопис 2019 §158)
+        # Reject sentences with unclosed relative or parenthetical clauses (Правопис 2019 §158)
         if UNCLOSED_RELATIVE_CLAUSE_RE.search(s):
+            continue
+        if UNCLOSED_TOBTO_RE.search(s):
+            continue
+        if SUBJECT_COMMA_PRED_RE.search(s):
             continue
         clean_sents.append(s)
     return clean_sents
+
+
+def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
+    """Verify that a negative control candidate has an explicit predicate and valid subordinate clauses."""
+    words = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", s.lower())
+    if not words:
+        return False
+    has_pred = False
+    for w in words:
+        if w in PREDICATE_WORDS:
+            has_pred = True
+            break
+        if cur_ves:
+            try:
+                cur_ves.execute("SELECT 1 FROM forms_all WHERE word_form = ? AND pos = 'verb' LIMIT 1", (w,))
+                if cur_ves.fetchone():
+                    has_pred = True
+                    break
+            except Exception:
+                pass
+        else:
+            has_pred = True
+            break
+    if not has_pred:
+        return False
+
+    # Check subordinate clause completeness if present at end of sentence
+    m_sub = re.search(r',\s*(?:що|щоб|якщо|якби|оскільки|бо),?\s+([^.!?…]{3,150})[.!?…»\"]$', s, re.IGNORECASE)
+    if m_sub and cur_ves:
+        sub_words = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", m_sub.group(1).lower())
+        sub_has_pred = any(w in PREDICATE_WORDS for w in sub_words)
+        if not sub_has_pred:
+            for w in sub_words:
+                try:
+                    cur_ves.execute("SELECT 1 FROM forms_all WHERE word_form = ? AND pos = 'verb' LIMIT 1", (w,))
+                    if cur_ves.fetchone():
+                        sub_has_pred = True
+                        break
+                except Exception:
+                    pass
+        if not sub_has_pred:
+            return False
+
+    return True
 
 
 def query_vesum_lemma_and_count(cur_ves: sqlite3.Cursor | None, token: str) -> tuple[str, int, bool]:
@@ -179,7 +256,7 @@ def query_vesum_lemma_and_count(cur_ves: sqlite3.Cursor | None, token: str) -> t
     """
     clean_token = token.strip().lower()
     if not cur_ves:
-        return clean_token, 1, True
+        return clean_token, 1, False
     try:
         # Check forms_all table first (canonical VESUM SQLite schema: word_form, lemma)
         # Prefer exact lemma match if the word form is itself a lemma (e.g., preposition 'при' vs verb 'перти')
@@ -328,6 +405,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "correct_pattern": "опанувати (що? знахідний відмінок)",
         "incorrect_pattern": "опанувати (чим? орудний відмінок)",
         "explanation": "Дієслово «опанувати» в українській мові перехідне і керує знахідним відмінком без прийменника: опанувати мову, опанувати професію, опанувати комп'ютерну грамотність (помилково: опанувати мовою).",
+        "critique": "Конструкція «опанувати чим» порушує валентність перехідного дієслова: в українській літературній мові воно керує прямим знахідним відмінком («опанувати що»).",
         "examples": [
             ("Студенти успішно опанували складний теоретичний матеріал з квантової фізики.", "Студенти успішно опанували складним теоретичним матеріалом з квантової фізики."),
             ("Щоб стати фахівцем, необхідно опанувати сучасні цифрові технології.", "Щоб стати фахівцем, необхідно опанувати сучасними цифровими технологіями."),
@@ -340,6 +418,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "correct_pattern": "завідувач (чого? родовий відмінок)",
         "incorrect_pattern": "завідувач (чим? орудний відмінок)",
         "explanation": "Іменник «завідувач» керує іменником у родовому відмінку без прийменника: завідувач кафедри, завідувач відділу, завідувач лабораторії (помилково під впливом російської: завідувач кафедрою).",
+        "critique": "Конструкція «завідувач чим» є синтаксичною калькою; питома українська модель вимагає безприйменникового родового відмінка («завідувач чого»).",
         "examples": [
             ("На засіданні виступив завідувач кафедри української філології.", "На засіданні виступив завідувач кафедрою української філології."),
             ("Наказом призначено нового завідувача наукового відділу університету.", "Наказом призначено нового завідувача науковим відділом університету."),
@@ -351,7 +430,13 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "verb": "докоряти",
         "correct_pattern": "докоряти (кому/чому? давальний відмінок)",
         "incorrect_pattern": "докоряти (кого/що? знахідний відмінок)",
-        "explanation": "У сучасній українській літературній мові нормативним є керування давальним відмінком: докоряти кому (синові, собі). Вживання знахідного відмінка вважається ненормативним для літературного стилю / розмовним відхиленням (згідно зі СУМ та нормативними порадниками).",
+        "explanation": (
+            "У сучасній українській літературній мові (посібники з культури мови Б. Антоненка-Давидовича, О. Пономарева) "
+            "нормативним є керування давальним відмінком: докоряти кому (синові, собі). "
+            "Словник української мови (СУМ) фіксує конструкцію зі знахідним відмінком лише з ремаркою «розм.» (розмовне), "
+            "тому в літературному мовленні та публіцистичному стилі вона вважається ненормативною."
+        ),
+        "critique": "Конструкція «докоряти кого» у СУМ кваліфікується як розмовна (розм.), а в сучасній літературній нормі та діловому мовленні нормативним є виключно давальний відмінок («докоряти кому»).",
         "examples": [
             ("Батько ніколи не докоряв синові за тимчасові життєві невдачі.", "Батько ніколи не докоряв сина за тимчасові життєві невдачі."),
             ("Вона гірко докоряла собі за виявлену в розмові нестриманість.", "Вона гірко докоряла себе за виявлену в розмові нестриманість."),
@@ -363,7 +448,13 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "verb": "навчатися",
         "correct_pattern": "навчатися (чого? родовий відмінок)",
         "incorrect_pattern": "навчатися (чому? давальний відмінок)",
-        "explanation": "Згідно з нормами сучасної української літературної мови (Правопис 2019, СУМ), дієслово «навчатися» послідовно керує родовим відмінком без прийменника: навчатися мови, ремесла, грамоти. Вживання давального відмінка є ненормативним для літературного мовлення.",
+        "explanation": (
+            "Сучасна українська літературна норма вимагає від дієслова «навчатися» безприйменникового родового відмінка: "
+            "навчатися мови, ремесла, грамоти (Б. Антоненко-Давидович «Як ми говоримо», О. Пономарів). "
+            "Хоча СУМ і фіксує давальний відмінок як «рідковживаний» (рідко), "
+            "взірцевий кодифікований стандарт однозначно віддає перевагу родовому відмінку."
+        ),
+        "critique": "Конструкція «навчатися чому» у словниках (зокрема СУМ) має позначку «рідко» і є нерекомендованою для сучасного літературного стилю; усталеною нормою є безприйменниковий родовий відмінок («навчатися чого»).",
         "examples": [
             ("Студенти наполегливо навчаються української літературної мови.", "Студенти наполегливо навчаються українській літературній мові."),
             ("Молодь охоче навчається сучасних цифрових технологій та дизайну.", "Молодь охоче навчається сучасним цифровим технологіям та дизайну."),
@@ -376,6 +467,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "correct_pattern": "властивий (кому/чому? давальний відмінок)",
         "incorrect_pattern": "властивий (для кого/чого? прийменник для)",
         "explanation": "Прикметники «властивий» та «притаманний» керують давальним відмінком: властивий людині, притаманний мові (конструкція «властивий для кого» є калькою з російської «свойственный для»).",
+        "critique": "Конструкція «властивий для кого» є синтаксичною калькою (з рос. «свойственный для»); українські прикметники «властивий» та «притаманний» керують давальним відмінком без прийменника («властивий кому»).",
         "examples": [
             ("Така дивовижна доброзичливість властива щирим і відкритим людям.", "Така дивовижна доброзичливість властива для щирих і відкритих людей."),
             ("Мелодійність та вокалізм притаманні українській фонетичній системі.", "Мелодійність та вокалізм притаманні для української фонетичної системи."),
@@ -388,6 +480,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "correct_pattern": "дякувати (кому/чому? давальний відмінок)",
         "incorrect_pattern": "дякувати (кого/що? знахідний відмінок)",
         "explanation": "Дієслово «дякувати» вимагає виключно давального відмінка: дякую вам, щиро дякуємо захисникам (вживання знахідного відмінка «дякую вас» є грубою синтаксичною калькою).",
+        "critique": "Конструкція «дякувати кого» є синтаксичною калькою; дієслово «дякувати» в українській мові послідовно керує давальним відмінком («дякувати кому»).",
         "examples": [
             ("Громада щиро дякує волонтерам за своєчасну доставку ліків.", "Громада щиро дякує волонтерів за своєчасну доставку ліків."),
             ("Хочу від щирого серця подякувати своїм шановним наставникам.", "Хочу від щирого серця подякувати своїх шановних наставників."),
@@ -400,6 +493,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "correct_pattern": "вибачати (кому? давальний відмінок)",
         "incorrect_pattern": "вибачати (кого? знахідний відмінок)",
         "explanation": "В українській мові дієслово «вибачати» керує давальним відмінком особи: вибачте мені, вибачати другові (помилково: вибачте мене під впливом російського «извините меня»).",
+        "critique": "Конструкція «вибачте мене» є калькою з російського мовлення; в українській літературній мові дієслово «вибачати» керує давальним відмінком особи («вибачте мені»).",
         "examples": [
             ("Прошу, вибачте мені за цю мимовільну прикрість.", "Прошу, вибачте мене за цю мимовільну прикрість."),
             ("Справжні друзі завжди щиро вибачають один одному дрібні непорозуміння.", "Справжні друзі завжди щиро вибачають один одного за дрібні непорозуміння."),
@@ -412,6 +506,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "correct_pattern": "хворіти (на що? на + знахідний відмінок)",
         "incorrect_pattern": "хворіти (чим? орудний відмінок)",
         "explanation": "В українській мові назва хвороби при дієслові «хворіти / захворіти» вживається з прийменником «на» у знахідному відмінку: хворіти на грип, захворіти на ангіну (орудний відмінок «хворіти грипом» є калькою з російської).",
+        "critique": "Конструкція «хворіти грипом» в орудному відмінку є калькою з російської мови; в українській літературній мові нормативною є прийменникова модель «хворіти на що».",
         "examples": [
             ("Узимку багато дітей у класі захворіло на сезонну застуду.", "Узимку багато дітей у класі захворіло сезонною застудою."),
             ("Лікар наголосив, що пацієнт тривалий час хворіє на цукровий діабет.", "Лікар наголосив, що пацієнт тривалий час хворіє цукровим діабетом."),
@@ -424,6 +519,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "correct_pattern": "знущатися (з кого/чого? з + родовий відмінок)",
         "incorrect_pattern": "знущатися (над ким/чим? над + орудний відмінок)",
         "explanation": "Дієслова «знущатися», «глузувати», «кепкувати», «сміятися» в українській мові керують прийменником «з» (зі) з родовим відмінком: сміятися з ворога, глузувати з невігластва (конструкція з «над» є російським впливом).",
+        "critique": "Конструкція «знущатися над ким» є калькою з російської; питома українська синтаксична норма вимагає прийменника «з» з родовим відмінком («знущатися з кого»).",
         "examples": [
             ("Правозахисники зафіксували численні факти того, як ворог знущався з полонених.", "Правозахисники зафіксували численні факти того, як ворог знущався над полоненими."),
             ("Неприпустимо кепкувати з чужих фізичних вад чи недоліків.", "Неприпустимо кепкувати над чужими фізичними вадами чи недоліками."),
@@ -436,6 +532,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "correct_pattern": "потребувати (чого? родовий відмінок)",
         "incorrect_pattern": "потребувати (що? знахідний відмінок)",
         "explanation": "Дієслово «потребувати» в українській мові послідовно керує родовим відмінком: потребувати допомоги, потребувати ремонту, потребувати уваги (знахідний відмінок є помилковим).",
+        "critique": "Дієслово «потребувати» керує родовим відмінком без прийменника («потребувати чого»); конструкції зі знахідним відмінком порушують норму літературного слововживання.",
         "examples": [
             ("Постраждалі внаслідок негоди люди потребують негайної медичної допомоги.", "Постраждалі внаслідок негоди люди потребують негайну медичну допомогу."),
             ("Старовинна споруда замку давно потребує капітальної реставрації.", "Старовинна споруда замку давно потребує капітальну реставрацію."),
@@ -448,6 +545,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "correct_pattern": "завдати (чого? родовий відмінок)",
         "incorrect_pattern": "нанести (що? знахідний відмінок)",
         "explanation": "В українській мові про негативні наслідки, шкоду, біль, удар кажуть «завдати шкоди / завдати удару» (родовий відмінок). Слово «нанести» вживають лише в прямому значенні нанесення фарби чи нанесення на карту.",
+        "critique": "Дієслово «завдати» сполучається з родовим відмінком («завдати шкоди, удару»); вживання «нанести збитки» є канцеляризмом і порушенням лексичної сполучуваності.",
         "examples": [
             ("Рясні зливи завдали значних збитків місцевим фермерським господарствам.", "Рясні зливи нанесли значні збитки місцевим фермерським господарствам."),
             ("Сили оборони завдали нищівного удару по позиціях окупантів.", "Сили оборони нанесли нищівний удар по позиціях окупантів."),
@@ -460,6 +558,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "correct_pattern": "вжити заходів (родовий відмінок)",
         "incorrect_pattern": "прийняти міри (калька)",
         "explanation": "Нормативний український вислів — «вжити заходів». Вислів «прийняти міри» є грубою калькою з російської канцелярської мови («принять меры»).",
+        "critique": "Вислів «прийняти міри» є канцелярською калькою з російської («принять меры»); нормативний український відповідник — «вжити заходів».",
         "examples": [
             ("Керівництво підприємства зобов'язане терміново вжити заходів безпеки.", "Керівництво підприємства зобов'язане терміново прийняти міри безпеки."),
             ("Комісія постановила вжити дієвих заходів для ліквідації аварії.", "Комісія постановила прийняти дієві міри для ліквідації аварії."),
@@ -472,6 +571,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "correct_pattern": "у справах / за законом / з питань / у вихідні",
         "incorrect_pattern": "по справах / по закону / по питанням / по вихідним",
         "explanation": "Прийменник «по» в українській мові має обмежену сферу вживання (рух поверхнею або мета руху: піти по хліб). Його неприпустимо калькувати у сфері діловодства, часу та регламенту.",
+        "critique": "Прийменник «по» в українській мові має вузьку семантику (рух поверхнею або мета); у діловому мовленні слід використовувати питомі прийменники «у», «за», «з», «щодо».",
         "examples": [
             ("Директор вирушив у службових справах до столиці.", "Директор вирушив по службових справах до столиці."),
             ("Суд виніс рішення суворо за чинним законом.", "Суд виніс рішення суворо по чинному закону."),
@@ -485,6 +585,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "correct_pattern": "за участі / за умови / за життя / під час зустрічі",
         "incorrect_pattern": "при участі / при умові / при житті / при зустрічі",
         "explanation": "Прийменник «при» вказує на просторову близькість (при дорозі, при університеті). Вживання «при» у значенні супроводу, умови чи часу є російською синтаксичною калькою.",
+        "critique": "Вживання «при» у значенні супроводу, умови чи часу є синтаксичною калькою; нормативними відповідниками є конструкції «за умови», «під час», «за участі».",
         "examples": [
             ("Конференція відбулася за активної участі провідних науковців.", "Конференція відбулася при активній участі провідних науковців."),
             ("Договір набуває чинності лише за умови підписання обома сторонами.", "Договір набуває чинності лише при умові підписання обома сторонами."),
@@ -551,6 +652,7 @@ def verify_respectful_tone(text: str, pejorative_words: set[str]) -> bool:
 def load_brown_uk_sentences(
     brown_uk_dir: Path,
     eval_count: int = 500,
+    cur_ves: sqlite3.Cursor | None = None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Load sentences from Brown-UK data/good and data/so-so, enforcing document-level holdout."""
     good_dir = brown_uk_dir / "data" / "good"
@@ -574,7 +676,7 @@ def load_brown_uk_sentences(
         clean_sents = split_clean_ukrainian_sentences(text)
         doc_count = 0
         for s in clean_sents:
-            if s not in eval_seen_sentences:
+            if s not in eval_seen_sentences and is_pristine_eval_sentence(s, cur_ves):
                 eval_seen_sentences.add(s)
                 eval_id = f"eval_gram_val_{hashlib.sha256(s.encode()).hexdigest()[:8]}"
                 eval_records.append({
@@ -609,7 +711,7 @@ def load_brown_uk_sentences(
             text = doc.read_text(encoding="utf-8")
             clean_sents = split_clean_ukrainian_sentences(text)
             for s in clean_sents:
-                if s not in eval_seen_sentences:
+                if s not in eval_seen_sentences and is_pristine_eval_sentence(s, cur_ves):
                     eval_seen_sentences.add(s)
                     eval_id = f"eval_gram_val_{hashlib.sha256(s.encode()).hexdigest()[:8]}"
                     eval_records.append({
@@ -755,7 +857,7 @@ def build_valency_trajectories(cur_ves: sqlite3.Cursor | None = None) -> list[di
             reasoning = [
                 f"1. Аналіз граматичного зв'язку: у реченні «{incorrect_sent}» наявне порушення норми відмінкового керування при слові «{verb}».",
                 f"2. Правило синтаксичного керування: в українській літературній мові нормативною є модель {frame['correct_pattern']}.",
-                f"3. Спростування помилкової моделі: конструкція {frame['incorrect_pattern']} є синтаксичною калькою або порушенням валентної структури слова.",
+                f"3. Оцінка помилкової моделі: {frame['critique']}",
                 f"4. Нормативна редакція: «{correct_sent}».",
             ]
             final_response = (
@@ -1061,12 +1163,11 @@ def main() -> int:
     conn_ves = None
     cur_ves = None
     vesum_path: Path = args.vesum_db
-    if vesum_path.is_file():
-        conn_ves = sqlite3.connect(f"file:{vesum_path}?mode=ro", uri=True)
-        cur_ves = conn_ves.cursor()
-        print(f"Connected to VESUM database: {vesum_path}")
-    else:
-        print(f"WARNING: VESUM database not found at {vesum_path}")
+    if not vesum_path.is_file():
+        raise FileNotFoundError(f"VESUM database not found at {vesum_path} (required for release certification)")
+    conn_ves = sqlite3.connect(f"file:{vesum_path}?mode=ro", uri=True)
+    cur_ves = conn_ves.cursor()
+    print(f"Connected to VESUM database: {vesum_path}")
 
     try:
         # 1. Load tone dictionary for Gate 6
@@ -1076,7 +1177,9 @@ def main() -> int:
 
         # 2. Ingest Brown-UK corpus & partition held-out evaluation
         print("\n[2/5] Loading Brown-UK corpus and isolating held-out evaluation documents...")
-        eval_records, brown_uk_train = load_brown_uk_sentences(args.brown_uk_dir, eval_count=args.eval_count)
+        eval_records, brown_uk_train = load_brown_uk_sentences(
+            args.brown_uk_dir, eval_count=args.eval_count, cur_ves=cur_ves
+        )
         print(f"Generated {len(eval_records)} held-out evaluation records (Gate 3 no-harm floor).")
         print(f"Loaded {len(brown_uk_train)} Brown-UK training candidate sentences.")
 
