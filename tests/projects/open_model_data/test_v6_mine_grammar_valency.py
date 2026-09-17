@@ -615,6 +615,21 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.DISCORDANT_PERSONAL_NAME_CASE_RE.search(frag_shcho_stosuetsya)
     assert miner.is_pristine_eval_sentence(frag_shcho_stosuetsya, cur_ves=cur)
 
+    # Defect 49 / Negative regression (Round 23 P2): Unpunctuated asyndetic condition clause lacking dash (Правопис 2019 §161 II.1)
+    frag_ne_vystachae_comma = "Не вистачає, скажімо, у якомусь селі коштів на ремонт доріг, школи, фельдшерсько-акушерського пункту, допоможе об'єднана громада."
+    assert miner.UNPUNCTUATED_ASYNDETIC_CONDITION_RE.search(frag_ne_vystachae_comma)
+    assert not miner.is_pristine_eval_sentence(frag_ne_vystachae_comma, cur_ves=cur)
+
+    # Defect 50 / Positive control (Round 23 P2): Properly punctuated asyndetic condition with dash (Правопис 2019 §161 II.1)
+    frag_ne_vystachae_dash = "Не вистачає, скажімо, у якомусь селі коштів на ремонт доріг, школи, фельдшерсько-акушерського пункту — допоможе об'єднана громада."
+    assert not miner.UNPUNCTUATED_ASYNDETIC_CONDITION_RE.search(frag_ne_vystachae_dash)
+    assert miner.is_pristine_eval_sentence(frag_ne_vystachae_dash, cur_ves=cur)
+
+    # Defect 51 / Positive control (Round 23 P2): Clean replacement literary sentence
+    frag_yikh_same_dlya_tsyoho = "Їх саме для цього обирали, і у своїх передвиборних програмах вони на цьому акцентували."
+    assert not miner.UNPUNCTUATED_ASYNDETIC_CONDITION_RE.search(frag_yikh_same_dlya_tsyoho)
+    assert miner.is_pristine_eval_sentence(frag_yikh_same_dlya_tsyoho, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:

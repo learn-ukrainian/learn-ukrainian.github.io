@@ -192,6 +192,10 @@ UNPUNCTUATED_ADVERSATIVE_PARENTHETICAL_RE = UNPUNCTUATED_CONJUNCTION_PARENTHETIC
 DISCORDANT_PERSONAL_NAME_CASE_RE = re.compile(
     r"\b(?:Олега|Івана|Петра|Михайла|Василя|Володимира|Сергія|Андрія|Олександра|Тараса|Юрія)\s+[А-ЯІЇЄҐ][а-яіїєґ']+(?:уку|юку|енку|овичу|евичу|ові|еві|єві)\b"
 )
+UNPUNCTUATED_ASYNDETIC_CONDITION_RE = re.compile(
+    r"^(?:Не\s+вистачає|Не\s+вистачить|Бракує|Забракне)\b(?:(?!\s+[—–-]\s+).)+?,\s*(?:допоможе|порятує|врятує|завадить|підтримає|виручить|забезпечить|стане|знайдеться|вирішить)\b",
+    re.IGNORECASE,
+)
 PREDICATE_WORDS = {
     "є", "це", "немає", "нема", "треба", "можна", "слід", "варто", "необхідно",
     "потрібно", "жаль", "сором", "пора", "час", "досить", "відомо", "зрозуміло",
@@ -290,6 +294,8 @@ def split_clean_ukrainian_sentences(
         if UNPUNCTUATED_ADVERSATIVE_PARENTHETICAL_RE.search(s):
             continue
         if DISCORDANT_PERSONAL_NAME_CASE_RE.search(s):
+            continue
+        if UNPUNCTUATED_ASYNDETIC_CONDITION_RE.search(s):
             continue
         clean_sents.append(s)
     return clean_sents
@@ -987,6 +993,10 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
 
     # 17. Discordant case in personal name (e.g. genitive first name + dative surname 'Олега Токарчуку')
     if DISCORDANT_PERSONAL_NAME_CASE_RE.search(s):
+        return False
+
+    # 18. Unpunctuated asyndetic condition-consequence clause lacking dash (Правопис 2019 §161 II.1)
+    if UNPUNCTUATED_ASYNDETIC_CONDITION_RE.search(s):
         return False
 
     # 4. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)
