@@ -208,6 +208,14 @@ INVALID_CALENDAR_DATE_AFFIX_RE = re.compile(
     r")",
     re.IGNORECASE,
 )
+INVALID_DOCUMENT_AKTU_RE = re.compile(
+    r"\b(?:"
+    r"(?:прийняття|ухвалення|підписання|оприлюднення|скасування|затвердження|проекту|проєкту|положення|положень|норм|вимог|дію|дії|статті)\s+(?:[а-яіїєґ\']+\s+)?акту\b"
+    r"|(?:цього|даного|такого|законодавчого|нормативного|правового|підзаконного|установчого|ненормативного|індивідуального)\s+акту\b"
+    r"|акту\s+(?:Верховно[їі]|Президента|Кабінету|уряду|парламенту|суду)\b"
+    r")",
+    re.IGNORECASE,
+)
 PREDICATE_WORDS = {
     "є", "це", "немає", "нема", "треба", "можна", "слід", "варто", "необхідно",
     "потрібно", "жаль", "сором", "пора", "час", "досить", "відомо", "зрозуміло",
@@ -312,6 +320,8 @@ def split_clean_ukrainian_sentences(
         if INVALID_NUMERAL_AFFIX_RE.search(s):
             continue
         if INVALID_CALENDAR_DATE_AFFIX_RE.search(s):
+            continue
+        if INVALID_DOCUMENT_AKTU_RE.search(s):
             continue
         clean_sents.append(s)
     return clean_sents
@@ -1036,6 +1046,7 @@ COMPOUND_GENITIVE_PREP_RE = re.compile(
     r"\b(?:" + "|".join(GENITIVE_COMPOUND_PREPOSITIONS) + r")\b",
     re.IGNORECASE,
 )
+INFINITIVE_LICENSING_PREPOSITIONS = re.compile(r"\b(?:з\s+метою|під\s+приводом)\b", re.IGNORECASE)
 
 
 def has_invalid_compound_preposition_case(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
@@ -1045,7 +1056,7 @@ def has_invalid_compound_preposition_case(s: str, cur_ves: sqlite3.Cursor | None
     Nouns taking '-а/-я' in genitive singular (e.g. 'букет' -> 'букета') that erroneously appear with
     '-у/-ю' (dative/locative 'букету') violate grammatical case government.
     Infinitive verbal complements (e.g. 'з метою отримати допомогу', СУМ-11) are recognized as valid
-    verbal phrases and not subjected to nominal genitive constraints.
+    verbal phrases only for compound prepositions that license infinitives ('з метою', 'під приводом').
     """
     if not cur_ves:
         return False
@@ -1056,6 +1067,7 @@ def has_invalid_compound_preposition_case(s: str, cur_ves: sqlite3.Cursor | None
         words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\x27\u2019\-]+", after)
         if not words:
             continue
+        licenses_inf = bool(INFINITIVE_LICENSING_PREPOSITIONS.search(m.group(0)))
         for w in words[:4]:
             cur_ves.execute(
                 "SELECT tags, pos FROM forms_all WHERE (word_form = ? OR word_form = ?)",
@@ -1064,10 +1076,12 @@ def has_invalid_compound_preposition_case(s: str, cur_ves: sqlite3.Cursor | None
             rows = cur_ves.fetchall()
             if not rows:
                 break
-            # If an infinitive appears before the head noun, it is an accepted verbal complement (e.g. 'з метою отримати...', СУМ-11)
+            # Infinitive verb check: only accepted if preposition licenses infinitive complement
             if any("inf" in r[0] for r in rows):
-                break
-            # If a finite verb appears before the head noun, it is ungrammatical (prepositions do not govern finite verbs)
+                if licenses_inf:
+                    break
+                return True  # Preposition does not license infinitive complement
+            # Finite verb check (prepositions never govern finite verbs)
             if any(r[1] == "verb" for r in rows) and not any(r[1] in ("noun", "adj", "adv") for r in rows):
                 return True
             # If the token can function as an adverb modifier, continue scanning for head
@@ -1210,6 +1224,10 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
 
     # 23. Invalid compound preposition case government (e.g. 'за допомогою букету' vs required genitive 'букета'; Правопис 2019 §82)
     if has_invalid_compound_preposition_case(s, cur_ves):
+        return False
+
+    # 24. Erroneous genitive -у in legislative/document noun 'акт' (Правопис 2019 §82: 'акта' (документ) vs 'акту' (дія))
+    if INVALID_DOCUMENT_AKTU_RE.search(s):
         return False
 
     # 4. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)

@@ -768,6 +768,26 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.has_invalid_compound_preposition_case(frag_z_metoyu_finite, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_z_metoyu_finite, cur_ves=cur)
 
+    # Defect 78 / Negative regression (Round 33 P2): Preposition 'за допомогою' taking infinitive rejected (only purpose prepositions license infinitives)
+    frag_za_dopomohoyu_inf = "Він прийшов туди за допомогою отримати необхідну допомогу."
+    assert miner.has_invalid_compound_preposition_case(frag_za_dopomohoyu_inf, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_za_dopomohoyu_inf, cur_ves=cur)
+
+    # Defect 79 / Negative regression (Round 33 P2): Document noun 'акт' with invalid genitive -у 'цього акту' rejected (Правопис 2019 §82)
+    frag_aktu_doc = "Однак прийняття цього акту Верховною Радою України навряд призведе до стрімких і радикальних змін в діловому світі."
+    assert miner.INVALID_DOCUMENT_AKTU_RE.search(frag_aktu_doc)
+    assert not miner.is_pristine_eval_sentence(frag_aktu_doc, cur_ves=cur)
+
+    # Defect 80 / Positive control (Round 33 P2): Document noun 'акт' with correct genitive -а 'цього акта' accepted
+    frag_akta_doc = "Однак прийняття цього акта Верховною Радою України навряд призведе до стрімких і радикальних змін в діловому світі."
+    assert not miner.INVALID_DOCUMENT_AKTU_RE.search(frag_akta_doc)
+    assert miner.is_pristine_eval_sentence(frag_akta_doc, cur_ves=cur)
+
+    # Defect 81 / Positive control (Round 33 P2): Clean replacement sentence from Brukhal doc accepted
+    frag_medyky_prykarpattya = "Тож до кінця року медики Прикарпаття отримають зарплатню у повному обсязі."
+    assert not miner.INVALID_DOCUMENT_AKTU_RE.search(frag_medyky_prykarpattya)
+    assert miner.is_pristine_eval_sentence(frag_medyky_prykarpattya, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:
