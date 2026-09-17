@@ -3835,3 +3835,35 @@ def test_pos_parse_cache_preserves_input_handling_and_result_isolation():
     assert parse({"pos": "verb"}) == []
     assert parse("verb:imperf") == ["verb"]
     assert parse("verbatim") == []
+
+
+@pytest.mark.parametrize("kind", ["classify", "cloze"])
+def test_budget_raw_rejection_keeps_later_small_cards_and_measures_final_bytes(kind):
+    import gzip
+
+    original = {"A1": {kind: {
+        "schema": f"atlas-practice-{kind}",
+        kind: [
+            {"lemmaId": "one", "id": "first", "evidence": "x" * 500},
+            {"lemmaId": "one", "id": "too-large", "evidence": "x" * 1800},
+            {"lemmaId": "one", "id": "later-small", "evidence": "x" * 60},
+            {"lemmaId": "one", "id": "last", "evidence": "x" * 300},
+        ],
+    }}}
+    results = []
+    for _ in range(2):
+        shards = json.loads(json.dumps(original))
+        apply_size_budgets(shards, raw_limit=1000, gzip_limit=10000,
+                           cloze_raw_limit=1500, cloze_gzip_limit=10000)
+        payload = shards["A1"][kind]
+        retained = {item["id"] for item in payload[kind]}
+        assert "too-large" not in retained
+        assert {"first", "later-small"} <= retained
+        raw = generate_practice_deck._json_bytes(payload)
+        limit = 1500 if kind == "cloze" else 1000
+        assert len(raw) <= limit
+        assert len(gzip.compress(raw, mtime=0)) <= 10000
+        assert payload["sizeBudget"]["rawLimitBytes"] == limit
+        assert payload["sizeBudget"]["ok"] is True
+        results.append(payload)
+    assert results[0] == results[1]

@@ -6193,6 +6193,14 @@ def apply_size_budgets(
 
         def mode_fits(candidate: list[Any]) -> bool:
             items[:] = candidate
+            effective_raw_limit = (
+                cloze_raw_limit if kind == "cloze" and cloze_raw_limit is not None else raw_limit
+            )
+            # Most greedy tail candidates already exceed the raw-byte cap.
+            # Reject them before compression; final retained shards still get
+            # their complete raw/gzip measurements through set_budget below.
+            if len(_json_bytes(payload)) > effective_raw_limit:
+                return False
             return bool(set_budget(payload, kind)["ok"])
 
         ordered = [candidate for _index, candidate in coverage_first_rows(original)]
