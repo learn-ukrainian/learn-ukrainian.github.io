@@ -40,28 +40,29 @@ that path fights Layout A / agents_extensions deploy.
 
 ### Operator posture (2026-09-17)
 
-**Use TypeSafe wherever it fits. Experiment freely.** Prefer a cheap Jev
-judgment over a full generative call when the need is a structured decision
-(route, rank, gate, score, verify, pick-one). Batch independent questions in
-one `system_one` call. Put thresholds in code; tune them as you learn.
+**Experiment freely. Use TypeSafe wherever a structured judgment helps** —
+including Cyrillic / Ukrainian **word qualification and labeling** (POS-ish
+buckets, dialect vs standard, OCR-garbage, Russian-shadow suspect, keep/drop,
+annotation priority, domain tags, etc.). Prefer a cheap Jev call over a full
+generative LLM when you need Choice / Score / Noul. Batch many questions in
+one `system_one` call. Invent labels, try thresholds, break things in pilots;
+tune in code.
 
-Suggested starting surfaces (not an exclusive list): pre-dispatch / lane
-triage; open-model-data row gates; RAG keep/drop; citation checks; skill/tool
-suggestion; any prompt-and-parse step that can become Choice / Score / Noul.
+Great fits: open-model-data row/word gates; lexicon triage; pre-dispatch
+routing; RAG keep/drop; citation checks; skill pick; any prompt-and-parse.
 
-### Still binding (narrow)
+### Only hard rails
 
-- **Credentials:** never commit or paste the API key.
-- **Ukrainian language facts:** lemma, stress, morphology, orthography, and
-  immersion policy stay VESUM / `sources` / verbatim curriculum — TypeSafe may
-  *route or triage*, not invent linguistic truth.
-- **Human dataset text:** classify/score/gate only; do not rewrite or
-  impersonate human-authored Ukrainian sources.
-- **Authority planes:** TypeSafe does not replace Fleet Comms, Monitor leases,
-  formal cross-family review, or merge gates.
+- **Credentials:** never commit or paste the API key
+  (`export TYPESAFE_API_KEY="$(tr -d '\r\n' < ~/.secrets/typsafe-ai.key)"`).
+- **Do not fake attested morphology:** if you need a VESUM-grade lemma/stress
+  paradigm as *fact*, still call VESUM/`sources`. Labeling with TypeSafe first
+  is encouraged; treating Jev as a replacement dictionary is not.
+- **Do not rewrite human source text** to “fix” Ukrainian in dataset pipelines —
+  label and route instead.
+- TypeSafe is not a substitute for formal CF / Monitor / merge authority.
 
-CI spend/egress is allowed when useful for a measured experiment; prefer local
-or bounded jobs first, and record model id + usage on receipts.
+Otherwise: go explore.
 
 ---
 
