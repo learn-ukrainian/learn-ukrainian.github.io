@@ -1236,15 +1236,26 @@ def has_genitive_reading(word: str, cur: sqlite3.Cursor | None = None) -> bool:
         return True
 
 
+NUMERAL_VERB_AGREEMENT: dict[str, tuple[str, ...]] = {
+    "два": (":past:p", ":pres:p:3", ":futr:p:3"),
+    "дві": (":past:p", ":pres:p:3", ":futr:p:3"),
+    "три": (":past:p", ":pres:p:3", ":futr:p:3"),
+    "чотири": (":past:p", ":pres:p:3", ":futr:p:3"),
+    "обидва": (":past:p", ":pres:p:3", ":futr:p:3"),
+    "обидві": (":past:p", ":pres:p:3", ":futr:p:3"),
+    "одні": (":past:p", ":pres:p:3", ":futr:p:3"),
+    "один": (":past:m", ":pres:s:3", ":futr:s:3"),
+    "одна": (":past:f", ":pres:s:3", ":futr:s:3"),
+}
+
+
 def verb_agrees_with_numeral(numr_w: str, verb_rows: list[tuple[str, ...]]) -> bool:
     """Check whether a finite verb form can grammatically agree with a nominative numeral subject."""
-    if numr_w in {"два", "дві", "три", "чотири", "обидва", "обидві", "одні"}:
-        return any(any(t in r[1] for t in (":past:p", ":pres:p:3", ":futr:p:3")) for r in verb_rows)
-    if numr_w == "один":
-        return any(":past:m" in r[1] or ":pres:s:3" in r[1] for r in verb_rows)
-    if numr_w == "одна":
-        return any(":past:f" in r[1] for r in verb_rows)
-    return False
+    expected_tags = NUMERAL_VERB_AGREEMENT.get(numr_w)
+    if expected_tags is None:
+        return False
+    return any(any(t in r[1] for t in expected_tags) for r in verb_rows)
+
 
 
 def is_in_direct_or_enclosing_pp(words: list[str], idx: int, cur: sqlite3.Cursor | None = None) -> bool:
@@ -1708,30 +1719,32 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
 
                             # 1a. Distinguish numeral-governed noun complements from numeral subjects/modifiers of finite verbs:
                             # - Adverbs of degree ('багато', 'трохи', 'мало') modify verbs directly ('багато шила', 'мало пила').
-                            # - Numeral subjects ('одна пила чай', 'один став лікарем', 'дві пили чай', 'три пили чай', 'троє пили каву') function as subject + predicate unless accompanied by an adnominal genitive attribute ('дві пили майстра').
+                            # - Numeral subjects ('одна пила чай', 'один став лікарем', 'дві пили чай', 'три пили чай', 'троє пили каву') function as subject + predicate unless accompanied by an animate adnominal genitive attribute ('дві пили майстра').
                             # - Numeral-noun phrases with adjectival agreement ('одне шило') or paucal governance ('два шила') function as noun complements.
                             cur.execute("SELECT lemma, tags FROM forms_all WHERE word_form = ? AND pos = 'numr'", (prev_w,))
                             numr_rows = cur.fetchall()
                             is_numr = bool(numr_rows) and "adv" not in prev_pos
 
-                            # Look ahead for a genitive dependent modifying words[idx] (e.g. 'дві пили майстра', 'два шила майстра')
-                            has_gen_dependent = False
-                            if idx + 1 < len(words) and cur:
-                                try:
-                                    cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (words[idx + 1],))
-                                    has_gen_dependent = any(
-                                        "v_rod" in r[1] for r in cur.fetchall() if r[0] in ("noun", "adj", "pron")
-                                    )
-                                except Exception:
-                                    pass
-
                             is_governed_noun = False
                             if is_numr and noun_rows:
                                 numr_lemmas = {r[0] for r in numr_rows}
                                 prev_is_nom = any("v_naz" in r[1] for r in numr_rows)
+
+                                # Look ahead for an animate adnominal genitive attribute modifying words[idx] (e.g. 'дві пили майстра', 'одні пили майстра')
+                                # to distinguish governed tool/artifact nouns from verbal direct/partitive genitive objects ('дві пили води', 'дві пили таблетки').
+                                has_gen_dependent = False
+                                if idx + 1 < len(words):
+                                    try:
+                                        cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (words[idx + 1],))
+                                        has_gen_dependent = any(
+                                            r[0] == "noun" and ":anim" in r[1] and "v_rod" in r[1] for r in cur.fetchall()
+                                        )
+                                    except Exception:
+                                        pass
+
                                 if "один" in numr_lemmas:
                                     # Forms of 'один' ('один', 'одна', 'одне', 'одні'):
-                                    # If prev_w agrees with words[idx] as a finite verb and has no genitive dependent, it is subject + predicate ('одна пила чай', 'один став лікарем', 'одні пили чай').
+                                    # If prev_w agrees with words[idx] as a finite verb and has no animate genitive dependent, it is subject + predicate ('одна пила чай', 'один став лікарем', 'одні пили чай').
                                     # Otherwise, if it agrees with words[idx] as an adjectival noun, it is a noun phrase ('одне шило', 'одні пили майстра').
                                     if prev_is_nom and verb_agrees_with_numeral(prev_w, verb_rows) and not has_gen_dependent:
                                         is_governed_noun = False

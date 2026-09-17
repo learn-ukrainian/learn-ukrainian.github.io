@@ -1875,6 +1875,109 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odyn_stav_likarem, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odyn_stav_likarem)) == 0
 
+    # Defect 218 / Negative regression (Round 85 Codex P2 & Fable Finding 1): Paucal numeral subject with partitive genitive object 'дві пили води' functions as complete subordinate clause (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_dvi_pyly_vody = (
+        "Він говорив із сестрами — дівчатами, що дві пили води — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_dvi_pyly_vody, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dvi_pyly_vody, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dvi_pyly_vody)) == 0
+
+    # Defect 219 / Negative regression (Round 85 Codex P2): Paucal numeral subject with partitive genitive object 'три пили води' functions as complete subordinate clause (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_try_pyly_vody = (
+        "Він говорив із сестрами — дівчатами, що три пили води — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_try_pyly_vody, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_try_pyly_vody, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_try_pyly_vody)) == 0
+
+    # Defect 220 / Negative regression (Round 85 Codex P2): Pronominal numeral subject with partitive genitive object 'одні пили води' functions as complete subordinate clause (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_odni_pyly_vody = (
+        "Він говорив із сестрами — дівчатами, що одні пили води — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_odni_pyly_vody, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odni_pyly_vody, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odni_pyly_vody)) == 0
+
+    # Defect 221 / Negative regression (Round 85 Fable Finding 1): Paucal numeral subject with accusative plural object 'дві пили таблетки' functions as complete subordinate clause (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_dvi_pyly_tabletky = (
+        "Він говорив із сестрами — дівчатами, що дві пили таблетки — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_dvi_pyly_tabletky, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dvi_pyly_tabletky, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dvi_pyly_tabletky)) == 0
+
+    # Defect 222 / Negative regression (Round 85 Fable Finding 1): Feminine numeral subject with accusative object 'одна пила таблетки' functions as complete subordinate clause (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_odna_pyla_tabletky = (
+        "Він говорив із сестрами — дівчатами, що одна пила таблетки — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_odna_pyla_tabletky, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odna_pyla_tabletky, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odna_pyla_tabletky)) == 0
+
+    # Defect 223 / Negative regression (Round 85 Fable Finding 1): Feminine numeral subject with partitive genitive object 'одна пила води' / 'одна пила вина' functions as complete subordinate clause (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_odna_pyla_vody = (
+        "Він говорив із сестрами — дівчатами, що одна пила води — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_odna_pyla_vody, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odna_pyla_vody, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odna_pyla_vody)) == 0
+
+    frag_discordant_apposition_odna_pyla_vyna = (
+        "Він говорив із сестрами — дівчатами, що одна пила вина — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_odna_pyla_vyna, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odna_pyla_vyna, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odna_pyla_vyna)) == 0
+
+    # Defect 224 / Negative regression (Round 85 Fable Finding 1): Masculine numeral subject with pronominal possessive modifier 'один став його другом' / 'один став її чоловіком' functions as complete subordinate clause (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_odyn_stav_yoho_druhom = (
+        "Він говорив із сестрами — хлопцями, що один став його другом — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_odyn_stav_yoho_druhom, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odyn_stav_yoho_druhom, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odyn_stav_yoho_druhom)) == 0
+
+    frag_discordant_apposition_odyn_stav_yiyi_cholovikom = (
+        "Він говорив із сестрами — хлопцями, що один став її чоловіком — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_odyn_stav_yiyi_cholovikom, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odyn_stav_yiyi_cholovikom, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odyn_stav_yiyi_cholovikom)) == 0
+
+    # Defect 225 / Negative regression (Round 85 Fable Finding 1): Masculine numeral subject with temporal demonstrative adverbial 'один став цього року лікарем' functions as complete subordinate clause (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_odyn_stav_tsioho_roku = (
+        "Він говорив із сестрами — хлопцями, що один став цього року лікарем — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_odyn_stav_tsioho_roku, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odyn_stav_tsioho_roku, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odyn_stav_tsioho_roku)) == 0
+
+    # Positive controls for numeral subjects with direct/partitive objects and attributes
+    frag_pos_dvi_pyly_vody = (
+        "Він говорив із сестрами — дівчатами, що дві пили води — та з лікаркою — фахівчинею — про виставу."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_pos_dvi_pyly_vody, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_pos_dvi_pyly_vody, cur_ves=cur)
+
+    frag_pos_odna_pyla_vody = (
+        "Він говорив із сестрами — дівчатами, що одна пила води — та з лікаркою — фахівчинею — про виставу."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_pos_odna_pyla_vody, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_pos_odna_pyla_vody, cur_ves=cur)
+
+    frag_pos_odyn_stav_yoho_druhom = (
+        "Він говорив із братами — хлопцями, що один став його другом — та з лікаркою — фахівчинею — про виставу."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_pos_odyn_stav_yoho_druhom, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_pos_odyn_stav_yoho_druhom, cur_ves=cur)
+
+    frag_pos_dvi_pyly_maistra_buly = (
+        "Театр — місце, де дві пили майстра були вдалою знахідкою — вважала лікарка."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_pos_dvi_pyly_maistra_buly, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_pos_dvi_pyly_maistra_buly, cur_ves=cur)
+
 
 
 
