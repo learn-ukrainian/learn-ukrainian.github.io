@@ -284,7 +284,7 @@ workbook:
     error: кін
     correction: кінь
     explanation: 'Сло́во «кінь» закі́нчується на м''яки́й знак: кінь. — The word «кінь» ends with a soft sign: кінь.'
-  - sentence: У су́пі лежи́ть сіл.
+  - sentence: Ма́ма си́пле сіл у суп.
     error: сіл
     correction: сіль
     explanation: 'Сло́во «сіль» ма́є м''яки́й [л''] і пи́шеться з ь: сіль. — The word «сіль» has a soft [l''] and is written with ь: сіль.'
