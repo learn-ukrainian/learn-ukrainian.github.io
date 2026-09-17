@@ -1527,6 +1527,54 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_duration_action_noun_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_duration_action_noun_myla)) == 1
 
+    # Defect 178 / Negative regression (Round 75 Codex P2): Quantified direct object 'всю підлогу' preserves finite predicate completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
+    frag_discordant_apposition_vsiu_pidlohu_finite_verb = (
+        "Він говорив із сестрою — дівчиною, що після роботи мила всю підлогу — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_vsiu_pidlohu_finite_verb, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_vsiu_pidlohu_finite_verb, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_vsiu_pidlohu_finite_verb)) == 0
+
+    # Defect 179 / Negative regression (Round 75 Codex P2): Non-restricted direct objects 'чашку'/'стіл' preserve finite predicate completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
+    frag_discordant_apposition_chashku_finite_verb = (
+        "Він говорив із сестрою — дівчиною, що після роботи мила чашку — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_chashku_finite_verb, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_chashku_finite_verb, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_chashku_finite_verb)) == 0
+
+    # Defect 180 / Negative regression (Round 75 Codex P2): 1st person subject 'я' with direct object 'посуд' preserves finite verb completeness across action noun PP (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
+    frag_discordant_apposition_ia_pryhotuvannya_posud = (
+        "Він говорив із сестрою — дівчиною, у якої я після приготування мила посуд — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_ia_pryhotuvannya_posud, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_ia_pryhotuvannya_posud, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_ia_pryhotuvannya_posud)) == 0
+
+    # Defect 181 / Negative regression (Round 75 Fable P1): Animate direct object 'дитину' preserves finite predicate completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
+    frag_discordant_apposition_ditynu_finite_verb = (
+        "Він говорив із сестрою — дівчиною, яка після роботи мила дитину — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_ditynu_finite_verb, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_ditynu_finite_verb, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_ditynu_finite_verb)) == 0
+
+    # Defect 182 / Negative regression (Round 75 Fable P2): Possessive pronoun 'її' inside PP does not leak noun out of prepositional governance (Правопис 2019 §9, §37, §114.2, §158, §161)
+    frag_discordant_apposition_bez_yiyi_myla = (
+        "Театр — місце, де без її мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_bez_yiyi_myla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_bez_yiyi_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_bez_yiyi_myla)) == 0
+
+    # Defect 183 / Negative regression (Round 75 Fable P2): Noun inside possessive PP 'на її честь' is not treated as matrix clause subject (Правопис 2019 §9, §37, §114.2, §158, §161)
+    frag_discordant_apposition_na_yiyi_chest = (
+        "Театр — місце, де він на її честь після купівлі мила посуд вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_na_yiyi_chest, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_na_yiyi_chest, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_na_yiyi_chest)) == 0
+
 
 
 

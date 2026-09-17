@@ -1136,20 +1136,21 @@ RELATIVE_PRONOUNS = {
     "хто", "кого", "кому", "ким", "кім",
     "що", "чого", "чому", "чим", "чім",
 }
-OBLIQUE_PRONOUN_COMPLEMENTS = {
+OBLIQUE_SUBSTANTIVE_PRONOUNS = {
     # Oblique relative pronouns
     "якого", "якій", "яким", "яких", "якої", "якому", "яку", "якими", "якою",
     "котрого", "котрій", "котрим", "котрих", "котрої", "котрому", "котру", "котрими", "котрою",
     "кого", "кому", "ким", "кім",
     "чого", "чому", "чим", "чім",
-    # Oblique personal pronouns (including n- prefixed forms after prepositions)
+    # 1st/2nd person oblique personal pronouns
     "мене", "мені", "мною",
     "тебе", "тобі", "тобою",
-    "його", "йому", "ним", "ньому", "нього", "нім",
-    "її", "їй", "нею", "ній", "неї",
     "нас", "нам", "нами",
     "вас", "вам", "вами",
-    "їх", "їм", "ними", "них",
+    # 3rd person personal pronouns with obligatory prepositional n- (Правопис 2019 §114.2)
+    "нього", "ньому", "нім", "ним",
+    "неї", "ній", "нею",
+    "них", "ними",
     # Reflexive
     "себе", "собі", "собою",
 }
@@ -1246,9 +1247,9 @@ def is_in_direct_or_enclosing_pp(words: list[str], idx: int, cur: sqlite3.Cursor
     k = idx - 1
     while k >= 0 and not is_preposition(words[k], cur) and is_modifier_or_adv(words[k], cur):
         w_k_lower = words[k].lower()
-        if w_k_lower in OBLIQUE_PRONOUN_COMPLEMENTS:
-            # Oblique relative or personal pronoun is the complement of a preceding preposition,
-            # closing the prepositional phrase at words[k] (e.g. 'з якою сестра', 'у якої мати').
+        if w_k_lower in OBLIQUE_SUBSTANTIVE_PRONOUNS and k > 0 and is_preposition(words[k - 1], cur):
+            # The preposition governs this substantive pronoun complement (e.g. 'з якою', 'у якої', 'до нього').
+            # The prepositional phrase is closed at words[k]; subsequent words are not governed by it.
             break
         if cur:
             try:
@@ -1331,19 +1332,6 @@ TIME_DURATION_NOUNS = {
 }
 
 
-COMMODITY_ACTION_NOUNS = {
-    "купівля", "купівлі", "купівлею",
-    "продаж", "продажу", "продажем",
-    "виготовлення", "виготовленням",
-    "виробництво", "виробництвом",
-    "варіння", "варінням",
-    "приготування", "приготуванням",
-    "вживання", "вживанням",
-    "використання", "використанням",
-    "застосування", "застосуванням",
-}
-
-
 def clause_has_agreeing_nominative_subject(words: list[str], verb_idx: int, cur: sqlite3.Cursor | None = None) -> bool:
     """Check whether the clause contains a nominative feminine or common-gender subject agreeing with words[verb_idx]."""
     if not cur:
@@ -1355,16 +1343,6 @@ def clause_has_agreeing_nominative_subject(words: list[str], verb_idx: int, cur:
         if not is_fem_past:
             return True
 
-        # If words[verb_idx] is immediately preceded by an action noun governing commodities,
-        # it is an adnominal genitive (e.g. 'після купівлі мила', 'після виготовлення мила'),
-        # so gender-unmarked pronouns ('я', 'ти') cannot promote it to a finite verb.
-        prev_k = verb_idx - 1
-        while prev_k >= 0 and is_modifier_or_adv(words[prev_k], cur) and not is_preposition(words[prev_k], cur):
-            prev_k -= 1
-        is_governed_by_action_noun = (
-            prev_k >= 0 and words[prev_k].lower() in COMMODITY_ACTION_NOUNS
-        )
-
         for i, w in enumerate(words):
             if i == verb_idx:
                 continue
@@ -1373,29 +1351,40 @@ def clause_has_agreeing_nominative_subject(words: list[str], verb_idx: int, cur:
                 continue
             if is_preposition(w_lower, cur):
                 continue
-            if w_lower in {"яка", "котра", "вона", "та", "що", "ця"}:
+            if w_lower in {"яка", "котра", "вона", "та", "що", "я", "ти", "ця"}:
                 return True
-            if w_lower in {"я", "ти"}:
-                if not is_governed_by_action_noun:
-                    return True
-                continue
             cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w_lower,))
             rows = cur.fetchall()
-            if any(
-                r[0] in ("noun", "pron")
-                and "v_naz" in r[1]
-                and (
-                    ":f" in r[1]
-                    or ":rel" in r[1]
-                    or (not is_governed_by_action_noun and (":pers:1" in r[1] or ":pers:2" in r[1]) and ":s" in r[1])
-                )
-                for r in rows
-            ):
-                return True
+            for r in rows:
+                if r[0] in ("noun", "pron") and "v_naz" in r[1]:
+                    tag_parts = set(r[1].split(":"))
+                    if (
+                        "f" in tag_parts
+                        or "rel" in tag_parts
+                        or (("pers" in tag_parts or "1" in tag_parts or "2" in tag_parts) and "s" in tag_parts)
+                    ):
+                        return True
     except Exception:
         pass
     return False
 
+
+EVENT_DURATION_NOUNS = {
+    "вистава", "вистави", "виставі", "виставу", "виставою", "виставах",
+    "спектакль", "спектаклю", "спектаклем", "спектаклі", "спектаклів",
+    "концерт", "концерту", "концертом", "концерти", "концертів",
+    "фільм", "фільму", "фільмом", "фільми", "фільмів",
+    "кіно",
+    "лекція", "лекції", "лекцію", "лекцією", "лекціях",
+    "урок", "уроку", "уроком", "уроки", "уроків",
+    "виступ", "виступу", "виступом", "виступи", "виступів",
+    "матч", "матчу", "матчем", "матчі", "матчів",
+    "гра", "гри", "гру", "грою", "ігри", "ігор", "іграх",
+    "сезон", "сезону", "сезоном", "сезони", "сезонів",
+    "сесія", "сесії", "сесію", "сесією", "сесіях",
+    "репетиція", "репетиції", "репетицію", "репетицією", "репетиціях",
+    "пара", "пари", "пару", "парою", "пар",
+}
 
 DURATION_MODIFIERS = {
     "весь", "ввесь", "увесь", "всю", "усю", "все", "усе", "всі", "усі",
@@ -1403,21 +1392,11 @@ DURATION_MODIFIERS = {
     "кожний", "кожну", "кожне", "кожні", "кожен",
 }
 
-WASHABLE_OBJECTS = {
-    "посуд", "посуду", "руки", "руку", "тіло", "ноги", "ногу", "обличчя",
-    "голову", "волосся", "підлогу", "підлоги", "вікна", "вікно", "машину",
-    "автомобіль", "стіни", "стіну", "одяг", "білизну", "овочі", "фрукти",
-    "ягоди", "яблука", "тарілки", "чашки", "миски", "каструлі", "ложки",
-    "виделки", "склянки", "пляшку", "пляшки", "двір", "під'їзд",
-    "його", "її", "їх", "себе",
-}
-
 
 def clause_has_direct_object(words: list[str], verb_idx: int, cur: sqlite3.Cursor | None = None) -> bool:
     """Check whether the clause containing words[verb_idx] has an accusative direct object outside prepositional phrases."""
     if not cur:
         return False
-    verb_lower = words[verb_idx].lower()
     for i, w in enumerate(words):
         if i == verb_idx:
             continue
@@ -1429,17 +1408,14 @@ def clause_has_direct_object(words: list[str], verb_idx: int, cur: sqlite3.Curso
             continue
         if w in TIME_DURATION_NOUNS:
             continue
-        if i > 0 and words[i - 1].lower() in DURATION_MODIFIERS:
+        # Event duration nouns modified by universal quantifiers (e.g. 'всю виставу') are duration adverbials, not direct objects
+        if w.lower() in EVENT_DURATION_NOUNS and i > 0 and words[i - 1].lower() in DURATION_MODIFIERS:
             continue
         try:
             cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w,))
             rows = cur.fetchall()
             if any(r[0] in ("noun", "pron") and "v_zna" in r[1] for r in rows):
-                if verb_lower == "мила":
-                    if w.lower() in WASHABLE_OBJECTS or any(r[0] == "pron" and "v_zna" in r[1] for r in rows):
-                        return True
-                else:
-                    return True
+                return True
         except Exception:
             pass
     return False
