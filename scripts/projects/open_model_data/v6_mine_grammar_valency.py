@@ -1124,7 +1124,11 @@ def get_vesum_cursor(cur_ves: sqlite3.Cursor | None = None) -> sqlite3.Cursor | 
 
 DASH_COPULA_INTRO_RE = re.compile(r"^\s*(це|це є|то|ось|значить)\b", re.IGNORECASE)
 DASH_SUBORDINATE_INTRO_RE = re.compile(
-    r",\s+(де|що|коли|якщо|хоч|хоча|бо|тому що|який|яка|яке|які|якого|якій|яким|яких|куди|звідки)\b",
+    r",\s+(де|що|коли|якщо|хоч|хоча|бо|тому що|який|яка|яке|які|якого|якій|яким|яких|якої|якому|яку|якими|куди|звідки)\b",
+    re.IGNORECASE,
+)
+DASH_SUBORDINATE_START_RE = re.compile(
+    r"^\s*(де|що|коли|якщо|хоч|хоча|бо|тому що|який|яка|яке|які|якого|якій|яким|яких|якої|якому|яку|якими|куди|звідки)\b",
     re.IGNORECASE,
 )
 
@@ -1141,6 +1145,64 @@ def strip_quoted_spans(text: str) -> str:
     return curr
 
 
+def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor | None = None) -> bool:
+    """Verify that all subordinate clauses opened in unquoted_inside are complete and not severed across end_dash.
+
+    Under Правопис 2019 §158.3, §161.I.1, and §161.I.10, subordinate clauses may be sequential or nested
+    (e.g. 'де для глядачів, які знають виставу, вдалою режисерською знахідкою'). A predicate in a closed
+    nested relative clause (e.g. 'знають') cannot satisfy the enclosing clause ('де ...'). Each opened
+    subordinate clause must have its own predicate outside nested clauses and cannot remain unclosed at end_dash.
+    """
+    if not DASH_SUBORDINATE_INTRO_RE.search(unquoted_inside):
+        return True
+
+    def words_have_predicate(words: list[str]) -> bool:
+        for w in words:
+            if w in PREDICATE_WORDS:
+                return True
+            if cur:
+                try:
+                    cur.execute("SELECT 1 FROM forms_all WHERE word_form = ? AND pos = 'verb' LIMIT 1", (w,))
+                    if cur.fetchone():
+                        return True
+                except Exception:
+                    pass
+        return False
+
+    parts = unquoted_inside.split(",")
+    stack: list[dict[str, Any]] = []
+    all_clauses: list[dict[str, Any]] = []
+
+    for idx, part in enumerate(parts):
+        m = DASH_SUBORDINATE_START_RE.match(part)
+        words = [w.lower() for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", part)]
+        if m:
+            marker = m.group(1).lower()
+            while stack and words_have_predicate(stack[-1]["words"]):
+                stack.pop()
+            clause = {"marker": marker, "words": words}
+            stack.append(clause)
+            all_clauses.append(clause)
+        else:
+            if idx == 0:
+                continue
+            while stack and words_have_predicate(stack[-1]["words"]):
+                stack.pop()
+            if stack:
+                stack[-1]["words"].extend(words)
+
+    for c in all_clauses:
+        if not words_have_predicate(c["words"]):
+            return False
+
+    if stack:
+        last_clause = stack[-1]
+        if not words_have_predicate(last_clause["words"]) and not unquoted_inside.rstrip().endswith(","):
+            return False
+
+    return True
+
+
 def extract_dash_apposition_spans(s: str, cur_ves: sqlite3.Cursor | None = None) -> list[tuple[str, str]]:
     """Extract (head_word, inside_phrase) pairs between paired dashes at quote depth 0.
 
@@ -1152,9 +1214,9 @@ def extract_dash_apposition_spans(s: str, cur_ves: sqlite3.Cursor | None = None)
     - Predicate dashes (Правопис 2019 §158.1: followed by 'це', 'це є', 'то', 'ось', 'значить') are
       unpaired copular delimiters between subject and predicate; they do not open or close appositions.
     - Appositive dash pairs enclose parenthetical explanatory phrases within a single clause,
-      without severing unclosed subordinate clauses across delimiter boundaries (Правопис 2019 §158.3, §161.I.10).
-      Subordinate clause completeness checks examine the most recent clause boundary extending to the closing
-      dash boundary, ensuring predicates in earlier relative clauses do not falsely satisfy later clauses.
+      without severing unclosed subordinate clauses across delimiter boundaries (Правопис 2019 §158.3, §161.I.1, §161.I.10).
+      Subordinate clause completeness tracking accounts for sequential and nested clause boundaries, ensuring
+      predicates in nested or earlier relative clauses (e.g. 'які знають виставу') do not falsely satisfy enclosing clauses.
     - Quoted spans are excluded before both subordinate-marker detection and predicate detection
       (Правопис 2019 §154, §164), preserving quoted-title boundaries so that subordinate markers inside
       quoted titles (e.g. «Життя, що триває») do not trigger false subordinate clause boundaries or
@@ -1214,34 +1276,16 @@ def extract_dash_apposition_spans(s: str, cur_ves: sqlite3.Cursor | None = None)
             i += 1
             continue
 
-        # If inside contains a subordinate clause boundary, verify that the subordinate clause
-        # is complete within the parenthetical construction and not severed across end_dash.
+        # If inside contains a subordinate clause boundary, verify that all subordinate clauses
+        # are complete within the parenthetical construction and not severed across end_dash
+        # (Правопис 2019 §158.3, §161.I.1, §161.I.10).
         # Exclude quoted spans before both subordinate-marker detection and predicate detection
         # (Правопис 2019 §164), preserving quoted-title boundaries so subordinate markers inside
         # quoted titles (e.g. «Життя, що триває») are not matched as matrix subordinate clause boundaries.
-        # Examine the most recent subordinate clause extending to end_dash so predicates in earlier
-        # relative clauses (e.g. 'яке всі знають') do not falsely satisfy later clauses (e.g. 'де ...').
         unquoted_inside = strip_quoted_spans(inside)
-        sub_matches = list(DASH_SUBORDINATE_INTRO_RE.finditer(unquoted_inside))
-        if sub_matches:
-            sub_tail = unquoted_inside[sub_matches[-1].end() :]
-            sub_words = [w.lower() for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", sub_tail)]
-            has_sub_predicate = False
-            for w in sub_words:
-                if w in PREDICATE_WORDS:
-                    has_sub_predicate = True
-                    break
-                if cur:
-                    try:
-                        cur.execute("SELECT 1 FROM forms_all WHERE word_form = ? AND pos = 'verb' LIMIT 1", (w,))
-                        if cur.fetchone():
-                            has_sub_predicate = True
-                            break
-                    except Exception:
-                        pass
-            if not has_sub_predicate and not sub_tail.rstrip().endswith(","):
-                i += 1
-                continue
+        if not check_subordinate_clauses_complete(unquoted_inside, cur):
+            i += 1
+            continue
 
         # Valid parenthetical apposition pair: record span and advance past end_dash
         # (preserving boundary role: closing dash cannot serve as opening dash).
