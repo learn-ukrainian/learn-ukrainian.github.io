@@ -670,6 +670,21 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.INVALID_CALENDAR_DATE_AFFIX_RE.search(frag_1990_kh_rokiv)
     assert miner.is_pristine_eval_sentence(frag_1990_kh_rokiv, cur_ves=cur)
 
+    # Defect 60 / Positive control (Round 26 P2): Valid hour expressions with ordinal affix 'о 9-й годині' permitted (Городенська 2017, p. 163)
+    frag_9_i_hodyni = "Зустріч відбудеться о 9-й годині в приміщенні міської бібліотеки."
+    assert not miner.INVALID_CALENDAR_DATE_AFFIX_RE.search(frag_9_i_hodyni)
+    assert miner.is_pristine_eval_sentence(frag_9_i_hodyni, cur_ves=cur)
+
+    # Defect 61 / Negative regression (Round 26 P2): Abbreviated calendar dates '1990-му р.' rejected (Городенська 2017, p. 163)
+    frag_1990_mu_r = "Родина придбала нову квартиру в Києві у 1990-му р. за власні кошти."
+    assert miner.INVALID_CALENDAR_DATE_AFFIX_RE.search(frag_1990_mu_r)
+    assert not miner.is_pristine_eval_sentence(frag_1990_mu_r, cur_ves=cur)
+
+    # Defect 62 / Positive control (Round 26 P2): Valid abbreviated calendar date '1990 р.' accepted (Городенська 2017, p. 163)
+    frag_1990_r = "Родина придбала нову квартиру в Києві у 1990 р. за власні кошти."
+    assert not miner.INVALID_CALENDAR_DATE_AFFIX_RE.search(frag_1990_r)
+    assert miner.is_pristine_eval_sentence(frag_1990_r, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:
