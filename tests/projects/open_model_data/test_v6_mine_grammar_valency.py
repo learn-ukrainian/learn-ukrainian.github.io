@@ -39,8 +39,8 @@ def test_valency_frames_authenticity_and_coverage() -> None:
 
     verbs = {f["verb"] for f in frames}
     assert "опанувати" in verbs  # опанувати що (знахідний)
-    assert "завідувач" in verbs  # завідувач кафедри (родовий)
-    assert "чекати" in verbs  # чекати на що (на + знахідний)
+    assert "докоряти" in verbs  # докоряти кому (давальний)
+    assert "навчатися" in verbs  # навчатися чого (родовий)
     assert "властивий" in verbs  # властивий кому (давальний)
     assert "дякувати" in verbs  # дякувати кому (давальний)
     assert "вибачати" in verbs  # вибачати кому (давальний)
@@ -101,6 +101,7 @@ def test_eval_benchmark_disk_invariants_and_schema() -> None:
             count += 1
 
     assert count == 500
+    assert len({rec["document_id"] for rec in (json.loads(line) for line in eval_file.open(encoding="utf-8"))}) >= 40
 
 
 def test_zero_train_eval_leakage_firewall() -> None:
@@ -129,7 +130,7 @@ def test_zero_train_eval_leakage_firewall() -> None:
 
 
 def test_sft_shards_disk_invariants_and_manifest() -> None:
-    """Verify SFT manifest, shard sizes <= 2,000 KB, and SHA-256 integrity."""
+    """Verify SFT manifest, shard sizes <= 2,000 KB, SHA-256 integrity, ID uniqueness, and zero markup."""
     manifest_path = RELEASE_DIR / "sft" / "manifest.json"
     assert manifest_path.is_file()
 
@@ -139,6 +140,7 @@ def test_sft_shards_disk_invariants_and_manifest() -> None:
     assert len(manifest["shards"]) == 70
 
     total_read = 0
+    seen_ids = set()
     for shard_info in manifest["shards"]:
         shard_file = RELEASE_DIR / "sft" / shard_info["shard_file"]
         assert shard_file.is_file()
@@ -151,12 +153,41 @@ def test_sft_shards_disk_invariants_and_manifest() -> None:
         actual_sha = miner.sha256_file(shard_file)
         assert actual_sha == shard_info["sha256"], f"SHA mismatch on {shard_file.name}"
 
-        # Check lines
-        lines_count = sum(1 for _ in shard_file.open(encoding="utf-8"))
+        # Check lines and trajectory invariants
+        lines_count = 0
+        with shard_file.open(encoding="utf-8") as f:
+            for line in f:
+                rec = json.loads(line)
+                tid = rec["trajectory_id"]
+                assert tid not in seen_ids, f"Duplicate trajectory_id found: {tid}"
+                seen_ids.add(tid)
+
+                orig = rec.get("original_text", "")
+                corr = rec.get("corrected_text", "")
+                assert "error_type=" not in orig and "error_type=" not in corr
+                assert ":::" not in orig and ":::" not in corr
+                assert "{" not in orig and "{" not in corr
+                assert "}" not in orig and "}" not in corr
+
+                lines_count += 1
+
         assert lines_count == shard_info["trajectories_count"]
         total_read += lines_count
 
     assert total_read == 35000
+    assert len(seen_ids) == 35000
+
+
+def test_abbreviation_protection_sentence_splitting() -> None:
+    """Verify that sentence splitting does not fragment abbreviations or initials."""
+    sample = (
+        "Загальний прибуток підприємства склав понад 2 тис. грн за минулий квартал. "
+        "Академік А. Кримський та проф. Шевченко високо оцінили результати роботи."
+    )
+    sents = miner.split_clean_ukrainian_sentences(sample)
+    assert len(sents) == 2
+    assert sents[0] == "Загальний прибуток підприємства склав понад 2 тис. грн за минулий квартал."
+    assert sents[1] == "Академік А. Кримський та проф. Шевченко високо оцінили результати роботи."
 
 
 def test_release_receipt_schema_and_checksum() -> None:
