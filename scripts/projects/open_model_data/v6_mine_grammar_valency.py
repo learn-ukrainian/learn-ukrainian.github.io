@@ -1129,7 +1129,7 @@ DASH_SUBORDINATE_INTRO_RE = re.compile(
 )
 
 
-def extract_dash_apposition_spans(s: str) -> list[tuple[str, str]]:
+def extract_dash_apposition_spans(s: str, cur_ves: sqlite3.Cursor | None = None) -> list[tuple[str, str]]:
     """Extract (head_word, inside_phrase) pairs between paired dashes at quote depth 0.
 
     Under Правопис 2019 §158, §161, and §164, parenthetical dash boundaries occur at quote depth 0;
@@ -1141,8 +1141,11 @@ def extract_dash_apposition_spans(s: str) -> list[tuple[str, str]]:
       unpaired copular delimiters between subject and predicate; they do not open or close appositions.
     - Appositive dash pairs enclose parenthetical explanatory phrases within a single clause,
       without severing unclosed subordinate clauses across delimiter boundaries (Правопис 2019 §158.3, §161.I.10).
+    - Subordinate predicate presence is verified against VESUM morphological evidence, avoiding suffix heuristics
+      that misclassify nominal genitive forms (e.g. 'глядачів' on '-ів') as past-tense verbs.
     - A closing dash closes the preceding span and cannot serve as an opening dash.
     """
+    cur = get_vesum_cursor(cur_ves)
     quote_stack: list[str] = []
     straight_quote = False
     dashes_at_depth_0: list[int] = []
@@ -1200,13 +1203,20 @@ def extract_dash_apposition_spans(s: str) -> list[tuple[str, str]]:
         sub_m = DASH_SUBORDINATE_INTRO_RE.search(inside)
         if sub_m:
             sub_tail = inside[sub_m.end() :]
-            has_sub_predicate = bool(
-                re.search(
-                    r"\b([а-яіїєґА-ЯІЇЄҐ\']+(ти|тися|ться|ло|ла|ли|в|ють|ять|уть|ать|ить|є|був|була|було|були|стане|стали|став|стала))\b",
-                    sub_tail,
-                    re.IGNORECASE,
-                )
-            )
+            sub_words = [w.lower() for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", sub_tail)]
+            has_sub_predicate = False
+            for w in sub_words:
+                if w in PREDICATE_WORDS:
+                    has_sub_predicate = True
+                    break
+                if cur:
+                    try:
+                        cur.execute("SELECT 1 FROM forms_all WHERE word_form = ? AND pos = 'verb' LIMIT 1", (w,))
+                        if cur.fetchone():
+                            has_sub_predicate = True
+                            break
+                    except Exception:
+                        pass
             if not has_sub_predicate and not sub_tail.rstrip().endswith(","):
                 i += 1
                 continue
@@ -1229,7 +1239,7 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
     if not cur:
         return False
 
-    spans = extract_dash_apposition_spans(s)
+    spans = extract_dash_apposition_spans(s, cur)
     if not spans:
         return False
 
@@ -1369,7 +1379,7 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
 
 
 def check_has_predicate(text: str, cur_ves: sqlite3.Cursor | None) -> bool:
-    """Check whether a text fragment contains an active predicate (verb, predicative, or copula)."""
+    """Check whether a text fragment contains an active predicate (verb, predicative, copula, or zero-copula dash)."""
     words = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", text.lower())
     for w in words:
         if w in PREDICATE_WORDS:
@@ -1383,6 +1393,21 @@ def check_has_predicate(text: str, cur_ves: sqlite3.Cursor | None) -> bool:
                 pass
         elif any(w.endswith(sfx) for sfx in ("ти", "тися", "ться", "ло", "ла", "ли", "в", "ють", "ять", "уть", "ать", "ить")):
             return True
+
+    # Zero-copula predicative dash between nominative nouns (Правопис 2019 §158.2)
+    m = re.search(r"\b([а-яіїєґА-ЯІЇЄҐ\']+)\s+[–—]\s+([а-яіїєґА-ЯІЇЄҐ\']+)", text)
+    if m and cur_ves:
+        w1, w2 = m.group(1).lower(), m.group(2).lower()
+        try:
+            cur_ves.execute("SELECT 1 FROM forms_all WHERE word_form = ? AND pos = 'noun' AND tags LIKE '%:v_naz%' LIMIT 1", (w1,))
+            r1 = cur_ves.fetchone()
+            cur_ves.execute("SELECT 1 FROM forms_all WHERE word_form = ? AND pos = 'noun' AND tags LIKE '%:v_naz%' LIMIT 1", (w2,))
+            r2 = cur_ves.fetchone()
+            if r1 and r2:
+                return True
+        except Exception:
+            pass
+
     return False
 
 

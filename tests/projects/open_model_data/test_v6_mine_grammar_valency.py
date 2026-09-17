@@ -967,6 +967,22 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_after_unpaired_dash, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_after_unpaired_dash)) == 1
 
+    # Defect 108 / Negative regression (Round 51 P2): Genitive plural noun ending in '-ів' does not fake predicate and bypass discordant apposition (Правопис 2019 §158, Ющук §21)
+    frag_discordant_apposition_plural_noun_in_clause = (
+        "Театр — місце, де для глядачів вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_plural_noun_in_clause, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_plural_noun_in_clause, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_plural_noun_in_clause)) == 0
+
+    # Defect 109 / Positive control (Round 51 P2): Agreeing instrumental apposition with plural noun in clause accepted (Правопис 2019 §158, Ющук §21)
+    frag_agreeing_apposition_plural_noun_in_clause = (
+        "Театр — місце, де для глядачів вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_plural_noun_in_clause, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_plural_noun_in_clause, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_plural_noun_in_clause)) == 1
+
 
 
 
