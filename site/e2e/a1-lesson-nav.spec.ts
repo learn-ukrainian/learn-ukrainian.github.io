@@ -26,6 +26,9 @@ test.describe('A1 upgrade nav', () => {
     await expect(sidebar).toBeVisible();
     const labels = await sidebar.locator('.lu-sidebar-text').allTextContents();
     expect(labels.some((label) => label.includes('Речі мають рід'))).toBe(true);
+    // Left nav must carry English support from A1_UNITS (same SSOT as landing cards).
+    expect(labels.some((label) => label.includes('Things Have Gender'))).toBe(true);
+    expect(labels.some((label) => label.includes('Sounds and First Letters'))).toBe(true);
     expect(labels.some((label) => label.includes('Він, вона, воно'))).toBe(false);
     await expect(page.locator('.lu-sidebar-link.active')).toHaveCount(0);
   });

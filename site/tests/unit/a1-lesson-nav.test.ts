@@ -2,11 +2,13 @@ import { describe, expect, it } from 'vitest';
 
 import {
   a1AdjacentHrefs,
+  a1ManifestTitleEn,
   isUpgradedLesson,
   isUpgradedModuleLanding,
   lessonNumberFromDoc,
   moduleSlugFromDoc,
   resolveNavHref,
+  withA1EnglishNavLabel,
   withManifestCopy,
 } from '../../src/lib/a1-lesson-nav';
 
@@ -42,6 +44,20 @@ describe('a1 lesson nav', () => {
     const [lesson] = card.lessons;
     expect(lesson.n).toBe(1);
     expect(lesson.href).toBe('/a1/stress-and-melody/1/');
+  });
+
+  it('builds left-nav labels from A1_UNITS English titles without hand-edited MDX', () => {
+    expect(a1ManifestTitleEn('sounds-letters-and-hello')).toBe('Sounds and First Letters');
+    expect(a1ManifestTitleEn('things-have-gender')).toBe('Things Have Gender');
+    expect(a1ManifestTitleEn('missing-slug')).toBeUndefined();
+
+    expect(withA1EnglishNavLabel('Звуки та перші літери', 'Sounds and First Letters')).toBe(
+      'Звуки та перші літери · Sounds and First Letters',
+    );
+    // Already bilingual — do not double-append.
+    expect(
+      withA1EnglishNavLabel("Моя сім'я · My Family", 'My Family'),
+    ).toBe("Моя сім'я · My Family");
   });
 
   it('treats a1/{slug}/{n} as a nested lesson', () => {

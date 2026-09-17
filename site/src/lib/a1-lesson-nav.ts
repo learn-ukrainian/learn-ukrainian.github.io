@@ -1,7 +1,30 @@
 /** A1 upgrade edition: modules live on the track landing; lessons live under a module. */
 
+import { A1_UNITS } from '../data/a1-v1-modules';
+
 export function normalizeDocId(id: string): string {
   return id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
+}
+
+/** English title from the bilingual A1 manifest (landing cards already use this). */
+export function a1ManifestTitleEn(slug: string | undefined): string | undefined {
+  if (!slug) return undefined;
+  for (const unit of A1_UNITS) {
+    const hit = unit.items.find((item) => item.slug === slug);
+    if (hit?.titleEn) return hit.titleEn;
+  }
+  return undefined;
+}
+
+/**
+ * A1 left-nav label: Ukrainian primary with English support.
+ * Skips when the published title is already bilingual (`UA · EN`).
+ */
+export function withA1EnglishNavLabel(label: string, titleEn?: string): string {
+  const trimmed = label.trim();
+  if (!titleEn) return trimmed;
+  if (trimmed.includes(' · ') || trimmed.includes(titleEn)) return trimmed;
+  return `${trimmed} · ${titleEn}`;
 }
 
 export function docParts(id: string): string[] {

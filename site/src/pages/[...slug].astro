@@ -8,8 +8,10 @@ import { isPublishedReading } from '../lib/readings';
 import { archiveBookmarkPaths } from '../lib/a1-archive-routes';
 import {
   a1AdjacentHrefs,
+  a1ManifestTitleEn,
   isUpgradedLesson,
   isUpgradedModuleLanding,
+  withA1EnglishNavLabel,
   withManifestCopy,
   lessonNumberFromDoc,
   moduleSlugFromDoc,
@@ -562,9 +564,11 @@ const sidebar = (() => {
     const links = modules.map((entry) => {
       const id = normalizeId(entry.id);
       const order = entry.data.sidebar?.order;
+      const slug = moduleSlugFromDoc(id);
       return {
         href: hrefFromRoute(id),
-        label: entry.data.title,
+        // Same bilingual SSOT as LevelLanding cards (A1_UNITS.titleEn) — not hand-edited MDX.
+        label: withA1EnglishNavLabel(entry.data.title, a1ManifestTitleEn(slug)),
         num: order ? String(order).padStart(2, '0') : '•',
         active: false,
       };
