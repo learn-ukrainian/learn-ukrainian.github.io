@@ -747,10 +747,11 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     base_secs = sections(base_md)
     base_paras_by_lesson: dict[int, list[str]] = {L["n"]: [] for L in lessons}
     for title, body in base_secs.items():
-        if title not in section_to_lesson:
+        mapped = section_to_lesson.get(title) or section_to_lesson.get(strip_acute(title))
+        if mapped is None:
             block(f"baseline section {title!r} has no lesson mapping (checker config)")
             continue
-        base_paras_by_lesson[section_to_lesson[title]] += [p for p in paragraphs(body) if len(p.split()) >= 8]
+        base_paras_by_lesson[mapped] += [p for p in paragraphs(body) if len(p.split()) >= 8]
     n_long = sum(len(v) for v in base_paras_by_lesson.values())
     report["facts"]["baseline"] = {"commit": ly.get("source_commit"), "prose_tokens": len(strip_comments(base_md).split()),
                                    "long_paragraphs": n_long, "activities": {k: len(v) for k, v in base_acts.items()},

@@ -1650,6 +1650,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Reviewed lesson metadata/exception declarations for --upgrade (default: derive fresh); section ownership and provenance must match deterministic derivation.",
     )
     parser.add_argument(
+        "--reuse-lesson-map",
+        action="store_true",
+        help=(
+            "With --upgrade, load curriculum/l2-uk-en/a1/{slug}/lessons.yaml as the "
+            "lesson map (for re-upgrading an already-split module whose section map "
+            "diverged from a1-v1 derive). Still preserves a1-v1 artifacts; does not "
+            "hand-edit activities."
+        ),
+    )
+    parser.add_argument(
         "level",
         help="Curriculum level code, for example a1, b1-pro, or hist.",
     )
@@ -1969,6 +1979,33 @@ def _upgrade_declared_map(derived: dict, raw: str | None) -> dict:
     return declared
 
 
+def _upgrade_reuse_lesson_map(slug: str, derived: dict) -> dict:
+    """Load the live a1 lessons.yaml for a re-upgrade while keeping a1-v1 as source.
+
+    Pedagogy expansions may add lessons/sections beyond the archive derive. Require
+    that every original activity id in derived provenance still appears in the
+    reused map's provenance (same ids, any lesson assignment already reviewed).
+    """
+    from scripts.build.lesson_map import validate_lesson_map
+
+    path = _default_module_dir("a1", slug) / "lessons.yaml"
+    if not path.is_file():
+        raise linear_pipeline.LinearPipelineError(
+            f"--reuse-lesson-map requires existing {path.relative_to(PROJECT_ROOT)}"
+        )
+    declared = linear_pipeline.load_yaml(path)
+    validate_lesson_map(declared)
+    derived_ids = {(p.get("new_id") or p.get("id")) for p in (derived.get("provenance") or [])}
+    declared_ids = {(p.get("new_id") or p.get("id")) for p in (declared.get("provenance") or [])}
+    missing = sorted(x for x in derived_ids if x and x not in declared_ids)
+    if missing:
+        raise linear_pipeline.LinearPipelineError(
+            f"--reuse-lesson-map provenance missing original activity ids: {missing[:8]}"
+        )
+    if int(declared.get("closes_module") or 0) != len(declared.get("lessons") or []):
+        raise linear_pipeline.LinearPipelineError("--reuse-lesson-map closes_module must name the last lesson")
+    return declared
+
 UPGRADE_INDEPENDENT_REVIEWER = "codex-tools"
 UPGRADE_INDEPENDENT_EFFORT = "medium"
 
@@ -2059,7 +2096,14 @@ def _run_upgrade(args: argparse.Namespace) -> int:
             plan, (source_dir / "module.md").read_text(encoding="utf-8"),
             linear_pipeline.load_yaml(source_dir / "activities.yaml"),
         )
-        lesson_map = _upgrade_declared_map(lesson_map, getattr(args, "lesson_map", None))
+        if getattr(args, "reuse_lesson_map", False):
+            if getattr(args, "lesson_map", None):
+                raise linear_pipeline.LinearPipelineError(
+                    "--reuse-lesson-map cannot combine with --lesson-map"
+                )
+            lesson_map = _upgrade_reuse_lesson_map(args.slug, lesson_map)
+        else:
+            lesson_map = _upgrade_declared_map(lesson_map, getattr(args, "lesson_map", None))
         module_dir.mkdir(parents=True, exist_ok=True)
         import yaml
 
