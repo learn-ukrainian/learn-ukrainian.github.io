@@ -310,6 +310,18 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     comma_abo = "Тоді водний транспорт у Києві, як каже Олександр Михайлик, був зручнішим за наземний, відтак на Русанівські сади до 1960-х їздили на міському катері, або на човні."
     assert not miner.is_pristine_eval_sentence(comma_abo, cur_ves=cur)
 
+    # Defect 9 (Round 5): Sentence-initial conjunction with erroneous comma (Pravopys §158)
+    odnak_comma = "Однак, у селі теж можна було отримати ділянку під забудову."
+    assert not miner.is_pristine_eval_sentence(odnak_comma, cur_ves=cur)
+
+    # Defect 10 (Round 5): Subordinate conditional clause lacking matrix predicate
+    frag_cond = "Звісно, за умови, якщо вони визначилися з ім'ям немовляти."
+    assert not miner.is_pristine_eval_sentence(frag_cond, cur_ves=cur)
+
+    # Defect 11 (Round 5): Trailing unicode ellipsis
+    ellipsis_sent = "І така картина спостерігається не лише у відділі продажів…"
+    assert not miner.is_pristine_eval_sentence(ellipsis_sent, cur_ves=cur)
+
 
 def test_release_receipt_schema_and_checksum() -> None:
     """Validate release receipt against JSON schema and sha256 checksum."""

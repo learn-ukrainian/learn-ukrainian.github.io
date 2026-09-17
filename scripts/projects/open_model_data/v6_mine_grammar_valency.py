@@ -252,18 +252,22 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
     if SUBJECT_COMMA_PRED_RE.search(s):
         return False
 
-    # 3. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)
+    # 3. Sentence-initial conjunction with erroneous comma (Pravopys 2019, §158)
+    if re.search(r"^(?:Однак|Проте),\s+", s):
+        return False
+
+    # 4. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)
     if re.search(r",\s+(?:й|і|та)\s+(?:додав|зазначив|підкреслив|нагадав|наголосив|уточнив)\b", s, re.IGNORECASE):
         return False
 
-    # 4. Erroneous comma before single 'або' or 'чи' joining homogeneous parts (Pravopys 2019, §158)
+    # 5. Erroneous comma before single 'або' or 'чи' joining homogeneous parts (Pravopys 2019, §158)
     if re.search(r",\s+(?:або|чи)\s+(?:на|у|в|до|з|із|зі|за|під|над|по|про|для|від|без|через|при|між|перед)\s+[^\,]+[.!?…»\"]$", s, re.IGNORECASE):
         return False
     m_abo_end = re.search(r",\s+(?:або|чи)\s+([а-яіїєґА-ЯІЇЄҐ']+)\s+([а-яіїєґА-ЯІЇЄҐ']+)[.!?…»\"]$", s, re.IGNORECASE)
     if m_abo_end and not (check_has_predicate(m_abo_end.group(1), cur_ves) or check_has_predicate(m_abo_end.group(2), cur_ves)):
         return False
 
-    # 5. Unclosed subordinate clause before coordinating conjunction joining matrix predicates
+    # 6. Unclosed subordinate clause before coordinating conjunction joining matrix predicates
     # e.g., 'Він наголосив, що ... допомагає ... і закликав' (missing comma before 'і')
     m_unclosed = re.search(r",\s+(?:що|щоб|якщо|якби|оскільки|бо)\b([^,]+?)\s+(?:і|й|та)\s+([а-яіїєґА-ЯІЇЄҐ']+)\b", s, re.IGNORECASE)
     if m_unclosed:
@@ -272,22 +276,29 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
         if check_has_predicate(v_next, cur_ves) and check_has_predicate(sub_body, cur_ves) and check_has_predicate(s[:m_unclosed.start()], cur_ves):
             return False
 
-    # 6. Subordinate clause completeness at end
+    # 7. Subordinate clause completeness at end
     m_sub_end = re.search(r",\s*(?:що|щоб|якщо|якби|оскільки|бо),?\s+([^.!?…]{3,150})[.!?…»\"]$", s, re.IGNORECASE)
     if m_sub_end and not check_has_predicate(m_sub_end.group(1), cur_ves):
         return False
 
-    # 7. Matrix clause completeness: ensure matrix clause has a predicate when relative/subordinate clause extends to end
-    m_rel_end = re.search(r",\s*(?:який|яка|яке|які|якого|якій|яким|яких|якої|де|куди|звідки|тому що)\s+([^.!?…]+)[.!?…»\"]$", s, re.IGNORECASE)
-    if m_rel_end and not check_has_predicate(s[:m_rel_end.start()], cur_ves):
+    # 8. Matrix clause completeness: ensure matrix clause has a predicate when relative/subordinate clause extends to end
+    m_clause_end = re.search(
+        r",\s*(?:який|яка|яке|які|якого|якій|яким|яких|якої|де|куди|звідки|тому що|якщо|якби|коли|хоч|хоча|мов|немов|наче|неначе|що|щоб|бо|оскільки)\s+([^.!?…]+)[.!?…»\"]$",
+        s,
+        re.IGNORECASE,
+    )
+    if m_clause_end and not check_has_predicate(s[:m_clause_end.start()], cur_ves):
         return False
 
-    # 8. Prepositional fragment starting with phrase followed by relative clause
+    # 9. Prepositional fragment starting with phrase followed by relative clause
     if re.search(r"^[^,.!?…]+,\s*через\s+[^,]+,\s*які\b", s, re.IGNORECASE):
         return False
 
-    # 9. No dangling trailing punctuation
-    return not (s.endswith("...") or s.endswith("—") or s.endswith(" -"))
+    # 10. No ellipsis anywhere (neither unicode … nor ASCII ...) and no trailing dashes
+    if "…" in s or "..." in s or s.endswith("—") or s.endswith(" -"):
+        return False
+
+    return bool(re.search(r"[.!?»\"]$", s))
 
 
 def query_vesum_lemma_and_count(cur_ves: sqlite3.Cursor | None, token: str) -> tuple[str, int, bool]:
@@ -747,8 +758,9 @@ def load_brown_uk_sentences(
         if len(eval_records) >= eval_count:
             break
 
-    # Pass 2: fill any remaining gap up to eval_count
-    if len(eval_records) < eval_count:
+    # Pass 2: fill any remaining gap up to eval_count in balanced round-robin across held_out_docs
+    while len(eval_records) < eval_count:
+        added_in_round = 0
         for doc in held_out_docs:
             text = doc.read_text(encoding="utf-8")
             clean_sents = split_clean_ukrainian_sentences(text)
@@ -776,10 +788,14 @@ def load_brown_uk_sentences(
                             "char_length": len(s),
                         },
                     })
+                    added_in_round += 1
                     if len(eval_records) >= eval_count:
                         break
+                    break  # Take at most 1 extra sentence per document per round-robin cycle
             if len(eval_records) >= eval_count:
                 break
+        if added_in_round == 0:
+            break
 
     # Build Brown-UK training sentences (PRESERVE training + so-so contrastive)
     train_sentences: list[dict[str, Any]] = []
