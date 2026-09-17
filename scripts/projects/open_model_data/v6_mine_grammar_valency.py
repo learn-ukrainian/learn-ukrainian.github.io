@@ -216,10 +216,8 @@ INVALID_DOCUMENT_AKTU_RE = re.compile(
     r")(?!\s+(?:[а-яіїєґ\'’\-]+(?:ого|ього|ої|ьої)\s+){0,3}(?:агресії|вандалізму|тероризму|насильства|непокори|капітуляції|відчаю|милосердя|доброї\s+волі|героїзму|самопожертви|протесту|саботажу|диверсії|помсти|зради|каяття))",
     re.IGNORECASE,
 )
-DISCORDANT_DASH_APPOSITION_RE = re.compile(
-    r"\b[а-яіїєґА-ЯІЇЄҐ\']+(?:ою|ею|ям|ем|ом)\s+[–—]\s+[а-яіїєґА-ЯІЇЄҐ\']+(?:а|я|е)\s+[а-яіїєґА-ЯІЇЄҐ\']+(?:а|я|е|о|ь)\b[^–—]+[–—]\s+[а-яіїєґА-ЯІЇЄҐ\']*(?:ли|ла|ло|в|ть|ти|ють|ять|е|є)\b",
-    re.IGNORECASE,
-)
+PERSONAL_PRONOUNS_NOM = {"я", "ти", "він", "вона", "воно", "ми", "ви", "вони", "той", "та", "те", "ті"}
+CLAUSE_INTRO = {"що", "як", "коли", "де", "куди", "звідки", "мов", "наче", "ніби", "неначе", "хоч", "хоча", "якби", "якщо", "тому"}
 PREDICATE_WORDS = {
     "є", "це", "немає", "нема", "треба", "можна", "слід", "варто", "необхідно",
     "потрібно", "жаль", "сором", "пора", "час", "досить", "відомо", "зрозуміло",
@@ -327,7 +325,7 @@ def split_clean_ukrainian_sentences(
             continue
         if INVALID_DOCUMENT_AKTU_RE.search(s):
             continue
-        if DISCORDANT_DASH_APPOSITION_RE.search(s):
+        if has_discordant_dash_apposition(s):
             continue
         clean_sents.append(s)
     return clean_sents
@@ -1102,12 +1100,37 @@ def has_invalid_compound_preposition_case(s: str, cur_ves: sqlite3.Cursor | None
     return False
 
 
+_GLOBAL_VESUM_CONN: sqlite3.Connection | None = None
+_GLOBAL_VESUM_CUR: sqlite3.Cursor | None = None
+
+
+def get_vesum_cursor(cur_ves: sqlite3.Cursor | None = None) -> sqlite3.Cursor | None:
+    """Return an active VESUM cursor, using the supplied cursor if given, or a cached read-only cursor."""
+    if cur_ves is not None:
+        return cur_ves
+    global _GLOBAL_VESUM_CONN, _GLOBAL_VESUM_CUR
+    if _GLOBAL_VESUM_CUR is not None:
+        return _GLOBAL_VESUM_CUR
+    if DEFAULT_VESUM_DB.is_file():
+        try:
+            _GLOBAL_VESUM_CONN = sqlite3.connect(f"file:{DEFAULT_VESUM_DB}?mode=ro", uri=True)
+            _GLOBAL_VESUM_CUR = _GLOBAL_VESUM_CONN.cursor()
+            return _GLOBAL_VESUM_CUR
+        except Exception:
+            return None
+    return None
+
+
 def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None) -> bool:
-    """Reject ungrammatical appositions set off by paired dashes that fail case agreement with the head (Правопис 2019 §158, Ющук §21)."""
-    if DISCORDANT_DASH_APPOSITION_RE.search(s):
-        return True
-    if not cur_ves:
+    """Reject ungrammatical appositions set off by paired dashes that fail case agreement with the head (Правопис 2019 §158, Ющук §21).
+
+    Distinguishes genuine appositions (which must agree in case with their nominal head) from valid parenthetical
+    clauses (Правопис 2019 §161.I.10) such as those with finite verbs, copula-omitted subject clauses, or adverbial heads.
+    """
+    cur = get_vesum_cursor(cur_ves)
+    if not cur:
         return False
+
     m = re.search(r"\b([а-яіїєґА-ЯІЇЄҐ\']+)\s+[–—]\s+([^–—]+?)\s+[–—]", s)
     if not m:
         return False
@@ -1117,35 +1140,63 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
     if not words or len(words) < 2:
         return False
 
-    cur_ves.execute(
-        "SELECT DISTINCT pos, tags FROM forms_all WHERE word_form IN ({})".format(
-            ",".join("?" for _ in words)
-        ),
-        [w.lower() for w in words],
-    )
-    rows = cur_ves.fetchall()
-    has_verb = any(r[0] == "verb" and not any(inf in r[1] for inf in (":inf", ":adjp", ":advp")) for r in rows)
-    if has_verb:
-        return False
-
-    cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ?", (head_word,))
-    head_rows = cur_ves.fetchall()
+    # Check head word: must be a noun
+    cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (head_word,))
+    head_rows = cur.fetchall()
     if not head_rows:
         return False
-    head_cases = {tag.split(":v_")[1].split(":")[0] for r in head_rows for tag in [r[0]] if ":v_" in tag}
+    noun_head_rows = [r for r in head_rows if r[0] == "noun"]
+    if not noun_head_rows:
+        return False
 
-    if head_cases and "naz" not in head_cases:
-        app_first = words[0].lower()
-        app_second = words[1].lower()
-        cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ?", (app_first,))
-        w1_rows = cur_ves.fetchall()
-        cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ?", (app_second,))
-        w2_rows = cur_ves.fetchall()
-        w1_cases = {tag.split(":v_")[1].split(":")[0] for r in w1_rows for tag in [r[0]] if ":v_" in tag}
-        w2_cases = {tag.split(":v_")[1].split(":")[0] for r in w2_rows for tag in [r[0]] if ":v_" in tag}
+    head_cases = {tag.split(":v_")[1].split(":")[0] for r in noun_head_rows for tag in [r[1]] if ":v_" in tag}
+    # If head noun can be nominative, nominative agreement is valid (no discord)
+    if not head_cases or "naz" in head_cases:
+        return False
 
-        if "naz" in w1_cases and "naz" in w2_cases and not (head_cases & (w1_cases & w2_cases)):
-            return True
+    # Check inside phrase: must NOT be an inserted sentence/clause
+    lower_words = [w.lower() for w in words]
+    if any(w in PERSONAL_PRONOUNS_NOM for w in lower_words[:2]):
+        return False
+    if any(w in CLAUSE_INTRO for w in lower_words[:2]):
+        return False
+    if any(w in PREDICATE_WORDS for w in lower_words):
+        return False
+
+    # Check for finite verbs in inside phrase
+    cur.execute(
+        "SELECT DISTINCT word_form, pos, tags FROM forms_all WHERE word_form IN ({})".format(
+            ",".join("?" for _ in lower_words)
+        ),
+        lower_words,
+    )
+    inside_rows = cur.fetchall()
+    for _wf, pos, tags in inside_rows:
+        if pos == "verb" and any(t in tags for t in (":past", ":pres", ":fut", ":impr")):
+            return False
+
+    # Extract non-prepositional core tokens of the appositive phrase
+    content_tokens = []
+    for w in lower_words:
+        cur.execute("SELECT pos FROM forms_all WHERE word_form = ?", (w,))
+        w_pos = {r[0] for r in cur.fetchall()}
+        if "prep" in w_pos and "noun" not in w_pos and "adj" not in w_pos:
+            break
+        content_tokens.append(w)
+
+    if not content_tokens:
+        return False
+
+    # In an apposition, an appositive noun renaming the head must agree in case
+    for tok in content_tokens:
+        cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (tok,))
+        tok_rows = cur.fetchall()
+        noun_toks = [r for r in tok_rows if r[0] == "noun"]
+        if noun_toks:
+            noun_cases = {tag.split(":v_")[1].split(":")[0] for r in noun_toks for tag in [r[1]] if ":v_" in tag}
+            if "naz" in noun_cases and not (noun_cases & head_cases):
+                return True
+
     return False
 
 

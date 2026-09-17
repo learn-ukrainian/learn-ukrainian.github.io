@@ -851,6 +851,25 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_apposition_replacement, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_apposition_replacement)) == 1
 
+    # Defect 92 / Positive regression (Round 40 P2): Valid parenthetical clause with finite verb between dashes accepted (Правопис 2019 §161.I.10)
+    frag_parenthetical_verb = "Він згодом — настала весна — пішов додому."
+    assert not miner.has_discordant_dash_apposition(frag_parenthetical_verb, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_parenthetical_verb, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_parenthetical_verb)) == 1
+
+    # Defect 93 / Positive regression (Round 40 P2): Valid parenthetical clause with omitted copula between dashes accepted (Правопис 2019 §161.I.10)
+    frag_parenthetical_copula = "Він говорив із сестрою — вона лікарка — про роботу."
+    assert not miner.has_discordant_dash_apposition(frag_parenthetical_copula, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_parenthetical_copula, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_parenthetical_copula)) == 1
+
+    # Defect 94 / Positive control (Round 40 P2): Valid case-agreeing instrumental apposition accepted (Правопис 2019 §158)
+    frag_agreeing_apposition = "Вдалою режисерською знахідкою – своєрідною грою на контрасті – стали комічні вибрики."
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition)) == 1
+
+
 
 def test_release_receipt_schema_and_checksum() -> None:
     """Validate release receipt against JSON schema and sha256 checksum."""
