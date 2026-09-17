@@ -83,22 +83,29 @@ policy. That makes the generator **language-adjacent**: LANGUAGE-LANES seating
 applies (agy / codex / claude / grok-4.6 only). Cheap code-only seats are wrong
 here even when the page set is “code-anchored.”
 
+Do **not** treat Gemini Flash and Astra as interchangeable generators. Pin one
+family to execute the pilot pass and the other to independent review so the
+cross-family gate is automatic.
+
+| Role | Seat | Model / effort |
+| --- | --- | --- |
+| **Execute** (OpenWiki generate + PR author) | AGY | Gemini Flash (`gemini-3.8-flash-high` / current AGY Flash default) |
+| **Review** (formal CF of the exact PR head) | Codex | Astra @ `low` (bump only if the review envelope is large/ambiguous) |
+
 | Field | Decision |
 | --- | --- |
-| Preferred generator | **Gemini Flash** via AGY (`gemini-3.8-flash-high` / current AGY Flash default) |
-| Alternate (same PR class) | **Astra @ `low`** via Codex (`gpt-6-astra`) when AGY is unfit or concurrency-full |
-| Billing bucket | Existing Google AIS / Gemini subscription (AGY); Codex subscription for Astra |
+| Billing | Existing Google AIS / Gemini subscription (execute); Codex subscription (review) |
 | Credential owner | Operator-held AIS / Codex credentials already used by the fleet |
-| Rejected for this program | **DeepSeek** (any Flash/Pro id, including V4.1 / `deepseek-flash`) — not a language seat; **OpenRouter**; **Hermes host gateway** (removed 2026-08-16); Cursor |
+| Rejected for this program | **DeepSeek** (any Flash/Pro id, including V4.1 / `deepseek-flash`) — not a language seat; **OpenRouter**; **Hermes host gateway** (removed 2026-08-16); Cursor as generator or sole CF identity |
 | Automation venue (pilot #5541) | **Local dispatch worktree only** — one generation pass, PR-bound |
 | Automation venue (recurring #5542) | **Not authorized in CI** until #5542 explicitly chooses a venue; default remains local/operator-triggered |
-| Generator family on receipts | Record concrete model ID + family on every pilot/regen PR |
+| Generator / reviewer on receipts | Record concrete model ID + family for **both** execute and review on every pilot/regen PR |
 
-No viable named language-lane route → skip OpenWiki; continue deterministic index only.
+If AGY cannot execute (outage / hard quota), **swap once for that PR**: Astra @ `low` executes and AGY Gemini Flash reviews. Do not leave both seats unmarked “alternate generators.” Record the swap on the PR.
 
-**Operator amendment (2026-09-17):** prefer Gemini Flash or Astra light over
-DeepSeek for Ukrainian-related documentation. DeepSeek remains fine for
-code/infra CF volume elsewhere; it is not the docs-knowledge OpenWiki route.
+No viable language-lane execute+review pair → skip OpenWiki; continue deterministic index only.
+
+**Operator amendments (2026-09-17):** (1) prefer Gemini Flash / Astra over DeepSeek for Ukrainian-related documentation; (2) prefer execute/review split over interchangeable alternates.
 
 ### Hard exclusions (generator output)
 
@@ -131,7 +138,8 @@ provider route.
 - **Full OpenWiki adoption now** → rejected: immature upstream, no measured gain over Monitor orientation, root-file write hazard.
 - **Deterministic index only (never pilot OpenWiki)** → accepted as the success path if pilot kills; not chosen as the *only* path a priori because a bounded pilot is cheap relative to repeated agent scans *if* exit criteria pass.
 - **OpenRouter-hosted generation** → rejected by #5537 charter.
-- **DeepSeek Flash / V4.1 / `deepseek-flash` as OpenWiki generator** → rejected 2026-09-17: docs-knowledge is language-adjacent; LANGUAGE-LANES excludes DeepSeek. Prefer Gemini Flash or Astra @ low.
+- **DeepSeek Flash / V4.1 / `deepseek-flash` as OpenWiki generator** → rejected 2026-09-17: docs-knowledge is language-adjacent; LANGUAGE-LANES excludes DeepSeek.
+- **Gemini Flash and Astra as interchangeable “either generates” alternates** → rejected 2026-09-17: prefer fixed execute/review split so cross-family review is automatic; allow a recorded one-time swap only on AGY outage.
 - **CI-native recurring OpenWiki updates** → deferred; new spend/egress class (FBL-012); local pilot first.
 - **Keep program under infra-harness #6943** → rejected (FBL-001): lease collision with other infra work; fail-closed own-stream sweep.
 
