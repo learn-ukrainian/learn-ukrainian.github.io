@@ -1303,6 +1303,39 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_clause_verb_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_clause_verb_myla)) == 1
 
+    # Defect 150 / Negative regression (Round 68 P2): Dependent genitive nouns inside prepositional phrases do not fake clause completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_discordant_apposition_dep_genitive_myla = (
+        "Театр — місце, де після виготовлення мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_dep_genitive_myla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dep_genitive_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dep_genitive_myla)) == 0
+
+    # Defect 151 / Positive control (Round 68 P2): Agreeing instrumental apposition across dependent genitive noun accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_agreeing_apposition_dep_genitive_myla = (
+        "Театр — місце, де після виготовлення мила вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_dep_genitive_myla, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_dep_genitive_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_dep_genitive_myla)) == 1
+
+    # Defect 152 / Negative regression (Round 68 P2): Enclosing phrase tracking does not span across separate prepositional phrases (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_discordant_apposition_clause_verb_across_pp = (
+        "Він говорив із сестрою — дівчиною, яка після тривалого відпочинку мила посуд біля будинку — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_clause_verb_across_pp, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_clause_verb_across_pp, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_clause_verb_across_pp)) == 0
+
+    # Defect 153 / Positive control (Round 68 P2): Agreeing instrumental apposition across separate prepositional phrases accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_agreeing_apposition_clause_verb_across_pp = (
+        "Він говорив із сестрою — дівчиною, яка після тривалого відпочинку мила посуд біля будинку — та з лікаркою — досвідченою фахівчинею — про виставу."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_clause_verb_across_pp, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_clause_verb_across_pp, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_clause_verb_across_pp)) == 1
+
+
 
 def test_release_receipt_schema_and_checksum() -> None:
     """Validate release receipt against JSON schema and sha256 checksum."""
