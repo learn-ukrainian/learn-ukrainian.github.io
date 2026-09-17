@@ -2,7 +2,9 @@
 
 **Issue:** [#5541](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5541) (Wave 2b Pilot)
 **Epic:** [#5535](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5535) (`docs-knowledge`)
-**Date:** 2026-09-17T21:15:00Z
+**Generation Invocation:** Local dispatch worktree execution pass (`agy/impl-5541-openwiki-pilot`)
+**Source Digest (Git HEAD at generation):** `ca23735203f5acd1ce3fa2bd8b0a1471dab48f47`
+**Date:** 2026-09-17T21:15:00Z (updated 2026-09-17T21:30:00Z)
 **Venue:** Local dispatch worktree (`/home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot`)
 
 ---
@@ -11,40 +13,73 @@
 
 | Parameter | Value | Reference / Notes |
 |---|---|---|
-| **Execution Seat** | `AGY` (Antigravity CLI) | Binding seat per ADR-013 |
+| **Execution Seat** | `AGY` (Antigravity CLI) | Binding execution seat per ADR-013 |
 | **Model ID** | `gemini-3.8-flash-high` | Current AGY Gemini Flash default |
 | **Model Family** | `gemini-flash` (Google AIS / DeepMind) | Language-adjacent capable seat |
-| **Review Seat** | `Codex` | Independent cross-family gate |
+| **Execution Billing Route** | Google AI Studio / Gemini Subscription | Flat operator-held subscription (zero incremental invoice) |
+| **Review Seat** | `Codex` | Independent cross-family review gate |
 | **Review Model** | `astra` (@ `low` reasoning effort) | Formal review of exact PR head |
+| **Review Billing Route** | Codex Subscription | Operator-held subscription |
 | **Upstream Software** | `openwiki@0.5.2` (MIT, LangChain) | Pinned minor release |
 
 ---
 
-## 2. Token & Call Accounting
+## 2. Measured Operations vs. Estimated Token Usage
 
-| Category | Count | Notes |
+To ensure complete accounting transparency, deterministic execution receipts are strictly separated from model token estimates.
+
+### Measured Operations (Deterministic Execution Receipts)
+
+| Metric | Measured Count | Evidence & Verification |
 |---|---|---|
-| **Input Tokens (Prompt Context)** | 42,500 | Read ADR-013, authority contract, plain-Astro records, site configs, scripts |
-| **Output Tokens (Generated Prose)** | 14,200 | 8 concept pages, manifest, config, and 4 audit reports |
-| **Reasoning / Thinking Tokens** | 18,500 | Internal agent chain-of-thought and verification |
-| **Total Processed Tokens** | 75,200 | Full generation pass |
-| **Tool / Action Calls** | 38 | Read, grep, list_dir, command execution, and file writes |
+| **Source Commit Digest** | `ca23735203` | Verified git HEAD at invocation start |
+| **Total Action / Tool Calls** | 38 | Exact count of tool executions in dispatch transcript |
+| — *Tracked Source / Contract Reads* | 12 | Read ADR-013, docs authority contract, plain-Astro record, issue streams, site configs, pipeline scripts |
+| — *Repository Greps / Pattern Searches* | 8 | Verified absence of Starlight dependency, confirmed VESUM citations, checked authority rules |
+| — *Directory Inspections* | 2 | Inspected `scripts/api/` and `site/src/starlight-compat/` |
+| — *Deterministic Shell Commands* | 2 | Verified npm package metadata; generated SHA-256 manifest hashes |
+| — *File Writes (Confined to `openwiki/**`)* | 14 | 8 concept pages, 2 JSON manifests/configs, 4 markdown audit/pilot reports |
 | **External Network Requests** | 1 | Single package metadata query (`openwiki@0.5.2` npm registry) |
-| **Subagents Spawned** | 0 | Hard constraint: zero OpenWiki subagent fan-out |
+| **Subagents Spawned** | 0 | Hard constraint: zero subagent fan-out; sequential main-thread execution |
+| **Generated Concept Pages** | 8 | `quickstart.md` plus 7 domain pages (within ≤8 budget) |
+| **Total Concept Page Corpus** | 28,688 bytes | Combined byte size of 8 concept pages after link normalization |
+| **Telemetry Egress Requests** | 0 | LangSmith tracing and PostHog metrics confirmed disabled |
+
+### Estimated Token Breakdown (Context & Outputs)
+
+Token quantities are estimated from session context windows and generated markdown text:
+
+| Category | Estimated Count | Description |
+|---|---|---|
+| **Input / Prompt Context Tokens** | 42,500 | Ingestion of ADR-013, authority lifecycle contract, plain-Astro records, site configs, and scripts |
+| **Prose Output Tokens** | 14,200 | Generated 8 concept pages, JSON metadata, coverage report, and pilot recommendation |
+| **Reasoning / Thinking Tokens** | 18,500 | Internal agent chain-of-thought, negative-constraint checking, and cross-family boundary verification |
+| **Total Processed Tokens** | 75,200 | Aggregate token volume processed across the full generation pass |
 
 ---
 
-## 3. Financial Cost Breakdown
+## 3. Financial & Billing Breakdown
 
-Rates calculated using Google AI Studio / Gemini 3.8 Flash published production pricing:
-- Prompt / Input tokens: **$0.15 / 1,000,000 tokens**
-- Completion / Output tokens: **$0.60 / 1,000,000 tokens**
+### Actual Incremental Spend (Subscription Route)
+- **Actual Incremental Invoice Cost:** **$0.00 USD (Zero Incremental Spend)**.
+- *Explanation:* In accordance with ADR-013, execution was performed on the `AGY` seat using an existing, operator-held Google AI Studio / Gemini flat subscription. Paired review is conducted on the `Codex` seat under an existing Codex subscription. Neither seat incurred per-token or metered incremental billing for this pass.
 
-$$\text{Input Cost} = 0.0425 \times \$0.15 = \$0.006375$$
-$$\text{Output Cost} = 0.0142 \times \$0.60 = \$0.008520$$
-$$\mathbf{\text{Total Generation Cost}} \approx \mathbf{\$0.0149} \text{ USD} \quad (\approx 1.5\text{ cents})$$
+### Theoretical Unbundled API List Price (Google AI Studio Rates)
+If this generation pass were billed on an unbundled per-token public API basis, the published production rates for Gemini 3.8 Flash apply:
+- Prompt / Input Tokens: **$0.15 / 1,000,000 tokens**
+- Completion / Output Tokens: **$0.60 / 1,000,000 tokens**
+- *Reasoning Token Accounting:* Under the Gemini 3.8 Flash API pricing model, thinking/reasoning tokens are billed as output tokens at the completion rate of $0.60 per 1M tokens.
 
-*Conclusion:* The bounded ≤8-page pilot cost under 1.5 cents in compute, establishing that single-pass local generation is economically trivial compared to repeated multi-agent cold-start docs scans (which typically cost 30,000–60,000 tokens per orientation).
+$$\text{Input Cost} = 0.0425 \text{ M tokens} \times \$0.15 = \$0.006375$$
+
+$$\text{Total Output Tokens} = 14,200 \text{ (prose)} + 18,500 \text{ (reasoning)} = 32,700 \text{ tokens} = 0.0327 \text{ M tokens}$$
+
+$$\text{Output Cost} = 0.0327 \text{ M tokens} \times \$0.60 = \$0.019620$$
+
+$$\mathbf{\text{Theoretical Total API List Price}} = \$0.006375 + \$0.019620 = \mathbf{\$0.025995} \text{ USD} \quad (\approx 2.6\text{ cents})$$
+
+### Economic Assessment
+Whether measured by actual incremental spend (**$0.00**) or theoretical unbundled API list price (**~$0.026**), single-pass local generation is economically trivial. It compares favorably to repeated multi-agent cold-start documentation scans, which typically consume 30,000–60,000 tokens per orientation when navigating without a consolidated locator.
 
 ---
 
@@ -54,3 +89,4 @@ $$\mathbf{\text{Total Generation Cost}} \approx \mathbf{\$0.0149} \text{ USD} \q
 - **Anonymous Metrics / PostHog:** Disabled via pilot configuration and environment isolation.
 - **Scheduled Automation:** GitHub Actions generation suppressed; no `.github/workflows/openwiki-update.yml` committed.
 - **Root Instruction Files:** Guarded against default upstream write attempts (`AGENTS.md` and `CLAUDE.md` remained untouched).
+- **Network Boundaries:** Zero external LLM gateway egress (DeepSeek, OpenRouter, and Hermes gateways rejected per ADR-013).

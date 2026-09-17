@@ -8,7 +8,7 @@ tags: [pipeline, mdx, build, config-as-policy, generation]
 # Content Pipeline and Build Runtime
 
 > [!NOTE]
-> OpenWiki is a non-authoritative locator. The authoritative sources for pipeline behavior are executable scripts under [`scripts/generate_mdx/`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/generate_mdx/), [`scripts/build/`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/build/), and configuration policy in [`scripts/config.py`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/config.py).
+> OpenWiki is a non-authoritative locator. The authoritative sources for pipeline behavior are executable scripts under [`scripts/generate_mdx/`](../scripts/generate_mdx/), [`scripts/build/`](../scripts/build/), and configuration policy in [`scripts/config.py`](../scripts/config.py).
 
 ## Pipeline Overview
 
@@ -27,16 +27,16 @@ flowchart LR
 ## Core Components
 
 ### 1. Generation Subsystem (`scripts/generate_mdx/`)
-- [`core.py`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/generate_mdx/core.py): Orchestrates template filling and component assembly.
-- [`converters.py`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/generate_mdx/converters.py): Converts internal lesson DSL nodes into JSX/Astro-compatible components (`<DialogueBox>`, `<VocabCard>`, `<FlashcardDeck>`).
-- [`wire_navigation.py`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/generate_mdx/wire_navigation.py): Automates forward and backward lesson sequencing and breadcrumb links.
-- [`generate_seo.py`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/generate_mdx/generate_seo.py): Emits OpenGraph metadata and structured schema tags.
+- [`core.py`](../scripts/generate_mdx/core.py): Orchestrates template filling and component assembly.
+- [`converters.py`](../scripts/generate_mdx/converters.py): Converts internal lesson DSL nodes into JSX/Astro-compatible components (`<DialogueBox>`, `<VocabCard>`, `<FlashcardDeck>`).
+- [`wire_navigation.py`](../scripts/generate_mdx/wire_navigation.py): Automates forward and backward lesson sequencing and breadcrumb links.
+- [`generate_seo.py`](../scripts/generate_mdx/generate_seo.py): Emits OpenGraph metadata and structured schema tags.
 
 ### 2. Build Orchestration (`scripts/build/`)
-- [`v7_build.py`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/build/v7_build.py): Primary build entrypoint for V7 curriculum authoring.
-- [`lesson_assembler.py`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/build/lesson_assembler.py): Aggregates dialogue sections, grammar breakdowns, and interactive exercises.
-- [`activity_renderer.py`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/build/activity_renderer.py): Renders interactive quizzes, fill-in-the-blank cards, and audio listening checks.
-- [`lesson_gates.py`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/build/lesson_gates.py): Enforces structural integrity, component order, and vocabulary constraints prior to committing output.
+- [`v7_build.py`](../scripts/build/v7_build.py): Primary build entrypoint for V7 curriculum authoring.
+- [`lesson_assembler.py`](../scripts/build/lesson_assembler.py): Aggregates dialogue sections, grammar breakdowns, and interactive exercises.
+- [`activity_renderer.py`](../scripts/build/activity_renderer.py): Renders interactive quizzes, fill-in-the-blank cards, and audio listening checks.
+- [`lesson_gates.py`](../scripts/build/lesson_gates.py): Enforces structural integrity, component order, and vocabulary constraints prior to committing output.
 
 ---
 
@@ -51,4 +51,4 @@ All pedagogical parameters, CEFR track configurations, and immersion floors are 
 - **`IMMERSION_POLICIES`:** Authoritative structural sub-gates (`_l2_exposure_floor_gate`, `_long_uk_ceiling_gate`, `_component_density_gate`).
 
 > [!TIP]
-> Per [docs-authority-lifecycle.md](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/docs/architecture/docs-authority-lifecycle.md), if any narrative document asserts immersion rules differing from `scripts/config.py`, the configuration values in `scripts/config.py` are the authoritative source of truth.
+> Per [docs-authority-lifecycle.md](../docs/architecture/docs-authority-lifecycle.md), if any narrative document asserts immersion rules differing from `scripts/config.py`, the configuration values in `scripts/config.py` are the authoritative source of truth.

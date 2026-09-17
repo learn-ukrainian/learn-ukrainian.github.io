@@ -13,7 +13,7 @@ tags: [site, astro, ui-stack-truth, plain-astro, de-starlight]
 
 ## Background & Decision Record
 
-The repository originally evaluated Starlight versus custom Astro components. As recorded in [`docs/architecture/2026-06-09-ui-astro-without-starlight.md`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/docs/architecture/2026-06-09-ui-astro-without-starlight.md):
+The repository originally evaluated Starlight versus custom Astro components. As recorded in [`docs/architecture/2026-06-09-ui-astro-without-starlight.md`](../docs/architecture/2026-06-09-ui-astro-without-starlight.md):
 - **Decision:** Keep Astro as the static builder; remove Starlight as the learner-facing layer; build custom owned components and routes.
 - **Why:** Starlight documentation machinery imposed heavyweight overrides. A custom layout (`CourseLayout.astro` + `course.css`) provides total control over hero banners, breadcrumbs, vocabulary decks, and theme tokens (`--lu-*`).
 
@@ -22,7 +22,7 @@ The repository originally evaluated Starlight versus custom Astro components. As
 ## Technical Evidence in the Tree
 
 ### 1. Astro Configuration (`site/astro.config.mjs`)
-Inspecting [`site/astro.config.mjs`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/site/astro.config.mjs):
+Inspecting [`site/astro.config.mjs`](../site/astro.config.mjs):
 ```javascript
 export default defineConfig({
   site: 'https://learn-ukrainian.github.io',
@@ -49,10 +49,10 @@ resolve: {
   },
 }
 ```
-This alias redirects Starlight component imports to the lightweight local shim [`site/src/starlight-compat/index.ts`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/site/src/starlight-compat/index.ts).
+This alias redirects Starlight component imports to the lightweight local shim [`site/src/starlight-compat/index.ts`](../site/src/starlight-compat/index.ts).
 
 ### 3. Dependency Verification (`site/package.json`)
-- `@astrojs/starlight` is **not** present in [`site/package.json`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/site/package.json) (it was fully removed in commit `666b6a551f` on 2026-06-08).
+- `@astrojs/starlight` is **not** present in [`site/package.json`](../site/package.json) (it was fully removed in commit `666b6a551f` on 2026-06-08).
 - The directory was renamed from historical `starlight/` to `site/` in commit `0e6310ae1a` (2026-06-13).
 
 ---
@@ -67,6 +67,6 @@ graph TD
     LAYOUT --> DIST["Astro dist/ Output"]
 ```
 
-- **Course Layout:** [`site/src/layouts/CourseLayout.astro`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/site/src/layouts/CourseLayout.astro) renders header navigation, breadcrumbs, sidebar course navigation, and footer.
+- **Course Layout:** [`site/src/layouts/CourseLayout.astro`](../site/src/layouts/CourseLayout.astro) renders header navigation, breadcrumbs, sidebar course navigation, and footer.
 - **Styling:** Controlled by custom CSS tokens in `site/src/styles/course.css`.
 - **Search:** Native search index generated at build time; custom routing at `site/src/pages/[...slug].astro`.

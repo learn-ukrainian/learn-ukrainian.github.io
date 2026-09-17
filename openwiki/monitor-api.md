@@ -13,11 +13,11 @@ tags: [monitor-api, fastapi, orientation, contracts, live-ops-boundary]
 
 ## Architecture
 
-The operational dashboard backend is built on **FastAPI** and located under [`scripts/api/`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/api/). It serves local developer dashboards, provides orientation payloads for agents, and hosts artifact exploration tools.
+The operational dashboard backend is built on **FastAPI** and located under [`scripts/api/`](../scripts/api/). It serves local developer dashboards, provides orientation payloads for agents, and hosts artifact exploration tools.
 
-- **Main Entrypoint:** [`scripts/api/main.py`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/api/main.py)
+- **Main Entrypoint:** [`scripts/api/main.py`](../scripts/api/main.py)
 - **Local Port:** Default `localhost:8000` (configurable)
-- **Supervision:** [`scripts/api/run_monitor_api_supervisor.sh`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/api/run_monitor_api_supervisor.sh)
+- **Supervision:** [`scripts/api/run_monitor_api_supervisor.sh`](../scripts/api/run_monitor_api_supervisor.sh)
 
 ---
 
@@ -25,17 +25,17 @@ The operational dashboard backend is built on **FastAPI** and located under [`sc
 
 | Router file | Prefix / Endpoint | Purpose |
 |---|---|---|
-| [`rules_router.py`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/api/rules_router.py) | `/api/rules` | Serves authoritative shared agent rules parsed from `agents_extensions/shared/rules/`. |
-| [`artifacts_router.py`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/api/artifacts_router.py) | `/artifacts/` | Serves committed and generated evaluation artifacts (HTML reports, scorecards). |
-| [`batch_router.py`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/api/batch_router.py) | `/api/batch/...` | Manages batch build tasks and WebSocket progress reporting. |
-| [`agent_router.py`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/api/agent_router.py) | `/api/agent/...` | Exposes agent metrics, session metadata, and tool invocation stats. |
-| [`docs_router.py`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/api/docs_router.py) | `/api/docs/...` | Document inspection endpoint. (Post-adopt expansion candidate for OpenWiki browsing). |
+| [`rules_router.py`](../scripts/api/rules_router.py) | `/api/rules` | Serves authoritative shared agent rules parsed from `agents_extensions/shared/rules/`. |
+| [`artifacts_router.py`](../scripts/api/artifacts_router.py) | `/artifacts/` | Serves committed and generated evaluation artifacts (HTML reports, scorecards). |
+| [`batch_router.py`](../scripts/api/batch_router.py) | `/api/batch/...` | Manages batch build tasks and WebSocket progress reporting. |
+| [`agent_router.py`](../scripts/api/agent_router.py) | `/api/agent/...` | Exposes agent metrics, session metadata, and tool invocation stats. |
+| [`docs_router.py`](../scripts/api/docs_router.py) | `/api/docs/...` | Document inspection endpoint. (Post-adopt expansion candidate for OpenWiki browsing). |
 
 ---
 
 ## Developer and Agent Orientation Contract
 
-The `/api/orient` endpoint (defined in [`scripts/api/main.py`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/api/main.py)) is the standard entrypoint for coding agents starting a fresh session. It provides:
+The `/api/orient` endpoint (defined in [`scripts/api/main.py`](../scripts/api/main.py)) is the standard entrypoint for coding agents starting a fresh session. It provides:
 
 1. **Repository Identity & Git Head:** Current commit SHA and branch sanity.
 2. **Recent Milestones & Stream Status:** High-priority active issues and recent handoff digests.

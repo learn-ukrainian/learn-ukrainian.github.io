@@ -8,7 +8,7 @@ tags: [contracts, verification, vesum, quality-gates, docs-inventory]
 # Content Contracts and Quality Assurance
 
 > [!NOTE]
-> OpenWiki is a non-authoritative locator. Authoritative verification logic resides in executable scripts under [`scripts/audit/`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/audit/) and the documentation inventory tool [`scripts/docs/docs_inventory.py`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/docs/docs_inventory.py).
+> OpenWiki is a non-authoritative locator. Authoritative verification logic resides in executable scripts under [`scripts/audit/`](../scripts/audit/) and the documentation inventory tool [`scripts/docs/docs_inventory.py`](../scripts/docs/docs_inventory.py).
 
 ## Linguistic Integrity & VESUM Verification
 
@@ -21,9 +21,9 @@ To maintain the highest standard of modern Ukrainian language instruction:
 
 ## Deterministic Documentation Inventory (#5536)
 
-Owned by [#5536](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5536) and defined in [`docs/knowledge/inventory/README.md`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/docs/knowledge/inventory/README.md):
+Owned by [#5536](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/5536) and defined in [`docs/knowledge/inventory/README.md`](../docs/knowledge/inventory/README.md):
 
-- **Tool:** [`scripts/docs/docs_inventory.py`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/docs/docs_inventory.py)
+- **Tool:** [`scripts/docs/docs_inventory.py`](../scripts/docs/docs_inventory.py)
 - **Source of Truth:** Git's staged and committed index (`git ls-files --stage -z`). Untracked files, local caches, and gitignored paths are strictly ignored.
 - **Determinism:** Identical index, HEAD, and tool version yield byte-identical manifests. No run timestamps, wall-clock age, or absolute paths affect output digests.
 
@@ -36,7 +36,7 @@ flowchart LR
 ```
 
 ### Schema & Artifacts
-The inventory outputs conform to [`docs/knowledge/inventory/manifest.schema.json`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/docs/knowledge/inventory/manifest.schema.json), recording:
+The inventory outputs conform to [`docs/knowledge/inventory/manifest.schema.json`](../docs/knowledge/inventory/manifest.schema.json), recording:
 - File paths, byte/line counts, content SHA-256 hashes, and blob IDs.
 - Frontmatter diagnostics (enforcing lifecycle states: `draft`, `active`, `superseded`, `archive`).
 - Graph edges capturing Markdown links, image references, and supersession relationships.
@@ -45,7 +45,7 @@ The inventory outputs conform to [`docs/knowledge/inventory/manifest.schema.json
 
 ## Audit Scripts & Gate Enforcement
 
-The [`scripts/audit/`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/audit/) directory provides gatekeepers that run in CI and local verification:
+The [`scripts/audit/`](../scripts/audit/) directory provides gatekeepers that run in CI and local verification:
 - `check_adrs.py`: Verifies ADR formatting, sequential numbering, and status fields.
 - `check_decisions.py`: Tracks dated decision cards and flags expired entries.
 - `certify_module.py`: Evaluates curriculum units against all pedagogical and immersion gates before promotion.

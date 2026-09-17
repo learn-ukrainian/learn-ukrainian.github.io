@@ -8,7 +8,7 @@ tags: [docs-authority, lifecycle, conflict-resolution, adr-013, contract]
 # Documentation Authority and Lifecycle Contract
 
 > [!NOTE]
-> OpenWiki is a non-authoritative locator. The binding authority contract is defined in [`docs/architecture/docs-authority-lifecycle.md`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/docs/architecture/docs-authority-lifecycle.md) and frozen under [ADR-013](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/docs/architecture/adr/adr-013-docs-knowledge-openwiki.md).
+> OpenWiki is a non-authoritative locator. The binding authority contract is defined in [`docs/architecture/docs-authority-lifecycle.md`](../docs/architecture/docs-authority-lifecycle.md) and frozen under [ADR-013](../docs/architecture/adr/adr-013-docs-knowledge-openwiki.md).
 
 ## Authority Classes and Precedence
 
@@ -45,7 +45,7 @@ When two repository artifacts disagree on a fact, agents and tooling must execut
 
 ## Worked Example: Immersion Policy Conflict
 
-- **Scenario:** A curated documentation guide claims A1 lessons must maintain 70% Ukrainian text, whereas [`scripts/config.py`](file:///home/ops/learn-ukrainian/.worktrees/dispatch/agy/impl-5541-openwiki-pilot/scripts/config.py) defines `TRACK_CONFIG["a1"]["immersion_range"] = [0.10, 0.50]`.
+- **Scenario:** A curated documentation guide claims A1 lessons must maintain 70% Ukrainian text, whereas [`scripts/config.py`](../scripts/config.py) defines `TRACK_CONFIG["a1"]["immersion_range"] = [0.10, 0.50]`.
 - **Resolution:** Config-as-policy wins. The executable configuration in `scripts/config.py` and operator contract item 9 govern runtime lesson building. The documentation is stale for that fact type.
 - **OpenWiki Citation:** OpenWiki must cite `scripts/config.py` and the operator contract path, rather than repeating the obsolete documentation claim.
 

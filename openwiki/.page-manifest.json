@@ -3,42 +3,42 @@
   "pages": {
     "agent-runtime.md": {
       "gitHead": "ca23735203f5acd1ce3fa2bd8b0a1471dab48f47",
-      "pageVersion": "sha256:90ecd571b71bdb8aa3068259a5628708e3e265f49f49b6e9c539f05bf36bfa7c",
+      "pageVersion": "sha256:a184a381457dc738a0040b22540592623d5bec40a08a18230198eb512603b20a",
       "completedBy": "agy/gemini-3.8-flash-high"
     },
     "architecture-overview.md": {
       "gitHead": "ca23735203f5acd1ce3fa2bd8b0a1471dab48f47",
-      "pageVersion": "sha256:829c829dcb6f9d59665f162fbe2ddefe3936703a94f044bc2b340a6891c1365f",
+      "pageVersion": "sha256:ea8bebfbf735b15d359644a4bfea79ba588356bf79a81d777706e8920402c496",
       "completedBy": "agy/gemini-3.8-flash-high"
     },
     "content-contracts.md": {
       "gitHead": "ca23735203f5acd1ce3fa2bd8b0a1471dab48f47",
-      "pageVersion": "sha256:a693be88d844de8119cafd9d4b12fe72e4d9330fe377dd23eea857d254c3cda0",
+      "pageVersion": "sha256:1d627b766ed0579a3ff4489ffbc721a7b83942f0bf19b59fdc5f23283310bcec",
       "completedBy": "agy/gemini-3.8-flash-high"
     },
     "docs-lifecycle.md": {
       "gitHead": "ca23735203f5acd1ce3fa2bd8b0a1471dab48f47",
-      "pageVersion": "sha256:b8fa7e28a2a9bddb023dcf31aaf28a5ae48509c678ba8ac6a3ffbbcd9b972ea5",
+      "pageVersion": "sha256:d62240e497211dc309fa1bb1745b5f7aefbef4ba6d6a0d4aab12ac70cb678eef",
       "completedBy": "agy/gemini-3.8-flash-high"
     },
     "learner-site.md": {
       "gitHead": "ca23735203f5acd1ce3fa2bd8b0a1471dab48f47",
-      "pageVersion": "sha256:0efb34e28bb5b7c71abc69098bd3bae934d7da26e1509bee9fe71abf91c030e2",
+      "pageVersion": "sha256:f4a25b411da58729ce6b0e056a5a508f485cb442fafa622200cb76d34dbfaea6",
       "completedBy": "agy/gemini-3.8-flash-high"
     },
     "monitor-api.md": {
       "gitHead": "ca23735203f5acd1ce3fa2bd8b0a1471dab48f47",
-      "pageVersion": "sha256:b28787778697959c19ccd1b8069ee80879c6f4b37f781fe4896e740c6444ca24",
+      "pageVersion": "sha256:7151d0b0a23c6cb340b91d4062817292f86f1b8f414d2dbc58f41e23f3203e76",
       "completedBy": "agy/gemini-3.8-flash-high"
     },
     "pipeline-runtime.md": {
       "gitHead": "ca23735203f5acd1ce3fa2bd8b0a1471dab48f47",
-      "pageVersion": "sha256:d6dd0672e8d5bd27eb0e063a540a2832c5ae03c23f9157d007c1e5ec2f2d1ab6",
+      "pageVersion": "sha256:0689e0288bbbfccb2aacd9b05440ced9dcd04c27c2d9a818226e9174792bafdb",
       "completedBy": "agy/gemini-3.8-flash-high"
     },
     "quickstart.md": {
       "gitHead": "ca23735203f5acd1ce3fa2bd8b0a1471dab48f47",
-      "pageVersion": "sha256:4bed38f03b96818c3f65d5f9a58dae5d67f9ffd246c5ec6920037a76fd0b918d",
+      "pageVersion": "sha256:f3baf2edb95355d5e06ad10b001459b9fbc47be5856c29bd1f454b8270523809",
       "completedBy": "agy/gemini-3.8-flash-high"
     }
   }
