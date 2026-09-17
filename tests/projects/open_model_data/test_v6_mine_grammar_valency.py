@@ -1015,6 +1015,22 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_quoted_subordinate_marker, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_quoted_subordinate_marker)) == 1
 
+    # Defect 114 / Negative regression (Round 54 P2): Predicate in earlier relative clause does not fake completeness of later clause (Правопис 2019 §158, §161, Ющук §21)
+    frag_discordant_apposition_earlier_clause_predicate = (
+        "Театр — місце, яке всі знають, де вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_earlier_clause_predicate, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_earlier_clause_predicate, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_earlier_clause_predicate)) == 0
+
+    # Defect 115 / Positive control (Round 54 P2): Agreeing instrumental apposition with earlier relative clause accepted (Правопис 2019 §158, §161, Ющук §21)
+    frag_agreeing_apposition_earlier_clause_predicate = (
+        "Театр — місце, яке всі знають, де вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_earlier_clause_predicate, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_earlier_clause_predicate, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_earlier_clause_predicate)) == 1
+
 
 
 

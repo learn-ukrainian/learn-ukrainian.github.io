@@ -1153,6 +1153,8 @@ def extract_dash_apposition_spans(s: str, cur_ves: sqlite3.Cursor | None = None)
       unpaired copular delimiters between subject and predicate; they do not open or close appositions.
     - Appositive dash pairs enclose parenthetical explanatory phrases within a single clause,
       without severing unclosed subordinate clauses across delimiter boundaries (Правопис 2019 §158.3, §161.I.10).
+      Subordinate clause completeness checks examine the most recent clause boundary extending to the closing
+      dash boundary, ensuring predicates in earlier relative clauses do not falsely satisfy later clauses.
     - Quoted spans are excluded before both subordinate-marker detection and predicate detection
       (Правопис 2019 §154, §164), preserving quoted-title boundaries so that subordinate markers inside
       quoted titles (e.g. «Життя, що триває») do not trigger false subordinate clause boundaries or
@@ -1217,10 +1219,12 @@ def extract_dash_apposition_spans(s: str, cur_ves: sqlite3.Cursor | None = None)
         # Exclude quoted spans before both subordinate-marker detection and predicate detection
         # (Правопис 2019 §164), preserving quoted-title boundaries so subordinate markers inside
         # quoted titles (e.g. «Життя, що триває») are not matched as matrix subordinate clause boundaries.
+        # Examine the most recent subordinate clause extending to end_dash so predicates in earlier
+        # relative clauses (e.g. 'яке всі знають') do not falsely satisfy later clauses (e.g. 'де ...').
         unquoted_inside = strip_quoted_spans(inside)
-        sub_m = DASH_SUBORDINATE_INTRO_RE.search(unquoted_inside)
-        if sub_m:
-            sub_tail = unquoted_inside[sub_m.end() :]
+        sub_matches = list(DASH_SUBORDINATE_INTRO_RE.finditer(unquoted_inside))
+        if sub_matches:
+            sub_tail = unquoted_inside[sub_matches[-1].end() :]
             sub_words = [w.lower() for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", sub_tail)]
             has_sub_predicate = False
             for w in sub_words:
