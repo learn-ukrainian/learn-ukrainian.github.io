@@ -16,6 +16,7 @@ from scripts.practice.typesafe_distractor_validator import (
 
 class DummyAns:
     """Mock answer container mimicking typesafe_sdk answer types."""
+
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
             setattr(self, k, v)
@@ -110,7 +111,50 @@ def test_validate_anti_calque_yield_mock():
         mock_response=mock_resp,
     )
     assert verdict.verdict == "pass"
-    assert any("High anti-calque value" in f for f in verdict.findings)
+    assert any("Anti-calque value" in f for f in verdict.findings)
+
+
+def test_deterministic_vesum_and_style_guide_checks(tmp_path):
+    import sqlite3
+
+    vesum_db = tmp_path / "vesum.db"
+    sources_db = tmp_path / "sources.db"
+
+    # Seed mock vesum
+    conn = sqlite3.connect(vesum_db)
+    conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT)")
+    conn.execute("INSERT INTO forms VALUES ('друга', 'друг')")
+    conn.commit()
+    conn.close()
+
+    # Seed mock sources style_guide
+    conn = sqlite3.connect(sources_db)
+    conn.execute("CREATE TABLE style_guide (headword TEXT, text TEXT)")
+    conn.execute("INSERT INTO style_guide VALUES ('протягом', 'на протязі - калька')")
+    conn.commit()
+    conn.close()
+
+    mock_resp = {
+        "model": "jev-test",
+        "answers": {
+            "distractor_plausibility": DummyAns(score=1.80, confidence=0.95),
+            "is_unambiguous": DummyAns(noul=0.95),
+            "anti_calque_yield": DummyAns(noul=0.85),
+            "card_quality": DummyAns(choice="pass", confidence=0.90),
+        },
+    }
+
+    verdict = validate_practice_card(
+        stem="Це тривало _____ року.",
+        target="протягом",
+        distractors=["на протязі"],
+        mock_response=mock_resp,
+        vesum_db=vesum_db,
+        sources_db=sources_db,
+    )
+
+    assert verdict.style_guide_attested
+    assert any("Attested style-guide entry" in f for f in verdict.findings)
 
 
 @pytest.mark.live_network

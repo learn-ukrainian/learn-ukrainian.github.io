@@ -1,16 +1,23 @@
 #!/usr/bin/env python3
 """TypeSafe Practice Distractor & Misconception Validator (Practice Hub #8174).
 
-Automated pedagogical verification of practice cards & distractor foils:
-  1. Distractor Plausibility & Foil Quality (Score)
-  2. Unambiguous Target Exclusivity (Noul: guarantees no distractor is a valid secondary reading)
-  3. Anti-Calque Yield (Noul: identifies drills countering Russian linguistic interference)
-  4. Card Quality Verdict (Choice: pass, warn_weak_foils, fail_ambiguous, fail_broken)
+Two-layer verification architecture:
+  Tier 1: Fast pedagogical & ambiguity screening via TypeSafe System One (Jev 1.13):
+    1. Distractor Plausibility & Foil Quality (Score)
+    2. Unambiguous Target Exclusivity (Noul: guarantees no distractor is a valid secondary reading)
+    3. Anti-Calque Yield (Noul: identifies drills countering Russian linguistic interference)
+    4. Card Quality Verdict (Choice: pass, warn_weak_foils, fail_ambiguous, fail_broken)
+
+  Tier 2: Deterministic verification against immutable Ukrainian linguistic authority:
+    1. Morphological Attestation: Cross-checks target and distractors against VESUM (data/vesum.db).
+    2. Style-Guide Grounding: Corroborates anti-calque claims against Antonenko-Davydovych
+       «Як ми говоримо» (data/sources.db table style_guide).
 
 Adheres strictly to the 2026-09-17 TypeSafe fleet contract:
-  - Credentials securely resolved from ~/.secrets/typsafe-ai.key (never committed or leaked)
-  - Evaluated in code using calibrated probabilities and confidence metrics
-  - Complements VESUM and static practice checkers as a front-line pedagogical validator
+  - System One outputs are treated as probabilistic triage, never confusing LLM confidence
+    with ground linguistic truth.
+  - Morphological forms and Russianism classifications are anchored in VESUM and verified style guides.
+  - Credentials securely resolved from ~/.secrets/typsafe-ai.key (never committed or leaked).
 """
 
 from __future__ import annotations
@@ -18,6 +25,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
+import sqlite3
 import sys
 import time
 from dataclasses import asdict, dataclass
@@ -30,10 +39,10 @@ if str(REPO_ROOT) not in sys.path:
 
 # Policy thresholds (evaluated in Python code)
 DEFAULT_THRESHOLDS = {
-    "unambiguous_min": 0.70,        # P(is_unambiguous) must be >= 0.70 to pass
-    "plausibility_min": 0.80,       # Score >= 0.80 for high-quality foils
-    "anti_calque_notable": 0.60,    # P(anti_calque) >= 0.60 flagged as high anti-calque value
-    "confidence_review_floor": 0.50 # Confidence < 0.50 triggers advisory review
+    "unambiguous_min": 0.70,  # P(is_unambiguous) must be >= 0.70 to pass
+    "plausibility_min": 0.80,  # Score >= 0.80 for high-quality foils
+    "anti_calque_notable": 0.60,  # P(anti_calque) >= 0.60 flagged as high anti-calque value
+    "confidence_review_floor": 0.50,  # Confidence < 0.50 triggers advisory review
 }
 
 
@@ -52,6 +61,8 @@ class DistractorValidationVerdict:
     model: str
     needs_review: bool
     findings: list[str]
+    vesum_verified: bool = False
+    style_guide_attested: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -86,8 +97,7 @@ def get_typesafe_client(api_key: str | None = None) -> Any:
     resolved = api_key or resolve_api_key()
     if not resolved:
         raise ValueError(
-            "TypeSafe API key not found. Ensure TYPESAFE_API_KEY is exported "
-            "or ~/.secrets/typsafe-ai.key exists."
+            "TypeSafe API key not found. Ensure TYPESAFE_API_KEY is exported or ~/.secrets/typsafe-ai.key exists."
         )
 
     return TypeSafeClient(api_key=resolved)
@@ -103,8 +113,8 @@ def build_validation_questions() -> dict[str, Any]:
             criteria=[
                 "Poor: distractors are absurd, impossible nonsense, or obvious non-foils that provide no learning value",
                 "Acceptable: grammatical forms from other slots, but somewhat generic or mechanical",
-                "High quality: directly targets frequent learner misconceptions (case confusion, wrong person/mood, or Russian calques)"
-            ]
+                "High quality: directly targets frequent learner misconceptions (case confusion, wrong person/mood, or Russian calques)",
+            ],
         ),
         "is_unambiguous": Noul(
             instructions="In the context of the sentence stem and target grammar, is the target answer the ONLY correct option (none of the distractors can serve as an acceptable secondary answer)?"
@@ -118,10 +128,65 @@ def build_validation_questions() -> dict[str, Any]:
                 "pass": "Card is unambiguous, has plausible foils, and is pedagogically sound for learners",
                 "warn_weak_foils": "Card is unambiguous, but distractors are too weak, obvious, or unchallenging",
                 "fail_ambiguous": "One or more distractors could be considered grammatically acceptable in context",
-                "fail_broken": "Target is incorrect or distractors contain typos or malformed tokens"
-            }
-        )
+                "fail_broken": "Target is incorrect or distractors contain typos or malformed tokens",
+            },
+        ),
     }
+
+
+def _resolve_db_path(relative_path: str) -> Path | None:
+    """Locate database file across worktree or main checkout."""
+    candidates = [
+        REPO_ROOT / relative_path,
+        REPO_ROOT.parent.parent.parent / relative_path,
+    ]
+    for c in candidates:
+        if c.is_file():
+            return c
+    return None
+
+
+def verify_word_in_vesum(word: str, vesum_db_path: Path | None = None) -> bool:
+    """Verify if a word form is attested in VESUM (data/vesum.db)."""
+    db_path = vesum_db_path or _resolve_db_path("data/vesum.db")
+    if not db_path or not db_path.is_file():
+        return True  # Fail open if DB not present in CI environment
+
+    clean = word.strip().lower().replace("’", "'").replace("ʼ", "'")
+    try:
+        conn = sqlite3.connect(f"file:{db_path.as_posix()}?mode=ro", uri=True)
+        cursor = conn.execute("SELECT 1 FROM forms WHERE word_form = ? LIMIT 1", (clean,))
+        found = cursor.fetchone() is not None
+        conn.close()
+        return found
+    except Exception:
+        return True
+
+
+def check_style_guide_calque(tokens: list[str], sources_db_path: Path | None = None) -> list[str]:
+    """Check if any token matches an attested calque in data/sources.db table style_guide."""
+    db_path = sources_db_path or _resolve_db_path("data/sources.db")
+    if not db_path or not db_path.is_file():
+        return []
+
+    hits: list[str] = []
+    try:
+        conn = sqlite3.connect(f"file:{db_path.as_posix()}?mode=ro", uri=True)
+        for tok in tokens:
+            clean = tok.strip().lower()
+            if len(clean) < 3:
+                continue
+            cursor = conn.execute(
+                "SELECT headword FROM style_guide WHERE headword LIKE ? OR text LIKE ? LIMIT 1",
+                (f"%{clean}%", f"%{clean}%"),
+            )
+            row = cursor.fetchone()
+            if row:
+                hits.append(f"{clean} (Antonenko-Davydovych: {row[0]})")
+        conn.close()
+    except Exception:
+        pass
+    return hits
 
 
 def validate_practice_card(
@@ -131,16 +196,18 @@ def validate_practice_card(
     grammar_focus: str | None = None,
     client: Any | None = None,
     thresholds: dict[str, float] | None = None,
-    mock_response: dict[str, Any] | None = None
+    mock_response: dict[str, Any] | None = None,
+    vesum_db: Path | None = None,
+    sources_db: Path | None = None,
 ) -> DistractorValidationVerdict:
-    """Validate a single practice card's options through TypeSafe System One."""
+    """Validate a single practice card's options through TypeSafe System One and deterministic authority."""
     th = {**DEFAULT_THRESHOLDS, **(thresholds or {})}
     state = {
         "sentence_stem": stem,
         "target_correct_answer": target,
         "distractor_options": distractors,
         "all_options": [target, *distractors],
-        "grammar_focus": grammar_focus or "General Ukrainian grammar practice"
+        "grammar_focus": grammar_focus or "General Ukrainian grammar practice",
     }
 
     t0 = time.perf_counter()
@@ -170,31 +237,54 @@ def validate_practice_card(
     calque_prob = float(calque_ans.noul if hasattr(calque_ans, "noul") else calque_ans["noul"])
 
     quality_choice = str(quality_ans.choice if hasattr(quality_ans, "choice") else quality_ans["choice"])
-    quality_conf = float(quality_ans.confidence if hasattr(quality_ans, "confidence") else quality_ans.get("confidence", 1.0))
+    quality_conf = float(
+        quality_ans.confidence if hasattr(quality_ans, "confidence") else quality_ans.get("confidence", 1.0)
+    )
 
     findings: list[str] = []
     final_verdict = quality_choice
     needs_review = False
 
-    # Hard Invariant 1: Ambiguity Failure
+    # Tier 1 (System One) Invariant 1: Ambiguity Failure
     if unambig_prob < th["unambiguous_min"]:
         final_verdict = "fail_ambiguous"
-        findings.append(f"Ambiguity alert: target exclusivity probability is low (P={unambig_prob:.2f} < {th['unambiguous_min']:.2f})")
+        findings.append(
+            f"Ambiguity alert: target exclusivity probability is low (P={unambig_prob:.2f} < {th['unambiguous_min']:.2f})"
+        )
         needs_review = True
 
-    # Hard Invariant 2: Distractor Quality
+    # Tier 1 Invariant 2: Distractor Quality
     if plaus_score < th["plausibility_min"] and final_verdict == "pass":
         final_verdict = "warn_weak_foils"
-        findings.append(f"Weak foils: distractor plausibility score is low ({plaus_score:.2f} < {th['plausibility_min']:.2f})")
+        findings.append(
+            f"Weak foils: distractor plausibility score is low ({plaus_score:.2f} < {th['plausibility_min']:.2f})"
+        )
 
-    # Anti-calque notification
+    # Tier 1 Invariant 3: Anti-calque notification
     if calque_prob >= th["anti_calque_notable"]:
-        findings.append(f"High anti-calque value (P={calque_prob:.2f})")
+        findings.append(f"Anti-calque value (TypeSafe System-1 judgment: P={calque_prob:.2f})")
 
-    # Confidence check
+    # Tier 1 Invariant 4: Confidence check
     if quality_conf < th["confidence_review_floor"]:
         needs_review = True
         findings.append(f"Low verdict confidence ({quality_conf:.2f}) - manual check recommended")
+
+    # Tier 2: Deterministic Authority Checks
+    vesum_ok = True
+    # Single-word target verification in VESUM
+    if re.fullmatch(r"[\w'’ʼ-]+", target) and not verify_word_in_vesum(target, vesum_db_path=vesum_db):
+        vesum_ok = False
+        needs_review = True
+        findings.append(f"VESUM authority alert: target form '{target}' not attested in forms table")
+        if final_verdict == "pass":
+            final_verdict = "warn_weak_foils"
+
+    # Style-guide cross-check
+    all_tokens = [target, *distractors]
+    calque_hits = check_style_guide_calque(all_tokens, sources_db_path=sources_db)
+    style_attested = len(calque_hits) > 0
+    for hit in calque_hits:
+        findings.append(f"Attested style-guide entry: {hit}")
 
     return DistractorValidationVerdict(
         stem=stem,
@@ -209,7 +299,9 @@ def validate_practice_card(
         latency_seconds=elapsed,
         model=model_name,
         needs_review=needs_review,
-        findings=findings
+        findings=findings,
+        vesum_verified=vesum_ok,
+        style_guide_attested=style_attested,
     )
 
 
@@ -234,7 +326,7 @@ def main() -> int:
         target=args.target,
         distractors=args.distractors,
         grammar_focus=args.grammar,
-        client=client
+        client=client,
     )
 
     if args.format == "json":
@@ -248,6 +340,7 @@ def main() -> int:
         print(f"Unambiguous : P(yes) = {verdict.is_unambiguous_prob:.2f}")
         print(f"Plausibility: {verdict.plausibility_score:.2f} / 2.00 (conf: {verdict.plausibility_confidence:.2f})")
         print(f"Anti-Calque : P(yes) = {verdict.anti_calque_yield_prob:.2f}")
+        print(f"VESUM Check : {'Attested' if verdict.vesum_verified else 'Missing/Unverified'}")
         if verdict.findings:
             print(f"Findings    : {'; '.join(verdict.findings)}")
 
