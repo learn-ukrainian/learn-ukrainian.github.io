@@ -1079,6 +1079,22 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_multiword_prep_relative_clause, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_multiword_prep_relative_clause)) == 1
 
+    # Defect 122 / Negative regression (Round 58 P2): Typographic apostrophe in multiword preposition does not bypass relative clause detection (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_discordant_apposition_typographic_apostrophe_prep_relative_clause = (
+        "Театр — місце, де для глядачів, у зв’язку з якими він перебував, вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_typographic_apostrophe_prep_relative_clause, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_typographic_apostrophe_prep_relative_clause, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_typographic_apostrophe_prep_relative_clause)) == 0
+
+    # Defect 123 / Positive control (Round 58 P2): Agreeing instrumental apposition with typographic apostrophe in multiword preposition accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_agreeing_apposition_typographic_apostrophe_prep_relative_clause = (
+        "Театр — місце, де для глядачів, у зв’язку з якими він перебував, вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_typographic_apostrophe_prep_relative_clause, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_typographic_apostrophe_prep_relative_clause, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_typographic_apostrophe_prep_relative_clause)) == 1
+
 
 
 

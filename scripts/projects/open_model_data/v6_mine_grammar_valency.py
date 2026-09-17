@@ -1122,6 +1122,14 @@ def get_vesum_cursor(cur_ves: sqlite3.Cursor | None = None) -> sqlite3.Cursor | 
     return None
 
 
+APOSTROPHE_RE = re.compile(r"['’ʼ´`]")
+
+
+def normalize_apostrophes(text: str) -> str:
+    """Normalize typographic and legacy apostrophe variants to standard ASCII apostrophe (Правопис 2019 §9)."""
+    return APOSTROPHE_RE.sub("'", text)
+
+
 RELATIVE_PRONOUNS = {
     "який", "яка", "яке", "які", "якого", "якій", "яким", "яких", "якої", "якому", "яку", "якими",
     "котрий", "котра", "котре", "котрі", "котрого", "котрій", "котрим", "котрих", "котрої", "котрому", "котру", "котрими",
@@ -1137,7 +1145,7 @@ RELATIVE_PRONOUN_PATTERN = (
     r"котрий|котра|котре|котрі|котрого|котрій|котрим|котрих|котрої|котрому|котру|котрими|"
     r"хто|кого|кому|ким|кім|що|чого|чому|чим|чім)"
 )
-PREP_RELATIVE_PATTERN = rf"(?:(?:[а-яіїєґА-ЯІЇЄҐ\'-]+\s+){{0,3}}{RELATIVE_PRONOUN_PATTERN})"
+PREP_RELATIVE_PATTERN = rf"(?:(?:[а-яіїєґА-ЯІЇЄҐ'’ʼ´`\-]+\s+){{0,3}}{RELATIVE_PRONOUN_PATTERN})"
 SUB_CONJ_PATTERN = r"де|коли|якщо|хоч|хоча|бо|тому що|куди|звідки|доки|поки"
 SUBORDINATE_CLAUSE_INTRO_PATTERN = rf"(?:{SUB_CONJ_PATTERN}|{PREP_RELATIVE_PATTERN})"
 
@@ -1167,11 +1175,14 @@ def strip_quoted_spans(text: str) -> str:
 def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor | None = None) -> bool:
     """Verify that all subordinate clauses opened in unquoted_inside are complete and not severed across end_dash.
 
-    Under Правопис 2019 §37, §158.3, §161.I.1, and §161.I.10, subordinate clauses may be sequential or nested,
-    including multiword preposition-led relative clauses (e.g. 'де для глядачів, поруч з якими він говорив, вдалою режисерською знахідкою').
-    A predicate in a closed nested relative clause (e.g. 'говорив') cannot satisfy the enclosing clause ('де ...').
+    Under Правопис 2019 §9, §37, §158.3, §161.I.1, and §161.I.10, subordinate clauses may be sequential or nested,
+    including multiword preposition-led relative clauses (e.g. 'де для глядачів, у зв’язку з якими він перебував, вдалою режисерською знахідкою').
+    A predicate in a closed nested relative clause (e.g. 'перебував') cannot satisfy the enclosing clause ('де ...').
+    Apostrophes (ASCII, typographic, modifier) are normalized under Правопис 2019 §9 so tokenization accurately preserves
+    words with apostrophes (e.g. 'зв’язку') within multiword boundaries.
     Each opened subordinate clause must have its own predicate outside nested clauses and cannot remain unclosed at end_dash.
     """
+    unquoted_inside = normalize_apostrophes(unquoted_inside)
     if not DASH_SUBORDINATE_INTRO_RE.search(unquoted_inside):
         return True
 
@@ -1244,16 +1255,18 @@ def extract_dash_apposition_spans(s: str, cur_ves: sqlite3.Cursor | None = None)
     - Predicate dashes (Правопис 2019 §158.1: followed by 'це', 'це є', 'то', 'ось', 'значить') are
       unpaired copular delimiters between subject and predicate; they do not open or close appositions.
     - Appositive dash pairs enclose parenthetical explanatory phrases within a single clause,
-      without severing unclosed subordinate clauses across delimiter boundaries (Правопис 2019 §158.3, §161.I.1, §161.I.10).
+      without severing unclosed subordinate clauses across delimiter boundaries (Правопис 2019 §9, §158.3, §161.I.1, §161.I.10).
       Subordinate clause completeness tracking accounts for sequential and nested clause boundaries, including
-      multiword preposition-led relative clauses (e.g. 'поруч з якими він говорив'), ensuring predicates in nested or earlier relative
-      clauses do not falsely satisfy enclosing clauses.
+      multiword preposition-led relative clauses (e.g. 'поруч з якими він говорив', 'у зв’язку з якими він перебував'),
+      ensuring predicates in nested or earlier relative clauses do not falsely satisfy enclosing clauses, with apostrophe
+      normalization preserving token integrity.
     - Quoted spans are excluded before both subordinate-marker detection and predicate detection
       (Правопис 2019 §154, §164), preserving quoted-title boundaries so that subordinate markers inside
       quoted titles (e.g. «Життя, що триває») do not trigger false subordinate clause boundaries or
       corrupt quote stripping for predicate detection.
     - A closing dash closes the preceding span and cannot serve as an opening dash.
     """
+    s = normalize_apostrophes(s)
     cur = get_vesum_cursor(cur_ves)
     quote_stack: list[str] = []
     straight_quote = False
@@ -1332,6 +1345,7 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
     Distinguishes genuine appositions (which must agree in case with their nominal head) from valid parenthetical
     clauses (Правопис 2019 §161.I.10) such as those with finite verbs, copula-omitted subject clauses, or adverbial heads.
     """
+    s = normalize_apostrophes(s)
     cur = get_vesum_cursor(cur_ves)
     if not cur:
         return False
