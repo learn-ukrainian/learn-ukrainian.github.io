@@ -109,6 +109,22 @@ Curated docs must never embed live leases or occupancy claims.
 Recurring automation and cold-start cutover only after pilot exit criteria in
 ADR-013. Program may close successfully with OpenWiki rejected.
 
+### Post-adopt expansion (operator 2026-09-17)
+
+**Only if #5541 = adopt / adopt-with-amendments and #5543 gates pass:**
+
+1. Expand beyond the ≤8-page code-anchored pilot (allowlist v2 as needed).
+2. Add a **visual OpenWiki representation in the Ops API UI** (`dashboards/`,
+   served alongside Artifacts). Wire `scripts/api/docs_router.py` allowed roots
+   to include `openwiki/` so `/artifacts/` can browse the same tree.
+3. UI shows pages + freshness (source digest, generator model/family, last
+   regen, cost). Missing/stale wiki → fallback banner (same policy as agent
+   cold-start fallback).
+4. **Non-goals:** not Swagger `/docs`; not Orient/Work/Fleet replacement;
+   OpenWiki never owns live stream/task state.
+
+Before adopt: no Ops UI binding and no API route that treats OpenWiki as authority.
+
 ## Adjacent programs
 
 - Fleet-comms / Channels work under infra or monitor streams must not be
