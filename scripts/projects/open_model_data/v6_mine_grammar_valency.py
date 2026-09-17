@@ -446,10 +446,13 @@ def check_word_agrees_with_head(w: str, head: str, cur_ves: sqlite3.Cursor | Non
         return False
     cur_ves.execute("SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?)", (w.lower(), w.capitalize()))
     rows = cur_ves.fetchall()
+    modifier_rows = [r[0] for r in rows if r[0].startswith("adj") or r[0].startswith("pron")]
+    if not modifier_rows:
+        return False
     if head == "думку":
-        return any((r[0].startswith("adj") or r[0].startswith("pron")) and ":f:" in r[0] and ":v_zna" in r[0] for r in rows) or any(":nv" in r[0] for r in rows)
+        return any((":f:" in t and ":v_zna" in t) or ":nv" in t for t in modifier_rows)
     if head == "погляд":
-        return any((r[0].startswith("adj") or r[0].startswith("pron")) and ":m:" in r[0] and (":v_zna" in r[0] or ":v_naz" in r[0]) for r in rows) or any(":nv" in r[0] for r in rows)
+        return any((":m:" in t and (":v_zna" in t or ":v_naz" in t)) or ":nv" in t for t in modifier_rows)
     return False
 
 

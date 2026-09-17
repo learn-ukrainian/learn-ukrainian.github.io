@@ -571,6 +571,18 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.has_homogeneous_verb_comma(frag_valid_m_zna, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_valid_m_zna, cur_ves=cur)
 
+    # Defect 41 / Negative regression (Round 19 P2): Invariable noun 'метро' modifying 'думку' rejected (Правопис 2019 §158 I.11)
+    frag_metro_dumku = "Він реагує на слова, на метро думку, і пише довгого листа."
+    assert not miner.is_parenthetical_segment("на метро думку", cur_ves=cur)
+    assert miner.has_homogeneous_verb_comma(frag_metro_dumku, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_metro_dumku, cur_ves=cur)
+
+    # Defect 42 / Negative regression (Round 19 P2): Invariable noun 'таксі' modifying 'погляд' rejected (Правопис 2019 §158 I.11)
+    frag_taksi_pohlyad = "Він реагує на слова, на таксі погляд, і пише довгого листа."
+    assert not miner.is_parenthetical_segment("на таксі погляд", cur_ves=cur)
+    assert miner.has_homogeneous_verb_comma(frag_taksi_pohlyad, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_taksi_pohlyad, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:
