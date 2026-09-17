@@ -1463,6 +1463,38 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_duration_adverbial_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_duration_adverbial_myla)) == 1
 
+    # Defect 170 / Negative regression (Round 73 P2): Relative pronoun 'що' subject preserves finite verb completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
+    frag_discordant_apposition_shcho_relative_finite_verb_myla = (
+        "Він говорив із сестрою — дівчиною, що після роботи мила посуд — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_shcho_relative_finite_verb_myla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_shcho_relative_finite_verb_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_shcho_relative_finite_verb_myla)) == 0
+
+    # Defect 171 / Positive control (Round 73 P2): Agreeing instrumental apposition across 'що' relative clause accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
+    frag_agreeing_apposition_shcho_relative_finite_verb_myla = (
+        "Він говорив із сестрою — дівчиною, що після роботи мила посуд — та з лікаркою — досвідченою фахівчинею — про виставу."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_shcho_relative_finite_verb_myla, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_shcho_relative_finite_verb_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_shcho_relative_finite_verb_myla)) == 1
+
+    # Defect 172 / Negative regression (Round 73 P2): 1st-person pronoun 'я' subject preserves finite verb completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
+    frag_discordant_apposition_ia_pronoun_finite_verb_myla = (
+        "Він говорив із сестрою — дівчиною, у якої я після роботи мила посуд — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_ia_pronoun_finite_verb_myla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_ia_pronoun_finite_verb_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_ia_pronoun_finite_verb_myla)) == 0
+
+    # Defect 173 / Positive control (Round 73 P2): Agreeing instrumental apposition across 'я' clause accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
+    frag_agreeing_apposition_ia_pronoun_finite_verb_myla = (
+        "Він говорив із сестрою — дівчиною, у якої я після роботи мила посуд — та з лікаркою — досвідченою фахівчинею — про виставу."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_ia_pronoun_finite_verb_myla, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_ia_pronoun_finite_verb_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_ia_pronoun_finite_verb_myla)) == 1
+
 
 
 

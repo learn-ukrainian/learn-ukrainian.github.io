@@ -1221,6 +1221,9 @@ def is_in_direct_or_enclosing_pp(words: list[str], idx: int, cur: sqlite3.Cursor
     """Check whether words[idx] is governed by a direct or enclosing prepositional phrase."""
     if idx <= 0:
         return False
+    # Nominative personal pronouns can never be governed by a preposition
+    if words[idx].lower() in {"я", "ти", "він", "вона", "воно", "ми", "ви", "вони"}:
+        return False
 
     # Rule 1: Direct preposition with optional modifiers preceding words[idx]
     k = idx - 1
@@ -1307,11 +1310,11 @@ TIME_DURATION_NOUNS = {
 
 
 def clause_has_agreeing_nominative_subject(words: list[str], verb_idx: int, cur: sqlite3.Cursor | None = None) -> bool:
-    """Check whether the clause contains a nominative feminine subject agreeing with words[verb_idx]."""
+    """Check whether the clause contains a nominative feminine or common-gender subject agreeing with words[verb_idx]."""
     if not cur:
         return False
     try:
-        cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (words[verb_idx],))
+        cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (words[verb_idx].lower(),))
         v_rows = cur.fetchall()
         is_fem_past = any(":past:f" in r[0] for r in v_rows)
         if not is_fem_past:
@@ -1319,15 +1322,26 @@ def clause_has_agreeing_nominative_subject(words: list[str], verb_idx: int, cur:
         for i, w in enumerate(words):
             if i == verb_idx:
                 continue
+            w_lower = w.lower()
             if is_in_direct_or_enclosing_pp(words, i, cur):
                 continue
-            if is_preposition(w, cur):
+            if is_preposition(w_lower, cur):
                 continue
-            if w in {"яка", "котра", "вона", "та"}:
+            if w_lower in {"яка", "котра", "вона", "та", "що", "я", "ти", "ця"}:
                 return True
-            cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w,))
+            cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w_lower,))
             rows = cur.fetchall()
-            if any(r[0] in ("noun", "pron") and "v_naz" in r[1] and ":f" in r[1] for r in rows):
+            if any(
+                r[0] in ("noun", "pron")
+                and "v_naz" in r[1]
+                and (
+                    ":f" in r[1]
+                    or ":rel" in r[1]
+                    or (":pers:1" in r[1] and ":s" in r[1])
+                    or (":pers:2" in r[1] and ":s" in r[1])
+                )
+                for r in rows
+            ):
                 return True
     except Exception:
         pass
@@ -1373,7 +1387,7 @@ def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor |
        (e.g. 'яка після навчання мила посуд', 'яка після роботи не мила посуду', 'яка посуд після роботи мила', 'яка після роботи мила його').
     """
     # A word immediately preceded by negative particle 'не' is a negated verb, not a noun in a PP
-    if idx > 0 and words[idx - 1] == "не":
+    if idx > 0 and words[idx - 1].lower() == "не":
         return False
 
     if is_in_direct_or_enclosing_pp(words, idx, cur):
