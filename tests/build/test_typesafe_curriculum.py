@@ -1,4 +1,4 @@
-"""Unit + optional live tests for TypeSafe curriculum triage (#8177–#8179)."""
+"""Unit + optional live tests for TypeSafe curriculum triage."""
 
 from __future__ import annotations
 
@@ -68,6 +68,45 @@ def test_exact_winner_and_unaccented_heuristics():
     assert not tc.has_unaccented_copy(["мʼя́та", "мʼя́со"], "мʼя́та")
 
 
+def test_route_noul_cookbook_band():
+    """#8195 — consistency_noul: [0.30, 0.70] inclusive → uncertain."""
+    assert tc.route_noul(0.29) == "false"
+    assert tc.route_noul(0.30) == "uncertain"
+    assert tc.route_noul(0.50) == "uncertain"
+    assert tc.route_noul(0.70) == "uncertain"
+    assert tc.route_noul(0.71) == "true"
+
+
+def test_route_choice_uses_top_probability_not_api_confidence():
+    """#8195 — consistency_choice: gate on max(probabilities)."""
+    assert tc.route_choice_top_prob(0.59) == "escalate"
+    assert tc.route_choice_top_prob(0.60) == "act"
+    # peaked distribution wins even if API confidence were ignored
+    top = tc.choice_top_probability({"stress": 0.72, "soft_sign": 0.28}, confidence=0.1)
+    assert top == pytest.approx(0.72)
+    assert tc.route_choice_top_prob(top) == "act"
+
+
+def test_collapse_choice_parent_on_weak_top_prob():
+    """#8210 — weak leaf → parent unclear."""
+    assert (
+        tc.collapse_choice(
+            "stress",
+            {"stress": 0.45, "soft_sign": 0.40, "unclear": 0.15},
+            parent_map=tc.DISTRACTOR_FAMILY_PARENTS,
+        )
+        == "unclear"
+    )
+    assert (
+        tc.collapse_choice(
+            "stress",
+            {"stress": 0.80, "soft_sign": 0.10, "unclear": 0.10},
+            parent_map=tc.DISTRACTOR_FAMILY_PARENTS,
+        )
+        == "stress"
+    )
+
+
 def test_evaluate_ec_item_mocked_needs_repair_on_thin_options():
     """#8177 — code routes needs_repair from mechanical + clarity band."""
     client = _FakeClient(
@@ -82,7 +121,11 @@ def test_evaluate_ec_item_mocked_needs_repair_on_thin_options():
                 "distractor_family": {
                     "choice": "stress",
                     "confidence": 0.8,
-                    "probabilities": {"stress": 0.8},
+                    "probabilities": {
+                        "stress": 0.55,
+                        "soft_sign": 0.35,
+                        "unclear": 0.10,
+                    },
                 }
             },
             scores={
@@ -115,7 +158,11 @@ def test_evaluate_ec_item_mocked_needs_repair_on_thin_options():
     assert ev.option_count == 1
     assert ev.needs_repair is True
     assert ev.distractor_family.choice == "stress"
+    assert ev.distractor_family.routing == "escalate"  # top p 0.55 < 0.60
+    assert ev.effective_distractor_family == "unclear"
+    assert ev.family_trusted is False
     assert ev.pedagogical_clarity.band == "unclear"
+    assert ev.unaccented_copy_of_winner.decision == "false"
     assert ev.receipt.model == "jev-test"
     assert ev.receipt.input_tokens == 10
 
@@ -131,12 +178,21 @@ def test_evaluate_vocab_row_mocked_escalates_russian_shadow():
                 "proper_name": 0.01,
             },
             choices={
-                "dialect_bucket": {"choice": "unclear", "confidence": 0.6},
-                "domain": {"choice": "everyday", "confidence": 0.7},
+                "dialect_bucket": {
+                    "choice": "unclear",
+                    "confidence": 0.6,
+                    "probabilities": {"unclear": 0.65, "standard": 0.35},
+                },
+                "domain": {
+                    "choice": "everyday",
+                    "confidence": 0.7,
+                    "probabilities": {"everyday": 0.8},
+                },
             },
             scores={
                 "priority": {
                     "score": 0.2,
+                    "confidence": 0.8,
                     "legend": {0: "drop", 1: "optional", 2: "core"},
                 }
             },
@@ -150,8 +206,11 @@ def test_evaluate_vocab_row_mocked_escalates_russian_shadow():
         client=client,
     )
     assert ev.russian_shadow_suspect.is_true
+    assert ev.russian_shadow_suspect.decision == "true"
     assert ev.escalate_to_sources is True
     assert ev.priority.band == "drop"
+    # mid keep_for_level is uncertain, not a hard drop signal by itself
+    assert ev.keep_for_level.decision == "uncertain"
 
 
 def test_evaluate_lesson_readiness_mocked_qg_budget():
@@ -163,11 +222,20 @@ def test_evaluate_lesson_readiness_mocked_qg_budget():
                 "cf_ready_likely": 0.85,
             },
             choices={
-                "qg_budget": {"choice": "light", "confidence": 0.7},
+                "qg_budget": {
+                    "choice": "light",
+                    "confidence": 0.7,
+                    "probabilities": {
+                        "light": 0.72,
+                        "full": 0.18,
+                        "skip_to_gates": 0.10,
+                    },
+                },
             },
             scores={
                 "preserve_expand_fidelity": {
                     "score": 1.8,
+                    "confidence": 0.9,
                     "legend": {
                         0: "invented_rewrite",
                         1: "light_expand",
@@ -176,10 +244,12 @@ def test_evaluate_lesson_readiness_mocked_qg_budget():
                 },
                 "immersion_fit": {
                     "score": 1.2,
+                    "confidence": 0.7,
                     "legend": {0: "english_heavy", 1: "mixed", 2: "immersion_ok"},
                 },
                 "decolonize_risk": {
                     "score": 1.9,
+                    "confidence": 0.85,
                     "legend": {0: "clear_risk", 1: "mild", 2: "clean"},
                 },
             },
@@ -195,8 +265,154 @@ def test_evaluate_lesson_readiness_mocked_qg_budget():
     )
     assert ev.recommended_qg == "light"
     assert ev.cf_ready_likely.is_true
+    assert ev.cf_ready is True
     assert ev.preserve_expand_fidelity.band == "faithful_preserve_expand"
     assert ev.decolonize_risk.band == "clean"
+
+
+def test_propose_and_run_verify_dispatches_local_tool():
+    """#8196 — Choice selects tool; injectable runner executes."""
+    client = _FakeClient(
+        _FakeResponse(
+            choices={
+                "verify_tool": {
+                    "choice": "check_russian_shadow",
+                    "confidence": 0.9,
+                    "probabilities": {
+                        "check_russian_shadow": 0.85,
+                        "verify_stress": 0.10,
+                        "none": 0.05,
+                    },
+                }
+            }
+        )
+    )
+    calls: list[str] = []
+
+    def fake_ru(word: str):
+        calls.append(word)
+        return {"matches_russian": True, "confidence": 0.9}
+
+    prop = tc.propose_and_run_verify(
+        word="участвувати",
+        context="calque suspect",
+        client=client,
+        russian_shadow_fn=fake_ru,
+    )
+    assert prop.tool == "check_russian_shadow"
+    assert prop.routing == "act"
+    assert prop.ran is True
+    assert calls == ["участвувати"]
+    assert prop.verify_result is not None
+    assert prop.verify_result["matches_russian"] is True
+
+
+def test_propose_verify_skips_run_when_top_prob_weak():
+    client = _FakeClient(
+        _FakeResponse(
+            choices={
+                "verify_tool": {
+                    "choice": "verify_stress",
+                    "confidence": 0.4,
+                    "probabilities": {
+                        "verify_stress": 0.40,
+                        "none": 0.35,
+                        "check_russian_shadow": 0.25,
+                    },
+                }
+            }
+        )
+    )
+    prop = tc.propose_and_run_verify(
+        word="мʼята",
+        client=client,
+        verify_stress_fn=lambda w: {"status": "ok"},
+    )
+    assert prop.routing == "escalate"
+    assert prop.ran is False
+    assert prop.verify_result is None
+
+
+def test_preparsed_candidates_and_pick():
+    """#8208 — generators + Choice pick verbatim."""
+    stress = tc.stress_candidates("мята")
+    assert "мята" in stress
+    assert any("\u0301" in s for s in stress)
+    apos = tc.apostrophe_candidates("м'ята")
+    assert any("ʼ" in s or "'" in s for s in apos)
+    soft = tc.soft_sign_candidates("мати")
+    assert any("ь" in s for s in soft)
+
+    client = _FakeClient(
+        _FakeResponse(
+            nouls={"any_adequate": 0.95},
+            choices={
+                "pick": {
+                    "choice": "мʼя́та",
+                    "confidence": 0.9,
+                    "probabilities": {"мʼя́та": 0.9, "мʼята": 0.1},
+                }
+            },
+        )
+    )
+    pick = tc.pick_preparsed_value(
+        question="Correct stressed form with apostrophe",
+        candidates=["мʼята", "мʼя́та"],
+        client=client,
+    )
+    assert pick.selected == "мʼя́та"
+    assert pick.routing == "act"
+
+
+def test_guardrails_block_on_calque():
+    """#8209 — clear calque + block severity → block."""
+    client = _FakeClient(
+        _FakeResponse(
+            nouls={
+                "russian_calque_suspect": 0.95,
+                "invented_upgrade_defect": 0.05,
+                "immersion_leak": 0.05,
+            },
+            scores={
+                "hazard_severity": {
+                    "score": 1.9,
+                    "confidence": 0.9,
+                    "legend": {0: "none", 1: "mild", 2: "block"},
+                }
+            },
+        )
+    )
+    ev = tc.evaluate_upgrade_io_guardrails(
+        level="a2",
+        excerpt="Я участвую в проекті.",
+        client=client,
+    )
+    assert ev.action == "block"
+
+
+def test_guardrails_review_on_uncertain_noul():
+    client = _FakeClient(
+        _FakeResponse(
+            nouls={
+                "russian_calque_suspect": 0.50,
+                "invented_upgrade_defect": 0.10,
+                "immersion_leak": 0.10,
+            },
+            scores={
+                "hazard_severity": {
+                    "score": 0.2,
+                    "confidence": 0.8,
+                    "legend": {0: "none", 1: "mild", 2: "block"},
+                }
+            },
+        )
+    )
+    ev = tc.evaluate_upgrade_io_guardrails(
+        level="b1",
+        excerpt="Нормальний уривок.",
+        client=client,
+    )
+    assert ev.action == "review"
 
 
 @pytest.mark.live_network
