@@ -788,6 +788,19 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.INVALID_DOCUMENT_AKTU_RE.search(frag_medyky_prykarpattya)
     assert miner.is_pristine_eval_sentence(frag_medyky_prykarpattya, cur_ves=cur)
 
+    # Defect 82 / Positive control (Round 34 P2): Action noun 'акт' with valid genitive -у 'цього акту агресії' accepted (Правопис 2019 §82)
+    frag_aktu_action = "Наслідки цього акту агресії відчуваються досі."
+    assert not miner.INVALID_DOCUMENT_AKTU_RE.search(frag_aktu_action)
+    assert miner.is_pristine_eval_sentence(frag_aktu_action, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_aktu_action)) == 1
+
+    # Defect 83 / Positive control (Round 34 P2): Action noun 'акт' in 'акту вандалізму' accepted
+    frag_aktu_vandalism = "Після акту вандалізму міська влада відновила меморіал."
+    assert not miner.INVALID_DOCUMENT_AKTU_RE.search(frag_aktu_vandalism)
+    assert miner.is_pristine_eval_sentence(frag_aktu_vandalism, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_aktu_vandalism)) == 1
+
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:
