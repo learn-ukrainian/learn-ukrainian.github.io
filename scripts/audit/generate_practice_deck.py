@@ -5877,8 +5877,19 @@ def apply_size_budgets(
                 if kind in level_shards
             )
 
-        selected: list[Any] = []
-        for candidate in candidates:
+        low = 0
+        high = len(candidates)
+        best_prefix = 0
+        while low <= high:
+            mid = (low + high) // 2
+            if surface_fits(candidates[:mid]):
+                best_prefix = mid
+                low = mid + 1
+            else:
+                high = mid - 1
+
+        selected: list[Any] = list(candidates[:best_prefix])
+        for candidate in candidates[best_prefix:]:
             trial = [*selected, candidate]
             if surface_fits(trial):
                 selected = trial
@@ -5904,8 +5915,20 @@ def apply_size_budgets(
             items[:] = candidate
             return bool(set_budget(payload, kind)["ok"])
 
-        selected: list[Any] = []
-        for _index, candidate in coverage_first_rows(original):
+        ordered = [candidate for _index, candidate in coverage_first_rows(original)]
+        low = 0
+        high = len(ordered)
+        best_prefix = 0
+        while low <= high:
+            mid = (low + high) // 2
+            if mode_fits(ordered[:mid]):
+                best_prefix = mid
+                low = mid + 1
+            else:
+                high = mid - 1
+
+        selected: list[Any] = list(ordered[:best_prefix])
+        for candidate in ordered[best_prefix:]:
             trial = [*selected, candidate]
             if mode_fits(trial):
                 selected = trial
