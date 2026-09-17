@@ -824,6 +824,19 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_zhorstokoho_nasylstva, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_zhorstokoho_nasylstva)) == 1
 
+    # Defect 88 / Negative regression (Round 38 P2): Document noun 'акт' in title prepositional phrase 'акту про запобігання проявам насильства' rejected (Правопис 2019 §82)
+    frag_aktu_pro_nasylstvo = "Однак прийняття нового акту про запобігання проявам насильства спричинило суперечки."
+    assert miner.INVALID_DOCUMENT_AKTU_RE.search(frag_aktu_pro_nasylstvo)
+    assert not miner.is_pristine_eval_sentence(frag_aktu_pro_nasylstvo, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_aktu_pro_nasylstvo)) == 0
+
+    # Defect 89 / Positive control (Round 38 P2): Document noun 'акт' with correct genitive -а 'акта про запобігання проявам насильства' accepted
+    frag_akta_pro_nasylstvo = "Однак прийняття нового акта про запобігання проявам насильства спричинило суперечки."
+    assert not miner.INVALID_DOCUMENT_AKTU_RE.search(frag_akta_pro_nasylstvo)
+    assert miner.is_pristine_eval_sentence(frag_akta_pro_nasylstvo, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_akta_pro_nasylstvo)) == 1
+
+
 
 
 
