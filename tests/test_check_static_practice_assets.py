@@ -733,6 +733,7 @@ def test_check_assets_summary_includes_coverage_structure(tmp_path: Path) -> Non
         "paronym",
         "antonym",
         "homonym",
+        "imperative",
     ]
     assert coverage["levels"]["A1"]["cloze"] == {"ratio": 0.0, "pct": 0.0, "thin": True}
     assert coverage["levels"]["A1"]["synonym"] == {"ratio": 0.0, "pct": 0.0, "thin": True}

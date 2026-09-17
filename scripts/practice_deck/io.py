@@ -150,6 +150,7 @@ def _safe_shard_name(name: object) -> str:
         "practice-paronym.",
         "practice-antonym.",
         "practice-homonym.",
+        "practice-imperative.",
     )
     if not name.endswith(".json") or not name.startswith(allowed_prefixes):
         raise PracticeDeckHydrationError(f"unexpected practice deck file path: {name!r}")

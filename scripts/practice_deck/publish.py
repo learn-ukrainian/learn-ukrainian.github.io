@@ -54,6 +54,7 @@ KINDS = {
     "paronym": ("practice-paronym.{level}.json", "atlas-practice-paronym"),
     "antonym": ("practice-antonym.{level}.json", "atlas-practice-antonym"),
     "homonym": ("practice-homonym.{level}.json", "atlas-practice-homonym"),
+    "imperative": ("practice-imperative.{level}.json", "atlas-practice-imperative"),
 }
 
 
