@@ -1835,6 +1835,46 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odni_pyly_chai, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odni_pyly_chai)) == 0
 
+    # Defect 213 / Negative regression (Round 84 Codex P2): Numeral-noun phrase with genitive dependent 'дві пили майстра' functions as direct object (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_dvi_pyly_maistra = (
+        "Театр — місце, де дві пили майстра вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_dvi_pyly_maistra, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dvi_pyly_maistra, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dvi_pyly_maistra)) == 0
+
+    # Defect 214 / Negative regression (Round 84 Codex P2): Numeral-noun phrase with genitive dependent 'три пили майстра' functions as direct object (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_try_pyly_maistra = (
+        "Театр — місце, де три пили майстра вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_try_pyly_maistra, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_try_pyly_maistra, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_try_pyly_maistra)) == 0
+
+    # Defect 215 / Negative regression (Round 84 Codex P2): Numeral-noun phrase with genitive dependent 'одні пили майстра' functions as direct object (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_odni_pyly_maistra = (
+        "Театр — місце, де одні пили майстра вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_odni_pyly_maistra, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odni_pyly_maistra, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odni_pyly_maistra)) == 0
+
+    # Defect 216 / Negative regression (Round 84 Fable P2): Feminine numeral subject 'одна пила чай' functions as complete subordinate clause with past feminine verb predicate (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_odna_pyla_chai = (
+        "Він говорив із сестрою — дівчиною, що одна пила чай — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_odna_pyla_chai, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odna_pyla_chai, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odna_pyla_chai)) == 0
+
+    # Defect 217 / Negative regression (Round 84 Fable P2): Masculine numeral subject 'один став лікарем' functions as complete subordinate clause with past masculine verb predicate (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_odyn_stav_likarem = (
+        "Він говорив із братами — хлопцями, що один став лікарем — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_odyn_stav_likarem, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odyn_stav_likarem, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odyn_stav_likarem)) == 0
+
 
 
 

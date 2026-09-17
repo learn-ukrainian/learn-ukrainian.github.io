@@ -1236,6 +1236,17 @@ def has_genitive_reading(word: str, cur: sqlite3.Cursor | None = None) -> bool:
         return True
 
 
+def verb_agrees_with_numeral(numr_w: str, verb_rows: list[tuple[str, ...]]) -> bool:
+    """Check whether a finite verb form can grammatically agree with a nominative numeral subject."""
+    if numr_w in {"два", "дві", "три", "чотири", "обидва", "обидві", "одні"}:
+        return any(any(t in r[1] for t in (":past:p", ":pres:p:3", ":futr:p:3")) for r in verb_rows)
+    if numr_w == "один":
+        return any(":past:m" in r[1] or ":pres:s:3" in r[1] for r in verb_rows)
+    if numr_w == "одна":
+        return any(":past:f" in r[1] for r in verb_rows)
+    return False
+
+
 def is_in_direct_or_enclosing_pp(words: list[str], idx: int, cur: sqlite3.Cursor | None = None) -> bool:
     """Check whether words[idx] is governed by a direct or enclosing prepositional phrase."""
     if idx <= 0:
@@ -1697,24 +1708,32 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
 
                             # 1a. Distinguish numeral-governed noun complements from numeral subjects/modifiers of finite verbs:
                             # - Adverbs of degree ('багато', 'трохи', 'мало') modify verbs directly ('багато шила', 'мало пила').
-                            # - Forms of 'один' ('одна', 'одне', 'одні') agree with nouns and never govern genitive/accusative nouns of different gender ('одна шила').
-                            # - Collective numerals ('двоє', 'троє') and paucal numerals ('обидва', 'обидві') with plural verbs ('обидві пили чай', 'троє пили каву') function as subject + predicate.
+                            # - Numeral subjects ('одна пила чай', 'один став лікарем', 'дві пили чай', 'три пили чай', 'троє пили каву') function as subject + predicate unless accompanied by an adnominal genitive attribute ('дві пили майстра').
+                            # - Numeral-noun phrases with adjectival agreement ('одне шило') or paucal governance ('два шила') function as noun complements.
                             cur.execute("SELECT lemma, tags FROM forms_all WHERE word_form = ? AND pos = 'numr'", (prev_w,))
                             numr_rows = cur.fetchall()
                             is_numr = bool(numr_rows) and "adv" not in prev_pos
 
+                            # Look ahead for a genitive dependent modifying words[idx] (e.g. 'дві пили майстра', 'два шила майстра')
+                            has_gen_dependent = False
+                            if idx + 1 < len(words) and cur:
+                                try:
+                                    cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (words[idx + 1],))
+                                    has_gen_dependent = any(
+                                        "v_rod" in r[1] for r in cur.fetchall() if r[0] in ("noun", "adj", "pron")
+                                    )
+                                except Exception:
+                                    pass
+
                             is_governed_noun = False
                             if is_numr and noun_rows:
                                 numr_lemmas = {r[0] for r in numr_rows}
-                                # 1. Forms of 'один' ('один', 'одна', 'одне', 'одні', etc.):
-                                # They are adjectival agreeing numerals.
-                                # If prev_w agrees with a noun reading of words[idx] in gender, number, and case, it is a noun phrase (e.g. 'одне шило').
-                                # But if prev_w is 'одні' and words[idx] has a plural verb reading where 'одні' acts as plural subject ('одні пили чай'), it remains a predicate.
-                                # Otherwise (e.g. 'одна шила'), it does not agree as a noun and functions as subject + verb.
+                                prev_is_nom = any("v_naz" in r[1] for r in numr_rows)
                                 if "один" in numr_lemmas:
-                                    has_plural_verb = any(any(t in r[1] for t in (":past:p", ":pres:p:3", ":futr:p:3")) for r in verb_rows)
-                                    prev_is_nom = any("v_naz" in r[1] for r in numr_rows)
-                                    if prev_w == "одні" and has_plural_verb and prev_is_nom:
+                                    # Forms of 'один' ('один', 'одна', 'одне', 'одні'):
+                                    # If prev_w agrees with words[idx] as a finite verb and has no genitive dependent, it is subject + predicate ('одна пила чай', 'один став лікарем', 'одні пили чай').
+                                    # Otherwise, if it agrees with words[idx] as an adjectival noun, it is a noun phrase ('одне шило', 'одні пили майстра').
+                                    if prev_is_nom and verb_agrees_with_numeral(prev_w, verb_rows) and not has_gen_dependent:
                                         is_governed_noun = False
                                     elif words_can_agree(prev_w, words[idx], cur, allow_numr=True):
                                         is_governed_noun = True
@@ -1725,9 +1744,10 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                                 elif prev_w in {"два", "дві", "три", "чотири", "обидва", "обидві"}:
                                     has_paucal_noun = any(any(c in r[1] for c in ("p:v_naz", "p:v_zna")) for r in noun_rows)
                                     if has_paucal_noun:
-                                        has_plural_verb = any(any(t in r[1] for t in (":past:p", ":pres:p:3", ":futr:p:3")) for r in verb_rows)
-                                        prev_is_nom = any("v_naz" in r[1] for r in numr_rows)
-                                        is_governed_noun = not (has_plural_verb and prev_is_nom)
+                                        if prev_is_nom and verb_agrees_with_numeral(prev_w, verb_rows) and not has_gen_dependent:
+                                            is_governed_noun = False
+                                        else:
+                                            is_governed_noun = True
                                 else:
                                     # Higher cardinals ('п\'ять' and above) and collective numerals ('двоє', 'троє') govern genitive plural ('p:v_rod')
                                     has_gen_plural = any("p:v_rod" in r[1] for r in noun_rows)
