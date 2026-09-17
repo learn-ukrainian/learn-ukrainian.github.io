@@ -395,6 +395,21 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     frag_preposed_mod = "Розрахунок невикористаної субсидії визначається наступним чином: від суми, нарахованої за опалювальний сезон субсидії, віднімається вартість уже спожитого газу та вартість 100 кубів – 687,90 гривень."
     assert not miner.is_pristine_eval_sentence(frag_preposed_mod, cur_ves=cur)
 
+    # Defect 22 (Round 9): Ungoverned numeral nominative/accusative case following 'близько' / 'до' (СУМ)
+    frag_numeral = "Загалом представлено близько п'ятсот творів."
+    assert not miner.is_pristine_eval_sentence(frag_numeral, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_numeral)) == 0
+
+    # Defect 23 (Round 9): Comma separating homogeneous predicates, calque 'в свою чергу', isolated 'все ж' (Правопис §158)
+    frag_homogeneous_comma = "В свою чергу, батьки переїхали на дачу, і почали вмовляти синів частіше займатися городом, але кількість грядок, все ж, вирішили зменшити."
+    assert not miner.is_pristine_eval_sentence(frag_homogeneous_comma, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_homogeneous_comma)) == 0
+
+    # Defect 24 (Round 9): Sentence-initial explanatory conjunction 'Тобто' with erroneous comma (Правопис §158)
+    frag_tobto_comma = "Тобто, ця сума залишається на рахунку одержувача, а решта невикористаної субсидії повертається державі."
+    assert not miner.is_pristine_eval_sentence(frag_tobto_comma, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_tobto_comma)) == 0
+
 
 def test_release_receipt_schema_and_checksum() -> None:
     """Validate release receipt against JSON schema and sha256 checksum."""

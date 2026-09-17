@@ -132,13 +132,13 @@ SUBJECT_COMMA_PRED_RE = re.compile(
     re.IGNORECASE,
 )
 SENTENCE_INITIAL_CONJUNCTION_COMMA_RE = re.compile(
-    r"^(?:Однак|Проте|Втім|Утім|Адже|Тож|Отож),\s+",
+    r"^(?:Однак|Проте|Втім|Утім|Адже|Тож|Отож|Тобто),\s+",
     re.IGNORECASE,
 )
 NON_PARENTHETICAL_ISOLATION_RE = re.compile(
     r"(?:^|,\s*)(?:насамперед|передусім|перш\s+за\s+все|водночас|разом\s+з\s+тим|до\s+того\s+ж|"
     r"тим\s+не\s+менше|між\s+тим|принаймні|в\s+основному|в\s+кінцевому\s+підсумку|"
-    r"все\s+ж\s+таки|все-таки|майже|навіть|зокрема|тим\s+часом|насправді|при\s+цьому|"
+    r"все\s+ж(?:\s+таки)?|все-таки|майже|навіть|зокрема|тим\s+часом|насправді|при\s+цьому|"
     r"тим\s+більше|по\s+суті|адже|фактично|буквально),\s+",
     re.IGNORECASE,
 )
@@ -162,7 +162,14 @@ PREPOSED_MODIFIER_ISOLATION_RE = re.compile(
     re.IGNORECASE,
 )
 CALQUED_BUREAUCRATIC_PHRASES_RE = re.compile(
-    r"\b(?:наступним\s+чином|у\s+повній\s+мірі|в\s+повній\s+мірі|у\s+кінці\s+кінців|в\s+кінці\s+кінців|не\s+дивлячись\s+на|приймати\s+участь|прийняти\s+участь)\b",
+    r"\b(?:наступним\s+чином|у\s+повній\s+мірі|в\s+повній\s+мірі|у\s+кінці\s+кінців|в\s+кінці\s+кінців|не\s+дивлячись\s+на|приймати\s+участь|прийняти\s+участь|[ву]\s+свою\s+чергу)\b",
+    re.IGNORECASE,
+)
+UNGOVERNED_NUMERAL_RE = re.compile(
+    r"\b(?:близько|до)\s+(?:сто|двісті|триста|чотириста|п['’]ятсот|шістсот|сімсот|вісімсот|дев['’]ятсот|тисяча|"
+    r"два|дві|три|чотири|п['’]ять|шість|сім|вісім|дев['’]ять|десять|одинадцять|дванадцять|тринадцять|чотирнадцять|"
+    r"п['’]ятнадцять|шістнадцять|сімнадцять|вісімнадцять|дев['’]ятнадцять|двадцять|тридцять|сорок|п['’]ятдесят|"
+    r"шістдесят|сімдесят|вісімдесят|дев['’]яносто)(?![а-яіїєґА-ЯІЇЄҐ'’])",
     re.IGNORECASE,
 )
 PREDICATE_WORDS = {
@@ -258,6 +265,8 @@ def split_clean_ukrainian_sentences(
             continue
         if CALQUED_BUREAUCRATIC_PHRASES_RE.search(s):
             continue
+        if UNGOVERNED_NUMERAL_RE.search(s):
+            continue
         clean_sents.append(s)
     return clean_sents
 
@@ -279,6 +288,76 @@ def check_invalid_future_construction(s: str, cur_ves: sqlite3.Cursor | None) ->
                     if not any("inf" in t for t in all_tags):
                         return True
                     break
+    return False
+
+
+def check_invalid_numeral_case(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
+    """Reject ungrammatical nominative/accusative numerals following prepositions of approximation/limit ('близько', 'до')."""
+    if UNGOVERNED_NUMERAL_RE.search(s):
+        return True
+    if cur_ves:
+        for m in re.finditer(r"\b(близько|до)\s+([а-яіїєґА-ЯІЇЄҐ'’]+)\b", s, re.IGNORECASE):
+            num_word = m.group(2).lower()
+            cur_ves.execute(
+                "SELECT tags FROM forms_all WHERE word_form = ? AND (pos = 'numr' OR tags LIKE '%:numr%')",
+                (num_word,),
+            )
+            rows = cur_ves.fetchall()
+            if rows:
+                all_tags = [r[0] for r in rows]
+                if not any("v_rod" in t for t in all_tags):
+                    return True
+    return False
+
+
+def has_homogeneous_verb_comma(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
+    """Reject erroneous comma separating homogeneous predicates joined by single coordinating conjunction (Правопис 2019 §158.1)."""
+    if not cur_ves:
+        return False
+    for m in re.finditer(r",\s*(?:і|й|та)\s+([а-яіїєґА-ЯІЇЄҐ'’]+)\b", s):
+        v2 = m.group(1).lower()
+        cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (v2,))
+        rows2 = cur_ves.fetchall()
+        finite2 = [r[0] for r in rows2 if any(x in r[0] for x in (":past:", ":pres:", ":fut:")) and ":inf" not in r[0]]
+        if not finite2:
+            continue
+
+        before = s[:m.start()]
+        last_clause = before.split(",")[-1]
+        sub_markers = {
+            "що", "щоб", "як", "яка", "який", "яке", "які", "якого", "якій", "яким", "яких", "якої",
+            "де", "куди", "звідки", "коли", "бо", "оскільки", "хоч", "хоча", "якщо", "якби",
+        }
+        words_last = re.findall(r"[а-яіїєґА-ЯІЇЄҐ'’]+", last_clause.lower())
+        if any(marker in words_last for marker in sub_markers):
+            continue
+
+        for w1 in words_last:
+            cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (w1,))
+            rows1 = cur_ves.fetchall()
+            finite1 = [r[0] for r in rows1 if any(x in r[0] for x in (":past:", ":pres:", ":fut:")) and ":inf" not in r[0]]
+            if not finite1:
+                continue
+
+            match_agreement = False
+            for t1 in finite1:
+                for t2 in finite2:
+                    if any((tag in t1 and tag in t2) for tag in (":past:p", ":past:m", ":past:f", ":past:n")):
+                        match_agreement = True
+                    elif any(tag in t1 and tag in t2 for tag in (":pres:", ":fut:")):
+                        for p in (":1:s", ":2:s", ":3:s", ":1:p", ":2:p", ":3:p"):
+                            if p in t1 and p in t2:
+                                match_agreement = True
+
+            if match_agreement:
+                after_words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ'’]+", s[m.end():].lower())
+                if after_words:
+                    next_word = after_words[0]
+                    cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ? AND (pos = 'noun' OR pos = 'adj')", (next_word,))
+                    rows = cur_ves.fetchall()
+                    if rows and any("v_naz" in r[0] for r in rows):
+                        continue
+                return True
     return False
 
 
@@ -358,6 +437,14 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
 
     # 10. Calqued bureaucratic idiom
     if CALQUED_BUREAUCRATIC_PHRASES_RE.search(s):
+        return False
+
+    # 11. Ungoverned numeral nominative case following 'близько' or 'до' (СУМ)
+    if check_invalid_numeral_case(s, cur_ves):
+        return False
+
+    # 12. Erroneous comma separating homogeneous predicates joined by single 'і/й/та' (Правопис 2019 §158.1)
+    if has_homogeneous_verb_comma(s, cur_ves):
         return False
 
     # 4. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)
