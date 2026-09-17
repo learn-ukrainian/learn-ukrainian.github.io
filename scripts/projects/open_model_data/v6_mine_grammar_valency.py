@@ -1176,11 +1176,12 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
     """Verify that all subordinate clauses opened in unquoted_inside are complete and not severed across end_dash.
 
     Under Правопис 2019 §9, §37, §158.3, §161.I.1, and §161.I.10, subordinate clauses may be sequential or nested,
-    including multiword preposition-led relative clauses of arbitrary length (e.g. 'де для глядачів, у тісному зв’язку з якими він перебував, вдалою режисерською знахідкою').
-    A predicate in a closed nested relative clause (e.g. 'перебував') cannot satisfy the enclosing clause ('де ...').
+    including multiword preposition-led or noun-headed relative clauses of arbitrary length (e.g. 'де для глядачів, мати яких працювала, вдалою режисерською знахідкою',
+    'де для глядачів, у тісному зв’язку з якими він перебував, вдалою режисерською знахідкою').
+    A predicate in a closed nested relative clause (e.g. 'працювала', 'перебував') cannot satisfy the enclosing clause ('де ...').
     Apostrophes (ASCII, typographic, modifier) are normalized under Правопис 2019 §9 so tokenization accurately preserves
     words with apostrophes (e.g. 'зв’язку') within multiword boundaries, and relative clause detection scans without a fixed-window
-    limit before the relative pronoun so long as no preceding predicate has occurred.
+    limit before the relative pronoun, correctly accommodating noun heads with homonymous verb readings (e.g. 'мати').
     Each opened subordinate clause must have its own predicate outside nested clauses and cannot remain unclosed at end_dash.
     """
     unquoted_inside = normalize_apostrophes(unquoted_inside)
@@ -1214,7 +1215,7 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                 marker = "тому що" if part.strip().lower().startswith("тому що") else words[0]
             else:
                 for k, w in enumerate(words):
-                    if w in RELATIVE_PRONOUNS and not words_have_predicate(words[:k]):
+                    if w in RELATIVE_PRONOUNS:
                         is_sub = True
                         marker = " ".join(words[: k + 1])
                         break
@@ -1258,9 +1259,10 @@ def extract_dash_apposition_spans(s: str, cur_ves: sqlite3.Cursor | None = None)
     - Appositive dash pairs enclose parenthetical explanatory phrases within a single clause,
       without severing unclosed subordinate clauses across delimiter boundaries (Правопис 2019 §9, §158.3, §161.I.1, §161.I.10).
       Subordinate clause completeness tracking accounts for sequential and nested clause boundaries, including
-      multiword preposition-led relative clauses of arbitrary length (e.g. 'поруч з якими він говорив', 'у тісному зв’язку з якими він перебував'),
-      ensuring predicates in nested or earlier relative clauses do not falsely satisfy enclosing clauses, with apostrophe
-      normalization preserving token integrity and unbounded scans before relative pronouns.
+      multiword preposition-led or noun-headed relative clauses of arbitrary length (e.g. 'поруч з якими він говорив',
+      'у тісному зв’язку з якими він перебував', 'мати яких працювала'), ensuring predicates in nested or earlier relative
+      clauses do not falsely satisfy enclosing clauses, with apostrophe normalization preserving token integrity and
+      unbounded scans accommodating noun heads with homonymous verb readings.
     - Quoted spans are excluded before both subordinate-marker detection and predicate detection
       (Правопис 2019 §154, §164), preserving quoted-title boundaries so that subordinate markers inside
       quoted titles (e.g. «Життя, що триває») do not trigger false subordinate clause boundaries or
