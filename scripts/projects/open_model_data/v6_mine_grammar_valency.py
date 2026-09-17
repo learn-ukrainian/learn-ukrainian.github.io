@@ -1420,7 +1420,8 @@ MEASURE_AND_FREQUENCY_NOUNS = {
 
 PRENOMINAL_TITLES = {
     "пані", "пан", "добродійка", "добродій",
-    "леді", "мадам", "міс", "місіс", "фрау", "мадмуазель",
+    "леді", "мадам", "міс", "місіс", "фрау", "мадмуазель", "мадемуазель",
+    "сеньйора", "сеньйорита", "фрейлейн",
 }
 
 
@@ -1465,9 +1466,14 @@ def get_clause_direct_object_indices(words: list[str], verb_idx: int, cur: sqlit
         if w_lower in PRENOMINAL_TITLES and i + 1 < len(words):
             try:
                 next_k = i + 1
-                while next_k < len(words) and is_modifier_or_adv(words[next_k], cur) and not is_preposition(words[next_k], cur):
+                while (
+                    next_k < len(words)
+                    and next_k != verb_idx
+                    and is_modifier_or_adv(words[next_k], cur)
+                    and not is_preposition(words[next_k], cur)
+                ):
                     next_k += 1
-                if next_k < len(words):
+                if next_k < len(words) and next_k != verb_idx:
                     cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (words[next_k].lower(),))
                     next_rows = cur.fetchall()
                     if any("v_naz" in r[0] for r in next_rows):
@@ -1664,27 +1670,44 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                     # Disambiguate finite verbs homonymous with nouns:
                     has_noun_reading = any(r[0] == "noun" for r in rows)
                     if has_noun_reading:
-                        # 1. If words[idx] is an event duration noun preceded by a numeral, quantity word, or duration modifier
-                        #    (e.g. 'п\'ять вистав', 'дві вистави', 'кілька вистав'), it is a duration noun complement, not a predicate
-                        if words[idx].lower() in EVENT_DURATION_NOUNS:
-                            prev_k = idx - 1
-                            while (
-                                prev_k >= 0
-                                and is_modifier_or_adv(words[prev_k], cur)
-                                and not is_preposition(words[prev_k], cur)
-                            ):
-                                if (
-                                    words[prev_k].lower() in QUANTITY_WORDS
-                                    or words[prev_k].lower() in DURATION_MODIFIERS
-                                    or bool(get_vesum_pos(words[prev_k], cur) & {"numr"})
-                                ):
-                                    break
-                                prev_k -= 1
-                            if prev_k >= 0 and (
+                        # Find the preceding quantifier or numeral modifier
+                        prev_k = idx - 1
+                        while (
+                            prev_k >= 0
+                            and is_modifier_or_adv(words[prev_k], cur)
+                            and not is_preposition(words[prev_k], cur)
+                        ):
+                            if (
                                 words[prev_k].lower() in QUANTITY_WORDS
                                 or words[prev_k].lower() in DURATION_MODIFIERS
                                 or bool(get_vesum_pos(words[prev_k], cur) & {"numr"})
                             ):
+                                break
+                            prev_k -= 1
+
+                        if prev_k >= 0 and (
+                            words[prev_k].lower() in QUANTITY_WORDS
+                            or words[prev_k].lower() in DURATION_MODIFIERS
+                            or bool(get_vesum_pos(words[prev_k], cur) & {"numr"})
+                        ):
+                            prev_w = words[prev_k].lower()
+                            prev_pos = get_vesum_pos(prev_w, cur)
+                            is_cardinal_numr = bool(prev_pos & {"numr"}) and "adv" not in prev_pos
+                            has_gen_acc_noun = any(
+                                r[0] == "noun" and any(case in r[1] for case in ("v_rod", "v_zna"))
+                                for r in rows
+                            )
+                            # 1a. If preceded by a count numeral (e.g. 'два шила', 'п\'ять вистав', 'дві вистави'),
+                            #     it is a numeral-governed noun complement, not a predicate
+                            if is_cardinal_numr and has_gen_acc_noun:
+                                continue
+                            # 1b. If preceded by a quantity word/duration modifier and is an event duration noun
+                            #     (e.g. 'кілька вистав', 'багато вистав', 'всю виставу'), it is an event noun complement
+                            if (
+                                prev_w in QUANTITY_WORDS
+                                or prev_w in DURATION_MODIFIERS
+                                or bool(prev_pos & {"numr"})
+                            ) and words[idx].lower() in EVENT_DURATION_NOUNS:
                                 continue
 
                         # 2. If a word has a noun reading and is in a prepositional phrase, it is a noun, not a predicate.

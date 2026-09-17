@@ -1747,6 +1747,14 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_pani_holovna_likarka, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_pani_holovna_likarka)) == 0
 
+    # Defect 202 / Negative regression (Round 80 Codex P2): Noun governed by cardinal count numeral ('два шила') functions as noun complement rather than finite predicate (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_dva_shyla = (
+        "Театр — місце, де два шила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_dva_shyla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dva_shyla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dva_shyla)) == 0
+
 
 
 
