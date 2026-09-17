@@ -751,6 +751,18 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.has_invalid_compound_preposition_case(frag_dokazu, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_dokazu, cur_ves=cur)
 
+    # Defect 75 / Positive regression (Round 31 P2): Preposition 'з метою' with infinitive verb complement accepted (СУМ-11)
+    frag_z_metoyu_inf = "Він прийшов з метою отримати допомогу."
+    assert not miner.has_invalid_compound_preposition_case(frag_z_metoyu_inf, cur_ves=cur)
+    frag_z_metoyu_inf_full = "Він прийшов туди з метою отримати необхідну допомогу."
+    assert not miner.has_invalid_compound_preposition_case(frag_z_metoyu_inf_full, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_z_metoyu_inf_full, cur_ves=cur)
+
+    # Defect 76 / Positive control (Round 31 P2): Preposition 'з метою' with adverbial modifier before infinitive accepted
+    frag_z_metoyu_adv_inf = "Захід відбувся з метою краще зрозуміти ситуацію."
+    assert not miner.has_invalid_compound_preposition_case(frag_z_metoyu_adv_inf, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_z_metoyu_adv_inf, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:

@@ -1044,11 +1044,15 @@ def has_invalid_compound_preposition_case(s: str, cur_ves: sqlite3.Cursor | None
     Compound prepositions like 'за допомогою', 'під час', 'з метою' strictly govern the genitive case.
     Nouns taking '-а/-я' in genitive singular (e.g. 'букет' -> 'букета') that erroneously appear with
     '-у/-ю' (dative/locative 'букету') violate grammatical case government.
+    Infinitive verbal complements (e.g. 'з метою отримати допомогу', СУМ-11) are recognized as valid
+    verbal phrases and not subjected to nominal genitive constraints.
     """
     if not cur_ves:
         return False
     for m in COMPOUND_GENITIVE_PREP_RE.finditer(s):
         after = s[m.end():].strip()
+        if not after or after[0] in ",:;–—":
+            continue
         words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\x27\u2019\-]+", after)
         if not words:
             continue
@@ -1060,6 +1064,12 @@ def has_invalid_compound_preposition_case(s: str, cur_ves: sqlite3.Cursor | None
             rows = cur_ves.fetchall()
             if not rows:
                 break
+            # If an infinitive or verb appears before the head noun, it is a verbal complement (e.g. 'з метою отримати...')
+            if any(r[1] == "verb" for r in rows):
+                break
+            # If the token can function as an adverb modifier, continue scanning for head
+            if any(r[1] == "adv" for r in rows):
+                continue
             noun_adj_rows = [r for r in rows if r[1] in ("noun", "adj")]
             if noun_adj_rows:
                 if not any("v_rod" in r[0] for r in rows) and not any("nv" in r[0] for r in rows):
