@@ -42,6 +42,7 @@ import {
   type PracticeClozeItem,
   type PracticeDeckData,
   type PracticeHeritageItem,
+  type PracticeImperativeItem,
   type PracticeIndexItem,
   type PracticeLexeme,
   type PracticeMode,
@@ -484,6 +485,15 @@ describe('lexicon SRS facade', () => {
       });
     }
 
+    for (const slot of ['2sg', '1pl', '2pl'] as const) {
+      expect(parseCardKey(`alpha::imperative::${slot}`)).toEqual({
+        lemmaId: 'alpha',
+        mode: 'imperative',
+        slot,
+        quarantined: false,
+      });
+    }
+
     for (const mode of ['paradigm', 'stress', 'classify', 'synonym', 'heritage'] as const) {
       const selection = selectNextPracticeItem(modeDeck([{ id: `${mode}-alpha`, modes: [mode] }]), {
         now: NOW,
@@ -491,6 +501,117 @@ describe('lexicon SRS facade', () => {
       expect(selection?.mode).toBe(mode);
     }
     expect(selectNextPracticeItem(modeDeck([{ id: 'paronym-alpha', modes: ['paronym'] }]), { now: NOW })).toBeNull();
+  });
+
+  test('imperative SRS keys round-trip through rating, reload, and reselection for all three slots', () => {
+    const slots = ['2sg', '1pl', '2pl'] as const;
+    const imperativeItems: PracticeImperativeItem[] = slots.map((slot) => ({
+      id: `imp_robyty_${slot}`,
+      lemmaId: 'робити',
+      srsKey: `робити::imperative::${slot}`,
+      lemma: 'роби́ти',
+      aspect: 'imperf',
+      slot,
+      slotLabelUa: slot === '2sg' ? '2-га особа однини' : slot === '1pl' ? '1-ша особа множини' : '2-га особа множини',
+      target: slot === '2sg' ? 'роби́' : slot === '1pl' ? 'робі́мо' : 'робі́ть',
+      options: [{ text: 'роби́', isCorrect: true, code: 'CORRECT' }],
+    }));
+
+    const deck: PracticeDeckData = {
+      index: [
+        {
+          lemmaId: 'робити',
+          hasAudio: false,
+          hasSentence: false,
+          modes: ['imperative'],
+          hasCloze: false,
+          clozeIds: [],
+          weight: 1,
+        },
+      ],
+      lexemes: [
+        {
+          lemmaId: 'робити',
+          lemma: 'роби́ти',
+          lemmaPlain: 'робити',
+          cefr: 'A2',
+          morphology: { pos: 'verb' },
+        },
+      ],
+      cloze: [],
+      stress: [],
+      classify: [],
+      paradigm: [],
+      synonym: [],
+      heritage: [],
+      paronym: [],
+      antonym: [],
+      homonym: [],
+      imperative: imperativeItems,
+    };
+
+    // 1. Initial selection: all three slots are new with cardState: null
+    const initialCandidates = slots.map((slot) => {
+      const key = `робити::imperative::${slot}`;
+      const parsed = parseCardKey(key);
+      expect(parsed).toEqual({
+        lemmaId: 'робити',
+        mode: 'imperative',
+        slot,
+        quarantined: false,
+      });
+      return key;
+    });
+
+    const state1 = loadState(localStorage, NOW);
+    for (const key of initialCandidates) {
+      expect(state1.cards.get(key)).toBeUndefined();
+    }
+
+    const firstSelection = selectNextPracticeItem(deck, { now: NOW, modeFilter: 'imperative' });
+    expect(firstSelection).not.toBeNull();
+    expect(firstSelection?.mode).toBe('imperative');
+    expect(firstSelection?.cardState).toBeNull();
+    expect(initialCandidates).toContain(firstSelection?.cardKey);
+
+    // 2. Rate each slot independently
+    const reviewTimes = [NOW.getTime(), NOW.getTime() + 1000, NOW.getTime() + 2000];
+    slots.forEach((slot, idx) => {
+      const rated = rateCard('робити', 'imperative', 'good', reviewTimes[idx], { slotId: slot });
+      expect(rated.reps).toBe(1);
+      expect(rated.state).toBe(State.Learning);
+    });
+
+    // Verify all 3 slots have distinct active card states in current state
+    const state2 = loadState(localStorage, NOW);
+    for (const slot of slots) {
+      const key = `робити::imperative::${slot}`;
+      const card = state2.cards.get(key);
+      expect(card).toBeDefined();
+      expect(card?.reps).toBe(1);
+    }
+
+    // 3. Reselection immediately finds non-null cardState for the rated slot
+    const secondSelection = selectNextPracticeItem(deck, { now: NOW.getTime() + 3000, modeFilter: 'imperative' });
+    expect(secondSelection).not.toBeNull();
+    expect(secondSelection?.cardState).not.toBeNull();
+    expect(secondSelection?.cardState?.reps).toBe(1);
+
+    // 4. Reload from storage: no quarantine, card states preserved
+    const reloaded = loadState(localStorage, NOW.getTime() + 4000);
+    for (const slot of slots) {
+      const key = `робити::imperative::${slot}`;
+      const card = reloaded.cards.get(key);
+      expect(card).toBeDefined();
+      expect(card?.reps).toBe(1);
+    }
+
+    // 5. Direct cardKey rating also updates the specific slot
+    rateCard('робити::imperative::1pl', 'easy', NOW.getTime() + 5000);
+    const state3 = loadState(localStorage, NOW.getTime() + 5000);
+    expect(state3.cards.get('робити::imperative::1pl')?.reps).toBe(2);
+    expect(state3.cards.get('робити::imperative::2sg')?.reps).toBe(1);
+    expect(state3.cards.get('робити::imperative::2pl')?.reps).toBe(1);
   });
 
   test('emits heritage candidates from published items in mixed and focus modes', () => {

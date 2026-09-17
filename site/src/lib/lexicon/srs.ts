@@ -722,8 +722,8 @@ export interface StorageLike {
 }
 
 export type ParsedCardKey =
-  | { lemmaId: string; mode: PracticeMode; quarantined: false }
-  | { lemmaId: string; mode: null; rawMode: string; quarantined: true };
+  | { lemmaId: string; mode: PracticeMode; slot?: string; quarantined: false }
+  | { lemmaId: string; mode: null; rawMode: string; slot?: string; quarantined: true };
 
 const FSRS6_DEFAULT_PARAMS: FSRSParameters = {
   request_retention: 0.9,
@@ -947,27 +947,30 @@ export function isPracticeMode(value: unknown): value is PracticeMode {
 }
 
 export function parseCardKey(key: string): ParsedCardKey {
-  const separatorIndex = key.indexOf('::');
-  if (separatorIndex < 0) {
+  const parts = key.split('::');
+  if (parts.length === 1) {
     return {
       lemmaId: key,
       mode: 'flashcards',
       quarantined: false,
     };
   }
-  const lemmaId = key.slice(0, separatorIndex) || key;
-  const rawMode = key.slice(separatorIndex + 2);
+  const lemmaId = parts[0] || key;
+  const rawMode = parts[1];
+  const slot = parts.length > 2 ? parts.slice(2).join('::') : undefined;
   if (!isPracticeMode(rawMode)) {
     return {
       lemmaId,
       mode: null,
       rawMode,
+      ...(slot ? { slot } : {}),
       quarantined: true,
     };
   }
   return {
     lemmaId,
     mode: rawMode,
+    ...(slot ? { slot } : {}),
     quarantined: false,
   };
 }
@@ -1439,8 +1442,8 @@ function presentationFromMeta(meta?: ReviewMeta): ReviewEventPresentation | unde
     : undefined;
 }
 
-export function cardKey(lemmaId: string, mode: PracticeMode): string {
-  return `${lemmaId}::${mode}`;
+export function cardKey(lemmaId: string, mode: PracticeMode, slot?: string): string {
+  return slot ? `${lemmaId}::${mode}::${slot}` : `${lemmaId}::${mode}`;
 }
 
 export function rateCard(
@@ -1471,26 +1474,37 @@ export function rateCard(
   const reviewDate = rawDate instanceof Date ? rawDate : new Date(rawDate ?? Date.now());
   const state = currentState();
   const scheduler = fsrs(state.settings.params);
-  const key = cardKey(lemmaId, mode);
+  const parsed = lemmaId.includes('::') ? parseCardKey(lemmaId) : null;
+  const effectiveLemmaId = parsed && !parsed.quarantined ? parsed.lemmaId : lemmaId;
+  const effectiveMode = parsed && !parsed.quarantined && parsed.mode ? parsed.mode : mode;
+  const slot = parsed && !parsed.quarantined ? parsed.slot : (effectiveMode === 'imperative' ? meta?.slotId : undefined);
+  const key = parsed && !parsed.quarantined
+    ? lemmaId
+    : cardKey(effectiveLemmaId, effectiveMode, slot);
+  const effectiveMeta = meta
+    ? { ...meta, ...(slot && !meta.slotId ? { slotId: slot } : {}) }
+    : slot
+      ? { slotId: slot }
+      : undefined;
   const currentCard = state.cards.get(key);
   const fsrsCard = currentCard ? fsrsCardFromState(currentCard) : createEmptyCard(reviewDate);
   const record = scheduler.next(fsrsCard, reviewDate, RATING_TO_FSRS[rating]);
   const next = stateFromFsrsCard(record.card);
   state.cards.set(key, next);
-  state.reviews.push(serializeReview(key, lemmaId, mode, rating, record, meta));
+  state.reviews.push(serializeReview(key, effectiveLemmaId, effectiveMode, rating, record, effectiveMeta));
   compactReviewHistory(state.reviews, state.reviewAggregates, MAX_RAW_REVIEW_LOG_ENTRIES);
   const storage = currentStorage();
   persistWithQuotaRecovery(state, storage, reviewDate.getTime());
   try {
     recordCardReviewEvent(
       {
-        lemmaId,
-        mode,
+        lemmaId: effectiveLemmaId,
+        mode: effectiveMode,
         rating,
         reviewedAt: reviewDate,
         deckVersion: PRACTICE_MODE_DECK_VERSION,
         fsrsParamsVersion: state.settings.version,
-        presentation: presentationFromMeta(meta),
+        presentation: presentationFromMeta(effectiveMeta),
       },
       storage,
     );
@@ -1977,7 +1991,7 @@ function buildStaticCandidates(deck: PracticeDeckData, modeFilter: PracticeModeF
               lemma,
               indexItem,
               mode,
-              cardKey: imperative.srsKey || cardKey(indexItem.lemmaId, mode),
+              cardKey: imperative.srsKey || cardKey(indexItem.lemmaId, mode, imperative.slot),
               imperative,
             }),
           );
