@@ -97,9 +97,7 @@ class EcItemEvaluation:
             return True
         if self.unaccented_copy_of_winner.is_true:
             return True
-        if self.pedagogical_clarity.band == "unclear":
-            return True
-        return False
+        return self.pedagogical_clarity.band == "unclear"
 
 
 @dataclass(frozen=True)
