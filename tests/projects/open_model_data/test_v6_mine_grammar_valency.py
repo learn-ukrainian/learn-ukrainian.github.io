@@ -1495,6 +1495,38 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_ia_pronoun_finite_verb_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_ia_pronoun_finite_verb_myla)) == 1
 
+    # Defect 174 / Negative regression (Round 74 Fable P2): Noun subject across 'з якою' relative clause preserves finite verb completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
+    frag_discordant_apposition_yakoiu_noun_subject_finite_verb_myla = (
+        "Він говорив із сестрою — дівчиною, з якою сестра після роботи мила посуд — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_yakoiu_noun_subject_finite_verb_myla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_yakoiu_noun_subject_finite_verb_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_yakoiu_noun_subject_finite_verb_myla)) == 0
+
+    # Defect 175 / Positive control (Round 74 Fable P2): Agreeing instrumental apposition across 'з якою' relative clause accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
+    frag_agreeing_apposition_yakoiu_noun_subject_finite_verb_myla = (
+        "Він говорив із сестрою — дівчиною, з якою сестра після роботи мила посуд — та з лікаркою — досвідченою фахівчинею — про виставу."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_yakoiu_noun_subject_finite_verb_myla, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_yakoiu_noun_subject_finite_verb_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_yakoiu_noun_subject_finite_verb_myla)) == 1
+
+    # Defect 176 / Negative regression (Round 74 Codex P2): Common-gender subject with duration adverbial does not fake finite verb across action noun PP (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
+    frag_discordant_apposition_duration_action_noun_myla = (
+        "Театр — місце, де я після купівлі мила всю виставу вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_duration_action_noun_myla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_duration_action_noun_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_duration_action_noun_myla)) == 0
+
+    # Defect 177 / Positive control (Round 74 Codex P2): Agreeing instrumental apposition across action noun PP and duration adverbial accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
+    frag_agreeing_apposition_duration_action_noun_myla = (
+        "Театр — місце, де я після купівлі мила всю виставу вдалою режисерською знахідкою – своєрідною грою та імпровізацією – вважав комічні вибрики."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_duration_action_noun_myla, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_duration_action_noun_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_duration_action_noun_myla)) == 1
+
 
 
 
