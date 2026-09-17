@@ -226,6 +226,13 @@ def test_sentence_splitting_rejects_unbalanced_and_defective_punctuation() -> No
     sample_valid = "Посада, на яку приймаєте працівника, обов'язково повинна бути в державному класифікаторі професій в Україні."
     assert len(miner.split_clean_ukrainian_sentences(sample_valid)) == 1
 
+    # Defect: compound abbreviation preceding sentence boundary must split and not merge
+    sample_abbr = "В селі Лисець Тисменицького району травмовано чоловіка, 1972 р. н. З діагнозом «відкритий перелом лівої гомілки» потерпілого госпіталізовано до обласної клінічної лікарні."
+    sents_abbr = miner.split_clean_ukrainian_sentences(sample_abbr)
+    # The first sentence ends in 'р. н.' and is filtered out by the abbreviation ending guard; second sentence is pristine
+    assert len(sents_abbr) == 1
+    assert sents_abbr[0] == "З діагнозом «відкритий перелом лівої гомілки» потерпілого госпіталізовано до обласної клінічної лікарні."
+
 
 def test_valency_explanations_codification_nuance() -> None:
     """Verify valency explanations cite modern literary codification (СУМ, Правопис 2019)."""
@@ -244,6 +251,13 @@ def test_valency_explanations_codification_nuance() -> None:
     assert "родово" in navch_expl
     assert "Правопис 2019" in navch_expl or "СУМ" in navch_expl
     assert "синтаксичною калькою з російської" not in navch_expl
+
+    # znushchatysia explanation must cite modern authorities (Ponomariv/Chak), SUM-11 context, and F/Calque category
+    assert "знущатися" in frames
+    znushch_frame = frames["знущатися"]
+    assert "Пономарів" in znushch_frame["explanation"] or "Чак" in znushch_frame["explanation"]
+    assert "СУМ-11" in znushch_frame["explanation"] or "СУМ-11" in znushch_frame["critique"]
+    assert znushch_frame["category"] == "F/Calque"
 
     # All frames must have nuanced critique
     for frame in miner.VALENCY_FRAMES:
@@ -321,6 +335,18 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     # Defect 11 (Round 5): Trailing unicode ellipsis
     ellipsis_sent = "І така картина спостерігається не лише у відділі продажів…"
     assert not miner.is_pristine_eval_sentence(ellipsis_sent, cur_ves=cur)
+
+    # Defect 12 (Round 6): Non-parenthetical adverb erroneously isolated by commas (Horodenska, p. 71)
+    frag_adverb = "Створена в XIII столітті інквізиція розглядала, насамперед, справи про єресь, але якщо все-таки вдавалося вижити."
+    assert not miner.is_pristine_eval_sentence(frag_adverb, cur_ves=cur)
+
+    # Defect 13 (Round 6): Broken paired conjunction 'як ..., так ...' omitting 'і/й' (Pravopys 2019, §158.I.5)
+    frag_paired = "На мою думку, в цьому полягає ще одна її цінність, адже вона доступна як для українського, так для німецького читача."
+    assert not miner.is_pristine_eval_sentence(frag_paired, cur_ves=cur)
+
+    # Defect 14 (Round 6): Multi-sentence fragment across compound abbreviation
+    frag_multisents = "В селі Лисець Тисменицького району травмовано чоловіка, 1972 р. н. З діагнозом «відкритий перелом лівої гомілки» потерпілого госпіталізовано до обласної клінічної лікарні."
+    assert not miner.is_pristine_eval_sentence(frag_multisents, cur_ves=cur)
 
 
 def test_release_receipt_schema_and_checksum() -> None:

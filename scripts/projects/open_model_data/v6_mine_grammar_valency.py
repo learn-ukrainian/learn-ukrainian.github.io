@@ -71,11 +71,16 @@ CLEAN_TGT_RE = re.compile(r"\{[^{}=]*?=>([^{}]*?):::error_type=[^}]+\}")
 # Ukrainian abbreviation and initials protection
 COMPOUND_ABBREVIATIONS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"\bв\.\s*о\.", re.IGNORECASE), "в§DOT§ о§DOT§"),
+    (re.compile(r"\bр\.\s*н\.(?=\s+[А-ЯІЇЄҐA-Z«\"„])", re.IGNORECASE), "р§DOT§ н."),
     (re.compile(r"\bр\.\s*н\.", re.IGNORECASE), "р§DOT§ н§DOT§"),
     (re.compile(r"\bт\.\s*зв\.", re.IGNORECASE), "т§DOT§ зв§DOT§"),
+    (re.compile(r"\bі\s+т\.\s*д\.(?=\s+[А-ЯІЇЄҐA-Z«\"„])", re.IGNORECASE), "і т§DOT§ д."),
     (re.compile(r"\bі\s+т\.\s*д\.", re.IGNORECASE), "і т§DOT§ д§DOT§"),
+    (re.compile(r"\bі\s+т\.\s*п\.(?=\s+[А-ЯІЇЄҐA-Z«\"„])", re.IGNORECASE), "і т§DOT§ п."),
     (re.compile(r"\bі\s+т\.\s*п\.", re.IGNORECASE), "і т§DOT§ п§DOT§"),
+    (re.compile(r"\bт\.\s*ін\.(?=\s+[А-ЯІЇЄҐA-Z«\"„])", re.IGNORECASE), "т§DOT§ ін."),
     (re.compile(r"\bт\.\s*ін\.", re.IGNORECASE), "т§DOT§ ін§DOT§"),
+    (re.compile(r"\bм\.\s*п\.(?=\s+[А-ЯІЇЄҐA-Z«\"„])", re.IGNORECASE), "м§DOT§ п."),
     (re.compile(r"\bм\.\s*п\.", re.IGNORECASE), "м§DOT§ п§DOT§"),
 ]
 INLINE_ABBREVIATIONS = (
@@ -169,7 +174,7 @@ def split_clean_ukrainian_sentences(
         if not re.search(r"[.!?…»\"]$", s):
             continue
         # Must NOT end with abbreviation dot or initial
-        if re.search(r"\b(?:тис|млн|млрд|р|рр|ст|м|с|вул|ім|проф|доц|акад|напр|див|ін|д)\.$", s, re.IGNORECASE):
+        if re.search(r"\b(?:тис|млн|млрд|р|рр|ст|м|с|вул|ім|проф|доц|акад|напр|див|ін|д|н)\.$", s, re.IGNORECASE):
             continue
         if re.search(r"(?:^|[\s«\"„])(?:[А-ЯІЇЄҐA-Z])\.$", s):
             continue
@@ -254,6 +259,24 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
 
     # 3. Sentence-initial conjunction with erroneous comma (Pravopys 2019, §158)
     if re.search(r"^(?:Однак|Проте),\s+", s):
+        return False
+
+    # 4. Non-parenthetical adverbs, particles, and conjunctions erroneously isolated by commas (Horodenska; Pravopys 2019)
+    if re.search(
+        r"(?:^|,\s*)(?:насамперед|передусім|перш\s+за\s+все|водночас|разом\s+з\s+тим|до\s+того\s+ж|"
+        r"тим\s+не\s+менше|між\s+тим|принаймні|в\s+основному|в\s+кінцевому\s+підсумку|"
+        r"все\s+ж\s+таки|все-таки|майже|навіть|зокрема),\s+",
+        s,
+        re.IGNORECASE,
+    ):
+        return False
+
+    # 5. Broken paired conjunctions, e.g. 'як ..., так ...' omitting 'і/й' (Pravopys 2019, §158.I.5)
+    if re.search(r"\bяк\s+[^,]+,\s+так\s+(?!і\b|й\b)[а-яіїєґА-ЯІЇЄҐ]", s, re.IGNORECASE):
+        return False
+
+    # 6. Compound abbreviation hiding an internal sentence boundary (e.g. '1972 р. н. З діагнозом')
+    if re.search(r"\b(?:р\.\s*н\.|і\s+т\.\s*д\.|і\s+т\.\s*п\.|т\.\s*ін\.)\s+[А-ЯІЇЄҐA-Z«\"„]", s):
         return False
 
     # 4. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)
@@ -455,6 +478,7 @@ CATEGORY_EXPLANATIONS: dict[str, dict[str, str]] = {
 VALENCY_FRAMES: list[dict[str, Any]] = [
     {
         "verb": "опанувати",
+        "category": "G/Case",
         "correct_pattern": "опанувати (що? знахідний відмінок)",
         "incorrect_pattern": "опанувати (чим? орудний відмінок)",
         "explanation": "Дієслово «опанувати» в українській мові перехідне і керує знахідним відмінком без прийменника: опанувати мову, опанувати професію, опанувати комп'ютерну грамотність (помилково: опанувати мовою).",
@@ -468,6 +492,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
     },
     {
         "verb": "завідувач",
+        "category": "G/Case",
         "correct_pattern": "завідувач (чого? родовий відмінок)",
         "incorrect_pattern": "завідувач (чим? орудний відмінок)",
         "explanation": "Іменник «завідувач» керує іменником у родовому відмінку без прийменника: завідувач кафедри, завідувач відділу, завідувач лабораторії (помилково під впливом російської: завідувач кафедрою).",
@@ -481,6 +506,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
     },
     {
         "verb": "докоряти",
+        "category": "G/Case",
         "correct_pattern": "докоряти (кому/чому? давальний відмінок)",
         "incorrect_pattern": "докоряти (кого/що? знахідний відмінок)",
         "explanation": (
@@ -499,6 +525,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
     },
     {
         "verb": "навчатися",
+        "category": "G/Case",
         "correct_pattern": "навчатися (чого? родовий відмінок)",
         "incorrect_pattern": "навчатися (чому? давальний відмінок)",
         "explanation": (
@@ -517,6 +544,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
     },
     {
         "verb": "властивий",
+        "category": "G/Prep",
         "correct_pattern": "властивий (кому/чому? давальний відмінок)",
         "incorrect_pattern": "властивий (для кого/чого? прийменник для)",
         "explanation": "Прикметники «властивий» та «притаманний» керують давальним відмінком: властивий людині, притаманний мові (конструкція «властивий для кого» є калькою з російської «свойственный для»).",
@@ -530,6 +558,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
     },
     {
         "verb": "дякувати",
+        "category": "G/Case",
         "correct_pattern": "дякувати (кому/чому? давальний відмінок)",
         "incorrect_pattern": "дякувати (кого/що? знахідний відмінок)",
         "explanation": "Дієслово «дякувати» вимагає виключно давального відмінка: дякую вам, щиро дякуємо захисникам (вживання знахідного відмінка «дякую вас» є грубою синтаксичною калькою).",
@@ -543,6 +572,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
     },
     {
         "verb": "вибачати",
+        "category": "G/Case",
         "correct_pattern": "вибачати (кому? давальний відмінок)",
         "incorrect_pattern": "вибачати (кого? знахідний відмінок)",
         "explanation": "В українській мові дієслово «вибачати» керує давальним відмінком особи: вибачте мені, вибачати другові (помилково: вибачте мене під впливом російського «извините меня»).",
@@ -556,6 +586,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
     },
     {
         "verb": "хворіти",
+        "category": "G/Prep",
         "correct_pattern": "хворіти (на що? на + знахідний відмінок)",
         "incorrect_pattern": "хворіти (чим? орудний відмінок)",
         "explanation": "В українській мові назва хвороби при дієслові «хворіти / захворіти» вживається з прийменником «на» у знахідному відмінку: хворіти на грип, захворіти на ангіну (орудний відмінок «хворіти грипом» є калькою з російської).",
@@ -569,10 +600,22 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
     },
     {
         "verb": "знущатися",
+        "category": "F/Calque",
         "correct_pattern": "знущатися (з кого/чого? з + родовий відмінок)",
         "incorrect_pattern": "знущатися (над ким/чим? над + орудний відмінок)",
-        "explanation": "Дієслова «знущатися», «глузувати», «кепкувати», «сміятися» в українській мові керують прийменником «з» (зі) з родовим відмінком: сміятися з ворога, глузувати з невігластва (конструкція з «над» є російським впливом).",
-        "critique": "Конструкція «знущатися над ким» є калькою з російської; питома українська синтаксична норма вимагає прийменника «з» з родовим відмінком («знущатися з кого»).",
+        "explanation": (
+            "В українській літературній мові традиційним і стилістично зразковим є керування прийменником «з» "
+            "із родовим відмінком: «знущатися з когось», «сміятися з когось», «глузувати з когось» (О. Пономарів «Культура слова», "
+            "Є. Чак «Складні випадки українського слововживання»). Конструкція з прийменником «над» («знущатися над ким»), "
+            "хоч і фіксувалася в радянському СУМ-11 (1970–1980) поруч із «з кого», виникла як синтаксична калька російської моделі "
+            "(«издеваться над кем»). Сучасні норми культури української мови розрізняють ці варіанти: модель «з кого» є стилістично зразковою "
+            "та рекомендованою літературною нормою, тоді як «над ким» розглядається як небажаний контактний паралелізм."
+        ),
+        "critique": (
+            "Хоча словник радянської доби СУМ-11 фіксував паралельні форми «з кого» та «над ким» без диференціації, "
+            "сучасна нормативна стилістика (О. Пономарів) розрізняє стилістичну перевагу: питома модель з родовим відмінком "
+            "(«знущатися з кого») є рекомендованою літературною нормою, тоді як вживання прийменника «над» є контактною синтаксичною калькою."
+        ),
         "examples": [
             ("Правозахисники зафіксували численні факти того, як ворог знущався з полонених.", "Правозахисники зафіксували численні факти того, як ворог знущався над полоненими."),
             ("Неприпустимо кепкувати з чужих фізичних вад чи недоліків.", "Неприпустимо кепкувати над чужими фізичними вадами чи недоліками."),
@@ -582,6 +625,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
     },
     {
         "verb": "потребувати",
+        "category": "G/Case",
         "correct_pattern": "потребувати (чого? родовий відмінок)",
         "incorrect_pattern": "потребувати (що? знахідний відмінок)",
         "explanation": "Дієслово «потребувати» в українській мові послідовно керує родовим відмінком: потребувати допомоги, потребувати ремонту, потребувати уваги (знахідний відмінок є помилковим).",
@@ -595,6 +639,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
     },
     {
         "verb": "завдати",
+        "category": "F/Calque",
         "correct_pattern": "завдати (чого? родовий відмінок)",
         "incorrect_pattern": "нанести (що? знахідний відмінок)",
         "explanation": "В українській мові про негативні наслідки, шкоду, біль, удар кажуть «завдати шкоди / завдати удару» (родовий відмінок). Слово «нанести» вживають лише в прямому значенні нанесення фарби чи нанесення на карту.",
@@ -608,6 +653,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
     },
     {
         "verb": "вжити",
+        "category": "F/Calque",
         "correct_pattern": "вжити заходів (родовий відмінок)",
         "incorrect_pattern": "прийняти міри (калька)",
         "explanation": "Нормативний український вислів — «вжити заходів». Вислів «прийняти міри» є грубою калькою з російської канцелярської мови («принять меры»).",
@@ -621,6 +667,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
     },
     {
         "verb": "прийменник_по",
+        "category": "G/Prep",
         "correct_pattern": "у справах / за законом / з питань / у вихідні",
         "incorrect_pattern": "по справах / по закону / по питанням / по вихідним",
         "explanation": "Прийменник «по» в українській мові має обмежену сферу вживання (рух поверхнею або мета руху: піти по хліб). Його неприпустимо калькувати у сфері діловодства, часу та регламенту.",
@@ -635,6 +682,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
     },
     {
         "verb": "прийменник_при",
+        "category": "G/Prep",
         "correct_pattern": "за участі / за умови / за життя / під час зустрічі",
         "incorrect_pattern": "при участі / при умові / при житті / при зустрічі",
         "explanation": "Прийменник «при» вказує на просторову близькість (при дорозі, при університеті). Вживання «при» у значенні супроводу, умови чи часу є російською синтаксичною калькою.",
@@ -902,7 +950,7 @@ def load_ua_gec_annotations(ua_gec_dir: Path) -> list[dict[str, Any]]:
 
 
 def build_valency_trajectories(cur_ves: sqlite3.Cursor | None = None) -> list[dict[str, Any]]:
-    """Build high-precision grammatical case valency reasoning trajectories."""
+    """Build high-precision grammatical case valency and syntactic government trajectories."""
     trajectories = []
     for frame in VALENCY_FRAMES:
         for correct_sent, incorrect_sent in frame["examples"]:
@@ -910,23 +958,40 @@ def build_valency_trajectories(cur_ves: sqlite3.Cursor | None = None) -> list[di
             lookup_token = verb.split("_")[-1] if verb.startswith("прийменник_") else verb
             lemma, forms_cnt, attested = query_vesum_lemma_and_count(cur_ves, lookup_token)
 
-            query = f"Відредагуйте речення та поясніть синтаксичні норми відмінкового керування: «{incorrect_sent}»"
+            cat = frame.get("category", "G/Case")
+            subt = frame.get("subtype", "valency_government")
+            is_calque = cat in ("F/Calque", "F/Style")
+
+            query = (
+                f"Відредагуйте речення та поясніть синтаксично-стилістичні норми слововживання: «{incorrect_sent}»"
+                if is_calque
+                else f"Відредагуйте речення та поясніть синтаксичні норми відмінкового керування: «{incorrect_sent}»"
+            )
             target_term = verb
             reasoning = [
-                f"1. Аналіз граматичного зв'язку: у реченні «{incorrect_sent}» наявне порушення норми відмінкового керування при слові «{verb}».",
-                f"2. Правило синтаксичного керування: в українській літературній мові нормативною є модель {frame['correct_pattern']}.",
+                (
+                    f"1. Аналіз синтаксичної конструкції: у реченні «{incorrect_sent}» вжито контактну кальковану модель при слові «{verb}»."
+                    if is_calque
+                    else f"1. Аналіз граматичного зв'язку: у реченні «{incorrect_sent}» наявне порушення норми відмінкового керування при слові «{verb}»."
+                ),
+                (
+                    f"2. Стилістично-синтаксична норма: в українській літературній мові рекомендованою є модель {frame['correct_pattern']}."
+                    if is_calque
+                    else f"2. Правило синтаксичного керування: в українській літературній мові нормативною є модель {frame['correct_pattern']}."
+                ),
                 f"3. Оцінка помилкової моделі: {frame['critique']}",
                 f"4. Нормативна редакція: «{correct_sent}».",
             ]
             final_response = (
-                f"Речення містить помилку відмінкового керування. Нормативний варіант: «{correct_sent}».\n\n"
-                f"Пояснення: {frame['explanation']}"
+                f"У реченні допущено стилістично небажану синтаксичну кальку. Рекомендований літературний варіант: «{correct_sent}».\n\nПояснення: {frame['explanation']}"
+                if is_calque
+                else f"Речення містить помилку відмінкового керування. Нормативний варіант: «{correct_sent}».\n\nПояснення: {frame['explanation']}"
             )
             trajectories.append({
                 "schema_version": "v1_grammar_valency_trajectory",
                 "trajectory_id": f"traj.valency.{hashlib.sha256(incorrect_sent.encode()).hexdigest()[:16]}",
-                "category": "G/Case",
-                "subtype": "valency_government",
+                "category": cat,
+                "subtype": subt,
                 "query": query,
                 "target_term": target_term,
                 "is_erroneous": True,
