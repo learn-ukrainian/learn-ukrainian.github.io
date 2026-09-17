@@ -1188,11 +1188,13 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
     if not content_tokens:
         return False
 
-    # Identify all nominative nouns in content_tokens with their spans in inside
+    # Identify all nominative nouns in content_tokens with their spans in inside (stopping at preposition cutoff)
     nom_nouns = []
-    for match in re.finditer(r"\b([а-яіїєґА-ЯІЇЄҐ\']+)\b", inside):
+    for token_idx, match in enumerate(re.finditer(r"\b([а-яіїєґА-ЯІЇЄҐ\']+)\b", inside)):
+        if token_idx >= len(content_tokens):
+            break
         w = match.group(1).lower()
-        if w in COORD_CONJ or w not in content_tokens:
+        if w in COORD_CONJ:
             continue
         cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w,))
         tok_rows = cur.fetchall()

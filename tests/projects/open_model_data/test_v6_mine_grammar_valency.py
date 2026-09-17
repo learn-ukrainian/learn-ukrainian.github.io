@@ -903,6 +903,15 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_coord_adj_predicates, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_coord_adj_predicates)) == 1
 
+    # Defect 100 / Negative regression (Round 44 P2): Repeated noun beyond preposition cutoff does not bypass apposition agreement (Ющук §21)
+    frag_discordant_repeated_noun_cutoff = (
+        "Вдалою режисерською знахідкою – своєрідна гра та імпровізація на тему «Гра» – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_repeated_noun_cutoff, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_repeated_noun_cutoff, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_repeated_noun_cutoff)) == 0
+
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:
