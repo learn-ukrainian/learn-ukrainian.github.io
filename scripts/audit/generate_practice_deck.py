@@ -2744,8 +2744,8 @@ IMPERATIVE_EXPLANATIONS = {
         "This imperative has a different person or number. Check the requested pronoun.",
     ),
     "WRONG_MOOD": (
-        "Це теперішній час дійсного способу, а потрібен наказ або заклик до дії.",
-        "This is present indicative; the prompt asks for an imperative.",
+        "Це дійсний спосіб, а потрібен наказ або заклик до дії.",
+        "This is indicative mood; the prompt asks for an imperative.",
     ),
     "ORTHO_SOFT_SIGN": (
         "Після губних б, п, в, м, ф та шиплячих ж, ч, ш, щ м'який знак тут не пишемо.",
@@ -2761,7 +2761,7 @@ IMPERATIVE_EXPLANATIONS = {
     ),
 }
 # Literary practice excludes marked register forms, but keeps short/long and
-# orthographic variants. Query the public forms view, never raw forms_all.
+# orthographic variants. Query forms_all (or forms view fallback), filtering form_markers.
 _IMPERATIVE_EXCLUDED_TAGS = frozenset({
     "bad", "obsc", "subst", "arch", "dial", "dialect", "slang", "vulg", "coll", "rare",
 })
@@ -2825,7 +2825,7 @@ def _imperative_forms(
             if {number, person} <= tokens:
                 if "impr" in tokens:
                     slots[slot].add(form)
-                elif "pres" in tokens or "futr" in tokens:
+                elif "pres" in tokens or ("perf" in tokens and "futr" in tokens):
                     present[slot].add(form)
     # Prefer full -мо and -ся forms; never discard their attested alternatives.
     def preference(form: str) -> tuple[bool, bool, str]:
@@ -2870,6 +2870,7 @@ def _imperative_distractors(
         display = _imperative_display(form, number, mood="Ind")
         if display:
             candidates.append((display, "WRONG_MOOD"))
+            break
     # In a sentence-level imperative cue, contrast an auxiliary + infinitive
     # against the requested synthetic form only for imperfective aspect.
     # Calque aux ("давайте робити") is an imperfective learner error; it is
@@ -2891,7 +2892,7 @@ def _imperative_distractors(
             display = _imperative_display(forms[index], IMPERATIVE_SLOTS[other][0])
             if display:
                 candidates.append((display, "WRONG_PERSON"))
-    if calque:
+    if calque and slot != "1pl":
         candidates.append(calque)
     return candidates
 

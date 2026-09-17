@@ -3658,7 +3658,9 @@ def imperative_conn():
     paradigms = {
         "робити": ("imperf", {"impr:s:2": ["роби"], "impr:p:1": ["робімо", "робім"],
                               "impr:p:2": ["робіть", "робіте"], "pres:s:2": ["робиш"],
-                              "pres:p:1": ["робимо"], "pres:p:2": ["робите"]}),
+                              "pres:p:1": ["робимо"], "pres:p:2": ["робите"],
+                              "futr:s:2": ["робитимеш"], "futr:p:1": ["робитимемо"],
+                              "futr:p:2": ["робитимете"]}),
         "робитися": ("imperf", {"impr:s:2": ["робися", "робись"],
                                 "impr:p:1": ["робімося", "робімось", "робімся"],
                                 "impr:p:2": ["робіться"]}),
@@ -3723,6 +3725,10 @@ def test_imperative_taxonomy_uses_attested_slots_and_present(imperative_conn, im
     codes = set()
     for lemma in ("робити", "поставити", "провітрити"):
         for item in _imperative_test_items(imperative_conn, lemma):
+            all_option_texts = {option["text"] for option in item["options"]}
+            assert "робитимеш" not in all_option_texts
+            assert "робитимемо" not in all_option_texts
+            assert "робитимете" not in all_option_texts
             for option in item["options"]:
                 code = option["code"]
                 codes.add(code)
@@ -3731,6 +3737,9 @@ def test_imperative_taxonomy_uses_attested_slots_and_present(imperative_conn, im
                         "SELECT tags FROM forms WHERE word_form=? AND lemma=?", (option["text"], lemma),
                     ).fetchone()[0]
                     assert (":impr:" if code == "WRONG_PERSON" else (":pres:" if ":pres:" in tags else ":futr:")) in tags
+                    if code == "WRONG_MOOD":
+                        assert "теперішній" not in option["explanationUk"]
+                        assert "present" not in option.get("explanationEn", "").lower()
                 elif code == "ORTHO_SOFT_SIGN":
                     assert option["text"] == "поставь"
                 elif code == "STEM_CLUSTER":
