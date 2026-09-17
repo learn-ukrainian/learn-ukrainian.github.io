@@ -1388,7 +1388,7 @@ def test_paradigm_eliminates_nominative_singular_base_case_bias() -> None:
             {"label": "столом", "kind": "same-paradigm"},
         ],
     }
-    errors = validate_paradigm_item(invalid_item)
+    errors = validate_paradigm_item(invalid_item, enforce_no_base_case=True)
     assert any("base-case bias" in err for err in errors)
 
 

@@ -4007,10 +4007,10 @@ def validate_heritage_item(item: dict[str, Any], *, internal_options: bool = Fal
     return errors
 
 
-def validate_paradigm_item(item: dict[str, Any]) -> list[str]:
+def validate_paradigm_item(item: dict[str, Any], enforce_no_base_case: bool = False) -> list[str]:
     errors: list[str] = []
     slot = item.get("slot")
-    if isinstance(slot, dict):
+    if enforce_no_base_case and isinstance(slot, dict):
         case_key = _paradigm_slot_case_key(str(slot.get("case") or "")) or str(slot.get("case") or "").lower()
         number_key = str(slot.get("number") or "").lower()
         if case_key in ("називний", "nominative") and number_key in ("singular", "однина", "sg"):
