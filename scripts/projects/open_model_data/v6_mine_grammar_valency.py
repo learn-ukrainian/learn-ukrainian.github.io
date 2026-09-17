@@ -1217,39 +1217,22 @@ def has_genitive_reading(word: str, cur: sqlite3.Cursor | None = None) -> bool:
         return True
 
 
-def is_deverbal_or_partitive_noun(word: str, cur: sqlite3.Cursor | None = None) -> bool:
-    """Check whether a noun can govern an adnominal genitive complement in a prepositional phrase."""
-    w = word.lower()
-    if w.endswith(("ння", "ття", "ство", "цтво")):
-        return True
-    partitives = {
-        "початок", "початку", "кінець", "кінця", "виробництво", "виробництва",
-        "шматок", "шматка", "брусок", "бруска", "частка", "частки", "частина",
-        "частини", "пляшка", "пляшки", "крапля", "краплі", "склянка", "склянки",
-        "літр", "літра", "кілограм", "кілограма", "видобуток", "видобутку",
-        "переробка", "переробки", "випуск", "випуску",
-    }
-    return w in partitives
-
-
-def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor | None = None) -> bool:
-    """Check whether words[idx] is governed by an unclosed enclosing, direct, or nested preposition.
-
-    Handles:
-    1. Direct prepositional phrases with optional modifiers (e.g. 'під час', 'у вільний час', 'після зміни').
-    2. Constituents inside an enclosing prepositional phrase [P ... A ... N] where P is an enclosing preposition,
-       A is a prenominal modifier agreeing with head noun N (at n_idx >= idx), spanning nested prepositional
-       modifiers and noun/verb homonyms without premature closure (e.g. 'у вільний від виготовлення мила час').
-    3. Dependent nouns in an adnominal genitive chain inside a prepositional phrase (e.g. 'після виготовлення мила',
-       'після зміни режисера', 'від виконання роботи'), distinguishing dependent genitives from actual clause verbs
-       following complete prepositional phrases (e.g. 'яка після роботи мила посуд', 'яка посуд після роботи мила').
-    """
+def is_in_direct_or_enclosing_pp(words: list[str], idx: int, cur: sqlite3.Cursor | None = None) -> bool:
+    """Check whether words[idx] is governed by a direct or enclosing prepositional phrase."""
     if idx <= 0:
         return False
 
     # Rule 1: Direct preposition with optional modifiers preceding words[idx]
     k = idx - 1
     while k >= 0 and not is_preposition(words[k], cur) and is_modifier_or_adv(words[k], cur):
+        if cur:
+            try:
+                cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (words[k],))
+                v_rows = cur.fetchall()
+                if any(any(t in r[0] for t in (":past", ":pres", ":futr")) for r in v_rows):
+                    break
+            except Exception:
+                pass
         k -= 1
     if k >= 0 and is_preposition(words[k], cur):
         return True
@@ -1303,15 +1286,65 @@ def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor |
             ):
                 return True
 
+    return False
+
+
+def clause_has_direct_object(words: list[str], verb_idx: int, cur: sqlite3.Cursor | None = None) -> bool:
+    """Check whether the clause containing words[verb_idx] has an accusative direct object outside prepositional phrases."""
+    if not cur:
+        return False
+    for i, w in enumerate(words):
+        if i == verb_idx:
+            continue
+        if is_in_direct_or_enclosing_pp(words, i, cur):
+            continue
+        if is_preposition(w, cur):
+            continue
+        if w in {"який", "яка", "яке", "які", "котрий", "котра", "котре", "котрі", "хто", "що"}:
+            continue
+        try:
+            cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w,))
+            rows = cur.fetchall()
+            if any(r[0] in ("noun", "pron") and "v_zna" in r[1] for r in rows):
+                return True
+        except Exception:
+            pass
+    return False
+
+
+def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor | None = None) -> bool:
+    """Check whether words[idx] is governed by an unclosed enclosing, direct, or nested preposition.
+
+    Handles:
+    1. Direct prepositional phrases with optional modifiers (e.g. 'під час', 'у вільний час', 'після зміни').
+    2. Constituents inside an enclosing prepositional phrase [P ... A ... N] where P is an enclosing preposition,
+       A is a prenominal modifier agreeing with head noun N (at n_idx >= idx), spanning nested prepositional
+       modifiers and noun/verb homonyms without premature closure (e.g. 'у вільний від виготовлення мила час').
+    3. Dependent nouns in an adnominal genitive chain inside a prepositional phrase (e.g. 'після виготовлення мила',
+       'після купівлі мила', 'після продажу мила', 'після зміни режисера', 'від виконання роботи'),
+       distinguishing dependent genitives from actual transitive clause verbs governing direct objects
+       (e.g. 'яка після навчання мила посуд', 'яка посуд після роботи мила', 'яка після роботи мила його').
+    """
+    if is_in_direct_or_enclosing_pp(words, idx, cur):
+        return True
+
     # Rule 3: Dependent noun in an adnominal genitive chain inside a prepositional phrase
-    # (e.g. 'після виготовлення мила', 'після зміни режисера', 'від виконання роботи')
+    # (e.g. 'після виготовлення мила', 'після купівлі мила', 'після продажу мила', 'після зміни режисера', 'від виконання роботи')
     if has_genitive_reading(words[idx], cur):
         k = idx - 1
         while (
             k >= 0
             and not is_preposition(words[k], cur)
-            and ("adj" in get_vesum_pos(words[k], cur) or "adv" in get_vesum_pos(words[k], cur))
+            and is_modifier_or_adv(words[k], cur)
         ):
+            if cur:
+                try:
+                    cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (words[k],))
+                    v_rows = cur.fetchall()
+                    if any(any(t in r[0] for t in (":past", ":pres", ":futr")) for r in v_rows):
+                        break
+                except Exception:
+                    pass
             k -= 1
         if k >= 0 and "noun" in get_vesum_pos(words[k], cur) and is_in_prepositional_phrase(words, k, cur):
             has_finite = False
@@ -1323,10 +1356,8 @@ def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor |
                 except Exception:
                     pass
             if has_finite:
-                if is_deverbal_or_partitive_noun(words[k], cur):
-                    return True
-            else:
-                return True
+                return not clause_has_direct_object(words, idx, cur)
+            return True
 
     return False
 

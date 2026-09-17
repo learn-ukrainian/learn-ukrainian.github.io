@@ -1383,6 +1383,55 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_pronominal_object_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_pronominal_object_myla)) == 1
 
+    # Defect 160 / Negative regression (Round 71 P2): Deverbal noun PP followed by finite verb with direct object preserves clause completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_discordant_apposition_deverbal_pp_finite_verb_myla = (
+        "Він говорив із сестрою — дівчиною, яка після навчання мила посуд — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_deverbal_pp_finite_verb_myla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_deverbal_pp_finite_verb_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_deverbal_pp_finite_verb_myla)) == 0
+
+    # Defect 161 / Positive control (Round 71 P2): Agreeing instrumental apposition across deverbal noun PP and finite verb accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_agreeing_apposition_deverbal_pp_finite_verb_myla = (
+        "Він говорив із сестрою — дівчиною, яка після навчання мила посуд — та з лікаркою — досвідченою фахівчинею — про виставу."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_deverbal_pp_finite_verb_myla, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_deverbal_pp_finite_verb_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_deverbal_pp_finite_verb_myla)) == 1
+
+    # Defect 162 / Negative regression (Round 71 P2): Genitive noun governed by non-suffix action noun 'купівля' does not fake clause predicate (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_discordant_apposition_kupivlia_genitive_myla = (
+        "Театр — місце, де після купівлі мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_kupivlia_genitive_myla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_kupivlia_genitive_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_kupivlia_genitive_myla)) == 0
+
+    # Defect 163 / Positive control (Round 71 P2): Agreeing instrumental apposition across 'купівля' PP accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_agreeing_apposition_kupivlia_genitive_myla = (
+        "Театр — місце, де після купівлі мила вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_kupivlia_genitive_myla, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_kupivlia_genitive_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_kupivlia_genitive_myla)) == 1
+
+    # Defect 164 / Negative regression (Round 71 P2): Genitive noun governed by non-suffix action noun 'продаж' does not fake clause predicate (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_discordant_apposition_prodazh_genitive_myla = (
+        "Театр — місце, де після продажу мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_prodazh_genitive_myla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_prodazh_genitive_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_prodazh_genitive_myla)) == 0
+
+    # Defect 165 / Positive control (Round 71 P2): Agreeing instrumental apposition across 'продаж' PP accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_agreeing_apposition_prodazh_genitive_myla = (
+        "Театр — місце, де після продажу мила вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_prodazh_genitive_myla, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_prodazh_genitive_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_prodazh_genitive_myla)) == 1
+
+
 
 
 
