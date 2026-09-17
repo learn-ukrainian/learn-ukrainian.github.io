@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "pilot": {
+    "issue": 5541,
+    "epic": 5535,
+    "stream": "docs-knowledge",
+    "status": "pilot_evaluation"
+  },
+  "openwiki": {
+    "version": "0.5.2",
+    "package": "openwiki@0.5.2",
+    "mode": "code",
+    "language": "en",
+    "allowlist": "v1",
+    "pageLimit": 8,
+    "entrypoint": "openwiki/quickstart.md",
+    "instructionsFile": "openwiki/INSTRUCTIONS.md",
+    "writeBoundary": "openwiki/**"
+  },
+  "providerRoute": {
+    "executionSeat": "AGY",
+    "executionModelId": "gemini-3.8-flash-high",
+    "executionModelFamily": "gemini-flash",
+    "executionPlatform": "antigravity-cli",
+    "reviewSeat": "Codex",
+    "reviewModelId": "astra",
+    "reviewEffort": "low",
+    "crossFamilyRequired": true
+  },
+  "featureFlags": {
+    "telemetry": false,
+    "langsmithTracing": false,
+    "anonymousMetrics": false,
+    "scheduledWorkflows": false,
+    "subagentFanout": false,
+    "rootInstructionWrites": false,
+    "externalNetworking": false
+  },
+  "readRoots": [
+    "scripts/",
+    "site/",
+    "docs/architecture/",
+    "docs/best-practices/"
+  ],
+  "hardExclusions": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    "README.md",
+    "agents_extensions/**",
+    ".claude/**",
+    ".codex/**",
+    ".agent/**",
+    ".gemini/**",
+    "docs/session-state/**",
+    ".github/workflows/openwiki-update.yml"
+  ]
+}
