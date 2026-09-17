@@ -951,6 +951,23 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_separate_parenthetical_spans, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_separate_parenthetical_spans)) == 1
 
+    # Defect 106 / Negative regression (Round 50 P2): Positional dash pairing skips genuine appositions after an unpaired dash (Правопис 2019 §158, Ющук §21)
+    frag_discordant_apposition_after_unpaired_dash = (
+        "Театр — це місце, де вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_after_unpaired_dash, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_after_unpaired_dash, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_after_unpaired_dash)) == 0
+
+    # Defect 107 / Positive control (Round 50 P2): Agreeing instrumental apposition after unpaired predicate dash accepted (Правопис 2019 §158, Ющук §21)
+    frag_agreeing_apposition_after_unpaired_dash = (
+        "Театр — це місце, де вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_after_unpaired_dash, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_after_unpaired_dash, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_after_unpaired_dash)) == 1
+
+
 
 
 

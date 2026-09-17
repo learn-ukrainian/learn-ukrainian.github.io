@@ -1122,12 +1122,26 @@ def get_vesum_cursor(cur_ves: sqlite3.Cursor | None = None) -> sqlite3.Cursor | 
     return None
 
 
+DASH_COPULA_INTRO_RE = re.compile(r"^\s*(це|це є|то|ось|значить)\b", re.IGNORECASE)
+DASH_SUBORDINATE_INTRO_RE = re.compile(
+    r",\s+(де|що|коли|якщо|хоч|хоча|бо|тому що|який|яка|яке|які|якого|якій|яким|яких|куди|звідки)\b",
+    re.IGNORECASE,
+)
+
+
 def extract_dash_apposition_spans(s: str) -> list[tuple[str, str]]:
     """Extract (head_word, inside_phrase) pairs between paired dashes at quote depth 0.
 
     Under Правопис 2019 §158, §161, and §164, parenthetical dash boundaries occur at quote depth 0;
     dashes occurring inside quoted titles (e.g. «Вистава “Життя триває — гра”») belong strictly to the
     title and do not delimit matrix parenthetical constructions.
+
+    Delimiter roles are determined before pairing:
+    - Predicate dashes (Правопис 2019 §158.1: followed by 'це', 'це є', 'то', 'ось', 'значить') are
+      unpaired copular delimiters between subject and predicate; they do not open or close appositions.
+    - Appositive dash pairs enclose parenthetical explanatory phrases within a single clause,
+      without severing unclosed subordinate clauses across delimiter boundaries (Правопис 2019 §158.3, §161.I.10).
+    - A closing dash closes the preceding span and cannot serve as an opening dash.
     """
     quote_stack: list[str] = []
     straight_quote = False
@@ -1153,18 +1167,54 @@ def extract_dash_apposition_spans(s: str) -> list[tuple[str, str]]:
             dashes_at_depth_0.append(idx)
 
     spans: list[tuple[str, str]] = []
-    # Step by 2: each parenthetical construction has an opening dash and a closing dash.
-    # A closing dash closes the preceding span and cannot serve as an opening dash.
-    for d_idx in range(0, len(dashes_at_depth_0) - 1, 2):
-        start_dash = dashes_at_depth_0[d_idx]
-        end_dash = dashes_at_depth_0[d_idx + 1]
+    num_dashes = len(dashes_at_depth_0)
+    if num_dashes < 2:
+        return spans
+
+    i = 0
+    while i < num_dashes - 1:
+        start_dash = dashes_at_depth_0[i]
+        end_dash = dashes_at_depth_0[i + 1]
+
+        # Determine delimiter role of start_dash:
+        # A copular/predicate dash (тире між підметом і присудком, Правопис 2019 §158.1) is unpaired.
+        after_start = s[start_dash + 1 :]
+        if DASH_COPULA_INTRO_RE.match(after_start):
+            i += 1
+            continue
 
         prefix = s[:start_dash]
         m = re.search(r"\b([а-яіїєґА-ЯІЇЄҐ\']+)\s+$", prefix)
-        if m:
-            head_word = m.group(1).lower()
-            inside = s[start_dash + 1 : end_dash].strip()
-            spans.append((head_word, inside))
+        if not m:
+            i += 1
+            continue
+
+        head_word = m.group(1).lower()
+        inside = s[start_dash + 1 : end_dash].strip()
+        if not inside or DASH_COPULA_INTRO_RE.match(inside) or ";" in inside:
+            i += 1
+            continue
+
+        # If inside contains a subordinate clause boundary, verify that the subordinate clause
+        # is complete within the parenthetical construction and not severed across end_dash.
+        sub_m = DASH_SUBORDINATE_INTRO_RE.search(inside)
+        if sub_m:
+            sub_tail = inside[sub_m.end() :]
+            has_sub_predicate = bool(
+                re.search(
+                    r"\b([а-яіїєґА-ЯІЇЄҐ\']+(ти|тися|ться|ло|ла|ли|в|ють|ять|уть|ать|ить|є|був|була|було|були|стане|стали|став|стала))\b",
+                    sub_tail,
+                    re.IGNORECASE,
+                )
+            )
+            if not has_sub_predicate and not sub_tail.rstrip().endswith(","):
+                i += 1
+                continue
+
+        # Valid parenthetical apposition pair: record span and advance past end_dash
+        # (preserving boundary role: closing dash cannot serve as opening dash).
+        spans.append((head_word, inside))
+        i += 2
 
     return spans
 
