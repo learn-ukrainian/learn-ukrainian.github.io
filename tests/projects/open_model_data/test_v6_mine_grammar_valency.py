@@ -812,6 +812,13 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_novogo_akta, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_novogo_akta)) == 1
 
+    # Defect 86 / Positive control (Round 36 P2): Action noun 'акт' with modifier before action noun 'акту збройної агресії' accepted (Правопис 2019 §82)
+    frag_zbroyna_ahresiya = "Він описав свої дії під час акту збройної агресії."
+    assert not miner.INVALID_DOCUMENT_AKTU_RE.search(frag_zbroyna_ahresiya)
+    assert miner.is_pristine_eval_sentence(frag_zbroyna_ahresiya, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_zbroyna_ahresiya)) == 1
+
+
 
 
 
