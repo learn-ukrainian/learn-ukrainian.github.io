@@ -56,3 +56,19 @@ existing, undocumented decision explicit.
 
 Accepted and in effect. Option B (no-Astro) can be revisited only if the MDX
 pipeline or Pages deploy constraints change materially.
+
+## Amendment 2026-09-17 — evidence refresh (#5538)
+
+The decision is unchanged. Three evidence details above have drifted; the
+original text is kept as written and corrected here.
+
+- **Paths:** `starlight/` was renamed to `site/` on 2026-06-13 (`0e6310ae1a`;
+  compat symlink dropped in `772122da52`). Read every `starlight/…` and `src/…`
+  path above as `site/…`. The rename deferred under *Consequences* is done.
+- **Dependency:** `@astrojs/starlight` is not in `site/package.json`. It was
+  removed in `666b6a551f` (2026-06-08), so there is no npm dependency left to
+  clean up. The Vite alias resolves the import without it.
+- **Alias removal gate:** the first *Consequences* bullet is formalised, with
+  measured importer counts, in
+  [`2026-09-17-astro-starlight-residue.md`](2026-09-17-astro-starlight-residue.md) §5.
+  The alias stays until that gate passes.
