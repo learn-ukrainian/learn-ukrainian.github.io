@@ -21,6 +21,7 @@ upstream-docs: https://docs.typesafe.ai/llms.txt
 ## Project Overlay (learn-ukrainian fleet policy)
 
 **Canonical install:** this file under `agents_extensions/shared/skills/typesafe-ai/`.
+**Fleet best practice (read this):** `docs/best-practices/typesafe-jev.md`.
 Deploy with `npm run agents:deploy` (or `scripts/deploy_prompts.sh`). Do **not**
 hand-edit `.claude/skills/`, `.agents/skills/`, or other deployed mirrors. Do **not**
 treat `npx skills add typesafe-ai/skills` as the source of truth for this repo —

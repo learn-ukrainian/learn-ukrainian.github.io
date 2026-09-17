@@ -83,6 +83,7 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 | Track architecture | [`track-architecture.md`](docs/best-practices/track-architecture.md) |
 | Harness engineering | [`harness-engineering.md`](docs/best-practices/harness-engineering.md) |
 | Dialogue situations | [`dialogue-situations.md`](docs/best-practices/dialogue-situations.md) |
+| **TypeSafe / Jev (structured judgments — READ before labeling/triage pilots)** | [`typesafe-jev.md`](docs/best-practices/typesafe-jev.md) |
 
 ---
 
