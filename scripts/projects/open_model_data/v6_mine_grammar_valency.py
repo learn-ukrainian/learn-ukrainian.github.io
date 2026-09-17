@@ -1222,7 +1222,7 @@ def has_direct_object_after(words: list[str], idx: int, cur: sqlite3.Cursor | No
     if not cur or idx + 1 >= len(words):
         return False
     k = idx + 1
-    while k < len(words) and "adv" in get_vesum_pos(words[k], cur):
+    while k < len(words) and ("adv" in get_vesum_pos(words[k], cur) or "adj" in get_vesum_pos(words[k], cur)):
         k += 1
     if k >= len(words):
         return False
@@ -1238,36 +1238,6 @@ def has_direct_object_after(words: list[str], idx: int, cur: sqlite3.Cursor | No
         return False
 
 
-def clause_has_agreeing_subject(words: list[str], idx: int, cur: sqlite3.Cursor | None = None) -> bool:
-    """Check whether the clause preceding words[idx] contains a nominative subject agreeing with words[idx]."""
-    if not cur:
-        return False
-    try:
-        cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (words[idx],))
-        v_rows = cur.fetchall()
-        finite_tags = [r[0] for r in v_rows if any(t in r[0] for t in (":past", ":pres", ":futr"))]
-        if not finite_tags:
-            return False
-        is_past_f = any(":past:f" in t for t in finite_tags)
-        is_past_m = any(":past:m" in t for t in finite_tags)
-        is_past_p = any(":past:p" in t for t in finite_tags)
-        for i in range(idx):
-            w = words[i]
-            cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w,))
-            rows = cur.fetchall()
-            for r in rows:
-                if "v_naz" in r[1]:
-                    if is_past_f and ":f:" in r[1]:
-                        return True
-                    if is_past_m and ":m:" in r[1]:
-                        return True
-                    if is_past_p and (":p:" in r[1] or ":pl:" in r[1]):
-                        return True
-        return False
-    except Exception:
-        return False
-
-
 def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor | None = None) -> bool:
     """Check whether words[idx] is governed by an unclosed enclosing, direct, or nested preposition.
 
@@ -1277,8 +1247,8 @@ def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor |
        A is a prenominal modifier agreeing with head noun N (at n_idx >= idx), spanning nested prepositional
        modifiers and noun/verb homonyms without premature closure (e.g. 'у вільний від виготовлення мила час').
     3. Dependent nouns in an adnominal genitive chain inside a prepositional phrase (e.g. 'після виготовлення мила',
-       'після зміни режисера', 'від виконання роботи'), distinguishing dependent genitives from actual clause verbs
-       with direct objects or agreeing subjects (e.g. 'яка після роботи мила посуд').
+       'після зміни режисера', 'від виконання роботи'), distinguishing dependent genitives from actual transitive
+       clause verbs with direct objects (e.g. 'яка після роботи мила посуд').
     """
     if idx <= 0:
         return False
@@ -1348,9 +1318,7 @@ def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor |
                 cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (words[idx],))
                 v_rows = cur.fetchall()
                 has_finite = any(any(t in r[1] for t in (":past", ":pres", ":futr")) for r in v_rows)
-                if has_finite and (
-                    has_direct_object_after(words, idx, cur) or clause_has_agreeing_subject(words, idx, cur)
-                ):
+                if has_finite and has_direct_object_after(words, idx, cur):
                     is_finite_verb = True
             except Exception:
                 pass
@@ -1367,6 +1335,7 @@ def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor |
                 return True
 
     return False
+
 
 
 RELATIVE_PRONOUN_PATTERN = (

@@ -1335,6 +1335,23 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_clause_verb_across_pp, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_clause_verb_across_pp)) == 1
 
+    # Defect 154 / Negative regression (Round 69 P2): Agreeing subject with subsequent matrix verb does not make PP-internal genitive a predicate (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_discordant_apposition_agreeing_subject_genitive_myla = (
+        "Театр — місце, де сестра після виготовлення мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_agreeing_subject_genitive_myla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_agreeing_subject_genitive_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_agreeing_subject_genitive_myla)) == 0
+
+    # Defect 155 / Positive control (Round 69 P2): Agreeing instrumental apposition across subject and genitive PP accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_agreeing_apposition_agreeing_subject_genitive_myla = (
+        "Театр — місце, де сестра після виготовлення мила вдалою режисерською знахідкою – своєрідною грою та імпровізацією – вважала комічні вибрики."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_agreeing_subject_genitive_myla, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_agreeing_subject_genitive_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_agreeing_subject_genitive_myla)) == 1
+
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:
