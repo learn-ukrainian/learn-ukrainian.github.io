@@ -927,6 +927,14 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_discordant_nested_quoted_title_verb, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_nested_quoted_title_verb)) == 0
 
+    # Defect 103 / Negative regression (Round 47 P2): Dashes inside quoted titles do not truncate apposition boundary (Правопис 2019 §164)
+    frag_discordant_dash_in_quoted_title = (
+        "Вдалою режисерською знахідкою – своєрідна гра та імпровізація на тему «Вистава “Життя триває — гра”» – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_dash_in_quoted_title, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_dash_in_quoted_title, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_dash_in_quoted_title)) == 0
+
 
 
 

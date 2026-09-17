@@ -1122,6 +1122,52 @@ def get_vesum_cursor(cur_ves: sqlite3.Cursor | None = None) -> sqlite3.Cursor | 
     return None
 
 
+def extract_dash_apposition_span(s: str) -> tuple[str | None, str | None]:
+    """Extract head word and inside phrase between paired dashes, respecting quotation boundaries.
+
+    Under Правопис 2019 §158, §161, and §164, parenthetical dash boundaries occur at quote depth 0;
+    dashes occurring inside quoted titles (e.g. «Вистава “Життя триває — гра”») belong strictly to the
+    title and do not truncate or close the parenthetical construction.
+    """
+    m_start = re.search(r"\b([а-яіїєґА-ЯІЇЄҐ\']+)\s+[–—]\s+", s)
+    if not m_start:
+        return None, None
+    head_word = m_start.group(1).lower()
+    start_pos = m_start.end()
+    rest = s[start_pos:]
+
+    quote_stack: list[str] = []
+    straight_quote = False
+    closing_pos = -1
+
+    for i, ch in enumerate(rest):
+        if ch in "«„":
+            quote_stack.append(ch)
+        elif ch == "“":
+            if quote_stack and quote_stack[-1] == "„":
+                quote_stack.pop()
+            else:
+                quote_stack.append("“")
+        elif ch == "»":
+            if quote_stack and quote_stack[-1] == "«":
+                quote_stack.pop()
+        elif ch == "”":
+            if quote_stack and quote_stack[-1] in ("“", "„"):
+                quote_stack.pop()
+        elif ch == '"':
+            straight_quote = not straight_quote
+        elif ch in "–—":
+            in_quote = bool(quote_stack) or straight_quote
+            if not in_quote:
+                closing_pos = i
+                break
+
+    if closing_pos != -1:
+        inside = rest[:closing_pos].strip()
+        return head_word, inside
+    return None, None
+
+
 def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None) -> bool:
     """Reject ungrammatical appositions set off by paired dashes that fail case agreement with the head (Правопис 2019 §158, Ющук §21).
 
@@ -1132,11 +1178,9 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
     if not cur:
         return False
 
-    m = re.search(r"\b([а-яіїєґА-ЯІЇЄҐ\']+)\s+[–—]\s+([^–—]+?)\s+[–—]", s)
-    if not m:
+    head_word, inside = extract_dash_apposition_span(s)
+    if not head_word or not inside:
         return False
-    head_word = m.group(1).lower()
-    inside = m.group(2).strip()
     words = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", inside)
     if not words or len(words) < 2:
         return False
