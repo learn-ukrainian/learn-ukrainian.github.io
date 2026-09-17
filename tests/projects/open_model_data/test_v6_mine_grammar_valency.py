@@ -383,6 +383,18 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     frag_mp = "Документ було скріплено печаткою організації м. п. За цим розпорядженням створено комісію."
     assert not miner.is_pristine_eval_sentence(frag_mp, cur_ves=cur)
 
+    # Defect 19 (Round 8): Pleonastic double future construction (Правопис 2019; IMZO Gr 7)
+    frag_double_future = "Першими на дистанцію запрошують досвідчених плавців, що будуть змагатимуться за призові місця."
+    assert not miner.is_pristine_eval_sentence(frag_double_future, cur_ves=cur)
+
+    # Defect 20 (Round 8): Unpunctuated explanatory construction with demonstrative (Правопис 2019 §158.3.г)
+    frag_unpunctuated_yak = "Структуру закону було вибудовано так, щоб за допомогою такого інструменту як референдум проводити провладні рішення."
+    assert not miner.is_pristine_eval_sentence(frag_unpunctuated_yak, cur_ves=cur)
+
+    # Defect 21 (Round 8): Preposed participial modifier erroneously isolated by commas (Правопис 2019 §158.3.а)
+    frag_preposed_mod = "Розрахунок невикористаної субсидії визначається наступним чином: від суми, нарахованої за опалювальний сезон субсидії, віднімається вартість уже спожитого газу та вартість 100 кубів – 687,90 гривень."
+    assert not miner.is_pristine_eval_sentence(frag_preposed_mod, cur_ves=cur)
+
 
 def test_release_receipt_schema_and_checksum() -> None:
     """Validate release receipt against JSON schema and sha256 checksum."""

@@ -149,6 +149,22 @@ BROKEN_PAIRED_CONJUNCTION_RE = re.compile(
 MULTI_SENTENCE_COMPOUND_ABBR_RE = re.compile(
     r"\b(?:р\.\s*н\.|і\s+т\.\s*д\.|і\s+т\.\s*п\.|т\.\s*ін\.|м\.\s*п\.)\s+[А-ЯІЇЄҐA-Z«\"„]",
 )
+DOUBLE_FUTURE_RE = re.compile(
+    r"\bбуд(?:у|еш|е|емо|ете|уть)(?:\s+[а-яіїєґ\x27]+){0,2}\s+[а-яіїєґ\x27]+(?:тиму|тимеш|тиме|тимемо|тимете|тимуть)(?:ся|сь)?\b",
+    re.IGNORECASE,
+)
+UNPUNCTUATED_TAKY_YAK_RE = re.compile(
+    r"\bтак(?:ий|а|е|і|ого|ої|ому|им|их|кими|у)\s+[^,]{1,60}?\s+як\b",
+    re.IGNORECASE,
+)
+PREPOSED_MODIFIER_ISOLATION_RE = re.compile(
+    r",\s*[а-яіїєґ\x27]+(?:ний|на|не|ні|того|тий|та|те|ті|ного|ної|ному|них|ним|ними|того|тої|тому|тих|тим|тими)\s+[^,]+?\s+[а-яіїєґ\x27]+,\s*(?:віднімається|додається|визначається|є|має|було|буде|стало|належить|полягає|складає|становить)\b",
+    re.IGNORECASE,
+)
+CALQUED_BUREAUCRATIC_PHRASES_RE = re.compile(
+    r"\b(?:наступним\s+чином|у\s+повній\s+мірі|в\s+повній\s+мірі|у\s+кінці\s+кінців|в\s+кінці\s+кінців|не\s+дивлячись\s+на|приймати\s+участь|прийняти\s+участь)\b",
+    re.IGNORECASE,
+)
 PREDICATE_WORDS = {
     "є", "це", "немає", "нема", "треба", "можна", "слід", "варто", "необхідно",
     "потрібно", "жаль", "сором", "пора", "час", "досить", "відомо", "зрозуміло",
@@ -234,8 +250,36 @@ def split_clean_ukrainian_sentences(
             continue
         if MULTI_SENTENCE_COMPOUND_ABBR_RE.search(s):
             continue
+        if DOUBLE_FUTURE_RE.search(s):
+            continue
+        if UNPUNCTUATED_TAKY_YAK_RE.search(s):
+            continue
+        if PREPOSED_MODIFIER_ISOLATION_RE.search(s):
+            continue
+        if CALQUED_BUREAUCRATIC_PHRASES_RE.search(s):
+            continue
         clean_sents.append(s)
     return clean_sents
+
+
+def check_invalid_future_construction(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
+    """Reject ungrammatical compound future constructions like 'будуть змагатимуться' or 'буде робить'."""
+    for m in re.finditer(r"\b(буд(?:у|еш|е|емо|ете|уть))\b", s, re.IGNORECASE):
+        after = s[m.end():]
+        words = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", after)
+        for w in words[:3]:
+            wl = w.lower()
+            if re.search(r"(?:тиму|тимеш|тиме|тимемо|тимете|тимуть)(?:ся|сь)?$", wl):
+                return True
+            if cur_ves:
+                cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (wl,))
+                rows = cur_ves.fetchall()
+                if rows:
+                    all_tags = [r[0] for r in rows]
+                    if not any("inf" in t for t in all_tags):
+                        return True
+                    break
+    return False
 
 
 def check_has_predicate(text: str, cur_ves: sqlite3.Cursor | None) -> bool:
@@ -298,6 +342,22 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
 
     # 6. Compound abbreviation hiding an internal sentence boundary (e.g. '1972 р. н. З діагнозом')
     if MULTI_SENTENCE_COMPOUND_ABBR_RE.search(s):
+        return False
+
+    # 7. Pleonastic double future construction (Правопис 2019; IMZO Gr 7)
+    if DOUBLE_FUTURE_RE.search(s) or check_invalid_future_construction(s, cur_ves):
+        return False
+
+    # 8. Unpunctuated explanatory/comparative construction with demonstrative (Правопис 2019 §158.3.г)
+    if UNPUNCTUATED_TAKY_YAK_RE.search(s):
+        return False
+
+    # 9. Preposed participial modifier erroneously isolated by commas (Правопис 2019 §158.3.а)
+    if PREPOSED_MODIFIER_ISOLATION_RE.search(s):
+        return False
+
+    # 10. Calqued bureaucratic idiom
+    if CALQUED_BUREAUCRATIC_PHRASES_RE.search(s):
         return False
 
     # 4. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)
