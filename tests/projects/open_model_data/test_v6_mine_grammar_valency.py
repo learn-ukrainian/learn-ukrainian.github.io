@@ -595,6 +595,26 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.has_homogeneous_verb_comma(frag_moho_pohlyad, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_moho_pohlyad, cur_ves=cur)
 
+    # Defect 45 / Negative regression (Round 21 P2): Unpunctuated source-attribution parenthetical following coordinating conjunction lacking opening comma (Правопис 2019 §158 I.11)
+    frag_ta_yak_perekonyuyut = "Та як переконують обізнані з методикою фінансування галузі, можливості влади обласного рівня тут обмежені."
+    assert miner.UNPUNCTUATED_CONJUNCTION_PARENTHETICAL_RE.search(frag_ta_yak_perekonyuyut)
+    assert not miner.is_pristine_eval_sentence(frag_ta_yak_perekonyuyut, cur_ves=cur)
+
+    # Defect 46 / Positive control (Round 21 P2): Properly punctuated source-attribution parenthetical with opening comma (Правопис 2019 §158 I.11)
+    frag_ta_yak_valid = "Та, як переконують обізнані з методикою фінансування галузі, можливості влади обласного рівня тут обмежені."
+    assert not miner.UNPUNCTUATED_CONJUNCTION_PARENTHETICAL_RE.search(frag_ta_yak_valid)
+    assert miner.is_pristine_eval_sentence(frag_ta_yak_valid, cur_ves=cur)
+
+    # Defect 47 / Negative regression (Round 21 P2): Discordant personal name case agreement 'Олега Токарчуку' (genitive + dative)
+    frag_oleha_tokarchuku = "Редакція «Дзеркала Коломиї» зателефонувала головлікареві Коломийської дитячої лікарні Олега Токарчуку з проханням розповісти про останні новини."
+    assert miner.DISCORDANT_PERSONAL_NAME_CASE_RE.search(frag_oleha_tokarchuku)
+    assert not miner.is_pristine_eval_sentence(frag_oleha_tokarchuku, cur_ves=cur)
+
+    # Defect 48 / Positive control (Round 21 P2): Clean replacement literary sentence
+    frag_shcho_stosuetsya = "А що стосується лікарів, то їм доведеться поки що обійтися 30 відсотками платні."
+    assert not miner.DISCORDANT_PERSONAL_NAME_CASE_RE.search(frag_shcho_stosuetsya)
+    assert miner.is_pristine_eval_sentence(frag_shcho_stosuetsya, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:

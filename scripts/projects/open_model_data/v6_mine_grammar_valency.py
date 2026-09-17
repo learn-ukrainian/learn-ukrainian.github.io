@@ -173,9 +173,24 @@ UNGOVERNED_NUMERAL_RE = re.compile(
     r"шістдесят|сімдесят|вісімдесят|дев['’]яносто)(?![а-яіїєґА-ЯІЇЄҐ'’])",
     re.IGNORECASE,
 )
-UNPUNCTUATED_ADVERSATIVE_PARENTHETICAL_RE = re.compile(
-    r",\s+(?:а|але)\s+(?:навпаки|наприклад|зокрема|мабуть|можливо|безперечно|безумовно|очевидно|скажімо|до\s+речі)(?:(?:,\s*|\s+)[а-яіїєґА-ЯІЇЄҐ]+|[.,!?…»\"]|$)",
+UNPUNCTUATED_CONJUNCTION_PARENTHETICAL_RE = re.compile(
+    r"(?:^|[«\"„—]\s*|,\s+)(?:Та|І|Й|А|Але|Проте|Однак)\s+"
+    r"(?:"
+    r"як\s+[^,]{0,100}?\b(?:"
+    r"переконують|переконує|кажуть|каже|відомо|стверджують|стверджує|зазначають|зазначає|"
+    r"зазначено|свідчать|свідчить|повідомляють|повідомляє|повідомлено|бачимо|здається|"
+    r"видається|виявилося|виявляється|гадають|вважають|вважає|з['’]ясувалося|сповіщають|"
+    r"сповіщає|випливає|видно|наголошують|наголошує|підкреслюють|підкреслює|"
+    r"зауважують|зауважує|пише|пишуть|писав|писали|запевняють|запевняє"
+    r")\b[^,]*\s*,\s*"
+    r"|(?:на\s+(?:думку|погляд)|за\s+(?:словами|даними|інформацією|повідомленням|свідченням|версією|оцінкою))\b[^,]+,\s*"
+    r"|(?:навпаки|наприклад|зокрема|мабуть|можливо|безперечно|безумовно|очевидно|скажімо|до\s+речі|по-перше|по-друге|по-третє)(?:(?:,\s*|\s+)[а-яіїєґА-ЯІЇЄҐ]+|[.,!?…»\"]|$)"
+    r")",
     re.IGNORECASE,
+)
+UNPUNCTUATED_ADVERSATIVE_PARENTHETICAL_RE = UNPUNCTUATED_CONJUNCTION_PARENTHETICAL_RE
+DISCORDANT_PERSONAL_NAME_CASE_RE = re.compile(
+    r"\b(?:Олега|Івана|Петра|Михайла|Василя|Володимира|Сергія|Андрія|Олександра|Тараса|Юрія)\s+[А-ЯІЇЄҐ][а-яіїєґ']+(?:уку|юку|енку|овичу|евичу|ові|еві|єві)\b"
 )
 PREDICATE_WORDS = {
     "є", "це", "немає", "нема", "треба", "можна", "слід", "варто", "необхідно",
@@ -273,6 +288,8 @@ def split_clean_ukrainian_sentences(
         if UNGOVERNED_NUMERAL_RE.search(s):
             continue
         if UNPUNCTUATED_ADVERSATIVE_PARENTHETICAL_RE.search(s):
+            continue
+        if DISCORDANT_PERSONAL_NAME_CASE_RE.search(s):
             continue
         clean_sents.append(s)
     return clean_sents
@@ -964,8 +981,12 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
     if has_unclosed_clarification(s, cur_ves):
         return False
 
-    # 16. Unpunctuated parenthetical following adversative conjunction (Правопис 2019 §158 I.11)
+    # 16. Unpunctuated parenthetical following coordinating/adversative conjunction (Правопис 2019 §158 I.11)
     if UNPUNCTUATED_ADVERSATIVE_PARENTHETICAL_RE.search(s):
+        return False
+
+    # 17. Discordant case in personal name (e.g. genitive first name + dative surname 'Олега Токарчуку')
+    if DISCORDANT_PERSONAL_NAME_CASE_RE.search(s):
         return False
 
     # 4. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)
