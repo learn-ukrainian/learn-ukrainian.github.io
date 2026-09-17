@@ -650,6 +650,26 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.INVALID_NUMERAL_AFFIX_RE.search(frag_80_kh)
     assert miner.is_pristine_eval_sentence(frag_80_kh, cur_ves=cur)
 
+    # Defect 56 / Negative regression (Round 25 P2): Pleonastic calendar date numeral affix '1990-му році' (Городенська 2017, p. 163)
+    frag_1990_mu_rotsi = "Так, батьки киянина Юрія купили дачу в селі Дідівщина у 1990-му році за чотири тисячі рублів (тоді за ці гроші можна було купити кооперативну однокімнатну квартиру)."
+    assert miner.INVALID_CALENDAR_DATE_AFFIX_RE.search(frag_1990_mu_rotsi)
+    assert not miner.is_pristine_eval_sentence(frag_1990_mu_rotsi, cur_ves=cur)
+
+    # Defect 57 / Positive control (Round 25 P2): Properly formatted calendar date 'у 1990 році' (Городенська 2017, p. 163)
+    frag_1990_rotsi = "Так, батьки киянина Юрія купили дачу в селі Дідівщина у 1990 році за чотири тисячі рублів (тоді за ці гроші можна було купити кооперативну однокімнатну квартиру)."
+    assert not miner.INVALID_CALENDAR_DATE_AFFIX_RE.search(frag_1990_rotsi)
+    assert miner.is_pristine_eval_sentence(frag_1990_rotsi, cur_ves=cur)
+
+    # Defect 58 / Positive control (Round 25 P2): Clean replacement literary sentence from same doc
+    frag_didyvshchyna_urozhay = "Родюча ділянка на Дідівщині згодом рятувала родину врожаєм картоплі."
+    assert not miner.INVALID_CALENDAR_DATE_AFFIX_RE.search(frag_didyvshchyna_urozhay)
+    assert miner.is_pristine_eval_sentence(frag_didyvshchyna_urozhay, cur_ves=cur)
+
+    # Defect 59 / Positive control (Round 25 P2): Decades '1990-х років' permitted without false positive
+    frag_1990_kh_rokiv = "Коли криза 1990-х років закінчилась, Юрій з братом умовляли батьків скоротити вирощування картоплі, бо стало дешевше її купувати."
+    assert not miner.INVALID_CALENDAR_DATE_AFFIX_RE.search(frag_1990_kh_rokiv)
+    assert miner.is_pristine_eval_sentence(frag_1990_kh_rokiv, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:

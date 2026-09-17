@@ -200,6 +200,14 @@ INVALID_NUMERAL_AFFIX_RE = re.compile(
     r"\b\d+-(?:ого|их|ім|ій|ий|ому|лому|ему|ти|ими|іх)\b",
     re.IGNORECASE,
 )
+INVALID_CALENDAR_DATE_AFFIX_RE = re.compile(
+    r"\b\d+-(?:го|ого|му|ому|ім|им|ій|й|е|є|а|я)\s+(?:"
+    r"ро(?:ку|ці|ком)|р\."
+    r"|січня|лютого|березня|квітня|травня|червня|липня|серпня|вересня|жовтня|листопада|грудня"
+    r"|годин[іи]"
+    r")\b",
+    re.IGNORECASE,
+)
 PREDICATE_WORDS = {
     "є", "це", "немає", "нема", "треба", "можна", "слід", "варто", "необхідно",
     "потрібно", "жаль", "сором", "пора", "час", "досить", "відомо", "зрозуміло",
@@ -302,6 +310,8 @@ def split_clean_ukrainian_sentences(
         if UNPUNCTUATED_ASYNDETIC_CONDITION_RE.search(s):
             continue
         if INVALID_NUMERAL_AFFIX_RE.search(s):
+            continue
+        if INVALID_CALENDAR_DATE_AFFIX_RE.search(s):
             continue
         clean_sents.append(s)
     return clean_sents
@@ -1007,6 +1017,10 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
 
     # 19. Pleonastic or invalid numeral affix (Городенська 2017, p. 163; Правопис 2019)
     if INVALID_NUMERAL_AFFIX_RE.search(s):
+        return False
+
+    # 20. Pleonastic numeral affix in calendar dates and hours (Городенська 2017, p. 163; Правопис 2019)
+    if INVALID_CALENDAR_DATE_AFFIX_RE.search(s):
         return False
 
     # 4. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)
