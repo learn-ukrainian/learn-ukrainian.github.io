@@ -433,6 +433,22 @@ PARENTHETICAL_PHRASES = {
 }
 
 
+def check_word_has_genitive(w: str, cur_ves: sqlite3.Cursor | None) -> bool:
+    if not cur_ves:
+        return False
+    cur_ves.execute("SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?)", (w.lower(), w.capitalize()))
+    rows = cur_ves.fetchall()
+    return any(":v_rod" in r[0] or ":v_gen" in r[0] for r in rows)
+
+
+def check_word_has_modifier(w: str, cur_ves: sqlite3.Cursor | None) -> bool:
+    if not cur_ves:
+        return False
+    cur_ves.execute("SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?)", (w.lower(), w.capitalize()))
+    rows = cur_ves.fetchall()
+    return any(r[0].startswith("adj") or r[0].startswith("pron") for r in rows)
+
+
 def is_parenthetical_segment(seg: str, cur_ves: sqlite3.Cursor | None) -> bool:
     """Check whether a comma-delimited text segment is an isolated parenthetical word or phrase (Правопис 2019 §158 I.11)."""
     seg_clean = seg.strip().lower()
@@ -443,12 +459,15 @@ def is_parenthetical_segment(seg: str, cur_ves: sqlite3.Cursor | None) -> bool:
         return False
     if any(get_verb_finite_tags(w, cur_ves) for w in words):
         return False
-    # Only recognized parenthetical frames with 'думку' or 'погляд': "на ... думку", "на ... погляд"
-    if words[0] == "на" and (words[-1] in {"думку", "погляд"} or (len(words) >= 2 and words[1] in {"думку", "погляд"})):
-        return True
-    # Only recognized parenthetical frames with 'словами': "словами [когось]"
-    if words[0] == "словами" and len(words) <= 3:
-        return True
+    # Attribution frames with genitive source: 'на думку [автора]', 'на погляд [фахівців]'
+    if words[0] == "на" and len(words) >= 3 and words[1] in {"думку", "погляд"}:
+        return bool(cur_ves and all(check_word_has_genitive(w, cur_ves) for w in words[2:]))
+    # Attribution frames with genitive source: 'словами [Шевченка]'
+    if words[0] == "словами" and 2 <= len(words) <= 4:
+        return bool(cur_ves and all(check_word_has_genitive(w, cur_ves) for w in words[1:]))
+    # Pre-nominal modifier frame: 'на мою власну думку', 'на перший погляд'
+    if words[0] == "на" and len(words) >= 3 and words[-1] in {"думку", "погляд"}:
+        return bool(cur_ves and all(check_word_has_modifier(w, cur_ves) for w in words[1:-1]))
     for w in words:
         if w in PARENTHETICAL_PHRASES:
             continue

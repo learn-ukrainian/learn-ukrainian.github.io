@@ -531,6 +531,28 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.has_homogeneous_verb_comma(frag_valid_dumku, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_valid_dumku, cur_ves=cur)
 
+    # Defect 39 / Negative regression (Round 17 P2): Ordinary prepositional complement 'на думку про відпустку' not exempted from homogeneous predicate comma check (Правопис 2019 §158 I.2, примітка 1; I.11)
+    frag_complement_dumku = "Він реагує на слова, на думку про відпустку, і пише довгого листа."
+    assert not miner.is_parenthetical_segment("на думку про відпустку", cur_ves=cur)
+    assert miner.has_homogeneous_verb_comma(frag_complement_dumku, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_complement_dumku, cur_ves=cur)
+
+    # Positive control 1 (Round 17 P2): Legitimate source attribution parenthetical 'на думку експертів' (Правопис 2019 §158 I.11)
+    frag_valid_attribution = "Він реагує на слова, на думку експертів, і пише довгого листа."
+    assert miner.is_parenthetical_segment("на думку експертів", cur_ves=cur)
+    assert not miner.has_homogeneous_verb_comma(frag_valid_attribution, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_valid_attribution, cur_ves=cur)
+
+    # Positive control 2 (Round 17 P2): Legitimate attribution parenthetical with 'словами' (Правопис 2019 §158 I.11)
+    frag_valid_slovamy = "Він реагує на слова, словами автора, і пише довгого листа."
+    assert miner.is_parenthetical_segment("словами автора", cur_ves=cur)
+    assert not miner.has_homogeneous_verb_comma(frag_valid_slovamy, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_valid_slovamy, cur_ves=cur)
+
+    # Positive control 3 (Round 17 P2): Removing erroneous comma before 'і' restores pristine status for ordinary complements
+    frag_no_erroneous_comma = "Він реагує на слова, на думку про відпустку і пише довгого листа."
+    assert not miner.has_homogeneous_verb_comma(frag_no_erroneous_comma, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:
