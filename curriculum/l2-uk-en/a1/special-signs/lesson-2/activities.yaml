@@ -281,7 +281,7 @@ workbook:
     options:
     - чай
     - чаі
-    - час
+    - чаї
     explanation: 'Напівголосни́й звук [й] познача́ється лі́терою й: чай. — The semivowel sound [j] is
       written with letter й: чай.'
   - sentence: На столі́ лежи́ть смачне́ йа́блуко. — A tasty apple is on the table.
@@ -290,7 +290,7 @@ workbook:
     options:
     - я́блуко
     - йа́блуко
-    - ю́шка
+    - а́блуко
     explanation: 'Сполу́ка зву́ків [йа] на поча́тку сло́ва познача́ється лі́терою я: я́блуко. — The sound
       blend [ja] at the word start is written with letter я: я́блуко.'
   - sentence: У тарі́лці те́пла йу́шка. — There is warm soup in the bowl.
@@ -299,7 +299,7 @@ workbook:
     options:
     - ю́шка
     - йу́шка
-    - я́блуко
+    - у́шка
     explanation: 'Сполу́ка зву́ків [йу] на поча́тку сло́ва познача́ється лі́терою ю: ю́шка. — The sound
       blend [ju] at the word start is written with letter ю: ю́шка.'
   - sentence: У лі́сі живе́ смуга́стий йено́т. — A striped raccoon lives in the forest.
@@ -308,7 +308,7 @@ workbook:
     options:
     - єно́т
     - йено́т
-    - кінь
+    - ено́т
     explanation: 'Сполу́ка зву́ків [йе] на поча́тку сло́ва познача́ється лі́терою є: єно́т. — The sound
       blend [je] at the word start is written with letter є: єно́т.'
   - sentence: На по́лі росте́ сокови́тий буряік. — A juicy beet grows in the field.
@@ -317,7 +317,7 @@ workbook:
     options:
     - буря́к
     - буряік
-    - бур'я́н
+    - буряк
     explanation: 'Сло́во «буря́к» пи́шеться з лі́терою я: буря́к. — The word «буря́к» is written with
       the letter я: буря́к.'
   - sentence: Сього́дні в мі́сті вели́ке свиа́то. — Today there is a big holiday in the city.

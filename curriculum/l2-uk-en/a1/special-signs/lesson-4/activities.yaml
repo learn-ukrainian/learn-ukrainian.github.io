@@ -73,7 +73,7 @@ inline:
     options:
     - сім'я́
     - сімя
-    - свя́то
+    - симя
     explanation: У сло́ві сім'я́ потрі́бен апо́строф. — In the word сім'я́ an apostrophe is needed.
   - sentence: Сього́дні га́рний і те́плий ден.
     error: ден
@@ -81,7 +81,7 @@ inline:
     options:
     - день
     - ден
-    - кін
+    - дєнь
     explanation: День потребу́є м'яко́го зна́ка. — День requires a soft sign.
   - sentence: Сього́дні у мі́сті вели́ке св'ято.
     error: св'ято
@@ -89,7 +89,7 @@ inline:
     options:
     - свя́то
     - св'ято
-    - сім'я́
+    - свиа́то
     explanation: У сло́ві свя́то нема́є апо́строфа. — In the word свя́то there is no apostrophe.
   - sentence: На столі́ лежи́ть вели́ка льожка.
     error: льожка
@@ -97,7 +97,7 @@ inline:
     options:
     - ло́жка
     - льожка
-    - день
+    - ложка
     explanation: Ло́жка не ма́є м'яко́го зна́ка пі́сля л. — Ло́жка has no soft sign after л.
 - id: act-404
   type: match-up
@@ -240,7 +240,7 @@ workbook:
     options:
     - сім'я́
     - сімя
-    - свя́то
+    - симя
     explanation: У сло́ві сім'я́ потрі́бен апо́строф. — In the word сім'я́ an apostrophe is needed.
   - sentence: У руці́ рі́вно пять па́льців.
     error: пять
@@ -248,7 +248,7 @@ workbook:
     options:
     - п'ять
     - пять
-    - сім'я́
+    - пят
     explanation: У сло́ві п'ять потрі́бен апо́строф. — In the word п'ять an apostrophe is needed.
   - sentence: На по́лі росте́ зеле́ний бурян.
     error: бурян
@@ -256,7 +256,7 @@ workbook:
     options:
     - бур'я́н
     - бурян
-    - свя́то
+    - бурян'
     explanation: У сло́ві бур'я́н потрі́бен апо́строф пі́сля р. — In the word бур'я́н an apostrophe is
       needed after р.
   - sentence: Сього́дні ду́же те́плий ден.
@@ -265,7 +265,7 @@ workbook:
     options:
     - день
     - ден
-    - кін
+    - дєнь
     explanation: День потребу́є м'яко́го зна́ка. — День requires a soft sign.
   - sentence: Сього́дні у на́с весе́ле св'ято.
     error: св'ято
@@ -273,7 +273,7 @@ workbook:
     options:
     - свя́то
     - св'ято
-    - сім'я́
+    - свиа́то
     explanation: У сло́ві свя́то нема́є апо́строфа. — In the word свя́то there is no apostrophe.
   - sentence: У су́пі лежи́ть вели́ка льожка.
     error: льожка
@@ -281,7 +281,7 @@ workbook:
     options:
     - ло́жка
     - льожка
-    - день
+    - ложка
     explanation: Ло́жка не ма́є м'яко́го зна́ка пі́сля л. — Ло́жка has no soft sign after л.
 - id: act-w4
   type: true-false

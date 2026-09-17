@@ -617,9 +617,13 @@ def error_correction_item_defects(
     Also enforces the React render contract: after
     ``error_correction_render_values``, at least one chip string equals
     ``correctForm`` exactly (``selectedFix === correctForm``). Glossed chips
-    like ``день (day)`` against bare ``день`` fail here. Shared by upgrade
-    lesson gates and fresh-build python QG. A1 EN scaffolds are writer-required
-    (prompts + advisory warnings), not a hard fail on legacy gold.
+    like ``день (day)`` against bare ``день`` fail here. Count, duplicates, and
+    third-distractor checks use the **rendered** chip list so full-sentence
+    options that collapse to the same replacement are caught. Stress-only
+    contrasts keep their acutes (``мо́локо`` / ``молоко́`` / ``моло́ко`` are
+    three real choices). Shared by upgrade lesson gates and fresh-build
+    python QG. A1 EN scaffolds are writer-required (prompts + advisory
+    warnings), not a hard fail on legacy gold.
     """
     if not isinstance(item, dict):
         return [f"{activity_id}: error-correction item must be a mapping"]
@@ -643,60 +647,91 @@ def error_correction_item_defects(
                 "use a natural Ukrainian carrier (optional EN after —)"
             )
     correction = _ec_item_correction_token(item)
-    labels = _ec_option_labels(item.get("options"))
+    raw_options = item.get("options")
+    labels = _ec_option_labels(raw_options)
     if not labels:
         defects.append(f"{prefix}error-correction options empty (reveal-only is forbidden)")
         return defects
-    if len(labels) < 3:
-        defects.append(
-            f"{prefix}error-correction needs >=3 options (got {len(labels)}); "
-            "tautological [correction, error] is not a real choice"
-        )
-    norm_labels = [strip_acute(nfc(x)).lower() for x in labels]
-    if correction:
-        corr_key = strip_acute(nfc(correction)).lower()
-        if corr_key not in norm_labels:
-            defects.append(f"{prefix}error-correction options must include correction {correction!r}")
-    if error:
-        err_key = strip_acute(nfc(error)).lower()
-        non_error_distractors = [
-            lab for lab, key in zip(labels, norm_labels, strict=True)
-            if key != err_key and (not correction or key != strip_acute(nfc(correction)).lower())
-        ]
-        if not non_error_distractors:
-            defects.append(
-                f"{prefix}error-correction options must include a distractor other than "
-                f"the spotted error {error!r} (not just correction+error)"
-            )
-    # Distinct surface forms (stress-sensitive for pedagogical pairs).
-    surfaces = [nfc(x).lower() for x in labels]
-    if len(set(surfaces)) < len(surfaces):
-        defects.append(f"{prefix}error-correction options contain duplicates")
 
-    # Render-faithful chip contract (same derivation the MDX/React path uses).
+    # Prefer the same chip list the MDX/React path shows the learner.
+    rendered_options: list | None = None
+    correct_form: object = correction
     try:
         from scripts.build.activity_renderer import error_correction_render_values
     except Exception:  # pragma: no cover
         error_correction_render_values = None  # type: ignore[assignment]
     if error_correction_render_values is not None:
-        raw_options = item.get("options")
         correct_form, rendered_options = error_correction_render_values(
             sentence if isinstance(sentence, str) else "",
             error or "",
             correction or item.get("correction") or "",
             raw_options if isinstance(raw_options, list) else [],
         )
-        if (
-            isinstance(correct_form, str)
-            and correct_form.strip()
-            and isinstance(rendered_options, list)
-            and not any(opt == correct_form for opt in rendered_options)
-        ):
+
+    chip_labels = labels
+    if isinstance(rendered_options, list):
+        rendered_labels = _ec_option_labels(rendered_options)
+        if rendered_labels:
+            chip_labels = rendered_labels
+
+    if len(chip_labels) < 3:
+        defects.append(
+            f"{prefix}error-correction needs >=3 options (got {len(chip_labels)}); "
+            "tautological [correction, error] is not a real choice"
+        )
+
+    # Stress-sensitive surfaces: acute placement is a real pedagogical contrast.
+    surfaces = [nfc(x).lower() for x in chip_labels]
+    if len(set(surfaces)) < len(surfaces):
+        defects.append(f"{prefix}error-correction options contain duplicates")
+
+    if isinstance(correct_form, str) and correct_form.strip():
+        if not any(opt == correct_form for opt in (rendered_options or chip_labels)):
+            # Also accept stress-insensitive match only when render list unavailable.
+            if isinstance(rendered_options, list):
+                defects.append(
+                    f"{prefix}error-correction rendered options must include exact "
+                    f"correctForm {correct_form!r} (React chip equality; no gloss/"
+                    f"stress drift vs winning chip)"
+                )
+            else:
+                corr_key = strip_acute(nfc(correct_form)).lower()
+                if corr_key not in [strip_acute(s) for s in surfaces]:
+                    defects.append(
+                        f"{prefix}error-correction options must include correction {correct_form!r}"
+                    )
+        # Word-form correctForm must not be paired with undecomposed sentence chips.
+        if isinstance(rendered_options, list) and " " not in correct_form.strip():
+            for opt in rendered_options:
+                if isinstance(opt, str) and " " in opt.strip():
+                    defects.append(
+                        f"{prefix}error-correction option {opt!r} did not reduce to a "
+                        f"word chip (correctForm is {correct_form!r})"
+                    )
+                    break
+    elif correction:
+        corr_key = strip_acute(nfc(correction)).lower()
+        if corr_key not in [strip_acute(s) for s in surfaces]:
+            defects.append(f"{prefix}error-correction options must include correction {correction!r}")
+
+    if error:
+        err_surf = nfc(error).lower()
+        corr_surf = ""
+        if isinstance(correct_form, str) and correct_form.strip():
+            corr_surf = nfc(correct_form).lower()
+        elif correction:
+            corr_surf = nfc(correction).lower()
+        non_error_distractors = [
+            lab
+            for lab, surf in zip(chip_labels, surfaces, strict=True)
+            if surf != err_surf and (not corr_surf or surf != corr_surf)
+        ]
+        if not non_error_distractors:
             defects.append(
-                f"{prefix}error-correction rendered options must include exact "
-                f"correctForm {correct_form!r} (React chip equality; no gloss/"
-                f"stress drift vs winning chip)"
+                f"{prefix}error-correction options must include a distractor other than "
+                f"the spotted error {error!r} (not just correction+error)"
             )
+
     # Keep signature compatible; EN scaffold is advisory via warnings helper.
     _ = (level, require_en_scaffold)
     return defects

@@ -331,6 +331,45 @@ def test_error_correction_options_gate_rejects_tautology_and_empty():
     assert ok == []
 
 
+def test_error_correction_stress_contrast_is_not_tautology():
+    """Acute-only triples are real choices; do not strip stress before comparing."""
+    ok = gates.error_correction_item_defects(
+        {
+            "sentence": "Це мо́локо. — This is milk.",
+            "error": "мо́локо",
+            "correction": "молоко́",
+            "options": ["молоко́", "мо́локо", "моло́ко"],
+        },
+        level="a1",
+    )
+    assert ok == []
+
+
+def test_error_correction_rendered_duplicate_chips_fail():
+    """Full-sentence options that collapse to the same replacement are duplicates."""
+    collapsed = gates.error_correction_item_defects(
+        {
+            "sentence": "Сьогодні гарний ден.",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день", "ден", "Сьогодні гарний день."],
+        },
+        level="a1",
+    )
+    assert any("duplicate" in d or "distractor" in d for d in collapsed)
+
+    undecomposed = gates.error_correction_item_defects(
+        {
+            "sentence": "Сього́дні га́рний ден. — Today is a nice day.",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день", "ден", "Сього́дні га́рний день."],
+        },
+        level="a1",
+    )
+    assert any("did not reduce to a word chip" in d for d in undecomposed)
+
+
 def test_error_correction_render_faithful_and_a1_en_scaffold():
     glossed = gates.error_correction_item_defects(
         {

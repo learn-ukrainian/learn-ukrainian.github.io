@@ -115,10 +115,11 @@ For `{DIM}` specifically:
     stress mark, IPA).
   - **Find-and-Fix distractor relevance (residual — do NOT re-count chips):**
     Deterministic gates already enforce ≥3 options, non-empty, non-tautology,
-    render-faithful `correctForm` equality, and A1 EN scaffolds. Your job:
+    and render-faithful `correctForm` equality. A1 EN scaffolds on EC stems are
+    writer doctrine + advisory warnings, not a hard gate. Your job:
     are the *third* chips pedagogically related to the spotted error (same
     orthography rule / wiki L2 contrast), or are they unrelated filler
-    (`стан` after spotting `ден`, `сімя` after a soft-sign miss)? Flag
+    (`стан` after spotting `ден`, `кінь` after a [йе]→є miss)? Flag
     `unrelated_ec_distractor` with the exact options list when a distractor
     does not test the taught contrast. Do not score stress placement or chip
     string equality — those are oracle/gate work.
