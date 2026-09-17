@@ -529,3 +529,6 @@ data/telemetry/*
 # JSONL shards stay local research partition (#8007).
 data/projects/open_model_data/decolonization/stem_controls/*_controls.jsonl
 data/projects/open_model_data/decolonization/stem_controls/*_pairs.jsonl
+
+# Regenerable tracked-doc inventory and cold-start receipts (#5536).
+/audit/docs-inventory/

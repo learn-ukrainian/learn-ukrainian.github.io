@@ -1,0 +1,286 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "git_commit": {
+      "type": "string"
+    },
+    "source": {
+      "const": "git_index"
+    },
+    "tracked_file_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "inventory_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "history_scope": {
+      "type": "string"
+    },
+    "history_shallow": {
+      "type": "boolean"
+    },
+    "policy": {
+      "type": "object",
+      "properties": {
+        "parse_limit_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "root_files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "read_roots": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "excluded_components": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "parse_limit_bytes",
+        "root_files",
+        "read_roots",
+        "excluded_components"
+      ],
+      "additionalProperties": false
+    },
+    "counts": {
+      "type": "object",
+      "properties": {
+        "documents": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "eligible_tracked_files": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "references": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "documents",
+        "eligible_tracked_files",
+        "references"
+      ],
+      "additionalProperties": false
+    },
+    "documents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "lines": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "git_blob": {
+            "type": "string"
+          },
+          "git_mode": {
+            "enum": [
+              "100644",
+              "100755"
+            ]
+          },
+          "history": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "latest_commit": {
+                    "type": "string"
+                  },
+                  "latest_at": {
+                    "type": "string"
+                  },
+                  "first_at": {
+                    "type": "string"
+                  },
+                  "commit_count": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                },
+                "required": [
+                  "latest_commit",
+                  "latest_at",
+                  "first_at",
+                  "commit_count"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "location": {
+            "enum": [
+              "root_instruction",
+              "archive",
+              "generated",
+              "reference",
+              "binding_rule",
+              "adr",
+              "planning",
+              "operational",
+              "curated",
+              "supporting"
+            ]
+          },
+          "metadata_errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "authority_markers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "candidate_lifecycle": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "enum": [
+                      "draft",
+                      "active",
+                      "superseded",
+                      "archive"
+                    ]
+                  },
+                  "confidence": {
+                    "enum": [
+                      "explicit",
+                      "location_only"
+                    ]
+                  },
+                  "evidence": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "value",
+                  "confidence",
+                  "evidence"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "unresolved_local_references": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "analysis": {
+            "enum": [
+              "complete",
+              "non_utf8",
+              "size_limit"
+            ]
+          },
+          "inbound_references": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "outbound_references": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "path",
+          "type",
+          "bytes",
+          "lines",
+          "sha256",
+          "git_blob",
+          "git_mode",
+          "history",
+          "location",
+          "metadata_errors",
+          "authority_markers",
+          "candidate_lifecycle",
+          "unresolved_local_references",
+          "analysis",
+          "inbound_references",
+          "outbound_references"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "exact_duplicates": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "whitespace_duplicate_candidates": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "git_commit",
+    "source",
+    "tracked_file_digest",
+    "inventory_digest",
+    "history_scope",
+    "history_shallow",
+    "policy",
+    "counts",
+    "documents",
+    "exact_duplicates",
+    "whitespace_duplicate_candidates"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Documentation inventory manifest v1"
+}
