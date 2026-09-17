@@ -1,4 +1,4 @@
-import { describe, test, expect, vi } from 'vitest';
+import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ErrorCorrection, { ErrorCorrectionItem, tokenizeErrorSentence } from '@site/src/components/ErrorCorrection';
@@ -50,6 +50,10 @@ function retryBtn(container: HTMLElement) {
 // ── ErrorCorrectionItem ───────────────────────────────────────────────────────
 
 describe('stressed Ukrainian tokens', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   test('combining acute stays inside the word instead of becoming a lone apostrophe token', () => {
     const tokens = tokenizeErrorSentence('Приві́т, па́не профе́соре!');
     expect(tokens.filter((t) => t.trim() && !/^[,.!]+$/.test(t))).toEqual([
@@ -80,6 +84,10 @@ describe('stressed Ukrainian tokens', () => {
 });
 
 describe('hyphenated tokens', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   test('a hyphenated word is one token, not split at the hyphen', () => {
     const tokens = tokenizeErrorSentence('Це се-ло гарне.');
     expect(tokens.filter((t) => t.trim() && !/^[,.!]+$/.test(t))).toEqual([
@@ -133,6 +141,10 @@ describe('hyphenated tokens', () => {
 });
 
 describe('numeral tokens', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   test('digits stay inside the word token instead of becoming punctuation', () => {
     const tokens = tokenizeErrorSentence('Мені 30 років.');
     expect(tokens.filter((t) => t.trim() && !/^[,.!]+$/.test(t))).toEqual([
@@ -160,6 +172,10 @@ describe('numeral tokens', () => {
 });
 
 describe('ErrorCorrectionItem (identify step)', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   const baseProps = {
     sentence: 'I goed to school yesterday.',
     errorWord: 'goed',
@@ -201,6 +217,10 @@ describe('ErrorCorrectionItem (identify step)', () => {
 });
 
 describe('ErrorCorrectionItem (correct → identify → fix → complete path)', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   const baseProps = {
     sentence: 'I goed to school yesterday.',
     errorWord: 'goed',
@@ -298,6 +318,10 @@ describe('ErrorCorrectionItem (correct → identify → fix → complete path)',
 });
 
 describe('ErrorCorrectionItem (wrong-word attempt during identify)', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   const baseProps = {
     sentence: 'I goed to school yesterday.',
     errorWord: 'goed',
@@ -328,6 +352,10 @@ describe('ErrorCorrectionItem (wrong-word attempt during identify)', () => {
 });
 
 describe('ErrorCorrectionItem (no-error path)', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   const noErrorProps = {
     sentence: 'I went to school yesterday.',
     errorWord: null,
@@ -363,6 +391,10 @@ describe('ErrorCorrectionItem (no-error path)', () => {
 });
 
 describe('ErrorCorrectionItem multi-word error', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   // The component supports multi-word error phrases via
   // `errorWord.split(/\s+/)` — clicking ANY word that belongs to the
   // phrase should advance to the fix step, and the stored selection
@@ -418,6 +450,10 @@ describe('ErrorCorrectionItem multi-word error', () => {
 });
 
 describe('ErrorCorrectionItem sentence-level rewrite without options', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   const props = {
     sentence: 'I will to read the book tomorrow.',
     errorWord: 'I will to read the book tomorrow.',
@@ -454,6 +490,10 @@ describe('ErrorCorrectionItem sentence-level rewrite without options', () => {
 });
 
 describe('ErrorCorrectionItem keyboard a11y', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   // Clickable word spans are role="button" + tabIndex=0 during the
   // identify step, and MUST respond to Enter and Space per WCAG
   // SC 2.1.1. This is why the onKeyDown handler exists — adding
@@ -523,6 +563,10 @@ describe('ErrorCorrectionItem keyboard a11y', () => {
 });
 
 describe('ErrorCorrectionItem Ukrainian labels', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   const props = {
     sentence: 'Я пішов до школу вчора.',
     errorWord: 'школу',
@@ -556,6 +600,10 @@ describe('ErrorCorrectionItem Ukrainian labels', () => {
 // ── ErrorCorrection wrapper ──────────────────────────────────────────────────
 
 describe('ErrorCorrection wrapper', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   const items = [
     {
       sentence: 'I goed to school.',
@@ -589,12 +637,15 @@ describe('ErrorCorrection wrapper', () => {
   });
 
   test('renders English header by default', () => {
+    document.documentElement.dataset.chromeLocale = 'en';
     render(<ErrorCorrection items={items} />);
     expect(screen.getAllByText('Find and Fix').length).toBeGreaterThan(0);
   });
 
-  test('renders Ukrainian header when isUkrainian=true', () => {
-    render(<ErrorCorrection items={items} isUkrainian />);
+  test('renders Ukrainian header when chrome locale is uk', () => {
+    document.documentElement.dataset.chromeLocale = 'uk';
+    const view = render(<ErrorCorrection items={items} isUkrainian={false} />);
+    view.rerender(<ErrorCorrection items={items} isUkrainian={false} />);
     expect(screen.getAllByText('Знайдіть і виправте помилку').length).toBeGreaterThan(0);
   });
 

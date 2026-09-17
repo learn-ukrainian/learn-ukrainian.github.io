@@ -2,6 +2,11 @@ import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import { parseMarkdown, shuffle } from './utils';
 import ActivityHelp from './ActivityHelp';
+import {
+  chromeFacingBilingual,
+  useActivityIsUkrainian,
+  useChromeLocale,
+} from '../lib/i18n/useChromeLocale';
 
 interface QuizQuestionProps {
   /**
@@ -131,7 +136,10 @@ interface QuizProps {
   isUkrainian?: boolean;
 }
 
-export default function Quiz({ questions, instruction, children, isUkrainian }: QuizProps) {
+export default function Quiz({ questions, instruction, children, isUkrainian: bakedIsUkrainian }: QuizProps) {
+  const isUkrainian = useActivityIsUkrainian(bakedIsUkrainian);
+  const locale = useChromeLocale();
+
   const headerLabel = isUkrainian ? 'Тест' : 'Quiz';
 
   return (
@@ -141,8 +149,8 @@ export default function Quiz({ questions, instruction, children, isUkrainian }: 
         <span>{headerLabel}</span>
         <ActivityHelp activityType="quiz" isUkrainian={isUkrainian} />
       </div>
-      {instruction && (
-        <p className={styles.instruction}><strong>{instruction}</strong></p>
+      {chromeFacingBilingual(instruction, locale) && (
+        <p className={styles.instruction}><strong>{chromeFacingBilingual(instruction, locale)}</strong></p>
       )}
       <div className={styles.activityContent}>
         {questions ? questions.map((item, index) => {

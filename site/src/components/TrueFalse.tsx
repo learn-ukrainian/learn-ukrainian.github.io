@@ -2,6 +2,11 @@
  * Site compatibility shim. The source implementation is versioned in
  * @learn-ukrainian/activity-kit; these declarations retain lesson-schema input.
  */
+import KitTrueFalse, {
+  TrueFalseQuestion as KitTrueFalseQuestion,
+} from '../../../packages/activity-kit/src/components/TrueFalse';
+import { useActivityIsUkrainian } from '../lib/i18n/useChromeLocale';
+
 export interface TrueFalseQuestionProps {
   /**
    * @schemaDescription Statement the learner marks true or false.
@@ -62,4 +67,13 @@ export interface TrueFalseProps {
   onComplete?: () => void;
 }
 
-export { default, TrueFalseQuestion } from '../../../packages/activity-kit/src/components/TrueFalse';
+export function TrueFalseQuestion(props: TrueFalseQuestionProps) {
+  const isUkrainian = useActivityIsUkrainian(props.isUkrainian);
+  return <KitTrueFalseQuestion {...props} isUkrainian={isUkrainian} />;
+}
+
+/** Follow site chrome locale toggle; ignore bake-time isUkrainian={false}. */
+export default function TrueFalse(props: TrueFalseProps) {
+  const isUkrainian = useActivityIsUkrainian(props.isUkrainian);
+  return <KitTrueFalse {...props} isUkrainian={isUkrainian} />;
+}
