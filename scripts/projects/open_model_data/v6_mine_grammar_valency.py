@@ -1187,8 +1187,40 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
     if not content_tokens:
         return False
 
-    # In an apposition, an appositive noun renaming the head must agree in case
+    # Identify all nominative nouns in content_tokens
+    nom_nouns = []
     for tok in content_tokens:
+        cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (tok,))
+        tok_rows = cur.fetchall()
+        noun_toks = [r for r in tok_rows if r[0] == "noun"]
+        if noun_toks:
+            noun_cases = {tag.split(":v_")[1].split(":")[0] for r in noun_toks for tag in [r[1]] if ":v_" in tag}
+            if "naz" in noun_cases:
+                nom_nouns.append(tok)
+
+    # If there are 2 or more nominative nouns (e.g. 'її мати лікарка', 'батько вчитель'),
+    # this is a two-member clause with an omitted zero copula (Правопис 2019 §161.I.1, примітка 1,
+    # and §161.I.10), not an apposition.
+    if len(nom_nouns) >= 2:
+        return False
+
+    # If exactly 1 nominative noun: check if it is postposed by a predicative adjective (e.g. 'мати щаслива')
+    if len(nom_nouns) == 1 and len(content_tokens) >= 2:
+        idx = content_tokens.index(nom_nouns[0])
+        possessives = {
+            "її", "його", "їхній", "їхня", "їхнє", "їхні",
+            "мій", "моя", "моє", "мої", "твій", "твоя", "твоє", "твої",
+            "наш", "наша", "наше", "наші", "ваш", "ваша", "ваше", "ваші",
+        }
+        if (idx == 0 or (idx == 1 and content_tokens[0] in possessives)) and idx + 1 < len(content_tokens):
+            next_tok = content_tokens[idx + 1]
+            cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (next_tok,))
+            next_rows = cur.fetchall()
+            if any(r[0] == "adj" and ":v_naz" in r[1] for r in next_rows):
+                return False
+
+    # For a genuine appositive noun phrase renaming the head, enforce case agreement
+    for tok in nom_nouns:
         cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (tok,))
         tok_rows = cur.fetchall()
         noun_toks = [r for r in tok_rows if r[0] == "noun"]

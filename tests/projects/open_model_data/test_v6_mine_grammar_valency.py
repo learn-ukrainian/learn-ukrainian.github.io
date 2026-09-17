@@ -869,6 +869,11 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition)) == 1
 
+    # Defect 95 / Positive regression (Round 41 P2): Valid zero-copula noun-subject parenthetical clause between dashes accepted (Правопис 2019 §161.I.1, примітка 1, and §161.I.10)
+    frag_noun_subject_copula = "Він говорив із сестрою — її мати лікарка — про роботу."
+    assert not miner.has_discordant_dash_apposition(frag_noun_subject_copula, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_noun_subject_copula, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_noun_subject_copula)) == 1
 
 
 def test_release_receipt_schema_and_checksum() -> None:
