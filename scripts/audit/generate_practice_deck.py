@@ -1900,6 +1900,8 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
     }
     if sense is not None:
         lexeme["senseId"] = str(sense["id"]).strip()
+    else:
+        lexeme["senseId"] = f"{lemma}_s1"
     example = entry.get("practice_example")
     if isinstance(example, dict):
         text = _clean_text(example.get("text"))
@@ -4935,6 +4937,7 @@ def build_practice_shards(
                     "hasCloze": bool(cloze_ids),
                     "clozeIds": cloze_ids,
                     "newOrder": order,
+                    "senseId": lexeme.get("senseId") or f"{lexeme.get('lemma', lexeme['lemmaId'])}_s1",
                 }
             )
         coverage = round(len({item["lemmaId"] for item in level_cloze}) / len(level_lexemes), 4)
@@ -5023,6 +5026,20 @@ def build_practice_shards(
             "cloze": cloze_payload,
             **mode_payloads,
         }
+    for level_shards in shards.values():
+        for kind, payload in level_shards.items():
+            key = (
+                "items"
+                if kind == "index"
+                else (kind if kind in {"lexemes", "cloze"} else MODE_BODY_KEYS.get(kind, kind))
+            )
+            items = payload.get(key)
+            if isinstance(items, list):
+                for item in items:
+                    if isinstance(item, dict) and not item.get("senseId"):
+                        lemma = item.get("lemma") or item.get("lemmaId")
+                        if lemma:
+                            item["senseId"] = f"{lemma}_s1"
     return shards
 
 
@@ -5790,27 +5807,32 @@ def apply_size_budgets(
             if isinstance(item, dict) and _clean_text(item.get("lemmaId"))
         }
         original_positions = {id(item): index for index, item in enumerate(original_index)}
-        cloze_first = [
-            item
-            for item in original_index
-            if isinstance(item, dict)
-            and (
-                item.get("clozeIds")
-                or any(mode in item.get("modes", []) for mode in DRILL_MODES)
-            )
-        ]
-        cloze_first_ids = {id(item) for item in cloze_first}
-        non_cloze = [item for item in original_index if id(item) not in cloze_first_ids]
+
+        def item_mode_priority(item: Any) -> int:
+            if not isinstance(item, dict):
+                return 3
+            modes = item.get("modes", [])
+            # Priority 0: thin pair modes
+            if any(m in modes for m in ("synonym", "antonym", "heritage", "paronym", "homonym")):
+                return 0
+            # Priority 1: cloze or other drill modes
+            if item.get("clozeIds") or any(m in modes for m in DRILL_MODES):
+                return 1
+            # Priority 2: plain lexemes
+            return 2
 
         def surface_item_size(item: Any) -> int:
             lemma_id = _clean_text(item.get("lemmaId")) if isinstance(item, dict) else None
             return item_size(item) + item_size(lexeme_by_id.get(lemma_id))
 
         candidates = sorted(
-            cloze_first,
-            key=lambda item: (surface_item_size(item), original_positions[id(item)]),
+            original_index,
+            key=lambda item: (
+                item_mode_priority(item),
+                surface_item_size(item),
+                original_positions[id(item)],
+            ),
         )
-        candidates.extend(non_cloze)
 
         def apply_selection(selected: list[Any]) -> None:
             kept_index = sorted(selected, key=lambda item: original_positions[id(item)])

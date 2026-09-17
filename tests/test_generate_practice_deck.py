@@ -1946,7 +1946,7 @@ def test_size_budget_surface_trim_prioritizes_cloze_coverage(capsys: pytest.Capt
 def test_size_budget_surface_trim_prioritizes_drill_modes_and_preserves_cross_level_mode_items(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    lemma_ids = ("plain1", "syn_leg", "plain2", "plain3")
+    lemma_ids = ("plain1", "cloze_only", "syn_leg", "plain2")
     index = {
         "schema": "atlas-practice-index",
         "items": [
@@ -1954,20 +1954,24 @@ def test_size_budget_surface_trim_prioritizes_drill_modes_and_preserves_cross_le
                 "lemmaId": lemma_id,
                 "lemma": lemma_id,
                 "cefr": "B1",
-                "modes": ["flashcards", "synonym"] if lemma_id == "syn_leg" else ["flashcards"],
-                "hasCloze": False,
-                "clozeIds": [],
+                "modes": (
+                    ["flashcards", "synonym"]
+                    if lemma_id == "syn_leg"
+                    else (["flashcards", "cloze"] if lemma_id == "cloze_only" else ["flashcards"])
+                ),
+                "hasCloze": lemma_id == "cloze_only",
+                "clozeIds": ["cloze:1"] if lemma_id == "cloze_only" else [],
                 "newOrder": order,
             }
             for order, lemma_id in enumerate(lemma_ids)
         ],
         "counts": {
             "lexemes": len(lemma_ids),
-            "cloze": 0,
-            "clozeEligibleLexemes": 0,
-            "clozeCoverage": 0.0,
-            "modeCounts": {"synonym": 1},
-            "modeCoverage": {"synonym": 0.25},
+            "cloze": 1,
+            "clozeEligibleLexemes": 1,
+            "clozeCoverage": 0.25,
+            "modeCounts": {"synonym": 1, "cloze": 1},
+            "modeCoverage": {"synonym": 0.25, "cloze": 0.25},
         },
     }
     lexemes = {
@@ -1986,8 +1990,8 @@ def test_size_budget_surface_trim_prioritizes_drill_modes_and_preserves_cross_le
     }
     shards = {"B1": {"index": index, "lexemes": lexemes, "synonym": synonym}}
 
-    probe_index = {**index, "items": [index["items"][1]]}
-    probe_lexemes = {**lexemes, "lexemes": [lexemes["lexemes"][1]]}
+    probe_index = {**index, "items": [index["items"][2]]}
+    probe_lexemes = {**lexemes, "lexemes": [lexemes["lexemes"][2]]}
     index_budget = generate_practice_deck._size_budget(probe_index, 1_000_000, 1_000_000)
     lexeme_budget = generate_practice_deck._size_budget(probe_lexemes, 1_000_000, 1_000_000)
     apply_size_budgets(
