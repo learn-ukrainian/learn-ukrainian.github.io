@@ -14105,3 +14105,2793 @@ pairs:
     answer_form: юдофільський
     confusable_form: юдофобський
     origin: authored-antonym-frame
+- slugA: адекватний
+  slugB: неадекватний
+  distinction_gloss_uk: «адекватний» — протилежність за значенням до «неадекватний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «адекватний» є антонімом до слова ___ .
+    answer_form: неадекватний
+    confusable_form: адекватний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «неадекватний» є антонімом до слова ___ .
+    answer_form: адекватний
+    confusable_form: неадекватний
+    origin: authored-antonym-frame
+- slugA: бажаний
+  slugB: небажаний
+  distinction_gloss_uk: «бажаний» — протилежність за значенням до «небажаний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «бажаний» є антонімом до слова ___ .
+    answer_form: небажаний
+    confusable_form: бажаний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «небажаний» є антонімом до слова ___ .
+    answer_form: бажаний
+    confusable_form: небажаний
+    origin: authored-antonym-frame
+- slugA: болісний
+  slugB: безболісний
+  distinction_gloss_uk: «болісний» — протилежність за значенням до «безболісний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «болісний» є антонімом до слова ___ .
+    answer_form: безболісний
+    confusable_form: болісний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «безболісний» є антонімом до слова ___ .
+    answer_form: болісний
+    confusable_form: безболісний
+    origin: authored-antonym-frame
+- slugA: буття
+  slugB: небуття
+  distinction_gloss_uk: «буття» — протилежність за значенням до «небуття».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «буття» є антонімом до слова ___ .
+    answer_form: небуття
+    confusable_form: буття
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «небуття» є антонімом до слова ___ .
+    answer_form: буття
+    confusable_form: небуття
+    origin: authored-antonym-frame
+- slugA: вдало
+  slugB: невдало
+  distinction_gloss_uk: «вдало» — протилежність за значенням до «невдало».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «вдало» є антонімом до слова ___ .
+    answer_form: невдало
+    confusable_form: вдало
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невдало» є антонімом до слова ___ .
+    answer_form: вдало
+    confusable_form: невдало
+    origin: authored-antonym-frame
+- slugA: вдячність
+  slugB: невдячність
+  distinction_gloss_uk: «вдячність» — протилежність за значенням до «невдячність».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «вдячність» є антонімом до слова ___ .
+    answer_form: невдячність
+    confusable_form: вдячність
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невдячність» є антонімом до слова ___ .
+    answer_form: вдячність
+    confusable_form: невдячність
+    origin: authored-antonym-frame
+- slugA: вербальний
+  slugB: невербальний
+  distinction_gloss_uk: «вербальний» — протилежність за значенням до «невербальний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «вербальний» є антонімом до слова ___ .
+    answer_form: невербальний
+    confusable_form: вербальний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невербальний» є антонімом до слова ___ .
+    answer_form: вербальний
+    confusable_form: невербальний
+    origin: authored-antonym-frame
+- slugA: весело
+  slugB: невесело
+  distinction_gloss_uk: «весело» — протилежність за значенням до «невесело».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «весело» є антонімом до слова ___ .
+    answer_form: невесело
+    confusable_form: весело
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невесело» є антонімом до слова ___ .
+    answer_form: весело
+    confusable_form: невесело
+    origin: authored-antonym-frame
+- slugA: вибагливий
+  slugB: невибагливий
+  distinction_gloss_uk: «вибагливий» — протилежність за значенням до «невибагливий».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «вибагливий» є антонімом до слова ___ .
+    answer_form: невибагливий
+    confusable_form: вибагливий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невибагливий» є антонімом до слова ___ .
+    answer_form: вибагливий
+    confusable_form: невибагливий
+    origin: authored-antonym-frame
+- slugA: вибагливість
+  slugB: невибагливість
+  distinction_gloss_uk: «вибагливість» — протилежність за значенням до «невибагливість».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «вибагливість» є антонімом до слова ___ .
+    answer_form: невибагливість
+    confusable_form: вибагливість
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невибагливість» є антонімом до слова ___ .
+    answer_form: вибагливість
+    confusable_form: невибагливість
+    origin: authored-antonym-frame
+- slugA: вигідно
+  slugB: невигідно
+  distinction_gloss_uk: «вигідно» — протилежність за значенням до «невигідно».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «вигідно» є антонімом до слова ___ .
+    answer_form: невигідно
+    confusable_form: вигідно
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невигідно» є антонімом до слова ___ .
+    answer_form: вигідно
+    confusable_form: невигідно
+    origin: authored-antonym-frame
+- slugA: видимий
+  slugB: невидимий
+  distinction_gloss_uk: «видимий» — протилежність за значенням до «невидимий».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «видимий» є антонімом до слова ___ .
+    answer_form: невидимий
+    confusable_form: видимий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невидимий» є антонімом до слова ___ .
+    answer_form: видимий
+    confusable_form: невидимий
+    origin: authored-antonym-frame
+- slugA: визнаний
+  slugB: невизнаний
+  distinction_gloss_uk: «визнаний» — протилежність за значенням до «невизнаний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «визнаний» є антонімом до слова ___ .
+    answer_form: невизнаний
+    confusable_form: визнаний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невизнаний» є антонімом до слова ___ .
+    answer_form: визнаний
+    confusable_form: невизнаний
+    origin: authored-antonym-frame
+- slugA: визначений
+  slugB: невизначений
+  distinction_gloss_uk: «визначений» — протилежність за значенням до «невизначений».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «визначений» є антонімом до слова ___ .
+    answer_form: невизначений
+    confusable_form: визначений
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невизначений» є антонімом до слова ___ .
+    answer_form: визначений
+    confusable_form: невизначений
+    origin: authored-antonym-frame
+- slugA: визначеність
+  slugB: невизначеність
+  distinction_gloss_uk: «визначеність» — протилежність за значенням до «невизначеність».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «визначеність» є антонімом до слова ___ .
+    answer_form: невизначеність
+    confusable_form: визначеність
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невизначеність» є антонімом до слова ___ .
+    answer_form: визначеність
+    confusable_form: невизначеність
+    origin: authored-antonym-frame
+- slugA: виконаний
+  slugB: невиконаний
+  distinction_gloss_uk: «виконаний» — протилежність за значенням до «невиконаний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «виконаний» є антонімом до слова ___ .
+    answer_form: невиконаний
+    confusable_form: виконаний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невиконаний» є антонімом до слова ___ .
+    answer_form: виконаний
+    confusable_form: невиконаний
+    origin: authored-antonym-frame
+- slugA: вимушено
+  slugB: невимушено
+  distinction_gloss_uk: «вимушено» — протилежність за значенням до «невимушено».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «вимушено» є антонімом до слова ___ .
+    answer_form: невимушено
+    confusable_form: вимушено
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невимушено» є антонімом до слова ___ .
+    answer_form: вимушено
+    confusable_form: невимушено
+    origin: authored-antonym-frame
+- slugA: винний
+  slugB: невинний
+  distinction_gloss_uk: «винний» — протилежність за значенням до «невинний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «винний» є антонімом до слова ___ .
+    answer_form: невинний
+    confusable_form: винний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невинний» є антонімом до слова ___ .
+    answer_form: винний
+    confusable_form: невинний
+    origin: authored-antonym-frame
+- slugA: виправданий
+  slugB: невиправданий
+  distinction_gloss_uk: «виправданий» — протилежність за значенням до «невиправданий».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «виправданий» є антонімом до слова ___ .
+    answer_form: невиправданий
+    confusable_form: виправданий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невиправданий» є антонімом до слова ___ .
+    answer_form: виправданий
+    confusable_form: невиправданий
+    origin: authored-antonym-frame
+- slugA: виразний
+  slugB: невиразний
+  distinction_gloss_uk: «виразний» — протилежність за значенням до «невиразний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «виразний» є антонімом до слова ___ .
+    answer_form: невиразний
+    confusable_form: виразний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невиразний» є антонімом до слова ___ .
+    answer_form: виразний
+    confusable_form: невиразний
+    origin: authored-antonym-frame
+- slugA: властивий
+  slugB: невластивий
+  distinction_gloss_uk: «властивий» — протилежність за значенням до «невластивий».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «властивий» є антонімом до слова ___ .
+    answer_form: невластивий
+    confusable_form: властивий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невластивий» є антонімом до слова ___ .
+    answer_form: властивий
+    confusable_form: невластивий
+    origin: authored-antonym-frame
+- slugA: вміння
+  slugB: невміння
+  distinction_gloss_uk: «вміння» — протилежність за значенням до «невміння».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «вміння» є антонімом до слова ___ .
+    answer_form: невміння
+    confusable_form: вміння
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невміння» є антонімом до слова ___ .
+    answer_form: вміння
+    confusable_form: невміння
+    origin: authored-antonym-frame
+- slugA: впевнений
+  slugB: невпевнений
+  distinction_gloss_uk: «впевнений» — протилежність за значенням до «невпевнений».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «впевнений» є антонімом до слова ___ .
+    answer_form: невпевнений
+    confusable_form: впевнений
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невпевнений» є антонімом до слова ___ .
+    answer_form: впевнений
+    confusable_form: невпевнений
+    origin: authored-antonym-frame
+- slugA: впевненість
+  slugB: невпевненість
+  distinction_gloss_uk: «впевненість» — протилежність за значенням до «невпевненість».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «впевненість» є антонімом до слова ___ .
+    answer_form: невпевненість
+    confusable_form: впевненість
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невпевненість» є антонімом до слова ___ .
+    answer_form: впевненість
+    confusable_form: невпевненість
+    origin: authored-antonym-frame
+- slugA: врожай
+  slugB: неврожай
+  distinction_gloss_uk: «врожай» — протилежність за значенням до «неврожай».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «врожай» є антонімом до слова ___ .
+    answer_form: неврожай
+    confusable_form: врожай
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «неврожай» є антонімом до слова ___ .
+    answer_form: врожай
+    confusable_form: неврожай
+    origin: authored-antonym-frame
+- slugA: вчасно
+  slugB: невчасно
+  distinction_gloss_uk: «вчасно» — протилежність за значенням до «невчасно».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «вчасно» є антонімом до слова ___ .
+    answer_form: невчасно
+    confusable_form: вчасно
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невчасно» є антонімом до слова ___ .
+    answer_form: вчасно
+    confusable_form: невчасно
+    origin: authored-antonym-frame
+- slugA: відомий
+  slugB: невідомий
+  distinction_gloss_uk: «відомий» — протилежність за значенням до «невідомий».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «відомий» є антонімом до слова ___ .
+    answer_form: невідомий
+    confusable_form: відомий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невідомий» є антонімом до слова ___ .
+    answer_form: відомий
+    confusable_form: невідомий
+    origin: authored-antonym-frame
+- slugA: відомо
+  slugB: невідомо
+  distinction_gloss_uk: «відомо» — протилежність за значенням до «невідомо».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «відомо» є антонімом до слова ___ .
+    answer_form: невідомо
+    confusable_form: відомо
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невідомо» є антонімом до слова ___ .
+    answer_form: відомо
+    confusable_form: невідомо
+    origin: authored-antonym-frame
+- slugA: відповідальність
+  slugB: безвідповідальність
+  distinction_gloss_uk: «відповідальність» — протилежність за значенням до «безвідповідальність».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «відповідальність» є антонімом до слова ___ .
+    answer_form: безвідповідальність
+    confusable_form: відповідальність
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «безвідповідальність» є антонімом до слова ___ .
+    answer_form: відповідальність
+    confusable_form: безвідповідальність
+    origin: authored-antonym-frame
+- slugA: відповідний
+  slugB: невідповідний
+  distinction_gloss_uk: «відповідний» — протилежність за значенням до «невідповідний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «відповідний» є антонімом до слова ___ .
+    answer_form: невідповідний
+    confusable_form: відповідний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невідповідний» є антонімом до слова ___ .
+    answer_form: відповідний
+    confusable_form: невідповідний
+    origin: authored-antonym-frame
+- slugA: відповідність
+  slugB: невідповідність
+  distinction_gloss_uk: «відповідність» — протилежність за значенням до «невідповідність».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «відповідність» є антонімом до слова ___ .
+    answer_form: невідповідність
+    confusable_form: відповідність
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невідповідність» є антонімом до слова ___ .
+    answer_form: відповідність
+    confusable_form: невідповідність
+    origin: authored-antonym-frame
+- slugA: вітряний
+  slugB: безвітряний
+  distinction_gloss_uk: «вітряний» — протилежність за значенням до «безвітряний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «вітряний» є антонімом до слова ___ .
+    answer_form: безвітряний
+    confusable_form: вітряний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «безвітряний» є антонімом до слова ___ .
+    answer_form: вітряний
+    confusable_form: безвітряний
+    origin: authored-antonym-frame
+- slugA: гаразд
+  slugB: негаразд
+  distinction_gloss_uk: «гаразд» — протилежність за значенням до «негаразд».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «гаразд» є антонімом до слова ___ .
+    answer_form: негаразд
+    confusable_form: гаразд
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «негаразд» є антонімом до слова ___ .
+    answer_form: гаразд
+    confusable_form: негаразд
+    origin: authored-antonym-frame
+- slugA: гарний
+  slugB: негарний
+  distinction_gloss_uk: «гарний» — протилежність за значенням до «негарний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «гарний» є антонімом до слова ___ .
+    answer_form: негарний
+    confusable_form: гарний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «негарний» є антонімом до слова ___ .
+    answer_form: гарний
+    confusable_form: негарний
+    origin: authored-antonym-frame
+- slugA: глибоко
+  slugB: неглибоко
+  distinction_gloss_uk: «глибоко» — протилежність за значенням до «неглибоко».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «глибоко» є антонімом до слова ___ .
+    answer_form: неглибоко
+    confusable_form: глибоко
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «неглибоко» є антонімом до слова ___ .
+    answer_form: глибоко
+    confusable_form: неглибоко
+    origin: authored-antonym-frame
+- slugA: голосно
+  slugB: неголосно
+  distinction_gloss_uk: «голосно» — протилежність за значенням до «неголосно».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «голосно» є антонімом до слова ___ .
+    answer_form: неголосно
+    confusable_form: голосно
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «неголосно» є антонімом до слова ___ .
+    answer_form: голосно
+    confusable_form: неголосно
+    origin: authored-antonym-frame
+- slugA: грамотно
+  slugB: неграмотно
+  distinction_gloss_uk: «грамотно» — протилежність за значенням до «неграмотно».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «грамотно» є антонімом до слова ___ .
+    answer_form: неграмотно
+    confusable_form: грамотно
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «неграмотно» є антонімом до слова ___ .
+    answer_form: грамотно
+    confusable_form: неграмотно
+    origin: authored-antonym-frame
+- slugA: громадський
+  slugB: антигромадський
+  distinction_gloss_uk: «громадський» — протилежність за значенням до «антигромадський».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «громадський» є антонімом до слова ___ .
+    answer_form: антигромадський
+    confusable_form: громадський
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «антигромадський» є антонімом до слова ___ .
+    answer_form: громадський
+    confusable_form: антигромадський
+    origin: authored-antonym-frame
+- slugA: грішний
+  slugB: безгрішний
+  distinction_gloss_uk: «грішний» — протилежність за значенням до «безгрішний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «грішний» є антонімом до слова ___ .
+    answer_form: безгрішний
+    confusable_form: грішний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «безгрішний» є антонімом до слова ___ .
+    answer_form: грішний
+    confusable_form: безгрішний
+    origin: authored-antonym-frame
+- slugA: гідний
+  slugB: негідний
+  distinction_gloss_uk: «гідний» — протилежність за значенням до «негідний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «гідний» є антонімом до слова ___ .
+    answer_form: негідний
+    confusable_form: гідний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «негідний» є антонімом до слова ___ .
+    answer_form: гідний
+    confusable_form: негідний
+    origin: authored-antonym-frame
+- slugA: гідно
+  slugB: негідно
+  distinction_gloss_uk: «гідно» — протилежність за значенням до «негідно».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «гідно» є антонімом до слова ___ .
+    answer_form: негідно
+    confusable_form: гідно
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «негідно» є антонімом до слова ___ .
+    answer_form: гідно
+    confusable_form: негідно
+    origin: authored-antonym-frame
+- slugA: давно
+  slugB: недавно
+  distinction_gloss_uk: «давно» — протилежність за значенням до «недавно».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «давно» є антонімом до слова ___ .
+    answer_form: недавно
+    confusable_form: давно
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недавно» є антонімом до слова ___ .
+    answer_form: давно
+    confusable_form: недавно
+    origin: authored-antonym-frame
+- slugA: давній
+  slugB: недавній
+  distinction_gloss_uk: «давній» — протилежність за значенням до «недавній».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «давній» є антонімом до слова ___ .
+    answer_form: недавній
+    confusable_form: давній
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недавній» є антонімом до слова ___ .
+    answer_form: давній
+    confusable_form: недавній
+    origin: authored-antonym-frame
+- slugA: державний
+  slugB: недержавний
+  distinction_gloss_uk: «державний» — протилежність за значенням до «недержавний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «державний» є антонімом до слова ___ .
+    answer_form: недержавний
+    confusable_form: державний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недержавний» є антонімом до слова ___ .
+    answer_form: державний
+    confusable_form: недержавний
+    origin: authored-antonym-frame
+- slugA: довго
+  slugB: недовго
+  distinction_gloss_uk: «довго» — протилежність за значенням до «недовго».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «довго» є антонімом до слова ___ .
+    answer_form: недовго
+    confusable_form: довго
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недовго» є антонімом до слова ___ .
+    answer_form: довго
+    confusable_form: недовго
+    origin: authored-antonym-frame
+- slugA: довіра
+  slugB: недовіра
+  distinction_gloss_uk: «довіра» — протилежність за значенням до «недовіра».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «довіра» є антонімом до слова ___ .
+    answer_form: недовіра
+    confusable_form: довіра
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недовіра» є антонімом до слова ___ .
+    answer_form: довіра
+    confusable_form: недовіра
+    origin: authored-antonym-frame
+- slugA: доконаний
+  slugB: недоконаний
+  distinction_gloss_uk: «доконаний» — протилежність за значенням до «недоконаний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «доконаний» є антонімом до слова ___ .
+    answer_form: недоконаний
+    confusable_form: доконаний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недоконаний» є антонімом до слова ___ .
+    answer_form: доконаний
+    confusable_form: недоконаний
+    origin: authored-antonym-frame
+- slugA: доречний
+  slugB: недоречний
+  distinction_gloss_uk: «доречний» — протилежність за значенням до «недоречний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «доречний» є антонімом до слова ___ .
+    answer_form: недоречний
+    confusable_form: доречний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недоречний» є антонімом до слова ___ .
+    answer_form: доречний
+    confusable_form: недоречний
+    origin: authored-antonym-frame
+- slugA: доречність
+  slugB: недоречність
+  distinction_gloss_uk: «доречність» — протилежність за значенням до «недоречність».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «доречність» є антонімом до слова ___ .
+    answer_form: недоречність
+    confusable_form: доречність
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недоречність» є антонімом до слова ___ .
+    answer_form: доречність
+    confusable_form: недоречність
+    origin: authored-antonym-frame
+- slugA: дорого
+  slugB: недорого
+  distinction_gloss_uk: «дорого» — протилежність за значенням до «недорого».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «дорого» є антонімом до слова ___ .
+    answer_form: недорого
+    confusable_form: дорого
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недорого» є антонімом до слова ___ .
+    answer_form: дорого
+    confusable_form: недорого
+    origin: authored-antonym-frame
+- slugA: досвідчений
+  slugB: недосвідчений
+  distinction_gloss_uk: «досвідчений» — протилежність за значенням до «недосвідчений».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «досвідчений» є антонімом до слова ___ .
+    answer_form: недосвідчений
+    confusable_form: досвідчений
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недосвідчений» є антонімом до слова ___ .
+    answer_form: досвідчений
+    confusable_form: недосвідчений
+    origin: authored-antonym-frame
+- slugA: досконалий
+  slugB: недосконалий
+  distinction_gloss_uk: «досконалий» — протилежність за значенням до «недосконалий».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «досконалий» є антонімом до слова ___ .
+    answer_form: недосконалий
+    confusable_form: досконалий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недосконалий» є антонімом до слова ___ .
+    answer_form: досконалий
+    confusable_form: недосконалий
+    origin: authored-antonym-frame
+- slugA: досконалість
+  slugB: недосконалість
+  distinction_gloss_uk: «досконалість» — протилежність за значенням до «недосконалість».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «досконалість» є антонімом до слова ___ .
+    answer_form: недосконалість
+    confusable_form: досконалість
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недосконалість» є антонімом до слова ___ .
+    answer_form: досконалість
+    confusable_form: недосконалість
+    origin: authored-antonym-frame
+- slugA: достатньо
+  slugB: недостатньо
+  distinction_gloss_uk: «достатньо» — протилежність за значенням до «недостатньо».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «достатньо» є антонімом до слова ___ .
+    answer_form: недостатньо
+    confusable_form: достатньо
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недостатньо» є антонімом до слова ___ .
+    answer_form: достатньо
+    confusable_form: недостатньо
+    origin: authored-antonym-frame
+- slugA: достатній
+  slugB: недостатній
+  distinction_gloss_uk: «достатній» — протилежність за значенням до «недостатній».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «достатній» є антонімом до слова ___ .
+    answer_form: недостатній
+    confusable_form: достатній
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недостатній» є антонімом до слова ___ .
+    answer_form: достатній
+    confusable_form: недостатній
+    origin: authored-antonym-frame
+- slugA: достатність
+  slugB: недостатність
+  distinction_gloss_uk: «достатність» — протилежність за значенням до «недостатність».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «достатність» є антонімом до слова ___ .
+    answer_form: недостатність
+    confusable_form: достатність
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недостатність» є антонімом до слова ___ .
+    answer_form: достатність
+    confusable_form: недостатність
+    origin: authored-antonym-frame
+- slugA: достиглий
+  slugB: недостиглий
+  distinction_gloss_uk: «достиглий» — протилежність за значенням до «недостиглий».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «достиглий» є антонімом до слова ___ .
+    answer_form: недостиглий
+    confusable_form: достиглий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недостиглий» є антонімом до слова ___ .
+    answer_form: достиглий
+    confusable_form: недостиглий
+    origin: authored-antonym-frame
+- slugA: достойний
+  slugB: недостойний
+  distinction_gloss_uk: «достойний» — протилежність за значенням до «недостойний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «достойний» є антонімом до слова ___ .
+    answer_form: недостойний
+    confusable_form: достойний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недостойний» є антонімом до слова ___ .
+    answer_form: достойний
+    confusable_form: недостойний
+    origin: authored-antonym-frame
+- slugA: доступний
+  slugB: недоступний
+  distinction_gloss_uk: «доступний» — протилежність за значенням до «недоступний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «доступний» є антонімом до слова ___ .
+    answer_form: недоступний
+    confusable_form: доступний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недоступний» є антонімом до слова ___ .
+    answer_form: доступний
+    confusable_form: недоступний
+    origin: authored-antonym-frame
+- slugA: досяжний
+  slugB: недосяжний
+  distinction_gloss_uk: «досяжний» — протилежність за значенням до «недосяжний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «досяжний» є антонімом до слова ___ .
+    answer_form: недосяжний
+    confusable_form: досяжний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недосяжний» є антонімом до слова ___ .
+    answer_form: досяжний
+    confusable_form: недосяжний
+    origin: authored-antonym-frame
+- slugA: доцільно
+  slugB: недоцільно
+  distinction_gloss_uk: «доцільно» — протилежність за значенням до «недоцільно».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «доцільно» є антонімом до слова ___ .
+    answer_form: недоцільно
+    confusable_form: доцільно
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недоцільно» є антонімом до слова ___ .
+    answer_form: доцільно
+    confusable_form: недоцільно
+    origin: authored-antonym-frame
+- slugA: доцільність
+  slugB: недоцільність
+  distinction_gloss_uk: «доцільність» — протилежність за значенням до «недоцільність».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «доцільність» є антонімом до слова ___ .
+    answer_form: недоцільність
+    confusable_form: доцільність
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недоцільність» є антонімом до слова ___ .
+    answer_form: доцільність
+    confusable_form: недоцільність
+    origin: authored-antonym-frame
+- slugA: діяльність
+  slugB: бездіяльність
+  distinction_gloss_uk: «діяльність» — протилежність за значенням до «бездіяльність».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «діяльність» є антонімом до слова ___ .
+    answer_form: бездіяльність
+    confusable_form: діяльність
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «бездіяльність» є антонімом до слова ___ .
+    answer_form: діяльність
+    confusable_form: бездіяльність
+    origin: authored-antonym-frame
+- slugA: ефективність
+  slugB: неефективність
+  distinction_gloss_uk: «ефективність» — протилежність за значенням до «неефективність».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «ефективність» є антонімом до слова ___ .
+    answer_form: неефективність
+    confusable_form: ефективність
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «неефективність» є антонімом до слова ___ .
+    answer_form: ефективність
+    confusable_form: неефективність
+    origin: authored-antonym-frame
+- slugA: завершений
+  slugB: незавершений
+  distinction_gloss_uk: «завершений» — протилежність за значенням до «незавершений».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «завершений» є антонімом до слова ___ .
+    answer_form: незавершений
+    confusable_form: завершений
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незавершений» є антонімом до слова ___ .
+    answer_form: завершений
+    confusable_form: незавершений
+    origin: authored-antonym-frame
+- slugA: завершеність
+  slugB: незавершеність
+  distinction_gloss_uk: «завершеність» — протилежність за значенням до «незавершеність».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «завершеність» є антонімом до слова ___ .
+    answer_form: незавершеність
+    confusable_form: завершеність
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незавершеність» є антонімом до слова ___ .
+    answer_form: завершеність
+    confusable_form: незавершеність
+    origin: authored-antonym-frame
+- slugA: задоволений
+  slugB: незадоволений
+  distinction_gloss_uk: «задоволений» — протилежність за значенням до «незадоволений».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «задоволений» є антонімом до слова ___ .
+    answer_form: незадоволений
+    confusable_form: задоволений
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незадоволений» є антонімом до слова ___ .
+    answer_form: задоволений
+    confusable_form: незадоволений
+    origin: authored-antonym-frame
+- slugA: задоволення
+  slugB: незадоволення
+  distinction_gloss_uk: «задоволення» — протилежність за значенням до «незадоволення».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «задоволення» є антонімом до слова ___ .
+    answer_form: незадоволення
+    confusable_form: задоволення
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незадоволення» є антонімом до слова ___ .
+    answer_form: задоволення
+    confusable_form: незадоволення
+    origin: authored-antonym-frame
+- slugA: законний
+  slugB: беззаконний
+  distinction_gloss_uk: «законний» — протилежність за значенням до «беззаконний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «законний» є антонімом до слова ___ .
+    answer_form: беззаконний
+    confusable_form: законний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «беззаконний» є антонімом до слова ___ .
+    answer_form: законний
+    confusable_form: беззаконний
+    origin: authored-antonym-frame
+- slugA: законно
+  slugB: незаконно
+  distinction_gloss_uk: «законно» — протилежність за значенням до «незаконно».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «законно» є антонімом до слова ___ .
+    answer_form: незаконно
+    confusable_form: законно
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незаконно» є антонімом до слова ___ .
+    answer_form: законно
+    confusable_form: незаконно
+    origin: authored-antonym-frame
+- slugA: залежно
+  slugB: незалежно
+  distinction_gloss_uk: «залежно» — протилежність за значенням до «незалежно».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «залежно» є антонімом до слова ___ .
+    answer_form: незалежно
+    confusable_form: залежно
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незалежно» є антонімом до слова ___ .
+    answer_form: залежно
+    confusable_form: незалежно
+    origin: authored-antonym-frame
+- slugA: замкнений
+  slugB: незамкнений
+  distinction_gloss_uk: «замкнений» — протилежність за значенням до «незамкнений».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «замкнений» є антонімом до слова ___ .
+    answer_form: незамкнений
+    confusable_form: замкнений
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незамкнений» є антонімом до слова ___ .
+    answer_form: замкнений
+    confusable_form: незамкнений
+    origin: authored-antonym-frame
+- slugA: заслужено
+  slugB: незаслужено
+  distinction_gloss_uk: «заслужено» — протилежність за значенням до «незаслужено».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «заслужено» є антонімом до слова ___ .
+    answer_form: незаслужено
+    confusable_form: заслужено
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незаслужено» є антонімом до слова ___ .
+    answer_form: заслужено
+    confusable_form: незаслужено
+    origin: authored-antonym-frame
+- slugA: затишно
+  slugB: незатишно
+  distinction_gloss_uk: «затишно» — протилежність за значенням до «незатишно».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «затишно» є антонімом до слова ___ .
+    answer_form: незатишно
+    confusable_form: затишно
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незатишно» є антонімом до слова ___ .
+    answer_form: затишно
+    confusable_form: незатишно
+    origin: authored-antonym-frame
+- slugA: звичний
+  slugB: незвичний
+  distinction_gloss_uk: «звичний» — протилежність за значенням до «незвичний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «звичний» є антонімом до слова ___ .
+    answer_form: незвичний
+    confusable_form: звичний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незвичний» є антонімом до слова ___ .
+    answer_form: звичний
+    confusable_form: незвичний
+    origin: authored-antonym-frame
+- slugA: звично
+  slugB: незвично
+  distinction_gloss_uk: «звично» — протилежність за значенням до «незвично».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «звично» є антонімом до слова ___ .
+    answer_form: незвично
+    confusable_form: звично
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незвично» є антонімом до слова ___ .
+    answer_form: звично
+    confusable_form: незвично
+    origin: authored-antonym-frame
+- slugA: згода
+  slugB: незгода
+  distinction_gloss_uk: «згода» — протилежність за значенням до «незгода».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «згода» є антонімом до слова ___ .
+    answer_form: незгода
+    confusable_form: згода
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незгода» є антонімом до слова ___ .
+    answer_form: згода
+    confusable_form: незгода
+    origin: authored-antonym-frame
+- slugA: згодний
+  slugB: незгодний
+  distinction_gloss_uk: «згодний» — протилежність за значенням до «незгодний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «згодний» є антонімом до слова ___ .
+    answer_form: незгодний
+    confusable_form: згодний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незгодний» є антонімом до слова ___ .
+    answer_form: згодний
+    confusable_form: незгодний
+    origin: authored-antonym-frame
+- slugA: здатний
+  slugB: нездатний
+  distinction_gloss_uk: «здатний» — протилежність за значенням до «нездатний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «здатний» є антонімом до слова ___ .
+    answer_form: нездатний
+    confusable_form: здатний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «нездатний» є антонімом до слова ___ .
+    answer_form: здатний
+    confusable_form: нездатний
+    origin: authored-antonym-frame
+- slugA: здатність
+  slugB: нездатність
+  distinction_gloss_uk: «здатність» — протилежність за значенням до «нездатність».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «здатність» є антонімом до слова ___ .
+    answer_form: нездатність
+    confusable_form: здатність
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «нездатність» є антонімом до слова ___ .
+    answer_form: здатність
+    confusable_form: нездатність
+    origin: authored-antonym-frame
+- slugA: здійсненний
+  slugB: нездійсненний
+  distinction_gloss_uk: «здійсненний» — протилежність за значенням до «нездійсненний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «здійсненний» є антонімом до слова ___ .
+    answer_form: нездійсненний
+    confusable_form: здійсненний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «нездійсненний» є антонімом до слова ___ .
+    answer_form: здійсненний
+    confusable_form: нездійсненний
+    origin: authored-antonym-frame
+- slugA: змога
+  slugB: незмога
+  distinction_gloss_uk: «змога» — протилежність за значенням до «незмога».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «змога» є антонімом до слова ___ .
+    answer_form: незмога
+    confusable_form: змога
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незмога» є антонімом до слова ___ .
+    answer_form: змога
+    confusable_form: незмога
+    origin: authored-antonym-frame
+- slugA: змінний
+  slugB: незмінний
+  distinction_gloss_uk: «змінний» — протилежність за значенням до «незмінний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «змінний» є антонімом до слова ___ .
+    answer_form: незмінний
+    confusable_form: змінний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незмінний» є антонімом до слова ___ .
+    answer_form: змінний
+    confusable_form: незмінний
+    origin: authored-antonym-frame
+- slugA: змінність
+  slugB: незмінність
+  distinction_gloss_uk: «змінність» — протилежність за значенням до «незмінність».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «змінність» є антонімом до слова ___ .
+    answer_form: незмінність
+    confusable_form: змінність
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незмінність» є антонімом до слова ___ .
+    answer_form: змінність
+    confusable_form: незмінність
+    origin: authored-antonym-frame
+- slugA: знайомий
+  slugB: незнайомий
+  distinction_gloss_uk: «знайомий» — протилежність за значенням до «незнайомий».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «знайомий» є антонімом до слова ___ .
+    answer_form: незнайомий
+    confusable_form: знайомий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незнайомий» є антонімом до слова ___ .
+    answer_form: знайомий
+    confusable_form: незнайомий
+    origin: authored-antonym-frame
+- slugA: знаний
+  slugB: незнаний
+  distinction_gloss_uk: «знаний» — протилежність за значенням до «незнаний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «знаний» є антонімом до слова ___ .
+    answer_form: незнаний
+    confusable_form: знаний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незнаний» є антонімом до слова ___ .
+    answer_form: знаний
+    confusable_form: незнаний
+    origin: authored-antonym-frame
+- slugA: знання
+  slugB: незнання
+  distinction_gloss_uk: «знання» — протилежність за значенням до «незнання».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «знання» є антонімом до слова ___ .
+    answer_form: незнання
+    confusable_form: знання
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незнання» є антонімом до слова ___ .
+    answer_form: знання
+    confusable_form: незнання
+    origin: authored-antonym-frame
+- slugA: значно
+  slugB: незначно
+  distinction_gloss_uk: «значно» — протилежність за значенням до «незначно».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «значно» є антонімом до слова ___ .
+    answer_form: незначно
+    confusable_form: значно
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незначно» є антонімом до слова ___ .
+    answer_form: значно
+    confusable_form: незначно
+    origin: authored-antonym-frame
+- slugA: зримо
+  slugB: незримо
+  distinction_gloss_uk: «зримо» — протилежність за значенням до «незримо».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «зримо» є антонімом до слова ___ .
+    answer_form: незримо
+    confusable_form: зримо
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незримо» є антонімом до слова ___ .
+    answer_form: зримо
+    confusable_form: незримо
+    origin: authored-antonym-frame
+- slugA: зрозумілий
+  slugB: незрозумілий
+  distinction_gloss_uk: «зрозумілий» — протилежність за значенням до «незрозумілий».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «зрозумілий» є антонімом до слова ___ .
+    answer_form: незрозумілий
+    confusable_form: зрозумілий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незрозумілий» є антонімом до слова ___ .
+    answer_form: зрозумілий
+    confusable_form: незрозумілий
+    origin: authored-antonym-frame
+- slugA: зрозуміло
+  slugB: незрозуміло
+  distinction_gloss_uk: «зрозуміло» — протилежність за значенням до «незрозуміло».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «зрозуміло» є антонімом до слова ___ .
+    answer_form: незрозуміло
+    confusable_form: зрозуміло
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незрозуміло» є антонімом до слова ___ .
+    answer_form: зрозуміло
+    confusable_form: незрозуміло
+    origin: authored-antonym-frame
+- slugA: зручний
+  slugB: незручний
+  distinction_gloss_uk: «зручний» — протилежність за значенням до «незручний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «зручний» є антонімом до слова ___ .
+    answer_form: незручний
+    confusable_form: зручний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незручний» є антонімом до слова ___ .
+    answer_form: зручний
+    confusable_form: незручний
+    origin: authored-antonym-frame
+- slugA: зручно
+  slugB: незручно
+  distinction_gloss_uk: «зручно» — протилежність за значенням до «незручно».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «зручно» є антонімом до слова ___ .
+    answer_form: незручно
+    confusable_form: зручно
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «незручно» є антонімом до слова ___ .
+    answer_form: зручно
+    confusable_form: незручно
+    origin: authored-antonym-frame
+- slugA: компетентність
+  slugB: некомпетентність
+  distinction_gloss_uk: «компетентність» — протилежність за значенням до «некомпетентність».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «компетентність» є антонімом до слова ___ .
+    answer_form: некомпетентність
+    confusable_form: компетентність
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «некомпетентність» є антонімом до слова ___ .
+    answer_form: компетентність
+    confusable_form: некомпетентність
+    origin: authored-antonym-frame
+- slugA: комфортно
+  slugB: некомфортно
+  distinction_gloss_uk: «комфортно» — протилежність за значенням до «некомфортно».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «комфортно» є антонімом до слова ___ .
+    answer_form: некомфортно
+    confusable_form: комфортно
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «некомфортно» є антонімом до слова ___ .
+    answer_form: комфортно
+    confusable_form: некомфортно
+    origin: authored-antonym-frame
+- slugA: контрольований
+  slugB: неконтрольований
+  distinction_gloss_uk: «контрольований» — протилежність за значенням до «неконтрольований».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «контрольований» є антонімом до слова ___ .
+    answer_form: неконтрольований
+    confusable_form: контрольований
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «неконтрольований» є антонімом до слова ___ .
+    answer_form: контрольований
+    confusable_form: неконтрольований
+    origin: authored-antonym-frame
+- slugA: коректно
+  slugB: некоректно
+  distinction_gloss_uk: «коректно» — протилежність за значенням до «некоректно».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «коректно» є антонімом до слова ___ .
+    answer_form: некоректно
+    confusable_form: коректно
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «некоректно» є антонімом до слова ___ .
+    answer_form: коректно
+    confusable_form: некоректно
+    origin: authored-antonym-frame
+- slugA: корисливість
+  slugB: безкорисливість
+  distinction_gloss_uk: «корисливість» — протилежність за значенням до «безкорисливість».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «корисливість» є антонімом до слова ___ .
+    answer_form: безкорисливість
+    confusable_form: корисливість
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «безкорисливість» є антонімом до слова ___ .
+    answer_form: корисливість
+    confusable_form: безкорисливість
+    origin: authored-antonym-frame
+- slugA: красиво
+  slugB: некрасиво
+  distinction_gloss_uk: «красиво» — протилежність за значенням до «некрасиво».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «красиво» є антонімом до слова ___ .
+    answer_form: некрасиво
+    confusable_form: красиво
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «некрасиво» є антонімом до слова ___ .
+    answer_form: красиво
+    confusable_form: некрасиво
+    origin: authored-antonym-frame
+- slugA: критично
+  slugB: некритично
+  distinction_gloss_uk: «критично» — протилежність за значенням до «некритично».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «критично» є антонімом до слова ___ .
+    answer_form: некритично
+    confusable_form: критично
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «некритично» є антонімом до слова ___ .
+    answer_form: критично
+    confusable_form: некритично
+    origin: authored-antonym-frame
+- slugA: легальний
+  slugB: нелегальний
+  distinction_gloss_uk: «легальний» — протилежність за значенням до «нелегальний».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «легальний» є антонімом до слова ___ .
+    answer_form: нелегальний
+    confusable_form: легальний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «нелегальний» є антонімом до слова ___ .
+    answer_form: легальний
+    confusable_form: нелегальний
+    origin: authored-antonym-frame
+- slugA: легально
+  slugB: нелегально
+  distinction_gloss_uk: «легально» — протилежність за значенням до «нелегально».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «легально» є антонімом до слова ___ .
+    answer_form: нелегально
+    confusable_form: легально
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «нелегально» є антонімом до слова ___ .
+    answer_form: легально
+    confusable_form: нелегально
+    origin: authored-antonym-frame
+- slugA: людський
+  slugB: нелюдський
+  distinction_gloss_uk: «людський» — протилежність за значенням до «нелюдський».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «людський» є антонімом до слова ___ .
+    answer_form: нелюдський
+    confusable_form: людський
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «нелюдський» є антонімом до слова ___ .
+    answer_form: людський
+    confusable_form: нелюдський
+    origin: authored-antonym-frame
+- slugA: милість
+  slugB: немилість
+  distinction_gloss_uk: «милість» — протилежність за значенням до «немилість».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «милість» є антонімом до слова ___ .
+    answer_form: немилість
+    confusable_form: милість
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «немилість» є антонімом до слова ___ .
+    answer_form: милість
+    confusable_form: немилість
+    origin: authored-antonym-frame
+- slugA: можливий
+  slugB: неможливий
+  distinction_gloss_uk: «можливий» — протилежність за значенням до «неможливий».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «можливий» є антонімом до слова ___ .
+    answer_form: неможливий
+    confusable_form: можливий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «неможливий» є антонімом до слова ___ .
+    answer_form: можливий
+    confusable_form: неможливий
+    origin: authored-antonym-frame
+- slugA: можливо
+  slugB: неможливо
+  distinction_gloss_uk: «можливо» — протилежність за значенням до «неможливо».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «можливо» є антонімом до слова ___ .
+    answer_form: неможливо
+    confusable_form: можливо
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «неможливо» є антонімом до слова ___ .
+    answer_form: можливо
+    confusable_form: неможливо
+    origin: authored-antonym-frame
+- slugA: можливість
+  slugB: неможливість
+  distinction_gloss_uk: «можливість» — протилежність за значенням до «неможливість».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «можливість» є антонімом до слова ___ .
+    answer_form: неможливість
+    confusable_form: можливість
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «неможливість» є антонімом до слова ___ .
+    answer_form: можливість
+    confusable_form: неможливість
+    origin: authored-antonym-frame
+- slugA: наголошений
+  slugB: ненаголошений
+  distinction_gloss_uk: «наголошений» — протилежність за значенням до «ненаголошений».
+  citations:
+  - sum20ua.com
+  curator: vesum-morphological-antonym
+  frames:
+  - sentence_with_slot: Слово «наголошений» є антонімом до слова ___ .
+    answer_form: ненаголошений
+    confusable_form: наголошений
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «ненаголошений» є антонімом до слова ___ .
+    answer_form: наголошений
+    confusable_form: ненаголошений
+    origin: authored-antonym-frame
+- slugA: удача
+  slugB: невдача
+  distinction_gloss_uk: «удача» — протилежність за значенням до «невдача».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «удача» є антонімом до слова ___ .
+    answer_form: невдача
+    confusable_form: удача
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невдача» є антонімом до слова ___ .
+    answer_form: удача
+    confusable_form: невдача
+    origin: authored-antonym-frame
+- slugA: порожній
+  slugB: повний
+  distinction_gloss_uk: «порожній» — протилежність за значенням до «повний».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «порожній» є антонімом до слова ___ .
+    answer_form: повний
+    confusable_form: порожній
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «повний» є антонімом до слова ___ .
+    answer_form: порожній
+    confusable_form: повний
+    origin: authored-antonym-frame
+- slugA: гарний
+  slugB: поганий
+  distinction_gloss_uk: «гарний» — протилежність за значенням до «поганий».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «гарний» є антонімом до слова ___ .
+    answer_form: поганий
+    confusable_form: гарний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «поганий» є антонімом до слова ___ .
+    answer_form: гарний
+    confusable_form: поганий
+    origin: authored-antonym-frame
+- slugA: приємний
+  slugB: неприємний
+  distinction_gloss_uk: «приємний» — протилежність за значенням до «неприємний».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «приємний» є антонімом до слова ___ .
+    answer_form: неприємний
+    confusable_form: приємний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «неприємний» є антонімом до слова ___ .
+    answer_form: приємний
+    confusable_form: неприємний
+    origin: authored-antonym-frame
+- slugA: тверезий
+  slugB: п'яний
+  distinction_gloss_uk: «тверезий» — протилежність за значенням до «п'яний».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «тверезий» є антонімом до слова ___ .
+    answer_form: п'яний
+    confusable_form: тверезий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «п'яний» є антонімом до слова ___ .
+    answer_form: тверезий
+    confusable_form: п'яний
+    origin: authored-antonym-frame
+- slugA: вільний
+  slugB: зайнятий
+  distinction_gloss_uk: «вільний» — протилежність за значенням до «зайнятий».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «вільний» є антонімом до слова ___ .
+    answer_form: зайнятий
+    confusable_form: вільний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «зайнятий» є антонімом до слова ___ .
+    answer_form: вільний
+    confusable_form: зайнятий
+    origin: authored-antonym-frame
+- slugA: ввічливий
+  slugB: грубий
+  distinction_gloss_uk: «ввічливий» — протилежність за значенням до «грубий».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «ввічливий» є антонімом до слова ___ .
+    answer_form: грубий
+    confusable_form: ввічливий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «грубий» є антонімом до слова ___ .
+    answer_form: ввічливий
+    confusable_form: грубий
+    origin: authored-antonym-frame
+- slugA: дрібний
+  slugB: великий
+  distinction_gloss_uk: «дрібний» — протилежність за значенням до «великий».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «дрібний» є антонімом до слова ___ .
+    answer_form: великий
+    confusable_form: дрібний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «великий» є антонімом до слова ___ .
+    answer_form: дрібний
+    confusable_form: великий
+    origin: authored-antonym-frame
+- slugA: тихий
+  slugB: шумний
+  distinction_gloss_uk: «тихий» — протилежність за значенням до «шумний».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «тихий» є антонімом до слова ___ .
+    answer_form: шумний
+    confusable_form: тихий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «шумний» є антонімом до слова ___ .
+    answer_form: тихий
+    confusable_form: шумний
+    origin: authored-antonym-frame
+- slugA: теплий
+  slugB: прохолодний
+  distinction_gloss_uk: «теплий» — протилежність за значенням до «прохолодний».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «теплий» є антонімом до слова ___ .
+    answer_form: прохолодний
+    confusable_form: теплий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «прохолодний» є антонімом до слова ___ .
+    answer_form: теплий
+    confusable_form: прохолодний
+    origin: authored-antonym-frame
+- slugA: гарячий
+  slugB: крижаний
+  distinction_gloss_uk: «гарячий» — протилежність за значенням до «крижаний».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «гарячий» є антонімом до слова ___ .
+    answer_form: крижаний
+    confusable_form: гарячий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «крижаний» є антонімом до слова ___ .
+    answer_form: гарячий
+    confusable_form: крижаний
+    origin: authored-antonym-frame
+- slugA: ранній
+  slugB: пізній
+  distinction_gloss_uk: «ранній» — протилежність за значенням до «пізній».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «ранній» є антонімом до слова ___ .
+    answer_form: пізній
+    confusable_form: ранній
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «пізній» є антонімом до слова ___ .
+    answer_form: ранній
+    confusable_form: пізній
+    origin: authored-antonym-frame
+- slugA: сучасний
+  slugB: стародавній
+  distinction_gloss_uk: «сучасний» — протилежність за значенням до «стародавній».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «сучасний» є антонімом до слова ___ .
+    answer_form: стародавній
+    confusable_form: сучасний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «стародавній» є антонімом до слова ___ .
+    answer_form: сучасний
+    confusable_form: стародавній
+    origin: authored-antonym-frame
+- slugA: весна
+  slugB: осінь
+  distinction_gloss_uk: «весна» — протилежність за значенням до «осінь».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «весна» є антонімом до слова ___ .
+    answer_form: осінь
+    confusable_form: весна
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «осінь» є антонімом до слова ___ .
+    answer_form: весна
+    confusable_form: осінь
+    origin: authored-antonym-frame
+- slugA: тепло
+  slugB: холод
+  distinction_gloss_uk: «тепло» — протилежність за значенням до «холод».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «тепло» є антонімом до слова ___ .
+    answer_form: холод
+    confusable_form: тепло
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «холод» є антонімом до слова ___ .
+    answer_form: тепло
+    confusable_form: холод
+    origin: authored-antonym-frame
+- slugA: спека
+  slugB: мороз
+  distinction_gloss_uk: «спека» — протилежність за значенням до «мороз».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «спека» є антонімом до слова ___ .
+    answer_form: мороз
+    confusable_form: спека
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «мороз» є антонімом до слова ___ .
+    answer_form: спека
+    confusable_form: мороз
+    origin: authored-antonym-frame
+- slugA: правда
+  slugB: брехня
+  distinction_gloss_uk: «правда» — протилежність за значенням до «брехня».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «правда» є антонімом до слова ___ .
+    answer_form: брехня
+    confusable_form: правда
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «брехня» є антонімом до слова ___ .
+    answer_form: правда
+    confusable_form: брехня
+    origin: authored-antonym-frame
+- slugA: приятель
+  slugB: недруг
+  distinction_gloss_uk: «приятель» — протилежність за значенням до «недруг».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «приятель» є антонімом до слова ___ .
+    answer_form: недруг
+    confusable_form: приятель
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «недруг» є антонімом до слова ___ .
+    answer_form: приятель
+    confusable_form: недруг
+    origin: authored-antonym-frame
+- slugA: сила
+  slugB: слабкість
+  distinction_gloss_uk: «сила» — протилежність за значенням до «слабкість».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «сила» є антонімом до слова ___ .
+    answer_form: слабкість
+    confusable_form: сила
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «слабкість» є антонімом до слова ___ .
+    answer_form: сила
+    confusable_form: слабкість
+    origin: authored-antonym-frame
+- slugA: прибуток
+  slugB: збиток
+  distinction_gloss_uk: «прибуток» — протилежність за значенням до «збиток».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «прибуток» є антонімом до слова ___ .
+    answer_form: збиток
+    confusable_form: прибуток
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «збиток» є антонімом до слова ___ .
+    answer_form: прибуток
+    confusable_form: збиток
+    origin: authored-antonym-frame
+- slugA: успіх
+  slugB: невдача
+  distinction_gloss_uk: «успіх» — протилежність за значенням до «невдача».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «успіх» є антонімом до слова ___ .
+    answer_form: невдача
+    confusable_form: успіх
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «невдача» є антонімом до слова ___ .
+    answer_form: успіх
+    confusable_form: невдача
+    origin: authored-antonym-frame
+- slugA: підйом
+  slugB: спуск
+  distinction_gloss_uk: «підйом» — протилежність за значенням до «спуск».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «підйом» є антонімом до слова ___ .
+    answer_form: спуск
+    confusable_form: підйом
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «спуск» є антонімом до слова ___ .
+    answer_form: підйом
+    confusable_form: спуск
+    origin: authored-antonym-frame
+- slugA: прихід
+  slugB: відхід
+  distinction_gloss_uk: «прихід» — протилежність за значенням до «відхід».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «прихід» є антонімом до слова ___ .
+    answer_form: відхід
+    confusable_form: прихід
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «відхід» є антонімом до слова ___ .
+    answer_form: прихід
+    confusable_form: відхід
+    origin: authored-antonym-frame
+- slugA: купівля
+  slugB: продаж
+  distinction_gloss_uk: «купівля» — протилежність за значенням до «продаж».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «купівля» є антонімом до слова ___ .
+    answer_form: продаж
+    confusable_form: купівля
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «продаж» є антонімом до слова ___ .
+    answer_form: купівля
+    confusable_form: продаж
+    origin: authored-antonym-frame
+- slugA: здоров'я
+  slugB: хвороба
+  distinction_gloss_uk: «здоров'я» — протилежність за значенням до «хвороба».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «здоров'я» є антонімом до слова ___ .
+    answer_form: хвороба
+    confusable_form: здоров'я
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «хвороба» є антонімом до слова ___ .
+    answer_form: здоров'я
+    confusable_form: хвороба
+    origin: authored-antonym-frame
+- slugA: гарячий
+  slugB: холодний
+  distinction_gloss_uk: «гарячий» — протилежність за значенням до «холодний».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «гарячий» є антонімом до слова ___ .
+    answer_form: холодний
+    confusable_form: гарячий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «холодний» є антонімом до слова ___ .
+    answer_form: гарячий
+    confusable_form: холодний
+    origin: authored-antonym-frame
+- slugA: хоробрий
+  slugB: боязкий
+  distinction_gloss_uk: «хоробрий» — протилежність за значенням до «боязкий».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «хоробрий» є антонімом до слова ___ .
+    answer_form: боязкий
+    confusable_form: хоробрий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «боязкий» є антонімом до слова ___ .
+    answer_form: хоробрий
+    confusable_form: боязкий
+    origin: authored-antonym-frame
+- slugA: сміливий
+  slugB: боягузливий
+  distinction_gloss_uk: «сміливий» — протилежність за значенням до «боягузливий».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «сміливий» є антонімом до слова ___ .
+    answer_form: боягузливий
+    confusable_form: сміливий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «боягузливий» є антонімом до слова ___ .
+    answer_form: сміливий
+    confusable_form: боягузливий
+    origin: authored-antonym-frame
+- slugA: мудрий
+  slugB: дурний
+  distinction_gloss_uk: «мудрий» — протилежність за значенням до «дурний».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «мудрий» є антонімом до слова ___ .
+    answer_form: дурний
+    confusable_form: мудрий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «дурний» є антонімом до слова ___ .
+    answer_form: мудрий
+    confusable_form: дурний
+    origin: authored-antonym-frame
+- slugA: правдивий
+  slugB: брехливий
+  distinction_gloss_uk: «правдивий» — протилежність за значенням до «брехливий».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «правдивий» є антонімом до слова ___ .
+    answer_form: брехливий
+    confusable_form: правдивий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «брехливий» є антонімом до слова ___ .
+    answer_form: правдивий
+    confusable_form: брехливий
+    origin: authored-antonym-frame
+- slugA: працьовитий
+  slugB: ледачий
+  distinction_gloss_uk: «працьовитий» — протилежність за значенням до «ледачий».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «працьовитий» є антонімом до слова ___ .
+    answer_form: ледачий
+    confusable_form: працьовитий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «ледачий» є антонімом до слова ___ .
+    answer_form: працьовитий
+    confusable_form: ледачий
+    origin: authored-antonym-frame
+- slugA: голосний
+  slugB: тихий
+  distinction_gloss_uk: «голосний» — протилежність за значенням до «тихий».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «голосний» є антонімом до слова ___ .
+    answer_form: тихий
+    confusable_form: голосний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «тихий» є антонімом до слова ___ .
+    answer_form: голосний
+    confusable_form: тихий
+    origin: authored-antonym-frame
+- slugA: знаходити
+  slugB: губити
+  distinction_gloss_uk: «знаходити» — протилежність за значенням до «губити».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «знаходити» є антонімом до слова ___ .
+    answer_form: губити
+    confusable_form: знаходити
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «губити» є антонімом до слова ___ .
+    answer_form: знаходити
+    confusable_form: губити
+    origin: authored-antonym-frame
+- slugA: знаходити
+  slugB: втрачати
+  distinction_gloss_uk: «знаходити» — протилежність за значенням до «втрачати».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «знаходити» є антонімом до слова ___ .
+    answer_form: втрачати
+    confusable_form: знаходити
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «втрачати» є антонімом до слова ___ .
+    answer_form: знаходити
+    confusable_form: втрачати
+    origin: authored-antonym-frame
+- slugA: будувати
+  slugB: руйнувати
+  distinction_gloss_uk: «будувати» — протилежність за значенням до «руйнувати».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «будувати» є антонімом до слова ___ .
+    answer_form: руйнувати
+    confusable_form: будувати
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «руйнувати» є антонімом до слова ___ .
+    answer_form: будувати
+    confusable_form: руйнувати
+    origin: authored-antonym-frame
+- slugA: відкривати
+  slugB: закривати
+  distinction_gloss_uk: «відкривати» — протилежність за значенням до «закривати».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «відкривати» є антонімом до слова ___ .
+    answer_form: закривати
+    confusable_form: відкривати
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «закривати» є антонімом до слова ___ .
+    answer_form: відкривати
+    confusable_form: закривати
+    origin: authored-antonym-frame
+- slugA: відчиняти
+  slugB: зачиняти
+  distinction_gloss_uk: «відчиняти» — протилежність за значенням до «зачиняти».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «відчиняти» є антонімом до слова ___ .
+    answer_form: зачиняти
+    confusable_form: відчиняти
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «зачиняти» є антонімом до слова ___ .
+    answer_form: відчиняти
+    confusable_form: зачиняти
+    origin: authored-antonym-frame
+- slugA: вмикати
+  slugB: вимикати
+  distinction_gloss_uk: «вмикати» — протилежність за значенням до «вимикати».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «вмикати» є антонімом до слова ___ .
+    answer_form: вимикати
+    confusable_form: вмикати
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «вимикати» є антонімом до слова ___ .
+    answer_form: вмикати
+    confusable_form: вимикати
+    origin: authored-antonym-frame
+- slugA: входити
+  slugB: виходити
+  distinction_gloss_uk: «входити» — протилежність за значенням до «виходити».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «входити» є антонімом до слова ___ .
+    answer_form: виходити
+    confusable_form: входити
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «виходити» є антонімом до слова ___ .
+    answer_form: входити
+    confusable_form: виходити
+    origin: authored-antonym-frame
+- slugA: піднімати
+  slugB: опускати
+  distinction_gloss_uk: «піднімати» — протилежність за значенням до «опускати».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «піднімати» є антонімом до слова ___ .
+    answer_form: опускати
+    confusable_form: піднімати
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «опускати» є антонімом до слова ___ .
+    answer_form: піднімати
+    confusable_form: опускати
+    origin: authored-antonym-frame
+- slugA: радіти
+  slugB: сумувати
+  distinction_gloss_uk: «радіти» — протилежність за значенням до «сумувати».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «радіти» є антонімом до слова ___ .
+    answer_form: сумувати
+    confusable_form: радіти
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «сумувати» є антонімом до слова ___ .
+    answer_form: радіти
+    confusable_form: сумувати
+    origin: authored-antonym-frame
+- slugA: любити
+  slugB: ненавидіти
+  distinction_gloss_uk: «любити» — протилежність за значенням до «ненавидіти».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «любити» є антонімом до слова ___ .
+    answer_form: ненавидіти
+    confusable_form: любити
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «ненавидіти» є антонімом до слова ___ .
+    answer_form: любити
+    confusable_form: ненавидіти
+    origin: authored-antonym-frame
+- slugA: влітку
+  slugB: взимку
+  distinction_gloss_uk: «влітку» — протилежність за значенням до «взимку».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «влітку» є антонімом до слова ___ .
+    answer_form: взимку
+    confusable_form: влітку
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «взимку» є антонімом до слова ___ .
+    answer_form: влітку
+    confusable_form: взимку
+    origin: authored-antonym-frame
+- slugA: голосно
+  slugB: тихо
+  distinction_gloss_uk: «голосно» — протилежність за значенням до «тихо».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «голосно» є антонімом до слова ___ .
+    answer_form: тихо
+    confusable_form: голосно
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «тихо» є антонімом до слова ___ .
+    answer_form: голосно
+    confusable_form: тихо
+    origin: authored-antonym-frame
+- slugA: світло
+  slugB: темно
+  distinction_gloss_uk: «світло» — протилежність за значенням до «темно».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «світло» є антонімом до слова ___ .
+    answer_form: темно
+    confusable_form: світло
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «темно» є антонімом до слова ___ .
+    answer_form: світло
+    confusable_form: темно
+    origin: authored-antonym-frame
+- slugA: тепло
+  slugB: холодно
+  distinction_gloss_uk: «тепло» — протилежність за значенням до «холодно».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «тепло» є антонімом до слова ___ .
+    answer_form: холодно
+    confusable_form: тепло
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «холодно» є антонімом до слова ___ .
+    answer_form: тепло
+    confusable_form: холодно
+    origin: authored-antonym-frame
+- slugA: радість
+  slugB: печаль
+  distinction_gloss_uk: «радість» — протилежність за значенням до «печаль».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «радість» є антонімом до слова ___ .
+    answer_form: печаль
+    confusable_form: радість
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «печаль» є антонімом до слова ___ .
+    answer_form: радість
+    confusable_form: печаль
+    origin: authored-antonym-frame
+- slugA: коротко
+  slugB: довго
+  distinction_gloss_uk: «коротко» — протилежність за значенням до «довго».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «коротко» є антонімом до слова ___ .
+    answer_form: довго
+    confusable_form: коротко
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «довго» є антонімом до слова ___ .
+    answer_form: коротко
+    confusable_form: довго
+    origin: authored-antonym-frame
+- slugA: дорого
+  slugB: дешево
+  distinction_gloss_uk: «дорого» — протилежність за значенням до «дешево».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «дорого» є антонімом до слова ___ .
+    answer_form: дешево
+    confusable_form: дорого
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «дешево» є антонімом до слова ___ .
+    answer_form: дорого
+    confusable_form: дешево
+    origin: authored-antonym-frame
+- slugA: глибоко
+  slugB: мілко
+  distinction_gloss_uk: «глибоко» — протилежність за значенням до «мілко».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «глибоко» є антонімом до слова ___ .
+    answer_form: мілко
+    confusable_form: глибоко
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «мілко» є антонімом до слова ___ .
+    answer_form: глибоко
+    confusable_form: мілко
+    origin: authored-antonym-frame
+- slugA: широко
+  slugB: вузько
+  distinction_gloss_uk: «широко» — протилежність за значенням до «вузько».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «широко» є антонімом до слова ___ .
+    answer_form: вузько
+    confusable_form: широко
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «вузько» є антонімом до слова ___ .
+    answer_form: широко
+    confusable_form: вузько
+    origin: authored-antonym-frame
+- slugA: часто
+  slugB: рідко
+  distinction_gloss_uk: «часто» — протилежність за значенням до «рідко».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «часто» є антонімом до слова ___ .
+    answer_form: рідко
+    confusable_form: часто
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «рідко» є антонімом до слова ___ .
+    answer_form: часто
+    confusable_form: рідко
+    origin: authored-antonym-frame
+- slugA: сумно
+  slugB: весело
+  distinction_gloss_uk: «сумно» — протилежність за значенням до «весело».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «сумно» є антонімом до слова ___ .
+    answer_form: весело
+    confusable_form: сумно
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «весело» є антонімом до слова ___ .
+    answer_form: сумно
+    confusable_form: весело
+    origin: authored-antonym-frame
+- slugA: гучно
+  slugB: тихо
+  distinction_gloss_uk: «гучно» — протилежність за значенням до «тихо».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «гучно» є антонімом до слова ___ .
+    answer_form: тихо
+    confusable_form: гучно
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «тихо» є антонімом до слова ___ .
+    answer_form: гучно
+    confusable_form: тихо
+    origin: authored-antonym-frame
+- slugA: жарко
+  slugB: холодно
+  distinction_gloss_uk: «жарко» — протилежність за значенням до «холодно».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «жарко» є антонімом до слова ___ .
+    answer_form: холодно
+    confusable_form: жарко
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «холодно» є антонімом до слова ___ .
+    answer_form: жарко
+    confusable_form: холодно
+    origin: authored-antonym-frame
+- slugA: чисто
+  slugB: брудно
+  distinction_gloss_uk: «чисто» — протилежність за значенням до «брудно».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «чисто» є антонімом до слова ___ .
+    answer_form: брудно
+    confusable_form: чисто
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «брудно» є антонімом до слова ___ .
+    answer_form: чисто
+    confusable_form: брудно
+    origin: authored-antonym-frame
+- slugA: цікаво
+  slugB: нудно
+  distinction_gloss_uk: «цікаво» — протилежність за значенням до «нудно».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «цікаво» є антонімом до слова ___ .
+    answer_form: нудно
+    confusable_form: цікаво
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «нудно» є антонімом до слова ___ .
+    answer_form: цікаво
+    confusable_form: нудно
+    origin: authored-antonym-frame
+- slugA: прямо
+  slugB: криво
+  distinction_gloss_uk: «прямо» — протилежність за значенням до «криво».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «прямо» є антонімом до слова ___ .
+    answer_form: криво
+    confusable_form: прямо
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «криво» є антонімом до слова ___ .
+    answer_form: прямо
+    confusable_form: криво
+    origin: authored-antonym-frame
+- slugA: зранку
+  slugB: ввечері
+  distinction_gloss_uk: «зранку» — протилежність за значенням до «ввечері».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «зранку» є антонімом до слова ___ .
+    answer_form: ввечері
+    confusable_form: зранку
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «ввечері» є антонімом до слова ___ .
+    answer_form: зранку
+    confusable_form: ввечері
+    origin: authored-antonym-frame
+- slugA: сміливість
+  slugB: боягузтво
+  distinction_gloss_uk: «сміливість» — протилежність за значенням до «боягузтво».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «сміливість» є антонімом до слова ___ .
+    answer_form: боягузтво
+    confusable_form: сміливість
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «боягузтво» є антонімом до слова ___ .
+    answer_form: сміливість
+    confusable_form: боягузтво
+    origin: authored-antonym-frame
+- slugA: тиша
+  slugB: галас
+  distinction_gloss_uk: «тиша» — протилежність за значенням до «галас».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «тиша» є антонімом до слова ___ .
+    answer_form: галас
+    confusable_form: тиша
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «галас» є антонімом до слова ___ .
+    answer_form: тиша
+    confusable_form: галас
+    origin: authored-antonym-frame
+- slugA: спокій
+  slugB: тривога
+  distinction_gloss_uk: «спокій» — протилежність за значенням до «тривога».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «спокій» є антонімом до слова ___ .
+    answer_form: тривога
+    confusable_form: спокій
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «тривога» є антонімом до слова ___ .
+    answer_form: спокій
+    confusable_form: тривога
+    origin: authored-antonym-frame
+- slugA: будень
+  slugB: свято
+  distinction_gloss_uk: «будень» — протилежність за значенням до «свято».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «будень» є антонімом до слова ___ .
+    answer_form: свято
+    confusable_form: будень
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «свято» є антонімом до слова ___ .
+    answer_form: будень
+    confusable_form: свято
+    origin: authored-antonym-frame
+- slugA: ранковий
+  slugB: вечірній
+  distinction_gloss_uk: «ранковий» — протилежність за значенням до «вечірній».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «ранковий» є антонімом до слова ___ .
+    answer_form: вечірній
+    confusable_form: ранковий
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «вечірній» є антонімом до слова ___ .
+    answer_form: ранковий
+    confusable_form: вечірній
+    origin: authored-antonym-frame
+- slugA: весняний
+  slugB: осінній
+  distinction_gloss_uk: «весняний» — протилежність за значенням до «осінній».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «весняний» є антонімом до слова ___ .
+    answer_form: осінній
+    confusable_form: весняний
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «осінній» є антонімом до слова ___ .
+    answer_form: весняний
+    confusable_form: осінній
+    origin: authored-antonym-frame
+- slugA: починати
+  slugB: закінчувати
+  distinction_gloss_uk: «починати» — протилежність за значенням до «закінчувати».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «починати» є антонімом до слова ___ .
+    answer_form: закінчувати
+    confusable_form: починати
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «закінчувати» є антонімом до слова ___ .
+    answer_form: починати
+    confusable_form: закінчувати
+    origin: authored-antonym-frame
+- slugA: почати
+  slugB: закінчити
+  distinction_gloss_uk: «почати» — протилежність за значенням до «закінчити».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «почати» є антонімом до слова ___ .
+    answer_form: закінчити
+    confusable_form: почати
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «закінчити» є антонімом до слова ___ .
+    answer_form: почати
+    confusable_form: закінчити
+    origin: authored-antonym-frame
+- slugA: зайти
+  slugB: вийти
+  distinction_gloss_uk: «зайти» — протилежність за значенням до «вийти».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «зайти» є антонімом до слова ___ .
+    answer_form: вийти
+    confusable_form: зайти
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «вийти» є антонімом до слова ___ .
+    answer_form: зайти
+    confusable_form: вийти
+    origin: authored-antonym-frame
+- slugA: підніматися
+  slugB: опускатися
+  distinction_gloss_uk: «підніматися» — протилежність за значенням до «опускатися».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «підніматися» є антонімом до слова ___ .
+    answer_form: опускатися
+    confusable_form: підніматися
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «опускатися» є антонімом до слова ___ .
+    answer_form: підніматися
+    confusable_form: опускатися
+    origin: authored-antonym-frame
+- slugA: сміятися
+  slugB: плакати
+  distinction_gloss_uk: «сміятися» — протилежність за значенням до «плакати».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «сміятися» є антонімом до слова ___ .
+    answer_form: плакати
+    confusable_form: сміятися
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «плакати» є антонімом до слова ___ .
+    answer_form: сміятися
+    confusable_form: плакати
+    origin: authored-antonym-frame
+- slugA: множити
+  slugB: ділити
+  distinction_gloss_uk: «множити» — протилежність за значенням до «ділити».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «множити» є антонімом до слова ___ .
+    answer_form: ділити
+    confusable_form: множити
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «ділити» є антонімом до слова ___ .
+    answer_form: множити
+    confusable_form: ділити
+    origin: authored-antonym-frame
+- slugA: додавати
+  slugB: віднімати
+  distinction_gloss_uk: «додавати» — протилежність за значенням до «віднімати».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «додавати» є антонімом до слова ___ .
+    answer_form: віднімати
+    confusable_form: додавати
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «віднімати» є антонімом до слова ___ .
+    answer_form: додавати
+    confusable_form: віднімати
+    origin: authored-antonym-frame
+- slugA: покращувати
+  slugB: погіршувати
+  distinction_gloss_uk: «покращувати» — протилежність за значенням до «погіршувати».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «покращувати» є антонімом до слова ___ .
+    answer_form: погіршувати
+    confusable_form: покращувати
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «погіршувати» є антонімом до слова ___ .
+    answer_form: покращувати
+    confusable_form: погіршувати
+    origin: authored-antonym-frame
+- slugA: згадувати
+  slugB: забувати
+  distinction_gloss_uk: «згадувати» — протилежність за значенням до «забувати».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «згадувати» є антонімом до слова ___ .
+    answer_form: забувати
+    confusable_form: згадувати
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «забувати» є антонімом до слова ___ .
+    answer_form: згадувати
+    confusable_form: забувати
+    origin: authored-antonym-frame
+- slugA: вітатися
+  slugB: прощатися
+  distinction_gloss_uk: «вітатися» — протилежність за значенням до «прощатися».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «вітатися» є антонімом до слова ___ .
+    answer_form: прощатися
+    confusable_form: вітатися
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «прощатися» є антонімом до слова ___ .
+    answer_form: вітатися
+    confusable_form: прощатися
+    origin: authored-antonym-frame
+- slugA: засинати
+  slugB: прокидатися
+  distinction_gloss_uk: «засинати» — протилежність за значенням до «прокидатися».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «засинати» є антонімом до слова ___ .
+    answer_form: прокидатися
+    confusable_form: засинати
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «прокидатися» є антонімом до слова ___ .
+    answer_form: засинати
+    confusable_form: прокидатися
+    origin: authored-antonym-frame
+- slugA: мурувати
+  slugB: руйнувати
+  distinction_gloss_uk: «мурувати» — протилежність за значенням до «руйнувати».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «мурувати» є антонімом до слова ___ .
+    answer_form: руйнувати
+    confusable_form: мурувати
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «руйнувати» є антонімом до слова ___ .
+    answer_form: мурувати
+    confusable_form: руйнувати
+    origin: authored-antonym-frame
+- slugA: вдихати
+  slugB: видихати
+  distinction_gloss_uk: «вдихати» — протилежність за значенням до «видихати».
+  citations:
+  - sum.in.ua
+  curator: sum11-lexicographer-pointer
+  frames:
+  - sentence_with_slot: Слово «вдихати» є антонімом до слова ___ .
+    answer_form: видихати
+    confusable_form: вдихати
+    origin: authored-antonym-frame
+  - sentence_with_slot: Слово «видихати» є антонімом до слова ___ .
+    answer_form: вдихати
+    confusable_form: видихати
+    origin: authored-antonym-frame

@@ -1943,6 +1943,69 @@ def test_size_budget_surface_trim_prioritizes_cloze_coverage(capsys: pytest.Capt
     assert shards["A1"]["index"]["counts"]["clozeCoverage"] == 1.0
 
 
+def test_size_budget_surface_trim_prioritizes_drill_modes_and_preserves_cross_level_mode_items(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    lemma_ids = ("plain1", "cloze_only", "syn_leg", "plain2")
+    index = {
+        "schema": "atlas-practice-index",
+        "items": [
+            {
+                "lemmaId": lemma_id,
+                "lemma": lemma_id,
+                "cefr": "B1",
+                "modes": (
+                    ["flashcards", "synonym"]
+                    if lemma_id == "syn_leg"
+                    else (["flashcards", "cloze"] if lemma_id == "cloze_only" else ["flashcards"])
+                ),
+                "hasCloze": lemma_id == "cloze_only",
+                "clozeIds": ["cloze:1"] if lemma_id == "cloze_only" else [],
+                "newOrder": order,
+            }
+            for order, lemma_id in enumerate(lemma_ids)
+        ],
+        "counts": {
+            "lexemes": len(lemma_ids),
+            "cloze": 1,
+            "clozeEligibleLexemes": 1,
+            "clozeCoverage": 0.25,
+            "modeCounts": {"synonym": 1, "cloze": 1},
+            "modeCoverage": {"synonym": 0.25, "cloze": 0.25},
+        },
+    }
+    lexemes = {
+        "schema": "atlas-practice-lexemes",
+        "lexemes": [
+            {"lemmaId": lemma_id, "lemma": lemma_id, "padding": "x" * 1_500}
+            for lemma_id in lemma_ids
+        ],
+    }
+    synonym = {
+        "schema": "atlas-practice-synonym",
+        "synonym": [
+            {"id": "syn:1", "lemmaId": "syn_leg", "target": "syn_leg"},
+            {"id": "syn:2", "lemmaId": "a2_prompt", "target": "a2_prompt"},
+        ],
+    }
+    shards = {"B1": {"index": index, "lexemes": lexemes, "synonym": synonym}}
+
+    probe_index = {**index, "items": [index["items"][2]]}
+    probe_lexemes = {**lexemes, "lexemes": [lexemes["lexemes"][2]]}
+    index_budget = generate_practice_deck._size_budget(probe_index, 1_000_000, 1_000_000)
+    lexeme_budget = generate_practice_deck._size_budget(probe_lexemes, 1_000_000, 1_000_000)
+    apply_size_budgets(
+        shards,
+        raw_limit=max(int(index_budget["rawBytes"]), int(lexeme_budget["rawBytes"])) + 200,
+        gzip_limit=max(int(index_budget["gzipBytes"]), int(lexeme_budget["gzipBytes"])) + 200,
+    )
+
+    assert "trimmed surface lexemes 4 -> 1" in capsys.readouterr().err
+    assert [item["lemmaId"] for item in shards["B1"]["index"]["items"]] == ["syn_leg"]
+    assert [item["lemmaId"] for item in shards["B1"]["lexemes"]["lexemes"]] == ["syn_leg"]
+    assert {item["lemmaId"] for item in shards["B1"]["synonym"]["synonym"]} == {"syn_leg", "a2_prompt"}
+
+
 def test_size_budget_trims_oversized_mode_without_cutting_cloze_surface(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -3458,7 +3521,7 @@ def test_live_antonym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
     live_path = Path("data/lexicon/antonym_pairs.yaml")
     assert live_path.exists()
     pairs = read_antonym_pairs(live_path)
-    assert len(pairs) == 940, f"Expected 940 reviewed antonym pairs, got {len(pairs)}"
+    assert len(pairs) == 1126, f"Expected 1126 reviewed antonym pairs, got {len(pairs)}"
     seen_pairs: set[tuple[str, str]] = set()
     for index, pair in enumerate(pairs):
         errors = validate_antonym_pair(pair)
