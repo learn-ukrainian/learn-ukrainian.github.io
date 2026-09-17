@@ -1287,7 +1287,21 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_homonym_myla_chas, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_homonym_myla_chas)) == 1
 
+    # Defect 148 / Negative regression (Round 67 P2): Actual finite verbs following adverbial prepositional phrase are not swallowed (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_discordant_apposition_clause_verb_myla = (
+        "Він говорив із сестрою — дівчиною, яка після роботи мила посуд — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_clause_verb_myla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_clause_verb_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_clause_verb_myla)) == 0
 
+    # Defect 149 / Positive control (Round 67 P2): Agreeing instrumental apposition across clause verb accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_agreeing_apposition_clause_verb_myla = (
+        "Він говорив із сестрою — дівчиною, яка після роботи мила посуд — та з лікаркою — досвідченою фахівчинею — про виставу."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_clause_verb_myla, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_clause_verb_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_clause_verb_myla)) == 1
 
 
 def test_release_receipt_schema_and_checksum() -> None:

@@ -1206,100 +1206,61 @@ def words_can_agree(adj_word: str, noun_word: str, cur: sqlite3.Cursor | None = 
         return True
 
 
-def has_genitive_reading(word: str, cur: sqlite3.Cursor | None = None) -> bool:
-    """Check whether a word has an attested genitive noun reading in VESUM."""
-    if not cur:
-        return True
-    try:
-        cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (word,))
-        return any("v_rod" in r[0] for r in cur.fetchall())
-    except Exception:
-        return True
-
-
 def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor | None = None) -> bool:
     """Check whether words[idx] is governed by an unclosed enclosing or nested preposition.
 
     Handles:
     1. Direct prepositional phrases with optional modifiers (e.g. 'під час', 'у вільний час', 'після зміни').
-    2. Dependent nouns in an adnominal genitive chain inside a prepositional phrase (e.g. 'від виготовлення мила', 'після зміни режисера').
-    3. Enclosing prepositional phrases with nested prepositional modifiers modifying a prenominal adjective
-       across dependent noun phrases and noun/verb homonyms without premature closure (e.g. 'у вільний від виготовлення мила час').
+    2. Constituents inside an enclosing prepositional phrase [P ... A ... N] where P is an enclosing preposition,
+       A is a prenominal modifier agreeing with head noun N (at n_idx >= idx), spanning nested prepositional
+       modifiers and noun/verb homonyms without premature closure (e.g. 'у вільний від виготовлення мила час').
     """
     if idx <= 0:
         return False
 
-    # Pattern 1: Direct preposition with optional modifiers preceding words[idx]
+    # Rule 1: Direct preposition with optional modifiers preceding words[idx]
     k = idx - 1
     while k >= 0 and is_modifier_or_adv(words[k], cur):
         k -= 1
     if k >= 0 and is_preposition(words[k], cur):
         return True
 
-    noun_tags = get_vesum_pos(words[idx], cur)
-    if "noun" not in noun_tags:
-        return False
-
-    # Pattern 2: Dependent noun in an adnominal genitive chain inside a prepositional phrase
-    # (e.g. 'від виготовлення мила', 'після зміни режисера')
-    if has_genitive_reading(words[idx], cur):
-        for p_idx in range(idx - 1, -1, -1):
-            if is_preposition(words[p_idx], cur):
-                span = words[p_idx + 1 : idx]
-                valid = True
-                has_intervening_noun = False
-                for w in span:
-                    w_pos = get_vesum_pos(w, cur)
-                    if w in CLAUSE_INTRO or ("verb" in w_pos and not (w_pos & {"noun", "adj", "pron"})):
-                        valid = False
-                        break
-                    if "noun" in w_pos:
-                        has_intervening_noun = True
-                if valid and has_intervening_noun:
-                    return True
-            if words[p_idx] in CLAUSE_INTRO:
-                break
-
-    # Pattern 3: Enclosing preposition with prenominal adjective modified by a nested phrase
-    for p_idx in range(idx):
+    # Rule 2: Inside an enclosing prepositional phrase [P ... A ... N]
+    # where P is an enclosing preposition, A is a prenominal modifier, and N is an agreed head noun
+    for p_idx in range(idx + 1):
         if not is_preposition(words[p_idx], cur):
             continue
 
-        span = words[p_idx + 1 : idx]
-        has_verb_or_conj = False
-        has_nested_prep = False
-        has_adj = False
-        nested_prep_idx = -1
-
-        for s_i, s_w in enumerate(span):
-            abs_i = p_idx + 1 + s_i
-            if is_preposition(s_w, cur):
-                has_nested_prep = True
-                nested_prep_idx = abs_i
+        for n_idx in range(idx, len(words)):
+            n_pos = get_vesum_pos(words[n_idx], cur)
+            if "noun" not in n_pos:
                 continue
-            pos = get_vesum_pos(s_w, cur)
-            # A finite verb interrupts the prepositional phrase only if it lacks nominal/adjectival readings
-            if "verb" in pos and not (pos & {"noun", "adj", "pron"}) and cur:
-                try:
-                    cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (s_w,))
-                    v_rows = cur.fetchall()
-                    if any(any(t in r[0] for t in (":past", ":pres", ":futr", ":impers")) for r in v_rows):
-                        has_verb_or_conj = True
-                        break
-                except Exception:
-                    pass
-            if s_w in CLAUSE_INTRO:
-                has_verb_or_conj = True
-                break
-            if (
-                not has_nested_prep
-                and ("adj" in pos or "part" in pos or "pron" in pos)
-                and words_can_agree(s_w, words[idx], cur)
-            ):
-                has_adj = True
 
-        if not has_verb_or_conj and has_nested_prep and has_adj and nested_prep_idx > p_idx:
-            return True
+            span = words[p_idx + 1 : n_idx]
+            has_nested_prep = False
+            has_adj_before_nested = False
+            has_invalid_break = False
+
+            for s_w in span:
+                if s_w in CLAUSE_INTRO:
+                    has_invalid_break = True
+                    break
+                if is_preposition(s_w, cur):
+                    has_nested_prep = True
+                    continue
+                w_pos = get_vesum_pos(s_w, cur)
+                if "verb" in w_pos and not (w_pos & {"noun", "adj", "pron"}):
+                    has_invalid_break = True
+                    break
+                if (
+                    not has_nested_prep
+                    and ("adj" in w_pos or "part" in w_pos or "pron" in w_pos)
+                    and words_can_agree(s_w, words[n_idx], cur)
+                ):
+                    has_adj_before_nested = True
+
+            if not has_invalid_break and has_nested_prep and has_adj_before_nested:
+                return True
 
     return False
 
