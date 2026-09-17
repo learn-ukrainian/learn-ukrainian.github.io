@@ -68,6 +68,7 @@ PRACTICE_MODES = {
     "paronym",
     "antonym",
     "homonym",
+    "imperative",
 }
 EXPECTED_SCHEMAS = {
     "index": "atlas-practice-index",

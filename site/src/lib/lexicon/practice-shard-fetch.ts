@@ -11,6 +11,7 @@ import type {
   PracticeClozeItem,
   PracticeDeckData,
   PracticeHeritageItem,
+  PracticeImperativeItem,
   PracticeParadigmItem,
   PracticeParonymItem,
   PracticeStressItem,
@@ -28,6 +29,7 @@ export const PRACTICE_DRILL_KINDS = [
   "paronym",
   "heritage",
   "antonym",
+  "imperative",
 ] as const;
 
 export type PracticeDrillKind = (typeof PRACTICE_DRILL_KINDS)[number];
@@ -41,6 +43,7 @@ export type PracticeDrillFields = {
   paronym: PracticeParonymItem[];
   heritage: PracticeHeritageItem[];
   antonym: PracticeAntonymItem[];
+  imperative: PracticeImperativeItem[];
 };
 
 /** Deduped fetch for practice and Atlas JSON by URL. Concurrent or repeated callers share the promise. */
@@ -100,6 +103,7 @@ export function drillFieldsFromShardResults(results: readonly unknown[]): Practi
     paronym: itemsFromShard<PracticeParonymItem>(results[5], "paronym"),
     heritage: itemsFromShard<PracticeHeritageItem>(results[6], "heritage"),
     antonym: itemsFromShard<PracticeAntonymItem>(results[7], "antonym"),
+    imperative: itemsFromShard<PracticeImperativeItem>(results[8], "imperative"),
   };
 }
 
@@ -126,6 +130,7 @@ export function concatDrillFields(batches: readonly PracticeDrillFields[]): Prac
     paronym: batches.flatMap((batch) => batch.paronym),
     heritage: batches.flatMap((batch) => batch.heritage),
     antonym: batches.flatMap((batch) => batch.antonym),
+    imperative: batches.flatMap((batch) => batch.imperative),
   };
 }
 
@@ -143,6 +148,7 @@ export function appendDrillFields(deck: PracticeDeckData, fields: PracticeDrillF
     paronym: [...(deck.paronym ?? []), ...fields.paronym],
     heritage: [...(deck.heritage ?? []), ...fields.heritage],
     antonym: [...(withAntonym.antonym ?? []), ...fields.antonym],
+    imperative: [...(deck.imperative ?? []), ...fields.imperative],
   };
   return merged;
 }

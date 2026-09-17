@@ -72,6 +72,7 @@ export const PRACTICE_MODES = [
   'paronym',
   'antonym',
   'homonym',
+  'imperative',
 ] as const;
 const PRACTICE_MODE_SET = new Set<string>(PRACTICE_MODES);
 
@@ -321,6 +322,38 @@ export interface PracticeAntonymItem {
   citations?: string[];
 }
 
+export interface PracticeImperativeOption {
+  text: string;
+  isCorrect: boolean;
+  code?: 'CORRECT' | 'WRONG_PERSON' | 'WRONG_MOOD' | 'ORTHO_SOFT_SIGN' | 'STEM_CLUSTER' | 'CALQUE_AUX' | string;
+  explanationUk?: string;
+  explanationEn?: string;
+}
+
+export interface PracticeImperativeItem {
+  id: string;
+  lemmaId: string;
+  srsKey: string;
+  lemma: string;
+  lemmaPlain?: string;
+  aspect: 'perf' | 'imperf' | string;
+  slot: '2sg' | '1pl' | '2pl' | string;
+  slotLabelUa: string;
+  slotLabelEn?: string;
+  target: string;
+  targetPlain: string;
+  acceptedAnswers: string[];
+  options: PracticeImperativeOption[];
+  cueSentence?: string;
+  cueSentenceEn?: string;
+  cefr: string;
+  notes?: string;
+}
+
+export interface PracticeImperativeShard extends PracticeShardMeta {
+  imperative: PracticeImperativeItem[];
+}
+
 export interface PracticeShardMeta {
   schema: string;
   schemaVersion: number;
@@ -384,6 +417,7 @@ export interface PracticeDeckData {
   synonym?: PracticeSynonymItem[];
   paronym?: PracticeParonymItem[];
   heritage?: PracticeHeritageItem[];
+  imperative?: PracticeImperativeItem[];
   fixtureNote?: string;
 }
 
@@ -533,6 +567,7 @@ export interface PracticeSelection {
   synonym?: PracticeSynonymItem;
   paronym?: PracticeParonymItem;
   heritage?: PracticeHeritageItem;
+  imperative?: PracticeImperativeItem;
   recallDirection: RecallDirection;
   choicePolarity: ChoicePolarity;
 }
@@ -1526,6 +1561,7 @@ interface DeckMaps {
   synonym: Map<string, PracticeSynonymItem[]>;
   paronym: Map<string, PracticeParonymItem[]>;
   heritage: Map<string, PracticeHeritageItem[]>;
+  imperative: Map<string, PracticeImperativeItem[]>;
 }
 
 const deckMapsCache = new WeakMap<PracticeDeckData, DeckMaps>();
@@ -1552,6 +1588,7 @@ function deckMaps(deck: PracticeDeckData): DeckMaps {
     synonym: groupByLemma(deck.synonym),
     paronym: groupByLemma(deck.paronym),
     heritage: groupByLemma(deck.heritage),
+    imperative: groupByLemma(deck.imperative),
   };
   deckMapsCache.set(deck, maps);
   return maps;
@@ -1915,6 +1952,22 @@ function buildStaticCandidates(deck: PracticeDeckData, modeFilter: PracticeModeF
               mode,
               cardKey: paronym.srsKey,
               paronym,
+            }),
+          );
+        }
+        continue;
+      }
+      if (mode === 'imperative') {
+        const items = maps.imperative.get(indexItem.lemmaId) ?? [];
+        for (const imperative of items) {
+          candidates.push(
+            cachedSelection({
+              itemId: makeItemId(indexItem.lemmaId, mode, imperative.id),
+              lemma,
+              indexItem,
+              mode,
+              cardKey: imperative.srsKey || cardKey(indexItem.lemmaId, mode),
+              imperative,
             }),
           );
         }

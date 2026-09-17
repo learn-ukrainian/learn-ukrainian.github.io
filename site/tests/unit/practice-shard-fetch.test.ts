@@ -27,6 +27,7 @@ const emptyFields: PracticeDrillFields = {
   paronym: [],
   heritage: [],
   antonym: [],
+  imperative: [],
 };
 
 describe("practice-shard-fetch", () => {
@@ -94,6 +95,7 @@ describe("practice-shard-fetch", () => {
       "/lexicon/practice-paronym.A1.json",
       "/lexicon/practice-heritage.A1.json",
       "/lexicon/practice-antonym.A1.json",
+      "/lexicon/practice-imperative.A1.json",
     ]);
   });
 
