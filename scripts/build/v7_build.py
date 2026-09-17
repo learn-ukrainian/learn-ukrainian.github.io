@@ -29,6 +29,7 @@ from scripts.audit.llm_qg_store import (
 )
 from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
 from scripts.build import linear_pipeline, run_archive
+from scripts.build.cf_preflight import CfPreflightError, require_cf_preflight
 from scripts.build.phases.implementation_map import (
     read_implementation_map,
     seed_implementation_map,
@@ -38,6 +39,25 @@ from scripts.common.thresholds import QG_DIMS, terminal_dims_for
 from scripts.orchestration import reap_worktrees
 
 DEFAULT_WRITER_TIMEOUT_S = 1800
+
+
+def _enforce_cf_preflight(args: argparse.Namespace, module_dir: Path | None = None) -> None:
+    """Fail closed before any paid writer/upgrade call unless CF is clear."""
+    if getattr(args, "dry_run", False):
+        return
+    if getattr(args, "allow_no_cf_preflight", False):
+        print(
+            "NOTE: --allow-no-cf-preflight set; skipping CF-before-build gate",
+            file=sys.stderr,
+        )
+        return
+    clearance = getattr(args, "cf_clearance", None)
+    require_cf_preflight(
+        repo_root=PROJECT_ROOT,
+        clearance_path=Path(clearance) if clearance else None,
+        module_dir=module_dir,
+        github_repo=os.environ.get("LU_GITHUB_REPO") or None,
+    )
 FETCH_TIMEOUT_S = 30
 GIT_ARTIFACT_TIMEOUT_S = 30
 # Wall clock for the whole --worktree child. A 4-lesson upgrade is writer +
@@ -1720,6 +1740,24 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--cf-clearance",
+        metavar="PATH",
+        default=None,
+        help=(
+            "JSON clearance file proving exact-head CF APPROVE "
+            '({"head":"<40-hex>","verdict":"APPROVE"}). Required for paid builds '
+            "unless --allow-no-cf-preflight. See scripts/build/cf_preflight.py."
+        ),
+    )
+    parser.add_argument(
+        "--allow-no-cf-preflight",
+        action="store_true",
+        help=(
+            "Escape hatch: skip CF-before-build preflight (logs a NOTE). "
+            "Do not use for ordinary curriculum builds."
+        ),
+    )
+    parser.add_argument(
         "--out",
         metavar="PATH",
         default=None,
@@ -2117,6 +2155,7 @@ def _run_upgrade(args: argparse.Namespace) -> int:
         if args.dry_run:
             tracker.emit("module_done", dry_run=True, writer_invoked=False, **fields)
             return 0
+        _enforce_cf_preflight(args, module_dir)
         writer = _normalize_writer(args.writer)
         if writer == "claude-tools":
             writer = "agy-tools"
@@ -2235,6 +2274,10 @@ def _run_upgrade(args: argparse.Namespace) -> int:
     except AgentStalledError as exc:
         tracker.emit("module_failed", phase=phase, error=str(exc), **fields)
         return 124
+    except CfPreflightError as exc:
+        tracker.emit("module_failed", phase=phase, error=str(exc), **fields)
+        print(f"v7_build upgrade: {exc}", file=sys.stderr)
+        return exc.exit_code
     except (linear_pipeline.LinearPipelineError, OSError, ValueError) as exc:
         tracker.emit("module_failed", phase=phase, error=str(exc), **fields)
         print(f"v7_build upgrade: {exc}", file=sys.stderr)
@@ -2390,6 +2433,8 @@ def _run(args: argparse.Namespace) -> int:
                 duration_s=round(time.monotonic() - module_started_at, 3),
             )
             return 0
+
+        _enforce_cf_preflight(args, module_dir)
 
         phase = "writer"
         _phase_started(archive, phase)
@@ -2893,6 +2938,23 @@ def _run(args: argparse.Namespace) -> int:
             exc=exc,
         )
         return 124
+    except CfPreflightError as exc:
+        tracker.emit(
+            "module_failed",
+            level=level,
+            slug=slug,
+            phase=phase,
+            reason=str(exc)[:500],
+        )
+        print(f"v7_build failed in phase {phase}: {exc}", file=sys.stderr, flush=True)
+        _archive_failure_best_effort(
+            archive,
+            phase=phase,
+            module_dir=module_dir,
+            plan_path=plan_path,
+            exc=exc,
+        )
+        return exc.exit_code
     except Exception as exc:
         tracker.emit(
             "module_failed",

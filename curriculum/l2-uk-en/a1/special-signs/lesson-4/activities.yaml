@@ -97,7 +97,7 @@ inline:
     options:
     - ло́жка
     - льожка
-    - ложка
+    - льжка
     explanation: Ло́жка не ма́є м'яко́го зна́ка пі́сля л. — Ло́жка has no soft sign after л.
 - id: act-404
   type: match-up
@@ -281,7 +281,7 @@ workbook:
     options:
     - ло́жка
     - льожка
-    - ложка
+    - льжка
     explanation: Ло́жка не ма́є м'яко́го зна́ка пі́сля л. — Ло́жка has no soft sign after л.
 - id: act-w4
   type: true-false

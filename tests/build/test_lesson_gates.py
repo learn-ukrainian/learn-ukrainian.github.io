@@ -331,6 +331,34 @@ def test_error_correction_options_gate_rejects_tautology_and_empty():
     assert ok == []
 
 
+def test_error_correction_unaccented_correct_copy_fails():
+    """Bare «ложка» against stressed «ло́жка» is not a spelling distractor."""
+    bad = gates.error_correction_item_defects(
+        {
+            "sentence": "На столі́ лежи́ть льожка. — A spoon is on the table.",
+            "error": "льожка",
+            "correction": "ло́жка",
+            "options": ["ло́жка", "льожка", "ложка"],
+        },
+        level="a1",
+    )
+    assert any("unaccented copy" in d for d in bad)
+
+    # Genuine different-stress triple still passes.
+    assert (
+        gates.error_correction_item_defects(
+            {
+                "sentence": "Це мо́локо. — This is milk.",
+                "error": "мо́локо",
+                "correction": "молоко́",
+                "options": ["молоко́", "мо́локо", "моло́ко"],
+            },
+            level="a1",
+        )
+        == []
+    )
+
+
 def test_error_correction_stress_contrast_is_not_tautology():
     """Acute-only triples are real choices; do not strip stress before comparing."""
     ok = gates.error_correction_item_defects(

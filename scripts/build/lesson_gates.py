@@ -732,6 +732,24 @@ def error_correction_item_defects(
                 f"the spotted error {error!r} (not just correction+error)"
             )
 
+    # Unaccented copy of a stressed correctForm is not a real distractor:
+    # React uses ===, so «ложка» loses against «ло́жка», but the chip only
+    # omits teaching stress — it is not a spelling contrast.
+    if isinstance(correct_form, str) and ACUTE in correct_form:
+        bare_corr = strip_acute(nfc(correct_form)).lower()
+        for lab in chip_labels:
+            if not isinstance(lab, str):
+                continue
+            if ACUTE in lab:
+                continue
+            if nfc(lab).lower() == bare_corr:
+                defects.append(
+                    f"{prefix}error-correction option {lab!r} is an unaccented copy of "
+                    f"correctForm {correct_form!r}; use a real spelling distractor "
+                    "(or a different stress placement), not stress omission"
+                )
+                break
+
     # Keep signature compatible; EN scaffold is advisory via warnings helper.
     _ = (level, require_en_scaffold)
     return defects
