@@ -60,6 +60,28 @@ def test_valency_frames_authenticity_and_coverage() -> None:
             assert len(incorrect) > 15
 
 
+def test_vesum_database_resolution_and_attestation() -> None:
+    """Verify that VESUM database resolves via git-common-dir and forms_all queries succeed."""
+    vesum_db = miner.DEFAULT_VESUM_DB
+    assert vesum_db.is_file(), f"VESUM database could not be resolved at {vesum_db}"
+
+    import sqlite3
+    conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
+    cur = conn.cursor()
+
+    for verb, expected_min_forms in [
+        ("опанувати", 10),
+        ("докоряти", 15),
+        ("навчатися", 25),
+        ("завідувач", 10),
+        ("властивий", 20),
+    ]:
+        lemma, count, attested = miner.query_vesum_lemma_and_count(cur, verb)
+        assert lemma == verb
+        assert attested is True
+        assert count >= expected_min_forms, f"Expected >={expected_min_forms} forms for {verb}, got {count}"
+
+
 def test_gate6_tone_calibration_respectful_pedagogy() -> None:
     """Verify Gate 6 tone check filters condescending terms and passes polite phrasing."""
     pejorative_words = miner.load_tone_dict(miner.DEFAULT_TONE_DICT_DIR)
@@ -188,6 +210,40 @@ def test_abbreviation_protection_sentence_splitting() -> None:
     assert len(sents) == 2
     assert sents[0] == "Загальний прибуток підприємства склав понад 2 тис. грн за минулий квартал."
     assert sents[1] == "Академік А. Кримський та проф. Шевченко високо оцінили результати роботи."
+
+
+def test_sentence_splitting_rejects_unbalanced_and_defective_punctuation() -> None:
+    """Verify filtering of unbalanced parentheses, brackets, and unclosed relative clauses."""
+    # Defect: unclosed parenthesis
+    sample_paren = "Адже буддисти активно виступали за мир (наприклад, «Луганськ – це Україна»."
+    assert len(miner.split_clean_ukrainian_sentences(sample_paren)) == 0
+
+    # Defect: unclosed relative clause missing closing comma before main predicate
+    sample_comma = "Посада, на яку приймаєте працівника обов'язково повинна бути в державному класифікаторі професій в Україні."
+    assert len(miner.split_clean_ukrainian_sentences(sample_comma)) == 0
+
+    # Valid sentence with balanced punctuation and subordinate clause must pass
+    sample_valid = "Посада, на яку приймаєте працівника, обов'язково повинна бути в державному класифікаторі професій в Україні."
+    assert len(miner.split_clean_ukrainian_sentences(sample_valid)) == 1
+
+
+def test_valency_explanations_codification_nuance() -> None:
+    """Verify valency explanations cite modern literary codification (СУМ, Правопис 2019)."""
+    frames = {f["verb"]: f for f in miner.VALENCY_FRAMES}
+    assert "докоряти" in frames
+    assert "навчатися" in frames
+
+    # dokoriati explanation must cite literary norm and avoid blanket Russian calque claim
+    dok_expl = frames["докоряти"]["explanation"]
+    assert "давальним відмінком" in dok_expl
+    assert "невірно" not in dok_expl
+    assert "російською синтаксичною калькою" not in dok_expl
+
+    # navchatysia explanation must cite Pravopys 2019 / SUM and genitive government
+    navch_expl = frames["навчатися"]["explanation"]
+    assert "родовим відмінком" in navch_expl
+    assert "Правопис 2019" in navch_expl or "СУМ" in navch_expl
+    assert "синтаксичною калькою з російської" not in navch_expl
 
 
 def test_release_receipt_schema_and_checksum() -> None:

@@ -33,12 +33,33 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-DEFAULT_VESUM_DB = PROJECT_ROOT / "data" / "vesum.db"
-DEFAULT_SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
+def resolve_data_path(rel_path: str) -> Path:
+    """Resolve a relative data path, falling back to git common dir for gitignored files."""
+    local_p = PROJECT_ROOT / rel_path
+    if local_p.exists() and (local_p.is_dir() or local_p.stat().st_size > 0):
+        return local_p
+    try:
+        common = subprocess.check_output(
+            ["git", "rev-parse", "--git-common-dir"],
+            cwd=PROJECT_ROOT,
+            text=True,
+            stderr=subprocess.DEVNULL,
+            timeout=30,
+        ).strip()
+        main_p = Path(common).resolve().parent / rel_path
+        if main_p.exists() and (main_p.is_dir() or main_p.stat().st_size > 0):
+            return main_p
+    except Exception:
+        pass
+    return local_p
+
+
+DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
+DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v05_grammar_valency"
-DEFAULT_UA_GEC_DIR = PROJECT_ROOT / "tmp" / "cache" / "ua-gec"
-DEFAULT_BROWN_UK_DIR = PROJECT_ROOT / "tmp" / "cache" / "brown-uk"
-DEFAULT_TONE_DICT_DIR = PROJECT_ROOT / "tmp" / "cache" / "tone-dict-uk"
+DEFAULT_UA_GEC_DIR = resolve_data_path("tmp/cache/ua-gec")
+DEFAULT_BROWN_UK_DIR = resolve_data_path("tmp/cache/brown-uk")
+DEFAULT_TONE_DICT_DIR = resolve_data_path("tmp/cache/tone-dict-uk")
 
 SCHEMA_EVAL_PATH = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_grammar_valency_eval_record.schema.json"
 SCHEMA_RECEIPT_PATH = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_grammar_valency_release_receipt.schema.json"
@@ -80,6 +101,13 @@ def unprotect_abbreviations(text: str) -> str:
     return text.replace("§DOT§", ".")
 
 
+# Unclosed subordinate relative clause missing closing comma before main predicate (Правопис 2019 §158)
+UNCLOSED_RELATIVE_CLAUSE_RE = re.compile(
+    r',\s+(?:на\s+яку|в\s+які[йм]|у\s+які[йм]|яка|який|яке|які|якого|якій|яким|яких|якої|котри[йаеі])\s+[^,]{3,60}?\s+(?:обов\'язково\s+)?(?:повинн[аиое]|необхідно|варто|мусит[ьь]|має|є)\b',
+    re.IGNORECASE,
+)
+
+
 def split_clean_ukrainian_sentences(
     text: str,
     min_len: int = 40,
@@ -92,6 +120,8 @@ def split_clean_ukrainian_sentences(
     - Abbreviations (2 тис. грн, рр., ст.) do not split across sentences.
     - Initials (Т. Шевченко, «А.) do not split across sentences.
     - Fragments ending in abbreviations or dangling quotes are rejected.
+    - Balanced punctuation (parentheses, brackets, braces, quotes) is enforced.
+    - Sentences with unclosed subordinate relative clauses are rejected.
     """
     protected = protect_abbreviations(text)
     raw_sents = re.split(r"(?<=[.!?…])\s+(?=[А-ЯІЇЄҐA-Z«\"„—])", protected)
@@ -117,8 +147,25 @@ def split_clean_ukrainian_sentences(
             continue
         if re.search(r"(?:^|[\s«\"„])(?:[А-ЯІЇЄҐA-Z])\.$", s):
             continue
-        # Check matching quotes if present
+        # Check matching quotes, parentheses, brackets, and braces
         if s.count("«") != s.count("»"):
+            continue
+        if s.count("(") != s.count(")"):
+            continue
+        if s.count("[") != s.count("]"):
+            continue
+        if s.count("{") != s.count("}"):
+            continue
+        if s.count('"') % 2 != 0:
+            continue
+        # Reject invalid double punctuation
+        if re.search(r"(?<!\.)\.\.(?!\.)|,,|;;", s):
+            continue
+        # Reject dangling non-terminal punctuation
+        if re.search(r"[,;:\-–—]\s*$", s):
+            continue
+        # Reject sentences with unclosed subordinate relative clause missing closing comma (Правопис 2019 §158)
+        if UNCLOSED_RELATIVE_CLAUSE_RE.search(s):
             continue
         clean_sents.append(s)
     return clean_sents
@@ -134,20 +181,29 @@ def query_vesum_lemma_and_count(cur_ves: sqlite3.Cursor | None, token: str) -> t
     if not cur_ves:
         return clean_token, 1, True
     try:
-        cur_ves.execute("SELECT lemma FROM forms WHERE form = ? LIMIT 1", (clean_token,))
-        row = cur_ves.fetchone()
-        if row and row[0]:
-            lemma = str(row[0])
-            cur_ves.execute("SELECT COUNT(*) FROM forms WHERE lemma = ?", (lemma,))
-            cnt_row = cur_ves.fetchone()
-            count = int(cnt_row[0]) if cnt_row else 1
-            return lemma, max(1, count), True
-
-        cur_ves.execute("SELECT lemma FROM forms_all WHERE form = ? LIMIT 1", (clean_token,))
+        # Check forms_all table first (canonical VESUM SQLite schema: word_form, lemma)
+        # Prefer exact lemma match if the word form is itself a lemma (e.g., preposition 'при' vs verb 'перти')
+        cur_ves.execute(
+            "SELECT lemma FROM forms_all WHERE word_form = ? ORDER BY (lemma = word_form) DESC LIMIT 1",
+            (clean_token,),
+        )
         row = cur_ves.fetchone()
         if row and row[0]:
             lemma = str(row[0])
             cur_ves.execute("SELECT COUNT(*) FROM forms_all WHERE lemma = ?", (lemma,))
+            cnt_row = cur_ves.fetchone()
+            count = int(cnt_row[0]) if cnt_row else 1
+            return lemma, max(1, count), True
+
+        # Fallback to forms table if present (for test fixtures)
+        cur_ves.execute(
+            "SELECT lemma FROM forms WHERE form = ? ORDER BY (lemma = form) DESC LIMIT 1",
+            (clean_token,),
+        )
+        row = cur_ves.fetchone()
+        if row and row[0]:
+            lemma = str(row[0])
+            cur_ves.execute("SELECT COUNT(*) FROM forms WHERE lemma = ?", (lemma,))
             cnt_row = cur_ves.fetchone()
             count = int(cnt_row[0]) if cnt_row else 1
             return lemma, max(1, count), True
@@ -295,7 +351,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "verb": "докоряти",
         "correct_pattern": "докоряти (кому/чому? давальний відмінок)",
         "incorrect_pattern": "докоряти (кого/що? знахідний відмінок)",
-        "explanation": "Дієслово «докоряти» в українській літературній мові керує давальним відмінком (докоряти синові, докоряти собі). Вживання знахідного відмінка («докоряти сина») є російською синтаксичною калькою («упрекать сына»).",
+        "explanation": "У сучасній українській літературній мові нормативним є керування давальним відмінком: докоряти кому (синові, собі). Вживання знахідного відмінка вважається ненормативним для літературного стилю / розмовним відхиленням (згідно зі СУМ та нормативними порадниками).",
         "examples": [
             ("Батько ніколи не докоряв синові за тимчасові життєві невдачі.", "Батько ніколи не докоряв сина за тимчасові життєві невдачі."),
             ("Вона гірко докоряла собі за виявлену в розмові нестриманість.", "Вона гірко докоряла себе за виявлену в розмові нестриманість."),
@@ -307,7 +363,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
         "verb": "навчатися",
         "correct_pattern": "навчатися (чого? родовий відмінок)",
         "incorrect_pattern": "навчатися (чому? давальний відмінок)",
-        "explanation": "Дієслово «навчатися» в українській мові керує родовим відмінком без прийменника: навчатися мови, навчатися ремесла, навчатися грамоти (вживання давального відмінка «навчатися мові» є синтаксичною калькою з російської).",
+        "explanation": "Згідно з нормами сучасної української літературної мови (Правопис 2019, СУМ), дієслово «навчатися» послідовно керує родовим відмінком без прийменника: навчатися мови, ремесла, грамоти. Вживання давального відмінка є ненормативним для літературного мовлення.",
         "examples": [
             ("Студенти наполегливо навчаються української літературної мови.", "Студенти наполегливо навчаються українській літературній мові."),
             ("Молодь охоче навчається сучасних цифрових технологій та дизайну.", "Молодь охоче навчається сучасним цифровим технологіям та дизайну."),
@@ -990,6 +1046,7 @@ def main() -> int:
     parser.add_argument("--ua-gec-dir", type=Path, default=DEFAULT_UA_GEC_DIR)
     parser.add_argument("--brown-uk-dir", type=Path, default=DEFAULT_BROWN_UK_DIR)
     parser.add_argument("--tone-dict-dir", type=Path, default=DEFAULT_TONE_DICT_DIR)
+    parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB)
     parser.add_argument("--target-count", type=int, default=35000)
     parser.add_argument("--eval-count", type=int, default=500)
     parser.add_argument("--shards-count", type=int, default=70)
@@ -1003,9 +1060,13 @@ def main() -> int:
 
     conn_ves = None
     cur_ves = None
-    if DEFAULT_VESUM_DB.is_file():
-        conn_ves = sqlite3.connect(f"file:{DEFAULT_VESUM_DB}?mode=ro", uri=True)
+    vesum_path: Path = args.vesum_db
+    if vesum_path.is_file():
+        conn_ves = sqlite3.connect(f"file:{vesum_path}?mode=ro", uri=True)
         cur_ves = conn_ves.cursor()
+        print(f"Connected to VESUM database: {vesum_path}")
+    else:
+        print(f"WARNING: VESUM database not found at {vesum_path}")
 
     try:
         # 1. Load tone dictionary for Gate 6
