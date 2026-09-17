@@ -55,19 +55,20 @@ measured gain.
 | Fact type | Authority | Generated OpenWiki role |
 | --- | --- | --- |
 | Runtime behavior | Code + tests | May cite paths; never redefine behavior |
+| Config knobs / immersion values | Config-as-policy (`scripts/config.py` etc.) | Cite config path; never invent policy |
 | Binding agent rules | `agents_extensions/shared/rules/` (+ served `/api/rules`) | Locator only; never duplicate binding text |
-| Deployed rule copies | Generated from `agents_extensions/` | Out of scope; never write `.claude/` / `.codex/` / `.agent/` / `.gemini/` |
+| Deployed rule copies | Generated from `agents_extensions/` | Out of scope; never write harness deploy trees |
 | Curated docs | Tracked `docs/**` with declared lifecycle | May summarize with citations |
-| ADRs / decisions | `docs/architecture/adr/`, `docs/decisions/` | Cite; do not invent supersession |
+| ADRs / decisions / pending cards | `docs/architecture/adr/`, `docs/decisions/` | Cite; do not invent supersession |
+| Planning state | GitHub issue/epic bodies | Cite issue numbers; GH state wins over stale plans |
 | Live ops / leases / capacity | Monitor API + session streams | **Forbidden** to mirror or assert as current |
 | Research provenance | Project Research Registry (ADR-011) | Cross-link; do not replace attributed fetch |
 | Learner UI stack truth | Plain Astro ACCEPTED record + `site/` | Must not claim Starlight/Docusaurus as current |
 | Ukrainian language claims | VESUM / `sources` / verbatim quoted curriculum | **Verbatim quote only** in generated pages (FBL-013) |
-| Immersion / scaffolding policy | Operator contract item 9 + level rules | Precedence example: A1 English scaffolding is intentional; generated docs must not “correct” it |
+| Immersion / scaffolding policy | Operator contract item 9 + config-as-policy | Precedence: config/operator contract win over stale docs; see conflict procedure |
 
-Worked immersion example: an OpenWiki page about A1 module chrome may quote the
-operator-contract exception and the module plan; it must not invent a
-Ukrainian-only A1 chrome policy that contradicts the exception.
+Worked immersion example and conflict procedure: see
+[`docs-authority-lifecycle.md`](../docs-authority-lifecycle.md).
 
 ### Stream ownership
 
@@ -105,7 +106,7 @@ If AGY cannot execute (outage / hard quota), **swap once for that PR**: Astra @ 
 
 No viable language-lane execute+review pair → skip OpenWiki; continue deterministic index only.
 
-**Operator amendments (2026-09-17):** (1) prefer Gemini Flash / Astra over DeepSeek for Ukrainian-related documentation; (2) prefer execute/review split over interchangeable alternates.
+**Operator amendments (2026-09-17):** (1) prefer Gemini Flash / Astra over DeepSeek for Ukrainian-related documentation; (2) prefer execute/review split over interchangeable alternates; (3) **if the pilot is adopted**, expand page coverage and add a **visual OpenWiki browser in the Ops API UI** (dashboards + `/artifacts` via `docs_router` allowlisting `openwiki/`), with freshness digest — never as live-state authority and never conflated with Swagger `/docs`.
 
 ### Hard exclusions (generator output)
 
