@@ -412,7 +412,7 @@ def check_verb_agreement(tags1: list[str], tags2: list[str]) -> bool:
     return False
 
 
-PARENTHETICAL_WORDS = {
+PARENTHETICAL_PHRASES = {
     "наприклад", "зокрема", "мабуть", "можливо", "певне", "певно", "безперечно", "безумовно",
     "очевидно", "справді", "дійсно", "правда", "кажуть", "скажімо", "значить", "отже",
     "навпаки", "до речі", "між іншим", "на жаль", "на щастя", "по-перше", "по-друге",
@@ -421,22 +421,25 @@ PARENTHETICAL_WORDS = {
 
 
 def is_parenthetical_segment(seg: str, cur_ves: sqlite3.Cursor | None) -> bool:
-    """Check whether a comma-delimited text segment is a parenthetical word or phrase (Правопис 2019 §158 I.11)."""
+    """Check whether a comma-delimited text segment is an isolated parenthetical word or phrase (Правопис 2019 §158 I.11)."""
     seg_clean = seg.strip().lower()
-    if seg_clean in PARENTHETICAL_WORDS:
+    if seg_clean in PARENTHETICAL_PHRASES:
         return True
     words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\x27\u2019\-]+", seg_clean)
-    if not words or len(words) > 4:
+    if not words or len(words) > 3:
         return False
-    if any(w in PARENTHETICAL_WORDS for w in words):
-        return True
-    if cur_ves:
-        for w in words:
+    if any(get_verb_finite_tags(w, cur_ves) for w in words):
+        return False
+    for w in words:
+        if w in PARENTHETICAL_PHRASES:
+            continue
+        if cur_ves:
             cur_ves.execute("SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?)", (w, w.capitalize()))
-            for r in cur_ves.fetchall():
-                if ":insert" in r[0]:
-                    return True
-    return False
+            rows = cur_ves.fetchall()
+            if any(":insert" in r[0] for r in rows):
+                continue
+        return False
+    return True
 
 
 def has_homogeneous_verb_comma(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
@@ -449,9 +452,9 @@ def has_homogeneous_verb_comma(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
         if not segments:
             continue
 
-        # If the segment immediately preceding ', і' is parenthetical (e.g. ', наприклад,'),
+        # If there is an enclosed parenthetical immediately preceding ', і' (e.g. ', наприклад, і'),
         # the comma before 'і' is a closing parenthetical comma under Правопис 2019 §158 I.11
-        if is_parenthetical_segment(segments[-1], cur_ves):
+        if len(segments) >= 2 and is_parenthetical_segment(segments[-1], cur_ves):
             continue
 
         finite1_list = []
@@ -747,6 +750,76 @@ def has_unclosed_appositive_comma(s: str, cur_ves: sqlite3.Cursor | None) -> boo
     return False
 
 
+LOC_TIME_PREPOSITIONS = {
+    "під", "біля", "коло", "поблизу", "неподалік", "над", "в", "у", "на", "за", "перед", "при", "серед", "між",
+}
+
+
+def has_unclosed_clarification(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
+    """Reject unclosed clarifying adverbial modifiers lacking closing comma before subject/predicate (Правопис 2019 §158 I.15(3))."""
+    if not cur_ves:
+        return False
+    for m in re.finditer(r",", s):
+        before = s[:m.start()].strip()
+        after = s[m.end():].strip()
+
+        # Clause before comma
+        clause_before = before.split(",")[-1].strip()
+        words_before = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\x27\u2019\-]+", clause_before)
+        if not words_before or len(words_before) < 2:
+            continue
+
+        # If clause_before already has a finite verb, it's not a preposed adverbial
+        if any(get_verb_finite_tags(w, cur_ves) for w in words_before):
+            continue
+
+        # Must have a loc/time preposition in words_before
+        if not any(w.lower() in LOC_TIME_PREPOSITIONS for w in words_before):
+            continue
+
+        # Segment after comma
+        seg_after = re.split(r"[,:;]", after)[0].strip()
+        words_seg = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\x27\u2019\-]+", seg_after)
+        if len(words_seg) < 4:
+            continue
+
+        # First word after comma must be a loc/time preposition
+        first_w = words_seg[0].lower()
+        if first_w not in LOC_TIME_PREPOSITIONS:
+            continue
+
+        # The token immediately following prep must NOT be a relative pronoun or question word
+        second_w = words_seg[1].lower()
+        if second_w in SUBORDINATE_MARKERS or second_w.startswith("як"):
+            continue
+
+        # Look for a subject and verb in words_seg:
+        # The prepositional phrase extends at least 2 tokens.
+        # After it, there is a nominative subject and finite verb without an intervening comma
+        for i in range(2, len(words_seg) - 1):
+            w_s = words_seg[i]
+            if words_seg[i - 1].lower() in LOC_TIME_PREPOSITIONS:
+                continue
+            s_tags = get_subj_nominative_tags(w_s, cur_ves)
+            if not s_tags:
+                continue
+
+            for j in range(i + 1, len(words_seg)):
+                w_v = words_seg[j]
+                v_tags = get_verb_finite_tags(w_v, cur_ves)
+                if v_tags and any(check_subj_verb_agreement(st, vt) for st in s_tags for vt in v_tags):
+                    cur_ves.execute(
+                        "SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?) AND pos = 'noun'",
+                        (w_s, w_s.capitalize()),
+                    )
+                    rows = cur_ves.fetchall()
+                    if rows and any("v_naz" in r[0] for r in rows) and not any(c in rows[0][0] for c in ["v_rod", "v_dav", "v_mis"] if len(rows) == 1):
+                        return True
+                    if w_s.lower() in PRONOUNS_NAZ:
+                        return True
+    return False
+
+
 
 def check_has_predicate(text: str, cur_ves: sqlite3.Cursor | None) -> bool:
     """Check whether a text fragment contains an active predicate (verb, predicative, or copula)."""
@@ -840,6 +913,10 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
 
     # 14. Unclosed detached apposition lacking closing comma before matrix verb (Правопис 2019 §158 I.14)
     if has_unclosed_appositive_comma(s, cur_ves):
+        return False
+
+    # 15. Unclosed clarifying adverbial modifier lacking closing comma before subject/predicate (Правопис 2019 §158 I.15(3))
+    if has_unclosed_clarification(s, cur_ves):
         return False
 
     # 4. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)

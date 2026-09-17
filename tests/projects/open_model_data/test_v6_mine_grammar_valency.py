@@ -479,6 +479,19 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.has_homogeneous_verb_comma(frag_parenthetical_closing, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_parenthetical_closing, cur_ves=cur)
 
+    # Defect 34 (Round 14 P1): Unclosed clarifying adverbial modifier lacking closing comma before subject/predicate (Правопис 2019 §158 I.15(3))
+    frag_unclosed_clarification = (
+        "Українські буддисти спершу зводили свій храм на Луганщині, та звідти їх вигнала війна, "
+        "і тепер під селом Паньківка, біля залитого фундаменту споруди сепаратисти облаштували свою базу."
+    )
+    assert not miner.is_pristine_eval_sentence(frag_unclosed_clarification, cur_ves=cur)
+    assert miner.has_unclosed_clarification(frag_unclosed_clarification, cur_ves=cur)
+
+    # Defect 35 (Round 14 P2): Comma separating homogeneous predicates with parenthetical word inside clause (Правопис 2019 §158 I.1)
+    frag_clause_with_spravdi = "Він справді читає книжку, і пише довгого листа."
+    assert not miner.is_pristine_eval_sentence(frag_clause_with_spravdi, cur_ves=cur)
+    assert miner.has_homogeneous_verb_comma(frag_clause_with_spravdi, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:
