@@ -546,9 +546,14 @@ describe('site shim surface', () => {
   test('re-exports the kit implementations at runtime', () => {
     expect(SiteCloze).toBe(KitCloze);
     expect(SiteClozePassage).toBe(KitClozePassage);
-    expect(SiteMatchUp).toBe(KitMatchUp);
-    expect(SiteTrueFalse).toBe(KitTrueFalse);
-    expect(SiteTrueFalseQuestion).toBe(KitTrueFalseQuestion);
+    // MatchUp / TrueFalse are thin chrome-locale wrappers around the kit
+    // defaults so the УКР/ENG toggle updates activity chrome (see useChromeLocale).
+    expect(SiteMatchUp).not.toBe(KitMatchUp);
+    expect(SiteTrueFalse).not.toBe(KitTrueFalse);
+    expect(SiteTrueFalseQuestion).not.toBe(KitTrueFalseQuestion);
+    expect(typeof SiteMatchUp).toBe('function');
+    expect(typeof SiteTrueFalse).toBe('function');
+    expect(typeof SiteTrueFalseQuestion).toBe('function');
   });
 
   type PropAnnotations = Record<string, { schemaDescription: boolean; ukrainianText?: string }>;
