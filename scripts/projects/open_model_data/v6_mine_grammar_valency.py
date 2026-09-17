@@ -216,6 +216,10 @@ INVALID_DOCUMENT_AKTU_RE = re.compile(
     r")(?!\s+(?:[а-яіїєґ\'’\-]+(?:ого|ього|ої|ьої)\s+){0,3}(?:агресії|вандалізму|тероризму|насильства|непокори|капітуляції|відчаю|милосердя|доброї\s+волі|героїзму|самопожертви|протесту|саботажу|диверсії|помсти|зради|каяття))",
     re.IGNORECASE,
 )
+DISCORDANT_DASH_APPOSITION_RE = re.compile(
+    r"\b[а-яіїєґА-ЯІЇЄҐ\']+(?:ою|ею|ям|ем|ом)\s+[–—]\s+[а-яіїєґА-ЯІЇЄҐ\']+(?:а|я|е)\s+[а-яіїєґА-ЯІЇЄҐ\']+(?:а|я|е|о|ь)\b[^–—]+[–—]\s+[а-яіїєґА-ЯІЇЄҐ\']*(?:ли|ла|ло|в|ть|ти|ють|ять|е|є)\b",
+    re.IGNORECASE,
+)
 PREDICATE_WORDS = {
     "є", "це", "немає", "нема", "треба", "можна", "слід", "варто", "необхідно",
     "потрібно", "жаль", "сором", "пора", "час", "досить", "відомо", "зрозуміло",
@@ -322,6 +326,8 @@ def split_clean_ukrainian_sentences(
         if INVALID_CALENDAR_DATE_AFFIX_RE.search(s):
             continue
         if INVALID_DOCUMENT_AKTU_RE.search(s):
+            continue
+        if DISCORDANT_DASH_APPOSITION_RE.search(s):
             continue
         clean_sents.append(s)
     return clean_sents
@@ -1096,6 +1102,53 @@ def has_invalid_compound_preposition_case(s: str, cur_ves: sqlite3.Cursor | None
     return False
 
 
+def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None) -> bool:
+    """Reject ungrammatical appositions set off by paired dashes that fail case agreement with the head (Правопис 2019 §158, Ющук §21)."""
+    if DISCORDANT_DASH_APPOSITION_RE.search(s):
+        return True
+    if not cur_ves:
+        return False
+    m = re.search(r"\b([а-яіїєґА-ЯІЇЄҐ\']+)\s+[–—]\s+([^–—]+?)\s+[–—]", s)
+    if not m:
+        return False
+    head_word = m.group(1).lower()
+    inside = m.group(2).strip()
+    words = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", inside)
+    if not words or len(words) < 2:
+        return False
+
+    cur_ves.execute(
+        "SELECT DISTINCT pos, tags FROM forms_all WHERE word_form IN ({})".format(
+            ",".join("?" for _ in words)
+        ),
+        [w.lower() for w in words],
+    )
+    rows = cur_ves.fetchall()
+    has_verb = any(r[0] == "verb" and not any(inf in r[1] for inf in (":inf", ":adjp", ":advp")) for r in rows)
+    if has_verb:
+        return False
+
+    cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ?", (head_word,))
+    head_rows = cur_ves.fetchall()
+    if not head_rows:
+        return False
+    head_cases = {tag.split(":v_")[1].split(":")[0] for r in head_rows for tag in [r[0]] if ":v_" in tag}
+
+    if head_cases and "naz" not in head_cases:
+        app_first = words[0].lower()
+        app_second = words[1].lower()
+        cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ?", (app_first,))
+        w1_rows = cur_ves.fetchall()
+        cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ?", (app_second,))
+        w2_rows = cur_ves.fetchall()
+        w1_cases = {tag.split(":v_")[1].split(":")[0] for r in w1_rows for tag in [r[0]] if ":v_" in tag}
+        w2_cases = {tag.split(":v_")[1].split(":")[0] for r in w2_rows for tag in [r[0]] if ":v_" in tag}
+
+        if "naz" in w1_cases and "naz" in w2_cases and not (head_cases & (w1_cases & w2_cases)):
+            return True
+    return False
+
+
 def check_has_predicate(text: str, cur_ves: sqlite3.Cursor | None) -> bool:
     """Check whether a text fragment contains an active predicate (verb, predicative, or copula)."""
     words = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", text.lower())
@@ -1228,6 +1281,10 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
 
     # 24. Erroneous genitive -у in legislative/document noun 'акт' (Правопис 2019 §82: 'акта' (документ) vs 'акту' (дія))
     if INVALID_DOCUMENT_AKTU_RE.search(s):
+        return False
+
+    # 25. Discordant parenthetical apposition case agreement (Правопис 2019 §158, Ющук §21)
+    if has_discordant_dash_apposition(s, cur_ves):
         return False
 
     # 4. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)

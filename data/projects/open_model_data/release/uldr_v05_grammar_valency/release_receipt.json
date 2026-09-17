@@ -6,7 +6,7 @@
   "git_commit": "e6349b5047f4ac9e2e66dd198ba2ba9f4e1bda48",
   "evaluation_benchmark": {
     "file_path": "data/projects/open_model_data/release/uldr_v05_grammar_valency/brown_uk_negative_control_eval.jsonl",
-    "sha256": "ee465de16a2562340ea89634fbc03e5dfcd9c476fe4257c60c38277c19f820f3",
+    "sha256": "0fe02d8712b9a9eb0197b57073988094eb8d4203590166d3ff0880a3711075ee",
     "total_cases": 500,
     "held_out_documents_count": 50,
     "held_out_documents": [

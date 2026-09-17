@@ -836,11 +836,20 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_akta_pro_nasylstvo, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_akta_pro_nasylstvo)) == 1
 
+    # Defect 90 / Negative regression (Round 39 P2): Discordant dash apposition (instrumental head with nominative apposition) rejected (Правопис 2019 §158, Ющук §21)
+    frag_discordant_apposition = (
+        "Вдалою режисерською знахідкою – своєрідна гра на контрасті – стали комічні вибрики "
+        "представників найстаршого покоління родини: старих чоловіка і жінки."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition)) == 0
 
-
-
-
-
+    # Defect 91 / Positive control (Round 39 P2): Clean replacement sentence from same doc accepted
+    frag_apposition_replacement = "Кожному поколінню героїв відповіді на ці запитання доводиться шукати самостійно."
+    assert not miner.has_discordant_dash_apposition(frag_apposition_replacement, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_apposition_replacement, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_apposition_replacement)) == 1
 
 
 def test_release_receipt_schema_and_checksum() -> None:
