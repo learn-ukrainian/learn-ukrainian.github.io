@@ -1163,6 +1163,28 @@ def is_preposition(word: str, cur: sqlite3.Cursor | None = None) -> bool:
             pass
     return False
 
+
+def is_modifier_or_adv(word: str, cur: sqlite3.Cursor | None = None) -> bool:
+    """Check whether a word is an adjective, pronoun, numeral, adverb, or particle modifying a noun."""
+    if not cur:
+        return False
+    try:
+        cur.execute("SELECT DISTINCT pos FROM forms_all WHERE word_form = ?", (word,))
+        pos_set = {r[0] for r in cur.fetchall()}
+        return bool(pos_set & {"adj", "pron", "num", "adv", "part"})
+    except Exception:
+        return False
+
+
+def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor | None = None) -> bool:
+    """Check whether words[idx] functions as the nominal complement of a preceding preposition."""
+    for p in range(idx - 1, max(-1, idx - 5), -1):
+        if is_preposition(words[p], cur):
+            if all(is_modifier_or_adv(words[k], cur) for k in range(p + 1, idx)):
+                return True
+            break
+    return False
+
 RELATIVE_PRONOUN_PATTERN = (
     r"(?:який|яка|яке|які|якого|якій|яким|яких|якої|якому|яку|якими|"
     r"котрий|котра|котре|котрі|котрого|котрій|котрим|котрих|котрої|котрому|котру|котрими|"
@@ -1217,7 +1239,7 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
     def words_have_predicate(words: list[str]) -> bool:
         for idx, w in enumerate(words):
             if w in PREDICATE_WORDS:
-                if idx > 0 and is_preposition(words[idx - 1], cur):
+                if is_in_prepositional_phrase(words, idx, cur):
                     continue
                 return True
             if cur:
@@ -1236,13 +1258,10 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                     if not has_finite_verb:
                         continue
                     # Disambiguate finite verbs homonymous with nouns:
-                    # If a word has a noun reading and is preceded by a preposition in the clause segment,
-                    # it functions as a nominal complement in a prepositional phrase, not a clause predicate.
+                    # If a word has a noun reading and is in a prepositional phrase, it is a noun, not a predicate.
                     has_noun_reading = any(r[0] == "noun" for r in rows)
-                    if has_noun_reading:
-                        preceded_by_prep = any(is_preposition(words[j], cur) for j in range(max(0, idx - 3), idx))
-                        if preceded_by_prep:
-                            continue
+                    if has_noun_reading and is_in_prepositional_phrase(words, idx, cur):
+                        continue
                     return True
                 except Exception:
                     pass

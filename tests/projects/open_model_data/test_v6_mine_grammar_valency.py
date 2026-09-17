@@ -1207,6 +1207,22 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_dependent_infinitive, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_dependent_infinitive)) == 1
 
+    # Defect 138 / Negative regression (Round 63 P2): Modified prepositional phrase with predicative noun 'час' does not fake clause completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_discordant_apposition_prep_modified_chas = (
+        "Театр — місце, де у вільний час вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_prep_modified_chas, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_prep_modified_chas, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_prep_modified_chas)) == 0
+
+    # Defect 139 / Positive control (Round 63 P2): Agreeing instrumental apposition with modified prepositional phrase accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_agreeing_apposition_prep_modified_chas = (
+        "Театр — місце, де у вільний час вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_prep_modified_chas, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_prep_modified_chas, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_prep_modified_chas)) == 1
+
 
 def test_release_receipt_schema_and_checksum() -> None:
     """Validate release receipt against JSON schema and sha256 checksum."""
