@@ -10,6 +10,10 @@ Tests:
 
 from __future__ import annotations
 
+from pathlib import Path
+
+import pytest
+
 from scripts.practice.numeral_agreement_engine import (
     InterferenceType,
     NounParadigm,
@@ -274,6 +278,94 @@ def test_fractional_numeral_governance():
     assert card_f.target_number == "singular"
 
 
+def test_zero_collision_guarantee_fixture_paradigms():
+    """Verify zero-collision guarantee across synthetic paradigms without DB dependency."""
+    sample_paradigms = [
+        NounParadigm(
+            lemma="стіл",
+            gender="m",
+            is_anim=False,
+            cefr_level="A1",
+            nom_sg="стіл",
+            gen_sg="стола",
+            nom_pl="столи",
+            gen_pl="столів",
+            dat_pl="столам",
+            loc_pl="столах",
+            oru_sg="столом",
+        ),
+        NounParadigm(
+            lemma="студент",
+            gender="m",
+            is_anim=True,
+            cefr_level="A1",
+            nom_sg="студент",
+            gen_sg="студента",
+            nom_pl="студенти",
+            gen_pl="студентів",
+            dat_pl="студентам",
+            loc_pl="студентах",
+            oru_sg="студентом",
+        ),
+        NounParadigm(
+            lemma="сестра",
+            gender="f",
+            is_anim=True,
+            cefr_level="A1",
+            nom_sg="сестра",
+            gen_sg="сестри",
+            nom_pl="сестри",
+            gen_pl="сестер",
+            dat_pl="сестрам",
+            loc_pl="сестрах",
+            oru_sg="сестрою",
+        ),
+        NounParadigm(
+            lemma="книжка",
+            gender="f",
+            is_anim=False,
+            cefr_level="A1",
+            nom_sg="книжка",
+            gen_sg="книжки",
+            nom_pl="книжки",
+            gen_pl="книжок",
+            dat_pl="книжкам",
+            loc_pl="книжках",
+            oru_sg="книжкою",
+        ),
+        NounParadigm(
+            lemma="вікно",
+            gender="n",
+            is_anim=False,
+            cefr_level="A1",
+            nom_sg="вікно",
+            gen_sg="вікна",
+            nom_pl="вікна",
+            gen_pl="вікон",
+            dat_pl="вікнам",
+            loc_pl="вікнах",
+            oru_sg="вікном",
+        ),
+    ]
+
+    cards = generate_deck_across_all_tiers(sample_paradigms * 10, target_count=50)
+    assert len(cards) == 50
+    for card in cards:
+        errs = validate_numeral_card(card)
+        assert not errs, f"Validation errors in {card.id}: {errs}"
+        assert len(card.options) == 4
+        assert len(set(card.options)) == 4, f"Duplicate options in {card.id}: {card.options}"
+        assert card.correct_form in card.options
+        for d in card.distractors:
+            assert d["form"] != card.correct_form
+            assert len(d["explanation_ua"].strip()) > 10
+            assert len(d["explanation_en"].strip()) > 10
+
+
+@pytest.mark.skipif(
+    not Path("data/vesum.db").exists() or Path("data/vesum.db").stat().st_size < 1_000_000,
+    reason="Requires full local data/vesum.db (>1MB); CI omits it",
+)
 def test_zero_collision_guarantee_large_scale():
     """Verify zero-collision guarantee across >= 1,000 generated cards."""
     paradigms = load_noun_paradigms_from_db(limit=1600)
