@@ -1,6 +1,7 @@
 lessons:
 - n: 1
-  title: "М'яки́й знак (Ь) та африка́ти: Лі́тери Ь, Ц, Ч · Soft Sign (Ь) and Affricates: Letters Ь, Ц, Ч"
+  title: 'М''яки́й знак (Ь) та африка́ти: Лі́тери Ь, Ц, Ч · Soft Sign (Ь) and Affricates:
+    Letters Ь, Ц, Ч'
   sections:
   - М'який знак
   - Африкати Ц та Ч
@@ -17,7 +18,8 @@ lessons:
   unverified_stress: []
   unverified_lemmas: []
 - n: 2
-  title: "Йото́вані лі́тери та напівголосни́й: Лі́тери Й, Я, Ю, Є · Iotated Vowels and Semivowel: Letters Й, Я, Ю, Є"
+  title: 'Йото́вані лі́тери та напівголосни́й: Лі́тери Й, Я, Ю, Є · Iotated Vowels
+    and Semivowel: Letters Й, Я, Ю, Є'
   sections:
   - Йотовані голосні
   - Буква Й та етикетні формули
@@ -34,7 +36,8 @@ lessons:
   unverified_stress: []
   unverified_lemmas: []
 - n: 3
-  title: "За́вжди два зву́ки: Лі́тери Ї, Щ та лі́тера Ф · Always Two Sounds: Letters Ї, Щ and Letter Ф"
+  title: 'За́вжди два зву́ки: Лі́тери Ї, Щ та лі́тера Ф · Always Two Sounds: Letters
+    Ї, Щ and Letter Ф'
   sections:
   - 'Завжди два звуки: Ї та Щ'
   - Буква Ф та повний спектр вітань
@@ -51,7 +54,8 @@ lessons:
   unverified_stress: []
   unverified_lemmas: []
 - n: 4
-  title: "Апо́строф і три ключові́ контра́сти: буря́к, бур'я́н, свя́то · The Apostrophe and Three Key Contrasts: буря́к, бур'я́н, свя́то"
+  title: 'Апо́строф і три ключові́ контра́сти: буря́к, бур''я́н, свя́то · The Apostrophe
+    and Three Key Contrasts: буря́к, бур''я́н, свя́то'
   sections:
   - Апостроф
   - Контраст і пастки
@@ -68,7 +72,8 @@ lessons:
   unverified_stress: []
   unverified_lemmas: []
 - n: 5
-  title: "Пра́вила перено́су слів та си́нтез особли́вих зна́ків · Word Hyphenation Rules and Special Signs Synthesis"
+  title: Пра́вила перено́су слів та си́нтез особли́вих зна́ків · Word Hyphenation
+    Rules and Special Signs Synthesis
   sections:
   - Перенос і письмо
   - Далі

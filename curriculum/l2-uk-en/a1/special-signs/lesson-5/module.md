@@ -96,3 +96,11 @@ English support after the dialogue:
 | **До поба́чення!** | Goodbye! |
 
 <!-- INJECT_ACTIVITY: act-505 -->
+
+### Підсу́мок мо́дуля — Module summary
+
+- **Ви розрізня́єте м'яки́й знак та апо́строф** — You distinguish the soft sign and the apostrophe in everyday Ukrainian words.
+- **Ви чита́єте слова́ з м'яки́м зна́ком без за́йвих голосни́х** — You read words with ь without adding extra vowels.
+- **Ви вимовля́єте апо́строф із розді́льним зву́ком [й]** — You pronounce the apostrophe with a distinct [й] sound.
+- **Ви зна́єте контра́сти «буря́к», «бур'я́н», «свя́то»** — You know the contrasts «буря́к», «бур'я́н», «свя́то».
+- **Ви пра́вильно перено́сите слова́ з особли́вими зна́ками** — You correctly hyphenate words with special signs.

@@ -11,7 +11,7 @@ Understanding these letters connects directly with the core themes of our module
 The letter **Ї ї** always represents two sounds: **[йі]**, said as "starts with a y-sound" (the semi-vowel [j] plus the vowel [i]). Unlike **Я, Ю, Є**, the letter **Ї** never softens a preceding consonant and never collapses into a single sound:
 - At the beginning of a word: **їжа́к** — hedgehog (pronounced [йі-жа́к]).
 - In the middle of a word after a vowel: **по́їзд** — train (pronounced [по́-йізд]).
-- In the capital city of Ukraine: **Ки́їв** — Kyiv (pronounced [ки́-йів]).
+- In the capital city of Ukraine: **Киї́в** — Kyiv (pronounced [ки́-йів]).
 - In the name of the country: **Украї́на** — Ukraine (pronounced [у-кра-йі́-на]).
 
 <!-- INJECT_ACTIVITY: act-301 -->
@@ -42,7 +42,7 @@ Notice how these letters appear in real polite dialogues today (**сього́д
 
 > **Марко́:** До́брий день, Окса́но! Ра́дий тебе́ ба́чити. *(Good day, Oksana! Glad to see you.)*
 > **Окса́на:** До́брий день, Ма́рку! Як твоя́ сім'я́? *(Good day, Marko! How is your family?)*
-> **Марко́:** Дя́кую, усе́ чудо́во! Сього́дні вве́чері ми ї́демо на по́їзді в Ки́їв. *(Thank you, everything is great! Today evening we are taking a train to Kyiv.)*
+> **Марко́:** Дя́кую, усе́ чудо́во! Сього́дні вве́чері ми ї́демо на по́їзді в Киї́в. *(Thank you, everything is great! Today evening we are taking a train to Kyiv.)*
 > **Окса́на:** Щасли́вої доро́ги! На все до́бре! *(Have a good trip! All the best!)*
 
 English support after the dialogue:
@@ -54,7 +54,7 @@ English support after the dialogue:
 | **До́брий день, Ма́рку!** | Good day, Marko! |
 | **Як твоя́ сім'я́?** | How is your family? |
 | **Дя́кую, усе́ чудо́во!** | Thank you, everything is great! |
-| **Сього́дні вве́чері ми ї́демо на по́їзді в Ки́їв.** | This evening we are traveling by train to Kyiv. |
+| **Сього́дні вве́чері ми ї́демо на по́їзді в Киї́в.** | This evening we are traveling by train to Kyiv. |
 | **Щасли́вої доро́ги!** | Have a safe trip! |
 | **На все до́бре!** | All the best! |
 

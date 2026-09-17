@@ -87,7 +87,7 @@ Pay attention to the two standard prohibitions when hyphenating words across lin
 
 ### Пра́ктика перено́су слів — Hyphenation practice
 
-<DivideWords client:only='react' instruction={"Обери́ підгото́влену моде́ль перено́су. — Choose the prepared hyphenation model."} items={JSON.parse(`[{"word": "Мар'я́на", "answer": "Мар'-яна"}, {"word": "дерев'я́ний", "answer": "дере-в'яний"}, {"word": "бур'я́н", "answer": "бур'-ян"}, {"word": "па́льці", "answer": "паль-ці"}]`)} />
+<DivideWords client:only='react' instruction={"Обери́ підгото́влену моде́ль перено́су. — Choose the prepared hyphenation model."} items={JSON.parse(`[{"word": "Мар'я́на", "answer": "Мар'-я́на"}, {"word": "дерев'я́ний", "answer": "дере́-в'яний"}, {"word": "бур'я́н", "answer": "бур'-ян"}, {"word": "па́льці", "answer": "паль-ці"}]`)} />
 
 Reading before writing: first recognize the printed word, then copy the sign in
 a notebook cue.
@@ -106,7 +106,7 @@ Notice how common objects follow these exact patterns. A **дерев'я́ний
 
 ### Пра́вила перено́су: нови́й спектр слів — Hyphenation rules: New words
 
-<DivideWords client:only='react' instruction={"Обері́ть пра́вильний варіа́нт перено́су для ко́жного сло́ва. — Choose the correct hyphenation option for each word."} items={JSON.parse(`[{"word": "вчи́тель", "answer": "вчи-тель"}, {"word": "мале́нький", "answer": "малень-кий"}, {"word": "комп'ю́тер", "answer": "комп'-ютер"}, {"word": "здоро́в'я", "answer": "здо-ров'я"}, {"word": "я́блуко", "answer": "яб-луко"}, {"word": "по́їзд", "answer": "по-їзд"}]`)} />
+<DivideWords client:only='react' instruction={"Обері́ть пра́вильний варіа́нт перено́су для ко́жного сло́ва. — Choose the correct hyphenation option for each word."} items={JSON.parse(`[{"word": "вчи́тель", "answer": "вчи-тель"}, {"word": "мале́нький", "answer": "малень-кий"}, {"word": "комп'ю́тер", "answer": "комп'-ютер"}, {"word": "здоро́в'я", "answer": "здо-ров'я"}, {"word": "я́блуко", "answer": "яб-лу́ко"}, {"word": "по́їзд", "answer": "по-їзд"}]`)} />
 
 ## Да́лі
 
@@ -175,6 +175,14 @@ English support after the dialogue:
 
 <GroupSort client:only='react' groups={JSON.parse(`{"Знак Ь (пом'я́кшення) — Soft sign Ь (softening)": ["день", "кінь", "сіль", "вчи́тель"], "Апо́строф (розді́льність) — Apostrophe (separation)": ["сім'я́", "м'я́со", "п'ять", "бур'я́н"], "Бу́кви Ї та Щ (два зву́ки) — Letters Ї and Щ (two sounds)": ["їжа́к", "по́їзд", "щу́ка", "борщ"]}`)} instruction={"Розподілі́ть слова́ у три гру́пи за ї́хньою фонети́чною структу́рою. — Sort the words into three groups by their phonetic structure."} isUkrainian={false} />
 
+### Підсу́мок мо́дуля — Module summary
+
+- **Ви розрізня́єте м'яки́й знак та апо́строф** — You distinguish the soft sign and the apostrophe in everyday Ukrainian words.
+- **Ви чита́єте слова́ з м'яки́м зна́ком без за́йвих голосни́х** — You read words with ь without adding extra vowels.
+- **Ви вимовля́єте апо́строф із розді́льним зву́ком [й]** — You pronounce the apostrophe with a distinct [й] sound.
+- **Ви зна́єте контра́сти «буря́к», «бур'я́н», «свя́то»** — You know the contrasts «буря́к», «бур'я́н», «свя́то».
+- **Ви пра́вильно перено́сите слова́ з особли́вими зна́ками** — You correctly hyphenate words with special signs.
+
 </TabItem>
 <TabItem label="Словник — Vocabulary">
 
@@ -231,7 +239,7 @@ English support after the dialogue:
 
 ### Си́нтез пра́вил мо́дуля — Module Synthesis Quiz
 
-<Quiz client:only='react' questions={JSON.parse(`[{"question": "Чи мо́жна відрива́ти апо́строф від попере́дньої бу́кви при перено́сі? — Can the apostrophe be separated from the preceding letter during hyphenation?", "options": [{"text": "ні, не мо́жна — no, you cannot", "correct": true}, {"text": "так, за́вжди мо́жна — yes, you always can", "correct": false}], "explanation": ""}, {"question": "Чи мо́жна відрива́ти м'яки́й знак від попере́дньої бу́кви при перено́сі? — Can the soft sign be separated from the preceding letter during hyphenation?", "options": [{"text": "ні, не мо́жна — no, you cannot", "correct": true}, {"text": "так, за́вжди мо́жна — yes, you always can", "correct": false}], "explanation": ""}, {"question": "Як пра́вильно перенести́ сло́во «па́льці»? — What is the correct hyphenation for «па́льці»?", "options": [{"text": "паль-ці", "correct": true}, {"text": "пал-ьці", "correct": false}, {"text": "па-льці", "correct": false}], "explanation": ""}, {"question": "Як пра́вильно перенести́ сло́во «Мар'я́на»? — What is the correct hyphenation for «Мар'я́на»?", "options": [{"text": "Мар'-яна", "correct": true}, {"text": "Мар-'яна", "correct": false}, {"text": "Ма-р'яна", "correct": false}], "explanation": ""}, {"question": "Як пра́вильно перенести́ сло́во «бур'я́н»? — What is the correct hyphenation for «бур'я́н»?", "options": [{"text": "бур'-ян", "correct": true}, {"text": "бур-'ян", "correct": false}, {"text": "бу-р'ян", "correct": false}], "explanation": ""}, {"question": "Як пра́вильно перенести́ сло́во «дерев'я́ний»? — What is the correct hyphenation for «дерев'я́ний»?", "options": [{"text": "дере-в'яний", "correct": true}, {"text": "дерев-'яний", "correct": false}, {"text": "де-рев'яний", "correct": false}], "explanation": ""}]`)} instruction={"Test your mastery of the special signs, rules of hyphenation, and pronunciation."} isUkrainian={false} />
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Чи мо́жна відрива́ти апо́строф від попере́дньої бу́кви при перено́сі? — Can the apostrophe be separated from the preceding letter during hyphenation?", "options": [{"text": "ні, не мо́жна — no, you cannot", "correct": true}, {"text": "так, за́вжди мо́жна — yes, you always can", "correct": false}], "explanation": ""}, {"question": "Чи мо́жна відрива́ти м'яки́й знак від попере́дньої бу́кви при перено́сі? — Can the soft sign be separated from the preceding letter during hyphenation?", "options": [{"text": "ні, не мо́жна — no, you cannot", "correct": true}, {"text": "так, за́вжди мо́жна — yes, you always can", "correct": false}], "explanation": ""}, {"question": "Як пра́вильно перенести́ сло́во «па́льці»? — What is the correct hyphenation for «па́льці»?", "options": [{"text": "паль-ці", "correct": true}, {"text": "пал-ьці", "correct": false}, {"text": "па-льці", "correct": false}], "explanation": ""}, {"question": "Як пра́вильно перенести́ сло́во «Мар'я́на»? — What is the correct hyphenation for «Мар'я́на»?", "options": [{"text": "Мар'-я́на", "correct": true}, {"text": "Мар-'я́на", "correct": false}, {"text": "Ма-р'яна", "correct": false}], "explanation": ""}, {"question": "Як пра́вильно перенести́ сло́во «бур'я́н»? — What is the correct hyphenation for «бур'я́н»?", "options": [{"text": "бур'-ян", "correct": true}, {"text": "бур-'ян", "correct": false}, {"text": "бу-р'ян", "correct": false}], "explanation": ""}, {"question": "Як пра́вильно перенести́ сло́во «дерев'я́ний»? — What is the correct hyphenation for «дерев'я́ний»?", "options": [{"text": "дере́-в'яний", "correct": true}, {"text": "дере́в-'яний", "correct": false}, {"text": "де-рев'яний", "correct": false}], "explanation": ""}]`)} instruction={"Переві́рте знання́ особли́вих зна́ків та перено́су слів. — Test your mastery of special signs and word hyphenation."} isUkrainian={false} />
 
 </TabItem>
 <TabItem label="Ресурси — Resources">
@@ -241,10 +249,10 @@ English support after the dialogue:
 :::info[🎧 🔗 External Resources]
 
 **📚 Books:**
-- 📚 [Авраменко О. М. — Українська мова. 5 клас](https://pidruchnyk.com.ua/1126-ukrainska-mova-5-klas-avramenko.html)
-- 📚 [Большакова І. О., Пристинська М. С. — Українська мова. Буквар. 1 клас](https://pidruchnyk.com.ua/1179-bukvar-1-klas-bolshakova.html)
-- 📚 [Захарійчук М. Д. — Українська мова. Буквар. 1 клас](https://pidruchnyk.com.ua/1181-bukvar-1-klas-zahariychuk.html)
-- 📚 [Вашуленко М. С., Вашуленко О. В. — Українська мова. Буквар. 1 клас](https://pidruchnyk.com.ua/1180-bukvar-1-klas-vashulenko.html)
+- 📚 [Авра́менко О. М. — Украї́нська мо́ва. 5 клас](https://pidruchnyk.com.ua/1126-ukrainska-mova-5-klas-avramenko.html)
+- 📚 [Большако́ва І. О., При́стинська М. С. — Украї́нська мо́ва. Буква́р. 1 клас](https://pidruchnyk.com.ua/1179-bukvar-1-klas-bolshakova.html)
+- 📚 [Захарійчук М. Д. — Украї́нська мо́ва. Буква́р. 1 клас](https://pidruchnyk.com.ua/1181-bukvar-1-klas-zahariychuk.html)
+- 📚 [Вашуленко М. С., Вашуленко О. В. — Украї́нська мо́ва. Буква́р. 1 клас](https://pidruchnyk.com.ua/1180-bukvar-1-klas-vashulenko.html)
 :::
 
 </TabItem>
