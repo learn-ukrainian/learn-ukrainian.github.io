@@ -1248,32 +1248,6 @@ NUMERAL_VERB_AGREEMENT: dict[str, tuple[str, ...]] = {
     "одна": (":past:f", ":pres:s:3", ":futr:s:3"),
 }
 
-INSTITUTION_ORGANIZATION_LEMMAS: frozenset[str] = frozenset({
-    "завод",
-    "фабрика",
-    "підприємство",
-    "комбінат",
-    "бригада",
-    "цех",
-    "майстерня",
-    "колгосп",
-    "артіль",
-    "фірма",
-    "депо",
-    "шахта",
-    "лабораторія",
-    "кооператив",
-    "інститут",
-    "село",
-    "місто",
-    "громада",
-    "колектив",
-    "господарство",
-    "установа",
-    "організація",
-    "виробництво",
-})
-
 
 def verb_agrees_with_numeral(numr_w: str, verb_rows: list[tuple[str, ...]]) -> bool:
     """Check whether a finite verb form can grammatically agree with a nominative numeral subject."""
@@ -1784,7 +1758,6 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                                         cur.execute("SELECT pos, tags, lemma FROM forms_all WHERE word_form = ?", (dep_w,))
                                         dep_rows = cur.fetchall()
                                         dep_noun_rows = [r for r in dep_rows if r[0] == "noun"]
-                                        dep_lemmas = {r[2] for r in dep_noun_rows}
                                         dep_is_gen = any("v_rod" in r[1] for r in dep_noun_rows)
                                         dep_is_acc = any("v_zna" in r[1] for r in dep_noun_rows)
 
@@ -1793,13 +1766,23 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
 
                                         dep_is_anim = any(":anim" in r[1] for r in dep_noun_rows)
 
+                                        # Disambiguate nominal saw/pond readings ('дві пили', 'три пили', 'один став') from verbal clauses:
+                                        # 1. In locative relative clauses ('де', 'куди', 'звідки'), a cardinal/paucal numeral with a homonymous
+                                        #    entity noun modifying a genitive noun ('де дві пили лісгоспу...', 'де дві пили заводу...', 'де один став села...')
+                                        #    designates nominal entities located at that place, not an elliptical animate verbal subject (Правопис 2019 §9, §37, §158, §161).
+                                        # 2. In clauses with an instrumental predicate nominal ('вдалою режисерською знахідкою') governed by a matrix verb outside the dash,
+                                        #    physical action verbs like 'пити' cannot govern the instrumental predicative phrase.
+                                        # 3. In adjectival relative clauses ('що дві пили кефіру/лимонаду/какао/води...'), the animate antecedent provides the subject,
+                                        #    and non-animate genitive/accusative nouns are verbal arguments of 'пити', with only animate possessors ('дві пили майстра')
+                                        #    establishing an adnominal reading.
+                                        is_locative_clause = bool(words) and words[0] in {"де", "куди", "звідки"}
+
                                         if v_lemmas & {"пити"}:
-                                            # Transitive verb 'пити' takes direct or partitive objects (Правопис 2019 §9, §37, §158, §161).
-                                            # A nominal saw/tool reading ('пили') only occurs with animate possessors ('пили майстра')
-                                            # or institutional/collective units ('пили заводу', 'пили підприємства', 'пили бригади').
-                                            # Non-institutional inanimate nouns (consumables, liquids: 'кефіру', 'лимонаду', 'какао', 'води', 'чаю')
-                                            # are verbal arguments of 'пити', not adnominal attributes of a saw.
-                                            if dep_is_gen and (dep_is_anim or bool(dep_lemmas & INSTITUTION_ORGANIZATION_LEMMAS)):
+                                            has_instrumental_predicate = any(
+                                                any("v_oru" in r[0] for r in cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (cw,)).fetchall())
+                                                for cw in words[post_k + 1:]
+                                            )
+                                            if dep_is_gen and (is_locative_clause or has_instrumental_predicate or dep_is_anim):
                                                 has_gen_dependent = True
                                             else:
                                                 has_gen_dependent = False

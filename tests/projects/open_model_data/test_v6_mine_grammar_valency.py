@@ -2004,6 +2004,18 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
         assert not miner.is_pristine_eval_sentence(s_defect_228, cur_ves=cur)
         assert len(miner.split_clean_ukrainian_sentences(s_defect_228)) == 0
 
+    # Defect 229 / Negative regression (Round 88 Codex P2): Arbitrary institution/organization genitive nouns
+    # ('дві пили лісгоспу', 'дві пили лісництва', 'дві пили школи') in locative relative clauses
+    # function as noun phrases without finite verbs and cannot be forced to a verbal reading by absence from a finite list (Правопис 2019 §9, §37, §158, §161)
+    for s_defect_229 in [
+        "Театр — місце, де дві пили лісгоспу вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка.",
+        "Театр — місце, де дві пили лісництва вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка.",
+        "Театр — місце, де дві пили школи вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка.",
+    ]:
+        assert miner.has_discordant_dash_apposition(s_defect_229, cur_ves=cur)
+        assert not miner.is_pristine_eval_sentence(s_defect_229, cur_ves=cur)
+        assert len(miner.split_clean_ukrainian_sentences(s_defect_229)) == 0
+
     # Positive controls for numeral subjects with direct/partitive objects and attributes
     frag_pos_dvi_pyly_vody = (
         "Він говорив із сестрами — дівчатами, що дві пили води — та з лікаркою — фахівчинею — про виставу."
