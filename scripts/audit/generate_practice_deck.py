@@ -106,7 +106,7 @@ DEFAULT_HOMONYM_PAIRS = Path("data/lexicon/homonym_pairs.yaml")
 DEFAULT_SYNONYM_VERDICTS = Path("data/lexicon/synonym_pair_verdicts.yaml")
 # Keep the default above the current all-eligible deck size. A lower default
 # silently contracts the committed practice surface during routine cloze regen.
-DEFAULT_TARGET = 6000
+DEFAULT_TARGET = 8500
 DEFAULT_RAW_LIMIT = 1_600_000
 DEFAULT_GZIP_LIMIT = 180_000
 # Cloze cards are the intentionally denser mode: their production emit drops
@@ -5808,15 +5808,40 @@ def apply_size_budgets(
         }
         original_positions = {id(item): index for index, item in enumerate(original_index)}
 
+        deck_thin_mode_lemma_ids: set[str] = {
+            _clean_text(card.get("lemmaId"))
+            for lvl_shards in shards.values()
+            for mode in ("synonym", "antonym", "heritage", "paronym", "homonym")
+            for card in (body_items(lvl_shards, mode) or [])
+            if isinstance(card, dict) and _clean_text(card.get("lemmaId"))
+        } | {
+            _clean_text(card.get("targetLemmaId"))
+            for lvl_shards in shards.values()
+            for card in (body_items(lvl_shards, "synonym") or [])
+            if isinstance(card, dict) and _clean_text(card.get("targetLemmaId"))
+        }
+        deck_drill_mode_lemma_ids: set[str] = {
+            _clean_text(card.get("lemmaId"))
+            for lvl_shards in shards.values()
+            for mode in DRILL_MODES
+            for card in (body_items(lvl_shards, mode) or [])
+            if isinstance(card, dict) and _clean_text(card.get("lemmaId"))
+        }
+
         def item_mode_priority(item: Any) -> int:
             if not isinstance(item, dict):
                 return 3
+            lemma_id = _clean_text(item.get("lemmaId"))
             modes = item.get("modes", [])
-            # Priority 0: thin pair modes
-            if any(m in modes for m in ("synonym", "antonym", "heritage", "paronym", "homonym")):
+            # Priority 0: thin pair modes anywhere across the deck
+            if (lemma_id and lemma_id in deck_thin_mode_lemma_ids) or any(
+                m in modes for m in ("synonym", "antonym", "heritage", "paronym", "homonym")
+            ):
                 return 0
-            # Priority 1: cloze or other drill modes
-            if item.get("clozeIds") or any(m in modes for m in DRILL_MODES):
+            # Priority 1: cloze or other drill modes anywhere across the deck
+            if (lemma_id and lemma_id in deck_drill_mode_lemma_ids) or item.get("clozeIds") or any(
+                m in modes for m in DRILL_MODES
+            ):
                 return 1
             # Priority 2: plain lexemes
             return 2
@@ -5906,6 +5931,15 @@ def apply_size_budgets(
         )
         return True
 
+    original_level_lexemes: dict[str, set[str]] = {
+        level: {
+            _clean_text(lexeme.get("lemmaId"))
+            for lexeme in body_items(level_shards, "lexemes") or []
+            if isinstance(lexeme, dict) and _clean_text(lexeme.get("lemmaId"))
+        }
+        for level, level_shards in shards.items()
+    }
+
     for level, level_shards in shards.items():
         oversized_kinds: set[str] = set()
         for kind, payload in level_shards.items():
@@ -5958,6 +5992,49 @@ def apply_size_budgets(
                     "after its payload was exhausted",
                     file=sys.stderr,
                 )
+
+    # Cross-level referential integrity:
+    # If surface trimming at any level dropped lexemes, prune any drill card
+    # across the entire deck whose lemmaId (or synonym targetLemmaId) was dropped.
+    all_dropped_lexemes: set[str] = set()
+    for level, level_shards in shards.items():
+        original_lexemes = original_level_lexemes.get(level)
+        if original_lexemes is not None:
+            current_lexemes = {
+                _clean_text(lexeme.get("lemmaId"))
+                for lexeme in body_items(level_shards, "lexemes") or []
+                if isinstance(lexeme, dict) and _clean_text(lexeme.get("lemmaId"))
+            }
+            all_dropped_lexemes.update(original_lexemes - current_lexemes)
+
+    any_cross_level_pruned = False
+    if all_dropped_lexemes:
+        for _level, level_shards in shards.items():
+            for mode in DRILL_MODES:
+                items = body_items(level_shards, mode)
+                if items is None:
+                    continue
+                before = len(items)
+                if mode == "synonym":
+                    items[:] = [
+                        item
+                        for item in items
+                        if isinstance(item, dict)
+                        and _clean_text(item.get("lemmaId")) not in all_dropped_lexemes
+                        and _clean_text(item.get("targetLemmaId")) not in all_dropped_lexemes
+                    ]
+                else:
+                    items[:] = [
+                        item
+                        for item in items
+                        if isinstance(item, dict)
+                        and _clean_text(item.get("lemmaId")) not in all_dropped_lexemes
+                    ]
+                if len(items) != before:
+                    any_cross_level_pruned = True
+                    set_budget(level_shards[mode], mode)
+    if any_cross_level_pruned:
+        refresh_all_metadata()
 
 
 def write_shards(shards: dict[str, dict[str, dict[str, Any]]], out_dir: Path) -> list[Path]:
