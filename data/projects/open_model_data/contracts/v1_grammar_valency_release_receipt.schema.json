@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_grammar_valency_release_receipt.schema.json",
+  "title": "v1_grammar_valency_release_receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "issue",
+    "parent_epic",
+    "created_at",
+    "git_commit",
+    "evaluation_benchmark",
+    "sft_training_dataset",
+    "invariants_verified"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v1_grammar_valency_release_receipt"
+    },
+    "issue": {
+      "type": "integer",
+      "const": 8143
+    },
+    "parent_epic": {
+      "type": "integer",
+      "const": 6321
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "git_commit": {
+      "type": "string"
+    },
+    "evaluation_benchmark": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file_path",
+        "sha256",
+        "total_cases",
+        "held_out_documents_count",
+        "held_out_documents"
+      ],
+      "properties": {
+        "file_path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "total_cases": {
+          "type": "integer",
+          "const": 500
+        },
+        "held_out_documents_count": {
+          "type": "integer",
+          "minimum": 10
+        },
+        "held_out_documents": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "sft_training_dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "directory_path",
+        "manifest_file",
+        "manifest_sha256",
+        "shards_count",
+        "total_trajectories",
+        "max_shard_size_kb",
+        "category_distribution",
+        "sources_summary"
+      ],
+      "properties": {
+        "directory_path": {
+          "type": "string"
+        },
+        "manifest_file": {
+          "type": "string"
+        },
+        "manifest_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "shards_count": {
+          "type": "integer",
+          "const": 70
+        },
+        "total_trajectories": {
+          "type": "integer",
+          "const": 35000
+        },
+        "max_shard_size_kb": {
+          "type": "number",
+          "maximum": 2000.0
+        },
+        "category_distribution": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "sources_summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ua_gec_grammar_and_fluency",
+            "vesum_valency_and_government",
+            "brown_uk_corpus"
+          ],
+          "properties": {
+            "ua_gec_grammar_and_fluency": {
+              "type": "integer"
+            },
+            "vesum_valency_and_government": {
+              "type": "integer"
+            },
+            "brown_uk_corpus": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    "invariants_verified": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "zero_train_eval_leakage",
+        "document_partitioning_enforced",
+        "full_20_category_taxonomy_ingested",
+        "vesum_valency_verified",
+        "tone_calibration_gate6_verified",
+        "precommit_file_ceiling_satisfied"
+      ],
+      "properties": {
+        "zero_train_eval_leakage": {
+          "const": true
+        },
+        "document_partitioning_enforced": {
+          "const": true
+        },
+        "full_20_category_taxonomy_ingested": {
+          "const": true
+        },
+        "vesum_valency_verified": {
+          "const": true
+        },
+        "tone_calibration_gate6_verified": {
+          "const": true
+        },
+        "precommit_file_ceiling_satisfied": {
+          "const": true
+        }
+      }
+    }
+  }
+}

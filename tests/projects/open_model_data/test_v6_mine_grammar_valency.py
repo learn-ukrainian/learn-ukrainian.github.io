@@ -1,0 +1,252 @@
+"""Unit tests and invariant verifications for Track 6 Grammar, Valency & Syntactic Precision Engine.
+
+Covers Issue #8143 / Epic #6321.
+"""
+
+from __future__ import annotations
+
+import glob
+import json
+from pathlib import Path
+
+from jsonschema import validate
+
+from scripts.projects.open_model_data import v6_mine_grammar_valency as miner
+
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+RELEASE_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v05_grammar_valency"
+EVAL_SCHEMA_PATH = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_grammar_valency_eval_record.schema.json"
+RECEIPT_SCHEMA_PATH = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "contracts" / "v1_grammar_valency_release_receipt.schema.json"
+
+
+def test_taxonomy_coverage_and_categories() -> None:
+    """Ensure full 20-category UA-GEC taxonomy (14 Grammar + 6 Fluency) is covered."""
+    assert len(miner.ALL_GRAMMAR_CATEGORIES) == 14
+    assert len(miner.ALL_FLUENCY_CATEGORIES) == 6
+    assert len(miner.FULL_TAXONOMY) == 20
+
+    for cat in miner.FULL_TAXONOMY:
+        assert cat in miner.CATEGORY_EXPLANATIONS
+        assert "title" in miner.CATEGORY_EXPLANATIONS[cat]
+        assert "rule" in miner.CATEGORY_EXPLANATIONS[cat]
+        assert len(miner.CATEGORY_EXPLANATIONS[cat]["rule"]) > 20
+
+
+def test_valency_frames_authenticity_and_coverage() -> None:
+    """Verify linguistic coverage of case valency and prepositional government frames."""
+    frames = miner.VALENCY_FRAMES
+    assert len(frames) >= 12
+
+    verbs = {f["verb"] for f in frames}
+    assert "опанувати" in verbs  # опанувати що (знахідний)
+    assert "завідувач" in verbs  # завідувач кафедри (родовий)
+    assert "чекати" in verbs  # чекати на що (на + знахідний)
+    assert "властивий" in verbs  # властивий кому (давальний)
+    assert "дякувати" in verbs  # дякувати кому (давальний)
+    assert "вибачати" in verbs  # вибачати кому (давальний)
+    assert "хворіти" in verbs  # хворіти на що (на + знахідний)
+    assert "знущатися" in verbs  # знущатися з кого (з + родовий)
+    assert "потребувати" in verbs  # потребувати чого (родовий)
+    assert "завдати" in verbs  # завдати шкоди (родовий)
+    assert "вжити" in verbs  # вжити заходів (родовий)
+    assert "прийменник_по" in verbs  # у справах, за законом
+    assert "прийменник_при" in verbs  # за участі, за умови
+
+    for f in frames:
+        assert len(f["examples"]) >= 3
+        for correct, incorrect in f["examples"]:
+            assert correct != incorrect
+            assert len(correct) > 15
+            assert len(incorrect) > 15
+
+
+def test_gate6_tone_calibration_respectful_pedagogy() -> None:
+    """Verify Gate 6 tone check filters condescending terms and passes polite phrasing."""
+    pejorative_words = miner.load_tone_dict(miner.DEFAULT_TONE_DICT_DIR)
+    assert "тупий" in pejorative_words
+    assert "недолугий" in pejorative_words
+    assert "ідіотський" in pejorative_words
+    assert "невігластво" in pejorative_words
+
+    # Condescending phrase must fail
+    condescending_phrase = "Це абсолютно тупий і недолугий варіант тексту."
+    assert not miner.verify_respectful_tone(condescending_phrase, pejorative_words)
+
+    # Respectful pedagogical phrase must pass
+    respectful_phrase = (
+        "У поданому реченні допущено помилку відмінкового керування. "
+        "Нормативним варіантом в українській літературній мові є вживання прийменника «за»."
+    )
+    assert miner.verify_respectful_tone(respectful_phrase, pejorative_words)
+
+
+def test_eval_benchmark_disk_invariants_and_schema() -> None:
+    """Validate held-out negative control eval benchmark against schema contract."""
+    eval_file = RELEASE_DIR / "brown_uk_negative_control_eval.jsonl"
+    assert eval_file.is_file(), f"Missing eval file: {eval_file}"
+
+    schema = json.loads(EVAL_SCHEMA_PATH.read_text(encoding="utf-8"))
+    count = 0
+    seen_ids = set()
+
+    with eval_file.open(encoding="utf-8") as f:
+        for line in f:
+            rec = json.loads(line)
+            validate(instance=rec, schema=schema)
+            assert rec["eval_id"] not in seen_ids
+            seen_ids.add(rec["eval_id"])
+            assert rec["target_action"] == "PRESERVE"
+            assert rec["is_pristine_control"] is True
+            assert rec["source_corpus"] == "brown_uk_good"
+            count += 1
+
+    assert count == 500
+
+
+def test_zero_train_eval_leakage_firewall() -> None:
+    """Enforce strict 0% train/eval leakage between held-out eval and SFT shards."""
+    eval_file = RELEASE_DIR / "brown_uk_negative_control_eval.jsonl"
+    eval_sentences = set()
+    with eval_file.open(encoding="utf-8") as f:
+        for line in f:
+            rec = json.loads(line)
+            eval_sentences.add(rec["sentence_text"].strip())
+
+    sft_files = sorted(glob.glob(str(RELEASE_DIR / "sft" / "sft_shard_*.jsonl")))
+    assert len(sft_files) == 70
+
+    leaks = 0
+    for sf in sft_files:
+        with open(sf, encoding="utf-8") as f:
+            for line in f:
+                rec = json.loads(line)
+                orig = rec.get("original_text", "").strip()
+                corr = rec.get("corrected_text", "").strip()
+                if orig in eval_sentences or corr in eval_sentences:
+                    leaks += 1
+
+    assert leaks == 0, f"Found {leaks} train/eval leakage instances!"
+
+
+def test_sft_shards_disk_invariants_and_manifest() -> None:
+    """Verify SFT manifest, shard sizes <= 2,000 KB, and SHA-256 integrity."""
+    manifest_path = RELEASE_DIR / "sft" / "manifest.json"
+    assert manifest_path.is_file()
+
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert manifest["total_trajectories"] == 35000
+    assert manifest["shards_count"] == 70
+    assert len(manifest["shards"]) == 70
+
+    total_read = 0
+    for shard_info in manifest["shards"]:
+        shard_file = RELEASE_DIR / "sft" / shard_info["shard_file"]
+        assert shard_file.is_file()
+
+        # Hard constraint: git-tracked file size <= 2,000 KB
+        size_kb = shard_file.stat().st_size / 1024.0
+        assert size_kb <= 2000.0, f"Shard {shard_file.name} exceeds 2,000 KB: {size_kb:.2f} KB"
+
+        # Check sha256
+        actual_sha = miner.sha256_file(shard_file)
+        assert actual_sha == shard_info["sha256"], f"SHA mismatch on {shard_file.name}"
+
+        # Check lines
+        lines_count = sum(1 for _ in shard_file.open(encoding="utf-8"))
+        assert lines_count == shard_info["trajectories_count"]
+        total_read += lines_count
+
+    assert total_read == 35000
+
+
+def test_release_receipt_schema_and_checksum() -> None:
+    """Validate release receipt against JSON schema and sha256 checksum."""
+    receipt_file = RELEASE_DIR / "release_receipt.json"
+    assert receipt_file.is_file()
+
+    schema = json.loads(RECEIPT_SCHEMA_PATH.read_text(encoding="utf-8"))
+    receipt = json.loads(receipt_file.read_text(encoding="utf-8"))
+    validate(instance=receipt, schema=schema)
+
+    assert receipt["issue"] == 8143
+    assert receipt["parent_epic"] == 6321
+    assert receipt["evaluation_benchmark"]["total_cases"] == 500
+    assert receipt["sft_training_dataset"]["total_trajectories"] == 35000
+    assert receipt["sft_training_dataset"]["shards_count"] == 70
+    assert receipt["invariants_verified"]["zero_train_eval_leakage"] is True
+    assert receipt["invariants_verified"]["full_20_category_taxonomy_ingested"] is True
+    assert receipt["invariants_verified"]["vesum_valency_verified"] is True
+    assert receipt["invariants_verified"]["tone_calibration_gate6_verified"] is True
+    assert receipt["invariants_verified"]["precommit_file_ceiling_satisfied"] is True
+
+    # Check sha256 file
+    sha_file = RELEASE_DIR / "release_receipt.json.sha256"
+    assert sha_file.is_file()
+    expected_sha = miner.sha256_file(receipt_file)
+    assert expected_sha in sha_file.read_text(encoding="utf-8")
+
+
+def test_hermetic_isolation_synthetic_run(tmp_path: Path) -> None:
+    """Hermetic test: run extraction and sharding on isolated synthetic fixtures."""
+    ua_gec_dir = tmp_path / "ua-gec"
+    brown_uk_dir = tmp_path / "brown-uk"
+    tone_dict_dir = tmp_path / "tone-dict"
+    out_dir = tmp_path / "release"
+
+    # Create synthetic UA-GEC annotated file
+    ann_dir = ua_gec_dir / "data" / "gec-fluency" / "train" / "annotated"
+    ann_dir.mkdir(parents=True)
+    ann_content = (
+        "Студенти {опанували мовою=>опанували мову:::error_type=G/Case} за один семестр. "
+        "Керівництво {прийняло міри=>вжило заходів:::error_type=F/Calque} своєчасно."
+    )
+    (ann_dir / "0001.a1.ann").write_text(ann_content, encoding="utf-8")
+
+    # Create synthetic Brown-UK good and so-so files
+    good_dir = brown_uk_dir / "data" / "good"
+    so_so_dir = brown_uk_dir / "data" / "so-so"
+    good_dir.mkdir(parents=True)
+    so_so_dir.mkdir(parents=True)
+
+    for i in range(15):
+        (good_dir / f"doc_{i:03d}.txt").write_text(
+            f"Це бездоганне речення номер {i} для перевірки негативного контролю та відсутності помилок.",
+            encoding="utf-8",
+        )
+    (so_so_dir / "doc_so_so.txt").write_text(
+        "Це речення з живого мовлення для контрастивного стилістичного аналізу.",
+        encoding="utf-8",
+    )
+
+    # Create synthetic tone-dict
+    tone_dict_dir.mkdir(parents=True)
+    (tone_dict_dir / "tone-dict-uk-manual.tsv").write_text(
+        "тупий\t-1\t-1\nідіот\t-1\t-1\n",
+        encoding="utf-8",
+    )
+
+    # Run extraction pipeline with small target count
+    pej = miner.load_tone_dict(tone_dict_dir)
+    assert "тупий" in pej
+
+    eval_recs, brown_train = miner.load_brown_uk_sentences(brown_uk_dir, eval_count=10)
+    assert len(eval_recs) == 10
+
+    ua_items = miner.load_ua_gec_annotations(ua_gec_dir)
+    assert len(ua_items) == 2
+
+    val_items = miner.build_valency_trajectories()
+    assert len(val_items) > 0
+
+    sft_trajectories = miner.build_sft_dataset(
+        ua_gec_items=ua_items,
+        valency_items=val_items,
+        brown_uk_train=brown_train,
+        pejorative_words=pej,
+        target_count=100,
+    )
+    assert len(sft_trajectories) == 100
+
+    shard_files, manifest = miner.shard_dataset(sft_trajectories, out_dir, num_shards=5)
+    assert len(shard_files) == 5
+    assert manifest["total_trajectories"] == 100
