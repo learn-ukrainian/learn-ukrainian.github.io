@@ -935,6 +935,14 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_discordant_dash_in_quoted_title, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_dash_in_quoted_title)) == 0
 
+    # Defect 104 / Negative regression (Round 48 P2): Earlier quoted titles with dashes do not divert opening dash boundary (Правопис 2019 §158, §164)
+    frag_discordant_earlier_quoted_title_with_dash = (
+        "На виставі «Життя триває — гра» вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_earlier_quoted_title_with_dash, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_earlier_quoted_title_with_dash, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_earlier_quoted_title_with_dash)) == 0
+
 
 
 

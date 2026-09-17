@@ -1122,25 +1122,18 @@ def get_vesum_cursor(cur_ves: sqlite3.Cursor | None = None) -> sqlite3.Cursor | 
     return None
 
 
-def extract_dash_apposition_span(s: str) -> tuple[str | None, str | None]:
-    """Extract head word and inside phrase between paired dashes, respecting quotation boundaries.
+def extract_dash_apposition_spans(s: str) -> list[tuple[str, str]]:
+    """Extract (head_word, inside_phrase) pairs between paired dashes at quote depth 0.
 
     Under Правопис 2019 §158, §161, and §164, parenthetical dash boundaries occur at quote depth 0;
     dashes occurring inside quoted titles (e.g. «Вистава “Життя триває — гра”») belong strictly to the
-    title and do not truncate or close the parenthetical construction.
+    title and do not delimit matrix parenthetical constructions.
     """
-    m_start = re.search(r"\b([а-яіїєґА-ЯІЇЄҐ\']+)\s+[–—]\s+", s)
-    if not m_start:
-        return None, None
-    head_word = m_start.group(1).lower()
-    start_pos = m_start.end()
-    rest = s[start_pos:]
-
     quote_stack: list[str] = []
     straight_quote = False
-    closing_pos = -1
+    dashes_at_depth_0: list[int] = []
 
-    for i, ch in enumerate(rest):
+    for idx, ch in enumerate(s):
         if ch in "«„":
             quote_stack.append(ch)
         elif ch == "“":
@@ -1156,16 +1149,22 @@ def extract_dash_apposition_span(s: str) -> tuple[str | None, str | None]:
                 quote_stack.pop()
         elif ch == '"':
             straight_quote = not straight_quote
-        elif ch in "–—":
-            in_quote = bool(quote_stack) or straight_quote
-            if not in_quote:
-                closing_pos = i
-                break
+        elif ch in "–—" and not quote_stack and not straight_quote:
+            dashes_at_depth_0.append(idx)
 
-    if closing_pos != -1:
-        inside = rest[:closing_pos].strip()
-        return head_word, inside
-    return None, None
+    spans: list[tuple[str, str]] = []
+    for d_idx in range(len(dashes_at_depth_0) - 1):
+        start_dash = dashes_at_depth_0[d_idx]
+        end_dash = dashes_at_depth_0[d_idx + 1]
+
+        prefix = s[:start_dash]
+        m = re.search(r"\b([а-яіїєґА-ЯІЇЄҐ\']+)\s+$", prefix)
+        if m:
+            head_word = m.group(1).lower()
+            inside = s[start_dash + 1 : end_dash].strip()
+            spans.append((head_word, inside))
+
+    return spans
 
 
 def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None) -> bool:
@@ -1178,135 +1177,141 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
     if not cur:
         return False
 
-    head_word, inside = extract_dash_apposition_span(s)
-    if not head_word or not inside:
-        return False
-    words = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", inside)
-    if not words or len(words) < 2:
+    spans = extract_dash_apposition_spans(s)
+    if not spans:
         return False
 
-    # Check head word: must be a noun
-    cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (head_word,))
-    head_rows = cur.fetchall()
-    if not head_rows:
-        return False
-    noun_head_rows = [r for r in head_rows if r[0] == "noun"]
-    if not noun_head_rows:
-        return False
-
-    head_cases = {tag.split(":v_")[1].split(":")[0] for r in noun_head_rows for tag in [r[1]] if ":v_" in tag}
-    # If head noun can be nominative, nominative agreement is valid (no discord)
-    if not head_cases or "naz" in head_cases:
-        return False
-
-    # Check inside phrase: must NOT be an inserted sentence/clause
-    lower_words = [w.lower() for w in words]
-    if lower_words[0] in {"я", "ти", "він", "вона", "воно", "ми", "ви", "вони", "той", "те", "ті"}:
-        return False
-    if any(w in CLAUSE_INTRO for w in lower_words[:2]) and lower_words[0] not in COORD_CONJ:
-        return False
-
-    # Words outside quoted titles (including nested quotes under Правопис 2019 §164, примітка 3)
-    unquoted_inside = inside
-    prev_unquoted = None
-    while prev_unquoted != unquoted_inside:
-        prev_unquoted = unquoted_inside
-        unquoted_inside = re.sub(r"«[^«»]*»", " ", unquoted_inside)
-        unquoted_inside = re.sub(r"[“„][^“”„]*[“”]", " ", unquoted_inside)
-        unquoted_inside = re.sub(r'"[^"]*"', " ", unquoted_inside)
-    unquoted_words = [w.lower() for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", unquoted_inside)]
-
-    if any(w in PREDICATE_WORDS for w in unquoted_words):
-        return False
-
-    # Check for finite verbs in unquoted inside phrase
-    if unquoted_words:
-        cur.execute(
-            "SELECT DISTINCT word_form, pos, tags FROM forms_all WHERE word_form IN ({})".format(
-                ",".join("?" for _ in unquoted_words)
-            ),
-            unquoted_words,
-        )
-        inside_rows = cur.fetchall()
-        for _wf, pos, tags in inside_rows:
-            if pos == "verb" and any(t in tags for t in (":past", ":pres", ":fut", ":impr")):
-                return False
-
-    # Extract non-prepositional core tokens of the appositive phrase
-    content_tokens = []
-    for w in lower_words:
-        cur.execute("SELECT pos FROM forms_all WHERE word_form = ?", (w,))
-        w_pos = {r[0] for r in cur.fetchall()}
-        if "prep" in w_pos and "noun" not in w_pos and "adj" not in w_pos and w not in COORD_CONJ:
-            break
-        content_tokens.append(w)
-
-    if not content_tokens:
-        return False
-
-    # Identify all nominative nouns in content_tokens with their spans in inside (stopping at preposition cutoff)
-    nom_nouns = []
-    for token_idx, match in enumerate(re.finditer(r"\b([а-яіїєґА-ЯІЇЄҐ\']+)\b", inside)):
-        if token_idx >= len(content_tokens):
-            break
-        w = match.group(1).lower()
-        if w in COORD_CONJ:
+    for head_word, inside in spans:
+        words = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", inside)
+        if not words or len(words) < 2:
             continue
-        cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w,))
-        tok_rows = cur.fetchall()
-        noun_toks = [r for r in tok_rows if r[0] == "noun"]
-        if noun_toks:
-            noun_cases = {tag.split(":v_")[1].split(":")[0] for r in noun_toks for tag in [r[1]] if ":v_" in tag}
-            if "naz" in noun_cases:
-                nom_nouns.append((w, match.start(), match.end()))
 
-    # If there are 2 or more nominative nouns:
-    # In a two-member zero-copula clause (Правопис 2019 §161.I.1, примітка 1, and §161.I.10),
-    # the subject and predicate are juxtaposed without coordination or commas (e.g. 'мати лікарка',
-    # 'її мати лікарка і вчителька', 'батько і мати лікарі').
-    # By contrast, in coordinated homogeneous appositions (Ющук §21), all conjuncts are joined
-    # by coordinating conjunctions or commas (e.g. 'гра та імпровізація', 'гра, музика та імпровізація'),
-    # so every adjacent pair is coordinated and case agreement with the matrix head is retained.
-    if len(nom_nouns) >= 2:
-        has_uncoordinated_noun_pair = False
-        for j in range(len(nom_nouns) - 1):
-            _w1, _s1, e1 = nom_nouns[j]
-            _w2, s2, _e2 = nom_nouns[j + 1]
-            between_text = inside[e1:s2]
-            between_words = set(re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", between_text.lower()))
-            is_coordinated = ("," in between_text or ";" in between_text or bool(between_words & COORD_CONJ))
-            if not is_coordinated:
-                has_uncoordinated_noun_pair = True
+        # Check head word: must be a noun
+        cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (head_word,))
+        head_rows = cur.fetchall()
+        if not head_rows:
+            continue
+        noun_head_rows = [r for r in head_rows if r[0] == "noun"]
+        if not noun_head_rows:
+            continue
+
+        head_cases = {tag.split(":v_")[1].split(":")[0] for r in noun_head_rows for tag in [r[1]] if ":v_" in tag}
+        # If head noun can be nominative, nominative agreement is valid (no discord)
+        if not head_cases or "naz" in head_cases:
+            continue
+
+        # Check inside phrase: must NOT be an inserted sentence/clause
+        lower_words = [w.lower() for w in words]
+        if lower_words[0] in {"я", "ти", "він", "вона", "воно", "ми", "ви", "вони", "той", "те", "ті"}:
+            continue
+        if any(w in CLAUSE_INTRO for w in lower_words[:2]) and lower_words[0] not in COORD_CONJ:
+            continue
+
+        # Words outside quoted titles (including nested quotes under Правопис 2019 §164, примітка 3)
+        unquoted_inside = inside
+        prev_unquoted = None
+        while prev_unquoted != unquoted_inside:
+            prev_unquoted = unquoted_inside
+            unquoted_inside = re.sub(r"«[^«»]*»", " ", unquoted_inside)
+            unquoted_inside = re.sub(r"[“„][^“”„]*[“”]", " ", unquoted_inside)
+            unquoted_inside = re.sub(r'"[^"]*"', " ", unquoted_inside)
+        unquoted_words = [w.lower() for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", unquoted_inside)]
+
+        if any(w in PREDICATE_WORDS for w in unquoted_words):
+            continue
+
+        # Check for finite verbs in unquoted inside phrase
+        if unquoted_words:
+            cur.execute(
+                "SELECT DISTINCT word_form, pos, tags FROM forms_all WHERE word_form IN ({})".format(
+                    ",".join("?" for _ in unquoted_words)
+                ),
+                unquoted_words,
+            )
+            inside_rows = cur.fetchall()
+            has_verb = False
+            for _wf, pos, tags in inside_rows:
+                if pos == "verb" and any(t in tags for t in (":past", ":pres", ":fut", ":impr")):
+                    has_verb = True
+                    break
+            if has_verb:
+                continue
+
+        # Extract non-prepositional core tokens of the appositive phrase
+        content_tokens = []
+        for w in lower_words:
+            cur.execute("SELECT pos FROM forms_all WHERE word_form = ?", (w,))
+            w_pos = {r[0] for r in cur.fetchall()}
+            if "prep" in w_pos and "noun" not in w_pos and "adj" not in w_pos and w not in COORD_CONJ:
                 break
-        if has_uncoordinated_noun_pair:
-            return False
+            content_tokens.append(w)
 
-    # If exactly 1 nominative noun: check if it is postposed by a predicative adjective (e.g. 'мати щаслива',
-    # 'мати щаслива і здорова')
-    if len(nom_nouns) == 1 and len(content_tokens) >= 2:
-        nom_noun_word = nom_nouns[0][0]
-        idx = content_tokens.index(nom_noun_word)
-        possessives = {
-            "її", "його", "їхній", "їхня", "їхнє", "їхні",
-            "мій", "моя", "моє", "мої", "твій", "твоя", "твоє", "твої",
-            "наш", "наша", "наше", "наші", "ваш", "ваша", "ваше", "ваші",
-        }
-        if (idx == 0 or (idx == 1 and content_tokens[0] in possessives)) and idx + 1 < len(content_tokens):
-            next_tok = content_tokens[idx + 1]
-            cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (next_tok,))
-            next_rows = cur.fetchall()
-            if any(r[0] == "adj" and ":v_naz" in r[1] for r in next_rows):
-                return False
+        if not content_tokens:
+            continue
 
-    # For an apposition (including coordinated appositions), enforce case agreement
-    for tok, _start, _end in nom_nouns:
-        cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (tok,))
-        tok_rows = cur.fetchall()
-        noun_toks = [r for r in tok_rows if r[0] == "noun"]
-        if noun_toks:
-            noun_cases = {tag.split(":v_")[1].split(":")[0] for r in noun_toks for tag in [r[1]] if ":v_" in tag}
-            if "naz" in noun_cases and not (noun_cases & head_cases):
-                return True
+        # Identify all nominative nouns in content_tokens with their spans in inside (stopping at preposition cutoff)
+        nom_nouns = []
+        for token_idx, match in enumerate(re.finditer(r"\b([а-яіїєґА-ЯІЇЄҐ\']+)\b", inside)):
+            if token_idx >= len(content_tokens):
+                break
+            w = match.group(1).lower()
+            if w in COORD_CONJ:
+                continue
+            cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w,))
+            tok_rows = cur.fetchall()
+            noun_toks = [r for r in tok_rows if r[0] == "noun"]
+            if noun_toks:
+                noun_cases = {tag.split(":v_")[1].split(":")[0] for r in noun_toks for tag in [r[1]] if ":v_" in tag}
+                if "naz" in noun_cases:
+                    nom_nouns.append((w, match.start(), match.end()))
+
+        # If there are 2 or more nominative nouns:
+        # In a two-member zero-copula clause (Правопис 2019 §161.I.1, примітка 1, and §161.I.10),
+        # the subject and predicate are juxtaposed without coordination or commas (e.g. 'мати лікарка',
+        # 'її мати лікарка і вчителька', 'батько і мати лікарі').
+        # By contrast, in coordinated homogeneous appositions (Ющук §21), all conjuncts are joined
+        # by coordinating conjunctions or commas (e.g. 'гра та імпровізація', 'гра, музика та імпровізація'),
+        # so every adjacent pair is coordinated and case agreement with the matrix head is retained.
+        if len(nom_nouns) >= 2:
+            has_uncoordinated_noun_pair = False
+            for j in range(len(nom_nouns) - 1):
+                _w1, _s1, e1 = nom_nouns[j]
+                _w2, s2, _e2 = nom_nouns[j + 1]
+                between_text = inside[e1:s2]
+                between_words = set(re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", between_text.lower()))
+                is_coordinated = ("," in between_text or ";" in between_text or bool(between_words & COORD_CONJ))
+                if not is_coordinated:
+                    has_uncoordinated_noun_pair = True
+                    break
+            if has_uncoordinated_noun_pair:
+                continue
+
+        # If exactly 1 nominative noun: check if it is postposed by a predicative adjective (e.g. 'мати щаслива',
+        # 'мати щаслива і здорова')
+        if len(nom_nouns) == 1 and len(content_tokens) >= 2:
+            nom_noun_word = nom_nouns[0][0]
+            idx = content_tokens.index(nom_noun_word)
+            possessives = {
+                "її", "його", "їхній", "їхня", "їхнє", "їхні",
+                "мій", "моя", "моє", "мої", "твій", "твоя", "твоє", "твої",
+                "наш", "наша", "наше", "наші", "ваш", "ваша", "ваше", "ваші",
+            }
+            if (idx == 0 or (idx == 1 and content_tokens[0] in possessives)) and idx + 1 < len(content_tokens):
+                next_tok = content_tokens[idx + 1]
+                cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (next_tok,))
+                next_rows = cur.fetchall()
+                if any(r[0] == "adj" and ":v_naz" in r[1] for r in next_rows):
+                    continue
+
+        # For an apposition (including coordinated appositions), enforce case agreement
+        for tok, _start, _end in nom_nouns:
+            cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (tok,))
+            tok_rows = cur.fetchall()
+            noun_toks = [r for r in tok_rows if r[0] == "noun"]
+            if noun_toks:
+                noun_cases = {tag.split(":v_")[1].split(":")[0] for r in noun_toks for tag in [r[1]] if ":v_" in tag}
+                if "naz" in noun_cases and not (noun_cases & head_cases):
+                    return True
 
     return False
 
