@@ -26,9 +26,10 @@ _REQUEST_CHANGES = re.compile(
     r"(?im)(?:reviewer\s+)?verdict\s*:\s*request[_ -]?changes\b"
     r"|\bVERDICT\s*:\s*(?:CHANGES_REQUESTED|REQUEST_CHANGES)\b"
 )
-# Unambiguous explicit head bindings only — not any SHA that appears in prose.
+# Dedicated head field only (line-anchored). Rejects historical prose such as
+# "Previously reviewed head:" which embeds the word "head" mid-line.
 _EXPLICIT_HEAD = re.compile(
-    r"(?im)\b(?:exact\s+)?head(?:\s+sha)?\s*[:=]\s*`?([0-9a-f]{40})`?"
+    r"(?im)^[ \t]*(?:exact[ \t]+)?head(?:[ \t]+sha)?[ \t]*[:=][ \t]*`?([0-9a-f]{40})`?"
 )
 _REVIEW_STATE_APPROVED = frozenset({"APPROVED"})
 _REVIEW_STATE_CHANGES = frozenset({"CHANGES_REQUESTED"})
@@ -125,7 +126,12 @@ def evaluate_evidence_events(
             head=head_n,
             source="events",
         )
-    latest = max(relevant, key=lambda event: event.when)
+    # Later wins. Equal timestamps fail closed: request_changes beats approve.
+    def _rank(event: CfEvidenceEvent) -> tuple[datetime, int]:
+        kind_rank = 1 if event.kind == "request_changes" else 0
+        return (event.when, kind_rank)
+
+    latest = max(relevant, key=_rank)
     if latest.kind == "approve":
         return CfPreflightResult(
             True,
@@ -247,7 +253,8 @@ def events_from_github_payloads(
         if not isinstance(row, Mapping):
             continue
         body = row.get("body")
-        when = _parse_timestamp(row.get("created_at") or row.get("updated_at"))
+        # Prefer updated_at so an edited REQUEST_CHANGES is not stuck at create time.
+        when = _parse_timestamp(row.get("updated_at")) or _parse_timestamp(row.get("created_at"))
         if when is None or not isinstance(body, str):
             continue
         kind = verdict_kind(body)
@@ -329,8 +336,12 @@ def events_from_github_payloads(
     return events
 
 
-def github_pr_evidence_events(*, repo: str | None = None) -> list[CfEvidenceEvent]:
-    """Best-effort: ordered CF events from the open PR for the current branch."""
+def github_pr_evidence_events(*, repo: str | None = None) -> list[CfEvidenceEvent] | None:
+    """Ordered CF events from the open PR, or ``None`` if a channel fetch failed.
+
+    Empty successful channels return ``[]``. A ``None`` from either comments or
+    reviews means incomplete evidence — callers must not clear a paid build.
+    """
     view_args = ["pr", "view", "--json", "number,url"]
     if repo:
         view_args.extend(["-R", repo])
@@ -352,10 +363,9 @@ def github_pr_evidence_events(*, repo: str | None = None) -> list[CfEvidenceEven
         reviews = _gh_json(
             ["api", f"repos/{{owner}}/{{repo}}/pulls/{number}/reviews", "--paginate"]
         )
-    return events_from_github_payloads(
-        comments=comments if isinstance(comments, list) else None,
-        reviews=reviews if isinstance(reviews, list) else None,
-    )
+    if not isinstance(comments, list) or not isinstance(reviews, list):
+        return None
+    return events_from_github_payloads(comments=comments, reviews=reviews)
 
 
 def check_cf_preflight(
@@ -402,9 +412,18 @@ def check_cf_preflight(
         "true",
         "yes",
     }:
-        events = list(github_events) if github_events is not None else github_pr_evidence_events(
-            repo=github_repo
-        )
+        if github_events is not None:
+            events: list[CfEvidenceEvent] | None = list(github_events)
+        else:
+            events = github_pr_evidence_events(repo=github_repo)
+        if events is None:
+            return CfPreflightResult(
+                False,
+                "cf_preflight: incomplete GitHub CF evidence "
+                "(comments or reviews API failed) — do not start a paid build",
+                head=resolved_head,
+                source="github",
+            )
         if events:
             return evaluate_evidence_events(events, head=resolved_head)
 

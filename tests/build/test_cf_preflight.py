@@ -148,3 +148,86 @@ def test_mixed_channel_request_changes_comment_after_approve_review():
         ],
     )
     assert cf.evaluate_evidence_events(events, head=head).clear is False
+
+
+def test_edited_request_changes_comment_uses_updated_at():
+    """Comment created earlier, edited later to RC — must beat mid-window APPROVE."""
+    head = "a" * 40
+    events = cf.events_from_github_payloads(
+        comments=[
+            {
+                "body": f"Reviewer verdict: REQUEST_CHANGES\nExact head: {head}",
+                "created_at": "2026-09-17T10:00:00Z",
+                "updated_at": "2026-09-17T12:00:00Z",
+            }
+        ],
+        reviews=[
+            {
+                "state": "APPROVED",
+                "commit_id": head,
+                "submitted_at": "2026-09-17T11:00:00Z",
+                "body": "ok",
+            }
+        ],
+    )
+    assert cf.evaluate_evidence_events(events, head=head).clear is False
+
+
+def test_same_second_conflict_fails_closed_to_request_changes():
+    head = "a" * 40
+    stamp = "2026-09-17T11:00:00Z"
+    events = cf.events_from_github_payloads(
+        comments=[
+            {
+                "body": f"Reviewer verdict: APPROVE\nExact head: {head}",
+                "created_at": stamp,
+            }
+        ],
+        reviews=[
+            {
+                "state": "CHANGES_REQUESTED",
+                "commit_id": head,
+                "submitted_at": stamp,
+                "body": "",
+            }
+        ],
+    )
+    assert cf.evaluate_evidence_events(events, head=head).clear is False
+
+
+def test_historical_only_previously_reviewed_head_does_not_clear():
+    head = "a" * 40
+    bodies = [f"Reviewer verdict: APPROVE\nPreviously reviewed head: {head}"]
+    assert cf.evaluate_comment_bodies(bodies, head=head).clear is False
+    assert cf.explicit_heads_in_body(bodies[0]) == []
+
+
+def test_incomplete_github_evidence_does_not_clear(tmp_path: Path, monkeypatch):
+    head = "a" * 40
+
+    def fake_gh(args):
+        joined = " ".join(args)
+        if "pr view" in joined or args[:2] == ["pr", "view"]:
+            return {"number": 8155, "url": "https://example.test/8155"}
+        if "/comments" in joined:
+            return None  # channel failure
+        if "/reviews" in joined:
+            return [
+                {
+                    "state": "APPROVED",
+                    "commit_id": head,
+                    "submitted_at": "2026-09-17T12:00:00Z",
+                    "body": "ok",
+                }
+            ]
+        return None
+
+    monkeypatch.setattr(cf, "_gh_json", fake_gh)
+    result = cf.check_cf_preflight(
+        repo_root=tmp_path,
+        head=head,
+        allow_github=True,
+        github_repo="learn-ukrainian/learn-ukrainian.github.io",
+    )
+    assert result.clear is False
+    assert "incomplete" in result.reason
