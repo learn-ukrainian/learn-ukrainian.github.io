@@ -1787,6 +1787,30 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_senyora_likarka, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_senyora_likarka)) == 0
 
+    # Defect 207 / Negative regression (Round 82 Codex P2 Finding 1 & Fable P2 Finding 1): Adjectival agreeing numeral 'одне шило' functions as noun phrase, not predicate (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_odne_shylo = (
+        "Театр — місце, де одне шило вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_odne_shylo, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odne_shylo, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odne_shylo)) == 0
+
+    # Defect 208 / Negative regression (Round 82 Codex P2 Finding 2): Numeral-governed noun phrase with genitive dependent 'два шила майстра' functions as direct object (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_dva_shyla_maistra = (
+        "Театр — місце, де два шила майстра вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_dva_shyla_maistra, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dva_shyla_maistra, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dva_shyla_maistra)) == 0
+
+    # Defect 209 / Negative regression (Round 82 Fable P3 Finding 3): Fractional numeral 'півтора шила' governing genitive singular functions as noun complement (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_pivtora_shyla = (
+        "Театр — місце, де півтора шила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_pivtora_shyla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_pivtora_shyla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_pivtora_shyla)) == 0
+
 
 
 
