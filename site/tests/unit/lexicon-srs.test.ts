@@ -23,6 +23,7 @@ import {
   readDailyPracticeDeckSnapshot,
   recentSessionHistory,
   refillDailyPracticeDeckSnapshot,
+  restoreSrsFromReviewEventExport,
   saveState,
   selectDailyPracticeDeckItems,
   czNorm,
@@ -52,6 +53,7 @@ import {
   type SelectionHistoryItem,
 } from '@site/src/lib/lexicon/srs';
 import { PRACTICE_LEVELS } from '@site/src/lib/lexicon/runtime-contract';
+import { exportReviewEventLog } from '@site/src/lib/lexicon/review-events';
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
 const HOUR_MS = 60 * 60 * 1000;
@@ -510,43 +512,19 @@ describe('lexicon SRS facade', () => {
       lemmaId: 'робити',
       srsKey: `робити::imperative::${slot}`,
       lemma: 'роби́ти',
+      lemmaPlain: 'робити',
       aspect: 'imperf',
       slot,
       slotLabelUa: slot === '2sg' ? '2-га особа однини' : slot === '1pl' ? '1-ша особа множини' : '2-га особа множини',
       target: slot === '2sg' ? 'роби́' : slot === '1pl' ? 'робі́мо' : 'робі́ть',
+      targetPlain: slot === '2sg' ? 'роби' : slot === '1pl' ? 'робімо' : 'робіть',
+      acceptedAnswers: [slot === '2sg' ? 'роби' : slot === '1pl' ? 'робімо' : 'робіть'],
       options: [{ text: 'роби́', isCorrect: true, code: 'CORRECT' }],
+      cefr: 'A2',
     }));
 
     const deck: PracticeDeckData = {
-      index: [
-        {
-          lemmaId: 'робити',
-          hasAudio: false,
-          hasSentence: false,
-          modes: ['imperative'],
-          hasCloze: false,
-          clozeIds: [],
-          weight: 1,
-        },
-      ],
-      lexemes: [
-        {
-          lemmaId: 'робити',
-          lemma: 'роби́ти',
-          lemmaPlain: 'робити',
-          cefr: 'A2',
-          morphology: { pos: 'verb' },
-        },
-      ],
-      cloze: [],
-      stress: [],
-      classify: [],
-      paradigm: [],
-      synonym: [],
-      heritage: [],
-      paronym: [],
-      antonym: [],
-      homonym: [],
+      ...modeDeck([{ id: 'робити', modes: ['imperative'] }]),
       imperative: imperativeItems,
     };
 
@@ -612,6 +590,26 @@ describe('lexicon SRS facade', () => {
     expect(state3.cards.get('робити::imperative::1pl')?.reps).toBe(2);
     expect(state3.cards.get('робити::imperative::2sg')?.reps).toBe(1);
     expect(state3.cards.get('робити::imperative::2pl')?.reps).toBe(1);
+
+    // 6. Export review event log and restore into fresh storage:
+    // preserves 3 independent slot cards, does not collapse into single key
+    const exported = exportReviewEventLog(localStorage, NOW.getTime() + 6000);
+    const destStorage = new (class {
+      readonly values = new Map<string, string>();
+      getItem(k: string) { return this.values.get(k) ?? null; }
+      setItem(k: string, v: string) { this.values.set(k, v); }
+      removeItem(k: string) { this.values.delete(k); }
+    })();
+
+    const restored = restoreSrsFromReviewEventExport(exported, destStorage, NOW.getTime() + 6000);
+    expect(restored.ok).toBe(true);
+    expect(restored.ok && restored.updated).toBe(3);
+
+    const destState = loadState(destStorage, NOW.getTime() + 6000);
+    expect(destState.cards.get('робити::imperative::1pl')?.reps).toBe(2);
+    expect(destState.cards.get('робити::imperative::2sg')?.reps).toBe(1);
+    expect(destState.cards.get('робити::imperative::2pl')?.reps).toBe(1);
+    expect(destState.cards.get('робити::imperative')).toBeUndefined();
   });
 
   test('emits heritage candidates from published items in mixed and focus modes', () => {

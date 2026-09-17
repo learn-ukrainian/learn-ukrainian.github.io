@@ -309,4 +309,62 @@ describe('importReviewEventExport', () => {
     expect(folded.get(reviewEventCardKey('future', 'flashcards'))?.last_review).toBe(receivedAt);
     expect(unclamped.get(reviewEventCardKey('future', 'flashcards'))?.last_review).toBe(future);
   });
+
+  test('restores and backfills imperative slot cards into independent schedules', () => {
+    const slots = ['2sg', '1pl', '2pl'] as const;
+    const remoteStorage = new MemoryStorage();
+    loadState(remoteStorage, NOW);
+
+    // Rate each slot on remote
+    slots.forEach((slot, idx) => {
+      rateCard('робити', 'imperative', 'good', NOW.getTime() + idx * 1000, { slotId: slot });
+    });
+    // Rate 1pl a second time
+    rateCard('робити', 'imperative', 'easy', NOW.getTime() + 5000, { slotId: '1pl' });
+
+    const exported = exportReviewEventLog(remoteStorage, LATER.getTime());
+    expect(exported.events).toHaveLength(4);
+
+    // Restore into a fresh destination storage
+    const destination = new MemoryStorage();
+    loadState(destination, NOW);
+
+    const restored = restoreSrsFromReviewEventExport(exported, destination, LATER);
+    expect(restored.ok).toBe(true);
+    expect(restored.ok && restored.updated).toBe(3);
+
+    const after = loadState(destination, LATER);
+    expect(after.cards.get('робити::imperative::2sg')?.reps).toBe(1);
+    expect(after.cards.get('робити::imperative::1pl')?.reps).toBe(2);
+    expect(after.cards.get('робити::imperative::2pl')?.reps).toBe(1);
+    expect(after.cards.get('робити::imperative')).toBeUndefined();
+
+    // Verify backfill from raw review log entries also preserves slotId
+    const backfillStorage = new MemoryStorage();
+    const rawReviews: ReviewLogEntry[] = slots.map((slot, idx) => ({
+      cardKey: cardKey('робити', 'imperative', slot),
+      lemmaId: 'робити',
+      mode: 'imperative',
+      rating: 'good',
+      state: State.Review,
+      due: NOW.getTime() + DAY_MS,
+      stability: 5,
+      difficulty: 4,
+      elapsed_days: 1,
+      last_elapsed_days: 1,
+      scheduled_days: 1,
+      learning_steps: 0,
+      review: NOW.getTime() + idx * 1000,
+    }));
+    const backfillResult = backfillReviewEventsFromSrsReviews(rawReviews, backfillStorage, {
+      deckVersion: PRACTICE_MODE_DECK_VERSION,
+    });
+    expect(backfillResult.added).toBe(3);
+    const backfilledLog = loadReviewEventLog(backfillStorage);
+    expect(backfilledLog.events).toHaveLength(3);
+    for (const evt of backfilledLog.events) {
+      expect(evt.presentation?.slotId).toBeDefined();
+      expect(slots).toContain(evt.presentation?.slotId);
+    }
+  });
 });

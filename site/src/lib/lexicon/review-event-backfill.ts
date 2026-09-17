@@ -11,7 +11,14 @@
  */
 
 import type { FSRSParameters } from 'ts-fsrs';
-import type { CardState, PracticeMode, PracticeRating, ReviewLogAggregate, ReviewLogEntry } from './srs';
+import {
+  parseCardKey,
+  type CardState,
+  type PracticeMode,
+  type PracticeRating,
+  type ReviewLogAggregate,
+  type ReviewLogEntry,
+} from './srs';
 import {
   FSRS_PARAMS_VERSION,
   REVIEW_EVENTS_SCHEMA,
@@ -64,8 +71,11 @@ export function reviewEventContentKey(
   rating: PracticeRating,
   reviewedAt: number,
   occurrence: number,
+  slot?: string,
 ): string {
-  return `${lemmaId}\0${mode}\0${rating}\0${reviewedAt}\0${occurrence}`;
+  return slot && mode === 'imperative'
+    ? `${lemmaId}\0${mode}\0${rating}\0${reviewedAt}\0${occurrence}\0${slot}`
+    : `${lemmaId}\0${mode}\0${rating}\0${reviewedAt}\0${occurrence}`;
 }
 
 export function clampReviewedAt(reviewedAt: number, receivedAt: number): number {
@@ -91,8 +101,11 @@ function contentKeyWithoutOccurrence(
   mode: PracticeMode,
   rating: PracticeRating,
   reviewedAt: number,
+  slot?: string,
 ): string {
-  return `${lemmaId}\0${mode}\0${rating}\0${reviewedAt}`;
+  return slot && mode === 'imperative'
+    ? `${lemmaId}\0${mode}\0${rating}\0${reviewedAt}\0${slot}`
+    : `${lemmaId}\0${mode}\0${rating}\0${reviewedAt}`;
 }
 
 /**
@@ -114,7 +127,8 @@ export function backfillReviewEventsFromSrsReviews(
   const fsrsParamsVersion = options.fsrsParamsVersion ?? FSRS_PARAMS_VERSION;
   const existingByBase = new Map<string, number>();
   for (const event of log.events) {
-    const base = contentKeyWithoutOccurrence(event.lemmaId, event.mode, event.rating, event.reviewedAt);
+    const slot = event.mode === 'imperative' ? event.presentation?.slotId : undefined;
+    const base = contentKeyWithoutOccurrence(event.lemmaId, event.mode, event.rating, event.reviewedAt, slot);
     existingByBase.set(base, (existingByBase.get(base) ?? 0) + 1);
   }
 
@@ -129,7 +143,9 @@ export function backfillReviewEventsFromSrsReviews(
   });
 
   for (const review of ordered) {
-    const base = contentKeyWithoutOccurrence(review.lemmaId, review.mode, review.rating, review.review);
+    const parsed = review.cardKey ? parseCardKey(review.cardKey) : null;
+    const slot = parsed && !parsed.quarantined && review.mode === 'imperative' ? parsed.slot : undefined;
+    const base = contentKeyWithoutOccurrence(review.lemmaId, review.mode, review.rating, review.review, slot);
     const occurrence = usedByBase.get(base) ?? 0;
     usedByBase.set(base, occurrence + 1);
     const existing = existingByBase.get(base) ?? 0;
@@ -143,6 +159,7 @@ export function backfillReviewEventsFromSrsReviews(
       review.rating,
       review.review,
       occurrence,
+      slot,
     );
     incoming.push({
       eventId: mintDeterministicUlid(review.review, fingerprint),
@@ -153,6 +170,7 @@ export function backfillReviewEventsFromSrsReviews(
       deckVersion: options.deckVersion,
       clientId,
       fsrsParamsVersion,
+      ...(slot ? { presentation: { slotId: slot } } : {}),
     });
   }
 

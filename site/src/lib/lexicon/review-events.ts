@@ -792,8 +792,8 @@ export function canonicalReplayOrder(events: readonly ReviewEvent[]): ReviewEven
   });
 }
 
-export function reviewEventCardKey(lemmaId: string, mode: PracticeMode): string {
-  return `${lemmaId}::${mode}`;
+export function reviewEventCardKey(lemmaId: string, mode: PracticeMode, slot?: string): string {
+  return slot && mode === 'imperative' ? `${lemmaId}::${mode}::${slot}` : `${lemmaId}::${mode}`;
 }
 
 function cardFromFsrs(card: FsrsCard): FoldedCardState {
@@ -836,7 +836,8 @@ export function foldReviewEventsToCards(
   const scheduler = params ? fsrs(params) : fsrs();
   const cards = new Map<string, FoldedCardState>();
   for (const event of canonicalReplayOrder(events)) {
-    const key = reviewEventCardKey(event.lemmaId, event.mode);
+    const slot = event.mode === 'imperative' ? event.presentation?.slotId : undefined;
+    const key = reviewEventCardKey(event.lemmaId, event.mode, slot);
     const reviewDate = new Date(event.reviewedAt);
     const current = cards.get(key);
     const fsrsCard = current ? fsrsFromFolded(current) : createEmptyCard(reviewDate);
