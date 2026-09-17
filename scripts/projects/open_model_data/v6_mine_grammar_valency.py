@@ -1162,8 +1162,14 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
     if any(w in CLAUSE_INTRO for w in lower_words[:2]) and lower_words[0] not in COORD_CONJ:
         return False
 
-    # Words outside quoted titles (e.g. exclude words inside «...», "...", “...”)
-    unquoted_inside = re.sub(r"[«\"“„][^»\"“”]*[»\"“”]", " ", inside)
+    # Words outside quoted titles (including nested quotes under Правопис 2019 §164, примітка 3)
+    unquoted_inside = inside
+    prev_unquoted = None
+    while prev_unquoted != unquoted_inside:
+        prev_unquoted = unquoted_inside
+        unquoted_inside = re.sub(r"«[^«»]*»", " ", unquoted_inside)
+        unquoted_inside = re.sub(r"[“„][^“”„]*[“”]", " ", unquoted_inside)
+        unquoted_inside = re.sub(r'"[^"]*"', " ", unquoted_inside)
     unquoted_words = [w.lower() for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", unquoted_inside)]
 
     if any(w in PREDICATE_WORDS for w in unquoted_words):

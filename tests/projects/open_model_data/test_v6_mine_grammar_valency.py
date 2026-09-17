@@ -919,6 +919,15 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_discordant_quoted_title_verb, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_quoted_title_verb)) == 0
 
+    # Defect 102 / Negative regression (Round 46 P2): Nested quotation verbs do not bypass apposition agreement (Правопис 2019 §164, примітка 3)
+    frag_discordant_nested_quoted_title_verb = (
+        "Вдалою режисерською знахідкою – своєрідна гра та імпровізація на тему «Вистава “Життя триває”» – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_nested_quoted_title_verb, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_nested_quoted_title_verb, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_nested_quoted_title_verb)) == 0
+
+
 
 
 
