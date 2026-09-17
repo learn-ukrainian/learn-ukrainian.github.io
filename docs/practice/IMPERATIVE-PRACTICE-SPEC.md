@@ -122,7 +122,7 @@ The client and verification engine must normalize responses (`stripStressMarks`,
 ## 6. Frontend & UI/UX Requirements (Kimi)
 
 1. **Mode Chooser Tile**:
-   - Add `imperative` to `PRACTICE_MODES` in [`site/src/lib/lexicon/srs.ts`](file:///home/ops/learn-ukrainian/site/src/lib/lexicon/srs.ts).
+   - Add `imperative` to `PRACTICE_MODES` in [`site/src/lib/lexicon/srs.ts`](../../site/src/lib/lexicon/srs.ts).
    - Display tile title: **Наказовий спосіб** (`Imperative Mood`).
    - Short description on focus/hover: *«Тренування форм наказового способу: 2-га ос. однини, 1-ша та 2-га ос. множини»*.
 2. **Interaction Stage**:
@@ -159,3 +159,4 @@ The client and verification engine must normalize responses (`stripStressMarks`,
 - **Sub-Issue 2 (#8158)**: `[4387][practice] Imperative Generator: VESUM 3-slot extraction, distractor engine & shard compilation` (Owner: Astra / Codex).
 - **Sub-Issue 3 (#8159)**: `[4387][practice] Imperative UI: Kimi web design, responsive card interactions & feedback` (Owner: Kimi).
 - **Sub-Issue 4 (#8160)**: `[4387][practice] Imperative Verification: Held-out linguistic tests, CI gates & release hydration` (Owner: Claude / Astra).
+
