@@ -1161,20 +1161,26 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
         return False
     if any(w in CLAUSE_INTRO for w in lower_words[:2]) and lower_words[0] not in COORD_CONJ:
         return False
-    if any(w in PREDICATE_WORDS for w in lower_words):
+
+    # Words outside quoted titles (e.g. exclude words inside «...», "...", “...”)
+    unquoted_inside = re.sub(r"[«\"“„][^»\"“”]*[»\"“”]", " ", inside)
+    unquoted_words = [w.lower() for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", unquoted_inside)]
+
+    if any(w in PREDICATE_WORDS for w in unquoted_words):
         return False
 
-    # Check for finite verbs in inside phrase
-    cur.execute(
-        "SELECT DISTINCT word_form, pos, tags FROM forms_all WHERE word_form IN ({})".format(
-            ",".join("?" for _ in lower_words)
-        ),
-        lower_words,
-    )
-    inside_rows = cur.fetchall()
-    for _wf, pos, tags in inside_rows:
-        if pos == "verb" and any(t in tags for t in (":past", ":pres", ":fut", ":impr")):
-            return False
+    # Check for finite verbs in unquoted inside phrase
+    if unquoted_words:
+        cur.execute(
+            "SELECT DISTINCT word_form, pos, tags FROM forms_all WHERE word_form IN ({})".format(
+                ",".join("?" for _ in unquoted_words)
+            ),
+            unquoted_words,
+        )
+        inside_rows = cur.fetchall()
+        for _wf, pos, tags in inside_rows:
+            if pos == "verb" and any(t in tags for t in (":past", ":pres", ":fut", ":impr")):
+                return False
 
     # Extract non-prepositional core tokens of the appositive phrase
     content_tokens = []

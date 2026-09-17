@@ -911,6 +911,15 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_discordant_repeated_noun_cutoff, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_repeated_noun_cutoff)) == 0
 
+    # Defect 101 / Negative regression (Round 45 P2): Quoted title verbs do not bypass apposition agreement (Правопис 2019 §154, §161.I.10)
+    frag_discordant_quoted_title_verb = (
+        "Вдалою режисерською знахідкою – своєрідна гра та імпровізація на тему «Життя триває» – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_quoted_title_verb, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_quoted_title_verb, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_quoted_title_verb)) == 0
+
+
 
 
 
