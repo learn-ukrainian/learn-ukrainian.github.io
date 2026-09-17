@@ -175,6 +175,7 @@ PYTHON_QG_GATE_ORDER = (
     "strict_json_parse",
     "activity_schema",
     "quiz_translate_explanations",
+    "error_correction_options",
     "word_count",
     "vocab_count",
     "vocab_floor",
@@ -263,6 +264,7 @@ REVIEWER_FIX_ADDITIONAL_ARTIFACTS_BY_GATE: dict[str, tuple[str, ...]] = {
     "resources_url_resolve": ("resources.yaml",),
     "ai_slop_clean": ("activities.yaml", "vocabulary.yaml", "resources.yaml"),
     "llm_qg_grammar_calque": ("activities.yaml", "vocabulary.yaml", "resources.yaml"),
+    "error_correction_options": ("activities.yaml",),
 }
 PIPELINE_INSERT_GATES = frozenset({"inject_activity_ids"})
 TERMINAL_ZERO_RETRY_GATES = frozenset(
@@ -9216,6 +9218,10 @@ def run_python_qg(
         return _python_qg_report(plan, gates)
 
     record("quiz_translate_explanations", _quiz_translate_explanation_gate(activities))
+    record(
+        "error_correction_options",
+        _error_correction_options_gate(activities, level=level),
+    )
     record("word_count", _word_count_gate(module_text, int(plan["word_target"])))
     record("plan_sections", _section_gate(module_text, plan))
     record("formatting_standards", _formatting_standards_gate(module_text))
@@ -10506,6 +10512,40 @@ def _quiz_translate_explanation_gate(activities: list[dict[str, Any]]) -> dict[s
     }
     if violations:
         report["message"] = _format_quiz_translate_explanation_diagnostic(violations)
+    return report
+
+
+def _error_correction_options_gate(
+    activities: list[dict[str, Any]],
+    *,
+    level: str = "",
+) -> dict[str, Any]:
+    """Shared Find-and-Fix option contract (fresh build + upgrade)."""
+    from scripts.build.lesson_gates import error_correction_activity_defects
+
+    violations: list[str] = []
+    checked = 0
+    for activity in activities:
+        if not isinstance(activity, Mapping):
+            continue
+        if str(activity.get("type") or "") != "error-correction":
+            continue
+        checked += 1
+        violations.extend(
+            error_correction_activity_defects(dict(activity), level=level)
+        )
+    report: dict[str, Any] = {
+        "passed": not violations,
+        "checked": checked,
+        "violations": violations,
+    }
+    if violations:
+        preview = "; ".join(violations[:8])
+        more = f" (+{len(violations) - 8} more)" if len(violations) > 8 else ""
+        report["message"] = (
+            f"ERROR_CORRECTION_OPTIONS_GATE FAILED: {len(violations)} defects. "
+            f"{preview}{more}"
+        )
     return report
 
 

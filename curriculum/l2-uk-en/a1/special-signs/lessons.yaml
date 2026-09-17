@@ -88,7 +88,8 @@ lessons:
     workbook:
     - 6
     - 9
-  unverified_stress: []
+  unverified_stress:
+  - Мар'я́но
   unverified_lemmas: []
 closes_module: 5
 provenance:

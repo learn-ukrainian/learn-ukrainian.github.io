@@ -73,19 +73,26 @@ tautology. After the learner marks the error, chips that are only
 
 For **every** `error-correction` item that has a non-empty `error:`:
 
-1. `sentence:` is a **natural Ukrainian carrier** (dialogue/scene), optional
-   English after an em dash `—`. Forbidden: English meta stems
+1. `sentence:` is a **natural Ukrainian carrier** (dialogue/scene). At **A1**,
+   for **new** Find-and-Fix items add a short English scaffold after an em dash
+   `—` (or a parenthetical gloss). For items preserved from the original module,
+   do **not** rewrite `sentence:` (structural preservation); put EN in
+   `explanation:` instead if needed. Forbidden: English meta stems
    (“Find the word…”, “Identify which…”, “In Ukrainian, the word for…”).
 2. Canonical fields only: `sentence`, `error`, `correction`, `options`,
    optional `explanation` (same contract as fresh write).
 3. `options:` has **≥3 distinct** forms, **includes `correction`**, and includes
    **≥1 distractor that is not the spotted `error` token**.
-4. Distractors come **only** from the inventory below (wiki L2 / bad-form pairs /
+4. **Render-faithful chips:** after MDX derivation, at least one option string
+   must equal the rendered `correctForm` **exactly** (React uses
+   `selectedFix === correctForm`). Do not put English glosses on chips
+   (`день (day)` vs bare `день`); keep glosses in `sentence` / `explanation`.
+5. Distractors come **only** from the inventory below (wiki L2 / bad-form pairs /
    cumulative learner-state contrasts). Never invent Russianisms or fabricate
    wrong forms. If inventory is thin, reuse attested pairs from the original
    module’s other EC items / quiz contrasts — still never ship `[corr, err]` alone.
-5. You **may grow** original `options` lists (preservation is ⊆). You **must**
-   grow empty or binary tautological originals to satisfy (3)–(4).
+6. You **may grow** original `options` lists (preservation is ⊆). You **must**
+   grow empty or binary tautological originals to satisfy (3)–(5).
 
 Empty `options` (UI reveal-only) is a hard fail.
 

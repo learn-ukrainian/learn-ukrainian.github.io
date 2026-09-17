@@ -292,17 +292,19 @@ def test_structural_containment_keeps_answers_and_multiplicity():
 
 def test_error_correction_options_gate_rejects_tautology_and_empty():
     empty = gates.error_correction_item_defects(
-        {"sentence": "Сього́дні ден.", "error": "ден", "correction": "день", "options": []}
+        {"sentence": "Сього́дні ден. — Today den.", "error": "ден", "correction": "день", "options": []},
+        level="a1",
     )
     assert any("empty" in d for d in empty)
 
     binary = gates.error_correction_item_defects(
         {
-            "sentence": "Сього́дні ден.",
+            "sentence": "Сього́дні ден. — Today den.",
             "error": "ден",
             "correction": "день",
             "options": ["день", "ден"],
-        }
+        },
+        level="a1",
     )
     assert any(">=3" in d or "distractor other than" in d for d in binary)
 
@@ -312,19 +314,109 @@ def test_error_correction_options_gate_rejects_tautology_and_empty():
             "error": "ден",
             "correction": "день",
             "options": ["день", "дєнь", "дэнь"],
-        }
+        },
+        level="a1",
     )
     assert any("meta-prompt" in d or "Ukrainian-first" in d for d in meta)
 
     ok = gates.error_correction_item_defects(
         {
+            "sentence": "Сього́дні га́рний ден. — Today is a nice day (misspelled).",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день", "дєнь", "дэнь"],
+        },
+        level="a1",
+    )
+    assert ok == []
+
+
+def test_error_correction_render_faithful_and_a1_en_scaffold():
+    glossed = gates.error_correction_item_defects(
+        {
+            "sentence": "Сього́дні ден. — Today den.",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день (day)", "ден", "дєнь"],
+        },
+        level="a1",
+    )
+    assert any("correctForm" in d or "exact" in d for d in glossed)
+
+    no_en = gates.error_correction_item_warnings(
+        {
             "sentence": "Сього́дні га́рний ден.",
             "error": "ден",
             "correction": "день",
             "options": ["день", "дєнь", "дэнь"],
+        },
+        level="a1",
+    )
+    assert any("English scaffold" in d for d in no_en)
+
+    # Missing EN is advisory, not a hard defect.
+    assert (
+        gates.error_correction_item_defects(
+            {
+                "sentence": "Сього́дні га́рний ден.",
+                "error": "ден",
+                "correction": "день",
+                "options": ["день", "дєнь", "дэнь"],
+            },
+            level="a1",
+        )
+        == []
+    )
+
+    # Fresh B1 builds do not require EN scaffolds on EC stems.
+    b1_ok = gates.error_correction_item_warnings(
+        {
+            "sentence": "Сього́дні га́рний ден.",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день", "дєнь", "дэнь"],
+        },
+        level="b1",
+    )
+    assert b1_ok == []
+
+
+def test_correct_keys_includes_error_correction_winning_form():
+    keys = gates._correct_keys(
+        {
+            "error": "Кийи́в",
+            "correction": "Ки́їв",
+            "options": ["Ки́їв", "Кийи́в", "Ки́ів"],
         }
     )
-    assert ok == []
+    assert "ки́їв" in keys
+    errors = gates.pedagogical_error_forms(
+        {
+            "inline": [
+                {
+                    "type": "error-correction",
+                    "items": [
+                        {
+                            "error": "Кийи́в",
+                            "correction": "Ки́їв",
+                            "options": ["Ки́їв", "Кийи́в", "Ки́ів"],
+                        }
+                    ],
+                }
+            ],
+            "workbook": [],
+        }
+    )
+    assert "ки́їв" not in errors
+    assert "кийи́в" in errors
+
+
+def test_wrong_stress_checks_proper_names_against_oracle():
+    # Proper names must not be exempt from wrong-stress via allow.
+    bad = gates.wrong_stress("Ми ї́демо в Киї́в.", set(), {"Київ"})
+    assert any("Киї́в" in x for x in bad)
+    good = gates.wrong_stress("Ми ї́демо в Ки́їв.", set(), {"Київ"})
+    assert good == []
 
 
 def test_contains_allows_expanded_error_correction_options():
