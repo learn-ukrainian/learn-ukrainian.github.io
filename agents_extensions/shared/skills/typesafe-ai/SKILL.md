@@ -36,43 +36,30 @@ that path fights Layout A / agents_extensions deploy.
   (run from the primary checkout; do not copy the key into worktrees or logs).
 - Client default model is `jev-latest` per upstream SDK.
 
-### When to use here (high value)
+### Operator posture (2026-09-17)
 
-| Use | Shape | Why |
-| --- | --- | --- |
-| Pre-dispatch / lane triage | Choice + confidence gate | Cheap structured route before Fable/Astra/Kimi spend |
-| open-model-data row gates | Noul / Score / Choice fan-out | Rights eligibility, dialect bucket, OCR-suspect, STEM admit — code keeps policy |
-| RAG / evidence keep-or-drop | Score or Noul per passage | Drop junk before expensive generative review |
-| Citation / claim check | Choice vs source excerpt | Catch unsupported claims; escalate low confidence |
-| Skill / tool suggestion | Choice over a closed catalog | Pick at most one skill; reject when none fit |
+**Use TypeSafe wherever it fits. Experiment freely.** Prefer a cheap Jev
+judgment over a full generative call when the need is a structured decision
+(route, rank, gate, score, verify, pick-one). Batch independent questions in
+one `system_one` call. Put thresholds in code; tune them as you learn.
 
-Batch independent questions in **one** `system_one` call (speculative fan-out).
-Thresholds live in **code**, not in the model.
+Suggested starting surfaces (not an exclusive list): pre-dispatch / lane
+triage; open-model-data row gates; RAG keep/drop; citation checks; skill/tool
+suggestion; any prompt-and-parse step that can become Choice / Score / Noul.
 
-### Hard non-uses (binding)
+### Still binding (narrow)
 
-- **Never** use TypeSafe as authority for Ukrainian lemma, stress, morphology,
-  orthography, or immersion policy. Those stay VESUM / `sources` MCP /
-  verbatim curriculum quotes (operator contract item 7 + 9).
-- **Never** let TypeSafe invent or rewrite human-authored dataset text in
-  open-model-data. It may **classify / score / gate** candidates; it may not
-  impersonate source Ukrainian.
-- **Never** replace Fleet Comms, Monitor leases, formal CF review, or merge
-  gates with a TypeSafe judgment.
-- **Never** call TypeSafe from CI until an explicit issue authorizes spend/egress
-  (same class of caution as OpenWiki FBL-012).
+- **Credentials:** never commit or paste the API key.
+- **Ukrainian language facts:** lemma, stress, morphology, orthography, and
+  immersion policy stay VESUM / `sources` / verbatim curriculum — TypeSafe may
+  *route or triage*, not invent linguistic truth.
+- **Human dataset text:** classify/score/gate only; do not rewrite or
+  impersonate human-authored Ukrainian sources.
+- **Authority planes:** TypeSafe does not replace Fleet Comms, Monitor leases,
+  formal cross-family review, or merge gates.
 
-### Integration shape for this monorepo
-
-1. Keep policy and thresholds in Python under `scripts/` (or epic-owned tooling).
-2. Ask narrow typed questions over bounded `state` (JSON fields preferred).
-3. Branch in code on `choice` / `score` / `noul` + `confidence`.
-4. Escalate low-confidence or high-impact cases to a language-lane LLM or human.
-5. Log model id, question ids, and usage tokens on receipts — not the API key.
-
-Pilot recommendation: start with **one** open-model-data eligibility/triage
-script and **one** harness pre-route probe; measure cost vs current LLM triage
-before widening.
+CI spend/egress is allowed when useful for a measured experiment; prefer local
+or bounded jobs first, and record model id + usage on receipts.
 
 ---
 
