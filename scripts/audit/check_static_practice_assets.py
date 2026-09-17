@@ -29,6 +29,7 @@ from generate_practice_deck import (
     validate_classify_item,
     validate_classify_session_cap,
     validate_heritage_item,
+    validate_imperative_item,
     validate_paradigm_item,
     validate_synonym_item,
 )
@@ -494,6 +495,12 @@ def _check_level(
                     for error in validate_classify_item(item)
                 )
             errors.extend(f"{paths[kind]}: {error}" for error in validate_classify_session_cap(classify_rows))
+        elif kind == "imperative":
+            for index, item in enumerate(item for item in rows if isinstance(item, dict)):
+                errors.extend(
+                    f"{paths[kind]}: imperative[{index}] {error}"
+                    for error in validate_imperative_item(item)
+                )
         elif kind == "synonym":
             for index, item in enumerate(item for item in rows if isinstance(item, dict)):
                 errors.extend(
@@ -924,13 +931,24 @@ def _print_summary(summary: dict[str, Any]) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--daily-pool", type=Path, default=DEFAULT_DAILY_POOL)
-    parser.add_argument("--practice-dir", type=Path, default=DEFAULT_PRACTICE_DIR)
-    parser.add_argument("--reviewed-sources", type=Path, default=DEFAULT_REVIEWED_SOURCES)
-    parser.add_argument("--levels", type=_parse_levels, default=DEFAULT_LEVELS)
-    parser.add_argument("--min-daily-pool-size", type=int, default=250)
-    parser.add_argument("--min-practice-lexemes-per-level", type=int, default=25)
+    parser = argparse.ArgumentParser(
+        description="Validate hydrated Word Atlas daily and practice assets. "
+        "Run after generation or release hydration; this does not compile missing shards.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  %(prog)s
+  %(prog)s --practice-dir site/public/lexicon --vesum-db data/vesum.db
+Outputs: summary or JSON on stdout; validates hydrated static practice assets and mode shards.
+Exit codes: 0 valid; 1 validation failure; 2 invalid arguments.
+Related: generate_practice_deck.py; docs/practice/IMPERATIVE-PRACTICE-SPEC.md.
+""",
+    )
+    parser.add_argument("--daily-pool", type=Path, default=DEFAULT_DAILY_POOL, help="Daily pool JSON path (default: %(default)s).")
+    parser.add_argument("--practice-dir", type=Path, default=DEFAULT_PRACTICE_DIR, help="Directory of hydrated shards (default: %(default)s).")
+    parser.add_argument("--reviewed-sources", type=Path, default=DEFAULT_REVIEWED_SOURCES, help="Reviewed source allowlist JSON (default: %(default)s).")
+    parser.add_argument("--levels", type=_parse_levels, default=DEFAULT_LEVELS, help="Comma-separated CEFR levels, e.g. A1,A2 (default: all published levels).")
+    parser.add_argument("--min-daily-pool-size", type=int, default=250, help="Minimum daily word count (default: %(default)s).")
+    parser.add_argument("--min-practice-lexemes-per-level", type=int, default=25, help="Minimum lexemes in each level (default: %(default)s).")
     parser.add_argument(
         "--vesum-db",
         type=Path,
@@ -940,8 +958,8 @@ def main(argv: list[str] | None = None) -> int:
             "CI stays schema-only by omitting this flag."
         ),
     )
-    parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES)
-    parser.add_argument("--sentence-inventory", type=Path, default=DEFAULT_SENTENCE_INVENTORY)
+    parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES, help="Cloze source JSON (default: %(default)s).")
+    parser.add_argument("--sentence-inventory", type=Path, default=DEFAULT_SENTENCE_INVENTORY, help="Sentence inventory JSON (default: %(default)s).")
     parser.add_argument(
         "--teacher-cloze",
         type=Path,
@@ -960,7 +978,7 @@ def main(argv: list[str] | None = None) -> int:
         default=True,
         help="Run the Practice Hub quality assurance gate (default: enabled in CLI)",
     )
-    parser.add_argument("--format", choices=("summary", "json"), default="summary")
+    parser.add_argument("--format", choices=("summary", "json"), default="summary", help="Output format (default: %(default)s).")
     args = parser.parse_args(argv)
 
     summary = check_assets(

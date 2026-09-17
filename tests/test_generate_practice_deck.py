@@ -77,6 +77,7 @@ def synthetic_creation_baseline(monkeypatch: pytest.MonkeyPatch) -> None:
     """Existing factory scenarios use a fixed historical synthetic corpus."""
     from scripts.practice.creation_review import CreationReview
 
+    generate_practice_deck._imperative_display.cache_clear()
     policy = CreationReview.from_path(FIXTURES / "lexicon-practice-creation-review.json")
     monkeypatch.setattr(CreationReview, "from_path", classmethod(lambda cls: policy))
 
@@ -3645,3 +3646,237 @@ def test_vesum_number_key_and_lemma_search_paradigm():
         "Новий", "adj", verifier
     )
     assert (paradigm2.get("cases") or {}).get("genitive", {}).get("singular") == "нового"
+
+
+@pytest.fixture
+def imperative_conn():
+    """VESUM-attested paradigms; separate from host database and stress hydration."""
+    import sqlite3
+
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, tags TEXT, pos TEXT)")
+    paradigms = {
+        "робити": ("imperf", {"impr:s:2": ["роби"], "impr:p:1": ["робімо", "робім"],
+                              "impr:p:2": ["робіть", "робіте"], "pres:s:2": ["робиш"],
+                              "pres:p:1": ["робимо"], "pres:p:2": ["робите"],
+                              "futr:s:2": ["робитимеш"], "futr:p:1": ["робитимемо"],
+                              "futr:p:2": ["робитимете"]}),
+        "робитися": ("imperf", {"impr:s:2": ["робися", "робись"],
+                                "impr:p:1": ["робімося", "робімось", "робімся"],
+                                "impr:p:2": ["робіться"]}),
+        "поставити": ("perf", {"impr:s:2": ["постав"], "impr:p:1": ["поставмо"],
+                               "impr:p:2": ["поставте"],
+                               "futr:s:2": ["поставиш"], "futr:p:1": ["поставимо"],
+                               "futr:p:2": ["поставите"]}),
+        "провітрити": ("perf", {"impr:s:2": ["провітри"], "impr:p:1": ["провітрімо", "провітрім"],
+                                "impr:p:2": ["провітріть"],
+                                "futr:s:2": ["провітриш"], "futr:p:1": ["провітримо"],
+                                "futr:p:2": ["провітрите"]}),
+    }
+    conn.executemany("INSERT INTO forms VALUES (?, ?, ?, 'verb')", [
+        (form, lemma, f"verb:{aspect}:{tags}")
+        for lemma, (aspect, slots) in paradigms.items()
+        for tags, forms in slots.items() for form in forms
+    ])
+    yield conn
+    conn.close()
+
+
+@pytest.fixture
+def imperative_plain_stress(monkeypatch):
+    # Source stress behavior has its own tests; fixtures must not depend on the
+    # installed trie or silently exercise a live host DB during unit tests.
+    from scripts.verification import stress
+
+    monkeypatch.setattr(stress, "verify_stress", lambda *a, **kw: {"status": "not_found", "matches": []})
+
+
+def _imperative_test_items(conn, lemma="робити", cefr="A1"):
+    return generate_practice_deck._build_imperative_items(
+        {"lemmaId": lemma, "lemma": lemma, "lemmaPlain": lemma, "pos": "verb"}, conn, cefr,
+    )
+
+
+def test_imperative_three_slots_variants_and_contract(imperative_conn, imperative_plain_stress):
+    items = _imperative_test_items(imperative_conn)
+    assert [item["slot"] for item in items] == ["2sg", "1pl", "2pl"]
+    assert items[1]["target"] == "робімо"
+    assert set(items[1]["acceptedAnswers"]) == {"робімо", "робім"}
+    assert set(items[2]["acceptedAnswers"]) == {"робіть", "робіте"}
+    for item in items:
+        assert generate_practice_deck.validate_imperative_item(item) == []
+        assert item["srsKey"] == f"робити::imperative::{item['slot']}"
+        assert len(item["options"]) == 4
+        assert all(option["text"] not in item["acceptedAnswers"]
+                   for option in item["options"] if not option["isCorrect"])
+        assert all(option.get("explanationEn") for option in item["options"] if not option["isCorrect"])
+    assert items == _imperative_test_items(imperative_conn)
+
+
+def test_imperative_reflexive_variants_and_immersion(imperative_conn, imperative_plain_stress):
+    items = _imperative_test_items(imperative_conn, "робитися", "B1")
+    assert set(items[0]["acceptedAnswers"]) == {"робися", "робись"}
+    assert set(items[1]["acceptedAnswers"]) == {"робімося", "робімось", "робімся"}
+    assert all("slotLabelEn" not in item and "Imperative:" not in item["notes"] for item in items)
+    assert all("explanationEn" not in option for item in items for option in item["options"])
+
+
+def test_imperative_taxonomy_uses_attested_slots_and_present(imperative_conn, imperative_plain_stress):
+    codes = set()
+    for lemma in ("робити", "поставити", "провітрити"):
+        for item in _imperative_test_items(imperative_conn, lemma):
+            all_option_texts = {option["text"] for option in item["options"]}
+            assert "робитимеш" not in all_option_texts
+            assert "робитимемо" not in all_option_texts
+            assert "робитимете" not in all_option_texts
+            for option in item["options"]:
+                code = option["code"]
+                codes.add(code)
+                if code in {"WRONG_PERSON", "WRONG_MOOD"}:
+                    tags = imperative_conn.execute(
+                        "SELECT tags FROM forms WHERE word_form=? AND lemma=?", (option["text"], lemma),
+                    ).fetchone()[0]
+                    assert (":impr:" if code == "WRONG_PERSON" else (":pres:" if ":pres:" in tags else ":futr:")) in tags
+                    if code == "WRONG_MOOD":
+                        assert "теперішній" not in option["explanationUk"]
+                        assert "present" not in option.get("explanationEn", "").lower()
+                elif code == "ORTHO_SOFT_SIGN":
+                    assert option["text"] == "поставь"
+                elif code == "STEM_CLUSTER":
+                    assert option["text"] == "провітр"
+    assert codes == {"CORRECT", *generate_practice_deck.IMPERATIVE_EXPLANATIONS}
+
+
+def test_imperative_mutation_is_not_an_attested_word(imperative_conn, imperative_plain_stress):
+    # A mutation that is an attested word of any POS cannot be called misspelt.
+    imperative_conn.execute("INSERT INTO forms VALUES ('поставь','поставь','noun','noun')")
+    items = _imperative_test_items(imperative_conn, "поставити")
+    assert all(option["code"] != "ORTHO_SOFT_SIGN" for item in items for option in item["options"])
+
+
+def test_imperative_rejects_mixed_aspect_and_missing_slots(imperative_conn, imperative_plain_stress):
+    assert _imperative_test_items(imperative_conn, "відсутній") == []
+    assert _imperative_test_items(imperative_conn, cefr="C2") == []
+    imperative_conn.execute("INSERT INTO forms VALUES ('роби','робити','verb:perf:impr:s:2','verb')")
+    assert _imperative_test_items(imperative_conn) == []
+
+
+def test_imperative_stress_and_ambiguous_readings(imperative_conn, monkeypatch):
+    from scripts.verification import stress
+
+    def oracle(word, **kwargs):
+        if word == "робімо":
+            assert kwargs["pos"] == "VERB"
+            return {"status": "ok", "matches": [{"stressed_form": "робі́мо"}]}
+        if word == "роби":
+            return {"status": "ambiguous", "matches": [{"stressed_form": "ро́би"}, {"stressed_form": "роби́"}]}
+        return {"status": "not_found", "matches": []}
+
+    monkeypatch.setattr(stress, "verify_stress", oracle)
+    items = _imperative_test_items(imperative_conn)
+    assert "2sg" not in {item["slot"] for item in items}
+    first_plural = next(item for item in items if item["slot"] == "1pl")
+    assert set(first_plural["acceptedAnswers"]) == {"робі́мо", "робімо", "робім"}
+    assert first_plural["targetPlain"] == "робімо"
+
+
+def test_imperative_excludes_marked_forms_and_exact_tag_mismatches(imperative_conn, imperative_plain_stress):
+    imperative_conn.executemany("INSERT INTO forms VALUES (?, 'робити', ?, 'verb')", [
+        ("marked", "verb:imperf:impr:p:1:arch"),
+        ("wrong-person", "verb:imperf:impr:p:12"),
+        ("future", "verb:imperf:futr:p:1"),
+    ])
+    items = _imperative_test_items(imperative_conn)
+    assert all(answer not in {"marked", "wrong-person", "future"}
+               for item in items for answer in item["acceptedAnswers"])
+
+
+def test_imperative_validator_rejects_stress_normalized_collisions(imperative_conn, imperative_plain_stress):
+    item = _imperative_test_items(imperative_conn)[1]
+    distractor = next(option for option in item["options"] if not option["isCorrect"])
+    distractor["text"] = "робі́м"
+    errors = generate_practice_deck.validate_mode_items("imperative", [item])
+    assert any("collides" in error for error in errors)
+
+
+def test_imperative_fixture_integration_includes_index_and_counts(imperative_conn, imperative_plain_stress):
+    payload = {}
+    for form, lemma, tags, pos in imperative_conn.execute("SELECT * FROM forms"):
+        payload.setdefault(form, []).append({"lemma": lemma, "tags": tags, "pos": pos})
+    payload["робити"] = [{"lemma": "робити", "tags": "verb:imperf:inf", "pos": "verb"}]
+    entries = [{"lemma": "робити", "url_slug": "робити", "pos": "verb",
+                "enrichment": {"cefr": {"level": "A1"}}, "gloss": "do",
+                "course_usage": [{"module": "fixture"}]}]
+    shards = build_practice_shards(
+        entries, ReviewedSourceAllowlist(frozenset()), JsonVesumVerifier(payload),
+        config=BuildConfig(target=1, source_label="fixture"),
+    )
+    assert len(shards["A1"]["imperative"]["imperative"]) == 3
+    assert "imperative" in shards["A1"]["index"]["items"][0]["modes"]
+    assert shards["A1"]["index"]["counts"]["modeCounts"]["imperative"] == 3
+
+
+def test_imperative_preserves_monosyllables(imperative_conn, monkeypatch):
+    from scripts.verification import stress
+
+    imperative_conn.executemany("INSERT INTO forms VALUES (?, 'бути', ?, 'verb')", [
+        ("будь", "verb:imperf:impr:s:2"), ("будьмо", "verb:imperf:impr:p:1"),
+        ("будьте", "verb:imperf:impr:p:2"),
+    ])
+    monkeypatch.setattr(stress, "verify_stress", lambda word, **kw: {
+        "status": "invalid_input" if word == "будь" else "not_found", "matches": [],
+    })
+    items = _imperative_test_items(imperative_conn, "бути")
+    assert [item["target"] for item in items] == ["будь", "будьмо", "будьте"]
+
+
+def test_imperative_rejects_multiple_accents_in_one_oracle_reading(imperative_conn, monkeypatch):
+    from scripts.verification import stress
+
+    monkeypatch.setattr(stress, "verify_stress", lambda word, **kw: {
+        "status": "ok", "matches": [{"stressed_form": "ро́бі́мо", "vowel_indices": [1, 3]}],
+    } if word == "робімо" else {"status": "not_found", "matches": []})
+    assert "1pl" not in {item["slot"] for item in _imperative_test_items(imperative_conn)}
+
+
+def test_pos_parse_cache_preserves_input_handling_and_result_isolation():
+    parse = generate_practice_deck._normalize_pos_buckets
+    result = parse("Verb / NOUN")
+    assert result == ["verb", "noun"]
+    result.clear()
+    assert parse("verb / noun") == ["verb", "noun"]
+    assert parse({"pos": "verb"}) == []
+    assert parse("verb:imperf") == ["verb"]
+    assert parse("verbatim") == []
+
+
+@pytest.mark.parametrize("kind", ["classify", "cloze"])
+def test_budget_raw_rejection_keeps_later_small_cards_and_measures_final_bytes(kind):
+    import gzip
+
+    original = {"A1": {kind: {
+        "schema": f"atlas-practice-{kind}",
+        kind: [
+            {"lemmaId": "one", "id": "first", "evidence": "x" * 500},
+            {"lemmaId": "one", "id": "too-large", "evidence": "x" * 1800},
+            {"lemmaId": "one", "id": "later-small", "evidence": "x" * 60},
+            {"lemmaId": "one", "id": "last", "evidence": "x" * 300},
+        ],
+    }}}
+    results = []
+    for _ in range(2):
+        shards = json.loads(json.dumps(original))
+        apply_size_budgets(shards, raw_limit=1000, gzip_limit=10000,
+                           cloze_raw_limit=1500, cloze_gzip_limit=10000)
+        payload = shards["A1"][kind]
+        retained = {item["id"] for item in payload[kind]}
+        assert "too-large" not in retained
+        assert {"first", "later-small"} <= retained
+        raw = generate_practice_deck._json_bytes(payload)
+        limit = 1500 if kind == "cloze" else 1000
+        assert len(raw) <= limit
+        assert len(gzip.compress(raw, mtime=0)) <= 10000
+        assert payload["sizeBudget"]["rawLimitBytes"] == limit
+        assert payload["sizeBudget"]["ok"] is True
+        results.append(payload)
+    assert results[0] == results[1]

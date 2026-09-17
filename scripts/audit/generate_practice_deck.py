@@ -17,7 +17,9 @@ import sqlite3
 import sys
 import unicodedata
 from collections import Counter
+from contextlib import closing
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Protocol
 
@@ -2255,13 +2257,19 @@ def _normalize_pos_buckets(value: Any) -> list[str]:
     text = _clean_text(value)
     if not text:
         return []
-    folded = text.casefold()
+    # Cloze distractor selection visits the same handful of POS labels for
+    # every candidate. Cache the pure parse, but return a fresh mutable list.
+    return list(_cached_pos_buckets(text.casefold()))
+
+
+@lru_cache(maxsize=512)
+def _cached_pos_buckets(folded: str) -> tuple[str, ...]:
     buckets: list[str] = []
     for part in re.split(r"\s*[,;/|+]\s*", folded):
         for bucket, aliases in _POS_BUCKET_ALIASES.items():
             if any(_pos_alias_matches(part, alias) for alias in aliases) and bucket not in buckets:
                 buckets.append(bucket)
-    return buckets
+    return tuple(buckets)
 
 
 def _pos_alias_matches(part: str, alias: str) -> bool:
@@ -2723,6 +2731,252 @@ def _paradigm_slot_case_key(case_name: str) -> str | None:
         if internal.casefold() == english:
             return ukrainian
     return None
+
+
+IMPERATIVE_SLOTS = {
+    "2sg": ("s", "2", "ти (2-га особа однини)", "2nd person singular (you)"),
+    "1pl": ("p", "1", "ми (1-ша особа множини)", "1st person plural (let's)"),
+    "2pl": ("p", "2", "ви (2-га особа множини)", "2nd person plural (you)"),
+}
+IMPERATIVE_EXPLANATIONS = {
+    "WRONG_PERSON": (
+        "Це наказовий спосіб, але інша особа або число. Звірте форму з указаним займенником.",
+        "This imperative has a different person or number. Check the requested pronoun.",
+    ),
+    "WRONG_MOOD": (
+        "Це дійсний спосіб, а потрібен наказ або заклик до дії.",
+        "This is indicative mood; the prompt asks for an imperative.",
+    ),
+    "ORTHO_SOFT_SIGN": (
+        "Після губних б, п, в, м, ф та шиплячих ж, ч, ш, щ м'який знак тут не пишемо.",
+        "Do not add a soft sign after these labial or postalveolar consonants.",
+    ),
+    "STEM_CLUSTER": (
+        "У цій формі після збігу приголосних із сонорним зберігаємо закінчення -и.",
+        "Keep the -и ending after this consonant cluster ending in a sonorant.",
+    ),
+    "CALQUE_AUX": (
+        "У цьому завданні потрібна синтетична форма наказового способу, без «давай» чи «давайте».",
+        "Use the synthetic imperative requested here, without an auxiliary plus infinitive.",
+    ),
+}
+# Literary practice excludes marked register forms, but keeps short/long and
+# orthographic variants. Query forms_all (or forms view fallback), filtering form_markers.
+_IMPERATIVE_EXCLUDED_TAGS = frozenset({
+    "bad", "obsc", "subst", "arch", "dial", "dialect", "slang", "vulg", "coll", "rare",
+})
+
+
+@lru_cache(maxsize=32768)
+def _imperative_display(form: str, number: str, *, mood: str = "Imp") -> str | None:
+    """Use oracle stress only; missing stress stays bare, ambiguity fails closed."""
+    from scripts.verification.stress import verify_stress
+
+    # The oracle deliberately rejects monosyllables: there is no stress choice
+    # to mark. These forms have already passed the VESUM morphology lookup.
+    if sum(letter in UKRAINIAN_VOWELS for letter in form) == 1:
+        return form
+    result = verify_stress(
+        form, pos="VERB", tags=[f"Number={'Sing' if number == 's' else 'Plur'}", f"Mood={mood}"],
+    )
+    if result["status"] == "not_found":
+        return form
+    readings = {match["stressed_form"] for match in result["matches"]}
+    if len(readings) != 1:
+        return None
+    display = next(iter(readings))
+    if display.count(STRESS_MARK) > 1:
+        return None
+    return display if _plain(display) == _plain(form) else None
+
+
+def _imperative_forms(
+    lemma: str, vesum_conn: sqlite3.Connection,
+) -> tuple[dict[str, list[str]], dict[str, list[str]], str | None]:
+    slots: dict[str, set[str]] = {slot: set() for slot in IMPERATIVE_SLOTS}
+    present: dict[str, set[str]] = {slot: set() for slot in IMPERATIVE_SLOTS}
+    aspects: set[str] = set()
+    try:
+        rows = vesum_conn.execute(
+            """
+            SELECT fa.word_form, fa.tags
+            FROM forms_all fa
+            WHERE fa.lemma = ? AND fa.pos = 'verb'
+              AND NOT EXISTS (
+                  SELECT 1 FROM form_markers m
+                  WHERE m.form_id = fa.id
+                    AND m.marker IN ('bad', 'subst', 'obsc', 'dialect', 'arch', 'slang', 'vulg')
+              )
+            ORDER BY fa.word_form, fa.tags
+            """,
+            (lemma,),
+        ).fetchall()
+    except sqlite3.OperationalError:
+        rows = vesum_conn.execute(
+            "SELECT word_form, tags FROM forms WHERE lemma = ? AND pos = 'verb' ORDER BY word_form, tags",
+            (lemma,),
+        ).fetchall()
+    for form, tags in rows:
+        tokens = set(tags.split(":"))
+        if tokens & _IMPERATIVE_EXCLUDED_TAGS:
+            continue
+        aspects.update(tokens & {"perf", "imperf"})
+        for slot, (number, person, _uk, _en) in IMPERATIVE_SLOTS.items():
+            if {number, person} <= tokens:
+                if "impr" in tokens:
+                    slots[slot].add(form)
+                elif "pres" in tokens or ("perf" in tokens and "futr" in tokens):
+                    present[slot].add(form)
+    # Prefer full -мо and -ся forms; never discard their attested alternatives.
+    def preference(form: str) -> tuple[bool, bool, str]:
+        stem = re.sub(r"(?:ся|сь)$", "", form)
+        return (stem.endswith("ім"), form.endswith("сь") or stem.endswith("іте"), form)
+
+    return (
+        {slot: sorted(forms, key=preference) for slot, forms in slots.items()},
+        {slot: sorted(forms) for slot, forms in present.items()},
+        next(iter(aspects)) if len(aspects) == 1 else None,
+    )
+
+
+def _imperative_distractors(
+    lemma: str, slot: str, target: str, slots: dict[str, list[str]],
+    present: dict[str, list[str]], vesum_conn: sqlite3.Connection,
+    *, aspect: str, stressed_lemma: str,
+) -> list[tuple[str, str]]:
+    """Rank explainable errors; mutations must not be attested word forms."""
+    candidates: list[tuple[str, str]] = []
+    plain_target = _plain(target)
+    stem = re.sub(r"(?:ся|сь)$", "", plain_target)
+    target_stem = re.sub(r"(?:ся|сь)$", "", target)
+    reflexive = plain_target[len(stem):]
+    target_reflexive = target[len(target_stem):]
+    has_stress = STRESS_MARK in target
+    mutation = None
+    if slot == "2sg" and stem[-1:] in "бпвмфжчшщ":
+        mutation_str = (target_stem + "ь" + target_reflexive) if has_stress else (stem + "ь" + reflexive)
+        mutation = (mutation_str, "ORTHO_SOFT_SIGN")
+    elif slot == "2sg" and len(stem) >= 3 and stem.endswith("и"):
+        consonants = set("бвгґджзйклмнпрстфхцчшщ")
+        if stem[-2] in "рлмн" and stem[-3] in consonants:
+            mutation_str = (target_stem[:-1] + target_reflexive) if has_stress else (stem[:-1] + reflexive)
+            mutation = (mutation_str, "STEM_CLUSTER")
+    if mutation and vesum_conn.execute(
+        "SELECT 1 FROM forms WHERE word_form = ? LIMIT 1", (_plain(mutation[0]),),
+    ).fetchone() is None:
+        candidates.append(mutation)
+    number = IMPERATIVE_SLOTS[slot][0]
+    for form in present[slot]:
+        display = _imperative_display(form, number, mood="Ind")
+        if display:
+            candidates.append((display, "WRONG_MOOD"))
+            break
+    # In a sentence-level imperative cue, contrast an auxiliary + infinitive
+    # against the requested synthetic form only for imperfective aspect.
+    # Calque aux ("давайте робити") is an imperfective learner error; it is
+    # not a natural learner error shape for perfective verbs.
+    calque = None
+    if aspect == "imperf":
+        aux_plain = "давай" if slot == "2sg" else "давайте"
+        aux_stressed = "дава́й" if slot == "2sg" else "дава́йте"
+        auxiliary = aux_stressed if has_stress else aux_plain
+        calque_lemma = stressed_lemma if has_stress else lemma
+        calque = (f"{auxiliary} {calque_lemma}", "CALQUE_AUX")
+        if slot == "1pl":
+            candidates.append(calque)
+    # One representative from each other slot before optional variants.
+    for index in range(max(map(len, slots.values()), default=0)):
+        for other, forms in slots.items():
+            if other == slot or index >= len(forms):
+                continue
+            display = _imperative_display(forms[index], IMPERATIVE_SLOTS[other][0])
+            if display:
+                candidates.append((display, "WRONG_PERSON"))
+    if calque and slot != "1pl":
+        candidates.append(calque)
+    return candidates
+
+
+def _build_imperative_items(
+    lexeme: dict[str, Any], vesum_conn: sqlite3.Connection, cefr: str,
+) -> list[dict[str, Any]]:
+    """Extract all attested synthetic slots and emit collision-free four-choice cards."""
+    if cefr not in PUBLISHED_LEVELS or lexeme.get("pos") != "verb":
+        return []
+    lemma = _plain(str(lexeme.get("lemmaPlain") or lexeme.get("lemma") or ""))
+    slots, present, aspect = _imperative_forms(lemma, vesum_conn)
+    if aspect is None:
+        return []
+    items = []
+    for slot, forms in slots.items():
+        if not forms:
+            continue
+        number, _person, label_uk, label_en = IMPERATIVE_SLOTS[slot]
+        displays = [_imperative_display(form, number) for form in forms]
+        if any(display is None for display in displays):
+            continue
+        target = displays[0]
+        accepted = list(dict.fromkeys(value for pair in zip(displays, forms, strict=True) for value in pair))
+        seen = {_plain(answer) for answer in accepted}
+        options = [{"text": target, "isCorrect": True, "code": "CORRECT"}]
+        for text, code in _imperative_distractors(
+            lemma, slot, target, slots, present, vesum_conn,
+            aspect=aspect, stressed_lemma=str(lexeme.get("lemma") or lemma),
+        ):
+            if _plain(text) in seen:
+                continue
+            seen.add(_plain(text))
+            uk, en = IMPERATIVE_EXPLANATIONS[code]
+            option = {"text": text, "isCorrect": False, "code": code, "explanationUk": uk}
+            if cefr in {"A1", "A2"}:
+                option["explanationEn"] = en
+            options.append(option)
+            if len(options) == 4:
+                break
+        if len(options) != 4:
+            continue
+        item_id = f"{lexeme['lemmaId']}:imperative:{slot}"
+        random.Random(item_id).shuffle(options)
+        notes = "Наказовий спосіб: " + label_uk + "."
+        if len(forms) > 1:
+            notes += " Допустимі варіанти: " + ", ".join(displays) + "."
+        if cefr in {"A1", "A2"}:
+            notes += " Imperative: " + label_en + "."
+            if len(forms) > 1:
+                notes += " All listed variants are accepted."
+        item = {
+            "id": item_id, "lemmaId": lexeme["lemmaId"],
+            "srsKey": f"{lexeme['lemmaId']}::imperative::{slot}",
+            "lemma": lexeme["lemma"], "lemmaPlain": lemma, "aspect": aspect,
+            "slot": slot, "slotLabelUa": label_uk, "target": target,
+            "targetPlain": _plain(target), "acceptedAnswers": accepted,
+            "options": options, "cefr": cefr, "notes": notes,
+            "cueSentence": "Прямий наказ або заклик: «___!»",
+        }
+        if cefr in {"A1", "A2"}:
+            item["slotLabelEn"] = label_en
+            item["cueSentenceEn"] = "A direct command or invitation: ‘___!’"
+        items.append(item)
+    return items
+
+
+def _imperative_connection(verifier: VesumVerifier) -> sqlite3.Connection:
+    """Share one read-only production connection; fixtures use their own rows."""
+    if isinstance(verifier, RealVesumVerifier):
+        from scripts.rag.config import VESUM_DB_PATH
+
+        path = verifier.db_path or VESUM_DB_PATH
+        return sqlite3.connect(f"{path.resolve().as_uri()}?mode=ro", uri=True)
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, tags TEXT, pos TEXT)")
+    if isinstance(verifier, JsonVesumVerifier):
+        conn.executemany(
+            "INSERT INTO forms VALUES (?, ?, ?, ?)",
+            [(form, row.get("lemma"), row.get("tags", ""), row.get("pos"))
+             for form, rows in verifier.payload.items() if isinstance(rows, list)
+             for row in rows if isinstance(row, dict)],
+        )
+    return conn
 
 
 def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
@@ -4130,6 +4384,57 @@ def validate_homonym_item(item: dict[str, Any], *, internal_options: bool = Fals
     return errors
 
 
+def validate_imperative_item(item: dict[str, Any]) -> list[str]:
+    """Check the public imperative contract, including normalized answer isolation."""
+    errors: list[str] = []
+    for key in ("id", "lemmaId", "srsKey", "lemma", "slotLabelUa", "target", "targetPlain", "notes"):
+        if not _clean_text(item.get(key)):
+            errors.append(f"imperative item missing {key}")
+    if item.get("slot") not in IMPERATIVE_SLOTS:
+        errors.append("invalid imperative slot")
+    if item.get("aspect") not in {"perf", "imperf"}:
+        errors.append("invalid imperative aspect")
+    if item.get("cefr") not in PUBLISHED_LEVELS:
+        errors.append("invalid imperative CEFR")
+    if item.get("srsKey") != f"{item.get('lemmaId')}::imperative::{item.get('slot')}":
+        errors.append("imperative srsKey must include the slot")
+    answers = item.get("acceptedAnswers")
+    if not isinstance(answers, list) or not answers or any(not _clean_text(a) for a in answers):
+        errors.append("imperative acceptedAnswers must be a nonempty string list")
+        answers = []
+    accepted = {_plain(a) for a in answers if isinstance(a, str)}
+    target = _plain(str(item.get("target") or ""))
+    if target not in accepted or item.get("targetPlain") != target:
+        errors.append("imperative target must match targetPlain and acceptedAnswers")
+    options = item.get("options")
+    if not isinstance(options, list) or len(options) != 4:
+        return [*errors, "imperative requires exactly four options"]
+    correct = 0
+    seen: set[str] = set()
+    for option in options:
+        if not isinstance(option, dict) or not _clean_text(option.get("text")):
+            errors.append("imperative option missing text")
+            continue
+        text = _plain(option["text"])
+        if text in seen:
+            errors.append("duplicate normalized imperative option")
+        seen.add(text)
+        if option.get("isCorrect") is True:
+            correct += 1
+            if option.get("code") != "CORRECT" or text != target:
+                errors.append("imperative correct option must match target")
+        else:
+            if option.get("isCorrect") is not False:
+                errors.append("imperative isCorrect must be a boolean")
+            if text in accepted:
+                errors.append("imperative distractor collides with acceptedAnswers")
+            if option.get("code") not in IMPERATIVE_EXPLANATIONS or not _clean_text(option.get("explanationUk")):
+                errors.append("imperative distractor requires taxonomy code and explanation")
+    if correct != 1:
+        errors.append("imperative requires exactly one correct option")
+    return errors
+
+
 def validate_mode_items(mode: str, items: list[dict[str, Any]]) -> list[str]:
     errors: list[str] = []
     if mode == "classify":
@@ -4154,6 +4459,9 @@ def validate_mode_items(mode: str, items: list[dict[str, Any]]) -> list[str]:
     elif mode == "homonym":
         for index, item in enumerate(items):
             errors.extend(f"homonym[{index}]: {error}" for error in validate_homonym_item(item))
+    elif mode == "imperative":
+        for index, item in enumerate(items):
+            errors.extend(f"imperative[{index}]: {error}" for error in validate_imperative_item(item))
     elif mode == "stress":
         for index, item in enumerate(items):
             if not isinstance(item, dict):
@@ -4598,6 +4906,14 @@ def build_practice_shards(
         mode_by_level[lexeme["cefr"]]["classify"].extend(classify_items)
         paradigm_items = _build_paradigm_items(lexeme)
         mode_by_level[lexeme["cefr"]]["paradigm"].extend(paradigm_items)
+
+    with closing(_imperative_connection(verifier)) as imperative_conn:
+        for lexeme in all_lexemes:
+            level = lexeme.get("cefr")
+            if level in PUBLISHED_LEVELS:
+                mode_by_level[level]["imperative"].extend(
+                    _build_imperative_items(lexeme, imperative_conn, level)
+                )
 
     synonym_items = _build_synonym_items(
         lexemes_by_entry,
@@ -5915,6 +6231,14 @@ def apply_size_budgets(
 
         def mode_fits(candidate: list[Any]) -> bool:
             items[:] = candidate
+            effective_raw_limit = (
+                cloze_raw_limit if kind == "cloze" and cloze_raw_limit is not None else raw_limit
+            )
+            # Most greedy tail candidates already exceed the raw-byte cap.
+            # Reject them before compression; final retained shards still get
+            # their complete raw/gzip measurements through set_budget below.
+            if len(_json_bytes(payload)) > effective_raw_limit:
+                return False
             return bool(set_budget(payload, kind)["ok"])
 
         ordered = [candidate for _index, candidate in coverage_first_rows(original)]
@@ -6086,13 +6410,24 @@ def write_aspect_residual_report(path: Path, residuals: list[dict[str, str]]) ->
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--atlas-db", type=Path, default=DEFAULT_ATLAS_DB)
-    parser.add_argument("--manifest", type=Path)
-    parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
-    parser.add_argument("--reviewed-allowlist", type=Path, default=DEFAULT_ALLOWLIST)
-    parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES)
-    parser.add_argument("--sentence-inventory", type=Path, default=DEFAULT_SENTENCE_INVENTORY)
+    parser = argparse.ArgumentParser(
+        description="Generate deterministic Word Atlas practice shards from admitted lexemes. "
+        "Use hydrated Atlas/VESUM data for publication or JSON fixtures for testing.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""Examples:
+  %(prog)s --atlas-db data/atlas.db --vesum-db data/vesum.db
+  %(prog)s --manifest tests/fixtures/lexicon-practice-manifest.json --vesum-fixture tests/fixtures/lexicon-practice-vesum.json --out-dir batch_state/practice
+Outputs: practice-{mode}.{level}.json shards in --out-dir, including index metadata.
+Exit codes: 0 success; nonzero on invalid data, validation failures, or CLI errors.
+Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
+""",
+    )
+    parser.add_argument("--atlas-db", type=Path, default=DEFAULT_ATLAS_DB, help="Hydrated Atlas SQLite input (default: data/atlas.db).")
+    parser.add_argument("--manifest", type=Path, help="Use an Atlas JSON manifest instead of --atlas-db (default: none).")
+    parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR, help="Write shards here (default: site/public/lexicon).")
+    parser.add_argument("--reviewed-allowlist", type=Path, default=DEFAULT_ALLOWLIST, help="Reviewed cloze source JSON (default: site/src/data/lexicon-practice-reviewed-sources.json).")
+    parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES, help="Cloze candidate JSON (default: site/src/data/lexicon-practice-cloze-sources.json).")
+    parser.add_argument("--sentence-inventory", type=Path, default=DEFAULT_SENTENCE_INVENTORY, help="Sentence candidate inventory (default: site/src/data/lexicon-sentence-inventory.json).")
     parser.add_argument(
         "--end-dictionary-inventory",
         type=Path,
@@ -6102,11 +6437,11 @@ def main(argv: list[str] | None = None) -> int:
             "overlay when combining acute is present; never fabricates cloze."
         ),
     )
-    parser.add_argument("--heritage-pairs", type=Path, default=DEFAULT_HERITAGE_PAIRS)
-    parser.add_argument("--paronym-pairs", type=Path, default=DEFAULT_PARONYM_PAIRS)
-    parser.add_argument("--antonym-pairs", type=Path, default=DEFAULT_ANTONYM_PAIRS)
-    parser.add_argument("--homonym-pairs", type=Path, default=DEFAULT_HOMONYM_PAIRS)
-    parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS)
+    parser.add_argument("--heritage-pairs", type=Path, default=DEFAULT_HERITAGE_PAIRS, help="Curated heritage YAML (default: data/lexicon/heritage_pairs.yaml).")
+    parser.add_argument("--paronym-pairs", type=Path, default=DEFAULT_PARONYM_PAIRS, help="Curated paronym YAML (default: data/lexicon/paronym_pairs.yaml).")
+    parser.add_argument("--antonym-pairs", type=Path, default=DEFAULT_ANTONYM_PAIRS, help="Curated antonym YAML (default: data/lexicon/antonym_pairs.yaml).")
+    parser.add_argument("--homonym-pairs", type=Path, default=DEFAULT_HOMONYM_PAIRS, help="Curated homonym YAML (default: data/lexicon/homonym_pairs.yaml).")
+    parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS, help="Reviewed synonym verdict YAML (default: data/lexicon/synonym_pair_verdicts.yaml).")
     parser.add_argument(
         "--curated-membership",
         type=Path,
@@ -6122,23 +6457,23 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         help="Private local recognition-only overlay; do not use for public output.",
     )
-    parser.add_argument("--vesum-fixture", type=Path)
+    parser.add_argument("--vesum-fixture", type=Path, help="Use a JSON form-to-analysis fixture instead of production VESUM (default: none).")
     parser.add_argument(
         "--vesum-db",
         type=Path,
         help="Explicit VESUM database path, including a validated local shadow.",
     )
-    parser.add_argument("--target", type=int, default=DEFAULT_TARGET)
-    parser.add_argument("--raw-limit", type=int, default=DEFAULT_RAW_LIMIT)
-    parser.add_argument("--gzip-limit", type=int, default=DEFAULT_GZIP_LIMIT)
-    parser.add_argument("--cloze-raw-limit", type=int, default=DEFAULT_CLOZE_RAW_LIMIT)
-    parser.add_argument("--cloze-gzip-limit", type=int, default=DEFAULT_CLOZE_GZIP_LIMIT)
+    parser.add_argument("--target", type=int, default=DEFAULT_TARGET, help="Maximum selected lexemes before size budgets (default: %(default)s).")
+    parser.add_argument("--raw-limit", type=int, default=DEFAULT_RAW_LIMIT, help="Maximum raw bytes per ordinary shard (default: %(default)s).")
+    parser.add_argument("--gzip-limit", type=int, default=DEFAULT_GZIP_LIMIT, help="Maximum gzip bytes per ordinary shard (default: %(default)s).")
+    parser.add_argument("--cloze-raw-limit", type=int, default=DEFAULT_CLOZE_RAW_LIMIT, help="Maximum raw bytes per cloze shard (default: %(default)s).")
+    parser.add_argument("--cloze-gzip-limit", type=int, default=DEFAULT_CLOZE_GZIP_LIMIT, help="Maximum gzip bytes per cloze shard (default: %(default)s).")
     parser.add_argument(
         "--aspect-residual-report",
         type=Path,
         help="Write named A2-C1 practice verbs that still have no emitted aspect set.",
     )
-    parser.add_argument("--fixture-note", type=str)
+    parser.add_argument("--fixture-note", type=str, help="Attach a fixture-only explanatory note to output (default: none).")
     parser.add_argument(
         "--seed-selection",
         choices=("priority", "representative"),
