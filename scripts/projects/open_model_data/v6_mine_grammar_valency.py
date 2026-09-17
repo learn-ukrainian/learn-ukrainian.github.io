@@ -1355,7 +1355,8 @@ def get_clause_agreeing_subject_indices(words: list[str], verb_idx: int, cur: sq
                 continue
             if is_preposition(w_lower, cur):
                 continue
-            if w_lower in {"яка", "котра", "вона", "та", "що", "я", "ти", "ця"}:
+            # Note: "та" removed from subject list as it is overwhelmingly a conjunction (Fable R77 finding 1)
+            if w_lower in {"яка", "котра", "вона", "що", "я", "ти", "ця"}:
                 subj_indices.append(i)
                 continue
             cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w_lower,))
@@ -1381,19 +1382,19 @@ def clause_has_agreeing_nominative_subject(words: list[str], verb_idx: int, cur:
 
 
 EVENT_DURATION_NOUNS = {
-    "вистава", "вистави", "виставі", "виставу", "виставою", "виставах",
+    "вистава", "вистави", "виставі", "виставу", "виставою", "виставах", "вистав",
     "спектакль", "спектаклю", "спектаклем", "спектаклі", "спектаклів",
     "концерт", "концерту", "концертом", "концерти", "концертів",
     "фільм", "фільму", "фільмом", "фільми", "фільмів",
     "кіно",
-    "лекція", "лекції", "лекцію", "лекцією", "лекціях",
+    "лекція", "лекції", "лекцію", "лекцією", "лекціях", "лекцій",
     "урок", "уроку", "уроком", "уроки", "уроків",
     "виступ", "виступу", "виступом", "виступи", "виступів",
     "матч", "матчу", "матчем", "матчі", "матчів",
     "гра", "гри", "гру", "грою", "ігри", "ігор", "іграх",
     "сезон", "сезону", "сезоном", "сезони", "сезонів",
-    "сесія", "сесії", "сесію", "сесією", "сесіях",
-    "репетиція", "репетиції", "репетицію", "репетицією", "репетиціях",
+    "сесія", "сесії", "сесію", "сесією", "сесіях", "сесій",
+    "репетиція", "репетиції", "репетицію", "репетицією", "репетиціях", "репетицій",
     "пара", "пари", "пару", "парою", "пар",
 }
 
@@ -1426,45 +1427,64 @@ def get_clause_direct_object_indices(words: list[str], verb_idx: int, cur: sqlit
             continue
         if w_lower in TIME_DURATION_NOUNS:
             continue
-        # Event duration nouns modified by universal quantifiers with optional intervening adjectives
-        # (e.g. 'всю виставу', 'всю довгу виставу', 'цілу першу годину') are duration adverbials, not direct objects
+        # Event duration nouns modified by universal quantifiers, quantity words, or numerals
+        # with optional intervening adjectives (e.g. 'всю виставу', 'всю довгу виставу', 'п\'ять вистав', 'дві вистави')
+        # are duration adverbials, not direct objects
         if w_lower in EVENT_DURATION_NOUNS:
             prev_k = i - 1
+            is_dur = False
             while prev_k >= 0 and is_modifier_or_adv(words[prev_k], cur) and not is_preposition(words[prev_k], cur):
-                if words[prev_k].lower() in DURATION_MODIFIERS:
+                prev_w = words[prev_k].lower()
+                if (
+                    prev_w in DURATION_MODIFIERS
+                    or prev_w in QUANTITY_WORDS
+                    or bool(get_vesum_pos(prev_w, cur) & {"numr"})
+                ):
+                    is_dur = True
                     break
                 prev_k -= 1
-            if prev_k >= 0 and words[prev_k].lower() in DURATION_MODIFIERS:
+            if is_dur:
                 continue
 
-        # Check if w is a numeral or quantity word (e.g. 'багато посуду', 'п'ять чашок', 'кілька тарілок')
-        is_quantifier = (
-            w_lower in QUANTITY_WORDS
-            or bool(get_vesum_pos(w_lower, cur) & {"numr"})
-        )
-        if is_quantifier:
-            # Check if this numeral/quantifier quantifies a duration noun (e.g. 'п'ять годин', 'дві вистави')
+        # Prenominal title words (e.g. 'пані лікарка', 'добродійка вчителька') modify the following noun
+        # and do not serve as direct objects
+        if w_lower in {"пані", "добродійка"} and i + 1 < len(words) and "noun" in get_vesum_pos(words[i + 1].lower(), cur):
+            continue
+
+        # Check if w is a numeral or quantity word (e.g. 'багато посуду', 'п\'ять чашок', 'кілька тарілок')
+        is_numr = bool(get_vesum_pos(w_lower, cur) & {"numr"})
+        is_qty = w_lower in QUANTITY_WORDS
+        if is_numr or is_qty:
             next_k = i + 1
             while next_k < len(words) and is_modifier_or_adv(words[next_k], cur) and not is_preposition(words[next_k], cur):
                 next_k += 1
-            if next_k < len(words):
+            if next_k < len(words) and not is_in_direct_or_enclosing_pp(words, next_k, cur):
                 head_w = words[next_k].lower()
                 if head_w in TIME_DURATION_NOUNS or head_w in EVENT_DURATION_NOUNS:
                     continue  # Duration adverbial, not direct object
-
-            try:
-                cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w_lower,))
-                rows = cur.fetchall()
-                if any(r[0] in ("numr", "noun", "pron") and "v_zna" in r[1] for r in rows) or w_lower in QUANTITY_WORDS:
-                    obj_indices.append(i)
-                    continue
-            except Exception:
-                pass
+                try:
+                    cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (head_w,))
+                    head_rows = cur.fetchall()
+                    if any(r[0] in ("noun", "pron") and "v_rod" in r[1] for r in head_rows):
+                        obj_indices.append(i)
+                        continue
+                except Exception:
+                    pass
+            if is_numr and not is_qty:
+                try:
+                    cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w_lower,))
+                    rows = cur.fetchall()
+                    if any(r[0] == "numr" and "v_zna" in r[1] for r in rows):
+                        obj_indices.append(i)
+                        continue
+                except Exception:
+                    pass
+            continue
 
         try:
             cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w_lower,))
             rows = cur.fetchall()
-            if any(r[0] in ("noun", "pron", "numr") and "v_zna" in r[1] for r in rows):
+            if any(r[0] in ("noun", "pron") and "v_zna" in r[1] for r in rows):
                 obj_indices.append(i)
         except Exception:
             pass
@@ -1529,12 +1549,8 @@ def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor |
                 if not subj_indices:
                     return True
                 obj_indices = get_clause_direct_object_indices(words, idx, cur)
-                # Subject and direct object must be represented by distinct tokens (or reflexive 'себе')
-                has_distinct_object = any(
-                    s != o or words[o].lower() == "себе"
-                    for s in subj_indices
-                    for o in obj_indices
-                )
+                # Subject and direct object must be represented by distinct tokens
+                has_distinct_object = any(s != o for s in subj_indices for o in obj_indices)
                 return not has_distinct_object
             return True
 
@@ -1616,6 +1632,25 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                         for r in verb_rows
                     )
                     if not has_finite_verb:
+                        continue
+                    # If preceded by a numeral or quantity word (e.g. 'п\'ять вистав', 'кілька вистав'),
+                    # words[idx] is a quantified genitive plural noun complement, not a predicate
+                    prev_k = idx - 1
+                    while (
+                        prev_k >= 0
+                        and is_modifier_or_adv(words[prev_k], cur)
+                        and not is_preposition(words[prev_k], cur)
+                    ):
+                        if (
+                            words[prev_k].lower() in QUANTITY_WORDS
+                            or bool(get_vesum_pos(words[prev_k], cur) & {"numr"})
+                        ):
+                            break
+                        prev_k -= 1
+                    if prev_k >= 0 and (
+                        words[prev_k].lower() in QUANTITY_WORDS
+                        or bool(get_vesum_pos(words[prev_k], cur) & {"numr"})
+                    ):
                         continue
                     # Disambiguate finite verbs homonymous with nouns:
                     # If a word has a noun reading and is in a prepositional phrase, it is a noun, not a predicate.

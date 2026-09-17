@@ -1622,6 +1622,45 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_kilka_tarilok, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_kilka_tarilok)) == 0
 
+    # Defect 189 / Negative regression (Round 77 Codex P2): Quantity adverb modifying an adverb ('трохи згодом') without a governed genitive nominal object does not count as direct object (Правопис 2019 §9, §37, §158, §161, Ющук §21, §25)
+    frag_discordant_apposition_trokhy_zghodom = (
+        "Театр — місце, де я після купівлі мила трохи згодом вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_trokhy_zghodom, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_trokhy_zghodom, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_trokhy_zghodom)) == 0
+
+    # Defect 190 / Negative regression (Round 77 Fable P2): Conjunction 'та' inside coordinate PP ('пані після купівлі мила та шампуню') cannot serve as nominative subject satisfying distinct subject/object requirement (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_pani_ta_shampuniu = (
+        "Театр — місце, де пані після купівлі мила та шампуню вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_pani_ta_shampuniu, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_pani_ta_shampuniu, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_pani_ta_shampuniu)) == 0
+
+    # Defect 191 / Negative regression (Round 77 Fable P2): Numeral or quantifier with event duration noun ('п\'ять вистав', 'дві вистави') functions as duration adverbial rather than direct object or finite predicate (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_pyat_vystav = (
+        "Театр — місце, де я після купівлі мила п'ять вистав вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_pyat_vystav, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_pyat_vystav, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_pyat_vystav)) == 0
+
+    frag_discordant_apposition_dvi_vystavy = (
+        "Театр — місце, де я після купівлі мила дві вистави вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_dvi_vystavy, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dvi_vystavy, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dvi_vystavy)) == 0
+
+    # Defect 192 / Negative regression (Round 77 Fable P2): Prenominal title noun ('пані лікарка') modifying nominative subject does not count as direct object (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_pani_likarka = (
+        "Театр — місце, де пані лікарка після купівлі мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_pani_likarka, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_pani_likarka, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_pani_likarka)) == 0
+
 
 
 
