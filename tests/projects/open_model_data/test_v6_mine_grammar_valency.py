@@ -800,6 +800,19 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_aktu_vandalism, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_aktu_vandalism)) == 1
 
+    # Defect 84 / Negative regression (Round 35 P2): Document noun 'акт' with modifier 'нового' and invalid genitive -у 'нового акту' rejected (Правопис 2019 §82)
+    frag_novogo_aktu = "Однак прийняття нового акту Верховною Радою України спричинило дискусію."
+    assert miner.INVALID_DOCUMENT_AKTU_RE.search(frag_novogo_aktu)
+    assert not miner.is_pristine_eval_sentence(frag_novogo_aktu, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_novogo_aktu)) == 0
+
+    # Defect 85 / Positive control (Round 35 P2): Document noun 'акт' with modifier 'нового' and correct genitive -а 'нового акта' accepted
+    frag_novogo_akta = "Однак прийняття нового акта Верховною Радою України спричинило дискусію."
+    assert not miner.INVALID_DOCUMENT_AKTU_RE.search(frag_novogo_akta)
+    assert miner.is_pristine_eval_sentence(frag_novogo_akta, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_novogo_akta)) == 1
+
+
 
 
 
