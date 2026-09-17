@@ -336,22 +336,78 @@ def get_verb_finite_tags(w: str, cur: sqlite3.Cursor) -> list[str]:
     ]
 
 
-def get_noun_subj_tags(w: str, cur: sqlite3.Cursor) -> list[str]:
+def get_subj_nominative_tags(w: str, cur: sqlite3.Cursor) -> list[str]:
     cur.execute(
-        "SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?) AND (pos = 'noun' OR tags LIKE '%pron%')",
+        "SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?) AND (pos IN ('noun', 'adj') OR tags LIKE '%pron%')",
         (w.lower(), w.capitalize()),
     )
     return [r[0] for r in cur.fetchall() if "v_naz" in r[0]]
 
 
+def get_noun_subj_tags(w: str, cur: sqlite3.Cursor) -> list[str]:
+    return get_subj_nominative_tags(w, cur)
+
+
+def is_modified_by_adj(prev_w: str, cur: sqlite3.Cursor) -> bool:
+    cur.execute(
+        "SELECT pos FROM forms_all WHERE (word_form = ? OR word_form = ?)",
+        (prev_w.lower(), prev_w.capitalize()),
+    )
+    poses = {r[0] for r in cur.fetchall()}
+    return "adj" in poses and not bool(poses & {"adv", "part"})
+
+
+def has_zna(w: str, cur: sqlite3.Cursor) -> bool:
+    cur.execute(
+        "SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?) AND (pos IN ('noun', 'adj') OR tags LIKE '%pron%')",
+        (w.lower(), w.capitalize()),
+    )
+    return any("v_zna" in r[0] for r in cur.fetchall())
+
+
+def check_subj_verb_agreement(st: str, vt: str) -> bool:
+    s_parts = set(st.split(":"))
+    v_parts = set(vt.split(":"))
+    if "p" in s_parts and "p" in v_parts:
+        if "1" in v_parts and "1" not in s_parts:
+            return False
+        return not ("2" in v_parts and "2" not in s_parts)
+    if "p" not in s_parts and "p" not in v_parts and bool(s_parts & {"s", "m", "f", "n"}) and bool(v_parts & {"s", "m", "f", "n"}):
+        if "1" in v_parts and "1" not in s_parts:
+            return False
+        if "2" in v_parts and "2" not in s_parts:
+            return False
+        if "past" in v_parts:
+            v_gender = v_parts & {"m", "f", "n"}
+            s_gender = s_parts & {"m", "f", "n"}
+            if v_gender and s_gender:
+                return bool(v_gender & s_gender)
+        return True
+    return False
+
+
 def check_verb_agreement(tags1: list[str], tags2: list[str]) -> bool:
     for t1 in tags1:
         for t2 in tags2:
-            if any((tag in t1 and tag in t2) for tag in (":past:p", ":past:m", ":past:f", ":past:n")):
-                return True
-            if any(tag in t1 for tag in (":pres:", ":futr:")) and any(tag in t2 for tag in (":pres:", ":futr:")):
-                for p in PERSON_NUMBER_TAGS:
-                    if p in t1 and p in t2:
+            p1 = set(t1.split(":"))
+            p2 = set(t2.split(":"))
+            if "past" in p1 and "past" in p2:
+                if "p" in p1 and "p" in p2:
+                    return True
+                g1 = p1 & {"m", "f", "n"}
+                g2 = p2 & {"m", "f", "n"}
+                if g1 and g2 and bool(g1 & g2):
+                    return True
+            if bool(p1 & {"pres", "futr"}) and bool(p2 & {"pres", "futr"}):
+                if "p" in p1 and "p" in p2:
+                    pn1 = p1 & {"1", "2", "3"}
+                    pn2 = p2 & {"1", "2", "3"}
+                    if pn1 and pn2 and bool(pn1 & pn2):
+                        return True
+                if "s" in p1 and "s" in p2:
+                    pn1 = p1 & {"1", "2", "3"}
+                    pn2 = p2 & {"1", "2", "3"}
+                    if pn1 and pn2 and bool(pn1 & pn2):
                         return True
     return False
 
@@ -362,14 +418,29 @@ def has_homogeneous_verb_comma(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
         return False
     for m in re.finditer(r",\s*(?:і|й|та)\s+", s):
         before = s[:m.start()]
-        last_clause = before.split(",")[-1]
-        words_last = re.findall(r"[а-яіїєґА-ЯІЇЄҐ'’]+", last_clause.lower())
+        segments = [c.strip() for c in before.split(",") if c.strip()]
+        if not segments:
+            continue
 
         finite1_list = []
-        for w1 in words_last:
-            tags1 = get_verb_finite_tags(w1, cur_ves)
-            if tags1:
-                finite1_list.append((w1, tags1))
+        words_last = []
+        for seg in reversed(segments):
+            if ";" in seg:
+                break
+            if ":" in seg:
+                seg = seg.split(":")[-1].strip()
+            w_seg = re.findall(r"[а-яіїєґА-ЯІЇЄҐ'’]+", seg.lower())
+            if any(marker in w_seg for marker in SUBORDINATE_MARKERS):
+                if not finite1_list:
+                    finite1_list = [(w, get_verb_finite_tags(w, cur_ves)) for w in w_seg if get_verb_finite_tags(w, cur_ves)]
+                    words_last = w_seg
+                break
+            f_list = [(w, get_verb_finite_tags(w, cur_ves)) for w in w_seg if get_verb_finite_tags(w, cur_ves)]
+            if f_list:
+                finite1_list = f_list
+                words_last = w_seg
+                break
+
         if not finite1_list:
             continue
 
@@ -438,8 +509,6 @@ def has_homogeneous_verb_comma(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
         if idx_v2 + 1 < len(words_after):
             next_w = words_after[idx_v2 + 1]
             if next_w not in COMMON_PREPOSITIONS:
-                is_v2_plural = any(":p" in t for t in finite2)
-                is_v2_singular = any(":s" in t or any(g in t for g in (":m", ":f", ":n")) for t in finite2)
                 cur_ves.execute(
                     "SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?) AND pos = 'noun'",
                     (next_w, next_w.capitalize()),
@@ -450,41 +519,107 @@ def has_homogeneous_verb_comma(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
                         "SELECT pos FROM forms_all WHERE (word_form = ? OR word_form = ?) AND pos IN ('adv', 'part')",
                         (next_w, next_w.capitalize()),
                     )
-                    if not cur_ves.fetchone():
-                        if is_v2_plural and any(":p:v_naz" in r[0] for r in rows) and not any("v_zna" in r[0] for r in rows):
-                            continue
-                        if is_v2_singular and any(
-                            ":s:v_naz" in r[0] or ":m:v_naz" in r[0] or ":f:v_naz" in r[0] or ":n:v_naz" in r[0]
-                            for r in rows
-                        ) and not any("v_zna" in r[0] for r in rows):
-                            continue
+                    if not cur_ves.fetchone() and (
+                        any(check_subj_verb_agreement(r[0], vt) for r in rows for vt in finite2)
+                        and not any("v_zna" in r[0] for r in rows)
+                    ):
+                        continue
         return True
 
     return False
+
+
+CORRELATIVE_PARTICLES = {"то", "так", "як", "хоч", "хоча"}
 
 
 def check_unpunctuated_compound_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
     """Reject unpunctuated compound sentences lacking comma before coordinating conjunction (Правопис 2019 §158.2)."""
     if not cur_ves:
         return False
-    m = re.match(r"^([А-ЯІЇЄҐA-Z][а-яіїєґ\x27\u2019]+)\s+([А-ЯІЇЄҐA-Zа-яіїєґ\x27\u2019]+)\s+(?:і|й|та)\s+([^\,]+)", s)
-    if not m:
-        return False
-    w1, w2, after_str = m.group(1), m.group(2), m.group(3)
-    v1 = get_verb_finite_tags(w1, cur_ves) or get_verb_finite_tags(w2, cur_ves)
-    s1 = get_noun_subj_tags(w1, cur_ves) if not get_verb_finite_tags(w1, cur_ves) else get_noun_subj_tags(w2, cur_ves)
-    if not v1 or not s1:
-        return False
+    for m in re.finditer(r"(?<![,:;\-–—])\s+(?:і|й|та)\s+", s):
+        before = s[:m.start()].strip()
+        after = s[m.end():].strip()
 
-    words_after = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\x27\u2019]+", after_str)
-    v2_list = [w for w in words_after if get_verb_finite_tags(w, cur_ves)]
-    s2_list = [w for w in words_after if get_noun_subj_tags(w, cur_ves) and w not in v2_list]
-    if not v2_list or not s2_list:
-        return False
-    idx_s2 = words_after.index(s2_list[0])
-    idx_v2 = words_after.index(v2_list[0])
-    subj1_word = w2 if get_verb_finite_tags(w1, cur_ves) else w1
-    return bool(idx_s2 < idx_v2 and subj1_word.lower() != s2_list[0].lower())
+        words_before = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\x27\u2019]+", before)
+        if not words_before:
+            continue
+        if words_before[-1].lower() in CORRELATIVE_PARTICLES:
+            continue
+
+        first_w = words_before[0]
+        if first_w.lower() in COMMON_PREPOSITIONS:
+            continue
+        first_v = get_verb_finite_tags(first_w, cur_ves)
+        first_s = get_subj_nominative_tags(first_w, cur_ves)
+        if not first_v and not first_s:
+            continue
+
+        all_v1 = []
+        for i, w in enumerate(words_before):
+            if i > 0 and (words_before[i - 1].lower() in COMMON_PREPOSITIONS or is_modified_by_adj(words_before[i - 1], cur_ves)):
+                continue
+            tags = get_verb_finite_tags(w, cur_ves)
+            if tags:
+                all_v1.append((w, tags))
+        if not all_v1:
+            continue
+
+        s1_found = None
+        for i, w in enumerate(words_before):
+            if i > 0 and words_before[i - 1].lower() in COMMON_PREPOSITIONS:
+                continue
+            if w in [v[0] for v in all_v1]:
+                continue
+            s_tags = get_subj_nominative_tags(w, cur_ves)
+            if not s_tags:
+                continue
+            for _v_word, v_tags in all_v1:
+                if any(check_subj_verb_agreement(st, vt) for st in s_tags for vt in v_tags):
+                    s1_found = (w, s_tags)
+                    break
+            if s1_found:
+                break
+        if not s1_found:
+            continue
+
+        s1_word, s1_tags = s1_found
+
+        clause2 = re.split(r"[,:;]", after)[0]
+        words_after = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\x27\u2019]+", clause2)
+        if not words_after:
+            continue
+
+        all_v2 = []
+        for i, w in enumerate(words_after):
+            if i > 0 and (words_after[i - 1].lower() in COMMON_PREPOSITIONS or is_modified_by_adj(words_after[i - 1], cur_ves)):
+                continue
+            tags = get_verb_finite_tags(w, cur_ves)
+            if tags:
+                all_v2.append((w, tags))
+        if not all_v2:
+            continue
+
+        v2_word, v2_tags = all_v2[0]
+        idx_v2 = words_after.index(v2_word)
+        tokens_before_v2 = words_after[:idx_v2]
+
+        for i, w in enumerate(tokens_before_v2):
+            if i > 0 and tokens_before_v2[i - 1].lower() in COMMON_PREPOSITIONS:
+                continue
+            if w.lower() == s1_word.lower():
+                continue
+            s2_tags = get_subj_nominative_tags(w, cur_ves)
+            if not s2_tags:
+                continue
+            if not any(check_subj_verb_agreement(st, vt) for st in s2_tags for vt in v2_tags):
+                continue
+            v2_agrees_with_s1 = any(check_subj_verb_agreement(st, vt) for st in s1_tags for vt in v2_tags)
+            if v2_agrees_with_s1 and has_zna(w, cur_ves) and w.lower() not in PRONOUNS_NAZ:
+                continue
+            return True
+
+    return False
+
 
 
 def check_has_predicate(text: str, cur_ves: sqlite3.Cursor | None) -> bool:

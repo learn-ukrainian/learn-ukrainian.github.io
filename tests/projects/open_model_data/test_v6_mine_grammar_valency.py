@@ -440,6 +440,28 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_futr_repro, cur_ves=cur)
     assert miner.has_homogeneous_verb_comma(frag_futr_repro, cur_ves=cur)
 
+    # Defect 31 (Round 12): Expanded unpunctuated compound sentence (Правопис §158 II.2)
+    frag_expanded_compound = (
+        "Концепція «бачу печатку – вірю» глибоко засіла у свідомості сучасних підприємців "
+        "і найімовірніше останні й надалі використовуватимуть кліше на своїх документах."
+    )
+    assert not miner.is_pristine_eval_sentence(frag_expanded_compound, cur_ves=cur)
+    assert miner.check_unpunctuated_compound_sentence(frag_expanded_compound, cur_ves=cur)
+
+    # Defect 32 (Round 12): Homogeneous predicate comma with intervening elliptical clause (Правопис §158 I.1)
+    frag_elliptical_homogeneous = (
+        "Звісно, є і бенефіціар цього протистояння: Росія постачає наступальну зброю Азербайджану, "
+        "оборонну – Вірменії, і готується в разі загострення ситуації в епіцентрі конфлікту зіграти роль провідного миротворця."
+    )
+    assert not miner.is_pristine_eval_sentence(frag_elliptical_homogeneous, cur_ves=cur)
+    assert miner.has_homogeneous_verb_comma(frag_elliptical_homogeneous, cur_ves=cur)
+
+    # Positive control (Round 12 P2): Accusative object before verb in homogeneous predicate sentence
+    frag_valid_acc_object = "Він читатиме і листи писатиме до друзів."
+    assert not miner.check_unpunctuated_compound_sentence(frag_valid_acc_object, cur_ves=cur)
+    assert not miner.has_homogeneous_verb_comma(frag_valid_acc_object, cur_ves=cur)
+
+
 
 def test_release_receipt_schema_and_checksum() -> None:
     """Validate release receipt against JSON schema and sha256 checksum."""

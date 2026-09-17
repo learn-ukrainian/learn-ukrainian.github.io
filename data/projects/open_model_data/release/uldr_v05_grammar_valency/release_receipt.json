@@ -2,11 +2,11 @@
   "schema_version": "v1_grammar_valency_release_receipt",
   "issue": 8143,
   "parent_epic": 6321,
-  "created_at": "2026-09-17T08:51:38Z",
-  "git_commit": "10430bf80cac8dfe5dc7f96082ce1cdaa7c87e8b",
+  "created_at": "2026-09-17T09:03:01Z",
+  "git_commit": "e787c0f8c732f2954e84247c7dd3fac8e5c20b43",
   "evaluation_benchmark": {
     "file_path": "data/projects/open_model_data/release/uldr_v05_grammar_valency/brown_uk_negative_control_eval.jsonl",
-    "sha256": "35364699e15ffd2d9b0a836609325f6e8703de74dbeb1e26a1d14e24c1f13609",
+    "sha256": "d4aebaf08979d0e1546c2589be2e02164b8334831d13a864d9a65e9657c6c83e",
     "total_cases": 500,
     "held_out_documents_count": 50,
     "held_out_documents": [
