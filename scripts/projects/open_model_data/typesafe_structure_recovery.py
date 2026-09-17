@@ -9,8 +9,8 @@ and historical sources in data/sources.db.
 Core Principles:
 1. Pass 1 (Stitch): Batched Noul questions per line pair determine whether a line
    break splits a sentence or word mid-boundary.
-2. Pass 2 (Classify): Batched Choice questions classify merged blocks into headings,
-   paragraphs, list items, quotes, or exercises.
+2. Pass 2 (Classify): Batched Choice & Score questions classify merged blocks into
+   headings, paragraphs, list items, quotes, or exercises.
 3. Verbatim Rendering: The model NEVER generates or rewrites text. Code applies Markdown
    formatting directly to the original characters, preserving 100% of the human source text.
 """
@@ -63,21 +63,26 @@ class RecoveryReport:
 
 
 def _resolve_typesafe_key() -> str:
-    """Resolve TypeSafe API key from environment or user home secrets."""
+    """Resolve TypeSafe API key from environment or host secrets."""
     key = os.environ.get("TYPESAFE_API_KEY", "").strip()
     if key:
         return key
 
     key_files = [
+        Path.home() / ".secrets" / "typsafe-ai.key",
+        Path.home() / ".secrets" / "typesafe-ai.key",
         Path.home() / ".config" / "typesafe" / "key",
         Path.home() / ".typesafe_api_key",
         Path.home() / ".gemini" / "antigravity-cli" / "typesafe_api_key",
     ]
     for p in key_files:
         if p.is_file():
-            content = p.read_text(encoding="utf-8").strip()
-            if content:
-                return content
+            try:
+                content = p.read_text(encoding="utf-8").strip()
+                if content:
+                    return content
+            except OSError:
+                continue
     return ""
 
 
@@ -87,10 +92,10 @@ class TypeSafeStructureRecovery:
     QUESTIONS_PASS1: ClassVar[dict[str, Any]] = {
         "is_continuation": {
             "type": "noul",
-            "instructions": "Does Line 2 continue the sentence or hyphenated word broken across the line boundary from Line 1?",
+            "instructions": "Does `state.line_2` continue the sentence or hyphenated word broken across the line boundary from `state.line_1`?",
             "criteria": {
-                "true": "Line 1 ends mid-sentence or with a broken hyphenated word fragment (e.g. 'відро-'), and Line 2 immediately continues that sentence or word.",
-                "false": "Line 1 ends with terminal punctuation (. ? ! :), or Line 2 starts a new paragraph, heading, list item, or independent clause.",
+                "true": "line_1 ends mid-sentence or with a broken hyphenated word fragment (e.g. 'відро-'), and line_2 immediately continues that sentence or word.",
+                "false": "line_1 ends with terminal punctuation (. ? ! :), or line_2 starts a new paragraph, heading, list item, or independent clause.",
             },
         }
     }
@@ -99,7 +104,7 @@ class TypeSafeStructureRecovery:
         "block_type": {
             "type": "choice",
             "instructions": "What structural Markdown block element is this Ukrainian text block?",
-            "options": {
+            "criteria": {
                 "heading": "A section title, chapter header, or topic label.",
                 "paragraph": "Standard expository or narrative prose text.",
                 "list_item": "An item in a list, enumeration, bullet, or sub-question.",
@@ -110,17 +115,23 @@ class TypeSafeStructureRecovery:
         "heading_level": {
             "type": "score",
             "instructions": "If this block is a heading, rate its hierarchical level from 1 (major chapter) to 3 (sub-topic).",
-            "levels": {
-                "1": "Level 1 heading (#): main book division or major section.",
-                "2": "Level 2 heading (##): topic title or lesson heading.",
-                "3": "Level 3 heading (###): sub-section or rule header.",
-            },
+            "criteria": [
+                "Level 1 heading (#): main book division or major section.",
+                "Level 2 heading (##): topic title or lesson heading.",
+                "Level 3 heading (###): sub-section or rule header.",
+            ],
         },
     }
 
-    def __init__(self, api_key: str | None = None, base_url: str = "https://api.typesafe.ai"):
-        self.api_key = api_key or _resolve_typesafe_key()
+    def __init__(
+        self,
+        api_key: str | None = None,
+        base_url: str = "https://api.typesafe.ai",
+        batch_size: int = 15,
+    ) -> None:
+        self.api_key = api_key if api_key is not None else _resolve_typesafe_key()
         self.base_url = base_url.rstrip("/")
+        self.batch_size = max(1, batch_size)
 
     def recover(self, raw_text: str) -> RecoveryReport:
         """Execute two-pass structure recovery over raw text."""
@@ -154,20 +165,19 @@ class TypeSafeStructureRecovery:
         if len(lines) == 1:
             return [RecoveredBlock(block_id=1, raw_lines=[lines[0]], merged_text=lines[0])], 0
 
+        # Pre-evaluate continuations for all adjacent pairs
+        continuations = self._evaluate_all_continuations(lines)
+
         blocks: list[RecoveredBlock] = []
         current_block_lines: list[str] = [lines[0]]
         dehyphen_count = 0
 
         for i in range(len(lines) - 1):
-            line_a = lines[i]
-            line_b = lines[i + 1]
-
-            is_cont = self._evaluate_continuation(line_a, line_b)
+            is_cont = continuations[i]
 
             if is_cont:
-                current_block_lines.append(line_b)
+                current_block_lines.append(lines[i + 1])
             else:
-                # Merge current block lines
                 merged, d_count = self._merge_lines(current_block_lines)
                 dehyphen_count += d_count
                 blocks.append(
@@ -177,7 +187,7 @@ class TypeSafeStructureRecovery:
                         merged_text=merged,
                     )
                 )
-                current_block_lines = [line_b]
+                current_block_lines = [lines[i + 1]]
 
         if current_block_lines:
             merged, d_count = self._merge_lines(current_block_lines)
@@ -192,21 +202,113 @@ class TypeSafeStructureRecovery:
 
         return blocks, dehyphen_count
 
-    def _evaluate_continuation(self, line_a: str, line_b: str) -> bool:
-        """Determine if line_b continues line_a."""
-        if self.api_key:
-            try:
-                p = self._call_pass1_api(line_a, line_b)
-                return p >= 0.75
-            except Exception:
-                return self._heuristic_continuation(line_a, line_b)
-        return self._heuristic_continuation(line_a, line_b)
+    def _evaluate_all_continuations(self, lines: list[str]) -> list[bool]:
+        """Evaluate continuation for each pair of adjacent lines, batching where possible."""
+        n_pairs = len(lines) - 1
+        results: list[bool] = [False] * n_pairs
 
-    def _heuristic_continuation(self, line_a: str, line_b: str) -> bool:
+        pairs = [{"line_1": lines[i], "line_2": lines[i + 1]} for i in range(n_pairs)]
+
+        if self.api_key:
+            # Process in batches
+            for offset in range(0, n_pairs, self.batch_size):
+                batch = pairs[offset : offset + self.batch_size]
+                try:
+                    batch_res = self._call_pass1_batch_api(batch)
+                    for j, is_c in enumerate(batch_res):
+                        results[offset + j] = is_c
+                    continue
+                except Exception:
+                    pass
+                # Fallback for this batch
+                for j, p in enumerate(batch):
+                    results[offset + j] = self._heuristic_continuation(p["line_1"], p["line_2"])
+        else:
+            for i, p in enumerate(pairs):
+                results[i] = self._heuristic_continuation(p["line_1"], p["line_2"])
+
+        return results
+
+    def _call_pass1_batch_api(self, batch_pairs: list[dict[str, str]]) -> list[bool]:
+        """Batch call remote TypeSafe System One API for line continuations."""
+        if len(batch_pairs) == 1:
+            p = self._call_pass1_single_api(batch_pairs[0]["line_1"], batch_pairs[0]["line_2"])
+            return [p >= 0.75]
+
+        questions: dict[str, Any] = {}
+        for idx in range(len(batch_pairs)):
+            questions[f"p{idx}_cont"] = {
+                "type": "noul",
+                "instructions": (
+                    f"Does line_2 continue the sentence or hyphenated word broken across "
+                    f"the line boundary from line_1 in state.pairs[{idx}]?"
+                ),
+                "criteria": {
+                    "true": "line_1 ends mid-sentence or with a broken hyphenated word fragment, and line_2 continues it.",
+                    "false": "line_1 ends with terminal punctuation or line_2 starts a new independent structural element.",
+                },
+            }
+
+        url = f"{self.base_url}/v1/systemone"
+        payload = {
+            "model": "jev-latest",
+            "state": {"pairs": batch_pairs},
+            "questions": questions,
+        }
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self.api_key}",
+                "User-Agent": "learn-ukrainian-autoformat/1.0",
+            },
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            answers = data.get("answers", {})
+            out: list[bool] = []
+            for idx in range(len(batch_pairs)):
+                q_ans = answers.get(f"p{idx}_cont", {})
+                noul_val = float(q_ans.get("noul", 0.0))
+                out.append(noul_val >= 0.75)
+            return out
+
+    def _call_pass1_single_api(self, line_a: str, line_b: str) -> float:
+        """Single line pair remote TypeSafe API call for Pass 1 continuation."""
+        url = f"{self.base_url}/v1/systemone"
+        payload = {
+            "model": "jev-latest",
+            "state": {"line_1": line_a, "line_2": line_b},
+            "questions": self.QUESTIONS_PASS1,
+        }
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self.api_key}",
+                "User-Agent": "learn-ukrainian-autoformat/1.0",
+            },
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            return float(data["answers"]["is_continuation"]["noul"])
+
+    @staticmethod
+    def _heuristic_continuation(line_a: str, line_b: str) -> bool:
         """Deterministic linguistic heuristic for sentence continuation."""
         # Broken hyphen: word- at end of line followed by letters on next line
         if re.search(r"[\wА-Яа-яІіЇїЄєҐґ]-\s*$", line_a) and re.match(r"^[а-яіїєґ]", line_b):
             return True
+
+        # Headings and exercise markers are block boundaries
+        if re.match(r"^(розділ|параграф|тема|урок|вправа|завдання)\b", line_a, flags=re.IGNORECASE):
+            return False
+        if re.match(r"^(розділ|параграф|тема|урок|вправа|завдання)\b", line_b, flags=re.IGNORECASE):
+            return False
 
         # Terminal punctuation indicates end of block
         if re.search(r"[.?!:]\s*$", line_a):
@@ -233,10 +335,8 @@ class TypeSafeStructureRecovery:
         dehyphens = 0
 
         for next_line in lines[1:]:
-            # Check for end-of-line hyphenation (e.g. 'відро-' + 'дження')
             match = re.search(r"([\wА-Яа-яІіЇїЄєҐґ]+)-\s*$", merged)
             if match and re.match(r"^[а-яіїєґ]", next_line):
-                # Remove hyphen and stitch directly
                 merged = merged[: match.end() - 1] + next_line
                 dehyphens += 1
             else:
@@ -245,23 +345,117 @@ class TypeSafeStructureRecovery:
         return merged, dehyphens
 
     def _pass2_classify(self, blocks: list[RecoveredBlock]) -> None:
-        """Classify each block into a markdown block type."""
-        for block in blocks:
-            if self.api_key:
+        """Classify each block into a markdown block type with batched API calls."""
+        if not blocks:
+            return
+
+        if self.api_key:
+            for offset in range(0, len(blocks), self.batch_size):
+                batch = blocks[offset : offset + self.batch_size]
                 try:
-                    b_type, h_level, conf = self._call_pass2_api(block.merged_text)
-                    block.block_type = b_type
-                    block.heading_level = h_level
-                    block.confidence = conf
+                    results = self._call_pass2_batch_api([b.merged_text for b in batch])
+                    for j, (b_type, h_lvl, conf) in enumerate(results):
+                        batch[j].block_type = b_type
+                        batch[j].heading_level = h_lvl
+                        batch[j].confidence = conf
                     continue
                 except Exception:
                     pass
-            b_type, h_level, conf = self._heuristic_classify(block.merged_text)
-            block.block_type = b_type
-            block.heading_level = h_level
-            block.confidence = conf
+                # Fallback for this batch
+                for b in batch:
+                    b_type, h_lvl, conf = self._heuristic_classify(b.merged_text)
+                    b.block_type = b_type
+                    b.heading_level = h_lvl
+                    b.confidence = conf
+        else:
+            for b in blocks:
+                b_type, h_lvl, conf = self._heuristic_classify(b.merged_text)
+                b.block_type = b_type
+                b.heading_level = h_lvl
+                b.confidence = conf
 
-    def _heuristic_classify(self, text: str) -> tuple[BlockType, int, float]:
+    def _call_pass2_batch_api(self, texts: list[str]) -> list[tuple[BlockType, int, float]]:
+        """Batch call remote TypeSafe System One API for block classification."""
+        if len(texts) == 1:
+            res = self._call_pass2_single_api(texts[0])
+            return [res]
+
+        questions: dict[str, Any] = {}
+        for idx in range(len(texts)):
+            questions[f"b{idx}_type"] = {
+                "type": "choice",
+                "instructions": f"What structural Markdown block element is state.blocks[{idx}]?",
+                "criteria": self.QUESTIONS_PASS2["block_type"]["criteria"],
+            }
+            questions[f"b{idx}_level"] = {
+                "type": "score",
+                "instructions": f"If state.blocks[{idx}] is a heading, rate its hierarchical level from 1 (major chapter) to 3 (sub-topic).",
+                "criteria": self.QUESTIONS_PASS2["heading_level"]["criteria"],
+            }
+
+        url = f"{self.base_url}/v1/systemone"
+        payload = {
+            "model": "jev-latest",
+            "state": {"blocks": texts},
+            "questions": questions,
+        }
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self.api_key}",
+                "User-Agent": "learn-ukrainian-autoformat/1.0",
+            },
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            answers = data.get("answers", {})
+            out: list[tuple[BlockType, int, float]] = []
+            for idx in range(len(texts)):
+                ans_type = answers.get(f"b{idx}_type", {})
+                ans_lvl = answers.get(f"b{idx}_level", {})
+
+                b_type_str = str(ans_type.get("choice", "paragraph"))
+                b_type = BlockType(b_type_str) if b_type_str in BlockType._value2member_map_ else BlockType.PARAGRAPH
+
+                # Jev score is continuous 0.0 to 2.0; map 0 -> level 1, 1 -> level 2, 2 -> level 3
+                raw_score = float(ans_lvl.get("score", 1.0))
+                h_level = max(1, min(3, round(raw_score) + 1))
+                conf = float(ans_type.get("confidence", 1.0))
+                out.append((b_type, h_level, conf))
+            return out
+
+    def _call_pass2_single_api(self, text: str) -> tuple[BlockType, int, float]:
+        """Single block remote TypeSafe API call for Pass 2 classification."""
+        url = f"{self.base_url}/v1/systemone"
+        payload = {
+            "model": "jev-latest",
+            "state": {"block_text": text},
+            "questions": self.QUESTIONS_PASS2,
+        }
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self.api_key}",
+                "User-Agent": "learn-ukrainian-autoformat/1.0",
+            },
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            b_type_str = data["answers"]["block_type"]["choice"]
+            b_type = BlockType(b_type_str) if b_type_str in BlockType._value2member_map_ else BlockType.PARAGRAPH
+            raw_score = float(data["answers"]["heading_level"]["score"])
+            h_level = max(1, min(3, round(raw_score) + 1))
+            conf = float(data["answers"]["block_type"].get("confidence", 1.0))
+            return b_type, h_level, conf
+
+    @staticmethod
+    def _heuristic_classify(text: str) -> tuple[BlockType, int, float]:
         """Deterministic heuristic for block classification."""
         clean = text.strip()
 
@@ -285,54 +479,6 @@ class TypeSafeStructureRecovery:
             return BlockType.QUOTE, 2, 0.80
 
         return BlockType.PARAGRAPH, 2, 0.90
-
-    def _call_pass1_api(self, line_a: str, line_b: str) -> float:
-        """Call remote TypeSafe API for Pass 1 continuation."""
-        url = f"{self.base_url}/v1/system_one"
-        payload = {
-            "model": "jev-latest",
-            "state": {"line_1": line_a, "line_2": line_b},
-            "questions": self.QUESTIONS_PASS1,
-        }
-        req = urllib.request.Request(
-            url,
-            data=json.dumps(payload).encode("utf-8"),
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {self.api_key}",
-                "User-Agent": "learn-ukrainian-autoformat/1.0",
-            },
-            method="POST",
-        )
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-            return float(data["answers"]["is_continuation"]["noul"])
-
-    def _call_pass2_api(self, text: str) -> tuple[BlockType, int, float]:
-        """Call remote TypeSafe API for Pass 2 classification."""
-        url = f"{self.base_url}/v1/system_one"
-        payload = {
-            "model": "jev-latest",
-            "state": {"block_text": text},
-            "questions": self.QUESTIONS_PASS2,
-        }
-        req = urllib.request.Request(
-            url,
-            data=json.dumps(payload).encode("utf-8"),
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {self.api_key}",
-                "User-Agent": "learn-ukrainian-autoformat/1.0",
-            },
-            method="POST",
-        )
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-            b_type_str = data["answers"]["block_type"]["choice"]
-            b_type = BlockType(b_type_str) if b_type_str in BlockType._value2member_map_ else BlockType.PARAGRAPH
-            h_level = round(data["answers"]["heading_level"]["score"])
-            conf = float(data["answers"]["block_type"].get("confidence", 1.0))
-            return b_type, h_level, conf
 
     @staticmethod
     def _render_markdown(blocks: list[RecoveredBlock]) -> str:
