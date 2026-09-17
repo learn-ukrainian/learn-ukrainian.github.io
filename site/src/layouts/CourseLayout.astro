@@ -195,6 +195,10 @@ const isActive = (href: string) => {
           } catch {
             // Storage can be unavailable in hardened browser contexts.
           }
+          // Notify React activity islands that follow chrome locale at runtime.
+          document.documentElement.dispatchEvent(
+            new CustomEvent('lu-chrome-locale', { detail: { locale: next } }),
+          );
         });
       })();
     </script>

@@ -1,6 +1,11 @@
 import React, { useRef, useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
+import {
+  chromeFacingBilingual,
+  useActivityIsUkrainian,
+  useChromeLocale,
+} from '../lib/i18n/useChromeLocale';
 import { shuffle } from './utils';
 
 export interface ErrorCorrectionItemProps {
@@ -372,8 +377,11 @@ interface ErrorCorrectionProps {
   isUkrainian?: boolean;
 }
 
-export default function ErrorCorrection({ items, children, instruction, isUkrainian }: ErrorCorrectionProps) {
+export default function ErrorCorrection({ items, children, instruction, isUkrainian: bakedIsUkrainian }: ErrorCorrectionProps) {
+  const isUkrainian = useActivityIsUkrainian(bakedIsUkrainian);
+  const locale = useChromeLocale();
   const headerLabel = isUkrainian ? 'Знайдіть і виправте помилку' : 'Find and Fix';
+  const shownInstruction = chromeFacingBilingual(instruction, locale);
 
   return (
     <div className={styles.activityContainer} data-activity="error-correction">
@@ -382,8 +390,8 @@ export default function ErrorCorrection({ items, children, instruction, isUkrain
         <span>{headerLabel}</span>
         <ActivityHelp activityType="error-correction" isUkrainian={isUkrainian} />
       </div>
-      {instruction && (
-        <p className={styles.instruction}><strong>{instruction}</strong></p>
+      {shownInstruction && (
+        <p className={styles.instruction}><strong>{shownInstruction}</strong></p>
       )}
       <div className={styles.activityContent}>
         {items ? items.map((item, index) => (

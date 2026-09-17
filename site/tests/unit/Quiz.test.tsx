@@ -30,6 +30,10 @@ function feedbackBox(container: HTMLElement) {
 // ── QuizQuestion ──────────────────────────────────────────────────────────────
 
 describe('QuizQuestion', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   const baseProps = {
     question: 'What is 2+2?',
     options: ['3', '4', '5', '6'],
@@ -133,6 +137,7 @@ describe('QuizQuestion', () => {
 
   test('renders Ukrainian correct label when isUkrainian=true', async () => {
     const user = userEvent.setup();
+    document.documentElement.dataset.chromeLocale = 'uk';
     const { container } = render(<QuizQuestion {...baseProps} isUkrainian />);
 
     await user.click(findOptionByText(container, '4'));
@@ -142,6 +147,7 @@ describe('QuizQuestion', () => {
 
   test('renders Ukrainian incorrect label when isUkrainian=true', async () => {
     const user = userEvent.setup();
+    document.documentElement.dataset.chromeLocale = 'uk';
     const { container } = render(<QuizQuestion {...baseProps} isUkrainian />);
 
     await user.click(findOptionByText(container, '3'));
@@ -153,6 +159,10 @@ describe('QuizQuestion', () => {
 // ── Quiz wrapper ──────────────────────────────────────────────────────────────
 
 describe('Quiz wrapper', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   const questionsProp = [
     {
       question: 'Q1?',
@@ -192,6 +202,7 @@ describe('Quiz wrapper', () => {
   });
 
   test('renders Ukrainian header label when isUkrainian=true', () => {
+    document.documentElement.dataset.chromeLocale = 'uk';
     render(<Quiz questions={questionsProp} isUkrainian />);
     expect(screen.getAllByText('Тест').length).toBeGreaterThan(0);
   });
@@ -236,6 +247,10 @@ describe('Quiz wrapper', () => {
 // ── Malformed-data guard rail ────────────────────────────────────────────────
 
 describe('Quiz graceful degradation (malformed data)', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   let warnSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {

@@ -1,4 +1,4 @@
-import { describe, test, expect, vi } from 'vitest';
+import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import FillIn, { FillInQuestion } from '@site/src/components/FillIn';
@@ -46,6 +46,10 @@ function checkButton(container: HTMLElement) {
 // ── FillInQuestion (single-blank, chip-style) ────────────────────────────────
 
 describe('FillInQuestion', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   const baseProps = {
     sentence: 'The capital of Ukraine is ___.',
     answer: 'Kyiv',
@@ -183,6 +187,10 @@ describe('FillInQuestion', () => {
 // ── FillIn wrapper (select-dropdown, multi-item) ─────────────────────────────
 
 describe('FillIn wrapper', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   const items = [
     { sentence: 'The sun is ___.', answer: 'yellow', options: ['yellow', 'blue'] },
     { sentence: 'Water is ___.', answer: 'wet', options: ['wet', 'dry'] },
@@ -214,6 +222,7 @@ describe('FillIn wrapper', () => {
   });
 
   test('renders Ukrainian header label when isUkrainian=true', () => {
+    document.documentElement.dataset.chromeLocale = 'uk';
     render(<FillIn items={items} isUkrainian />);
     expect(screen.getAllByText('Заповніть пропуски').length).toBeGreaterThan(0);
   });

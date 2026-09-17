@@ -1,4 +1,4 @@
-import { describe, test, expect } from 'vitest';
+import { describe, test, expect, beforeEach } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import GroupSort from '@site/src/components/GroupSort';
 
@@ -43,6 +43,10 @@ function wordTiles(scope: HTMLElement) {
 // ── GroupSort ─────────────────────────────────────────────────────────────────
 
 describe('GroupSort initial render', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   const groups = {
     Fruits: ['apple', 'banana'],
     Vegetables: ['carrot', 'potato'],
@@ -104,6 +108,10 @@ describe('GroupSort initial render', () => {
 });
 
 describe('GroupSort labels', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   const groups = { A: ['one'], B: ['two'] };
 
   test('renders English header by default', () => {
@@ -112,6 +120,7 @@ describe('GroupSort labels', () => {
   });
 
   test('renders Ukrainian header when isUkrainian=true', () => {
+    document.documentElement.dataset.chromeLocale = 'uk';
     render(<GroupSort groups={groups} isUkrainian />);
     expect(screen.getAllByText('Розподіліть за категоріями').length).toBeGreaterThan(0);
   });
@@ -122,6 +131,7 @@ describe('GroupSort labels', () => {
   });
 
   test('placeholder uses Ukrainian label when isUkrainian=true', () => {
+    document.documentElement.dataset.chromeLocale = 'uk';
     const { container } = render(<GroupSort groups={groups} isUkrainian />);
     expect(bucketByName(container, 'A').textContent).toContain('Перетягніть слова сюди');
   });
@@ -133,6 +143,10 @@ describe('GroupSort labels', () => {
 });
 
 describe('GroupSort with many groups', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   test('renders a bucket for each group even with 5 groups', () => {
     const groups = {
       Red: ['a', 'b'],
@@ -168,6 +182,10 @@ describe('GroupSort with many groups', () => {
 });
 
 describe('GroupSort draggability', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   // We can't test drag events themselves but we can confirm the DOM
   // contract: every word tile should be draggable=true so the real
   // drag handlers in a browser have something to fire on.

@@ -216,7 +216,7 @@ workbook:
 - id: act-108
   type: unjumble
   title: Складі́ть слова́ з лі́тер — Unjumble letters
-  instruction: Arrange the letters to form correct Ukrainian words.
+  instruction: Складі́ть пра́вильні украї́нські слова́ з лі́тер. — Arrange the letters to form correct Ukrainian words.
   items:
   - words:
     - д
@@ -273,33 +273,50 @@ workbook:
 - id: act-110
   type: error-correction
   title: Знайді́ть поми́лку — Spot the error
-  instruction: Identify which word is written incorrectly according to Ukrainian soft
-    sign rules.
+  instruction: Знайді́ть сло́во з поми́лкою за пра́вилами м'яко́го зна́ка. — Identify which word is written incorrectly according to Ukrainian soft sign rules.
   items:
-  - sentence: У сло́ві ден написа́ли без зна́ка ь. — In the word "ден" they wrote without the sign ь.
+  - sentence: Сього́дні га́рний ден.
     error: ден
     correction: день
+    options:
+    - день
+    - ден
     explanation: 'Пе́ред па́узою сло́во «день» пи́шеться з м''яки́м зна́ком: день. — Before a pause, the word «день» is written with a soft sign: день.'
-  - sentence: На по́лі біжи́ть кін без зна́ка. — In the field runs "кін" without a sign.
+  - sentence: На по́лі біжи́ть кін.
     error: кін
     correction: кінь
+    options:
+    - кінь
+    - кін
     explanation: 'Сло́во «кінь» закі́нчується на м''яки́й знак: кінь. — The word «кінь» ends with a soft sign: кінь.'
-  - sentence: У су́пі лежи́ть сіл без зна́ка. — In the soup lies "сіл" without a sign.
+  - sentence: Ма́ма си́пле сіл у суп.
     error: сіл
     correction: сіль
+    options:
+    - сіль
+    - сіл
     explanation: 'Сло́во «сіль» ма́є м''яки́й [л''] і пи́шеться з ь: сіль. — The word «сіль» has a soft [l''] and is written with ь: сіль.'
-  - sentence: Наш вчител пи́ше те́кст. — Our "вчител" is writing a text.
+  - sentence: Наш вчител пи́ше те́кст.
     error: вчител
     correction: вчи́тель
+    options:
+    - вчи́тель
+    - вчител
     explanation: 'Іме́нник «вчи́тель» ма́є м''яки́й кінце́вий [л'']: вчи́тель. — The noun «вчи́тель» has a soft final [l'']: вчи́тель.'
-  - sentence: У сло́ві чьас помилко́во написа́ли ь. — In the word "чьас" they mistakenly wrote ь.
+  - sentence: За́раз ма́ємо чьас на обі́д.
     error: чьас
     correction: час
+    options:
+    - час
+    - чьас
     explanation: 'Звук [ч] в украї́нській мо́ві тверди́й; пі́сля ч знак ь не ста́виться:
       час. — The sound [ч] in Ukrainian is hard; no soft sign is written after ч: час.'
-  - sentence: У сло́ві палці написа́ли без зна́ка ь. — In the word "палці" they wrote without the sign ь.
+  - sentence: На руці́ ба́чу палці.
     error: палці
     correction: па́льці
+    options:
+    - па́льці
+    - палці
     explanation: 'У сло́ві «па́льці» пі́сля лі́тери л пи́шеться м''яки́й знак: па́льці. — In the word «па́льці», a soft sign is written after letter л: па́льці.'
 - id: act-111
   type: quiz

@@ -2,6 +2,11 @@ import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import { shuffle } from './utils';
 import ActivityHelp from './ActivityHelp';
+import {
+  chromeFacingBilingual,
+  useActivityIsUkrainian,
+  useChromeLocale,
+} from '../lib/i18n/useChromeLocale';
 
 // Generate consistent colors for words
 const WORD_COLORS = [
@@ -33,7 +38,9 @@ interface GroupSortProps {
   isUkrainian?: boolean;
 }
 
-export default function GroupSort({ groups, instruction, isUkrainian }: GroupSortProps) {
+export default function GroupSort({ groups, instruction, isUkrainian: bakedIsUkrainian }: GroupSortProps) {
+  const isUkrainian = useActivityIsUkrainian(bakedIsUkrainian);
+  const locale = useChromeLocale();
   const groupNames = Object.keys(groups);
 
   // Flatten and shuffle all items with colors
@@ -188,8 +195,8 @@ export default function GroupSort({ groups, instruction, isUkrainian }: GroupSor
         <span>{headerLabel}</span>
         <ActivityHelp activityType="group-sort" isUkrainian={isUkrainian} />
       </div>
-      {instruction && (
-        <p className={styles.instruction}><strong>{instruction}</strong></p>
+      {chromeFacingBilingual(instruction, locale) && (
+        <p className={styles.instruction}><strong>{chromeFacingBilingual(instruction, locale)}</strong></p>
       )}
 
       <div className={styles.groupSortContainer}>
