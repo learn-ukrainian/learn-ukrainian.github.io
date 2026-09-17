@@ -891,6 +891,19 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_agreeing_coord_apposition, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_coord_apposition)) == 1
 
+    # Defect 98 / Positive regression (Round 43 P2): Zero-copula clause with coordinated nominal predicates accepted (Правопис 2019 §161.I.10)
+    frag_coord_nominal_predicates = "Він говорив із сестрою — її мати лікарка і вчителька — про роботу."
+    assert not miner.has_discordant_dash_apposition(frag_coord_nominal_predicates, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_coord_nominal_predicates, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_coord_nominal_predicates)) == 1
+
+    # Defect 99 / Positive regression (Round 43 P2): Zero-copula clause with coordinated predicative adjectives accepted (Правопис 2019 §161.I.10)
+    frag_coord_adj_predicates = "Він говорив із сестрою — її мати щаслива і здорова — про роботу."
+    assert not miner.has_discordant_dash_apposition(frag_coord_adj_predicates, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_coord_adj_predicates, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_coord_adj_predicates)) == 1
+
+
 
 def test_release_receipt_schema_and_checksum() -> None:
     """Validate release receipt against JSON schema and sha256 checksum."""

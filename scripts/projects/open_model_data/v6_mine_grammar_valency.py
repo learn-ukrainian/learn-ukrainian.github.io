@@ -1188,31 +1188,46 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
     if not content_tokens:
         return False
 
-    has_coordination = any(w in COORD_CONJ for w in content_tokens)
-
-    # Identify all nominative nouns in content_tokens
+    # Identify all nominative nouns in content_tokens with their spans in inside
     nom_nouns = []
-    for tok in content_tokens:
-        if tok in COORD_CONJ:
+    for match in re.finditer(r"\b([а-яіїєґА-ЯІЇЄҐ\']+)\b", inside):
+        w = match.group(1).lower()
+        if w in COORD_CONJ or w not in content_tokens:
             continue
-        cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (tok,))
+        cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w,))
         tok_rows = cur.fetchall()
         noun_toks = [r for r in tok_rows if r[0] == "noun"]
         if noun_toks:
             noun_cases = {tag.split(":v_")[1].split(":")[0] for r in noun_toks for tag in [r[1]] if ":v_" in tag}
             if "naz" in noun_cases:
-                nom_nouns.append(tok)
+                nom_nouns.append((w, match.start(), match.end()))
 
-    # If there are 2 or more uncoordinated nominative nouns (e.g. 'її мати лікарка', 'батько вчитель'),
-    # this is a two-member clause with an omitted zero copula (Правопис 2019 §161.I.1, примітка 1,
-    # and §161.I.10), not an apposition. Coordinated nouns ('гра та імпровізація') are homogeneous
-    # appositions and retain case agreement requirements (Ющук §21).
-    if len(nom_nouns) >= 2 and not has_coordination:
-        return False
+    # If there are 2 or more nominative nouns:
+    # In a two-member zero-copula clause (Правопис 2019 §161.I.1, примітка 1, and §161.I.10),
+    # the subject and predicate are juxtaposed without coordination or commas (e.g. 'мати лікарка',
+    # 'її мати лікарка і вчителька', 'батько і мати лікарі').
+    # By contrast, in coordinated homogeneous appositions (Ющук §21), all conjuncts are joined
+    # by coordinating conjunctions or commas (e.g. 'гра та імпровізація', 'гра, музика та імпровізація'),
+    # so every adjacent pair is coordinated and case agreement with the matrix head is retained.
+    if len(nom_nouns) >= 2:
+        has_uncoordinated_noun_pair = False
+        for j in range(len(nom_nouns) - 1):
+            _w1, _s1, e1 = nom_nouns[j]
+            _w2, s2, _e2 = nom_nouns[j + 1]
+            between_text = inside[e1:s2]
+            between_words = set(re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", between_text.lower()))
+            is_coordinated = ("," in between_text or ";" in between_text or bool(between_words & COORD_CONJ))
+            if not is_coordinated:
+                has_uncoordinated_noun_pair = True
+                break
+        if has_uncoordinated_noun_pair:
+            return False
 
-    # If exactly 1 nominative noun: check if it is postposed by a predicative adjective (e.g. 'мати щаслива')
-    if len(nom_nouns) == 1 and len(content_tokens) >= 2 and not has_coordination:
-        idx = content_tokens.index(nom_nouns[0])
+    # If exactly 1 nominative noun: check if it is postposed by a predicative adjective (e.g. 'мати щаслива',
+    # 'мати щаслива і здорова')
+    if len(nom_nouns) == 1 and len(content_tokens) >= 2:
+        nom_noun_word = nom_nouns[0][0]
+        idx = content_tokens.index(nom_noun_word)
         possessives = {
             "її", "його", "їхній", "їхня", "їхнє", "їхні",
             "мій", "моя", "моє", "мої", "твій", "твоя", "твоє", "твої",
@@ -1226,7 +1241,7 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
                 return False
 
     # For an apposition (including coordinated appositions), enforce case agreement
-    for tok in nom_nouns:
+    for tok, _start, _end in nom_nouns:
         cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (tok,))
         tok_rows = cur.fetchall()
         noun_toks = [r for r in tok_rows if r[0] == "noun"]
