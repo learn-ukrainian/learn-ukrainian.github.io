@@ -505,6 +505,32 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.has_homogeneous_verb_comma(frag_vlasne_kazhuchy, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_vlasne_kazhuchy, cur_ves=cur)
 
+    # Defect 37 (Round 16 P1): Partially punctuated adversative parenthetical lacking opening comma after 'а' (Правопис 2019 §158 I.11, примітка 2)
+    frag_partially_punctuated_navpaky = (
+        "І так склалося, що поділ на «наші» і «ваші» свята, як пригадує пані Люда, "
+        "їх зовсім не роз'єднував, а навпаки, зближував."
+    )
+    assert not miner.is_pristine_eval_sentence(frag_partially_punctuated_navpaky, cur_ves=cur)
+    assert miner.UNPUNCTUATED_ADVERSATIVE_PARENTHETICAL_RE.search(frag_partially_punctuated_navpaky)
+    assert len(miner.split_clean_ukrainian_sentences(frag_partially_punctuated_navpaky)) == 0
+
+    # Positive control 1 (Round 16 P1): Fully punctuated adversative parenthetical (Правопис 2019 §158 I.11, примітка 2)
+    frag_correct_navpaky = "Це їх зовсім не роз'єднувало, а, навпаки, зближувало."
+    assert not miner.UNPUNCTUATED_ADVERSATIVE_PARENTHETICAL_RE.search(frag_correct_navpaky)
+    assert miner.is_pristine_eval_sentence(frag_correct_navpaky, cur_ves=cur)
+
+    # Defect 38 / Negative regression (Round 16 P2): Non-parenthetical accusative phrase ending in 'думку' not exempted from homogeneous predicate comma check (Правопис 2019 §158 I.1)
+    frag_accusative_dumku = "Він записує речення, чужу думку, і читає довгого листа."
+    assert not miner.is_parenthetical_segment("чужу думку", cur_ves=cur)
+    assert miner.has_homogeneous_verb_comma(frag_accusative_dumku, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_accusative_dumku, cur_ves=cur)
+
+    # Positive control 2 (Round 16 P2): Legitimate parenthetical phrase with 'думку' (Правопис 2019 §158 I.11)
+    frag_valid_dumku = "Він записує речення, на нашу думку, і читає довгого листа."
+    assert miner.is_parenthetical_segment("на нашу думку", cur_ves=cur)
+    assert not miner.has_homogeneous_verb_comma(frag_valid_dumku, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_valid_dumku, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:
