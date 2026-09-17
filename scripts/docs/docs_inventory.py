@@ -40,7 +40,7 @@ def digest(data: bytes) -> str:
 
 
 def git(repo: Path, *args: str) -> bytes:
-    return subprocess.check_output(['git', '-C', str(repo), *args], stderr=subprocess.DEVNULL)
+    return subprocess.check_output(['git', '-C', str(repo), *args], stderr=subprocess.DEVNULL, timeout=30)
 
 
 def permitted(path: str) -> bool:

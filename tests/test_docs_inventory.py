@@ -11,7 +11,7 @@ from scripts.docs.docs_inventory import build, canonical, digest, main, metadata
 
 
 def git(repo, *args):
-    return subprocess.check_output(['git', '-C', str(repo), *args], stderr=subprocess.DEVNULL)
+    return subprocess.check_output(['git', '-C', str(repo), *args], stderr=subprocess.DEVNULL, timeout=30)
 
 
 def put(repo, path, text):
@@ -121,7 +121,7 @@ def test_symlinks_conflicts_and_analysis_limits(repo):
     assert rows['docs/marker.md']['authority_markers'] == ['authority', 'status']
     oid = git(repo, 'rev-parse', 'HEAD:docs/a.md').decode().strip()
     subprocess.run(['git', '-C', str(repo), 'update-index', '--index-info'],
-                   input=f'100644 {oid} 1\tdocs/conflict.md\n'.encode(), check=True)
+                   input=f'100644 {oid} 1\tdocs/conflict.md\n'.encode(), check=True, timeout=30)
     with pytest.raises(ValueError, match='Unmerged'):
         build(repo)
 
@@ -129,10 +129,10 @@ def test_symlinks_conflicts_and_analysis_limits(repo):
 def test_cli_identical_outputs_schema_and_output_guard(repo):
     script = Path(__file__).resolve().parents[1] / 'scripts/docs/docs_inventory.py'
     command = [sys.executable, str(script), '--repo', str(repo)]
-    subprocess.run(command, check=True, capture_output=True)
+    subprocess.run(command, check=True, capture_output=True, timeout=60)
     output = repo / 'audit/docs-inventory'
     first = {p.name: p.read_bytes() for p in output.iterdir()}
-    subprocess.run(command, check=True, capture_output=True)
+    subprocess.run(command, check=True, capture_output=True, timeout=60)
     assert first == {p.name: p.read_bytes() for p in output.iterdir()}
     schema = json.loads((script.parents[2] / 'docs/knowledge/inventory/manifest.schema.json').read_text())
     validate(json.loads(first['manifest.json']), schema)
