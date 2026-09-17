@@ -30,6 +30,7 @@ import {
   type DailyPracticeDeckSnapshot,
   type DailyPracticeRowState,
   type PracticeHeritageItem,
+  type PracticeImperativeItem,
   type PracticeParonymItem,
   type PracticeLexeme,
   type PracticeMode,
@@ -1059,9 +1060,9 @@ describe('LexiconPractice', () => {
 
     await user.click(screen.getByRole('button', { name: 'A2' }));
     await waitFor(() => expect(dashboard.querySelector('[data-mode="stress"]')).toBeInTheDocument());
-    // 11 MODE_CARD_ORDER lexicon cards + 9 ZNO_PRACTICE_DECKS cards (#6620 added
+    // 12 MODE_CARD_ORDER lexicon cards + 9 ZNO_PRACTICE_DECKS cards (#6620 added
     // morphology/syntax/phonetics to the prior 6) + 1 culture-error-correction card (#7961).
-    expect(dashboard.querySelectorAll('[data-mode]').length).toBe(21);
+    expect(dashboard.querySelectorAll('[data-mode]').length).toBe(22);
   });
 
   test('renders stress marks only on A1, while revealed daily sentence English stays available', () => {
@@ -2707,6 +2708,206 @@ describe('LexiconPractice', () => {
     expect(await screen.findByTestId('practice-paronym-empty')).toBeInTheDocument();
     expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('0/0');
     expect(screen.queryByTestId('practice-paronym')).not.toBeInTheDocument();
+  });
+
+  // #8159: imperative ('Наказовий спосіб') mode — slot banner, aspect badge,
+  // misconception-coded feedback, and the K3 mode tile.
+  function imperativePracticeItem(): PracticeImperativeItem {
+    return {
+      id: 'imp_robyty_1pl',
+      lemmaId: 'robyty',
+      srsKey: 'robyty::imperative::1pl',
+      lemma: 'роби́ти',
+      lemmaPlain: 'робити',
+      aspect: 'imperf',
+      slot: '1pl',
+      slotLabelUa: '1-ша особа множини (заклик до дії)',
+      slotLabelEn: "1st person plural (let's...)",
+      target: 'робі́мо',
+      targetPlain: 'робімо',
+      acceptedAnswers: ['робі́мо', 'робімо', 'робі́м', 'робім'],
+      options: [
+        { text: 'робі́мо', isCorrect: true, code: 'CORRECT' },
+        {
+          text: 'ро́бимо',
+          isCorrect: false,
+          code: 'WRONG_MOOD',
+          explanationUk: '«ро́бимо» — це форма теперішнього часу дійсного способу (що ми робимо?), а не наказ чи заклик.',
+        },
+        {
+          text: 'робі́ть',
+          isCorrect: false,
+          code: 'WRONG_PERSON',
+          explanationUk: '«робі́ть» — це форма 2-ї особи множини (ви робіть), а потрібна 1-ша особа множини (ми робімо).',
+        },
+        {
+          text: 'роби́',
+          isCorrect: false,
+          code: 'WRONG_PERSON',
+        },
+      ],
+      cueSentence: 'Друзі, нумо працювати, ... все вчасно!',
+      cueSentenceEn: "Friends, let's work and do everything on time!",
+      cefr: 'A2',
+      notes: 'Наголос на закінченні: робі́мо.',
+    };
+  }
+
+  function imperativeDeck({ includeItems = true } = {}): PracticeDeckData {
+    const entry = lexeme(
+      'robyty',
+      'робити',
+      'to do',
+      { nominative: 'робити', accusative: 'робити', locative: 'робити' },
+      { cefr: 'A2' },
+    );
+    return {
+      deckVersion: 'test-imperative',
+      level: 'A2',
+      lexemes: [entry],
+      index: [
+        {
+          lemmaId: entry.lemmaId,
+          lemma: entry.lemma,
+          cefr: 'A2',
+          modes: ['imperative'],
+          hasCloze: false,
+          clozeIds: [],
+          newOrder: 0,
+        },
+      ],
+      cloze: [],
+      stress: [],
+      classify: [],
+      paradigm: [],
+      synonym: [],
+      imperative: includeItems ? [imperativePracticeItem()] : [],
+    };
+  }
+
+  test('imperative renders slot banner, aspect badge, and cue in imperative focus mode', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<LexiconPractice initialDeck={imperativeDeck()} />);
+    expect(container.querySelector('[data-mode="imperative"]')).toHaveTextContent('Наказовий спосіб');
+    expect(container.querySelector('[data-mode="imperative"]')).toHaveTextContent('Форми дієслів');
+
+    await user.click(container.querySelector<HTMLButtonElement>('[data-mode="imperative"]')!);
+
+    expect(await screen.findByTestId('practice-imperative')).toBeInTheDocument();
+    expect(screen.getByTestId('practice-imperative-banner')).toHaveTextContent('1-ша особа множини (заклик до дії)');
+    expect(screen.getByTestId('practice-imperative-aspect')).toHaveTextContent('недоконаний вид');
+    expect(screen.getByTestId('practice-imperative-cue')).toHaveTextContent('Друзі, нумо працювати, ... все вчасно!');
+    // Stress marks stay visible on the options — the WRONG_MOOD distractor differs
+    // from the target only by stress placement.
+    const stage = screen.getByTestId('practice-imperative');
+    expect(within(stage).getByRole('button', { name: /робі́мо/ })).toBeInTheDocument();
+    expect(within(stage).getByRole('button', { name: /ро́бимо/ })).toBeInTheDocument();
+    expect(within(stage).getByText('1')).toBeInTheDocument();
+    expect(within(stage).getByText('4')).toBeInTheDocument();
+  });
+
+  test('imperative wrong mood choice scores again and shows the misconception explanation', async () => {
+    const user = userEvent.setup();
+    render(
+      <LexiconPractice
+        initialDeck={imperativeDeck()}
+        autoStart
+        initialMode="imperative"
+      />,
+    );
+
+    await user.click(
+      within(screen.getByTestId('practice-imperative')).getByRole('button', { name: /ро́бимо/ }),
+    );
+
+    const feedback = screen.getByTestId('practice-imperative-feedback');
+    expect(feedback).toHaveTextContent('Неправильно. Правильна форма — «робі́мо».');
+    expect(feedback).toHaveTextContent('теперішнього часу дійсного способу');
+    await waitFor(() => {
+      expect(storedState().reviews[0]).toMatchObject({
+        lemmaId: 'robyty',
+        mode: 'imperative',
+        rating: 'again',
+        cardKey: 'robyty::imperative::1pl',
+      });
+    });
+  });
+
+  test('imperative wrong choice without shard explanation falls back to the code copy', async () => {
+    const user = userEvent.setup();
+    render(
+      <LexiconPractice
+        initialDeck={imperativeDeck()}
+        autoStart
+        initialMode="imperative"
+      />,
+    );
+
+    // «роби́» carries code WRONG_PERSON but no per-option explanationUk.
+    await user.click(
+      within(screen.getByTestId('practice-imperative')).getByRole('button', { name: /роби́$/ }),
+    );
+
+    const feedback = screen.getByTestId('practice-imperative-feedback');
+    expect(feedback).toHaveTextContent('Неправильно. Правильна форма — «робі́мо».');
+    expect(feedback).toHaveTextContent('Це форма іншої особи');
+  });
+
+  test('imperative STEM_CLUSTER fallback specifies sonorant cluster rule', async () => {
+    const user = userEvent.setup();
+    const deck = imperativeDeck();
+    deck.imperative[0].options[3] = {
+      text: 'провітр',
+      isCorrect: false,
+      code: 'STEM_CLUSTER',
+    };
+    render(
+      <LexiconPractice
+        initialDeck={deck}
+        autoStart
+        initialMode="imperative"
+      />,
+    );
+
+    await user.click(
+      within(screen.getByTestId('practice-imperative')).getByRole('button', { name: /провітр/ }),
+    );
+
+    const feedback = screen.getByTestId('practice-imperative-feedback');
+    expect(feedback).toHaveTextContent('Після збігу приголосних із сонорним');
+  });
+
+  test('imperative correct choice scores good and restates the target', async () => {
+    const user = userEvent.setup();
+    render(
+      <LexiconPractice
+        initialDeck={imperativeDeck()}
+        autoStart
+        initialMode="imperative"
+      />,
+    );
+
+    await user.click(
+      within(screen.getByTestId('practice-imperative')).getByRole('button', { name: /робі́мо/ }),
+    );
+
+    const feedback = screen.getByTestId('practice-imperative-feedback');
+    expect(feedback).toHaveTextContent('Правильно! «робі́мо» — 1-ша особа множини (заклик до дії).');
+    expect(feedback).toHaveTextContent('Наголос на закінченні: робі́мо.');
+    await waitFor(() => {
+      expect(storedState().reviews[0]).toMatchObject({
+        lemmaId: 'robyty',
+        mode: 'imperative',
+        rating: 'good',
+        cardKey: 'robyty::imperative::1pl',
+      });
+    });
+  });
+
+  test('imperative mode card is present in the K3 grid even when the deck has no imperative items', () => {
+    const { container } = render(<LexiconPractice initialDeck={imperativeDeck({ includeItems: false })} />);
+
+    expect(container.querySelector('[data-mode="imperative"]')).toHaveTextContent('Наказовий спосіб');
   });
 
   test('focus deep-link: a bare Atlas lemma resolves to its item with no double session start', async () => {

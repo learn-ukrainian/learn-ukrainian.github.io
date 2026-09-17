@@ -582,7 +582,8 @@ const frontmatter = {
   :global(.lexicon-choice),
   :global(.lexicon-cloze),
   :global(.lexicon-heritage),
-  :global(.lexicon-paronym) {
+  :global(.lexicon-paronym),
+  :global(.lexicon-imperative) {
     display: grid;
     gap: 1rem;
   }
@@ -699,6 +700,96 @@ const frontmatter = {
   :global(.paronym-slot.filled) {
     border-bottom-color: var(--lu-green);
     color: var(--lu-state-correct-fg);
+  }
+
+  /* #8159: 'imperative' ('Наказовий спосіб') stage — slot banner, infinitive +
+     aspect badge, and communicative cue, in the paronym visual language. */
+  :global(.imperative-task) {
+    margin: 0 0 -0.1rem;
+    color: var(--lu-purple);
+    font-size: 0.92rem;
+    font-weight: 900;
+  }
+
+  :global(.imperative-banner) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--lu-border);
+    border-left: 4px solid var(--lu-purple);
+    border-radius: 14px;
+    background: var(--lu-surface-raised);
+    box-shadow: var(--lu-shadow);
+  }
+
+  :global(.imperative-slot-pronoun) {
+    display: grid;
+    place-items: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 10px;
+    border-radius: 12px;
+    background: var(--lu-purple);
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 900;
+  }
+
+  :global(.imperative-slot-label) {
+    color: var(--lu-text);
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1.35;
+  }
+
+  :global(.imperative-slot-label .btn-sub) {
+    font-weight: 700;
+  }
+
+  :global(.imperative-lemma-row) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin: 0;
+  }
+
+  :global(.imperative-lemma) {
+    color: var(--lu-text);
+    font-size: 1.6rem;
+    font-weight: 900;
+  }
+
+  :global(.imperative-aspect) {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 800;
+  }
+
+  :global(.imperative-aspect.imperf) {
+    background: var(--lu-teal-light, color-mix(in srgb, var(--lu-teal) 14%, transparent));
+    color: var(--lu-teal);
+  }
+
+  :global(.imperative-aspect.perf) {
+    background: var(--lu-orange-light);
+    color: var(--lu-orange);
+  }
+
+  :global(.imperative-cue) {
+    margin: 0;
+    padding: 1rem 1.2rem;
+    border: 1px dashed var(--lu-border);
+    border-radius: 12px;
+    color: var(--lu-text);
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.55;
   }
 
   :global(.paronym-feedback) {
