@@ -606,6 +606,7 @@ describe('lexicon SRS facade', () => {
       'flashcards|matching|choice|cloze|paradigm|stress|heritage|synonym|classify|paronym': 3,
       'flashcards|matching|choice|cloze|paradigm|stress|heritage|synonym|classify|paronym|antonym': 4,
       'flashcards|matching|choice|cloze|paradigm|stress|heritage|synonym|classify|paronym|antonym|homonym': 5,
+      'flashcards|matching|choice|cloze|paradigm|stress|heritage|synonym|classify|paronym|antonym|homonym|imperative': 6,
     };
 
     expect(versionByModeSet[PRACTICE_MODES.join('|')]).toBe(PRACTICE_MODE_DECK_VERSION);

@@ -57,7 +57,7 @@ const MIN_WORD_REPEAT_WINDOW = 8;
 const DEFAULT_RECOGNITION_STABILITY = 3;
 
 export type PracticeRating = 'again' | 'hard' | 'good' | 'easy';
-export const PRACTICE_MODE_DECK_VERSION = 5;
+export const PRACTICE_MODE_DECK_VERSION = 6;
 export const PRACTICE_MODES = [
   'flashcards',
   'matching',
@@ -322,13 +322,24 @@ export interface PracticeAntonymItem {
   citations?: string[];
 }
 
+export type PracticeImperativeErrorCode =
+  | 'CORRECT'
+  | 'WRONG_PERSON'
+  | 'WRONG_MOOD'
+  | 'ORTHO_SOFT_SIGN'
+  | 'STEM_CLUSTER'
+  | 'CALQUE_AUX';
+
 export interface PracticeImperativeOption {
   text: string;
   isCorrect: boolean;
-  code?: 'CORRECT' | 'WRONG_PERSON' | 'WRONG_MOOD' | 'ORTHO_SOFT_SIGN' | 'STEM_CLUSTER' | 'CALQUE_AUX' | string;
+  code?: PracticeImperativeErrorCode;
   explanationUk?: string;
   explanationEn?: string;
 }
+
+export type PracticeImperativeSlot = '2sg' | '1pl' | '2pl';
+export type PracticeImperativeAspect = 'perf' | 'imperf';
 
 export interface PracticeImperativeItem {
   id: string;
@@ -336,8 +347,8 @@ export interface PracticeImperativeItem {
   srsKey: string;
   lemma: string;
   lemmaPlain?: string;
-  aspect: 'perf' | 'imperf' | string;
-  slot: '2sg' | '1pl' | '2pl' | string;
+  aspect: PracticeImperativeAspect;
+  slot: PracticeImperativeSlot;
   slotLabelUa: string;
   slotLabelEn?: string;
   target: string;

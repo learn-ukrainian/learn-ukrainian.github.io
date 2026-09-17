@@ -58,9 +58,16 @@ Ukrainian synthetic imperatives exist only for:
      *(Generating an erroneous `-ь` on these stems forms a licensed orthographic distractor).*
 
 ### C. 1st Person Plural (Cohortative) & Anti-Calque Gate
-- Literary standard: **`-мо`** (after vowel/soft sign: *чита́ймо, ста́ньмо*) or **`-імо`** (after consonant: *робі́мо, пиші́мо, ході́мо*).
-- Literary shorter variant: **`-ім`** (*ході́м, робі́м*). Both `-імо` and `-ім` are recognized in Правопис 2019 (§116).
+- Literary standard:
+  - **`-мо`**: attaches directly to stems ending in a vowel (*чита́ймо*), a soft sign (*ста́ньмо, ся́дьмо, бу́дьмо*), or a hard consonant/labial/post-alveolar without soft sign (*рі́жмо, си́пмо, ві́рмо, пла́чмо*).
+  - **`-імо`**: attaches to stems that take stressed *-и́* in the 2sg (*робі́мо, пиші́мо, ході́мо, несі́мо*).
+- Literary shorter variant: **`-ім`** (*ході́м, робі́м, несі́м*). Both `-імо` and `-ім` are recognized in Правопис 2019 (§116).
 - **Anti-Calque Rule**: In Ukrainian, *«давайте + дієслово»* (*«давайте робити»*) and *«пішли»* (in the sense of "let's go") are severe Russian calques/surzhyk. Ukrainian requires synthetic *робімо* / *ходімо*, or *ходімо робити* / *нумо робити*.
+
+### D. Aspectual Contrast in the Imperative
+- **Недоконаний вид (Imperfective)**: used for general instructions, repeated or ongoing actions, or polite invitations without focus on completion (*«Чита́йте уважно»*, *«Заходьте, сідайте»*).
+- **Доконаний вид (Perfective)**: used for single, bounded actions where reaching the result/goal is critical (*«Прочита́йте цей параграф до кінця»*, *«Сядьте ось тут»*).
+- Drills contrast aspectual pairs (*роби́ / зроби́*, *пиши́ / напиши́*, *відчиня́й / відчини́*) with communicative cue contexts to reinforce normative aspect choice.
 
 ---
 
@@ -73,7 +80,7 @@ Every multiple-choice distractor must originate from a verified distractor famil
 | `WRONG_PERSON` | Valid imperative of another slot | Same lemma, different imperative slot | *роби́* (2sg) or *робі́ть* (2pl) | «Це форма 2-ї особи однини/множини, а потрібна 1-ша особа множини.» |
 | `WRONG_MOOD` | Present indicative form | Same lemma, present indicative form | *ро́бимо* (pres.1pl) | «Це форма дійсного способу (що ми робимо зараз), а не заклик до дії.» |
 | `ORTHO_SOFT_SIGN` | Erroneous soft sign on hard consonant | Suffix `-ь` added to labial/post-alveolar | *поставь* ❌ (target: *постав*) | «Губні та шиплячі в кінці слів в українській мові тверді: м'який знак не пишеться.» |
-| `STEM_CLUSTER` | Missing vocalic ending `-и` | Dropped `-и` resulting in unpronounceable cluster | *провітр* ❌ (target: *провітри*) | «Після збігу приголосних обов'язково пишеться закінчення -и.» |
+| `STEM_CLUSTER` | Missing vocalic ending `-и` | Dropped `-и` in stems with sonorant clusters | *провітр* ❌ (target: *провітри*) | «Після збігу приголосних із сонорним обов'язково пишеться закінчення -и.» |
 | `CALQUE_AUX` | Russian auxiliary calque (sentence level only) | *Давайте* + infinitive/indicative | *давайте робити* ❌ | «В українській мові заклик до спільної дії передається синтетичною формою: робімо!» |
 
 ---
@@ -85,15 +92,18 @@ Stored at `site/public/lexicon/practice-imperative.{level}.json` for levels `A1`
 
 ```json
 {
-  "schema": "practice-imperative-shard.v1",
+  "schema": "atlas-practice-imperative",
+  "schemaVersion": 1,
+  "deckVersion": "atlas-practice-v1-c0c3f3242b5134b6",
   "level": "A2",
-  "generatedAt": "2026-09-17T18:00:00Z",
-  "itemCount": 420,
-  "items": [
+  "source": "vesum",
+  "imperative": [
     {
       "id": "imp_robyty_1pl",
-      "lemmaId": "robyty",
+      "lemmaId": "робити",
+      "srsKey": "робити::imperative::1pl",
       "lemma": "роби́ти",
+      "lemmaPlain": "робити",
       "aspect": "imperf",
       "slot": "1pl",
       "slotLabelUa": "1-ша особа множини (заклик до дії)",
@@ -102,12 +112,14 @@ Stored at `site/public/lexicon/practice-imperative.{level}.json` for levels `A1`
       "targetPlain": "робімо",
       "acceptedAnswers": ["робі́мо", "робімо", "робі́м", "робім"],
       "options": [
-        {"text": "робі́мо", "isCorrect": true},
-        {"text": "ро́бимо", "isCorrect": false, "code": "WRONG_MOOD"},
-        {"text": "робі́ть", "isCorrect": false, "code": "WRONG_PERSON"},
-        {"text": "роби́", "isCorrect": false, "code": "WRONG_PERSON"}
+        {"text": "робі́мо", "isCorrect": true, "code": "CORRECT"},
+        {"text": "ро́бимо", "isCorrect": false, "code": "WRONG_MOOD", "explanationUk": "«ро́бимо» — це форма теперішнього часу дійсного способу (що ми робимо?), а не наказ чи заклик."},
+        {"text": "робі́ть", "isCorrect": false, "code": "WRONG_PERSON", "explanationUk": "«робі́ть» — це форма 2-ї особи множини (ви робіть), а потрібна 1-ша особа множини (ми робімо)."},
+        {"text": "роби́", "isCorrect": false, "code": "WRONG_PERSON", "explanationUk": "«роби́» — це форма 2-ї особи однини (ти роби), а потрібна 1-ша особа множини (ми робімо)."}
       ],
       "cueSentence": "Друзі, нумо працювати, ... все вчасно!",
+      "cueSentenceEn": "Friends, let's work and do everything on time!",
+      "cefr": "A2",
       "notes": "Наголос на закінченні: робі́мо."
     }
   ]
@@ -159,4 +171,3 @@ The client and verification engine must normalize responses (`stripStressMarks`,
 - **Sub-Issue 2 (#8158)**: `[4387][practice] Imperative Generator: VESUM 3-slot extraction, distractor engine & shard compilation` (Owner: Astra / Codex).
 - **Sub-Issue 3 (#8159)**: `[4387][practice] Imperative UI: Kimi web design, responsive card interactions & feedback` (Owner: Kimi).
 - **Sub-Issue 4 (#8160)**: `[4387][practice] Imperative Verification: Held-out linguistic tests, CI gates & release hydration` (Owner: Claude / Astra).
-

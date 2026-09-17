@@ -145,4 +145,42 @@ describe("practice-shard-fetch", () => {
     );
     expect(merged.cloze.map((item) => item.clozeId)).toEqual(["core", "a1", "a2"]);
   });
+
+  test("fetchPracticeDrillFields hydrates canonical imperative shard items", async () => {
+    const canonicalItem = {
+      id: "imp_robyty_1pl",
+      lemmaId: "робити",
+      srsKey: "робити::imperative::1pl",
+      lemma: "роби́ти",
+      aspect: "imperf" as const,
+      slot: "1pl" as const,
+      slotLabelUa: "1-ша особа множини (заклик до дії)",
+      target: "робі́мо",
+      targetPlain: "робімо",
+      acceptedAnswers: ["робі́мо", "робімо", "робі́м", "робім"],
+      options: [
+        { text: "робі́мо", isCorrect: true, code: "CORRECT" as const },
+        { text: "ро́бимо", isCorrect: false, code: "WRONG_MOOD" as const },
+      ],
+      cefr: "A2",
+    };
+
+    vi.stubGlobal("fetch", async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("practice-imperative.A2.json")) {
+        return jsonResponse(200, {
+          schema: "atlas-practice-imperative",
+          schemaVersion: 1,
+          deckVersion: "v1",
+          level: "A2",
+          source: "vesum",
+          imperative: [canonicalItem],
+        });
+      }
+      return jsonResponse(404);
+    });
+
+    const fields = await fetchPracticeDrillFields("/lexicon", "A2", new Map());
+    expect(fields.imperative).toEqual([canonicalItem]);
+  });
 });
