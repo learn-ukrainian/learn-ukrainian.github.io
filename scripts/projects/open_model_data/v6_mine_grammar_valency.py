@@ -1217,25 +1217,19 @@ def has_genitive_reading(word: str, cur: sqlite3.Cursor | None = None) -> bool:
         return True
 
 
-def has_direct_object_after(words: list[str], idx: int, cur: sqlite3.Cursor | None = None) -> bool:
-    """Check whether words[idx] is followed by a direct object in accusative case."""
-    if not cur or idx + 1 >= len(words):
-        return False
-    k = idx + 1
-    while k < len(words) and ("adv" in get_vesum_pos(words[k], cur) or "adj" in get_vesum_pos(words[k], cur)):
-        k += 1
-    if k >= len(words):
-        return False
-    try:
-        cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (words[k],))
-        rows = cur.fetchall()
-        has_acc = any(r[0] in ("noun", "pron") and "v_zna" in r[1] for r in rows)
-        cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (words[idx],))
-        v_rows = cur.fetchall()
-        has_trans = any(":trans" in r[0] or ":imperf" in r[0] or ":perf" in r[0] for r in v_rows)
-        return has_acc and has_trans
-    except Exception:
-        return False
+def is_deverbal_or_partitive_noun(word: str, cur: sqlite3.Cursor | None = None) -> bool:
+    """Check whether a noun can govern an adnominal genitive complement in a prepositional phrase."""
+    w = word.lower()
+    if w.endswith(("ння", "ття", "ство", "цтво")):
+        return True
+    partitives = {
+        "початок", "початку", "кінець", "кінця", "виробництво", "виробництва",
+        "шматок", "шматка", "брусок", "бруска", "частка", "частки", "частина",
+        "частини", "пляшка", "пляшки", "крапля", "краплі", "склянка", "склянки",
+        "літр", "літра", "кілограм", "кілограма", "видобуток", "видобутку",
+        "переробка", "переробки", "випуск", "випуску",
+    }
+    return w in partitives
 
 
 def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor | None = None) -> bool:
@@ -1247,8 +1241,8 @@ def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor |
        A is a prenominal modifier agreeing with head noun N (at n_idx >= idx), spanning nested prepositional
        modifiers and noun/verb homonyms without premature closure (e.g. 'у вільний від виготовлення мила час').
     3. Dependent nouns in an adnominal genitive chain inside a prepositional phrase (e.g. 'після виготовлення мила',
-       'після зміни режисера', 'від виконання роботи'), distinguishing dependent genitives from actual transitive
-       clause verbs with direct objects (e.g. 'яка після роботи мила посуд').
+       'після зміни режисера', 'від виконання роботи'), distinguishing dependent genitives from actual clause verbs
+       following complete prepositional phrases (e.g. 'яка після роботи мила посуд', 'яка посуд після роботи мила').
     """
     if idx <= 0:
         return False
@@ -1312,29 +1306,30 @@ def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor |
     # Rule 3: Dependent noun in an adnominal genitive chain inside a prepositional phrase
     # (e.g. 'після виготовлення мила', 'після зміни режисера', 'від виконання роботи')
     if has_genitive_reading(words[idx], cur):
-        is_finite_verb = False
-        if cur:
-            try:
-                cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (words[idx],))
-                v_rows = cur.fetchall()
-                has_finite = any(any(t in r[1] for t in (":past", ":pres", ":futr")) for r in v_rows)
-                if has_finite and has_direct_object_after(words, idx, cur):
-                    is_finite_verb = True
-            except Exception:
-                pass
-
-        if not is_finite_verb:
-            k = idx - 1
-            while (
-                k >= 0
-                and not is_preposition(words[k], cur)
-                and ("adj" in get_vesum_pos(words[k], cur) or "adv" in get_vesum_pos(words[k], cur))
-            ):
-                k -= 1
-            if k >= 0 and "noun" in get_vesum_pos(words[k], cur) and is_in_prepositional_phrase(words, k, cur):
+        k = idx - 1
+        while (
+            k >= 0
+            and not is_preposition(words[k], cur)
+            and ("adj" in get_vesum_pos(words[k], cur) or "adv" in get_vesum_pos(words[k], cur))
+        ):
+            k -= 1
+        if k >= 0 and "noun" in get_vesum_pos(words[k], cur) and is_in_prepositional_phrase(words, k, cur):
+            has_finite = False
+            if cur:
+                try:
+                    cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (words[idx],))
+                    v_rows = cur.fetchall()
+                    has_finite = any(any(t in r[1] for t in (":past", ":pres", ":futr")) for r in v_rows)
+                except Exception:
+                    pass
+            if has_finite:
+                if is_deverbal_or_partitive_noun(words[k], cur):
+                    return True
+            else:
                 return True
 
     return False
+
 
 
 

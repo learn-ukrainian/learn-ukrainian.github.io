@@ -1351,6 +1351,39 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_agreeing_subject_genitive_myla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_agreeing_subject_genitive_myla)) == 1
 
+    # Defect 156 / Negative regression (Round 70 P2): Preceding direct object across adverbial PP preserves finite predicate (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_discordant_apposition_preceding_object_myla = (
+        "Він говорив із сестрою — дівчиною, яка посуд після роботи мила — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_preceding_object_myla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_preceding_object_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_preceding_object_myla)) == 0
+
+    # Defect 157 / Positive control (Round 70 P2): Agreeing instrumental apposition with preceding direct object accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_agreeing_apposition_preceding_object_myla = (
+        "Він говорив із сестрою — дівчиною, яка посуд після роботи мила — та з лікаркою — досвідченою фахівчинею — про виставу."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_preceding_object_myla, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_preceding_object_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_preceding_object_myla)) == 1
+
+    # Defect 158 / Negative regression (Round 70 P2): Pronominal direct object preserves finite predicate (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_discordant_apposition_pronominal_object_myla = (
+        "Він говорив із сестрою — дівчиною, яка після роботи мила його — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_pronominal_object_myla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_pronominal_object_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_pronominal_object_myla)) == 0
+
+    # Defect 159 / Positive control (Round 70 P2): Agreeing instrumental apposition with pronominal direct object accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_agreeing_apposition_pronominal_object_myla = (
+        "Він говорив із сестрою — дівчиною, яка після роботи мила його — та з лікаркою — досвідченою фахівчинею — про виставу."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_pronominal_object_myla, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_pronominal_object_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_pronominal_object_myla)) == 1
+
+
 
 
 
