@@ -12,6 +12,12 @@ from scripts.build import linear_pipeline, v7_build
 VALID_EVIDENCE = '"This quoted excerpt gives enough surrounding lesson context."'
 
 
+@pytest.fixture(autouse=True)
+def _skip_cf_preflight_for_goodhart_unit_tests(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Goodhart sentinel tests mock the pipeline; CF gate is covered elsewhere.
+    monkeypatch.setattr(v7_build, "_enforce_cf_preflight", lambda *_a, **_k: None)
+
+
 def _verdict(
     obligation_id: str,
     verdict: str,

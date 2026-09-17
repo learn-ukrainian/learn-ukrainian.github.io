@@ -22,6 +22,8 @@ from scripts.build import linear_pipeline, v7_build
 @pytest.fixture(autouse=True)
 def _simulate_worktree_child(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv(v7_build.run_archive.ENV_KEY, "test-child")
+    # These tests exercise writer dispatch, not the CF-before-build gate.
+    monkeypatch.setattr(v7_build, "_enforce_cf_preflight", lambda *_a, **_k: None)
 
 
 def _seed_sources_mcp_config(

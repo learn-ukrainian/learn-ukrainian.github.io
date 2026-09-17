@@ -215,8 +215,9 @@ def git_head(repo_root: Path) -> str | None:
             check=False,
             capture_output=True,
             text=True,
+            timeout=30,
         )
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
         return None
     if proc.returncode != 0:
         return None
@@ -230,8 +231,9 @@ def _gh_json(args: list[str]) -> Any | None:
             check=False,
             capture_output=True,
             text=True,
+            timeout=60,
         )
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
         return None
     if proc.returncode != 0 or not proc.stdout.strip():
         return None

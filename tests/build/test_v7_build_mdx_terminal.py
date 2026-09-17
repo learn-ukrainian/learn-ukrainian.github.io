@@ -125,6 +125,8 @@ def _install_pass_fixture(
         writer_timeout=5,
         effort=None,
         no_resume=True,
+        allow_no_cf_preflight=True,
+        cf_clearance=None,
     )
     return args, telemetry_path, module_dir
 
