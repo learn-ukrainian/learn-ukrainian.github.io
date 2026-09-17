@@ -441,12 +441,16 @@ def check_word_has_genitive(w: str, cur_ves: sqlite3.Cursor | None) -> bool:
     return any(":v_rod" in r[0] or ":v_gen" in r[0] for r in rows)
 
 
-def check_word_has_modifier(w: str, cur_ves: sqlite3.Cursor | None) -> bool:
+def check_word_agrees_with_head(w: str, head: str, cur_ves: sqlite3.Cursor | None) -> bool:
     if not cur_ves:
         return False
     cur_ves.execute("SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?)", (w.lower(), w.capitalize()))
     rows = cur_ves.fetchall()
-    return any(r[0].startswith("adj") or r[0].startswith("pron") for r in rows)
+    if head == "думку":
+        return any((r[0].startswith("adj") or r[0].startswith("pron")) and ":f:" in r[0] and ":v_zna" in r[0] for r in rows) or any(":nv" in r[0] for r in rows)
+    if head == "погляд":
+        return any((r[0].startswith("adj") or r[0].startswith("pron")) and ":m:" in r[0] and (":v_zna" in r[0] or ":v_naz" in r[0]) for r in rows) or any(":nv" in r[0] for r in rows)
+    return False
 
 
 def is_parenthetical_segment(seg: str, cur_ves: sqlite3.Cursor | None) -> bool:
@@ -467,7 +471,7 @@ def is_parenthetical_segment(seg: str, cur_ves: sqlite3.Cursor | None) -> bool:
         return bool(cur_ves and all(check_word_has_genitive(w, cur_ves) for w in words[1:]))
     # Pre-nominal modifier frame: 'на мою власну думку', 'на перший погляд'
     if words[0] == "на" and len(words) >= 3 and words[-1] in {"думку", "погляд"}:
-        return bool(cur_ves and all(check_word_has_modifier(w, cur_ves) for w in words[1:-1]))
+        return bool(cur_ves and all(check_word_agrees_with_head(w, words[-1], cur_ves) for w in words[1:-1]))
     for w in words:
         if w in PARENTHETICAL_PHRASES:
             continue

@@ -553,6 +553,24 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     frag_no_erroneous_comma = "Він реагує на слова, на думку про відпустку і пише довгого листа."
     assert not miner.has_homogeneous_verb_comma(frag_no_erroneous_comma, cur_ves=cur)
 
+    # Defect 40 / Negative regression (Round 18 P2): Malformed parenthetical with incompatible modifier agreement 'на моїй думку' (Правопис 2019 §158 I.11)
+    frag_incompatible_modifier = "Він реагує на слова, на моїй думку, і пише довгого листа."
+    assert not miner.is_parenthetical_segment("на моїй думку", cur_ves=cur)
+    assert miner.has_homogeneous_verb_comma(frag_incompatible_modifier, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_incompatible_modifier, cur_ves=cur)
+
+    # Positive control 1 (Round 18 P2): Valid pre-nominal modifier agreement with 'думку' (Правопис 2019 §158 I.11)
+    frag_valid_f_zna = "Він реагує на слова, на мою думку, і пише довгого листа."
+    assert miner.is_parenthetical_segment("на мою думку", cur_ves=cur)
+    assert not miner.has_homogeneous_verb_comma(frag_valid_f_zna, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_valid_f_zna, cur_ves=cur)
+
+    # Positive control 2 (Round 18 P2): Valid pre-nominal modifier agreement with 'погляд' (Правопис 2019 §158 I.11)
+    frag_valid_m_zna = "Він реагує на слова, на мій погляд, і пише довгого листа."
+    assert miner.is_parenthetical_segment("на мій погляд", cur_ves=cur)
+    assert not miner.has_homogeneous_verb_comma(frag_valid_m_zna, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_valid_m_zna, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:
