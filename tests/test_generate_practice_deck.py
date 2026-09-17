@@ -1943,6 +1943,65 @@ def test_size_budget_surface_trim_prioritizes_cloze_coverage(capsys: pytest.Capt
     assert shards["A1"]["index"]["counts"]["clozeCoverage"] == 1.0
 
 
+def test_size_budget_surface_trim_prioritizes_drill_modes_and_preserves_cross_level_mode_items(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    lemma_ids = ("plain1", "syn_leg", "plain2", "plain3")
+    index = {
+        "schema": "atlas-practice-index",
+        "items": [
+            {
+                "lemmaId": lemma_id,
+                "lemma": lemma_id,
+                "cefr": "B1",
+                "modes": ["flashcards", "synonym"] if lemma_id == "syn_leg" else ["flashcards"],
+                "hasCloze": False,
+                "clozeIds": [],
+                "newOrder": order,
+            }
+            for order, lemma_id in enumerate(lemma_ids)
+        ],
+        "counts": {
+            "lexemes": len(lemma_ids),
+            "cloze": 0,
+            "clozeEligibleLexemes": 0,
+            "clozeCoverage": 0.0,
+            "modeCounts": {"synonym": 1},
+            "modeCoverage": {"synonym": 0.25},
+        },
+    }
+    lexemes = {
+        "schema": "atlas-practice-lexemes",
+        "lexemes": [
+            {"lemmaId": lemma_id, "lemma": lemma_id, "padding": "x" * 1_500}
+            for lemma_id in lemma_ids
+        ],
+    }
+    synonym = {
+        "schema": "atlas-practice-synonym",
+        "synonym": [
+            {"id": "syn:1", "lemmaId": "syn_leg", "target": "syn_leg"},
+            {"id": "syn:2", "lemmaId": "a2_prompt", "target": "a2_prompt"},
+        ],
+    }
+    shards = {"B1": {"index": index, "lexemes": lexemes, "synonym": synonym}}
+
+    probe_index = {**index, "items": [index["items"][1]]}
+    probe_lexemes = {**lexemes, "lexemes": [lexemes["lexemes"][1]]}
+    index_budget = generate_practice_deck._size_budget(probe_index, 1_000_000, 1_000_000)
+    lexeme_budget = generate_practice_deck._size_budget(probe_lexemes, 1_000_000, 1_000_000)
+    apply_size_budgets(
+        shards,
+        raw_limit=max(int(index_budget["rawBytes"]), int(lexeme_budget["rawBytes"])) + 200,
+        gzip_limit=max(int(index_budget["gzipBytes"]), int(lexeme_budget["gzipBytes"])) + 200,
+    )
+
+    assert "trimmed surface lexemes 4 -> 1" in capsys.readouterr().err
+    assert [item["lemmaId"] for item in shards["B1"]["index"]["items"]] == ["syn_leg"]
+    assert [item["lemmaId"] for item in shards["B1"]["lexemes"]["lexemes"]] == ["syn_leg"]
+    assert {item["lemmaId"] for item in shards["B1"]["synonym"]["synonym"]} == {"syn_leg", "a2_prompt"}
+
+
 def test_size_budget_trims_oversized_mode_without_cutting_cloze_surface(
     capsys: pytest.CaptureFixture[str],
 ) -> None:

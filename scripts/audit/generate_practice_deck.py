@@ -5713,6 +5713,11 @@ def apply_size_budgets(
         original_bodies: dict[str, list[Any]],
         kept_ids: set[str],
     ) -> None:
+        original_level_lexeme_ids = {
+            _clean_text(item.get("lemmaId"))
+            for item in original_bodies.get("lexemes", [])
+            if isinstance(item, dict) and _clean_text(item.get("lemmaId"))
+        }
         for kind, original in original_bodies.items():
             current = body_items(level_shards, kind)
             if current is None:
@@ -5720,7 +5725,12 @@ def apply_size_budgets(
             current[:] = [
                 item
                 for item in original
-                if not isinstance(item, dict) or _clean_text(item.get("lemmaId")) in kept_ids
+                if not isinstance(item, dict)
+                or (
+                    _clean_text(item.get("lemmaId")) in kept_ids
+                    if _clean_text(item.get("lemmaId")) in original_level_lexeme_ids
+                    else True
+                )
             ]
 
     def item_lemma_id(item: Any, index: int) -> str:
@@ -5783,7 +5793,11 @@ def apply_size_budgets(
         cloze_first = [
             item
             for item in original_index
-            if isinstance(item, dict) and item.get("clozeIds")
+            if isinstance(item, dict)
+            and (
+                item.get("clozeIds")
+                or any(mode in item.get("modes", []) for mode in DRILL_MODES)
+            )
         ]
         cloze_first_ids = {id(item) for item in cloze_first}
         non_cloze = [item for item in original_index if id(item) not in cloze_first_ids]

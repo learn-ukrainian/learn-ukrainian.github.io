@@ -1113,6 +1113,9 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Canonical spatial adverbs (near / nearby, beside); both A2 in PULS; high-frequency core adverbs of place, safe and unmistakable at A2.
 - a: блискуче
   b: гаразд
   polarity: synonym
@@ -1735,6 +1738,9 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Core qualitative adjectives (worthy / deserving); both A2 in PULS; standard predicate adjectives with direct 1:1 semantic overlap.
 - a: вартість
   b: ціна
   polarity: synonym
@@ -1942,6 +1948,9 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Core interpersonal relation nouns (relationships / relation); both A2 in PULS; widely used in social/interpersonal units.
 - a: взимку
   b: узимку
   polarity: synonym
@@ -2687,6 +2696,9 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Core decision-making verbs (decide, resolve / adopt, pass); both A2 in PULS; common communicative verbs.
 - a: висвітлювати
   b: пояснювати
   polarity: synonym
@@ -2818,6 +2830,9 @@ approved:
   polarity: synonym
   sources:
   - miyklas.com.ua
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: High-frequency intransitive verbs (emerge, come out / appear); both A2 in PULS; natural synonymy in basic narrative contexts.
 - a: виходити
   b: сходити
   polarity: synonym
@@ -3323,6 +3338,9 @@ approved:
   polarity: synonym
   sources:
   - miyklas.com.ua
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Canonical phonetic alternation of the core profession noun (teacher); both A2 in PULS; essential pedagogical recognition.
 - a: вчити
   b: навчати
   polarity: synonym
@@ -3976,6 +3994,9 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: High-utility transaction verbs (compensate / reimburse); both A2 in PULS; clear single-sense match for practical everyday vocabulary.
 - a: відіграти
   b: зіграти
   polarity: synonym
@@ -4563,6 +4584,9 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: High-frequency auditory adjectives (loud / loud, resonant); both A2 in PULS; standard sensory description.
 - a: голота
   b: юрба
   polarity: synonym
@@ -4717,6 +4741,9 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Everyday preparation verbs (get ready, prepare / gather, intend); both A2 in PULS; ubiquitous daily routine vocabulary.
 - a: гра
   b: забава
   polarity: synonym
@@ -5180,6 +5207,9 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Canonical frequency adverbs (sometimes / at times); both A2 in PULS; fundamental daily time adverbs, unmistakable at A2.
 - a: деколи
   b: іноді
   polarity: synonym
@@ -5232,6 +5262,9 @@ approved:
   polarity: synonym
   sources:
   - synonyms_karavansky
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Epistemic approximation adverbs/particles (roughly, around / perhaps, probably); both A2 in PULS.
 - a: деталь
   b: риса
   polarity: synonym
@@ -6043,6 +6076,9 @@ approved:
   - synonyms
   - synonyms_karavansky
   - wiktionary
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Core cognitive nouns (thought, opinion / reasoning, deliberation); both A2 in PULS; standard communicative vocabulary.
 - a: думка
   b: погляд
   polarity: synonym
@@ -8061,6 +8097,9 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Everyday concrete nouns (implement / tool, instrument); both A2 in PULS; direct physical referents, fair and gentle at A2.
 - a: знаходитися
   b: перебувати
   polarity: synonym
@@ -8771,6 +8810,9 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Canonical temporal adverbs (once, formerly / earlier, before); both A2 in PULS; standard past-tense narrative markers.
 - a: колишній
   b: минулий
   polarity: synonym
@@ -8835,6 +8877,9 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Structural nouns (composition / structure, construction); both A2 in PULS; standard descriptive and artistic vocabulary.
 - a: композиція
   b: структура
   polarity: synonym
@@ -8860,6 +8905,9 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Everyday postal and packaging nouns (envelope / packet, bag); both A2 in PULS; high-frequency concrete nouns.
 - a: конкурент
   b: суперник
   polarity: synonym
@@ -9360,6 +9408,9 @@ approved:
   polarity: antonym
   sources:
   - wiktionary
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Core grammatical tense antonyms (future tense / past tense); fundamental A2 grammar terminology.
 - a: майстер
   b: митець
   polarity: synonym
@@ -9367,6 +9418,9 @@ approved:
   - synonyms
   - synonyms_karavansky
   - wiktionary
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Creative profession nouns (master, craftsman / artist); both A2 in PULS; common cultural vocabulary.
 - a: майстер
   b: фахівець
   polarity: synonym
@@ -9498,6 +9552,9 @@ approved:
   polarity: antonym
   sources:
   - wiktionary
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Core grammatical tense antonyms (past tense / present tense); fundamental A2 grammar terminology.
 - a: множина
   b: однина
   polarity: antonym
@@ -9565,6 +9622,9 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Poetic and reflective nouns (dream / vision, dream); both A2 in PULS; common cultural and narrative pairing.
 - a: мрія
   b: фантазія
   polarity: synonym
@@ -10211,6 +10271,9 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Core motion verbs of carrying (carry / bear, wear); both A2 in PULS; fundamental everyday verbs.
 - a: нестися
   b: їхати
   polarity: synonym
@@ -10522,6 +10585,9 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Essential communication nouns (announcement / notice, message); both A2 in PULS; ubiquitous public/text vocabulary.
 - a: один
   b: єдиний
   polarity: synonym
@@ -10709,6 +10775,9 @@ approved:
   polarity: synonym
   sources:
   - synonyms_karavansky
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Standard descriptive adjectives (official / official, duty-related); both A2 in PULS; basic institutional and workplace vocabulary.
 - a: охочий
   b: чіпкий
   polarity: synonym
@@ -10859,6 +10928,9 @@ approved:
   polarity: synonym
   sources:
   - synonyms_karavansky
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Core educational/storytelling nouns (retelling / story, tale); both A2 in PULS; staple of A2 reading comprehension lessons.
 - a: перелік
   b: список
   polarity: synonym
@@ -10898,6 +10970,9 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Canonical urban navigation nouns (intersection / crossroads); both A2 in PULS; essential city/directions vocabulary.
 - a: переходити
   b: проходити
   polarity: synonym
@@ -11008,6 +11083,9 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Common coordination verbs (coordinate / align, agree); both A2 in PULS; frequent in everyday planning and dialogue.
 - a: подеколи
   b: часом
   polarity: synonym
@@ -11226,6 +11304,9 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Fundamental motion/arrival verbs (arrive / come); both A2 in PULS; staple of travel and schedule topics.
 - a: привабливість
   b: цікавість
   polarity: synonym
@@ -11817,6 +11898,9 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Organizational reference nouns (list / index, directory); both A2 in PULS; standard textual vocabulary.
 - a: сповидний
   b: фіктивний
   polarity: synonym
@@ -12018,6 +12102,9 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Core movement/pace nouns (tempo, pace / gait, stride); both A2 in PULS; natural synonymy in pace descriptions.
 - a: темп
   b: хід
   polarity: synonym
@@ -12153,6 +12240,9 @@ approved:
   sources:
   - synonyms
   - synonyms_karavansky
+  a2Exception: true
+  curator: gemini/8144-densify-practice-pairs
+  a2Rationale: Core text/media nouns (excerpt / fragment); both A2 in PULS; frequent in reading exercises and textbook instructions.
 - a: уривок
   b: частина
   polarity: synonym
