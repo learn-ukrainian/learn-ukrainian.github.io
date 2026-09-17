@@ -1811,6 +1811,30 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_pivtora_shyla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_pivtora_shyla)) == 0
 
+    # Defect 210 / Negative regression (Round 83 Codex P2 Finding 1 & Fable P2 Finding 1): Paucal numeral subject 'дві пили чай' functions as complete subordinate clause with plural verb predicate (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_dvi_pyly_chai = (
+        "Він говорив із сестрами — дівчатами, що дві пили чай — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_dvi_pyly_chai, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dvi_pyly_chai, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dvi_pyly_chai)) == 0
+
+    # Defect 211 / Negative regression (Round 83 Codex P2 Finding 1 & Fable P2 Finding 1): Paucal numeral subject 'три пили чай' functions as complete subordinate clause with plural verb predicate (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_try_pyly_chai = (
+        "Він говорив із сестрами — дівчатами, що три пили чай — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_try_pyly_chai, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_try_pyly_chai, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_try_pyly_chai)) == 0
+
+    # Defect 212 / Negative regression (Round 83 Codex P2 Finding 2 & Fable P2 Finding 1): Pronominal numeral subject 'одні пили чай' functions as complete subordinate clause with plural verb predicate (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_odni_pyly_chai = (
+        "Він говорив із сестрами — дівчатами, що одні пили чай — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_odni_pyly_chai, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odni_pyly_chai, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odni_pyly_chai)) == 0
+
 
 
 
