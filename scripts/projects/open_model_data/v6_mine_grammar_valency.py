@@ -1248,6 +1248,26 @@ NUMERAL_VERB_AGREEMENT: dict[str, tuple[str, ...]] = {
     "одна": (":past:f", ":pres:s:3", ":futr:s:3"),
 }
 
+DRINK_CONSUMABLE_LEMMAS: frozenset[str] = frozenset({
+    "вода",
+    "вино",
+    "чай",
+    "кава",
+    "сік",
+    "пиво",
+    "молоко",
+    "квас",
+    "узвар",
+    "таблетка",
+    "пігулка",
+    "ліки",
+    "напій",
+    "отрута",
+    "настоянка",
+    "відвар",
+    "компот",
+})
+
 
 def verb_agrees_with_numeral(numr_w: str, verb_rows: list[tuple[str, ...]]) -> bool:
     """Check whether a finite verb form can grammatically agree with a nominative numeral subject."""
@@ -1255,7 +1275,6 @@ def verb_agrees_with_numeral(numr_w: str, verb_rows: list[tuple[str, ...]]) -> b
     if expected_tags is None:
         return False
     return any(any(t in r[1] for t in expected_tags) for r in verb_rows)
-
 
 
 def is_in_direct_or_enclosing_pp(words: list[str], idx: int, cur: sqlite3.Cursor | None = None) -> bool:
@@ -1446,6 +1465,10 @@ PRENOMINAL_TITLES = {
     "леді", "мадам", "міс", "місіс", "фрау", "мадмуазель", "мадемуазель",
     "сеньйора", "сеньйорита", "фрейлейн",
 }
+
+TEMPORAL_GEN_MODIFIERS: frozenset[str] = frozenset({
+    "року", "років", "дня", "днів", "тижня", "тижнів", "місяця", "місяців", "часу", "пори",
+})
 
 
 def get_clause_direct_object_indices(words: list[str], verb_idx: int, cur: sqlite3.Cursor | None = None) -> list[int]:
@@ -1730,15 +1753,62 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                                 numr_lemmas = {r[0] for r in numr_rows}
                                 prev_is_nom = any("v_naz" in r[1] for r in numr_rows)
 
-                                # Look ahead for an animate adnominal genitive attribute modifying words[idx] (e.g. 'дві пили майстра', 'одні пили майстра')
-                                # to distinguish governed tool/artifact nouns from verbal direct/partitive genitive objects ('дві пили води', 'дві пили таблетки').
+                                # Look ahead across modifying adjectives/pronouns/adverbs for an adnominal genitive attribute or verbal argument
+                                # to distinguish governed tool/artifact/entity nouns ('дві пили заводу', 'три пили бригади', 'дві пили підприємства',
+                                # 'дві пили старого майстра', 'одні пили нашого майстра', 'один став села') from verbal direct/partitive objects and complements
+                                # ('дві пили води', 'дві пили таблетки', 'один ніс брата', 'один віз лікаря', 'один пас коней', 'один став лікарем').
                                 has_gen_dependent = False
-                                if idx + 1 < len(words):
+                                post_k = idx + 1
+                                while post_k < len(words):
+                                    next_w = words[post_k]
+                                    cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (next_w,))
+                                    next_rows = cur.fetchall()
+                                    is_pure_noun = bool(next_rows) and all(r[0] == "noun" and ":pron:" not in r[1] for r in next_rows)
+                                    if is_pure_noun:
+                                        break
+                                    is_modifier = any(r[0] in ("adj", "adv") or ":pron:" in r[1] for r in next_rows)
+                                    if is_modifier:
+                                        post_k += 1
+                                        continue
+                                    break
+
+                                if post_k < len(words):
                                     try:
-                                        cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (words[idx + 1],))
-                                        has_gen_dependent = any(
-                                            r[0] == "noun" and ":anim" in r[1] and "v_rod" in r[1] for r in cur.fetchall()
-                                        )
+                                        dep_w = words[post_k]
+                                        cur.execute("SELECT pos, tags, lemma FROM forms_all WHERE word_form = ?", (dep_w,))
+                                        dep_rows = cur.fetchall()
+                                        dep_noun_rows = [r for r in dep_rows if r[0] == "noun"]
+                                        dep_lemmas = {r[2] for r in dep_noun_rows}
+                                        dep_is_gen = any("v_rod" in r[1] for r in dep_noun_rows)
+                                        dep_is_acc = any("v_zna" in r[1] for r in dep_noun_rows)
+
+                                        cur.execute("SELECT DISTINCT lemma FROM forms_all WHERE word_form = ? AND pos = 'verb'", (words[idx],))
+                                        v_lemmas = {r[0] for r in cur.fetchall()}
+
+                                        if v_lemmas & {"пити"}:
+                                            if dep_lemmas & DRINK_CONSUMABLE_LEMMAS:
+                                                has_gen_dependent = False
+                                            elif dep_is_gen:
+                                                has_gen_dependent = True
+                                        elif v_lemmas & {"стати"}:
+                                            if dep_is_gen and dep_w not in TEMPORAL_GEN_MODIFIERS and dep_w not in DURATION_MODIFIERS:
+                                                has_gen_dependent = True
+                                            else:
+                                                has_ins = any(
+                                                    any("m:v_oru" in r[0] for r in cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (cw,)).fetchall())
+                                                    for cw in words[idx + 1:]
+                                                )
+                                                if has_ins:
+                                                    has_gen_dependent = False
+                                                elif dep_is_gen:
+                                                    has_gen_dependent = True
+                                        elif v_lemmas & {"нести", "везти", "пасти"}:
+                                            if dep_is_acc:
+                                                has_gen_dependent = False
+                                            elif dep_is_gen:
+                                                has_gen_dependent = True
+                                        elif dep_is_gen:
+                                            has_gen_dependent = True
                                     except Exception:
                                         pass
 

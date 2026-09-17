@@ -61,6 +61,10 @@ def test_valency_frames_authenticity_and_coverage() -> None:
             assert len(incorrect) > 15
 
 
+@pytest.mark.skipif(
+    not miner.DEFAULT_VESUM_DB.is_file(),
+    reason="VESUM database not present in CI sandbox — run locally for full coverage",
+)
 def test_vesum_database_resolution_and_attestation() -> None:
     """Verify that VESUM database resolves via git-common-dir and forms_all queries succeed."""
     vesum_db = miner.DEFAULT_VESUM_DB
@@ -299,6 +303,10 @@ def test_vesum_query_fail_closed_when_cursor_none() -> None:
     assert attested is False
 
 
+@pytest.mark.skipif(
+    not miner.DEFAULT_VESUM_DB.is_file(),
+    reason="VESUM database not present in CI sandbox — run locally for full coverage",
+)
 def test_negative_controls_filtering_rejects_defective_structures() -> None:
     """Verify that incomplete subordinate clauses, comma before predicate, and unclosed appositives are rejected."""
     import sqlite3
@@ -1953,6 +1961,36 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odyn_stav_tsioho_roku, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odyn_stav_tsioho_roku)) == 0
 
+    # Defect 226 / Negative regression (Round 86 Codex P2 & Fable Finding 2): Inanimate and pre-modified adnominal genitive attributes
+    # ('дві пили заводу', 'три пили бригади', 'дві пили підприємства', 'дві пили старого майстра', 'одні пили нашого майстра', 'один став села')
+    # function as noun phrases without predicates (Правопис 2019 §9, §37, §158, §161)
+    for s_defect_226 in [
+        "Театр — місце, де дві пили заводу вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка.",
+        "Театр — місце, де три пили бригади вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка.",
+        "Театр — місце, де дві пили підприємства вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка.",
+        "Театр — місце, де одні пили заводу вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка.",
+        "Театр — місце, де одні пили підприємства вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка.",
+        "Театр — місце, де дві пили старого майстра вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка.",
+        "Театр — місце, де одні пили нашого майстра вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка.",
+        "Театр — місце, де один став села вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала лікарка.",
+    ]:
+        assert miner.has_discordant_dash_apposition(s_defect_226, cur_ves=cur)
+        assert not miner.is_pristine_eval_sentence(s_defect_226, cur_ves=cur)
+        assert len(miner.split_clean_ukrainian_sentences(s_defect_226)) == 0
+
+    # Defect 227 / Negative regression (Round 86 Claude Fable Finding 1): Numeral subjects with transitive verbs taking animate direct objects
+    # ('один ніс брата', 'один віз лікаря', 'один пас коней', 'один пас корів') form complete subordinate clauses
+    # and properly pair preceding appositive dashes, exposing subsequent discordant appositions (Правопис 2019 §9, §37, §158, §161)
+    for s_defect_227 in [
+        "Він говорив із братами — хлопцями, що один ніс брата — та з лікаркою — досвідчена фахівчиня — про виставу.",
+        "Він говорив із братами — хлопцями, що один віз лікаря — та з лікаркою — досвідчена фахівчиня — про виставу.",
+        "Він говорив із братами — хлопцями, що один пас коней — та з лікаркою — досвідчена фахівчиня — про виставу.",
+        "Він говорив із братами — хлопцями, що один пас корів — та з лікаркою — досвідчена фахівчиня — про виставу.",
+    ]:
+        assert miner.has_discordant_dash_apposition(s_defect_227, cur_ves=cur)
+        assert not miner.is_pristine_eval_sentence(s_defect_227, cur_ves=cur)
+        assert len(miner.split_clean_ukrainian_sentences(s_defect_227)) == 0
+
     # Positive controls for numeral subjects with direct/partitive objects and attributes
     frag_pos_dvi_pyly_vody = (
         "Він говорив із сестрами — дівчатами, що дві пили води — та з лікаркою — фахівчинею — про виставу."
@@ -1977,6 +2015,30 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     )
     assert not miner.has_discordant_dash_apposition(frag_pos_dvi_pyly_maistra_buly, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_pos_dvi_pyly_maistra_buly, cur_ves=cur)
+
+    frag_pos_dvi_pyly_zavodu_buly = (
+        "Театр — місце, де дві пили заводу були вдалою знахідкою — вважала лікарка."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_pos_dvi_pyly_zavodu_buly, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_pos_dvi_pyly_zavodu_buly, cur_ves=cur)
+
+    frag_pos_odyn_nis_brata = (
+        "Він говорив із братами — хлопцями, що один ніс брата — та з лікаркою — фахівчинею — про виставу."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_pos_odyn_nis_brata, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_pos_odyn_nis_brata, cur_ves=cur)
+
+    frag_pos_odyn_viz_likarya = (
+        "Він говорив із братами — хлопцями, що один віз лікаря — та з лікаркою — фахівчинею — про виставу."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_pos_odyn_viz_likarya, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_pos_odyn_viz_likarya, cur_ves=cur)
+
+    frag_pos_odyn_pas_konei = (
+        "Він говорив із братами — хлопцями, що один пас коней — та з лікаркою — фахівчинею — про виставу."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_pos_odyn_pas_konei, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_pos_odyn_pas_konei, cur_ves=cur)
 
 
 
