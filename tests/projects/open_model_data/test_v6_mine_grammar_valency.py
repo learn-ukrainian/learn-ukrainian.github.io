@@ -1755,6 +1755,38 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dva_shyla, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dva_shyla)) == 0
 
+    # Defect 203 / Negative regression (Round 81 Codex P2): Agreeing numeral subject ('одна шила') forms subject-predicate with feminine past verb (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_odna_shyla = (
+        "Він говорив із сестрою — дівчиною, що одна шила — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_odna_shyla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_odna_shyla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_odna_shyla)) == 0
+
+    # Defect 204 / Negative regression (Round 81 Fable P2): Paucal numeral subject with plural past verb and direct object ('обидві пили чай') (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_obydvi_pyly = (
+        "Він говорив із сестрами — дівчатами, що обидві пили чай — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_obydvi_pyly, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_obydvi_pyly, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_obydvi_pyly)) == 0
+
+    # Defect 205 / Negative regression (Round 81 Fable P2): Collective numeral subject with plural past verb ('де троє пили каву') (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_troye_pyly = (
+        "Він говорив із друзями — людьми, де троє пили каву — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_troye_pyly, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_troye_pyly, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_troye_pyly)) == 0
+
+    # Defect 206 / Negative regression (Round 81 Fable P3 Finding 2): Prenominal title variant 'сеньйора' modifying subject (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_senyora_likarka = (
+        "Театр — місце, де сеньйора головна лікарка після купівлі мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_senyora_likarka, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_senyora_likarka, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_senyora_likarka)) == 0
+
 
 
 

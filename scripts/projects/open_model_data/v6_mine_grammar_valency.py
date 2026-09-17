@@ -1692,15 +1692,44 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                         ):
                             prev_w = words[prev_k].lower()
                             prev_pos = get_vesum_pos(prev_w, cur)
-                            is_cardinal_numr = bool(prev_pos & {"numr"}) and "adv" not in prev_pos
-                            has_gen_acc_noun = any(
-                                r[0] == "noun" and any(case in r[1] for case in ("v_rod", "v_zna"))
-                                for r in rows
-                            )
-                            # 1a. If preceded by a count numeral (e.g. 'два шила', 'п\'ять вистав', 'дві вистави'),
-                            #     it is a numeral-governed noun complement, not a predicate
-                            if is_cardinal_numr and has_gen_acc_noun:
+                            noun_rows = [r for r in rows if r[0] == "noun"]
+
+                            # 1a. Distinguish numeral-governed noun complements from numeral subjects/modifiers of finite verbs:
+                            # - Adverbs of degree ('багато', 'трохи', 'мало') modify verbs directly ('багато шила', 'мало пила').
+                            # - Forms of 'один' ('одна', 'одне', 'одні') agree with nouns and never govern genitive/accusative nouns of different gender ('одна шила').
+                            # - Collective numerals ('двоє', 'троє') and paucal numerals ('обидва', 'обидві') with plural verbs ('обидві пили чай', 'троє пили каву') function as subject + predicate.
+                            cur.execute("SELECT lemma, tags FROM forms_all WHERE word_form = ? AND pos = 'numr'", (prev_w,))
+                            numr_rows = cur.fetchall()
+                            is_numr = bool(numr_rows) and "adv" not in prev_pos
+
+                            is_governed_noun = False
+                            if is_numr and noun_rows:
+                                numr_lemmas = {r[0] for r in numr_rows}
+                                if "один" not in numr_lemmas:
+                                    next_k = idx + 1
+                                    has_acc_object = False
+                                    if next_k < len(words):
+                                        cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (words[next_k],))
+                                        next_rows = cur.fetchall()
+                                        has_acc_object = any(r[0] == "noun" and "v_zna" in r[1] for r in next_rows)
+
+                                    if not has_acc_object:
+                                        if prev_w in {"два", "дві", "три", "чотири", "обидва", "обидві"}:
+                                            has_paucal_noun = any(any(c in r[1] for c in ("p:v_naz", "p:v_zna")) for r in noun_rows)
+                                            if has_paucal_noun:
+                                                has_plural_verb = any(any(t in r[1] for t in (":past:p", ":pres:3:p", ":futr:3:p")) for r in verb_rows)
+                                                prev_is_nom = any("v_naz" in r[1] for r in numr_rows)
+                                                if not (has_plural_verb and prev_is_nom):
+                                                    is_governed_noun = True
+                                        else:
+                                            # Higher cardinals ('п\'ять' and above) and collective numerals ('двоє', 'троє') govern genitive plural ('p:v_rod')
+                                            has_gen_plural = any("p:v_rod" in r[1] for r in noun_rows)
+                                            if has_gen_plural:
+                                                is_governed_noun = True
+
+                            if is_governed_noun:
                                 continue
+
                             # 1b. If preceded by a quantity word/duration modifier and is an event duration noun
                             #     (e.g. 'кілька вистав', 'багато вистав', 'всю виставу'), it is an event noun complement
                             if (
