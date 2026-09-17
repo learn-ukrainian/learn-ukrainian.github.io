@@ -938,7 +938,7 @@ def main(argv: list[str] | None = None) -> int:
         epilog="""Examples:
   %(prog)s
   %(prog)s --practice-dir site/public/lexicon --vesum-db data/vesum.db
-Outputs: summary or JSON on stdout; hydrates the default deck and fills missing mode shards.
+Outputs: summary or JSON on stdout; validates hydrated static practice assets and mode shards.
 Exit codes: 0 valid; 1 validation failure; 2 invalid arguments.
 Related: generate_practice_deck.py; docs/practice/IMPERATIVE-PRACTICE-SPEC.md.
 """,

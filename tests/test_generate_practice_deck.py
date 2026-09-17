@@ -3663,9 +3663,13 @@ def imperative_conn():
                                 "impr:p:1": ["робімося", "робімось", "робімся"],
                                 "impr:p:2": ["робіться"]}),
         "поставити": ("perf", {"impr:s:2": ["постав"], "impr:p:1": ["поставмо"],
-                               "impr:p:2": ["поставте"]}),
+                               "impr:p:2": ["поставте"],
+                               "futr:s:2": ["поставиш"], "futr:p:1": ["поставимо"],
+                               "futr:p:2": ["поставите"]}),
         "провітрити": ("perf", {"impr:s:2": ["провітри"], "impr:p:1": ["провітрімо", "провітрім"],
-                                "impr:p:2": ["провітріть"]}),
+                                "impr:p:2": ["провітріть"],
+                                "futr:s:2": ["провітриш"], "futr:p:1": ["провітримо"],
+                                "futr:p:2": ["провітрите"]}),
     }
     conn.executemany("INSERT INTO forms VALUES (?, ?, ?, 'verb')", [
         (form, lemma, f"verb:{aspect}:{tags}")
@@ -3726,7 +3730,7 @@ def test_imperative_taxonomy_uses_attested_slots_and_present(imperative_conn, im
                     tags = imperative_conn.execute(
                         "SELECT tags FROM forms WHERE word_form=? AND lemma=?", (option["text"], lemma),
                     ).fetchone()[0]
-                    assert (":impr:" if code == "WRONG_PERSON" else ":pres:") in tags
+                    assert (":impr:" if code == "WRONG_PERSON" else (":pres:" if ":pres:" in tags else ":futr:")) in tags
                 elif code == "ORTHO_SOFT_SIGN":
                     assert option["text"] == "поставь"
                 elif code == "STEM_CLUSTER":

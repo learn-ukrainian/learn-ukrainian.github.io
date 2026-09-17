@@ -2796,10 +2796,27 @@ def _imperative_forms(
     slots: dict[str, set[str]] = {slot: set() for slot in IMPERATIVE_SLOTS}
     present: dict[str, set[str]] = {slot: set() for slot in IMPERATIVE_SLOTS}
     aspects: set[str] = set()
-    for form, tags in vesum_conn.execute(
-        "SELECT word_form, tags FROM forms WHERE lemma = ? AND pos = 'verb' ORDER BY word_form, tags",
-        (lemma,),
-    ):
+    try:
+        rows = vesum_conn.execute(
+            """
+            SELECT fa.word_form, fa.tags
+            FROM forms_all fa
+            WHERE fa.lemma = ? AND fa.pos = 'verb'
+              AND NOT EXISTS (
+                  SELECT 1 FROM form_markers m
+                  WHERE m.form_id = fa.id
+                    AND m.marker IN ('bad', 'subst', 'obsc', 'dialect', 'arch', 'slang', 'vulg')
+              )
+            ORDER BY fa.word_form, fa.tags
+            """,
+            (lemma,),
+        ).fetchall()
+    except sqlite3.OperationalError:
+        rows = vesum_conn.execute(
+            "SELECT word_form, tags FROM forms WHERE lemma = ? AND pos = 'verb' ORDER BY word_form, tags",
+            (lemma,),
+        ).fetchall()
+    for form, tags in rows:
         tokens = set(tags.split(":"))
         if tokens & _IMPERATIVE_EXCLUDED_TAGS:
             continue
@@ -2808,7 +2825,7 @@ def _imperative_forms(
             if {number, person} <= tokens:
                 if "impr" in tokens:
                     slots[slot].add(form)
-                elif "pres" in tokens:
+                elif "pres" in tokens or "futr" in tokens:
                     present[slot].add(form)
     # Prefer full -мо and -ся forms; never discard their attested alternatives.
     def preference(form: str) -> tuple[bool, bool, str]:
@@ -2825,20 +2842,27 @@ def _imperative_forms(
 def _imperative_distractors(
     lemma: str, slot: str, target: str, slots: dict[str, list[str]],
     present: dict[str, list[str]], vesum_conn: sqlite3.Connection,
+    *, aspect: str, stressed_lemma: str,
 ) -> list[tuple[str, str]]:
     """Rank explainable errors; mutations must not be attested word forms."""
     candidates: list[tuple[str, str]] = []
-    stem = re.sub(r"(?:ся|сь)$", "", _plain(target))
-    reflexive = _plain(target)[len(stem):]
+    plain_target = _plain(target)
+    stem = re.sub(r"(?:ся|сь)$", "", plain_target)
+    target_stem = re.sub(r"(?:ся|сь)$", "", target)
+    reflexive = plain_target[len(stem):]
+    target_reflexive = target[len(target_stem):]
+    has_stress = STRESS_MARK in target
     mutation = None
     if slot == "2sg" and stem[-1:] in "бпвмфжчшщ":
-        mutation = (stem + "ь" + reflexive, "ORTHO_SOFT_SIGN")
+        mutation_str = (target_stem + "ь" + target_reflexive) if has_stress else (stem + "ь" + reflexive)
+        mutation = (mutation_str, "ORTHO_SOFT_SIGN")
     elif slot == "2sg" and len(stem) >= 3 and stem.endswith("и"):
         consonants = set("бвгґджзйклмнпрстфхцчшщ")
         if stem[-2] in "рлмн" and stem[-3] in consonants:
-            mutation = (stem[:-1] + reflexive, "STEM_CLUSTER")
+            mutation_str = (target_stem[:-1] + target_reflexive) if has_stress else (stem[:-1] + reflexive)
+            mutation = (mutation_str, "STEM_CLUSTER")
     if mutation and vesum_conn.execute(
-        "SELECT 1 FROM forms WHERE word_form = ? LIMIT 1", (mutation[0],),
+        "SELECT 1 FROM forms WHERE word_form = ? LIMIT 1", (_plain(mutation[0]),),
     ).fetchone() is None:
         candidates.append(mutation)
     number = IMPERATIVE_SLOTS[slot][0]
@@ -2847,11 +2871,18 @@ def _imperative_distractors(
         if display:
             candidates.append((display, "WRONG_MOOD"))
     # In a sentence-level imperative cue, contrast an auxiliary + infinitive
-    # against the requested synthetic form. No claims about all uses of давати.
-    auxiliary = "давай" if slot == "2sg" else "давайте"
-    calque = (f"{auxiliary} {lemma}", "CALQUE_AUX")
-    if slot == "1pl":
-        candidates.append(calque)
+    # against the requested synthetic form only for imperfective aspect.
+    # Calque aux ("давайте робити") is an imperfective learner error; it is
+    # not a natural learner error shape for perfective verbs.
+    calque = None
+    if aspect == "imperf":
+        aux_plain = "давай" if slot == "2sg" else "давайте"
+        aux_stressed = "дава́й" if slot == "2sg" else "дава́йте"
+        auxiliary = aux_stressed if has_stress else aux_plain
+        calque_lemma = stressed_lemma if has_stress else lemma
+        calque = (f"{auxiliary} {calque_lemma}", "CALQUE_AUX")
+        if slot == "1pl":
+            candidates.append(calque)
     # One representative from each other slot before optional variants.
     for index in range(max(map(len, slots.values()), default=0)):
         for other, forms in slots.items():
@@ -2860,7 +2891,8 @@ def _imperative_distractors(
             display = _imperative_display(forms[index], IMPERATIVE_SLOTS[other][0])
             if display:
                 candidates.append((display, "WRONG_PERSON"))
-    candidates.append(calque)
+    if calque:
+        candidates.append(calque)
     return candidates
 
 
@@ -2886,7 +2918,10 @@ def _build_imperative_items(
         accepted = list(dict.fromkeys(value for pair in zip(displays, forms, strict=True) for value in pair))
         seen = {_plain(answer) for answer in accepted}
         options = [{"text": target, "isCorrect": True, "code": "CORRECT"}]
-        for text, code in _imperative_distractors(lemma, slot, target, slots, present, vesum_conn):
+        for text, code in _imperative_distractors(
+            lemma, slot, target, slots, present, vesum_conn,
+            aspect=aspect, stressed_lemma=str(lexeme.get("lemma") or lemma),
+        ):
             if _plain(text) in seen:
                 continue
             seen.add(_plain(text))
@@ -2905,7 +2940,9 @@ def _build_imperative_items(
         if len(forms) > 1:
             notes += " Допустимі варіанти: " + ", ".join(displays) + "."
         if cefr in {"A1", "A2"}:
-            notes += " Imperative: " + label_en + ". All listed variants are accepted."
+            notes += " Imperative: " + label_en + "."
+            if len(forms) > 1:
+                notes += " All listed variants are accepted."
         item = {
             "id": item_id, "lemmaId": lexeme["lemmaId"],
             "srsKey": f"{lexeme['lemmaId']}::imperative::{slot}",
