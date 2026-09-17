@@ -218,6 +218,7 @@ INVALID_DOCUMENT_AKTU_RE = re.compile(
 )
 PERSONAL_PRONOUNS_NOM = {"я", "ти", "він", "вона", "воно", "ми", "ви", "вони", "той", "та", "те", "ті"}
 CLAUSE_INTRO = {"що", "як", "коли", "де", "куди", "звідки", "мов", "наче", "ніби", "неначе", "хоч", "хоча", "якби", "якщо", "тому"}
+COORD_CONJ = {"і", "й", "та", "або", "чи"}
 PREDICATE_WORDS = {
     "є", "це", "немає", "нема", "треба", "можна", "слід", "варто", "необхідно",
     "потрібно", "жаль", "сором", "пора", "час", "досить", "відомо", "зрозуміло",
@@ -1156,9 +1157,9 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
 
     # Check inside phrase: must NOT be an inserted sentence/clause
     lower_words = [w.lower() for w in words]
-    if any(w in PERSONAL_PRONOUNS_NOM for w in lower_words[:2]):
+    if lower_words[0] in {"я", "ти", "він", "вона", "воно", "ми", "ви", "вони", "той", "те", "ті"}:
         return False
-    if any(w in CLAUSE_INTRO for w in lower_words[:2]):
+    if any(w in CLAUSE_INTRO for w in lower_words[:2]) and lower_words[0] not in COORD_CONJ:
         return False
     if any(w in PREDICATE_WORDS for w in lower_words):
         return False
@@ -1180,16 +1181,20 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
     for w in lower_words:
         cur.execute("SELECT pos FROM forms_all WHERE word_form = ?", (w,))
         w_pos = {r[0] for r in cur.fetchall()}
-        if "prep" in w_pos and "noun" not in w_pos and "adj" not in w_pos:
+        if "prep" in w_pos and "noun" not in w_pos and "adj" not in w_pos and w not in COORD_CONJ:
             break
         content_tokens.append(w)
 
     if not content_tokens:
         return False
 
+    has_coordination = any(w in COORD_CONJ for w in content_tokens)
+
     # Identify all nominative nouns in content_tokens
     nom_nouns = []
     for tok in content_tokens:
+        if tok in COORD_CONJ:
+            continue
         cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (tok,))
         tok_rows = cur.fetchall()
         noun_toks = [r for r in tok_rows if r[0] == "noun"]
@@ -1198,14 +1203,15 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
             if "naz" in noun_cases:
                 nom_nouns.append(tok)
 
-    # If there are 2 or more nominative nouns (e.g. 'її мати лікарка', 'батько вчитель'),
+    # If there are 2 or more uncoordinated nominative nouns (e.g. 'її мати лікарка', 'батько вчитель'),
     # this is a two-member clause with an omitted zero copula (Правопис 2019 §161.I.1, примітка 1,
-    # and §161.I.10), not an apposition.
-    if len(nom_nouns) >= 2:
+    # and §161.I.10), not an apposition. Coordinated nouns ('гра та імпровізація') are homogeneous
+    # appositions and retain case agreement requirements (Ющук §21).
+    if len(nom_nouns) >= 2 and not has_coordination:
         return False
 
     # If exactly 1 nominative noun: check if it is postposed by a predicative adjective (e.g. 'мати щаслива')
-    if len(nom_nouns) == 1 and len(content_tokens) >= 2:
+    if len(nom_nouns) == 1 and len(content_tokens) >= 2 and not has_coordination:
         idx = content_tokens.index(nom_nouns[0])
         possessives = {
             "її", "його", "їхній", "їхня", "їхнє", "їхні",
@@ -1219,7 +1225,7 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
             if any(r[0] == "adj" and ":v_naz" in r[1] for r in next_rows):
                 return False
 
-    # For a genuine appositive noun phrase renaming the head, enforce case agreement
+    # For an apposition (including coordinated appositions), enforce case agreement
     for tok in nom_nouns:
         cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (tok,))
         tok_rows = cur.fetchall()

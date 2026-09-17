@@ -875,6 +875,22 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_noun_subject_copula, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_noun_subject_copula)) == 1
 
+    # Defect 96 / Negative regression (Round 42 P2): Coordinated nominative apposition with oblique head rejected (Ющук §21)
+    frag_discordant_coord_apposition = (
+        "Вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_coord_apposition, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_coord_apposition, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_coord_apposition)) == 0
+
+    # Defect 97 / Positive control (Round 42 P2): Coordinated case-agreeing instrumental apposition accepted (Ющук §21)
+    frag_agreeing_coord_apposition = (
+        "Вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_coord_apposition, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_coord_apposition, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_coord_apposition)) == 1
+
 
 def test_release_receipt_schema_and_checksum() -> None:
     """Validate release receipt against JSON schema and sha256 checksum."""
