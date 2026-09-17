@@ -28,6 +28,7 @@ from .activities import (
 )
 from .activity_validation import (
     check_english_hints_in_activities,
+    check_error_correction_stem_quality,
     check_fill_in_answer_in_options,
     check_indeclinable_case_drills,
     check_mark_the_words_answers_in_text,
@@ -140,6 +141,7 @@ __all__ = [
     "check_content_recall_violations",
     "check_duplicate_content",
     "check_english_hints_in_activities",
+    "check_error_correction_stem_quality",
     # Euphony
     "check_euphony_violations",
     "check_fill_in_answer_in_options",

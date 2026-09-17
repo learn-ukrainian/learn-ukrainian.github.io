@@ -447,7 +447,9 @@ def generate_mdx(
     if yaml_activities:
         yaml_activities = backfill_missing_activity_ids(list(yaml_activities))
 
-    # Determine if Ukrainian headers are forced
+    # Determine if Ukrainian headers are forced (tabs / empty-state chrome).
+    # A1 keeps bilingual tab labels (is_ukrainian_forced=False) but activity
+    # widget chrome must be Ukrainian (Find and Fix → Знайдіть і виправте…).
     is_ukrainian_forced = False
     lvl = level.lower()
     is_a2_2_preview = lvl.startswith('a2') and module_num >= 9
@@ -458,6 +460,7 @@ def generate_mdx(
         or lvl.startswith('b1')
     ):
         is_ukrainian_forced = True
+    activity_chrome_ukrainian = is_ukrainian_forced or lvl == 'a1' or lvl.startswith('a1')
 
     # Component imports. Keep the legacy broad preamble stable for existing
     # generated MDX, but gate newer rare components so ordinary A1/A2
@@ -538,7 +541,7 @@ sidebar:
     ) = _inject_inline_activities(
         lesson_content,
         yaml_activities,
-        is_ukrainian_forced,
+        activity_chrome_ukrainian,
     )
 
     # --- TAB 2: Vocabulary ---
@@ -561,7 +564,7 @@ sidebar:
     if tab3_activities:
         activities_content = yaml_activities_to_jsx(
             tab3_activities,
-            is_ukrainian_forced,
+            activity_chrome_ukrainian,
             inline_cross_ref_ids=injected_activity_ids,
             inline_cross_ref_positions=_injected_activity_positions,
             inline_cross_ref_fingerprints=_injected_activity_fingerprints,

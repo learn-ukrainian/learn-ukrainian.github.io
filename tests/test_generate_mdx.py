@@ -233,12 +233,13 @@ Practice there.
     assert "act-1 inline greeting" in lesson_tab
     assert "act-2 inline thanks" in lesson_tab
 
-    assert "### act-1 inline greeting\n\n*(see lesson, §Section One)*" in tab3
-    assert "### act-2 inline thanks\n\n*(see lesson, §Section Two)*" in tab3
+    assert "### act-1 inline greeting\n\n*(див. розділ, §Section One)*" in tab3
+    assert "### act-2 inline thanks\n\n*(див. розділ, §Section Two)*" in tab3
     assert "### act-3 workbook yes\n\n<Quiz" in tab3
     assert "### act-4 workbook no\n\n<Quiz" in tab3
     assert "*(see lesson)*" not in tab3
     assert tab3.count("<Quiz") == 2
+    assert "isUkrainian={true}" in mdx
 
     mdx_uk = generate_mdx(md_content, 1, yaml_activities=activities, level="folk")
     tab3_uk = mdx_uk.split('<TabItem label="Вправи">', 1)[1].split("</TabItem>", 1)[0]
@@ -473,8 +474,8 @@ subtitle: Test
     tab3 = mdx.split('<TabItem label="Вправи — Activities">', 1)[1].split("</TabItem>", 1)[0]
 
     assert "No workbook activities for this module; see the Lesson tab." not in tab3
-    assert "### Inline one\n\n*(see lesson tab)*" in tab3
-    assert "### Inline two\n\n*(see lesson tab)*" in tab3
+    assert "### Inline one\n\n*(див. вкладку «Урок»)*" in tab3
+    assert "### Inline two\n\n*(див. вкладку «Урок»)*" in tab3
     assert "<Quiz" not in tab3
     assert "*(see lesson)*" not in tab3
 

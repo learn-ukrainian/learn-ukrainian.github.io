@@ -12,6 +12,8 @@ from pathlib import Path
 
 import yaml
 
+from scripts.audit.checks.activity_validation import check_error_correction_stem_quality
+
 MAX_UNVERIFIED_STRESS = 10
 MAX_UNVERIFIED_LEMMAS = 5
 
@@ -1022,6 +1024,14 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                     a, level=str(plan.get("level") or "").lower()
                 ):
                     warn(f"lesson {n}: {advisory}")
+        for v in check_error_correction_stem_quality(
+            {"inline": inline, "workbook": workbook},
+            level=str(plan.get("level") or "").lower(),
+        ):
+            if v.get("severity") == "critical":
+                block(f"lesson {n}: {v['message']}")
+            else:
+                warn(f"lesson {n}: {v['message']}")
         lemmas = [norm_md(str(e.get("lemma", ""))).lower() for e in vocab]
         all_lemmas += lemmas
         if len(lemmas) < 12:
