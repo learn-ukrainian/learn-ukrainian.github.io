@@ -1289,6 +1289,51 @@ def is_in_direct_or_enclosing_pp(words: list[str], idx: int, cur: sqlite3.Cursor
     return False
 
 
+TIME_DURATION_NOUNS = {
+    "день", "дні", "днів", "дня", "дню", "днем",
+    "ніч", "ночі", "ночей", "ніччю",
+    "доба", "добу", "доби", "добою", "діб",
+    "тиждень", "тижні", "тижнів", "тижня", "тижнем",
+    "місяць", "місяці", "місяців", "місяця", "місяцем",
+    "рік", "роки", "років", "року", "роком",
+    "година", "годину", "години", "годин", "годиною",
+    "хвилина", "хвилину", "хвилини", "хвилин", "хвилиною",
+    "секунда", "секунду", "секунди", "секунд", "секундою",
+    "мить", "миті", "митю", "митей",
+    "час", "часу", "часом", "часи", "часів",
+    "ранок", "ранку", "ранком", "ранки", "ранків",
+    "вечір", "вечора", "вечором", "вечори", "вечорів",
+}
+
+
+def clause_has_agreeing_nominative_subject(words: list[str], verb_idx: int, cur: sqlite3.Cursor | None = None) -> bool:
+    """Check whether the clause contains a nominative feminine subject agreeing with words[verb_idx]."""
+    if not cur:
+        return False
+    try:
+        cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (words[verb_idx],))
+        v_rows = cur.fetchall()
+        is_fem_past = any(":past:f" in r[0] for r in v_rows)
+        if not is_fem_past:
+            return True
+        for i, w in enumerate(words):
+            if i == verb_idx:
+                continue
+            if is_in_direct_or_enclosing_pp(words, i, cur):
+                continue
+            if is_preposition(w, cur):
+                continue
+            if w in {"яка", "котра", "вона", "та"}:
+                return True
+            cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w,))
+            rows = cur.fetchall()
+            if any(r[0] in ("noun", "pron") and "v_naz" in r[1] and ":f" in r[1] for r in rows):
+                return True
+    except Exception:
+        pass
+    return False
+
+
 def clause_has_direct_object(words: list[str], verb_idx: int, cur: sqlite3.Cursor | None = None) -> bool:
     """Check whether the clause containing words[verb_idx] has an accusative direct object outside prepositional phrases."""
     if not cur:
@@ -1301,6 +1346,8 @@ def clause_has_direct_object(words: list[str], verb_idx: int, cur: sqlite3.Curso
         if is_preposition(w, cur):
             continue
         if w in {"який", "яка", "яке", "які", "котрий", "котра", "котре", "котрі", "хто", "що"}:
+            continue
+        if w in TIME_DURATION_NOUNS:
             continue
         try:
             cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w,))
@@ -1322,9 +1369,13 @@ def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor |
        modifiers and noun/verb homonyms without premature closure (e.g. 'у вільний від виготовлення мила час').
     3. Dependent nouns in an adnominal genitive chain inside a prepositional phrase (e.g. 'після виготовлення мила',
        'після купівлі мила', 'після продажу мила', 'після зміни режисера', 'від виконання роботи'),
-       distinguishing dependent genitives from actual transitive clause verbs governing direct objects
-       (e.g. 'яка після навчання мила посуд', 'яка посуд після роботи мила', 'яка після роботи мила його').
+       distinguishing dependent genitives from actual transitive clause verbs governing direct objects or under negation
+       (e.g. 'яка після навчання мила посуд', 'яка після роботи не мила посуду', 'яка посуд після роботи мила', 'яка після роботи мила його').
     """
+    # A word immediately preceded by negative particle 'не' is a negated verb, not a noun in a PP
+    if idx > 0 and words[idx - 1] == "не":
+        return False
+
     if is_in_direct_or_enclosing_pp(words, idx, cur):
         return True
 
@@ -1356,6 +1407,9 @@ def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor |
                 except Exception:
                     pass
             if has_finite:
+                # If clause has no agreeing nominative subject, a past feminine verb cannot be a predicate
+                if not clause_has_agreeing_nominative_subject(words, idx, cur):
+                    return True
                 return not clause_has_direct_object(words, idx, cur)
             return True
 
