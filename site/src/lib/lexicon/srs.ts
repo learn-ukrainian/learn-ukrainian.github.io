@@ -2696,6 +2696,7 @@ export function extendWithLowerDecks(base: PracticeDeckData, lowers: PracticeDec
     synonym: [...(base.synonym ?? []), ...lowers.flatMap((d) => d.synonym ?? [])],
     paronym: [...(base.paronym ?? []), ...lowers.flatMap((d) => d.paronym ?? [])],
     heritage: [...(base.heritage ?? []), ...lowers.flatMap((d) => d.heritage ?? [])],
+    imperative: [...(base.imperative ?? []), ...lowers.flatMap((d) => d.imperative ?? [])],
     fixtureNote: base.fixtureNote ?? lowers.find((d) => d.fixtureNote)?.fixtureNote,
   };
 }

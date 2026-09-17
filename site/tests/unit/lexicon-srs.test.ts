@@ -14,6 +14,7 @@ import {
   cardKey,
   countDailyPracticeDone,
   deriveDailyPracticeRows,
+  extendWithLowerDecks,
   getDueQueue,
   isPracticeMode,
   loadState,
@@ -610,6 +611,85 @@ describe('lexicon SRS facade', () => {
     expect(destState.cards.get('робити::imperative::2sg')?.reps).toBe(1);
     expect(destState.cards.get('робити::imperative::2pl')?.reps).toBe(1);
     expect(destState.cards.get('робити::imperative')).toBeUndefined();
+  });
+
+  test('extendWithLowerDecks preserves and concatenates imperative items during background deck merging', () => {
+    const slots = ['2sg', '1pl', '2pl'] as const;
+    const imperativeItems: PracticeImperativeItem[] = slots.map((slot) => ({
+      id: `imp_robyty_${slot}`,
+      lemmaId: 'робити',
+      srsKey: `робити::imperative::${slot}`,
+      lemma: 'роби́ти',
+      lemmaPlain: 'робити',
+      aspect: 'imperf',
+      slot,
+      slotLabelUa: slot === '2sg' ? '2-га особа однини' : slot === '1pl' ? '1-ша особа множини' : '2-га особа множини',
+      target: slot === '2sg' ? 'роби́' : slot === '1pl' ? 'робі́мо' : 'робі́ть',
+      targetPlain: slot === '2sg' ? 'роби' : slot === '1pl' ? 'робімо' : 'робіть',
+      acceptedAnswers: [slot === '2sg' ? 'роби' : slot === '1pl' ? 'робімо' : 'робіть'],
+      options: [{ text: 'роби́', isCorrect: true, code: 'CORRECT' }],
+      cefr: 'A2',
+    }));
+
+    // Base deck (A2) with imperative drills loaded first
+    const baseDeck: PracticeDeckData = {
+      ...modeDeck([{ id: 'робити', modes: ['imperative'] }]),
+      level: 'A2',
+      imperative: imperativeItems,
+    };
+
+    // Verify selection succeeds before background core shards arrive
+    const beforeMerge = selectNextPracticeItem(baseDeck, { now: NOW, modeFilter: 'imperative' });
+    expect(beforeMerge).not.toBeNull();
+    expect(beforeMerge?.mode).toBe('imperative');
+
+    // Lower deck (e.g. A1 background core shard) arrives with additional core items
+    const lowerDeck: PracticeDeckData = {
+      ...modeDeck([{ id: 'читати', modes: ['flashcards'] }]),
+      level: 'A1',
+    };
+
+    // Background merge occurs: extendWithLowerDecks(baseDeck, [lowerDeck])
+    const mergedDeck = extendWithLowerDecks(baseDeck, [lowerDeck]);
+
+    // Imperative items must be preserved on the merged deck
+    expect(mergedDeck.imperative).toBeDefined();
+    expect(mergedDeck.imperative).toHaveLength(3);
+    expect(mergedDeck.imperative?.map((item) => item.id)).toEqual(imperativeItems.map((item) => item.id));
+
+    // Selection after merge must continue to find imperative candidates
+    const afterMerge = selectNextPracticeItem(mergedDeck, { now: NOW, modeFilter: 'imperative' });
+    expect(afterMerge).not.toBeNull();
+    expect(afterMerge?.mode).toBe('imperative');
+    expect(afterMerge?.lemma.lemmaId).toBe('робити');
+
+    // Also verify concatenation when lower deck also carries imperative items
+    const lowerWithImp: PracticeDeckData = {
+      ...modeDeck([{ id: 'пити', modes: ['imperative'] }]),
+      level: 'A1',
+      imperative: [
+        {
+          id: 'imp_pyty_2sg',
+          lemmaId: 'пити',
+          srsKey: 'пити::imperative::2sg',
+          lemma: 'пи́ти',
+          lemmaPlain: 'пити',
+          aspect: 'imperf',
+          slot: '2sg',
+          slotLabelUa: '2-га особа однини',
+          target: 'пий',
+          targetPlain: 'пий',
+          acceptedAnswers: ['пий'],
+          options: [{ text: 'пий', isCorrect: true, code: 'CORRECT' }],
+          cefr: 'A1',
+        },
+      ],
+    };
+
+    const combined = extendWithLowerDecks(baseDeck, [lowerWithImp]);
+    expect(combined.imperative).toHaveLength(4);
+    expect(combined.imperative?.map((i) => i.lemmaId)).toContain('робити');
+    expect(combined.imperative?.map((i) => i.lemmaId)).toContain('пити');
   });
 
   test('emits heritage candidates from published items in mixed and focus modes', () => {
