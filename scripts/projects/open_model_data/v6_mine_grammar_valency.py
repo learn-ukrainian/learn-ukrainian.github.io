@@ -1010,6 +1010,65 @@ def has_discordant_pronoun_complement(s: str, cur_ves: sqlite3.Cursor | None) ->
     return adj_w.lower().endswith(("ими", "іми"))
 
 
+GENITIVE_COMPOUND_PREPOSITIONS = [
+    r"за\s+допомогою",
+    r"за\s+посередництвом",
+    r"за\s+участю",
+    r"за\s+винятком",
+    r"за\s+рахунок",
+    r"з\s+метою",
+    r"на\s+основі",
+    r"на\s+базі",
+    r"на\s+користь",
+    r"на\s+чолі",
+    r"під\s+час",
+    r"під\s+виглядом",
+    r"під\s+приводом",
+    r"під\s+керівництвом",
+    r"у\s+ході",
+    r"в\s+ході",
+    r"у\s+процесі",
+    r"в\s+процесі",
+    r"у\s+результаті",
+    r"в\s+результаті",
+]
+COMPOUND_GENITIVE_PREP_RE = re.compile(
+    r"\b(?:" + "|".join(GENITIVE_COMPOUND_PREPOSITIONS) + r")\b",
+    re.IGNORECASE,
+)
+
+
+def has_invalid_compound_preposition_case(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
+    """Reject ungrammatical case government after compound genitive prepositions (Правопис 2019 §82).
+
+    Compound prepositions like 'за допомогою', 'під час', 'з метою' strictly govern the genitive case.
+    Nouns taking '-а/-я' in genitive singular (e.g. 'букет' -> 'букета') that erroneously appear with
+    '-у/-ю' (dative/locative 'букету') violate grammatical case government.
+    """
+    if not cur_ves:
+        return False
+    for m in COMPOUND_GENITIVE_PREP_RE.finditer(s):
+        after = s[m.end():].strip()
+        words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\x27\u2019\-]+", after)
+        if not words:
+            continue
+        for w in words[:4]:
+            cur_ves.execute(
+                "SELECT tags, pos FROM forms_all WHERE (word_form = ? OR word_form = ?)",
+                (w.lower(), w.capitalize()),
+            )
+            rows = cur_ves.fetchall()
+            if not rows:
+                break
+            noun_adj_rows = [r for r in rows if r[1] in ("noun", "adj")]
+            if noun_adj_rows:
+                if not any("v_rod" in r[0] for r in rows) and not any("nv" in r[0] for r in rows):
+                    return True
+                if any(r[1] == "noun" and ("v_rod" in r[0] or "nv" in r[0]) for r in rows):
+                    break
+    return False
+
+
 def check_has_predicate(text: str, cur_ves: sqlite3.Cursor | None) -> bool:
     """Check whether a text fragment contains an active predicate (verb, predicative, or copula)."""
     words = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", text.lower())
@@ -1134,6 +1193,10 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
 
     # 22. Discordant pronoun complement agreement (singular pronoun object taking plural complement, e.g. 'нікого не залишають байдужими' vs 'байдужим')
     if has_discordant_pronoun_complement(s, cur_ves):
+        return False
+
+    # 23. Invalid compound preposition case government (e.g. 'за допомогою букету' vs required genitive 'букета'; Правопис 2019 §82)
+    if has_invalid_compound_preposition_case(s, cur_ves):
         return False
 
     # 4. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)

@@ -736,6 +736,21 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.has_discordant_pronoun_complement(frag_lunaly_zvuky, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_lunaly_zvuky, cur_ves=cur)
 
+    # Defect 72 / Negative regression (Round 30 P2): Invalid dative/locative 'букету' governed by genitive compound preposition 'за допомогою' rejected
+    frag_buketu = "Наречені приховували сморід за допомогою букету квітів."
+    assert miner.has_invalid_compound_preposition_case(frag_buketu, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_buketu, cur_ves=cur)
+
+    # Defect 73 / Positive control (Round 30 P2): Correct genitive 'букета' governed by 'за допомогою' accepted
+    frag_buketa = "Наречені приховували сморід за допомогою букета квітів."
+    assert not miner.has_invalid_compound_preposition_case(frag_buketa, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_buketa, cur_ves=cur)
+
+    # Defect 74 / Positive control (Round 30 P2): Clean replacement sentence from same doc accepted
+    frag_dokazu = "У середньовічних текстах немає жодного доказу використання такого пристосування."
+    assert not miner.has_invalid_compound_preposition_case(frag_dokazu, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_dokazu, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:
