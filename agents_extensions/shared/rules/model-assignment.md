@@ -66,6 +66,14 @@ Use Cursor with the same pinned model only when native Claude does not expose Fa
 rejects that model before inference. Quota pressure alone does not invert this order.
 Record the harness fallback explicitly; it is a transport fallback, not a model substitution.
 
+**Fable 5.1 & Sonnet 5 Routing Tiering (operator directive 2026-09-17):**
+- **Advanced reasoning, contested architectural decisions, and Ukrainian-specific linguistic reviews**:
+  Mandate **`claude-fable-5-1` (Fable 5.1)**. Fable's deep reasoning and linguistic rigor are required
+  whenever complex domain logic, contested architectural questions, or Ukrainian language norms and
+  pedagogy are evaluated.
+- **Everyday routine infrastructure and standard non-linguistic coding**:
+  Use **`claude-sonnet-5` (Sonnet 5)** to preserve frontier rate limits and execution speed.
+
 ### 2-Tier Formal Review Routing Policy (user directive 2026-07-22)
 
 * **Everyday Routine Formal Reviews** (practical roles; Codex @ `medium`, other seats @ `high` effort):
