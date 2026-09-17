@@ -251,27 +251,27 @@ workbook:
   title: Знайді́ть поми́лку — Spot the error
   instruction: Find the spelling error in each sentence.
   items:
-  - sentence: У лі́сі спить мале́нький йіжа́к. — In the forest sleeps a little hedgehog.
+  - sentence: У лі́сі спить мале́нький йіжа́к.
     error: йіжа́к
     correction: їжа́к
     explanation: 'Звукосполу́чення [йі] за́вжди познача́ється лі́терою ї: їжа́к. — The sound blend [ji] is always written with letter ї: їжа́к.'
-  - sentence: Швидки́й пойи́зд ї́де в столи́цю. — A fast train is heading to the capital.
+  - sentence: Швидки́й пойи́зд ї́де в столи́цю.
     error: пойи́зд
     correction: по́їзд
     explanation: 'Сло́во «по́їзд» пи́шеться з лі́терою ї: по́їзд. — The word «по́їзд» is written with the letter ї: по́їзд.'
-  - sentence: Ми ї́демо в мі́сто Кийи́в. — We are going to the city of Kyiv.
+  - sentence: Ми ї́демо в мі́сто Кийи́в.
     error: Кийи́в
     correction: Ки́їв
     explanation: 'На́зва столи́ці Украї́ни пи́шеться з лі́терою ї: Ки́їв. — The capital of Ukraine is written with the letter ї: Ки́їв.'
-  - sentence: На обі́д ми їмо́ гаря́чий боршч. — For lunch we eat hot borscht.
+  - sentence: На обі́д ми їмо́ гаря́чий боршч.
     error: боршч
     correction: борщ
     explanation: 'Звукосполу́чення [шч] на письмі́ познача́ється лі́терою щ: борщ. — The sound blend [шч] is written with the letter щ: борщ.'
-  - sentence: У рі́чці пла́ває вели́ка шчу́ка. — In the river swims a big pike.
+  - sentence: У рі́чці пла́ває вели́ка шчу́ка.
     error: шчу́ка
     correction: щу́ка
     explanation: 'Звукосполу́чення [шч] познача́ється одніє́ю лі́терою щ: щу́ка. — The sound blend [шч] is written with single letter щ: щу́ка.'
-  - sentence: На столі́ лежи́ть га́рне хво́то. — On the table lies a nice photo.
+  - sentence: На столі́ лежи́ть га́рне хво́то.
     error: хво́то
     correction: фо́то
     explanation: 'Сло́во «фо́то» пи́шеться з лі́терою ф: фо́то. — The word «фо́то» is written with the letter ф: фо́то.'

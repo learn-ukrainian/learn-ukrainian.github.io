@@ -65,28 +65,28 @@ inline:
   title: Ви́прав па́стки — Correct the traps
   instruction: Обери́ пра́вильну украї́нську фо́рму. — Choose the correct Ukrainian form.
   items:
-  - sentence: Не пиши́ сімя без апо́строфа. — Do not write "сімя" without an apostrophe.
+  - sentence: Моя́ дру́жна сімя живе́ у Ки́єві.
     error: сімя
     correction: сім'я́
     options:
     - сім'я́
     - сімя
     explanation: У сло́ві сім'я́ потрі́бен апо́строф. — In the word сім'я́ an apostrophe is needed.
-  - sentence: День — не пиши́ ден. — День — do not write "ден".
+  - sentence: Сього́дні га́рний і те́плий ден.
     error: ден
     correction: день
     options:
     - день
     - ден
     explanation: День потребу́є м'яко́го зна́ка. — День requires a soft sign.
-  - sentence: Не пиши́ св'ято з апо́строфом. — Do not write "св'ято" with an apostrophe.
+  - sentence: Сього́дні у мі́сті вели́ке св'ято.
     error: св'ято
     correction: свя́то
     options:
     - свя́то
     - св'ято
     explanation: У сло́ві свя́то нема́є апо́строфа. — In the word свя́то there is no apostrophe.
-  - sentence: Не пиши́ льожка з ви́гаданим м'яки́м зна́ком. — Do not write "льожка" with an invented soft sign.
+  - sentence: На столі́ лежи́ть вели́ка льожка.
     error: льожка
     correction: ло́жка
     options:
@@ -216,42 +216,42 @@ workbook:
   title: Ви́прав усі́ па́стки — Fix all traps
   instruction: Обери́ пра́вильну украї́нську фо́рму. — Choose the correct Ukrainian form.
   items:
-  - sentence: Не пиши́ сімя без апо́строфа. — Do not write "сімя" without an apostrophe.
+  - sentence: Це на́ша дру́жна сімя.
     error: сімя
     correction: сім'я́
     options:
     - сім'я́
     - сімя
     explanation: У сло́ві сім'я́ потрі́бен апо́строф. — In the word сім'я́ an apostrophe is needed.
-  - sentence: Не пиши́ пять без апо́строфа. — Do not write "пять" without an apostrophe.
+  - sentence: У руці́ рі́вно пять па́льців.
     error: пять
     correction: п'ять
     options:
     - п'ять
     - пять
     explanation: У сло́ві п'ять потрі́бен апо́строф. — In the word п'ять an apostrophe is needed.
-  - sentence: Не пиши́ бурян без апо́строфа. — Do not write "бурян" without an apostrophe.
+  - sentence: На по́лі росте́ зеле́ний бурян.
     error: бурян
     correction: бур'я́н
     options:
     - бур'я́н
     - бурян
     explanation: У сло́ві бур'я́н потрі́бен апо́строф пі́сля р. — In the word бур'я́н an apostrophe is needed after р.
-  - sentence: День — не пиши́ ден. — День — do not write "ден".
+  - sentence: Сього́дні ду́же те́плий ден.
     error: ден
     correction: день
     options:
     - день
     - ден
     explanation: День потребу́є м'яко́го зна́ка. — День requires a soft sign.
-  - sentence: Не пиши́ св'ято з апо́строфом. — Do not write "св'ято" with an apostrophe.
+  - sentence: Сього́дні у на́с весе́ле св'ято.
     error: св'ято
     correction: свя́то
     options:
     - свя́то
     - св'ято
     explanation: У сло́ві свя́то нема́є апо́строфа. — In the word свя́то there is no apostrophe.
-  - sentence: Не пиши́ льожка з ви́гаданим м'яки́м зна́ком. — Do not write "льожка" with an invented soft sign.
+  - sentence: У су́пі лежи́ть вели́ка льожка.
     error: льожка
     correction: ло́жка
     options:
