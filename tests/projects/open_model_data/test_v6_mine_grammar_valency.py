@@ -1255,6 +1255,23 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_expanded_modifiers_chas, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_expanded_modifiers_chas)) == 1
 
+    # Defect 144 / Negative regression (Round 65 P2): Dependent nouns inside nested prepositional phrase do not prematurely close enclosing preposition (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_discordant_apposition_dependent_nouns_chas = (
+        "Театр — місце, де у вільний від виконання роботи час вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_dependent_nouns_chas, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dependent_nouns_chas, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dependent_nouns_chas)) == 0
+
+    # Defect 145 / Positive control (Round 65 P2): Agreeing instrumental apposition across dependent nouns accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_agreeing_apposition_dependent_nouns_chas = (
+        "Театр — місце, де у вільний від виконання роботи час вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_dependent_nouns_chas, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_dependent_nouns_chas, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_dependent_nouns_chas)) == 1
+
+
 
 def test_release_receipt_schema_and_checksum() -> None:
     """Validate release receipt against JSON schema and sha256 checksum."""

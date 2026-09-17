@@ -1175,20 +1175,99 @@ def get_vesum_pos(word: str, cur: sqlite3.Cursor | None = None) -> set[str]:
         return set()
 
 
+def is_modifier_or_adv(word: str, cur: sqlite3.Cursor | None = None) -> bool:
+    """Check whether a word is an adjectival modifier, pronoun, numeral, adverb, or particle."""
+    tags = get_vesum_pos(word, cur)
+    return bool(tags & {"adj", "pron", "num", "adv", "part"})
+
+
+def words_can_agree(adj_word: str, noun_word: str, cur: sqlite3.Cursor | None = None) -> bool:
+    """Check whether an adjective and noun can agree in gender, number, and case in VESUM."""
+    if not cur:
+        return True
+    try:
+        cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (adj_word,))
+        adj_rows = [r[1] for r in cur.fetchall() if r[0] == "adj"]
+        cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (noun_word,))
+        noun_rows = [r[1] for r in cur.fetchall() if r[0] in ("noun", "pron")]
+        if not adj_rows or not noun_rows:
+            return True
+        cases = ("v_naz", "v_rod", "v_dav", "v_zna", "v_oru", "v_mis")
+        genders = (":m:", ":f:", ":n:", ":p:")
+        for at in adj_rows:
+            for nt in noun_rows:
+                for c in cases:
+                    if c in at and c in nt:
+                        for g in genders:
+                            if g in at and g in nt:
+                                return True
+        return False
+    except Exception:
+        return True
+
+
 def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor | None = None) -> bool:
-    """Check whether words[idx] is governed by an unclosed enclosing or nested preposition."""
-    prep_stack: list[int] = []
-    for i in range(idx + 1):
-        w = words[i]
-        if is_preposition(w, cur):
-            prep_stack.append(i)
-        elif prep_stack:
-            pos_tags = get_vesum_pos(w, cur)
-            if i == idx:
-                return len(prep_stack) > 0
-            # A head noun closes the innermost preposition
-            if "noun" in pos_tags and not (pos_tags & {"adj", "adv", "part"}):
-                prep_stack.pop()
+    """Check whether words[idx] is governed by an unclosed enclosing or nested preposition.
+
+    Handles:
+    1. Direct prepositional phrases with optional modifiers (e.g. 'під час', 'у вільний час', 'після зміни').
+    2. Enclosing prepositional phrases with nested prepositional modifiers modifying a prenominal adjective
+       across dependent noun phrases without premature closure (e.g. 'у вільний від виконання роботи час').
+    """
+    if idx <= 0:
+        return False
+
+    # Pattern 1: Direct preposition with optional modifiers preceding words[idx]
+    k = idx - 1
+    while k >= 0 and is_modifier_or_adv(words[k], cur):
+        k -= 1
+    if k >= 0 and is_preposition(words[k], cur):
+        return True
+
+    # Pattern 2: Enclosing preposition with prenominal adjective modified by a nested phrase
+    noun_tags = get_vesum_pos(words[idx], cur)
+    if "noun" not in noun_tags:
+        return False
+
+    for p_idx in range(idx):
+        if not is_preposition(words[p_idx], cur):
+            continue
+
+        span = words[p_idx + 1 : idx]
+        has_verb_or_conj = False
+        has_nested_prep = False
+        has_adj = False
+        nested_prep_idx = -1
+
+        for s_i, s_w in enumerate(span):
+            abs_i = p_idx + 1 + s_i
+            if is_preposition(s_w, cur):
+                has_nested_prep = True
+                nested_prep_idx = abs_i
+                continue
+            pos = get_vesum_pos(s_w, cur)
+            if "verb" in pos and cur:
+                try:
+                    cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (s_w,))
+                    v_rows = cur.fetchall()
+                    if any(any(t in r[0] for t in (":past", ":pres", ":futr", ":impers")) for r in v_rows):
+                        has_verb_or_conj = True
+                        break
+                except Exception:
+                    pass
+            if s_w in CLAUSE_INTRO:
+                has_verb_or_conj = True
+                break
+            if (
+                not has_nested_prep
+                and ("adj" in pos or "part" in pos or "pron" in pos)
+                and words_can_agree(s_w, words[idx], cur)
+            ):
+                has_adj = True
+
+        if not has_verb_or_conj and has_nested_prep and has_adj and nested_prep_idx > p_idx:
+            return True
+
     return False
 
 RELATIVE_PRONOUN_PATTERN = (
@@ -1235,9 +1314,9 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
     limit before the relative pronoun.
     Predicate detection requires finite indicative or impersonal verb forms (:past, :pres, :futr, :impers) or predicative words (PREDICATE_WORDS).
     Imperative forms (:impr), non-finite infinitives (:inf, e.g. 'побачити' in dependent 'після спроби побачити'), and nominal
-    complements in prepositional phrases (e.g. 'зміни' in 'після зміни', 'час' in 'у вільний від роботи час' and 'у цей дуже важливий вільний час')
+    complements in prepositional phrases (e.g. 'зміни' in 'після зміни', 'час' in 'у вільний від роботи час', 'у вільний від виконання роботи час', and 'у цей дуже важливий вільний час')
     do not complete subordinate clauses. Structural prepositional phrase tracking accounts for enclosing prepositions, nested prepositional
-    modifiers, and expanded modifier chains without token cutoffs, ensuring noun subjects and prepositional complements are not falsely treated as predicates.
+    modifiers, expanded modifier chains, and dependent noun phrases without premature closure, ensuring noun subjects and prepositional complements are not falsely treated as predicates.
     Each opened subordinate clause must have its own predicate outside nested clauses and cannot remain unclosed at end_dash.
     """
     unquoted_inside = normalize_apostrophes(unquoted_inside)
