@@ -28,12 +28,12 @@ that path fights Layout A / agents_extensions deploy.
 
 ### Credentials
 
-- API key lives at **`.secrets/typesafe-ai.key`** (gitignored via `*.key` /
-  `.secrets/`) or `TYPESAFE_API_KEY` in the environment. **Never** commit the
-  key, paste it into skills, PRs, issues, or curriculum.
+- API key lives at **`~/.secrets/typesafe-ai.key`** (host home secrets dir,
+  outside the git tree) or `TYPESAFE_API_KEY` in the environment. **Never**
+  commit the key, paste it into skills, PRs, issues, or curriculum.
 - Load for a session:
-  `export TYPESAFE_API_KEY="$(tr -d '\r\n' < .secrets/typesafe-ai.key)"`
-  (run from the primary checkout; do not copy the key into worktrees or logs).
+  `export TYPESAFE_API_KEY="$(tr -d '\r\n' < ~/.secrets/typesafe-ai.key)"`
+  (do not copy the key into the repo, worktrees, or logs).
 - Client default model is `jev-latest` per upstream SDK.
 
 ### Operator posture (2026-09-17)
