@@ -1248,24 +1248,30 @@ NUMERAL_VERB_AGREEMENT: dict[str, tuple[str, ...]] = {
     "одна": (":past:f", ":pres:s:3", ":futr:s:3"),
 }
 
-DRINK_CONSUMABLE_LEMMAS: frozenset[str] = frozenset({
-    "вода",
-    "вино",
-    "чай",
-    "кава",
-    "сік",
-    "пиво",
-    "молоко",
-    "квас",
-    "узвар",
-    "таблетка",
-    "пігулка",
-    "ліки",
-    "напій",
-    "отрута",
-    "настоянка",
-    "відвар",
-    "компот",
+INSTITUTION_ORGANIZATION_LEMMAS: frozenset[str] = frozenset({
+    "завод",
+    "фабрика",
+    "підприємство",
+    "комбінат",
+    "бригада",
+    "цех",
+    "майстерня",
+    "колгосп",
+    "артіль",
+    "фірма",
+    "депо",
+    "шахта",
+    "лабораторія",
+    "кооператив",
+    "інститут",
+    "село",
+    "місто",
+    "громада",
+    "колектив",
+    "господарство",
+    "установа",
+    "організація",
+    "виробництво",
 })
 
 
@@ -1785,11 +1791,18 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                                         cur.execute("SELECT DISTINCT lemma FROM forms_all WHERE word_form = ? AND pos = 'verb'", (words[idx],))
                                         v_lemmas = {r[0] for r in cur.fetchall()}
 
+                                        dep_is_anim = any(":anim" in r[1] for r in dep_noun_rows)
+
                                         if v_lemmas & {"пити"}:
-                                            if dep_lemmas & DRINK_CONSUMABLE_LEMMAS:
-                                                has_gen_dependent = False
-                                            elif dep_is_gen:
+                                            # Transitive verb 'пити' takes direct or partitive objects (Правопис 2019 §9, §37, §158, §161).
+                                            # A nominal saw/tool reading ('пили') only occurs with animate possessors ('пили майстра')
+                                            # or institutional/collective units ('пили заводу', 'пили підприємства', 'пили бригади').
+                                            # Non-institutional inanimate nouns (consumables, liquids: 'кефіру', 'лимонаду', 'какао', 'води', 'чаю')
+                                            # are verbal arguments of 'пити', not adnominal attributes of a saw.
+                                            if dep_is_gen and (dep_is_anim or bool(dep_lemmas & INSTITUTION_ORGANIZATION_LEMMAS)):
                                                 has_gen_dependent = True
+                                            else:
+                                                has_gen_dependent = False
                                         elif v_lemmas & {"стати"}:
                                             if dep_is_gen and dep_w not in TEMPORAL_GEN_MODIFIERS and dep_w not in DURATION_MODIFIERS:
                                                 has_gen_dependent = True

@@ -1991,6 +1991,19 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
         assert not miner.is_pristine_eval_sentence(s_defect_227, cur_ves=cur)
         assert len(miner.split_clean_ukrainian_sentences(s_defect_227)) == 0
 
+    # Defect 228 / Negative regression (Round 87 Codex P2): Consumable and liquid partitive/direct objects
+    # with numeral subject and verb 'пити' ('дві пили кефіру', 'дві пили лимонаду', 'дві пили какао')
+    # form complete subordinate clauses without relying on an incomplete allowlist, properly exposing
+    # subsequent discordant appositions (Правопис 2019 §9, §37, §158, §161)
+    for s_defect_228 in [
+        "Він говорив із сестрами — дівчатами, що дві пили кефіру — та з лікаркою — досвідчена фахівчиня — про виставу.",
+        "Він говорив із сестрами — дівчатами, що дві пили лимонаду — та з лікаркою — досвідчена фахівчиня — про виставу.",
+        "Він говорив із сестрами — дівчатами, що дві пили какао — та з лікаркою — досвідчена фахівчиня — про виставу.",
+    ]:
+        assert miner.has_discordant_dash_apposition(s_defect_228, cur_ves=cur)
+        assert not miner.is_pristine_eval_sentence(s_defect_228, cur_ves=cur)
+        assert len(miner.split_clean_ukrainian_sentences(s_defect_228)) == 0
+
     # Positive controls for numeral subjects with direct/partitive objects and attributes
     frag_pos_dvi_pyly_vody = (
         "Він говорив із сестрами — дівчатами, що дві пили води — та з лікаркою — фахівчинею — про виставу."
