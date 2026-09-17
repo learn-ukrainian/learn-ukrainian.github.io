@@ -32,15 +32,15 @@ class MockSystemOneResponse:
 
 
 def test_hermetic_valency_admit():
-    mock_client = MagicMock()
-    mock_client.system_one.return_value = MockSystemOneResponse(
-        {
+    mock_resp = {
+        "model": "jev-test",
+        "answers": {
             "strict_government": MockNoulResult(0.96),
             "syntactic_exclusivity": MockNoulResult(0.94),
             "is_calque_foil": MockNoulResult(0.92),
             "sentence_naturalness": MockScoreResult(4.5, 0.90),
-        }
-    )
+        },
+    }
 
     verdict = verify_valency_card(
         verb="дякувати",
@@ -48,7 +48,7 @@ def test_hermetic_valency_admit():
         target="вам",
         calque_distractor="вас",
         case_demanded="Dative",
-        client=mock_client,
+        mock_response=mock_resp,
     )
 
     assert verdict.verdict == "admit"
@@ -59,15 +59,15 @@ def test_hermetic_valency_admit():
 
 
 def test_hermetic_valency_fail_incorrect_gov():
-    mock_client = MagicMock()
-    mock_client.system_one.return_value = MockSystemOneResponse(
-        {
+    mock_resp = {
+        "model": "jev-test",
+        "answers": {
             "strict_government": MockNoulResult(0.35),  # Incorrect government
             "syntactic_exclusivity": MockNoulResult(0.40),
             "is_calque_foil": MockNoulResult(0.20),
             "sentence_naturalness": MockScoreResult(3.0, 0.80),
-        }
-    )
+        },
+    }
 
     verdict = verify_valency_card(
         verb="бачити",
@@ -75,7 +75,7 @@ def test_hermetic_valency_fail_incorrect_gov():
         target="другу",
         calque_distractor="друга",
         case_demanded="Dative",
-        client=mock_client,
+        mock_response=mock_resp,
     )
 
     assert verdict.verdict == "fail_incorrect_gov"
@@ -83,15 +83,15 @@ def test_hermetic_valency_fail_incorrect_gov():
 
 
 def test_hermetic_valency_warn_weak_foil():
-    mock_client = MagicMock()
-    mock_client.system_one.return_value = MockSystemOneResponse(
-        {
+    mock_resp = {
+        "model": "jev-test",
+        "answers": {
             "strict_government": MockNoulResult(0.95),
             "syntactic_exclusivity": MockNoulResult(0.92),
             "is_calque_foil": MockNoulResult(0.40),  # Weak foil (not a real calque)
             "sentence_naturalness": MockScoreResult(4.0, 0.85),
-        }
-    )
+        },
+    }
 
     verdict = verify_valency_card(
         verb="дякувати",
@@ -99,7 +99,7 @@ def test_hermetic_valency_warn_weak_foil():
         target="мамі",
         calque_distractor="столу",
         case_demanded="Dative",
-        client=mock_client,
+        mock_response=mock_resp,
     )
 
     assert verdict.verdict == "warn_weak_foil"

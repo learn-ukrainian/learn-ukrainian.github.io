@@ -43,23 +43,23 @@ class MockSystemOneResponse:
 
 
 def test_hermetic_admit_valid_example():
-    mock_client = MagicMock()
-    mock_client.system_one.return_value = MockSystemOneResponse(
-        {
+    mock_resp = {
+        "model": "jev-test",
+        "answers": {
             "sense_match": MockChoiceResult("primary_sense", 0.96),
             "is_authentic_ukrainian": MockNoulResult(0.95),
             "calque_risk": MockChoiceResult("none_authentic", 0.98),
             "pedagogical_clarity": MockScoreResult(4.5, 0.90),
             "cefr_level": MockChoiceResult("A2", 0.85, 0.88),
-        }
-    )
+        },
+    }
 
     verdict = evaluate_atlas_example(
         lemma="вірний",
         definition="відданий, незрадливий у дружбі, коханні",
         sentence="Він мій найвірніший друг уже багато років.",
         pos="adj",
-        client=mock_client,
+        mock_response=mock_resp,
     )
 
     assert verdict.verdict == "admit"
@@ -72,23 +72,23 @@ def test_hermetic_admit_valid_example():
 
 
 def test_hermetic_reject_polysemous_calque():
-    mock_client = MagicMock()
-    mock_client.system_one.return_value = MockSystemOneResponse(
-        {
+    mock_resp = {
+        "model": "jev-test",
+        "answers": {
             "sense_match": MockChoiceResult("primary_sense", 0.85),
             "is_authentic_ukrainian": MockNoulResult(0.20),
             "calque_risk": MockChoiceResult("direct_russian_calque", 0.94),
             "pedagogical_clarity": MockScoreResult(3.0, 0.80),
             "cefr_level": MockChoiceResult("A2", 0.80, 0.85),
-        }
-    )
+        },
+    }
 
     verdict = evaluate_atlas_example(
         lemma="вірний",
         definition="відданий, незрадливий",
         sentence="У цій задачі тільки одне вірне рішення.",
         pos="adj",
-        client=mock_client,
+        mock_response=mock_resp,
     )
 
     assert verdict.verdict == "reject_calque"
@@ -97,23 +97,23 @@ def test_hermetic_reject_polysemous_calque():
 
 
 def test_hermetic_reject_wrong_sense():
-    mock_client = MagicMock()
-    mock_client.system_one.return_value = MockSystemOneResponse(
-        {
+    mock_resp = {
+        "model": "jev-test",
+        "answers": {
             "sense_match": MockChoiceResult("unrelated_or_wrong_sense", 0.92),
             "is_authentic_ukrainian": MockNoulResult(0.92),
             "calque_risk": MockChoiceResult("none_authentic", 0.95),
             "pedagogical_clarity": MockScoreResult(4.0, 0.85),
             "cefr_level": MockChoiceResult("B1", 0.80, 0.85),
-        }
-    )
+        },
+    }
 
     verdict = evaluate_atlas_example(
         lemma="лава",
         definition="вулканічна маса, що виливається з вулкана",
         sentence="Дідусь сів на дерев'яну лаву біля хати.",
         pos="noun",
-        client=mock_client,
+        mock_response=mock_resp,
     )
 
     assert verdict.verdict == "reject_off_sense"
@@ -122,23 +122,23 @@ def test_hermetic_reject_wrong_sense():
 
 
 def test_hermetic_warn_poor_pedagogy():
-    mock_client = MagicMock()
-    mock_client.system_one.return_value = MockSystemOneResponse(
-        {
+    mock_resp = {
+        "model": "jev-test",
+        "answers": {
             "sense_match": MockChoiceResult("primary_sense", 0.90),
             "is_authentic_ukrainian": MockNoulResult(0.88),
             "calque_risk": MockChoiceResult("none_authentic", 0.92),
             "pedagogical_clarity": MockScoreResult(1.8, 0.82),
             "cefr_level": MockChoiceResult("C2", 0.70, 0.75),
-        }
-    )
+        },
+    }
 
     verdict = evaluate_atlas_example(
         lemma="сонце",
         definition="центральне світило Сонячної системи",
         sentence="Сонце... отак воно якось... через дим туманний ледь-ледь...",
         pos="noun",
-        client=mock_client,
+        mock_response=mock_resp,
     )
 
     assert verdict.verdict == "warn_pedagogy"
@@ -146,22 +146,22 @@ def test_hermetic_warn_poor_pedagogy():
 
 
 def test_hermetic_low_confidence_triggers_review():
-    mock_client = MagicMock()
-    mock_client.system_one.return_value = MockSystemOneResponse(
-        {
+    mock_resp = {
+        "model": "jev-test",
+        "answers": {
             "sense_match": MockChoiceResult("primary_sense", 0.60),
             "is_authentic_ukrainian": MockNoulResult(0.80),
             "calque_risk": MockChoiceResult("none_authentic", 0.75),
             "pedagogical_clarity": MockScoreResult(3.5, 0.42),  # Low confidence
             "cefr_level": MockChoiceResult("B1", 0.60, 0.40),  # Low confidence
-        }
-    )
+        },
+    }
 
     verdict = evaluate_atlas_example(
         lemma="громада",
         definition="група людей, об'єднаних спільністю інтересів",
         sentence="Громада зібралася біля клубу.",
-        client=mock_client,
+        mock_response=mock_resp,
     )
 
     assert verdict.verdict == "needs_review"

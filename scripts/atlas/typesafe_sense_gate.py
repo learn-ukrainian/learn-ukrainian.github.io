@@ -67,6 +67,38 @@ class AtlasSenseGateVerdict:
         return asdict(self)
 
 
+try:
+    from typesafe_sdk import Choice, Noul, Score, TypeSafeClient
+except ImportError:
+    TypeSafeClient = None  # type: ignore
+
+    class Choice:  # type: ignore
+        def __init__(self, instructions: str, criteria: dict[str, str]):
+            self.type = "choice"
+            self.instructions = instructions
+            self.criteria = criteria
+
+        def to_dict(self) -> dict[str, Any]:
+            return {"type": self.type, "instructions": self.instructions, "criteria": self.criteria}
+
+    class Score:  # type: ignore
+        def __init__(self, instructions: str, criteria: list[str]):
+            self.type = "score"
+            self.instructions = instructions
+            self.criteria = criteria
+
+        def to_dict(self) -> dict[str, Any]:
+            return {"type": self.type, "instructions": self.instructions, "criteria": self.criteria}
+
+    class Noul:  # type: ignore
+        def __init__(self, instructions: str):
+            self.type = "noul"
+            self.instructions = instructions
+
+        def to_dict(self) -> dict[str, Any]:
+            return {"type": self.type, "instructions": self.instructions}
+
+
 def resolve_api_key() -> str | None:
     """Resolve TypeSafe API key securely from environment or ~/.secrets/."""
     env_key = os.environ.get("TYPESAFE_API_KEY", "").strip()
@@ -84,27 +116,19 @@ def resolve_api_key() -> str | None:
 
 
 def get_typesafe_client(api_key: str | None = None) -> Any:
-    """Instantiate TypeSafeClient using the verified SDK."""
-    try:
-        from typesafe_sdk import TypeSafeClient
-    except ImportError as err:
-        raise ImportError(
-            "typesafe-sdk is not installed. Install with `.venv/bin/python -m pip install typesafe-sdk`"
-        ) from err
-
+    """Instantiate TypeSafeClient using the verified SDK, or None if unavailable."""
+    if TypeSafeClient is None:
+        return None
     resolved = api_key or resolve_api_key()
     if not resolved:
         raise ValueError(
             "TypeSafe API key not found. Ensure TYPESAFE_API_KEY is exported or ~/.secrets/typsafe-ai.key exists."
         )
-
     return TypeSafeClient(api_key=resolved)
 
 
 def build_atlas_questions() -> dict[str, Any]:
     """Define the 5 batched questions for Word Atlas example sentence gating."""
-    from typesafe_sdk import Choice, Noul, Score
-
     return {
         "sense_match": Choice(
             instructions=(
@@ -169,27 +193,56 @@ def evaluate_atlas_example(
     pos: str | None = None,
     client: Any = None,
     thresholds: dict[str, float] | None = None,
+    mock_response: dict[str, Any] | None = None,
 ) -> AtlasSenseGateVerdict:
     """Evaluate a candidate Word Atlas example sentence using TypeSafe System One."""
     th = {**DEFAULT_THRESHOLDS, **(thresholds or {})}
-    typesafe = client or get_typesafe_client()
 
-    state = {
-        "lemma": lemma,
-        "part_of_speech": pos or "unspecified",
-        "dictionary_definition": definition,
-        "example_sentence": sentence,
-    }
+    if mock_response is not None:
+        latency = 0.0
+        model = mock_response.get("model", "jev-mock")
+        answers = mock_response["answers"]
+    else:
+        typesafe = client or get_typesafe_client()
+        state = {
+            "lemma": lemma,
+            "part_of_speech": pos or "unspecified",
+            "dictionary_definition": definition,
+            "example_sentence": sentence,
+        }
 
-    t0 = time.perf_counter()
-    response = typesafe.system_one(
-        state=state,
-        questions=build_atlas_questions(),
-        model="jev-latest",
-    )
-    latency = time.perf_counter() - t0
+        t0 = time.perf_counter()
+        if typesafe is not None:
+            response = typesafe.system_one(
+                state=state,
+                questions=build_atlas_questions(),
+                model="jev-latest",
+            )
+            latency = time.perf_counter() - t0
+            answers = response.answers
+            model = response.model
+        else:
+            import urllib.request
 
-    answers = response.answers
+            api_key = resolve_api_key()
+            if not api_key:
+                raise ValueError("TypeSafe API key not found.")
+            questions = {
+                k: v.to_dict() if hasattr(v, "to_dict") else v
+                for k, v in build_atlas_questions().items()
+            }
+            body = json.dumps({"state": state, "model": "jev-latest", "questions": questions}).encode()
+            req = urllib.request.Request(
+                "https://api.typesafe.ai/v1/systemone",
+                data=body,
+                headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+                method="POST",
+            )
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                data = json.load(resp)
+            latency = time.perf_counter() - t0
+            answers = data.get("answers", {})
+            model = data.get("model", "jev-latest")
     sense_ans = answers["sense_match"]
     auth_ans = answers["is_authentic_ukrainian"]
     calque_ans = answers["calque_risk"]
@@ -247,7 +300,7 @@ def evaluate_atlas_example(
         cefr_level=cefr_level,
         cefr_confidence=cefr_conf,
         latency_seconds=latency,
-        model=response.model,
+        model=model,
         needs_review=needs_review,
         findings=findings,
     )
