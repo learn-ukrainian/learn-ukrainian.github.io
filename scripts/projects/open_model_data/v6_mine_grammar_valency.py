@@ -1181,7 +1181,9 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
     A predicate in a closed nested relative clause (e.g. 'працювала', 'перебував') cannot satisfy the enclosing clause ('де ...').
     Apostrophes (ASCII, typographic, modifier) are normalized under Правопис 2019 §9 so tokenization accurately preserves
     words with apostrophes (e.g. 'зв’язку') within multiword boundaries, and relative clause detection scans without a fixed-window
-    limit before the relative pronoun, correctly accommodating noun heads with homonymous verb readings (e.g. 'мати').
+    limit before the relative pronoun.
+    Predicate detection requires finite verb forms (:past, :pres, :futr, :impr, :impers) and disambiguates noun/infinitive
+    homonyms (e.g. 'мати', 'брати') so that noun subjects in open clauses are not falsely treated as clause-completing predicates.
     Each opened subordinate clause must have its own predicate outside nested clauses and cannot remain unclosed at end_dash.
     """
     unquoted_inside = normalize_apostrophes(unquoted_inside)
@@ -1194,8 +1196,19 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                 return True
             if cur:
                 try:
-                    cur.execute("SELECT 1 FROM forms_all WHERE word_form = ? AND pos = 'verb' LIMIT 1", (w,))
-                    if cur.fetchone():
+                    cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (w,))
+                    rows = cur.fetchall()
+                    verb_rows = [r for r in rows if r[0] == "verb"]
+                    if not verb_rows:
+                        continue
+                    has_finite_verb = any(
+                        any(t in r[1] for t in (":past", ":pres", ":futr", ":impr", ":impers"))
+                        for r in verb_rows
+                    )
+                    if has_finite_verb:
+                        return True
+                    has_noun_reading = any(r[0] == "noun" for r in rows)
+                    if not has_noun_reading:
                         return True
                 except Exception:
                     pass
@@ -1261,8 +1274,9 @@ def extract_dash_apposition_spans(s: str, cur_ves: sqlite3.Cursor | None = None)
       Subordinate clause completeness tracking accounts for sequential and nested clause boundaries, including
       multiword preposition-led or noun-headed relative clauses of arbitrary length (e.g. 'поруч з якими він говорив',
       'у тісному зв’язку з якими він перебував', 'мати яких працювала'), ensuring predicates in nested or earlier relative
-      clauses do not falsely satisfy enclosing clauses, with apostrophe normalization preserving token integrity and
-      unbounded scans accommodating noun heads with homonymous verb readings.
+      clauses do not falsely satisfy enclosing clauses, with apostrophe normalization preserving token integrity,
+      unbounded scans accommodating noun heads with homonymous verb readings, and finite predicate disambiguation
+      preventing noun/infinitive homonyms from faking clause completeness.
     - Quoted spans are excluded before both subordinate-marker detection and predicate detection
       (Правопис 2019 §154, §164), preserving quoted-title boundaries so that subordinate markers inside
       quoted titles (e.g. «Життя, що триває») do not trigger false subordinate clause boundaries or
