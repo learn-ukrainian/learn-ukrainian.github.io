@@ -2257,13 +2257,19 @@ def _normalize_pos_buckets(value: Any) -> list[str]:
     text = _clean_text(value)
     if not text:
         return []
-    folded = text.casefold()
+    # Cloze distractor selection visits the same handful of POS labels for
+    # every candidate. Cache the pure parse, but return a fresh mutable list.
+    return list(_cached_pos_buckets(text.casefold()))
+
+
+@lru_cache(maxsize=512)
+def _cached_pos_buckets(folded: str) -> tuple[str, ...]:
     buckets: list[str] = []
     for part in re.split(r"\s*[,;/|+]\s*", folded):
         for bucket, aliases in _POS_BUCKET_ALIASES.items():
             if any(_pos_alias_matches(part, alias) for alias in aliases) and bucket not in buckets:
                 buckets.append(bucket)
-    return buckets
+    return tuple(buckets)
 
 
 def _pos_alias_matches(part: str, alias: str) -> bool:

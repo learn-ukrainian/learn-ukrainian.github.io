@@ -3824,3 +3824,14 @@ def test_imperative_rejects_multiple_accents_in_one_oracle_reading(imperative_co
         "status": "ok", "matches": [{"stressed_form": "ро́бі́мо", "vowel_indices": [1, 3]}],
     } if word == "робімо" else {"status": "not_found", "matches": []})
     assert "1pl" not in {item["slot"] for item in _imperative_test_items(imperative_conn)}
+
+
+def test_pos_parse_cache_preserves_input_handling_and_result_isolation():
+    parse = generate_practice_deck._normalize_pos_buckets
+    result = parse("Verb / NOUN")
+    assert result == ["verb", "noun"]
+    result.clear()
+    assert parse("verb / noun") == ["verb", "noun"]
+    assert parse({"pos": "verb"}) == []
+    assert parse("verb:imperf") == ["verb"]
+    assert parse("verbatim") == []
