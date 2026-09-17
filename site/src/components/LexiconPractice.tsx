@@ -60,6 +60,9 @@ import {
   type PracticeDeckData,
   type PracticeHeritageItem,
   type PracticeHeritageShard,
+  type PracticeImperativeErrorCode,
+  type PracticeImperativeItem,
+  type PracticeImperativeSlot,
   type PracticeParonymItem,
   type PracticeParonymShard,
   type PracticeIndexItem,
@@ -391,6 +394,10 @@ interface ChoiceOption {
   label: string;
   correct: boolean;
   kind?: 'answer' | 'calque' | 'distractor';
+  /** Imperative misconception metadata carried from the shard (#8159). */
+  code?: PracticeImperativeErrorCode;
+  explanationUk?: string;
+  explanationEn?: string;
 }
 
 /**
@@ -551,6 +558,7 @@ type VisiblePracticeModeFilter = Extract<
   | 'synonym'
   | 'paronym'
   | 'heritage'
+  | 'imperative'
 >;
 
 const MODE_CARD_ORDER: VisiblePracticeModeFilter[] = [
@@ -562,6 +570,7 @@ const MODE_CARD_ORDER: VisiblePracticeModeFilter[] = [
   'stress',
   'classify',
   'paradigm',
+  'imperative',
   'synonym',
   'paronym',
   'heritage',
@@ -677,6 +686,15 @@ const MODE_META: Record<
     step: 'Питома лексика',
     stepEn: 'Native vocabulary',
     accent: 'teal',
+  },
+  imperative: {
+    title: 'Наказовий спосіб',
+    en: 'Imperative Mood',
+    description: 'Тренування форм наказового способу: 2-га ос. однини, 1-ша та 2-га ос. множини.',
+    descriptionEn: 'Practice imperative mood forms: 2nd person singular, 1st and 2nd person plural.',
+    step: 'Форми дієслів',
+    stepEn: 'Verb Forms',
+    accent: 'purple',
   },
 };
 
@@ -964,7 +982,8 @@ function hasLoadedDrillShards(deck: PracticeDeckData | null): boolean {
         (deck.paradigm?.length ?? 0) > 0 ||
         (deck.synonym?.length ?? 0) > 0 ||
         (deck.paronym?.length ?? 0) > 0 ||
-        (deck.heritage?.length ?? 0) > 0),
+        (deck.heritage?.length ?? 0) > 0 ||
+        (deck.imperative?.length ?? 0) > 0),
   );
 }
 
@@ -1374,6 +1393,108 @@ function stressFeedbackFor(item: PracticeStressItem, correct: boolean): DrillFee
     : { kind: 'wrong', textUk: `Неправильно. ${textUk}`, textEn: `Incorrect. ${textEn}` };
 }
 
+/** #8159: imperative slot chrome — pronoun chip plus fallback slot labels when a shard row omits them. */
+const IMPERATIVE_SLOT_META: Record<PracticeImperativeSlot, { pronoun: string; uk: string; en: string }> = {
+  '2sg': {
+    pronoun: 'ти',
+    uk: '2-га особа однини (ти)',
+    en: '2nd person singular (informal you)',
+  },
+  '1pl': {
+    pronoun: 'ми',
+    uk: '1-ша особа множини (заклик до дії)',
+    en: "1st person plural (let's...)",
+  },
+  '2pl': {
+    pronoun: 'ви',
+    uk: '2-га особа множини (ви)',
+    en: '2nd person plural (polite/plural you)',
+  },
+};
+
+function imperativeAspectLabel(aspect: PracticeImperativeItem['aspect']): { uk: string; en: string } {
+  return aspect === 'perf'
+    ? { uk: 'доконаний вид', en: 'perfective aspect' }
+    : { uk: 'недоконаний вид', en: 'imperfective aspect' };
+}
+
+/**
+ * #8159: misconception copy per distractor family (IMPERATIVE-PRACTICE-SPEC §4).
+ * Shard rows may carry a per-option `explanationUk`/`explanationEn`; these are the
+ * fallbacks when they don't, so a locked miss always teaches the specific error.
+ */
+const IMPERATIVE_CODE_FEEDBACK: Record<Exclude<PracticeImperativeErrorCode, 'CORRECT'>, { uk: string; en: string }> = {
+  WRONG_PERSON: {
+    uk: 'Це форма іншої особи — зверніть увагу, до кого звертаються (ти, ми чи ви).',
+    en: 'This form addresses a different person — check who is being addressed (ти, ми, or ви).',
+  },
+  WRONG_MOOD: {
+    uk: 'Це форма дійсного способу (теперішній час: що ми робимо?), а не наказ чи заклик. Порівняйте: «ро́бимо» (дійсний спосіб) — «робі́мо» (наказовий спосіб).',
+    en: 'This is the indicative mood (present tense: what are we doing?), not a command. Compare: «ро́бимо» (indicative) vs «робі́мо» (imperative).',
+  },
+  ORTHO_SOFT_SIGN: {
+    uk: "Губні (б, п, в, м, ф) та шиплячі (ж, ч, ш, щ) в українському наказовому способі м'якого знака не мають: сип, постав, ріж.",
+    en: 'Labials (б, п, в, м, ф) and hushers (ж, ч, ш, щ) never take a soft sign in the Ukrainian imperative: сип, постав, ріж.',
+  },
+  STEM_CLUSTER: {
+    uk: "Після збігу приголосних у основі обов'язково пишеться закінчення -и: провітри, підкресли, засліпи.",
+    en: 'Stems ending in a consonant cluster require the -и ending: провітри, підкресли, засліпи.',
+  },
+  CALQUE_AUX: {
+    uk: 'В українській мові заклик до спільної дії передається синтетичною формою (робімо!), а не калькою «давайте робити».',
+    en: 'Ukrainian expresses "let\'s" with a synthetic form (робімо!), not the calque «давайте робити».',
+  },
+};
+
+function imperativeOptions(item: PracticeImperativeItem): ChoiceOption[] {
+  return item.options.map((option) => ({
+    label: option.text,
+    correct: option.isCorrect,
+    code: option.code,
+    explanationUk: option.explanationUk,
+    explanationEn: option.explanationEn,
+  }));
+}
+
+/**
+ * #8159: 'imperative' ('Наказовий спосіб') teaching feedback. A wrong pick names the
+ * correct target form and explains the specific misconception (`option.code`); a correct
+ * pick restates the target and, for accepted literary variants shorter than the target
+ * (e.g. -ім vs -імо, §116 Правопис 2019), notes the most common norm.
+ */
+function imperativeFeedbackFor(item: PracticeImperativeItem, option: ChoiceOption): DrillFeedback {
+  const slot = IMPERATIVE_SLOT_META[item.slot];
+  const slotUk = item.slotLabelUa || slot.uk;
+  const slotEn = item.slotLabelEn || slot.en;
+  if (option.correct) {
+    const chosen = czNorm(option.label);
+    const isVariant = chosen !== czNorm(item.targetPlain || item.target)
+      && item.acceptedAnswers.some((answer) => czNorm(answer) === chosen);
+    const variantNoteUk = isVariant
+      ? ` Форма «${option.label}» є допустимим варіантом, але найуживанішою літературною нормою є «${item.target}».`
+      : '';
+    const variantNoteEn = isVariant
+      ? ` «${option.label}» is an accepted variant, but «${item.target}» is the most common literary norm.`
+      : '';
+    const notesUk = item.notes ? ` ${item.notes}` : '';
+    return {
+      kind: 'correct',
+      textUk: `Правильно! «${item.target}» — ${slotUk}.${variantNoteUk}${notesUk}`,
+      textEn: `Correct! «${item.target}» — ${slotEn}.${variantNoteEn}`,
+    };
+  }
+  const codeFeedback = option.code && option.code !== 'CORRECT' ? IMPERATIVE_CODE_FEEDBACK[option.code] : null;
+  const explanationUk = option.explanationUk ?? codeFeedback?.uk
+    ?? 'Це не та форма наказового способу, яку вимагає ця граматична позиція.';
+  const explanationEn = option.explanationEn ?? codeFeedback?.en
+    ?? 'This is not the imperative form this grammatical slot requires.';
+  return {
+    kind: 'wrong',
+    textUk: `Неправильно. Правильна форма — «${item.target}». ${explanationUk}`,
+    textEn: `Incorrect. The correct form is «${item.target}». ${explanationEn}`,
+  };
+}
+
 function drillChoicePrompt(
   selection: PracticeSelection,
   learnerLevel: CefrLevel,
@@ -1440,7 +1561,7 @@ function slotPromptParts(prompt: string): [string, string] {
 }
 
 function shouldLoadCloze(mode: PracticeModeFilter): boolean {
-  return ['mixed', 'cloze', 'stress', 'classify', 'paradigm', 'synonym', 'paronym', 'heritage'].includes(mode);
+  return ['mixed', 'cloze', 'stress', 'classify', 'paradigm', 'synonym', 'paronym', 'heritage', 'imperative'].includes(mode);
 }
 
 function sessionScopeIndexForMode(
@@ -1476,6 +1597,7 @@ function withLoadedModeContent(
     synonym: deck.synonym,
     paronym: deck.paronym,
     heritage: deck.heritage,
+    imperative: deck.imperative,
   };
   const content = contentByMode[modeFilter];
   if (!content) return index;
@@ -3726,11 +3848,13 @@ function LexiconPracticeIsland({
     const nextChoiceFeedback =
       isMeaningChoiceSurface(selection)
         ? choiceFeedbackFor(selection, option, learnerLevel)
-        : selection.classify
-          ? classifyFeedbackFor(selection, option, learnerLevel)
-          : selection.synonym
-            ? synonymFeedbackFor(selection, option, learnerLevel)
-            : null;
+        : selection.imperative
+          ? imperativeFeedbackFor(selection.imperative, option)
+          : selection.classify
+            ? classifyFeedbackFor(selection, option, learnerLevel)
+            : selection.synonym
+              ? synonymFeedbackFor(selection, option, learnerLevel)
+              : null;
     setAnswerLocked(true);
     setChoiceSelectedLabel(option.label);
     if (selection.paradigm) setParadigmSelectedLabel(option.label);
@@ -5112,6 +5236,20 @@ export function PracticeItem({
     );
   }
 
+  if (selection.mode === 'imperative' && selection.imperative) {
+    return (
+      <PracticeImperative
+        item={selection.imperative}
+        feedback={choiceFeedback}
+        answerLocked={answerLocked}
+        selectedLabel={choiceSelectedLabel}
+        chromeLocale={chromeLocale}
+        onChoice={onChoice}
+        showEnglishSubtitles={showEnglishSubtitles}
+      />
+    );
+  }
+
   const drillOptions = drillChoiceOptions(selection, showEnglishSubtitles, learnerLevel);
   const drillPrompt = drillChoicePrompt(selection, learnerLevel);
   if (drillOptions && drillPrompt) {
@@ -5253,8 +5391,9 @@ export function PracticeItem({
   // `.synonym` as "no synonym drill" (both return null), which would otherwise let a
   // synonym-mode selection fall through to the word↔gloss meaning-choice surface below and
   // invent an unrelated pair. Fail closed instead: never let 'synonym' mode reach the
-  // fallback meant for bare 'choice'/'antonym'/'homonym' selections.
-  if (selection.mode === 'synonym') {
+  // fallback meant for bare 'choice'/'antonym'/'homonym' selections. Same for #8159
+  // 'imperative': a missing `.imperative` item must not degrade into a meaning drill.
+  if (selection.mode === 'synonym' || selection.mode === 'imperative') {
     return (
       <div className="practice-empty-state" data-testid="practice-choice-empty">
         <p className="lexicon-practice-muted">
@@ -5554,6 +5693,117 @@ function PracticeHeritage({
               <PracticeChromeLabel k="practice.openInAtlasArrow" />
             </a>
           </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/**
+ * #8159: 'imperative' ('Наказовий спосіб') stage. Stress marks are rendered RAW
+ * (never routed through displayPracticeForm): the WRONG_MOOD distractor differs
+ * from the target only by stress («ро́бимо» indicative vs «робі́мо» imperative),
+ * so stripping marks above A1 would collapse two options into visual duplicates.
+ */
+function PracticeImperative({
+  item,
+  feedback,
+  answerLocked,
+  selectedLabel,
+  chromeLocale,
+  onChoice,
+  showEnglishSubtitles,
+}: {
+  item: PracticeImperativeItem;
+  feedback: DrillFeedback | null;
+  answerLocked: boolean;
+  selectedLabel: string | null;
+  chromeLocale: 'en' | 'uk';
+  onChoice(option: ChoiceOption): void;
+  showEnglishSubtitles: boolean;
+}) {
+  const options = imperativeOptions(item);
+  const slot = IMPERATIVE_SLOT_META[item.slot];
+  const aspect = imperativeAspectLabel(item.aspect);
+  const cue = item.cueSentence?.trim() || null;
+  const cueEnglish = cue ? usablePracticeSentenceEnglish(item.cueSentenceEn) : null;
+  return (
+    <div className="lexicon-imperative" data-testid="practice-imperative">
+      <DigitChoiceShortcuts
+        options={options}
+        answerLocked={answerLocked}
+        onChoice={onChoice}
+      />
+      <p className="imperative-task">
+        <PracticeChromeDual
+          uk="Оберіть правильну форму наказового способу."
+          en="Choose the correct imperative form."
+        />
+      </p>
+      <div className="imperative-banner" data-testid="practice-imperative-banner">
+        <span className="imperative-slot-pronoun" lang="uk" aria-hidden="true">
+          {slot.pronoun}
+        </span>
+        <span className="imperative-slot-label">
+          <span lang="uk">{item.slotLabelUa || slot.uk}</span>
+          {showEnglishSubtitles ? (
+            <span className="btn-sub" lang="en"> / {item.slotLabelEn || slot.en}</span>
+          ) : null}
+        </span>
+      </div>
+      <p className="imperative-lemma-row">
+        <span className="imperative-lemma" lang="uk">{item.lemma}</span>
+        <span
+          className={`imperative-aspect ${item.aspect}`}
+          data-testid="practice-imperative-aspect"
+        >
+          <span lang="uk">{aspect.uk}</span>
+          {showEnglishSubtitles ? (
+            <span className="btn-sub" lang="en"> / {aspect.en}</span>
+          ) : null}
+        </span>
+      </p>
+      {cue ? (
+        <p className="imperative-cue" lang="uk" data-testid="practice-imperative-cue">
+          {cue}
+        </p>
+      ) : null}
+      {cueEnglish && showEnglishSubtitles ? (
+        <p className="cz-translate" data-testid="practice-imperative-cue-en" lang="en">
+          {cueEnglish}
+        </p>
+      ) : null}
+      <ul className="lexicon-option-list mc-options">
+        {options.map((option, index) => (
+          <li key={`${option.label}-${index}`}>
+            <button
+              {...mcOptionAttrs(option, answerLocked, selectedLabel === option.label)}
+              type="button"
+              disabled={answerLocked}
+              onClick={() => onChoice(option)}
+            >
+              <span className="mc-key">{index + 1}</span>
+              <span lang="uk">{option.label}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+      <DrillFeedbackPanel
+        feedback={feedback}
+        testId="practice-imperative-feedback"
+        showEnglishSubtitles={showEnglishSubtitles}
+      />
+      {feedback ? (
+        <div style={{ marginTop: '0.4rem' }}>
+          <a
+            href={atlasLemmaHref(item.lemmaId)}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={CHROME_STRINGS[chromeLocale]['practice.openInAtlasTab']}
+            style={{ fontSize: '0.85rem', textDecoration: 'underline', color: 'inherit', fontWeight: 'bold' }}
+          >
+            <PracticeChromeLabel k="practice.openInAtlasArrow" />
+          </a>
         </div>
       ) : null}
     </div>
