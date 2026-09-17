@@ -96,6 +96,14 @@ For **every** `error-correction` item that has a non-empty `error:`:
 
 Empty `options` (UI reveal-only) is a hard fail.
 
+### Fill-in (`fill-in`) — HARD (upgrade gate, #8214)
+
+Every fill-in **item** must include a non-empty `explanation:` that teaches why
+the answer is correct (apostrophe rule, soft sign, letter, etc.). Micro-blanks
+like `бур___ян` / answer `'` without feedback are a hard fail — same contract as
+quiz/translate explanations. Structural blank + `answer∈options` checks still
+apply.
+
 ### Activity chrome language
 
 Learner-facing `instruction:` / bilingual titles may keep `UA — EN` shape; the
