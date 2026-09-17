@@ -763,6 +763,11 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.has_invalid_compound_preposition_case(frag_z_metoyu_adv_inf, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_z_metoyu_adv_inf, cur_ves=cur)
 
+    # Defect 77 / Negative regression (Round 32 P2): Preposition 'з метою' with finite past verb 'отримав' rejected
+    frag_z_metoyu_finite = "Він прийшов туди з метою отримав необхідну допомогу."
+    assert miner.has_invalid_compound_preposition_case(frag_z_metoyu_finite, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_z_metoyu_finite, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:

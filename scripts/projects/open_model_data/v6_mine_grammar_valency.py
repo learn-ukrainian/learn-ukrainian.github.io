@@ -1064,9 +1064,12 @@ def has_invalid_compound_preposition_case(s: str, cur_ves: sqlite3.Cursor | None
             rows = cur_ves.fetchall()
             if not rows:
                 break
-            # If an infinitive or verb appears before the head noun, it is a verbal complement (e.g. 'з метою отримати...')
-            if any(r[1] == "verb" for r in rows):
+            # If an infinitive appears before the head noun, it is an accepted verbal complement (e.g. 'з метою отримати...', СУМ-11)
+            if any("inf" in r[0] for r in rows):
                 break
+            # If a finite verb appears before the head noun, it is ungrammatical (prepositions do not govern finite verbs)
+            if any(r[1] == "verb" for r in rows) and not any(r[1] in ("noun", "adj", "adv") for r in rows):
+                return True
             # If the token can function as an adverb modifier, continue scanning for head
             if any(r[1] == "adv" for r in rows):
                 continue
