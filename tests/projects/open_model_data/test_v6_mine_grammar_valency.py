@@ -818,6 +818,13 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_zbroyna_ahresiya, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_zbroyna_ahresiya)) == 1
 
+    # Defect 87 / Positive control (Round 37 P2): Action noun 'акт' following preposition and multiple modifiers 'після акту жорстокого фізичного насильства' accepted (Правопис 2019 §82)
+    frag_zhorstokoho_nasylstva = "Він пояснив положення тіла після акту жорстокого фізичного насильства."
+    assert not miner.INVALID_DOCUMENT_AKTU_RE.search(frag_zhorstokoho_nasylstva)
+    assert miner.is_pristine_eval_sentence(frag_zhorstokoho_nasylstva, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_zhorstokoho_nasylstva)) == 1
+
+
 
 
 
