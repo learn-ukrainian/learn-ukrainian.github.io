@@ -1153,9 +1153,10 @@ def extract_dash_apposition_spans(s: str, cur_ves: sqlite3.Cursor | None = None)
       unpaired copular delimiters between subject and predicate; they do not open or close appositions.
     - Appositive dash pairs enclose parenthetical explanatory phrases within a single clause,
       without severing unclosed subordinate clauses across delimiter boundaries (Правопис 2019 §158.3, §161.I.10).
-    - Subordinate predicate presence is verified against VESUM morphological evidence outside quoted titles
-      (Правопис 2019 §154, §164), avoiding suffix heuristics that misclassify nominal genitive forms (e.g. 'глядачів')
-      or verbs within embedded titles (e.g. «Життя триває») as matrix subordinate predicates.
+    - Quoted spans are excluded before both subordinate-marker detection and predicate detection
+      (Правопис 2019 §154, §164), preserving quoted-title boundaries so that subordinate markers inside
+      quoted titles (e.g. «Життя, що триває») do not trigger false subordinate clause boundaries or
+      corrupt quote stripping for predicate detection.
     - A closing dash closes the preceding span and cannot serve as an opening dash.
     """
     cur = get_vesum_cursor(cur_ves)
@@ -1213,11 +1214,14 @@ def extract_dash_apposition_spans(s: str, cur_ves: sqlite3.Cursor | None = None)
 
         # If inside contains a subordinate clause boundary, verify that the subordinate clause
         # is complete within the parenthetical construction and not severed across end_dash.
-        sub_m = DASH_SUBORDINATE_INTRO_RE.search(inside)
+        # Exclude quoted spans before both subordinate-marker detection and predicate detection
+        # (Правопис 2019 §164), preserving quoted-title boundaries so subordinate markers inside
+        # quoted titles (e.g. «Життя, що триває») are not matched as matrix subordinate clause boundaries.
+        unquoted_inside = strip_quoted_spans(inside)
+        sub_m = DASH_SUBORDINATE_INTRO_RE.search(unquoted_inside)
         if sub_m:
-            sub_tail = inside[sub_m.end() :]
-            unquoted_sub_tail = strip_quoted_spans(sub_tail)
-            sub_words = [w.lower() for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", unquoted_sub_tail)]
+            sub_tail = unquoted_inside[sub_m.end() :]
+            sub_words = [w.lower() for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", sub_tail)]
             has_sub_predicate = False
             for w in sub_words:
                 if w in PREDICATE_WORDS:
@@ -1231,7 +1235,7 @@ def extract_dash_apposition_spans(s: str, cur_ves: sqlite3.Cursor | None = None)
                             break
                     except Exception:
                         pass
-            if not has_sub_predicate and not unquoted_sub_tail.rstrip().endswith(","):
+            if not has_sub_predicate and not sub_tail.rstrip().endswith(","):
                 i += 1
                 continue
 

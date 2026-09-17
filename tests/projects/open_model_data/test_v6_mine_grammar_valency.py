@@ -999,6 +999,22 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_quoted_verb_in_clause, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_quoted_verb_in_clause)) == 1
 
+    # Defect 112 / Negative regression (Round 53 P2): Quoted subordinate marker does not trigger false subordinate clause boundary or corrupt quote stripping (Правопис 2019 §154, §158, §164)
+    frag_discordant_apposition_quoted_subordinate_marker = (
+        "Театр — місце вистави «Життя, що триває», де вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_quoted_subordinate_marker, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_quoted_subordinate_marker, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_quoted_subordinate_marker)) == 0
+
+    # Defect 113 / Positive control (Round 53 P2): Agreeing instrumental apposition with quoted subordinate marker accepted (Правопис 2019 §154, §158, §164)
+    frag_agreeing_apposition_quoted_subordinate_marker = (
+        "Театр — місце вистави «Життя, що триває», де вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_quoted_subordinate_marker, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_quoted_subordinate_marker, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_quoted_subordinate_marker)) == 1
+
 
 
 
