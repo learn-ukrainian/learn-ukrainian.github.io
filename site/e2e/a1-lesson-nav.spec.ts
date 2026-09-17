@@ -54,7 +54,12 @@ test.describe('A1 upgrade nav', () => {
   test('A1 landing lists both upgraded modules', async ({ page }) => {
     await page.goto('/a1/');
     const labels = await page.locator('.lu-sidebar-text').allTextContents();
-    expect(labels).toEqual(expect.arrayContaining(['Речі мають рід', 'Який він?']));
+    expect(labels).toEqual(
+      expect.arrayContaining([
+        'Речі мають рід · Things Have Gender',
+        'Який він? · What Is It Like?',
+      ]),
+    );
   });
 
   test('last gender lesson next goes to the next module landing', async ({ page }) => {
