@@ -196,6 +196,10 @@ UNPUNCTUATED_ASYNDETIC_CONDITION_RE = re.compile(
     r"^(?:Не\s+вистачає|Не\s+вистачить|Бракує|Забракне)\b(?:(?!\s+[—–-]\s+).)+?,\s*(?:допоможе|порятує|врятує|завадить|підтримає|виручить|забезпечить|стане|знайдеться|вирішить)\b",
     re.IGNORECASE,
 )
+INVALID_NUMERAL_AFFIX_RE = re.compile(
+    r"\b\d+-(?:ого|их|ім|ій|ий|ому|лому|ему|ти|ими|іх)\b",
+    re.IGNORECASE,
+)
 PREDICATE_WORDS = {
     "є", "це", "немає", "нема", "треба", "можна", "слід", "варто", "необхідно",
     "потрібно", "жаль", "сором", "пора", "час", "досить", "відомо", "зрозуміло",
@@ -296,6 +300,8 @@ def split_clean_ukrainian_sentences(
         if DISCORDANT_PERSONAL_NAME_CASE_RE.search(s):
             continue
         if UNPUNCTUATED_ASYNDETIC_CONDITION_RE.search(s):
+            continue
+        if INVALID_NUMERAL_AFFIX_RE.search(s):
             continue
         clean_sents.append(s)
     return clean_sents
@@ -997,6 +1003,10 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
 
     # 18. Unpunctuated asyndetic condition-consequence clause lacking dash (Правопис 2019 §161 II.1)
     if UNPUNCTUATED_ASYNDETIC_CONDITION_RE.search(s):
+        return False
+
+    # 19. Pleonastic or invalid numeral affix (Городенська 2017, p. 163; Правопис 2019)
+    if INVALID_NUMERAL_AFFIX_RE.search(s):
         return False
 
     # 4. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)

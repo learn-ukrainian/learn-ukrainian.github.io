@@ -630,6 +630,26 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.UNPUNCTUATED_ASYNDETIC_CONDITION_RE.search(frag_yikh_same_dlya_tsyoho)
     assert miner.is_pristine_eval_sentence(frag_yikh_same_dlya_tsyoho, cur_ves=cur)
 
+    # Defect 52 / Negative regression (Round 24 P2): Pleonastic numeral affix '26-ого' (Городенська 2017, p. 163)
+    frag_26_oho = "Що буде після 26-ого, прогнозувати важко."
+    assert miner.INVALID_NUMERAL_AFFIX_RE.search(frag_26_oho)
+    assert not miner.is_pristine_eval_sentence(frag_26_oho, cur_ves=cur)
+
+    # Defect 53 / Negative regression (Round 24 P2): Pleonastic numeral affix '80-их' (Городенська 2017, p. 163)
+    frag_80_ykh = "Чимало поколінь дітей гралися такими іграшками, проте у 80-их роках XX століття традиція їхнього створення почала занепадати."
+    assert miner.INVALID_NUMERAL_AFFIX_RE.search(frag_80_ykh)
+    assert not miner.is_pristine_eval_sentence(frag_80_ykh, cur_ves=cur)
+
+    # Defect 54 / Positive control (Round 24 P2): Properly affixed numeral '26-го' (Городенська 2017, p. 163)
+    frag_26_ho = "Що буде після 26-го, прогнозувати важко."
+    assert not miner.INVALID_NUMERAL_AFFIX_RE.search(frag_26_ho)
+    assert miner.is_pristine_eval_sentence(frag_26_ho, cur_ves=cur)
+
+    # Defect 55 / Positive control (Round 24 P2): Properly affixed numeral '80-х' (Городенська 2017, p. 163)
+    frag_80_kh = "Чимало поколінь дітей гралися такими іграшками, проте у 80-х роках XX століття традиція їхнього створення почала занепадати."
+    assert not miner.INVALID_NUMERAL_AFFIX_RE.search(frag_80_kh)
+    assert miner.is_pristine_eval_sentence(frag_80_kh, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:
