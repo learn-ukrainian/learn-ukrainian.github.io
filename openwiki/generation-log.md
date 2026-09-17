@@ -26,7 +26,15 @@
 
 ## 2. Measured Operations vs. Estimated Token Usage
 
-To ensure complete accounting transparency, deterministic execution receipts are strictly separated from model token estimates.
+To ensure complete accounting transparency and audit honesty, **deterministic execution receipts** (exact tool calls, file writes, network queries, corpus byte sizes, and subscription invoice deltas) are strictly separated from **derived model token estimates**.
+
+> [!IMPORTANT]
+> **Usage Receipt Status: Absent (Estimated Token Accounting)**
+> No machine-readable API token usage receipt (e.g. `usage.json` or provider HTTP response metadata recording exact prompt and completion token counters) was emitted or captured by the AGY subscription execution runtime. The AGY CLI session operated under an existing flat operator subscription where per-request token usage receipts are not persisted.
+>
+> Consequently, operational counts (tool calls, file writes, network queries, and corpus byte sizes) and incremental spend ($0.00) are **measured execution receipts**, whereas token quantities (~42.5k prompt context, ~14.2k prose completion, ~18.5k reasoning tokens) are **derived estimates**.
+>
+> Under ADR-013 Criterion 5, full cost accounting cannot be claimed as an unqualified receipt-backed PASS without acknowledging this distinction. The status is therefore reported honestly as **QUALIFIED PASS (Estimate-Based Accounting; No Provider Token Receipt)**. Automated provider token receipt capture is deferred to Wave 3 (#5542).
 
 ### Measured Operations (Deterministic Execution Receipts)
 
@@ -42,29 +50,29 @@ To ensure complete accounting transparency, deterministic execution receipts are
 | **External Network Requests** | 1 | Single package metadata query (`openwiki@0.5.2` npm registry) |
 | **Subagents Spawned** | 0 | Hard constraint: zero subagent fan-out; sequential main-thread execution |
 | **Generated Concept Pages** | 8 | `quickstart.md` plus 7 domain pages (within ≤8 budget) |
-| **Total Concept Page Corpus** | 28,688 bytes | Combined byte size of 8 concept pages after link normalization |
+| **Total Concept Page Corpus** | 28,894 bytes | Combined byte size of 8 concept pages on exact head (verified on disk) |
 | **Telemetry Egress Requests** | 0 | LangSmith tracing and PostHog metrics confirmed disabled |
 
-### Estimated Token Breakdown (Context & Outputs)
+### Estimated Token Breakdown (Context & Outputs — No Provider Receipt)
 
-Token quantities are estimated from session context windows and generated markdown text:
+Token quantities are derived estimates from session context windows and generated markdown text, not machine-verified receipts:
 
 | Category | Estimated Count | Description |
 |---|---|---|
-| **Input / Prompt Context Tokens** | 42,500 | Ingestion of ADR-013, authority lifecycle contract, plain-Astro records, site configs, and scripts |
-| **Prose Output Tokens** | 14,200 | Generated 8 concept pages, JSON metadata, coverage report, and pilot recommendation |
-| **Reasoning / Thinking Tokens** | 18,500 | Internal agent chain-of-thought, negative-constraint checking, and cross-family boundary verification |
-| **Total Processed Tokens** | 75,200 | Aggregate token volume processed across the full generation pass |
+| **Input / Prompt Context Tokens** | 42,500 | Estimated context window ingestion of ADR-013, authority lifecycle contract, plain-Astro records, site configs, and scripts |
+| **Prose Output Tokens** | 14,200 | Estimated volume for generated 8 concept pages, JSON metadata, coverage report, and pilot recommendation |
+| **Reasoning / Thinking Tokens** | 18,500 | Estimated internal agent chain-of-thought, negative-constraint checking, and cross-family boundary verification |
+| **Total Processed Tokens** | 75,200 | Aggregate estimated token volume processed across the full generation pass |
 
 ---
 
 ## 3. Financial & Billing Breakdown
 
-### Actual Incremental Spend (Subscription Route)
+### Actual Incremental Spend (Subscription Route — Measured Receipt)
 - **Actual Incremental Invoice Cost:** **$0.00 USD (Zero Incremental Spend)**.
-- *Explanation:* In accordance with ADR-013, execution was performed on the `AGY` seat using an existing, operator-held Google AI Studio / Gemini flat subscription. Paired review is conducted on the `Codex` seat under an existing Codex subscription. Neither seat incurred per-token or metered incremental billing for this pass.
+- *Verification:* In accordance with ADR-013, execution was performed on the `AGY` seat using an existing, operator-held Google AI Studio / Gemini flat subscription. Paired review is conducted on the `Codex` seat under an existing Codex subscription. Neither seat incurred per-token or metered incremental billing on operator invoices.
 
-### Theoretical Unbundled API List Price (Google AI Studio Rates)
+### Theoretical Unbundled API List Price (Google AI Studio Rates — Estimated)
 If this generation pass were billed on an unbundled per-token public API basis, the published production rates for Gemini 3.8 Flash apply:
 - Prompt / Input Tokens: **$0.15 / 1,000,000 tokens**
 - Completion / Output Tokens: **$0.60 / 1,000,000 tokens**
@@ -78,8 +86,10 @@ $$\text{Output Cost} = 0.0327 \text{ M tokens} \times \$0.60 = \$0.019620$$
 
 $$\mathbf{\text{Theoretical Total API List Price}} = \$0.006375 + \$0.019620 = \mathbf{\$0.025995} \text{ USD} \quad (\approx 2.6\text{ cents})$$
 
-### Economic Assessment
-Whether measured by actual incremental spend (**$0.00**) or theoretical unbundled API list price (**~$0.026**), single-pass local generation is economically trivial. It compares favorably to repeated multi-agent cold-start documentation scans, which typically consume 30,000–60,000 tokens per orientation when navigating without a consolidated locator.
+### Economic Assessment & Accounting Classification
+Whether evaluated by actual incremental spend (**$0.00**) or theoretical unbundled API list price (**~$0.026**), single-pass local generation is economically trivial. It compares favorably to repeated multi-agent cold-start documentation scans, which typically consume 30,000–60,000 tokens per orientation when navigating without a consolidated locator.
+
+However, because token counts and theoretical list prices are derived estimates in the absence of an automated provider usage receipt (`usage.json`), this accounting is classified as **substantiated at the operational and cash level, but estimated at the token level**. Full receipt-backed token accounting remains an open work item for Wave 3 (#5542).
 
 ---
 

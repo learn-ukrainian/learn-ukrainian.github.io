@@ -46,6 +46,7 @@ Evaluation of upstream LangChain OpenWiki (`openwiki@0.5.2`) reveals several beh
 
 ### Wave 3 (#5542 — Validation and Bounded Updates)
 - [ ] **Native Runner Wrapper (`scripts/docs/run_openwiki.py`):** Author a Python runner that invokes OpenWiki in a sandboxed directory, intercepts and discards root instruction writes, and synchronizes outputs to `openwiki/**`.
+- [ ] **Automated Provider Token Usage Receipt Capture:** Wire generator runner to capture and persist machine-readable provider API token usage receipts (`usage.json`), enabling deterministic, receipt-verified cost accounting rather than context-derived estimates.
 - [ ] **Automated Grounding & Stack Linter (`tests/test_openwiki_grounding.py`):** Add a pytest suite to verify:
   - 100% of links in `openwiki/` resolve to real tracked git files.
   - Zero mentions of Starlight or Docusaurus as current frameworks.
