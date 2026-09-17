@@ -1153,7 +1153,9 @@ def extract_dash_apposition_spans(s: str) -> list[tuple[str, str]]:
             dashes_at_depth_0.append(idx)
 
     spans: list[tuple[str, str]] = []
-    for d_idx in range(len(dashes_at_depth_0) - 1):
+    # Step by 2: each parenthetical construction has an opening dash and a closing dash.
+    # A closing dash closes the preceding span and cannot serve as an opening dash.
+    for d_idx in range(0, len(dashes_at_depth_0) - 1, 2):
         start_dash = dashes_at_depth_0[d_idx]
         end_dash = dashes_at_depth_0[d_idx + 1]
 

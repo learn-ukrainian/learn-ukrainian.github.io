@@ -943,6 +943,14 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_discordant_earlier_quoted_title_with_dash, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_earlier_quoted_title_with_dash)) == 0
 
+    # Defect 105 / Positive control (Round 49 P2): Multiple parenthetical spans with intervening matrix text do not form spurious appositions (Правопис 2019 §158, §161)
+    frag_separate_parenthetical_spans = (
+        "Він говорив із сестрою — досвідченою лікаркою — цілий день — навіть під час обіду — про роботу."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_separate_parenthetical_spans, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_separate_parenthetical_spans, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_separate_parenthetical_spans)) == 1
+
 
 
 
