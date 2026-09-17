@@ -310,54 +310,103 @@ def check_invalid_numeral_case(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
     return False
 
 
+PRONOUNS_NAZ = {"я", "ти", "він", "вона", "воно", "ми", "ви", "вони", "хто", "що"}
+PERSON_NUMBER_TAGS = (":s:1", ":s:2", ":s:3", ":p:1", ":p:2", ":p:3")
+SUBORDINATE_MARKERS = {
+    "що", "щоб", "як", "яка", "який", "яке", "які", "якого", "якій", "яким", "яких", "якої",
+    "де", "куди", "звідки", "коли", "бо", "оскільки", "хоч", "хоча", "якщо", "якби",
+}
+COMMON_PREPOSITIONS = {
+    "в", "у", "до", "на", "з", "із", "зі", "за", "під", "над", "перед", "при", "по",
+    "про", "для", "від", "од", "без", "через", "між", "серед", "біля", "коло",
+    "проти", "щодо", "заради", "внаслідок", "згідно", "поруч", "замість",
+}
+
+
 def has_homogeneous_verb_comma(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
     """Reject erroneous comma separating homogeneous predicates joined by single coordinating conjunction (Правопис 2019 §158.1)."""
     if not cur_ves:
         return False
-    for m in re.finditer(r",\s*(?:і|й|та)\s+([а-яіїєґА-ЯІЇЄҐ'’]+)\b", s):
-        v2 = m.group(1).lower()
-        cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (v2,))
-        rows2 = cur_ves.fetchall()
-        finite2 = [r[0] for r in rows2 if any(x in r[0] for x in (":past:", ":pres:", ":fut:")) and ":inf" not in r[0]]
-        if not finite2:
-            continue
-
+    for m in re.finditer(r",\s*(?:і|й|та)\s+", s):
         before = s[:m.start()]
         last_clause = before.split(",")[-1]
-        sub_markers = {
-            "що", "щоб", "як", "яка", "який", "яке", "які", "якого", "якій", "яким", "яких", "якої",
-            "де", "куди", "звідки", "коли", "бо", "оскільки", "хоч", "хоча", "якщо", "якби",
-        }
         words_last = re.findall(r"[а-яіїєґА-ЯІЇЄҐ'’]+", last_clause.lower())
-        if any(marker in words_last for marker in sub_markers):
+        if any(marker in words_last for marker in SUBORDINATE_MARKERS):
             continue
 
+        finite1_list = []
         for w1 in words_last:
             cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (w1,))
             rows1 = cur_ves.fetchall()
-            finite1 = [r[0] for r in rows1 if any(x in r[0] for x in (":past:", ":pres:", ":fut:")) and ":inf" not in r[0]]
-            if not finite1:
-                continue
+            tags1 = [r[0] for r in rows1 if any(x in r[0] for x in (":past:", ":pres:", ":fut:")) and ":inf" not in r[0]]
+            if tags1:
+                finite1_list.append((w1, tags1))
+        if not finite1_list:
+            continue
 
-            match_agreement = False
-            for t1 in finite1:
+        after_clause = s[m.end():].split(",")[0]
+        words_after = re.findall(r"[а-яіїєґА-ЯІЇЄҐ'’]+", after_clause.lower())
+
+        v2_word = None
+        finite2 = None
+        has_new_subject = False
+
+        for w2 in words_after[:5]:
+            if w2 in PRONOUNS_NAZ:
+                has_new_subject = True
+                break
+
+            cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (w2,))
+            rows2 = cur_ves.fetchall()
+            tags2 = [r[0] for r in rows2 if any(x in r[0] for x in (":past:", ":pres:", ":fut:")) and ":inf" not in r[0]]
+            if tags2:
+                v2_word = w2
+                finite2 = tags2
+                break
+
+            if w2 not in COMMON_PREPOSITIONS:
+                cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (w2,))
+                rows = cur_ves.fetchall()
+                if rows and any("v_naz" in r[0] for r in rows):
+                    cur_ves.execute("SELECT pos FROM forms_all WHERE word_form = ? AND pos IN ('adv', 'part')", (w2,))
+                    if not cur_ves.fetchone():
+                        has_new_subject = True
+                        break
+
+        if has_new_subject or not v2_word or not finite2:
+            continue
+
+        match_agreement = False
+        for _w1, tags1 in finite1_list:
+            for t1 in tags1:
                 for t2 in finite2:
                     if any((tag in t1 and tag in t2) for tag in (":past:p", ":past:m", ":past:f", ":past:n")):
                         match_agreement = True
-                    elif any(tag in t1 and tag in t2 for tag in (":pres:", ":fut:")):
-                        for p in (":1:s", ":2:s", ":3:s", ":1:p", ":2:p", ":3:p"):
+                    elif any(tag in t1 for tag in (":pres:", ":fut:")) and any(tag in t2 for tag in (":pres:", ":fut:")):
+                        for p in PERSON_NUMBER_TAGS:
                             if p in t1 and p in t2:
                                 match_agreement = True
-
             if match_agreement:
-                after_words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ'’]+", s[m.end():].lower())
-                if after_words:
-                    next_word = after_words[0]
-                    cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ? AND (pos = 'noun' OR pos = 'adj')", (next_word,))
+                break
+
+        if match_agreement:
+            idx_v2 = words_after.index(v2_word)
+            if idx_v2 + 1 < len(words_after):
+                next_w = words_after[idx_v2 + 1]
+                if next_w not in COMMON_PREPOSITIONS:
+                    is_v2_plural = any(":p" in t for t in finite2)
+                    is_v2_singular = any(":s" in t or any(g in t for g in (":m", ":f", ":n")) for t in finite2)
+                    cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (next_w,))
                     rows = cur_ves.fetchall()
-                    if rows and any("v_naz" in r[0] for r in rows):
-                        continue
-                return True
+                    if rows:
+                        cur_ves.execute("SELECT pos FROM forms_all WHERE word_form = ? AND pos IN ('adv', 'part')", (next_w,))
+                        if not cur_ves.fetchone():
+                            if is_v2_plural and any(":p:v_naz" in r[0] for r in rows) and not any("v_zna" in r[0] for r in rows):
+                                continue
+                            if is_v2_singular and any(":s:v_naz" in r[0] or ":m:v_naz" in r[0] or ":f:v_naz" in r[0] or ":n:v_naz" in r[0] for r in rows) and not any("v_zna" in r[0] for r in rows):
+                                continue
+            return True
+
     return False
 
 

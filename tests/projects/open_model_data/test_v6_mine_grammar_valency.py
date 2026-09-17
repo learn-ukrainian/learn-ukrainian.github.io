@@ -410,6 +410,16 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_tobto_comma, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_tobto_comma)) == 0
 
+    # Defect 25 (Round 10): Comma separating homogeneous predicates with intervening adverb (Правопис §158)
+    frag_adv_homogeneous = "Інформаційний запит ми надіслали 15 лютого, і щотижня зверталися за телефоном з приводу реагування на редакційне звернення."
+    assert not miner.is_pristine_eval_sentence(frag_adv_homogeneous, cur_ves=cur)
+    assert miner.has_homogeneous_verb_comma(frag_adv_homogeneous, cur_ves=cur)
+
+    # Defect 26 (Round 10): Comma separating present-tense homogeneous predicates (VESUM pres:s:3) (Правопис §158)
+    frag_pres_repro = "Він щодня читає книжки, і пише листи до друзів."
+    assert not miner.is_pristine_eval_sentence(frag_pres_repro, cur_ves=cur)
+    assert miner.has_homogeneous_verb_comma(frag_pres_repro, cur_ves=cur)
+
 
 def test_release_receipt_schema_and_checksum() -> None:
     """Validate release receipt against JSON schema and sha256 checksum."""
