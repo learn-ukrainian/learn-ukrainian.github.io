@@ -65,6 +65,36 @@ original-item exemption. Do not create exemptions.
 Use <!-- INJECT_ACTIVITY: id --> for each inline activity, once, in its relevant section.
 Use only the base A1 placement/type matrix below. Preserve every option of odd-one-out.
 
+### Find-and-Fix (`error-correction`) — HARD (upgrade gate)
+
+Step 1 is “spot the bad token”. Step 2 must be a **real spelling choice**, not a
+tautology. After the learner marks the error, chips that are only
+`[correction, same-error]` fail the lesson gates (and teach nothing).
+
+For **every** `error-correction` item that has a non-empty `error:`:
+
+1. `sentence:` is a **natural Ukrainian carrier** (dialogue/scene), optional
+   English after an em dash `—`. Forbidden: English meta stems
+   (“Find the word…”, “Identify which…”, “In Ukrainian, the word for…”).
+2. Canonical fields only: `sentence`, `error`, `correction`, `options`,
+   optional `explanation` (same contract as fresh write).
+3. `options:` has **≥3 distinct** forms, **includes `correction`**, and includes
+   **≥1 distractor that is not the spotted `error` token**.
+4. Distractors come **only** from the inventory below (wiki L2 / bad-form pairs /
+   cumulative learner-state contrasts). Never invent Russianisms or fabricate
+   wrong forms. If inventory is thin, reuse attested pairs from the original
+   module’s other EC items / quiz contrasts — still never ship `[corr, err]` alone.
+5. You **may grow** original `options` lists (preservation is ⊆). You **must**
+   grow empty or binary tautological originals to satisfy (3)–(4).
+
+Empty `options` (UI reveal-only) is a hard fail.
+
+### Activity chrome language
+
+Learner-facing `instruction:` / bilingual titles may keep `UA — EN` shape; the
+site chrome locale toggle picks the facing language at runtime. Do not bake
+English-only instructions for Ukrainian chrome. Content stems stay as above.
+
 Allocate each original vocabulary entry once, at its first teaching use. Keep the union
 equal to the original vocabulary, with >=12 complete entries per lesson. Learner knowledge
 is cumulative: prior-module vocabulary plus entries introduced in previous lessons.
@@ -72,6 +102,10 @@ Every entry needs lemma, translation, pos, usage. Every lesson needs nonempty re
 with title plus url, chunk_id or source. The landing page aggregates these artifacts.
 
 {ACTIVITY_CONFIG}
+
+## Distractor inventory (read-only — use for EC / MCQ wrong forms)
+
+{DISTRACTOR_INVENTORY}
 
 ## Learner state before this lesson
 

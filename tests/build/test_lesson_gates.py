@@ -290,6 +290,67 @@ def test_structural_containment_keeps_answers_and_multiplicity():
     assert not gates.contains(True, 1)
 
 
+def test_error_correction_options_gate_rejects_tautology_and_empty():
+    empty = gates.error_correction_item_defects(
+        {"sentence": "Сього́дні ден.", "error": "ден", "correction": "день", "options": []}
+    )
+    assert any("empty" in d for d in empty)
+
+    binary = gates.error_correction_item_defects(
+        {
+            "sentence": "Сього́дні ден.",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день", "ден"],
+        }
+    )
+    assert any(">=3" in d or "distractor other than" in d for d in binary)
+
+    meta = gates.error_correction_item_defects(
+        {
+            "sentence": "Find the soft-sign error in this word.",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день", "дєнь", "дэнь"],
+        }
+    )
+    assert any("meta-prompt" in d or "Ukrainian-first" in d for d in meta)
+
+    ok = gates.error_correction_item_defects(
+        {
+            "sentence": "Сього́дні га́рний ден.",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день", "дєнь", "дэнь"],
+        }
+    )
+    assert ok == []
+
+
+def test_contains_allows_expanded_error_correction_options():
+    orig = {
+        "items": [
+            {
+                "sentence": "Сього́дні ден.",
+                "error": "ден",
+                "correction": "день",
+                "options": ["день", "ден"],
+            }
+        ]
+    }
+    expanded = {
+        "items": [
+            {
+                "sentence": "Сього́дні ден.",
+                "error": "ден",
+                "correction": "день",
+                "options": ["день", "ден", "дєнь"],
+            }
+        ]
+    }
+    assert gates.contains(orig, expanded)
+
+
 def test_gold_preservation_activity_and_vocabulary_semantics(gold):
     report = gates.run_lesson_gates(*gold)
     # A missing rendered page must fail, but cannot conceal content results.
@@ -495,6 +556,10 @@ def test_writer_prompt_is_not_a_learner_attribution_surface(gold):
     before = gates.run_lesson_gates(module, source, plan)
     prompt = render_upgrade_prompt(plan, source, lesson_map, lesson=1)
     assert gates.NAME_RE.search(prompt), "real prompt must exercise the attribution regression"
+    assert "Find-and-Fix" in prompt or "error-correction" in prompt
+    assert "DISTRACTOR_INVENTORY" not in prompt  # must be substituted
+    assert ">=3" in prompt or "≥3" in prompt
+    assert "Distractor inventory" in prompt
     for name in ("writer_prompt.md", "reviewer_prompt.md", "writer_raw.md"):
         (module / "lesson-1" / name).write_text(prompt)
     after = gates.run_lesson_gates(module, source, plan)

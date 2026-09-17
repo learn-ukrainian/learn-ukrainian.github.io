@@ -504,6 +504,125 @@ def pedagogical_error_forms(acts: dict) -> set[str]:
     return {form for form in out if form}
 
 
+_EC_META_STEM_RE = re.compile(
+    r"^\s*(find|identify|choose|select|spot|correct|which word|the word for|"
+    r"in ukrainian|according to|pick the)\b",
+    re.I,
+)
+_CYR_RE = re.compile(f"[{CYR}]")
+
+
+def _ec_item_error_token(item: dict) -> str | None:
+    for key in ("error", "errorWord", "error_word"):
+        raw = item.get(key)
+        if raw is None:
+            continue
+        if isinstance(raw, str) and not raw.strip():
+            return None  # explicit no-error sentinel
+        if isinstance(raw, str) and raw.strip():
+            return raw.strip()
+    return None
+
+
+def _ec_item_correction_token(item: dict) -> str:
+    for key in ("correction", "correctForm", "answer"):
+        raw = item.get(key)
+        if isinstance(raw, str) and raw.strip():
+            return raw.strip()
+    return ""
+
+
+def _ec_option_labels(options) -> list[str]:
+    out: list[str] = []
+    if not isinstance(options, list):
+        return out
+    for opt in options:
+        if isinstance(opt, str) and opt.strip():
+            # Strip optional English gloss "форма (gloss)" for identity checks.
+            label = opt.strip()
+            if " (" in label and label.endswith(")"):
+                label = label[: label.rfind(" (")].strip()
+            out.append(label)
+        elif isinstance(opt, dict):
+            text = _option_text(opt)
+            if text.strip():
+                out.append(text.strip())
+    return out
+
+
+def error_correction_item_defects(item: dict, *, activity_id: str = "") -> list[str]:
+    """Return blocking defects for one Find-and-Fix item (empty = ok).
+
+    After the learner spots the bad token, step 2 must offer a real choice set:
+    include the correction, at least three chips, and at least one distractor that
+    is not merely replaying the error they already marked. Empty options
+    (reveal-only) and tautological ``[correction, error]`` pairs fail.
+    """
+    if not isinstance(item, dict):
+        return [f"{activity_id}: error-correction item must be a mapping"]
+    error = _ec_item_error_token(item)
+    if error is None and item.get("error") == "":
+        return []  # deliberate no-error item
+    if error is None:
+        # Missing error field with a sentence still needs options when correction exists.
+        if not (item.get("correction") or item.get("correctForm") or item.get("answer")):
+            return []
+        error = ""
+    sentence = item.get("sentence")
+    defects: list[str] = []
+    prefix = f"{activity_id}: " if activity_id else ""
+    if isinstance(sentence, str) and sentence.strip():
+        if not _CYR_RE.search(sentence):
+            defects.append(f"{prefix}error-correction sentence must be Ukrainian-first (needs Cyrillic)")
+        elif _EC_META_STEM_RE.search(sentence):
+            defects.append(
+                f"{prefix}error-correction sentence is an English meta-prompt; "
+                "use a natural Ukrainian carrier (optional EN after —)"
+            )
+    correction = _ec_item_correction_token(item)
+    labels = _ec_option_labels(item.get("options"))
+    if not labels:
+        defects.append(f"{prefix}error-correction options empty (reveal-only is forbidden)")
+        return defects
+    if len(labels) < 3:
+        defects.append(
+            f"{prefix}error-correction needs >=3 options (got {len(labels)}); "
+            "tautological [correction, error] is not a real choice"
+        )
+    norm_labels = [strip_acute(nfc(x)).lower() for x in labels]
+    if correction:
+        corr_key = strip_acute(nfc(correction)).lower()
+        if corr_key not in norm_labels:
+            defects.append(f"{prefix}error-correction options must include correction {correction!r}")
+    if error:
+        err_key = strip_acute(nfc(error)).lower()
+        non_error_distractors = [
+            lab for lab, key in zip(labels, norm_labels, strict=True)
+            if key != err_key and (not correction or key != strip_acute(nfc(correction)).lower())
+        ]
+        if not non_error_distractors:
+            defects.append(
+                f"{prefix}error-correction options must include a distractor other than "
+                f"the spotted error {error!r} (not just correction+error)"
+            )
+    # Distinct surface forms (stress-sensitive for pedagogical pairs).
+    surfaces = [nfc(x).lower() for x in labels]
+    if len(set(surfaces)) < len(surfaces):
+        defects.append(f"{prefix}error-correction options contain duplicates")
+    return defects
+
+
+def error_correction_activity_defects(activity: dict) -> list[str]:
+    """Blocking Find-and-Fix defects for one activity (all items)."""
+    if not isinstance(activity, dict) or activity.get("type") != "error-correction":
+        return []
+    aid = str(activity.get("id") or "error-correction")
+    out: list[str] = []
+    for idx, item in enumerate(activity.get("items") or []):
+        out.extend(error_correction_item_defects(item, activity_id=f"{aid}[{idx}]"))
+    return out
+
+
 def missing_stress(text: str, allow: set[str]) -> list[str]:
     """Cyrillic tokens (NFC) with >=2 vowels and no combining acute, in learner-facing text."""
     bad = []
@@ -716,6 +835,8 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                     block(f"lesson {n}: {aid} has no instruction/title")
                 for c in contradictions({k: v for k, v in a.items() if k in LIST_FIELDS}, aid):
                     block(f"lesson {n}: contradictory payload in {c}")
+                for defect in error_correction_activity_defects(a):
+                    block(f"lesson {n}: {defect}")
         lemmas = [norm_md(str(e.get("lemma", ""))).lower() for e in vocab]
         all_lemmas += lemmas
         if len(lemmas) < 12:
