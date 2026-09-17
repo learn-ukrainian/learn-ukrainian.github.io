@@ -1,9 +1,11 @@
 ---
-title: 'М''яки́й знак (Ь) та африка́ти: Лі́тери Ь, Ц, Ч'
+title: 'М''яки́й знак (Ь) та африка́ти: Лі́тери Ь, Ц, Ч · Soft Sign (Ь) and Affricates:
+  Letters Ь, Ц, Ч'
 description: Ь, апостроф і три ключові контрасти - день, сім'я, буряк/бур'ян
 sidebar:
   order: 1
-  label: '01. М''яки́й знак (Ь) та африка́ти: Лі́тери Ь, Ц, Ч'
+  label: '01. М''яки́й знак (Ь) та африка́ти: Лі́тери Ь, Ц, Ч · Soft Sign (Ь) and
+    Affricates: Letters Ь, Ц, Ч'
 pipeline: v7-upgrade
 build_status: validated
 draft: false
@@ -123,7 +125,7 @@ These pairs are reading tools. You do not need to use all of them in conversatio
 
 ### Що ро́бить ь — What does ь do
 
-<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "день", "right": "soft [n'] in «день»"}, {"left": "кінь", "right": "soft [n'] in «кінь»"}, {"left": "сіль", "right": "soft [l'] in «сіль»"}, {"left": "вчи́тель", "right": "soft [l'] in «вчи́тель»"}, {"left": "ь (soft sign)", "right": "has no sound of its own"}]`)} instruction={"Match each word or sign with what the soft sign does."} isUkrainian={false} />
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "день", "right": "soft [n'] in «день»"}, {"left": "кінь", "right": "soft [n'] in «кінь»"}, {"left": "сіль", "right": "soft [l'] in «сіль»"}, {"left": "вчи́тель", "right": "soft [l'] in «вчи́тель»"}, {"left": "ь (soft sign)", "right": "has no sound of its own"}]`)} instruction={"З'єдна́йте ко́жне сло́во з підка́зкою про м'яки́й знак. — Match each word or sign with what the soft sign does."} isUkrainian={false} />
 
 Ukrainian schoolchildren remember which consonants can be softened with a famous mnemonic phrase: *«Де ти з'їси́ ці лини́?»* (Where will you eat these tench?). The consonants **д, т, з, с, ц, л, н** can take a soft sign. In contrast, consonants made with the lips (**б, п, в, м, ф**) and hushing consonants (**ж, ч, ш, щ**) never take a soft sign in standard Ukrainian spelling.
 
@@ -158,6 +160,17 @@ Notice how **па́льці** (fingers) combines both principles: the soft sign 
   title="Діалог"
   exchanges={JSON.parse('[{"speaker":"Окса́на","text":"До́брий день! Яка́ ціна́ на цей рис?"},{"speaker":"Тара́с","text":"До́брий день! Ціна́ мале́нька. Ось чи́ста ча́шка та сві́жий рис."},{"speaker":"Окса́на","text":"Дя́кую! Наш вчи́тель каза́в, що сього́дні со́нце я́сне."}]')}
 />
+
+English support after the dialogue:
+
+| Ukrainian | English |
+| --- | --- |
+| **До́брий день!** | Good day! / Hello! |
+| **Яка́ ціна́ на цей рис?** | What is the price of this rice? |
+| **Ціна́ мале́нька.** | The price is low (small). |
+| **Ось чи́ста ча́шка та сві́жий рис.** | Here is a clean cup and fresh rice. |
+| **Дя́кую!** | Thank you! |
+| **Наш вчи́тель каза́в, що сього́дні со́нце я́сне.** | Our teacher said that today the sun is bright. |
 
 ### Розподілі́ть слова́ за тве́рдістю зву́ка — Group Sort: Hard vs Soft
 
@@ -203,7 +216,7 @@ Notice how **па́льці** (fingers) combines both principles: the soft sign 
 
 ### Вста́вте пропу́щене сло́во — Fill in the blank
 
-<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Світи́ть со́нце, наста́в ___ .", "answer": "день", "options": ["день", "кінь", "сіль"]}, {"sentence": "У селі́ на по́лі біжи́ть ___ .", "answer": "кінь", "options": ["кінь", "день", "вчи́тель"]}, {"sentence": "На столі́ лежи́ть бі́ла ___ .", "answer": "сіль", "options": ["сіль", "ціна́", "ча́шка"]}, {"sentence": "Наш ___ пи́ше те́кст.", "answer": "вчи́тель", "options": ["вчи́тель", "кінь", "день"]}, {"sentence": "Чи висо́ка тут ___ на хліб?", "answer": "ціна́", "options": ["ціна́", "сіль", "ча́шка"]}, {"sentence": "Ось рука́, а на руці́ — ___ .", "answer": "па́льці", "options": ["па́льці", "ча́шка", "вчи́тель"]}]`)} instruction={"Fill in the blanks with the correct vocabulary word."} isUkrainian={false} />
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Світи́ть со́нце, наста́в ___ . — The sun shines, […] has arrived.", "answer": "день", "options": ["день", "кінь", "сіль"]}, {"sentence": "У селі́ на по́лі біжи́ть ___ . — In the village in the field runs a […].", "answer": "кінь", "options": ["кінь", "день", "вчи́тель"]}, {"sentence": "На столі́ лежи́ть бі́ла ___ . — On the table lies white […].", "answer": "сіль", "options": ["сіль", "ціна́", "ча́шка"]}, {"sentence": "Наш ___ пи́ше те́кст. — Our […] is writing a text.", "answer": "вчи́тель", "options": ["вчи́тель", "кінь", "день"]}, {"sentence": "Чи висо́ка тут ___ на хліб? — Is the […] for bread high here?", "answer": "ціна́", "options": ["ціна́", "сіль", "ча́шка"]}, {"sentence": "Ось рука́, а на руці́ — ___ . — Here is a hand, and on the hand are […].", "answer": "па́льці", "options": ["па́льці", "ча́шка", "вчи́тель"]}]`)} instruction={"Fill in the blanks with the correct vocabulary word."} isUkrainian={false} />
 
 ### Складі́ть слова́ з лі́тер — Unjumble letters
 
@@ -215,7 +228,7 @@ Notice how **па́льці** (fingers) combines both principles: the soft sign 
 
 ### Знайді́ть поми́лку — Spot the error
 
-<ErrorCorrection client:only='react' instruction="Identify which word is written incorrectly according to Ukrainian soft sign rules." items={JSON.parse(`[{"sentence": "У сло́ві ден написа́ли без зна́ка ь.", "errorWord": "ден", "correctForm": "день", "options": [], "explanation": "Пе́ред па́узою сло́во «день» пи́шеться з м'яки́м зна́ком: день."}, {"sentence": "На по́лі біжи́ть кін без зна́ка.", "errorWord": "кін", "correctForm": "кінь", "options": [], "explanation": "Сло́во «кінь» закі́нчується на м'яки́й знак: кінь."}, {"sentence": "У су́пі лежи́ть сіл без зна́ка.", "errorWord": "сіл", "correctForm": "сіль", "options": [], "explanation": "Сло́во «сіль» ма́є м'яки́й [л'] і пи́шеться з ь: сіль."}, {"sentence": "Наш вчител пи́ше те́кст.", "errorWord": "вчител", "correctForm": "вчи́тель", "options": [], "explanation": "Іме́нник «вчи́тель» ма́є м'яки́й кінце́вий [л']: вчи́тель."}, {"sentence": "У сло́ві чьас помилко́во написа́ли ь.", "errorWord": "чьас", "correctForm": "час", "options": [], "explanation": "Звук [ч] в украї́нській мо́ві тверди́й; пі́сля ч знак ь не ста́виться: час."}, {"sentence": "У сло́ві палці написа́ли без зна́ка ь.", "errorWord": "палці", "correctForm": "па́льці", "options": [], "explanation": "У сло́ві «па́льці» пі́сля лі́тери л пи́шеться м'яки́й знак: па́льці."}]`)} isUkrainian={false} />
+<ErrorCorrection client:only='react' instruction="Identify which word is written incorrectly according to Ukrainian soft sign rules." items={JSON.parse(`[{"sentence": "У сло́ві ден написа́ли без зна́ка ь. — In the word \\"ден\\" they wrote without the sign ь.", "errorWord": "ден", "correctForm": "день", "options": [], "explanation": "Пе́ред па́узою сло́во «день» пи́шеться з м'яки́м зна́ком: день. — Before a pause, the word «день» is written with a soft sign: день."}, {"sentence": "На по́лі біжи́ть кін без зна́ка. — In the field runs \\"кін\\" without a sign.", "errorWord": "кін", "correctForm": "кінь", "options": [], "explanation": "Сло́во «кінь» закі́нчується на м'яки́й знак: кінь. — The word «кінь» ends with a soft sign: кінь."}, {"sentence": "У су́пі лежи́ть сіл без зна́ка. — In the soup lies \\"сіл\\" without a sign.", "errorWord": "сіл", "correctForm": "сіль", "options": [], "explanation": "Сло́во «сіль» ма́є м'яки́й [л'] і пи́шеться з ь: сіль. — The word «сіль» has a soft [l'] and is written with ь: сіль."}, {"sentence": "Наш вчител пи́ше те́кст. — Our \\"вчител\\" is writing a text.", "errorWord": "вчител", "correctForm": "вчи́тель", "options": [], "explanation": "Іме́нник «вчи́тель» ма́є м'яки́й кінце́вий [л']: вчи́тель. — The noun «вчи́тель» has a soft final [l']: вчи́тель."}, {"sentence": "У сло́ві чьас помилко́во написа́ли ь. — In the word \\"чьас\\" they mistakenly wrote ь.", "errorWord": "чьас", "correctForm": "час", "options": [], "explanation": "Звук [ч] в украї́нській мо́ві тверди́й; пі́сля ч знак ь не ста́виться: час. — The sound [ч] in Ukrainian is hard; no soft sign is written after ч: час."}, {"sentence": "У сло́ві палці написа́ли без зна́ка ь. — In the word \\"палці\\" they wrote without the sign ь.", "errorWord": "палці", "correctForm": "па́льці", "options": [], "explanation": "У сло́ві «па́льці» пі́сля лі́тери л пи́шеться м'яки́й знак: па́льці. — In the word «па́льці», a soft sign is written after letter л: па́льці."}]`)} isUkrainian={false} />
 
 ### Знак ь чи без зна́ка — Soft sign or no sign
 

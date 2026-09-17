@@ -1,4 +1,4 @@
-# Особли́ві зна́ки (Ь) та африка́ти: Лі́тери Ь, Ц, Ч
+# М'яки́й знак (Ь) та африка́ти: Лі́тери Ь, Ц, Ч · Soft Sign (Ь) and Affricates: Letters Ь, Ц, Ч
 
 **день. сім'я́. буря́к. бур'я́н.** — four words, two signs, three beginner contrasts.
 
@@ -84,5 +84,16 @@ Notice how **па́льці** (fingers) combines both principles: the soft sign 
 > **Окса́на:** До́брий день! Яка́ ціна́ на цей рис? *(Good day! What is the price of this rice?)*
 > **Тара́с:** До́брий день! Ціна́ мале́нька. Ось чи́ста ча́шка та сві́жий рис. *(Good day! The price is low. Here is a clean cup and fresh rice.)*
 > **Окса́на:** Дя́кую! Наш вчи́тель каза́в, що сього́дні со́нце я́сне. *(Thank you! Our teacher said that today the sun is bright.)*
+
+English support after the dialogue:
+
+| Ukrainian | English |
+| --- | --- |
+| **До́брий день!** | Good day! / Hello! |
+| **Яка́ ціна́ на цей рис?** | What is the price of this rice? |
+| **Ціна́ мале́нька.** | The price is low (small). |
+| **Ось чи́ста ча́шка та сві́жий рис.** | Here is a clean cup and fresh rice. |
+| **Дя́кую!** | Thank you! |
+| **Наш вчи́тель каза́в, що сього́дні со́нце я́сне.** | Our teacher said that today the sun is bright. |
 
 <!-- INJECT_ACTIVITY: act-105 -->

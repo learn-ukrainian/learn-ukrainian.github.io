@@ -1,10 +1,10 @@
-# Йото́вані лі́тери та напівголосни́й: Лі́тери Й, Я, Ю, Є
+# Йото́вані лі́тери та напівголосни́й: Лі́тери Й, Я, Ю, Є · Iotated Vowels and Semivowel: Letters Й, Я, Ю, Є
 
 **Я Ю Є Ї** — the four special vowel letters.
 
 Earlier lessons introduced basic vowel letters. Here you only need the quick review that makes **ь** and apostrophe readable.
 
-In this lesson, we study the letters **Й, Я, Ю, Є** in detail. The letter **Й** is a semi-vowel sonant [j], while **Я, Ю, Є** are iotated letters (**йото́ваний**) that carry two different reading jobs depending on where they sit in a word. Understanding these jobs will make both the soft sign (**м'яки́й знак**) and the apostrophe (**апо́строф**) intuitive to read.
+In this lesson, we study the letters **Й, Я, Ю, Є** in detail. The letter **Й** is a semi-vowel [j] that glides into vowels (like the *y* in *yes*). The letters **Я, Ю, Є** are iotated vowels (**йото́ваний**) — letters that represent a "y + vowel" sound combination (**Я** = "y + a", **Ю** = "y + u", **Є** = "y + e"). They carry two different reading jobs depending on where they sit in a word. Understanding these jobs will make both the soft sign (**м'яки́й знак**) and the apostrophe (**апо́строф**) intuitive to read.
 
 When reading Ukrainian, we read syllables smoothly together (**зли́то**), not in a disconnected staccato (**розді́льно**). Even a **мале́нький** (small) **знак** (sign) on the page tells your tongue whether to pronounce a sound hard (**тверди́й**) or soft (**м'яки́й**). Our **вчи́тель** (teacher) emphasizes that on a sunny **день** (day) or during a joyful **свя́то** (holiday), clear pronunciation connects people.
 
@@ -62,6 +62,20 @@ Notice how we use these sounds in courteous Ukrainian greetings and polite expre
 > **Софі́я:** Приві́т, Ма́рку! Ра́да тебе́ ба́чити. Як спра́ви? *(Hello, Marko! Glad to see you. How are things?)*
 > **Марко́:** Дя́кую, чудо́во! Ось гаря́чий чай та сві́же я́блуко. *(Thank you, great! Here is hot tea and a fresh apple.)*
 > **Софі́я:** Смачно́го! На все до́бре! *(Bon appetit! All the best!)*
+
+English support after the dialogue:
+
+| Ukrainian | English |
+| --- | --- |
+| **Приві́т, Софі́є!** | Hello, Sofia! |
+| **Ра́дий тебе́ ба́чити.** | Glad to see you (masculine). |
+| **Приві́т, Ма́рку!** | Hello, Marko! |
+| **Ра́да тебе́ ба́чити.** | Glad to see you (feminine). |
+| **Як спра́ви?** | How are things? / How are you? |
+| **Дя́кую, чудо́во!** | Thank you, wonderful! |
+| **Ось гаря́чий чай та сві́же я́блуко.** | Here is hot tea and a fresh apple. |
+| **Смачно́го!** | Enjoy your meal! / Bon appetit! |
+| **На все до́бре!** | All the best! |
 
 Notice that even when counting on your **па́льці** (fingers), each word follows its natural syllable rhythm. Today you can read every one of these combinations with ease.
 

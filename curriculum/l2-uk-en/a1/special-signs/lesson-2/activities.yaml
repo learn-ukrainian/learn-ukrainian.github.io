@@ -75,36 +75,36 @@ inline:
   instruction: Determine whether the highlighted iotated vowel represents one or two
     sounds.
   items:
-  - question: 'Лі́тера «я» у сло́ві «я́блуко»:'
+  - question: 'Лі́тера «я» у сло́ві «я́блуко»: — The letter «я» in «я́блуко» (apple):'
     options:
-    - два зву́ки [йа]
-    - оди́н звук [а]
-    answer: два зву́ки [йа]
-  - question: 'Лі́тера «я» у сло́ві «пі́сня»:'
+    - два зву́ки [йа] — two sounds [йа]
+    - оди́н звук [а] — one sound [а]
+    answer: два зву́ки [йа] — two sounds [йа]
+  - question: 'Лі́тера «я» у сло́ві «пі́сня»: — The letter «я» in «пі́сня» (song):'
     options:
-    - оди́н звук [а]
-    - два зву́ки [йа]
-    answer: оди́н звук [а]
-  - question: 'Лі́тера «ю» у сло́ві «ю́шка»:'
+    - оди́н звук [а] — one sound [а]
+    - два зву́ки [йа] — two sounds [йа]
+    answer: оди́н звук [а] — one sound [а]
+  - question: 'Лі́тера «ю» у сло́ві «ю́шка»: — The letter «ю» in «ю́шка» (soup):'
     options:
-    - два зву́ки [йу]
-    - оди́н звук [у]
-    answer: два зву́ки [йу]
-  - question: 'Лі́тера «ю» у сло́ві «лю́ди»:'
+    - два зву́ки [йу] — two sounds [йу]
+    - оди́н звук [у] — one sound [у]
+    answer: два зву́ки [йу] — two sounds [йу]
+  - question: 'Лі́тера «ю» у сло́ві «лю́ди»: — The letter «ю» in «лю́ди» (people):'
     options:
-    - оди́н звук [у]
-    - два зву́ки [йу]
-    answer: оди́н звук [у]
-  - question: 'Лі́тера «є» у сло́ві «єно́т»:'
+    - оди́н звук [у] — one sound [у]
+    - два зву́ки [йу] — two sounds [йу]
+    answer: оди́н звук [у] — one sound [у]
+  - question: 'Лі́тера «є» у сло́ві «єно́т»: — The letter «є» in «єно́т» (raccoon):'
     options:
-    - два зву́ки [йе]
-    - оди́н звук [е]
-    answer: два зву́ки [йе]
-  - question: 'Лі́тера «я» у сло́ві «буря́к»:'
+    - два зву́ки [йе] — two sounds [йе]
+    - оди́н звук [е] — one sound [е]
+    answer: два зву́ки [йе] — two sounds [йе]
+  - question: 'Лі́тера «я» у сло́ві «буря́к»: — The letter «я» in «буря́к» (beetroot):'
     options:
-    - оди́н звук [а]
-    - два зву́ки [йа]
-    answer: оди́н звук [а]
+    - оди́н звук [а] — one sound [а]
+    - два зву́ки [йа] — two sounds [йа]
+    answer: оди́н звук [а] — one sound [а]
 - id: act-204
   type: true-false
   title: Пра́вила йото́ваних лі́тер — True or False
@@ -167,37 +167,37 @@ workbook:
   title: Вста́вте пропу́щене сло́во — Fill in the blank
   instruction: Fill in the blank with the appropriate word.
   items:
-  - sentence: У ча́шці гаря́чий ___ .
+  - sentence: У ча́шці гаря́чий ___ . — In the cup is hot […].
     answer: чай
     options:
     - чай
     - рис
     - час
-  - sentence: На столі́ лежи́ть сві́же сокови́те ___ .
+  - sentence: На столі́ лежи́ть сві́же сокови́те ___ . — On the table lies fresh juicy […].
     answer: я́блуко
     options:
     - я́блуко
     - ю́шка
     - єно́т
-  - sentence: У зоопа́рку живе́ смуга́стий ___ .
+  - sentence: У зоопа́рку живе́ смуга́стий ___ . — In the zoo lives a striped […].
     answer: єно́т
     options:
     - єно́т
     - кінь
     - лань
-  - sentence: Сього́дні в селі́ весе́ле ___ .
+  - sentence: Сього́дні в селі́ весе́ле ___ . — Today in the village there is a merry […].
     answer: свя́то
     options:
     - свя́то
     - день
     - чай
-  - sentence: У ба́бці на горо́ді росте́ черво́ний ___ .
+  - sentence: У ба́бці на горо́ді росте́ черво́ний ___ . — In grandma's garden grows red […].
     answer: буря́к
     options:
     - буря́к
     - я́блуко
     - ю́шка
-  - sentence: Наш ___ пока́зує ціка́вий малю́нок.
+  - sentence: Наш ___ пока́зує ціка́вий малю́нок. — Our […] is showing an interesting drawing.
     answer: вчи́тель
     options:
     - вчи́тель
@@ -251,33 +251,30 @@ workbook:
   title: Знайді́ть поми́лку — Spot the error
   instruction: Find the spelling error in each sentence.
   items:
-  - sentence: Вра́нці я пив чаі з лимо́ном.
+  - sentence: Вра́нці я пив чаі з лимо́ном. — In the morning I drank tea with lemon.
     error: чаі
     correction: чай
-    explanation: 'Напівголосни́й звук [й] познача́ється лі́терою й: чай.'
-  - sentence: На столі́ лежи́ть смачне́ йа́блуко.
+    explanation: 'Напівголосни́й звук [й] познача́ється лі́терою й: чай. — The semivowel sound [j] is written with letter й: чай.'
+  - sentence: На столі́ лежи́ть смачне́ йа́блуко. — On the table lies a tasty apple.
     error: йа́блуко
     correction: я́блуко
-    explanation: 'Сполу́ка зву́ків [йа] на поча́тку сло́ва познача́ється лі́терою
-      я: я́блуко.'
-  - sentence: У тарі́лці те́пла йу́шка.
+    explanation: 'Сполу́ка зву́ків [йа] на поча́тку сло́ва познача́ється лі́терою я: я́блуко. — The sound blend [ja] at the word start is written with letter я: я́блуко.'
+  - sentence: У тарі́лці те́пла йу́шка. — In the plate is warm broth.
     error: йу́шка
     correction: ю́шка
-    explanation: 'Сполу́ка зву́ків [йу] на поча́тку сло́ва познача́ється лі́терою
-      ю: ю́шка.'
-  - sentence: У лі́сі живе́ смуга́стий йено́т.
+    explanation: 'Сполу́ка зву́ків [йу] на поча́тку сло́ва познача́ється лі́терою ю: ю́шка. — The sound blend [ju] at the word start is written with letter ю: ю́шка.'
+  - sentence: У лі́сі живе́ смуга́стий йено́т. — In the forest lives a striped raccoon.
     error: йено́т
     correction: єно́т
-    explanation: 'Сполу́ка зву́ків [йе] на поча́тку сло́ва познача́ється лі́терою
-      є: єно́т.'
-  - sentence: На по́лі росте́ сокови́тий буряік.
+    explanation: 'Сполу́ка зву́ків [йе] на поча́тку сло́ва познача́ється лі́терою є: єно́т. — The sound blend [je] at the word start is written with letter є: єно́т.'
+  - sentence: На по́лі росте́ сокови́тий буряік. — In the field grows juicy beetroot.
     error: буряік
     correction: буря́к
-    explanation: 'Сло́во «буря́к» пи́шеться з лі́терою я: буря́к.'
-  - sentence: Сього́дні в мі́сті вели́ке свиа́то.
+    explanation: 'Сло́во «буря́к» пи́шеться з лі́терою я: буря́к. — The word «буря́к» is written with the letter я: буря́к.'
+  - sentence: Сього́дні в мі́сті вели́ке свиа́то. — Today in town there is a big holiday.
     error: свиа́то
     correction: свя́то
-    explanation: 'Сло́во «свя́то» пи́шеться з лі́терою я без апо́строфа: свя́то.'
+    explanation: 'Сло́во «свя́то» пи́шеться з лі́терою я без апо́строфа: свя́то. — The word «свя́то» is written with letter я without an apostrophe: свя́то.'
 - id: act-210
   type: quiz
   title: Ви́беріть пра́вильне сло́во — Multiple Choice
@@ -324,32 +321,32 @@ workbook:
   title: Ви́бір лі́тери — Letter Choice
   instruction: Choose the appropriate letter for each word.
   items:
-  - question: 'Пе́рша лі́тера у сло́ві «___блуко»:'
+  - question: 'Пе́рша лі́тера у сло́ві «___блуко»: — First letter in «___блуко» (apple):'
     options:
     - Я
     - Й
     answer: Я
-  - question: 'Пе́рша лі́тера у сло́ві «___шка»:'
+  - question: 'Пе́рша лі́тера у сло́ві «___шка»: — First letter in «___шка» (soup):'
     options:
     - Ю
     - Й
     answer: Ю
-  - question: 'Пе́рша лі́тера у сло́ві «___но́т»:'
+  - question: 'Пе́рша лі́тера у сло́ві «___но́т»: — First letter in «___но́т» (raccoon):'
     options:
     - Є
     - Й
     answer: Є
-  - question: 'Оста́ння лі́тера у сло́ві «ча___»:'
+  - question: 'Оста́ння лі́тера у сло́ві «ча___»: — Last letter in «ча___» (tea):'
     options:
     - й
     - і
     answer: й
-  - question: 'Лі́тера пі́сля «р» у сло́ві «бур___к»:'
+  - question: 'Лі́тера пі́сля «р» у сло́ві «бур___к»: — Letter after «р» in «бур___к» (beetroot):'
     options:
     - я
     - і
     answer: я
-  - question: 'Лі́тера пі́сля «в» у сло́ві «св___то»:'
+  - question: 'Лі́тера пі́сля «в» у сло́ві «св___то»: — Letter after «в» in «св___то» (holiday):'
     options:
     - я
     - і
