@@ -987,6 +987,29 @@ def has_discordant_subject_predicate(s: str, cur_ves: sqlite3.Cursor | None) -> 
     return False
 
 
+DISCORDANT_PRONOUN_COMPLEMENT_RE = re.compile(
+    r"\b(?:нікого|ніщо|когось|будь-кого|хтось|щось|кожного)\b[^,;:\.?!]*?\b(?:не\s+)?(?:залиш\w*|лиш\w*|роби\w*|зроби\w*|вважа\w*)\b[^,;:\.?!]*?\b([а-яіїєґА-ЯІЇЄҐ]+(?:ими|іми))\b"
+    r"|\b(?:не\s+)?(?:залиш\w*|лиш\w*|роби\w*|зроби\w*|вважа\w*)\b[^,;:\.?!]*?\b(?:нікого|ніщо|когось|будь-кого|хтось|щось|кожного)\b[^,;:\.?!]*?\b([а-яіїєґА-ЯІЇЄҐ]+(?:ими|іми))\b",
+    re.IGNORECASE,
+)
+
+
+def has_discordant_pronoun_complement(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
+    """Reject singular pronouns taking plural predicate adjective complements (e.g. 'нікого не залишають байдужими' vs 'байдужим')."""
+    m = DISCORDANT_PRONOUN_COMPLEMENT_RE.search(s)
+    if not m:
+        return False
+    adj_w = m.group(1) or m.group(2)
+    if cur_ves:
+        cur_ves.execute(
+            "SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?) AND pos = 'adj'",
+            (adj_w.lower(), adj_w.capitalize()),
+        )
+        tags = [r[0] for r in cur_ves.fetchall()]
+        return any("p:v_oru" in t for t in tags)
+    return adj_w.lower().endswith(("ими", "іми"))
+
+
 def check_has_predicate(text: str, cur_ves: sqlite3.Cursor | None) -> bool:
     """Check whether a text fragment contains an active predicate (verb, predicative, or copula)."""
     words = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", text.lower())
@@ -1107,6 +1130,10 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
 
     # 21. Discordant subject-predicate agreement (singular head noun with genitive dependents taking plural predicate; Ющук §21)
     if has_discordant_subject_predicate(s, cur_ves):
+        return False
+
+    # 22. Discordant pronoun complement agreement (singular pronoun object taking plural complement, e.g. 'нікого не залишають байдужими' vs 'байдужим')
+    if has_discordant_pronoun_complement(s, cur_ves):
         return False
 
     # 4. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)

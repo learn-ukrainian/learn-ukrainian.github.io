@@ -721,6 +721,21 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.has_discordant_subject_predicate(frag_protses_tryvav, cur_ves=cur)
     assert miner.is_pristine_eval_sentence(frag_protses_tryvav, cur_ves=cur)
 
+    # Defect 69 / Negative regression (Round 29 P2): Singular pronoun 'нікого' taking plural adjective complement 'байдужими' rejected
+    frag_nikoho_bayduzhymy = "У поєднанні з класичною музикою вони нікого не залишають байдужими."
+    assert miner.has_discordant_pronoun_complement(frag_nikoho_bayduzhymy, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_nikoho_bayduzhymy, cur_ves=cur)
+
+    # Defect 70 / Positive control (Round 29 P2): Singular pronoun 'нікого' taking singular adjective complement 'байдужим' accepted
+    frag_nikoho_bayduzhym = "У поєднанні з класичною музикою вони нікого не залишають байдужим."
+    assert not miner.has_discordant_pronoun_complement(frag_nikoho_bayduzhym, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_nikoho_bayduzhym, cur_ves=cur)
+
+    # Defect 71 / Positive control (Round 29 P2): Clean replacement sentence from same doc accepted
+    frag_lunaly_zvuky = "Лунали звуки творів Мендельсона, Шопена, Брамса, Дебюсі та інших видатних композиторів."
+    assert not miner.has_discordant_pronoun_complement(frag_lunaly_zvuky, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_lunaly_zvuky, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:
