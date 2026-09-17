@@ -1437,8 +1437,8 @@ const IMPERATIVE_CODE_FEEDBACK: Record<Exclude<PracticeImperativeErrorCode, 'COR
     en: 'Labials (б, п, в, м, ф) and hushers (ж, ч, ш, щ) never take a soft sign in the Ukrainian imperative: сип, постав, ріж.',
   },
   STEM_CLUSTER: {
-    uk: "Після збігу приголосних у основі обов'язково пишеться закінчення -и: провітри, підкресли, засліпи.",
-    en: 'Stems ending in a consonant cluster require the -и ending: провітри, підкресли, засліпи.',
+    uk: "Після збігу приголосних із сонорним (р, л, м, н) у кінці основи обов'язково пишеться закінчення -и: провітри, підкресли.",
+    en: 'Stems ending in a consonant cluster with a sonorant (р, л, м, н) require the -и ending: провітри, підкресли.',
   },
   CALQUE_AUX: {
     uk: 'В українській мові заклик до спільної дії передається синтетичною формою (робімо!), а не калькою «давайте робити».',

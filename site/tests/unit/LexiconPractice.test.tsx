@@ -2853,6 +2853,30 @@ describe('LexiconPractice', () => {
     expect(feedback).toHaveTextContent('Це форма іншої особи');
   });
 
+  test('imperative STEM_CLUSTER fallback specifies sonorant cluster rule', async () => {
+    const user = userEvent.setup();
+    const deck = imperativeDeck();
+    deck.imperative[0].options[3] = {
+      text: 'провітр',
+      isCorrect: false,
+      code: 'STEM_CLUSTER',
+    };
+    render(
+      <LexiconPractice
+        initialDeck={deck}
+        autoStart
+        initialMode="imperative"
+      />,
+    );
+
+    await user.click(
+      within(screen.getByTestId('practice-imperative')).getByRole('button', { name: /провітр/ }),
+    );
+
+    const feedback = screen.getByTestId('practice-imperative-feedback');
+    expect(feedback).toHaveTextContent('Після збігу приголосних із сонорним');
+  });
+
   test('imperative correct choice scores good and restates the target', async () => {
     const user = userEvent.setup();
     render(
