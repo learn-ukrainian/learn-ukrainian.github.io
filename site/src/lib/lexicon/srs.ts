@@ -57,7 +57,7 @@ const MIN_WORD_REPEAT_WINDOW = 8;
 const DEFAULT_RECOGNITION_STABILITY = 3;
 
 export type PracticeRating = 'again' | 'hard' | 'good' | 'easy';
-export const PRACTICE_MODE_DECK_VERSION = 5;
+export const PRACTICE_MODE_DECK_VERSION = 6;
 export const PRACTICE_MODES = [
   'flashcards',
   'matching',
@@ -72,6 +72,7 @@ export const PRACTICE_MODES = [
   'paronym',
   'antonym',
   'homonym',
+  'imperative',
 ] as const;
 const PRACTICE_MODE_SET = new Set<string>(PRACTICE_MODES);
 
@@ -321,6 +322,49 @@ export interface PracticeAntonymItem {
   citations?: string[];
 }
 
+export type PracticeImperativeErrorCode =
+  | 'CORRECT'
+  | 'WRONG_PERSON'
+  | 'WRONG_MOOD'
+  | 'ORTHO_SOFT_SIGN'
+  | 'STEM_CLUSTER'
+  | 'CALQUE_AUX';
+
+export interface PracticeImperativeOption {
+  text: string;
+  isCorrect: boolean;
+  code?: PracticeImperativeErrorCode;
+  explanationUk?: string;
+  explanationEn?: string;
+}
+
+export type PracticeImperativeSlot = '2sg' | '1pl' | '2pl';
+export type PracticeImperativeAspect = 'perf' | 'imperf';
+
+export interface PracticeImperativeItem {
+  id: string;
+  lemmaId: string;
+  srsKey: string;
+  lemma: string;
+  lemmaPlain?: string;
+  aspect: PracticeImperativeAspect;
+  slot: PracticeImperativeSlot;
+  slotLabelUa: string;
+  slotLabelEn?: string;
+  target: string;
+  targetPlain: string;
+  acceptedAnswers: string[];
+  options: PracticeImperativeOption[];
+  cueSentence?: string;
+  cueSentenceEn?: string;
+  cefr: string;
+  notes?: string;
+}
+
+export interface PracticeImperativeShard extends PracticeShardMeta {
+  imperative: PracticeImperativeItem[];
+}
+
 export interface PracticeShardMeta {
   schema: string;
   schemaVersion: number;
@@ -384,6 +428,7 @@ export interface PracticeDeckData {
   synonym?: PracticeSynonymItem[];
   paronym?: PracticeParonymItem[];
   heritage?: PracticeHeritageItem[];
+  imperative?: PracticeImperativeItem[];
   fixtureNote?: string;
 }
 
@@ -533,6 +578,7 @@ export interface PracticeSelection {
   synonym?: PracticeSynonymItem;
   paronym?: PracticeParonymItem;
   heritage?: PracticeHeritageItem;
+  imperative?: PracticeImperativeItem;
   recallDirection: RecallDirection;
   choicePolarity: ChoicePolarity;
 }
@@ -676,8 +722,8 @@ export interface StorageLike {
 }
 
 export type ParsedCardKey =
-  | { lemmaId: string; mode: PracticeMode; quarantined: false }
-  | { lemmaId: string; mode: null; rawMode: string; quarantined: true };
+  | { lemmaId: string; mode: PracticeMode; slot?: string; quarantined: false }
+  | { lemmaId: string; mode: null; rawMode: string; slot?: string; quarantined: true };
 
 const FSRS6_DEFAULT_PARAMS: FSRSParameters = {
   request_retention: 0.9,
@@ -901,27 +947,30 @@ export function isPracticeMode(value: unknown): value is PracticeMode {
 }
 
 export function parseCardKey(key: string): ParsedCardKey {
-  const separatorIndex = key.indexOf('::');
-  if (separatorIndex < 0) {
+  const parts = key.split('::');
+  if (parts.length === 1) {
     return {
       lemmaId: key,
       mode: 'flashcards',
       quarantined: false,
     };
   }
-  const lemmaId = key.slice(0, separatorIndex) || key;
-  const rawMode = key.slice(separatorIndex + 2);
+  const lemmaId = parts[0] || key;
+  const rawMode = parts[1];
+  const slot = parts.length > 2 ? parts.slice(2).join('::') : undefined;
   if (!isPracticeMode(rawMode)) {
     return {
       lemmaId,
       mode: null,
       rawMode,
+      ...(slot ? { slot } : {}),
       quarantined: true,
     };
   }
   return {
     lemmaId,
     mode: rawMode,
+    ...(slot ? { slot } : {}),
     quarantined: false,
   };
 }
@@ -1393,8 +1442,8 @@ function presentationFromMeta(meta?: ReviewMeta): ReviewEventPresentation | unde
     : undefined;
 }
 
-export function cardKey(lemmaId: string, mode: PracticeMode): string {
-  return `${lemmaId}::${mode}`;
+export function cardKey(lemmaId: string, mode: PracticeMode, slot?: string): string {
+  return slot ? `${lemmaId}::${mode}::${slot}` : `${lemmaId}::${mode}`;
 }
 
 export function rateCard(
@@ -1425,26 +1474,37 @@ export function rateCard(
   const reviewDate = rawDate instanceof Date ? rawDate : new Date(rawDate ?? Date.now());
   const state = currentState();
   const scheduler = fsrs(state.settings.params);
-  const key = cardKey(lemmaId, mode);
+  const parsed = lemmaId.includes('::') ? parseCardKey(lemmaId) : null;
+  const effectiveLemmaId = parsed && !parsed.quarantined ? parsed.lemmaId : lemmaId;
+  const effectiveMode = parsed && !parsed.quarantined && parsed.mode ? parsed.mode : mode;
+  const slot = parsed && !parsed.quarantined ? parsed.slot : (effectiveMode === 'imperative' ? meta?.slotId : undefined);
+  const key = parsed && !parsed.quarantined
+    ? lemmaId
+    : cardKey(effectiveLemmaId, effectiveMode, slot);
+  const effectiveMeta = meta
+    ? { ...meta, ...(slot && !meta.slotId ? { slotId: slot } : {}) }
+    : slot
+      ? { slotId: slot }
+      : undefined;
   const currentCard = state.cards.get(key);
   const fsrsCard = currentCard ? fsrsCardFromState(currentCard) : createEmptyCard(reviewDate);
   const record = scheduler.next(fsrsCard, reviewDate, RATING_TO_FSRS[rating]);
   const next = stateFromFsrsCard(record.card);
   state.cards.set(key, next);
-  state.reviews.push(serializeReview(key, lemmaId, mode, rating, record, meta));
+  state.reviews.push(serializeReview(key, effectiveLemmaId, effectiveMode, rating, record, effectiveMeta));
   compactReviewHistory(state.reviews, state.reviewAggregates, MAX_RAW_REVIEW_LOG_ENTRIES);
   const storage = currentStorage();
   persistWithQuotaRecovery(state, storage, reviewDate.getTime());
   try {
     recordCardReviewEvent(
       {
-        lemmaId,
-        mode,
+        lemmaId: effectiveLemmaId,
+        mode: effectiveMode,
         rating,
         reviewedAt: reviewDate,
         deckVersion: PRACTICE_MODE_DECK_VERSION,
         fsrsParamsVersion: state.settings.version,
-        presentation: presentationFromMeta(meta),
+        presentation: presentationFromMeta(effectiveMeta),
       },
       storage,
     );
@@ -1526,6 +1586,7 @@ interface DeckMaps {
   synonym: Map<string, PracticeSynonymItem[]>;
   paronym: Map<string, PracticeParonymItem[]>;
   heritage: Map<string, PracticeHeritageItem[]>;
+  imperative: Map<string, PracticeImperativeItem[]>;
 }
 
 const deckMapsCache = new WeakMap<PracticeDeckData, DeckMaps>();
@@ -1552,6 +1613,7 @@ function deckMaps(deck: PracticeDeckData): DeckMaps {
     synonym: groupByLemma(deck.synonym),
     paronym: groupByLemma(deck.paronym),
     heritage: groupByLemma(deck.heritage),
+    imperative: groupByLemma(deck.imperative),
   };
   deckMapsCache.set(deck, maps);
   return maps;
@@ -1915,6 +1977,22 @@ function buildStaticCandidates(deck: PracticeDeckData, modeFilter: PracticeModeF
               mode,
               cardKey: paronym.srsKey,
               paronym,
+            }),
+          );
+        }
+        continue;
+      }
+      if (mode === 'imperative') {
+        const items = maps.imperative.get(indexItem.lemmaId) ?? [];
+        for (const imperative of items) {
+          candidates.push(
+            cachedSelection({
+              itemId: makeItemId(indexItem.lemmaId, mode, imperative.id),
+              lemma,
+              indexItem,
+              mode,
+              cardKey: imperative.srsKey || cardKey(indexItem.lemmaId, mode, imperative.slot),
+              imperative,
             }),
           );
         }
@@ -2618,6 +2696,7 @@ export function extendWithLowerDecks(base: PracticeDeckData, lowers: PracticeDec
     synonym: [...(base.synonym ?? []), ...lowers.flatMap((d) => d.synonym ?? [])],
     paronym: [...(base.paronym ?? []), ...lowers.flatMap((d) => d.paronym ?? [])],
     heritage: [...(base.heritage ?? []), ...lowers.flatMap((d) => d.heritage ?? [])],
+    imperative: [...(base.imperative ?? []), ...lowers.flatMap((d) => d.imperative ?? [])],
     fixtureNote: base.fixtureNote ?? lowers.find((d) => d.fixtureNote)?.fixtureNote,
   };
 }

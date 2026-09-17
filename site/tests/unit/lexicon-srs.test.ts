@@ -14,6 +14,7 @@ import {
   cardKey,
   countDailyPracticeDone,
   deriveDailyPracticeRows,
+  extendWithLowerDecks,
   getDueQueue,
   isPracticeMode,
   loadState,
@@ -23,6 +24,7 @@ import {
   readDailyPracticeDeckSnapshot,
   recentSessionHistory,
   refillDailyPracticeDeckSnapshot,
+  restoreSrsFromReviewEventExport,
   saveState,
   selectDailyPracticeDeckItems,
   czNorm,
@@ -42,6 +44,7 @@ import {
   type PracticeClozeItem,
   type PracticeDeckData,
   type PracticeHeritageItem,
+  type PracticeImperativeItem,
   type PracticeIndexItem,
   type PracticeLexeme,
   type PracticeMode,
@@ -51,6 +54,7 @@ import {
   type SelectionHistoryItem,
 } from '@site/src/lib/lexicon/srs';
 import { PRACTICE_LEVELS } from '@site/src/lib/lexicon/runtime-contract';
+import { exportReviewEventLog } from '@site/src/lib/lexicon/review-events';
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
 const HOUR_MS = 60 * 60 * 1000;
@@ -484,6 +488,15 @@ describe('lexicon SRS facade', () => {
       });
     }
 
+    for (const slot of ['2sg', '1pl', '2pl'] as const) {
+      expect(parseCardKey(`alpha::imperative::${slot}`)).toEqual({
+        lemmaId: 'alpha',
+        mode: 'imperative',
+        slot,
+        quarantined: false,
+      });
+    }
+
     for (const mode of ['paradigm', 'stress', 'classify', 'synonym', 'heritage'] as const) {
       const selection = selectNextPracticeItem(modeDeck([{ id: `${mode}-alpha`, modes: [mode] }]), {
         now: NOW,
@@ -491,6 +504,192 @@ describe('lexicon SRS facade', () => {
       expect(selection?.mode).toBe(mode);
     }
     expect(selectNextPracticeItem(modeDeck([{ id: 'paronym-alpha', modes: ['paronym'] }]), { now: NOW })).toBeNull();
+  });
+
+  test('imperative SRS keys round-trip through rating, reload, and reselection for all three slots', () => {
+    const slots = ['2sg', '1pl', '2pl'] as const;
+    const imperativeItems: PracticeImperativeItem[] = slots.map((slot) => ({
+      id: `imp_robyty_${slot}`,
+      lemmaId: 'робити',
+      srsKey: `робити::imperative::${slot}`,
+      lemma: 'роби́ти',
+      lemmaPlain: 'робити',
+      aspect: 'imperf',
+      slot,
+      slotLabelUa: slot === '2sg' ? '2-га особа однини' : slot === '1pl' ? '1-ша особа множини' : '2-га особа множини',
+      target: slot === '2sg' ? 'роби́' : slot === '1pl' ? 'робі́мо' : 'робі́ть',
+      targetPlain: slot === '2sg' ? 'роби' : slot === '1pl' ? 'робімо' : 'робіть',
+      acceptedAnswers: [slot === '2sg' ? 'роби' : slot === '1pl' ? 'робімо' : 'робіть'],
+      options: [{ text: 'роби́', isCorrect: true, code: 'CORRECT' }],
+      cefr: 'A2',
+    }));
+
+    const deck: PracticeDeckData = {
+      ...modeDeck([{ id: 'робити', modes: ['imperative'] }]),
+      imperative: imperativeItems,
+    };
+
+    // 1. Initial selection: all three slots are new with cardState: null
+    const initialCandidates = slots.map((slot) => {
+      const key = `робити::imperative::${slot}`;
+      const parsed = parseCardKey(key);
+      expect(parsed).toEqual({
+        lemmaId: 'робити',
+        mode: 'imperative',
+        slot,
+        quarantined: false,
+      });
+      return key;
+    });
+
+    const state1 = loadState(localStorage, NOW);
+    for (const key of initialCandidates) {
+      expect(state1.cards.get(key)).toBeUndefined();
+    }
+
+    const firstSelection = selectNextPracticeItem(deck, { now: NOW, modeFilter: 'imperative' });
+    expect(firstSelection).not.toBeNull();
+    expect(firstSelection?.mode).toBe('imperative');
+    expect(firstSelection?.cardState).toBeNull();
+    expect(initialCandidates).toContain(firstSelection?.cardKey);
+
+    // 2. Rate each slot independently
+    const reviewTimes = [NOW.getTime(), NOW.getTime() + 1000, NOW.getTime() + 2000];
+    slots.forEach((slot, idx) => {
+      const rated = rateCard('робити', 'imperative', 'good', reviewTimes[idx], { slotId: slot });
+      expect(rated.reps).toBe(1);
+      expect(rated.state).toBe(State.Learning);
+    });
+
+    // Verify all 3 slots have distinct active card states in current state
+    const state2 = loadState(localStorage, NOW);
+    for (const slot of slots) {
+      const key = `робити::imperative::${slot}`;
+      const card = state2.cards.get(key);
+      expect(card).toBeDefined();
+      expect(card?.reps).toBe(1);
+    }
+
+    // 3. Reselection immediately finds non-null cardState for the rated slot
+    const secondSelection = selectNextPracticeItem(deck, { now: NOW.getTime() + 3000, modeFilter: 'imperative' });
+    expect(secondSelection).not.toBeNull();
+    expect(secondSelection?.cardState).not.toBeNull();
+    expect(secondSelection?.cardState?.reps).toBe(1);
+
+    // 4. Reload from storage: no quarantine, card states preserved
+    const reloaded = loadState(localStorage, NOW.getTime() + 4000);
+    for (const slot of slots) {
+      const key = `робити::imperative::${slot}`;
+      const card = reloaded.cards.get(key);
+      expect(card).toBeDefined();
+      expect(card?.reps).toBe(1);
+    }
+
+    // 5. Direct cardKey rating also updates the specific slot
+    rateCard('робити::imperative::1pl', 'easy', NOW.getTime() + 5000);
+    const state3 = loadState(localStorage, NOW.getTime() + 5000);
+    expect(state3.cards.get('робити::imperative::1pl')?.reps).toBe(2);
+    expect(state3.cards.get('робити::imperative::2sg')?.reps).toBe(1);
+    expect(state3.cards.get('робити::imperative::2pl')?.reps).toBe(1);
+
+    // 6. Export review event log and restore into fresh storage:
+    // preserves 3 independent slot cards, does not collapse into single key
+    const exported = exportReviewEventLog(localStorage, NOW.getTime() + 6000);
+    const destStorage = new (class {
+      readonly values = new Map<string, string>();
+      getItem(k: string) { return this.values.get(k) ?? null; }
+      setItem(k: string, v: string) { this.values.set(k, v); }
+      removeItem(k: string) { this.values.delete(k); }
+    })();
+
+    const restored = restoreSrsFromReviewEventExport(exported, destStorage, NOW.getTime() + 6000);
+    expect(restored.ok).toBe(true);
+    expect(restored.ok && restored.updated).toBe(3);
+
+    const destState = loadState(destStorage, NOW.getTime() + 6000);
+    expect(destState.cards.get('робити::imperative::1pl')?.reps).toBe(2);
+    expect(destState.cards.get('робити::imperative::2sg')?.reps).toBe(1);
+    expect(destState.cards.get('робити::imperative::2pl')?.reps).toBe(1);
+    expect(destState.cards.get('робити::imperative')).toBeUndefined();
+  });
+
+  test('extendWithLowerDecks preserves and concatenates imperative items during background deck merging', () => {
+    const slots = ['2sg', '1pl', '2pl'] as const;
+    const imperativeItems: PracticeImperativeItem[] = slots.map((slot) => ({
+      id: `imp_robyty_${slot}`,
+      lemmaId: 'робити',
+      srsKey: `робити::imperative::${slot}`,
+      lemma: 'роби́ти',
+      lemmaPlain: 'робити',
+      aspect: 'imperf',
+      slot,
+      slotLabelUa: slot === '2sg' ? '2-га особа однини' : slot === '1pl' ? '1-ша особа множини' : '2-га особа множини',
+      target: slot === '2sg' ? 'роби́' : slot === '1pl' ? 'робі́мо' : 'робі́ть',
+      targetPlain: slot === '2sg' ? 'роби' : slot === '1pl' ? 'робімо' : 'робіть',
+      acceptedAnswers: [slot === '2sg' ? 'роби' : slot === '1pl' ? 'робімо' : 'робіть'],
+      options: [{ text: 'роби́', isCorrect: true, code: 'CORRECT' }],
+      cefr: 'A2',
+    }));
+
+    // Base deck (A2) with imperative drills loaded first
+    const baseDeck: PracticeDeckData = {
+      ...modeDeck([{ id: 'робити', modes: ['imperative'] }]),
+      level: 'A2',
+      imperative: imperativeItems,
+    };
+
+    // Verify selection succeeds before background core shards arrive
+    const beforeMerge = selectNextPracticeItem(baseDeck, { now: NOW, modeFilter: 'imperative' });
+    expect(beforeMerge).not.toBeNull();
+    expect(beforeMerge?.mode).toBe('imperative');
+
+    // Lower deck (e.g. A1 background core shard) arrives with additional core items
+    const lowerDeck: PracticeDeckData = {
+      ...modeDeck([{ id: 'читати', modes: ['flashcards'] }]),
+      level: 'A1',
+    };
+
+    // Background merge occurs: extendWithLowerDecks(baseDeck, [lowerDeck])
+    const mergedDeck = extendWithLowerDecks(baseDeck, [lowerDeck]);
+
+    // Imperative items must be preserved on the merged deck
+    expect(mergedDeck.imperative).toBeDefined();
+    expect(mergedDeck.imperative).toHaveLength(3);
+    expect(mergedDeck.imperative?.map((item) => item.id)).toEqual(imperativeItems.map((item) => item.id));
+
+    // Selection after merge must continue to find imperative candidates
+    const afterMerge = selectNextPracticeItem(mergedDeck, { now: NOW, modeFilter: 'imperative' });
+    expect(afterMerge).not.toBeNull();
+    expect(afterMerge?.mode).toBe('imperative');
+    expect(afterMerge?.lemma.lemmaId).toBe('робити');
+
+    // Also verify concatenation when lower deck also carries imperative items
+    const lowerWithImp: PracticeDeckData = {
+      ...modeDeck([{ id: 'пити', modes: ['imperative'] }]),
+      level: 'A1',
+      imperative: [
+        {
+          id: 'imp_pyty_2sg',
+          lemmaId: 'пити',
+          srsKey: 'пити::imperative::2sg',
+          lemma: 'пи́ти',
+          lemmaPlain: 'пити',
+          aspect: 'imperf',
+          slot: '2sg',
+          slotLabelUa: '2-га особа однини',
+          target: 'пий',
+          targetPlain: 'пий',
+          acceptedAnswers: ['пий'],
+          options: [{ text: 'пий', isCorrect: true, code: 'CORRECT' }],
+          cefr: 'A1',
+        },
+      ],
+    };
+
+    const combined = extendWithLowerDecks(baseDeck, [lowerWithImp]);
+    expect(combined.imperative).toHaveLength(4);
+    expect(combined.imperative?.map((i) => i.lemmaId)).toContain('робити');
+    expect(combined.imperative?.map((i) => i.lemmaId)).toContain('пити');
   });
 
   test('emits heritage candidates from published items in mixed and focus modes', () => {
@@ -606,6 +805,7 @@ describe('lexicon SRS facade', () => {
       'flashcards|matching|choice|cloze|paradigm|stress|heritage|synonym|classify|paronym': 3,
       'flashcards|matching|choice|cloze|paradigm|stress|heritage|synonym|classify|paronym|antonym': 4,
       'flashcards|matching|choice|cloze|paradigm|stress|heritage|synonym|classify|paronym|antonym|homonym': 5,
+      'flashcards|matching|choice|cloze|paradigm|stress|heritage|synonym|classify|paronym|antonym|homonym|imperative': 6,
     };
 
     expect(versionByModeSet[PRACTICE_MODES.join('|')]).toBe(PRACTICE_MODE_DECK_VERSION);

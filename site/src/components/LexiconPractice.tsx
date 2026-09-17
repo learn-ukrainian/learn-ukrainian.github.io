@@ -1056,7 +1056,9 @@ function reviewMetaFromSelection(selection: PracticeSelection): ReviewMeta {
         ? { slotId: selection.heritage.heritageId }
         : selection.stress?.stressId
           ? { slotId: selection.stress.stressId }
-          : {}),
+          : selection.imperative?.slot
+            ? { slotId: selection.imperative.slot }
+            : {}),
   };
 }
 

@@ -123,7 +123,7 @@ PUBLISHED_LEVELS = ("A1", "A2", "B1", "B2", "C1")
 # five-shard transport contract stable by carrying admitted, unlevelled
 # recognition lexemes in the first shard; the lexeme/index field remains null.
 UNKNOWN_CEFR_TRANSPORT_LEVEL = PUBLISHED_LEVELS[0]
-DRILL_MODES = ("stress", "classify", "paradigm", "synonym", "heritage", "paronym", "antonym", "homonym")
+DRILL_MODES = ("stress", "classify", "paradigm", "synonym", "heritage", "paronym", "antonym", "homonym", "imperative")
 MODE_SHARD_KEYS = ("cloze", *DRILL_MODES)
 MODE_SCHEMAS = {
     "cloze": "atlas-practice-cloze",
@@ -135,6 +135,7 @@ MODE_SCHEMAS = {
     "paronym": "atlas-practice-paronym",
     "antonym": "atlas-practice-antonym",
     "homonym": "atlas-practice-homonym",
+    "imperative": "atlas-practice-imperative",
 }
 MODE_BODY_KEYS = {
     "cloze": "cloze",
@@ -146,6 +147,7 @@ MODE_BODY_KEYS = {
     "paronym": "paronym",
     "antonym": "antonym",
     "homonym": "homonym",
+    "imperative": "imperative",
 }
 THIN_WARN_THRESHOLDS = {
     "cloze": 0.10,
