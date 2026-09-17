@@ -452,7 +452,7 @@ def check_word_agrees_with_head(w: str, head: str, cur_ves: sqlite3.Cursor | Non
     if head == "думку":
         return any((":f:" in t and ":v_zna" in t) or ":nv" in t for t in modifier_rows)
     if head == "погляд":
-        return any((":m:" in t and (":v_zna" in t or ":v_naz" in t)) or ":nv" in t for t in modifier_rows)
+        return any((":m:" in t and (":rinanim" in t or ":v_naz" in t)) or ":nv" in t for t in modifier_rows)
     return False
 
 

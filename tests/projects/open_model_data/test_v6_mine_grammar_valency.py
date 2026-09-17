@@ -583,6 +583,18 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.has_homogeneous_verb_comma(frag_taksi_pohlyad, cur_ves=cur)
     assert not miner.is_pristine_eval_sentence(frag_taksi_pohlyad, cur_ves=cur)
 
+    # Defect 43 / Negative regression (Round 20 P2): Animate accusative modifier 'першого' with inanimate head 'погляд' rejected (Правопис 2019 §158 I.11)
+    frag_pershoho_pohlyad = "Він реагує на слова, на першого погляд, і пише довгого листа."
+    assert not miner.is_parenthetical_segment("на першого погляд", cur_ves=cur)
+    assert miner.has_homogeneous_verb_comma(frag_pershoho_pohlyad, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_pershoho_pohlyad, cur_ves=cur)
+
+    # Defect 44 / Negative regression (Round 20 P2): Animate accusative modifier 'мого' with inanimate head 'погляд' rejected (Правопис 2019 §158 I.11)
+    frag_moho_pohlyad = "Він реагує на слова, на мого погляд, і пише довгого листа."
+    assert not miner.is_parenthetical_segment("на мого погляд", cur_ves=cur)
+    assert miner.has_homogeneous_verb_comma(frag_moho_pohlyad, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_moho_pohlyad, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:
