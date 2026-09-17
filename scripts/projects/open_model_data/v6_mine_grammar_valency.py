@@ -131,10 +131,11 @@ SUBJECT_COMMA_PRED_RE = re.compile(
     r'^[^\,]+,\s*(?:ні|і|або)\s+[^\,]+,\s*(?:ні|і|або)\s+[^\,]+,\s*(?:не\s+)?(?:дозволили|могли|змогли|повинн|стали|були|мають)\b',
     re.IGNORECASE,
 )
-SENTENCE_INITIAL_CONJUNCTION_COMMA_RE = re.compile(
-    r"^(?:Однак|Проте|Втім|Утім|Адже|Тож|Отож|Тобто),\s+",
+CLAUSE_INITIAL_CONJUNCTION_COMMA_RE = re.compile(
+    r"(?:^|,\s*)(?:Однак|Проте|Втім|Утім|Адже|Тож|Отож|Тобто),\s+",
     re.IGNORECASE,
 )
+SENTENCE_INITIAL_CONJUNCTION_COMMA_RE = CLAUSE_INITIAL_CONJUNCTION_COMMA_RE
 NON_PARENTHETICAL_ISOLATION_RE = re.compile(
     r"(?:^|,\s*)(?:насамперед|передусім|перш\s+за\s+все|водночас|разом\s+з\s+тим|до\s+того\s+ж|"
     r"тим\s+не\s+менше|між\s+тим|принаймні|в\s+основному|в\s+кінцевому\s+підсумку|"
@@ -323,6 +324,38 @@ COMMON_PREPOSITIONS = {
 }
 
 
+def get_verb_finite_tags(w: str, cur: sqlite3.Cursor) -> list[str]:
+    cur.execute(
+        "SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?) AND pos = 'verb'",
+        (w.lower(), w.capitalize()),
+    )
+    return [
+        r[0]
+        for r in cur.fetchall()
+        if any(x in r[0] for x in (":past:", ":pres:", ":futr:")) and ":inf" not in r[0]
+    ]
+
+
+def get_noun_subj_tags(w: str, cur: sqlite3.Cursor) -> list[str]:
+    cur.execute(
+        "SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?) AND (pos = 'noun' OR tags LIKE '%pron%')",
+        (w.lower(), w.capitalize()),
+    )
+    return [r[0] for r in cur.fetchall() if "v_naz" in r[0]]
+
+
+def check_verb_agreement(tags1: list[str], tags2: list[str]) -> bool:
+    for t1 in tags1:
+        for t2 in tags2:
+            if any((tag in t1 and tag in t2) for tag in (":past:p", ":past:m", ":past:f", ":past:n")):
+                return True
+            if any(tag in t1 for tag in (":pres:", ":futr:")) and any(tag in t2 for tag in (":pres:", ":futr:")):
+                for p in PERSON_NUMBER_TAGS:
+                    if p in t1 and p in t2:
+                        return True
+    return False
+
+
 def has_homogeneous_verb_comma(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
     """Reject erroneous comma separating homogeneous predicates joined by single coordinating conjunction (Правопис 2019 §158.1)."""
     if not cur_ves:
@@ -331,14 +364,10 @@ def has_homogeneous_verb_comma(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
         before = s[:m.start()]
         last_clause = before.split(",")[-1]
         words_last = re.findall(r"[а-яіїєґА-ЯІЇЄҐ'’]+", last_clause.lower())
-        if any(marker in words_last for marker in SUBORDINATE_MARKERS):
-            continue
 
         finite1_list = []
         for w1 in words_last:
-            cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (w1,))
-            rows1 = cur_ves.fetchall()
-            tags1 = [r[0] for r in rows1 if any(x in r[0] for x in (":past:", ":pres:", ":fut:")) and ":inf" not in r[0]]
+            tags1 = get_verb_finite_tags(w1, cur_ves)
             if tags1:
                 finite1_list.append((w1, tags1))
         if not finite1_list:
@@ -356,19 +385,23 @@ def has_homogeneous_verb_comma(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
                 has_new_subject = True
                 break
 
-            cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (w2,))
-            rows2 = cur_ves.fetchall()
-            tags2 = [r[0] for r in rows2 if any(x in r[0] for x in (":past:", ":pres:", ":fut:")) and ":inf" not in r[0]]
+            tags2 = get_verb_finite_tags(w2, cur_ves)
             if tags2:
                 v2_word = w2
                 finite2 = tags2
                 break
 
             if w2 not in COMMON_PREPOSITIONS:
-                cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (w2,))
+                cur_ves.execute(
+                    "SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?) AND pos = 'noun'",
+                    (w2, w2.capitalize()),
+                )
                 rows = cur_ves.fetchall()
                 if rows and any("v_naz" in r[0] for r in rows):
-                    cur_ves.execute("SELECT pos FROM forms_all WHERE word_form = ? AND pos IN ('adv', 'part')", (w2,))
+                    cur_ves.execute(
+                        "SELECT pos FROM forms_all WHERE (word_form = ? OR word_form = ?) AND pos IN ('adv', 'part')",
+                        (w2, w2.capitalize()),
+                    )
                     if not cur_ves.fetchone():
                         has_new_subject = True
                         break
@@ -378,36 +411,80 @@ def has_homogeneous_verb_comma(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
 
         match_agreement = False
         for _w1, tags1 in finite1_list:
-            for t1 in tags1:
-                for t2 in finite2:
-                    if any((tag in t1 and tag in t2) for tag in (":past:p", ":past:m", ":past:f", ":past:n")):
-                        match_agreement = True
-                    elif any(tag in t1 for tag in (":pres:", ":fut:")) and any(tag in t2 for tag in (":pres:", ":fut:")):
-                        for p in PERSON_NUMBER_TAGS:
-                            if p in t1 and p in t2:
-                                match_agreement = True
-            if match_agreement:
+            if check_verb_agreement(tags1, finite2):
+                match_agreement = True
                 break
 
-        if match_agreement:
-            idx_v2 = words_after.index(v2_word)
-            if idx_v2 + 1 < len(words_after):
-                next_w = words_after[idx_v2 + 1]
-                if next_w not in COMMON_PREPOSITIONS:
-                    is_v2_plural = any(":p" in t for t in finite2)
-                    is_v2_singular = any(":s" in t or any(g in t for g in (":m", ":f", ":n")) for t in finite2)
-                    cur_ves.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (next_w,))
-                    rows = cur_ves.fetchall()
-                    if rows:
-                        cur_ves.execute("SELECT pos FROM forms_all WHERE word_form = ? AND pos IN ('adv', 'part')", (next_w,))
-                        if not cur_ves.fetchone():
-                            if is_v2_plural and any(":p:v_naz" in r[0] for r in rows) and not any("v_zna" in r[0] for r in rows):
-                                continue
-                            if is_v2_singular and any(":s:v_naz" in r[0] or ":m:v_naz" in r[0] or ":f:v_naz" in r[0] or ":n:v_naz" in r[0] for r in rows) and not any("v_zna" in r[0] for r in rows):
-                                continue
-            return True
+        if not match_agreement:
+            continue
+
+        # If last_clause has a subordinate marker, check if v2 could coordinate with an earlier matrix clause instead
+        if any(marker in words_last for marker in SUBORDINATE_MARKERS):
+            all_prior_clauses = before.split(",")[:-1]
+            prior_agrees = False
+            for c in all_prior_clauses:
+                words_c = re.findall(r"[а-яіїєґА-ЯІЇЄҐ'’]+", c.lower())
+                for wc in words_c:
+                    tagsc = get_verb_finite_tags(wc, cur_ves)
+                    if tagsc and check_verb_agreement(tagsc, finite2):
+                        prior_agrees = True
+                        break
+                if prior_agrees:
+                    break
+            if prior_agrees:
+                continue
+
+        idx_v2 = words_after.index(v2_word)
+        if idx_v2 + 1 < len(words_after):
+            next_w = words_after[idx_v2 + 1]
+            if next_w not in COMMON_PREPOSITIONS:
+                is_v2_plural = any(":p" in t for t in finite2)
+                is_v2_singular = any(":s" in t or any(g in t for g in (":m", ":f", ":n")) for t in finite2)
+                cur_ves.execute(
+                    "SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?) AND pos = 'noun'",
+                    (next_w, next_w.capitalize()),
+                )
+                rows = cur_ves.fetchall()
+                if rows:
+                    cur_ves.execute(
+                        "SELECT pos FROM forms_all WHERE (word_form = ? OR word_form = ?) AND pos IN ('adv', 'part')",
+                        (next_w, next_w.capitalize()),
+                    )
+                    if not cur_ves.fetchone():
+                        if is_v2_plural and any(":p:v_naz" in r[0] for r in rows) and not any("v_zna" in r[0] for r in rows):
+                            continue
+                        if is_v2_singular and any(
+                            ":s:v_naz" in r[0] or ":m:v_naz" in r[0] or ":f:v_naz" in r[0] or ":n:v_naz" in r[0]
+                            for r in rows
+                        ) and not any("v_zna" in r[0] for r in rows):
+                            continue
+        return True
 
     return False
+
+
+def check_unpunctuated_compound_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
+    """Reject unpunctuated compound sentences lacking comma before coordinating conjunction (Правопис 2019 §158.2)."""
+    if not cur_ves:
+        return False
+    m = re.match(r"^([А-ЯІЇЄҐA-Z][а-яіїєґ\x27\u2019]+)\s+([А-ЯІЇЄҐA-Zа-яіїєґ\x27\u2019]+)\s+(?:і|й|та)\s+([^\,]+)", s)
+    if not m:
+        return False
+    w1, w2, after_str = m.group(1), m.group(2), m.group(3)
+    v1 = get_verb_finite_tags(w1, cur_ves) or get_verb_finite_tags(w2, cur_ves)
+    s1 = get_noun_subj_tags(w1, cur_ves) if not get_verb_finite_tags(w1, cur_ves) else get_noun_subj_tags(w2, cur_ves)
+    if not v1 or not s1:
+        return False
+
+    words_after = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\x27\u2019]+", after_str)
+    v2_list = [w for w in words_after if get_verb_finite_tags(w, cur_ves)]
+    s2_list = [w for w in words_after if get_noun_subj_tags(w, cur_ves) and w not in v2_list]
+    if not v2_list or not s2_list:
+        return False
+    idx_s2 = words_after.index(s2_list[0])
+    idx_v2 = words_after.index(v2_list[0])
+    subj1_word = w2 if get_verb_finite_tags(w1, cur_ves) else w1
+    return bool(idx_s2 < idx_v2 and subj1_word.lower() != s2_list[0].lower())
 
 
 def check_has_predicate(text: str, cur_ves: sqlite3.Cursor | None) -> bool:
@@ -494,6 +571,10 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
 
     # 12. Erroneous comma separating homogeneous predicates joined by single 'і/й/та' (Правопис 2019 §158.1)
     if has_homogeneous_verb_comma(s, cur_ves):
+        return False
+
+    # 13. Unpunctuated compound sentence lacking comma before 'і/й/та' (Правопис 2019 §158.2)
+    if check_unpunctuated_compound_sentence(s, cur_ves):
         return False
 
     # 4. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)

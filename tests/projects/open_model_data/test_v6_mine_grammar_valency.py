@@ -420,6 +420,26 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_pres_repro, cur_ves=cur)
     assert miner.has_homogeneous_verb_comma(frag_pres_repro, cur_ves=cur)
 
+    # Defect 27 (Round 11): Clause-initial conjunction comma after clause boundary (Правопис §158)
+    frag_otogh_comma = "Мовляв, начальство їхнє в Івано-Франківську, отож, звертайтеся туди."
+    assert not miner.is_pristine_eval_sentence(frag_otogh_comma, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_otogh_comma)) == 0
+
+    # Defect 28 (Round 11): Unpunctuated compound sentence lacking comma before 'і' (Правопис §158.2)
+    frag_unpunctuated_compound = "Підростав Олексій і вже Миколка народився, тож вирішив пан Роман сам зробити свою першу скрипку синові."
+    assert not miner.is_pristine_eval_sentence(frag_unpunctuated_compound, cur_ves=cur)
+    assert miner.check_unpunctuated_compound_sentence(frag_unpunctuated_compound, cur_ves=cur)
+
+    # Defect 29 (Round 11): Homogeneous predicate comma inside relative clause (Правопис §158.1)
+    frag_relative_homogeneous = "Діяльністю станції поліція зацікавилась ще в 2015-му, коли почала перевірку фірм, які виграли на тендерах ЧАЕС, і повинні були займатися демонтажем і дезактивацією обладнання машинних залів енергоблоків."
+    assert not miner.is_pristine_eval_sentence(frag_relative_homogeneous, cur_ves=cur)
+    assert miner.has_homogeneous_verb_comma(frag_relative_homogeneous, cur_ves=cur)
+
+    # Defect 30 (Round 11): Future-tense homogeneous predicate reproduction with VESUM ':futr:' (Правопис §158)
+    frag_futr_repro = "Він щодня читатиме книжки, і писатиме листи до друзів."
+    assert not miner.is_pristine_eval_sentence(frag_futr_repro, cur_ves=cur)
+    assert miner.has_homogeneous_verb_comma(frag_futr_repro, cur_ves=cur)
+
 
 def test_release_receipt_schema_and_checksum() -> None:
     """Validate release receipt against JSON schema and sha256 checksum."""
