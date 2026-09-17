@@ -1139,6 +1139,29 @@ RELATIVE_PRONOUNS = {
 SUBORDINATE_CONJUNCTIONS = {
     "де", "коли", "якщо", "хоч", "хоча", "бо", "тому що", "куди", "звідки", "доки", "поки", "як",
 }
+PREPOSITIONS = {
+    "в", "у", "вві", "уві", "до", "від", "од", "з", "із", "зі", "ізо",
+    "за", "на", "над", "надо", "під", "підо", "перед", "передо", "по",
+    "через", "крізь", "при", "про", "без", "для", "після", "проти",
+    "серед", "коло", "біля", "повз", "круг", "довкола", "навколо",
+    "поруч", "посеред", "щодо", "заради", "замість", "всупереч",
+    "згідно", "наперекір", "завдяки", "поза", "понад", "попід",
+    "поміж", "між", "близько", "щойно", "супроти", "вздовж", "уздовж",
+    "крім", "опрач",
+}
+
+
+def is_preposition(word: str, cur: sqlite3.Cursor | None = None) -> bool:
+    """Check whether a word is a preposition under Правопис 2019 and VESUM."""
+    if word in PREPOSITIONS:
+        return True
+    if cur:
+        try:
+            cur.execute("SELECT 1 FROM forms_all WHERE word_form = ? AND pos = 'prep' LIMIT 1", (word,))
+            return cur.fetchone() is not None
+        except Exception:
+            pass
+    return False
 
 RELATIVE_PRONOUN_PATTERN = (
     r"(?:який|яка|яке|які|якого|якій|яким|яких|якої|якому|яку|якими|"
@@ -1181,9 +1204,10 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
     A predicate in a closed nested relative clause (e.g. 'працювала', 'перебував') cannot satisfy the enclosing clause ('де ...').
     Apostrophes (ASCII, typographic, modifier) are normalized under Правопис 2019 §9 so tokenization accurately preserves
     words with apostrophes (e.g. 'зв’язку') within multiword boundaries, and relative clause detection scans without a fixed-window
-    limit before the relative pronoun.
-    Predicate detection requires finite verb forms (:past, :pres, :futr, :impr, :impers) and disambiguates noun/infinitive
-    homonyms (e.g. 'мати', 'брати') so that noun subjects in open clauses are not falsely treated as clause-completing predicates.
+    Predicate detection requires finite indicative or impersonal verb forms (:past, :pres, :futr, :impers) or predicative words (PREDICATE_WORDS).
+    Imperative forms (:impr), non-finite infinitives (:inf, e.g. 'побачити' in dependent 'після спроби побачити'), and nominal
+    complements in prepositional phrases (e.g. 'зміни' in 'після зміни') do not complete subordinate clauses.
+    Disambiguation ensures noun subjects and prepositional complements are not falsely treated as clause-completing predicates.
     Each opened subordinate clause must have its own predicate outside nested clauses and cannot remain unclosed at end_dash.
     """
     unquoted_inside = normalize_apostrophes(unquoted_inside)
@@ -1191,8 +1215,10 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
         return True
 
     def words_have_predicate(words: list[str]) -> bool:
-        for w in words:
+        for idx, w in enumerate(words):
             if w in PREDICATE_WORDS:
+                if idx > 0 and is_preposition(words[idx - 1], cur):
+                    continue
                 return True
             if cur:
                 try:
@@ -1201,15 +1227,23 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                     verb_rows = [r for r in rows if r[0] == "verb"]
                     if not verb_rows:
                         continue
+                    # Subordinate clauses require finite indicative or impersonal predicates (:past, :pres, :futr, :impers).
+                    # Imperative (:impr) forms and non-finite infinitives (:inf) do not complete subordinate clauses.
                     has_finite_verb = any(
-                        any(t in r[1] for t in (":past", ":pres", ":futr", ":impr", ":impers"))
+                        any(t in r[1] for t in (":past", ":pres", ":futr", ":impers"))
                         for r in verb_rows
                     )
-                    if has_finite_verb:
-                        return True
+                    if not has_finite_verb:
+                        continue
+                    # Disambiguate finite verbs homonymous with nouns:
+                    # If a word has a noun reading and is preceded by a preposition in the clause segment,
+                    # it functions as a nominal complement in a prepositional phrase, not a clause predicate.
                     has_noun_reading = any(r[0] == "noun" for r in rows)
-                    if not has_noun_reading:
-                        return True
+                    if has_noun_reading:
+                        preceded_by_prep = any(is_preposition(words[j], cur) for j in range(max(0, idx - 3), idx))
+                        if preceded_by_prep:
+                            continue
+                    return True
                 except Exception:
                     pass
         return False
@@ -1276,7 +1310,7 @@ def extract_dash_apposition_spans(s: str, cur_ves: sqlite3.Cursor | None = None)
       'у тісному зв’язку з якими він перебував', 'мати яких працювала'), ensuring predicates in nested or earlier relative
       clauses do not falsely satisfy enclosing clauses, with apostrophe normalization preserving token integrity,
       unbounded scans accommodating noun heads with homonymous verb readings, and finite predicate disambiguation
-      preventing noun/infinitive homonyms from faking clause completeness.
+      preventing noun/infinitive homonyms, dependent infinitives, and prepositional noun phrases from faking clause completeness.
     - Quoted spans are excluded before both subordinate-marker detection and predicate detection
       (Правопис 2019 §154, §164), preserving quoted-title boundaries so that subordinate markers inside
       quoted titles (e.g. «Життя, що триває») do not trigger false subordinate clause boundaries or

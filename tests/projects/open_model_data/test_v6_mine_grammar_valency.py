@@ -1159,6 +1159,54 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_noun_sestra, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_noun_sestra)) == 1
 
+    # Defect 132 / Negative regression (Round 62 P2): Verb homonym with imperative reading in prepositional phrase does not fake clause completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_discordant_apposition_prep_homonym_zminy = (
+        "Театр — місце, де після зміни режисера вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_prep_homonym_zminy, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_prep_homonym_zminy, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_prep_homonym_zminy)) == 0
+
+    # Defect 133 / Positive control (Round 62 P2): Agreeing instrumental apposition with prepositional phrase accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_agreeing_apposition_prep_homonym_zminy = (
+        "Театр — місце, де після зміни режисера вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_prep_homonym_zminy, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_prep_homonym_zminy, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_prep_homonym_zminy)) == 1
+
+    # Defect 134 / Contrastive negative control (Round 62 P2): Unambiguous noun in prepositional phrase rejects discordant apposition (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_discordant_apposition_prep_noun_kontsert = (
+        "Театр — місце, де після концерту вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_prep_noun_kontsert, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_prep_noun_kontsert, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_prep_noun_kontsert)) == 0
+
+    # Defect 135 / Contrastive positive control (Round 62 P2): Unambiguous noun in prepositional phrase accepts agreeing apposition (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_agreeing_apposition_prep_noun_kontsert = (
+        "Театр — місце, де після концерту вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_prep_noun_kontsert, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_prep_noun_kontsert, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_prep_noun_kontsert)) == 1
+
+    # Defect 136 / Negative regression (Round 62 P2): Dependent infinitive in prepositional phrase does not fake clause completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_discordant_apposition_dependent_infinitive = (
+        "Театр — місце, де мати після спроби побачити виставу вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_dependent_infinitive, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_dependent_infinitive, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_dependent_infinitive)) == 0
+
+    # Defect 137 / Positive control (Round 62 P2): Agreeing instrumental apposition with dependent infinitive accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_agreeing_apposition_dependent_infinitive = (
+        "Театр — місце, де мати після спроби побачити виставу вдалою режисерською знахідкою – своєрідною грою та імпровізацією – вважала комічні вибрики."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_dependent_infinitive, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_dependent_infinitive, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_dependent_infinitive)) == 1
+
 
 def test_release_receipt_schema_and_checksum() -> None:
     """Validate release receipt against JSON schema and sha256 checksum."""
