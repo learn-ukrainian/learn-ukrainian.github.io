@@ -1164,25 +1164,31 @@ def is_preposition(word: str, cur: sqlite3.Cursor | None = None) -> bool:
     return False
 
 
-def is_modifier_or_adv(word: str, cur: sqlite3.Cursor | None = None) -> bool:
-    """Check whether a word is an adjective, pronoun, numeral, adverb, or particle modifying a noun."""
+def get_vesum_pos(word: str, cur: sqlite3.Cursor | None = None) -> set[str]:
+    """Return distinct POS tags for a word from forms_all."""
     if not cur:
-        return False
+        return set()
     try:
         cur.execute("SELECT DISTINCT pos FROM forms_all WHERE word_form = ?", (word,))
-        pos_set = {r[0] for r in cur.fetchall()}
-        return bool(pos_set & {"adj", "pron", "num", "adv", "part"})
+        return {r[0] for r in cur.fetchall()}
     except Exception:
-        return False
+        return set()
 
 
 def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor | None = None) -> bool:
-    """Check whether words[idx] functions as the nominal complement of a preceding preposition."""
-    for p in range(idx - 1, max(-1, idx - 5), -1):
-        if is_preposition(words[p], cur):
-            if all(is_modifier_or_adv(words[k], cur) for k in range(p + 1, idx)):
-                return True
-            break
+    """Check whether words[idx] is governed by an unclosed enclosing or nested preposition."""
+    prep_stack: list[int] = []
+    for i in range(idx + 1):
+        w = words[i]
+        if is_preposition(w, cur):
+            prep_stack.append(i)
+        elif prep_stack:
+            pos_tags = get_vesum_pos(w, cur)
+            if i == idx:
+                return len(prep_stack) > 0
+            # A head noun closes the innermost preposition
+            if "noun" in pos_tags and not (pos_tags & {"adj", "adv", "part"}):
+                prep_stack.pop()
     return False
 
 RELATIVE_PRONOUN_PATTERN = (
@@ -1226,10 +1232,12 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
     A predicate in a closed nested relative clause (e.g. 'працювала', 'перебував') cannot satisfy the enclosing clause ('де ...').
     Apostrophes (ASCII, typographic, modifier) are normalized under Правопис 2019 §9 so tokenization accurately preserves
     words with apostrophes (e.g. 'зв’язку') within multiword boundaries, and relative clause detection scans without a fixed-window
+    limit before the relative pronoun.
     Predicate detection requires finite indicative or impersonal verb forms (:past, :pres, :futr, :impers) or predicative words (PREDICATE_WORDS).
     Imperative forms (:impr), non-finite infinitives (:inf, e.g. 'побачити' in dependent 'після спроби побачити'), and nominal
-    complements in prepositional phrases (e.g. 'зміни' in 'після зміни') do not complete subordinate clauses.
-    Disambiguation ensures noun subjects and prepositional complements are not falsely treated as clause-completing predicates.
+    complements in prepositional phrases (e.g. 'зміни' in 'після зміни', 'час' in 'у вільний від роботи час' and 'у цей дуже важливий вільний час')
+    do not complete subordinate clauses. Structural prepositional phrase tracking accounts for enclosing prepositions, nested prepositional
+    modifiers, and expanded modifier chains without token cutoffs, ensuring noun subjects and prepositional complements are not falsely treated as predicates.
     Each opened subordinate clause must have its own predicate outside nested clauses and cannot remain unclosed at end_dash.
     """
     unquoted_inside = normalize_apostrophes(unquoted_inside)
@@ -1329,7 +1337,8 @@ def extract_dash_apposition_spans(s: str, cur_ves: sqlite3.Cursor | None = None)
       'у тісному зв’язку з якими він перебував', 'мати яких працювала'), ensuring predicates in nested or earlier relative
       clauses do not falsely satisfy enclosing clauses, with apostrophe normalization preserving token integrity,
       unbounded scans accommodating noun heads with homonymous verb readings, and finite predicate disambiguation
-      preventing noun/infinitive homonyms, dependent infinitives, and prepositional noun phrases from faking clause completeness.
+      with structural prepositional phrase tracking preventing noun/infinitive homonyms, dependent infinitives, and
+      enclosing/nested prepositional noun phrases from faking clause completeness.
     - Quoted spans are excluded before both subordinate-marker detection and predicate detection
       (Правопис 2019 §154, §164), preserving quoted-title boundaries so that subordinate markers inside
       quoted titles (e.g. «Життя, що триває») do not trigger false subordinate clause boundaries or

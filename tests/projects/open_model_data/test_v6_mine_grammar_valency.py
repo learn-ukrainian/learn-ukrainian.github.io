@@ -1223,6 +1223,38 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_prep_modified_chas, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_prep_modified_chas)) == 1
 
+    # Defect 140 / Negative regression (Round 64 P2): Enclosing prepositional phrase with nested prepositional modifier does not fake clause completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_discordant_apposition_nested_prep_chas = (
+        "Театр — місце, де у вільний від роботи час вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_nested_prep_chas, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_nested_prep_chas, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_nested_prep_chas)) == 0
+
+    # Defect 141 / Positive control (Round 64 P2): Agreeing instrumental apposition with nested prepositional phrase accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_agreeing_apposition_nested_prep_chas = (
+        "Театр — місце, де у вільний від роботи час вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_nested_prep_chas, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_nested_prep_chas, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_nested_prep_chas)) == 1
+
+    # Defect 142 / Negative regression (Round 64 P2): Expanded modifier chain without token cutoff does not fake clause completeness (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_discordant_apposition_expanded_modifiers_chas = (
+        "Театр — місце, де у цей дуже важливий вільний час вдалою режисерською знахідкою – своєрідна гра та імпровізація – стали комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_expanded_modifiers_chas, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_expanded_modifiers_chas, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_expanded_modifiers_chas)) == 0
+
+    # Defect 143 / Positive control (Round 64 P2): Agreeing instrumental apposition with expanded modifier chain accepted (Правопис 2019 §9, §37, §158, §161, Ющук §21)
+    frag_agreeing_apposition_expanded_modifiers_chas = (
+        "Театр — місце, де у цей дуже важливий вільний час вдалою режисерською знахідкою – своєрідною грою та імпровізацією – стали комічні вибрики."
+    )
+    assert not miner.has_discordant_dash_apposition(frag_agreeing_apposition_expanded_modifiers_chas, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_agreeing_apposition_expanded_modifiers_chas, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_agreeing_apposition_expanded_modifiers_chas)) == 1
+
 
 def test_release_receipt_schema_and_checksum() -> None:
     """Validate release receipt against JSON schema and sha256 checksum."""
