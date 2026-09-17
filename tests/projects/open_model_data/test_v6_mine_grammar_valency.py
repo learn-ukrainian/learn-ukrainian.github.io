@@ -1661,6 +1661,38 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_pani_likarka, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_pani_likarka)) == 0
 
+    # Defect 193 / Negative regression (Round 78 Codex P2): Unambiguous finite verb preceded by quantity adverb ('що багато працювала') completes relative clause, preserving discordant apposition detection (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_bahato_pratsiuvav = (
+        "Він говорив із сестрою — дівчиною, що багато працювала — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_bahato_pratsiuvav, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_bahato_pratsiuvav, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_bahato_pratsiuvav)) == 0
+
+    # Defect 194 / Negative regression (Round 78 Codex P2): Unambiguous finite verb preceded by quantity adverb ('що трохи говорила') completes relative clause, preserving discordant apposition detection (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_trokhy_hovoryla = (
+        "Він говорив із сестрою — дівчиною, що трохи говорила — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_trokhy_hovoryla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_trokhy_hovoryla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_trokhy_hovoryla)) == 0
+
+    # Defect 195 / Negative regression (Round 78 Fable P2 Finding 2): Frequency noun phrase with quantifier ('кілька разів') functions as frequency adverbial rather than direct object (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_kilka_raziv = (
+        "Театр — місце, де я після купівлі мила кілька разів вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважав комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_kilka_raziv, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_kilka_raziv, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_kilka_raziv)) == 0
+
+    # Defect 196 / Negative regression (Round 78 Fable P2 Finding 3): Indeclinable prenominal title noun ('леді лікарка') modifying nominative subject does not count as direct object (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_ledi_likarka = (
+        "Театр — місце, де леді лікарка після купівлі мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_ledi_likarka, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_ledi_likarka, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_ledi_likarka)) == 0
+
 
 
 

@@ -1409,6 +1409,16 @@ QUANTITY_WORDS = {
     "чимало", "трохи", "мало", "немало",
 }
 
+MEASURE_AND_FREQUENCY_NOUNS = {
+    "раз", "рази", "разів", "разу", "разом",
+    "крок", "кроки", "кроків", "крока", "кроком",
+    "кілометр", "кілометри", "кілометрів", "кілометра", "кілометром",
+    "метр", "метри", "метрів", "метра", "метром",
+    "сантиметр", "сантиметри", "сантиметрів",
+    "миля", "милі", "миль",
+    "поверх", "поверхи", "поверхів",
+}
+
 
 def get_clause_direct_object_indices(words: list[str], verb_idx: int, cur: sqlite3.Cursor | None = None) -> list[int]:
     """Return indices of words in the clause that can serve as direct objects for words[verb_idx]."""
@@ -1425,7 +1435,7 @@ def get_clause_direct_object_indices(words: list[str], verb_idx: int, cur: sqlit
             continue
         if w_lower in {"який", "яка", "яке", "які", "котрий", "котра", "котре", "котрі", "хто", "що"}:
             continue
-        if w_lower in TIME_DURATION_NOUNS:
+        if w_lower in TIME_DURATION_NOUNS or w_lower in MEASURE_AND_FREQUENCY_NOUNS:
             continue
         # Event duration nouns modified by universal quantifiers, quantity words, or numerals
         # with optional intervening adjectives (e.g. 'всю виставу', 'всю довгу виставу', 'п\'ять вистав', 'дві вистави')
@@ -1446,10 +1456,19 @@ def get_clause_direct_object_indices(words: list[str], verb_idx: int, cur: sqlit
             if is_dur:
                 continue
 
-        # Prenominal title words (e.g. 'пані лікарка', 'добродійка вчителька') modify the following noun
-        # and do not serve as direct objects
-        if w_lower in {"пані", "добродійка"} and i + 1 < len(words) and "noun" in get_vesum_pos(words[i + 1].lower(), cur):
-            continue
+        # Prenominal title or appositive noun (e.g. 'пані лікарка', 'леді лікарка', 'мадам директорка', 'добродійка вчителька')
+        # immediately preceding another nominative noun is an appositive to the subject, not a direct object
+        if i + 1 < len(words):
+            try:
+                cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (w_lower,))
+                w_rows = cur.fetchall()
+                if any("v_naz" in r[0] for r in w_rows):
+                    cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (words[i + 1].lower(),))
+                    next_rows = cur.fetchall()
+                    if any("v_naz" in r[0] for r in next_rows):
+                        continue
+            except Exception:
+                pass
 
         # Check if w is a numeral or quantity word (e.g. 'багато посуду', 'п\'ять чашок', 'кілька тарілок')
         is_numr = bool(get_vesum_pos(w_lower, cur) & {"numr"})
@@ -1460,8 +1479,12 @@ def get_clause_direct_object_indices(words: list[str], verb_idx: int, cur: sqlit
                 next_k += 1
             if next_k < len(words) and not is_in_direct_or_enclosing_pp(words, next_k, cur):
                 head_w = words[next_k].lower()
-                if head_w in TIME_DURATION_NOUNS or head_w in EVENT_DURATION_NOUNS:
-                    continue  # Duration adverbial, not direct object
+                if (
+                    head_w in TIME_DURATION_NOUNS
+                    or head_w in EVENT_DURATION_NOUNS
+                    or head_w in MEASURE_AND_FREQUENCY_NOUNS
+                ):
+                    continue  # Duration, frequency, or measure adverbial, not direct object
                 try:
                     cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (head_w,))
                     head_rows = cur.fetchall()
@@ -1633,30 +1656,38 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                     )
                     if not has_finite_verb:
                         continue
-                    # If preceded by a numeral or quantity word (e.g. 'п\'ять вистав', 'кілька вистав'),
-                    # words[idx] is a quantified genitive plural noun complement, not a predicate
-                    prev_k = idx - 1
-                    while (
-                        prev_k >= 0
-                        and is_modifier_or_adv(words[prev_k], cur)
-                        and not is_preposition(words[prev_k], cur)
-                    ):
-                        if (
-                            words[prev_k].lower() in QUANTITY_WORDS
-                            or bool(get_vesum_pos(words[prev_k], cur) & {"numr"})
-                        ):
-                            break
-                        prev_k -= 1
-                    if prev_k >= 0 and (
-                        words[prev_k].lower() in QUANTITY_WORDS
-                        or bool(get_vesum_pos(words[prev_k], cur) & {"numr"})
-                    ):
-                        continue
                     # Disambiguate finite verbs homonymous with nouns:
-                    # If a word has a noun reading and is in a prepositional phrase, it is a noun, not a predicate.
                     has_noun_reading = any(r[0] == "noun" for r in rows)
-                    if has_noun_reading and is_in_prepositional_phrase(words, idx, cur):
-                        continue
+                    if has_noun_reading:
+                        # 1. If preceded by a numeral or quantity word and has a genitive/accusative noun reading
+                        #    (e.g. 'п\'ять вистав', 'кілька вистав'), words[idx] is a quantified noun complement, not a predicate
+                        has_gen_acc_noun = any(
+                            r[0] == "noun" and any(case in r[1] for case in ("v_rod", "v_zna"))
+                            for r in rows
+                        )
+                        if has_gen_acc_noun:
+                            prev_k = idx - 1
+                            while (
+                                prev_k >= 0
+                                and is_modifier_or_adv(words[prev_k], cur)
+                                and not is_preposition(words[prev_k], cur)
+                            ):
+                                if (
+                                    words[prev_k].lower() in QUANTITY_WORDS
+                                    or bool(get_vesum_pos(words[prev_k], cur) & {"numr"})
+                                ):
+                                    break
+                                prev_k -= 1
+                            if prev_k >= 0 and (
+                                words[prev_k].lower() in QUANTITY_WORDS
+                                or bool(get_vesum_pos(words[prev_k], cur) & {"numr"})
+                            ):
+                                continue
+
+                        # 2. If a word has a noun reading and is in a prepositional phrase, it is a noun, not a predicate.
+                        if is_in_prepositional_phrase(words, idx, cur):
+                            continue
+
                     return True
                 except Exception:
                     pass
