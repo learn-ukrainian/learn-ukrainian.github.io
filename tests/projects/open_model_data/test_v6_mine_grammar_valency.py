@@ -1693,6 +1693,60 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_ledi_likarka, cur_ves=cur)
     assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_ledi_likarka)) == 0
 
+    # Defect 197 / Negative regression (Round 79 Codex P2 Finding 1): Physical building floors ('мила поверхи') is a direct object, not a measure adverbial (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_poverkhy = (
+        "Він говорив із сестрою — дівчиною, що після роботи мила поверхи — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_poverkhy, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_poverkhy, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_poverkhy)) == 0
+
+    # Defect 198 / Negative regression (Round 79 Codex P2 Finding 2): Direct object preceding noun subject ('посуд лікарка') is not discarded as title apposition (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_posud_likarka = (
+        "Він говорив із сестрою — дівчиною, якій після роботи мила посуд лікарка — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_posud_likarka, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_posud_likarka, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_posud_likarka)) == 0
+
+    # Defect 199 / Negative regression (Round 79 Fable P2 Finding 1): Direct object preceding noun subject ('посуд сестра') is not discarded as title apposition (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_posud_sestra = (
+        "Він говорив із сестрою — дівчиною, у якої посуд сестра після роботи мила — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_posud_sestra, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_posud_sestra, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_posud_sestra)) == 0
+
+    # Defect 200 / Negative regression (Round 79 Fable P2 Finding 2): Verb/noun homonyms following quantity adverbs ('багато пекла', 'багато шила', 'трохи мила') serve as finite predicates (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_bahato_pekla = (
+        "Він говорив із сестрою — дівчиною, що багато пекла — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_bahato_pekla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_bahato_pekla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_bahato_pekla)) == 0
+
+    frag_discordant_apposition_trokhy_myla = (
+        "Він говорив із сестрою — дівчиною, що трохи мила посуд — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_trokhy_myla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_trokhy_myla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_trokhy_myla)) == 0
+
+    frag_discordant_apposition_bahato_shyla = (
+        "Він говорив із сестрою — дівчиною, що багато шила — та з лікаркою — досвідчена фахівчиня — про виставу."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_bahato_shyla, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_bahato_shyla, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_bahato_shyla)) == 0
+
+    # Defect 201 / Negative regression (Round 79 Fable P3 Finding 4): Intervening adjective between title and noun ('пані головна лікарка') modifies subject and does not count as direct object (Правопис 2019 §9, §37, §158, §161)
+    frag_discordant_apposition_pani_holovna_likarka = (
+        "Театр — місце, де пані головна лікарка після купівлі мила вдалою режисерською знахідкою – своєрідна гра та імпровізація – вважала комічні вибрики."
+    )
+    assert miner.has_discordant_dash_apposition(frag_discordant_apposition_pani_holovna_likarka, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_discordant_apposition_pani_holovna_likarka, cur_ves=cur)
+    assert len(miner.split_clean_ukrainian_sentences(frag_discordant_apposition_pani_holovna_likarka)) == 0
+
 
 
 

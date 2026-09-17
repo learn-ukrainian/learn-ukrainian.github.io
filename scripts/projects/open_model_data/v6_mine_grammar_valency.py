@@ -1410,13 +1410,17 @@ QUANTITY_WORDS = {
 }
 
 MEASURE_AND_FREQUENCY_NOUNS = {
-    "раз", "рази", "разів", "разу", "разом",
+    "раз", "рази", "разів", "разу",
     "крок", "кроки", "кроків", "крока", "кроком",
     "кілометр", "кілометри", "кілометрів", "кілометра", "кілометром",
     "метр", "метри", "метрів", "метра", "метром",
     "сантиметр", "сантиметри", "сантиметрів",
     "миля", "милі", "миль",
-    "поверх", "поверхи", "поверхів",
+}
+
+PRENOMINAL_TITLES = {
+    "пані", "пан", "добродійка", "добродій",
+    "леді", "мадам", "міс", "місіс", "фрау", "мадмуазель",
 }
 
 
@@ -1456,14 +1460,15 @@ def get_clause_direct_object_indices(words: list[str], verb_idx: int, cur: sqlit
             if is_dur:
                 continue
 
-        # Prenominal title or appositive noun (e.g. 'пані лікарка', 'леді лікарка', 'мадам директорка', 'добродійка вчителька')
-        # immediately preceding another nominative noun is an appositive to the subject, not a direct object
-        if i + 1 < len(words):
+        # Prenominal title or honorific noun (e.g. 'пані лікарка', 'пані головна лікарка', 'леді лікарка', 'мадам директорка')
+        # modifying another nominative subject noun is an appositive to the subject, not a direct object
+        if w_lower in PRENOMINAL_TITLES and i + 1 < len(words):
             try:
-                cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (w_lower,))
-                w_rows = cur.fetchall()
-                if any("v_naz" in r[0] for r in w_rows):
-                    cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (words[i + 1].lower(),))
+                next_k = i + 1
+                while next_k < len(words) and is_modifier_or_adv(words[next_k], cur) and not is_preposition(words[next_k], cur):
+                    next_k += 1
+                if next_k < len(words):
+                    cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (words[next_k].lower(),))
                     next_rows = cur.fetchall()
                     if any("v_naz" in r[0] for r in next_rows):
                         continue
@@ -1659,13 +1664,9 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                     # Disambiguate finite verbs homonymous with nouns:
                     has_noun_reading = any(r[0] == "noun" for r in rows)
                     if has_noun_reading:
-                        # 1. If preceded by a numeral or quantity word and has a genitive/accusative noun reading
-                        #    (e.g. 'п\'ять вистав', 'кілька вистав'), words[idx] is a quantified noun complement, not a predicate
-                        has_gen_acc_noun = any(
-                            r[0] == "noun" and any(case in r[1] for case in ("v_rod", "v_zna"))
-                            for r in rows
-                        )
-                        if has_gen_acc_noun:
+                        # 1. If words[idx] is an event duration noun preceded by a numeral, quantity word, or duration modifier
+                        #    (e.g. 'п\'ять вистав', 'дві вистави', 'кілька вистав'), it is a duration noun complement, not a predicate
+                        if words[idx].lower() in EVENT_DURATION_NOUNS:
                             prev_k = idx - 1
                             while (
                                 prev_k >= 0
@@ -1674,12 +1675,14 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
                             ):
                                 if (
                                     words[prev_k].lower() in QUANTITY_WORDS
+                                    or words[prev_k].lower() in DURATION_MODIFIERS
                                     or bool(get_vesum_pos(words[prev_k], cur) & {"numr"})
                                 ):
                                     break
                                 prev_k -= 1
                             if prev_k >= 0 and (
                                 words[prev_k].lower() in QUANTITY_WORDS
+                                or words[prev_k].lower() in DURATION_MODIFIERS
                                 or bool(get_vesum_pos(words[prev_k], cur) & {"numr"})
                             ):
                                 continue
