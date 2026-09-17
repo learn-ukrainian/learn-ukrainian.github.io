@@ -1206,13 +1206,25 @@ def words_can_agree(adj_word: str, noun_word: str, cur: sqlite3.Cursor | None = 
         return True
 
 
+def has_genitive_reading(word: str, cur: sqlite3.Cursor | None = None) -> bool:
+    """Check whether a word has an attested genitive noun reading in VESUM."""
+    if not cur:
+        return True
+    try:
+        cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (word,))
+        return any("v_rod" in r[0] for r in cur.fetchall())
+    except Exception:
+        return True
+
+
 def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor | None = None) -> bool:
     """Check whether words[idx] is governed by an unclosed enclosing or nested preposition.
 
     Handles:
     1. Direct prepositional phrases with optional modifiers (e.g. 'під час', 'у вільний час', 'після зміни').
-    2. Enclosing prepositional phrases with nested prepositional modifiers modifying a prenominal adjective
-       across dependent noun phrases without premature closure (e.g. 'у вільний від виконання роботи час').
+    2. Dependent nouns in an adnominal genitive chain inside a prepositional phrase (e.g. 'від виготовлення мила', 'після зміни режисера').
+    3. Enclosing prepositional phrases with nested prepositional modifiers modifying a prenominal adjective
+       across dependent noun phrases and noun/verb homonyms without premature closure (e.g. 'у вільний від виготовлення мила час').
     """
     if idx <= 0:
         return False
@@ -1224,11 +1236,31 @@ def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor |
     if k >= 0 and is_preposition(words[k], cur):
         return True
 
-    # Pattern 2: Enclosing preposition with prenominal adjective modified by a nested phrase
     noun_tags = get_vesum_pos(words[idx], cur)
     if "noun" not in noun_tags:
         return False
 
+    # Pattern 2: Dependent noun in an adnominal genitive chain inside a prepositional phrase
+    # (e.g. 'від виготовлення мила', 'після зміни режисера')
+    if has_genitive_reading(words[idx], cur):
+        for p_idx in range(idx - 1, -1, -1):
+            if is_preposition(words[p_idx], cur):
+                span = words[p_idx + 1 : idx]
+                valid = True
+                has_intervening_noun = False
+                for w in span:
+                    w_pos = get_vesum_pos(w, cur)
+                    if w in CLAUSE_INTRO or ("verb" in w_pos and not (w_pos & {"noun", "adj", "pron"})):
+                        valid = False
+                        break
+                    if "noun" in w_pos:
+                        has_intervening_noun = True
+                if valid and has_intervening_noun:
+                    return True
+            if words[p_idx] in CLAUSE_INTRO:
+                break
+
+    # Pattern 3: Enclosing preposition with prenominal adjective modified by a nested phrase
     for p_idx in range(idx):
         if not is_preposition(words[p_idx], cur):
             continue
@@ -1246,7 +1278,8 @@ def is_in_prepositional_phrase(words: list[str], idx: int, cur: sqlite3.Cursor |
                 nested_prep_idx = abs_i
                 continue
             pos = get_vesum_pos(s_w, cur)
-            if "verb" in pos and cur:
+            # A finite verb interrupts the prepositional phrase only if it lacks nominal/adjectival readings
+            if "verb" in pos and not (pos & {"noun", "adj", "pron"}) and cur:
                 try:
                     cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'verb'", (s_w,))
                     v_rows = cur.fetchall()
@@ -1314,9 +1347,9 @@ def check_subordinate_clauses_complete(unquoted_inside: str, cur: sqlite3.Cursor
     limit before the relative pronoun.
     Predicate detection requires finite indicative or impersonal verb forms (:past, :pres, :futr, :impers) or predicative words (PREDICATE_WORDS).
     Imperative forms (:impr), non-finite infinitives (:inf, e.g. 'побачити' in dependent 'після спроби побачити'), and nominal
-    complements in prepositional phrases (e.g. 'зміни' in 'після зміни', 'час' in 'у вільний від роботи час', 'у вільний від виконання роботи час', and 'у цей дуже важливий вільний час')
+    complements in prepositional phrases (e.g. 'зміни' in 'після зміни', 'час' in 'у вільний від роботи час', 'у вільний від виконання роботи час', 'у вільний від виготовлення мила час', and 'у цей дуже важливий вільний час')
     do not complete subordinate clauses. Structural prepositional phrase tracking accounts for enclosing prepositions, nested prepositional
-    modifiers, expanded modifier chains, and dependent noun phrases without premature closure, ensuring noun subjects and prepositional complements are not falsely treated as predicates.
+    modifiers, expanded modifier chains, and dependent noun phrases and noun/verb homonyms without premature closure, ensuring noun subjects and prepositional complements are not falsely treated as predicates.
     Each opened subordinate clause must have its own predicate outside nested clauses and cannot remain unclosed at end_dash.
     """
     unquoted_inside = normalize_apostrophes(unquoted_inside)
