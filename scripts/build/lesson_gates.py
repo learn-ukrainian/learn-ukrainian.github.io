@@ -461,6 +461,13 @@ def _correct_keys(blob: dict) -> set[str]:
                 keys.add(nfc(item).lower().strip())
     elif isinstance(answer, str) and answer.strip():
         keys.add(nfc(answer).lower().strip())
+    # Find-and-Fix / error-correction: the winning form lives in correction /
+    # correctForm. Without these, every chip (including the answer) is treated
+    # as a pedagogical misspelling and skipped by the stress oracle.
+    for key in ("correction", "correctForm", "correct_form"):
+        raw = blob.get(key)
+        if isinstance(raw, str) and raw.strip():
+            keys.add(nfc(raw).lower().strip())
     for option in options:
         if isinstance(option, dict) and option.get("correct") is True:
             text = _option_text(option)
@@ -502,6 +509,296 @@ def pedagogical_error_forms(acts: dict) -> set[str]:
                     if key and key not in correct_keys:
                         out.add(key)
     return {form for form in out if form}
+
+
+_EC_META_STEM_RE = re.compile(
+    r"^\s*(find|identify|choose|select|spot|correct|which word|the word for|"
+    r"in ukrainian|according to|pick the)\b",
+    re.I,
+)
+_CYR_RE = re.compile(f"[{CYR}]")
+# A1 Find-and-Fix stems keep Ukrainian first, then a short EN gloss.
+_EC_EN_SCAFFOLD_RE = re.compile(
+    r"(?:[—–]\s*[A-Za-z]|\([A-Za-z][^)]{0,80}\)|/\s*[A-Za-z])"
+)
+
+
+def _ec_requires_en_scaffold(level: str | None, require_en_scaffold: bool | None) -> bool:
+    if require_en_scaffold is not None:
+        return require_en_scaffold
+    return str(level or "").strip().lower() == "a1"
+
+
+def _ec_item_error_token(item: dict) -> str | None:
+    for key in ("error", "errorWord", "error_word"):
+        raw = item.get(key)
+        if raw is None:
+            continue
+        if isinstance(raw, str) and not raw.strip():
+            return None  # explicit no-error sentinel
+        if isinstance(raw, str) and raw.strip():
+            return raw.strip()
+    return None
+
+
+def _ec_item_correction_token(item: dict) -> str:
+    for key in ("correction", "correctForm", "answer"):
+        raw = item.get(key)
+        if isinstance(raw, str) and raw.strip():
+            return raw.strip()
+    return ""
+
+
+def _ec_option_labels(options) -> list[str]:
+    out: list[str] = []
+    if not isinstance(options, list):
+        return out
+    for opt in options:
+        if isinstance(opt, str) and opt.strip():
+            # Strip optional English gloss "форма (gloss)" for identity checks.
+            label = opt.strip()
+            if " (" in label and label.endswith(")"):
+                label = label[: label.rfind(" (")].strip()
+            out.append(label)
+        elif isinstance(opt, dict):
+            text = _option_text(opt)
+            if text.strip():
+                out.append(text.strip())
+    return out
+
+
+def error_correction_item_warnings(
+    item: dict,
+    *,
+    activity_id: str = "",
+    level: str | None = None,
+    require_en_scaffold: bool | None = None,
+) -> list[str]:
+    """Non-blocking Find-and-Fix advisories (A1 EN scaffold, etc.)."""
+    if not isinstance(item, dict):
+        return []
+    error = _ec_item_error_token(item)
+    if error is None and item.get("error") == "":
+        return []
+    if error is None and not (
+        item.get("correction") or item.get("correctForm") or item.get("answer")
+    ):
+        return []
+    sentence = item.get("sentence")
+    if not (isinstance(sentence, str) and sentence.strip()):
+        return []
+    if not _ec_requires_en_scaffold(level, require_en_scaffold):
+        return []
+    if not _CYR_RE.search(sentence) or _EC_META_STEM_RE.search(sentence):
+        return []  # hard defects own these
+    if _EC_EN_SCAFFOLD_RE.search(sentence):
+        return []
+    prefix = f"{activity_id}: " if activity_id else ""
+    return [
+        f"{prefix}error-correction A1 sentence should add English scaffold "
+        "(after — or in parentheses), Ukrainian-first"
+    ]
+
+
+def error_correction_item_defects(
+    item: dict,
+    *,
+    activity_id: str = "",
+    level: str | None = None,
+    require_en_scaffold: bool | None = None,
+) -> list[str]:
+    """Return blocking defects for one Find-and-Fix item (empty = ok).
+
+    After the learner spots the bad token, step 2 must offer a real choice set:
+    include the correction, at least three chips, and at least one distractor that
+    is not merely replaying the error they already marked. Empty options
+    (reveal-only) and tautological ``[correction, error]`` pairs fail.
+
+    Also enforces the React render contract: after
+    ``error_correction_render_values``, at least one chip string equals
+    ``correctForm`` exactly (``selectedFix === correctForm``). Glossed chips
+    like ``день (day)`` against bare ``день`` fail here. Count, duplicates, and
+    third-distractor checks use the **rendered** chip list so full-sentence
+    options that collapse to the same replacement are caught. Stress-only
+    contrasts keep their acutes (``мо́локо`` / ``молоко́`` / ``моло́ко`` are
+    three real choices). Shared by upgrade lesson gates and fresh-build
+    python QG. A1 EN scaffolds are writer-required (prompts + advisory
+    warnings), not a hard fail on legacy gold.
+    """
+    if not isinstance(item, dict):
+        return [f"{activity_id}: error-correction item must be a mapping"]
+    error = _ec_item_error_token(item)
+    if error is None and item.get("error") == "":
+        return []  # deliberate no-error item
+    if error is None:
+        # Missing error field with a sentence still needs options when correction exists.
+        if not (item.get("correction") or item.get("correctForm") or item.get("answer")):
+            return []
+        error = ""
+    sentence = item.get("sentence")
+    defects: list[str] = []
+    prefix = f"{activity_id}: " if activity_id else ""
+    if isinstance(sentence, str) and sentence.strip():
+        if not _CYR_RE.search(sentence):
+            defects.append(f"{prefix}error-correction sentence must be Ukrainian-first (needs Cyrillic)")
+        elif _EC_META_STEM_RE.search(sentence):
+            defects.append(
+                f"{prefix}error-correction sentence is an English meta-prompt; "
+                "use a natural Ukrainian carrier (optional EN after —)"
+            )
+    correction = _ec_item_correction_token(item)
+    raw_options = item.get("options")
+    labels = _ec_option_labels(raw_options)
+    if not labels:
+        defects.append(f"{prefix}error-correction options empty (reveal-only is forbidden)")
+        return defects
+
+    # Prefer the same chip list the MDX/React path shows the learner.
+    rendered_options: list | None = None
+    correct_form: object = correction
+    try:
+        from scripts.build.activity_renderer import error_correction_render_values
+    except Exception:  # pragma: no cover
+        error_correction_render_values = None  # type: ignore[assignment]
+    if error_correction_render_values is not None:
+        correct_form, rendered_options = error_correction_render_values(
+            sentence if isinstance(sentence, str) else "",
+            error or "",
+            correction or item.get("correction") or "",
+            raw_options if isinstance(raw_options, list) else [],
+        )
+
+    chip_labels = labels
+    if isinstance(rendered_options, list):
+        rendered_labels = _ec_option_labels(rendered_options)
+        if rendered_labels:
+            chip_labels = rendered_labels
+
+    if len(chip_labels) < 3:
+        defects.append(
+            f"{prefix}error-correction needs >=3 options (got {len(chip_labels)}); "
+            "tautological [correction, error] is not a real choice"
+        )
+
+    # Stress-sensitive surfaces: acute placement is a real pedagogical contrast.
+    surfaces = [nfc(x).lower() for x in chip_labels]
+    if len(set(surfaces)) < len(surfaces):
+        defects.append(f"{prefix}error-correction options contain duplicates")
+
+    if isinstance(correct_form, str) and correct_form.strip():
+        if not any(opt == correct_form for opt in (rendered_options or chip_labels)):
+            # Also accept stress-insensitive match only when render list unavailable.
+            if isinstance(rendered_options, list):
+                defects.append(
+                    f"{prefix}error-correction rendered options must include exact "
+                    f"correctForm {correct_form!r} (React chip equality; no gloss/"
+                    f"stress drift vs winning chip)"
+                )
+            else:
+                corr_key = strip_acute(nfc(correct_form)).lower()
+                if corr_key not in [strip_acute(s) for s in surfaces]:
+                    defects.append(
+                        f"{prefix}error-correction options must include correction {correct_form!r}"
+                    )
+        # Word-form correctForm must not be paired with undecomposed sentence chips.
+        if isinstance(rendered_options, list) and " " not in correct_form.strip():
+            for opt in rendered_options:
+                if isinstance(opt, str) and " " in opt.strip():
+                    defects.append(
+                        f"{prefix}error-correction option {opt!r} did not reduce to a "
+                        f"word chip (correctForm is {correct_form!r})"
+                    )
+                    break
+    elif correction:
+        corr_key = strip_acute(nfc(correction)).lower()
+        if corr_key not in [strip_acute(s) for s in surfaces]:
+            defects.append(f"{prefix}error-correction options must include correction {correction!r}")
+
+    if error:
+        err_surf = nfc(error).lower()
+        corr_surf = ""
+        if isinstance(correct_form, str) and correct_form.strip():
+            corr_surf = nfc(correct_form).lower()
+        elif correction:
+            corr_surf = nfc(correction).lower()
+        non_error_distractors = [
+            lab
+            for lab, surf in zip(chip_labels, surfaces, strict=True)
+            if surf != err_surf and (not corr_surf or surf != corr_surf)
+        ]
+        if not non_error_distractors:
+            defects.append(
+                f"{prefix}error-correction options must include a distractor other than "
+                f"the spotted error {error!r} (not just correction+error)"
+            )
+
+    # Unaccented copy of a stressed correctForm is not a real distractor:
+    # React uses ===, so «ложка» loses against «ло́жка», but the chip only
+    # omits teaching stress — it is not a spelling contrast.
+    if isinstance(correct_form, str) and ACUTE in correct_form:
+        bare_corr = strip_acute(nfc(correct_form)).lower()
+        for lab in chip_labels:
+            if not isinstance(lab, str):
+                continue
+            if ACUTE in lab:
+                continue
+            if nfc(lab).lower() == bare_corr:
+                defects.append(
+                    f"{prefix}error-correction option {lab!r} is an unaccented copy of "
+                    f"correctForm {correct_form!r}; use a real spelling distractor "
+                    "(or a different stress placement), not stress omission"
+                )
+                break
+
+    # Keep signature compatible; EN scaffold is advisory via warnings helper.
+    _ = (level, require_en_scaffold)
+    return defects
+
+
+def error_correction_activity_defects(
+    activity: dict,
+    *,
+    level: str | None = None,
+    require_en_scaffold: bool | None = None,
+) -> list[str]:
+    """Blocking Find-and-Fix defects for one activity (all items)."""
+    if not isinstance(activity, dict) or activity.get("type") != "error-correction":
+        return []
+    aid = str(activity.get("id") or "error-correction")
+    out: list[str] = []
+    for idx, item in enumerate(activity.get("items") or []):
+        out.extend(
+            error_correction_item_defects(
+                item,
+                activity_id=f"{aid}[{idx}]",
+                level=level,
+                require_en_scaffold=require_en_scaffold,
+            )
+        )
+    return out
+
+
+def error_correction_activity_warnings(
+    activity: dict,
+    *,
+    level: str | None = None,
+    require_en_scaffold: bool | None = None,
+) -> list[str]:
+    """Non-blocking Find-and-Fix advisories for one activity."""
+    if not isinstance(activity, dict) or activity.get("type") != "error-correction":
+        return []
+    aid = str(activity.get("id") or "error-correction")
+    out: list[str] = []
+    for idx, item in enumerate(activity.get("items") or []):
+        out.extend(
+            error_correction_item_warnings(
+                item,
+                activity_id=f"{aid}[{idx}]",
+                level=level,
+                require_en_scaffold=require_en_scaffold,
+            )
+        )
+    return out
 
 
 def missing_stress(text: str, allow: set[str]) -> list[str]:
@@ -628,10 +925,11 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     base_secs = sections(base_md)
     base_paras_by_lesson: dict[int, list[str]] = {L["n"]: [] for L in lessons}
     for title, body in base_secs.items():
-        if title not in section_to_lesson:
+        mapped = section_to_lesson.get(title) or section_to_lesson.get(strip_acute(title))
+        if mapped is None:
             block(f"baseline section {title!r} has no lesson mapping (checker config)")
             continue
-        base_paras_by_lesson[section_to_lesson[title]] += [p for p in paragraphs(body) if len(p.split()) >= 8]
+        base_paras_by_lesson[mapped] += [p for p in paragraphs(body) if len(p.split()) >= 8]
     n_long = sum(len(v) for v in base_paras_by_lesson.values())
     report["facts"]["baseline"] = {"commit": ly.get("source_commit"), "prose_tokens": len(strip_comments(base_md).split()),
                                    "long_paragraphs": n_long, "activities": {k: len(v) for k, v in base_acts.items()},
@@ -716,6 +1014,14 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                     block(f"lesson {n}: {aid} has no instruction/title")
                 for c in contradictions({k: v for k, v in a.items() if k in LIST_FIELDS}, aid):
                     block(f"lesson {n}: contradictory payload in {c}")
+                for defect in error_correction_activity_defects(
+                    a, level=str(plan.get("level") or "").lower()
+                ):
+                    block(f"lesson {n}: {defect}")
+                for advisory in error_correction_activity_warnings(
+                    a, level=str(plan.get("level") or "").lower()
+                ):
+                    warn(f"lesson {n}: {advisory}")
         lemmas = [norm_md(str(e.get("lemma", ""))).lower() for e in vocab]
         all_lemmas += lemmas
         if len(lemmas) < 12:
@@ -736,13 +1042,16 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
         if len(u_lem) > MAX_UNVERIFIED_LEMMAS:
             block(f"lesson {n}: {len(u_lem)} unverified lemmas > {MAX_UNVERIFIED_LEMMAS} (stop rule)")
         proper = {strip_acute(str(w)) for w in (ly.get("proper_names") or [])} | {strip_acute(str(e.get("lemma", ""))) for e in vocab if str(e.get("lemma", ""))[:1].isupper()}
-        allow = {strip_acute(w).lower() for w in u_stress} | {w.lower() for w in proper}
+        # Proper names stay in missing-stress allow (lookup order uses `proper`),
+        # but NOT in wrong-stress allow — otherwise Киї́в vs Ки́їв is invisible.
+        unverified_allow = {strip_acute(w).lower() for w in u_stress}
+        allow = unverified_allow | {w.lower() for w in proper}
         try:
             wrong = wrong_stress(
                 learner_text(lesson_md_clean[n]) + "\n" + "\n".join(
                     str(x) for x in leaves(vocab) if isinstance(x, str)
                 ),
-                allow,
+                unverified_allow,
                 proper,
             )
             for activity in (acts.get("inline") or []) + (acts.get("workbook") or []):
@@ -750,7 +1059,9 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                     continue
                 errors = pedagogical_error_forms({"inline": [activity], "workbook": []})
                 blob = "\n".join(str(x) for x in leaves(activity) if isinstance(x, str))
-                wrong += wrong_stress(blob, allow, proper, exact_skip={nfc(w).lower() for w in errors})
+                wrong += wrong_stress(
+                    blob, unverified_allow, proper, exact_skip={nfc(w).lower() for w in errors}
+                )
         except Exception as exc:
             block(f"lesson {n}: stress oracle unavailable: {type(exc).__name__}")
             wrong = []

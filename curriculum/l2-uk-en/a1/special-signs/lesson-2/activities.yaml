@@ -44,67 +44,90 @@ inline:
     - two sounds [йа]
     - one sound [а]
     answer: two sounds [йа]
+    explanation: 'At the beginning of a word, the iotated letter «я» represents two sounds: [й] + [а]
+      (я́блуко).'
   - question: How many sounds does the letter «я» represent in «пі́сня» after a consonant?
     options:
     - one sound [а] and softness
     - two sounds [йа]
     answer: one sound [а] and softness
+    explanation: After a consonant without an apostrophe, «я» softens the consonant [н'] and represents
+      one vowel sound [а].
   - question: How many sounds does the letter «ю» represent at the beginning of «ю́шка»?
     options:
     - two sounds [йу]
     - one sound [у]
     answer: two sounds [йу]
+    explanation: 'At the beginning of a word, the iotated letter «ю» represents two sounds: [й] + [у]
+      (ю́шка).'
   - question: How many sounds does the letter «ю» represent in «лю́ди» after a consonant?
     options:
     - one sound [у] and softness
     - two sounds [йу]
     answer: one sound [у] and softness
+    explanation: After a consonant without an apostrophe, «ю» softens the consonant [л'] and represents
+      one vowel sound [у].
   - question: How many sounds does the letter «є» represent at the beginning of «єно́т»?
     options:
     - two sounds [йе]
     - one sound [е]
     answer: two sounds [йе]
+    explanation: 'At the beginning of a word, the iotated letter «є» represents two sounds: [й] + [е]
+      (єно́т).'
   - question: What kind of sound is the letter Й in Ukrainian?
     options:
     - semivowel sonorant [й]
     - vowel sound
     answer: semivowel sonorant [й]
+    explanation: The letter Й represents a semivowel glide [j] that attaches to vowels and never forms
+      a syllable beat alone.
 - id: act-203
   type: quiz
   title: Оди́н чи два зву́ки — One or Two Sounds
-  instruction: Determine whether the highlighted iotated vowel represents one or two
-    sounds.
+  instruction: Determine whether the highlighted iotated vowel represents one or two sounds.
   items:
   - question: 'Лі́тера «я» у сло́ві «я́блуко»: — The letter «я» in «я́блуко» (apple):'
     options:
     - два зву́ки [йа] — two sounds [йа]
     - оди́н звук [а] — one sound [а]
     answer: два зву́ки [йа] — two sounds [йа]
+    explanation: На поча́тку сло́ва лі́тера «я» познача́є два зву́ки [йа]. — At the beginning of a word,
+      «я» represents two sounds [йа].
   - question: 'Лі́тера «я» у сло́ві «пі́сня»: — The letter «я» in «пі́сня» (song):'
     options:
     - оди́н звук [а] — one sound [а]
     - два зву́ки [йа] — two sounds [йа]
     answer: оди́н звук [а] — one sound [а]
+    explanation: Пі́сля м'яко́го при́голосного лі́тера «я» познача́є оди́н звук [а]. — After a soft consonant,
+      «я» represents one sound [а].
   - question: 'Лі́тера «ю» у сло́ві «ю́шка»: — The letter «ю» in «ю́шка» (soup):'
     options:
     - два зву́ки [йу] — two sounds [йу]
     - оди́н звук [у] — one sound [у]
     answer: два зву́ки [йу] — two sounds [йу]
+    explanation: На поча́тку сло́ва лі́тера «ю» познача́є два зву́ки [йу]. — At the beginning of a word,
+      «ю» represents two sounds [йу].
   - question: 'Лі́тера «ю» у сло́ві «лю́ди»: — The letter «ю» in «лю́ди» (people):'
     options:
     - оди́н звук [у] — one sound [у]
     - два зву́ки [йу] — two sounds [йу]
     answer: оди́н звук [у] — one sound [у]
+    explanation: Пі́сля при́голосного «лю́ди» лі́тера «ю» пом'я́кшує [л'] і дає́ оди́н звук [у]. — After
+      a consonant in «лю́ди», «ю» softens [л'] and gives one sound [у].
   - question: 'Лі́тера «є» у сло́ві «єно́т»: — The letter «є» in «єно́т» (raccoon):'
     options:
     - два зву́ки [йе] — two sounds [йе]
     - оди́н звук [е] — one sound [е]
     answer: два зву́ки [йе] — two sounds [йе]
+    explanation: На поча́тку сло́ва лі́тера «є» познача́є два зву́ки [йе]. — At the beginning of a word,
+      «є» represents two sounds [йе].
   - question: 'Лі́тера «я» у сло́ві «буря́к»: — The letter «я» in «буря́к» (beetroot):'
     options:
     - оди́н звук [а] — one sound [а]
     - два зву́ки [йа] — two sounds [йа]
     answer: оди́н звук [а] — one sound [а]
+    explanation: У сло́ві «буря́к» нема́є апо́строфа; «я» пом'я́кшує [р'] і дає́ оди́н звук [а]. — In
+      «буря́к» there is no apostrophe; «я» softens [р'] and gives one sound [а].
 - id: act-204
   type: true-false
   title: Пра́вила йото́ваних лі́тер — True or False
@@ -131,8 +154,7 @@ inline:
 - id: act-205
   type: group-sort
   title: Розподілі́ть слова́ за кі́лькістю зву́ків — Group Sort
-  instruction: Sort words based on whether the iotated vowel represents two sounds
-    or one sound.
+  instruction: Sort words based on whether the iotated vowel represents two sounds or one sound.
   groups:
   - name: Two sounds
     items:
@@ -206,7 +228,8 @@ workbook:
 - id: act-208
   type: unjumble
   title: Складі́ть слова́ з лі́тер — Unjumble letters
-  instruction: Складі́ть пра́вильні украї́нські слова́ з лі́тер. — Arrange the letters to form correct Ukrainian words.
+  instruction: Складі́ть пра́вильні украї́нські слова́ з лі́тер. — Arrange the letters to form correct
+    Ukrainian words.
   items:
   - words:
     - ч
@@ -249,50 +272,63 @@ workbook:
 - id: act-209
   type: error-correction
   title: Знайді́ть поми́лку — Spot the error
-  instruction: Знайді́ть орфографі́чну поми́лку в ко́жному ре́ченні. — Find the spelling error in each sentence.
+  instruction: Знайді́ть орфографі́чну поми́лку в ко́жному ре́ченні. — Find the spelling error in each
+    sentence.
   items:
-  - sentence: Вра́нці я пив чаі з лимо́ном.
+  - sentence: Вра́нці я пив чаі з лимо́ном. — In the morning I drank tea with lemon.
     error: чаі
     correction: чай
     options:
     - чай
     - чаі
-    explanation: 'Напівголосни́й звук [й] познача́ється лі́терою й: чай. — The semivowel sound [j] is written with letter й: чай.'
-  - sentence: На столі́ лежи́ть смачне́ йа́блуко.
+    - чаї
+    explanation: 'Напівголосни́й звук [й] познача́ється лі́терою й: чай. — The semivowel sound [j] is
+      written with letter й: чай.'
+  - sentence: На столі́ лежи́ть смачне́ йа́блуко. — A tasty apple is on the table.
     error: йа́блуко
     correction: я́блуко
     options:
     - я́блуко
     - йа́блуко
-    explanation: 'Сполу́ка зву́ків [йа] на поча́тку сло́ва познача́ється лі́терою я: я́блуко. — The sound blend [ja] at the word start is written with letter я: я́блуко.'
-  - sentence: У тарі́лці те́пла йу́шка.
+    - а́блуко
+    explanation: 'Сполу́ка зву́ків [йа] на поча́тку сло́ва познача́ється лі́терою я: я́блуко. — The sound
+      blend [ja] at the word start is written with letter я: я́блуко.'
+  - sentence: У тарі́лці те́пла йу́шка. — There is warm soup in the bowl.
     error: йу́шка
     correction: ю́шка
     options:
     - ю́шка
     - йу́шка
-    explanation: 'Сполу́ка зву́ків [йу] на поча́тку сло́ва познача́ється лі́терою ю: ю́шка. — The sound blend [ju] at the word start is written with letter ю: ю́шка.'
-  - sentence: У лі́сі живе́ смуга́стий йено́т.
+    - у́шка
+    explanation: 'Сполу́ка зву́ків [йу] на поча́тку сло́ва познача́ється лі́терою ю: ю́шка. — The sound
+      blend [ju] at the word start is written with letter ю: ю́шка.'
+  - sentence: У лі́сі живе́ смуга́стий йено́т. — A striped raccoon lives in the forest.
     error: йено́т
     correction: єно́т
     options:
     - єно́т
     - йено́т
-    explanation: 'Сполу́ка зву́ків [йе] на поча́тку сло́ва познача́ється лі́терою є: єно́т. — The sound blend [je] at the word start is written with letter є: єно́т.'
-  - sentence: На по́лі росте́ сокови́тий буряік.
+    - ено́т
+    explanation: 'Сполу́ка зву́ків [йе] на поча́тку сло́ва познача́ється лі́терою є: єно́т. — The sound
+      blend [je] at the word start is written with letter є: єно́т.'
+  - sentence: На по́лі росте́ сокови́тий буряік. — A juicy beet grows in the field.
     error: буряік
     correction: буря́к
     options:
     - буря́к
     - буряік
-    explanation: 'Сло́во «буря́к» пи́шеться з лі́терою я: буря́к. — The word «буря́к» is written with the letter я: буря́к.'
-  - sentence: Сього́дні в мі́сті вели́ке свиа́то.
+    - бурьак
+    explanation: 'Сло́во «буря́к» пи́шеться з лі́терою я: буря́к. — The word «буря́к» is written with
+      the letter я: буря́к.'
+  - sentence: Сього́дні в мі́сті вели́ке свиа́то. — Today there is a big holiday in the city.
     error: свиа́то
     correction: свя́то
     options:
     - свя́то
     - свиа́то
-    explanation: 'Сло́во «свя́то» пи́шеться з лі́терою я без апо́строфа: свя́то. — The word «свя́то» is written with letter я without an apostrophe: свя́то.'
+    - св'ято
+    explanation: 'Сло́во «свя́то» пи́шеться з лі́терою я без апо́строфа: свя́то. — The word «свя́то» is
+      written with letter я without an apostrophe: свя́то.'
 - id: act-210
   type: quiz
   title: Ви́беріть пра́вильне сло́во — Multiple Choice
@@ -304,36 +340,42 @@ workbook:
     - час
     - рис
     answer: чай
+    explanation: «Чай» means tea; «час» means time, and «рис» means rice.
   - question: What is the Ukrainian word for “apple”?
     options:
     - я́блуко
     - ю́шка
     - єно́т
     answer: я́блуко
+    explanation: «Я́блуко» means apple; «ю́шка» is soup/broth, and «єно́т» is raccoon.
   - question: What is the Ukrainian word for “soup / broth”?
     options:
     - ю́шка
     - я́блуко
     - єно́т
     answer: ю́шка
+    explanation: «Ю́шка» is traditional Ukrainian soup or broth.
   - question: What is the Ukrainian word for “raccoon”?
     options:
     - єно́т
     - кінь
     - лань
     answer: єно́т
+    explanation: «Єно́т» is raccoon; «кінь» is horse, and «лань» is doe/hind.
   - question: What is the Ukrainian word for “beetroot”?
     options:
     - буря́к
     - я́блуко
     - свя́то
     answer: буря́к
+    explanation: «Буря́к» is beetroot, the essential ingredient in Ukrainian borsch.
   - question: What is the Ukrainian word for “holiday”?
     options:
     - свя́то
     - буря́к
     - день
     answer: свя́то
+    explanation: «Свя́то» means holiday or celebration; «день» means day.
 - id: act-211
   type: quiz
   title: Ви́бір лі́тери — Letter Choice
@@ -344,28 +386,40 @@ workbook:
     - Я
     - Й
     answer: Я
+    explanation: На́зва «я́блуко» почина́ється з лі́тери Я, яка́ дає́ зву́ки [йа]. — The word «я́блуко»
+      begins with letter Я, which represents [йа].
   - question: 'Пе́рша лі́тера у сло́ві «___шка»: — First letter in «___шка» (soup):'
     options:
     - Ю
     - Й
     answer: Ю
+    explanation: На́зва «ю́шка» почина́ється з лі́тери Ю, яка́ дає́ зву́ки [йу]. — The word «ю́шка» begins
+      with letter Ю, which represents [йу].
   - question: 'Пе́рша лі́тера у сло́ві «___но́т»: — First letter in «___но́т» (raccoon):'
     options:
     - Є
     - Й
     answer: Є
+    explanation: На́зва «єно́т» почина́ється з лі́тери Є, яка́ дає́ зву́ки [йе]. — The word «єно́т» begins
+      with letter Є, which represents [йе].
   - question: 'Оста́ння лі́тера у сло́ві «ча___»: — Last letter in «ча___» (tea):'
     options:
     - й
     - і
     answer: й
+    explanation: Напівголосни́й звук [й] у сло́ві «чай» пи́шеться з лі́терою й. — The semivowel glide
+      [j] in «чай» is written with letter й.
   - question: 'Лі́тера пі́сля «р» у сло́ві «бур___к»: — Letter after «р» in «бур___к» (beetroot):'
     options:
     - я
     - і
     answer: я
+    explanation: Сло́во «буря́к» пи́шеться з лі́терою я без апо́строфа. — The word «буря́к» is written
+      with the letter я without an apostrophe.
   - question: 'Лі́тера пі́сля «в» у сло́ві «св___то»: — Letter after «в» in «св___то» (holiday):'
     options:
     - я
     - і
     answer: я
+    explanation: Сло́во «свя́то» пи́шеться з лі́терою я без апо́строфа. — The word «свя́то» is written
+      with letter я without an apostrophe.

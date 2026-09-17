@@ -29,6 +29,7 @@ from scripts.audit.llm_qg_store import (
 )
 from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
 from scripts.build import linear_pipeline, run_archive
+from scripts.build.cf_preflight import CfPreflightError, require_cf_preflight
 from scripts.build.phases.implementation_map import (
     read_implementation_map,
     seed_implementation_map,
@@ -38,6 +39,25 @@ from scripts.common.thresholds import QG_DIMS, terminal_dims_for
 from scripts.orchestration import reap_worktrees
 
 DEFAULT_WRITER_TIMEOUT_S = 1800
+
+
+def _enforce_cf_preflight(args: argparse.Namespace, module_dir: Path | None = None) -> None:
+    """Fail closed before any paid writer/upgrade call unless CF is clear."""
+    if getattr(args, "dry_run", False):
+        return
+    if getattr(args, "allow_no_cf_preflight", False):
+        print(
+            "NOTE: --allow-no-cf-preflight set; skipping CF-before-build gate",
+            file=sys.stderr,
+        )
+        return
+    clearance = getattr(args, "cf_clearance", None)
+    require_cf_preflight(
+        repo_root=PROJECT_ROOT,
+        clearance_path=Path(clearance) if clearance else None,
+        module_dir=module_dir,
+        github_repo=os.environ.get("LU_GITHUB_REPO") or None,
+    )
 FETCH_TIMEOUT_S = 30
 GIT_ARTIFACT_TIMEOUT_S = 30
 # Wall clock for the whole --worktree child. A 4-lesson upgrade is writer +
@@ -1650,6 +1670,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Reviewed lesson metadata/exception declarations for --upgrade (default: derive fresh); section ownership and provenance must match deterministic derivation.",
     )
     parser.add_argument(
+        "--reuse-lesson-map",
+        action="store_true",
+        help=(
+            "With --upgrade, load curriculum/l2-uk-en/a1/{slug}/lessons.yaml as the "
+            "lesson map (for re-upgrading an already-split module whose section map "
+            "diverged from a1-v1 derive). Still preserves a1-v1 artifacts; does not "
+            "hand-edit activities."
+        ),
+    )
+    parser.add_argument(
         "level",
         help="Curriculum level code, for example a1, b1-pro, or hist.",
     )
@@ -1707,6 +1737,24 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             "Load the plan and build the knowledge packet, then stop before "
             "writer invocation (default: false). In --upgrade mode, save lessons.yaml "
             "and the rendered writer_prompt.md without calling any model."
+        ),
+    )
+    parser.add_argument(
+        "--cf-clearance",
+        metavar="PATH",
+        default=None,
+        help=(
+            "JSON clearance file proving exact-head CF APPROVE "
+            '({"head":"<40-hex>","verdict":"APPROVE"}). Required for paid builds '
+            "unless --allow-no-cf-preflight. See scripts/build/cf_preflight.py."
+        ),
+    )
+    parser.add_argument(
+        "--allow-no-cf-preflight",
+        action="store_true",
+        help=(
+            "Escape hatch: skip CF-before-build preflight (logs a NOTE). "
+            "Do not use for ordinary curriculum builds."
         ),
     )
     parser.add_argument(
@@ -1969,6 +2017,33 @@ def _upgrade_declared_map(derived: dict, raw: str | None) -> dict:
     return declared
 
 
+def _upgrade_reuse_lesson_map(slug: str, derived: dict) -> dict:
+    """Load the live a1 lessons.yaml for a re-upgrade while keeping a1-v1 as source.
+
+    Pedagogy expansions may add lessons/sections beyond the archive derive. Require
+    that every original activity id in derived provenance still appears in the
+    reused map's provenance (same ids, any lesson assignment already reviewed).
+    """
+    from scripts.build.lesson_map import validate_lesson_map
+
+    path = _default_module_dir("a1", slug) / "lessons.yaml"
+    if not path.is_file():
+        raise linear_pipeline.LinearPipelineError(
+            f"--reuse-lesson-map requires existing {path.relative_to(PROJECT_ROOT)}"
+        )
+    declared = linear_pipeline.load_yaml(path)
+    validate_lesson_map(declared)
+    derived_ids = {(p.get("new_id") or p.get("id")) for p in (derived.get("provenance") or [])}
+    declared_ids = {(p.get("new_id") or p.get("id")) for p in (declared.get("provenance") or [])}
+    missing = sorted(x for x in derived_ids if x and x not in declared_ids)
+    if missing:
+        raise linear_pipeline.LinearPipelineError(
+            f"--reuse-lesson-map provenance missing original activity ids: {missing[:8]}"
+        )
+    if int(declared.get("closes_module") or 0) != len(declared.get("lessons") or []):
+        raise linear_pipeline.LinearPipelineError("--reuse-lesson-map closes_module must name the last lesson")
+    return declared
+
 UPGRADE_INDEPENDENT_REVIEWER = "codex-tools"
 UPGRADE_INDEPENDENT_EFFORT = "medium"
 
@@ -2059,7 +2134,14 @@ def _run_upgrade(args: argparse.Namespace) -> int:
             plan, (source_dir / "module.md").read_text(encoding="utf-8"),
             linear_pipeline.load_yaml(source_dir / "activities.yaml"),
         )
-        lesson_map = _upgrade_declared_map(lesson_map, getattr(args, "lesson_map", None))
+        if getattr(args, "reuse_lesson_map", False):
+            if getattr(args, "lesson_map", None):
+                raise linear_pipeline.LinearPipelineError(
+                    "--reuse-lesson-map cannot combine with --lesson-map"
+                )
+            lesson_map = _upgrade_reuse_lesson_map(args.slug, lesson_map)
+        else:
+            lesson_map = _upgrade_declared_map(lesson_map, getattr(args, "lesson_map", None))
         module_dir.mkdir(parents=True, exist_ok=True)
         import yaml
 
@@ -2073,6 +2155,7 @@ def _run_upgrade(args: argparse.Namespace) -> int:
         if args.dry_run:
             tracker.emit("module_done", dry_run=True, writer_invoked=False, **fields)
             return 0
+        _enforce_cf_preflight(args, module_dir)
         writer = _normalize_writer(args.writer)
         if writer == "claude-tools":
             writer = "agy-tools"
@@ -2191,6 +2274,10 @@ def _run_upgrade(args: argparse.Namespace) -> int:
     except AgentStalledError as exc:
         tracker.emit("module_failed", phase=phase, error=str(exc), **fields)
         return 124
+    except CfPreflightError as exc:
+        tracker.emit("module_failed", phase=phase, error=str(exc), **fields)
+        print(f"v7_build upgrade: {exc}", file=sys.stderr)
+        return exc.exit_code
     except (linear_pipeline.LinearPipelineError, OSError, ValueError) as exc:
         tracker.emit("module_failed", phase=phase, error=str(exc), **fields)
         print(f"v7_build upgrade: {exc}", file=sys.stderr)
@@ -2346,6 +2433,8 @@ def _run(args: argparse.Namespace) -> int:
                 duration_s=round(time.monotonic() - module_started_at, 3),
             )
             return 0
+
+        _enforce_cf_preflight(args, module_dir)
 
         phase = "writer"
         _phase_started(archive, phase)
@@ -2849,6 +2938,23 @@ def _run(args: argparse.Namespace) -> int:
             exc=exc,
         )
         return 124
+    except CfPreflightError as exc:
+        tracker.emit(
+            "module_failed",
+            level=level,
+            slug=slug,
+            phase=phase,
+            reason=str(exc)[:500],
+        )
+        print(f"v7_build failed in phase {phase}: {exc}", file=sys.stderr, flush=True)
+        _archive_failure_best_effort(
+            archive,
+            phase=phase,
+            module_dir=module_dir,
+            plan_path=plan_path,
+            exc=exc,
+        )
+        return exc.exit_code
     except Exception as exc:
         tracker.emit(
             "module_failed",

@@ -290,6 +290,226 @@ def test_structural_containment_keeps_answers_and_multiplicity():
     assert not gates.contains(True, 1)
 
 
+def test_error_correction_options_gate_rejects_tautology_and_empty():
+    empty = gates.error_correction_item_defects(
+        {"sentence": "Сього́дні ден. — Today den.", "error": "ден", "correction": "день", "options": []},
+        level="a1",
+    )
+    assert any("empty" in d for d in empty)
+
+    binary = gates.error_correction_item_defects(
+        {
+            "sentence": "Сього́дні ден. — Today den.",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день", "ден"],
+        },
+        level="a1",
+    )
+    assert any(">=3" in d or "distractor other than" in d for d in binary)
+
+    meta = gates.error_correction_item_defects(
+        {
+            "sentence": "Find the soft-sign error in this word.",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день", "дєнь", "дэнь"],
+        },
+        level="a1",
+    )
+    assert any("meta-prompt" in d or "Ukrainian-first" in d for d in meta)
+
+    ok = gates.error_correction_item_defects(
+        {
+            "sentence": "Сього́дні га́рний ден. — Today is a nice day (misspelled).",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день", "дєнь", "дэнь"],
+        },
+        level="a1",
+    )
+    assert ok == []
+
+
+def test_error_correction_unaccented_correct_copy_fails():
+    """Bare «ложка» against stressed «ло́жка» is not a spelling distractor."""
+    bad = gates.error_correction_item_defects(
+        {
+            "sentence": "На столі́ лежи́ть льожка. — A spoon is on the table.",
+            "error": "льожка",
+            "correction": "ло́жка",
+            "options": ["ло́жка", "льожка", "ложка"],
+        },
+        level="a1",
+    )
+    assert any("unaccented copy" in d for d in bad)
+
+    # Genuine different-stress triple still passes.
+    assert (
+        gates.error_correction_item_defects(
+            {
+                "sentence": "Це мо́локо. — This is milk.",
+                "error": "мо́локо",
+                "correction": "молоко́",
+                "options": ["молоко́", "мо́локо", "моло́ко"],
+            },
+            level="a1",
+        )
+        == []
+    )
+
+
+def test_error_correction_stress_contrast_is_not_tautology():
+    """Acute-only triples are real choices; do not strip stress before comparing."""
+    ok = gates.error_correction_item_defects(
+        {
+            "sentence": "Це мо́локо. — This is milk.",
+            "error": "мо́локо",
+            "correction": "молоко́",
+            "options": ["молоко́", "мо́локо", "моло́ко"],
+        },
+        level="a1",
+    )
+    assert ok == []
+
+
+def test_error_correction_rendered_duplicate_chips_fail():
+    """Full-sentence options that collapse to the same replacement are duplicates."""
+    collapsed = gates.error_correction_item_defects(
+        {
+            "sentence": "Сьогодні гарний ден.",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день", "ден", "Сьогодні гарний день."],
+        },
+        level="a1",
+    )
+    assert any("duplicate" in d or "distractor" in d for d in collapsed)
+
+    undecomposed = gates.error_correction_item_defects(
+        {
+            "sentence": "Сього́дні га́рний ден. — Today is a nice day.",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день", "ден", "Сього́дні га́рний день."],
+        },
+        level="a1",
+    )
+    assert any("did not reduce to a word chip" in d for d in undecomposed)
+
+
+def test_error_correction_render_faithful_and_a1_en_scaffold():
+    glossed = gates.error_correction_item_defects(
+        {
+            "sentence": "Сього́дні ден. — Today den.",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день (day)", "ден", "дєнь"],
+        },
+        level="a1",
+    )
+    assert any("correctForm" in d or "exact" in d for d in glossed)
+
+    no_en = gates.error_correction_item_warnings(
+        {
+            "sentence": "Сього́дні га́рний ден.",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день", "дєнь", "дэнь"],
+        },
+        level="a1",
+    )
+    assert any("English scaffold" in d for d in no_en)
+
+    # Missing EN is advisory, not a hard defect.
+    assert (
+        gates.error_correction_item_defects(
+            {
+                "sentence": "Сього́дні га́рний ден.",
+                "error": "ден",
+                "correction": "день",
+                "options": ["день", "дєнь", "дэнь"],
+            },
+            level="a1",
+        )
+        == []
+    )
+
+    # Fresh B1 builds do not require EN scaffolds on EC stems.
+    b1_ok = gates.error_correction_item_warnings(
+        {
+            "sentence": "Сього́дні га́рний ден.",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день", "дєнь", "дэнь"],
+        },
+        level="b1",
+    )
+    assert b1_ok == []
+
+
+def test_correct_keys_includes_error_correction_winning_form():
+    keys = gates._correct_keys(
+        {
+            "error": "Кийи́в",
+            "correction": "Ки́їв",
+            "options": ["Ки́їв", "Кийи́в", "Ки́ів"],
+        }
+    )
+    assert "ки́їв" in keys
+    errors = gates.pedagogical_error_forms(
+        {
+            "inline": [
+                {
+                    "type": "error-correction",
+                    "items": [
+                        {
+                            "error": "Кийи́в",
+                            "correction": "Ки́їв",
+                            "options": ["Ки́їв", "Кийи́в", "Ки́ів"],
+                        }
+                    ],
+                }
+            ],
+            "workbook": [],
+        }
+    )
+    assert "ки́їв" not in errors
+    assert "кийи́в" in errors
+
+
+def test_wrong_stress_checks_proper_names_against_oracle():
+    # Proper names must not be exempt from wrong-stress via allow.
+    bad = gates.wrong_stress("Ми ї́демо в Киї́в.", set(), {"Київ"})
+    assert any("Киї́в" in x for x in bad)
+    good = gates.wrong_stress("Ми ї́демо в Ки́їв.", set(), {"Київ"})
+    assert good == []
+
+
+def test_contains_allows_expanded_error_correction_options():
+    orig = {
+        "items": [
+            {
+                "sentence": "Сього́дні ден.",
+                "error": "ден",
+                "correction": "день",
+                "options": ["день", "ден"],
+            }
+        ]
+    }
+    expanded = {
+        "items": [
+            {
+                "sentence": "Сього́дні ден.",
+                "error": "ден",
+                "correction": "день",
+                "options": ["день", "ден", "дєнь"],
+            }
+        ]
+    }
+    assert gates.contains(orig, expanded)
+
+
 def test_gold_preservation_activity_and_vocabulary_semantics(gold):
     report = gates.run_lesson_gates(*gold)
     # A missing rendered page must fail, but cannot conceal content results.
@@ -495,6 +715,10 @@ def test_writer_prompt_is_not_a_learner_attribution_surface(gold):
     before = gates.run_lesson_gates(module, source, plan)
     prompt = render_upgrade_prompt(plan, source, lesson_map, lesson=1)
     assert gates.NAME_RE.search(prompt), "real prompt must exercise the attribution regression"
+    assert "Find-and-Fix" in prompt or "error-correction" in prompt
+    assert "DISTRACTOR_INVENTORY" not in prompt  # must be substituted
+    assert ">=3" in prompt or "≥3" in prompt
+    assert "Distractor inventory" in prompt
     for name in ("writer_prompt.md", "reviewer_prompt.md", "writer_raw.md"):
         (module / "lesson-1" / name).write_text(prompt)
     after = gates.run_lesson_gates(module, source, plan)

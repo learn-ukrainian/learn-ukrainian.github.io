@@ -483,23 +483,29 @@ def _check_error_correction(
 
         derived_form = derive_error_correction_replacement(sent, error, correction)
         if (
-            not isinstance(correction, str)
-            or derived_form is None
-            or is_punctuation_error_correction(sent, error, correction)
+            isinstance(correction, str)
+            and derived_form is not None
+            and not is_punctuation_error_correction(sent, error, correction)
         ):
-            continue
-        correct_form, _ = error_correction_render_values(
-            sent, error, correction, item.get("options", [])
-        )
-        if not isinstance(correct_form, str) or correct_form == correction:
+            correct_form, _ = error_correction_render_values(
+                sent, error, correction, item.get("options", [])
+            )
+            if not isinstance(correct_form, str) or correct_form == correction:
+                issues.append(ActivityIssue(
+                    slug, section, "error-correction", i, "error",
+                    "rendered correctForm still equals the corrected sentence",
+                ))
+            elif correct_form.rstrip().endswith((".", "?", "!")):
+                issues.append(ActivityIssue(
+                    slug, section, "error-correction", i, "error",
+                    f"rendered correctForm ends with sentence punctuation: \"{correct_form}\"",
+                ))
+
+        from scripts.build.lesson_gates import error_correction_item_defects
+
+        for defect in error_correction_item_defects(item, activity_id=f"item[{i}]"):
             issues.append(ActivityIssue(
-                slug, section, "error-correction", i, "error",
-                "rendered correctForm still equals the corrected sentence",
-            ))
-        elif correct_form.rstrip().endswith((".", "?", "!")):
-            issues.append(ActivityIssue(
-                slug, section, "error-correction", i, "error",
-                f"rendered correctForm ends with sentence punctuation: \"{correct_form}\"",
+                slug, section, "error-correction", i, "error", defect,
             ))
 
     return issues

@@ -2,7 +2,8 @@ inline:
 - id: act-301
   type: watch-and-repeat
   title: 'Диві́ться та повто́рюйте: Ї, Щ, Ф — Watch and repeat: Ї, Щ, Ф'
-  instruction: Watch the pronunciation video and repeat each word aloud.
+  instruction: Диві́ться ві́део з вимо́вою та повто́рюйте ко́жне сло́во вго́лос. — Watch the pronunciation
+    video and repeat each word aloud.
   items:
   - word: їжа́к
     letter: Ї
@@ -37,30 +38,39 @@ inline:
 - id: act-302
   type: true-false
   title: Пра́вила лі́тер Ї, Щ, Ф — True or False
-  instruction: Decide whether each statement is true or false.
+  instruction: Ви́значте, пра́вда це чи непра́вда. — Decide whether each statement is true or false.
   items:
-  - statement: Лі́тера Ї за́вжди познача́є два зву́ки [йі]. — The letter Ї always represents two sounds [йі].
+  - statement: Лі́тера Ї за́вжди познача́є два зву́ки [йі]. — The letter Ї always represents two sounds
+      [йі].
     answer: true
     explanation: Лі́тера Ї ніко́ли не познача́є оди́н звук. — The letter Ї never represents just one sound.
-  - statement: Лі́тера Щ за́вжди познача́є два зву́ки [шч]. — The letter Щ always represents two sounds [шч].
+  - statement: Лі́тера Щ за́вжди познача́є два зву́ки [шч]. — The letter Щ always represents two sounds
+      [шч].
     answer: true
-    explanation: В украї́нській мо́ві Щ — це сполу́чення тверди́х зву́ків [ш] та [ч]. — In Ukrainian, Щ is a blend of hard sounds [ш] and [ч].
+    explanation: В украї́нській мо́ві Щ — це сполу́чення тверди́х зву́ків [ш] та [ч]. — In Ukrainian,
+      Щ is a blend of hard sounds [ш] and [ч].
   - statement: Лі́тера Ф за́вжди познача́є два зву́ки. — The letter Ф always represents two sounds.
     answer: false
     explanation: Лі́тера Ф познача́є оди́н звук [ф]. — The letter Ф represents one sound [ф].
-  - statement: У сло́ві «борщ» оста́нній звук познача́ється як [шч]. — In the word «борщ», the final letter represents [шч].
+  - statement: У сло́ві «борщ» оста́нній звук познача́ється як [шч]. — In the word «борщ», the final letter
+      represents [шч].
     answer: true
-    explanation: Лі́тера щ наприкінці́ сло́ва вимовля́ється як [шч]. — The letter щ at the end of a word is pronounced [шч].
-  - statement: The letter Ї can soften the preceding consonant.
+    explanation: Лі́тера щ наприкінці́ сло́ва вимовля́ється як [шч]. — The letter щ at the end of a word
+      is pronounced [шч].
+  - statement: Лі́тера Ї мо́же пом'я́кшувати попере́дній при́голосний. — The letter Ї can soften the preceding
+      consonant.
     answer: false
-    explanation: The letter Ї always keeps its semivowel sound [й].
-  - statement: Слова́ «бу́ква» та «лі́тера» ма́ють одна́кове зна́чення. — The words «бу́ква» and «лі́тера» have the same meaning.
+    explanation: Лі́тера Ї за́вжди зберіга́є сві́й напівголосни́й звук [й]. — The letter Ї always keeps
+      its semivowel sound [й].
+  - statement: Слова́ «бу́ква» та «лі́тера» ма́ють одна́кове зна́чення. — The words «бу́ква» and «лі́тера»
+      have the same meaning.
     answer: true
     explanation: Оби́два те́рміни є сино́німами. — Both terms are synonyms.
 - id: act-303
   type: quiz
   title: 'Оди́н чи два зву́ки: Ї, Щ, Ф — One or Two Sounds'
-  instruction: Choose whether the highlighted letter represents one sound or two sounds.
+  instruction: Обері́ть, оди́н чи два зву́ки познача́є ви́ділена лі́тера. — Choose whether the highlighted
+    letter represents one sound or two sounds.
   items:
   - question: 'Лі́тера «ї» у сло́ві «їжа́к»: — The letter «ї» in «їжа́к» (hedgehog):'
     options:
@@ -95,7 +105,8 @@ inline:
 - id: act-304
   type: quiz
   title: Звукове́ зна́чення лі́тер — Sound Values
-  instruction: Identify the correct phonetic transcription for each letter.
+  instruction: Ви́значте пра́вильне фонети́чне зна́чення для ко́жної лі́тери. — Identify the correct phonetic
+    transcription for each letter.
   items:
   - question: Які́ зву́ки познача́є лі́тера Ї? — Which sounds does the letter Ї represent?
     options:
@@ -133,8 +144,8 @@ inline:
 - id: act-305
   type: group-sort
   title: Розподілі́ть слова́ за лі́терами — Group Sort
-  instruction: Sort words according to whether their key letter represents two sounds
-    or one sound.
+  instruction: Розподілі́ть слова́ зале́жно від то́го, оди́н чи два зву́ки познача́є головна́ лі́тера.
+    — Sort words according to whether their key letter represents two sounds or one sound.
   groups:
   - name: За́вжди два зву́ки (Ї, Щ) — Always two sounds
     items:
@@ -150,7 +161,8 @@ workbook:
 - id: act-306
   type: fill-in
   title: Вста́вте пропу́щене сло́во — Fill in the blank
-  instruction: Fill in the blank with the appropriate vocabulary word.
+  instruction: Вста́вте пропу́щене сло́во у ко́жне ре́чення. — Fill in the blank with the appropriate
+    vocabulary word.
   items:
   - sentence: У лі́сі біжи́ть колю́чий ___ . — In the forest runs a prickly […].
     answer: їжа́к
@@ -158,7 +170,8 @@ workbook:
     - їжа́к
     - кінь
     - єно́т
-  - sentence: Столи́ця Украї́ни — це прекра́сне мі́сто ___ . — The capital of Ukraine is the beautiful city of […].
+  - sentence: Столи́ця Украї́ни — це прекра́сне мі́сто ___ . — The capital of Ukraine is the beautiful
+      city of […].
     answer: Ки́їв
     options:
     - Ки́їв
@@ -191,7 +204,8 @@ workbook:
 - id: act-307
   type: match-up
   title: З'єдна́йте слова́ та зна́чення — Match word meanings
-  instruction: Match each Ukrainian word with its English meaning.
+  instruction: З'єдна́йте ко́жне украї́нське сло́во з йо́го англі́йським зна́ченням. — Match each Ukrainian
+    word with its English meaning.
   pairs:
   - left: їжа́к
     right: hedgehog
@@ -208,7 +222,8 @@ workbook:
 - id: act-308
   type: unjumble
   title: Складі́ть слова́ з лі́тер — Unjumble letters
-  instruction: Складі́ть пра́вильні украї́нські слова́ з лі́тер. — Arrange the letters to form correct Ukrainian words.
+  instruction: Складі́ть пра́вильні украї́нські слова́ з лі́тер. — Arrange the letters to form correct
+    Ukrainian words.
   items:
   - words:
     - ї
@@ -249,54 +264,68 @@ workbook:
 - id: act-309
   type: error-correction
   title: Знайді́ть поми́лку — Spot the error
-  instruction: Знайді́ть орфографі́чну поми́лку в ко́жному ре́ченні. — Find the spelling error in each sentence.
+  instruction: Знайді́ть орфографі́чну поми́лку в ко́жному ре́ченні. — Find the spelling error in each
+    sentence.
   items:
-  - sentence: У лі́сі спить мале́нький йіжа́к.
+  - sentence: У лі́сі спить мале́нький йіжа́к. — A little hedgehog sleeps in the forest.
     error: йіжа́к
     correction: їжа́к
     options:
     - їжа́к
     - йіжа́к
-    explanation: 'Звукосполу́чення [йі] за́вжди познача́ється лі́терою ї: їжа́к. — The sound blend [ji] is always written with letter ї: їжа́к.'
-  - sentence: Швидки́й пойи́зд ї́де в столи́цю.
+    - іжа́к
+    explanation: 'Звукосполу́чення [йі] за́вжди познача́ється лі́терою ї: їжа́к. — The sound blend [ji]
+      is always written with letter ї: їжа́к.'
+  - sentence: Швидки́й пойи́зд ї́де в столи́цю. — A fast train goes to the capital.
     error: пойи́зд
     correction: по́їзд
     options:
     - по́їзд
     - пойи́зд
-    explanation: 'Сло́во «по́їзд» пи́шеться з лі́терою ї: по́їзд. — The word «по́їзд» is written with the letter ї: по́їзд.'
-  - sentence: Ми ї́демо в мі́сто Кийи́в.
+    - по́ізд
+    explanation: 'Сло́во «по́їзд» пи́шеться з лі́терою ї: по́їзд. — The word «по́їзд» is written with
+      the letter ї: по́їзд.'
+  - sentence: Ми ї́демо в мі́сто Кийи́в. — We are going to the city of Kyiv.
     error: Кийи́в
     correction: Ки́їв
     options:
     - Ки́їв
     - Кийи́в
-    explanation: 'На́зва столи́ці Украї́ни пи́шеться з лі́терою ї: Ки́їв. — The capital of Ukraine is written with the letter ї: Ки́їв.'
-  - sentence: На обі́д ми їмо́ гаря́чий боршч.
+    - Ки́ів
+    explanation: 'На́зва столи́ці Украї́ни пи́шеться з лі́терою ї: Ки́їв. — The capital of Ukraine is
+      written with the letter ї: Ки́їв.'
+  - sentence: На обі́д ми їмо́ гаря́чий боршч. — For lunch we eat hot borshch.
     error: боршч
     correction: борщ
     options:
     - борщ
     - боршч
-    explanation: 'Звукосполу́чення [шч] на письмі́ познача́ється лі́терою щ: борщ. — The sound blend [шч] is written with the letter щ: борщ.'
-  - sentence: У рі́чці пла́ває вели́ка шчу́ка.
+    - борч
+    explanation: 'Звукосполу́чення [шч] на письмі́ познача́ється лі́терою щ: борщ. — The sound blend [шч]
+      is written with the letter щ: борщ.'
+  - sentence: У рі́чці пла́ває вели́ка шчу́ка. — A big pike swims in the river.
     error: шчу́ка
     correction: щу́ка
     options:
     - щу́ка
     - шчу́ка
-    explanation: 'Звукосполу́чення [шч] познача́ється одніє́ю лі́терою щ: щу́ка. — The sound blend [шч] is written with single letter щ: щу́ка.'
-  - sentence: На столі́ лежи́ть га́рне хво́то.
+    - шу́ка
+    explanation: 'Звукосполу́чення [шч] познача́ється одніє́ю лі́терою щ: щу́ка. — The sound blend [шч]
+      is written with single letter щ: щу́ка.'
+  - sentence: На столі́ лежи́ть га́рне хво́то. — A nice photo lies on the table.
     error: хво́то
     correction: фо́то
     options:
     - фо́то
     - хво́то
-    explanation: 'Сло́во «фо́то» пи́шеться з лі́терою ф: фо́то. — The word «фо́то» is written with the letter ф: фо́то.'
+    - хо́то
+    explanation: 'Сло́во «фо́то» пи́шеться з лі́терою ф: фо́то. — The word «фо́то» is written with the
+      letter ф: фо́то.'
 - id: act-310
   type: quiz
   title: Ви́беріть пра́вильне сло́во — Multiple Choice
-  instruction: Select the correctly spelled Ukrainian word.
+  instruction: Ви́беріть пра́вильно напи́сане украї́нське сло́во. — Select the correctly spelled Ukrainian
+    word.
   items:
   - question: Що означа́є «hedgehog» в украї́нській мо́ві? — What is the Ukrainian word for "hedgehog"?
     options:
@@ -337,7 +366,8 @@ workbook:
 - id: act-311
   type: quiz
   title: Ви́бір лі́тери — Letter Choice
-  instruction: Choose the appropriate letter for each word.
+  instruction: Обері́ть потрі́бну лі́теру для ко́жного сло́ва. — Choose the appropriate letter for each
+    word.
   items:
   - question: 'Пе́рша лі́тера у сло́ві «___жа́к»: — First letter in «___жа́к» (hedgehog):'
     options:
@@ -354,7 +384,7 @@ workbook:
     - щ
     - ч
     answer: щ
-  - question: 'Пе́рша лі́тера у сло́ві «___о́то»: — First letter in «___о́то» (photo):'
+  - question: 'Пе́рша лі́тера у сло́ві «___ото́»: — First letter in «___ото́» (photo):'
     options:
     - Ф
     - Х

@@ -24,6 +24,12 @@ from scripts.audit.llm_qg_store import CONTENT_FILES, DB_ENV_VAR, db_path, recor
 from scripts.build import linear_pipeline, v7_build
 
 
+@pytest.fixture(autouse=True)
+def _skip_cf_preflight_for_resume_unit_tests(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Resume/artifact tests are not the CF-before-build gate.
+    monkeypatch.setattr(v7_build, "_enforce_cf_preflight", lambda *_a, **_k: None)
+
+
 @pytest.fixture()
 def module_dir(tmp_path: Path) -> Path:
     return tmp_path

@@ -30,8 +30,11 @@ truth and do not score them again. The deterministic floor includes
 (non-exhaustive): word counts, plan adherence, vesum_verified vocabulary
 coverage, textbook grounding, immersion ratios, AI-slop patterns, activity
 schema + types + props, formatting standards, `forbidden_words`
-(SEVERE_RUSSIANISMS hard list), and `engagement_floor` (callout minimums +
-META_NARRATION zero-tolerance ban).
+(SEVERE_RUSSIANISMS hard list), `engagement_floor` (callout minimums +
+META_NARRATION zero-tolerance ban), and Find-and-Fix
+`error_correction_options` (≥3 chips, non-tautology, render-faithful
+`correctForm` equality). A1 EN scaffolds on EC stems are writer doctrine +
+advisory warnings, not a hard deterministic fail.
 
 Your job in this LLM dim is the residual judgment that regex cannot make.
 
@@ -110,6 +113,16 @@ For `{DIM}` specifically:
     він,вона,воно / ми / ви / вони** (six rows). Vocabulary tables stay
     two-column unless a third column adds essential teaching value (e.g.,
     stress mark, IPA).
+  - **Find-and-Fix distractor relevance (residual — do NOT re-count chips):**
+    Deterministic gates already enforce ≥3 options, non-empty, non-tautology,
+    and render-faithful `correctForm` equality. A1 EN scaffolds on EC stems are
+    writer doctrine + advisory warnings, not a hard gate. Your job:
+    are the *third* chips pedagogically related to the spotted error (same
+    orthography rule / wiki L2 contrast), or are they unrelated filler
+    (`стан` after spotting `ден`, `кінь` after a [йе]→є miss)? Flag
+    `unrelated_ec_distractor` with the exact options list when a distractor
+    does not test the taught contrast. Do not score stress placement or chip
+    string equality — those are oracle/gate work.
 - `naturalness`: does Ukrainian read as native? The gate confirmed VESUM +
   russianism shadow; you assess flow, register, idiom, grammar government, and
   collocation. This is a linguistic-quality review, not a vibes review.

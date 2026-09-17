@@ -175,6 +175,7 @@ PYTHON_QG_GATE_ORDER = (
     "strict_json_parse",
     "activity_schema",
     "quiz_translate_explanations",
+    "error_correction_options",
     "word_count",
     "vocab_count",
     "vocab_floor",
@@ -263,6 +264,7 @@ REVIEWER_FIX_ADDITIONAL_ARTIFACTS_BY_GATE: dict[str, tuple[str, ...]] = {
     "resources_url_resolve": ("resources.yaml",),
     "ai_slop_clean": ("activities.yaml", "vocabulary.yaml", "resources.yaml"),
     "llm_qg_grammar_calque": ("activities.yaml", "vocabulary.yaml", "resources.yaml"),
+    "error_correction_options": ("activities.yaml",),
 }
 PIPELINE_INSERT_GATES = frozenset({"inject_activity_ids"})
 TERMINAL_ZERO_RETRY_GATES = frozenset(
@@ -1027,6 +1029,83 @@ def plan_path_for(level: str, slug: str) -> Path:
     return PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans" / level / f"{slug}.yaml"
 
 
+def _upgrade_distractor_inventory(level: str, slug: str, source_dir: Path) -> str:
+    """Build a bounded, read-only distractor packet for the upgrade writer.
+
+    Prefer the compiled pedagogy wiki L2-error section; fall back to orthographic
+    contrasts already present in the archived module's activities.
+    """
+    chunks: list[str] = []
+    try:
+        article_paths = _wiki_article_paths(str(level).lower(), str(slug))
+    except Exception:
+        article_paths = []
+    for path in article_paths[:2]:
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        # Prefer the dedicated L2-errors heading; else first sizeable table.
+        match = re.search(
+            r"(##[^\n]*(?:Типові помилки|L2|помилк)[^\n]*\n)(.*?)(?=\n## |\Z)",
+            text,
+            re.S | re.I,
+        )
+        body = match.group(0).strip() if match else ""
+        if not body:
+            table = re.search(r"(\|[^\n]+\|\n\|[-| :]+\|\n(?:\|[^\n]+\|\n){2,})", text)
+            body = table.group(1).strip() if table else ""
+        if body:
+            # Cap prompt tax while keeping pairs.
+            lines = body.splitlines()
+            chunks.append(f"### Wiki `{path.as_posix()}`\n\n" + "\n".join(lines[:80]))
+    # Archived activity contrasts (error/correction and wrong quiz options).
+    acts_path = source_dir / "activities.yaml"
+    pairs: list[str] = []
+    if acts_path.is_file():
+        try:
+            raw = yaml.safe_load(acts_path.read_text(encoding="utf-8"))
+        except (OSError, yaml.YAMLError):
+            raw = None
+        activities: list[Any] = []
+        if isinstance(raw, dict):
+            activities = list(raw.get("inline") or []) + list(raw.get("workbook") or [])
+            if not activities and isinstance(raw.get("activities"), list):
+                activities = list(raw["activities"])
+        elif isinstance(raw, list):
+            activities = raw
+        for act in activities:
+            if not isinstance(act, dict):
+                continue
+            for item in act.get("items") or []:
+                if not isinstance(item, dict):
+                    continue
+                err = item.get("error") or item.get("errorWord")
+                corr = item.get("correction") or item.get("correctForm") or item.get("answer")
+                if isinstance(err, str) and err.strip() and isinstance(corr, str) and corr.strip():
+                    pairs.append(f"- ❌ {err.strip()} → ✅ {corr.strip()}")
+                for opt in item.get("options") or []:
+                    if isinstance(opt, dict) and opt.get("correct") is False:
+                        text = str(opt.get("text") or "").strip()
+                        if text:
+                            pairs.append(f"- distractor: {text}")
+    if pairs:
+        # Dedupe while preserving order.
+        seen: set[str] = set()
+        uniq: list[str] = []
+        for line in pairs:
+            if line not in seen:
+                seen.add(line)
+                uniq.append(line)
+        chunks.append("### Archived module contrasts\n\n" + "\n".join(uniq[:60]))
+    if not chunks:
+        return (
+            "(No wiki L2 table or archived EC contrasts found. Still forbid inventing "
+            "Russianisms; reuse attested module contrasts only, or defer the item.)"
+        )
+    return "\n\n".join(chunks)
+
+
 def render_upgrade_prompt(
     plan: Mapping[str, Any],
     source_dir: Path,
@@ -1055,6 +1134,7 @@ def render_upgrade_prompt(
             f"### {name}\n\n{(source_dir / name).read_text(encoding='utf-8')}"
             for name in WRITER_ARTIFACTS
         ),
+        "DISTRACTOR_INVENTORY": _upgrade_distractor_inventory(level, str(plan["slug"]), source_dir),
     }
     # One substitution pass: input artifacts may themselves contain template-like text.
     return re.sub(r"\{([A-Z_]+)\}", lambda match: values.get(match[1], match[0]), template)
@@ -9138,6 +9218,10 @@ def run_python_qg(
         return _python_qg_report(plan, gates)
 
     record("quiz_translate_explanations", _quiz_translate_explanation_gate(activities))
+    record(
+        "error_correction_options",
+        _error_correction_options_gate(activities, level=level),
+    )
     record("word_count", _word_count_gate(module_text, int(plan["word_target"])))
     record("plan_sections", _section_gate(module_text, plan))
     record("formatting_standards", _formatting_standards_gate(module_text))
@@ -10428,6 +10512,40 @@ def _quiz_translate_explanation_gate(activities: list[dict[str, Any]]) -> dict[s
     }
     if violations:
         report["message"] = _format_quiz_translate_explanation_diagnostic(violations)
+    return report
+
+
+def _error_correction_options_gate(
+    activities: list[dict[str, Any]],
+    *,
+    level: str = "",
+) -> dict[str, Any]:
+    """Shared Find-and-Fix option contract (fresh build + upgrade)."""
+    from scripts.build.lesson_gates import error_correction_activity_defects
+
+    violations: list[str] = []
+    checked = 0
+    for activity in activities:
+        if not isinstance(activity, Mapping):
+            continue
+        if str(activity.get("type") or "") != "error-correction":
+            continue
+        checked += 1
+        violations.extend(
+            error_correction_activity_defects(dict(activity), level=level)
+        )
+    report: dict[str, Any] = {
+        "passed": not violations,
+        "checked": checked,
+        "violations": violations,
+    }
+    if violations:
+        preview = "; ".join(violations[:8])
+        more = f" (+{len(violations) - 8} more)" if len(violations) > 8 else ""
+        report["message"] = (
+            f"ERROR_CORRECTION_OPTIONS_GATE FAILED: {len(violations)} defects. "
+            f"{preview}{more}"
+        )
     return report
 
 

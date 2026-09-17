@@ -104,6 +104,11 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
   build engine on `main` is not completion. Once gates pass in a worktree,
   open the scripts-free content PR the same session — do not idle waiting
   for a prompt.
+- **CF before any curriculum build (not upgrade-only):** exact-head CF must be
+  clear on the prep the build depends on before `v7_build` / `--upgrade` /
+  writer runs. CF feedback → fix → re-CF; do not rebuild while CF is still
+  open. Built content gets its own CF before merge. Canonical wording:
+  `agents_extensions/shared/rules/pipeline.md` § Pipeline policy authority.
 - **Auto-finalize must not mix `scripts/` into curriculum PRs.** Content PRs
   from this epic stay scripts-free; `scripts/` changes are a separate PR.
   This is a constraint on the existing auto-finalize path in
