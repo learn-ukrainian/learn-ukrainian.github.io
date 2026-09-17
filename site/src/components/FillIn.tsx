@@ -2,6 +2,11 @@ import React, { useRef, useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import { parseMarkdown, shuffle } from './utils';
 import ActivityHelp from './ActivityHelp';
+import {
+  chromeFacingBilingual,
+  useActivityIsUkrainian,
+  useChromeLocale,
+} from '../lib/i18n/useChromeLocale';
 
 // Generate consistent colors for option chips
 const CHIP_COLORS = [
@@ -262,7 +267,10 @@ interface FillInProps {
   isUkrainian?: boolean;
 }
 
-export default function FillIn({ items, instruction, isUkrainian }: FillInProps) {
+export default function FillIn({ items, instruction, isUkrainian: bakedIsUkrainian }: FillInProps) {
+  const isUkrainian = useActivityIsUkrainian(bakedIsUkrainian);
+  const locale = useChromeLocale();
+
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [showResults, setShowResults] = useState(false);
 
@@ -282,9 +290,9 @@ export default function FillIn({ items, instruction, isUkrainian }: FillInProps)
         <span>{headerLabel}</span>
         <ActivityHelp activityType="fill-in" isUkrainian={isUkrainian} />
       </div>
-      {instruction && (
+      {chromeFacingBilingual(instruction, locale) && (
         <p className={styles.instruction}>
-          <strong>{instruction}</strong>
+          <strong>{chromeFacingBilingual(instruction, locale)}</strong>
         </p>
       )}
       <div className={styles.activityContent}>

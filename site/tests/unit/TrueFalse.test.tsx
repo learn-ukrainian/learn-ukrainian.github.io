@@ -1,4 +1,4 @@
-import { describe, test, expect } from 'vitest';
+import { describe, test, expect, beforeEach } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
@@ -43,6 +43,10 @@ function retryButton(container: HTMLElement) {
 // ── TrueFalseQuestion (single-statement variant) ─────────────────────────────
 
 describe('TrueFalseQuestion', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   const baseProps = {
     statement: 'The sky is blue.',
     isTrue: true,
@@ -62,6 +66,7 @@ describe('TrueFalseQuestion', () => {
   });
 
   test('renders Ukrainian buttons when isUkrainian=true (regression for #1082 r1)', () => {
+    document.documentElement.dataset.chromeLocale = 'uk';
     const { container } = render(<TrueFalseQuestion {...baseProps} isUkrainian />);
     expect(findTfButton(container, 'Правда')).toBeInTheDocument();
     expect(findTfButton(container, 'Неправда')).toBeInTheDocument();
@@ -99,6 +104,7 @@ describe('TrueFalseQuestion', () => {
 
   test('wrong-answer feedback uses Ukrainian phrasing in UK mode', async () => {
     const user = userEvent.setup();
+    document.documentElement.dataset.chromeLocale = 'uk';
     const { container } = render(<TrueFalseQuestion {...baseProps} isUkrainian />);
 
     await user.click(findTfButton(container, 'Неправда'));
@@ -146,6 +152,10 @@ describe('TrueFalseQuestion', () => {
 // ── TrueFalse wrapper (multi-item with Check Answers button) ─────────────────
 
 describe('TrueFalse wrapper', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   const items = [
     { statement: 'Kyiv is the capital of Ukraine.', isTrue: true, explanation: 'Correct.' },
     { statement: 'The Dnipro flows into the Baltic Sea.', isTrue: false, explanation: 'It flows into the Black Sea.' },
@@ -172,6 +182,7 @@ describe('TrueFalse wrapper', () => {
   });
 
   test('renders Ukrainian header label when isUkrainian=true', () => {
+    document.documentElement.dataset.chromeLocale = 'uk';
     render(<TrueFalse items={items} isUkrainian />);
     expect(screen.getAllByText('Правда чи хибність').length).toBeGreaterThan(0);
   });
@@ -226,6 +237,7 @@ describe('TrueFalse wrapper', () => {
   });
 
   test('uses Ukrainian button labels in wrapper when isUkrainian=true', () => {
+    document.documentElement.dataset.chromeLocale = 'uk';
     const { container } = render(<TrueFalse items={items} isUkrainian />);
     const rows = [...container.querySelectorAll<HTMLElement>('[data-activity="tf-row"]')];
     const firstRowBtns = within(rows[0]).getAllByRole('button');
@@ -236,6 +248,7 @@ describe('TrueFalse wrapper', () => {
 
   test('Check Answers uses the Ukrainian label when isUkrainian=true', async () => {
     const user = userEvent.setup();
+    document.documentElement.dataset.chromeLocale = 'uk';
     const { container } = render(<TrueFalse items={items} isUkrainian />);
     const firstRow = container.querySelectorAll<HTMLElement>('[data-activity="tf-row"]')[0];
     await user.click(within(firstRow).getByRole('button', { name: 'Правда' }));

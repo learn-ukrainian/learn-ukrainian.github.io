@@ -2,6 +2,10 @@
  * Site compatibility shim. The source implementation is versioned in
  * @learn-ukrainian/activity-kit; these declarations retain lesson-schema input.
  */
+import type { ReactNode } from 'react';
+import KitMatchUp from '../../../packages/activity-kit/src/components/MatchUp';
+import { useActivityIsUkrainian } from '../lib/i18n/useChromeLocale';
+
 export interface MatchPair {
   /**
    * @schemaDescription Left value consumed by this component.
@@ -26,7 +30,7 @@ export interface MatchUpProps {
    * @schemaDescription Instruction shown to the learner above the activity.
    * @ukrainianText true
    */
-  instruction?: React.ReactNode;
+  instruction?: ReactNode;
   /**
    * @schemaDescription UI language flag for Ukrainian labels and feedback.
    * @ukrainianText false
@@ -44,4 +48,8 @@ export interface MatchUpProps {
   disabled?: boolean;
 }
 
-export { default } from '../../../packages/activity-kit/src/components/MatchUp';
+/** Follow site chrome locale toggle; ignore bake-time isUkrainian={false}. */
+export default function MatchUp(props: MatchUpProps) {
+  const isUkrainian = useActivityIsUkrainian(props.isUkrainian);
+  return <KitMatchUp {...props} isUkrainian={isUkrainian} />;
+}

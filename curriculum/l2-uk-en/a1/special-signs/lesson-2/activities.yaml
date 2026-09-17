@@ -206,7 +206,7 @@ workbook:
 - id: act-208
   type: unjumble
   title: Складі́ть слова́ з лі́тер — Unjumble letters
-  instruction: Arrange the letters to form correct Ukrainian words.
+  instruction: Складі́ть пра́вильні украї́нські слова́ з лі́тер. — Arrange the letters to form correct Ukrainian words.
   items:
   - words:
     - ч
@@ -249,31 +249,49 @@ workbook:
 - id: act-209
   type: error-correction
   title: Знайді́ть поми́лку — Spot the error
-  instruction: Find the spelling error in each sentence.
+  instruction: Знайді́ть орфографі́чну поми́лку в ко́жному ре́ченні. — Find the spelling error in each sentence.
   items:
   - sentence: Вра́нці я пив чаі з лимо́ном.
     error: чаі
     correction: чай
+    options:
+    - чай
+    - чаі
     explanation: 'Напівголосни́й звук [й] познача́ється лі́терою й: чай. — The semivowel sound [j] is written with letter й: чай.'
   - sentence: На столі́ лежи́ть смачне́ йа́блуко.
     error: йа́блуко
     correction: я́блуко
+    options:
+    - я́блуко
+    - йа́блуко
     explanation: 'Сполу́ка зву́ків [йа] на поча́тку сло́ва познача́ється лі́терою я: я́блуко. — The sound blend [ja] at the word start is written with letter я: я́блуко.'
   - sentence: У тарі́лці те́пла йу́шка.
     error: йу́шка
     correction: ю́шка
+    options:
+    - ю́шка
+    - йу́шка
     explanation: 'Сполу́ка зву́ків [йу] на поча́тку сло́ва познача́ється лі́терою ю: ю́шка. — The sound blend [ju] at the word start is written with letter ю: ю́шка.'
   - sentence: У лі́сі живе́ смуга́стий йено́т.
     error: йено́т
     correction: єно́т
+    options:
+    - єно́т
+    - йено́т
     explanation: 'Сполу́ка зву́ків [йе] на поча́тку сло́ва познача́ється лі́терою є: єно́т. — The sound blend [je] at the word start is written with letter є: єно́т.'
   - sentence: На по́лі росте́ сокови́тий буряік.
     error: буряік
     correction: буря́к
+    options:
+    - буря́к
+    - буряік
     explanation: 'Сло́во «буря́к» пи́шеться з лі́терою я: буря́к. — The word «буря́к» is written with the letter я: буря́к.'
   - sentence: Сього́дні в мі́сті вели́ке свиа́то.
     error: свиа́то
     correction: свя́то
+    options:
+    - свя́то
+    - свиа́то
     explanation: 'Сло́во «свя́то» пи́шеться з лі́терою я без апо́строфа: свя́то. — The word «свя́то» is written with letter я without an apostrophe: свя́то.'
 - id: act-210
   type: quiz

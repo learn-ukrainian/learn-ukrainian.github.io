@@ -1,4 +1,4 @@
-import { describe, test, expect, vi } from 'vitest';
+import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import MatchUp from '@site/src/components/MatchUp';
@@ -40,6 +40,10 @@ function feedback(container: HTMLElement) {
 // ── MatchUp ───────────────────────────────────────────────────────────────────
 
 describe('MatchUp', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   const pairs = [
     { left: 'Cat', right: 'Meow' },
     { left: 'Dog', right: 'Bark' },
@@ -84,6 +88,7 @@ describe('MatchUp', () => {
   });
 
   test('renders Ukrainian header when isUkrainian=true', () => {
+    document.documentElement.dataset.chromeLocale = 'uk';
     render(<MatchUp pairs={pairs} isUkrainian />);
     expect(screen.getAllByText('Знайдіть пару').length).toBeGreaterThan(0);
   });
@@ -257,6 +262,7 @@ describe('MatchUp', () => {
 
   test('shows Ukrainian success message when isUkrainian=true', async () => {
     const user = userEvent.setup();
+    document.documentElement.dataset.chromeLocale = 'uk';
     const { container } = render(<MatchUp pairs={pairs} isUkrainian />);
 
     await user.click(leftTiles(container)[0]);
@@ -307,6 +313,10 @@ describe('MatchUp', () => {
   });
 
   describe('practice-only matchedPairCoding="semantic-four"', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
     test('omitted prop leaves default DOM and pair-color attributes', async () => {
       const user = userEvent.setup();
       const { container } = render(<MatchUp pairs={pairs} />);
@@ -416,6 +426,7 @@ describe('MatchUp', () => {
 
     test('matched tiles announce pair identity and tag in accessible name', async () => {
       const user = userEvent.setup();
+      document.documentElement.dataset.chromeLocale = 'uk';
       const { container } = render(
         <MatchUp pairs={pairs} matchedPairCoding="semantic-four" isUkrainian />,
       );

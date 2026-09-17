@@ -1,7 +1,17 @@
 import React, { useRef, useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
+import {
+  chromeFacingBilingual,
+  useActivityIsUkrainian,
+  useChromeLocale,
+} from '../lib/i18n/useChromeLocale';
 import { shuffleNotCorrect } from './utils';
+
+/** Letter-tile word builders (answer has no spaces) vs sentence builders. */
+export function isWordUnjumbleAnswer(answer: string): boolean {
+  return answer.trim().length > 0 && !/\s/.test(answer.trim());
+}
 
 // Generate consistent colors for words
 const WORD_COLORS = [
@@ -186,12 +196,17 @@ export function UnjumbleQuestion({
   const joiner = /\s/.test(answer.trim()) ? ' ' : '';
   const userAnswer = selectedWords.map(w => w.text).join(joiner);
   const isCorrect = normalizeUnjumbleAnswer(userAnswer) === normalizeUnjumbleAnswer(answer);
+  const wordMode = isWordUnjumbleAnswer(answer);
 
-  const placeholderLabel = isUkrainian ? 'Перетягніть слова сюди, щоб скласти речення...' : 'Drag words here to build the sentence...';
+  const placeholderLabel = wordMode
+    ? (isUkrainian ? 'Перетягніть літери сюди, щоб скласти слово...' : 'Drag letters here to form the word...')
+    : (isUkrainian ? 'Перетягніть слова сюди, щоб скласти речення...' : 'Drag words here to build the sentence...');
   const checkBtnLabel = isUkrainian ? 'Перевірити' : 'Check Answer';
   const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
   const correctLabel = isUkrainian ? '✓ Правильно!' : '✓ Correct!';
-  const incorrectLabel = isUkrainian ? '✗ Правильне речення:' : '✗ The correct sentence is:';
+  const incorrectLabel = wordMode
+    ? (isUkrainian ? '✗ Правильне слово:' : '✗ The correct word is:')
+    : (isUkrainian ? '✗ Правильне речення:' : '✗ The correct sentence is:');
 
   return (
     <div className={styles.unjumbleQuestion} data-activity="unjumble-question">
@@ -329,18 +344,24 @@ interface UnjumbleProps {
   isUkrainian?: boolean;
 }
 
-export default function Unjumble({ items, instruction, children, isUkrainian }: UnjumbleProps) {
-  const headerLabel = isUkrainian ? 'Складіть речення' : 'Build the Sentence';
+export default function Unjumble({ items, instruction, children, isUkrainian: bakedIsUkrainian }: UnjumbleProps) {
+  const isUkrainian = useActivityIsUkrainian(bakedIsUkrainian);
+  const locale = useChromeLocale();
+  const wordMode = Boolean(items?.length) && items!.every((item) => isWordUnjumbleAnswer(item.answer));
+  const headerLabel = wordMode
+    ? (isUkrainian ? 'Складіть слово' : 'Build the Word')
+    : (isUkrainian ? 'Складіть речення' : 'Build the Sentence');
+  const shownInstruction = chromeFacingBilingual(instruction, locale);
 
   return (
-    <div className={styles.activityContainer}>
+    <div className={styles.activityContainer} data-activity="unjumble" data-mode={wordMode ? 'word' : 'sentence'}>
       <div className={styles.activityHeader}>
         <span className={styles.activityIcon}>🧩</span>
         <span>{headerLabel}</span>
         <ActivityHelp activityType="unjumble" isUkrainian={isUkrainian} />
       </div>
-      {instruction && (
-        <p className={styles.instruction}><strong>{instruction}</strong></p>
+      {shownInstruction && (
+        <p className={styles.instruction}><strong>{shownInstruction}</strong></p>
       )}
       <div className={styles.activityContent}>
         {items ? items.map((item, index) => (

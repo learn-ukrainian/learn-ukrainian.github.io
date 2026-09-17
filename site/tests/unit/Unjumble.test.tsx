@@ -1,4 +1,4 @@
-import { describe, test, expect, vi } from 'vitest';
+import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UnjumbleQuestion, normalizeUnjumbleAnswer } from '@site/src/components/Unjumble';
@@ -27,6 +27,10 @@ function resetBtn(container: HTMLElement) {
 // ── UnjumbleQuestion ──────────────────────────────────────────────────────────
 
 describe('UnjumbleQuestion', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   const props = { words: 'dog / the / runs', answer: 'the dog runs' };
 
   test('renders word tiles in the word bank', () => {
@@ -194,6 +198,10 @@ describe('UnjumbleQuestion', () => {
   // Tiles never carry punctuation, but the YAML `answer` field can (see #7994:
   // Gemini audit of things-have-gender act-104/act-205/act-305).
   describe('grading tolerates punctuation absent from the tiles', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
     // Tiles shuffle to a guaranteed-wrong order, so placing them correctly
     // means clicking each tile by name in the intended sentence order.
     async function placeInOrderAndCheck(
@@ -261,6 +269,10 @@ describe('UnjumbleQuestion', () => {
 });
 
 describe('normalizeUnjumbleAnswer', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   test('strips a terminal period', () => {
     expect(normalizeUnjumbleAnswer('Це моя книга.')).toBe('це моя книга');
   });
@@ -291,6 +303,10 @@ describe('normalizeUnjumbleAnswer', () => {
 // ── Unjumble wrapper ──────────────────────────────────────────────────────────
 
 describe('Unjumble wrapper', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
   test('renders one UnjumbleQuestion per item', () => {
     const { container } = render(
       <Unjumble
@@ -316,15 +332,23 @@ describe('Unjumble wrapper', () => {
   });
 
   test('renders English header by default', () => {
+    document.documentElement.dataset.chromeLocale = 'en';
     render(<Unjumble items={[{ words: 'a / b', answer: 'a b' }]} />);
     expect(screen.getByText('Build the Sentence')).toBeInTheDocument();
   });
 
-  test('renders Ukrainian header when isUkrainian=true', () => {
-    render(<Unjumble items={[{ words: 'a / b', answer: 'a b' }]} isUkrainian={true} />);
+  test('renders Ukrainian header when chrome locale is uk', () => {
+    document.documentElement.dataset.chromeLocale = 'uk';
+    render(<Unjumble items={[{ words: 'a / b', answer: 'a b' }]} isUkrainian={false} />);
     expect(screen.getByText('Складіть речення')).toBeInTheDocument();
   });
 
+  test('letter-tile activities use Build the Word chrome', () => {
+    document.documentElement.dataset.chromeLocale = 'en';
+    render(<Unjumble items={[{ words: 'д / е / н / ь', answer: 'день' }]} />);
+    expect(screen.getByText('Build the Word')).toBeInTheDocument();
+    expect(screen.queryByText('Build the Sentence')).not.toBeInTheDocument();
+  });
   test('first question is the first child of its container (CSS :first-child rule applies)', () => {
     // happy-dom doesn't evaluate CSS module rules so we verify DOM structure.
     const { container } = render(
