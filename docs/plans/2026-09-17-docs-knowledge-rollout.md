@@ -81,17 +81,26 @@ Must cite lessons from `docs/cleanup-plan-2026-q2.md` and require a smoke build
 gate for learner `site/` when moves touch MDX/import surfaces. External-link
 policy: breadcrumb stubs for high-traffic paths (default).
 
-## #5540 session-state
+## #5540 session-state (FBL-008)
 
-Do not move `docs/session-state/` until a named gate owner records predicate
-proof that Monitor/session streams remain healthy (FBL-008). Prefer split:
-operational pointers stay stream-owned; curated docs never embed live leases.
+**Hard exclusion:** `docs/session-state/` and `current.md` compatibility
+routers are **out of scope for #5540 moves**. Do not relocate them under this
+issue.
+
+Split them into a follow-up blocked on a **named gate** with owner + predicate,
+for example: Monitor `/api/session/current` and SessionStart no longer read any
+`docs/session-state/` path, proven by a specific check. Until that gate exists,
+session-state stays where it is. #5540 proceeds only on uncontested surfaces
+(dispatch-briefs, queues, audits/reports/status/reviews, token-usage, tracked
+references).
+
+Curated docs must never embed live leases or occupancy claims.
 
 ## #5541 pilot constraints (summary)
 
 - Fresh worktree; tracked allowlist v1 only
 - ≤8 code-anchored pages; no docs-prose until allowlist v2
-- Disable/revert root instruction outputs
+- Disable/revert **any** write outside `openwiki/**` (blanket FBL-003)
 - Record execute = Gemini Flash and review = Astra @ low (or the documented one-time swap) on the PR; never DeepSeek for this program
 - Independent cross-family review after generation
 

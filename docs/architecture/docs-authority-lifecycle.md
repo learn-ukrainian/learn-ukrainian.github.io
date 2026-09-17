@@ -10,20 +10,38 @@ moving, generating, or citing repository knowledge. It does not replace
 
 ## Authority classes
 
-| Class | Location | Lifecycle | Who may change | Citation rule |
+| Class | Location | Lifecycle | Who may change | What it may override |
 | --- | --- | --- | --- | --- |
-| Behavioral truth | Code + tests | Continuous | PR + CI + CF review | Prefer tests over prose when they disagree |
-| Binding rules | `agents_extensions/shared/rules/` | Continuous; served at `/api/rules` | PR; deploy copies regenerated | Never duplicate binding text into OpenWiki |
-| Deployed rule copies | `.claude/`, `.codex/`, `.agent/`, `.gemini/` | Generated consumers | Deploy command only | Out of scope for docs/OpenWiki writes |
-| Curated docs | Tracked `docs/**` (see allowlist) | `draft` → `active` → `superseded` → `archive` | PR; owner named in frontmatter when present | Path + date; stale claims fail audits |
-| Architecture ADRs | `docs/architecture/adr/` | Permanent | New ADR; never reuse numbers | Cite ID + status |
-| Decision journal | `docs/decisions/` | Expiring | `check_decisions.py` | Not permanent architecture |
-| Planning / epics | GitHub issues + `docs/plans/` | Issue state is SSOT | Issue/PR workflow | Plans point at issue numbers |
-| Generated evidence | top-level `audit/`, batch receipts | Append-only / regenerate | Owning pipeline | Not curated docs |
-| OpenWiki | `openwiki/` (when present) | Generated; killable | Pilot/regen PR only | Locator + citation; never authority |
-| Live ops | Monitor API, session streams, Fleet Comms | Live | Runtime systems | **Never** assert as durable docs fact |
+| Behavioral truth | Code + tests | Continuous | PR + CI + CF review | Prose that contradicts observed behavior |
+| Config-as-policy | `scripts/config.py`, `scripts/config/*.yaml` (typed policy values) | Continuous | PR + CI + CF | Stale curated docs that restate the same knobs |
+| Binding rules (source) | `agents_extensions/shared/rules/`, `contracts/` | Continuous; served at `/api/rules` | PR; deploy regenerates copies | Deployed copies; never OpenWiki paraphrases |
+| Deployed rule copies | `.claude/`, `.codex/`, `.agent/`, `.gemini/` | Generated consumers | Deploy command only | Nothing — consumers only; drift is a defect |
+| Curated docs | Tracked `docs/**` (see allowlist) | `draft` → `active` → `superseded` → `archive` | PR; owner in frontmatter when present | Nothing over code/config/rules; may guide humans |
+| Architecture ADRs | `docs/architecture/adr/` | Permanent | New ADR; never reuse numbers | Prior ADRs only via explicit supersession |
+| Decision journal | `docs/decisions/` (dated, expiring) | Expiring | `check_decisions.py` | Nothing permanent; not an ADR substitute |
+| Pending decision cards | `docs/decisions/pending/` | Blocking until resolved | Operator/advisor disposition | Blocks related work; does not rewrite code |
+| Planning / epics | GitHub issue/epic bodies + `docs/plans/` | Issue state is SSOT | Issue/PR workflow | Plans point at issues; GH issue state wins over stale plan text |
+| Agent memory files | Repo `memory/` / harness memory paths when tracked | Behavioral continuity | Owning harness discipline | Never binding policy; locator/continuity only |
+| Generated evidence | top-level `audit/`, batch receipts | Append-only / regenerate | Owning pipeline | Not curated docs; cite as evidence, not policy |
+| OpenWiki | `openwiki/` (when present) | Generated; killable | Pilot/regen PR only | **Nothing** — locator + citation only |
+| Live ops | Monitor API, session streams, Fleet Comms | Live | Runtime systems | **Never** durable docs fact |
 | Research registry | ADR-011 surfaces | Task-scoped | Registry tooling | Attributed fetch required when claimed |
 | Archives | Named archive trees / closed issues | Frozen | Explicit archive PR | Historical only |
+
+### Conflict-resolution procedure
+
+When two classes disagree on the same fact:
+
+1. **Classify the fact type** (behavior, config knob, binding rule, pedagogy intent, live ops, planning state).
+2. **Apply the row above** — higher-authority class wins only for fact types it owns.
+3. **If both claim ownership, decide by evidence of staleness**, not by layer name:
+   - Prefer the artifact with a newer verified commit, live probe, or explicit supersession link.
+   - Prefer tool-backed runtime/config reads over narrative docs.
+   - Prefer `/api/rules` / `agents_extensions/` over deployed copies when they drift.
+4. **Record the disposition** (issue comment or decision card) when the conflict is load-bearing.
+5. OpenWiki **never** breaks ties — it may only cite the winning authority.
+
+**Worked example (immersion):** operator-expectations item 9 + `IMMERSION_POLICIES` in config are the authoritative immersion knobs for runtime. A curated docs page (or historical north-star text) that says “docs win over config” is stale for that fact type; config-as-policy wins until an ADR explicitly supersedes it. OpenWiki must quote the operator-contract / config path, not invent a Ukrainian-only A1 chrome policy.
 
 ## Allowlist / exclusion policy (v1)
 
@@ -33,7 +51,7 @@ caches, private mounts) are forbidden inputs.
 
 ### Allowlist v1 (OpenWiki pilot pages — code-anchored)
 
-Eligible source roots for ≤8 pilot pages (#5541):
+Eligible **read** roots for ≤8 pilot pages (#5541):
 
 - `scripts/` (pipeline, Monitor API, agent runtime, orchestration)
 - `site/` and `site/src/` (learner Astro product — stack truth only)
@@ -41,14 +59,30 @@ Eligible source roots for ≤8 pilot pages (#5541):
 - Selected root instruction files for *inventory classification only*
   (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `README.md`) — **never as OpenWiki write targets**
 
-### Explicit exclusions
+### Explicit exclusions (reads)
 
 - `docs/session-state/**` and any Monitor projection dumps
 - Private topology, credentials, tokens, raw IP addresses
 - `curriculum/**` lesson bodies as free synthesis (Ukrainian = verbatim quote only)
 - `wiki/**` generated seminar wiki (separate authority)
 - Deployed harness trees listed above
-- OpenWiki must not write root instruction files or `agents_extensions/`
+
+### Generator write surface (hard — FBL-003)
+
+The **only** approved OpenWiki write surface is `openwiki/**`.
+
+OpenWiki must not create or modify anything outside `openwiki/**`, including
+(but not limited to):
+
+- `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `README.md`
+- `agents_extensions/`, `.claude/`, `.codex/`, `.agent/`, `.gemini/`
+- `docs/`, `scripts/`, `site/`, `curriculum/`, `wiki/`
+- `docs/session-state/**`
+
+Disable non-`openwiki/**` outputs if upstream supports it; otherwise **revert
+every such path before the pilot PR** and record the revert in the pilot
+report. A later human-authored root pointer to `openwiki/quickstart.md` is
+separate instruction-file scope under #5543 — never a generator write.
 
 Allowlist v2 (docs-prose synthesis) is owned by #5539/#5540 after IA migration.
 

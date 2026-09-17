@@ -109,14 +109,19 @@ No viable language-lane execute+review pair → skip OpenWiki; continue determin
 
 ### Hard exclusions (generator output)
 
-OpenWiki must not create or modify:
+Approved write surface: **`openwiki/**` only** (FBL-003). Any generator output
+outside that tree is a defect and must be reverted before the pilot PR lands.
+
+OpenWiki must not create or modify, among other paths:
 
 - `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `README.md` (root instruction set)
 - anything under `agents_extensions/`, `.claude/`, `.codex/`, `.agent/`, `.gemini/`
-- live state under `docs/session-state/` or Monitor projections
+- `docs/` (including `docs/session-state/`), `scripts/`, `site/`, `curriculum/`, `wiki/`
+- Monitor projections or live ops dumps
 
-Disable those outputs if upstream supports it; otherwise revert before the pilot
-PR lands (FBL-003).
+Disable those outputs if upstream supports it; otherwise revert and record the
+revert in the pilot report. A human-authored root pointer to
+`openwiki/quickstart.md` is #5543 instruction-file scope, never a generator write.
 
 ### Pilot exit criteria (adopt / amend / reject)
 
