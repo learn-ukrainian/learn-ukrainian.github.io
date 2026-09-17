@@ -6150,4 +6150,75 @@ describe('LexiconPractice', () => {
       await waitFor(() => expect(statValues().slice(0, 3)).toEqual(['0', '1', '1']));
     });
   });
+
+  describe('#8167 Unified Case Engine - Case Selector UI', () => {
+    test('renders case selector presets and case/number chips on idle screen', async () => {
+      render(<LexiconPractice initialDeck={paradigmDeck()} />);
+      const selector = await screen.findByTestId('practice-case-selector');
+      expect(selector).toBeInTheDocument();
+
+      // Check presets
+      expect(within(selector).getByTestId('case-preset-all-oblique')).toBeInTheDocument();
+      expect(within(selector).getByTestId('case-preset-vocative-only')).toBeInTheDocument();
+      expect(within(selector).getByTestId('case-preset-dative-locative')).toBeInTheDocument();
+      expect(within(selector).getByTestId('case-preset-plural-endings')).toBeInTheDocument();
+      expect(within(selector).getByTestId('case-preset-all')).toBeInTheDocument();
+
+      // Check individual case chips
+      expect(within(selector).getByTestId('case-chip-кличний')).toBeInTheDocument();
+      expect(within(selector).getByTestId('case-chip-родовий')).toBeInTheDocument();
+
+      // Check number chips
+      expect(within(selector).getByTestId('number-chip-singular')).toBeInTheDocument();
+      expect(within(selector).getByTestId('number-chip-plural')).toBeInTheDocument();
+    });
+
+    test('selecting a preset updates active preset and persists to localStorage', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={paradigmDeck()} />);
+      const selector = await screen.findByTestId('practice-case-selector');
+
+      const vocativePreset = within(selector).getByTestId('case-preset-vocative-only');
+      await user.click(vocativePreset);
+
+      expect(vocativePreset).toHaveAttribute('data-active', 'true');
+
+      const saved = JSON.parse(window.localStorage.getItem('lexicon-case-selector-filter') ?? '{}');
+      expect(saved.activePreset).toBe('vocative-only');
+      expect(saved.cases).toEqual(['кличний']);
+    });
+
+    test('toggling an individual case chip updates selection and persists to localStorage', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={paradigmDeck()} />);
+      const selector = await screen.findByTestId('practice-case-selector');
+
+      const vocativeChip = within(selector).getByTestId('case-chip-кличний');
+      const checkbox = within(vocativeChip).getByRole('checkbox');
+      expect(checkbox).toBeChecked();
+
+      await user.click(checkbox);
+      expect(checkbox).not.toBeChecked();
+
+      const saved = JSON.parse(window.localStorage.getItem('lexicon-case-selector-filter') ?? '{}');
+      expect(saved.cases).not.toContain('кличний');
+    });
+
+    test('paradigm feedback panel displays teaching explanation upon answer', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={paradigmDeck()} autoStart initialMode="paradigm" />);
+
+      // Case selector is rendered in active stage
+      expect(screen.getByTestId('practice-case-selector')).toBeInTheDocument();
+
+      // Click option
+      const wrongOption = screen.getByRole('button', { name: /кава/ });
+      await user.click(wrongOption);
+
+      const feedback = screen.getByTestId('practice-paradigm-feedback');
+      expect(feedback).toBeInTheDocument();
+      expect(feedback.textContent).toContain('кава');
+      expect(feedback.textContent).toContain('потрібна форма');
+    });
+  });
 });

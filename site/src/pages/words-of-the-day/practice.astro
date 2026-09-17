@@ -1958,6 +1958,88 @@ const frontmatter = {
     font-size: 0.92rem;
     line-height: 1.5;
   }
+
+  :global(.k3-case-selector-container) {
+    margin-top: 0.5rem;
+  }
+
+  :global(.lexicon-case-selector-bar) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 0.75rem 1rem;
+    background: var(--lu-surface-raised, rgba(255, 255, 255, 0.04));
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+  }
+  :global(.case-selector-presets),
+  :global(.case-selector-toggles) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  :global(.case-selector-heading) {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--lu-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-right: 0.25rem;
+  }
+  :global(.case-preset-chip) {
+    background: transparent;
+    border: 1px solid var(--lu-border);
+    color: var(--lu-text);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  :global(.case-preset-chip:hover) {
+    border-color: var(--lu-primary);
+  }
+  :global(.case-preset-chip.active),
+  :global(.case-preset-chip[data-active="true"]) {
+    background: var(--lu-state-active, rgba(0, 87, 183, 0.15));
+    border-color: var(--lu-primary);
+    color: var(--lu-primary);
+    font-weight: 600;
+  }
+  :global(.case-toggle-group),
+  :global(.number-toggle-group) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  :global(.case-chip-list) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+  :global(.case-checkbox-chip) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    border: 1px solid var(--lu-border);
+    font-size: 0.8rem;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.15s ease;
+  }
+  :global(.case-checkbox-chip input[type="checkbox"]) {
+    margin: 0;
+    cursor: pointer;
+  }
+  :global(.case-checkbox-chip.selected) {
+    border-color: var(--lu-primary);
+    background: var(--lu-surface, rgba(255, 255, 255, 0.08));
+  }
   :global(.k3-mode-grid) {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

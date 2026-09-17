@@ -126,6 +126,21 @@ import { useZnoPracticeOverlay, ZNO_MODE_META } from './useZnoPracticeOverlay';
 import ErrorCorrectionPractice from './ErrorCorrectionPractice';
 import { useErrorCorrectionPracticeOverlay } from './useErrorCorrectionPracticeOverlay';
 import cultureErrorCorrectionsData from '../data/practice-error-corrections.json';
+import {
+  ALL_NUMBERS,
+  ALL_UKRAINIAN_CASES,
+  CASE_LABELS_MAP,
+  CASE_PRESETS,
+  NUMBER_LABELS_MAP,
+  detectPreset,
+  loadCaseFilter,
+  matchesCaseFilter,
+  saveCaseFilter,
+  type CaseFilterState,
+  type CasePresetId,
+  type UkrainianCaseKey,
+  type UkrainianNumberKey,
+} from '../lib/lexicon/case-filter';
 
 
 /**
@@ -1310,6 +1325,40 @@ function synonymFeedbackFor(
     : { kind: 'wrong', textUk: `Неправильно. ${textUk}`, textEn: `Incorrect. ${textEn}` };
 }
 
+/**
+ * #8167: Teaching feedback sentence for nominal declension drills.
+ * Explains which case form is required and gives English scaffolding.
+ */
+function paradigmFeedbackFor(
+  selection: PracticeSelection,
+  option: ChoiceOption,
+  learnerLevel: CefrLevel,
+): DrillFeedback | null {
+  const paradigm = selection.paradigm;
+  if (!paradigm) return null;
+  const slotUk = paradigm.slot.labelUk;
+  const slotEn = paradigm.slot.labelEn || translateGrammarTerm(slotUk);
+  const lemma = selection.lemma.lemma;
+  const answer = paradigm.options.find((candidate) => candidate.kind === 'answer');
+  if (!answer) return null;
+  const answerLabel = displayPracticeForm(answer.label, learnerLevel);
+  const optionLabel = displayPracticeForm(option.label, learnerLevel);
+
+  if (option.correct) {
+    return {
+      kind: 'correct',
+      textUk: `Правильно! Для «${lemma}» (${slotUk}) правильно «${answerLabel}».`,
+      textEn: `Correct! The ${slotEn} form of "${lemma}" is "${answerLabel}".`,
+    };
+  }
+
+  return {
+    kind: 'wrong',
+    textUk: `Неправильно. Для «${lemma}» (${slotUk}) потрібна форма «${answerLabel}» (а «${optionLabel}» — інша форма).`,
+    textEn: `Incorrect. The ${slotEn} form of "${lemma}" is "${answerLabel}" (while "${optionLabel}" is a different form).`,
+  };
+}
+
 function drillChoiceOptions(
   selection: PracticeSelection,
   showEnglishSubtitles: boolean,
@@ -2027,6 +2076,104 @@ function DigitChoiceShortcuts({
   return null;
 }
 
+/**
+ * #8167: Interactive Case Selector bar for nominal declension drills.
+ * Supports quick presets (All Oblique, Vocative Only, Dative & Locative Contrast, Plural Endings),
+ * individual case multi-select, and number scope toggles.
+ */
+export function CaseSelectorBar({
+  filter,
+  onPresetSelect,
+  onToggleCase,
+  onToggleNumber,
+  chromeLocale,
+}: {
+  filter: CaseFilterState;
+  onPresetSelect: (presetId: CasePresetId) => void;
+  onToggleCase: (c: UkrainianCaseKey) => void;
+  onToggleNumber: (n: UkrainianNumberKey) => void;
+  chromeLocale: 'uk' | 'en';
+}) {
+  return (
+    <div className="lexicon-case-selector-bar" data-testid="practice-case-selector">
+      <div className="case-selector-presets" role="group" aria-label="Швидкі набори відмінків">
+        <span className="case-selector-heading">
+          {chromeLocale === 'uk' ? 'Набори:' : 'Presets:'}
+        </span>
+        {Object.values(CASE_PRESETS).map((preset) => {
+          const isActive = filter.activePreset === preset.id;
+          return (
+            <button
+              key={preset.id}
+              type="button"
+              className={`case-preset-chip ${isActive ? 'active' : ''}`}
+              data-testid={`case-preset-${preset.id}`}
+              data-active={isActive ? 'true' : 'false'}
+              onClick={() => onPresetSelect(preset.id)}
+            >
+              {chromeLocale === 'uk' ? preset.labelUk : preset.labelEn}
+            </button>
+          );
+        })}
+      </div>
+      <div className="case-selector-toggles">
+        <div className="case-toggle-group" role="group" aria-label="Відмінки">
+          <span className="case-selector-heading">
+            {chromeLocale === 'uk' ? 'Відмінки:' : 'Cases:'}
+          </span>
+          <div className="case-chip-list">
+            {ALL_UKRAINIAN_CASES.map((caseKey) => {
+              const checked = filter.cases.includes(caseKey);
+              const meta = CASE_LABELS_MAP[caseKey];
+              return (
+                <label
+                  key={caseKey}
+                  className={`case-checkbox-chip ${checked ? 'selected' : ''}`}
+                  data-testid={`case-chip-${caseKey}`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => onToggleCase(caseKey)}
+                    aria-label={chromeLocale === 'uk' ? meta.uk : meta.en}
+                  />
+                  <span>{chromeLocale === 'uk' ? meta.uk : meta.en}</span>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+        <div className="number-toggle-group" role="group" aria-label="Число">
+          <span className="case-selector-heading">
+            {chromeLocale === 'uk' ? 'Число:' : 'Number:'}
+          </span>
+          <div className="case-chip-list">
+            {ALL_NUMBERS.map((numKey) => {
+              const checked = filter.numbers.includes(numKey);
+              const meta = NUMBER_LABELS_MAP[numKey];
+              return (
+                <label
+                  key={numKey}
+                  className={`case-checkbox-chip ${checked ? 'selected' : ''}`}
+                  data-testid={`number-chip-${numKey}`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => onToggleNumber(numKey)}
+                    aria-label={chromeLocale === 'uk' ? meta.uk : meta.en}
+                  />
+                  <span>{chromeLocale === 'uk' ? meta.uk : meta.en}</span>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function LexiconPractice(props: LexiconPracticeProps) {
   return (
     <PracticeErrorBoundary>
@@ -2120,6 +2267,54 @@ function LexiconPracticeIsland({
    * leaving a bare red ✗ / green outline with no teaching content.
    */
   const [choiceFeedback, setChoiceFeedback] = useState<DrillFeedback | null>(null);
+  const [caseFilter, setCaseFilter] = useState<CaseFilterState>(() => loadCaseFilter());
+
+  function handleCasePresetSelect(presetId: CasePresetId) {
+    const preset = CASE_PRESETS[presetId];
+    if (!preset) return;
+    const next: CaseFilterState = {
+      cases: [...preset.cases],
+      numbers: [...preset.numbers],
+      activePreset: presetId,
+    };
+    setCaseFilter(next);
+    saveCaseFilter(next);
+  }
+
+  function handleToggleCase(c: UkrainianCaseKey) {
+    const current = new Set(caseFilter.cases);
+    if (current.has(c)) {
+      if (current.size > 1) current.delete(c);
+    } else {
+      current.add(c);
+    }
+    const nextCases = ALL_UKRAINIAN_CASES.filter((item) => current.has(item));
+    const next: CaseFilterState = {
+      cases: nextCases,
+      numbers: caseFilter.numbers,
+      activePreset: detectPreset(nextCases, caseFilter.numbers),
+    };
+    setCaseFilter(next);
+    saveCaseFilter(next);
+  }
+
+  function handleToggleNumber(n: UkrainianNumberKey) {
+    const current = new Set(caseFilter.numbers);
+    if (current.has(n)) {
+      if (current.size > 1) current.delete(n);
+    } else {
+      current.add(n);
+    }
+    const nextNumbers = ALL_NUMBERS.filter((item) => current.has(item));
+    const next: CaseFilterState = {
+      cases: caseFilter.cases,
+      numbers: nextNumbers,
+      activePreset: detectPreset(caseFilter.cases, nextNumbers),
+    };
+    setCaseFilter(next);
+    saveCaseFilter(next);
+  }
+
   const [customSets, setCustomSets] = useState<CustomSet[]>(() => readLocalCustomSets());
   const [selectedDeckFilter, setSelectedDeckFilter] = useState<string>('all');
   const [deckPickerOpen, setDeckPickerOpen] = useState(false);
@@ -2859,9 +3054,10 @@ function LexiconPracticeIsland({
       // A weak-area focus session narrows the pool to items matching the tapped
       // weakness on top of the normal §6b session constraints (no parallel path).
       if (focusWeakness && !matchesWeakness(candidate, focusWeakness)) return false;
+      if (!matchesCaseFilter(candidate, caseFilter)) return false;
       return true;
     },
-    [focusWeakness, sessionPoolConstraints],
+    [caseFilter, focusWeakness, sessionPoolConstraints],
   );
 
   // Pass a deck-scoped index into the selector, rather than constructing every
@@ -3854,7 +4050,9 @@ function LexiconPracticeIsland({
             ? classifyFeedbackFor(selection, option, learnerLevel)
             : selection.synonym
               ? synonymFeedbackFor(selection, option, learnerLevel)
-              : null;
+              : selection.paradigm
+                ? paradigmFeedbackFor(selection, option, learnerLevel)
+                : null;
     setAnswerLocked(true);
     setChoiceSelectedLabel(option.label);
     if (selection.paradigm) setParadigmSelectedLabel(option.label);
@@ -4602,6 +4800,15 @@ function LexiconPracticeIsland({
                   </span>
                 </button>
               </div>
+              <div className="k3-case-selector-container">
+                <CaseSelectorBar
+                  filter={caseFilter}
+                  onPresetSelect={handleCasePresetSelect}
+                  onToggleCase={handleToggleCase}
+                  onToggleNumber={handleToggleNumber}
+                  chromeLocale={chromeLocale}
+                />
+              </div>
             </div>
             </div>
           </div>
@@ -4868,6 +5075,15 @@ function LexiconPracticeIsland({
             <div className="lexicon-practice-stage" ref={stageRef} tabIndex={-1}>
               {selection ? (
                 <>
+                  {(mode === 'paradigm' || selection.mode === 'paradigm') && (
+                    <CaseSelectorBar
+                      filter={caseFilter}
+                      onPresetSelect={handleCasePresetSelect}
+                      onToggleCase={handleToggleCase}
+                      onToggleNumber={handleToggleNumber}
+                      chromeLocale={chromeLocale}
+                    />
+                  )}
                   <PracticeItem
                     key={selection.cardKey}
                     selection={selection}
@@ -5313,7 +5529,9 @@ export function PracticeItem({
                 ? 'practice-classify-feedback'
                 : selection.mode === 'synonym'
                   ? 'practice-synonym-feedback'
-                  : 'practice-choice-feedback'
+                  : selection.mode === 'paradigm'
+                    ? 'practice-paradigm-feedback'
+                    : 'practice-choice-feedback'
             }
             showEnglishSubtitles={showEnglishSubtitles}
           />

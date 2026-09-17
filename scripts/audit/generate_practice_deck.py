@@ -2979,6 +2979,29 @@ def _imperative_connection(verifier: VesumVerifier) -> sqlite3.Connection:
     return conn
 
 
+CASE_CONFUSION_PRIORITY: dict[str, tuple[str, ...]] = {
+    "родовий": ("знахідний", "давальний", "місцевий", "називний", "орудний", "кличний"),
+    "давальний": ("місцевий", "родовий", "орудний", "знахідний", "називний", "кличний"),
+    "місцевий": ("давальний", "родовий", "знахідний", "орудний", "називний", "кличний"),
+    "знахідний": ("називний", "родовий", "давальний", "місцевий", "орудний", "кличний"),
+    "орудний": ("родовий", "місцевий", "давальний", "називний", "знахідний", "кличний"),
+    "кличний": ("називний", "родовий", "давальний", "місцевий", "орудний", "знахідний"),
+    "називний": ("родовий", "знахідний", "давальний", "місцевий", "орудний", "кличний"),
+}
+
+
+def _paradigm_distractor_rank(
+    other: dict[str, str],
+    slot: dict[str, str],
+    confusions: tuple[str, ...],
+    paradigm_id: str,
+) -> tuple[int, int, str]:
+    same_num = 0 if other["number"] == slot["number"] else 1
+    case_rank = confusions.index(other["case"]) if other["case"] in confusions else len(confusions)
+    h = hashlib.sha1(f"{paradigm_id}:{other['case']}:{other['number']}:{other['form']}".encode()).hexdigest()
+    return (same_num, case_rank, h)
+
+
 def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
     """Build case/number MC cards from a lexeme paradigm.
 
@@ -2989,6 +3012,13 @@ def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
     shard size stays within budget — excluding every duplicated surface starved
     adjectives below the unique-lemma bar. Require four distinct surfaces for a
     four-option MCQ.
+
+    Pedagogical rules (#8167):
+    - Eliminate base-case bias: Nominative singular (nom:s) is never a challenge
+      target, as identifying the base lemma provides minimal learning value.
+    - Nominative singular remains in the distractor candidate pool to test
+      case discrimination (e.g. Accusative vs Nominative).
+    - Distractors are prioritized by grammatical case confusion and number.
     """
     if not _normalize_cefr(lexeme.get("cefr")):
         return []
@@ -3029,19 +3059,34 @@ def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
         return []
     items = []
     for index, slot in enumerate(slots):
+        # Eliminate base-case bias (#8167): never prompt for nominative singular.
+        if slot["case"] == "називний" and slot["number"] == "singular":
+            continue
         label_uk, label_en = CASE_SLOT_LABELS[slot["case"]]
         number_uk = "однина" if slot["number"] == "singular" else "множина"
         number_en = "sg" if slot["number"] == "singular" else "pl"
+        paradigm_id = f"{lexeme['lemmaId']}:paradigm:{index + 1}"
+
+        # Pedagogical distractor selection: rank same-paradigm forms by case confusion and number proximity
+        candidates = [
+            other for other in slots
+            if other is not slot and _plain(other["form"]) != _plain(slot["form"])
+        ]
+        confusions = CASE_CONFUSION_PRIORITY.get(slot["case"], ())
+        candidates.sort(key=lambda other: _paradigm_distractor_rank(other, slot, confusions, paradigm_id))
+
         options = [{"label": slot["form"], "kind": "answer"}]
-        for other in slots:
-            if other is slot:
-                continue
-            options.append({"label": other["form"], "kind": "same-paradigm"})
+        for other in candidates:
+            options.append({
+                "label": other["form"],
+                "kind": "same-paradigm",
+                "distractorCase": other["case"],
+                "distractorNumber": other["number"],
+            })
             if len(options) == 4:
                 break
         if len(options) < 4:
             continue
-        paradigm_id = f"{lexeme['lemmaId']}:paradigm:{index + 1}"
         answer_index = int(hashlib.sha1(paradigm_id.encode("utf-8")).hexdigest()[:2], 16) % len(options)
         answer = options.pop(0)
         options.insert(answer_index, answer)
@@ -3964,6 +4009,12 @@ def validate_heritage_item(item: dict[str, Any], *, internal_options: bool = Fal
 
 def validate_paradigm_item(item: dict[str, Any]) -> list[str]:
     errors: list[str] = []
+    slot = item.get("slot")
+    if isinstance(slot, dict):
+        case_key = _paradigm_slot_case_key(str(slot.get("case") or "")) or str(slot.get("case") or "").lower()
+        number_key = str(slot.get("number") or "").lower()
+        if case_key in ("називний", "nominative") and number_key in ("singular", "однина", "sg"):
+            errors.append("paradigm item cannot target nominative singular (base-case bias)")
     options = item.get("options")
     if not isinstance(options, list) or len(options) < 4:
         return ["paradigm option set must contain at least four options"]
