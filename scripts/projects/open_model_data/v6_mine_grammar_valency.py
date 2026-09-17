@@ -1129,6 +1129,18 @@ DASH_SUBORDINATE_INTRO_RE = re.compile(
 )
 
 
+def strip_quoted_spans(text: str) -> str:
+    """Iteratively strip quoted titles (including nested quotes under Правопис 2019 §164, примітка 3)."""
+    prev = None
+    curr = text
+    while prev != curr:
+        prev = curr
+        curr = re.sub(r"«[^«»]*»", " ", curr)
+        curr = re.sub(r"[“„][^“”„]*[“”]", " ", curr)
+        curr = re.sub(r'"[^"]*"', " ", curr)
+    return curr
+
+
 def extract_dash_apposition_spans(s: str, cur_ves: sqlite3.Cursor | None = None) -> list[tuple[str, str]]:
     """Extract (head_word, inside_phrase) pairs between paired dashes at quote depth 0.
 
@@ -1141,8 +1153,9 @@ def extract_dash_apposition_spans(s: str, cur_ves: sqlite3.Cursor | None = None)
       unpaired copular delimiters between subject and predicate; they do not open or close appositions.
     - Appositive dash pairs enclose parenthetical explanatory phrases within a single clause,
       without severing unclosed subordinate clauses across delimiter boundaries (Правопис 2019 §158.3, §161.I.10).
-    - Subordinate predicate presence is verified against VESUM morphological evidence, avoiding suffix heuristics
-      that misclassify nominal genitive forms (e.g. 'глядачів' on '-ів') as past-tense verbs.
+    - Subordinate predicate presence is verified against VESUM morphological evidence outside quoted titles
+      (Правопис 2019 §154, §164), avoiding suffix heuristics that misclassify nominal genitive forms (e.g. 'глядачів')
+      or verbs within embedded titles (e.g. «Життя триває») as matrix subordinate predicates.
     - A closing dash closes the preceding span and cannot serve as an opening dash.
     """
     cur = get_vesum_cursor(cur_ves)
@@ -1203,7 +1216,8 @@ def extract_dash_apposition_spans(s: str, cur_ves: sqlite3.Cursor | None = None)
         sub_m = DASH_SUBORDINATE_INTRO_RE.search(inside)
         if sub_m:
             sub_tail = inside[sub_m.end() :]
-            sub_words = [w.lower() for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", sub_tail)]
+            unquoted_sub_tail = strip_quoted_spans(sub_tail)
+            sub_words = [w.lower() for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", unquoted_sub_tail)]
             has_sub_predicate = False
             for w in sub_words:
                 if w in PREDICATE_WORDS:
@@ -1217,7 +1231,7 @@ def extract_dash_apposition_spans(s: str, cur_ves: sqlite3.Cursor | None = None)
                             break
                     except Exception:
                         pass
-            if not has_sub_predicate and not sub_tail.rstrip().endswith(","):
+            if not has_sub_predicate and not unquoted_sub_tail.rstrip().endswith(","):
                 i += 1
                 continue
 
@@ -1270,13 +1284,7 @@ def has_discordant_dash_apposition(s: str, cur_ves: sqlite3.Cursor | None = None
             continue
 
         # Words outside quoted titles (including nested quotes under Правопис 2019 §164, примітка 3)
-        unquoted_inside = inside
-        prev_unquoted = None
-        while prev_unquoted != unquoted_inside:
-            prev_unquoted = unquoted_inside
-            unquoted_inside = re.sub(r"«[^«»]*»", " ", unquoted_inside)
-            unquoted_inside = re.sub(r"[“„][^“”„]*[“”]", " ", unquoted_inside)
-            unquoted_inside = re.sub(r'"[^"]*"', " ", unquoted_inside)
+        unquoted_inside = strip_quoted_spans(inside)
         unquoted_words = [w.lower() for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ\']+\b", unquoted_inside)]
 
         if any(w in PREDICATE_WORDS for w in unquoted_words):
