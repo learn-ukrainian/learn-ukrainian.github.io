@@ -33,6 +33,7 @@ The threshold for writing an ADR: **would a new engineer need to know this to un
 | [ADR-010](adr-010-mcp-verification-phase3.md) | MCP verification layer — Phase 3 architectural redesign | Deferred — Krisztian decision 2026-07-07: Phase 2 tools (verify_quote, |
 | [ADR-011](adr-011-project-research-registry.md) | Project Research Registry — bounded cold-start discovery and task-scoped adoption | Accepted |
 | [ADR-012](adr-012-code-driven-curriculum-lifecycle.md) | Code-driven curriculum lifecycle and prompts as versioned source | Proposed |
+| [ADR-013](adr-013-docs-knowledge-openwiki.md) | Docs-knowledge authority and conditional OpenWiki | Accepted |
 | [ADR-017](adr-017-atlas-schema-and-lifecycle.md) | Atlas projection schema and lifecycle | Accepted |
 | [ADR-018](adr-018-entire-acp-context-layer.md) | Entire is an optional context index, not a control plane | Accepted |
 <!-- ADR-INDEX-END -->
