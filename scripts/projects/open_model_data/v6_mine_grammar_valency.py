@@ -173,6 +173,10 @@ UNGOVERNED_NUMERAL_RE = re.compile(
     r"шістдесят|сімдесят|вісімдесят|дев['’]яносто)(?![а-яіїєґА-ЯІЇЄҐ'’])",
     re.IGNORECASE,
 )
+UNPUNCTUATED_ADVERSATIVE_PARENTHETICAL_RE = re.compile(
+    r",\s+(?:а|але)\s+(?:навпаки|наприклад|зокрема|мабуть|можливо|безперечно|безумовно|очевидно|скажімо|до\s+речі)\s+[а-яіїєґА-ЯІЇЄҐ]+",
+    re.IGNORECASE,
+)
 PREDICATE_WORDS = {
     "є", "це", "немає", "нема", "треба", "можна", "слід", "варто", "необхідно",
     "потрібно", "жаль", "сором", "пора", "час", "досить", "відомо", "зрозуміло",
@@ -267,6 +271,8 @@ def split_clean_ukrainian_sentences(
         if CALQUED_BUREAUCRATIC_PHRASES_RE.search(s):
             continue
         if UNGOVERNED_NUMERAL_RE.search(s):
+            continue
+        if UNPUNCTUATED_ADVERSATIVE_PARENTHETICAL_RE.search(s):
             continue
         clean_sents.append(s)
     return clean_sents
@@ -415,8 +421,11 @@ def check_verb_agreement(tags1: list[str], tags2: list[str]) -> bool:
 PARENTHETICAL_PHRASES = {
     "наприклад", "зокрема", "мабуть", "можливо", "певне", "певно", "безперечно", "безумовно",
     "очевидно", "справді", "дійсно", "правда", "кажуть", "скажімо", "значить", "отже",
-    "навпаки", "до речі", "між іншим", "на жаль", "на щастя", "по-перше", "по-друге",
-    "по-третє", "з одного боку", "з другого боку", "коротше кажучи", "взагалі",
+    "навпаки", "до речі", "між іншим", "на жаль", "на щастя", "на біду", "по-перше", "по-друге",
+    "по-третє", "з одного боку", "з другого боку", "з іншого боку", "коротше кажучи",
+    "власне кажучи", "щиро кажучи", "правду кажучи", "правду сказати", "м'яко кажучи",
+    "іншими словами", "одним словом", "так би мовити", "на мою думку", "на наш погляд",
+    "на перший погляд", "без сумніву", "як відомо", "як то кажуть", "як кажуть", "взагалі",
 }
 
 
@@ -426,10 +435,12 @@ def is_parenthetical_segment(seg: str, cur_ves: sqlite3.Cursor | None) -> bool:
     if seg_clean in PARENTHETICAL_PHRASES:
         return True
     words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\x27\u2019\-]+", seg_clean)
-    if not words or len(words) > 3:
+    if not words or len(words) > 4:
         return False
     if any(get_verb_finite_tags(w, cur_ves) for w in words):
         return False
+    if words[-1] in {"кажучи", "сказати", "словами", "словом", "погляд", "думку"}:
+        return True
     for w in words:
         if w in PARENTHETICAL_PHRASES:
             continue
@@ -917,6 +928,10 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
 
     # 15. Unclosed clarifying adverbial modifier lacking closing comma before subject/predicate (Правопис 2019 §158 I.15(3))
     if has_unclosed_clarification(s, cur_ves):
+        return False
+
+    # 16. Unpunctuated parenthetical following adversative conjunction (Правопис 2019 §158 I.11)
+    if UNPUNCTUATED_ADVERSATIVE_PARENTHETICAL_RE.search(s):
         return False
 
     # 4. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)

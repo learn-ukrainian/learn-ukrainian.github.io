@@ -492,6 +492,19 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.is_pristine_eval_sentence(frag_clause_with_spravdi, cur_ves=cur)
     assert miner.has_homogeneous_verb_comma(frag_clause_with_spravdi, cur_ves=cur)
 
+    # Defect 36 (Round 15 P1): Unpunctuated parenthetical following adversative conjunction (Правопис 2019 §158 I.11)
+    frag_unpunctuated_navpaky = (
+        "За словами голови Малолюбашанської ОТГ, сьогодні надходження від останнього скоротилися вдвічі, "
+        "тоді як вартість пального не зменшується, а навпаки зростає."
+    )
+    assert not miner.is_pristine_eval_sentence(frag_unpunctuated_navpaky, cur_ves=cur)
+    assert miner.UNPUNCTUATED_ADVERSATIVE_PARENTHETICAL_RE.search(frag_unpunctuated_navpaky)
+
+    # Positive control (Round 15 P2): Multi-word parenthetical phrase 'власне кажучи' before coordinating conjunction (Правопис 2019 §158 I.11)
+    frag_vlasne_kazhuchy = "Він читає цікаву книжку, власне кажучи, і пише довгого листа."
+    assert not miner.has_homogeneous_verb_comma(frag_vlasne_kazhuchy, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_vlasne_kazhuchy, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:
