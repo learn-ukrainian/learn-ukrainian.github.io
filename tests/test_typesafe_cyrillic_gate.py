@@ -87,6 +87,26 @@ def test_evaluate_surzhyk_override_mock():
     assert "Colonial Surzhyk flagged" in (verdict.review_reason or "")
 
 
+def test_evaluate_standard_with_high_shadow_override_mock():
+    # Model proposed standard_modern + admit_standard, but colonial_shadow P(yes) >= 0.50
+    mock_resp = {
+        "model": "jev-test",
+        "answers": {
+            "ocr_corruption": DummyAns(score=0.05, confidence=0.95),
+            "lexical_variety": DummyAns(choice="standard_modern", confidence=0.90),
+            "colonial_shadow": DummyAns(noul=0.75),
+            "curriculum_action": DummyAns(choice="admit_standard", confidence=0.85),
+        },
+    }
+    verdict = evaluate_cyrillic_text(
+        text="Ми приймаємо участь у конференції на протязі дня.",
+        mock_response=mock_resp,
+    )
+    assert verdict.decision == "use_as_anti_calque"
+    assert verdict.needs_review
+    assert "Colonial Surzhyk flagged" in (verdict.review_reason or "")
+
+
 def test_evaluate_authentic_dialect_mock():
     mock_resp = {
         "model": "jev-test",
@@ -103,6 +123,31 @@ def test_evaluate_authentic_dialect_mock():
     )
     assert verdict.decision == "admit_heritage"
     assert not verdict.needs_review
+
+
+def test_evaluate_authentic_dialect_high_shadow_regression():
+    """Regression test for PR #8175 CF review:
+    authentic_dialect + admit_dialect_heritage with misfired colonial_shadow >= 0.50
+    must NOT be misrouted to use_as_anti_calque. It must retain admit_heritage
+    and set needs_review=True for human/heritage review.
+    """
+    mock_resp = {
+        "model": "jev-test",
+        "answers": {
+            "ocr_corruption": DummyAns(score=0.15, confidence=0.90),
+            "lexical_variety": DummyAns(choice="authentic_dialect", confidence=0.92),
+            "colonial_shadow": DummyAns(noul=0.65),  # Shadow probe misfires >= colonial_shadow_flag
+            "curriculum_action": DummyAns(choice="admit_dialect_heritage", confidence=0.88),
+        },
+    }
+    verdict = evaluate_cyrillic_text(
+        text="У поліському селі казали: ходімо до лісу по ягоди.",
+        mock_response=mock_resp,
+    )
+    assert verdict.decision == "admit_heritage"
+    assert verdict.decision != "use_as_anti_calque"
+    assert verdict.needs_review is True
+    assert "Authentic dialect with elevated colonial shadow probe" in (verdict.review_reason or "")
 
 
 def test_evaluate_low_confidence_escalation_mock():

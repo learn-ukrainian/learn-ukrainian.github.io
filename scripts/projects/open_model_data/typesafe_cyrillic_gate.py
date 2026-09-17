@@ -192,23 +192,43 @@ def evaluate_cyrillic_text(
             needs_review = True
             review_reason = f"Borderline OCR corruption ({ocr_score:.2f}) with low confidence ({ocr_conf:.2f})"
 
-    # 2. Colonial Surzhyk Invariant: Surzhyk is never admitted to standard corpus
-    elif variety == "colonial_surzhyk" or shadow_prob >= th["colonial_shadow_flag"]:
-        if action == "admit_standard":
-            # Override model's curriculum action if colonial shadow is flagged
-            final_decision = "use_as_anti_calque"
+    # 2. Dialect Heritage Protection: authentic dialect admitting dialect heritage is preserved.
+    # Do NOT force anti-calque from colonial shadow probe alone; set needs_review instead if shadow is high.
+    elif variety == "authentic_dialect" and action in ("admit_dialect_heritage", "admit_heritage"):
+        final_decision = "admit_heritage"
+        if shadow_prob >= th["colonial_shadow_flag"]:
+            needs_review = True
+            review_reason = (
+                f"Authentic dialect with elevated colonial shadow probe (P={shadow_prob:.2f}) - held for review"
+            )
+
+    # 3. Colonial Surzhyk Invariant: Surzhyk is never admitted to standard corpus.
+    # Colonial shadow override only applies when variety is colonial_surzhyk OR when admitting standard without dialect heritage intent.
+    elif variety == "colonial_surzhyk" or (
+        shadow_prob >= th["colonial_shadow_flag"]
+        and action == "admit_standard"
+        and variety != "authentic_dialect"
+    ):
+        final_decision = "use_as_anti_calque"
+        if action == "admit_standard" or variety != "colonial_surzhyk":
             needs_review = True
             review_reason = f"Colonial Surzhyk flagged (P={shadow_prob:.2f}) - redirected from admit_standard to anti_calque"
-        else:
-            final_decision = "use_as_anti_calque"
+        elif action != "use_as_anti_calque":
+            needs_review = True
+            review_reason = f"Colonial Surzhyk flagged (P={shadow_prob:.2f}) - redirected from {action} to anti_calque"
 
-    # 3. Non-Ukrainian text
+    # 4. Non-Ukrainian text
     elif variety == "non_ukrainian":
         final_decision = "reject"
 
-    # 4. Dialect Heritage Protection
+    # 5. Dialect Heritage Protection fallback
     elif variety == "authentic_dialect":
         final_decision = "admit_heritage"
+        if shadow_prob >= th["colonial_shadow_flag"]:
+            needs_review = True
+            review_reason = (
+                f"Authentic dialect with elevated colonial shadow probe (P={shadow_prob:.2f}) - held for review"
+            )
 
     # 5. Low confidence escalation
     if variety_conf < th["confidence_review_floor"] or action_conf < th["confidence_review_floor"]:
