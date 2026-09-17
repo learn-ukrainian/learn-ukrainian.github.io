@@ -904,6 +904,88 @@ def has_unclosed_clarification(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
     return False
 
 
+QUANTIFIERS = {"більшість", "частина", "ряд", "низка", "кількість", "багато", "чимало", "декілька", "кілька"}
+COPULA_VERBS_PLURAL = {"стали", "були", "виявилися", "залишилися", "послужили", "слугували"}
+
+
+def has_discordant_subject_predicate(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
+    """Reject singular head noun with genitive dependents taking an uncoordinated plural predicate (Ющук §21)."""
+    if not cur_ves:
+        return False
+    clause_match = re.match(r"^([^,;:\—–\-]+)", s)
+    if not clause_match:
+        return False
+    clause = clause_match.group(1).strip()
+    words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\x27\u2019\-]+", clause)
+    if len(words) < 5:
+        return False
+
+    start_idx = 0
+    if words[0].lower() in {"і", "й", "та", "а", "але", "проте", "однак", "що"}:
+        start_idx = 1
+    if start_idx >= len(words):
+        return False
+
+    w0 = words[start_idx]
+    if w0.lower() in COMMON_PREPOSITIONS or w0.lower() in QUANTIFIERS:
+        return False
+
+    s_tags = get_subj_nominative_tags(w0, cur_ves)
+    if not s_tags or any("p" in t.split(":") for t in s_tags):
+        return False  # not strictly singular nominative
+
+    if start_idx + 1 >= len(words):
+        return False
+    w1 = words[start_idx + 1]
+    cur_ves.execute(
+        "SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?) AND pos IN ('noun', 'adj')",
+        (w1.lower(), w1.capitalize()),
+    )
+    w1_tags = [r[0] for r in cur_ves.fetchall()]
+    if not any("v_rod" in t for t in w1_tags):
+        return False  # not followed by genitive dependent
+
+    # Find finite verb in the clause
+    for idx in range(start_idx + 2, len(words)):
+        w = words[idx]
+        v_tags = get_verb_finite_tags(w, cur_ves)
+        if v_tags:
+            # Check if verb is strictly plural
+            if all("p" in vt.split(":") for vt in v_tags) and not any(
+                check_subj_verb_agreement(st, vt) for st in s_tags for vt in v_tags
+            ):
+                is_copula = w.lower() in COPULA_VERBS_PLURAL
+                has_oru_comp = False
+                if idx + 1 < len(words):
+                    next_w = words[idx + 1]
+                    cur_ves.execute(
+                        "SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?) AND pos = 'noun'",
+                        (next_w.lower(), next_w.capitalize()),
+                    )
+                    has_oru_comp = any("v_oru" in r[0] for r in cur_ves.fetchall())
+                if is_copula or has_oru_comp:
+                    has_coord_nom_subject = False
+                    for c_idx in range(start_idx + 1, idx):
+                        if words[c_idx].lower() in {"та", "і", "й"} and c_idx + 1 < idx:
+                            after_w = words[c_idx + 1]
+                            prev_w = words[c_idx - 1]
+                            cur_ves.execute(
+                                "SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?) AND pos = 'noun'",
+                                (after_w.lower(), after_w.capitalize()),
+                            )
+                            after_n_tags = [r[0] for r in cur_ves.fetchall()]
+                            cur_ves.execute(
+                                "SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ?) AND pos = 'noun'",
+                                (prev_w.lower(), prev_w.capitalize()),
+                            )
+                            prev_n_tags = [r[0] for r in cur_ves.fetchall()]
+                            if any("v_naz" in t for t in after_n_tags) and any("v_naz" in t for t in prev_n_tags):
+                                has_coord_nom_subject = True
+                    if not has_coord_nom_subject:
+                        return True
+            break
+    return False
+
 
 def check_has_predicate(text: str, cur_ves: sqlite3.Cursor | None) -> bool:
     """Check whether a text fragment contains an active predicate (verb, predicative, or copula)."""
@@ -1021,6 +1103,10 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
 
     # 20. Pleonastic numeral affix in calendar dates and hours (Городенська 2017, p. 163; Правопис 2019)
     if INVALID_CALENDAR_DATE_AFFIX_RE.search(s):
+        return False
+
+    # 21. Discordant subject-predicate agreement (singular head noun with genitive dependents taking plural predicate; Ющук §21)
+    if has_discordant_subject_predicate(s, cur_ves):
         return False
 
     # 4. Dangling speech reporting verbs without coordinated subject pronoun (, й додав)

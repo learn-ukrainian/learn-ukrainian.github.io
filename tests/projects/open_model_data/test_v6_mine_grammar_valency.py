@@ -700,6 +700,27 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.INVALID_CALENDAR_DATE_AFFIX_RE.search(frag_1990_r_paren)
     assert miner.is_pristine_eval_sentence(frag_1990_r_paren, cur_ves=cur)
 
+    # Defect 66 / Negative regression (Round 28 P2): Singular abstract subject with coordinated genitive dependents taking plural predicate rejected (Ющук §21)
+    frag_nekonstytutsiynist_staly = (
+        "Неконституційність положень закону та процедури його ухвалення стали підставою "
+        "для подання 57 народних депутатів до Конституційного суду ще 1 грудня 2014 року."
+    )
+    assert miner.has_discordant_subject_predicate(frag_nekonstytutsiynist_staly, cur_ves=cur)
+    assert not miner.is_pristine_eval_sentence(frag_nekonstytutsiynist_staly, cur_ves=cur)
+
+    # Defect 67 / Positive control (Round 28 P2): Singular predicate 'стала' correctly agreeing with singular subject accepted (Ющук §21)
+    frag_nekonstytutsiynist_stala = (
+        "Неконституційність положень закону та процедури його ухвалення стала підставою "
+        "для подання 57 народних депутатів до Конституційного суду ще 1 грудня 2014 року."
+    )
+    assert not miner.has_discordant_subject_predicate(frag_nekonstytutsiynist_stala, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_nekonstytutsiynist_stala, cur_ves=cur)
+
+    # Defect 68 / Positive control (Round 28 P2): Pristine replacement sentence from same doc accepted
+    frag_protses_tryvav = "Процес тривав декілька років, і лише в останні місяці активізувався."
+    assert not miner.has_discordant_subject_predicate(frag_protses_tryvav, cur_ves=cur)
+    assert miner.is_pristine_eval_sentence(frag_protses_tryvav, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:
