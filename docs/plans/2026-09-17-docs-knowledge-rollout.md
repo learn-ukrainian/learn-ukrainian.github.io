@@ -50,7 +50,7 @@ No other overlap.
 | FBL-001 | Dedicated stream + migrate off infra lease | `issue_streams.yaml` + this plan; #5535 is stream epic |
 | FBL-002 | Tracked-only inventory; fresh worktree | Authority contract allowlist; #5536 owns enforcement |
 | FBL-003 | Hard-exclude root instruction writes | ADR-013 + #5541/#5542 bodies |
-| FBL-004 | Named provider route + billing + family | ADR-013 provider table (DeepSeek Flash first-party) |
+| FBL-004 | Named provider route + billing + family | ADR-013 provider table (Gemini Flash / Astra @ low; DeepSeek rejected) |
 | FBL-005 | Three-arm measurement vs Monitor baseline | Authority contract + #5543; #5536 captures baseline |
 | FBL-006 | Boundary vs Monitor + Research Registry | ADR-013 precedence table |
 | FBL-007 | Re-anchor Astro on 2026-06-09 ACCEPTED | #5538 verifies; does not re-author |
@@ -92,7 +92,7 @@ operational pointers stay stream-owned; curated docs never embed live leases.
 - Fresh worktree; tracked allowlist v1 only
 - ≤8 code-anchored pages; no docs-prose until allowlist v2
 - Disable/revert root instruction outputs
-- Record DeepSeek Flash (or GO'd alternate) model/family on the PR
+- Record Gemini Flash or Astra @ low model/family on the PR (never DeepSeek for this program)
 - Independent cross-family review after generation
 
 ## #5542 / #5543

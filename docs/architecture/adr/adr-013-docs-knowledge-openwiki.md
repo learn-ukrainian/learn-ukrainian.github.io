@@ -78,18 +78,27 @@ predecessor/adjacent awareness only — not the lease or membership home for
 
 ### OpenWiki provider route (pilot)
 
+Docs-knowledge pages can cite or quote Ukrainian and touch pedagogy/immersion
+policy. That makes the generator **language-adjacent**: LANGUAGE-LANES seating
+applies (agy / codex / claude / grok-4.6 only). Cheap code-only seats are wrong
+here even when the page set is “code-anchored.”
+
 | Field | Decision |
 | --- | --- |
-| Preferred generator | **DeepSeek V4 Flash** via first-party DeepSeek API (`deepseek-direct` / OpenCode seat) |
-| Billing bucket | Prepaid DeepSeek USD (`scripts/config/agent_budgets.yaml`) |
-| Credential owner | Operator-held DeepSeek API credential already used by the fleet |
-| Rejected routes | **OpenRouter** (excluded by #5537); **Hermes host gateway** (removed from this host 2026-08-16) |
-| Alternate (if DeepSeek unavailable) | Gemini through existing Google AIS / AGY route — requires present-tense GO before use for OpenWiki |
+| Preferred generator | **Gemini Flash** via AGY (`gemini-3.8-flash-high` / current AGY Flash default) |
+| Alternate (same PR class) | **Astra @ `low`** via Codex (`gpt-6-astra`) when AGY is unfit or concurrency-full |
+| Billing bucket | Existing Google AIS / Gemini subscription (AGY); Codex subscription for Astra |
+| Credential owner | Operator-held AIS / Codex credentials already used by the fleet |
+| Rejected for this program | **DeepSeek** (any Flash/Pro id, including V4.1 / `deepseek-flash`) — not a language seat; **OpenRouter**; **Hermes host gateway** (removed 2026-08-16); Cursor |
 | Automation venue (pilot #5541) | **Local dispatch worktree only** — one generation pass, PR-bound |
 | Automation venue (recurring #5542) | **Not authorized in CI** until #5542 explicitly chooses a venue; default remains local/operator-triggered |
 | Generator family on receipts | Record concrete model ID + family on every pilot/regen PR |
 
-No viable named route → skip OpenWiki; continue deterministic index only.
+No viable named language-lane route → skip OpenWiki; continue deterministic index only.
+
+**Operator amendment (2026-09-17):** prefer Gemini Flash or Astra light over
+DeepSeek for Ukrainian-related documentation. DeepSeek remains fine for
+code/infra CF volume elsewhere; it is not the docs-knowledge OpenWiki route.
 
 ### Hard exclusions (generator output)
 
@@ -122,6 +131,7 @@ provider route.
 - **Full OpenWiki adoption now** → rejected: immature upstream, no measured gain over Monitor orientation, root-file write hazard.
 - **Deterministic index only (never pilot OpenWiki)** → accepted as the success path if pilot kills; not chosen as the *only* path a priori because a bounded pilot is cheap relative to repeated agent scans *if* exit criteria pass.
 - **OpenRouter-hosted generation** → rejected by #5537 charter.
+- **DeepSeek Flash / V4.1 / `deepseek-flash` as OpenWiki generator** → rejected 2026-09-17: docs-knowledge is language-adjacent; LANGUAGE-LANES excludes DeepSeek. Prefer Gemini Flash or Astra @ low.
 - **CI-native recurring OpenWiki updates** → deferred; new spend/egress class (FBL-012); local pilot first.
 - **Keep program under infra-harness #6943** → rejected (FBL-001): lease collision with other infra work; fail-closed own-stream sweep.
 
