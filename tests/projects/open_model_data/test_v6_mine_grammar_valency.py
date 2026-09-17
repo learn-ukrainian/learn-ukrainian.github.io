@@ -685,6 +685,21 @@ def test_negative_controls_filtering_rejects_defective_structures() -> None:
     assert not miner.INVALID_CALENDAR_DATE_AFFIX_RE.search(frag_1990_r)
     assert miner.is_pristine_eval_sentence(frag_1990_r, cur_ves=cur)
 
+    # Defect 63 / Negative regression (Round 27 P2): Abbreviated calendar date before closing parenthesis '(у 1990-му р.)' rejected (Городенська 2017, p. 163)
+    frag_1990_mu_r_paren = "Родина придбала нову квартиру в Києві (у 1990-му р.) за власні кошти."
+    assert miner.INVALID_CALENDAR_DATE_AFFIX_RE.search(frag_1990_mu_r_paren)
+    assert not miner.is_pristine_eval_sentence(frag_1990_mu_r_paren, cur_ves=cur)
+
+    # Defect 64 / Negative regression (Round 27 P2): Abbreviated calendar date before semicolon '1990-му р.;' rejected (Городенська 2017, p. 163)
+    frag_1990_mu_r_semi = "Родина придбала нову квартиру в Києві; у 1990-му р.; за власні кошти."
+    assert miner.INVALID_CALENDAR_DATE_AFFIX_RE.search(frag_1990_mu_r_semi)
+    assert not miner.is_pristine_eval_sentence(frag_1990_mu_r_semi, cur_ves=cur)
+
+    # Defect 65 / Positive control (Round 27 P2): Valid parenthesized date '(у 1990 р.)' accepted (Городенська 2017, p. 163)
+    frag_1990_r_paren = "Родина придбала нову квартиру в Києві (у 1990 р.) за власні кошти."
+    assert not miner.INVALID_CALENDAR_DATE_AFFIX_RE.search(frag_1990_r_paren)
+    assert miner.is_pristine_eval_sentence(frag_1990_r_paren, cur_ves=cur)
+
 
 
 def test_release_receipt_schema_and_checksum() -> None:
