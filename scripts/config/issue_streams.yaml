@@ -19,6 +19,9 @@ streams:
   infra-harness:
     title: "Infra & fleet reliability (hooks, dispatch, routing)"
     epics: [6943]  # successor to closed #4707
+  docs-knowledge:
+    title: "Repository knowledge system — docs authority, Astro truth, OpenWiki"
+    epics: [5535]  # nested program; was provisionally under #4707/#6943 until this registry bootstrap (#5537)
   devops:
     title: "DevOps automation, CI, release & launcher reliability"
     epics: [5703]

@@ -62,6 +62,7 @@ is the single source of truth for membership (auditor:
 | atlas-practice | #4387 | Word Atlas + Practice Hub product & UX (intake epics #4220, #4378, #5224 and UX epic #4700 folded into umbrella #4387) |
 | corpus-channels | #4706 | Acquisition & ingestion (textbooks · ZNO · Ohoiko-media · press · academic) |
 | infra-harness | #6943 (successor to closed #4707) | Infra & fleet reliability (hooks, dispatch, routing) |
+| docs-knowledge | #5535 | Repository knowledge system — curated docs authority, plain-Astro truth, optional OpenWiki layer |
 | devops | #5703 | DevOps automation, CI, release & launcher reliability |
 | monitor (`ops-api` alias) | #7919 (successor to closed #7177) | **Ops API + UI** — operator API (`scripts/api`) + dashboards; Monitor routes are a subset |
 | eval-harness | #4913 | Internal QG schemas, validators, quality gates, product adapters, and private calibration |
@@ -98,6 +99,7 @@ epic-board state and bind only once that stream's driver (State: the operator) c
 | Stream | State | Current milestone | Done when |
 | --- | --- | --- | --- |
 | infra-harness | ACTIVE *(proposed)* | Weak-driver rails T1 (T1.1 slot addressing ✅ #5878; T1.2 lease lifecycle; T1.3 glm canary lane) | T1.2 + T1.3 merged with mutation-checked tests. (The fleet-comms decision packet — dual-write parity + authority-signal evidence for any future plane change, file handoff never dropped unilaterally per `fleet-comms-coordination.md` — is the NEXT milestone, not this one.) |
+| docs-knowledge | ACTIVE | #5537 freeze (ADR-013 + stream registry) → Wave 1 #5536∥#5538 | Next after #5537 merge: tracked inventory (#5536) parallel with Astro residue (#5538) |
 | eval-harness | *(operator to set)* | Internal product-quality machinery under #4913 *(driver to confirm)* | Current internal milestone is confirmed on #4913 without absorbing public gold or release work |
 | open-model-data | ACTIVE | Execute #7423: Cyrillic-Slavic Ukrainian dataset delivery with protected Old East Slavic/Kyivan Rus, Middle Ukrainian, Church Slavonic recension, and source-attested Rusyn boundaries; retain #6375/Cycle007 as completed historical evaluation evidence. | The #7423 contract and issue DAG are merged and hash-bound; source/rights/applicability, atomic rules, historical protection, held-out/lineage firewall, pilot, scale, consumer reproduction, and final residual gates pass; Phase 4 remains blocked. |
 | atlas-practice | ACTIVE *(proposed)* | Practice Hub deck experience stable after the D10 wave (#5877–#5883) *(driver to confirm)* | A bounded soak: 7 days with no new daily-deck defect filed; then next #4387 item |
