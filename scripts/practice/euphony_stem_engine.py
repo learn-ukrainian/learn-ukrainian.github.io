@@ -1,12 +1,12 @@
 """Ukrainian Euphony and Stem Alternations Engine.
 
-Implements Ukrainian Pravopys 2019 rules for:
-  1. Preposition Euphony: у vs в (§ 20–§ 22), з vs із vs зі (§ 24).
-  2. Conjunction Euphony: і vs й (§ 23).
-  3. Historical Vowel Shifts: [о], [е] <-> [і] in open vs closed syllables (§ 70–§ 71).
-  4. Second Palatalization: г -> з', к -> ц', х -> с' in Dative/Locative singular (§ 72).
-  5. First Palatalization: г -> ж, к -> ч, х -> ш in Vocative singular (§ 73).
-  6. Verb Iotation: Epenthetic -л- (любити -> люблю) and dental shifts (д -> дж, т -> ч, з -> ж, с -> ш) in 1st person singular (§ 74).
+Implements Ukrainian Pravopys 2019 (§ 23–25) and Academic Grammar rules for:
+  1. Preposition Euphony: у vs в (§ 23), з vs із vs зі (§ 25).
+  2. Conjunction Euphony: і vs й (§ 24).
+  3. Historical Vowel Shifts: [о], [е] <-> [і] in open vs closed syllables (Академічна граматика).
+  4. Second Palatalization: г -> з', к -> ц', х -> с' in Dative/Locative singular (Академічна граматика).
+  5. First Palatalization: г -> ж, к -> ч, х -> ш in Vocative singular (Академічна граматика).
+  6. Verb Iotation: Epenthetic -л- (любити -> люблю) and dental shifts (д -> дж, т -> ч, з -> ж, с -> ш) in 1st person singular (Академічна граматика).
 
 Provides targeted pedagogical feedback explaining the phonetic rule (open vs closed syllables,
 consonant cluster relief, palatalization) and guarantees zero options collisions.
@@ -382,7 +382,7 @@ HISTORICAL_VOWEL_SHIFTS = [
         "target": "вечора",
         "calque_wrong": "вечіра",
         "russian_wrong": "вечер",
-        "vowel_pair": "і/е",
+        "vowel_pair": "і/о",
     },
 ]
 

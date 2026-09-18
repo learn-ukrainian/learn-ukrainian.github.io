@@ -1,13 +1,13 @@
 /**
  * Ukrainian Euphony & Stem Alternations Model and Evaluation Engine.
  *
- * Implements Ukrainian Pravopys 2019 (§ 20–24, § 70–74):
- * - Preposition euphony: у vs в, з vs із vs зі
- * - Conjunction euphony: і vs й
- * - Vowel alternations: [о], [е] <-> [і] in open vs closed syllables
- * - Second palatalization: г -> з', к -> ц', х -> с' in Dative/Locative
- * - First palatalization: г -> ж, к -> ч, х -> ш in Vocative
- * - Verb iotation: Epenthetic -л- and dental shifts in 1st person singular
+ * Implements Ukrainian Pravopys 2019 (§ 23–25) and Academic Grammar rules:
+ * - Preposition euphony: у vs в (§ 23), з vs із vs зі (§ 25)
+ * - Conjunction euphony: і vs й (§ 24)
+ * - Vowel alternations: [о], [е] <-> [і] in open vs closed syllables (Академічна граматика)
+ * - Second palatalization: г -> з', к -> ц', х -> с' in Dative/Locative (Академічна граматика)
+ * - First palatalization: г -> ж, к -> ч, х -> ш in Vocative (Академічна граматика)
+ * - Verb iotation: Epenthetic -л- and dental shifts in 1st person singular (Академічна граматика)
  */
 
 export type EuphonyCategoryKey =

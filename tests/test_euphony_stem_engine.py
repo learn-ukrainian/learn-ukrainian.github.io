@@ -134,10 +134,14 @@ def test_vowel_shifts_closed_open():
         "target": "вечора",
         "calque_wrong": "вечіра",
         "russian_wrong": "вечер",
-        "vowel_pair": "і/е",
+        "vowel_pair": "і/о",
     }
     card_v = generate_vowel_shift_card(vechir, 1)
     assert card_v.correct_answer == "вечора"
+    # Check that explanation correctly states alternation with [о], not [е]
+    calque_distractor = next(d for d in card_v.distractors if d["form"] == "вечіра")
+    assert "чергується з [о]" in calque_distractor["explanation_ua"]
+    assert "alternates with [о]" in calque_distractor["explanation_en"]
     assert len(set(card_v.options)) == 4
 
     # Calque distractor (*кіта)
