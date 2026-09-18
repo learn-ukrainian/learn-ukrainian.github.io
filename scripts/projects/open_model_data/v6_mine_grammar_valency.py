@@ -3572,24 +3572,16 @@ BROWN_UK_GENRE_REGISTERS: dict[str, tuple[str, str]] = {
 def quote_sentence(s: str, outer_mark: str = ".") -> str:
     """Quote a Ukrainian sentence following Pravopys 2019 § 162 typography.
 
-    - If s ends with '?' and outer_mark is '?' or '.':
-      outer mark is dropped (single '?' inside quotes serves for both):
-      «Хто це?»
-    - If s ends with '!' and outer_mark is '.':
-      outer dot is dropped: «Слава Україні!»
-    - If s ends with '...' or '…' and outer_mark is '.':
-      outer dot is dropped: «Степ...»
+    - If s ends with '?', '!', '...', or '…':
+      omit trailing outer . or ? after closing quote:
+      «Хто це?», «Слава Україні!», «Степ...»
     - If s ends with a single period, inner period is stripped and outer_mark is placed outside:
       «Сонце світить». or «Сонце світить»?
     - Otherwise outer_mark is placed outside:
       «Сонце світить». or «Сонце світить»?
     """
     s_str = s.strip()
-    if re.search(r"\?\s*»*$", s_str):
-        return f"«{s_str}»"
-    if re.search(r"!\s*»*$", s_str) and outer_mark == ".":
-        return f"«{s_str}»"
-    if re.search(r"([…]|\.{3})\s*»*$", s_str) and outer_mark == ".":
+    if re.search(r"([?!…]|\.{3})\s*»*$", s_str):
         return f"«{s_str}»"
     if s_str.endswith("."):
         inner = re.sub(r"(?<!\.)\.\s*»*$", "", s_str).rstrip()
@@ -3608,18 +3600,18 @@ def sanitize_punctuation(text: str) -> str:
     - «... ?». -> «... ?»
     - «... ?»? -> «... ?»
     - «... !». -> «... !»
+    - «... !»? -> «... !»
     - «... ...». -> «... ...»
+    - «... ...»? -> «... ...»
     - .. -> .
-    Preserves legitimate ellipses (... or …).
+    Preserves legitimate ellipses (... or …) without duplicate outer terminal marks.
     """
     res = re.sub(r"\.{4,}", "...", text)
     res = re.sub(r"(?<!\.)\.\.(?!\.)", ".", res)
     # Strip inner single dot before closing quote when followed by punctuation:
     res = re.sub(r"(?<!\.)\.\s*(»+)\s*([.?!:,])", r"\1\2", res)
-    # Drop outer period after closing quote if inside ends with ?, !, or ellipsis:
-    res = re.sub(r"([?!…]|\.{3})\s*(»+)\s*\.", r"\1\2", res)
-    # Drop outer question mark if inside already ends with ?:
-    res = re.sub(r"\?\s*(»+)\s*\?", r"?\1", res)
+    # Drop outer terminal mark (. or ?) after closing quote if inside ends with ?, !, or ellipsis:
+    res = re.sub(r"([?!…]|\.{3})\s*(»+)\s*[.?]", r"\1\2", res)
     return res
 
 

@@ -2410,9 +2410,11 @@ def test_sanitize_punctuation() -> None:
     # Clean text without redundant dots remains unchanged
     assert miner.sanitize_punctuation("«слово».") == "«слово»."
     assert miner.sanitize_punctuation("«слово»?") == "«слово»?"
-    # Legitimate ellipses inside quotes are preserved
+    # Legitimate ellipses inside quotes are preserved without duplicate outer marks
     assert miner.sanitize_punctuation("«Ще не вмерла...»,") == "«Ще не вмерла...»,"
-    assert miner.sanitize_punctuation("«слово...»?") == "«слово...»?"
+    assert miner.sanitize_punctuation("«слово...»?") == "«слово...»"
+    assert miner.sanitize_punctuation("«слово...».") == "«слово...»"
+    assert miner.sanitize_punctuation("«слово!»?") == "«слово!»"
 
 
 def test_pejorative_stems_precision() -> None:
@@ -2467,7 +2469,10 @@ def test_quote_sentence_typography() -> None:
     assert miner.quote_sentence("Хто це?", "?") == "«Хто це?»"
     assert miner.quote_sentence("Хто це?", ".") == "«Хто це?»"
     assert miner.quote_sentence("Слава Україні!", ".") == "«Слава Україні!»"
+    assert miner.quote_sentence("Слава Україні!", "?") == "«Слава Україні!»"
     assert miner.quote_sentence("Степ...", ".") == "«Степ...»"
+    assert miner.quote_sentence("Степ...", "?") == "«Степ...»"
+    assert miner.quote_sentence("Степ…", "?") == "«Степ…»"
     assert miner.quote_sentence("Пам’ятаєте «Капітанша»: «Працелюбна людина...»?", "?") == "«Пам’ятаєте «Капітанша»: «Працелюбна людина...»?»"
 
 
