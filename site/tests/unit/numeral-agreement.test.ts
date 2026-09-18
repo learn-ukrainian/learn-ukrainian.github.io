@@ -180,7 +180,7 @@ describe('numeral-agreement', () => {
       prompt_en: 'Choose the correct form for: 2 (громадянин)',
       pedagogical_rule_ua: 'Іменники на -ин вживаються у формі родового відмінка однини.',
       pedagogical_rule_en: 'Nouns in -ин take Genitive singular.',
-      pravopys_ref: 'Правопис 2019, § 105; Морфологія української мови (Волкова, Масло 2012, с. 91)',
+      pravopys_ref: 'Морфологія української мови (Волкова, Масло 2012, с. 91)',
     };
 
     const normalized = normalizeNumeralItem(rawPythonCard);

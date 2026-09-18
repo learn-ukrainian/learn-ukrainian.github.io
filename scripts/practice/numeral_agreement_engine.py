@@ -441,7 +441,7 @@ def generate_card_for_tier(
             "з іменником у роді, числі й відмінку: вимагає називного відмінка однини."
         )
         pravopys_rule_en = "Numerals ending in 'one' (1, 21, 31...) agree in gender and govern Nominative singular."
-        pravopys_citation = "Академічна граматика: узгодження числівника «один» з іменником"
+        pravopys_citation = "Академічна граматика: узгодження числівника «один» з іменником (Волкова, Масло 2012, с. 90)"
 
     elif tier == NumeralTier.TIER_2_PAUCAL:
         numeral_val = rng.choice([2, 3, 4, 22, 23, 24, 32, 34])

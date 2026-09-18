@@ -22,6 +22,7 @@ from scripts.practice.numeral_agreement_engine import (
     format_numeral_words,
     generate_card_for_tier,
     generate_deck_across_all_tiers,
+    is_dropping_yn_paucal_exception,
     load_noun_paradigms_from_db,
     validate_numeral_card,
 )
@@ -179,6 +180,43 @@ def test_paucal_dropping_yn_exception():
     assert len(card_dict["distractors"]) == 3
     assert "explanationUa" in card_dict["distractors"][0]
     assert "interferenceType" in card_dict["distractors"][0]
+
+
+def test_paucal_dropping_yn_exception_negative_cases():
+    """Verify inanimate nouns and non-masculine nouns ending in -ин are excluded from paucal Gen Sg."""
+    # Inanimate masculine nouns ending in -ин retain -ин in plural and follow regular Tier 2 paucal (Nom Pl)
+    magazyn = NounParadigm(
+        lemma="магазин",
+        gender="m",
+        is_anim=False,
+        cefr_level="A1",
+        nom_sg="магазин",
+        gen_sg="магазину",
+        nom_pl="магазини",
+        gen_pl="магазинів",
+        dat_pl="магазинам",
+        loc_pl="магазинах",
+        oru_sg="магазином",
+    )
+    assert not is_dropping_yn_paucal_exception(magazyn)
+    card = generate_card_for_tier(magazyn, NumeralTier.TIER_2_PAUCAL, seed_idx=0)
+    assert card is not None
+    assert card.correct_form == "магазини"
+    assert card.target_case == "називний"
+    assert card.target_number == "plural"
+
+    # Feminine noun
+    dytyna = NounParadigm(
+        lemma="дитина",
+        gender="f",
+        is_anim=True,
+        cefr_level="A1",
+        nom_sg="дитина",
+        gen_sg="дитини",
+        nom_pl="діти",
+        gen_pl="дітей",
+    )
+    assert not is_dropping_yn_paucal_exception(dytyna)
 
 
 def test_teen_tier_violation_distractor():
