@@ -118,6 +118,7 @@ DISCIPLINE_PHILOLOGY_CULTURE = {"ukrmova", "ukrlit", "zarlit", "mystetstvo", "et
 
 # Imperative task verbs in textbook exercises to filter out from concept extraction
 EXERCISE_IMPERATIVES = {
+    # Plural / formal imperatives
     "складіть", "оцініть", "прочитайте", "виконайте", "знайдіть", "поясніть", "запишіть",
     "пригадайте", "зауважимо", "дослідіть", "обчисліть", "розв'яжіть", "розвяжіть",
     "назвіть", "доведіть", "порівняйте", "охарактеризуйте", "сформулюйте", "наведіть",
@@ -127,8 +128,27 @@ EXERCISE_IMPERATIVES = {
     "висловте", "обговоріть", "підготуйте", "скористайтеся", "вкажіть", "відшукайте",
     "спростіть", "побудуйте", "намалюйте", "згрупуйте", "відгадайте", "розподіліть",
     "перегляньте", "подивіться", "дізнайтеся", "ознайомтеся", "повторіть", "підсумуйте",
-    "доповніть", "поміркуймо", "обговорімо", "подумайте", "зробіть", "сформулюймо",
-    "варто", "дотримуватись", "написати",
+    "доповніть", "подумайте", "зробіть", "варто", "дотримуватись", "написати",
+    "перепишіть", "зіставте", "продемонструйте", "пояснюйте", "розгадайте", "придумайте",
+    "накресліть", "виміряйте", "полічіть", "порахуйте", "розфарбуйте", "доберіть",
+    "встановіть", "з'ясуйте", "зясуйте",
+    # Singular informal imperatives (Grades 1-6 textbooks)
+    "склади", "оціни", "прочитай", "виконай", "знайди", "поясни", "запиши",
+    "пригадай", "зауваж", "досліди", "обчисли", "розв'яжи", "розвяжи",
+    "назви", "доведи", "порівняй", "охарактеризуй", "сформулюй", "наведи",
+    "розглянь", "заповни", "проаналізуй", "уяви", "дай", "поміркуй", "перевір",
+    "запам'ятай", "запамятай", "зверни", "випиши", "продовж", "вибери",
+    "перекажи", "встав", "спробуй", "визнач", "познач", "поділи", "утвори",
+    "вислови", "обговори", "підготуй", "скористайся", "вкажи", "відшукай",
+    "спрости", "побудуй", "намалюй", "згрупуй", "відгадай", "розподіли",
+    "переглянь", "подивись", "подивися", "дізнайся", "ознайомся", "повтори", "підсумуй",
+    "доповни", "подумай", "зроби", "перепиши", "зістав", "продемонструй", "пояснюй",
+    "розгадай", "придумай", "накресли", "виміряй", "полічи", "порахуй",
+    "розфарбуй", "добери", "встанови", "з'ясуй", "зясуй",
+    # Cohortative 1st-person plural forms
+    "поміркуймо", "обговорімо", "сформулюймо", "дослідімо", "пригадаймо",
+    "виконаймо", "розв'яжімо", "розвяжімо", "обчислімо", "підсумуймо",
+    "спробуймо", "повторімо", "перевірмо", "розгляньмо",
 }
 
 NON_CONCEPT_PREFIXES = (
@@ -247,9 +267,45 @@ CONTRADICTORY_MODIFIER_PAIRS = [
 
 DANGLING_STARTER_RE = re.compile(
     r"^(?:записан\w*\s+рівність|цю\s+рівність|цю\s+формулу|цей\s+вираз|цей\s+малюнок|цей\s+рисунок|цей\s+графік|"
-    r"звідси\b|у\s+таких\s+випадках|аналогічно\b|тому\s+для|отже\b|тоді\s+маємо|тоді\s+як|оскільки\b|"
+    r"звідси\b|у\s+таких\s+випадках|аналогічн\w*|тому\s+для|тому\b|отже\b|тоді\s+маємо|тоді\s+як|оскільки\b|"
     r"наприклад\b|позначимо\b|нехай\b|підставивши\b|помноживши\b|поділивши\b|доведемо\b|розв'язання\b|розглянемо\s+приклад|"
-    r"так\w*\s+рівність|так\w*\s+послідовність|так\w*\s+вираз)\b",
+    r"так\w*\s+рівність|так\w*\s+послідовність|так\w*\s+вираз|так\w*\s+чином\b|"
+    r"крім\s+того\b|зокрема\b|відповідно\b|проте\b|однак\b|"
+    r"як\s+бачимо\b|як\s+відомо\b|як\s+зазначалося\b|вони\b|він\b|вона\b|воно\b)\b",
+    re.IGNORECASE,
+)
+
+FORWARD_BACKWARD_REF_RE = re.compile(
+    r"\b(?:"
+    r"наступн\w*\s+тем\w*|"
+    r"наступн\w*\s+параграф\w*|"
+    r"наступн\w*\s+розділ\w*|"
+    r"попередн\w*\s+тем\w*|"
+    r"попередн\w*\s+параграф\w*|"
+    r"попередн\w*\s+розділ\w*|"
+    r"про\s+як\w*\s+йтиметься|"
+    r"про\s+це\s+йтиметься|"
+    r"як\s+зазначено\s+вище|"
+    r"як\s+було\s+сказано|"
+    r"як\s+уже\s+зазначалося|"
+    r"як\s+ми\s+вже\s+знаємо|"
+    r"як\s+ви\s+вже\s+знаєте|"
+    r"як\s+відомо\s+з\s+попередн\w*|"
+    r"рівносильн\w*\s+даній|"
+    r"розглянут\w*\s+раніше|"
+    r"у\s+попередньому\s+класі|"
+    r"у\s+наступному\s+класі|"
+    r"наведен\w*\s+вище|"
+    r"згадайте\s+з\s+курсу|"
+    r"у\s+минулому\s+році"
+    r")\b",
+    re.IGNORECASE,
+)
+
+DEFINITIONAL_MARKER_RE = re.compile(
+    r"(?:—\s*це\b|–\s*це\b|-\s*це\b|\bназивають\b|\bназивається\b|\bозначення\b|\bвизначення\b|"
+    r"\bє\s+[а-яіїєґ]+(?:им|ою|ем|ям|ими)\b|\bце\s+[а-яіїєґ]+\b|"
+    r"\bсукупність\b|\bпроцес\b|\bявище\b|\bвластивість\b|\bвеличина\b|\bсистема\b|\bправило\b|\bзакон\b)",
     re.IGNORECASE,
 )
 
@@ -668,6 +724,10 @@ def is_clean_content_chunk(chunk: TextbookChunk) -> bool:
         return False
     if len(EXERCISE_ITEM_RE.findall(t)) >= 2:
         return False
+    if len(re.findall(r"^\s*\d+[\.\)]\s+", t, re.MULTILINE)) >= 3:
+        return False
+    if len(FIGURE_REF_RE.findall(t)) >= 2 and len(t) < 800:
+        return False
     if not verify_pedagogical_tone(t):
         return False
     if any(m in t for m in frontmatter_markers):
@@ -835,12 +895,14 @@ def check_concept_contradiction(snippet: str, concept: str) -> bool:
 
 
 def is_snippet_grounded_in_concept(snippet: str, concept: str) -> bool:
-    """Verify that the snippet is strictly grounded in the concept, without contradiction or dangling starter."""
+    """Verify that the snippet is strictly grounded in the concept, without contradiction, dangling starter, or forward/backward pointer."""
     if not snippet or not concept:
         return False
     if check_concept_contradiction(snippet, concept):
         return False
     if DANGLING_STARTER_RE.search(snippet):
+        return False
+    if FORWARD_BACKWARD_REF_RE.search(snippet):
         return False
 
     snip_lower = snippet.lower()
@@ -848,14 +910,23 @@ def is_snippet_grounded_in_concept(snippet: str, concept: str) -> bool:
     snip_words = set(re.findall(r"[а-яіїєґ']+", snip_lower))
     conc_words = set(re.findall(r"[а-яіїєґ']+", conc_lower))
 
-    words = [w for w in re.findall(r"[а-яіїєґ']+", conc_lower) if w not in STOPWORD_TERMS and len(w) >= 4]
+    # Significant content words with len >= 3 (e.g. сон, рух, кут, газ, іон, світ, тіло)
+    words = [w for w in re.findall(r"[а-яіїєґ']+", conc_lower) if w not in STOPWORD_TERMS and len(w) >= 3]
     if not words:
         return True
 
+    # Primary entity check: the leading non-stopword of the concept (e.g. "сон" in "Сон як прояв біоритмів організму")
+    # MUST be present in the snippet
+    primary_word = words[0]
+    primary_stem = primary_word[:len(primary_word) - 1] if len(primary_word) > 3 else primary_word
+    primary_matched = any(sw.startswith(primary_stem) for sw in snip_words) or (primary_word in snip_lower)
+    if not primary_matched:
+        return False
+
     matched = 0
     for w in words:
-        stem = w[:len(w) - 1] if len(w) > 4 else w
-        if stem in snip_lower:
+        stem = w[:len(w) - 1] if len(w) > 3 else w
+        if stem in snip_lower or any(sw.startswith(stem) for sw in snip_words):
             matched += 1
 
     if len(words) == 1:
@@ -898,12 +969,12 @@ def extract_meaningful_text_snippet(
     grounding_keywords: set[str] = set()
     if concept:
         for w in re.findall(r"[а-яіїєґ']+", concept.lower()):
-            if len(w) >= 4 and w not in STOPWORD_TERMS:
+            if len(w) >= 3 and w not in STOPWORD_TERMS:
                 grounding_keywords.add(w)
     if terms:
         for t in terms:
             for w in re.findall(r"[а-яіїєґ']+", t.lower()):
-                if len(w) >= 4 and w not in STOPWORD_TERMS:
+                if len(w) >= 3 and w not in STOPWORD_TERMS:
                     grounding_keywords.add(w)
 
     def _sentence_score(s: str) -> int:
@@ -923,13 +994,18 @@ def extract_meaningful_text_snippet(
             return -100
         if DANGLING_STARTER_RE.search(s):
             return -100
+        if FORWARD_BACKWARD_REF_RE.search(s):
+            return -100
         if concept and not is_snippet_grounded_in_concept(s, concept):
             return -100
 
         score = 1
         s_lower = s.lower()
-        if concept and concept.lower() in s_lower:
+        conc_stem = concept.lower()[:len(concept) - 1] if len(concept) > 4 else concept.lower()
+        if concept and (concept.lower() in s_lower or conc_stem in s_lower):
             score += 10
+        if DEFINITIONAL_MARKER_RE.search(s_lower):
+            score += 15
         if terms:
             for t in terms:
                 if t.lower() in s_lower:
@@ -967,11 +1043,13 @@ def extract_meaningful_text_snippet(
                     best_score = sc_comb
                     best_cand = s_comb
 
-    # Require positive grounding score
-    if best_score > 0 and best_cand:
+    # Require substantive score (definitional or grounded)
+    if best_score >= 10 and best_cand:
         if concept and not is_snippet_grounded_in_concept(best_cand, concept):
             return ""
         if DANGLING_STARTER_RE.search(best_cand):
+            return ""
+        if FORWARD_BACKWARD_REF_RE.search(best_cand):
             return ""
         return best_cand.rstrip(". ") + "."
 
@@ -979,11 +1057,14 @@ def extract_meaningful_text_snippet(
 
 
 def clean_and_validate_candidate(cand: str) -> str | None:
-    """Clean and validate a candidate concept, rejecting exercises and mid-word cuts."""
+    """Clean and validate a candidate concept, rejecting exercises, dangling punctuation, and mid-word cuts."""
     c = cand.strip()
     c = normalize_apostrophes(c)
     c = re.sub(r"[\s\.\d—–-]+$", "", c).strip()
     if not c or len(c) < 4:
+        return None
+    # Reject terminal dangling punctuation/apostrophes
+    if c.endswith(("'", "’", "ʼ", "`", "-", "—", "–", "…", ".")):
         return None
     for delim in [":", ";", "(", " - це", " — це", " – це"]:
         if delim in c:
@@ -995,15 +1076,17 @@ def clean_and_validate_candidate(cand: str) -> str | None:
     words = [w.strip(".,;:?!'\"«»„“—–()") for w in c.split() if w.strip(".,;:?!'\"«»„“—–()")]
     if not words or len(words) > 5:
         return None
-    w0 = words[0].lower()
-    if w0 in EXERCISE_IMPERATIVES:
+    # Reject if ANY word is an imperative verb
+    if any(w.lower() in EXERCISE_IMPERATIVES for w in words):
         return None
     c_lower = c.lower()
     if any(c_lower.startswith(p) for p in NON_CONCEPT_PREFIXES):
         return None
-    if w0 in FILLER_STARTS:
+    if words[0].lower() in FILLER_STARTS:
         return None
     if words[-1].lower() in DANGLING_TAILS:
+        return None
+    if len(words[-1]) < 2:
         return None
     if c.isupper() or any(ch.isupper() for ch in c[1:]):
         c = c.capitalize()
@@ -1021,19 +1104,19 @@ def extract_key_concept(chunk: TextbookChunk | str, title: str = "", subject: st
         chunk_title = title
         subj = subject
 
-    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    lines = [normalize_apostrophes(line.strip()) for line in text.splitlines() if line.strip()]
     for line in lines[:15]:
         m_num_sec = re.match(r"^\d+[\.\s]+([А-ЯІЇЄҐ][а-яіїєґ0-9\s'-]{3,40})", line)
         if m_num_sec:
             val = clean_and_validate_candidate(m_num_sec.group(1))
             if val:
                 return val
-        m_sec = re.match(r"^§\s*\d+[\.\s]+([^.\n?]+)", line)
+        m_sec = re.match(r"^§\s*\d+[\.\s]+([^.\n?]+)", line, re.IGNORECASE)
         if m_sec:
             val = clean_and_validate_candidate(m_sec.group(1))
             if val:
                 return val
-        m_tema = re.match(r"^Тема\s*\d*[\.\s]+([^.\n?]+)", line)
+        m_tema = re.match(r"^(?:тема|розділ)\s*\d*[\.\s]+([^.\n?]+)", line, re.IGNORECASE)
         if m_tema:
             val = clean_and_validate_candidate(m_tema.group(1))
             if val:
@@ -1050,12 +1133,6 @@ def extract_key_concept(chunk: TextbookChunk | str, title: str = "", subject: st
         if val:
             return val
 
-    # Try canonical terms present in chunk text
-    text_lower = text.lower()
-    for ct in CANONICAL_SUBJECT_TERMINOLOGY.get(subj, []):
-        if ct in text_lower:
-            return ct
-
     # Try bold/heading line grounded in chunk
     for line in lines[:10]:
         m_bold = re.match(r"^([А-ЯІЇЄҐ][а-яіїєґ\s'-]{4,40})$", line)
@@ -1063,6 +1140,13 @@ def extract_key_concept(chunk: TextbookChunk | str, title: str = "", subject: st
             val = clean_and_validate_candidate(m_bold.group(1))
             if val:
                 return val
+
+    # Try canonical terms present in chunk text
+    text_lower = text.lower()
+    for ct in CANONICAL_SUBJECT_TERMINOLOGY.get(subj, []):
+        stem = ct[:len(ct) - 1] if len(ct) > 4 else ct
+        if stem in text_lower:
+            return ct.capitalize()
 
     return ""
 
@@ -1102,18 +1186,26 @@ def extract_scientific_terminology_for_snippet(
     conc_lower = concept.lower()
     candidate_terms: list[str] = []
 
-    # 1. Subject canonical terms present in snippet or concept
+    # 1. Subject canonical terms present directly in snippet
     canonical_list = CANONICAL_SUBJECT_TERMINOLOGY.get(subject, [])
     if isinstance(canonical_list, list):
         for ct in canonical_list:
-            if (ct in snip_lower or ct in conc_lower) and ct not in candidate_terms:
-                candidate_terms.append(ct)
+            ct_words = ct.split()
+            if len(ct_words) == 1:
+                stem = ct[:len(ct) - 1] if len(ct) > 4 else ct
+                for sw in re.findall(r"[а-яіїєґ']+", snip_lower):
+                    if sw.startswith(stem) and sw not in STOPWORD_TERMS and len(sw) >= 4 and sw not in candidate_terms:
+                        candidate_terms.append(sw)
+            else:
+                if ct in snip_lower and ct not in candidate_terms:
+                    candidate_terms.append(ct)
 
-    # 2. Concept itself as a unit (if not a stopword and present in snippet or concept)
-    if concept:
-        c_clean = conc_lower.strip()
-        if c_clean not in STOPWORD_TERMS and (c_clean in snip_lower or c_clean in conc_lower) and c_clean not in candidate_terms:
-            candidate_terms.append(c_clean)
+    # 2. Extract substantive domain nouns directly from snippet
+    for w in re.findall(r"[а-яіїєґ']+", snip_lower):
+        if len(w) >= 4 and w not in STOPWORD_TERMS and w != conc_lower and _has_noun_reading(w) and w not in candidate_terms:
+            candidate_terms.append(w)
+
+    # Note: Do not append concept itself to candidate terms (eliminates circularity)
 
     # 3. Filter candidate terms: reject bare adjectives and stopwords
     filtered_terms: list[str] = []
@@ -1160,10 +1252,10 @@ def extract_scientific_terminology_for_snippet(
         seen_lemmas.add(lemma)
         final_terms.append(t)
 
-    # 6. Strict containment verification: EVERY term must be in snippet or concept
+    # 6. Strict containment verification: EVERY term must be in snippet and NOT identical to concept
     verified_terms = [
         t for t in final_terms
-        if (t.lower() in snip_lower or t.lower() in conc_lower)
+        if t.lower() in snip_lower and t.lower().strip() != conc_lower.strip()
     ]
     return verified_terms[:4]
 
@@ -1200,9 +1292,9 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int) -> dict[str, Any]:
     if chunk.subject in DISCIPLINE_MATH_COMPUTING:
         if q_var == 0:
             query = (
-                f"Наведіть теоретичне визначення та поясніть математичний зміст поняття «{concept}» "
+                f"Охарактеризуйте теоретичний зміст поняття «{concept}» "
                 f"для учнів {grade} класу з курсу {subj_gen} за підручником (автор — {author}). "
-                f"Вкажіть ключові наукові терміни, що розкривають сутність цього поняття."
+                f"Вкажіть ключові наукові терміни, що розкривають сутність цього матеріалу."
             )
         elif q_var == 1:
             query = (
@@ -1211,13 +1303,13 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int) -> dict[str, Any]:
             )
         else:
             query = (
-                f"У чому полягає теоретична сутність поняття «{concept}» за курсом {subj_gen} для {grade} класу "
+                f"У чому полягає теоретична сутність поняття «{concept}» у курсі {subj_gen} для {grade} класу "
                 f"(підручник автора {author})? Вкажіть термінологічну основу навчального матеріалу."
             )
         step1 = f"1. Понятійний аналіз: Досліджуємо теоретичний зміст поняття «{concept}» у курсі {subj_gen} ({grade} клас)."
-        step2 = f"2. Текстологічна база: Наводимо нормативне визначення з підручника ({author}): «{snippet}»"
+        step2 = f"2. Текстологічна база: Наводимо матеріал підручника ({author}): «{snippet}»"
         step3 = f"3. Термінологічна основа: Виділяємо ключові наукові терміни теми: {terms_str}."
-        step4 = "4. Педагогічний підсумок: Сформульовано теоретичне визначення та його термінологічні ознаки для навчального використання."
+        step4 = "4. Педагогічний підсумок: Сформульовано теоретичні відомості та їх термінологічні ознаки для навчального використання."
         solution = (
             f"Поняття «{concept}» є базовим у курсі {subj_gen} ({grade} клас).\n\n"
             f"У підручнику ({author}) його сутність розкрито так:\n«{snippet}»\n\n"
@@ -1227,7 +1319,7 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int) -> dict[str, Any]:
     elif chunk.subject in DISCIPLINE_NATURAL_SCIENCES:
         if q_var == 0:
             query = (
-                f"Наведіть наукове визначення та охарактеризуйте сутність теми «{concept}» "
+                f"Охарактеризуйте науковий зміст теми «{concept}» "
                 f"у курсі {subj_gen} ({grade} клас) за підручником (автор — {author}). "
                 f"Вкажіть ключові природничо-наукові терміни теми."
             )
@@ -1238,7 +1330,7 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int) -> dict[str, Any]:
             )
         else:
             query = (
-                f"У чому полягає наукова сутність явища «{concept}» за програмою курсу {subj_gen} "
+                f"У чому полягає наукова сутність явища «{concept}» у курсі {subj_gen} "
                 f"({grade} клас, автор підручника — {author})? Вкажіть ключові поняття теми."
             )
         step1 = f"1. Науковий аналіз: Розглядаємо сутність явища «{concept}» у структурі курсу {subj_gen} ({grade} клас)."
@@ -1265,7 +1357,7 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int) -> dict[str, Any]:
             )
         else:
             query = (
-                f"У чому полягає суспільно-правова сутність теми «{concept}» за курсом {subj_nom} "
+                f"У чому полягає суспільно-правова сутність теми «{concept}» у курсі {subj_nom} "
                 f"({grade} клас, автор підручника — {author})? Вкажіть термінологічну основу матеріалу."
             )
         step1 = f"1. Суспільствознавчий аналіз: Досліджуємо тему «{concept}» у курсі {subj_nom} ({grade} клас)."
@@ -1291,7 +1383,7 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int) -> dict[str, Any]:
             )
         else:
             query = (
-                f"У чому полягає культурно-освітнє значення теми «{concept}» за програмою {subj_nom} "
+                f"У чому полягає культурно-освітнє значення теми «{concept}» у курсі з предмета {subj_nom} "
                 f"({grade} клас, автор підручника — {author})? Вкажіть ключові терміни теми."
             )
         step1 = f"1. Змістовий аналіз: Розглядаємо навчальні аспекти теми «{concept}» у курсі {subj_nom} ({grade} клас)."
@@ -1848,16 +1940,25 @@ def verify_snippet_concept_grounding(eval_dir: Path, sft_dir: Path) -> bool:
 
 
 def verify_terms_present_in_snippet(eval_dir: Path, sft_dir: Path) -> bool:
-    """Verify that 100% of scientific terms appear in the snippet or concept."""
+    """Verify that 100% of scientific terms appear directly in the snippet and are non-circular."""
     for p in list(eval_dir.glob("eval_shard_*.jsonl")) + list(sft_dir.glob("sft_shard_*.jsonl")):
         with p.open("r", encoding="utf-8") as f:
             for line in f:
                 d = json.loads(line)
-                concept = (d.get("concept") or d.get("target_concept") or "").lower()
+                concept = (d.get("concept") or d.get("target_concept") or "").strip().lower()
                 terms = d.get("scientific_terminology", [])
-                text_corpus = (d.get("reference_solution", "") + " " + d.get("final_response", "") + " " + concept).lower()
+                steps = d.get("reference_reasoning") or d.get("reasoning_steps") or []
+                if len(steps) > 1:
+                    snip = extract_raw_snippet_from_step2(steps[1]).lower()
+                else:
+                    sol = d.get("reference_solution") or d.get("final_response") or ""
+                    m = re.search(r"«([^»]{20,})»", sol)
+                    snip = m.group(1).lower() if m else ""
                 for t in terms:
-                    if t.lower() not in text_corpus and t.lower() not in concept:
+                    t_clean = t.strip().lower()
+                    if t_clean == concept:
+                        return False
+                    if snip and t_clean not in snip:
                         return False
     return True
 
@@ -1881,7 +1982,14 @@ def verify_zero_dangling_starters(eval_dir: Path, sft_dir: Path) -> bool:
 
 
 def verify_eval_no_fake_algorithm_claims(eval_dir: Path) -> bool:
-    """Verify that eval benchmark queries and solutions do not make ungrounded algorithm claims."""
+    """Verify that eval benchmark queries, solutions, and reasoning steps do not make ungrounded curriculum or algorithm claims."""
+    forbidden_curriculum_patterns = [
+        re.compile(r"програм\w*\s+курс\w*", re.IGNORECASE),
+        re.compile(r"навчальн\w*\s+програм\w*", re.IGNORECASE),
+        re.compile(r"за\s+програмою\b", re.IGNORECASE),
+        re.compile(r"згідно\s+з\s+програмою\b", re.IGNORECASE),
+        re.compile(r"нормативн\w*\s+визначенн\w*", re.IGNORECASE),
+    ]
     for p in eval_dir.glob("eval_shard_*.jsonl"):
         with p.open("r", encoding="utf-8") as f:
             for line in f:
@@ -1889,8 +1997,10 @@ def verify_eval_no_fake_algorithm_claims(eval_dir: Path) -> bool:
                 q = d.get("query", "")
                 sol = d.get("reference_solution", "")
                 steps = d.get("reference_reasoning", [])
-                if "згідно з навчальною програмою" in sol.lower():
-                    return False
+                all_eval_text = f"{q} {sol} {' '.join(steps)}"
+                for pat in forbidden_curriculum_patterns:
+                    if pat.search(all_eval_text):
+                        return False
                 if len(steps) >= 4:
                     step4 = steps[3]
                     if "алгоритм" in step4.lower() and "алгоритм" not in q.lower():

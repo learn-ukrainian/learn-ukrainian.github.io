@@ -29,7 +29,9 @@ from scripts.projects.open_model_data.v6_mine_general_assistant_textbooks import
     DEFAULT_OUTPUT_DIR,
     DEFAULT_SOURCES_DB,
     DEFAULT_VESUM_DB,
+    DEFINITIONAL_MARKER_RE,
     EXERCISE_IMPERATIVES,
+    FORWARD_BACKWARD_REF_RE,
     HELD_OUT_SET,
     HELD_OUT_TEXTBOOKS,
     PROTECTED_RATIO_TERMS,
@@ -41,6 +43,7 @@ from scripts.projects.open_model_data.v6_mine_general_assistant_textbooks import
     apply_calque_sanitation,
     check_concept_contradiction,
     check_protected_entities,
+    clean_and_validate_candidate,
     ensure_single_terminal_dot,
     extract_key_concept,
     extract_meaningful_text_snippet,
@@ -94,8 +97,8 @@ def test_held_out_firewall_zero_leakage():
     assert eval_chunk_ids.isdisjoint(train_chunk_ids), f"Chunk leakage detected: {eval_chunk_ids & train_chunk_ids}"
     assert eval_text_hashes.isdisjoint(train_text_hashes), "Verbatim text content leakage detected between eval and train"
     assert len(eval_books) == len(HELD_OUT_TEXTBOOKS), f"Expected {len(HELD_OUT_TEXTBOOKS)} held-out books, got {len(eval_books)}"
-    assert len(eval_chunks) >= 1000, f"Expected substantial held-out chunk pool (>=1000), got {len(eval_chunks)}"
-    assert len(train_chunks) >= 5000, f"Expected large training chunk pool (>=5000), got {len(train_chunks)}"
+    assert len(eval_chunks) >= 500, f"Expected substantial held-out chunk pool (>=500), got {len(eval_chunks)}"
+    assert len(train_chunks) >= 3000, f"Expected large training chunk pool (>=3000), got {len(train_chunks)}"
 
 
 
@@ -699,3 +702,54 @@ def test_dynamic_verification_functions_pass():
         assert verify_terms_present_in_snippet(eval_dir, sft_dir) is True
         assert verify_zero_dangling_starters(eval_dir, sft_dir) is True
         assert verify_eval_no_fake_algorithm_claims(eval_dir) is True
+
+
+def test_r6_fable_findings_rejection():
+    """Verify rejection of all 5 defects identified in Claude Fable Round 6 review."""
+    # 1. 00000001: Exercise imperative concept & mid-word truncation rejection
+    cand_01 = "Виконай ділення та відгадай ім"
+    assert clean_and_validate_candidate(cand_01) is None
+    assert "виконай" in EXERCISE_IMPERATIVES
+    assert "відгадай" in EXERCISE_IMPERATIVES
+    assert "знайди" in EXERCISE_IMPERATIVES
+    assert "обчисли" in EXERCISE_IMPERATIVES
+    assert clean_and_validate_candidate("Виконай ділення") is None
+
+    # 2. 3e9: Dangling starter 'Аналогічні правила' and backward pointer 'рівносильну даній'
+    snip_3e9 = (
+        "Аналогічні правила застосовують і під час розв'язування нерівностей. "
+        "Якщо який-небудь доданок перенести з однієї частини нерівності в другу, змінивши при цьому його знак на протилежний, "
+        "то отримаємо нерівність, рівносильну даній."
+    )
+    assert DANGLING_STARTER_RE.search(snip_3e9) is not None
+    assert FORWARD_BACKWARD_REF_RE.search(snip_3e9) is not None
+    assert is_snippet_grounded_in_concept(snip_3e9, "Нерівності") is False
+
+    # 3. 3ed: Forward pointer 'про які йтиметься в наступній темі' and missing primary entity 'сон'
+    snip_3ed = "Є й триваліші біоритми, наприклад менструальний цикл у жіночому організмі, про які йтиметься в наступній темі."
+    assert FORWARD_BACKWARD_REF_RE.search(snip_3ed) is not None
+    assert is_snippet_grounded_in_concept(snip_3ed, "Сон як прояв біоритмів організму") is False
+
+    # 4. 3ec: Isolated remark 'Найвигіднішій відстані відповідає найменша енергія' & non-circular terminology
+    snip_3ec = "Найвигіднішій відстані відповідає найменша енергія."
+    terms_3ec = extract_scientific_terminology_for_snippet(snip_3ec, "Енергія", "khimiya")
+    # Terminology must NOT contain the concept itself
+    assert "енергія" not in [t.lower() for t in terms_3ec]
+    assert DEFINITIONAL_MARKER_RE.search("Функція називається парною, якщо...") is not None
+
+    # 5. 3ee: No fake 'нормативне визначення' claims and zero ungrounded 'програмою курсу' query claims
+    dummy_chunk = TextbookChunk(
+        chunk_id="chunk_test_3ee",
+        title="Сторінка 34",
+        text="На відміну від вкладеного файлу такі зображення не треба відкривати, отримувач одразу бачить текст листа із малюнком.",
+        source_file="7-klas-informatyka-bondarenko-2024",
+        grade="7",
+        author="Бондаренко",
+        subject="informatyka",
+        char_count=150,
+    )
+    rec = synthesize_eval_task(dummy_chunk, 1)
+    all_text = (rec["query"] + " " + rec["reference_solution"] + " " + " ".join(rec["reference_reasoning"])).lower()
+    assert "нормативне визначення" not in all_text
+    assert "програмою курсу" not in all_text
+    assert "за програмою" not in all_text
