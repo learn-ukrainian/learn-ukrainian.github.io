@@ -81,8 +81,8 @@ def test_held_out_firewall_zero_leakage():
     assert eval_chunk_ids.isdisjoint(train_chunk_ids), f"Chunk leakage detected: {eval_chunk_ids & train_chunk_ids}"
     assert eval_text_hashes.isdisjoint(train_text_hashes), "Verbatim text content leakage detected between eval and train"
     assert len(eval_books) == len(HELD_OUT_TEXTBOOKS), f"Expected {len(HELD_OUT_TEXTBOOKS)} held-out books, got {len(eval_books)}"
-    assert len(eval_chunks) >= 2500, f"Expected substantial held-out chunk pool (>=2500), got {len(eval_chunks)}"
-    assert len(train_chunks) >= 14000, f"Expected large training chunk pool (>=14000), got {len(train_chunks)}"
+    assert len(eval_chunks) >= 2000, f"Expected substantial held-out chunk pool (>=2000), got {len(eval_chunks)}"
+    assert len(train_chunks) >= 13000, f"Expected large training chunk pool (>=13000), got {len(train_chunks)}"
 
 
 
@@ -367,7 +367,20 @@ def test_eval_benchmark_disk_invariants_and_schema():
                     assert verify_pedagogical_tone(rec["query"])
                     assert verify_pedagogical_tone(rec["reference_solution"])
                     assert check_protected_entities(rec["reference_solution"])
-                    assert not re.search(r"«[^»]*«", json.dumps(rec, ensure_ascii=False)), f"Nested guillemets in eval record: {rec['eval_id']}"
+                    json_str = json.dumps(rec, ensure_ascii=False)
+                    assert not re.search(r"«[^»]*«", json_str), f"Nested guillemets in eval record: {rec['eval_id']}"
+                    assert not re.search(r"(?:\.\s+){3,}|\.{4,}", json_str), f"TOC dot leader in eval record: {rec['eval_id']}"
+                    assert not re.search(r"\(\s*\)|\.\s+\.", json_str), f"Formula garble in eval record: {rec['eval_id']}"
+                    for field_name in ["query", "reference_solution", "concept"]:
+                        val = rec[field_name]
+                        assert val.count("«") == val.count("»"), f"Unbalanced guillemets in {field_name}: {val}"
+                        assert val.count("„") == val.count("“"), f"Unbalanced inner quotes in {field_name}: {val}"
+                    for step in rec["reference_reasoning"]:
+                        assert step.count("«") == step.count("»"), f"Unbalanced guillemets in step: {step}"
+                        assert step.count("„") == step.count("“"), f"Unbalanced inner quotes in step: {step}"
+                    step2 = rec["reference_reasoning"][1]
+                    assert not step2.endswith("...»") and not step2.endswith("...».") and not step2.endswith("...»."), f"Truncated quote ending in step 2: {step2}"
+                    assert "..." not in step2, f"Ellipsis in step 2 quotation: {step2}"
                     for t in rec.get("scientific_terminology", []):
                         assert t.lower() not in STOPWORD_TERMS, f"Stopword '{t}' in eval record terms: {t}"
 
@@ -400,6 +413,18 @@ def test_sft_manifest_and_shards_invariants():
                 for line in f:
                     rec = json.loads(line)
                     assert not re.search(r"«[^»]*«", line), f"Nested guillemets in SFT record: {rec['trajectory_id']}"
+                    assert not re.search(r"(?:\.\s+){3,}|\.{4,}", line), f"TOC dot leader in SFT record: {rec['trajectory_id']}"
+                    assert not re.search(r"\(\s*\)|\.\s+\.", line), f"Formula garble in SFT record: {rec['trajectory_id']}"
+                    for field_name in ["query", "final_response", "target_concept"]:
+                        val = rec[field_name]
+                        assert val.count("«") == val.count("»"), f"Unbalanced guillemets in {field_name}: {val}"
+                        assert val.count("„") == val.count("“"), f"Unbalanced inner quotes in {field_name}: {val}"
+                    for step in rec["reasoning_steps"]:
+                        assert step.count("«") == step.count("»"), f"Unbalanced guillemets in step: {step}"
+                        assert step.count("„") == step.count("“"), f"Unbalanced inner quotes in step: {step}"
+                    step2 = rec["reasoning_steps"][1]
+                    assert not step2.endswith("...»") and not step2.endswith("...».") and not step2.endswith("...»."), f"Truncated quote ending in step 2: {step2}"
+                    assert "..." not in step2, f"Ellipsis in step 2 quotation: {step2}"
                     step3 = rec["reasoning_steps"][2]
                     assert "верховенство права" not in step3.lower() or rec["subject"] == "pravoznavstvo"
                     for sw in ["клас", "математика", "підручник", "україни"]:

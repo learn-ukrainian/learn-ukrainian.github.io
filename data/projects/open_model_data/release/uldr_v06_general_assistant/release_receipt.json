@@ -2,15 +2,15 @@
   "schema_version": "v1_general_assistant_release_receipt",
   "issue": 8139,
   "parent_epic": 6321,
-  "created_at": "2026-09-18T20:06:12Z",
-  "git_commit": "bac43871234e96bd2dc9f6b336c5d7437a0c70d7",
+  "created_at": "2026-09-18T20:49:54Z",
+  "git_commit": "b43f91f0894a130eca0082c3d5e58228ad1cce4c",
   "evaluation_benchmark": {
     "directory_path": "data/projects/open_model_data/release/uldr_v06_general_assistant/eval",
     "manifest_file": "manifest.json",
-    "manifest_sha256": "fc93807b782953f5732f8eedba3f2a5c54c2bd84389d784ad81db7d397d31d9d",
+    "manifest_sha256": "368e38d0045543bcf7072d3d21e325fff99e1a207bbacc2dd792ed8731fee63d",
     "shards_count": 5,
     "total_cases": 2500,
-    "max_shard_size_kb": 1584.05,
+    "max_shard_size_kb": 1411.68,
     "held_out_books_count": 22,
     "held_out_books": [
       "5-klas-matematyka-ister-2022",
@@ -68,10 +68,10 @@
   "sft_training_dataset": {
     "directory_path": "data/projects/open_model_data/release/uldr_v06_general_assistant/sft",
     "manifest_file": "manifest.json",
-    "manifest_sha256": "4b296ce75f2e90e8d239b202d43351b756bb19166ea96239802d69961edf3e26",
+    "manifest_sha256": "cddc5bd3808484e587a781eb38b38bf0842f5dfe5e255e6a4c6b7a267a226fbd",
     "shards_count": 150,
     "total_trajectories": 75000,
-    "max_shard_size_kb": 1560.64,
+    "max_shard_size_kb": 1489.27,
     "books_count": 151,
     "subject_distribution": {
       "algebra": 3182,
