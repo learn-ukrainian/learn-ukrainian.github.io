@@ -130,10 +130,17 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
   English. Titles must match what the redesigned module actually teaches (no
   leftover Hello on module 1 after greetings moved). **English density in
   activities:** modules that teach letters before the learner can read (A1.1
-  1–4) need English next to every learner-facing stem/option/explanation.
-  From `who-am-i` onward, keep original A1 immersion (UA first, English
-  support — not an English course). Site **left nav** is a separate later
-  problem; do not block module PRs on it.
+  1–4) need English next to learner-facing **prompts, options, and
+  explanations** (and activity **instructions**). That does **not** mean
+  stuffing English into every interactive surface: `error-correction`
+  **stems** stay natural Ukrainian sentences containing the error — English
+  belongs in the **explanation** (solution), not in a meta «Не пиши… / Do not
+  write…» stem and not as an em-dash gloss on the sentence to correct. Widget
+  chrome (`Find and Fix`, step labels) must be Ukrainian for A1
+  (`isUkrainian={true}`). From `who-am-i` onward, keep original A1 immersion
+  (UA first, English support — not an English course). **Left nav** module
+  labels must be bilingual like landing cards; CF may REQUEST_CHANGES for
+  missing EN on sidebar labels (no longer deferred).
 
 ## Epic split (do not thrash sessions)
 

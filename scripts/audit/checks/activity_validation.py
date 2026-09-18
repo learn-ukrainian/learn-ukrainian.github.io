@@ -1167,6 +1167,102 @@ _EXEMPT_ERROR_ACTIVITY_TYPES = {
 }
 
 
+_ERROR_CORRECTION_META_STEM_RE = re.compile(
+    r"(?i)(?:\bне\s+пиши\b|\bне\s+пишіть\b|\bdo\s+not\s+write\b|\bdon't\s+write\b|"
+    r"\bnever\s+write\b|\bdo\s+not\s+spell\b)"
+)
+_ERROR_CORRECTION_EN_STEM_RE = re.compile(r"—\s*[A-Za-z“\"']")
+
+
+def flatten_lesson_activities(activities_doc) -> list:
+    """Normalize lesson or legacy activity docs into a flat activity list."""
+    if activities_doc is None:
+        return []
+    if isinstance(activities_doc, list):
+        return [a for a in activities_doc if isinstance(a, dict) or hasattr(a, "type")]
+    if isinstance(activities_doc, dict):
+        flat: list = []
+        for key in ("inline", "workbook", "activities", "items"):
+            chunk = activities_doc.get(key)
+            if isinstance(chunk, list):
+                flat.extend(a for a in chunk if isinstance(a, dict) or hasattr(a, "type"))
+        if flat:
+            return flat
+        if activities_doc.get("type"):
+            return [activities_doc]
+    return []
+
+
+def check_error_correction_stem_quality(
+    yaml_activities: list,
+    *,
+    level: str | None = None,
+    enforce_en_in_stem: bool | None = None,
+) -> list[dict]:
+    """Hard-fail meta Find-and-Fix stems; flag English inside EC sentences.
+
+    Find-and-Fix stems must be natural Ukrainian sentences that contain the error.
+    Meta instructions like «Не пиши X» / «Do not write X» are always critical.
+    Em-dash English inside the stem belongs in ``explanation`` (and optional
+    instruction gloss), not in the form the learner corrects.
+
+    EN-in-stem severity: critical for A2+; warning on A1 until content backfill
+    (operator: EN support is for instruction/explanation, not EC stems).
+    """
+    activities = flatten_lesson_activities(yaml_activities)
+    lvl = (level or "").lower()
+    is_a1 = lvl == "a1" or lvl.startswith("a1")
+    if enforce_en_in_stem is None:
+        enforce_en_in_stem = not is_a1
+
+    violations: list[dict] = []
+    for activity in activities:
+        if _get_activity_attr(activity, "type", "") != "error-correction":
+            continue
+        title = _get_activity_attr(activity, "title", "Untitled")
+        act_id = _get_activity_attr(activity, "id", "")
+        items = _get_activity_attr(activity, "items", []) or []
+        for item_idx, item in enumerate(items, 1):
+            sentence = str(_get_activity_attr(item, "sentence", "") or "")
+            if not sentence.strip():
+                continue
+            where = f"{act_id or title} item {item_idx}"
+            if _ERROR_CORRECTION_META_STEM_RE.search(sentence):
+                violations.append(
+                    {
+                        "type": "ERROR_CORRECTION_META_STEM",
+                        "severity": "critical",
+                        "activity": title,
+                        "message": (
+                            f"{where}: Find-and-Fix stem is a meta-instruction "
+                            f"({sentence[:80]!r}), not a natural Ukrainian sentence with one error."
+                        ),
+                        "suggestion": (
+                            "Rewrite sentence as Ukrainian containing the error "
+                            "(e.g. «У мене́ вели́ка сімя.»); put English in explanation."
+                        ),
+                    }
+                )
+                continue
+            if _ERROR_CORRECTION_EN_STEM_RE.search(sentence):
+                violations.append(
+                    {
+                        "type": "ERROR_CORRECTION_EN_IN_STEM",
+                        "severity": "critical" if enforce_en_in_stem else "warning",
+                        "activity": title,
+                        "message": (
+                            f"{where}: English support appears inside the error-correction "
+                            f"stem ({sentence[:80]!r}); keep the stem Ukrainian."
+                        ),
+                        "suggestion": (
+                            "Remove the «— English» tail from sentence; keep bilingual "
+                            "support in instruction and/or explanation only."
+                        ),
+                    }
+                )
+    return violations
+
+
 def check_activity_intentional_error_leak(yaml_activities: list) -> list[dict]:
     """Detect unclassified textbook error drills leaking into positive learning activities.
 
@@ -1176,7 +1272,7 @@ def check_activity_intentional_error_leak(yaml_activities: list) -> list[dict]:
     """
     violations = []
 
-    for activity in yaml_activities:
+    for activity in flatten_lesson_activities(yaml_activities):
         act_type = _get_activity_attr(activity, "type", "")
         if act_type in _EXEMPT_ERROR_ACTIVITY_TYPES:
             continue
@@ -1321,6 +1417,7 @@ __all__ = [
     "check_activity_intentional_error_leak",
     "check_duplicate_options",
     "check_english_hints_in_activities",
+    "check_error_correction_stem_quality",
     "check_fill_in_answer_in_options",
     "check_fill_in_blank_formatting",
     "check_indeclinable_case_drills",
@@ -1338,4 +1435,5 @@ __all__ = [
     "check_unjumble_out_of_scope_dative",
     # Unjumble quality checks
     "check_unjumble_runon_answer",
+    "flatten_lesson_activities",
 ]

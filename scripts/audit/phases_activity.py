@@ -29,6 +29,7 @@ from .checks.activities import (
 from .checks.activity_validation import (
     check_duplicate_options,
     check_english_hints_in_activities,
+    check_error_correction_stem_quality,
     check_fill_in_answer_in_options,
     check_indeclinable_case_drills,
     check_mark_the_words_answers_in_text,
@@ -239,6 +240,12 @@ def validate_activity_answers(ctx: AuditContext, state: AuditState) -> None:
         check_english_hints_in_activities(ctx.yaml_activities, ctx.level_code, ctx.module_num),
         "English hints in A2+ activities",
     )
+    ec_stem_violations = check_error_correction_stem_quality(
+        ctx.yaml_activities, level=ctx.level_code
+    )
+    _print_detailed_violations(ec_stem_violations, "error-correction stem quality")
+    if any(v.get("severity") == "critical" for v in ec_stem_violations):
+        state.has_critical_failure = True
     _print_detailed_violations(
         check_unjumble_empty_jumbled(ctx.yaml_activities), "unjumble activities with empty jumbled fields"
     )

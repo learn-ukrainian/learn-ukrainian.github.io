@@ -419,7 +419,30 @@ def test_error_correction_render_faithful_and_a1_en_scaffold():
         },
         level="a1",
     )
-    assert any("English scaffold" in d for d in no_en)
+    assert any("explanation" in d and "English" in d for d in no_en)
+
+    # English on the sentence does not satisfy the scaffold; explanation does.
+    stem_en = gates.error_correction_item_warnings(
+        {
+            "sentence": "Сього́дні га́рний ден. — Today is a nice day.",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день", "дєнь", "дэнь"],
+        },
+        level="a1",
+    )
+    assert any("explanation" in d for d in stem_en)
+    explained = gates.error_correction_item_warnings(
+        {
+            "sentence": "Сього́дні га́рний ден.",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день", "дєнь", "дэнь"],
+            "explanation": "День потребує м'якого знака. — Day needs a soft sign.",
+        },
+        level="a1",
+    )
+    assert explained == []
 
     # Missing EN is advisory, not a hard defect.
     assert (

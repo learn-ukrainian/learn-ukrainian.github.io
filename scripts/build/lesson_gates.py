@@ -12,6 +12,8 @@ from pathlib import Path
 
 import yaml
 
+from scripts.audit.checks.activity_validation import check_error_correction_stem_quality
+
 MAX_UNVERIFIED_STRESS = 10
 MAX_UNVERIFIED_LEMMAS = 5
 
@@ -517,10 +519,7 @@ _EC_META_STEM_RE = re.compile(
     re.I,
 )
 _CYR_RE = re.compile(f"[{CYR}]")
-# A1 Find-and-Fix stems keep Ukrainian first, then a short EN gloss.
-_EC_EN_SCAFFOLD_RE = re.compile(
-    r"(?:[—–]\s*[A-Za-z]|\([A-Za-z][^)]{0,80}\)|/\s*[A-Za-z])"
-)
+_LATIN_RE = re.compile(r"[A-Za-z]")
 
 
 def _ec_requires_en_scaffold(level: str | None, require_en_scaffold: bool | None) -> bool:
@@ -574,7 +573,12 @@ def error_correction_item_warnings(
     level: str | None = None,
     require_en_scaffold: bool | None = None,
 ) -> list[str]:
-    """Non-blocking Find-and-Fix advisories (A1 EN scaffold, etc.)."""
+    """Non-blocking Find-and-Fix advisories.
+
+    A1 English support belongs in ``explanation``, not in ``sentence``.
+    The sentence is the form the learner corrects. Asking for an em-dash
+    gloss on that sentence fights ``check_error_correction_stem_quality``.
+    """
     if not isinstance(item, dict):
         return []
     error = _ec_item_error_token(item)
@@ -591,12 +595,13 @@ def error_correction_item_warnings(
         return []
     if not _CYR_RE.search(sentence) or _EC_META_STEM_RE.search(sentence):
         return []  # hard defects own these
-    if _EC_EN_SCAFFOLD_RE.search(sentence):
+    explanation = item.get("explanation")
+    if isinstance(explanation, str) and _LATIN_RE.search(explanation):
         return []
     prefix = f"{activity_id}: " if activity_id else ""
     return [
-        f"{prefix}error-correction A1 sentence should add English scaffold "
-        "(after — or in parentheses), Ukrainian-first"
+        f"{prefix}error-correction A1 explanation should include a short English "
+        "scaffold (not in the sentence)"
     ]
 
 
@@ -622,8 +627,8 @@ def error_correction_item_defects(
     options that collapse to the same replacement are caught. Stress-only
     contrasts keep their acutes (``мо́локо`` / ``молоко́`` / ``моло́ко`` are
     three real choices). Shared by upgrade lesson gates and fresh-build
-    python QG. A1 EN scaffolds are writer-required (prompts + advisory
-    warnings), not a hard fail on legacy gold.
+    python QG. A1 English belongs in ``explanation`` (advisory warning),
+    not as a gloss on the sentence, and is not a hard fail on legacy gold.
     """
     if not isinstance(item, dict):
         return [f"{activity_id}: error-correction item must be a mapping"]
@@ -644,7 +649,7 @@ def error_correction_item_defects(
         elif _EC_META_STEM_RE.search(sentence):
             defects.append(
                 f"{prefix}error-correction sentence is an English meta-prompt; "
-                "use a natural Ukrainian carrier (optional EN after —)"
+                "use a natural Ukrainian carrier and put English in explanation"
             )
     correction = _ec_item_correction_token(item)
     raw_options = item.get("options")
@@ -1022,6 +1027,14 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                     a, level=str(plan.get("level") or "").lower()
                 ):
                     warn(f"lesson {n}: {advisory}")
+        for v in check_error_correction_stem_quality(
+            {"inline": inline, "workbook": workbook},
+            level=str(plan.get("level") or "").lower(),
+        ):
+            if v.get("severity") == "critical":
+                block(f"lesson {n}: {v['message']}")
+            else:
+                warn(f"lesson {n}: {v['message']}")
         lemmas = [norm_md(str(e.get("lemma", ""))).lower() for e in vocab]
         all_lemmas += lemmas
         if len(lemmas) < 12:

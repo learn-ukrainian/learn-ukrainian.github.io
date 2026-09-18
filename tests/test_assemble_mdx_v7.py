@@ -184,8 +184,9 @@ references:
     assert "<Cloze" in activities_tab
     assert "<TranslationCritique" in activities_tab
     assert '"text": "7"' in activities_tab
-    assert "### Inline observe\n\n*(see lesson tab)*" in activities_tab
-    assert "### Inline true false\n\n*(see lesson tab)*" in activities_tab
+    assert "### Inline observe\n\n*(див. вкладку «Урок»)*" in activities_tab
+    assert "### Inline true false\n\n*(див. вкладку «Урок»)*" in activities_tab
+    assert "*(see lesson tab)*" not in activities_tab
     assert "*(see lesson)*" not in activities_tab
     assert "INJECT_ACTIVITY" not in mdx
     assert "by Unknown" not in mdx
