@@ -34,6 +34,34 @@ this context on the hard turn, not to avoid a decision you can already make.
 Unused paid quota is waste (§2c); manufactured work is a defect. Judgment is not
 implementation — seat no-solo rules still bind.
 
+## Do not make the operator repeat this
+
+These four were already binding and this seat still dropped them. They are checked
+every cycle, before any status sentence.
+
+1. **DoR before dispatch.** Start substantive work only when the task card and the
+   dispatch preflight are both green. Chat "ready" is not DoR. Tables:
+   `docs/best-practices/task-quality.md` and `/api/rules` → `operator-expectations.md` §3b.
+2. **DoD before "done".** Done means the user-visible outcome is verified, git
+   hygiene is done, and GitHub hygiene is done. A dispatch, a branch, an open PR,
+   green CI, or "Next:" is not Done. The driver merges after exact-head
+   cross-family APPROVE and green CI on that head. Do not ask the operator to merge.
+   Same sources, §3a.
+3. **Git and GitHub hygiene.** The primary checkout stays on `main` and is
+   read-only. Edits, commits, and PRs happen only in
+   `.worktrees/dispatch/<agent>/<task>/`. Every commit has an `X-Agent` trailer.
+   Never push to `main`. No PR, draft or ready, before exact-head cross-family
+   APPROVE — a draft starts CI here. After `MERGED`, `merge_closeout --apply`
+   must prove the remote branch is gone, the local branch is gone, and no
+   worktree remains. A non-zero closeout is a blocker.
+4. **Know every worker's status.** Do not say a worker is running, finished, or
+   stuck unless `delegate.py status <task-id>` was run in this turn. Keep the
+   task id, that status, and the branch head. After every dispatch, arm
+   `delegate.py wait <task-id>` before the turn ends. This seat has no Monitor
+   tool; §5's Monitor path does not wake it. When the wait returns, read the
+   result and take the next action. A finished worker that sits until the
+   operator asks is a driver defect.
+
 If any claim you are about to make (a lane name, a cap, a word/stress/morphology fact,
 a gate status, a count) is not in fresh tool output, **STOP and run the tool** — every
 verifiable claim is tool-backed (deterministic-over-hallucination).
@@ -142,8 +170,14 @@ Binding for this lane:
 2. The **driver does not decide Ukrainian**. Gemini writes; Astra reviews; they
    settle language. Do not referee stress, letters, or morphology in the driver
    seat.
-3. **Claude Sonnet** implements machinery (`scripts/`, gates, certify). Fable
-   advises only if needed. Driver (Grok) does not solo-implement.
+3. **Machinery is Fable 5.1, not Sonnet** (operator 2026-09-18). Advanced
+   machinery (`scripts/`, gates, the writer-prompt contract) goes to
+   `claude-fable-5-1` with `--mode danger`. Claude `workspace-write` does not
+   grant writes, so that mode returns a no-op. A bug found in the old module is
+   fixed by this machine: the writer is not given the bad content, and the gate
+   fails if it comes back. Do not hand-edit the lesson, the plan, or
+   `lessons.yaml` to hide it. Do not start the paid writer until a rendered
+   prompt is clean of the reported defect. The driver does not solo-implement.
 4. Content PRs are **scripts-free**. One Astra CF per content PR. While CF/CI
    runs on module N, package N+1 (pipeline). Do not dump every module on one
    reviewer in one turn.
@@ -380,6 +414,10 @@ be missed between routing and worker launch. Read and apply every `unread` or
 ```
 
 ### 5. Settle-loop (never poll by hand)
+
+A dispatch returning is not a settle. Arm a wait in the same turn (`delegate.py
+wait <task-id>` where this seat has no Monitor tool; otherwise the Monitor
+tool). Ending the turn with a live worker and no wait is a driver defect.
 
 Watch the task's `batch_state/tasks/<id>.json` `status` with the **Monitor** tool.
 This wait is a §2c fill window, not an idle period: fill free lanes before holding.
@@ -679,7 +717,7 @@ not the utilization half.
 | **Claude Fable 5.1 (when in the driver seat)** | Apply the Fable 5.1 section of the `claude-api` skill's migration guide (`shared/model-migration.md`) and the fleet effort topology in `docs/best-practices/fleet-shared-doctrine.md` § Fable 5.1 `/effort`. Essentials: thinking is always on (never send `thinking: disabled`); default **`high`**, step to **`medium`/`low`** for routine (do not keep an Opus/`xhigh` habit); **`xhigh`** for hard multi-file / long autonomous turns **and** for curriculum/linguistic skills that pin `effort: xhigh` (do not step those down); **`max` almost never**. Long deliverables stay at **`high`** unless a measured quality gain says otherwise; at `xhigh`/`max` leave output-budget room. Quirks: high+ on simple tasks over-gathers (lower effort); low searches less (bump for retrieval); effort ≠ shorter replies. Keep test-before-report and progress-grounding (Opus 5 “delete verification scaffolding” does not apply); delegate independent subtasks asynchronously; no context-budget countdowns; final summaries re-ground (outcome first, plain identifiers). Corrections: state plainly and briefly, then continue. |
 | **Claude Opus 5 (when in the driver seat)** | Apply the Opus 5 section of the same migration guide. Thinking stays on; control cost with `effort` (`medium`/`low` for routine driving). Disabling thinking on Opus 5 can turn tool calls into plain text and leak internal tags, and a Claude Code seat cannot set it anyway. |
 | **Codex / GPT-5.6 Terra** | Named alternate only for harness / infra (`epic:4707`) and the independent DevOps stream (`epic:5703`). The launcher injects the HydrationCapsuleV1 cold-start board and binds at most one exact fresh CLI rollover; stop on any SessionStart setup error. Codex has no Monitor-equivalent watcher, so use bounded foreground waits and escalate hard judgment to Sol. |
-| **Cursor (Auto)** | Launched via `./start-cursor-driver.sh --epic <epic>` (#6956). Keep Auto; pin `grok-4.6` / `composer-2.5` only when family independence must be frozen. Driver-of-record requires attested `resolved_model` (unattested Auto cannot be driver-of-record). **Concurrency 1:** this driver session **is** the Cursor lane — do **not** `delegate.py dispatch --agent cursor` from inside it (deadlock / quota contention). Runtime note: stream leases serialize one **driver** per epic stream (`already has live session`); `delegate.py` does **not** fail-closed against a live Cursor driver lease — capacity is a non-blocking hint only. GUI Cursor IDE remains human supervision, not a second driver protocol. **Anti-passive (Cursor):** this seat has repeatedly failed by stopping at "CF/CI pending" overnight. Binding: every turn that does not merge/hygiene a CLEAN gate must §2-epic-dispose the next issue or name a §2c code; a CLEAN/MERGEABLE PR with CF APPROVE must be merge-queued the same turn (no `--delete-branch` until MERGED). Session end without that closeout is a driver defect. |
+| **Cursor (Auto)** | Launched via `./start-cursor-driver.sh --epic <epic>` (#6956). Keep Auto; pin `grok-4.6` / `composer-2.5` only when family independence must be frozen. Driver-of-record requires attested `resolved_model` (unattested Auto cannot be driver-of-record). **Concurrency 1:** this driver session **is** the Cursor lane — do **not** `delegate.py dispatch --agent cursor` from inside it (deadlock / quota contention). Runtime note: stream leases serialize one **driver** per epic stream (`already has live session`); `delegate.py` does **not** fail-closed against a live Cursor driver lease — capacity is a non-blocking hint only. GUI Cursor IDE remains human supervision, not a second driver protocol. **Anti-passive (Cursor):** this seat has repeatedly failed by stopping at "CF/CI pending" overnight, and by reporting worker status from memory. Binding: every turn that does not merge/hygiene a CLEAN gate must §2-epic-dispose the next issue or name a §2c code; a CLEAN/MERGEABLE PR with CF APPROVE must be merge-queued the same turn (no `--delete-branch` until MERGED). After every dispatch, arm `delegate.py wait` before the turn ends, and do not state a worker's status without `delegate.py status` in that turn. Session end without that closeout is a driver defect. |
 
 ---
 
