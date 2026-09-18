@@ -51,13 +51,14 @@ All must be true:
 | **Non-goals** | Explicit |
 | **Denominator** | What “all” means (files, modules, sample size, env) |
 | **Verify** | Exact commands or held-out check named up front |
-| **Acceptance criteria** | Testable checks mapped to denominator + Verify + applicable DoD rows; semantic proof of the user outcome (green CI alone is not enough) |
+| **Acceptance criteria** | Stable IDs (`AC-01`, `AC-02`, …), each testable and mapped to denominator + Verify evidence + applicable DoD rows; semantic proof of the user outcome (green CI alone is not enough) |
 | **Deps** | Blockers named or “none”; no unknown human GO mid-flight |
 | **Terminal goal** | `merge` \| `deploy` \| `certify` \| `decision-only` \| `audit-only` |
 | **Size** | One user-visible outcome (split if multiple); one PR unless epic child |
 | **Accountable driver** | Named lane/seat that owns landing (when code) + DoD closeout |
-| **Stop / residual policy** | Failure halfway → owner; in-scope residual keeps the task unfinished unless authorized scope revision + transfer |
-| **CF path** | Feasible **cross-family** review route named (lane or substitute). Naming a path ≠ review done; discussion/panels ≠ the review gate; only an exact-head qualifying APPROVE counts |
+| **Stop policy** | Failure condition · owner · disposition · unblock/transfer rule (“none expected” is not a stop policy) |
+| **Residual policy** | Who owns leftovers if any; in-scope residual keeps the task unfinished unless authorized scope revision + transfer |
+| **Review plan** | Anticipated author family; eligible **outside-family** reviewer; backup reviewer; explicit: advisor discussion / prompt review does **not** satisfy exact-head CF. Re-validate independence + capacity after author and review SHA are known |
 
 For `decision-only` / `audit-only`: define the required decision or findings,
 supporting evidence, disposition, and recipient. Mark irrelevant landing /
@@ -65,47 +66,52 @@ cleanup rows N/A with reasons — do not invent repo churn to “finish.”
 
 ### B. Dispatch preflight — may we run it *now*?
 
-Tool-backed checks (**unknown ≠ green**). Each check records subject · timestamp ·
-result · failure action. Refresh affected checks after capacity, lease, env, or
-scope moves — a historical green does not authorize a later dispatch.
-Resources are **conjunctive**: disk insufficiency vetoes even with quota
-headroom; disk alone never overrides other failures.
+Tool-backed checks (**unknown ≠ green**). Each check records **command ·
+timestamp · relevant output/receipt · pass criterion · failure action**.
+Re-preflight **immediately before each dispatch wave and before each CF
+request** — capacity and family independence are time-sensitive; a historical
+green does not authorize a later start. Resources are **conjunctive**: disk
+insufficiency vetoes even with quota headroom; disk alone never overrides
+other failures.
 
 | Check | Requirement |
 | --- | --- |
 | **Monitor / API** | Health needed for the task is green (e.g. Monitor loopback, `/api/rules` when rules bind) |
 | **Task infra** | Dependencies for *this* task work (name them: sources MCP, VESUM/`sources.db`, CI, deploy target, …) — not “all infra forever” |
 | **Disk** | Free disk + `.worktrees` headroom for the actual task (incl. build/test trees); **disk wins over quota** |
-| **Capacity check** | Live usage/occupancy (`python -m scripts.fleet.usage show` / occupancy) — prove numbers now |
+| **Capacity check** | Live usage + pick (`python -m scripts.fleet.usage show`, `python -m scripts.fleet.capacity_pick`) — prove numbers now |
 | **Worker headroom** | When terminal goal ∈ {`merge`,`deploy`,`certify`}: ≥2 **non-orchestrator** agents with real capacity, and each required role named (implement vs independent CF — headcount ≠ independence). For `decision-only`/`audit-only`, keep applicable advisor + independent-review rules without forcing unused CF seats |
-| **Fleet usable** | Target epic/stream not lease-wedged; WIP caps OK; no conflicting active driver claim that blocks this start |
+| **Fleet usable** | Target epic/stream not lease-wedged (`fleet_comms plane-status`); WIP / active dispatches OK (`/api/delegate/active`); no conflicting driver claim that blocks this start |
 | **Env / secrets** | Only if required: named credentials/paths present (never print secrets) |
 | **Research / routing** | Role · task-family · track · owned paths classified when dispatching (`--research-*` or deliberately generic); `ROUTING_CARD_V1` when the lane requires it |
 
 **Trivial exempt (bounded):** may skip the full card and most preflight **only**
-when **both** are true: (1) the issue has label `trivial` **or** states
-`trivial:` in the first line, **and** (2) the change is a typo / comment /
-single-line / single-file mechanical fix with no behavior, schema, API, or
-pedagogy change. Riskier work called “trivial” in good faith is still DoR-full.
-Never dispatch into ENOSPC or a dead dependency the chore needs.
+when **all** are true: (1) issue has label `trivial` **or** first line
+`trivial:`; (2) **one-file**, non-behavioral typo/comment-only (or equivalent
+single-line mechanical fix); (3) changes **no** rules, schemas, CI/security
+gates, dependencies, generated artifacts, learner-facing semantics, deploy, or
+certification; (4) a deterministic verify command is named. **Any doubt →
+non-trivial.** Never dispatch into ENOSPC or a dead dependency the chore needs.
 
 ### Preflight command sketch (evidence, not theatre)
 
 ```bash
 # Platform
 curl -sfS http://127.0.0.1:8765/api/health >/dev/null
-# Disk (prove numbers; host policy sets thresholds)
+# Disk (derive .worktrees from common dir — not an arbitrary cwd)
 df -h /
 du -sh "$(dirname "$(git rev-parse --git-common-dir)")/.worktrees"
-# Capacity + worker headroom (read lane reserve / in_flight; unknown ≠ green)
+# Capacity + pick + worker headroom (unknown ≠ green)
 .venv/bin/python -m scripts.fleet.usage show
-# Fleet usable / lease (epic stream + active dispatches)
+.venv/bin/python -m scripts.fleet.capacity_pick
+# Fleet usable / lease / active dispatches
 .venv/bin/python -m scripts.fleet_comms plane-status
-curl -sfS http://127.0.0.1:8765/api/delegate/active | head -c 2000; echo
+curl -sfS 'http://127.0.0.1:8765/api/delegate/active' | head -c 2000; echo
 # Issue card
 .venv/bin/python scripts/ci/check_issue_task_quality.py --issue N
 ```
 
+Record pass/fail with timestamp + receipt for each command above.
 ---
 
 ## Task definition (while open)
@@ -113,8 +119,8 @@ curl -sfS http://127.0.0.1:8765/api/delegate/active | head -c 2000; echo
 Keep the DoR fields current. Material scope change → re-DoR + comment.
 Mission-shrinking non-goals need operator/advisor approval (Fable / Astra;
 Kimi may consult on non-Ukrainian design/coding only).
-Re-run **dispatch preflight** before a new wave of workers if disk, leases, or
-capacity may have moved.
+Re-run **dispatch preflight immediately before each dispatch wave and before
+each CF request** (not only when conditions “might” have moved).
 
 ---
 
@@ -132,23 +138,28 @@ Naming a residual owner does **not** satisfy an unmet acceptance criterion;
 in-scope residual keeps the task unfinished unless an authorized scope revision
 and transfer resolve it.
 
-Compose only the rows that apply:
+Compose only the rows that apply (N/A needs a reason — do not skip silently):
 
-- [ ] **Outcome verified** against denominator (commands + evidence on the issue);
-      semantic proof of the user outcome — not CI-green alone
+- [ ] **Outcome verified** against denominator on the **exact merged SHA / shipped
+      artifact** (and applicable env); a command run on an earlier worker head is
+      insufficient; semantic proof — not CI-green alone
+- [ ] Each `AC-NN` checked off with evidence link/receipt
 - [ ] Verify commands green (or N/A with reason)
 - [ ] Docs/templates touched by the change are updated
 - [ ] If code/docs change: PR + independent **cross-family exact-head APPROVE**
-      (including quality posture: not over-built for the outcome) + required CI
-      green on that head + **landed** (merge verified, not merely enqueued) by the
-      accountable driver — workers never merge; drivers never ask the operator to merge
+      with **quality-posture receipt** (best-practice basis, root-cause treatment,
+      no unnecessary architecture, no scope creep) + required CI green on that
+      head + **landed** (merge verified, not merely enqueued) by the accountable
+      driver — workers never merge; drivers never ask the operator to merge
 - [ ] **Git hygiene:** remote branch gone, local branch gone, dispatch worktree(s)
       reaped (`merge_closeout` / `reap_worktrees.py`)
 - [ ] **GitHub hygiene:** issue updated; closed when acceptance criteria are met
       (else open only with named residual + owner)
-- [ ] **Terminal goal matched** — merge ≠ deploy ≠ certify; analysis tasks use the
-      decision/findings disposition from the DoR card
-- [ ] Close comment: verified outcome · denominator · **residual** · **owner**
+- [ ] **Terminal goal matched** — merge ≠ deploy ≠ certify.
+      `decision-only`: durable approved decision + evidence + recipient.
+      `audit-only`: denominator-complete findings + evidence + owned residual
+- [ ] Close comment: verified outcome · denominator · merged SHA/artifact ·
+      **residual** · **owner**
 - [ ] Lifecycle closeout reconciled when the lane uses `task_closeout`
 
 ---

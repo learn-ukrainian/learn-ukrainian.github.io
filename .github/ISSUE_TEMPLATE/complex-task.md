@@ -35,32 +35,39 @@ assignees: ''
 ## Accountable driver
 <!-- Lane/seat that owns merge + DoD closeout -->
 
-## Stop / residual policy
-<!-- Failure halfway → who owns leftovers; or `none expected` -->
+## Stop policy
+<!-- Failure condition · owner · disposition · unblock/transfer — not "none expected" alone -->
 
-## CF path
-<!-- Cross-family review lane (or named substitute) -->
+## Residual policy
+<!-- Leftover owner / transfer, or explicit none -->
 
-## Dispatch preflight (DoR B — before workers)
+## Review plan
+<!-- Anticipated author family · eligible outside-family reviewer · backup · independence revalidated after author+SHA known -->
+<!-- Advisor discussion / prompt review does NOT satisfy exact-head CF -->
+
+## Dispatch preflight (DoR B — before each worker wave and before CF)
 - [ ] Monitor/API healthy for this task
 - [ ] Named task infra works (sources/VESUM/CI/… as needed)
-- [ ] Disk headroom proven (`df` + `.worktrees`)
-- [ ] Capacity check run (`python -m scripts.fleet.usage show`)
+- [ ] Disk headroom proven (`df` + `.worktrees` via `git rev-parse --git-common-dir`)
+- [ ] Capacity check run (`usage show` + `capacity_pick`)
 - [ ] ≥2 non-orchestrator agents with headroom **when** terminal goal is merge/deploy/certify (roles named)
 - [ ] Target epic/stream not lease-wedged; WIP OK
 - [ ] Env/secrets present only if required (never print)
-- [ ] Preflight evidence dated (unknown ≠ green; refresh if capacity/leases moved)
+- [ ] Preflight evidence dated (command · timestamp · receipt · pass criterion; unknown ≠ green)
 
 Canonical DoR: `docs/best-practices/task-quality.md` (card ∧ preflight).
 Operator everyday “ready” = DoD delivered, not this checklist.
 
 ## Acceptance Criteria / Definition of Done
-- [ ] Outcome verified against denominator (evidence on this issue)
+- [ ] AC-01: …
+- [ ] AC-02: …
+<!-- Stable IDs required; map each to Verify evidence + denominator -->
+- [ ] Outcome verified on exact merged SHA / shipped artifact
 - [ ] Verify commands green (or N/A with reason)
 - [ ] Docs/templates updated if touched
-- [ ] If code/docs change: PR + independent cross-family exact-head APPROVE + CI green on that head + landed per merge policy
+- [ ] If code/docs change: PR + independent cross-family exact-head APPROVE (with quality-posture receipt) + CI green on that head + landed per merge policy
 - [ ] Merge closeout when PR: remote branch gone, local branch gone, dispatch worktree reaped
-- [ ] Close comment: verified outcome · denominator · residual · owner
+- [ ] Close comment: verified outcome · denominator · merged SHA · residual · owner
 
 Canonical pack: `docs/best-practices/task-quality.md`
 
