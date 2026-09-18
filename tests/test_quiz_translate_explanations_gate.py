@@ -1,4 +1,4 @@
-"""Tests for quiz/translate explanation Python QG coverage."""
+"""Tests for quiz/translate/fill-in explanation Python QG coverage (#8214)."""
 
 from __future__ import annotations
 
@@ -53,6 +53,34 @@ def test_empty_quiz_translate_explanation_fails() -> None:
     assert "QUIZ_TRANSLATE_EXPLANATIONS_GATE FAILED: 4 violations" in result["message"]
 
 
+def test_fill_in_missing_explanation_fails() -> None:
+    """#8214 — micro-blank comedy without teaching feedback is a hard fail."""
+    activities = [
+        {
+            "id": "act-w5",
+            "type": "fill-in",
+            "items": [
+                {
+                    "sentence": "бур___ян",
+                    "answer": "'",
+                    "options": ["'", "ь", ""],
+                },
+                {
+                    "sentence": "ден___",
+                    "answer": "ь",
+                    "options": ["ь", "'", "й"],
+                    "explanation": "День потребує м'якого знака.",
+                },
+            ],
+        }
+    ]
+    result = _quiz_translate_explanation_gate(activities)
+    assert result["passed"] is False
+    assert result["checked"] == 2
+    assert result["violations"][0]["activity_type"] == "fill-in"
+    assert result["violations"][0]["reason"] == "missing"
+
+
 def test_real_quiz_translate_explanations_pass() -> None:
     activities = [
         {
@@ -77,11 +105,26 @@ def test_real_quiz_translate_explanations_pass() -> None:
                 }
             ],
         },
+        {
+            "id": "ss-fill",
+            "type": "fill-in",
+            "items": [
+                {
+                    "sentence": "бур___ян",
+                    "answer": "'",
+                    "options": ["'", "ь"],
+                    "explanation": (
+                        "У слові бур'ян потрібен апостроф після р. — "
+                        "In бур'ян an apostrophe is needed after р."
+                    ),
+                }
+            ],
+        },
     ]
 
     result = _quiz_translate_explanation_gate(activities)
 
-    assert result == {"passed": True, "checked": 2, "violations": []}
+    assert result == {"passed": True, "checked": 3, "violations": []}
 
 
 def test_quiz_translate_explanation_gate_runs_after_schema() -> None:
