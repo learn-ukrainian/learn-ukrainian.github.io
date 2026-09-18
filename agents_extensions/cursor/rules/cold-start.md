@@ -65,3 +65,12 @@ busy/partial behavior, and receipt-verification contract.
 If Monitor API is down: `git status --short --branch` + read
 `agents_extensions/shared/rules/_load-via-api.md` and its ordered local
 fallback list.
+
+## Rules hash refresh (no Monitor restart)
+
+`GET /api/rules` reads rule files **live from the Monitor project checkout** on
+every request (ETag = content SHA-256). After a rules PR merges and the primary
+checkout is pulled, the next cold-start /rules fetch sees the new hash — **do not
+restart Monitor** for rule text. Long-running driver *sessions* that already
+injected an old rules blob into context must **re-fetch** `/api/rules` or start a
+new session; a TUI driver relaunch re-runs cold start and picks up the new hash.

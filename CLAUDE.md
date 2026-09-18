@@ -41,7 +41,7 @@ approval (Fable, Sol; roster may change); already-ordered work is item 10 (do no
 presentation or dispatch, substantive phase/epic prompts freeze SHA-256 plus user outcome, denominator, non-goals, role map,
 independent held-out evaluation, stop/residual policy, and completion terms; live-routed
 critics re-review material drift. Prompt review is not exact-head implementation or
-cross-family PR review; engine proof is not product completion · repo hard gates bind.
+cross-family PR review; engine proof is not product completion · **DoD (ready=delivered):** e2e outcome + driver merges after CF+CI (never ask operator) + git/GitHub hygiene; "Next:" ≠ Done · repo hard gates bind.
 
 ---
 

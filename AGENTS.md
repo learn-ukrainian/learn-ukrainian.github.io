@@ -117,9 +117,17 @@ non-skippable:
 
 ## Completion
 
+**Definition of Done (operator: "ready" = delivered):** a task/issue is finished only
+when the user-visible outcome is verified end-to-end **and** git hygiene (branches +
+worktrees reaped) **and** GitHub hygiene (issue updated/closed as appropriate) are
+done. Opening a PR, requesting CF, or writing "Next: …" is not Done. Full schema:
+`docs/best-practices/task-quality.md` DoD; binding: `/api/rules` →
+`operator-expectations.md` §3a. DoR ("may we start") is separate.
+
 Before claiming completion, inspect the exact diff and status, run proportionate
 verification, and report changed files, commands/results, final branch status,
 the user-visible outcome, and any residual. Follow the full rules for issue
 linkage, PR state, review routing, merge ownership, and cleanup. When acting as
 orchestrator, ensure approved PRs are merged to `main` and post-merge worktree/branch
-cleanup is completed; do not declare a task done while an approved, green PR sits unmerged.
+cleanup is completed; do not declare a task done while an approved, green PR sits
+unmerged; do not ask the operator to merge.

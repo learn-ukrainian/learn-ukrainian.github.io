@@ -51,17 +51,29 @@ Mission-shrinking non-goals need operator/advisor approval.
 
 ---
 
-## Definition of Done (DoD) — may we close?
+## Definition of Done (DoD) — may we close / claim finished?
+
+**Operator binding (2026-09-18):** an issue/task is "**ready**" in the everyday
+sense only when it is **delivered end-to-end** and git/GitHub hygiene is maintained.
+That everyday "ready" is **this DoD**, not DoR. Binding copy also lives in
+`operator-expectations.md` §3a (served at `/api/rules`).
+
+A task is **not** Done when: PR opened, CF requested, CI pending, "Next: …" written
+in a handoff, or the operator is asked to merge.
 
 Compose only the rows that apply:
 
-- [ ] Outcome verified against denominator (commands + evidence on the issue)
+- [ ] **Outcome verified** against denominator (commands + evidence on the issue)
 - [ ] Verify commands green (or N/A with reason)
 - [ ] Docs/templates touched by the change are updated
 - [ ] If code/docs change: PR + independent **cross-family exact-head APPROVE**
-      + required CI green on that head + landed per merge policy
-- [ ] Merge closeout when PR: remote branch gone, local branch gone, dispatch
-      worktree reaped
+      + required CI green on that head + **landed** by the accountable driver
+      (`gh pr merge --squash` / MQ) — workers never merge; drivers never ask the
+      operator to merge
+- [ ] **Git hygiene:** remote branch gone, local branch gone, dispatch worktree(s)
+      reaped (`merge_closeout` / `reap_worktrees.py`)
+- [ ] **GitHub hygiene:** issue updated; closed when acceptance criteria are met
+      (else open only with named residual + owner)
 - [ ] **Terminal goal matched** — merge ≠ deploy ≠ certify
 - [ ] Close comment: verified outcome · denominator · **residual** · **owner**
 - [ ] Lifecycle closeout reconciled when the lane uses `task_closeout`

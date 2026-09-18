@@ -48,6 +48,25 @@ tie-breakers.
    when acceptance criteria are met, with tool-backed evidence. `X-Agent` trailer on
    every commit. Session start/end: sweep worktrees, branches, open PRs — a dangling
    ref reads as unfinished work to the rest of the fleet.
+3a. **Definition of Done (operator synonym: "ready" = delivered).** A GitHub
+   issue or assigned task is **not** finished when a PR is open, CF is requested,
+   or a handoff lists "Next: …". It is finished only when delivered **end-to-end**
+   and hygiene is complete:
+   - **User-visible outcome** verified against the stated denominator (tool-backed).
+   - **Landing** (when code/docs changed): exact-head cross-family CF APPROVE + CI Gate
+     green on that head + merged/enqueued by the accountable driver — never ask the
+     operator to merge.
+   - **Git hygiene:** remote branch gone, local branch gone, dispatch worktree(s) reaped
+     (`merge_closeout` / `reap_worktrees.py`); no zombie refs for that PR.
+   - **GitHub hygiene:** issue updated with evidence; closed when acceptance criteria
+     are met (or left open only with named residual + owner). Linked PRs not abandoned.
+   - **Residual** named with owner, or explicit "none".
+   Writing "Next" and stopping the turn is a contract violation of item 10. Canonical
+   ticket schema (DoR vs DoD): `docs/best-practices/task-quality.md`. Lifecycle states:
+   `agents_extensions/shared/contracts/task-lifecycle-closeout.md`.
+   **Do not confuse with Definition of Ready (DoR)** — DoR is "may we start/dispatch";
+   DoD is "may we close/claim finished."
+
 4. **Utilize the whole fleet — together you are stronger.** Substantive design/decisions get
    ≥1 other agent BEFORE committing; solo only for trivial work. Two distinct duties, don't
    conflate them: (a) *discussion/panel input* improves the work but does NOT satisfy the
