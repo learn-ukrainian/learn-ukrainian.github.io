@@ -82,7 +82,7 @@ class EuphonyCard:
     distractors: list[dict[str, Any]] = field(default_factory=list)
     pedagogical_rule_ua: str = ""
     pedagogical_rule_en: str = ""
-    pravopys_ref: str = "Правопис 2019, § 20–24, § 70–74"
+    pravopys_ref: str = "Правопис 2019, § 23–25; Академічна граматика"
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -113,7 +113,7 @@ def starts_with_vowel(word: str) -> bool:
 
 
 def resolve_u_v_rule(prev_word: str | None, next_word: str) -> tuple[str, str, str]:
-    """Resolve correct preposition У vs В per Правопис 2019 (§ 20–22)."""
+    """Resolve correct preposition У vs В per Правопис 2019 (§ 23)."""
     next_clean = next_word.lstrip("«\"'( \n\t").lower()
     prev_clean = prev_word.rstrip(".,;:!?»\"') \n\t").lower() if prev_word else None
 
@@ -173,7 +173,7 @@ def resolve_u_v_rule(prev_word: str | None, next_word: str) -> tuple[str, str, s
 
 
 def resolve_i_y_rule(prev_word: str | None, next_word: str) -> tuple[str, str, str]:
-    """Resolve correct conjunction І vs Й per Правопис 2019 (§ 23)."""
+    """Resolve correct conjunction І vs Й per Правопис 2019 (§ 24)."""
     next_clean = next_word.lstrip("«\"'( \n\t").lower()
     prev_clean = prev_word.rstrip(".,;:!?»\"') \n\t").lower() if prev_word else None
 
@@ -217,7 +217,7 @@ def resolve_i_y_rule(prev_word: str | None, next_word: str) -> tuple[str, str, s
 
 
 def resolve_z_iz_zi_rule(prev_word: str | None, next_word: str) -> tuple[str, str, str]:
-    """Resolve correct preposition З vs ІЗ vs ЗІ per Правопис 2019 (§ 24)."""
+    """Resolve correct preposition З vs ІЗ vs ЗІ per Правопис 2019 (§ 25)."""
     next_clean = next_word.lstrip("«\"'( \n\t").lower()
     prev_clean = prev_word.rstrip(".,;:!?»\"') \n\t").lower() if prev_word else None
 
@@ -248,12 +248,15 @@ def resolve_z_iz_zi_rule(prev_word: str | None, next_word: str) -> tuple[str, st
             "Before a vowel, always use 'з': 'з одного боку'.",
         )
 
-    # Condition 4: between complex clusters / after consonant ending
-    if prev_clean and not ends_with_vowel(prev_clean) and next_clean[0] in SIBILANTS:
+    # Condition 4: between consonants to avoid heavy cluster clash (e.g. лист із Бразилії, поїзд із Харкова)
+    if prev_clean and not ends_with_vowel(prev_clean) and (
+        (len(next_clean) >= 2 and next_clean[0] not in VOWELS and next_clean[1] not in VOWELS)
+        or next_clean[0] in SIBILANTS
+    ):
         return (
             "із",
-            "Між свистячими/шиплячими або після приголосного перед збігом приголосних уживається «із»: «лист із Бразилії».",
-            "Between sibilants or complex clusters, use 'із'.",
+            "Між приголосними для уникнення важкого збігу звуків уживається «із»: «лист із Бразилії», «поїзд із Харкова».",
+            "Between consonants to avoid heavy clusters, use 'із': 'лист із Бразилії'.",
         )
 
     return (
@@ -288,7 +291,7 @@ EUPHONY_SENTENCES = [
     {"prev": "Ми приїхали", "next": "братом", "frame": "Ми приїхали {p} братом.", "type": "z_iz_zi"},
     {"prev": "Вони вийшли", "next": "школи", "frame": "Вони вийшли {p} школи.", "type": "z_iz_zi"},
     {"prev": "Він зустрівся", "next": "артистом", "frame": "Він зустрівся {p} артистом.", "type": "z_iz_zi"},
-    {"prev": "Він отримав листа", "next": "Бразилії", "frame": "Він отримав листа {p} Бразилії.", "type": "z_iz_zi"},
+    {"prev": "Прийшов лист", "next": "Бразилії", "frame": "Прийшов лист {p} Бразилії.", "type": "z_iz_zi"},
 ]
 
 HISTORICAL_VOWEL_SHIFTS = [
@@ -371,14 +374,14 @@ HISTORICAL_VOWEL_SHIFTS = [
         "vowel_pair": "і/е",
     },
     {
-        "lemma": "папір",
-        "closed_nom_sg": "папір",
-        "open_gen_sg": "паперу",
-        "open_nom_pl": "папери",
-        "frame": "Він узяв аркуш чистого (папір) ➔ ___.",
-        "target": "паперу",
-        "calque_wrong": "папіру",
-        "russian_wrong": "папір",
+        "lemma": "вечір",
+        "closed_nom_sg": "вечір",
+        "open_gen_sg": "вечора",
+        "open_nom_pl": "вечори",
+        "frame": "До самого пізнього (вечір) ➔ ___ тривала розмова.",
+        "target": "вечора",
+        "calque_wrong": "вечіра",
+        "russian_wrong": "вечер",
         "vowel_pair": "і/е",
     },
 ]
@@ -567,15 +570,15 @@ VERB_IOTATION_ITEMS = [
         "rule_en": "Dental [д] alternates with [дж]: сидіти ➔ сиджу.",
     },
     {
-        "infinitive": "хотіти",
+        "infinitive": "платити",
         "stem_type": "dental_t",
-        "target": "хочу",
-        "frame": "Я щиро (хотіти) ➔ ___ вивчити українську мову.",
-        "wrong_missing_l": "хотю",
-        "wrong_person": "хочеш",
-        "wrong_plural": "хотять",
-        "rule_ua": "Зубний [т] у 1-й особі однини чергується з [ч]: хотіти ➔ хочу.",
-        "rule_en": "Dental [т] alternates with [ч]: хотіти ➔ хочу.",
+        "target": "плачу",
+        "frame": "Я завжди (платити) ➔ ___ за комунальні послуги вчасно.",
+        "wrong_missing_l": "платю",
+        "wrong_person": "платиш",
+        "wrong_plural": "платять",
+        "rule_ua": "Зубний [т] у 1-й особі однини чергується з [ч]: платити ➔ плачу.",
+        "rule_en": "Dental [т] alternates with [ч]: платити ➔ плачу.",
     },
     {
         "infinitive": "просити",
@@ -636,7 +639,7 @@ def generate_preposition_card(item: dict[str, Any], idx: int) -> EuphonyCard:
             ),
         ]
         options = [correct_p, distractor_p, "до", "на"]
-        pravopys_ref = "Правопис 2019, § 20–22"
+        pravopys_ref = "Правопис 2019, § 23"
 
     elif cat_type == "i_y":
         correct_p, rule_ua, rule_en = resolve_i_y_rule(item["prev"], item["next"])
@@ -667,7 +670,7 @@ def generate_preposition_card(item: dict[str, Any], idx: int) -> EuphonyCard:
             ),
         ]
         options = [correct_p, distractor_p, "та", "але"]
-        pravopys_ref = "Правопис 2019, § 23"
+        pravopys_ref = "Правопис 2019, § 24"
 
     else:  # z_iz_zi
         correct_p, rule_ua, rule_en = resolve_z_iz_zi_rule(item["prev"], item["next"])
@@ -694,7 +697,7 @@ def generate_preposition_card(item: dict[str, Any], idx: int) -> EuphonyCard:
             ),
         ]
         options = [correct_p, other_choices[0], other_choices[1], "від"]
-        pravopys_ref = "Правопис 2019, § 24"
+        pravopys_ref = "Правопис 2019, § 25"
 
     rng.shuffle(options)
     prompt_ua = item["frame"].replace("{p}", "___")
@@ -801,7 +804,7 @@ def generate_vowel_shift_card(item: dict[str, Any], idx: int) -> EuphonyCard:
         ],
         pedagogical_rule_ua=rule_ua,
         pedagogical_rule_en=rule_en,
-        pravopys_ref="Правопис 2019, § 70–71",
+        pravopys_ref="Академічна граматика: чергування [о], [е] з [і]",
     )
 
 
@@ -880,7 +883,7 @@ def generate_second_palatalization_card(item: dict[str, Any], idx: int) -> Eupho
         ],
         pedagogical_rule_ua=rule_ua,
         pedagogical_rule_en=rule_en,
-        pravopys_ref="Правопис 2019, § 72",
+        pravopys_ref="Академічна граматика: друга палаталізація (г, к, х ➔ з', ц', с')",
     )
 
 
@@ -959,7 +962,7 @@ def generate_first_palatalization_vocative_card(item: dict[str, Any], idx: int) 
         ],
         pedagogical_rule_ua=rule_ua,
         pedagogical_rule_en=rule_en,
-        pravopys_ref="Правопис 2019, § 73",
+        pravopys_ref="Академічна граматика: перша палаталізація (г, к, х ➔ ж, ч, ш)",
     )
 
 
@@ -1022,7 +1025,7 @@ def generate_verb_iotation_card(item: dict[str, Any], idx: int) -> EuphonyCard:
         ],
         pedagogical_rule_ua=item["rule_ua"],
         pedagogical_rule_en=item["rule_en"],
-        pravopys_ref="Правопис 2019, § 74",
+        pravopys_ref="Академічна граматика: чергування приголосних у дієсловах ІІ дієвідміни",
     )
 
 

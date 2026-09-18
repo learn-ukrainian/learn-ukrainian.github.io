@@ -56,6 +56,9 @@ describe('euphony-stem', () => {
 
     // Before single consonant -> з
     expect(resolveZIzZiRules('приїхали', 'братом').choice).toBe('з');
+
+    // Between consonants to avoid heavy clusters -> із
+    expect(resolveZIzZiRules('лист', 'Бразилії').choice).toBe('із');
   });
 
   it('provides targeted feedback for correct and distractor choices', () => {
@@ -77,7 +80,7 @@ describe('euphony-stem', () => {
       ],
       pedagogicalRuleUa: 'Друга палаталізація: г, к, х чергуються із з, ц, с.',
       pedagogicalRuleEn: 'Second palatalization: г, к, х shift to з, ц, с.',
-      pravopysRef: 'Правопис 2019, § 72',
+      pravopysRef: "Академічна граматика: друга палаталізація (г, к, х ➔ з', ц', с')",
     };
 
     const correctRes = euphonyFeedbackFor(card, 'руці');

@@ -99,6 +99,10 @@ def test_resolve_z_iz_zi_euphony():
     z_cons, _, _ = resolve_z_iz_zi_rule("приїхали", "братом")
     assert z_cons == "з"
 
+    # Between consonants to avoid heavy clusters -> із
+    iz_cluster, _, _ = resolve_z_iz_zi_rule("лист", "Бразилії")
+    assert iz_cluster == "із"
+
 
 def test_vowel_shifts_closed_open():
     """Verify vowel shifts [о], [е] <-> [і] in open vs closed syllables."""
@@ -116,8 +120,25 @@ def test_vowel_shifts_closed_open():
     card = generate_vowel_shift_card(item, 0)
     assert card.correct_answer == "кота"
     assert card.category == EuphonyCategory.VOWEL_SHIFT_O_E_I
+    assert card.pravopys_ref == "Академічна граматика: чергування [о], [е] з [і]"
     assert len(card.options) == 4
     assert len(set(card.options)) == 4
+
+    # Test вечір
+    vechir = {
+        "lemma": "вечір",
+        "closed_nom_sg": "вечір",
+        "open_gen_sg": "вечора",
+        "open_nom_pl": "вечори",
+        "frame": "До самого пізнього (вечір) ➔ ___ тривала розмова.",
+        "target": "вечора",
+        "calque_wrong": "вечіра",
+        "russian_wrong": "вечер",
+        "vowel_pair": "і/е",
+    }
+    card_v = generate_vowel_shift_card(vechir, 1)
+    assert card_v.correct_answer == "вечора"
+    assert len(set(card_v.options)) == 4
 
     # Calque distractor (*кіта)
     calque_d = next(

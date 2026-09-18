@@ -91,7 +91,7 @@ export function startsWithVowel(word: string): boolean {
 }
 
 /**
- * Determine correct preposition У vs В per Правопис 2019 (§ 20–22).
+ * Determine correct preposition У vs В per Правопис 2019 (§ 23).
  */
 export function resolveUVRules(
   prevWord: string | null,
@@ -138,7 +138,7 @@ export function resolveUVRules(
     return {
       choice: 'у',
       ruleUa: 'Між приголосними завжди вживається «у» для милозвучності.',
-      ruleEn: "Between consonants, use 'у' for euphony.",
+      ruleEn: "Between consonants, use 'у'.",
     };
   }
 
@@ -169,7 +169,7 @@ export function resolveUVRules(
 }
 
 /**
- * Determine correct conjunction І vs Й per Правопис 2019 (§ 23).
+ * Determine correct conjunction І vs Й per Правопис 2019 (§ 24).
  */
 export function resolveIYRules(
   prevWord: string | null,
@@ -218,7 +218,7 @@ export function resolveIYRules(
 }
 
 /**
- * Determine correct preposition З vs ІЗ vs ЗІ per Правопис 2019 (§ 24).
+ * Determine correct preposition З vs ІЗ vs ЗІ per Правопис 2019 (§ 25).
  */
 export function resolveZIzZiRules(
   prevWord: string | null,
@@ -261,11 +261,16 @@ export function resolveZIzZiRules(
     };
   }
 
-  if (prevClean && !endsWithVowel(prevClean) && SIBILANTS.has(nextClean[0])) {
+  if (
+    prevClean &&
+    !endsWithVowel(prevClean) &&
+    ((nextClean.length >= 2 && !VOWELS.has(nextClean[0]) && !VOWELS.has(nextClean[1])) ||
+      SIBILANTS.has(nextClean[0]))
+  ) {
     return {
       choice: 'із',
-      ruleUa: 'Між свистячими/шиплячими після приголосного вживається «із».',
-      ruleEn: 'Between sibilants after a consonant, use «із».',
+      ruleUa: 'Між приголосними для уникнення важкого збігу звуків уживається «із»: «лист із Бразилії».',
+      ruleEn: "Between consonants to avoid heavy cluster clash, use 'із': 'лист із Бразилії'.",
     };
   }
 
