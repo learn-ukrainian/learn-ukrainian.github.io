@@ -2313,8 +2313,18 @@ def test_n4_tone_calibration_inflected_forms() -> None:
     assert miner.verify_respectful_tone("Це граматична помилка, спричинена синтаксичною калькою.", pej_words)
 
 
+def test_n5_proekt_spelling_rejection() -> None:
+    """Verify pre-2019 'проект' is rejected by validation even without VESUM database."""
+    assert not miner.validate_target_sentence("Схвалено проект закону про освіту.")
+    assert miner.validate_target_sentence("Схвалено проєкт закону про освіту.")
+
+
+@pytest.mark.skipif(
+    not miner.DEFAULT_VESUM_DB.is_file(),
+    reason="VESUM database not present in CI sandbox — run locally for full coverage",
+)
 def test_n5_brown_uk_normative_spelling_no_proekt() -> None:
-    """Verify Brown-UK negative controls reject pre-2019 'проект' and do not use error category G/Other."""
+    """Verify Brown-UK negative controls reject pre-2019 'проект'."""
     import sqlite3
     conn = sqlite3.connect(f"file:{miner.DEFAULT_VESUM_DB}?mode=ro", uri=True)
     cur = conn.cursor()
@@ -2325,6 +2335,21 @@ def test_n5_brown_uk_normative_spelling_no_proekt() -> None:
         "Ми ознайомилися з новим проєктом постанови уряду на засіданні.", cur
     )
     conn.close()
+
+
+def test_r4_control_categories_isolation() -> None:
+    """Verify Brown-UK controls are categorized as Control/Usus or Control/Normative, not F/Style or G/Other."""
+    receipt_file = RELEASE_DIR / "release_receipt.json"
+    assert receipt_file.is_file()
+    receipt = json.loads(receipt_file.read_text(encoding="utf-8"))
+    cat_dist = receipt["sft_training_dataset"]["category_distribution"]
+
+    assert "Control/Usus" in cat_dist
+    assert "Control/Normative" in cat_dist
+    # F/Style should reflect actual UA-GEC errors, not inflated by 16k so-so items
+    assert cat_dist["Control/Usus"] > 10000
+    assert cat_dist["F/Style"] < 1500
+    assert cat_dist.get("G/Other", 0) < 500
 
 
 def test_multi_error_grouping_cohesion(tmp_path: Path) -> None:

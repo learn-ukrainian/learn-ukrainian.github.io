@@ -2156,7 +2156,7 @@ def check_has_predicate(text: str, cur_ves: sqlite3.Cursor | None) -> bool:
                     return True
             except Exception:
                 pass
-        elif any(w.endswith(sfx) for sfx in ("ти", "тися", "ться", "ло", "ла", "ли", "в", "ють", "ять", "уть", "ать", "ить")):
+        elif any(w.endswith(sfx) for sfx in ("ти", "тися", "ться", "ся", "сь", "лися", "лась", "ло", "ла", "ли", "в", "ють", "ять", "уть", "ать", "ить")):
             return True
 
     # Zero-copula predicative dash between nominative nouns (Правопис 2019 §158.2)
@@ -3019,10 +3019,14 @@ PEJORATIVE_STEMS: tuple[str, ...] = (
     "безглузд",
     "дурн",
     "дурощ",
+    "дурост",
     "нездар",
     "дикунськ",
     "кретин",
     "тупоум",
+    "туп",
+    "ганебн",
+    "потворн",
 )
 
 
@@ -3515,6 +3519,20 @@ def build_participle_trajectories(cur_ves: sqlite3.Cursor | None = None) -> list
     return trajectories
 
 
+def extract_context_content_sample(text: str) -> str:
+    """Extract sample content words for dynamic sentence-grounded reasoning."""
+    words = [
+        w for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']{4,}\b", text)
+        if w.lower() not in {
+            "було", "були", "буде", "вони", "його", "який", "яких", "яка", "яке",
+            "цього", "тому", "лише", "може", "також", "яким", "інших",
+            "свої", "свого", "своїх", "таких", "таким", "через", "після", "перед",
+        }
+    ]
+    sample = words[:3] if words else re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", text)[:2]
+    return ", ".join(f"«{w}»" for w in sample) if sample else "ключових лексем"
+
+
 def build_sft_dataset(
     ua_gec_items: list[dict[str, Any]],
     valency_items: list[dict[str, Any]],
@@ -3578,6 +3596,7 @@ def build_sft_dataset(
             "rule": "Дотримання граматичних норм української мови.",
         })
         all_errs = item.get("all_errors", [])
+        tgt_clean = item["target_sentence"].rstrip(".")
         if len(all_errs) > 1:
             query = f"Проаналізуйте речення, знайдіть помилки та виправте їх із нормативним обґрунтуванням: «{item['source_sentence']}»"
             err_bullets = "\n".join(
@@ -3585,7 +3604,7 @@ def build_sft_dataset(
                 for e in all_errs
             )
             rules_bullets = " ".join(
-                f"[{e['tag']}]: {CATEGORY_EXPLANATIONS.get(e['tag'], {}).get('rule', '')}"
+                f"[{e['tag']}]: {CATEGORY_EXPLANATIONS.get(e['tag'], {}).get('rule', '').rstrip('.')}."
                 for e in all_errs
             )
             corrs_list = ", ".join(f"«{e['correction']}»" for e in all_errs)
@@ -3593,7 +3612,7 @@ def build_sft_dataset(
                 f"1. Виявлення девіацій: у реченні зафіксовано такі невідповідності:\n{err_bullets}",
                 f"2. Граматичні та синтаксичні норми: {rules_bullets}",
                 f"3. Відновлення нормативних форм: контекстуально правильними варіантами є {corrs_list}.",
-                f"4. Підсумкове речення: «{item['target_sentence']}».",
+                f"4. Підсумкове речення: «{tgt_clean}».",
             ]
             final_response = (
                 f"У реченні допущено такі невідповідності нормам:\n{err_bullets}\n\n"
@@ -3602,16 +3621,17 @@ def build_sft_dataset(
             )
         else:
             query = f"Проаналізуйте речення, знайдіть помилку та виправте її з граматичним обґрунтуванням: «{item['source_sentence']}»"
+            norm_rule = cat_meta["rule"].rstrip(".") + "."
             reasoning = [
                 f"1. Виявлення девіації: у реченні зафіксовано помилку категорії [{tag}] ({cat_meta['title']}): фрагмент «{item['error']}».",
-                f"2. Граматична норма: {cat_meta['rule']}.",
+                f"2. Граматична норма: {norm_rule}",
                 f"3. Відновлення нормативної форми: контекстуально правильним варіантом є «{item['correction']}».",
-                f"4. Підсумкове речення: «{item['target_sentence']}».",
+                f"4. Підсумкове речення: «{tgt_clean}».",
             ]
             final_response = (
                 f"У реченні допущено помилку ({cat_meta['title']}): «{item['error']}» замість «{item['correction']}».\n\n"
                 f"Виправлене речення: «{item['target_sentence']}».\n\n"
-                f"Обґрунтування: {cat_meta['rule']}"
+                f"Обґрунтування: {norm_rule}"
             )
 
         first_corr_token = re.findall(r"\w+", item["correction"])
@@ -3664,19 +3684,21 @@ def build_sft_dataset(
             doc_id = b.get("doc_id", "")
             genre = b.get("genre", "")
             word_cnt = len(s.split())
+            first_word = re.findall(r"\w+", s)
+            token_to_check = first_word[0] if first_word else s[:10]
+            lemma, forms_cnt, attested = query_vesum_lemma_and_count(cur_ves, token_to_check)
+            sample_str = extract_context_content_sample(s)
+
             query = f"Чи є граматичні, синтаксичні або стилістичні помилки в цьому реченні: «{s}»?"
             reasoning = [
                 f"1. Структурний аналіз: розглядаємо речення ({word_cnt} слів) з авторитетного корпусу Brown-UK (розділ {genre}, документ {doc_id}): «{s}».",
-                "2. Синтаксична сполучуваність: предикативні зв'язки, відмінкове керування та узгодження компонентів бездоганно відповідають нормі.",
-                "3. Лексичний склад: відсутні суржикові форми, кальки чи невластиві синтаксичні моделі. Усі лексеми відповідають нормам правопису.",
+                f"2. Синтаксична сполучуваність: предикативні зв'язки та узгодження компонентів довкола {sample_str} бездоганно відповідають нормі.",
+                f"3. Лексичний склад: уживання слів (зокрема «{token_to_check}») є унормованим, відсутні суржикові форми, кальки чи орфографічні девіації.",
                 "4. Висновок: речення граматично і стилістично довершене і не потребує нормативних правок.",
             ]
             final_response = (
                 f"У поданому реченні помилок немає. Воно повністю відповідає нормам сучасної української літературної мови: «{s}»."
             )
-            first_word = re.findall(r"\w+", s)
-            token_to_check = first_word[0] if first_word else s[:10]
-            lemma, forms_cnt, attested = query_vesum_lemma_and_count(cur_ves, token_to_check)
 
             traj_hash = hashlib.sha256(s.encode()).hexdigest()[:16]
             traj = {
@@ -3712,7 +3734,7 @@ def build_sft_dataset(
             if add_trajectory(traj):
                 good_count += 1
 
-        # Add so-so (CONTRAST) items: category F/Style, usus diversity
+        # Add so-so (CONTRAST) items: category Control/Usus, usus diversity
         soso_count = 0
         for b in soso_items:
             if len(all_trajectories) >= target_count:
@@ -3720,25 +3742,27 @@ def build_sft_dataset(
             s = b["text"]
             doc_id = b.get("doc_id", "")
             genre = b.get("genre", "")
+            first_word = re.findall(r"\w+", s)
+            token_to_check = first_word[0] if first_word else s[:10]
+            lemma, forms_cnt, attested = query_vesum_lemma_and_count(cur_ves, token_to_check)
+            sample_str = extract_context_content_sample(s)
+
             query = f"Проаналізуйте стилістичну та синтаксичну структуру цього речення: «{s}»."
             reasoning = [
-                f"1. Аналіз узусу: аналізуємо речення з живого мовного вжитку (розряд Brown-UK so-so, розділ {genre}, документ {doc_id}): «{s}».",
-                "2. Стилістичні особливості: речення демонструє розмовний чи публіцистичний регістр із припустимою авторською варіативністю.",
-                "3. Збереження змісту: речення є змістовно зрозумілим і не потребує нормативного втручання поза межами суворого академічного стилю.",
+                f"1. Аналіз узусу: аналізуємо речення ({len(s.split())} слів) з живого мовного вжитку (розряд Brown-UK so-so, розділ {genre}, документ {doc_id}): «{s}».",
+                f"2. Стилістичні особливості: речення довкола лексем {sample_str} демонструє функціональний регістр {genre} із припустимою авторською варіативністю.",
+                f"3. Збереження змісту: слововживання зі словом «{token_to_check}» є змістовно зрозумілим і не потребує нормативного втручання.",
                 "4. Підсумок: підтверджуємо прийнятність речення у відповідному функціональному стилі.",
             ]
             final_response = (
                 f"Речення становить зразок живої мовної практики (розмовний / публіцистичний узус): «{s}». Синтаксична структура та зміст є зрозумілими в цьому регістрі."
             )
-            first_word = re.findall(r"\w+", s)
-            token_to_check = first_word[0] if first_word else s[:10]
-            lemma, forms_cnt, attested = query_vesum_lemma_and_count(cur_ves, token_to_check)
 
             traj_hash = hashlib.sha256(s.encode()).hexdigest()[:16]
             traj = {
                 "schema_version": "v1_grammar_valency_trajectory",
                 "trajectory_id": f"traj.brown.contrast.{traj_hash}",
-                "category": "F/Style",
+                "category": "Control/Usus",
                 "subtype": "brown_uk_so_so_contrast",
                 "query": query,
                 "target_term": token_to_check,
@@ -3776,25 +3800,27 @@ def build_sft_dataset(
                 s = b["text"]
                 doc_id = b.get("doc_id", "")
                 genre = b.get("genre", "")
+                first_word = re.findall(r"\w+", s)
+                token_to_check = first_word[0] if first_word else s[:10]
+                lemma, forms_cnt, attested = query_vesum_lemma_and_count(cur_ves, token_to_check)
+                sample_str = extract_context_content_sample(s)
+
                 query = f"Чи є граматичні, синтаксичні або стилістичні помилки в цьому реченні: «{s}»?"
                 reasoning = [
-                    f"1. Структурний аналіз: розглядаємо речення з авторитетного корпусу Brown-UK (розділ {genre}, документ {doc_id}): «{s}».",
-                    "2. Перевірка зв'язку слів: узгодження підмета і присудка, керування дієслів і прийменників бездоганні.",
-                    "3. Відсутність кальок: відсутні лексичні росіянізми чи невластиві синтаксичні моделі.",
-                    "4. Висновок: речення граматично і стилістично довершене і не потребує правок.",
+                    f"1. Структурний аналіз: розглядаємо речення ({len(s.split())} слів) з авторитетного корпусу Brown-UK (розділ {genre}, документ {doc_id}): «{s}».",
+                    f"2. Синтаксична сполучуваність: предикативні зв'язки та узгодження компонентів довкола {sample_str} бездоганно відповідають нормі.",
+                    f"3. Лексичний склад: уживання слів (зокрема «{token_to_check}») є унормованим, відсутні суржикові форми, кальки чи орфографічні девіації.",
+                    "4. Висновок: речення граматично і стилістично довершене і не потребує нормативних правок.",
                 ]
                 final_response = (
                     f"У поданому реченні помилок немає. Воно повністю відповідає нормам сучасної української літературної мови: «{s}»."
                 )
-                first_word = re.findall(r"\w+", s)
-                token_to_check = first_word[0] if first_word else s[:10]
-                lemma, forms_cnt, attested = query_vesum_lemma_and_count(cur_ves, token_to_check)
 
                 traj_hash = hashlib.sha256(f"{doc_id}_{s}".encode()).hexdigest()[:16]
                 traj = {
                     "schema_version": "v1_grammar_valency_trajectory",
                     "trajectory_id": f"traj.brown.preserve.{traj_hash}",
-                    "category": "G/Other",
+                    "category": "Control/Normative",
                     "subtype": "brown_uk_good_preserve",
                     "query": query,
                     "target_term": token_to_check,
