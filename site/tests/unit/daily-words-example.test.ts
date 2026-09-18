@@ -101,6 +101,9 @@ describe("DailyWords list example sentence (GH #5434)", () => {
       expect(row).toHaveProperty("lemma");
       expect(row).toHaveProperty("slug");
       expect(row).toHaveProperty("gloss");
+      expect(typeof row.gloss).toBe("string");
+      expect(row.gloss!.trim().length).toBeGreaterThan(0);
+      expect(row.gloss).not.toMatch(/[\u0400-\u04FF]/);
       if (row.example !== undefined && row.example !== null) {
         expect(typeof row.example).toBe("string");
         expect(row.example.trim()).toBe(row.example);

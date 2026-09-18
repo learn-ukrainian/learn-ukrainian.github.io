@@ -1,12 +1,17 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 from scripts.atlas import atlas_db
 from scripts.audit.generate_daily_pool import (
+    DEFAULT_OUT,
+    VERIFIED_ENGLISH_GLOSSES,
     _clean_origin,
+    _entry_gloss,
     _first_origin,
+    _is_eligible,
     build_pool,
     compute_weight,
     load_db_entries,
@@ -407,9 +412,7 @@ def test_first_origin_only_returns_kaikki_sourced_prose() -> None:
         "gloss": "coin",
         "primary_source": "course",
         "course_usage": [],
-        "enrichment": {
-            "etymology": {"text": "From Latin monēta.", "source": "kaikki/Wiktionary (CC BY-SA 3.0)"}
-        },
+        "enrichment": {"etymology": {"text": "From Latin monēta.", "source": "kaikki/Wiktionary (CC BY-SA 3.0)"}},
     }
     esum_entry = {
         "lemma": "вода",
@@ -417,9 +420,7 @@ def test_first_origin_only_returns_kaikki_sourced_prose() -> None:
         "gloss": "water",
         "primary_source": "course",
         "course_usage": [],
-        "enrichment": {
-            "etymology": {"text": "Стаття ЕСУМ: вода; етимонів: 3.", "source": "ЕСУМ"}
-        },
+        "enrichment": {"etymology": {"text": "Стаття ЕСУМ: вода; етимонів: 3.", "source": "ЕСУМ"}},
     }
 
     assert _first_origin(kaikki_entry) == "From Latin monēta."
@@ -515,3 +516,57 @@ def test_build_pool_includes_c1_words_alongside_a_lower_level_majority() -> None
     assert len(c1) == 40  # default MIN_PER_LEVEL
     # Every C1 card carries its true level so the WotD C1 tab can match it.
     assert all(item["cefr"] == "C1" for item in c1)
+
+
+def test_entry_gloss_and_eligibility_enforces_english() -> None:
+    """#8258: raw Cyrillic definitions from СУМ/ВТС must not leak into the daily pool
+    without a verified English gloss; verified English glosses must be applied."""
+    # Entry with pure Cyrillic definition from СУМ/ВТС not in VERIFIED_ENGLISH_GLOSSES
+    cyrillic_unverified = {
+        "lemma": "невідомеслово",
+        "url_slug": "nevidomeslovo",
+        "gloss": "який не потребує коштів, оплати; безплатний",
+        "primary_source": "course",
+    }
+    assert _entry_gloss(cyrillic_unverified) is None
+    assert not _is_eligible(cyrillic_unverified)
+
+    # Entry with verified English gloss override
+    verified_entry = {
+        "lemma": "дівчина",
+        "url_slug": "дівчина",
+        "gloss": "молода неодружена особа жіночої статі",
+        "primary_source": "course",
+        "entry_type": "lexeme",
+    }
+    assert _entry_gloss(verified_entry) == VERIFIED_ENGLISH_GLOSSES["дівчина"]
+    assert _is_eligible(verified_entry)
+
+    # Entry with standard English gloss
+    english_entry = {
+        "lemma": "книга",
+        "url_slug": "knyha",
+        "gloss": "book",
+        "primary_source": "course",
+        "entry_type": "lexeme",
+    }
+    assert _entry_gloss(english_entry) == "book"
+    assert _is_eligible(english_entry)
+
+
+def test_committed_daily_pool_has_only_valid_english_glosses() -> None:
+    """#8258: 100% of cards in the committed daily pool must carry non-empty English glosses
+    with zero Cyrillic characters."""
+    pool = json.loads(DEFAULT_OUT.read_text(encoding="utf-8"))
+    assert len(pool) == 300
+
+    cyrillic_re = re.compile(r"[\u0400-\u04FF]")
+    latin_re = re.compile(r"[A-Za-z]")
+
+    for item in pool:
+        lemma = item.get("lemma")
+        gloss = item.get("gloss")
+        assert isinstance(gloss, str), f"Card '{lemma}' is missing a gloss"
+        assert gloss.strip(), f"Card '{lemma}' has an empty gloss"
+        assert latin_re.search(gloss), f"Card '{lemma}' gloss has no Latin/English letters: '{gloss}'"
+        assert not cyrillic_re.search(gloss), f"Card '{lemma}' gloss contains Cyrillic: '{gloss}'"

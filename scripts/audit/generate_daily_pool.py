@@ -49,6 +49,86 @@ MIN_PER_LEVEL = 40
 _DERIVED_FORM_SOURCES = DERIVED_FORM_SOURCES
 _SURZHYK_SOURCE = SURZHYK_SOURCE
 
+_LATIN_RE = re.compile(r"[A-Za-z]")
+
+# Verified English translations for lemmas that lack bilingual glosses in upstream
+# sources or where upstream fallback contains raw monolingual Ukrainian dictionary
+# definitions from СУМ/ВТС (#8258).
+VERIFIED_ENGLISH_GLOSSES: dict[str, str] = {
+    "аналогічно": "similarly, likewise",
+    "архаїка": "antiquity, archaism, archaic elements",
+    "безкоштовний": "free of charge, complimentary",
+    "біб": "broad bean, fava bean",
+    "використовувати": "to use, to utilize, to employ",
+    "відстань": "distance, gap",
+    "відчуття": "feeling, sensation, perception",
+    "двигун": "engine, motor",
+    "дівчина": "girl, young woman",
+    "етнічність": "ethnicity, ethnic identity",
+    "захист": "defense, protection",
+    "клавіатура": "keyboard",
+    "контролювати": "to control, to monitor, to supervise",
+    "м'яз": "muscle",
+    "мох": "moss",
+    "овес": "oats, oat",
+    "ом": "ohm (unit of electrical resistance)",
+    "продавати": "to sell",
+    "простір": "space, expanse",
+    "рости": "to grow, to increase",
+    "сад": "garden, orchard",
+    "свідомість": "consciousness, awareness",
+    "спостереження": "observation, monitoring",
+    "судома": "cramp, spasm, convulsion",
+    "сума": "sum, total, amount",
+    "умовний": "conventional, conditional, symbolic",
+    "цвісти": "to bloom, to blossom, to flower",
+    "цунамі": "tsunami",
+    "шум": "noise, sound, rustle",
+}
+
+# Verified English translations for daily example sentences lacking an English gloss (#8258).
+VERIFIED_EXAMPLE_EN: dict[str, str] = {
+    "аналогічно": "Similarly, in this same record of the Salary field we will select the Sum function.",
+    "безкоштовний": "Usually, a company providing free hosting earns money by displaying ads on pages hosted on it.",
+    "біб": "At the same time, the authorized archon took out of the boxes a bean and a tablet with the candidate's name.",
+    "відстань": "What will the distance between them be after 35 minutes?",
+    "відчуття": "Because of this, serotonin and dopamine accumulate in the synaptic cleft, causing a sensation of pleasure.",
+    "двигун": "A heat engine is a machine that operates cyclically and converts fuel energy into mechanical energy.",
+    "захист": "One of the most important tasks of the state is the protection of the rights of all people, including teenagers.",
+    "клавіатура": "Thus, the keyboard converts the notification of a particular key press into a set of electrical signals.",
+    "контролювати": "Monitor for the onset of vomiting.",
+    "м'яз": "Which muscle must contract for the shin to move in the direction shown by the arrow?",
+    "мох": "Verbynka carefully lifted the moss.",
+    "овес": "Green rye and oats too — here our whole kin has gathered.",
+    "ом": "The total resistance of two lamps and a rheostat connected in series is 65 ohms.",
+    "простір": "What personal space is and what its components are.",
+    "свідомість": "Consciousness: the desire to know oneself is one of the main drivers of human development.",
+    "спостереження": "A radiation and chemical observation post is set up on the facility's grounds near the control center.",
+    "сума": "How many terms of this progression need to be taken so that their sum equals 253?",
+    "умовний": "Therefore, scholars made a conventional division of history into periods — the periodization of history.",
+    "цвісти": "To bloom like this, to grow like this, to marry thus and walk ahead, without quarreling on the arduous road...",
+    "цунамі": "Tsunamis encompass the entire depth of water masses and move across the ocean.",
+    "шум": "In ancient times, the word 'shum' also referred to the forest.",
+}
+
+
+def _entry_gloss(entry: dict[str, Any]) -> str | None:
+    """Return a verified English gloss for a daily-pool candidate entry.
+
+    If an entry's upstream gloss is a raw monolingual Ukrainian definition from
+    СУМ/ВТС (lacking Latin/English text), it is rejected unless covered by
+    VERIFIED_ENGLISH_GLOSSES (#8258).
+    """
+    lemma = entry.get("lemma")
+    if isinstance(lemma, str) and lemma in VERIFIED_ENGLISH_GLOSSES:
+        return VERIFIED_ENGLISH_GLOSSES[lemma]
+    gloss = entry.get("gloss")
+    if not isinstance(gloss, str) or not gloss.strip():
+        return None
+    if not _LATIN_RE.search(gloss):
+        return None
+    return gloss.strip()
+
 
 def kind_for_source(source: Any) -> str:
     """Return the compact Atlas source-kind bucket for a manifest source."""
@@ -71,9 +151,7 @@ _MAX_ORIGIN_LENGTH = 160
 
 # Matches a parenthetical that contains Latin-script characters (transliteration
 # or English gloss). Tolerates one level of nested parentheses.
-_LATIN_PARENTHETICAL_RE = re.compile(
-    r"\((?:[^()]|\([^()]*\))*[A-Za-z](?:[^()]|\([^()]*\))*\)"
-)
+_LATIN_PARENTHETICAL_RE = re.compile(r"\((?:[^()]|\([^()]*\))*[A-Za-z](?:[^()]|\([^()]*\))*\)")
 # Imperial comparison clauses that Kaikki sometimes appends.
 # Keep the sentence's own period before the clause; only drop the clause itself.
 _COMPARE_CLAUSE_RE = re.compile(r"(?:\s*,\s*)?\b[Cc]ompare\s+[A-Z][a-z]+[^.]*\.?")
@@ -179,13 +257,13 @@ def compute_weight(entry: dict[str, Any]) -> int:
 
 
 def _is_eligible(entry: dict[str, Any]) -> bool:
-    """A daily card needs a real lemma headword and a translation; drop grammar metaterms
-    (via is_lexeme_entry), inflected/normalized duplicates, and avoid-classified forms
-    so cards show only learner-safe headwords rather than case forms, grammar labels, or
-    error-modeling lemmas."""
+    """A daily card needs a real lemma headword and an English translation; drop grammar
+    metaterms (via is_lexeme_entry), inflected/normalized duplicates, and avoid-classified
+    forms so cards show only learner-safe headwords rather than case forms, grammar labels,
+    or error-modeling lemmas."""
     return (
         is_lexeme_entry(entry)
-        and _has_text(entry.get("gloss"))
+        and _entry_gloss(entry) is not None
         and entry.get("primary_source") not in _DERIVED_FORM_SOURCES
         and entry.get("primary_source") != _SURZHYK_SOURCE
         and is_surface_admitted(entry, SURFACE_DAILY)
@@ -259,14 +337,14 @@ def _pool_item(
 ) -> dict[str, Any] | None:
     lemma = entry.get("lemma")
     slug = entry.get("url_slug")
-    if not _has_text(lemma) or not _has_text(slug):
+    gloss = _entry_gloss(entry)
+    if not _has_text(lemma) or not _has_text(slug) or gloss is None:
         return None
 
-    gloss = entry.get("gloss")
     item: dict[str, Any] = {
         "lemma": lemma,
         "slug": slug,
-        "gloss": gloss if isinstance(gloss, str) else None,
+        "gloss": gloss,
         "k": kind_for_source(entry.get("primary_source")),
         "weight": compute_weight(entry),
     }
@@ -280,6 +358,8 @@ def _pool_item(
     if _has_text(pos):
         item["pos"] = pos
     example, example_en = _first_example(entry)
+    if example_en is None and isinstance(lemma, str) and lemma in VERIFIED_EXAMPLE_EN:
+        example_en = VERIFIED_EXAMPLE_EN[lemma]
     inventory_row = (sentence_inventory or {}).get(str(lemma))
     if inventory_row is not None:
         item["example"] = str(inventory_row["sentence"]).strip()
