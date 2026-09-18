@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import glob
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -2155,9 +2156,84 @@ def test_hermetic_isolation_synthetic_run(tmp_path: Path) -> None:
         brown_uk_train=brown_train,
         pejorative_words=pej,
         target_count=100,
+        allow_synthetic_fallback=True,
     )
     assert len(sft_trajectories) == 100
 
     shard_files, manifest = miner.shard_dataset(sft_trajectories, out_dir, num_shards=5)
     assert len(shard_files) == 5
     assert manifest["total_trajectories"] == 100
+
+
+def test_f1_zero_synthetic_duplication_and_no_id_renaming() -> None:
+    """Verify zero duplicate IDs, zero _{seq} renamings, and zero .synth_ fallbacks in shards."""
+    sft_files = sorted(glob.glob(str(RELEASE_DIR / "sft" / "sft_shard_*.jsonl")))
+    assert len(sft_files) == 70
+    seen_ids = set()
+    for sf in sft_files:
+        with open(sf, encoding="utf-8") as f:
+            for line in f:
+                rec = json.loads(line)
+                tid = rec["trajectory_id"]
+                assert tid not in seen_ids, f"Duplicate trajectory ID: {tid}"
+                assert ".synth_" not in tid, f"Synthetic fallback found in production: {tid}"
+                assert not re.search(r"_\d+$", tid), f"Renamed collision ID found: {tid}"
+                seen_ids.add(tid)
+    assert len(seen_ids) == 35000
+
+
+def test_f2_calque_error_head_word_alignment() -> None:
+    """Verify calque trajectories use error_head_word instead of claiming corrected head_word in error sentence."""
+    trajectories = miner.build_valency_trajectories()
+    calque_trajs = [t for t in trajectories if t["category"] == "F/Calque"]
+    assert len(calque_trajs) > 0
+    for t in calque_trajs:
+        step1 = t["reasoning_steps"][0]
+        assert "при слові «вжити»" not in step1
+        assert "при слові «завдати»" not in step1
+        assert "зі словом «прийняти»" in step1 or "зі словом «нанести»" in step1
+
+
+def test_f5_ua_gec_test_split_firewall() -> None:
+    """Verify load_ua_gec_annotations strictly excludes test partition."""
+    import inspect
+    src = inspect.getsource(miner.load_ua_gec_annotations)
+    assert '("train",)' in src
+    assert '"test"' not in src
+
+
+def test_f7_genre_stratification_exact_50_docs() -> None:
+    """Verify held-out negative control eval benchmark covers exact 50 docs across all 9 genres."""
+    eval_file = RELEASE_DIR / "brown_uk_negative_control_eval.jsonl"
+    assert eval_file.is_file()
+    doc_ids = set()
+    genres = set()
+    with eval_file.open(encoding="utf-8") as f:
+        for line in f:
+            rec = json.loads(line)
+            doc_id = rec["document_id"]
+            doc_ids.add(doc_id)
+            genres.add(doc_id.split("_")[0])
+
+    assert len(doc_ids) == 50, f"Expected 50 distinct held-out docs, got {len(doc_ids)}"
+    assert genres == {"A", "B", "C", "D", "E", "F", "G", "H", "I"}, f"Incomplete genres: {genres}"
+
+
+def test_f10_participle_sharding_distribution() -> None:
+    """Verify 45 participle trajectories exist and are distributed across shards."""
+    sft_files = sorted(glob.glob(str(RELEASE_DIR / "sft" / "sft_shard_*.jsonl")))
+    participle_count = 0
+    shards_with_participles = 0
+    for sf in sft_files:
+        shard_has_part = False
+        with open(sf, encoding="utf-8") as f:
+            for line in f:
+                rec = json.loads(line)
+                if rec.get("subtype") == "participle_norm":
+                    participle_count += 1
+                    shard_has_part = True
+        if shard_has_part:
+            shards_with_participles += 1
+
+    assert participle_count == 45, f"Expected 45 participle trajectories, got {participle_count}"
+    assert shards_with_participles >= 20, f"Expected participle distribution across >=20 shards, got {shards_with_participles}"

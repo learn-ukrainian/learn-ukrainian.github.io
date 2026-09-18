@@ -2711,6 +2711,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
     {
         "verb": "завдати",
         "head_word": "завдати",
+        "error_head_word": "нанести",
         "category": "F/Calque",
         "correct_pattern": "завдати (чого? родовий відмінок)",
         "incorrect_pattern": "нанести (що? знахідний відмінок)",
@@ -2726,6 +2727,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
     {
         "verb": "вжити",
         "head_word": "вжити",
+        "error_head_word": "прийняти",
         "category": "F/Calque",
         "correct_pattern": "вжити заходів (родовий відмінок)",
         "incorrect_pattern": "прийняти міри (калька)",
@@ -2768,7 +2770,7 @@ VALENCY_FRAMES: list[dict[str, Any]] = [
             ("Конференція відбулася за активної участі провідних науковців.", "Конференція відбулася при активній участі провідних науковців."),
             ("Договір набуває чинності лише за умови підписання обома сторонами.", "Договір набуває чинності лише при умові підписання обома сторонами."),
             ("Видатний письменник ще за життя здобув світове визнання.", "Видатний письменник ще при житті здобув світове визнання."),
-            ("Ми детально обговоримо цей проєкт під час особистої зустрічі.", "Ми детально обговоримо цей проект при особистій зустрічі."),
+            ("Ми детально обговоримо цей проєкт під час особистої зустрічі.", "Ми детально обговоримо цей проєкт при особистій зустрічі."),
         ],
     },
 ]
@@ -3037,22 +3039,24 @@ def load_brown_uk_sentences(
     # Check for standard Brown-UK genre prefix codes (A-I)
     standard_genres = {"A", "B", "C", "D", "E", "F", "G", "H", "I"}
     if standard_genres & set(by_genre.keys()):
-        # Genre stratification: E has 4 files, allocate 2 for holdout.
-        # Allocate 6 files each for the other 8 genres (A, B, C, D, F, G, H, I): 2 + 8 * 6 = 50.
+        # Genre stratification: allocate 2 for E, 6 each for A, B, C, D, F, G, H, I = 50 docs.
+        # Ensure every selected held-out document contains pristine sentences so all 50 appear in eval.
         for g in sorted(by_genre.keys()):
             files = by_genre[g]
-            n_hold = min(2 if g == "E" else 6, len(files))
-            held_out_docs.extend(files[:n_hold])
-            train_docs.extend(files[n_hold:])
-
-        # If holdout count is less than 50 (e.g. some genre had fewer files), fill up to 50
-        if len(held_out_docs) < 50:
-            for g in sorted(by_genre.keys()):
-                for f in by_genre[g]:
-                    if f not in held_out_docs and len(held_out_docs) < 50:
-                        held_out_docs.append(f)
-                        if f in train_docs:
-                            train_docs.remove(f)
+            target_hold = 2 if g == "E" else 6
+            valid_files = []
+            for f in files:
+                text = f.read_text(encoding="utf-8")
+                sents = split_clean_ukrainian_sentences(text)
+                if any(is_pristine_eval_sentence(s, cur_ves) for s in sents):
+                    valid_files.append(f)
+                if len(valid_files) >= target_hold:
+                    break
+            selected = valid_files[:target_hold]
+            held_out_docs.extend(selected)
+            for f in files:
+                if f not in selected:
+                    train_docs.append(f)
         held_out_docs = held_out_docs[:50]
     else:
         # Fallback for synthetic / test fixture runs
@@ -3142,42 +3146,73 @@ def load_brown_uk_sentences(
             break
 
     # Build Brown-UK training sentences (PRESERVE training + so-so contrastive)
+    # Round-robin across genres so training sentences are evenly distributed across genres A-I
+    train_by_genre: dict[str, list[Path]] = defaultdict(list)
+    for doc in train_docs:
+        train_by_genre[doc.stem.split("_")[0]].append(doc)
+
     train_sentences: list[dict[str, Any]] = []
     good_train_count = 0
-    for doc in train_docs:
-        text = doc.read_text(encoding="utf-8")
-        clean_sents = split_clean_ukrainian_sentences(text)
-        for s in clean_sents:
-            if s not in eval_seen_sentences:
+    genre_good_sents: dict[str, list[tuple[str, str]]] = defaultdict(list)
+    for g, docs in train_by_genre.items():
+        for doc in docs:
+            text = doc.read_text(encoding="utf-8")
+            for s in split_clean_ukrainian_sentences(text):
+                if s not in eval_seen_sentences:
+                    genre_good_sents[g].append((s, doc.stem))
+
+    g_keys = sorted(genre_good_sents.keys())
+    indices = {g: 0 for g in g_keys}
+    while good_train_count < 20000:
+        added_in_round = False
+        for g in g_keys:
+            if indices[g] < len(genre_good_sents[g]):
+                s, doc_id = genre_good_sents[g][indices[g]]
+                indices[g] += 1
                 train_sentences.append({
                     "text": s,
-                    "doc_id": doc.stem,
+                    "doc_id": doc_id,
+                    "genre": g,
                     "source": "brown_uk_good",
                     "is_error": False,
                 })
                 good_train_count += 1
-                if good_train_count >= 16000:
+                added_in_round = True
+                if good_train_count >= 20000:
                     break
-        if good_train_count >= 16000:
+        if not added_in_round:
             break
 
     if so_so_dir.is_dir():
         so_so_files = sorted(so_so_dir.glob("*.txt"))
-        soso_train_count = 0
+        soso_by_genre: dict[str, list[tuple[str, str]]] = defaultdict(list)
         for doc in so_so_files:
+            g = doc.stem.split("_")[0]
             text = doc.read_text(encoding="utf-8")
-            clean_sents = split_clean_ukrainian_sentences(text)
-            for s in clean_sents:
-                train_sentences.append({
-                    "text": s,
-                    "doc_id": doc.stem,
-                    "source": "brown_uk_so_so",
-                    "is_error": True,
-                })
-                soso_train_count += 1
-                if soso_train_count >= 16000:
-                    break
-            if soso_train_count >= 16000:
+            for s in split_clean_ukrainian_sentences(text):
+                soso_by_genre[g].append((s, doc.stem))
+
+        soso_train_count = 0
+        soso_g_keys = sorted(soso_by_genre.keys())
+        soso_indices = {g: 0 for g in soso_g_keys}
+        while soso_train_count < 20000:
+            added_in_round = False
+            for g in soso_g_keys:
+                if soso_indices[g] < len(soso_by_genre[g]):
+                    s, doc_id = soso_by_genre[g][soso_indices[g]]
+                    soso_indices[g] += 1
+                    train_sentences.append({
+                        "text": s,
+                        "doc_id": doc_id,
+                        "genre": g,
+                        "source": "brown_uk_so_so",
+                        "is_error": True,
+                    })
+                    soso_train_count += 1
+                    added_in_round = True
+                    if soso_train_count >= 20000:
+                        break
+            if not added_in_round:
                 break
 
     return eval_records, train_sentences
@@ -3206,7 +3241,7 @@ def load_ua_gec_annotations(ua_gec_dir: Path) -> list[dict[str, Any]]:
                 ann_files.extend(sorted(p.glob("*.ann")))
 
     extracted: list[dict[str, Any]] = []
-    seen_keys: set[tuple[str, str, str]] = set()
+    seen_sentences: set[str] = set()
 
     for af in ann_files:
         doc_id = af.stem.split(".")[0]
@@ -3225,26 +3260,53 @@ def load_ua_gec_annotations(ua_gec_dir: Path) -> list[dict[str, Any]]:
                         restored_sent = restored_sent.replace(k, v)
 
                 matches = list(ANN_RE.finditer(restored_sent))
-                for m in matches:
-                    err, corr, tag = m.group(1).strip(), m.group(2).strip(), m.group(3).strip()
-                    if tag in FULL_TAXONOMY and err and corr:
-                        key = (err, corr, restored_sent[:60])
-                        if key not in seen_keys:
-                            seen_keys.add(key)
-                            src_sent = CLEAN_SRC_RE.sub(r"\1", restored_sent)
-                            tgt_sent = CLEAN_TGT_RE.sub(r"\1", restored_sent)
-                            # Reject any sentence with residual annotation markup
-                            if any(bad in src_sent or bad in tgt_sent for bad in ("error_type=", ":::", "{", "}")):
-                                continue
-                            if 20 <= len(src_sent) <= 300 and 20 <= len(tgt_sent) <= 300:
-                                extracted.append({
-                                    "doc_id": doc_id,
-                                    "tag": tag,
-                                    "error": err,
-                                    "correction": corr,
-                                    "source_sentence": src_sent,
-                                    "target_sentence": tgt_sent,
-                                })
+                valid_matches = [
+                    m for m in matches
+                    if m.group(3).strip() in FULL_TAXONOMY and m.group(1).strip() and m.group(2).strip()
+                ]
+                if not valid_matches:
+                    continue
+
+                src_sent = CLEAN_SRC_RE.sub(r"\1", restored_sent)
+                tgt_sent = CLEAN_TGT_RE.sub(r"\1", restored_sent)
+                # Reject any sentence with residual annotation markup
+                if any(bad in src_sent or bad in tgt_sent for bad in ("error_type=", ":::", "{", "}")):
+                    continue
+                if not (20 <= len(src_sent) <= 300 and 20 <= len(tgt_sent) <= 300):
+                    continue
+                if src_sent in seen_sentences:
+                    continue
+                seen_sentences.add(src_sent)
+
+                # Prioritize Grammar (G/) categories over Fluency (F/) categories
+                def match_priority(m: re.Match[str]) -> tuple[int, str]:
+                    tag = m.group(3).strip()
+                    return (0 if tag.startswith("G/") else 1, tag)
+
+                valid_matches.sort(key=match_priority)
+                primary_match = valid_matches[0]
+                primary_tag = primary_match.group(3).strip()
+                primary_err = primary_match.group(1).strip()
+                primary_corr = primary_match.group(2).strip()
+
+                all_errors = [
+                    {
+                        "error": m.group(1).strip(),
+                        "correction": m.group(2).strip(),
+                        "tag": m.group(3).strip(),
+                    }
+                    for m in valid_matches
+                ]
+
+                extracted.append({
+                    "doc_id": doc_id,
+                    "tag": primary_tag,
+                    "error": primary_err,
+                    "correction": primary_corr,
+                    "all_errors": all_errors,
+                    "source_sentence": src_sent,
+                    "target_sentence": tgt_sent,
+                })
 
     return extracted
 
@@ -3287,15 +3349,16 @@ def build_valency_trajectories(cur_ves: sqlite3.Cursor | None = None) -> list[di
                     f"Для зразкового літературного стилю рекомендовано вжити модель {frame['correct_pattern']}: «{correct_sent}».\n\nПояснення: {frame['explanation']}"
                 )
             elif cat == "F/Calque":
+                error_head = frame.get("error_head_word", head_word)
                 query = f"Відредагуйте речення та поясніть синтаксично-стилістичні норми слововживання: «{incorrect_sent}»"
                 reasoning = [
-                    f"1. Аналіз синтаксичної конструкції: у реченні «{incorrect_sent}» вжито кальковану модель при слові «{head_word}».",
+                    f"1. Аналіз синтаксичної конструкції: у реченні «{incorrect_sent}» вжито кальковану модель зі словом «{error_head}» замість нормативного «{head_word}».",
                     f"2. Стилістично-синтаксична норма: в українській літературній мові рекомендованою є модель {frame['correct_pattern']}.",
                     f"3. Оцінка помилкової моделі: {frame['critique']}",
                     f"4. Нормативна редакція: «{correct_sent}».",
                 ]
                 final_response = (
-                    f"У реченні допущено стилістично небажану синтаксичну кальку. Рекомендований літературний варіант: «{correct_sent}».\n\nПояснення: {frame['explanation']}"
+                    f"У реченні допущено стилістично небажану синтаксичну кальку («{error_head}» замість «{head_word}»). Рекомендований літературний варіант: «{correct_sent}».\n\nПояснення: {frame['explanation']}"
                 )
             else:
                 query = f"Відредагуйте речення та поясніть синтаксичні норми відмінкового керування: «{incorrect_sent}»"
@@ -3347,15 +3410,19 @@ def build_participle_trajectories(cur_ves: sqlite3.Cursor | None = None) -> list
         lemma, forms_cnt, attested = query_vesum_lemma_and_count(cur_ves, lemma_word)
 
         for correct_sent, incorrect_sent in frame["examples"]:
+            err_stem = err_word[:5]
+            actual_err_tokens = [w for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", incorrect_sent, re.IGNORECASE) if err_stem in w.lower()]
+            actual_err = actual_err_tokens[0] if actual_err_tokens else err_word
+
             query = f"Відредагуйте речення, усунувши невластиву українській мові дієприкметникову форму: «{incorrect_sent}»"
             reasoning = [
-                f"1. Виявлення морфологічної невідповідності: у реченні «{incorrect_sent}» використано ненормативний активний дієприкметник теперішнього часу «{err_word}».",
+                f"1. Виявлення морфологічної невідповідності: у реченні «{incorrect_sent}» використано ненормативний активний дієприкметник теперішнього часу «{actual_err}».",
                 f"2. Граматична та стилістична норма: в українській літературній мові активні дієприкметники на -чий (-ачий, -ячий, -учий, -ючий) є штучними та нерекомендованими. {frame['rule']}",
-                f"3. Оцінка помилкової моделі: форма «{err_word}» є калькою; її належить замінити питомим словом «{corr_word}» або відповідною описовою синтаксичною конструкцією.",
+                f"3. Оцінка помилкової моделі: форма «{actual_err}» є ненормативною калькою; її належить замінити питомим словом «{corr_word}» або відповідною описовою синтаксичною конструкцією.",
                 f"4. Нормативна редакція: «{correct_sent}».",
             ]
             final_response = (
-                f"У реченні допущено помилку утворення дієприкметників (категорія G/Participle): вжито «{err_word}» замість нормативного «{corr_word}».\n\n"
+                f"У реченні допущено помилку утворення дієприкметників (категорія G/Participle): вжито «{actual_err}» замість нормативного літературного відповідника.\n\n"
                 f"Виправлене речення: «{correct_sent}».\n\n"
                 f"Обґрунтування: {frame['explanation']}"
             )
@@ -3366,7 +3433,7 @@ def build_participle_trajectories(cur_ves: sqlite3.Cursor | None = None) -> list
                 "category": "G/Participle",
                 "subtype": "participle_norm",
                 "query": query,
-                "target_term": err_word,
+                "target_term": actual_err,
                 "is_erroneous": True,
                 "original_text": incorrect_sent,
                 "corrected_text": correct_sent,
@@ -3396,6 +3463,7 @@ def build_sft_dataset(
     participle_items: list[dict[str, Any]] | None = None,
     cur_ves: sqlite3.Cursor | None = None,
     target_count: int = 35000,
+    allow_synthetic_fallback: bool = False,
 ) -> list[dict[str, Any]]:
     """Assemble and balance 35,000 SFT trajectories with 0% synthetic duplication."""
     if participle_items is None:
@@ -3414,9 +3482,7 @@ def build_sft_dataset(
 
         tid = t["trajectory_id"]
         if tid in seen_trajectory_ids:
-            seq = len(all_trajectories) + 1
-            tid = f"{tid}_{seq}"
-            t["trajectory_id"] = tid
+            return False  # Strictly skip duplicates - never rename or reuse
         seen_trajectory_ids.add(tid)
 
         all_trajectories.append(t)
@@ -3434,7 +3500,7 @@ def build_sft_dataset(
             break
         add_trajectory(dict(p))
 
-    # 3. UA-GEC full taxonomy train annotations (single pass over unique items - NO reps loop)
+    # 3. UA-GEC full taxonomy train annotations (single pass over unique sentences - NO reps loop)
     for item in ua_gec_items:
         if len(all_trajectories) >= target_count:
             break
@@ -3443,24 +3509,48 @@ def build_sft_dataset(
             "title": "Граматична правильність",
             "rule": "Дотримання граматичних норм української мови.",
         })
-        query = f"Проаналізуйте речення, знайдіть помилку та виправте її з граматичним обґрунтуванням: «{item['source_sentence']}»"
-        reasoning = [
-            f"1. Виявлення девіації: у реченні зафіксовано помилку категорії [{tag}] ({cat_meta['title']}): фрагмент «{item['error']}».",
-            f"2. Граматична норма: {cat_meta['rule']}.",
-            f"3. Відновлення нормативної форми: контекстуально правильним варіантом є «{item['correction']}».",
-            f"4. Підсумкове речення: «{item['target_sentence']}».",
-        ]
-        final_response = (
-            f"У реченні допущено помилку ({cat_meta['title']}): «{item['error']}» замість «{item['correction']}».\n\n"
-            f"Виправлене речення: «{item['target_sentence']}».\n\n"
-            f"Обґрунтування: {cat_meta['rule']}"
-        )
+        all_errs = item.get("all_errors", [])
+        if len(all_errs) > 1:
+            query = f"Проаналізуйте речення, знайдіть помилки та виправте їх із нормативним обґрунтуванням: «{item['source_sentence']}»"
+            err_bullets = "\n".join(
+                f"- [{e['tag']}] «{e['error']}» замість «{e['correction']}» ({CATEGORY_EXPLANATIONS.get(e['tag'], {}).get('title', 'Нормативність')})"
+                for e in all_errs
+            )
+            rules_bullets = " ".join(
+                f"[{e['tag']}]: {CATEGORY_EXPLANATIONS.get(e['tag'], {}).get('rule', '')}"
+                for e in all_errs
+            )
+            corrs_list = ", ".join(f"«{e['correction']}»" for e in all_errs)
+            reasoning = [
+                f"1. Виявлення девіацій: у реченні зафіксовано такі невідповідності:\n{err_bullets}",
+                f"2. Граматичні та синтаксичні норми: {rules_bullets}",
+                f"3. Відновлення нормативних форм: контекстуально правильними варіантами є {corrs_list}.",
+                f"4. Підсумкове речення: «{item['target_sentence']}».",
+            ]
+            final_response = (
+                f"У реченні допущено такі невідповідності нормам:\n{err_bullets}\n\n"
+                f"Виправлене речення: «{item['target_sentence']}».\n\n"
+                f"Обґрунтування: {rules_bullets}"
+            )
+        else:
+            query = f"Проаналізуйте речення, знайдіть помилку та виправте її з граматичним обґрунтуванням: «{item['source_sentence']}»"
+            reasoning = [
+                f"1. Виявлення девіації: у реченні зафіксовано помилку категорії [{tag}] ({cat_meta['title']}): фрагмент «{item['error']}».",
+                f"2. Граматична норма: {cat_meta['rule']}.",
+                f"3. Відновлення нормативної форми: контекстуально правильним варіантом є «{item['correction']}».",
+                f"4. Підсумкове речення: «{item['target_sentence']}».",
+            ]
+            final_response = (
+                f"У реченні допущено помилку ({cat_meta['title']}): «{item['error']}» замість «{item['correction']}».\n\n"
+                f"Виправлене речення: «{item['target_sentence']}».\n\n"
+                f"Обґрунтування: {cat_meta['rule']}"
+            )
 
         first_corr_token = re.findall(r"\w+", item["correction"])
         token_to_check = first_corr_token[0] if first_corr_token else item["correction"]
         lemma, forms_cnt, attested = query_vesum_lemma_and_count(cur_ves, token_to_check)
 
-        traj_hash = hashlib.sha256(f"{item['source_sentence']}_{item['error']}_{item['correction']}_{tag}".encode()).hexdigest()[:16]
+        traj_hash = hashlib.sha256(item["source_sentence"].encode()).hexdigest()[:16]
         traj = {
             "schema_version": "v1_grammar_valency_trajectory",
             "trajectory_id": f"traj.gec.{traj_hash}",
@@ -3503,9 +3593,11 @@ def build_sft_dataset(
             if len(all_trajectories) >= target_count or good_count >= needed_good:
                 break
             s = b["text"]
+            doc_id = b.get("doc_id", "")
+            genre = b.get("genre", "")
             query = f"Чи є граматичні, синтаксичні або стилістичні помилки в цьому реченні: «{s}»?"
             reasoning = [
-                f"1. Структурний аналіз: розглядаємо речення з авторитетного корпусу Brown-UK: «{s}».",
+                f"1. Структурний аналіз: розглядаємо речення з авторитетного корпусу Brown-UK (розділ {genre}, документ {doc_id}): «{s}».",
                 "2. Перевірка зв'язку слів: узгодження підмета і присудка, керування дієслів і прийменників бездоганні.",
                 "3. Відсутність кальок: відсутні лексичні росіянізми чи невластиві синтаксичні моделі.",
                 "4. Висновок: речення граматично і стилістично довершене і не потребує правок.",
@@ -3517,7 +3609,7 @@ def build_sft_dataset(
             token_to_check = first_word[0] if first_word else s[:10]
             lemma, forms_cnt, attested = query_vesum_lemma_and_count(cur_ves, token_to_check)
 
-            traj_hash = hashlib.sha256(s.encode()).hexdigest()[:16]
+            traj_hash = hashlib.sha256(f"{doc_id}_{s}".encode()).hexdigest()[:16]
             traj = {
                 "schema_version": "v1_grammar_valency_trajectory",
                 "trajectory_id": f"traj.brown.preserve.{traj_hash}",
@@ -3528,6 +3620,11 @@ def build_sft_dataset(
                 "is_erroneous": False,
                 "original_text": s,
                 "corrected_text": s,
+                "source_metadata": {
+                    "corpus": "brown_uk_good",
+                    "doc_id": doc_id,
+                    "genre": genre,
+                },
                 "morphemic_breakdown": {
                     "syntactic_rule": "Нормативний синтаксис сучасної літературної мови",
                     "grammatical_mechanism": "Збереження оригінального авторського синтаксису без виправлень",
@@ -3552,9 +3649,11 @@ def build_sft_dataset(
             if len(all_trajectories) >= target_count:
                 break
             s = b["text"]
+            doc_id = b.get("doc_id", "")
+            genre = b.get("genre", "")
             query = f"Проаналізуйте стилістичну та синтаксичну структуру цього речення: «{s}»."
             reasoning = [
-                f"1. Аналіз узусу: аналізуємо речення з живого мовного вжитку (розряд Brown-UK so-so): «{s}».",
+                f"1. Аналіз узусу: аналізуємо речення з живого мовного вжитку (розряд Brown-UK so-so, розділ {genre}, документ {doc_id}): «{s}».",
                 "2. Стилістичні особливості: речення демонструє розмовний чи публіцистичний регістр із припустимою авторською варіативністю.",
                 "3. Збереження змісту: речення є змістовно зрозумілим і не потребує нормативного втручання поза межами суворого академічного стилю.",
                 "4. Підсумок: підтверджуємо прийнятність речення у відповідному функціональному стилі.",
@@ -3566,7 +3665,7 @@ def build_sft_dataset(
             token_to_check = first_word[0] if first_word else s[:10]
             lemma, forms_cnt, attested = query_vesum_lemma_and_count(cur_ves, token_to_check)
 
-            traj_hash = hashlib.sha256(s.encode()).hexdigest()[:16]
+            traj_hash = hashlib.sha256(f"{doc_id}_{s}".encode()).hexdigest()[:16]
             traj = {
                 "schema_version": "v1_grammar_valency_trajectory",
                 "trajectory_id": f"traj.brown.contrast.{traj_hash}",
@@ -3577,6 +3676,11 @@ def build_sft_dataset(
                 "is_erroneous": False,
                 "original_text": s,
                 "corrected_text": s,
+                "source_metadata": {
+                    "corpus": "brown_uk_so_so",
+                    "doc_id": doc_id,
+                    "genre": genre,
+                },
                 "morphemic_breakdown": {
                     "syntactic_rule": "Стилістичний аналіз живого мовлення",
                     "grammatical_mechanism": "Контрастивний аналіз мовної варіативності",
@@ -3601,9 +3705,11 @@ def build_sft_dataset(
                 if len(all_trajectories) >= target_count:
                     break
                 s = b["text"]
+                doc_id = b.get("doc_id", "")
+                genre = b.get("genre", "")
                 query = f"Чи є граматичні, синтаксичні або стилістичні помилки в цьому реченні: «{s}»?"
                 reasoning = [
-                    f"1. Структурний аналіз: розглядаємо речення з авторитетного корпусу Brown-UK: «{s}».",
+                    f"1. Структурний аналіз: розглядаємо речення з авторитетного корпусу Brown-UK (розділ {genre}, документ {doc_id}): «{s}».",
                     "2. Перевірка зв'язку слів: узгодження підмета і присудка, керування дієслів і прийменників бездоганні.",
                     "3. Відсутність кальок: відсутні лексичні росіянізми чи невластиві синтаксичні моделі.",
                     "4. Висновок: речення граматично і стилістично довершене і не потребує правок.",
@@ -3615,7 +3721,7 @@ def build_sft_dataset(
                 token_to_check = first_word[0] if first_word else s[:10]
                 lemma, forms_cnt, attested = query_vesum_lemma_and_count(cur_ves, token_to_check)
 
-                traj_hash = hashlib.sha256(s.encode()).hexdigest()[:16]
+                traj_hash = hashlib.sha256(f"{doc_id}_{s}".encode()).hexdigest()[:16]
                 traj = {
                     "schema_version": "v1_grammar_valency_trajectory",
                     "trajectory_id": f"traj.brown.preserve.{traj_hash}",
@@ -3626,6 +3732,11 @@ def build_sft_dataset(
                     "is_erroneous": False,
                     "original_text": s,
                     "corrected_text": s,
+                    "source_metadata": {
+                        "corpus": "brown_uk_good",
+                        "doc_id": doc_id,
+                        "genre": genre,
+                    },
                     "morphemic_breakdown": {
                         "syntactic_rule": "Нормативний синтаксис сучасної літературної мови",
                         "grammatical_mechanism": "Збереження оригінального авторського синтаксису без виправлень",
@@ -3644,8 +3755,13 @@ def build_sft_dataset(
                 if add_trajectory(traj):
                     good_count += 1
 
-    # Fallback for synthetic / tiny fixtures if target_count was requested larger than available items
+    # Fallback strictly gated behind allow_synthetic_fallback
     if len(all_trajectories) < target_count:
+        if not allow_synthetic_fallback:
+            raise ValueError(
+                f"Insufficient unique trajectories to satisfy {target_count} target: "
+                f"assembled {len(all_trajectories)} unique items without synthetic duplication."
+            )
         idx = 0
         pool = list(all_trajectories)
         while len(all_trajectories) < target_count and pool:
@@ -3746,6 +3862,7 @@ def main() -> int:
     parser.add_argument("--target-count", type=int, default=35000)
     parser.add_argument("--eval-count", type=int, default=500)
     parser.add_argument("--shards-count", type=int, default=70)
+    parser.add_argument("--git-commit", type=str, default=None)
 
     args = parser.parse_args()
     output_dir: Path = args.output_dir
@@ -3764,15 +3881,17 @@ def main() -> int:
     print(f"Connected to VESUM database: {vesum_path}")
 
     try:
-        # 1. Load tone dictionary for Gate 6
+        # 1. Load tone dict for Gate 6 tone calibration
         print("\n[1/5] Loading tone-dict-uk for Gate 6 tone calibration...")
         pejorative_words = load_tone_dict(args.tone_dict_dir)
         print(f"Loaded {len(pejorative_words)} pejorative tone check words.")
 
-        # 2. Ingest Brown-UK corpus & partition held-out evaluation
+        # 2. Ingest Brown-UK corpus & partition evaluation set (Gate 3 floor)
         print("\n[2/5] Loading Brown-UK corpus and isolating held-out evaluation documents...")
         eval_records, brown_uk_train = load_brown_uk_sentences(
-            args.brown_uk_dir, eval_count=args.eval_count, cur_ves=cur_ves
+            args.brown_uk_dir,
+            eval_count=args.eval_count,
+            cur_ves=cur_ves,
         )
         print(f"Generated {len(eval_records)} held-out evaluation records (Gate 3 no-harm floor).")
         print(f"Loaded {len(brown_uk_train)} Brown-UK training candidate sentences.")
@@ -3781,6 +3900,7 @@ def main() -> int:
         with eval_file.open("w", encoding="utf-8") as f:
             for rec in eval_records:
                 f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+
         eval_sha256 = sha256_file(eval_file)
         (output_dir / "brown_uk_negative_control_eval.sha256").write_text(
             f"{eval_sha256}  brown_uk_negative_control_eval.jsonl\n", encoding="utf-8"
@@ -3830,7 +3950,7 @@ def main() -> int:
 
         eval_doc_stems = {rec["document_id"] for rec in eval_records}
         train_good_doc_stems = {b["doc_id"] for b in brown_uk_train if not b.get("is_error", False)}
-        document_partitioning_enforced = (len(eval_doc_stems & train_good_doc_stems) == 0 and len(eval_doc_stems) >= 40)
+        document_partitioning_enforced = (len(eval_doc_stems & train_good_doc_stems) == 0 and len(eval_doc_stems) == 50)
 
         cats_present = set(cat_dist.keys())
         full_20_category_taxonomy_ingested = (set(FULL_TAXONOMY) <= cats_present)
@@ -3861,12 +3981,14 @@ def main() -> int:
         for inv_k, inv_v in invariants_verified.items():
             assert inv_v is True, f"Invariant verification failed for {inv_k}: {inv_v}"
 
+        git_commit = args.git_commit if args.git_commit else get_git_commit()
+
         receipt = {
             "schema_version": "v1_grammar_valency_release_receipt",
             "issue": 8143,
             "parent_epic": 6321,
             "created_at": datetime.now(UTC).isoformat(timespec="seconds").replace("+00:00", "Z"),
-            "git_commit": get_git_commit(),
+            "git_commit": git_commit,
             "evaluation_benchmark": {
                 "file_path": str(eval_file.relative_to(PROJECT_ROOT)),
                 "sha256": eval_sha256,
