@@ -3,65 +3,75 @@
  *
  * Implements Ukrainian Pravopys 2019 (§§ 42–44) and Academic Grammar rules for:
  *   1. Prepositions (Прийменники):
- *      - Hyphenated with з-/із- (§ 42, п. 1: з-під, з-за, із-за, з-поміж, з-понад)
- *      - Solid compounds (§ 42, п. 2: посеред, задля, заради, внаслідок, напередодні)
- *      - Multi-word locutions (§ 42, п. 3: згідно з, відповідно до, під час)
+ *      - Solid compound prepositions (§ 42, п. 1: посеред, задля, заради, внаслідок, напередодні)
+ *      - Compound prepositions with з-/із- via hyphen (§ 42, п. 2: з-під, з-за, із-за, з-поміж, з-понад)
+ *      - Multi-word prepositional locutions (§ 42, п. 3: згідно з, відповідно до, під час, у зв'язку з)
  *      - Anti-calque & government norms (по vs о/з/за/на, завдяки vs через, протягом vs на протязі)
  *   2. Conjunctions (Сполучники):
- *      - Homophone disambiguation (§ 43: проте/зате vs про те/за те, щоб vs що б,
- *        якби vs як би, якщо vs як що, також/теж vs так же/те ж)
+ *      - Homophonous sequence disambiguation (§ 43, п. 1 та примітка: проте/зате vs про те/за те,
+ *        щоб vs що б, якби vs як би, якщо vs як що)
+ *      - Joining conjunctions (Правопис 2019, § 43, п. 1; Академічна граматика; СУМ-20: також/теж vs так же/те ж [§ 44, п. 1.13])
+ *      - Coordinating vs subordinating conjunction function
  *   3. Particles (Частки):
- *      - Orthography of не and ні (§ 44, п. 1: разом vs окремо for nouns, adjectives,
- *        verbs, gerunds, participles with or without dependents, contrast with 'а')
- *      - Enclitics and prefixes (§ 44, п. 2: -бо, -но, -то, -от, -таки vs таки пішов;
- *        будь-, казна-, хтозна- vs будь у кого)
+ *      - Orthography of не and ні (§ 44, п. 1 окремо: з дієсловами, дієприслівниками, дієприкметниками
+ *        з залежними словами, заперечення/протиставлення з «а»; § 44, п. 2 разом: якщо без «не» не вживається,
+ *        якщо утворює єдине поняття, з одиничними дієприкметниками-означеннями)
+ *      - Hyphenated and standalone enclitic particles (§ 44, п. 3.1: -бо, -но, -то, -от, -таки vs таки дійшов;
+ *        § 44, п. 3.2: будь-, казна-, хтозна- vs будь у кого)
  */
 
-export type FunctionWordCategoryKey =
-  | 'preposition_hyphenated'
-  | 'preposition_compound_solid'
-  | 'preposition_locution_separate'
-  | 'preposition_government_po'
-  | 'preposition_zavdyaky_vs_cherez'
-  | 'preposition_protyahom_vs_na_protyazi'
-  | 'conjunction_prote_zate'
-  | 'conjunction_shchob'
-  | 'conjunction_yakby'
-  | 'conjunction_yakshcho'
-  | 'conjunction_takozh_tezh'
-  | 'particle_ne_solid'
-  | 'particle_ne_contrast_separate'
-  | 'particle_ne_verb_separate'
-  | 'particle_ne_participle'
-  | 'particle_hyphenated_enclitics'
-  | 'particle_prefix_split';
+export const FUNCTION_WORD_CATEGORY_KEYS = [
+  'preposition_hyphenated',
+  'preposition_compound_solid',
+  'preposition_locution_separate',
+  'preposition_government_po',
+  'preposition_zavdyaky_vs_cherez',
+  'preposition_protyahom_vs_na_protyazi',
+  'conjunction_prote_zate',
+  'conjunction_shchob',
+  'conjunction_yakby',
+  'conjunction_yakshcho',
+  'conjunction_takozh_tezh',
+  'particle_ne_solid',
+  'particle_ne_contrast_separate',
+  'particle_ne_verb_separate',
+  'particle_ne_participle',
+  'particle_hyphenated_enclitics',
+  'particle_prefix_split',
+] as const;
 
-export type FunctionWordInterferenceKey =
-  | 'missing_hyphen_preposition'
-  | 'false_separate_preposition'
-  | 'false_solid_preposition'
-  | 'false_hyphen_preposition'
-  | 'false_solid_locution'
-  | 'false_hyphen_locution'
-  | 'russian_calque_po'
-  | 'russian_calque_general'
-  | 'lexical_semantic_confusion'
-  | 'mismatched_causal_consequence'
-  | 'air_draft_calque_for_duration'
-  | 'homophone_conjunction_for_pronoun'
-  | 'homophone_pronoun_for_conjunction'
-  | 'homophone_adverb_for_conjunction'
-  | 'false_hyphen_conjunction'
-  | 'false_solid_ne_contrast'
-  | 'false_separate_ne_noun_adj'
-  | 'false_solid_ne_verb'
-  | 'false_solid_ne_participle_with_dependents'
-  | 'false_separate_ne_participle_isolated'
-  | 'missing_hyphen_particle'
-  | 'false_hyphen_particle'
-  | 'false_hyphen_prepositional_split'
-  | 'false_solid_particle'
-  | 'false_hyphen_inverted_taky';
+export type FunctionWordCategoryKey = (typeof FUNCTION_WORD_CATEGORY_KEYS)[number];
+
+export const FUNCTION_WORD_INTERFERENCE_KEYS = [
+  'missing_hyphen_preposition',
+  'false_separate_preposition',
+  'false_solid_preposition',
+  'false_hyphen_preposition',
+  'false_solid_locution',
+  'false_hyphen_locution',
+  'russian_calque_po',
+  'russian_calque_general',
+  'lexical_semantic_confusion',
+  'mismatched_causal_consequence',
+  'air_draft_calque_for_duration',
+  'homophone_conjunction_for_pronoun',
+  'homophone_pronoun_for_conjunction',
+  'homophone_adverb_for_conjunction',
+  'false_hyphen_conjunction',
+  'false_solid_ne_contrast',
+  'false_separate_ne_verb',
+  'false_separate_ne_noun_adj',
+  'false_solid_ne_verb',
+  'false_solid_ne_participle_with_dependents',
+  'false_separate_ne_participle_isolated',
+  'missing_hyphen_particle',
+  'false_hyphen_particle',
+  'false_hyphen_prepositional_split',
+  'false_solid_particle',
+  'false_hyphen_inverted_taky',
+] as const;
+
+export type FunctionWordInterferenceKey = (typeof FUNCTION_WORD_INTERFERENCE_KEYS)[number];
 
 export interface FunctionWordDistractor {
   form: string;
@@ -246,14 +256,14 @@ export function resolveConjunctionHomophoneRule(
     if (isConjunction) {
       return {
         choice: isTezh ? 'теж' : 'також',
-        ruleUa: 'Приєднувальні сполучники «також», «теж» пишуться разом (Академічна граматика; СУМ-20; Правопис 2019, § 44, п. 1).',
-        ruleEn: "Joining conjunctions 'також', 'теж' are written solid (Academic Grammar; SUM-20; Pravopys 2019, § 44, item 1).",
+        ruleUa: 'Приєднувальні сполучники «також», «теж» пишуться разом (Правопис 2019, § 43, п. 1; Академічна граматика; СУМ-20).',
+        ruleEn: "Joining conjunctions 'також', 'теж' are written solid (Pravopys 2019, § 43, item 1; Academic Grammar; SUM-20).",
       };
     }
     return {
       choice: isTezh ? 'те ж' : 'так же',
-      ruleUa: 'Займенник «те» / прислівник «так» із часткою «ж / же» пишеться окремо.',
-      ruleEn: "Pronoun 'те' or adverb 'так' with particle 'ж / же' is written separately.",
+      ruleUa: 'Займенник «те» / прислівник «так» із часткою «ж / же» пишеться окремо (Правопис 2019, § 44, п. 1.13; СУМ-20).',
+      ruleEn: "Pronoun 'те' or adverb 'так' with particle 'ж / же' is written separately (Pravopys 2019, § 44, item 1.13; SUM-20).",
     };
   }
   throw new Error(`Unknown conjunction homophone pair: ${pair}`);

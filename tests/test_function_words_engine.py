@@ -10,7 +10,7 @@ Tests:
      - щоб vs що б.
      - якби vs як би.
      - якщо vs як що.
-     - також/теж vs так же/те ж (Академічна граматика; СУМ-20; § 44, п. 1).
+     - також/теж vs так же/те ж (Правопис 2019, § 43, п. 1 vs § 44, п. 1.13; СУМ-20).
   3. Particle orthography (§ 44, п. 1 та 2):
      - не with nouns/adjectives: new concept (§ 44, п. 2.7) vs explicit contrast with 'а' (§ 44, п. 1.4).
      - не with verbs/gerunds: separate (§ 44, п. 1.1 та 1.2) unless bound root (§ 44, п. 2.5).

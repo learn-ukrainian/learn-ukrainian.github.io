@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
+  FUNCTION_WORD_CATEGORY_KEYS,
+  FUNCTION_WORD_INTERFERENCE_KEYS,
   functionWordFeedbackFor,
   type PracticeFunctionWordCard,
   resolveCausalPrepositionRule,
@@ -196,53 +198,8 @@ describe('function-words', () => {
     expect(raw.total_cards).toBeGreaterThanOrEqual(40);
     expect(raw.cards.length).toBe(raw.total_cards);
 
-    const validCategories = new Set([
-      'preposition_hyphenated',
-      'preposition_compound_solid',
-      'preposition_locution_separate',
-      'preposition_government_po',
-      'preposition_zavdyaky_vs_cherez',
-      'preposition_protyahom_vs_na_protyazi',
-      'conjunction_prote_zate',
-      'conjunction_shchob',
-      'conjunction_yakby',
-      'conjunction_yakshcho',
-      'conjunction_takozh_tezh',
-      'particle_ne_solid',
-      'particle_ne_contrast_separate',
-      'particle_ne_verb_separate',
-      'particle_ne_participle',
-      'particle_hyphenated_enclitics',
-      'particle_prefix_split',
-    ]);
-
-    const validInterferenceTypes = new Set([
-      'missing_hyphen_preposition',
-      'false_separate_preposition',
-      'false_solid_preposition',
-      'false_hyphen_preposition',
-      'false_solid_locution',
-      'false_hyphen_locution',
-      'russian_calque_po',
-      'russian_calque_general',
-      'lexical_semantic_confusion',
-      'mismatched_causal_consequence',
-      'air_draft_calque_for_duration',
-      'homophone_conjunction_for_pronoun',
-      'homophone_pronoun_for_conjunction',
-      'homophone_adverb_for_conjunction',
-      'false_hyphen_conjunction',
-      'false_solid_ne_contrast',
-      'false_separate_ne_noun_adj',
-      'false_solid_ne_verb',
-      'false_solid_ne_participle_with_dependents',
-      'false_separate_ne_participle_isolated',
-      'missing_hyphen_particle',
-      'false_hyphen_particle',
-      'false_hyphen_prepositional_split',
-      'false_solid_particle',
-      'false_hyphen_inverted_taky',
-    ]);
+    const validCategories = new Set<string>(FUNCTION_WORD_CATEGORY_KEYS);
+    const validInterferenceTypes = new Set<string>(FUNCTION_WORD_INTERFERENCE_KEYS);
 
     for (const card of raw.cards) {
       expect(validCategories.has(card.category)).toBe(true);

@@ -86,6 +86,7 @@ class FunctionWordInterferenceType(StrEnum):
     HOMOPHONE_ADVERB_FOR_CONJUNCTION = "homophone_adverb_for_conjunction"
     FALSE_HYPHEN_CONJUNCTION = "false_hyphen_conjunction"
     FALSE_SOLID_NE_CONTRAST = "false_solid_ne_contrast"
+    FALSE_SEPARATE_NE_VERB = "false_separate_ne_verb"
     FALSE_SEPARATE_NE_NOUN_ADJ = "false_separate_ne_noun_adj"
     FALSE_SOLID_NE_VERB = "false_solid_ne_verb"
     FALSE_SOLID_NE_PARTICIPLE_WITH_DEPENDENTS = "false_solid_ne_participle_with_dependents"
@@ -348,8 +349,8 @@ CANONICAL_PREPOSITION_GOVERNMENT_ITEMS = [
         "after": "сьомій годині вечора.",
         "correct": "о",
         "distractors": [
-            ("по", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "Для позначення точного часу в українській мові вживаємо прийменник «о / об» («о сьомій»), а не «по сьомій».", "To indicate exact time in Ukrainian, use preposition 'о / об' ('о сьомій'), not 'по'."),
-            ("в", FunctionWordInterferenceType.RUSSIAN_CALQUE_GENERAL, "З числівниками на позначення годин нормативним є прийменник «о/об»: «о сьомій годині».", "With hours, use 'о/об': 'о сьомій годині'."),
+            ("по", FunctionWordInterferenceType.LEXICAL_SEMANTIC_CONFUSION, "Прийменник «по» з місцевим відмінком означає «після» («по сьомій» = після сьомої години), а не точний час настання події («о сьомій»).", "Preposition 'по' + locative means 'after' ('по сьомій' = after seven), not exact time ('о сьомій')."),
+            ("в", FunctionWordInterferenceType.RUSSIAN_CALQUE_GENERAL, "Вживання прийменника «в/у» на позначення точного часу години без прикметника («в сім годин») є російською калькою. В українській мові: «о сьомій годині».", "Using 'в/у' for clock time ('в сім годин') is a Russian calque; Ukrainian uses 'о / об' ('о сьомій годині')."),
             ("біля", FunctionWordInterferenceType.LEXICAL_SEMANTIC_CONFUSION, "Прийменник «біля» вказує на просторову близькість (біля столу), а для приблизного часу вживають «близько» (близько сьомої); для точного ж часу потрібен прийменник «о» (о сьомій).", "Preposition 'біля' indicates spatial proximity, while approximate time uses 'близько'; exact time requires 'о / об'."),
         ],
         "citation": "Антоненко-Давидович «Як ми говоримо»; СУМ-20",
@@ -376,15 +377,15 @@ CANONICAL_PREPOSITION_GOVERNMENT_ITEMS = [
         "id": "prep_gov_po_zasib_3",
         "category": FunctionWordCategory.PREPOSITION_GOVERNMENT_PO,
         "cefr": "A2",
-        "before": "Він подав заяву про звільнення",
-        "after": "власним бажанням.",
-        "correct": "за",
+        "before": "Він вирішив звільнитися",
+        "after": "і знайти нову роботу.",
+        "correct": "за власним бажанням",
         "distractors": [
-            ("по", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "В українській мові вживаємо «за власним бажанням», уникаючи російського калькованого «по власному бажанню».", "Standard Ukrainian uses 'за власним бажанням', avoiding calque 'по'."),
-            ("з", FunctionWordInterferenceType.RUSSIAN_CALQUE_GENERAL, "З іменником «бажання» в цій синтаксичній конструкції нормативним є прийменник «за» («за власним бажанням»).", "Standard preposition in this construction is 'за'."),
-            ("через", FunctionWordInterferenceType.LEXICAL_SEMANTIC_CONFUSION, "Прийменник «через» позначає зовнішню несприятливу причину, тоді як волевиявлення особи виражається конструкцією «за власним бажанням».", "'Через' denotes adverse external causes; use 'за власним бажанням'."),
+            ("по власному бажанню", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "В українській мові усталеною формою є «за власним бажанням». Конструкція «по власному бажанню» — калька з російської («по собственному желанию»).", "Standard Ukrainian uses 'за власним бажанням'; 'по власному бажанню' is a Russian calque."),
+            ("з власного бажання", FunctionWordInterferenceType.LEXICAL_SEMANTIC_CONFUSION, "Прийменник «з» тут невживаний у стандартній літературній та діловій мові; нормативний вислів — «за власним бажанням».", "Preposition 'з' is non-standard here; correct phrase is 'за власним бажанням'."),
+            ("по власному бажанні", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "Калька з російської мови та неправильне прийменникове керування. Норма: «за власним бажанням».", "Russian calque and erroneous prepositional government; standard is 'за власним бажанням'."),
         ],
-        "citation": "Антоненко-Давидович «Як ми говоримо»; Культура слова",
+        "citation": "Антоненко-Давидович «Як ми говоримо»; СУМ-20",
         "rule_ua": "У значенні підстави або відповідності вживаємо прийменник «за» («за власним бажанням», «за наказом», «за правилами»), уникаючи російського калькованого «по».",
         "rule_en": "Ukrainian uses preposition 'за' for motivation or conformity ('за власним бажанням', 'за наказом'), not Russian calque 'по'.",
     },
@@ -516,7 +517,7 @@ CANONICAL_CONJUNCTION_ITEMS = [
             ("аби", FunctionWordInterferenceType.HOMOPHONE_CONJUNCTION_FOR_PRONOUN, "«Аби» має значення «лише б» або «щоб», що спотворює зміст цього речення.", "'Аби' alters the intended meaning of manner."),
         ],
         "citation": "Правопис 2019, § 43, п. 1 та примітка",
-        "rule_ua": "Прислівник «як» із часткою «би» пишеться окремо, якщо частку можна переставити («Як точніше сформулювати б цю думку»).",
+        "rule_ua": "Прислівник «як» із часткою «би» пишеться окремо, якщо частку можна переставити («Як точніше б сформулювати цю думку»).",
         "rule_en": "Adverb 'як' with particle 'би' is written separately when expressing manner.",
     },
     {
@@ -531,7 +532,7 @@ CANONICAL_CONJUNCTION_ITEMS = [
             ("тоже", FunctionWordInterferenceType.RUSSIAN_CALQUE_GENERAL, "Слово «тоже» — грубий русизм. В українській мові слід уживати «також» або «теж».", "'Тоже' is a Russianism; use Ukrainian 'також' or 'теж'."),
             ("так-же", FunctionWordInterferenceType.FALSE_HYPHEN_CONJUNCTION, "В українській мові немає написання «так-же».", "No such hyphenated form exists in Ukrainian."),
         ],
-        "citation": "Академічна граматика; СУМ-20; Правопис 2019, § 44, п. 1",
+        "citation": "Правопис 2019, § 43, п. 1; Академічна граматика; СУМ-20",
         "rule_ua": "Сполучники «також», «теж» пишуться разом. Слід уникати русизму «тоже». Сполука «так же» пишеться окремо, коли «так» — прислівник.",
         "rule_en": "Conjunctions 'також', 'теж' are written solid. Avoid Russianism 'тоже'.",
     },
@@ -611,7 +612,7 @@ CANONICAL_CONJUNCTION_ITEMS = [
             ("те-ж", FunctionWordInterferenceType.FALSE_HYPHEN_CONJUNCTION, "Сполучник «теж» пишеться разом, без дефіса.", "Conjunction 'теж' is written solid."),
             ("тоже", FunctionWordInterferenceType.RUSSIAN_CALQUE_GENERAL, "Слово «тоже» — русизм; нормативні форми — «теж» або «також».", "'Тоже' is a Russianism; use Ukrainian 'теж' or 'також'."),
         ],
-        "citation": "Академічна граматика; СУМ-20; Правопис 2019, § 44, п. 1",
+        "citation": "Правопис 2019, § 43, п. 1; Академічна граматика; СУМ-20",
         "rule_ua": "Сполучник «теж» пишеться разом.",
         "rule_en": "Conjunction 'теж' is written solid.",
     },
@@ -627,7 +628,7 @@ CANONICAL_CONJUNCTION_ITEMS = [
             ("те-ж", FunctionWordInterferenceType.FALSE_HYPHEN_CONJUNCTION, "Займенник із часткою пишеться окремо без дефіса.", "Pronoun with particle is written separately."),
             ("тоже", FunctionWordInterferenceType.RUSSIAN_CALQUE_GENERAL, "Русизм; вживаємо «те ж саме».", "Russianism; use 'те ж саме'."),
         ],
-        "citation": "Академічна граматика; СУМ-20; Правопис 2019, § 44, п. 1",
+        "citation": "Правопис 2019, § 44, п. 1.13; СУМ-20",
         "rule_ua": "Вказівний займенник «те» з часткою «ж» пишеться окремо.",
         "rule_en": "Demonstrative pronoun 'те' with particle 'ж' is written separately.",
     },
@@ -690,7 +691,7 @@ CANONICAL_PARTICLE_ITEMS = [
         "after": "будь-які прояви несправедливості та зради.",
         "correct": "ненавидіти",
         "distractors": [
-            ("не навидіти", FunctionWordInterferenceType.FALSE_SEPARATE_NE_NOUN_ADJ, "Дієслово «ненавидіти» без «не» в сучасній українській мові не вживається, тому пишеться разом.", "The verb 'ненавидіти' cannot stand without 'не', so it is written solid."),
+            ("не навидіти", FunctionWordInterferenceType.FALSE_SEPARATE_NE_VERB, "Дієслово «ненавидіти» без «не» в сучасній українській мові не вживається, тому пишеться разом.", "The verb 'ненавидіти' cannot stand without 'не', so it is written solid."),
             ("не-навидіти", FunctionWordInterferenceType.FALSE_HYPHEN_PARTICLE, "Префікс «не-» у корені дієслова пишеться разом без дефіса.", "Written solid without a hyphen."),
             ("нінавидіти", FunctionWordInterferenceType.LEXICAL_SEMANTIC_CONFUSION, "Слово починається з префікса «не-», а не «ні-».", "Prefix is 'не-', not 'ні-'."),
         ],
@@ -963,24 +964,24 @@ def resolve_conjunction_homophone(pair: str, is_conjunction: bool) -> tuple[str,
         if is_conjunction:
             return (
                 "також",
-                "Приєднувальний сполучник «також» пишеться разом (Академічна граматика; СУМ-20; Правопис 2019, § 44, п. 1).",
+                "Приєднувальний сполучник «також» пишеться разом (Правопис 2019, § 43, п. 1; Академічна граматика; СУМ-20).",
                 "Joining conjunction 'також' is written solid.",
             )
         return (
             "так же",
-            "Прислівник «так» із підсилювальною часткою «же» пишеться окремо.",
+            "Прислівник «так» із підсилювальною часткою «же» пишеться окремо (Правопис 2019, § 44, п. 1.13; СУМ-20).",
             "Adverb 'так' with particle 'же' is written separately.",
         )
     elif p in ("tezh", "теж"):
         if is_conjunction:
             return (
                 "теж",
-                "Приєднувальний сполучник «теж» пишеться разом (Академічна граматика; СУМ-20; Правопис 2019, § 44, п. 1).",
+                "Приєднувальний сполучник «теж» пишеться разом (Правопис 2019, § 43, п. 1; Академічна граматика; СУМ-20).",
                 "Joining conjunction 'теж' is written solid.",
             )
         return (
             "те ж",
-            "Вказівний займенник «те» з часткою «ж» пишеться окремо.",
+            "Вказівний займенник «те» з часткою «ж» пишеться окремо (Правопис 2019, § 44, п. 1.13; СУМ-20).",
             "Demonstrative pronoun 'те' with particle 'ж' is written separately.",
         )
     raise ValueError(f"Unknown conjunction homophone pair: {pair}")

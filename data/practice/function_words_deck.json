@@ -491,15 +491,15 @@
       "distractors": [
         {
           "form": "по",
-          "interferenceType": "russian_calque_po",
-          "explanationUa": "Для позначення точного часу в українській мові вживаємо прийменник «о / об» («о сьомій»), а не «по сьомій».",
-          "explanationEn": "To indicate exact time in Ukrainian, use preposition 'о / об' ('о сьомій'), not 'по'."
+          "interferenceType": "lexical_semantic_confusion",
+          "explanationUa": "Прийменник «по» з місцевим відмінком означає «після» («по сьомій» = після сьомої години), а не точний час настання події («о сьомій»).",
+          "explanationEn": "Preposition 'по' + locative means 'after' ('по сьомій' = after seven), not exact time ('о сьомій')."
         },
         {
           "form": "в",
           "interferenceType": "russian_calque_general",
-          "explanationUa": "З числівниками на позначення годин нормативним є прийменник «о/об»: «о сьомій годині».",
-          "explanationEn": "With hours, use 'о/об': 'о сьомій годині'."
+          "explanationUa": "Вживання прийменника «в/у» на позначення точного часу години без прикметника («в сім годин») є російською калькою. В українській мові: «о сьомій годині».",
+          "explanationEn": "Using 'в/у' for clock time ('в сім годин') is a Russian calque; Ukrainian uses 'о / об' ('о сьомій годині')."
         },
         {
           "form": "біля",
@@ -559,38 +559,38 @@
       "id": "prep_gov_po_zasib_3",
       "category": "preposition_government_po",
       "cefrLevel": "A2",
-      "prompt": "Він подав заяву про звільнення _______ власним бажанням.",
-      "fullSentence": "Він подав заяву про звільнення за власним бажанням.",
-      "sentenceBefore": "Він подав заяву про звільнення",
-      "sentenceAfter": "власним бажанням.",
-      "correctAnswer": "за",
+      "prompt": "Він вирішив звільнитися _______ і знайти нову роботу.",
+      "fullSentence": "Він вирішив звільнитися за власним бажанням і знайти нову роботу.",
+      "sentenceBefore": "Він вирішив звільнитися",
+      "sentenceAfter": "і знайти нову роботу.",
+      "correctAnswer": "за власним бажанням",
       "options": [
-        "через",
-        "по",
-        "за",
-        "з"
+        "по власному бажанні",
+        "по власному бажанню",
+        "за власним бажанням",
+        "з власного бажання"
       ],
       "distractors": [
         {
-          "form": "по",
+          "form": "по власному бажанню",
           "interferenceType": "russian_calque_po",
-          "explanationUa": "В українській мові вживаємо «за власним бажанням», уникаючи російського калькованого «по власному бажанню».",
-          "explanationEn": "Standard Ukrainian uses 'за власним бажанням', avoiding calque 'по'."
+          "explanationUa": "В українській мові усталеною формою є «за власним бажанням». Конструкція «по власному бажанню» — калька з російської («по собственному желанию»).",
+          "explanationEn": "Standard Ukrainian uses 'за власним бажанням'; 'по власному бажанню' is a Russian calque."
         },
         {
-          "form": "з",
-          "interferenceType": "russian_calque_general",
-          "explanationUa": "З іменником «бажання» в цій синтаксичній конструкції нормативним є прийменник «за» («за власним бажанням»).",
-          "explanationEn": "Standard preposition in this construction is 'за'."
-        },
-        {
-          "form": "через",
+          "form": "з власного бажання",
           "interferenceType": "lexical_semantic_confusion",
-          "explanationUa": "Прийменник «через» позначає зовнішню несприятливу причину, тоді як волевиявлення особи виражається конструкцією «за власним бажанням».",
-          "explanationEn": "'Через' denotes adverse external causes; use 'за власним бажанням'."
+          "explanationUa": "Прийменник «з» тут невживаний у стандартній літературній та діловій мові; нормативний вислів — «за власним бажанням».",
+          "explanationEn": "Preposition 'з' is non-standard here; correct phrase is 'за власним бажанням'."
+        },
+        {
+          "form": "по власному бажанні",
+          "interferenceType": "russian_calque_po",
+          "explanationUa": "Калька з російської мови та неправильне прийменникове керування. Норма: «за власним бажанням».",
+          "explanationEn": "Russian calque and erroneous prepositional government; standard is 'за власним бажанням'."
         }
       ],
-      "ruleCitation": "Антоненко-Давидович «Як ми говоримо»; Культура слова",
+      "ruleCitation": "Антоненко-Давидович «Як ми говоримо»; СУМ-20",
       "ruleSummary": {
         "uk": "У значенні підстави або відповідності вживаємо прийменник «за» («за власним бажанням», «за наказом», «за правилами»), уникаючи російського калькованого «по».",
         "en": "Ukrainian uses preposition 'за' for motivation or conformity ('за власним бажанням', 'за наказом'), not Russian calque 'по'."
@@ -920,7 +920,7 @@
       ],
       "ruleCitation": "Правопис 2019, § 43, п. 1 та примітка",
       "ruleSummary": {
-        "uk": "Прислівник «як» із часткою «би» пишеться окремо, якщо частку можна переставити («Як точніше сформулювати б цю думку»).",
+        "uk": "Прислівник «як» із часткою «би» пишеться окремо, якщо частку можна переставити («Як точніше б сформулювати цю думку»).",
         "en": "Adverb 'як' with particle 'би' is written separately when expressing manner."
       }
     },
@@ -959,7 +959,7 @@
           "explanationEn": "No such hyphenated form exists in Ukrainian."
         }
       ],
-      "ruleCitation": "Академічна граматика; СУМ-20; Правопис 2019, § 44, п. 1",
+      "ruleCitation": "Правопис 2019, § 43, п. 1; Академічна граматика; СУМ-20",
       "ruleSummary": {
         "uk": "Сполучники «також», «теж» пишуться разом. Слід уникати русизму «тоже». Сполука «так же» пишеться окремо, коли «так» — прислівник.",
         "en": "Conjunctions 'також', 'теж' are written solid. Avoid Russianism 'тоже'."
@@ -1164,7 +1164,7 @@
           "explanationEn": "'Тоже' is a Russianism; use Ukrainian 'теж' or 'також'."
         }
       ],
-      "ruleCitation": "Академічна граматика; СУМ-20; Правопис 2019, § 44, п. 1",
+      "ruleCitation": "Правопис 2019, § 43, п. 1; Академічна граматика; СУМ-20",
       "ruleSummary": {
         "uk": "Сполучник «теж» пишеться разом.",
         "en": "Conjunction 'теж' is written solid."
@@ -1205,7 +1205,7 @@
           "explanationEn": "Russianism; use 'те ж саме'."
         }
       ],
-      "ruleCitation": "Академічна граматика; СУМ-20; Правопис 2019, § 44, п. 1",
+      "ruleCitation": "Правопис 2019, § 44, п. 1.13; СУМ-20",
       "ruleSummary": {
         "uk": "Вказівний займенник «те» з часткою «ж» пишеться окремо.",
         "en": "Demonstrative pronoun 'те' with particle 'ж' is written separately."
@@ -1352,7 +1352,7 @@
       "distractors": [
         {
           "form": "не навидіти",
-          "interferenceType": "false_separate_ne_noun_adj",
+          "interferenceType": "false_separate_ne_verb",
           "explanationUa": "Дієслово «ненавидіти» без «не» в сучасній українській мові не вживається, тому пишеться разом.",
           "explanationEn": "The verb 'ненавидіти' cannot stand without 'не', so it is written solid."
         },
