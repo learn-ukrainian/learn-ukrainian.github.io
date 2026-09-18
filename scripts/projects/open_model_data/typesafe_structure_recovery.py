@@ -123,6 +123,12 @@ class TypeSafeStructureRecovery:
         },
     }
 
+    KNOWN_COMPOUND_PREFIXES: ClassVar[set[str]] = {
+        "будь", "небудь", "хто", "де", "по", "темно", "світло", "яскраво",
+        "жовто", "синьо", "військово", "науково", "фізико", "хіміко",
+        "історико", "суспільно", "соціально", "пів", "макро", "мікро",
+    }
+
     def __init__(
         self,
         api_key: str | None = None,
@@ -132,15 +138,26 @@ class TypeSafeStructureRecovery:
         self.api_key = api_key if api_key is not None else _resolve_typesafe_key()
         self.base_url = base_url.rstrip("/")
         self.batch_size = max(1, batch_size)
+        self.api_calls: int = 0
 
     def recover(self, raw_text: str) -> RecoveryReport:
-        """Execute two-pass structure recovery over raw text."""
-        raw_lines = [line.strip() for line in raw_text.splitlines() if line.strip()]
-        if not raw_lines:
+        """Execute two-pass structure recovery over raw text, preserving blank-line paragraph gaps."""
+        paragraph_chunks = [p.strip() for p in re.split(r"\n\s*\n+", raw_text) if p.strip()]
+        if not paragraph_chunks:
             return RecoveryReport(0, 0, 0, 1.0, "", [])
 
-        # Pass 1: Stitch lines into blocks and dehyphenate
-        blocks, dehyphen_count = self._pass1_stitch(raw_lines)
+        all_raw_lines: list[str] = []
+        blocks: list[RecoveredBlock] = []
+        total_dehyphen_count = 0
+
+        for chunk in paragraph_chunks:
+            chunk_lines = [line.strip() for line in chunk.splitlines() if line.strip()]
+            if not chunk_lines:
+                continue
+            all_raw_lines.extend(chunk_lines)
+            chunk_blocks, d_count = self._pass1_stitch(chunk_lines, start_block_id=len(blocks) + 1)
+            blocks.extend(chunk_blocks)
+            total_dehyphen_count += d_count
 
         # Pass 2: Classify blocks
         self._pass2_classify(blocks)
@@ -148,22 +165,22 @@ class TypeSafeStructureRecovery:
         # Pass 3: Render verbatim markdown
         rendered = self._render_markdown(blocks)
 
-        # Calculate character preservation (excluding whitespace and hyphen removed by de-hyphenation)
-        char_ratio = self._calculate_preservation(raw_text, blocks, dehyphen_count)
+        # Calculate character preservation (excluding whitespace and justified de-hyphenation)
+        char_ratio = self._calculate_preservation(raw_text, blocks, total_dehyphen_count)
 
         return RecoveryReport(
-            original_line_count=len(raw_lines),
+            original_line_count=len(all_raw_lines),
             recovered_block_count=len(blocks),
-            dehyphenated_count=dehyphen_count,
+            dehyphenated_count=total_dehyphen_count,
             character_preservation_ratio=char_ratio,
             rendered_markdown=rendered,
             blocks=blocks,
         )
 
-    def _pass1_stitch(self, lines: list[str]) -> tuple[list[RecoveredBlock], int]:
-        """Stitch adjacent lines into coherent blocks using continuation probabilities."""
+    def _pass1_stitch(self, lines: list[str], start_block_id: int = 1) -> tuple[list[RecoveredBlock], int]:
+        """Stitch adjacent lines within a paragraph chunk into coherent blocks using continuation probabilities."""
         if len(lines) == 1:
-            return [RecoveredBlock(block_id=1, raw_lines=[lines[0]], merged_text=lines[0])], 0
+            return [RecoveredBlock(block_id=start_block_id, raw_lines=[lines[0]], merged_text=lines[0])], 0
 
         # Pre-evaluate continuations for all adjacent pairs
         continuations = self._evaluate_all_continuations(lines)
@@ -182,7 +199,7 @@ class TypeSafeStructureRecovery:
                 dehyphen_count += d_count
                 blocks.append(
                     RecoveredBlock(
-                        block_id=len(blocks) + 1,
+                        block_id=start_block_id + len(blocks),
                         raw_lines=list(current_block_lines),
                         merged_text=merged,
                     )
@@ -194,7 +211,7 @@ class TypeSafeStructureRecovery:
             dehyphen_count += d_count
             blocks.append(
                 RecoveredBlock(
-                    block_id=len(blocks) + 1,
+                    block_id=start_block_id + len(blocks),
                     raw_lines=list(current_block_lines),
                     merged_text=merged,
                 )
@@ -273,6 +290,7 @@ class TypeSafeStructureRecovery:
                 q_ans = answers.get(f"p{idx}_cont", {})
                 noul_val = float(q_ans.get("noul", 0.0))
                 out.append(noul_val >= 0.75)
+            self.api_calls += 1
             return out
 
     def _call_pass1_single_api(self, line_a: str, line_b: str) -> float:
@@ -295,13 +313,14 @@ class TypeSafeStructureRecovery:
         )
         with urllib.request.urlopen(req, timeout=10) as resp:
             data = json.loads(resp.read().decode("utf-8"))
+            self.api_calls += 1
             return float(data["answers"]["is_continuation"]["noul"])
 
     @staticmethod
     def _heuristic_continuation(line_a: str, line_b: str) -> bool:
         """Deterministic linguistic heuristic for sentence continuation."""
-        # Broken hyphen: word- at end of line followed by letters on next line
-        if re.search(r"[\wА-Яа-яІіЇїЄєҐґ]-\s*$", line_a) and re.match(r"^[а-яіїєґ]", line_b):
+        # Broken hyphen: word- or word\u00ad at end of line followed by letters on next line
+        if re.search(r"[\wА-Яа-яІіЇїЄєҐґ][-\u00ad]\s*$", line_a) and re.match(r"^[а-яіїєґ]", line_b):
             return True
 
         # Headings and exercise markers are block boundaries
@@ -325,9 +344,9 @@ class TypeSafeStructureRecovery:
         # If line A does not end in punctuation and line B starts with uppercase but is normal text length
         return bool(not re.search(r"[.?!:;,]\s*$", line_a) and len(line_a.split()) > 4)
 
-    @staticmethod
-    def _merge_lines(lines: list[str]) -> tuple[str, int]:
-        """Merge a sequence of lines into a block with de-hyphenation."""
+    @classmethod
+    def _merge_lines(cls, lines: list[str]) -> tuple[str, int]:
+        """Merge a sequence of lines into a block with verified de-hyphenation."""
         if not lines:
             return "", 0
 
@@ -335,12 +354,31 @@ class TypeSafeStructureRecovery:
         dehyphens = 0
 
         for next_line in lines[1:]:
-            match = re.search(r"([\wА-Яа-яІіЇїЄєҐґ]+)-\s*$", merged)
-            if match and re.match(r"^[а-яіїєґ]", next_line):
-                merged = merged[: match.end() - 1] + next_line
+            # 1. Unicode soft hyphen \u00ad: always a line-wrap formatting artifact
+            match_soft = re.search(r"([\wА-Яа-яІіЇїЄєҐґ]+)\u00ad\s*$", merged)
+            if match_soft and re.match(r"^[а-яіїєґ]", next_line):
+                merged = merged[: match_soft.end() - 1] + next_line
                 dehyphens += 1
-            else:
-                merged = f"{merged} {next_line}"
+                continue
+
+            # 2. ASCII hyphen - at end of line: check if wrapping vs lexical compound
+            match_ascii = re.search(r"([а-яіїєґА-ЯІЇЄҐ]+)-\s*$", merged)
+            match_next = re.match(r"^([а-яіїєґ]+)", next_line)
+            if match_ascii and match_next:
+                part1 = match_ascii.group(1)
+                part2 = match_next.group(1)
+                is_compound = (
+                    len(part1) < 2
+                    or len(part2) < 2
+                    or part1.lower() in cls.KNOWN_COMPOUND_PREFIXES
+                )
+                if not is_compound:
+                    # De-hyphenate line-wrapped word
+                    merged = merged[: match_ascii.end() - 1] + next_line
+                    dehyphens += 1
+                    continue
+
+            merged = f"{merged} {next_line}"
 
         return merged, dehyphens
 
@@ -425,6 +463,7 @@ class TypeSafeStructureRecovery:
                 h_level = max(1, min(3, round(raw_score) + 1))
                 conf = float(ans_type.get("confidence", 1.0))
                 out.append((b_type, h_level, conf))
+            self.api_calls += 1
             return out
 
     def _call_pass2_single_api(self, text: str) -> tuple[BlockType, int, float]:
@@ -452,6 +491,7 @@ class TypeSafeStructureRecovery:
             raw_score = float(data["answers"]["heading_level"]["score"])
             h_level = max(1, min(3, round(raw_score) + 1))
             conf = float(data["answers"]["block_type"].get("confidence", 1.0))
+            self.api_calls += 1
             return b_type, h_level, conf
 
     @staticmethod
@@ -505,13 +545,32 @@ class TypeSafeStructureRecovery:
 
     @staticmethod
     def _calculate_preservation(raw_text: str, blocks: list[RecoveredBlock], dehyphen_count: int) -> float:
-        """Verify 100% preservation of substantive characters."""
-        raw_chars = re.sub(r"\s+", "", raw_text)
-        merged_chars = "".join(re.sub(r"\s+", "", b.merged_text) for b in blocks)
-        # Account for intentional dehyphenation removals
-        if len(raw_chars) == len(merged_chars) + dehyphen_count:
-            return 1.0
-        return len(merged_chars) / max(1, len(raw_chars))
+        """Verify verbatim character preservation with sequence matching."""
+        import difflib
+
+        raw_chars = [c for c in raw_text if not c.isspace()]
+        rec_chars = [c for c in "".join(b.merged_text for b in blocks) if not c.isspace()]
+
+        if not raw_chars:
+            return 1.0 if not rec_chars else 0.0
+
+        matcher = difflib.SequenceMatcher(None, raw_chars, rec_chars)
+        matched_count = 0
+        deleted_hyphens = 0
+
+        for tag, i1, i2, _j1, _j2 in matcher.get_opcodes():
+            if tag == "equal":
+                matched_count += (i2 - i1)
+            elif tag == "delete":
+                # Deletions from raw_chars are only excused if they are hyphens removed by dehyphenation
+                deleted_chars = raw_chars[i1:i2]
+                for c in deleted_chars:
+                    if c in {"-", "\u00ad"} and deleted_hyphens < dehyphen_count:
+                        deleted_hyphens += 1
+                        matched_count += 1
+
+        total_expected = len(raw_chars)
+        return min(1.0, matched_count / max(1, total_expected))
 
 
 def recover_source_text(raw_text: str, engine: TypeSafeStructureRecovery | None = None) -> RecoveryReport:
