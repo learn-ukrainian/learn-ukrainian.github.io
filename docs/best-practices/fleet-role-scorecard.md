@@ -45,7 +45,7 @@
 | **Astra** (`gpt-6-astra`) | Live OpenAI advisor / hard implement / CF peer | OpenAI-family CF limits if author is OpenAI | OpenAI / Codex | Ceiling advisor (with Fable); replaces Sol as designated OpenAI advisor seat |
 | **Sol** (historical) | Prior OpenAI ceiling advisor evidence | Superseded as designated advisor by Astra | OpenAI / Codex | Historical only — do not route item-12 GO here |
 | **Opus 4.8** | Durable long agentic sessions; orchestration; architecture | Costly as bulk worker | Anthropic | Prefer orchestrator |
-| **Terra** | Balanced implementer/orchestrator; strong everyday agentic | Not Sol/Fable ceiling | OpenAI / Codex | Orchestrator + worker |
+| **Terra** | Balanced implementer/orchestrator; strong everyday agentic | Not Astra/Fable ceiling | OpenAI / Codex | Orchestrator + worker |
 | **Luna** | Fast bounded implementation, recon, and mechanical checks | Never sole architecture/security/language/release authority | OpenAI / Codex | Bounded worker / recon |
 | **Claude Haiku** | Fast cheap recon/triage on Anthropic lane; good for log/search skim | Never sole architecture/security/language/release authority | Anthropic | Recon (with Luna / 3.5 Flash) |
 | **Sonnet 5** | Near-flagship coding at better cost; daily driver agentic | Escalate systemic ambiguity | Anthropic | Default worker |
@@ -109,7 +109,7 @@ Never use a fixed unordered list that can pick the author’s family.
 | Event | Action |
 |---|---|
 | New major model release | Mark affected rows **provisional**; run ≥3 relevant cells |
-| New xAI ceiling model | Bakeoff vs Sol/Fable before **advisor** seat |
+| New xAI ceiling model | Bakeoff vs Astra/Fable before **advisor** seat |
 | 2 consecutive fails on validated cell | Demote to provisional; consider deprecated for that task family |
 | Validated win on hard cell | May promote within role (not auto-orchestrator) |
 
@@ -124,7 +124,7 @@ Luna / Claude Haiku / Gemini 3.5 Flash recon
   → Sonnet 5 / Grok 4.5 / Terra implement (worktree)
     → escalate immediately if security / high blast radius / unclear invariants / multi-architecture
     → otherwise escalate after evidence-backed root-cause attempts fail
-      → Sol or Fable (xhigh) advisory or hard implement
+      → Astra or Fable (xhigh) advisory or hard implement
         → orchestrator integrates
         → CF review: other family + task-qualified
 ```
@@ -136,7 +136,7 @@ Luna / Claude Haiku / Gemini 3.5 Flash recon
 | Entitlement | Treat as | Do not treat as |
 |---|---|---|
 | SuperGrok Heavy | Verified **capacity** for longer/more parallel Grok workers | Automatic intelligence rank or orchestrator promotion |
-| Future xAI Fable/Sol-class | **Candidate** ceiling advisor + hard coder after bakeoff | Auto king of fleet / sole orchestrator |
+| Future xAI Fable/Astra-class | **Candidate** ceiling advisor + hard coder after bakeoff | Auto king of fleet / sole orchestrator |
 
 Re-verify capacity and routing when the subscription plan or API routing changes.
 
@@ -154,12 +154,12 @@ Re-verify capacity and routing when the subscription plan or API routing changes
 
 ```text
 Routine code/fix          → Sonnet 5 | Terra | Grok 4.5
-Hard code (ceiling)         → Sol | Fable 5 (after mid-tier wall or known ceiling)
+Hard code (ceiling)         → Astra | Fable 5 (after mid-tier wall or known ceiling)
 Orchestrate stream          → Opus 4.8 | Terra xhigh  (exactly one)
-UI / visual product         → K3 explore → Sonnet/Terra/Grok implement → Sol if systems-hard
+UI / visual product         → K3 explore → Sonnet/Terra/Grok implement → Astra if systems-hard
 UA language                 → Gemini 3.1 Pro (AGY) + VESUM/sources
 Security/bug CF             → author-family-conditional (Grok/GLM/DeepSeek/Opus/…)
-Architecture decision       → Sol/Fable advisory → orchestrator decides
+Architecture decision       → Astra/Fable advisory → orchestrator decides
 Recon                       → Luna | Claude Haiku | Gemini 3.5 Flash
 ```
 
