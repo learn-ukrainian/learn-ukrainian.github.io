@@ -756,6 +756,17 @@ def test_source_boundaries_and_work_exclusions() -> None:
     assert "litopysni_zamitky_1783_1811" in EXCLUDED_MODERN_WORKS
 
     if DEFAULT_SOURCES_DB.is_file():
+        with sqlite3.connect(f"file:{DEFAULT_SOURCES_DB}?mode=ro", uri=True) as _conn:
+            _tables = {
+                row[0]
+                for row in _conn.execute(
+                    "SELECT name FROM sqlite_master WHERE type = 'table'"
+                )
+            }
+        if "literary_texts" not in _tables:
+            pytest.skip(
+                "data/sources.db present but literary_texts not provisioned (CI stub)"
+            )
         chunks = load_middle_ukrainian_chunks(DEFAULT_SOURCES_DB)
 
         v_chunks = [c for c in chunks if c.work_id == "ivan_velychkovskyy_tvory"]
