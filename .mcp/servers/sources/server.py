@@ -1833,12 +1833,28 @@ async def handle_collection_stats(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text=json.dumps(stats, indent=2))]
 
 
+_FILE_HASH_CACHE: dict[tuple[str, int, int], str] = {}
+
+
 def _sha256_of_file(path: Path) -> str:
+    resolved = path.resolve()
+    try:
+        st = resolved.stat()
+        cache_key = (str(resolved), st.st_mtime_ns, st.st_size)
+        cached = _FILE_HASH_CACHE.get(cache_key)
+        if cached is not None:
+            return cached
+    except OSError:
+        cache_key = None
+
     digest = hashlib.sha256()
-    with open(path, "rb") as handle:
+    with open(resolved, "rb") as handle:
         for block in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(block)
-    return digest.hexdigest()
+    result = digest.hexdigest()
+    if cache_key is not None:
+        _FILE_HASH_CACHE[cache_key] = result
+    return result
 
 
 async def handle_mcp_server_identity(args: dict) -> list[TextContent]:

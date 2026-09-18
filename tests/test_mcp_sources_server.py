@@ -983,3 +983,33 @@ class TestCollectionStatsHandler:
             assert data["sum20_articles"] == 40
             assert data["slovnyk_me_entries"] == 50
             assert data["wikipedia"] == 60
+
+
+class TestFileHashCaching:
+    """Test _sha256_of_file caching and mtime-based invalidation (#8221)."""
+
+    def test_sha256_of_file_caches_across_invocations(self, server_module, tmp_path):
+        test_file = tmp_path / "test_cache.bin"
+        test_file.write_bytes(b"content-version-1")
+
+        h1 = server_module._sha256_of_file(test_file)
+        assert len(h1) == 64
+
+        # Calling second time should return from cache
+        with patch("builtins.open", side_effect=AssertionError("Should not re-read from disk")):
+            h2 = server_module._sha256_of_file(test_file)
+            assert h2 == h1
+
+    def test_sha256_of_file_invalidates_on_mtime_change(self, server_module, tmp_path):
+        import time
+
+        test_file = tmp_path / "test_mtime.bin"
+        test_file.write_bytes(b"content-version-1")
+        h1 = server_module._sha256_of_file(test_file)
+
+        # Update content and ensure mtime updates
+        time.sleep(0.01)
+        test_file.write_bytes(b"content-version-2-modified")
+        h2 = server_module._sha256_of_file(test_file)
+
+        assert h2 != h1
