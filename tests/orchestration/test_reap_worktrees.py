@@ -2562,3 +2562,73 @@ def test_missing_requested_repository_both_repos_aggregate_json_sanitizes_stderr
     assert str(tmp_path) not in captured.out
     assert "repository not found: learn-ukrainian-infra-private" in captured.err
     assert str(tmp_path) not in captured.err
+
+
+def test_review_pr_number_reads_the_encoded_pull_request() -> None:
+    assert rw.review_pr_number("codex/review-8154-astra") == 8154
+    assert rw.review_pr_number("refs/heads/cursor/review-12-r2") == 12
+    assert rw.review_pr_number("cursor/cu-activity-qs-gates") is None
+    assert rw.review_pr_number(None) is None
+
+
+def test_select_orphaned_sandboxes_keeps_live_and_young_reviews(tmp_path: Path) -> None:
+    worktrees = tmp_path / ".worktrees" / "dispatch" / "codex" / "review-8154-astra"
+    worktrees.mkdir(parents=True)
+    old = rw.SandboxProcess(
+        pid=11, ppid=1, comm="codex-linux-sandbox", cwd=worktrees, age_s=8000
+    )
+    young = rw.SandboxProcess(
+        pid=12, ppid=1, comm="codex-linux-sandbox", cwd=worktrees, age_s=30
+    )
+    owned = rw.SandboxProcess(
+        pid=13, ppid=50, comm="codex-linux-sandbox", cwd=worktrees, age_s=90000
+    )
+    other = rw.SandboxProcess(pid=14, ppid=1, comm="node", cwd=worktrees, age_s=90000)
+    outside = rw.SandboxProcess(
+        pid=15, ppid=1, comm="codex-linux-sandbox", cwd=tmp_path, age_s=90000
+    )
+    assert rw.select_orphaned_sandboxes(
+        [old, young, owned, other, outside], repo_root=tmp_path
+    ) == [11]
+
+
+def test_merged_review_worktree_on_main_is_reapable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    info = rw.WorktreeInfo(
+        path=repo, branch="codex/review-8154-astra", head="abc", detached=False
+    )
+    monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: True)
+    monkeypatch.setattr(rw, "_origin_branch_present", lambda _path, _branch: True)
+    monkeypatch.setattr(rw, "_pr_matches_worktree_head", lambda _info, _pr: False)
+    reason = rw._qualifying_reason(
+        repo_root=repo,
+        info=info,
+        pr_state=rw.PullRequestState(number=8154, state="MERGED", head_sha="other"),
+        build_age_hours=6.0,
+        now=time.time(),
+        merged_pr_only=True,
+    )
+    assert reason == "PR #8154 MERGED; review HEAD is on origin/main"
+
+
+def test_open_review_worktree_is_not_reapable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    info = rw.WorktreeInfo(
+        path=repo, branch="codex/review-8154-astra", head="abc", detached=False
+    )
+    monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: True)
+    monkeypatch.setattr(rw, "_origin_branch_present", lambda _path, _branch: True)
+    monkeypatch.setattr(rw, "_pr_matches_worktree_head", lambda _info, _pr: False)
+    reason = rw._qualifying_reason(
+        repo_root=repo,
+        info=info,
+        pr_state=rw.PullRequestState(number=8154, state="OPEN", head_sha="other"),
+        build_age_hours=6.0,
+        now=time.time(),
+        merged_pr_only=True,
+    )
+    assert reason is None
