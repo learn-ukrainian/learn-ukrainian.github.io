@@ -997,7 +997,10 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     for title, body in base_secs.items():
         mapped = section_to_lesson.get(title) or section_to_lesson.get(strip_acute(title))
         if mapped is None:
-            block(f"baseline section {title!r} has no lesson mapping (checker config)")
+            # A line-break baseline section is dropped on purpose, so lessons.yaml
+            # need not map it; any other unmapped section is still a config error.
+            if not (alphabet and mentions_line_breaks(title)):
+                block(f"baseline section {title!r} has no lesson mapping (checker config)")
             continue
         # Alphabet modules must not teach line breaks, so original paragraphs that do
         # are intentionally not carried forward (#8237).

@@ -29,6 +29,7 @@ from scripts.audit.llm_qg_store import (
 )
 from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
 from scripts.build import linear_pipeline, run_archive
+from scripts.build.alphabet_modules import is_alphabet_slug
 from scripts.build.cf_preflight import CfPreflightError, require_cf_preflight
 from scripts.build.phases.implementation_map import (
     read_implementation_map,
@@ -2044,6 +2045,35 @@ def _upgrade_reuse_lesson_map(slug: str, derived: dict) -> dict:
         raise linear_pipeline.LinearPipelineError("--reuse-lesson-map closes_module must name the last lesson")
     return declared
 
+
+def _clear_previous_edition(module_dir: Path) -> list[Path]:
+    """Delete the previous edition's per-lesson writer artifacts so an upgrade starts clean (#8237).
+
+    The writer replaces a lesson only when that lesson finishes, so a stopped
+    run over the published files is a mix of old and new lessons. Removes
+    ``lesson-*/`` writer artifacts and any ``writer_prompt.md`` not bound to
+    that lesson's writer receipt. ``lessons.yaml``, the bound raw response and
+    its receipt stay: a resumed lesson is re-parsed from them. Runs only inside
+    a build worktree (``_run`` refuses the primary checkout) and never touches
+    ``a1-v1/`` or site pages.
+    """
+    removed: list[Path] = []
+    for lesson_dir in sorted(module_dir.glob("lesson-*")):
+        if not lesson_dir.is_dir():
+            continue
+        stale = [lesson_dir / name for name in linear_pipeline.WRITER_ARTIFACTS]
+        prompt_path = lesson_dir / "writer_prompt.md"
+        if prompt_path.is_file():
+            receipt = _read_json(lesson_dir / "upgrade_writer.json") or {}
+            if receipt.get("prompt_sha256") != hashlib.sha256(prompt_path.read_bytes()).hexdigest():
+                stale.append(prompt_path)
+        for path in stale:
+            if path.is_file():
+                path.unlink()
+                removed.append(path)
+    return removed
+
+
 UPGRADE_INDEPENDENT_REVIEWER = "codex-tools"
 UPGRADE_INDEPENDENT_EFFORT = "medium"
 
@@ -2156,6 +2186,9 @@ def _run_upgrade(args: argparse.Namespace) -> int:
             tracker.emit("module_done", dry_run=True, writer_invoked=False, **fields)
             return 0
         _enforce_cf_preflight(args, module_dir)
+        if is_alphabet_slug(args.slug):
+            removed = _clear_previous_edition(module_dir)
+            tracker.emit("upgrade_cleared_previous_edition", removed=len(removed), **fields)
         writer = _normalize_writer(args.writer)
         if writer == "claude-tools":
             writer = "agy-tools"

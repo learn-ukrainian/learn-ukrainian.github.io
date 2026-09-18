@@ -904,3 +904,25 @@ def test_alphabet_full_gate_ignores_heading_and_rejects_dropped_provenance(gold)
     (source / "activities.yaml").write_text(yaml.safe_dump(base, allow_unicode=True))
     report = gates.run_lesson_gates(module, source, plan)
     assert any("provenance points at dropped" in d for d in report["blocking"])
+
+
+def test_alphabet_gate_does_not_require_a_dropped_line_break_baseline_section(gold):
+    module, source, plan = _alphabet_gold(gold, "special-signs")
+    path = source / "module.md"
+    path.write_text(path.read_text() + "\n\n## Перенос і письмо\n\n"
+                    "You will sometimes see words split across a line in printed Ukrainian today.\n")
+    report = gates.run_lesson_gates(module, source, plan)
+    assert not any("has no lesson mapping" in d for d in report["blocking"])
+
+    # Any other unmapped baseline section is still a checker-config error.
+    path.write_text(path.read_text() + "\n\n## Зайвий розділ\n\nЦе ще один абзац без жодного уроку.\n")
+    report = gates.run_lesson_gates(module, source, plan)
+    assert any("baseline section 'Зайвий розділ' has no lesson mapping" in d for d in report["blocking"])
+
+
+def test_non_alphabet_gate_still_requires_a_line_break_baseline_section(gold):
+    module, source, plan = gold
+    path = source / "module.md"
+    path.write_text(path.read_text() + "\n\n## Перенос і письмо\n\nПеренос слів у цьому модулі.\n")
+    report = gates.run_lesson_gates(module, source, plan)
+    assert any("baseline section 'Перенос і письмо' has no lesson mapping" in d for d in report["blocking"])

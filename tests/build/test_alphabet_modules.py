@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import re
 
+import pytest
 import yaml
 
 from scripts.build import alphabet_modules as am
@@ -64,6 +65,7 @@ def test_compress_wiki_packet_does_not_query_on_line_break_points():
 def test_upgrade_prompt_drops_line_breaks_from_plan_and_original_artifacts(tmp_path):
     (tmp_path / "module.md").write_text(
         "## Знаки\n\nЦе абзац про апостроф, який ми залишаємо без змін у цьому уроці добре.\n\n"
+        "## Перенос і письмо\n\n"
         "Перенос слів: Мар'-яна і дере-в'яний ділимо так у цьому абзаці сьогодні.\n",
         encoding="utf-8",
     )
@@ -75,10 +77,16 @@ def test_upgrade_prompt_drops_line_breaks_from_plan_and_original_artifacts(tmp_p
         "workbook": [],
     }, allow_unicode=True), encoding="utf-8")
     (tmp_path / "vocabulary.yaml").write_text("[]", encoding="utf-8")
-    (tmp_path / "resources.yaml").write_text("[]", encoding="utf-8")
+    (tmp_path / "resources.yaml").write_text(yaml.safe_dump([
+        {"title": "Вашуленко, 3 клас, p. 90", "role": "textbook",
+         "notes": "Line-break rule: apostrophe is not separated from the previous letter."},
+    ], allow_unicode=True), encoding="utf-8")
 
     prompt = linear_pipeline.render_upgrade_prompt(PLAN, tmp_path, {"lessons": []}, lesson=1)
 
+    assert "## Перенос і письмо" not in prompt  # the heading is an order too
+    assert "Вашуленко, 3 клас, p. 90" in prompt  # the source stays, its line-break note goes
+    assert "Line-break rule" not in prompt
     assert "a-fill" in prompt
     assert "a-div" not in prompt
     assert "Мар'-яна і дере-в'яний ділимо" not in prompt  # original paragraph dropped
@@ -107,3 +115,94 @@ def test_writer_prompts_forbid_line_breaks_and_error_token():
         assert re.search(r"NOT\s+contain\s+the\s+(?:spotted\s+)?`error`", text), name  # rule 3
         assert "кінь" in text
         assert '`""`' in text  # empty-string fill-in contract
+
+
+@pytest.mark.parametrize("text", [
+    "You will sometimes see words split across a line in printed Ukrainian.",
+    "words split across\na line",
+    "Word Hyphenation Rules",
+    "do not hyphenate",
+    "Пра́вила перено́су слів",  # published titles carry stress marks
+    "Safe line-break model",
+    "Do not leave one single letter alone on a line.",
+])
+def test_matcher_catches_the_paraphrases_the_archive_uses(text):
+    assert am.mentions_line_breaks(text)
+
+
+@pytest.mark.parametrize("text", [
+    "ма-ма, та-то, мо-ло-ко",
+    "Поділи слово на склади: кни-га.",
+    "Склади — Syllables",
+    "UA — EN hyphen-free line of text",
+    "Read each line aloud.",
+    "буря́к, бур'я́н, свя́то",
+])
+def test_matcher_leaves_syllables_alone(text):
+    assert not am.mentions_line_breaks(text)
+
+
+def test_lesson_map_filter_drops_the_line_break_lesson_but_keeps_budgets():
+    lesson_map = {
+        "lessons": [
+            {"n": 1, "title": "Апо́строф · The Apostrophe", "sections": ["Апостроф"],
+             "minutes": 60, "word_target": 550},
+            {"n": 2, "title": "Пра́вила перено́су слів · Word Hyphenation Rules",
+             "sections": ["Перенос і письмо", "Далі"], "minutes": 60, "word_target": 550},
+        ],
+        "closes_module": 2,
+        "provenance": [
+            {"placement": "inline", "index": 0, "new_id": "act-1", "lesson": 1},
+            {"placement": "inline", "index": 1, "new_id": "act-5", "lesson": 2},
+        ],
+        "items_min_exempt": [{"id": "act-1", "reason": "r"}, {"id": "act-5", "reason": "r"}],
+    }
+    out = am.filter_line_break_lesson_map(lesson_map, {("inline", 1)})
+    assert out["lessons"][0] == lesson_map["lessons"][0]
+    assert out["lessons"][1] == {"n": 2, "sections": ["Далі"], "minutes": 60, "word_target": 550}
+    assert [p["new_id"] for p in out["provenance"]] == ["act-1"]
+    assert out["items_min_exempt"] == [{"id": "act-1", "reason": "r"}]
+    assert out["closes_module"] == 2
+    assert lesson_map["lessons"][1]["sections"] == ["Перенос і письмо", "Далі"]  # input untouched
+
+
+SPECIAL_SIGNS_FORBIDDEN = (
+    "перенос", "Перенос", "divide-words", "Мар'-яна", "дере-в'яний", "бур'-ян", "паль-ці",
+    "line-break", "line break", "split across a line", "prepared models", "hyphenat",
+)
+
+
+def _region(prompt: str, start: str, end: str) -> str:
+    return prompt.split(start, 1)[1].split(end, 1)[0]
+
+
+@pytest.mark.parametrize("lesson", [None, 5])
+def test_special_signs_upgrade_prompt_has_no_hyphenation_lesson(monkeypatch, lesson):
+    """The real five-lesson map and a1-v1 sources, rendered with no model call."""
+    monkeypatch.setattr(
+        linear_pipeline, "invoke_writer",
+        lambda *a, **kw: (_ for _ in ()).throw(AssertionError("called a model")),
+    )
+    root = linear_pipeline.PROJECT_ROOT / "curriculum/l2-uk-en"
+    plan = yaml.safe_load((root / "plans/a1/special-signs.yaml").read_text(encoding="utf-8"))
+    lesson_map = yaml.safe_load((root / "a1/special-signs/lessons.yaml").read_text(encoding="utf-8"))
+    assert len(lesson_map["lessons"]) == 5
+    assert "Перенос і письмо" in lesson_map["lessons"][4]["sections"]  # the input does carry it
+
+    prompt = linear_pipeline.render_upgrade_prompt(plan, root / "a1-v1/special-signs", lesson_map, lesson=lesson)
+
+    shown_map = _region(prompt, "## Deterministic lessons.yaml (read-only)", "## Original plan (read-only)")
+    artifacts = _region(prompt, "## Existing module artifacts (read-only)", "## Response format")
+    for region in (shown_map, artifacts):
+        plain = region.replace("\u0301", "")
+        for token in SPECIAL_SIGNS_FORBIDDEN:
+            assert token not in region, token
+            assert token not in plain, token
+    shown = yaml.safe_load(shown_map)
+    assert [L["n"] for L in shown["lessons"]] == [1, 2, 3, 4, 5]  # five lessons stay
+    assert shown["lessons"][4]["sections"] == ["Далі", "Підсумок модуля"]
+    assert shown["lessons"][4]["word_target"] == 550
+    assert "act-5" not in {p["new_id"] for p in shown["provenance"]}
+    assert "act-5" not in {e["id"] for e in shown["items_min_exempt"]}
+    assert "act-4" in {p["new_id"] for p in shown["provenance"]}
+    assert "## Контраст і пастки" in artifacts and "## Далі" in artifacts

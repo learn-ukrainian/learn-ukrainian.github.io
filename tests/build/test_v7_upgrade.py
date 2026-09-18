@@ -226,3 +226,88 @@ def test_upgrade_cli_real_subprocess(tmp_path):
     assert result.returncode == v7_build.PrimaryCheckoutBuildError.exit_code
     assert "Refusing to run v7_build in the primary checkout; pass --worktree" in result.stderr
     assert not out.exists()
+
+
+def _seed_previous_edition(module_dir: Path) -> None:
+    for n in (1, 2):
+        lesson_dir = module_dir / f"lesson-{n}"
+        lesson_dir.mkdir(parents=True, exist_ok=True)
+        for name in linear_pipeline.WRITER_ARTIFACTS:
+            (lesson_dir / name).write_text("old edition", encoding="utf-8")
+        (lesson_dir / "writer_prompt.md").write_text("old prompt", encoding="utf-8")
+        (lesson_dir / "writer_output.raw.md").write_text("bound response", encoding="utf-8")
+    (module_dir / "lessons.yaml").write_text("lessons: []\n", encoding="utf-8")
+
+
+def test_clear_previous_edition_removes_lesson_artifacts_and_keeps_lessons_yaml(tmp_path):
+    import hashlib
+
+    module_dir = tmp_path / "curriculum/l2-uk-en/a1/special-signs"
+    archive = tmp_path / "curriculum/l2-uk-en/a1-v1/special-signs"
+    archive.mkdir(parents=True)
+    (archive / "module.md").write_text("archive", encoding="utf-8")
+    _seed_previous_edition(module_dir)
+    # Lesson 2 was written by this edition: its prompt is bound to the writer receipt.
+    bound = hashlib.sha256(b"old prompt").hexdigest()
+    (module_dir / "lesson-2/upgrade_writer.json").write_text(json.dumps({"prompt_sha256": bound}), encoding="utf-8")
+
+    removed = v7_build._clear_previous_edition(module_dir)
+
+    for n in (1, 2):
+        for name in linear_pipeline.WRITER_ARTIFACTS:
+            assert not (module_dir / f"lesson-{n}" / name).exists()
+        assert (module_dir / f"lesson-{n}/writer_output.raw.md").exists()
+    assert not (module_dir / "lesson-1/writer_prompt.md").exists()  # stale: no receipt binds it
+    assert (module_dir / "lesson-2/writer_prompt.md").exists()  # resumable
+    assert (module_dir / "lessons.yaml").read_text(encoding="utf-8") == "lessons: []\n"
+    assert (archive / "module.md").exists()
+    assert len(removed) == 2 * len(linear_pipeline.WRITER_ARTIFACTS) + 1
+
+
+def _run_upgrade_with_old_edition(upgrade_root, monkeypatch, *, alphabet: bool, dry_run: bool = False):
+    from scripts.build import lesson_gates
+    from scripts.pipeline import stress_annotator
+
+    module_dir = upgrade_root / UPGRADED
+    _seed_previous_edition(module_dir)
+    seen: list[bool] = []
+
+    def invoke(prompt, selected_writer, **kwargs):
+        n = len(seen) + 1
+        if n == 1:
+            seen.append(all(
+                (module_dir / f"lesson-{k}" / name).exists()
+                for k in (1, 2) for name in linear_pipeline.WRITER_ARTIFACTS
+            ))
+        else:
+            seen.append(False)
+        return _gold_response(n)
+
+    monkeypatch.setattr(v7_build, "is_alphabet_slug", lambda slug: alphabet)
+    monkeypatch.setattr(linear_pipeline, "invoke_writer", invoke)
+    monkeypatch.setattr(v7_build, "_run_llm_qg", lambda **kw: {"passed": True})
+    monkeypatch.setattr(v7_build, "_llm_qg_payload_passes", lambda result: result["passed"])
+    monkeypatch.setattr(stress_annotator, "annotate_file", lambda path: 0)
+    monkeypatch.setattr(lesson_gates, "run_lesson_gates", lambda *a, **kw: {"passed": True})
+    monkeypatch.setattr(linear_pipeline, "run_mdx_render_gate", lambda mdx: {"passed": True})
+    argv = ["a1", "things-have-gender", "--upgrade", "--writer", "gemini-tools"]
+    assert v7_build._run(v7_build.parse_args(argv + (["--dry-run"] if dry_run else []))) == 0
+    return module_dir, seen
+
+
+def test_alphabet_upgrade_starts_from_a_cleared_module(upgrade_root, monkeypatch):
+    module_dir, seen = _run_upgrade_with_old_edition(upgrade_root, monkeypatch, alphabet=True)
+    assert seen[0] is False  # the first writer call no longer sees the old edition
+    assert (module_dir / "lessons.yaml").is_file()
+    assert "old edition" not in (module_dir / "lesson-1/module.md").read_text(encoding="utf-8")
+
+
+def test_other_upgrades_and_dry_runs_do_not_clear(upgrade_root, monkeypatch):
+    _, seen = _run_upgrade_with_old_edition(upgrade_root, monkeypatch, alphabet=False)
+    assert seen[0] is True
+
+
+def test_alphabet_dry_run_does_not_clear(upgrade_root, monkeypatch):
+    module_dir, seen = _run_upgrade_with_old_edition(upgrade_root, monkeypatch, alphabet=True, dry_run=True)
+    assert seen == []
+    assert (module_dir / "lesson-1/module.md").read_text(encoding="utf-8") == "old edition"
