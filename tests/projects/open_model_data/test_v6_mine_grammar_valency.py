@@ -2477,6 +2477,9 @@ def test_quote_sentence_typography() -> None:
     assert miner.quote_sentence("Степ...", ".") == "«Степ...»"
     assert miner.quote_sentence("Степ...", "?") == "«Степ...»"
     assert miner.quote_sentence("Степ…", "?") == "«Степ…»"
+    # Sentence ending in ?. strips . and omits outer mark per § 162
+    assert miner.quote_sentence("вулиця Франка?.", "?") == "«вулиця Франка?»"
+    assert miner.quote_sentence("вулиця Франка?.", ".") == "«вулиця Франка?»"
     # Sentence ending in ».: leave inside intact inside outer quotes
     assert miner.quote_sentence("…під час конкурсу малюнків «Яка ти, Європо?».", ".") == "«…під час конкурсу малюнків «Яка ти, Європо?».»"
     assert miner.quote_sentence("…під час конкурсу малюнків «Яка ти, Європо?».", "?") == "«…під час конкурсу малюнків «Яка ти, Європо?».»"
@@ -2491,15 +2494,13 @@ def test_shards_zero_double_terminal_punctuation() -> None:
         pytest.skip("Release shards not yet generated in this worktree")
 
     # Double punctuation patterns:
-    # 1. Inner single dot before closing quote followed by punctuation: .». or .»?
-    p_inner_dot = re.compile(r"(?<!\.)\.\s*»+\s*[.?!]")
-    # 2. Duplicate question marks: ?»?
+    # 1. Double terminal punctuation at end of line: e.g. .»., .»?, ?»., ?»?, !»., ...».
+    p_terminal_double = re.compile(r"([.?!…]|\.{3})\s*»+\s*[.?]\s*$")
+    # 2. Duplicate question marks anywhere: ?»?
     p_double_q = re.compile(r"\?\s*»+\s*\?")
-    # 3. Outer mark on wrapper after exclamation or ellipsis: !». or ...».
-    p_outer_mark = re.compile(r"([!…]|\.{3})\s*»+\s*[.?]\s*$")
-    # 4. Adjacent closing quotes: »» (R7-2)
+    # 3. Adjacent closing quotes anywhere: »» (R7-2)
     p_adjacent_quotes = re.compile(r"»»")
-    # 5. Consecutive dots (not ellipsis): ..
+    # 4. Consecutive double dots (not ellipsis): ..
     p_double_dot = re.compile(r"(?<!\.)\.\.(?!\.)")
 
     violations = []
@@ -2510,9 +2511,8 @@ def test_shards_zero_double_terminal_punctuation() -> None:
                 for field in ("query", "final_response"):
                     text = record.get(field, "")
                     for pat_name, pat in [
-                        ("inner_dot", p_inner_dot),
+                        ("terminal_double", p_terminal_double),
                         ("double_q", p_double_q),
-                        ("outer_mark", p_outer_mark),
                         ("adjacent_quotes", p_adjacent_quotes),
                         ("double_dot", p_double_dot),
                     ]:
@@ -2520,9 +2520,8 @@ def test_shards_zero_double_terminal_punctuation() -> None:
                             violations.append((sf.name, line_no, field, pat_name, text))
                 for idx, step in enumerate(record.get("reasoning_steps", [])):
                     for pat_name, pat in [
-                        ("inner_dot", p_inner_dot),
+                        ("terminal_double", p_terminal_double),
                         ("double_q", p_double_q),
-                        ("outer_mark", p_outer_mark),
                         ("adjacent_quotes", p_adjacent_quotes),
                         ("double_dot", p_double_dot),
                     ]:

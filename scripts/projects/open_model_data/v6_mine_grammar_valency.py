@@ -3583,6 +3583,8 @@ def quote_sentence(s: str, outer_mark: str = ".") -> str:
       «...плакав!»
     - If sentence ends with a single period, strip inner period and place outer_mark outside:
       «Сонце світить». or «Сонце світить»?
+    - If inner stripped sentence ends in ?, !, …, or ..., omit outer mark per § 162:
+      «...вулиця Франка?»
     - Otherwise place outer_mark outside:
       «Сонце світить». or «Сонце світить»?
     """
@@ -3595,7 +3597,17 @@ def quote_sentence(s: str, outer_mark: str = ".") -> str:
         return f"«{s_str}"
     if s_str.endswith("."):
         inner = s_str[:-1].rstrip()
+        if inner.endswith("?") or inner.endswith("!") or inner.endswith("…") or inner.endswith("..."):
+            return f"«{inner}»"
         return f"«{inner}»{outer_mark}"
+    return f"«{s_str}»{outer_mark}"
+
+
+def quote_span(s: str, outer_mark: str = ".") -> str:
+    """Quote a fragment or word, omitting outer mark if fragment already ends in punctuation."""
+    s_str = s.strip()
+    if s_str.endswith(".") or s_str.endswith("?") or s_str.endswith("!") or s_str.endswith("…") or s_str.endswith("..."):
+        return f"«{s_str}»"
     return f"«{s_str}»{outer_mark}"
 
 
@@ -3672,6 +3684,10 @@ def build_sft_dataset(
     seen_source_texts: set[str] = set()
 
     def add_trajectory(t: dict[str, Any]) -> bool:
+        t["query"] = sanitize_punctuation(t.get("query", ""))
+        t["reasoning_steps"] = [sanitize_punctuation(step) for step in t.get("reasoning_steps", [])]
+        t["final_response"] = sanitize_punctuation(t.get("final_response", ""))
+
         # Gate 6 tone check on every generated reasoning step and final response
         for step in t.get("reasoning_steps", []):
             if not verify_respectful_tone(step, pejorative_words):
@@ -3729,10 +3745,13 @@ def build_sft_dataset(
                 for e in all_errs
             )
             corrs_list = ", ".join(f"«{e['correction']}»" for e in all_errs)
+            corr_step = f"3. Відновлення нормативних форм: контекстуально правильними варіантами є {corrs_list}."
+            if re.search(r"[.?!…]»\.$", corr_step):
+                corr_step = corr_step[:-1]
             reasoning = [
                 f"1. Виявлення девіацій: у реченні зафіксовано такі невідповідності:\n{err_bullets}",
                 f"2. Граматичні та синтаксичні норми: {rules_bullets}",
-                f"3. Відновлення нормативних форм: контекстуально правильними варіантами є {corrs_list}.",
+                corr_step,
                 f"4. Підсумкове речення: {tgt_quoted}",
             ]
             final_response = (
@@ -3743,10 +3762,12 @@ def build_sft_dataset(
         else:
             query = f"Проаналізуйте речення, знайдіть помилку та виправте її з граматичним обґрунтуванням: {src_quoted}"
             norm_rule = cat_meta["rule"].rstrip(".") + "."
+            err_quoted = quote_span(item["error"], ".")
+            corr_quoted = quote_span(item["correction"], ".")
             reasoning = [
-                f"1. Виявлення девіації: у реченні зафіксовано помилку категорії [{tag}] ({cat_meta['title']}): фрагмент «{item['error']}».",
+                f"1. Виявлення девіації: у реченні зафіксовано помилку категорії [{tag}] ({cat_meta['title']}): фрагмент {err_quoted}",
                 f"2. Граматична норма: {norm_rule}",
-                f"3. Відновлення нормативної форми: контекстуально правильним варіантом є «{item['correction']}».",
+                f"3. Відновлення нормативної форми: контекстуально правильним варіантом є {corr_quoted}",
                 f"4. Підсумкове речення: {tgt_quoted}",
             ]
             final_response = (
