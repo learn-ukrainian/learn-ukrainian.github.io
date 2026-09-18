@@ -175,7 +175,8 @@ claim_session_supervisor_env() {
     # Local --local callers retain proof-gated dead-process recovery; launchers
     # must not silently switch to that local path when Monitor refuses a claim.
     if grep -q "already has live session" "$supervisor_tmp" 2>/dev/null \
-        && [ "${LC_DRIVER_FORCE:-0}" = "1" ]; then
+        && [ "${LC_DRIVER_FORCE:-0}" = "1" ] \
+        && [ -z "${SESSION_SUPERVISOR_WAKE_DELIVERY:-}" ]; then
       echo "Session supervisor: attributed --force release of ${stream}" >&2
       if ! "$python_bin" -m scripts.session_supervisor release --role driver --force \
           --stream "$stream" \
@@ -201,8 +202,12 @@ claim_session_supervisor_env() {
       if grep -q "already has live session" "$supervisor_tmp" 2>/dev/null; then
         echo "  hint: another process still holds this epic stream." >&2
         echo "  diagnose: .venv/bin/python -m agents_extensions.shared.session_streams handoff-status --stream ${stream}" >&2
-        echo "  takeover: ./${launcher} --epic ${epic} --force" >&2
-        echo "  or: .venv/bin/python -m scripts.session_supervisor release --role driver --force --stream ${stream} --actor-agent ${agent} --actor-host-id \"\$LU_MONITOR_HOST_ID\" --reason 'operator force takeover'" >&2
+        if [ -n "${SESSION_SUPERVISOR_WAKE_DELIVERY:-}" ]; then
+          echo "  supervisory successor launches cannot --force; the operator flag is one-shot." >&2
+        else
+          echo "  takeover: ./${launcher} --epic ${epic} --force" >&2
+          echo "  or: .venv/bin/python -m scripts.session_supervisor release --role driver --force --stream ${stream} --actor-agent ${agent} --actor-host-id \"\$LU_MONITOR_HOST_ID\" --reason 'operator force takeover'" >&2
+        fi
       fi
       return 1
     fi
@@ -404,6 +409,7 @@ session_supervisor_exec_successor() {
     unset "$name"
   done
   # Replace this supervisor shell. Its successor uses the same approved public
-  # entrypoint and original argv, then makes a fresh Monitor TTL/CAS claim.
+  # entrypoint and original argv (without --force; that flag is one-shot), then
+  # makes a fresh Monitor TTL/CAS claim.
   exec "$LC_ROOT/start-${LC_PROVIDER}-driver.sh" "${LC_DRIVER_ORIGINAL_ARGS[@]}"
 }

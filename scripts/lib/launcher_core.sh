@@ -293,6 +293,23 @@ launcher_need_value() {
   fi
 }
 
+launcher_drop_force_from_successor_args() {
+  # --force is a one-shot operator takeover. Supervisory successor execs replay
+  # LC_DRIVER_ORIGINAL_ARGS; leaving --force there can evict a later legitimate
+  # holder (#8229 CF).
+  local arg
+  local -a kept=()
+  for arg in "${LC_DRIVER_ORIGINAL_ARGS[@]+"${LC_DRIVER_ORIGINAL_ARGS[@]}"}"; do
+    [ "$arg" = "--force" ] && continue
+    kept+=("$arg")
+  done
+  if [ "${#kept[@]}" -gt 0 ]; then
+    LC_DRIVER_ORIGINAL_ARGS=("${kept[@]}")
+  else
+    LC_DRIVER_ORIGINAL_ARGS=()
+  fi
+}
+
 launcher_parse() {
   while [ "$#" -gt 0 ]; do
     case "$1" in
@@ -999,6 +1016,7 @@ launcher_main() {
   launcher_clear_foreign_route_state
   launcher_defaults
   launcher_parse "$@"
+  launcher_drop_force_from_successor_args
   launcher_normalize_model
   launcher_normalize_effort
   # Provider adapters are sourced dynamically and consume these values.
