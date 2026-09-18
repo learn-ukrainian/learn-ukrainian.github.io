@@ -2255,20 +2255,28 @@ def test_f10_participle_sharding_distribution() -> None:
 
 
 def test_n1_ua_gec_single_layer_and_zero_overlapping_contradictions(tmp_path: Path) -> None:
-    """Verify load_ua_gec_annotations uses single layer and rejects overlapping sentence prefixes."""
+    """Verify load_ua_gec_annotations uses single layer (gec-fluency) and ignores gec-only layer."""
     fake_gec = tmp_path / "ua-gec"
-    train_dir = fake_gec / "data" / "gec-fluency" / "train" / "annotated"
-    train_dir.mkdir(parents=True)
+    fluency_dir = fake_gec / "data" / "gec-fluency" / "train" / "annotated"
+    only_dir = fake_gec / "data" / "gec-only" / "train" / "annotated"
+    fluency_dir.mkdir(parents=True)
+    only_dir.mkdir(parents=True)
 
-    ann_content = (
-        "Серце криваво стискалося від жалю до рідного краю у скрутну годину.\n\n"
-        "Серце {криваво=>боляче:::error_type=F/Style} стискалося від жалю у скрутну годину випробувань.\n\n"
-        "Серце {криваво=>щемно:::error_type=F/Style} стискалося від туги у скрутну годину випробувань.\n\n"
+    # In gec-fluency, sentence is corrected to боляче
+    (fluency_dir / "0100.ann").write_text(
+        "Серце {криваво=>боляче:::error_type=F/Style} стискалося від жалю у скрутну годину випробувань.\n\n",
+        encoding="utf-8",
     )
-    (train_dir / "0100.ann").write_text(ann_content, encoding="utf-8")
+    # In gec-only, same document has conflicting split keeping криваво uncorrected
+    (only_dir / "0100.ann").write_text(
+        "Серце криваво стискалося від жалю у скрутну годину випробувань. {Це=>То:::error_type=F/Style} був важкий час.\n\n",
+        encoding="utf-8",
+    )
+
     items = miner.load_ua_gec_annotations(fake_gec)
     assert len(items) == 1
     assert items[0]["doc_id"] == "0100"
+    assert items[0]["correction"] == "боляче"
 
 
 def test_n2_zero_unexplained_edits_and_pure_taxonomy(tmp_path: Path) -> None:
@@ -2297,7 +2305,7 @@ def test_n3_verbal_noun_target_grammaticality() -> None:
 
 def test_n4_tone_calibration_inflected_forms() -> None:
     """Verify verify_respectful_tone rejects inflected forms of pejorative words across stems."""
-    pej_words = miner.load_pejorative_words(PROJECT_ROOT / "data" / "dictionaries" / "tone-dict-uk")
+    pej_words = miner.load_tone_dict(PROJECT_ROOT / "data" / "dictionaries" / "tone-dict-uk")
     assert not miner.verify_respectful_tone("Це безглузда відповідь не підходить.", pej_words)
     assert not miner.verify_respectful_tone("Це було ідіотське рішення студента.", pej_words)
     assert not miner.verify_respectful_tone("Його дебільні жарти заважали заняттю.", pej_words)
@@ -2307,12 +2315,16 @@ def test_n4_tone_calibration_inflected_forms() -> None:
 
 def test_n5_brown_uk_normative_spelling_no_proekt() -> None:
     """Verify Brown-UK negative controls reject pre-2019 'проект' and do not use error category G/Other."""
+    import sqlite3
+    conn = sqlite3.connect(f"file:{miner.DEFAULT_VESUM_DB}?mode=ro", uri=True)
+    cur = conn.cursor()
     assert not miner.is_pristine_eval_sentence(
-        "Ми ознайомилися з новим проектом постанови уряду на засіданні.", None
+        "Ми ознайомилися з новим проектом постанови уряду на засіданні.", cur
     )
     assert miner.is_pristine_eval_sentence(
-        "Ми ознайомилися з новим проєктом постанови уряду на засіданні.", None
+        "Ми ознайомилися з новим проєктом постанови уряду на засіданні.", cur
     )
+    conn.close()
 
 
 def test_multi_error_grouping_cohesion(tmp_path: Path) -> None:
