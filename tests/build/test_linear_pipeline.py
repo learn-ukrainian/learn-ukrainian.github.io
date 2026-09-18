@@ -1603,6 +1603,11 @@ def _passing_qg_fixture(tmp_path: Path) -> tuple[Path, Path, Callable]:
                         "sentence": "Я вмиваю__.",
                         "answer": "ся",
                         "options": ["ся", "ти", "ми"],
+                        # #8214 — happy-path canary must satisfy fill-in explanations.
+                        "explanation": (
+                            "Зворотне дієслово: 1-ша особа однини бере -ся. — "
+                            "Reflexive: 1st person singular takes -ся."
+                        ),
                     }
                 ],
             }
