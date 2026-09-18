@@ -2338,6 +2338,10 @@ def is_pristine_eval_sentence(s: str, cur_ves: sqlite3.Cursor | None) -> bool:
     if "…" in s or "..." in s or s.endswith("—") or s.endswith(" -"):
         return False
 
+    # 11. Pre-2019 non-normative spellings (Правопис 2019 §126)
+    if re.search(r"\bпроект[а-яіїєґ]*\b", s, re.IGNORECASE):
+        return False
+
     return bool(re.search(r"[.!?»\"]$", s))
 
 
@@ -3005,11 +3009,29 @@ def load_tone_dict(tone_dict_dir: Path) -> set[str]:
     return condescending_terms
 
 
+PEJORATIVE_STEMS: tuple[str, ...] = (
+    "ідіот",
+    "дебіл",
+    "невіглас",
+    "недолуг",
+    "нікчем",
+    "жалюгідн",
+    "безглузд",
+    "дурн",
+    "дурощ",
+    "нездар",
+    "дикунськ",
+    "кретин",
+    "тупоум",
+)
+
+
 def verify_respectful_tone(text: str, pejorative_words: set[str]) -> bool:
     """Gate 6 check: verify zero derogatory/condescending language in pedagogical outputs."""
     tokens = set(re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", text.lower()))
-    intersection = tokens & pejorative_words
-    return len(intersection) == 0
+    if tokens & pejorative_words:
+        return False
+    return not any(any(t.startswith(stem) for stem in PEJORATIVE_STEMS) for t in tokens)
 
 
 def load_brown_uk_sentences(
@@ -3159,6 +3181,8 @@ def load_brown_uk_sentences(
             text = doc.read_text(encoding="utf-8")
             for s in split_clean_ukrainian_sentences(text):
                 if s not in eval_seen_sentences:
+                    if re.search(r"\bпроект[а-яіїєґ]*\b", s, re.IGNORECASE):
+                        continue
                     genre_good_sents[g].append((s, doc.stem))
 
     g_keys = sorted(genre_good_sents.keys())
@@ -3190,6 +3214,8 @@ def load_brown_uk_sentences(
             g = doc.stem.split("_")[0]
             text = doc.read_text(encoding="utf-8")
             for s in split_clean_ukrainian_sentences(text):
+                if re.search(r"\bпроект[а-яіїєґ]*\b", s, re.IGNORECASE):
+                    continue
                 soso_by_genre[g].append((s, doc.stem))
 
         soso_train_count = 0
@@ -3231,17 +3257,35 @@ def mask_annotations_in_text(text: str) -> tuple[str, dict[str, str]]:
     return masked, ann_map
 
 
+def validate_target_sentence(text: str) -> bool:
+    """Sanity-check target sentence well-formedness and basic grammar rules (N3)."""
+    if text.count("«") != text.count("»"):
+        return False
+    if text.count("(") != text.count(")"):
+        return False
+    if text.count("[") != text.count("]"):
+        return False
+    if text.count('"') % 2 != 0:
+        return False
+    if not re.search(r"[.!?…»\"]$", text):
+        return False
+    if re.search(r"\b(?:привертання|звертання|набуття|дотримання)\s+увагу\b", text, re.IGNORECASE):
+        return False
+    return not bool(re.search(r"\bпроект[а-яіїєґ]*\b", text, re.IGNORECASE))
+
+
 def load_ua_gec_annotations(ua_gec_dir: Path) -> list[dict[str, Any]]:
-    """Ingest full 20-category UA-GEC annotations across train partition and layers."""
+    """Ingest full 20-category UA-GEC annotations across train partition and single layer."""
     ann_files: list[Path] = []
-    for layer in ("gec-fluency", "gec-only"):
-        for partition in ("train",):
-            p = ua_gec_dir / "data" / layer / partition / "annotated"
-            if p.is_dir():
-                ann_files.extend(sorted(p.glob("*.ann")))
+    # N1: Load strictly from gec-fluency to eliminate contradictory multi-layer duplicates
+    for partition in ("train",):
+        p = ua_gec_dir / "data" / "gec-fluency" / partition / "annotated"
+        if p.is_dir():
+            ann_files.extend(sorted(p.glob("*.ann")))
 
     extracted: list[dict[str, Any]] = []
     seen_sentences: set[str] = set()
+    seen_doc_prefixes: set[tuple[str, str]] = set()
 
     for af in ann_files:
         doc_id = af.stem.split(".")[0]
@@ -3264,11 +3308,16 @@ def load_ua_gec_annotations(ua_gec_dir: Path) -> list[dict[str, Any]]:
                     m for m in matches
                     if m.group(3).strip() in FULL_TAXONOMY and m.group(1).strip() and m.group(2).strip()
                 ]
-                if not valid_matches:
+                # N2: Require that 100% of annotations in the sentence belong to FULL_TAXONOMY
+                # with non-empty error and correction (zero unexplained edits, zero hidden punctuation/spelling shifts)
+                if not valid_matches or len(valid_matches) != len(matches):
                     continue
 
                 src_sent = CLEAN_SRC_RE.sub(r"\1", restored_sent)
                 tgt_sent = CLEAN_TGT_RE.sub(r"\1", restored_sent)
+                if src_sent == tgt_sent:
+                    continue
+
                 # Reject any sentence with residual annotation markup
                 if any(bad in src_sent or bad in tgt_sent for bad in ("error_type=", ":::", "{", "}")):
                     continue
@@ -3276,7 +3325,18 @@ def load_ua_gec_annotations(ua_gec_dir: Path) -> list[dict[str, Any]]:
                     continue
                 if src_sent in seen_sentences:
                     continue
+
+                # N1: Prevent overlapping text / different splits from the same document
+                prefix_key = (doc_id, src_sent[:30])
+                if prefix_key in seen_doc_prefixes:
+                    continue
+
+                # N3 safeguard: verify grammatical validity of target sentence
+                if not validate_target_sentence(tgt_sent):
+                    continue
+
                 seen_sentences.add(src_sent)
+                seen_doc_prefixes.add(prefix_key)
 
                 # Prioritize Grammar (G/) categories over Fluency (F/) categories
                 def match_priority(m: re.Match[str]) -> tuple[int, str]:
@@ -3471,6 +3531,7 @@ def build_sft_dataset(
 
     all_trajectories: list[dict[str, Any]] = []
     seen_trajectory_ids: set[str] = set()
+    seen_source_texts: set[str] = set()
 
     def add_trajectory(t: dict[str, Any]) -> bool:
         # Gate 6 tone check on every generated reasoning step and final response
@@ -3479,6 +3540,13 @@ def build_sft_dataset(
                 return False
         if not verify_respectful_tone(t.get("final_response", ""), pejorative_words):
             return False
+
+        # Strictly prevent identical source sentences across multiple documents/frames (N6)
+        src_text = t.get("original_text", "").strip()
+        if src_text:
+            if src_text in seen_source_texts:
+                return False
+            seen_source_texts.add(src_text)
 
         tid = t["trajectory_id"]
         if tid in seen_trajectory_ids:
@@ -3570,7 +3638,7 @@ def build_sft_dataset(
                     "lemma": lemma,
                     "vesum_forms_count": forms_cnt,
                     "is_standard_attested": attested,
-                    "tags": [tag.replace("/", "_").lower()],
+                    "tags": [tag.lower().replace("/", "_")],
                 }
             ],
             "reasoning_steps": reasoning,
@@ -3587,7 +3655,7 @@ def build_sft_dataset(
     if remaining > 0:
         needed_good = remaining // 2 if soso_items else remaining
 
-        # Add good (PRESERVE) items: category G/Other, standard literary syntax
+        # Add good (PRESERVE) items: category Control/Normative, standard literary syntax
         good_count = 0
         for b in good_items:
             if len(all_trajectories) >= target_count or good_count >= needed_good:
@@ -3595,12 +3663,13 @@ def build_sft_dataset(
             s = b["text"]
             doc_id = b.get("doc_id", "")
             genre = b.get("genre", "")
+            word_cnt = len(s.split())
             query = f"Чи є граматичні, синтаксичні або стилістичні помилки в цьому реченні: «{s}»?"
             reasoning = [
-                f"1. Структурний аналіз: розглядаємо речення з авторитетного корпусу Brown-UK (розділ {genre}, документ {doc_id}): «{s}».",
-                "2. Перевірка зв'язку слів: узгодження підмета і присудка, керування дієслів і прийменників бездоганні.",
-                "3. Відсутність кальок: відсутні лексичні росіянізми чи невластиві синтаксичні моделі.",
-                "4. Висновок: речення граматично і стилістично довершене і не потребує правок.",
+                f"1. Структурний аналіз: розглядаємо речення ({word_cnt} слів) з авторитетного корпусу Brown-UK (розділ {genre}, документ {doc_id}): «{s}».",
+                "2. Синтаксична сполучуваність: предикативні зв'язки, відмінкове керування та узгодження компонентів бездоганно відповідають нормі.",
+                "3. Лексичний склад: відсутні суржикові форми, кальки чи невластиві синтаксичні моделі. Усі лексеми відповідають нормам правопису.",
+                "4. Висновок: речення граматично і стилістично довершене і не потребує нормативних правок.",
             ]
             final_response = (
                 f"У поданому реченні помилок немає. Воно повністю відповідає нормам сучасної української літературної мови: «{s}»."
@@ -3609,11 +3678,11 @@ def build_sft_dataset(
             token_to_check = first_word[0] if first_word else s[:10]
             lemma, forms_cnt, attested = query_vesum_lemma_and_count(cur_ves, token_to_check)
 
-            traj_hash = hashlib.sha256(f"{doc_id}_{s}".encode()).hexdigest()[:16]
+            traj_hash = hashlib.sha256(s.encode()).hexdigest()[:16]
             traj = {
                 "schema_version": "v1_grammar_valency_trajectory",
                 "trajectory_id": f"traj.brown.preserve.{traj_hash}",
-                "category": "G/Other",
+                "category": "Control/Normative",
                 "subtype": "brown_uk_good_preserve",
                 "query": query,
                 "target_term": token_to_check,
@@ -3665,7 +3734,7 @@ def build_sft_dataset(
             token_to_check = first_word[0] if first_word else s[:10]
             lemma, forms_cnt, attested = query_vesum_lemma_and_count(cur_ves, token_to_check)
 
-            traj_hash = hashlib.sha256(f"{doc_id}_{s}".encode()).hexdigest()[:16]
+            traj_hash = hashlib.sha256(s.encode()).hexdigest()[:16]
             traj = {
                 "schema_version": "v1_grammar_valency_trajectory",
                 "trajectory_id": f"traj.brown.contrast.{traj_hash}",

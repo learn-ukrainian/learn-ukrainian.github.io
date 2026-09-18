@@ -2194,12 +2194,27 @@ def test_f2_calque_error_head_word_alignment() -> None:
         assert "зі словом «прийняти»" in step1 or "зі словом «нанести»" in step1
 
 
-def test_f5_ua_gec_test_split_firewall() -> None:
-    """Verify load_ua_gec_annotations strictly excludes test partition."""
-    import inspect
-    src = inspect.getsource(miner.load_ua_gec_annotations)
-    assert '("train",)' in src
-    assert '"test"' not in src
+def test_f5_ua_gec_test_split_firewall(tmp_path: Path) -> None:
+    """Verify load_ua_gec_annotations strictly excludes test partition in runtime behavior."""
+    fake_gec = tmp_path / "ua-gec"
+    train_dir = fake_gec / "data" / "gec-fluency" / "train" / "annotated"
+    test_dir = fake_gec / "data" / "gec-fluency" / "test" / "annotated"
+    train_dir.mkdir(parents=True)
+    test_dir.mkdir(parents=True)
+
+    (train_dir / "0001.ann").write_text(
+        "Він опанував {мовою=>мову:::error_type=G/Case} за один рік навчання в університеті.\n\n",
+        encoding="utf-8",
+    )
+    (test_dir / "9999.ann").write_text(
+        "Студент здав {іспитом=>іспит:::error_type=G/Case} на відмінно в тестовій сесії.\n\n",
+        encoding="utf-8",
+    )
+
+    items = miner.load_ua_gec_annotations(fake_gec)
+    assert len(items) == 1
+    assert items[0]["doc_id"] == "0001"
+    assert "тестовій сесії" not in [it["source_sentence"] for it in items]
 
 
 def test_f7_genre_stratification_exact_50_docs() -> None:
@@ -2237,3 +2252,91 @@ def test_f10_participle_sharding_distribution() -> None:
 
     assert participle_count == 45, f"Expected 45 participle trajectories, got {participle_count}"
     assert shards_with_participles >= 20, f"Expected participle distribution across >=20 shards, got {shards_with_participles}"
+
+
+def test_n1_ua_gec_single_layer_and_zero_overlapping_contradictions(tmp_path: Path) -> None:
+    """Verify load_ua_gec_annotations uses single layer and rejects overlapping sentence prefixes."""
+    fake_gec = tmp_path / "ua-gec"
+    train_dir = fake_gec / "data" / "gec-fluency" / "train" / "annotated"
+    train_dir.mkdir(parents=True)
+
+    ann_content = (
+        "Серце криваво стискалося від жалю до рідного краю у скрутну годину.\n\n"
+        "Серце {криваво=>боляче:::error_type=F/Style} стискалося від жалю у скрутну годину випробувань.\n\n"
+        "Серце {криваво=>щемно:::error_type=F/Style} стискалося від туги у скрутну годину випробувань.\n\n"
+    )
+    (train_dir / "0100.ann").write_text(ann_content, encoding="utf-8")
+    items = miner.load_ua_gec_annotations(fake_gec)
+    assert len(items) == 1
+    assert items[0]["doc_id"] == "0100"
+
+
+def test_n2_zero_unexplained_edits_and_pure_taxonomy(tmp_path: Path) -> None:
+    """Verify sentences with unclassified punctuation/spelling edits are rejected so 100% of edits are explained."""
+    fake_gec = tmp_path / "ua-gec"
+    train_dir = fake_gec / "data" / "gec-fluency" / "train" / "annotated"
+    train_dir.mkdir(parents=True)
+
+    dirty_ann = "Студенти {опанували мовою=>опанували мову:::error_type=G/Case} {-=>—:::error_type=Punctuation} це велике досягнення.\n\n"
+    pure_ann = "Студенти {опанували мовою=>опанували мову:::error_type=G/Case} за один навчальний семестр в університеті.\n\n"
+
+    (train_dir / "0200.ann").write_text(dirty_ann + pure_ann, encoding="utf-8")
+    items = miner.load_ua_gec_annotations(fake_gec)
+    assert len(items) == 1
+    assert "навчальний семестр" in items[0]["source_sentence"]
+    assert len(items[0]["all_errors"]) == 1
+    assert items[0]["all_errors"][0]["tag"] == "G/Case"
+
+
+def test_n3_verbal_noun_target_grammaticality() -> None:
+    """Verify target sentences never produce ungrammatical verbal noun + accusative constructions."""
+    assert not miner.validate_target_sentence("Для привертання увагу до цього питання.")
+    assert not miner.validate_target_sentence("З метою звертання увагу громадян.")
+    assert miner.validate_target_sentence("Для привертання уваги до цього важливого питання.")
+
+
+def test_n4_tone_calibration_inflected_forms() -> None:
+    """Verify verify_respectful_tone rejects inflected forms of pejorative words across stems."""
+    pej_words = miner.load_pejorative_words(PROJECT_ROOT / "data" / "dictionaries" / "tone-dict-uk")
+    assert not miner.verify_respectful_tone("Це безглузда відповідь не підходить.", pej_words)
+    assert not miner.verify_respectful_tone("Це було ідіотське рішення студента.", pej_words)
+    assert not miner.verify_respectful_tone("Його дебільні жарти заважали заняттю.", pej_words)
+    assert not miner.verify_respectful_tone("Це дурна помилка у тексті.", pej_words)
+    assert miner.verify_respectful_tone("Це граматична помилка, спричинена синтаксичною калькою.", pej_words)
+
+
+def test_n5_brown_uk_normative_spelling_no_proekt() -> None:
+    """Verify Brown-UK negative controls reject pre-2019 'проект' and do not use error category G/Other."""
+    assert not miner.is_pristine_eval_sentence(
+        "Ми ознайомилися з новим проектом постанови уряду на засіданні.", None
+    )
+    assert miner.is_pristine_eval_sentence(
+        "Ми ознайомилися з новим проєктом постанови уряду на засіданні.", None
+    )
+
+
+def test_multi_error_grouping_cohesion(tmp_path: Path) -> None:
+    """Verify multi-error sentences are grouped into single cohesive trajectories."""
+    fake_gec = tmp_path / "ua-gec"
+    train_dir = fake_gec / "data" / "gec-fluency" / "train" / "annotated"
+    train_dir.mkdir(parents=True)
+
+    multi_ann = "Студенти {опанували мовою=>опанували мову:::error_type=G/Case} та {прийняли міри=>вжили заходів:::error_type=F/Calque} вчасно.\n\n"
+    (train_dir / "0300.ann").write_text(multi_ann, encoding="utf-8")
+
+    items = miner.load_ua_gec_annotations(fake_gec)
+    assert len(items) == 1
+    item = items[0]
+    assert len(item["all_errors"]) == 2
+    tags = {e["tag"] for e in item["all_errors"]}
+    assert tags == {"G/Case", "F/Calque"}
+
+
+def test_participle_inflected_surface_form_extraction() -> None:
+    """Verify participle trajectory extraction yields inflected surface forms, not lemmas."""
+    trajectories = miner.build_participle_trajectories()
+    assert len(trajectories) == 45
+    target_terms = {t["target_term"] for t in trajectories}
+    assert "бажаючого" in target_terms or "оточуючого" in target_terms or "існуючі" in target_terms
+    for term in target_terms:
+        assert not term.endswith("ти")
