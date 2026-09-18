@@ -140,7 +140,6 @@ describe('player contract: payload mapping and answer_key separation', () => {
     const { container } = render(<ActivityPlayer activity={corrupted} />);
 
     fireEvent.click(screen.getByRole('button', { name: 'True' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Check Answers' }));
 
     const feedback = container.querySelector('[data-activity="tf-row-feedback"]');
     expect(feedback).toBeInTheDocument();
@@ -172,7 +171,6 @@ describe('player contract: content rendering', () => {
     expect(screen.getByText('Це навчальне твердження позначено як правдиве.')).toBeInTheDocument();
 
     fireEvent.click(screen.getAllByRole('button', { name: 'Правда' })[0]);
-    fireEvent.click(screen.getByRole('button', { name: 'Перевірити' }));
 
     const feedback = container.querySelector('[data-activity="tf-row-feedback"]');
     expect(feedback?.textContent).toContain('У ключі для цього твердження вказано «правда».');

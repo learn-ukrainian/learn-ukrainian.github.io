@@ -207,16 +207,14 @@
                 "description": "C1 sentences should demonstrate complex syntax and register-appropriate language"
               },
               "answer": {
-                "type": "string",
-                "minLength": 1
+                "type": "string"
               },
               "options": {
                 "type": "array",
                 "minItems": 4,
                 "maxItems": 4,
                 "items": {
-                  "type": "string",
-                  "minLength": 1
+                  "type": "string"
                 }
               },
               "explanation": {

@@ -242,3 +242,27 @@ def test_format_resources_for_mdx_strips_build_speak_notes_from_public_text():
         assert "No Grade 1 blockquote surfaced" not in mdx
         assert "surfaced in module.md" not in mdx
         assert "chunk_id" not in mdx
+
+
+def test_youtube_url_without_role_is_a_video_not_a_book():
+    mdx = format_resources_for_mdx([
+        {"title": "Alphabet song", "url": "https://www.youtube.com/watch?v=abc12345678"},
+        {"title": "Short clip", "url": "https://youtu.be/abc12345678"},
+        {"title": "Караман Grade 10", "author": "Караман", "role": "textbook"},
+    ])
+
+    assert "📺 Videos" in mdx
+    books = mdx.split("📺 Videos")[0]  # everything filed above the Videos group
+    assert "Alphabet song" not in books
+    assert "Short clip" not in books
+    assert "📺 [Alphabet song](https://www.youtube.com/watch?v=abc12345678)" in mdx
+    assert "📺 [Short clip](https://youtu.be/abc12345678)" in mdx
+
+
+def test_youtube_url_in_legacy_books_bucket_without_role_is_a_video():
+    from scripts.generate_mdx.resources import _resource_role
+
+    assert _resource_role({"url": "https://youtube.com/watch?v=x"}, "books") == "youtube"
+    assert _resource_role({"url": "https://m.youtube.com/watch?v=x"}) == "youtube"
+    assert _resource_role({"url": "https://example.com/youtube.com"}) == "textbook"
+    assert _resource_role({"url": "https://example.com/a", "role": "textbook"}) == "textbook"

@@ -460,16 +460,14 @@
                 "description": "Sentence with ____ or {answer} marking the blank"
               },
               "answer": {
-                "type": "string",
-                "minLength": 1
+                "type": "string"
               },
               "options": {
                 "type": "array",
                 "minItems": 2,
                 "maxItems": 6,
                 "items": {
-                  "type": "string",
-                  "minLength": 1
+                  "type": "string"
                 }
               },
               "explanation": {

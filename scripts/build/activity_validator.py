@@ -376,6 +376,11 @@ def _check_fill_in(
                 f"answer \"{answer}\" not in options {opts}",
             ))
 
+        from scripts.build.lesson_gates import fill_in_item_defects
+
+        for defect in fill_in_item_defects(item, activity_id=f"item[{i}]"):
+            issues.append(ActivityIssue(slug, section, "fill-in", i, "error", defect))
+
         # No hints in parentheses — learner should produce from context, not copy
         hint_match = re.search(r"\([^)]+\)", sent)
         if hint_match:

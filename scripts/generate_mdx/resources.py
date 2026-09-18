@@ -294,10 +294,20 @@ LEGACY_RESOURCE_ROLE = {
 }
 
 
+_YOUTUBE_HOST_RE = re.compile(r'^(?:https?:)?//(?:[\w-]+\.)*(?:youtube\.com|youtu\.be)(?:[/:?#]|$)', re.IGNORECASE)
+
+
+def _is_youtube_url(url: object) -> bool:
+    return bool(_YOUTUBE_HOST_RE.match(str(url or '').strip()))
+
+
 def _resource_role(item: dict, legacy_bucket: str | None = None) -> str:
     role = str(item.get('role') or '').strip().lower()
     if role:
         return role
+    # A YouTube URL is a video even when the role is missing; never a Book.
+    if _is_youtube_url(item.get('url')):
+        return 'youtube'
     if legacy_bucket is not None:
         return LEGACY_RESOURCE_ROLE.get(legacy_bucket, legacy_bucket)
     return 'textbook'

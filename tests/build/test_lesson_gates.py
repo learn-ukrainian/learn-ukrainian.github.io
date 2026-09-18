@@ -306,7 +306,32 @@ def test_error_correction_options_gate_rejects_tautology_and_empty():
         },
         level="a1",
     )
-    assert any(">=3" in d or "distractor other than" in d for d in binary)
+    assert any("must not contain the spotted error" in d for d in binary)
+
+    # A three-chip set that still carries the error fails too (live defect:
+    # `день` / `ден` / `дєнь` after the learner already clicked `ден`).
+    three_with_error = gates.error_correction_item_defects(
+        {
+            "sentence": "Сього́дні га́рний ден. — Today is a nice day (misspelled).",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день", "ден", "дєнь"],
+        },
+        level="a1",
+    )
+    assert any("must not contain the spotted error" in d for d in three_with_error)
+
+    # Case differences do not hide the error token.
+    cased = gates.error_correction_item_defects(
+        {
+            "sentence": "Сього́дні га́рний ден.",
+            "error": "ден",
+            "correction": "день",
+            "options": ["день", "Ден", "дєнь", "дэнь"],
+        },
+        level="a1",
+    )
+    assert any("must not contain the spotted error" in d for d in cased)
 
     meta = gates.error_correction_item_defects(
         {
@@ -348,10 +373,10 @@ def test_error_correction_unaccented_correct_copy_fails():
     assert (
         gates.error_correction_item_defects(
             {
-                "sentence": "Це мо́локо. — This is milk.",
-                "error": "мо́локо",
+                "sentence": "Це моло́ко. — This is milk.",
+                "error": "моло́ко",
                 "correction": "молоко́",
-                "options": ["молоко́", "мо́локо", "моло́ко"],
+                "options": ["молоко́", "мо́локо", "малоко́"],
             },
             level="a1",
         )
@@ -363,10 +388,10 @@ def test_error_correction_stress_contrast_is_not_tautology():
     """Acute-only triples are real choices; do not strip stress before comparing."""
     ok = gates.error_correction_item_defects(
         {
-            "sentence": "Це мо́локо. — This is milk.",
-            "error": "мо́локо",
+            "sentence": "Це моло́ко. — This is milk.",
+            "error": "моло́ко",
             "correction": "молоко́",
-            "options": ["молоко́", "мо́локо", "моло́ко"],
+            "options": ["молоко́", "мо́локо", "малоко́"],
         },
         level="a1",
     )
@@ -763,3 +788,119 @@ def test_configured_word_target_is_enforced(gold):
     path.write_text(yaml.safe_dump(lesson_map, allow_unicode=True))
     report = gates.run_lesson_gates(module, source, plan)
     assert f"lesson 1: prose tokens {observed} < {observed + 1} minimum" in report["diagnostics"]
+
+
+# ── alphabet-module machinery (#8237) ────────────────────────────────────────
+
+ALPHABET_SLUGS = ("sounds-letters-and-hello", "reading-ukrainian", "special-signs")
+
+
+def test_fill_in_no_sign_wording_fails_but_empty_string_passes():
+    for bad in ("без знака", "без зна́ка — no sign", "Немає знака", "No sign"):
+        in_options = gates.fill_in_item_defects(
+            {"sentence": "ден___ь", "answer": "ь", "options": ["ь", bad]}
+        )
+        assert any("empty string" in d for d in in_options), bad
+        as_answer = gates.fill_in_item_defects(
+            {"sentence": "ден___ь", "answer": bad, "options": ["ь", bad]}
+        )
+        assert any("empty string" in d for d in as_answer), bad
+
+    assert gates.fill_in_item_defects(
+        {"sentence": "ден___ь", "answer": "", "options": ["", "ь", "'"]}
+    ) == []
+
+
+def test_fill_in_activity_defects_only_looks_at_fill_in():
+    fill = {"id": "act-1", "type": "fill-in",
+            "items": [{"sentence": "a___", "answer": "без знака", "options": ["без знака", ""]}]}
+    assert gates.fill_in_activity_defects(fill)
+    assert gates.fill_in_activity_defects({**fill, "type": "quiz"}) == []
+
+
+@pytest.mark.parametrize("slug", ALPHABET_SLUGS)
+def test_alphabet_slugs_reject_line_break_activities_and_models(slug):
+    divide = {"id": "a1", "type": "divide-words", "title": "Поділ", "items": [{"word": "мама"}]}
+    assert any("divide-words" in d for d in gates.alphabet_line_break_defects(
+        slug=slug, activities=[divide], prose=""))
+
+    perenos = {"id": "a2", "type": "quiz", "instruction": "Перенос слів — Word breaks", "items": []}
+    assert any("перенос" in d for d in gates.alphabet_line_break_defects(
+        slug=slug, activities=[perenos], prose=""))
+
+    titled = {"id": "a3", "type": "quiz", "title": "Правила переносу", "items": []}
+    assert gates.alphabet_line_break_defects(slug=slug, activities=[titled], prose="")
+
+    for model in ("Мар'-яна", "дере-в'яний", "бур'-ян", "паль-ці", "Мар’-яна"):
+        assert gates.alphabet_line_break_defects(
+            slug=slug, activities=[], prose=f"Пишемо {model} тут."), model
+        assert gates.alphabet_line_break_defects(
+            slug=slug, activities=[{"id": "a4", "type": "quiz", "items": [{"q": model}]}], prose=""), model
+
+    clean = {"id": "a5", "type": "quiz", "title": "Склади", "instruction": "Оберіть склад", "items": [{"q": "ма-ма"}]}
+    assert gates.alphabet_line_break_defects(slug=slug, activities=[clean], prose="Це мама.") == []
+
+
+def test_other_slugs_keep_line_break_activities():
+    divide = {"id": "a1", "type": "divide-words", "title": "Перенос", "items": []}
+    assert gates.alphabet_line_break_defects(
+        slug="my-family", activities=[divide], prose="бур'-ян") == []
+
+
+@pytest.mark.parametrize("phrase", [
+    "mastery of all 33 letters",
+    "comprehensive command of the complete 33-letter",
+    "use only prepared models",
+    "before you leave the lesson tab",
+    "Stay inside Ukrainian for this lesson",
+])
+def test_banned_learner_phrases_fail_case_insensitively(phrase):
+    assert gates.banned_phrase_defects(f"Intro. {phrase.upper()}, then more.", "lesson 1 prose")
+    assert gates.banned_phrase_defects(f"Intro. {phrase.lower()} ok", "module landing")
+
+
+def test_bare_mastery_is_not_banned():
+    assert gates.banned_phrase_defects("Mastery comes with practice.", "lesson 1 prose") == []
+
+
+def _alphabet_gold(gold, slug="reading-ukrainian"):
+    module, source, plan = gold
+    plan["slug"] = slug
+    return module, source, plan
+
+
+def _line_break_blocks(report):
+    return [d for d in report["blocking"] if "перенос" in d or "line break" in d]
+
+
+def test_alphabet_full_gate_rejects_prose_teaching_line_breaks(gold):
+    module, source, plan = _alphabet_gold(gold)
+    path = module / "lesson-1/module.md"
+    path.write_text(path.read_text() + "\n\nПеренос слова: пишемо стіл-ець, а не стілець, коли рядок закінчується.\n")
+    assert any("prose mentions перенос" in d for d in _line_break_blocks(
+        gates.run_lesson_gates(module, source, plan)))
+
+
+def test_alphabet_full_gate_rejects_quiz_stem_about_hyphenation(gold):
+    module, source, plan = _alphabet_gold(gold)
+    path = module / "lesson-1/activities.yaml"
+    data = yaml.safe_load(path.read_text())
+    data["inline"].append({"id": "act-lb", "type": "quiz", "instruction": "Оберіть відповідь",
+                           "items": [{"question": "Як зробити перенос слова «книга»?",
+                                      "options": ["кни-га", "ки-нга"], "answer": "кни-га"}]})
+    path.write_text(yaml.safe_dump(data, allow_unicode=True))
+    assert any("act-lb" in d for d in _line_break_blocks(
+        gates.run_lesson_gates(module, source, plan)))
+
+
+def test_alphabet_full_gate_ignores_heading_and_rejects_dropped_provenance(gold):
+    module, source, plan = _alphabet_gold(gold)
+    path = module / "lesson-1/module.md"
+    path.write_text(path.read_text() + "\n\n## Перенос і підсумок\n")
+    assert _line_break_blocks(gates.run_lesson_gates(module, source, plan)) == []
+
+    base = yaml.safe_load((source / "activities.yaml").read_text())
+    base["inline"][0]["instruction"] = "Перенос слів"
+    (source / "activities.yaml").write_text(yaml.safe_dump(base, allow_unicode=True))
+    report = gates.run_lesson_gates(module, source, plan)
+    assert any("provenance points at dropped" in d for d in report["blocking"])

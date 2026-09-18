@@ -228,7 +228,6 @@ describe('activity-kit contract', () => {
     render(<ActivityPlayer activity={fixtures[0] as LuActivityV1} onComplete={onComplete} />);
 
     fireEvent.click(screen.getAllByRole('button', { name: 'True' })[0]);
-    fireEvent.click(screen.getByRole('button', { name: 'Check Answers' }));
 
     expect(onComplete).toHaveBeenCalledWith({
       activityId: 'golden-true-false',

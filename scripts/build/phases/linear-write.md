@@ -381,45 +381,45 @@ field `items`; do NOT use the React/component prop name `questions`.
 {COMPONENT_PROPS_SCHEMA}
 ```
 
-For item-bearing types, include non-empty `items`; numeric arrays like `correct_order` use zero-based indices.
+Item-bearing types need non-empty `items`; numeric arrays like `correct_order` are zero-based.
 
-**`group-sort` shape (mandatory canonical fields).** Use `groups` shaped like `{"label": "Group name", "items": ["word 1", "word 2"]}`. Do NOT emit top-level `items`, `key`, or `{word, group}` pairs.
+**`group-sort` shape (mandatory canonical fields).** Use `groups` like `{"label": "Group name", "items": ["word 1", "word 2"]}`; no top-level `items`, `key`, or `{word, group}` pairs.
 
-**`letter-grid` shape (mandatory canonical fields).** Each `letters` entry MUST use `upper`, `lower`, `emoji`, `key_word`, and optional `sound_type`/`note`; no aliases such as `letter`, `word`, `sound`, or `kind`.
+**`letter-grid` shape (mandatory canonical fields).** Each `letters` entry MUST use `upper`, `lower`, `emoji`, `key_word`, optional `sound_type`/`note`; no aliases (`letter`, `word`, `sound`, `kind`).
 
-**`count-syllables` item shape (mandatory canonical fields).** Each item MUST use `word` and integer `correct`. Do NOT use `answer`.
+**`count-syllables` item shape (mandatory canonical fields).** Each item MUST use `word` and integer `correct`, not `answer`.
 
-**`watch-and-repeat` item shape (mandatory canonical fields).** Each item MUST use `video` for the YouTube/video URL. Do NOT use `url`.
+**`watch-and-repeat` item shape (mandatory canonical fields).** Each item MUST use `video` (the video URL), not `url`.
 
-**`translate` activity items (mandatory canonical fields — HARD FAIL on alias).** Each item inside a `translate` activity's `items:` list MUST use `source` for the text to translate and `options` for target choices; the correct target answer is the option with `correct: true`. For UK→EN translation, `source` is the Ukrainian text and the target English answer lives in `options[].text`. Do NOT use `prompt:`/`answer:` aliases, and do NOT emit a bare `target:` field that the parser cannot consume.
+**`translate` activity items (mandatory canonical fields — HARD FAIL on alias).** Each item in a `translate` activity's `items:` MUST use `source` (text to translate) and `options` (target choices); the correct target answer is the option with `correct: true`. For UK→EN, `source` is Ukrainian and the English answer is in `options[].text`. Do NOT use `prompt:`/`answer:` aliases, and do NOT emit a bare `target:` field.
 
-**`quiz` and `translate` item explanations (mandatory teaching feedback — HARD FAIL if missing/empty).** Every item inside a `quiz` or `translate` activity's `items:` list MUST include `explanation: "..."`. Keep it one concise line explaining why the correct option is right; for A1/A2, write this explanation in simple English. Empty strings, whitespace-only strings, or omitted `explanation` fields fail the `quiz_translate_explanations` gate.
+**`quiz` and `translate` item explanations (mandatory teaching feedback — HARD FAIL if missing/empty).** Every `quiz` or `translate` item MUST include `explanation: "..."`: one concise line on why the correct option is right (simple English for A1/A2). Empty, whitespace-only, or omitted values fail the `quiz_translate_explanations` gate.
 
-**`error-correction` activity items (mandatory canonical fields — HARD FAIL on alias).** Each item inside an `error-correction` activity's `items:` list MUST use these EXACT inner field names — they are the schema consumed by `scripts/yaml_activities.py: _parse_error_correction` AND the only fields the `vesum_verified` gate treats as containing intentional misspellings:
+**`error-correction` activity items (mandatory canonical fields — HARD FAIL on alias).** Each `error-correction` item MUST use these EXACT inner field names — the schema consumed by `scripts/yaml_activities.py: _parse_error_correction` AND the only fields the `vesum_verified` gate treats as containing intentional misspellings:
 
 ```yaml
 - type: error-correction
   title: ...
   instruction: ...
   items:
-    - sentence: "Вона дивюся в дзеркало."  # Ukrainian carrier only — no EN gloss
-      error: дивюся                        # the malformed token (excluded from VESUM)
-      correction: дивиться                 # the corrected token (must appear exactly in options)
-      options: [дивиться, дивюся, дивлюся] # ≥3 chips; ≥1 distractor ≠ error; no glosses on chips
+    - sentence: "Вона дивюся в дзеркало."  # Ukrainian only
+      error: дивюся                        # malformed token (VESUM-excluded)
+      correction: дивиться                 # must appear exactly in options
+      options: [дивиться, дивицця, дивитьця] # ≥3 chips; NEVER the error token; no glosses on chips
       explanation: "Вона дивиться. — She looks (reflexive 3rd person)."  # A1 EN lives here
 ```
 
-**Find-and-Fix options — HARD (same gate as `--upgrade`).** For every item with
-a non-empty `error:`:
-1. `options:` ≥3 distinct forms, includes `correction`, and includes ≥1 distractor
-   that is **not** the spotted `error` (never ship `[correction, error]` alone or
-   empty/`reveal-only` options).
-2. Chips must be **render-faithful**: after derivation, a chip equals
-   `correctForm` exactly (no `день (day)` gloss on the winning chip).
-3. At **A1**, `sentence:` is Ukrainian only. Put the short English scaffold in
-   `explanation:`. No English meta stems (“Find the soft-sign error…”).
-4. Distractors come ONLY from wiki L2 / bad-form inventory (see Distractor supply
-   above). Never invent Russianisms.
+**Find-and-Fix options — HARD (same gate as `--upgrade`).** Every item with a non-empty `error:`:
+1. `options:` ≥3 distinct forms, includes `correction`, and must **NOT contain the `error` token** (gate rejects it). Distractors: other spellings of the same word, never unrelated words (`кінь`, `сіль`).
+2. The winning chip equals `correctForm` exactly (no `день (day)` gloss).
+3. At **A1**, `sentence:` is Ukrainian only; the English scaffold goes in `explanation:`. No English meta stems (“Find the soft-sign error…”).
+4. Distractors come ONLY from wiki L2 / bad-form inventory (see above); never invent Russianisms.
+
+**Fill-in "no character"** is `""` in `options` and `answer`, never `без знака` / `no sign`.
+
+**Alphabet modules** (`sounds-letters-and-hello`, `reading-ukrainian`, `special-signs`): no `перенос`, no `divide-words`, no models `Мар'-яна`, `дере-в'яний`, `бур'-ян`, `паль-ці`.
+
+**Banned phrases** (any case): "mastery of all 33 letters", "comprehensive command of the complete 33-letter", "use only prepared models", "before you leave the lesson tab", "Stay inside Ukrainian for this lesson".
 
 The complete VESUM-exclusion list is exactly:
 `{sentence, error, errors, errorWord, error_word, explanation}`.

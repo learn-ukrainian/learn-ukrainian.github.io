@@ -28,8 +28,15 @@ function getWordColor(word: string, index: number): string {
 // Tiles never carry punctuation, but the YAML `answer` field can include a
 // terminal `.`/`?`/`!` or clause commas — normalize both sides before
 // comparing so those don't cause false negatives.
+// Stress marks are teaching notation, not letters: tiles `б/у/р/я/к` must match
+// the answer `буря́к`. Covers the combining acute (U+0301) and the precomposed
+// stressed vowels (á é í ó ú ý and Cyrillic ѓ ќ, which decompose to base + U+0301).
+function stripStress(text: string): string {
+  return text.normalize('NFD').replace(/\u0301/g, '').normalize('NFC');
+}
+
 export function normalizeUnjumbleAnswer(text: string): string {
-  return text
+  return stripStress(text)
     .trim()
     .replace(/[.?!]+$/, '')
     .replace(/,/g, '')

@@ -212,6 +212,9 @@ def _build_scenario_tokens(plan: dict) -> set[str]:
     ranking can promote blocks that describe the real scenario — not just
     the per-section query tokens (#1282).
     """
+    from scripts.build.alphabet_modules import filter_line_break_plan
+
+    plan = filter_line_break_plan(plan)
     parts: list[str] = [
         str(plan.get("title") or ""),
         str(plan.get("subtitle") or ""),
@@ -263,6 +266,9 @@ def compress_wiki_packet(
         bonuses and matched terms). Saved in ``wiki-excerpts.yaml`` for
         inspectability (#1282 AC-3) without entering the writer prompt.
     """
+    from scripts.build.alphabet_modules import filter_line_break_plan
+
+    plan = filter_line_break_plan(plan)
     sections = plan.get("content_outline") or []
     articles = _parse_wiki_articles(wiki_packet)
     result = {

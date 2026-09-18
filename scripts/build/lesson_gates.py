@@ -13,6 +13,13 @@ from pathlib import Path
 import yaml
 
 from scripts.audit.checks.activity_validation import check_error_correction_stem_quality
+from scripts.build.alphabet_modules import (
+    banned_phrases_in,
+    contains_line_break_model,
+    is_alphabet_slug,
+    is_line_break_activity,
+    mentions_line_breaks,
+)
 
 MAX_UNVERIFIED_STRESS = 10
 MAX_UNVERIFIED_LEMMAS = 5
@@ -615,9 +622,9 @@ def error_correction_item_defects(
     """Return blocking defects for one Find-and-Fix item (empty = ok).
 
     After the learner spots the bad token, step 2 must offer a real choice set:
-    include the correction, at least three chips, and at least one distractor that
-    is not merely replaying the error they already marked. Empty options
-    (reveal-only) and tautological ``[correction, error]`` pairs fail.
+    the correction plus at least two distractors, and no chip equal to the error
+    they already marked (the component filters it out too, so an error chip would
+    shrink the set below three). Empty options (reveal-only) fail.
 
     Also enforces the React render contract: after
     ``error_correction_render_values``, at least one chip string equals
@@ -721,20 +728,11 @@ def error_correction_item_defects(
 
     if error:
         err_surf = nfc(error).lower()
-        corr_surf = ""
-        if isinstance(correct_form, str) and correct_form.strip():
-            corr_surf = nfc(correct_form).lower()
-        elif correction:
-            corr_surf = nfc(correction).lower()
-        non_error_distractors = [
-            lab
-            for lab, surf in zip(chip_labels, surfaces, strict=True)
-            if surf != err_surf and (not corr_surf or surf != corr_surf)
-        ]
-        if not non_error_distractors:
+        if err_surf in surfaces:
             defects.append(
-                f"{prefix}error-correction options must include a distractor other than "
-                f"the spotted error {error!r} (not just correction+error)"
+                f"{prefix}error-correction options must not contain the spotted error "
+                f"{error!r}: the learner already marked it, so offering it again is not a "
+                "choice (use the correction plus other spellings of the same word)"
             )
 
     # Unaccented copy of a stressed correctForm is not a real distractor:
@@ -804,6 +802,72 @@ def error_correction_activity_warnings(
             )
         )
     return out
+
+
+# Words for "no sign" are prose, not an empty choice. An empty fill-in choice
+# is the empty string "", which the component renders as a blank slot.
+_NO_SIGN_RE = re.compile(r"\b(?:без|немає)\s+знака\b|\bno\s+sign\b", re.IGNORECASE)
+
+
+def fill_in_item_defects(item: dict, *, activity_id: str = "") -> list[str]:
+    """Blocking fill-in defects: "no sign" wording in place of the empty string (#8237)."""
+    if not isinstance(item, dict):
+        return []
+    prefix = f"{activity_id}: " if activity_id else ""
+    options = item.get("options")
+    values = [("answer", item.get("answer"))]
+    if isinstance(options, list):
+        values += [("option", o) for o in options]
+    out: list[str] = []
+    for label, value in values:
+        if isinstance(value, str) and _NO_SIGN_RE.search(strip_acute(value)):
+            out.append(
+                f"{prefix}fill-in {label} {value!r} words the empty choice; use the empty "
+                'string "" (the component renders a blank slot), not \'без знака\' / '
+                "'Немає знака' / 'no sign'"
+            )
+    return out
+
+
+def fill_in_activity_defects(activity: dict) -> list[str]:
+    if not isinstance(activity, dict) or activity.get("type") != "fill-in":
+        return []
+    aid = str(activity.get("id") or "fill-in")
+    out: list[str] = []
+    for idx, item in enumerate(activity.get("items") or []):
+        out.extend(fill_in_item_defects(item, activity_id=f"{aid}[{idx}]"))
+    return out
+
+
+def alphabet_line_break_defects(
+    *, slug: object, activities: list, prose: str, label: str = "",
+) -> list[str]:
+    """Alphabet modules teach syllables, not line breaks (#8237). Empty for other slugs."""
+    if not is_alphabet_slug(slug):
+        return []
+    prefix = f"{label}: " if label else ""
+    out: list[str] = []
+    for a in activities:
+        if not isinstance(a, dict):
+            continue
+        aid = a.get("id") or a.get("type")
+        if a.get("type") == "divide-words":
+            out.append(f"{prefix}{aid}: divide-words is a line-break activity; alphabet modules must not teach line breaks")
+        if is_line_break_activity(a) and a.get("type") != "divide-words":
+            out.append(f"{prefix}{aid}: activity text mentions перенос; alphabet modules must not teach line breaks")
+        blob = "\n".join(str(x) for x in leaves(a) if isinstance(x, str))
+        if contains_line_break_model(blob):
+            out.append(f"{prefix}{aid}: activity contains a hyphenation model (Мар'-яна / дере-в'яний / бур'-ян / паль-ці)")
+    body = "\n".join(ln for ln in prose.splitlines() if not ln.lstrip().startswith("#"))
+    if mentions_line_breaks(body):
+        out.append(f"{prefix}prose mentions перенос; alphabet modules must not teach line breaks")
+    if contains_line_break_model(prose):
+        out.append(f"{prefix}prose contains a hyphenation model (Мар'-яна / дере-в'яний / бур'-ян / паль-ці)")
+    return out
+
+
+def banned_phrase_defects(text: str, label: str) -> list[str]:
+    return [f"{label}: banned learner-facing phrase {p!r}" for p in banned_phrases_in(norm_text(text))]
 
 
 def missing_stress(text: str, allow: set[str]) -> list[str]:
@@ -928,13 +992,19 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
         (a.get("id") or f"act-w{i + 1}") for i, a in enumerate(base_acts.get("workbook", []))}
     base_vocab = yaml.safe_load(base["vocabulary.yaml"])
     base_secs = sections(base_md)
+    alphabet = is_alphabet_slug(plan.get("slug"))
     base_paras_by_lesson: dict[int, list[str]] = {L["n"]: [] for L in lessons}
     for title, body in base_secs.items():
         mapped = section_to_lesson.get(title) or section_to_lesson.get(strip_acute(title))
         if mapped is None:
             block(f"baseline section {title!r} has no lesson mapping (checker config)")
             continue
-        base_paras_by_lesson[mapped] += [p for p in paragraphs(body) if len(p.split()) >= 8]
+        # Alphabet modules must not teach line breaks, so original paragraphs that do
+        # are intentionally not carried forward (#8237).
+        base_paras_by_lesson[mapped] += [
+            p for p in paragraphs(body)
+            if len(p.split()) >= 8 and not (alphabet and mentions_line_breaks(p))
+        ]
     n_long = sum(len(v) for v in base_paras_by_lesson.values())
     report["facts"]["baseline"] = {"commit": ly.get("source_commit"), "prose_tokens": len(strip_comments(base_md).split()),
                                    "long_paragraphs": n_long, "activities": {k: len(v) for k, v in base_acts.items()},
@@ -1023,10 +1093,19 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                     a, level=str(plan.get("level") or "").lower()
                 ):
                     block(f"lesson {n}: {defect}")
+                for defect in fill_in_activity_defects(a):
+                    block(f"lesson {n}: {defect}")
                 for advisory in error_correction_activity_warnings(
                     a, level=str(plan.get("level") or "").lower()
                 ):
                     warn(f"lesson {n}: {advisory}")
+        for defect in alphabet_line_break_defects(
+            slug=plan.get("slug"), activities=inline + workbook,
+            prose=lesson_md_clean[n], label=f"lesson {n}",
+        ):
+            block(defect)
+        for defect in banned_phrase_defects(lesson_md_clean[n], f"lesson {n} prose"):
+            block(defect)
         for v in check_error_correction_stem_quality(
             {"inline": inline, "workbook": workbook},
             level=str(plan.get("level") or "").lower(),
@@ -1164,7 +1243,11 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     prov = {(p.get("placement"), p.get("index")): p for p in provenance}
     originals = [("inline", i, a) for i, a in enumerate(base_acts.get("inline", []))] + \
                 [("workbook", i, a) for i, a in enumerate(base_acts.get("workbook", []))]
+    # Originals that teach line breaks are intentionally dropped in alphabet modules.
+    dropped = {(pl, i) for pl, i, a in originals if alphabet and is_line_break_activity(a)}
     for placement, i, a in originals:
+        if (placement, i) in dropped:
+            continue
         p = prov.get((placement, i))
         expected_id = a.get("id") if placement == "inline" else (a.get("id") or f"act-w{i+1}")
         if not p:
@@ -1191,7 +1274,10 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     # Exemptions cannot be invented for new writer activities.
     if not set(exempt) <= original_ids:
         block("item exemptions may name only preserved original activities")
-    if len(provenance) != len(originals) or len(prov) != len(provenance):
+    for pl, i in sorted(k for k in prov if k in dropped):
+        block(f"provenance points at dropped line-break original {pl}[{i}]; remove it")
+    kept_provenance = [p for p in provenance if (p.get("placement"), p.get("index")) not in dropped]
+    if len(kept_provenance) != len(originals) - len(dropped) or len(prov) != len(provenance):
         block("provenance must cover every original exactly once")
     # Allocation records first introduction once; a later lesson may use prior vocabulary.
     # Names copied as complete archived lines are already in the baseline; do not
@@ -1307,6 +1393,8 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
         block("module landing render missing")
     else:
         landing_text = norm_text(strip_comments(unescape_published(landing)))
+        for defect in banned_phrase_defects(landing_text, "module landing"):
+            block(defect)
         if len(re.findall(r"<TabItem\s", strip_comments(landing))) != 4:
             block("module landing must have four learner tabs")
         for lemma in base_lemmas:
