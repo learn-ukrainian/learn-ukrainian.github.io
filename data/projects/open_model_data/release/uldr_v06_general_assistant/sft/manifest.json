@@ -2,907 +2,907 @@
   "dataset_name": "uldr_v06_general_assistant_sft",
   "total_trajectories": 75000,
   "shards_count": 150,
-  "max_shard_size_kb": 1692.23,
+  "max_shard_size_kb": 1591.45,
   "shards": [
     {
       "shard_file": "sft_shard_001_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1680.9,
-      "sha256": "07d7f105c114fccd4fcfe932b216ab2689afec2da2f53291d51010bf4beeee7c"
+      "size_kb": 1581.15,
+      "sha256": "715925448ba1cf088a41098b6dfaeeb5b6e45445331e5f7cbba40b5a2e1e3ceb"
     },
     {
       "shard_file": "sft_shard_002_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1687.19,
-      "sha256": "94704a32ceb1e921a3b4ecb46c7930aef54cb5be0da0bce23533bd8df9e2f24f"
+      "size_kb": 1584.77,
+      "sha256": "cf27c081291409ad61d4c0a40d6606c400ee723c16f94345a8793bb53d75ff8c"
     },
     {
       "shard_file": "sft_shard_003_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1686.6,
-      "sha256": "e23345f65589a3d6782132965f2735ee67e65b9ad88d6afc04c5b9daa0b7dee8"
+      "size_kb": 1581.53,
+      "sha256": "15e14cf1792109a770ae666a592fd8c66788c242f8bdf69de497cf3ee443c553"
     },
     {
       "shard_file": "sft_shard_004_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.32,
-      "sha256": "92ed7a6c254145fd5a29ff9ac661f4a8dec82bac08600da4339bd49633a576cd"
+      "size_kb": 1583.37,
+      "sha256": "151976c031978ac9895e91715b88ed36720d09c589d784b18c5908d72190e114"
     },
     {
       "shard_file": "sft_shard_005_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1683.22,
-      "sha256": "013f0a1399fdb2c603719a478273e5c6fc759e2cf5ace747cf856a816d04b309"
+      "size_kb": 1584.26,
+      "sha256": "2b832e468fb3b7c05fca0d440bc32cf0ad2771e3328b1944243ce7c0a11026a6"
     },
     {
       "shard_file": "sft_shard_006_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1685.57,
-      "sha256": "55bdfc9777a607b378c9b722d5994f3caad2c7a6dd5c571e180b036458f5c40c"
+      "size_kb": 1583.48,
+      "sha256": "8b31c1c7a8141e4d98e1497aa23d1d7e56d340af15f2f994633494213ff9a78a"
     },
     {
       "shard_file": "sft_shard_007_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1687.4,
-      "sha256": "49ffda286886710f674fff967d702c331dda2e25e77afe251c7ab88f0c1500c4"
+      "size_kb": 1590.09,
+      "sha256": "2403991c76855118de8bb27a8f7dc1d246cec4e4a3eb0a44effa96b4554c2ff2"
     },
     {
       "shard_file": "sft_shard_008_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1682.61,
-      "sha256": "8a9328346ff557f0907365cb53d98a9008c5954ffdc26d4b68ee8ad0dbc26f27"
+      "size_kb": 1588.68,
+      "sha256": "ae8e8656103479f71bf6ac2b9808f75a1e31d3f67d6660705e928ddd81d5936d"
     },
     {
       "shard_file": "sft_shard_009_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.06,
-      "sha256": "45b707f02aaea137f60cf72e5a10d8493f6d1a8f163aa78729a51173b2442d21"
+      "size_kb": 1583.27,
+      "sha256": "1759ffc98fedc7571d89cc9a71a722a1db76171381781a9aca0061ab1f71e17d"
     },
     {
       "shard_file": "sft_shard_010_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1692.23,
-      "sha256": "4f921a8f3b39aab3ef9f013bb8f89e6af4d450a9563b1e4749dd2d72949b78b2"
+      "size_kb": 1578.3,
+      "sha256": "23e86556fb8b1d5567ba86800b03c848ab48b250f0415100c89ddd2850e83675"
     },
     {
       "shard_file": "sft_shard_011_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1682.6,
-      "sha256": "5ad29fdbc1013550a2d4347b72aa6eab0850b8d2b2b526059b0d3165c814cbd2"
+      "size_kb": 1574.89,
+      "sha256": "fca0571a2f480d02cc9d55675edb5c668e5976e0899ef35ac749c88b2b599cda"
     },
     {
       "shard_file": "sft_shard_012_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1687.25,
-      "sha256": "319d79823761d87858e37fbbe26c55cd66856b75e48ff7a9fbb31e66d9497c9c"
+      "size_kb": 1581.7,
+      "sha256": "fecf030e89d2f42a2752a1e5ef6595d2564cfe46339c94316ee6cc6636d5e0f4"
     },
     {
       "shard_file": "sft_shard_013_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1681.65,
-      "sha256": "e9de2e487708cea83440e241f75c9fe70471224563b42d082531e69b983e18e7"
+      "size_kb": 1580.65,
+      "sha256": "460eeb1ce81c628e4d3b2f69148e6ac447ca135fc7f5c427d18e6e48722154ff"
     },
     {
       "shard_file": "sft_shard_014_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.35,
-      "sha256": "ce7349ae4792cbf6cfa3c1493062d451dfc7013a282220bc81c249a101be3654"
+      "size_kb": 1580.13,
+      "sha256": "a9d10fbed740c55d2b38bb8c116ed13e0623c27f7fc7b89089d66c745fb8db8c"
     },
     {
       "shard_file": "sft_shard_015_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.35,
-      "sha256": "860812f24f2e60cbd24b8a555f8451096d67773417ab2dd44166ba780f02ad46"
+      "size_kb": 1574.2,
+      "sha256": "2aa8690f647de3c8a6d839ec765ea3a3cecf74c0433387278e0f6469a9c2a0c6"
     },
     {
       "shard_file": "sft_shard_016_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1682.22,
-      "sha256": "d4394b1616561d7ec0f28b90a9e2ab0b74ee79e407be27580206b07a6d08c98d"
+      "size_kb": 1574.05,
+      "sha256": "e286f096218fda6d6c08926b1fe92de32bac438388fb13dd1e070b49f0481ec5"
     },
     {
       "shard_file": "sft_shard_017_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1679.53,
-      "sha256": "af0672b7ea02124ff4ba7595381fc8936bb08ddd8b917a53366106ba649092a7"
+      "size_kb": 1583.32,
+      "sha256": "8b58ac900d36e52dd343a1696f0bdff7c53e33cf6f818d8e41280d9d7290f3ff"
     },
     {
       "shard_file": "sft_shard_018_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.66,
-      "sha256": "6b00cd21a9b4288dd68fba15bac2c2b7f980aaaf3a16cefe099ccc7741c9a6bf"
+      "size_kb": 1586.38,
+      "sha256": "ca52828a1691b5f54aeeb2ecddeccbf01fb6f26d98c2ee028b17f7a0216d82a2"
     },
     {
       "shard_file": "sft_shard_019_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1688.32,
-      "sha256": "b1e3035a11b6df50a3deb7f9d4aa4457b69fd6ab9a8f610acef64d78a7526fec"
+      "size_kb": 1573.78,
+      "sha256": "af888faa61b72cb04f7d29d471bfe28d286870386d356dfcd8dcbbb398ef1bf3"
     },
     {
       "shard_file": "sft_shard_020_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1682.9,
-      "sha256": "a01249a9d1da37b3c148da3db74d7868229a527ecd231251367917cb6cd71cf6"
+      "size_kb": 1587.67,
+      "sha256": "88b0bc60bb65d4c7bf5400c7c0a9fecf6f413de8b1d90fdf921c3eb1ae9cbf26"
     },
     {
       "shard_file": "sft_shard_021_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1685.54,
-      "sha256": "5d8b1c492da487a7677a3081267b6018cd2727f55165c5ce497a6766865c3341"
+      "size_kb": 1577.04,
+      "sha256": "50a2397723b920ed5da7c507ff231ab65b9c5eb01ab366ebd8e35db4dd6a93d2"
     },
     {
       "shard_file": "sft_shard_022_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1689.19,
-      "sha256": "cff648f5b63fd215e9a7ee0e67b657e6aa19a3a095074043b05f935d886f0ccc"
+      "size_kb": 1581.37,
+      "sha256": "2ae4ce848af9eb9da4c86403e3d2910b847f1a1bffe0f47312f270782e75565e"
     },
     {
       "shard_file": "sft_shard_023_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1687.83,
-      "sha256": "b441c95826a54e3dd5536a4ed54ef4c5f1209c0581f490c556d6940bec9a8459"
+      "size_kb": 1582.02,
+      "sha256": "0e0a86b2b23dc367af44d854ee2d116ab9e196808c855e938465709f6c144d96"
     },
     {
       "shard_file": "sft_shard_024_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1686.27,
-      "sha256": "94164155f4941767f0bf93256fd37437cec90476f5315c4ea1e929f47ab9b036"
+      "size_kb": 1585.37,
+      "sha256": "854b3cb7e824345ca25a0de55637f9d4bc2985a5070ab66cb86cfc5d70c39e40"
     },
     {
       "shard_file": "sft_shard_025_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1685.69,
-      "sha256": "7ea94c5478392f34056a61c59cc8ef9f7a5e08d0d8f33ada9e70fa1b97f166bc"
+      "size_kb": 1584.91,
+      "sha256": "29c0e9cf3d774b8449a8d3f16e083b5c5e7a75d5057720381bcfb6e2eaf91a47"
     },
     {
       "shard_file": "sft_shard_026_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1685.49,
-      "sha256": "e0e52ec6ad8edd2a121b4e4df453d51224957691728904d7338a12710abca876"
+      "size_kb": 1581.61,
+      "sha256": "d7a99cd9ce1becdaf5a7a7ced09aac9924f7bb854db6cfa6e499c835a3776460"
     },
     {
       "shard_file": "sft_shard_027_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1685.58,
-      "sha256": "422e5310aa3562be065a65b1ea098aea80f916ba2b9478cc4f4284b78fea5764"
+      "size_kb": 1582.53,
+      "sha256": "b4d467f715f1fb1c77e9dd2e10ffe8fec3587e601b45abfc15f806a227072ec1"
     },
     {
       "shard_file": "sft_shard_028_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1681.37,
-      "sha256": "bf2c453a728b2a11cef4f393b7969f1f65cc58cd0666ba135e9141e2dbbe763a"
+      "size_kb": 1583.83,
+      "sha256": "50b265075c476f1731817b03869626e60cb8824388278b38076c29a18a1db727"
     },
     {
       "shard_file": "sft_shard_029_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1681.19,
-      "sha256": "5c2110ad29f7c9aed08082fce7b292fd4eaa6b42879f304c13246fd314a6b784"
+      "size_kb": 1582.67,
+      "sha256": "3b9c1e3fbec15d4586dd172b8388dbf16bbf4945379e3393cd05c325e83d90ba"
     },
     {
       "shard_file": "sft_shard_030_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1680.21,
-      "sha256": "6cd16886aac79af1c819f27a3611a6d2af042f7315c17d4c5b03920f997848c3"
+      "size_kb": 1588.86,
+      "sha256": "6327f768e647ec729d0e75c9176aff5c76f7c7e6c167c68ee39d9a7872e7227b"
     },
     {
       "shard_file": "sft_shard_031_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1685.74,
-      "sha256": "c3d7b229b2cbc58032fe509cac7c55a63e830e1633c3eb5cd6f3ccda3bbde94b"
+      "size_kb": 1575.62,
+      "sha256": "cbd194d6bdf72782252ffcebf62b043bbc6a15f56a4e6660d7baca72d3acfbf0"
     },
     {
       "shard_file": "sft_shard_032_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.55,
-      "sha256": "525320cf02acaa28e877bee2214e74621d9d0445a40bce68eee26db0cb914430"
+      "size_kb": 1576.66,
+      "sha256": "5b597cacf85ef40822a85695bfab78cdb59c050ba69c78b9b4829f5189dd1c66"
     },
     {
       "shard_file": "sft_shard_033_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1678.43,
-      "sha256": "09f7e065b014f7372a1276317aa9789f738ca0a63046052ba9e05b2aa5b4585d"
+      "size_kb": 1581.92,
+      "sha256": "2dd266d2195b94b475b6096a637da08136ce77e167b204996ba4a682340b42ed"
     },
     {
       "shard_file": "sft_shard_034_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1685.07,
-      "sha256": "46b40b15ce6aa089647d2a632e56ce6ea29bda73023052946a604d536410d356"
+      "size_kb": 1580.5,
+      "sha256": "b0b61a508c115f538d1e7d9fa096d07d17454a0fa03f010976d42a1ca5363ea1"
     },
     {
       "shard_file": "sft_shard_035_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1682.66,
-      "sha256": "b55055016ccc96e6c827bdc18a453d9ce934d1029f975fdd491f2f883db4ad40"
+      "size_kb": 1587.45,
+      "sha256": "0ad13bed31c249ab48948c34c5d1ce871e8fc156c3f9a7c054d1c5034a46e6d7"
     },
     {
       "shard_file": "sft_shard_036_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1687.52,
-      "sha256": "bb172a6bc964aa264c7abb53f8e319c76068b5e94cab4a885da8a41797f7d226"
+      "size_kb": 1590.02,
+      "sha256": "77bbffb74083ce1b55d70e404a8ef193394fa4e3487e439d25614b04fe40312e"
     },
     {
       "shard_file": "sft_shard_037_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1680.57,
-      "sha256": "95de25e57f50f15d98b937d747ea872dee133f823682d2720880b7e0d92d65cf"
+      "size_kb": 1581.54,
+      "sha256": "2bb9bcfdcd2e6eb78b9abc8ae8e7794bded212865bec9b708345ba061d39aa10"
     },
     {
       "shard_file": "sft_shard_038_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1685.32,
-      "sha256": "9e99e3576041ff36ac07fea3659eee9538572d23d81880a9eb0f3653be29f0d3"
+      "size_kb": 1584.35,
+      "sha256": "d1dc660fdef62f78b35dc7d939fc9d72c4bde31ca9b5ca1656668c1a91662e2d"
     },
     {
       "shard_file": "sft_shard_039_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1679.6,
-      "sha256": "736e6dced5172fd16e0c9b944bd48819b8816431f1743957105f2fb07457758e"
+      "size_kb": 1588.63,
+      "sha256": "a3119ca08669c3f44472025dc5a9e5014cf6787dd02fd63714917af6e6a9e4de"
     },
     {
       "shard_file": "sft_shard_040_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1681.66,
-      "sha256": "a018b2024a20697dd6fd7e80ac0557869b9a941074f79926831a18c4d3fe7f82"
+      "size_kb": 1578.83,
+      "sha256": "c1ab813c104eb90066e55a41ced0ad39a09df178c2ac34d1d3b976f892c46e86"
     },
     {
       "shard_file": "sft_shard_041_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1687.57,
-      "sha256": "fcd11e7e35ed465677e2fdbe2d3c9fbf0629d4dd409c3536148baa9a21c9ac54"
+      "size_kb": 1583.52,
+      "sha256": "2caaedde40890590caddb67a5c3df3092b610ac84565613457b89344833e62c2"
     },
     {
       "shard_file": "sft_shard_042_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1679.27,
-      "sha256": "18b8a959c2e9ad6f9e80b83bd6266701bf77fcd2e63511d59f4e61269a3cc055"
+      "size_kb": 1581.63,
+      "sha256": "79f50e886390ed4c11b41f2b7a4c954a0c8223d04313ca297d19be69c1088e29"
     },
     {
       "shard_file": "sft_shard_043_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.06,
-      "sha256": "0229fd9e317a2d2690e5ea64882f9e2bdb055667c8442be10bf15484b463d804"
+      "size_kb": 1588.35,
+      "sha256": "24a2e2abee654cc3c02c2887084df22dd1799028959dcd985f4efb3345a0b39c"
     },
     {
       "shard_file": "sft_shard_044_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.91,
-      "sha256": "aee217d615a43aee68990ba7911ea48f646b4aecb93820b5420044da66295ed1"
+      "size_kb": 1578.17,
+      "sha256": "82e94b38e6d76feed8c25e4d3f576b011e9520ed6828eeafae347b970b6c869c"
     },
     {
       "shard_file": "sft_shard_045_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1681.9,
-      "sha256": "62ffd0e1c686721041f87442d18f3aedc3f834a3a3113f2d8fc32f8261fcf9ed"
+      "size_kb": 1580.25,
+      "sha256": "990d34dc1bd8b7ddbc31d3b4fcdcfb58cbace0cb70e8de1c9ce5bc7a7d7cfe83"
     },
     {
       "shard_file": "sft_shard_046_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1686.07,
-      "sha256": "9c692ae14e7a342709009221bcdb565c5dc98c27548a10442100a3b0feb1a2ed"
+      "size_kb": 1586.32,
+      "sha256": "8435bc8131a5b745bd103ff4370df0356c736d9fc8967d460e0ff23a143e9f80"
     },
     {
       "shard_file": "sft_shard_047_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1682.21,
-      "sha256": "e7bd526c8303d0d7e6d82f519617ba57e530528dd64150be9ddd4c06a67fedec"
+      "size_kb": 1588.96,
+      "sha256": "5098d7b8ff172153f02e91a47f8543b1e23a4062ecf2add0bc2b5a2d40f6bb1f"
     },
     {
       "shard_file": "sft_shard_048_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1687.01,
-      "sha256": "5f9c23762e8eb7d8824fdbc9411e174ed03d24f5c8eb54c87f2dd84b03e62e2d"
+      "size_kb": 1576.49,
+      "sha256": "7b2bf64a99bc2b15f3cdd954e3555c2081c25ac643772127f6437c698f4dbc10"
     },
     {
       "shard_file": "sft_shard_049_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1673.43,
-      "sha256": "8ae85b831c579b3d824fa3b8ceb20cba3d76cb94a9492178211bae6430dda1fa"
+      "size_kb": 1576.52,
+      "sha256": "4437006dc29eb1712145c2144ff71ea2c1839538abf4ffa364476069ecb2fe84"
     },
     {
       "shard_file": "sft_shard_050_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1682.47,
-      "sha256": "b24e44cf87d8078d5a6bffe5d3dc9e70af62f0741721afd66636b7333f51b3a7"
+      "size_kb": 1584.38,
+      "sha256": "86864634fc02101ee994498ef5f29f131dd9842db25588b0efcbef781ba7fa4d"
     },
     {
       "shard_file": "sft_shard_051_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1683.65,
-      "sha256": "7f1a7ce8617db08f42878812cabc63f17b8cca7463e7136f53af2ebf9408b1b6"
+      "size_kb": 1582.48,
+      "sha256": "207cfbbd853a883bacd20a07381f8222989d3ba5a10b7c94baaf1e44079eaa17"
     },
     {
       "shard_file": "sft_shard_052_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1685.75,
-      "sha256": "884b1b738db3afa408b3b947397c7d264eb9d4ce835563031423f1df8bb6616c"
+      "size_kb": 1577.9,
+      "sha256": "a185f136b9712f9e6778258f7b7f21da3a4649f7a9e048c60c865f985a2bc453"
     },
     {
       "shard_file": "sft_shard_053_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1683.11,
-      "sha256": "b27830bdbdaa1a07687e4adbfc0d097f828320cb75765cf8cb358ef03baaf9b8"
+      "size_kb": 1576.33,
+      "sha256": "b0196ff7e13c315e5e74dddda1187f33a1d6c5fe06b2aa1c0a49b31e79566f62"
     },
     {
       "shard_file": "sft_shard_054_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1681.45,
-      "sha256": "7d45c07b57f65f503ebef4bedfa5ded34e9a27d45801bbcf35e433b5ad75e78d"
+      "size_kb": 1585.48,
+      "sha256": "fad181b073f2c0f772a9476585523d056cb6ce6d7285241bdba1be5ada66f112"
     },
     {
       "shard_file": "sft_shard_055_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1686.82,
-      "sha256": "0136f8e2c879e3d7f7ded1b3a54e5892430ee7bb45ca1c4653e08d31c858b276"
+      "size_kb": 1582.78,
+      "sha256": "965e7bf0846e327bebe84ca7c34270634506ef3fd8ad65d86f92fb4afa8b402a"
     },
     {
       "shard_file": "sft_shard_056_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1683.25,
-      "sha256": "d5bec2173ee79b65d3ddc08ea8a15a54d508e6120bbf1257da4072013b0415ae"
+      "size_kb": 1583.16,
+      "sha256": "2a271360ea592f894109df56a12bbd1865ad58649ba7377b85b596700a642e15"
     },
     {
       "shard_file": "sft_shard_057_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1681.41,
-      "sha256": "bdadc7289c37d3749ddd0abe43d99e0bbf2c367aa29a441c602b70f7dedf112d"
+      "size_kb": 1590.16,
+      "sha256": "53d5def777c53dfc76e68b537b8f2b7a4017de93f1c66856b36b97082a2fb76f"
     },
     {
       "shard_file": "sft_shard_058_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1678.38,
-      "sha256": "d991bed90d3679f65127f25c97870aaaf82632a5f26b8b30d366e2ba847334e9"
+      "size_kb": 1580.5,
+      "sha256": "34309956acdfd793c93988ee5da9c0be375d8d964055a4e2e9a1e786494e33e6"
     },
     {
       "shard_file": "sft_shard_059_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.24,
-      "sha256": "e0521a9f735ed760fe5abddbb862ecf93610c43357c7eefec053ee2d4f27b646"
+      "size_kb": 1576.15,
+      "sha256": "715bb233c5aa0902a24a5569e54362164a002175198d1db7b45175c90838c76a"
     },
     {
       "shard_file": "sft_shard_060_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1682.42,
-      "sha256": "e86b44b2ee34c7b05dc40384a74680ed6e2d1f62798127ffcc2b15d59bce8a43"
+      "size_kb": 1583.17,
+      "sha256": "1c59ef6927b70fcc735a480453301c2e257db635c43fd74999f1e85bbcef2c32"
     },
     {
       "shard_file": "sft_shard_061_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1687.25,
-      "sha256": "c7f40cb6c2606390279b38b5d88736763e6e43628b205367f2ad94ff351f083c"
+      "size_kb": 1578.31,
+      "sha256": "cbc73c5c4179ad888fc4f762920f35c53bd7be5f4d38ee1e103e8e92b254b153"
     },
     {
       "shard_file": "sft_shard_062_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1685.59,
-      "sha256": "7e67abb7b0fc8174d6b4d01525cc7627f4fd4bed7f27a794fd7f2a2d84ba6e38"
+      "size_kb": 1585.08,
+      "sha256": "81be96e3893f1cb1ec18695c988d214bb673f34e837c80cfd51cc61acd99f62d"
     },
     {
       "shard_file": "sft_shard_063_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1681.73,
-      "sha256": "00d0f1fe39c97120fb62c1884da7131c6bde3f995509e16924d345c7e7b02b6a"
+      "size_kb": 1585.38,
+      "sha256": "4d34ff3edd62a95911b461cfa2fa44aa2fb28ae2427afb7e274440530a5ffe66"
     },
     {
       "shard_file": "sft_shard_064_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1687.81,
-      "sha256": "1eaff16e08331d0a9070df782589f8fb060bb97ffbd4fda0f0855c0654328bb1"
+      "size_kb": 1584.64,
+      "sha256": "46b8755f0ef61f32e2d895e23b701908c9c43f2887585642844a636078c342e4"
     },
     {
       "shard_file": "sft_shard_065_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1683.37,
-      "sha256": "1164cea3f7ced0645d8eb0431057dfd5030f4c2c0a110e94f4b6a80ec365dda2"
+      "size_kb": 1580.94,
+      "sha256": "da398b2bda6ce26c5daecdc146c4442cc2d2397ca48cecba87876b06f2214d2a"
     },
     {
       "shard_file": "sft_shard_066_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1687.78,
-      "sha256": "cdd72f81584d4bca163e726071e76a8e4c789c952727f5c8836250e96de73f8a"
+      "size_kb": 1580.52,
+      "sha256": "25785adc8dad5a7cb744c6be9e4685b8596e438c6451d5b36b03536ecb394898"
     },
     {
       "shard_file": "sft_shard_067_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1685.54,
-      "sha256": "d3516896270342e5a5a4e77411a05e93ace6c91eddb0b5de96dd6f29b91ddeb5"
+      "size_kb": 1580.3,
+      "sha256": "bf4e7c518a8c03ecddcb4e502f384e80d638733e6fab487fb4c0e2dc61d90260"
     },
     {
       "shard_file": "sft_shard_068_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1678.35,
-      "sha256": "5097b2300998add869edb3accdd2d1aed4b6c3074043857982c3024a3975bca8"
+      "size_kb": 1585.33,
+      "sha256": "dff6975f15af7da3bb32862a9c7704fc411d80971c596b2b15c6cdc4c475098d"
     },
     {
       "shard_file": "sft_shard_069_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1682.54,
-      "sha256": "ca438d45917b31fadd09e85f2fa26aaaaae28f469ee9c6ed0434f14225bbe8bb"
+      "size_kb": 1583.43,
+      "sha256": "8e08dc9faa1d564e7c7dbfca727e7b31bc2aaf7ce0b491f0f6eb0f38120fabb4"
     },
     {
       "shard_file": "sft_shard_070_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1683.22,
-      "sha256": "140d796bc020fab834d5e2f117b51512f084bdc0ab08dcb7bdd63ff8276033a6"
+      "size_kb": 1589.82,
+      "sha256": "a2f606c9cfa43c1f9ebb40ec985fed15c20978a97a6e9888544a0f26975f74d4"
     },
     {
       "shard_file": "sft_shard_071_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1683.48,
-      "sha256": "553b98432170f74a689e9bb77a090895faba23e49dc7bb3adbc3784334208dd4"
+      "size_kb": 1574.52,
+      "sha256": "a8c619edfbe3b84edb7ff534b6672172a85b9532d9bac6d3fada2c2d6f505771"
     },
     {
       "shard_file": "sft_shard_072_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1682.08,
-      "sha256": "5034e13df9313e7be94c41d2dddc89021f65ef907632bd7229f98859b4018a51"
+      "size_kb": 1576.83,
+      "sha256": "8020c4b6aa43aa2d216534b1a310c06edc2a9338cda219b3a001910d4a5caf1a"
     },
     {
       "shard_file": "sft_shard_073_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1688.22,
-      "sha256": "6c34a89fff9007c210cc8511e94865701d9683e301e98e59ddb40865de05c4fb"
+      "size_kb": 1581.42,
+      "sha256": "7747729aa5a964248defbb0f7b57679cfe0372a3e41f896bdebf4f5a1677557e"
     },
     {
       "shard_file": "sft_shard_074_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1681.45,
-      "sha256": "6e65b66f4fdbf0d66948c9aaf613d86715a83eab7fc70e8be834a4ae3f5f3b16"
+      "size_kb": 1577.89,
+      "sha256": "2a958f3eccdf6d31c0658e78b66d725f2106a40def8e6126af25b20e15a9346b"
     },
     {
       "shard_file": "sft_shard_075_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1685.27,
-      "sha256": "7e09d316ed19a64baa9501d968fc5e257cfd7ed37643a6129d4ec8dd1823fd32"
+      "size_kb": 1585.77,
+      "sha256": "653e0557f1044ea84b3353956050410c89484ff63651a90a3c930398c8af0436"
     },
     {
       "shard_file": "sft_shard_076_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1687.63,
-      "sha256": "1bc5468f60d6be44e5aca864e690e6d9c6909e3bc5f7c13e247a92f11ed6c229"
+      "size_kb": 1588.21,
+      "sha256": "305daf1cd6aface2e0c7134b2b986bfab738d8e4d6defa665792a6635801a605"
     },
     {
       "shard_file": "sft_shard_077_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1681.16,
-      "sha256": "ae61799153f65af0b2c07f568980069ba69476339f77816e04094d5590d36553"
+      "size_kb": 1575.51,
+      "sha256": "af15c3bde24476b6bfdb3c70482c029810007e1b486edfa9436025d2f7d3d82c"
     },
     {
       "shard_file": "sft_shard_078_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1681.77,
-      "sha256": "353dc1706b1debf307cb9a56939302dec46bf4f1e3e98795bf70b60c4d504e4c"
+      "size_kb": 1579.83,
+      "sha256": "f7b906118b2b35ae99aa008270342e396c4bb6387b3e44b0bae417c869a65604"
     },
     {
       "shard_file": "sft_shard_079_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1681.29,
-      "sha256": "c3ee22b1ace4d13a54fbd65c3b63ce6bdd4d33bfa17b66fcd54385948e57e0f5"
+      "size_kb": 1580.16,
+      "sha256": "88574fb0ba3c52e3c692d66d223df977697f0a4c81ace73022f0a38635a2cb5a"
     },
     {
       "shard_file": "sft_shard_080_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1687.73,
-      "sha256": "8ed9eed7af26e26618bf4e4079560608f91418e160bc033182820670da89f00a"
+      "size_kb": 1577.82,
+      "sha256": "8c1d02bf956b5b58592300a9cf4edb25beeb6a5e4ab8900b5342072014919303"
     },
     {
       "shard_file": "sft_shard_081_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1678.85,
-      "sha256": "ad9a9b7ae358771fecfdc85f453a2fe490ef7fc4ab6df7ed58a8499e662d3cf5"
+      "size_kb": 1578.3,
+      "sha256": "e416a838ca5bc9b7124e4c40076f627440f6e4fedeb7e12e3e73b121b50d9f85"
     },
     {
       "shard_file": "sft_shard_082_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1683.5,
-      "sha256": "dace741cc493529c0ba8d0e15cbbe04dc9cdec6e40bd38bb1f1ef696df30e079"
+      "size_kb": 1580.11,
+      "sha256": "055dc696a4ad3930263187d6acc5cb73156811f1c2474fdba2e2960af0e12c22"
     },
     {
       "shard_file": "sft_shard_083_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1687.92,
-      "sha256": "46b84105ef71e8ff4587a01ca44f2b61c3ad6fd4919fd21c0f9536a0e8c2a3d6"
+      "size_kb": 1584.42,
+      "sha256": "5b7e4a1e99d74c72f314e6891d2bbd26bcf4b741629e2df685c23e23a48df53e"
     },
     {
       "shard_file": "sft_shard_084_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1681.43,
-      "sha256": "3a128717eb4069bcc7f30400f6fd479c4198dca533847e0b971e319b542e449c"
+      "size_kb": 1580.5,
+      "sha256": "608d6d9bc966a99ffb0fff79323108eecbb840685a356644e2bf4fe34f7dde42"
     },
     {
       "shard_file": "sft_shard_085_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1682.21,
-      "sha256": "7f29cf56fa1db97d0c2915777e739394f7c7b915f55ff884047091e523fb2bb7"
+      "size_kb": 1578.09,
+      "sha256": "46a772f69c118c30bfb37e7fd1d13b292a6d7306178bbf3f2ad76991070ef2d1"
     },
     {
       "shard_file": "sft_shard_086_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1681.91,
-      "sha256": "15198ecacea5c6b0fd7feda97093e5b2b62f9acda7a618ce466d8c6b7cb27e2e"
+      "size_kb": 1580.42,
+      "sha256": "bc2aac1eac0fa8417c695b0ec263fed6486071ea2078d5f6cb61a8f9b84f1fcf"
     },
     {
       "shard_file": "sft_shard_087_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1688.76,
-      "sha256": "bcea12e62c58623673dccb881832320de74911581a4634795069bbcec49a9d9b"
+      "size_kb": 1582.61,
+      "sha256": "8798e8b5e4bff8e9afd389d236c8c147e82507db5e0bd3190b4f32ff35cbe40e"
     },
     {
       "shard_file": "sft_shard_088_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1688.63,
-      "sha256": "11b8242fa14b4c20dd54424ccc2f43621c5c1b32294be55f53d246a68ef96a74"
+      "size_kb": 1589.94,
+      "sha256": "e4e6212e911720880c16fb9dda3d0b5dee2383c4ecab29603b2cadab0c825341"
     },
     {
       "shard_file": "sft_shard_089_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1682.84,
-      "sha256": "7a491671961262cdc1f38def49d9bd4ef5b13777f02801db5f8c580750957d87"
+      "size_kb": 1575.9,
+      "sha256": "8760cac7c372982a52e9d4e68fba23040d32c8770d49be23c4005307a602eed4"
     },
     {
       "shard_file": "sft_shard_090_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.8,
-      "sha256": "a962493e60eaf22850e357e9f23af784803005281f5a72ee64d28e00acdca8cc"
+      "size_kb": 1583.56,
+      "sha256": "b6ef66c90e282f7dc89939c7e48880fb63bfb5abfb34485de88190deab8acf65"
     },
     {
       "shard_file": "sft_shard_091_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1682.71,
-      "sha256": "369304cbf4b3bc9ce1a4e262f15bc3b1dbe48021bf3b2a41e07fbd2614a7b2c3"
+      "size_kb": 1571.9,
+      "sha256": "1da025c20948da089138d55bcbf6a4ea1de6efb60ef71a94afcdee7c25c8452a"
     },
     {
       "shard_file": "sft_shard_092_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.05,
-      "sha256": "7b6ba3cf85b94b3a08bd99d6e8e56cb71a27441e85c1c46ac74e017c335847f1"
+      "size_kb": 1581.39,
+      "sha256": "abea44ce80c1dce2a93ae6cead178988da2cf8724b68c6c8995061cb3f3b427f"
     },
     {
       "shard_file": "sft_shard_093_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1685.26,
-      "sha256": "f888a8994422ac76b24e1f2a04871a09e52cb5d1d8da3dd74bfd508a67e599b8"
+      "size_kb": 1581.05,
+      "sha256": "fda2d2a126ab8258c1b380c9bdac56a9c2ac34660a9d19e19a3b3043cb527daf"
     },
     {
       "shard_file": "sft_shard_094_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1685.32,
-      "sha256": "eb57f168d3a3d8d7edb69880abdfd316466d091602689c10ceecd50fc3198d01"
+      "size_kb": 1584.19,
+      "sha256": "b8a390556925ac8f94ea8b2b2bbe5fdccea883aab6d49ae52d8dd33618b39792"
     },
     {
       "shard_file": "sft_shard_095_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1679.98,
-      "sha256": "65829c9253193eb030ee04ccaba6c7fd50bb1f62b2fd4dc0528de28ee81a5fd6"
+      "size_kb": 1582.19,
+      "sha256": "07f7b15baae341c3d98173ded4d08aae67fbbf87c234c605d1d9052fcd9898bd"
     },
     {
       "shard_file": "sft_shard_096_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1691.46,
-      "sha256": "d3efe85ac0c6afbe5c2f9bafd760625a4f174fe8c382b41be0ec67bde645316d"
+      "size_kb": 1590.02,
+      "sha256": "16afc36d715987751c5ef3b868697643ff55db247ae60ba99d5697c147cb4762"
     },
     {
       "shard_file": "sft_shard_097_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1683.43,
-      "sha256": "94a437bcc9f4939844b9d139fedc6f1598565f8ff7a628ccde1e0978d26dbc4c"
+      "size_kb": 1581.47,
+      "sha256": "8268d7e1ec27bc110dd242e02045f1a6e3b1088da0cedd34f2e8f46987eaa15f"
     },
     {
       "shard_file": "sft_shard_098_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.55,
-      "sha256": "7f788d58d3ca8a3c94ebd83f6d22c7f78781ccfa0837d8658e933d2fa023625e"
+      "size_kb": 1579.71,
+      "sha256": "ccdb4b1ce094500e6375bbd6613500e7ae368282c7c73c792f1e1b3d896adeb4"
     },
     {
       "shard_file": "sft_shard_099_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1682.58,
-      "sha256": "abe35a9d088302028906545d999a90d3bab95b33e0b2d2f4255dd1f3fc7a7b04"
+      "size_kb": 1579.78,
+      "sha256": "3cbd9482f668ca386e9e6007a85cf49cc51bf8a01e9a2577eaf6f4704bb46e2d"
     },
     {
       "shard_file": "sft_shard_100_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1690.4,
-      "sha256": "a12c6b3e9bb70ca5a2fda3f4a947f8686bc074612a88914df53908f4fc9938e2"
+      "size_kb": 1586.48,
+      "sha256": "7ac34ef421b2b39f75823cd7c4e8e184e8082079ae56f023e46d20c877671186"
     },
     {
       "shard_file": "sft_shard_101_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1688.26,
-      "sha256": "0e75a615b9f417c9e2328b2e5d12e2cb7d32c5c581e7b5b9bf54229c684ff694"
+      "size_kb": 1586.22,
+      "sha256": "1b800cc0dac1e60d2919e80a7795cf676c63433920912a2bb08795d78e512c85"
     },
     {
       "shard_file": "sft_shard_102_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1687.97,
-      "sha256": "de96ee0d2fcc94a0e0ce8e965c90f4af6c68e9bb4254e6e1c3558c27abf03455"
+      "size_kb": 1591.02,
+      "sha256": "f19356d0d1df85f7930815491c38ca69dc8fade05cbed61949a329a0d3f9ab62"
     },
     {
       "shard_file": "sft_shard_103_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1686.04,
-      "sha256": "382afa545a61c74bb1e8e3dba431bed8b68f83a16a54267144a70eed849444f8"
+      "size_kb": 1575.97,
+      "sha256": "8d451fb0798dba6b62e69329aea550806aada8f41503ef72fcfc825f0c2181c9"
     },
     {
       "shard_file": "sft_shard_104_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1686.79,
-      "sha256": "9e7148a8cb5f9cb1382c527f88639387db0765db9eca9ba3571283734683b006"
+      "size_kb": 1588.8,
+      "sha256": "345552c625e2baeff18a601fada81354685d29ea45aca89d61be63970a6f83a8"
     },
     {
       "shard_file": "sft_shard_105_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1686.45,
-      "sha256": "f4bf9dfa6fe847487a6e497bdd9017d3b894545d8e15345add40577856168ce2"
+      "size_kb": 1585.7,
+      "sha256": "e0d15a2fe4028056fc5524e6be43421cc77080b7eeddecd3989a63349cfe427c"
     },
     {
       "shard_file": "sft_shard_106_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1686.52,
-      "sha256": "332b923f3dec08d376191458cb6fa13929997b21dd3dbe97b4bedef51e2cd6e5"
+      "size_kb": 1574.02,
+      "sha256": "35f15a520b287a054aee4857ae8e8ceb86c280d1e18a5309317e8b1b541da758"
     },
     {
       "shard_file": "sft_shard_107_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1691.34,
-      "sha256": "d22f46588e13107af99dce2c2f23d75c6da86dc1fab46a47e808a66cd00a784b"
+      "size_kb": 1581.96,
+      "sha256": "049bb932ca26bf337d7c8abf84e80b40067a97bd5144b110ce9061d4d8ebf40d"
     },
     {
       "shard_file": "sft_shard_108_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1687.87,
-      "sha256": "72d0f453dc28768149db7473ab2f4845ff76264808aa777308bed600a3c926f8"
+      "size_kb": 1590.31,
+      "sha256": "806d3b1e0458ddc6da45653b07eb3765968bbee1fd3314e174bf9f10191ff657"
     },
     {
       "shard_file": "sft_shard_109_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1679.8,
-      "sha256": "53006e723adea1c3c0fc3fb791eb947d70844b24954a22bb7ff84b3aa0fe528e"
+      "size_kb": 1578.17,
+      "sha256": "cbd22614281835051778ca280d4aac323e312053b55e6a91df7c86fcc31a298d"
     },
     {
       "shard_file": "sft_shard_110_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1687.08,
-      "sha256": "60ccfcfcbc77e21f9514f41a27111d598dcdbbeb9670edcf777d1d372095dead"
+      "size_kb": 1590.6,
+      "sha256": "fe94970eb6ff49887eedf9310b4f3ae785bc2df0c3c15ba727c356ae4e2c845e"
     },
     {
       "shard_file": "sft_shard_111_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.44,
-      "sha256": "83246b97c764e1dc1506364e5c169acf04184c1ca12f2eedef2cdec3b5cf816a"
+      "size_kb": 1589.5,
+      "sha256": "e0caa812da91c48f000c434eb69bfe3a14871e57c57360ed6358853b48d03d96"
     },
     {
       "shard_file": "sft_shard_112_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1676.21,
-      "sha256": "7893047e4f631c65a6bd8f632529587c19752f6968a38a8699481491eafd0771"
+      "size_kb": 1575.24,
+      "sha256": "2fb3803c5de0d5698dcd9b245a465b6a1a12f6905e28d6c40500661161ee9113"
     },
     {
       "shard_file": "sft_shard_113_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1679.15,
-      "sha256": "114e14d0aaa95901cd86c251b7c07e1a3bc9d43a7a5bd0441b5e2e4a6f8a71d3"
+      "size_kb": 1579.31,
+      "sha256": "c1cad6a57b5f50df869de7ae1cceca1240ddf51994e9fb53742dc2b541b4a5e1"
     },
     {
       "shard_file": "sft_shard_114_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.56,
-      "sha256": "bd808008f316006614f0b843cb41160f713a9d987afa2be8e35358f53001ff0b"
+      "size_kb": 1587.52,
+      "sha256": "a7d542d6081f4984af2f5e0a4c10e05ce57c3d7106fff4e76c4d9db71d5d30be"
     },
     {
       "shard_file": "sft_shard_115_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1682.82,
-      "sha256": "d51484dd02cda473b5691174a022637d6cc938d074656b1b20c20ad0297d2fe9"
+      "size_kb": 1578.96,
+      "sha256": "ee2108fdc24932a8360ebd4382aa45b242cf69ebb53fda518c35b30273f66d70"
     },
     {
       "shard_file": "sft_shard_116_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1686.04,
-      "sha256": "24f6b13928f91369db5dab2bbd0de979dbfff76248dd84775e8b35ff09336f61"
+      "size_kb": 1584.99,
+      "sha256": "85cf79a888205dada16757a80834b039ff115cac78f1b622bfb46eef8c9b6347"
     },
     {
       "shard_file": "sft_shard_117_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.61,
-      "sha256": "03d09eaa6147cafc1d84cbf9c622e474c451100d084244f76a9eea0031a16e43"
+      "size_kb": 1585.5,
+      "sha256": "67b83ed70368a8b7f60632f01802e924fae5e910b1e2fc80b671aeef073e1681"
     },
     {
       "shard_file": "sft_shard_118_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.57,
-      "sha256": "29bcf3a20b820b1732dd8b8a2e6ee856829bacd343dffcf90035be3c678c7b53"
+      "size_kb": 1576.35,
+      "sha256": "c05613fee7e745e80559d14f8811e79115f168362f3c377977965703ee66c01b"
     },
     {
       "shard_file": "sft_shard_119_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1679.42,
-      "sha256": "c6c76c5cabdb4ab72841e5956f447dc41214013e4b330a415910326eb84de87d"
+      "size_kb": 1582.93,
+      "sha256": "7b7986ff4aea1c50a7c57473819364ca1653acae5fa222b1c7174a300944db62"
     },
     {
       "shard_file": "sft_shard_120_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.66,
-      "sha256": "78aa6214a08e911bcff4ed43aed01892c9debb8e20f7e309a0604b410ef0b4fb"
+      "size_kb": 1583.12,
+      "sha256": "8545342e513200b37b34763e143a13ba5e310f69d77c441833fc2e0a8f3f960d"
     },
     {
       "shard_file": "sft_shard_121_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1682.86,
-      "sha256": "7eaaabcd8b9cbfd66e2f28e9405a8b50b99227cfcee085c46c550ce749bcf78f"
+      "size_kb": 1567.92,
+      "sha256": "9718f823ab6d8993d864613ae6bb476b9f0a304e1563138db29ef2ca9eebeaeb"
     },
     {
       "shard_file": "sft_shard_122_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1682.54,
-      "sha256": "ff6d488b816884ac5b2a6643c59344b2252ab186e67d61376392bc59d9fdf58a"
+      "size_kb": 1581.24,
+      "sha256": "069e55624c729f4f174dffd2ea55d9c969842d5540bdb06c537791db8aa4f75a"
     },
     {
       "shard_file": "sft_shard_123_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1691.19,
-      "sha256": "f177c1155566db6057326a5e274c129066eb6312562e29897b7090987814944a"
+      "size_kb": 1589.6,
+      "sha256": "089e9f93de04ceacec0244c669c22ba21ca29fd8cb6ea09a4c78387867961974"
     },
     {
       "shard_file": "sft_shard_124_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1685.58,
-      "sha256": "88752b885e8ec3c67ec7b047a5b3f0f0033bda63175387fb1513a49dab737903"
+      "size_kb": 1580.77,
+      "sha256": "1184bdb24afc004b06f620f2bd036d4972aabdd8d7b6054ec5098c74d5010444"
     },
     {
       "shard_file": "sft_shard_125_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1678.61,
-      "sha256": "adbfc907c7de150aa2fff2852f0807ffb70944f3235dd02dee69475c6bca53a7"
+      "size_kb": 1573.75,
+      "sha256": "d32be0b2f6319b3f4bd140984dd2badae52c99ac3a8eb4de68590b827a65cfaf"
     },
     {
       "shard_file": "sft_shard_126_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1680.03,
-      "sha256": "50ec107068ed80078a14612a175af44dfdb91305f2c154d8c74432be32ac269c"
+      "size_kb": 1579.85,
+      "sha256": "fd2826755c9ab9e8e4ee759cd1576f5b924ec05228b76239d1a512f8a13df653"
     },
     {
       "shard_file": "sft_shard_127_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1688.34,
-      "sha256": "ce0b69a10a09c2a78457b29a6e67d54dacae50839425fd22d1420ca9a984961f"
+      "size_kb": 1586.28,
+      "sha256": "ed6bb30902b6b55396a72a0c95db72ae8a758fced1d6099ce0dccf1145ede7a8"
     },
     {
       "shard_file": "sft_shard_128_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1690.4,
-      "sha256": "765d351611386604592147eed15cd575bc385f9c970afc1034259f7a72522913"
+      "size_kb": 1585.63,
+      "sha256": "933e5f24478de17226167a86cb419a6981e13e76b2c1b249db17d4e80bc20193"
     },
     {
       "shard_file": "sft_shard_129_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1688.25,
-      "sha256": "7034e057868144e3fc14dc7cfb86d269a50c9cd97fd7356ff2ed876e0a9895d2"
+      "size_kb": 1587.34,
+      "sha256": "e6daa0352c8efa85636b64822018b4c5dcdace0ee38a94ec138bd7a2a0fbc725"
     },
     {
       "shard_file": "sft_shard_130_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.47,
-      "sha256": "f5c84e01af73d8cc4cb75c0ac11add3e2fedbf6f616fbbf2f5ff1fc366ad4d76"
+      "size_kb": 1591.45,
+      "sha256": "13801803545be3980a6e826b9ace1ea2d634d06d3815c4cb93afceb86e90b25b"
     },
     {
       "shard_file": "sft_shard_131_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1683.82,
-      "sha256": "c1838b8b6182ac9169926bacfe77eef004bbd2ac93e21db35d13e9ba6e7f30d9"
+      "size_kb": 1579.48,
+      "sha256": "62ba59d4bfb6e64c1711aca9f6db0f9a2dcf843c578934622ae7a3ff4baf74f2"
     },
     {
       "shard_file": "sft_shard_132_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1688.21,
-      "sha256": "f7869dbb395523f66b1e56697733d7bad32997a76698e41e7a31163752c75859"
+      "size_kb": 1582.74,
+      "sha256": "271ac3f6502718af81ffd9ee9096c44b524604a3675b6cba1b7d21a87f421184"
     },
     {
       "shard_file": "sft_shard_133_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1685.03,
-      "sha256": "aea8e4857a9adc2ff0fcc6f91481e2a5c31e3badf31017d3d44c6a275da13a00"
+      "size_kb": 1573.2,
+      "sha256": "1d18c87e63aa78354a0c0c373d472d8dc3df97cd43511fd5ad1a56962880e511"
     },
     {
       "shard_file": "sft_shard_134_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1681.66,
-      "sha256": "1966299f45618e04b7168f5dfec9762000014ceed4ebfea660d256bc55d639b8"
+      "size_kb": 1584.94,
+      "sha256": "db40f21cb9fc2674e5aa2c66561af23e64c0dd21c1266958fe345a8218c7c56e"
     },
     {
       "shard_file": "sft_shard_135_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1691.91,
-      "sha256": "e38d740f3c6ea619417e91ed1088f24ac124d5e66851431a2e10c99c6de66733"
+      "size_kb": 1586.39,
+      "sha256": "7067041bd78b5385a6a9cb0dfada3a5e5c99b1520300998f4fb56203cfd2cb04"
     },
     {
       "shard_file": "sft_shard_136_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1679.6,
-      "sha256": "940c2dea72457c8ad4582fcfc9ad0dd8b99275cc1fc0016d59af03cfe108ba2f"
+      "size_kb": 1574.06,
+      "sha256": "5b3b18b937ee4cee01697779073fa78dcb27bd8fc733b464c933d4b78f09e24c"
     },
     {
       "shard_file": "sft_shard_137_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.9,
-      "sha256": "3a409b64316ad8d1fabd8aa71f0714a503920701311e772d4b7adfa0a1382a78"
+      "size_kb": 1587.34,
+      "sha256": "1b5cba6947bb264eb104d9fe89859037a732547b68c3d6eba00ae53056e9304c"
     },
     {
       "shard_file": "sft_shard_138_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1681.02,
-      "sha256": "8c89a5ae67a34b72f26c414405496355ef3505d5069cc7b74575b20381dc6e70"
+      "size_kb": 1586.47,
+      "sha256": "b5c548a821e8409c6a76abeb8c08cee19ecc2179dd5e09edf92efbea41057be2"
     },
     {
       "shard_file": "sft_shard_139_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.88,
-      "sha256": "13920a70f8968708e597a2ca3d8036f235b72e1544230004b0ef5cfb595015ed"
+      "size_kb": 1579.82,
+      "sha256": "e01edce7f4f94f31c8c337769f0171bd4175ab7e474ebe3b37a025bb6d06548b"
     },
     {
       "shard_file": "sft_shard_140_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1676.9,
-      "sha256": "ddafbdcb7eaeba9eedb956a50ed423dedac7c62f46eeaa7ad8ed093079430f9b"
+      "size_kb": 1581.23,
+      "sha256": "2e41e8ed715cda249746b2a0287c178832bdcac4a643822797156d8502785d65"
     },
     {
       "shard_file": "sft_shard_141_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1683.51,
-      "sha256": "47372f66bbbc3deb3ce78687a0bab950c1ecd91a05870d83499cc4638054d6f0"
+      "size_kb": 1591.12,
+      "sha256": "8d3c4fd5dc007fa4de82c6b17e9c5af18fd0d30cf1549bdabe29d606b5b957ce"
     },
     {
       "shard_file": "sft_shard_142_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1681.16,
-      "sha256": "8ad2b092e065c17e5a9691985b16c3227706faacb5b4989774338067f07af2e2"
+      "size_kb": 1572.34,
+      "sha256": "0c38e26b8679de0631f14b15d4ff02863c7974b6c649ccc401c87af776473be6"
     },
     {
       "shard_file": "sft_shard_143_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1688.06,
-      "sha256": "22fa3ba28ac627bfc5ff22422350b489c1ece106e9fc08c7c0c087e534591ab6"
+      "size_kb": 1575.95,
+      "sha256": "e3b7addc5f7f32333be630d5f4a3fb6aa034d30b7377e9a3b33d81332d3f975f"
     },
     {
       "shard_file": "sft_shard_144_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1688.15,
-      "sha256": "3bd270136708709bed8ada50859eb4f83430bee7ca44032bab8706080c5ea6ac"
+      "size_kb": 1582.07,
+      "sha256": "ce9b39bd9de01279ff3380c7d9aed994f50e8dbb23e1175dcdf505b06262a24e"
     },
     {
       "shard_file": "sft_shard_145_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1676.8,
-      "sha256": "55c8b52a2a44c7a14affb6b53f90608d9622761146675dbe65187d503b03a2db"
+      "size_kb": 1582.85,
+      "sha256": "260a74de8988a2aea22be68b64b6f4e549bcd24791e403ed5e505a64150662c0"
     },
     {
       "shard_file": "sft_shard_146_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1678.27,
-      "sha256": "c66231034d7d5754eb9ba8495105fd4e469a5af40d1b6877fceb19da5c890270"
+      "size_kb": 1587.21,
+      "sha256": "c0cd0d640c2ab15d4e342896d3e965d653c5d91423945148a4d5402ed53c26e1"
     },
     {
       "shard_file": "sft_shard_147_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1688.52,
-      "sha256": "14315c10b05b619d88396d7ef93fb69d3f386e8ee30c59e9ed7996e773f2c72a"
+      "size_kb": 1591.22,
+      "sha256": "638507eadca9fce61ebde4c0e6db66f6eed69c303195eddb960d99c0a738fe0e"
     },
     {
       "shard_file": "sft_shard_148_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1683.76,
-      "sha256": "df79804b0ba0bf6ad68e0dc4734b4025eaab7ddba9afff8b650c255a3ae87106"
+      "size_kb": 1589.37,
+      "sha256": "05a5325eb1dca58851f9f4507bcf9aa22cac3d3c5c0201b8e5892e13d939392c"
     },
     {
       "shard_file": "sft_shard_149_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1684.55,
-      "sha256": "0e45bca1144447b1d448280a4343afaf46b59dae4f90d13a9cfd1a39e1319bb4"
+      "size_kb": 1580.18,
+      "sha256": "ef1b6b2e2db99d15502db2a839767edcf08515185c2552b5835d620d493a2dcc"
     },
     {
       "shard_file": "sft_shard_150_of_150.jsonl",
       "trajectories_count": 500,
-      "size_kb": 1685.89,
-      "sha256": "df831a4db14ae0a78bb613021d3322e004ce884bbd8f223eacf56a06505e41e7"
+      "size_kb": 1585.04,
+      "sha256": "5c15131e39a436582259aee5f822caf597471355ca9c355dde88affea8466b5f"
     }
   ]
 }

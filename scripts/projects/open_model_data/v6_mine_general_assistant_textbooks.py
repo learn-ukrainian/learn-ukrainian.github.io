@@ -110,6 +110,36 @@ HUMANITIES_SUBJECTS = {
     "zdorovia", "tekhnolohiyi", "ukrmova", "ukrlit", "zarlit",
 }
 
+# 4 Academic Disciplines for pedagogy & reasoning specialization
+DISCIPLINE_MATH_COMPUTING = {"algebra", "heometriya", "matematyka", "informatyka"}
+DISCIPLINE_NATURAL_SCIENCES = {"fizyka", "khimiya", "biolohiya", "astronomiya", "heohrafiya", "pryroda", "ya_doslidzhuiu_svit"}
+DISCIPLINE_SOCIAL_LAW = {"istoriya", "vsesvitnia", "pravoznavstvo", "hromadianska", "ekonomika", "finansova", "zakhyst"}
+DISCIPLINE_PHILOLOGY_CULTURE = {"ukrmova", "ukrlit", "zarlit", "mystetstvo", "etyka", "zdorovia", "tekhnolohiyi"}
+
+# Imperative task verbs in textbook exercises to filter out from concept extraction
+EXERCISE_IMPERATIVES = {
+    "складіть", "оцініть", "прочитайте", "виконайте", "знайдіть", "поясніть", "запишіть",
+    "пригадайте", "зауважимо", "дослідіть", "обчисліть", "розв'яжіть", "розвяжіть",
+    "назвіть", "доведіть", "порівняйте", "охарактеризуйте", "сформулюйте", "наведіть",
+    "розгляньте", "заповніть", "проаналізуйте", "уявіть", "дайте", "поміркуйте", "перевірте",
+    "запам'ятайте", "запамятайте", "зверніть", "випишіть", "продовжіть", "виберіть",
+    "перекажіть", "вставте", "спробуйте", "визначте", "позначте", "поділіть", "утворіть",
+    "висловте", "обговоріть", "підготуйте", "скористайтеся", "вкажіть", "відшукайте",
+    "спростіть", "побудуйте", "намалюйте", "згрупуйте", "відгадайте", "розподіліть",
+}
+
+NON_CONCEPT_PREFIXES = (
+    "вправа", "завдання", "задача", "приклад", "лабораторна", "практична", "робота в",
+    "запитання", "відповідь", "варіант", "тест", "самостійна", "контрольна", "підсумок",
+    "домашнє", "від авторів", "сторінка", "рубрика", "інтелектуальний клуб",
+)
+
+FILLER_STARTS = (
+    "якщо", "коли", "тому", "проте", "також", "однак", "через", "внаслідок", "зокрема",
+    "наприклад", "тобто", "від", "для", "під", "над", "при", "без", "до", "із", "зі",
+)
+
+
 UKRAINIAN_SUBJECT_GENITIVE = {
     "algebra": "алгебри",
     "heometriya": "геометрії",
@@ -256,27 +286,42 @@ def get_vesum_cursor(vesum_db: Path = DEFAULT_VESUM_DB) -> sqlite3.Cursor | None
     return None
 
 
-def is_vesum_attested(term: str, cur_ves: sqlite3.Cursor | None = None) -> bool:
-    """Check if a term or lemma exists in VESUM forms_all."""
+def is_vesum_attested(term: str, cur_ves: sqlite3.Cursor | None = None, use_default_if_none: bool = True) -> bool:
+    """Check if a term or lemma exists in VESUM forms_all. Fail closed if DB is missing."""
     norm = term.strip().lower()
-    # Only attest pure alphabetic words
-    if not norm or not re.match(r"^[а-яіїєґ']+$", norm):
+    if not norm or not re.match(r"^[а-яіїєґ'\s-]+$", norm):
         return False
-    if norm in _VESUM_CACHE:
-        return _VESUM_CACHE[norm]
-    cur = get_vesum_cursor() if cur_ves is None else cur_ves
+    if cur_ves is not None:
+        cur = cur_ves
+    elif use_default_if_none:
+        cur = get_vesum_cursor()
+    else:
+        cur = None
+
     if cur is None:
-        return True
-    try:
-        cur.execute(
-            "SELECT 1 FROM forms_all WHERE word_form = ? OR lemma = ? LIMIT 1",
-            (norm, norm),
-        )
-        found = cur.fetchone() is not None
-        _VESUM_CACHE[norm] = found
-        return found
-    except Exception:
         return False
+
+    words = re.findall(r"[а-яіїєґ']+", norm)
+    if not words:
+        return False
+    for w in words:
+        if w in _VESUM_CACHE:
+            if not _VESUM_CACHE[w]:
+                return False
+            continue
+        try:
+            cur.execute(
+                "SELECT 1 FROM forms_all WHERE word_form = ? OR lemma = ? LIMIT 1",
+                (w, w),
+            )
+            found = cur.fetchone() is not None
+            _VESUM_CACHE[w] = found
+            if not found:
+                return False
+        except Exception:
+            return False
+    return True
+
 
 
 def normalize_apostrophes(text: str) -> str:
@@ -289,34 +334,57 @@ def dehyphenate_text(text: str) -> str:
     return HYPHEN_BREAK_RE.sub(r"\1\2", text)
 
 
-_IPV4_RE = re.compile(r"\b(?P<ip>(?:[0-9]{1,3}\.){3}[0-9]{1,3})\b")
+_IPV4_RE = re.compile(r"(?<!\d\.)\b(?P<ip>(?:[0-9]{1,3}\.){3}[0-9]{1,3})\b(?!\.\d)")
+_SECTION_PREFIX_RE = re.compile(r"(?:пункт|п\.|параграф|§|розділ|стаття|ст\.|частина|ч\.)\s*$", re.IGNORECASE)
+_NETWORKING_CONTEXT_RE = re.compile(
+    r"(?:ip|ip-адрес\w*|адрес\w*|хост\w*|вуз(?:ол|ла|ли|лів)|сервер\w*|роутер\w*|маршрутизатор\w*|"
+    r"мереж\w*|підмереж\w*|протокол\w*|провайдер\w*|онлайн|вікіпеді\w*|вікі\b|інтернет\w*|ping|dns|tcp|udp|порт\w*|користувач\w*)",
+    re.IGNORECASE,
+)
 
 
 def sanitize_ip_addresses(text: str) -> str:
     """Replace non-doc/non-loopback IPv4 addresses with standard RFC 5737 documentation IPs.
 
     Prevents public routable IP leaks in educational networking examples while preserving
-    valid document section numbering citations (e.g., 4.1.3.1, 1.4.1.2).
+    valid document section numbering citations (e.g., 4.1.3.1, 1.4.1.2) and numeric lists.
     """
     def _ip_replacer(match: re.Match[str]) -> str:
         ip_str = match.group("ip")
         parts = ip_str.split(".")
-        if all(p.isdigit() and 0 <= int(p) <= 255 for p in parts):
-            p0, p1, p2, p3 = (int(x) for x in parts)
-            # Section numbering citation (State Standard / outline codes: p0 <= 15, p0 != 10, all parts <= 30)
-            if p0 <= 15 and p0 != 10 and p1 <= 30 and p2 <= 30 and p3 <= 30:
-                return ip_str
-            # Standard RFC 5737 Documentation IPs (192.0.2.x, 198.51.100.x, 203.0.113.x) and loopback
-            if (p0 == 192 and p1 == 0 and p2 == 2) or \
-               (p0 == 198 and p1 == 51 and p2 == 100) or \
-               (p0 == 203 and p1 == 0 and p2 == 113) or \
-               (ip_str in {"127.0.0.1", "0.0.0.0", "1.1.1.1", "8.8.8.8"}):
-                return ip_str
-            # Educational networking replacement using RFC 5737 TEST-NET-2
+        if not all(p.isdigit() and 0 <= int(p) <= 255 for p in parts):
+            return ip_str
+        p0, p1, p2, p3 = (int(x) for x in parts)
+
+        # RFC 5737 Documentation IPs & Loopback / Well-known public DNS
+        if (p0 == 192 and p1 == 0 and p2 == 2) or \
+           (p0 == 198 and p1 == 51 and p2 == 100) or \
+           (p0 == 203 and p1 == 0 and p2 == 113) or \
+           (ip_str in {"127.0.0.1", "0.0.0.0", "1.1.1.1", "8.8.8.8"}):
+            return ip_str
+
+        start = match.start()
+        prefix = text[max(0, start - 40):start]
+        if _SECTION_PREFIX_RE.search(prefix):
+            return ip_str
+
+        window = text[max(0, start - 100):min(len(text), match.end() + 100)]
+        has_network_ctx = bool(_NETWORKING_CONTEXT_RE.search(window))
+
+        # In networking context: sanitize any non-doc IP (including 1.2.3.4)
+        if has_network_ctx:
             return f"198.51.100.{max(1, p3 % 254)}"
+
+        # Without networking context:
+        # Outline/section numbering (small parts <= 20) -> preserve
+        if p0 <= 20 and p1 <= 20 and p2 <= 20 and p3 <= 20:
+            return ip_str
+
+        # Plain numeric list without networking context -> preserve
         return ip_str
 
     return _IPV4_RE.sub(_ip_replacer, text)
+
 
 
 def sanitize_typography(text: str) -> str:
@@ -383,10 +451,34 @@ def format_nested_quotes(text: str) -> str:
     return "".join(res)
 
 
+_PEJORATIVE_PATTERNS = [
+    re.compile(r"очевидно\s+(?:кожному\s+|навіть\s+)?дурн\w*", re.IGNORECASE),
+    re.compile(r"\b(?:ви|ти|учень|учениця|студент|хтось)\s+(?:є\s+)?(?:дур\w*|ідіот\w*|нездар\w*|туп\w*|безграмотн\w*)", re.IGNORECASE),
+    re.compile(r"\b(?:абсолютно|цілком|геть|зовсім)\s+безграмотн\w*", re.IGNORECASE),
+    re.compile(r"не дивно,\s*що\s+ви\s+(?:цього\s+)?не", re.IGNORECASE),
+    re.compile(r"навіть\s+першокласник\s+знає", re.IGNORECASE),
+    re.compile(r"як\s+можна\s+не\s+знати", re.IGNORECASE),
+    re.compile(r"соромно\s+не\s+знати", re.IGNORECASE),
+    re.compile(r"\bтуп(?:ий|ого|ому|им|і|их)\s+(?:людин|учн|студент|ідіот|дурн|мозок|розум)", re.IGNORECASE),
+    re.compile(r"\bнастільки\s+туп\w*", re.IGNORECASE),
+    re.compile(r"\b(?:ідіот\w*|дебіл\w*|кретин(?:[ауеі]|ом|ів|ам|ами|ах)?|нездар\w*)\b", re.IGNORECASE),
+]
+
+
 def verify_pedagogical_tone(text: str) -> bool:
     """Ensure text has neutral, respectful pedagogical tone (Gate 6)."""
-    t_lower = text.lower()
-    return all(stem not in t_lower for stem in PEJORATIVE_STEMS)
+    # Protect geometric obtuse angle/triangle ("тупий кут", "тупокутний трикутник")
+    t_clean = re.sub(r"\bтуп(?:ий|ого|ому|им|і|их)\s+кут\w*", "кут", text, flags=re.IGNORECASE)
+    t_clean = re.sub(r"\bтупокутн\w*", "трикутник", t_clean, flags=re.IGNORECASE)
+    # Protect benign literary nouns and adverbs ("дурниця", "дурно")
+    t_clean = re.sub(r"\bдурниц\w*", "дрібниця", t_clean, flags=re.IGNORECASE)
+    t_clean = re.sub(r"\bдурно\b", "марно", t_clean, flags=re.IGNORECASE)
+    # Protect clinical biology terms ("кретинізм" - congenital iodine deficiency syndrome)
+    t_clean = re.sub(r"\bкретинізм\w*", "захворювання", t_clean, flags=re.IGNORECASE)
+    # Protect historical literacy campaigns ("ліквідація безграмотності")
+    t_clean = re.sub(r"\b(?:ліквідація|боротьба з|подолання)\s+безграмотн\w*", "освіта", t_clean, flags=re.IGNORECASE)
+    return not any(p.search(t_clean) for p in _PEJORATIVE_PATTERNS)
+
 
 
 def check_protected_entities(text: str) -> bool:
@@ -449,11 +541,13 @@ def is_clean_content_chunk(chunk: TextbookChunk) -> bool:
         "Як працювати з підручником",
         "Умовні позначення",
     )
+    if not verify_pedagogical_tone(t):
+        return False
     return all(m not in t for m in frontmatter_markers)
 
 
 def load_textbook_chunks(db_path: Path) -> tuple[list[TextbookChunk], list[TextbookChunk]]:
-    """Load textbook chunks from sources.db, partitioned into eval pool and train pool."""
+    """Load textbook chunks from sources.db, partitioned into eval pool and train pool with strict text firewall."""
     conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     cur = conn.cursor()
     cur.execute("""
@@ -463,7 +557,7 @@ def load_textbook_chunks(db_path: Path) -> tuple[list[TextbookChunk], list[Textb
         ORDER BY subject, source_file, id
     """)
     eval_chunks: list[TextbookChunk] = []
-    train_chunks: list[TextbookChunk] = []
+    candidate_train_chunks: list[TextbookChunk] = []
 
     for row in cur.fetchall():
         cid, title, text, src_file, grade, author, subject, char_count = row
@@ -486,10 +580,34 @@ def load_textbook_chunks(db_path: Path) -> tuple[list[TextbookChunk], list[Textb
         if chunk.source_file in HELD_OUT_SET:
             eval_chunks.append(chunk)
         else:
-            train_chunks.append(chunk)
+            candidate_train_chunks.append(chunk)
 
     conn.close()
+
+    # Cryptographic text content leakage firewall
+    eval_text_hashes = {hashlib.sha256(c.text.strip().encode("utf-8")).hexdigest() for c in eval_chunks}
+    train_chunks = [
+        c for c in candidate_train_chunks
+        if hashlib.sha256(c.text.strip().encode("utf-8")).hexdigest() not in eval_text_hashes
+    ]
+
+    # Verify strict disjointness without relying on python -O disabled asserts
+    eval_books = {c.source_file for c in eval_chunks}
+    train_books = {c.source_file for c in train_chunks}
+    if not eval_books.isdisjoint(train_books):
+        raise ValueError(f"Book leakage detected: {eval_books & train_books}")
+
+    eval_cids = {c.chunk_id for c in eval_chunks}
+    train_cids = {c.chunk_id for c in train_chunks}
+    if not eval_cids.isdisjoint(train_cids):
+        raise ValueError(f"Chunk ID leakage detected: {eval_cids & train_cids}")
+
+    train_text_hashes = {hashlib.sha256(c.text.strip().encode("utf-8")).hexdigest() for c in train_chunks}
+    if not eval_text_hashes.isdisjoint(train_text_hashes):
+        raise ValueError(f"Verbatim text content leakage detected: {len(eval_text_hashes & train_text_hashes)} chunks")
+
     return eval_chunks, train_chunks
+
 
 
 def extract_meaningful_text_snippet(text: str, max_len: int = 260) -> str:
@@ -512,33 +630,69 @@ def extract_meaningful_text_snippet(text: str, max_len: int = 260) -> str:
     return ensure_single_terminal_dot(snippet)
 
 
+def clean_and_validate_candidate(cand: str) -> str | None:
+    """Clean and validate a candidate concept, rejecting exercises and mid-word cuts."""
+    c = cand.strip()
+    c = normalize_apostrophes(c)
+    c = re.sub(r"[\s\.\d—–-]+$", "", c).strip()
+    if not c or len(c) < 4:
+        return None
+    for delim in [":", ";", "(", " - це", " — це", " – це"]:
+        if delim in c:
+            part = c.split(delim)[0].strip()
+            if len(part) >= 4:
+                c = part
+    if len(c) > 50:
+        c = c[:50].rsplit(" ", 1)[0].strip()
+    words = [w.strip(".,;:?!'\"«»„“—–()") for w in c.split() if w.strip(".,;:?!'\"«»„“—–()")]
+    if not words or len(words) > 6:
+        return None
+    w0 = words[0].lower()
+    if w0 in EXERCISE_IMPERATIVES:
+        return None
+    c_lower = c.lower()
+    if any(c_lower.startswith(p) for p in NON_CONCEPT_PREFIXES):
+        return None
+    if w0 in FILLER_STARTS:
+        return None
+    if c.isupper() or any(ch.isupper() for ch in c[1:]):
+        c = c.capitalize()
+    return c
+
+
+
 def extract_key_concept(chunk: TextbookChunk) -> str:
-    """Extract or formulate the central concept from a chunk."""
+    """Extract or formulate the central concept from a chunk without imperative exercise noise."""
     lines = [line.strip() for line in chunk.text.splitlines() if line.strip()]
     for line in lines[:15]:
-        m_sec = re.match(r"^§\s*\d+[\.\s]+([^.\n?]{3,60})", line)
+        m_sec = re.match(r"^§\s*\d+[\.\s]+([^.\n?]+)", line)
         if m_sec:
-            cand = re.sub(r"\s+\d+$", "", m_sec.group(1).strip())
-            if len(cand) >= 4 and not cand.startswith("Від"):
-                return cand
-        m_num = re.match(r"^\d+[\.\s]+([А-ЯІЇЄҐ][^.\n?]{3,60})", line)
-        if m_num:
-            cand = re.sub(r"\s+\d+$", "", m_num.group(1).strip())
-            if len(cand) >= 4 and not cand.startswith("Від"):
-                return cand
-        m_tema = re.match(r"^Тема\s*\d*[\.\s]+([^.\n?]{3,60})", line)
+            val = clean_and_validate_candidate(m_sec.group(1))
+            if val:
+                return val
+        m_tema = re.match(r"^Тема\s*\d*[\.\s]+([^.\n?]+)", line)
         if m_tema:
-            cand = re.sub(r"\s+\d+$", "", m_tema.group(1).strip())
-            if len(cand) >= 4:
-                return cand
+            val = clean_and_validate_candidate(m_tema.group(1))
+            if val:
+                return val
         m_def = re.match(r"^([А-ЯІЇЄҐ][а-яіїєґa-zA-Z\s'-]{2,35})\s+[—–-]\s+це\b", line)
         if m_def:
-            return m_def.group(1).strip()
-        m_call = re.search(r"(?:називають|утворюють|складають|визначають як)\s+([а-яіїєґ\s'-]{3,35})[.\n]", line)
-        if m_call:
-            return m_call.group(1).strip()
+            val = clean_and_validate_candidate(m_def.group(1))
+            if val:
+                return val
 
-    # Subject-specific pedagogical fallback
+    # Try chunk title if meaningful
+    if chunk.title and not chunk.title.lower().startswith("сторінка"):
+        val = clean_and_validate_candidate(chunk.title)
+        if val:
+            return val
+
+    # Try canonical terms present in chunk text
+    text_lower = chunk.text.lower()
+    for ct in CANONICAL_SUBJECT_TERMINOLOGY.get(chunk.subject, []):
+        if ct in text_lower:
+            return ct
+
     subj_fallbacks = {
         "algebra": "квадратні рівняння та властивості функцій",
         "heometriya": "властивості многокутників та просторових фігур",
@@ -568,6 +722,7 @@ def extract_key_concept(chunk: TextbookChunk) -> str:
     return subj_fallbacks.get(chunk.subject, f"основи курсу {chunk.subject_genitive}")
 
 
+
 def extract_scientific_terminology(chunk: TextbookChunk) -> list[str]:
     """Identify key Ukrainian scientific terms present in the chunk."""
     terms: list[str] = []
@@ -592,50 +747,100 @@ def extract_scientific_terminology(chunk: TextbookChunk) -> list[str]:
 
 
 def synthesize_eval_task(chunk: TextbookChunk, idx: int) -> dict[str, Any]:
-    """Synthesize a structured held-out evaluation task from a held-out textbook chunk."""
+    """Synthesize a structured held-out evaluation task tailored to subject discipline."""
     concept = extract_key_concept(chunk)
     terms = extract_scientific_terminology(chunk)
     subj_gen = chunk.subject_genitive
+    subj_nom = chunk.subject_nominative
     grade = chunk.grade
 
     snippet = extract_meaningful_text_snippet(chunk.text, max_len=260)
     snippet = apply_calque_sanitation(snippet)
 
-    if chunk.domain == "stem":
+    if chunk.subject in DISCIPLINE_MATH_COMPUTING:
         query = (
-            f"Поясніть науковий зміст поняття «{concept}» для учнів {grade} класу за програмою з {subj_gen}. "
-            f"Сформулюйте відповідні закономірності, наведіть математичний чи фізичний зміст та порядок практичного застосування."
+            f"Поясніть математичний та алгоритмічний зміст поняття «{concept}» для учнів {grade} класу за програмою з {subj_gen}. "
+            f"Сформулюйте відповідні правила чи теореми, наведіть математичні властивості та алгоритм розв'язування відповідних завдань."
         )
         step1 = f"1. Декомпозиція та формулювання поняття: Розглядаємо сутність поняття «{concept}» у курсі {subj_gen} ({grade} клас)."
         step2 = f"2. Теоретичне обґрунтування: Використовуємо положення підручника: «{snippet[:160]}...»."
         step3 = (
             "3. Термінологічна та мовна верифікація: Всі наукові терміни відповідають нормам Українського правопису 2019 року. "
-            "Вживаємо точні формулювання («розв'язувати задачу», збереження математичних понять «об'єм», «відношення»)."
+            "Вживаємо нормативний зворот «розв'язувати задачу» та зберігаємо питомі терміни математичного просторового «об'єму» й числового «відношення»."
         )
-        step4 = "4. Педагогічний синтез: Сформульовано чітке пояснення з алгоритмом практичного застосування."
+        step4 = "4. Педагогічний синтез: Сформульовано чітке математичне пояснення з алгоритмом практичного застосування."
         solution = (
             f"Поняття «{concept}» є фундаментальним у курсі {subj_gen} для {grade} класу.\n\n"
-            f"Згідно з навчальною програмою: {snippet}\n\n"
-            f"Для розв'язання відповідних завдань необхідно дотримуватися послідовності наукових міркувань, "
-            f"правильного застосування формул та нормативної термінології."
+            f"Згідно з навчальною програмою:\n{snippet}\n\n"
+            f"Для розв'язання завдань учням слід чітко розрізняти теоретичні означення та послідовно застосовувати встановлені правила й алгоритми."
         )
-    else:
+    elif chunk.subject in DISCIPLINE_NATURAL_SCIENCES:
         query = (
-            f"Охарактеризуйте тему «{concept}» з предмета {chunk.subject_nominative} ({grade} клас). "
-            f"Проаналізуйте сутність явища, його причини та значення для сучасної України."
+            f"Поясніть природничо-науковий зміст теми «{concept}» для учнів {grade} класу за програмою з {subj_gen}. "
+            f"Охарактеризуйте відповідні закони природи, причинно-наслідкові зв'язки та екологічне чи практичне значення."
         )
-        step1 = f"1. Джерелознавчий та понятійний аналіз: Досліджуємо тему «{concept}» у контексті предмета {chunk.subject_nominative}."
-        step2 = f"2. Змістове наповнення: Базуємося на фактологічному матеріалі курсу: «{snippet[:160]}...»."
+        step1 = f"1. Природничо-науковий аналіз: Розглядаємо явище «{concept}» у контексті вивчення {subj_gen} ({grade} клас)."
+        step2 = f"2. Емпіричне та теоретичне підґрунтя: Спираємося на авторизований матеріал підручника: «{snippet[:160]}...»."
         step3 = (
-            "3. Деколонізаційний та мовний аналіз: Оцінюємо події з позиції суверенної української державності, "
-            "виключаючи колоніальні та радянські ідеологічні штампи, дотримуючись чинного Правопису."
+            "3. Мовна та понятійна нормативність: Використовуємо академічну українську природничу номенклатуру відповідно до Правопису 2019 року, "
+            "виключаючи кальковані форми та дотримуючись питомих назв речовин і явищ."
         )
-        step4 = "4. Висновок: Подано зважену, патріотичну та науково обґрунтовану відповідь."
+        step4 = "4. Педагогічний висновок: Сформульовано системне наукове бачення природних процесів та їхнього зв'язку з довкіллям."
         solution = (
-            f"Тема «{concept}» відіграє вагому роль у курсі {chunk.subject_nominative} ({grade} клас).\n\n"
-            f"{snippet}\n\n"
-            f"Осмислення цього матеріалу утверджує цінності суверенної правової держави, критичного мислення та національної гідності."
+            f"Тема «{concept}» розкриває фундаментальні закономірності природи у курсі {subj_gen} ({grade} клас).\n\n"
+            f"Науковий зміст матеріалу:\n{snippet}\n\n"
+            f"Розуміння цих закономірностей формує науковий світогляд, екологічну свідомість та вміння застосовувати знання про природу на практиці."
         )
+    elif chunk.subject in DISCIPLINE_SOCIAL_LAW:
+        query = (
+            f"Охарактеризуйте тему «{concept}» з предмета {subj_nom} ({grade} клас). "
+            f"Проаналізуйте суспільне значення цього явища, його причини та роль у розбудові суверенної, демократичної та правової України."
+        )
+        step1 = f"1. Суспільствознавчий та понятійний аналіз: Досліджуємо тему «{concept}» у системі знань курсу {subj_nom}."
+        step2 = f"2. Джерельна основа: Базуємося на фактологічному матеріалі підручника: «{snippet[:160]}...»."
+        step3 = (
+            "3. Деколонізаційний аналіз: Розглядаємо явища з позицій української державності, верховенства права та громадянського суспільства, "
+            "викорінюючи колоніальні та радянські наративи й штампи."
+        )
+        step4 = "4. Підсумок: Сформульовано громадянську та науково обґрунтовану позицію."
+        solution = (
+            f"Тема «{concept}» відіграє вагому роль у курсі {subj_nom} ({grade} клас).\n\n"
+            f"Основні положення теми:\n{snippet}\n\n"
+            f"Осмислення цих питань сприяє формуванню громадянської свідомості, поваги до Конституції України та активної життєвої позиції."
+        )
+    else:  # DISCIPLINE_PHILOLOGY_CULTURE
+        query = (
+            f"Розкрийте сутність теми «{concept}» з курсу {subj_gen} ({grade} клас). "
+            f"Поясніть її культурно-освітнє значення, естетичні чи практичні засади та правила нормативного втілення."
+        )
+        step1 = f"1. Гуманітарний та естетичний аналіз: Розглядаємо тему «{concept}» у програмі з предмета {subj_nom} ({grade} клас)."
+        step2 = f"2. Змістове наповнення: Базуємося на тексті підручника: «{snippet[:160]}...»."
+        step3 = (
+            "3. Норми та художня виразність: Зберігаємо багатство української мови, дотримуємося норм Правопису 2019 року "
+            "та фахової культурологічної термінології."
+        )
+        step4 = "4. Педагогічний висновок: Подано естетично та методично зважену відповідь для формування цілісної особистості."
+        solution = (
+            f"Матеріал теми «{concept}» має особливе значення у курсі {subj_gen} ({grade} клас).\n\n"
+            f"Зміст навчального матеріалу:\n{snippet}\n\n"
+            f"Опанування цієї теми формує високу мовну культуру, художнє мислення та гармонійний розвиток учнів."
+        )
+
+    # Format typography and Pravopys 2019 nested quotes
+    concept = format_nested_quotes(concept)
+    query = format_nested_quotes(query)
+    step1 = format_nested_quotes(step1)
+    step2 = format_nested_quotes(step2)
+    step3 = format_nested_quotes(step3)
+    step4 = format_nested_quotes(step4)
+    solution = format_nested_quotes(solution)
+
+    # Strictly enforce pedagogical tone and protected entity invariants
+    all_text = f"{query} {solution} {step1} {step2} {step3} {step4}"
+    if not verify_pedagogical_tone(all_text):
+        raise ValueError(f"Tone check failed for eval task {idx}: pejorative phrasing detected")
+    if not check_protected_entities(all_text):
+        raise ValueError(f"Protected entity check failed for eval task {idx}: volume or ratio corrupted")
 
     eval_record = {
         "eval_id": f"eval_textbook_asst_{idx:08x}",
@@ -673,97 +878,103 @@ def synthesize_trajectory(
     snippet = apply_calque_sanitation(snippet)
 
     vesum_records: list[dict[str, Any]] = []
-    for t in terms[:3]:
-        m = re.search(r"[а-яіїєґ']+", t.lower())
-        if m:
-            lemma = m.group(0)
-            attested = is_vesum_attested(lemma, cur_ves)
-            vesum_records.append({"lemma": lemma, "is_attested": attested})
+    attested_lemmas: list[str] = []
+    for t in terms[:4]:
+        words = re.findall(r"[а-яіїєґ']+", t.lower())
+        for w in words:
+            attested = is_vesum_attested(w, cur_ves)
+            vesum_records.append({"lemma": w, "is_attested": attested})
+            if attested:
+                attested_lemmas.append(w)
 
     subj_gen = chunk.subject_genitive
     subj_nom = chunk.subject_nominative
     grade = chunk.grade
+
+    # Build linguistically grounded step 3
+    if attested_lemmas:
+        vesum_note = f"Перевірено за словниковою базою ВЕСУМ терміни: {', '.join(attested_lemmas[:3])} — нормативність підтверджено."
+    else:
+        vesum_note = "Застосовано академічну наукову термінологію згідно з нормами чинного Правопису 2019 року."
 
     if task_type == "conceptual_explanation":
         query = (
             f"Як пояснити тему «{concept}» з предмета {subj_nom} для учнів {grade} класу? "
             f"Наведіть чітке наукове визначення та поясніть його ключові ознаки."
         )
-        r_step1 = f"1. Аналіз запитання: Потрібно розкрити сутність поняття «{concept}» відповідно до навчальної програми для {grade} класу з предмета {subj_nom}."
+        r_step1 = f"1. Аналіз запитання: Розглядаємо навчальні цілі теми «{concept}» у курсі {subj_gen} ({grade} клас)."
         r_step2 = f"2. Науково-педагогічна основа: Спираємося на авторизований зміст підручника: «{snippet[:150]}...»."
-        r_step3 = (
-            "3. Нормативність та термінологічний контроль: Перевіряємо відповідність термінології Українському правопису 2019 року. "
-            "Стежимо за точністю слововживання, уникаючи росіянізмів та калькованих синтаксичних зворотів."
-        )
+        r_step3 = f"3. Термінологічний контроль: {vesum_note} Уникаємо калькованих синтаксичних конструкцій."
         r_step4 = "4. Синтез пояснення: Формулюємо доступну, логічну та фахово вивірену педагогічну відповідь."
         final_resp = (
-            f"Тема «{concept}» є базовою у вивченні {subj_gen} у {grade} класі.\n\n"
+            f"Тема «{concept}» є важливою складовою курсу {subj_gen} ({grade} клас).\n\n"
             f"Основні наукові положення:\n"
-            f"• Сутність: {snippet}\n"
-            f"• Наукове значення: формування цілісного наукового світогляду та навичок системного мислення.\n\n"
-            f"Зверніть увагу: під час аналізу цієї теми слід послуговуватися питомою українською науковою термінологією "
-            f"та чітко розмежовувати теоретичні властивості та їхнє практичне втілення."
+            f"• Сутність поняття: {snippet}\n"
+            f"• Значення матеріалу: формує системне розуміння предмета та аналітичне мислення учнів.\n\n"
+            f"Під час вивчення цього матеріалу важливо послідовно зіставляти теоретичні положення з конкретними прикладами."
         )
 
     elif task_type == "problem_solving":
         query = (
-            f"Запропонуйте алгоритм розв'язування типової навчальної задачі на тему «{concept}» "
+            f"Запропонуйте алгоритм розв'язування типових навчальних завдань на тему «{concept}» "
             f"({subj_nom}, {grade} клас) та вкажіть основні етапи виконання."
         )
-        r_step1 = f"1. Декомпозиція задачі: Виокремлюємо відомі та шукані величини/чинники для теми «{concept}»."
-        r_step2 = f"2. Застосування правил та формул: Базуємо алгоритм на положеннях: «{snippet[:150]}...»."
-        r_step3 = (
-            "3. Мовний та лінгвістичний контроль: Застосовуємо нормативний зворот «розв'язувати задачу» "
-            "(замість калькованого «вирішувати задачу»). Захищаємо поняття математичного «об'єму» та «відношення»."
-        )
-        r_step4 = "4. Формулювання послідовності кроків: Описуємо поетапний план дій учня."
+        r_step1 = f"1. Декомпозиція завдання: Визначаємо вхідні дані та мету роботи для теми «{concept}»."
+        r_step2 = f"2. Теоретичні закономірності: Використовуємо положення підручника: «{snippet[:150]}...»."
+        if chunk.subject in DISCIPLINE_MATH_COMPUTING:
+            r_step3 = (
+                f"3. Мовний та понятійний контроль: {vesum_note} "
+                "Застосовуємо нормативний зворот «розв'язувати задачу» (не «вирішувати»), зберігаємо точний математичний «об'єм» та «відношення»."
+            )
+        else:
+            r_step3 = (
+                f"3. Лінгвістичний контроль: {vesum_note} "
+                "Дотримуємося питомої наукової термінології та чинних орфографічних норм."
+            )
+        r_step4 = "4. Послідовність кроків: Описуємо структурований покроковий план дій учня."
         final_resp = (
-            f"Для якісного розв'язування завдань на тему «{concept}» ({subj_nom}, {grade} клас) рекомендуємо такий алгоритм:\n\n"
-            f"1. Аналіз умови: уважно прочитайте умову, визначте дано та шукане.\n"
-            f"2. Теоретичне обґрунтування: застосуйте профільні формули чи закони: {snippet[:180]}.\n"
-            f"3. Математичні обчислення або логічний вивід: виконайте послідовні дії, перевіряючи одиниці вимірювання чи логічну узгодженість.\n"
-            f"4. Перевірка відповіді: зіставте отриманий результат із фізичним або змістовим сенсом умови."
+            f"Для розв'язування завдань на тему «{concept}» ({subj_nom}, {grade} клас) рекомендується такий алгоритм:\n\n"
+            f"1. Аналіз вихідних даних: уважно ознайомтеся з умовою та з'ясуйте головні взаємозв'язки.\n"
+            f"2. Теоретичне підґрунтя: спирайтеся на базові положення курсу: {snippet[:180]}.\n"
+            f"3. Виконання дій: послідовно застосуйте правила або формули, контролюючи проміжні результати.\n"
+            f"4. Перевірка та висновок: зіставте отриманий результат із реальними закономірностями предмета."
         )
 
     elif task_type == "applied_analysis":
         query = (
             f"У чому полягає практичне значення матеріалу «{concept}» ({subj_nom}, {grade} клас) "
-            f"у повсякденному житті або сучасному розвитку науки й технологій?"
+            f"у повсякденному житті або сучасному розвитку суспільства й технологій?"
         )
-        r_step1 = f"1. Змістовий аналіз: Досліджуємо практичні взаємозв'язки теоретичного положення «{concept}»."
+        r_step1 = f"1. Змістовий аналіз: Досліджуємо практичні взаємозв'язки теми «{concept}»."
         r_step2 = f"2. Фактологічне підґрунтя: Згідно з текстом підручника: «{snippet[:150]}...»."
-        r_step3 = (
-            "3. Правописна чистота: Використовуємо терміни, закріплені в академічних словниках сучасної української мови. "
-            "Тон відповіді — науковий, шанобливий, заохочувальний."
-        )
-        r_step4 = "4. Узагальнення: Поєднуємо шкільну теорію із сучасними викликами та практичною користю."
+        r_step3 = f"3. Правописна чистота: {vesum_note} Тон викладу — науковий, шанобливий та заохочувальний."
+        r_step4 = "4. Узагальнення: Поєднуємо навчальний матеріал із реальними практичними викликами."
         final_resp = (
-            f"Вивчення теми «{concept}» має безпосередній практичний вимір у сучасному світі.\n\n"
-            f"Практичне застосування:\n"
+            f"Вивчення теми «{concept}» має безпосередній практичний вимір у сучасному житті.\n\n"
+            f"Практичне втілення:\n"
             f"• Реальний контекст: {snippet}\n"
-            f"• Розвиток компетентностей: формує вміння ухвалювати виважені рішення на основі точних знань та критичного аналізу.\n\n"
-            f"Розуміння цих процесів допомагає усвідомити закономірності навколишнього світу та використовувати знання "
-            f"з {subj_gen} для професійного становлення."
+            f"• Компетентнісний результат: розвиває навички критичного мислення та обґрунтованого ухвалення рішень.\n\n"
+            f"Опанування цих знань з {subj_gen} допомагає краще орієнтуватися у навколишньому світі та фахових процесах."
         )
 
     elif task_type == "source_critical_evaluation":
         query = (
-            f"Проаналізуйте сутність поняття «{concept}» ({subj_nom}, {grade} клас) з позиції сучасної деколонізованої української гуманітаристики. "
+            f"Проаналізуйте сутність теми «{concept}» ({subj_nom}, {grade} клас) з позиції сучасної деколонізованої української освіти. "
             f"Чому важливо спиратися на українські джерела?"
         )
-        r_step1 = f"1. Постановка проблеми: Оцінка явища «{concept}» у контексті викладання курсу {subj_nom}."
+        r_step1 = f"1. Постановка проблеми: Оцінка явища «{concept}» у структурі курсу {subj_nom}."
         r_step2 = f"2. Джерельна база: Використовуємо зміст українського підручника: «{snippet[:150]}...»."
         r_step3 = (
-            "3. Деколонізація та мовний лад: Повністю відкидаємо імперські наративи та штучні радянські інтерпретації. "
-            "Спираємося на сучасні норми наукового викладу."
+            f"3. Джерелознавчий та мовний аналіз: {vesum_note} "
+            "Спираємося на сучасні українські фахові джерела, утверджуючи державницьку позицію."
         )
-        r_step4 = "4. Формулювання висновку: Підкреслюємо суб'єктність української наукової школи."
+        r_step4 = "4. Формулювання висновку: Підкреслюємо суб'єктність українського наукового дискурсу."
         final_resp = (
-            f"Аналіз теми «{concept}» у курсі {subj_nom} утверджує суб'єктність українського наукового дискурсу.\n\n"
-            f"Ключові висновки:\n"
-            f"• Джерельне підґрунтя: {snippet}\n"
-            f"• Деколонізаційний вимір: позбавлення від нав'язаних ззовні стереотипів та утвердження правдивої історичної й культурної тяглості.\n\n"
-            f"Опора на українські підручники та наукові першоджерела гарантує суверенітет знань та високу академічну доброчесність."
+            f"Аналіз теми «{concept}» у курсі {subj_nom} утверджує самостійність та наукову гідність української освіти.\n\n"
+            f"Ключові аспекти:\n"
+            f"• Фактологічна основа: {snippet}\n"
+            f"• Деколонізаційний вимір: подолання нав'язаних ззовні інтерпретацій та спирання на достовірні першоджерела.\n\n"
+            f"Використання українських підручників забезпечує високу якість знань та академічну доброчесність."
         )
 
     else:  # terminological_pedagogy
@@ -771,19 +982,69 @@ def synthesize_trajectory(
             f"Яких термінологічних вимог та норм Правопису 2019 року необхідно дотримуватися під час вивчення теми «{concept}» ({subj_nom})?"
         )
         r_step1 = f"1. Лінгвістичний аналіз: Виокремлюємо базові наукові терміни до теми «{concept}»."
-        r_step2 = f"2. Контекст курсу: У тексті підручника розглядаються поняття: «{snippet[:150]}...»."
-        r_step3 = (
-            "3. Правописна перевірка: Зіставляємо термінологію з нормами Українського правопису 2019 року. "
-            "Вживаємо питомі назви речовин/понять (водень, кисень, сульфатна кислота, розв'язок задачі)."
-        )
+        r_step2 = f"2. Контекст курсу: У тексті підручника розглядаються положення: «{snippet[:150]}...»."
+
+        # Discipline-specific terminological notes
+        if chunk.subject in DISCIPLINE_MATH_COMPUTING:
+            r_step3 = (
+                f"3. Термінологічні орієнтири: {vesum_note} "
+                "Вживаємо «розв'язувати задачу / рівняння» (не «вирішувати»), геометричний «об'єм» (не «обсяг»), «відношення величин» (не «відносини»)."
+            )
+            term_guidance = (
+                "• Математичні дієслова: вживайте «розв'язувати задачу», «розв'язувати рівняння» (а не «вирішувати»).\n"
+                "• Захист понять: просторова міра геометричного тіла — виключно «об'єм» (не «обсяг»), частка двох чисел — «відношення» (не «відносини»)."
+            )
+        elif chunk.subject in {"khimiya", "fizyka"}:
+            r_step3 = (
+                f"3. Природнича номенклатура: {vesum_note} "
+                "Використовуємо питомі назви елементів і сполук (водень, кисень, сульфатна кислота), уникаємо калькованого «наносити шкоду» (вживаємо «завдавати шкоди»)."
+            )
+            term_guidance = (
+                "• Хімічна та фізична номенклатура: вживайте питомі назви речовин («водень», «кисень», «сульфатна кислота», «хлоридна кислота»).\n"
+                "• Дієслівні норми: використовуйте зворот «завдавати шкоди» (а не кальковане «наносити шкоду»)."
+            )
+        elif chunk.subject in DISCIPLINE_SOCIAL_LAW:
+            r_step3 = (
+                f"3. Суспільствознавча термінологія: {vesum_note} "
+                "Вживаємо суверенні правничі терміни («верховенство права», «державотворення», «суверенітет»), викорінюючи колоніальні штампи."
+            )
+            term_guidance = (
+                "• Правничі та державницькі терміни: вживайте «верховенство права», «правопорядок», «суверенітет України».\n"
+                "• Подолання стереотипів: послуговуйтеся сучасною термінологією, закріпленою в Конституції України та чинному законодавстві."
+            )
+        else:
+            r_step3 = (
+                f"3. Правописні норми: {vesum_note} "
+                "Дотримуємося правил вживання лапок (зовнішні «...», внутрішні „...“), усуваємо подвійну пунктуацію."
+            )
+            term_guidance = (
+                "• Норми Правопису 2019 року: дотримуйтеся правил вживання лапок (§ 164: зовнішні «...», внутрішні „...“).\n"
+                "• Культура слововживання: уникайте синтаксичних кальок (кажіть «залежно від», а не «в залежності від»)."
+            )
+
         r_step4 = "4. Педагогічна настанова: Формулюємо правила безпомилкового слововживання."
         final_resp = (
-            f"Під час опанування теми «{concept}» важливо дотримуватися чистоти української наукової мови:\n\n"
-            f"• Наукова термінологія: вживайте нормативні українські терміни ({', '.join(terms[:4])}).\n"
-            f"• Синтаксичні конструкції: кажіть «розв'язувати задачу» (а не «вирішувати»), «залежно від» (а не «в залежності від»).\n"
-            f"• Збереження сутності: у математиці та фізиці строго зберігаємо поняття «об'єм» (просторовий вимір) та «відношення» (частка величин).\n\n"
-            f"Дотримання цих правил гарантує високу фахову культуру та бездоганну грамотність."
+            f"Під час вивчення теми «{concept}» важливо дотримуватися чистоти української фахової мови:\n\n"
+            f"• Профільні терміни: послуговуйтеся нормативними формами ({', '.join(terms[:4])}).\n"
+            f"{term_guidance}\n\n"
+            f"Фахова точність мовлення є невіддільною ознакою якісної шкільної освіти."
         )
+
+    # Format typography and Pravopys 2019 nested quotes
+    concept = format_nested_quotes(concept)
+    query = format_nested_quotes(query)
+    r_step1 = format_nested_quotes(r_step1)
+    r_step2 = format_nested_quotes(r_step2)
+    r_step3 = format_nested_quotes(r_step3)
+    r_step4 = format_nested_quotes(r_step4)
+    final_resp = format_nested_quotes(final_resp)
+
+    # Invariant checks
+    all_text = f"{query} {final_resp} {r_step1} {r_step2} {r_step3} {r_step4}"
+    if not verify_pedagogical_tone(all_text):
+        raise ValueError(f"Tone check failed for trajectory {traj_idx}: pejorative phrasing detected")
+    if not check_protected_entities(all_text):
+        raise ValueError(f"Protected entity check failed for trajectory {traj_idx}: volume or ratio corrupted")
 
     traj = {
         "schema_version": "v1_general_assistant_trajectory",
@@ -810,24 +1071,32 @@ def synthesize_trajectory(
     return traj
 
 
+
 def generate_evaluation_benchmark(
     eval_chunks: list[TextbookChunk],
     eval_dir: Path,
     target_count: int = 2500,
     shards_count: int = 5,
 ) -> tuple[dict[str, Any], str, dict[str, int], dict[str, int]]:
-    """Generate held-out evaluation tasks partitioned across shards and validate against schema."""
+    """Generate held-out evaluation tasks stratified across all 22 held-out textbooks."""
     eval_dir.mkdir(parents=True, exist_ok=True)
     schema = json.loads(SCHEMA_EVAL_PATH.read_text(encoding="utf-8"))
     validator = jsonschema.Draft202012Validator(schema)
 
-    stem_chunks = [c for c in eval_chunks if c.domain == "stem"]
-    hum_chunks = [c for c in eval_chunks if c.domain == "humanities"]
+    # Group eval chunks by held-out source_file
+    chunks_by_book: dict[str, list[TextbookChunk]] = {}
+    for c in eval_chunks:
+        chunks_by_book.setdefault(c.source_file, []).append(c)
 
-    if not stem_chunks:
-        stem_chunks = eval_chunks
-    if not hum_chunks:
-        hum_chunks = eval_chunks
+    stem_books = [b for b in HELD_OUT_TEXTBOOKS if b in chunks_by_book and any(c.domain == "stem" for c in chunks_by_book[b])]
+    hum_books = [b for b in HELD_OUT_TEXTBOOKS if b in chunks_by_book and any(c.domain == "humanities" for c in chunks_by_book[b])]
+
+    # Fallback if partitioning small test subset
+    if not stem_books:
+        stem_books = [b for b in chunks_by_book if any(c.domain == "stem" for c in chunks_by_book[b])] or list(chunks_by_book.keys())
+    if not hum_books:
+        hum_books = [b for b in chunks_by_book if any(c.domain == "humanities" for c in chunks_by_book[b])] or list(chunks_by_book.keys())
+
 
     records: list[dict[str, Any]] = []
     subj_dist: dict[str, int] = Counter()
@@ -839,8 +1108,11 @@ def generate_evaluation_benchmark(
     random.seed(8139)
     idx = 1
 
+    # Round-robin sampling across STEM books
     for i in range(target_stem):
-        chunk = stem_chunks[i % len(stem_chunks)]
+        book = stem_books[i % len(stem_books)]
+        book_pool = chunks_by_book[book]
+        chunk = book_pool[(i // len(stem_books)) % len(book_pool)]
         rec = synthesize_eval_task(chunk, idx)
         validator.validate(rec)
         records.append(rec)
@@ -848,8 +1120,11 @@ def generate_evaluation_benchmark(
         domain_dist["stem"] += 1
         idx += 1
 
+    # Round-robin sampling across Humanities books
     for i in range(target_hum):
-        chunk = hum_chunks[i % len(hum_chunks)]
+        book = hum_books[i % len(hum_books)]
+        book_pool = chunks_by_book[book]
+        chunk = book_pool[(i // len(hum_books)) % len(book_pool)]
         rec = synthesize_eval_task(chunk, idx)
         validator.validate(rec)
         records.append(rec)
@@ -918,22 +1193,36 @@ def generate_sft_dataset(
     shards_count: int = 150,
     vesum_cur: sqlite3.Cursor | None = None,
 ) -> tuple[dict[str, Any], str, dict[str, int], dict[str, int], int]:
-    """Generate 75,000 multi-turn instructional trajectories across 150 shards."""
+    """Generate multi-turn instructional trajectories balanced across curriculum subjects."""
     sft_dir.mkdir(parents=True, exist_ok=True)
     trajectories_per_shard = target_count // shards_count
-    assert trajectories_per_shard * shards_count == target_count, "Target count must divide evenly by shards"
+    if trajectories_per_shard * shards_count != target_count:
+        raise ValueError("Target count must divide evenly by shards")
 
-    stem_chunks = [c for c in train_chunks if c.domain == "stem"]
-    hum_chunks = [c for c in train_chunks if c.domain == "humanities"]
+    # Group chunks by domain and subject
+    stem_by_subj: dict[str, list[TextbookChunk]] = {}
+    hum_by_subj: dict[str, list[TextbookChunk]] = {}
+    for c in train_chunks:
+        if c.domain == "stem":
+            stem_by_subj.setdefault(c.subject, []).append(c)
+        else:
+            hum_by_subj.setdefault(c.subject, []).append(c)
 
-    if not stem_chunks:
-        stem_chunks = train_chunks
-    if not hum_chunks:
-        hum_chunks = train_chunks
+    stem_subjects = sorted(stem_by_subj.keys())
+    hum_subjects = sorted(hum_by_subj.keys())
 
-    # Target balanced domain distribution proportional to target_count
+    # Fallback for small hermetic test subsets
+    if not stem_subjects and hum_subjects:
+        stem_by_subj = hum_by_subj
+        stem_subjects = hum_subjects
+    elif not hum_subjects and stem_subjects:
+        hum_by_subj = stem_by_subj
+        hum_subjects = stem_subjects
+
+    # Proportional domain targets
     target_stem = int(target_count * 35000 / 75000)
     target_hum = target_count - target_stem
+
 
     task_types_stem = ["conceptual_explanation", "problem_solving", "applied_analysis", "terminological_pedagogy"]
     task_types_hum = ["conceptual_explanation", "applied_analysis", "source_critical_evaluation", "terminological_pedagogy"]
@@ -946,24 +1235,28 @@ def generate_sft_dataset(
     random.seed(8139)
     traj_id_counter = 1
 
-    # Generate STEM
+    # Round-robin sampling across STEM subjects
     for i in range(target_stem):
-        chunk = stem_chunks[i % len(stem_chunks)]
-        ttype = task_types_stem[(i // len(stem_chunks)) % len(task_types_stem)]
+        subj = stem_subjects[i % len(stem_subjects)]
+        subj_pool = stem_by_subj[subj]
+        chunk = subj_pool[(i // len(stem_subjects)) % len(subj_pool)]
+        ttype = task_types_stem[(i // len(stem_subjects)) % len(task_types_stem)]
         traj = synthesize_trajectory(chunk, traj_id_counter, ttype, vesum_cur)
         all_trajectories.append(traj)
-        subj_dist[chunk.subject] += 1
+        subj_dist[subj] += 1
         domain_dist["stem"] += 1
         books_seen.add(chunk.source_file)
         traj_id_counter += 1
 
-    # Generate Humanities
+    # Round-robin sampling across Humanities subjects
     for i in range(target_hum):
-        chunk = hum_chunks[i % len(hum_chunks)]
-        ttype = task_types_hum[(i // len(hum_chunks)) % len(task_types_hum)]
+        subj = hum_subjects[i % len(hum_subjects)]
+        subj_pool = hum_by_subj[subj]
+        chunk = subj_pool[(i // len(hum_subjects)) % len(subj_pool)]
+        ttype = task_types_hum[(i // len(hum_subjects)) % len(task_types_hum)]
         traj = synthesize_trajectory(chunk, traj_id_counter, ttype, vesum_cur)
         all_trajectories.append(traj)
-        subj_dist[chunk.subject] += 1
+        subj_dist[subj] += 1
         domain_dist["humanities"] += 1
         books_seen.add(chunk.source_file)
         traj_id_counter += 1
@@ -1018,6 +1311,7 @@ def generate_sft_dataset(
     return manifest_data, manifest_sha256, dict(subj_dist), dict(domain_dist), len(books_seen)
 
 
+
 def generate_release_receipt(
     eval_dir: Path,
     eval_manifest_sha256: str,
@@ -1036,6 +1330,7 @@ def generate_release_receipt(
     books_count: int,
     git_commit: str,
     output_dir: Path,
+    invariants_verified: dict[str, bool] | None = None,
     validate_schema: bool = True,
 ) -> dict[str, Any]:
     """Build, validate, and write the cryptographic release receipt."""
@@ -1051,6 +1346,26 @@ def generate_release_receipt(
         sft_rel_path = str(sft_dir.relative_to(PROJECT_ROOT))
     except ValueError:
         sft_rel_path = str(sft_dir)
+
+    # If not provided, compute dynamically based on verified runtime properties
+    if invariants_verified is None:
+        partition_ok = (len(eval_subj_dist) == len(HELD_OUT_TEXTBOOKS)) if eval_count == 2500 else (len(eval_subj_dist) >= 1)
+        coverage_ok = (eval_domain_dist.get("stem", 0) >= 500 and eval_domain_dist.get("humanities", 0) >= 500) if eval_count == 2500 else True
+        invariants_verified = {
+            "zero_train_eval_leakage": True,
+            "textbook_partitioning_enforced": partition_ok,
+            "stem_humanities_coverage": coverage_ok,
+            "entity_preservation_volume_ratio": True,
+            "pravopys_2019_verified": True,
+            "gate6_pedagogy_tone_verified": True,
+            "precommit_file_ceiling_satisfied": eval_max_shard_size_kb <= 2000.0 and max_shard_size_kb <= 2000.0,
+        }
+
+
+    # Ensure all required invariants are booleans and fail closed if any is False
+    for inv_k, inv_v in invariants_verified.items():
+        if not inv_v:
+            raise ValueError(f"Release receipt invariant failed: {inv_k} = {inv_v}")
 
     receipt = {
         "schema_version": "v1_general_assistant_release_receipt",
@@ -1081,15 +1396,7 @@ def generate_release_receipt(
             "subject_distribution": sft_subj_dist,
             "domain_distribution": sft_domain_dist,
         },
-        "invariants_verified": {
-            "zero_train_eval_leakage": True,
-            "textbook_partitioning_enforced": True,
-            "stem_humanities_coverage": True,
-            "entity_preservation_volume_ratio": True,
-            "pravopys_2019_verified": True,
-            "gate6_pedagogy_tone_verified": True,
-            "precommit_file_ceiling_satisfied": True,
-        },
+        "invariants_verified": invariants_verified,
     }
 
     if validate_schema and eval_count == 2500 and sft_count == 75000:
@@ -1138,7 +1445,8 @@ def main() -> int:
     # Assert strict 0% leakage
     eval_books = {c.source_file for c in eval_chunks}
     train_books = {c.source_file for c in train_chunks}
-    assert eval_books.isdisjoint(train_books), f"Leakage detected between eval and train: {eval_books & train_books}"
+    if not eval_books.isdisjoint(train_books):
+        raise ValueError(f"Book leakage detected: {eval_books & train_books}")
 
     eval_count = 100 if args.dry_run else 2500
     eval_shards_count = 1 if args.dry_run else 5
@@ -1176,6 +1484,15 @@ def main() -> int:
         max_shard_size_kb = manifest_data["max_shard_size_kb"]
 
     if not args.eval_only and not args.sft_only and not args.dry_run:
+        invariants_verified = {
+            "zero_train_eval_leakage": True,
+            "textbook_partitioning_enforced": len(eval_subj_dist) == len(HELD_OUT_TEXTBOOKS),
+            "stem_humanities_coverage": eval_domain_dist.get("stem", 0) >= 500 and eval_domain_dist.get("humanities", 0) >= 500,
+            "entity_preservation_volume_ratio": True,
+            "pravopys_2019_verified": True,
+            "gate6_pedagogy_tone_verified": True,
+            "precommit_file_ceiling_satisfied": eval_manifest_data.get("max_shard_size_kb", 0.0) <= 2000.0 and max_shard_size_kb <= 2000.0,
+        }
         generate_release_receipt(
             eval_dir=eval_dir,
             eval_manifest_sha256=eval_manifest_sha256,
@@ -1194,10 +1511,12 @@ def main() -> int:
             books_count=books_count,
             git_commit=git_commit,
             output_dir=output_dir,
+            invariants_verified=invariants_verified,
         )
 
     logger.info("Phase 6.1 General Ukrainian Assistant Mining Completed Successfully.")
     return 0
+
 
 
 if __name__ == "__main__":

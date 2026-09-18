@@ -27,15 +27,18 @@ from scripts.projects.open_model_data.v6_mine_general_assistant_textbooks import
     DEFAULT_OUTPUT_DIR,
     DEFAULT_SOURCES_DB,
     DEFAULT_VESUM_DB,
+    EXERCISE_IMPERATIVES,
     HELD_OUT_SET,
     HELD_OUT_TEXTBOOKS,
     PROTECTED_RATIO_TERMS,
     PROTECTED_VOLUME_TERMS,
     SCHEMA_EVAL_PATH,
     SCHEMA_RECEIPT_PATH,
+    TextbookChunk,
     apply_calque_sanitation,
     check_protected_entities,
     ensure_single_terminal_dot,
+    extract_key_concept,
     format_nested_quotes,
     generate_evaluation_benchmark,
     generate_release_receipt,
@@ -55,13 +58,17 @@ def test_held_out_firewall_zero_leakage():
     train_books = {c.source_file for c in train_chunks}
     eval_chunk_ids = {c.chunk_id for c in eval_chunks}
     train_chunk_ids = {c.chunk_id for c in train_chunks}
+    eval_text_hashes = {hashlib.sha256(c.text.strip().encode("utf-8")).hexdigest() for c in eval_chunks}
+    train_text_hashes = {hashlib.sha256(c.text.strip().encode("utf-8")).hexdigest() for c in train_chunks}
 
-    # Strict disjointness
+    # Strict disjointness: books, chunk IDs, and verbatim text hashes
     assert eval_books.isdisjoint(train_books), f"Book leakage detected: {eval_books & train_books}"
     assert eval_chunk_ids.isdisjoint(train_chunk_ids), f"Chunk leakage detected: {eval_chunk_ids & train_chunk_ids}"
+    assert eval_text_hashes.isdisjoint(train_text_hashes), "Verbatim text content leakage detected between eval and train"
     assert len(eval_books) == len(HELD_OUT_TEXTBOOKS), f"Expected {len(HELD_OUT_TEXTBOOKS)} held-out books, got {len(eval_books)}"
     assert len(eval_chunks) > 3000, f"Expected substantial held-out chunk pool, got {len(eval_chunks)}"
     assert len(train_chunks) > 25000, f"Expected large training chunk pool, got {len(train_chunks)}"
+
 
 
 def test_subject_and_grade_coverage():
@@ -165,7 +172,12 @@ def test_typography_and_nested_quotes():
 
 
 def test_vesum_scientific_attestation():
-    """Verify that authentic Ukrainian scientific terms are attested in VESUM."""
+    """Verify that authentic Ukrainian scientific terms are attested in VESUM and fails closed."""
+    # Fail closed verification: when cursor is None and use_default_if_none is False, must return False
+    assert is_vesum_attested("водень", None, use_default_if_none=False) is False
+    assert is_vesum_attested("", None, use_default_if_none=False) is False
+
+
     cur = get_vesum_cursor(DEFAULT_VESUM_DB)
     if cur is None:
         pytest.skip("VESUM database not found on disk")
@@ -176,6 +188,11 @@ def test_vesum_scientific_attestation():
     ]
     for lemma in canonical_scientific_lemmas:
         assert is_vesum_attested(lemma, cur) is True, f"Scientific lemma not attested in VESUM: {lemma}"
+
+    # Multi-word term validation: all words must be attested
+    assert is_vesum_attested("об'єм циліндра", cur) is True
+    assert is_vesum_attested("сульфатна кислота", cur) is True
+    assert is_vesum_attested("об'єм невідомещонебуває", cur) is False
 
     # Non-Ukrainian pseudo-words must fail attestation
     assert is_vesum_attested("xyznonexistent", cur) is False
@@ -196,6 +213,33 @@ def test_sanitize_ip_addresses():
     assert sanitize_ip_addresses("Хост 127.0.0.1 або 8.8.8.8.") == "Хост 127.0.0.1 або 8.8.8.8."
     # RFC 5737 doc IP preserved
     assert sanitize_ip_addresses("Тестова адреса: 198.51.100.4.") == "Тестова адреса: 198.51.100.4."
+    # Dotted chains (diagram labels) must be preserved, not converted to IPs
+    assert sanitize_ip_addresses("Поставимо 1.2.3.4.6.7.8.10 у схему.") == "Поставимо 1.2.3.4.6.7.8.10 у схему."
+    # Plain numeric lists without networking context must be preserved
+    num_list = ".".join(["25", "30", "40", "50"])
+    assert sanitize_ip_addresses(f"Значення числового ряду: {num_list}.") == f"Значення числового ряду: {num_list}."
+    # Synthetic IP in networking context must be converted even if small octets
+    assert sanitize_ip_addresses("вузол в мережі має адресу 1.2.3.4.") == "вузол в мережі має адресу 198.51.100.4."
+
+
+def test_concept_extraction_rejects_imperatives():
+    """Verify that exercise instructions starting with imperative verbs are rejected from concepts."""
+    bad_chunk = TextbookChunk(
+        chunk_id="test_exercise_chunk",
+        title="Сторінка 180",
+        text="6. Складіть коротке повідомлення, оцінюючи свою діяльність на уроці.\nІнтелектуальний клуб.",
+        source_file="8-klas-heohrafiya-hilberh-2025",
+        grade="8",
+        author="Гільберг",
+        subject="heohrafiya",
+        char_count=200,
+    )
+    concept = extract_key_concept(bad_chunk)
+    assert not concept.lower().startswith("складіть")
+    assert not concept.lower().startswith("оцініть")
+    w0 = concept.split()[0].lower().strip(".,;:?!'\"«»„“—–()")
+    assert w0 not in EXERCISE_IMPERATIVES
+
 
 
 def test_synthetic_pipeline_hermetic_run():
@@ -279,6 +323,8 @@ def test_eval_benchmark_disk_invariants_and_schema():
         assert manifest["shards_count"] == 5
         assert len(manifest["shards"]) == 5
         total_seen = 0
+        seen_books = set()
+        seen_subjects = set()
         for shard_info in manifest["shards"]:
             assert shard_info["cases_count"] == 500
             assert shard_info["size_kb"] < 2000.0, f"Shard exceeds ceiling: {shard_info}"
@@ -290,10 +336,26 @@ def test_eval_benchmark_disk_invariants_and_schema():
                     hasher.update(line.encode("utf-8"))
                     rec = json.loads(line)
                     validator.validate(rec)
-                    assert rec["source_metadata"]["source_book"] in HELD_OUT_SET
+                    src_book = rec["source_metadata"]["source_book"]
+                    assert src_book in HELD_OUT_SET
+                    seen_books.add(src_book)
+                    seen_subjects.add(rec["subject"])
+
+                    # Invariant checks on actual records
+                    concept = rec["concept"]
+                    w0 = concept.split()[0].lower().strip(".,;:?!'\"«»„“—–()")
+                    assert w0 not in EXERCISE_IMPERATIVES, f"Imperative concept found: {concept}"
+                    assert verify_pedagogical_tone(rec["query"])
+                    assert verify_pedagogical_tone(rec["reference_solution"])
+                    assert check_protected_entities(rec["reference_solution"])
+
                     total_seen += 1
             assert hasher.hexdigest() == shard_info["sha256"]
         assert total_seen == 2500
+        # Stratification: all 22 held-out textbooks and all 22 curriculum subjects present
+        assert len(seen_books) == len(HELD_OUT_TEXTBOOKS), f"Missing held-out books: {HELD_OUT_SET - seen_books}"
+        assert len(seen_subjects) == len(HELD_OUT_TEXTBOOKS), f"Expected 22 subjects, got {len(seen_subjects)}"
+
 
 
 def test_sft_manifest_and_shards_invariants():
