@@ -100,7 +100,7 @@ describe('noun-mechanics', () => {
         },
         {
           text: 'ніж',
-          interference_type: 'false_vocative_nominative',
+          interference_type: 'false_nominative_for_instrumental',
           explanation: {
             ua: 'Називний замість орудного.',
             en: 'Nominative instead of instrumental.',

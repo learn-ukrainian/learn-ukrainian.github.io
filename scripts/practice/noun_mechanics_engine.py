@@ -22,7 +22,7 @@ Implements Ukrainian Pravopys 2019 (§§ 68, 73, 80, 82, 87) and Academic Gramma
        * терміна (specialized scientific term) vs терміну (deadline/time period).
        * рахунка (commercial invoice) vs рахунку (bank account/game score).
 
-  2. Vocative Case Endings (-е, -у, -ю, -о) [Правопис 2019 §§ 73, 87]:
+  2. Vocative Case Endings (-е, -у, -ю, -о) [Правопис 2019 §§ 74, 87]:
      - § 87, п. 1 (-е): II declension hard group with historical consonant mutations
        (брате, друже [г->ж], козаче [к->ч], пастуше [х->ш], чоловіче).
      - § 87, п. 2 (-у): II declension masculine with suffixes -ник, -ак, -ок or hard velar stems
@@ -95,6 +95,9 @@ class NounMechanicsInterferenceType(StrEnum):
     FALSE_GENITIVE_U_FOR_SETTLEMENT = "false_genitive_u_for_settlement"
     FALSE_GENITIVE_A_FOR_COLLECTIVE = "false_genitive_a_for_collective"
     HOMONYM_GENITIVE_MEANING_MISMATCH = "homonym_genitive_meaning_mismatch"
+    FALSE_NOMINATIVE_FOR_GENITIVE = "false_nominative_for_genitive"
+    FALSE_INSTRUMENTAL_FOR_GENITIVE = "false_instrumental_for_genitive"
+    FALSE_DATIVE_FOR_GENITIVE = "false_dative_for_genitive"
     FALSE_VOCATIVE_NOMINATIVE = "false_vocative_nominative"
     FALSE_VOCATIVE_U_FOR_HARD_E = "false_vocative_u_for_hard_e"
     FALSE_VOCATIVE_E_FOR_SUFFIX_U = "false_vocative_e_for_suffix_u"
@@ -104,8 +107,12 @@ class NounMechanicsInterferenceType(StrEnum):
     FALSE_MUTATION_MISSING = "false_mutation_missing"
     FALSE_INSTRUMENTAL_OM_FOR_SIBILANT = "false_instrumental_om_for_sibilant"
     FALSE_INSTRUMENTAL_IM_FOR_NOUN = "false_instrumental_im_for_noun"
+    FALSE_NOMINATIVE_FOR_INSTRUMENTAL = "false_nominative_for_instrumental"
+    FALSE_INSTRUMENTAL_EM_FOR_HARD = "false_instrumental_em_for_hard"
     FALSE_ANIMACY_ACCUSATIVE_INANIMATE = "false_animacy_accusative_inanimate"
     FALSE_ANIMACY_ACCUSATIVE_ANIMATE = "false_animacy_accusative_animate"
+    FALSE_INSTRUMENTAL_FOR_ACCUSATIVE = "false_instrumental_for_accusative"
+    FALSE_DATIVE_FOR_ACCUSATIVE = "false_dative_for_accusative"
     RUSSIAN_DECLENSION_INTERFERENCE = "russian_declension_interference"
 
 
@@ -130,9 +137,37 @@ INTERFERENCE_EXPLANATIONS: dict[NounMechanicsInterferenceType, dict[str, str]] =
         "ua": "Невідповідність закінчення значенню слова в контексті. За Правописом 2019 § 82, п. 3 закінчення -а/-я вказує на конкретний предмет чи місяць, а -у/-ю — на матеріал, процес чи збірність.",
         "en": "Ending mismatch with word sense in context. Under Pravopys 2019 § 82, item 3, -a/-ya denotes a concrete object/month, whereas -u/-yu denotes material, process, or collection.",
     },
+    NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE: {
+        "ua": "Вживання форми називного відмінка замість обов'язкового родового (наприклад, після прийменників «біля», «до», «без» або при запереченні «немає»).",
+        "en": "Use of nominative form instead of required genitive (e.g. after prepositions 'bilia', 'do', 'bez' or negation 'nemaie').",
+    },
+    NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE: {
+        "ua": "Вживання форми орудного відмінка замість родового.",
+        "en": "Use of instrumental form instead of genitive.",
+    },
+    NounMechanicsInterferenceType.FALSE_DATIVE_FOR_GENITIVE: {
+        "ua": "Вживання закінчення давального відмінка замість родового.",
+        "en": "Use of dative case ending instead of genitive.",
+    },
+    NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_INSTRUMENTAL: {
+        "ua": "Форма називного відмінка замість орудного знаряддя, способу дії чи супроводу.",
+        "en": "Nominative form instead of instrumental of instrument, means, or accompaniment.",
+    },
+    NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_ACCUSATIVE: {
+        "ua": "Форма орудного відмінка замість знахідного прямого додатка.",
+        "en": "Instrumental form instead of accusative direct object.",
+    },
+    NounMechanicsInterferenceType.FALSE_DATIVE_FOR_ACCUSATIVE: {
+        "ua": "Форма давального відмінка замість знахідного прямого додатка.",
+        "en": "Dative form instead of accusative direct object.",
+    },
+    NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_EM_FOR_HARD: {
+        "ua": "Помилкове закінчення -ем замість -ом для твердої групи другої відміни в орудному відмінку.",
+        "en": "Erroneous ending -em instead of -om for 2nd declension hard stem in the instrumental.",
+    },
     NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE: {
-        "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-        "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87).",
+        "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+        "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87).",
     },
     NounMechanicsInterferenceType.FALSE_VOCATIVE_U_FOR_HARD_E: {
         "ua": "Помилкове вживання закінчення -у для іменників твердої групи другої відміни без зменшувальних суфіксів. За Правописом 2019 § 87, п. 1 вони приймають закінчення -е (брате, козаче).",
@@ -269,7 +304,7 @@ def resolve_noun_vocative(
     has_velar_or_diminutive: bool = False,
     is_soft_hypocoristic: bool = False,
 ) -> tuple[str, str, str]:
-    """Resolve Vocative case ending per Правопис 2019 §§ 73, 87.
+    """Resolve Vocative case ending per Правопис 2019 §§ 74, 87.
 
     Returns:
         (ending, rule_ua, rule_en)
@@ -384,7 +419,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="студент",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість обов'язкового родового при запереченні «немає».",
                         "en": "Nominative form instead of required Genitive after negation 'nemaie'.",
@@ -392,7 +427,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="студентом",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -423,12 +458,12 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="вчитель",
-                    interference_type=NounMechanicsInterferenceType.FALSE_ANIMACY_ACCUSATIVE_ANIMATE,
-                    explanation=INTERFERENCE_EXPLANATIONS[NounMechanicsInterferenceType.FALSE_ANIMACY_ACCUSATIVE_ANIMATE],
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
+                    explanation=INTERFERENCE_EXPLANATIONS[NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE],
                 ),
                 NounMechanicsDistractor(
                     text="вчителем",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -459,7 +494,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="стіл",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового після прийменника «біля».",
                         "en": "Nominative form instead of Genitive after preposition 'bilia'.",
@@ -467,7 +502,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="столом",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -498,7 +533,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="ніж",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового при запереченні «не зміг знайти».",
                         "en": "Nominative form instead of Genitive under negated transitive verb.",
@@ -506,7 +541,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="ножем",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -537,7 +572,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="трактор",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового приналежності.",
                         "en": "Nominative form instead of possessive Genitive.",
@@ -545,7 +580,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="трактором",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -576,7 +611,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="дуб",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового приналежності.",
                         "en": "Nominative form instead of possessive Genitive.",
@@ -584,7 +619,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="дубом",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -618,7 +653,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="Київ",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового після прийменника «з».",
                         "en": "Nominative form instead of Genitive after preposition 'z'.",
@@ -626,7 +661,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="Києвом",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -657,7 +692,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="Львів",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового з прийменником «зі».",
                         "en": "Nominative form instead of Genitive with preposition 'zi'.",
@@ -665,7 +700,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="Львовом",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -699,7 +734,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="метр",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового після кількісного числівника «одного».",
                         "en": "Nominative form instead of Genitive after numeral 'odnoho'.",
@@ -707,7 +742,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="метром",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -741,7 +776,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="долар",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового.",
                         "en": "Nominative form instead of Genitive.",
@@ -749,7 +784,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="доларом",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -783,7 +818,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="понеділок",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового з прийменником «з».",
                         "en": "Nominative form instead of Genitive after 'z'.",
@@ -791,7 +826,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="понеділком",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -819,13 +854,13 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                     text="січню",
                     interference_type=NounMechanicsInterferenceType.FALSE_GENITIVE_U_FOR_CONCRETE_BEING,
                     explanation={
-                        "ua": "Назви місяців за Правописом 2019 § 82, п. 1.4 мають закінчення -я/-а (січня, лютого, березня).",
+                        "ua": "Назви місяців за Правописом 2019 § 82, п. 1.4 мають закінчення -я/-а (січня, березня, квітня).",
                         "en": "Names of calendar months take ending -ya/-a in the genitive.",
                     },
                 ),
                 NounMechanicsDistractor(
                     text="січень",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового дати.",
                         "en": "Nominative form instead of Genitive in date expression.",
@@ -833,7 +868,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="січнем",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -867,7 +902,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="цукор",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового кількісного.",
                         "en": "Nominative form instead of quantitative Genitive.",
@@ -875,7 +910,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="цукром",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -906,7 +941,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="пісок",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового міри.",
                         "en": "Nominative form instead of Genitive of quantity.",
@@ -914,7 +949,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="піском",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -945,7 +980,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="мед",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового.",
                         "en": "Nominative form instead of Genitive.",
@@ -953,7 +988,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="медом",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -984,7 +1019,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="кисень",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового.",
                         "en": "Nominative form instead of Genitive.",
@@ -992,7 +1027,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="киснем",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -1023,7 +1058,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="чай",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового кількісного.",
                         "en": "Nominative form instead of Genitive.",
@@ -1031,7 +1066,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="чаєм",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -1065,7 +1100,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="розвиток",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового при дієслівному іменнику «прискорення».",
                         "en": "Nominative form instead of Genitive.",
@@ -1073,7 +1108,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="розвитком",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -1104,7 +1139,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="прогрес",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового.",
                         "en": "Nominative form instead of Genitive.",
@@ -1112,7 +1147,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="прогресом",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -1143,7 +1178,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="біль",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового.",
                         "en": "Nominative form instead of Genitive.",
@@ -1151,7 +1186,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="болем",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -1182,7 +1217,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="дощ",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового після прийменника «від».",
                         "en": "Nominative form instead of Genitive after 'vid'.",
@@ -1190,7 +1225,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="дощем",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -1221,7 +1256,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="спорт",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового після прийменника «без».",
                         "en": "Nominative form instead of Genitive after 'bez'.",
@@ -1229,7 +1264,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="спортом",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -1263,7 +1298,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="ліс",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового.",
                         "en": "Nominative form instead of Genitive.",
@@ -1271,7 +1306,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="лісом",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -1302,7 +1337,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="народ",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового.",
                         "en": "Nominative form instead of Genitive.",
@@ -1310,7 +1345,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="народом",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -1341,7 +1376,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="Крим",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового приналежності.",
                         "en": "Nominative form instead of Genitive.",
@@ -1349,7 +1384,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="Кримом",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -1380,7 +1415,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="Китай",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового після прийменника «від».",
                         "en": "Nominative form instead of Genitive after 'vid'.",
@@ -1388,7 +1423,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="Китаєм",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -1419,7 +1454,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="оркестр",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового.",
                         "en": "Nominative form instead of Genitive.",
@@ -1427,7 +1462,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="оркестром",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -1464,7 +1499,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="камінь",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового.",
                         "en": "Nominative form instead of Genitive.",
@@ -1472,7 +1507,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="каменем",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -1482,7 +1517,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
             pravopys_section="§ 82, п. 3",
             rule_summary={
                 "ua": "Одиничний камінь як окремий предмет має закінчення -я (каменя), а гірська порода чи матеріал — -ю (каменю).",
-                "en": "An individual stone takes -ya (kaminia), while stone as mineral matter takes -yu (kaminiu).",
+                "en": "An individual stone takes -ya (kamenia), while stone as mineral matter takes -yu (kaminiu).",
             },
         )
     )
@@ -1506,7 +1541,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="камінь",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового з прийменником «з».",
                         "en": "Nominative form instead of Genitive with 'z'.",
@@ -1514,7 +1549,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="каменем",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -1548,7 +1583,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="листопад",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового часу.",
                         "en": "Nominative form instead of Genitive.",
@@ -1556,7 +1591,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="листопадом",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -1590,7 +1625,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="листопад",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового після «під час».",
                         "en": "Nominative form instead of Genitive after 'pid chas'.",
@@ -1598,7 +1633,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="листопадом",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -1632,7 +1667,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="апарат",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового приналежності.",
                         "en": "Nominative form instead of Genitive.",
@@ -1640,7 +1675,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="апаратом",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -1657,7 +1692,186 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
 
     cards.append(
         NounMechanicsCard(
-            card_id="noun_gen_ii_homonym_termina_term_6",
+            card_id="noun_gen_ii_homonym_aparatu_org_6",
+            category=NounMechanicsCategory.GEN_II_HOMONYM_PAIR,
+            cefr_level="B2",
+            prompt_sentence="Уряд ухвалив рішення про скорочення штату міністерського ___.",
+            blank_target="апарату",
+            correct_answer="апарату",
+            distractors=[
+                NounMechanicsDistractor(
+                    text="апарата",
+                    interference_type=NounMechanicsInterferenceType.HOMONYM_GENITIVE_MEANING_MISMATCH,
+                    explanation={
+                        "ua": "Закінчення -а вживається для фізичного приладу/механізму (фотоапарата), а установа чи орган влади має закінчення -у (державного апарату).",
+                        "en": "Ending -a denotes a physical instrument/device, while an administrative body or institution takes -u (aparatu).",
+                    },
+                ),
+                NounMechanicsDistractor(
+                    text="апарат",
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
+                    explanation=INTERFERENCE_EXPLANATIONS[NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE],
+                ),
+                NounMechanicsDistractor(
+                    text="апаратом",
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
+                    explanation=INTERFERENCE_EXPLANATIONS[NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE],
+                ),
+            ],
+            pravopys_section="§ 82, п. 3",
+            rule_summary={
+                "ua": "Установа, орган влади або організаційна структура має в родовому відмінку закінчення -у (апарату), а фізичний прилад — -а (апарата).",
+                "en": "An administrative body takes ending -u (aparatu), while a physical instrument takes -a (aparata).",
+            },
+        )
+    )
+
+    cards.append(
+        NounMechanicsCard(
+            card_id="noun_gen_ii_homonym_papera_doc_7",
+            category=NounMechanicsCategory.GEN_II_HOMONYM_PAIR,
+            cefr_level="B2",
+            prompt_sentence="Юрист уважно перевірив справжність цього цінного державного ___.",
+            blank_target="папера",
+            correct_answer="папера",
+            distractors=[
+                NounMechanicsDistractor(
+                    text="паперу",
+                    interference_type=NounMechanicsInterferenceType.HOMONYM_GENITIVE_MEANING_MISMATCH,
+                    explanation={
+                        "ua": "Закінчення -у означає матеріал або сировину (аркуш паперу), тоді як офіційний документ чи цінний папір має закінчення -а (цінного папера).",
+                        "en": "Ending -u denotes paper material, while an official document or security certificate takes -a (papera).",
+                    },
+                ),
+                NounMechanicsDistractor(
+                    text="папір",
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
+                    explanation=INTERFERENCE_EXPLANATIONS[NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE],
+                ),
+                NounMechanicsDistractor(
+                    text="папером",
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
+                    explanation=INTERFERENCE_EXPLANATIONS[NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE],
+                ),
+            ],
+            pravopys_section="§ 82, п. 3",
+            rule_summary={
+                "ua": "Цінний папір або офіційний документ має закінчення -а (папера), а папір як матеріал — -у (паперу).",
+                "en": "A financial security or official document takes ending -a (papera), while paper as material takes -u (paperu).",
+            },
+        )
+    )
+
+    cards.append(
+        NounMechanicsCard(
+            card_id="noun_gen_ii_homonym_paperu_mass_8",
+            category=NounMechanicsCategory.GEN_II_HOMONYM_PAIR,
+            cefr_level="B1",
+            prompt_sentence="Для друку тиражу книги видавництву бракувало білого ___.",
+            blank_target="паперу",
+            correct_answer="паперу",
+            distractors=[
+                NounMechanicsDistractor(
+                    text="папера",
+                    interference_type=NounMechanicsInterferenceType.HOMONYM_GENITIVE_MEANING_MISMATCH,
+                    explanation={
+                        "ua": "Закінчення -а вживається для документа або цінного папера, а речовина/матеріал має закінчення -у (паперу).",
+                        "en": "Ending -a denotes an official security/document, while paper material strictly takes -u (paperu).",
+                    },
+                ),
+                NounMechanicsDistractor(
+                    text="папір",
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
+                    explanation=INTERFERENCE_EXPLANATIONS[NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE],
+                ),
+                NounMechanicsDistractor(
+                    text="папером",
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
+                    explanation=INTERFERENCE_EXPLANATIONS[NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE],
+                ),
+            ],
+            pravopys_section="§ 82, п. 3",
+            rule_summary={
+                "ua": "Папір як речовина чи матеріал має у родовому відмінку закінчення -у (паперу).",
+                "en": "Paper as substance or writing material takes ending -u in the genitive (paperu).",
+            },
+        )
+    )
+
+    cards.append(
+        NounMechanicsCard(
+            card_id="noun_gen_ii_homonym_akta_doc_9",
+            category=NounMechanicsCategory.GEN_II_HOMONYM_PAIR,
+            cefr_level="B2",
+            prompt_sentence="Комісія підписала оригінал підсумкового юридичного ___.",
+            blank_target="акта",
+            correct_answer="акта",
+            distractors=[
+                NounMechanicsDistractor(
+                    text="акту",
+                    interference_type=NounMechanicsInterferenceType.HOMONYM_GENITIVE_MEANING_MISMATCH,
+                    explanation={
+                        "ua": "Закінчення -у позначає дію або частину вистави (першого акту), а офіційний документ чи протокол має закінчення -а (юридичного акта).",
+                        "en": "Ending -u denotes an action or theatrical act, while an official document/decree takes ending -a (akta).",
+                    },
+                ),
+                NounMechanicsDistractor(
+                    text="акт",
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
+                    explanation=INTERFERENCE_EXPLANATIONS[NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE],
+                ),
+                NounMechanicsDistractor(
+                    text="актом",
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
+                    explanation=INTERFERENCE_EXPLANATIONS[NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE],
+                ),
+            ],
+            pravopys_section="§ 82, п. 3",
+            rule_summary={
+                "ua": "Документ, закон або офіційна постанова має закінчення -а (акта), а дія чи театральна дія — -у (акту).",
+                "en": "A formal legal document takes -a (akta), while an action or play act takes -u (aktu).",
+            },
+        )
+    )
+
+    cards.append(
+        NounMechanicsCard(
+            card_id="noun_gen_ii_homonym_aktu_action_10",
+            category=NounMechanicsCategory.GEN_II_HOMONYM_PAIR,
+            cefr_level="B1",
+            prompt_sentence="Глядачі бурхливо аплодували акторам після першого драматичного ___ вистави.",
+            blank_target="акту",
+            correct_answer="акту",
+            distractors=[
+                NounMechanicsDistractor(
+                    text="акта",
+                    interference_type=NounMechanicsInterferenceType.HOMONYM_GENITIVE_MEANING_MISMATCH,
+                    explanation={
+                        "ua": "Закінчення -а вживається для офіційного документа (державного акта), а дія або театральна частина має закінчення -у (першого акту).",
+                        "en": "Ending -a is for an official document/act, whereas an action or theatrical act requires ending -u (aktu).",
+                    },
+                ),
+                NounMechanicsDistractor(
+                    text="акт",
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
+                    explanation=INTERFERENCE_EXPLANATIONS[NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE],
+                ),
+                NounMechanicsDistractor(
+                    text="актом",
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
+                    explanation=INTERFERENCE_EXPLANATIONS[NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE],
+                ),
+            ],
+            pravopys_section="§ 82, п. 3",
+            rule_summary={
+                "ua": "Дія, окремий вчинок або частина спектаклю має закінчення -у (акту).",
+                "en": "An action or a part of a theatrical production takes ending -u (aktu).",
+            },
+        )
+    )
+    cards.append(
+        NounMechanicsCard(
+            card_id="noun_gen_ii_homonym_termina_term_11",
             category=NounMechanicsCategory.GEN_II_HOMONYM_PAIR,
             cefr_level="B1",
             prompt_sentence="Мовознавець детально пояснив етимологію цього наукового ___.",
@@ -1674,7 +1888,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="термін",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового.",
                         "en": "Nominative form instead of Genitive.",
@@ -1682,7 +1896,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="терміном",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -1699,7 +1913,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
 
     cards.append(
         NounMechanicsCard(
-            card_id="noun_gen_ii_homonym_terminu_time_7",
+            card_id="noun_gen_ii_homonym_terminu_time_12",
             category=NounMechanicsCategory.GEN_II_HOMONYM_PAIR,
             cefr_level="B1",
             prompt_sentence="Клієнт звернувся до банку для продовження ___ дії договору.",
@@ -1716,7 +1930,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="термін",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма називного відмінка замість родового при дієслівному іменнику «продовження».",
                         "en": "Nominative form instead of Genitive.",
@@ -1724,7 +1938,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="терміном",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_GENITIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість родового.",
                         "en": "Instrumental form instead of Genitive.",
@@ -2286,7 +2500,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="маме",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.RUSSIAN_DECLENSION_INTERFERENCE,
                     explanation={
                         "ua": "Закінчення -е належить м'якій групі, а тверда група першої відміни має закінчення -о (мамо, сестро).",
                         "en": "Ending -e belongs to soft stems; 1st declension hard stems strictly take -o (mamo, sestro).",
@@ -2301,7 +2515,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                     },
                 ),
             ],
-            pravopys_section="§ 73, п. 1",
+            pravopys_section="§ 74, п. 1",
             rule_summary={
                 "ua": "Іменники I відміни твердої групи у кличному відмінку мають закінчення -о (мамо, сестро, дружино).",
                 "en": "First declension hard-group nouns take vocative ending -o (mamo, sestro).",
@@ -2325,7 +2539,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="Миколе",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.RUSSIAN_DECLENSION_INTERFERENCE,
                     explanation={
                         "ua": "Чоловічі імена I відміни твердої групи приймають закінчення -о (Миколо, Петро -> Петре [II відміна]).",
                         "en": "First declension masculine hard names take ending -o (Mykolo).",
@@ -2340,7 +2554,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                     },
                 ),
             ],
-            pravopys_section="§ 73, п. 1",
+            pravopys_section="§ 74, п. 1",
             rule_summary={
                 "ua": "Чоловічі імена I відміни на -а мають у кличному відмінку закінчення -о (Миколо, Кузьмо).",
                 "en": "First declension masculine names ending in -a take vocative ending -o (Mykolo).",
@@ -2364,7 +2578,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="сестре",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.RUSSIAN_DECLENSION_INTERFERENCE,
                     explanation={
                         "ua": "Іменники I відміни твердої групи у кличному відмінку мають закінчення -о (сестро, мамо), а не -е.",
                         "en": "First declension hard-group nouns take vocative ending -o (sestro, mamo), not -e.",
@@ -2379,7 +2593,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                     },
                 ),
             ],
-            pravopys_section="§ 73, п. 1",
+            pravopys_section="§ 74, п. 1",
             rule_summary={
                 "ua": "Іменники I відміни твердої групи закінчуються на -о у кличному відмінку (сестро, мамо, весно).",
                 "en": "First declension hard-group nouns take ending -o in the vocative (sestro, mamo).",
@@ -2403,7 +2617,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="Оксане",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.RUSSIAN_DECLENSION_INTERFERENCE,
                     explanation={
                         "ua": "Жіночі імена твердої групи першої відміни мають у кличному відмінку закінчення -о (Оксано, Ганно, Світлано).",
                         "en": "Feminine hard-group names of the 1st declension take -o in the vocative (Oksano, Hanno).",
@@ -2418,7 +2632,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                     },
                 ),
             ],
-            pravopys_section="§ 73, п. 1",
+            pravopys_section="§ 74, п. 1",
             rule_summary={
                 "ua": "Жіночі імена I відміни твердої групи мають у кличному відмінку закінчення -о (Оксано, Тетяно, Ларисо).",
                 "en": "Feminine names of 1st declension hard group take vocative ending -o.",
@@ -2428,7 +2642,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
 
     cards.append(
         NounMechanicsCard(
-            card_id="noun_voc_i_soft_mariie_3",
+            card_id="noun_voc_i_soft_mariie_1",
             category=NounMechanicsCategory.VOC_I_SOFT_YE_YU,
             cefr_level="A1",
             prompt_sentence="Пані ___, підпишіть, будь ласка, цей документ!",
@@ -2454,7 +2668,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                     },
                 ),
             ],
-            pravopys_section="§ 73, п. 2",
+            pravopys_section="§ 74, п. 2",
             rule_summary={
                 "ua": "Імена I відміни на -ія у кличному відмінку мають закінчення -є (Маріє, Софіє, Надіє).",
                 "en": "First declension feminine names ending in -iia take vocative ending -ye (Mariie, Sofiie).",
@@ -2464,7 +2678,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
 
     cards.append(
         NounMechanicsCard(
-            card_id="noun_voc_i_soft_zemle_4",
+            card_id="noun_voc_i_soft_zemle_2",
             category=NounMechanicsCategory.VOC_I_SOFT_YE_YU,
             cefr_level="A2",
             prompt_sentence="О рідна українська ___, ти даруєш силу й натхнення!",
@@ -2490,7 +2704,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                     },
                 ),
             ],
-            pravopys_section="§ 73, п. 2",
+            pravopys_section="§ 74, п. 2",
             rule_summary={
                 "ua": "Іменники I відміни м'якої групи у кличному відмінку мають закінчення -е (земле, доле, пісне).",
                 "en": "First declension soft-group nouns take vocative ending -e (zemle, dole, pisne).",
@@ -2500,7 +2714,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
 
     cards.append(
         NounMechanicsCard(
-            card_id="noun_voc_i_soft_doniu_5",
+            card_id="noun_voc_i_soft_doniu_3",
             category=NounMechanicsCategory.VOC_I_SOFT_YE_YU,
             cefr_level="A1",
             prompt_sentence="Моя мила ___, швидше збирайся до школи!",
@@ -2526,7 +2740,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                     explanation=INTERFERENCE_EXPLANATIONS[NounMechanicsInterferenceType.FALSE_VOCATIVE_O_FOR_SOFT],
                 ),
             ],
-            pravopys_section="§ 73, п. 2",
+            pravopys_section="§ 74, п. 2",
             rule_summary={
                 "ua": "Пестливі іменники I відміни на -я мають у кличному відмінку закінчення -ю (доню, бабусю, матусю).",
                 "en": "Affectionate 1st declension nouns take vocative ending -yu (doniu, babusiu).",
@@ -2553,7 +2767,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="ніж",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_INSTRUMENTAL,
                     explanation={
                         "ua": "Форма називного відмінка замість орудного знаряддя дії.",
                         "en": "Nominative form instead of instrumental of instrument.",
@@ -2589,7 +2803,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="товариш",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_INSTRUMENTAL,
                     explanation={
                         "ua": "Форма називного відмінка замість орудного супроводу з «з».",
                         "en": "Nominative form instead of instrumental with 'z'.",
@@ -2625,7 +2839,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="плащ",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_INSTRUMENTAL,
                     explanation={
                         "ua": "Форма називного відмінка замість орудного засобу дії.",
                         "en": "Nominative form instead of instrumental.",
@@ -2661,7 +2875,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="меч",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_INSTRUMENTAL,
                     explanation={
                         "ua": "Форма називного відмінка замість орудного знаряддя.",
                         "en": "Nominative form instead of instrumental.",
@@ -2697,7 +2911,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="плече",
-                    interference_type=NounMechanicsInterferenceType.FALSE_VOCATIVE_NOMINATIVE,
+                    interference_type=NounMechanicsInterferenceType.FALSE_NOMINATIVE_FOR_INSTRUMENTAL,
                     explanation={
                         "ua": "Форма називного відмінка замість орудного знаряддя.",
                         "en": "Nominative form instead of instrumental.",
@@ -2736,7 +2950,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="столу",
-                    interference_type=NounMechanicsInterferenceType.FALSE_GENITIVE_U_FOR_CONCRETE_BEING,
+                    interference_type=NounMechanicsInterferenceType.FALSE_DATIVE_FOR_ACCUSATIVE,
                     explanation={
                         "ua": "Форма давального відмінка або помилкового родового замість знахідного.",
                         "en": "Dative or false genitive form instead of accusative.",
@@ -2744,7 +2958,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="столом",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_ACCUSATIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість знахідного прямого додатка.",
                         "en": "Instrumental form instead of direct object accusative.",
@@ -2775,7 +2989,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="олівцю",
-                    interference_type=NounMechanicsInterferenceType.FALSE_GENITIVE_U_FOR_CONCRETE_BEING,
+                    interference_type=NounMechanicsInterferenceType.FALSE_DATIVE_FOR_ACCUSATIVE,
                     explanation={
                         "ua": "Форма давального відмінка замість знахідного.",
                         "en": "Dative form instead of accusative.",
@@ -2783,7 +2997,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="олівцем",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_ACCUSATIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість знахідного.",
                         "en": "Instrumental form instead of accusative.",
@@ -2814,7 +3028,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="вовку",
-                    interference_type=NounMechanicsInterferenceType.FALSE_GENITIVE_U_FOR_CONCRETE_BEING,
+                    interference_type=NounMechanicsInterferenceType.FALSE_DATIVE_FOR_ACCUSATIVE,
                     explanation={
                         "ua": "Форма давального відмінка або кличного замість знахідного істоти.",
                         "en": "Dative/vocative form instead of animate accusative.",
@@ -2822,7 +3036,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="вовком",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_ACCUSATIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість знахідного прямого додатка.",
                         "en": "Instrumental form instead of direct object accusative.",
@@ -2853,7 +3067,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="лікарю",
-                    interference_type=NounMechanicsInterferenceType.FALSE_GENITIVE_U_FOR_CONCRETE_BEING,
+                    interference_type=NounMechanicsInterferenceType.FALSE_DATIVE_FOR_ACCUSATIVE,
                     explanation={
                         "ua": "Форма давального відмінка замість знахідного істоти.",
                         "en": "Dative form instead of animate accusative.",
@@ -2861,7 +3075,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="лікарем",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_ACCUSATIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість знахідного прямого додатка.",
                         "en": "Instrumental form instead of accusative.",
@@ -2892,7 +3106,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="автомобілю",
-                    interference_type=NounMechanicsInterferenceType.FALSE_GENITIVE_U_FOR_CONCRETE_BEING,
+                    interference_type=NounMechanicsInterferenceType.FALSE_DATIVE_FOR_ACCUSATIVE,
                     explanation={
                         "ua": "Форма давального відмінка замість знахідного неістоти.",
                         "en": "Dative form instead of inanimate accusative.",
@@ -2900,7 +3114,7 @@ def build_canonical_noun_mechanics_cards() -> list[NounMechanicsCard]:
                 ),
                 NounMechanicsDistractor(
                     text="автомобілем",
-                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_OM_FOR_SIBILANT,
+                    interference_type=NounMechanicsInterferenceType.FALSE_INSTRUMENTAL_FOR_ACCUSATIVE,
                     explanation={
                         "ua": "Форма орудного відмінка замість знахідного прямого додатка.",
                         "en": "Instrumental form instead of accusative.",

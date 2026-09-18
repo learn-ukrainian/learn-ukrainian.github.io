@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "title": "Ukrainian Noun Deep Mechanics Practice Deck",
   "description": "Morphological, orthographic, and declension mastery deck covering II declension genitive (-а vs -у), vocative case, instrumental sibilants, and animacy distinctions per Правопис 2019.",
-  "card_count": 66,
+  "card_count": 71,
   "cards": [
     {
       "card_id": "noun_gen_ii_being_student_1",
@@ -28,7 +28,7 @@
         },
         {
           "text": "студент",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість обов'язкового родового при запереченні «немає».",
             "en": "Nominative form instead of required Genitive after negation 'nemaie'."
@@ -36,7 +36,7 @@
         },
         {
           "text": "студентом",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -73,15 +73,15 @@
         },
         {
           "text": "вчитель",
-          "interference_type": "false_animacy_accusative_animate",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
-            "ua": "Помилкове вживання форми називного відмінка для істоти у Знахідному відмінку. Істоти чоловічого роду в Знахідному відмінку обов'язково набувають форми Родового відмінка (бачу студента, вовка).",
-            "en": "Erroneous use of Nominative form for animate beings in the Accusative. Animate masculine nouns strictly require the Genitive form in the Accusative (bachu studenta)."
+            "ua": "Вживання форми називного відмінка замість обов'язкового родового (наприклад, після прийменників «біля», «до», «без» або при запереченні «немає»).",
+            "en": "Use of nominative form instead of required genitive (e.g. after prepositions 'bilia', 'do', 'bez' or negation 'nemaie')."
           }
         },
         {
           "text": "вчителем",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -118,7 +118,7 @@
         },
         {
           "text": "стіл",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового після прийменника «біля».",
             "en": "Nominative form instead of Genitive after preposition 'bilia'."
@@ -126,7 +126,7 @@
         },
         {
           "text": "столом",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -163,7 +163,7 @@
         },
         {
           "text": "ніж",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового при запереченні «не зміг знайти».",
             "en": "Nominative form instead of Genitive under negated transitive verb."
@@ -171,7 +171,7 @@
         },
         {
           "text": "ножем",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -208,7 +208,7 @@
         },
         {
           "text": "трактор",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового приналежності.",
             "en": "Nominative form instead of possessive Genitive."
@@ -216,7 +216,7 @@
         },
         {
           "text": "трактором",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -253,7 +253,7 @@
         },
         {
           "text": "дуб",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового приналежності.",
             "en": "Nominative form instead of possessive Genitive."
@@ -261,7 +261,7 @@
         },
         {
           "text": "дубом",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -298,7 +298,7 @@
         },
         {
           "text": "Київ",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового після прийменника «з».",
             "en": "Nominative form instead of Genitive after preposition 'z'."
@@ -306,7 +306,7 @@
         },
         {
           "text": "Києвом",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -343,7 +343,7 @@
         },
         {
           "text": "Львів",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового з прийменником «зі».",
             "en": "Nominative form instead of Genitive with preposition 'zi'."
@@ -351,7 +351,7 @@
         },
         {
           "text": "Львовом",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -388,7 +388,7 @@
         },
         {
           "text": "метр",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового після кількісного числівника «одного».",
             "en": "Nominative form instead of Genitive after numeral 'odnoho'."
@@ -396,7 +396,7 @@
         },
         {
           "text": "метром",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -433,7 +433,7 @@
         },
         {
           "text": "долар",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового.",
             "en": "Nominative form instead of Genitive."
@@ -441,7 +441,7 @@
         },
         {
           "text": "доларом",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -478,7 +478,7 @@
         },
         {
           "text": "понеділок",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового з прийменником «з».",
             "en": "Nominative form instead of Genitive after 'z'."
@@ -486,7 +486,7 @@
         },
         {
           "text": "понеділком",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -517,13 +517,13 @@
           "text": "січню",
           "interference_type": "false_genitive_u_for_concrete_being",
           "explanation": {
-            "ua": "Назви місяців за Правописом 2019 § 82, п. 1.4 мають закінчення -я/-а (січня, лютого, березня).",
+            "ua": "Назви місяців за Правописом 2019 § 82, п. 1.4 мають закінчення -я/-а (січня, березня, квітня).",
             "en": "Names of calendar months take ending -ya/-a in the genitive."
           }
         },
         {
           "text": "січень",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового дати.",
             "en": "Nominative form instead of Genitive in date expression."
@@ -531,7 +531,7 @@
         },
         {
           "text": "січнем",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -568,7 +568,7 @@
         },
         {
           "text": "цукор",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового кількісного.",
             "en": "Nominative form instead of quantitative Genitive."
@@ -576,7 +576,7 @@
         },
         {
           "text": "цукром",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -613,7 +613,7 @@
         },
         {
           "text": "пісок",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового міри.",
             "en": "Nominative form instead of Genitive of quantity."
@@ -621,7 +621,7 @@
         },
         {
           "text": "піском",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -658,7 +658,7 @@
         },
         {
           "text": "мед",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового.",
             "en": "Nominative form instead of Genitive."
@@ -666,7 +666,7 @@
         },
         {
           "text": "медом",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -703,7 +703,7 @@
         },
         {
           "text": "кисень",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового.",
             "en": "Nominative form instead of Genitive."
@@ -711,7 +711,7 @@
         },
         {
           "text": "киснем",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -748,7 +748,7 @@
         },
         {
           "text": "чай",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового кількісного.",
             "en": "Nominative form instead of Genitive."
@@ -756,7 +756,7 @@
         },
         {
           "text": "чаєм",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -793,7 +793,7 @@
         },
         {
           "text": "розвиток",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового при дієслівному іменнику «прискорення».",
             "en": "Nominative form instead of Genitive."
@@ -801,7 +801,7 @@
         },
         {
           "text": "розвитком",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -838,7 +838,7 @@
         },
         {
           "text": "прогрес",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового.",
             "en": "Nominative form instead of Genitive."
@@ -846,7 +846,7 @@
         },
         {
           "text": "прогресом",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -883,7 +883,7 @@
         },
         {
           "text": "біль",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового.",
             "en": "Nominative form instead of Genitive."
@@ -891,7 +891,7 @@
         },
         {
           "text": "болем",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -928,7 +928,7 @@
         },
         {
           "text": "дощ",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового після прийменника «від».",
             "en": "Nominative form instead of Genitive after 'vid'."
@@ -936,7 +936,7 @@
         },
         {
           "text": "дощем",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -973,7 +973,7 @@
         },
         {
           "text": "спорт",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового після прийменника «без».",
             "en": "Nominative form instead of Genitive after 'bez'."
@@ -981,7 +981,7 @@
         },
         {
           "text": "спортом",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -1018,7 +1018,7 @@
         },
         {
           "text": "ліс",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового.",
             "en": "Nominative form instead of Genitive."
@@ -1026,7 +1026,7 @@
         },
         {
           "text": "лісом",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -1063,7 +1063,7 @@
         },
         {
           "text": "народ",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового.",
             "en": "Nominative form instead of Genitive."
@@ -1071,7 +1071,7 @@
         },
         {
           "text": "народом",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -1108,7 +1108,7 @@
         },
         {
           "text": "Крим",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового приналежності.",
             "en": "Nominative form instead of Genitive."
@@ -1116,7 +1116,7 @@
         },
         {
           "text": "Кримом",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -1153,7 +1153,7 @@
         },
         {
           "text": "Китай",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового після прийменника «від».",
             "en": "Nominative form instead of Genitive after 'vid'."
@@ -1161,7 +1161,7 @@
         },
         {
           "text": "Китаєм",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -1198,7 +1198,7 @@
         },
         {
           "text": "оркестр",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового.",
             "en": "Nominative form instead of Genitive."
@@ -1206,7 +1206,7 @@
         },
         {
           "text": "оркестром",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -1243,7 +1243,7 @@
         },
         {
           "text": "камінь",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового.",
             "en": "Nominative form instead of Genitive."
@@ -1251,7 +1251,7 @@
         },
         {
           "text": "каменем",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -1261,7 +1261,7 @@
       "pravopys_section": "§ 82, п. 3",
       "rule_summary": {
         "ua": "Одиничний камінь як окремий предмет має закінчення -я (каменя), а гірська порода чи матеріал — -ю (каменю).",
-        "en": "An individual stone takes -ya (kaminia), while stone as mineral matter takes -yu (kaminiu)."
+        "en": "An individual stone takes -ya (kamenia), while stone as mineral matter takes -yu (kaminiu)."
       }
     },
     {
@@ -1288,7 +1288,7 @@
         },
         {
           "text": "камінь",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового з прийменником «з».",
             "en": "Nominative form instead of Genitive with 'z'."
@@ -1296,7 +1296,7 @@
         },
         {
           "text": "каменем",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -1333,7 +1333,7 @@
         },
         {
           "text": "листопад",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового часу.",
             "en": "Nominative form instead of Genitive."
@@ -1341,7 +1341,7 @@
         },
         {
           "text": "листопадом",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -1378,7 +1378,7 @@
         },
         {
           "text": "листопад",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового після «під час».",
             "en": "Nominative form instead of Genitive after 'pid chas'."
@@ -1386,7 +1386,7 @@
         },
         {
           "text": "листопадом",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -1423,7 +1423,7 @@
         },
         {
           "text": "апарат",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового приналежності.",
             "en": "Nominative form instead of Genitive."
@@ -1431,7 +1431,7 @@
         },
         {
           "text": "апаратом",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -1445,16 +1445,241 @@
       }
     },
     {
-      "card_id": "noun_gen_ii_homonym_termina_term_6",
+      "card_id": "noun_gen_ii_homonym_aparatu_org_6",
+      "category": "gen_ii_homonym_pair",
+      "cefr_level": "B2",
+      "prompt_sentence": "Уряд ухвалив рішення про скорочення штату міністерського ___.",
+      "blank_target": "апарату",
+      "correct_answer": "апарату",
+      "options": [
+        "апарату",
+        "апарата",
+        "апаратом",
+        "апарат"
+      ],
+      "distractors": [
+        {
+          "text": "апарата",
+          "interference_type": "homonym_genitive_meaning_mismatch",
+          "explanation": {
+            "ua": "Закінчення -а вживається для фізичного приладу/механізму (фотоапарата), а установа чи орган влади має закінчення -у (державного апарату).",
+            "en": "Ending -a denotes a physical instrument/device, while an administrative body or institution takes -u (aparatu)."
+          }
+        },
+        {
+          "text": "апарат",
+          "interference_type": "false_nominative_for_genitive",
+          "explanation": {
+            "ua": "Вживання форми називного відмінка замість обов'язкового родового (наприклад, після прийменників «біля», «до», «без» або при запереченні «немає»).",
+            "en": "Use of nominative form instead of required genitive (e.g. after prepositions 'bilia', 'do', 'bez' or negation 'nemaie')."
+          }
+        },
+        {
+          "text": "апаратом",
+          "interference_type": "false_instrumental_for_genitive",
+          "explanation": {
+            "ua": "Вживання форми орудного відмінка замість родового.",
+            "en": "Use of instrumental form instead of genitive."
+          }
+        }
+      ],
+      "pravopys_section": "§ 82, п. 3",
+      "rule_summary": {
+        "ua": "Установа, орган влади або організаційна структура має в родовому відмінку закінчення -у (апарату), а фізичний прилад — -а (апарата).",
+        "en": "An administrative body takes ending -u (aparatu), while a physical instrument takes -a (aparata)."
+      }
+    },
+    {
+      "card_id": "noun_gen_ii_homonym_papera_doc_7",
+      "category": "gen_ii_homonym_pair",
+      "cefr_level": "B2",
+      "prompt_sentence": "Юрист уважно перевірив справжність цього цінного державного ___.",
+      "blank_target": "папера",
+      "correct_answer": "папера",
+      "options": [
+        "папера",
+        "папір",
+        "папером",
+        "паперу"
+      ],
+      "distractors": [
+        {
+          "text": "паперу",
+          "interference_type": "homonym_genitive_meaning_mismatch",
+          "explanation": {
+            "ua": "Закінчення -у означає матеріал або сировину (аркуш паперу), тоді як офіційний документ чи цінний папір має закінчення -а (цінного папера).",
+            "en": "Ending -u denotes paper material, while an official document or security certificate takes -a (papera)."
+          }
+        },
+        {
+          "text": "папір",
+          "interference_type": "false_nominative_for_genitive",
+          "explanation": {
+            "ua": "Вживання форми називного відмінка замість обов'язкового родового (наприклад, після прийменників «біля», «до», «без» або при запереченні «немає»).",
+            "en": "Use of nominative form instead of required genitive (e.g. after prepositions 'bilia', 'do', 'bez' or negation 'nemaie')."
+          }
+        },
+        {
+          "text": "папером",
+          "interference_type": "false_instrumental_for_genitive",
+          "explanation": {
+            "ua": "Вживання форми орудного відмінка замість родового.",
+            "en": "Use of instrumental form instead of genitive."
+          }
+        }
+      ],
+      "pravopys_section": "§ 82, п. 3",
+      "rule_summary": {
+        "ua": "Цінний папір або офіційний документ має закінчення -а (папера), а папір як матеріал — -у (паперу).",
+        "en": "A financial security or official document takes ending -a (papera), while paper as material takes -u (paperu)."
+      }
+    },
+    {
+      "card_id": "noun_gen_ii_homonym_paperu_mass_8",
+      "category": "gen_ii_homonym_pair",
+      "cefr_level": "B1",
+      "prompt_sentence": "Для друку тиражу книги видавництву бракувало білого ___.",
+      "blank_target": "паперу",
+      "correct_answer": "паперу",
+      "options": [
+        "папером",
+        "папера",
+        "папір",
+        "паперу"
+      ],
+      "distractors": [
+        {
+          "text": "папера",
+          "interference_type": "homonym_genitive_meaning_mismatch",
+          "explanation": {
+            "ua": "Закінчення -а вживається для документа або цінного папера, а речовина/матеріал має закінчення -у (паперу).",
+            "en": "Ending -a denotes an official security/document, while paper material strictly takes -u (paperu)."
+          }
+        },
+        {
+          "text": "папір",
+          "interference_type": "false_nominative_for_genitive",
+          "explanation": {
+            "ua": "Вживання форми називного відмінка замість обов'язкового родового (наприклад, після прийменників «біля», «до», «без» або при запереченні «немає»).",
+            "en": "Use of nominative form instead of required genitive (e.g. after prepositions 'bilia', 'do', 'bez' or negation 'nemaie')."
+          }
+        },
+        {
+          "text": "папером",
+          "interference_type": "false_instrumental_for_genitive",
+          "explanation": {
+            "ua": "Вживання форми орудного відмінка замість родового.",
+            "en": "Use of instrumental form instead of genitive."
+          }
+        }
+      ],
+      "pravopys_section": "§ 82, п. 3",
+      "rule_summary": {
+        "ua": "Папір як речовина чи матеріал має у родовому відмінку закінчення -у (паперу).",
+        "en": "Paper as substance or writing material takes ending -u in the genitive (paperu)."
+      }
+    },
+    {
+      "card_id": "noun_gen_ii_homonym_akta_doc_9",
+      "category": "gen_ii_homonym_pair",
+      "cefr_level": "B2",
+      "prompt_sentence": "Комісія підписала оригінал підсумкового юридичного ___.",
+      "blank_target": "акта",
+      "correct_answer": "акта",
+      "options": [
+        "акт",
+        "акту",
+        "акта",
+        "актом"
+      ],
+      "distractors": [
+        {
+          "text": "акту",
+          "interference_type": "homonym_genitive_meaning_mismatch",
+          "explanation": {
+            "ua": "Закінчення -у позначає дію або частину вистави (першого акту), а офіційний документ чи протокол має закінчення -а (юридичного акта).",
+            "en": "Ending -u denotes an action or theatrical act, while an official document/decree takes ending -a (akta)."
+          }
+        },
+        {
+          "text": "акт",
+          "interference_type": "false_nominative_for_genitive",
+          "explanation": {
+            "ua": "Вживання форми називного відмінка замість обов'язкового родового (наприклад, після прийменників «біля», «до», «без» або при запереченні «немає»).",
+            "en": "Use of nominative form instead of required genitive (e.g. after prepositions 'bilia', 'do', 'bez' or negation 'nemaie')."
+          }
+        },
+        {
+          "text": "актом",
+          "interference_type": "false_instrumental_for_genitive",
+          "explanation": {
+            "ua": "Вживання форми орудного відмінка замість родового.",
+            "en": "Use of instrumental form instead of genitive."
+          }
+        }
+      ],
+      "pravopys_section": "§ 82, п. 3",
+      "rule_summary": {
+        "ua": "Документ, закон або офіційна постанова має закінчення -а (акта), а дія чи театральна дія — -у (акту).",
+        "en": "A formal legal document takes -a (akta), while an action or play act takes -u (aktu)."
+      }
+    },
+    {
+      "card_id": "noun_gen_ii_homonym_aktu_action_10",
+      "category": "gen_ii_homonym_pair",
+      "cefr_level": "B1",
+      "prompt_sentence": "Глядачі бурхливо аплодували акторам після першого драматичного ___ вистави.",
+      "blank_target": "акту",
+      "correct_answer": "акту",
+      "options": [
+        "актом",
+        "акта",
+        "акт",
+        "акту"
+      ],
+      "distractors": [
+        {
+          "text": "акта",
+          "interference_type": "homonym_genitive_meaning_mismatch",
+          "explanation": {
+            "ua": "Закінчення -а вживається для офіційного документа (державного акта), а дія або театральна частина має закінчення -у (першого акту).",
+            "en": "Ending -a is for an official document/act, whereas an action or theatrical act requires ending -u (aktu)."
+          }
+        },
+        {
+          "text": "акт",
+          "interference_type": "false_nominative_for_genitive",
+          "explanation": {
+            "ua": "Вживання форми називного відмінка замість обов'язкового родового (наприклад, після прийменників «біля», «до», «без» або при запереченні «немає»).",
+            "en": "Use of nominative form instead of required genitive (e.g. after prepositions 'bilia', 'do', 'bez' or negation 'nemaie')."
+          }
+        },
+        {
+          "text": "актом",
+          "interference_type": "false_instrumental_for_genitive",
+          "explanation": {
+            "ua": "Вживання форми орудного відмінка замість родового.",
+            "en": "Use of instrumental form instead of genitive."
+          }
+        }
+      ],
+      "pravopys_section": "§ 82, п. 3",
+      "rule_summary": {
+        "ua": "Дія, окремий вчинок або частина спектаклю має закінчення -у (акту).",
+        "en": "An action or a part of a theatrical production takes ending -u (aktu)."
+      }
+    },
+    {
+      "card_id": "noun_gen_ii_homonym_termina_term_11",
       "category": "gen_ii_homonym_pair",
       "cefr_level": "B1",
       "prompt_sentence": "Мовознавець детально пояснив етимологію цього наукового ___.",
       "blank_target": "терміна",
       "correct_answer": "терміна",
       "options": [
-        "терміна",
-        "терміну",
         "термін",
+        "терміну",
+        "терміна",
         "терміном"
       ],
       "distractors": [
@@ -1468,7 +1693,7 @@
         },
         {
           "text": "термін",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового.",
             "en": "Nominative form instead of Genitive."
@@ -1476,7 +1701,7 @@
         },
         {
           "text": "терміном",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -1490,7 +1715,7 @@
       }
     },
     {
-      "card_id": "noun_gen_ii_homonym_terminu_time_7",
+      "card_id": "noun_gen_ii_homonym_terminu_time_12",
       "category": "gen_ii_homonym_pair",
       "cefr_level": "B1",
       "prompt_sentence": "Клієнт звернувся до банку для продовження ___ дії договору.",
@@ -1498,9 +1723,9 @@
       "correct_answer": "терміну",
       "options": [
         "терміну",
-        "терміна",
+        "терміном",
         "термін",
-        "терміном"
+        "терміна"
       ],
       "distractors": [
         {
@@ -1513,7 +1738,7 @@
         },
         {
           "text": "термін",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_genitive",
           "explanation": {
             "ua": "Форма називного відмінка замість родового при дієслівному іменнику «продовження».",
             "en": "Nominative form instead of Genitive."
@@ -1521,7 +1746,7 @@
         },
         {
           "text": "терміном",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_genitive",
           "explanation": {
             "ua": "Форма орудного відмінка замість родового.",
             "en": "Instrumental form instead of Genitive."
@@ -1552,8 +1777,8 @@
           "text": "брат",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
@@ -1597,8 +1822,8 @@
           "text": "друг",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
@@ -1642,8 +1867,8 @@
           "text": "козак",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
@@ -1687,8 +1912,8 @@
           "text": "пастух",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
@@ -1732,8 +1957,8 @@
           "text": "чоловік",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
@@ -1777,8 +2002,8 @@
           "text": "батько",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
@@ -1822,8 +2047,8 @@
           "text": "синок",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
@@ -1867,8 +2092,8 @@
           "text": "робітник",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
@@ -1912,8 +2137,8 @@
           "text": "дід",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
@@ -1957,8 +2182,8 @@
           "text": "хлопчик",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
@@ -2002,8 +2227,8 @@
           "text": "вчитель",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
@@ -2047,8 +2272,8 @@
           "text": "Василь",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
@@ -2092,8 +2317,8 @@
           "text": "боєць",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
@@ -2137,8 +2362,8 @@
           "text": "Андрій",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
@@ -2182,8 +2407,8 @@
           "text": "татусь",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
@@ -2227,13 +2452,13 @@
           "text": "мама",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
           "text": "маме",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "russian_declension_interference",
           "explanation": {
             "ua": "Закінчення -е належить м'якій групі, а тверда група першої відміни має закінчення -о (мамо, сестро).",
             "en": "Ending -e belongs to soft stems; 1st declension hard stems strictly take -o (mamo, sestro)."
@@ -2248,7 +2473,7 @@
           }
         }
       ],
-      "pravopys_section": "§ 73, п. 1",
+      "pravopys_section": "§ 74, п. 1",
       "rule_summary": {
         "ua": "Іменники I відміни твердої групи у кличному відмінку мають закінчення -о (мамо, сестро, дружино).",
         "en": "First declension hard-group nouns take vocative ending -o (mamo, sestro)."
@@ -2272,13 +2497,13 @@
           "text": "Микола",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
           "text": "Миколе",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "russian_declension_interference",
           "explanation": {
             "ua": "Чоловічі імена I відміни твердої групи приймають закінчення -о (Миколо, Петро -> Петре [II відміна]).",
             "en": "First declension masculine hard names take ending -o (Mykolo)."
@@ -2293,7 +2518,7 @@
           }
         }
       ],
-      "pravopys_section": "§ 73, п. 1",
+      "pravopys_section": "§ 74, п. 1",
       "rule_summary": {
         "ua": "Чоловічі імена I відміни на -а мають у кличному відмінку закінчення -о (Миколо, Кузьмо).",
         "en": "First declension masculine names ending in -a take vocative ending -o (Mykolo)."
@@ -2317,13 +2542,13 @@
           "text": "сестра",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
           "text": "сестре",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "russian_declension_interference",
           "explanation": {
             "ua": "Іменники I відміни твердої групи у кличному відмінку мають закінчення -о (сестро, мамо), а не -е.",
             "en": "First declension hard-group nouns take vocative ending -o (sestro, mamo), not -e."
@@ -2338,7 +2563,7 @@
           }
         }
       ],
-      "pravopys_section": "§ 73, п. 1",
+      "pravopys_section": "§ 74, п. 1",
       "rule_summary": {
         "ua": "Іменники I відміни твердої групи закінчуються на -о у кличному відмінку (сестро, мамо, весно).",
         "en": "First declension hard-group nouns take ending -o in the vocative (sestro, mamo)."
@@ -2362,13 +2587,13 @@
           "text": "Оксана",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
           "text": "Оксане",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "russian_declension_interference",
           "explanation": {
             "ua": "Жіночі імена твердої групи першої відміни мають у кличному відмінку закінчення -о (Оксано, Ганно, Світлано).",
             "en": "Feminine hard-group names of the 1st declension take -o in the vocative (Oksano, Hanno)."
@@ -2383,32 +2608,32 @@
           }
         }
       ],
-      "pravopys_section": "§ 73, п. 1",
+      "pravopys_section": "§ 74, п. 1",
       "rule_summary": {
         "ua": "Жіночі імена I відміни твердої групи мають у кличному відмінку закінчення -о (Оксано, Тетяно, Ларисо).",
         "en": "Feminine names of 1st declension hard group take vocative ending -o."
       }
     },
     {
-      "card_id": "noun_voc_i_soft_mariie_3",
+      "card_id": "noun_voc_i_soft_mariie_1",
       "category": "voc_i_soft_ye_yu",
       "cefr_level": "A1",
       "prompt_sentence": "Пані ___, підпишіть, будь ласка, цей документ!",
       "blank_target": "Маріє",
       "correct_answer": "Маріє",
       "options": [
+        "Марійо",
         "Маріє",
-        "Марія",
         "Машу",
-        "Марійо"
+        "Марія"
       ],
       "distractors": [
         {
           "text": "Марія",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
@@ -2428,14 +2653,14 @@
           }
         }
       ],
-      "pravopys_section": "§ 73, п. 2",
+      "pravopys_section": "§ 74, п. 2",
       "rule_summary": {
         "ua": "Імена I відміни на -ія у кличному відмінку мають закінчення -є (Маріє, Софіє, Надіє).",
         "en": "First declension feminine names ending in -iia take vocative ending -ye (Mariie, Sofiie)."
       }
     },
     {
-      "card_id": "noun_voc_i_soft_zemle_4",
+      "card_id": "noun_voc_i_soft_zemle_2",
       "category": "voc_i_soft_ye_yu",
       "cefr_level": "A2",
       "prompt_sentence": "О рідна українська ___, ти даруєш силу й натхнення!",
@@ -2443,8 +2668,8 @@
       "correct_answer": "земле",
       "options": [
         "земле",
-        "землі",
         "земльо",
+        "землі",
         "земля"
       ],
       "distractors": [
@@ -2452,8 +2677,8 @@
           "text": "земля",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
@@ -2473,32 +2698,32 @@
           }
         }
       ],
-      "pravopys_section": "§ 73, п. 2",
+      "pravopys_section": "§ 74, п. 2",
       "rule_summary": {
         "ua": "Іменники I відміни м'якої групи у кличному відмінку мають закінчення -е (земле, доле, пісне).",
         "en": "First declension soft-group nouns take vocative ending -e (zemle, dole, pisne)."
       }
     },
     {
-      "card_id": "noun_voc_i_soft_doniu_5",
+      "card_id": "noun_voc_i_soft_doniu_3",
       "category": "voc_i_soft_ye_yu",
       "cefr_level": "A1",
       "prompt_sentence": "Моя мила ___, швидше збирайся до школи!",
       "blank_target": "доню",
       "correct_answer": "доню",
       "options": [
-        "доня",
-        "доньо",
         "доне",
-        "доню"
+        "доню",
+        "доня",
+        "доньо"
       ],
       "distractors": [
         {
           "text": "доня",
           "interference_type": "false_vocative_nominative",
           "explanation": {
-            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 73, 87).",
-            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 73, 87)."
+            "ua": "Вживання форми Називного відмінка замість обов'язкового Кличного під час звертання. В українській мові звертання завжди вимагає Кличного відмінка (Правопис 2019 §§ 74, 87).",
+            "en": "Use of Nominative case instead of mandatory Vocative in address. Ukrainian syntax strictly requires the Vocative case when addressing persons (Pravopys 2019 §§ 74, 87)."
           }
         },
         {
@@ -2518,7 +2743,7 @@
           }
         }
       ],
-      "pravopys_section": "§ 73, п. 2",
+      "pravopys_section": "§ 74, п. 2",
       "rule_summary": {
         "ua": "Пестливі іменники I відміни на -я мають у кличному відмінку закінчення -ю (доню, бабусю, матусю).",
         "en": "Affectionate 1st declension nouns take vocative ending -yu (doniu, babusiu)."
@@ -2548,7 +2773,7 @@
         },
         {
           "text": "ніж",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_instrumental",
           "explanation": {
             "ua": "Форма називного відмінка замість орудного знаряддя дії.",
             "en": "Nominative form instead of instrumental of instrument."
@@ -2593,7 +2818,7 @@
         },
         {
           "text": "товариш",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_instrumental",
           "explanation": {
             "ua": "Форма називного відмінка замість орудного супроводу з «з».",
             "en": "Nominative form instead of instrumental with 'z'."
@@ -2638,7 +2863,7 @@
         },
         {
           "text": "плащ",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_instrumental",
           "explanation": {
             "ua": "Форма називного відмінка замість орудного засобу дії.",
             "en": "Nominative form instead of instrumental."
@@ -2683,7 +2908,7 @@
         },
         {
           "text": "меч",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_instrumental",
           "explanation": {
             "ua": "Форма називного відмінка замість орудного знаряддя.",
             "en": "Nominative form instead of instrumental."
@@ -2728,7 +2953,7 @@
         },
         {
           "text": "плече",
-          "interference_type": "false_vocative_nominative",
+          "interference_type": "false_nominative_for_instrumental",
           "explanation": {
             "ua": "Форма називного відмінка замість орудного знаряддя.",
             "en": "Nominative form instead of instrumental."
@@ -2773,7 +2998,7 @@
         },
         {
           "text": "столу",
-          "interference_type": "false_genitive_u_for_concrete_being",
+          "interference_type": "false_dative_for_accusative",
           "explanation": {
             "ua": "Форма давального відмінка або помилкового родового замість знахідного.",
             "en": "Dative or false genitive form instead of accusative."
@@ -2781,7 +3006,7 @@
         },
         {
           "text": "столом",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_accusative",
           "explanation": {
             "ua": "Форма орудного відмінка замість знахідного прямого додатка.",
             "en": "Instrumental form instead of direct object accusative."
@@ -2818,7 +3043,7 @@
         },
         {
           "text": "олівцю",
-          "interference_type": "false_genitive_u_for_concrete_being",
+          "interference_type": "false_dative_for_accusative",
           "explanation": {
             "ua": "Форма давального відмінка замість знахідного.",
             "en": "Dative form instead of accusative."
@@ -2826,7 +3051,7 @@
         },
         {
           "text": "олівцем",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_accusative",
           "explanation": {
             "ua": "Форма орудного відмінка замість знахідного.",
             "en": "Instrumental form instead of accusative."
@@ -2863,7 +3088,7 @@
         },
         {
           "text": "вовку",
-          "interference_type": "false_genitive_u_for_concrete_being",
+          "interference_type": "false_dative_for_accusative",
           "explanation": {
             "ua": "Форма давального відмінка або кличного замість знахідного істоти.",
             "en": "Dative/vocative form instead of animate accusative."
@@ -2871,7 +3096,7 @@
         },
         {
           "text": "вовком",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_accusative",
           "explanation": {
             "ua": "Форма орудного відмінка замість знахідного прямого додатка.",
             "en": "Instrumental form instead of direct object accusative."
@@ -2908,7 +3133,7 @@
         },
         {
           "text": "лікарю",
-          "interference_type": "false_genitive_u_for_concrete_being",
+          "interference_type": "false_dative_for_accusative",
           "explanation": {
             "ua": "Форма давального відмінка замість знахідного істоти.",
             "en": "Dative form instead of animate accusative."
@@ -2916,7 +3141,7 @@
         },
         {
           "text": "лікарем",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_accusative",
           "explanation": {
             "ua": "Форма орудного відмінка замість знахідного прямого додатка.",
             "en": "Instrumental form instead of accusative."
@@ -2953,7 +3178,7 @@
         },
         {
           "text": "автомобілю",
-          "interference_type": "false_genitive_u_for_concrete_being",
+          "interference_type": "false_dative_for_accusative",
           "explanation": {
             "ua": "Форма давального відмінка замість знахідного неістоти.",
             "en": "Dative form instead of inanimate accusative."
@@ -2961,7 +3186,7 @@
         },
         {
           "text": "автомобілем",
-          "interference_type": "false_instrumental_om_for_sibilant",
+          "interference_type": "false_instrumental_for_accusative",
           "explanation": {
             "ua": "Форма орудного відмінка замість знахідного прямого додатка.",
             "en": "Instrumental form instead of accusative."

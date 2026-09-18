@@ -42,6 +42,9 @@ export const NOUN_MECHANICS_INTERFERENCE_KEYS = [
   'false_genitive_u_for_settlement',
   'false_genitive_a_for_collective',
   'homonym_genitive_meaning_mismatch',
+  'false_nominative_for_genitive',
+  'false_instrumental_for_genitive',
+  'false_dative_for_genitive',
   'false_vocative_nominative',
   'false_vocative_u_for_hard_e',
   'false_vocative_e_for_suffix_u',
@@ -51,8 +54,12 @@ export const NOUN_MECHANICS_INTERFERENCE_KEYS = [
   'false_mutation_missing',
   'false_instrumental_om_for_sibilant',
   'false_instrumental_im_for_noun',
+  'false_nominative_for_instrumental',
+  'false_instrumental_em_for_hard',
   'false_animacy_accusative_inanimate',
   'false_animacy_accusative_animate',
+  'false_instrumental_for_accusative',
+  'false_dative_for_accusative',
   'russian_declension_interference',
 ] as const;
 

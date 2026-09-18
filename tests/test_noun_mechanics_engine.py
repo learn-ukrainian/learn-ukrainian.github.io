@@ -185,3 +185,23 @@ def test_deck_export_and_file_parity(tmp_path: Path):
         committed_data = json.load(f)
 
     assert data == committed_data, "Committed deck differs from fresh generator export"
+
+
+def test_homonym_pair_coverage():
+    """Verify all 6 semantic homonym pairs (12 cards) are covered in the canonical deck."""
+    cards = build_canonical_noun_mechanics_cards()
+    homonym_cards = [c for c in cards if c.category.value == "gen_ii_homonym_pair"]
+    assert len(homonym_cards) == 12
+
+    answers = {c.correct_answer for c in homonym_cards}
+    expected_pairs = [
+        ("каменя", "каменю"),
+        ("листопада", "листопаду"),
+        ("апарата", "апарату"),
+        ("папера", "паперу"),
+        ("акта", "акту"),
+        ("терміна", "терміну"),
+    ]
+    for form1, form2 in expected_pairs:
+        assert form1 in answers, f"Missing homonym card for {form1}"
+        assert form2 in answers, f"Missing homonym card for {form2}"
