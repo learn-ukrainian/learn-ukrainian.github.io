@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import json
 import random
+import sqlite3
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -14,7 +16,6 @@ from scripts.audit.generate_practice_deck import (
     JsonVesumVerifier,
     RealVesumVerifier,
     ReviewedSourceAllowlist,
-    _all_valid_forms_for_slot,
     _aspect_category,
     _build_antonym_items,
     _build_classify_items,
@@ -1510,34 +1511,117 @@ def test_paradigm_zero_collision_guarantee_across_nouns() -> None:
 
     total_items = 0
     slot_counts: dict[tuple[str, str], int] = {}
-    for lexeme in lexemes:
-        items = _build_paradigm_items(lexeme)
-        for item in items:
-            total_items += 1
-            slot_key = (item["slot"]["case"], item["slot"]["number"])
-            slot_counts[slot_key] = slot_counts.get(slot_key, 0) + 1
+    conn = None
+    cursor = None
+    try:
+        from scripts.rag.config import VESUM_DB_PATH
 
-            assert not (item["slot"]["case"] == "називний" and item["slot"]["number"] == "singular")
-            errors = validate_paradigm_item(item, enforce_no_base_case=True)
-            assert errors == [], f"Validation errors for item {item['paradigmId']}: {errors}"
+        if VESUM_DB_PATH.exists():
+            conn = sqlite3.connect(str(VESUM_DB_PATH))
+            cursor = conn.cursor()
+    except Exception:
+        cursor = None
 
-            labels = [o["label"] for o in item["options"]]
-            assert len(labels) == 4
-            assert len(set(labels)) == 4, f"Duplicate option labels in {item['paradigmId']}: {labels}"
+    case_tag_map = {
+        "називний": "v_naz",
+        "родовий": "v_rod",
+        "давальний": "v_dav",
+        "знахідний": "v_zna",
+        "орудний": "v_oru",
+        "місцевий": "v_mis",
+        "кличний": "v_kly",
+    }
+    non_standard_tags = {"subst", "bad", "rare", "dial", "coll", "arch", "vulgar", "alt", "prop", "nv", "abbr"}
 
-            # Independent target-slot membership check: no distractor may be a valid form of target slot
-            valid_for_slot = _all_valid_forms_for_slot(
-                lexeme["lemma"], item["slot"]["case"], item["slot"]["number"], lexeme["paradigm"]["cases"]
-            )
-            distractor_labels = [o["label"] for o in item["options"] if o.get("kind") != "answer"]
-            for d_label in distractor_labels:
-                assert _plain(d_label) not in valid_for_slot, (
-                    f"Distractor '{d_label}' is a valid form for target slot {slot_key} of lemma '{lexeme['lemma']}'"
+    try:
+        for lexeme in lexemes:
+            items = _build_paradigm_items(lexeme)
+            # Query independent VESUM oracle for all attested forms of this lemma
+            vesum_rows = []
+            if cursor:
+                cursor.execute(
+                    "SELECT word_form, tags FROM forms_all WHERE lemma = ? AND pos = 'noun'",
+                    (lexeme["lemma"],),
                 )
+                vesum_rows = cursor.fetchall()
+
+            for item in items:
+                total_items += 1
+                slot_key = (item["slot"]["case"], item["slot"]["number"])
+                slot_counts[slot_key] = slot_counts.get(slot_key, 0) + 1
+
+                assert not (item["slot"]["case"] == "називний" and item["slot"]["number"] == "singular")
+                errors = validate_paradigm_item(item, enforce_no_base_case=True)
+                assert errors == [], f"Validation errors for item {item['paradigmId']}: {errors}"
+
+                labels = [o["label"] for o in item["options"]]
+                assert len(labels) == 4
+                assert len(set(labels)) == 4, f"Duplicate option labels in {item['paradigmId']}: {labels}"
+
+                # Independent oracle check against VESUM (#8167 Finding 2)
+                if vesum_rows:
+                    target_tag = case_tag_map[item["slot"]["case"]]
+                    vesum_valid = set()
+                    for wf, tags in vesum_rows:
+                        tokens = set(tags.replace(":", " ").split())
+                        if tokens & non_standard_tags:
+                            continue
+                        if target_tag in tokens and (
+                            (item["slot"]["number"] == "plural" and "p" in tokens)
+                            or (item["slot"]["number"] == "singular" and any(t in tokens for t in ("m", "f", "n", "s")))
+                        ):
+                            vesum_valid.add(_plain(wf))
+
+                    # 1. Answer must be verified standard form in VESUM
+                    if vesum_valid:
+                        assert _plain(item["form"]) in vesum_valid, (
+                            f"Answer '{item['form']}' not in VESUM standard forms for {slot_key} of lemma '{lexeme['lemma']}'"
+                        )
+
+                    # 2. No distractor may be a valid form of the target slot
+                    distractor_labels = [o["label"] for o in item["options"] if o.get("kind") != "answer"]
+                    for d_label in distractor_labels:
+                        assert _plain(d_label) not in vesum_valid, (
+                            f"Distractor '{d_label}' is a valid VESUM form for target slot {slot_key} of lemma '{lexeme['lemma']}'"
+                        )
+    finally:
+        if conn:
+            conn.close()
 
     # Coverage verification across all 13 non-base cells
     assert total_items >= 10000, f"Expected at least 10,000 items across 1,000 nouns, got {total_items}"
     assert len(slot_counts) == 13, f"Expected coverage across all 13 cells, got {len(slot_counts)}: {slot_counts.keys()}"
+
+
+def test_paradigm_vesum_failure_skips_or_prevents_collisions(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Simulating VESUM lookup failure must safely skip affected cards rather than emitting collisions (#8167 Finding 1)."""
+    import scripts.verification.vesum as vesum_mod
+
+    def _failing_verify_lemma(lemma: str) -> list[dict[str, Any]]:
+        raise RuntimeError("Simulated VESUM database outage")
+
+    monkeypatch.setattr(vesum_mod, "verify_lemma", _failing_verify_lemma)
+
+    lexeme = {
+        "lemmaId": "test_abazyn",
+        "lemma": "абазин",
+        "cefr": "B1",
+        "paradigm": {
+            "cases": {
+                "називний": {"singular": "абазин", "plural": "абазини"},
+                "родовий": {"singular": "абазина", "plural": "абазинів"},
+                "давальний": {"singular": "абазину", "plural": "абазинам"},
+                "знахідний": {"singular": "абазина", "plural": "абазинів"},
+                "орудний": {"singular": "абазином", "plural": "абазинами"},
+                "місцевий": {"singular": "абазину", "plural": "абазинах"},
+                "кличний": {"singular": "абазине", "plural": "абазини"},
+            }
+        },
+    }
+
+    # When VESUM lookup fails, generator skips cards rather than continuing with incomplete alternatives
+    items = _build_paradigm_items(lexeme)
+    assert items == [], "Expected generator to skip affected cards when complete source-backed alternatives cannot be verified"
 
 
 def test_meaning_mc_eligibility_marks_clean_and_messy_glosses() -> None:

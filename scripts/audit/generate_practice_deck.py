@@ -3007,12 +3007,23 @@ def _all_valid_forms_for_slot(
     case_key: str,
     number_key: str,
     cases: dict[str, Any],
+    *,
+    require_vesum: bool = False,
 ) -> set[str]:
     """Return all valid surface forms for a (case, number) slot to prevent distractor collisions.
 
     If a slot has multiple valid variants (e.g. dative singular 'котові' / 'коту'),
     offering one as the correct answer and another as a 'same-paradigm' distractor
     creates a false error where a correct Ukrainian form is marked wrong (#8167 Finding 1).
+
+    Ukrainian nominal syncretism and alternations are handled across multiple layers:
+    1. Direct inspection of the paradigm cases dictionary.
+    2. Ukrainian nominal syncretism rules (Accusative Plural = Nominative Plural / Genitive Plural;
+       Vocative Plural = Nominative Plural; Accusative Singular = Nominative Singular / Genitive Singular).
+    3. Authoritative VESUM lookup excluding substandard tags (:subst, :bad, :dial, etc.).
+       If require_vesum is True and VESUM lookup raises an exception, the error is propagated so the
+       generator can skip affected cards rather than continuing with incomplete alternatives.
+    4. Comprehensive rule-based alternations for masculine dative/locative singular.
     """
     valid: set[str] = set()
 
@@ -3033,8 +3044,59 @@ def _all_valid_forms_for_slot(
                     if p:
                         valid.add(p)
 
-    # 2. Check VESUM for morphological variants
-    norm_lemma = _plain(lemma)
+    # 2. Ukrainian nominal syncretism rules directly from paradigm
+    if number_key == "plural":
+        if case_key == "знахідний":
+            # Accusative plural of animates syncretic with Genitive plural; inanimates with Nominative plural
+            for k in ("називний", "родовий", "nominative", "genitive"):
+                for name, forms in cases.items():
+                    if _paradigm_slot_case_key(str(name)) == _paradigm_slot_case_key(k) and isinstance(forms, dict):
+                        val = forms.get("plural")
+                        if isinstance(val, str):
+                            for part in val.split("/"):
+                                p = _plain(part.strip())
+                                if p:
+                                    valid.add(p)
+                        elif isinstance(val, (list, set, tuple)):
+                            for item in val:
+                                p = _plain(str(item).strip())
+                                if p:
+                                    valid.add(p)
+        elif case_key in ("кличний", "називний"):
+            # In Ukrainian, Vocative plural is identical to Nominative plural
+            for k in ("кличний", "називний"):
+                for name, forms in cases.items():
+                    if _paradigm_slot_case_key(str(name)) == _paradigm_slot_case_key(k) and isinstance(forms, dict):
+                        val = forms.get("plural")
+                        if isinstance(val, str):
+                            for part in val.split("/"):
+                                p = _plain(part.strip())
+                                if p:
+                                    valid.add(p)
+                        elif isinstance(val, (list, set, tuple)):
+                            for item in val:
+                                p = _plain(str(item).strip())
+                                if p:
+                                    valid.add(p)
+    elif number_key == "singular" and case_key == "знахідний":
+        # Accusative singular syncretic with Genitive singular (masc anim) or Nominative singular (inanim/neuter)
+        for k in ("називний", "родовий"):
+            for name, forms in cases.items():
+                if _paradigm_slot_case_key(str(name)) == _paradigm_slot_case_key(k) and isinstance(forms, dict):
+                    val = forms.get("singular")
+                    if isinstance(val, str):
+                        for part in val.split("/"):
+                            p = _plain(part.strip())
+                            if p:
+                                valid.add(p)
+                    elif isinstance(val, (list, set, tuple)):
+                        for item in val:
+                            p = _plain(str(item).strip())
+                            if p:
+                                valid.add(p)
+
+    # 3. Check VESUM for morphological variants
+    norm_lemma = lemma.strip() if lemma else ""
     if norm_lemma:
         internal_case = None
         for eng, ua in CASE_LABELS_UA.items():
@@ -3048,44 +3110,74 @@ def _all_valid_forms_for_slot(
                 from scripts.verification.vesum import verify_lemma
 
                 rows = verify_lemma(norm_lemma)
+                if not rows and norm_lemma.lower() != norm_lemma:
+                    rows = verify_lemma(norm_lemma.lower())
                 for row in rows:
                     tags = str(row.get("tags") or "")
                     tokens = {tok for tok in tags.replace(":", " ").split() if tok}
+                    if tokens & {"subst", "bad", "rare", "dial", "coll", "arch", "vulgar", "alt"}:
+                        continue
                     if target_tag in tokens and _vesum_number_key(tokens) == number_key:
                         form = _clean_text(row.get("word_form"))
                         if form:
                             valid.add(_plain(form))
-            except Exception:
-                pass
+            except Exception as exc:
+                if require_vesum:
+                    raise RuntimeError(f"VESUM lookup failed for '{norm_lemma}': {exc}") from exc
 
-    # 3. Rule-based morphological fallback for standard masculine dative/locative singular alternations
-    # when VESUM is offline/unseeded in test environments
+    # 4. Rule-based morphological fallback for standard masculine dative/locative singular alternations
     if number_key == "singular" and case_key == "давальний":
         additions = set()
         for v in list(valid):
-            if v.endswith("ові") or v.endswith("еві"):
+            if v.endswith("ові") or v.endswith("еві") or v.endswith("єві"):
                 stem = v[:-3]
-                if v.endswith("ові"):
-                    additions.add(stem + "у")
-                else:
-                    additions.add(stem + "ю")
-            elif v.endswith("єві"):
-                additions.add(v[:-3] + "ю")
+                additions.add(stem + "у")
+                additions.add(stem + "ю")
             elif v.endswith("у") and len(v) > 2:
-                additions.add(v[:-1] + "ові")
+                stem = v[:-1]
+                additions.add(stem + "ові")
+                additions.add(stem + "еві")
+                additions.add(stem + "єві")
             elif v.endswith("ю") and len(v) > 2:
-                additions.add(v[:-1] + "еві")
+                stem = v[:-1]
+                additions.add(stem + "еві")
+                additions.add(stem + "єві")
         valid.update(additions)
     elif number_key == "singular" and case_key == "місцевий":
         additions = set()
         for v in list(valid):
-            if v.endswith("ові") or v.endswith("еві"):
+            if v.endswith("ові") or v.endswith("еві") or v.endswith("єві"):
                 stem = v[:-3]
                 additions.add(stem + "і")
+                additions.add(stem + "ї")
                 additions.add(stem + "у")
+                additions.add(stem + "ю")
             elif v.endswith("у") and len(v) > 2:
-                additions.add(v[:-1] + "ові")
-                additions.add(v[:-1] + "і")
+                stem = v[:-1]
+                additions.add(stem + "ові")
+                additions.add(stem + "еві")
+                additions.add(stem + "єві")
+                additions.add(stem + "і")
+            elif v.endswith("ю") and len(v) > 2:
+                stem = v[:-1]
+                additions.add(stem + "еві")
+                additions.add(stem + "єві")
+                additions.add(stem + "ї")
+            elif (v.endswith("і") or v.endswith("ї")) and len(v) > 2:
+                stem = v[:-1]
+                additions.add(stem + "ові")
+                additions.add(stem + "еві")
+                additions.add(stem + "єві")
+                additions.add(stem + "у")
+                additions.add(stem + "ю")
+        for name, forms in cases.items():
+            if _paradigm_slot_case_key(str(name)) == "давальний" and isinstance(forms, dict):
+                val = forms.get("singular")
+                if isinstance(val, str):
+                    for part in val.split("/"):
+                        p = _plain(part.strip())
+                        if p:
+                            valid.add(p)
         valid.update(additions)
 
     return valid
@@ -3161,9 +3253,13 @@ def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
 
         # Pedagogical distractor selection: exclude all valid forms of the target slot
         # to guarantee no second correct answer is marked wrong (#8167 Finding 1).
-        valid_target_forms = _all_valid_forms_for_slot(
-            lemma_str, slot["case"], slot["number"], cases
-        )
+        # Require complete source-backed alternatives; skip card if lookup fails.
+        try:
+            valid_target_forms = _all_valid_forms_for_slot(
+                lemma_str, slot["case"], slot["number"], cases, require_vesum=True
+            )
+        except Exception:
+            continue
         valid_target_forms.add(_plain(slot["form"]))
 
         candidates = [

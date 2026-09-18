@@ -3102,7 +3102,8 @@ function LexiconPracticeIsland({
       committed.historyLen === history.length &&
       fresh &&
       fresh.itemId !== committed.selection.itemId &&
-      itemIdPresentInDeck(selectionDeck, committed.selection.itemId)
+      itemIdPresentInDeck(selectionDeck, committed.selection.itemId) &&
+      (!poolFilter || poolFilter(committed.selection))
     ) {
       return committed.selection;
     }
