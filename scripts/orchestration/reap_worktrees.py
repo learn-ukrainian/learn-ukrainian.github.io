@@ -16,6 +16,8 @@ import argparse
 import fcntl
 import json
 import os
+import re
+import signal
 import subprocess
 import sys
 import time
@@ -33,6 +35,14 @@ from scripts.orchestration import reaper_lifecycle
 from scripts.path_safety import assert_delete_target
 
 DEFAULT_BUILD_AGE_HOURS = 6
+# After the owning agent exits, a sandbox can keep a CPU pinned with no new
+# work. This is only the flush window, not a session cap: a live owner is
+# never killed, however long the session has already run.
+ORPHAN_IDLE_GRACE_S = 120
+ORPHAN_MAX_AGE_S = 7200
+_ORPHAN_SANDBOX_COMM = "codex-linux-sandbox"
+_WORKSPACE_MTIME_SKIP = frozenset({".git", "node_modules", ".venv", "__pycache__"})
+_REVIEW_PR_RE = re.compile(r"(?:^|/)review-(\d+)(?:-|$)")
 
 _GIT_ENV_DENYLIST = {
     "GIT_DIR",
@@ -274,32 +284,277 @@ def _query_pr_states(repo_root: Path, branch: str | None) -> tuple[list[PullRequ
         # a destructive fail-open on malformed input. Routing it through the
         # existing error channel makes all callers retain instead, since each
         # one already treats a non-None error as skip/retain.
-        if not isinstance(item, dict):
-            return [], "gh pr list returned a malformed row (not an object)"
-        raw_state = item.get("state")
-        state = str(raw_state).upper() if isinstance(raw_state, str) else ""
-        if state not in _PR_STATES:
-            # An unrecognised state is ambiguous, and ambiguity must not read
-            # as "no open PR". `[{"state": "CLOSED"}]` and an unknown enum
-            # both used to authorise deletion.
-            return [], "gh pr list returned a row with an unusable state"
-        number = item.get("number")
-        if isinstance(number, bool) or not isinstance(number, int) or number <= 0:
-            # gh always returns `number` when asked for it, so a row without a
-            # usable one is an incomplete answer, not a PR-free branch.
-            return [], "gh pr list returned a row without a usable PR number"
-        states.append(
-            PullRequestState(
-                number=number,
-                state=state,
-                head_sha=(
-                    str(item.get("headRefOid"))
-                    if item.get("headRefOid")
+        parsed, err = _parse_pr_item(item)
+        if err is not None or parsed is None:
+            return [], err or "gh pr list returned an unusable row"
+        states.append(parsed)
+    return states, None
+
+
+def review_pr_number(branch: str | None) -> int | None:
+    """Return the PR number encoded in a review branch, if the name has one.
+
+    Review checkouts are named ``<agent>/review-<number>-<slot>``. They are not
+    the PR head branch, so ``gh pr list --head`` does not see the merged PR.
+    """
+    if not branch:
+        return None
+    name = branch
+    for prefix in ("refs/heads/", "refs/remotes/origin/"):
+        if name.startswith(prefix):
+            name = name[len(prefix) :]
+            break
+    match = _REVIEW_PR_RE.search(name)
+    if match is None:
+        return None
+    return int(match.group(1))
+
+
+def _parse_pr_item(item: Any) -> tuple[PullRequestState | None, str | None]:
+    if not isinstance(item, dict):
+        return None, "gh pr payload row is not an object"
+    raw_state = item.get("state")
+    state = str(raw_state).upper() if isinstance(raw_state, str) else ""
+    if state not in _PR_STATES:
+        return None, "gh pr payload row has an unusable state"
+    number = item.get("number")
+    if isinstance(number, bool) or not isinstance(number, int) or number <= 0:
+        return None, "gh pr payload row has no usable PR number"
+    head = item.get("headRefOid")
+    return (
+        PullRequestState(
+            number=number,
+            state=state,
+            head_sha=str(head) if head else None,
+        ),
+        None,
+    )
+
+
+def _query_pr_by_number(repo_root: Path, number: int) -> tuple[list[PullRequestState], str | None]:
+    """Look up one PR by number. Fail closed: an unreadable answer is an error."""
+    try:
+        proc = _run(
+            [
+                "gh",
+                "pr",
+                "view",
+                str(number),
+                "--json",
+                "number,state,headRefOid",
+            ],
+            cwd=repo_root,
+            timeout=30,
+        )
+    except (FileNotFoundError, subprocess.SubprocessError) as exc:
+        return [], f"gh pr view failed: {exc}"
+    if proc.returncode != 0:
+        return [], f"gh pr view failed: {_format_failure(proc)}"
+    try:
+        item = json.loads(proc.stdout or "null")
+    except json.JSONDecodeError as exc:
+        return [], f"gh pr view returned invalid JSON: {exc}"
+    parsed, err = _parse_pr_item(item)
+    if err is not None or parsed is None:
+        return [], err or "gh pr view returned an unusable payload"
+    return [parsed], None
+
+
+@dataclass(frozen=True)
+class SandboxProcess:
+    """One process row used to decide whether a Codex sandbox is still working."""
+
+    pid: int
+    ppid: int
+    comm: str
+    cwd: Path | None
+    age_s: float
+    workspace_mtime: float | None = None
+
+
+def latest_workspace_mtime(root: Path) -> float | None:
+    """Newest mtime under ``root``, skipping VCS and dependency trees."""
+    try:
+        latest = root.stat().st_mtime
+    except OSError:
+        return None
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirnames[:] = [name for name in dirnames if name not in _WORKSPACE_MTIME_SKIP]
+        for name in filenames:
+            try:
+                mtime = os.stat(os.path.join(dirpath, name)).st_mtime
+            except OSError:
+                continue
+            if mtime > latest:
+                latest = mtime
+    return latest
+
+
+def select_orphaned_sandboxes(
+    processes: list[SandboxProcess],
+    *,
+    repo_root: Path,
+    now: float,
+    idle_grace_s: float = ORPHAN_IDLE_GRACE_S,
+    max_age_s: float = ORPHAN_MAX_AGE_S,
+) -> list[int]:
+    """Return pids of Codex sandboxes whose agent is no longer working.
+
+    A live owner (ppid != 1) is a running session and is never selected, at
+    any age. An init-reparented sandbox is selected when its worktree has
+    gone quiet or its age reaches the hard cap, even if it is still writing.
+    """
+    worktrees = (repo_root / ".worktrees").resolve()
+    selected: list[int] = []
+    for proc in processes:
+        if proc.comm != _ORPHAN_SANDBOX_COMM or proc.ppid != 1 or proc.cwd is None:
+            continue
+        try:
+            proc.cwd.resolve().relative_to(worktrees)
+        except (OSError, ValueError):
+            continue
+        if (
+            proc.age_s < max_age_s
+            and proc.workspace_mtime is not None
+            and (now - proc.workspace_mtime) < idle_grace_s
+        ):
+            continue
+        selected.append(proc.pid)
+    return selected
+
+
+def _proc_start_age_s(stat_text: str, *, uptime_s: float, ticks_per_sec: int) -> tuple[int, float] | None:
+    """Return ``(ppid, age_s)`` from a ``/proc/<pid>/stat`` line."""
+    end = stat_text.rfind(")")
+    if end < 0:
+        return None
+    fields = stat_text[end + 2 :].split()
+    # After the comm field, index 0 is state (field 3). ppid is field 4,
+    # starttime is field 22.
+    if len(fields) <= 19:
+        return None
+    try:
+        ppid = int(fields[1])
+        start_ticks = int(fields[19])
+    except ValueError:
+        return None
+    if ticks_per_sec <= 0:
+        return None
+    return ppid, uptime_s - (start_ticks / ticks_per_sec)
+
+
+def _read_sandbox_processes(
+    proc_root: Path = Path("/proc"), *, repo_root: Path
+) -> list[SandboxProcess]:
+    try:
+        uptime_s = float((proc_root / "uptime").read_text(encoding="utf-8").split()[0])
+    except (OSError, ValueError, IndexError):
+        return []
+    ticks = os.sysconf("SC_CLK_TCK") if hasattr(os, "sysconf") else 100
+    found: list[SandboxProcess] = []
+    try:
+        entries = list(proc_root.iterdir())
+    except OSError:
+        return []
+    for entry in entries:
+        if not entry.name.isdigit():
+            continue
+        try:
+            comm = (entry / "comm").read_text(encoding="utf-8").strip()
+        except OSError:
+            continue
+        if comm != _ORPHAN_SANDBOX_COMM:
+            continue
+        try:
+            stat_text = (entry / "stat").read_text(encoding="utf-8")
+        except OSError:
+            continue
+        parsed = _proc_start_age_s(stat_text, uptime_s=uptime_s, ticks_per_sec=int(ticks))
+        if parsed is None:
+            continue
+        ppid, age_s = parsed
+        try:
+            cwd = Path(os.readlink(entry / "cwd"))
+        except OSError:
+            cwd = None
+        found.append(
+            SandboxProcess(
+                pid=int(entry.name),
+                ppid=ppid,
+                comm=comm,
+                cwd=cwd,
+                age_s=age_s,
+                workspace_mtime=(
+                    latest_workspace_mtime(cwd)
+                    if ppid == 1 and cwd is not None and is_under_worktrees(repo_root, cwd)
                     else None
                 ),
             )
         )
-    return states, None
+    return found
+
+
+def _descendant_pids(root_pid: int, proc_root: Path = Path("/proc")) -> list[int]:
+    children: dict[int, list[int]] = {}
+    try:
+        entries = list(proc_root.iterdir())
+    except OSError:
+        return []
+    for entry in entries:
+        if not entry.name.isdigit():
+            continue
+        try:
+            stat_text = (entry / "stat").read_text(encoding="utf-8")
+        except OSError:
+            continue
+        parsed = _proc_start_age_s(stat_text, uptime_s=0.0, ticks_per_sec=1)
+        if parsed is None:
+            continue
+        ppid, _age = parsed
+        children.setdefault(ppid, []).append(int(entry.name))
+    ordered: list[int] = []
+    stack = list(children.get(root_pid, []))
+    seen = {root_pid}
+    while stack:
+        pid = stack.pop()
+        if pid in seen:
+            continue
+        seen.add(pid)
+        ordered.append(pid)
+        stack.extend(children.get(pid, []))
+    return ordered
+
+
+def stop_orphaned_sandboxes(
+    repo_root: Path,
+    *,
+    now: float | None = None,
+    idle_grace_s: float = ORPHAN_IDLE_GRACE_S,
+    max_age_s: float = ORPHAN_MAX_AGE_S,
+    proc_root: Path = Path("/proc"),
+) -> list[int]:
+    """SIGKILL ownerless Codex sandboxes once quiet or past the hard age cap.
+
+    Returns the sandbox pids that were signaled. A sandbox still owned by its
+    agent is never touched, however long that session has been running.
+    """
+    selected = select_orphaned_sandboxes(
+        _read_sandbox_processes(proc_root, repo_root=repo_root),
+        repo_root=repo_root,
+        now=time.time() if now is None else now,
+        idle_grace_s=idle_grace_s,
+        max_age_s=max_age_s,
+    )
+    signaled: list[int] = []
+    for pid in selected:
+        victims = [*_descendant_pids(pid, proc_root), pid]
+        for victim in victims:
+            try:
+                os.kill(victim, signal.SIGKILL)
+            except (ProcessLookupError, PermissionError):
+                continue
+        signaled.append(pid)
+    return signaled
 
 
 def _best_pr(prs: list[PullRequestState]) -> PullRequestState | None:
@@ -397,6 +652,14 @@ def _candidate_branches_for_worktree(repo_root: Path, info: WorktreeInfo) -> lis
         pass
 
     return candidates
+
+
+def _worktree_review_pr_number(repo_root: Path, info: WorktreeInfo) -> int | None:
+    for branch in _candidate_branches_for_worktree(repo_root, info):
+        number = review_pr_number(branch)
+        if number is not None:
+            return number
+    return None
 
 
 def _pr_matches_worktree_head(
@@ -870,6 +1133,13 @@ def _qualifying_reason(
         if pr_state.state == "MERGED":
             if _pr_matches_worktree_head(info, pr_state):
                 return f"{pr_label} MERGED"
+            review_number = _worktree_review_pr_number(repo_root, info)
+            if review_number is not None and pr_state.number == review_number:
+                if _is_ancestor_of_origin_main(info.path):
+                    return f"PR #{review_number} MERGED; review HEAD is on origin/main"
+                # Review branches are local-only; a missing origin branch
+                # cannot prove that their extra commits are safe to discard.
+                return None
             # Squash merges may leave extra local reconcile commits. A gone
             # origin branch permits cleanup without an exact PR-head match.
             if info.branch is not None and not _origin_branch_present(info.path, info.branch):
@@ -1523,7 +1793,8 @@ def reap_worktrees(
     active_ids = _active_task_ids()
     if require_activity_probe is None:
         require_activity_probe = bool(apply)
-    if live_cwds is None:
+    killed_sandboxes = stop_orphaned_sandboxes(repo_root) if apply else []
+    if live_cwds is None or killed_sandboxes:
         live_cwds = _live_cwd_paths(repo_root)
     if require_activity_probe and live_cwds is None:
         raise RuntimeError("process-CWD activity probe unavailable; cleanup skipped")
@@ -1610,6 +1881,13 @@ def reap_worktrees(
                     if err:
                         errors.append(err)
                     all_pr_states.extend(st)
+
+            review_number = _worktree_review_pr_number(repo_root, info)
+            if review_number is not None:
+                review_states, review_err = _query_pr_by_number(repo_root, review_number)
+                if review_err:
+                    errors.append(review_err)
+                all_pr_states.extend(review_states)
 
             # Follow-up CI branches carry a different branch name than the PR
             # head they fix.  Find the MERGED PR that introduced the worktree
