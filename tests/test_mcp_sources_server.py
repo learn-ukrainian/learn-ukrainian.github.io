@@ -16,6 +16,7 @@ import asyncio
 import importlib.util
 import json
 import sys
+import threading
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -1038,8 +1039,8 @@ class TestFileHashCaching:
         h2 = server_module._sha256_of_file(target_file)
         assert h2 != h1
 
-    def test_sha256_of_file_concurrent_cold_calls_synchronized(self, server_module, tmp_path):
-        """Concurrent cold reads must be synchronized by lock to prevent duplicated disk thrashing."""
+    def test_sha256_of_file_concurrent_cold_calls_deduplicated(self, server_module, tmp_path):
+        """Concurrent cold reads must be synchronized by lock and deduplicate disk reads (#8221)."""
         import concurrent.futures
 
         test_file = tmp_path / "test_concurrent.bin"
@@ -1047,10 +1048,40 @@ class TestFileHashCaching:
 
         server_module._FILE_HASH_CACHE.clear()
 
+        real_open = open
+        open_count = 0
+        open_lock = threading.Lock()
+
+        def counting_open(file, *args, **kwargs):
+            nonlocal open_count
+            if str(test_file) in str(file):
+                with open_lock:
+                    open_count += 1
+            return real_open(file, *args, **kwargs)
+
         # Run 8 concurrent threads on the same cold file
-        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
-            futures = [executor.submit(server_module._sha256_of_file, test_file) for _ in range(8)]
-            results = [f.result() for f in futures]
+        with patch("builtins.open", side_effect=counting_open):
+            with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+                futures = [executor.submit(server_module._sha256_of_file, test_file) for _ in range(8)]
+                results = [f.result() for f in futures]
 
         assert len(set(results)) == 1
         assert len(results[0]) == 64
+        # Proves that despite 8 concurrent callers, disk read was executed exactly once
+        assert open_count == 1
+
+    def test_sha256_of_file_waiting_callers_re_stat_inside_lock(self, server_module, tmp_path):
+        """Callers waiting on lock must re-stat and cache the latest file state (#8221)."""
+        test_file = tmp_path / "test_re_stat.bin"
+        test_file.write_bytes(b"state_1")
+        server_module._FILE_HASH_CACHE.clear()
+
+        # Caller 1 starts hashing under lock, mutates file while caller 2 waits
+        with server_module._FILE_HASH_LOCK:
+            # File is updated on disk while lock is held
+            test_file.write_bytes(b"state_2_updated")
+            # Lock is released when block exits
+
+        # Calling _sha256_of_file now gets state_2_updated and correctly caches it
+        h = server_module._sha256_of_file(test_file)
+        assert server_module._sha256_of_file(test_file) == h

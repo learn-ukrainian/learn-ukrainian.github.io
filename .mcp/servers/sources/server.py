@@ -1853,10 +1853,15 @@ def _sha256_of_file(path: Path) -> str:
         cache_key = None
 
     with _FILE_HASH_LOCK:
-        if cache_key is not None:
+        # Re-stat inside the lock so waiting callers check against the freshest file metadata
+        try:
+            st = resolved.stat()
+            cache_key = (str(resolved), st.st_mtime_ns, st.st_ctime_ns, st.st_size, st.st_ino)
             cached = _FILE_HASH_CACHE.get(cache_key)
             if cached is not None:
                 return cached
+        except OSError:
+            cache_key = None
 
         digest = hashlib.sha256()
         with open(resolved, "rb") as handle:
