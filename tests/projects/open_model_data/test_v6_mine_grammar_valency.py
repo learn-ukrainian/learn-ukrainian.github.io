@@ -8,6 +8,7 @@ from __future__ import annotations
 import glob
 import json
 import re
+import sqlite3
 from pathlib import Path
 
 import pytest
@@ -2400,21 +2401,11 @@ def test_format_word_count_ua() -> None:
 
 
 def test_sanitize_punctuation() -> None:
-    """Verify removal of redundant inner terminal dots before closing guillemet when outer punctuation follows."""
-    assert miner.sanitize_punctuation("«слово.».") == "«слово»."
-    assert miner.sanitize_punctuation("«слово.»?") == "«слово»?"
-    assert miner.sanitize_punctuation("«слово.»:") == "«слово»:"
-    assert miner.sanitize_punctuation("«слово.»,") == "«слово»,"
-    assert miner.sanitize_punctuation("«слово.»!") == "«слово»!"
+    """Verify normalization of multiple consecutive dots."""
     assert miner.sanitize_punctuation("«слово»..") == "«слово»."
-    # Clean text without redundant dots remains unchanged
+    assert miner.sanitize_punctuation("слово....") == "слово..."
     assert miner.sanitize_punctuation("«слово».") == "«слово»."
     assert miner.sanitize_punctuation("«слово»?") == "«слово»?"
-    # Legitimate ellipses inside quotes are preserved without duplicate outer marks
-    assert miner.sanitize_punctuation("«Ще не вмерла...»,") == "«Ще не вмерла...»,"
-    assert miner.sanitize_punctuation("«слово...»?") == "«слово...»"
-    assert miner.sanitize_punctuation("«слово...».") == "«слово...»"
-    assert miner.sanitize_punctuation("«слово!»?") == "«слово!»"
 
 
 def test_pejorative_stems_precision() -> None:
@@ -2439,6 +2430,19 @@ def test_check_has_predicate_reflexive_precision() -> None:
     assert miner.check_has_predicate("Засідання успішно відбулося.", None)
     assert miner.check_has_predicate("Студенти ретельно навчалися.", None)
     assert miner.check_has_predicate("Правила суворо виконуються.", None)
+
+
+def test_grounding_token_non_pronoun_precision() -> None:
+    """Verify that grounding tokens and samples reject pronouns and quantifiers (R7-3, R7-4)."""
+    con = sqlite3.connect(PROJECT_ROOT / "data" / "vesum.db")
+    cur = con.cursor()
+    text = "Ніхто більше в цілому світі не знав цієї таємниці."
+    sample_str, primary_token = miner.extract_context_content_sample(text, cur_ves=cur)
+    assert primary_token not in ("ніхто", "більше", "цілому", "цієї")
+    assert primary_token in ("світі", "знав", "таємниці")
+    assert "ніхто" not in sample_str.lower()
+    assert "більше" not in sample_str.lower()
+    assert "цілому" not in sample_str.lower()
 
 
 def test_brown_uk_genre_registers_canonical_mapping() -> None:
@@ -2473,34 +2477,88 @@ def test_quote_sentence_typography() -> None:
     assert miner.quote_sentence("Степ...", ".") == "«Степ...»"
     assert miner.quote_sentence("Степ...", "?") == "«Степ...»"
     assert miner.quote_sentence("Степ…", "?") == "«Степ…»"
-    assert miner.quote_sentence("Пам’ятаєте «Капітанша»: «Працелюбна людина...»?", "?") == "«Пам’ятаєте «Капітанша»: «Працелюбна людина...»?»"
+    # Sentence ending in ».: leave inside intact inside outer quotes
+    assert miner.quote_sentence("…під час конкурсу малюнків «Яка ти, Європо?».", ".") == "«…під час конкурсу малюнків «Яка ти, Європо?».»"
+    assert miner.quote_sentence("…під час конкурсу малюнків «Яка ти, Європо?».", "?") == "«…під час конкурсу малюнків «Яка ти, Європо?».»"
+    # Sentence ending in »: do not double closing quotes (R7-2)
+    assert miner.quote_sentence("Він сказав: «Добрий день, рідна школо!»", "?") == "«Він сказав: «Добрий день, рідна школо!»"
 
 
 def test_shards_zero_double_terminal_punctuation() -> None:
-    """Verify that no SFT shard contains duplicate terminal punctuation (e.g. .»., .»?, ?»., ?»?, !».)."""
+    """Verify that no SFT shard contains double punctuation or adjacent identical closing quotes."""
     shard_files = sorted(RELEASE_DIR.glob("sft/sft_shard_*.jsonl"))
     if not shard_files:
         pytest.skip("Release shards not yet generated in this worktree")
 
-    double_punct_regex = re.compile(r"([.?!…]|\.{3})\s*»+\s*[.?]")
+    # Double punctuation patterns:
+    # 1. Inner single dot before closing quote followed by punctuation: .». or .»?
+    p_inner_dot = re.compile(r"(?<!\.)\.\s*»+\s*[.?!]")
+    # 2. Duplicate question marks: ?»?
+    p_double_q = re.compile(r"\?\s*»+\s*\?")
+    # 3. Outer mark on wrapper after exclamation or ellipsis: !». or ...».
+    p_outer_mark = re.compile(r"([!…]|\.{3})\s*»+\s*[.?]\s*$")
+    # 4. Adjacent closing quotes: »» (R7-2)
+    p_adjacent_quotes = re.compile(r"»»")
+    # 5. Consecutive dots (not ellipsis): ..
+    p_double_dot = re.compile(r"(?<!\.)\.\.(?!\.)")
+
     violations = []
     for sf in shard_files:
         with open(sf, encoding="utf-8") as f:
             for line_no, line in enumerate(f, start=1):
                 record = json.loads(line)
-                query = record.get("query", "")
-                final = record.get("final_response", "")
-                steps = record.get("reasoning_steps", [])
-                if double_punct_regex.search(query):
-                    violations.append((sf.name, line_no, "query", query))
-                if double_punct_regex.search(final):
-                    violations.append((sf.name, line_no, "final_response", final))
-                for idx, step in enumerate(steps):
-                    if double_punct_regex.search(step):
-                        violations.append((sf.name, line_no, f"step_{idx}", step))
+                for field in ("query", "final_response"):
+                    text = record.get(field, "")
+                    for pat_name, pat in [
+                        ("inner_dot", p_inner_dot),
+                        ("double_q", p_double_q),
+                        ("outer_mark", p_outer_mark),
+                        ("adjacent_quotes", p_adjacent_quotes),
+                        ("double_dot", p_double_dot),
+                    ]:
+                        if pat.search(text):
+                            violations.append((sf.name, line_no, field, pat_name, text))
+                for idx, step in enumerate(record.get("reasoning_steps", [])):
+                    for pat_name, pat in [
+                        ("inner_dot", p_inner_dot),
+                        ("double_q", p_double_q),
+                        ("outer_mark", p_outer_mark),
+                        ("adjacent_quotes", p_adjacent_quotes),
+                        ("double_dot", p_double_dot),
+                    ]:
+                        if pat.search(step):
+                            violations.append((sf.name, line_no, f"step_{idx}", pat_name, step))
                 if len(violations) > 10:
                     break
         if len(violations) > 10:
             break
 
     assert not violations, f"Found double punctuation in shards: {violations[:5]}"
+
+
+def test_control_records_verbatim_fidelity() -> None:
+    """Verify that for every Control record, the quoted sentence in query matches original_text (R7-1)."""
+    shard_files = sorted(RELEASE_DIR.glob("sft/sft_shard_*.jsonl"))
+    if not shard_files:
+        pytest.skip("Release shards not yet generated in this worktree")
+
+    checked_count = 0
+    for sf in shard_files:
+        with open(sf, encoding="utf-8") as f:
+            for line_no, line in enumerate(f, start=1):
+                rec = json.loads(line)
+                if rec.get("category") in ("Control/Normative", "Control/Usus"):
+                    orig = rec["original_text"].strip()
+                    query = rec.get("query", "")
+                    expected_quoted = miner.quote_sentence(
+                        orig, "?" if rec.get("category") == "Control/Normative" else "."
+                    )
+                    assert expected_quoted in query, (
+                        f"Mismatch in {sf.name}:{line_no}:\n"
+                        f"orig: {orig}\n"
+                        f"expected: {expected_quoted}\n"
+                        f"query: {query}"
+                    )
+                    checked_count += 1
+
+    assert checked_count >= 30000, f"Expected >= 30,000 control records, checked {checked_count}"

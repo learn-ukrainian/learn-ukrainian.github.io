@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import logging
 import math
 import random
 import re
@@ -29,6 +30,8 @@ from collections import Counter, defaultdict
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
@@ -3572,46 +3575,34 @@ BROWN_UK_GENRE_REGISTERS: dict[str, tuple[str, str]] = {
 def quote_sentence(s: str, outer_mark: str = ".") -> str:
     """Quote a Ukrainian sentence following Pravopys 2019 § 162 typography.
 
-    - If s ends with '?', '!', '...', or '…':
-      omit trailing outer . or ? after closing quote:
+    - If the sentence already ends in »., leave it alone inside outer quotes:
+      «...«Яка ти, Європо?».»
+    - If sentence own last character is ?, !, ..., or …, omit outer mark per § 162:
       «Хто це?», «Слава Україні!», «Степ...»
-    - If s ends with a single period, inner period is stripped and outer_mark is placed outside:
+    - If sentence already ends in », do not double adjacent closing quotes (R7-2):
+      «...плакав!»
+    - If sentence ends with a single period, strip inner period and place outer_mark outside:
       «Сонце світить». or «Сонце світить»?
-    - Otherwise outer_mark is placed outside:
+    - Otherwise place outer_mark outside:
       «Сонце світить». or «Сонце світить»?
     """
     s_str = s.strip()
-    if re.search(r"([?!…]|\.{3})\s*»*$", s_str):
+    if re.search(r"»\s*\.$", s_str):
         return f"«{s_str}»"
+    if s_str.endswith("?") or s_str.endswith("!") or s_str.endswith("…") or s_str.endswith("..."):
+        return f"«{s_str}»"
+    if s_str.endswith("»"):
+        return f"«{s_str}"
     if s_str.endswith("."):
-        inner = re.sub(r"(?<!\.)\.\s*»*$", "", s_str).rstrip()
-        trailing_quotes = re.search(r"»+$", s_str)
-        tq = trailing_quotes.group(0) if trailing_quotes else ""
-        return f"«{inner}{tq}»{outer_mark}"
+        inner = s_str[:-1].rstrip()
+        return f"«{inner}»{outer_mark}"
     return f"«{s_str}»{outer_mark}"
 
 
 def sanitize_punctuation(text: str) -> str:
-    """Normalize Ukrainian quotation punctuation, eliminating redundant inner terminal dots.
-
-    Fixes:
-    - «... .». -> «... ».
-    - «... .»? -> «... »?
-    - «... ?». -> «... ?»
-    - «... ?»? -> «... ?»
-    - «... !». -> «... !»
-    - «... !»? -> «... !»
-    - «... ...». -> «... ...»
-    - «... ...»? -> «... ...»
-    - .. -> .
-    Preserves legitimate ellipses (... or …) without duplicate outer terminal marks.
-    """
+    """Normalize consecutive multiple dots without modifying quoted spans."""
     res = re.sub(r"\.{4,}", "...", text)
     res = re.sub(r"(?<!\.)\.\.(?!\.)", ".", res)
-    # Strip inner single dot before closing quote when followed by punctuation:
-    res = re.sub(r"(?<!\.)\.\s*(»+)\s*([.?!:,])", r"\1\2", res)
-    # Drop outer terminal mark (. or ?) after closing quote if inside ends with ?, !, or ellipsis:
-    res = re.sub(r"([?!…]|\.{3})\s*(»+)\s*[.?]", r"\1\2", res)
     return res
 
 
@@ -3619,7 +3610,7 @@ def extract_context_content_sample(text: str, cur_ves: sqlite3.Cursor | None = N
     """Extract sample content words and a primary content token for sentence-grounded reasoning."""
     function_words = {
         "було", "були", "буде", "вони", "його", "який", "яких", "яка", "яке",
-        "цього", "тому", "лише", "може", "також", "яким", "інших",
+        "цього", "тому", "лише", "може", "також", "яким", "інших", "інший", "інша", "інше", "інші", "іншого", "іншому",
         "свої", "свого", "своїх", "таких", "таким", "через", "після", "перед",
         "коли", "якщо", "якби", "щоб", "потім", "проте", "однак", "тощо",
         "хіба", "авжеж", "тобто", "чому", "цьому", "чомусь", "якому", "якомусь",
@@ -3627,27 +3618,37 @@ def extract_context_content_sample(text: str, cur_ves: sqlite3.Cursor | None = N
         "майже", "невже", "разом", "дуже", "зараз", "тепер", "туди", "сюди",
         "звідти", "звідси", "навіщо", "відтак", "щодо", "посеред", "серед",
         "поза", "поруч", "навколо", "довкола", "проти", "замість", "попри",
+        "ніхто", "ніщо", "нікого", "нічого", "нікому", "нічому", "ніким", "нічим",
+        "хтось", "щось", "когось", "чогось",
+        "всі", "усі", "всього", "усього", "всьому", "усьому", "всіх", "усіх", "всім", "усім",
+        "кожен", "кожна", "кожне", "кожні", "кожного", "кожному", "кожній",
+        "більше", "менше", "багато", "трохи", "цілому",
     }
     words = [
         w for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']{4,}\b", text)
         if w.lower() not in function_words
     ]
     all_tokens = [w for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", text) if w.lower() not in function_words]
-    primary_token = ""
+    valid_content_words: list[str] = []
     if cur_ves and words:
         for w in words:
             try:
-                cur_ves.execute("SELECT pos FROM forms_all WHERE word_form = ? LIMIT 1", (w.lower(),))
+                cur_ves.execute(
+                    "SELECT pos, tags FROM forms_all WHERE word_form = ? AND pos IN ('noun', 'adj', 'verb') AND tags NOT LIKE '%pron%' LIMIT 1",
+                    (w.lower(),),
+                )
                 row = cur_ves.fetchone()
-                if row and row[0] in ("noun", "adj", "verb"):
-                    primary_token = w
-                    break
-            except Exception:
-                pass
-    if not primary_token:
-        primary_token = words[0] if words else (all_tokens[0] if all_tokens else text[:10])
+                if row:
+                    valid_content_words.append(w)
+            except sqlite3.Error as e:
+                logger.warning("VESUM grounding token lookup failed for '%s': %s", w, e)
 
-    sample = words[:3] if words else (all_tokens[:2] if all_tokens else re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", text)[:2])
+    primary_token = (
+        valid_content_words[0] if valid_content_words else (words[0] if words else (all_tokens[0] if all_tokens else text[:10]))
+    )
+    sample = (
+        valid_content_words[:3] if valid_content_words else (words[:3] if words else (all_tokens[:2] if all_tokens else re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", text)[:2]))
+    )
     sample_str = ", ".join(f"«{w}»" for w in sample) if sample else "ключових лексем"
     return sample_str, primary_token
 
@@ -3671,11 +3672,6 @@ def build_sft_dataset(
     seen_source_texts: set[str] = set()
 
     def add_trajectory(t: dict[str, Any]) -> bool:
-        # Punctuation normalization (resolves R5-1 double punctuation .». and .»?)
-        t["query"] = sanitize_punctuation(t.get("query", ""))
-        t["reasoning_steps"] = [sanitize_punctuation(step) for step in t.get("reasoning_steps", [])]
-        t["final_response"] = sanitize_punctuation(t.get("final_response", ""))
-
         # Gate 6 tone check on every generated reasoning step and final response
         for step in t.get("reasoning_steps", []):
             if not verify_respectful_tone(step, pejorative_words):
