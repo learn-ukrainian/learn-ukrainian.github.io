@@ -99,6 +99,14 @@ candidate diff plus a bounded local test log before spawning a seat and exits 3 
 
 Passage keep/drop; citation supported?; pick at most one skill from a closed catalog.
 
+Skill suggestion pipeline (#8201, parent #6943):
+- CLI: `.venv/bin/python -m scripts.typesafe.skill_suggestion --turn '...'`
+- Module: `scripts/typesafe/skill_suggestion.py` (`suggest_skill`, `suggestion_block`)
+- Cookbook: https://docs.typesafe.ai/cookbooks/skill_suggestion.md
+- Two batched `system_one` calls (rank catalog + Noul `needs_skill`, then verify top-3); 0-or-1 skill name; **advisory only**
+- Issue #8201 (parent #6943)
+- Tests: `tests/typesafe/test_skill_suggestion.py` (`TYPESAFE_LIVE=1` for live)
+
 ### 3.6 Anywhere you’d prompt-and-parse
 
 If the generative model would return a single enum, score, or yes/no — use Jev.
@@ -214,6 +222,7 @@ than copying this snippet.
 
 ## 10. Related
 
+- Skill suggestion: `scripts/typesafe/skill_suggestion.py` (#8201)
 - Skill + overlay: `agents_extensions/shared/skills/typesafe-ai/`
 - Upstream: [System One](https://docs.typesafe.ai/concepts/system-one.md),
   [primitives](https://docs.typesafe.ai/primitives.md),
