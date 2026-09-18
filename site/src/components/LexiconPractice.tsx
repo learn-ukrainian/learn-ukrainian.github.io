@@ -3713,7 +3713,6 @@ function LexiconPracticeIsland({
   ) {
     committedSelectionRef.current = null;
     clearResumeSnapshot(nextMode);
-    setSessionSeed(makePracticeSessionSeed());
     await beginSession(nextMode, budget, undefined, focus, overrides);
   }
 

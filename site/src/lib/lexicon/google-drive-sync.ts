@@ -40,8 +40,12 @@ export function loadGoogleIdentitySdk(): Promise<void> {
 
 export function getGoogleClientId(): string | null {
   if (typeof window !== 'undefined') {
-    const stored = localStorage.getItem('learn_uk_google_client_id');
-    if (stored) return stored;
+    try {
+      const stored = window.localStorage?.getItem('learn_uk_google_client_id');
+      if (stored) return stored;
+    } catch {
+      // Storage access blocked/denied (e.g. private mode, strict sandbox, or disabled cookies)
+    }
   }
   if (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_GOOGLE_CLIENT_ID) {
     return import.meta.env.PUBLIC_GOOGLE_CLIENT_ID;
@@ -55,7 +59,11 @@ export function isGoogleSyncConfigured(): boolean {
 
 export function setGoogleClientId(clientId: string): void {
   if (typeof window !== 'undefined') {
-    localStorage.setItem('learn_uk_google_client_id', clientId.trim());
+    try {
+      window.localStorage?.setItem('learn_uk_google_client_id', clientId.trim());
+    } catch {
+      // Storage access blocked/denied
+    }
   }
 }
 

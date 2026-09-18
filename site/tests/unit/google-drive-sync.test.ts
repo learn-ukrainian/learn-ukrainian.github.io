@@ -40,4 +40,25 @@ describe('google-drive-sync security and configuration', () => {
     setInMemoryAccessToken(null);
     expect(getInMemoryAccessToken()).toBeNull();
   });
+
+  test('gracefully handles localStorage denial and security exceptions', () => {
+    const denied = vi.fn(() => {
+      throw new Error('SecurityError: The operation is insecure.');
+    });
+    vi.stubGlobal('localStorage', {
+      getItem: denied,
+      setItem: denied,
+      clear: vi.fn(),
+      removeItem: denied,
+      key: vi.fn(),
+      length: 0,
+    });
+    try {
+      expect(() => isGoogleSyncConfigured()).not.toThrow();
+      expect(isGoogleSyncConfigured()).toBe(false);
+      expect(() => setGoogleClientId('test-id')).not.toThrow();
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
 });
