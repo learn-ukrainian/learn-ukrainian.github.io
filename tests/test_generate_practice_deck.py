@@ -3978,6 +3978,9 @@ def imperative_conn():
                                 "impr:p:2": ["провітріть"],
                                 "futr:s:2": ["провітриш"], "futr:p:1": ["провітримо"],
                                 "futr:p:2": ["провітрите"]}),
+        "ходити": ("imperf", {"impr:s:2": ["ходи"], "impr:p:1": ["ходімо", "ходім"],
+                              "impr:p:2": ["ходіть", "ходіте"], "impr:p:1:subst": ["ходімте"],
+                              "pres:s:2": ["ходиш"], "pres:p:1": ["ходимо"], "pres:p:2": ["ходите"]}),
     }
     conn.executemany("INSERT INTO forms VALUES (?, ?, ?, 'verb')", [
         (form, lemma, f"verb:{aspect}:{tags}")
@@ -4186,3 +4189,264 @@ def test_budget_raw_rejection_keeps_later_small_cards_and_measures_final_bytes(k
         assert payload["sizeBudget"]["ok"] is True
         results.append(payload)
     assert results[0] == results[1]
+
+
+def _load_imperative_verbs_fixture() -> tuple[list[dict[str, Any]], sqlite3.Connection]:
+    """Helper loading the offline 1,050-verb imperative fixture into an in-memory SQLite db."""
+    fixture_path = Path(__file__).parent / "fixtures" / "atlas" / "1000_verb_imperatives.json"
+    with open(fixture_path, encoding="utf-8") as f:
+        verbs = json.load(f)
+
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE forms (word_form TEXT, lemma TEXT, tags TEXT, pos TEXT)")
+    to_insert = []
+    for v in verbs:
+        lemma = v["lemma"]
+        for wf, tags in v.get("forms", []):
+            to_insert.append((wf, lemma, tags, "verb"))
+    conn.executemany("INSERT INTO forms VALUES (?, ?, ?, ?)", to_insert)
+    return verbs, conn
+
+
+def test_imperative_multi_key_acceptance_comprehensive(imperative_conn, imperative_plain_stress):
+    """Multi-key acceptance test (§116 Правопис 2019 variants)."""
+    # 1. 1pl -імо vs -ім
+    items_robyty = _imperative_test_items(imperative_conn, "робити", "A2")
+    item_1pl = next(it for it in items_robyty if it["slot"] == "1pl")
+    assert "робімо" in item_1pl["acceptedAnswers"]
+    assert "робім" in item_1pl["acceptedAnswers"]
+    # 2. Reflexive -ся vs -сь
+    items_refl = _imperative_test_items(imperative_conn, "робитися", "B1")
+    item_refl_2sg = next(it for it in items_refl if it["slot"] == "2sg")
+    assert "робися" in item_refl_2sg["acceptedAnswers"]
+    assert "робись" in item_refl_2sg["acceptedAnswers"]
+    item_refl_1pl = next(it for it in items_refl if it["slot"] == "1pl")
+    assert {"робімося", "робімось", "робімся"} <= set(item_refl_1pl["acceptedAnswers"])
+    # 3. 2pl -іть vs -іте
+    item_2pl = next(it for it in items_robyty if it["slot"] == "2pl")
+    assert "робіть" in item_2pl["acceptedAnswers"]
+    assert "робіте" in item_2pl["acceptedAnswers"]
+
+    # 4. Offline substandard exclusion check (ходімте:subst in imperative_conn)
+    items_hodyty = _imperative_test_items(imperative_conn, "ходити", "A1")
+    item_hodyty_1pl = next(it for it in items_hodyty if it["slot"] == "1pl")
+    assert "ходімо" in item_hodyty_1pl["acceptedAnswers"]
+    assert "ходім" in item_hodyty_1pl["acceptedAnswers"]
+    assert "ходімте" not in item_hodyty_1pl["acceptedAnswers"]
+
+    # Live VESUM consistency check when available: proves real VESUM yields §116 variants
+    from scripts.rag.config import VESUM_DB_PATH
+
+    if VESUM_DB_PATH.exists():
+        with sqlite3.connect(str(VESUM_DB_PATH)) as vesum_conn:
+            # Verify робити forms in live VESUM
+            robyty_slots, _, _ = generate_practice_deck._imperative_forms("робити", vesum_conn)
+            assert "робімо" in robyty_slots["1pl"] and "робім" in robyty_slots["1pl"]
+            assert "робіть" in robyty_slots["2pl"] and "робіте" in robyty_slots["2pl"]
+
+            # Verify reflexive робитися forms in live VESUM
+            refl_slots, _, _ = generate_practice_deck._imperative_forms("робитися", vesum_conn)
+            assert "робися" in refl_slots["2sg"] and "робись" in refl_slots["2sg"]
+            assert {"робімося", "робімось", "робімся"} <= set(refl_slots["1pl"])
+
+            # Verify ходити and exclusion of substandard ходімте (marked subst in VESUM)
+            hodyty_slots, _, _ = generate_practice_deck._imperative_forms("ходити", vesum_conn)
+            assert "ходімо" in hodyty_slots["1pl"] and "ходім" in hodyty_slots["1pl"]
+            assert "ходіть" in hodyty_slots["2pl"] and "ходіте" in hodyty_slots["2pl"]
+            assert "ходімте" not in hodyty_slots["1pl"]
+
+
+def test_imperative_scaffolding_immersion_by_level(imperative_conn, imperative_plain_stress):
+    """A1 and A2 cards have English scaffolding; B1+ strictly preserves Ukrainian immersion."""
+    for cefr in ("A1", "A2"):
+        items = _imperative_test_items(imperative_conn, "робити", cefr)
+        for it in items:
+            assert "slotLabelEn" in it
+            assert "cueSentenceEn" in it
+            assert all("explanationEn" in opt for opt in it["options"] if not opt["isCorrect"])
+            assert "Imperative:" in it["notes"]
+
+    for cefr in ("B1", "B2", "C1"):
+        items = _imperative_test_items(imperative_conn, "робити", cefr)
+        for it in items:
+            assert "slotLabelEn" not in it
+            assert "cueSentenceEn" not in it
+            assert all("explanationEn" not in opt for opt in it["options"])
+            assert "Imperative:" not in it["notes"]
+            assert "accepted" not in it["notes"].lower()
+
+
+def test_imperative_coverage_threshold_and_zero_collision():
+    """Verify >= 1,000 unique lemmas threshold and zero distractor collisions across deck.
+
+    Genuinely offline gate: executes in CI using 1000_verb_imperatives.json with frozen forms.
+    Note: Target stress and exact string matching deterministically rely on the pinned
+    ukrainian_word_stress==2.1.0 trie package.
+    """
+    verbs, mem_conn = _load_imperative_verbs_fixture()
+
+    lemmas_with_imperative = set()
+    total_items = 0
+    by_level: dict[str, int] = {}
+
+    for v in verbs:
+        lemma = v.get("lemma")
+        cefr = v.get("cefr")
+        if not lemma or cefr not in generate_practice_deck.PUBLISHED_LEVELS:
+            continue
+        lexeme = {
+            "lemmaId": v.get("lemmaId", lemma),
+            "lemma": lemma,
+            "lemmaPlain": lemma,
+            "cefr": cefr,
+            "pos": "verb",
+        }
+        items = generate_practice_deck._build_imperative_items(lexeme, mem_conn, cefr)
+        if items:
+            lemmas_with_imperative.add(lemma)
+            total_items += len(items)
+            by_level[cefr] = by_level.get(cefr, 0) + len(items)
+            for it in items:
+                accepted_plain = {_plain(a) for a in it["acceptedAnswers"]}
+                for opt in it["options"]:
+                    if not opt["isCorrect"]:
+                        assert opt["text"] not in it["acceptedAnswers"], (
+                            f"Distractor collision in {it['id']}: {opt['text']}"
+                        )
+                        assert _plain(opt["text"]) not in accepted_plain, (
+                            f"Normalized distractor collision in {it['id']}: {opt['text']}"
+                        )
+
+    assert len(lemmas_with_imperative) == 1050, (
+        f"Expected 1,050 unique lemmas, got {len(lemmas_with_imperative)}"
+    )
+    assert total_items == 3137, f"Expected 3,137 items, got {total_items}"
+    assert by_level == {"A1": 279, "A2": 655, "B1": 1089, "B2": 721, "C1": 393}, (
+        f"Level distribution mismatch: {by_level}"
+    )
+
+
+def test_imperative_held_out_stratified_audit_200_items():
+    """Held-out linguistic review of 200 stratified items (40 per level A1-C1).
+
+    Genuinely offline gate: dynamically recomputes zero-collision guarantees,
+    VESUM tag attestation, card re-derivation, distractor taxonomy, stress verification,
+    and immersion contracts.
+    Note: Target stress deterministically relies on the pinned ukrainian_word_stress==2.1.0 trie.
+    """
+    audit_fixture_path = Path(__file__).parent / "fixtures" / "atlas" / "imperative_held_out_audit_200.json"
+    assert audit_fixture_path.exists(), f"Missing audit fixture: {audit_fixture_path}"
+
+    with open(audit_fixture_path, encoding="utf-8") as f:
+        audit_data = json.load(f)
+
+    sample_200 = audit_data.get("items", [])
+    assert len(sample_200) == 200, f"Expected 200 items in held-out audit, got {len(sample_200)}"
+
+    by_level: dict[str, list[dict[str, Any]]] = {lvl: [] for lvl in generate_practice_deck.PUBLISHED_LEVELS}
+    for it in sample_200:
+        by_level[it["cefr"]].append(it)
+
+    for lvl, lvl_items in by_level.items():
+        assert len(lvl_items) == 40, f"Expected 40 items for level {lvl}, got {len(lvl_items)}"
+
+    verbs, mem_conn = _load_imperative_verbs_fixture()
+    verbs_by_lemma = {v["lemma"]: v for v in verbs}
+    valid_codes = {"CORRECT", *generate_practice_deck.IMPERATIVE_EXPLANATIONS.keys()}
+
+    for it in sample_200:
+        # 1. Schema and contract checks
+        errors = generate_practice_deck.validate_imperative_item(it)
+        assert errors == [], f"Item validation failed for {it['id']}: {errors}"
+        assert it["aspect"] in ("perf", "imperf")
+        assert it["slot"] in ("2sg", "1pl", "2pl")
+        assert len(it["options"]) == 4
+
+        # 2. Dynamic zero-collision check across raw and normalized text
+        accepted_plain = {_plain(a) for a in it["acceptedAnswers"]}
+        for opt in it["options"]:
+            if not opt["isCorrect"]:
+                assert opt["text"] not in it["acceptedAnswers"], (
+                    f"Distractor collision in {it['id']}: {opt['text']}"
+                )
+                assert _plain(opt["text"]) not in accepted_plain, (
+                    f"Normalized distractor collision in {it['id']}: {opt['text']}"
+                )
+
+        # 3. Target attestation in offline forms db
+        target_plain = it["targetPlain"]
+        lemma_plain = it["lemmaPlain"]
+        expected_slot_suffix = {"2sg": "impr:s:2", "1pl": "impr:p:1", "2pl": "impr:p:2"}[it["slot"]]
+        rows = mem_conn.execute(
+            "SELECT tags FROM forms WHERE lemma=? AND word_form=?", (lemma_plain, target_plain)
+        ).fetchall()
+        assert rows, f"Target form {target_plain} not found in forms for lemma {lemma_plain}"
+        assert any(expected_slot_suffix in r[0] for r in rows), (
+            f"Expected slot {expected_slot_suffix} not in tags {rows} for {target_plain}"
+        )
+
+        # 4. Dynamic card re-derivation from generator
+        v_entry = verbs_by_lemma.get(lemma_plain)
+        assert v_entry is not None, f"Lemma {lemma_plain} not found in verbs fixture"
+        lexeme = {
+            "lemmaId": lemma_plain,
+            "lemma": lemma_plain,
+            "lemmaPlain": lemma_plain,
+            "cefr": it["cefr"],
+            "pos": "verb",
+        }
+        rebuilt_items = generate_practice_deck._build_imperative_items(lexeme, mem_conn, it["cefr"])
+        rebuilt_match = next((item for item in rebuilt_items if item["slot"] == it["slot"]), None)
+        assert rebuilt_match is not None, f"Slot {it['slot']} not rebuilt for {lemma_plain}"
+        assert rebuilt_match["target"] == it["target"], f"Target mismatch for {it['id']}"
+        assert set(rebuilt_match["acceptedAnswers"]) == set(it["acceptedAnswers"]), (
+            f"Accepted answers mismatch for {it['id']}"
+        )
+
+        # 5. Options and distractor taxonomy checks
+        correct_opts = [o for o in it["options"] if o["isCorrect"]]
+        assert len(correct_opts) == 1
+        assert correct_opts[0]["code"] == "CORRECT"
+
+        for opt in it["options"]:
+            assert opt["code"] in valid_codes
+            if not opt["isCorrect"]:
+                assert opt.get("explanationUk"), f"Missing explanationUk in {it['id']}"
+                if opt["code"] in ("WRONG_PERSON", "WRONG_MOOD"):
+                    opt_plain = _plain(opt["text"])
+                    opt_rows = mem_conn.execute(
+                        "SELECT tags FROM forms WHERE lemma=? AND word_form=?", (lemma_plain, opt_plain)
+                    ).fetchall()
+                    assert opt_rows, f"Grammatical distractor {opt_plain} not found for {lemma_plain}"
+                elif opt["code"] == "ORTHO_SOFT_SIGN":
+                    assert "ь" in opt["text"], f"Expected soft sign in ORTHO_SOFT_SIGN distractor {opt['text']}"
+
+        # 6. Scaffolding vs Immersion contract by level
+        if it["cefr"] in ("A1", "A2"):
+            assert "slotLabelEn" in it
+            assert "cueSentenceEn" in it
+            assert "Imperative:" in it["notes"]
+            assert all("explanationEn" in opt for opt in it["options"] if not opt["isCorrect"])
+        else:
+            assert "slotLabelEn" not in it
+            assert "cueSentenceEn" not in it
+            assert "Imperative:" not in it["notes"]
+            assert all("explanationEn" not in opt for opt in it["options"])
+
+        # 7. Linguistic audit certificate metadata and dynamic stress verification
+        audit = it.get("audit", {})
+        assert audit.get("verdict") == "APPROVED", f"Item {it['id']} not APPROVED in audit"
+        assert audit.get("pravopys_section") == "§116"
+
+        vowels = set("аеєиіїоуюяАЕЄИІЇОУЮЯ")
+        num_vowels = sum(1 for c in it["target"] if c in vowels)
+        is_stressed_or_monosyllable = ("\u0301" in it["target"]) or (num_vowels <= 1)
+        assert audit.get("target_stress_verified") is is_stressed_or_monosyllable, (
+            f"Stress verification flag mismatch for {it['id']}: expected {is_stressed_or_monosyllable}"
+        )
+
+    # 192 targets carry verified accentuation (U+0301) or are monosyllabic.
+    # 8 polysyllabic targets fall back to bare unaccented display due to oracle not_found
+    # (1 in B2: пасися; 7 in C1: пилососьте, затікай, переповіжмо, переповіж, перезавантажуйте, зазвучімо, облаштуйтеся).
+    stressed_count = sum(1 for it in sample_200 if it.get("audit", {}).get("target_stress_verified"))
+    assert stressed_count == 192, f"Expected 192 stressed targets, got {stressed_count}"
