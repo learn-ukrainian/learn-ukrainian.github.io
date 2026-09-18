@@ -2727,6 +2727,41 @@ def test_detached_review_queries_pr_number_from_path(
     assert result.reason == "PR #8154 MERGED; review HEAD is on origin/main"
 
 
+
+
+@pytest.mark.parametrize("gh_outage", [False, True])
+def test_review_issue_number_does_not_block_merged_pr(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, gh_outage: bool
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = repo / ".worktrees" / "dispatch" / "agy" / "review-8183-preflight-r6"
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    git(repo, "worktree", "add", "--detach", str(worktree), "main")
+    head = git(worktree, "rev-parse", "HEAD")
+    patch_gh(monkeypatch, {})
+    err = (
+        "gh pr view failed: connection reset by peer"
+        if gh_outage
+        else "gh pr view failed: GraphQL: Could not resolve to a PullRequest with the number of 8183."
+    )
+    monkeypatch.setattr(rw, "_query_pr_by_number", lambda _repo, _n: ([], err))
+    monkeypatch.setattr(
+        rw,
+        "_query_prs_by_head_sha",
+        lambda _repo, _sha: [rw.PullRequestState(number=8243, state="MERGED", head_sha=head)],
+    )
+    monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: False)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    results = rw.reap_worktrees(repo_root=repo, live_cwds=set(), merged_pr_only=True)
+    result = result_for(results, worktree)
+    if gh_outage:
+        assert result.action == "skipped"
+        assert "PR guard unavailable" in result.reason
+    else:
+        assert result.action == "would_remove"
+        assert result.reason == "PR #8243 MERGED"
+
+
 def test_read_sandbox_processes_scans_only_orphans_under_worktrees(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
