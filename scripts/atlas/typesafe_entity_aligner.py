@@ -74,6 +74,33 @@ class AlignmentEvaluation:
         return data
 
 
+try:
+    from typesafe_sdk import Noul, Score, TypeSafeClient
+except ImportError:
+    TypeSafeClient = None
+    Score = None
+    Noul = None
+
+if Score is None:
+
+    class Score:  # type: ignore
+        def __init__(self, instructions: str, criteria: list[str]):
+            self.type = "score"
+            self.instructions = instructions
+            self.criteria = criteria
+
+        def to_dict(self) -> dict[str, Any]:
+            return {"type": self.type, "instructions": self.instructions, "criteria": self.criteria}
+
+    class Noul:  # type: ignore
+        def __init__(self, instructions: str):
+            self.type = "noul"
+            self.instructions = instructions
+
+        def to_dict(self) -> dict[str, Any]:
+            return {"type": self.type, "instructions": self.instructions}
+
+
 def _resolve_typesafe_key() -> str:
     """Resolve TypeSafe API key from environment or user home secrets."""
     if key := os.environ.get("TYPESAFE_API_KEY", "").strip():
@@ -88,6 +115,38 @@ def _resolve_typesafe_key() -> str:
             except Exception:
                 pass
     return ""
+
+
+SCORE_CRITERIA: list[str] = [
+    "0 - different concepts or unrelated headwords",
+    "1 - near-synonyms, polysemous sense splits, or stylistic variants requiring human curator inspection",
+    "2 - same lexical entity or authentic decolonized synonym pairs denoting the identical referent",
+]
+
+
+def build_entity_alignment_questions() -> dict[str, Any]:
+    """Define the Score + Noul question batch conforming to typesafe_sdk specification."""
+    return {
+        "how_entities_relate": Score(
+            instructions=(
+                "How do `entity_a` and `entity_b` relate in the context of Ukrainian lexicography? "
+                "Evaluate semantic overlap, register, dialectal variation, and lexical equivalence."
+            ),
+            criteria=SCORE_CRITERIA,
+        ),
+        "is_decolonized_preferred": Noul(
+            instructions=(
+                "Is `entity_a` or `entity_b` an authentic/decolonized Ukrainian form (e.g. пилосмок, праска, слухавка) "
+                "contrasted with a Soviet/Russian calque (пилосос, утюг, трубка)?"
+            )
+        ),
+        "identical_pos_and_gender": Noul(
+            instructions="Do `entity_a` and `entity_b` have the exact same part of speech and grammatical gender?"
+        ),
+        "definition_semantic_match": Noul(
+            instructions="Do the definitions of `entity_a` and `entity_b` describe the exact same real-world concept or object?"
+        ),
+    }
 
 
 class TypeSafeEntityAligner:
@@ -128,68 +187,100 @@ class TypeSafeEntityAligner:
             },
         }
 
-        questions = {
-            "how_entities_relate": {
-                "type": "score",
-                "instructions": (
-                    "How do `entity_a` and `entity_b` relate in the context of Ukrainian lexicography? "
-                    "Level 0: different concepts or unrelated headwords. "
-                    "Level 1: near-synonyms, polysemous sense splits, or stylistic variants requiring human curator inspection. "
-                    "Level 2: same lexical entity or authentic decolonized synonym pairs denoting the identical referent."
-                ),
-                "levels": self.SCORE_LEVELS,
-            },
-            "is_decolonized_preferred": {
-                "type": "noul",
-                "instructions": (
-                    "Is `entity_a` or `entity_b` an authentic/decolonized Ukrainian form (e.g. пилосмок, праска, слухавка) "
-                    "contrasted with a Soviet/Russian calque (пилосос, утюг, трубка)?"
-                ),
-            },
-            "identical_pos_and_gender": {
-                "type": "noul",
-                "instructions": "Do `entity_a` and `entity_b` have the exact same part of speech and grammatical gender?",
-            },
-            "definition_semantic_match": {
-                "type": "noul",
-                "instructions": "Do the definitions of `entity_a` and `entity_b` describe the exact same real-world concept or object?",
-            },
-        }
-
-        body = json.dumps(
-            {
-                "state": state,
-                "questions": questions,
-                "model": self.model,
-            }
-        ).encode("utf-8")
-
-        req = urllib.request.Request(
-            "https://api.typesafe.ai/v1/systemone",
-            data=body,
-            headers={
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json",
-            },
-            method="POST",
-        )
-
         try:
-            with urllib.request.urlopen(req, timeout=15) as resp:
-                data = json.load(resp)
+            if TypeSafeClient is not None and self.api_key:
+                client = TypeSafeClient(api_key=self.api_key)
+                response = client.system_one(
+                    state=state,
+                    questions=build_entity_alignment_questions(),
+                    model=self.model,
+                )
+                answers = response.answers
+            else:
+                raw_questions = {
+                    "how_entities_relate": {
+                        "type": "score",
+                        "instructions": (
+                            "How do `entity_a` and `entity_b` relate in the context of Ukrainian lexicography? "
+                            "Evaluate semantic overlap, register, dialectal variation, and lexical equivalence."
+                        ),
+                        "criteria": SCORE_CRITERIA,
+                    },
+                    "is_decolonized_preferred": {
+                        "type": "noul",
+                        "instructions": (
+                            "Is `entity_a` or `entity_b` an authentic/decolonized Ukrainian form (e.g. пилосмок, праска, слухавка) "
+                            "contrasted with a Soviet/Russian calque (пилосос, утюг, трубка)?"
+                        ),
+                    },
+                    "identical_pos_and_gender": {
+                        "type": "noul",
+                        "instructions": "Do `entity_a` and `entity_b` have the exact same part of speech and grammatical gender?",
+                    },
+                    "definition_semantic_match": {
+                        "type": "noul",
+                        "instructions": "Do the definitions of `entity_a` and `entity_b` describe the exact same real-world concept or object?",
+                    },
+                }
+                body = json.dumps(
+                    {
+                        "state": state,
+                        "questions": raw_questions,
+                        "model": self.model,
+                    }
+                ).encode("utf-8")
+
+                req = urllib.request.Request(
+                    "https://api.typesafe.ai/v1/systemone",
+                    data=body,
+                    headers={
+                        "Authorization": f"Bearer {self.api_key}",
+                        "Content-Type": "application/json",
+                    },
+                    method="POST",
+                )
+                with urllib.request.urlopen(req, timeout=15) as resp:
+                    data = json.load(resp)
+                answers = data.get("answers", {})
         except Exception as e:
-            # Fallback on network or API failure
-            return self._mock_alignment(entry_a, entry_b, notes=f"Fallback from error: {e}")
+            # Never silently fabricate data on live API failure
+            return AlignmentEvaluation(
+                candidate_a=entry_a.headword,
+                source_a=entry_a.source,
+                candidate_b=entry_b.headword,
+                source_b=entry_b.source,
+                action=AlignmentAction.CURATOR_REVIEW,
+                score_level=1,
+                score_label="api_error_requires_curator",
+                confidence=0.0,
+                is_decolonized_preferred=False,
+                identical_pos_and_gender=False,
+                definition_semantic_match=False,
+                curator_notes=f"Live TypeSafe API failure: {e}",
+            )
 
-        answers = data.get("answers", {})
-        score_ans = answers.get("how_entities_relate", {})
-        score_val = int(score_ans.get("score", 1))
-        conf = float(score_ans.get("confidence", 0.75))
-        probs = score_ans.get("probabilities", {})
+        score_ans = answers.get("how_entities_relate") if isinstance(answers, dict) else getattr(answers, "how_entities_relate", None)
+        score_val = int(getattr(score_ans, "score", None) if getattr(score_ans, "score", None) is not None else (score_ans.get("score", 1) if isinstance(score_ans, dict) else 1))
+        conf = float(getattr(score_ans, "confidence", None) if getattr(score_ans, "confidence", None) is not None else (score_ans.get("confidence", 0.75) if isinstance(score_ans, dict) else 0.75))
+        probs = getattr(score_ans, "probabilities", None) if getattr(score_ans, "probabilities", None) is not None else (score_ans.get("probabilities", {}) if isinstance(score_ans, dict) else {})
 
-        decol_noul = float(answers.get("is_decolonized_preferred", {}).get("noul", 0.0))
-        pos_noul = float(answers.get("identical_pos_and_gender", {}).get("noul", 0.0))
-        def_noul = float(answers.get("definition_semantic_match", {}).get("noul", 0.0))
+        def _get_noul(ans_obj: Any) -> float:
+            if ans_obj is None:
+                return 0.0
+            val = getattr(ans_obj, "noul", None)
+            if val is not None:
+                return float(val)
+            if isinstance(ans_obj, dict):
+                return float(ans_obj.get("noul", 0.0))
+            return 0.0
+
+        decol_ans = answers.get("is_decolonized_preferred") if isinstance(answers, dict) else getattr(answers, "is_decolonized_preferred", None)
+        pos_ans = answers.get("identical_pos_and_gender") if isinstance(answers, dict) else getattr(answers, "identical_pos_and_gender", None)
+        def_ans = answers.get("definition_semantic_match") if isinstance(answers, dict) else getattr(answers, "definition_semantic_match", None)
+
+        decol_noul = _get_noul(decol_ans)
+        pos_noul = _get_noul(pos_ans)
+        def_noul = _get_noul(def_ans)
 
         # Code-owned routing based on TypeSafe entity_alignment pattern
         if score_val == 2 and def_noul >= 0.70 and pos_noul >= 0.60:

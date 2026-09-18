@@ -141,3 +141,48 @@ def test_alignment_result_serialization():
     assert data["action"] == "merge"
     assert "probabilities" in data
     assert isinstance(data["confidence"], float)
+
+
+def test_typesafe_sdk_score_criteria_schema():
+    """Verify build_entity_alignment_questions conforms to TypeSafe SDK criteria list schema."""
+    from scripts.atlas.typesafe_entity_aligner import SCORE_CRITERIA, build_entity_alignment_questions
+
+    questions = build_entity_alignment_questions()
+    assert "how_entities_relate" in questions
+    score_q = questions["how_entities_relate"]
+
+    # Must be criteria list, NOT a levels dict
+    assert hasattr(score_q, "criteria")
+    assert isinstance(score_q.criteria, list)
+    assert len(score_q.criteria) == 3
+    assert score_q.criteria == SCORE_CRITERIA
+
+    # Verify msgspec / TypeSafe SDK validity if SDK installed
+    try:
+        from typesafe_sdk import Score
+
+        real_score = Score(
+            instructions="Test",
+            criteria=SCORE_CRITERIA,
+        )
+        assert real_score.criteria == SCORE_CRITERIA
+    except ImportError:
+        pass
+
+
+def test_live_api_failure_does_not_mask_with_mock(monkeypatch):
+    """Verify live API exceptions do NOT silently mask with fabricated mock confidence."""
+    aligner = TypeSafeEntityAligner(api_key="fake-key-for-test", mock=False)
+    entry_a = DictionaryEntry(headword="тест1", source="СУМ-20", definition="деф1", pos="noun")
+    entry_b = DictionaryEntry(headword="тест2", source="ВТС", definition="деф2", pos="noun")
+
+    def _mock_failure(*args, **kwargs):
+        raise ConnectionError("Simulated network drop")
+
+    monkeypatch.setattr("urllib.request.urlopen", _mock_failure)
+    monkeypatch.setattr("scripts.atlas.typesafe_entity_aligner.TypeSafeClient", None)
+
+    result = aligner.align_entries(entry_a, entry_b)
+    assert result.action == AlignmentAction.CURATOR_REVIEW
+    assert result.confidence == 0.0
+    assert "Live TypeSafe API failure" in result.curator_notes
