@@ -116,7 +116,10 @@ class MalformedResponse(ValueError):
 def _unit_float(value: Any, what: str) -> float:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise MalformedResponse(f"{what} is not a number")
-    number = float(value)
+    try:
+        number = float(value)
+    except OverflowError as exc:
+        raise MalformedResponse(f"{what} is too large to convert") from exc
     if not math.isfinite(number) or not 0.0 <= number <= 1.0:
         raise MalformedResponse(f"{what} is outside [0, 1]")
     return number

@@ -166,6 +166,9 @@ def test_triage_skips_on_incomplete_read() -> None:
         {"answers": _answers("broken", float("nan"), 0.0)},
         {"answers": _answers("broken", "high", 0.0)},
         {"answers": _answers("broken", 0.9, None)},
+        {"answers": _answers("broken", 10**400, 0.0)},
+        {"answers": _answers("broken", 0.9, 10**400)},
+        {"answers": _answers("broken", -(10**400), 0.0)},
     ],
 )
 def test_triage_skips_on_malformed_response(response) -> None:
