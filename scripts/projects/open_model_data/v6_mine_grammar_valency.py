@@ -3572,29 +3572,39 @@ BROWN_UK_GENRE_REGISTERS: dict[str, tuple[str, str]] = {
 }
 
 
-def quote_sentence(s: str, outer_mark: str = ".") -> str:
-    """Quote a Ukrainian sentence following Pravopys 2019 § 162 typography.
+def convert_nested_quotes(text: str) -> str:
+    """Convert inner «...» quotes to „...“ when wrapping in outer «...» per Pravopys § 164."""
+    res = []
+    for ch in text:
+        if ch == "«":
+            res.append("„")
+        elif ch == "»":
+            res.append("“")
+        else:
+            res.append(ch)
+    return "".join(res)
 
-    - If the sentence already ends in »., leave it alone inside outer quotes:
-      «...«Яка ти, Європо?».»
-    - If sentence own last character is ?, !, ..., or …, omit outer mark per § 162:
-      «Хто це?», «Слава Україні!», «Степ...»
-    - If sentence already ends in », do not double adjacent closing quotes (R7-2):
-      «...плакав!»
-    - If sentence ends with a single period, strip inner period and place outer_mark outside:
-      «Сонце світить». or «Сонце світить»?
-    - If inner stripped sentence ends in ?, !, …, or ..., omit outer mark per § 162:
-      «...вулиця Франка?»
-    - Otherwise place outer_mark outside:
-      «Сонце світить». or «Сонце світить»?
+
+def quote_sentence(s: str, outer_mark: str = ".") -> str:
+    """Quote a Ukrainian sentence following Pravopys 2019 § 162 and § 164 typography.
+
+    - If the sentence already contains «...», convert them to inner „...“ per § 164.
+    - If sentence ends with ?, !, ..., or …, the mark stays inside and outer mark is omitted per § 162.
+    - If sentence ends with direct speech closing quote (e.g. !“, ?“, …“), outer mark is omitted per § 162.
+    - If sentence ends with a single period, strip inner period and place outer_mark outside.
+    - If inner stripped sentence ends in ?, !, …, or ..., omit outer mark per § 162.
+    - Otherwise place outer_mark outside.
     """
     s_str = s.strip()
-    if re.search(r"»\s*\.$", s_str):
-        return f"«{s_str}»"
+    if "«" in s_str or "»" in s_str:
+        s_str = convert_nested_quotes(s_str)
     if s_str.endswith("?") or s_str.endswith("!") or s_str.endswith("…") or s_str.endswith("..."):
         return f"«{s_str}»"
-    if s_str.endswith("»"):
-        return f"«{s_str}"
+    if s_str.endswith("“"):
+        before = s_str[:-1].rstrip()
+        if before.endswith("?") or before.endswith("!") or before.endswith("…") or before.endswith("..."):
+            return f"«{s_str}»"
+        return f"«{s_str}»{outer_mark}"
     if s_str.endswith("."):
         inner = s_str[:-1].rstrip()
         if inner.endswith("?") or inner.endswith("!") or inner.endswith("…") or inner.endswith("..."):

@@ -2432,17 +2432,21 @@ def test_check_has_predicate_reflexive_precision() -> None:
     assert miner.check_has_predicate("Правила суворо виконуються.", None)
 
 
+@pytest.mark.skipif(
+    not miner.DEFAULT_VESUM_DB.is_file(),
+    reason="VESUM database not present in CI sandbox — run locally for full coverage",
+)
 def test_grounding_token_non_pronoun_precision() -> None:
-    """Verify that grounding tokens and samples reject pronouns and quantifiers (R7-3, R7-4)."""
-    con = sqlite3.connect(PROJECT_ROOT / "data" / "vesum.db")
-    cur = con.cursor()
-    text = "Ніхто більше в цілому світі не знав цієї таємниці."
-    sample_str, primary_token = miner.extract_context_content_sample(text, cur_ves=cur)
-    assert primary_token not in ("ніхто", "більше", "цілому", "цієї")
-    assert primary_token in ("світі", "знав", "таємниці")
-    assert "ніхто" not in sample_str.lower()
-    assert "більше" not in sample_str.lower()
-    assert "цілому" not in sample_str.lower()
+    """Verify that grounding tokens and samples reject pronouns and quantifiers (R7-3, R7-4, R8-1)."""
+    with sqlite3.connect(f"file:{miner.DEFAULT_VESUM_DB}?mode=ro", uri=True) as conn:
+        cur = conn.cursor()
+        text = "Ніхто більше в цілому світі не знав цієї таємниці."
+        sample_str, primary_token = miner.extract_context_content_sample(text, cur_ves=cur)
+        assert primary_token not in ("ніхто", "більше", "цілому", "цієї")
+        assert primary_token in ("світі", "знав", "таємниці")
+        assert "ніхто" not in sample_str.lower()
+        assert "більше" not in sample_str.lower()
+        assert "цілому" not in sample_str.lower()
 
 
 def test_brown_uk_genre_registers_canonical_mapping() -> None:
@@ -2465,7 +2469,7 @@ def test_brown_uk_genre_registers_canonical_mapping() -> None:
 
 
 def test_quote_sentence_typography() -> None:
-    """Verify Ukrainian quote punctuation conforms to Pravopys 2019 § 162."""
+    """Verify Ukrainian quote punctuation conforms to Pravopys 2019 § 162 and § 164."""
     # Declarative sentence: inner period stripped, outer dot/question mark placed outside
     assert miner.quote_sentence("Сонце світить.", ".") == "«Сонце світить»."
     assert miner.quote_sentence("Сонце світить.", "?") == "«Сонце світить»?"
@@ -2480,27 +2484,36 @@ def test_quote_sentence_typography() -> None:
     # Sentence ending in ?. strips . and omits outer mark per § 162
     assert miner.quote_sentence("вулиця Франка?.", "?") == "«вулиця Франка?»"
     assert miner.quote_sentence("вулиця Франка?.", ".") == "«вулиця Франка?»"
-    # Sentence ending in ».: leave inside intact inside outer quotes
-    assert miner.quote_sentence("…під час конкурсу малюнків «Яка ти, Європо?».", ".") == "«…під час конкурсу малюнків «Яка ти, Європо?».»"
-    assert miner.quote_sentence("…під час конкурсу малюнків «Яка ти, Європо?».", "?") == "«…під час конкурсу малюнків «Яка ти, Європо?».»"
-    # Sentence ending in »: do not double closing quotes (R7-2)
-    assert miner.quote_sentence("Він сказав: «Добрий день, рідна школо!»", "?") == "«Він сказав: «Добрий день, рідна школо!»"
+    # Nested quotes converted to „...“ per § 164 and terminal period placed outside outer guillemets
+    assert miner.quote_sentence("…під час конкурсу малюнків «Яка ти, Європо?».", ".") == "«…під час конкурсу малюнків „Яка ти, Європо?“»."
+    assert miner.quote_sentence("…під час конкурсу малюнків «Яка ти, Європо?».", "?") == "«…під час конкурсу малюнків „Яка ти, Європо?“»?"
+    assert miner.quote_sentence("У 1970 році почав працювати на заводі «Електроприлад».", ".") == "«У 1970 році почав працювати на заводі „Електроприлад“»."
+    assert miner.quote_sentence("У 1970 році почав працювати на заводі «Електроприлад».", "?") == "«У 1970 році почав працювати на заводі „Електроприлад“»?"
+    # Direct speech ending in ! or ?: mark stays inside, balanced quotes, no doubled marks
+    assert miner.quote_sentence("Він сказав: «Добрий день, рідна школо!»", "?") == "«Він сказав: „Добрий день, рідна школо!“»"
+    assert miner.quote_sentence("Він сказав: «Добрий день, рідна школо!»", ".") == "«Він сказав: „Добрий день, рідна школо!“»"
+    # Sentence starting with quote: no doubled ««
+    assert miner.quote_sentence("«Через це сталося лихо».", ".") == "«„Через це сталося лихо“»."
 
 
 def test_shards_zero_double_terminal_punctuation() -> None:
-    """Verify that no SFT shard contains double punctuation or adjacent identical closing quotes."""
+    """Verify that no SFT shard contains double punctuation, adjacent closing quotes, or period inside guillemets."""
     shard_files = sorted(RELEASE_DIR.glob("sft/sft_shard_*.jsonl"))
     if not shard_files:
         pytest.skip("Release shards not yet generated in this worktree")
 
-    # Double punctuation patterns:
-    # 1. Double terminal punctuation at end of line: e.g. .»., .»?, ?»., ?»?, !»., ...».
-    p_terminal_double = re.compile(r"([.?!…]|\.{3})\s*»+\s*[.?]\s*$")
-    # 2. Duplicate question marks anywhere: ?»?
-    p_double_q = re.compile(r"\?\s*»+\s*\?")
-    # 3. Adjacent closing quotes anywhere: »» (R7-2)
+    # Double punctuation and typographic patterns:
+    # 1. Period inside outer guillemets: .» (excluding legitimate ellipsis ...»)
+    p_single_dot_guillemet = re.compile(r"(?<!\.)\.\s*»")
+    # 2. Doubled opening quotes: ««
+    p_double_open = re.compile(r"««")
+    # 3. Adjacent closing quotes anywhere: »» (R7-2, R8-3)
     p_adjacent_quotes = re.compile(r"»»")
-    # 4. Consecutive double dots (not ellipsis): ..
+    # 4. Double terminal punctuation at end of line: e.g. .»., .»?, ?»., ?»?, !»., ...».
+    p_terminal_double = re.compile(r"([.?!…]|\.{3})\s*»+\s*[.?]\s*$")
+    # 5. Duplicate question marks anywhere: ?»?
+    p_double_q = re.compile(r"\?\s*»+\s*\?")
+    # 6. Consecutive double dots (not ellipsis): ..
     p_double_dot = re.compile(r"(?<!\.)\.\.(?!\.)")
 
     violations = []
@@ -2511,18 +2524,22 @@ def test_shards_zero_double_terminal_punctuation() -> None:
                 for field in ("query", "final_response"):
                     text = record.get(field, "")
                     for pat_name, pat in [
+                        ("single_dot_guillemet", p_single_dot_guillemet),
+                        ("double_open", p_double_open),
+                        ("adjacent_quotes", p_adjacent_quotes),
                         ("terminal_double", p_terminal_double),
                         ("double_q", p_double_q),
-                        ("adjacent_quotes", p_adjacent_quotes),
                         ("double_dot", p_double_dot),
                     ]:
                         if pat.search(text):
                             violations.append((sf.name, line_no, field, pat_name, text))
                 for idx, step in enumerate(record.get("reasoning_steps", [])):
                     for pat_name, pat in [
+                        ("single_dot_guillemet", p_single_dot_guillemet),
+                        ("double_open", p_double_open),
+                        ("adjacent_quotes", p_adjacent_quotes),
                         ("terminal_double", p_terminal_double),
                         ("double_q", p_double_q),
-                        ("adjacent_quotes", p_adjacent_quotes),
                         ("double_dot", p_double_dot),
                     ]:
                         if pat.search(step):
@@ -2536,7 +2553,7 @@ def test_shards_zero_double_terminal_punctuation() -> None:
 
 
 def test_control_records_verbatim_fidelity() -> None:
-    """Verify that for every Control record, the quoted sentence in query matches original_text (R7-1)."""
+    """Verify that for every Control record, the quoted sentence in query matches original_text (R7-1, R8-4)."""
     shard_files = sorted(RELEASE_DIR.glob("sft/sft_shard_*.jsonl"))
     if not shard_files:
         pytest.skip("Release shards not yet generated in this worktree")
@@ -2549,6 +2566,7 @@ def test_control_records_verbatim_fidelity() -> None:
                 if rec.get("category") in ("Control/Normative", "Control/Usus"):
                     orig = rec["original_text"].strip()
                     query = rec.get("query", "")
+                    # 1. Generator contract match
                     expected_quoted = miner.quote_sentence(
                         orig, "?" if rec.get("category") == "Control/Normative" else "."
                     )
@@ -2558,6 +2576,41 @@ def test_control_records_verbatim_fidelity() -> None:
                         f"expected: {expected_quoted}\n"
                         f"query: {query}"
                     )
+                    # 2. Non-circular core content match (R8-4): corpus text without outer punctuation
+                    core_orig = miner.convert_nested_quotes(orig).rstrip(".?!…")
+                    assert core_orig in query, (
+                        f"Core content mismatch in {sf.name}:{line_no}:\n"
+                        f"core_orig: {core_orig}\n"
+                        f"query: {query}"
+                    )
                     checked_count += 1
 
     assert checked_count >= 30000, f"Expected >= 30,000 control records, checked {checked_count}"
+
+
+def test_ua_gec_sanitized_error_spans_in_query() -> None:
+    """Verify that every UA-GEC trajectory contains its sanitized error span in the query (R8-5)."""
+    shard_files = sorted(RELEASE_DIR.glob("sft/sft_shard_*.jsonl"))
+    if not shard_files:
+        pytest.skip("Release shards not yet generated in this worktree")
+
+    checked_count = 0
+    for sf in shard_files:
+        with open(sf, encoding="utf-8") as f:
+            for line_no, line in enumerate(f, start=1):
+                rec = json.loads(line)
+                tid = rec.get("trajectory_id", "")
+                if not tid.startswith("traj.gec."):
+                    continue
+                step_0 = rec.get("reasoning_steps", [""])[0]
+                m = re.search(r"фрагмент «(.+?)»", step_0)
+                if m:
+                    err_span = m.group(1)
+                    query = rec.get("query", "")
+                    assert err_span in query, (
+                        f"Error span '{err_span}' missing from query in {sf.name}:{line_no} ({tid}):\n"
+                        f"query: {query}"
+                    )
+                    checked_count += 1
+
+    assert checked_count >= 1000, f"Expected >= 1,000 GEC records checked, got {checked_count}"
