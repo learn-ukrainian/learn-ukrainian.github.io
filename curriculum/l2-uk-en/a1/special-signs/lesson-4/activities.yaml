@@ -142,19 +142,16 @@ inline:
   instruction: Обері́ть пра́вильний варіа́нт ві́дповіді на ко́жне запита́ння. — Choose
     the correct answer to each question.
   items:
-  - prompt: Пі́сля яки́х лі́тер за́вжди пи́шеться апо́строф пе́ред я, ю, є, ї? — After
-      which letters is an apostrophe always written before я, ю, є, ї?
+  - prompt: 'Which set is right? — сім''я́, п''ять, бур''я́н vs буря́к, свя́то, цвях'
     options:
-    - text: Пі́сля губни́х б, п, в, м, ф та пі́сля р — After labials б, п, в, м, ф
-        and after р
+    - text: 'сім''я́, п''ять, бур''я́н — так; буря́к, свя́то, цвях — ні'
       correct: true
-    - text: Пі́сля будь-яки́х при́голосних — After any consonants
+    - text: 'апо́строф пі́сля ко́жних б, п, в, м, ф, р — apostrophe after every б, п, в, м, ф, р'
       correct: false
-    - text: Ті́льки пі́сля голосни́х — Only after vowels
+    - text: 'апо́строф пі́сля будь-яки́х при́голосних — apostrophe after any consonants'
       correct: false
-    explanation: Апо́строф вжива́ється пі́сля губни́х при́голосних (б, п, в, м, ф)
-      та р пе́ред я, ю, є, ї. — The apostrophe is used after labial consonants (б,
-      п, в, м, ф) and р before я, ю, є, ї.
+    explanation: 'Апо́строф: сім''я́, п''ять, бур''я́н. Без апо́строфа: буря́к, свя́то,
+      цвях. — Apostrophe in сім''я́, п''ять, бур''я́н. None in буря́к, свя́то, цвях.'
   - prompt: Чому́ в сло́ві «буря́к» нема́є апо́строфа? — Why is there no apostrophe
       in the word «буря́к»?
     options:

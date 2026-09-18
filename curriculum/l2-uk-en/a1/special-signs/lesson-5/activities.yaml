@@ -8,7 +8,7 @@ inline:
   - word: Мар'я́на
     answer: Мар'-я́на
   - word: дерев'я́ний
-    answer: дере́-в'яний
+    answer: дере-в'я́ний
   - word: бур'я́н
     answer: бур'-ян
   - word: па́льці
@@ -375,10 +375,11 @@ workbook:
       correct: true
     - text: пал-ьці
       correct: false
-    - text: па-льці
+    - text: п-альці
       correct: false
-    explanation: 'М''яки́й знак не відрива́ється від лі́тери л: паль-ці. — The soft
-      sign is not separated from the letter л: паль-ці.'
+    explanation: 'М''яки́й знак не відрива́ється від лі́тери л: паль-ці (па-льці теж
+      мо́жна). Не мо́жна пал-ьці. — The soft sign stays with л: паль-ці (па-льці is
+      also allowed). пал-ьці is not.'
   - prompt: Як пра́вильно перенести́ сло́во «Мар'я́на»? — What is the correct hyphenation
       for «Мар'я́на»?
     options:
@@ -386,10 +387,11 @@ workbook:
       correct: true
     - text: Мар-'я́на
       correct: false
-    - text: Ма-р'яна
+    - text: М-ар'яна
       correct: false
-    explanation: 'Апо́строф не відрива́ється від лі́тери р: Мар''-я́на. — The apostrophe
-      is not separated from the letter р: Мар''-я́на.'
+    explanation: 'Апо́строф не відрива́ється від лі́тери р: Мар''-я́на (Ма-р''яна теж
+      мо́жна). Не мо́жна Мар-''яна. — The apostrophe stays with р: Мар''-я́на (Ма-р''яна
+      is also allowed). Мар-''яна is not.'
   - prompt: Як пра́вильно перенести́ сло́во «бур'я́н»? — What is the correct hyphenation
       for «бур'я́н»?
     options:
@@ -397,18 +399,20 @@ workbook:
       correct: true
     - text: бур-'ян
       correct: false
-    - text: бу-р'ян
+    - text: б-ур'ян
       correct: false
-    explanation: 'Апо́строф залиша́ється з попере́дньою лі́терою р: бур''-ян. — The
-      apostrophe stays with the preceding letter р: бур''-ян.'
+    explanation: 'Апо́строф залиша́ється з лі́терою р: бур''-ян (бу-р''ян теж мо́жна).
+      Не мо́жна бур-''ян. — The apostrophe stays with р: бур''-ян (бу-р''ян is also
+      allowed). бур-''ян is not.'
   - prompt: Як пра́вильно перенести́ сло́во «дерев'я́ний»? — What is the correct hyphenation
       for «дерев'я́ний»?
     options:
-    - text: дере́-в'яний
+    - text: дере-в'я́ний
       correct: true
-    - text: дере́в-'яний
+    - text: дерев-'яний
       correct: false
-    - text: де-рев'яний
+    - text: д-ерев'яний
       correct: false
-    explanation: Безпе́чна моде́ль перено́су — дере́-в'яний. — The safe hyphenation
-      model is дере́-в'яний.
+    explanation: 'На́голос на я: дере-в''я́ний (де-рев''я́ний теж мо́жна). Не мо́жна
+      відрива́ти апо́строф: дерев-''яний. — Stress stays on я: дере-в''я́ний (де-рев''я́ний
+      is also allowed). Do not detach the apostrophe: дерев-''яний.'
