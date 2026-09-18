@@ -1,0 +1,1217 @@
+"""Ukrainian Function Words Practice Engine (Службові частини мови).
+
+Implements Ukrainian Pravopys 2019 (§§ 36–40) and Academic Grammar rules for:
+  1. Prepositions (Прийменники):
+     - Compound prepositions with з-/із- via hyphen (§ 36.1: з-під, з-за, із-за, з-поміж).
+     - Solid compound prepositions (§ 36.2: посеред, задля, заради, поміж, внаслідок, напередодні).
+     - Multi-word prepositional locutions (§ 36.3: згідно з, відповідно до, під час, у зв'язку з).
+     - Anti-calque & government norms (по vs о/з/за/на, завдяки vs через, протягом vs на протязі).
+  2. Conjunctions (Сполучники):
+     - Homophonous sequence disambiguation (§ 37: проте/зате vs про те/за те, щоб vs що б,
+       якби vs як би, якщо vs як що, також/теж vs так же/те ж).
+     - Coordinating vs subordinating conjunction function.
+  3. Particles (Частки):
+     - Orthography of не and ні (§§ 38–39: разом vs окремо across nouns, adjectives, verbs,
+       adverbs, and participles with or without dependent words).
+     - Hyphenated and standalone enclitic particles (§ 40: -бо, -но, -то, -от, -таки vs таки дійшов;
+       будь-, казна-, хтозна- vs будь у кого).
+
+Provides targeted pedagogical feedback explaining the specific orthographic or syntactic rule,
+and guarantees zero collisions among options.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import random
+import sys
+from dataclasses import dataclass
+from enum import StrEnum
+from pathlib import Path
+from typing import Any
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+
+class FunctionWordCategory(StrEnum):
+    """Specific categories of function words practice."""
+
+    # Prepositions (Прийменники)
+    PREPOSITION_HYPHENATED = "preposition_hyphenated"
+    PREPOSITION_COMPOUND_SOLID = "preposition_compound_solid"
+    PREPOSITION_LOCUTION_SEPARATE = "preposition_locution_separate"
+    PREPOSITION_GOVERNMENT_PO = "preposition_government_po"
+    PREPOSITION_ZAVDYAKY_VS_CHEREZ = "preposition_zavdyaky_vs_cherez"
+    PREPOSITION_PROTYAHOM_VS_NA_PROTYAZI = "preposition_protyahom_vs_na_protyazi"
+
+    # Conjunctions (Сполучники)
+    CONJUNCTION_PROTE_ZATE = "conjunction_prote_zate"
+    CONJUNCTION_SHCHOB = "conjunction_shchob"
+    CONJUNCTION_YAKBY = "conjunction_yakby"
+    CONJUNCTION_YAKSHCHO = "conjunction_yakshcho"
+    CONJUNCTION_TAKOZH_TEZH = "conjunction_takozh_tezh"
+
+    # Particles (Частки)
+    PARTICLE_NE_SOLID = "particle_ne_solid"
+    PARTICLE_NE_CONTRAST_SEPARATE = "particle_ne_contrast_separate"
+    PARTICLE_NE_VERB_SEPARATE = "particle_ne_verb_separate"
+    PARTICLE_NE_PARTICIPLE = "particle_ne_participle"
+    PARTICLE_HYPHENATED_ENCLITICS = "particle_hyphenated_enclitics"
+    PARTICLE_PREFIX_SPLIT = "particle_prefix_split"
+
+
+class FunctionWordInterferenceType(StrEnum):
+    """Taxonomy of grammatical, orthographic, and interference misconceptions."""
+
+    MISSING_HYPHEN_PREPOSITION = "missing_hyphen_preposition"
+    FALSE_SEPARATE_PREPOSITION = "false_separate_preposition"
+    FALSE_SOLID_PREPOSITION = "false_solid_preposition"
+    FALSE_HYPHEN_PREPOSITION = "false_hyphen_preposition"
+    FALSE_SOLID_LOCUTION = "false_solid_locution"
+    FALSE_HYPHEN_LOCUTION = "false_hyphen_locution"
+    RUSSIAN_CALQUE_PO = "russian_calque_po"
+    MISMATCHED_CAUSAL_CONSEQUENCE = "mismatched_causal_consequence"
+    AIR_DRAFT_CALQUE_FOR_DURATION = "air_draft_calque_for_duration"
+    HOMOPHONE_CONJUNCTION_FOR_PRONOUN = "homophone_conjunction_for_pronoun"
+    HOMOPHONE_PRONOUN_FOR_CONJUNCTION = "homophone_pronoun_for_conjunction"
+    HOMOPHONE_ADVERB_FOR_CONJUNCTION = "homophone_adverb_for_conjunction"
+    FALSE_HYPHEN_CONJUNCTION = "false_hyphen_conjunction"
+    FALSE_SOLID_NE_CONTRAST = "false_solid_ne_contrast"
+    FALSE_SEPARATE_NE_NOUN_ADJ = "false_separate_ne_noun_adj"
+    FALSE_SOLID_NE_VERB = "false_solid_ne_verb"
+    FALSE_SOLID_NE_PARTICIPLE_WITH_DEPENDENTS = "false_solid_ne_participle_with_dependents"
+    FALSE_SEPARATE_NE_PARTICIPLE_ISOLATED = "false_separate_ne_participle_isolated"
+    MISSING_HYPHEN_PARTICLE = "missing_hyphen_particle"
+    FALSE_HYPHEN_PREPOSITIONAL_SPLIT = "false_hyphen_prepositional_split"
+    FALSE_SOLID_PARTICLE = "false_solid_particle"
+    FALSE_HYPHEN_INVERTED_TAKY = "false_hyphen_inverted_taky"
+
+
+@dataclass(frozen=True)
+class FunctionWordDistractor:
+    """A distractor choice with error classification and bilingual explanation."""
+
+    form: str
+    interference_type: FunctionWordInterferenceType
+    explanation_ua: str
+    explanation_en: str
+
+
+@dataclass(frozen=True)
+class FunctionWordCard:
+    """Practice card testing a function word rule with context and distractors."""
+
+    card_id: str
+    category: FunctionWordCategory
+    cefr_level: str  # A2, B1, B2
+    sentence_before: str
+    sentence_after: str
+    correct_answer: str
+    distractors: list[FunctionWordDistractor]
+    rule_citation: str
+    rule_summary_ua: str
+    rule_summary_en: str
+
+    @property
+    def full_sentence(self) -> str:
+        """Render the complete sentence with the correct answer."""
+        sep_before = " " if self.sentence_before and not self.sentence_before.endswith(" ") else ""
+        sep_after = " " if self.sentence_after and not self.sentence_after.startswith((" ", ",", ".", "!", "?", ":", ";")) else ""
+        return f"{self.sentence_before}{sep_before}{self.correct_answer}{sep_after}{self.sentence_after}".strip()
+
+    @property
+    def prompt_display(self) -> str:
+        """Render the sentence prompt with a blank indicator."""
+        sep_before = " " if self.sentence_before and not self.sentence_before.endswith(" ") else ""
+        sep_after = " " if self.sentence_after and not self.sentence_after.startswith((" ", ",", ".", "!", "?", ":", ";")) else ""
+        return f"{self.sentence_before}{sep_before}_______{sep_after}{self.sentence_after}".strip()
+
+    def all_options(self, seed: int | None = None) -> list[str]:
+        """Return the shuffled list of all 4 unique options."""
+        opts = [self.correct_answer] + [d.form for d in self.distractors]
+        rnd = random.Random(seed) if seed is not None else random.Random(42)
+        rnd.shuffle(opts)
+        return opts
+
+
+# ============================================================================
+# Rule Definitions & Curated Canonical Instances
+# ============================================================================
+
+CANONICAL_PREPOSITION_HYPHENATED_ITEMS = [
+    {
+        "id": "prep_hyphen_z_pid_1",
+        "category": FunctionWordCategory.PREPOSITION_HYPHENATED,
+        "cefr": "A2",
+        "before": "Кошеня визирнуло",
+        "after": "дивана й злякано нявкнуло.",
+        "correct": "з-під",
+        "distractors": [
+            ("зпід", FunctionWordInterferenceType.MISSING_HYPHEN_PREPOSITION, "Складні прийменники з першою частиною «з-», «із-» пишуться через дефіс, а не разом.", "Compound prepositions with z-/iz- are written with a hyphen, not as a single word."),
+            ("з під", FunctionWordInterferenceType.FALSE_SEPARATE_PREPOSITION, "Це складний прийменник просторового значення, він пишеться через дефіс, а не двома окремими словами.", "This is a compound directional preposition written with a hyphen, not two separate words."),
+            ("із під", FunctionWordInterferenceType.FALSE_SEPARATE_PREPOSITION, "Перед глухим приголосним [п] вживаємо префіксальну частину «з-» через дефіс: «з-під».", "Before voiceless [p], use the hyphenated form 'з-під'."),
+        ],
+        "citation": "Правопис 2019, § 36, п. 1",
+        "rule_ua": "Складні прийменники з початковими «з-», «із-» пишуться через дефіс: з-під, з-за, із-за, з-поміж, з-понад, з-посеред.",
+        "rule_en": "Compound prepositions starting with z-/iz- are hyphenated: з-під, з-за, із-за, з-поміж, з-понад.",
+    },
+    {
+        "id": "prep_hyphen_z_za_2",
+        "category": FunctionWordCategory.PREPOSITION_HYPHENATED,
+        "cefr": "A2",
+        "before": "Сонце повільно випливало",
+        "after": "густих ранкових хмар.",
+        "correct": "з-за",
+        "distractors": [
+            ("зза", FunctionWordInterferenceType.MISSING_HYPHEN_PREPOSITION, "Прийменник «з-за» обов'язково пишеться через дефіс (Правопис 2019, § 36).", "The preposition 'з-за' must be hyphenated."),
+            ("з за", FunctionWordInterferenceType.FALSE_SEPARATE_PREPOSITION, "Складний прийменник руху з протилежного боку пишеться через дефіс, а не окремо.", "Written with a hyphen, not as two separate words."),
+            ("із за", FunctionWordInterferenceType.FALSE_SEPARATE_PREPOSITION, "Обидві частини складного прийменника з'єднуються дефісом: «з-за» або «із-за».", "Both parts are connected with a hyphen."),
+        ],
+        "citation": "Правопис 2019, § 36, п. 1",
+        "rule_ua": "Складні прийменники з початковими «з-», «із-» пишуться через дефіс: з-під, з-за, із-за, з-поміж.",
+        "rule_en": "Compound prepositions starting with z-/iz- are hyphenated.",
+    },
+    {
+        "id": "prep_hyphen_z_pomizh_3",
+        "category": FunctionWordCategory.PREPOSITION_HYPHENATED,
+        "cefr": "B1",
+        "before": "Він вибрав найстигліше яблуко",
+        "after": "усіх плодів у кошику.",
+        "correct": "з-поміж",
+        "distractors": [
+            ("зпоміж", FunctionWordInterferenceType.MISSING_HYPHEN_PREPOSITION, "Прийменники з першою частиною «з-» пишуться через дефіс.", "Prepositions starting with z- require a hyphen."),
+            ("з поміж", FunctionWordInterferenceType.FALSE_SEPARATE_PREPOSITION, "«З-поміж» є єдиним складним прийменником і пишеться через дефіс.", "Written as a single hyphenated preposition."),
+            ("поміж", FunctionWordInterferenceType.MISSING_HYPHEN_PREPOSITION, "Прийменник «поміж» означає розташування всередині, а для відокремлення («вибрати з когось/чогось») потрібен «з-поміж».", "'Поміж' indicates location among, whereas 'з-поміж' denotes selection from among."),
+        ],
+        "citation": "Правопис 2019, § 36, п. 1",
+        "rule_ua": "Складні прийменники з «з-» пишуться через дефіс: з-поміж, з-понад, з-посеред.",
+        "rule_en": "Compound prepositions with z- are written with a hyphen.",
+    },
+    {
+        "id": "prep_hyphen_z_ponad_4",
+        "category": FunctionWordCategory.PREPOSITION_HYPHENATED,
+        "cefr": "B1",
+        "before": "Птахи зграями летіли",
+        "after": "самого обрію.",
+        "correct": "з-понад",
+        "distractors": [
+            ("зпонад", FunctionWordInterferenceType.MISSING_HYPHEN_PREPOSITION, "Прийменник «з-понад» пишеться через дефіс.", "The preposition 'з-понад' is written with a hyphen."),
+            ("з понад", FunctionWordInterferenceType.FALSE_SEPARATE_PREPOSITION, "Складні прийменники з «з-» не пишуться окремо.", "Compound prepositions starting with z- are not written separately."),
+            ("понад", FunctionWordInterferenceType.MISSING_HYPHEN_PREPOSITION, "«Понад» позначає рух поверх або понад чимось, а «з-понад» вказує на вихідний пункт зверху.", "'Понад' means above/over, while 'з-понад' indicates movement from above."),
+        ],
+        "citation": "Правопис 2019, § 36, п. 1",
+        "rule_ua": "Складні прийменники з першою частиною «з-» пишуться через дефіс: з-понад.",
+        "rule_en": "Compound prepositions with z- are written with a hyphen.",
+    },
+]
+
+CANONICAL_PREPOSITION_COMPOUND_SOLID_ITEMS = [
+    {
+        "id": "prep_solid_posered_1",
+        "category": FunctionWordCategory.PREPOSITION_COMPOUND_SOLID,
+        "cefr": "A2",
+        "before": "Маленька галявина розкинулася",
+        "after": "густого соснового лісу.",
+        "correct": "посеред",
+        "distractors": [
+            ("по серед", FunctionWordInterferenceType.FALSE_SEPARATE_PREPOSITION, "Складний прийменник «посеред» утворений з двох прийменників і пишеться разом.", "Compound preposition 'посеред' is written as a single word."),
+            ("по-серед", FunctionWordInterferenceType.FALSE_HYPHEN_PREPOSITION, "Через дефіс пишуться лише прийменники з першою частиною «з-», а «посеред» пишеться разом.", "Only prepositions beginning with z-/iz- are hyphenated; 'посеред' is solid."),
+            ("по середу", FunctionWordInterferenceType.FALSE_SEPARATE_PREPOSITION, "«Посеред» є непохідним просторовим прийменником, що керує родовим відмінком.", "'Посеред' is a compound preposition governing the genitive case."),
+        ],
+        "citation": "Правопис 2019, § 36, п. 2",
+        "rule_ua": "Складні прийменники, утворені злиттям кількох прийменників або прийменника з іншою частиною мови, пишуться разом: посеред, задля, поміж, заради, внаслідок.",
+        "rule_en": "Compound prepositions formed by joining prepositions or a preposition with another word are written solid: посеред, задля, поміж.",
+    },
+    {
+        "id": "prep_solid_zadlya_2",
+        "category": FunctionWordCategory.PREPOSITION_COMPOUND_SOLID,
+        "cefr": "B1",
+        "before": "Українці об'єдналися",
+        "after": "перемоги та спільного майбутнього.",
+        "correct": "задля",
+        "distractors": [
+            ("за для", FunctionWordInterferenceType.FALSE_SEPARATE_PREPOSITION, "Складний прийменник мети «задля» пишеться разом (Правопис 2019, § 36).", "Purpose preposition 'задля' is written as one word."),
+            ("за-для", FunctionWordInterferenceType.FALSE_HYPHEN_PREPOSITION, "Дефіс вживається лише для прийменників із початковим «з-» (з-під, з-за). «Задля» пишеться разом.", "Hyphens are only used for z- prefixes; 'задля' is solid."),
+            ("ради", FunctionWordInterferenceType.FALSE_SOLID_PREPOSITION, "«Задля» або «заради» — літературні форми, що вживаються з родовим відмінком.", "Use standard literary 'задля' with genitive."),
+        ],
+        "citation": "Правопис 2019, § 36, п. 2",
+        "rule_ua": "Складні прийменники мети й причини пишуться разом: задля, заради, внаслідок.",
+        "rule_en": "Compound prepositions of purpose and cause are written solid: задля, заради.",
+    },
+    {
+        "id": "prep_solid_vnaslidok_3",
+        "category": FunctionWordCategory.PREPOSITION_COMPOUND_SOLID,
+        "cefr": "B2",
+        "before": "Рух поїздів затримано",
+        "after": "несприятливих погодних умов.",
+        "correct": "внаслідок",
+        "distractors": [
+            ("в наслідок", FunctionWordInterferenceType.FALSE_SEPARATE_PREPOSITION, "У ролі прийменника причини («через щось») «внаслідок» пишеться разом. Окремо пишеться іменник із прийменником: «вірити в наслідок справи».", "As a preposition meaning 'as a consequence of', 'внаслідок' is solid. Separate 'в наслідок' is a noun with preposition."),
+            ("в-наслідок", FunctionWordInterferenceType.FALSE_HYPHEN_PREPOSITION, "Складні прийменники такого типу пишуться разом, без дефіса.", "Written solid without a hyphen."),
+            ("у наслідок", FunctionWordInterferenceType.FALSE_SEPARATE_PREPOSITION, "Коли виражає причинний зв'язок, це прийменник, який пишеться одним словом: «внаслідок» або «унаслідок».", "Written as a single word when expressing causal relationship."),
+        ],
+        "citation": "Правопис 2019, § 36, п. 2",
+        "rule_ua": "Прийменники, утворені з прийменника та іменника, пишуться разом: внаслідок, напередодні, упродовж.",
+        "rule_en": "Prepositions formed from a preposition and a noun are written solid: внаслідок, напередодні.",
+    },
+    {
+        "id": "prep_solid_naperedodni_4",
+        "category": FunctionWordCategory.PREPOSITION_COMPOUND_SOLID,
+        "cefr": "B1",
+        "before": "Ми зібралися родиною",
+        "after": "Різдва Христового.",
+        "correct": "напередодні",
+        "distractors": [
+            ("на передодні", FunctionWordInterferenceType.FALSE_SEPARATE_PREPOSITION, "Прийменник часового значення «напередодні» пишеться разом.", "Temporal preposition 'напередодні' is written solid."),
+            ("на-передодні", FunctionWordInterferenceType.FALSE_HYPHEN_PREPOSITION, "Складні прийменники без частки «з-» пишуться разом, дефіс не вживається.", "No hyphen is used; written solid."),
+            ("в передодні", FunctionWordInterferenceType.FALSE_SEPARATE_PREPOSITION, "Нормативною є форма «напередодні» або «у переддень».", "Standard form is 'напередодні'."),
+        ],
+        "citation": "Правопис 2019, § 36, п. 2",
+        "rule_ua": "Прийменники, утворені злиттям прийменників та іменників, пишуться разом: напередодні, внаслідок, уподовж.",
+        "rule_en": "Prepositions formed from prepositions and nouns are written solid: напередодні.",
+    },
+]
+
+CANONICAL_PREPOSITION_LOCUTIONS_ITEMS = [
+    {
+        "id": "prep_loc_zhidno_z_1",
+        "category": FunctionWordCategory.PREPOSITION_LOCUTION_SEPARATE,
+        "cefr": "A2",
+        "before": "Усі документи складено",
+        "after": "встановленими державними нормами.",
+        "correct": "згідно з",
+        "distractors": [
+            ("згідноз", FunctionWordInterferenceType.FALSE_SOLID_LOCUTION, "Прийменникові сполуки пишуться окремими словами: «згідно з».", "Prepositional locutions are written as separate words: 'згідно з'."),
+            ("згідно-з", FunctionWordInterferenceType.FALSE_HYPHEN_LOCUTION, "Прийменникова сполука «згідно з» пишеться окремо без дефіса.", "Written as separate words without a hyphen."),
+            ("згідно до", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "Нормативна українська конструкція: «згідно з» (+ орудний відмінок) або «відповідно до» (+ родовий відмінок).", "Standard Ukrainian construction is 'згідно з' (+ instrumental) or 'відповідно до' (+ genitive)."),
+        ],
+        "citation": "Правопис 2019, § 36, п. 3; Культура мови",
+        "rule_ua": "Прийменникові сполуки пишуться окремо: згідно з, відповідно до, під час, у разі, залежно від.",
+        "rule_en": "Prepositional locutions are written as separate words: згідно з, відповідно до, під час.",
+    },
+    {
+        "id": "prep_loc_vidpovidno_do_2",
+        "category": FunctionWordCategory.PREPOSITION_LOCUTION_SEPARATE,
+        "cefr": "B1",
+        "before": "Рішення ухвалено",
+        "after": "чинного законодавства України.",
+        "correct": "відповідно до",
+        "distractors": [
+            ("відповіднодо", FunctionWordInterferenceType.FALSE_SOLID_LOCUTION, "Прийменникова сполука «відповідно до» пишеться двома окремими словами.", "Written as two separate words: 'відповідно до'."),
+            ("відповідно з", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "Нормативно вживати «відповідно до» (+ родовий відмінок) або «згідно з» (+ орудний відмінок). Конструкція «відповідно з» є калькою.", "Standard form is 'відповідно до' (+ Genitive) or 'згідно з' (+ Instrumental)."),
+            ("у відповідності до", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "Конструкція «у відповідності до» є громіздкою канцеляристською калькою; нормативний варіант — «відповідно до».", "Standard natural Ukrainian is 'відповідно до' rather than the calque 'у відповідності до'."),
+        ],
+        "citation": "Правопис 2019, § 36, п. 3; СУМ-20",
+        "rule_ua": "Прийменникові сполуки пишуться окремо: відповідно до, згідно з.",
+        "rule_en": "Prepositional locutions are written as separate words: відповідно до.",
+    },
+    {
+        "id": "prep_loc_pid_chas_3",
+        "category": FunctionWordCategory.PREPOSITION_LOCUTION_SEPARATE,
+        "cefr": "A2",
+        "before": "Слухачі вимкнули телефони",
+        "after": "важливої лекції.",
+        "correct": "під час",
+        "distractors": [
+            ("підчас", FunctionWordInterferenceType.FALSE_SOLID_LOCUTION, "Прийменникова сполука «під час» завжди пишеться двома окремими словами.", "Prepositional locution 'під час' is always two separate words."),
+            ("під-час", FunctionWordInterferenceType.FALSE_HYPHEN_LOCUTION, "Дефіс у сполуці «під час» не вживається.", "No hyphen is used in 'під час'."),
+            ("во врем'я", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "Суржикове запозичення; нормативний український вислів — «під час».", "Surzhyk borrowing; correct Ukrainian form is 'під час'."),
+        ],
+        "citation": "Правопис 2019, § 36, п. 3",
+        "rule_ua": "Прийменникові сполуки пишуться окремими словами: під час, у разі, у зв'язку з.",
+        "rule_en": "Prepositional locutions are written separately: під час.",
+    },
+]
+
+CANONICAL_PREPOSITION_GOVERNMENT_ITEMS = [
+    {
+        "id": "prep_gov_po_chas_1",
+        "category": FunctionWordCategory.PREPOSITION_GOVERNMENT_PO,
+        "cefr": "A2",
+        "before": "Потяг вирушає рівно",
+        "after": "сьомій годині вечора.",
+        "correct": "о",
+        "distractors": [
+            ("по", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "Для позначення точного часу в українській мові вживаємо прийменник «о / об» («о сьомій»), а не «по сьомій».", "To indicate exact time in Ukrainian, use preposition 'о / об' ('о сьомій'), not 'по'."),
+            ("в", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "З числівниками на позначення годин нормативним є прийменник «о/об»: «о сьомій годині».", "With hours, use 'о/об': 'о сьомій годині'."),
+            ("у", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "На позначення години вживається прийменник «о» (перед голосними «об»): «о сьомій годині».", "For hours, use 'о' (or 'об' before vowels)."),
+        ],
+        "citation": "Антоненко-Давидович «Як ми говоримо»; СУМ-20",
+        "rule_ua": "На позначення точного часу вживаємо прийменники «о», «об» («о котрій годині? — о сьомій»), а не «по» чи «в».",
+        "rule_en": "To state time, Ukrainian uses 'о / об' ('о сьомій годині'), not 'по' or 'в'.",
+    },
+    {
+        "id": "prep_gov_po_predmet_2",
+        "category": FunctionWordCategory.PREPOSITION_GOVERNMENT_PO,
+        "cefr": "B1",
+        "before": "Студенти успішно склали іспит",
+        "after": "української літератури.",
+        "correct": "з",
+        "distractors": [
+            ("по", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "Назву предмета, дисципліни чи галузі передаємо прийменником «з» («іспит з літератури»), а не калькованим «по літературі».", "Use preposition 'з' for subjects and disciplines ('іспит з літератури'), avoiding calque 'по'."),
+            ("по темі", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "«Іспит з предмета» — усталена синтаксична норма української мови.", "Standard Ukrainian syntax requires 'з' + Genitive for academic subjects."),
+            ("про", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "Прийменник «про» вказує на зміст розмови чи розповіді, а назва іспиту керується прийменником «з».", "Use 'з' for academic examinations."),
+        ],
+        "citation": "Антоненко-Давидович «Як ми говоримо»; Словник труднощів",
+        "rule_ua": "Навчальні дисципліни та галузі знань вимагають прийменника «з» (з математики, з історії), а не «по».",
+        "rule_en": "Academic subjects take preposition 'з' with Genitive (іспит з історії), not 'по'.",
+    },
+    {
+        "id": "prep_gov_po_zasib_3",
+        "category": FunctionWordCategory.PREPOSITION_GOVERNMENT_PO,
+        "cefr": "A2",
+        "before": "Ми швидко переговорили",
+        "after": "телефону й домовилися про зустріч.",
+        "correct": "по",
+        "distractors": [
+            ("через", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "Засіб зв'язку в українській мові позначається безприйменниковим орудним відмінком («телефоном») або прийменником «по телефону». «Через телефон» є буквальним перекладом.", "Means of communication is expressed via Instrumental ('телефоном') or 'по телефону'."),
+            ("на", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "Нормативними є вирази «говорити телефоном» або «по телефону».", "Standard forms are 'телефоном' or 'по телефону'."),
+            ("за допомогою", FunctionWordInterferenceType.FALSE_SOLID_LOCUTION, "Громіздка описова конструкція замість природного «телефоном» чи «по телефону».", "Overly verbose construction compared to natural 'телефоном' or 'по телефону'."),
+        ],
+        "citation": "СУМ-20; Правопис 2019",
+        "rule_ua": "Прийменник «по» вживається на позначення засобу зв'язку (по телефону, по радіо), поряд із безприйменниковим орудним (телефоном).",
+        "rule_en": "Preposition 'по' is legitimate for communication channels (по телефону) alongside the instrumental case.",
+    },
+    {
+        "id": "prep_gov_zavdyaky_cherez_4",
+        "category": FunctionWordCategory.PREPOSITION_ZAVDYAKY_VS_CHEREZ,
+        "cefr": "B1",
+        "before": "Матч довелося скасувати",
+        "after": "сильну зливу та грозу.",
+        "correct": "через",
+        "distractors": [
+            ("завдяки", FunctionWordInterferenceType.MISMATCHED_CAUSAL_CONSEQUENCE, "«Завдяки» вживається лише тоді, коли наслідок позитивний (завдяки допомозі). Для негативних чи несприятливих обставин вживаємо «через».", "'Завдяки' is used only for positive causes. For adverse or negative causes, use 'через'."),
+            ("по причині", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "«По причині» — груба російська калька (рос. «по причине»). Нормативний прийменник — «через».", "Calque from Russian 'по причине'; use Ukrainian 'через'."),
+            ("із-за", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "Прийменник «із-за» в літературній мові позначає рух звідкись («вийти із-за столу»), а причинне значення («із-за дощу») є ненормативним суржиком.", "Literary 'із-за' denotes spatial origin ('вийти із-за столу'); causal use is substandard."),
+        ],
+        "citation": "Антоненко-Давидович «Як ми говоримо»; Культура слова",
+        "rule_ua": "«Завдяки» вживаємо тільки при позитивних наслідках (+ давальний в.); якщо наслідок негативний або нейтральний — вживаємо «через» (+ знахідний в.).",
+        "rule_en": "'Завдяки' (+ Dative) is reserved for positive factors; use 'через' (+ Accusative) for negative or neutral causes.",
+    },
+    {
+        "id": "prep_gov_protyahom_5",
+        "category": FunctionWordCategory.PREPOSITION_PROTYAHOM_VS_NA_PROTYAZI,
+        "cefr": "B1",
+        "before": "Команда наполегливо тренувалася",
+        "after": "усього навчального року.",
+        "correct": "протягом",
+        "distractors": [
+            ("на протязі", FunctionWordInterferenceType.AIR_DRAFT_CALQUE_FOR_DURATION, "«На протязі» означає перебування на струмені повітря («стояти на протязі»). На позначення часової тривалості слід вживати «протягом» або «упродовж».", "'На протязі' literally means in an air draft. For time duration, use 'протягом' or 'упродовж'."),
+            ("у протязі", FunctionWordInterferenceType.AIR_DRAFT_CALQUE_FOR_DURATION, "В українській мові немає прийменника «у протязі»; нормативними є «протягом» або «упродовж».", "Standard temporal prepositions are 'протягом' or 'упродовж'."),
+            ("за період", FunctionWordInterferenceType.FALSE_SOLID_LOCUTION, "Стилістично краще вживати питомі українські прийменники «протягом» або «упродовж».", "Prefer authentic 'протягом' or 'упродовж'."),
+        ],
+        "citation": "Антоненко-Давидович «Як ми говоримо»",
+        "rule_ua": "На позначення тривалості в часі вживаємо «протягом» або «упродовж». Вислів «на протязі» вживається лише у значенні різкого струменя повітря між дверима чи вікнами.",
+        "rule_en": "Use 'протягом' or 'упродовж' for time duration. 'На протязі' refers solely to an air draft.",
+    },
+]
+
+CANONICAL_CONJUNCTION_ITEMS = [
+    {
+        "id": "conj_prote_zate_1",
+        "category": FunctionWordCategory.CONJUNCTION_PROTE_ZATE,
+        "cefr": "B1",
+        "before": "Завдання було складним,",
+        "after": "ми розв'язали його вчасно.",
+        "correct": "проте",
+        "distractors": [
+            ("про те", FunctionWordInterferenceType.HOMOPHONE_PRONOUN_FOR_CONJUNCTION, "«Проте» є протиставним сполучником (= «але») і пишеться разом. Окремо «про те» пишеться тоді, коли це прийменник із займенником («ми говорили про те диво»).", "'Проте' is an adversative conjunction (= 'але') written solid. Separate 'про те' is preposition + pronoun."),
+            ("про-те", FunctionWordInterferenceType.FALSE_HYPHEN_CONJUNCTION, "Сполучник «проте» пишеться разом, без дефіса.", "Conjunction 'проте' is written solid without a hyphen."),
+            ("за це", FunctionWordInterferenceType.HOMOPHONE_PRONOUN_FOR_CONJUNCTION, "Для протиставлення двох частин речення вживаємо сполучник «проте» або «зате».", "Use conjunction 'проте' or 'зате' for sentence contrast."),
+        ],
+        "citation": "Правопис 2019, § 37, п. 1",
+        "rule_ua": "Сполучники «проте», «зате» (= але, однак) пишуться разом. Їх слід відрізняти від прийменників із вказівним займенником «про те», «за те», які пишуться окремо.",
+        "rule_en": "Conjunctions 'проте', 'зате' (= but, however) are written solid, unlike preposition + pronoun 'про те', 'за те'.",
+    },
+    {
+        "id": "conj_pro_te_pronoun_2",
+        "category": FunctionWordCategory.CONJUNCTION_PROTE_ZATE,
+        "cefr": "B1",
+        "before": "Учитель детально розповів",
+        "after": "як відбувалися визвольні змагання.",
+        "correct": "про те,",
+        "distractors": [
+            ("проте,", FunctionWordInterferenceType.HOMOPHONE_CONJUNCTION_FOR_PRONOUN, "Тут «те» — вказівний займенник із прийменником «про» («розповів про що? — про те»). Тому пишемо окремо: «про те».", "Here 'те' is a demonstrative pronoun with preposition 'про'; written separately as 'про те'."),
+            ("про-те,", FunctionWordInterferenceType.FALSE_HYPHEN_CONJUNCTION, "Прийменник із займенником пишеться окремо, без дефіса.", "Preposition with pronoun is written as two separate words."),
+            ("про шо,", FunctionWordInterferenceType.HOMOPHONE_PRONOUN_FOR_CONJUNCTION, "Форма «шо» є грубим просторіччям; нормативна літературна мова вимагає «про те, що...».", "Substandard form; literary Ukrainian uses 'про те, що'."),
+        ],
+        "citation": "Правопис 2019, § 37, п. 1",
+        "rule_ua": "Прийменник із займенником «про те» пишеться окремо, якщо до слова «те» можна поставити запитання (про що? — про те).",
+        "rule_en": "Preposition + pronoun 'про те' is written separately when 'те' answers a case question (about what? -> about that).",
+    },
+    {
+        "id": "conj_shchob_3",
+        "category": FunctionWordCategory.CONJUNCTION_SHCHOB,
+        "cefr": "A2",
+        "before": "Він прийшов раніше,",
+        "after": "допомогти вчителю підготувати клас.",
+        "correct": "щоб",
+        "distractors": [
+            ("що б", FunctionWordInterferenceType.HOMOPHONE_PRONOUN_FOR_CONJUNCTION, "Сполучник мети «щоб» пишеться разом. Частку «б» тут не можна відкинути чи переставити («Він прийшов раніше, що допомогти» ❌).", "Purpose conjunction 'щоб' is written solid. The particle 'б' cannot be removed without ruining the sentence."),
+            ("що-б", FunctionWordInterferenceType.FALSE_HYPHEN_CONJUNCTION, "Сполучник «щоб» пишеться разом, дефіс не вживається.", "Conjunction 'щоб' is written solid without a hyphen."),
+            ("аби", FunctionWordInterferenceType.HOMOPHONE_CONJUNCTION_FOR_PRONOUN, "«Аби» також можливе, але основний нормативний сполучник мети — «щоб».", "'Щоб' is the primary purpose conjunction."),
+        ],
+        "citation": "Правопис 2019, § 37, п. 2",
+        "rule_ua": "Сполучник мети та з'ясувальний «щоб» пишеться разом. Займенник із часткою «що б» пишеться окремо (частку «б» можна переставити).",
+        "rule_en": "Purpose conjunction 'щоб' is written solid. Relative pronoun with particle 'що б' is written separately.",
+    },
+    {
+        "id": "conj_shcho_b_pronoun_4",
+        "category": FunctionWordCategory.CONJUNCTION_SHCHOB,
+        "cefr": "B1",
+        "before": "Цікаво,",
+        "after": "ти сказав на моєму місці?",
+        "correct": "що б",
+        "distractors": [
+            ("щоб", FunctionWordInterferenceType.HOMOPHONE_CONJUNCTION_FOR_PRONOUN, "Тут «що» — питальний займенник, а «б» — умовна частка, яку можна переставити («Що ти сказав би?»). Тому пишемо окремо: «що б».", "Here 'що' is an interrogative pronoun and 'б' is a moveable conditional particle ('Що ти сказав би?'); written separately."),
+            ("що-б", FunctionWordInterferenceType.FALSE_HYPHEN_CONJUNCTION, "Займенник із часткою пишеться окремо, без дефіса.", "Pronoun with particle is written separately without a hyphen."),
+            ("якби", FunctionWordInterferenceType.HOMOPHONE_CONJUNCTION_FOR_PRONOUN, "«Якби» є умовним сполучником («якби знав»), а в цьому реченні потрібен займенник «що» з часткою «б».", "'Якби' is a conditional conjunction; here the question requires pronoun 'що' + particle 'б'."),
+        ],
+        "citation": "Правопис 2019, § 37, п. 2",
+        "rule_ua": "Займенник «що» з часткою «б» пишеться окремо, якщо частку «б» можна вилучити або переставити в інше місце речення.",
+        "rule_en": "Pronoun 'що' with particle 'б' is written separately if 'б' can be moved elsewhere in the clause.",
+    },
+    {
+        "id": "conj_yakby_5",
+        "category": FunctionWordCategory.CONJUNCTION_YAKBY,
+        "cefr": "B1",
+        "before": "Ми встигли б на поїзд,",
+        "after": "виїхали на пів години раніше.",
+        "correct": "якби",
+        "distractors": [
+            ("як би", FunctionWordInterferenceType.HOMOPHONE_PRONOUN_FOR_CONJUNCTION, "Умовний сполучник «якби» (= «якщо б») пишеться разом.", "Conditional conjunction 'якби' (= 'if') is written solid."),
+            ("як-би", FunctionWordInterferenceType.FALSE_HYPHEN_CONJUNCTION, "Сполучник «якби» пишеться разом, без дефіса.", "Written solid without a hyphen."),
+            ("коли б", FunctionWordInterferenceType.HOMOPHONE_CONJUNCTION_FOR_PRONOUN, "Сполучник «коли б» синонімічний, але цільовий суцільний умовний сполучник — «якби».", "'Якби' is the primary synthetic conditional conjunction."),
+        ],
+        "citation": "Правопис 2019, § 37, п. 3",
+        "rule_ua": "Умовний сполучник «якби» (= якщо б) пишеться разом. Прислівник «як» із часткою «би» пишеться окремо: «Як би добре ми не грали...».",
+        "rule_en": "Conditional conjunction 'якби' (= if) is solid. Adverb of manner 'як' + particle 'би' is written separately.",
+    },
+    {
+        "id": "conj_yak_by_adverb_6",
+        "category": FunctionWordCategory.CONJUNCTION_YAKBY,
+        "cefr": "B2",
+        "before": "Не знаю,",
+        "after": "точніше сформулювати цю думку.",
+        "correct": "як би",
+        "distractors": [
+            ("якби", FunctionWordInterferenceType.HOMOPHONE_CONJUNCTION_FOR_PRONOUN, "Тут «як» — прислівник способу дії («яким чином»), а «би» — частка. Їх пишемо окремо: «як би».", "Here 'як' is an adverb of manner ('in what way') and 'би' is a particle; written separately as 'як би'."),
+            ("як-би", FunctionWordInterferenceType.FALSE_HYPHEN_CONJUNCTION, "Прислівник із часткою пишеться двома окремими словами.", "Written as two separate words without a hyphen."),
+            ("аби", FunctionWordInterferenceType.HOMOPHONE_CONJUNCTION_FOR_PRONOUN, "«Аби» має значення «лише б» або «щоб», що спотворює зміст цього речення.", "'Аби' alters the intended meaning of manner."),
+        ],
+        "citation": "Правопис 2019, § 37, п. 3",
+        "rule_ua": "Прислівник «як» із часткою «би» пишеться окремо, якщо частку можна переставити («Як точніше сформулювати б цю думку»).",
+        "rule_en": "Adverb 'як' with particle 'би' is written separately when expressing manner.",
+    },
+    {
+        "id": "conj_takozh_7",
+        "category": FunctionWordCategory.CONJUNCTION_TAKOZH_TEZH,
+        "cefr": "A2",
+        "before": "Моя сестра вивчає іноземні мови, і я",
+        "after": "вирішив обрати філологічний факультет.",
+        "correct": "також",
+        "distractors": [
+            ("так же", FunctionWordInterferenceType.HOMOPHONE_ADVERB_FOR_CONJUNCTION, "«Так же» є поєднанням прислівника «так» із часткою «же» («зроби так же»). Для зв'язку речень вживаємо сполучники «також», «теж».", "'Так же' is adverb + particle ('in the same way'). To join clauses, use conjunctions 'також', 'теж'."),
+            ("тоже", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "Слово «тоже» — грубий русизм. В українській мові слід уживати «також» або «теж».", "'Тоже' is a Russianism; use Ukrainian 'також' or 'теж'."),
+            ("так-же", FunctionWordInterferenceType.FALSE_HYPHEN_CONJUNCTION, "В українській мові немає написання «так-же».", "No such hyphenated form exists in Ukrainian."),
+        ],
+        "citation": "Правопис 2019, § 37, п. 5; Культура мови",
+        "rule_ua": "Сполучники «також», «теж» пишуться разом. Слід уникати русизму «тоже». Сполука «так же» пишеться окремо, коли «так» — прислівник.",
+        "rule_en": "Conjunctions 'також', 'теж' are written solid. Avoid Russianism 'тоже'.",
+    },
+    {
+        "id": "conj_yakshcho_8",
+        "category": FunctionWordCategory.CONJUNCTION_YAKSHCHO,
+        "cefr": "A2",
+        "before": "Ми обов'язково підемо на прогулянку,",
+        "after": "до вечора вигляне сонце.",
+        "correct": "якщо",
+        "distractors": [
+            ("як що", FunctionWordInterferenceType.HOMOPHONE_PRONOUN_FOR_CONJUNCTION, "Умовний сполучник «якщо» пишеться разом. Окремо «як що» пишеться лише тоді, коли «що» є окремим займенником.", "Conditional conjunction 'якщо' is written solid."),
+            ("як-що", FunctionWordInterferenceType.FALSE_HYPHEN_CONJUNCTION, "Сполучник «якщо» пишеться разом, без дефіса.", "Written solid without a hyphen."),
+            ("єслі", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "Слово «єслі» — ненормативний суржик. В українській мові вживаємо сполучник «якщо» або «якби».", "Substandard Surzhyk; use Ukrainian 'якщо'."),
+        ],
+        "citation": "Правопис 2019, § 37, п. 4",
+        "rule_ua": "Умовний сполучник «якщо» пишеться разом.",
+        "rule_en": "Conditional conjunction 'якщо' is written solid.",
+    },
+    {
+        "id": "conj_yak_shcho_pronoun_9",
+        "category": FunctionWordCategory.CONJUNCTION_YAKSHCHO,
+        "cefr": "B1",
+        "before": "Негайно повідом чергового,",
+        "after": "трапиться щось підозріле.",
+        "correct": "як що",
+        "distractors": [
+            ("якщо", FunctionWordInterferenceType.HOMOPHONE_CONJUNCTION_FOR_PRONOUN, "Тут «що» виступає займенником зі значенням «якщо щось трапиться», тому пишеться окремо: «як що».", "Here 'що' is an indefinite pronoun ('if anything happens'), written separately as 'як що'."),
+            ("як-що", FunctionWordInterferenceType.FALSE_HYPHEN_CONJUNCTION, "Пишеться двома окремими словами, без дефіса.", "Written as two separate words without a hyphen."),
+            ("якби", FunctionWordInterferenceType.HOMOPHONE_CONJUNCTION_FOR_PRONOUN, "«Якби» вживається з дієсловами минулого часу в умовному способі («якби трапилося»), а тут теперішній/майбутній час.", "'Якби' requires conditional mood."),
+        ],
+        "citation": "Правопис 2019, § 37, п. 4",
+        "rule_ua": "Сполука «як що» (де «що» — неозначений займенник у значенні «що-небудь») пишеться окремо.",
+        "rule_en": "The combination 'як що' (where 'що' is an indefinite pronoun) is written separately.",
+    },
+    {
+        "id": "conj_zate_10",
+        "category": FunctionWordCategory.CONJUNCTION_PROTE_ZATE,
+        "cefr": "B1",
+        "before": "Ця квартира невелика,",
+        "after": "дуже світла й затишна.",
+        "correct": "зате",
+        "distractors": [
+            ("за те", FunctionWordInterferenceType.HOMOPHONE_PRONOUN_FOR_CONJUNCTION, "Протиставний сполучник «зате» (= але) пишеться разом.", "Adversative conjunction 'зате' (= but) is written solid."),
+            ("за-те", FunctionWordInterferenceType.FALSE_HYPHEN_CONJUNCTION, "Сполучник «зате» пишеться разом, без дефіса.", "Conjunction 'зате' is written solid."),
+            ("взамін", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "Для протиставлення використовуємо сполучник «зате» або «проте».", "Use conjunction 'зате' or 'проте'."),
+        ],
+        "citation": "Правопис 2019, § 37, п. 1",
+        "rule_ua": "Протиставний сполучник «зате» пишеться разом.",
+        "rule_en": "Adversative conjunction 'зате' is written solid.",
+    },
+    {
+        "id": "conj_za_te_pronoun_11",
+        "category": FunctionWordCategory.CONJUNCTION_PROTE_ZATE,
+        "cefr": "B1",
+        "before": "Я щиро дякую тобі",
+        "after": "що ти завжди приходиш на допомогу.",
+        "correct": "за те,",
+        "distractors": [
+            ("зате,", FunctionWordInterferenceType.HOMOPHONE_CONJUNCTION_FOR_PRONOUN, "Тут «те» — займенник із прийменником «за» (дякую за що? — за те). Пишеться окремо.", "Here 'те' is a pronoun with preposition 'за' (thank for what? -> for that). Written separately."),
+            ("за-те,", FunctionWordInterferenceType.FALSE_HYPHEN_CONJUNCTION, "Прийменник із займенником пишеться окремо без дефіса.", "Preposition with pronoun is written separately."),
+            ("за шо,", FunctionWordInterferenceType.HOMOPHONE_PRONOUN_FOR_CONJUNCTION, "Форма «шо» є грубим просторіччям.", "Substandard form; use standard 'за те, що'."),
+        ],
+        "citation": "Правопис 2019, § 37, п. 1",
+        "rule_ua": "Прийменник із займенником «за те» пишеться окремо, якщо «те» відповідає на питання відмінка.",
+        "rule_en": "Preposition with pronoun 'за те' is written separately when answering a case question.",
+    },
+    {
+        "id": "conj_tezh_12",
+        "category": FunctionWordCategory.CONJUNCTION_TAKOZH_TEZH,
+        "cefr": "A2",
+        "before": "Мої друзі вирушили в Карпати, і я",
+        "after": "поїхав разом із ними.",
+        "correct": "теж",
+        "distractors": [
+            ("те ж", FunctionWordInterferenceType.HOMOPHONE_PRONOUN_FOR_CONJUNCTION, "Приєднувальний сполучник «теж» (= також) пишеться разом. Окремо «те ж» пишеться лише тоді, коли «те» — займенник, а «ж» — частка («те ж саме»).", "Joining conjunction 'теж' is written solid. Separate 'те ж' is pronoun + particle."),
+            ("те-ж", FunctionWordInterferenceType.FALSE_HYPHEN_CONJUNCTION, "Сполучник «теж» пишеться разом, без дефіса.", "Conjunction 'теж' is written solid."),
+            ("тоже", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "Слово «тоже» — русизм; нормативні форми — «теж» або «також».", "'Тоже' is a Russianism; use Ukrainian 'теж' or 'також'."),
+        ],
+        "citation": "Правопис 2019, § 37, п. 5",
+        "rule_ua": "Сполучник «теж» пишеться разом.",
+        "rule_en": "Conjunction 'теж' is written solid.",
+    },
+    {
+        "id": "conj_te_zh_pronoun_13",
+        "category": FunctionWordCategory.CONJUNCTION_TAKOZH_TEZH,
+        "cefr": "B1",
+        "before": "Студент знову дав",
+        "after": "саме формулювання, що й минулого разу.",
+        "correct": "те ж",
+        "distractors": [
+            ("теж", FunctionWordInterferenceType.HOMOPHONE_CONJUNCTION_FOR_PRONOUN, "Тут «те» — вказівний займенник, а «ж» — підсилювальна частка, яку можна вилучити («дав те саме формулювання»). Пишеться окремо.", "Here 'те' is a demonstrative pronoun and 'ж' is an emphasizing particle that can be omitted; written separately."),
+            ("те-ж", FunctionWordInterferenceType.FALSE_HYPHEN_CONJUNCTION, "Займенник із часткою пишеться окремо без дефіса.", "Pronoun with particle is written separately."),
+            ("тоже", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "Русизм; вживаємо «те ж саме».", "Russianism; use 'те ж саме'."),
+        ],
+        "citation": "Правопис 2019, § 37, п. 5",
+        "rule_ua": "Вказівний займенник «те» з часткою «ж» пишеться окремо.",
+        "rule_en": "Demonstrative pronoun 'те' with particle 'ж' is written separately.",
+    },
+]
+
+CANONICAL_PARTICLE_ITEMS = [
+    {
+        "id": "part_ne_noun_solid_1",
+        "category": FunctionWordCategory.PARTICLE_NE_SOLID,
+        "cefr": "A2",
+        "before": "Сказана ним",
+        "after": "дуже засмутила щирих друзів.",
+        "correct": "неправда",
+        "distractors": [
+            ("не правда", FunctionWordInterferenceType.FALSE_SEPARATE_NE_NOUN_ADJ, "«Неправда» пишеться разом, бо утворює нове поняття, яке можна замінити синонімом без «не» («брехня»). Окремо пишеться лише при протиставленні («не правда, а брехня»).", "'Неправда' is written solid because it creates a new concept replaceable by synonym 'брехня'. Separate only with contrast."),
+            ("не-правда", FunctionWordInterferenceType.MISSING_HYPHEN_PARTICLE, "Частка «не» з іменниками через дефіс не пишеться.", "The particle 'не' is never hyphenated with nouns."),
+            ("ніправда", FunctionWordInterferenceType.FALSE_SOLID_PARTICLE, "Префікс заперечення понять — «не-», а не «ні-».", "The prefix for nouns is 'не-', not 'ні-'."),
+        ],
+        "citation": "Правопис 2019, § 38, п. 1",
+        "rule_ua": "Частка «не» з іменниками, прикметниками та прислівниками пишеться разом, якщо слово у сполученні з «не» утворює нове поняття (можна замінити синонімом: неправда — брехня).",
+        "rule_en": "Particle 'не' is solid with nouns, adjectives, and adverbs when forming a new concept replaceable by a synonym.",
+    },
+    {
+        "id": "part_ne_contrast_sep_2",
+        "category": FunctionWordCategory.PARTICLE_NE_CONTRAST_SEPARATE,
+        "cefr": "A2",
+        "before": "Річка біля нашого села була",
+        "after": "глибока, а зовсім мілка.",
+        "correct": "не",
+        "distractors": [
+            ("ні", FunctionWordInterferenceType.FALSE_SOLID_PARTICLE, "Для заперечення ознаки перед прикметником уживаємо частку «не», а не підсилювальну «ні».", "Use negative particle 'не' rather than intensifying 'ні'."),
+            ("не-", FunctionWordInterferenceType.MISSING_HYPHEN_PARTICLE, "Частка «не» при протиставленні пишеться окремим словом, без дефіса.", "Written as a separate word without a hyphen."),
+            ("аж ніяк", FunctionWordInterferenceType.FALSE_SOLID_PARTICLE, "При прямому протиставленні з «а» вживаємо заперечну частку «не»: «не глибока, а мілка».", "Direct contrast with 'а' takes negative particle 'не'."),
+        ],
+        "citation": "Правопис 2019, § 38, п. 2",
+        "rule_ua": "Частка «не» пишеться окремо, якщо в реченні є протиставлення зі сполучником «а» чи «але»: не глибокий, а мілкий; не правда, а брехня.",
+        "rule_en": "Particle 'не' is written separately when there is explicit contrast with 'а' or 'але'.",
+    },
+    {
+        "id": "part_ne_verb_sep_3",
+        "category": FunctionWordCategory.PARTICLE_NE_VERB_SEPARATE,
+        "cefr": "A1",
+        "before": "Я щиро",
+        "after": "цього складного математичного правила.",
+        "correct": "не знаю",
+        "distractors": [
+            ("незнаю", FunctionWordInterferenceType.FALSE_SOLID_NE_VERB, "Частка «не» з дієсловами завжди пишеться окремо (крім винятків, коли слово без «не» не вживається: ненавидіти, нехтувати).", "Particle 'не' is written separately with verbs (except when the verb cannot stand alone)."),
+            ("не-знаю", FunctionWordInterferenceType.MISSING_HYPHEN_PARTICLE, "Частка «не» з дієсловами через дефіс не пишеться.", "Particle 'не' is never hyphenated with verbs."),
+            ("ні знаю", FunctionWordInterferenceType.FALSE_SOLID_PARTICLE, "Для заперечення дії з дієсловами вживаємо частку «не», а не «ні».", "Verbs take negative particle 'не', not 'ні'."),
+        ],
+        "citation": "Правопис 2019, § 38, п. 3",
+        "rule_ua": "Частка «не» з дієсловами та дієприслівниками пишеться окремо: не знаю, не бачив, не поспішаючи. Разом пишеться лише тоді, коли дієслово без «не» не вживається: ненавидіти, неволити, нехтувати.",
+        "rule_en": "Particle 'не' is written separately with verbs and gerunds unless the verb cannot exist without 'не'.",
+    },
+    {
+        "id": "part_ne_verb_solid_exception_4",
+        "category": FunctionWordCategory.PARTICLE_NE_VERB_SEPARATE,
+        "cefr": "B1",
+        "before": "Справжній патріот завжди буде",
+        "after": "будь-які прояви несправедливості та зради.",
+        "correct": "ненавидіти",
+        "distractors": [
+            ("не навидіти", FunctionWordInterferenceType.FALSE_SEPARATE_NE_NOUN_ADJ, "Дієслово «ненавидіти» без «не» в сучасній українській мові не вживається, тому пишеться разом.", "The verb 'ненавидіти' cannot stand without 'не', so it is written solid."),
+            ("не-навидіти", FunctionWordInterferenceType.MISSING_HYPHEN_PARTICLE, "Префікс «не-» у корені дієслова пишеться разом без дефіса.", "Written solid without a hyphen."),
+            ("зневажати не", FunctionWordInterferenceType.FALSE_SOLID_NE_VERB, "Словосполучення не узгоджується граматично з контекстом.", "Does not fit grammatical sentence frame."),
+        ],
+        "citation": "Правопис 2019, § 38, п. 3, прим. 1",
+        "rule_ua": "Дієслова, які без «не» не вживаються, пишуться разом: ненавидіти, неволити, нехтувати, незчутися.",
+        "rule_en": "Verbs that cannot be used without 'не' are written solid: ненавидіти, нехтувати.",
+    },
+    {
+        "id": "part_ne_participle_solid_5",
+        "category": FunctionWordCategory.PARTICLE_NE_PARTICIPLE,
+        "cefr": "B2",
+        "before": "На письмовому столі лежав",
+        "after": "довгий лист від давнього друга.",
+        "correct": "непрочитаний",
+        "distractors": [
+            ("не прочитаний", FunctionWordInterferenceType.FALSE_SEPARATE_NE_PARTICIPLE_ISOLATED, "Одиничний дієприкметник, який не має при собі пояснювальних (залежних) слів і виступає означенням, пишеться з «не» разом.", "An isolated participle without dependent words functioning as an attribute is written solid with 'не'."),
+            ("не-прочитаний", FunctionWordInterferenceType.MISSING_HYPHEN_PARTICLE, "Дієприкметники з «не» пишуться разом без дефіса.", "Participles with 'не' are written solid, not hyphenated."),
+            ("ні прочитаний", FunctionWordInterferenceType.FALSE_SOLID_PARTICLE, "Префікс заперечення прикметникових форм — «не-», а не «ні-».", "Prefix is 'не-', not 'ні-'."),
+        ],
+        "citation": "Правопис 2019, § 38, п. 4",
+        "rule_ua": "Дієприкметник із «не» пишеться разом, якщо він є означенням і не має при собі залежних слів: непрочитаний лист, незасіяне поле.",
+        "rule_en": "A participle is written solid with 'не' when acting as an attribute without dependent words.",
+    },
+    {
+        "id": "part_ne_participle_sep_with_dep_6",
+        "category": FunctionWordCategory.PARTICLE_NE_PARTICIPLE,
+        "cefr": "B2",
+        "before": "На столі лежав лист, ще",
+        "after": "жодним із присутніх у кімнаті.",
+        "correct": "не прочитаний",
+        "distractors": [
+            ("непрочитаний", FunctionWordInterferenceType.FALSE_SOLID_NE_PARTICIPLE_WITH_DEPENDENTS, "Якщо дієприкметник має залежні слова («ще не прочитаний жодним»), частка «не» пишеться окремо.", "If a participle has dependent words ('ще не прочитаний жодним'), 'не' is written separately."),
+            ("не-прочитаний", FunctionWordInterferenceType.MISSING_HYPHEN_PARTICLE, "Дієприкметник із часткою «не» пишеться двома окремими словами, дефіс не вживається.", "Written as separate words without a hyphen."),
+            ("ні прочитаний", FunctionWordInterferenceType.FALSE_SOLID_PARTICLE, "Вживаємо частку «не», а не «ні».", "Use particle 'не', not 'ні'."),
+        ],
+        "citation": "Правопис 2019, § 38, п. 4",
+        "rule_ua": "Дієприкметник із часткою «не» пишеться окремо, якщо при ньому є пояснювальні (залежні) слова: ще не прочитаний лист; поле, не засіяне вчасно.",
+        "rule_en": "A participle is written separately from 'не' when it has dependent/modifying words.",
+    },
+    {
+        "id": "part_enclitic_bo_no_7",
+        "category": FunctionWordCategory.PARTICLE_HYPHENATED_ENCLITICS,
+        "cefr": "A2",
+        "before": "Будь ласка,",
+        "after": "уважніше цей абзац ще раз.",
+        "correct": "прочитай-но",
+        "distractors": [
+            ("прочитайно", FunctionWordInterferenceType.MISSING_HYPHEN_PARTICLE, "Частки «-бо», «-но», «-то», «-от», «-таки» після слів, які вони підсилюють, пишуться через дефіс: «прочитай-но».", "Particles -бо, -но, -то, -от, -таки are attached with a hyphen when following the word they emphasize."),
+            ("прочитай но", FunctionWordInterferenceType.MISSING_HYPHEN_PARTICLE, "Спонукальна частка «-но» після дієслова пишеться через дефіс, а не окремо.", "Cohortative particle '-но' is written with a hyphen after verbs."),
+            ("прочитай же", FunctionWordInterferenceType.FALSE_SOLID_PARTICLE, "Частка «же» пишеться окремо, але цільовою спонукальною часткою є «-но».", "Particle 'же' is written separately, but the prompt tests '-но'."),
+        ],
+        "citation": "Правопис 2019, § 40, п. 1",
+        "rule_ua": "Частки «-бо», «-но», «-то», «-от», «-таки» пишуться через дефіс, коли приєднуються безпосередньо до слова, яке вони виділяють: скажи-бо, прочитай-но, як-от, дійшов-таки.",
+        "rule_en": "Particles -бо, -но, -то, -от, -таки are hyphenated when directly following the word they intensify.",
+    },
+    {
+        "id": "part_taky_inverted_8",
+        "category": FunctionWordCategory.PARTICLE_HYPHENATED_ENCLITICS,
+        "cefr": "B1",
+        "before": "Незважаючи на сильну втому, альпініст",
+        "after": "дістався вершини гори.",
+        "correct": "таки",
+        "distractors": [
+            ("таки-", FunctionWordInterferenceType.FALSE_HYPHEN_INVERTED_TAKY, "Частка «таки» пишеться через дефіс лише тоді, коли стоїть ПІСЛЯ дієслова («дістався-таки»). Якщо вона стоїть перед словом — пишеться окремо: «таки дістався».", "'Таки' is hyphenated only when standing AFTER the verb ('дістався-таки'). When standing BEFORE, it is written separately."),
+            ("-таки", FunctionWordInterferenceType.FALSE_HYPHEN_INVERTED_TAKY, "Перед словом частка «таки» пишеться окремо без дефіса.", "Before the word, 'таки' is written separately without a hyphen."),
+            ("так-таки", FunctionWordInterferenceType.FALSE_SOLID_PARTICLE, "«Так-таки» є подвоєною часткою, тут же потрібна проста частка «таки».", "Single particle 'таки' is required here."),
+        ],
+        "citation": "Правопис 2019, § 40, п. 1, прим.",
+        "rule_ua": "Частка «таки» пишеться через дефіс лише після слова (дійшов-таки). Якщо вона стоїть перед словом — пишеться окремо: таки дійшов, таки знав.",
+        "rule_en": "Particle 'таки' is hyphenated only when placed after the word (дійшов-таки); when placed before, it is written separately (таки дійшов).",
+    },
+    {
+        "id": "part_prefix_split_9",
+        "category": FunctionWordCategory.PARTICLE_PREFIX_SPLIT,
+        "cefr": "B1",
+        "before": "Він був людиною відкритою й міг зупинитися",
+        "after": "на ніч під час подорожі.",
+        "correct": "будь у кого",
+        "distractors": [
+            ("будь-у-кого", FunctionWordInterferenceType.FALSE_HYPHEN_PREPOSITIONAL_SPLIT, "Якщо між часткою («будь-», «хтозна-») та займенником стоїть прийменник, усі три слова пишуться окремо: «будь у кого».", "If a preposition stands between a particle and a pronoun, all three words are written separately: 'будь у кого'."),
+            ("будь-у кого", FunctionWordInterferenceType.FALSE_HYPHEN_PREPOSITIONAL_SPLIT, "Дефіс не вживається, якщо вклинюється прийменник; пишуться три окремі слова.", "No hyphen is used when a preposition intervenes; written as three separate words."),
+            ("будьукого", FunctionWordInterferenceType.FALSE_SOLID_PARTICLE, "Таке написання є грубою орфографічною помилкою; три слова пишуться окремо.", "Gross error; all three words must be written separately."),
+        ],
+        "citation": "Правопис 2019, § 40, п. 2",
+        "rule_ua": "Частки «будь-», «казна-», «хтозна-» пишуться через дефіс (будь-хто, хтозна-де). Але якщо між часткою і займенником стоїть прийменник, усі слова пишуться окремо: будь у кого, хтозна з ким, казна за що.",
+        "rule_en": "Particles будь-, казна-, хтозна- are hyphenated, but when a preposition intervenes, all three words are written separately: будь у кого.",
+    },
+    {
+        "id": "part_ne_adj_solid_10",
+        "category": FunctionWordCategory.PARTICLE_NE_SOLID,
+        "cefr": "A2",
+        "before": "Перед нами відкрився",
+        "after": "але дуже мальовничий краєвид.",
+        "correct": "невеликий",
+        "distractors": [
+            ("не великий", FunctionWordInterferenceType.FALSE_SEPARATE_NE_NOUN_ADJ, "Прикметник «невеликий» пишеться разом, оскільки утворює нове поняття (= малий) і тут немає прямого протиставлення з «а».", "Adjective 'невеликий' is written solid when forming a new concept (= малий) without direct contrast with 'а'."),
+            ("не-великий", FunctionWordInterferenceType.MISSING_HYPHEN_PARTICLE, "Частка «не» з прикметниками через дефіс не пишеться.", "The particle 'не' is never hyphenated with adjectives."),
+            ("нівеликий", FunctionWordInterferenceType.FALSE_SOLID_PARTICLE, "Префікс заперечення прикметників — «не-», а не «ні-».", "Prefix is 'не-', not 'ні-'."),
+        ],
+        "citation": "Правопис 2019, § 38, п. 1",
+        "rule_ua": "«Не» з прикметниками пишеться разом, якщо утворює нове поняття (можна замінити синонімом без «не»: невеликий — малий).",
+        "rule_en": "'Не' is written solid with adjectives when forming a new concept replaceable by a synonym.",
+    },
+    {
+        "id": "part_ne_adv_contrast_11",
+        "category": FunctionWordCategory.PARTICLE_NE_CONTRAST_SEPARATE,
+        "cefr": "A2",
+        "before": "Наш новий офіс розташований",
+        "after": "далеко, а зовсім близько від метро.",
+        "correct": "не",
+        "distractors": [
+            ("ні", FunctionWordInterferenceType.FALSE_SOLID_PARTICLE, "Перед прислівником для заперечення ознаки вживаємо «не», а не «ні».", "Use particle 'не', not 'ні'."),
+            ("не-", FunctionWordInterferenceType.MISSING_HYPHEN_PARTICLE, "Частка «не» перед протиставленням пишеться окремо.", "Written as a separate word without a hyphen."),
+            ("ані", FunctionWordInterferenceType.FALSE_SOLID_PARTICLE, "При прямому протиставленні з «а» вживаємо заперечну частку «не»: «не далеко, а близько».", "Direct contrast with 'а' takes negative particle 'не'."),
+        ],
+        "citation": "Правопис 2019, § 38, п. 2",
+        "rule_ua": "Частка «не» пишеться окремо при протиставленні зі сполучником «а»: не далеко, а близько.",
+        "rule_en": "Particle 'не' is written separately when directly contrasted with 'а': не далеко, а близько.",
+    },
+    {
+        "id": "part_prefix_hyphen_12",
+        "category": FunctionWordCategory.PARTICLE_HYPHENATED_ENCLITICS,
+        "cefr": "A2",
+        "before": "Це просте правило може пояснити",
+        "after": "із присутніх учнів.",
+        "correct": "будь-хто",
+        "distractors": [
+            ("будь хто", FunctionWordInterferenceType.MISSING_HYPHEN_PARTICLE, "Частки «будь-», «казна-», «хтозна-» з займенниками без прийменника пишуться через дефіс: «будь-хто».", "Particles будь-, казна-, хтозна- are hyphenated with pronouns when no preposition intervenes."),
+            ("будьхто", FunctionWordInterferenceType.FALSE_SOLID_PARTICLE, "«Будь-хто» пишеться через дефіс, а не разом.", "Written with a hyphen, not solid."),
+            ("хто будь", FunctionWordInterferenceType.FALSE_SOLID_PARTICLE, "Нормативний порядок морфем — префіксальна частка попереду: «будь-хто».", "Standard order places 'будь-' before the pronoun."),
+        ],
+        "citation": "Правопис 2019, § 40, п. 2",
+        "rule_ua": "Частки «будь-», «казна-», «хтозна-» пишуться через дефіс: будь-хто, будь-який, хтозна-хто.",
+        "rule_en": "Particles будь-, казна-, хтозна- are written with a hyphen: будь-хто, хтозна-хто.",
+    },
+    {
+        "id": "part_prefix_khtozna_13",
+        "category": FunctionWordCategory.PARTICLE_HYPHENATED_ENCLITICS,
+        "cefr": "B1",
+        "before": "Він несподівано поїхав",
+        "after": "й не залишив нової адреси.",
+        "correct": "хтозна-куди",
+        "distractors": [
+            ("хтозна куди", FunctionWordInterferenceType.MISSING_HYPHEN_PARTICLE, "Частка «хтозна-» з прислівниками пишеться через дефіс: «хтозна-куди».", "Particle 'хтозна-' with adverbs is written with a hyphen."),
+            ("хтознакуди", FunctionWordInterferenceType.FALSE_SOLID_PARTICLE, "«Хтозна-куди» пишеться через дефіс, а не одним словом.", "Written with a hyphen, not as a single word."),
+            ("куди-небудь", FunctionWordInterferenceType.FALSE_SOLID_PARTICLE, "«Куди-небудь» позначає будь-який напрямок, а «хтозна-куди» — невідомий напрямок.", "'Хтозна-куди' specifically denotes an unknown direction."),
+        ],
+        "citation": "Правопис 2019, § 40, п. 2",
+        "rule_ua": "Частка «хтозна-» з прислівниками пишеться через дефіс: хтозна-куди, хтозна-як, хтозна-де.",
+        "rule_en": "Particle 'хтозна-' with adverbs is written with a hyphen: хтозна-куди, хтозна-де.",
+    },
+]
+
+
+# ============================================================================
+# Rule Resolution Engine (Правопис 2019, §§ 36–40)
+# ============================================================================
+
+
+def resolve_preposition_hyphenation(prep: str) -> tuple[bool, str, str]:
+    """Determine if a compound preposition requires a hyphen per Правопис 2019 (§ 36.1)."""
+    norm = prep.strip().lower()
+    if norm.startswith(("з-", "із-")):
+        return (
+            True,
+            "Складні прийменники з першою частиною «з-», «із-» пишуться через дефіс (з-під, з-за, із-за, з-поміж).",
+            "Compound prepositions with initial z-/iz- are hyphenated (з-під, з-за, із-за, з-поміж).",
+        )
+    return (
+        False,
+        "Складні прийменники без «з-», «із-» пишуться разом (посеред, задля, внаслідок).",
+        "Compound prepositions without initial z-/iz- are written solid (посеред, задля, внаслідок).",
+    )
+
+
+def resolve_causal_preposition(is_positive_factor: bool) -> tuple[str, str, str]:
+    """Determine correct causal preposition (завдяки vs через) based on semantic polarity."""
+    if is_positive_factor:
+        return (
+            "завдяки",
+            "«Завдяки» вживаємо лише з давальним відмінком для вираження позитивних, сприятливих чинників.",
+            "Use 'завдяки' (+ Dative) exclusively for positive or favorable factors.",
+        )
+    return (
+        "через",
+        "«Через» вживаємо зі знахідним відмінком для небажаних, шкідливих або нейтральних причин.",
+        "Use 'через' (+ Accusative) for adverse, undesirable, or neutral causes.",
+    )
+
+
+def resolve_duration_preposition(is_time_duration: bool) -> tuple[str, str, str]:
+    """Determine duration preposition: 'протягом'/'упродовж' vs 'на протязі'."""
+    if is_time_duration:
+        return (
+            "протягом",
+            "На позначення тривалості в часі вживаємо «протягом» або «упродовж».",
+            "Use 'протягом' or 'упродовж' to express duration in time.",
+        )
+    return (
+        "на протязі",
+        "Вислів «на протязі» вживається лише в прямому значенні струменя повітря між відчиненими вікнами чи дверима.",
+        "The phrase 'на протязі' refers strictly to being in an air draft between open doors or windows.",
+    )
+
+
+def resolve_conjunction_homophone(pair: str, is_conjunction: bool) -> tuple[str, str, str]:
+    """Distinguish conjunction from homophonous pronoun/particle sequences per Правопис 2019 (§ 37)."""
+    pair_lower = pair.strip().lower()
+    if pair_lower in ("prote", "проте", "zate", "зате"):
+        if is_conjunction:
+            return (
+                "проте",
+                "Сполучники «проте», «зате» (= але) пишуться разом.",
+                "Conjunctions 'проте', 'зате' (= but, however) are written solid.",
+            )
+        return (
+            "про те",
+            "Прийменник із вказівним займенником «про те» пишеться окремо (про що? — про те).",
+            "Preposition with demonstrative pronoun 'про те' is written separately (about what? -> about that).",
+        )
+    elif pair_lower in ("shchob", "щоб"):
+        if is_conjunction:
+            return (
+                "щоб",
+                "Сполучник мети та з'ясувальний «щоб» пишеться разом.",
+                "Purpose and explanatory conjunction 'щоб' is written solid.",
+            )
+        return (
+            "що б",
+            "Займенник «що» з часткою «б» пишеться окремо (частку можна переставити).",
+            "Interrogative/relative pronoun 'що' with particle 'б' is written separately.",
+        )
+    elif pair_lower in ("yakby", "якби"):
+        if is_conjunction:
+            return (
+                "якби",
+                "Умовний сполучник «якби» (= якщо б) пишеться разом.",
+                "Conditional conjunction 'якби' (= if) is written solid.",
+            )
+        return (
+            "як би",
+            "Прислівник способу дії «як» із часткою «би» пишеться окремо.",
+            "Adverb of manner 'як' with modal particle 'би' is written separately.",
+        )
+    elif pair_lower in ("yakshcho", "якщо"):
+        if is_conjunction:
+            return (
+                "якщо",
+                "Умовний сполучник «якщо» пишеться разом.",
+                "Conditional conjunction 'якщо' (= if) is written solid.",
+            )
+        return (
+            "як що",
+            "Сполука «як що» (де «що» — займенник) пишеться окремо.",
+            "Sequence 'як що' (where 'що' is a pronoun) is written separately.",
+        )
+    elif pair_lower in ("takozh", "також", "tezh", "теж"):
+        if is_conjunction:
+            return (
+                "також",
+                "Приєднувальні сполучники «також», «теж» пишуться разом.",
+                "Joining conjunctions 'також', 'теж' are written solid.",
+            )
+        return (
+            "так же",
+            "Прислівник «так» із підсилювальною часткою «же» пишеться окремо.",
+            "Adverb 'так' with particle 'же' is written separately.",
+        )
+    raise ValueError(f"Unknown conjunction homophone pair: {pair}")
+
+
+def resolve_particle_ne(
+    pos: str,
+    has_contrast: bool = False,
+    has_dependent_words: bool = False,
+    cannot_stand_without_ne: bool = False,
+    forms_new_concept: bool = True,
+) -> tuple[str, str, str]:
+    """Orthography of 'не' per Правопис 2019 (§§ 38–39). Returns ('разом' | 'окремо', rule_ua, rule_en)."""
+    pos_norm = pos.strip().lower()
+
+    if cannot_stand_without_ne:
+        return (
+            "разом",
+            "Слова, які без «не» не вживаються, завжди пишуться разом: ненавидіти, нехтувати, неволити, негайний.",
+            "Words that cannot stand without 'не' are always written solid: ненавидіти, нехтувати.",
+        )
+
+    if has_contrast:
+        return (
+            "окремо",
+            "Частка «не» пишеться окремо, якщо є протиставлення зі сполучником «а» чи «але»: не широкий, а вузький.",
+            "Particle 'не' is written separately when an explicit contrast with 'а' or 'але' is present.",
+        )
+
+    if pos_norm in ("verb", "дієслово", "gerund", "дієприслівник"):
+        return (
+            "окремо",
+            "Частка «не» з дієсловами та дієприслівниками пишеться окремо: не знаю, не пишучи.",
+            "Particle 'не' is written separately with verbs and gerunds: не знаю, не пишучи.",
+        )
+
+    if pos_norm in ("participle", "дієприкметник"):
+        if has_dependent_words:
+            return (
+                "окремо",
+                "Частка «не» з дієприкметниками пишеться окремо, якщо при них є пояснювальні (залежні) слова: ще не прочитана книга.",
+                "Particle 'не' is written separately with participles having dependent modifying words: ще не прочитана книга.",
+            )
+        return (
+            "разом",
+            "Одиничний дієприкметник без залежних слів, що виступає означенням, пишеться з «не» разом: непрочитана книга.",
+            "An isolated participle without dependent words acting as an attribute is written solid: непрочитана книга.",
+        )
+
+    if pos_norm in ("noun", "іменник", "adj", "adjective", "прикметник", "adv", "adverb", "прислівник"):
+        if forms_new_concept:
+            return (
+                "разом",
+                "З іменниками, прикметниками та прислівниками «не» пишеться разом, коли утворює нове поняття (можна замінити синонімом: неправда — брехня).",
+                "With nouns, adjectives, and adverbs, 'не' is written solid when forming a new concept (replaceable with a synonym).",
+            )
+        return (
+            "окремо",
+            "Якщо слово з «не» не утворює нового поняття і лише заперечує ознаку, воно пишеться окремо.",
+            "If 'не' merely negates without forming a unified lexical concept, it is written separately.",
+        )
+
+    return (
+        "окремо",
+        "За загальним правилом частка «не» пишеться окремо.",
+        "As a general rule, particle 'не' is written separately.",
+    )
+
+
+def resolve_particle_hyphenation(
+    particle: str,
+    position_after_word: bool = True,
+    has_intervening_preposition: bool = False,
+) -> tuple[str, str, str]:
+    """Orthography of particles per Правопис 2019 (§ 40). Returns ('дефіс' | 'окремо', rule_ua, rule_en)."""
+    p_norm = particle.strip().lower().replace("-", "")
+
+    if p_norm in ("будь", "казна", "хтозна"):
+        if has_intervening_preposition:
+            return (
+                "окремо",
+                "Якщо між частками «будь-», «казна-», «хтозна-» та займенником стоїть прийменник, усі три слова пишуться окремо: будь у кого, хтозна з ким.",
+                "When a preposition intervenes between будь-, казна-, хтозна- and a pronoun, all three words are written separately: будь у кого.",
+            )
+        return (
+            "дефіс",
+            "Частки «будь-», «казна-», «хтозна-» з іншими словами пишуться через дефіс: будь-хто, хтозна-де.",
+            "Particles будь-, казна-, хтозна- are hyphenated: будь-хто, хтозна-де.",
+        )
+
+    if p_norm == "таки":
+        if position_after_word:
+            return (
+                "дефіс",
+                "Частка «таки» пишеться через дефіс, коли стоїть ПІСЛЯ слова, яке виділяє: прийшов-таки, знав-таки.",
+                "Particle 'таки' is hyphenated when standing AFTER the word it emphasizes: прийшов-таки.",
+            )
+        return (
+            "окремо",
+            "Частка «таки» пишеться окремо, коли стоїть ПЕРЕД словом: таки прийшов, таки переміг.",
+            "Particle 'таки' is written separately when standing BEFORE the word: таки прийшов.",
+        )
+
+    if p_norm in ("бо", "но", "то", "от"):
+        return (
+            "дефіс",
+            f"Частки «-{p_norm}» після слів, які вони виділяють, пишуться через дефіс (Правопис 2019, § 40).",
+            f"Particles '-{p_norm}' are hyphenated when following the emphasized word.",
+        )
+
+    return (
+        "окремо",
+        "Частка пишеться окремо.",
+        "Particle is written separately.",
+    )
+
+
+def build_canonical_function_word_cards() -> list[FunctionWordCard]:
+    """Compile the authoritative set of canonical Function Word practice cards."""
+    all_raw_items = (
+        CANONICAL_PREPOSITION_HYPHENATED_ITEMS
+        + CANONICAL_PREPOSITION_COMPOUND_SOLID_ITEMS
+        + CANONICAL_PREPOSITION_LOCUTIONS_ITEMS
+        + CANONICAL_PREPOSITION_GOVERNMENT_ITEMS
+        + CANONICAL_CONJUNCTION_ITEMS
+        + CANONICAL_PARTICLE_ITEMS
+    )
+
+    cards: list[FunctionWordCard] = []
+    for item in all_raw_items:
+        distractors = [
+            FunctionWordDistractor(
+                form=d[0],
+                interference_type=d[1],
+                explanation_ua=d[2],
+                explanation_en=d[3],
+            )
+            for d in item["distractors"]
+        ]
+        card = FunctionWordCard(
+            card_id=item["id"],
+            category=item["category"],
+            cefr_level=item["cefr"],
+            sentence_before=item["before"],
+            sentence_after=item["after"],
+            correct_answer=item["correct"],
+            distractors=distractors,
+            rule_citation=item["citation"],
+            rule_summary_ua=item["rule_ua"],
+            rule_summary_en=item["rule_en"],
+        )
+        cards.append(card)
+
+    return cards
+
+
+def validate_function_word_card(card: FunctionWordCard) -> list[str]:
+    """Hermetic verification of a function word card ensuring zero collisions and complete metadata."""
+    errors: list[str] = []
+
+    if not card.card_id:
+        errors.append("card_id is empty")
+    if not card.correct_answer:
+        errors.append("correct_answer is empty")
+
+    # Options count and zero-collision check
+    if len(card.distractors) != 3:
+        errors.append(f"expected exactly 3 distractors, got {len(card.distractors)}")
+
+    forms = [card.correct_answer]
+    seen_interference: set[FunctionWordInterferenceType] = set()
+
+    for idx, d in enumerate(card.distractors):
+        if not d.form:
+            errors.append(f"distractor[{idx}] form is empty")
+        if d.form in forms:
+            errors.append(f"collision detected: distractor '{d.form}' duplicates existing option")
+        forms.append(d.form)
+
+        if not d.explanation_ua:
+            errors.append(f"distractor[{idx}] explanation_ua is empty")
+        if not d.explanation_en:
+            errors.append(f"distractor[{idx}] explanation_en is empty")
+        seen_interference.add(d.interference_type)
+
+    if not card.rule_citation:
+        errors.append("rule_citation is empty")
+    if not card.rule_summary_ua:
+        errors.append("rule_summary_ua is empty")
+    if not card.rule_summary_en:
+        errors.append("rule_summary_en is empty")
+
+    return errors
+
+
+def export_function_word_deck(cards: list[FunctionWordCard], output_path: Path | None = None) -> dict[str, Any]:
+    """Export function word cards to standard JSON structure for practice consumption."""
+    deck = {
+        "version": "1.0",
+        "title": "Ukrainian Function Words Practice (Службові частини мови)",
+        "categories": [c.value for c in FunctionWordCategory],
+        "total_cards": len(cards),
+        "cards": [
+            {
+                "id": c.card_id,
+                "category": c.category.value,
+                "cefrLevel": c.cefr_level,
+                "prompt": c.prompt_display,
+                "fullSentence": c.full_sentence,
+                "sentenceBefore": c.sentence_before,
+                "sentenceAfter": c.sentence_after,
+                "correctAnswer": c.correct_answer,
+                "options": c.all_options(),
+                "distractors": [
+                    {
+                        "form": d.form,
+                        "interferenceType": d.interference_type.value,
+                        "explanationUa": d.explanation_ua,
+                        "explanationEn": d.explanation_en,
+                    }
+                    for d in c.distractors
+                ],
+                "ruleCitation": c.rule_citation,
+                "ruleSummary": {
+                    "uk": c.rule_summary_ua,
+                    "en": c.rule_summary_en,
+                },
+            }
+            for c in cards
+        ],
+    }
+
+    if output_path is not None:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(deck, f, ensure_ascii=False, indent=2)
+
+    return deck
+
+
+def main() -> int:
+    """CLI runner to validate and export canonical function word practice deck."""
+    parser = argparse.ArgumentParser(description="Ukrainian Function Words Practice Engine.")
+    parser.add_argument("--output", type=Path, help="Target JSON output path for practice deck.")
+    parser.add_argument("--validate-only", action="store_true", help="Run validation without writing file.")
+    args = parser.parse_args()
+
+    cards = build_canonical_function_word_cards()
+    total_errors = 0
+
+    for card in cards:
+        errs = validate_function_word_card(card)
+        if errs:
+            print(f"Error in card {card.card_id}: {errs}", file=sys.stderr)
+            total_errors += len(errs)
+
+    if total_errors > 0:
+        print(f"Validation failed with {total_errors} errors.", file=sys.stderr)
+        return 1
+
+    print(f"✅ Successfully validated {len(cards)} Function Word practice cards with 0 collisions.")
+
+    if not args.validate_only and args.output:
+        export_function_word_deck(cards, args.output)
+        print(f"Exported deck to {args.output}")
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

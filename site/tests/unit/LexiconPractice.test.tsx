@@ -27,6 +27,7 @@ import {
   saveState,
   selectNextPracticeItem,
   type PracticeDeckData,
+  type PracticeClozeItem,
   type DailyPracticeDeckSnapshot,
   type DailyPracticeRowState,
   type PracticeHeritageItem,
