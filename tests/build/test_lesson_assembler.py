@@ -102,6 +102,9 @@ def test_canonical_site_routes_and_frontmatter_groups(gold, tmp_path):
     probe = r'''
 const fs = require('fs');
 const ts = require('typescript');
+const demodule = (src) => src
+  .replace(/^\s*import\s[\s\S]*?;\s*$/gm, '')
+  .replaceAll('export ', '');
 const source = fs.readFileSync('site/src/pages/[...slug].astro', 'utf8').split('---')[1];
 const tree = ts.createSourceFile('route.ts', source, ts.ScriptTarget.Latest, true);
 const wanted = new Set(['TRACKS', 'HIDDEN_DOCS', 'normalizeId', 'allDocs', 'visibleDocs',
@@ -117,10 +120,12 @@ const selected = tree.statements.filter(statement => {
  }
  return false;
 }).map(statement => statement.getText(tree)).join('\n').replace('export async function', 'async function').replaceAll('import.meta.env.PROD', 'true');
-const helper = fs.readFileSync('site/src/lib/a1-archive-routes.ts', 'utf8').replaceAll('export ', '');
-const nav = fs.readFileSync('site/src/lib/a1-lesson-nav.ts', 'utf8').replaceAll('export ', '');
-const units = fs.readFileSync('site/src/data/a1-v1-modules.ts', 'utf8').replaceAll('export ', '');
-const compiled = ts.transpileModule(helper + '\n' + nav + '\n' + units + '\n' + selected, {compilerOptions: {target: ts.ScriptTarget.ES2022}}).outputText;
+const helper = demodule(fs.readFileSync('site/src/lib/a1-archive-routes.ts', 'utf8'));
+const nav = demodule(fs.readFileSync('site/src/lib/a1-lesson-nav.ts', 'utf8'));
+const units = demodule(fs.readFileSync('site/src/data/a1-v1-modules.ts', 'utf8'));
+const compiled = ts.transpileModule(helper + '\n' + nav + '\n' + units + '\n' + selected, {
+  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
+}).outputText.replace(/^\s*exports?\.[^\n]*\n/gm, '').replace(/^\s*export\s*\{\s*\}\s*;?\s*$/gm, '');
 const docs = JSON.parse(fs.readFileSync(0, 'utf8'));
 const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
 new AsyncFunction('getCollection', 'moduleCount', compiled + '\nreturn {routes: await getStaticPaths(), groups: plannedModuleGroups("a1", TRACKS["a1"]), visible: [...deployedDocsByTrack.keys()]};')(
