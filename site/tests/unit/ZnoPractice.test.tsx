@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ZnoPractice, { type ZnoPracticeDeck } from '@site/src/components/ZnoPractice';
+import ZnoPractice, { nextDueItem, type ZnoPracticeDeck, type ZnoPracticeItem } from '@site/src/components/ZnoPractice';
 import { SRS_STORAGE_KEY, cardKey, loadState } from '@site/src/lib/lexicon/srs';
 
 const decks: ZnoPracticeDeck[] = [{
@@ -116,5 +116,36 @@ describe('ZnoPractice', () => {
     expect(screen.getByTestId('zno-practice-item')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'До колод' }));
     expect(onBackToDecks).toHaveBeenCalledOnce();
+  });
+
+  test('nextDueItem randomizes task order across seeds and respects excludedIds', () => {
+    const multiItems: ZnoPracticeItem[] = Array.from({ length: 10 }, (_, i) => ({
+      znoTaskId: `zno:task_${i}`,
+      znoMode: 'choice',
+      taskFormat: 'single-choice',
+      stem: `Завдання ${i}`,
+      options: ['А', 'Б', 'В', 'Г'],
+      correctLetter: 'А',
+      correctIndex: 0,
+      year: 2023,
+      exam: 'zno',
+      session: 'osnovna',
+      taskNo: i + 1,
+      topicTag: 'Лексика',
+      attribution: 'Джерело: УЦОЯО',
+    }));
+
+    const firstPicks = new Set<string>();
+    for (let s = 1; s <= 10; s += 1) {
+      const item = nextDueItem(multiItems, null, s * 7919);
+      if (item) firstPicks.add(item.znoTaskId);
+    }
+    // Across 10 different seeds, at least 3 distinct first items must be picked
+    expect(firstPicks.size).toBeGreaterThanOrEqual(3);
+
+    // excludedIds filtering prevents repeating recently seen items
+    const excluded = new Set(['zno:task_0', 'zno:task_1', 'zno:task_2']);
+    const pickWithExclusion = nextDueItem(multiItems, null, 12345, excluded);
+    expect(excluded.has(pickWithExclusion!.znoTaskId)).toBe(false);
   });
 });

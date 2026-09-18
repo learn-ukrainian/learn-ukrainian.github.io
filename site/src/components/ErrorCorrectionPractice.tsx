@@ -17,6 +17,7 @@ export interface ErrorCorrectionPracticeProps {
   items: readonly ErrorCorrectionDrill[];
   onBackToDecks: () => void;
   chromeLocale?: 'uk' | 'en';
+  randomize?: boolean;
 }
 
 function dayKey(now = new Date()): string {
@@ -35,14 +36,20 @@ function hashSeed(input: string): number {
 export function nextDueErrorCorrectionItem(
   items: readonly ErrorCorrectionDrill[],
   currentId: string | null,
+  sessionSeed: string | number = dayKey(),
+  excludedIds?: ReadonlySet<string>,
 ): ErrorCorrectionDrill | null {
   if (!items.length) return null;
   const now = Date.now();
   const cards = loadState().cards;
-  const seedDay = dayKey();
+  const pool = items.filter((item) => {
+    if (excludedIds && excludedIds.has(item.id)) return false;
+    if (currentId && item.id === currentId && items.length > 1) return false;
+    return true;
+  });
+  const candidates = pool.length > 0 ? pool : items.filter((item) => item.id !== currentId || items.length === 1);
   return (
-    [...items]
-      .filter((item) => item.id !== currentId || items.length === 1)
+    [...candidates]
       .sort((left, right) => {
         const leftDue = cards.get(cardKey(left.id, 'choice'))?.due ?? 0;
         const rightDue = cards.get(cardKey(right.id, 'choice'))?.due ?? 0;
@@ -50,7 +57,7 @@ export function nextDueErrorCorrectionItem(
         const rightPriority = rightDue <= now ? 0 : 1;
         if (leftPriority !== rightPriority) return leftPriority - rightPriority;
         if (leftDue !== rightDue) return leftDue - rightDue;
-        return hashSeed(`${seedDay}:${left.id}`) - hashSeed(`${seedDay}:${right.id}`);
+        return hashSeed(`${sessionSeed}:${left.id}`) - hashSeed(`${sessionSeed}:${right.id}`);
       })[0] ?? null
   );
 }
@@ -59,14 +66,21 @@ export default function ErrorCorrectionPractice({
   items = [],
   onBackToDecks,
   chromeLocale = 'uk',
+  randomize = false,
 }: ErrorCorrectionPracticeProps) {
-  const [currentId, setCurrentId] = useState<string | null>(() => items[0]?.id ?? null);
+  const [sessionSeed] = useState(() => (randomize ? Math.floor(Math.random() * 1_000_000_000) : dayKey()));
+  const [seenIds, setSeenIds] = useState<Set<string>>(() => new Set());
+  const [currentId, setCurrentId] = useState<string | null>(() => {
+    if (!items.length) return null;
+    if (!randomize) return items[0]?.id ?? null;
+    return nextDueErrorCorrectionItem(items, null, sessionSeed)?.id ?? items[0]?.id ?? null;
+  });
   const [rated, setRated] = useState(false);
   const [sessionStats, setSessionStats] = useState({ answered: 0, correct: 0 });
 
   const currentItem = useMemo(
-    () => items.find((it) => it.id === currentId) ?? nextDueErrorCorrectionItem(items, null),
-    [items, currentId],
+    () => items.find((it) => it.id === currentId) ?? nextDueErrorCorrectionItem(items, null, sessionSeed),
+    [items, currentId, sessionSeed],
   );
 
   const handleComplete = useCallback(
@@ -85,10 +99,14 @@ export default function ErrorCorrectionPractice({
 
   const handleNext = useCallback(() => {
     if (!currentItem) return;
-    const next = nextDueErrorCorrectionItem(items, currentItem.id);
+    const nextSeen = new Set(seenIds);
+    nextSeen.add(currentItem.id);
+    const effectiveSeen = nextSeen.size >= items.length ? new Set<string>() : nextSeen;
+    const next = nextDueErrorCorrectionItem(items, currentItem.id, sessionSeed, effectiveSeen);
+    setSeenIds(effectiveSeen);
     setCurrentId(next?.id ?? null);
     setRated(false);
-  }, [items, currentItem]);
+  }, [items, currentItem, seenIds, sessionSeed]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

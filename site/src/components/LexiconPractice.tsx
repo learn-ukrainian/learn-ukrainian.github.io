@@ -109,7 +109,7 @@ import {
   deleteLocalCustomSet,
   type CustomSet,
 } from '../lib/lexicon/custom-decks';
-import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken } from '../lib/lexicon/google-drive-sync';
+import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken, isGoogleSyncConfigured } from '../lib/lexicon/google-drive-sync';
 import { usablePracticeSentenceEnglish } from '../lib/lexicon/practice-sentence-en';
 import { selectHeritagePracticePresentation } from '../lib/lexicon/practice-activity-adapters';
 import { searchShardForQuery, type SearchRow, type SearchShardManifest } from '../lib/lexicon/search';
@@ -3713,6 +3713,7 @@ function LexiconPracticeIsland({
   ) {
     committedSelectionRef.current = null;
     clearResumeSnapshot(nextMode);
+    setSessionSeed(makePracticeSessionSeed());
     await beginSession(nextMode, budget, undefined, focus, overrides);
   }
 
@@ -4849,19 +4850,21 @@ function LexiconPracticeIsland({
           >
             <summary><ChromeText k="practice.secondaryToolsTitle" /></summary>
             <div className="k3-practice-sources-content">
-              <div className="k3-drive-sync-bar" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <button
-                  type="button"
-                  className="btn btn-sm"
-                  style={{ background: 'var(--lu-accent-blue, #2563eb)', color: '#fff', borderRadius: '8px', padding: '0.4rem 0.8rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-                  onClick={handleGoogleDriveSync}
-                  disabled={isDriveSyncing}
-                >
-                  <span>☁️</span>
-                  <span>{isDriveSyncing ? 'Синхронізація...' : 'Увійти та синхронізувати з Google Drive'}</span>
-                </button>
-                {driveSyncMsg ? <span style={{ fontSize: '0.85rem', color: 'var(--lu-text-muted)' }}>{driveSyncMsg}</span> : null}
-              </div>
+              {isGoogleSyncConfigured() ? (
+                <div className="k3-drive-sync-bar" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <button
+                    type="button"
+                    className="btn btn-sm"
+                    style={{ background: 'var(--lu-accent-blue, #2563eb)', color: '#fff', borderRadius: '8px', padding: '0.4rem 0.8rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+                    onClick={handleGoogleDriveSync}
+                    disabled={isDriveSyncing}
+                  >
+                    <span>☁️</span>
+                    <span>{isDriveSyncing ? 'Синхронізація...' : 'Увійти та синхронізувати з Google Drive'}</span>
+                  </button>
+                  {driveSyncMsg ? <span style={{ fontSize: '0.85rem', color: 'var(--lu-text-muted)' }}>{driveSyncMsg}</span> : null}
+                </div>
+              ) : null}
 
               <div className="k3-deck-filter-bar" style={{ margin: '1rem 0 0', padding: '0.75rem 1rem', background: 'var(--lu-bg-card, rgba(255,255,255,0.05))', borderRadius: '12px', border: '1px solid var(--lu-border, rgba(255,255,255,0.1))' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
@@ -5052,6 +5055,7 @@ function LexiconPracticeIsland({
               items={cultureDrills}
               onBackToDecks={() => setActiveCulturePractice(false)}
               chromeLocale={chromeLocale}
+              randomize={true}
             />
           </div>
         </div>

@@ -119,4 +119,28 @@ describe('ErrorCorrectionPractice', () => {
     });
     expect(result.current.activeCulturePractice).toBe(false);
   });
+
+  test('nextDueErrorCorrectionItem shuffles tasks across seeds and respects excludedIds', () => {
+    const drills: ErrorCorrectionDrill[] = Array.from({ length: 10 }, (_, i) => ({
+      id: `err_${String(i).padStart(4, '0')}`,
+      sentence: `Речення ${i}`,
+      errorWord: `помилка_${i}`,
+      correctForm: `норма_${i}`,
+      options: [`помилка_${i}`, `норма_${i}`],
+      explanation: `Пояснення ${i}`,
+      isUkrainian: true,
+      source: 'Джерело',
+    }));
+
+    const firstPicks = new Set<string>();
+    for (let s = 1; s <= 10; s += 1) {
+      const pick = nextDueErrorCorrectionItem(drills, null, s * 9973);
+      if (pick) firstPicks.add(pick.id);
+    }
+    expect(firstPicks.size).toBeGreaterThanOrEqual(3);
+
+    const excluded = new Set(['err_0000', 'err_0001', 'err_0002']);
+    const pickWithExclusion = nextDueErrorCorrectionItem(drills, null, 12345, excluded);
+    expect(excluded.has(pickWithExclusion!.id)).toBe(false);
+  });
 });
