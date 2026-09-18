@@ -71,6 +71,9 @@ yt-dlp>=2026.7.4
 # Build utilities
 jinja2>=3.1
 
+# TypeSafe System One (Jev) — curriculum / open-model triage (#8177–#8179)
+typesafe-sdk>=0.6.0
+
 # Security floors (transitive deps held above their vulnerable range)
 # zeroconf comes via mcp-memory-service; CVE-2026-48045 / GHSA-9663-mqmp-p9mm
 # (unbounded TC-deferred queue → LAN-local memory exhaustion) is fixed in 0.149.12.
