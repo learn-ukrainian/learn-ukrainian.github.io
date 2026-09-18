@@ -128,15 +128,66 @@ def test_homonym_disambiguation_hermetic_without_vesum(tmp_path) -> None:
     fake_path = tmp_path / "nonexistent_vesum.db"
     disambiguator = TypeSafeHomonymDisambiguator(api_key="", vesum_path=fake_path)
 
-    # Disambiguate without database connection
+    assert disambiguator.vesum_path == fake_path
+    assert disambiguator._get_vesum_conn() is None
+
+    # Disambiguate with known lemma fallback table
     res_verb = disambiguator.disambiguate("Дівчина ретельно мила руки.", "мила")
     assert res_verb.grammatical_form == GrammaticalForm.FINITE_VERB_PAST
     assert res_verb.lemma == "мити"
+    assert res_verb.needs_verification is False
 
     res_noun = disambiguator.disambiguate("Шматок мила лежав на столі.", "мила")
     assert res_noun.grammatical_form == GrammaticalForm.NOUN_GENITIVE
     assert res_noun.lemma == "мило"
+    assert res_noun.needs_verification is False
 
     res_saw = disambiguator.disambiguate("Дві пили заводу стояли в кутку.", "пили")
     assert res_saw.grammatical_form == GrammaticalForm.NOUN_GENITIVE
     assert res_saw.lemma == "пила"
+    assert res_saw.needs_verification is False
+
+
+def test_morphological_attestation_failure_escalates() -> None:
+    """Unattested tokens (e.g. nonsense words) must never be auto-accepted even if syntax matches."""
+    disambiguator = TypeSafeHomonymDisambiguator(api_key="")
+    res = disambiguator.disambiguate("Вона qzx руки.", "qzx")
+    assert res.needs_verification is True
+    assert res.confidence < 0.85
+
+
+def test_target_token_boundary_validation() -> None:
+    """Target tokens must match whole word tokens, not substrings or missing tokens."""
+    disambiguator = TypeSafeHomonymDisambiguator(api_key="")
+    # Substring 'ила' inside 'мила'
+    res_sub = disambiguator.disambiguate("Вона мила руки.", "ила")
+    assert res_sub.needs_verification is True
+    assert res_sub.confidence == 0.0
+    assert res_sub.grammatical_form == GrammaticalForm.OTHER
+    assert res_sub.syntactic_role == SyntacticRole.UNKNOWN
+
+    # Missing token
+    res_absent = disambiguator.disambiguate("Вона мила руки.", "відсутній")
+    assert res_absent.needs_verification is True
+    assert res_absent.confidence == 0.0
+
+
+@patch("urllib.request.urlopen")
+def test_remote_api_invalid_labels_and_confidence_validation(mock_urlopen: MagicMock) -> None:
+    """Invalid labels, NaN confidence, or out-of-bounds confidence must require verification."""
+    import io
+    # 1. Invalid label with high confidence
+    resp_mock = io.BytesIO(b'{"answers": {"i0_form": {"choice": "invalid", "confidence": 0.99}, "i0_role": {"choice": "invalid", "confidence": 0.99}}}')
+    mock_urlopen.return_value.__enter__.return_value = resp_mock
+
+    disambiguator = TypeSafeHomonymDisambiguator(api_key="fake-key")
+    res = disambiguator.disambiguate("Вона мила руки.", "мила")
+    assert res.needs_verification is True
+    assert res.confidence == 0.0
+
+    # 2. Out of bounds confidence (2.0)
+    resp_mock2 = io.BytesIO(b'{"answers": {"i0_form": {"choice": "finite_verb_past", "confidence": 2.0}, "i0_role": {"choice": "predicate_verb", "confidence": 2.0}}}')
+    mock_urlopen.return_value.__enter__.return_value = resp_mock2
+    res2 = disambiguator.disambiguate("Вона мила руки.", "мила")
+    assert res2.needs_verification is True
+    assert res2.confidence == 0.0

@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import re
 import sqlite3
@@ -48,10 +49,8 @@ class GrammaticalForm(StrEnum):
     OTHER = "other"
 
 
-@dataclass
+@dataclass(frozen=True)
 class HomonymDisambiguation:
-    """Disambiguated grammatical and syntactic interpretation of a homonym token in context."""
-
     sentence: str
     target_token: str
     grammatical_form: GrammaticalForm
@@ -59,7 +58,19 @@ class HomonymDisambiguation:
     lemma: str
     confidence: float
     needs_verification: bool
-    reason: str = ""
+    reason: str
+
+
+@dataclass
+class HomonymBatchReport:
+    total_processed: int
+    finite_verbs: int
+    genitive_nouns: int
+    adjectives: int
+    other_forms: int
+    high_confidence: int
+    needs_verification_count: int
+    disambiguations: list[HomonymDisambiguation]
 
 
 def _resolve_typesafe_key() -> str:
@@ -88,10 +99,8 @@ def _resolve_typesafe_key() -> str:
 
 def _resolve_vesum_path(custom_path: Path | str | None = None) -> Path:
     """Resolve active VESUM database path across primary checkout and worktrees."""
-    if custom_path:
-        p = Path(custom_path)
-        if p.is_file() and p.stat().st_size > 1024:
-            return p
+    if custom_path is not None:
+        return Path(custom_path)
     candidates = [
         PROJECT_ROOT / "data" / "vesum.db",
         Path("/home/ops/learn-ukrainian/data/vesum.db"),
@@ -225,31 +234,87 @@ class TypeSafeHomonymDisambiguator:
         results: list[HomonymDisambiguation] = []
 
         for idx, (sent, tok) in enumerate(batch):
-            form_ans = answers.get(f"i{idx}_form", {})
-            role_ans = answers.get(f"i{idx}_role", {})
+            form_ans = answers.get(f"i{idx}_form")
+            role_ans = answers.get(f"i{idx}_role")
 
-            form_choice = form_ans.get("choice", "other")
-            role_choice = role_ans.get("choice", "unknown")
+            is_valid_structure = isinstance(form_ans, dict) and isinstance(role_ans, dict)
+            form_choice = form_ans.get("choice") if is_valid_structure else None
+            role_choice = role_ans.get("choice") if is_valid_structure else None
+
+            valid_form = (
+                is_valid_structure
+                and form_choice in GrammaticalForm._value2member_map_
+                and form_choice != GrammaticalForm.OTHER.value
+            )
+            valid_role = (
+                is_valid_structure
+                and role_choice in SyntacticRole._value2member_map_
+                and role_choice != SyntacticRole.UNKNOWN.value
+            )
+
+            if not (valid_form and valid_role):
+                g_form = (
+                    GrammaticalForm(form_choice)
+                    if (form_choice in GrammaticalForm._value2member_map_)
+                    else GrammaticalForm.OTHER
+                )
+                s_role = (
+                    SyntacticRole(role_choice)
+                    if (role_choice in SyntacticRole._value2member_map_)
+                    else SyntacticRole.UNKNOWN
+                )
+                lemma, _ = self._lookup_vesum_lemma(tok, g_form)
+                results.append(
+                    HomonymDisambiguation(
+                        sentence=sent,
+                        target_token=tok,
+                        grammatical_form=g_form,
+                        syntactic_role=s_role,
+                        lemma=lemma,
+                        confidence=0.0,
+                        needs_verification=True,
+                        reason=f"Unrecognized or invalid form/role choice from TypeSafe API (form={form_choice!r}, role={role_choice!r})",
+                    )
+                )
+                continue
+
+            g_form = GrammaticalForm(form_choice)
+            s_role = SyntacticRole(role_choice)
 
             try:
-                g_form = GrammaticalForm(form_choice)
-            except ValueError:
-                g_form = GrammaticalForm.OTHER
+                conf_form = float(form_ans.get("confidence", -1))
+                conf_role = float(role_ans.get("confidence", -1))
+                if not (
+                    math.isfinite(conf_form)
+                    and 0.0 <= conf_form <= 1.0
+                    and math.isfinite(conf_role)
+                    and 0.0 <= conf_role <= 1.0
+                ):
+                    raise ValueError("Confidence out of finite [0..1] range")
+                confidence = min(conf_form, conf_role)
+            except (TypeError, ValueError):
+                lemma, _ = self._lookup_vesum_lemma(tok, g_form)
+                results.append(
+                    HomonymDisambiguation(
+                        sentence=sent,
+                        target_token=tok,
+                        grammatical_form=g_form,
+                        syntactic_role=s_role,
+                        lemma=lemma,
+                        confidence=0.0,
+                        needs_verification=True,
+                        reason="Malformed or non-numeric confidence in TypeSafe API response",
+                    )
+                )
+                continue
 
-            try:
-                s_role = SyntacticRole(role_choice)
-            except ValueError:
-                s_role = SyntacticRole.UNKNOWN
-
-            conf_form = float(form_ans.get("confidence", 0.5))
-            conf_role = float(role_ans.get("confidence", 0.5))
-            confidence = min(conf_form, conf_role)
-
-            needs_ver = confidence < 0.85
-            reason = "Auto-accepted by TypeSafe System One" if not needs_ver else f"Confidence {confidence:.2f} < 0.85"
-
-            # Resolve lemma via VESUM
-            lemma = self._lookup_vesum_lemma(tok, g_form)
+            lemma, attested = self._lookup_vesum_lemma(tok, g_form)
+            needs_ver = (confidence < 0.85) or not attested
+            reason = (
+                "Auto-accepted by TypeSafe System One"
+                if not needs_ver
+                else (f"Confidence {confidence:.2f} < 0.85" if confidence < 0.85 else "Lemma not attested in VESUM")
+            )
 
             results.append(
                 HomonymDisambiguation(
@@ -258,7 +323,7 @@ class TypeSafeHomonymDisambiguator:
                     grammatical_form=g_form,
                     syntactic_role=s_role,
                     lemma=lemma,
-                    confidence=confidence,
+                    confidence=round(confidence, 2),
                     needs_verification=needs_ver,
                     reason=reason,
                 )
@@ -266,98 +331,163 @@ class TypeSafeHomonymDisambiguator:
 
         return results
 
-    def _lookup_vesum_lemma(self, tok: str, form: GrammaticalForm) -> str:
-        """Query VESUM to resolve canonical lemma for the disambiguated form."""
+    def _lookup_vesum_lemma(self, tok: str, form: GrammaticalForm) -> tuple[str, bool]:
+        """Query VESUM to resolve canonical lemma for the disambiguated form.
+
+        Returns (lemma, attested_in_morphology).
+        """
         lower_t = tok.lower()
         ves_conn = self._get_vesum_conn()
         if not ves_conn:
-            return self.KNOWN_LEMMA_FALLBACKS.get((lower_t, form), lower_t)
+            if (lower_t, form) in self.KNOWN_LEMMA_FALLBACKS:
+                return (self.KNOWN_LEMMA_FALLBACKS[(lower_t, form)], True)
+            return (lower_t, False)
 
         try:
             cur = ves_conn.cursor()
             if form == GrammaticalForm.FINITE_VERB_PAST:
-                cur.execute("SELECT lemma FROM forms_all WHERE word_form = ? AND pos = 'verb' AND tags LIKE '%past%' LIMIT 1", (lower_t,))
+                cur.execute(
+                    "SELECT lemma FROM forms_all WHERE word_form = ? AND pos = 'verb' AND tags LIKE '%past%' LIMIT 1",
+                    (lower_t,),
+                )
             elif form == GrammaticalForm.NOUN_GENITIVE:
-                cur.execute("SELECT lemma FROM forms_all WHERE word_form = ? AND pos = 'noun' AND tags LIKE '%v_rod%' LIMIT 1", (lower_t,))
+                cur.execute(
+                    "SELECT lemma FROM forms_all WHERE word_form = ? AND pos = 'noun' AND tags LIKE '%v_rod%' LIMIT 1",
+                    (lower_t,),
+                )
             elif form == GrammaticalForm.NOUN_NOMINATIVE:
-                cur.execute("SELECT lemma FROM forms_all WHERE word_form = ? AND pos = 'noun' AND tags LIKE '%v_naz%' LIMIT 1", (lower_t,))
+                cur.execute(
+                    "SELECT lemma FROM forms_all WHERE word_form = ? AND pos = 'noun' AND tags LIKE '%v_naz%' LIMIT 1",
+                    (lower_t,),
+                )
             elif form == GrammaticalForm.NOUN_ACCUSATIVE:
-                cur.execute("SELECT lemma FROM forms_all WHERE word_form = ? AND pos = 'noun' AND tags LIKE '%v_zna%' LIMIT 1", (lower_t,))
+                cur.execute(
+                    "SELECT lemma FROM forms_all WHERE word_form = ? AND pos = 'noun' AND tags LIKE '%v_zna%' LIMIT 1",
+                    (lower_t,),
+                )
             elif form == GrammaticalForm.ADJECTIVE:
-                cur.execute("SELECT lemma FROM forms_all WHERE word_form = ? AND pos = 'adj' LIMIT 1", (lower_t,))
+                cur.execute(
+                    "SELECT lemma FROM forms_all WHERE word_form = ? AND pos = 'adj' LIMIT 1",
+                    (lower_t,),
+                )
             else:
                 cur.execute("SELECT lemma FROM forms_all WHERE word_form = ? LIMIT 1", (lower_t,))
             row = cur.fetchone()
             if row:
-                return row[0]
+                return (row[0], True)
         except sqlite3.Error:
             pass
-        return self.KNOWN_LEMMA_FALLBACKS.get((lower_t, form), lower_t)
+
+        if (lower_t, form) in self.KNOWN_LEMMA_FALLBACKS:
+            return (self.KNOWN_LEMMA_FALLBACKS[(lower_t, form)], True)
+        return (lower_t, False)
 
     def _heuristic_disambiguate(self, sentence: str, target_token: str) -> HomonymDisambiguation:
         """Deterministic heuristic and VESUM-backed disambiguation."""
+        # Validate that the target token occurs as a complete word in the sentence
+        if not re.search(rf"\b{re.escape(target_token)}\b", sentence, re.IGNORECASE):
+            return HomonymDisambiguation(
+                sentence=sentence,
+                target_token=target_token,
+                grammatical_form=GrammaticalForm.OTHER,
+                syntactic_role=SyntacticRole.UNKNOWN,
+                lemma=target_token,
+                confidence=0.0,
+                needs_verification=True,
+                reason=f"Target token {target_token!r} not found as a complete word token in sentence",
+            )
+
         lower_t = target_token.lower()
         lower_s = sentence.lower()
 
         # Check surrounding syntactic environment
         # 1. Subject pronoun preceding target: «вона мила», «дівчина мила», «вони пили»
-        verb_preceding_match = re.search(r"\b(я|ти|він|вона|воно|ми|ви|вони|дівчина|жінка|сестра|мати|хлопець)\s+" + re.escape(lower_t) + r"\b", lower_s)
-        has_direct_object_following = re.search(re.escape(lower_t) + r"\s+(руки|посуд|воду|чай|кефір|підлогу|обличчя)\b", lower_s)
+        verb_preceding_match = re.search(
+            r"\b(я|ти|він|вона|воно|ми|ви|вони|дівчина|жінка|сестра|мати|хлопець)\s+" + re.escape(lower_t) + r"\b",
+            lower_s,
+        )
+        has_direct_object_following = re.search(
+            r"\b" + re.escape(lower_t) + r"\s+(руки|посуд|воду|чай|кефір|підлогу|обличчя)\b",
+            lower_s,
+        )
 
         if verb_preceding_match or has_direct_object_following:
-            lemma = self._lookup_vesum_lemma(target_token, GrammaticalForm.FINITE_VERB_PAST)
+            lemma, attested = self._lookup_vesum_lemma(target_token, GrammaticalForm.FINITE_VERB_PAST)
             return HomonymDisambiguation(
                 sentence=sentence,
                 target_token=target_token,
                 grammatical_form=GrammaticalForm.FINITE_VERB_PAST,
                 syntactic_role=SyntacticRole.PREDICATE_VERB,
                 lemma=lemma,
-                confidence=0.92,
-                needs_verification=False,
-                reason="Preceding subject or governed direct object confirms finite verb reading",
+                confidence=0.92 if attested else 0.50,
+                needs_verification=not attested,
+                reason=(
+                    "Preceding subject or governed direct object confirms finite verb reading"
+                    if attested
+                    else f"Verb pattern matched but token {target_token!r} not attested in VESUM"
+                ),
             )
 
         # 2. Genitive container / measure preceding target: «шматок мила», «брусок мила», «дві пили», «три пили»
-        noun_preceding_match = re.search(r"\b(шматок|брусок|залишок|грам|кілограм|пачка|запах|виробництво|заводу|майстра)\s+" + re.escape(lower_t) + r"\b", lower_s)
-        numeral_saw_match = re.search(r"\b(дві|три|чотири|одна)\s+" + re.escape(lower_t) + r"\s+(заводу|лісгоспу|майстра)\b", lower_s)
+        noun_preceding_match = re.search(
+            r"\b(шматок|брусок|залишок|грам|кілограм|пачка|запах|виробництво|заводу|майстра)\s+"
+            + re.escape(lower_t)
+            + r"\b",
+            lower_s,
+        )
+        numeral_saw_match = re.search(
+            r"\b(дві|три|чотири|одна)\s+" + re.escape(lower_t) + r"\s+(заводу|лісгоспу|майстра)\b",
+            lower_s,
+        )
 
         if noun_preceding_match or numeral_saw_match:
-            lemma = self._lookup_vesum_lemma(target_token, GrammaticalForm.NOUN_GENITIVE)
+            lemma, attested = self._lookup_vesum_lemma(target_token, GrammaticalForm.NOUN_GENITIVE)
             return HomonymDisambiguation(
                 sentence=sentence,
                 target_token=target_token,
                 grammatical_form=GrammaticalForm.NOUN_GENITIVE,
                 syntactic_role=SyntacticRole.ADNOMINAL_ATTRIBUTE,
                 lemma=lemma,
-                confidence=0.90,
-                needs_verification=False,
-                reason="Governed nominal attribute or measure dependent confirms noun reading",
+                confidence=0.90 if attested else 0.50,
+                needs_verification=not attested,
+                reason=(
+                    "Governed nominal attribute or measure dependent confirms noun reading"
+                    if attested
+                    else f"Noun pattern matched but token {target_token!r} not attested in VESUM"
+                ),
             )
 
         # 3. Copula or predicative degree adverb preceding: «була мила», «напрочуд мила», «дуже мила»
-        adj_preceding_match = re.search(r"\b(була|стала|напрочуд|дуже|надзвичайно|така)\s+" + re.escape(lower_t) + r"\b", lower_s)
+        adj_preceding_match = re.search(
+            r"\b(була|стала|напрочуд|дуже|надзвичайно|така)\s+" + re.escape(lower_t) + r"\b",
+            lower_s,
+        )
         if adj_preceding_match:
-            lemma = self._lookup_vesum_lemma(target_token, GrammaticalForm.ADJECTIVE)
+            lemma, attested = self._lookup_vesum_lemma(target_token, GrammaticalForm.ADJECTIVE)
             return HomonymDisambiguation(
                 sentence=sentence,
                 target_token=target_token,
                 grammatical_form=GrammaticalForm.ADJECTIVE,
                 syntactic_role=SyntacticRole.PREDICATE_VERB,
                 lemma=lemma,
-                confidence=0.88,
-                needs_verification=False,
-                reason="Preceding copula or degree adverb confirms adjectival reading",
+                confidence=0.88 if attested else 0.50,
+                needs_verification=not attested,
+                reason=(
+                    "Preceding copula or degree adverb confirms adjectival reading"
+                    if attested
+                    else f"Adjective pattern matched but token {target_token!r} not attested in VESUM"
+                ),
             )
 
         # Default VESUM fallback
-        lemma = self._lookup_vesum_lemma(target_token, GrammaticalForm.OTHER)
+        lemma, attested = self._lookup_vesum_lemma(target_token, GrammaticalForm.OTHER)
         return HomonymDisambiguation(
             sentence=sentence,
             target_token=target_token,
             grammatical_form=GrammaticalForm.OTHER,
             syntactic_role=SyntacticRole.UNKNOWN,
             lemma=lemma,
-            confidence=0.60,
+            confidence=0.60 if attested else 0.30,
             needs_verification=True,
             reason="Ambiguous context routed for manual linguistic evaluation",
         )
