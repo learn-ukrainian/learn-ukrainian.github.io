@@ -114,11 +114,12 @@ claim_session_supervisor_env() {
     return 1
   fi
 
-  local supervisor_tmp
+  local supervisor_tmp release_tmp
   supervisor_tmp="$(mktemp)"
+  release_tmp="${supervisor_tmp}.release"
   # Ensure cleanup even on early return.
   # shellcheck disable=SC2064
-  trap "rm -f '$supervisor_tmp'" RETURN
+  trap "rm -f '$supervisor_tmp' '$release_tmp'" RETURN
 
   local stream_normalized="${stream//:/-}"
   local lineage_id="lineage-${stream_normalized}-${agent}-${$}"
@@ -170,17 +171,41 @@ claim_session_supervisor_env() {
   fi
 
   if ! "$python_bin" "${supervisor_args[@]}" > "$supervisor_tmp" 2>&1; then
-    echo "Error: session supervisor failed to claim ${stream}" >&2
-    sed 's/^/  supervisor: /' "$supervisor_tmp" >&2
     # Remote v1 is TTL-only: an unexpired lease is live regardless of PID.
     # Local --local callers retain proof-gated dead-process recovery; launchers
     # must not silently switch to that local path when Monitor refuses a claim.
-    if grep -q "already has live session" "$supervisor_tmp" 2>/dev/null; then
-      echo "  hint: another process still holds this epic stream." >&2
-      echo "  diagnose: .venv/bin/python -m agents_extensions.shared.session_streams handoff-status --stream ${stream}" >&2
-      echo "  remote leases remain live until expires_at; wait for TTL expiry or obtain an attributed operator release." >&2
+    if grep -q "already has live session" "$supervisor_tmp" 2>/dev/null \
+        && [ "${LC_DRIVER_FORCE:-0}" = "1" ]; then
+      echo "Session supervisor: attributed --force release of ${stream}" >&2
+      if ! "$python_bin" -m scripts.session_supervisor release --role driver --force \
+          --stream "$stream" \
+          --actor-agent "$agent" \
+          --actor-host-id "$host_id" \
+          --reason "operator force takeover via ${launcher} (#8229)" \
+          > "$release_tmp" 2>&1; then
+        echo "Error: attributed force release of ${stream} failed" >&2
+        sed 's/^/  supervisor: /' "$supervisor_tmp" >&2
+        sed 's/^/  supervisor: /' "$release_tmp" >&2
+        rm -f "$release_tmp"
+        return 1
+      fi
+      rm -f "$release_tmp"
+      if ! "$python_bin" "${supervisor_args[@]}" > "$supervisor_tmp" 2>&1; then
+        echo "Error: session supervisor failed to claim ${stream} after --force release" >&2
+        sed 's/^/  supervisor: /' "$supervisor_tmp" >&2
+        return 1
+      fi
+    else
+      echo "Error: session supervisor failed to claim ${stream}" >&2
+      sed 's/^/  supervisor: /' "$supervisor_tmp" >&2
+      if grep -q "already has live session" "$supervisor_tmp" 2>/dev/null; then
+        echo "  hint: another process still holds this epic stream." >&2
+        echo "  diagnose: .venv/bin/python -m agents_extensions.shared.session_streams handoff-status --stream ${stream}" >&2
+        echo "  takeover: ./${launcher} --epic ${epic} --force" >&2
+        echo "  or: .venv/bin/python -m scripts.session_supervisor release --role driver --force --stream ${stream} --actor-agent ${agent} --actor-host-id \"\$LU_MONITOR_HOST_ID\" --reason 'operator force takeover'" >&2
+      fi
+      return 1
     fi
-    return 1
   fi
 
   # Parse the supervisor's JSON capsule into sourceable export statements.

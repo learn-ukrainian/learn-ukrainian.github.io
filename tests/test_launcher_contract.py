@@ -104,6 +104,48 @@ def test_interactive_launchers_reject_driver_epic(name: str) -> None:
     assert "interactive launchers reject --epic" in result.stderr
 
 
+@pytest.mark.parametrize(
+    "name",
+    (
+        "start-claude.sh",
+        "start-codex.sh",
+        "start-gemini.sh",
+        "start-grok.sh",
+        "start-kimi.sh",
+        "start-kimicc.sh",
+        "start-glm.sh",
+        "start-glmcc.sh",
+    ),
+)
+def test_interactive_launchers_reject_force(name: str) -> None:
+    result = run_launcher(name, "--force")
+    assert result.returncode == 2
+    assert "interactive launchers reject --force" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "name",
+    (
+        "start-claude-driver.sh",
+        "start-codex-driver.sh",
+        "start-cursor-driver.sh",
+        "start-gemini-driver.sh",
+        "start-grok-driver.sh",
+    ),
+)
+def test_driver_help_lists_force(name: str) -> None:
+    result = run_launcher(name, "--help")
+    assert result.returncode == 0, result.stderr
+    assert "--force" in result.stdout
+    assert "Attributed operator release" in result.stdout
+
+
+def test_driver_dry_run_force_announces_release_then_claim() -> None:
+    result = run_launcher("start-grok-driver.sh", "--epic", "infra", "--force")
+    assert result.returncode == 0, result.stderr
+    assert "would force-release any live holder on epic:6943 then claim" in result.stdout
+
+
 def test_driver_requires_certified_model_and_valid_epic() -> None:
     missing = run_launcher("start-claude-driver.sh")
     assert missing.returncode == 2
