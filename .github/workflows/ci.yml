@@ -618,8 +618,9 @@ jobs:
             skip_ok "$FRONTEND_JOB"
           fi
           # Advisory-only (#8232): TypeSafe/Jev is not CF and not merge
-          # authority. skip_ok covers both "no secret configured" and a
-          # successful triage run; only an actual job failure (a
-          # high-confidence `broken` verdict) blocks the gate.
-          skip_ok "$TYPESAFE_TRIAGE"
+          # authority. First slice stays advisory until soak: success,
+          # skipped and failure are all accepted here, so a red TypeSafe
+          # check is visible but never turns CI Gate red.
+          advisory_ok() { [ "$1" = success ] || [ "$1" = skipped ] || [ "$1" = failure ]; }
+          advisory_ok "$TYPESAFE_TRIAGE"
           echo "CI Gate green"

@@ -129,3 +129,56 @@ def test_truncate_diff_over_limit_truncates_and_marks() -> None:
     assert out.startswith("x" * 100)
     assert "truncated" in out
     assert out.count("x") == MAX_DIFF_CHARS
+
+
+_KEY = "sk-live-SECRET-KEY-123"
+
+
+def test_triage_never_prints_api_key_from_value_error() -> None:
+    def boom(state, questions, api_key):
+        raise ValueError(f"Invalid header value: 'Bearer {api_key}'")
+
+    code, msg = triage(["a.py"], "diff", "pull_request", _KEY, system_one=boom)
+    assert code == 0
+    assert _KEY not in msg
+    assert "ValueError" in msg
+
+
+def test_triage_skips_on_incomplete_read() -> None:
+    import http.client
+
+    def boom(state, questions, api_key):
+        raise http.client.IncompleteRead(b"par", 10)
+
+    code, msg = triage(["a.py"], "diff", "pull_request", _KEY, system_one=boom)
+    assert code == 0
+    assert "IncompleteRead" in msg
+
+
+@pytest.mark.parametrize(
+    "response",
+    [
+        {"answers": None},
+        {},
+        None,
+        {"answers": {"readiness": None, "high_risk": {"noul": 0.1}}},
+        {"answers": _answers("broken", 1.7, 0.0)},
+        {"answers": _answers("broken", float("nan"), 0.0)},
+        {"answers": _answers("broken", "high", 0.0)},
+        {"answers": _answers("broken", 0.9, None)},
+    ],
+)
+def test_triage_skips_on_malformed_response(response) -> None:
+    code, msg = triage(
+        ["a.py"], "diff", "pull_request", _KEY, system_one=lambda s, q, k: response
+    )
+    assert code == 0
+    assert "unexpected API response shape" in msg
+
+
+def test_triage_still_fails_on_confident_broken() -> None:
+    code, _ = triage(
+        ["a.py"], "diff", "pull_request", _KEY,
+        system_one=lambda s, q, k: {"answers": _answers("broken", 0.9, 0.0)},
+    )
+    assert code == 1

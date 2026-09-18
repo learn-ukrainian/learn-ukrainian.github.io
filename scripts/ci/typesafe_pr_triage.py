@@ -17,7 +17,9 @@ TypeSafe never replaces merge gates).
 
 from __future__ import annotations
 
+import http.client
 import json
+import math
 import os
 import subprocess
 import urllib.request
@@ -107,12 +109,36 @@ def call_system_one(
         return json.loads(resp.read().decode("utf-8"))
 
 
-def evaluate(answers: dict[str, Any]) -> tuple[bool, str]:
-    """Compose the two raw answers into a pass/fail. Never logs secrets."""
-    readiness = answers.get("readiness", {})
+class MalformedResponse(ValueError):
+    """The API answered, but not in the shape ``evaluate`` needs."""
+
+
+def _unit_float(value: Any, what: str) -> float:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise MalformedResponse(f"{what} is not a number")
+    number = float(value)
+    if not math.isfinite(number) or not 0.0 <= number <= 1.0:
+        raise MalformedResponse(f"{what} is outside [0, 1]")
+    return number
+
+
+def evaluate(answers: Any) -> tuple[bool, str]:
+    """Compose the two raw answers into a pass/fail. Never logs secrets.
+
+    Raises ``MalformedResponse`` on an unexpected shape (null answers, invalid
+    confidence); callers treat that as an advisory skip.
+    """
+    if not isinstance(answers, dict):
+        raise MalformedResponse("answers is not an object")
+    readiness = answers.get("readiness")
+    high_risk_answer = answers.get("high_risk")
+    if not isinstance(readiness, dict) or not isinstance(high_risk_answer, dict):
+        raise MalformedResponse("missing readiness/high_risk answer")
     choice = readiness.get("choice")
-    confidence = float(readiness.get("confidence", 0.0))
-    high_risk = float(answers.get("high_risk", {}).get("noul", 0.0))
+    if not isinstance(choice, str):
+        raise MalformedResponse("readiness choice is not a string")
+    confidence = _unit_float(readiness.get("confidence"), "confidence")
+    high_risk = _unit_float(high_risk_answer.get("noul"), "high_risk")
 
     broken = choice == "broken"
     should_fail = broken and (
@@ -140,10 +166,16 @@ def triage(
     state = build_state(paths, diff, event)
     try:
         response = system_one(state, QUESTIONS, api_key)
-    except (OSError, ValueError) as exc:
-        return 0, f"typesafe-jev triage: API call failed ({exc}) — advisory, not blocking."
+    except (OSError, ValueError, http.client.HTTPException) as exc:
+        # Class name only: str(exc) may echo the Authorization header value.
+        return 0, f"typesafe-jev triage: API call failed ({type(exc).__name__}) — advisory, not blocking."
 
-    should_fail, summary = evaluate(response.get("answers", {}))
+    try:
+        if not isinstance(response, dict):
+            raise MalformedResponse("response is not an object")
+        should_fail, summary = evaluate(response.get("answers"))
+    except MalformedResponse:
+        return 0, "typesafe-jev triage: unexpected API response shape — advisory, not blocking."
     return (1 if should_fail else 0), summary
 
 
