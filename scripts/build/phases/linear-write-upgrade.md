@@ -123,8 +123,8 @@ or any gloss in `options` or `answer` — the gate rejects them. Sample:
 
 These three modules teach syllables, not line breaks. Do **not** teach `перенос`, do
 not emit `divide-words` activities, and do not use the models `Мар'-яна`,
-`дере-в'яний`, `бур'-ян`, `паль-ці` or any other hyphenated break. The plan and
-original artifacts below have been filtered of `перенос` items on purpose; an
+`дере-в'яний`, `бур'-ян`, `паль-ці` or any other hyphenated break. The lesson map, plan
+and original artifacts below have been filtered of `перенос` items on purpose; an
 original divide-words activity that is missing from them is intentionally dropped.
 The gate fails such a build.
 

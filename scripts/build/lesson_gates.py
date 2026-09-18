@@ -997,7 +997,10 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     for title, body in base_secs.items():
         mapped = section_to_lesson.get(title) or section_to_lesson.get(strip_acute(title))
         if mapped is None:
-            block(f"baseline section {title!r} has no lesson mapping (checker config)")
+            # A line-break baseline section is dropped on purpose, so lessons.yaml
+            # need not map it; any other unmapped section is still a config error.
+            if not (alphabet and mentions_line_breaks(title)):
+                block(f"baseline section {title!r} has no lesson mapping (checker config)")
             continue
         # Alphabet modules must not teach line breaks, so original paragraphs that do
         # are intentionally not carried forward (#8237).
@@ -1274,8 +1277,8 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     # Exemptions cannot be invented for new writer activities.
     if not set(exempt) <= original_ids:
         block("item exemptions may name only preserved original activities")
-    for pl, i in sorted(k for k in prov if k in dropped):
-        block(f"provenance points at dropped line-break original {pl}[{i}]; remove it")
+    # A provenance row for a dropped line-break original is skipped, not blocked:
+    # the live lessons.yaml still carries it and is never hand-edited (#8237).
     kept_provenance = [p for p in provenance if (p.get("placement"), p.get("index")) not in dropped]
     if len(kept_provenance) != len(originals) - len(dropped) or len(prov) != len(provenance):
         block("provenance must cover every original exactly once")

@@ -4,13 +4,15 @@ The three A1 alphabet modules teach syllables, not line breaks. Syllable
 divisions and typographic line breaks are different things, so these modules
 must not teach a "correct" hyphenation. The prompt filter drops plan text about
 ``перенос`` before the writer sees it; the lesson gate fails a build that
-still ships it.
+still ships it. The upgrade prompt gets the same treatment for the lesson map
+and every original artifact, headings included: a lesson that is filtered out
+of the prose but still named in the map is still an order to write it.
 """
 from __future__ import annotations
 
 import copy
 import re
-from collections.abc import Mapping
+from collections.abc import Mapping, Set
 from typing import Any
 
 ALPHABET_SLUGS = frozenset({
@@ -20,9 +22,13 @@ ALPHABET_SLUGS = frozenset({
 })
 
 _APOS = "['’ʼ`]"
-# Word-stem match: перенос / переносу / переносі / переносити.
+# Word-stem match: перенос / переносу / переносі / переносити. The English side
+# covers the paraphrases the archived lessons actually use ("words split across a
+# line", "Word Hyphenation Rules"); ``\s+`` because markdown wraps mid-phrase.
+# Ordinary syllable hyphens (ма-ма) and the word ``склади`` never match.
 LINE_BREAK_RE = re.compile(
-    rf"перенос|line[- ]?break|divide-words|"
+    rf"перенос|line[-\s]?break|divide-words|hyphenat|"
+    rf"split\s+across\s+(?:a|the)\s+line|alone\s+on\s+a\s+line|"
     rf"Мар{_APOS}-яна|дере-в{_APOS}яний|бур{_APOS}-ян|паль-ці",
     re.IGNORECASE,
 )
@@ -49,12 +55,17 @@ def is_alphabet_slug(slug: object) -> bool:
     return str(slug or "").strip().lower() in ALPHABET_SLUGS
 
 
+def _plain(text: str) -> str:
+    # Published titles carry stress marks (перено́су); match the unstressed stem.
+    return text.replace("\u0301", "")
+
+
 def mentions_line_breaks(text: object) -> bool:
-    return isinstance(text, str) and bool(LINE_BREAK_RE.search(text))
+    return isinstance(text, str) and bool(LINE_BREAK_RE.search(_plain(text)))
 
 
 def contains_line_break_model(text: object) -> bool:
-    return isinstance(text, str) and bool(_MODEL_RE.search(text))
+    return isinstance(text, str) and bool(_MODEL_RE.search(_plain(text)))
 
 
 def banned_phrases_in(text: str) -> list[str]:
@@ -112,6 +123,52 @@ def filter_line_break_plan(plan: Mapping[str, Any]) -> dict[str, Any]:
     return _filter(copy.deepcopy(dict(plan)))
 
 
+_TITLE_JOIN_RE = re.compile(r"\s+(і|й|та|and)\s+|\s*(,|·)\s*", re.IGNORECASE)
+
+
+def strip_line_break_title(title: str) -> str:
+    """Drop the line-break half of a joined title: ``Перенос і підсумок`` -> ``Підсумок``.
+
+    Returns ``""`` when nothing else is left.
+    """
+    if not mentions_line_breaks(title):
+        return title
+    parts = _TITLE_JOIN_RE.split(title)  # text, word-joiner, punct-joiner, text, ...
+    kept: list[str] = []
+    for i in range(0, len(parts), 3):
+        if mentions_line_breaks(parts[i]):
+            continue
+        if kept:
+            kept.append(", " if parts[i - 1] == "," else f" {parts[i - 2] or parts[i - 1]} ")
+        kept.append(parts[i])
+    out = "".join(kept).strip()
+    return out[:1].upper() + out[1:]
+
+
+def line_break_free_titles(plan: Mapping[str, Any]) -> dict[str, Any]:
+    """Prompt-only copy of an alphabet plan whose section titles name no line breaks.
+
+    ``filter_line_break_plan`` keeps section titles because the section gate reads
+    them; the writer must not see a hyphenation title, so the copy a prompt shows
+    renames the section (word budget kept) or drops it when nothing else is left.
+    The plan file and the gate's plan are untouched.
+    """
+    if not is_alphabet_slug(plan.get("slug")):
+        return dict(plan)
+    out = copy.deepcopy(dict(plan))
+    outline = []
+    for section in out.get("content_outline") or []:
+        if isinstance(section, Mapping) and isinstance(section.get("section"), str):
+            title = strip_line_break_title(section["section"])
+            if not title:
+                continue
+            section = {**section, "section": title}
+        outline.append(section)
+    if "content_outline" in out:
+        out["content_outline"] = outline
+    return out
+
+
 def is_line_break_activity(activity: Any) -> bool:
     """True for a divide-words activity or one whose text teaches line breaks."""
     if not isinstance(activity, Mapping):
@@ -131,11 +188,69 @@ def filter_line_break_activities(activities: Any) -> Any:
     return activities
 
 
-def filter_line_break_paragraphs(markdown: str) -> str:
-    """Drop prose paragraphs that teach line breaks; headings are structural and stay."""
+def filter_line_break_resources(resources: Any) -> Any:
+    """Drop line-break notes from a parsed ``resources.yaml``.
+
+    A source stays when only its note is about line breaks; an entry whose own
+    title is about them goes whole.
+    """
+    if isinstance(resources, list):
+        resources = [
+            r for r in resources
+            if not (isinstance(r, Mapping) and mentions_line_breaks(r.get("title")))
+        ]
+    return _filter(copy.deepcopy(resources))
+
+
+def line_break_original_keys(activities: Any) -> set[tuple[str, int]]:
+    """``(placement, index)`` of original activities that teach line breaks."""
+    if not isinstance(activities, Mapping):
+        return set()
+    return {
+        (placement, i)
+        for placement in ("inline", "workbook")
+        for i, a in enumerate(activities.get(placement) or [])
+        if is_line_break_activity(a)
+    }
+
+
+def filter_line_break_lesson_map(
+    lesson_map: Mapping[str, Any], dropped: Set[tuple[str, int]] = frozenset(),
+) -> dict[str, Any]:
+    """Return the lesson map the writer may see: no line-break lesson, section or activity.
+
+    Lesson titles and section names that name line breaks are removed, and so
+    are the provenance rows and item exemptions of ``dropped`` originals
+    (``line_break_original_keys``). Lesson numbers, minutes, word targets and
+    activity counts stay. The on-disk ``lessons.yaml`` is not changed.
+    """
+    out = copy.deepcopy(dict(lesson_map))
+    for lesson in out.get("lessons") or []:
+        if mentions_line_breaks(lesson.get("title")):
+            del lesson["title"]
+        if isinstance(lesson.get("sections"), list):
+            lesson["sections"] = [s for s in lesson["sections"] if not mentions_line_breaks(s)]
+    dropped_ids = set()
     kept = []
-    for para in re.split(r"\n\s*\n", markdown):
-        heading_only = para.lstrip().startswith("#") and "\n" not in para.strip()
-        if heading_only or not mentions_line_breaks(para):
-            kept.append(para)
-    return "\n\n".join(kept)
+    for row in out.get("provenance") or []:
+        if (row.get("placement"), row.get("index")) in dropped:
+            dropped_ids.add(row.get("new_id"))
+        else:
+            kept.append(row)
+    if "provenance" in out:
+        out["provenance"] = kept
+    if "items_min_exempt" in out:
+        out["items_min_exempt"] = [e for e in out["items_min_exempt"] if e.get("id") not in dropped_ids]
+    return out
+
+
+def filter_line_break_paragraphs(markdown: str) -> str:
+    """Drop paragraphs that teach line breaks, headings included.
+
+    A kept ``## Перенос і письмо`` heading still orders the writer to build that
+    lesson, so it goes too; its surviving paragraphs read on under the previous
+    heading.
+    """
+    return "\n\n".join(
+        para for para in re.split(r"\n\s*\n", markdown) if not mentions_line_breaks(para)
+    )
