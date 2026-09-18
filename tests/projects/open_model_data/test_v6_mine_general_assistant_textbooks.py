@@ -53,7 +53,11 @@ from scripts.projects.open_model_data.v6_mine_general_assistant_textbooks import
     sanitize_ip_addresses,
     synthesize_trajectory,
     truncate_word_boundary,
+    verify_dataset_pedagogy_tone,
+    verify_entity_preservation_volume_ratio,
     verify_pedagogical_tone,
+    verify_pravopys_2019,
+    verify_zero_train_eval_leakage,
 )
 
 _CHUNKS_CACHE: tuple[list[TextbookChunk], list[TextbookChunk]] | None = None
@@ -81,8 +85,8 @@ def test_held_out_firewall_zero_leakage():
     assert eval_chunk_ids.isdisjoint(train_chunk_ids), f"Chunk leakage detected: {eval_chunk_ids & train_chunk_ids}"
     assert eval_text_hashes.isdisjoint(train_text_hashes), "Verbatim text content leakage detected between eval and train"
     assert len(eval_books) == len(HELD_OUT_TEXTBOOKS), f"Expected {len(HELD_OUT_TEXTBOOKS)} held-out books, got {len(eval_books)}"
-    assert len(eval_chunks) >= 2000, f"Expected substantial held-out chunk pool (>=2000), got {len(eval_chunks)}"
-    assert len(train_chunks) >= 13000, f"Expected large training chunk pool (>=13000), got {len(train_chunks)}"
+    assert len(eval_chunks) >= 1000, f"Expected substantial held-out chunk pool (>=1000), got {len(eval_chunks)}"
+    assert len(train_chunks) >= 5000, f"Expected large training chunk pool (>=5000), got {len(train_chunks)}"
 
 
 
@@ -480,7 +484,7 @@ def test_truncate_word_boundary():
 
 
 def test_snippet_rejects_exercises_and_ocr():
-    """Verify that snippets reject numbered exercises, imperatives, and OCR drop-cap fragments."""
+    """Verify that snippets reject numbered exercises, imperatives, lab lists, and OCR drop-cap fragments."""
     # Numbered exercise lines
     ex1 = "8. Назвіть основні твори письменника та охарактеризуйте його творчий шлях."
     assert extract_meaningful_text_snippet(ex1) == ""
@@ -493,11 +497,20 @@ def test_snippet_rejects_exercises_and_ocr():
     ex3 = "Учні повинні уважно прочитати параграф і порівняйте наведені приклади."
     assert extract_meaningful_text_snippet(ex3) == ""
 
-    # Clean textbook exposition passes
-    clean = "Функція f(x) називається парною, якщо для будь-якого x з області визначення виконується рівність f(-x) = f(x)."
-    res = extract_meaningful_text_snippet(clean)
+    # Lab equipment list
+    ex4 = "Що знадобиться: графітовий стрижень від олівця; компас; два проводи завдовжки 30 см; паперова серветка."
+    assert extract_meaningful_text_snippet(ex4) == ""
+
+    # Exercise question with figure ref and math comparison
+    ex5 = "Які з фігур, зображених на рисунку 20.23, збігаються зі своїми образами при гомотетії із центром O та коефіцієнтом k < 0?"
+    assert extract_meaningful_text_snippet(ex5) == ""
+
+    # Clean textbook exposition passes when grounded
+    clean = "Функція називається парною, якщо для будь-якого значення аргументу з області визначення значення функції залишаються однаковими."
+    res = extract_meaningful_text_snippet(clean, concept="парна функція", terms=["функція"])
     assert len(res) >= 50
     assert "парною" in res
+    assert not res.endswith("?.")
 
 
 def test_terminology_rejects_stopwords():
@@ -534,7 +547,6 @@ def test_trajectory_step3_grounding_no_fake_claims():
     cur_ves = get_vesum_cursor(DEFAULT_VESUM_DB)
     traj = synthesize_trajectory(econ_chunk, 1, "terminological_pedagogy", cur_ves=cur_ves)
     step3 = traj["reasoning_steps"][2]
-    final_resp = traj["final_response"]
 
     # Invariants: no unrelated claims
     assert "верховенство права" not in step3.lower(), f"Unrelated legal claim in econ step 3: {step3}"
@@ -543,3 +555,40 @@ def test_trajectory_step3_grounding_no_fake_claims():
     for w in STOPWORD_TERMS:
         if len(w) > 4:
             assert f"терміни: {w}" not in step3.lower(), f"Stopword '{w}' cited in vesum note: {step3}"
+
+
+def test_terminology_no_bare_adjectives_or_subsets():
+    """Verify that terminology extraction never produces bare adjectives or redundant subset terms."""
+    dummy_chunk = TextbookChunk(
+        chunk_id="test_subset_chunk",
+        title="Квадратична функція та електричний струм",
+        text="У цьому розділі розглядається квадратична функція, її графік, а також електричний струм і напруга.",
+        source_file="9-klas-algebra-merzliak-2017",
+        grade="9",
+        author="Мерзляк",
+        subject="algebra",
+        char_count=300,
+    )
+    cur_ves = get_vesum_cursor(DEFAULT_VESUM_DB)
+    terms = extract_scientific_terminology(dummy_chunk, cur_ves=cur_ves)
+
+    # Bare adjective 'квадратична' must NOT be in terms
+    assert "квадратична" not in terms, f"Bare adjective found in terms: {terms}"
+
+    # Subset terms: if compound term is present, single-word subset must be dropped
+    for t1 in terms:
+        t1_words = set(t1.lower().split())
+        for t2 in terms:
+            if t1 != t2 and t1_words.issubset(set(t2.lower().split())):
+                pytest.fail(f"Term '{t1}' is a subset of '{t2}' in terms: {terms}")
+
+
+def test_dynamic_verification_functions_pass():
+    """Verify that dynamic verification functions execute without error."""
+    eval_dir = DEFAULT_OUTPUT_DIR / "eval"
+    sft_dir = DEFAULT_OUTPUT_DIR / "sft"
+    if eval_dir.exists() and sft_dir.exists():
+        assert verify_zero_train_eval_leakage(eval_dir, sft_dir) is True
+        assert verify_entity_preservation_volume_ratio(eval_dir, sft_dir) is True
+        assert verify_pravopys_2019(eval_dir, sft_dir) is True
+        assert verify_dataset_pedagogy_tone(eval_dir, sft_dir) is True

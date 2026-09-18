@@ -290,6 +290,21 @@ EXERCISE_LINE_PATTERNS = [
     re.compile(r"(?:^|\s)(?:запитання|завдання|вправи|практична робота|тестові завдання|перевірте себе|інтелектуальний клуб)\b", re.IGNORECASE),
 ]
 
+EXERCISE_ITEM_RE = re.compile(
+    r"^\s*(?:\d+\.\d+|\d+°|\d{3,}\.|\d+[\.\)]\s*(?:[^\n]*?\b(?:" + "|".join(EXERCISE_IMPERATIVES) + r")\b))",
+    re.IGNORECASE | re.MULTILINE,
+)
+LAB_EQUIPMENT_RE = re.compile(
+    r"\b(?:що знадобиться|обладнання|матеріали|прилади|реактиви|посуд|хід роботи|інструктаж|лабораторн\w*|практичн\w* робот\w*|дослід\w*|експеримент\w*)\b",
+    re.IGNORECASE,
+)
+FIGURE_REF_RE = re.compile(
+    r"\b(?:рис\.|рисунок|рисунк\w*|мал\.|малюнок|малюнк\w*|табл\.|таблиц\w*|іл\.|ілюстрац\w*|схем\w*|діаграм\w*|фото)\s*\d+",
+    re.IGNORECASE,
+)
+MATH_GARBLE_RE = re.compile(r"[=><±×÷−√∫∑^{}[\]\\|~]")
+QUESTION_STARTER_RE = re.compile(r"^\s*(?:які|яка|який|яке|яких|яким|чому|чи|хто|що|де|куди|звідки|як|скільки)\b", re.IGNORECASE)
+
 
 def truncate_word_boundary(text: str, max_len: int) -> str:
     """Truncate text cleanly at a word boundary, stripping trailing punctuation and dangling opening quotes."""
@@ -587,7 +602,7 @@ class TextbookChunk:
 
 
 def is_clean_content_chunk(chunk: TextbookChunk) -> bool:
-    """Filter out administrative frontmatter, tables of contents, and short fragments."""
+    """Filter out administrative frontmatter, tables of contents, exercise sections, and short fragments."""
     if chunk.char_count < 150:
         return False
     if chunk.subject not in STEM_SUBJECTS and chunk.subject not in HUMANITIES_SUBJECTS:
@@ -616,6 +631,11 @@ def is_clean_content_chunk(chunk: TextbookChunk) -> bool:
         return False
     if re.search(r"^\s*(?:зміст|table of contents)\b", t, re.IGNORECASE | re.MULTILINE):
         return False
+    # Reject chunks starting with or dominated by exercises / problem sets
+    if re.search(r"^\s*(?:вправа|вправи|завдання|питання і завдання|практична робота|лабораторна робота|тестові завдання)\b", t, re.IGNORECASE | re.MULTILINE):
+        return False
+    if len(EXERCISE_ITEM_RE.findall(t)) >= 2:
+        return False
     if not verify_pedagogical_tone(t):
         return False
     if any(m in t for m in frontmatter_markers):
@@ -623,8 +643,9 @@ def is_clean_content_chunk(chunk: TextbookChunk) -> bool:
     concept = extract_key_concept(chunk)
     if not concept:
         return False
-    snippet = extract_meaningful_text_snippet(chunk.text)
-    return bool(snippet and len(snippet) >= 60)
+    terms = extract_scientific_terminology(chunk)
+    snippet = extract_meaningful_text_snippet(chunk.text, concept=concept, terms=terms)
+    return bool(snippet and len(snippet) >= 50)
 
 
 def load_textbook_chunks(db_path: Path) -> tuple[list[TextbookChunk], list[TextbookChunk]]:
@@ -694,10 +715,10 @@ def load_textbook_chunks(db_path: Path) -> tuple[list[TextbookChunk], list[Textb
 def is_clean_prose_line(line: str) -> bool:
     """Validate that a single line is clean textbook running prose, rejecting OCR garble, formulas, and TOC."""
     s = line.strip()
-    if not s or len(s) < 18:
+    if not s or len(s) < 10:
         return False
     # Drop section titles and structural headings
-    if re.match(r"^(?:§|розділ|тема|частина|параграф)\b", s, re.IGNORECASE):
+    if re.match(r"^(?:§\s*\d*|\b(?:розділ|тема|частина|параграф|урок)\b)", s, re.IGNORECASE):
         return False
     # Drop short all-caps lines (titles, headers)
     if s.isupper() and len(s) < 50:
@@ -714,7 +735,17 @@ def is_clean_prose_line(line: str) -> bool:
     # Drop figures, diagrams, tables, and exercises
     if re.match(r"^(?:мал\.|рис\.|таблиц\w*|схема|діаграм\w*|фото|вправа|завдання|питання|варіант)\b", s, re.IGNORECASE):
         return False
-    if re.match(r"^(?:\d+[\.\)]|[а-яіїєґa-z][\.\)])\s+", s, re.IGNORECASE):
+    if FIGURE_REF_RE.search(s):
+        return False
+    if LAB_EQUIPMENT_RE.search(s):
+        return False
+    if "?" in s:
+        return False
+    if s.count(";") >= 2 or (":" in s and s.endswith(";")):
+        return False
+    if MATH_GARBLE_RE.search(s):
+        return False
+    if EXERCISE_ITEM_RE.match(s):
         return False
     if any(p.search(s) for p in EXERCISE_LINE_PATTERNS):
         return False
@@ -722,12 +753,15 @@ def is_clean_prose_line(line: str) -> bool:
     if any(w in EXERCISE_IMPERATIVES for w in words):
         return False
     # Drop formula garble: empty parens, spaced periods, isolated math operators
-    if re.search(r"\(\s*\)", s) or re.search(r"\.\s+\.", s):
+    if re.search(r"\(\s*\)|\.\s+\.", s):
         return False
     if re.search(r"(?:[=><±×÷−]\s*){2,}", s):
         return False
     # Drop spaced sequences of isolated Latin formula fragments (e.g. 'OA OB AOB' or 'x a y b R')
     if re.search(r"\b[a-zA-Z]{1,3}(?:\s+[a-zA-Z]{1,3}){2,}\b", s):
+        return False
+    # If line is short and has no terminal punctuation, treat as heading or table fragment
+    if len(s) < 50 and not s.endswith((".", "!", "»", "“", "—", "-")):
         return False
     # Cyrillic vs Latin / symbols / digits ratio
     cyr = len(re.findall(r"[а-яіїєґА-ЯІЇЄҐ]", s))
@@ -735,7 +769,7 @@ def is_clean_prose_line(line: str) -> bool:
     digits = len(re.findall(r"[0-9]", s))
     symbols = len(re.findall(r"[=><±×÷−+\\/*_^{}[\]|~]", s))
     total_letters = cyr + lat
-    if cyr < 12:
+    if cyr < 8:
         return False
     if total_letters > 0 and (cyr / total_letters) < 0.80:
         return False
@@ -744,8 +778,13 @@ def is_clean_prose_line(line: str) -> bool:
     return not OCR_DROPCAP_RE.search(s)
 
 
-def extract_meaningful_text_snippet(text: str, max_len: int = 280) -> str:
-    """Extract a coherent, contiguous prose paragraph ending on a sentence boundary without mid-word or mid-sentence cuts."""
+def extract_meaningful_text_snippet(
+    text: str,
+    concept: str = "",
+    terms: list[str] | None = None,
+    max_len: int = 260,
+) -> str:
+    """Extract a coherent, grounded contiguous prose paragraph ending on a sentence boundary without exercises or questions."""
     clean = sanitize_typography(text)
     lines = clean.splitlines()
     blocks: list[list[str]] = []
@@ -760,30 +799,82 @@ def extract_meaningful_text_snippet(text: str, max_len: int = 280) -> str:
     if curr:
         blocks.append(curr)
 
+    # Collect keywords from concept and terms for grounding
+    grounding_keywords: set[str] = set()
+    if concept:
+        for w in re.findall(r"[а-яіїєґ']+", concept.lower()):
+            if len(w) >= 4 and w not in STOPWORD_TERMS:
+                grounding_keywords.add(w)
+    if terms:
+        for t in terms:
+            for w in re.findall(r"[а-яіїєґ']+", t.lower()):
+                if len(w) >= 4 and w not in STOPWORD_TERMS:
+                    grounding_keywords.add(w)
+
+    def _sentence_score(s: str) -> int:
+        if not (50 <= len(s) <= max_len):
+            return -100
+        if not s.endswith((".", "!", "»", "“")):
+            return -100
+        if "?" in s or QUESTION_STARTER_RE.match(s):
+            return -100
+        if FIGURE_REF_RE.search(s) or LAB_EQUIPMENT_RE.search(s) or MATH_GARBLE_RE.search(s):
+            return -100
+        if re.search(r"\(\s*\)|\.\s+\.|\.{3,}", s):
+            return -100
+        if s.count(";") >= 2:
+            return -100
+        if any(w in EXERCISE_IMPERATIVES for w in re.findall(r"[а-яіїєґ']+", s.lower())):
+            return -100
+
+        score = 1
+        s_lower = s.lower()
+        if concept and concept.lower() in s_lower:
+            score += 10
+        if terms:
+            for t in terms:
+                if t.lower() in s_lower:
+                    score += 8
+        s_words = set(re.findall(r"[а-яіїєґ']+", s_lower))
+        for kw in grounding_keywords:
+            if kw in s_lower or any(sw.startswith(kw[:4]) for sw in s_words):
+                score += 4
+        return score
+
+    best_cand = ""
+    best_score = 0
+
     for block in blocks:
         para = dehyphenate_text(" ".join(block))
         para = MULTISPACE_RE.sub(" ", para).strip()
-        if len(para) < 60:
+        if len(para) < 50:
             continue
-        # Split on sentence boundaries: sentence-ending punctuation followed by space and capital letter or quote
         sents = re.split(r"(?<=[.!?])\s+(?=[«„\"А-ЯІЇЄҐ])", para)
         for i, s in enumerate(sents):
             s = s.strip()
             if not s or not re.match(r"^[«„\"А-ЯІЇЄҐ]", s):
                 continue
-            if not s.endswith((".", "!", "?", "»", "“")):
-                continue
-            # Double check for formula or TOC garble in sentence
-            if re.search(r"\(\s*\)|\.\s+\.|\.{3,}", s):
-                continue
-            if len(s) >= 70 and len(s) <= max_len:
-                return s
-            if len(s) < 70 and i + 1 < len(sents):
-                s2 = (s + " " + sents[i + 1].strip()).strip()
-                if len(s2) <= max_len and s2.endswith((".", "!", "?", "»", "“")) and not re.search(r"\(\s*\)|\.\s+\.|\.{3,}", s2):
-                    return s2
-            if len(s) >= 50 and len(s) <= max_len:
-                return s
+            # Check single sentence
+            sc = _sentence_score(s)
+            if sc > best_score:
+                best_score = sc
+                best_cand = s
+            # Check combining two short adjacent sentences in the same block
+            if len(s) < 75 and i + 1 < len(sents):
+                s_next = sents[i + 1].strip()
+                s_comb = (s + " " + s_next).strip()
+                sc_comb = _sentence_score(s_comb)
+                if sc_comb > best_score:
+                    best_score = sc_comb
+                    best_cand = s_comb
+
+    # Require positive grounding score (at least one concept or term keyword matched)
+    if best_score >= 4 and best_cand:
+        return best_cand.rstrip(". ") + "."
+
+    if not grounding_keywords and best_score >= 1 and best_cand:
+        return best_cand.rstrip(". ") + "."
+
     return ""
 
 
@@ -861,14 +952,10 @@ def extract_key_concept(chunk: TextbookChunk) -> str:
 
 
 def extract_scientific_terminology(chunk: TextbookChunk, cur_ves: sqlite3.Cursor | None = None) -> list[str]:
-    """Identify key Ukrainian scientific terms present in the chunk, deduplicated by lemma and excluding stopwords."""
-    terms: list[str] = []
-    seen_lemmas: set[str] = set()
-    text_lower = chunk.text.lower()
-    canonical_list = CANONICAL_SUBJECT_TERMINOLOGY.get(chunk.subject, [])
+    """Identify key Ukrainian scientific terms present in the chunk, deduplicated by lemma, excluding stopwords and bare adjectives."""
+    cur = cur_ves or get_vesum_cursor()
 
     def _get_lemma(word: str) -> str:
-        cur = cur_ves or get_vesum_cursor()
         if cur is None:
             return word
         try:
@@ -878,21 +965,72 @@ def extract_scientific_terminology(chunk: TextbookChunk, cur_ves: sqlite3.Cursor
         except Exception:
             return word
 
+    def _has_noun_reading(word: str) -> bool:
+        if cur is None:
+            return not word.endswith(("ий", "ій", "а", "я", "е", "є", "их", "і", "им", "ій", "ою", "ими"))
+        try:
+            cur.execute("SELECT tags FROM forms_all WHERE word_form = ?", (word,))
+            rows = cur.fetchall()
+            if not rows:
+                return True
+            return any(r[0].startswith("noun") for r in rows)
+        except Exception:
+            return True
+
+    text_lower = chunk.text.lower()
     candidate_terms: list[str] = []
+
+    # 1. Subject canonical terminology present in text
+    canonical_list = CANONICAL_SUBJECT_TERMINOLOGY.get(chunk.subject, [])
     if isinstance(canonical_list, list):
         for ct in canonical_list:
             if ct in text_lower and ct not in candidate_terms:
                 candidate_terms.append(ct)
 
-    # Also extract domain terms from the concept itself
+    # 2. Concept itself as a unit (if not a stopword and present in text)
     concept = extract_key_concept(chunk)
     if concept:
-        c_words = [w.strip(".,;:?!'\"«»„“—–()").lower() for w in concept.split()]
-        for w in c_words:
-            if len(w) >= 5 and w not in STOPWORD_TERMS and w in text_lower and w not in candidate_terms:
-                candidate_terms.append(w)
+        c_clean = concept.strip().lower()
+        if c_clean not in STOPWORD_TERMS and c_clean in text_lower and c_clean not in candidate_terms:
+            candidate_terms.append(c_clean)
 
+    # 3. Filter candidate terms: reject bare adjectives and stopwords
+    filtered_terms: list[str] = []
     for t in candidate_terms:
+        words = [w for w in re.findall(r"[а-яіїєґ']+", t.lower()) if w not in STOPWORD_TERMS and len(w) >= 4]
+        if not words:
+            continue
+        # If single-word, ensure it can be a noun (reject bare adjectives like 'квадратична')
+        if len(words) == 1 and not _has_noun_reading(words[0]):
+            continue
+        # For multi-word terms, head word is usually the last word
+        head_word = words[-1]
+        if not _has_noun_reading(head_word):
+            continue
+        filtered_terms.append(t)
+
+    # 4. Strict subset deduplication: drop any term whose words are a strict subset of another term
+    deduped_subset: list[str] = []
+    for t in filtered_terms:
+        t_words = set(re.findall(r"[а-яіїєґ']+", t.lower()))
+        is_sub = False
+        for other in filtered_terms:
+            if other == t:
+                continue
+            other_words = set(re.findall(r"[а-яіїєґ']+", other.lower()))
+            if t_words.issubset(other_words) and len(t) < len(other):
+                is_sub = True
+                break
+            if t.lower() in other.lower() and len(t) < len(other):
+                is_sub = True
+                break
+        if not is_sub:
+            deduped_subset.append(t)
+
+    # 5. Deduplicate by head-word lemma
+    final_terms: list[str] = []
+    seen_lemmas: set[str] = set()
+    for t in deduped_subset:
         words = [w for w in re.findall(r"[а-яіїєґ']+", t.lower()) if w not in STOPWORD_TERMS and len(w) >= 4]
         if not words:
             continue
@@ -901,9 +1039,9 @@ def extract_scientific_terminology(chunk: TextbookChunk, cur_ves: sqlite3.Cursor
         if lemma in seen_lemmas:
             continue
         seen_lemmas.add(lemma)
-        terms.append(t)
+        final_terms.append(t)
 
-    return terms[:4]
+    return final_terms[:4]
 
 
 def synthesize_eval_task(chunk: TextbookChunk, idx: int) -> dict[str, Any]:
@@ -914,7 +1052,7 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int) -> dict[str, Any]:
     subj_nom = chunk.subject_nominative
     grade = chunk.grade
 
-    snippet = extract_meaningful_text_snippet(chunk.text, max_len=260)
+    snippet = extract_meaningful_text_snippet(chunk.text, concept=concept, terms=terms, max_len=260)
     snippet = apply_calque_sanitation(snippet)
 
     terms_str = f" Профільні терміни теми: {', '.join(terms[:3])}." if terms else ""
@@ -925,10 +1063,10 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int) -> dict[str, Any]:
             f"Сформулюйте відповідні правила чи теореми, наведіть математичні властивості та алгоритм розв'язування відповідних завдань."
         )
         step1 = f"1. Декомпозиція та формулювання поняття: Розглядаємо сутність поняття «{concept}» у курсі {subj_gen} ({grade} клас)."
-        step2 = f"2. Теоретичне обґрунтування: Використовуємо положення підручника: «{snippet}»."
+        step2 = f"2. Теоретичне обґрунтування: Використовуємо положення підручника: «{snippet}»"
         step3 = (
-            f"3. Термінологічна та мовна нормативність: Поняття «{concept}» подано відповідно до програми курсу {subj_gen} та норм Правопису 2019 року.{terms_str} "
-            "У викладі дотримано наукового академічного стилю та нормативного математичного слововживання."
+            f"3. Термінологічна основа: Поняття «{concept}» розкрито у викладі курсу {subj_gen}.{terms_str} "
+            "Виклад відповідає навчальним завданням теми."
         )
         step4 = "4. Педагогічний синтез: Сформульовано чітке математичне пояснення з алгоритмом практичного застосування."
         solution = (
@@ -942,10 +1080,10 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int) -> dict[str, Any]:
             f"Охарактеризуйте відповідні закони природи, причинно-наслідкові зв'язки та екологічне чи практичне значення."
         )
         step1 = f"1. Природничо-науковий аналіз: Розглядаємо явище «{concept}» у контексті вивчення {subj_gen} ({grade} клас)."
-        step2 = f"2. Емпіричне та теоретичне підґрунтя: Спираємося на авторизований матеріал підручника: «{snippet}»."
+        step2 = f"2. Емпіричне та теоретичне підґрунтя: Спираємося на авторизований матеріал підручника: «{snippet}»"
         step3 = (
-            f"3. Мовна та понятійна нормативність: Поняття «{concept}» опрацьовано за нормами чинного Правопису 2019 року.{terms_str} "
-            "Дотримано академічної природничої номенклатури та питомих українських назв явищ і процесів."
+            f"3. Термінологічна основа: Поняття «{concept}» розглядається в контексті курсу {subj_gen}.{terms_str} "
+            "Наведено наукові характеристики досліджуваного явища."
         )
         step4 = "4. Педагогічний висновок: Сформульовано системне наукове бачення природних процесів та їхнього зв'язку з довкіллям."
         solution = (
@@ -959,10 +1097,10 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int) -> dict[str, Any]:
             f"Проаналізуйте суспільне значення цього явища, його причини та роль у сучасному розвитку суспільства й держави."
         )
         step1 = f"1. Суспільствознавчий та понятійний аналіз: Досліджуємо тему «{concept}» у системі знань курсу {subj_nom} ({grade} клас)."
-        step2 = f"2. Джерельна основа: Базуємося на фактологічному матеріалі підручника: «{snippet}»."
+        step2 = f"2. Джерельна основа: Базуємося на фактологічному матеріалі підручника: «{snippet}»"
         step3 = (
-            f"3. Наукова та понятійна верифікація: Поняття «{concept}» викладено на основі сучасної навчальної програми з предмета {subj_nom}.{terms_str} "
-            "Дотримано фахової суспільствознавчої термінології та норм чинного Правопису 2019 року."
+            f"3. Термінологічна основа: Тему «{concept}» охарактеризовано в курсі {subj_nom}.{terms_str} "
+            "Розкрито основні суспільні поняття та взаємозв'язки."
         )
         step4 = "4. Підсумок: Сформульовано зважену та науково обґрунтовану громадянську позицію."
         solution = (
@@ -976,10 +1114,10 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int) -> dict[str, Any]:
             f"Поясніть її культурно-освітнє значення, естетичні чи практичні засади та правила нормативного втілення."
         )
         step1 = f"1. Гуманітарний та естетичний аналіз: Розглядаємо тему «{concept}» у програмі з предмета {subj_nom} ({grade} клас)."
-        step2 = f"2. Змістове наповнення: Базуємося на тексті підручника: «{snippet}»."
+        step2 = f"2. Змістове наповнення: Базуємося на тексті підручника: «{snippet}»"
         step3 = (
-            f"3. Норми та художня виразність: Зберігаємо багатство української мови, дотримуємося норм Правопису 2019 року.{terms_str} "
-            "У викладі використано питому фахову термінологію."
+            f"3. Змістова основа: Матеріал теми «{concept}» структуровано для вивчення в курсі {subj_gen}.{terms_str} "
+            "Подано характеристику ключових понять."
         )
         step4 = "4. Педагогічний висновок: Подано естетично та методично зважену відповідь для формування цілісної особистості."
         solution = (
@@ -1038,7 +1176,7 @@ def synthesize_trajectory(
     """Synthesize a complete multi-turn instructional reasoning trajectory from a textbook chunk."""
     concept = extract_key_concept(chunk)
     terms = extract_scientific_terminology(chunk, cur_ves=cur_ves)
-    snippet = extract_meaningful_text_snippet(chunk.text, max_len=260)
+    snippet = extract_meaningful_text_snippet(chunk.text, concept=concept, terms=terms, max_len=260)
     snippet = apply_calque_sanitation(snippet)
 
     vesum_records: list[dict[str, Any]] = []
@@ -1058,10 +1196,7 @@ def synthesize_trajectory(
     grade = chunk.grade
 
     # Build linguistically grounded step 3 without unverified claims
-    if attested_lemmas:
-        vesum_note = f"За словниковою базою ВЕСУМ підтверджено нормативність термінів до теми «{concept}»: {', '.join(attested_lemmas[:3])}."
-    else:
-        vesum_note = f"У викладі теми «{concept}» дотримано фахової термінології та норм чинного Правопису 2019 року."
+    vesum_note = f"За словниковою базою ВЕСУМ зафіксовано терміни теми: {', '.join(attested_lemmas[:3])}." if attested_lemmas else ""
 
     if task_type == "conceptual_explanation":
         query = (
@@ -1069,8 +1204,8 @@ def synthesize_trajectory(
             f"Наведіть чітке наукове визначення та поясніть його ключові ознаки."
         )
         r_step1 = f"1. Аналіз запитання: Розглядаємо навчальні цілі теми «{concept}» у курсі {subj_gen} ({grade} клас)."
-        r_step2 = f"2. Науково-педагогічна основа: Спираємося на авторизований зміст підручника: «{snippet}»."
-        r_step3 = f"3. Термінологічний контроль: {vesum_note} У викладі дотримано наукового академічного стилю та чинних мовних норм."
+        r_step2 = f"2. Науково-педагогічна основа: Спираємося на авторизований зміст підручника: «{snippet}»"
+        r_step3 = f"3. Термінологічний аналіз: Виділено ключові поняття до теми «{concept}».{f' {vesum_note}' if vesum_note else ''}"
         r_step4 = "4. Синтез пояснення: Формулюємо доступну, логічну та фахово вивірену педагогічну відповідь."
         final_resp = (
             f"Тема «{concept}» є важливою складовою курсу {subj_gen} ({grade} клас).\n\n"
@@ -1086,16 +1221,13 @@ def synthesize_trajectory(
             f"({subj_nom}, {grade} клас) та вкажіть основні етапи виконання."
         )
         r_step1 = f"1. Декомпозиція завдання: Визначаємо вхідні дані та мету роботи для теми «{concept}»."
-        r_step2 = f"2. Теоретичні закономірності: Використовуємо положення підручника: «{snippet}»."
-        r_step3 = (
-            f"3. Лінгвістичний та понятійний контроль: {vesum_note} "
-            "Дотримуємося академічної термінології, питомих наукових зворотів та чинних орфографічних норм."
-        )
+        r_step2 = f"2. Теоретичні закономірності: Використовуємо положення підручника: «{snippet}»"
+        r_step3 = f"3. Понятійний аналіз: Визначено теоретичні поняття до теми «{concept}».{f' {vesum_note}' if vesum_note else ''}"
         r_step4 = "4. Послідовність кроків: Описуємо структурований покроковий план дій учня."
         final_resp = (
             f"Для розв'язування завдань на тему «{concept}» ({subj_nom}, {grade} клас) рекомендується такий алгоритм:\n\n"
             f"1. Аналіз вихідних даних: уважно ознайомтеся з умовою та з'ясуйте головні взаємозв'язки.\n"
-            f"2. Теоретичне підґрунтя: спирайтеся на базові положення курсу: «{snippet}».\n"
+            f"2. Теоретичне підґрунтя: спирайтеся на базові положення курсу: «{snippet}»\n"
             f"3. Виконання дій: послідовно застосуйте правила або формули, контролюючи проміжні результати.\n"
             f"4. Перевірка та висновок: зіставте отриманий результат із реальними закономірностями предмета."
         )
@@ -1106,8 +1238,8 @@ def synthesize_trajectory(
             f"у повсякденному житті або сучасному розвитку суспільства й технологій?"
         )
         r_step1 = f"1. Змістовий аналіз: Досліджуємо практичні взаємозв'язки теми «{concept}»."
-        r_step2 = f"2. Фактологічне підґрунтя: Згідно з текстом підручника: «{snippet}»."
-        r_step3 = f"3. Правописна чистота: {vesum_note} Тон викладу — науковий, шанобливий та заохочувальний."
+        r_step2 = f"2. Фактологічне підґрунтя: Згідно з текстом підручника: «{snippet}»"
+        r_step3 = f"3. Понятійний аналіз: Окреслено ключові терміни до теми «{concept}».{f' {vesum_note}' if vesum_note else ''}"
         r_step4 = "4. Узагальнення: Поєднуємо навчальний матеріал із реальними практичними викликами."
         final_resp = (
             f"Вивчення теми «{concept}» має безпосередній практичний вимір у сучасному житті.\n\n"
@@ -1123,11 +1255,8 @@ def synthesize_trajectory(
             f"Чому важливо спиратися на українські джерела?"
         )
         r_step1 = f"1. Постановка проблеми: Оцінка явища «{concept}» у структурі курсу {subj_nom}."
-        r_step2 = f"2. Джерельна база: Використовуємо зміст українського підручника: «{snippet}»."
-        r_step3 = (
-            f"3. Джерелознавчий та мовний аналіз: {vesum_note} "
-            "Спираємося на сучасні українські фахові джерела, утверджуючи державницьку позицію."
-        )
+        r_step2 = f"2. Джерельна база: Використовуємо зміст українського підручника: «{snippet}»"
+        r_step3 = f"3. Джерелознавчий та понятійний аналіз: Опрацьовано першоджерельний зміст до теми «{concept}».{f' {vesum_note}' if vesum_note else ''}"
         r_step4 = "4. Формулювання висновку: Підкреслюємо суб'єктність українського наукового дискурсу."
         final_resp = (
             f"Аналіз теми «{concept}» у курсі {subj_nom} утверджує самостійність та наукову гідність української освіти.\n\n"
@@ -1142,11 +1271,8 @@ def synthesize_trajectory(
             f"Яких термінологічних вимог та норм Правопису 2019 року необхідно дотримуватися під час вивчення теми «{concept}» ({subj_nom})?"
         )
         r_step1 = f"1. Лінгвістичний аналіз: Виокремлюємо базові наукові терміни до теми «{concept}»."
-        r_step2 = f"2. Контекст курсу: У тексті підручника розглядаються положення: «{snippet}»."
-        r_step3 = (
-            f"3. Термінологічний аналіз: {vesum_note} "
-            f"Для теми «{concept}» забезпечено нормативність наукового слововживання згідно з чинним Правописом 2019 року."
-        )
+        r_step2 = f"2. Контекст курсу: У тексті підручника розглядаються положення: «{snippet}»"
+        r_step3 = f"3. Термінологічний аналіз: Виділено профільні терміни до теми «{concept}».{f' {vesum_note}' if vesum_note else ''}"
         r_step4 = "4. Педагогічна настанова: Формулюємо правила безпомилкового слововживання."
 
         term_items = []
@@ -1446,6 +1572,71 @@ def generate_sft_dataset(
 
 
 
+def verify_zero_train_eval_leakage(eval_dir: Path, sft_dir: Path) -> bool:
+    """Verify zero chunk_id and book leakage between generated eval and SFT shards on disk."""
+    eval_cids: set[str] = set()
+    eval_books: set[str] = set()
+    for p in eval_dir.glob("eval_shard_*.jsonl"):
+        with p.open("r", encoding="utf-8") as f:
+            for line in f:
+                d = json.loads(line)
+                meta = d.get("source_metadata", {})
+                if "chunk_id" in meta:
+                    eval_cids.add(meta["chunk_id"])
+                if "source_book" in meta:
+                    eval_books.add(meta["source_book"])
+
+    sft_cids: set[str] = set()
+    sft_books: set[str] = set()
+    for p in sft_dir.glob("sft_shard_*.jsonl"):
+        with p.open("r", encoding="utf-8") as f:
+            for line in f:
+                d = json.loads(line)
+                meta = d.get("source_metadata", {})
+                if "chunk_id" in meta:
+                    sft_cids.add(meta["chunk_id"])
+                if "source_book" in meta:
+                    sft_books.add(meta["source_book"])
+
+    if not eval_cids or not sft_cids:
+        return False
+    return eval_cids.isdisjoint(sft_cids) and eval_books.isdisjoint(sft_books)
+
+
+def verify_entity_preservation_volume_ratio(eval_dir: Path, sft_dir: Path) -> bool:
+    """Verify 100% adherence to geometric volume and scientific ratio invariants across shards."""
+    for p in list(eval_dir.glob("eval_shard_*.jsonl")) + list(sft_dir.glob("sft_shard_*.jsonl")):
+        with p.open("r", encoding="utf-8") as f:
+            for line in f:
+                if not check_protected_entities(line):
+                    return False
+    return True
+
+
+def verify_pravopys_2019(eval_dir: Path, sft_dir: Path) -> bool:
+    """Verify Pravopys 2019 compliance: zero nested guillemets, zero calques, and proper Ukrainian typography."""
+    nested_guillemets = re.compile(r"«[^»]*«")
+    for p in list(eval_dir.glob("eval_shard_*.jsonl")) + list(sft_dir.glob("sft_shard_*.jsonl")):
+        with p.open("r", encoding="utf-8") as f:
+            for line in f:
+                if nested_guillemets.search(line):
+                    return False
+                for calque_pat, _ in CALQUE_REPLACEMENTS:
+                    if calque_pat.search(line):
+                        return False
+    return True
+
+
+def verify_dataset_pedagogy_tone(eval_dir: Path, sft_dir: Path) -> bool:
+    """Verify Gate 6 pedagogical tone calibration across generated dataset shards."""
+    for p in list(eval_dir.glob("eval_shard_*.jsonl")) + list(sft_dir.glob("sft_shard_*.jsonl")):
+        with p.open("r", encoding="utf-8") as f:
+            for line in f:
+                if not verify_pedagogical_tone(line):
+                    return False
+    return True
+
+
 def generate_release_receipt(
     eval_dir: Path,
     eval_manifest_sha256: str,
@@ -1481,17 +1672,21 @@ def generate_release_receipt(
     except ValueError:
         sft_rel_path = str(sft_dir)
 
-    # If not provided, compute dynamically based on verified runtime properties
+    # Compute dynamically across all dataset shards on disk when not explicitly provided
     if invariants_verified is None:
         partition_ok = (len(eval_subj_dist) == len(HELD_OUT_TEXTBOOKS)) if eval_count == 2500 else (len(eval_subj_dist) >= 1)
         coverage_ok = (eval_domain_dist.get("stem", 0) >= 500 and eval_domain_dist.get("humanities", 0) >= 500) if eval_count == 2500 else True
+        zero_leakage_ok = verify_zero_train_eval_leakage(eval_dir, sft_dir)
+        entities_ok = verify_entity_preservation_volume_ratio(eval_dir, sft_dir)
+        pravopys_ok = verify_pravopys_2019(eval_dir, sft_dir)
+        tone_ok = verify_dataset_pedagogy_tone(eval_dir, sft_dir)
         invariants_verified = {
-            "zero_train_eval_leakage": True,
+            "zero_train_eval_leakage": zero_leakage_ok,
             "textbook_partitioning_enforced": partition_ok,
             "stem_humanities_coverage": coverage_ok,
-            "entity_preservation_volume_ratio": True,
-            "pravopys_2019_verified": True,
-            "gate6_pedagogy_tone_verified": True,
+            "entity_preservation_volume_ratio": entities_ok,
+            "pravopys_2019_verified": pravopys_ok,
+            "gate6_pedagogy_tone_verified": tone_ok,
             "precommit_file_ceiling_satisfied": eval_max_shard_size_kb <= 2000.0 and max_shard_size_kb <= 2000.0,
         }
 
@@ -1618,15 +1813,6 @@ def main() -> int:
         max_shard_size_kb = manifest_data["max_shard_size_kb"]
 
     if not args.eval_only and not args.sft_only and not args.dry_run:
-        invariants_verified = {
-            "zero_train_eval_leakage": True,
-            "textbook_partitioning_enforced": len(eval_subj_dist) == len(HELD_OUT_TEXTBOOKS),
-            "stem_humanities_coverage": eval_domain_dist.get("stem", 0) >= 500 and eval_domain_dist.get("humanities", 0) >= 500,
-            "entity_preservation_volume_ratio": True,
-            "pravopys_2019_verified": True,
-            "gate6_pedagogy_tone_verified": True,
-            "precommit_file_ceiling_satisfied": eval_manifest_data.get("max_shard_size_kb", 0.0) <= 2000.0 and max_shard_size_kb <= 2000.0,
-        }
         generate_release_receipt(
             eval_dir=eval_dir,
             eval_manifest_sha256=eval_manifest_sha256,
@@ -1645,7 +1831,7 @@ def main() -> int:
             books_count=books_count,
             git_commit=git_commit,
             output_dir=output_dir,
-            invariants_verified=invariants_verified,
+            invariants_verified=None,
         )
 
     logger.info("Phase 6.1 General Ukrainian Assistant Mining Completed Successfully.")
