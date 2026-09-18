@@ -44,7 +44,7 @@ describe('function-words', () => {
     expect(resolveDurationPrepositionRule(false).choice).toBe('на протязі');
   });
 
-  it('resolves conjunction homophones (§ 43)', () => {
+  it('resolves conjunction homophones (§ 43, п. 1 та примітка)', () => {
     // проте vs про те
     expect(resolveConjunctionHomophoneRule('проте', true).choice).toBe('проте');
     expect(resolveConjunctionHomophoneRule('проте', false).choice).toBe('про те');
@@ -76,7 +76,7 @@ describe('function-words', () => {
     expect(() => resolveConjunctionHomophoneRule('невідомий', true)).toThrowError();
   });
 
-  it('resolves particle не orthography (§ 44, п. 1)', () => {
+  it('resolves particle не orthography (§ 44, п. 1 та 2)', () => {
     // Bound root verbs -> разом
     expect(
       resolveParticleNeRule({ pos: 'verb', cannotStandWithoutNe: true }).orthography,
@@ -104,7 +104,7 @@ describe('function-words', () => {
     );
   });
 
-  it('resolves particle hyphenation and split by preposition (§ 44, п. 2)', () => {
+  it('resolves particle hyphenation and split by preposition (§ 44, п. 1 та 3)', () => {
     // Enclitics -бо, -но, -то, -от
     expect(resolveParticleHyphenationRule({ particle: 'бо' }).orthography).toBe('дефіс');
     expect(resolveParticleHyphenationRule({ particle: 'но' }).orthography).toBe('дефіс');
@@ -157,7 +157,7 @@ describe('function-words', () => {
           explanationEn: 'Compound prepositions with z- are hyphenated.',
         },
       ],
-      ruleCitation: 'Правопис 2019, § 42, п. 1',
+      ruleCitation: 'Правопис 2019, § 42, п. 2',
       ruleSummary: {
         uk: 'Складні прийменники з «з-» пишуться через дефіс: з-під, з-за.',
         en: 'Compound prepositions with z- are hyphenated.',
@@ -176,5 +176,82 @@ describe('function-words', () => {
     const unknownRes = functionWordFeedbackFor(card, 'інше');
     expect(unknownRes.isCorrect).toBe(false);
     expect(unknownRes.explanationUa).toContain('Неправильно.');
+  });
+
+  it('validates canonical deck schema and type parity against TypeScript definitions', async () => {
+    const { readFileSync, existsSync } = await import('node:fs');
+    const { resolve } = await import('node:path');
+
+    const candidates = [
+      resolve(process.cwd(), 'data/practice/function_words_deck.json'),
+      resolve(process.cwd(), '../data/practice/function_words_deck.json'),
+    ];
+    const deckPath = candidates.find((p) => existsSync(p));
+    expect(deckPath).toBeDefined();
+
+    const raw = JSON.parse(readFileSync(deckPath!, 'utf8')) as {
+      total_cards: number;
+      cards: PracticeFunctionWordCard[];
+    };
+    expect(raw.total_cards).toBeGreaterThanOrEqual(40);
+    expect(raw.cards.length).toBe(raw.total_cards);
+
+    const validCategories = new Set([
+      'preposition_hyphenated',
+      'preposition_compound_solid',
+      'preposition_locution_separate',
+      'preposition_government_po',
+      'preposition_zavdyaky_vs_cherez',
+      'preposition_protyahom_vs_na_protyazi',
+      'conjunction_prote_zate',
+      'conjunction_shchob',
+      'conjunction_yakby',
+      'conjunction_yakshcho',
+      'conjunction_takozh_tezh',
+      'particle_ne_solid',
+      'particle_ne_contrast_separate',
+      'particle_ne_verb_separate',
+      'particle_ne_participle',
+      'particle_hyphenated_enclitics',
+      'particle_prefix_split',
+    ]);
+
+    const validInterferenceTypes = new Set([
+      'missing_hyphen_preposition',
+      'false_separate_preposition',
+      'false_solid_preposition',
+      'false_hyphen_preposition',
+      'false_solid_locution',
+      'false_hyphen_locution',
+      'russian_calque_po',
+      'russian_calque_general',
+      'lexical_semantic_confusion',
+      'mismatched_causal_consequence',
+      'air_draft_calque_for_duration',
+      'homophone_conjunction_for_pronoun',
+      'homophone_pronoun_for_conjunction',
+      'homophone_adverb_for_conjunction',
+      'false_hyphen_conjunction',
+      'false_solid_ne_contrast',
+      'false_separate_ne_noun_adj',
+      'false_solid_ne_verb',
+      'false_solid_ne_participle_with_dependents',
+      'false_separate_ne_participle_isolated',
+      'missing_hyphen_particle',
+      'false_hyphen_particle',
+      'false_hyphen_prepositional_split',
+      'false_solid_particle',
+      'false_hyphen_inverted_taky',
+    ]);
+
+    for (const card of raw.cards) {
+      expect(validCategories.has(card.category)).toBe(true);
+      expect(card.options.length).toBe(4);
+      expect(card.options.includes(card.correctAnswer)).toBe(true);
+      expect(card.distractors.length).toBe(3);
+      for (const distractor of card.distractors) {
+        expect(validInterferenceTypes.has(distractor.interferenceType)).toBe(true);
+      }
+    }
   });
 });

@@ -2,24 +2,24 @@
 
 Tests:
   1. Preposition orthography & government:
-     - Hyphenation with з-/із- (§ 42, п. 1) vs solid compound (§ 42, п. 2) vs locutions (§ 42, п. 3).
+     - Hyphenation with з-/із- (§ 42, п. 2) vs solid compound (§ 42, п. 1) vs locutions (§ 42, п. 3).
      - Causal government: завдяки (+ Dat, positive) vs через (+ Acc, adverse/neutral).
      - Temporal government: протягом/упродовж vs literal air draft 'на протязі'.
-  2. Conjunction disambiguation (§ 43):
-     - проте/зате vs про те/за те (п. 1).
-     - щоб vs що б (п. 2).
-     - якби vs як би (п. 3).
-     - якщо vs як що (п. 4).
-     - також/теж vs так же/те ж (п. 5).
-  3. Particle orthography (§ 44):
-     - не with nouns/adjectives: new concept (solid) vs explicit contrast with 'а' (separate) (п. 1).
-     - не with verbs/gerunds: separate unless bound root (ненавидіти) (п. 1).
-     - не with participles: isolated attribute (solid) vs with dependent words (separate) (п. 1).
-     - Enclitics: -бо, -но, -то, -от, -таки (postpositive hyphen vs prepositive separate) (п. 2).
-     - Prefix particles: будь-, казна-, хтозна- (hyphenated vs split by preposition) (п. 2).
+  2. Conjunction disambiguation (§ 43, п. 1 та примітка):
+     - проте/зате vs про те/за те.
+     - щоб vs що б.
+     - якби vs як би.
+     - якщо vs як що.
+     - також/теж vs так же/те ж (Академічна граматика; СУМ-20; § 44, п. 1).
+  3. Particle orthography (§ 44, п. 1 та 2):
+     - не with nouns/adjectives: new concept (§ 44, п. 2.7) vs explicit contrast with 'а' (§ 44, п. 1.4).
+     - не with verbs/gerunds: separate (§ 44, п. 1.1 та 1.2) unless bound root (§ 44, п. 2.5).
+     - не with participles: isolated attribute (§ 44, п. 2.8) vs with dependent words (§ 44, п. 1.3).
+     - Enclitics: -бо, -но, -то, -от, -таки (§ 44, п. 3.1) vs prepositive separate (§ 44, п. 3.1, прим. 2).
+     - Prefix particles: будь-, казна-, хтозна- (§ 44, п. 3.2) vs split by preposition (§ 44, п. 1; § 34).
   4. Deck validation and zero collisions across all canonical cards.
   5. Deterministic balanced option distribution.
-  6. Deck JSON export integrity.
+  6. Deck JSON export integrity and committed deck parity.
 """
 
 from __future__ import annotations
@@ -44,8 +44,8 @@ from scripts.practice.function_words_engine import (
 
 
 def test_resolve_preposition_hyphenation():
-    """Verify compound preposition hyphenation rules per Правопис 2019 (§ 42, п. 1 vs § 42, п. 2)."""
-    # Prepositions with initial з- / із- must be hyphenated
+    """Verify compound preposition hyphenation rules per Правопис 2019 (§ 42, п. 2 vs § 42, п. 1)."""
+    # Prepositions with initial з- / із- must be hyphenated (§ 42, п. 2)
     assert resolve_preposition_hyphenation("з-під")[0] is True
     assert resolve_preposition_hyphenation("з-за")[0] is True
     assert resolve_preposition_hyphenation("із-за")[0] is True
@@ -53,7 +53,7 @@ def test_resolve_preposition_hyphenation():
     assert resolve_preposition_hyphenation("з-понад")[0] is True
     assert resolve_preposition_hyphenation("з-посеред")[0] is True
 
-    # Compound prepositions without initial з-/із- are written solid
+    # Compound prepositions without initial з-/із- are written solid (§ 42, п. 1)
     assert resolve_preposition_hyphenation("посеред")[0] is False
     assert resolve_preposition_hyphenation("задля")[0] is False
     assert resolve_preposition_hyphenation("заради")[0] is False
@@ -87,7 +87,7 @@ def test_resolve_duration_preposition():
 
 
 def test_resolve_conjunction_homophones():
-    """Verify conjunction disambiguation from homophonous word sequences per § 43."""
+    """Verify conjunction disambiguation from homophonous word sequences per § 43, п. 1 та примітка."""
     # проте vs про те
     assert resolve_conjunction_homophone("проте", is_conjunction=True)[0] == "проте"
     assert resolve_conjunction_homophone("проте", is_conjunction=False)[0] == "про те"
@@ -121,44 +121,44 @@ def test_resolve_conjunction_homophones():
 
 
 def test_resolve_particle_ne():
-    """Verify orthography of 'не' per Правопис 2019 (§ 44, п. 1)."""
-    # Bound root verbs always solid
+    """Verify orthography of 'не' per Правопис 2019 (§ 44, п. 1 та 2)."""
+    # Bound root verbs always solid (§ 44, п. 2.5)
     assert resolve_particle_ne("verb", cannot_stand_without_ne=True)[0] == "разом"
 
-    # Regular verbs always separate
+    # Regular verbs always separate (§ 44, п. 1.1 та 1.2)
     assert resolve_particle_ne("verb")[0] == "окремо"
     assert resolve_particle_ne("gerund")[0] == "окремо"
 
-    # Explicit contrast with 'а' always separate
+    # Explicit contrast with 'а' always separate (§ 44, п. 1.4)
     assert resolve_particle_ne("noun", has_contrast=True)[0] == "окремо"
     assert resolve_particle_ne("adj", has_contrast=True)[0] == "окремо"
     assert resolve_particle_ne("adverb", has_contrast=True)[0] == "окремо"
 
-    # Nouns & adjectives forming new concept -> solid
+    # Nouns & adjectives forming new concept -> solid (§ 44, п. 2.7)
     assert resolve_particle_ne("noun", forms_new_concept=True)[0] == "разом"
     assert resolve_particle_ne("adj", forms_new_concept=True)[0] == "разом"
     assert resolve_particle_ne("adv", forms_new_concept=True)[0] == "разом"
 
-    # Participle without dependents -> solid
+    # Participle without dependents -> solid (§ 44, п. 2.8)
     assert resolve_particle_ne("participle", has_dependent_words=False)[0] == "разом"
 
-    # Participle with dependents -> separate
+    # Participle with dependents -> separate (§ 44, п. 1.3)
     assert resolve_particle_ne("participle", has_dependent_words=True)[0] == "окремо"
 
 
 def test_resolve_particle_hyphenation():
-    """Verify enclitic and prefix particle hyphenation per § 44, п. 2."""
-    # Enclitics -бо, -но, -то, -от
+    """Verify enclitic and prefix particle hyphenation per § 44, п. 1 та 3."""
+    # Enclitics -бо, -но, -то, -от (§ 44, п. 3.1)
     assert resolve_particle_hyphenation("бо")[0] == "дефіс"
     assert resolve_particle_hyphenation("но")[0] == "дефіс"
     assert resolve_particle_hyphenation("то")[0] == "дефіс"
     assert resolve_particle_hyphenation("от")[0] == "дефіс"
 
-    # Таки: postpositive -> hyphen, prepositive -> separate
+    # Таки: postpositive -> hyphen (§ 44, п. 3.1), prepositive -> separate (§ 44, п. 3.1, прим. 2)
     assert resolve_particle_hyphenation("таки", position_after_word=True)[0] == "дефіс"
     assert resolve_particle_hyphenation("таки", position_after_word=False)[0] == "окремо"
 
-    # Будь-, хтозна-, казна-: standalone -> hyphen, with intervening preposition -> separate
+    # Будь-, хтозна-, казна-: standalone -> hyphen (§ 44, п. 3.2), with intervening preposition -> separate (§ 44, п. 1; § 34)
     assert resolve_particle_hyphenation("будь", has_intervening_preposition=False)[0] == "дефіс"
     assert resolve_particle_hyphenation("хтозна", has_intervening_preposition=False)[0] == "дефіс"
     assert resolve_particle_hyphenation("будь", has_intervening_preposition=True)[0] == "окремо"
@@ -201,7 +201,7 @@ def test_canonical_cards_integrity_and_zero_collisions():
 
 
 def test_export_function_word_deck(tmp_path: Path):
-    """Test exporting function word deck to JSON format."""
+    """Test exporting function word deck to JSON format and verify committed deck parity."""
     cards = build_canonical_function_word_cards()
     out_file = tmp_path / "function_words_deck.json"
     deck = export_function_word_deck(cards, output_path=out_file)
@@ -221,6 +221,14 @@ def test_export_function_word_deck(tmp_path: Path):
     assert len(first_card["options"]) == 4
     assert len(first_card["distractors"]) == 3
 
+    # Verify committed deck matches fresh export
+    repo_root = Path(__file__).resolve().parent.parent
+    committed_deck_file = repo_root / "data" / "practice" / "function_words_deck.json"
+    assert committed_deck_file.exists(), f"Committed deck missing at {committed_deck_file}"
+    with open(committed_deck_file, encoding="utf-8") as f:
+        committed_deck = json.load(f)
+    assert committed_deck == loaded, "Committed function_words_deck.json diverges from fresh export!"
+
 
 def test_option_position_distribution():
     """Verify that card.all_options() distributes correct answers across positions 0..3."""
@@ -228,9 +236,8 @@ def test_option_position_distribution():
     positions = [card.all_options().index(card.correct_answer) for card in cards]
     position_counts = {p: positions.count(p) for p in range(4)}
 
-    # Every position (0, 1, 2, 3) must have at least 15% of the total cards
-    min_expected = int(len(cards) * 0.15)
+    # Every position (0, 1, 2, 3) must be tightly distributed (7 <= count <= 14 for 42 cards)
     for p in range(4):
-        assert position_counts[p] >= min_expected, (
-            f"Position {p} has {position_counts[p]} answers, expected at least {min_expected} (total {len(cards)})"
+        assert 7 <= position_counts[p] <= 14, (
+            f"Position {p} has {position_counts[p]} answers, expected between 7 and 14 (total {len(cards)})"
         )
