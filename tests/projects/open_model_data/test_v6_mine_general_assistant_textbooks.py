@@ -25,6 +25,7 @@ import jsonschema
 import pytest
 
 from scripts.projects.open_model_data.v6_mine_general_assistant_textbooks import (
+    DANGLING_STARTER_RE,
     DEFAULT_OUTPUT_DIR,
     DEFAULT_SOURCES_DB,
     DEFAULT_VESUM_DB,
@@ -38,25 +39,33 @@ from scripts.projects.open_model_data.v6_mine_general_assistant_textbooks import
     STOPWORD_TERMS,
     TextbookChunk,
     apply_calque_sanitation,
+    check_concept_contradiction,
     check_protected_entities,
     ensure_single_terminal_dot,
     extract_key_concept,
     extract_meaningful_text_snippet,
     extract_scientific_terminology,
+    extract_scientific_terminology_for_snippet,
     format_nested_quotes,
     generate_evaluation_benchmark,
     generate_release_receipt,
     generate_sft_dataset,
     get_vesum_cursor,
+    is_snippet_grounded_in_concept,
     is_vesum_attested,
     load_textbook_chunks,
     sanitize_ip_addresses,
+    synthesize_eval_task,
     synthesize_trajectory,
     truncate_word_boundary,
     verify_dataset_pedagogy_tone,
     verify_entity_preservation_volume_ratio,
+    verify_eval_no_fake_algorithm_claims,
     verify_pedagogical_tone,
     verify_pravopys_2019,
+    verify_snippet_concept_grounding,
+    verify_terms_present_in_snippet,
+    verify_zero_dangling_starters,
     verify_zero_train_eval_leakage,
 )
 
@@ -583,6 +592,100 @@ def test_terminology_no_bare_adjectives_or_subsets():
                 pytest.fail(f"Term '{t1}' is a subset of '{t2}' in terms: {terms}")
 
 
+def test_concept_contradiction_rejection():
+    """Verify that contradictory concepts and modifiers are strictly rejected."""
+    # Arithmetic vs geometric
+    snip_geom = "Записану рівність називають формулою n-го члена геометричної прогресії."
+    assert check_concept_contradiction(snip_geom, "Арифметична прогресія") is True
+    assert is_snippet_grounded_in_concept(snip_geom, "Арифметична прогресія") is False
+
+    snip_arith = "Послідовність є арифметичною прогресією, якщо кожний наступний член більший за попередній."
+    assert check_concept_contradiction(snip_arith, "Арифметична прогресія") is False
+    assert is_snippet_grounded_in_concept(snip_arith, "Арифметична прогресія") is True
+    assert is_snippet_grounded_in_concept(snip_arith, "Геометрична прогресія") is False
+
+    # Even vs odd
+    snip_even = "Графік парної функції є симетричним відносно осі ординат."
+    assert check_concept_contradiction(snip_even, "Непарна функція") is True
+    assert is_snippet_grounded_in_concept(snip_even, "Непарна функція") is False
+    assert is_snippet_grounded_in_concept(snip_even, "Парна функція") is True
+
+
+def test_dangling_starters_rejection():
+    """Verify that anaphoric dangling starters are detected and rejected from snippets."""
+    bad_starters = [
+        "Записану рівність називають формулою n-го члена геометричної прогресії.",
+        "Цю рівність називають формулою коренів квадратного рівняння.",
+        "Цю формулу застосовують для обчислення тиску.",
+        "Цей вираз є тотожністю.",
+        "Цей малюнок ілюструє перебіг реакції.",
+        "Звідси маємо шуканий результат для функції.",
+        "Аналогічно доводиться теорема для довільного трикутника.",
+        "Тому для обчислення площі використовуємо формулу.",
+        "Отже, пряма є дотичною до кола.",
+        "Тоді маємо рівність векторів на площині.",
+        "Наприклад, число 12 є складеним.",
+        "Позначимо через x шукану швидкість автомобіля.",
+        "Нехай дано трикутник зі сторонами a, b і c.",
+        "Підставивши значення у формулу, отримуємо розв'язок.",
+        "Доведемо правильність цієї рівності методом індукції.",
+        "Розглянемо приклад розв'язування лінійного рівняння.",
+        "Таку рівність називають пропорцією двох величин.",
+    ]
+    for s in bad_starters:
+        assert DANGLING_STARTER_RE.search(s), f"Failed to detect dangling starter in: {s}"
+        assert is_snippet_grounded_in_concept(s, "поняття") is False
+
+    good_sentence = "Квадрат будь-якого члена геометричної прогресії дорівнює добутку двох сусідніх із ним членів."
+    assert not DANGLING_STARTER_RE.search(good_sentence)
+
+
+def test_terminology_containment_in_snippet_or_concept():
+    """Verify that scientific terms are strictly present in the snippet or concept (no hallucinated chunk terms)."""
+    # Vectors snippet with no triangles mentioned
+    snip_vec = "Вектором називають напрямлений відрізок, тобто відрізок, для якого вказано, яка з його границь є початком, а яка — кінцем."
+    conc_vec = "Вектори"
+    cur_ves = get_vesum_cursor(DEFAULT_VESUM_DB)
+    terms = extract_scientific_terminology_for_snippet(snip_vec, conc_vec, "heometriya", cur_ves=cur_ves)
+
+    # Invariants: no triangles, 100% containment
+    assert "трикутник" not in terms, f"Irrelevant term 'трикутник' found in vector terms: {terms}"
+    assert len(terms) >= 1
+    for t in terms:
+        assert t.lower() in snip_vec.lower() or t.lower() in conc_vec.lower(), f"Term '{t}' not in snippet or concept"
+
+
+def test_eval_query_solution_factual_alignment():
+    """Verify that eval tasks have honest attribution, zero fake algorithm claims, and no ungrounded curriculum claims."""
+    dummy_chunk = TextbookChunk(
+        chunk_id="test_eval_chunk",
+        title="18. Геометрична прогресія",
+        text=(
+            "18. Геометрична прогресія 175\n"
+            "Квадрат будь-якого члена геометричної прогресії, крім першого (і останнього, якщо прогресія є скінченною), "
+            "дорівнює добутку двох сусідніх із ним членів.\n"
+        ),
+        source_file="9-klas-algebra-merzliak-2017",
+        grade="9",
+        author="Мерзляк",
+        subject="algebra",
+        char_count=260,
+    )
+    rec = synthesize_eval_task(dummy_chunk, 1)
+
+    # Invariants
+    assert rec["concept"] == "Геометрична прогресія"
+    assert "Мерзляк" in rec["query"] or "Мерзляк" in rec["reference_solution"]
+    assert "згідно з навчальною програмою" not in rec["reference_solution"].lower()
+    for step in rec["reference_reasoning"]:
+        assert "згідно з навчальною програмою" not in step.lower()
+        if "алгоритм" in step.lower():
+            assert "алгоритм" in rec["query"].lower()
+    for t in rec["scientific_terminology"]:
+        text_corpus = (rec["reference_solution"] + " " + rec["concept"]).lower()
+        assert t.lower() in text_corpus, f"Term '{t}' not contained in solution or concept"
+
+
 def test_dynamic_verification_functions_pass():
     """Verify that dynamic verification functions execute without error."""
     eval_dir = DEFAULT_OUTPUT_DIR / "eval"
@@ -592,3 +695,7 @@ def test_dynamic_verification_functions_pass():
         assert verify_entity_preservation_volume_ratio(eval_dir, sft_dir) is True
         assert verify_pravopys_2019(eval_dir, sft_dir) is True
         assert verify_dataset_pedagogy_tone(eval_dir, sft_dir) is True
+        assert verify_snippet_concept_grounding(eval_dir, sft_dir) is True
+        assert verify_terms_present_in_snippet(eval_dir, sft_dir) is True
+        assert verify_zero_dangling_starters(eval_dir, sft_dir) is True
+        assert verify_eval_no_fake_algorithm_claims(eval_dir) is True

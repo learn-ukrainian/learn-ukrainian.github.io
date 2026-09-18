@@ -126,18 +126,29 @@ EXERCISE_IMPERATIVES = {
     "перекажіть", "вставте", "спробуйте", "визначте", "позначте", "поділіть", "утворіть",
     "висловте", "обговоріть", "підготуйте", "скористайтеся", "вкажіть", "відшукайте",
     "спростіть", "побудуйте", "намалюйте", "згрупуйте", "відгадайте", "розподіліть",
+    "перегляньте", "подивіться", "дізнайтеся", "ознайомтеся", "повторіть", "підсумуйте",
+    "доповніть", "поміркуймо", "обговорімо", "подумайте", "зробіть", "сформулюймо",
+    "варто", "дотримуватись", "написати",
 }
 
 NON_CONCEPT_PREFIXES = (
     "вправа", "завдання", "задача", "приклад", "лабораторна", "практична", "робота в",
     "запитання", "відповідь", "варіант", "тест", "самостійна", "контрольна", "підсумок",
     "домашнє", "від авторів", "сторінка", "рубрика", "інтелектуальний клуб",
+    "перегляньте", "дізнайтеся", "електронний додаток", "додаток", "відео", "схема для",
 )
 
 FILLER_STARTS = (
     "якщо", "коли", "тому", "проте", "також", "однак", "через", "внаслідок", "зокрема",
     "наприклад", "тобто", "від", "для", "під", "над", "при", "без", "до", "із", "зі",
+    "оскільки", "хоча", "щодо", "після", "під час", "згідно", "незважаючи", "завдяки", "як",
 )
+
+DANGLING_TAILS = {
+    "є", "був", "була", "було", "були", "має", "може", "як", "що", "де", "коли",
+    "та", "і", "й", "або", "чи", "а", "але", "це", "до", "від", "на", "в", "у",
+    "із", "зі", "за", "під", "над", "при", "про", "для", "без", "через", "з",
+}
 
 
 UKRAINIAN_SUBJECT_GENITIVE = {
@@ -197,31 +208,51 @@ UKRAINIAN_SUBJECT_NOMINATIVE = {
 }
 
 CANONICAL_SUBJECT_TERMINOLOGY = {
-    "algebra": ["дискримінант", "корінь рівняння", "квадратний тричлен", "функція", "графік", "арифметична прогресія", "похідна", "нерівність"],
-    "heometriya": ["теорема Піфагора", "об'єм циліндра", "об'єм піраміди", "об'єм конуса", "об'єм кулі", "відношення площ", "відношення величин", "вектор", "трикутник"],
-    "matematyka": ["числова множина", "десятковий дріб", "відсоток", "пропорція", "ділення", "множення", "відношення чисел", "координатна пряма"],
-    "fizyka": ["прискорювач", "заломлення", "відбиття", "густина", "сила тяжіння", "імпульс", "кінетична енергія", "електричний струм", "напруга"],
-    "khimiya": ["водень", "кисень", "вуглець", "азот", "сірка", "залізо", "сульфатна кислота", "хлоридна кислота", "нітратна кислота", "періодичний закон", "електроліз"],
-    "biolohiya": ["клітина", "хромосома", "фотосинтез", "метаболізм", "генотип", "екосистема", "мембрана", "фермент", "біорізноманіття"],
-    "informatyka": ["алгоритм", "масив", "цикл", "розгалуження", "база даних", "інтерфейс", "функція", "кодування інформації"],
-    "heohrafiya": ["атмосфера", "гідросфера", "літосфера", "клімат", "рельєф", "природні ресурси", "демографія", "корисні копалини"],
-    "pryroda": ["спостереження", "експеримент", "природне явище", "агрегатний стан", "сонячна система", "екологічна рівновага"],
-    "ya_doslidzhuiu_svit": ["довкілля", "природа", "суспільство"],
-    "istoriya": ["державотворення", "суверенітет", "Русь-Україна", "козацтво", "Гетьманщина", "УНР", "боротьба УПА", "незалежність України"],
-    "vsesvitnia": ["античність", "середньовіччя", "відродження", "просвітництво", "промисловий переворот", "міжнародні відносини"],
-    "pravoznavstvo": ["верховенство права", "Конституція України", "правопорядок", "юридична відповідальність", "права людини", "судочинство"],
-    "hromadianska": ["громадянське суспільство", "демократія", "громадянська позиція", "права і свободи", "вибори", "самоврядування"],
-    "ekonomika": ["ринковий механізм", "попит", "пропозиція", "інфляція", "бюджет", "підприємництво", "валовий внутрішній продукт"],
-    "finansova": ["фінансовий план", "депозит", "кредит", "інвестиції", "страхування", "банківська система", "платіжні картки"],
-    "ukrmova": ["орфографія", "пунктуація", "синтаксис", "словосполучення", "лексичне значення", "частини мови", "Правопис 2019"],
-    "ukrlit": ["ідейно-тематичний зміст", "художній образ", "композиція", "метафора", "патріотичний мотив", "гуманістичний пафос"],
-    "zarlit": ["світовий шедевр", "літературний напрям", "романтизм", "реалізм", "психологізм", "драматургія"],
-    "mystetstvo": ["художній стиль", "гармонія", "композиція", "виражальні засоби", "архітектура", "музичне мистецтво"],
-    "zakhyst": ["обороноздатність", "цивільний захист", "домедична допомога", "військова присяга", "національна безпека"],
-    "etyka": ["мораль", "чесноти", "повага", "справедливість", "культура спілкування", "толерантність"],
-    "zdorovia": ["здоровий спосіб життя", "безпека", "психічне здоров'я", "профілактика", "рухова активність"],
-    "tekhnolohiyi": ["проєктування", "матеріалознавство", "технологічний процес", "макет", "конструювання", "ергономіка"],
+    "algebra": ["дискримінант", "корінь рівняння", "квадратний тричлен", "функція", "графік", "арифметична прогресія", "геометрична прогресія", "похідна", "нерівність", "послідовність", "добуток", "квадрат", "знаменник", "степінь", "многочлен", "одночлен", "дробовий вираз"],
+    "heometriya": ["теорема Піфагора", "об'єм циліндра", "об'єм піраміди", "об'єм конуса", "об'єм кулі", "відношення площ", "відношення величин", "вектор", "трикутник", "паралелограм", "трапеція", "синус", "косинус", "тангенс", "координати", "відрізок", "кут"],
+    "matematyka": ["числова множина", "десятковий дріб", "відсоток", "пропорція", "ділення", "множення", "відношення чисел", "координатна пряма", "натуральне число", "звичайний дріб"],
+    "fizyka": ["прискорювач", "заломлення", "відбиття", "густина", "сила тяжіння", "імпульс", "кінетична енергія", "електричний струм", "напруга", "опір", "тиск", "робота", "потужність", "теплота", "магнітне поле"],
+    "khimiya": ["водень", "кисень", "вуглець", "азот", "сірка", "залізо", "сульфатна кислота", "хлоридна кислота", "нітратна кислота", "періодичний закон", "електроліз", "оксид", "основа", "кислота", "сіль", "молярна маса", "розчин", "валентність"],
+    "biolohiya": ["клітина", "хромосома", "фотосинтез", "метаболізм", "генотип", "екосистема", "мембрана", "фермент", "біорізноманіття", "орган", "тканина", "розмноження", "спадковість", "мінливість"],
+    "informatyka": ["алгоритм", "масив", "цикл", "розгалуження", "база даних", "інтерфейс", "функція", "кодування інформації", "змінна", "програма", "оператор", "мережа", "файл"],
+    "heohrafiya": ["атмосфера", "гідросфера", "літосфера", "клімат", "рельєф", "природні ресурси", "демографія", "корисні копалини", "географічна карта", "материк", "океан", "густота населення"],
+    "pryroda": ["спостереження", "експеримент", "природне явище", "агрегатний стан", "сонячна система", "екологічна рівновага", "жива природа", "нежива природа"],
+    "ya_doslidzhuiu_svit": ["довкілля", "природа", "суспільство", "людина", "безпека"],
+    "istoriya": ["державотворення", "суверенітет", "Русь-Україна", "козацтво", "Гетьманщина", "УНР", "боротьба УПА", "незалежність України", "археологія", "джерелознавство", "національне відродження"],
+    "vsesvitnia": ["античність", "середньовіччя", "відродження", "просвітництво", "промисловий переворот", "міжнародні відносини", "реформація", "революція"],
+    "pravoznavstvo": ["верховенство права", "Конституція України", "правопорядок", "юридична відповідальність", "права людини", "судочинство", "правопорушення", "закон", "громадянство"],
+    "hromadianska": ["громадянське суспільство", "демократія", "громадянська позиція", "права і свободи", "вибори", "самоврядування", "громада", "плюралізм", "дискримінація"],
+    "ekonomika": ["ринковий механізм", "попит", "пропозиція", "інфляція", "бюджет", "підприємництво", "валовий внутрішній продукт", "ціна", "виробництво", "доходи", "витрати"],
+    "finansova": ["фінансовий план", "депозит", "кредит", "інвестиції", "страхування", "банківська система", "платіжні картки", "бюджет родини", "заощадження"],
+    "ukrmova": ["орфографія", "пунктуація", "синтаксис", "словосполучення", "лексичне значення", "частини мови", "Правопис 2019", "фонетика", "морфологія", "члени речення", "стилістика"],
+    "ukrlit": ["ідейно-тематичний зміст", "художній образ", "композиція", "метафора", "патріотичний мотив", "гуманістичний пафос", "жанр", "ліричний герой", "мотив"],
+    "zarlit": ["світовий шедевр", "літературний напрям", "романтизм", "реалізм", "психологізм", "драматургія", "новела", "роман", "трагедія"],
+    "mystetstvo": ["художній стиль", "гармонія", "композиція", "виражальні засоби", "архітектура", "музичне мистецтво", "живопис", "скульптура"],
+    "zakhyst": ["обороноздатність", "цивільний захист", "домедична допомога", "військова присяга", "національна безпека", "тактична підготовка", "вогнева підготовка"],
+    "etyka": ["мораль", "чесноти", "повага", "справедливість", "культура спілкування", "толерантність", "гідність", "совість", "добро"],
+    "zdorovia": ["здоровий спосіб життя", "безпека", "психічне здоров'я", "профілактика", "рухова активність", "раціональне харчування", "гігієна"],
+    "tekhnolohiyi": ["проєктування", "матеріалознавство", "технологічний процес", "макет", "конструювання", "ергономіка", "виріб", "технологічна карта"],
 }
+
+CONTRADICTORY_MODIFIER_PAIRS = [
+    ("арифметичн", "геометричн"),
+    ("парн", "непарн"),
+    ("прям", "обернен"),
+    ("додатн", "від'ємн"),
+    ("раціональн", "ірраціональн"),
+    ("складен", "прост"),
+    ("зовнішн", "внутрішн"),
+    ("однорідн", "неоднорідн"),
+]
+
+DANGLING_STARTER_RE = re.compile(
+    r"^(?:записан\w*\s+рівність|цю\s+рівність|цю\s+формулу|цей\s+вираз|цей\s+малюнок|цей\s+рисунок|цей\s+графік|"
+    r"звідси\b|у\s+таких\s+випадках|аналогічно\b|тому\s+для|отже\b|тоді\s+маємо|тоді\s+як|оскільки\b|"
+    r"наприклад\b|позначимо\b|нехай\b|підставивши\b|помноживши\b|поділивши\b|доведемо\b|розв'язання\b|розглянемо\s+приклад|"
+    r"так\w*\s+рівність|так\w*\s+послідовність|так\w*\s+вираз)\b",
+    re.IGNORECASE,
+)
+
 
 # Typography & Calque Sanitation
 APOSTROPHE_RE = re.compile(r"['’ʼ´`]")
@@ -280,6 +311,7 @@ STOPWORD_TERMS = {
     "школа", "школи", "школу", "курс", "курсу", "курсі",
     "урок", "уроку", "уроці", "поняття", "приклад", "прикладу", "значення",
     "автор", "автори", "авторів", "підсумок", "підсумки", "правило", "правила",
+    "число", "числа", "чисел", "числу", "числом", "член", "члена", "членів",
 }
 
 OCR_DROPCAP_RE = re.compile(r"(?<!\b[а-яіїєґ])[\.!?]\s+[а-яіїєґ]")
@@ -643,9 +675,11 @@ def is_clean_content_chunk(chunk: TextbookChunk) -> bool:
     concept = extract_key_concept(chunk)
     if not concept:
         return False
-    terms = extract_scientific_terminology(chunk)
-    snippet = extract_meaningful_text_snippet(chunk.text, concept=concept, terms=terms)
-    return bool(snippet and len(snippet) >= 50)
+    snippet = extract_meaningful_text_snippet(chunk.text, concept=concept)
+    if not snippet or len(snippet) < 50:
+        return False
+    terms = extract_scientific_terminology_for_snippet(snippet, concept, chunk.subject)
+    return bool(terms)
 
 
 def load_textbook_chunks(db_path: Path) -> tuple[list[TextbookChunk], list[TextbookChunk]]:
@@ -778,6 +812,67 @@ def is_clean_prose_line(line: str) -> bool:
     return not OCR_DROPCAP_RE.search(s)
 
 
+def check_concept_contradiction(snippet: str, concept: str) -> bool:
+    """Detect if snippet contradicts the concept via antonymous/differentiating modifiers."""
+    snip_words = set(re.findall(r"[а-яіїєґ']+", snippet.lower()))
+    conc_words = set(re.findall(r"[а-яіїєґ']+", concept.lower()))
+
+    for m1, m2 in CONTRADICTORY_MODIFIER_PAIRS:
+        def _has_ex(words: set[str], s1: str, s2: str) -> bool:
+            return any(w.startswith(s1) and not w.startswith(s2) for w in words)
+
+        c1 = _has_ex(conc_words, m1, m2)
+        c2 = any(w.startswith(m2) for w in conc_words)
+
+        s1 = _has_ex(snip_words, m1, m2)
+        s2 = any(w.startswith(m2) for w in snip_words)
+
+        if c1 and not c2 and s2 and not s1:
+            return True
+        if c2 and not c1 and s1 and not s2:
+            return True
+    return False
+
+
+def is_snippet_grounded_in_concept(snippet: str, concept: str) -> bool:
+    """Verify that the snippet is strictly grounded in the concept, without contradiction or dangling starter."""
+    if not snippet or not concept:
+        return False
+    if check_concept_contradiction(snippet, concept):
+        return False
+    if DANGLING_STARTER_RE.search(snippet):
+        return False
+
+    snip_lower = snippet.lower()
+    conc_lower = concept.lower()
+    snip_words = set(re.findall(r"[а-яіїєґ']+", snip_lower))
+    conc_words = set(re.findall(r"[а-яіїєґ']+", conc_lower))
+
+    words = [w for w in re.findall(r"[а-яіїєґ']+", conc_lower) if w not in STOPWORD_TERMS and len(w) >= 4]
+    if not words:
+        return True
+
+    matched = 0
+    for w in words:
+        stem = w[:len(w) - 1] if len(w) > 4 else w
+        if stem in snip_lower:
+            matched += 1
+
+    if len(words) == 1:
+        return matched == 1
+
+    for m1, m2 in CONTRADICTORY_MODIFIER_PAIRS:
+        def _has_ex(w_set: set[str], s1: str, s2: str) -> bool:
+            return any(w.startswith(s1) and not w.startswith(s2) for w in w_set)
+
+        if _has_ex(conc_words, m1, m2) and not _has_ex(snip_words, m1, m2):
+            return False
+        if any(w.startswith(m2) for w in conc_words) and not any(w.startswith(m2) for w in snip_words):
+            return False
+
+    return matched >= 1
+
+
 def extract_meaningful_text_snippet(
     text: str,
     concept: str = "",
@@ -826,6 +921,10 @@ def extract_meaningful_text_snippet(
             return -100
         if any(w in EXERCISE_IMPERATIVES for w in re.findall(r"[а-яіїєґ']+", s.lower())):
             return -100
+        if DANGLING_STARTER_RE.search(s):
+            return -100
+        if concept and not is_snippet_grounded_in_concept(s, concept):
+            return -100
 
         score = 1
         s_lower = s.lower()
@@ -868,11 +967,12 @@ def extract_meaningful_text_snippet(
                     best_score = sc_comb
                     best_cand = s_comb
 
-    # Require positive grounding score (at least one concept or term keyword matched)
-    if best_score >= 4 and best_cand:
-        return best_cand.rstrip(". ") + "."
-
-    if not grounding_keywords and best_score >= 1 and best_cand:
+    # Require positive grounding score
+    if best_score > 0 and best_cand:
+        if concept and not is_snippet_grounded_in_concept(best_cand, concept):
+            return ""
+        if DANGLING_STARTER_RE.search(best_cand):
+            return ""
         return best_cand.rstrip(". ") + "."
 
     return ""
@@ -893,7 +993,7 @@ def clean_and_validate_candidate(cand: str) -> str | None:
     if len(c) > 50:
         c = c[:50].rsplit(" ", 1)[0].strip()
     words = [w.strip(".,;:?!'\"«»„“—–()") for w in c.split() if w.strip(".,;:?!'\"«»„“—–()")]
-    if not words or len(words) > 6:
+    if not words or len(words) > 5:
         return None
     w0 = words[0].lower()
     if w0 in EXERCISE_IMPERATIVES:
@@ -903,15 +1003,31 @@ def clean_and_validate_candidate(cand: str) -> str | None:
         return None
     if w0 in FILLER_STARTS:
         return None
+    if words[-1].lower() in DANGLING_TAILS:
+        return None
     if c.isupper() or any(ch.isupper() for ch in c[1:]):
         c = c.capitalize()
     return c
 
 
-def extract_key_concept(chunk: TextbookChunk) -> str:
+def extract_key_concept(chunk: TextbookChunk | str, title: str = "", subject: str = "") -> str:
     """Extract the central concept grounded directly in chunk text without imperative exercise noise."""
-    lines = [line.strip() for line in chunk.text.splitlines() if line.strip()]
+    if isinstance(chunk, TextbookChunk):
+        text = chunk.text
+        chunk_title = chunk.title
+        subj = chunk.subject
+    else:
+        text = chunk
+        chunk_title = title
+        subj = subject
+
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
     for line in lines[:15]:
+        m_num_sec = re.match(r"^\d+[\.\s]+([А-ЯІЇЄҐ][а-яіїєґ0-9\s'-]{3,40})", line)
+        if m_num_sec:
+            val = clean_and_validate_candidate(m_num_sec.group(1))
+            if val:
+                return val
         m_sec = re.match(r"^§\s*\d+[\.\s]+([^.\n?]+)", line)
         if m_sec:
             val = clean_and_validate_candidate(m_sec.group(1))
@@ -929,14 +1045,14 @@ def extract_key_concept(chunk: TextbookChunk) -> str:
                 return val
 
     # Try chunk title if meaningful
-    if chunk.title and not chunk.title.lower().startswith("сторінка"):
-        val = clean_and_validate_candidate(chunk.title)
+    if chunk_title and not chunk_title.lower().startswith("сторінка"):
+        val = clean_and_validate_candidate(chunk_title)
         if val:
             return val
 
     # Try canonical terms present in chunk text
-    text_lower = chunk.text.lower()
-    for ct in CANONICAL_SUBJECT_TERMINOLOGY.get(chunk.subject, []):
+    text_lower = text.lower()
+    for ct in CANONICAL_SUBJECT_TERMINOLOGY.get(subj, []):
         if ct in text_lower:
             return ct
 
@@ -951,8 +1067,13 @@ def extract_key_concept(chunk: TextbookChunk) -> str:
     return ""
 
 
-def extract_scientific_terminology(chunk: TextbookChunk, cur_ves: sqlite3.Cursor | None = None) -> list[str]:
-    """Identify key Ukrainian scientific terms present in the chunk, deduplicated by lemma, excluding stopwords and bare adjectives."""
+def extract_scientific_terminology_for_snippet(
+    snippet: str,
+    concept: str,
+    subject: str,
+    cur_ves: sqlite3.Cursor | None = None,
+) -> list[str]:
+    """Extract terms strictly guaranteed to appear in snippet or concept."""
     cur = cur_ves or get_vesum_cursor()
 
     def _get_lemma(word: str) -> str:
@@ -977,21 +1098,21 @@ def extract_scientific_terminology(chunk: TextbookChunk, cur_ves: sqlite3.Cursor
         except Exception:
             return True
 
-    text_lower = chunk.text.lower()
+    snip_lower = snippet.lower()
+    conc_lower = concept.lower()
     candidate_terms: list[str] = []
 
-    # 1. Subject canonical terminology present in text
-    canonical_list = CANONICAL_SUBJECT_TERMINOLOGY.get(chunk.subject, [])
+    # 1. Subject canonical terms present in snippet or concept
+    canonical_list = CANONICAL_SUBJECT_TERMINOLOGY.get(subject, [])
     if isinstance(canonical_list, list):
         for ct in canonical_list:
-            if ct in text_lower and ct not in candidate_terms:
+            if (ct in snip_lower or ct in conc_lower) and ct not in candidate_terms:
                 candidate_terms.append(ct)
 
-    # 2. Concept itself as a unit (if not a stopword and present in text)
-    concept = extract_key_concept(chunk)
+    # 2. Concept itself as a unit (if not a stopword and present in snippet or concept)
     if concept:
-        c_clean = concept.strip().lower()
-        if c_clean not in STOPWORD_TERMS and c_clean in text_lower and c_clean not in candidate_terms:
+        c_clean = conc_lower.strip()
+        if c_clean not in STOPWORD_TERMS and (c_clean in snip_lower or c_clean in conc_lower) and c_clean not in candidate_terms:
             candidate_terms.append(c_clean)
 
     # 3. Filter candidate terms: reject bare adjectives and stopwords
@@ -1000,16 +1121,14 @@ def extract_scientific_terminology(chunk: TextbookChunk, cur_ves: sqlite3.Cursor
         words = [w for w in re.findall(r"[а-яіїєґ']+", t.lower()) if w not in STOPWORD_TERMS and len(w) >= 4]
         if not words:
             continue
-        # If single-word, ensure it can be a noun (reject bare adjectives like 'квадратична')
         if len(words) == 1 and not _has_noun_reading(words[0]):
             continue
-        # For multi-word terms, head word is usually the last word
         head_word = words[-1]
         if not _has_noun_reading(head_word):
             continue
         filtered_terms.append(t)
 
-    # 4. Strict subset deduplication: drop any term whose words are a strict subset of another term
+    # 4. Strict subset deduplication
     deduped_subset: list[str] = []
     for t in filtered_terms:
         t_words = set(re.findall(r"[а-яіїєґ']+", t.lower()))
@@ -1041,89 +1160,149 @@ def extract_scientific_terminology(chunk: TextbookChunk, cur_ves: sqlite3.Cursor
         seen_lemmas.add(lemma)
         final_terms.append(t)
 
-    return final_terms[:4]
+    # 6. Strict containment verification: EVERY term must be in snippet or concept
+    verified_terms = [
+        t for t in final_terms
+        if (t.lower() in snip_lower or t.lower() in conc_lower)
+    ]
+    return verified_terms[:4]
+
+
+def extract_scientific_terminology(
+    chunk: TextbookChunk,
+    cur_ves: sqlite3.Cursor | None = None,
+    snippet: str = "",
+) -> list[str]:
+    """Identify key Ukrainian scientific terms present in the snippet/chunk, excluding stopwords and bare adjectives."""
+    concept = extract_key_concept(chunk)
+    if snippet:
+        return extract_scientific_terminology_for_snippet(snippet, concept, chunk.subject, cur_ves=cur_ves)
+    snip = extract_meaningful_text_snippet(chunk.text, concept=concept)
+    if snip:
+        return extract_scientific_terminology_for_snippet(snip, concept, chunk.subject, cur_ves=cur_ves)
+    return extract_scientific_terminology_for_snippet(chunk.text, concept, chunk.subject, cur_ves=cur_ves)
 
 
 def synthesize_eval_task(chunk: TextbookChunk, idx: int) -> dict[str, Any]:
     """Synthesize a structured held-out evaluation task tailored to subject discipline."""
     concept = extract_key_concept(chunk)
-    terms = extract_scientific_terminology(chunk)
+    snippet = extract_meaningful_text_snippet(chunk.text, concept=concept, max_len=260)
+    snippet = apply_calque_sanitation(snippet)
+    terms = extract_scientific_terminology_for_snippet(snippet, concept, chunk.subject)
     subj_gen = chunk.subject_genitive
     subj_nom = chunk.subject_nominative
     grade = chunk.grade
+    author = chunk.author
 
-    snippet = extract_meaningful_text_snippet(chunk.text, concept=concept, terms=terms, max_len=260)
-    snippet = apply_calque_sanitation(snippet)
-
-    terms_str = f" Профільні терміни теми: {', '.join(terms[:3])}." if terms else ""
+    terms_str = ", ".join(terms) if terms else concept
+    q_var = idx % 3
 
     if chunk.subject in DISCIPLINE_MATH_COMPUTING:
-        query = (
-            f"Поясніть математичний та алгоритмічний зміст поняття «{concept}» для учнів {grade} класу за програмою з {subj_gen}. "
-            f"Сформулюйте відповідні правила чи теореми, наведіть математичні властивості та алгоритм розв'язування відповідних завдань."
-        )
-        step1 = f"1. Декомпозиція та формулювання поняття: Розглядаємо сутність поняття «{concept}» у курсі {subj_gen} ({grade} клас)."
-        step2 = f"2. Теоретичне обґрунтування: Використовуємо положення підручника: «{snippet}»"
-        step3 = (
-            f"3. Термінологічна основа: Поняття «{concept}» розкрито у викладі курсу {subj_gen}.{terms_str} "
-            "Виклад відповідає навчальним завданням теми."
-        )
-        step4 = "4. Педагогічний синтез: Сформульовано чітке математичне пояснення з алгоритмом практичного застосування."
+        if q_var == 0:
+            query = (
+                f"Наведіть теоретичне визначення та поясніть математичний зміст поняття «{concept}» "
+                f"для учнів {grade} класу з курсу {subj_gen} за підручником (автор — {author}). "
+                f"Вкажіть ключові наукові терміни, що розкривають сутність цього поняття."
+            )
+        elif q_var == 1:
+            query = (
+                f"Охарактеризуйте фундаментальне поняття «{concept}» у курсі {subj_gen} ({grade} клас), "
+                f"спираючись на шкільний підручник ({author}). Наведіть основні фахові терміни теми."
+            )
+        else:
+            query = (
+                f"У чому полягає теоретична сутність поняття «{concept}» за курсом {subj_gen} для {grade} класу "
+                f"(підручник автора {author})? Вкажіть термінологічну основу навчального матеріалу."
+            )
+        step1 = f"1. Понятійний аналіз: Досліджуємо теоретичний зміст поняття «{concept}» у курсі {subj_gen} ({grade} клас)."
+        step2 = f"2. Текстологічна база: Наводимо нормативне визначення з підручника ({author}): «{snippet}»"
+        step3 = f"3. Термінологічна основа: Виділяємо ключові наукові терміни теми: {terms_str}."
+        step4 = "4. Педагогічний підсумок: Сформульовано теоретичне визначення та його термінологічні ознаки для навчального використання."
         solution = (
-            f"Поняття «{concept}» є фундаментальним у курсі {subj_gen} для {grade} класу.\n\n"
-            f"Згідно з навчальною програмою:\n{snippet}\n\n"
-            f"Для розв'язання завдань учням слід чітко розрізняти теоретичні означення та послідовно застосовувати встановлені правила й алгоритми."
+            f"Поняття «{concept}» є базовим у курсі {subj_gen} ({grade} клас).\n\n"
+            f"У підручнику ({author}) його сутність розкрито так:\n«{snippet}»\n\n"
+            f"Ключові наукові терміни теми: {terms_str}.\n\n"
+            f"Розуміння сутності поняття «{concept}» є необхідною теоретичною основою для успішного опанування навчального матеріалу."
         )
     elif chunk.subject in DISCIPLINE_NATURAL_SCIENCES:
-        query = (
-            f"Поясніть природничо-науковий зміст теми «{concept}» для учнів {grade} класу за програмою з {subj_gen}. "
-            f"Охарактеризуйте відповідні закони природи, причинно-наслідкові зв'язки та екологічне чи практичне значення."
-        )
-        step1 = f"1. Природничо-науковий аналіз: Розглядаємо явище «{concept}» у контексті вивчення {subj_gen} ({grade} клас)."
-        step2 = f"2. Емпіричне та теоретичне підґрунтя: Спираємося на авторизований матеріал підручника: «{snippet}»"
-        step3 = (
-            f"3. Термінологічна основа: Поняття «{concept}» розглядається в контексті курсу {subj_gen}.{terms_str} "
-            "Наведено наукові характеристики досліджуваного явища."
-        )
-        step4 = "4. Педагогічний висновок: Сформульовано системне наукове бачення природних процесів та їхнього зв'язку з довкіллям."
+        if q_var == 0:
+            query = (
+                f"Наведіть наукове визначення та охарактеризуйте сутність теми «{concept}» "
+                f"у курсі {subj_gen} ({grade} клас) за підручником (автор — {author}). "
+                f"Вкажіть ключові природничо-наукові терміни теми."
+            )
+        elif q_var == 1:
+            query = (
+                f"Охарактеризуйте природничо-науковий зміст матеріалу «{concept}» для учнів {grade} класу "
+                f"з курсу {subj_gen} на основі підручника ({author}). Наведіть профільні наукові терміни."
+            )
+        else:
+            query = (
+                f"У чому полягає наукова сутність явища «{concept}» за програмою курсу {subj_gen} "
+                f"({grade} клас, автор підручника — {author})? Вкажіть ключові поняття теми."
+            )
+        step1 = f"1. Науковий аналіз: Розглядаємо сутність явища «{concept}» у структурі курсу {subj_gen} ({grade} клас)."
+        step2 = f"2. Джерельна основа: Спираємося на виклад матеріалу в підручнику ({author}): «{snippet}»"
+        step3 = f"3. Термінологічний аналіз: Виділяємо ключові природничо-наукові терміни теми: {terms_str}."
+        step4 = "4. Науково-педагогічний висновок: Сформульовано сутнісну характеристику природного явища на основі шкільного курсу."
         solution = (
-            f"Тема «{concept}» розкриває фундаментальні закономірності природи у курсі {subj_gen} ({grade} клас).\n\n"
-            f"Науковий зміст матеріалу:\n{snippet}\n\n"
-            f"Розуміння цих закономірностей формує науковий світогляд, екологічну свідомість та вміння застосовувати знання про природу на практиці."
+            f"Тема «{concept}» розкриває важливі природні закономірності у курсі {subj_gen} ({grade} клас).\n\n"
+            f"Згідно з підручником ({author}):\n«{snippet}»\n\n"
+            f"Ключові наукові терміни теми: {terms_str}.\n\n"
+            f"Засвоєння цих наукових фактів є основою для формування цілісного природничо-наукового світогляду учнів."
         )
     elif chunk.subject in DISCIPLINE_SOCIAL_LAW:
-        query = (
-            f"Охарактеризуйте тему «{concept}» з предмета {subj_nom} ({grade} клас). "
-            f"Проаналізуйте суспільне значення цього явища, його причини та роль у сучасному розвитку суспільства й держави."
-        )
-        step1 = f"1. Суспільствознавчий та понятійний аналіз: Досліджуємо тему «{concept}» у системі знань курсу {subj_nom} ({grade} клас)."
-        step2 = f"2. Джерельна основа: Базуємося на фактологічному матеріалі підручника: «{snippet}»"
-        step3 = (
-            f"3. Термінологічна основа: Тему «{concept}» охарактеризовано в курсі {subj_nom}.{terms_str} "
-            "Розкрито основні суспільні поняття та взаємозв'язки."
-        )
-        step4 = "4. Підсумок: Сформульовано зважену та науково обґрунтовану громадянську позицію."
+        if q_var == 0:
+            query = (
+                f"Охарактеризуйте суспільне значення та сутність теми «{concept}» "
+                f"з предмета {subj_nom} ({grade} клас) на основі підручника (автор — {author}). "
+                f"Вкажіть ключові поняття теми."
+            )
+        elif q_var == 1:
+            query = (
+                f"Розкрийте зміст теми «{concept}» у курсі {subj_nom} для {grade} класу "
+                f"за підручником ({author}). Наведіть базові суспільствознавчі терміни."
+            )
+        else:
+            query = (
+                f"У чому полягає суспільно-правова сутність теми «{concept}» за курсом {subj_nom} "
+                f"({grade} клас, автор підручника — {author})? Вкажіть термінологічну основу матеріалу."
+            )
+        step1 = f"1. Суспільствознавчий аналіз: Досліджуємо тему «{concept}» у курсі {subj_nom} ({grade} клас)."
+        step2 = f"2. Джерельна база: Наводимо базові положення з підручника ({author}): «{snippet}»"
+        step3 = f"3. Термінологічний аналіз: Виокремлюємо ключові суспільствознавчі терміни теми: {terms_str}."
+        step4 = "4. Педагогічний підсумок: Сформульовано коректну характеристику суспільного явища на основі навчального курсу."
         solution = (
-            f"Тема «{concept}» відіграє вагому роль у курсі {subj_nom} ({grade} клас).\n\n"
-            f"Основні положення теми:\n{snippet}\n\n"
-            f"Осмислення цих питань сприяє формуванню наукового світогляду, правової та соціальної культури й активної громадянської позиції."
+            f"Тема «{concept}» має важливе світоглядне значення у курсі {subj_nom} ({grade} клас).\n\n"
+            f"У підручнику ({author}) зазначено:\n«{snippet}»\n\n"
+            f"Ключові поняття теми: {terms_str}.\n\n"
+            f"Вивчення цього матеріалу сприяє формуванню правової культури та активної громадянської позиції учнів."
         )
     else:  # DISCIPLINE_PHILOLOGY_CULTURE
-        query = (
-            f"Розкрийте сутність теми «{concept}» з курсу {subj_gen} ({grade} клас). "
-            f"Поясніть її культурно-освітнє значення, естетичні чи практичні засади та правила нормативного втілення."
-        )
-        step1 = f"1. Гуманітарний та естетичний аналіз: Розглядаємо тему «{concept}» у програмі з предмета {subj_nom} ({grade} клас)."
-        step2 = f"2. Змістове наповнення: Базуємося на тексті підручника: «{snippet}»"
-        step3 = (
-            f"3. Змістова основа: Матеріал теми «{concept}» структуровано для вивчення в курсі {subj_gen}.{terms_str} "
-            "Подано характеристику ключових понять."
-        )
-        step4 = "4. Педагогічний висновок: Подано естетично та методично зважену відповідь для формування цілісної особистості."
+        if q_var == 0:
+            query = (
+                f"Розкрийте сутність теми «{concept}» з предмета {subj_nom} ({grade} клас) "
+                f"за матеріалом підручника (автор — {author}). Вкажіть ключові поняття теми."
+            )
+        elif q_var == 1:
+            query = (
+                f"Охарактеризуйте змістове наповнення теми «{concept}» у курсі {subj_nom} ({grade} клас) "
+                f"на основі підручника ({author}). Наведіть основні фахові терміни."
+            )
+        else:
+            query = (
+                f"У чому полягає культурно-освітнє значення теми «{concept}» за програмою {subj_nom} "
+                f"({grade} клас, автор підручника — {author})? Вкажіть ключові терміни теми."
+            )
+        step1 = f"1. Змістовий аналіз: Розглядаємо навчальні аспекти теми «{concept}» у курсі {subj_nom} ({grade} клас)."
+        step2 = f"2. Текстологічна база: Наводимо матеріал підручника ({author}): «{snippet}»"
+        step3 = f"3. Термінологічний аналіз: Виділяємо ключові поняття теми: {terms_str}."
+        step4 = "4. Педагогічний підсумок: Подано структурований зміст навчального матеріалу з дотриманням фахових норм."
         solution = (
-            f"Матеріал теми «{concept}» має особливе значення у курсі {subj_gen} ({grade} клас).\n\n"
-            f"Зміст навчального матеріалу:\n{snippet}\n\n"
-            f"Опанування цієї теми формує високу мовну культуру, художнє мислення та гармонійний розвиток учнів."
+            f"Матеріал теми «{concept}» посідає важливе місце в курсі {subj_nom} ({grade} клас).\n\n"
+            f"У підручнику ({author}) подано такий виклад:\n«{snippet}»\n\n"
+            f"Ключові терміни теми: {terms_str}.\n\n"
+            f"Опанування цієї теми формує високу культуру мислення та грамотність учнів."
         )
 
     # Format typography and Pravopys 2019 nested quotes
@@ -1175,9 +1354,9 @@ def synthesize_trajectory(
 ) -> dict[str, Any]:
     """Synthesize a complete multi-turn instructional reasoning trajectory from a textbook chunk."""
     concept = extract_key_concept(chunk)
-    terms = extract_scientific_terminology(chunk, cur_ves=cur_ves)
-    snippet = extract_meaningful_text_snippet(chunk.text, concept=concept, terms=terms, max_len=260)
+    snippet = extract_meaningful_text_snippet(chunk.text, concept=concept, max_len=260)
     snippet = apply_calque_sanitation(snippet)
+    terms = extract_scientific_terminology_for_snippet(snippet, concept, chunk.subject, cur_ves=cur_ves)
 
     vesum_records: list[dict[str, Any]] = []
     attested_lemmas: list[str] = []
@@ -1637,6 +1816,88 @@ def verify_dataset_pedagogy_tone(eval_dir: Path, sft_dir: Path) -> bool:
     return True
 
 
+def extract_raw_snippet_from_step2(step2: str) -> str:
+    """Extract the authentic textbook snippet from Step 2 of reasoning steps."""
+    parts = step2.split(":", 2)
+    if len(parts) >= 3:
+        body = parts[2].strip()
+    elif len(parts) == 2:
+        body = parts[1].strip()
+    else:
+        body = step2.strip()
+    return body.strip("«» \t\n")
+
+
+def verify_snippet_concept_grounding(eval_dir: Path, sft_dir: Path) -> bool:
+    """Verify that 100% of eval and SFT records have snippets grounded in the target concept."""
+    for p in list(eval_dir.glob("eval_shard_*.jsonl")) + list(sft_dir.glob("sft_shard_*.jsonl")):
+        with p.open("r", encoding="utf-8") as f:
+            for line in f:
+                d = json.loads(line)
+                concept = d.get("concept") or d.get("target_concept") or ""
+                steps = d.get("reference_reasoning") or d.get("reasoning_steps") or []
+                if len(steps) > 1:
+                    snip = extract_raw_snippet_from_step2(steps[1])
+                else:
+                    sol = d.get("reference_solution") or d.get("final_response") or ""
+                    m = re.search(r"«([^»]{30,})»", sol)
+                    snip = m.group(1) if m else ""
+                if snip and not is_snippet_grounded_in_concept(snip, concept):
+                    return False
+    return True
+
+
+def verify_terms_present_in_snippet(eval_dir: Path, sft_dir: Path) -> bool:
+    """Verify that 100% of scientific terms appear in the snippet or concept."""
+    for p in list(eval_dir.glob("eval_shard_*.jsonl")) + list(sft_dir.glob("sft_shard_*.jsonl")):
+        with p.open("r", encoding="utf-8") as f:
+            for line in f:
+                d = json.loads(line)
+                concept = (d.get("concept") or d.get("target_concept") or "").lower()
+                terms = d.get("scientific_terminology", [])
+                text_corpus = (d.get("reference_solution", "") + " " + d.get("final_response", "") + " " + concept).lower()
+                for t in terms:
+                    if t.lower() not in text_corpus and t.lower() not in concept:
+                        return False
+    return True
+
+
+def verify_zero_dangling_starters(eval_dir: Path, sft_dir: Path) -> bool:
+    """Verify that zero quoted snippets start with dangling anaphoric starters."""
+    for p in list(eval_dir.glob("eval_shard_*.jsonl")) + list(sft_dir.glob("sft_shard_*.jsonl")):
+        with p.open("r", encoding="utf-8") as f:
+            for line in f:
+                d = json.loads(line)
+                steps = d.get("reference_reasoning") or d.get("reasoning_steps") or []
+                if len(steps) > 1:
+                    snip = extract_raw_snippet_from_step2(steps[1])
+                else:
+                    sol = d.get("reference_solution") or d.get("final_response") or ""
+                    m = re.search(r"«([^»]{20,})»", sol)
+                    snip = m.group(1) if m else ""
+                if snip and DANGLING_STARTER_RE.search(snip):
+                    return False
+    return True
+
+
+def verify_eval_no_fake_algorithm_claims(eval_dir: Path) -> bool:
+    """Verify that eval benchmark queries and solutions do not make ungrounded algorithm claims."""
+    for p in eval_dir.glob("eval_shard_*.jsonl"):
+        with p.open("r", encoding="utf-8") as f:
+            for line in f:
+                d = json.loads(line)
+                q = d.get("query", "")
+                sol = d.get("reference_solution", "")
+                steps = d.get("reference_reasoning", [])
+                if "згідно з навчальною програмою" in sol.lower():
+                    return False
+                if len(steps) >= 4:
+                    step4 = steps[3]
+                    if "алгоритм" in step4.lower() and "алгоритм" not in q.lower():
+                        return False
+    return True
+
+
 def generate_release_receipt(
     eval_dir: Path,
     eval_manifest_sha256: str,
@@ -1680,6 +1941,17 @@ def generate_release_receipt(
         entities_ok = verify_entity_preservation_volume_ratio(eval_dir, sft_dir)
         pravopys_ok = verify_pravopys_2019(eval_dir, sft_dir)
         tone_ok = verify_dataset_pedagogy_tone(eval_dir, sft_dir)
+        grounding_ok = verify_snippet_concept_grounding(eval_dir, sft_dir)
+        terms_ok = verify_terms_present_in_snippet(eval_dir, sft_dir)
+        starters_ok = verify_zero_dangling_starters(eval_dir, sft_dir)
+        no_fake_claims_ok = verify_eval_no_fake_algorithm_claims(eval_dir)
+
+        if not (grounding_ok and terms_ok and starters_ok and no_fake_claims_ok):
+            raise ValueError(
+                f"Content quality check failed: grounding={grounding_ok}, terms={terms_ok}, "
+                f"starters={starters_ok}, no_fake_claims={no_fake_claims_ok}"
+            )
+
         invariants_verified = {
             "zero_train_eval_leakage": zero_leakage_ok,
             "textbook_partitioning_enforced": partition_ok,
