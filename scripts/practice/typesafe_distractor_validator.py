@@ -23,7 +23,7 @@ Linguistic Authority & Deterministic Hard Rail:
     LLM judgment and triggers needs_review = True.
 
 Adheres strictly to the 2026-09-17 TypeSafe fleet contract:
-  - Credentials securely resolved from ~/.secrets/typsafe-ai.key (never committed or leaked)
+  - Credentials securely resolved from ~/.secrets/typesafe-ai.key (never committed or leaked)
   - Evaluated in code using calibrated probabilities and confidence metrics
   - Complements VESUM and static practice checkers as a front-line pedagogical validator
 """
@@ -93,7 +93,7 @@ def resolve_api_key() -> str | None:
     if env_key:
         return env_key
 
-    for name in ("typsafe-ai.key", "typesafe-ai.key"):
+    for name in ("typesafe-ai.key", "typsafe-ai.key"):
         path = Path.home() / ".secrets" / name
         if path.exists():
             key = path.read_text(encoding="utf-8").strip()
@@ -117,7 +117,7 @@ def get_typesafe_client(api_key: str | None = None) -> Any:
     if not resolved:
         raise ValueError(
             "TypeSafe API key not found. Ensure TYPESAFE_API_KEY is exported "
-            "or ~/.secrets/typsafe-ai.key exists."
+            "or ~/.secrets/typesafe-ai.key exists."
         )
 
     return TypeSafeClient(api_key=resolved)

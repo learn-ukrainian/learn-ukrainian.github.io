@@ -29,14 +29,12 @@ that path fights Layout A / agents_extensions deploy.
 
 ### Credentials
 
-- API key lives at **`~/.secrets/typsafe-ai.key`** (host home secrets dir,
+- API key lives at **`~/.secrets/typesafe-ai.key`** (host home secrets dir,
   outside the git tree) or `TYPESAFE_API_KEY` in the environment. **Never**
   commit the key, paste it into skills, PRs, issues, or curriculum.
 - Load for a session:
-  `export TYPESAFE_API_KEY="$(tr -d '\r\n' < ~/.secrets/typsafe-ai.key)"`
+  `export TYPESAFE_API_KEY="$(tr -d '\r\n' < ~/.secrets/typesafe-ai.key)"`
   (do not copy the key into the repo, worktrees, or logs).
-  Filename on disk today is `typsafe-ai.key` (missing `e`); rename to
-  `typesafe-ai.key` later if you want — update this skill when you do.
 - Client default model is `jev-latest` per upstream SDK.
 
 ### Operator posture (2026-09-17)
@@ -55,7 +53,7 @@ routing; RAG keep/drop; citation checks; skill pick; any prompt-and-parse.
 ### Only hard rails
 
 - **Credentials:** never commit or paste the API key
-  (`export TYPESAFE_API_KEY="$(tr -d '\r\n' < ~/.secrets/typsafe-ai.key)"`).
+  (`export TYPESAFE_API_KEY="$(tr -d '\r\n' < ~/.secrets/typesafe-ai.key)"`).
 - **Do not fake attested morphology:** if you need a VESUM-grade lemma/stress
   paradigm as *fact*, still call VESUM/`sources`. Labeling with TypeSafe first
   is encouraged; treating Jev as a replacement dictionary is not.

@@ -183,8 +183,8 @@ def test_resolve_typesafe_key_skips_empty_file(tmp_path, monkeypatch) -> None:
 
     secrets_dir = tmp_path / ".secrets"
     secrets_dir.mkdir()
-    (secrets_dir / "typsafe-ai.key").write_text("   \n", encoding="utf-8")
-    (secrets_dir / "typesafe-ai.key").write_text("", encoding="utf-8")
+    (secrets_dir / "typesafe-ai.key").write_text("   \n", encoding="utf-8")
+    (secrets_dir / "typsafe-ai.key").write_text("", encoding="utf-8")
 
     assert _resolve_typesafe_key() == ""
 

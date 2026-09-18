@@ -73,11 +73,11 @@ def _resolve_typesafe_key() -> str:
         return key
 
     key_files = [
-        Path.home() / ".secrets" / "typsafe-ai.key",
         Path.home() / ".secrets" / "typesafe-ai.key",
         Path.home() / ".config" / "typesafe" / "key",
         Path.home() / ".typesafe_api_key",
         Path.home() / ".gemini" / "antigravity-cli" / "typesafe_api_key",
+        Path.home() / ".secrets" / "typsafe-ai.key",
     ]
     for path in key_files:
         if path.is_file():

@@ -67,8 +67,8 @@ def _resolve_typesafe_key() -> str:
         return key
 
     key_files = [
-        Path.home() / ".secrets" / "typsafe-ai.key",
         Path.home() / ".secrets" / "typesafe-ai.key",
+        Path.home() / ".secrets" / "typsafe-ai.key",
     ]
     for p in key_files:
         if p.is_file():

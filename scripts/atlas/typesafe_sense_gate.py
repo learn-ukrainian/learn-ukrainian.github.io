@@ -15,7 +15,7 @@ Decolonization Moat (§6):
   examples reinforce standard, authentic Ukrainian.
 
 Adheres strictly to the 2026-09-17 TypeSafe fleet contract:
-  - Credentials securely resolved from ~/.secrets/typsafe-ai.key (never committed or leaked)
+  - Credentials securely resolved from ~/.secrets/typesafe-ai.key (never committed or leaked)
   - Thresholds and business logic evaluated in Python code, not prompt prose
   - Complements VESUM and sources.db; VESUM remains morphological SSOT
 """
@@ -105,7 +105,7 @@ def resolve_api_key() -> str | None:
     if env_key:
         return env_key
 
-    for name in ("typsafe-ai.key", "typesafe-ai.key"):
+    for name in ("typesafe-ai.key", "typsafe-ai.key"):
         path = Path.home() / ".secrets" / name
         if path.exists():
             key = path.read_text(encoding="utf-8").strip()
@@ -122,7 +122,7 @@ def get_typesafe_client(api_key: str | None = None) -> Any:
     resolved = api_key or resolve_api_key()
     if not resolved:
         raise ValueError(
-            "TypeSafe API key not found. Ensure TYPESAFE_API_KEY is exported or ~/.secrets/typsafe-ai.key exists."
+            "TypeSafe API key not found. Ensure TYPESAFE_API_KEY is exported or ~/.secrets/typesafe-ai.key exists."
         )
     return TypeSafeClient(api_key=resolved)
 

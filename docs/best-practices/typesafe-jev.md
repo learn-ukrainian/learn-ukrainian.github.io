@@ -19,10 +19,10 @@ judgment helps — including Cyrillic / Ukrainian **word qualification and label
 ## 1. Session setup
 
 ```bash
-export TYPESAFE_API_KEY="$(tr -d '\r\n' < ~/.secrets/typsafe-ai.key)"
+export TYPESAFE_API_KEY="$(tr -d '\r\n' < ~/.secrets/typesafe-ai.key)"
 ```
 
-- Host path is `~/.secrets/typsafe-ai.key` (filename currently misspelled `typsafe`).
+- Host path is `~/.secrets/typesafe-ai.key`.
 - Never commit, paste, or log the key.
 - Optional: `pip install typesafe-sdk` and `TypeSafeClient()` (reads the same env).
 - Stdlib is enough: `urllib` POST JSON to `/v1/systemone`.
@@ -184,7 +184,7 @@ def api_key() -> str:
     env = os.environ.get("TYPESAFE_API_KEY", "").strip()
     if env:
         return env
-    path = Path.home() / ".secrets" / "typsafe-ai.key"
+    path = Path.home() / ".secrets" / "typesafe-ai.key"
     return path.read_text(encoding="utf-8").splitlines()[0].strip()
 
 def system_one(state, questions, model="jev-latest", timeout=60):
