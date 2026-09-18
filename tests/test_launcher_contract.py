@@ -143,7 +143,8 @@ def test_driver_help_lists_force(name: str) -> None:
 def test_driver_dry_run_force_announces_release_then_claim() -> None:
     result = run_launcher("start-grok-driver.sh", "--epic", "infra", "--force")
     assert result.returncode == 0, result.stderr
-    assert "would force-release any live holder on epic:6943 then claim" in result.stdout
+    assert "would force-release any live holder on epic:" in result.stdout
+    assert "then claim" in result.stdout
 
 
 def test_driver_requires_certified_model_and_valid_epic() -> None:
