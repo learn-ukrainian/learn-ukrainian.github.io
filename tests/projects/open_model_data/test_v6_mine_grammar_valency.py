@@ -2377,3 +2377,93 @@ def test_participle_inflected_surface_form_extraction() -> None:
     assert "бажаючого" in target_terms or "оточуючого" in target_terms or "існуючі" in target_terms
     for term in target_terms:
         assert not term.endswith("ти")
+
+
+def test_format_word_count_ua() -> None:
+    """Verify Ukrainian numeral agreement for word counts (1 слово, 2-4 слова, 5-20 слів)."""
+    assert miner.format_word_count_ua(1) == "1 слово"
+    assert miner.format_word_count_ua(2) == "2 слова"
+    assert miner.format_word_count_ua(3) == "3 слова"
+    assert miner.format_word_count_ua(4) == "4 слова"
+    assert miner.format_word_count_ua(5) == "5 слів"
+    assert miner.format_word_count_ua(10) == "10 слів"
+    assert miner.format_word_count_ua(11) == "11 слів"
+    assert miner.format_word_count_ua(12) == "12 слів"
+    assert miner.format_word_count_ua(14) == "14 слів"
+    assert miner.format_word_count_ua(20) == "20 слів"
+    assert miner.format_word_count_ua(21) == "21 слово"
+    assert miner.format_word_count_ua(22) == "22 слова"
+    assert miner.format_word_count_ua(25) == "25 слів"
+    assert miner.format_word_count_ua(101) == "101 слово"
+    assert miner.format_word_count_ua(112) == "112 слів"
+    assert miner.format_word_count_ua(124) == "124 слова"
+
+
+def test_sanitize_punctuation() -> None:
+    """Verify removal of redundant inner terminal dots before closing guillemet when outer punctuation follows."""
+    assert miner.sanitize_punctuation("«слово.».") == "«слово»."
+    assert miner.sanitize_punctuation("«слово.»?") == "«слово»?"
+    assert miner.sanitize_punctuation("«слово.»:") == "«слово»:"
+    assert miner.sanitize_punctuation("«слово.»,") == "«слово»,"
+    assert miner.sanitize_punctuation("«слово.»!") == "«слово»!"
+    assert miner.sanitize_punctuation("«слово»..") == "«слово»."
+    # Clean text without redundant dots remains unchanged
+    assert miner.sanitize_punctuation("«слово».") == "«слово»."
+    assert miner.sanitize_punctuation("«слово»?") == "«слово»?"
+    # Legitimate ellipses inside quotes are preserved
+    assert miner.sanitize_punctuation("«Ще не вмерла...»,") == "«Ще не вмерла...»,"
+    assert miner.sanitize_punctuation("«слово...»?") == "«слово...»?"
+
+
+def test_pejorative_stems_precision() -> None:
+    """Verify that legitimate vocabulary with 'туп-' prefix is not falsely classified as pejorative."""
+    pej_words = miner.load_tone_dict(PROJECT_ROOT / "data" / "dictionaries" / "tone-dict-uk")
+    # Legitimate non-pejorative words
+    assert miner.verify_respectful_tone("Поїзд зайшов у залізничний тупик.", pej_words)
+    assert miner.verify_respectful_tone("Було чути виразний тупіт коней.", pej_words)
+    assert miner.verify_respectful_tone("Не варто тупати ногами на сходах.", pej_words)
+    # Truly pejorative words must still be caught
+    assert not miner.verify_respectful_tone("Це була абсолютно тупа відповідь.", pej_words)
+    assert not miner.verify_respectful_tone("Цей коментатор — справжня тупиця.", pej_words)
+    assert not miner.verify_respectful_tone("Це тупоумне зауваження.", pej_words)
+
+
+def test_check_has_predicate_reflexive_precision() -> None:
+    """Verify that pronouns with -сь/-ся are not falsely treated as verbal predicates."""
+    # When cur_ves is None, fallback heuristic should not treat pronouns ending in -сь/-ся as verbs
+    assert not miner.check_has_predicate("У кімнаті хтось або щось.", None)
+    assert not miner.check_has_predicate("Десь колись у темному лісі.", None)
+    # Real reflexive verbs must be recognized
+    assert miner.check_has_predicate("Засідання успішно відбулося.", None)
+    assert miner.check_has_predicate("Студенти ретельно навчалися.", None)
+    assert miner.check_has_predicate("Правила суворо виконуються.", None)
+
+
+def test_shards_zero_double_terminal_punctuation() -> None:
+    """Verify that no SFT shard contains single dot followed by quote and punctuation (.». or .»?)."""
+    shard_files = sorted(RELEASE_DIR.glob("sft/sft_shard_*.jsonl"))
+    if not shard_files:
+        pytest.skip("Release shards not yet generated in this worktree")
+
+    double_punct_regex = re.compile(r"(?<!\.)\.\s*»\s*[.?!:,]")
+    violations = []
+    for sf in shard_files:
+        with open(sf, encoding="utf-8") as f:
+            for line_no, line in enumerate(f, start=1):
+                record = json.loads(line)
+                query = record.get("query", "")
+                final = record.get("final_response", "")
+                steps = record.get("reasoning_steps", [])
+                if double_punct_regex.search(query):
+                    violations.append((sf.name, line_no, "query", query))
+                if double_punct_regex.search(final):
+                    violations.append((sf.name, line_no, "final_response", final))
+                for idx, step in enumerate(steps):
+                    if double_punct_regex.search(step):
+                        violations.append((sf.name, line_no, f"step_{idx}", step))
+                if len(violations) > 10:
+                    break
+        if len(violations) > 10:
+            break
+
+    assert not violations, f"Found double punctuation in shards: {violations[:5]}"
