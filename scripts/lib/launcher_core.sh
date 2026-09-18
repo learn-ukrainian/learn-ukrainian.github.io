@@ -295,11 +295,21 @@ launcher_need_value() {
 
 launcher_drop_force_from_successor_args() {
   # --force is a one-shot operator takeover. Supervisory successor execs replay
-  # LC_DRIVER_ORIGINAL_ARGS; leaving --force there can evict a later legitimate
-  # holder (#8229 CF).
-  local arg
+  # LC_DRIVER_ORIGINAL_ARGS; leaving launcher --force there can evict a later
+  # legitimate holder (#8229 CF). Provider args after `--` are forwarded
+  # verbatim and must keep a literal --force.
+  local arg past_dd=0
   local -a kept=()
   for arg in "${LC_DRIVER_ORIGINAL_ARGS[@]+"${LC_DRIVER_ORIGINAL_ARGS[@]}"}"; do
+    if [ "$past_dd" = "1" ]; then
+      kept+=("$arg")
+      continue
+    fi
+    if [ "$arg" = "--" ]; then
+      past_dd=1
+      kept+=("$arg")
+      continue
+    fi
     [ "$arg" = "--force" ] && continue
     kept+=("$arg")
   done
