@@ -2671,6 +2671,7 @@ def test_merged_review_worktree_on_main_is_reapable(
         path=repo, branch="codex/review-8154-astra", head="abc", detached=False
     )
     monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: True)
+    monkeypatch.setattr(rw, "_is_head_reachable_from_remote", lambda _path, _head=None: True)
     monkeypatch.setattr(rw, "_pr_matches_worktree_head", lambda _info, _pr: False)
     reason = rw._qualifying_reason(
         repo_root=repo,
@@ -2691,6 +2692,7 @@ def test_open_review_worktree_is_not_reapable(
         path=repo, branch="codex/review-8154-astra", head="abc", detached=False
     )
     monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: True)
+    monkeypatch.setattr(rw, "_is_head_reachable_from_remote", lambda _path, _head=None: True)
     monkeypatch.setattr(rw, "_origin_branch_present", lambda _path, _branch: True)
     monkeypatch.setattr(rw, "_pr_matches_worktree_head", lambda _info, _pr: False)
     reason = rw._qualifying_reason(
@@ -2760,6 +2762,42 @@ def test_review_issue_number_does_not_block_merged_pr(
     else:
         assert result.action == "would_remove"
         assert result.reason == "PR #8243 MERGED"
+
+
+@pytest.mark.parametrize("gh_outage", [False, True])
+def test_review_issue_number_without_exact_head_pr_reaps_merged_tree(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, gh_outage: bool
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = repo / ".worktrees" / "dispatch" / "claude" / "review-8201-docs"
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    git(repo, "worktree", "add", "--detach", str(worktree), "main")
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / "review-8201-docs.json").write_text(json.dumps({"status": "done"}), encoding="utf-8")
+    patch_gh(monkeypatch, {})
+    err = (
+        "gh pr view failed: connection reset by peer"
+        if gh_outage
+        else "gh pr view failed: GraphQL: Could not resolve to a PullRequest with the number of 8201"
+    )
+    monkeypatch.setattr(rw, "_query_pr_by_number", lambda _repo, _n: ([], err))
+    monkeypatch.setattr(rw, "_query_prs_by_head_sha", lambda _repo, _sha: [])
+    monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: True)
+    monkeypatch.setattr(rw, "_is_head_reachable_from_remote", lambda _path, _head=None: True)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    results = rw.reap_worktrees(
+        repo_root=repo,
+        live_cwds=set(),
+        merged_pr_only=True,
+        include_terminal_dispatches=True,
+    )
+    result = result_for(results, worktree)
+    if gh_outage:
+        assert result.action == "skipped"
+        assert "PR guard unavailable" in result.reason
+    else:
+        assert result.action == "would_remove"
 
 
 def test_read_sandbox_processes_scans_only_orphans_under_worktrees(
