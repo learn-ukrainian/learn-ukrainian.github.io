@@ -8,7 +8,7 @@ High-throughput, calibrated triage for Ukrainian & Cyrillic text chunks:
   4. Tri-State Admissibility & Routing (admit_standard, admit_dialect_heritage, anti_calque_foil, reject_drop)
 
 Adheres strictly to the 2026-09-17 TypeSafe fleet contract:
-  - Credentials securely loaded from ~/.secrets/typsafe-ai.key (never logged or committed)
+  - Credentials securely loaded from ~/.secrets/typesafe-ai.key (never logged or committed)
   - Thresholds and policy maintained in Python code
   - Does NOT replace VESUM as morphological authority; acts as fast semantic front-line gate
   - Never rewrites human source Ukrainian
@@ -99,7 +99,7 @@ def resolve_api_key() -> str | None:
         return env_key
 
     # Check host secret locations outside the repository
-    for name in ("typsafe-ai.key", "typesafe-ai.key"):
+    for name in ("typesafe-ai.key", "typsafe-ai.key"):
         path = Path.home() / ".secrets" / name
         if path.exists():
             key = path.read_text(encoding="utf-8").strip()
@@ -123,7 +123,7 @@ def get_typesafe_client(api_key: str | None = None) -> Any:
     if not resolved:
         raise ValueError(
             "TypeSafe API key not found. Ensure TYPESAFE_API_KEY is exported "
-            "or ~/.secrets/typsafe-ai.key exists."
+            "or ~/.secrets/typesafe-ai.key exists."
         )
 
     return TypeSafeClient(api_key=resolved)

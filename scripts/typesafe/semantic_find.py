@@ -10,7 +10,7 @@ always sum to 1 — some line ranks first even when none of them actually
 answers the query — so the Noul is what tells "real answer" apart from
 "closest irrelevant line."
 
-Credentials: ``TYPESAFE_API_KEY`` or ``~/.secrets/typsafe-ai.key``.
+Credentials: ``TYPESAFE_API_KEY`` or ``~/.secrets/typesafe-ai.key``.
 """
 
 from __future__ import annotations
@@ -21,7 +21,8 @@ from pathlib import Path
 from typing import Any, Protocol
 
 DEFAULT_MODEL = "jev-latest"
-_SECRET_PATH = Path.home() / ".secrets" / "typsafe-ai.key"
+_SECRET_PATH = Path.home() / ".secrets" / "typesafe-ai.key"
+_LEGACY_SECRET_PATH = Path.home() / ".secrets" / "typsafe-ai.key"
 # Cap Choice criteria size; TypeSafe Choice needs a closed set
 # (same bound as scripts/build/typesafe_curriculum.py pick_preparsed_value).
 _MAX_CHOICE_LINES = 24
@@ -65,7 +66,8 @@ def load_typesafe_api_key() -> str:
     env = os.environ.get("TYPESAFE_API_KEY", "").strip()
     if env:
         return env
-    return _SECRET_PATH.read_text(encoding="utf-8").splitlines()[0].strip()
+    path = _SECRET_PATH if _SECRET_PATH.is_file() else _LEGACY_SECRET_PATH
+    return path.read_text(encoding="utf-8").splitlines()[0].strip()
 
 
 def _build_client() -> _SystemOneClient:

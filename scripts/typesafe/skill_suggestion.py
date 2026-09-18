@@ -17,7 +17,7 @@ agent skill roster for a given turn:
 The result is advisory only — it ranks one skill higher, never replaces the
 agent's own roster or judgment (see ``suggestion_block``).
 
-Credentials: ``TYPESAFE_API_KEY`` or ``~/.secrets/typsafe-ai.key``
+Credentials: ``TYPESAFE_API_KEY`` or ``~/.secrets/typesafe-ai.key``
 (also accepts ``~/.secrets/typesafe-ai.key``).
 """
 
@@ -197,12 +197,12 @@ def load_typesafe_api_key() -> str:
     if env:
         return env
     home = Path.home() / ".secrets"
-    for name in ("typsafe-ai.key", "typesafe-ai.key"):
+    for name in ("typesafe-ai.key", "typsafe-ai.key"):
         path = home / name
         if path.is_file():
             return path.read_text(encoding="utf-8").strip().replace("\r", "")
     raise FileNotFoundError(
-        "TYPESAFE_API_KEY unset and neither ~/.secrets/typsafe-ai.key nor ~/.secrets/typesafe-ai.key found"
+        "TYPESAFE_API_KEY unset and neither ~/.secrets/typesafe-ai.key nor legacy ~/.secrets/typsafe-ai.key found"
     )
 
 
