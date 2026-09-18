@@ -37,7 +37,7 @@ describe('canonical A1 landing', () => {
         'export const LevelLanding = (props) => props;');
     const compiled = await evaluate(source, runtime);
     const tree = compiled.default({ modules });
-    const landing = tree.props.children.find(child => child?.type === compiled.LevelLanding);
+    const landing = tree.props.children.find((child: any) => child?.type === compiled.LevelLanding);
     expect(landing.props.modules).toEqual(modules);
     expect(landing.props.moduleCount).toBe(modules.reduce((total, group) => total + group.items.length, 0));
   });

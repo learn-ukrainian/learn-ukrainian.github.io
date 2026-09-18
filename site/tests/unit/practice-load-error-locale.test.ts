@@ -3,7 +3,7 @@
 import { readFileSync } from "node:fs";
 import reactRenderer from "@astrojs/react/server.js";
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
-import { Window } from "happy-dom";
+import { Window, type HTMLElement as HappyHTMLElement } from "happy-dom";
 import { beforeAll, describe, expect, test } from "vitest";
 
 describe("practice load-error locale purity (#7691)", () => {
@@ -16,7 +16,7 @@ describe("practice load-error locale purity (#7691)", () => {
     const container = await AstroContainer.create();
     container.addServerRenderer({ renderer: reactRenderer });
     container.addClientRenderer({ name: "@astrojs/react", entrypoint: "@astrojs/react/client.js" });
-    html = await container.renderToString(Mount);
+    html = await container.renderToString(Mount as any);
   });
 
   test.each([
@@ -29,7 +29,7 @@ describe("practice load-error locale purity (#7691)", () => {
       document.documentElement.dataset.chromeLocale = locale;
       document.head.innerHTML = `<style>${localeCss}</style>`;
       document.body.innerHTML = html;
-      const fallback = document.querySelector<HTMLElement>("#lexicon-practice-fallback")!;
+      const fallback = document.querySelector<HappyHTMLElement>("#lexicon-practice-fallback")!;
       expect(fallback.hidden).toBe(true);
       fallback.hidden = false;
 
@@ -37,9 +37,9 @@ describe("practice load-error locale purity (#7691)", () => {
         ["#lexicon-practice-error", "practice.loadError", error],
         ["button", "practice.retry", retry],
       ]) {
-        const label = fallback.querySelector(selector)!;
+        const label = fallback.querySelector<HappyHTMLElement>(selector)!;
         expect(label.querySelector(".lu-i18n")?.getAttribute("data-i18n")).toBe(key);
-        const variants = [...label.querySelectorAll<HTMLElement>("[data-loc]")];
+        const variants = [...label.querySelectorAll<HappyHTMLElement>("[data-loc]")];
         expect(variants).toHaveLength(2);
         const visible = variants.filter((span) => window.getComputedStyle(span).display !== "none");
         expect(visible).toHaveLength(1);

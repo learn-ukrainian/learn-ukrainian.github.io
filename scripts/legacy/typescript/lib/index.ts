@@ -4,7 +4,7 @@
  * Main entry point for the refactored generator architecture.
  *
  * Usage:
- *   import { parseModule, renderHtml, renderVibeJson } from './lib';
+ *   import { parseModule, renderVibeJson } from './lib';
  */
 
 // Types
@@ -24,7 +24,6 @@ export {
 
 // Renderers
 export { renderVibeJson } from './renderers/json';
-export { renderHtml, getTemplate } from './renderers/html';
 
 // Utils
 export {

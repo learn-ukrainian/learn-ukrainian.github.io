@@ -41,7 +41,7 @@ describe('a1 lesson nav', () => {
     expect(card.status).toBe('active');
     // Type-level: withManifestCopy must carry a concrete lessons type (not
     // `unknown`) so callers can pass the result straight into LevelLanding.
-    const [lesson] = card.lessons;
+    const [lesson] = card.lessons!;
     expect(lesson.n).toBe(1);
     expect(lesson.href).toBe('/a1/stress-and-melody/1/');
   });

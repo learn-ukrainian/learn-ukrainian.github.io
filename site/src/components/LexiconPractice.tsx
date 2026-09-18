@@ -4100,16 +4100,27 @@ function LexiconPracticeIsland({
       const outcome = clozeAttemptRecorded
         ? { nextUnresolved: new Set(unresolvedCardKeys), nextDeferred: [...deferredLemmas] }
         : recordReview(selection, 'good');
-      const labelUk = caseDrill
-        ? cloze.caseRule.caseLabel
-        : (cloze.caseRule.triggerLabel || 'словникова форма');
-      const labelEn = caseDrill
-        ? translateGrammarTerm(cloze.caseRule.caseLabel)
-        : 'dictionary form';
+      const rule = cloze.caseRule;
+      const isDoc = 'code' in rule && rule.code === 'document-context';
+      let labelUk: string;
+      let labelEn: string;
+      if (isDoc) {
+        labelUk = rule.labelUk || '';
+        labelEn = rule.labelEn || '';
+      } else if (caseDrill) {
+        const caseLabel = 'caseLabel' in rule && rule.caseLabel ? rule.caseLabel : '';
+        labelUk = caseLabel;
+        labelEn = translateGrammarTerm(caseLabel);
+      } else {
+        const triggerLabel = 'triggerLabel' in rule && rule.triggerLabel ? rule.triggerLabel : '';
+        labelUk = triggerLabel || 'словникова форма';
+        labelEn = 'dictionary form';
+      }
+
       setClozeFeedback({
         kind: 'correct',
-        textUk: `✓ ${cloze.form} (${labelUk})`,
-        textEn: `✓ ${cloze.form} (${labelEn})`,
+        textUk: labelUk ? `✓ ${cloze.form} (${labelUk})` : `✓ ${cloze.form}`,
+        textEn: labelEn ? `✓ ${cloze.form} (${labelEn})` : `✓ ${cloze.form}`,
       });
       setAnswerLocked(true);
       commitAnsweredSelection(selection, outcome);
@@ -4126,10 +4137,19 @@ function LexiconPracticeIsland({
       const exhausted = nextCaseMissCount >= 2;
       // Keep the typed value (select it, don't clear it) — a chip tap that put the
       // right lemma in the box must not be destroyed on the first case-miss.
+      const rule = cloze.caseRule;
+      const caseLabel = 'caseLabel' in rule && rule.caseLabel ? rule.caseLabel : '';
+      const feedback = 'feedback' in rule && rule.feedback ? `: ${rule.feedback}` : '';
+      const textUk = caseLabel
+        ? `→ Правильне слово. Тепер постав його ${casePhraseAccusative(caseLabel)}${feedback}`
+        : `→ Правильне слово. Тепер обери правильну форму${feedback}`;
+      const textEn = caseLabel
+        ? `→ Correct word. Now put it in the ${translateGrammarTerm(caseLabel)}${feedback}`
+        : `→ Correct word. Now choose the correct form${feedback}`;
       setClozeFeedback({
         kind: 'case-miss',
-        textUk: `→ Правильне слово. Тепер постав його ${casePhraseAccusative(cloze.caseRule.caseLabel)}: ${cloze.caseRule.feedback}`,
-        textEn: `→ Correct word. Now put it in the ${translateGrammarTerm(cloze.caseRule.caseLabel)}: ${cloze.caseRule.feedback}`,
+        textUk,
+        textEn,
       });
       if (exhausted) {
         setAnswerLocked(true);

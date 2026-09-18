@@ -442,7 +442,7 @@ export function LexiconCustomDeckManager({
                         padding: '1rem',
                         display: 'flex',
                         flexDirection: 'column',
-                        justify: 'space-between',
+                        justifyContent: 'space-between',
                       }}
                     >
                       <div>
