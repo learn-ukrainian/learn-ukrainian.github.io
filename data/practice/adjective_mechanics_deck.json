@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "title": "Ukrainian Adjective Deep Mechanics Deck (Прикметник)",
   "description": "Comprehensive practice deck for degrees of comparison, soft/hard declension, and possessive formation grounded in Ukrainian Pravopys 2019 §§ 22, 106–114.",
-  "card_count": 74,
+  "card_count": 78,
   "cards": [
     {
       "card_id": "adj_comp_zhch_dorohyi_nom",
@@ -14,32 +14,32 @@
       "options": [
         "дорогшим",
         "дорожчим",
-        "дорожнім",
-        "дорогішим"
+        "дорожійшим",
+        "дорожшим"
       ],
       "distractors": [
         {
           "text": "дорогшим",
           "interference_type": "false_synthetic_missing_mutation",
           "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
           }
         },
         {
-          "text": "дорогішим",
+          "text": "дорожшим",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "дорожійшим",
           "interference_type": "false_comparative_ish_for_sh",
           "explanation": {
             "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
             "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
-          }
-        },
-        {
-          "text": "дорожнім",
-          "interference_type": "false_synthetic_missing_mutation",
-          "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
           }
         }
       ],
@@ -67,8 +67,8 @@
           "text": "дужшим",
           "interference_type": "false_synthetic_missing_mutation",
           "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
           }
         },
         {
@@ -105,15 +105,15 @@
         "низькіший",
         "нижчий",
         "низший",
-        "нижній"
+        "нижійшим"
       ],
       "distractors": [
         {
           "text": "низший",
           "interference_type": "false_synthetic_missing_mutation",
           "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
           }
         },
         {
@@ -125,11 +125,11 @@
           }
         },
         {
-          "text": "нижній",
-          "interference_type": "false_synthetic_missing_mutation",
+          "text": "нижійшим",
+          "interference_type": "false_comparative_ish_for_sh",
           "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
           }
         }
       ],
@@ -157,8 +157,8 @@
           "text": "вузшою",
           "interference_type": "false_synthetic_missing_mutation",
           "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
           }
         },
         {
@@ -195,15 +195,15 @@
         "близший",
         "близькіший",
         "ближчий",
-        "ближній"
+        "ближійший"
       ],
       "distractors": [
         {
           "text": "близший",
           "interference_type": "false_synthetic_missing_mutation",
           "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
           }
         },
         {
@@ -215,11 +215,11 @@
           }
         },
         {
-          "text": "ближній",
-          "interference_type": "false_synthetic_missing_mutation",
+          "text": "ближійший",
+          "interference_type": "false_comparative_ish_for_sh",
           "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
           }
         }
       ],
@@ -237,9 +237,9 @@
       "blank_target": "важчим",
       "correct_answer": "важчим",
       "options": [
-        "важнішим",
+        "важійшим",
         "важчим",
-        "важкішим",
+        "важкіший",
         "важшим"
       ],
       "distractors": [
@@ -247,12 +247,12 @@
           "text": "важшим",
           "interference_type": "false_synthetic_missing_mutation",
           "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
           }
         },
         {
-          "text": "важкішим",
+          "text": "важкіший",
           "interference_type": "false_comparative_ish_for_sh",
           "explanation": {
             "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
@@ -260,7 +260,7 @@
           }
         },
         {
-          "text": "важнішим",
+          "text": "важійшим",
           "interference_type": "false_comparative_ish_for_sh",
           "explanation": {
             "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
@@ -292,8 +292,8 @@
           "text": "високша",
           "interference_type": "false_synthetic_missing_mutation",
           "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
           }
         },
         {
@@ -308,8 +308,8 @@
           "text": "вишча",
           "interference_type": "false_synthetic_missing_mutation",
           "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
           }
         }
       ],
@@ -317,6 +317,51 @@
       "rule_summary": {
         "ua": "У слові високий суфікс -ок- випадає, а с разом із суфіксом -ш- переходить у -щ- [шч]: вищий, вища.",
         "en": "In vysokyi, suffix -ok- drops and s + -sh- mutates into -shch-: vyshchyi, vyshcha."
+      }
+    },
+    {
+      "card_id": "adj_comp_shch_vysokyi_masc",
+      "category": "comp_synthetic_mutation_shch",
+      "cefr_level": "A2",
+      "prompt_sentence": "Хлопець хотів здаватися значно ___, ніж був насправді.",
+      "blank_target": "вищим",
+      "correct_answer": "вищим",
+      "options": [
+        "високішим",
+        "вишчим",
+        "високшим",
+        "вищим"
+      ],
+      "distractors": [
+        {
+          "text": "високшим",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "високішим",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        },
+        {
+          "text": "вишчим",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (б)",
+      "rule_summary": {
+        "ua": "У прикметнику високий кінцевий приголосний с разом із суфіксом -ш- чергується на -щ-: вищий (в орудному: вищим).",
+        "en": "In vysokyi, root consonant s + -sh- mutates into -shch-: vyshchyi (instrumental: vyshchym)."
       }
     },
     {
@@ -329,7 +374,7 @@
       "options": [
         "товжчий",
         "товщий",
-        "товстніший",
+        "товщійший",
         "товстший"
       ],
       "distractors": [
@@ -337,20 +382,20 @@
           "text": "товстший",
           "interference_type": "false_synthetic_missing_mutation",
           "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
           }
         },
         {
           "text": "товжчий",
           "interference_type": "false_synthetic_missing_mutation",
           "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
           }
         },
         {
-          "text": "товстніший",
+          "text": "товщійший",
           "interference_type": "false_comparative_ish_for_sh",
           "explanation": {
             "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
@@ -360,24 +405,122 @@
       ],
       "pravopys_section": "§ 110, п. 1 (б)",
       "rule_summary": {
-        "ua": "У прикметнику товстий кінцеві ст разом із суфіксом -ш- чергуються на -щ-: товщий (також товстіший).",
-        "en": "In tovstyi, final st + -sh- mutates into -shch-: tovshchyi (also tovstishyi)."
+        "ua": "У прикметнику товстий кінцеві ст разом із суфіксом -ш- чергуються на -щ-: товщий.",
+        "en": "In tovstyi, final st + -sh- mutates into -shch-: tovshchyi."
       }
     },
     {
-      "card_id": "adj_comp_shch_shvydkyi_nom",
+      "card_id": "adj_comp_shch_tovstyi_fem",
       "category": "comp_synthetic_mutation_shch",
+      "cefr_level": "B1",
+      "prompt_sentence": "Зимова куртка виявилася значно ___, ніж легкий плащ.",
+      "blank_target": "товща",
+      "correct_answer": "товща",
+      "options": [
+        "товстша",
+        "товща",
+        "товщійша",
+        "товжча"
+      ],
+      "distractors": [
+        {
+          "text": "товстша",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "товжча",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "товщійша",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (б)",
+      "rule_summary": {
+        "ua": "У прикметнику товстий кінцеві ст разом із суфіксом -ш- переходять у -щ-: товща (жіночий рід).",
+        "en": "In tovstyi, final st + -sh- mutates into -shch-: tovshcha (feminine)."
+      }
+    },
+    {
+      "card_id": "adj_comp_shch_krashchyi_inst",
+      "category": "comp_synthetic_mutation_shch",
+      "cefr_level": "A2",
+      "prompt_sentence": "Кожен новий проєкт ставав значно ___ результатом тривалої праці.",
+      "blank_target": "кращим",
+      "correct_answer": "кращим",
+      "options": [
+        "красшим",
+        "красішим",
+        "кращим",
+        "кражчим"
+      ],
+      "distractors": [
+        {
+          "text": "красшим",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "красішим",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        },
+        {
+          "text": "кражчим",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (б)",
+      "rule_summary": {
+        "ua": "Форма вищого ступеня кращий містить історичне чергування з суфіксом -ш-, що перейшов у -щ-: кращий (в орудному: кращим).",
+        "en": "The comparative form krashchyi features historical mutation yielding -shch-: krashchyi (instrumental: krashchym)."
+      }
+    },
+    {
+      "card_id": "adj_comp_dropk_shvydkyi_inst",
+      "category": "comp_synthetic_sh_dropping_k",
       "cefr_level": "A2",
       "prompt_sentence": "Сучасний експрес є значно ___ транспортом, ніж звичайний автобус.",
       "blank_target": "швидшим",
       "correct_answer": "швидшим",
       "options": [
-        "швидчнішим",
-        "швиджчим",
+        "швидкшим",
+        "швидшим",
         "швидкішим",
-        "швидшим"
+        "швиджчим"
       ],
       "distractors": [
+        {
+          "text": "швидкшим",
+          "interference_type": "false_sh_dropping_k_missing_drop",
+          "explanation": {
+            "ua": "Помилка при творенні вищого ступеня за допомогою суфікса -ш-. Суфікси -к-, -ок- при цьому обов'язково випадають (Правопис 2019 § 110, п. 1 а: швидкий -> швидший, широкий -> ширший, глибокий -> глибший, а не *швидкший чи *широкший).",
+            "en": "Suffix dropping error: suffixes -k- and -ok- strictly drop before comparative suffix -sh- (Pravopys 2019 § 110, item 1 a: shvydkyi -> shvydshyi, shyrokyi -> shyrshyi, not *shvydkshyi)."
+          }
+        },
         {
           "text": "швидкішим",
           "interference_type": "false_comparative_ish_for_sh",
@@ -390,45 +533,37 @@
           "text": "швиджчим",
           "interference_type": "false_synthetic_missing_mutation",
           "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
-          }
-        },
-        {
-          "text": "швидчнішим",
-          "interference_type": "false_comparative_ish_for_sh",
-          "explanation": {
-            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
-            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
           }
         }
       ],
       "pravopys_section": "§ 110, п. 1 (а)",
       "rule_summary": {
-        "ua": "У слові швидкий випадає суфікс -к- і додається -ш-: швидший (в орудному: швидшим).",
-        "en": "In shvydkyi, suffix -k- drops and suffix -sh- is added: shvydshyi (instrumental: shvydshym)."
+        "ua": "У слові швидкий випадає суфікс -к- і додається суфікс -ш-: швидший (в орудному: швидшим, а не *швидкшим).",
+        "en": "In shvydkyi, suffix -k- drops before comparative suffix -sh-: shvydshyi (instrumental: shvydshym)."
       }
     },
     {
-      "card_id": "adj_comp_shch_shyrokyi_nom",
-      "category": "comp_synthetic_mutation_shch",
+      "card_id": "adj_comp_dropk_shyrokyi_inst",
+      "category": "comp_synthetic_sh_dropping_k",
       "cefr_level": "A2",
       "prompt_sentence": "Внизу за поворотом річище ставало набагато ___.",
       "blank_target": "ширшим",
       "correct_answer": "ширшим",
       "options": [
-        "ширжчим",
+        "ширшим",
         "широкшим",
-        "широкішим",
-        "ширшим"
+        "ширжчим",
+        "широкішим"
       ],
       "distractors": [
         {
           "text": "широкшим",
-          "interference_type": "false_synthetic_missing_mutation",
+          "interference_type": "false_sh_dropping_k_missing_drop",
           "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
+            "ua": "Помилка при творенні вищого ступеня за допомогою суфікса -ш-. Суфікси -к-, -ок- при цьому обов'язково випадають (Правопис 2019 § 110, п. 1 а: швидкий -> швидший, широкий -> ширший, глибокий -> глибший, а не *швидкший чи *широкший).",
+            "en": "Suffix dropping error: suffixes -k- and -ok- strictly drop before comparative suffix -sh- (Pravopys 2019 § 110, item 1 a: shvydkyi -> shvydshyi, shyrokyi -> shyrshyi, not *shvydkshyi)."
           }
         },
         {
@@ -443,37 +578,37 @@
           "text": "ширжчим",
           "interference_type": "false_synthetic_missing_mutation",
           "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
           }
         }
       ],
       "pravopys_section": "§ 110, п. 1 (а)",
       "rule_summary": {
-        "ua": "У слові широкий випадає суфікс -ок- і додається суфікс -ш-: ширший (в орудному: ширшим).",
-        "en": "In shyrokyi, suffix -ok- drops and suffix -sh- is added: shyrshyi (instrumental: shyrshym)."
+        "ua": "У слові широкий випадає суфікс -ок- і додається суфікс -ш-: ширший (в орудному: ширшим, а не *широкшим).",
+        "en": "In shyrokyi, suffix -ok- drops before suffix -sh-: shyrshyi (instrumental: shyrshym)."
       }
     },
     {
-      "card_id": "adj_comp_shch_hlybokyi_nom",
-      "category": "comp_synthetic_mutation_shch",
+      "card_id": "adj_comp_dropk_hlybokyi_inst",
+      "category": "comp_synthetic_sh_dropping_k",
       "cefr_level": "B1",
       "prompt_sentence": "У центрі затоки озеро виявилося значно ___.",
       "blank_target": "глибшим",
       "correct_answer": "глибшим",
       "options": [
-        "глибжчим",
         "глибокшим",
-        "глибокішим",
-        "глибшим"
+        "глибшим",
+        "глибжчим",
+        "глибокішим"
       ],
       "distractors": [
         {
           "text": "глибокшим",
-          "interference_type": "false_synthetic_missing_mutation",
+          "interference_type": "false_sh_dropping_k_missing_drop",
           "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
+            "ua": "Помилка при творенні вищого ступеня за допомогою суфікса -ш-. Суфікси -к-, -ок- при цьому обов'язково випадають (Правопис 2019 § 110, п. 1 а: швидкий -> швидший, широкий -> ширший, глибокий -> глибший, а не *швидкший чи *широкший).",
+            "en": "Suffix dropping error: suffixes -k- and -ok- strictly drop before comparative suffix -sh- (Pravopys 2019 § 110, item 1 a: shvydkyi -> shvydshyi, shyrokyi -> shyrshyi, not *shvydkshyi)."
           }
         },
         {
@@ -488,15 +623,60 @@
           "text": "глибжчим",
           "interference_type": "false_synthetic_missing_mutation",
           "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
           }
         }
       ],
       "pravopys_section": "§ 110, п. 1 (а)",
       "rule_summary": {
-        "ua": "У слові глибокий суфікс -ок- випадає, додається суфікс -ш-: глибший (в орудному: глибшим).",
-        "en": "In hlybokyi, suffix -ok- drops and suffix -sh- is attached: hlybshyi (instrumental: hlybshym)."
+        "ua": "У слові глибокий суфікс -ок- випадає перед суфіксом -ш-: глибший (в орудному: глибшим, а не *глибокшим).",
+        "en": "In hlybokyi, suffix -ok- drops before suffix -sh-: hlybshyi (instrumental: hlybshym)."
+      }
+    },
+    {
+      "card_id": "adj_comp_dropk_korotkyi_nom",
+      "category": "comp_synthetic_sh_dropping_k",
+      "cefr_level": "A2",
+      "prompt_sentence": "У грудні світловий день стає значно ___, ніж у листопаді.",
+      "blank_target": "коротший",
+      "correct_answer": "коротший",
+      "options": [
+        "короткший",
+        "коротший",
+        "корожчий",
+        "короткіший"
+      ],
+      "distractors": [
+        {
+          "text": "короткший",
+          "interference_type": "false_sh_dropping_k_missing_drop",
+          "explanation": {
+            "ua": "Помилка при творенні вищого ступеня за допомогою суфікса -ш-. Суфікси -к-, -ок- при цьому обов'язково випадають (Правопис 2019 § 110, п. 1 а: швидкий -> швидший, широкий -> ширший, глибокий -> глибший, а не *швидкший чи *широкший).",
+            "en": "Suffix dropping error: suffixes -k- and -ok- strictly drop before comparative suffix -sh- (Pravopys 2019 § 110, item 1 a: shvydkyi -> shvydshyi, shyrokyi -> shyrshyi, not *shvydkshyi)."
+          }
+        },
+        {
+          "text": "короткіший",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        },
+        {
+          "text": "корожчий",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (а)",
+      "rule_summary": {
+        "ua": "У прикметнику короткий суфікс -к- випадає перед суфіксом -ш-: коротший (а не *короткший).",
+        "en": "In korotkyi, suffix -k- drops before suffix -sh-: korotshyi (not *korotkshyi)."
       }
     },
     {
@@ -525,8 +705,8 @@
           "text": "новжчою",
           "interference_type": "false_synthetic_missing_mutation",
           "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
           }
         },
         {
@@ -750,8 +930,8 @@
           "text": "свіжчим",
           "interference_type": "false_synthetic_missing_mutation",
           "explanation": {
-            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi)."
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
           }
         },
         {
@@ -778,9 +958,9 @@
       "correct_answer": "більшою",
       "options": [
         "більшою",
-        "величавішою",
+        "найвеликішою",
         "великішою",
-        "величнішою"
+        "великшою"
       ],
       "distractors": [
         {
@@ -792,7 +972,7 @@
           }
         },
         {
-          "text": "величнішою",
+          "text": "великшою",
           "interference_type": "false_suppletive_regularized",
           "explanation": {
             "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
@@ -800,7 +980,7 @@
           }
         },
         {
-          "text": "величавішою",
+          "text": "найвеликішою",
           "interference_type": "false_suppletive_regularized",
           "explanation": {
             "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
@@ -867,14 +1047,14 @@
       "blank_target": "гіршою",
       "correct_answer": "гіршою",
       "options": [
-        "згіршою",
+        "гіршішою",
         "гіршою",
-        "поганішою",
-        "поганшою"
+        "поганішною",
+        "поганійшою"
       ],
       "distractors": [
         {
-          "text": "поганішою",
+          "text": "поганішною",
           "interference_type": "false_suppletive_regularized",
           "explanation": {
             "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
@@ -882,7 +1062,7 @@
           }
         },
         {
-          "text": "поганшою",
+          "text": "поганійшою",
           "interference_type": "false_suppletive_regularized",
           "explanation": {
             "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
@@ -890,7 +1070,7 @@
           }
         },
         {
-          "text": "згіршою",
+          "text": "гіршішою",
           "interference_type": "false_suppletive_regularized",
           "explanation": {
             "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
@@ -914,12 +1094,12 @@
       "options": [
         "добрішним",
         "кращим",
-        "добрішим",
+        "добршим",
         "хорошішим"
       ],
       "distractors": [
         {
-          "text": "добрішим",
+          "text": "добршим",
           "interference_type": "false_suppletive_regularized",
           "explanation": {
             "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
@@ -958,13 +1138,13 @@
       "correct_answer": "ліпшого",
       "options": [
         "хорошішого",
-        "добрішого",
+        "добршого",
         "ліпшого",
         "ліпнішого"
       ],
       "distractors": [
         {
-          "text": "добрішого",
+          "text": "добршого",
           "interference_type": "false_suppletive_regularized",
           "explanation": {
             "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
@@ -1272,7 +1452,7 @@
       "blank_target": "найдорожчим",
       "correct_answer": "найдорожчим",
       "options": [
-        "найдорогішим",
+        "найдорогшим",
         "найдорожчим",
         "самим дорогим",
         "самим дорожчим"
@@ -1295,11 +1475,11 @@
           }
         },
         {
-          "text": "найдорогішим",
-          "interference_type": "false_comparative_ish_for_sh",
+          "text": "найдорогшим",
+          "interference_type": "false_synthetic_missing_mutation",
           "explanation": {
-            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
-            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
           }
         }
       ],
@@ -2120,21 +2300,21 @@
       }
     },
     {
-      "card_id": "adj_decl_soft_bezkraii_gen",
+      "card_id": "adj_decl_soft_vechirnii_gen",
       "category": "decl_soft_genitive_dative",
-      "cefr_level": "B2",
-      "prompt_sentence": "Мандрівники годинами милувалися просторами ___ південного степу.",
-      "blank_target": "безкрайого",
-      "correct_answer": "безкрайого",
+      "cefr_level": "A2",
+      "prompt_sentence": "Ми залюбки чекали настання тихого ___ часу для читання.",
+      "blank_target": "вечірнього",
+      "correct_answer": "вечірнього",
       "options": [
-        "безкрайного",
-        "безкрайього",
-        "безкраїного",
-        "безкрайого"
+        "вечірного",
+        "вечірньго",
+        "вечірнього",
+        "вечірнійого"
       ],
       "distractors": [
         {
-          "text": "безкрайного",
+          "text": "вечірного",
           "interference_type": "false_soft_genitive_hard_ending",
           "explanation": {
             "ua": "Помилка у відмінюванні м'якої групи прикметників. У родовому відмінку чоловічого роду вони мають закінчення -ього (синього, літнього, давнього), а не тверде -ого.",
@@ -2142,7 +2322,7 @@
           }
         },
         {
-          "text": "безкрайього",
+          "text": "вечірньго",
           "interference_type": "false_soft_genitive_hard_ending",
           "explanation": {
             "ua": "Помилка у відмінюванні м'якої групи прикметників. У родовому відмінку чоловічого роду вони мають закінчення -ього (синього, літнього, давнього), а не тверде -ого.",
@@ -2150,7 +2330,7 @@
           }
         },
         {
-          "text": "безкраїного",
+          "text": "вечірнійого",
           "interference_type": "false_soft_genitive_hard_ending",
           "explanation": {
             "ua": "Помилка у відмінюванні м'якої групи прикметників. У родовому відмінку чоловічого роду вони мають закінчення -ього (синього, літнього, давнього), а не тверде -ого.",
@@ -2160,8 +2340,8 @@
       ],
       "pravopys_section": "§ 108",
       "rule_summary": {
-        "ua": "Прикметники на -їй мають основу на [j] і в родовому відмінку однини закінчуються на -ього/-його: безкрайого.",
-        "en": "Adjectives in -ii have stem in /j/ and take ending -yoho: bezkrayoho in genitive singular."
+        "ua": "Прикметники м'якої групи в родовому відмінку чоловічого роду однини мають закінчення -ього: вечірнього (а не тверде -ого).",
+        "en": "Soft-group adjectives in masculine genitive singular take ending -yoho: vechirnyoho (not hard -oho)."
       }
     },
     {
@@ -2352,7 +2532,7 @@
       "blank_target": "Франкова",
       "correct_answer": "Франкова",
       "options": [
-        "Франкове",
+        "Франковська",
         "Франківа",
         "Франкова",
         "Франківська"
@@ -2375,11 +2555,11 @@
           }
         },
         {
-          "text": "Франкове",
-          "interference_type": "false_possessive_iv_suffix_vowel",
+          "text": "Франковська",
+          "interference_type": "false_relational_for_possessive",
           "explanation": {
-            "ua": "Помилка у голосному суфікса присвійних прикметників. Після м'яких приголосних та [j] виступає суфікс -ев- / -єв- (Василів -> Василева, Сергіїв -> Сергієве), а після твердих — -ов- (батьків -> батькова).",
-            "en": "Possessive suffix vowel error. After soft consonants and /j/, suffix -ev- / -yev- is used in open syllables (Vasyleva, Serhiyeva); after hard consonants, -ov- is used (batkova)."
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
           }
         }
       ],
@@ -2400,7 +2580,7 @@
         "братова",
         "братіва",
         "братська",
-        "братове"
+        "братовська"
       ],
       "distractors": [
         {
@@ -2420,11 +2600,11 @@
           }
         },
         {
-          "text": "братове",
-          "interference_type": "false_possessive_iv_suffix_vowel",
+          "text": "братовська",
+          "interference_type": "false_relational_for_possessive",
           "explanation": {
-            "ua": "Помилка у голосному суфікса присвійних прикметників. Після м'яких приголосних та [j] виступає суфікс -ев- / -єв- (Василів -> Василева, Сергіїв -> Сергієве), а після твердих — -ов- (батьків -> батькова).",
-            "en": "Possessive suffix vowel error. After soft consonants and /j/, suffix -ev- / -yev- is used in open syllables (Vasyleva, Serhiyeva); after hard consonants, -ov- is used (batkova)."
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
           }
         }
       ],
@@ -2623,8 +2803,8 @@
       "correct_answer": "тітчину",
       "options": [
         "тіткину",
-        "тіткин",
-        "тіточну",
+        "тітчену",
+        "тітчинську",
         "тітчину"
       ],
       "distractors": [
@@ -2637,7 +2817,7 @@
           }
         },
         {
-          "text": "тіткин",
+          "text": "тітчену",
           "interference_type": "false_possessive_missing_mutation",
           "explanation": {
             "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
@@ -2645,11 +2825,11 @@
           }
         },
         {
-          "text": "тіточну",
-          "interference_type": "false_possessive_missing_mutation",
+          "text": "тітчинську",
+          "interference_type": "false_relational_for_possessive",
           "explanation": {
-            "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
-            "en": "Missing consonant alternation before possessive suffix -yn. Consonants h, k, kh mutate to zh, ch, sh (Olha -> Olzhyn, dochka -> dochchyn, Solokha -> Soloshyn)."
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
           }
         }
       ],
@@ -2660,21 +2840,21 @@
       }
     },
     {
-      "card_id": "adj_poss_kurchyn_nom",
+      "card_id": "adj_poss_kachchyn_nom",
       "category": "possessive_yn_mutation",
       "cefr_level": "B1",
       "prompt_sentence": "У високій траві біліло маленьке ___ крильце.",
-      "blank_target": "курчине",
-      "correct_answer": "курчине",
+      "blank_target": "каччине",
+      "correct_answer": "каччине",
       "options": [
-        "курчине",
-        "куркине",
-        "куряче",
-        "курине"
+        "каччине",
+        "каччене",
+        "каччинське",
+        "качкине"
       ],
       "distractors": [
         {
-          "text": "куркине",
+          "text": "качкине",
           "interference_type": "false_possessive_missing_mutation",
           "explanation": {
             "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
@@ -2682,26 +2862,26 @@
           }
         },
         {
-          "text": "куряче",
+          "text": "каччене",
+          "interference_type": "false_possessive_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
+            "en": "Missing consonant alternation before possessive suffix -yn. Consonants h, k, kh mutate to zh, ch, sh (Olha -> Olzhyn, dochka -> dochchyn, Solokha -> Soloshyn)."
+          }
+        },
+        {
+          "text": "каччинське",
           "interference_type": "false_relational_for_possessive",
           "explanation": {
             "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
             "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
           }
-        },
-        {
-          "text": "курине",
-          "interference_type": "false_possessive_missing_mutation",
-          "explanation": {
-            "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
-            "en": "Missing consonant alternation before possessive suffix -yn. Consonants h, k, kh mutate to zh, ch, sh (Olha -> Olzhyn, dochka -> dochchyn, Solokha -> Soloshyn)."
-          }
         }
       ],
       "pravopys_section": "§ 22, 107",
       "rule_summary": {
-        "ua": "Перед суфіксом -ин к чергується на ч: курка -> курчин (середній рід: курчине).",
-        "en": "Before suffix -yn, k mutates to ch: kurka -> kurchyn (neuter: kurchyne)."
+        "ua": "Перед суфіксом -ин приголосний к основи чергується на ч: качка -> каччин (середній рід: каччине).",
+        "en": "Before suffix -yn, stem k mutates to ch: kachka -> kachchyn (neuter: kachchyne)."
       }
     },
     {
@@ -2750,29 +2930,21 @@
       }
     },
     {
-      "card_id": "adj_poss_sestryn_nom",
+      "card_id": "adj_poss_svekrushyn_nom",
       "category": "possessive_yn_mutation",
-      "cefr_level": "A1",
-      "prompt_sentence": "На вішалці біля дверей висіло тепле ___ пальто.",
-      "blank_target": "сестрине",
-      "correct_answer": "сестрине",
+      "cefr_level": "B1",
+      "prompt_sentence": "У родині завжди шанували розважливий ___ голос.",
+      "blank_target": "свекрушин",
+      "correct_answer": "свекрушин",
       "options": [
-        "сестріне",
-        "сестрове",
-        "сестрине",
-        "сестринське"
+        "свекрушин",
+        "свекрушинський",
+        "свекрухин",
+        "свекрушен"
       ],
       "distractors": [
         {
-          "text": "сестринське",
-          "interference_type": "false_relational_for_possessive",
-          "explanation": {
-            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
-            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
-          }
-        },
-        {
-          "text": "сестріне",
+          "text": "свекрухин",
           "interference_type": "false_possessive_missing_mutation",
           "explanation": {
             "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
@@ -2780,18 +2952,26 @@
           }
         },
         {
-          "text": "сестрове",
-          "interference_type": "false_possessive_iv_suffix_vowel",
+          "text": "свекрушен",
+          "interference_type": "false_possessive_missing_mutation",
           "explanation": {
-            "ua": "Помилка у голосному суфікса присвійних прикметників. Після м'яких приголосних та [j] виступає суфікс -ев- / -єв- (Василів -> Василева, Сергіїв -> Сергієве), а після твердих — -ов- (батьків -> батькова).",
-            "en": "Possessive suffix vowel error. After soft consonants and /j/, suffix -ev- / -yev- is used in open syllables (Vasyleva, Serhiyeva); after hard consonants, -ov- is used (batkova)."
+            "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
+            "en": "Missing consonant alternation before possessive suffix -yn. Consonants h, k, kh mutate to zh, ch, sh (Olha -> Olzhyn, dochka -> dochchyn, Solokha -> Soloshyn)."
+          }
+        },
+        {
+          "text": "свекрушинський",
+          "interference_type": "false_relational_for_possessive",
+          "explanation": {
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
           }
         }
       ],
-      "pravopys_section": "§ 107",
+      "pravopys_section": "§ 22, 107",
       "rule_summary": {
-        "ua": "Від іменника I відміни сестра присвійний прикметник твориться суфіксом -ин: сестрине пальто.",
-        "en": "From 1st declension noun sestra, possessive takes suffix -yn: sestryne palto."
+        "ua": "Перед суфіксом -ин кінцевий приголосний х чергується на ш: свекруха -> свекрушин (а не *свекрухин).",
+        "en": "Before suffix -yn, stem kh mutates to sh: svekrukha -> svekrushyn (not *svekrukhyn)."
       }
     },
     {

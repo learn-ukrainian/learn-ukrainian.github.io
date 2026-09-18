@@ -33,6 +33,7 @@
 export const ADJECTIVE_MECHANICS_CATEGORY_KEYS = [
   'comp_synthetic_mutation_zhch',
   'comp_synthetic_mutation_shch',
+  'comp_synthetic_sh_dropping_k',
   'comp_synthetic_ish',
   'comp_suppletive',
   'comp_analytic_formation',
@@ -50,6 +51,7 @@ export type AdjectiveMechanicsCategoryKey = (typeof ADJECTIVE_MECHANICS_CATEGORY
 
 export const ADJECTIVE_MECHANICS_INTERFERENCE_KEYS = [
   'false_synthetic_missing_mutation',
+  'false_sh_dropping_k_missing_drop',
   'false_comparative_ish_for_sh',
   'false_comparative_sh_for_ish',
   'false_suppletive_regularized',
@@ -183,6 +185,14 @@ export function resolveDegreeComparisonRule(
           'При творенні вищого ступеня приголосні к, с разом із суфіксом -ш- переходять у -щ- (Правопис 2019 § 110, п. 1 б: вищий, товщий, кращий).',
         ruleEn:
           'In comparative formation, stems ending in k, s fuse with suffix -sh- to form -shch- (Pravopys 2019 § 110, item 1 b: vyshchyi, tovshchyi).',
+      };
+    case 'comp_synthetic_sh_dropping_k':
+      return {
+        indicator: '-ш- (випадання -к-/-ок-)',
+        ruleUa:
+          'При творенні вищого ступеня за допомогою суфікса -ш- суфікси -к-, -ок- випадають (Правопис 2019 § 110, п. 1 а: швидкий -> швидший, широкий -> ширший, глибокий -> глибший, короткий -> коротший).',
+        ruleEn:
+          'When forming the comparative with suffix -sh-, suffixes -k- and -ok- drop (Pravopys 2019 § 110, item 1 a: shvydkyi -> shvydshyi, shyrokyi -> shyrshyi, hlybokyi -> hlybshyi).',
       };
     case 'comp_synthetic_ish':
       return {

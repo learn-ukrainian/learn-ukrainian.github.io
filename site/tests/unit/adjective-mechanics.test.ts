@@ -26,6 +26,12 @@ describe('adjective-mechanics', () => {
     expect(shch.ruleUa).toContain('-щ-');
     expect(shch.ruleEn).toContain('-shch-');
 
+    // -sh- suffix dropping -k-/-ok-
+    const dropk = resolveDegreeComparisonRule('comp_synthetic_sh_dropping_k');
+    expect(dropk.indicator).toContain('-ш-');
+    expect(dropk.ruleUa).toContain('випадають');
+    expect(dropk.ruleEn).toContain('drop');
+
     // -ish- suffix
     const ish = resolveDegreeComparisonRule('comp_synthetic_ish');
     expect(ish.indicator).toBe('-іш-');

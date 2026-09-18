@@ -39,6 +39,7 @@ from scripts.practice.adjective_mechanics_engine import (
     resolve_soft_declension_instrumental_rule,
     validate_adjective_card,
     verify_deck_with_vesum,
+    verify_distractors_with_vesum,
 )
 
 
@@ -55,6 +56,12 @@ def test_resolve_degree_comparison_rule():
     assert ind_shch == "-щ-"
     assert "переходять у -щ-" in ua_shch
     assert "-shch-" in en_shch
+
+    # -ш- suffix dropping -k-/-ok-
+    ind_dropk, ua_dropk, en_dropk = resolve_degree_comparison_rule(AdjectiveCategory.COMP_SYNTHETIC_SH_DROPPING_K)
+    assert "-ш-" in ind_dropk
+    assert "випадають" in ua_dropk
+    assert "drop" in en_dropk
 
     # -іш- suffix
     ind_ish, ua_ish, en_ish = resolve_degree_comparison_rule(AdjectiveCategory.COMP_SYNTHETIC_ISH)
@@ -191,8 +198,16 @@ def test_deck_export_and_file_parity(tmp_path: Path):
 
 
 def test_vesum_verification():
-    """Verify that VESUM database verifier confirms all target words."""
+    """Verify that VESUM database confirms all target words and validates corruption distractors."""
     cards = build_canonical_adjective_cards()
     report = verify_deck_with_vesum(cards)
     assert report["verified"] is True, f"VESUM verification failed: {report.get('missing_forms', [])}"
     assert report["checked_word_count"] >= 70
+
+    # Extended distractor verification: ensure phonological/morphological corruption
+    # distractors are not valid standard words in VESUM.
+    dist_report = verify_distractors_with_vesum(cards)
+    assert dist_report["verified"] is True, (
+        f"Corruption distractors matched valid standard words in VESUM: {dist_report.get('invalid_distractors', [])}"
+    )
+    assert dist_report["checked_distractor_count"] >= 100

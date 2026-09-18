@@ -1,14 +1,23 @@
 """Ukrainian Adjective Deep Mechanics Practice Engine (Прикметник).
 
-Implements Ukrainian Pravopys 2019 (§§ 22, 106, 107, 108, 109, 110, 111, 112, 113, 114)
-and Academic Grammar rules for:
+Implements Ukrainian Pravopys 2019:
+  - Part I, § 22: Чергування приголосних при творенні слів (г, ж, з -> -зьк-, к, ч, ц -> -цьк-, х, ш, с -> -ськ-; г->ж, к->ч, х->ш).
+  - Part III, §§ 106–114: Морфологія — Прикметник (офіційне видання НАН України / Інститут мовознавства):
+    * § 106: Поділ на тверду та м'яку групи.
+    * § 107: Творення присвійних прикметників (-ів/-ова/-еве, -ин/-ина/-єве; чергування перед -ин).
+    * § 108: Відмінювання прикметників твердої та м'якої груп (-ого/-ього, -ому/-ьому, орудний -ім).
+    * § 110: Творення вищого ступеня (п. 1 а: суфікси -ш-/-іш- та випадання -к-/-ок-; п. 1 б: чергування -жч-, -щ-; п. 1 в: суплетивні; п. 2: складена форма).
+    * § 111: Творення найвищого ступеня (префікс най-, підсилювальні якнай-, щонай-; складена форма).
+
+Rules covered:
   1. Degrees of Comparison (Ступені порівняння прикметників) [Правопис 2019 §§ 110–114]:
      - Comparative (Вищий ступінь):
        * Simple synthetic form with -ш- / -іш- and morphophonemic mutations:
          - г, ж, з + -ш- -> -жч- (дорогий -> дорожчий, дужий -> дужчий, низький -> нижчий,
            вузький -> вужчий, близький -> ближчий, важкий -> важчий).
-         - к, с + -ш- -> -щ- (високий -> вищий, товстий -> товстіший/товщий, кращий,
-           широкий -> ширший, глибокий -> глибший).
+         - к, с, ст + -ш- -> -щ- (високий -> вищий, товстий -> товщий, кращий).
+         - Suffix dropping: суфікси -к-, -ок- випадають перед -ш- (швидкий -> швидший,
+           широкий -> ширший, глибокий -> глибший, короткий -> коротший).
          - Regular suffix -іш- for cluster/hard stems (новий -> новіший, теплий -> тепліший,
            розумний -> розумніший, гарний -> гарніший, сильний -> сильніший).
        * Suppletive stems: великий -> більший, малий -> менший, поганий -> гірший,
@@ -71,6 +80,7 @@ class AdjectiveCategory(StrEnum):
 
     COMP_SYNTHETIC_MUTATION_ZHCH = "comp_synthetic_mutation_zhch"
     COMP_SYNTHETIC_MUTATION_SHCH = "comp_synthetic_mutation_shch"
+    COMP_SYNTHETIC_SH_DROPPING_K = "comp_synthetic_sh_dropping_k"
     COMP_SYNTHETIC_ISH = "comp_synthetic_ish"
     COMP_SUPPLETIVE = "comp_suppletive"
     COMP_ANALYTIC_FORMATION = "comp_analytic_formation"
@@ -88,6 +98,7 @@ class AdjectiveInterferenceType(StrEnum):
     """Taxonomy of morphological, phonological, and syntactic adjective misconceptions."""
 
     FALSE_SYNTHETIC_MISSING_MUTATION = "false_synthetic_missing_mutation"
+    FALSE_SH_DROPPING_K_MISSING_DROP = "false_sh_dropping_k_missing_drop"
     FALSE_COMPARATIVE_ISH_FOR_SH = "false_comparative_ish_for_sh"
     FALSE_COMPARATIVE_SH_FOR_ISH = "false_comparative_sh_for_ish"
     FALSE_SUPPLETIVE_REGULARIZED = "false_suppletive_regularized"
@@ -107,8 +118,12 @@ class AdjectiveInterferenceType(StrEnum):
 
 INTERFERENCE_EXPLANATIONS: dict[AdjectiveInterferenceType, dict[str, str]] = {
     AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION: {
-        "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с разом із -ш- переходять у -щ- (вищий, товщий).",
-        "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s + -sh- fuse into -shch- (vyshchyi).",
+        "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+        "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi).",
+    },
+    AdjectiveInterferenceType.FALSE_SH_DROPPING_K_MISSING_DROP: {
+        "ua": "Помилка при творенні вищого ступеня за допомогою суфікса -ш-. Суфікси -к-, -ок- при цьому обов'язково випадають (Правопис 2019 § 110, п. 1 а: швидкий -> швидший, широкий -> ширший, глибокий -> глибший, а не *швидкший чи *широкший).",
+        "en": "Suffix dropping error: suffixes -k- and -ok- strictly drop before comparative suffix -sh- (Pravopys 2019 § 110, item 1 a: shvydkyi -> shvydshyi, shyrokyi -> shyrshyi, not *shvydkshyi).",
     },
     AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH: {
         "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
@@ -241,8 +256,8 @@ CANONICAL_ADJECTIVE_CARDS: list[dict[str, Any]] = [
         },
         "distractors": [
             ("дорогшим", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
-            ("дорогішим", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
-            ("дорожнім", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
+            ("дорожшим", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
+            ("дорожійшим", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
         ],
     },
     {
@@ -278,7 +293,7 @@ CANONICAL_ADJECTIVE_CARDS: list[dict[str, Any]] = [
         "distractors": [
             ("низший", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
             ("низькіший", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
-            ("нижній", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
+            ("нижійшим", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
         ],
     },
     {
@@ -314,7 +329,7 @@ CANONICAL_ADJECTIVE_CARDS: list[dict[str, Any]] = [
         "distractors": [
             ("близший", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
             ("близькіший", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
-            ("ближній", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
+            ("ближійший", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
         ],
     },
     {
@@ -331,12 +346,12 @@ CANONICAL_ADJECTIVE_CARDS: list[dict[str, Any]] = [
         },
         "distractors": [
             ("важшим", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
-            ("важкішим", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
-            ("важнішим", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
+            ("важкіший", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
+            ("важійшим", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
         ],
     },
     # =========================================================================
-    # 2. COMP_SYNTHETIC_MUTATION_SHCH (к, с + -ш- -> -щ-) [§ 110, п. 1 (б)]
+    # 2. COMP_SYNTHETIC_MUTATION_SHCH (к, с, ст + -ш- -> -щ-) [Правопис 2019 § 110, п. 1 (б)]
     # =========================================================================
     {
         "card_id": "adj_comp_shch_vysokyi_nom",
@@ -357,6 +372,24 @@ CANONICAL_ADJECTIVE_CARDS: list[dict[str, Any]] = [
         ],
     },
     {
+        "card_id": "adj_comp_shch_vysokyi_masc",
+        "category": AdjectiveCategory.COMP_SYNTHETIC_MUTATION_SHCH,
+        "cefr_level": "A2",
+        "prompt_sentence": "Хлопець хотів здаватися значно ___, ніж був насправді.",
+        "blank_target": "вищим",
+        "correct_answer": "вищим",
+        "pravopys_section": "§ 110, п. 1 (б)",
+        "rule_summary": {
+            "ua": "У прикметнику високий кінцевий приголосний с разом із суфіксом -ш- чергується на -щ-: вищий (в орудному: вищим).",
+            "en": "In vysokyi, root consonant s + -sh- mutates into -shch-: vyshchyi (instrumental: vyshchym).",
+        },
+        "distractors": [
+            ("високшим", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
+            ("високішим", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
+            ("вишчим", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
+        ],
+    },
+    {
         "card_id": "adj_comp_shch_tovstyi_nom",
         "category": AdjectiveCategory.COMP_SYNTHETIC_MUTATION_SHCH,
         "cefr_level": "B1",
@@ -365,67 +398,124 @@ CANONICAL_ADJECTIVE_CARDS: list[dict[str, Any]] = [
         "correct_answer": "товщий",
         "pravopys_section": "§ 110, п. 1 (б)",
         "rule_summary": {
-            "ua": "У прикметнику товстий кінцеві ст разом із суфіксом -ш- чергуються на -щ-: товщий (також товстіший).",
-            "en": "In tovstyi, final st + -sh- mutates into -shch-: tovshchyi (also tovstishyi).",
+            "ua": "У прикметнику товстий кінцеві ст разом із суфіксом -ш- чергуються на -щ-: товщий.",
+            "en": "In tovstyi, final st + -sh- mutates into -shch-: tovshchyi.",
         },
         "distractors": [
             ("товстший", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
             ("товжчий", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
-            ("товстніший", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
+            ("товщійший", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
         ],
     },
     {
-        "card_id": "adj_comp_shch_shvydkyi_nom",
+        "card_id": "adj_comp_shch_tovstyi_fem",
         "category": AdjectiveCategory.COMP_SYNTHETIC_MUTATION_SHCH,
+        "cefr_level": "B1",
+        "prompt_sentence": "Зимова куртка виявилася значно ___, ніж легкий плащ.",
+        "blank_target": "товща",
+        "correct_answer": "товща",
+        "pravopys_section": "§ 110, п. 1 (б)",
+        "rule_summary": {
+            "ua": "У прикметнику товстий кінцеві ст разом із суфіксом -ш- переходять у -щ-: товща (жіночий рід).",
+            "en": "In tovstyi, final st + -sh- mutates into -shch-: tovshcha (feminine).",
+        },
+        "distractors": [
+            ("товстша", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
+            ("товжча", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
+            ("товщійша", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
+        ],
+    },
+    {
+        "card_id": "adj_comp_shch_krashchyi_inst",
+        "category": AdjectiveCategory.COMP_SYNTHETIC_MUTATION_SHCH,
+        "cefr_level": "A2",
+        "prompt_sentence": "Кожен новий проєкт ставав значно ___ результатом тривалої праці.",
+        "blank_target": "кращим",
+        "correct_answer": "кращим",
+        "pravopys_section": "§ 110, п. 1 (б)",
+        "rule_summary": {
+            "ua": "Форма вищого ступеня кращий містить історичне чергування з суфіксом -ш-, що перейшов у -щ-: кращий (в орудному: кращим).",
+            "en": "The comparative form krashchyi features historical mutation yielding -shch-: krashchyi (instrumental: krashchym).",
+        },
+        "distractors": [
+            ("красшим", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
+            ("красішим", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
+            ("кражчим", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
+        ],
+    },
+    # =========================================================================
+    # 2b. COMP_SYNTHETIC_SH_DROPPING_K (Випадання -к-, -ок- перед -ш-) [Правопис 2019 § 110, п. 1 (а)]
+    # =========================================================================
+    {
+        "card_id": "adj_comp_dropk_shvydkyi_inst",
+        "category": AdjectiveCategory.COMP_SYNTHETIC_SH_DROPPING_K,
         "cefr_level": "A2",
         "prompt_sentence": "Сучасний експрес є значно ___ транспортом, ніж звичайний автобус.",
         "blank_target": "швидшим",
         "correct_answer": "швидшим",
         "pravopys_section": "§ 110, п. 1 (а)",
         "rule_summary": {
-            "ua": "У слові швидкий випадає суфікс -к- і додається -ш-: швидший (в орудному: швидшим).",
-            "en": "In shvydkyi, suffix -k- drops and suffix -sh- is added: shvydshyi (instrumental: shvydshym).",
+            "ua": "У слові швидкий випадає суфікс -к- і додається суфікс -ш-: швидший (в орудному: швидшим, а не *швидкшим).",
+            "en": "In shvydkyi, suffix -k- drops before comparative suffix -sh-: shvydshyi (instrumental: shvydshym).",
         },
         "distractors": [
+            ("швидкшим", AdjectiveInterferenceType.FALSE_SH_DROPPING_K_MISSING_DROP),
             ("швидкішим", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
             ("швиджчим", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
-            ("швидчнішим", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
         ],
     },
     {
-        "card_id": "adj_comp_shch_shyrokyi_nom",
-        "category": AdjectiveCategory.COMP_SYNTHETIC_MUTATION_SHCH,
+        "card_id": "adj_comp_dropk_shyrokyi_inst",
+        "category": AdjectiveCategory.COMP_SYNTHETIC_SH_DROPPING_K,
         "cefr_level": "A2",
         "prompt_sentence": "Внизу за поворотом річище ставало набагато ___.",
         "blank_target": "ширшим",
         "correct_answer": "ширшим",
         "pravopys_section": "§ 110, п. 1 (а)",
         "rule_summary": {
-            "ua": "У слові широкий випадає суфікс -ок- і додається суфікс -ш-: ширший (в орудному: ширшим).",
-            "en": "In shyrokyi, suffix -ok- drops and suffix -sh- is added: shyrshyi (instrumental: shyrshym).",
+            "ua": "У слові широкий випадає суфікс -ок- і додається суфікс -ш-: ширший (в орудному: ширшим, а не *широкшим).",
+            "en": "In shyrokyi, suffix -ok- drops before suffix -sh-: shyrshyi (instrumental: shyrshym).",
         },
         "distractors": [
-            ("широкшим", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
+            ("широкшим", AdjectiveInterferenceType.FALSE_SH_DROPPING_K_MISSING_DROP),
             ("широкішим", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
             ("ширжчим", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
         ],
     },
     {
-        "card_id": "adj_comp_shch_hlybokyi_nom",
-        "category": AdjectiveCategory.COMP_SYNTHETIC_MUTATION_SHCH,
+        "card_id": "adj_comp_dropk_hlybokyi_inst",
+        "category": AdjectiveCategory.COMP_SYNTHETIC_SH_DROPPING_K,
         "cefr_level": "B1",
         "prompt_sentence": "У центрі затоки озеро виявилося значно ___.",
         "blank_target": "глибшим",
         "correct_answer": "глибшим",
         "pravopys_section": "§ 110, п. 1 (а)",
         "rule_summary": {
-            "ua": "У слові глибокий суфікс -ок- випадає, додається суфікс -ш-: глибший (в орудному: глибшим).",
-            "en": "In hlybokyi, suffix -ok- drops and suffix -sh- is attached: hlybshyi (instrumental: hlybshym).",
+            "ua": "У слові глибокий суфікс -ок- випадає перед суфіксом -ш-: глибший (в орудному: глибшим, а не *глибокшим).",
+            "en": "In hlybokyi, suffix -ok- drops before suffix -sh-: hlybshyi (instrumental: hlybshym).",
         },
         "distractors": [
-            ("глибокшим", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
+            ("глибокшим", AdjectiveInterferenceType.FALSE_SH_DROPPING_K_MISSING_DROP),
             ("глибокішим", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
             ("глибжчим", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
+        ],
+    },
+    {
+        "card_id": "adj_comp_dropk_korotkyi_nom",
+        "category": AdjectiveCategory.COMP_SYNTHETIC_SH_DROPPING_K,
+        "cefr_level": "A2",
+        "prompt_sentence": "У грудні світловий день стає значно ___, ніж у листопаді.",
+        "blank_target": "коротший",
+        "correct_answer": "коротший",
+        "pravopys_section": "§ 110, п. 1 (а)",
+        "rule_summary": {
+            "ua": "У прикметнику короткий суфікс -к- випадає перед суфіксом -ш-: коротший (а не *короткший).",
+            "en": "In korotkyi, suffix -k- drops before suffix -sh-: korotshyi (not *korotkshyi).",
+        },
+        "distractors": [
+            ("короткший", AdjectiveInterferenceType.FALSE_SH_DROPPING_K_MISSING_DROP),
+            ("короткіший", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
+            ("корожчий", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
         ],
     },
     # =========================================================================
@@ -556,8 +646,8 @@ CANONICAL_ADJECTIVE_CARDS: list[dict[str, Any]] = [
         },
         "distractors": [
             ("великішою", AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED),
-            ("величнішою", AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED),
-            ("величавішою", AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED),
+            ("великшою", AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED),
+            ("найвеликішою", AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED),
         ],
     },
     {
@@ -591,9 +681,9 @@ CANONICAL_ADJECTIVE_CARDS: list[dict[str, Any]] = [
             "en": "The adjective pohanyi forms comparative suppletively: hirshyi (fem. instrumental: hirshoyu).",
         },
         "distractors": [
-            ("поганішою", AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED),
-            ("поганшою", AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED),
-            ("згіршою", AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED),
+            ("поганішною", AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED),
+            ("поганійшою", AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED),
+            ("гіршішою", AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED),
         ],
     },
     {
@@ -609,7 +699,7 @@ CANONICAL_ADJECTIVE_CARDS: list[dict[str, Any]] = [
             "en": "Adjectives dobryi and khoroshyi form suppletive comparatives: krashchyi and lipshyi.",
         },
         "distractors": [
-            ("добрішим", AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED),
+            ("добршим", AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED),
             ("хорошішим", AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED),
             ("добрішним", AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED),
         ],
@@ -627,7 +717,7 @@ CANONICAL_ADJECTIVE_CARDS: list[dict[str, Any]] = [
             "en": "The suppletive comparative lipshyi takes genitive singular ending -oho: lipshoho.",
         },
         "distractors": [
-            ("добрішого", AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED),
+            ("добршого", AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED),
             ("хорошішого", AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED),
             ("ліпнішого", AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED),
         ],
@@ -761,7 +851,7 @@ CANONICAL_ADJECTIVE_CARDS: list[dict[str, Any]] = [
         "distractors": [
             ("самим дорогим", AdjectiveInterferenceType.RUSSIAN_CALQUE_SAMYI),
             ("самим дорожчим", AdjectiveInterferenceType.RUSSIAN_CALQUE_SAMYI),
-            ("найдорогішим", AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH),
+            ("найдорогшим", AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION),
         ],
     },
     {
@@ -1098,21 +1188,21 @@ CANONICAL_ADJECTIVE_CARDS: list[dict[str, Any]] = [
         ],
     },
     {
-        "card_id": "adj_decl_soft_bezkraii_gen",
+        "card_id": "adj_decl_soft_vechirnii_gen",
         "category": AdjectiveCategory.DECL_SOFT_GENITIVE_DATIVE,
-        "cefr_level": "B2",
-        "prompt_sentence": "Мандрівники годинами милувалися просторами ___ південного степу.",
-        "blank_target": "безкрайого",
-        "correct_answer": "безкрайого",
+        "cefr_level": "A2",
+        "prompt_sentence": "Ми залюбки чекали настання тихого ___ часу для читання.",
+        "blank_target": "вечірнього",
+        "correct_answer": "вечірнього",
         "pravopys_section": "§ 108",
         "rule_summary": {
-            "ua": "Прикметники на -їй мають основу на [j] і в родовому відмінку однини закінчуються на -ього/-його: безкрайого.",
-            "en": "Adjectives in -ii have stem in /j/ and take ending -yoho: bezkrayoho in genitive singular.",
+            "ua": "Прикметники м'якої групи в родовому відмінку чоловічого роду однини мають закінчення -ього: вечірнього (а не тверде -ого).",
+            "en": "Soft-group adjectives in masculine genitive singular take ending -yoho: vechirnyoho (not hard -oho).",
         },
         "distractors": [
-            ("безкрайного", AdjectiveInterferenceType.FALSE_SOFT_GENITIVE_HARD_ENDING),
-            ("безкрайього", AdjectiveInterferenceType.FALSE_SOFT_GENITIVE_HARD_ENDING),
-            ("безкраїного", AdjectiveInterferenceType.FALSE_SOFT_GENITIVE_HARD_ENDING),
+            ("вечірного", AdjectiveInterferenceType.FALSE_SOFT_GENITIVE_HARD_ENDING),
+            ("вечірньго", AdjectiveInterferenceType.FALSE_SOFT_GENITIVE_HARD_ENDING),
+            ("вечірнійого", AdjectiveInterferenceType.FALSE_SOFT_GENITIVE_HARD_ENDING),
         ],
     },
     # =========================================================================
@@ -1205,7 +1295,7 @@ CANONICAL_ADJECTIVE_CARDS: list[dict[str, Any]] = [
         "distractors": [
             ("Франківа", AdjectiveInterferenceType.FALSE_POSSESSIVE_IV_SUFFIX_VOWEL),
             ("Франківська", AdjectiveInterferenceType.FALSE_RELATIONAL_FOR_POSSESSIVE),
-            ("Франкове", AdjectiveInterferenceType.FALSE_POSSESSIVE_IV_SUFFIX_VOWEL),
+            ("Франковська", AdjectiveInterferenceType.FALSE_RELATIONAL_FOR_POSSESSIVE),
         ],
     },
     {
@@ -1223,7 +1313,7 @@ CANONICAL_ADJECTIVE_CARDS: list[dict[str, Any]] = [
         "distractors": [
             ("братіва", AdjectiveInterferenceType.FALSE_POSSESSIVE_IV_SUFFIX_VOWEL),
             ("братська", AdjectiveInterferenceType.FALSE_RELATIONAL_FOR_POSSESSIVE),
-            ("братове", AdjectiveInterferenceType.FALSE_POSSESSIVE_IV_SUFFIX_VOWEL),
+            ("братовська", AdjectiveInterferenceType.FALSE_RELATIONAL_FOR_POSSESSIVE),
         ],
     },
     {
@@ -1315,26 +1405,26 @@ CANONICAL_ADJECTIVE_CARDS: list[dict[str, Any]] = [
         },
         "distractors": [
             ("тіткину", AdjectiveInterferenceType.FALSE_POSSESSIVE_MISSING_MUTATION),
-            ("тіткин", AdjectiveInterferenceType.FALSE_POSSESSIVE_MISSING_MUTATION),
-            ("тіточну", AdjectiveInterferenceType.FALSE_POSSESSIVE_MISSING_MUTATION),
+            ("тітчену", AdjectiveInterferenceType.FALSE_POSSESSIVE_MISSING_MUTATION),
+            ("тітчинську", AdjectiveInterferenceType.FALSE_RELATIONAL_FOR_POSSESSIVE),
         ],
     },
     {
-        "card_id": "adj_poss_kurchyn_nom",
+        "card_id": "adj_poss_kachchyn_nom",
         "category": AdjectiveCategory.POSSESSIVE_YN_MUTATION,
         "cefr_level": "B1",
         "prompt_sentence": "У високій траві біліло маленьке ___ крильце.",
-        "blank_target": "курчине",
-        "correct_answer": "курчине",
+        "blank_target": "каччине",
+        "correct_answer": "каччине",
         "pravopys_section": "§ 22, 107",
         "rule_summary": {
-            "ua": "Перед суфіксом -ин к чергується на ч: курка -> курчин (середній рід: курчине).",
-            "en": "Before suffix -yn, k mutates to ch: kurka -> kurchyn (neuter: kurchyne).",
+            "ua": "Перед суфіксом -ин приголосний к основи чергується на ч: качка -> каччин (середній рід: каччине).",
+            "en": "Before suffix -yn, stem k mutates to ch: kachka -> kachchyn (neuter: kachchyne).",
         },
         "distractors": [
-            ("куркине", AdjectiveInterferenceType.FALSE_POSSESSIVE_MISSING_MUTATION),
-            ("куряче", AdjectiveInterferenceType.FALSE_RELATIONAL_FOR_POSSESSIVE),
-            ("курине", AdjectiveInterferenceType.FALSE_POSSESSIVE_MISSING_MUTATION),
+            ("качкине", AdjectiveInterferenceType.FALSE_POSSESSIVE_MISSING_MUTATION),
+            ("каччене", AdjectiveInterferenceType.FALSE_POSSESSIVE_MISSING_MUTATION),
+            ("каччинське", AdjectiveInterferenceType.FALSE_RELATIONAL_FOR_POSSESSIVE),
         ],
     },
     {
@@ -1356,21 +1446,21 @@ CANONICAL_ADJECTIVE_CARDS: list[dict[str, Any]] = [
         ],
     },
     {
-        "card_id": "adj_poss_sestryn_nom",
+        "card_id": "adj_poss_svekrushyn_nom",
         "category": AdjectiveCategory.POSSESSIVE_YN_MUTATION,
-        "cefr_level": "A1",
-        "prompt_sentence": "На вішалці біля дверей висіло тепле ___ пальто.",
-        "blank_target": "сестрине",
-        "correct_answer": "сестрине",
-        "pravopys_section": "§ 107",
+        "cefr_level": "B1",
+        "prompt_sentence": "У родині завжди шанували розважливий ___ голос.",
+        "blank_target": "свекрушин",
+        "correct_answer": "свекрушин",
+        "pravopys_section": "§ 22, 107",
         "rule_summary": {
-            "ua": "Від іменника I відміни сестра присвійний прикметник твориться суфіксом -ин: сестрине пальто.",
-            "en": "From 1st declension noun sestra, possessive takes suffix -yn: sestryne palto.",
+            "ua": "Перед суфіксом -ин кінцевий приголосний х чергується на ш: свекруха -> свекрушин (а не *свекрухин).",
+            "en": "Before suffix -yn, stem kh mutates to sh: svekrukha -> svekrushyn (not *svekrukhyn).",
         },
         "distractors": [
-            ("сестринське", AdjectiveInterferenceType.FALSE_RELATIONAL_FOR_POSSESSIVE),
-            ("сестріне", AdjectiveInterferenceType.FALSE_POSSESSIVE_MISSING_MUTATION),
-            ("сестрове", AdjectiveInterferenceType.FALSE_POSSESSIVE_IV_SUFFIX_VOWEL),
+            ("свекрухин", AdjectiveInterferenceType.FALSE_POSSESSIVE_MISSING_MUTATION),
+            ("свекрушен", AdjectiveInterferenceType.FALSE_POSSESSIVE_MISSING_MUTATION),
+            ("свекрушинський", AdjectiveInterferenceType.FALSE_RELATIONAL_FOR_POSSESSIVE),
         ],
     },
     {
@@ -1706,6 +1796,12 @@ def resolve_degree_comparison_rule(
             "При творенні вищого ступеня приголосні к, с разом із суфіксом -ш- переходять у -щ- (Правопис 2019 § 110, п. 1 б: вищий, товщий, кращий).",
             "In comparative formation, stems ending in k, s fuse with suffix -sh- to form -shch- (Pravopys 2019 § 110, item 1 b: vyshchyi, tovshchyi).",
         )
+    if category == AdjectiveCategory.COMP_SYNTHETIC_SH_DROPPING_K:
+        return (
+            "-ш- (випадання -к-/-ок-)",
+            "При творенні вищого ступеня за допомогою суфікса -ш- суфікси -к-, -ок- випадають (Правопис 2019 § 110, п. 1 а: швидкий -> швидший, широкий -> ширший, глибокий -> глибший, короткий -> коротший).",
+            "When forming the comparative with suffix -sh-, suffixes -k- and -ok- drop (Pravopys 2019 § 110, item 1 a: shvydkyi -> shvydshyi, shyrokyi -> shyrshyi, hlybokyi -> hlybshyi).",
+        )
     if category == AdjectiveCategory.COMP_SYNTHETIC_ISH:
         return (
             "-іш-",
@@ -1850,6 +1946,60 @@ def verify_deck_with_vesum(cards: list[AdjectiveCard], vesum_db_path: Path | Non
         "verified": len(missing_forms) == 0,
         "checked_word_count": checked_count,
         "missing_forms": missing_forms,
+    }
+
+
+def verify_distractors_with_vesum(cards: list[AdjectiveCard], vesum_db_path: Path | None = None) -> dict[str, Any]:
+    """Verifies that phonological and morphological corruption distractors are not valid standard words in VESUM."""
+    resolved_path = find_vesum_db(vesum_db_path)
+    if not resolved_path.exists():
+        return {
+            "verified": False,
+            "error": f"VESUM database not found at {resolved_path}",
+            "invalid_distractors": [],
+        }
+
+    corruption_types = {
+        AdjectiveInterferenceType.FALSE_SYNTHETIC_MISSING_MUTATION,
+        AdjectiveInterferenceType.FALSE_SH_DROPPING_K_MISSING_DROP,
+        AdjectiveInterferenceType.FALSE_COMPARATIVE_ISH_FOR_SH,
+        AdjectiveInterferenceType.FALSE_SUPPLETIVE_REGULARIZED,
+        AdjectiveInterferenceType.FALSE_POSSESSIVE_MISSING_MUTATION,
+        AdjectiveInterferenceType.FALSE_DERIVATION_MISSING_MUTATION,
+    }
+
+    conn = sqlite3.connect(resolved_path)
+    cur = conn.cursor()
+
+    invalid_distractors: list[dict[str, Any]] = []
+    checked_count = 0
+
+    for card in cards:
+        for dist in card.distractors:
+            if dist.interference_type in corruption_types:
+                clean_word = dist.text.strip(".,;:!?«»\"'")
+                checked_count += 1
+                cur.execute(
+                    "SELECT lemma, pos, tags FROM forms_all WHERE word_form = ?",
+                    (clean_word,),
+                )
+                rows = cur.fetchall()
+                standard_adj_rows = [r for r in rows if r[1].startswith("adj") and ":bad" not in r[2]]
+                if standard_adj_rows:
+                    invalid_distractors.append(
+                        {
+                            "card_id": card.card_id,
+                            "distractor": dist.text,
+                            "interference_type": dist.interference_type.value,
+                            "matching_vesum_rows": standard_adj_rows,
+                        }
+                    )
+
+    conn.close()
+    return {
+        "verified": len(invalid_distractors) == 0,
+        "checked_distractor_count": checked_count,
+        "invalid_distractors": invalid_distractors,
     }
 
 
