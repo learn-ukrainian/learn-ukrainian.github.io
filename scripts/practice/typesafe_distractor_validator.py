@@ -221,7 +221,7 @@ def ground_with_sources(
             target_analyses = [a for t in target_tokens for a in v_res.get(t, [])]
     except Exception as exc:
         target_status = f"ERROR: {exc}"
-        target_in_vesum = True  # fail-open if VESUM DB unprovisioned
+        target_in_vesum = False  # fail-closed on VESUM exception
 
     # 2. Distractor morphology check in VESUM
     all_distractor_tokens: list[str] = []
@@ -242,7 +242,8 @@ def ground_with_sources(
                 missing_from_vesum.append(d)
             analyses_by_distractor[d] = [a for t in tokens for a in token_results.get(t, [])]
     except Exception:
-        verified_in_vesum = list(distractors)
+        verified_in_vesum = []
+        missing_from_vesum = list(distractors)
 
     # 3. Detect Russian-shadow and calque patterns
     detected_calques: list[dict[str, Any]] = []
@@ -424,7 +425,7 @@ def validate_practice_card(
         grounded = True
 
         # Target verification check
-        target_in_vesum = grounding_data.get("target", {}).get("in_vesum", True)
+        target_in_vesum = grounding_data.get("target", {}).get("in_vesum", False)
         if not target_in_vesum:
             final_verdict = "fail_broken"
             needs_review = True

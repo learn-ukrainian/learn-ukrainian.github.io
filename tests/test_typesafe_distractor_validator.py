@@ -255,6 +255,97 @@ def test_ground_with_sources_direct():
     assert "на протязі" in calque_forms
 
 
+def test_ground_with_sources_vesum_exception_fails_closed():
+    """Verify ground_with_sources fails closed when VESUM raises an exception."""
+    with patch(
+        "scripts.practice.typesafe_distractor_validator.verify_word",
+        side_effect=RuntimeError("VESUM connection error"),
+    ), patch(
+        "scripts.practice.typesafe_distractor_validator.verify_words",
+        side_effect=RuntimeError("VESUM bulk connection error"),
+    ):
+        res = ground_with_sources(
+            target="братом",
+            distractors=["брати", "братів"],
+        )
+        assert res["target"]["in_vesum"] is False
+        assert "ERROR: VESUM connection error" in res["target"]["status"]
+        assert res["distractors"]["verified_in_vesum"] == []
+        assert set(res["distractors"]["missing_from_vesum"]) == {"брати", "братів"}
+
+    # Multi-word target exception path
+    with patch(
+        "scripts.practice.typesafe_distractor_validator.verify_words",
+        side_effect=RuntimeError("VESUM multi-word error"),
+    ):
+        res_multi = ground_with_sources(
+            target="минулого року",
+            distractors=["цього року"],
+        )
+        assert res_multi["target"]["in_vesum"] is False
+        assert "ERROR: VESUM multi-word error" in res_multi["target"]["status"]
+        assert res_multi["distractors"]["verified_in_vesum"] == []
+
+
+def test_validate_practice_card_vesum_exception_forces_fail_broken():
+    """When verify_word raises an exception during grounding, validator fails closed to fail_broken."""
+    mock_resp = {
+        "model": "jev-test",
+        "answers": {
+            "distractor_plausibility": DummyAns(score=1.80, confidence=0.95),
+            "is_unambiguous": DummyAns(noul=0.95),
+            "anti_calque_yield": DummyAns(noul=0.10),
+            "card_quality": DummyAns(choice="pass", confidence=0.90),
+        },
+    }
+    with patch(
+        "scripts.practice.typesafe_distractor_validator.verify_word",
+        side_effect=RuntimeError("VESUM database locked"),
+    ):
+        verdict = validate_practice_card(
+            stem="Він пішов до лісу з _____ (брат).",
+            target="братом",
+            distractors=["брати", "братів"],
+            mock_response=mock_resp,
+            always_ground=True,
+        )
+        assert verdict.verdict == "fail_broken"
+        assert verdict.needs_review is True
+        assert verdict.grounded is True
+        assert verdict.grounding is not None
+        assert verdict.grounding["target"]["in_vesum"] is False
+        assert "ERROR: VESUM database locked" in verdict.grounding["target"]["status"]
+        assert any("not found in VESUM morphological dictionary (grounding failure)" in f for f in verdict.findings)
+
+
+def test_escalate_path_vesum_exception_forces_fail_broken():
+    """Ambiguous card triggers escalate path, and VESUM exception fails closed to fail_broken."""
+    mock_resp = {
+        "model": "jev-test",
+        "answers": {
+            "distractor_plausibility": DummyAns(score=1.20, confidence=0.80),
+            "is_unambiguous": DummyAns(noul=0.45),  # Triggers escalate
+            "anti_calque_yield": DummyAns(noul=0.10),
+            "card_quality": DummyAns(choice="pass", confidence=0.60),
+        },
+    }
+    with patch(
+        "scripts.practice.typesafe_distractor_validator.verify_word",
+        side_effect=RuntimeError("VESUM IO error"),
+    ):
+        verdict = validate_practice_card(
+            stem="Він пішов до лісу з _____ (брат).",
+            target="братом",
+            distractors=["брати", "братів", "братові"],
+            mock_response=mock_resp,
+        )
+        assert verdict.verdict == "fail_broken"
+        assert verdict.needs_review is True
+        assert verdict.grounded is True
+        assert verdict.grounding["target"]["in_vesum"] is False
+        assert any("not found in VESUM morphological dictionary (grounding failure)" in f for f in verdict.findings)
+
+
 @pytest.mark.live_network
 def test_live_practice_validator_smoke():
     key = resolve_api_key()
