@@ -13,9 +13,11 @@ Covers:
 """
 
 import asyncio
+import hashlib
 import importlib.util
 import json
 import sys
+import threading
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -983,3 +985,135 @@ class TestCollectionStatsHandler:
             assert data["sum20_articles"] == 40
             assert data["slovnyk_me_entries"] == 50
             assert data["wikipedia"] == 60
+
+
+class TestFileHashCaching:
+    """Test _sha256_of_file caching, invalidation, replacement, and concurrency (#8221)."""
+
+    def test_sha256_of_file_caches_across_invocations(self, server_module, tmp_path):
+        test_file = tmp_path / "test_cache.bin"
+        test_file.write_bytes(b"content-version-1")
+
+        h1 = server_module._sha256_of_file(test_file)
+        assert len(h1) == 64
+
+        # Calling second time should return from cache without disk I/O
+        with patch("builtins.open", side_effect=AssertionError("Should not re-read from disk")):
+            h2 = server_module._sha256_of_file(test_file)
+            assert h2 == h1
+
+    def test_sha256_of_file_invalidates_on_mtime_change(self, server_module, tmp_path):
+        import os
+
+        test_file = tmp_path / "test_mtime.bin"
+        test_file.write_bytes(b"data_version_1__")  # 16 bytes
+        h1 = server_module._sha256_of_file(test_file)
+
+        # Write same-length content so size remains strictly identical
+        test_file.write_bytes(b"data_version_2__")  # 16 bytes
+        # Explicitly update mtime by 1 second to isolate mtime invalidation from size
+        st = test_file.stat()
+        os.utime(test_file, ns=(st.st_atime_ns, st.st_mtime_ns + 1_000_000_000))
+
+        h2 = server_module._sha256_of_file(test_file)
+        assert h2 != h1
+
+    def test_sha256_of_file_invalidates_on_replacement_with_preserved_mtime(self, server_module, tmp_path):
+        """Atomic replacement with preserved mtime/size must invalidate via inode/ctime (#8221)."""
+        import os
+
+        target_file = tmp_path / "target_db.bin"
+        replacement_file = tmp_path / "temp_db.bin"
+
+        target_file.write_bytes(b"original_payload")  # 16 bytes
+        h1 = server_module._sha256_of_file(target_file)
+
+        # Create replacement file with different content of identical size
+        replacement_file.write_bytes(b"replaced_payload")  # 16 bytes
+        st_orig = target_file.stat()
+        # Preserve original mtime
+        os.utime(replacement_file, ns=(st_orig.st_atime_ns, st_orig.st_mtime_ns))
+
+        # Atomic replace (moves replacement into target, altering inode)
+        os.replace(replacement_file, target_file)
+
+        h2 = server_module._sha256_of_file(target_file)
+        assert h2 != h1
+
+    def test_sha256_of_file_concurrent_cold_calls_deduplicated(self, server_module, tmp_path):
+        """Concurrent cold reads must be synchronized by lock and deduplicate disk reads (#8221)."""
+        import concurrent.futures
+
+        test_file = tmp_path / "test_concurrent.bin"
+        test_file.write_bytes(b"concurrent_payload_content")
+
+        server_module._FILE_HASH_CACHE.clear()
+
+        real_open = open
+        open_count = 0
+        open_lock = threading.Lock()
+
+        def counting_open(file, *args, **kwargs):
+            nonlocal open_count
+            if str(test_file) in str(file):
+                with open_lock:
+                    open_count += 1
+            return real_open(file, *args, **kwargs)
+
+        # Run 8 concurrent threads on the same cold file
+        with patch("builtins.open", side_effect=counting_open):
+            with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+                futures = [executor.submit(server_module._sha256_of_file, test_file) for _ in range(8)]
+                results = [f.result() for f in futures]
+
+        assert len(set(results)) == 1
+        assert len(results[0]) == 64
+        # Proves that despite 8 concurrent callers, disk read was executed exactly once
+        assert open_count == 1
+
+    def test_sha256_of_file_waiting_callers_re_stat_inside_lock(self, server_module, tmp_path):
+        """Callers waiting on lock must re-stat and cache the latest file state (#8221)."""
+        test_file = tmp_path / "test_re_stat.bin"
+        test_file.write_bytes(b"initial_state_payload")
+        server_module._FILE_HASH_CACHE.clear()
+
+        real_lock = server_module._FILE_HASH_LOCK
+        caller_blocked = threading.Event()
+        proceed_event = threading.Event()
+
+        class HookedLock:
+            def __enter__(self):
+                # Caller has completed pre-lock stat and is now entering lock
+                caller_blocked.set()
+                assert proceed_event.wait(timeout=5.0)
+                return real_lock.__enter__()
+
+            def __exit__(self, *args):
+                return real_lock.__exit__(*args)
+
+        result_holder: dict[str, str] = {}
+
+        def worker():
+            result_holder["hash"] = server_module._sha256_of_file(test_file)
+
+        with patch.object(server_module, "_FILE_HASH_LOCK", HookedLock()):
+            t = threading.Thread(target=worker)
+            t.start()
+
+            # Wait until worker has completed pre-lock stat and reached lock
+            assert caller_blocked.wait(timeout=5.0)
+
+            # Mutate the file on disk while worker is blocked before lock
+            test_file.write_bytes(b"mutated_state_payload_updated")
+            proceed_event.set()
+
+            t.join(timeout=5.0)
+            assert not t.is_alive()
+
+        # Worker re-stated inside lock, hashed mutated payload, and successfully cached it
+        mutated_hash = hashlib.sha256(b"mutated_state_payload_updated").hexdigest()
+        assert result_holder["hash"] == mutated_hash
+
+        # Assert subsequent call hits cache without disk I/O
+        with patch("builtins.open", side_effect=AssertionError("Should hit cache")):
+            assert server_module._sha256_of_file(test_file) == mutated_hash
