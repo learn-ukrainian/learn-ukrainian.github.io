@@ -402,11 +402,11 @@ For item-bearing types, include non-empty `items`; numeric arrays like `correct_
   title: ...
   instruction: ...
   items:
-    - sentence: "Вона дивюся в дзеркало. — She looks in the mirror."  # UA carrier + A1 EN scaffold
+    - sentence: "Вона дивюся в дзеркало."  # Ukrainian carrier only — no EN gloss
       error: дивюся                        # the malformed token (excluded from VESUM)
       correction: дивиться                 # the corrected token (must appear exactly in options)
       options: [дивиться, дивюся, дивлюся] # ≥3 chips; ≥1 distractor ≠ error; no glosses on chips
-      explanation: "Reflexive 3rd person singular is дивиться."   # optional
+      explanation: "Вона дивиться. — She looks (reflexive 3rd person)."  # A1 EN lives here
 ```
 
 **Find-and-Fix options — HARD (same gate as `--upgrade`).** For every item with
@@ -416,8 +416,8 @@ a non-empty `error:`:
    empty/`reveal-only` options).
 2. Chips must be **render-faithful**: after derivation, a chip equals
    `correctForm` exactly (no `день (day)` gloss on the winning chip).
-3. At **A1**, `sentence:` is Ukrainian-first with a short English scaffold after
-   `—` (or parentheses). No English meta stems (“Find the soft-sign error…”).
+3. At **A1**, `sentence:` is Ukrainian only. Put the short English scaffold in
+   `explanation:`. No English meta stems (“Find the soft-sign error…”).
 4. Distractors come ONLY from wiki L2 / bad-form inventory (see Distractor supply
    above). Never invent Russianisms.
 
