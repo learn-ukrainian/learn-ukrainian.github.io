@@ -264,3 +264,33 @@ def test_invalid_api_response_validation(mock_urlopen: MagicMock) -> None:
     assert report2.total_processed == 1
     assert report2.qualifications[0].needs_verification is True
     assert report2.qualifications[0].confidence == 0.0
+
+    # 3. Boolean metric (confidence: true) must be rejected, not converted to 1.0
+    resp_mock3 = io.BytesIO(
+        b'{"answers": {"w0_stratum": {"choice": "standard_literary", "confidence": true}, '
+        b'"w0_shadow": {"noul": 0.1}, "w0_priority": {"score": 3.0}, "w0_ocr": {"noul": 0.0}}}'
+    )
+    mock_urlopen.return_value.__enter__.return_value = resp_mock3
+    report3 = qualifier.qualify_words(["перемога"])
+    assert report3.qualifications[0].needs_verification is True
+    assert report3.qualifications[0].confidence == 0.0
+
+    # 4. answers: null
+    resp_mock4 = io.BytesIO(b'{"answers": null}')
+    mock_urlopen.return_value.__enter__.return_value = resp_mock4
+    report4 = qualifier.qualify_words(["і"])
+    assert report4.qualifications[0].needs_verification is True
+    assert report4.qualifications[0].confidence == 0.0
+
+    # 5. choice is list: []
+    resp_mock5 = io.BytesIO(b'{"answers": {"w0_stratum": {"choice": [], "confidence": 0.99}}}')
+    mock_urlopen.return_value.__enter__.return_value = resp_mock5
+    report5 = qualifier.qualify_words(["і"])
+    assert report5.qualifications[0].needs_verification is True
+    assert report5.qualifications[0].confidence == 0.0
+
+    # 6. Remote network error on stopword enforces needs_verification on fallback
+    mock_urlopen.side_effect = OSError("API network timeout")
+    report6 = qualifier.qualify_words(["і"])
+    assert report6.qualifications[0].needs_verification is True
+    assert "Remote API failed" in report6.qualifications[0].reason

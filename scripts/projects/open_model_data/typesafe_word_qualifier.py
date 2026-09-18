@@ -28,7 +28,7 @@ import sqlite3
 import sys
 import time
 import urllib.request
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from enum import StrEnum
 from pathlib import Path
 from typing import Any, ClassVar
@@ -213,6 +213,16 @@ KNOWN_CULTURAL_GEMS = frozenset({
 })
 
 
+def _parse_metric(val: Any, min_val: float, max_val: float) -> float:
+    """Parse and validate numeric metric strictly, rejecting booleans, non-numbers, and out-of-bounds values."""
+    if isinstance(val, bool) or not isinstance(val, (int, float)):
+        raise ValueError(f"Value {val!r} must be a numeric int/float, not bool or non-number")
+    f = float(val)
+    if not math.isfinite(f) or f < min_val or f > max_val:
+        raise ValueError(f"Value {f} out of bounds [{min_val}, {max_val}]")
+    return f
+
+
 class TypeSafeWordQualifier:
     """Multi-axis qualification engine using TypeSafe System One."""
 
@@ -284,11 +294,17 @@ class TypeSafeWordQualifier:
                     batch_qualifications = self._call_batch_api(batch)
                     qualifications.extend(batch_qualifications)
                     continue
-                except Exception:
-                    pass
-                # Fallback for this batch if remote API fails
-                for w in batch:
-                    qualifications.append(self._heuristic_qualify(w))
+                except Exception as exc:
+                    # Fallback for this batch if remote API fails: enforce verification
+                    for w in batch:
+                        q = self._heuristic_qualify(w)
+                        qualifications.append(
+                            replace(
+                                q,
+                                needs_verification=True,
+                                reason=f"Remote API failed ({type(exc).__name__}); fallback requires verification: {q.reason}",
+                            )
+                        )
         else:
             for w in clean_words:
                 qualifications.append(self._heuristic_qualify(w))
@@ -368,7 +384,12 @@ class TypeSafeWordQualifier:
         with urllib.request.urlopen(req, timeout=30.0) as resp:
             data = json.loads(resp.read().decode("utf-8"))
 
-        answers = data.get("answers", {})
+        answers = (
+            data["answers"]
+            if isinstance(data, dict) and isinstance(data.get("answers"), dict)
+            else {}
+        )
+
         results: list[WordQualification] = []
 
         for idx, word in enumerate(batch):
@@ -384,8 +405,10 @@ class TypeSafeWordQualifier:
                 and isinstance(ocr_ans, dict)
             )
 
-            choice_str = stratum_ans.get("choice") if is_valid_structure else None
-            if not is_valid_structure or choice_str not in LexicalStratum._value2member_map_:
+            choice_val = stratum_ans.get("choice") if is_valid_structure else None
+            is_valid_choice = isinstance(choice_val, str) and choice_val in LexicalStratum._value2member_map_
+
+            if not is_valid_structure or not is_valid_choice:
                 results.append(
                     WordQualification(
                         word=word,
@@ -396,27 +419,19 @@ class TypeSafeWordQualifier:
                         ocr_junk=0.0,
                         needs_verification=True,
                         verification_route="vesum_lookup",
-                        reason=f"Malformed or invalid API answer from TypeSafe System One (choice={choice_str!r})",
+                        reason=f"Malformed or invalid API answer from TypeSafe System One (choice={choice_val!r})",
                     )
                 )
                 continue
 
-            stratum = LexicalStratum(choice_str)
+            stratum = LexicalStratum(choice_val)
 
             try:
-                conf_val = float(stratum_ans.get("confidence", -1))
-                shadow_val = float(shadow_ans.get("noul", -1))
-                prio_val = float(prio_ans.get("score", -1))
-                ocr_val = float(ocr_ans.get("noul", -1))
-
-                if not (
-                    math.isfinite(conf_val) and 0.0 <= conf_val <= 1.0
-                    and math.isfinite(shadow_val) and 0.0 <= shadow_val <= 1.0
-                    and math.isfinite(prio_val) and 0.0 <= prio_val <= 4.0
-                    and math.isfinite(ocr_val) and 0.0 <= ocr_val <= 1.0
-                ):
-                    raise ValueError("Metric out of bounds")
-            except (TypeError, ValueError):
+                conf_val = _parse_metric(stratum_ans.get("confidence"), 0.0, 1.0)
+                shadow_val = _parse_metric(shadow_ans.get("noul"), 0.0, 1.0)
+                prio_val = _parse_metric(prio_ans.get("score"), 0.0, 4.0)
+                ocr_val = _parse_metric(ocr_ans.get("noul"), 0.0, 1.0)
+            except (TypeError, ValueError, OverflowError):
                 results.append(
                     WordQualification(
                         word=word,
