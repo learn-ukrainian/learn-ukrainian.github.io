@@ -95,10 +95,10 @@ def test_record_fast_fail_counts_and_writes(tmp_path: Path) -> None:
 
 def _git_repo(tmp_path: Path) -> Path:
     for cmd in (["init", "-q"], ["config", "user.email", "a@b"], ["config", "user.name", "n"]):
-        subprocess.run(["git", *cmd], cwd=tmp_path, check=True)
+        subprocess.run(["git", *cmd], cwd=tmp_path, check=True, timeout=30)
     (tmp_path / "a.py").write_text("x = 1\n")
-    subprocess.run(["git", "add", "."], cwd=tmp_path, check=True)
-    subprocess.run(["git", "commit", "-qm", "i"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "add", "."], cwd=tmp_path, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-qm", "i"], cwd=tmp_path, check=True, timeout=30)
     (tmp_path / "a.py").write_text("def f(:\n")
     return tmp_path
 
