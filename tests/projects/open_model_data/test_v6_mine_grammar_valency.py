@@ -2439,13 +2439,45 @@ def test_check_has_predicate_reflexive_precision() -> None:
     assert miner.check_has_predicate("Правила суворо виконуються.", None)
 
 
+def test_brown_uk_genre_registers_canonical_mapping() -> None:
+    """Verify Brown-UK genre registers exactly match canonical 2014 scheme (A-I)."""
+    expected_genres = {"A", "B", "C", "D", "E", "F", "G", "H", "I"}
+    assert set(miner.BROWN_UK_GENRE_REGISTERS.keys()) == expected_genres
+    assert len(miner.BROWN_UK_GENRE_REGISTERS) == 9
+
+    # Pin critical categories identified in CF R6 review
+    assert miner.BROWN_UK_GENRE_REGISTERS["B"] == ("Релігійна література", "конфесійний стиль")
+    assert miner.BROWN_UK_GENRE_REGISTERS["H"] == ("Навчальна література", "навчально-науковий стиль")
+    assert miner.BROWN_UK_GENRE_REGISTERS["A"] == ("Преса", "публіцистичний стиль")
+    assert miner.BROWN_UK_GENRE_REGISTERS["E"] == ("Адміністративні документи", "офіційно-діловий стиль")
+    assert miner.BROWN_UK_GENRE_REGISTERS["G"] == ("Наукова література", "науковий стиль")
+    assert miner.BROWN_UK_GENRE_REGISTERS["I"] == ("Художні тексти", "художній стиль")
+
+    # Reject non-Brown-UK codes
+    for invalid_code in ("J", "K", "L", "M", "N", "P", "R", "Z"):
+        assert invalid_code not in miner.BROWN_UK_GENRE_REGISTERS
+
+
+def test_quote_sentence_typography() -> None:
+    """Verify Ukrainian quote punctuation conforms to Pravopys 2019 § 162."""
+    # Declarative sentence: inner period stripped, outer dot/question mark placed outside
+    assert miner.quote_sentence("Сонце світить.", ".") == "«Сонце світить»."
+    assert miner.quote_sentence("Сонце світить.", "?") == "«Сонце світить»?"
+    # Question / exclamation / ellipsis: mark stays inside, outer mark dropped
+    assert miner.quote_sentence("Хто це?", "?") == "«Хто це?»"
+    assert miner.quote_sentence("Хто це?", ".") == "«Хто це?»"
+    assert miner.quote_sentence("Слава Україні!", ".") == "«Слава Україні!»"
+    assert miner.quote_sentence("Степ...", ".") == "«Степ...»"
+    assert miner.quote_sentence("Пам’ятаєте «Капітанша»: «Працелюбна людина...»?", "?") == "«Пам’ятаєте «Капітанша»: «Працелюбна людина...»?»"
+
+
 def test_shards_zero_double_terminal_punctuation() -> None:
-    """Verify that no SFT shard contains single dot followed by quote and punctuation (.». or .»?)."""
+    """Verify that no SFT shard contains duplicate terminal punctuation (e.g. .»., .»?, ?»., ?»?, !».)."""
     shard_files = sorted(RELEASE_DIR.glob("sft/sft_shard_*.jsonl"))
     if not shard_files:
         pytest.skip("Release shards not yet generated in this worktree")
 
-    double_punct_regex = re.compile(r"(?<!\.)\.\s*»\s*[.?!:,]")
+    double_punct_regex = re.compile(r"([.?!…]|\.{3})\s*»+\s*[.?]")
     violations = []
     for sf in shard_files:
         with open(sf, encoding="utf-8") as f:

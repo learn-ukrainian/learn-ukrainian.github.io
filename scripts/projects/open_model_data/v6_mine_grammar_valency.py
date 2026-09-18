@@ -3555,24 +3555,48 @@ def format_word_count_ua(n: int) -> str:
     return f"{n} слів"
 
 
+# Canonical Brown-UK text categories A-I (Старко та ін., 2014; doc/vymohy_do_frahmentiv.md)
 BROWN_UK_GENRE_REGISTERS: dict[str, tuple[str, str]] = {
-    "A": ("Преса: репортаж та новини", "публіцистичний стиль (періодика)"),
-    "B": ("Преса: редакційні статті та аналітика", "публіцистичний стиль (суспільно-політична аналітика)"),
-    "C": ("Популярні видання та огляди", "публіцистичний стиль (есеїстика та огляди)"),
-    "D": ("Мемуари, щоденники та біографії", "мемуарно-документальний стиль"),
-    "E": ("Офіційні та виробничо-інструктивні тексти", "офіційно-діловий та виробничий стиль"),
-    "F": ("Популярна наука та просвіта", "науково-популярний стиль"),
-    "G": ("Гуманітарні та суспільні науки", "науковий стиль (гуманітарні науки)"),
-    "H": ("Природничі та точні науки", "науковий стиль (природничо-технічні науки)"),
-    "I": ("Художня проза", "художній стиль (белетристика)"),
-    "J": ("Нормативно-правові та офіційні документи", "офіційно-діловий стиль (законодавство)"),
-    "K": ("Художня література: повісті та романи", "художній стиль (романна проза)"),
-    "L": ("Детективна та гостросюжетна проза", "художній стиль (детектив)"),
-    "M": ("Фантастика та пригодницька література", "художній стиль (фантастика)"),
-    "N": ("Історична белетристика", "художній стиль (історична проза)"),
-    "P": ("Гумор і сатира", "художньо-публіцистичний стиль (сатира та гумор)"),
-    "R": ("Інтерв'ю та живі розмови", "розмовно-публіцистичний стиль"),
+    "A": ("Преса", "публіцистичний стиль"),
+    "B": ("Релігійна література", "конфесійний стиль"),
+    "C": ("Професійно-популярна література", "науково-популярний та виробничо-практичний стиль"),
+    "D": ("Естетичні інформативні тексти", "есеїстичний та мемуарно-біографічний стиль"),
+    "E": ("Адміністративні документи", "офіційно-діловий стиль"),
+    "F": ("Науково-популярна література", "науково-популярний стиль"),
+    "G": ("Наукова література", "науковий стиль"),
+    "H": ("Навчальна література", "навчально-науковий стиль"),
+    "I": ("Художні тексти", "художній стиль"),
 }
+
+
+def quote_sentence(s: str, outer_mark: str = ".") -> str:
+    """Quote a Ukrainian sentence following Pravopys 2019 § 162 typography.
+
+    - If s ends with '?' and outer_mark is '?' or '.':
+      outer mark is dropped (single '?' inside quotes serves for both):
+      «Хто це?»
+    - If s ends with '!' and outer_mark is '.':
+      outer dot is dropped: «Слава Україні!»
+    - If s ends with '...' or '…' and outer_mark is '.':
+      outer dot is dropped: «Степ...»
+    - If s ends with a single period, inner period is stripped and outer_mark is placed outside:
+      «Сонце світить». or «Сонце світить»?
+    - Otherwise outer_mark is placed outside:
+      «Сонце світить». or «Сонце світить»?
+    """
+    s_str = s.strip()
+    if re.search(r"\?\s*»*$", s_str):
+        return f"«{s_str}»"
+    if re.search(r"!\s*»*$", s_str) and outer_mark == ".":
+        return f"«{s_str}»"
+    if re.search(r"([…]|\.{3})\s*»*$", s_str) and outer_mark == ".":
+        return f"«{s_str}»"
+    if s_str.endswith("."):
+        inner = re.sub(r"(?<!\.)\.\s*»*$", "", s_str).rstrip()
+        trailing_quotes = re.search(r"»+$", s_str)
+        tq = trailing_quotes.group(0) if trailing_quotes else ""
+        return f"«{inner}{tq}»{outer_mark}"
+    return f"«{s_str}»{outer_mark}"
 
 
 def sanitize_punctuation(text: str) -> str:
@@ -3581,31 +3605,57 @@ def sanitize_punctuation(text: str) -> str:
     Fixes:
     - «... .». -> «... ».
     - «... .»? -> «... »?
-    - «... .»: -> «... »:
-    - «... .», -> «... »,
+    - «... ?». -> «... ?»
+    - «... ?»? -> «... ?»
+    - «... !». -> «... !»
+    - «... ...». -> «... ...»
     - .. -> .
     Preserves legitimate ellipses (... or …).
     """
     res = re.sub(r"\.{4,}", "...", text)
     res = re.sub(r"(?<!\.)\.\.(?!\.)", ".", res)
-    res = re.sub(r"(?<!\.)\.\s*»\s*([.?!:,])", r"»\1", res)
+    # Strip inner single dot before closing quote when followed by punctuation:
+    res = re.sub(r"(?<!\.)\.\s*(»+)\s*([.?!:,])", r"\1\2", res)
+    # Drop outer period after closing quote if inside ends with ?, !, or ellipsis:
+    res = re.sub(r"([?!…]|\.{3})\s*(»+)\s*\.", r"\1\2", res)
+    # Drop outer question mark if inside already ends with ?:
+    res = re.sub(r"\?\s*(»+)\s*\?", r"?\1", res)
     return res
 
 
-def extract_context_content_sample(text: str) -> tuple[str, str]:
+def extract_context_content_sample(text: str, cur_ves: sqlite3.Cursor | None = None) -> tuple[str, str]:
     """Extract sample content words and a primary content token for sentence-grounded reasoning."""
+    function_words = {
+        "було", "були", "буде", "вони", "його", "який", "яких", "яка", "яке",
+        "цього", "тому", "лише", "може", "також", "яким", "інших",
+        "свої", "свого", "своїх", "таких", "таким", "через", "після", "перед",
+        "коли", "якщо", "якби", "щоб", "потім", "проте", "однак", "тощо",
+        "хіба", "авжеж", "тобто", "чому", "цьому", "чомусь", "якому", "якомусь",
+        "кому", "чого", "чим", "ким", "комусь", "чимось", "кимось", "навіть",
+        "майже", "невже", "разом", "дуже", "зараз", "тепер", "туди", "сюди",
+        "звідти", "звідси", "навіщо", "відтак", "щодо", "посеред", "серед",
+        "поза", "поруч", "навколо", "довкола", "проти", "замість", "попри",
+    }
     words = [
         w for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']{4,}\b", text)
-        if w.lower() not in {
-            "було", "були", "буде", "вони", "його", "який", "яких", "яка", "яке",
-            "цього", "тому", "лише", "може", "також", "яким", "інших",
-            "свої", "свого", "своїх", "таких", "таким", "через", "після", "перед",
-            "коли", "якщо", "якби", "щоб", "потім", "проте", "однак", "тощо",
-        }
+        if w.lower() not in function_words
     ]
-    all_tokens = re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", text)
-    primary_token = words[0] if words else (all_tokens[0] if all_tokens else text[:10])
-    sample = words[:3] if words else all_tokens[:2]
+    all_tokens = [w for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", text) if w.lower() not in function_words]
+    primary_token = ""
+    if cur_ves and words:
+        for w in words:
+            try:
+                cur_ves.execute("SELECT pos FROM forms_all WHERE word_form = ? LIMIT 1", (w.lower(),))
+                row = cur_ves.fetchone()
+                if row and row[0] in ("noun", "adj", "verb"):
+                    primary_token = w
+                    break
+            except Exception:
+                pass
+    if not primary_token:
+        primary_token = words[0] if words else (all_tokens[0] if all_tokens else text[:10])
+
+    sample = words[:3] if words else (all_tokens[:2] if all_tokens else re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']+\b", text)[:2])
     sample_str = ", ".join(f"«{w}»" for w in sample) if sample else "ключових лексем"
     return sample_str, primary_token
 
@@ -3678,10 +3728,10 @@ def build_sft_dataset(
             "rule": "Дотримання граматичних норм української мови.",
         })
         all_errs = item.get("all_errors", [])
-        src_clean = item["source_sentence"].rstrip(". ")
-        tgt_clean = item["target_sentence"].rstrip(". ")
+        src_quoted = quote_sentence(item["source_sentence"], ".")
+        tgt_quoted = quote_sentence(item["target_sentence"], ".")
         if len(all_errs) > 1:
-            query = f"Проаналізуйте речення, знайдіть помилки та виправте їх із нормативним обґрунтуванням: «{src_clean}»."
+            query = f"Проаналізуйте речення, знайдіть помилки та виправте їх із нормативним обґрунтуванням: {src_quoted}"
             err_bullets = "\n".join(
                 f"- [{e['tag']}] «{e['error']}» замість «{e['correction']}» ({CATEGORY_EXPLANATIONS.get(e['tag'], {}).get('title', 'Нормативність')})"
                 for e in all_errs
@@ -3695,25 +3745,25 @@ def build_sft_dataset(
                 f"1. Виявлення девіацій: у реченні зафіксовано такі невідповідності:\n{err_bullets}",
                 f"2. Граматичні та синтаксичні норми: {rules_bullets}",
                 f"3. Відновлення нормативних форм: контекстуально правильними варіантами є {corrs_list}.",
-                f"4. Підсумкове речення: «{tgt_clean}».",
+                f"4. Підсумкове речення: {tgt_quoted}",
             ]
             final_response = (
                 f"У реченні допущено такі невідповідності нормам:\n{err_bullets}\n\n"
-                f"Виправлене речення: «{tgt_clean}».\n\n"
+                f"Виправлене речення: {tgt_quoted}\n\n"
                 f"Обґрунтування: {rules_bullets}"
             )
         else:
-            query = f"Проаналізуйте речення, знайдіть помилку та виправте її з граматичним обґрунтуванням: «{src_clean}»."
+            query = f"Проаналізуйте речення, знайдіть помилку та виправте її з граматичним обґрунтуванням: {src_quoted}"
             norm_rule = cat_meta["rule"].rstrip(".") + "."
             reasoning = [
                 f"1. Виявлення девіації: у реченні зафіксовано помилку категорії [{tag}] ({cat_meta['title']}): фрагмент «{item['error']}».",
                 f"2. Граматична норма: {norm_rule}",
                 f"3. Відновлення нормативної форми: контекстуально правильним варіантом є «{item['correction']}».",
-                f"4. Підсумкове речення: «{tgt_clean}».",
+                f"4. Підсумкове речення: {tgt_quoted}",
             ]
             final_response = (
                 f"У реченні допущено помилку ({cat_meta['title']}): «{item['error']}» замість «{item['correction']}».\n\n"
-                f"Виправлене речення: «{tgt_clean}».\n\n"
+                f"Виправлене речення: {tgt_quoted}\n\n"
                 f"Обґрунтування: {norm_rule}"
             )
 
@@ -3764,25 +3814,26 @@ def build_sft_dataset(
             if len(all_trajectories) >= target_count or good_count >= needed_good:
                 break
             s = b["text"]
-            s_clean = s.rstrip(". ")
             doc_id = b.get("doc_id", "")
             genre = b.get("genre", "")
             word_cnt = len(s.split())
             word_count_str = format_word_count_ua(word_cnt)
-            genre_info = BROWN_UK_GENRE_REGISTERS.get(genre, (f"Розділ {genre}", "літературний стиль"))
-            genre_title, genre_register = genre_info
-            sample_str, token_to_check = extract_context_content_sample(s)
+            genre_info = BROWN_UK_GENRE_REGISTERS.get(genre, (f"Категорія {genre}", "літературний стиль"))
+            genre_title, genre_style = genre_info
+            sample_str, token_to_check = extract_context_content_sample(s, cur_ves=cur_ves)
             lemma, forms_cnt, attested = query_vesum_lemma_and_count(cur_ves, token_to_check)
 
-            query = f"Чи є граматичні, синтаксичні або стилістичні помилки в цьому реченні: «{s_clean}»?"
+            s_q = quote_sentence(s, "?")
+            s_dot = quote_sentence(s, ".")
+            query = f"Чи є граматичні, синтаксичні або стилістичні помилки в цьому реченні: {s_q}"
             reasoning = [
-                f"1. Структурний аналіз: розглядаємо речення ({word_count_str}) з авторитетного корпусу Brown-UK ({genre_title}, документ {doc_id}): «{s_clean}».",
-                f"2. Синтаксична сполучуваність: предикативні зв'язки та узгодження компонентів довкола {sample_str} бездоганно відповідають нормі ({genre_register}).",
+                f"1. Структурний аналіз: розглядаємо речення ({word_count_str}) з авторитетного корпусу Brown-UK (категорія {genre} — {genre_title}, документ {doc_id}): {s_dot}",
+                f"2. Синтаксична сполучуваність: предикативні зв'язки та узгодження компонентів довкола {sample_str} повністю відповідають нормам ({genre_style}).",
                 f"3. Лексичний склад: уживання слів (зокрема «{token_to_check}») є унормованим, відсутні суржикові форми, кальки чи орфографічні девіації.",
                 "4. Висновок: речення граматично і стилістично довершене і не потребує нормативних правок.",
             ]
             final_response = (
-                f"У поданому реченні помилок немає. Воно повністю відповідає нормам сучасної української літературної мови: «{s_clean}»."
+                f"У поданому реченні помилок немає. Воно повністю відповідає нормам сучасної української літературної мови: {s_dot}"
             )
 
             traj_hash = hashlib.sha256(s.encode()).hexdigest()[:16]
@@ -3825,25 +3876,25 @@ def build_sft_dataset(
             if len(all_trajectories) >= target_count:
                 break
             s = b["text"]
-            s_clean = s.rstrip(". ")
             doc_id = b.get("doc_id", "")
             genre = b.get("genre", "")
             word_cnt = len(s.split())
             word_count_str = format_word_count_ua(word_cnt)
-            genre_info = BROWN_UK_GENRE_REGISTERS.get(genre, (f"Розділ {genre}", "живий узус"))
-            genre_title, genre_register = genre_info
-            sample_str, token_to_check = extract_context_content_sample(s)
+            genre_info = BROWN_UK_GENRE_REGISTERS.get(genre, (f"Категорія {genre}", "живий узус"))
+            genre_title, genre_style = genre_info
+            sample_str, token_to_check = extract_context_content_sample(s, cur_ves=cur_ves)
             lemma, forms_cnt, attested = query_vesum_lemma_and_count(cur_ves, token_to_check)
 
-            query = f"Проаналізуйте стилістичну та синтаксичну структуру цього речення: «{s_clean}»."
+            s_dot = quote_sentence(s, ".")
+            query = f"Проаналізуйте стилістичну та синтаксичну структуру цього речення: {s_dot}"
             reasoning = [
-                f"1. Аналіз узусу: аналізуємо речення ({word_count_str}) з живого мовного вжитку (розряд Brown-UK so-so, {genre_title}, документ {doc_id}): «{s_clean}».",
-                f"2. Стилістичні особливості: речення довкола лексем {sample_str} демонструє функціональний {genre_register} із припустимою авторською варіативністю.",
+                f"1. Аналіз узусу: аналізуємо речення ({word_count_str}) з живого мовного вжитку (розряд Brown-UK so-so, категорія {genre} — {genre_title}, документ {doc_id}): {s_dot}",
+                f"2. Стилістичні особливості: речення довкола лексем {sample_str} демонструє припустиму авторську варіативність у межах функціонального стилю ({genre_style}).",
                 f"3. Збереження змісту: слововживання зі словом «{token_to_check}» є змістовно зрозумілим і не потребує нормативного втручання.",
                 "4. Підсумок: підтверджуємо прийнятність речення у відповідному функціональному стилі.",
             ]
             final_response = (
-                f"Речення становить зразок живої мовної практики ({genre_register}): «{s_clean}». Синтаксична структура та зміст є зрозумілими в цьому регістрі."
+                f"Речення становить зразок живої мовної практики ({genre_title}, {genre_style}): {s_dot}\n\nСинтаксична структура та зміст є зрозумілими в цьому функціональному стилі."
             )
 
             traj_hash = hashlib.sha256(s.encode()).hexdigest()[:16]
@@ -3886,25 +3937,26 @@ def build_sft_dataset(
                 if len(all_trajectories) >= target_count:
                     break
                 s = b["text"]
-                s_clean = s.rstrip(". ")
                 doc_id = b.get("doc_id", "")
                 genre = b.get("genre", "")
                 word_cnt = len(s.split())
                 word_count_str = format_word_count_ua(word_cnt)
-                genre_info = BROWN_UK_GENRE_REGISTERS.get(genre, (f"Розділ {genre}", "літературний стиль"))
-                genre_title, genre_register = genre_info
-                sample_str, token_to_check = extract_context_content_sample(s)
+                genre_info = BROWN_UK_GENRE_REGISTERS.get(genre, (f"Категорія {genre}", "літературний стиль"))
+                genre_title, genre_style = genre_info
+                sample_str, token_to_check = extract_context_content_sample(s, cur_ves=cur_ves)
                 lemma, forms_cnt, attested = query_vesum_lemma_and_count(cur_ves, token_to_check)
 
-                query = f"Чи є граматичні, синтаксичні або стилістичні помилки в цьому реченні: «{s_clean}»?"
+                s_q = quote_sentence(s, "?")
+                s_dot = quote_sentence(s, ".")
+                query = f"Чи є граматичні, синтаксичні або стилістичні помилки в цьому реченні: {s_q}"
                 reasoning = [
-                    f"1. Структурний аналіз: розглядаємо речення ({word_count_str}) з авторитетного корпусу Brown-UK ({genre_title}, документ {doc_id}): «{s_clean}».",
-                    f"2. Синтаксична сполучуваність: предикативні зв'язки та узгодження компонентів довкола {sample_str} бездоганно відповідають нормі ({genre_register}).",
+                    f"1. Структурний аналіз: розглядаємо речення ({word_count_str}) з авторитетного корпусу Brown-UK (категорія {genre} — {genre_title}, документ {doc_id}): {s_dot}",
+                    f"2. Синтаксична сполучуваність: предикативні зв'язки та узгодження компонентів довкола {sample_str} повністю відповідають нормам ({genre_style}).",
                     f"3. Лексичний склад: уживання слів (зокрема «{token_to_check}») є унормованим, відсутні суржикові форми, кальки чи орфографічні девіації.",
                     "4. Висновок: речення граматично і стилістично довершене і не потребує нормативних правок.",
                 ]
                 final_response = (
-                    f"У поданому реченні помилок немає. Воно повністю відповідає нормам сучасної української літературної мови: «{s_clean}»."
+                    f"У поданому реченні помилок немає. Воно повністю відповідає нормам сучасної української літературної мови: {s_dot}"
                 )
 
                 traj_hash = hashlib.sha256(f"{doc_id}_{s}".encode()).hexdigest()[:16]
