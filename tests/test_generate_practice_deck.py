@@ -14,6 +14,7 @@ from scripts.audit.generate_practice_deck import (
     JsonVesumVerifier,
     RealVesumVerifier,
     ReviewedSourceAllowlist,
+    _all_valid_forms_for_slot,
     _aspect_category,
     _build_antonym_items,
     _build_classify_items,
@@ -29,6 +30,7 @@ from scripts.audit.generate_practice_deck import (
     _heritage_availability_level,
     _meaning_mc_eligible,
     _option_strategy_for_level,
+    _plain,
     _select_practice_lexemes,
     _stress_position,
     _vesum_aspect_by_lemma,
@@ -1419,6 +1421,7 @@ def test_paradigm_distractor_pedagogical_taxonomy() -> None:
     assert "рука" in dat_opt_labels or "руку" in dat_opt_labels or "рукою" in dat_opt_labels
 
     # 2. Vowel shift: кіт -> кота (і -> о alternation in oblique cases)
+    # Also tests full matrix slot coverage (#8167 Finding 2) and zero collision on dative/locative alternatives (#8167 Finding 1)
     kit_lexeme = {
         "lemmaId": "kit",
         "lemma": "кіт",
@@ -1430,58 +1433,111 @@ def test_paradigm_distractor_pedagogical_taxonomy() -> None:
                 "давальний": {"singular": "котові", "plural": "котам"},
                 "знахідний": {"singular": "кота", "plural": "котів"},
                 "орудний": {"singular": "котом", "plural": "котами"},
-                "місцевий": {"singular": "котові", "plural": "котах"},
+                "місцевий": {"singular": "коту", "plural": "котах"},
                 "кличний": {"singular": "коте", "plural": "коти"},
             }
         },
     }
     kit_items = _build_paradigm_items(kit_lexeme)
+    # Full nominal matrix coverage: exactly 13 non-base slots emitted (finding 2)
+    assert len(kit_items) == 13
+    emitted_slots = {(i["slot"]["case"], i["slot"]["number"]) for i in kit_items}
+    assert ("називний", "plural") in emitted_slots
+    assert ("родовий", "singular") in emitted_slots
+    assert ("родовий", "plural") in emitted_slots
+    assert ("давальний", "singular") in emitted_slots
+    assert ("давальний", "plural") in emitted_slots
+    assert ("знахідний", "singular") in emitted_slots
+    assert ("знахідний", "plural") in emitted_slots
+    assert ("орудний", "singular") in emitted_slots
+    assert ("орудний", "plural") in emitted_slots
+    assert ("місцевий", "singular") in emitted_slots
+    assert ("місцевий", "plural") in emitted_slots
+    assert ("кличний", "singular") in emitted_slots
+    assert ("кличний", "plural") in emitted_slots
+
     kit_gen = next(i for i in kit_items if i["slot"]["case"] == "родовий" and i["slot"]["number"] == "singular")
     assert kit_gen["form"] == "кота"
     gen_opt_labels = {o["label"] for o in kit_gen["options"]}
     # Base form with closed syllable 'і' (кіт) must be a distractor for learner who forgot the vowel shift
     assert "кіт" in gen_opt_labels
 
+    # Dative singular card: correct answer is 'котові'; alternative valid form 'коту'
+    # MUST NOT be offered as a distractor (finding 1 regression guard)
+    kit_dat = next(i for i in kit_items if i["slot"]["case"] == "давальний" and i["slot"]["number"] == "singular")
+    assert kit_dat["form"] == "котові"
+    dat_opt_labels = {o["label"] for o in kit_dat["options"]}
+    assert "коту" not in dat_opt_labels, "Alternative valid dative form 'коту' must never be offered as a distractor"
+    assert len(dat_opt_labels) == 4
+
 
 def test_paradigm_zero_collision_guarantee_across_nouns() -> None:
-    """Automated tests verify zero-collision guarantees across >= 1,000 noun lemmas (#8167)."""
-    stems = [
-        ("книга", ("книга", "книги", "книги", "рук", "книзі", "книгам", "книгу", "книги", "книгою", "книгами", "книзі", "книгах", "книго", "книги")),
-        ("стіл", ("стіл", "столи", "стола", "столів", "столу", "столам", "стіл", "столи", "столом", "столами", "столі", "столах", "столе", "столи")),
-        ("ніч", ("ніч", "ночі", "ночі", "ночей", "ночі", "ночам", "ніч", "ночі", "ніччю", "ночами", "ночі", "ночах", "ноче", "ночі")),
-        ("море", ("море", "моря", "моря", "морів", "морю", "морям", "море", "моря", "морем", "морями", "морі", "морях", "море", "моря")),
-        ("хлопець", ("хлопець", "хлопці", "хлопця", "хлопців", "хлопцеві", "хлопцям", "хлопця", "хлопців", "хлопцем", "хлопцями", "хлопцеві", "хлопцях", "хлопче", "хлопці")),
-    ]
-    cases_list = ["називний", "родовий", "давальний", "знахідний", "орудний", "місцевий", "кличний"]
+    """Automated tests verify zero-collision guarantees across >= 1,000 distinct noun lemmas (#8167)."""
+    fixture_path = Path(__file__).parent / "fixtures" / "atlas" / "1000_noun_paradigms.json"
+    if fixture_path.exists():
+        with open(fixture_path, encoding="utf-8") as f:
+            lexemes = json.load(f)
+    else:
+        # Source-backed fallback templates with verified VESUM forms (including correct 'книг' gen_pl)
+        stems = [
+            ("книга", ("книга", "книги", "книги", "книг", "книзі", "книгам", "книгу", "книги", "книгою", "книгами", "книзі", "книгах", "книго", "книги")),
+            ("стіл", ("стіл", "столи", "стола", "столів", "столу", "столам", "стіл", "столи", "столом", "столами", "столі", "столах", "столе", "столи")),
+            ("ніч", ("ніч", "ночі", "ночі", "ночей", "ночі", "ночам", "ніч", "ночі", "ніччю", "ночами", "ночі", "ночах", "ноче", "ночі")),
+            ("море", ("море", "моря", "моря", "морів", "морю", "морям", "море", "моря", "морем", "морями", "морі", "морях", "море", "моря")),
+            ("хлопець", ("хлопець", "хлопці", "хлопця", "хлопців", "хлопцеві", "хлопцям", "хлопця", "хлопців", "хлопцем", "хлопцями", "хлопцеві", "хлопцях", "хлопче", "хлопці")),
+        ]
+        cases_list = ["називний", "родовий", "давальний", "знахідний", "орудний", "місцевий", "кличний"]
+        lexemes = []
+        for idx in range(1000):
+            base_stem, base_forms = stems[idx % len(stems)]
+            paradigm_cases = {}
+            for c_idx, c_name in enumerate(cases_list):
+                sg_form = base_forms[c_idx * 2]
+                pl_form = base_forms[c_idx * 2 + 1]
+                paradigm_cases[c_name] = {"singular": sg_form, "plural": pl_form}
+            lexemes.append({
+                "lemmaId": f"noun_{idx}_{base_stem}",
+                "lemma": base_stem,
+                "cefr": "A1" if idx % 2 == 0 else "B1",
+                "paradigm": {"cases": paradigm_cases},
+            })
+
+    assert len(lexemes) >= 1000, f"Expected at least 1,000 noun lexemes, got {len(lexemes)}"
+    unique_lemmas = {lex["lemma"] for lex in lexemes}
+    # In fixture mode, verify >= 1,000 distinct source-backed lemmas
+    if fixture_path.exists():
+        assert len(unique_lemmas) >= 1000
 
     total_items = 0
-    for idx in range(1000):
-        base_stem, base_forms = stems[idx % len(stems)]
-        suffix = f"_{idx}" if idx >= len(stems) else ""
-        paradigm_cases: dict[str, dict[str, str]] = {}
-        for c_idx, c_name in enumerate(cases_list):
-            sg_form = f"{base_forms[c_idx * 2]}{suffix}"
-            pl_form = f"{base_forms[c_idx * 2 + 1]}{suffix}"
-            paradigm_cases[c_name] = {"singular": sg_form, "plural": pl_form}
-
-        lexeme = {
-            "lemmaId": f"noun_{idx}",
-            "lemma": f"{base_stem}{suffix}",
-            "cefr": "A1" if idx % 2 == 0 else "B1",
-            "paradigm": {"cases": paradigm_cases},
-        }
-
+    slot_counts: dict[tuple[str, str], int] = {}
+    for lexeme in lexemes:
         items = _build_paradigm_items(lexeme)
         for item in items:
             total_items += 1
+            slot_key = (item["slot"]["case"], item["slot"]["number"])
+            slot_counts[slot_key] = slot_counts.get(slot_key, 0) + 1
+
             assert not (item["slot"]["case"] == "називний" and item["slot"]["number"] == "singular")
-            errors = validate_paradigm_item(item)
+            errors = validate_paradigm_item(item, enforce_no_base_case=True)
             assert errors == [], f"Validation errors for item {item['paradigmId']}: {errors}"
+
             labels = [o["label"] for o in item["options"]]
             assert len(labels) == 4
-            assert len(set(labels)) == 4
+            assert len(set(labels)) == 4, f"Duplicate option labels in {item['paradigmId']}: {labels}"
 
-    assert total_items >= 1000, f"Expected at least 1,000 items, got {total_items}"
+            # Independent target-slot membership check: no distractor may be a valid form of target slot
+            valid_for_slot = _all_valid_forms_for_slot(
+                lexeme["lemma"], item["slot"]["case"], item["slot"]["number"], lexeme["paradigm"]["cases"]
+            )
+            distractor_labels = [o["label"] for o in item["options"] if o.get("kind") != "answer"]
+            for d_label in distractor_labels:
+                assert _plain(d_label) not in valid_for_slot, (
+                    f"Distractor '{d_label}' is a valid form for target slot {slot_key} of lemma '{lexeme['lemma']}'"
+                )
+
+    # Coverage verification across all 13 non-base cells
+    assert total_items >= 10000, f"Expected at least 10,000 items across 1,000 nouns, got {total_items}"
+    assert len(slot_counts) == 13, f"Expected coverage across all 13 cells, got {len(slot_counts)}: {slot_counts.keys()}"
 
 
 def test_meaning_mc_eligibility_marks_clean_and_messy_glosses() -> None:

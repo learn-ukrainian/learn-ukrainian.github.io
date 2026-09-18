@@ -3002,23 +3002,113 @@ def _paradigm_distractor_rank(
     return (same_num, case_rank, h)
 
 
+def _all_valid_forms_for_slot(
+    lemma: str,
+    case_key: str,
+    number_key: str,
+    cases: dict[str, Any],
+) -> set[str]:
+    """Return all valid surface forms for a (case, number) slot to prevent distractor collisions.
+
+    If a slot has multiple valid variants (e.g. dative singular 'котові' / 'коту'),
+    offering one as the correct answer and another as a 'same-paradigm' distractor
+    creates a false error where a correct Ukrainian form is marked wrong (#8167 Finding 1).
+    """
+    valid: set[str] = set()
+
+    # 1. Inspect forms in the lexeme cases dict itself
+    for name, forms in cases.items():
+        if not isinstance(forms, dict):
+            continue
+        if _paradigm_slot_case_key(str(name)) == case_key:
+            val = forms.get(number_key)
+            if isinstance(val, str):
+                for part in val.split("/"):
+                    p = _plain(part.strip())
+                    if p:
+                        valid.add(p)
+            elif isinstance(val, (list, set, tuple)):
+                for item in val:
+                    p = _plain(str(item).strip())
+                    if p:
+                        valid.add(p)
+
+    # 2. Check VESUM for morphological variants
+    norm_lemma = _plain(lemma)
+    if norm_lemma:
+        internal_case = None
+        for eng, ua in CASE_LABELS_UA.items():
+            if ua == case_key:
+                internal_case = eng
+                break
+        target_tag = CASE_VESUM_TAGS.get(internal_case) if internal_case else None
+
+        if target_tag:
+            try:
+                from scripts.verification.vesum import verify_lemma
+
+                rows = verify_lemma(norm_lemma)
+                for row in rows:
+                    tags = str(row.get("tags") or "")
+                    tokens = {tok for tok in tags.replace(":", " ").split() if tok}
+                    if target_tag in tokens and _vesum_number_key(tokens) == number_key:
+                        form = _clean_text(row.get("word_form"))
+                        if form:
+                            valid.add(_plain(form))
+            except Exception:
+                pass
+
+    # 3. Rule-based morphological fallback for standard masculine dative/locative singular alternations
+    # when VESUM is offline/unseeded in test environments
+    if number_key == "singular" and case_key == "давальний":
+        additions = set()
+        for v in list(valid):
+            if v.endswith("ові") or v.endswith("еві"):
+                stem = v[:-3]
+                if v.endswith("ові"):
+                    additions.add(stem + "у")
+                else:
+                    additions.add(stem + "ю")
+            elif v.endswith("єві"):
+                additions.add(v[:-3] + "ю")
+            elif v.endswith("у") and len(v) > 2:
+                additions.add(v[:-1] + "ові")
+            elif v.endswith("ю") and len(v) > 2:
+                additions.add(v[:-1] + "еві")
+        valid.update(additions)
+    elif number_key == "singular" and case_key == "місцевий":
+        additions = set()
+        for v in list(valid):
+            if v.endswith("ові") or v.endswith("еві"):
+                stem = v[:-3]
+                additions.add(stem + "і")
+                additions.add(stem + "у")
+            elif v.endswith("у") and len(v) > 2:
+                additions.add(v[:-1] + "ові")
+                additions.add(v[:-1] + "і")
+        valid.update(additions)
+
+    return valid
+
+
 def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
     """Build case/number MC cards from a lexeme paradigm.
 
     Ukrainian paradigms are heavily syncretic (shared surfaces across cases).
     Cards ask for a *named slot* (``родовий, однина``), so a shared surface may
-    still be the answer for its representative slot. Keep one slot per distinct
-    surface (prefer nominative→vocative order) so distractors stay unique and
-    shard size stays within budget — excluding every duplicated surface starved
-    adjectives below the unique-lemma bar. Require four distinct surfaces for a
-    four-option MCQ.
+    still be the answer for its representative slot.
 
     Pedagogical rules (#8167):
     - Eliminate base-case bias: Nominative singular (nom:s) is never a challenge
       target, as identifying the base lemma provides minimal learning value.
+    - Full 7-case x 2-number nominal matrix: all 13 eligible non-base slots are
+      generated independently, allowing learners to drill any case and number.
     - Nominative singular remains in the distractor candidate pool to test
       case discrimination (e.g. Accusative vs Nominative).
     - Distractors are prioritized by grammatical case confusion and number.
+    - All valid forms of the target slot are excluded from distractors to prevent
+      marking a valid Ukrainian alternative (e.g. котові / коту) as wrong.
+    - Distractor options are deduplicated by surface within each card.
     """
     if not _normalize_cefr(lexeme.get("cefr")):
         return []
@@ -3038,7 +3128,7 @@ def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
             seen_case_names.add(key)
 
     slots: list[dict[str, str]] = []
-    seen_forms: set[str] = set()
+    seen_slots: set[tuple[str, str]] = set()
     for case_name in ordered_case_names:
         forms = cases.get(case_name)
         if not isinstance(forms, dict):
@@ -3050,14 +3140,16 @@ def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
             form = _single_surface(forms.get(number))
             if not form:
                 continue
-            normalized = _plain(form)
-            if normalized in seen_forms:
+            slot_key = (case_key, number)
+            if slot_key in seen_slots:
                 continue
-            seen_forms.add(normalized)
+            seen_slots.add(slot_key)
             slots.append({"case": case_key, "number": number, "form": form})
-    if len(slots) < 4:
+    unique_surfaces = {_plain(s["form"]) for s in slots}
+    if len(unique_surfaces) < 4:
         return []
     items = []
+    lemma_str = str(lexeme.get("lemma") or lexeme.get("lemmaPlain") or "")
     for index, slot in enumerate(slots):
         # Eliminate base-case bias (#8167): never prompt for nominative singular.
         if slot["case"] == "називний" and slot["number"] == "singular":
@@ -3067,16 +3159,27 @@ def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
         number_en = "sg" if slot["number"] == "singular" else "pl"
         paradigm_id = f"{lexeme['lemmaId']}:paradigm:{index + 1}"
 
-        # Pedagogical distractor selection: rank same-paradigm forms by case confusion and number proximity
+        # Pedagogical distractor selection: exclude all valid forms of the target slot
+        # to guarantee no second correct answer is marked wrong (#8167 Finding 1).
+        valid_target_forms = _all_valid_forms_for_slot(
+            lemma_str, slot["case"], slot["number"], cases
+        )
+        valid_target_forms.add(_plain(slot["form"]))
+
         candidates = [
             other for other in slots
-            if other is not slot and _plain(other["form"]) != _plain(slot["form"])
+            if _plain(other["form"]) not in valid_target_forms
         ]
         confusions = CASE_CONFUSION_PRIORITY.get(slot["case"], ())
         candidates.sort(key=lambda other: _paradigm_distractor_rank(other, slot, confusions, paradigm_id))
 
         options = [{"label": slot["form"], "kind": "answer"}]
+        seen_option_surfaces = {_plain(slot["form"])}
         for other in candidates:
+            norm_other = _plain(other["form"])
+            if norm_other in seen_option_surfaces:
+                continue
+            seen_option_surfaces.add(norm_other)
             options.append({
                 "label": other["form"],
                 "kind": "same-paradigm",
