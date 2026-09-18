@@ -22,6 +22,52 @@ class DummyAns:
             setattr(self, k, v)
 
 
+
+def _hermetic_ground(
+    target: str,
+    distractors: list[str],
+    vesum_db_path=None,
+    sources_db_path=None,
+    *,
+    calque_forms: list[str] | None = None,
+) -> dict:
+    """Deterministic grounding stub for CI (no VESUM/sources.db required)."""
+    calques = [{"form": f, "source": "stub"} for f in (calque_forms or [])]
+    return {
+        "target": {
+            "word": target,
+            "in_vesum": True,
+            "status": "CLEAN",
+            "analyses": [],
+        },
+        "distractors": {
+            "verified_in_vesum": list(distractors),
+            "missing_from_vesum": [],
+            "analyses": {},
+        },
+        "calques_and_shadows": calques,
+        "has_calque_foil": any(c["form"] in distractors for c in calques),
+        "grounded": True,
+    }
+
+
+def _hermetic_ground_with_calque(
+    target: str,
+    distractors: list[str],
+    vesum_db_path=None,
+    sources_db_path=None,
+) -> dict:
+    """Hermetic ground that marks classic протязі calque foils as detected."""
+    calques = [d for d in distractors if "протяз" in d]
+    return _hermetic_ground(
+        target,
+        distractors,
+        vesum_db_path=vesum_db_path,
+        sources_db_path=sources_db_path,
+        calque_forms=calques,
+    )
+
+
 def test_resolve_api_key_from_env():
     with patch.dict(os.environ, {"TYPESAFE_API_KEY": "practice-test-key"}):
         assert resolve_api_key() == "practice-test-key"
@@ -67,6 +113,7 @@ def test_validate_ambiguous_card_mock():
         target="братом",
         distractors=["брати", "братів", "братові"],
         mock_response=mock_resp,
+        ground_hook=_hermetic_ground,
     )
     assert verdict.verdict == "fail_ambiguous"
     assert verdict.needs_review
@@ -90,6 +137,7 @@ def test_validate_weak_foils_mock():
         target="подвір'ї",
         distractors=["автомобіль", "комп'ютер", "кіт"],
         mock_response=mock_resp,
+        ground_hook=_hermetic_ground,
     )
     assert verdict.verdict == "warn_weak_foils"
     assert any("Weak foils" in f for f in verdict.findings)
@@ -112,6 +160,7 @@ def test_validate_anti_calque_yield_mock():
         distractors=["на протязі", "в протязі", "по протязі"],
         grammar_focus="Prepositional government & anti-calque",
         mock_response=mock_resp,
+        ground_hook=_hermetic_ground_with_calque,
     )
     assert verdict.verdict == "pass"
     assert any("High anti-calque value" in f for f in verdict.findings)
@@ -132,7 +181,7 @@ def test_escalate_path_invokes_grounding():
     }
     with patch(
         "scripts.practice.typesafe_distractor_validator.ground_with_sources",
-        wraps=ground_with_sources,
+        side_effect=_hermetic_ground,
     ) as mock_ground:
         verdict = validate_practice_card(
             stem="Він пішов до лісу з _____ (брат).",
@@ -184,7 +233,7 @@ def test_always_ground_forces_grounding_on_clean_card():
     }
     with patch(
         "scripts.practice.typesafe_distractor_validator.ground_with_sources",
-        wraps=ground_with_sources,
+        side_effect=_hermetic_ground,
     ) as mock_ground:
         verdict = validate_practice_card(
             stem="Вчора ми побачили старого _____ (друг).",
@@ -213,13 +262,14 @@ def test_anti_calque_unverified_by_sources_flags_review():
         target="братом",
         distractors=["брати", "братів", "братові"],  # All clean UK grammar forms
         mock_response=mock_resp,
+        ground_hook=_hermetic_ground,
     )
     assert verdict.grounded is True
     assert verdict.needs_review is True
     assert any("Anti-calque yield unverified by Sources/VESUM" in f for f in verdict.findings)
 
 
-def test_target_missing_from_vesum_triggers_fail_broken():
+def test_target_missing_from_vesum_triggers_fail_broken(requires_vesum_db):
     """When target is an invented non-word, grounding detects it and forces fail_broken."""
     mock_resp = {
         "model": "jev-test",
@@ -242,8 +292,8 @@ def test_target_missing_from_vesum_triggers_fail_broken():
     assert any("not found in VESUM" in f for f in verdict.findings)
 
 
-def test_ground_with_sources_direct():
-    """Directly test ground_with_sources function."""
+def test_ground_with_sources_direct(requires_vesum_db):
+    """Directly test ground_with_sources function (needs real VESUM)."""
     res = ground_with_sources(
         target="протягом",
         distractors=["на протязі", "другові"],
