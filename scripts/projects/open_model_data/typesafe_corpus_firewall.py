@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import re
 import urllib.request
@@ -103,6 +104,9 @@ def _resolve_typesafe_key() -> str:
 
 
 # Regex patterns for deterministic heuristic fallback
+STRICT_RUSSIAN_CHARS_RE = re.compile(r"[эёЭЁ]")
+ARCHAIC_CYRILLIC_RE = re.compile(r"[ѣѧѩѫѭѢѦѪ]")
+HISTORICAL_SHARED_CHARS_RE = re.compile(r"[ыъЫЪ]")
 RUSSIAN_ONLY_CHARS_RE = re.compile(r"[ыэъёЫЭЪЁ]")
 UKRAINIAN_DISTINCTIVE_CHARS_RE = re.compile(r"[іїєґІЇЄҐ]")
 MIXED_HOMOGLYPH_RE = re.compile(
@@ -149,15 +153,14 @@ class TypeSafeCorpusFirewall:
 
     def filter_sentences(self, sentences: list[str]) -> FirewallBatchReport:
         """Filter and route a batch of candidate sentences."""
-        clean_inputs = [s.strip() for s in sentences if s.strip()]
-        if not clean_inputs:
+        if not sentences:
             return FirewallBatchReport(0, 0, 0, 0, 0, 0, 0, 0.0, [])
 
         decisions: list[FirewallDecision] = []
 
         if self.api_key:
-            for offset in range(0, len(clean_inputs), self.batch_size):
-                batch = clean_inputs[offset : offset + self.batch_size]
+            for offset in range(0, len(sentences), self.batch_size):
+                batch = sentences[offset : offset + self.batch_size]
                 try:
                     batch_decisions = self._call_firewall_batch_api(batch)
                     decisions.extend(batch_decisions)
@@ -168,7 +171,7 @@ class TypeSafeCorpusFirewall:
                 for s in batch:
                     decisions.append(self._heuristic_evaluate(s))
         else:
-            for s in clean_inputs:
+            for s in sentences:
                 decisions.append(self._heuristic_evaluate(s))
 
         # Build telemetry summary
@@ -236,19 +239,71 @@ class TypeSafeCorpusFirewall:
             answers = data.get("answers", {})
             out: list[FirewallDecision] = []
             for idx, s in enumerate(batch):
-                q_route = answers.get(f"s{idx}_route", {})
-                q_qual = answers.get(f"s{idx}_quality", {})
-                q_unc = answers.get(f"s{idx}_uncertainty", {})
+                q_route = answers.get(f"s{idx}_route")
+                q_qual = answers.get(f"s{idx}_quality")
+                q_unc = answers.get(f"s{idx}_uncertainty")
 
-                action_str = str(q_route.get("choice", CorpusAction.KEEP_STANDARD))
-                action = (
-                    CorpusAction(action_str)
-                    if action_str in CorpusAction._value2member_map_
-                    else CorpusAction.KEEP_STANDARD
-                )
-                score_val = float(q_qual.get("score", 3.0))
-                conf_val = float(q_route.get("confidence", 1.0))
-                unc_val = float(q_unc.get("noul", 0.1))
+                # Validate answer presence and dictionary structure
+                if (
+                    not isinstance(q_route, dict)
+                    or not isinstance(q_qual, dict)
+                    or not isinstance(q_unc, dict)
+                ):
+                    out.append(
+                        FirewallDecision(
+                            sentence=s,
+                            action=CorpusAction.DROP_OCR_NOISE,
+                            quality_score=0.0,
+                            confidence=0.0,
+                            needs_human_review=True,
+                            review_probability=1.0,
+                            reason="Malformed or missing response from TypeSafe API",
+                        )
+                    )
+                    continue
+
+                choice = q_route.get("choice")
+                if choice not in CorpusAction._value2member_map_:
+                    out.append(
+                        FirewallDecision(
+                            sentence=s,
+                            action=CorpusAction.DROP_OCR_NOISE,
+                            quality_score=0.0,
+                            confidence=0.0,
+                            needs_human_review=True,
+                            review_probability=1.0,
+                            reason=f"Unknown choice label from TypeSafe API: {choice!r}",
+                        )
+                    )
+                    continue
+
+                action = CorpusAction(choice)
+                try:
+                    score_val = float(q_qual.get("score"))
+                    conf_val = float(q_route.get("confidence"))
+                    unc_val = float(q_unc.get("noul"))
+                    if not (
+                        math.isfinite(score_val)
+                        and 0.0 <= score_val <= 4.0
+                        and math.isfinite(conf_val)
+                        and 0.0 <= conf_val <= 1.0
+                        and math.isfinite(unc_val)
+                        and 0.0 <= unc_val <= 1.0
+                    ):
+                        raise ValueError("Score or confidence out of bounds")
+                except (TypeError, ValueError):
+                    out.append(
+                        FirewallDecision(
+                            sentence=s,
+                            action=CorpusAction.DROP_OCR_NOISE,
+                            quality_score=0.0,
+                            confidence=0.0,
+                            needs_human_review=True,
+                            review_probability=1.0,
+                            reason="Out of bounds or non-numeric score from TypeSafe API",
+                        )
+                    )
+                    continue
 
                 needs_review = unc_val >= 0.60 or conf_val < 0.70
                 out.append(
@@ -266,7 +321,19 @@ class TypeSafeCorpusFirewall:
 
     def _heuristic_evaluate(self, text: str) -> FirewallDecision:
         """Deterministic linguistic heuristics for corpus filtering."""
-        # 1. Mixed Latin-Cyrillic homoglyphs inside a word (OCR corruption)
+        # 1. Strict Russian letter detection (э, ё) — never present in Ukrainian, dialects, or Old East Slavic
+        if STRICT_RUSSIAN_CHARS_RE.search(text):
+            return FirewallDecision(
+                sentence=text,
+                action=CorpusAction.DROP_RUSSIAN_SURZHYK,
+                quality_score=0.0,
+                confidence=1.0,
+                needs_human_review=False,
+                review_probability=0.0,
+                reason="Contains Russian-specific alphabet characters (э/ё)",
+            )
+
+        # 2. Mixed Latin-Cyrillic homoglyphs inside a word (OCR corruption)
         if MIXED_HOMOGLYPH_RE.search(text):
             return FirewallDecision(
                 sentence=text,
@@ -278,20 +345,65 @@ class TypeSafeCorpusFirewall:
                 reason="Contains corrupted mixed Latin-Cyrillic homoglyphs inside word tokens",
             )
 
-        # 2. Old East Slavic / Middle Ukrainian historical markers
-        if OLD_EAST_SLAVIC_MARKERS_RE.search(text):
+        # 3. Cyrillic letter presence and language ratio check (reject foreign text, pure numbers, noise)
+        cyrillic_letters = len(re.findall(r"[а-яА-ЯіїєґІЇЄҐѣѧѩѫѭѢѦѪ]", text))
+        latin_letters = len(re.findall(r"[a-zA-Z]", text))
+        total_letters = cyrillic_letters + latin_letters
+
+        if total_letters < 3 or cyrillic_letters / max(1, total_letters) < 0.60:
             return FirewallDecision(
                 sentence=text,
-                action=CorpusAction.KEEP_HISTORICAL,
-                quality_score=3.5,
-                confidence=0.90,
+                action=CorpusAction.DROP_OCR_NOISE,
+                quality_score=0.0,
+                confidence=0.95,
                 needs_human_review=False,
-                review_probability=0.2,
-                reason="Contains attested Old East Slavic / Middle Ukrainian lexical markers",
+                review_probability=0.05,
+                reason="Non-Ukrainian or non-language text (lacks required Cyrillic content)",
             )
 
-        # 3. Authentic dialectal markers
-        if DIALECTAL_MARKERS_RE.search(text):
+        # 4. Check historical and dialect markers
+        historical_matches = set(m.lower() for m in OLD_EAST_SLAVIC_MARKERS_RE.findall(text))
+        dialect_matches = set(m.lower() for m in DIALECTAL_MARKERS_RE.findall(text))
+        has_archaic_letters = bool(ARCHAIC_CYRILLIC_RE.search(text))
+        has_shared_historical_chars = bool(HISTORICAL_SHARED_CHARS_RE.search(text))
+
+        # Check for letters absent in modern Ukrainian (ы, ъ)
+        if has_shared_historical_chars:
+            # If dialectal markers present with ы/ъ -> conflicting signal (modern Ukrainian dialects do not write with ы/ъ)
+            if dialect_matches:
+                return FirewallDecision(
+                    sentence=text,
+                    action=CorpusAction.DROP_RUSSIAN_SURZHYK,
+                    quality_score=0.0,
+                    confidence=0.95,
+                    needs_human_review=False,
+                    review_probability=0.05,
+                    reason="Conflicting dialect markers with Russian alphabet characters",
+                )
+            # For Old East Slavic: authentic text has archaic letters or >= 2 distinct historical lexical markers
+            if has_archaic_letters or len(historical_matches) >= 2:
+                return FirewallDecision(
+                    sentence=text,
+                    action=CorpusAction.KEEP_HISTORICAL,
+                    quality_score=3.5,
+                    confidence=0.92,
+                    needs_human_review=False,
+                    review_probability=0.15,
+                    reason="Contains attested Old East Slavic / Middle Ukrainian lexical and orthographic markers",
+                )
+            # Otherwise (isolated single marker like 'князь' or no markers with ы/ъ): reject as Russian
+            return FirewallDecision(
+                sentence=text,
+                action=CorpusAction.DROP_RUSSIAN_SURZHYK,
+                quality_score=0.0,
+                confidence=1.0,
+                needs_human_review=False,
+                review_probability=0.0,
+                reason="Contains Russian-specific alphabet characters (ы/ъ) without sufficient historical provenance",
+            )
+
+        # 5. Clean text without Russian characters: check dialectal and historical markers
+        if dialect_matches:
             return FirewallDecision(
                 sentence=text,
                 action=CorpusAction.KEEP_DIALECTAL,
@@ -302,21 +414,20 @@ class TypeSafeCorpusFirewall:
                 reason="Contains authentic Ukrainian regional dialect markers",
             )
 
-        # 4. Russian letter detection (ы, э, ъ, ё)
-        if RUSSIAN_ONLY_CHARS_RE.search(text):
+        if has_archaic_letters or historical_matches:
             return FirewallDecision(
                 sentence=text,
-                action=CorpusAction.DROP_RUSSIAN_SURZHYK,
-                quality_score=0.0,
-                confidence=1.0,
+                action=CorpusAction.KEEP_HISTORICAL,
+                quality_score=3.5,
+                confidence=0.90,
                 needs_human_review=False,
-                review_probability=0.0,
-                reason="Contains Russian-specific alphabet characters (ы/э/ъ/ё)",
+                review_probability=0.2,
+                reason="Contains attested Old East Slavic / Middle Ukrainian lexical markers",
             )
 
-        # 5. Length and character ratio checks
+        # 6. Length check on stripped text
         words = text.split()
-        if len(words) < 3 or len(text) < 15:
+        if len(words) < 3 or len(text.strip()) < 15:
             return FirewallDecision(
                 sentence=text,
                 action=CorpusAction.DROP_OCR_NOISE,
@@ -349,7 +460,7 @@ def main() -> None:
         print(f"File not found: {path}")
         return
 
-    lines = [line.strip() for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    lines = [line.rstrip("\r\n") for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
     firewall = TypeSafeCorpusFirewall()
     report = firewall.filter_sentences(lines)
 

@@ -126,3 +126,58 @@ def test_live_typesafe_firewall_integration() -> None:
     assert report.kept_standard >= 1
     assert report.dropped_russian_surzhyk >= 1
     assert report.average_quality > 1.0
+
+
+def test_russian_letter_precedence_over_markers() -> None:
+    """Russian letters must reject immediately even if historical/dialect markers are present."""
+    firewall = TypeSafeCorpusFirewall(api_key=None)
+    res = firewall.filter_sentences(["Это князь с буквой ы."])
+    assert res.total_processed == 1
+    assert res.dropped_russian_surzhyk == 1
+    assert res.decisions[0].action == CorpusAction.DROP_RUSSIAN_SURZHYK
+
+    # Isolated single marker with ы (e.g. Russian sentence mentioning князь with ы but no archaic letters)
+    res_isolated = firewall.filter_sentences(["Князь пришел с буквой ы сюда."])
+    assert res_isolated.dropped_russian_surzhyk == 1
+    assert res_isolated.decisions[0].action == CorpusAction.DROP_RUSSIAN_SURZHYK
+
+    # Dialect marker with ы (conflicting dialect markers and Russian characters)
+    res_dialect_conflict = firewall.filter_sentences(["Файний ґазда прийшов с буквой ы."])
+    assert res_dialect_conflict.dropped_russian_surzhyk == 1
+    assert res_dialect_conflict.decisions[0].action == CorpusAction.DROP_RUSSIAN_SURZHYK
+
+
+def test_non_ukrainian_and_numeric_noise_rejection() -> None:
+    """Foreign text and numeric/punctuation noise must be dropped, not admitted as standard."""
+    firewall = TypeSafeCorpusFirewall(api_key=None)
+    res_en = firewall.filter_sentences(["This is an English sentence."])
+    assert res_en.dropped_ocr_noise == 1
+    assert res_en.kept_standard == 0
+
+    res_num = firewall.filter_sentences(["12345 67890 12345 67890."])
+    assert res_num.dropped_ocr_noise == 1
+    assert res_num.kept_standard == 0
+
+
+def test_verbatim_whitespace_preservation() -> None:
+    """Original sentence strings with leading/trailing whitespace must be preserved verbatim."""
+    firewall = TypeSafeCorpusFirewall(api_key=None)
+    original = "  Текст із пробілами на початку і табуляцією в кінці.\t"
+    res = firewall.filter_sentences([original])
+    assert res.total_processed == 1
+    assert res.decisions[0].sentence == original
+
+
+@patch("urllib.request.urlopen")
+def test_malformed_api_response_validation(mock_urlopen: MagicMock) -> None:
+    """Malformed, missing, or unknown choices in API answers must escalate to review."""
+    import io
+    resp_mock = io.BytesIO(b'{"answers": {"s0_route": {"choice": "invalid_choice"}}}')
+    mock_urlopen.return_value.__enter__.return_value = resp_mock
+
+    firewall = TypeSafeCorpusFirewall(api_key="fake-key", batch_size=10)
+    res = firewall.filter_sentences(["Якийсь валідний текст для тестування."])
+    assert res.total_processed == 1
+    assert res.decisions[0].needs_human_review is True
+    assert res.decisions[0].confidence == 0.0
+    assert res.escalated_to_human == 1
