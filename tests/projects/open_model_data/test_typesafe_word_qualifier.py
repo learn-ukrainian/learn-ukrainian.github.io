@@ -173,8 +173,8 @@ def test_vesum_tag_markers_handling(monkeypatch: pytest.MonkeyPatch) -> None:
         def execute(self, query: str, params: tuple) -> None:
             pass
 
-        def fetchone(self) -> tuple[str, str] | None:
-            return ("noun", self.tag_val)
+        def fetchall(self) -> list[tuple[str, str]]:
+            return [("noun", self.tag_val)]
 
     class MockConn:
         def __init__(self, tag_val: str):
@@ -201,3 +201,66 @@ def test_vesum_tag_markers_handling(monkeypatch: pytest.MonkeyPatch) -> None:
     assert res_alt.stratum == LexicalStratum.STANDARD_LITERARY
     assert res_alt.pedagogical_priority == 1.5
     assert res_alt.needs_verification is False
+
+
+def test_vesum_multi_analysis_order_independence(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Verify that multiple VESUM analyses flag nonstandard usage regardless of database row order."""
+    qualifier = TypeSafeWordQualifier(api_key=None)
+
+    class MultiMockCursor:
+        def __init__(self, rows: list[tuple[str, str]]):
+            self.rows = rows
+
+        def execute(self, query: str, params: tuple) -> None:
+            pass
+
+        def fetchall(self) -> list[tuple[str, str]]:
+            return self.rows
+
+    class MultiMockConn:
+        def __init__(self, rows: list[tuple[str, str]]):
+            self.rows = rows
+
+        def cursor(self) -> MultiMockCursor:
+            return MultiMockCursor(self.rows)
+
+    clean_row = ("noun", "noun:m:v_naz")
+    obsc_row = ("noun", "noun:m:v_naz:obsc")
+
+    # Order 1: Clean row first, obscene row second
+    monkeypatch.setattr(qualifier, "_get_vesum_conn", lambda: MultiMockConn([clean_row, obsc_row]))
+    res1 = qualifier._heuristic_qualify("тестслово")
+    assert res1.stratum == LexicalStratum.PEJORATIVE_SLUR
+    assert res1.needs_verification is True
+
+    # Order 2: Obscene row first, clean row second
+    monkeypatch.setattr(qualifier, "_get_vesum_conn", lambda: MultiMockConn([obsc_row, clean_row]))
+    res2 = qualifier._heuristic_qualify("тестслово")
+    assert res2.stratum == LexicalStratum.PEJORATIVE_SLUR
+    assert res2.needs_verification is True
+
+
+@patch("urllib.request.urlopen")
+def test_invalid_api_response_validation(mock_urlopen: MagicMock) -> None:
+    """Invalid choices, missing answers, or out-of-bounds metrics must not be auto-accepted."""
+    import io
+    # 1. Invalid choice label with high confidence
+    resp_mock = io.BytesIO(b'{"answers": {"w0_stratum": {"choice": "INVALID", "confidence": 0.99}}}')
+    mock_urlopen.return_value.__enter__.return_value = resp_mock
+
+    qualifier = TypeSafeWordQualifier(api_key="fake-key", batch_size=10)
+    report = qualifier.qualify_words(["перемога"])
+    assert report.total_processed == 1
+    assert report.qualifications[0].needs_verification is True
+    assert report.qualifications[0].confidence == 0.0
+
+    # 2. Out of bounds metric
+    resp_mock2 = io.BytesIO(
+        b'{"answers": {"w0_stratum": {"choice": "standard_literary", "confidence": 1.5}, '
+        b'"w0_shadow": {"noul": 0.1}, "w0_priority": {"score": 3.0}, "w0_ocr": {"noul": 0.0}}}'
+    )
+    mock_urlopen.return_value.__enter__.return_value = resp_mock2
+    report2 = qualifier.qualify_words(["перемога"])
+    assert report2.total_processed == 1
+    assert report2.qualifications[0].needs_verification is True
+    assert report2.qualifications[0].confidence == 0.0

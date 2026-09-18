@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import re
 import sqlite3
@@ -371,48 +372,92 @@ class TypeSafeWordQualifier:
         results: list[WordQualification] = []
 
         for idx, word in enumerate(batch):
-            stratum_ans = answers.get(f"w{idx}_stratum", {})
-            shadow_ans = answers.get(f"w{idx}_shadow", {})
-            prio_ans = answers.get(f"w{idx}_priority", {})
-            ocr_ans = answers.get(f"w{idx}_ocr", {})
+            stratum_ans = answers.get(f"w{idx}_stratum")
+            shadow_ans = answers.get(f"w{idx}_shadow")
+            prio_ans = answers.get(f"w{idx}_priority")
+            ocr_ans = answers.get(f"w{idx}_ocr")
 
-            choice_str = stratum_ans.get("choice", "standard_literary")
+            is_valid_structure = (
+                isinstance(stratum_ans, dict)
+                and isinstance(shadow_ans, dict)
+                and isinstance(prio_ans, dict)
+                and isinstance(ocr_ans, dict)
+            )
+
+            choice_str = stratum_ans.get("choice") if is_valid_structure else None
+            if not is_valid_structure or choice_str not in LexicalStratum._value2member_map_:
+                results.append(
+                    WordQualification(
+                        word=word,
+                        stratum=LexicalStratum.STANDARD_LITERARY,
+                        confidence=0.0,
+                        russian_shadow=0.0,
+                        pedagogical_priority=0.0,
+                        ocr_junk=0.0,
+                        needs_verification=True,
+                        verification_route="vesum_lookup",
+                        reason=f"Malformed or invalid API answer from TypeSafe System One (choice={choice_str!r})",
+                    )
+                )
+                continue
+
+            stratum = LexicalStratum(choice_str)
+
             try:
-                stratum = LexicalStratum(choice_str)
-            except ValueError:
-                stratum = LexicalStratum.STANDARD_LITERARY
+                conf_val = float(stratum_ans.get("confidence", -1))
+                shadow_val = float(shadow_ans.get("noul", -1))
+                prio_val = float(prio_ans.get("score", -1))
+                ocr_val = float(ocr_ans.get("noul", -1))
 
-            confidence = float(stratum_ans.get("confidence", 0.5))
-            shadow_prob = float(shadow_ans.get("noul", 0.0))
-            priority = float(prio_ans.get("score", 2.0))
-            ocr_prob = float(ocr_ans.get("noul", 0.0))
+                if not (
+                    math.isfinite(conf_val) and 0.0 <= conf_val <= 1.0
+                    and math.isfinite(shadow_val) and 0.0 <= shadow_val <= 1.0
+                    and math.isfinite(prio_val) and 0.0 <= prio_val <= 4.0
+                    and math.isfinite(ocr_val) and 0.0 <= ocr_val <= 1.0
+                ):
+                    raise ValueError("Metric out of bounds")
+            except (TypeError, ValueError):
+                results.append(
+                    WordQualification(
+                        word=word,
+                        stratum=stratum,
+                        confidence=0.0,
+                        russian_shadow=0.0,
+                        pedagogical_priority=0.0,
+                        ocr_junk=0.0,
+                        needs_verification=True,
+                        verification_route="vesum_lookup",
+                        reason="Out of bounds or non-numeric metric in TypeSafe API response",
+                    )
+                )
+                continue
 
             # Routing determination
             needs_ver = False
             route = "none"
             reason = "Auto-accepted by TypeSafe System One"
 
-            if ocr_prob >= 0.50:
+            if ocr_val >= 0.50:
                 needs_ver = True
                 route = "ocr_filter"
-                reason = f"High probability of OCR/homoglyph corruption ({ocr_prob:.2f})"
-            elif shadow_prob >= 0.50 or stratum == LexicalStratum.CALQUE_RUSSIANISM:
+                reason = f"High probability of OCR/homoglyph corruption ({ocr_val:.2f})"
+            elif shadow_val >= 0.50 or stratum == LexicalStratum.CALQUE_RUSSIANISM:
                 needs_ver = True
                 route = "style_guide_review"
-                reason = f"Elevated Russian shadow ({shadow_prob:.2f}) or calque classification"
-            elif confidence < 0.85:
+                reason = f"Elevated Russian shadow ({shadow_val:.2f}) or calque classification"
+            elif conf_val < 0.85:
                 needs_ver = True
                 route = "vesum_lookup"
-                reason = f"Confidence {confidence:.2f} below auto-accept threshold 0.85"
+                reason = f"Confidence {conf_val:.2f} below auto-accept threshold 0.85"
 
             results.append(
                 WordQualification(
                     word=word,
                     stratum=stratum,
-                    confidence=confidence,
-                    russian_shadow=shadow_prob,
-                    pedagogical_priority=priority,
-                    ocr_junk=ocr_prob,
+                    confidence=round(conf_val, 2),
+                    russian_shadow=round(shadow_val, 2),
+                    pedagogical_priority=round(prio_val, 2),
+                    ocr_junk=round(ocr_val, 2),
                     needs_verification=needs_ver,
                     verification_route=route,
                     reason=reason,
@@ -528,26 +573,29 @@ class TypeSafeWordQualifier:
         if ves_conn:
             try:
                 cur = ves_conn.cursor()
-                cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ? LIMIT 1", (lower_w,))
-                row = cur.fetchone()
-                if row:
-                    tags = row[1] or ""
-                    tag_tokens = set(tags.split(":"))
+                cur.execute("SELECT pos, tags FROM forms_all WHERE word_form = ?", (lower_w,))
+                rows = cur.fetchall()
+                if rows:
+                    all_tokens: set[str] = set()
+                    for r in rows:
+                        tags = r[1] or ""
+                        all_tokens.update(tags.split(":"))
+
                     # Canonical VESUM markers from vesum_reingest.py:
                     # 'bad': invalid, 'subst': nonstandard, 'obsc': obscene, 'vulg': vulgar, 'slang': slang
-                    is_bad = bool(tag_tokens & {"bad", "subst", "obsc", "vulg", "slang"})
-                    is_alt_or_arch = bool(tag_tokens & {"alt", "arch"})
+                    is_bad = bool(all_tokens & {"bad", "subst", "obsc", "vulg", "slang"})
+                    is_alt_or_arch = bool(all_tokens & {"alt", "arch"})
                     if is_bad:
                         stratum = (
                             LexicalStratum.PEJORATIVE_SLUR
-                            if bool(tag_tokens & {"obsc", "vulg"})
+                            if bool(all_tokens & {"obsc", "vulg"})
                             else (
                                 LexicalStratum.SLANG_COLLOQUIAL
-                                if "slang" in tag_tokens
+                                if "slang" in all_tokens
                                 else LexicalStratum.CALQUE_RUSSIANISM
                             )
                         )
-                        flagged_markers = ", ".join(sorted(tag_tokens & {"bad", "subst", "obsc", "vulg", "slang"}))
+                        flagged_markers = ", ".join(sorted(all_tokens & {"bad", "subst", "obsc", "vulg", "slang"}))
                         return WordQualification(
                             word=word,
                             stratum=stratum,
