@@ -58,7 +58,7 @@ Cross-family independence checks evaluate either the **attested concrete model f
     endpoint metadata (surfaced by the fleet API), not a general dispatch worker
     cap; the session-stream lease is the Cursor driver admission signal.
 - **Layout A Worktrees:** Implementation runs only from isolated dispatch worktrees under `.worktrees/dispatch/{agent}/{task}/`.
-- **Driver Never Merges:** Drivers neither merge PRs nor arm auto-merge. The human operator retains sole merge authority.
+- **Driver merges own-lane PRs:** After exact-head cross-family CF APPROVE + CI Gate green, the Cursor driver (like every epic driver) enqueues/merges its own lane's PRs via `gh pr merge --squash` per `drive-epic` §7 and `critical-rules` §8.5. Workers never merge. Do **not** ask the operator to merge — that is the defect this fleet was built to remove. GUI supervision chats are not the merge seat; the leased TUI/driver session is.
 - **Single Playbook:** No second router or alternate state machine; drivers run the standard `drive-epic` skill.
 
 ## Do-Not-Vendor List (Non-Goals)
