@@ -69,9 +69,9 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
 
 - **CF review-fix before CI (operator 2026-09-18, fleet):** Astra (or other
   exact-head CF) on the **branch** → fix → re-CF until APPROVE **before**
-  opening a ready content/machinery PR. Do not start CI Gate on heads still in
-  the CF fix loop. Canonical: `agents_extensions/shared/rules/workflow.md` §
-  Merge policy.
+  opening any PR (draft or ready — drafts still trigger CI here). Do not start
+  CI Gate on heads still in the CF fix loop. Canonical:
+  `agents_extensions/shared/rules/workflow.md` § Merge policy.
 - Merge gate: exact-head CF APPROVE **and** CI Gate green on that SHA, then
   `gh pr merge --squash` (merge queue). Never `--auto`. Never
   `--delete-branch` until `gh pr view` shows `MERGED`. Then reap worktrees.
