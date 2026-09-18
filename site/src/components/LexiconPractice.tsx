@@ -4100,11 +4100,14 @@ function LexiconPracticeIsland({
       const outcome = clozeAttemptRecorded
         ? { nextUnresolved: new Set(unresolvedCardKeys), nextDeferred: [...deferredLemmas] }
         : recordReview(selection, 'good');
+      const rule = cloze.caseRule;
+      const ruleCaseLabel = 'caseLabel' in rule && rule.caseLabel ? rule.caseLabel : '';
+      const ruleTriggerLabel = 'triggerLabel' in rule && rule.triggerLabel ? rule.triggerLabel : '';
       const labelUk = caseDrill
-        ? cloze.caseRule.caseLabel
-        : (cloze.caseRule.triggerLabel || 'словникова форма');
+        ? (ruleCaseLabel || 'потрібна форма')
+        : (ruleTriggerLabel || 'словникова форма');
       const labelEn = caseDrill
-        ? translateGrammarTerm(cloze.caseRule.caseLabel)
+        ? (ruleCaseLabel ? translateGrammarTerm(ruleCaseLabel) : 'required form')
         : 'dictionary form';
       setClozeFeedback({
         kind: 'correct',
@@ -4126,10 +4129,16 @@ function LexiconPracticeIsland({
       const exhausted = nextCaseMissCount >= 2;
       // Keep the typed value (select it, don't clear it) — a chip tap that put the
       // right lemma in the box must not be destroyed on the first case-miss.
+      const rule = cloze.caseRule;
+      const ruleCaseLabel = 'caseLabel' in rule && rule.caseLabel ? rule.caseLabel : '';
+      const caseLabelUk = ruleCaseLabel || 'потрібну форму';
+      const caseLabelEn = ruleCaseLabel ? translateGrammarTerm(ruleCaseLabel) : 'required form';
+      const feedbackUk = 'feedback' in rule && rule.feedback ? `: ${rule.feedback}` : '';
+      const feedbackEn = 'feedback' in rule && rule.feedback ? `: ${rule.feedback}` : '';
       setClozeFeedback({
         kind: 'case-miss',
-        textUk: `→ Правильне слово. Тепер постав його ${casePhraseAccusative(cloze.caseRule.caseLabel)}: ${cloze.caseRule.feedback}`,
-        textEn: `→ Correct word. Now put it in the ${translateGrammarTerm(cloze.caseRule.caseLabel)}: ${cloze.caseRule.feedback}`,
+        textUk: `→ Правильне слово. Тепер постав його ${casePhraseAccusative(caseLabelUk)}${feedbackUk}`,
+        textEn: `→ Correct word. Now put it in the ${caseLabelEn}${feedbackEn}`,
       });
       if (exhausted) {
         setAnswerLocked(true);

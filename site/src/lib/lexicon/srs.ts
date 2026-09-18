@@ -137,17 +137,24 @@ export interface PracticeClozeOption {
   strategy?: string;
 }
 
-export interface PracticeCaseRule {
-  ruleId?: string;
-  code?: string;
-  case?: string;
+export interface PracticeAuthoredCaseRule {
+  ruleId: string;
+  case: string;
   caseLabel: string;
-  trigger?: string;
-  triggerLabel?: string;
-  feedback?: string;
-  labelUk?: string;
-  labelEn?: string;
+  trigger: string;
+  triggerLabel: string;
+  feedback: string;
 }
+
+export interface PracticeDocumentCaseRule {
+  code: 'document-context';
+  labelUk: string;
+  labelEn: string;
+  caseLabel?: string;
+  feedback?: string;
+}
+
+export type PracticeCaseRule = PracticeAuthoredCaseRule | PracticeDocumentCaseRule;
 
 export interface PracticeClozeAttributionSentence {
   sentenceId: string | number;
@@ -2164,6 +2171,10 @@ export function isCaseClozeDrill(
   cloze: PracticeClozeItem,
   lemma: Pick<PracticeLexeme, 'lemma' | 'pos'>,
 ): boolean {
+  // Document-imported clozes are in-context vocabulary insertions, not authored case drills
+  if ('code' in cloze.caseRule && cloze.caseRule.code === 'document-context') {
+    return false;
+  }
   // Deterministic prompt heuristic: czNorm-equal answer is an insertion,
   // never a case drill. Likewise, VESUM indeclinable POS tags must not receive
   // case wording. Otherwise a changed form remains a case drill: authored clozes

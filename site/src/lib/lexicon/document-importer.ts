@@ -167,7 +167,7 @@ export function extractDocumentClozeItems(text: string, lemmaKeys: string[], wor
           blankCase: 'context',
           form: rawWord,
           lemma: matchedLemma,
-          caseRule: { code: 'document-context', labelUk: 'Контекст з документа', labelEn: 'Document Sentence', caseLabel: 'знахідний' },
+          caseRule: { code: 'document-context', labelUk: 'Контекст з документа', labelEn: 'Document Sentence' },
           clozeEn: translation ? `Translation: ${translation}` : 'Sentence from your imported text',
           options: [
             { optionId: 'opt_ans', lemmaId: matchedLemma, label: rawWord, kind: 'answer' },

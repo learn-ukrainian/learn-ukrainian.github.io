@@ -1,6 +1,6 @@
 // @vitest-environment node
 
-import { chmodSync, existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { chmodSync, existsSync, readFileSync, renameSync, statSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, test } from "vitest";
 import { normalizeAtlasText } from "@site/src/lib/lexicon/normalize";
@@ -353,6 +353,7 @@ describe("AtlasDataSource fixture shard parity (Sol F006, unconditional)", () =>
     }
     const descriptor = manifest.entries.shards[node.shardId!]!;
     const shardPath = resolve(versionDir, descriptor.url);
+    const originalMode = statSync(shardPath).mode;
     const original = readFileSync(shardPath);
     const corrupted = Buffer.from(original);
     corrupted[0] = (corrupted[0] + 1) % 256;
@@ -366,7 +367,7 @@ describe("AtlasDataSource fixture shard parity (Sol F006, unconditional)", () =>
     } finally {
       writeFileSync(shardPath, original);
       try {
-        chmodSync(shardPath, 0o444);
+        chmodSync(shardPath, originalMode);
       } catch {}
     }
   });

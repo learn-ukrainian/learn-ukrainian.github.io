@@ -5542,7 +5542,7 @@ describe('LexiconPractice', () => {
             sentence: 'Я п’ю _____ зранку.',
             blankCase: 'accusative',
             caseRule: {
-              code: 'acc_sg',
+              code: 'document-context',
               labelUk: 'знахідний відмінок',
               labelEn: 'accusative singular',
               caseLabel: 'знахідний',
@@ -5575,6 +5575,58 @@ describe('LexiconPractice', () => {
 
       expect(screen.queryByText(/We couldn’t load practice/i)).not.toBeInTheDocument();
       expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
+    });
+
+    test('document-imported cloze never renders undefined in feedback or prompt', async () => {
+      const customSet: CustomSet = {
+        id: 'test_doc_imported_cloze_no_undefined',
+        title: 'Doc Set',
+        lemma_keys: ['книга'],
+        cloze_items: [
+          {
+            clozeId: 'doc_cloze_no_undef',
+            lemmaId: 'knyha',
+            sentenceFrameId: 'doc_frame_no_undef',
+            sentence: 'Я читаю _____ щодня.',
+            blankCase: 'context',
+            form: 'книгу',
+            lemma: 'книга',
+            caseRule: {
+              code: 'document-context',
+              labelUk: 'Контекст з документа',
+              labelEn: 'Document Sentence',
+            },
+            clozeEn: 'I read a book every day.',
+            options: [
+              { optionId: 'opt_ans', lemmaId: 'knyha', label: 'книгу', kind: 'answer' },
+              { optionId: 'opt_dec_1', lemmaId: 'knyha', label: 'книзі', kind: 'decoy-oblique' },
+            ],
+          },
+        ],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        device_id: 'test_device',
+        revision: 1,
+      };
+
+      localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([customSet]));
+
+      const user = userEvent.setup();
+      const { container } = render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} initialMode="cloze" />);
+
+      const customBtn = screen.getByRole('button', { name: /Doc Set/i });
+      await user.click(customBtn);
+
+      const clozeCard = container.querySelector<HTMLButtonElement>('[data-mode="cloze"]')!;
+      await user.click(clozeCard);
+
+      expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
+
+      // Submit an answer and assert the rendered DOM never contains 'undefined'
+      const input = screen.getByRole('textbox');
+      await user.type(input, 'книга{Enter}');
+
+      expect(container.textContent).not.toContain('undefined');
     });
 
     test('dashboard session estimate narrows to a 1-word custom deck, not the full level (PR #5837 fix-round-2)', async () => {
