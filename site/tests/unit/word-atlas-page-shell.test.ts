@@ -25,9 +25,9 @@ describe("WordAtlasPageShell dormant states", () => {
   let WordAtlasPageShell: AstroComponent;
 
   beforeAll(async () => {
-    ({ default: WordAtlasPageShell } = await import(
+    ({ default: WordAtlasPageShell } = (await import(
       "@site/src/lexicon/WordAtlasPageShell.astro"
-    ));
+    )) as any);
     container = await AstroContainer.create();
     container.addServerRenderer({ renderer: reactRenderer });
   });

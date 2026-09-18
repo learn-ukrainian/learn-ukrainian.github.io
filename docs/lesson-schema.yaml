@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 447ad48ca21ccc82c1666ff06bb305c71626b0223705de441ed66e5e690e2af1
+  components_sha256: ca6e9887cd9716c5a91d2d590d52a2f0cc753df9d644a79c4917156a99a73e09
   config_tables_sha256: fe0a306d77dfb5b01975ba9cb54ae154f97b2dd279310abdddcc06f3facdf35b
   lesson_contract_sha256: 1dbc34313d5e2fef4582ec435e853a4d8b52ecafc18e4a0661a8ca8afb0f99c8
 components:
