@@ -853,11 +853,14 @@ def alphabet_line_break_defects(
         aid = a.get("id") or a.get("type")
         if a.get("type") == "divide-words":
             out.append(f"{prefix}{aid}: divide-words is a line-break activity; alphabet modules must not teach line breaks")
-        if any(mentions_line_breaks(a.get(k)) for k in ("title", "instruction")):
-            out.append(f"{prefix}{aid}: title/instruction mentions перенос; alphabet modules must not teach line breaks")
+        if is_line_break_activity(a) and a.get("type") != "divide-words":
+            out.append(f"{prefix}{aid}: activity text mentions перенос; alphabet modules must not teach line breaks")
         blob = "\n".join(str(x) for x in leaves(a) if isinstance(x, str))
         if contains_line_break_model(blob):
             out.append(f"{prefix}{aid}: activity contains a hyphenation model (Мар'-яна / дере-в'яний / бур'-ян / паль-ці)")
+    body = "\n".join(ln for ln in prose.splitlines() if not ln.lstrip().startswith("#"))
+    if mentions_line_breaks(body):
+        out.append(f"{prefix}prose mentions перенос; alphabet modules must not teach line breaks")
     if contains_line_break_model(prose):
         out.append(f"{prefix}prose contains a hyphenation model (Мар'-яна / дере-в'яний / бур'-ян / паль-ці)")
     return out
@@ -1271,6 +1274,8 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     # Exemptions cannot be invented for new writer activities.
     if not set(exempt) <= original_ids:
         block("item exemptions may name only preserved original activities")
+    for pl, i in sorted(k for k in prov if k in dropped):
+        block(f"provenance points at dropped line-break original {pl}[{i}]; remove it")
     kept_provenance = [p for p in provenance if (p.get("placement"), p.get("index")) not in dropped]
     if len(kept_provenance) != len(originals) - len(dropped) or len(prov) != len(provenance):
         block("provenance must cover every original exactly once")

@@ -74,7 +74,7 @@ export function FillInQuestion({ sentence, answer, options = [] }: FillInQuestio
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    if (draggedOption && !showResult) {
+    if (draggedOption !== null && !showResult) {
       setSelected(draggedOption);
       setShowResult(true);
     }
@@ -230,7 +230,7 @@ export default function FillIn({ items, instruction, isUkrainian }: FillInProps)
                   onChange={(e) => handleSelect(index, e.target.value)}
                   disabled={showResults}
                 >
-                  <option value=""></option>
+                  <option value="" disabled>{isUkrainian ? '— оберіть —' : '— choose —'}</option>
                   {shuffle(item.options || []).map((opt, i) => (
                     <option key={i} value={opt === '' ? EMPTY_OPTION_VALUE : opt}>
                       {opt || BLANK_SLOT}

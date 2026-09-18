@@ -861,3 +861,46 @@ def test_banned_learner_phrases_fail_case_insensitively(phrase):
 
 def test_bare_mastery_is_not_banned():
     assert gates.banned_phrase_defects("Mastery comes with practice.", "lesson 1 prose") == []
+
+
+def _alphabet_gold(gold, slug="reading-ukrainian"):
+    module, source, plan = gold
+    plan["slug"] = slug
+    return module, source, plan
+
+
+def _line_break_blocks(report):
+    return [d for d in report["blocking"] if "перенос" in d or "line break" in d]
+
+
+def test_alphabet_full_gate_rejects_prose_teaching_line_breaks(gold):
+    module, source, plan = _alphabet_gold(gold)
+    path = module / "lesson-1/module.md"
+    path.write_text(path.read_text() + "\n\nПеренос слова: пишемо стіл-ець, а не стілець, коли рядок закінчується.\n")
+    assert any("prose mentions перенос" in d for d in _line_break_blocks(
+        gates.run_lesson_gates(module, source, plan)))
+
+
+def test_alphabet_full_gate_rejects_quiz_stem_about_hyphenation(gold):
+    module, source, plan = _alphabet_gold(gold)
+    path = module / "lesson-1/activities.yaml"
+    data = yaml.safe_load(path.read_text())
+    data["inline"].append({"id": "act-lb", "type": "quiz", "instruction": "Оберіть відповідь",
+                           "items": [{"question": "Як зробити перенос слова «книга»?",
+                                      "options": ["кни-га", "ки-нга"], "answer": "кни-га"}]})
+    path.write_text(yaml.safe_dump(data, allow_unicode=True))
+    assert any("act-lb" in d for d in _line_break_blocks(
+        gates.run_lesson_gates(module, source, plan)))
+
+
+def test_alphabet_full_gate_ignores_heading_and_rejects_dropped_provenance(gold):
+    module, source, plan = _alphabet_gold(gold)
+    path = module / "lesson-1/module.md"
+    path.write_text(path.read_text() + "\n\n## Перенос і підсумок\n")
+    assert _line_break_blocks(gates.run_lesson_gates(module, source, plan)) == []
+
+    base = yaml.safe_load((source / "activities.yaml").read_text())
+    base["inline"][0]["instruction"] = "Перенос слів"
+    (source / "activities.yaml").write_text(yaml.safe_dump(base, allow_unicode=True))
+    report = gates.run_lesson_gates(module, source, plan)
+    assert any("provenance points at dropped" in d for d in report["blocking"])

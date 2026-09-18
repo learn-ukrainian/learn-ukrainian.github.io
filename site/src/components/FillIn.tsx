@@ -121,7 +121,7 @@ export function FillInQuestion({
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    if (draggedOption && !showResult && !disabled) {
+    if (draggedOption !== null && !showResult && !disabled) {
       complete(draggedOption);
     }
     setDraggedOption(null);
@@ -324,7 +324,7 @@ export default function FillIn({ items, instruction, isUkrainian: bakedIsUkraini
                   onChange={(e) => handleSelect(index, e.target.value)}
                   disabled={showResults}
                 >
-                  <option value=""></option>
+                  <option value="" disabled>{isUkrainian ? '— оберіть —' : '— choose —'}</option>
                   {shuffle(item.options || []).map((opt, i) => (
                     <option key={i} value={opt === '' ? EMPTY_OPTION_VALUE : opt}>
                       {opt || BLANK_SLOT}
