@@ -1,19 +1,19 @@
 /**
  * Ukrainian Function Words Practice Engine (Службові частини мови).
  *
- * Implements Ukrainian Pravopys 2019 (§§ 36–40) and Academic Grammar rules for:
+ * Implements Ukrainian Pravopys 2019 (§§ 42–44) and Academic Grammar rules for:
  *   1. Prepositions (Прийменники):
- *      - Hyphenated with з-/із- (§ 36.1: з-під, з-за, із-за, з-поміж, з-понад)
- *      - Solid compounds (§ 36.2: посеред, задля, заради, внаслідок, напередодні)
- *      - Multi-word locutions (§ 36.3: згідно з, відповідно до, під час)
+ *      - Hyphenated with з-/із- (§ 42, п. 1: з-під, з-за, із-за, з-поміж, з-понад)
+ *      - Solid compounds (§ 42, п. 2: посеред, задля, заради, внаслідок, напередодні)
+ *      - Multi-word locutions (§ 42, п. 3: згідно з, відповідно до, під час)
  *      - Anti-calque & government norms (по vs о/з/за/на, завдяки vs через, протягом vs на протязі)
  *   2. Conjunctions (Сполучники):
- *      - Homophone disambiguation (§ 37: проте/зате vs про те/за те, щоб vs що б,
+ *      - Homophone disambiguation (§ 43: проте/зате vs про те/за те, щоб vs що б,
  *        якби vs як би, якщо vs як що, також/теж vs так же/те ж)
  *   3. Particles (Частки):
- *      - Orthography of не and ні (§§ 38–39: разом vs окремо for nouns, adjectives,
+ *      - Orthography of не and ні (§ 44, п. 1: разом vs окремо for nouns, adjectives,
  *        verbs, gerunds, participles with or without dependents, contrast with 'а')
- *      - Enclitics and prefixes (§ 40: -бо, -но, -то, -от, -таки vs таки пішов;
+ *      - Enclitics and prefixes (§ 44, п. 2: -бо, -но, -то, -от, -таки vs таки пішов;
  *        будь-, казна-, хтозна- vs будь у кого)
  */
 
@@ -44,6 +44,8 @@ export type FunctionWordInterferenceKey =
   | 'false_solid_locution'
   | 'false_hyphen_locution'
   | 'russian_calque_po'
+  | 'russian_calque_general'
+  | 'lexical_semantic_confusion'
   | 'mismatched_causal_consequence'
   | 'air_draft_calque_for_duration'
   | 'homophone_conjunction_for_pronoun'
@@ -96,7 +98,7 @@ export interface FunctionWordFeedback {
 }
 
 /**
- * Determine if a compound preposition requires a hyphen per Правопис 2019 (§ 36.1).
+ * Determine if a compound preposition requires a hyphen per Правопис 2019 (§ 42, п. 1).
  */
 export function resolvePrepositionHyphenationRule(prep: string): {
   requiresHyphen: boolean;
@@ -108,17 +110,17 @@ export function resolvePrepositionHyphenationRule(prep: string): {
     return {
       requiresHyphen: true,
       ruleUa:
-        'Складні прийменники з першою частиною «з-», «із-» пишуться через дефіс (з-під, з-за, із-за, з-поміж).',
+        'Складні прийменники з першою частиною «з-», «із-» пишуться через дефіс: з-під, з-за, із-за, з-поміж (Правопис 2019, § 42, п. 1).',
       ruleEn:
-        'Compound prepositions with initial z-/iz- are hyphenated (з-під, з-за, із-за, з-поміж).',
+        'Compound prepositions with initial z-/iz- are hyphenated: з-під, з-за, із-за, з-поміж (Pravopys 2019, § 42, item 1).',
     };
   }
   return {
     requiresHyphen: false,
     ruleUa:
-      'Складні прийменники без «з-», «із-» пишуться разом (посеред, задля, внаслідок).',
+      'Складні прийменники без «з-», «із-» пишуться разом: посеред, задля, внаслідок (Правопис 2019, § 42, п. 2).',
     ruleEn:
-      'Compound prepositions without initial z-/iz- are written solid (посеред, задля, внаслідок).',
+      'Compound prepositions without initial z-/iz- are written solid: посеред, задля, внаслідок (Pravopys 2019, § 42, item 2).',
   };
 }
 
@@ -173,7 +175,7 @@ export function resolveDurationPrepositionRule(isTimeDuration: boolean): {
 }
 
 /**
- * Distinguish conjunction from homophonous pronoun/particle sequences per Правопис 2019 (§ 37).
+ * Distinguish conjunction from homophonous pronoun/particle sequences per Правопис 2019 (§ 43).
  */
 export function resolveConjunctionHomophoneRule(
   pair: string,
@@ -181,26 +183,27 @@ export function resolveConjunctionHomophoneRule(
 ): { choice: string; ruleUa: string; ruleEn: string } {
   const p = pair.trim().toLowerCase();
   if (p === 'prote' || p === 'проте' || p === 'zate' || p === 'зате') {
+    const isZate = p === 'zate' || p === 'зате';
     if (isConjunction) {
       return {
-        choice: 'проте',
-        ruleUa: 'Сполучники «проте», «зате» (= але) пишуться разом.',
-        ruleEn: "Conjunctions 'проте', 'зате' (= but, however) are written solid.",
+        choice: isZate ? 'зате' : 'проте',
+        ruleUa: 'Сполучники «проте», «зате» (= але) пишуться разом (Правопис 2019, § 43, п. 1).',
+        ruleEn: "Conjunctions 'проте', 'зате' (= but, however) are written solid (Pravopys 2019, § 43, item 1).",
       };
     }
     return {
-      choice: 'про те',
-      ruleUa: 'Прийменник із вказівним займенником «про те» пишеться окремо (про що? — про те).',
+      choice: isZate ? 'за те' : 'про те',
+      ruleUa: 'Прийменник із вказівним займенником «про те», «за те» пишеться окремо (про що? — про те; за що? — за те).',
       ruleEn:
-        "Preposition with demonstrative pronoun 'про те' is written separately (about what? -> about that).",
+        "Preposition with demonstrative pronoun 'про те', 'за те' is written separately.",
     };
   }
   if (p === 'shchob' || p === 'щоб') {
     if (isConjunction) {
       return {
         choice: 'щоб',
-        ruleUa: "Сполучник мети та з'ясувальний «щоб» пишеться разом.",
-        ruleEn: "Purpose and explanatory conjunction 'щоб' is written solid.",
+        ruleUa: "Сполучник мети та з'ясувальний «щоб» пишеться разом (Правопис 2019, § 43, п. 2).",
+        ruleEn: "Purpose and explanatory conjunction 'щоб' is written solid (Pravopys 2019, § 43, item 2).",
       };
     }
     return {
@@ -213,8 +216,8 @@ export function resolveConjunctionHomophoneRule(
     if (isConjunction) {
       return {
         choice: 'якби',
-        ruleUa: 'Умовний сполучник «якби» (= якщо б) пишеться разом.',
-        ruleEn: "Conditional conjunction 'якби' (= if) is written solid.",
+        ruleUa: 'Умовний сполучник «якби» (= якщо б) пишеться разом (Правопис 2019, § 43, п. 3).',
+        ruleEn: "Conditional conjunction 'якби' (= if) is written solid (Pravopys 2019, § 43, item 3).",
       };
     }
     return {
@@ -227,8 +230,8 @@ export function resolveConjunctionHomophoneRule(
     if (isConjunction) {
       return {
         choice: 'якщо',
-        ruleUa: 'Умовний сполучник «якщо» пишеться разом.',
-        ruleEn: "Conditional conjunction 'якщо' (= if) is written solid.",
+        ruleUa: 'Умовний сполучник «якщо» пишеться разом (Правопис 2019, § 43, п. 4).',
+        ruleEn: "Conditional conjunction 'якщо' (= if) is written solid (Pravopys 2019, § 43, item 4).",
       };
     }
     return {
@@ -238,24 +241,25 @@ export function resolveConjunctionHomophoneRule(
     };
   }
   if (p === 'takozh' || p === 'також' || p === 'tezh' || p === 'теж') {
+    const isTezh = p === 'tezh' || p === 'теж';
     if (isConjunction) {
       return {
-        choice: 'також',
-        ruleUa: 'Приєднувальні сполучники «також», «теж» пишуться разом.',
-        ruleEn: "Joining conjunctions 'також', 'теж' are written solid.",
+        choice: isTezh ? 'теж' : 'також',
+        ruleUa: 'Приєднувальні сполучники «також», «теж» пишуться разом (Правопис 2019, § 43, п. 5).',
+        ruleEn: "Joining conjunctions 'також', 'теж' are written solid (Pravopys 2019, § 43, item 5).",
       };
     }
     return {
-      choice: 'так же',
-      ruleUa: 'Прислівник «так» із підсилювальною часткою «же» пишеться окремо.',
-      ruleEn: "Adverb 'так' with particle 'же' is written separately.",
+      choice: isTezh ? 'те ж' : 'так же',
+      ruleUa: 'Займенник «те» / прислівник «так» із часткою «ж / же» пишеться окремо.',
+      ruleEn: "Pronoun 'те' or adverb 'так' with particle 'ж / же' is written separately.",
     };
   }
   throw new Error(`Unknown conjunction homophone pair: ${pair}`);
 }
 
 /**
- * Orthography of 'не' per Правопис 2019 (§§ 38–39).
+ * Orthography of 'не' per Правопис 2019 (§ 44, п. 1).
  */
 export function resolveParticleNeRule(params: {
   pos: string;
@@ -270,9 +274,9 @@ export function resolveParticleNeRule(params: {
     return {
       orthography: 'разом',
       ruleUa:
-        'Слова, які без «не» не вживаються, завжди пишуться разом: ненавидіти, нехтувати, неволити, негайний.',
+        'Слова, які без «не» не вживаються, завжди пишуться разом: ненавидіти, нехтувати, неволити, негайний (Правопис 2019, § 44, п. 1).',
       ruleEn:
-        "Words that cannot stand without 'не' are always written solid: ненавидіти, нехтувати.",
+        "Words that cannot stand without 'не' are always written solid: ненавидіти, нехтувати (Pravopys 2019, § 44, item 1).",
     };
   }
 
@@ -280,9 +284,9 @@ export function resolveParticleNeRule(params: {
     return {
       orthography: 'окремо',
       ruleUa:
-        'Частка «не» пишеться окремо, якщо є протиставлення зі сполучником «а» чи «але»: не широкий, а вузький.',
+        'Частка «не» пишеться окремо, якщо є протиставлення зі сполучником «а»: не глибока, а мілка річка (Правопис 2019, § 44, п. 1).',
       ruleEn:
-        "Particle 'не' is written separately when an explicit contrast with 'а' or 'але' is present.",
+        "Particle 'не' is written separately when an explicit contrast with 'а' is present: не глибока, а мілка.",
     };
   }
 
@@ -290,7 +294,7 @@ export function resolveParticleNeRule(params: {
     return {
       orthography: 'окремо',
       ruleUa:
-        'Частка «не» з дієсловами та дієприслівниками пишеться окремо: не знаю, не пишучи.',
+        'Частка «не» з дієсловами та дієприслівниками пишеться окремо: не знаю, не пишучи (Правопис 2019, § 44, п. 1).',
       ruleEn:
         "Particle 'не' is written separately with verbs and gerunds: не знаю, не пишучи.",
     };
@@ -301,7 +305,7 @@ export function resolveParticleNeRule(params: {
       return {
         orthography: 'окремо',
         ruleUa:
-          'Частка «не» з дієприкметниками пишеться окремо, якщо при них є пояснювальні (залежні) слова: ще не прочитана книга.',
+          'Частка «не» з дієприкметниками пишеться окремо, якщо при них є пояснювальні (залежні) слова: ще не прочитана книга (Правопис 2019, § 44, п. 1).',
         ruleEn:
           "Particle 'не' is written separately with participles having dependent modifying words: ще не прочитана книга.",
       };
@@ -309,7 +313,7 @@ export function resolveParticleNeRule(params: {
     return {
       orthography: 'разом',
       ruleUa:
-        'Одиничний дієприкметник без залежних слів, що виступає означенням, пишеться з «не» разом: непрочитана книга.',
+        'Одиничний дієприкметник без залежних слів, що виступає означенням, пишеться з «не» разом: непрочитана книга (Правопис 2019, § 44, п. 1).',
       ruleEn:
         "An isolated participle without dependent words acting as an attribute is written solid: непрочитана книга.",
     };
@@ -329,7 +333,7 @@ export function resolveParticleNeRule(params: {
       return {
         orthography: 'разом',
         ruleUa:
-          'З іменниками, прикметниками та прислівниками «не» пишеться разом, коли утворює нове поняття (можна замінити синонімом: неправда — брехня).',
+          'З іменниками, прикметниками та прислівниками «не» пишеться разом, коли утворює нове поняття (можна замінити синонімом: неправда — брехня) (Правопис 2019, § 44, п. 1).',
         ruleEn:
           "With nouns, adjectives, and adverbs, 'не' is written solid when forming a new concept (replaceable with a synonym).",
       };
@@ -337,7 +341,7 @@ export function resolveParticleNeRule(params: {
     return {
       orthography: 'окремо',
       ruleUa:
-        'Якщо слово з «не» не утворює нового поняття і лише заперечує ознаку, воно пишеться окремо.',
+        'Якщо слово з «не» не утворює нового поняття і лише заперечує ознаку, воно пишеться окремо (Правопис 2019, § 44, п. 1).',
       ruleEn:
         "If 'не' merely negates without forming a unified lexical concept, it is written separately.",
     };
@@ -351,7 +355,7 @@ export function resolveParticleNeRule(params: {
 }
 
 /**
- * Orthography of particles per Правопис 2019 (§ 40).
+ * Orthography of particles per Правопис 2019 (§ 44, п. 2).
  */
 export function resolveParticleHyphenationRule(params: {
   particle: string;
@@ -365,7 +369,7 @@ export function resolveParticleHyphenationRule(params: {
       return {
         orthography: 'окремо',
         ruleUa:
-          'Якщо між частками «будь-», «казна-», «хтозна-» та займенником стоїть прийменник, усі три слова пишуться окремо: будь у кого, хтозна з ким.',
+          'Якщо між частками «будь-», «казна-», «хтозна-» та займенником стоїть прийменник, усі три слова пишуться окремо: будь у кого, хтозна з ким (Правопис 2019, § 44, п. 2).',
         ruleEn:
           'When a preposition intervenes between будь-, казна-, хтозна- and a pronoun, all three words are written separately: будь у кого.',
       };
@@ -373,7 +377,7 @@ export function resolveParticleHyphenationRule(params: {
     return {
       orthography: 'дефіс',
       ruleUa:
-        'Частки «будь-», «казна-», «хтозна-» з іншими словами пишуться через дефіс: будь-хто, хтозна-де.',
+        'Частки «будь-», «казна-», «хтозна-» з іншими словами пишуться через дефіс: будь-хто, хтозна-де (Правопис 2019, § 44, п. 2).',
       ruleEn: 'Particles будь-, казна-, хтозна- are hyphenated: будь-хто, хтозна-де.',
     };
   }
@@ -383,7 +387,7 @@ export function resolveParticleHyphenationRule(params: {
       return {
         orthography: 'дефіс',
         ruleUa:
-          'Частка «таки» пишеться через дефіс, коли стоїть ПІСЛЯ слова, яке виділяє: прийшов-таки, знав-таки.',
+          'Частка «таки» пишеться через дефіс, коли стоїть ПІСЛЯ слова, яке виділяє: прийшов-таки, знав-таки (Правопис 2019, § 44, п. 2).',
         ruleEn:
           "Particle 'таки' is hyphenated when standing AFTER the word it emphasizes: прийшов-таки.",
       };
@@ -391,7 +395,7 @@ export function resolveParticleHyphenationRule(params: {
     return {
       orthography: 'окремо',
       ruleUa:
-        'Частка «таки» пишеться окремо, коли стоїть ПЕРЕД словом: таки прийшов, таки переміг.',
+        'Частка «таки» пишеться окремо, коли стоїть ПЕРЕД словом: таки прийшов, таки переміг (Правопис 2019, § 44, п. 2).',
       ruleEn:
         "Particle 'таки' is written separately when standing BEFORE the word: таки прийшов.",
     };
@@ -400,7 +404,7 @@ export function resolveParticleHyphenationRule(params: {
   if (pNorm === 'бо' || pNorm === 'но' || pNorm === 'то' || pNorm === 'от') {
     return {
       orthography: 'дефіс',
-      ruleUa: `Частки «-${pNorm}» після слів, які вони виділяють, пишуться через дефіс (Правопис 2019, § 40).`,
+      ruleUa: `Частки «-${pNorm}» після слів, які вони виділяють, пишуться через дефіс (Правопис 2019, § 44, п. 2).`,
       ruleEn: `Particles '-${pNorm}' are hyphenated when following the emphasized word.`,
     };
   }

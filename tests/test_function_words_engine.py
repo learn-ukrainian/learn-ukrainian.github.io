@@ -2,23 +2,24 @@
 
 Tests:
   1. Preposition orthography & government:
-     - Hyphenation with з-/із- (§ 36.1) vs solid compound (§ 36.2) vs locutions (§ 36.3).
+     - Hyphenation with з-/із- (§ 42, п. 1) vs solid compound (§ 42, п. 2) vs locutions (§ 42, п. 3).
      - Causal government: завдяки (+ Dat, positive) vs через (+ Acc, adverse/neutral).
      - Temporal government: протягом/упродовж vs literal air draft 'на протязі'.
-  2. Conjunction disambiguation (§ 37):
-     - проте/зате vs про те/за те.
-     - щоб vs що б.
-     - якби vs як би.
-     - якщо vs як що.
-     - також/теж vs так же/те ж.
-  3. Particle orthography (§§ 38–40):
-     - не with nouns/adjectives: new concept (solid) vs explicit contrast with 'а' (separate).
-     - не with verbs/gerunds: separate unless bound root (ненавидіти).
-     - не with participles: isolated attribute (solid) vs with dependent words (separate).
-     - Enclitics: -бо, -но, -то, -от, -таки (postpositive hyphen vs prepositive separate).
-     - Prefix particles: будь-, казна-, хтозна- (hyphenated vs split by preposition).
+  2. Conjunction disambiguation (§ 43):
+     - проте/зате vs про те/за те (п. 1).
+     - щоб vs що б (п. 2).
+     - якби vs як би (п. 3).
+     - якщо vs як що (п. 4).
+     - також/теж vs так же/те ж (п. 5).
+  3. Particle orthography (§ 44):
+     - не with nouns/adjectives: new concept (solid) vs explicit contrast with 'а' (separate) (п. 1).
+     - не with verbs/gerunds: separate unless bound root (ненавидіти) (п. 1).
+     - не with participles: isolated attribute (solid) vs with dependent words (separate) (п. 1).
+     - Enclitics: -бо, -но, -то, -от, -таки (postpositive hyphen vs prepositive separate) (п. 2).
+     - Prefix particles: будь-, казна-, хтозна- (hyphenated vs split by preposition) (п. 2).
   4. Deck validation and zero collisions across all canonical cards.
-  5. Deck JSON export integrity.
+  5. Deterministic balanced option distribution.
+  6. Deck JSON export integrity.
 """
 
 from __future__ import annotations
@@ -43,7 +44,7 @@ from scripts.practice.function_words_engine import (
 
 
 def test_resolve_preposition_hyphenation():
-    """Verify compound preposition hyphenation rules per Правопис 2019 (§ 36.1 vs § 36.2)."""
+    """Verify compound preposition hyphenation rules per Правопис 2019 (§ 42, п. 1 vs § 42, п. 2)."""
     # Prepositions with initial з- / із- must be hyphenated
     assert resolve_preposition_hyphenation("з-під")[0] is True
     assert resolve_preposition_hyphenation("з-за")[0] is True
@@ -86,10 +87,14 @@ def test_resolve_duration_preposition():
 
 
 def test_resolve_conjunction_homophones():
-    """Verify conjunction disambiguation from homophonous word sequences per § 37."""
+    """Verify conjunction disambiguation from homophonous word sequences per § 43."""
     # проте vs про те
     assert resolve_conjunction_homophone("проте", is_conjunction=True)[0] == "проте"
     assert resolve_conjunction_homophone("проте", is_conjunction=False)[0] == "про те"
+
+    # зате vs за те
+    assert resolve_conjunction_homophone("зате", is_conjunction=True)[0] == "зате"
+    assert resolve_conjunction_homophone("зате", is_conjunction=False)[0] == "за те"
 
     # щоб vs що б
     assert resolve_conjunction_homophone("щоб", is_conjunction=True)[0] == "щоб"
@@ -107,12 +112,16 @@ def test_resolve_conjunction_homophones():
     assert resolve_conjunction_homophone("також", is_conjunction=True)[0] == "також"
     assert resolve_conjunction_homophone("також", is_conjunction=False)[0] == "так же"
 
+    # теж vs те ж
+    assert resolve_conjunction_homophone("теж", is_conjunction=True)[0] == "теж"
+    assert resolve_conjunction_homophone("теж", is_conjunction=False)[0] == "те ж"
+
     with pytest.raises(ValueError):
         resolve_conjunction_homophone("невідомий", is_conjunction=True)
 
 
 def test_resolve_particle_ne():
-    """Verify orthography of 'не' per Правопис 2019 (§§ 38–39)."""
+    """Verify orthography of 'не' per Правопис 2019 (§ 44, п. 1)."""
     # Bound root verbs always solid
     assert resolve_particle_ne("verb", cannot_stand_without_ne=True)[0] == "разом"
 
@@ -138,7 +147,7 @@ def test_resolve_particle_ne():
 
 
 def test_resolve_particle_hyphenation():
-    """Verify enclitic and prefix particle hyphenation per § 40."""
+    """Verify enclitic and prefix particle hyphenation per § 44, п. 2."""
     # Enclitics -бо, -но, -то, -от
     assert resolve_particle_hyphenation("бо")[0] == "дефіс"
     assert resolve_particle_hyphenation("но")[0] == "дефіс"
@@ -211,3 +220,17 @@ def test_export_function_word_deck(tmp_path: Path):
     assert "correctAnswer" in first_card
     assert len(first_card["options"]) == 4
     assert len(first_card["distractors"]) == 3
+
+
+def test_option_position_distribution():
+    """Verify that card.all_options() distributes correct answers across positions 0..3."""
+    cards = build_canonical_function_word_cards()
+    positions = [card.all_options().index(card.correct_answer) for card in cards]
+    position_counts = {p: positions.count(p) for p in range(4)}
+
+    # Every position (0, 1, 2, 3) must have at least 15% of the total cards
+    min_expected = int(len(cards) * 0.15)
+    for p in range(4):
+        assert position_counts[p] >= min_expected, (
+            f"Position {p} has {position_counts[p]} answers, expected at least {min_expected} (total {len(cards)})"
+        )

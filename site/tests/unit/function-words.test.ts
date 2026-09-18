@@ -44,10 +44,14 @@ describe('function-words', () => {
     expect(resolveDurationPrepositionRule(false).choice).toBe('на протязі');
   });
 
-  it('resolves conjunction homophones (§ 37)', () => {
+  it('resolves conjunction homophones (§ 43)', () => {
     // проте vs про те
     expect(resolveConjunctionHomophoneRule('проте', true).choice).toBe('проте');
     expect(resolveConjunctionHomophoneRule('проте', false).choice).toBe('про те');
+
+    // зате vs за те
+    expect(resolveConjunctionHomophoneRule('зате', true).choice).toBe('зате');
+    expect(resolveConjunctionHomophoneRule('зате', false).choice).toBe('за те');
 
     // щоб vs що б
     expect(resolveConjunctionHomophoneRule('щоб', true).choice).toBe('щоб');
@@ -65,10 +69,14 @@ describe('function-words', () => {
     expect(resolveConjunctionHomophoneRule('також', true).choice).toBe('також');
     expect(resolveConjunctionHomophoneRule('також', false).choice).toBe('так же');
 
+    // теж vs те ж
+    expect(resolveConjunctionHomophoneRule('теж', true).choice).toBe('теж');
+    expect(resolveConjunctionHomophoneRule('теж', false).choice).toBe('те ж');
+
     expect(() => resolveConjunctionHomophoneRule('невідомий', true)).toThrowError();
   });
 
-  it('resolves particle не orthography (§§ 38–39)', () => {
+  it('resolves particle не orthography (§ 44, п. 1)', () => {
     // Bound root verbs -> разом
     expect(
       resolveParticleNeRule({ pos: 'verb', cannotStandWithoutNe: true }).orthography,
@@ -96,7 +104,7 @@ describe('function-words', () => {
     );
   });
 
-  it('resolves particle hyphenation and split by preposition (§ 40)', () => {
+  it('resolves particle hyphenation and split by preposition (§ 44, п. 2)', () => {
     // Enclitics -бо, -но, -то, -от
     expect(resolveParticleHyphenationRule({ particle: 'бо' }).orthography).toBe('дефіс');
     expect(resolveParticleHyphenationRule({ particle: 'но' }).orthography).toBe('дефіс');
@@ -149,7 +157,7 @@ describe('function-words', () => {
           explanationEn: 'Compound prepositions with z- are hyphenated.',
         },
       ],
-      ruleCitation: 'Правопис 2019, § 36, п. 1',
+      ruleCitation: 'Правопис 2019, § 42, п. 1',
       ruleSummary: {
         uk: 'Складні прийменники з «з-» пишуться через дефіс: з-під, з-за.',
         en: 'Compound prepositions with z- are hyphenated.',
