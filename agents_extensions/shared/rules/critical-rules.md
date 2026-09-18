@@ -140,6 +140,10 @@ everything" cannot survive this repo's merge rate and is corporate dual-control 
 
 **8.5 — Merge queue protocol.**
 - **Workers never merge, enqueue, or arm auto-merge; orchestrators MUST.** Only the accountable owner (orchestrator) of that PR's lane enqueues/merges it once both gates pass. The orchestrator's job is to ensure approved work lands in `main`, not to abandon approved PRs unmerged.
+- **CF review-fix before CI (operator 2026-09-18):** complete exact-head CF
+  (APPROVE / fix / re-CF) on the branch **before** opening a ready non-draft PR
+  that starts CI Gate. Do not burn CI while CF findings are still being fixed.
+  See `workflow.md` § Merge policy.
 - Enqueue **only** when all three hold (landing order #7450): exact-head cross-family CF APPROVE
   with **no BLOCKING finding outstanding** per §8.4 · PR is **not a draft** · **CI Gate green on
   that same head**. Pending is not green; a documented non-blocking finding does not hold enqueue.

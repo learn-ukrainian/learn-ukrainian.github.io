@@ -448,13 +448,20 @@ stale — re-run exact-head CF before any enqueue.
 PRs only — never commit or merge to `main` directly.
 
 **Binding public landing order (operator 2026-08-30 / #7450; CF-attest retired
-2026-09-03):** GitHub `required_approving_review_count` is 0 and the sole required
-check is CI Gate. Auto-merge / enqueue is **not** review. That is how PRs
-#7447–#7449 hit `main` with empty reviews. Drivers follow this order:
+2026-09-03; CF-before-CI clarified 2026-09-18):** GitHub
+`required_approving_review_count` is 0 and the sole required check is CI Gate.
+Auto-merge / enqueue is **not** review. That is how PRs #7447–#7449 hit `main`
+with empty reviews. Drivers follow this order:
 
+0. **CF review-fix before CI (binding).** Push the branch. Run exact-head CF
+   via `ask-<lane> --branch <name>` (or equivalent). Fix → re-CF until
+   `VERDICT: APPROVE` on the tip. **Do not** open a ready (non-draft) PR while
+   CF is open or while iterating findings — opening ready starts CI and slows
+   the review-fix loop. CI runs once on a CF-APPROVED tip.
 1. **Independent cross-family exact-head CF** — attested `resolved_model`,
-   different family from the author, APPROVE on the current PR head.
-2. **CI Gate green** on that **same** head.
+   different family from the author, APPROVE on the tip (post on the PR once
+   open, bound to that SHA).
+2. **Open / mark ready** → **CI Gate green** on that **same** head.
 3. **Merge queue only after both.** Enqueue then; never before.
 
 **Never auto-merge or enqueue first.** Never treat `gh pr merge --auto` as a
