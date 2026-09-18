@@ -100,7 +100,7 @@ cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) �
 
 **Recommended against as a driver seat (least-bite — the live `model_catalog.orchestrator_seats` policy is authoritative):**
 - **Fable 5** (Anthropic top tier) — default Anthropic driver plus hardest judgment and
-  top Anthropic advisor (with Sol). **Opus 5 is neither an advisor
+  top Anthropic advisor (with Astra). **Opus 5 is neither an advisor
   nor an orchestrator seat** (operator 2026-07-26) — it remains a complex-coding/deep-review
   dispatch seat only.
 - **Kimi K2.7** 256K — under the ~500K window we want for a driver. **Codex (GPT-5.6)** was

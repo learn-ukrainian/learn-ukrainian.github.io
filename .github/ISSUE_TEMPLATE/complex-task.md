@@ -32,6 +32,28 @@ assignees: ''
 ## Dependencies
 <!-- Blockers named, or `none` -->
 
+## Accountable driver
+<!-- Lane/seat that owns merge + DoD closeout -->
+
+## Stop / residual policy
+<!-- Failure halfway → who owns leftovers; or `none expected` -->
+
+## CF path
+<!-- Cross-family review lane (or named substitute) -->
+
+## Dispatch preflight (DoR B — before workers)
+- [ ] Monitor/API healthy for this task
+- [ ] Named task infra works (sources/VESUM/CI/… as needed)
+- [ ] Disk headroom proven (`df` + `.worktrees`)
+- [ ] Capacity check run (`python -m scripts.fleet.usage show`)
+- [ ] ≥2 non-orchestrator agents with headroom **when** terminal goal is merge/deploy/certify (roles named)
+- [ ] Target epic/stream not lease-wedged; WIP OK
+- [ ] Env/secrets present only if required (never print)
+- [ ] Preflight evidence dated (unknown ≠ green; refresh if capacity/leases moved)
+
+Canonical DoR: `docs/best-practices/task-quality.md` (card ∧ preflight).
+Operator everyday “ready” = DoD delivered, not this checklist.
+
 ## Acceptance Criteria / Definition of Done
 - [ ] Outcome verified against denominator (evidence on this issue)
 - [ ] Verify commands green (or N/A with reason)

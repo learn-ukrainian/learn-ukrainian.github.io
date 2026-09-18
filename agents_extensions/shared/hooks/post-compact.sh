@@ -39,7 +39,7 @@ emit_context() {
 if [ -n "${GROK_AGENT:-}" ] || [ "${SESSION_HANDOFF_AGENT:-}" = "grok" ] \
   || [ "${SESSION_HANDOFF_AGENT:-}" = "grok-build" ]; then
   _grok_ctx="KEY REMINDERS (Grok post-compact, thin path):
-  - Fleet driver: dispatch with ROUTING_CARD_V1; default bounded work = Fable/Sol brief → heap/practical.
+  - Fleet driver: dispatch with ROUTING_CARD_V1; default bounded work = Fable/Astra brief → heap/practical.
   - Heavy atlas compute on VPS (atlas-runner), not the Mac.
   - Tool-backed claims only; breadth report before handoff.
   - Epic=${SESSION_EPIC:-none}"

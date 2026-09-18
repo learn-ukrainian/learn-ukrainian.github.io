@@ -66,6 +66,20 @@ tie-breakers.
    `agents_extensions/shared/contracts/task-lifecycle-closeout.md`.
    **Do not confuse with Definition of Ready (DoR)** — DoR is "may we start/dispatch";
    DoD is "may we close/claim finished."
+3b. **Definition of Ready (DoR) — may we start / dispatch.** DoR =
+   **task card green ∧ dispatch preflight green.** Canonical tables:
+   `docs/best-practices/task-quality.md` § DoR. Card includes GitHub issue with
+   description + acceptance criteria, outcome, scope, non-goals, denominator,
+   verify, accountable driver, stop/residual policy, and a named CF path.
+   Preflight is tool-backed: Monitor/API and *task* infra healthy, disk headroom
+   (disk wins over quota), live capacity check, ≥2 non-orchestrator workers with
+   headroom, fleet/lease usable, env/secrets only if required. Quality posture:
+   best practice first; lightest elegant design that meets the outcome — no
+   over-engineering. Everyday operator "**ready**" still means **DoD (§3a)**,
+   not DoR. Trivial chores may skip most of the card; do not dispatch into
+   ENOSPC or a dead dependency the chore needs. Epic/phase kickoffs still need
+   §14. Re-DoR on material scope change; re-preflight before a new worker wave
+   when disk/leases/capacity may have moved.
 
 4. **Utilize the whole fleet — together you are stronger.** Substantive design/decisions get
    ≥1 other agent BEFORE committing; solo only for trivial work. Two distinct duties, don't
@@ -76,7 +90,7 @@ tie-breakers.
    limits; cost is never a reason to hold back — passivity is the failure mode, not spend).
    **Driver routing is enforced** (operator GO 2026-08-06): every dispatch needs a
    `ROUTING_CARD_V1` (tier · model×harness · advisor packet · alternatives); default bounded
-   work is **authority brief (Fable or Sol) → heap/practical implement**, not a mid-brain
+   work is **authority brief (Fable or Astra) → heap/practical implement**, not a mid-brain
    solo marathon. Session breadth floor + handoff report:
    `fleet-driver-routing.md` + `python -m scripts.fleet.driver_breadth_report`.
 5. **Know each model's strengths and weaknesses; route by fit.** The canonical per-task routing
@@ -84,9 +98,11 @@ tie-breakers.
    constants — confirm current capability before relying on a specific string. Distinguish the
    MODEL from the HARNESS it rides in (see "Harness vs model" in `model-assignment.md`):
    hermes and opencode each host many models and add their own capabilities.
-   **Tiers:** authority (Fable/Sol) · practical (Terra/Sonnet/Flash-high) · heap (Luna and
+   **Tiers:** authority (Fable/Astra) · practical (Terra/Sonnet/Flash-high) · heap (Luna and
    weaker with a complete advisor packet). Fable remains the Anthropic authority seat even
    under a small Claude sub — reach via native Claude pin or **Cursor → Fable**.
+   **Kimi** is an additional design/coding consult lane for **non-Ukrainian** work (infra,
+   harness, product code) — not a substitute for Fable/Astra on new architecture GO.
 6. **Limits happen — handle them.** Providers rate-limit and quota out; that is normal
    operations, not an outage. On limit: check `/api/orient` runtime headroom; for
    Claude/Codex budget buckets at `near_cap`, substitute per
@@ -151,15 +167,18 @@ tie-breakers.
 12. **Advisor / operator approval gate (binding) — new decisions only.** Agents must **not**
     invent or unilaterally adopt **new** architecture, local layout, process, or policy
     without **present-tense approval** from the **operator** or a designated **advisor**.
-    Current advisors: **Fable** and **Sol** (roster may change — do not hard-code forever;
-    confirm via `/api/rules` / `model-assignment.md` when unsure). Fable is a summoned design
-    advisor, not a standing reviewer or routing default. Discussion/panels improve quality but
-    do **not** replace advisor approval for design. This gate governs *deciding*, not
-    *implementing*: once the operator or an advisor has ordered or approved the work, item 10
-    governs — drive it to a complete outcome without re-opening a GO request. Routine
-    implementation of already-queued work does not need a new advisor turn. Slicing an
-    already-approved user-visible outcome into PR-sized stages is item-10 disobedience,
-    not an extra exemption from this gate; unrelated outcomes stay in other PRs.
+    Current designated advisors: **Fable** and **Astra** (roster may change — confirm via
+    `/api/rules` / `model-assignment.md` when unsure; do not treat stale digests as roster).
+    **Kimi** may be consulted for design and coding on **non-Ukrainian** surfaces (infra,
+    harness, product code); Kimi does not alone satisfy item-12 architecture GO — that remains
+    operator / Fable / Astra. Fable is a summoned design advisor, not a standing reviewer or
+    routing default. Discussion/panels improve quality but do **not** replace advisor approval
+    for design. This gate governs *deciding*, not *implementing*: once the operator or an
+    advisor has ordered or approved the work, item 10 governs — drive it to a complete outcome
+    without re-opening a GO request. Routine implementation of already-queued work does not
+    need a new advisor turn. Slicing an already-approved user-visible outcome into PR-sized
+    stages is item-10 disobedience, not an extra exemption from this gate; unrelated outcomes
+    stay in other PRs.
     Violations: shipping
     helpers/layouts/process "for now", redefining primary-checkout semantics, flipping gates
     without an advisor record, or citing this gate to pause already-decided implementation.

@@ -69,4 +69,4 @@ Use `codexbar` to verify model credits, rate limits, and availability before dis
 
 ## Advisor Approval Gate
 
-All architecture, file layout, and process decisions require approval from designated advisors (**Fable**, **Sol**). Gemini orchestrators manage task breakdown, fleet routing, and verification, but must consult advisors for structural decisions.
+All architecture, file layout, and process decisions require approval from designated advisors (**Fable**, **Astra**). Gemini orchestrators manage task breakdown, fleet routing, and verification, but must consult advisors for structural decisions.

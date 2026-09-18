@@ -707,10 +707,14 @@ Use the live catalog and validated runtime profile for supported effort values, 
 capacity, and transport capabilities. A model name or historical context window grants
 no filesystem, tool, or driver authority.
 
-The compatibility key `execution_routing.sol_advised_bounded` retains its name; its
-current model selections come from the catalog. Historical Sol, Terra, and Luna evidence
-remains historical and does not authorize a fallback or transfer qualification to Astra.
-All are OpenAI-family models and cannot satisfy independent CF for an OpenAI-authored PR.
+The compatibility key `execution_routing.sol_advised_bounded` retains its name
+(historical; do not treat "Sol" in the key as the live advisor seat). Current
+designated advisors are **Fable** and **Astra**; **Kimi** consults non-Ukrainian
+design/coding only and does not alone satisfy architecture GO. Model selections
+for this route come from the catalog (`gpt-6-astra`). Historical Sol, Terra, and
+Luna evidence remains historical and does not authorize a fallback or transfer
+qualification to Astra. All are OpenAI-family models and cannot satisfy
+independent CF for an OpenAI-authored PR.
 
 ## Claude reviewer-seat economics (2026-06-12)
 
