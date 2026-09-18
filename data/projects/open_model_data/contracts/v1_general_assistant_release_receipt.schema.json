@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_general_assistant_release_receipt.schema.json",
+  "title": "v1_general_assistant_release_receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "issue",
+    "parent_epic",
+    "created_at",
+    "git_commit",
+    "evaluation_benchmark",
+    "sft_training_dataset",
+    "invariants_verified"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v1_general_assistant_release_receipt"
+    },
+    "issue": {
+      "type": "integer",
+      "const": 8139
+    },
+    "parent_epic": {
+      "type": "integer",
+      "const": 6321
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "git_commit": {
+      "type": "string"
+    },
+    "evaluation_benchmark": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "directory_path",
+        "manifest_file",
+        "manifest_sha256",
+        "shards_count",
+        "total_cases",
+        "max_shard_size_kb",
+        "held_out_books_count",
+        "held_out_books",
+        "subject_distribution",
+        "domain_distribution"
+      ],
+      "properties": {
+        "directory_path": {
+          "type": "string"
+        },
+        "manifest_file": {
+          "type": "string"
+        },
+        "manifest_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "shards_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "total_cases": {
+          "type": "integer",
+          "const": 2500
+        },
+        "max_shard_size_kb": {
+          "type": "number",
+          "maximum": 2000.0
+        },
+        "held_out_books_count": {
+          "type": "integer",
+          "minimum": 15
+        },
+        "held_out_books": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "subject_distribution": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "domain_distribution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["stem", "humanities"],
+          "properties": {
+            "stem": { "type": "integer", "minimum": 500 },
+            "humanities": { "type": "integer", "minimum": 500 }
+          }
+        }
+      }
+    },
+    "sft_training_dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "directory_path",
+        "manifest_file",
+        "manifest_sha256",
+        "shards_count",
+        "total_trajectories",
+        "max_shard_size_kb",
+        "books_count",
+        "subject_distribution",
+        "domain_distribution"
+      ],
+      "properties": {
+        "directory_path": {
+          "type": "string"
+        },
+        "manifest_file": {
+          "type": "string"
+        },
+        "manifest_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "shards_count": {
+          "type": "integer",
+          "const": 150
+        },
+        "total_trajectories": {
+          "type": "integer",
+          "const": 75000
+        },
+        "max_shard_size_kb": {
+          "type": "number",
+          "maximum": 2000.0
+        },
+        "books_count": {
+          "type": "integer",
+          "minimum": 100
+        },
+        "subject_distribution": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "domain_distribution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["stem", "humanities"],
+          "properties": {
+            "stem": { "type": "integer", "minimum": 20000 },
+            "humanities": { "type": "integer", "minimum": 20000 }
+          }
+        }
+      }
+    },
+    "invariants_verified": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "zero_train_eval_leakage",
+        "textbook_partitioning_enforced",
+        "stem_humanities_coverage",
+        "entity_preservation_volume_ratio",
+        "pravopys_2019_verified",
+        "gate6_pedagogy_tone_verified",
+        "precommit_file_ceiling_satisfied"
+      ],
+      "properties": {
+        "zero_train_eval_leakage": {
+          "const": true
+        },
+        "textbook_partitioning_enforced": {
+          "const": true
+        },
+        "stem_humanities_coverage": {
+          "const": true
+        },
+        "entity_preservation_volume_ratio": {
+          "const": true
+        },
+        "pravopys_2019_verified": {
+          "const": true
+        },
+        "gate6_pedagogy_tone_verified": {
+          "const": true
+        },
+        "precommit_file_ceiling_satisfied": {
+          "const": true
+        }
+      }
+    }
+  }
+}
