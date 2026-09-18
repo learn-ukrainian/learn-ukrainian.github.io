@@ -268,6 +268,169 @@ claim_session_supervisor_env "epic:9999" "test-agent" "test-harness" "" "" "{pro
     assert supervisor_args[supervisor_args.index("--host-id") + 1] == "local"
 
 
+def _live_session_fake_python(capture: Path, counter: Path) -> str:
+    ok = (
+        '{"schema":"session-supervisor-bootstrap.v1","identity":{"role":"driver",'
+        '"stream_id":"epic:9999","lease":{"session_id":"sess-shell-790",'
+        '"lease_id":"lease-shell-790","generation":4,"fencing_token":4,'
+        '"expires_at":"2026-07-21T03:00:00Z"}},"rollover":null,"digest":{},'
+        '"dual_write":{},"diagnostics":{}}'
+    )
+    return f"""#!/usr/bin/env bash
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.api.occupancy_local" && "${{3:-}}" == "resolve-host-id" ]]; then
+  printf '%s\\n' "host-job"
+  exit 0
+fi
+if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" ]]; then
+  printf '%s\\n' "CMD:$3" >> "{capture}"
+  printf '%s\\n' -- "$@" >> "{capture}"
+  printf '%s\\n' "---" >> "{capture}"
+  if [[ "$3" == "release" ]]; then
+    printf '%s\\n' '{{"outcome":"force_released"}}'
+    exit 0
+  fi
+  if [[ "$3" == "open" ]]; then
+    count=0
+    if [[ -f "{counter}" ]]; then
+      count=$(cat "{counter}")
+    fi
+    count=$((count + 1))
+    printf '%s' "$count" > "{counter}"
+    if [[ "$count" -eq 1 ]]; then
+      echo "stream epic:9999 already has live session sess-held (open)" >&2
+      exit 1
+    fi
+    printf '%s\\n' '{ok}'
+    exit 0
+  fi
+fi
+if [[ "$1" == "-c" ]]; then
+  shift
+  exec /usr/bin/env python3 -c "$@"
+fi
+if [[ "$1" == "-" ]]; then
+  shift
+  exec /usr/bin/env python3 - "$@"
+fi
+echo "unexpected python args: $*" >&2
+exit 1
+"""
+
+
+def test_claim_without_force_prints_takeover_hint(tmp_path: Path) -> None:
+    project, _capture = _build_fake_project(tmp_path)
+    capture = tmp_path / "live_capture.txt"
+    counter = tmp_path / "open_count.txt"
+    _write_executable(project / ".venv" / "bin" / "python", _live_session_fake_python(capture, counter))
+    script = f"""
+set -euo pipefail
+source "{project}/scripts/lib/session_supervisor.sh"
+claim_session_supervisor_env "epic:9999" "test-agent" "test-harness" "test-task" "test-instance" "{project}" "start-grok-driver.sh" "infra"
+"""
+    result = subprocess.run(
+        ["bash", "-c", script],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+        env=_clean_environ(),
+    )
+    assert result.returncode == 1, result.stderr + result.stdout
+    assert "already has live session" in result.stderr
+    assert "./start-grok-driver.sh --epic infra --force" in result.stderr
+    assert "scripts.session_supervisor release --role driver --force" in result.stderr
+    assert "CMD:release" not in capture.read_text(encoding="utf-8")
+
+
+def test_claim_with_force_releases_then_opens(tmp_path: Path) -> None:
+    project, _capture = _build_fake_project(tmp_path)
+    capture = tmp_path / "force_capture.txt"
+    counter = tmp_path / "open_count.txt"
+    _write_executable(project / ".venv" / "bin" / "python", _live_session_fake_python(capture, counter))
+    script = f"""
+set -euo pipefail
+source "{project}/scripts/lib/session_supervisor.sh"
+LC_DRIVER_FORCE=1
+claim_session_supervisor_env "epic:9999" "test-agent" "test-harness" "test-task" "test-instance" "{project}" "start-grok-driver.sh" "infra"
+printf 'SESSION=%s\\n' "$SESSION_STREAM_SESSION_ID"
+"""
+    result = subprocess.run(
+        ["bash", "-c", script],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+        env=_clean_environ(),
+    )
+    assert result.returncode == 0, result.stderr + result.stdout + "\n" + capture.read_text(encoding="utf-8")
+    assert "SESSION=sess-shell-790" in result.stdout
+    assert "attributed --force release" in result.stderr
+    log = capture.read_text(encoding="utf-8")
+    assert log.count("CMD:open") == 2
+    assert log.count("CMD:release") == 1
+    assert "--reason" in log
+    assert "operator force takeover via start-grok-driver.sh (#8229)" in log
+    assert "--actor-agent" in log
+    assert "test-agent" in log
+
+
+def test_claim_force_is_ignored_on_supervisory_wake(tmp_path: Path) -> None:
+    project, _capture = _build_fake_project(tmp_path)
+    capture = tmp_path / "wake_capture.txt"
+    counter = tmp_path / "open_count.txt"
+    _write_executable(project / ".venv" / "bin" / "python", _live_session_fake_python(capture, counter))
+    watch_dir = project / "scripts" / "ai_agent_bridge"
+    watch_dir.mkdir(parents=True)
+    _write_executable(
+        watch_dir / "inbox_watch.sh",
+        "#!/usr/bin/env bash\nprintf '%s\\n' '{\"session_id\":\"sess-wake\",\"generation\":4}'\n",
+    )
+    script = f"""
+set -euo pipefail
+source "{project}/scripts/lib/session_supervisor.sh"
+LC_DRIVER_FORCE=1
+SESSION_SUPERVISOR_WAKE_DELIVERY=delivery-wake-1
+SESSION_SUPERVISOR_WAKE_STREAM=epic:9999
+claim_session_supervisor_env "epic:9999" "test-agent" "test-harness" "test-task" "test-instance" "{project}" "start-grok-driver.sh" "infra"
+"""
+    result = subprocess.run(
+        ["bash", "-c", script],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+        env=_clean_environ(),
+    )
+    assert result.returncode == 1, result.stderr + result.stdout
+    assert "already has live session" in result.stderr
+    assert "supervisory successor launches cannot --force" in result.stderr
+    log = capture.read_text(encoding="utf-8")
+    assert "CMD:release" not in log
+    assert log.count("CMD:open") == 1
+
+
+def test_launcher_drops_force_from_successor_args() -> None:
+    script = f"""
+set -euo pipefail
+source "{_REPO_ROOT}/scripts/lib/launcher_core.sh"
+LC_DRIVER_ORIGINAL_ARGS=(--epic infra --force --model grok-4.6 -- --force)
+launcher_drop_force_from_successor_args
+printf 'COUNT=%s\\n' "${{#LC_DRIVER_ORIGINAL_ARGS[@]}}"
+printf 'ARGS=%s\\n' "${{LC_DRIVER_ORIGINAL_ARGS[*]}}"
+"""
+    result = subprocess.run(
+        ["bash", "-c", script],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+        env=_clean_environ(),
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
+    assert "COUNT=6" in result.stdout
+    assert "ARGS=--epic infra --model grok-4.6 -- --force" in result.stdout
+
+
 def test_claim_fails_closed_on_missing_required_fields(tmp_path: Path) -> None:
     project, _supervisor_capture = _build_fake_project(tmp_path)
     # Replace fake python with one that returns an incomplete lease.

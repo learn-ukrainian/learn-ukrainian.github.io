@@ -159,6 +159,17 @@ for operator review and are never swept automatically.
 3. If the remote holder remains unexpired, **stop** — wait for expiry or an
    attributed operator release, regardless of local PID observations. An
    unavailable remote endpoint is unknown authority, not proof of release.
+   Operator takeover (predecessor did not hand off) is launcher `--force`,
+   which calls `session_supervisor release --force` then claims a **new**
+   session. Live drivers must not pass `--force` or `handoff-claim`.
+
+   ```bash
+   ./start-grok-driver.sh --epic infra --force
+   # equivalent supervisor CLI:
+   .venv/bin/python -m scripts.session_supervisor release --role driver --force \
+     --stream epic:6943 --actor-agent operator --actor-host-id "$LU_MONITOR_HOST_ID" \
+     --reason "operator force takeover"
+   ```
 4. Read the remote digest surfaced at SessionStart and fold it into your handoff file.
 5. Bind exact rollover IDs if any, then drive.
 6. Append a typed `POST …/handoff` after each batch and cleanly release on end.

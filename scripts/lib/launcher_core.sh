@@ -35,7 +35,7 @@ launcher_usage() {
   case "$LC_PROVIDER:$LC_MODE" in
     kimi:interactive) example_three='./start-kimicc.sh --endpoint coding' ;;
     glm:interactive) example_three='./start-glmcc.sh --endpoint coding' ;;
-    *:driver) example_three="./${name} --epic devops" ;;
+    *:driver) example_three="./${name} --epic devops"$'\n'"  ./${name} --epic infra --force" ;;
     *) example_three="./start-${LC_PROVIDER}-driver.sh --epic devops" ;;
   esac
   cat <<EOF
@@ -56,6 +56,9 @@ Options:
                              Other providers ignore.
   --harness HARNESS          Provider harness (default: ${LC_HARNESS}).
   --epic SELECTOR            Driver lane only; for example: devops or atlas.
+  --force                    Driver only. Attributed operator release of a live
+                             predecessor lease, then claim. Use when the previous
+                             driver did not hand off. Live drivers must not pass it.
   --governor SELECTOR        Codex driver only; one lease-free Sol cycle (AUTO allowed).
   --endpoint NAME            Kimi/GLM route endpoint: coding or platform.
   --isolate-config           Kimi/GLM Claude-Code config isolation (default).
@@ -277,6 +280,7 @@ launcher_defaults() {
   LC_DRY_RUN="${LAUNCHER_DRY_RUN:-0}"
   LC_EPIC=""
   LC_GOVERNOR="0"
+  LC_DRIVER_FORCE=0
   LC_DRIVER_LEASE_CLAIMED=0
   LC_HARNESS_EXPLICIT=0
   LC_FORWARD_ARGS=()
@@ -286,6 +290,33 @@ launcher_need_value() {
   if [ -z "${2:-}" ]; then
     launcher_error "$1 requires a value; run --help."
     exit 2
+  fi
+}
+
+launcher_drop_force_from_successor_args() {
+  # --force is a one-shot operator takeover. Supervisory successor execs replay
+  # LC_DRIVER_ORIGINAL_ARGS; leaving launcher --force there can evict a later
+  # legitimate holder (#8229 CF). Provider args after `--` are forwarded
+  # verbatim and must keep a literal --force.
+  local arg past_dd=0
+  local -a kept=()
+  for arg in "${LC_DRIVER_ORIGINAL_ARGS[@]+"${LC_DRIVER_ORIGINAL_ARGS[@]}"}"; do
+    if [ "$past_dd" = "1" ]; then
+      kept+=("$arg")
+      continue
+    fi
+    if [ "$arg" = "--" ]; then
+      past_dd=1
+      kept+=("$arg")
+      continue
+    fi
+    [ "$arg" = "--force" ] && continue
+    kept+=("$arg")
+  done
+  if [ "${#kept[@]}" -gt 0 ]; then
+    LC_DRIVER_ORIGINAL_ARGS=("${kept[@]}")
+  else
+    LC_DRIVER_ORIGINAL_ARGS=()
   fi
 }
 
@@ -328,6 +359,7 @@ launcher_parse() {
         shift 2
         ;;
       --epic=*) LC_EPIC="${1#*=}"; shift ;;
+      --force) LC_DRIVER_FORCE=1; shift ;;
       --governor)
         # Preserve the historical `--governor --help` form: help is a launcher
         # request, not a selector named "--help".
@@ -416,6 +448,10 @@ launcher_validate_mode() {
   if [ "$LC_MODE" = "interactive" ]; then
     if [ -n "$LC_EPIC" ]; then
       launcher_error "interactive launchers reject --epic; use start-${LC_PROVIDER}-driver.sh."
+      exit 2
+    fi
+    if [ "$LC_DRIVER_FORCE" = "1" ]; then
+      launcher_error "interactive launchers reject --force; use start-${LC_PROVIDER}-driver.sh --epic SELECTOR --force."
       exit 2
     fi
     if [ "$LC_GOVERNOR" = "1" ]; then
@@ -537,6 +573,9 @@ launcher_claim_driver_lease() {
   launcher_prepare_driver_identity
   if [ "$LC_DRY_RUN" = "1" ]; then
     printf 'launcher: would claim lease stream=%s agent=%s harness=%s\n' "$stream" "$LC_PROVIDER" "$LC_DRIVER_HARNESS"
+    if [ "${LC_DRIVER_FORCE:-0}" = "1" ]; then
+      printf 'launcher: would force-release any live holder on %s then claim\n' "$stream"
+    fi
     launcher_cursor_observer_presence
     return 0
   fi
@@ -987,6 +1026,7 @@ launcher_main() {
   launcher_clear_foreign_route_state
   launcher_defaults
   launcher_parse "$@"
+  launcher_drop_force_from_successor_args
   launcher_normalize_model
   launcher_normalize_effort
   # Provider adapters are sourced dynamically and consume these values.
