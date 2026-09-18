@@ -2571,24 +2571,49 @@ def test_review_pr_number_reads_the_encoded_pull_request() -> None:
     assert rw.review_pr_number(None) is None
 
 
-def test_select_orphaned_sandboxes_keeps_live_and_young_reviews(tmp_path: Path) -> None:
+def test_select_orphaned_sandboxes_kills_only_a_quiet_orphan(tmp_path: Path) -> None:
     worktrees = tmp_path / ".worktrees" / "dispatch" / "codex" / "review-8154-astra"
     worktrees.mkdir(parents=True)
-    old = rw.SandboxProcess(
-        pid=11, ppid=1, comm="codex-linux-sandbox", cwd=worktrees, age_s=8000
+    now = 1_000_000.0
+    quiet = rw.SandboxProcess(
+        pid=11,
+        ppid=1,
+        comm="codex-linux-sandbox",
+        cwd=worktrees,
+        age_s=30,
+        workspace_mtime=now - 600,
     )
-    young = rw.SandboxProcess(
-        pid=12, ppid=1, comm="codex-linux-sandbox", cwd=worktrees, age_s=30
+    still_writing = rw.SandboxProcess(
+        pid=12,
+        ppid=1,
+        comm="codex-linux-sandbox",
+        cwd=worktrees,
+        age_s=8000,
+        workspace_mtime=now - 10,
     )
-    owned = rw.SandboxProcess(
-        pid=13, ppid=50, comm="codex-linux-sandbox", cwd=worktrees, age_s=90000
+    long_owned = rw.SandboxProcess(
+        pid=13,
+        ppid=50,
+        comm="codex-linux-sandbox",
+        cwd=worktrees,
+        age_s=150_000,
+        workspace_mtime=now - 10_000,
     )
-    other = rw.SandboxProcess(pid=14, ppid=1, comm="node", cwd=worktrees, age_s=90000)
+    other = rw.SandboxProcess(
+        pid=14, ppid=1, comm="node", cwd=worktrees, age_s=90000, workspace_mtime=0
+    )
     outside = rw.SandboxProcess(
-        pid=15, ppid=1, comm="codex-linux-sandbox", cwd=tmp_path, age_s=90000
+        pid=15,
+        ppid=1,
+        comm="codex-linux-sandbox",
+        cwd=tmp_path,
+        age_s=90000,
+        workspace_mtime=0,
     )
     assert rw.select_orphaned_sandboxes(
-        [old, young, owned, other, outside], repo_root=tmp_path
+        [quiet, still_writing, long_owned, other, outside],
+        repo_root=tmp_path,
+        now=now,
     ) == [11]
 
 

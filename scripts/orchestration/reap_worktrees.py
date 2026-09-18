@@ -35,10 +35,12 @@ from scripts.orchestration import reaper_lifecycle
 from scripts.path_safety import assert_delete_target
 
 DEFAULT_BUILD_AGE_HOURS = 6
-# Same bound as delegate's default hard timeout. A Codex sandbox reparented to
-# init after the review agent exits must not keep a CPU pinned past this.
-ORPHAN_SANDBOX_MAX_AGE_S = 7200
+# After the owning agent exits, a sandbox can keep a CPU pinned with no new
+# work. This is only the flush window, not a session cap: a live owner is
+# never killed, however long the session has already run.
+ORPHAN_IDLE_GRACE_S = 120
 _ORPHAN_SANDBOX_COMM = "codex-linux-sandbox"
+_WORKSPACE_MTIME_SKIP = frozenset({".git", "node_modules", ".venv", "__pycache__"})
 _REVIEW_PR_RE = re.compile(r"(?:^|/)review-(\d+)(?:-|$)")
 
 _GIT_ENV_DENYLIST = {
@@ -380,37 +382,60 @@ def _query_pr_by_number(repo_root: Path, number: int) -> tuple[list[PullRequestS
 
 @dataclass(frozen=True)
 class SandboxProcess:
-    """One process row used to decide whether a Codex sandbox is orphaned."""
+    """One process row used to decide whether a Codex sandbox is still working."""
 
     pid: int
     ppid: int
     comm: str
     cwd: Path | None
     age_s: float
+    workspace_mtime: float | None = None
+
+
+def latest_workspace_mtime(root: Path) -> float | None:
+    """Newest mtime under ``root``, skipping VCS and dependency trees."""
+    try:
+        latest = root.stat().st_mtime
+    except OSError:
+        return None
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirnames[:] = [name for name in dirnames if name not in _WORKSPACE_MTIME_SKIP]
+        for name in filenames:
+            try:
+                mtime = os.stat(os.path.join(dirpath, name)).st_mtime
+            except OSError:
+                continue
+            if mtime > latest:
+                latest = mtime
+    return latest
 
 
 def select_orphaned_sandboxes(
     processes: list[SandboxProcess],
     *,
     repo_root: Path,
-    max_age_s: float = ORPHAN_SANDBOX_MAX_AGE_S,
+    now: float,
+    idle_grace_s: float = ORPHAN_IDLE_GRACE_S,
 ) -> list[int]:
-    """Return pids of init-reparented Codex sandboxes pinned under ``.worktrees``.
+    """Return pids of Codex sandboxes whose agent is no longer working.
 
-    A live review still owns its sandbox (ppid != 1). Once the agent exits,
-    the sandbox is reparented to init and can spin forever. Age below the cap
-    is left alone so a just-orphaned process can still flush.
+    A live owner (ppid != 1) is a running session and is never selected, at
+    any age. An init-reparented sandbox is selected only when its worktree
+    has also gone quiet, so a leftover that is still writing can finish.
     """
     worktrees = (repo_root / ".worktrees").resolve()
     selected: list[int] = []
     for proc in processes:
-        if proc.comm != _ORPHAN_SANDBOX_COMM or proc.ppid != 1:
-            continue
-        if proc.age_s < max_age_s or proc.cwd is None:
+        if proc.comm != _ORPHAN_SANDBOX_COMM or proc.ppid != 1 or proc.cwd is None:
             continue
         try:
             proc.cwd.resolve().relative_to(worktrees)
         except (OSError, ValueError):
+            continue
+        if (
+            proc.workspace_mtime is not None
+            and (now - proc.workspace_mtime) < idle_grace_s
+        ):
             continue
         selected.append(proc.pid)
     return selected
@@ -475,6 +500,7 @@ def _read_sandbox_processes(proc_root: Path = Path("/proc")) -> list[SandboxProc
                 comm=comm,
                 cwd=cwd,
                 age_s=age_s,
+                workspace_mtime=latest_workspace_mtime(cwd) if cwd is not None else None,
             )
         )
     return found
@@ -514,18 +540,20 @@ def _descendant_pids(root_pid: int, proc_root: Path = Path("/proc")) -> list[int
 def stop_orphaned_sandboxes(
     repo_root: Path,
     *,
-    max_age_s: float = ORPHAN_SANDBOX_MAX_AGE_S,
+    now: float | None = None,
+    idle_grace_s: float = ORPHAN_IDLE_GRACE_S,
     proc_root: Path = Path("/proc"),
 ) -> list[int]:
-    """SIGKILL init-reparented Codex sandboxes that have outlived the hard timeout.
+    """SIGKILL Codex sandboxes whose owning agent is gone and no longer writing.
 
-    Returns the sandbox pids that were signaled. A live review (ppid != 1) is
-    never touched.
+    Returns the sandbox pids that were signaled. A sandbox still owned by its
+    agent is never touched, however long that session has been running.
     """
     selected = select_orphaned_sandboxes(
         _read_sandbox_processes(proc_root),
         repo_root=repo_root,
-        max_age_s=max_age_s,
+        now=time.time() if now is None else now,
+        idle_grace_s=idle_grace_s,
     )
     signaled: list[int] = []
     for pid in selected:
