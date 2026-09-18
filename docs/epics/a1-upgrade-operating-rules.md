@@ -67,6 +67,11 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
 
 ## Merge and live Pages (two different steps)
 
+- **CF review-fix before CI (operator 2026-09-18, fleet):** Astra (or other
+  exact-head CF) on the **branch** → fix → re-CF until APPROVE **before**
+  opening any PR (draft or ready — drafts still trigger CI here). Do not start
+  CI Gate on heads still in the CF fix loop. Canonical:
+  `agents_extensions/shared/rules/workflow.md` § Merge policy.
 - Merge gate: exact-head CF APPROVE **and** CI Gate green on that SHA, then
   `gh pr merge --squash` (merge queue). Never `--auto`. Never
   `--delete-branch` until `gh pr view` shows `MERGED`. Then reap worktrees.
@@ -74,11 +79,14 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
   (`deploy-pages.yml` eligibility) fail-closes on `curriculum/` and
   `site/src/content/` (`content_drift` / `unknown_path`). That is
   intentional: merge ≠ community rollout.
-- When the operator wants it live:
-  `gh workflow run deploy-pages.yml --ref main`
-  Then prove the learner URL is **200** (e.g.
-  `https://learn-ukrainian.github.io/a1/<slug>/1/`). Do not claim live from
-  a skipped deploy job or from `/a1/` index 200 alone.
+- **Continuous deploy (operator 2026-09-18):** after a content merge that
+  should be live, the driver runs
+  `gh workflow run deploy-pages.yml --ref main`, proves the learner URL(s)
+  **200** (full module paths, not a single lesson), **notifies** the operator,
+  and continues — do **not** wait for a per-cutover GO or create a deploy
+  bottleneck. Operator checks async.
+  Example prove: `https://learn-ukrainian.github.io/a1/<slug>/{,1,2,…}/`.
+  Do not claim live from a skipped deploy job or from `/a1/` index 200 alone.
 
 ## Writer / reviewer split (do not swap hats)
 
@@ -99,11 +107,13 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
   advanced" for A1. Do not add a repeating "we will explain this later" line
   on every such mention.
 - **Outcome, not engine-on-main:** the unit of done is a published
-  `/a1/<slug>/` — content PR, CF, green CI, merge, and manual
-  `deploy-pages.yml` cutover (see Merge and live Pages above). Landing the
+  `/a1/<slug>/` **full module** (landing + every lesson), not a lesson subset
+  — content on branch → Astra CF review-fix → ready PR → green CI → merge →
+  continuous `deploy-pages.yml` (see Merge and live Pages above). Landing the
   build engine on `main` is not completion. Once gates pass in a worktree,
-  open the scripts-free content PR the same session — do not idle waiting
-  for a prompt.
+  push the scripts-free branch and start Astra CF the same session — do not
+  idle waiting for a prompt; open the PR only after CF APPROVE (no draft-before-CF
+  either — drafts still trigger CI).
 - **CF before any curriculum build (not upgrade-only):** exact-head CF must be
   clear on the prep the build depends on before `v7_build` / `--upgrade` /
   writer runs. CF feedback → fix → re-CF; do not rebuild while CF is still
