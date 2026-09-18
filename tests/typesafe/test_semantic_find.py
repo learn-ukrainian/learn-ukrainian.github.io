@@ -91,10 +91,29 @@ def test_find_tags_lines_and_asks_where_and_exists_questions():
 
     where = call["questions"]["where"]
     assert set(where.criteria) == {"L000", "L001"}
+    assert where.criteria["L000"] == "first line"
+    assert where.criteria["L001"] == "second line"
     assert "second line" in where.instructions
 
     exists = call["questions"]["exists"]
     assert "second line" in exists.instructions
+    assert getattr(exists, "criteria", None) in (None, {})
+
+
+def test_find_caps_choice_criteria_at_max_lines():
+    from scripts.typesafe.semantic_find import _MAX_CHOICE_LINES
+
+    lines = [f"line-{i}" for i in range(_MAX_CHOICE_LINES + 5)]
+    probs = {f"L{i:03d}": (1.0 if i == 0 else 0.0) for i in range(_MAX_CHOICE_LINES)}
+    client = _FakeClient(_FakeResponse(choice_probabilities=probs, noul=0.9))
+
+    result = find(lines, "query", client=client)
+
+    where = client.calls[0]["questions"]["where"]
+    assert len(where.criteria) == _MAX_CHOICE_LINES
+    assert all(isinstance(v, str) and v for v in where.criteria.values())
+    assert len(result["relevance"]) == len(lines)
+    assert result["relevance"][_MAX_CHOICE_LINES:] == [0.0] * 5
 
 
 def test_find_defaults_to_the_module_model_and_respects_an_override():

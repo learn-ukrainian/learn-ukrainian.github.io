@@ -22,6 +22,9 @@ from typing import Any, Protocol
 
 DEFAULT_MODEL = "jev-latest"
 _SECRET_PATH = Path.home() / ".secrets" / "typsafe-ai.key"
+# Cap Choice criteria size; TypeSafe Choice needs a closed set
+# (same bound as scripts/build/typesafe_curriculum.py pick_preparsed_value).
+_MAX_CHOICE_LINES = 24
 
 
 class _SystemOneClient(Protocol):
@@ -37,11 +40,11 @@ class _SystemOneClient(Protocol):
 
 
 def _question_primitives():
-    """Return Choice/Noul/NoulCriteria; stub when SDK absent (hermetic CI)."""
+    """Return Choice/Noul; stub when SDK absent (hermetic CI)."""
     try:
-        from typesafe_sdk import Choice, Noul, NoulCriteria
+        from typesafe_sdk import Choice, Noul
 
-        return Choice, Noul, NoulCriteria
+        return Choice, Noul
     except ImportError:  # pragma: no cover - exercised in CI without extra-index
         # Mirror the real SDK's public attribute surface (`.instructions`,
         # `.criteria`) so callers and tests work unchanged either way.
@@ -55,9 +58,7 @@ def _question_primitives():
                 self.instructions = instructions
                 self.criteria = criteria
 
-        NoulCriteria = dict
-
-        return Choice, Noul, NoulCriteria
+        return Choice, Noul
 
 
 def load_typesafe_api_key() -> str:
@@ -83,20 +84,30 @@ def _tag_lines(lines: Sequence[str]) -> str:
 
 
 def _where_question(lines: Sequence[str], query: str):
-    Choice, _Noul, _NoulCriteria = _question_primitives()
+    Choice, _Noul = _question_primitives()
+    # Descriptive criteria strings (required by TypeSafe Choice schema /
+    # fleet cookbook). Cap length to keep the closed set bounded.
+    capped = list(lines)[:_MAX_CHOICE_LINES]
+    criteria = {
+        _line_id(i): (line if len(line) <= 120 else line[:117] + "...")
+        for i, line in enumerate(capped)
+    }
     return Choice(
         instructions=f'Which line of the document contains the answer to: "{query}"?',
-        criteria={_line_id(i): None for i in range(len(lines))},
+        criteria=criteria,
     )
 
 
 def _exists_question(query: str):
-    _Choice, Noul, NoulCriteria = _question_primitives()
+    # Bare Noul(instructions=...) matches every other call site in this repo;
+    # do not import NoulCriteria (absent / unused elsewhere) inside the same
+    # try that also loads Choice/Noul — a missing symbol would silently stub all three.
+    _Choice, Noul = _question_primitives()
     return Noul(
-        instructions=f'Does any line of the document address or answer: "{query}"?',
-        criteria=NoulCriteria(
-            true="At least one line of the document states or directly implies the answer",
-            false="No line of the document addresses this",
+        instructions=(
+            f'Does any line of the document address or answer: "{query}"? '
+            "True if at least one line states or directly implies the answer; "
+            "false if no line addresses this."
         ),
     )
 
@@ -117,25 +128,33 @@ def find(
     Pass `client` (anything satisfying `_SystemOneClient`, e.g. a test fake)
     to skip talking to the real API; otherwise a `TypeSafeClient` is built
     from `TYPESAFE_API_KEY` and closed afterward.
+
+    At most ``_MAX_CHOICE_LINES`` lines are scored via Choice; longer documents
+    truncate the Choice set (Noul still sees the full tagged state).
     """
     if not lines:
         return {"exists": 0.0, "relevance": []}
 
     owns_client = client is None
     active_client = client if client is not None else _build_client()
+    scored_lines = list(lines)[:_MAX_CHOICE_LINES]
     try:
         response = active_client.system_one(
             state=_tag_lines(lines),
             questions={
-                "where": _where_question(lines, query),
+                "where": _where_question(scored_lines, query),
                 "exists": _exists_question(query),
             },
             model=model,
         )
         probabilities = response.choices["where"].probabilities
+        relevance = [probabilities.get(_line_id(i), 0.0) for i in range(len(scored_lines))]
+        # Pad so callers always get one score per input line.
+        if len(relevance) < len(lines):
+            relevance.extend([0.0] * (len(lines) - len(relevance)))
         return {
             "exists": response.nouls["exists"].noul,
-            "relevance": [probabilities.get(_line_id(i), 0.0) for i in range(len(lines))],
+            "relevance": relevance,
         }
     finally:
         if owns_client:
