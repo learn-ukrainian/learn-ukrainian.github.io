@@ -13,6 +13,7 @@ Covers:
 """
 
 import asyncio
+import hashlib
 import importlib.util
 import json
 import sys
@@ -1073,15 +1074,46 @@ class TestFileHashCaching:
     def test_sha256_of_file_waiting_callers_re_stat_inside_lock(self, server_module, tmp_path):
         """Callers waiting on lock must re-stat and cache the latest file state (#8221)."""
         test_file = tmp_path / "test_re_stat.bin"
-        test_file.write_bytes(b"state_1")
+        test_file.write_bytes(b"initial_state_payload")
         server_module._FILE_HASH_CACHE.clear()
 
-        # Caller 1 starts hashing under lock, mutates file while caller 2 waits
-        with server_module._FILE_HASH_LOCK:
-            # File is updated on disk while lock is held
-            test_file.write_bytes(b"state_2_updated")
-            # Lock is released when block exits
+        real_lock = server_module._FILE_HASH_LOCK
+        caller_blocked = threading.Event()
+        proceed_event = threading.Event()
 
-        # Calling _sha256_of_file now gets state_2_updated and correctly caches it
-        h = server_module._sha256_of_file(test_file)
-        assert server_module._sha256_of_file(test_file) == h
+        class HookedLock:
+            def __enter__(self):
+                # Caller has completed pre-lock stat and is now entering lock
+                caller_blocked.set()
+                assert proceed_event.wait(timeout=5.0)
+                return real_lock.__enter__()
+
+            def __exit__(self, *args):
+                return real_lock.__exit__(*args)
+
+        result_holder: dict[str, str] = {}
+
+        def worker():
+            result_holder["hash"] = server_module._sha256_of_file(test_file)
+
+        with patch.object(server_module, "_FILE_HASH_LOCK", HookedLock()):
+            t = threading.Thread(target=worker)
+            t.start()
+
+            # Wait until worker has completed pre-lock stat and reached lock
+            assert caller_blocked.wait(timeout=5.0)
+
+            # Mutate the file on disk while worker is blocked before lock
+            test_file.write_bytes(b"mutated_state_payload_updated")
+            proceed_event.set()
+
+            t.join(timeout=5.0)
+            assert not t.is_alive()
+
+        # Worker re-stated inside lock, hashed mutated payload, and successfully cached it
+        mutated_hash = hashlib.sha256(b"mutated_state_payload_updated").hexdigest()
+        assert result_holder["hash"] == mutated_hash
+
+        # Assert subsequent call hits cache without disk I/O
+        with patch("builtins.open", side_effect=AssertionError("Should hit cache")):
+            assert server_module._sha256_of_file(test_file) == mutated_hash
