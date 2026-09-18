@@ -65,9 +65,7 @@ QUESTIONS: dict[str, Any] = {
 
 
 def resolve_changed_paths(base: str, head: str, *, cwd: Path | None = None) -> list[str]:
-    raw = subprocess.check_output(
-        ["git", "diff", "--name-only", base, head], text=True, cwd=cwd, timeout=60
-    )
+    raw = subprocess.check_output(["git", "diff", "--name-only", base, head], text=True, cwd=cwd, timeout=60)
     return [line for line in raw.splitlines() if line]
 
 
@@ -82,8 +80,11 @@ def truncate_diff(diff: str, limit: int = MAX_DIFF_CHARS) -> str:
     return f"{diff[:limit]}\n...[truncated {dropped} more chars]"
 
 
-def build_state(paths: list[str], diff: str, event: str) -> dict[str, Any]:
-    return {"event": event, "changed_paths": paths, "diff": truncate_diff(diff)}
+def build_state(paths: list[str], diff: str, event: str, test_log: str | None = None) -> dict[str, Any]:
+    state: dict[str, Any] = {"event": event, "changed_paths": paths, "diff": truncate_diff(diff)}
+    if test_log is not None:
+        state["test_log"] = test_log
+    return state
 
 
 def call_system_one(
@@ -125,11 +126,11 @@ def _unit_float(value: Any, what: str) -> float:
     return number
 
 
-def evaluate(answers: Any) -> tuple[bool, str]:
-    """Compose the two raw answers into a pass/fail. Never logs secrets.
+def parse_answers(answers: Any) -> tuple[str, float, float]:
+    """Validate the raw answers; return ``(choice, confidence, high_risk)``.
 
     Raises ``MalformedResponse`` on an unexpected shape (null answers, invalid
-    confidence); callers treat that as an advisory skip.
+    confidence).
     """
     if not isinstance(answers, dict):
         raise MalformedResponse("answers is not an object")
@@ -142,15 +143,23 @@ def evaluate(answers: Any) -> tuple[bool, str]:
         raise MalformedResponse("readiness choice is not a string")
     confidence = _unit_float(readiness.get("confidence"), "confidence")
     high_risk = _unit_float(high_risk_answer.get("noul"), "high_risk")
+    return choice, confidence, high_risk
 
-    broken = choice == "broken"
-    should_fail = broken and (
-        confidence >= CHOICE_FAIL_CONFIDENCE or high_risk >= HIGH_RISK_FAIL_THRESHOLD
-    )
+
+def is_confident_break(choice: str, confidence: float, high_risk: float) -> bool:
+    return choice == "broken" and (confidence >= CHOICE_FAIL_CONFIDENCE or high_risk >= HIGH_RISK_FAIL_THRESHOLD)
+
+
+def evaluate(answers: Any) -> tuple[bool, str]:
+    """Compose the two raw answers into a pass/fail. Never logs secrets.
+
+    Callers treat ``MalformedResponse`` as an advisory skip.
+    """
+    choice, confidence, high_risk = parse_answers(answers)
+    should_fail = is_confident_break(choice, confidence, high_risk)
     verdict = "FAIL" if should_fail else "pass"
     summary = (
-        f"typesafe-jev triage: readiness={choice!r} confidence={confidence:.2f} "
-        f"high_risk={high_risk:.2f} -> {verdict}"
+        f"typesafe-jev triage: readiness={choice!r} confidence={confidence:.2f} high_risk={high_risk:.2f} -> {verdict}"
     )
     return should_fail, summary
 

@@ -90,6 +90,11 @@ Noul. High confidence → cheap seat; low confidence → Fable/Astra/human.
 
 Docs-only?, blocking vs nit?, evidence-missing?, scope-creep? → fewer review loops.
 
+`scripts/delegate.py dispatch --preflight-triage` is the pre-dispatch hook (#8183): it triages the
+candidate diff plus a bounded local test log before spawning a seat and exits 3 on a confident
+`broken_or_failing` verdict (missing key / API failure skips). It reuses the CI primitives; the
+`typesafe_pr_triage` CI job remains the advisory Gate job once a PR exists. Neither is CF or merge authority.
+
 ### 3.5 RAG / review / skills
 
 Passage keep/drop; citation supported?; pick at most one skill from a closed catalog.
