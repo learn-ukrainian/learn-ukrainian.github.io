@@ -27,10 +27,10 @@ inline:
     answer: комп'-ютер
   - word: здоро́в'я
     answer: здо-ров'я
-  - word: я́блуко
-    answer: яб-лу́ко
-  - word: по́їзд
-    answer: по-їзд
+  - word: свя́то
+    answer: свя-то
+  - word: буря́к
+    answer: бу-ряк
 - id: act-503
   type: match-up
   title: Етике́тні ви́рази та проща́ння — Etiquette formulas and farewells
@@ -55,72 +55,75 @@ inline:
   instruction: Обері́ть пра́вильний варіа́нт ві́дповіді за конте́кстом діало́гу. —
     Choose the correct answer based on dialogue context.
   items:
-  - prompt: Як Марко́ віта́є Окса́ну вде́нь? — How does Marko greet Oksana during
-      the day?
+  - prompt: Як Мар'я́на віта́є вчи́теля на уро́ці? — How does Mariana greet the teacher
+      in the lesson?
     options:
-    - text: До́брий день! — Good day!
+    - text: До́брий день, вчи́телю! — Good day, teacher!
       correct: true
-    - text: До́брий ве́чір! — Good evening!
+    - text: До́брий ве́чір, вчи́телю! — Good evening, teacher!
       correct: false
-    - text: До поба́чення! — Goodbye!
+    - text: До поба́чення, вчи́телю! — Goodbye, teacher!
       correct: false
-    explanation: «До́брий день!» — станда́ртне де́нне віта́ння. — "До́брий день!"
-      is the standard daytime greeting.
-  - prompt: Що відповіда́є Окса́на на віта́ння «До́брий день!»? — What does Oksana
-      reply to the greeting "Good day!"?
+    explanation: «До́брий день!» — станда́ртне де́нне віта́ння в украї́нській мо́ві.
+      — "До́брий день!" is the standard daytime greeting in Ukrainian.
+  - prompt: Як вчи́тель зверта́ється до Мар'я́ни? — How does the teacher address Mariana?
     options:
-    - text: До́брий день! — Good day!
+    - text: Мар'я́но — Mariana (vocative)
       correct: true
-    - text: На все до́бре! — All the best!
+    - text: Мар'я́на — Mariana (nominative)
       correct: false
-    - text: Будь ла́ска! — You are welcome!
+    - text: Марко́ — Marko
       correct: false
-    explanation: На віта́ння «До́брий день!» відповіда́ють «До́брий день!». — The
-      response to "До́брий день!" is "До́брий день!".
-  - prompt: Як Окса́на (жі́нка) ка́же, що ра́да ба́чити співрозмо́вника? — How does
-      Oksana (female) say she is glad to see someone?
+    explanation: 'В украї́нській мо́ві у зверта́нні вжива́ється кли́чний відмі́нок:
+      Мар''я́но. — In Ukrainian, the vocative case is used in direct address: Мар''я́но.'
+  - prompt: За що Мар'я́на дя́кує вчи́телю? — What does Mariana thank the teacher
+      for?
     options:
-    - text: Ра́да тебе́ ба́чити! — Glad to see you!
+    - text: Дя́кую за ціка́вий уро́к. — Thank you for the interesting lesson.
       correct: true
-    - text: Ра́дий тебе́ ба́чити! — Glad to see you!
+    - text: Дя́кую за смачну́ ка́ву. — Thank you for the tasty coffee.
       correct: false
-    - text: Ра́ді тебе́ ба́чити! — Glad to see you!
+    - text: Дя́кую за нови́й зо́шит. — Thank you for the new notebook.
       correct: false
-    explanation: Жіно́чий рід вимага́є фо́рму «ра́да» (female speaker). — Feminine
-      grammatical gender requires the form "ра́да" (female speaker).
-  - prompt: Як Марко́ (чолові́к) ка́же, що ра́дий ба́чити співрозмо́вницю? — How does
-      Marko (male) say he is glad to see someone?
+    explanation: Мар'я́на дя́кує вчи́телю за ціка́вий уро́к. — Mariana thanks the
+      teacher for the interesting lesson.
+  - prompt: Що ка́же вчи́тель про робо́ту Мар'я́ни? — What does the teacher say about
+      Mariana's work?
     options:
-    - text: Ра́дий тебе́ ба́чити! — Glad to see you!
+    - text: Ти сього́дні чудо́во працюва́ла. — You worked wonderfully today.
       correct: true
-    - text: Ра́да тебе́ ба́чити! — Glad to see you!
+    - text: Ти сього́дні відпочива́ла. — You rested today.
       correct: false
-    - text: Ра́до тебе́ ба́чити! — Glad to see you!
+    - text: Ти запізни́лася на уро́к. — You were late for the lesson.
       correct: false
-    explanation: Чолові́чий рід вимага́є фо́рму «ра́дий» (male speaker). — Masculine
-      grammatical gender requires the form "ра́дий" (male speaker).
-  - prompt: Що ка́жуть співрозмо́вники під час вві́чливого проща́ння? — What do speakers
-      say during polite parting?
+    explanation: Вчи́тель хва́лить учени́цю за чудо́ву пра́цю на уро́ці. — The teacher
+      praises the student for wonderful work in the lesson.
+  - prompt: Яку́ фо́рмулу вві́чливого проща́ння вжива́є Мар'я́на? — Which polite farewell
+      formula does Mariana use?
     options:
-    - text: До поба́чення! На все до́бре! — Goodbye! All the best!
+    - text: На все до́бре! До поба́чення! — All the best! Goodbye!
       correct: true
-    - text: До́брий день! Дя́кую! — Good day! Thank you!
+    - text: До́брий ра́нок! Будь ла́ска! — Good morning! Please!
       correct: false
     - text: Як спра́ви? Чудо́во! — How are things? Great!
       correct: false
-    explanation: «До поба́чення!» та «На все до́бре!» — фо́рмули проща́ння. — "До
-      поба́чення!" and "На все до́бре!" are parting formulas.
-  - prompt: Яке́ сло́во вжива́ється для ви́словлення по́вної та щи́рої подя́ки? —
-      Which word is used to express gratitude?
+    explanation: «На все до́бре!» та «До поба́чення!» — станда́ртні украї́нські фо́рмули
+      проща́ння. — "На все до́бре!" and "До поба́чення!" are standard Ukrainian farewell
+      formulas.
+  - prompt: Чому́ в і́мені Мар'я́на пи́шеться апо́строф? — Why is an apostrophe written
+      in the name Mariana?
     options:
-    - text: Дя́кую! — Thank you!
+    - text: Пі́сля р пе́ред я чу́ти [йа], тому́ пи́шеться апо́строф. — After р before
+        я [йа] is heard, so an apostrophe is written.
       correct: true
-    - text: Свя́то! — Holiday!
+    - text: Бо р пом'я́кшується пе́ред я. — Because р is softened before я.
       correct: false
-    - text: Перено́с! — Hyphenation!
+    - text: Бо в імена́х за́вжди ста́виться м'яки́й знак. — Because names always use
+        a soft sign.
       correct: false
-    explanation: «Дя́кую!» — головне́ сло́во вдя́чності в украї́нській мо́ві. — "Дя́кую!"
-      is the primary word of thanks in Ukrainian.
+    explanation: В і́мені Мар'я́на тверди́й при́голосний р розділя́ється апо́строфом
+      пе́ред я. — In the name Мар'я́на the hard consonant р is separated by an apostrophe
+      before я.
 - id: act-505
   type: group-sort
   title: 'Си́нтез: класифіка́ція за зна́ками — Synthesis: Classification by signs'
@@ -141,13 +144,13 @@ inline:
     - п'ять
     - бур'я́н
     name: Апо́строф (розді́льність) — Apostrophe (separation)
-  - label: Бу́кви Ї та Щ (два зву́ки) — Letters Ї and Щ (two sounds)
+  - label: Без зна́ка (зли́те чита́ння) — No sign (smooth reading)
     items:
-    - їжа́к
-    - по́їзд
-    - щу́ка
-    - борщ
-    name: Бу́кви Ї та Щ (два зву́ки) — Letters Ї and Щ (two sounds)
+    - буря́к
+    - свя́то
+    - цвях
+    - ло́жка
+    name: Без зна́ка (зли́те чита́ння) — No sign (smooth reading)
 workbook:
 - id: act-w5
   type: fill-in
@@ -161,18 +164,24 @@ workbook:
     - ''''
     - ь
     - без зна́ка — no sign
+    explanation: 'Апо́строф пи́шеться пі́сля твердо́го р пе́ред я: бур''я́н. — An
+      apostrophe is written after hard р before я: бур''я́н.'
   - sentence: комп___ютер
     answer: ''''
     options:
     - ''''
     - ь
     - без зна́ка — no sign
+    explanation: 'Апо́строф пи́шеться пі́сля губно́го п пе́ред ю: комп''ю́тер. — An
+      apostrophe is written after labial п before ю: комп''ю́тер.'
   - sentence: ім___я
     answer: ''''
     options:
     - ''''
     - ь
     - без зна́ка — no sign
+    explanation: 'Апо́строф пи́шеться пі́сля губно́го м пе́ред я: ім''я́. — An apostrophe
+      is written after labial м before я: ім''я́.'
   - sentence: У сло́ві мален_кий потрі́бен ___ . — In the word "мален_кий", […] is
       needed.
     answer: ь
@@ -180,6 +189,8 @@ workbook:
     - ь
     - ''''
     - без зна́ка — no sign
+    explanation: 'М''яки́й знак пом''я́кшує при́голосний н: мале́нький. — The soft
+      sign softens the consonant н: мале́нький.'
   - sentence: У сло́ві цвях пра́вильний ви́бір — ___ . — In the word "цвях", the correct
       choice is […].
     answer: без зна́ка — no sign
@@ -187,6 +198,8 @@ workbook:
     - без зна́ка — no sign
     - ''''
     - ь
+    explanation: У сло́ві цвях збіг при́голосних цв пе́ред я пи́шеться без зна́ка.
+      — In the word цвях the consonant cluster цв before я is written without a sign.
 - id: act-w6
   type: quiz
   title: Пра́вильна фо́рма — Correct form
@@ -247,7 +260,7 @@ workbook:
       an apostrophe; the other words here have no sign.
 - id: act-506
   type: unjumble
-  title: 'Складі́ть односкладо́ві слова́ — Unjumble: Single-syllable words'
+  title: 'Складі́ть слова́ — Unjumble: Words with special signs'
   instruction: Складі́ть пра́вильні украї́нські слова́ з по́даних лі́тер. — Form correct
     Ukrainian words from the given letters.
   items:
@@ -271,20 +284,24 @@ workbook:
     answer: сіль
   - words:
     - б
-    - о
-    - р
-    - щ
-    answer: борщ
-  - words:
-    - к
     - у
-    - щ
-    answer: кущ
+    - р
+    - я
+    - к
+    answer: буря́к
   - words:
-    - ч
-    - а
     - с
-    answer: час
+    - в
+    - я
+    - т
+    - о
+    answer: свя́то
+  - words:
+    - ц
+    - в
+    - я
+    - х
+    answer: цвях
 - id: act-507
   type: true-false
   title: Підсумко́ві те́зи мо́дуля — Final module statements
@@ -294,28 +311,30 @@ workbook:
   - statement: Знак Ь ніко́ли не відрива́ється від попере́дньої лі́тери при перено́сі.
       — The soft sign Ь is never separated from the preceding letter during hyphenation.
     correct: true
-    explanation: Знак Ь за́вжди залиша́ється з попере́днім при́голосним. — The soft
-      sign Ь always stays with the preceding consonant.
+    explanation: 'Знак Ь за́вжди залиша́ється з попере́днім при́голосним: паль-ці.
+      — The soft sign Ь always stays with the preceding consonant: паль-ці.'
   - statement: Апо́строф при перено́сі за́вжди залиша́ється з попере́дньою лі́терою.
       — The apostrophe always stays with the preceding letter during hyphenation.
     correct: true
-    explanation: Апо́строф не перено́ситься на насту́пний рядо́к. — The apostrophe
-      is never moved alone to the next line.
+    explanation: 'Апо́строф не перено́ситься на насту́пний рядо́к: Мар''-я́на, бур''-ян.
+      — The apostrophe is never moved alone to the next line: Мар''-я́на, бур''-ян.'
   - statement: Мо́жна залиша́ти одну́ лі́теру на рядку́ при перено́сі сло́ва. — You
       may leave a single letter on a line when hyphenating a word.
     correct: false
     explanation: Одну́ лі́теру ніко́ли не залиша́ють і не перево́дять на і́нший рядо́к.
       — A single letter is never left alone or carried alone to another line.
-  - statement: 'Лі́тера Ї за́вжди познача́є два зву́ки: [й] + [і]. — The letter Ї
-      always represents two sounds: [й] + [і].'
-    correct: true
-    explanation: Лі́тера Ї за будь-яки́х умо́в ма́є два зву́ки. — The letter Ї has
-      two sounds under all conditions.
-  - statement: Бу́ква Щ в украї́нській мо́ві вимовля́ється як м'яки́й звук. — The
-      letter Щ in Ukrainian is pronounced as a soft sound.
+  - statement: М'яки́й знак (ь) ма́є вла́сний голосни́й звук. — The soft sign (ь)
+      has its own vowel sound.
     correct: false
-    explanation: Щ — це ви́ключно тверда́ сполу́ка [ш] та [ч]. — Щ is exclusively
-      a hard blend of [ш] and [ч].
+    explanation: М'яки́й знак не ма́є вла́сного зву́ка; він лише́ пом'я́кшує попере́дній
+      при́голосний. — The soft sign has no sound of its own; it only softens the preceding
+      consonant.
+  - statement: Апо́строф вка́зує, що попере́дній при́голосний залиша́ється тверди́м.
+      — The apostrophe indicates that the preceding consonant remains hard.
+    correct: true
+    explanation: 'Апо́строф розділя́є зву́ки: при́голосний звучи́ть тве́рдо, а по́тім
+      чу́ти [й] + голосни́й. — The apostrophe separates sounds: the consonant sounds
+      hard, followed by [j] + vowel.'
   - statement: У сло́ві «свя́то» пи́шеться апо́строф. — An apostrophe is written in
       the word «свя́то».
     correct: false
@@ -323,47 +342,73 @@ workbook:
       There is no apostrophe in «свя́то» because [с] precedes [в].
 - id: act-508
   type: quiz
-  title: Си́нтез пра́вил мо́дуля — Module Synthesis Quiz
+  title: Си́нтез пра́вил перено́су та зна́ків — Synthesis Quiz
   instruction: Переві́рте знання́ особли́вих зна́ків та перено́су слів. — Test your
-    mastery of special signs and word hyphenation.
+    knowledge of special signs and word hyphenation.
   items:
-  - question: Чи мо́жна відрива́ти апо́строф від попере́дньої бу́кви при перено́сі?
+  - prompt: Чи мо́жна відрива́ти апо́строф від попере́дньої бу́кви при перено́сі?
       — Can the apostrophe be separated from the preceding letter during hyphenation?
     options:
-    - ні, не мо́жна — no, you cannot
-    - так, за́вжди мо́жна — yes, you always can
-    answer: ні, не мо́жна — no, you cannot
-  - question: Чи мо́жна відрива́ти м'яки́й знак від попере́дньої бу́кви при перено́сі?
+    - text: Ні, не мо́жна. — No, you cannot.
+      correct: true
+    - text: Так, за́вжди мо́жна. — Yes, you always can.
+      correct: false
+    - text: Лише́ у до́вгих слова́х. — Only in long words.
+      correct: false
+    explanation: 'Апо́строф за́вжди залиша́ється з попере́дньою лі́терою: Мар''-я́на.
+      — The apostrophe always stays with the preceding letter: Мар''-я́на.'
+  - prompt: Чи мо́жна відрива́ти м'яки́й знак від попере́дньої бу́кви при перено́сі?
       — Can the soft sign be separated from the preceding letter during hyphenation?
     options:
-    - ні, не мо́жна — no, you cannot
-    - так, за́вжди мо́жна — yes, you always can
-    answer: ні, не мо́жна — no, you cannot
-  - question: Як пра́вильно перенести́ сло́во «па́льці»? — What is the correct hyphenation
+    - text: Ні, не мо́жна. — No, you cannot.
+      correct: true
+    - text: Так, за́вжди мо́жна. — Yes, you always can.
+      correct: false
+    - text: Лише́ на поча́тку рядка́. — Only at the beginning of a line.
+      correct: false
+    explanation: 'М''яки́й знак за́вжди залиша́ється з попере́дньою лі́терою: паль-ці.
+      — The soft sign always stays with the preceding letter: паль-ці.'
+  - prompt: Як пра́вильно перенести́ сло́во «па́льці»? — What is the correct hyphenation
       for «па́льці»?
     options:
-    - паль-ці
-    - пал-ьці
-    - па-льці
-    answer: паль-ці
-  - question: Як пра́вильно перенести́ сло́во «Мар'я́на»? — What is the correct hyphenation
+    - text: паль-ці
+      correct: true
+    - text: пал-ьці
+      correct: false
+    - text: па-льці
+      correct: false
+    explanation: 'М''яки́й знак не відрива́ється від лі́тери л: паль-ці. — The soft
+      sign is not separated from the letter л: паль-ці.'
+  - prompt: Як пра́вильно перенести́ сло́во «Мар'я́на»? — What is the correct hyphenation
       for «Мар'я́на»?
     options:
-    - Мар'-я́на
-    - Мар-'я́на
-    - Ма-р'яна
-    answer: Мар'-я́на
-  - question: Як пра́вильно перенести́ сло́во «бур'я́н»? — What is the correct hyphenation
+    - text: Мар'-я́на
+      correct: true
+    - text: Мар-'я́на
+      correct: false
+    - text: Ма-р'яна
+      correct: false
+    explanation: 'Апо́строф не відрива́ється від лі́тери р: Мар''-я́на. — The apostrophe
+      is not separated from the letter р: Мар''-я́на.'
+  - prompt: Як пра́вильно перенести́ сло́во «бур'я́н»? — What is the correct hyphenation
       for «бур'я́н»?
     options:
-    - бур'-ян
-    - бур-'ян
-    - бу-р'ян
-    answer: бур'-ян
-  - question: Як пра́вильно перенести́ сло́во «дерев'я́ний»? — What is the correct
-      hyphenation for «дерев'я́ний»?
+    - text: бур'-ян
+      correct: true
+    - text: бур-'ян
+      correct: false
+    - text: бу-р'ян
+      correct: false
+    explanation: 'Апо́строф залиша́ється з попере́дньою лі́терою р: бур''-ян. — The
+      apostrophe stays with the preceding letter р: бур''-ян.'
+  - prompt: Як пра́вильно перенести́ сло́во «дерев'я́ний»? — What is the correct hyphenation
+      for «дерев'я́ний»?
     options:
-    - дере́-в'яний
-    - дере́в-'яний
-    - де-рев'яний
-    answer: дере́-в'яний
+    - text: дере́-в'яний
+      correct: true
+    - text: дере́в-'яний
+      correct: false
+    - text: де-рев'яний
+      correct: false
+    explanation: Безпе́чна моде́ль перено́су — дере́-в'яний. — The safe hyphenation
+      model is дере́-в'яний.

@@ -1,0 +1,71 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 5.0,
+      "evidence": "Eleven activities exceed the mapped ten, core vocabulary entries are missing, headings lack English, and preservation and lesson-5 closure remain unverified.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Here you only need the quick review that makes **ь** and apostrophe readable.",
+        "At the beginning of a word: **я́блуко** (apple) has two sounds: [й] + [а]."
+      ]
+    },
+    "naturalness": {
+      "score": 4.0,
+      "evidence": "Attempted VESUM and sources calls were blocked by approval policy, leaving gender, government, and example authenticity unverified under the required audit.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "**Ра́дий тебе́ ба́чити.** | Glad to see you (masculine). |",
+        "**Ось гаря́чий чай та сві́же я́блуко.** | Here is hot tea and a fresh apple."
+      ]
+    },
+    "decolonization": {
+      "score": 6.0,
+      "evidence": "The framing treats Ukrainian independently, but blocked sources checks prevent certifying freedom from Russian-pattern usage.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "The apostrophe is a Ukrainian reading instruction: do not soften the previous consonant;"
+      ]
+    },
+    "engagement": {
+      "score": 6.0,
+      "evidence": "Videos and dialogue provide variety, but repeated recognition quizzes dominate and every supposedly scrambled word already appears in correct letter order.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Watch the pronunciation video and repeat each word aloud.",
+        "Складі́ть пра́вильні украї́нські слова́ з лі́тер. — Arrange the letters to form correct Ukrainian words."
+      ]
+    },
+    "tone": {
+      "score": 7.0,
+      "evidence": "The voice avoids a named narrator and supplies bilingual dialogue support, but its closing assurance assumes mastery without evidence.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Today you can read every one of these combinations with ease."
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "REJECT",
+    "terminal_verdict": "PASS",
+    "failing_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
+    ],
+    "rejected_dims": [
+      "pedagogical",
+      "naturalness"
+    ],
+    "warning_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
+    ],
+    "min_score": 4.0,
+    "min_dim": "naturalness"
+  }
+}

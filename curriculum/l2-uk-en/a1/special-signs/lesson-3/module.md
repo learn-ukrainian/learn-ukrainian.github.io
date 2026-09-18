@@ -40,23 +40,10 @@ The letter **Ф ф** represents the voiceless labiodental fricative [f]. In nati
 
 Notice how these letters appear in real polite dialogues today (**сього́дні**) when greeting people and discussing family (**сім'я́**):
 
-> **Марко́:** До́брий день, Окса́но! Ра́дий тебе́ ба́чити. *(Good day, Oksana! Glad to see you.)*
-> **Окса́на:** До́брий день, Ма́рку! Як твоя́ сім'я́? *(Good day, Marko! How is your family?)*
-> **Марко́:** Дя́кую, усе́ чудо́во! Сього́дні вве́чері ми ї́демо на по́їзді в Ки́їв. *(Thank you, everything is great! Today evening we are taking a train to Kyiv.)*
-> **Окса́на:** Щасли́вої доро́ги! На все до́бре! *(Have a good trip! All the best!)*
-
-English support after the dialogue:
-
-| Ukrainian | English |
-| --- | --- |
-| **До́брий день, Окса́но!** | Good day, Oksana! |
-| **Ра́дий тебе́ ба́чити.** | Glad to see you. |
-| **До́брий день, Ма́рку!** | Good day, Marko! |
-| **Як твоя́ сім'я́?** | How is your family? |
-| **Дя́кую, усе́ чудо́во!** | Thank you, everything is great! |
-| **Сього́дні вве́чері ми ї́демо на по́їзді в Ки́їв.** | This evening we are traveling by train to Kyiv. |
-| **Щасли́вої доро́ги!** | Have a safe trip! |
-| **На все до́бре!** | All the best! |
+> **Марко́:** До́брий день, Окса́но! Ра́дий тебе́ ба́чити. — Good day, Oksana! Glad to see you.
+> **Окса́на:** До́брий день, Ма́рку! Як твоя́ сім'я́? — Good day, Marko! How is your family?
+> **Марко́:** Дя́кую, усе́ чудо́во! Сього́дні вве́чері ми ї́демо на по́їзді в Ки́їв. — Thank you, everything is great! This evening we are traveling by train to Kyiv.
+> **Окса́на:** Щасли́вої доро́ги! На все до́бре! — Have a safe trip! All the best!
 
 When practicing Ukrainian pronunciation, remember that each letter gives you a predictable and reliable sound signal. In many languages, letters change drastically depending on subtle surrounding factors, but Ukrainian orthography adheres closely to phonetic principles. By mastering the clear two-sound combinations of **Ї** [йі] and **Щ** [шч], you build an authentic native accent from your very first steps in reading.
 

@@ -26,3 +26,6 @@
 # the same surface. Ambiguous verify_stress returns Neut first; annotator then
 # picks matches[0] and fails A1 pedagogy / slow nightly (#8082). Prefer Fem.
 сім'я: "сім'я́"
+# Title-case Київ is correct (Ки́їв); lowercase trie returns киї́в (#7994 scar).
+# Annotator casefolds before lookup, so without this override it rewrites capital Kyiv wrong.
+київ: "ки́їв"

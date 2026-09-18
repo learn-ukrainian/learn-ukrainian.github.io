@@ -1,8 +1,8 @@
 # Апо́строф і три ключові́ контра́сти: буря́к, бур'я́н, свя́то · The Apostrophe and Three Key Contrasts: буря́к, бур'я́н, свя́то
 
-In this lesson, we study the most distinctive punctuation mark in Ukrainian orthography: the **апо́строф** (apostrophe). Unlike alphabet letters, the apostrophe has no sound of its own, but it plays a crucial role in shaping pronunciation: it forbids softening of the preceding consonant and instructs you to pronounce the following iotated vowel with a full, crisp [j] glide.
+In this lesson, we study the most distinctive punctuation mark in Ukrainian orthography: the **апо́строф** — apostrophe. Unlike alphabet letters, the apostrophe has no sound of its own, but it plays a crucial role in shaping pronunciation: it forbids softening of the preceding consonant and instructs you to pronounce the following iotated vowel with a full, crisp [j] glide.
 
-In addition to the basic rules, we master three classic phonetic contrasts that often challenge beginners: why we write **буря́к** (beetroot) without a sign, **бур'я́н** (weed) with an apostrophe, and **свя́то** (holiday) or **цвях** (nail) with no sign at all.
+In addition to the basic rules, we master three classic phonetic contrasts that often challenge beginners: why we write **буря́к** — beetroot without a sign, **бур'я́н** — weed with an apostrophe, and **свя́то** — holiday or **цвях** — nail with no sign at all.
 
 ## Апо́строф
 
@@ -11,7 +11,9 @@ In addition to the basic rules, we master three classic phonetic contrasts that 
 Read it as a separation sign. It does not make a big pause. It keeps the
 previous consonant hard and lets the next **я, ю, є, ї** start with **[й]**.
 
-The first A1 model is: **б, п, в, м, ф, р + апо́строф + я, ю, є, ї**
+The first A1 model is:
+
+**б, п, в, м, ф, р + апо́строф + я, ю, є, ї** — labials/р + apostrophe before iotated vowels
 
 Start with these words:
 
@@ -35,15 +37,37 @@ In Ukrainian schools, teachers often help children remember the labial consonant
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
-Compare the pronunciation of words read separately (**розді́льно**) versus words read smoothly together (**зли́то**). When an apostrophe is present, we pronounce the consonant hard (**тверди́й**) and immediately follow with [j] + vowel, without blending or softening (**м'яки́й**):
-- **м'яч** (ball): pronounce [м] hard, then [йа].
-- **м'я́та** (mint): pronounce [м] hard, then [йа].
-- **здоро́в'я** (health): the labial [в] remains hard before [йа].
-- **ім'я́** (name): pronounce hard [м] followed by clear [йа].
+Compare the pronunciation of words read separately (**розді́льно** — separately) versus words read smoothly together (**зли́то** — together). When an apostrophe is present, we pronounce the consonant hard (**тверди́й** — hard) and immediately follow with [j] + vowel, without blending or softening (**м'яки́й** — soft):
+- **м'яч** — ball: pronounce [м] hard, then [йа].
+- **м'я́та** — mint: pronounce [м] hard, then [йа].
+- **здоро́в'я** — health: the labial [в] remains hard before [йа].
+- **ім'я́** — name: pronounce hard [м] followed by clear [йа].
 
 Notice that even for a **мале́нький** (small) **знак** (sign), its presence completely changes the syllable dynamic.
 
 <!-- INJECT_ACTIVITY: act-3 -->
+
+Notice how these words and sounds appear in everyday Ukrainian dialogue when talking with friends about family and preparing for a holiday:
+
+> **Тара́с:** До́брий день, Мар'я́но! Як твоє́ здоро́в'я? *(Good day, Mariana! How is your health?)*
+> **Мар'я́на:** До́брий день, Тара́се! Дя́кую, все до́бре. *(Good day, Taras! Thank you, all is well.)*
+> **Тара́с:** Чудо́во! Що ти готу́єш на свя́то? *(Wonderful! What are you preparing for the holiday?)*
+> **Мар'я́на:** Готу́ю борщ: купу́ю сві́же м'я́со та черво́ний буря́к. *(I am making borscht: I am buying fresh meat and red beetroot.)*
+> **Тара́с:** Смачно́го вам і га́рного свя́та! *(Enjoy your meal and have a great holiday!)*
+> **Мар'я́на:** Дя́кую щи́ро, Тара́се! *(Thank you sincerely, Taras!)*
+
+English support after the dialogue:
+
+| Ukrainian | English |
+| --- | --- |
+| **До́брий день, Мар'я́но!** | Good day, Mariana! |
+| **Як твоє́ здоро́в'я?** | How is your health? |
+| **До́брий день, Тара́се!** | Good day, Taras! |
+| **Дя́кую, все до́бре.** | Thank you, all is well. |
+| **Чудо́во! Що ти готу́єш на свя́то?** | Wonderful! What are you preparing for the holiday? |
+| **Готу́ю борщ: купу́ю сві́же м'я́со та черво́ний буря́к.** | I am making borscht: I am buying fresh meat and red beetroot. |
+| **Смачно́го вам і га́рного свя́та!** | Enjoy your meal and have a great holiday! |
+| **Дя́кую щи́ро, Тара́се!** | Thank you sincerely, Taras! |
 
 ## Контра́ст і па́стки
 
@@ -84,10 +108,10 @@ explain them.
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-Let us examine the exact nature of the trap in the word **свя́то** (holiday). Why is there no apostrophe here, even though **в** is a labial consonant? The Ukrainian spelling rule (Право́пис §7) states that if a root labial consonant is preceded by another same-root consonant other than **р** (in **свя́то**, the letter **с**), then no apostrophe is written. The consonant [в] simply softens together with the preceding [s']. The exact same rule applies to the word **цвях** (nail), where [ц] precedes the labial [в]. (Note the exception for **р**: if the preceding consonant is **р**, the apostrophe is retained, as in **черв'я́к** and **ве́рб'я**).
+Let us examine the exact nature of the trap in the word **свя́то** — holiday. Why is there no apostrophe here, even though **в** is a labial consonant? The Ukrainian spelling rule states that if a root labial consonant is preceded by another same-root consonant other than **р** (in **свя́то**, the letter **с**), then no apostrophe is written. The consonant [в] simply softens together with the preceding [s']. The exact same rule applies to the word **цвях** — nail, where [ц] precedes the labial [в].
 
 <!-- INJECT_ACTIVITY: act-404 -->
 
-By contrast, in the agricultural pair **буря́к** and **бур'я́н**, the difference lies in the consonant **р**. In **буря́к** (beetroot), the sonant [r'] is soft, so **я** represents a single vowel sound [а] and softens the consonant. In **бур'я́н** (weed), the consonant [r] is hard, so an apostrophe is required to preserve the distinct separation [йа]. Finally, beware of false analogies: in common everyday words like **ло́жка** (spoon), never add unnecessary soft signs.
+By contrast, in the agricultural pair **буря́к** and **бур'я́н**, the difference lies in the consonant **р**. In **буря́к** — beetroot, the sonant [r'] is soft, so **я** represents a single vowel sound [а] and softens the consonant. In **бур'я́н** — weed, the consonant [r] is hard, so an apostrophe is required to preserve the distinct separation [йа]. Finally, beware of false analogies: in common everyday words like **ло́жка** — spoon, never add unnecessary soft signs.
 
 <!-- INJECT_ACTIVITY: act-405 -->

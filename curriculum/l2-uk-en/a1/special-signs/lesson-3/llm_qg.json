@@ -1,0 +1,71 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 5.0,
+      "evidence": "Act-302 wrongly labels two sounds as one; activities total 11 against 10 planned, target vocabulary is missing, and preservation and cumulative coverage remain unverified.",
+      "verdict": "REJECT",
+      "evidence_quotes": [
+        "У сло́ві «борщ» оста́нній звук познача́ється як [шч].",
+        "З'єдна́йте ко́жне украї́нське сло́во з йо́го англі́йським зна́ченням."
+      ]
+    },
+    "naturalness": {
+      "score": 6.0,
+      "evidence": "VESUM gender/form and СУМ-20 government/example calls returned approval-required errors, leaving the mandatory source audit unresolved rather than demonstrating incorrect Ukrainian.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "У мене́ в альбо́мі є га́рне сіме́йне ___ .",
+        "**Сього́дні вве́чері ми ї́демо на по́їзді в Ки́їв.** | This evening we are traveling by train to Kyiv."
+      ]
+    },
+    "decolonization": {
+      "score": 8.0,
+      "evidence": "The framing centers Ukraine and Ukrainian pronunciation without Russian mediation, although linguistic provenance remains unresolved under naturalness.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "In the capital city of Ukraine: **Ки́їв** — Kyiv"
+      ]
+    },
+    "engagement": {
+      "score": 6.0,
+      "evidence": "Video repetition and dialogue provide variety, but repeated recognition quizzes dominate and the greetings section lacks communicative practice.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Choose whether the highlighted letter represents one sound or two sounds.",
+        "Identify the correct phonetic transcription for each letter."
+      ]
+    },
+    "tone": {
+      "score": 7.0,
+      "evidence": "The lesson avoids a named narrator and provides bilingual dialogue support, but promises of immediate native pronunciation overstate beginner outcomes.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "you build an authentic native accent from your very first steps in reading.",
+        "Now you can recognize and pronounce **Ї**, **Щ**, and **Ф** with complete confidence."
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "REJECT",
+    "terminal_verdict": "PASS",
+    "failing_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
+    ],
+    "rejected_dims": [
+      "pedagogical"
+    ],
+    "warning_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
+    ],
+    "min_score": 5.0,
+    "min_dim": "pedagogical"
+  }
+}
