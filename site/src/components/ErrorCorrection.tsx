@@ -7,6 +7,7 @@ import {
   useChromeLocale,
 } from '../lib/i18n/useChromeLocale';
 import { shuffle } from './utils';
+import { optionsWithoutSpottedError } from '../../../packages/activity-kit/src/components/utils';
 
 export interface ErrorCorrectionItemProps {
   /**
@@ -79,8 +80,11 @@ export function ErrorCorrectionItem({
   onComplete,
   disabled = false,
 }: ErrorCorrectionItemProps) {
-  // Shuffle options on mount
-  const shuffledOptions = useMemo(() => shuffle([...options]), [options]);
+  // Shuffle options on mount, minus the error the learner already spotted.
+  const shuffledOptions = useMemo(
+    () => shuffle(optionsWithoutSpottedError(options, errorWord, correctForm)),
+    [options, errorWord, correctForm],
+  );
 
   const [step, setStep] = useState<Step>('identify');
   const [selectedWord, setSelectedWord] = useState<string | null>(null);

@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
-import { shuffle } from './utils';
+import { optionsWithoutSpottedError, shuffle } from './utils';
 
 interface ErrorCorrectionItemProps {
   /**
@@ -46,8 +46,11 @@ export function ErrorCorrectionItem({
   explanation,
   isUkrainian
 }: ErrorCorrectionItemProps) {
-  // Shuffle options on mount
-  const shuffledOptions = useMemo(() => shuffle([...options]), [options]);
+  // Shuffle options on mount, minus the error the learner already spotted.
+  const shuffledOptions = useMemo(
+    () => shuffle(optionsWithoutSpottedError(options, errorWord, correctForm)),
+    [options, errorWord, correctForm],
+  );
 
   const [step, setStep] = useState<Step>('identify');
   const [selectedWord, setSelectedWord] = useState<string | null>(null);

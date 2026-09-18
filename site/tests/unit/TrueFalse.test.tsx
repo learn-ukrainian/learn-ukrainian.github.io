@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach } from 'vitest';
+import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TrueFalse, { TrueFalseQuestion } from '@site/src/components/TrueFalse';
@@ -149,7 +149,7 @@ describe('TrueFalseQuestion', () => {
   });
 });
 
-// ── TrueFalse wrapper (multi-item with Check Answers button) ─────────────────
+// ── TrueFalse wrapper (multi-item, per-row result on click) ─────────────────
 
 describe('TrueFalse wrapper', () => {
   beforeEach(() => {
@@ -187,35 +187,62 @@ describe('TrueFalse wrapper', () => {
     expect(screen.getAllByText('Правда чи хибність').length).toBeGreaterThan(0);
   });
 
-  test('Check Answers button is disabled until at least one answer is selected', () => {
+  test('has no batch Check Answers button; nothing is graded before a click', () => {
     const { container } = render(<TrueFalse items={items} />);
-    expect(checkButton(container)).toBeDisabled();
+    expect(checkButton(container)).toBeUndefined();
+    expect(rowFeedbacks(container)).toHaveLength(0);
+    expect(retryButton(container)).toBeUndefined();
   });
 
-  test('Check Answers button becomes enabled after a selection', async () => {
+  test('clicking one row shows that row result and explanation immediately', async () => {
     const user = userEvent.setup();
     const { container } = render(<TrueFalse items={items} />);
 
-    const firstRow = container.querySelectorAll<HTMLElement>('[data-activity="tf-row"]')[0];
-    await user.click(within(firstRow).getByRole('button', { name: 'True' }));
+    const rows = [...container.querySelectorAll<HTMLElement>('[data-activity="tf-row"]')];
+    await user.click(within(rows[1]).getByRole('button', { name: 'True' })); // wrong
 
-    expect(checkButton(container)).toBeEnabled();
+    const feedbacks = rowFeedbacks(container);
+    expect(feedbacks).toHaveLength(1);
+    expect(within(rows[1]).getByText(/It flows into the Black Sea/)).toBeInTheDocument();
+    expect(feedbacks[0].getAttribute('data-correct')).toBe('false');
   });
 
-  test('clicking Check Answers reveals one feedback box per answered item', async () => {
+  test('clicking one row does not mark the other rows wrong or lock them', async () => {
     const user = userEvent.setup();
     const { container } = render(<TrueFalse items={items} />);
 
     const rows = [...container.querySelectorAll<HTMLElement>('[data-activity="tf-row"]')];
     await user.click(within(rows[0]).getByRole('button', { name: 'True' }));
-    await user.click(within(rows[1]).getByRole('button', { name: 'False' }));
-    await user.click(checkButton(container)!);
 
-    expect(rowFeedbacks(container).length).toBe(2);
-    // Both answers were correct — verify the data-correct marker
-    for (const fb of rowFeedbacks(container)) {
-      expect(fb.getAttribute('data-correct')).toBe('true');
+    expect(within(rows[0]).getAllByRole('button').every(b => (b as HTMLButtonElement).disabled)).toBe(true);
+    expect(within(rows[1]).queryByText('✗', { exact: false })).toBeNull();
+    expect(rows[1].querySelector('[data-activity="tf-row-feedback"]')).toBeNull();
+    for (const btn of within(rows[1]).getAllByRole('button')) {
+      expect(btn).toBeEnabled();
     }
+  });
+
+  test('an answered row is locked against a second click', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<TrueFalse items={items} />);
+
+    const rows = [...container.querySelectorAll<HTMLElement>('[data-activity="tf-row"]')];
+    await user.click(within(rows[0]).getByRole('button', { name: 'False' }));
+    await user.click(within(rows[0]).getByRole('button', { name: 'True' }));
+
+    expect(rowFeedbacks(container)[0].getAttribute('data-correct')).toBe('false');
+  });
+
+  test('onComplete fires once, only after every row is answered', async () => {
+    const user = userEvent.setup();
+    const onComplete = vi.fn();
+    const { container } = render(<TrueFalse items={items} onComplete={onComplete} />);
+
+    const rows = [...container.querySelectorAll<HTMLElement>('[data-activity="tf-row"]')];
+    await user.click(within(rows[0]).getByRole('button', { name: 'True' }));
+    expect(onComplete).not.toHaveBeenCalled();
+    await user.click(within(rows[1]).getByRole('button', { name: 'False' }));
+    expect(onComplete).toHaveBeenCalledTimes(1);
   });
 
   test('Try Again resets selections and hides feedback', async () => {
@@ -225,15 +252,13 @@ describe('TrueFalse wrapper', () => {
     const rows = [...container.querySelectorAll<HTMLElement>('[data-activity="tf-row"]')];
     await user.click(within(rows[0]).getByRole('button', { name: 'True' }));
     await user.click(within(rows[1]).getByRole('button', { name: 'False' }));
-    await user.click(checkButton(container)!);
 
     expect(rowFeedbacks(container).length).toBe(2);
 
     await user.click(retryButton(container)!);
 
     expect(rowFeedbacks(container).length).toBe(0);
-    // Check button reappears and is disabled again (no answers yet)
-    expect(checkButton(container)).toBeDisabled();
+    expect(retryButton(container)).toBeUndefined();
   });
 
   test('uses Ukrainian button labels in wrapper when isUkrainian=true', () => {
@@ -246,16 +271,13 @@ describe('TrueFalse wrapper', () => {
     expect(labels).toContain('Неправда');
   });
 
-  test('Check Answers uses the Ukrainian label when isUkrainian=true', async () => {
+  test('Try Again uses the Ukrainian label when isUkrainian=true', async () => {
     const user = userEvent.setup();
     document.documentElement.dataset.chromeLocale = 'uk';
     const { container } = render(<TrueFalse items={items} isUkrainian />);
     const firstRow = container.querySelectorAll<HTMLElement>('[data-activity="tf-row"]')[0];
     await user.click(within(firstRow).getByRole('button', { name: 'Правда' }));
 
-    const check = [...container.querySelectorAll<HTMLButtonElement>('button')].find(
-      b => b.textContent?.trim() === 'Перевірити'
-    );
-    expect(check).toBeInTheDocument();
+    expect(retryButton(container)).toHaveTextContent('Спробувати знову');
   });
 });

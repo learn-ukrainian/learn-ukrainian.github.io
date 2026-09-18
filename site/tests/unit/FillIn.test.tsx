@@ -292,3 +292,76 @@ describe('FillIn wrapper', () => {
     }
   });
 });
+
+// ── empty-string choice (#8237) ──────────────────────────────────────────────
+
+describe('empty-string fill-in choice', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
+  test('chip: an empty option renders as a blank clickable slot with no text', () => {
+    const { container } = render(
+      <FillInQuestion sentence="бур___ян" answer="'" options={["'", '']} />,
+    );
+    const chips = chipsIn(container);
+    expect(chips).toHaveLength(2);
+    const blank = chips.find((c) => c.textContent?.replace(/ /g, '') === '');
+    expect(blank).toBeDefined();
+    expect(blank!.textContent).not.toMatch(/[A-Za-zА-Яа-яІіЇїЄєҐґ—]/);
+  });
+
+  test('chip: choosing the empty option is correct when answer is the empty string', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <FillInQuestion sentence="ден___ь" answer="" options={['ь', '']} />,
+    );
+    const blank = chipsIn(container).find((c) => c.textContent?.replace(/ /g, '') === '')!;
+    await user.click(blank);
+
+    expect(feedback(container)!.getAttribute('data-correct')).toBe('true');
+    expect(blankZone(container)!.textContent?.replace(/ /g, '')).toBe('');
+  });
+
+  test('chip: choosing a letter is wrong when answer is the empty string', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <FillInQuestion sentence="ден___ь" answer="" options={['ь', '']} />,
+    );
+    await user.click(chipByText(container, 'ь'));
+
+    expect(feedback(container)!.getAttribute('data-correct')).toBe('false');
+  });
+
+  test('list: an unanswered row is not graded as the empty answer', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <FillIn
+        items={[
+          { sentence: 'ден___ь', answer: '', options: ['ь', ''] },
+          { sentence: "бур___ян", answer: "'", options: ["'", ''] },
+        ]}
+      />,
+    );
+    const selects = [...container.querySelectorAll<HTMLSelectElement>('select')];
+    expect(checkButton(container)).toBeDisabled();
+    await user.selectOptions(selects[0], selects[0].options[selects[0].options.length - 1]);
+    // second row still unanswered: Check stays disabled
+    expect(checkButton(container)).toBeDisabled();
+  });
+
+  test('list: picking the blank option grades against the empty answer', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <FillIn items={[{ sentence: 'ден___ь', answer: '', options: ['ь', ''] }]} />,
+    );
+    const select = container.querySelector<HTMLSelectElement>('select')!;
+    const blankOption = [...select.options].find(
+      (o) => o.value !== '' && o.textContent?.replace(/ /g, '') === '',
+    )!;
+    await user.selectOptions(select, blankOption);
+    await user.click(checkButton(container)!);
+
+    expect(container.querySelectorAll('[class*="correctHint"]')).toHaveLength(0);
+  });
+});

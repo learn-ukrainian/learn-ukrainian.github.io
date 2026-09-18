@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styles from './Activities.module.css';
+import { deriveSeed, seededRandom } from './utils';
 
 interface OddOneOutProps {
   /**
@@ -32,11 +33,38 @@ interface OddOneOutProps {
 }
 
 /**
+ * Writers tend to put the odd word last, so source order leaks the answer.
+ * Shuffle the words and remap `correct` to the odd word's new position.
+ *
+ * The default rng is seeded from the words, so server and client render the
+ * same order (no hydration mismatch). Tests pass a stub rng.
+ */
+export function shuffleOddOneOut(
+  words: string[],
+  correct: number,
+  rng: () => number = seededRandom(deriveSeed(words)),
+): { words: string[]; correct: number } {
+  const order = words.map((_, i) => i);
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [order[i], order[j]] = [order[j], order[i]];
+  }
+  return {
+    words: order.map((i) => words[i]),
+    correct: order.indexOf(correct),
+  };
+}
+
+/**
  * Четверте «зайве» — Odd One Out
  * Show 4 words, learner picks the one that doesn't belong.
  * Ukrainian textbook exercise pattern (МійКлас Grade 5).
  */
-export default function OddOneOut({ instruction, items }: OddOneOutProps) {
+export default function OddOneOut({ instruction, items: sourceItems }: OddOneOutProps) {
+  const items = useMemo(
+    () => (sourceItems || []).map((item) => ({ ...item, ...shuffleOddOneOut(item.words, item.correct) })),
+    [sourceItems],
+  );
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);

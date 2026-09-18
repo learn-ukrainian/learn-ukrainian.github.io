@@ -663,3 +663,50 @@ describe('ErrorCorrection wrapper', () => {
     expect(allItems[1].getAttribute('data-step')).toBe('identify');
   });
 });
+
+describe('step-2 chips never replay the spotted error (#8237)', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
+  function chipTexts(container: HTMLElement) {
+    return [...container.querySelectorAll('[data-activity="error-correction-fix-chip"]')].map(
+      (b) => b.textContent?.trim(),
+    );
+  }
+
+  test('the error token is filtered out of the chip list', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <ErrorCorrectionItem
+        sentence="Сьогодні гарний ден."
+        errorWord="ден"
+        correctForm="день"
+        options={['день', 'ден', 'дєнь']}
+        explanation="Мʼякий знак."
+      />,
+    );
+    await user.click(wordByText(container, 'ден'));
+
+    expect(chipTexts(container).sort()).toEqual(['день', 'дєнь'].sort());
+    expect(chipTexts(container)).not.toContain('ден');
+  });
+
+  test('filtering ignores case and never drops the correction', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <ErrorCorrectionItem
+        sentence="Ден добрий."
+        errorWord="Ден"
+        correctForm="день"
+        options={['день', 'ден', 'дєнь', 'дінь']}
+        explanation=""
+      />,
+    );
+    await user.click(wordByText(container, 'Ден'));
+
+    expect(chipTexts(container)).toContain('день');
+    expect(chipTexts(container)).not.toContain('ден');
+    expect(chipTexts(container)).toHaveLength(3);
+  });
+});

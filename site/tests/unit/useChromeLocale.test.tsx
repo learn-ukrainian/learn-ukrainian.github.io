@@ -59,7 +59,7 @@ describe('ErrorCorrection choice chips', () => {
             sentence: 'Сього́дні га́рний ден.',
             errorWord: 'ден',
             correctForm: 'день',
-            options: ['день', 'ден'],
+            options: ['день', 'ден', 'дєнь'],
             explanation: 'soft sign',
           },
         ]}
@@ -68,7 +68,8 @@ describe('ErrorCorrection choice chips', () => {
     await user.click(screen.getByRole('button', { name: /Click to flag "ден"/i }));
     expect(screen.getByText(/Step 2/i)).toBeInTheDocument();
     const chips = document.querySelectorAll('[data-activity="error-correction-fix-chip"]');
-    expect([...chips].map((el) => el.textContent)).toEqual(expect.arrayContaining(['день', 'ден']));
+    // The spotted error `ден` is not offered again (#8237).
+    expect([...chips].map((el) => el.textContent).sort()).toEqual(['день', 'дєнь']);
     expect(chips).toHaveLength(2);
     expect(screen.queryByRole('button', { name: /Show correction/i })).not.toBeInTheDocument();
   });

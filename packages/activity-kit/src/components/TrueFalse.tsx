@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styles from './Activities.module.css';
 import { parseMarkdown } from './utils';
 import ActivityHelp from './ActivityHelp';
@@ -122,18 +122,25 @@ export interface TrueFalseProps {
 
 export default function TrueFalse({ items, instruction, isUkrainian, onComplete }: TrueFalseProps) {
   const [selections, setSelections] = useState<Record<number, boolean>>({});
-  const [showResults, setShowResults] = useState(false);
+  const completedRef = useRef(false);
 
+  // Each row shows its own result on the click, like the single-statement
+  // component. A row locks once answered; other rows stay untouched.
   const handleSelect = (index: number, value: boolean) => {
-    if (showResults) return;
-    setSelections({ ...selections, [index]: value });
+    if (index in selections) return;
+    const next = { ...selections, [index]: value };
+    setSelections(next);
+    if (!completedRef.current && Object.keys(next).length === items.length) {
+      completedRef.current = true;
+      onComplete?.();
+    }
   };
 
   const headerLabel = isUkrainian ? 'Правда чи хибність' : 'True or False';
   const trueLabel = isUkrainian ? 'Правда' : 'True';
   const falseLabel = isUkrainian ? 'Неправда' : 'False';
-  const checkBtnLabel = isUkrainian ? 'Перевірити' : 'Check Answers';
   const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
+  const anyAnswered = Object.keys(selections).length > 0;
 
   return (
     <div className={styles.activityContainer} data-activity="true-false">
@@ -147,6 +154,7 @@ export default function TrueFalse({ items, instruction, isUkrainian, onComplete 
       )}
       <div className={styles.activityContent}>
         {items.map((item, index) => {
+          const answered = index in selections;
           const isCorrect = selections[index] === item.isTrue;
 
           return (
@@ -155,24 +163,24 @@ export default function TrueFalse({ items, instruction, isUkrainian, onComplete 
               <div className={styles.trueFalseButtons}>
                 <button
                   className={`${styles.tfButton} ${selections[index] === true ? styles.selected : ''
-                    } ${showResults && item.isTrue ? styles.correct : ''} ${showResults && selections[index] === true && !item.isTrue ? styles.incorrect : ''
+                    } ${answered && item.isTrue ? styles.correct : ''} ${answered && selections[index] === true && !item.isTrue ? styles.incorrect : ''
                     }`}
                   onClick={() => handleSelect(index, true)}
-                  disabled={showResults}
+                  disabled={answered}
                 >
                   {trueLabel}
                 </button>
                 <button
                   className={`${styles.tfButton} ${selections[index] === false ? styles.selected : ''
-                    } ${showResults && !item.isTrue ? styles.correct : ''} ${showResults && selections[index] === false && item.isTrue ? styles.incorrect : ''
+                    } ${answered && !item.isTrue ? styles.correct : ''} ${answered && selections[index] === false && item.isTrue ? styles.incorrect : ''
                     }`}
                   onClick={() => handleSelect(index, false)}
-                  disabled={showResults}
+                  disabled={answered}
                 >
                   {falseLabel}
                 </button>
               </div>
-              {showResults && (
+              {answered && (
                 <div
                   className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
                   data-activity="tf-row-feedback"
@@ -185,30 +193,19 @@ export default function TrueFalse({ items, instruction, isUkrainian, onComplete 
           );
         })}
 
-        <div className={styles.controls}>
-          {!showResults ? (
-            <button
-              className={styles.checkButton}
-              onClick={() => {
-                setShowResults(true);
-                onComplete?.();
-              }}
-              disabled={Object.keys(selections).length === 0}
-            >
-              {checkBtnLabel}
-            </button>
-          ) : (
+        {anyAnswered && (
+          <div className={styles.controls}>
             <button
               className={styles.retryButton}
               onClick={() => {
-                setShowResults(false);
+                completedRef.current = false;
                 setSelections({});
               }}
             >
               {retryBtnLabel}
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

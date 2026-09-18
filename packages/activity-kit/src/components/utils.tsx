@@ -58,3 +58,20 @@ export function parseMarkdown(text: string): React.ReactNode {
         return part;
     });
 }
+
+/**
+ * Step-2 chips must not replay the token the learner just flagged: offering
+ * `ден` again after they clicked `ден` is not a choice. The correction is never
+ * dropped, even if an author's option list is malformed.
+ */
+export function optionsWithoutSpottedError(
+  options: string[],
+  errorWord: string | null,
+  correctForm: string,
+): string[] {
+  if (!errorWord) return options;
+  const key = (value: string) => value.normalize('NFC').trim().toLowerCase();
+  const error = key(errorWord);
+  const correction = key(correctForm);
+  return options.filter((option) => key(option) === correction || key(option) !== error);
+}

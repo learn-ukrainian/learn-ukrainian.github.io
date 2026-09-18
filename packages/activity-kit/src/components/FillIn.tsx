@@ -10,6 +10,15 @@ const CHIP_COLORS = [
   '#7CB342', '#FB8C00', '#F4511E', '#6D4C41'
 ];
 
+/**
+ * An option or answer may be the empty string: nothing is inserted into the
+ * blank. It renders as a blank clickable slot (no text, no gloss) and grades by
+ * comparing the selected value to `answer` like any other choice.
+ */
+const BLANK_SLOT = '\u00A0';
+/** <option value> stand-in for "" so it stays distinct from the unset placeholder. */
+const EMPTY_OPTION_VALUE = '__empty__';
+
 function getChipColor(text: string, index: number): string {
   const charSum = text.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
   return CHIP_COLORS[(charSum + index) % CHIP_COLORS.length];
@@ -92,13 +101,13 @@ export function FillInQuestion({ sentence, answer, options = [] }: FillInQuestio
           data-activity="fillin-blank"
           onDragOver={handleDragOver}
           onDrop={handleDrop}
-          style={selected && selectedColor ? {
+          style={selected !== null && selectedColor ? {
             backgroundColor: selectedColor,
             color: 'white',
             borderStyle: 'solid'
           } : undefined}
         >
-          {selected || 'drag here'}
+          {selected !== null ? selected || BLANK_SLOT : 'drag here'}
         </span>
         {parseMarkdown(parts[1] || '')}
       </p>
@@ -116,8 +125,9 @@ export function FillInQuestion({ sentence, answer, options = [] }: FillInQuestio
               draggable
               onDragStart={(e) => handleDragStart(e, option.text)}
               onClick={() => handleSelect(option.text)}
+              aria-label={option.text === '' ? 'empty' : undefined}
             >
-              {option.text}
+              {option.text || BLANK_SLOT}
             </button>
           ))}
         </div>
@@ -137,7 +147,7 @@ export function FillInQuestion({ sentence, answer, options = [] }: FillInQuestio
           data-activity="fillin-feedback"
           data-correct={isCorrect ? 'true' : 'false'}
         >
-          {isCorrect ? '✓ Correct!' : `✗ The answer is: ${answer}`}
+          {isCorrect ? '✓ Correct!' : `✗ The answer is: ${answer || '(nothing goes here)'}`}
         </div>
       )}
     </div>
@@ -185,7 +195,8 @@ export default function FillIn({ items, instruction, isUkrainian }: FillInProps)
   const [showResults, setShowResults] = useState(false);
 
   const handleSelect = (index: number, value: string) => {
-    setAnswers({ ...answers, [index]: value });
+    if (value === '') return; // the unset placeholder is not an answer
+    setAnswers({ ...answers, [index]: value === EMPTY_OPTION_VALUE ? '' : value });
   };
 
   const allAnswered = Object.keys(answers).length === items.length;
@@ -206,7 +217,7 @@ export default function FillIn({ items, instruction, isUkrainian }: FillInProps)
       <div className={styles.activityContent}>
         {items.map((item, index) => {
           const parts = item.sentence.split(/_{3,}/);  // Match 3+ underscores
-          const isCorrect = answers[index] === item.answer;
+          const isCorrect = index in answers && answers[index] === item.answer;
 
           return (
             <div key={index} className={styles.fillInRow} data-activity="fillin-row">
@@ -215,14 +226,14 @@ export default function FillIn({ items, instruction, isUkrainian }: FillInProps)
                 <select
                   className={`${styles.fillInSelect} ${showResults ? (isCorrect ? styles.correct : styles.incorrect) : ''
                     }`}
-                  value={answers[index] || ''}
+                  value={index in answers ? answers[index] || EMPTY_OPTION_VALUE : ''}
                   onChange={(e) => handleSelect(index, e.target.value)}
                   disabled={showResults}
                 >
                   <option value=""></option>
                   {shuffle(item.options || []).map((opt, i) => (
-                    <option key={i} value={opt}>
-                      {opt}
+                    <option key={i} value={opt === '' ? EMPTY_OPTION_VALUE : opt}>
+                      {opt || BLANK_SLOT}
                     </option>
                   ))}
                 </select>
@@ -230,7 +241,7 @@ export default function FillIn({ items, instruction, isUkrainian }: FillInProps)
               </span>
               {showResults && !isCorrect && (
                 <span className={styles.correctHint}>
-                  {isUkrainian ? 'Правильно:' : 'Correct:'} {item.answer}
+                  {isUkrainian ? 'Правильно:' : 'Correct:'} {item.answer || (isUkrainian ? '(нічого не вставляємо)' : '(nothing goes here)')}
                 </span>
               )}
             </div>

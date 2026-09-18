@@ -51,6 +51,12 @@ from scripts.audit.content_surface_gates import scan_module_surface
 from scripts.audit.failure_classes import FailureClass, FailureRecord
 from scripts.audit.module_size_policy_audit import markdown_module_evidence
 from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
+from scripts.build.alphabet_modules import (
+    filter_line_break_activities,
+    filter_line_break_paragraphs,
+    filter_line_break_plan,
+    is_alphabet_slug,
+)
 from scripts.build.citation_matcher import (
     CitationKey,
     citation_keys_match,
@@ -1107,6 +1113,25 @@ def _upgrade_distractor_inventory(level: str, slug: str, source_dir: Path) -> st
     return "\n\n".join(chunks)
 
 
+def _plan_content_for_prompt(plan: Mapping[str, Any], plan_content: str) -> str:
+    """Raw plan text for a prompt; alphabet slugs get the line-break-free plan (#8237)."""
+    if not is_alphabet_slug(plan.get("slug")):
+        return plan_content
+    return yaml.safe_dump(filter_line_break_plan(plan), allow_unicode=True, sort_keys=False)
+
+
+def _original_artifact_for_prompt(plan: Mapping[str, Any], name: str, text: str) -> str:
+    """Original artifact text for the upgrade prompt, minus line-break teaching for alphabet slugs."""
+    if not is_alphabet_slug(plan.get("slug")):
+        return text
+    if name == "module.md":
+        return filter_line_break_paragraphs(text)
+    if name == "activities.yaml":
+        data = yaml.safe_load(text)
+        return yaml.safe_dump(filter_line_break_activities(data), allow_unicode=True, sort_keys=False)
+    return text
+
+
 def render_upgrade_prompt(
     plan: Mapping[str, Any],
     source_dir: Path,
@@ -1118,6 +1143,7 @@ def render_upgrade_prompt(
     """Render the V7 lesson-scoped upgrade brief without retrieval or model calls."""
     from scripts.pipeline.config_tables import get_activity_config
 
+    plan = filter_line_break_plan(plan)
     level = str(plan["level"]).lower()
     sequence = int(plan["sequence"])
     template = (Path(__file__).parent / "phases/linear-write-upgrade.md").read_text(encoding="utf-8")
@@ -1132,7 +1158,7 @@ def render_upgrade_prompt(
         "LESSON_MAP": yaml.safe_dump(dict(lesson_map), allow_unicode=True, sort_keys=False),
         "ORIGINAL_PLAN": yaml.safe_dump(dict(plan), allow_unicode=True, sort_keys=False),
         "ORIGINAL_ARTIFACTS": "\n\n".join(
-            f"### {name}\n\n{(source_dir / name).read_text(encoding='utf-8')}"
+            f"### {name}\n\n{_original_artifact_for_prompt(plan, name, (source_dir / name).read_text(encoding='utf-8'))}"
             for name in WRITER_ARTIFACTS
         ),
         "DISTRACTOR_INVENTORY": _upgrade_distractor_inventory(level, str(plan["slug"]), source_dir),
@@ -1285,6 +1311,7 @@ def build_knowledge_packet(
         plan_data = dict(plan)
 
     validate_plan(plan_data)
+    plan_data = filter_line_break_plan(plan_data)
     level_key = str(level or plan_data["level"]).lower()
     slug_key = str(slug or plan_data["slug"]).strip()
     if not slug_key:
@@ -3694,6 +3721,8 @@ def writer_context(
     use_generator: bool = False,
     obligation_checklist: Mapping[str, Any] | None = None,
 ) -> dict[str, str]:
+    plan_content = _plan_content_for_prompt(plan, plan_content)
+    plan = filter_line_break_plan(plan)
     level = str(plan["level"])
     sequence = int(plan["sequence"])
     learner_state = build_learner_state(level.lower(), sequence)
@@ -4766,7 +4795,7 @@ def review_context(
             letter_module=bool(plan.get("letter_module")),
         ),
         "CONTRACT_YAML": _contract_yaml(plan),
-        "PLAN_CONTENT": plan_content,
+        "PLAN_CONTENT": _plan_content_for_prompt(plan, plan_content),
         "GENERATED_CONTENT": generated_content,
         "WIKI_MANIFEST": wiki_manifest_text,
         "IMPLEMENTATION_MAP_CONTRACT": impl_map_contract,
@@ -4855,7 +4884,7 @@ def wiki_coverage_review_context(
         "MODULE_NUM": str(sequence),
         "MODULE_SLUG": str(plan["slug"]),
         "WORD_TARGET": str(plan["word_target"]),
-        "PLAN_CONTENT": plan_content,
+        "PLAN_CONTENT": _plan_content_for_prompt(plan, plan_content),
         "GENERATED_CONTENT": generated_content,
         "WIKI_MANIFEST": manifest_text,
         "WIKI_COVERAGE_GATE": json.dumps(
@@ -5052,7 +5081,7 @@ def pedagogical_correction_context(
         "MODULE_NUM": str(plan.get("sequence") or ""),
         "MODULE_SLUG": str(plan.get("slug") or ""),
         "PEDAGOGICAL_FINDINGS": _yaml_inline(findings),
-        "PLAN_CONTENT": plan_content,
+        "PLAN_CONTENT": _plan_content_for_prompt(plan, plan_content),
         "WIKI_MANIFEST": _prompt_yaml_or_text(wiki_manifest),
         "OBLIGATION_CHECKLIST": _prompt_yaml_or_text(obligation_checklist),
         "MODULE_CONTENT": module_text,

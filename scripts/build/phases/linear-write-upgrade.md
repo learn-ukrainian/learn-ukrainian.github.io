@@ -68,8 +68,9 @@ Use only the base A1 placement/type matrix below. Preserve every option of odd-o
 ### Find-and-Fix (`error-correction`) — HARD (upgrade gate)
 
 Step 1 is “spot the bad token”. Step 2 must be a **real spelling choice**, not a
-tautology. After the learner marks the error, chips that are only
-`[correction, same-error]` fail the lesson gates (and teach nothing).
+tautology. The component removes the spotted error from the step-2 chips, so an
+`options:` list that contains the `error` token both fails the lesson gates and
+shrinks the visible choice set.
 
 For **every** `error-correction` item that has a non-empty `error:`:
 
@@ -82,8 +83,11 @@ For **every** `error-correction` item that has a non-empty `error:`:
    “In Ukrainian, the word for…”).
 2. Canonical fields only: `sentence`, `error`, `correction`, `options`,
    optional `explanation` (same contract as fresh write).
-3. `options:` has **≥3 distinct** forms, **includes `correction`**, and includes
-   **≥1 distractor that is not the spotted `error` token**.
+3. `options:` has **≥3 distinct** forms, **includes `correction`**, and must **NOT
+   contain the `error` token** (any option equal to `error` fails). The three chips
+   are the correction plus ≥2 distractors, none of them the error. Distractors are
+   **other spellings of the same word** (`день` → `дєнь` / `дінь`), never an unrelated
+   vocabulary word (`кінь`, `сіль`, `свято`).
 4. **Render-faithful chips:** after MDX derivation, at least one option string
    must equal the rendered `correctForm` **exactly** (React uses
    `selectedFix === correctForm`). Do not put English glosses on chips
@@ -91,7 +95,7 @@ For **every** `error-correction` item that has a non-empty `error:`:
 5. Distractors come **only** from the inventory below (wiki L2 / bad-form pairs /
    cumulative learner-state contrasts). Never invent Russianisms or fabricate
    wrong forms. If inventory is thin, reuse attested pairs from the original
-   module’s other EC items / quiz contrasts — still never ship `[corr, err]` alone.
+   module’s other EC items / quiz contrasts — still never put the error token in `options`.
 6. You **may grow** original `options` lists (preservation is ⊆). You **must**
    grow empty or binary tautological originals to satisfy (3)–(5).
 
@@ -104,6 +108,31 @@ the answer is correct (apostrophe rule, soft sign, letter, etc.). Micro-blanks
 like `бур___ян` / answer `'` without feedback are a hard fail — same contract as
 quiz/translate explanations. Structural blank + `answer∈options` checks still
 apply.
+
+**Empty choice (blank slot).** When "no character" is the right answer, the option
+and the `answer` are the **empty string `""`**, nothing else. The chip renders as a
+blank clickable slot; grading compares the selected value to `answer`; empty means
+no character inserted. Never write `без знака`, `без зна́ка — no sign`, `Немає знака`
+or any gloss in `options` or `answer` — the gate rejects them. Sample:
+
+```json
+{"sentence": "ден___ь", "options": ["", "ь", "'"], "answer": "", "explanation": "..."}
+```
+
+### Alphabet modules: no line breaks (`sounds-letters-and-hello`, `reading-ukrainian`, `special-signs`)
+
+These three modules teach syllables, not line breaks. Do **not** teach `перенос`, do
+not emit `divide-words` activities, and do not use the models `Мар'-яна`,
+`дере-в'яний`, `бур'-ян`, `паль-ці` or any other hyphenated break. The plan and
+original artifacts below have been filtered of `перенос` items on purpose; an
+original divide-words activity that is missing from them is intentionally dropped.
+The gate fails such a build.
+
+### Learner-facing phrases banned at every level
+
+Never write (case-insensitive): "mastery of all 33 letters", "comprehensive command of
+the complete 33-letter", "use only prepared models", "before you leave the lesson
+tab", "Stay inside Ukrainian for this lesson".
 
 ### Activity chrome language
 

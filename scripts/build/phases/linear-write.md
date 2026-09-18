@@ -405,21 +405,29 @@ For item-bearing types, include non-empty `items`; numeric arrays like `correct_
     - sentence: "Вона дивюся в дзеркало."  # Ukrainian carrier only — no EN gloss
       error: дивюся                        # the malformed token (excluded from VESUM)
       correction: дивиться                 # the corrected token (must appear exactly in options)
-      options: [дивиться, дивюся, дивлюся] # ≥3 chips; ≥1 distractor ≠ error; no glosses on chips
+      options: [дивиться, дивицця, дивитьця] # ≥3 chips; NEVER the error token; no glosses on chips
       explanation: "Вона дивиться. — She looks (reflexive 3rd person)."  # A1 EN lives here
 ```
 
 **Find-and-Fix options — HARD (same gate as `--upgrade`).** For every item with
 a non-empty `error:`:
-1. `options:` ≥3 distinct forms, includes `correction`, and includes ≥1 distractor
-   that is **not** the spotted `error` (never ship `[correction, error]` alone or
-   empty/`reveal-only` options).
+1. `options:` ≥3 distinct forms, includes `correction`, and must **NOT contain the
+   spotted `error` token** (the component removes it from step 2 and the gate rejects
+   it). Distractors are other spellings of the same word, never an unrelated
+   vocabulary word (`кінь`, `сіль`, `свято`). No `[correction, error]` pairs, no
+   empty/`reveal-only` options.
 2. Chips must be **render-faithful**: after derivation, a chip equals
    `correctForm` exactly (no `день (day)` gloss on the winning chip).
 3. At **A1**, `sentence:` is Ukrainian only. Put the short English scaffold in
    `explanation:`. No English meta stems (“Find the soft-sign error…”).
 4. Distractors come ONLY from wiki L2 / bad-form inventory (see Distractor supply
    above). Never invent Russianisms.
+
+**Fill-in empty choice.** "No character" is the empty string `""` in `options` and `answer` (renders as a blank slot). Never `без знака` / `Немає знака` / `no sign` — gate failure.
+
+**Alphabet modules** (`sounds-letters-and-hello`, `reading-ukrainian`, `special-signs`) do not teach line breaks: no `перенос`, no `divide-words` activities, no models `Мар'-яна`, `дере-в'яний`, `бур'-ян`, `паль-ці`.
+
+**Banned at every level** (case-insensitive): "mastery of all 33 letters", "comprehensive command of the complete 33-letter", "use only prepared models", "before you leave the lesson tab", "Stay inside Ukrainian for this lesson".
 
 The complete VESUM-exclusion list is exactly:
 `{sentence, error, errors, errorWord, error_word, explanation}`.

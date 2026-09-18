@@ -293,10 +293,44 @@ describe('normalizeUnjumbleAnswer', () => {
     expect(normalizeUnjumbleAnswer('the dog runs')).toBe('the dog runs');
   });
 
+  test('ignores a combining stress mark (U+0301)', () => {
+    expect(normalizeUnjumbleAnswer('буря\u0301к')).toBe('буряк');
+    expect(normalizeUnjumbleAnswer('буря\u0301к')).toBe(normalizeUnjumbleAnswer('буряк'));
+  });
+
+  test('ignores precomposed stress marks too', () => {
+    expect(normalizeUnjumbleAnswer('\u00E1')).toBe('a');
+    expect(normalizeUnjumbleAnswer('Ма\u0301ма')).toBe('мама');
+  });
+
+  test('keeps й and ї intact when stripping stress', () => {
+    expect(normalizeUnjumbleAnswer('Йой Їжа\u0301к')).toBe('йой їжак');
+  });
+
   test('treats punctuated and unpunctuated forms of the same sentence as equal', () => {
     expect(normalizeUnjumbleAnswer('Привіт, як справи?')).toBe(
       normalizeUnjumbleAnswer('Привіт як справи')
     );
+  });
+});
+
+describe('UnjumbleQuestion with a stressed answer', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
+  test('letter tiles б/у/р/я/к are graded correct against буря́к', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<UnjumbleQuestion words="к / я / б / р / у" answer={'буря\u0301к'} />);
+
+    for (const letter of ['б', 'у', 'р', 'я', 'к']) {
+      const tile = tilesIn(container, 'word-bank').find(t => t.textContent?.trim() === letter)!;
+      await user.click(tile);
+    }
+    await user.click(submitBtn(container));
+
+    expect(container.querySelector('[data-correct="true"]')).toBeInTheDocument();
+    expect(container.querySelector('[data-correct="false"]')).not.toBeInTheDocument();
   });
 });
 
