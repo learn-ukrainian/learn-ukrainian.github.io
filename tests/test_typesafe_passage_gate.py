@@ -111,3 +111,23 @@ def test_triage_and_evidence_block_formatting():
     assert "[p1]" in acc_block
     assert "[p2]" in conf_block
     assert "SOVIET/IDEOLOGICAL BIAS" in conf_block
+
+
+def test_live_api_failure_routes_to_curator_review(monkeypatch):
+    """Live API errors must not silently fall back to the keyword mock."""
+    gate = TypeSafePassageGate(api_key="test-key", mock=False)
+    passage = CandidatePassage(
+        id="api-fail-01",
+        title="Чергування",
+        text="В українській мові в закритих складах звуки [о], [е] переходять у [і].",
+        source="textbooks",
+    )
+
+    def _boom(*_a, **_k):
+        raise TimeoutError("simulated typesafe outage")
+
+    monkeypatch.setattr("urllib.request.urlopen", _boom)
+    result = gate.evaluate_passage("Чергування голосних", passage)
+    assert result.disposition == PassageDisposition.CURATOR_REVIEW
+    assert result.is_relevant == 0.0
+    assert "Live TypeSafe API failure" in result.reason

@@ -38,6 +38,7 @@ class PassageDisposition(StrEnum):
     ACCEPTED = "accepted"
     CONFLICT_QUARANTINE = "conflict_quarantine"
     EXCLUDED = "excluded"
+    CURATOR_REVIEW = "curator_review"  # Live API failure or ambiguous triage
 
 
 @dataclass(frozen=True)
@@ -75,6 +76,7 @@ class RAGTriageResult:
     query: str
     accepted: list[CandidatePassage] = field(default_factory=list)
     quarantined_conflict: list[CandidatePassage] = field(default_factory=list)
+    curator_review: list[CandidatePassage] = field(default_factory=list)
     excluded: list[CandidatePassage] = field(default_factory=list)
     evaluations: list[PassageEvaluation] = field(default_factory=list)
 
@@ -195,8 +197,18 @@ class TypeSafePassageGate:
             evid = float(answers.get("contains_usable_evidence", {}).get("noul", 0.0))
             soviet = float(answers.get("has_soviet_or_imperial_bias", {}).get("noul", 0.0))
             calque = float(answers.get("contains_calque_or_surzhyk", {}).get("noul", 0.0))
-        except Exception:
-            return self._mock_evaluate(query, passage)
+        except Exception as exc:
+            # Never silently fabricate bias scores on live API failure
+            # (typesafe_entity_aligner CURATOR_REVIEW precedent).
+            return PassageEvaluation(
+                passage_id=passage.id,
+                disposition=PassageDisposition.CURATOR_REVIEW,
+                is_relevant=0.0,
+                contains_evidence=0.0,
+                soviet_bias=0.0,
+                calque_score=0.0,
+                reason=f"Live TypeSafe API failure: {exc}",
+            )
 
         return self._route_scores(passage.id, rel, evid, soviet, calque)
 
@@ -293,6 +305,8 @@ class TypeSafePassageGate:
                 result.accepted.append(p)
             elif eval_res.disposition == PassageDisposition.CONFLICT_QUARANTINE:
                 result.quarantined_conflict.append(p)
+            elif eval_res.disposition == PassageDisposition.CURATOR_REVIEW:
+                result.curator_review.append(p)
             else:
                 result.excluded.append(p)
         return result
