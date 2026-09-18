@@ -17,6 +17,7 @@ import argparse
 import json
 import os
 import re
+import sys
 import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
@@ -72,13 +73,15 @@ def _resolve_typesafe_key() -> str:
         return key
 
     key_files = [
+        Path.home() / ".secrets" / "typsafe-ai.key",
+        Path.home() / ".secrets" / "typesafe-ai.key",
         Path.home() / ".config" / "typesafe" / "key",
         Path.home() / ".typesafe_api_key",
         Path.home() / ".gemini" / "antigravity-cli" / "typesafe_api_key",
     ]
-    for p in key_files:
-        if p.is_file():
-            content = p.read_text(encoding="utf-8").strip()
+    for path in key_files:
+        if path.is_file():
+            content = path.read_text(encoding="utf-8").strip().splitlines()[0].strip()
             if content:
                 return content
     return ""
@@ -109,7 +112,8 @@ class TypeSafeReranker:
     }
 
     def __init__(self, api_key: str | None = None, base_url: str = "https://api.typesafe.ai"):
-        self.api_key = api_key or _resolve_typesafe_key()
+        # Explicit empty string forces heuristic mode; None resolves from env/secrets.
+        self.api_key = _resolve_typesafe_key() if api_key is None else api_key
         self.base_url = base_url.rstrip("/")
 
     def rerank(
@@ -159,7 +163,7 @@ class TypeSafeReranker:
     def _rerank_remote(self, query: str, candidates: list[RerankCandidate]) -> list[RerankResult]:
         """Execute remote TypeSafe System One calls for each candidate."""
         results: list[RerankResult] = []
-        url = f"{self.base_url}/v1/system_one"
+        url = f"{self.base_url}/v1/systemone"
 
         for idx, cand in enumerate(candidates):
             state = {
@@ -213,10 +217,30 @@ class TypeSafeReranker:
                             original_rank=idx + 1,
                         )
                     )
-            except Exception:
-                # Fall back to heuristic for this candidate if network/API fails
-                fallback_res = self._score_single_heuristic(query, cand, idx + 1)
-                results.append(fallback_res)
+            except Exception as exc:
+                # Never silently fabricate scores on live API failure (entity_aligner precedent).
+                results.append(
+                    RerankResult(
+                        candidate=cand,
+                        relevance_score=0.0,
+                        clarity_level=0,
+                        composite_score=0.0,
+                        is_uncertain=True,
+                        original_rank=idx + 1,
+                    )
+                )
+                # Attach failure reason on the candidate metadata for callers.
+                meta = dict(cand.metadata or {})
+                meta["api_error"] = f"Live TypeSafe API failure: {exc}"
+                results[-1].candidate = RerankCandidate(
+                    id=cand.id,
+                    text=cand.text,
+                    title=cand.title,
+                    grade=cand.grade,
+                    author=cand.author,
+                    source_file=cand.source_file,
+                    metadata=meta,
+                )
 
         return results
 
@@ -323,11 +347,33 @@ def main() -> None:
     parser.add_argument("--query", "-q", required=True, help="Target search concept or lesson objective")
     parser.add_argument("--top-k", "-k", type=int, default=5, help="Number of top candidates to display")
     parser.add_argument("--drop-threshold", type=float, default=0.20, help="Drop threshold for low-relevance noise")
+    parser.add_argument(
+        "--candidates-json",
+        "-c",
+        help="Path to JSON list of candidate dicts (id/text/title/...). Reads stdin when set to '-'.",
+    )
     args = parser.parse_args()
 
     reranker = TypeSafeReranker()
     print(f"TypeSafe Reranker initialized (Remote API: {'Active' if reranker.api_key else 'Heuristic offline'})")
     print(f"Query: {args.query}\n")
+
+    if not args.candidates_json:
+        raise SystemExit("Provide --candidates-json PATH (or '-') with candidate dicts to re-rank.")
+
+    raw = sys.stdin.read() if args.candidates_json == "-" else Path(args.candidates_json).read_text(encoding="utf-8")
+    candidates = json.loads(raw)
+    if not isinstance(candidates, list):
+        raise SystemExit("--candidates-json must decode to a JSON list")
+
+    results = rerank_textbook_candidates(
+        args.query,
+        candidates,
+        top_k=args.top_k,
+        drop_threshold=args.drop_threshold,
+        reranker=reranker,
+    )
+    print(json.dumps([r.to_dict() for r in results], ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":

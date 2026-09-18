@@ -127,14 +127,23 @@ def test_rerank_textbook_candidates_helper() -> None:
 
     # With drop_threshold=0.0, both items are retained and ranked
     results_all = rerank_textbook_candidates(
-        "чергування звуків у коренях дієслів", raw_dicts, top_k=2, drop_threshold=0.0
+        "чергування звуків у коренях дієслів",
+        raw_dicts,
+        top_k=2,
+        drop_threshold=0.0,
+        reranker=TypeSafeReranker(api_key=""),
     )
     assert len(results_all) == 2
     assert results_all[0].candidate.id == "txt_101"
     assert results_all[0].composite_score > results_all[1].composite_score
 
     # With default drop_threshold=0.20, TOC noise is cleanly pruned
-    results_pruned = rerank_textbook_candidates("чергування звуків у коренях дієслів", raw_dicts, top_k=2)
+    results_pruned = rerank_textbook_candidates(
+        "чергування звуків у коренях дієслів",
+        raw_dicts,
+        top_k=2,
+        reranker=TypeSafeReranker(api_key=""),
+    )
     assert len(results_pruned) == 1
     assert results_pruned[0].candidate.id == "txt_101"
 
@@ -164,3 +173,19 @@ def test_rerank_remote_mock(mock_urlopen: MagicMock) -> None:
     assert results[0].clarity_level == 3
     assert not results[0].is_uncertain
     assert results[0].composite_score == pytest.approx(0.70 * 0.88 + 0.30 * 1.0, rel=1e-3)
+
+
+@patch("urllib.request.urlopen", side_effect=TimeoutError("simulated typesafe outage"))
+def test_remote_api_failure_does_not_fabricate_scores(_mock_urlopen: MagicMock) -> None:
+    """Live API errors must not silently fall back to the lexical heuristic."""
+    reranker = TypeSafeReranker(api_key="test-key")
+    cand = RerankCandidate(
+        id="c1",
+        title="Правило",
+        text="Правило. Дієслова в минулому часі змінюються за родами та числами.",
+    )
+    results = reranker.rerank("минулий час", [cand], drop_threshold=0.0)
+    assert len(results) == 1
+    assert results[0].composite_score == 0.0
+    assert results[0].is_uncertain is True
+    assert "api_error" in (results[0].candidate.metadata or {})
