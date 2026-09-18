@@ -1,6 +1,6 @@
 """Numeral + Noun Agreement Engine for Ukrainian Language Learning.
 
-Implements Ukrainian Pravopys 2019 (§ 105–107) rules for numeral and noun agreement
+Implements Ukrainian Academic Grammar (Volkova, Maslo 2012, pp. 90–94) rules for numeral and noun agreement
 across all 5 distinct number tiers:
   Tier 1: Ends in 1, except 11 -> Nominative singular (21 день, 41 книга).
   Tier 2: Ends in 2, 3, 4, except 12–14 -> Nominative plural (2 столи, 3 сестри, 4 вікна).
@@ -103,7 +103,7 @@ class NumeralAgreementCard:
     prompt_en: str = ""
     pedagogical_rule_ua: str = ""
     pedagogical_rule_en: str = ""
-    pravopys_ref: str = "Правопис 2019, § 105–107"
+    pravopys_ref: str = "Академічна граматика: зв'язок числівника з іменником"
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -404,13 +404,13 @@ def load_noun_paradigms_from_db(
 
 
 def is_dropping_yn_paucal_exception(noun: NounParadigm) -> bool:
-    """Detect masculine nouns with suffix -ин that drops in the plural.
+    """Detect masculine animate nouns with suffix -ин that drops in the plural.
 
-    Under Ukrainian academic grammar (Volkova, Maslo 2012, p. 91), nouns such as
+    Under Ukrainian academic grammar (Volkova, Maslo 2012, p. 91), animate nouns such as
     «громадянин», «селянин», «киянин», «львів'янин», «болгарин» take Genitive singular
     after numerals 2, 3, 4 («два громадянина», «три селянина»), rather than Nominative plural.
     """
-    if noun.gender != "m":
+    if not (noun.gender == "m" and noun.is_anim):
         return False
     if noun.lemma.endswith("ин") and len(noun.lemma) > 3:
         stem = noun.lemma[:-2]
@@ -441,7 +441,7 @@ def generate_card_for_tier(
             "з іменником у роді, числі й відмінку: вимагає називного відмінка однини."
         )
         pravopys_rule_en = "Numerals ending in 'one' (1, 21, 31...) agree in gender and govern Nominative singular."
-        pravopys_citation = "Правопис 2019, § 105 (узгодження з числівником «один»)"
+        pravopys_citation = "Академічна граматика: узгодження числівника «один» з іменником"
 
     elif tier == NumeralTier.TIER_2_PAUCAL:
         numeral_val = rng.choice([2, 3, 4, 22, 23, 24, 32, 34])
@@ -459,7 +459,7 @@ def generate_card_for_tier(
                 "(e.g. 'громадянин' -> 'громадяни') take Genitive singular after 2, 3, 4: "
                 "'два громадянина', 'три селянина'."
             )
-            pravopys_citation = "Правопис 2019, § 105; Морфологія української мови (Волкова, Масло 2012, с. 91)"
+            pravopys_citation = "Морфологія української мови (Волкова, Масло 2012, с. 91)"
         else:
             target_case = "називний"
             target_number = "plural"
@@ -469,7 +469,7 @@ def generate_card_for_tier(
                 "іменником у називному відмінку множини: «два столи», «три сестри», «чотири вікна»."
             )
             pravopys_rule_en = "Numerals 2, 3, 4 (except 12–14) govern Nominative plural: 'два столи', 'три сестри'."
-            pravopys_citation = "Правопис 2019, § 105 (сполучення з числівниками 2, 3, 4)"
+            pravopys_citation = "Академічна граматика: сполучення числівників 2, 3, 4 з іменником (Волкова, Масло 2012, с. 91)"
 
     elif tier == NumeralTier.TIER_3_PLURAL:
         # Include teens to test teen-tier violation specifically
@@ -483,7 +483,7 @@ def generate_card_for_tier(
             "іменником у родовому відмінку множини: «п'ять столів», «дванадцять сестер»."
         )
         pravopys_rule_en = "Numerals 5–20, 30, and teens 11–14 govern Genitive plural: 'п'ять столів'."
-        pravopys_citation = "Правопис 2019, § 105 (сполучення з числівниками 5 і більше)"
+        pravopys_citation = "Академічна граматика: сполучення числівників від 5 і більше з іменником (Волкова, Масло 2012, с. 91)"
 
     elif tier == NumeralTier.TIER_4_FRACTIONAL:
         use_decimal = rng.choice([False, True])
@@ -498,10 +498,10 @@ def generate_card_for_tier(
         pravopys_rule_en = (
             "'Півтора' (m/n), 'півтори' (f), and decimals govern Genitive singular: 'півтора року', '2.5 літра'."
         )
-        pravopys_citation = "Правопис 2019, § 107 (сполучення з дробовими числівниками)"
+        pravopys_citation = "Академічна граматика: сполучення дробових числівників з іменником (Волкова, Масло 2012, с. 92)"
 
     elif tier == NumeralTier.TIER_5_COLLECTIVE:
-        # Collective numerals apply strictly to masculine animates and neuters (Pravopys 2019, § 105)
+        # Collective numerals apply strictly to masculine animates and neuters
         if not ((noun.gender == "m" and noun.is_anim) or noun.gender == "n"):
             return None
         numeral_val = rng.choice(["двоє", "троє", "четверо", "п'ятеро"])
@@ -513,7 +513,7 @@ def generate_card_for_tier(
             "відмінку множини: «двоє хлопців», «троє дітей», «четверо вікон»."
         )
         pravopys_rule_en = "Collective numerals (двоє, троє, четверо...) govern Genitive plural: 'двоє хлопців'."
-        pravopys_citation = "Правопис 2019, § 105 (сполучення зі збірними числівниками)"
+        pravopys_citation = "Академічна граматика: вживання збірних числівників (Волкова, Масло 2012, с. 93)"
     else:
         return None
 

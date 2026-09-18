@@ -85,7 +85,7 @@ describe('numeral-agreement', () => {
       promptEn: 'Choose the correct form for: 2 (журнал)',
       pedagogicalRuleUa: 'Числівники 2, 3, 4 керують називним відмінком множини.',
       pedagogicalRuleEn: 'Numerals 2, 3, 4 govern Nominative plural.',
-      pravopysRef: 'Правопис 2019, § 108–111',
+      pravopysRef: "Академічна граматика: сполучення числівників 2, 3, 4 з іменником (Волкова, Масло 2012, с. 91)",
     };
 
     // Correct choice

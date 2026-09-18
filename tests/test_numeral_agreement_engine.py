@@ -161,7 +161,7 @@ def test_paucal_dropping_yn_exception():
     assert card.target_case == "родовий"
     assert card.target_number == "singular"
     assert "два громадянина" in card.pedagogical_rule_ua or "родового відмінка однини" in card.pedagogical_rule_ua
-    assert card.pravopys_ref == "Правопис 2019, § 105; Морфологія української мови (Волкова, Масло 2012, с. 91)"
+    assert card.pravopys_ref == "Морфологія української мови (Волкова, Масло 2012, с. 91)"
 
     # Overgeneralized plural distractor (*громадяни) must NOT be labeled as Russianism calque
     nom_pl_distractor = next(d for d in card.distractors if d["form"] == "громадяни")

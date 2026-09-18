@@ -1,12 +1,12 @@
 /**
  * Ukrainian Numeral + Noun Agreement Model and Feedback Helpers.
  *
- * Grounded in Ukrainian Pravopys 2019 (§ 105–107) rules:
- * - Tier 1: Ends in 1 (except 11) -> Nominative singular (§ 105)
- * - Tier 2: Ends in 2, 3, 4 (except 12–14) -> Nominative plural (anti-calque focus; dropping -ин takes Gen Sg) (§ 105)
- * - Tier 3: 5–20, 30, and teens 11–14 -> Genitive plural (§ 105)
- * - Tier 4: Fractional (півтора / півтори / decimals) -> Genitive singular (§ 107)
- * - Tier 5: Collective (двоє, троє, четверо...) -> Genitive plural (§ 105)
+ * Grounded in Ukrainian Academic Grammar (Volkova, Maslo 2012, pp. 90–94):
+ * - Tier 1: Ends in 1 (except 11) -> Nominative singular
+ * - Tier 2: Ends in 2, 3, 4 (except 12–14) -> Nominative plural (anti-calque focus; dropping -ин takes Gen Sg)
+ * - Tier 3: 5–20, 30, and teens 11–14 -> Genitive plural
+ * - Tier 4: Fractional (півтора / півтори / decimals) -> Genitive singular
+ * - Tier 5: Collective (двоє, троє, четверо...) -> Genitive plural
  */
 
 export type NumeralTierKey =
@@ -188,7 +188,7 @@ export function normalizeNumeralItem(raw: unknown): PracticeNumeralItem {
     promptEn: String(r.promptEn ?? r.prompt_en ?? ''),
     pedagogicalRuleUa: String(r.pedagogicalRuleUa ?? r.pedagogical_rule_ua ?? ''),
     pedagogicalRuleEn: String(r.pedagogicalRuleEn ?? r.pedagogical_rule_en ?? ''),
-    pravopysRef: String(r.pravopysRef ?? r.pravopys_ref ?? 'Правопис 2019, § 105–107'),
+    pravopysRef: String(r.pravopysRef ?? r.pravopys_ref ?? "Академічна граматика: зв'язок числівника з іменником"),
   };
 }
 
