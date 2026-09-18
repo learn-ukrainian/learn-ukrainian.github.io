@@ -82,9 +82,9 @@ non-skippable:
 - Every commit has an `X-Agent: <agent>/<task-id>` trailer. Change tasks end in
   a pushed branch; never push directly to `main`. Workers neither merge nor
   arm auto-merge. **CF review-fix before CI** (operator 2026-09-18): exact-head
-  cross-family CF APPROVE/fix/re-CF on the branch **before opening any PR**
-  (draft or ready; drafts still start CI here); then CI green on that same
-  head; then the accountable orchestrator MUST merge (or enqueue via
+  independent cross-family CF APPROVE/fix/re-CF on the branch **before opening
+  any PR** (draft or ready; drafts still start CI here); then CI green on that
+  same head; then the accountable orchestrator MUST merge (or enqueue via
   `gh pr merge <N> --squash`). Never leave an approved, green PR unmerged
   waiting for operator action. Resolve material findings and re-review before
   merge.
