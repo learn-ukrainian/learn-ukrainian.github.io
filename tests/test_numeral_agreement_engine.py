@@ -139,6 +139,48 @@ def test_tier_2_russianism_calque_distractor():
     assert "Russianism" in calque_d["explanation_en"]
 
 
+def test_paucal_dropping_yn_exception():
+    """Verify masculine nouns in -ин that drop suffix in plural take Gen Sg after 2, 3, 4."""
+    noun = NounParadigm(
+        lemma="громадянин",
+        gender="m",
+        is_anim=True,
+        cefr_level="B1",
+        nom_sg="громадянин",
+        gen_sg="громадянина",
+        nom_pl="громадяни",
+        gen_pl="громадян",
+        dat_pl="громадянам",
+        loc_pl="громадянах",
+        oru_sg="громадянином",
+    )
+    # Under paucal tier (2, 3, 4): correct form must be Genitive singular (два громадянина)
+    card = generate_card_for_tier(noun, NumeralTier.TIER_2_PAUCAL, seed_idx=0)
+    assert card is not None
+    assert card.correct_form == "громадянина"
+    assert card.target_case == "родовий"
+    assert card.target_number == "singular"
+    assert "два громадянина" in card.pedagogical_rule_ua or "родового відмінка однини" in card.pedagogical_rule_ua
+    assert card.pravopys_ref == "Правопис 2019, § 105; Морфологія української мови (Волкова, Масло 2012, с. 91)"
+
+    # Overgeneralized plural distractor (*громадяни) must NOT be labeled as Russianism calque
+    nom_pl_distractor = next(d for d in card.distractors if d["form"] == "громадяни")
+    assert nom_pl_distractor["interference_type"] == InterferenceType.OVERGENERALIZED_PLURAL.value
+    assert "називним відмінком множини" in nom_pl_distractor["explanation_ua"]
+
+    # Verify no distractor is labeled as Russianism calque
+    assert not any(d["interference_type"] == InterferenceType.RUSSIANISM_CALQUE.value for d in card.distractors)
+
+    # Test serialization contract
+    card_dict = card.to_dict()
+    assert card_dict["correctForm"] == "громадянина"
+    assert card_dict["numeralDisplay"] == card.numeral_display
+    assert card_dict["targetCase"] == "родовий"
+    assert len(card_dict["distractors"]) == 3
+    assert "explanationUa" in card_dict["distractors"][0]
+    assert "interferenceType" in card_dict["distractors"][0]
+
+
 def test_teen_tier_violation_distractor():
     """Verify teen numerals (11-14) test teen-tier violation (treating as paucal 1-4)."""
     noun = NounParadigm(

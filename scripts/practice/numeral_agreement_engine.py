@@ -1,6 +1,6 @@
 """Numeral + Noun Agreement Engine for Ukrainian Language Learning.
 
-Implements Ukrainian Pravopys 2019 (§ 108–111) rules for numeral and noun agreement
+Implements Ukrainian Pravopys 2019 (§ 105–107) rules for numeral and noun agreement
 across all 5 distinct number tiers:
   Tier 1: Ends in 1, except 11 -> Nominative singular (21 день, 41 книга).
   Tier 2: Ends in 2, 3, 4, except 12–14 -> Nominative plural (2 столи, 3 сестри, 4 вікна).
@@ -103,7 +103,7 @@ class NumeralAgreementCard:
     prompt_en: str = ""
     pedagogical_rule_ua: str = ""
     pedagogical_rule_en: str = ""
-    pravopys_ref: str = "Правопис 2019, § 108–111"
+    pravopys_ref: str = "Правопис 2019, § 105–107"
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -125,6 +125,19 @@ class NumeralAgreementCard:
             "pedagogical_rule_ua": self.pedagogical_rule_ua,
             "pedagogical_rule_en": self.pedagogical_rule_en,
             "pravopys_ref": self.pravopys_ref,
+            # CamelCase aliases for direct TypeScript frontend ingestion
+            "numeralDisplay": self.numeral_display,
+            "numeralWords": self.numeral_words,
+            "isAnim": self.is_anim,
+            "cefrLevel": self.cefr_level,
+            "targetCase": self.target_case,
+            "targetNumber": self.target_number,
+            "correctForm": self.correct_form,
+            "promptUa": self.prompt_ua,
+            "promptEn": self.prompt_en,
+            "pedagogicalRuleUa": self.pedagogical_rule_ua,
+            "pedagogicalRuleEn": self.pedagogical_rule_en,
+            "pravopysRef": self.pravopys_ref,
         }
 
 
@@ -390,6 +403,22 @@ def load_noun_paradigms_from_db(
     return paradigms
 
 
+def is_dropping_yn_paucal_exception(noun: NounParadigm) -> bool:
+    """Detect masculine nouns with suffix -ин that drops in the plural.
+
+    Under Ukrainian academic grammar (Volkova, Maslo 2012, p. 91), nouns such as
+    «громадянин», «селянин», «киянин», «львів'янин», «болгарин» take Genitive singular
+    after numerals 2, 3, 4 («два громадянина», «три селянина»), rather than Nominative plural.
+    """
+    if noun.gender != "m":
+        return False
+    if noun.lemma.endswith("ин") and len(noun.lemma) > 3:
+        stem = noun.lemma[:-2]
+        if noun.nom_pl.startswith(stem) and not noun.nom_pl[len(stem) :].startswith(("ин", "ін", "їн")):
+            return True
+    return False
+
+
 def generate_card_for_tier(
     noun: NounParadigm,
     tier: NumeralTier,
@@ -412,17 +441,35 @@ def generate_card_for_tier(
             "з іменником у роді, числі й відмінку: вимагає називного відмінка однини."
         )
         pravopys_rule_en = "Numerals ending in 'one' (1, 21, 31...) agree in gender and govern Nominative singular."
+        pravopys_citation = "Правопис 2019, § 105 (узгодження з числівником «один»)"
 
     elif tier == NumeralTier.TIER_2_PAUCAL:
         numeral_val = rng.choice([2, 3, 4, 22, 23, 24, 32, 34])
-        target_case = "називний"
-        target_number = "plural"
-        correct_form = noun.nom_pl
-        pravopys_rule_ua = (
-            "Числівники 2, 3, 4 (та складені, що закінчуються на 2, 3, 4, крім 12–14) керують "
-            "іменником у називному відмінку множини: «два столи», «три сестри», «чотири вікна»."
-        )
-        pravopys_rule_en = "Numerals 2, 3, 4 (except 12–14) govern Nominative plural: 'два столи', 'три сестри'."
+        if is_dropping_yn_paucal_exception(noun):
+            target_case = "родовий"
+            target_number = "singular"
+            correct_form = noun.gen_sg
+            pravopys_rule_ua = (
+                "Іменники чоловічого роду на -ин, що втрачають цей суфікс у множині "
+                "(«громадянин», «селянин», «киянин»), після числівників 2, 3, 4 "
+                "вживаються у формі родового відмінка однини: «два громадянина», «три селянина»."
+            )
+            pravopys_rule_en = (
+                "Masculine nouns ending in -ин that lose this suffix in the plural "
+                "(e.g. 'громадянин' -> 'громадяни') take Genitive singular after 2, 3, 4: "
+                "'два громадянина', 'три селянина'."
+            )
+            pravopys_citation = "Правопис 2019, § 105; Морфологія української мови (Волкова, Масло 2012, с. 91)"
+        else:
+            target_case = "називний"
+            target_number = "plural"
+            correct_form = noun.nom_pl
+            pravopys_rule_ua = (
+                "Числівники 2, 3, 4 (та складені, що закінчуються на 2, 3, 4, крім 12–14) керують "
+                "іменником у називному відмінку множини: «два столи», «три сестри», «чотири вікна»."
+            )
+            pravopys_rule_en = "Numerals 2, 3, 4 (except 12–14) govern Nominative plural: 'два столи', 'три сестри'."
+            pravopys_citation = "Правопис 2019, § 105 (сполучення з числівниками 2, 3, 4)"
 
     elif tier == NumeralTier.TIER_3_PLURAL:
         # Include teens to test teen-tier violation specifically
@@ -436,6 +483,7 @@ def generate_card_for_tier(
             "іменником у родовому відмінку множини: «п'ять столів», «дванадцять сестер»."
         )
         pravopys_rule_en = "Numerals 5–20, 30, and teens 11–14 govern Genitive plural: 'п'ять столів'."
+        pravopys_citation = "Правопис 2019, § 105 (сполучення з числівниками 5 і більше)"
 
     elif tier == NumeralTier.TIER_4_FRACTIONAL:
         use_decimal = rng.choice([False, True])
@@ -450,9 +498,10 @@ def generate_card_for_tier(
         pravopys_rule_en = (
             "'Півтора' (m/n), 'півтори' (f), and decimals govern Genitive singular: 'півтора року', '2.5 літра'."
         )
+        pravopys_citation = "Правопис 2019, § 107 (сполучення з дробовими числівниками)"
 
     elif tier == NumeralTier.TIER_5_COLLECTIVE:
-        # Collective numerals apply strictly to masculine animates and neuters (Pravopys 2019, § 111)
+        # Collective numerals apply strictly to masculine animates and neuters (Pravopys 2019, § 105)
         if not ((noun.gender == "m" and noun.is_anim) or noun.gender == "n"):
             return None
         numeral_val = rng.choice(["двоє", "троє", "четверо", "п'ятеро"])
@@ -464,6 +513,7 @@ def generate_card_for_tier(
             "відмінку множини: «двоє хлопців», «троє дітей», «четверо вікон»."
         )
         pravopys_rule_en = "Collective numerals (двоє, троє, четверо...) govern Genitive plural: 'двоє хлопців'."
+        pravopys_citation = "Правопис 2019, § 105 (сполучення зі збірними числівниками)"
     else:
         return None
 
@@ -473,65 +523,97 @@ def generate_card_for_tier(
     candidate_distractors: list[NumeralDistractor] = []
 
     if tier == NumeralTier.TIER_2_PAUCAL:
-        # 1. Critical Russianism Calque: Genitive singular (*два журнала* vs *два журнали*)
-        candidate_distractors.append(
-            NumeralDistractor(
-                form=noun.gen_sg,
-                interference_type=InterferenceType.RUSSIANISM_CALQUE,
-                explanation_ua=(
-                    f"У родовому відмінку однини іменники після 2, 3, 4 вживаються в російській мові "
-                    f"(«два журнала»). В українській мові після 2, 3, 4 потрібен називний відмінок "
-                    f"множини: «{disp} {correct_form}»."
-                ),
-                explanation_en=(
-                    f"Using Genitive singular after 2, 3, 4 is a Russianism calque. Ukrainian requires "
-                    f"Nominative plural: '{disp} {correct_form}'."
-                ),
-            )
-        )
-        # 2. Genitive plural (5+ overgeneralization or compound misagreement)
-        if isinstance(numeral_val, int) and numeral_val > 20:
+        if is_dropping_yn_paucal_exception(noun):
+            # 1. Overgeneralized Nominative plural distractor (treating like regular nouns)
             candidate_distractors.append(
                 NumeralDistractor(
-                    form=noun.gen_pl,
-                    interference_type=InterferenceType.COMPOUND_LAST_WORD_MISAGREEMENT,
+                    form=noun.nom_pl,
+                    interference_type=InterferenceType.OVERGENERALIZED_PLURAL,
                     explanation_ua=(
-                        f"У складених числівниках іменник узгоджується з останнім словом: оскільки "
-                        f"останнє слово «{words.split()[-1]}», потрібен називний відмінок множини "
-                        f"(«{disp} {correct_form}»), а не родовий."
+                        f"Форма «{noun.nom_pl}» є називним відмінком множини. Для іменників на -ин, "
+                        f"що втрачають цей суфікс у множині, після 2, 3, 4 норма вимагає родового відмінка однини: «{disp} {correct_form}»."
                     ),
                     explanation_en=(
-                        f"In compound numerals, the noun agrees with the last word. Since the last "
-                        f"word is '{words.split()[-1]}', Nominative plural is required."
+                        f"'{noun.nom_pl}' is Nominative plural. For nouns in -ин losing this suffix in plural, "
+                        f"Ukrainian standard requires Genitive singular after 2, 3, 4: '{disp} {correct_form}'."
                     ),
                 )
             )
-        else:
+            # 2. Genitive plural (5+ overgeneralization)
             candidate_distractors.append(
                 NumeralDistractor(
                     form=noun.gen_pl,
                     interference_type=InterferenceType.OVERGENERALIZED_PLURAL,
                     explanation_ua=(
-                        f"Родовий відмінок множини вживається після числівників 5 і більше. "
-                        f"Після 2, 3, 4 потрібен називний відмінок множини: «{disp} {correct_form}»."
+                        f"Форма «{noun.gen_pl}» — це родовий відмінок множини (вживається після 5+). "
+                        f"Після 2, 3, 4 для цього іменника потрібен родовий відмінок однини: «{disp} {correct_form}»."
                     ),
                     explanation_en=(
-                        f"Genitive plural is used after 5+. Numerals 2, 3, and 4 require "
+                        f"'{noun.gen_pl}' is Genitive plural (used after 5+). "
+                        f"Numerals 2, 3, 4 require Genitive singular for this noun: '{disp} {correct_form}'."
+                    ),
+                )
+            )
+        else:
+            # 1. Critical Russianism Calque: Genitive singular (*два журнала* vs *два журнали*)
+            candidate_distractors.append(
+                NumeralDistractor(
+                    form=noun.gen_sg,
+                    interference_type=InterferenceType.RUSSIANISM_CALQUE,
+                    explanation_ua=(
+                        f"У родовому відмінку однини іменники після 2, 3, 4 вживаються в російській мові "
+                        f"(«два журнала»). В українській мові після 2, 3, 4 потрібен називний відмінок "
+                        f"множини: «{disp} {correct_form}»."
+                    ),
+                    explanation_en=(
+                        f"Using Genitive singular after 2, 3, 4 is a Russianism calque. Ukrainian requires "
                         f"Nominative plural: '{disp} {correct_form}'."
                     ),
                 )
             )
-        # 3. Base Nominative Singular Bias
+            # 2. Genitive plural (5+ overgeneralization or compound misagreement)
+            if isinstance(numeral_val, int) and numeral_val > 20:
+                candidate_distractors.append(
+                    NumeralDistractor(
+                        form=noun.gen_pl,
+                        interference_type=InterferenceType.COMPOUND_LAST_WORD_MISAGREEMENT,
+                        explanation_ua=(
+                            f"У складених числівниках іменник узгоджується з останнім словом: оскільки "
+                            f"останнє слово «{words.split()[-1]}», потрібен називний відмінок множини "
+                            f"(«{disp} {correct_form}»), а не родовий."
+                        ),
+                        explanation_en=(
+                            f"In compound numerals, the noun agrees with the last word. Since the last "
+                            f"word is '{words.split()[-1]}', Nominative plural is required."
+                        ),
+                    )
+                )
+            else:
+                candidate_distractors.append(
+                    NumeralDistractor(
+                        form=noun.gen_pl,
+                        interference_type=InterferenceType.OVERGENERALIZED_PLURAL,
+                        explanation_ua=(
+                            f"Родовий відмінок множини вживається після числівників 5 і більше. "
+                            f"Після 2, 3, 4 потрібен називний відмінок множини: «{disp} {correct_form}»."
+                        ),
+                        explanation_en=(
+                            f"Genitive plural is used after 5+. Numerals 2, 3, and 4 require "
+                            f"Nominative plural: '{disp} {correct_form}'."
+                        ),
+                    )
+                )
+        # 3. Base Nominative Singular Bias (both regular and dropping -ин)
         candidate_distractors.append(
             NumeralDistractor(
                 form=noun.nom_sg,
                 interference_type=InterferenceType.NOMINATIVE_SINGULAR_BIAS,
                 explanation_ua=(
                     f"Початкова словникова форма (однина) вживається лише з числівником «один». "
-                    f"Після {disp} потрібна множина: «{correct_form}»."
+                    f"Після {disp} потрібна форма «{correct_form}»."
                 ),
                 explanation_en=(
-                    f"Dictionary singular is only used with 'one'. After {disp}, plural is required: '{correct_form}'."
+                    f"Dictionary singular is only used with 'one'. After {disp}, the required form is '{correct_form}'."
                 ),
             )
         )
@@ -769,6 +851,10 @@ def generate_card_for_tier(
                 "interference_type": d.interference_type.value,
                 "explanation_ua": d.explanation_ua,
                 "explanation_en": d.explanation_en,
+                # CamelCase aliases for TypeScript frontend ingestion
+                "interferenceType": d.interference_type.value,
+                "explanationUa": d.explanation_ua,
+                "explanationEn": d.explanation_en,
             }
             for d in selected_distractors
         ],
@@ -776,7 +862,7 @@ def generate_card_for_tier(
         prompt_en=prompt_en,
         pedagogical_rule_ua=pravopys_rule_ua,
         pedagogical_rule_en=pravopys_rule_en,
-        pravopys_ref="Правопис 2019, § 108–111",
+        pravopys_ref=pravopys_citation,
     )
 
 

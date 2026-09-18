@@ -1,12 +1,12 @@
 /**
  * Ukrainian Numeral + Noun Agreement Model and Feedback Helpers.
  *
- * Grounded in Ukrainian Pravopys 2019 (§ 108–111) rules:
- * - Tier 1: Ends in 1 (except 11) -> Nominative singular
- * - Tier 2: Ends in 2, 3, 4 (except 12–14) -> Nominative plural (anti-calque focus)
- * - Tier 3: 5–20, 30, and teens 11–14 -> Genitive plural
- * - Tier 4: Fractional (півтора / півтори / decimals) -> Genitive singular
- * - Tier 5: Collective (двоє, троє, четверо...) -> Genitive plural
+ * Grounded in Ukrainian Pravopys 2019 (§ 105–107) rules:
+ * - Tier 1: Ends in 1 (except 11) -> Nominative singular (§ 105)
+ * - Tier 2: Ends in 2, 3, 4 (except 12–14) -> Nominative plural (anti-calque focus; dropping -ин takes Gen Sg) (§ 105)
+ * - Tier 3: 5–20, 30, and teens 11–14 -> Genitive plural (§ 105)
+ * - Tier 4: Fractional (півтора / півтори / decimals) -> Genitive singular (§ 107)
+ * - Tier 5: Collective (двоє, троє, четверо...) -> Genitive plural (§ 105)
  */
 
 export type NumeralTierKey =
@@ -154,35 +154,76 @@ export function classifyNumeralTier(value: number | string): NumeralTierKey {
 }
 
 /**
+ * Ingestion adapter that normalizes either camelCase or snake_case inputs
+ * into a strongly typed PracticeNumeralItem.
+ */
+export function normalizeNumeralItem(raw: unknown): PracticeNumeralItem {
+  if (!raw || typeof raw !== 'object') {
+    throw new TypeError('Invalid numeral item: expected an object');
+  }
+  const r = raw as Record<string, any>;
+  const rawDistractors = Array.isArray(r.distractors) ? r.distractors : [];
+  const distractors: NumeralDistractor[] = rawDistractors.map((d: any) => ({
+    form: String(d.form ?? ''),
+    interferenceType: (d.interferenceType ?? d.interference_type ?? 'overgeneralized_plural') as InterferenceTypeKey,
+    explanationUa: String(d.explanationUa ?? d.explanation_ua ?? ''),
+    explanationEn: String(d.explanationEn ?? d.explanation_en ?? ''),
+  }));
+
+  return {
+    id: String(r.id ?? ''),
+    tier: (r.tier ?? 'tier_3_plural_5_plus') as NumeralTierKey,
+    numeralDisplay: String(r.numeralDisplay ?? r.numeral_display ?? ''),
+    numeralWords: String(r.numeralWords ?? r.numeral_words ?? ''),
+    lemma: String(r.lemma ?? ''),
+    gender: (r.gender ?? 'm') as 'm' | 'f' | 'n',
+    isAnim: Boolean(r.isAnim ?? r.is_anim ?? false),
+    cefrLevel: String(r.cefrLevel ?? r.cefr_level ?? 'A1'),
+    targetCase: String(r.targetCase ?? r.target_case ?? ''),
+    targetNumber: (r.targetNumber ?? r.target_number ?? 'singular') as 'singular' | 'plural',
+    correctForm: String(r.correctForm ?? r.correct_form ?? ''),
+    options: Array.isArray(r.options) ? r.options.map(String) : [],
+    distractors,
+    promptUa: String(r.promptUa ?? r.prompt_ua ?? ''),
+    promptEn: String(r.promptEn ?? r.prompt_en ?? ''),
+    pedagogicalRuleUa: String(r.pedagogicalRuleUa ?? r.pedagogical_rule_ua ?? ''),
+    pedagogicalRuleEn: String(r.pedagogicalRuleEn ?? r.pedagogical_rule_en ?? ''),
+    pravopysRef: String(r.pravopysRef ?? r.pravopys_ref ?? 'Правопис 2019, § 105–107'),
+  };
+}
+
+/**
  * Generate targeted pedagogical feedback for a user's selection on a numeral card.
+ * Accepts either strongly-typed PracticeNumeralItem or raw JSON cards from Python engine.
  */
 export function numeralFeedbackFor(
-  item: PracticeNumeralItem,
+  item: PracticeNumeralItem | Record<string, any>,
   selectedOption: string,
 ): NumeralFeedback {
-  const normSelected = selectedOption.trim().toLowerCase();
-  const normCorrect = item.correctForm.trim().toLowerCase();
+  const normItem = normalizeNumeralItem(item);
+  const normSelected = (selectedOption ?? '').trim().toLowerCase();
+  const normCorrect = normItem.correctForm.trim().toLowerCase();
 
   if (normSelected === normCorrect) {
     return {
       isCorrect: true,
-      explanationUa: `Правильно! «${item.numeralDisplay} ${item.correctForm}» — правильна форма (${item.targetCase} відмінок ${item.targetNumber === 'singular' ? 'однини' : 'множини'}).`,
-      explanationEn: `Correct! '${item.numeralDisplay} ${item.correctForm}' is the correct form (${item.targetCase} ${item.targetNumber}).`,
-      ruleUa: item.pedagogicalRuleUa,
-      ruleEn: item.pedagogicalRuleEn,
+      explanationUa: `Правильно! «${normItem.numeralDisplay} ${normItem.correctForm}» — правильна форма (${normItem.targetCase} відмінок ${normItem.targetNumber === 'singular' ? 'однини' : 'множини'}).`,
+      explanationEn: `Correct! '${normItem.numeralDisplay} ${normItem.correctForm}' is the correct form (${normItem.targetCase} ${normItem.targetNumber}).`,
+      ruleUa: normItem.pedagogicalRuleUa,
+      ruleEn: normItem.pedagogicalRuleEn,
     };
   }
 
   // Look for specific distractor explanation
-  const distractor = item.distractors.find((d) => d.form.trim().toLowerCase() === normSelected);
+  const distractor = normItem.distractors.find((d) => (d.form ?? '').trim().toLowerCase() === normSelected);
 
   if (distractor) {
     return {
       isCorrect: false,
       explanationUa: distractor.explanationUa,
       explanationEn: distractor.explanationEn,
-      ruleUa: item.pedagogicalRuleUa,
-      ruleEn: item.pedagogicalRuleEn,
+      ruleUa: normItem.pedagogicalRuleUa,
+      ruleEn: normItem.pedagogicalRuleEn,
       interferenceType: distractor.interferenceType,
     };
   }
@@ -190,24 +231,28 @@ export function numeralFeedbackFor(
   // Generic fallback feedback
   return {
     isCorrect: false,
-    explanationUa: `Неправильно. Для «${item.numeralDisplay} (${item.lemma})» правильною є форма «${item.correctForm}».`,
-    explanationEn: `Incorrect. For '${item.numeralDisplay} (${item.lemma})', the correct form is '${item.correctForm}'.`,
-    ruleUa: item.pedagogicalRuleUa,
-    ruleEn: item.pedagogicalRuleEn,
+    explanationUa: `Неправильно. Для «${normItem.numeralDisplay} (${normItem.lemma})» правильною є форма «${normItem.correctForm}».`,
+    explanationEn: `Incorrect. For '${normItem.numeralDisplay} (${normItem.lemma})', the correct form is '${normItem.correctForm}'.`,
+    ruleUa: normItem.pedagogicalRuleUa,
+    ruleEn: normItem.pedagogicalRuleEn,
   };
 }
 
 /**
  * Filter items by numeral tier and CEFR level.
  */
-export function matchesNumeralFilter(item: PracticeNumeralItem, filter: NumeralFilter): boolean {
+export function matchesNumeralFilter(
+  item: PracticeNumeralItem | Record<string, any>,
+  filter: NumeralFilter,
+): boolean {
+  const normItem = normalizeNumeralItem(item);
   if (filter.tiers && filter.tiers.length > 0) {
-    if (!filter.tiers.includes(item.tier)) {
+    if (!filter.tiers.includes(normItem.tier)) {
       return false;
     }
   }
   if (filter.cefrLevels && filter.cefrLevels.length > 0) {
-    if (!filter.cefrLevels.includes(item.cefrLevel)) {
+    if (!filter.cefrLevels.includes(normItem.cefrLevel)) {
       return false;
     }
   }

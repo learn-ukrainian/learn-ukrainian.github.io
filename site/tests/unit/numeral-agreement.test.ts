@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   classifyNumeralTier,
   matchesNumeralFilter,
+  normalizeNumeralItem,
   numeralFeedbackFor,
   NUMERAL_TIER_META,
   type PracticeNumeralItem,
@@ -139,5 +140,63 @@ describe('numeral-agreement', () => {
     expect(NUMERAL_TIER_META.tier_2_ends_in_2_3_4.ua).toContain('2, 3, 4');
     expect(NUMERAL_TIER_META.tier_4_fractional.ua).toContain('півтора');
     expect(NUMERAL_TIER_META.tier_5_collective.ua).toContain('Збірні');
+  });
+
+  it('normalizes snake_case Python engine card output and generates feedback without error', () => {
+    const rawPythonCard = {
+      id: 'numeral-tier_2_ends_in_2_3_4-hromadianyn-2',
+      tier: 'tier_2_ends_in_2_3_4',
+      numeral_display: '2',
+      numeral_words: 'два',
+      lemma: 'громадянин',
+      gender: 'm',
+      is_anim: true,
+      cefr_level: 'B1',
+      target_case: 'родовий',
+      target_number: 'singular',
+      correct_form: 'громадянина',
+      options: ['громадянина', 'громадяни', 'громадян', 'громадянин'],
+      distractors: [
+        {
+          form: 'громадяни',
+          interference_type: 'overgeneralized_plural',
+          explanation_ua: 'Форма «громадяни» є називним відмінком множини.',
+          explanation_en: "'громадяни' is Nominative plural.",
+        },
+        {
+          form: 'громадян',
+          interference_type: 'overgeneralized_plural',
+          explanation_ua: 'Форма «громадян» — це родовий відмінок множини.',
+          explanation_en: "'громадян' is Genitive plural.",
+        },
+        {
+          form: 'громадянин',
+          interference_type: 'nominative_singular_bias',
+          explanation_ua: 'Початкова словникова форма не вживається.',
+          explanation_en: 'Dictionary singular is not used.',
+        },
+      ],
+      prompt_ua: '2 (громадянин) ➔ 2 …',
+      prompt_en: 'Choose the correct form for: 2 (громадянин)',
+      pedagogical_rule_ua: 'Іменники на -ин вживаються у формі родового відмінка однини.',
+      pedagogical_rule_en: 'Nouns in -ин take Genitive singular.',
+      pravopys_ref: 'Правопис 2019, § 105; Морфологія української мови (Волкова, Масло 2012, с. 91)',
+    };
+
+    const normalized = normalizeNumeralItem(rawPythonCard);
+    expect(normalized.correctForm).toBe('громадянина');
+    expect(normalized.numeralDisplay).toBe('2');
+    expect(normalized.distractors).toHaveLength(3);
+    expect(normalized.distractors[0].explanationUa).toBe('Форма «громадяни» є називним відмінком множини.');
+
+    // Pipe raw python card directly into numeralFeedbackFor
+    const feedbackCorrect = numeralFeedbackFor(rawPythonCard, 'громадянина');
+    expect(feedbackCorrect.isCorrect).toBe(true);
+    expect(feedbackCorrect.explanationUa).toContain('громадянина');
+
+    const feedbackDistractor = numeralFeedbackFor(rawPythonCard, 'громадяни');
+    expect(feedbackDistractor.isCorrect).toBe(false);
+    expect(feedbackDistractor.interferenceType).toBe('overgeneralized_plural');
+    expect(feedbackDistractor.explanationUa).toContain('називним відмінком');
   });
 });
