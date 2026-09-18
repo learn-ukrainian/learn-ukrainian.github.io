@@ -4114,7 +4114,7 @@ function LexiconPracticeIsland({
       } else {
         const triggerLabel = 'triggerLabel' in rule && rule.triggerLabel ? rule.triggerLabel : '';
         labelUk = triggerLabel || 'словникова форма';
-        labelEn = triggerLabel ? 'dictionary form' : 'dictionary form';
+        labelEn = 'dictionary form';
       }
 
       setClozeFeedback({

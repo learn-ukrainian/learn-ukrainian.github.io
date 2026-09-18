@@ -1,6 +1,6 @@
 // @vitest-environment node
 
-import { chmodSync, existsSync, readFileSync, renameSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, renameSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, test } from "vitest";
 import { normalizeAtlasText } from "@site/src/lib/lexicon/normalize";
@@ -352,24 +352,18 @@ describe("AtlasDataSource fixture shard parity (Sol F006, unconditional)", () =>
       depth += 1;
     }
     const descriptor = manifest.entries.shards[node.shardId!]!;
-    const shardPath = resolve(versionDir, descriptor.url);
-    const originalMode = statSync(shardPath).mode;
-    const original = readFileSync(shardPath);
-    const corrupted = Buffer.from(original);
-    corrupted[0] = (corrupted[0] + 1) % 256;
-    try {
-      chmodSync(shardPath, 0o644);
-    } catch {}
-    writeFileSync(shardPath, corrupted);
-    const http = nodeHttp(createFileAtlasFetch(treeRoot), { pointerTtlMs: 0 });
-    try {
-      await expect(http.getEntry(probeSlug)).rejects.toBeInstanceOf(AtlasDataSourceError);
-    } finally {
-      writeFileSync(shardPath, original);
-      try {
-        chmodSync(shardPath, originalMode);
-      } catch {}
-    }
+    const baseFetch = createFileAtlasFetch(treeRoot);
+    const corruptingFetch: AtlasFetch = async (url: string) => {
+      const bytes = await baseFetch(url);
+      if (url.endsWith(descriptor.url)) {
+        const corrupted = new Uint8Array(bytes);
+        corrupted[0] = (corrupted[0] + 1) % 256;
+        return corrupted;
+      }
+      return bytes;
+    };
+    const http = nodeHttp(corruptingFetch, { pointerTtlMs: 0 });
+    await expect(http.getEntry(probeSlug)).rejects.toBeInstanceOf(AtlasDataSourceError);
   });
 });
 
