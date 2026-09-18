@@ -29,6 +29,7 @@ import hashlib
 import json
 import re
 import sys
+import threading
 import unicodedata
 from difflib import SequenceMatcher
 from functools import lru_cache
@@ -1833,28 +1834,45 @@ async def handle_collection_stats(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text=json.dumps(stats, indent=2))]
 
 
-_FILE_HASH_CACHE: dict[tuple[str, int, int], str] = {}
+# Cache key: (canonical_path, mtime_ns, ctime_ns, size, inode)
+# Covers content edits, metadata changes (ctime), and atomic replacements (inode).
+# Serialized via lock to prevent redundant multi-gigabyte disk reads on concurrent cold calls.
+_FILE_HASH_CACHE: dict[tuple[str, int, int, int, int], str] = {}
+_FILE_HASH_LOCK = threading.Lock()
 
 
 def _sha256_of_file(path: Path) -> str:
     resolved = path.resolve()
     try:
         st = resolved.stat()
-        cache_key = (str(resolved), st.st_mtime_ns, st.st_size)
+        cache_key = (str(resolved), st.st_mtime_ns, st.st_ctime_ns, st.st_size, st.st_ino)
         cached = _FILE_HASH_CACHE.get(cache_key)
         if cached is not None:
             return cached
     except OSError:
         cache_key = None
 
-    digest = hashlib.sha256()
-    with open(resolved, "rb") as handle:
-        for block in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(block)
-    result = digest.hexdigest()
-    if cache_key is not None:
-        _FILE_HASH_CACHE[cache_key] = result
-    return result
+    with _FILE_HASH_LOCK:
+        if cache_key is not None:
+            cached = _FILE_HASH_CACHE.get(cache_key)
+            if cached is not None:
+                return cached
+
+        digest = hashlib.sha256()
+        with open(resolved, "rb") as handle:
+            for block in iter(lambda: handle.read(1024 * 1024), b""):
+                digest.update(block)
+        result = digest.hexdigest()
+
+        if cache_key is not None:
+            try:
+                st_post = resolved.stat()
+                post_key = (str(resolved), st_post.st_mtime_ns, st_post.st_ctime_ns, st_post.st_size, st_post.st_ino)
+                if post_key == cache_key:
+                    _FILE_HASH_CACHE[cache_key] = result
+            except OSError:
+                pass
+        return result
 
 
 async def handle_mcp_server_identity(args: dict) -> list[TextContent]:

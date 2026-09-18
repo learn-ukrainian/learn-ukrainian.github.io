@@ -986,7 +986,7 @@ class TestCollectionStatsHandler:
 
 
 class TestFileHashCaching:
-    """Test _sha256_of_file caching and mtime-based invalidation (#8221)."""
+    """Test _sha256_of_file caching, invalidation, replacement, and concurrency (#8221)."""
 
     def test_sha256_of_file_caches_across_invocations(self, server_module, tmp_path):
         test_file = tmp_path / "test_cache.bin"
@@ -995,21 +995,62 @@ class TestFileHashCaching:
         h1 = server_module._sha256_of_file(test_file)
         assert len(h1) == 64
 
-        # Calling second time should return from cache
+        # Calling second time should return from cache without disk I/O
         with patch("builtins.open", side_effect=AssertionError("Should not re-read from disk")):
             h2 = server_module._sha256_of_file(test_file)
             assert h2 == h1
 
     def test_sha256_of_file_invalidates_on_mtime_change(self, server_module, tmp_path):
-        import time
+        import os
 
         test_file = tmp_path / "test_mtime.bin"
-        test_file.write_bytes(b"content-version-1")
+        test_file.write_bytes(b"data_version_1__")  # 16 bytes
         h1 = server_module._sha256_of_file(test_file)
 
-        # Update content and ensure mtime updates
-        time.sleep(0.01)
-        test_file.write_bytes(b"content-version-2-modified")
-        h2 = server_module._sha256_of_file(test_file)
+        # Write same-length content so size remains strictly identical
+        test_file.write_bytes(b"data_version_2__")  # 16 bytes
+        # Explicitly update mtime by 1 second to isolate mtime invalidation from size
+        st = test_file.stat()
+        os.utime(test_file, ns=(st.st_atime_ns, st.st_mtime_ns + 1_000_000_000))
 
+        h2 = server_module._sha256_of_file(test_file)
         assert h2 != h1
+
+    def test_sha256_of_file_invalidates_on_replacement_with_preserved_mtime(self, server_module, tmp_path):
+        """Atomic replacement with preserved mtime/size must invalidate via inode/ctime (#8221)."""
+        import os
+
+        target_file = tmp_path / "target_db.bin"
+        replacement_file = tmp_path / "temp_db.bin"
+
+        target_file.write_bytes(b"original_payload")  # 16 bytes
+        h1 = server_module._sha256_of_file(target_file)
+
+        # Create replacement file with different content of identical size
+        replacement_file.write_bytes(b"replaced_payload")  # 16 bytes
+        st_orig = target_file.stat()
+        # Preserve original mtime
+        os.utime(replacement_file, ns=(st_orig.st_atime_ns, st_orig.st_mtime_ns))
+
+        # Atomic replace (moves replacement into target, altering inode)
+        os.replace(replacement_file, target_file)
+
+        h2 = server_module._sha256_of_file(target_file)
+        assert h2 != h1
+
+    def test_sha256_of_file_concurrent_cold_calls_synchronized(self, server_module, tmp_path):
+        """Concurrent cold reads must be synchronized by lock to prevent duplicated disk thrashing."""
+        import concurrent.futures
+
+        test_file = tmp_path / "test_concurrent.bin"
+        test_file.write_bytes(b"concurrent_payload_content")
+
+        server_module._FILE_HASH_CACHE.clear()
+
+        # Run 8 concurrent threads on the same cold file
+        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+            futures = [executor.submit(server_module._sha256_of_file, test_file) for _ in range(8)]
+            results = [f.result() for f in futures]
+
+        assert len(set(results)) == 1
+        assert len(results[0]) == 64
