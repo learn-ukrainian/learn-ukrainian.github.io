@@ -5701,6 +5701,35 @@ def _record_forward_failure(
 # ---------------------------------------------------------------------------
 
 
+def _run_preflight_triage(args: argparse.Namespace, *, worktree_arg: str | None) -> int | None:
+    """#8183: TypeSafe readiness triage before any worker is spawned.
+
+    Returns the fast-fail exit code, or ``None`` to let dispatch proceed
+    (pass, missing key, API/git failure — advisory, never blocks).
+    """
+    from scripts.typesafe import preflight_triage as pt
+
+    if args.cwd:
+        cwd = Path(args.cwd)
+    elif worktree_arg and worktree_arg != "auto" and Path(worktree_arg).is_dir():
+        cwd = Path(worktree_arg)
+    else:
+        cwd = Path.cwd()
+    try:
+        paths, diff = pt.collect_candidate(getattr(args, "preflight_base", None) or "origin/main", cwd)
+    except (OSError, subprocess.SubprocessError) as exc:
+        print(f"preflight-triage: could not resolve git diff ({type(exc).__name__}) — skipping.", file=sys.stderr)
+        return None
+    log_arg = getattr(args, "preflight_test_log", None)
+    log_path = Path(log_arg) if log_arg else cwd / ".preflight-test.log"
+    result = pt.run_preflight(paths, diff, pt.read_test_log(log_path), pt.load_api_key())
+    print(result.message, file=sys.stderr)
+    if not result.fast_fail:
+        return None
+    pt.record_fast_fail(args.task_id, result, _TASKS_DIR.parent / "preflight_fast_fail.jsonl")
+    return pt.FAST_FAIL_EXIT_CODE
+
+
 def cmd_dispatch(args: argparse.Namespace) -> int:
     """Spawn a detached worker and return immediately (stdout: `<task_id>\n<run_nonce>`)."""
     from scripts.agent_runtime.attribution import resolve_invocation_attribution
@@ -5857,6 +5886,11 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     if write_cwd_error:
         print(write_cwd_error, file=sys.stderr)
         return 2
+
+    if getattr(args, "preflight_triage", False):
+        preflight_rc = _run_preflight_triage(args, worktree_arg=worktree_arg)
+        if preflight_rc is not None:
+            return preflight_rc
 
     dirty_primary_error = _resolve_dirty_primary_checkout_error(mode=args.mode)
     if dirty_primary_error:
@@ -7992,6 +8026,27 @@ def build_parser() -> argparse.ArgumentParser:
             "active claim. Records task, conflicts, reason, and caller in the "
             "ownership ledger. Required text reason; empty string is ignored."
         ),
+    )
+    d.add_argument(
+        "--preflight-triage",
+        action="store_true",
+        help=(
+            "#8183: before spawning, run cheap TypeSafe/Jev readiness triage on the candidate "
+            "diff (+ local test log). A confident broken_or_failing verdict exits 3 without "
+            "starting a worker. Missing key or API failure skips (dispatch proceeds)."
+        ),
+    )
+    d.add_argument(
+        "--preflight-base",
+        default=None,
+        metavar="REF",
+        help="Base ref for the --preflight-triage diff (default: origin/main).",
+    )
+    d.add_argument(
+        "--preflight-test-log",
+        default=None,
+        metavar="PATH",
+        help="Local test log for --preflight-triage (default: <cwd>/.preflight-test.log if present).",
     )
     d.set_defaults(func=cmd_dispatch)
 
