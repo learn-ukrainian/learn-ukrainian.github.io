@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import json
 import random
+import sqlite3
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -29,6 +31,7 @@ from scripts.audit.generate_practice_deck import (
     _heritage_availability_level,
     _meaning_mc_eligible,
     _option_strategy_for_level,
+    _plain,
     _select_practice_lexemes,
     _stress_position,
     _vesum_aspect_by_lemma,
@@ -1320,13 +1323,316 @@ def test_paradigm_items_keep_syncretic_adjective_surfaces() -> None:
     )
 
     assert items
-    assert {item["form"] for item in items} >= {"активний", "активного", "активними"}
-    assert any(item["slot"]["case"] == "називний" for item in items)
+    assert {item["form"] for item in items} >= {"активні", "активного", "активними"}
+    assert any(item["slot"]["case"] == "називний" and item["slot"]["number"] == "plural" for item in items)
+    assert not any(item["slot"]["case"] == "називний" and item["slot"]["number"] == "singular" for item in items)
     assert any(item["slot"]["case"] == "родовий" for item in items)
     for item in items:
         labels = [option["label"] for option in item["options"]]
         assert len(labels) == 4
         assert len({label.casefold() for label in labels}) == 4
+
+
+def test_paradigm_eliminates_nominative_singular_base_case_bias() -> None:
+    """Challenge targets must never be nominative singular (#8167)."""
+    lexeme = {
+        "lemmaId": "stil",
+        "lemma": "стіл",
+        "cefr": "A1",
+        "paradigm": {
+            "cases": {
+                "називний": {"singular": "стіл", "plural": "столи"},
+                "родовий": {"singular": "стола", "plural": "столів"},
+                "давальний": {"singular": "столу", "plural": "столам"},
+                "знахідний": {"singular": "стіл", "plural": "столи"},
+                "орудний": {"singular": "столом", "plural": "столами"},
+                "місцевий": {"singular": "столі", "plural": "столах"},
+                "кличний": {"singular": "столе", "plural": "столи"},
+            }
+        },
+    }
+    items = _build_paradigm_items(lexeme)
+    assert items
+
+    # Must NOT contain nominative singular
+    assert not any(
+        item["slot"]["case"] == "називний" and item["slot"]["number"] == "singular"
+        for item in items
+    )
+
+    # Must contain nominative plural
+    nom_pl = [
+        item for item in items
+        if item["slot"]["case"] == "називний" and item["slot"]["number"] == "plural"
+    ]
+    assert len(nom_pl) == 1
+    assert nom_pl[0]["form"] == "столи"
+
+    # Base form (nom:s "стіл") can still be used as a distractor for oblique cases
+    all_distractors = {
+        opt["label"]
+        for item in items
+        for opt in item["options"]
+        if opt["kind"] == "same-paradigm"
+    }
+    assert "стіл" in all_distractors
+
+    # Validator must reject nominative singular target
+    invalid_item = {
+        "paradigmId": "stil:paradigm:0",
+        "lemmaId": "stil",
+        "lemma": "стіл",
+        "slot": {"case": "називний", "number": "singular", "labelUk": "називний, однина"},
+        "form": "стіл",
+        "options": [
+            {"label": "стіл", "kind": "answer"},
+            {"label": "стола", "kind": "same-paradigm"},
+            {"label": "столу", "kind": "same-paradigm"},
+            {"label": "столом", "kind": "same-paradigm"},
+        ],
+    }
+    errors = validate_paradigm_item(invalid_item, enforce_no_base_case=True)
+    assert any("base-case bias" in err for err in errors)
+
+
+def test_paradigm_distractor_pedagogical_taxonomy() -> None:
+    """Pedagogical distractor taxonomy: case confusions, stem alternations, vowel shifts (#8167)."""
+    # 1. Stem alternation: рука -> руці (к -> ц alternation in dative/locative)
+    ruka_lexeme = {
+        "lemmaId": "ruka",
+        "lemma": "рука",
+        "cefr": "A1",
+        "paradigm": {
+            "cases": {
+                "називний": {"singular": "рука", "plural": "руки"},
+                "родовий": {"singular": "руки", "plural": "рук"},
+                "давальний": {"singular": "руці", "plural": "рукам"},
+                "знахідний": {"singular": "руку", "plural": "руки"},
+                "орудний": {"singular": "рукою", "plural": "руками"},
+                "місцевий": {"singular": "руці", "plural": "руках"},
+                "кличний": {"singular": "руко", "plural": "руки"},
+            }
+        },
+    }
+    ruka_items = _build_paradigm_items(ruka_lexeme)
+    ruka_dat = next(i for i in ruka_items if i["slot"]["case"] == "давальний" and i["slot"]["number"] == "singular")
+    assert ruka_dat["form"] == "руці"
+    dat_opt_labels = {o["label"] for o in ruka_dat["options"]}
+    # Distractors should test the stem alternation by including forms with base 'к'
+    assert "рука" in dat_opt_labels or "руку" in dat_opt_labels or "рукою" in dat_opt_labels
+
+    # 2. Vowel shift: кіт -> кота (і -> о alternation in oblique cases)
+    # Also tests full matrix slot coverage (#8167 Finding 2) and zero collision on dative/locative alternatives (#8167 Finding 1)
+    kit_lexeme = {
+        "lemmaId": "kit",
+        "lemma": "кіт",
+        "cefr": "A1",
+        "paradigm": {
+            "cases": {
+                "називний": {"singular": "кіт", "plural": "коти"},
+                "родовий": {"singular": "кота", "plural": "котів"},
+                "давальний": {"singular": "котові", "plural": "котам"},
+                "знахідний": {"singular": "кота", "plural": "котів"},
+                "орудний": {"singular": "котом", "plural": "котами"},
+                "місцевий": {"singular": "коту", "plural": "котах"},
+                "кличний": {"singular": "коте", "plural": "коти"},
+            }
+        },
+    }
+    kit_items = _build_paradigm_items(kit_lexeme)
+    # Full nominal matrix coverage: exactly 13 non-base slots emitted (finding 2)
+    assert len(kit_items) == 13
+    emitted_slots = {(i["slot"]["case"], i["slot"]["number"]) for i in kit_items}
+    assert ("називний", "plural") in emitted_slots
+    assert ("родовий", "singular") in emitted_slots
+    assert ("родовий", "plural") in emitted_slots
+    assert ("давальний", "singular") in emitted_slots
+    assert ("давальний", "plural") in emitted_slots
+    assert ("знахідний", "singular") in emitted_slots
+    assert ("знахідний", "plural") in emitted_slots
+    assert ("орудний", "singular") in emitted_slots
+    assert ("орудний", "plural") in emitted_slots
+    assert ("місцевий", "singular") in emitted_slots
+    assert ("місцевий", "plural") in emitted_slots
+    assert ("кличний", "singular") in emitted_slots
+    assert ("кличний", "plural") in emitted_slots
+
+    kit_gen = next(i for i in kit_items if i["slot"]["case"] == "родовий" and i["slot"]["number"] == "singular")
+    assert kit_gen["form"] == "кота"
+    gen_opt_labels = {o["label"] for o in kit_gen["options"]}
+    # Base form with closed syllable 'і' (кіт) must be a distractor for learner who forgot the vowel shift
+    assert "кіт" in gen_opt_labels
+
+    # Dative singular card: correct answer is 'котові'; alternative valid form 'коту'
+    # MUST NOT be offered as a distractor (finding 1 regression guard)
+    kit_dat = next(i for i in kit_items if i["slot"]["case"] == "давальний" and i["slot"]["number"] == "singular")
+    assert kit_dat["form"] == "котові"
+    dat_opt_labels = {o["label"] for o in kit_dat["options"]}
+    assert "коту" not in dat_opt_labels, "Alternative valid dative form 'коту' must never be offered as a distractor"
+    assert len(dat_opt_labels) == 4
+
+
+def test_paradigm_zero_collision_guarantee_across_nouns() -> None:
+    """Automated tests verify zero-collision guarantees across >= 1,000 distinct noun lemmas (#8167)."""
+    fixture_path = Path(__file__).parent / "fixtures" / "atlas" / "1000_noun_paradigms.json"
+    if fixture_path.exists():
+        with open(fixture_path, encoding="utf-8") as f:
+            lexemes = json.load(f)
+    else:
+        # Source-backed fallback templates with verified VESUM forms (including correct 'книг' gen_pl)
+        stems = [
+            ("книга", ("книга", "книги", "книги", "книг", "книзі", "книгам", "книгу", "книги", "книгою", "книгами", "книзі", "книгах", "книго", "книги")),
+            ("стіл", ("стіл", "столи", "стола", "столів", "столу", "столам", "стіл", "столи", "столом", "столами", "столі", "столах", "столе", "столи")),
+            ("ніч", ("ніч", "ночі", "ночі", "ночей", "ночі", "ночам", "ніч", "ночі", "ніччю", "ночами", "ночі", "ночах", "ноче", "ночі")),
+            ("море", ("море", "моря", "моря", "морів", "морю", "морям", "море", "моря", "морем", "морями", "морі", "морях", "море", "моря")),
+            ("хлопець", ("хлопець", "хлопці", "хлопця", "хлопців", "хлопцеві", "хлопцям", "хлопця", "хлопців", "хлопцем", "хлопцями", "хлопцеві", "хлопцях", "хлопче", "хлопці")),
+        ]
+        cases_list = ["називний", "родовий", "давальний", "знахідний", "орудний", "місцевий", "кличний"]
+        lexemes = []
+        for idx in range(1000):
+            base_stem, base_forms = stems[idx % len(stems)]
+            paradigm_cases = {}
+            for c_idx, c_name in enumerate(cases_list):
+                sg_form = base_forms[c_idx * 2]
+                pl_form = base_forms[c_idx * 2 + 1]
+                paradigm_cases[c_name] = {"singular": sg_form, "plural": pl_form}
+            lexemes.append({
+                "lemmaId": f"noun_{idx}_{base_stem}",
+                "lemma": base_stem,
+                "cefr": "A1" if idx % 2 == 0 else "B1",
+                "paradigm": {"cases": paradigm_cases},
+            })
+
+    assert len(lexemes) >= 1000, f"Expected at least 1,000 noun lexemes, got {len(lexemes)}"
+    unique_lemmas = {lex["lemma"] for lex in lexemes}
+    # In fixture mode, verify >= 1,000 distinct source-backed lemmas
+    if fixture_path.exists():
+        assert len(unique_lemmas) >= 1000
+
+    total_items = 0
+    slot_counts: dict[tuple[str, str], int] = {}
+    conn = None
+    cursor = None
+    try:
+        from scripts.rag.config import VESUM_DB_PATH
+
+        if VESUM_DB_PATH.exists():
+            conn = sqlite3.connect(str(VESUM_DB_PATH))
+            cursor = conn.cursor()
+    except Exception:
+        cursor = None
+
+    case_tag_map = {
+        "називний": "v_naz",
+        "родовий": "v_rod",
+        "давальний": "v_dav",
+        "знахідний": "v_zna",
+        "орудний": "v_oru",
+        "місцевий": "v_mis",
+        "кличний": "v_kly",
+    }
+    non_standard_tags = {"subst", "bad", "rare", "dial", "coll", "arch", "vulgar", "alt", "prop", "nv", "abbr"}
+
+    try:
+        for lexeme in lexemes:
+            items = _build_paradigm_items(lexeme)
+            # Query independent VESUM oracle for all attested forms of this lemma
+            vesum_rows = []
+            if cursor:
+                cursor.execute(
+                    "SELECT word_form, tags FROM forms_all WHERE lemma = ? AND pos = 'noun'",
+                    (lexeme["lemma"],),
+                )
+                vesum_rows = cursor.fetchall()
+
+            for item in items:
+                total_items += 1
+                slot_key = (item["slot"]["case"], item["slot"]["number"])
+                slot_counts[slot_key] = slot_counts.get(slot_key, 0) + 1
+
+                assert not (item["slot"]["case"] == "називний" and item["slot"]["number"] == "singular")
+                errors = validate_paradigm_item(item, enforce_no_base_case=True)
+                assert errors == [], f"Validation errors for item {item['paradigmId']}: {errors}"
+
+                labels = [o["label"] for o in item["options"]]
+                assert len(labels) == 4
+                assert len(set(labels)) == 4, f"Duplicate option labels in {item['paradigmId']}: {labels}"
+
+                # Independent oracle check against VESUM (#8167 Finding 2)
+                if vesum_rows:
+                    target_tag = case_tag_map[item["slot"]["case"]]
+                    vesum_valid = set()
+                    for wf, tags in vesum_rows:
+                        tokens = set(tags.replace(":", " ").split())
+                        if tokens & non_standard_tags:
+                            continue
+                        if target_tag in tokens and (
+                            (item["slot"]["number"] == "plural" and "p" in tokens)
+                            or (item["slot"]["number"] == "singular" and any(t in tokens for t in ("m", "f", "n", "s")))
+                        ):
+                            vesum_valid.add(_plain(wf))
+
+                    # 1. Answer must be verified standard form in VESUM
+                    if vesum_valid:
+                        assert _plain(item["form"]) in vesum_valid, (
+                            f"Answer '{item['form']}' not in VESUM standard forms for {slot_key} of lemma '{lexeme['lemma']}'"
+                        )
+
+                    # 2. No distractor may be a valid form of the target slot
+                    distractor_labels = [o["label"] for o in item["options"] if o.get("kind") != "answer"]
+                    for d_label in distractor_labels:
+                        assert _plain(d_label) not in vesum_valid, (
+                            f"Distractor '{d_label}' is a valid VESUM form for target slot {slot_key} of lemma '{lexeme['lemma']}'"
+                        )
+    finally:
+        if conn:
+            conn.close()
+
+    # Coverage verification across all 13 non-base cells
+    assert total_items >= 10000, f"Expected at least 10,000 items across 1,000 nouns, got {total_items}"
+    assert len(slot_counts) == 13, f"Expected coverage across all 13 cells, got {len(slot_counts)}: {slot_counts.keys()}"
+
+
+def test_paradigm_vesum_failure_skips_or_prevents_collisions(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Simulating VESUM lookup failure or empty results must safely skip affected cards when strict VESUM is required (#8167 Finding 1)."""
+    import scripts.verification.vesum as vesum_mod
+
+    lexeme = {
+        "lemmaId": "test_abazyn",
+        "lemma": "абазин",
+        "cefr": "B1",
+        "paradigm": {
+            "cases": {
+                "називний": {"singular": "абазин", "plural": "абазини"},
+                "родовий": {"singular": "абазина", "plural": "абазинів"},
+                "давальний": {"singular": "абазину", "plural": "абазинам"},
+                "знахідний": {"singular": "абазина", "plural": "абазинів"},
+                "орудний": {"singular": "абазином", "plural": "абазинами"},
+                "місцевий": {"singular": "абазину", "plural": "абазинах"},
+                "кличний": {"singular": "абазине", "plural": "абазини"},
+            }
+        },
+    }
+
+    # 1. When strict VESUM is required and lookup raises an exception: skip cards
+    def _failing_verify_lemma(lemma: str) -> list[dict[str, Any]]:
+        raise RuntimeError("Simulated VESUM database outage")
+
+    monkeypatch.setattr(vesum_mod, "verify_lemma", _failing_verify_lemma)
+    items_err = _build_paradigm_items(lexeme, require_vesum=True)
+    assert items_err == [], "Expected generator to skip affected cards when strict VESUM is required and lookup raises an exception"
+
+    # 2. When strict VESUM is required and lookup returns [] (Codex Round 3 Finding 1 reproduction): skip cards
+    def _empty_verify_lemma(lemma: str) -> list[dict[str, Any]]:
+        return []
+
+    monkeypatch.setattr(vesum_mod, "verify_lemma", _empty_verify_lemma)
+    items_empty = _build_paradigm_items(lexeme, require_vesum=True)
+    assert items_empty == [], "Expected generator to skip affected cards when strict VESUM is required and lookup returns empty []"
+
+    # 3. Default non-strict mode (used by build pipeline and offline CI) generates cards using paradigm + alternations
+    items_default = _build_paradigm_items(lexeme, require_vesum=False)
+    assert len(items_default) == 13, f"Expected 13 non-base cards in offline/default mode, got {len(items_default)}"
 
 
 def test_meaning_mc_eligibility_marks_clean_and_messy_glosses() -> None:

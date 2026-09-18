@@ -2979,16 +2979,239 @@ def _imperative_connection(verifier: VesumVerifier) -> sqlite3.Connection:
     return conn
 
 
-def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
+CASE_CONFUSION_PRIORITY: dict[str, tuple[str, ...]] = {
+    "родовий": ("знахідний", "давальний", "місцевий", "називний", "орудний", "кличний"),
+    "давальний": ("місцевий", "родовий", "орудний", "знахідний", "називний", "кличний"),
+    "місцевий": ("давальний", "родовий", "знахідний", "орудний", "називний", "кличний"),
+    "знахідний": ("називний", "родовий", "давальний", "місцевий", "орудний", "кличний"),
+    "орудний": ("родовий", "місцевий", "давальний", "називний", "знахідний", "кличний"),
+    "кличний": ("називний", "родовий", "давальний", "місцевий", "орудний", "знахідний"),
+    "називний": ("родовий", "знахідний", "давальний", "місцевий", "орудний", "кличний"),
+}
+
+
+def _paradigm_distractor_rank(
+    other: dict[str, str],
+    slot: dict[str, str],
+    confusions: tuple[str, ...],
+    paradigm_id: str,
+) -> tuple[int, int, str]:
+    same_num = 0 if other["number"] == slot["number"] else 1
+    case_rank = confusions.index(other["case"]) if other["case"] in confusions else len(confusions)
+    h = hashlib.sha1(f"{paradigm_id}:{other['case']}:{other['number']}:{other['form']}".encode()).hexdigest()
+    return (same_num, case_rank, h)
+
+
+def _all_valid_forms_for_slot(
+    lemma: str,
+    case_key: str,
+    number_key: str,
+    cases: dict[str, Any],
+    *,
+    require_vesum: bool = False,
+) -> set[str]:
+    """Return all valid surface forms for a (case, number) slot to prevent distractor collisions.
+
+    If a slot has multiple valid variants (e.g. dative singular 'котові' / 'коту'),
+    offering one as the correct answer and another as a 'same-paradigm' distractor
+    creates a false error where a correct Ukrainian form is marked wrong (#8167 Finding 1).
+
+    Ukrainian nominal syncretism and alternations are handled across multiple layers:
+    1. Direct inspection of the paradigm cases dictionary.
+    2. Ukrainian nominal syncretism rules (Accusative Plural = Nominative Plural / Genitive Plural;
+       Vocative Plural = Nominative Plural; Accusative Singular = Nominative Singular / Genitive Singular).
+    3. Authoritative VESUM lookup excluding substandard tags (:subst, :bad, :dial, etc.).
+       If require_vesum is True and VESUM lookup raises an exception, the error is propagated so the
+       generator can skip affected cards rather than continuing with incomplete alternatives.
+    4. Comprehensive rule-based alternations for masculine dative/locative singular.
+    """
+    valid: set[str] = set()
+
+    # 1. Inspect forms in the lexeme cases dict itself
+    for name, forms in cases.items():
+        if not isinstance(forms, dict):
+            continue
+        if _paradigm_slot_case_key(str(name)) == case_key:
+            val = forms.get(number_key)
+            if isinstance(val, str):
+                for part in val.split("/"):
+                    p = _plain(part.strip())
+                    if p:
+                        valid.add(p)
+            elif isinstance(val, (list, set, tuple)):
+                for item in val:
+                    p = _plain(str(item).strip())
+                    if p:
+                        valid.add(p)
+
+    # 2. Ukrainian nominal syncretism rules directly from paradigm
+    if number_key == "plural":
+        if case_key == "знахідний":
+            # Accusative plural of animates syncretic with Genitive plural; inanimates with Nominative plural
+            for k in ("називний", "родовий", "nominative", "genitive"):
+                for name, forms in cases.items():
+                    if _paradigm_slot_case_key(str(name)) == _paradigm_slot_case_key(k) and isinstance(forms, dict):
+                        val = forms.get("plural")
+                        if isinstance(val, str):
+                            for part in val.split("/"):
+                                p = _plain(part.strip())
+                                if p:
+                                    valid.add(p)
+                        elif isinstance(val, (list, set, tuple)):
+                            for item in val:
+                                p = _plain(str(item).strip())
+                                if p:
+                                    valid.add(p)
+        elif case_key in ("кличний", "називний"):
+            # In Ukrainian, Vocative plural is identical to Nominative plural
+            for k in ("кличний", "називний"):
+                for name, forms in cases.items():
+                    if _paradigm_slot_case_key(str(name)) == _paradigm_slot_case_key(k) and isinstance(forms, dict):
+                        val = forms.get("plural")
+                        if isinstance(val, str):
+                            for part in val.split("/"):
+                                p = _plain(part.strip())
+                                if p:
+                                    valid.add(p)
+                        elif isinstance(val, (list, set, tuple)):
+                            for item in val:
+                                p = _plain(str(item).strip())
+                                if p:
+                                    valid.add(p)
+    elif number_key == "singular" and case_key == "знахідний":
+        # Accusative singular syncretic with Genitive singular (masc anim) or Nominative singular (inanim/neuter)
+        for k in ("називний", "родовий"):
+            for name, forms in cases.items():
+                if _paradigm_slot_case_key(str(name)) == _paradigm_slot_case_key(k) and isinstance(forms, dict):
+                    val = forms.get("singular")
+                    if isinstance(val, str):
+                        for part in val.split("/"):
+                            p = _plain(part.strip())
+                            if p:
+                                valid.add(p)
+                    elif isinstance(val, (list, set, tuple)):
+                        for item in val:
+                            p = _plain(str(item).strip())
+                            if p:
+                                valid.add(p)
+
+    # 3. Check VESUM for morphological variants
+    norm_lemma = lemma.strip() if lemma else ""
+    if norm_lemma:
+        internal_case = None
+        for eng, ua in CASE_LABELS_UA.items():
+            if ua == case_key:
+                internal_case = eng
+                break
+        target_tag = CASE_VESUM_TAGS.get(internal_case) if internal_case else None
+
+        if target_tag:
+            try:
+                from scripts.verification.vesum import verify_lemma
+
+                rows = verify_lemma(norm_lemma)
+                if not rows and norm_lemma.lower() != norm_lemma:
+                    rows = verify_lemma(norm_lemma.lower())
+                if require_vesum and not rows:
+                    raise RuntimeError(f"VESUM lookup returned no forms for '{norm_lemma}'")
+                found_target_evidence = False
+                for row in rows:
+                    tags = str(row.get("tags") or "")
+                    tokens = {tok for tok in tags.replace(":", " ").split() if tok}
+                    if tokens & {"subst", "bad", "rare", "dial", "coll", "arch", "vulgar", "alt"}:
+                        continue
+                    if target_tag in tokens and _vesum_number_key(tokens) == number_key:
+                        form = _clean_text(row.get("word_form"))
+                        if form:
+                            valid.add(_plain(form))
+                            found_target_evidence = True
+                if require_vesum and not found_target_evidence:
+                    raise RuntimeError(
+                        f"VESUM lookup had no usable source evidence for slot '{case_key}:{number_key}' of '{norm_lemma}'"
+                    )
+            except Exception as exc:
+                if require_vesum:
+                    raise RuntimeError(f"VESUM lookup failed for '{norm_lemma}': {exc}") from exc
+
+    # 4. Rule-based morphological fallback for standard masculine dative/locative singular alternations
+    if number_key == "singular" and case_key == "давальний":
+        additions = set()
+        for v in list(valid):
+            if v.endswith("ові") or v.endswith("еві") or v.endswith("єві"):
+                stem = v[:-3]
+                additions.add(stem + "у")
+                additions.add(stem + "ю")
+            elif v.endswith("у") and len(v) > 2:
+                stem = v[:-1]
+                additions.add(stem + "ові")
+                additions.add(stem + "еві")
+                additions.add(stem + "єві")
+            elif v.endswith("ю") and len(v) > 2:
+                stem = v[:-1]
+                additions.add(stem + "еві")
+                additions.add(stem + "єві")
+        valid.update(additions)
+    elif number_key == "singular" and case_key == "місцевий":
+        additions = set()
+        for v in list(valid):
+            if v.endswith("ові") or v.endswith("еві") or v.endswith("єві"):
+                stem = v[:-3]
+                additions.add(stem + "і")
+                additions.add(stem + "ї")
+                additions.add(stem + "у")
+                additions.add(stem + "ю")
+            elif v.endswith("у") and len(v) > 2:
+                stem = v[:-1]
+                additions.add(stem + "ові")
+                additions.add(stem + "еві")
+                additions.add(stem + "єві")
+                additions.add(stem + "і")
+            elif v.endswith("ю") and len(v) > 2:
+                stem = v[:-1]
+                additions.add(stem + "еві")
+                additions.add(stem + "єві")
+                additions.add(stem + "ї")
+            elif (v.endswith("і") or v.endswith("ї")) and len(v) > 2:
+                stem = v[:-1]
+                additions.add(stem + "ові")
+                additions.add(stem + "еві")
+                additions.add(stem + "єві")
+                additions.add(stem + "у")
+                additions.add(stem + "ю")
+        for name, forms in cases.items():
+            if _paradigm_slot_case_key(str(name)) == "давальний" and isinstance(forms, dict):
+                val = forms.get("singular")
+                if isinstance(val, str):
+                    for part in val.split("/"):
+                        p = _plain(part.strip())
+                        if p:
+                            valid.add(p)
+        valid.update(additions)
+
+    return valid
+
+
+def _build_paradigm_items(
+    lexeme: dict[str, Any],
+    require_vesum: bool = False,
+) -> list[dict[str, Any]]:
     """Build case/number MC cards from a lexeme paradigm.
 
     Ukrainian paradigms are heavily syncretic (shared surfaces across cases).
     Cards ask for a *named slot* (``родовий, однина``), so a shared surface may
-    still be the answer for its representative slot. Keep one slot per distinct
-    surface (prefer nominative→vocative order) so distractors stay unique and
-    shard size stays within budget — excluding every duplicated surface starved
-    adjectives below the unique-lemma bar. Require four distinct surfaces for a
-    four-option MCQ.
+    still be the answer for its representative slot.
+
+    Pedagogical rules (#8167):
+    - Eliminate base-case bias: Nominative singular (nom:s) is never a challenge
+      target, as identifying the base lemma provides minimal learning value.
+    - Full 7-case x 2-number nominal matrix: all 13 eligible non-base slots are
+      generated independently, allowing learners to drill any case and number.
+    - Nominative singular remains in the distractor candidate pool to test
+      case discrimination (e.g. Accusative vs Nominative).
+    - Distractors are prioritized by grammatical case confusion and number.
+    - All valid forms of the target slot are excluded from distractors to prevent
+      marking a valid Ukrainian alternative (e.g. котові / коту) as wrong.
+    - Distractor options are deduplicated by surface within each card.
     """
     if not _normalize_cefr(lexeme.get("cefr")):
         return []
@@ -3008,7 +3231,7 @@ def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
             seen_case_names.add(key)
 
     slots: list[dict[str, str]] = []
-    seen_forms: set[str] = set()
+    seen_slots: set[tuple[str, str]] = set()
     for case_name in ordered_case_names:
         forms = cases.get(case_name)
         if not isinstance(forms, dict):
@@ -3020,28 +3243,62 @@ def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
             form = _single_surface(forms.get(number))
             if not form:
                 continue
-            normalized = _plain(form)
-            if normalized in seen_forms:
+            slot_key = (case_key, number)
+            if slot_key in seen_slots:
                 continue
-            seen_forms.add(normalized)
+            seen_slots.add(slot_key)
             slots.append({"case": case_key, "number": number, "form": form})
-    if len(slots) < 4:
+    unique_surfaces = {_plain(s["form"]) for s in slots}
+    if len(unique_surfaces) < 4:
         return []
     items = []
+    lemma_str = str(lexeme.get("lemma") or lexeme.get("lemmaPlain") or "")
     for index, slot in enumerate(slots):
+        # Eliminate base-case bias (#8167): never prompt for nominative singular.
+        if slot["case"] == "називний" and slot["number"] == "singular":
+            continue
         label_uk, label_en = CASE_SLOT_LABELS[slot["case"]]
         number_uk = "однина" if slot["number"] == "singular" else "множина"
         number_en = "sg" if slot["number"] == "singular" else "pl"
-        options = [{"label": slot["form"], "kind": "answer"}]
-        for other in slots:
-            if other is slot:
+        paradigm_id = f"{lexeme['lemmaId']}:paradigm:{index + 1}"
+
+        # Pedagogical distractor selection: exclude all valid forms of the target slot
+        # to guarantee no second correct answer is marked wrong (#8167 Finding 1).
+        # When require_vesum is True, require complete source-backed alternatives; skip card if lookup fails.
+        try:
+            valid_target_forms = _all_valid_forms_for_slot(
+                lemma_str, slot["case"], slot["number"], cases, require_vesum=require_vesum
+            )
+        except Exception:
+            if require_vesum:
                 continue
-            options.append({"label": other["form"], "kind": "same-paradigm"})
+            valid_target_forms = set()
+        valid_target_forms.add(_plain(slot["form"]))
+
+        candidates = [
+            other for other in slots
+            if _plain(other["form"]) not in valid_target_forms
+        ]
+        confusions = CASE_CONFUSION_PRIORITY.get(slot["case"], ())
+        candidates.sort(key=lambda other: _paradigm_distractor_rank(other, slot, confusions, paradigm_id))
+
+        options = [{"label": slot["form"], "kind": "answer"}]
+        seen_option_surfaces = {_plain(slot["form"])}
+        for other in candidates:
+            norm_other = _plain(other["form"])
+            if norm_other in seen_option_surfaces:
+                continue
+            seen_option_surfaces.add(norm_other)
+            options.append({
+                "label": other["form"],
+                "kind": "same-paradigm",
+                "distractorCase": other["case"],
+                "distractorNumber": other["number"],
+            })
             if len(options) == 4:
                 break
         if len(options) < 4:
             continue
-        paradigm_id = f"{lexeme['lemmaId']}:paradigm:{index + 1}"
         answer_index = int(hashlib.sha1(paradigm_id.encode("utf-8")).hexdigest()[:2], 16) % len(options)
         answer = options.pop(0)
         options.insert(answer_index, answer)
@@ -3962,8 +4219,14 @@ def validate_heritage_item(item: dict[str, Any], *, internal_options: bool = Fal
     return errors
 
 
-def validate_paradigm_item(item: dict[str, Any]) -> list[str]:
+def validate_paradigm_item(item: dict[str, Any], enforce_no_base_case: bool = False) -> list[str]:
     errors: list[str] = []
+    slot = item.get("slot")
+    if enforce_no_base_case and isinstance(slot, dict):
+        case_key = _paradigm_slot_case_key(str(slot.get("case") or "")) or str(slot.get("case") or "").lower()
+        number_key = str(slot.get("number") or "").lower()
+        if case_key in ("називний", "nominative") and number_key in ("singular", "однина", "sg"):
+            errors.append("paradigm item cannot target nominative singular (base-case bias)")
     options = item.get("options")
     if not isinstance(options, list) or len(options) < 4:
         return ["paradigm option set must contain at least four options"]
