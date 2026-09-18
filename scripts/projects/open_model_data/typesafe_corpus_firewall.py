@@ -116,7 +116,6 @@ def _resolve_typesafe_key() -> str:
 STRICT_RUSSIAN_CHARS_RE = re.compile(r"[эёЭЁ]")
 ARCHAIC_CYRILLIC_RE = re.compile(r"[ѣѧѩѫѭѢѦѪ]")
 HISTORICAL_SHARED_CHARS_RE = re.compile(r"[ыъЫЪ]")
-UKRAINIAN_DISTINCTIVE_CHARS_RE = re.compile(r"[іїєґІЇЄҐ]")
 MIXED_HOMOGLYPH_RE = re.compile(
     r"\b(?=[a-zA-Zа-яА-ЯіїєґІЇЄҐ]*[a-zA-Z])(?=[a-zA-Zа-яА-ЯіїєґІЇЄҐ]*[а-яА-ЯіїєґІЇЄҐ])[a-zA-Zа-яА-ЯіїєґІЇЄҐ]+\b"
 )
