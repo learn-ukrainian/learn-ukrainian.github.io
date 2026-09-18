@@ -2503,7 +2503,7 @@ def test_shards_zero_double_terminal_punctuation() -> None:
         pytest.skip("Release shards not yet generated in this worktree")
 
     # Double punctuation and typographic patterns:
-    # 1. Period inside outer guillemets: .» (excluding legitimate ellipsis ...»)
+    # 1. Period inside outer guillemets: .» (excluding legitimate ellipsis ...» and abbreviations like «розм.», «т.д.»)
     p_single_dot_guillemet = re.compile(r"(?<!\.)\.\s*»")
     # 2. Doubled opening quotes: ««
     p_double_open = re.compile(r"««")
@@ -2516,6 +2516,10 @@ def test_shards_zero_double_terminal_punctuation() -> None:
     # 6. Consecutive double dots (not ellipsis): ..
     p_double_dot = re.compile(r"(?<!\.)\.\.(?!\.)")
 
+    def is_abbrev(text: str, dot_pos: int) -> bool:
+        prefix = text[: dot_pos + 1]
+        return any(prefix.endswith(a) for a in ("розм.", "т.д.", "ін.", "д.", "ім.", "ст.", "р."))
+
     violations = []
     for sf in shard_files:
         with open(sf, encoding="utf-8") as f:
@@ -2524,7 +2528,6 @@ def test_shards_zero_double_terminal_punctuation() -> None:
                 for field in ("query", "final_response"):
                     text = record.get(field, "")
                     for pat_name, pat in [
-                        ("single_dot_guillemet", p_single_dot_guillemet),
                         ("double_open", p_double_open),
                         ("adjacent_quotes", p_adjacent_quotes),
                         ("terminal_double", p_terminal_double),
@@ -2533,9 +2536,11 @@ def test_shards_zero_double_terminal_punctuation() -> None:
                     ]:
                         if pat.search(text):
                             violations.append((sf.name, line_no, field, pat_name, text))
+                    for m in p_single_dot_guillemet.finditer(text):
+                        if not is_abbrev(text, m.start()):
+                            violations.append((sf.name, line_no, field, "single_dot_guillemet", text))
                 for idx, step in enumerate(record.get("reasoning_steps", [])):
                     for pat_name, pat in [
-                        ("single_dot_guillemet", p_single_dot_guillemet),
                         ("double_open", p_double_open),
                         ("adjacent_quotes", p_adjacent_quotes),
                         ("terminal_double", p_terminal_double),
@@ -2544,6 +2549,9 @@ def test_shards_zero_double_terminal_punctuation() -> None:
                     ]:
                         if pat.search(step):
                             violations.append((sf.name, line_no, f"step_{idx}", pat_name, step))
+                    for m in p_single_dot_guillemet.finditer(step):
+                        if not is_abbrev(step, m.start()):
+                            violations.append((sf.name, line_no, f"step_{idx}", "single_dot_guillemet", step))
                 if len(violations) > 10:
                     break
         if len(violations) > 10:
@@ -2577,7 +2585,7 @@ def test_control_records_verbatim_fidelity() -> None:
                         f"query: {query}"
                     )
                     # 2. Non-circular core content match (R8-4): corpus text without outer punctuation
-                    core_orig = miner.convert_nested_quotes(orig).rstrip(".?!…")
+                    core_orig = miner.convert_nested_quotes(orig.strip()).rstrip(".?!…").strip()
                     assert core_orig in query, (
                         f"Core content mismatch in {sf.name}:{line_no}:\n"
                         f"core_orig: {core_orig}\n"
