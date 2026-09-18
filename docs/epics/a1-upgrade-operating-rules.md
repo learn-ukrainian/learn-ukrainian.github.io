@@ -112,7 +112,8 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
   continuous `deploy-pages.yml` (see Merge and live Pages above). Landing the
   build engine on `main` is not completion. Once gates pass in a worktree,
   push the scripts-free branch and start Astra CF the same session — do not
-  idle waiting for a prompt; open the ready PR only after CF APPROVE.
+  idle waiting for a prompt; open the PR only after CF APPROVE (no draft-before-CF
+  either — drafts still trigger CI).
 - **CF before any curriculum build (not upgrade-only):** exact-head CF must be
   clear on the prep the build depends on before `v7_build` / `--upgrade` /
   writer runs. CF feedback → fix → re-CF; do not rebuild while CF is still

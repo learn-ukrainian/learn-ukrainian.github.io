@@ -455,13 +455,15 @@ with empty reviews. Drivers follow this order:
 
 0. **CF review-fix before CI (binding).** Push the branch. Run exact-head CF
    via `ask-<lane> --branch <name>` (or equivalent). Fix → re-CF until
-   `VERDICT: APPROVE` on the tip. **Do not** open a ready (non-draft) PR while
-   CF is open or while iterating findings — opening ready starts CI and slows
-   the review-fix loop. CI runs once on a CF-APPROVED tip.
+   `VERDICT: APPROVE` on the tip. **Do not open any PR** (draft or ready)
+   while CF is open or while iterating findings — CI runs on draft
+   `opened`/`synchronize` with no draft guard in this repo, so a draft still
+   burns Gate during the fix loop. Open the PR only after CF APPROVE; CI
+   runs once on that tip.
 1. **Independent cross-family exact-head CF** — attested `resolved_model`,
    different family from the author, APPROVE on the tip (post on the PR once
    open, bound to that SHA).
-2. **Open / mark ready** → **CI Gate green** on that **same** head.
+2. **Open the PR** → **CI Gate green** on that **same** head.
 3. **Merge queue only after both.** Enqueue then; never before.
 
 **Never auto-merge or enqueue first.** Never treat `gh pr merge --auto` as a

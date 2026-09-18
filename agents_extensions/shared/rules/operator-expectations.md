@@ -55,11 +55,12 @@ tie-breakers.
    - **User-visible outcome** verified against the stated denominator (tool-backed).
    - **Landing** (when code/docs changed): **CF review-fix before CI** (operator
      2026-09-18) — complete independent exact-head cross-family CF
-     (APPROVE / fix / re-CF) on the branch **before** opening a ready
-     (non-draft) PR that starts CI Gate; do not burn CI on heads still in the
-     CF fix loop. Then: CF APPROVE + CI Gate green on that **same** head +
-     merged/enqueued by the accountable driver — never ask the operator to
-     merge. Canonical: `workflow.md` § Merge policy / landing order #7450.
+     (APPROVE / fix / re-CF) on the branch **before opening any PR** (draft
+     or ready; drafts still trigger CI here); do not burn CI on heads still
+     in the CF fix loop. Then: open PR → CF APPROVE posted on that head +
+     CI Gate green on that **same** head + merged/enqueued by the accountable
+     driver — never ask the operator to merge. Canonical: `workflow.md` §
+     Merge policy / landing order #7450.
    - **Git hygiene:** remote branch gone, local branch gone, dispatch worktree(s) reaped
      (`merge_closeout` / `reap_worktrees.py`); no zombie refs for that PR.
    - **GitHub hygiene:** issue updated with evidence; closed when acceptance criteria

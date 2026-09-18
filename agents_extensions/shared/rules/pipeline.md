@@ -28,9 +28,9 @@ paths:
   run). CF feedback → fix that surface → re-CF; do **not** rebuild while CF is
   still REQUEST_CHANGES / open. After a clear CF, build; built artifacts get
   their own CF before merge. Gemini self-adjust is not this gate.
-  **Content/machinery PR landing:** CF review-fix on the branch **before**
-  opening a ready PR / starting CI Gate (operator 2026-09-18) — see
-  `workflow.md` § Merge policy.
+  **Content/machinery PR landing:** CF review-fix on the branch **before
+  opening any PR** / starting CI Gate (operator 2026-09-18; drafts still
+  trigger CI) — see `workflow.md` § Merge policy.
   **Enforced:** `scripts/build/cf_preflight.py` via `v7_build` (clearance file
   `cf_clearance.json` / `--cf-clearance`, or GitHub exact-head APPROVE). Escape
   only with `--allow-no-cf-preflight` (logs a NOTE).
