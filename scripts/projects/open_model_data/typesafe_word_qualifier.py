@@ -532,21 +532,34 @@ class TypeSafeWordQualifier:
                 row = cur.fetchone()
                 if row:
                     tags = row[1] or ""
-                    is_bad = "bad" in tags or "v-alt" in tags
-                    is_rare = "rare" in tags or "obsc" in tags
+                    tag_tokens = set(tags.split(":"))
+                    # Canonical VESUM markers from vesum_reingest.py:
+                    # 'bad': invalid, 'subst': nonstandard, 'obsc': obscene, 'vulg': vulgar, 'slang': slang
+                    is_bad = bool(tag_tokens & {"bad", "subst", "obsc", "vulg", "slang"})
+                    is_alt_or_arch = bool(tag_tokens & {"alt", "arch"})
                     if is_bad:
+                        stratum = (
+                            LexicalStratum.PEJORATIVE_SLUR
+                            if bool(tag_tokens & {"obsc", "vulg"})
+                            else (
+                                LexicalStratum.SLANG_COLLOQUIAL
+                                if "slang" in tag_tokens
+                                else LexicalStratum.CALQUE_RUSSIANISM
+                            )
+                        )
+                        flagged_markers = ", ".join(sorted(tag_tokens & {"bad", "subst", "obsc", "vulg", "slang"}))
                         return WordQualification(
                             word=word,
-                            stratum=LexicalStratum.CALQUE_RUSSIANISM,
-                            confidence=0.82,
-                            russian_shadow=0.60,
-                            pedagogical_priority=1.0,
+                            stratum=stratum,
+                            confidence=0.88,
+                            russian_shadow=0.60 if stratum == LexicalStratum.CALQUE_RUSSIANISM else 0.05,
+                            pedagogical_priority=0.5,
                             ocr_junk=0.0,
                             needs_verification=True,
                             verification_route="style_guide_review",
-                            reason="VESUM flagged with bad/v-alt tag",
+                            reason=f"VESUM flagged with non-standard marker ({flagged_markers})",
                         )
-                    prio = 1.5 if is_rare else 3.0
+                    prio = 1.5 if is_alt_or_arch else 3.0
                     return WordQualification(
                         word=word,
                         stratum=LexicalStratum.STANDARD_LITERARY,

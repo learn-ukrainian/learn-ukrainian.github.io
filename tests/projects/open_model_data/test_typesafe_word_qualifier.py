@@ -160,3 +160,44 @@ def test_live_typesafe_api_lexicon_qualification() -> None:
     assert word_map["гідність"].pedagogical_priority >= 2.5
     assert word_map["мероприємство"].russian_shadow >= 0.40
     assert word_map["і"].pedagogical_priority <= 1.0
+
+
+def test_vesum_tag_markers_handling(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Test VESUM tag marker parsing for nonstandard, obscene, and variant forms."""
+    qualifier = TypeSafeWordQualifier(api_key=None)
+
+    class MockCursor:
+        def __init__(self, tag_val: str):
+            self.tag_val = tag_val
+
+        def execute(self, query: str, params: tuple) -> None:
+            pass
+
+        def fetchone(self) -> tuple[str, str] | None:
+            return ("noun", self.tag_val)
+
+    class MockConn:
+        def __init__(self, tag_val: str):
+            self.tag_val = tag_val
+
+        def cursor(self) -> MockCursor:
+            return MockCursor(self.tag_val)
+
+    # 1. Obscene tag -> PEJORATIVE_SLUR
+    monkeypatch.setattr(qualifier, "_get_vesum_conn", lambda: MockConn("noun:m:v_naz:obsc"))
+    res_obsc = qualifier._heuristic_qualify("лайкаслово")
+    assert res_obsc.stratum == LexicalStratum.PEJORATIVE_SLUR
+    assert res_obsc.needs_verification is True
+
+    # 2. Nonstandard 'subst' tag -> CALQUE_RUSSIANISM
+    monkeypatch.setattr(qualifier, "_get_vesum_conn", lambda: MockConn("noun:n:v_naz:subst"))
+    res_subst = qualifier._heuristic_qualify("суржикслово")
+    assert res_subst.stratum == LexicalStratum.CALQUE_RUSSIANISM
+    assert res_subst.needs_verification is True
+
+    # 3. Orthographic variant 'alt' tag -> STANDARD_LITERARY with priority 1.5
+    monkeypatch.setattr(qualifier, "_get_vesum_conn", lambda: MockConn("noun:f:v_naz:alt"))
+    res_alt = qualifier._heuristic_qualify("варіантслово")
+    assert res_alt.stratum == LexicalStratum.STANDARD_LITERARY
+    assert res_alt.pedagogical_priority == 1.5
+    assert res_alt.needs_verification is False
