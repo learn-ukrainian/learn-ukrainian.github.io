@@ -2571,7 +2571,7 @@ def test_review_pr_number_reads_the_encoded_pull_request() -> None:
     assert rw.review_pr_number(None) is None
 
 
-def test_select_orphaned_sandboxes_kills_only_a_quiet_orphan(tmp_path: Path) -> None:
+def test_select_orphaned_sandboxes_preserves_young_writers_and_owned_processes(tmp_path: Path) -> None:
     worktrees = tmp_path / ".worktrees" / "dispatch" / "codex" / "review-8154-astra"
     worktrees.mkdir(parents=True)
     now = 1_000_000.0
@@ -2588,7 +2588,7 @@ def test_select_orphaned_sandboxes_kills_only_a_quiet_orphan(tmp_path: Path) -> 
         ppid=1,
         comm="codex-linux-sandbox",
         cwd=worktrees,
-        age_s=8000,
+        age_s=7199,
         workspace_mtime=now - 10,
     )
     long_owned = rw.SandboxProcess(
@@ -2617,6 +2617,52 @@ def test_select_orphaned_sandboxes_kills_only_a_quiet_orphan(tmp_path: Path) -> 
     ) == [11]
 
 
+@pytest.mark.parametrize("age_s", [7200, 8000])
+def test_select_orphaned_sandboxes_kills_old_writing_orphan(tmp_path: Path, age_s: float) -> None:
+    now = 1_000_000.0
+    orphan = rw.SandboxProcess(
+        pid=12,
+        ppid=1,
+        comm="codex-linux-sandbox",
+        cwd=tmp_path / ".worktrees" / "dispatch" / "codex" / "writer",
+        age_s=age_s,
+        workspace_mtime=now,
+    )
+    assert rw.select_orphaned_sandboxes([orphan], repo_root=tmp_path, now=now) == [12]
+
+
+@pytest.mark.parametrize("merged_pr_only", [False, True])
+@pytest.mark.parametrize("detached", [False, True])
+def test_merged_review_worktree_with_unmerged_head_is_retained(
+    tmp_path: Path, merged_pr_only: bool, detached: bool
+) -> None:
+    repo = init_repo(tmp_path)
+    branch = "codex/review-8154-astra"
+    worktree = add_worktree(repo, branch)
+    pr_head = git(repo, "rev-parse", "HEAD")
+    (worktree / "review.txt").write_text("unmerged review work\n", encoding="utf-8")
+    git(worktree, "add", "review.txt")
+    git(worktree, "commit", "-m", "unmerged review work")
+    if detached:
+        git(worktree, "checkout", "--detach")
+    info = rw.WorktreeInfo(
+        path=worktree,
+        branch=None if detached else branch,
+        head=git(worktree, "rev-parse", "HEAD"),
+        detached=detached,
+    )
+    assert not rw._origin_branch_present(worktree, branch)
+    assert not rw._is_ancestor_of_origin_main(worktree)
+    assert rw._qualifying_reason(
+        repo_root=repo,
+        info=info,
+        pr_state=rw.PullRequestState(number=8154, state="MERGED", head_sha=pr_head),
+        build_age_hours=6.0,
+        now=time.time(),
+        merged_pr_only=merged_pr_only,
+    ) is None
+
+
 def test_merged_review_worktree_on_main_is_reapable(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -2625,7 +2671,6 @@ def test_merged_review_worktree_on_main_is_reapable(
         path=repo, branch="codex/review-8154-astra", head="abc", detached=False
     )
     monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: True)
-    monkeypatch.setattr(rw, "_origin_branch_present", lambda _path, _branch: True)
     monkeypatch.setattr(rw, "_pr_matches_worktree_head", lambda _info, _pr: False)
     reason = rw._qualifying_reason(
         repo_root=repo,
@@ -2657,3 +2702,55 @@ def test_open_review_worktree_is_not_reapable(
         merged_pr_only=True,
     )
     assert reason is None
+
+
+@pytest.mark.parametrize("layout", ["codex-review-8154-astra", "dispatch/codex/review-8154-astra"])
+def test_detached_review_queries_pr_number_from_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, layout: str
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = repo / ".worktrees" / layout
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    git(repo, "worktree", "add", "--detach", str(worktree), "main")
+    patch_gh(monkeypatch, {})
+    queried: list[int] = []
+
+    def query_by_number(_repo: Path, number: int) -> tuple[list[rw.PullRequestState], None]:
+        queried.append(number)
+        return [rw.PullRequestState(number=number, state="MERGED", head_sha="other")], None
+
+    monkeypatch.setattr(rw, "_query_pr_by_number", query_by_number)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    result = result_for(rw.reap_worktrees(repo_root=repo, live_cwds=set()), worktree)
+    assert queried == [8154]
+    assert result.action == "would_remove"
+    assert result.reason == "PR #8154 MERGED; review HEAD is on origin/main"
+
+
+def test_read_sandbox_processes_scans_only_orphans_under_worktrees(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    proc_root = tmp_path / "proc"
+    proc_root.mkdir()
+    (proc_root / "uptime").write_text("10000 0\n", encoding="utf-8")
+    worktree = tmp_path / ".worktrees" / "writer"
+    worktree.mkdir(parents=True)
+    for pid, ppid, cwd in [(11, 1, worktree), (12, 50, worktree), (13, 1, tmp_path)]:
+        entry = proc_root / str(pid)
+        entry.mkdir()
+        (entry / "comm").write_text("codex-linux-sandbox\n", encoding="utf-8")
+        fields = ["S", str(ppid), *(["0"] * 18)]
+        (entry / "stat").write_text(
+            f"{pid} (codex-linux-sandbox) {' '.join(fields)}\n", encoding="utf-8"
+        )
+        (entry / "cwd").symlink_to(cwd)
+    scanned: list[Path] = []
+
+    def workspace_mtime(path: Path) -> float:
+        scanned.append(path)
+        return 123.0
+
+    monkeypatch.setattr(rw, "latest_workspace_mtime", workspace_mtime)
+    processes = rw._read_sandbox_processes(proc_root, repo_root=tmp_path)
+    assert scanned == [worktree]
+    assert {proc.pid: proc.workspace_mtime for proc in processes} == {11: 123.0, 12: None, 13: None}
