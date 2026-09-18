@@ -559,10 +559,31 @@ jobs:
       - working-directory: site
         run: npm run test:built-output
 
+  typesafe-triage:
+    name: TypeSafe triage
+    needs: [changes]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - name: Run TypeSafe/Jev cheap triage (advisory; docs/best-practices/typesafe-jev.md)
+        env:
+          TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
+        run: python3 -m scripts.ci.typesafe_pr_triage
+
   ci-gate:
     name: CI Gate
     if: always() && !cancelled()
-    needs: [changes, ruff, secret-scan, pytest, contracts, frontend]
+    needs: [changes, ruff, secret-scan, pytest, contracts, frontend, typesafe-triage]
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
@@ -576,6 +597,7 @@ jobs:
           PYTEST: ${{ needs.pytest.result }}
           CONTRACTS: ${{ needs.contracts.result }}
           FRONTEND_JOB: ${{ needs.frontend.result }}
+          TYPESAFE_TRIAGE: ${{ needs.typesafe-triage.result }}
         run: |
           set -euo pipefail
           ok() { [ "$1" = success ]; }
@@ -595,4 +617,9 @@ jobs:
           else
             skip_ok "$FRONTEND_JOB"
           fi
+          # Advisory-only (#8232): TypeSafe/Jev is not CF and not merge
+          # authority. skip_ok covers both "no secret configured" and a
+          # successful triage run; only an actual job failure (a
+          # high-confidence `broken` verdict) blocks the gate.
+          skip_ok "$TYPESAFE_TRIAGE"
           echo "CI Gate green"

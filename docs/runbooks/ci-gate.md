@@ -14,6 +14,7 @@ replacement, not the old two-tier merge-queue file.
 | pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates; `docs` → 1 `docs_skills` shard) |
 | Contracts | not docs-only |
 | Frontend | when frontend paths changed |
+| TypeSafe triage | always (advisory; `skip_ok` — missing `TYPESAFE_API_KEY` or a `broken` verdict below confidence skips/passes green, only a high-confidence `broken` verdict fails, #8232) |
 | CI Gate | always |
 
 The Changes job uses `scripts/ci/classify_changes.py`. Ordinary PRs skip
