@@ -40,8 +40,12 @@ export function loadGoogleIdentitySdk(): Promise<void> {
 
 export function getGoogleClientId(): string | null {
   if (typeof window !== 'undefined') {
-    const stored = localStorage.getItem('learn_uk_google_client_id');
-    if (stored) return stored;
+    try {
+      const stored = window.localStorage?.getItem('learn_uk_google_client_id');
+      if (stored) return stored;
+    } catch {
+      // Storage access blocked/denied (e.g. private mode, strict sandbox, or disabled cookies)
+    }
   }
   if (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_GOOGLE_CLIENT_ID) {
     return import.meta.env.PUBLIC_GOOGLE_CLIENT_ID;
@@ -49,9 +53,17 @@ export function getGoogleClientId(): string | null {
   return null;
 }
 
+export function isGoogleSyncConfigured(): boolean {
+  return Boolean(getGoogleClientId());
+}
+
 export function setGoogleClientId(clientId: string): void {
   if (typeof window !== 'undefined') {
-    localStorage.setItem('learn_uk_google_client_id', clientId.trim());
+    try {
+      window.localStorage?.setItem('learn_uk_google_client_id', clientId.trim());
+    } catch {
+      // Storage access blocked/denied
+    }
   }
 }
 
@@ -62,22 +74,13 @@ export function setGoogleClientId(clientId: string): void {
 export async function requestGoogleAccessToken(
   customClientId?: string
 ): Promise<string> {
-  await loadGoogleIdentitySdk();
-
-  let clientId = customClientId || getGoogleClientId();
+  const clientId = customClientId || getGoogleClientId();
 
   if (!clientId) {
-    clientId = prompt(
-      'Введіть ваш Google Cloud OAuth Client ID (напр. XXXXX.apps.googleusercontent.com):\n\n' +
-      'Для створення безкоштовного Client ID:\n' +
-      '1. Перейдіть на https://console.cloud.google.com/apis/credentials\n' +
-      '2. Створіть OAuth 2.0 Client ID (Web Application) з походженням http://127.0.0.1:4321'
-    );
-    if (!clientId) {
-      throw new Error('Google OAuth Client ID не вказано');
-    }
-    setGoogleClientId(clientId);
+    throw new Error('Google OAuth Client ID не налаштовано для хмарної синхронізації');
   }
+
+  await loadGoogleIdentitySdk();
 
   return new Promise((resolve, reject) => {
     try {

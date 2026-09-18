@@ -27,7 +27,7 @@ import {
 } from '../lib/lexicon/paste-text-vocab';
 import { VesumFormShardClient } from '../lib/lexicon/vesum-form-shard';
 import type { PracticeClozeItem } from '../lib/lexicon/srs';
-import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken } from '../lib/lexicon/google-drive-sync';
+import { syncCustomSetsToDrive, requestGoogleAccessToken, setInMemoryAccessToken, getInMemoryAccessToken, isGoogleSyncConfigured } from '../lib/lexicon/google-drive-sync';
 
 interface LexiconCustomDeckManagerProps {
   chromeLocale: 'en' | 'uk';
@@ -354,15 +354,17 @@ export function LexiconCustomDeckManager({
             <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: driveConnected ? '#22c55e' : '#94a3b8' }} />
             <span>{syncStatusMsg || (driveConnected ? (chromeLocale === 'uk' ? 'Синхронізовано з Google Drive AppData' : 'Synced to Google Drive AppData') : (chromeLocale === 'uk' ? 'Локальне збереження (0 KB backend)' : 'Local storage (Zero backend)'))}</span>
           </div>
-          <button
-            type="button"
-            className="btn btn-sm"
-            onClick={handleDriveSync}
-            disabled={isDriveSyncing}
-            style={{ background: '#2563eb', color: '#fff', padding: '0.25rem 0.65rem', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 600 }}
-          >
-            {isDriveSyncing ? '...' : driveConnected ? (chromeLocale === 'uk' ? 'Синхронізувати' : 'Sync Now') : (chromeLocale === 'uk' ? 'Увійти в Google' : 'Sign in Google')}
-          </button>
+          {isGoogleSyncConfigured() ? (
+            <button
+              type="button"
+              className="btn btn-sm"
+              onClick={handleDriveSync}
+              disabled={isDriveSyncing}
+              style={{ background: '#2563eb', color: '#fff', padding: '0.25rem 0.65rem', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 600 }}
+            >
+              {isDriveSyncing ? '...' : driveConnected ? (chromeLocale === 'uk' ? 'Синхронізувати' : 'Sync Now') : (chromeLocale === 'uk' ? 'Увійти в Google' : 'Sign in Google')}
+            </button>
+          ) : null}
         </div>
 
         {/* Navigation Tabs */}

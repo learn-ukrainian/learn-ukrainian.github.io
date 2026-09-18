@@ -143,25 +143,33 @@ export function renderMarkedText(text: string, marks: readonly ZnoCharMark[] | u
   return parts;
 }
 
-export function nextDueItem(items: readonly ZnoPracticeItem[], currentId: string | null): ZnoPracticeItem | null {
+export function nextDueItem(
+  items: readonly ZnoPracticeItem[],
+  currentId: string | null,
+  sessionSeed: string | number = dayKey(),
+  excludedIds?: ReadonlySet<string>,
+): ZnoPracticeItem | null {
   if (!items.length) return null;
   const now = Date.now();
   const cards = loadState().cards;
-  const seedDay = dayKey();
-  return [...items]
-    .filter((item) => item.znoTaskId !== currentId || items.length === 1)
-    .sort((left, right) => {
-      const leftDue = cards.get(cardKey(left.znoTaskId, 'choice'))?.due ?? 0;
-      const rightDue = cards.get(cardKey(right.znoTaskId, 'choice'))?.due ?? 0;
-      const leftPriority = leftDue <= now ? 0 : 1;
-      const rightPriority = rightDue <= now ? 0 : 1;
-      if (leftPriority !== rightPriority) return leftPriority - rightPriority;
-      if (leftDue !== rightDue) return leftDue - rightDue;
-      // Stable per-day shuffle among equally-due items: without this, ties always
-      // broke alphabetically by znoTaskId, so the same repeated stems (14 unique
-      // stress stems cloned across 27 items) surfaced in lockstep every session.
-      return hashSeed(`${seedDay}:${left.znoTaskId}`) - hashSeed(`${seedDay}:${right.znoTaskId}`);
-    })[0] ?? null;
+  const pool = items.filter((item) => {
+    if (excludedIds && excludedIds.has(item.znoTaskId)) return false;
+    if (currentId && item.znoTaskId === currentId && items.length > 1) return false;
+    return true;
+  });
+  const candidates = pool.length > 0 ? pool : items.filter((item) => item.znoTaskId !== currentId || items.length === 1);
+  return (
+    [...candidates]
+      .sort((left, right) => {
+        const leftDue = cards.get(cardKey(left.znoTaskId, 'choice'))?.due ?? 0;
+        const rightDue = cards.get(cardKey(right.znoTaskId, 'choice'))?.due ?? 0;
+        const leftPriority = leftDue <= now ? 0 : 1;
+        const rightPriority = rightDue <= now ? 0 : 1;
+        if (leftPriority !== rightPriority) return leftPriority - rightPriority;
+        if (leftDue !== rightDue) return leftDue - rightDue;
+        return hashSeed(`${sessionSeed}:${left.znoTaskId}`) - hashSeed(`${sessionSeed}:${right.znoTaskId}`);
+      })[0] ?? null
+  );
 }
 
 /** Shared className + data-* attrs for the ZNO single-choice option buttons —
@@ -189,18 +197,23 @@ export default function ZnoPractice({
   onBackToDecks,
 }: ZnoPracticeProps) {
   const [activeDeckId, setActiveDeckId] = useState<string | null>(null);
+  const [sessionSeed, setSessionSeed] = useState(() => Math.floor(Math.random() * 1_000_000_000));
+  const [seenIds, setSeenIds] = useState<Set<string>>(() => new Set());
   const [itemId, setItemId] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [rated, setRated] = useState(false);
   const activeDeck = controlledDeck ?? decks.find((deck) => deck.deckId === activeDeckId) ?? null;
   const currentItem = useMemo(
-    () => activeDeck?.items.find((item) => item.znoTaskId === itemId) ?? nextDueItem(activeDeck?.items ?? [], null),
-    [activeDeck, itemId],
+    () => activeDeck?.items.find((item) => item.znoTaskId === itemId) ?? nextDueItem(activeDeck?.items ?? [], null, sessionSeed),
+    [activeDeck, itemId, sessionSeed],
   );
 
   function start(deck: ZnoPracticeDeck) {
+    const newSeed = Math.floor(Math.random() * 1_000_000_000);
     setActiveDeckId(deck.deckId);
-    setItemId(nextDueItem(deck.items, null)?.znoTaskId ?? null);
+    setSessionSeed(newSeed);
+    setSeenIds(new Set());
+    setItemId(nextDueItem(deck.items, null, newSeed)?.znoTaskId ?? null);
     setSelectedIndex(null);
     setRated(false);
   }
@@ -223,7 +236,12 @@ export default function ZnoPractice({
 
   function next() {
     if (!activeDeck || !currentItem) return;
-    setItemId(nextDueItem(activeDeck.items, currentItem.znoTaskId)?.znoTaskId ?? null);
+    const nextSeen = new Set(seenIds);
+    nextSeen.add(currentItem.znoTaskId);
+    const effectiveSeen = nextSeen.size >= activeDeck.items.length ? new Set<string>() : nextSeen;
+    const nextItem = nextDueItem(activeDeck.items, currentItem.znoTaskId, sessionSeed, effectiveSeen);
+    setSeenIds(effectiveSeen);
+    setItemId(nextItem?.znoTaskId ?? null);
     setSelectedIndex(null);
     setRated(false);
   }
