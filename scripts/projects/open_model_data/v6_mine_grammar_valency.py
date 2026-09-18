@@ -3684,10 +3684,6 @@ def build_sft_dataset(
     seen_source_texts: set[str] = set()
 
     def add_trajectory(t: dict[str, Any]) -> bool:
-        t["query"] = sanitize_punctuation(t.get("query", ""))
-        t["reasoning_steps"] = [sanitize_punctuation(step) for step in t.get("reasoning_steps", [])]
-        t["final_response"] = sanitize_punctuation(t.get("final_response", ""))
-
         # Gate 6 tone check on every generated reasoning step and final response
         for step in t.get("reasoning_steps", []):
             if not verify_respectful_tone(step, pejorative_words):
@@ -3731,9 +3727,20 @@ def build_sft_dataset(
             "title": "Граматична правильність",
             "rule": "Дотримання граматичних норм української мови.",
         })
-        all_errs = item.get("all_errors", [])
-        src_quoted = quote_sentence(item["source_sentence"], ".")
-        tgt_quoted = quote_sentence(item["target_sentence"], ".")
+        all_errs = [
+            {
+                "tag": e["tag"],
+                "error": sanitize_punctuation(e["error"]),
+                "correction": sanitize_punctuation(e["correction"]),
+            }
+            for e in item.get("all_errors", [])
+        ]
+        src_clean = sanitize_punctuation(item["source_sentence"])
+        tgt_clean = sanitize_punctuation(item["target_sentence"])
+        item_err = sanitize_punctuation(item["error"])
+        item_corr = sanitize_punctuation(item["correction"])
+        src_quoted = quote_sentence(src_clean, ".")
+        tgt_quoted = quote_sentence(tgt_clean, ".")
         if len(all_errs) > 1:
             query = f"Проаналізуйте речення, знайдіть помилки та виправте їх із нормативним обґрунтуванням: {src_quoted}"
             err_bullets = "\n".join(
@@ -3762,8 +3769,8 @@ def build_sft_dataset(
         else:
             query = f"Проаналізуйте речення, знайдіть помилку та виправте її з граматичним обґрунтуванням: {src_quoted}"
             norm_rule = cat_meta["rule"].rstrip(".") + "."
-            err_quoted = quote_span(item["error"], ".")
-            corr_quoted = quote_span(item["correction"], ".")
+            err_quoted = quote_span(item_err, ".")
+            corr_quoted = quote_span(item_corr, ".")
             reasoning = [
                 f"1. Виявлення девіації: у реченні зафіксовано помилку категорії [{tag}] ({cat_meta['title']}): фрагмент {err_quoted}",
                 f"2. Граматична норма: {norm_rule}",
@@ -3771,7 +3778,7 @@ def build_sft_dataset(
                 f"4. Підсумкове речення: {tgt_quoted}",
             ]
             final_response = (
-                f"У реченні допущено помилку ({cat_meta['title']}): «{item['error']}» замість «{item['correction']}».\n\n"
+                f"У реченні допущено помилку ({cat_meta['title']}): «{item_err}» замість «{item_corr}».\n\n"
                 f"Виправлене речення: {tgt_quoted}\n\n"
                 f"Обґрунтування: {norm_rule}"
             )
