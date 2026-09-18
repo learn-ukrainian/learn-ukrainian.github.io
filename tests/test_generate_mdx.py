@@ -430,7 +430,7 @@ Practice here.
 
     assert "Inline fill duplicate" in lesson_tab
     assert "<FillIn" in lesson_tab
-    assert "### Inline fill duplicate\n\n*(see lesson tab)*" in tab3
+    assert "### Inline fill duplicate\n\n*(див. вкладку «Урок»)*" in tab3
     assert tab3.count("Inline fill duplicate") == 1
     assert "<FillIn" not in tab3
     assert "Workbook-only quiz" in tab3
