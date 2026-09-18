@@ -2,8 +2,8 @@
   "schema_version": "v1_grammar_valency_release_receipt",
   "issue": 8143,
   "parent_epic": 6321,
-  "created_at": "2026-09-18T16:10:39Z",
-  "git_commit": "9364e54ca5b0a2b651ee893f6ec269668bf0a1ca",
+  "created_at": "2026-09-18T16:23:04Z",
+  "git_commit": "94b68d8ec9ed3dd9628069f6653d90d09680d6a5",
   "evaluation_benchmark": {
     "file_path": "data/projects/open_model_data/release/uldr_v05_grammar_valency/brown_uk_negative_control_eval.jsonl",
     "sha256": "f6c606d33bcf38845dafb7b0de33e8fd208b041e2f08a1b098f716be139e5e62",
@@ -65,10 +65,10 @@
   "sft_training_dataset": {
     "directory_path": "data/projects/open_model_data/release/uldr_v05_grammar_valency/sft",
     "manifest_file": "manifest.json",
-    "manifest_sha256": "b6c38b6995e07b05a69859767825b073653fee097ef93cde913d86f0a921622b",
+    "manifest_sha256": "33b53b54845df2a0ac7e38441c295015426d6291a373ab883339c91117002d22",
     "shards_count": 70,
     "total_trajectories": 35000,
-    "max_shard_size_kb": 1590.45,
+    "max_shard_size_kb": 1604.74,
     "category_distribution": {
       "G/Case": 414,
       "G/Prep": 75,
