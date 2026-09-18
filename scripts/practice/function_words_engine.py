@@ -350,7 +350,7 @@ CANONICAL_PREPOSITION_GOVERNMENT_ITEMS = [
         "correct": "о",
         "distractors": [
             ("по", FunctionWordInterferenceType.LEXICAL_SEMANTIC_CONFUSION, "Прийменник «по» з місцевим відмінком означає «після» («по сьомій» = після сьомої години), а не точний час настання події («о сьомій»).", "Preposition 'по' + locative means 'after' ('по сьомій' = after seven), not exact time ('о сьомій')."),
-            ("в", FunctionWordInterferenceType.RUSSIAN_CALQUE_GENERAL, "Вживання прийменника «в/у» на позначення точного часу години без прикметника («в сім годин») є російською калькою. В українській мові: «о сьомій годині».", "Using 'в/у' for clock time ('в сім годин') is a Russian calque; Ukrainian uses 'о / об' ('о сьомій годині')."),
+            ("в", FunctionWordInterferenceType.RUSSIAN_CALQUE_GENERAL, "Конструкція «в сім годин» — калька з російської; українською мовою на позначення точного часу кажемо: «о сьомій годині» (прийменник «о / об» із порядковим числівником).", "Construction 'в сім годин' is a Russian calque; Ukrainian marks exact time with 'о / об' and ordinal numeral: 'о сьомій годині'."),
             ("біля", FunctionWordInterferenceType.LEXICAL_SEMANTIC_CONFUSION, "Прийменник «біля» вказує на просторову близькість (біля столу), а для приблизного часу вживають «близько» (близько сьомої); для точного ж часу потрібен прийменник «о» (о сьомій).", "Preposition 'біля' indicates spatial proximity, while approximate time uses 'близько'; exact time requires 'о / об'."),
         ],
         "citation": "Антоненко-Давидович «Як ми говоримо»; СУМ-20",
@@ -381,9 +381,9 @@ CANONICAL_PREPOSITION_GOVERNMENT_ITEMS = [
         "after": "і знайти нову роботу.",
         "correct": "за власним бажанням",
         "distractors": [
-            ("по власному бажанню", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "В українській мові усталеною формою є «за власним бажанням». Конструкція «по власному бажанню» — калька з російської («по собственному желанию»).", "Standard Ukrainian uses 'за власним бажанням'; 'по власному бажанню' is a Russian calque."),
-            ("з власного бажання", FunctionWordInterferenceType.LEXICAL_SEMANTIC_CONFUSION, "Прийменник «з» тут невживаний у стандартній літературній та діловій мові; нормативний вислів — «за власним бажанням».", "Preposition 'з' is non-standard here; correct phrase is 'за власним бажанням'."),
-            ("по власному бажанні", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "Калька з російської мови та неправильне прийменникове керування. Норма: «за власним бажанням».", "Russian calque and erroneous prepositional government; standard is 'за власним бажанням'."),
+            ("по власному бажанню", FunctionWordInterferenceType.RUSSIAN_CALQUE_PO, "Конструкція «по власному бажанню» — калька з російської («по собственному желанию»). В українській мові вживаємо «за власним бажанням».", "Construction 'по власному бажанню' is a Russian calque ('по собственному желанию'); standard Ukrainian uses 'за власним бажанням'."),
+            ("через власне бажання", FunctionWordInterferenceType.MISMATCHED_CAUSAL_CONSEQUENCE, "Прийменник «через» позначає несприятливу причину чи перешкоду (через хворобу, через негоду). Для свідомого вибору чи мотивації вживаємо «за власним бажанням».", "Preposition 'через' indicates an adverse cause or obstacle; for intentional choice or motivation, use 'за власним бажанням'."),
+            ("при власному бажанні", FunctionWordInterferenceType.RUSSIAN_CALQUE_GENERAL, "Конструкція «при бажанні» — синтаксична калька російського «при желании». Нормативний літературний вислів — «за власним бажанням» (або «якщо є бажання / маючи бажання»).", "Phrase 'при власному бажанні' is a calque from Russian 'при желании'; standard Ukrainian uses 'за власним бажанням'."),
         ],
         "citation": "Антоненко-Давидович «Як ми говоримо»; СУМ-20",
         "rule_ua": "У значенні підстави або відповідності вживаємо прийменник «за» («за власним бажанням», «за наказом», «за правилами»), уникаючи російського калькованого «по».",

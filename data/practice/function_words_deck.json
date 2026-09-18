@@ -498,8 +498,8 @@
         {
           "form": "в",
           "interferenceType": "russian_calque_general",
-          "explanationUa": "Вживання прийменника «в/у» на позначення точного часу години без прикметника («в сім годин») є російською калькою. В українській мові: «о сьомій годині».",
-          "explanationEn": "Using 'в/у' for clock time ('в сім годин') is a Russian calque; Ukrainian uses 'о / об' ('о сьомій годині')."
+          "explanationUa": "Конструкція «в сім годин» — калька з російської; українською мовою на позначення точного часу кажемо: «о сьомій годині» (прийменник «о / об» із порядковим числівником).",
+          "explanationEn": "Construction 'в сім годин' is a Russian calque; Ukrainian marks exact time with 'о / об' and ordinal numeral: 'о сьомій годині'."
         },
         {
           "form": "біля",
@@ -565,29 +565,29 @@
       "sentenceAfter": "і знайти нову роботу.",
       "correctAnswer": "за власним бажанням",
       "options": [
-        "по власному бажанні",
+        "при власному бажанні",
         "по власному бажанню",
         "за власним бажанням",
-        "з власного бажання"
+        "через власне бажання"
       ],
       "distractors": [
         {
           "form": "по власному бажанню",
           "interferenceType": "russian_calque_po",
-          "explanationUa": "В українській мові усталеною формою є «за власним бажанням». Конструкція «по власному бажанню» — калька з російської («по собственному желанию»).",
-          "explanationEn": "Standard Ukrainian uses 'за власним бажанням'; 'по власному бажанню' is a Russian calque."
+          "explanationUa": "Конструкція «по власному бажанню» — калька з російської («по собственному желанию»). В українській мові вживаємо «за власним бажанням».",
+          "explanationEn": "Construction 'по власному бажанню' is a Russian calque ('по собственному желанию'); standard Ukrainian uses 'за власним бажанням'."
         },
         {
-          "form": "з власного бажання",
-          "interferenceType": "lexical_semantic_confusion",
-          "explanationUa": "Прийменник «з» тут невживаний у стандартній літературній та діловій мові; нормативний вислів — «за власним бажанням».",
-          "explanationEn": "Preposition 'з' is non-standard here; correct phrase is 'за власним бажанням'."
+          "form": "через власне бажання",
+          "interferenceType": "mismatched_causal_consequence",
+          "explanationUa": "Прийменник «через» позначає несприятливу причину чи перешкоду (через хворобу, через негоду). Для свідомого вибору чи мотивації вживаємо «за власним бажанням».",
+          "explanationEn": "Preposition 'через' indicates an adverse cause or obstacle; for intentional choice or motivation, use 'за власним бажанням'."
         },
         {
-          "form": "по власному бажанні",
-          "interferenceType": "russian_calque_po",
-          "explanationUa": "Калька з російської мови та неправильне прийменникове керування. Норма: «за власним бажанням».",
-          "explanationEn": "Russian calque and erroneous prepositional government; standard is 'за власним бажанням'."
+          "form": "при власному бажанні",
+          "interferenceType": "russian_calque_general",
+          "explanationUa": "Конструкція «при бажанні» — синтаксична калька російського «при желании». Нормативний літературний вислів — «за власним бажанням» (або «якщо є бажання / маючи бажання»).",
+          "explanationEn": "Phrase 'при власному бажанні' is a calque from Russian 'при желании'; standard Ukrainian uses 'за власним бажанням'."
         }
       ],
       "ruleCitation": "Антоненко-Давидович «Як ми говоримо»; СУМ-20",
