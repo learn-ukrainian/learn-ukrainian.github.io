@@ -239,9 +239,10 @@ def _seed_previous_edition(module_dir: Path) -> None:
     (module_dir / "lessons.yaml").write_text("lessons: []\n", encoding="utf-8")
 
 
-def test_clear_previous_edition_removes_lesson_artifacts_and_keeps_lessons_yaml(tmp_path):
+def test_clear_previous_edition_removes_lesson_artifacts_and_keeps_lessons_yaml(tmp_path, monkeypatch):
     import hashlib
 
+    monkeypatch.setattr(v7_build, "PROJECT_ROOT", tmp_path)
     module_dir = tmp_path / "curriculum/l2-uk-en/a1/special-signs"
     archive = tmp_path / "curriculum/l2-uk-en/a1-v1/special-signs"
     archive.mkdir(parents=True)
@@ -262,6 +263,65 @@ def test_clear_previous_edition_removes_lesson_artifacts_and_keeps_lessons_yaml(
     assert (module_dir / "lessons.yaml").read_text(encoding="utf-8") == "lessons: []\n"
     assert (archive / "module.md").exists()
     assert len(removed) == 2 * len(linear_pipeline.WRITER_ARTIFACTS) + 1
+
+
+def _primary_lesson(tmp_path: Path) -> Path:
+    primary = tmp_path / "primary/curriculum/l2-uk-en/a1/special-signs/lesson-1"
+    primary.mkdir(parents=True)
+    for name in (*linear_pipeline.WRITER_ARTIFACTS, "writer_prompt.md"):
+        (primary / name).write_text("primary checkout", encoding="utf-8")
+    return primary
+
+
+def _assert_primary_intact(primary: Path) -> None:
+    for name in (*linear_pipeline.WRITER_ARTIFACTS, "writer_prompt.md"):
+        assert (primary / name).read_text(encoding="utf-8") == "primary checkout"
+
+
+def test_clear_previous_edition_refuses_a_symlinked_lesson_directory(tmp_path, monkeypatch):
+    worktree = tmp_path / "worktree"
+    monkeypatch.setattr(v7_build, "PROJECT_ROOT", worktree)
+    primary = _primary_lesson(tmp_path)
+    module_dir = worktree / "curriculum/l2-uk-en/a1/special-signs"
+    module_dir.mkdir(parents=True)
+    (module_dir / "lesson-1").symlink_to(primary, target_is_directory=True)
+    # A real lesson sorted after the symlink: the refusal must come before any delete.
+    real = module_dir / "lesson-2"
+    real.mkdir()
+    (real / "module.md").write_text("old edition", encoding="utf-8")
+
+    with pytest.raises(linear_pipeline.LinearPipelineError, match="symlink"):
+        v7_build._clear_previous_edition(module_dir)
+
+    _assert_primary_intact(primary)
+    assert (module_dir / "lesson-1").is_symlink()
+
+
+def test_clear_previous_edition_refuses_targets_resolving_outside_the_worktree(tmp_path, monkeypatch):
+    worktree = tmp_path / "worktree"
+    monkeypatch.setattr(v7_build, "PROJECT_ROOT", worktree)
+    primary = _primary_lesson(tmp_path)
+    module_dir = worktree / "curriculum/l2-uk-en/a1/special-signs"
+    _seed_previous_edition(module_dir)
+    (module_dir / "lesson-2/module.md").unlink()
+    (module_dir / "lesson-2/module.md").symlink_to(primary / "module.md")
+
+    with pytest.raises(linear_pipeline.LinearPipelineError, match="outside the build worktree"):
+        v7_build._clear_previous_edition(module_dir)
+
+    _assert_primary_intact(primary)
+    # Checked before the first delete: lesson-1 is untouched too.
+    assert (module_dir / "lesson-1/module.md").read_text(encoding="utf-8") == "old edition"
+
+
+def test_clear_previous_edition_refuses_a_module_outside_the_worktree(tmp_path, monkeypatch):
+    monkeypatch.setattr(v7_build, "PROJECT_ROOT", tmp_path / "worktree")
+    primary = _primary_lesson(tmp_path)
+
+    with pytest.raises(linear_pipeline.LinearPipelineError, match="outside the build worktree"):
+        v7_build._clear_previous_edition(primary.parent)
+
+    _assert_primary_intact(primary)
 
 
 def _run_upgrade_with_old_edition(upgrade_root, monkeypatch, *, alphabet: bool, dry_run: bool = False):

@@ -2056,9 +2056,20 @@ def _clear_previous_edition(module_dir: Path) -> list[Path]:
     its receipt stay: a resumed lesson is re-parsed from them. Runs only inside
     a build worktree (``_run`` refuses the primary checkout) and never touches
     ``a1-v1/`` or site pages.
+
+    A symlink must never carry a delete out of the worktree: a symlinked
+    ``lesson-*`` directory is refused, and every target must still resolve
+    inside both the module directory and the worktree. All targets are checked
+    before the first delete, so a refusal leaves the module untouched.
     """
-    removed: list[Path] = []
+    root = PROJECT_ROOT.resolve()
+    module_root = module_dir.resolve()
+    if not module_root.is_relative_to(root):
+        raise linear_pipeline.LinearPipelineError(f"Refusing to clear {module_dir}: outside the build worktree")
+    targets: list[Path] = []
     for lesson_dir in sorted(module_dir.glob("lesson-*")):
+        if lesson_dir.is_symlink():
+            raise linear_pipeline.LinearPipelineError(f"Refusing to clear {lesson_dir}: lesson directory is a symlink")
         if not lesson_dir.is_dir():
             continue
         stale = [lesson_dir / name for name in linear_pipeline.WRITER_ARTIFACTS]
@@ -2068,10 +2079,15 @@ def _clear_previous_edition(module_dir: Path) -> list[Path]:
             if receipt.get("prompt_sha256") != hashlib.sha256(prompt_path.read_bytes()).hexdigest():
                 stale.append(prompt_path)
         for path in stale:
-            if path.is_file():
-                path.unlink()
-                removed.append(path)
-    return removed
+            if not (path.is_file() or path.is_symlink()):
+                continue
+            resolved = path.resolve()
+            if not (resolved.is_relative_to(module_root) and resolved.is_relative_to(root)):
+                raise linear_pipeline.LinearPipelineError(f"Refusing to delete {path}: resolves outside the build worktree")
+            targets.append(path)
+    for path in targets:
+        path.unlink()
+    return targets
 
 
 UPGRADE_INDEPENDENT_REVIEWER = "codex-tools"
