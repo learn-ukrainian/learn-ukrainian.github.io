@@ -35,7 +35,7 @@ If a scorecard row conflicts with LANGUAGE-LANES, egress, or review-gate rules �
 | **Egress** | Where prompt/code data may leave (Western lab, China-route, local-only). |
 | **CF review** | Cross-**family** formal review of a change; discussion/panel alone does **not** satisfy the gate. |
 | **Consequential** | Work that can merge to `main`, change learner-facing Atlas/curriculum, alter security/CI gates, or spend non-trivial quota on multi-agent implementation. |
-| **Ceiling model** | Sol, Fable 5, and any future peer (e.g. expected xAI Fable/Sol-class) reserved for hard design/diagnostic/architecture. |
+| **Ceiling model** | Astra, Fable 5, and any future peer (e.g. expected xAI Fable/Astra-class) reserved for hard design/diagnostic/architecture. Historical “Sol” references in older evidence remain historical — live designated advisors are **Fable + Astra**. |
 | **Provisional / validated / deprecated** | Scorecard assignment confidence (see scorecard § evidence). |
 
 ---
@@ -68,7 +68,7 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 
 ---
 
-## 4. Cost discipline (Sol / Fable / future xAI ceiling)
+## 4. Cost discipline (Astra / Fable / future xAI ceiling)
 
 - **Cursor Ultra month (operator 2026-08-13; sunset/review ~2026-09-13):** Ultra **20x** (~100% left at pin; resets unused ~30d). Prefer **`--agent cursor`** as the **first pick** for mechanical **and** ordinary infra/code implement when fit allows — not LANGUAGE-LANES, not advisor/authority. Spread remains; idle Ultra while burning Codex/Kimi/DeepSeek on those jobs is waste. `cursor:auto` never CF-of-record. DeepSeek Flash everyday; **Pro @ high = hard implement only**.
 - **Utilize, do not trim (operator 2026-08-08 / #6468):** free/behind seats (Cursor Auto, DeepSeek Flash, AGY, Pool, **Z.AI/GLM**, **Kimi k3-256k**, Claude routine, Grok workers) with open in-scope work must be pulled before feeding Codex near_cap mechanical jobs. **Keep Kimi and Z.AI/GLM** — they are first-class. Cutting subscriptions is a last resort after sustained measured zero use, not a response to multi-driver complexity. Concurrent drivers (~2 Grok + 1 Claude + 1–4 Codex) share free pools; coordinate via `/api/delegate/active`.
@@ -83,13 +83,13 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 - **Escalation after evidence-backed attempts:** repeated failed **root-cause** fixes (not blind “retry 2×”).
 - **Do not** escalate merely because the task is “important.”
 - **SuperGrok Heavy** (and similar plans): **verified capacity entitlement** for longer/more parallel Grok worker runs — **not** a stable capability rank. Re-check when plan or routing changes.
-- **Future xAI Fable/Sol-class:** candidate ceiling advisor/hard coder **after bakeoff**; do not auto-promote to orchestrator.
+- **Future xAI Fable/Astra-class:** candidate ceiling advisor/hard coder **after bakeoff**; do not auto-promote to orchestrator.
 
 ### Effort guidance (per model)
 
 | Model | Effort |
 |---|---|
-| Sol | Floor **`high`**; prefer **`xhigh`/`max`** for qualifying hard decisions |
+| Astra | Floor **`high`**; prefer **`xhigh`/`max`** for qualifying hard decisions (live OpenAI advisor seat; historical Sol effort notes are obsolete) |
 | **Fable 5.1** | Standing default **`high`** (API default; start here and sweep). See subsection below — do **not** port an Opus/`xhigh` habit. |
 | Fable 5 (legacy) | Prefer **`xhigh`** for ceiling work only when that SKU is seated |
 | Terra (orchestrating hard stream) | **`xhigh`** |
@@ -196,8 +196,8 @@ When a preferred lane is at quota/outage:
 
 ## 11. Anti-patterns
 
-- Sol/Fable for search, format, routine tests, first-pass CRUD.
-- Sol/Fable only at the end to bless a design they never challenged.
+- Astra/Fable for search, format, routine tests, first-pass CRUD.
+- Astra/Fable only at the end to bless a design they never challenged.
 - Any single model as sole orchestrator + implementer + CF reviewer on a consequential stream.
 - Flash/Luna/Haiku as release authority.
 - Discuss/panel counted as CF review.

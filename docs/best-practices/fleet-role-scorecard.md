@@ -1,20 +1,20 @@
 # Fleet role scorecard — living model classification
 
 **Status:** living scorecard (**classification refreshed** 2026-08-02 — not all cells fully bakeoff-validated)
-**Doctrine:** [`fleet-shared-doctrine.md`](fleet-shared-doctrine.md)  
-**Machine routing:** `agents_extensions/shared/rules/model-assignment.md` (takes precedence on conflict)  
-**Evidence baseline:** public Jul 2026 model cards/roundups + project catalog + Sol advisories #3588 / #3593  
+**Doctrine:** [`fleet-shared-doctrine.md`](fleet-shared-doctrine.md)
+**Machine routing:** `agents_extensions/shared/rules/model-assignment.md` (takes precedence on conflict)
+**Evidence baseline:** public Jul 2026 model cards/roundups + project catalog + Sol advisories #3588 / #3593
 **Owner:** accountable orchestrator (update after bakeoffs; operator approves role demotions/promotions for ceiling seats)
 
 ---
 
 ## 0. How to read this document
 
-- Rows are **role assignments**, not a global IQ ranking.  
-- Each assignment has a **confidence**: `provisional` | `validated` | `deprecated`.  
-- **Provisional** = operator intent + public priors + Sol review; needs local bakeoff.  
-- **Validated** = recorded local bakeoff with harness/effort/outcome.  
-- **Deprecated** = do not route except explicit exception.  
+- Rows are **role assignments**, not a global IQ ranking.
+- Each assignment has a **confidence**: `provisional` | `validated` | `deprecated`.
+- **Provisional** = operator intent + public priors + Sol review; needs local bakeoff.
+- **Validated** = recorded local bakeoff with harness/effort/outcome.
+- **Deprecated** = do not route except explicit exception.
 - Benchmarks and press numbers are **priors**; harness × effort can invert order.
 
 ---
@@ -23,13 +23,13 @@
 
 | Role | Primary | Secondary / volume | Effort | Confidence |
 |---|---|---|---|---|
-| Ceiling advisor/designer | Sol, Fable 5 | — | Sol ≥`high` (prefer `xhigh`/`max`); Fable prefer `xhigh` | provisional |
+| Ceiling advisor/designer | Astra, Fable 5 | — | Astra ≥`high` (prefer `xhigh`/`max`); Fable prefer `xhigh` | provisional |
 | Accountable orchestrator | Opus 4.8, Terra | — | Opus `high`+; Terra `xhigh` when owning hard streams | provisional |
 | General implementer | Sonnet 5, Terra, Grok 4.5 | Gemini 3.5 Flash, K3, Cursor (**pin family**) | `high` default | provisional |
-| Hard implementer | Sol, Fable 5 | Prefer Sonnet/Terra first unless known ceiling task | `xhigh` | provisional |
-| UI / visual product design | K3 | Sol (systems UX adjudication only) | K3 `high`; Sol `xhigh` | provisional (K3 UI primacy needs bakeoffs) |
+| Hard implementer | Astra, Fable 5 | Prefer Sonnet/Terra first unless known ceiling task | `xhigh` | provisional |
+| UI / visual product design | K3 | Astra (systems UX adjudication only); Kimi consult non-UA | K3 `high`; Astra `xhigh` | provisional (K3 UI primacy needs bakeoffs) |
 | Code/security CF review | **Author-family-conditional** (see §3) | — | `high`+ | provisional |
-| Critical CF review | Sol ↔ Fable/Opus **cross-family** | — | `xhigh` | provisional |
+| Critical CF review | Astra ↔ Fable/Opus **cross-family** | — | `xhigh` | provisional |
 | Ukrainian language | Gemini 3.1 Pro (AGY) | LANGUAGE-LANES: codex/claude/grok-4.6 + sources | `high` | provisional (UA primacy AGY; morphology still VESUM-gated) |
 | Recon / triage | Luna, Claude Haiku, Gemini 3.5 Flash | — | Luna `max` with exact owned paths + objective scope ceiling; others `medium`–`high`; never sole release | provisional |
 
@@ -42,7 +42,8 @@
 | Model | Strengths | Weaknesses | Route / egress notes | Project seat |
 |---|---|---|---|---|
 | **Fable 5** | Ceiling coding; long hard tasks; architecture; lead grows with difficulty | ~2× Opus price; safety reroutes possible | Anthropic | Ceiling advisor + hard code |
-| **Sol** | Frontier coding/agent claims; synthesis; hard debug; design judgment; multi-agent `ultra` class capabilities in family docs | Expensive; OpenAI-family CF limits if author is OpenAI | OpenAI / Codex | Ceiling advisor; floor `high` |
+| **Astra** (`gpt-6-astra`) | Live OpenAI advisor / hard implement / CF peer | OpenAI-family CF limits if author is OpenAI | OpenAI / Codex | Ceiling advisor (with Fable); replaces Sol as designated OpenAI advisor seat |
+| **Sol** (historical) | Prior OpenAI ceiling advisor evidence | Superseded as designated advisor by Astra | OpenAI / Codex | Historical only — do not route item-12 GO here |
 | **Opus 4.8** | Durable long agentic sessions; orchestration; architecture | Costly as bulk worker | Anthropic | Prefer orchestrator |
 | **Terra** | Balanced implementer/orchestrator; strong everyday agentic | Not Sol/Fable ceiling | OpenAI / Codex | Orchestrator + worker |
 | **Luna** | Fast bounded implementation, recon, and mechanical checks | Never sole architecture/security/language/release authority | OpenAI / Codex | Bounded worker / recon |
@@ -97,11 +98,11 @@ Never use a fixed unordered list that can pick the author’s family.
 
 ### 4.2 Fixed evaluation corpus (minimum five cells)
 
-1. Thin orchestrator decision (route + stop/go)  
-2. 200–500 LOC infra fix with tests  
-3. UI component (Practice/Atlas chrome)  
-4. CF code review of a known PR (sealed `review-pr`)  
-5. UA lemma/stress sample with `sources` MCP  
+1. Thin orchestrator decision (route + stop/go)
+2. 200–500 LOC infra fix with tests
+3. UI component (Practice/Atlas chrome)
+4. CF code review of a known PR (sealed `review-pr`)
+5. UA lemma/stress sample with `sources` MCP
 
 ### 4.3 Thresholds (starting policy)
 
@@ -143,8 +144,8 @@ Re-verify capacity and routing when the subscription plan or API routing changes
 
 ## 7. Fallback / substitution
 
-1. Prefer `scripts/config/agent_fallback_substitutions.yaml` + harness table in model-assignment.  
-2. Never silently lower quality floor on consequential work.  
+1. Prefer `scripts/config/agent_fallback_substitutions.yaml` + harness table in model-assignment.
+2. Never silently lower quality floor on consequential work.
 3. Always **NOTE** substitution (model, family, harness, reason) on PR or orchestration artifact.
 
 ---
