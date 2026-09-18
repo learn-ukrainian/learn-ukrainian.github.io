@@ -5578,44 +5578,37 @@ describe('LexiconPractice', () => {
     });
 
     test('document-imported cloze never renders undefined in feedback or prompt', async () => {
-      const customSet: CustomSet = {
-        id: 'test_doc_imported_cloze_no_undefined',
-        title: 'Doc Set',
-        lemma_keys: ['книга'],
-        cloze_items: [
-          {
-            clozeId: 'doc_cloze_no_undef',
-            lemmaId: 'knyha',
-            sentenceFrameId: 'doc_frame_no_undef',
-            sentence: 'Я читаю _____ щодня.',
-            blankCase: 'context',
-            form: 'книгу',
-            lemma: 'книга',
-            caseRule: {
-              code: 'document-context',
-              labelUk: 'Контекст з документа',
-              labelEn: 'Document Sentence',
-            },
-            clozeEn: 'I read a book every day.',
-            options: [
-              { optionId: 'opt_ans', lemmaId: 'knyha', label: 'книгу', kind: 'answer' },
-              { optionId: 'opt_dec_1', lemmaId: 'knyha', label: 'книзі', kind: 'decoy-oblique' },
-            ],
-          },
+      const base = sampleDeck();
+      const docCloze: PracticeClozeItem = {
+        clozeId: 'doc_cloze_no_undef',
+        lemmaId: 'knyha',
+        sentenceFrameId: 'doc_frame_no_undef',
+        sentence: 'Я читаю _____ щодня.',
+        blankCase: 'context',
+        form: 'книгу',
+        lemma: 'книга',
+        caseRule: {
+          code: 'document-context',
+          labelUk: 'Контекст з документа',
+          labelEn: 'Document Sentence',
+        },
+        clozeEn: 'I read a book every day.',
+        options: [
+          { optionId: 'opt_ans', lemmaId: 'knyha', label: 'книгу', kind: 'answer' },
+          { optionId: 'opt_dec_1', lemmaId: 'knyha', label: 'книзі', kind: 'decoy-oblique' },
         ],
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        device_id: 'test_device',
-        revision: 1,
+      };
+      const initialDeck: PracticeDeckData = {
+        ...base,
+        cloze: [docCloze],
+        index: base.index.map((entry) => ({
+          ...entry,
+          clozeIds: entry.lemmaId === 'knyha' ? ['doc_cloze_no_undef'] : [],
+        })),
       };
 
-      localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([customSet]));
-
       const user = userEvent.setup();
-      const { container } = render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} initialMode="cloze" />);
-
-      const customBtn = screen.getByRole('button', { name: /Doc Set/i });
-      await user.click(customBtn);
+      const { container } = render(<LexiconPractice initialDeck={initialDeck} autoStart={false} initialMode="cloze" />);
 
       const clozeCard = container.querySelector<HTMLButtonElement>('[data-mode="cloze"]')!;
       await user.click(clozeCard);
@@ -5624,9 +5617,56 @@ describe('LexiconPractice', () => {
 
       // Submit an answer and assert the rendered DOM never contains 'undefined'
       const input = screen.getByRole('textbox');
-      await user.type(input, 'книга{Enter}');
+      await user.type(input, 'тест{Enter}');
 
       expect(container.textContent).not.toContain('undefined');
+    });
+
+    test('document-imported cloze correct answer labels document context and never dictionary form', async () => {
+      const base = sampleDeck();
+      const docCloze: PracticeClozeItem = {
+        clozeId: 'doc_cloze_correct',
+        lemmaId: 'knyha',
+        sentenceFrameId: 'doc_frame_correct',
+        sentence: 'Я читаю _____ щодня.',
+        blankCase: 'context',
+        form: 'книгу',
+        lemma: 'книга',
+        caseRule: {
+          code: 'document-context',
+          labelUk: 'Контекст з документа',
+          labelEn: 'Document Sentence',
+        },
+        clozeEn: 'I read a book every day.',
+        options: [
+          { optionId: 'opt_ans', lemmaId: 'knyha', label: 'книгу', kind: 'answer' },
+          { optionId: 'opt_dec_1', lemmaId: 'knyha', label: 'книзі', kind: 'decoy-oblique' },
+        ],
+      };
+      const initialDeck: PracticeDeckData = {
+        ...base,
+        cloze: [docCloze],
+        index: base.index.map((entry) => ({
+          ...entry,
+          clozeIds: entry.lemmaId === 'knyha' ? ['doc_cloze_correct'] : [],
+        })),
+      };
+
+      const user = userEvent.setup();
+      const { container } = render(<LexiconPractice initialDeck={initialDeck} autoStart={false} initialMode="cloze" />);
+
+      const clozeCard = container.querySelector<HTMLButtonElement>('[data-mode="cloze"]')!;
+      await user.click(clozeCard);
+
+      expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
+
+      const input = screen.getByRole('textbox');
+      await user.type(input, 'книгу{Enter}');
+
+      expect(container.textContent).not.toContain('словникова форма');
+      expect(container.textContent).not.toContain('dictionary form');
+      expect(container.textContent).not.toContain('undefined');
+      expect(container.textContent).toContain('Контекст з документа');
     });
 
     test('dashboard session estimate narrows to a 1-word custom deck, not the full level (PR #5837 fix-round-2)', async () => {

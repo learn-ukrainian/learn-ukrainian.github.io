@@ -4101,18 +4101,26 @@ function LexiconPracticeIsland({
         ? { nextUnresolved: new Set(unresolvedCardKeys), nextDeferred: [...deferredLemmas] }
         : recordReview(selection, 'good');
       const rule = cloze.caseRule;
-      const ruleCaseLabel = 'caseLabel' in rule && rule.caseLabel ? rule.caseLabel : '';
-      const ruleTriggerLabel = 'triggerLabel' in rule && rule.triggerLabel ? rule.triggerLabel : '';
-      const labelUk = caseDrill
-        ? (ruleCaseLabel || 'потрібна форма')
-        : (ruleTriggerLabel || 'словникова форма');
-      const labelEn = caseDrill
-        ? (ruleCaseLabel ? translateGrammarTerm(ruleCaseLabel) : 'required form')
-        : 'dictionary form';
+      const isDoc = 'code' in rule && rule.code === 'document-context';
+      let labelUk: string;
+      let labelEn: string;
+      if (isDoc) {
+        labelUk = rule.labelUk || '';
+        labelEn = rule.labelEn || '';
+      } else if (caseDrill) {
+        const caseLabel = 'caseLabel' in rule && rule.caseLabel ? rule.caseLabel : '';
+        labelUk = caseLabel;
+        labelEn = translateGrammarTerm(caseLabel);
+      } else {
+        const triggerLabel = 'triggerLabel' in rule && rule.triggerLabel ? rule.triggerLabel : '';
+        labelUk = triggerLabel || 'словникова форма';
+        labelEn = triggerLabel ? 'dictionary form' : 'dictionary form';
+      }
+
       setClozeFeedback({
         kind: 'correct',
-        textUk: `✓ ${cloze.form} (${labelUk})`,
-        textEn: `✓ ${cloze.form} (${labelEn})`,
+        textUk: labelUk ? `✓ ${cloze.form} (${labelUk})` : `✓ ${cloze.form}`,
+        textEn: labelEn ? `✓ ${cloze.form} (${labelEn})` : `✓ ${cloze.form}`,
       });
       setAnswerLocked(true);
       commitAnsweredSelection(selection, outcome);
@@ -4130,15 +4138,18 @@ function LexiconPracticeIsland({
       // Keep the typed value (select it, don't clear it) — a chip tap that put the
       // right lemma in the box must not be destroyed on the first case-miss.
       const rule = cloze.caseRule;
-      const ruleCaseLabel = 'caseLabel' in rule && rule.caseLabel ? rule.caseLabel : '';
-      const caseLabelUk = ruleCaseLabel || 'потрібну форму';
-      const caseLabelEn = ruleCaseLabel ? translateGrammarTerm(ruleCaseLabel) : 'required form';
-      const feedbackUk = 'feedback' in rule && rule.feedback ? `: ${rule.feedback}` : '';
-      const feedbackEn = 'feedback' in rule && rule.feedback ? `: ${rule.feedback}` : '';
+      const caseLabel = 'caseLabel' in rule && rule.caseLabel ? rule.caseLabel : '';
+      const feedback = 'feedback' in rule && rule.feedback ? `: ${rule.feedback}` : '';
+      const textUk = caseLabel
+        ? `→ Правильне слово. Тепер постав його ${casePhraseAccusative(caseLabel)}${feedback}`
+        : `→ Правильне слово. Тепер обери правильну форму${feedback}`;
+      const textEn = caseLabel
+        ? `→ Correct word. Now put it in the ${translateGrammarTerm(caseLabel)}${feedback}`
+        : `→ Correct word. Now choose the correct form${feedback}`;
       setClozeFeedback({
         kind: 'case-miss',
-        textUk: `→ Правильне слово. Тепер постав його ${casePhraseAccusative(caseLabelUk)}${feedbackUk}`,
-        textEn: `→ Correct word. Now put it in the ${caseLabelEn}${feedbackEn}`,
+        textUk,
+        textEn,
       });
       if (exhausted) {
         setAnswerLocked(true);
