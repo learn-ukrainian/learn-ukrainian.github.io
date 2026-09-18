@@ -81,7 +81,10 @@ def _resolve_typesafe_key() -> str:
     ]
     for path in key_files:
         if path.is_file():
-            content = path.read_text(encoding="utf-8").strip().splitlines()[0].strip()
+            lines = path.read_text(encoding="utf-8").strip().splitlines()
+            if not lines:
+                continue
+            content = lines[0].strip()
             if content:
                 return content
     return ""

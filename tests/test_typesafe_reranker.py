@@ -10,6 +10,7 @@ import pytest
 from scripts.curriculum.typesafe_reranker import (
     RerankCandidate,
     TypeSafeReranker,
+    _resolve_typesafe_key,
     rerank_textbook_candidates,
 )
 
@@ -173,6 +174,19 @@ def test_rerank_remote_mock(mock_urlopen: MagicMock) -> None:
     assert results[0].clarity_level == 3
     assert not results[0].is_uncertain
     assert results[0].composite_score == pytest.approx(0.70 * 0.88 + 0.30 * 1.0, rel=1e-3)
+
+
+def test_resolve_typesafe_key_skips_empty_file(tmp_path, monkeypatch) -> None:
+    """A whitespace-only key file must not raise IndexError and must not be returned as the key."""
+    monkeypatch.delenv("TYPESAFE_API_KEY", raising=False)
+    monkeypatch.setattr("scripts.curriculum.typesafe_reranker.Path.home", lambda: tmp_path)
+
+    secrets_dir = tmp_path / ".secrets"
+    secrets_dir.mkdir()
+    (secrets_dir / "typsafe-ai.key").write_text("   \n", encoding="utf-8")
+    (secrets_dir / "typesafe-ai.key").write_text("", encoding="utf-8")
+
+    assert _resolve_typesafe_key() == ""
 
 
 @patch("urllib.request.urlopen", side_effect=TimeoutError("simulated typesafe outage"))
