@@ -121,3 +121,22 @@ def test_live_typesafe_api_homonym_disambiguation() -> None:
     # Low confidence / complex negative government triggers verification
     assert results[1].confidence <= 0.85
     assert results[1].needs_verification is True
+
+
+def test_homonym_disambiguation_hermetic_without_vesum(tmp_path) -> None:
+    """Verify hermetic fallback when vesum database is completely unavailable (e.g. in CI)."""
+    fake_path = tmp_path / "nonexistent_vesum.db"
+    disambiguator = TypeSafeHomonymDisambiguator(api_key="", vesum_path=fake_path)
+
+    # Disambiguate without database connection
+    res_verb = disambiguator.disambiguate("Дівчина ретельно мила руки.", "мила")
+    assert res_verb.grammatical_form == GrammaticalForm.FINITE_VERB_PAST
+    assert res_verb.lemma == "мити"
+
+    res_noun = disambiguator.disambiguate("Шматок мила лежав на столі.", "мила")
+    assert res_noun.grammatical_form == GrammaticalForm.NOUN_GENITIVE
+    assert res_noun.lemma == "мило"
+
+    res_saw = disambiguator.disambiguate("Дві пили заводу стояли в кутку.", "пили")
+    assert res_saw.grammatical_form == GrammaticalForm.NOUN_GENITIVE
+    assert res_saw.lemma == "пила"

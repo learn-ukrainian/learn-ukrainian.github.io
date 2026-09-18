@@ -121,6 +121,21 @@ class TypeSafeHomonymDisambiguator:
         "adjective": "Adjectival modifier or short predicative form (e.g., була мила).",
     }
 
+    KNOWN_LEMMA_FALLBACKS: ClassVar[dict[tuple[str, GrammaticalForm], str]] = {
+        ("мила", GrammaticalForm.FINITE_VERB_PAST): "мити",
+        ("мила", GrammaticalForm.NOUN_GENITIVE): "мило",
+        ("мила", GrammaticalForm.NOUN_NOMINATIVE): "мила",
+        ("мила", GrammaticalForm.ADJECTIVE): "милий",
+        ("пили", GrammaticalForm.FINITE_VERB_PAST): "пити",
+        ("пили", GrammaticalForm.NOUN_GENITIVE): "пила",
+        ("пили", GrammaticalForm.NOUN_NOMINATIVE): "пила",
+        ("шило", GrammaticalForm.NOUN_NOMINATIVE): "шило",
+        ("шила", GrammaticalForm.FINITE_VERB_PAST): "шити",
+        ("шила", GrammaticalForm.NOUN_GENITIVE): "шило",
+        ("пекла", GrammaticalForm.FINITE_VERB_PAST): "пекти",
+        ("пекла", GrammaticalForm.NOUN_GENITIVE): "пекло",
+    }
+
     def __init__(
         self,
         api_key: str | None = None,
@@ -253,11 +268,11 @@ class TypeSafeHomonymDisambiguator:
 
     def _lookup_vesum_lemma(self, tok: str, form: GrammaticalForm) -> str:
         """Query VESUM to resolve canonical lemma for the disambiguated form."""
+        lower_t = tok.lower()
         ves_conn = self._get_vesum_conn()
         if not ves_conn:
-            return tok.lower()
+            return self.KNOWN_LEMMA_FALLBACKS.get((lower_t, form), lower_t)
 
-        lower_t = tok.lower()
         try:
             cur = ves_conn.cursor()
             if form == GrammaticalForm.FINITE_VERB_PAST:
@@ -277,7 +292,7 @@ class TypeSafeHomonymDisambiguator:
                 return row[0]
         except sqlite3.Error:
             pass
-        return lower_t
+        return self.KNOWN_LEMMA_FALLBACKS.get((lower_t, form), lower_t)
 
     def _heuristic_disambiguate(self, sentence: str, target_token: str) -> HomonymDisambiguation:
         """Deterministic heuristic and VESUM-backed disambiguation."""
