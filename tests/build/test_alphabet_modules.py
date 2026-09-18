@@ -206,3 +206,66 @@ def test_special_signs_upgrade_prompt_has_no_hyphenation_lesson(monkeypatch, les
     assert "act-5" not in {e["id"] for e in shown["items_min_exempt"]}
     assert "act-4" in {p["new_id"] for p in shown["provenance"]}
     assert "## Контраст і пастки" in artifacts and "## Далі" in artifacts
+
+
+def test_prompt_plan_copy_renames_the_hyphenation_section_and_keeps_its_budget():
+    assert am.strip_line_break_title("Перенос і підсумок") == "Підсумок"
+    assert am.strip_line_break_title("Апостроф") == "Апостроф"
+    assert am.strip_line_break_title("Правила переносу · Word Hyphenation Rules") == ""
+
+    shown = am.line_break_free_titles(PLAN)
+    assert shown["content_outline"][0]["section"] == "Підсумок"
+    assert shown["content_outline"][0]["words"] == 300
+    assert PLAN["content_outline"][0]["section"] == "Перенос і підсумок"  # input untouched
+    # The gate's plan keeps the structural title.
+    assert am.filter_line_break_plan(PLAN)["content_outline"][0]["section"] == "Перенос і підсумок"
+
+    only = dict(PLAN, content_outline=[{"section": "Перенос", "words": 100}, {"section": "Апостроф", "words": 200}])
+    assert [s["section"] for s in am.line_break_free_titles(only)["content_outline"]] == ["Апостроф"]
+
+    other = dict(PLAN, slug="my-family")
+    assert am.line_break_free_titles(other) == other
+    assert "Перенос" not in linear_pipeline._plan_content_for_prompt(PLAN, yaml.safe_dump(PLAN, allow_unicode=True))
+
+
+@pytest.mark.parametrize("lesson", [None, 5])
+def test_special_signs_upgrade_prompt_original_plan_has_no_hyphenation_title(lesson):
+    """Live plan + live lessons.yaml, both read unchanged from disk (#8237 r2)."""
+    root = linear_pipeline.PROJECT_ROOT / "curriculum/l2-uk-en"
+    plan_path = root / "plans/a1/special-signs.yaml"
+    plan_text = plan_path.read_text(encoding="utf-8")
+    assert "section: Перенос і підсумок" in plan_text  # the file does carry it
+    plan = yaml.safe_load(plan_text)
+    lesson_map = yaml.safe_load((root / "a1/special-signs/lessons.yaml").read_text(encoding="utf-8"))
+
+    prompt = linear_pipeline.render_upgrade_prompt(plan, root / "a1-v1/special-signs", lesson_map, lesson=lesson)
+
+    region = _region(prompt, "## Original plan (read-only)", "## Existing module artifacts (read-only)")
+    for token in (*SPECIAL_SIGNS_FORBIDDEN, "Line Breaks"):
+        assert token not in region.replace("\u0301", ""), token
+    shown = yaml.safe_load(region)
+    original = {s["section"]: s["words"] for s in plan["content_outline"]}
+    sections = {s["section"]: s["words"] for s in shown["content_outline"]}
+    assert sections["Підсумок"] == original["Перенос і підсумок"]  # word budget stays
+    assert len(sections) == len(original)
+    assert plan_path.read_text(encoding="utf-8") == plan_text
+
+
+def test_no_line_break_english_title_exists_for_the_alphabet_section():
+    aliases = linear_pipeline._A1_M1_M7_SECTION_ALIASES
+    assert not any(am.mentions_line_breaks(a) or "Line Break" in a for v in aliases.values() for a in v)
+    keys = linear_pipeline._section_heading_keys_for_plan_section("Перенос і підсумок", "a1-script-building")
+    assert "Підсумок" in keys and "Textbook Check" in keys  # the heading the writer was given passes the gate
+
+
+def test_live_special_signs_lessons_yaml_still_points_at_the_dropped_original():
+    """The gate must cope with this row as-is; nobody removes it by hand."""
+    from scripts.build.lesson_map import _normalize_activities
+
+    root = linear_pipeline.PROJECT_ROOT / "curriculum/l2-uk-en"
+    source = root / "a1-v1/special-signs"
+    base = _normalize_activities((source / "module.md").read_text(encoding="utf-8"),
+                                 yaml.safe_load((source / "activities.yaml").read_text(encoding="utf-8")))
+    dropped = am.line_break_original_keys(base)
+    lesson_map = yaml.safe_load((root / "a1/special-signs/lessons.yaml").read_text(encoding="utf-8"))
+    assert dropped and dropped <= {(p["placement"], p["index"]) for p in lesson_map["provenance"]}

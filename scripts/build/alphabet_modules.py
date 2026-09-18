@@ -123,6 +123,52 @@ def filter_line_break_plan(plan: Mapping[str, Any]) -> dict[str, Any]:
     return _filter(copy.deepcopy(dict(plan)))
 
 
+_TITLE_JOIN_RE = re.compile(r"\s+(і|й|та|and)\s+|\s*(,|·)\s*", re.IGNORECASE)
+
+
+def strip_line_break_title(title: str) -> str:
+    """Drop the line-break half of a joined title: ``Перенос і підсумок`` -> ``Підсумок``.
+
+    Returns ``""`` when nothing else is left.
+    """
+    if not mentions_line_breaks(title):
+        return title
+    parts = _TITLE_JOIN_RE.split(title)  # text, word-joiner, punct-joiner, text, ...
+    kept: list[str] = []
+    for i in range(0, len(parts), 3):
+        if mentions_line_breaks(parts[i]):
+            continue
+        if kept:
+            kept.append(", " if parts[i - 1] == "," else f" {parts[i - 2] or parts[i - 1]} ")
+        kept.append(parts[i])
+    out = "".join(kept).strip()
+    return out[:1].upper() + out[1:]
+
+
+def line_break_free_titles(plan: Mapping[str, Any]) -> dict[str, Any]:
+    """Prompt-only copy of an alphabet plan whose section titles name no line breaks.
+
+    ``filter_line_break_plan`` keeps section titles because the section gate reads
+    them; the writer must not see a hyphenation title, so the copy a prompt shows
+    renames the section (word budget kept) or drops it when nothing else is left.
+    The plan file and the gate's plan are untouched.
+    """
+    if not is_alphabet_slug(plan.get("slug")):
+        return dict(plan)
+    out = copy.deepcopy(dict(plan))
+    outline = []
+    for section in out.get("content_outline") or []:
+        if isinstance(section, Mapping) and isinstance(section.get("section"), str):
+            title = strip_line_break_title(section["section"])
+            if not title:
+                continue
+            section = {**section, "section": title}
+        outline.append(section)
+    if "content_outline" in out:
+        out["content_outline"] = outline
+    return out
+
+
 def is_line_break_activity(activity: Any) -> bool:
     """True for a divide-words activity or one whose text teaches line breaks."""
     if not isinstance(activity, Mapping):

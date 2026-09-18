@@ -893,7 +893,8 @@ def test_alphabet_full_gate_rejects_quiz_stem_about_hyphenation(gold):
         gates.run_lesson_gates(module, source, plan)))
 
 
-def test_alphabet_full_gate_ignores_heading_and_rejects_dropped_provenance(gold):
+def test_alphabet_full_gate_ignores_heading_and_skips_dropped_provenance(gold):
+    """lessons.yaml is never hand-edited: a row for a dropped original is skipped (#8237 r2)."""
     module, source, plan = _alphabet_gold(gold)
     path = module / "lesson-1/module.md"
     path.write_text(path.read_text() + "\n\n## Перенос і підсумок\n")
@@ -902,8 +903,33 @@ def test_alphabet_full_gate_ignores_heading_and_rejects_dropped_provenance(gold)
     base = yaml.safe_load((source / "activities.yaml").read_text())
     base["inline"][0]["instruction"] = "Перенос слів"
     (source / "activities.yaml").write_text(yaml.safe_dump(base, allow_unicode=True))
+    lessons_before = (module / "lessons.yaml").read_text()
     report = gates.run_lesson_gates(module, source, plan)
-    assert any("provenance points at dropped" in d for d in report["blocking"])
+    assert not any("provenance" in d for d in report["diagnostics"]), report["diagnostics"]
+    assert (module / "lessons.yaml").read_text() == lessons_before
+
+
+def test_alphabet_gate_still_blocks_other_provenance_errors(gold):
+    module, source, plan = _alphabet_gold(gold)
+    base = yaml.safe_load((source / "activities.yaml").read_text())
+    base["inline"][0]["instruction"] = "Перенос слів"
+    (source / "activities.yaml").write_text(yaml.safe_dump(base, allow_unicode=True))
+    path = module / "lessons.yaml"
+    ly = yaml.safe_load(path.read_text())
+    row = next(p for p in ly["provenance"] if p["new_id"] == "act-2")
+
+    row["new_id"] = "act-3"  # a kept original renamed
+    path.write_text(yaml.safe_dump(ly, allow_unicode=True))
+    report = gates.run_lesson_gates(module, source, plan)
+    assert not report["passed"]
+    assert any("provenance" in d for d in report["diagnostics"]), report["diagnostics"]
+
+    row["new_id"] = "act-2"
+    ly["provenance"].remove(row)  # a kept original lost
+    path.write_text(yaml.safe_dump(ly, allow_unicode=True))
+    report = gates.run_lesson_gates(module, source, plan)
+    assert not report["passed"]
+    assert "Original activity indexes must be contiguous" in report["diagnostics"]
 
 
 def test_alphabet_gate_does_not_require_a_dropped_line_break_baseline_section(gold):

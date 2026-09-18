@@ -58,6 +58,7 @@ from scripts.build.alphabet_modules import (
     filter_line_break_plan,
     filter_line_break_resources,
     is_alphabet_slug,
+    line_break_free_titles,
     line_break_original_keys,
 )
 from scripts.build.citation_matcher import (
@@ -1120,7 +1121,7 @@ def _plan_content_for_prompt(plan: Mapping[str, Any], plan_content: str) -> str:
     """Raw plan text for a prompt; alphabet slugs get the line-break-free plan (#8237)."""
     if not is_alphabet_slug(plan.get("slug")):
         return plan_content
-    return yaml.safe_dump(filter_line_break_plan(plan), allow_unicode=True, sort_keys=False)
+    return yaml.safe_dump(line_break_free_titles(filter_line_break_plan(plan)), allow_unicode=True, sort_keys=False)
 
 
 def _original_artifact_for_prompt(plan: Mapping[str, Any], name: str, text: str) -> str:
@@ -1182,7 +1183,7 @@ def render_upgrade_prompt(
         "LESSON_MAP": yaml.safe_dump(
             _lesson_map_for_prompt(plan, lesson_map, source_dir), allow_unicode=True, sort_keys=False,
         ),
-        "ORIGINAL_PLAN": yaml.safe_dump(dict(plan), allow_unicode=True, sort_keys=False),
+        "ORIGINAL_PLAN": yaml.safe_dump(line_break_free_titles(plan), allow_unicode=True, sort_keys=False),
         "ORIGINAL_ARTIFACTS": "\n\n".join(
             f"### {name}\n\n{_original_artifact_for_prompt(plan, name, (source_dir / name).read_text(encoding='utf-8'))}"
             for name in WRITER_ARTIFACTS
@@ -10934,7 +10935,9 @@ _A1_M1_M7_SECTION_ALIASES = {
     "М'який знак": ("The Soft Sign",),
     "Апостроф": ("The Apostrophe",),
     "Контраст і типові помилки L2": ("Contrast and L2 Reading Traps",),
-    "Перенос і підсумок": ("Line Breaks and Textbook Check",),
+    # The alphabet writer is shown this section as "Підсумок" (#8237); no
+    # line-break English title exists for it to be handed.
+    "Перенос і підсумок": ("Підсумок", "Textbook Check"),
     "Наголос": ("Stress",),
     "Інтонація": ("Intonation",),
     "Читаємо вголос": ("Reading Aloud",),

@@ -1277,8 +1277,8 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     # Exemptions cannot be invented for new writer activities.
     if not set(exempt) <= original_ids:
         block("item exemptions may name only preserved original activities")
-    for pl, i in sorted(k for k in prov if k in dropped):
-        block(f"provenance points at dropped line-break original {pl}[{i}]; remove it")
+    # A provenance row for a dropped line-break original is skipped, not blocked:
+    # the live lessons.yaml still carries it and is never hand-edited (#8237).
     kept_provenance = [p for p in provenance if (p.get("placement"), p.get("index")) not in dropped]
     if len(kept_provenance) != len(originals) - len(dropped) or len(prov) != len(provenance):
         block("provenance must cover every original exactly once")
