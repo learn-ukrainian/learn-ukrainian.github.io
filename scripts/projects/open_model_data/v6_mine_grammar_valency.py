@@ -124,7 +124,8 @@ UNCLOSED_RELATIVE_CLAUSE_RE = re.compile(
     re.IGNORECASE,
 )
 UNCLOSED_TOBTO_RE = re.compile(
-    r',\s+(?:тобто|а\s+саме)\s+(?:[^,]+,\s*)*(?:[^,]+?)\s+(?:нагаду[єє]|повинн[аиое]|необхідно|варто|мусит[ьь]|має|є)\b',
+    # Bounded single span — avoid nested (?:[^,]+,\s*)* which CodeQL flags as ReDoS.
+    r',\s+(?:тобто|а\s+саме)\s+[^.]{3,120}?\s+(?:нагаду[єє]|повинн[аиое]|необхідно|варто|мусит[ьь]|має|є)\b',
     re.IGNORECASE,
 )
 SUBJECT_COMMA_PRED_RE = re.compile(
