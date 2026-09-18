@@ -74,6 +74,7 @@ FIELDS: tuple[FieldCheck, ...] = (
         "definition of done / acceptance criteria",
         re.compile(
             r"(?im)^#{1,3}\s*(?:definition of done|acceptance criteria(?:\s*/\s*definition of done)?|done)\s*$"
+            r"|^\s*-\s*\[\s*[xX ]\s*\]\s*AC-\d+"
         ),
     ),
     FieldCheck(
@@ -82,9 +83,28 @@ FIELDS: tuple[FieldCheck, ...] = (
         re.compile(r"(?im)^#{1,3}\s*(?:terminal goal)\s*$"),
     ),
     FieldCheck(
+        "accountable_driver",
+        "accountable driver",
+        re.compile(r"(?im)^#{1,3}\s*(?:accountable\s+driver|driver)\s*$"),
+    ),
+    FieldCheck(
+        "stop_policy",
+        "stop policy",
+        re.compile(r"(?im)^#{1,3}\s*(?:stop\s+policy|stop)\s*$"),
+    ),
+    FieldCheck(
         "residual",
-        "residual / leftover owner",
-        re.compile(r"(?im)^#{1,3}\s*(?:residual|leftovers?)\s*$"),
+        "residual policy / leftover owner",
+        re.compile(
+            r"(?im)^#{1,3}\s*(?:residual(?:\s+policy)?|leftovers?)\s*$"
+        ),
+    ),
+    FieldCheck(
+        "review_plan",
+        "review plan (author family · outside-family reviewer · backup)",
+        re.compile(
+            r"(?im)^#{1,3}\s*(?:review\s+plan|cf\s+path|cross[- ]family\s+review)\s*$"
+        ),
     ),
 )
 

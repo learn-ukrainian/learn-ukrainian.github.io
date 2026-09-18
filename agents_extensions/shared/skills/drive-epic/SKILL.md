@@ -28,7 +28,7 @@ what residual remains. Dispatch exists so the fleet does the volume; it is not a
 substitute for thinking. Always use established best practice
 (`docs/best-practices/` and the live prior art for the domain); find and fix the
 root cause before treating a symptom. You decide in-scope calls. You are not a
-designated advisor (Fable/Sol) and not the CF of record for work you drove — you
+designated advisor (Fable/Astra) and not the CF of record for work you drove — you
 *do* read the review and the diff before you merge. Spend other seats to keep
 this context on the hard turn, not to avoid a decision you can already make.
 Unused paid quota is waste (§2c); manufactured work is a defect. Judgment is not
@@ -311,7 +311,7 @@ Before **every** implement `delegate.py dispatch`:
    `routing_budget_primary` + `capacity_pick_order` (tool evidence).
 2. **No card = no dispatch.** Skipping the card is a process defect; do not launch the
    worker and "write the card later."
-3. **Default bounded work:** Fable or Sol **brief** → heap/practical **worker(s)** —
+3. **Default bounded work:** Fable or Astra **brief** → heap/practical **worker(s)** —
    not a Sonnet/Terra fixation solo. Heap without advisor packet is a process defect.
 4. **Fable path:** native `claude-fable-5-1` or Cursor pin to Fable; do not spend Fable on
    lockfiles / pointer / smoke jobs.
@@ -676,7 +676,7 @@ not the utilization half.
 
 ## Escalate — do NOT decide these solo
 
-Route to the **operator + advisors (Fable, Sol)** — never resolve from the loop:
+Route to the **operator + advisors (Fable, Astra)** — never resolve from the loop:
 
 1. Any **architecture / layout / process** change.
 2. A **contested CF verdict** (reviewer and author disagree, or two reviewers split).

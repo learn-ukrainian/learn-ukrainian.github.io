@@ -122,7 +122,12 @@ when the user-visible outcome is verified end-to-end **and** git hygiene (branch
 worktrees reaped) **and** GitHub hygiene (issue updated/closed as appropriate) are
 done. Opening a PR, requesting CF, or writing "Next: …" is not Done. Full schema:
 `docs/best-practices/task-quality.md` DoD; binding: `/api/rules` →
-`operator-expectations.md` §3a. DoR ("may we start") is separate.
+`operator-expectations.md` §3a.
+
+**Definition of Ready (DoR):** may start only when **task card ∧ dispatch preflight**
+are green (issue+ACs, outcome/verify, accountable driver, CF path; Monitor/task
+infra, disk, live capacity, ≥2 non-orch workers). Everyday “ready” ≠ DoR. Binding
+pointer: `/api/rules` → §3b; tables in `task-quality.md`.
 
 Before claiming completion, inspect the exact diff and status, run proportionate
 verification, and report changed files, commands/results, final branch status,

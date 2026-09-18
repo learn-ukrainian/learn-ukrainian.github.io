@@ -28,8 +28,21 @@ All templates under .github/ISSUE_TEMPLATE/.
 ## Dependencies
 none
 
-## Definition of Done
-- [ ] PR merged with CF + green CI
+## Accountable driver
+cursor-infra
+
+## Stop policy
+If CF CHANGES_REQUESTED: fix on tip and re-CF; owner cursor-infra.
+
+## Residual policy
+none
+
+## Review plan
+Author family Cursor; CF Claude; backup AGY. Discussion ≠ CF.
+
+## Acceptance Criteria / Definition of Done
+- [ ] AC-01: checker WARN when new DoR fields missing
+- [ ] AC-02: PR merged with CF + green CI
 
 ## Terminal goal
 merge
@@ -46,6 +59,10 @@ HEADINGS_ONLY = """
 ## Denominator
 ## Verify
 ## Dependencies
+## Accountable driver
+## Stop policy
+## Residual policy
+## Review plan
 ## Definition of Done
 ## Terminal goal
 ## Residual

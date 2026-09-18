@@ -172,7 +172,7 @@ Use the live model catalog and rules as authority. Standing task-fit defaults:
   `sources`/VESUM evidence for linguistic claims.
 - Routine Codex implementation uses Terra; Luna or Spark may perform bounded
   mechanical work but are never sole consequential authority.
-- Grok may own sustained daily driving where the roster permits. Fable and Sol
+- Grok may own sustained daily driving where the roster permits. Fable and Astra
   are summoned for short judgment, not polling.
 - GLM-5.3/z.ai is eligible for public, non-sensitive code/infra, bug/security,
   and cross-file analysis only. It is local-invocation-only, sends prompt data
