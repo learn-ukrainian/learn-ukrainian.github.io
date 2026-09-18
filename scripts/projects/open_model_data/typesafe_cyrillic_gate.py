@@ -22,6 +22,7 @@ import os
 import sys
 import time
 from dataclasses import asdict, dataclass
+from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
@@ -37,6 +38,38 @@ DEFAULT_THRESHOLDS = {
     "confidence_auto_accept": 0.75,  # Confidence >= 0.75 permits automated pipeline decisions
     "confidence_review_floor": 0.45, # Confidence < 0.45 escalates to human or dictionary check
 }
+
+
+class CurriculumAction(StrEnum):
+    """Canonical TypeSafe curriculum / corpus disposition (single taxonomy).
+
+    Shared by ``typesafe_cyrillic_gate`` and corpus-ingestion adapters such as
+    ``typesafe_corpus_firewall``. Do not invent parallel action enums.
+    """
+
+    ADMIT_STANDARD = "admit_standard"
+    ADMIT_DIALECT_HERITAGE = "admit_dialect_heritage"
+    USE_AS_ANTI_CALQUE = "use_as_anti_calque"
+    REJECT_DROP = "reject_drop"
+
+
+class LexicalVariety(StrEnum):
+    """Canonical lexical-variety labels for Cyrillic / Ukrainian triage."""
+
+    STANDARD_MODERN = "standard_modern"
+    AUTHENTIC_DIALECT = "authentic_dialect"
+    HISTORICAL_LITERARY = "historical_literary"
+    COLONIAL_SURZHYK = "colonial_surzhyk"
+    SOVIET_JARGON = "soviet_jargon"
+    NON_UKRAINIAN = "non_ukrainian"
+
+
+# Normalized final-decision labels used on CyrillicGateVerdict.decision
+# (heritage / anti_calque / reject are shortened forms of CurriculumAction).
+DECISION_ADMIT_STANDARD = "admit_standard"
+DECISION_ADMIT_HERITAGE = "admit_heritage"
+DECISION_ANTI_CALQUE = "anti_calque"
+DECISION_REJECT = "reject"
 
 
 @dataclass
@@ -112,13 +145,28 @@ def build_system_one_questions() -> dict[str, Any]:
         "lexical_variety": Choice(
             instructions="Classify the linguistic variety and origin of this Ukrainian/Cyrillic text",
             criteria={
-                "standard_modern": "Contemporary standard literary Ukrainian (post-1990 standard norm)",
-                "authentic_dialect": "Authentic regional Ukrainian dialect (Hutsul, Galician, Boyko, Polissian, etc. - e.g. ґазда, файно, бараболя)",
-                "historical_literary": "Historical Ukrainian literary or 1928 Kharkiv orthography",
-                "colonial_surzhyk": "Colonial Surzhyk, Russian calques, unidiomatic interference (e.g. случайно, получилося, вибачаюся, на протязі року, міроприємство)",
-                "soviet_jargon": "Soviet bureaucratic, ideological, or kolkhoz era terminology (e.g. колгоспниця, передовик, партком)",
-                "non_ukrainian": "Russian, Polish, or other non-Ukrainian text"
-            }
+                LexicalVariety.STANDARD_MODERN.value: (
+                    "Contemporary standard literary Ukrainian (post-1990 standard norm)"
+                ),
+                LexicalVariety.AUTHENTIC_DIALECT.value: (
+                    "Authentic regional Ukrainian dialect (Hutsul, Galician, Boyko, "
+                    "Polissian, etc. - e.g. ґазда, файно, бараболя)"
+                ),
+                LexicalVariety.HISTORICAL_LITERARY.value: (
+                    "Historical Ukrainian literary or 1928 Kharkiv orthography"
+                ),
+                LexicalVariety.COLONIAL_SURZHYK.value: (
+                    "Colonial Surzhyk, Russian calques, unidiomatic interference "
+                    "(e.g. случайно, получилося, вибачаюся, на протязі року, міроприємство)"
+                ),
+                LexicalVariety.SOVIET_JARGON.value: (
+                    "Soviet bureaucratic, ideological, or kolkhoz era terminology "
+                    "(e.g. колгоспниця, передовик, партком)"
+                ),
+                LexicalVariety.NON_UKRAINIAN.value: (
+                    "Russian, Polish, or other non-Ukrainian text"
+                ),
+            },
         ),
         "colonial_shadow": Noul(
             instructions="Does this text exhibit Russian lexical calques, Surzhyk, or grammatical interference (such as случайно, получилося, вибачаюся, на протязі)?"
@@ -126,12 +174,20 @@ def build_system_one_questions() -> dict[str, Any]:
         "curriculum_action": Choice(
             instructions="What pipeline action is most appropriate for this text?",
             criteria={
-                "admit_standard": "Admit into standard core Ukrainian corpus / curriculum",
-                "admit_dialect_heritage": "Admit into regional dialect / cultural heritage archive",
-                "use_as_anti_calque": "Use as anti-calque or error-correction drill foil",
-                "reject_drop": "Reject and exclude (OCR corruption, non-Ukrainian, or unacceptable quality)"
-            }
-        )
+                CurriculumAction.ADMIT_STANDARD.value: (
+                    "Admit into standard core Ukrainian corpus / curriculum"
+                ),
+                CurriculumAction.ADMIT_DIALECT_HERITAGE.value: (
+                    "Admit into regional dialect / cultural heritage archive"
+                ),
+                CurriculumAction.USE_AS_ANTI_CALQUE.value: (
+                    "Use as anti-calque or error-correction drill foil"
+                ),
+                CurriculumAction.REJECT_DROP.value: (
+                    "Reject and exclude (OCR corruption, non-Ukrainian, or unacceptable quality)"
+                ),
+            },
+        ),
     }
 
 
