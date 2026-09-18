@@ -391,7 +391,7 @@ Item-bearing types need non-empty `items`; numeric arrays like `correct_order` a
 
 **`watch-and-repeat` item shape (mandatory canonical fields).** Each item MUST use `video` (the video URL), not `url`.
 
-**`translate` activity items (mandatory canonical fields — HARD FAIL on alias).** Each `translate` item MUST use `source` (text to translate) and `options` (target choices); the correct one has `correct: true`. For UK→EN, `source` is Ukrainian and the English answer is in `options[].text`. No `prompt:`/`answer:` aliases, no bare `target:` field.
+**`translate` activity items (mandatory canonical fields — HARD FAIL on alias).** Each item in a `translate` activity's `items:` MUST use `source` (text to translate) and `options` (target choices); the correct target answer is the option with `correct: true`. For UK→EN, `source` is Ukrainian and the English answer is in `options[].text`. Do NOT use `prompt:`/`answer:` aliases, and do NOT emit a bare `target:` field.
 
 **`quiz` and `translate` item explanations (mandatory teaching feedback — HARD FAIL if missing/empty).** Every `quiz` or `translate` item MUST include `explanation: "..."`: one concise line on why the correct option is right (simple English for A1/A2). Empty, whitespace-only, or omitted values fail the `quiz_translate_explanations` gate.
 
