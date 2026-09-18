@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_grammar_valency_eval_record.schema.json",
+  "title": "v1_grammar_valency_eval_record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "eval_id",
+    "source_corpus",
+    "document_id",
+    "sentence_text",
+    "target_action",
+    "is_pristine_control",
+    "syntactic_category",
+    "linguistic_explanation",
+    "source_metadata"
+  ],
+  "properties": {
+    "eval_id": {
+      "type": "string",
+      "pattern": "^eval_gram_val_[a-f0-9]{8}$"
+    },
+    "source_corpus": {
+      "type": "string",
+      "const": "brown_uk_good"
+    },
+    "document_id": {
+      "type": "string",
+      "minLength": 3
+    },
+    "sentence_text": {
+      "type": "string",
+      "minLength": 20
+    },
+    "target_action": {
+      "type": "string",
+      "const": "PRESERVE"
+    },
+    "is_pristine_control": {
+      "type": "boolean",
+      "const": true
+    },
+    "syntactic_category": {
+      "type": "string",
+      "minLength": 3
+    },
+    "linguistic_explanation": {
+      "type": "string",
+      "minLength": 10
+    },
+    "source_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "partition",
+        "doc_name",
+        "char_length"
+      ],
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "partition": {
+          "type": "string",
+          "const": "held_out_eval"
+        },
+        "doc_name": {
+          "type": "string"
+        },
+        "char_length": {
+          "type": "integer",
+          "minimum": 20
+        }
+      }
+    }
+  }
+}
