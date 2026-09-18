@@ -192,53 +192,18 @@ describe('case-filter', () => {
       expect(matchesCaseFilter(makeCandidate('genitive', 'singular'), filter)).toBe(false);
     });
 
-    test('active-session filter change: committed non-matching card is rejected by stabilization guard', () => {
-      // User initially was on default (all cases) and had a nominative card committed
-      const committedCandidate = makeCandidate('називний', 'plural') as PracticeSelection;
-      (committedCandidate as any).itemId = 'item_nom_pl';
+    test('matchesCaseFilter correctly rejects non-matching candidates on filter change', () => {
+      const nomPlCandidate = makeCandidate('називний', 'plural') as PracticeSelection;
+      const vocSgCandidate = makeCandidate('кличний', 'singular') as PracticeSelection;
 
-      // User switches preset to "vocative-only"
       const vocativeFilter: CaseFilterState = {
         cases: ['кличний'],
         numbers: ['singular', 'plural'],
         activePreset: 'vocative-only',
       };
 
-      // The poolFilter predicate evaluates matchesCaseFilter
-      const poolFilter = (candidate: PracticeSelection) => matchesCaseFilter(candidate, vocativeFilter);
-
-      // Verify that committed selection fails poolFilter
-      expect(poolFilter(committedCandidate)).toBe(false);
-
-      // In LexiconPractice selection stabilization:
-      // if poolFilter returns false, committed.selection must NOT be retained
-      const freshSelection = makeCandidate('кличний', 'singular') as PracticeSelection;
-      (freshSelection as any).itemId = 'item_voc_sg';
-
-      const committed = {
-        historyLen: 0,
-        selection: committedCandidate,
-      };
-
-      const history = [];
-      const selectionDeck = { index: [{ itemId: 'item_nom_pl' }, { itemId: 'item_voc_sg' }] };
-      const itemIdPresentInDeck = (deck: any, id: string) => deck.index.some((i: any) => i.itemId === id);
-
-      // Simulation of LexiconPractice line 3100-3108 stabilization check:
-      let effectiveSelection = freshSelection;
-      if (
-        committed &&
-        committed.historyLen === history.length &&
-        freshSelection &&
-        freshSelection.itemId !== committed.selection.itemId &&
-        itemIdPresentInDeck(selectionDeck, committed.selection.itemId) &&
-        (!poolFilter || poolFilter(committed.selection))
-      ) {
-        effectiveSelection = committed.selection;
-      }
-
-      // Must pick the fresh vocative card, NOT retain the committed nominative card
-      expect(effectiveSelection.itemId).toBe('item_voc_sg');
+      expect(matchesCaseFilter(nomPlCandidate, vocativeFilter)).toBe(false);
+      expect(matchesCaseFilter(vocSgCandidate, vocativeFilter)).toBe(true);
     });
   });
 });

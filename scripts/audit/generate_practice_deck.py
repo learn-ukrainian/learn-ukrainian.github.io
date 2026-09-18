@@ -3112,6 +3112,9 @@ def _all_valid_forms_for_slot(
                 rows = verify_lemma(norm_lemma)
                 if not rows and norm_lemma.lower() != norm_lemma:
                     rows = verify_lemma(norm_lemma.lower())
+                if require_vesum and not rows:
+                    raise RuntimeError(f"VESUM lookup returned no forms for '{norm_lemma}'")
+                found_target_evidence = False
                 for row in rows:
                     tags = str(row.get("tags") or "")
                     tokens = {tok for tok in tags.replace(":", " ").split() if tok}
@@ -3121,6 +3124,11 @@ def _all_valid_forms_for_slot(
                         form = _clean_text(row.get("word_form"))
                         if form:
                             valid.add(_plain(form))
+                            found_target_evidence = True
+                if require_vesum and not found_target_evidence:
+                    raise RuntimeError(
+                        f"VESUM lookup had no usable source evidence for slot '{case_key}:{number_key}' of '{norm_lemma}'"
+                    )
             except Exception as exc:
                 if require_vesum:
                     raise RuntimeError(f"VESUM lookup failed for '{norm_lemma}': {exc}") from exc
@@ -3183,7 +3191,10 @@ def _all_valid_forms_for_slot(
     return valid
 
 
-def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
+def _build_paradigm_items(
+    lexeme: dict[str, Any],
+    require_vesum: bool = False,
+) -> list[dict[str, Any]]:
     """Build case/number MC cards from a lexeme paradigm.
 
     Ukrainian paradigms are heavily syncretic (shared surfaces across cases).
@@ -3253,13 +3264,15 @@ def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
 
         # Pedagogical distractor selection: exclude all valid forms of the target slot
         # to guarantee no second correct answer is marked wrong (#8167 Finding 1).
-        # Require complete source-backed alternatives; skip card if lookup fails.
+        # When require_vesum is True, require complete source-backed alternatives; skip card if lookup fails.
         try:
             valid_target_forms = _all_valid_forms_for_slot(
-                lemma_str, slot["case"], slot["number"], cases, require_vesum=True
+                lemma_str, slot["case"], slot["number"], cases, require_vesum=require_vesum
             )
         except Exception:
-            continue
+            if require_vesum:
+                continue
+            valid_target_forms = set()
         valid_target_forms.add(_plain(slot["form"]))
 
         candidates = [

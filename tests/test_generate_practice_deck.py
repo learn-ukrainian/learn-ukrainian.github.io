@@ -1594,13 +1594,8 @@ def test_paradigm_zero_collision_guarantee_across_nouns() -> None:
 
 
 def test_paradigm_vesum_failure_skips_or_prevents_collisions(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Simulating VESUM lookup failure must safely skip affected cards rather than emitting collisions (#8167 Finding 1)."""
+    """Simulating VESUM lookup failure or empty results must safely skip affected cards when strict VESUM is required (#8167 Finding 1)."""
     import scripts.verification.vesum as vesum_mod
-
-    def _failing_verify_lemma(lemma: str) -> list[dict[str, Any]]:
-        raise RuntimeError("Simulated VESUM database outage")
-
-    monkeypatch.setattr(vesum_mod, "verify_lemma", _failing_verify_lemma)
 
     lexeme = {
         "lemmaId": "test_abazyn",
@@ -1619,9 +1614,25 @@ def test_paradigm_vesum_failure_skips_or_prevents_collisions(monkeypatch: pytest
         },
     }
 
-    # When VESUM lookup fails, generator skips cards rather than continuing with incomplete alternatives
-    items = _build_paradigm_items(lexeme)
-    assert items == [], "Expected generator to skip affected cards when complete source-backed alternatives cannot be verified"
+    # 1. When strict VESUM is required and lookup raises an exception: skip cards
+    def _failing_verify_lemma(lemma: str) -> list[dict[str, Any]]:
+        raise RuntimeError("Simulated VESUM database outage")
+
+    monkeypatch.setattr(vesum_mod, "verify_lemma", _failing_verify_lemma)
+    items_err = _build_paradigm_items(lexeme, require_vesum=True)
+    assert items_err == [], "Expected generator to skip affected cards when strict VESUM is required and lookup raises an exception"
+
+    # 2. When strict VESUM is required and lookup returns [] (Codex Round 3 Finding 1 reproduction): skip cards
+    def _empty_verify_lemma(lemma: str) -> list[dict[str, Any]]:
+        return []
+
+    monkeypatch.setattr(vesum_mod, "verify_lemma", _empty_verify_lemma)
+    items_empty = _build_paradigm_items(lexeme, require_vesum=True)
+    assert items_empty == [], "Expected generator to skip affected cards when strict VESUM is required and lookup returns empty []"
+
+    # 3. Default non-strict mode (used by build pipeline and offline CI) generates cards using paradigm + alternations
+    items_default = _build_paradigm_items(lexeme, require_vesum=False)
+    assert len(items_default) == 13, f"Expected 13 non-base cards in offline/default mode, got {len(items_default)}"
 
 
 def test_meaning_mc_eligibility_marks_clean_and_messy_glosses() -> None:

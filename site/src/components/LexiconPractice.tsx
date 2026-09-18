@@ -5074,18 +5074,17 @@ function LexiconPracticeIsland({
 
           {deck && deck.index.length > 0 && (
             <div className="lexicon-practice-stage" ref={stageRef} tabIndex={-1}>
+              {(mode === 'paradigm' || selection?.mode === 'paradigm') && (
+                <CaseSelectorBar
+                  filter={caseFilter}
+                  onPresetSelect={handleCasePresetSelect}
+                  onToggleCase={handleToggleCase}
+                  onToggleNumber={handleToggleNumber}
+                  chromeLocale={chromeLocale}
+                />
+              )}
               {selection ? (
-                <>
-                  {(mode === 'paradigm' || selection.mode === 'paradigm') && (
-                    <CaseSelectorBar
-                      filter={caseFilter}
-                      onPresetSelect={handleCasePresetSelect}
-                      onToggleCase={handleToggleCase}
-                      onToggleNumber={handleToggleNumber}
-                      chromeLocale={chromeLocale}
-                    />
-                  )}
-                  <PracticeItem
+                <PracticeItem
                     key={selection.cardKey}
                     selection={selection}
                     deck={deck}
@@ -5116,7 +5115,6 @@ function LexiconPracticeIsland({
                     chromeLocale={chromeLocale}
                     learnerLevel={learnerLevel}
                   />
-                </>
               ) : mode === 'cloze' && deck.cloze.length === 0 ? (
                 renderPracticeEmptyState('practice.clozePreparing', 'practice-cloze-empty', ['matching', 'choice'])
               ) : mode === 'heritage' && (deck.heritage?.length ?? 0) === 0 ? (

@@ -889,6 +889,64 @@ function paradigmDeck(): PracticeDeckData {
   };
 }
 
+function multiCaseParadigmDeck(): PracticeDeckData {
+  const entry = lexeme('kava', 'кава', 'coffee', {
+    nominative: 'кава',
+    accusative: 'каву',
+    locative: 'каві',
+  });
+  return {
+    deckVersion: 'test-paradigm-multicase',
+    level: 'A1',
+    lexemes: [entry],
+    index: [{
+      lemmaId: entry.lemmaId,
+      lemma: entry.lemma,
+      cefr: 'A1',
+      modes: ['paradigm'],
+      hasCloze: false,
+      clozeIds: [],
+      newOrder: 0,
+    }],
+    cloze: [],
+    stress: [],
+    classify: [],
+    paradigm: [
+      {
+        paradigmId: 'kava-genitive',
+        lemmaId: 'kava',
+        lemma: 'кава',
+        slot: {
+          case: 'родовий',
+          number: 'singular',
+          labelUk: 'родовий відмінок однини',
+        },
+        form: 'кави',
+        options: [
+          { label: 'кави', kind: 'answer' },
+          { label: 'кава', kind: 'same-paradigm' },
+        ],
+      },
+      {
+        paradigmId: 'kava-vocative',
+        lemmaId: 'kava',
+        lemma: 'кава',
+        slot: {
+          case: 'кличний',
+          number: 'singular',
+          labelUk: 'кличний відмінок однини',
+        },
+        form: 'каво',
+        options: [
+          { label: 'каво', kind: 'answer' },
+          { label: 'кава', kind: 'same-paradigm' },
+        ],
+      },
+    ],
+    synonym: [],
+  };
+}
+
 function synonymDeck(): PracticeDeckData {
   // #6821: prompt and answer must be two DIFFERENT words — a tautological
   // «синонім до «X» — «X»» fixture doesn't exercise the prompt↔answer teaching
@@ -6219,6 +6277,65 @@ describe('LexiconPractice', () => {
       expect(feedback).toBeInTheDocument();
       expect(feedback.textContent).toContain('кава');
       expect(feedback.textContent).toContain('потрібна форма');
+    });
+
+    test('active-session filter change: changing preset during session switches displayed card', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={multiCaseParadigmDeck()} autoStart initialMode="paradigm" />);
+
+      // Wait for either card to be rendered (order depends on sessionSeed ranking)
+      const isInitialGenitive = await screen.findByText(/відмінок однини/).then((el) =>
+        el.textContent?.includes('родовий') ?? false,
+      );
+
+      const selector = screen.getByTestId('practice-case-selector');
+      if (isInitialGenitive) {
+        expect(screen.getByRole('button', { name: /кави/ })).toBeInTheDocument();
+        // Switch to vocative-only preset during active session
+        const vocativePreset = within(selector).getByTestId('case-preset-vocative-only');
+        await user.click(vocativePreset);
+
+        // Card must switch to vocative (stabilization guard does not retain non-matching genitive card)
+        await waitFor(() => {
+          expect(screen.getByText(/кличний відмінок однини/)).toBeInTheDocument();
+        });
+        expect(screen.getByRole('button', { name: /каво/ })).toBeInTheDocument();
+      } else {
+        expect(screen.getByRole('button', { name: /каво/ })).toBeInTheDocument();
+        // Deselect vocative chip during active session
+        const vocativeChip = within(selector).getByTestId('case-chip-кличний');
+        const checkbox = within(vocativeChip).getByRole('checkbox');
+        await user.click(checkbox);
+
+        // Card must switch to genitive (stabilization guard does not retain non-matching vocative card)
+        await waitFor(() => {
+          expect(screen.getByText(/родовий відмінок однини/)).toBeInTheDocument();
+        });
+        expect(screen.getByRole('button', { name: /кави/ })).toBeInTheDocument();
+      }
+    });
+
+    test('empty filtered pool keeps case selector visible in empty state and allows recovery', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={paradigmDeck()} autoStart initialMode="paradigm" />);
+
+      expect(await screen.findByTestId('practice-case-selector')).toBeInTheDocument();
+
+      // Click preset with no cards in this single-card (genitive) deck, e.g. vocative-only
+      const selector = screen.getByTestId('practice-case-selector');
+      const vocativePreset = within(selector).getByTestId('case-preset-vocative-only');
+      await user.click(vocativePreset);
+
+      // Empty state is rendered
+      expect(await screen.findByTestId('practice-all-caught-up')).toBeInTheDocument();
+
+      // Case selector MUST remain visible in the empty state so learner can recover (#8167 Finding 2)
+      expect(screen.getByTestId('practice-case-selector')).toBeInTheDocument();
+
+      // Clicking "all" preset recovers the card
+      const allPreset = within(screen.getByTestId('practice-case-selector')).getByTestId('case-preset-all');
+      await user.click(allPreset);
+      expect(await screen.findByRole('button', { name: /кави/ })).toBeInTheDocument();
     });
   });
 });
