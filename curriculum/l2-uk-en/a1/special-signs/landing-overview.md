@@ -3,7 +3,7 @@ Welcome to Module 3: **Особли́ві зна́ки та по́вна абе�
 By the end of this module, you can:
 
 - Understand the job of the soft sign (**м'яки́й знак**, **ь**) and read words with soft consonant endings cleanly: **день**, **кінь**, **сіль**, and **вчи́тель**;
-- Articulate the affricates **Ц** (both hard in **цирк**, **со́нце** and soft in **ціна́**, **па́льці**) and **Ч** (always hard in Ukrainian: **час**, **чи́стий**, **ча́шка**, **ніч**);
+- Articulate the affricates **Ц** (both hard in **цирк**, **со́нце** and soft in **ціна́**, **па́льці**) and **Ч** (hard in these examples: **час**, **чи́стий**, **ча́шка**, **ніч**);
 - Read the semivowel **Й** (**чай**, **йо́гурт**) and iotated vowels (**Я, Ю, Є**) both as "y + vowel" at the beginning of words and after vowels (**я́блуко**, **ю́шка**, **єно́т**, **моя́**), and as softening vowels after consonants (**пі́сня**, **лю́ди**, **си́нє**);
 - Pronounce the letter **Ї** as always two sounds: [йі], remembering that it always starts with a y-sound (**їжа́к**, **по́їзд**, **Ки́їв**, **Украї́на**);
 - Articulate the letter **Щ** as always two sounds: "sh+ch" ([ш] + [ч]) without softening (**борщ**, **щу́ка**, **що**, **ще**);

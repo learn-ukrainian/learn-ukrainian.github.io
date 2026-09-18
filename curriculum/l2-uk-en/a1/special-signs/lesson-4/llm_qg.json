@@ -1,0 +1,66 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 5.0,
+      "evidence": "Act-405 teaches an unconditional apostrophe rule contradicting the lesson’s contrasts; cumulative vocabulary and baseline preservation remain unverified, while module closure belongs to lesson 5.",
+      "verdict": "REJECT",
+      "evidence_quotes": [
+        "which letters is an apostrophe always written before я, ю, є, ї?"
+      ]
+    },
+    "naturalness": {
+      "score": 5.0,
+      "evidence": "The soup example is awkward, and attempted VESUM, orthography and dictionary calls returned “MCP tool call requires approval, but approval policy is never,” leaving gender, government and usage unverified.",
+      "verdict": "REJECT",
+      "evidence_quotes": [
+        "У су́пі потрі́бна вели́ка ___ . — In the soup a big […] is needed."
+      ]
+    },
+    "decolonization": {
+      "score": 8.0,
+      "evidence": "The explanation treats Ukrainian as autonomous rather than deriving its spelling from Russian, although source-based exclusion of calques remains unverified.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "have Ukrainian jobs, so you do not need another alphabet or another sign to"
+      ]
+    },
+    "engagement": {
+      "score": 6.0,
+      "evidence": "The supported dialogue adds context, but repeated spelling recognition and uniformly first-position correct answers in act-405 and act-407 make practice predictable.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Обері́ть пра́вильно напи́сану фо́рму. — Select the correctly spelled"
+      ]
+    },
+    "tone": {
+      "score": 8.0,
+      "evidence": "Instructions are supportive, dialogue speakers are not narrators, Ukrainian dialogue has adjacent English support, and learner examples avoid text fences.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Read **п'ять** smoothly, with a clear **й** sound. The airflow continues; the"
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "REJECT",
+    "terminal_verdict": "PASS",
+    "failing_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement"
+    ],
+    "rejected_dims": [
+      "pedagogical",
+      "naturalness"
+    ],
+    "warning_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement"
+    ],
+    "min_score": 5.0,
+    "min_dim": "pedagogical"
+  }
+}

@@ -1,0 +1,916 @@
+{
+  "passed": true,
+  "diagnostics": [],
+  "blocking": [],
+  "warnings": [
+    "lesson 4: act-4[0]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
+    "lesson 4: act-4[1]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
+    "lesson 4: act-4[2]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
+    "lesson 4: act-4[3]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
+    "lesson 4: act-w3[0]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
+    "lesson 4: act-w3[1]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
+    "lesson 4: act-w3[2]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
+    "lesson 4: act-w3[3]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
+    "lesson 4: act-w3[4]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
+    "lesson 4: act-w3[5]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first"
+  ],
+  "facts": {
+    "baseline": {
+      "commit": null,
+      "prose_tokens": 1449,
+      "long_paragraphs": 42,
+      "activities": {
+        "inline": 5,
+        "workbook": 7
+      },
+      "vocab": 29
+    },
+    "lessons": {
+      "1": {
+        "prose_tokens": 962,
+        "inline": 5,
+        "workbook": 6,
+        "vocab": 13,
+        "lemma_list": [
+          "м'який знак",
+          "знак",
+          "м'який",
+          "твердий",
+          "день",
+          "кінь",
+          "сіль",
+          "вчитель",
+          "маленький",
+          "пальці",
+          "сьогодні",
+          "злито",
+          "роздільно"
+        ],
+        "resources": 6,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 55
+      },
+      "2": {
+        "prose_tokens": 792,
+        "inline": 5,
+        "workbook": 6,
+        "vocab": 13,
+        "lemma_list": [
+          "йотований",
+          "знак",
+          "м'який",
+          "твердий",
+          "день",
+          "буряк",
+          "свято",
+          "маленький",
+          "сьогодні",
+          "вчитель",
+          "злито",
+          "роздільно",
+          "пальці"
+        ],
+        "resources": 7,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 52
+      },
+      "3": {
+        "prose_tokens": 604,
+        "inline": 5,
+        "workbook": 6,
+        "vocab": 13,
+        "lemma_list": [
+          "йотований",
+          "знак",
+          "м'який",
+          "твердий",
+          "день",
+          "сім'я",
+          "вчитель",
+          "маленький",
+          "сьогодні",
+          "злито",
+          "роздільно",
+          "пальці",
+          "свято"
+        ],
+        "resources": 6,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 49
+      },
+      "4": {
+        "prose_tokens": 1154,
+        "inline": 5,
+        "workbook": 6,
+        "vocab": 18,
+        "lemma_list": [
+          "апостроф",
+          "знак",
+          "роздільно",
+          "злито",
+          "твердий",
+          "м'який",
+          "сім'я",
+          "м'ясо",
+          "п'ять",
+          "дев'ять",
+          "ім'я",
+          "здоров'я",
+          "комп'ютер",
+          "буряк",
+          "бур'ян",
+          "свято",
+          "цвях",
+          "ложка"
+        ],
+        "resources": 4,
+        "unverified_stress": 1,
+        "unverified_lemmas": 0,
+        "est_minutes": 58
+      },
+      "5": {
+        "prose_tokens": 849,
+        "inline": 5,
+        "workbook": 6,
+        "vocab": 14,
+        "lemma_list": [
+          "мар'яна",
+          "дерев'яний",
+          "пальці",
+          "сьогодні",
+          "ложка",
+          "день",
+          "сім'я",
+          "апостроф",
+          "м'який знак",
+          "знак",
+          "маленький",
+          "вчитель",
+          "свято",
+          "бур'ян"
+        ],
+        "resources": 4,
+        "unverified_stress": 1,
+        "unverified_lemmas": 0,
+        "est_minutes": 53
+      }
+    },
+    "total_prose_tokens": 4361,
+    "preservation": {
+      "long_paragraphs": 42,
+      "lost": 0,
+      "duplicated": 0,
+      "misplaced": 0
+    },
+    "immersion": {
+      "1": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 27.86,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m01-03"
+        },
+        "l2_exposure_floor": {
+          "passed": true,
+          "required": {
+            "uk_dialogue_lines": 0,
+            "vocab_entries": 0,
+            "uk_example_sentences": 0,
+            "uk_tab3_activities": 5
+          },
+          "observed": {
+            "uk_dialogue_lines": 3,
+            "vocab_entries": 14,
+            "uk_example_sentences": 42,
+            "uk_tab3_activities": 5
+          },
+          "reason": null,
+          "policy": "a1-m01-03"
+        },
+        "long_uk_ceiling": {
+          "passed": true,
+          "required": {
+            "max_unsupported_uk_words": 10,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 0
+          },
+          "reason": null,
+          "offending_runs": [],
+          "policy": "a1-m01-03"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m01-03"
+        }
+      },
+      "2": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 29.3,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m01-03"
+        },
+        "l2_exposure_floor": {
+          "passed": true,
+          "required": {
+            "uk_dialogue_lines": 0,
+            "vocab_entries": 0,
+            "uk_example_sentences": 0,
+            "uk_tab3_activities": 5
+          },
+          "observed": {
+            "uk_dialogue_lines": 4,
+            "vocab_entries": 15,
+            "uk_example_sentences": 37,
+            "uk_tab3_activities": 5
+          },
+          "reason": null,
+          "policy": "a1-m01-03"
+        },
+        "long_uk_ceiling": {
+          "passed": true,
+          "required": {
+            "max_unsupported_uk_words": 10,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 0
+          },
+          "reason": null,
+          "offending_runs": [],
+          "policy": "a1-m01-03"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m01-03"
+        }
+      },
+      "3": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 25.94,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m01-03"
+        },
+        "l2_exposure_floor": {
+          "passed": true,
+          "required": {
+            "uk_dialogue_lines": 0,
+            "vocab_entries": 0,
+            "uk_example_sentences": 0,
+            "uk_tab3_activities": 5
+          },
+          "observed": {
+            "uk_dialogue_lines": 4,
+            "vocab_entries": 0,
+            "uk_example_sentences": 25,
+            "uk_tab3_activities": 5
+          },
+          "reason": null,
+          "policy": "a1-m01-03"
+        },
+        "long_uk_ceiling": {
+          "passed": true,
+          "required": {
+            "max_unsupported_uk_words": 10,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 0
+          },
+          "reason": null,
+          "offending_runs": [],
+          "policy": "a1-m01-03"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m01-03"
+        }
+      },
+      "4": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 29.8,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m01-03"
+        },
+        "l2_exposure_floor": {
+          "passed": true,
+          "required": {
+            "uk_dialogue_lines": 0,
+            "vocab_entries": 0,
+            "uk_example_sentences": 0,
+            "uk_tab3_activities": 5
+          },
+          "observed": {
+            "uk_dialogue_lines": 6,
+            "vocab_entries": 28,
+            "uk_example_sentences": 50,
+            "uk_tab3_activities": 5
+          },
+          "reason": null,
+          "policy": "a1-m01-03"
+        },
+        "long_uk_ceiling": {
+          "passed": true,
+          "required": {
+            "max_unsupported_uk_words": 10,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 0
+          },
+          "reason": null,
+          "offending_runs": [],
+          "policy": "a1-m01-03"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m01-03"
+        }
+      },
+      "5": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 31.76,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m01-03"
+        },
+        "l2_exposure_floor": {
+          "passed": true,
+          "required": {
+            "uk_dialogue_lines": 0,
+            "vocab_entries": 0,
+            "uk_example_sentences": 0,
+            "uk_tab3_activities": 5
+          },
+          "observed": {
+            "uk_dialogue_lines": 3,
+            "vocab_entries": 10,
+            "uk_example_sentences": 43,
+            "uk_tab3_activities": 5
+          },
+          "reason": null,
+          "policy": "a1-m01-03"
+        },
+        "long_uk_ceiling": {
+          "passed": true,
+          "required": {
+            "max_unsupported_uk_words": 10,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 0
+          },
+          "reason": null,
+          "offending_runs": [],
+          "policy": "a1-m01-03"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m01-03"
+        }
+      }
+    }
+  },
+  "mode": "upgrade",
+  "gates": {
+    "passed": true,
+    "lesson_split": {
+      "passed": true,
+      "diagnostics": [],
+      "blocking": [],
+      "warnings": [
+        "lesson 4: act-4[0]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
+        "lesson 4: act-4[1]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
+        "lesson 4: act-4[2]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
+        "lesson 4: act-4[3]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
+        "lesson 4: act-w3[0]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
+        "lesson 4: act-w3[1]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
+        "lesson 4: act-w3[2]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
+        "lesson 4: act-w3[3]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
+        "lesson 4: act-w3[4]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
+        "lesson 4: act-w3[5]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first"
+      ],
+      "facts": {
+        "baseline": {
+          "commit": null,
+          "prose_tokens": 1449,
+          "long_paragraphs": 42,
+          "activities": {
+            "inline": 5,
+            "workbook": 7
+          },
+          "vocab": 29
+        },
+        "lessons": {
+          "1": {
+            "prose_tokens": 962,
+            "inline": 5,
+            "workbook": 6,
+            "vocab": 13,
+            "lemma_list": [
+              "м'який знак",
+              "знак",
+              "м'який",
+              "твердий",
+              "день",
+              "кінь",
+              "сіль",
+              "вчитель",
+              "маленький",
+              "пальці",
+              "сьогодні",
+              "злито",
+              "роздільно"
+            ],
+            "resources": 6,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 55
+          },
+          "2": {
+            "prose_tokens": 792,
+            "inline": 5,
+            "workbook": 6,
+            "vocab": 13,
+            "lemma_list": [
+              "йотований",
+              "знак",
+              "м'який",
+              "твердий",
+              "день",
+              "буряк",
+              "свято",
+              "маленький",
+              "сьогодні",
+              "вчитель",
+              "злито",
+              "роздільно",
+              "пальці"
+            ],
+            "resources": 7,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 52
+          },
+          "3": {
+            "prose_tokens": 604,
+            "inline": 5,
+            "workbook": 6,
+            "vocab": 13,
+            "lemma_list": [
+              "йотований",
+              "знак",
+              "м'який",
+              "твердий",
+              "день",
+              "сім'я",
+              "вчитель",
+              "маленький",
+              "сьогодні",
+              "злито",
+              "роздільно",
+              "пальці",
+              "свято"
+            ],
+            "resources": 6,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 49
+          },
+          "4": {
+            "prose_tokens": 1154,
+            "inline": 5,
+            "workbook": 6,
+            "vocab": 18,
+            "lemma_list": [
+              "апостроф",
+              "знак",
+              "роздільно",
+              "злито",
+              "твердий",
+              "м'який",
+              "сім'я",
+              "м'ясо",
+              "п'ять",
+              "дев'ять",
+              "ім'я",
+              "здоров'я",
+              "комп'ютер",
+              "буряк",
+              "бур'ян",
+              "свято",
+              "цвях",
+              "ложка"
+            ],
+            "resources": 4,
+            "unverified_stress": 1,
+            "unverified_lemmas": 0,
+            "est_minutes": 58
+          },
+          "5": {
+            "prose_tokens": 849,
+            "inline": 5,
+            "workbook": 6,
+            "vocab": 14,
+            "lemma_list": [
+              "мар'яна",
+              "дерев'яний",
+              "пальці",
+              "сьогодні",
+              "ложка",
+              "день",
+              "сім'я",
+              "апостроф",
+              "м'який знак",
+              "знак",
+              "маленький",
+              "вчитель",
+              "свято",
+              "бур'ян"
+            ],
+            "resources": 4,
+            "unverified_stress": 1,
+            "unverified_lemmas": 0,
+            "est_minutes": 53
+          }
+        },
+        "total_prose_tokens": 4361,
+        "preservation": {
+          "long_paragraphs": 42,
+          "lost": 0,
+          "duplicated": 0,
+          "misplaced": 0
+        },
+        "immersion": {
+          "1": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 27.86,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m01-03"
+            },
+            "l2_exposure_floor": {
+              "passed": true,
+              "required": {
+                "uk_dialogue_lines": 0,
+                "vocab_entries": 0,
+                "uk_example_sentences": 0,
+                "uk_tab3_activities": 5
+              },
+              "observed": {
+                "uk_dialogue_lines": 3,
+                "vocab_entries": 14,
+                "uk_example_sentences": 42,
+                "uk_tab3_activities": 5
+              },
+              "reason": null,
+              "policy": "a1-m01-03"
+            },
+            "long_uk_ceiling": {
+              "passed": true,
+              "required": {
+                "max_unsupported_uk_words": 10,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 0
+              },
+              "reason": null,
+              "offending_runs": [],
+              "policy": "a1-m01-03"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m01-03"
+            }
+          },
+          "2": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 29.3,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m01-03"
+            },
+            "l2_exposure_floor": {
+              "passed": true,
+              "required": {
+                "uk_dialogue_lines": 0,
+                "vocab_entries": 0,
+                "uk_example_sentences": 0,
+                "uk_tab3_activities": 5
+              },
+              "observed": {
+                "uk_dialogue_lines": 4,
+                "vocab_entries": 15,
+                "uk_example_sentences": 37,
+                "uk_tab3_activities": 5
+              },
+              "reason": null,
+              "policy": "a1-m01-03"
+            },
+            "long_uk_ceiling": {
+              "passed": true,
+              "required": {
+                "max_unsupported_uk_words": 10,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 0
+              },
+              "reason": null,
+              "offending_runs": [],
+              "policy": "a1-m01-03"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m01-03"
+            }
+          },
+          "3": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 25.94,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m01-03"
+            },
+            "l2_exposure_floor": {
+              "passed": true,
+              "required": {
+                "uk_dialogue_lines": 0,
+                "vocab_entries": 0,
+                "uk_example_sentences": 0,
+                "uk_tab3_activities": 5
+              },
+              "observed": {
+                "uk_dialogue_lines": 4,
+                "vocab_entries": 0,
+                "uk_example_sentences": 25,
+                "uk_tab3_activities": 5
+              },
+              "reason": null,
+              "policy": "a1-m01-03"
+            },
+            "long_uk_ceiling": {
+              "passed": true,
+              "required": {
+                "max_unsupported_uk_words": 10,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 0
+              },
+              "reason": null,
+              "offending_runs": [],
+              "policy": "a1-m01-03"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m01-03"
+            }
+          },
+          "4": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 29.8,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m01-03"
+            },
+            "l2_exposure_floor": {
+              "passed": true,
+              "required": {
+                "uk_dialogue_lines": 0,
+                "vocab_entries": 0,
+                "uk_example_sentences": 0,
+                "uk_tab3_activities": 5
+              },
+              "observed": {
+                "uk_dialogue_lines": 6,
+                "vocab_entries": 28,
+                "uk_example_sentences": 50,
+                "uk_tab3_activities": 5
+              },
+              "reason": null,
+              "policy": "a1-m01-03"
+            },
+            "long_uk_ceiling": {
+              "passed": true,
+              "required": {
+                "max_unsupported_uk_words": 10,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 0
+              },
+              "reason": null,
+              "offending_runs": [],
+              "policy": "a1-m01-03"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m01-03"
+            }
+          },
+          "5": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 31.76,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m01-03"
+            },
+            "l2_exposure_floor": {
+              "passed": true,
+              "required": {
+                "uk_dialogue_lines": 0,
+                "vocab_entries": 0,
+                "uk_example_sentences": 0,
+                "uk_tab3_activities": 5
+              },
+              "observed": {
+                "uk_dialogue_lines": 3,
+                "vocab_entries": 10,
+                "uk_example_sentences": 43,
+                "uk_tab3_activities": 5
+              },
+              "reason": null,
+              "policy": "a1-m01-03"
+            },
+            "long_uk_ceiling": {
+              "passed": true,
+              "required": {
+                "max_unsupported_uk_words": 10,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 0
+              },
+              "reason": null,
+              "offending_runs": [],
+              "policy": "a1-m01-03"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m01-03"
+            }
+          }
+        }
+      }
+    }
+  }
+}

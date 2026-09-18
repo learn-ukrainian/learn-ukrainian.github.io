@@ -71,7 +71,7 @@ The letter **Ц** represents the voiceless alveolar affricate [ts], like the *ts
 
 <!-- INJECT_ACTIVITY: act-104 -->
 
-The letter **Ч** represents the voiceless postalveolar affricate [tʃ], like the *ch* in *chair*. A crucial rule of standard Ukrainian orthoepy is that **ч is always hard** (**тверди́й**). Even when followed by other sounds, keep it firmly unsoftened. Do not pronounce it soft like in some other Slavic languages:
+The letter **Ч** represents the voiceless postalveolar affricate [tʃ], like the *ch* in *chair*. In the words you learn here — **час**, **ча́шка**, **чи́стий**, **ніч** — keep **ч** hard (**тверди́й**). Before **і**, a hushing consonant can be slightly softer; that is not the model of these examples:
 - **час** — time
 - **ча́ша** — bowl or goblet
 - **ча́шка** — cup

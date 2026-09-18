@@ -2,8 +2,8 @@ inline:
 - id: act-101
   type: watch-and-repeat
   title: 'Диві́ться та повто́рюйте: Ь, Ц, Ч — Watch and repeat: Ь, Ц, Ч'
-  instruction: Диві́ться навча́льне ві́део та повто́рюйте ко́жне сло́во вго́лос. — Watch the pronunciation
-    video and repeat each word aloud.
+  instruction: Диві́ться навча́льне ві́део та повто́рюйте ко́жне сло́во вго́лос. —
+    Watch the pronunciation video and repeat each word aloud.
   items:
   - word: день
     letter: Ь
@@ -29,7 +29,7 @@ inline:
     letter: Ч
     sound: '[т͡ʃ]'
     video: https://www.youtube.com/watch?v=UsJkbdsY2RA
-    note: Voiceless postalveolar affricate; always hard in standard Ukrainian.
+    note: Voiceless postalveolar affricate; hard in these examples (час, ча́шка).
   - word: ча́шка
     letter: Ч
     sound: '[т͡ʃ]'
@@ -38,8 +38,8 @@ inline:
 - id: act-2
   type: match-up
   title: Що ро́бить ь — What does ь do
-  instruction: З'єдна́йте ко́жне сло́во з підка́зкою про м'яки́й знак. — Match each word or sign with
-    what the soft sign does.
+  instruction: З'єдна́йте ко́жне сло́во з підка́зкою про м'яки́й знак. — Match each
+    word or sign with what the soft sign does.
   pairs:
   - left: день
     right: soft [n'] in «день»
@@ -54,11 +54,13 @@ inline:
 - id: act-103
   type: true-false
   title: Пра́вила м'яко́го зна́ка та африка́т — True or False
-  instruction: 'Ви́значте: пра́вда це чи непра́вда. — Decide whether each statement is true or false.'
+  instruction: 'Ви́значте: пра́вда це чи непра́вда. — Decide whether each statement
+    is true or false.'
   items:
   - statement: The soft sign (ь) has its own vowel sound.
     answer: false
-    explanation: The soft sign has no sound of its own; it only softens the preceding consonant.
+    explanation: The soft sign has no sound of its own; it only softens the preceding
+      consonant.
   - statement: In the word «день», the final sound is soft.
     answer: true
     explanation: 'The letter ь makes the sound [н] soft: [ден''].'
@@ -77,8 +79,8 @@ inline:
 - id: act-104
   type: quiz
   title: Тверди́й чи м'яки́й звук — Hard or soft sound
-  instruction: 'Обері́ть, яки́м є ви́ділений при́голосний звук: тверди́м чи м''яки́м. — Choose whether
-    the highlighted consonant sound is hard or soft.'
+  instruction: 'Обері́ть, яки́м є ви́ділений при́голосний звук: тверди́м чи м''яки́м.
+    — Choose whether the highlighted consonant sound is hard or soft.'
   items:
   - question: 'Кінце́вий звук у сло́ві «день» [н''] — The final sound in «день» [n'']:'
     options:
@@ -92,14 +94,15 @@ inline:
     - м'яки́й — soft
     answer: тверди́й — hard
     explanation: 'Без м''яко́го зна́ка звук [н] залиша́ється тверди́м: [стан].'
-  - question: 'Звук [ц] у сло́ві «цирк» пе́ред лі́терою и — The sound [ts] in «цирк» before letter и:'
+  - question: 'Звук [ц] у сло́ві «цирк» пе́ред лі́терою и — The sound [ts] in «цирк»
+      before letter и:'
     options:
     - тверди́й — hard
     - м'яки́й — soft
     answer: тверди́й — hard
     explanation: 'Пе́ред лі́терою и звук [ц] є тверди́м: [цирк].'
-  - question: 'Звук [ц''] у сло́ві «ціна́» пе́ред лі́терою і — The sound [ts''] in «ціна́» before letter
-      і:'
+  - question: 'Звук [ц''] у сло́ві «ціна́» пе́ред лі́терою і — The sound [ts''] in
+      «ціна́» before letter і:'
     options:
     - м'яки́й — soft
     - тверди́й — hard
@@ -120,8 +123,9 @@ inline:
 - id: act-105
   type: group-sort
   title: 'Розподілі́ть слова́ за тве́рдістю зву́ка — Group Sort: Hard vs Soft'
-  instruction: 'Розподілі́ть слова́ на дві гру́пи: з тверди́м або́ з м''яки́м кінце́вим при́голосним.
-    — Sort words into those ending in a hard consonant and those ending in a soft consonant.'
+  instruction: 'Розподілі́ть слова́ на дві гру́пи: з тверди́м або́ з м''яки́м кінце́вим
+    при́голосним. — Sort words into those ending in a hard consonant and those ending
+    in a soft consonant.'
   groups:
   - name: Тверди́й при́голосний — Hard consonant
     items:
@@ -137,8 +141,8 @@ workbook:
 - id: act-106
   type: quiz
   title: Ви́беріть пра́вильне зна́чення — Choose the correct meaning
-  instruction: Обері́ть пра́вильний англі́йський перекла́д для ко́жного украї́нського сло́ва. — Select
-    the correct English translation for each Ukrainian word.
+  instruction: Обері́ть пра́вильний англі́йський перекла́д для ко́жного украї́нського
+    сло́ва. — Select the correct English translation for each Ukrainian word.
   items:
   - question: Що означа́є сло́во «день»? — What is the meaning of «день»?
     options:
@@ -191,8 +195,8 @@ workbook:
 - id: act-107
   type: fill-in
   title: Вста́вте пропу́щене сло́во — Fill in the blank
-  instruction: Впиші́ть або́ обері́ть пра́вильне сло́во у ре́ченні. — Fill in the blanks with the correct
-    vocabulary word.
+  instruction: Впиші́ть або́ обері́ть пра́вильне сло́во у ре́ченні. — Fill in the
+    blanks with the correct vocabulary word.
   items:
   - sentence: Світи́ть со́нце, наста́в ___ . — The sun shines, […] has arrived.
     answer: день
@@ -200,41 +204,61 @@ workbook:
     - день
     - кінь
     - сіль
-  - sentence: У селі́ на по́лі біжи́ть ___ . — In the village in the field runs a […].
+    explanation: '«День» познача́є час доби́ зі сві́тлом со́нця й пи́шеться з м''яки́м
+      зна́ком на кінці́: день. — «День» denotes the daytime with sunlight and ends
+      with a soft sign: день.'
+  - sentence: У селі́ на по́лі біжи́ть ___ . — In the village in the field runs a
+      […].
     answer: кінь
     options:
     - кінь
     - день
     - вчи́тель
+    explanation: '«Кінь» — це сві́йська твари́на; сло́во ма́є м''яки́й кінце́вий [н'']
+      і пи́шеться з ь: кінь. — «Кінь» is a domestic animal; the word ends in a soft
+      [n''] and is written with ь: кінь.'
   - sentence: На столі́ лежи́ть бі́ла ___ . — On the table lies white […].
     answer: сіль
     options:
     - сіль
     - ціна́
     - ча́шка
+    explanation: '«Сіль» — це бі́ла припра́ва для страв; сло́во ма́є м''яки́й кінце́вий
+      [л''] і пи́шеться з ь: сіль. — «Сіль» is salt, a white seasoning for food; it
+      ends in a soft [l''] with ь: сіль.'
   - sentence: Наш ___ пи́ше те́кст. — Our […] is writing a text.
     answer: вчи́тель
     options:
     - вчи́тель
     - кінь
     - день
+    explanation: '«Вчи́тель» — це люди́на, яка́ навча́є; сло́во ма́є м''яки́й кінце́вий
+      [л''] з ь: вчи́тель. — «Вчи́тель» is a teacher; the word ends in a soft [l'']
+      with ь: вчи́тель.'
   - sentence: Чи висо́ка тут ___ на хліб? — Is the […] for bread high here?
     answer: ціна́
     options:
     - ціна́
     - сіль
     - ча́шка
-  - sentence: Ось рука́, а на руці́ — ___ . — Here is a hand, and on the hand are […].
+    explanation: '«Ціна́» означа́є ва́ртість това́ру; пе́ред лі́терою і африка́та
+      [ц''] пом''я́кшується: ціна́. — «Ціна́» means price; before the letter і the
+      affricate [ts''] softens: ціна́.'
+  - sentence: Ось рука́, а на руці́ — ___ . — Here is a hand, and on the hand are
+      […].
     answer: па́льці
     options:
     - па́льці
     - ча́шка
     - вчи́тель
+    explanation: '«Па́льці» — це части́ни руки́; сло́во поє́днує м''яки́й [л''] із
+      ь та африка́ту ц: па́льці. — «Па́льці» means fingers; the word combines soft
+      [l''] with ь and affricate ц: па́льці.'
 - id: act-108
   type: unjumble
   title: Складі́ть слова́ з лі́тер — Unjumble letters
-  instruction: Складі́ть пра́вильні украї́нські слова́ з лі́тер. — Arrange the letters to form correct
-    Ukrainian words.
+  instruction: Складі́ть пра́вильні украї́нські слова́ з лі́тер. — Arrange the letters
+    to form correct Ukrainian words.
   items:
   - words:
     - д
@@ -274,8 +298,8 @@ workbook:
 - id: act-109
   type: match-up
   title: З'єдна́йте па́ри слів — Match word pairs
-  instruction: З'єдна́йте украї́нське сло́во з йо́го англі́йським перекла́дом. — Match each Ukrainian
-    word with its English meaning.
+  instruction: З'єдна́йте украї́нське сло́во з йо́го англі́йським перекла́дом. — Match
+    each Ukrainian word with its English meaning.
   pairs:
   - left: день
     right: day
@@ -292,8 +316,8 @@ workbook:
 - id: act-110
   type: error-correction
   title: Знайді́ть поми́лку — Spot the error
-  instruction: Знайді́ть сло́во з поми́лкою за пра́вилами м'яко́го зна́ка. — Identify which word is written
-    incorrectly according to Ukrainian soft sign rules.
+  instruction: Знайді́ть сло́во з поми́лкою за пра́вилами м'яко́го зна́ка. — Identify
+    which word is written incorrectly according to Ukrainian soft sign rules.
   items:
   - sentence: Сього́дні га́рний ден. — Today is a nice day.
     error: ден
@@ -302,8 +326,8 @@ workbook:
     - день
     - ден
     - дєнь
-    explanation: 'Пе́ред па́узою сло́во «день» пи́шеться з м''яки́м зна́ком: день. — Before a pause, the
-      word «день» is written with a soft sign: день.'
+    explanation: 'Пе́ред па́узою сло́во «день» пи́шеться з м''яки́м зна́ком: день.
+      — Before a pause, the word «день» is written with a soft sign: день.'
   - sentence: На по́лі біжи́ть кін. — A horse runs in the field.
     error: кін
     correction: кінь
@@ -311,8 +335,8 @@ workbook:
     - кінь
     - кін
     - кинь
-    explanation: 'Сло́во «кінь» закі́нчується на м''яки́й знак: кінь. — The word «кінь» ends with a soft
-      sign: кінь.'
+    explanation: 'Сло́во «кінь» закі́нчується на м''яки́й знак: кінь. — The word «кінь»
+      ends with a soft sign: кінь.'
   - sentence: Ма́ма си́пле сіл у суп. — Mom puts salt in the soup.
     error: сіл
     correction: сіль
@@ -320,8 +344,8 @@ workbook:
     - сіль
     - сіл
     - сил
-    explanation: 'Сло́во «сіль» ма́є м''яки́й [л''] і пи́шеться з ь: сіль. — The word «сіль» has a soft
-      [l''] and is written with ь: сіль.'
+    explanation: 'Сло́во «сіль» ма́є м''яки́й [л''] і пи́шеться з ь: сіль. — The word
+      «сіль» has a soft [l''] and is written with ь: сіль.'
   - sentence: Наш вчител пи́ше те́кст. — Our teacher is writing a text.
     error: вчител
     correction: вчи́тель
@@ -329,8 +353,8 @@ workbook:
     - вчи́тель
     - вчител
     - вчитиль
-    explanation: 'Іме́нник «вчи́тель» ма́є м''яки́й кінце́вий [л'']: вчи́тель. — The noun «вчи́тель» has
-      a soft final [l'']: вчи́тель.'
+    explanation: 'Іме́нник «вчи́тель» ма́є м''яки́й кінце́вий [л'']: вчи́тель. — The
+      noun «вчи́тель» has a soft final [l'']: вчи́тель.'
   - sentence: За́раз ма́ємо чьас на обі́д. — Now we have time for lunch.
     error: чьас
     correction: час
@@ -338,8 +362,9 @@ workbook:
     - час
     - чьас
     - чяс
-    explanation: 'Звук [ч] в украї́нській мо́ві тверди́й; пі́сля ч знак ь не ста́виться: час. — The sound
-      [ч] in Ukrainian is hard; no soft sign is written after ч: час.'
+    explanation: 'Звук [ч] в украї́нській мо́ві тверди́й; пі́сля ч знак ь не ста́виться:
+      час. — The sound [ч] in Ukrainian is hard; no soft sign is written after ч:
+      час.'
   - sentence: На руці́ ба́чу па́лці. — I see fingers on the hand.
     error: па́лці
     correction: па́льці
@@ -347,52 +372,59 @@ workbook:
     - па́льці
     - па́лці
     - па́лци
-    explanation: 'У сло́ві «па́льці» пі́сля лі́тери л пи́шеться м''яки́й знак: па́льці. — In the word
-      «па́льці», a soft sign is written after letter л: па́льці.'
+    explanation: 'У сло́ві «па́льці» пі́сля лі́тери л пи́шеться м''яки́й знак: па́льці.
+      — In the word «па́льці», a soft sign is written after letter л: па́льці.'
 - id: act-111
   type: quiz
   title: Знак ь чи без зна́ка — Soft sign or no sign
-  instruction: Обері́ть сло́во з м'яки́м або́ тверди́м при́голосним. — Choose the word with a soft or
-    hard consonant.
+  instruction: Обері́ть сло́во з м'яки́м або́ тверди́м при́голосним. — Choose the
+    word with a soft or hard consonant.
   items:
-  - question: 'Сло́во «день» чи «стан» з м''яки́м зву́ком [н''] — Word «день» or «стан» with soft [n'']:'
+  - question: 'Сло́во «день» чи «стан» з м''яки́м зву́ком [н''] — Word «день» or «стан»
+      with soft [n'']:'
     options:
     - день
     - стан
     answer: день
-    explanation: 'Сло́во «день» ма́є м''яки́й знак на кінці́: [ден'']. — The word «день» has a soft sign
-      at the end: [den''].'
-  - question: 'Сло́во «кінь» чи «лан» з м''яки́м зву́ком [н''] — Word «кінь» or «лан» with soft [n'']:'
+    explanation: 'Сло́во «день» ма́є м''яки́й знак на кінці́: [ден'']. — The word
+      «день» has a soft sign at the end: [den''].'
+  - question: 'Сло́во «кінь» чи «лан» з м''яки́м зву́ком [н''] — Word «кінь» or «лан»
+      with soft [n'']:'
     options:
     - кінь
     - лан
     answer: кінь
-    explanation: 'Сло́во «кінь» закі́нчується на м''яки́й знак: [кін'']. — The word «кінь» ends with a
-      soft sign: [kin''].'
-  - question: 'Сло́во «сіль» чи «рис» з м''яки́м зву́ком [л''] — Word «сіль» or «рис» with soft [l'']:'
+    explanation: 'Сло́во «кінь» закі́нчується на м''яки́й знак: [кін'']. — The word
+      «кінь» ends with a soft sign: [kin''].'
+  - question: 'Сло́во «сіль» чи «рис» з м''яки́м зву́ком [л''] — Word «сіль» or «рис»
+      with soft [l'']:'
     options:
     - сіль
     - рис
     answer: сіль
-    explanation: 'Сло́во «сіль» ма́є м''яки́й знак: [с''іл'']. — The word «сіль» has a soft sign: [sil''].'
-  - question: 'Фо́рма «стань» чи «стан» з м''яки́м зву́ком [н''] — Form «стань» or «стан» with soft [n'']:'
+    explanation: 'Сло́во «сіль» ма́є м''яки́й знак: [с''іл'']. — The word «сіль» has
+      a soft sign: [sil''].'
+  - question: 'Фо́рма «стань» чи «стан» з м''яки́м зву́ком [н''] — Form «стань» or
+      «стан» with soft [n'']:'
     options:
     - стань
     - стан
     answer: стань
-    explanation: Фо́рма «стань» вимовля́ється з м'яки́м [н']. — The form «стань» is pronounced with a
-      soft [n'].
-  - question: 'На́зва твари́ни «лань» чи по́ле «лан» — Animal name «лань» or field «лан»:'
+    explanation: Фо́рма «стань» вимовля́ється з м'яки́м [н']. — The form «стань» is
+      pronounced with a soft [n'].
+  - question: 'На́зва твари́ни «лань» чи по́ле «лан» — Animal name «лань» or field
+      «лан»:'
     options:
     - лань
     - лан
     answer: лань
-    explanation: Сло́во «лань» познача́є твари́ну й ма́є м'яки́й знак. — The word «лань» denotes an animal
-      and has a soft sign.
-  - question: 'На́зва твари́ни «рись» чи крупа́ «рис» — Animal name «рись» or grain «рис»:'
+    explanation: Сло́во «лань» познача́є твари́ну й ма́є м'яки́й знак. — The word
+      «лань» denotes an animal and has a soft sign.
+  - question: 'На́зва твари́ни «рись» чи крупа́ «рис» — Animal name «рись» or grain
+      «рис»:'
     options:
     - рись
     - рис
     answer: рись
-    explanation: Сло́во «рись» познача́є твари́ну й ма́є м'яки́й знак. — The word «рись» denotes an animal
-      and has a soft sign.
+    explanation: Сло́во «рись» познача́є твари́ну й ма́є м'яки́й знак. — The word
+      «рись» denotes an animal and has a soft sign.

@@ -1,0 +1,73 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 4.0,
+      "evidence": "Lesson 1 promises lesson-4 apostrophe outcomes, tests affricates before explaining them, omits tested vocabulary from its vocabulary file, and contains 11 activities against the mapped 10; baseline preservation and lesson-5 closure remain unverified.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "You are not learning every spelling rule today. You are learning these beginner contrasts:",
+        "The words «бу́ква» and «лі́тера» are synonyms in Ukrainian."
+      ]
+    },
+    "naturalness": {
+      "score": 4.0,
+      "evidence": "Attempted VESUM morphology, textbook, and dictionary calls were blocked by the approval policy, leaving gender, government, examples, and the absolute pronunciation claim unverified under the mandatory sources gate.",
+      "verdict": "REJECT",
+      "evidence_quotes": [
+        "Even when followed by other sounds, keep it firmly unsoftened.",
+        "Our teacher said that today the sun is bright."
+      ]
+    },
+    "decolonization": {
+      "score": 5.0,
+      "evidence": "Ukrainian-authored resources support the intended framing, but the quoted mnemonic lacks specific attribution and unsuccessful source checks cannot establish freedom from calques.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Ukrainian schoolchildren remember which consonants can be softened with a famous mnemonic phrase:"
+      ]
+    },
+    "engagement": {
+      "score": 6.0,
+      "evidence": "Videos and varied exercises offer participation, but the dialogue jumps from buying rice to a teacher's weather observation without a coherent communicative purpose.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Here is a clean cup and fresh rice.",
+        "Our teacher said that today the sun is bright."
+      ]
+    },
+    "tone": {
+      "score": 6.0,
+      "evidence": "Reassuring instructions, side-by-side dialogue translations, and unfenced examples suit A1, but the named teacher persona violates the narrator restriction and technical terminology burdens beginners.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Teacher Oksana's routine for this module is short: find the sign, say what it does, then read the word once.",
+        "They are single phonemes, not two separate letters pronounced back-to-back."
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "REJECT",
+    "terminal_verdict": "PASS",
+    "failing_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
+    ],
+    "rejected_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization"
+    ],
+    "warning_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
+    ],
+    "min_score": 4.0,
+    "min_dim": "pedagogical"
+  }
+}
