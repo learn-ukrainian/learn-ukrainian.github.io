@@ -158,7 +158,7 @@ export function readLocalCustomSets(): CustomSet[] {
   }
 }
 
-export function saveLocalCustomSet(set: Omit<CustomSet, 'device_id' | 'revision' | 'updated_at'> & { id?: string }): CustomSet {
+export function saveLocalCustomSet(set: Omit<CustomSet, 'id' | 'device_id' | 'revision' | 'updated_at' | 'created_at'> & { id?: string; created_at?: string }): CustomSet {
   const all = readLocalCustomSetsAllInternal();
   const now = new Date().toISOString();
   const deviceId = getDeviceId();

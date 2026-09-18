@@ -154,7 +154,7 @@ describe('practice deck local-work guard', () => {
 
   function pointerWithIndexCount(lexemes: number) {
     const { pointer } = packageFixture();
-    pointer.files[0].counts = { lexemes };
+    (pointer.files[0] as any).counts = { lexemes };
     return pointer;
   }
 

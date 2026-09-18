@@ -294,7 +294,7 @@ describe('IndexedDB durable store', () => {
       }),
     );
     const log = {
-      schema: REVIEW_EVENTS_SCHEMA,
+      schema: REVIEW_EVENTS_SCHEMA as 'practice-hub.review-events.v1',
       schemaVersion: 1 as const,
       clientId: 'overflow-client',
       fsrsParamsVersion: FSRS_PARAMS_VERSION,
@@ -437,7 +437,7 @@ describe('IndexedDB durable store', () => {
       }),
     );
     const log = {
-      schema: REVIEW_EVENTS_SCHEMA,
+      schema: REVIEW_EVENTS_SCHEMA as 'practice-hub.review-events.v1',
       schemaVersion: 1 as const,
       clientId: 'abort-client',
       fsrsParamsVersion: FSRS_PARAMS_VERSION,

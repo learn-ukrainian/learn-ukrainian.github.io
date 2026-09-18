@@ -1,6 +1,6 @@
 // @vitest-environment node
 
-import { existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { chmodSync, existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, test } from "vitest";
 import { normalizeAtlasText } from "@site/src/lib/lexicon/normalize";
@@ -339,18 +339,16 @@ describe("AtlasDataSource fixture shard parity (Sol F006, unconditional)", () =>
       new TextEncoder().encode(probeSlug.normalize("NFC")),
     );
     const bits = [...new Uint8Array(digest)].map((b) => b.toString(2).padStart(8, "0")).join("");
-    let node: {
-      shardId?: string;
-      children?: Record<string, { shardId?: string; children?: Record<string, unknown> }>;
-    } = (
+    type TreeNode = { shardId?: string; children?: Record<string, TreeNode> };
+    let node: TreeNode = (
       JSON.parse(readFileSync(resolve(treeRoot, "atlas", current.manifestUrl), "utf-8")) as {
-        entries: { tree: { shardId?: string; children?: Record<string, unknown> } };
+        entries: { tree: TreeNode };
       }
     ).entries.tree;
     let depth = 0;
     while (!node.shardId) {
       const bit = bits[depth]!;
-      node = node.children![bit]! as typeof node;
+      node = node.children![bit]!;
       depth += 1;
     }
     const descriptor = manifest.entries.shards[node.shardId!]!;
@@ -358,12 +356,18 @@ describe("AtlasDataSource fixture shard parity (Sol F006, unconditional)", () =>
     const original = readFileSync(shardPath);
     const corrupted = Buffer.from(original);
     corrupted[0] = (corrupted[0] + 1) % 256;
+    try {
+      chmodSync(shardPath, 0o644);
+    } catch {}
     writeFileSync(shardPath, corrupted);
     const http = nodeHttp(createFileAtlasFetch(treeRoot), { pointerTtlMs: 0 });
     try {
       await expect(http.getEntry(probeSlug)).rejects.toBeInstanceOf(AtlasDataSourceError);
     } finally {
       writeFileSync(shardPath, original);
+      try {
+        chmodSync(shardPath, 0o444);
+      } catch {}
     }
   });
 });

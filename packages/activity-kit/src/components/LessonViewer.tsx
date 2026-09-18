@@ -140,7 +140,7 @@ export const LessonViewer: React.FC<LessonViewerProps> = ({
                 <ActivityPlayer
                   activity={activeBlock.activity}
                   isUkrainian={isUkrainian}
-                  onComplete={(res) => onComplete && onComplete(activeBlock.id, res as Record<string, unknown>)}
+                  onComplete={(res) => onComplete && onComplete(activeBlock.id, res as unknown as Record<string, unknown>)}
                 />
               </div>
             )}

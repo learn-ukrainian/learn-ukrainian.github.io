@@ -23,7 +23,7 @@ export interface LexiconEntry {
   form_of?: { lemma: string; url_slug: string } | null;
   pos?: string | null;
   ipa?: string | null;
-  pronunciation?: { ipa: string; source: string } | null;
+  pronunciation?: { ipa: string; source?: string } | null;
   primary_source?: string;
   course_usage?: CourseUsage[];
   sections?: unknown;
@@ -46,6 +46,12 @@ export interface LexiconEntry {
     sovietization_risk: number;
     keywords?: string[];
     historical_note?: string;
+  } | null;
+  pre_soviet_witness?: {
+    witness: string;
+    quote: string;
+    historical_note?: string;
+    source_context?: string;
   } | null;
 }
 

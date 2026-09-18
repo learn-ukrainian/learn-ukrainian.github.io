@@ -138,12 +138,15 @@ export interface PracticeClozeOption {
 }
 
 export interface PracticeCaseRule {
-  ruleId: string;
-  case: string;
+  ruleId?: string;
+  code?: string;
+  case?: string;
   caseLabel: string;
-  trigger: string;
-  triggerLabel: string;
-  feedback: string;
+  trigger?: string;
+  triggerLabel?: string;
+  feedback?: string;
+  labelUk?: string;
+  labelEn?: string;
 }
 
 export interface PracticeClozeAttributionSentence {

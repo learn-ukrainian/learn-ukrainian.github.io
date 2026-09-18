@@ -16,7 +16,7 @@ describe("practice load-error locale purity (#7691)", () => {
     const container = await AstroContainer.create();
     container.addServerRenderer({ renderer: reactRenderer });
     container.addClientRenderer({ name: "@astrojs/react", entrypoint: "@astrojs/react/client.js" });
-    html = await container.renderToString(Mount);
+    html = await container.renderToString(Mount as any);
   });
 
   test.each([
@@ -29,7 +29,7 @@ describe("practice load-error locale purity (#7691)", () => {
       document.documentElement.dataset.chromeLocale = locale;
       document.head.innerHTML = `<style>${localeCss}</style>`;
       document.body.innerHTML = html;
-      const fallback = document.querySelector<HTMLElement>("#lexicon-practice-fallback")!;
+      const fallback = document.querySelector("#lexicon-practice-fallback") as any;
       expect(fallback.hidden).toBe(true);
       fallback.hidden = false;
 
@@ -37,11 +37,11 @@ describe("practice load-error locale purity (#7691)", () => {
         ["#lexicon-practice-error", "practice.loadError", error],
         ["button", "practice.retry", retry],
       ]) {
-        const label = fallback.querySelector(selector)!;
+        const label = fallback.querySelector(selector) as any;
         expect(label.querySelector(".lu-i18n")?.getAttribute("data-i18n")).toBe(key);
-        const variants = [...label.querySelectorAll<HTMLElement>("[data-loc]")];
+        const variants = [...(label.querySelectorAll("[data-loc]") as any)];
         expect(variants).toHaveLength(2);
-        const visible = variants.filter((span) => window.getComputedStyle(span).display !== "none");
+        const visible = variants.filter((span: any) => window.getComputedStyle(span).display !== "none");
         expect(visible).toHaveLength(1);
         expect(visible[0].dataset.loc).toBe(locale);
         expect(visible[0].lang).toBe(locale);

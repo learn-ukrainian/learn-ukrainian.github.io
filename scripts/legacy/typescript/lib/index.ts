@@ -24,7 +24,6 @@ export {
 
 // Renderers
 export { renderVibeJson } from './renderers/json';
-export { renderHtml, getTemplate } from './renderers/html';
 
 // Utils
 export {

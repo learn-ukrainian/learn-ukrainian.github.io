@@ -2914,7 +2914,7 @@ describe('LexiconPractice', () => {
   test('imperative STEM_CLUSTER fallback specifies sonorant cluster rule', async () => {
     const user = userEvent.setup();
     const deck = imperativeDeck();
-    deck.imperative[0].options[3] = {
+    deck.imperative![0].options[3] = {
       text: 'провітр',
       isCorrect: false,
       code: 'STEM_CLUSTER',

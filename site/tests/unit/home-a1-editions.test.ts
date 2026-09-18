@@ -33,7 +33,7 @@ describe('public A1 edition entry points', () => {
 
   beforeAll(async () => {
     const container = await AstroContainer.create();
-    home = parse(await container.renderToString(Home));
+    home = parse(await container.renderToString(Home as any));
   });
 
   test('home actions open either edition and keep Start A1 canonical', () => {
@@ -67,7 +67,7 @@ describe('public A1 edition entry points', () => {
 
   test.each(editions)('desktop and mobile header retain both editions on %s', async (currentPath) => {
     const container = await AstroContainer.create();
-    const page = parse(await container.renderToString(CourseLayout, {
+    const page = parse(await container.renderToString(CourseLayout as any, {
       props: { title: 'Course', currentPath },
     }));
     for (const label of ['Primary', 'Mobile primary']) {
