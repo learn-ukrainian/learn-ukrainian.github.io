@@ -1,0 +1,38 @@
+{
+  "dataset_name": "uldr_v06_general_assistant_eval",
+  "total_cases": 2500,
+  "shards_count": 5,
+  "max_shard_size_kb": 1535.09,
+  "shards": [
+    {
+      "shard_file": "eval_shard_001_of_005.jsonl",
+      "cases_count": 500,
+      "size_kb": 1522.79,
+      "sha256": "9707eb311af782fccfc79ffbbf782483ba4eddc97836ed76b1b3bfc2b32f57bd"
+    },
+    {
+      "shard_file": "eval_shard_002_of_005.jsonl",
+      "cases_count": 500,
+      "size_kb": 1535.09,
+      "sha256": "d7c5e966e12efcb4deda47dea920efce780adc49347dbab60ce835bc8fe57de6"
+    },
+    {
+      "shard_file": "eval_shard_003_of_005.jsonl",
+      "cases_count": 500,
+      "size_kb": 1464.93,
+      "sha256": "eaff9f686dfea83ce8a7188e09e7067e864aba12d408c138520cc21210bcb7fb"
+    },
+    {
+      "shard_file": "eval_shard_004_of_005.jsonl",
+      "cases_count": 500,
+      "size_kb": 1375.7,
+      "sha256": "4dcf66aa0c0a1c2ee1ce625d5231dda3e490c2705c6d9f53f8e7b584734ee6c3"
+    },
+    {
+      "shard_file": "eval_shard_005_of_005.jsonl",
+      "cases_count": 500,
+      "size_kb": 1429.85,
+      "sha256": "182768d75a26abadded5b4eaf29e98ebf15e9d5a068a6dea6912baa860a39763"
+    }
+  ]
+}
