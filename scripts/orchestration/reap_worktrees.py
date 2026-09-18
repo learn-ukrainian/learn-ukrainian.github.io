@@ -331,6 +331,11 @@ def _parse_pr_item(item: Any) -> tuple[PullRequestState | None, str | None]:
     )
 
 
+def _is_not_a_pull_request_error(message: str) -> bool:
+    """True when ``gh pr view`` says the number is not a PR (e.g. an issue)."""
+    return "Could not resolve to a PullRequest" in message
+
+
 def _query_pr_by_number(repo_root: Path, number: int) -> tuple[list[PullRequestState], str | None]:
     """Look up one PR by number. Fail closed: an unreadable answer is an error."""
     try:
@@ -1883,9 +1888,12 @@ def reap_worktrees(
                     all_pr_states.extend(st)
 
             review_number = _worktree_review_pr_number(repo_root, info)
+            review_err = None
+            review_not_a_pr = False
             if review_number is not None:
                 review_states, review_err = _query_pr_by_number(repo_root, review_number)
-                if review_err:
+                review_not_a_pr = review_err is not None and _is_not_a_pull_request_error(review_err)
+                if review_err and not review_not_a_pr:
                     errors.append(review_err)
                 all_pr_states.extend(review_states)
 
@@ -1902,6 +1910,13 @@ def reap_worktrees(
             # authoritative branch response -- that made UNKNOWN -> retain
             # non-universal on the destructive path.
             pr_state = _best_pr(all_pr_states)
+            if review_not_a_pr and not any(
+                st.state == "MERGED" and info.head and st.head_sha == info.head
+                for st in all_pr_states
+            ):
+                # The parsed token is an issue number, not a PR, and no
+                # exact-head MERGED PR vouches for this tree: stay closed.
+                errors.append(review_err or "review number is not a PR")
             if errors:
                 pr_error = "; ".join(errors)
 
