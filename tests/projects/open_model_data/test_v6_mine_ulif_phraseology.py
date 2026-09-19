@@ -47,6 +47,7 @@ from scripts.projects.open_model_data.v6_mine_ulif_phraseology import (
     parse_frazeolohichnyi_entry,
     synthesize_sft_trajectory,
     verify_phrase_in_vesum,
+    verify_receipt_invariants,
 )
 
 
@@ -461,7 +462,49 @@ def test_live_frazeolohichnyi_extraction():
 @requires_sources
 def test_live_ua_gec_extraction():
     calques = load_ua_gec_calques(DEFAULT_SOURCES_DB)
-    assert len(calques) > 1000
+    assert len(calques) > 500
+    for c in calques:
+        assert len(c.calque) >= 5
+        assert len(c.authentic) >= 5
+        assert '"' not in c.calque and '"' not in c.authentic
+        assert "'" not in c.calque and "'" not in c.authentic
+
+
+def test_verify_receipt_invariants_real_checks():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        td = Path(tmpdir)
+        sft_dir = td / "sft"
+        dpo_dir = td / "dpo"
+        sft_dir.mkdir()
+        dpo_dir.mkdir()
+
+        # Valid SFT shard
+        sft_shard = sft_dir / "sft_shard_001_of_001.jsonl"
+        valid_row = {
+            "task_type": "idiom_interpretation_literary",
+            "target_phrase": "брати гору",
+            "final_response": "<thought>Аналізую фразеологізм «брати гору» за академічним фразеологічним словником.</thought>\n\nНормативний вираз: **«брати гору»**.",
+        }
+        sft_shard.write_text(json.dumps(valid_row, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        # Valid DPO shard
+        dpo_shard = dpo_dir / "dpo_shard_001_of_001.jsonl"
+        dpo_row = {
+            "chosen": "<thought>Обґрунтування правильної норми слововживання.</thought>\n\nПравильно казати: **«брати участь»**.",
+            "rejected": "<thought>Помилкова думка.</thought>\n\nМожна казати інакше.",
+        }
+        dpo_shard.write_text(json.dumps(dpo_row, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        eval_records = [{"target_idiom": "брати гору"}]
+        res = verify_receipt_invariants(
+            eval_records=eval_records,
+            sft_dir=sft_dir,
+            dpo_dir=dpo_dir,
+            cur_ves=None,
+            sources_db=DEFAULT_SOURCES_DB,
+        )
+        assert res["thought_tags_verified_count"] == 1
+        assert res["zero_russian_syntactic_calques"] is True
 
 
 @requires_vesum

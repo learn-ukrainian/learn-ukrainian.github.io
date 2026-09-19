@@ -2,37 +2,35 @@
   "schema_version": "v1_ulif_phraseology_release_receipt",
   "issue": 8140,
   "parent_epic": 6321,
-  "created_at": "2026-09-19T22:55:01.181926+00:00",
-  "git_commit": "a035ab5c38247ef1f146ab7a86ed0d22a50a1784",
+  "created_at": "2026-09-19T23:07:54.345633+00:00",
+  "git_commit": "e6da637c05",
   "evaluation_benchmark": {
     "directory_path": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/eval",
     "manifest_file": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/eval/manifest_eval.json",
-    "manifest_sha256": "7ac9e3e675ef88ab6c68e510c14179384e40eb502e64386ec29a1ba23ca46900",
+    "manifest_sha256": "c80b13b621ae007f0deca5a67063489b72295d504b5397c2806b7c0e053df84c",
     "shards_count": 3,
     "total_cases": 1500,
-    "max_shard_size_kb": 1059.12,
+    "max_shard_size_kb": 1058.56,
     "held_out_categories": {
-      "anti_calque_decolonization": 283,
-      "authentic_idiom_usage": 609,
-      "figurative_reasoning": 608
+      "anti_calque_decolonization": 97,
+      "authentic_idiom_usage": 702,
+      "figurative_reasoning": 701
     },
-    "held_out_authors_count": 6,
+    "held_out_authors_count": 4,
     "held_out_authors": [
       "А. Дімаров",
-      "Корпус UA-GEC (Ukrainian Grammar Error Correction)",
       "М. Стельмах",
       "О. Гончар",
-      "Фразеологічний словник",
       "Ю. Яновський"
     ]
   },
   "sft_training_dataset": {
     "directory_path": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/sft",
     "manifest_file": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/sft/manifest_sft.json",
-    "manifest_sha256": "a127d65d3d27b29a90d4716d6eb5373e85d71d17f1832b01cf7d0a477ce9d957",
+    "manifest_sha256": "4a3da20043f5ee046cb9abc01ceba0e4a588d6de16969b1e62c681a99b6d46a3",
     "shards_count": 90,
     "total_trajectories": 45000,
-    "max_shard_size_kb": 1100.0,
+    "max_shard_size_kb": 1019.65,
     "task_distribution": {
       "anti_calque_decolonization": 15000,
       "idiom_interpretation_literary": 15000,
@@ -43,10 +41,10 @@
   "dpo_preference_dataset": {
     "directory_path": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/dpo",
     "manifest_file": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/dpo/manifest_dpo.json",
-    "manifest_sha256": "8adadcef54d6dfa725d56063ca2e9015d6b1cf6ecdd061e8fe82c13e914beaf8",
+    "manifest_sha256": "ae1306eaeaef1fd34e5c405f5ccf263aa3dff78ed111bc7f6f0981ac8d09a57f",
     "shards_count": 40,
     "total_pairs": 20000,
-    "max_shard_size_kb": 900.0,
+    "max_shard_size_kb": 1032.66,
     "flaw_distribution": {
       "lack_of_morphemic_reasoning": 7500,
       "soviet_lexicography_acceptance": 2500,
@@ -62,13 +60,13 @@
     "zero_train_eval_leakage": true
   },
   "verification_metrics": {
-    "vesum_attested_tokens_count": 3475,
+    "vesum_attested_tokens_count": 3800,
     "literary_citations_grounded_count": 15000,
     "thought_tags_verified_count": 45000,
     "zero_leakage_shards_checked": 130,
     "eval_target_overlap_count": 0,
-    "unique_calque_pairs_count": 1733,
-    "unique_idiom_units_count": 19976,
-    "unique_synonym_groups_count": 18954
+    "unique_calque_pairs_count": 458,
+    "unique_idiom_units_count": 20000,
+    "unique_synonym_groups_count": 18974
   }
 }
