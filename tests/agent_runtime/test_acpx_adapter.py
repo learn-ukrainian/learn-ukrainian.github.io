@@ -379,6 +379,23 @@ def test_resolve_host_node_single_matching_candidate_unchanged(tmp_path, monkeyp
     assert resolved == only.resolve()
 
 
+def test_resolve_host_node_skips_symlink_loop_path_entry(tmp_path, monkeypatch):
+    """#8287 CF: cyclic node symlink on PATH is skipped; later matching stub wins."""
+    required = acpx_module._required_node_major(adapter_label="test")
+    loop_dir = tmp_path / "loop"
+    loop_dir.mkdir()
+    loop_a = loop_dir / "a"
+    loop_b = loop_dir / "b"
+    loop_a.symlink_to(loop_b)
+    loop_b.symlink_to(loop_a)
+    (loop_dir / "node").symlink_to(loop_a)
+    matching = _fake_node_binary(tmp_path / "matching", version=f"v{required}.14.0")
+    _isolate_node_fallbacks(monkeypatch, path_dirs=(loop_dir, matching.parent))
+
+    resolved = acpx_module._resolve_host_node_binary(adapter_label="test")
+    assert resolved == matching.resolve()
+
+
 def test_acpx_spawn_argv_pins_absolute_node_when_shebang_uses_env(tmp_path, monkeypatch):
     """#6953: jail PATH=/usr/bin:/bin must not yield ``env: node: No such file``."""
     # Resolve the real contract node before hermetic PATH isolation.

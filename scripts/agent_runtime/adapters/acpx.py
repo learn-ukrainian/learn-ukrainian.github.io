@@ -893,6 +893,7 @@ def _resolve_host_node_binary(*, adapter_label: str = "ACPX") -> Path:
     candidates: list[Path] = []
     for part in os.environ.get("PATH", "").split(os.pathsep):
         if not part:
+            # Unlike shutil.which, empty PATH parts are not the cwd — never exec untrusted ./node.
             continue
         candidates.append(Path(part) / "node")
     for root in (*_versioned_node_keg_dirs(required_major), *_NODE_HOST_BIN_DIRS):
@@ -903,7 +904,8 @@ def _resolve_host_node_binary(*, adapter_label: str = "ACPX") -> Path:
     for candidate in candidates:
         try:
             resolved = candidate.resolve(strict=True)
-        except OSError:
+        except (OSError, RuntimeError):
+            # Python 3.12 raises RuntimeError on symlink loops; 3.13+ uses OSError(ELOOP).
             continue
         key = str(resolved)
         if key in seen:
