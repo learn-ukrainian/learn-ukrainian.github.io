@@ -1,11 +1,10 @@
 schema_version: 1
-description: 'Curated homonym pairs for dedicated homonym drills (#6138). Promoted
-  from MiyKlas approved homonym candidates. Fail-closed: unreviewed candidates excluded.'
+description: 'Curated homonym pairs for dedicated homonym drills (#6138). Promoted from MiyKlas approved homonym candidates.
+  Fail-closed: unreviewed candidates excluded.'
 pairs:
 - slugA: агент
   slugB: агент
-  distinction_gloss_uk: «Агент» — уповноважена особа чи розвідник; «агент» — діюча
-    сила чи чинник у природничих/хімічних процесах.
+  distinction_gloss_uk: «Агент» — уповноважена особа чи розвідник; «агент» — діюча сила чи чинник у природничих/хімічних процесах.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -20,14 +19,12 @@ pairs:
     origin: authored-homonym-frame
 - slugA: акція
   slugB: акція
-  distinction_gloss_uk: «Акція» — цінний папір, що засвідчує право власності; «акція»
-    — дія, захід або публічний виступ.
+  distinction_gloss_uk: «Акція» — цінний папір, що засвідчує право власності; «акція» — дія, захід або публічний виступ.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
   frames:
-  - sentence_with_slot: Інвестор придбав пакет цінних паперів і кожна ___ зросла в
-      ціні.
+  - sentence_with_slot: Інвестор придбав пакет цінних паперів і кожна ___ зросла в ціні.
     answer_form: акція
     confusable_form: акція
     origin: authored-homonym-frame
@@ -37,8 +34,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: апорт
   slugB: апорт
-  distinction_gloss_uk: «Апорт» — сорт соковитих яблук; «апорт» — вигук-команда собаці
-    принести кинутий предмет.
+  distinction_gloss_uk: «Апорт» — сорт соковитих яблук; «апорт» — вигук-команда собаці принести кинутий предмет.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -53,8 +49,8 @@ pairs:
     origin: authored-homonym-frame
 - slugA: атлас
   slugB: атлас
-  distinction_gloss_uk: «А́тлас» (з наголосом на першому складі) — збірник географічних
-    карт; «атла́с» (з наголосом на другому) — блискуча шовкова тканина.
+  distinction_gloss_uk: «А́тлас» (з наголосом на першому складі) — збірник географічних карт; «атла́с» (з наголосом на другому)
+    — блискуча шовкова тканина.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -69,8 +65,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: баба
   slugB: баба
-  distinction_gloss_uk: «Баба» — бабуся, літня жінка; «баба» — ударна частина механічного
-    молота або святкова випічка.
+  distinction_gloss_uk: «Баба» — бабуся, літня жінка; «баба» — ударна частина механічного молота або святкова випічка.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -85,8 +80,8 @@ pairs:
     origin: authored-homonym-frame
 - slugA: байка
   slugB: байка
-  distinction_gloss_uk: «Байка» — коротке алегоричне повчальне оповідання; «байка»
-    — м'яка бавовняна чи вовняна тканина з начесом.
+  distinction_gloss_uk: «Байка» — коротке алегоричне повчальне оповідання; «байка» — м'яка бавовняна чи вовняна тканина з
+    начесом.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -101,8 +96,8 @@ pairs:
     origin: authored-homonym-frame
 - slugA: балка
   slugB: балка
-  distinction_gloss_uk: «Балка» — яр із пологими схилами, вкритий травою; «балка»
-    — опорний будівельний брус із дерева чи металу.
+  distinction_gloss_uk: «Балка» — яр із пологими схилами, вкритий травою; «балка» — опорний будівельний брус із дерева чи
+    металу.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -117,8 +112,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: бар
   slugB: бар
-  distinction_gloss_uk: «Бар» — заклад громадського харчування або стійка; «бар» —
-    позасистемна одиниця вимірювання тиску.
+  distinction_gloss_uk: «Бар» — заклад громадського харчування або стійка; «бар» — позасистемна одиниця вимірювання тиску.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -133,8 +127,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: бокс
   slugB: бокс
-  distinction_gloss_uk: «Бокс» — вид кулачного спорту; «бокс» — ізольована палата
-    в лікарні або коротка зачіска.
+  distinction_gloss_uk: «Бокс» — вид кулачного спорту; «бокс» — ізольована палата в лікарні або коротка зачіска.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -149,8 +142,8 @@ pairs:
     origin: authored-homonym-frame
 - slugA: вал
   slugB: вал
-  distinction_gloss_uk: «Вал» — високий земляний насип або висока хвиля; «вал» — обертова
-    деталь механізму у формі циліндричного бруса.
+  distinction_gloss_uk: «Вал» — високий земляний насип або висока хвиля; «вал» — обертова деталь механізму у формі циліндричного
+    бруса.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -165,8 +158,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: вибиратися
   slugB: вибиратися
-  distinction_gloss_uk: «Вибиратися» — знаходити вихід, виходити з труднощів; «вибиратися»
-    — лаштуватися в дорогу чи виїжджати.
+  distinction_gloss_uk: «Вибиратися» — знаходити вихід, виходити з труднощів; «вибиратися» — лаштуватися в дорогу чи виїжджати.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -181,8 +173,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: вид
   slugB: вид
-  distinction_gloss_uk: «Вид» — зовнішній вигляд, краєвид або біологічний таксон;
-    «вид» — граматична категорія дієслова (доконаний/недоконаний).
+  distinction_gloss_uk: «Вид» — зовнішній вигляд, краєвид або біологічний таксон; «вид» — граматична категорія дієслова (доконаний/недоконаний).
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -197,8 +188,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: глава
   slugB: глава
-  distinction_gloss_uk: «Глава» — керівник установи, держави чи роду; «глава» — розділ
-    книги чи купол церкви.
+  distinction_gloss_uk: «Глава» — керівник установи, держави чи роду; «глава» — розділ книги чи купол церкви.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -213,8 +203,8 @@ pairs:
     origin: authored-homonym-frame
 - slugA: гранат
   slugB: гранат
-  distinction_gloss_uk: «Гранат» — південне дерево та соковитий плід з багатьма зернами;
-    «гранат» — дорогоцінний темно-червоний мінерал.
+  distinction_gloss_uk: «Гранат» — південне дерево та соковитий плід з багатьма зернами; «гранат» — дорогоцінний темно-червоний
+    мінерал.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -229,8 +219,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: графік
   slugB: графік
-  distinction_gloss_uk: «Гра́фік» — наочне креслення або розклад дій; «графі́к» —
-    художник, який займається графікою.
+  distinction_gloss_uk: «Гра́фік» — наочне креслення або розклад дій; «графі́к» — художник, який займається графікою.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -245,8 +234,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: грибок
   slugB: грибок
-  distinction_gloss_uk: «Грибок» — маленький гриб або мікроорганізм; «грибок» — дерев'яне
-    пристосування для штопання шкарпеток.
+  distinction_gloss_uk: «Грибок» — маленький гриб або мікроорганізм; «грибок» — дерев'яне пристосування для штопання шкарпеток.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -261,8 +249,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: двір
   slugB: двір
-  distinction_gloss_uk: «Двір» — подвір'я біля хати чи будинку; «двір» — монарх із
-    родиною та оточенням (царський двір).
+  distinction_gloss_uk: «Двір» — подвір'я біля хати чи будинку; «двір» — монарх із родиною та оточенням (царський двір).
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -277,8 +264,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: дисципліна
   slugB: дисципліна
-  distinction_gloss_uk: «Дисципліна» — дотримання порядку й правил; «дисципліна» —
-    окрема галузь науки чи навчальний предмет.
+  distinction_gloss_uk: «Дисципліна» — дотримання порядку й правил; «дисципліна» — окрема галузь науки чи навчальний предмет.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -293,8 +279,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: доля
   slugB: доля
-  distinction_gloss_uk: «Доля» — фатум, життєвий шлях або щастя; «доля» — частина
-    цілого, частка чи пай.
+  distinction_gloss_uk: «Доля» — фатум, життєвий шлях або щастя; «доля» — частина цілого, частка чи пай.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -309,8 +294,8 @@ pairs:
     origin: authored-homonym-frame
 - slugA: емісія
   slugB: емісія
-  distinction_gloss_uk: «Емісія» — випуск грошових знаків або цінних паперів; «емісія»
-    — випромінювання або викид речовини в навколишнє середовище.
+  distinction_gloss_uk: «Емісія» — випуск грошових знаків або цінних паперів; «емісія» — випромінювання або викид речовини
+    в навколишнє середовище.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -325,8 +310,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: жаба
   slugB: жаба
-  distinction_gloss_uk: «Жаба» — земноводна тварина; «жаба» — пристрій для затискання
-    кабелю чи рейки.
+  distinction_gloss_uk: «Жаба» — земноводна тварина; «жаба» — пристрій для затискання кабелю чи рейки.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -341,8 +325,8 @@ pairs:
     origin: authored-homonym-frame
 - slugA: жати
   slugB: жати
-  distinction_gloss_uk: «Жати» (жну, жнеш) — зрізати колосся хлібних злаків; «жати»
-    (жму, жмеш) — тиснути, стискати чи тиснути в ногах (взуття тисне).
+  distinction_gloss_uk: «Жати» (жну, жнеш) — зрізати колосся хлібних злаків; «жати» (жму, жмеш) — тиснути, стискати чи тиснути
+    в ногах (взуття тисне).
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -357,8 +341,8 @@ pairs:
     origin: authored-homonym-frame
 - slugA: забій
   slugB: забій
-  distinction_gloss_uk: «Забій» — місце видобутку корисної копалини в шахті; «забій»
-    — пошкодження м'яких тканин тіла від удару.
+  distinction_gloss_uk: «Забій» — місце видобутку корисної копалини в шахті; «забій» — пошкодження м'яких тканин тіла від
+    удару.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -373,8 +357,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: загін
   slugB: загін
-  distinction_gloss_uk: «Загін» — військове або спеціальне формування людей; «загін»
-    — обгороджена ділянка для худоби.
+  distinction_gloss_uk: «Загін» — військове або спеціальне формування людей; «загін» — обгороджена ділянка для худоби.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -389,8 +372,8 @@ pairs:
     origin: authored-homonym-frame
 - slugA: захід
   slugB: захід
-  distinction_gloss_uk: «Захід» — напрямок стосовно сторін світу (де заходить сонце);
-    «захід» — дія або подія, спрямована на щось.
+  distinction_gloss_uk: «Захід» — напрямок стосовно сторін світу (де заходить сонце); «захід» — дія або подія, спрямована
+    на щось.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -405,8 +388,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: карабін
   slugB: карабін
-  distinction_gloss_uk: «Карабін» — полегшена коротка гвинтівка; «карабін» — металевий
-    сполучний гак із засувкою у альпінізмі.
+  distinction_gloss_uk: «Карабін» — полегшена коротка гвинтівка; «карабін» — металевий сполучний гак із засувкою у альпінізмі.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -421,8 +403,8 @@ pairs:
     origin: authored-homonym-frame
 - slugA: карбункул
   slugB: карбункул
-  distinction_gloss_uk: «Карбункул» — гнійне запалення декількох волосяних мішечків;
-    «карбункул» — коштовний камінь червоного кольору (гранат).
+  distinction_gloss_uk: «Карбункул» — гнійне запалення декількох волосяних мішечків; «карбункул» — коштовний камінь червоного
+    кольору (гранат).
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -431,15 +413,13 @@ pairs:
     answer_form: карбункул
     confusable_form: карбункул
     origin: authored-homonym-frame
-  - sentence_with_slot: Корона королеви сяяла, оскільки її прикрашав червоний ___
-      .
+  - sentence_with_slot: Корона королеви сяяла, оскільки її прикрашав червоний ___ .
     answer_form: карбункул
     confusable_form: карбункул
     origin: authored-homonym-frame
 - slugA: клуб
   slugB: клуб
-  distinction_gloss_uk: «Клуб» — організація людей за інтересами або приміщення; «клуб»
-    — округла маса диму чи пилу.
+  distinction_gloss_uk: «Клуб» — організація людей за інтересами або приміщення; «клуб» — округла маса диму чи пилу.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -454,8 +434,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: коса
   slugB: коса
-  distinction_gloss_uk: «Коса» — заплетене волосся / сільськогосподарський інструмент
-    / піщана смуга суші у воді.
+  distinction_gloss_uk: «Коса» — заплетене волосся / сільськогосподарський інструмент / піщана смуга суші у воді.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -470,8 +449,8 @@ pairs:
     origin: authored-homonym-frame
 - slugA: лава
   slugB: лава
-  distinction_gloss_uk: «Лава» — ослін для сидіння або шикування людей / очисна виробка
-    в шахті; «лава» — розплавлена вулканічна маса.
+  distinction_gloss_uk: «Лава» — ослін для сидіння або шикування людей / очисна виробка в шахті; «лава» — розплавлена вулканічна
+    маса.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -486,8 +465,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: ласка
   slugB: ласка
-  distinction_gloss_uk: «Ласка» — вияв доброти, ніжності й прихильності; «ласка» —
-    дрібний хижий ссавець родини куницевих.
+  distinction_gloss_uk: «Ласка» — вияв доброти, ніжності й прихильності; «ласка» — дрібний хижий ссавець родини куницевих.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -502,8 +480,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: лисичка
   slugB: лисичка
-  distinction_gloss_uk: «Лисичка» — пестлива назва тварини (лисиці); «лисичка» — їстівний
-    жовтий гриб з лійкоподібною шапкою.
+  distinction_gloss_uk: «Лисичка» — пестлива назва тварини (лисиці); «лисичка» — їстівний жовтий гриб з лійкоподібною шапкою.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -518,8 +495,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: лютий
   slugB: лютий
-  distinction_gloss_uk: «Лютий» — другий місяць року; «лютий» — безжалісний, злий
-    або дужий (про мороз/вітер).
+  distinction_gloss_uk: «Лютий» — другий місяць року; «лютий» — безжалісний, злий або дужий (про мороз/вітер).
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -534,8 +510,8 @@ pairs:
     origin: authored-homonym-frame
 - slugA: магазин
   slugB: магазин
-  distinction_gloss_uk: «Магазин» — торговельне приміщення для продажу товарів; «магазин»
-    — частина вогнепальної зброї для набоїв.
+  distinction_gloss_uk: «Магазин» — торговельне приміщення для продажу товарів; «магазин» — частина вогнепальної зброї для
+    набоїв.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -550,8 +526,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: мандарин
   slugB: мандарин
-  distinction_gloss_uk: «Мандарин» — соковитий цитрусовий фрукт; «мандарин» — чиновник
-    у давньому Китаю.
+  distinction_gloss_uk: «Мандарин» — соковитий цитрусовий фрукт; «мандарин» — чиновник у давньому Китаю.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -566,8 +541,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: мило
   slugB: мило
-  distinction_gloss_uk: «Мило» — засіб для миття й прання; «мило» — приємно, солодко,
-    приязно (прислівник від «милий»).
+  distinction_gloss_uk: «Мило» — засіб для миття й прання; «мило» — приємно, солодко, приязно (прислівник від «милий»).
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -582,8 +556,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: набір
   slugB: набір
-  distinction_gloss_uk: «Набір» — сукупність предметів / комплект чи прийом людей;
-    «набір» — верстка тексу для друку.
+  distinction_gloss_uk: «Набір» — сукупність предметів / комплект чи прийом людей; «набір» — верстка тексу для друку.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -598,8 +571,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: наліт
   slugB: наліт
-  distinction_gloss_uk: «Наліт» — раптовий авіаційний чи бандитський напад; «наліт»
-    — тонкий шар осаду чи плівки на поверхні.
+  distinction_gloss_uk: «Наліт» — раптовий авіаційний чи бандитський напад; «наліт» — тонкий шар осаду чи плівки на поверхні.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -614,8 +586,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: нота
   slugB: нота
-  distinction_gloss_uk: «Нота» — графічний знак музичного звуку; «нота» — офіційне
-    дипломатичне звернення уряду.
+  distinction_gloss_uk: «Нота» — графічний знак музичного звуку; «нота» — офіційне дипломатичне звернення уряду.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -630,8 +601,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: образ
   slugB: образ
-  distinction_gloss_uk: «О́браз» — художнє відображення чи уявлення; «обра́з» — свята
-    ікона.
+  distinction_gloss_uk: «О́браз» — художнє відображення чи уявлення; «обра́з» — свята ікона.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -646,8 +616,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: орган
   slugB: орган
-  distinction_gloss_uk: «О́рган» — частина тіла чи установа; «орга́н» — найбільший
-    клавішно-духовий музичний інструмент.
+  distinction_gloss_uk: «О́рган» — частина тіла чи установа; «орга́н» — найбільший клавішно-духовий музичний інструмент.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -662,8 +631,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: орден
   slugB: орден
-  distinction_gloss_uk: «Орден» — почесна державна нагорода; «орден» — рицарська чи
-    релігійна організація.
+  distinction_gloss_uk: «Орден» — почесна державна нагорода; «орден» — рицарська чи релігійна організація.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -678,8 +646,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: оригінал
   slugB: оригінал
-  distinction_gloss_uk: «Оригінал» — справжній первинний документ (не копія); «оригінал»
-    — дивакувата й неординарна людина.
+  distinction_gloss_uk: «Оригінал» — справжній первинний документ (не копія); «оригінал» — дивакувата й неординарна людина.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -694,8 +661,8 @@ pairs:
     origin: authored-homonym-frame
 - slugA: палата
   slugB: палата
-  distinction_gloss_uk: «Палата» — кімната для пацієнтів у лікарні; «палата» — підрозділ
-    парламенту чи установа (Торгово-промислова палата).
+  distinction_gloss_uk: «Палата» — кімната для пацієнтів у лікарні; «палата» — підрозділ парламенту чи установа (Торгово-промислова
+    палата).
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -710,8 +677,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: пара
   slugB: пара
-  distinction_gloss_uk: «Пара» — газоподібний стан води при кипінні; «пара» — дві
-    однорідні речі або двоє людей.
+  distinction_gloss_uk: «Пара» — газоподібний стан води при кипінні; «пара» — дві однорідні речі або двоє людей.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -726,8 +692,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: партія
   slugB: партія
-  distinction_gloss_uk: «Партія» — політична організація; «партія» — окрема гра в
-    шахи або частина товару.
+  distinction_gloss_uk: «Партія» — політична організація; «партія» — окрема гра в шахи або частина товару.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -742,8 +707,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: патрон
   slugB: патрон
-  distinction_gloss_uk: «Патрон» — боєприпас для стрільби; «патрон» — покровитель,
-    шеф або керівник.
+  distinction_gloss_uk: «Патрон» — боєприпас для стрільби; «патрон» — покровитель, шеф або керівник.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -758,8 +722,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: рація
   slugB: рація
-  distinction_gloss_uk: «Рація» — пере переносна радіостанція; «рація» — правота,
-    слушність або підстава (мати рацію).
+  distinction_gloss_uk: «Рація» — пере переносна радіостанція; «рація» — правота, слушність або підстава (мати рацію).
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -774,8 +737,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: рейд
   slugB: рейд
-  distinction_gloss_uk: «Рейд» — військовий чи перевірочний нахід/просув; «рейд» —
-    прибережна частина моря для стоянки кораблів.
+  distinction_gloss_uk: «Рейд» — військовий чи перевірочний нахід/просув; «рейд» — прибережна частина моря для стоянки кораблів.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -790,8 +752,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: рись
   slugB: рись
-  distinction_gloss_uk: «Рись» — дикий хижий ссавець із китичками на вухах; «рись»
-    — біг коня (алюр між ходою та галопом).
+  distinction_gloss_uk: «Рись» — дикий хижий ссавець із китичками на вухах; «рись» — біг коня (алюр між ходою та галопом).
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -806,8 +767,8 @@ pairs:
     origin: authored-homonym-frame
 - slugA: саджати
   slugB: саджати
-  distinction_gloss_uk: «Саджати» — вміщувати рослину в ґрунт чи садовити за стіл;
-    «саджати» — закривати у в'язницю чи ставити хліб у піч.
+  distinction_gloss_uk: «Саджати» — вміщувати рослину в ґрунт чи садовити за стіл; «саджати» — закривати у в'язницю чи ставити
+    хліб у піч.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -822,8 +783,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: садити
   slugB: садити
-  distinction_gloss_uk: «Садити» — саджати рослини в землю; «садити» — допомагати
-    комусь сісти чи поміщати під варту.
+  distinction_gloss_uk: «Садити» — саджати рослини в землю; «садити» — допомагати комусь сісти чи поміщати під варту.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -838,8 +798,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: секрет
   slugB: секрет
-  distinction_gloss_uk: «Секрет» — таємниця, щось приховане; «секрет» — речовина,
-    що виробляється залозами організму.
+  distinction_gloss_uk: «Секрет» — таємниця, щось приховане; «секрет» — речовина, що виробляється залозами організму.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -854,8 +813,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: склад
   slugB: склад
-  distinction_gloss_uk: «Склад» — приміщення для товарів; «склад» — частина слова
-    (фонетична одиниця) чи устрій/структура.
+  distinction_gloss_uk: «Склад» — приміщення для товарів; «склад» — частина слова (фонетична одиниця) чи устрій/структура.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -870,8 +828,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: таз
   slugB: таз
-  distinction_gloss_uk: «Таз» — миска чи посудина для миття; «таз» — частина скелета
-    людини або тварини.
+  distinction_gloss_uk: «Таз» — миска чи посудина для миття; «таз» — частина скелета людини або тварини.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -886,8 +843,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: такса
   slugB: такса
-  distinction_gloss_uk: «Такса» — порода собак із короткими ногами; «такса» — установлений
-    тариф або ціна послуги.
+  distinction_gloss_uk: «Такса» — порода собак із короткими ногами; «такса» — установлений тариф або ціна послуги.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -902,8 +858,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: такт
   slugB: такт
-  distinction_gloss_uk: «Такт» — відчуття міри й вихованість; «такт» — музична ритмічна
-    одиниця або етап роботи двигуна.
+  distinction_gloss_uk: «Такт» — відчуття міри й вихованість; «такт» — музична ритмічна одиниця або етап роботи двигуна.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -918,8 +873,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: термін
   slugB: термін
-  distinction_gloss_uk: «Те́рмін» — слово із чітким науковим визначенням; «термі́н»
-    — строк або визначений час.
+  distinction_gloss_uk: «Те́рмін» — слово із чітким науковим визначенням; «термі́н» — строк або визначений час.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -934,8 +888,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: тур
   slugB: тур
-  distinction_gloss_uk: «Тур» — вимерлий дикий бик; «тур» — етап, коло змагань або
-    подорож.
+  distinction_gloss_uk: «Тур» — вимерлий дикий бик; «тур» — етап, коло змагань або подорож.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -950,8 +903,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: туш
   slugB: туш
-  distinction_gloss_uk: «Туш» — фарба для малювання, креслення чи косметики; «туш»
-    — короткий урочистий музичний марш.
+  distinction_gloss_uk: «Туш» — фарба для малювання, креслення чи косметики; «туш» — короткий урочистий музичний марш.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -966,8 +918,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: ударник
   slugB: ударник
-  distinction_gloss_uk: «Ударник» — деталь затвора вогнепальної зброї; «ударник» —
-    музикант, який грає на ударних інструментах.
+  distinction_gloss_uk: «Ударник» — деталь затвора вогнепальної зброї; «ударник» — музикант, який грає на ударних інструментах.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -982,8 +933,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: утримання
   slugB: утримання
-  distinction_gloss_uk: «Утримання» — матеріальне або фінансове забезпечення; «утримання»
-    — стриманість або відрахування грошей.
+  distinction_gloss_uk: «Утримання» — матеріальне або фінансове забезпечення; «утримання» — стриманість або відрахування грошей.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -998,8 +948,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: фаланга
   slugB: фаланга
-  distinction_gloss_uk: «Фаланга» — трубчаста кістка пальця; «фаланга» — бойовий стрій
-    давньогрецької піхоти.
+  distinction_gloss_uk: «Фаланга» — трубчаста кістка пальця; «фаланга» — бойовий стрій давньогрецької піхоти.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -1014,8 +963,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: фокус
   slugB: фокус
-  distinction_gloss_uk: «Фокус» — точка перетину променів оптичної системи; «фокус»
-    — ілюзія, трюк або витівка.
+  distinction_gloss_uk: «Фокус» — точка перетину променів оптичної системи; «фокус» — ілюзія, трюк або витівка.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -1030,8 +978,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: фунт
   slugB: фунт
-  distinction_gloss_uk: «Фунт» — одиниця маси (~453 г); «фунт» — грошова одиниця Великої
-    Британії (фунт стерлінгів).
+  distinction_gloss_uk: «Фунт» — одиниця маси (~453 г); «фунт» — грошова одиниця Великої Британії (фунт стерлінгів).
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -1046,8 +993,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: храп
   slugB: храп
-  distinction_gloss_uk: «Храп» — хрипкі звуки уві сні; «храп» — передня частина конячої
-    морди або упряжі.
+  distinction_gloss_uk: «Храп» — хрипкі звуки уві сні; «храп» — передня частина конячої морди або упряжі.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -1062,8 +1008,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: хронограф
   slugB: хронограф
-  distinction_gloss_uk: «Хронограф» — високоточний секундомір або годинник; «хронограф»
-    — середньовічна історична хроніка.
+  distinction_gloss_uk: «Хронограф» — високоточний секундомір або годинник; «хронограф» — середньовічна історична хроніка.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -1078,8 +1023,8 @@ pairs:
     origin: authored-homonym-frame
 - slugA: череда
   slugB: череда
-  distinction_gloss_uk: «Череда» — гурт свійських тварин (корів, овець), що пасуться
-    разом; «череда» — трироздільна лікарська рослина.
+  distinction_gloss_uk: «Череда» — гурт свійських тварин (корів, овець), що пасуться разом; «череда» — трироздільна лікарська
+    рослина.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -1094,8 +1039,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: шах
   slugB: шах
-  distinction_gloss_uk: «Шах» — монарший титул у країнах Сходу; «шах» — загроза королю
-    в шаховій грі.
+  distinction_gloss_uk: «Шах» — монарший титул у країнах Сходу; «шах» — загроза королю в шаховій грі.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -1110,8 +1054,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: штат
   slugB: штат
-  distinction_gloss_uk: «Штат» — самоуправна адміністративна одиниця держави; «штат»
-    — постійний склад працівників організації.
+  distinction_gloss_uk: «Штат» — самоуправна адміністративна одиниця держави; «штат» — постійний склад працівників організації.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -1126,8 +1069,8 @@ pairs:
     origin: authored-homonym-frame
 - slugA: штучний
   slugB: штучний
-  distinction_gloss_uk: «Штучний» — зроблений людьми, ненатуральний чи синтетичний;
-    «штучний» — той, що рахується поштучно (окремими екземплярами).
+  distinction_gloss_uk: «Штучний» — зроблений людьми, ненатуральний чи синтетичний; «штучний» — той, що рахується поштучно
+    (окремими екземплярами).
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -1142,14 +1085,12 @@ pairs:
     origin: authored-homonym-frame
 - slugA: як
   slugB: як
-  distinction_gloss_uk: «Як» — великий тибетський волохатий бык; «як» — питально-відносний
-    прислівник чи сполучник.
+  distinction_gloss_uk: «Як» — великий тибетський волохатий бык; «як» — питально-відносний прислівник чи сполучник.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
   frames:
-  - sentence_with_slot: У високогір'ї Гімалаїв випасається волохатий тибетський ___
-      .
+  - sentence_with_slot: У високогір'ї Гімалаїв випасається волохатий тибетський ___ .
     answer_form: як
     confusable_form: як
     origin: authored-homonym-frame
@@ -1159,8 +1100,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: яритися
   slugB: яритися
-  distinction_gloss_uk: «Яритися» — охоплюватися люттю, гнівом; «яритися» — яскраво
-    сяяти чи палати вогнем.
+  distinction_gloss_uk: «Яритися» — охоплюватися люттю, гнівом; «яритися» — яскраво сяяти чи палати вогнем.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -1175,8 +1115,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: яріти
   slugB: яріти
-  distinction_gloss_uk: «Яріти» — відсвічувати яскраво-червоним світлом / палати;
-    «яріти» — палати пристрастю або люттю.
+  distinction_gloss_uk: «Яріти» — відсвічувати яскраво-червоним світлом / палати; «яріти» — палати пристрастю або люттю.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -1191,8 +1130,7 @@ pairs:
     origin: authored-homonym-frame
 - slugA: ячмінь
   slugB: ячмінь
-  distinction_gloss_uk: «Ячмінь» — злакова сільськогосподарська культура; «ячмінь»
-    — гнійне запалення волосяного мішечка повіки.
+  distinction_gloss_uk: «Ячмінь» — злакова сільськогосподарська культура; «ячмінь» — гнійне запалення волосяного мішечка повіки.
   citations:
   - miyklas.com.ua
   curator: miyklas-reviewed
@@ -1205,3 +1143,352 @@ pairs:
     answer_form: ячмінь
     confusable_form: ячмінь
     origin: authored-homonym-frame
+- slugA: бал
+  slugB: бал
+  distinction_gloss_uk: «Бал» — великий вечір із танцями в ошатному вбранні; «бал» — одиниця оцінки успішності або сили явища
+    (шторму, землетрусу).
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: Випускники прийшли на урочистий святковий ___ у палац.
+    answer_form: бал
+    confusable_form: бал
+    origin: authored-gemini-8276
+  - sentence_with_slot: Учень отримав найвищий ___ за складний тест з історії.
+    answer_form: бал
+    confusable_form: бал
+    origin: authored-gemini-8276
+- slugA: кран
+  slugB: кран
+  distinction_gloss_uk: «Кран» — запірний пристрій для регулювання потоку води чи газу в трубі; «кран» — велика підйомна машина
+    на будівництві.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: На кухні зламався водопровідний ___ і почала капати вода.
+    answer_form: кран
+    confusable_form: кран
+    origin: authored-gemini-8276
+  - sentence_with_slot: На будівельному майданчику працював потужний баштовий ___ .
+    answer_form: кран
+    confusable_form: кран
+    origin: authored-gemini-8276
+- slugA: лист
+  slugB: лист
+  distinction_gloss_uk: «Лист» — поштове письмове повідомлення в конверті; «лист» — зелений вегетативний орган рослини на
+    гілці дерева.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: Поштар приніс рекомендований ___ від давнього друга.
+    answer_form: лист
+    confusable_form: лист
+    origin: authored-gemini-8276
+  - sentence_with_slot: Восени з високого дуба зірвався останній жовтий ___ .
+    answer_form: лист
+    confusable_form: лист
+    origin: authored-gemini-8276
+- slugA: рукав
+  slugB: рукав
+  distinction_gloss_uk: «Рукав» — деталь одягу, яка вкриває руку; «рукав» — відгалуження річки чи гнучкий шланг для подачі
+    води.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: Кравець акуратно підшив правий ___ нової сорочки.
+    answer_form: рукав
+    confusable_form: рукав
+    origin: authored-gemini-8276
+  - sentence_with_slot: Широка річка розділилася на два спокійні ___ перед морем.
+    answer_form: рукави
+    confusable_form: рукави
+    origin: authored-gemini-8276
+- slugA: лавка
+  slugB: лавка
+  distinction_gloss_uk: «Лавка» — невеликий магазин або торговельна крамничка; «лавка» — дерев'яна лавиця для сидіння в саду
+    чи біля хати.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: На розі вулиці відкрилася нова сувенірна ___ з книжками.
+    answer_form: лавка
+    confusable_form: лавка
+    origin: authored-gemini-8276
+  - sentence_with_slot: Дідусь сів перепочити на дерев'яну ___ під яблунею.
+    answer_form: лавку
+    confusable_form: лавку
+    origin: authored-gemini-8276
+- slugA: ключ
+  slugB: ключ
+  distinction_gloss_uk: «Ключ» — інструмент для відкривання замка або закручування гайок; «ключ» — природне джерело води або
+    стрій перелітних птахів у небі.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: Він повернув залізний ___ у замку дверей і зайшов.
+    answer_form: ключ
+    confusable_form: ключ
+    origin: authored-gemini-8276
+  - sentence_with_slot: Високо в осінньому небі летів журавлиний ___ .
+    answer_form: ключ
+    confusable_form: ключ
+    origin: authored-gemini-8276
+- slugA: стан
+  slugB: стан
+  distinction_gloss_uk: «Стан» — фізичний, душевний або суспільний лад/положення; «стан» — тулуб, талія людини або великий
+    прокатний металургійний агрегат.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: Лікар уважно перевірив загальний ___ здоров'я пацієнта.
+    answer_form: стан
+    confusable_form: стан
+    origin: authored-gemini-8276
+  - sentence_with_slot: Тонкий і стрункий дівочий ___ прикрашав широкий пояс.
+    answer_form: стан
+    confusable_form: стан
+    origin: authored-gemini-8276
+- slugA: гриф
+  slugB: гриф
+  distinction_gloss_uk: «Гриф» — великий хижий птах з родини яструбиних; «гриф» — довга вузька частина струнного інструмента,
+    до якої притискають струни.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: Над скелями кружляв могутній чорний ___ .
+    answer_form: гриф
+    confusable_form: гриф
+    origin: authored-gemini-8276
+  - sentence_with_slot: Гітарист поклав пальці лівої руки на ___ інструмента.
+    answer_form: гриф
+    confusable_form: гриф
+    origin: authored-gemini-8276
+- slugA: міна
+  slugB: міна
+  distinction_gloss_uk: «Міна» — вираз обличчя, гримаса; «міна» — вибуховий боєприпас, закладений у землю чи воду.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: У кумедного хлопчика на обличчі з'явилася смішна ___ .
+    answer_form: міна
+    confusable_form: міна
+    origin: authored-gemini-8276
+  - sentence_with_slot: Сапери обережно знешкодили ворожу протитанкову ___ .
+    answer_form: міну
+    confusable_form: міну
+    origin: authored-gemini-8276
+- slugA: пояс
+  slugB: пояс
+  distinction_gloss_uk: «Пояс» — смуга тканини чи шкіри для підперізування одягу на талії; «пояс» — географічна або кліматична
+    зона Землі.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: Козак підперезав широкий червоний ___ навколо талії.
+    answer_form: пояс
+    confusable_form: пояс
+    origin: authored-gemini-8276
+  - sentence_with_slot: Україна здебільшого розташована в помірному кліматичному ___ .
+    answer_form: поясі
+    confusable_form: поясі
+    origin: authored-gemini-8276
+- slugA: шашка
+  slugB: шашка
+  distinction_gloss_uk: «Шашка» — козацька або кавалерійська холодна рубаюча зброя; «шашка» — плоска кругла фішка для гри
+    в шашки.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: На поясі у вершника блищала гостра сталева ___ .
+    answer_form: шашка
+    confusable_form: шашка
+    origin: authored-gemini-8276
+  - sentence_with_slot: Гравець пересунув білу ___ на крайню клітинку дошки.
+    answer_form: шашку
+    confusable_form: шашку
+    origin: authored-gemini-8276
+- slugA: коло
+  slugB: коло
+  distinction_gloss_uk: «Коло» — замкнена крива лінія, геометрична фігура; «коло» — сукупність людей, об'єднаних спільними
+    інтересами чи знайомством.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: Учитель накреслив на дошці рівне геометричне ___ циркулем.
+    answer_form: коло
+    confusable_form: коло
+    origin: authored-gemini-8276
+  - sentence_with_slot: Учений потрапив у близьке ___ видатних науковців столиці.
+    answer_form: коло
+    confusable_form: коло
+    origin: authored-gemini-8276
+- slugA: корінь
+  slugB: корінь
+  distinction_gloss_uk: «Корінь» — підземна частина рослини, якою вона живиться із ґрунту; «корінь» — головна значуща частина
+    слова без суфіксів і префіксів.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: Могутнє дерево пустило глибокий ___ глибоко в землю.
+    answer_form: корінь
+    confusable_form: корінь
+    origin: authored-gemini-8276
+  - sentence_with_slot: У слові «лісник» спільний ___ має форму «ліс».
+    answer_form: корінь
+    confusable_form: корінь
+    origin: authored-gemini-8276
+- slugA: поле
+  slugB: поле
+  distinction_gloss_uk: «Поле» — велика безліса ділянка землі, засіяна зерном; «поле» — чиста смуга вздовж краю аркуша паперу
+    чи книги.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: Комбайн вийшов збирати стиглу пшеницю на золоте ___ .
+    answer_form: поле
+    confusable_form: поле
+    origin: authored-gemini-8276
+  - sentence_with_slot: Учень залишив широке ___ в зошиті для зауважень учителя.
+    answer_form: поле
+    confusable_form: поле
+    origin: authored-gemini-8276
+- slugA: поступ
+  slugB: поступ
+  distinction_gloss_uk: «Поступ» — прогрес, рух уперед і розвиток суспільства; «поступ» — крок або хода людини.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: Науково-технічний ___ докорінно змінив життя людства.
+    answer_form: поступ
+    confusable_form: поступ
+    origin: authored-gemini-8276
+  - sentence_with_slot: У тиші кімнати чувся повільний і важкий ___ господаря.
+    answer_form: поступ
+    confusable_form: поступ
+    origin: authored-gemini-8276
+- slugA: дріб
+  slugB: дріб
+  distinction_gloss_uk: «Дріб» — числове позначення частки одиниці в математиці; «дріб» — дрібні свинцеві кульки для мисливської
+    рушниці або частий барабанний бій.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: Учитель пояснив, як правильно додавати звичайний ___ на уроці.
+    answer_form: дріб
+    confusable_form: дріб
+    origin: authored-gemini-8276
+  - sentence_with_slot: Удалині пролунав гучний барабанний ___ полкового оркестру.
+    answer_form: дріб
+    confusable_form: дріб
+    origin: authored-gemini-8276
+- slugA: лінія
+  slugB: лінія
+  distinction_gloss_uk: «Лінія» — геометрична вузька смуга чи риска; «лінія» — шлях сполучення транспорту чи телефонного зв'язку.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: Архітектор провів рівну пряму ___ олівцем на кресленні.
+    answer_form: лінію
+    confusable_form: лінію
+    origin: authored-gemini-8276
+  - sentence_with_slot: У місті відкрилася нова швидкісна ___ трамвайного руху.
+    answer_form: лінія
+    confusable_form: лінія
+    origin: authored-gemini-8276
+- slugA: плід
+  slugB: плід
+  distinction_gloss_uk: «Плід» — орган рослини, що містить насіння (яблуко, груша); «плід» — зародок в утробі матері або результат
+    тривалої розумової праці.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: На гілці висів соковитий стиглий ___ яблуні.
+    answer_form: плід
+    confusable_form: плід
+    origin: authored-gemini-8276
+  - sentence_with_slot: Ця фундаментальна монографія — солідний ___ багаторічних досліджень.
+    answer_form: плід
+    confusable_form: плід
+    origin: authored-gemini-8276
+- slugA: точка
+  slugB: точка
+  distinction_gloss_uk: «Точка» — розділовий знак у кінці речення; «точка» — конкретне географічне або просторове місце на
+    карті.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: У кінці розповідного речення завжди ставиться ___ .
+    answer_form: точка
+    confusable_form: точка
+    origin: authored-gemini-8276
+  - sentence_with_slot: Маяк став головною опорною ___ навігації для кораблів.
+    answer_form: точкою
+    confusable_form: точкою
+    origin: authored-gemini-8276
+- slugA: правило
+  slugB: правило
+  distinction_gloss_uk: «Правило» — норма поведінки чи обов'язковий граматичний закон; «правило» — довге кермове весло або
+    напрямна лінійка в будівництві.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: Учень вивчив нове орфографічне ___ правопису префіксів.
+    answer_form: правило
+    confusable_form: правило
+    origin: authored-gemini-8276
+  - sentence_with_slot: Майстер вирівняв свіжу штукатурку на стіні за допомогою ___ .
+    answer_form: правила
+    confusable_form: правила
+    origin: authored-gemini-8276
+- slugA: галка
+  slugB: галка
+  distinction_gloss_uk: «Галка» — птах родини воронових з чорним пір'ям і сірою шиєю; «галка» — позначка у вигляді пташки
+    (галочки) під час перевірки.
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: На гілці старого клена сіла чорна сіроока ___ .
+    answer_form: галка
+    confusable_form: галка
+    origin: authored-gemini-8276
+  - sentence_with_slot: Біля кожного виконаного пункту плану стояла акуратна ___ .
+    answer_form: галка
+    confusable_form: галка
+    origin: authored-gemini-8276
+- slugA: етер
+  slugB: етер
+  distinction_gloss_uk: «Етер» — органічна летка хімічна сполука з характерним запахом; «етер» — простір радіо- або телевізійного
+    мовлення («прямий етер»).
+  citations:
+  - miyklas.com.ua
+  curator: gemini-8276-densification
+  frames:
+  - sentence_with_slot: У хімічній лабораторії використовують очищений медичний ___ .
+    answer_form: етер
+    confusable_form: етер
+    origin: authored-gemini-8276
+  - sentence_with_slot: Ведучий оголосив терміновий випуск новин у прямому ___ .
+    answer_form: етері
+    confusable_form: етері
+    origin: authored-gemini-8276

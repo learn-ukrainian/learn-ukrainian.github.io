@@ -3738,9 +3738,8 @@ def test_live_paronym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
     live_path = Path("data/lexicon/paronym_pairs.yaml")
     assert live_path.exists()
     pairs = read_paronym_pairs(live_path)
-    # 103 authored - 1 dedup (пам'ятка/пам'ятник was authored twice under two
-    # different apostrophe characters; #6338 merged the two into one entry).
-    assert len(pairs) == 102, f"Expected 102 paronym pairs (103 authored - 1 dedup, #6338), got {len(pairs)}"
+    # 102 base pairs (#6338) + 95 densified pairs (#8276) = 197 total pairs.
+    assert len(pairs) == 197, f"Expected 197 paronym pairs (102 base + 95 densified, #8276), got {len(pairs)}"
     seen_pairs: set[tuple[str, str]] = set()
     for index, pair in enumerate(pairs):
         errors = validate_paronym_pair(pair)
@@ -3917,7 +3916,8 @@ def test_live_homonym_pairs_yaml_is_valid_and_has_promoted_candidates() -> None:
     live_path = Path("data/lexicon/homonym_pairs.yaml")
     assert live_path.exists()
     pairs = read_homonym_pairs(live_path)
-    assert len(pairs) == 75, f"Expected 75 homonym pairs, got {len(pairs)}"
+    # 75 base pairs + 22 densified pairs (#8276) = 97 total pairs.
+    assert len(pairs) == 97, f"Expected 97 homonym pairs (75 base + 22 densified, #8276), got {len(pairs)}"
     for index, pair in enumerate(pairs):
         errors = validate_homonym_pair(pair)
         assert not errors, f"Pair {index} ({pair.get('slugA')}/{pair.get('slugB')}) invalid: {errors}"
