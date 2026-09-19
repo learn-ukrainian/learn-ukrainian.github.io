@@ -490,6 +490,9 @@ def test_audit_card_ambiguity_offline_strict_fails(tmp_path: Path, monkeypatch):
     }
     (tmp_path / "practice-paronym.A1.json").write_text(json.dumps(par_data, ensure_ascii=False), encoding="utf-8")
 
+    mock_vesum = tmp_path / "mock_vesum.db"
+    mock_vesum.touch()
+
     monkeypatch.setattr(typesafe_distractor_validator, "resolve_api_key", lambda: None)
     monkeypatch.setattr(
         typesafe_distractor_validator,
@@ -503,14 +506,55 @@ def test_audit_card_ambiguity_offline_strict_fails(tmp_path: Path, monkeypatch):
     verdicts, violations = audit_card_ambiguity(
         shards_dir=tmp_path,
         sample_size=1,
+        vesum_db=mock_vesum,
         mock_response=None,
         strict_ambiguity=True,
         client=None,
     )
     assert len(verdicts) == 1
     assert verdicts[0]["verdict"] == "unverified_offline"
+    assert verdicts[0]["model"] == "deterministic-vesum-grounding"
     assert verdicts[0]["unambiguous_prob"] is None
+    assert any("morphological attestation verified via VESUM" in f for f in verdicts[0]["findings"])
     assert any(v["type"] == "AMBIGUITY_VALIDATION_UNAVAILABLE" for v in violations)
+
+
+def test_audit_card_ambiguity_missing_vesum_reports_unavailable(tmp_path: Path, monkeypatch):
+    """P2 regression: missing VESUM database must report morphological verification as unavailable."""
+    from scripts.practice import typesafe_distractor_validator
+
+    par_data = {
+        "paronym": [
+            {
+                "paronymId": "p_test",
+                "prompt": "Вранці він ___ у парку.",
+                "answer": "бігає",
+                "options": [{"label": "бігає"}, {"label": "біжить"}],
+            }
+        ]
+    }
+    (tmp_path / "practice-paronym.A1.json").write_text(json.dumps(par_data, ensure_ascii=False), encoding="utf-8")
+
+    monkeypatch.setattr(typesafe_distractor_validator, "resolve_api_key", lambda: None)
+
+    nonexistent_db = tmp_path / "nonexistent.db"
+    assert not nonexistent_db.exists()
+
+    verdicts, violations = audit_card_ambiguity(
+        shards_dir=tmp_path,
+        sample_size=1,
+        vesum_db=nonexistent_db,
+        mock_response=None,
+        strict_ambiguity=False,
+        client=None,
+    )
+    assert len(verdicts) == 1
+    v = verdicts[0]
+    assert v["verdict"] == "unverified_offline"
+    assert v["model"] == "unavailable"
+    assert any("morphological verification unavailable" in f.lower() for f in v["findings"])
+    assert not any("verified via vesum" in f.lower() for f in v["findings"])
+    assert violations == []
 
 
 def test_audit_card_ambiguity_honors_sample_size(tmp_path: Path):

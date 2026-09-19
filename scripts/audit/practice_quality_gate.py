@@ -797,31 +797,37 @@ def audit_card_ambiguity(
             if vesum_db and Path(vesum_db).exists():
                 g = ground_with_sources(target=target, distractors=distractors, vesum_db_path=vesum_db)
                 t_ok = g.get("target", {}).get("in_vesum", False)
-            else:
-                t_ok = True
-            if not t_ok:
-                verdict = "fail_broken"
-                findings = [f"Target '{target}' not attested in VESUM morphological dictionary"]
-                violations.append(
-                    {
-                        "type": "CARD_BROKEN",
-                        "item": cid,
-                        "message": f"Target '{target}' not attested in VESUM",
-                    }
-                )
+                if not t_ok:
+                    verdict = "fail_broken"
+                    findings = [f"Target '{target}' not attested in VESUM morphological dictionary"]
+                    violations.append(
+                        {
+                            "type": "CARD_BROKEN",
+                            "item": cid,
+                            "message": f"Target '{target}' not attested in VESUM",
+                        }
+                    )
+                else:
+                    verdict = "unverified_offline"
+                    findings = [
+                        "Semantic ambiguity validation unavailable offline; morphological attestation verified via VESUM"
+                    ]
+                model_used = "deterministic-vesum-grounding"
             else:
                 verdict = "unverified_offline"
                 findings = [
-                    "Semantic ambiguity validation unavailable offline; morphological attestation verified via VESUM"
+                    "Semantic ambiguity validation unavailable offline; morphological verification unavailable (VESUM database not found)"
                 ]
-                if strict_ambiguity:
-                    violations.append(
-                        {
-                            "type": "AMBIGUITY_VALIDATION_UNAVAILABLE",
-                            "item": cid,
-                            "message": "Semantic ambiguity validation requires TypeSafe System One (unavailable offline in strict mode)",
-                        }
-                    )
+                model_used = "unavailable"
+
+            if strict_ambiguity:
+                violations.append(
+                    {
+                        "type": "AMBIGUITY_VALIDATION_UNAVAILABLE",
+                        "item": cid,
+                        "message": "Semantic ambiguity validation requires TypeSafe System One (unavailable offline in strict mode)",
+                    }
+                )
 
             verdicts.append(
                 {
@@ -833,7 +839,7 @@ def audit_card_ambiguity(
                     "verdict": verdict,
                     "unambiguous_prob": None,
                     "plausibility_score": None,
-                    "model": "deterministic-vesum-grounding",
+                    "model": model_used,
                     "findings": findings,
                 }
             )
