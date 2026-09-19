@@ -1,11 +1,11 @@
 /**
  * Ukrainian Verb Deep Mechanics Practice Engine (Дієслово).
  *
- * Implements Ukrainian Pravopys 2019 (§§ 115–129) and Academic Grammar rules for:
- *   1. Conjugation Classes I vs II (Дієвідміни I vs II) [§§ 116–117]:
+ * Implements Ukrainian Pravopys 2019 (§§ 115–120) and Academic Grammar rules for:
+ *   1. Conjugation Classes I vs II (Дієвідміни I vs II) [§ 115]:
  *      - Class I: personal endings with vowel -е- (-є-), 3rd person plural -уть / -ють (пишеш, чуєш, борються, мелють)
- *      - Class II: personal endings with vowel -и- (-ї-), 3rd person plural -ать / -ять (летиш, сидить, клеїш, стоять)
- *   2. Stem Morphophonemic Alternations in Conjugation [§ 118]:
+ *      - Class II: personal endings with vowel -и- (-ї-), 3rd person plural -ать / -ять (летиш, сидить, клеїш, стоять, біжать)
+ *   2. Stem Morphophonemic Alternations in Conjugation [§ 115]:
  *      - Epenthetic [л'] after labials (б, п, в, м, ф) in 1sg and 3pl Class II (любити -> люблю, люблять; спати -> сплю, сплять)
  *      - Dental/alveolar mutations in 1sg Class II: д->дж (ходжу), т->ч (лечу), с->ш (прошу), з->ж (вожу), ст->щ (чищу), зд->ждж (їжджу)
  *      - Class I present stem mutations: с->ш (пишу), к->ч (печеш), г->ж (можеш), root ablaut (брати -> беру, терти -> тру)
@@ -13,15 +13,15 @@
  *      - Prefixation: писати <-> написати, робити <-> зробити, читати <-> прочитати
  *      - Suffixation & ablaut: переписати <-> переписувати, відкрити <-> відкривати, допомогти <-> допомагати (о <-> а)
  *      - Suppletive pairs: брати <-> взяти, говорити <-> сказати, ловити <-> піймати, класти <-> покласти
- *   4. Imperative Mood Nuances & Anti-Calques [§ 125]:
+ *   4. Imperative Mood Nuances & Anti-Calques [§ 116]:
  *      - Synthetic 2sg/2pl endings: -и / -іть vs - / -те (роби/робіть vs читай/читайте, стань/станьте)
  *      - 1st person plural inclusive encouragement: -мо / -імо (ходімо, робімо, читаймо, працюймо)
  *      - Eradication of Russian calques: *давай підемо / *давайте зробимо -> ходімо, зробімо
- *   5. Verbals: Participles & Gerunds [§§ 127–129]:
- *      - Passive participles in -ний / -тий (написаний, зроблений, розбитий, відкритий)
- *      - Eradication of active Russian-calqued participles in -ачий/-учий (*бажаючий -> охочий, *діючий -> чинний)
- *      - Impersonal predicate forms in -но / -то (виконано, прийнято, відкрито)
- *      - Gerunds (дієприслівник): imperfective simultaneous in -учи/-ючи, -ачи/-ячи vs perfective prior in -вши/-ши
+ *   5. Verbals: Participles & Gerunds [§§ 119–120]:
+ *      - Passive participles in -ний / -тий [§ 119] (написаний, зроблений, розбитий, відкритий)
+ *      - Adjectival status of -ачий/-учий forms and eradication of active Russian-calqued participles [§ 119] (*бажаючий -> охочий, *діючий -> чинний)
+ *      - Impersonal predicate forms in -но / -то [§ 119] (виконано, прийнято, відкрито)
+ *      - Gerunds (дієприслівник) [§ 120]: imperfective simultaneous in -учи/-ючи, -ачи/-ячи vs perfective prior in -вши/-ши
  */
 
 export const VERB_MECHANICS_CATEGORY_KEYS = [
@@ -56,6 +56,7 @@ export const VERB_MECHANICS_INTERFERENCE_KEYS = [
   'false_imperative_missing_y_ending',
   'false_imperative_excessive_y_ending',
   'false_imperative_1pl_russian_te',
+  'false_imperative_indicative_confusion',
   'russian_calque_davai_imperative',
   'false_participle_suffix_nyi_tyi',
   'russian_calque_active_participle',
@@ -156,7 +157,7 @@ export function verbMechanicsFeedbackFor(
 }
 
 /**
- * Resolves conjugation class rule per Правопис 2019 §§ 116, 117.
+ * Resolves conjugation class rule per Правопис 2019 § 115.
  */
 export function resolveConjugationClassRule(
   category: VerbMechanicsCategoryKey,
@@ -174,20 +175,16 @@ export function resolveConjugationClassRule(
     return {
       indicator: '-и- / -ї- (-ать / -ять)',
       ruleUa:
-        'II дієвідміна: дієслова мають закінчення 3-ї особи множини -ать/-ять та голосний -и-/-ї- в особових закінченнях (летиш, сидить, стоїмо, бачать).',
+        'II дієвідміна: дієслова мають закінчення 3-ї особи множини -ать/-ять та голосний -и-/-ї- в особових закінченнях (летиш, сидить, стоїмо, біжать).',
       ruleEn:
-        'Conjugation Class II: 3rd person plural ends in -at/-iat and personal endings take -y-/-yi- (letysh, sydyt, stoimo, bachiat).',
+        'Conjugation Class II: 3rd person plural ends in -at/-iat and personal endings take -y-/-yi- (letysh, sydyt, stoimo, bizhat).',
     };
   }
-  return {
-    indicator: 'дієвідміна',
-    ruleUa: 'Правило дієвідмінювання дієслів.',
-    ruleEn: 'Verb conjugation rule.',
-  };
+  throw new Error(`Category ${category} is not a primary conjugation class category.`);
 }
 
 /**
- * Resolves epenthesis indicator and explanation per Правопис 2019 § 118.
+ * Resolves epenthesis indicator and explanation per Правопис 2019 § 115.
  */
 export function resolveEpenthesisRule(): {
   indicator: string;
@@ -204,7 +201,7 @@ export function resolveEpenthesisRule(): {
 }
 
 /**
- * Resolves dental/alveolar consonant alternation rule for 1sg per Правопис 2019 § 118.
+ * Resolves dental/alveolar consonant alternation rule for 1sg per Правопис 2019 § 115.
  */
 export function resolveDentalMutationRule(mutationKey: string): {
   mutation: string;
@@ -243,15 +240,15 @@ export function resolveDentalMutationRule(mutationKey: string): {
       ruleEn: 'zd alternates with zhdzh: yizdyty -> yizhdzhu.',
     },
   };
-  return mapping[mutationKey] ?? {
-    mutation: 'чергування',
-    ruleUa: 'Чергування приголосних у 1-й особі однини.',
-    ruleEn: 'Consonant alternation in 1st person singular.',
-  };
+  const res = mapping[mutationKey];
+  if (!res) {
+    throw new Error(`Unknown dental mutation key: ${mutationKey}`);
+  }
+  return res;
 }
 
 /**
- * Resolves imperative mood ending rule per Правопис 2019 § 125.
+ * Resolves imperative mood ending rule per Правопис 2019 § 116.
  */
 export function resolveImperativeRule(stemType: 'stressed_or_cluster' | 'vowel_or_soft' | 'inclusive_1pl'): {
   indicator: string;
@@ -262,9 +259,9 @@ export function resolveImperativeRule(stemType: 'stressed_or_cluster' | 'vowel_o
     return {
       indicator: '-и / -іть',
       ruleUa:
-        'Під наголосом або після збігу приголосних закінчення -и у 2-й особі однини та -іть у множині (роби, робіть; пиши, пишіть).',
+        'Під наголосом або після збігу приголосних закінчення -и у 2-й особі однини та -іть у множині (роби, робіть; пиши, пишіть; пор. винятки чисть, морщ).',
       ruleEn:
-        'Under stress or following consonant clusters, ending is strictly -y (2sg) and -it (2pl) (roby, robit; pyshy, pyshit).',
+        'Under stress or following consonant clusters, ending is generally -y (2sg) and -it (2pl) (roby, robit; pyshy, pyshit; cf. exceptions like chyst, morshch).',
     };
   }
   if (stemType === 'vowel_or_soft') {
@@ -286,7 +283,7 @@ export function resolveImperativeRule(stemType: 'stressed_or_cluster' | 'vowel_o
 }
 
 /**
- * Resolves active participle anti-calque rule per НУШ / Правопис 2019 § 127.
+ * Resolves active participle anti-calque rule per НУШ / Правопис 2019 § 119.
  */
 export function resolveParticipleAntiCalqueRule(): {
   indicator: string;
@@ -296,14 +293,14 @@ export function resolveParticipleAntiCalqueRule(): {
   return {
     indicator: 'Подолання активних дієприкметників',
     ruleUa:
-      'Активні дієприкметники теперішнього часу на -ачий/-ячий/-учий/-ючий замінюються прикметниками, іменниками чи підрядними реченнями (охочий, чинний).',
+      'В українській мові форми на -ачий/-учий функціонують переважно як прикметники або іменники (квітучий, живучий, стоячий). Активні дієприкметники теперішнього часу на позначення процесу замінюються прикметниками, іменниками чи підрядними реченнями (охочий, чинний, початківець).',
     ruleEn:
-      'Active present participles in -achy/-uchy are replaced with proper adjectives, agent nouns, or subordinate clauses (okhochyi, chynnyi).',
+      'In Ukrainian, forms in -achy/-uchy predominantly function as lexical adjectives or nouns (kvituchyi, zhyvuchyi). Active present participles expressing ongoing action are replaced with proper adjectives, agent nouns, or subordinate clauses (okhochyi, chynnyi, pochatkivets).',
   };
 }
 
 /**
- * Resolves impersonal predicate form rule per Правопис 2019 § 128.
+ * Resolves impersonal predicate form rule per Правопис 2019 § 119.
  */
 export function resolveImpersonalFormRule(): {
   indicator: string;
@@ -320,7 +317,7 @@ export function resolveImpersonalFormRule(): {
 }
 
 /**
- * Resolves gerund aspect suffix rule per Правопис 2019 § 129.
+ * Resolves gerund aspect suffix rule per Правопис 2019 § 120.
  */
 export function resolveGerundAspectRule(aspect: 'imperfective' | 'perfective'): {
   indicator: string;

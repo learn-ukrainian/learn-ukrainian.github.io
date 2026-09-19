@@ -1,10 +1,10 @@
 """Unit and integration tests for Ukrainian Verb Deep Mechanics Practice Engine.
 
 Tests:
-  1. Conjugation class rules [Правопис 2019 §§ 116, 117]:
+  1. Conjugation class rules [Правопис 2019 § 115]:
      - Class I: -е-/-є- (-уть/-ють) (пишеш, чуєш, борються, мелють).
      - Class II: -и-/-ї- (-ать/-ять) (летиш, сидить, клеїш, стоять, біжать).
-  2. Stem alternations [Правопис 2019 § 118]:
+  2. Stem alternations [Правопис 2019 § 115]:
      - Epenthetic [л'] after labials (любити -> люблю, люблять; спати -> сплю, сплять).
      - Dental/alveolar alternations in 1sg: д->дж, т->ч, с->ш, з->ж, ст->щ, зд->ждж.
      - Class I present stem alternations: с->ш, к->ч, г->ж, vowel ablaut.
@@ -12,15 +12,15 @@ Tests:
      - Prefixation (писати <-> написати, робити <-> зробити).
      - Suffixation & root vowel ablaut о <-> а (допомогти <-> допомагати, перемогти <-> перемагати).
      - Suppletive pairs (брати <-> взяти, говорити <-> сказати, ловити <-> піймати).
-  4. Imperative mood [Правопис 2019 § 125]:
+  4. Imperative mood [Правопис 2019 § 116]:
      - Synthetic endings: -и/-іть vs - / -те (роби, пишіть vs читай, стань, вірте).
      - Inclusive 1pl encouragement: -мо / -імо (ходімо, робімо, читаймо).
      - Eradication of Russian calques (*давай підемо -> ходімо).
-  5. Verbals [Правопис 2019 §§ 127–129]:
-     - Passive participles in -ний / -тий (написаний, зроблений, розбитий).
-     - Active participle calque eradication (*бажаючий -> охочий, *діючий -> чинний).
-     - Impersonal forms in -но / -то (виконано, прийнято, відкрито).
-     - Gerund aspect markers: imperfective -учи/-ючи vs perfective -вши/-ши.
+  5. Verbals [Правопис 2019 §§ 119–120]:
+     - Passive participles in -ний / -тий [§ 119] (написаний, зроблений, розбитий).
+     - Active participle calque eradication [§ 119] (*бажаючий -> охочий, *діючий -> чинний).
+     - Impersonal forms in -но / -то [§ 119] (виконано, прийнято, відкрито).
+     - Gerund aspect markers [§ 120]: imperfective -учи/-ючи vs perfective -вши/-ши.
   6. Deck validation: zero collisions, valid option counts, prompt blank markers.
   7. Balanced deterministic shuffle distribution across indices 0..3.
   8. Committed deck file parity.
@@ -53,7 +53,7 @@ from scripts.practice.verb_mechanics_engine import (
 
 
 def test_resolve_conjugation_class_rule():
-    """Verify conjugation class rules per Правопис 2019 §§ 116, 117."""
+    """Verify conjugation class rules per Правопис 2019 § 115."""
     ind_i, ua_i, en_i = resolve_conjugation_class_rule(VerbCategory.CONJ_CLASS_I_VOWEL_E_YE)
     assert "-е- / -є-" in ind_i
     assert "-уть/-ють" in ua_i
@@ -66,7 +66,7 @@ def test_resolve_conjugation_class_rule():
 
 
 def test_resolve_epenthesis_rule():
-    """Verify epenthetic [л'] after labials per Правопис 2019 § 118."""
+    """Verify epenthetic [л'] after labials per Правопис 2019 § 115."""
     ind, ua, en = resolve_epenthesis_rule()
     assert ind == "[л']"
     assert "після губних" in ua
@@ -74,7 +74,7 @@ def test_resolve_epenthesis_rule():
 
 
 def test_resolve_dental_mutation_rule():
-    """Verify dental/alveolar consonant alternations per Правопис 2019 § 118."""
+    """Verify dental/alveolar consonant alternations per Правопис 2019 § 115."""
     cases = [
         ("d_dzh", "д -> дж", "ходжу"),
         ("t_ch", "т -> ч", "лечу"),
@@ -91,7 +91,7 @@ def test_resolve_dental_mutation_rule():
 
 
 def test_resolve_imperative_rule():
-    """Verify imperative mood rules per Правопис 2019 § 125."""
+    """Verify imperative mood rules per Правопис 2019 § 116."""
     ind_str, ua_str, en_str = resolve_imperative_rule("stressed_or_cluster")
     assert ind_str == "-и / -іть"
     assert "Під наголосом" in ua_str
@@ -109,7 +109,7 @@ def test_resolve_imperative_rule():
 
 
 def test_resolve_verbal_rules():
-    """Verify participle and gerund rules per Правопис 2019 §§ 127–129."""
+    """Verify participle and gerund rules per Правопис 2019 §§ 119–120."""
     # Participle anti-calque
     ind_part, ua_part, _ = resolve_participle_anti_calque_rule()
     assert "активних" in ind_part

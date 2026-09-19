@@ -16,9 +16,9 @@ import {
 } from '../../src/lib/lexicon/verb-mechanics';
 
 describe('verb-mechanics', () => {
-  it('defines all 15 verb categories and 16 interference keys', () => {
+  it('defines all 15 verb categories and 17 interference keys', () => {
     expect(VERB_MECHANICS_CATEGORY_KEYS).toHaveLength(15);
-    expect(VERB_MECHANICS_INTERFERENCE_KEYS).toHaveLength(16);
+    expect(VERB_MECHANICS_INTERFERENCE_KEYS).toHaveLength(17);
     expect(VERB_MECHANICS_CATEGORY_KEYS).toContain('conj_class_i_vowel_e_ye');
     expect(VERB_MECHANICS_CATEGORY_KEYS).toContain('conj_class_ii_vowel_y_yi');
     expect(VERB_MECHANICS_CATEGORY_KEYS).toContain('conj_labial_epenthesis_l');
@@ -34,9 +34,10 @@ describe('verb-mechanics', () => {
     expect(VERB_MECHANICS_CATEGORY_KEYS).toContain('participle_anti_calque_active');
     expect(VERB_MECHANICS_CATEGORY_KEYS).toContain('participle_impersonal_no_to');
     expect(VERB_MECHANICS_CATEGORY_KEYS).toContain('gerund_formation_aspect');
+    expect(VERB_MECHANICS_INTERFERENCE_KEYS).toContain('false_imperative_indicative_confusion');
   });
 
-  it('resolves conjugation class rules accurately per §§ 116, 117', () => {
+  it('resolves conjugation class rules accurately per § 115', () => {
     const classI = resolveConjugationClassRule('conj_class_i_vowel_e_ye');
     expect(classI.indicator).toContain('-е- / -є-');
     expect(classI.ruleUa).toContain('-уть/-ють');
@@ -48,14 +49,14 @@ describe('verb-mechanics', () => {
     expect(classII.ruleEn).toContain('-at/-iat');
   });
 
-  it('resolves epenthesis rules accurately per § 118', () => {
+  it('resolves epenthesis rules accurately per § 115', () => {
     const ep = resolveEpenthesisRule();
     expect(ep.indicator).toBe("[л']");
     expect(ep.ruleUa).toContain('після губних');
     expect(ep.ruleEn).toContain('Epenthetic');
   });
 
-  it('resolves dental/alveolar consonant alternation rules for 1sg per § 118', () => {
+  it('resolves dental/alveolar consonant alternation rules for 1sg per § 115', () => {
     const cases = [
       { key: 'd_dzh', expectedMut: 'д -> дж', expectedEx: 'ходжу' },
       { key: 't_ch', expectedMut: 'т -> ч', expectedEx: 'лечу' },
@@ -71,7 +72,7 @@ describe('verb-mechanics', () => {
     }
   });
 
-  it('resolves imperative mood rules accurately per § 125', () => {
+  it('resolves imperative mood rules accurately per § 116', () => {
     const str = resolveImperativeRule('stressed_or_cluster');
     expect(str.indicator).toBe('-и / -іть');
     expect(str.ruleUa).toContain('наголосом');
@@ -85,7 +86,7 @@ describe('verb-mechanics', () => {
     expect(inc.ruleUa).toContain('заклик до спільної дії');
   });
 
-  it('resolves participle and gerund rules accurately per §§ 127–129', () => {
+  it('resolves participle and gerund rules accurately per §§ 119–120', () => {
     const partAnti = resolveParticipleAntiCalqueRule();
     expect(partAnti.indicator).toContain('активних');
     expect(partAnti.ruleUa).toContain('охочий, чинний');
@@ -101,6 +102,12 @@ describe('verb-mechanics', () => {
     const gerundPerf = resolveGerundAspectRule('perfective');
     expect(gerundPerf.indicator).toContain('-вши / -ши');
     expect(gerundPerf.ruleUa).toContain('передуючої');
+  });
+
+  it('throws error for unsupported conjugation category or unknown dental mutation', () => {
+    // @ts-expect-error test invalid category
+    expect(() => resolveConjugationClassRule('invalid_cat')).toThrow(/not a primary conjugation/);
+    expect(() => resolveDentalMutationRule('unknown_key')).toThrow(/Unknown dental mutation key/);
   });
 
   it('produces targeted feedback for learner responses', () => {
