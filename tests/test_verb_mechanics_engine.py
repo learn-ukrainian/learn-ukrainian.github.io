@@ -254,3 +254,22 @@ def test_non_ablaut_distractors_feedback():
     vidkryvuiut = next(d for d in vidkryvaty_card.distractors if d.text == "відкривують")
     assert "ablaut" not in vidkryvuiut.explanation["en"].lower()
     assert "-ува-" in vidkryvuiut.explanation["ua"]
+
+
+def test_gerund_distractors_feedback():
+    """Verify that gerund distractors (e.g. прочитано, принесши) do not receive unrelated generic feedback."""
+    cards = {c.card_id: c for c in build_canonical_verb_cards()}
+
+    prochytavshy_card = cards["verb_gerund_prochytavshy"]
+    prochytano = next(d for d in prochytavshy_card.distractors if d.text == "прочитано")
+    assert "безособова предикативна форма" in prochytano.explanation["ua"]
+    assert "impersonal predicative form" in prochytano.explanation["en"].lower()
+    assert "дієприслівник" in prochytano.explanation["ua"]
+    assert "impersonal predicates in ukrainian" not in prochytano.explanation["en"].lower()
+
+    prynisshy_card = cards["verb_gerund_prynisshy"]
+    prynesshy = next(d for d in prynisshy_card.distractors if d.text == "принесши")
+    assert "дієприслівник" in prynesshy.explanation["ua"].lower()
+    assert "теперішнього часу" not in prynesshy.explanation["ua"]
+    assert "present-tense" not in prynesshy.explanation["en"].lower()
+    assert "prynisshy" in prynesshy.explanation["en"]

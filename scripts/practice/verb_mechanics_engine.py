@@ -2561,17 +2561,26 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             {
                 "text": "читавши",
                 "interference_type": VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX],
+                "explanation": {
+                    "ua": "«Читавши» — дієприслівник минулого часу (попередня дія), тоді як у реченні описано одночасну тривалу дію, що вимагає недоконаного виду «читаючи» (Правопис 2019 § 120).",
+                    "en": "'Chytavshy' denotes a prior past action, whereas the sentence describes simultaneous ongoing action requiring imperfective 'chytaiuchy' (Pravopys 2019 § 120).",
+                },
             },
             {
                 "text": "читаячи",
                 "interference_type": VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX],
+                "explanation": {
+                    "ua": "Помилковий суфікс дієприслівника: дієслово I дієвідміни «читати» (читають) творить дієприслівник недоконаного виду суфіксом -ючи («читаючи»), а не -ячи («*читаячи») (Правопис 2019 § 120).",
+                    "en": "Erroneous gerund suffix: Class I verb 'chytaty' (chytaiut) forms imperfective gerund with suffix -iuchy ('chytaiuchy'), not -iachy ('*chytaiachy') (Pravopys 2019 § 120).",
+                },
             },
             {
                 "text": "прочитаючи",
                 "interference_type": VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX],
+                "explanation": {
+                    "ua": "Помилкове утворення: суфікс -ючи вживається з основами недоконаного виду («читаючи»), тоді як дієслово доконаного виду «прочитати» вимагає суфікса -вши («прочитавши») (Правопис 2019 § 120).",
+                    "en": "Erroneous formation: suffix -iuchy belongs to imperfective verbs ('chytaiuchy'), whereas perfective 'prochytaty' requires suffix -vshy ('prochytavshy') (Pravopys 2019 § 120).",
+                },
             },
         ],
         "pravopys_section": "Правопис 2019 § 120",
@@ -2591,12 +2600,18 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             {
                 "text": "сидучи",
                 "interference_type": VerbInterferenceType.FALSE_CONJUGATION_CLASS_II_FOR_I,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_CONJUGATION_CLASS_II_FOR_I],
+                "explanation": {
+                    "ua": "Помилковий суфікс дієприслівника: дієслово II дієвідміни «сидіти» (сидять) творить дієприслівник недоконаного виду суфіксом -ячи («сидячи»), а не -учи («*сидучи») (Правопис 2019 § 120).",
+                    "en": "Erroneous gerund suffix: Class II verb 'sydity' (sydiat) forms imperfective gerund with suffix -iachy ('sydiachy'), not -uchy ('*syduchy') (Pravopys 2019 § 120).",
+                },
             },
             {
                 "text": "сидівши",
                 "interference_type": VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX],
+                "explanation": {
+                    "ua": "«Сидівши» позначає попередню минулу дію, тоді як у реченні описано одночасний стан студентів під час лекції, що вимагає форми «сидячи» (Правопис 2019 § 120).",
+                    "en": "'Sydivshy' denotes a prior past action, whereas the sentence describes simultaneous ongoing state during the lecture, requiring 'sydiachy' (Pravopys 2019 § 120).",
+                },
             },
             {
                 "text": "сидячих",
@@ -2621,23 +2636,32 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             {
                 "text": "прочитаючи",
                 "interference_type": VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX],
+                "explanation": {
+                    "ua": "Помилкове утворення: суфікс -ючи вживається з основами недоконаного виду, тоді як дієслово доконаного виду «прочитати» творить дієприслівник суфіксом -вши: «прочитавши» (Правопис 2019 § 120).",
+                    "en": "Erroneous formation: suffix -iuchy belongs to imperfective verbs, whereas perfective 'prochytaty' forms gerund with suffix -vshy: 'prochytavshy' (Pravopys 2019 § 120).",
+                },
             },
             {
                 "text": "прочитано",
                 "interference_type": VerbInterferenceType.FALSE_IMPERSONAL_FORMS_AGREEMENT,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_IMPERSONAL_FORMS_AGREEMENT],
+                "explanation": {
+                    "ua": "«Прочитано» — це безособова предикативна форма на -но (позначає стан або результат у ролі присудка), а не дієприслівник, що виражає другорядну дію підмета («прочитавши»).",
+                    "en": "'Prochytano' is an impersonal predicative form in -no (functioning as a predicate denoting completed state), not a gerund expressing a subordinate action of the subject ('prochytavshy').",
+                },
             },
             {
                 "text": "прочитавшися",
                 "interference_type": VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX],
+                "explanation": {
+                    "ua": "Надлишковий постфікс -ся: перехідне дієслово «прочитати» не має зворотної частки -ся, тому форма «*прочитавшися» є ненормативною.",
+                    "en": "Spurious postfix -sia: transitive 'prochytaty' does not take reflexive -sia; '*prochytavshysia' is non-standard.",
+                },
             },
         ],
         "pravopys_section": "Правопис 2019 § 120",
         "rule_summary": {
             "ua": "Для позначення попередньої завершеної дії дієслово доконаного виду «прочитати» утворює дієприслівник на -вши: «прочитавши» (Правопис 2019 § 120).",
-            "en": "Prior completed action from perfective 'prochytaty' forms gerund with -vshy: 'prochytaffshy' (Pravopys 2019 § 120).",
+            "en": "Prior completed action from perfective 'prochytaty' forms gerund with -vshy: 'prochytavshy' (Pravopys 2019 § 120).",
         },
     },
     {
@@ -2651,17 +2675,26 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             {
                 "text": "принесши",
                 "interference_type": VerbInterferenceType.FALSE_STEM_MUTATION_CLASS_I,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_STEM_MUTATION_CLASS_I],
+                "explanation": {
+                    "ua": "У дієприслівнику доконаного виду від основи минулого часу дієслова «принести» (приніс) у закритому складі голосний [е] чергується з [і]: «принісши», а не «*принесши» (Правопис 2019 § 120).",
+                    "en": "In the perfective gerund of 'prynesty' (past stem 'prynis'), root vowel [e] mutates to [i] in the closed syllable before -shy: 'prynisshy', not '*prynesshy' (Pravopys 2019 § 120).",
+                },
             },
             {
                 "text": "приносячи",
                 "interference_type": VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX],
+                "explanation": {
+                    "ua": "«Приносячи» — дієприслівник недоконаного виду (одночасна тривала дія), тоді як у реченні описано попередню завершену дію, що вимагає доконаного виду «принісши» (Правопис 2019 § 120).",
+                    "en": "'Prynosiachy' is an imperfective gerund (denoting simultaneous ongoing action), whereas the sentence requires the completed prior action 'prynisshy' (Pravopys 2019 § 120).",
+                },
             },
             {
                 "text": "принісшися",
                 "interference_type": VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX],
+                "explanation": {
+                    "ua": "Надлишковий постфікс -ся: перехідне дієслово «принести» не вживається із зворотним постфіксом -ся.",
+                    "en": "Spurious postfix -sia: transitive 'prynesty' does not take reflexive -sia.",
+                },
             },
         ],
         "pravopys_section": "Правопис 2019 § 120",
@@ -2681,7 +2714,10 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             {
                 "text": "лягнувши",
                 "interference_type": VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX],
+                "explanation": {
+                    "ua": "Помилкове утворення дієприслівника: дієслово «лягти» творить дієприслівник минулого часу без суфікса -ну-: «лігши», а не «*лягнувши» (Правопис 2019 § 120).",
+                    "en": "Erroneous gerund derivation: 'liahty' forms past gerund without suffix -nu-: 'lihshy', not '*liahnuvshy' (Pravopys 2019 § 120).",
+                },
             },
             {
                 "text": "лягши",
@@ -2694,7 +2730,10 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             {
                 "text": "лігшися",
                 "interference_type": VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX],
+                "explanation": {
+                    "ua": "Надлишковий постфікс -ся: нормативною формою є дієприслівник «лігши» без постфікса -ся.",
+                    "en": "Spurious postfix -sia: standard gerund is 'lihshy' without reflexive -sia.",
+                },
             },
         ],
         "pravopys_section": "Правопис 2019 § 120",

@@ -3170,24 +3170,24 @@
           "text": "читавши",
           "interference_type": "false_gerund_aspect_suffix",
           "explanation": {
-            "ua": "Помилка у творенні дієприслівника (Правопис 2019 § 120): для вираження одночасної дії (недоконаний вид) вживаються суфікси -учи/-ючи (I дієвідміна) та -ачи/-ячи (II дієвідміна) (читаючи, сидячи). Для вираження передуючої дії (доконаний вид) вживається суфікс -вши/-ши (прочитавши, принісши). Не можна вживати -вши для одночасної дії або -ючи для завершеної.",
-            "en": "Gerund aspectual suffix error (Pravopys 2019 § 120). Imperfective simultaneous actions use -uchy/-iuchy (Class I) or -achy/-iachy (Class II) (chytaiuchy, sydyachy). Prior completed actions use -vshy/-shy (prochytaffshy, prynisshy). Confusing these markers breaks aspectual concordance."
+            "ua": "«Читавши» — дієприслівник минулого часу (попередня дія), тоді як у реченні описано одночасну тривалу дію, що вимагає недоконаного виду «читаючи» (Правопис 2019 § 120).",
+            "en": "'Chytavshy' denotes a prior past action, whereas the sentence describes simultaneous ongoing action requiring imperfective 'chytaiuchy' (Pravopys 2019 § 120)."
           }
         },
         {
           "text": "читаячи",
           "interference_type": "false_gerund_aspect_suffix",
           "explanation": {
-            "ua": "Помилка у творенні дієприслівника (Правопис 2019 § 120): для вираження одночасної дії (недоконаний вид) вживаються суфікси -учи/-ючи (I дієвідміна) та -ачи/-ячи (II дієвідміна) (читаючи, сидячи). Для вираження передуючої дії (доконаний вид) вживається суфікс -вши/-ши (прочитавши, принісши). Не можна вживати -вши для одночасної дії або -ючи для завершеної.",
-            "en": "Gerund aspectual suffix error (Pravopys 2019 § 120). Imperfective simultaneous actions use -uchy/-iuchy (Class I) or -achy/-iachy (Class II) (chytaiuchy, sydyachy). Prior completed actions use -vshy/-shy (prochytaffshy, prynisshy). Confusing these markers breaks aspectual concordance."
+            "ua": "Помилковий суфікс дієприслівника: дієслово I дієвідміни «читати» (читають) творить дієприслівник недоконаного виду суфіксом -ючи («читаючи»), а не -ячи («*читаячи») (Правопис 2019 § 120).",
+            "en": "Erroneous gerund suffix: Class I verb 'chytaty' (chytaiut) forms imperfective gerund with suffix -iuchy ('chytaiuchy'), not -iachy ('*chytaiachy') (Pravopys 2019 § 120)."
           }
         },
         {
           "text": "прочитаючи",
           "interference_type": "false_gerund_aspect_suffix",
           "explanation": {
-            "ua": "Помилка у творенні дієприслівника (Правопис 2019 § 120): для вираження одночасної дії (недоконаний вид) вживаються суфікси -учи/-ючи (I дієвідміна) та -ачи/-ячи (II дієвідміна) (читаючи, сидячи). Для вираження передуючої дії (доконаний вид) вживається суфікс -вши/-ши (прочитавши, принісши). Не можна вживати -вши для одночасної дії або -ючи для завершеної.",
-            "en": "Gerund aspectual suffix error (Pravopys 2019 § 120). Imperfective simultaneous actions use -uchy/-iuchy (Class I) or -achy/-iachy (Class II) (chytaiuchy, sydyachy). Prior completed actions use -vshy/-shy (prochytaffshy, prynisshy). Confusing these markers breaks aspectual concordance."
+            "ua": "Помилкове утворення: суфікс -ючи вживається з основами недоконаного виду («читаючи»), тоді як дієслово доконаного виду «прочитати» вимагає суфікса -вши («прочитавши») (Правопис 2019 § 120).",
+            "en": "Erroneous formation: suffix -iuchy belongs to imperfective verbs ('chytaiuchy'), whereas perfective 'prochytaty' requires suffix -vshy ('prochytavshy') (Pravopys 2019 § 120)."
           }
         }
       ],
@@ -3215,16 +3215,16 @@
           "text": "сидучи",
           "interference_type": "false_conjugation_class_ii_for_i",
           "explanation": {
-            "ua": "Помилка дієвідміни: для дієслова II дієвідміни помилково вжито закінчення I дієвідміни. За Правописом 2019 § 115, дієслова II дієвідміни в особових закінченнях мають голосний -и- (-ї-) (летиш, сидить, стоїмо) та закінчення 3-ї особи множини -ать (-ять) (летять, сидять, стоять, біжать), а не -е-/-є- чи -уть/-ють.",
-            "en": "Conjugation class error: Class I endings erroneously applied to a Class II verb. Under Pravopys 2019 § 115, Class II verbs take vowel -y- (-yi-) in personal endings (letysh, sydyt, stoimo) and 3rd person plural -at / -iat (letiat, sydiat, stoiat, bizhat), not -e-/-ye- or -ut/-yut."
+            "ua": "Помилковий суфікс дієприслівника: дієслово II дієвідміни «сидіти» (сидять) творить дієприслівник недоконаного виду суфіксом -ячи («сидячи»), а не -учи («*сидучи») (Правопис 2019 § 120).",
+            "en": "Erroneous gerund suffix: Class II verb 'sydity' (sydiat) forms imperfective gerund with suffix -iachy ('sydiachy'), not -uchy ('*syduchy') (Pravopys 2019 § 120)."
           }
         },
         {
           "text": "сидівши",
           "interference_type": "false_gerund_aspect_suffix",
           "explanation": {
-            "ua": "Помилка у творенні дієприслівника (Правопис 2019 § 120): для вираження одночасної дії (недоконаний вид) вживаються суфікси -учи/-ючи (I дієвідміна) та -ачи/-ячи (II дієвідміна) (читаючи, сидячи). Для вираження передуючої дії (доконаний вид) вживається суфікс -вши/-ши (прочитавши, принісши). Не можна вживати -вши для одночасної дії або -ючи для завершеної.",
-            "en": "Gerund aspectual suffix error (Pravopys 2019 § 120). Imperfective simultaneous actions use -uchy/-iuchy (Class I) or -achy/-iachy (Class II) (chytaiuchy, sydyachy). Prior completed actions use -vshy/-shy (prochytaffshy, prynisshy). Confusing these markers breaks aspectual concordance."
+            "ua": "«Сидівши» позначає попередню минулу дію, тоді як у реченні описано одночасний стан студентів під час лекції, що вимагає форми «сидячи» (Правопис 2019 § 120).",
+            "en": "'Sydivshy' denotes a prior past action, whereas the sentence describes simultaneous ongoing state during the lecture, requiring 'sydiachy' (Pravopys 2019 § 120)."
           }
         },
         {
@@ -3260,31 +3260,31 @@
           "text": "прочитаючи",
           "interference_type": "false_gerund_aspect_suffix",
           "explanation": {
-            "ua": "Помилка у творенні дієприслівника (Правопис 2019 § 120): для вираження одночасної дії (недоконаний вид) вживаються суфікси -учи/-ючи (I дієвідміна) та -ачи/-ячи (II дієвідміна) (читаючи, сидячи). Для вираження передуючої дії (доконаний вид) вживається суфікс -вши/-ши (прочитавши, принісши). Не можна вживати -вши для одночасної дії або -ючи для завершеної.",
-            "en": "Gerund aspectual suffix error (Pravopys 2019 § 120). Imperfective simultaneous actions use -uchy/-iuchy (Class I) or -achy/-iachy (Class II) (chytaiuchy, sydyachy). Prior completed actions use -vshy/-shy (prochytaffshy, prynisshy). Confusing these markers breaks aspectual concordance."
+            "ua": "Помилкове утворення: суфікс -ючи вживається з основами недоконаного виду, тоді як дієслово доконаного виду «прочитати» творить дієприслівник суфіксом -вши: «прочитавши» (Правопис 2019 § 120).",
+            "en": "Erroneous formation: suffix -iuchy belongs to imperfective verbs, whereas perfective 'prochytaty' forms gerund with suffix -vshy: 'prochytavshy' (Pravopys 2019 § 120)."
           }
         },
         {
           "text": "прочитано",
           "interference_type": "false_impersonal_forms_agreement",
           "explanation": {
-            "ua": "Помилка у вживанні безособової форми на -но / -то (Правопис 2019 § 119): у безособових предикативних реченнях присудок передається незмінюваною формою на -но / -то із прямим додатком у знахідному відмінку (роботу виконано, закон прийнято, двері відчинено). Узгоджені форми дієприкметників (прийнятий, підписана) виступають означеннями або елементами двоскладних пасивних конструкцій, а не присудком безособового односкладного речення.",
-            "en": "Impersonal -no / -to form error (Pravopys 2019 § 119). In impersonal predicate constructions, the action is expressed by invariant verbal forms in -no / -to governing a direct object in the accusative (robotu vykonano, zakon pryiniato). Agreeing participle forms (pryiniatyi, pidpysana) function as attributes or within personal passive clauses, not as predicates of impersonal sentences."
+            "ua": "«Прочитано» — це безособова предикативна форма на -но (позначає стан або результат у ролі присудка), а не дієприслівник, що виражає другорядну дію підмета («прочитавши»).",
+            "en": "'Prochytano' is an impersonal predicative form in -no (functioning as a predicate denoting completed state), not a gerund expressing a subordinate action of the subject ('prochytavshy')."
           }
         },
         {
           "text": "прочитавшися",
           "interference_type": "false_gerund_aspect_suffix",
           "explanation": {
-            "ua": "Помилка у творенні дієприслівника (Правопис 2019 § 120): для вираження одночасної дії (недоконаний вид) вживаються суфікси -учи/-ючи (I дієвідміна) та -ачи/-ячи (II дієвідміна) (читаючи, сидячи). Для вираження передуючої дії (доконаний вид) вживається суфікс -вши/-ши (прочитавши, принісши). Не можна вживати -вши для одночасної дії або -ючи для завершеної.",
-            "en": "Gerund aspectual suffix error (Pravopys 2019 § 120). Imperfective simultaneous actions use -uchy/-iuchy (Class I) or -achy/-iachy (Class II) (chytaiuchy, sydyachy). Prior completed actions use -vshy/-shy (prochytaffshy, prynisshy). Confusing these markers breaks aspectual concordance."
+            "ua": "Надлишковий постфікс -ся: перехідне дієслово «прочитати» не має зворотної частки -ся, тому форма «*прочитавшися» є ненормативною.",
+            "en": "Spurious postfix -sia: transitive 'prochytaty' does not take reflexive -sia; '*prochytavshysia' is non-standard."
           }
         }
       ],
       "pravopys_section": "Правопис 2019 § 120",
       "rule_summary": {
         "ua": "Для позначення попередньої завершеної дії дієслово доконаного виду «прочитати» утворює дієприслівник на -вши: «прочитавши» (Правопис 2019 § 120).",
-        "en": "Prior completed action from perfective 'prochytaty' forms gerund with -vshy: 'prochytaffshy' (Pravopys 2019 § 120)."
+        "en": "Prior completed action from perfective 'prochytaty' forms gerund with -vshy: 'prochytavshy' (Pravopys 2019 § 120)."
       }
     },
     {
@@ -3305,24 +3305,24 @@
           "text": "принесши",
           "interference_type": "false_stem_mutation_class_i",
           "explanation": {
-            "ua": "Помилка в основі теперішнього часу дієслів I дієвідміни (Правопис 2019 § 115): кінцеві приголосні та голосні інфінітивної основи зазнають закономірних чергувань (писати -> пишу, пишеш; чесати -> чешу, чеше; пекти -> печу, печеш; могти -> можу, можеш; брати -> беру; терти -> труть). Не можна зберігати незмінну інфінітивну основу (*писаю, *чесає, *пеку, *могу).",
-            "en": "Stem mutation error in Class I present tense (Pravopys 2019 § 115). Stem-final consonants and root vowels undergo historical mutations (pysaty -> pyshu, pyshesh; chesaty -> cheshe; pekty -> pechu; mohty -> mozhu; braty -> beru; terty -> trut). Preserving the unmutated infinitive stem (*pysaiu, *chesaie, *peku) is erroneous."
+            "ua": "У дієприслівнику доконаного виду від основи минулого часу дієслова «принести» (приніс) у закритому складі голосний [е] чергується з [і]: «принісши», а не «*принесши» (Правопис 2019 § 120).",
+            "en": "In the perfective gerund of 'prynesty' (past stem 'prynis'), root vowel [e] mutates to [i] in the closed syllable before -shy: 'prynisshy', not '*prynesshy' (Pravopys 2019 § 120)."
           }
         },
         {
           "text": "приносячи",
           "interference_type": "false_gerund_aspect_suffix",
           "explanation": {
-            "ua": "Помилка у творенні дієприслівника (Правопис 2019 § 120): для вираження одночасної дії (недоконаний вид) вживаються суфікси -учи/-ючи (I дієвідміна) та -ачи/-ячи (II дієвідміна) (читаючи, сидячи). Для вираження передуючої дії (доконаний вид) вживається суфікс -вши/-ши (прочитавши, принісши). Не можна вживати -вши для одночасної дії або -ючи для завершеної.",
-            "en": "Gerund aspectual suffix error (Pravopys 2019 § 120). Imperfective simultaneous actions use -uchy/-iuchy (Class I) or -achy/-iachy (Class II) (chytaiuchy, sydyachy). Prior completed actions use -vshy/-shy (prochytaffshy, prynisshy). Confusing these markers breaks aspectual concordance."
+            "ua": "«Приносячи» — дієприслівник недоконаного виду (одночасна тривала дія), тоді як у реченні описано попередню завершену дію, що вимагає доконаного виду «принісши» (Правопис 2019 § 120).",
+            "en": "'Prynosiachy' is an imperfective gerund (denoting simultaneous ongoing action), whereas the sentence requires the completed prior action 'prynisshy' (Pravopys 2019 § 120)."
           }
         },
         {
           "text": "принісшися",
           "interference_type": "false_gerund_aspect_suffix",
           "explanation": {
-            "ua": "Помилка у творенні дієприслівника (Правопис 2019 § 120): для вираження одночасної дії (недоконаний вид) вживаються суфікси -учи/-ючи (I дієвідміна) та -ачи/-ячи (II дієвідміна) (читаючи, сидячи). Для вираження передуючої дії (доконаний вид) вживається суфікс -вши/-ши (прочитавши, принісши). Не можна вживати -вши для одночасної дії або -ючи для завершеної.",
-            "en": "Gerund aspectual suffix error (Pravopys 2019 § 120). Imperfective simultaneous actions use -uchy/-iuchy (Class I) or -achy/-iachy (Class II) (chytaiuchy, sydyachy). Prior completed actions use -vshy/-shy (prochytaffshy, prynisshy). Confusing these markers breaks aspectual concordance."
+            "ua": "Надлишковий постфікс -ся: перехідне дієслово «принести» не вживається із зворотним постфіксом -ся.",
+            "en": "Spurious postfix -sia: transitive 'prynesty' does not take reflexive -sia."
           }
         }
       ],
@@ -3350,8 +3350,8 @@
           "text": "лягнувши",
           "interference_type": "false_gerund_aspect_suffix",
           "explanation": {
-            "ua": "Помилка у творенні дієприслівника (Правопис 2019 § 120): для вираження одночасної дії (недоконаний вид) вживаються суфікси -учи/-ючи (I дієвідміна) та -ачи/-ячи (II дієвідміна) (читаючи, сидячи). Для вираження передуючої дії (доконаний вид) вживається суфікс -вши/-ши (прочитавши, принісши). Не можна вживати -вши для одночасної дії або -ючи для завершеної.",
-            "en": "Gerund aspectual suffix error (Pravopys 2019 § 120). Imperfective simultaneous actions use -uchy/-iuchy (Class I) or -achy/-iachy (Class II) (chytaiuchy, sydyachy). Prior completed actions use -vshy/-shy (prochytaffshy, prynisshy). Confusing these markers breaks aspectual concordance."
+            "ua": "Помилкове утворення дієприслівника: дієслово «лягти» творить дієприслівник минулого часу без суфікса -ну-: «лігши», а не «*лягнувши» (Правопис 2019 § 120).",
+            "en": "Erroneous gerund derivation: 'liahty' forms past gerund without suffix -nu-: 'lihshy', not '*liahnuvshy' (Pravopys 2019 § 120)."
           }
         },
         {
@@ -3366,8 +3366,8 @@
           "text": "лігшися",
           "interference_type": "false_gerund_aspect_suffix",
           "explanation": {
-            "ua": "Помилка у творенні дієприслівника (Правопис 2019 § 120): для вираження одночасної дії (недоконаний вид) вживаються суфікси -учи/-ючи (I дієвідміна) та -ачи/-ячи (II дієвідміна) (читаючи, сидячи). Для вираження передуючої дії (доконаний вид) вживається суфікс -вши/-ши (прочитавши, принісши). Не можна вживати -вши для одночасної дії або -ючи для завершеної.",
-            "en": "Gerund aspectual suffix error (Pravopys 2019 § 120). Imperfective simultaneous actions use -uchy/-iuchy (Class I) or -achy/-iachy (Class II) (chytaiuchy, sydyachy). Prior completed actions use -vshy/-shy (prochytaffshy, prynisshy). Confusing these markers breaks aspectual concordance."
+            "ua": "Надлишковий постфікс -ся: нормативною формою є дієприслівник «лігши» без постфікса -ся.",
+            "en": "Spurious postfix -sia: standard gerund is 'lihshy' without reflexive -sia."
           }
         }
       ],

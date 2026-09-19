@@ -215,4 +215,32 @@ describe('verb-mechanics', () => {
     expect(fbZbudovuvalyEn.feedback).toContain('imperfective form');
     expect(fbZbudovuvalyEn.feedback).not.toContain('Missing root vowel ablaut');
   });
+
+  it('provides specific feedback for gerund distractors without unrelated generic guidance', () => {
+    const deckPath = resolve(__dirname, '../../../data/practice/verb_mechanics_deck.json');
+    const payload = JSON.parse(readFileSync(deckPath, 'utf-8'));
+
+    const prochytavshyCard = payload.cards.find(
+      (c: any) => c.card_id === 'verb_gerund_prochytavshy',
+    );
+    expect(prochytavshyCard).toBeDefined();
+    const fbProchytanoUa = verbMechanicsFeedbackFor(prochytavshyCard, 'прочитано', 'ua');
+    const fbProchytanoEn = verbMechanicsFeedbackFor(prochytavshyCard, 'прочитано', 'en');
+    expect(fbProchytanoUa.isCorrect).toBe(false);
+    expect(fbProchytanoUa.feedback).toContain('безособова предикативна форма');
+    expect(fbProchytanoEn.feedback).toContain('impersonal predicative form');
+    expect(fbProchytanoEn.feedback).not.toContain('Impersonal predicates in Ukrainian');
+
+    const prynisshyCard = payload.cards.find(
+      (c: any) => c.card_id === 'verb_gerund_prynisshy',
+    );
+    expect(prynisshyCard).toBeDefined();
+    const fbPrynesshyUa = verbMechanicsFeedbackFor(prynisshyCard, 'принесши', 'ua');
+    const fbPrynesshyEn = verbMechanicsFeedbackFor(prynisshyCard, 'принесши', 'en');
+    expect(fbPrynesshyUa.isCorrect).toBe(false);
+    expect(fbPrynesshyUa.feedback).toContain('чергується з [і]');
+    expect(fbPrynesshyUa.feedback).not.toContain('теперішнього часу');
+    expect(fbPrynesshyEn.feedback).toContain('prynisshy');
+    expect(fbPrynesshyEn.feedback).not.toContain('present-tense');
+  });
 });
