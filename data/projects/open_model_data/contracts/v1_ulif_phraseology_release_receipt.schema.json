@@ -13,7 +13,8 @@
     "evaluation_benchmark",
     "sft_training_dataset",
     "dpo_preference_dataset",
-    "invariants_verified"
+    "invariants_verified",
+    "verification_metrics"
   ],
   "properties": {
     "schema_version": {
@@ -198,6 +199,47 @@
         "zero_train_eval_leakage": {
           "type": "boolean",
           "const": true
+        }
+      }
+    },
+    "verification_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "vesum_attested_tokens_count",
+        "literary_citations_grounded_count",
+        "thought_tags_verified_count",
+        "zero_leakage_shards_checked",
+        "eval_target_overlap_count",
+        "unique_calque_pairs_count",
+        "unique_idiom_units_count",
+        "unique_synonym_groups_count"
+      ],
+      "properties": {
+        "vesum_attested_tokens_count": {
+          "type": "integer"
+        },
+        "literary_citations_grounded_count": {
+          "type": "integer"
+        },
+        "thought_tags_verified_count": {
+          "type": "integer"
+        },
+        "zero_leakage_shards_checked": {
+          "type": "integer"
+        },
+        "eval_target_overlap_count": {
+          "type": "integer",
+          "const": 0
+        },
+        "unique_calque_pairs_count": {
+          "type": "integer"
+        },
+        "unique_idiom_units_count": {
+          "type": "integer"
+        },
+        "unique_synonym_groups_count": {
+          "type": "integer"
         }
       }
     }

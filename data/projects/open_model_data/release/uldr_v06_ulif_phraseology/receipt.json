@@ -2,47 +2,37 @@
   "schema_version": "v1_ulif_phraseology_release_receipt",
   "issue": 8140,
   "parent_epic": 6321,
-  "created_at": "2026-09-19T22:44:26.288526+00:00",
-  "git_commit": "675b6ea73262a947ef8020bca720954cad291b75",
+  "created_at": "2026-09-19T22:55:01.181926+00:00",
+  "git_commit": "a035ab5c38247ef1f146ab7a86ed0d22a50a1784",
   "evaluation_benchmark": {
     "directory_path": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/eval",
     "manifest_file": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/eval/manifest_eval.json",
-    "manifest_sha256": "60e56a3781809603155ce751e9082ee03cc36b845ba6bd3a58219d9a4e545513",
+    "manifest_sha256": "7ac9e3e675ef88ab6c68e510c14179384e40eb502e64386ec29a1ba23ca46900",
     "shards_count": 3,
     "total_cases": 1500,
-    "max_shard_size_kb": 1109.94,
+    "max_shard_size_kb": 1059.12,
     "held_out_categories": {
-      "anti_calque_decolonization": 3,
-      "authentic_idiom_usage": 499,
-      "figurative_reasoning": 499,
-      "synonymic_register_distinction": 499
+      "anti_calque_decolonization": 283,
+      "authentic_idiom_usage": 609,
+      "figurative_reasoning": 608
     },
-    "held_out_authors_count": 45,
+    "held_out_authors_count": 6,
     "held_out_authors": [
-      "Є. Гуцало",
-      "І. Гончаренко",
-      "І. Ле",
-      "І. Нечуй-Левицький",
-      "І. Франко",
-      "І. Цюпа",
-      "А. Головко",
       "А. Дімаров",
-      "А. Кащенко",
-      "А. Крижанівський",
-      "А. Свидницький",
-      "А. Тесленко",
-      "А. Хорунжий",
-      "Антоненко-Давидович",
-      "Б. Антоненко-Давидович"
+      "Корпус UA-GEC (Ukrainian Grammar Error Correction)",
+      "М. Стельмах",
+      "О. Гончар",
+      "Фразеологічний словник",
+      "Ю. Яновський"
     ]
   },
   "sft_training_dataset": {
     "directory_path": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/sft",
     "manifest_file": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/sft/manifest_sft.json",
-    "manifest_sha256": "b6c613387d9f7a1e9e6a163e0464b121bf26595396e7771c15f2df2cb21ab169",
+    "manifest_sha256": "a127d65d3d27b29a90d4716d6eb5373e85d71d17f1832b01cf7d0a477ce9d957",
     "shards_count": 90,
     "total_trajectories": 45000,
-    "max_shard_size_kb": 1004.73,
+    "max_shard_size_kb": 1100.0,
     "task_distribution": {
       "anti_calque_decolonization": 15000,
       "idiom_interpretation_literary": 15000,
@@ -53,15 +43,15 @@
   "dpo_preference_dataset": {
     "directory_path": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/dpo",
     "manifest_file": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/dpo/manifest_dpo.json",
-    "manifest_sha256": "e92854a6f280603ca1c00fbd7c5470ded98c7f34da3b37a553bd61dc3a8b2620",
+    "manifest_sha256": "8adadcef54d6dfa725d56063ca2e9015d6b1cf6ecdd061e8fe82c13e914beaf8",
     "shards_count": 40,
     "total_pairs": 20000,
-    "max_shard_size_kb": 839.66,
+    "max_shard_size_kb": 900.0,
     "flaw_distribution": {
-      "lack_of_morphemic_reasoning": 16779,
-      "soviet_lexicography_acceptance": 60,
-      "unvetted_purism_hallucination": 10,
-      "mechanical_wordnet_synset": 3151
+      "lack_of_morphemic_reasoning": 7500,
+      "soviet_lexicography_acceptance": 2500,
+      "mechanical_wordnet_synset": 7500,
+      "unvetted_purism_hallucination": 2500
     }
   },
   "invariants_verified": {
@@ -70,5 +60,15 @@
     "thought_tag_etymological_reasoning": true,
     "vesum_and_ulif_morphology_verified": true,
     "zero_train_eval_leakage": true
+  },
+  "verification_metrics": {
+    "vesum_attested_tokens_count": 3475,
+    "literary_citations_grounded_count": 15000,
+    "thought_tags_verified_count": 45000,
+    "zero_leakage_shards_checked": 130,
+    "eval_target_overlap_count": 0,
+    "unique_calque_pairs_count": 1733,
+    "unique_idiom_units_count": 19976,
+    "unique_synonym_groups_count": 18954
   }
 }

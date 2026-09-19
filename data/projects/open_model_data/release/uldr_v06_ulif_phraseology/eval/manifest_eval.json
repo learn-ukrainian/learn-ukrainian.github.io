@@ -2,25 +2,42 @@
   "dataset_name": "uldr_v06_ulif_phraseology_eval",
   "total_cases": 1500,
   "shards_count": 3,
-  "max_shard_size_kb": 1109.94,
+  "max_shard_size_kb": 1059.12,
+  "held_out_categories": {
+    "anti_calque_decolonization": 283,
+    "authentic_idiom_usage": 609,
+    "figurative_reasoning": 608
+  },
+  "held_out_authors_count": 6,
+  "held_out_authors": [
+    "А. Дімаров",
+    "Корпус UA-GEC (Ukrainian Grammar Error Correction)",
+    "М. Стельмах",
+    "О. Гончар",
+    "Фразеологічний словник",
+    "Ю. Яновський"
+  ],
   "shards": [
     {
+      "shard_id": 1,
       "shard_file": "eval_shard_001_of_003.jsonl",
       "cases_count": 500,
-      "size_kb": 1102.59,
-      "sha256": "b8b3fe5e77989a684bf00955f70234ed09f8075cfed802acd942d06fdc2bcf38"
+      "size_kb": 948.18,
+      "sha256": "ce2536bcd44c0ce3b0522297b9533566e8368b15143d7af731c583633ee79663"
     },
     {
+      "shard_id": 2,
       "shard_file": "eval_shard_002_of_003.jsonl",
       "cases_count": 500,
-      "size_kb": 1104.92,
-      "sha256": "0da760a6499d7beb4becaa4198afd552b8e922cc1d0826e8325904a24d2800f1"
+      "size_kb": 1059.12,
+      "sha256": "03cbdee8e6bbbb965ca0efc15a3f345632a3b02d69c1ed1612a2ffee0ba9d579"
     },
     {
+      "shard_id": 3,
       "shard_file": "eval_shard_003_of_003.jsonl",
       "cases_count": 500,
-      "size_kb": 1109.94,
-      "sha256": "14acd9fead0017cb97534620c0cf647f783423db3895ba0b9c9faf3e9c917b8e"
+      "size_kb": 1048.82,
+      "sha256": "f0ed4b8223aaf1f67d020c10ce109c7779eba4645a702596b33055f674378e90"
     }
   ]
 }

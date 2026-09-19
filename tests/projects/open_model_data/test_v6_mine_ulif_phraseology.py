@@ -1,13 +1,13 @@
 """test_v6_mine_ulif_phraseology.py - Test suite for Phase 6.2 NASU ULIF Phraseology Engine.
 
 Verifies:
-1. 0% train/eval leakage firewall: strictly held-out classical authors and calques with word boundary matching.
+1. 0% train/eval leakage firewall: strictly held-out classical authors and calques with case-sensitive word boundary matching.
 2. Canonical calque catalog: authentic Ukrainian mechanisms, non-empty replacements, and flaw classification.
 3. Multi-turn instructional reasoning trajectory synthesis: <thought> trace formatting and pedagogical tone.
 4. Contrastive DPO pair generation: valid schema, non-trivial prompt, chosen, and rejected texts tailored to flaw.
 5. Draft 2020-12 JSON Schema validation for held-out evaluation records and release receipts.
 6. Shard formatting, manifest consistency, and size ceiling (< 2,000 KB per shard).
-7. Zero leakage audit scanning actual generated shards on disk.
+7. Zero leakage audit scanning actual generated shards on disk (author leakage & target phrase overlap).
 8. Live extraction from ULIF (data/ulif_dump_all.db), sources (frazeolohichnyi, ua_gec_errors), and VESUM.
 """
 
@@ -35,7 +35,7 @@ from scripts.projects.open_model_data.v6_mine_ulif_phraseology import (
     audit_zero_train_eval_leakage,
     clean_raw_html_and_tags,
     clean_stress_marks,
-    extract_classical_quote,
+    extract_quote_for_author,
     generate_dpo_dataset,
     generate_evaluation_benchmark,
     generate_release_receipt,
@@ -44,8 +44,9 @@ from scripts.projects.open_model_data.v6_mine_ulif_phraseology import (
     load_frazeolohichnyi_dictionary,
     load_ua_gec_calques,
     load_ulif_phraseology_and_synonyms,
+    parse_frazeolohichnyi_entry,
     synthesize_sft_trajectory,
-    verify_vesum_attestation,
+    verify_phrase_in_vesum,
 )
 
 
@@ -106,25 +107,39 @@ def test_clean_raw_html_and_tags():
     assert "</fras>" not in cleaned
     assert "≤" not in cleaned
     assert "≥" not in cleaned
-    assert cleaned == "Робінзон| щось інше" or "Робінзон" in cleaned
+    assert "Робінзон" in cleaned
 
 
-def test_extract_classical_quote():
-    text = "— Я ходив скаржитись на Лисицю (І. Нечуй-Левицький); — Сказали інше."
-    res = extract_classical_quote(text)
-    assert res is not None
-    quote, author = res
-    assert "Я ходив скаржитись на Лисицю" in quote
-    assert author == "І. Нечуй-Левицький"
+def test_extract_quote_for_author():
+    text = "— Я ходив скаржитись на Лисицю (І. Нечуй-Левицький); Він засів у бліндажі і не виходив (О. Гончар); Інший приклад."
+    quote = extract_quote_for_author(text, "О. Гончар")
+    assert quote is not None
+    assert "Він засів у бліндажі і не виходив" in quote
+
+
+def test_parse_frazeolohichnyi_entry():
+    raw_word = "блудити манівцями {{</fras>}}"
+    raw_def = "блук[']а[/']ти манівц[']я[/']ми, розм. Робити щось не так, як треба. — Я вирішив так (О. Гончар)."
+    unit = parse_frazeolohichnyi_entry(raw_word, raw_def)
+    assert unit.idiom == "блудити манівцями"
+    assert unit.register == "розмовний"
+    assert "Робити щось не так, як треба" in unit.definition
+    assert unit.is_held_out is True
+    assert unit.author == "О. Гончар"
 
 
 def test_is_record_held_out_word_boundaries():
+    # Capitalized author names match
     assert is_record_held_out("Текст із твору (О. Гончар).") is True
     assert is_record_held_out("Тут згадується Гончар та його твори.") is True
-    assert is_record_held_out("Згадується І. Гончаренко.") is False  # Substring protection!
     assert is_record_held_out("Повість (М. Стельмах).") is True
     assert is_record_held_out("Цитата (Ю. Яновський).") is True
     assert is_record_held_out("Оповідання (А. Дімаров).") is True
+
+    # Common nouns (lowercase) and different surnames DO NOT match
+    assert is_record_held_out("Згадується І. Гончаренко.") is False
+    assert is_record_held_out("гончар випалює новий глиняний глечик.") is False
+    assert is_record_held_out("старий стельмах ремонтує воза.") is False
     assert is_record_held_out("Твори І. Франка та Лесі Українки.") is False
 
 
@@ -141,7 +156,6 @@ def test_canonical_calque_catalog_integrity():
         "mechanical_wordnet_synset",
         "unvetted_purism_hallucination",
     }
-    held_out_count = 0
     for cp in CANONICAL_CALQUE_PAIRS:
         assert len(cp.calque) > 2
         assert len(cp.authentic) > 2
@@ -149,9 +163,8 @@ def test_canonical_calque_catalog_integrity():
         assert cp.rejected_flaw in valid_flaws
         assert cp.calque not in calque_set, f"Duplicate calque: {cp.calque}"
         calque_set.add(cp.calque)
-        if cp.is_held_out:
-            held_out_count += 1
-    assert held_out_count >= 3, "Must have at least 3 dedicated held-out calque pairs"
+        # Ensure zero Latin characters in author/source
+        assert not any(ord(c) < 128 and c.isalpha() for c in cp.author_or_source)
 
 
 # =========================================================================
@@ -196,6 +209,7 @@ def test_synthesize_sft_trajectory_idiom_interpretation():
         citation_text="Він на цьому добре погрів руки (І. Франко).",
         author="І. Франко",
         source_dict="frazeolohichnyi_slovnyk",
+        register="розмовний",
         is_held_out=False,
     )
     traj = synthesize_sft_trajectory(u, None, None, 3, "idiom_interpretation_literary")
@@ -213,6 +227,7 @@ def test_synthesize_sft_trajectory_dialogue():
         citation_text="Наша правда брала гору (І. Франко).",
         author="І. Франко",
         source_dict="frazeolohichnyi_slovnyk",
+        register="загальновживаний літературний",
         is_held_out=False,
     )
     traj = synthesize_sft_trajectory(u, None, None, 4, "contextual_dialogue_usage", scenario_idx=0)
@@ -235,20 +250,34 @@ def test_generate_evaluation_benchmark_and_schema_validation():
             headword=f"гору_{i}",
             idiom=f"брати гору {i}",
             definition=f"Отримувати вирішальну перевагу чи перемогу {i}.",
-            citation_text=f"— Наша правда брала гору у важких боях {i} (О. Гончар).",
+            citation_text=f"Наша правда брала гору у важких боях {i} (О. Гончар)",
             author="О. Гончар",
             source_dict="ulif_nasu",
+            register="загальновживаний літературний",
             is_held_out=True,
         )
         for i in range(1, 8)
     ]
-    eval_calques = [cp for cp in CANONICAL_CALQUE_PAIRS if cp.is_held_out]
+    eval_calques = [
+        CalquePair(
+            calque=f"помилка {i}",
+            authentic=f"правильно {i}",
+            mechanism=f"Слововживання помилка {i} є калькою.",
+            author_or_source="Корпус UA-GEC",
+            rejected_flaw="lack_of_morphemic_reasoning",
+            is_held_out=True,
+            error_type="F/Calque",
+        )
+        for i in range(1, 4)
+    ]
+    synonyms = [SynonymGroup("добрий", ["гарний", "чудовий"], "ulif_nasu")]
 
     with tempfile.TemporaryDirectory() as tmpdir:
         eval_dir = Path(tmpdir) / "eval"
         meta, _sha, _counts, _authors = generate_evaluation_benchmark(
             eval_units=eval_units,
             eval_calques=eval_calques,
+            synonym_pool=synonyms,
             output_dir=eval_dir,
             target_count=10,
         )
@@ -265,36 +294,25 @@ def test_generate_evaluation_benchmark_and_schema_validation():
                     assert record["source_metadata"]["partition"] == "held_out_eval"
 
 
-def test_zero_train_eval_leakage_firewall():
-    eval_calques = [cp for cp in CANONICAL_CALQUE_PAIRS if cp.is_held_out]
-    train_calques = [cp for cp in CANONICAL_CALQUE_PAIRS if not cp.is_held_out]
-
-    eval_calque_names = {cp.calque for cp in eval_calques}
-    train_calque_names = {cp.calque for cp in train_calques}
-
-    intersection = eval_calque_names.intersection(train_calque_names)
-    assert not intersection, f"Train/Eval calque leakage detected: {intersection}"
-
-    for hoa in HELD_OUT_AUTHORS_DISPLAY:
-        for tc in train_calques:
-            assert hoa not in tc.author_or_source, f"Held-out author {hoa} leaked in train calque {tc.calque}"
-
-
 # =========================================================================
 # 5. Sharding and Ceiling Invariants Tests
 # =========================================================================
 
 def test_sft_sharding_ceiling():
     units = [
-        PhraseologyUnit("гору", "брати гору", "перемагати", "І. Франко", "І. Франко", "ulif", False),
+        PhraseologyUnit("гору", "брати гору", "перемагати", "І. Франко", "І. Франко", "ulif", "загальновживаний", False),
     ]
-    calques = [cp for cp in CANONICAL_CALQUE_PAIRS if not cp.is_held_out]
+    dialogue_units = [
+        PhraseologyUnit("думка", "мати думку", "міркувати", "І. Франко", "І. Франко", "ulif", "загальновживаний", False),
+    ]
+    calques = [CANONICAL_CALQUE_PAIRS[0]]
     synonyms = [SynonymGroup("сміливий", ["відважний", "хоробрий", "мужній"], "ulif")]
 
     with tempfile.TemporaryDirectory() as tmpdir:
         sft_dir = Path(tmpdir) / "sft"
         manifest, _sha, _tasks = generate_sft_dataset(
             units=units,
+            dialogue_units=dialogue_units,
             calques=calques,
             synonyms=synonyms,
             output_dir=sft_dir,
@@ -309,14 +327,16 @@ def test_sft_sharding_ceiling():
 
 
 def test_dpo_sharding_ceiling():
-    calques = [cp for cp in CANONICAL_CALQUE_PAIRS if not cp.is_held_out]
-    units = [PhraseologyUnit("гору", "брати гору", "перемагати", "І. Франко", "І. Франко", "ulif", False)]
+    calques = [CANONICAL_CALQUE_PAIRS[0]]
+    units = [PhraseologyUnit("гору", "брати гору", "перемагати", "І. Франко", "І. Франко", "ulif", "загальновживаний", False)]
+    synonyms = [SynonymGroup("сміливий", ["відважний", "хоробрий", "мужній"], "ulif")]
 
     with tempfile.TemporaryDirectory() as tmpdir:
         dpo_dir = Path(tmpdir) / "dpo"
         manifest, _sha, _flaws = generate_dpo_dataset(
             calques=calques,
             units=units,
+            synonyms=synonyms,
             output_dir=dpo_dir,
             target_count=20,
             shards_count=2,
@@ -339,24 +359,10 @@ def test_release_receipt_schema_validation():
     with tempfile.TemporaryDirectory() as tmpdir:
         td = Path(tmpdir)
         sft_man_path = td / "manifest_sft.json"
-        sft_man_data = {
-            "dataset_name": "uldr_v06_ulif_phraseology_sft",
-            "total_trajectories": 45000,
-            "shards_count": 90,
-            "max_shard_size_kb": 1050.0,
-            "shards": [],
-        }
-        sft_man_path.write_text(json.dumps(sft_man_data))
+        sft_man_path.write_text("{}")
 
         dpo_man_path = td / "manifest_dpo.json"
-        dpo_man_data = {
-            "dataset_name": "uldr_v06_ulif_phraseology_dpo",
-            "total_pairs": 20000,
-            "shards_count": 40,
-            "max_shard_size_kb": 950.0,
-            "shards": [],
-        }
-        dpo_man_path.write_text(json.dumps(dpo_man_data))
+        dpo_man_path.write_text("{}")
 
         eval_meta = {
             "directory_path": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/eval",
@@ -365,9 +371,20 @@ def test_release_receipt_schema_validation():
             "shards_count": 3,
             "total_cases": 1500,
             "max_shard_size_kb": 1100.0,
-            "held_out_categories": {"anti_calque_decolonization": 3, "authentic_idiom_usage": 1497},
+            "held_out_categories": {"anti_calque_decolonization": 370, "authentic_idiom_usage": 1130},
             "held_out_authors_count": 4,
             "held_out_authors": HELD_OUT_AUTHORS_DISPLAY,
+        }
+
+        verification_info = {
+            "zero_russian_syntactic_calques": True,
+            "classical_literary_citations_grounded": True,
+            "thought_tag_etymological_reasoning": True,
+            "vesum_and_ulif_morphology_verified": True,
+            "zero_train_eval_leakage": True,
+            "vesum_attested_tokens_count": 1500,
+            "literary_citations_grounded_count": 15000,
+            "thought_tags_verified_count": 45000,
         }
 
         receipt = generate_release_receipt(
@@ -378,8 +395,11 @@ def test_release_receipt_schema_validation():
             dpo_manifest_path=dpo_man_path,
             dpo_manifest_sha256="2" * 64,
             dpo_flaw_dist={"lack_of_morphemic_reasoning": 15000, "soviet_lexicography_acceptance": 5000},
-            output_dir=td,
-            leakage_audit_result={"zero_leakage_verified": True},
+            verification_info=verification_info,
+            unique_calques=2500,
+            unique_idioms=20000,
+            unique_synonyms=10000,
+            output_path=td / "receipt.json",
         )
 
         validator.validate(receipt)
@@ -387,6 +407,7 @@ def test_release_receipt_schema_validation():
         assert receipt["issue"] == 8140
         assert receipt["parent_epic"] == 6321
         assert receipt["invariants_verified"]["zero_train_eval_leakage"] is True
+        assert receipt["verification_metrics"]["eval_target_overlap_count"] == 0
 
 
 def test_audit_zero_train_eval_leakage_on_disk():
@@ -397,20 +418,27 @@ def test_audit_zero_train_eval_leakage_on_disk():
         sft_dir.mkdir()
         dpo_dir.mkdir()
 
-        # Clean shard
+        # Clean shards
         sft_shard = sft_dir / "sft_shard_001_of_001.jsonl"
-        sft_shard.write_text(json.dumps({"query": "Чистий текст Івана Франка"}, ensure_ascii=False) + "\n", encoding="utf-8")
+        sft_shard.write_text(json.dumps({"target_phrase": "чистий текст", "query": "Чистий текст Івана Франка"}, ensure_ascii=False) + "\n", encoding="utf-8")
 
         dpo_shard = dpo_dir / "dpo_shard_001_of_001.jsonl"
-        dpo_shard.write_text(json.dumps({"chosen": "Леся Українка чудово писала"}, ensure_ascii=False) + "\n", encoding="utf-8")
+        dpo_shard.write_text(json.dumps({"target_phrase": "гарний вираз", "chosen": "Леся Українка чудово писала"}, ensure_ascii=False) + "\n", encoding="utf-8")
 
-        res = audit_zero_train_eval_leakage(sft_dir, dpo_dir)
+        # 1. Clean audit should pass
+        eval_records = [{"target_idiom": "невідомий вираз", "calqued_counterpart": None}]
+        res = audit_zero_train_eval_leakage(sft_dir, dpo_dir, eval_records=eval_records)
         assert res["zero_leakage_verified"] is True
 
-        # Now introduce a leak
-        sft_shard.write_text(json.dumps({"query": "Згадується О. Гончар"}, ensure_ascii=False) + "\n", encoding="utf-8")
-        with pytest.raises(AssertionError, match="Firewall Violated"):
-            audit_zero_train_eval_leakage(sft_dir, dpo_dir)
+        # 2. Author leakage introduces error
+        sft_shard.write_text(json.dumps({"target_phrase": "новий вираз", "query": "Згадується О. Гончар"}, ensure_ascii=False) + "\n", encoding="utf-8")
+        with pytest.raises(AssertionError, match="author leak"):
+            audit_zero_train_eval_leakage(sft_dir, dpo_dir, eval_records=eval_records)
+
+        # 3. Target phrase overlap introduces error
+        sft_shard.write_text(json.dumps({"target_phrase": "невідомий вираз", "query": "Чистий текст"}, ensure_ascii=False) + "\n", encoding="utf-8")
+        with pytest.raises(AssertionError, match="target overlap"):
+            audit_zero_train_eval_leakage(sft_dir, dpo_dir, eval_records=eval_records)
 
 
 # =========================================================================
@@ -440,5 +468,5 @@ def test_live_ua_gec_extraction():
 def test_live_vesum_attestation():
     with sqlite3.connect(f"file:{DEFAULT_VESUM_DB}?mode=ro", uri=True) as conn:
         cur = conn.cursor()
-        assert verify_vesum_attestation(cur, "брати участь") is True
-        assert verify_vesum_attestation(cur, "впадати в око") is True
+        assert verify_phrase_in_vesum("брати участь", cur) is True
+        assert verify_phrase_in_vesum("впадати в око", cur) is True
