@@ -29,6 +29,8 @@ import json
 from collections import Counter
 from pathlib import Path
 
+import pytest
+
 from scripts.practice.adjective_mechanics_engine import (
     AdjectiveCategory,
     build_canonical_adjective_cards,
@@ -197,6 +199,10 @@ def test_deck_export_and_file_parity(tmp_path: Path):
     assert data == committed_data, "Committed deck differs from fresh generator export"
 
 
+@pytest.mark.skipif(
+    not Path("data/vesum.db").exists() or Path("data/vesum.db").stat().st_size < 1_000_000,
+    reason="Requires full local data/vesum.db (>1MB); CI omits it",
+)
 def test_vesum_verification():
     """Verify that VESUM database confirms all target words and validates corruption distractors."""
     cards = build_canonical_adjective_cards()
