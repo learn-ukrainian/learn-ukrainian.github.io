@@ -87,47 +87,79 @@ VERIFIED_ENGLISH_GLOSSES: dict[str, str] = {
 }
 
 # Verified English translations for daily example sentences lacking an English gloss (#8258).
-VERIFIED_EXAMPLE_EN: dict[str, str] = {
-    "аналогічно": "Similarly, in this same record of the Salary field we will select the Sum function.",
-    "безкоштовний": "Usually, a company providing free hosting earns money by displaying ads on pages hosted on it.",
-    "біб": "At the same time, the authorized archon took out of the boxes a bean and a tablet with the candidate's name.",
-    "відстань": "What will the distance between them be after 35 minutes?",
-    "відчуття": "Because of this, serotonin and dopamine accumulate in the synaptic cleft, causing a sensation of pleasure.",
-    "двигун": "A heat engine is a machine that operates cyclically and converts fuel energy into mechanical energy.",
-    "захист": "One of the most important tasks of the state is the protection of the rights of all people, including teenagers.",
-    "клавіатура": "Thus, the keyboard converts the notification of a particular key press into a set of electrical signals.",
-    "контролювати": "Monitor for the onset of vomiting.",
-    "м'яз": "Which muscle must contract for the shin to move in the direction shown by the arrow?",
-    "мох": "Verbynka carefully lifted the moss.",
-    "овес": "Green rye and oats too — here our whole kin has gathered.",
-    "ом": "The total resistance of two lamps and a rheostat connected in series is 65 ohms.",
-    "простір": "What personal space is and what its components are.",
-    "свідомість": "Consciousness: the desire to know oneself is one of the main drivers of human development.",
-    "спостереження": "A radiation and chemical observation post is set up on the facility's grounds near the control center.",
-    "сума": "How many terms of this progression need to be taken so that their sum equals 253?",
-    "умовний": "Therefore, scholars made a conventional division of history into periods — the periodization of history.",
-    "цвісти": "To bloom like this, to grow like this, to marry thus and walk ahead, without quarreling on the arduous road...",
-    "цунамі": "Tsunamis encompass the entire depth of water masses and move across the ocean.",
-    "шум": "In ancient times, the word 'shum' also referred to the forest.",
+# Keyed strictly by the exact Ukrainian sentence text to eliminate translation mismatch
+# if an entry's sentence differs from the inventory row.
+VERIFIED_SENTENCE_EN: dict[str, str] = {
+    "Аналогічно в цьому самому записі поля Оклад виберемо функцію Сума.": (
+        "Similarly, in this same record of the Salary field we will select the Sum function."
+    ),
+    "Зазвичай компанія, що надає безкоштовний хостинг, заробляє шляхом показу реклами на сторінках, розміщених на ньому.": (
+        "Usually, a company providing free hosting earns money by displaying ads on pages hosted on it."
+    ),
+    "Одночасно уповноважений архонт виймав зі скриньок біб і табличку з іменем кандидата.": (
+        "At the same time, the authorized archon took out of the boxes a bean and a tablet with the candidate's name."
+    ),
+    "Яка відстань буде між ними через 35 хв?": ("What will the distance between them be after 35 minutes?"),
+    "Через це серотонін і дофамін накопичуються в синаптичній щілині, викликаючи відчуття насолоди.": (
+        "Because of this, serotonin and dopamine accumulate in the synaptic cleft, causing a sensation of pleasure."
+    ),
+    "Тепловий двигун — це машина, яка працює циклічно й перетворює енергію палива на механічну енергію.": (
+        "A heat engine is a machine that operates cyclically and converts fuel energy into mechanical energy."
+    ),
+    "Одним з найважливіших завдань держави є захист прав усіх людей, зокрема й підлітків.": (
+        "One of the most important tasks of the state is the protection of the rights of all people, including teenagers."
+    ),
+    "Так, клавіатура перетворює повідомлення про натиснення певної клавіші в сукупність електричних сигналів.": (
+        "Thus, the keyboard converts the notification of a particular key press into a set of electrical signals."
+    ),
+    "Контролювати появу блювання.": "Monitor for the onset of vomiting.",
+    "Який м’яз повинен скоротитися, щоб гомілка рухалася в напрямку, показаному стрілкою?": (
+        "Which muscle must contract for the shin to move in the direction shown by the arrow?"
+    ),
+    "Вербинка обережно підважила мох.": "Verbynka carefully lifted the moss.",
+    "Зеленеє жито ще й овес — Тут зібрався рід наш увесь.": (
+        "Green rye and oats too — here our whole kin has gathered."
+    ),
+    "Загальний опір двох ламп і реостата, з’єднаних послідовно, дорівнює 65 Ом.": (
+        "The total resistance of two lamps and a rheostat connected in series is 65 ohms."
+    ),
+    "Що таке особистий простір та якими є його складники.": ("What personal space is and what its components are."),
+    "Свідомість Прагнення пізнання себе є одним з головних рушіїв розвитку людства.": (
+        "Consciousness: the desire to know oneself is one of the main drivers of human development."
+    ),
+    "Пост радіаційного та хімічного спостереження встановлюють на території об’єкта недалеко від пункту управління.": (
+        "A radiation and chemical observation post is set up on the facility's grounds near the control center."
+    ),
+    "Скільки членів цієї прогресії потрібно взяти, щоб їхня сума дорівнювала 253?": (
+        "How many terms of this progression need to be taken so that their sum equals 253?"
+    ),
+    "Тому вчені здійснили умовний поділ історії на періоди — періодизацію історії.": (
+        "Therefore, scholars made a conventional division of history into periods — the periodization of history."
+    ),
+    "Отак цвісти, отак рости, Так одружитися і йти, Не сварячись в тяжкій дорозі...": (
+        "To bloom like this, to grow like this, to marry thus and walk ahead, without quarreling on the arduous road..."
+    ),
+    "Цунамі охоплюють усю товщу водних мас і рухаються Мал.": (
+        "Tsunamis encompass the entire depth of water masses and move across the ocean."
+    ),
+    "Словом шум у давнину називали ліс.": "In ancient times, the word 'shum' also referred to the forest.",
 }
 
 
 def _entry_gloss(entry: dict[str, Any]) -> str | None:
     """Return a verified English gloss for a daily-pool candidate entry.
 
-    If an entry's upstream gloss is a raw monolingual Ukrainian definition from
-    СУМ/ВТС (lacking Latin/English text), it is rejected unless covered by
-    VERIFIED_ENGLISH_GLOSSES (#8258).
+    If an entry's upstream gloss has valid Latin/English text, it is preserved.
+    If it is a raw monolingual Ukrainian definition from СУМ/ВТС (lacking Latin text),
+    it is rejected unless covered by VERIFIED_ENGLISH_GLOSSES (#8258).
     """
+    gloss = entry.get("gloss")
+    if isinstance(gloss, str) and _LATIN_RE.search(gloss):
+        return gloss.strip()
     lemma = entry.get("lemma")
     if isinstance(lemma, str) and lemma in VERIFIED_ENGLISH_GLOSSES:
         return VERIFIED_ENGLISH_GLOSSES[lemma]
-    gloss = entry.get("gloss")
-    if not isinstance(gloss, str) or not gloss.strip():
-        return None
-    if not _LATIN_RE.search(gloss):
-        return None
-    return gloss.strip()
+    return None
 
 
 def kind_for_source(source: Any) -> str:
@@ -358,19 +390,30 @@ def _pool_item(
     if _has_text(pos):
         item["pos"] = pos
     example, example_en = _first_example(entry)
-    if example_en is None and isinstance(lemma, str) and lemma in VERIFIED_EXAMPLE_EN:
-        example_en = VERIFIED_EXAMPLE_EN[lemma]
     inventory_row = (sentence_inventory or {}).get(str(lemma))
+    chosen_sentence: str | None = None
+    chosen_example_en: str | None = None
+
     if inventory_row is not None:
-        item["example"] = str(inventory_row["sentence"]).strip()
-        if example_en is not None:
-            item["exampleEn"] = example_en
+        chosen_sentence = str(inventory_row["sentence"]).strip()
+        item["example"] = chosen_sentence
+        # Only attach the entry's example_en if the inventory sentence matches the entry example
+        if example is not None and chosen_sentence == example and example_en is not None:
+            chosen_example_en = example_en
         item["exampleProvenance"] = inventory_row["provenance"]
         item["exampleLicense"] = inventory_row["license"]
     elif sentence_inventory is None and example is not None:
-        item["example"] = example
-        if example_en is not None:
-            item["exampleEn"] = example_en
+        chosen_sentence = example
+        item["example"] = chosen_sentence
+        chosen_example_en = example_en
+
+    # If no example_en was attached from the source, resolve via VERIFIED_SENTENCE_EN
+    # which is strictly keyed by the exact displayed Ukrainian sentence text (#8258).
+    if chosen_sentence is not None:
+        if chosen_example_en is not None:
+            item["exampleEn"] = chosen_example_en
+        elif chosen_sentence in VERIFIED_SENTENCE_EN:
+            item["exampleEn"] = VERIFIED_SENTENCE_EN[chosen_sentence]
     origin = _first_origin(entry)
     if origin is not None:
         item["etymology"] = origin
