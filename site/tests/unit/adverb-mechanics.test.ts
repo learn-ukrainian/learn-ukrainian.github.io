@@ -63,6 +63,7 @@ describe('adverb-mechanics', () => {
     expect(resolvePrefixPoRule().citation).toContain('§ 41, п. 3, 1)');
     expect(resolveParticlesHyphenRule().citation).toContain('§ 41, п. 3, 3)');
     expect(resolveReduplicationRule().citation).toContain('§ 41, п. 3, 5)');
+    expect(resolveComparisonSuperlativeRule().citation).toContain('§ 41, п. 1, 9)');
   });
 
   it('correctly provides feedback for correct selections', () => {

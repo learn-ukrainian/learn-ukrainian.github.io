@@ -79,6 +79,9 @@ def test_resolve_adverb_rules():
     cit_red, _, _ = resolve_reduplication_rule()
     assert "§ 41, п. 3, 5)" in cit_red
 
+    cit_sup, _, _ = resolve_comparison_superlative_rule()
+    assert "§ 41, п. 1, 9)" in cit_sup
+
 
 def test_build_canonical_adverb_cards_count_and_distribution():
     """Verify that 75 cards are built with exactly 5 cards per category."""
@@ -454,6 +457,20 @@ def test_distractor_exclusivity_and_no_valid_synonym_rejection():
         for d in rc.distractors:
             if "§ 41" in d.explanation_ua:
                 assert "§ 41, п. 3, 5)" in d.explanation_ua
+
+    # Verify Card 26 uses exact § 41, п. 3, 1) and no stale § 41, п. 2 а
+    c26 = cards_by_id["adverb_card_26"]
+    assert any("§ 41, п. 3, 1)" in d.explanation_ua for d in c26.distractors)
+    assert not any("п. 2 а" in d.explanation_ua for d in c26.distractors)
+
+    # Verify citation numbering for superlative cards across deck (Правопис 2019 § 41, п. 1, 9))
+    superlative_cards = [c for c in cards_by_id.values() if c.category == AdverbCategory.COMPARISON_SUPERLATIVE]
+    for sc in superlative_cards:
+        assert "§ 41, п. 1, 9)" in sc.rule_citation
+        for d in sc.distractors:
+            if "§ 41" in d.explanation_ua:
+                assert "§ 41, п. 1, 9)" in d.explanation_ua
+            assert "§ 20" not in d.explanation_ua, f"Stale § 20 citation found in superlative card {sc.card_id}"
 
     # Comprehensive deck-wide exclusivity audit across all 75 cards
     for card in cards_by_id.values():

@@ -11,14 +11,14 @@ Categories (15 categories x 5 cards = 75 canonical practice cards):
  4. adverb_semantic_measure_degree        - Measure & Degree (скільки? наскільки? якою мірою?) [Правопис 2019 § 41, п. 1]
  5. adverb_semantic_cause_purpose         - Cause & Purpose (чому? навіщо? з якої причини?) [Правопис 2019 § 41, п. 1]
  6. adverb_spelling_prefix_po             - Hyphenated spelling: prefix по- [Правопис 2019 § 41, п. 3, 1)]
- 7. adverb_spelling_particles_hyphen      - Hyphenated spelling: particles будь-, -небудь, казна-, хтозна-, бозна-, -таки [Правопис 2019 § 41, п. 3, 2)]
- 8. adverb_spelling_reduplication         - Hyphenated spelling: duplicated roots & synonymous pairs [Правопис 2019 § 41, п. 3, 3)]
+ 7. adverb_spelling_particles_hyphen      - Hyphenated spelling: particles будь-, -небудь, казна-, хтозна-, бозна-, -таки [Правопис 2019 § 41, п. 3, 3)]
+ 8. adverb_spelling_reduplication         - Hyphenated spelling: duplicated roots & synonymous pairs [Правопис 2019 § 41, п. 3, 5)]
  9. adverb_spelling_together_fused        - One-word fused adverbs from prepositional combinations [Правопис 2019 § 41, п. 1]
 10. adverb_homophone_napamyat_vden_dodomu - Homophone discrimination 1 (напам'ять vs на пам'ять, вдень vs в день, додому vs до дому) [Правопис 2019 § 41, пп. 1, 2]
 11. adverb_homophone_zgory_nazustrich_ubik- Homophone discrimination 2 (згори vs з гори, назустріч vs на зустріч, убік vs у бік) [Правопис 2019 § 41, пп. 1, 2]
 12. adverb_spelling_separate              - Separate spelling: adverbial phrases [Правопис 2019 § 41, п. 2: на жаль, до речі, без сумніву, день у день]
 13. adverb_comparison_synthetic           - Comparative degree: synthetic & suppletive forms [Правопис 2019 § 20; Академічна граматика]
-14. adverb_comparison_superlative         - Superlative degree: prefix най- and intensifiers як-, що- [Правопис 2019 § 20; Академічна граматика]
+14. adverb_comparison_superlative         - Superlative degree: prefix най- and intensifiers як-, що- [Правопис 2019 § 41, п. 1, 9); Академічна граматика]
 15. adverb_anti_calque                    - Anti-calque adverbials & speech culture [Антоненко-Давидович; СУМ-20]
 """
 
@@ -195,9 +195,9 @@ def resolve_comparison_synthetic_rule() -> tuple[str, str, str]:
 
 
 def resolve_comparison_superlative_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 20; Академічна граматика; СУМ-20"
-    ua = "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище) per § 20 та за нормами академічної граматики. Значення можна посилити префіксами як-, що-, які пишуться разом: якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою."
-    en = "The superlative degree is formed by prefixing най- to the comparative form (найкраще, найвище) per § 20 and academic grammar. Intensifying prefixes як-, що- are attached as single words (якнайшвидше, щонайдовше). Using 'самий' (*самий краще) is an ungrammatical calque."
+    cit = "Правопис 2019 § 41, п. 1, 9); Академічна граматика; СУМ-20"
+    ua = "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище). Значення можна посилити частками як-, що-, які пишуться разом per § 41, п. 1, 9): якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою."
+    en = "The superlative degree is formed by prefixing най- to the comparative form (найкраще, найвище). Intensifying particles як-, що- are attached as single words per § 41, p. 1, 9) (якнайшвидше, щонайдовше). Using 'самий' (*самий краще) is an ungrammatical calque."
     return cit, ua, en
 
 
@@ -1016,7 +1016,7 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="поукраїнськи",
                         interference_key=AdverbInterferenceKey.HYPHEN_OMISSION,
-                        explanation_ua="Написання разом є грубою орфографічною помилкою; за правилом § 41, п. 2 а префікс по- з суфіксом -ськи пишеться через дефіс.",
+                        explanation_ua="Написання разом є грубою орфографічною помилкою; за правилом § 41, п. 3, 1) префікс по- з суфіксом -ськи пишеться через дефіс.",
                         explanation_en="Writing as one word is a serious error; per § 41, p. 3, 1) prefix по- with suffix -ськи requires a hyphen.",
                     ),
                     AdverbDistractor(
@@ -2266,20 +2266,20 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="самий краще",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_CALQUE_SAMYI,
-                        explanation_ua="Формування найвищого ступеня за допомогою частки «самий» («самий краще») є грубим суржиком; нормативна українська форма має префікс най-: «найкраще» per § 20.",
-                        explanation_en="Forming the superlative with 'самий' is Surzhyk; standard Ukrainian uses prefix най-: 'найкраще' per § 20.",
+                        explanation_ua="Формування найвищого ступеня за допомогою частки «самий» («самий краще») є грубим суржиком; нормативна українська форма має префікс най-: «найкраще» per § 41, п. 1, 9).",
+                        explanation_en="Forming the superlative with 'самий' is Surzhyk; standard Ukrainian uses prefix най-: 'найкраще' per § 41, p. 1, 9).",
                     ),
                     AdverbDistractor(
                         text="най краще",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Префікс най- у найвищому ступені прислівників завжди пишеться РАЗОМ із словом per § 20 (найкраще, найшвидше).",
-                        explanation_en="Prefix най- in superlative adverbs is always written TOGETHER per § 20 (найкраще).",
+                        explanation_ua="Префікс най- у найвищому ступені прислівників завжди пишеться РАЗОМ із словом per § 41, п. 1, 9) (найкраще, найшвидше).",
+                        explanation_en="Prefix най- in superlative adverbs is always written TOGETHER per § 41, p. 1, 9) (найкраще).",
                     ),
                     AdverbDistractor(
                         text="най-краще",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_HYPHEN_ERROR,
-                        explanation_ua="Префікс най- приєднується без дефіса; написання разом є обов'язковим per § 20.",
-                        explanation_en="Prefix най- attaches without a hyphen; fused spelling is mandatory per § 20.",
+                        explanation_ua="Префікс най- приєднується без дефіса; написання разом є обов'язковим per § 41, п. 1, 9).",
+                        explanation_en="Prefix най- attaches without a hyphen; fused spelling is mandatory per § 41, p. 1, 9).",
                     ),
                 ),
                 rule_citation=cit_sup,
@@ -2296,20 +2296,20 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="як найшвидше",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Підсилювальні частки як- та що- у складі найвищого ступеня порівняння пишуться РАЗОМ per § 20 (якнайшвидше, щонайдовше).",
-                        explanation_en="Intensifying particles як- and що- in superlatives are written TOGETHER per § 20 (якнайшвидше).",
+                        explanation_ua="Підсилювальні частки як- та що- у складі найвищого ступеня порівняння пишуться РАЗОМ per § 41, п. 1, 9) (якнайшвидше, щонайдовше).",
+                        explanation_en="Intensifying particles як- and що- in superlatives are written TOGETHER per § 41, p. 1, 9) (якнайшвидше).",
                     ),
                     AdverbDistractor(
                         text="як-найшвидше",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_HYPHEN_ERROR,
-                        explanation_ua="Дефіс між часткою як- і префіксом най- не ставиться; слово пишеться повністю разом per § 20.",
-                        explanation_en="No hyphen between particle як- and prefix най-; the word is spelled completely together per § 20.",
+                        explanation_ua="Дефіс між часткою як- і префіксом най- не ставиться; слово пишеться повністю разом per § 41, п. 1, 9).",
+                        explanation_en="No hyphen between particle як- and prefix най-; the word is spelled completely together per § 41, p. 1, 9).",
                     ),
                     AdverbDistractor(
                         text="самий швидше",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_CALQUE_SAMYI,
-                        explanation_ua="Слово «самий» є російською калькою; в українській мові найвищий ступінь утворюється за допомогою префікса най- та підсилення як-: «якнайшвидше» per § 20.",
-                        explanation_en="Word 'самий' is a Russian calque; Ukrainian superlatives are formed with prefix най- and intensifier як-: 'якнайшвидше' per § 20.",
+                        explanation_ua="Слово «самий» є російською калькою; в українській мові найвищий ступінь утворюється за допомогою префікса най- та підсилення як-: «якнайшвидше» per § 41, п. 1, 9).",
+                        explanation_en="Word 'самий' is a Russian calque; Ukrainian superlatives are formed with prefix най- and intensifier як-: 'якнайшвидше' per § 41, p. 1, 9).",
                     ),
                 ),
                 rule_citation=cit_sup,
@@ -2326,20 +2326,20 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="що найдовше",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Підсилювальна частка що- з формою найвищого ступеня пишеться разом per § 20: «щонайдовше».",
-                        explanation_en="Intensifying particle що- with superlative form is written together per § 20: 'щонайдовше'.",
+                        explanation_ua="Підсилювальна частка що- з формою найвищого ступеня пишеться разом per § 41, п. 1, 9): «щонайдовше».",
+                        explanation_en="Intensifying particle що- with superlative form is written together per § 41, p. 1, 9): 'щонайдовше'.",
                     ),
                     AdverbDistractor(
                         text="що-найдовше",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_HYPHEN_ERROR,
-                        explanation_ua="Дефіс після частки що- є помилкою; слово пишеться разом per § 20.",
-                        explanation_en="Hyphen after particle що- is an error; the word is spelled together per § 20.",
+                        explanation_ua="Дефіс після частки що- є помилкою; слово пишеться разом per § 41, п. 1, 9).",
+                        explanation_en="Hyphen after particle що- is an error; the word is spelled together per § 41, p. 1, 9).",
                     ),
                     AdverbDistractor(
                         text="самий довше",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_CALQUE_SAMYI,
-                        explanation_ua="Калька з російської («самый дольше»); нормативна українська мова вимагає префікса най- з підсиленням що-: «щонайдовше» per § 20.",
-                        explanation_en="Russian calque ('самый дольше'); standard Ukrainian requires prefix най- with що-: 'щонайдовше' per § 20.",
+                        explanation_ua="Калька з російської («самый дольше»); нормативна українська мова вимагає префікса най- з підсиленням що-: «щонайдовше» per § 41, п. 1, 9).",
+                        explanation_en="Russian calque ('самый дольше'); standard Ukrainian requires prefix най- with що-: 'щонайдовше' per § 41, p. 1, 9).",
                     ),
                 ),
                 rule_citation=cit_sup,
@@ -2356,20 +2356,20 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="самий вище",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_CALQUE_SAMYI,
-                        explanation_ua="Слово «самий» не використовується для утворення найвищого ступеня; правильно — «найвище» per § 20.",
-                        explanation_en="Word 'самий' is not used for superlative formation; correct is 'найвище' per § 20.",
+                        explanation_ua="Слово «самий» не використовується для утворення найвищого ступеня; правильно — «найвище» per § 41, п. 1, 9).",
+                        explanation_en="Word 'самий' is not used for superlative formation; correct is 'найвище' per § 41, p. 1, 9).",
                     ),
                     AdverbDistractor(
                         text="най вище",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Префікс най- пишеться разом із прислівником per § 20.",
-                        explanation_en="Prefix най- is written together with the adverb per § 20.",
+                        explanation_ua="Префікс най- пишеться разом із прислівником per § 41, п. 1, 9).",
+                        explanation_en="Prefix най- is written together with the adverb per § 41, p. 1, 9).",
                     ),
                     AdverbDistractor(
                         text="най-вище",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_HYPHEN_ERROR,
-                        explanation_ua="Дефіс у префіксі най- заборонений; слово пишеться разом per § 20.",
-                        explanation_en="Hyphen in prefix най- is prohibited; it is written as one word per § 20.",
+                        explanation_ua="Дефіс у префіксі най- заборонений; слово пишеться разом per § 41, п. 1, 9).",
+                        explanation_en="Hyphen in prefix най- is prohibited; it is written as one word per § 41, p. 1, 9).",
                     ),
                 ),
                 rule_citation=cit_sup,
@@ -2386,20 +2386,20 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="як найретельніше",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Частка як- із префіксом най- пишеться разом: «якнайретельніше» per § 20.",
-                        explanation_en="Particle як- with prefix най- is written together: 'якнайретельніше' per § 20.",
+                        explanation_ua="Частка як- із префіксом най- пишеться разом: «якнайретельніше» per § 41, п. 1, 9).",
+                        explanation_en="Particle як- with prefix най- is written together: 'якнайретельніше' per § 41, p. 1, 9).",
                     ),
                     AdverbDistractor(
                         text="як-найретельніше",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_HYPHEN_ERROR,
-                        explanation_ua="Написання через дефіс є орфографічною помилкою; слово пишеться разом per § 20.",
-                        explanation_en="Hyphenated spelling is an orthographic error; the word is written together per § 20.",
+                        explanation_ua="Написання через дефіс є орфографічною помилкою; слово пишеться разом per § 41, п. 1, 9).",
+                        explanation_en="Hyphenated spelling is an orthographic error; the word is written together per § 41, p. 1, 9).",
                     ),
                     AdverbDistractor(
                         text="самий ретельно",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_CALQUE_SAMYI,
-                        explanation_ua="Кальковане поєднання «самий ретельно» є неприпустимим в українській мові; норма — «якнайретельніше» per § 20.",
-                        explanation_en="'Самий ретельно' is an unacceptable calque; standard Ukrainian is 'якнайретельніше' per § 20.",
+                        explanation_ua="Кальковане поєднання «самий ретельно» є неприпустимим в українській мові; норма — «якнайретельніше» per § 41, п. 1, 9).",
+                        explanation_en="'Самий ретельно' is an unacceptable calque; standard Ukrainian is 'якнайретельніше' per § 41, p. 1, 9).",
                     ),
                 ),
                 rule_citation=cit_sup,

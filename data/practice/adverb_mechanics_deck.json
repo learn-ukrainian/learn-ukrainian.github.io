@@ -1145,7 +1145,7 @@
           "text": "поукраїнськи",
           "interference_key": "HYPHEN_OMISSION",
           "explanation": {
-            "ua": "Написання разом є грубою орфографічною помилкою; за правилом § 41, п. 2 а префікс по- з суфіксом -ськи пишеться через дефіс.",
+            "ua": "Написання разом є грубою орфографічною помилкою; за правилом § 41, п. 3, 1) префікс по- з суфіксом -ськи пишеться через дефіс.",
             "en": "Writing as one word is a serious error; per § 41, p. 3, 1) prefix по- with suffix -ськи requires a hyphen."
           }
         },
@@ -2897,31 +2897,31 @@
           "text": "самий краще",
           "interference_key": "SUPERLATIVE_CALQUE_SAMYI",
           "explanation": {
-            "ua": "Формування найвищого ступеня за допомогою частки «самий» («самий краще») є грубим суржиком; нормативна українська форма має префікс най-: «найкраще» per § 20.",
-            "en": "Forming the superlative with 'самий' is Surzhyk; standard Ukrainian uses prefix най-: 'найкраще' per § 20."
+            "ua": "Формування найвищого ступеня за допомогою частки «самий» («самий краще») є грубим суржиком; нормативна українська форма має префікс най-: «найкраще» per § 41, п. 1, 9).",
+            "en": "Forming the superlative with 'самий' is Surzhyk; standard Ukrainian uses prefix най-: 'найкраще' per § 41, p. 1, 9)."
           }
         },
         {
           "text": "най краще",
           "interference_key": "HYPHEN_SEPARATION",
           "explanation": {
-            "ua": "Префікс най- у найвищому ступені прислівників завжди пишеться РАЗОМ із словом per § 20 (найкраще, найшвидше).",
-            "en": "Prefix най- in superlative adverbs is always written TOGETHER per § 20 (найкраще)."
+            "ua": "Префікс най- у найвищому ступені прислівників завжди пишеться РАЗОМ із словом per § 41, п. 1, 9) (найкраще, найшвидше).",
+            "en": "Prefix най- in superlative adverbs is always written TOGETHER per § 41, p. 1, 9) (найкраще)."
           }
         },
         {
           "text": "най-краще",
           "interference_key": "SUPERLATIVE_HYPHEN_ERROR",
           "explanation": {
-            "ua": "Префікс най- приєднується без дефіса; написання разом є обов'язковим per § 20.",
-            "en": "Prefix най- attaches without a hyphen; fused spelling is mandatory per § 20."
+            "ua": "Префікс най- приєднується без дефіса; написання разом є обов'язковим per § 41, п. 1, 9).",
+            "en": "Prefix най- attaches without a hyphen; fused spelling is mandatory per § 41, p. 1, 9)."
           }
         }
       ],
-      "rule_citation": "Правопис 2019 § 20; Академічна граматика; СУМ-20",
+      "rule_citation": "Правопис 2019 § 41, п. 1, 9); Академічна граматика; СУМ-20",
       "rule_summary": {
-        "ua": "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище) per § 20 та за нормами академічної граматики. Значення можна посилити префіксами як-, що-, які пишуться разом: якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою.",
-        "en": "The superlative degree is formed by prefixing най- to the comparative form (найкраще, найвище) per § 20 and academic grammar. Intensifying prefixes як-, що- are attached as single words (якнайшвидше, щонайдовше). Using 'самий' (*самий краще) is an ungrammatical calque."
+        "ua": "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище). Значення можна посилити частками як-, що-, які пишуться разом per § 41, п. 1, 9): якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою.",
+        "en": "The superlative degree is formed by prefixing най- to the comparative form (найкраще, найвище). Intensifying particles як-, що- are attached as single words per § 41, p. 1, 9) (якнайшвидше, щонайдовше). Using 'самий' (*самий краще) is an ungrammatical calque."
       }
     },
     {
@@ -2941,31 +2941,31 @@
           "text": "як найшвидше",
           "interference_key": "HYPHEN_SEPARATION",
           "explanation": {
-            "ua": "Підсилювальні частки як- та що- у складі найвищого ступеня порівняння пишуться РАЗОМ per § 20 (якнайшвидше, щонайдовше).",
-            "en": "Intensifying particles як- and що- in superlatives are written TOGETHER per § 20 (якнайшвидше)."
+            "ua": "Підсилювальні частки як- та що- у складі найвищого ступеня порівняння пишуться РАЗОМ per § 41, п. 1, 9) (якнайшвидше, щонайдовше).",
+            "en": "Intensifying particles як- and що- in superlatives are written TOGETHER per § 41, p. 1, 9) (якнайшвидше)."
           }
         },
         {
           "text": "як-найшвидше",
           "interference_key": "SUPERLATIVE_HYPHEN_ERROR",
           "explanation": {
-            "ua": "Дефіс між часткою як- і префіксом най- не ставиться; слово пишеться повністю разом per § 20.",
-            "en": "No hyphen between particle як- and prefix най-; the word is spelled completely together per § 20."
+            "ua": "Дефіс між часткою як- і префіксом най- не ставиться; слово пишеться повністю разом per § 41, п. 1, 9).",
+            "en": "No hyphen between particle як- and prefix най-; the word is spelled completely together per § 41, p. 1, 9)."
           }
         },
         {
           "text": "самий швидше",
           "interference_key": "SUPERLATIVE_CALQUE_SAMYI",
           "explanation": {
-            "ua": "Слово «самий» є російською калькою; в українській мові найвищий ступінь утворюється за допомогою префікса най- та підсилення як-: «якнайшвидше» per § 20.",
-            "en": "Word 'самий' is a Russian calque; Ukrainian superlatives are formed with prefix най- and intensifier як-: 'якнайшвидше' per § 20."
+            "ua": "Слово «самий» є російською калькою; в українській мові найвищий ступінь утворюється за допомогою префікса най- та підсилення як-: «якнайшвидше» per § 41, п. 1, 9).",
+            "en": "Word 'самий' is a Russian calque; Ukrainian superlatives are formed with prefix най- and intensifier як-: 'якнайшвидше' per § 41, p. 1, 9)."
           }
         }
       ],
-      "rule_citation": "Правопис 2019 § 20; Академічна граматика; СУМ-20",
+      "rule_citation": "Правопис 2019 § 41, п. 1, 9); Академічна граматика; СУМ-20",
       "rule_summary": {
-        "ua": "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище) per § 20 та за нормами академічної граматики. Значення можна посилити префіксами як-, що-, які пишуться разом: якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою.",
-        "en": "The superlative degree is formed by prefixing най- to the comparative form (найкраще, найвище) per § 20 and academic grammar. Intensifying prefixes як-, що- are attached as single words (якнайшвидше, щонайдовше). Using 'самий' (*самий краще) is an ungrammatical calque."
+        "ua": "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище). Значення можна посилити частками як-, що-, які пишуться разом per § 41, п. 1, 9): якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою.",
+        "en": "The superlative degree is formed by prefixing най- to the comparative form (найкраще, найвище). Intensifying particles як-, що- are attached as single words per § 41, p. 1, 9) (якнайшвидше, щонайдовше). Using 'самий' (*самий краще) is an ungrammatical calque."
       }
     },
     {
@@ -2985,31 +2985,31 @@
           "text": "що найдовше",
           "interference_key": "HYPHEN_SEPARATION",
           "explanation": {
-            "ua": "Підсилювальна частка що- з формою найвищого ступеня пишеться разом per § 20: «щонайдовше».",
-            "en": "Intensifying particle що- with superlative form is written together per § 20: 'щонайдовше'."
+            "ua": "Підсилювальна частка що- з формою найвищого ступеня пишеться разом per § 41, п. 1, 9): «щонайдовше».",
+            "en": "Intensifying particle що- with superlative form is written together per § 41, p. 1, 9): 'щонайдовше'."
           }
         },
         {
           "text": "що-найдовше",
           "interference_key": "SUPERLATIVE_HYPHEN_ERROR",
           "explanation": {
-            "ua": "Дефіс після частки що- є помилкою; слово пишеться разом per § 20.",
-            "en": "Hyphen after particle що- is an error; the word is spelled together per § 20."
+            "ua": "Дефіс після частки що- є помилкою; слово пишеться разом per § 41, п. 1, 9).",
+            "en": "Hyphen after particle що- is an error; the word is spelled together per § 41, p. 1, 9)."
           }
         },
         {
           "text": "самий довше",
           "interference_key": "SUPERLATIVE_CALQUE_SAMYI",
           "explanation": {
-            "ua": "Калька з російської («самый дольше»); нормативна українська мова вимагає префікса най- з підсиленням що-: «щонайдовше» per § 20.",
-            "en": "Russian calque ('самый дольше'); standard Ukrainian requires prefix най- with що-: 'щонайдовше' per § 20."
+            "ua": "Калька з російської («самый дольше»); нормативна українська мова вимагає префікса най- з підсиленням що-: «щонайдовше» per § 41, п. 1, 9).",
+            "en": "Russian calque ('самый дольше'); standard Ukrainian requires prefix най- with що-: 'щонайдовше' per § 41, p. 1, 9)."
           }
         }
       ],
-      "rule_citation": "Правопис 2019 § 20; Академічна граматика; СУМ-20",
+      "rule_citation": "Правопис 2019 § 41, п. 1, 9); Академічна граматика; СУМ-20",
       "rule_summary": {
-        "ua": "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище) per § 20 та за нормами академічної граматики. Значення можна посилити префіксами як-, що-, які пишуться разом: якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою.",
-        "en": "The superlative degree is formed by prefixing най- to the comparative form (найкраще, найвище) per § 20 and academic grammar. Intensifying prefixes як-, що- are attached as single words (якнайшвидше, щонайдовше). Using 'самий' (*самий краще) is an ungrammatical calque."
+        "ua": "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище). Значення можна посилити частками як-, що-, які пишуться разом per § 41, п. 1, 9): якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою.",
+        "en": "The superlative degree is formed by prefixing най- to the comparative form (найкраще, найвище). Intensifying particles як-, що- are attached as single words per § 41, p. 1, 9) (якнайшвидше, щонайдовше). Using 'самий' (*самий краще) is an ungrammatical calque."
       }
     },
     {
@@ -3029,31 +3029,31 @@
           "text": "самий вище",
           "interference_key": "SUPERLATIVE_CALQUE_SAMYI",
           "explanation": {
-            "ua": "Слово «самий» не використовується для утворення найвищого ступеня; правильно — «найвище» per § 20.",
-            "en": "Word 'самий' is not used for superlative formation; correct is 'найвище' per § 20."
+            "ua": "Слово «самий» не використовується для утворення найвищого ступеня; правильно — «найвище» per § 41, п. 1, 9).",
+            "en": "Word 'самий' is not used for superlative formation; correct is 'найвище' per § 41, p. 1, 9)."
           }
         },
         {
           "text": "най вище",
           "interference_key": "HYPHEN_SEPARATION",
           "explanation": {
-            "ua": "Префікс най- пишеться разом із прислівником per § 20.",
-            "en": "Prefix най- is written together with the adverb per § 20."
+            "ua": "Префікс най- пишеться разом із прислівником per § 41, п. 1, 9).",
+            "en": "Prefix най- is written together with the adverb per § 41, p. 1, 9)."
           }
         },
         {
           "text": "най-вище",
           "interference_key": "SUPERLATIVE_HYPHEN_ERROR",
           "explanation": {
-            "ua": "Дефіс у префіксі най- заборонений; слово пишеться разом per § 20.",
-            "en": "Hyphen in prefix най- is prohibited; it is written as one word per § 20."
+            "ua": "Дефіс у префіксі най- заборонений; слово пишеться разом per § 41, п. 1, 9).",
+            "en": "Hyphen in prefix най- is prohibited; it is written as one word per § 41, p. 1, 9)."
           }
         }
       ],
-      "rule_citation": "Правопис 2019 § 20; Академічна граматика; СУМ-20",
+      "rule_citation": "Правопис 2019 § 41, п. 1, 9); Академічна граматика; СУМ-20",
       "rule_summary": {
-        "ua": "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище) per § 20 та за нормами академічної граматики. Значення можна посилити префіксами як-, що-, які пишуться разом: якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою.",
-        "en": "The superlative degree is formed by prefixing най- to the comparative form (найкраще, найвище) per § 20 and academic grammar. Intensifying prefixes як-, що- are attached as single words (якнайшвидше, щонайдовше). Using 'самий' (*самий краще) is an ungrammatical calque."
+        "ua": "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище). Значення можна посилити частками як-, що-, які пишуться разом per § 41, п. 1, 9): якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою.",
+        "en": "The superlative degree is formed by prefixing най- to the comparative form (найкраще, найвище). Intensifying particles як-, що- are attached as single words per § 41, p. 1, 9) (якнайшвидше, щонайдовше). Using 'самий' (*самий краще) is an ungrammatical calque."
       }
     },
     {
@@ -3073,31 +3073,31 @@
           "text": "як найретельніше",
           "interference_key": "HYPHEN_SEPARATION",
           "explanation": {
-            "ua": "Частка як- із префіксом най- пишеться разом: «якнайретельніше» per § 20.",
-            "en": "Particle як- with prefix най- is written together: 'якнайретельніше' per § 20."
+            "ua": "Частка як- із префіксом най- пишеться разом: «якнайретельніше» per § 41, п. 1, 9).",
+            "en": "Particle як- with prefix най- is written together: 'якнайретельніше' per § 41, p. 1, 9)."
           }
         },
         {
           "text": "як-найретельніше",
           "interference_key": "SUPERLATIVE_HYPHEN_ERROR",
           "explanation": {
-            "ua": "Написання через дефіс є орфографічною помилкою; слово пишеться разом per § 20.",
-            "en": "Hyphenated spelling is an orthographic error; the word is written together per § 20."
+            "ua": "Написання через дефіс є орфографічною помилкою; слово пишеться разом per § 41, п. 1, 9).",
+            "en": "Hyphenated spelling is an orthographic error; the word is written together per § 41, p. 1, 9)."
           }
         },
         {
           "text": "самий ретельно",
           "interference_key": "SUPERLATIVE_CALQUE_SAMYI",
           "explanation": {
-            "ua": "Кальковане поєднання «самий ретельно» є неприпустимим в українській мові; норма — «якнайретельніше» per § 20.",
-            "en": "'Самий ретельно' is an unacceptable calque; standard Ukrainian is 'якнайретельніше' per § 20."
+            "ua": "Кальковане поєднання «самий ретельно» є неприпустимим в українській мові; норма — «якнайретельніше» per § 41, п. 1, 9).",
+            "en": "'Самий ретельно' is an unacceptable calque; standard Ukrainian is 'якнайретельніше' per § 41, p. 1, 9)."
           }
         }
       ],
-      "rule_citation": "Правопис 2019 § 20; Академічна граматика; СУМ-20",
+      "rule_citation": "Правопис 2019 § 41, п. 1, 9); Академічна граматика; СУМ-20",
       "rule_summary": {
-        "ua": "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище) per § 20 та за нормами академічної граматики. Значення можна посилити префіксами як-, що-, які пишуться разом: якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою.",
-        "en": "The superlative degree is formed by prefixing най- to the comparative form (найкраще, найвище) per § 20 and academic grammar. Intensifying prefixes як-, що- are attached as single words (якнайшвидше, щонайдовше). Using 'самий' (*самий краще) is an ungrammatical calque."
+        "ua": "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище). Значення можна посилити частками як-, що-, які пишуться разом per § 41, п. 1, 9): якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою.",
+        "en": "The superlative degree is formed by prefixing най- to the comparative form (найкраще, найвище). Intensifying particles як-, що- are attached as single words per § 41, p. 1, 9) (якнайшвидше, щонайдовше). Using 'самий' (*самий краще) is an ungrammatical calque."
       }
     },
     {
