@@ -34,7 +34,7 @@ describe('adverb-mechanics', () => {
     expect(ADVERB_MECHANICS_CATEGORY_KEYS).toContain('adverb_anti_calque');
   });
 
-  it('resolves adverb rules accurately per § 41, §§ 110–111', () => {
+  it('resolves adverb rules accurately per § 41, § 20', () => {
     const rules = [
       resolveMannerActionRule(),
       resolveTimeRule(),
@@ -111,7 +111,7 @@ describe('adverb-mechanics', () => {
           },
         },
       ],
-      rule_citation: 'Правопис 2019 § 41, п. 3; СУМ-20',
+      rule_citation: 'Правопис 2019 § 41, п. 2; СУМ-20',
       rule_summary: {
         ua: 'Прислівникові сполучення пишуться окремо.',
         en: 'Adverbial phrases are written separately.',

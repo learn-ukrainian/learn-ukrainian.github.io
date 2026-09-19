@@ -10,15 +10,15 @@ Categories (15 categories x 5 cards = 75 canonical practice cards):
  3. adverb_semantic_place_direction       - Place & Direction (де? куди? звідки?) [Правопис 2019 § 41, п. 1]
  4. adverb_semantic_measure_degree        - Measure & Degree (скільки? наскільки? якою мірою?) [Правопис 2019 § 41, п. 1]
  5. adverb_semantic_cause_purpose         - Cause & Purpose (чому? навіщо? з якої причини?) [Правопис 2019 § 41, п. 1]
- 6. adverb_spelling_prefix_po             - Hyphenated spelling: prefix по- [Правопис 2019 § 41, п. 2 а]
- 7. adverb_spelling_particles_hyphen      - Hyphenated spelling: particles будь-, -небудь, казна-, хтозна-, бозна-, -таки [Правопис 2019 § 41, п. 2 б]
- 8. adverb_spelling_reduplication         - Hyphenated spelling: duplicated roots & synonymous pairs [Правопис 2019 § 41, п. 2 в]
+ 6. adverb_spelling_prefix_po             - Hyphenated spelling: prefix по- [Правопис 2019 § 41, п. 3, 1)]
+ 7. adverb_spelling_particles_hyphen      - Hyphenated spelling: particles будь-, -небудь, казна-, хтозна-, бозна-, -таки [Правопис 2019 § 41, п. 3, 2)]
+ 8. adverb_spelling_reduplication         - Hyphenated spelling: duplicated roots & synonymous pairs [Правопис 2019 § 41, п. 3, 3)]
  9. adverb_spelling_together_fused        - One-word fused adverbs from prepositional combinations [Правопис 2019 § 41, п. 1]
-10. adverb_homophone_napamyat_vden_dodomu - Homophone discrimination 1 (напам'ять vs на пам'ять, вдень vs в день, додому vs до дому) [Правопис 2019 § 41, пп. 1, 3]
-11. adverb_homophone_zgory_nazustrich_ubik- Homophone discrimination 2 (згори vs з гори, назустріч vs на зустріч, убік vs у бік) [Правопис 2019 § 41, пп. 1, 3]
-12. adverb_spelling_separate              - Separate spelling: adverbial phrases [Правопис 2019 § 41, п. 3: на жаль, до речі, без сумніву, день у день]
-13. adverb_comparison_synthetic           - Comparative degree: synthetic & suppletive forms [Правопис 2019 §§ 110, 111]
-14. adverb_comparison_superlative         - Superlative degree: prefix най- and intensifiers як-, що- [Правопис 2019 § 111]
+10. adverb_homophone_napamyat_vden_dodomu - Homophone discrimination 1 (напам'ять vs на пам'ять, вдень vs в день, додому vs до дому) [Правопис 2019 § 41, пп. 1, 2]
+11. adverb_homophone_zgory_nazustrich_ubik- Homophone discrimination 2 (згори vs з гори, назустріч vs на зустріч, убік vs у бік) [Правопис 2019 § 41, пп. 1, 2]
+12. adverb_spelling_separate              - Separate spelling: adverbial phrases [Правопис 2019 § 41, п. 2: на жаль, до речі, без сумніву, день у день]
+13. adverb_comparison_synthetic           - Comparative degree: synthetic & suppletive forms [Правопис 2019 § 20; Академічна граматика]
+14. adverb_comparison_superlative         - Superlative degree: prefix най- and intensifiers як-, що- [Правопис 2019 § 20; Академічна граматика]
 15. adverb_anti_calque                    - Anti-calque adverbials & speech culture [Антоненко-Давидович; СУМ-20]
 """
 
@@ -139,23 +139,23 @@ def resolve_cause_purpose_rule() -> tuple[str, str, str]:
 
 
 def resolve_prefix_po_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 41, п. 2 а; СУМ-20"
-    ua = "Прислівники з префіксом по-, утворені від прикметників і займенників із суфіксами -ому, -ему, -и, -ськи, -цьки, пишуться через дефіс: по-українськи, по-новому, по-батьківськи, по-моєму, по-дитячому per § 41, п. 2 а."
-    en = "Adverbs with prefix по- formed from adjectives and pronouns with suffixes -ому, -ему, -и, -ськи, -цьки are hyphenated per § 41, p. 2 a: по-українськи, по-новому, по-батьківськи, по-моєму, по-дитячому."
+    cit = "Правопис 2019 § 41, п. 3, 1); СУМ-20"
+    ua = "Прислівники з префіксом по-, утворені від прикметників і займенників із суфіксами -ому, -ему, -и, -ськи, -цьки, пишуться через дефіс: по-українськи, по-новому, по-батьківськи, по-моєму, по-дитячому per § 41, п. 3, 1)."
+    en = "Adverbs with prefix по- formed from adjectives and pronouns with suffixes -ому, -ему, -и, -ськи, -цьки are hyphenated per § 41, p. 3, 1): по-українськи, по-новому, по-батьківськи, по-моєму, по-дитячому."
     return cit, ua, en
 
 
 def resolve_particles_hyphen_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 41, п. 2 б; СУМ-20"
-    ua = "Прислівники з частками будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то пишуться через дефіс per § 41, п. 2 б: будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки."
-    en = "Adverbs with particles будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то are hyphenated per § 41, p. 2 b: будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки."
+    cit = "Правопис 2019 § 41, п. 3, 2); СУМ-20"
+    ua = "Прислівники з частками будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то пишуться через дефіс per § 41, п. 3, 2): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки."
+    en = "Adverbs with particles будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то are hyphenated per § 41, p. 3, 2): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки."
     return cit, ua, en
 
 
 def resolve_reduplication_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 41, п. 2 в; СУМ-20"
-    ua = "Прислівники, утворені повторенням того самого слова, поєднанням синонімів або антонімів, а також парних слів з прийменником між ними, пишуться через дефіс per § 41, п. 2 в: віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно."
-    en = "Adverbs formed by reduplication of identical words, synonymous pairs, or identical roots connected by a preposition are hyphenated per § 41, p. 2 c: віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно."
+    cit = "Правопис 2019 § 41, п. 3, 3); СУМ-20"
+    ua = "Прислівники, утворені повторенням того самого слова, поєднанням синонімів або антонімів, а також парних слів з прийменником між ними, пишуться через дефіс per § 41, п. 3, 3): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно."
+    en = "Adverbs formed by reduplication of identical words, synonymous pairs, or identical roots connected by a preposition are hyphenated per § 41, p. 3, 3): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно."
     return cit, ua, en
 
 
@@ -167,37 +167,37 @@ def resolve_together_fused_rule() -> tuple[str, str, str]:
 
 
 def resolve_homophone_1_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 41, пп. 1, 3; СУМ-20"
-    ua = "Слід чітко розрізняти прислівники, що пишуться разом (§ 41, п. 1), та омонімічні іменникові сполуки з прийменниками, що пишуться окремо (§ 41, п. 3): вивчити напам'ять (як?) vs подарувати на пам'ять (на що? на пам'ять про подію); спати вдень (коли?) vs у цей пам'ятний день (у що?); іти додому (куди?) vs підійти до дому лісника (до якої споруди?)."
-    en = "Distinguish fused adverbs (spelled as one word per § 41, p. 1) from homophonous prepositional phrases with nouns (spelled separately per § 41, p. 3): вивчити напам'ять (manner) vs на пам'ять (as a keepsake); спати вдень (time) vs в день народження (on the day of); іти додому (direction) vs підійти до дому (to the house of)."
+    cit = "Правопис 2019 § 41, пп. 1, 2; СУМ-20"
+    ua = "Слід чітко розрізняти прислівники, що пишуться разом (§ 41, п. 1), та омонімічні іменникові сполуки з прийменниками, що пишуться окремо (§ 41, п. 2): вивчити напам'ять (як?) vs подарувати на пам'ять (на що? на пам'ять про подію); спати вдень (коли?) vs у цей пам'ятний день (у що?); іти додому (куди?) vs підійти до дому лісника (до якої споруди?)."
+    en = "Distinguish fused adverbs (spelled as one word per § 41, p. 1) from homophonous prepositional phrases with nouns (spelled separately per § 41, p. 2): вивчити напам'ять (manner) vs на пам'ять (as a keepsake); спати вдень (time) vs в день народження (on the day of); іти додому (direction) vs підійти до дому (to the house of)."
     return cit, ua, en
 
 
 def resolve_homophone_2_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 41, пп. 1, 3; СУМ-20"
-    ua = "Прислівники напрямку пишуться разом per § 41, п. 1 (згори вниз, бігти назустріч, відійти вбік), тоді як сполуки прийменника з іменником за наявності залежних слів пишуться окремо per § 41, п. 3 (спускатися з високої гори, вирушити на зустріч із друзями, поглянути у правий бік вулиці)."
-    en = "Directional adverbs are written as one word per § 41, p. 1 (згори, назустріч, вбік), whereas preposition + noun phrases with dependent words are written separately per § 41, p. 3 (з гори, на зустріч, у бік)."
+    cit = "Правопис 2019 § 41, пп. 1, 2; СУМ-20"
+    ua = "Прислівники напрямку пишуться разом per § 41, п. 1 (згори вниз, бігти назустріч, відійти вбік), тоді як сполуки прийменника з іменником за наявності залежних слів пишуться окремо per § 41, п. 2 (спускатися з високої гори, вирушити на зустріч із друзями, поглянути у правий бік вулиці)."
+    en = "Directional adverbs are written as one word per § 41, p. 1 (згори, назустріч, вбік), whereas preposition + noun phrases with dependent words are written separately per § 41, p. 2 (з гори, на зустріч, у бік)."
     return cit, ua, en
 
 
 def resolve_separate_phrases_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 41, п. 3; СУМ-20"
-    ua = "Прислівникові сполучення, утворені з прийменника та іменника, що зберігають відмінкову самостійність, пишуться окремо per § 41, п. 3: на жаль, до речі, без сумніву, день у день, до побачення. Написання їх разом (*нажаль, *доречі, *допобачення) є грубою помилкою."
-    en = "Adverbial expressions consisting of a preposition and a noun that retain grammatical independence are spelled separately per § 41, p. 3: на жаль, до речі, без сумніву, день у день, до побачення. Writing them as single words (*нажаль, *доречі) is an error."
+    cit = "Правопис 2019 § 41, п. 2; СУМ-20"
+    ua = "Прислівникові сполучення, утворені з прийменника та іменника, що зберігають відмінкову самостійність, пишуться окремо per § 41, п. 2: на жаль, до речі, без сумніву, день у день, до побачення. Написання їх разом (*нажаль, *доречі, *допобачення) є грубою помилкою."
+    en = "Adverbial expressions consisting of a preposition and a noun that retain grammatical independence are spelled separately per § 41, p. 2: на жаль, до речі, без сумніву, день у день, до побачення. Writing them as single words (*нажаль, *доречі) is an error."
     return cit, ua, en
 
 
 def resolve_comparison_synthetic_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 §§ 110, 111; СУМ-20"
-    ua = "Вищий ступінь порівняння якісних прислівників на -о, -е утворюється за допомогою суфіксів -ше, -іше (швидко -> швидше, тепло -> тепліше, глибоко -> глибше) або суплетивно (добре/гарно -> краще, погано -> гірше) per §§ 110, 111. Змішування слів 'більш' із синтетичною формою (*більш краще) є неприпустимим."
-    en = "The comparative degree of qualitative adverbs ending in -о, -е is formed synthetically with suffixes -ше, -іше (швидше, тепліше, глибше) or suppletively (краще, гірше) per §§ 110, 111. Mixing 'більш' with synthetic forms (*більш краще) is grammatically invalid."
+    cit = "Правопис 2019 § 20; Академічна граматика; СУМ-20"
+    ua = "Вищий ступінь порівняння якісних прислівників на -о, -е утворюється за допомогою суфіксів -ше, -іше (швидко -> швидше, тепло -> тепліше, глибоко -> глибше) з чергуванням приголосних per § 20 або суплетивно (добре/гарно -> краще, погано -> гірше). Змішування слів 'більш' із синтетичною формою (*більш краще) є неприпустимим."
+    en = "The comparative degree of qualitative adverbs ending in -о, -е is formed synthetically with suffixes -ше, -іше (швидше, тепліше, глибше) with consonant changes per § 20 or suppletively (краще, гірше). Mixing 'більш' with synthetic forms (*більш краще) is grammatically invalid."
     return cit, ua, en
 
 
 def resolve_comparison_superlative_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 111; СУМ-20"
-    ua = "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище) per § 111. Значення можна посилити префіксами як-, що-, які пишуться разом: якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою."
-    en = "The superlative degree is formed by prefixing най- to the comparative form (найкраще, найвище) per § 111. Intensifying prefixes як-, що- are attached as single words (якнайшвидше, щонайдовше). Using 'самий' (*самий краще) is an ungrammatical calque."
+    cit = "Правопис 2019 § 20; Академічна граматика; СУМ-20"
+    ua = "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище) per § 20 та за нормами академічної граматики. Значення можна посилити префіксами як-, що-, які пишуться разом: якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою."
+    en = "The superlative degree is formed by prefixing най- to the comparative form (найкраще, найвище) per § 20 and academic grammar. Intensifying prefixes як-, що- are attached as single words (якнайшвидше, щонайдовше). Using 'самий' (*самий краще) is an ungrammatical calque."
     return cit, ua, en
 
 
@@ -452,10 +452,10 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                         explanation_en="Particle що- in temporal adverbs (щодня, щомісяця) is attached without a hyphen per § 41, p. 1.",
                     ),
                     AdverbDistractor(
-                        text="кожен день",
-                        interference_key=AdverbInterferenceKey.RUSSIANISM_CALQUE,
-                        explanation_ua="Вживання іменникової сполуки «кожен день» у функції прислівника часто є синтаксичною калькою; нормативно — «щодня».",
-                        explanation_en="Using nominal phrase 'кожен день' adverbially is often a calque; standard Ukrainian uses 'щодня'.",
+                        text="по-щодня",
+                        interference_key=AdverbInterferenceKey.CORRUPTED_ADVERB_FORM,
+                        explanation_ua="Префікс по- з часовим прислівником не вживається; нормативна форма — «щодня».",
+                        explanation_en="Prefix по- is not used with temporal adverbs; standard form is 'щодня'.",
                     ),
                 ),
                 rule_citation=cit_time,
@@ -639,10 +639,10 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                         explanation_en="Adverb 'вперед' is written as one word without a hyphen per § 41, p. 1.",
                     ),
                     AdverbDistractor(
-                        text="наперед",
-                        interference_key=AdverbInterferenceKey.INCORRECT_QUESTION_CATEGORY,
-                        explanation_ua="«Наперед» означає часове випередження (заплатити наперед, знати наперед), тоді як просторовий напрямок руху — «вперед».",
-                        explanation_en="'Наперед' signifies temporal advance (pay in advance); spatial forward movement is 'вперед'.",
+                        text="вперід",
+                        interference_key=AdverbInterferenceKey.CORRUPTED_ADVERB_FORM,
+                        explanation_ua="Форма «вперід» є орфографічно помилковою (чергування е/і тут відсутнє); нормативне написання — «вперед» per § 41, п. 1.",
+                        explanation_en="Form 'вперід' is an orthographic error; standard spelling is 'вперед' per § 41, p. 1.",
                     ),
                 ),
                 rule_citation=cit_place,
@@ -1010,14 +1010,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="по українськи",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Прислівники з префіксом по- та суфіксами -ськи, -цьки пишуться через дефіс per § 41, п. 2 а.",
-                        explanation_en="Adverbs with prefix по- and suffixes -ськи, -цьки are hyphenated per § 41, p. 2 a.",
+                        explanation_ua="Прислівники з префіксом по- та суфіксами -ськи, -цьки пишуться через дефіс per § 41, п. 3, 1).",
+                        explanation_en="Adverbs with prefix по- and suffixes -ськи, -цьки are hyphenated per § 41, p. 3, 1).",
                     ),
                     AdverbDistractor(
                         text="поукраїнськи",
                         interference_key=AdverbInterferenceKey.HYPHEN_OMISSION,
                         explanation_ua="Написання разом є грубою орфографічною помилкою; за правилом § 41, п. 2 а префікс по- з суфіксом -ськи пишеться через дефіс.",
-                        explanation_en="Writing as one word is a serious error; per § 41, p. 2 a prefix по- with suffix -ськи requires a hyphen.",
+                        explanation_en="Writing as one word is a serious error; per § 41, p. 3, 1) prefix по- with suffix -ськи requires a hyphen.",
                     ),
                     AdverbDistractor(
                         text="на українській",
@@ -1040,14 +1040,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="по новому",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Прислівник способу дії «по-новому» пишеться через дефіс per § 41, п. 2 а; окремо пишеться лише прийменник з прикметником: «по новому шляху».",
-                        explanation_en="Adverb of manner 'по-новому' is hyphenated per § 41, p. 2 a; separate 'по новому' is only preposition + adjective.",
+                        explanation_ua="Прислівник способу дії «по-новому» пишеться через дефіс per § 41, п. 3, 1); окремо пишеться лише прийменник з прикметником: «по новому шляху».",
+                        explanation_en="Adverb of manner 'по-новому' is hyphenated per § 41, p. 3, 1); separate 'по новому' is only preposition + adjective.",
                     ),
                     AdverbDistractor(
                         text="поновому",
                         interference_key=AdverbInterferenceKey.HYPHEN_OMISSION,
-                        explanation_ua="Прислівники з префіксом по- та суфіксом -ому пишуться через дефіс, а не разом per § 41, п. 2 а.",
-                        explanation_en="Adverbs with prefix по- and suffix -ому are hyphenated, not written as one word per § 41, p. 2 a.",
+                        explanation_ua="Прислівники з префіксом по- та суфіксом -ому пишуться через дефіс, а не разом per § 41, п. 3, 1).",
+                        explanation_en="Adverbs with prefix по- and suffix -ому are hyphenated, not written as one word per § 41, p. 3, 1).",
                     ),
                     AdverbDistractor(
                         text="за новим",
@@ -1070,14 +1070,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="по батьківськи",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Прислівники з префіксом по- та суфіксами -ськи/-цьки обов'язково пишуться через дефіс per § 41, п. 2 а.",
-                        explanation_en="Adverbs with prefix по- and suffixes -ськи/-цьки must be hyphenated per § 41, p. 2 a.",
+                        explanation_ua="Прислівники з префіксом по- та суфіксами -ськи/-цьки обов'язково пишуться через дефіс per § 41, п. 3, 1).",
+                        explanation_en="Adverbs with prefix по- and suffixes -ськи/-цьки must be hyphenated per § 41, p. 3, 1).",
                     ),
                     AdverbDistractor(
                         text="побатьківськи",
                         interference_key=AdverbInterferenceKey.HYPHEN_OMISSION,
-                        explanation_ua="Префікс по- з суфіксом -ськи не пишеться разом; обов'язковий дефіс per § 41, п. 2 а.",
-                        explanation_en="Prefix по- with suffix -ськи cannot be written together; hyphen is mandatory per § 41, p. 2 a.",
+                        explanation_ua="Префікс по- з суфіксом -ськи не пишеться разом; обов'язковий дефіс per § 41, п. 3, 1).",
+                        explanation_en="Prefix по- with suffix -ськи cannot be written together; hyphen is mandatory per § 41, p. 3, 1).",
                     ),
                     AdverbDistractor(
                         text="як по батькові",
@@ -1100,14 +1100,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="по моєму",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Прислівник «по-моєму» пишеться через дефіс per § 41, п. 2 а; окремо «по моєму» пишеться лише тоді, коли «моєму» є означенням до іменника («по моєму сліду»).",
-                        explanation_en="Adverb 'по-моєму' is hyphenated per § 41, p. 2 a; separate 'по моєму' occurs only with an explicit noun ('по моєму сліду').",
+                        explanation_ua="Прислівник «по-моєму» пишеться через дефіс per § 41, п. 3, 1); окремо «по моєму» пишеться лише тоді, коли «моєму» є означенням до іменника («по моєму сліду»).",
+                        explanation_en="Adverb 'по-моєму' is hyphenated per § 41, p. 3, 1); separate 'по моєму' occurs only with an explicit noun ('по моєму сліду').",
                     ),
                     AdverbDistractor(
                         text="помоєму",
                         interference_key=AdverbInterferenceKey.HYPHEN_OMISSION,
-                        explanation_ua="Прислівники, утворені від займенників з префіксом по- та суфіксом -ему/-ому, пишуться через дефіс, а не разом per § 41, п. 2 а.",
-                        explanation_en="Pronominal adverbs with prefix по- and suffix -ему/-ому are hyphenated, not fused per § 41, p. 2 a.",
+                        explanation_ua="Прислівники, утворені від займенників з префіксом по- та суфіксом -ему/-ому, пишуться через дефіс, а не разом per § 41, п. 3, 1).",
+                        explanation_en="Pronominal adverbs with prefix по- and suffix -ему/-ому are hyphenated, not fused per § 41, p. 3, 1).",
                     ),
                     AdverbDistractor(
                         text="по-мойому",
@@ -1130,14 +1130,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="по дитячому",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Прислівники з префіксом по- та суфіксом -ому пишуться через дефіс per § 41, п. 2 а.",
-                        explanation_en="Adverbs with prefix по- and suffix -ому are hyphenated per § 41, p. 2 a.",
+                        explanation_ua="Прислівники з префіксом по- та суфіксом -ому пишуться через дефіс per § 41, п. 3, 1).",
+                        explanation_en="Adverbs with prefix по- and suffix -ому are hyphenated per § 41, p. 3, 1).",
                     ),
                     AdverbDistractor(
                         text="подитячому",
                         interference_key=AdverbInterferenceKey.HYPHEN_OMISSION,
-                        explanation_ua="Разом прислівник «по-дитячому» не пишеться; наявність префікса по- та суфікса -ому вимагає дефіса per § 41, п. 2 а.",
-                        explanation_en="'По-дитячому' cannot be written together; presence of по- and -ому requires a hyphen per § 41, p. 2 a.",
+                        explanation_ua="Разом прислівник «по-дитячому» не пишеться; наявність префікса по- та суфікса -ому вимагає дефіса per § 41, п. 3, 1).",
+                        explanation_en="'По-дитячому' cannot be written together; presence of по- and -ому requires a hyphen per § 41, p. 3, 1).",
                     ),
                     AdverbDistractor(
                         text="по дитячи",
@@ -1167,14 +1167,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="будь де",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Частка будь- у складі прислівників завжди пишеться через дефіс per § 41, п. 2 б (будь-де, будь-коли, будь-куди).",
-                        explanation_en="Particle будь- in adverbs is always hyphenated per § 41, p. 2 b (будь-де, будь-коли).",
+                        explanation_ua="Частка будь- у складі прислівників завжди пишеться через дефіс per § 41, п. 3, 2) (будь-де, будь-коли, будь-куди).",
+                        explanation_en="Particle будь- in adverbs is always hyphenated per § 41, p. 3, 2) (будь-де, будь-коли).",
                     ),
                     AdverbDistractor(
                         text="будьде",
                         interference_key=AdverbInterferenceKey.HYPHEN_OMISSION,
-                        explanation_ua="Частка будь- не пишеться разом із прислівниками; правильне написання — через дефіс per § 41, п. 2 б.",
-                        explanation_en="Particle будь- is never fused with adverbs; correct spelling requires a hyphen per § 41, p. 2 b.",
+                        explanation_ua="Частка будь- не пишеться разом із прислівниками; правильне написання — через дефіс per § 41, п. 3, 2).",
+                        explanation_en="Particle будь- is never fused with adverbs; correct spelling requires a hyphen per § 41, p. 3, 2).",
                     ),
                     AdverbDistractor(
                         text="будь-куди",
@@ -1197,14 +1197,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="як небудь",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Частка -небудь у складі неозначених прислівників пишеться через дефіс per § 41, п. 2 б (як-небудь, де-небудь, коли-небудь).",
-                        explanation_en="Particle -небудь in indefinite adverbs is hyphenated per § 41, p. 2 b (як-небудь, де-небудь).",
+                        explanation_ua="Частка -небудь у складі неозначених прислівників пишеться через дефіс per § 41, п. 3, 2) (як-небудь, де-небудь, коли-небудь).",
+                        explanation_en="Particle -небудь in indefinite adverbs is hyphenated per § 41, p. 3, 2) (як-небудь, де-небудь).",
                     ),
                     AdverbDistractor(
                         text="якнебудь",
                         interference_key=AdverbInterferenceKey.HYPHEN_OMISSION,
-                        explanation_ua="Частка -небудь не пишеться разом з основою; вона завжди приєднується дефісом per § 41, п. 2 б.",
-                        explanation_en="Particle -небудь is never written as one word; it is always attached with a hyphen per § 41, p. 2 b.",
+                        explanation_ua="Частка -небудь не пишеться разом з основою; вона завжди приєднується дефісом per § 41, п. 3, 2).",
+                        explanation_en="Particle -небудь is never written as one word; it is always attached with a hyphen per § 41, p. 3, 2).",
                     ),
                     AdverbDistractor(
                         text="як попало",
@@ -1227,14 +1227,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="хтозна як",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Частка хтозна- пишеться з прислівниками через дефіс per § 41, п. 2 б (хтозна-як, хтозна-де, хтозна-коли).",
-                        explanation_en="Particle хтозна- is hyphenated with adverbs per § 41, p. 2 b (хтозна-як, хтозна-де).",
+                        explanation_ua="Частка хтозна- пишеться з прислівниками через дефіс per § 41, п. 3, 2) (хтозна-як, хтозна-де, хтозна-коли).",
+                        explanation_en="Particle хтозна- is hyphenated with adverbs per § 41, p. 3, 2) (хтозна-як, хтозна-де).",
                     ),
                     AdverbDistractor(
                         text="хтознаяк",
                         interference_key=AdverbInterferenceKey.HYPHEN_OMISSION,
-                        explanation_ua="Слово «хтозна-як» не пишеться разом; частка хтозна- вимагає написання через дефіс per § 41, п. 2 б.",
-                        explanation_en="'Хтозна-як' cannot be fused; particle хтозна- strictly requires a hyphen per § 41, p. 2 b.",
+                        explanation_ua="Слово «хтозна-як» не пишеться разом; частка хтозна- вимагає написання через дефіс per § 41, п. 3, 2).",
+                        explanation_en="'Хтозна-як' cannot be fused; particle хтозна- strictly requires a hyphen per § 41, p. 3, 2).",
                     ),
                     AdverbDistractor(
                         text="бог знає як",
@@ -1257,20 +1257,20 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="казна коли",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Частка казна- з прислівниками пишеться через дефіс per § 41, п. 2 б.",
-                        explanation_en="Particle казна- with adverbs is hyphenated per § 41, p. 2 b.",
+                        explanation_ua="Частка казна- з прислівниками пишеться через дефіс per § 41, п. 3, 2).",
+                        explanation_en="Particle казна- with adverbs is hyphenated per § 41, p. 3, 2).",
                     ),
                     AdverbDistractor(
                         text="казнаколи",
                         interference_key=AdverbInterferenceKey.HYPHEN_OMISSION,
-                        explanation_ua="Написання разом є орфографічною помилкою; частка казна- приєднується через дефіс per § 41, п. 2 б.",
-                        explanation_en="Fused spelling is an orthographic error; particle казна- attaches via hyphen per § 41, p. 2 b.",
+                        explanation_ua="Написання разом є орфографічною помилкою; частка казна- приєднується через дефіс per § 41, п. 3, 2).",
+                        explanation_en="Fused spelling is an orthographic error; particle казна- attaches via hyphen per § 41, p. 3, 2).",
                     ),
                     AdverbDistractor(
                         text="бозна коли",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Частка бозна- так само вимагає дефіса (бозна-коли); роздільне написання помилкове per § 41, п. 2 б.",
-                        explanation_en="Particle бозна- likewise requires a hyphen (бозна-коли); separate writing is wrong per § 41, p. 2 b.",
+                        explanation_ua="Частка бозна- так само вимагає дефіса (бозна-коли); роздільне написання помилкове per § 41, п. 3, 2).",
+                        explanation_en="Particle бозна- likewise requires a hyphen (бозна-коли); separate writing is wrong per § 41, p. 3, 2).",
                     ),
                 ),
                 rule_citation=cit_part,
@@ -1287,14 +1287,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="бозна як",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Частка бозна- у складі неозначених прислівників завжди пишеться через дефіс per § 41, п. 2 б.",
-                        explanation_en="Particle бозна- in indefinite adverbs is always hyphenated per § 41, p. 2 b.",
+                        explanation_ua="Частка бозна- у складі неозначених прислівників завжди пишеться через дефіс per § 41, п. 3, 2).",
+                        explanation_en="Particle бозна- in indefinite adverbs is always hyphenated per § 41, p. 3, 2).",
                     ),
                     AdverbDistractor(
                         text="бознаяк",
                         interference_key=AdverbInterferenceKey.HYPHEN_OMISSION,
-                        explanation_ua="Частка бозна- не пишеться разом; обов'язкове написання через дефіс per § 41, п. 2 б.",
-                        explanation_en="Particle бозна- is not written together; hyphenation is mandatory per § 41, p. 2 b.",
+                        explanation_ua="Частка бозна- не пишеться разом; обов'язкове написання через дефіс per § 41, п. 3, 2).",
+                        explanation_en="Particle бозна- is not written together; hyphenation is mandatory per § 41, p. 3, 2).",
                     ),
                     AdverbDistractor(
                         text="бозна-куди",
@@ -1324,20 +1324,20 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="віч на віч",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Складний прислівник «віч-на-віч» пишеться з двома дефісами per § 41, п. 2 в.",
-                        explanation_en="Compound adverb 'віч-на-віч' is written with two hyphens per § 41, p. 2 c.",
+                        explanation_ua="Складний прислівник «віч-на-віч» пишеться з двома дефісами per § 41, п. 3, 3).",
+                        explanation_en="Compound adverb 'віч-на-віч' is written with two hyphens per § 41, p. 3, 3).",
                     ),
                     AdverbDistractor(
                         text="вічнавіч",
                         interference_key=AdverbInterferenceKey.HYPHEN_OMISSION,
-                        explanation_ua="Слово «віч-на-віч» не пишеться разом; воно складається з двох однакових іменників, з'єднаних прийменником, і пишеться через дефіси per § 41, п. 2 в.",
-                        explanation_en="'Віч-на-віч' cannot be fused; identical nouns joined by preposition take hyphens per § 41, p. 2 c.",
+                        explanation_ua="Слово «віч-на-віч» не пишеться разом; воно складається з двох однакових іменників, з'єднаних прийменником, і пишеться через дефіси per § 41, п. 3, 3).",
+                        explanation_en="'Віч-на-віч' cannot be fused; identical nouns joined by preposition take hyphens per § 41, p. 3, 3).",
                     ),
                     AdverbDistractor(
                         text="віч на-віч",
                         interference_key=AdverbInterferenceKey.CORRUPTED_ADVERB_FORM,
-                        explanation_ua="У складному прислівнику «віч-на-віч» обидва з'єднання вимагають дефісів per § 41, п. 2 в; односторонній дефіс неприпустимий.",
-                        explanation_en="In compound adverb 'віч-на-віч' both junctures require hyphens per § 41, p. 2 c; a single hyphen is incorrect.",
+                        explanation_ua="У складному прислівнику «віч-на-віч» обидва з'єднання вимагають дефісів per § 41, п. 3, 3); односторонній дефіс неприпустимий.",
+                        explanation_en="In compound adverb 'віч-на-віч' both junctures require hyphens per § 41, p. 3, 3); a single hyphen is incorrect.",
                     ),
                 ),
                 rule_citation=cit_red,
@@ -1354,20 +1354,20 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="пліч о пліч",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Прислівникове сполучення «пліч-о-пліч» пишеться з двома дефісами per § 41, п. 2 в.",
-                        explanation_en="Adverbial phrase 'пліч-о-пліч' is written with two hyphens per § 41, p. 2 c.",
+                        explanation_ua="Прислівникове сполучення «пліч-о-пліч» пишеться з двома дефісами per § 41, п. 3, 3).",
+                        explanation_en="Adverbial phrase 'пліч-о-пліч' is written with two hyphens per § 41, p. 3, 3).",
                     ),
                     AdverbDistractor(
                         text="плічопліч",
                         interference_key=AdverbInterferenceKey.HYPHEN_OMISSION,
-                        explanation_ua="Написання разом помилкове; сполука «пліч-о-пліч» обов'язково оформлюється через дефіси per § 41, п. 2 в.",
-                        explanation_en="Writing together is wrong; 'пліч-о-пліч' strictly requires hyphens per § 41, p. 2 c.",
+                        explanation_ua="Написання разом помилкове; сполука «пліч-о-пліч» обов'язково оформлюється через дефіси per § 41, п. 3, 3).",
+                        explanation_en="Writing together is wrong; 'пліч-о-пліч' strictly requires hyphens per § 41, p. 3, 3).",
                     ),
                     AdverbDistractor(
                         text="пліч-на-пліч",
                         interference_key=AdverbInterferenceKey.CORRUPTED_ADVERB_FORM,
-                        explanation_ua="Усталений складний прислівник має сполучний голосний о: «пліч-о-пліч», а не прийменник на per § 41, п. 2 в.",
-                        explanation_en="The set compound adverb has linking vowel о: 'пліч-о-пліч', not preposition на per § 41, p. 2 c.",
+                        explanation_ua="Усталений складний прислівник має сполучний голосний о: «пліч-о-пліч», а не прийменник на per § 41, п. 3, 3).",
+                        explanation_en="The set compound adverb has linking vowel о: 'пліч-о-пліч', not preposition на per § 41, p. 3, 3).",
                     ),
                 ),
                 rule_citation=cit_red,
@@ -1384,14 +1384,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="тишком нишком",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Синонімічні парні прислівники пишуться через дефіс per § 41, п. 2 в (тишком-нишком, зроду-віку).",
-                        explanation_en="Synonymous paired adverbs are hyphenated per § 41, p. 2 c (тишком-нишком).",
+                        explanation_ua="Синонімічні парні прислівники пишуться через дефіс per § 41, п. 3, 3) (тишком-нишком, зроду-віку).",
+                        explanation_en="Synonymous paired adverbs are hyphenated per § 41, p. 3, 3) (тишком-нишком).",
                     ),
                     AdverbDistractor(
                         text="тишкомнишком",
                         interference_key=AdverbInterferenceKey.HYPHEN_OMISSION,
-                        explanation_ua="Парне повторення близьких за значенням слів не пишеться разом; потрібен дефіс per § 41, п. 2 в.",
-                        explanation_en="Paired synonymous roots are not written together; a hyphen is required per § 41, p. 2 c.",
+                        explanation_ua="Парне повторення близьких за значенням слів не пишеться разом; потрібен дефіс per § 41, п. 3, 3).",
+                        explanation_en="Paired synonymous roots are not written together; a hyphen is required per § 41, p. 3, 3).",
                     ),
                     AdverbDistractor(
                         text="тихо-нишком",
@@ -1414,14 +1414,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="ледве ледве",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Повторення того самого слова для підсилення значення пишеться через дефіс per § 41, п. 2 в.",
-                        explanation_en="Reduplication of the same word for emphasis is hyphenated per § 41, p. 2 c.",
+                        explanation_ua="Повторення того самого слова для підсилення значення пишеться через дефіс per § 41, п. 3, 3).",
+                        explanation_en="Reduplication of the same word for emphasis is hyphenated per § 41, p. 3, 3).",
                     ),
                     AdverbDistractor(
                         text="ледвеледве",
                         interference_key=AdverbInterferenceKey.HYPHEN_OMISSION,
-                        explanation_ua="Повторювані слова ніколи не зливаються в одне слово; дефіс обов'язковий per § 41, п. 2 в.",
-                        explanation_en="Reduplicated words never merge into a single word; hyphen is mandatory per § 41, p. 2 c.",
+                        explanation_ua="Повторювані слова ніколи не зливаються в одне слово; дефіс обов'язковий per § 41, п. 3, 3).",
+                        explanation_en="Reduplicated words never merge into a single word; hyphen is mandatory per § 41, p. 3, 3).",
                     ),
                     AdverbDistractor(
                         text="чуть-чуть",
@@ -1444,14 +1444,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="давним давно",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Підсилювальне сполучення однакових коренів різної форми пишеться через дефіс per § 41, п. 2 в (давним-давно, повік-віки).",
-                        explanation_en="Emphatic combination of identical roots in different forms is hyphenated per § 41, p. 2 c.",
+                        explanation_ua="Підсилювальне сполучення однакових коренів різної форми пишеться через дефіс per § 41, п. 3, 3) (давним-давно, повік-віки).",
+                        explanation_en="Emphatic combination of identical roots in different forms is hyphenated per § 41, p. 3, 3).",
                     ),
                     AdverbDistractor(
                         text="давнимдавно",
                         interference_key=AdverbInterferenceKey.HYPHEN_OMISSION,
-                        explanation_ua="Слово «давним-давно» пишеться через дефіс, а не разом per § 41, п. 2 в.",
-                        explanation_en="Word 'давним-давно' is hyphenated, not written as one word per § 41, p. 2 c.",
+                        explanation_ua="Слово «давним-давно» пишеться через дефіс, а не разом per § 41, п. 3, 3).",
+                        explanation_en="Word 'давним-давно' is hyphenated, not written as one word per § 41, p. 3, 3).",
                     ),
                     AdverbDistractor(
                         text="давнім-давно",
@@ -1638,8 +1638,8 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="напам'ять",
                         interference_key=AdverbInterferenceKey.HOMOPHONE_ADVERB_CONFUSION,
-                        explanation_ua="Тут вжито іменник «пам'ять» у значенні спогаду (подарувати на пам'ять про подію), тому прийменник пишеться окремо per § 41, п. 3; разом «напам'ять» пишеться лише про запам'ятовування тексту напам'ять.",
-                        explanation_en="Here noun 'пам'ять' is used meaning keepsake/remembrance; preposition is written separately ('на пам'ять') per § 41, p. 3. Fused 'напам'ять' means reciting by heart.",
+                        explanation_ua="Тут вжито іменник «пам'ять» у значенні спогаду (подарувати на пам'ять про подію), тому прийменник пишеться окремо per § 41, п. 2; разом «напам'ять» пишеться лише про запам'ятовування тексту напам'ять.",
+                        explanation_en="Here noun 'пам'ять' is used meaning keepsake/remembrance; preposition is written separately ('на пам'ять') per § 41, p. 2. Fused 'напам'ять' means reciting by heart.",
                     ),
                     AdverbDistractor(
                         text="на-пам'ять",
@@ -1698,8 +1698,8 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="вдень",
                         interference_key=AdverbInterferenceKey.HOMOPHONE_ADVERB_CONFUSION,
-                        explanation_ua="Тут є конкретний іменник «день» із залежним родовим відмінком («день народження»), тому прийменник пишеться окремо per § 41, п. 3; разом «вдень» пишеться тільки прислівник на позначення світлої частини доби.",
-                        explanation_en="Here noun 'день' has dependent Genitive ('день народження'), so preposition is written separately per § 41, p. 3; fused 'вдень' is strictly the temporal adverb for daytime.",
+                        explanation_ua="Тут є конкретний іменник «день» із залежним родовим відмінком («день народження»), тому прийменник пишеться окремо per § 41, п. 2; разом «вдень» пишеться тільки прислівник на позначення світлої частини доби.",
+                        explanation_en="Here noun 'день' has dependent Genitive ('день народження'), so preposition is written separately per § 41, p. 2; fused 'вдень' is strictly the temporal adverb for daytime.",
                     ),
                     AdverbDistractor(
                         text="в-день",
@@ -1738,10 +1738,10 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                         explanation_en="Adverb 'вдень' is written together without a hyphen per § 41, p. 1.",
                     ),
                     AdverbDistractor(
-                        text="днем",
-                        interference_key=AdverbInterferenceKey.CORRUPTED_ADVERB_FORM,
-                        explanation_ua="В українській мові основним нормативним прислівником на позначення денного часу є «вдень».",
-                        explanation_en="In Ukrainian the primary normative adverb denoting daytime hours is 'вдень'.",
+                        text="у день",
+                        interference_key=AdverbInterferenceKey.HOMOPHONE_NOUN_PREP_CONFUSION,
+                        explanation_ua="Сполука «у день» з прийменником пишеться окремо per § 41, п. 2, тоді як часовий прислівник «вдень» пишеться разом per § 41, п. 1.",
+                        explanation_en="Prepositional phrase 'у день' is written separately per § 41, p. 2, while temporal adverb 'вдень' is written together per § 41, p. 1.",
                     ),
                 ),
                 rule_citation=cit_hom1,
@@ -1758,7 +1758,7 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="додому",
                         interference_key=AdverbInterferenceKey.HOMOPHONE_ADVERB_CONFUSION,
-                        explanation_ua="Тут «до дому» вжито як прийменник з конкретним іменником чоловічого роду (будівлею), що має означення («старовинної садиби»), тому пишеться окремо per § 41, п. 3; прислівник «додому» означає своє помешкання й не має залежних іменників.",
+                        explanation_ua="Тут «до дому» вжито як прийменник з конкретним іменником чоловічого роду (будівлею), що має означення («старовинної садиби»), тому пишеться окремо per § 41, п. 2; прислівник «додому» означає своє помешкання й не має залежних іменників.",
                         explanation_en="Here 'до дому' is a preposition with a specific modified noun ('house of the estate'); fused 'додому' means one's own home without dependents per § 41, p. 1.",
                     ),
                     AdverbDistractor(
@@ -1795,8 +1795,8 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="до дому",
                         interference_key=AdverbInterferenceKey.HOMOPHONE_NOUN_PREP_CONFUSION,
-                        explanation_ua="Прислівник напрямку «куди? додому» (до свого житла) пишеться разом per § 41, п. 1; окремо «до дому» пишеться лише тоді, коли йдеться про конкретний будинок з означенням per § 41, п. 3.",
-                        explanation_en="Directional adverb 'homewards' is written together per § 41, p. 1; separate 'до дому' applies only to a concrete building with modifiers per § 41, p. 3.",
+                        explanation_ua="Прислівник напрямку «куди? додому» (до свого житла) пишеться разом per § 41, п. 1; окремо «до дому» пишеться лише тоді, коли йдеться про конкретний будинок з означенням per § 41, п. 2.",
+                        explanation_en="Directional adverb 'homewards' is written together per § 41, p. 1; separate 'до дому' applies only to a concrete building with modifiers per § 41, p. 2.",
                     ),
                     AdverbDistractor(
                         text="до-дому",
@@ -1825,8 +1825,8 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="згори",
                         interference_key=AdverbInterferenceKey.HOMOPHONE_ADVERB_CONFUSION,
-                        explanation_ua="Тут є конкретний географічний об'єкт — гора («з гори Говерли»), тому прийменник «з» пишеться окремо від іменника per § 41, п. 3; разом «згори» пишеться тільки прислівник напрямку (дивитися згори вниз).",
-                        explanation_en="Here is a concrete mountain ('from Mount Hoverla'), so preposition 'з' is separate per § 41, p. 3; fused 'згори' is strictly the directional adverb.",
+                        explanation_ua="Тут є конкретний географічний об'єкт — гора («з гори Говерли»), тому прийменник «з» пишеться окремо від іменника per § 41, п. 2; разом «згори» пишеться тільки прислівник напрямку (дивитися згори вниз).",
+                        explanation_en="Here is a concrete mountain ('from Mount Hoverla'), so preposition 'з' is separate per § 41, p. 2; fused 'згори' is strictly the directional adverb.",
                     ),
                     AdverbDistractor(
                         text="з-гори",
@@ -1855,7 +1855,7 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="з гори",
                         interference_key=AdverbInterferenceKey.HOMOPHONE_NOUN_PREP_CONFUSION,
-                        explanation_ua="Прислівник напрямку «звідки? згори» пишеться разом per § 41, п. 1, коли немає конкретного іменника (гори); окремо «з гори» пишеться лише про реальну височину per § 41, п. 3.",
+                        explanation_ua="Прислівник напрямку «звідки? згори» пишеться разом per § 41, п. 1, коли немає конкретного іменника (гори); окремо «з гори» пишеться лише про реальну височину per § 41, п. 2.",
                         explanation_en="Directional adverb 'from above' is written together per § 41, p. 1 when no physical mountain is referenced.",
                     ),
                     AdverbDistractor(
@@ -1885,8 +1885,8 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="назустріч",
                         interference_key=AdverbInterferenceKey.HOMOPHONE_ADVERB_CONFUSION,
-                        explanation_ua="Тут маємо іменник «зустріч» (подія, захід) з означенням («зі своїми читачами»), тому прийменник пишеться окремо: «на зустріч» per § 41, п. 3; разом «назустріч» пишеться прислівник руху (йти назустріч вітру) per § 41, п. 1.",
-                        explanation_en="Here noun 'зустріч' refers to an event with readers, so preposition is separate ('на зустріч') per § 41, p. 3; fused 'назустріч' is the directional adverb per § 41, p. 1.",
+                        explanation_ua="Тут маємо іменник «зустріч» (подія, захід) з означенням («зі своїми читачами»), тому прийменник пишеться окремо: «на зустріч» per § 41, п. 2; разом «назустріч» пишеться прислівник руху (йти назустріч вітру) per § 41, п. 1.",
+                        explanation_en="Here noun 'зустріч' refers to an event with readers, so preposition is separate ('на зустріч') per § 41, p. 2; fused 'назустріч' is the directional adverb per § 41, p. 1.",
                     ),
                     AdverbDistractor(
                         text="на-зустріч",
@@ -1915,8 +1915,8 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="на зустріч",
                         interference_key=AdverbInterferenceKey.HOMOPHONE_NOUN_PREP_CONFUSION,
-                        explanation_ua="Прислівник/прийменниковий прислівник напрямку руху (куди? назустріч) пишеться разом per § 41, п. 1; окремо пишеться лише іменник події (іти на зустріч випускників) per § 41, п. 3.",
-                        explanation_en="Directional adverb 'towards' is written together per § 41, p. 1; separate 'на зустріч' refers to an event/meeting per § 41, p. 3.",
+                        explanation_ua="Прислівник/прийменниковий прислівник напрямку руху (куди? назустріч) пишеться разом per § 41, п. 1; окремо пишеться лише іменник події (іти на зустріч випускників) per § 41, п. 2.",
+                        explanation_en="Directional adverb 'towards' is written together per § 41, p. 1; separate 'на зустріч' refers to an event/meeting per § 41, p. 2.",
                     ),
                     AdverbDistractor(
                         text="на-зустріч",
@@ -1952,14 +1952,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="нажаль",
                         interference_key=AdverbInterferenceKey.UNWARRANTED_FUSION,
-                        explanation_ua="Прислівникове сполучення «на жаль» складається з прийменника та іменника й пишеться строго ОКРЕМО per § 41, п. 3; написання разом є поширеною помилкою.",
-                        explanation_en="Phrase 'на жаль' consists of preposition + noun and is written strictly SEPARATELY per § 41, p. 3; fusing is a common error.",
+                        explanation_ua="Прислівникове сполучення «на жаль» складається з прийменника та іменника й пишеться строго ОКРЕМО per § 41, п. 2; написання разом є поширеною помилкою.",
+                        explanation_en="Phrase 'на жаль' consists of preposition + noun and is written strictly SEPARATELY per § 41, p. 2; fusing is a common error.",
                     ),
                     AdverbDistractor(
                         text="на-жаль",
                         interference_key=AdverbInterferenceKey.UNWARRANTED_HYPHEN,
-                        explanation_ua="У сполуці «на жаль» дефіс заборонено; слова пишуться окремо per § 41, п. 3.",
-                        explanation_en="Hyphen is prohibited in 'на жаль'; words are written separately per § 41, p. 3.",
+                        explanation_ua="У сполуці «на жаль» дефіс заборонено; слова пишуться окремо per § 41, п. 2.",
+                        explanation_en="Hyphen is prohibited in 'на жаль'; words are written separately per § 41, p. 2.",
                     ),
                     AdverbDistractor(
                         text="к жалю",
@@ -1982,14 +1982,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="доречі",
                         interference_key=AdverbInterferenceKey.UNWARRANTED_FUSION,
-                        explanation_ua="Прислівникове сполучення «до речі» пишеться завжди ОКРЕМО per § 41, п. 3; написання разом є грубою орфографічною помилкою.",
-                        explanation_en="Adverbial phrase 'до речі' is always written SEPARATELY per § 41, p. 3; fusing is an orthographic error.",
+                        explanation_ua="Прислівникове сполучення «до речі» пишеться завжди ОКРЕМО per § 41, п. 2; написання разом є грубою орфографічною помилкою.",
+                        explanation_en="Adverbial phrase 'до речі' is always written SEPARATELY per § 41, p. 2; fusing is an orthographic error.",
                     ),
                     AdverbDistractor(
                         text="до-речі",
                         interference_key=AdverbInterferenceKey.UNWARRANTED_HYPHEN,
-                        explanation_ua="Сполучення «до речі» пишеться окремо без дефіса per § 41, п. 3.",
-                        explanation_en="Phrase 'до речі' is written separately without a hyphen per § 41, p. 3.",
+                        explanation_ua="Сполучення «до речі» пишеться окремо без дефіса per § 41, п. 2.",
+                        explanation_en="Phrase 'до речі' is written separately without a hyphen per § 41, p. 2.",
                     ),
                     AdverbDistractor(
                         text="к речі",
@@ -2012,14 +2012,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="безсумніву",
                         interference_key=AdverbInterferenceKey.UNWARRANTED_FUSION,
-                        explanation_ua="Прислівникове сполучення з прийменником «без сумніву» пишеться ОКРЕМО per § 41, п. 3.",
-                        explanation_en="Adverbial prepositional phrase 'без сумніву' is written SEPARATELY per § 41, p. 3.",
+                        explanation_ua="Прислівникове сполучення з прийменником «без сумніву» пишеться ОКРЕМО per § 41, п. 2.",
+                        explanation_en="Adverbial prepositional phrase 'без сумніву' is written SEPARATELY per § 41, p. 2.",
                     ),
                     AdverbDistractor(
                         text="без-сумніву",
                         interference_key=AdverbInterferenceKey.UNWARRANTED_HYPHEN,
-                        explanation_ua="У сполуці «без сумніву» дефіс не ставиться; слова пишуться окремо per § 41, п. 3.",
-                        explanation_en="No hyphen in 'без сумніву'; words are spelled separately per § 41, p. 3.",
+                        explanation_ua="У сполуці «без сумніву» дефіс не ставиться; слова пишуться окремо per § 41, п. 2.",
+                        explanation_en="No hyphen in 'без сумніву'; words are spelled separately per § 41, p. 2.",
                     ),
                     AdverbDistractor(
                         text="безспорно",
@@ -2042,14 +2042,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="день-у-день",
                         interference_key=AdverbInterferenceKey.UNWARRANTED_HYPHEN,
-                        explanation_ua="Сполучення двох однакових іменників з прийменником між ними пишуться ОКРЕМО per § 41, п. 3 (день у день, раз у раз, сам на сам).",
-                        explanation_en="Repetitions of identical nouns with preposition between them are written SEPARATELY per § 41, p. 3 (день у день, раз у раз).",
+                        explanation_ua="Сполучення двох однакових іменників з прийменником між ними пишуться ОКРЕМО per § 41, п. 2 (день у день, раз у раз, сам на сам).",
+                        explanation_en="Repetitions of identical nouns with preposition between them are written SEPARATELY per § 41, p. 2 (день у день, раз у раз).",
                     ),
                     AdverbDistractor(
                         text="день удень",
                         interference_key=AdverbInterferenceKey.UNWARRANTED_FUSION,
-                        explanation_ua="Обидва іменники пишуться окремо від прийменника: «день у день» per § 41, п. 3.",
-                        explanation_en="Both nouns are written separately from preposition: 'день у день' per § 41, p. 3.",
+                        explanation_ua="Обидва іменники пишуться окремо від прийменника: «день у день» per § 41, п. 2.",
+                        explanation_en="Both nouns are written separately from preposition: 'день у день' per § 41, p. 2.",
                     ),
                     AdverbDistractor(
                         text="день в день",
@@ -2072,14 +2072,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="допобачення",
                         interference_key=AdverbInterferenceKey.UNWARRANTED_FUSION,
-                        explanation_ua="Етикетний вираз «до побачення» складається з прийменника та віддієслівного іменника й пишеться ОКРЕМО per § 41, п. 3.",
-                        explanation_en="Etiquette formula 'до побачення' consists of preposition + verbal noun and is written SEPARATELY per § 41, p. 3.",
+                        explanation_ua="Етикетний вираз «до побачення» складається з прийменника та віддієслівного іменника й пишеться ОКРЕМО per § 41, п. 2.",
+                        explanation_en="Etiquette formula 'до побачення' consists of preposition + verbal noun and is written SEPARATELY per § 41, p. 2.",
                     ),
                     AdverbDistractor(
                         text="до-побачення",
                         interference_key=AdverbInterferenceKey.UNWARRANTED_HYPHEN,
-                        explanation_ua="У виразі «до побачення» дефіс не вживається; слова пишуться окремо per § 41, п. 3.",
-                        explanation_en="Hyphens are not used in 'до побачення'; words are written separately per § 41, p. 3.",
+                        explanation_ua="У виразі «до побачення» дефіс не вживається; слова пишуться окремо per § 41, п. 2.",
+                        explanation_en="Hyphens are not used in 'до побачення'; words are written separately per § 41, p. 2.",
                     ),
                     AdverbDistractor(
                         text="давай до побачення",
@@ -2109,14 +2109,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="більш швидше",
                         interference_key=AdverbInterferenceKey.COMPARATIVE_COMPOUND_CALQUE,
-                        explanation_ua="Поєднання слова «більш» із простою формою вищого ступеня («більш швидше») є грубою граматичною помилкою; слід уживати або просту форму «швидше», або складену «більш швидко» per § 110.",
-                        explanation_en="Combining 'більш' with simple comparative ('більш швидше') is a grammatical error; use either simple 'швидше' or compound 'більш швидко' per § 110.",
+                        explanation_ua="Поєднання слова «більш» із простою формою вищого ступеня («більш швидше») є грубою граматичною помилкою; слід уживати або просту форму «швидше», або складену «більш швидко» per § 20.",
+                        explanation_en="Combining 'більш' with simple comparative ('більш швидше') is a grammatical error; use either simple 'швидше' or compound 'більш швидко' per § 20.",
                     ),
                     AdverbDistractor(
                         text="швидкіше",
                         interference_key=AdverbInterferenceKey.CORRUPTED_ADVERB_FORM,
-                        explanation_ua="Від прикметника «швидкий» нормативна проста форма вищого ступеня утворюється за допомогою суфікса -ше: «швидше», а не -іше per § 110.",
-                        explanation_en="From 'швидкий' standard comparative takes suffix -ше: 'швидше', not -іше per § 110.",
+                        explanation_ua="Від прикметника «швидкий» нормативна проста форма вищого ступеня утворюється за допомогою суфікса -ше: «швидше», а не -іше per § 20.",
+                        explanation_en="From 'швидкий' standard comparative takes suffix -ше: 'швидше', not -іше per § 20.",
                     ),
                     AdverbDistractor(
                         text="самий швидко",
@@ -2139,8 +2139,8 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="більш краще",
                         interference_key=AdverbInterferenceKey.COMPARATIVE_COMPOUND_CALQUE,
-                        explanation_ua="Поєднання слова «більш» із простою формою вищого ступеня («більш краще») є грубою граматичною помилкою; слід уживати або просту форму «краще», або «більш якісно» per § 110.",
-                        explanation_en="Combining 'більш' with synthetic comparative ('більш краще') is a gross error; use simple 'краще' or 'більш якісно' per § 110.",
+                        explanation_ua="Поєднання слова «більш» із простою формою вищого ступеня («більш краще») є грубою граматичною помилкою; слід уживати або просту форму «краще», або «більш якісно» per § 20.",
+                        explanation_en="Combining 'більш' with synthetic comparative ('більш краще') is a gross error; use simple 'краще' or 'більш якісно' per § 20.",
                     ),
                     AdverbDistractor(
                         text="самий краще",
@@ -2169,8 +2169,8 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="більш гірше",
                         interference_key=AdverbInterferenceKey.COMPARATIVE_COMPOUND_CALQUE,
-                        explanation_ua="Змішування аналітичної та синтетичної форм («більш гірше») суворо заборонено граматикою; правильно — «гірше» per § 110.",
-                        explanation_en="Mixing analytic and synthetic comparative forms ('більш гірше') is prohibited; correct is 'гірше' per § 110.",
+                        explanation_ua="Змішування аналітичної та синтетичної форм («більш гірше») суворо заборонено граматикою; правильно — «гірше» per § 20.",
+                        explanation_en="Mixing analytic and synthetic comparative forms ('більш гірше') is prohibited; correct is 'гірше' per § 20.",
                     ),
                     AdverbDistractor(
                         text="самий гірше",
@@ -2199,8 +2199,8 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="глибокіше",
                         interference_key=AdverbInterferenceKey.CORRUPTED_ADVERB_FORM,
-                        explanation_ua="При утворенні вищого ступеня суфікс -ок- випадає: глибокий -> глибше (а не «глибокіше») per § 110, п. 1 а.",
-                        explanation_en="In forming the comparative suffix -ок- drops: глибокий -> глибше (not 'глибокіше') per § 110, p. 1 a.",
+                        explanation_ua="При утворенні вищого ступеня суфікс -ок- випадає: глибокий -> глибше (а не «глибокіше») per § 20.",
+                        explanation_en="In forming the comparative suffix -ок- drops: глибокий -> глибше (not 'глибокіше') per § 20.",
                     ),
                     AdverbDistractor(
                         text="більш глибше",
@@ -2209,10 +2209,10 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                         explanation_en="Combining 'більш' with synthetic 'глибше' is a redundant grammatical error.",
                     ),
                     AdverbDistractor(
-                        text="найглибше",
-                        interference_key=AdverbInterferenceKey.INCORRECT_QUESTION_CATEGORY,
-                        explanation_ua="Тут описується відносне занурення порівняно з попереднім рівнем (вищий ступінь «глибше»), а не абсолютний максимум (найвищий ступінь).",
-                        explanation_en="Here relative descent is described (comparative 'глибше'), not an absolute maximum (superlative).",
+                        text="самий глибоко",
+                        interference_key=AdverbInterferenceKey.SUPERLATIVE_CALQUE_SAMYI,
+                        explanation_ua="Кальковане поєднання «самий глибоко» є неприпустимим; нормативна форма — «глибше».",
+                        explanation_en="Calque 'самий глибоко' is unacceptable in Ukrainian; standard comparative is 'глибше'.",
                     ),
                 ),
                 rule_citation=cit_comp,
@@ -2229,14 +2229,14 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="більш тепліше",
                         interference_key=AdverbInterferenceKey.COMPARATIVE_COMPOUND_CALQUE,
-                        explanation_ua="Змішування слова «більш» з формою вищого ступеня («більш тепліше») є помилкою; правильно — «тепліше» per § 110.",
-                        explanation_en="Mixing 'більш' with comparative form ('більш тепліше') is an error; correct is 'тепліше' per § 110.",
+                        explanation_ua="Змішування слова «більш» з формою вищого ступеня («більш тепліше») є помилкою; правильно — «тепліше» per § 20.",
+                        explanation_en="Mixing 'більш' with comparative form ('більш тепліше') is an error; correct is 'тепліше' per § 20.",
                     ),
                     AdverbDistractor(
                         text="теплійо",
                         interference_key=AdverbInterferenceKey.CORRUPTED_ADVERB_FORM,
-                        explanation_ua="Такої форми в українській мові немає; вищий ступінь від «тепло» утворюється суфіксом -іше: «тепліше» per § 110, п. 1 а.",
-                        explanation_en="Such a form does not exist; comparative from 'тепло' takes suffix -іше: 'тепліше' per § 110, p. 1 a.",
+                        explanation_ua="Такої форми в українській мові немає; вищий ступінь від «тепло» утворюється суфіксом -іше: «тепліше» per § 20.",
+                        explanation_en="Such a form does not exist; comparative from 'тепло' takes suffix -іше: 'тепліше' per § 20.",
                     ),
                     AdverbDistractor(
                         text="самий тепліше",
@@ -2266,20 +2266,20 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="самий краще",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_CALQUE_SAMYI,
-                        explanation_ua="Формування найвищого ступеня за допомогою частки «самий» («самий краще») є грубим суржиком; нормативна українська форма має префікс най-: «найкраще» per § 111.",
-                        explanation_en="Forming the superlative with 'самий' is Surzhyk; standard Ukrainian uses prefix най-: 'найкраще' per § 111.",
+                        explanation_ua="Формування найвищого ступеня за допомогою частки «самий» («самий краще») є грубим суржиком; нормативна українська форма має префікс най-: «найкраще» per § 20.",
+                        explanation_en="Forming the superlative with 'самий' is Surzhyk; standard Ukrainian uses prefix най-: 'найкраще' per § 20.",
                     ),
                     AdverbDistractor(
                         text="най краще",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Префікс най- у найвищому ступені прислівників завжди пишеться РАЗОМ із словом per § 111 (найкраще, найшвидше).",
-                        explanation_en="Prefix най- in superlative adverbs is always written TOGETHER per § 111 (найкраще).",
+                        explanation_ua="Префікс най- у найвищому ступені прислівників завжди пишеться РАЗОМ із словом per § 20 (найкраще, найшвидше).",
+                        explanation_en="Prefix най- in superlative adverbs is always written TOGETHER per § 20 (найкраще).",
                     ),
                     AdverbDistractor(
                         text="най-краще",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_HYPHEN_ERROR,
-                        explanation_ua="Префікс най- приєднується без дефіса; написання разом є обов'язковим per § 111.",
-                        explanation_en="Prefix най- attaches without a hyphen; fused spelling is mandatory per § 111.",
+                        explanation_ua="Префікс най- приєднується без дефіса; написання разом є обов'язковим per § 20.",
+                        explanation_en="Prefix най- attaches without a hyphen; fused spelling is mandatory per § 20.",
                     ),
                 ),
                 rule_citation=cit_sup,
@@ -2296,20 +2296,20 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="як найшвидше",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Підсилювальні частки як- та що- у складі найвищого ступеня порівняння пишуться РАЗОМ per § 111 (якнайшвидше, щонайдовше).",
-                        explanation_en="Intensifying particles як- and що- in superlatives are written TOGETHER per § 111 (якнайшвидше).",
+                        explanation_ua="Підсилювальні частки як- та що- у складі найвищого ступеня порівняння пишуться РАЗОМ per § 20 (якнайшвидше, щонайдовше).",
+                        explanation_en="Intensifying particles як- and що- in superlatives are written TOGETHER per § 20 (якнайшвидше).",
                     ),
                     AdverbDistractor(
                         text="як-найшвидше",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_HYPHEN_ERROR,
-                        explanation_ua="Дефіс між часткою як- і префіксом най- не ставиться; слово пишеться повністю разом per § 111.",
-                        explanation_en="No hyphen between particle як- and prefix най-; the word is spelled completely together per § 111.",
+                        explanation_ua="Дефіс між часткою як- і префіксом най- не ставиться; слово пишеться повністю разом per § 20.",
+                        explanation_en="No hyphen between particle як- and prefix най-; the word is spelled completely together per § 20.",
                     ),
                     AdverbDistractor(
                         text="самий швидше",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_CALQUE_SAMYI,
-                        explanation_ua="Слово «самий» є російською калькою; в українській мові найвищий ступінь утворюється за допомогою префікса най- та підсилення як-: «якнайшвидше» per § 111.",
-                        explanation_en="Word 'самий' is a Russian calque; Ukrainian superlatives are formed with prefix най- and intensifier як-: 'якнайшвидше' per § 111.",
+                        explanation_ua="Слово «самий» є російською калькою; в українській мові найвищий ступінь утворюється за допомогою префікса най- та підсилення як-: «якнайшвидше» per § 20.",
+                        explanation_en="Word 'самий' is a Russian calque; Ukrainian superlatives are formed with prefix най- and intensifier як-: 'якнайшвидше' per § 20.",
                     ),
                 ),
                 rule_citation=cit_sup,
@@ -2326,20 +2326,20 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="що найдовше",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Підсилювальна частка що- з формою найвищого ступеня пишеться разом per § 111: «щонайдовше».",
-                        explanation_en="Intensifying particle що- with superlative form is written together per § 111: 'щонайдовше'.",
+                        explanation_ua="Підсилювальна частка що- з формою найвищого ступеня пишеться разом per § 20: «щонайдовше».",
+                        explanation_en="Intensifying particle що- with superlative form is written together per § 20: 'щонайдовше'.",
                     ),
                     AdverbDistractor(
                         text="що-найдовше",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_HYPHEN_ERROR,
-                        explanation_ua="Дефіс після частки що- є помилкою; слово пишеться разом per § 111.",
-                        explanation_en="Hyphen after particle що- is an error; the word is spelled together per § 111.",
+                        explanation_ua="Дефіс після частки що- є помилкою; слово пишеться разом per § 20.",
+                        explanation_en="Hyphen after particle що- is an error; the word is spelled together per § 20.",
                     ),
                     AdverbDistractor(
                         text="самий довше",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_CALQUE_SAMYI,
-                        explanation_ua="Калька з російської («самый дольше»); нормативна українська мова вимагає префікса най- з підсиленням що-: «щонайдовше» per § 111.",
-                        explanation_en="Russian calque ('самый дольше'); standard Ukrainian requires prefix най- with що-: 'щонайдовше' per § 111.",
+                        explanation_ua="Калька з російської («самый дольше»); нормативна українська мова вимагає префікса най- з підсиленням що-: «щонайдовше» per § 20.",
+                        explanation_en="Russian calque ('самый дольше'); standard Ukrainian requires prefix най- with що-: 'щонайдовше' per § 20.",
                     ),
                 ),
                 rule_citation=cit_sup,
@@ -2356,20 +2356,20 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="самий вище",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_CALQUE_SAMYI,
-                        explanation_ua="Слово «самий» не використовується для утворення найвищого ступеня; правильно — «найвище» per § 111.",
-                        explanation_en="Word 'самий' is not used for superlative formation; correct is 'найвище' per § 111.",
+                        explanation_ua="Слово «самий» не використовується для утворення найвищого ступеня; правильно — «найвище» per § 20.",
+                        explanation_en="Word 'самий' is not used for superlative formation; correct is 'найвище' per § 20.",
                     ),
                     AdverbDistractor(
                         text="най вище",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Префікс най- пишеться разом із прислівником per § 111.",
-                        explanation_en="Prefix най- is written together with the adverb per § 111.",
+                        explanation_ua="Префікс най- пишеться разом із прислівником per § 20.",
+                        explanation_en="Prefix най- is written together with the adverb per § 20.",
                     ),
                     AdverbDistractor(
                         text="най-вище",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_HYPHEN_ERROR,
-                        explanation_ua="Дефіс у префіксі най- заборонений; слово пишеться разом per § 111.",
-                        explanation_en="Hyphen in prefix най- is prohibited; it is written as one word per § 111.",
+                        explanation_ua="Дефіс у префіксі най- заборонений; слово пишеться разом per § 20.",
+                        explanation_en="Hyphen in prefix най- is prohibited; it is written as one word per § 20.",
                     ),
                 ),
                 rule_citation=cit_sup,
@@ -2386,20 +2386,20 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                     AdverbDistractor(
                         text="як найретельніше",
                         interference_key=AdverbInterferenceKey.HYPHEN_SEPARATION,
-                        explanation_ua="Частка як- із префіксом най- пишеться разом: «якнайретельніше» per § 111.",
-                        explanation_en="Particle як- with prefix най- is written together: 'якнайретельніше' per § 111.",
+                        explanation_ua="Частка як- із префіксом най- пишеться разом: «якнайретельніше» per § 20.",
+                        explanation_en="Particle як- with prefix най- is written together: 'якнайретельніше' per § 20.",
                     ),
                     AdverbDistractor(
                         text="як-найретельніше",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_HYPHEN_ERROR,
-                        explanation_ua="Написання через дефіс є орфографічною помилкою; слово пишеться разом per § 111.",
-                        explanation_en="Hyphenated spelling is an orthographic error; the word is written together per § 111.",
+                        explanation_ua="Написання через дефіс є орфографічною помилкою; слово пишеться разом per § 20.",
+                        explanation_en="Hyphenated spelling is an orthographic error; the word is written together per § 20.",
                     ),
                     AdverbDistractor(
                         text="самий ретельно",
                         interference_key=AdverbInterferenceKey.SUPERLATIVE_CALQUE_SAMYI,
-                        explanation_ua="Кальковане поєднання «самий ретельно» є неприпустимим в українській мові; норма — «якнайретельніше» per § 111.",
-                        explanation_en="'Самий ретельно' is an unacceptable calque; standard Ukrainian is 'якнайретельніше' per § 111.",
+                        explanation_ua="Кальковане поєднання «самий ретельно» є неприпустимим в українській мові; норма — «якнайретельніше» per § 20.",
+                        explanation_en="'Самий ретельно' is an unacceptable calque; standard Ukrainian is 'якнайретельніше' per § 20.",
                     ),
                 ),
                 rule_citation=cit_sup,
@@ -2585,7 +2585,7 @@ def find_vesum_db(specified: Path | None = None) -> Path:
 
 
 def verify_deck_with_vesum(cards: list[AdverbCard], vesum_db_path: Path | str | None = None) -> dict[str, Any]:
-    """Verify that all target vocabulary exists in VESUM."""
+    """Verify that all target vocabulary exists in VESUM and that every card contributes valid vocabulary."""
     import re
 
     resolved_path = find_vesum_db(Path(vesum_db_path) if vesum_db_path else None)
@@ -2594,6 +2594,7 @@ def verify_deck_with_vesum(cards: list[AdverbCard], vesum_db_path: Path | str | 
             "total_cards": len(cards),
             "target_tokens_count": 0,
             "missing_targets": [],
+            "empty_cards": [],
             "distractor_tokens_count": 0,
             "vesum_verified": None,
             "status": "skipped",
@@ -2609,6 +2610,7 @@ def verify_deck_with_vesum(cards: list[AdverbCard], vesum_db_path: Path | str | 
             "total_cards": len(cards),
             "target_tokens_count": 0,
             "missing_targets": [],
+            "empty_cards": [],
             "distractor_tokens_count": 0,
             "vesum_verified": None,
             "status": "skipped",
@@ -2620,33 +2622,57 @@ def verify_deck_with_vesum(cards: list[AdverbCard], vesum_db_path: Path | str | 
 
     all_target_tokens: set[str] = set()
     missing_targets: list[str] = []
+    empty_cards: list[str] = []
+    card_tokens_map: dict[str, list[str]] = {}
 
     for card in cards:
-        # Check tokens of correct answer
-        tokens = card.correct_answer.split()
-        for w in tokens:
-            # Normalize curly apostrophe and backtick BEFORE regex or filtering
+        raw_tokens = card.correct_answer.split()
+        valid_tokens_for_card: list[str] = []
+        for w in raw_tokens:
             clean = w.strip(strip_punctuation).lower().replace("’", "'").replace("`", "'")
             if not clean:
                 continue
             if not word_pattern.match(clean):
-                missing_targets.append(clean)
+                missing_targets.append(f"{card.card_id}: malformed token '{clean}'")
                 continue
+            valid_tokens_for_card.append(clean)
             all_target_tokens.add(clean)
 
+        if not valid_tokens_for_card:
+            empty_cards.append(card.card_id)
+            missing_targets.append(
+                f"{card.card_id}: no valid vocabulary tokens in correct_answer '{card.correct_answer}'"
+            )
+        else:
+            card_tokens_map[card.card_id] = valid_tokens_for_card
+
+    # Verify each unique valid token in VESUM
+    unattested_tokens: set[str] = set()
     for token in sorted(all_target_tokens):
         cursor.execute("SELECT 1 FROM forms_all WHERE word_form = ? LIMIT 1", (token,))
         if not cursor.fetchone():
-            missing_targets.append(token)
+            unattested_tokens.add(token)
 
     conn.close()
 
-    total_valid = len(missing_targets) == 0 and len(all_target_tokens) > 0
+    if unattested_tokens:
+        for card_id, tokens in card_tokens_map.items():
+            for tok in tokens:
+                if tok in unattested_tokens:
+                    missing_targets.append(f"{card_id}: token '{tok}' not found in VESUM")
+
+    # A deck passes IF AND ONLY IF:
+    # 1. There are cards
+    # 2. No card had empty/punctuation-only answer
+    # 3. No token was missing or malformed
+    # 4. At least one target token was checked
+    total_valid = len(cards) > 0 and len(empty_cards) == 0 and len(missing_targets) == 0 and len(all_target_tokens) > 0
 
     return {
         "total_cards": len(cards),
         "target_tokens_count": len(all_target_tokens),
         "missing_targets": missing_targets,
+        "empty_cards": empty_cards,
         "vesum_verified": total_valid,
         "status": "passed" if total_valid else "failed",
     }

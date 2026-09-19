@@ -316,12 +316,18 @@ def test_distractor_exclusivity_and_no_valid_synonym_rejection():
     """Verify that cards do not reject valid Ukrainian words (e.g. скорше) or valid phrases."""
     cards_by_id = {c.card_id: c for c in build_canonical_adverb_cards()}
 
-    # Card 61: швидше must not reject valid 'скорше' (attested in VESUM as adv:compc)
-    c61 = cards_by_id["adverb_card_61"]
-    distractor_texts_61 = [d.text for d in c61.distractors]
-    assert "скорше" not in distractor_texts_61, "Valid Ukrainian word 'скорше' must not be used as distractor"
-    assert "більш швидше" in distractor_texts_61
-    assert "швидкіше" in distractor_texts_61
+    # Card 8: щодня must not penalize valid 'кожен день' as a calque
+    c8 = cards_by_id["adverb_card_08"]
+    distractor_texts_8 = [d.text for d in c8.distractors]
+    assert "кожен день" not in distractor_texts_8, "Valid phrase 'кожен день' must not be used as distractor"
+    assert "по-щодня" in distractor_texts_8
+    assert "що дня" in distractor_texts_8
+    assert "що-дня" in distractor_texts_8
+
+    # Card 14: вперед must reject corrupted 'вперід'
+    c14 = cards_by_id["adverb_card_14"]
+    distractor_texts_14 = [d.text for d in c14.distractors]
+    assert "вперід" in distractor_texts_14
 
     # Card 40: давним-давно must reject morphological corruption 'давнім-давно', not valid 'дуже давно'
     c40 = cards_by_id["adverb_card_40"]
@@ -329,10 +335,38 @@ def test_distractor_exclusivity_and_no_valid_synonym_rejection():
     assert "дуже давно" not in distractor_texts_40, "Valid phrase 'дуже давно' must not be marked as error"
     assert "давнім-давно" in distractor_texts_40
 
+    # Card 49: вдень must not penalize valid instrumental noun 'днем'
+    c49 = cards_by_id["adverb_card_49"]
+    distractor_texts_49 = [d.text for d in c49.distractors]
+    assert "днем" not in distractor_texts_49, "Instrumental noun 'днем' must not be used as distractor"
+    assert "у день" in distractor_texts_49
+
+    # Card 61: швидше must not reject valid 'скорше' (attested in VESUM as adv:compc)
+    c61 = cards_by_id["adverb_card_61"]
+    distractor_texts_61 = [d.text for d in c61.distractors]
+    assert "скорше" not in distractor_texts_61, "Valid Ukrainian word 'скорше' must not be used as distractor"
+    assert "більш швидше" in distractor_texts_61
+    assert "швидкіше" in distractor_texts_61
+
+    # Card 64: глибше must not reject superlative 'найглибше' without comparative prompt context
+    c64 = cards_by_id["adverb_card_64"]
+    distractor_texts_64 = [d.text for d in c64.distractors]
+    assert "найглибше" not in distractor_texts_64, "Superlative 'найглибше' must not be rejected in ambiguous prompt"
+    assert "самий глибоко" in distractor_texts_64
+    assert "більш глибше" in distractor_texts_64
+
     # Card 74: принаймні must reject orthographic corruption 'принаймі'
     c74 = cards_by_id["adverb_card_74"]
     distractor_texts_74 = [d.text for d in c74.distractors]
     assert "принаймі" in distractor_texts_74
+
+    # Comprehensive deck-wide exclusivity audit across all 75 cards
+    for card in cards_by_id.values():
+        assert len(card.distractors) == 3
+        d_texts = [d.text for d in card.distractors]
+        assert len(set(d_texts)) == 3, f"Duplicate distractors in card {card.card_id}"
+        assert card.correct_answer not in d_texts, f"Collision in card {card.card_id}: answer in distractors"
+        assert card.target_token in card.correct_answer, f"Target token mismatch in card {card.card_id}"
 
 
 @pytest.mark.skipif(
@@ -360,7 +394,7 @@ def test_vesum_sanitization_and_malformed_token_detection():
     assert res_curly["vesum_verified"] is True
     assert len(res_curly["missing_targets"]) == 0
 
-    # Card with malformed/non-Ukrainian token should fail and appear in missing_targets
+    # Card with malformed/non-Ukrainian token should fail and report card ID
     malformed_card = AdverbCard(
         card_id="test_malformed",
         category=c1.category,
@@ -374,4 +408,52 @@ def test_vesum_sanitization_and_malformed_token_detection():
     )
     res_malformed = verify_deck_with_vesum([malformed_card])
     assert res_malformed["vesum_verified"] is False
-    assert "xyz123" in res_malformed["missing_targets"]
+    assert any("test_malformed" in err for err in res_malformed["missing_targets"])
+
+
+@pytest.mark.skipif(
+    not Path("data/vesum.db").exists() or Path("data/vesum.db").stat().st_size < 1_000_000,
+    reason="Requires full local data/vesum.db (>1MB); CI omits it",
+)
+def test_vesum_rejects_empty_and_punctuation_answers():
+    """Verify that empty or punctuation-only card answers fail verification and report offending card IDs."""
+    base_cards = build_canonical_adverb_cards()
+    valid_card = base_cards[0]
+
+    empty_card = AdverbCard(
+        card_id="card_empty",
+        category=valid_card.category,
+        prompt="Тест _______.",
+        target_token="",
+        correct_answer="",
+        distractors=valid_card.distractors,
+        rule_citation=valid_card.rule_citation,
+        rule_summary_ua=valid_card.rule_summary_ua,
+        rule_summary_en=valid_card.rule_summary_en,
+    )
+
+    punct_card = AdverbCard(
+        card_id="card_punct",
+        category=valid_card.category,
+        prompt="Тест _______.",
+        target_token="...",
+        correct_answer="...",
+        distractors=valid_card.distractors,
+        rule_citation=valid_card.rule_citation,
+        rule_summary_ua=valid_card.rule_summary_ua,
+        rule_summary_en=valid_card.rule_summary_en,
+    )
+
+    # Deck with valid card + empty card must fail
+    res_mixed = verify_deck_with_vesum([valid_card, empty_card])
+    assert res_mixed["vesum_verified"] is False
+    assert res_mixed["status"] == "failed"
+    assert "card_empty" in res_mixed["empty_cards"]
+    assert any("card_empty" in err for err in res_mixed["missing_targets"])
+
+    # Deck with valid card + punctuation-only card must fail
+    res_punct = verify_deck_with_vesum([valid_card, punct_card])
+    assert res_punct["vesum_verified"] is False
+    assert res_punct["status"] == "failed"
+    assert "card_punct" in res_punct["empty_cards"]
+    assert any("card_punct" in err for err in res_punct["missing_targets"])
