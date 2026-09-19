@@ -6,7 +6,7 @@ Tests:
   3. Paradigm rules for 40, 90, 100 [§ 105.7].
   4. Numeral + Noun case government: 2, 3, 4 (Nominative plural) vs 5+ (Genitive plural).
   5. Compound numeral last-digit agreement rules.
-  6. Collective numeral rules: masculine animate, pluralia tantum, neuter young beings, and female restriction [§ 105.6].
+  6. Collective numeral rules: masculine animate, pluralia tantum, neuter young beings, and female restriction [Синтаксичні норми / § 105.8–10].
   7. Fractional numeral rules: півтора vs півтори + Genitive singular [§ 107].
   8. Ordinal compound declension: only last word inflects [§ 106.2].
   9. Authentic time and approximate quantity constructions.
@@ -88,17 +88,19 @@ def test_resolve_numeral_rules():
     assert "last numeral" in en8
 
     _cit9, ua9, en9 = resolve_collective_masculine_rule()
-    assert "§ 105.6" in _cit9
+    assert "Синтаксичні норми" in _cit9
+    assert "105" in _cit9
     assert "троє друзів" in ua9
     assert "collective" in en9.lower()
 
     _cit10, ua10, en10 = resolve_collective_feminine_restriction_rule()
-    assert "§ 105.6" in _cit10
+    assert "Синтаксичні норми" in _cit10
     assert "НЕ вживаються" in ua10
     assert "NOT used with feminine" in en10
 
     _cit11, ua11, en11 = resolve_collective_pluralia_neuter_rule()
-    assert "§ 105.6" in _cit11
+    assert "Синтаксичні норми" in _cit11
+    assert "105" in _cit11
     assert "двоє дверей" in ua11
     assert "pluralia tantum" in en11
 

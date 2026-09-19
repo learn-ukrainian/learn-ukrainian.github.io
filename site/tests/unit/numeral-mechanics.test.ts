@@ -92,15 +92,17 @@ describe('numeral-mechanics', () => {
     expect(gComp.ruleUa).toContain('останнім словом');
 
     const cMasc = resolveCollectiveMasculineRule();
-    expect(cMasc.citation).toContain('§ 105.6');
+    expect(cMasc.citation).toContain('Синтаксичні норми');
+    expect(cMasc.citation).toContain('105');
     expect(cMasc.ruleUa).toContain('троє друзів');
 
     const cFem = resolveCollectiveFeminineRestrictionRule();
-    expect(cFem.citation).toContain('§ 105.6');
+    expect(cFem.citation).toContain('Синтаксичні норми');
     expect(cFem.ruleUa).toContain('НЕ вживаються');
 
     const cPlur = resolveCollectivePluraliaNeuterRule();
-    expect(cPlur.citation).toContain('§ 105.6');
+    expect(cPlur.citation).toContain('Синтаксичні норми');
+    expect(cPlur.citation).toContain('105');
     expect(cPlur.ruleUa).toContain('двоє дверей');
 
     const frac = resolveFractionalPivtoraRule();

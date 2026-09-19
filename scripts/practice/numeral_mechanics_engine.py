@@ -13,7 +13,7 @@ Implements Ukrainian Pravopys 2019 and Academic Grammar rules for:
           - Давальний: двомстам, трьомстам, чотирьомстам, п'ятистам, шістстам, семистам, вісімстам, дев'ятистам.
           - Орудний: двомастами, трьомастами, чотирмастами, п'ятьмастами (п'ятьомастами), шістьмастами, сьомастами, восьмастами (вісьмастами), дев'ятьмастами.
           - Місцевий: на двохстах, на трьохстах, на чотирьохстах, на п'ятистах, на шестистах.
-      - § 105.6: Збірні числівники (двоє, троє, четверо...):
+      - § 105 (пп. 8–10) та синтаксичні норми: Збірні числівники (двоє, троє, четверо...):
         * Сполучаються з іменниками чоловічого роду (назви істот: троє братів), іменниками середнього роду (четверо вікон, троє каченят)
           та pluralia tantum (двоє дверей, троє саней).
         * Не сполучаються з іменниками жіночого роду на позначення дорослих осіб (*двоє жінок* ❌ -> дві жінки ✅).
@@ -215,21 +215,21 @@ def resolve_government_compound_last_digit_rule() -> tuple[str, str, str]:
 
 
 def resolve_collective_masculine_rule() -> tuple[str, str, str]:
-    citation = "Правопис 2019 § 105.6"
+    citation = "Синтаксичні норми української мови / Правопис 2019 § 105 (пп. 8–10)"
     ua = "Збірні числівники (двоє, троє, четверо, п'ятеро тощо) природно вживаються з іменниками чоловічого роду — назвами осіб: двоє братів, троє друзів, четверо хлопців."
     en = "Collective numerals (двоє, троє, четверо...) naturally combine with masculine animate nouns denoting persons: двоє братів, троє друзів, четверо хлопців."
     return citation, ua, en
 
 
 def resolve_collective_feminine_restriction_rule() -> tuple[str, str, str]:
-    citation = "Правопис 2019 § 105.6"
+    citation = "Синтаксичні норми української мови (сполучуваність збірних числівників)"
     ua = "Збірні числівники НЕ вживаються з іменниками жіночого роду на позначення дорослих осіб: вживаються лише власне кількісні числівники — дві жінки (не *двоє жінок*), три сестри (не *троє сестер*)."
     en = "Collective numerals are NOT used with feminine nouns denoting adult persons: only cardinal numerals are admissible — дві жінки (not *двоє жінок*), три сестри (not *троє сестер*)."
     return citation, ua, en
 
 
 def resolve_collective_pluralia_neuter_rule() -> tuple[str, str, str]:
-    citation = "Правопис 2019 § 105.6"
+    citation = "Синтаксичні норми української мови / Правопис 2019 § 105 (пп. 8–10)"
     ua = "Збірні числівники обов'язково вживаються з іменниками, що мають лише форму множини (pluralia tantum: двоє дверей, троє ножиць, двоє саней), а також із назвами малят (четверо каченят)."
     en = "Collective numerals are mandatory with pluralia tantum nouns (двоє дверей, троє ножиць, двоє саней) and neuter nouns denoting young animals/beings (четверо каченят)."
     return citation, ua, en
@@ -894,8 +894,8 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
                 NumeralDistractor(
                     text="сімсот",
                     interference_type=NumeralInterferenceType.UNINFLECTED_BASE_FORM,
-                    explanation_ua="Дієслово 'опікуватися' керує орудним відмінком: нормативна форма — 'сьомастами' (або 'сіммастами').",
-                    explanation_en="Verb 'опікуватися' governs Instrumental case: standard form is 'сьомастами' (or 'сіммастами').",
+                    explanation_ua="Дієслово 'опікуватися' керує орудним відмінком: нормативна форма — 'сьомастами' (або 'сімомастами').",
+                    explanation_en="Verb 'опікуватися' governs Instrumental case: standard form is 'сьомастами' (or 'сімомастами').",
                 ),
                 NumeralDistractor(
                     text="семистами",

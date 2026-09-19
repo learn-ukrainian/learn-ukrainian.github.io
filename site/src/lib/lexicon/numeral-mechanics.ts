@@ -18,7 +18,7 @@
  *      - 2, 3, 4 govern Nominative plural: два брати, три олівці, чотири студенти (anti-calque *два брата* ❌)
  *      - 5+ govern Genitive plural: п'ять братів, десять рулонів
  *      - Compound numerals: government is determined strictly by the last numeral (двадцять один день, двадцять два дні, двадцять п'ять днів)
- *   5. Collective Numerals (§ 105.6):
+ *   5. Collective Numerals (§ 105.8–10, синтаксичні норми):
  *      - двоє, троє, четверо... combine with male animates (двоє братів), pluralia tantum (двоє дверей, троє ножиць), and young beings (четверо каченят)
  *      - Strictly inadmissible with adult female persons (*двоє жінок* ❌ -> дві жінки ✅)
  *   6. Fractional Numerals (§ 107):
@@ -272,7 +272,7 @@ export function resolveGovernmentCompoundLastDigitRule(): NumeralRuleResolution 
 
 export function resolveCollectiveMasculineRule(): NumeralRuleResolution {
   return {
-    citation: 'Правопис 2019 § 105.6',
+    citation: 'Синтаксичні норми української мови / Правопис 2019 § 105 (пп. 8–10)',
     ruleUa:
       "Збірні числівники (двоє, троє, четверо, п'ятеро тощо) природно вживаються з іменниками чоловічого роду — назвами осіб: двоє братів, троє друзів, четверо хлопців.",
     ruleEn:
@@ -282,7 +282,7 @@ export function resolveCollectiveMasculineRule(): NumeralRuleResolution {
 
 export function resolveCollectiveFeminineRestrictionRule(): NumeralRuleResolution {
   return {
-    citation: 'Правопис 2019 § 105.6',
+    citation: 'Синтаксичні норми української мови (сполучуваність збірних числівників)',
     ruleUa:
       'Збірні числівники НЕ вживаються з іменниками жіночого роду на позначення дорослих осіб: вживаються лише власне кількісні числівники — дві жінки (не *двоє жінок*), три сестри (не *троє сестер*).',
     ruleEn:
@@ -292,7 +292,7 @@ export function resolveCollectiveFeminineRestrictionRule(): NumeralRuleResolutio
 
 export function resolveCollectivePluraliaNeuterRule(): NumeralRuleResolution {
   return {
-    citation: 'Правопис 2019 § 105.6',
+    citation: 'Синтаксичні норми української мови / Правопис 2019 § 105 (пп. 8–10)',
     ruleUa:
       "Збірні числівники обов'язково вживаються з іменниками, що мають лише форму множини (pluralia tantum: двоє дверей, троє ножиць, двоє саней), а також із назвами малят (четверо каченят).",
     ruleEn:
