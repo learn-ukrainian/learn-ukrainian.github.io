@@ -107,6 +107,13 @@ Skill suggestion pipeline (#8201, parent #6943):
 - Issue #8201 (parent #6943)
 - Tests: `tests/typesafe/test_skill_suggestion.py` (`TYPESAFE_LIVE=1` for live)
 
+Citation and source-grounding verifier (#8192, parent #4913):
+
+- CLI: `.venv/bin/python -m scripts.audit.typesafe_citation_verifier --input cases.jsonl --out receipt.json`
+- Module: `scripts/audit/typesafe_citation_verifier.py`. Stage 1 is a deterministic quote match (a miss is `fabricated`, and the model is not called). Stage 2 is one Choice (`supports` / `contradicts` / `says_nothing`) on the source passage versus the claim.
+- Routing stays in code: only `supports` at confidence ≥ 0.80 is an accept (`verified`); `contradicts` at any confidence is `contradicted`; `says_nothing` at ≥ 0.80 is `unsupported`; API failure, a malformed answer, or anything less confident is `needs_human_review`.
+- Client: `scripts/typesafe/client.py`. Tests: `tests/audit/test_typesafe_citation_verifier.py` (`TYPESAFE_LIVE=1` for the live smoke).
+
 ### 3.6 Anywhere you’d prompt-and-parse
 
 If the generative model would return a single enum, score, or yes/no — use Jev.
@@ -215,8 +222,7 @@ def system_one(state, questions, model="jev-latest", timeout=60):
         return json.load(resp)
 ```
 
-Fleet CLIs (when landed): prefer a shared helper under `scripts/typesafe/` rather
-than copying this snippet.
+Fleet CLIs should call `scripts/typesafe/client.py` (`load_typesafe_api_key`, `system_one`) rather than copying this snippet.
 
 ---
 
