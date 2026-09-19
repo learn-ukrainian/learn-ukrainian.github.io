@@ -360,9 +360,9 @@ size_categories:
 - 100K<n<1M
 ---
 
-# Ukrainian Linguistic Decolonization & Reasoning (ULDR) — v0.1 (Training Candidate)
+# Ukrainian Linguistic Decolonization & Reasoning (ULDR) — v0.2 (Training Candidate)
 
-**ULDR v0.1** is the foundational unproven training candidate dataset for Ukrainian, built to teach language models to **think and reason in authentic Ukrainian** rather than translate through Russian or English. Packaged for remote fine-tuning on Hugging Face.
+**ULDR v0.2** is the foundational unproven training candidate dataset for Ukrainian, built to teach language models to **think and reason in authentic Ukrainian** rather than translate through Russian or English. Packaged for remote fine-tuning on Hugging Face.
 
 ## Dataset Summary
 
@@ -424,7 +424,7 @@ Each instruction trajectory follows standard reasoning format:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Package unified ULDR v0.1 dataset.")
+    parser = argparse.ArgumentParser(description="Package unified ULDR v0.2 dataset.")
     parser.add_argument(
         "--release-dir",
         type=Path,
@@ -434,7 +434,7 @@ def main() -> int:
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=REPO_ROOT / "data" / "projects" / "open_model_data" / "export" / "uldr_v01",
+        default=REPO_ROOT / "data" / "projects" / "open_model_data" / "export" / "uldr_v02",
         help="Path to output unified dataset directory",
     )
     parser.add_argument(

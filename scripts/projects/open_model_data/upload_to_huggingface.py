@@ -28,7 +28,7 @@ def main() -> int:
     parser.add_argument(
         "--dataset-dir",
         type=Path,
-        default=REPO_ROOT / "data" / "projects" / "open_model_data" / "export" / "uldr_v01",
+        default=REPO_ROOT / "data" / "projects" / "open_model_data" / "export" / "uldr_v02",
         help="Path to directory containing train.jsonl, dpo.jsonl, eval.jsonl, README.md",
     )
     parser.add_argument(
