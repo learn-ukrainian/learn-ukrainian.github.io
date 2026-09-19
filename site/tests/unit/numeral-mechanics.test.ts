@@ -243,4 +243,19 @@ describe('numeral-mechanics', () => {
 
     expect(totalEvaluated).toBe(75 * 4); // 300 evaluations
   });
+
+  it('ensures register clarity and unambiguous distractors for approximate constructions', () => {
+    const deckPath = resolve(__dirname, '../../../data/practice/numeral_mechanics_deck.json');
+    const content = readFileSync(deckPath, 'utf-8');
+    const deck = JSON.parse(content);
+
+    const card71 = deck.cards.find((c: PracticeNumeralMechanicsCard) => c.card_id === 'numeral_71');
+    expect(card71.prompt_sentence.toLowerCase()).toContain('офіційному');
+
+    const card75 = deck.cards.find((c: PracticeNumeralMechanicsCard) => c.card_id === 'numeral_75');
+    expect(card75.correct_answer).toBe('роки три');
+    const distractorTexts = card75.distractors.map((d: { text: string }) => d.text);
+    expect(distractorTexts).not.toContain('біля трьох років');
+    expect(distractorTexts).toContain('порядка трьох років');
+  });
 });

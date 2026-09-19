@@ -256,3 +256,21 @@ def test_cli_verify_vesum_json_success_and_export(monkeypatch, tmp_path: Path):
 
     main()
     assert out_file.exists(), "Deck should be exported when verification succeeds"
+
+
+def test_approximate_cards_register_and_unambiguous_distractors():
+    """Regression test for Card 71 and Card 75 (Astra review finding):
+    - Card 71 explicitly specifies official register in the prompt before testing 'близько ста' vs colloquial 'біля ста'.
+    - Card 75 uses unambiguously incorrect distractors (no bare colloquial 'біля' rejected as an error without register context).
+    """
+    cards = {c.card_id: c for c in build_canonical_numeral_cards()}
+
+    card71 = cards["numeral_71"]
+    assert "офіційному" in card71.sentence_before.lower(), "Card 71 must establish official register in prompt"
+    assert card71.correct_answer == "близько ста"
+
+    card75 = cards["numeral_75"]
+    assert card75.correct_answer == "роки три"
+    distractor_texts = [d.text for d in card75.distractors]
+    assert "біля трьох років" not in distractor_texts, "Card 75 must not reject bare 'біля трьох років' without register prompt"
+    assert "порядка трьох років" in distractor_texts, "Card 75 should use unambiguously incorrect 'порядка трьох років'"

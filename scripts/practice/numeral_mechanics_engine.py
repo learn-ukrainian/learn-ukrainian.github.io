@@ -2630,10 +2630,10 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
             correct_answer="роки три",
             distractors=(
                 NumeralDistractor(
-                    text="біля трьох років",
+                    text="порядка трьох років",
                     interference_type=NumeralInterferenceType.IMPROPER_APPROXIMATION_PREPOSITION,
-                    explanation_ua="У нормативній літературній мові замість розмовного 'біля трьох років' приблизність виражають інверсією ('роки три') або прийменником 'близько' ('близько трьох років').",
-                    explanation_en="In standard literary usage, rather than colloquial 'біля трьох років', approximation is expressed via inversion ('роки три') or preposition 'близько' ('близько трьох років').",
+                    explanation_ua="Конструкція *порядка трьох років* є грубою калькою з російської мови (*порядка трех лет*); приблизність позначають інверсією ('роки три') або 'близько трьох років'.",
+                    explanation_en="The phrase *порядка трьох років* is an ungrammatical Russian calque (*порядка трех лет*); approximation is expressed via inversion ('роки три') or 'близько трьох років'.",
                 ),
                 NumeralDistractor(
                     text="в районі трьох років",
