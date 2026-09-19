@@ -51,9 +51,9 @@ from scripts.practice.pronoun_mechanics_engine import (
 
 
 def test_resolve_epenthesis_rules():
-    """Verify epenthetic n- rules per Правопис 2019 § 116."""
+    """Verify epenthetic n- rules per Правопис 2019 § 108."""
     cit, ua, en = resolve_epenthesis_rule(PronounCategory.EPENTHETIC_N_PREPOSITIONAL)
-    assert "§ 116" in cit
+    assert "§ 108" in cit
     assert "до нього" in ua
     assert "oblique cases" in en
 
@@ -74,9 +74,9 @@ def test_resolve_epenthesis_rules():
 
 
 def test_resolve_orthography_rules():
-    """Verify pronoun orthography rules per Правопис 2019 § 42."""
+    """Verify pronoun orthography rules per Правопис 2019 § 39."""
     cit1, ua1, en1 = resolve_orthography_rule(PronounCategory.ORTHOGRAPHY_INDEFINITE_TOGETHER)
-    assert "§ 42" in cit1
+    assert "§ 39" in cit1
     assert "дехто, абихто" in ua1
     assert "single word" in en1
 
@@ -103,21 +103,21 @@ def test_resolve_orthography_rules():
 def test_resolve_paradigm_rules():
     """Verify reflexive, ves, demonstrative, interrogative, sam, and possessive rule resolvers."""
     cit_r, ua_r, en_r = resolve_reflexive_sebe_rule()
-    assert "§ 117" in cit_r
+    assert "§ 109" in cit_r
     assert "собі" in ua_r
     assert "Reflexive" in en_r
 
     cit_v, ua_v, en_v = resolve_declension_ves_rule()
-    assert "§ 119" in cit_v
+    assert "§ 113" in cit_v
     assert "всіма" in ua_v
     assert "-іма" in en_v
 
     cit_d, ua_d, _en_d = resolve_demonstrative_rule()
-    assert "§ 119" in cit_d
+    assert "§ 111" in cit_d
     assert "цими, тими" in ua_d
 
     cit_i, ua_i, _en_i = resolve_interrogative_rule()
-    assert "§§ 120–121" in cit_i
+    assert "§ 112" in cit_i
     assert "хто, що, чий" in ua_i
 
     _cit_s, ua_s, en_s = resolve_sam_vs_samyi_rule()
@@ -125,7 +125,7 @@ def test_resolve_paradigm_rules():
     assert "identity" in en_s
 
     cit_p, ua_p, _en_p = resolve_possessive_yikhniy_rule()
-    assert "§ 118" in cit_p
+    assert "§ 110" in cit_p
     assert "до них" in ua_p
 
 
@@ -219,7 +219,7 @@ def test_vesum_distractor_validation():
 
 
 def test_regression_zero_valid_distractor_collisions():
-    """Regression test ensuring valid alternatives (будь-яку, абихто, абияке, з будь-ким) are never distractors."""
+    """Regression test ensuring valid alternatives are never used as distractors."""
     cards_by_id = {c.card_id: c for c in build_canonical_pronoun_cards()}
 
     # Card 24: "брався за _______ роботу"
@@ -234,14 +234,40 @@ def test_regression_zero_valid_distractor_collisions():
     assert any(d.text == "будь-кого" for d in c26.distractors)
     assert c26.correct_answer == "будь-хто"
 
+    # Card 27: "нехай _______ допоможе йому з домашнім завданням"
+    c27 = cards_by_id["pron_orth_hyph_khto_nebud"]
+    assert "хто-будь" not in c27.all_options()
+    assert any(d.text == "кого-небудь" for d in c27.distractors)
+    assert c27.correct_answer == "хто-небудь"
+
     # Card 29: "виконує _______ доручення керівника"
     c29 = cards_by_id["pron_orth_hyph_bud_yake"]
     assert "абияке" not in c29.all_options()
     assert any(d.text == "будь-який" for d in c29.distractors)
     assert c29.correct_answer == "будь-яке"
 
+    # Card 31: "можна запитати дорогу _______ перехожого"
+    c31 = cards_by_id["pron_orth_split_bud_u_koho"]
+    assert "будь-кого" not in c31.all_options()
+    assert any(d.text == "будь-ким" for d in c31.distractors)
+    assert c31.correct_answer == "будь у кого"
+
     # Card 32: "вступати в суперечку _______"
     c32 = cards_by_id["pron_orth_split_bud_z_kym"]
     assert "з будь-ким" not in c32.all_options()
     assert any(d.text == "будь-ким" for d in c32.distractors)
     assert c32.correct_answer == "будь з ким"
+
+    # Card 68: "працювали в саду з _______ ранку"
+    c68 = cards_by_id["pron_sem_z_samoho_ranku"]
+    assert "самого ж" not in c68.all_options()
+    assert any(d.text == "самої" for d in c68.distractors)
+    assert c68.correct_answer == "самого"
+
+    # Card 70: "вирішила приготувати святковий обід _______"
+    c70 = cards_by_id["pron_sem_sama"]
+    assert "сама ж" not in c70.all_options()
+    assert "сама-одна" not in c70.all_options()
+    assert any(d.text == "сам" for d in c70.distractors)
+    assert any(d.text == "саме" for d in c70.distractors)
+    assert c70.correct_answer == "сама"

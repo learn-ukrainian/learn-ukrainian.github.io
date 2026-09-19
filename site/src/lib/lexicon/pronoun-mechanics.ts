@@ -1,19 +1,19 @@
 /**
  * Ukrainian Pronoun Deep Mechanics Practice Engine (Займенник).
  *
- * Implements Ukrainian Pravopys 2019 (§§ 42, 115–124) and Academic Grammar rules for:
- *   1. Epenthetic [n-] in 3rd-Person Pronouns (§ 116):
+ * Implements Ukrainian Pravopys 2019 (§§ 39, 108–114) and Academic Grammar rules for:
+ *   1. Epenthetic [n-] in 3rd-Person Pronouns (§ 108):
  *      - Compulsory epenthetic n- after prepositions: до нього, біля неї, про них, на ньому
  *      - Absence of n- in direct case government: бачу його, чую її, зустрів їх, дав йому
  *      - Omnipresent n- in Instrumental case: з ним / пишатися ним, з нею / захоплюватися нею, з ними / пишатися ними
  *      - Absence of n- after derivative dative prepositions: завдяки йому, наперекір їй, всупереч їм
- *   2. Orthography of Indefinite and Negative Pronouns (§ 42):
+ *   2. Orthography of Indefinite and Negative Pronouns (§ 39):
  *      - Solid writing with prefixes де-, аби-, ані- and suffix -сь: дехто, абихто, хтось, щось
  *      - Hyphenated writing with particles будь-, -небудь, казна-, хтозна-, бозна-: будь-хто, хто-небудь, казна-що
  *      - Split three-word writing when preposition intervenes: будь у кого, будь з ким, хтозна з ким, аби перед ким
  *      - Solid writing of negative pronouns with prefix ні-: ніхто, ніщо, ніякий, нічий
  *      - Split three-word writing of negative pronouns with prepositions: ні про що, ні з ким, ні до кого, ні за яких
- *   3. Declension Paradigms (§§ 117–121):
+ *   3. Declension Paradigms (§§ 109–113):
  *      - Reflexive pronoun себе: defective paradigm without Nominative; Dative собі, Instrumental собою, Locative на собі
  *      - Pronoun весь: Instrumental plural всіма (not *всьома, not *всеми)
  *      - Demonstrative pronouns цей / той: цими, тими, цього, тому, цьому
@@ -165,14 +165,14 @@ export function pronounMechanicsFeedbackFor(
 }
 
 /**
- * Resolves epenthetic n- rule per Правопис 2019 § 116.
+ * Resolves epenthetic n- rule per Правопис 2019 § 108.
  */
 export function resolveEpenthesisRule(category: PronounMechanicsCategoryKey): {
   citation: string;
   ruleUa: string;
   ruleEn: string;
 } {
-  const citation = 'Правопис 2019 § 116';
+  const citation = 'Правопис 2019 § 108';
   if (category === 'epenthetic_n_prepositional') {
     return {
       citation,
@@ -213,14 +213,14 @@ export function resolveEpenthesisRule(category: PronounMechanicsCategoryKey): {
 }
 
 /**
- * Resolves pronoun orthography rule per Правопис 2019 § 42.
+ * Resolves pronoun orthography rule per Правопис 2019 § 39.
  */
 export function resolveOrthographyRule(category: PronounMechanicsCategoryKey): {
   citation: string;
   ruleUa: string;
   ruleEn: string;
 } {
-  const citation = 'Правопис 2019 § 42';
+  const citation = 'Правопис 2019 § 39';
   if (category === 'orthography_indefinite_together') {
     return {
       citation,
@@ -270,7 +270,7 @@ export function resolveOrthographyRule(category: PronounMechanicsCategoryKey): {
 }
 
 /**
- * Resolves reflexive pronoun себе rule per Правопис 2019 § 117.
+ * Resolves reflexive pronoun себе rule per Правопис 2019 § 109.
  */
 export function resolveReflexiveSebeRule(): {
   citation: string;
@@ -278,7 +278,7 @@ export function resolveReflexiveSebeRule(): {
   ruleEn: string;
 } {
   return {
-    citation: 'Правопис 2019 § 117',
+    citation: 'Правопис 2019 § 109',
     ruleUa:
       "Зворотний займенник 'себе' не має називного відмінка; давальний відмінок — собі, орудний — собою, місцевий — на собі (при собі).",
     ruleEn:
@@ -287,7 +287,7 @@ export function resolveReflexiveSebeRule(): {
 }
 
 /**
- * Resolves pronoun весь rule per Правопис 2019 § 119.
+ * Resolves pronoun весь rule per Правопис 2019 § 113.
  */
 export function resolveDeclensionVesRule(): {
   citation: string;
@@ -295,7 +295,7 @@ export function resolveDeclensionVesRule(): {
   ruleEn: string;
 } {
   return {
-    citation: 'Правопис 2019 § 119',
+    citation: 'Правопис 2019 § 113',
     ruleUa:
       "Займенник 'весь' в орудному відмінку множини має нормативне закінчення -іма: всіма (форми *всьома чи *всеми є ненормативними).",
     ruleEn:
@@ -304,7 +304,7 @@ export function resolveDeclensionVesRule(): {
 }
 
 /**
- * Resolves demonstrative pronouns цей and той rule per Правопис 2019 § 119.
+ * Resolves demonstrative pronouns цей and той rule per Правопис 2019 § 111.
  */
 export function resolveDemonstrativeRule(): {
   citation: string;
@@ -312,7 +312,7 @@ export function resolveDemonstrativeRule(): {
   ruleEn: string;
 } {
   return {
-    citation: 'Правопис 2019 § 119',
+    citation: 'Правопис 2019 § 111',
     ruleUa:
       "Вказівні займенники 'цей' та 'той' у формах множини та непрямих відмінків однини відмінюються за твердим чи м'яким типом: цими, тими, цього, тому.",
     ruleEn:
@@ -321,7 +321,7 @@ export function resolveDemonstrativeRule(): {
 }
 
 /**
- * Resolves interrogative pronouns хто, що, чий rule per Правопис 2019 §§ 120–121.
+ * Resolves interrogative pronouns хто, що, чий rule per Правопис 2019 § 112.
  */
 export function resolveInterrogativeRule(): {
   citation: string;
@@ -329,7 +329,7 @@ export function resolveInterrogativeRule(): {
   ruleEn: string;
 } {
   return {
-    citation: 'Правопис 2019 §§ 120–121',
+    citation: 'Правопис 2019 § 112',
     ruleUa:
       'Питально-відносні займенники хто, що, чий змінюються за відмінками (кого, чого; кому, чому; ким, чим; чийого, чиєму, чиїм, чиїми).',
     ruleEn:
@@ -346,7 +346,7 @@ export function resolveSamVsSamyiRule(): {
   ruleEn: string;
 } {
   return {
-    citation: 'Академічна стилістика та граматика',
+    citation: 'Академічна стилістика та Правопис 2019 § 113',
     ruleUa:
       "'Сам' означає дію суб'єкта без сторонньої допомоги або особисто; 'самий' вказує на тотожність (той самий) чи просторову/часову межу (з самого ранку).",
     ruleEn:
@@ -355,7 +355,7 @@ export function resolveSamVsSamyiRule(): {
 }
 
 /**
- * Resolves possessive pronoun їхній vs personal їх rule per Правопис 2019 § 118.
+ * Resolves possessive pronoun їхній vs personal їх rule per Правопис 2019 § 110.
  */
 export function resolvePossessiveYikhniyRule(): {
   citation: string;
@@ -363,7 +363,7 @@ export function resolvePossessiveYikhniyRule(): {
   ruleEn: string;
 } {
   return {
-    citation: 'Правопис 2019 § 118',
+    citation: 'Правопис 2019 § 110',
     ruleUa:
       "Присвійний займенник 'їхній' узгоджується з іменником за зразком м'якої групи прикметників; після прийменників з особовим значенням вживається форма 'до них'.",
     ruleEn:

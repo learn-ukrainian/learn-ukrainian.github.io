@@ -148,7 +148,7 @@ class PronounCard:
 
 def resolve_epenthesis_rule(category: PronounCategory) -> tuple[str, str, str]:
     """Return citation and summaries for epenthetic n- rules."""
-    citation = "Правопис 2019 § 116"
+    citation = "Правопис 2019 § 108"
     if category == PronounCategory.EPENTHETIC_N_PREPOSITIONAL:
         ua = "Після прийменників у формах непрямих відмінків 3-ї особи обов'язково з'являється приставний [н-]: до нього, біля неї, про них, на ньому."
         en = "After prepositions in oblique cases of 3rd-person pronouns, epenthetic [n-] is compulsory: до нього, біля неї, про них, на ньому."
@@ -168,7 +168,7 @@ def resolve_epenthesis_rule(category: PronounCategory) -> tuple[str, str, str]:
 
 def resolve_orthography_rule(category: PronounCategory) -> tuple[str, str, str]:
     """Return citation and summaries for pronoun orthography rules."""
-    citation = "Правопис 2019 § 42"
+    citation = "Правопис 2019 § 39"
     if category == PronounCategory.ORTHOGRAPHY_INDEFINITE_TOGETHER:
         ua = "Неозначені займенники з частками-префіксами де-, аби-, ані- та суфіксом -сь пишуться разом: дехто, абихто, хтось, щось."
         en = "Indefinite pronouns with prefixes де-, аби-, ані- and suffix -сь are written as a single word: дехто, абихто, хтось, щось."
@@ -191,7 +191,7 @@ def resolve_orthography_rule(category: PronounCategory) -> tuple[str, str, str]:
 
 def resolve_reflexive_sebe_rule() -> tuple[str, str, str]:
     """Return citation and summaries for reflexive pronoun себе."""
-    citation = "Правопис 2019 § 117"
+    citation = "Правопис 2019 § 109"
     ua = "Зворотний займенник 'себе' не має називного відмінка; давальний відмінок — собі, орудний — собою, місцевий — на собі (при собі)."
     en = "Reflexive pronoun 'себе' lacks Nominative; Dative is собі, Instrumental is собою, Locative is на собі (при собі)."
     return citation, ua, en
@@ -199,7 +199,7 @@ def resolve_reflexive_sebe_rule() -> tuple[str, str, str]:
 
 def resolve_declension_ves_rule() -> tuple[str, str, str]:
     """Return citation and summaries for pronoun весь."""
-    citation = "Правопис 2019 § 119"
+    citation = "Правопис 2019 § 113"
     ua = "Займенник 'весь' в орудному відмінку множини має нормативне закінчення -іма: всіма (форми *всьома чи *всеми є ненормативними)."
     en = "The pronoun 'весь' in Instrumental plural takes ending -іма: всіма (forms *всьома and *всеми are ungrammatical)."
     return citation, ua, en
@@ -207,7 +207,7 @@ def resolve_declension_ves_rule() -> tuple[str, str, str]:
 
 def resolve_demonstrative_rule() -> tuple[str, str, str]:
     """Return citation and summaries for demonstrative pronouns цей and той."""
-    citation = "Правопис 2019 § 119"
+    citation = "Правопис 2019 § 111"
     ua = "Вказівні займенники 'цей' та 'той' у формах множини та непрямих відмінків однини відмінюються за твердим чи м'яким типом: цими, тими, цього, тому."
     en = "Demonstrative pronouns 'цей' and 'той' decline according to hard/soft pronominal patterns: цими, тими, цього, тому."
     return citation, ua, en
@@ -215,7 +215,7 @@ def resolve_demonstrative_rule() -> tuple[str, str, str]:
 
 def resolve_interrogative_rule() -> tuple[str, str, str]:
     """Return citation and summaries for interrogative pronouns хто, що, чий."""
-    citation = "Правопис 2019 §§ 120–121"
+    citation = "Правопис 2019 § 112"
     ua = "Питально-відносні займенники хто, що, чий змінюються за відмінками (кого, чого; кому, чому; ким, чим; чийого, чиєму, чиїм, чиїми)."
     en = "Interrogative-relative pronouns хто, що, чий decline according to pronominal paradigms (кого, чого; кому, чому; ким, чим; чийого, чиєму, чиїм, чиїми)."
     return citation, ua, en
@@ -223,7 +223,7 @@ def resolve_interrogative_rule() -> tuple[str, str, str]:
 
 def resolve_sam_vs_samyi_rule() -> tuple[str, str, str]:
     """Return citation and summaries for semantic distinction сам vs самий."""
-    citation = "Академічна стилістика та граматика"
+    citation = "Академічна стилістика та Правопис 2019 § 113"
     ua = "'Сам' означає дію суб'єкта без сторонньої допомоги або особисто; 'самий' вказує на тотожність (той самий) чи просторову/часову межу (з самого ранку)."
     en = "'Сам' expresses unassisted or personal action; 'самий' expresses identity (той самий) or spatial/temporal boundary (з самого ранку)."
     return citation, ua, en
@@ -231,7 +231,7 @@ def resolve_sam_vs_samyi_rule() -> tuple[str, str, str]:
 
 def resolve_possessive_yikhniy_rule() -> tuple[str, str, str]:
     """Return citation and summaries for possessive їхній vs personal їх."""
-    citation = "Правопис 2019 § 118"
+    citation = "Правопис 2019 § 110"
     ua = "Присвійний займенник 'їхній' узгоджується з іменником за зразком м'якої групи прикметників; після прийменників з особовим значенням вживається форма 'до них'."
     en = "Possessive pronoun 'їхній' declines like soft-stem adjectives; after prepositions in personal reference, 3rd-person 'до них' is used."
     return citation, ua, en
@@ -1107,10 +1107,10 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
                     explanation_en="Particle -небудь is written with a hyphen, never separately: 'хто-небудь'.",
                 ),
                 PronounDistractor(
-                    text="хто-будь",
+                    text="кого-небудь",
                     interference_type=PronounInterferenceType.CORRUPTED_DECLENSION_STEM,
-                    explanation_ua="Частка будь- виступає префіксом ('будь-хто'), а як постфікс вона не вживається.",
-                    explanation_en="Particle будь- is a prefix ('будь-хто'); it does not occur as a postfix.",
+                    explanation_ua="У підрядному реченні підмет до особового дієслова 'зателефонує' вимагає називного відмінка: 'хто-небудь'; форма родового/знахідного відмінка 'кого-небудь' порушує синтаксичний зв'язок.",
+                    explanation_en="The subject of the finite verb 'зателефонує' requires Nominative: 'хто-небудь'; Genitive/Accusative form 'кого-небудь' violates syntactic agreement.",
                 ),
             ),
             rule_citation=cit_orth,
@@ -1228,10 +1228,10 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
                     explanation_en="When a preposition intervenes between particle будь- and pronoun, all three words are written separately without hyphens: 'будь у кого'.",
                 ),
                 PronounDistractor(
-                    text="будь-кого",
+                    text="будь-ким",
                     interference_type=PronounInterferenceType.CORRUPTED_DECLENSION_STEM,
-                    explanation_ua="Прийменник 'у' пропущено, що руйнує нормативну синтаксичну конструкцію 'запитати у когось'.",
-                    explanation_en="Preposition 'у' is omitted, altering the required syntactic government.",
+                    explanation_ua="Дієслово 'запитати дорогу' не керує орудним відмінком особи ('будь-ким'); нормативною є прийменникова форма родового відмінка 'будь у кого'.",
+                    explanation_en="Verb 'запитати дорогу' does not govern Instrumental ('будь-ким'); prepositional Genitive 'будь у кого' is required.",
                 ),
                 PronounDistractor(
                     text="будьукого",
@@ -2427,10 +2427,10 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
                     explanation_en="For temporal boundary, 'з самого ранку' is used, not pronoun 'сам'.",
                 ),
                 PronounDistractor(
-                    text="самого ж",
+                    text="самої",
                     interference_type=PronounInterferenceType.CORRUPTED_DECLENSION_STEM,
-                    explanation_ua="Усталена ідіоматична часова межа — 'з самого ранку'; додавання частки ж тут стилістично зайве.",
-                    explanation_en="Idiomatic phrase of temporal boundary is 'з самого ранку'; adding ж is redundant.",
+                    explanation_ua="Іменник 'ранок' належить до чоловічого роду (у родовому відмінку 'ранку'), тому узгоджений займенник має форму чоловічого роду 'самого'; форма жіночого роду 'самої' порушує узгодження за родом.",
+                    explanation_en="Noun 'ранок' is masculine (Genitive 'ранку'); agreeing modifier must be masculine Genitive 'самого'; feminine 'самої' violates gender agreement.",
                 ),
                 PronounDistractor(
                     text="самим",
@@ -2452,16 +2452,16 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
             correct_answer="сама",
             distractors=(
                 PronounDistractor(
-                    text="сама ж",
+                    text="сам",
                     interference_type=PronounInterferenceType.CORRUPTED_DECLENSION_STEM,
-                    explanation_ua="Контекст вимагає нейтрального значення самостійної дії; додавання частки ж вносить невідповідний протиставний відтінок.",
-                    explanation_en="Context requires neutral unassisted action; adding ж introduces an unwanted contrastive nuance.",
+                    explanation_ua="Займенник узгоджується з підметом жіночого роду 'вона', тому вимагає форми жіночого роду 'сама'; чоловічий рід 'сам' порушує узгодження за родом.",
+                    explanation_en="Pronoun modifies feminine subject 'вона', requiring feminine 'сама'; masculine 'сам' violates gender agreement.",
                 ),
                 PronounDistractor(
-                    text="сама-одна",
+                    text="саме",
                     interference_type=PronounInterferenceType.CORRUPTED_DECLENSION_STEM,
-                    explanation_ua="Фольклорно-поетична форма 'сама-одна' має надмірну експресію самотності, не властиву нейтральному опису.",
-                    explanation_en="Poetic form 'сама-одна' conveys heavy loneliness not suited for neutral prose.",
+                    explanation_ua="Форма середнього роду 'саме' не узгоджується з особовим займенником жіночого роду 'вона'.",
+                    explanation_en="Neuter form 'саме' does not agree with feminine personal pronoun 'вона'.",
                 ),
                 PronounDistractor(
                     text="самій",

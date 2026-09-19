@@ -44,9 +44,9 @@ describe('pronoun-mechanics', () => {
     expect(PRONOUN_MECHANICS_INTERFERENCE_KEYS).toContain('confusion_sam_vs_samyi');
   });
 
-  it('resolves epenthetic n- rules accurately per § 116', () => {
+  it('resolves epenthetic n- rules accurately per § 108', () => {
     const prep = resolveEpenthesisRule('epenthetic_n_prepositional');
-    expect(prep.citation).toContain('§ 116');
+    expect(prep.citation).toContain('§ 108');
     expect(prep.ruleUa).toContain('до нього');
     expect(prep.ruleEn).toContain('oblique cases');
 
@@ -67,9 +67,9 @@ describe('pronoun-mechanics', () => {
     );
   });
 
-  it('resolves orthography rules accurately per § 42', () => {
+  it('resolves orthography rules accurately per § 39', () => {
     const tog = resolveOrthographyRule('orthography_indefinite_together');
-    expect(tog.citation).toContain('§ 42');
+    expect(tog.citation).toContain('§ 39');
     expect(tog.ruleUa).toContain('дехто, абихто');
     expect(tog.ruleEn).toContain('single word');
 
@@ -96,29 +96,30 @@ describe('pronoun-mechanics', () => {
 
   it('resolves paradigm and stylistic rules accurately', () => {
     const refl = resolveReflexiveSebeRule();
-    expect(refl.citation).toContain('§ 117');
+    expect(refl.citation).toContain('§ 109');
     expect(refl.ruleUa).toContain('собі');
     expect(refl.ruleEn).toContain('Reflexive');
 
     const ves = resolveDeclensionVesRule();
-    expect(ves.citation).toContain('§ 119');
+    expect(ves.citation).toContain('§ 113');
     expect(ves.ruleUa).toContain('всіма');
     expect(ves.ruleEn).toContain('-іма');
 
     const dem = resolveDemonstrativeRule();
-    expect(dem.citation).toContain('§ 119');
+    expect(dem.citation).toContain('§ 111');
     expect(dem.ruleUa).toContain('цими, тими');
 
     const int = resolveInterrogativeRule();
-    expect(int.citation).toContain('§§ 120–121');
+    expect(int.citation).toContain('§ 112');
     expect(int.ruleUa).toContain('хто, що, чий');
 
     const sam = resolveSamVsSamyiRule();
+    expect(sam.citation).toContain('§ 113');
     expect(sam.ruleUa).toContain('той самий');
     expect(sam.ruleEn).toContain('identity');
 
     const poss = resolvePossessiveYikhniyRule();
-    expect(poss.citation).toContain('§ 118');
+    expect(poss.citation).toContain('§ 110');
     expect(poss.ruleUa).toContain('до них');
   });
 
@@ -157,7 +158,7 @@ describe('pronoun-mechanics', () => {
           },
         },
       ],
-      pravopys_section: 'Правопис 2019 § 116',
+      pravopys_section: 'Правопис 2019 § 108',
       rule_summary: {
         ua: 'Обов’язковий приставний н- після прийменників.',
         en: 'Compulsory epenthetic n- after prepositions.',
@@ -262,7 +263,7 @@ describe('pronoun-mechanics', () => {
     }
   });
 
-  it('regression: ensures zero valid alternative collisions across Cards 24, 26, 29, 32', () => {
+  it('regression: ensures zero valid alternative collisions across Cards 24, 26, 27, 29, 31, 32, 68, 70', () => {
     const deckPath = resolve(__dirname, '../../../data/practice/pronoun_mechanics_deck.json');
     const raw = readFileSync(deckPath, 'utf-8');
     const deck = JSON.parse(raw);
@@ -280,16 +281,42 @@ describe('pronoun-mechanics', () => {
     expect(c26.options).toContain('будь-кого');
     expect(c26.correct_answer).toBe('будь-хто');
 
+    // Card 27
+    const c27 = cardMap.get('pron_orth_hyph_khto_nebud')!;
+    expect(c27.options).not.toContain('хто-будь');
+    expect(c27.options).toContain('кого-небудь');
+    expect(c27.correct_answer).toBe('хто-небудь');
+
     // Card 29
     const c29 = cardMap.get('pron_orth_hyph_bud_yake')!;
     expect(c29.options).not.toContain('абияке');
     expect(c29.options).toContain('будь-який');
     expect(c29.correct_answer).toBe('будь-яке');
 
+    // Card 31
+    const c31 = cardMap.get('pron_orth_split_bud_u_koho')!;
+    expect(c31.options).not.toContain('будь-кого');
+    expect(c31.options).toContain('будь-ким');
+    expect(c31.correct_answer).toBe('будь у кого');
+
     // Card 32
     const c32 = cardMap.get('pron_orth_split_bud_z_kym')!;
     expect(c32.options).not.toContain('з будь-ким');
     expect(c32.options).toContain('будь-ким');
     expect(c32.correct_answer).toBe('будь з ким');
+
+    // Card 68
+    const c68 = cardMap.get('pron_sem_z_samoho_ranku')!;
+    expect(c68.options).not.toContain('самого ж');
+    expect(c68.options).toContain('самої');
+    expect(c68.correct_answer).toBe('самого');
+
+    // Card 70
+    const c70 = cardMap.get('pron_sem_sama')!;
+    expect(c70.options).not.toContain('сама ж');
+    expect(c70.options).not.toContain('сама-одна');
+    expect(c70.options).toContain('сам');
+    expect(c70.options).toContain('саме');
+    expect(c70.correct_answer).toBe('сама');
   });
 });
