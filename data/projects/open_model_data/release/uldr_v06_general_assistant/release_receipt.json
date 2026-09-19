@@ -2,8 +2,8 @@
   "schema_version": "v1_general_assistant_release_receipt",
   "issue": 8139,
   "parent_epic": 6321,
-  "created_at": "2026-09-19T19:11:01Z",
-  "git_commit": "96de429dda5f4b59e67b34b20c006456ed7caef7",
+  "created_at": "2026-09-19T20:56:00Z",
+  "git_commit": "634cc5e2e0e0e1bfaee1679f88d1f55223efb6ad",
   "evaluation_benchmark": {
     "directory_path": "data/projects/open_model_data/release/uldr_v06_general_assistant/eval",
     "manifest_file": "manifest.json",

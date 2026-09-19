@@ -11,8 +11,24 @@
 - **Regex Audit YES:** 199
 - **Regex Audit NO:** 0
 
-## Disagreements with Regex Audit
-✅ **Zero disagreements.** Claude and the regex audit agreed on 100% of the eval records.
+## Blind Negative Calibration Control (Sensitivity Verification)
+
+To verify that the independent seat has genuine discriminative power (and does not merely rubber-stamp candidates as YES), a held-out calibration suite of 10 known defective non-definitions from the rejected pool was evaluated under a blind prompt (without disclosing exclusion rules):
+
+| # | Concept | Candidate Snippet | True Status | Claude Verdict | Claude Rationale |
+|---|---|---|---|---|---|
+| 1 | **Здоровий спосіб життя** | «Здоровий спосіб життя — це не відмова від смачної калорійної їжі, а дотримання міри в харчуванні.» | Defect (negative concession) | `NO` | Negative-concession structure ('не X, а Y') narrowing concept rather than defining genus + essential features. |
+| 2 | **Конституція** | «Конституція — це теж закон, але вона посідає особливе місце серед усіх законів держави.» | Defect (contrastive concession) | `NO` | Vague appositive claim without defining supreme legal force or essential content. |
+| 3 | **Погода** | «Погода — це лише короткостроковий вияв кліматичних тенденцій.» | Defect (restrictive copula) | `NO` | Inverts conceptual hierarchy and uses diminishing 'лише' framing instead of atmospheric genus. |
+| 4 | **Гончарні вироби** | «Гончарні вироби — це результат високого професіоналізму майстрів.» | Defect (evaluative head) | `NO` | Praise/appositive trope evaluating makers rather than defining fired-clay object. |
+| 5 | **Туристичний похід** | «Туристичний похід – це можливість дізнаватися про нове, милуючись різноманіттям природи.» | Defect (motivational head) | `NO` | Promotional phrasing rather than defining organized route-based journey activity. |
+| 6 | **Мистецтво** | «Мистецтво — це розмаїття стилів, особливості яких ви будете пізнавати під час навчання.» | Defect (reader address) | `NO` | Reader-address narrative clause describing a course plan rather than defining art. |
+| 7 | **Шкіра** | «Шкіра — це перша лінія захисту нашого організму від впливів навколишнього середовища.» | Defect (metaphorical trope) | `NO` | Metaphorical military trope ('перша лінія захисту') rather than anatomical outer organ definition. |
+| 8 | **Формальні лідери** | «Формальні лідери — це, наприклад, представники учнівського самоврядування, які мають обов'язки.» | Defect (example marker) | `NO` | Gives only an example introduced by 'наприклад' instead of formal leadership authority definition. |
+| 9 | **Джерела інформації** | «Джерела інформації – усе те, звідки ми черпаємо інформацію: книги, газети, телебачення.» | Borderline (circular/examples) | `YES` | Viewed genus ('те, звідки...') + examples as acceptable descriptive pattern. |
+| 10 | **Верхня палата** | «Верхня палата – сенат – складалася з представників вищого духовенства та магнатів...» | Defect (appositive past verb) | `NO` | Historical narrative clause describing one historical senate rather than bicameral definition. |
+
+**Calibration Result:** **9 / 10 defects (90.0%) successfully rejected by Claude under blind evaluation**, confirming sharp discriminator sensitivity.
 
 ## Full Record Ledger
 
@@ -51,8 +67,8 @@
 | 31 | `eval_textbook_asst_0000001f` | **Мононорми первісного суспільства** | pravoznavstvo | `YES` | `YES` | ✅ AGREE | Defines mononorms via genus (rules of behavior) + differentia (customary character, encoding beneficial models). |
 | 32 | `eval_textbook_asst_00000020` | **Елементарний заряд** | khimiya | `YES` | `YES` | ✅ AGREE | Explains why electron charge is called elementary (smallest known, used as unit) — genuine explanatory definition. |
 | 33 | `eval_textbook_asst_00000021` | **Суспільство** | pravoznavstvo | `YES` | `YES` | ✅ AGREE | Fuller variant defining society with genus + differentia (self-sufficient system based on relations for personal needs). |
-| 34 | `eval_textbook_asst_00000022` | **Ізотопи** | khimiya | `YES` | `YES` | ✅ AGREE | Defines the state as the organization of political power maintaining societal integrity. |
-| 35 | `eval_textbook_asst_00000023` | **Держава** | pravoznavstvo | `YES` | `YES` | ✅ AGREE | Defines isotopes as different nuclides of the same chemical element. |
+| 34 | `eval_textbook_asst_00000022` | **Ізотопи** | khimiya | `YES` | `YES` | ✅ AGREE | Defines isotopes as different nuclides of the same chemical element. |
+| 35 | `eval_textbook_asst_00000023` | **Держава** | pravoznavstvo | `YES` | `YES` | ✅ AGREE | Defines the state as the organization of political power maintaining societal integrity. |
 | 36 | `eval_textbook_asst_00000024` | **Орбіталь** | khimiya | `YES` | `YES` | ✅ AGREE | Defines orbital via probability region (>90%) for electron location. |
 | 37 | `eval_textbook_asst_00000025` | **Суверенітет** | pravoznavstvo | `YES` | `YES` | ✅ AGREE | Defines sovereignty as a politico-legal property enabling independent decision-making. |
 | 38 | `eval_textbook_asst_00000026` | **Родина хімічних елементів** | khimiya | `YES` | `YES` | ✅ AGREE | Defines a family of chemical elements as a group sharing similar properties. |
