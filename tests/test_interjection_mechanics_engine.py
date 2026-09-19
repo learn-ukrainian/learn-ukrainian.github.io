@@ -317,6 +317,14 @@ def test_vesum_verification_100_percent():
     assert len(res["missing_targets"]) == 0
     assert len(res["empty_cards"]) == 0
 
+    # Negative regression check: verify that a synthetic compound like 'кіт-кіт' fails verification
+    import dataclasses
+
+    corrupt_card = dataclasses.replace(cards[0], target_token="кіт-кіт")
+    res_corrupt = verify_deck_with_vesum([corrupt_card], db_path)
+    assert res_corrupt["vesum_verified"] is False
+    assert any("кіт-кіт" in m for m in res_corrupt["missing_targets"])
+
 
 def test_interjection_deck_json_export_and_file_parity(tmp_path: Path):
     """Verify JSON export schema and parity with committed artifact."""
@@ -375,6 +383,18 @@ def test_is_valid_vesum_token_rejections_and_compounds():
         is_valid_vesum_token(cursor, "столу-столу") is False
     )  # dative/locative noun cannot form onomatopoeic reduplication
     assert (
+        is_valid_vesum_token(cursor, "кіт-кіт") is False
+    )  # synthetic negative control: nominative noun cannot form sound reduplication (Astra R4)
+    assert (
+        is_valid_vesum_token(cursor, "пес-пес") is False
+    )  # nominative noun cannot form sound reduplication (Astra R4)
+    assert (
+        is_valid_vesum_token(cursor, "стіл-стіл") is False
+    )  # nominative noun cannot form sound reduplication (Astra R4)
+    assert (
+        is_valid_vesum_token(cursor, "крап-крап") is False
+    )  # 'крап' is noun only in VESUM, cannot form sound reduplication (Astra R4)
+    assert (
         is_valid_vesum_token(cursor, "гарний-бо") is False
     )  # adjective cannot take enclitic particle as an imperative/interjection compound
 
@@ -393,7 +413,7 @@ def test_is_valid_vesum_token_rejections_and_compounds():
 
     # Acceptance of valid reduplications (§ 35, п. 5, 4))
     assert is_valid_vesum_token(cursor, "гав-гав") is True
-    assert is_valid_vesum_token(cursor, "крап-крап") is True
+    assert is_valid_vesum_token(cursor, "кап-кап") is True
     assert is_valid_vesum_token(cursor, "хлюп-хлюп") is True
 
     # Acceptance of attested fixed idioms

@@ -40,7 +40,6 @@ REDUPLICATION_BASE_TAG_SUBSTRINGS: tuple[str, ...] = (
     "onomat",
     "predic",
     "part",
-    "v_naz",
 )
 ENCLITIC_STEM_TAG_SUBSTRINGS: tuple[str, ...] = (
     ":impr",
@@ -1252,17 +1251,17 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
             card_id="interjection_card_33",
             category=InterjectionCategory.ONOMATOPOEIA_NATURE_MECHANICS,
             prompt="«_______» — тихо падали на весняне підвіконня перші прозорі краплі травневого дощу.",
-            target_token="крап-крап",
-            correct_answer="Крап-крап",
+            target_token="кап-кап",
+            correct_answer="Кап-кап",
             distractors=(
                 InterjectionDistractor(
-                    text="Крапкрап",
+                    text="Капкап",
                     interference_key=InterjectionInterferenceKey.HYPHEN_OMISSION,
-                    explanation_ua="Повторювані звуконаслідувальні слова «крап-крап» пишуться через дефіс per § 35, п. 5, 4).",
-                    explanation_en="Repeated onomatopoeic elements 'крап-крап' are hyphenated per § 35, p. 5, 4).",
+                    explanation_ua="Повторювані звуконаслідувальні слова «кап-кап» пишуться через дефіс per § 35, п. 5, 4).",
+                    explanation_en="Repeated onomatopoeic elements 'кап-кап' are hyphenated per § 35, p. 5, 4).",
                 ),
                 InterjectionDistractor(
-                    text="Крап крап",
+                    text="Кап кап",
                     interference_key=InterjectionInterferenceKey.HYPHEN_SEPARATION,
                     explanation_ua="Написання частин повтору окремо є помилкою; повтори звуків з'єднуються дефісом.",
                     explanation_en="Writing parts of repetition separately is an error; sound repetitions are hyphenated.",
@@ -1270,8 +1269,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Буль-буль",
                     interference_key=InterjectionInterferenceKey.INCORRECT_SOUND_SOURCE,
-                    explanation_ua="«Буль-буль» імітує булькання води або рідини, тоді як падіння перших дощових крапель на підвіконня передає «крап-крап».",
-                    explanation_en="'Буль-буль' imitates bubbling liquid, whereas raindrops falling on a windowsill are described by 'крап-крап'.",
+                    explanation_ua="«Буль-буль» імітує булькання води або рідини, тоді як падіння перших дощових крапель на підвіконня передає «кап-кап».",
+                    explanation_en="'Буль-буль' imitates bubbling liquid, whereas raindrops falling on a windowsill are described by 'кап-кап'.",
                 ),
             ),
             rule_citation=cit7,

@@ -1429,25 +1429,25 @@
       "id": "interjection_card_33",
       "category": "interjection_onomatopoeia_nature_mechanics",
       "prompt": "«_______» — тихо падали на весняне підвіконня перші прозорі краплі травневого дощу.",
-      "target_token": "крап-крап",
-      "correct_answer": "Крап-крап",
+      "target_token": "кап-кап",
+      "correct_answer": "Кап-кап",
       "options": [
-        "Крап-крап",
-        "Крап крап",
-        "Крапкрап",
+        "Кап-кап",
+        "Кап кап",
+        "Капкап",
         "Буль-буль"
       ],
       "distractors": [
         {
-          "text": "Крапкрап",
+          "text": "Капкап",
           "interference_key": "HYPHEN_OMISSION",
           "explanation": {
-            "ua": "Повторювані звуконаслідувальні слова «крап-крап» пишуться через дефіс per § 35, п. 5, 4).",
-            "en": "Repeated onomatopoeic elements 'крап-крап' are hyphenated per § 35, p. 5, 4)."
+            "ua": "Повторювані звуконаслідувальні слова «кап-кап» пишуться через дефіс per § 35, п. 5, 4).",
+            "en": "Repeated onomatopoeic elements 'кап-кап' are hyphenated per § 35, p. 5, 4)."
           }
         },
         {
-          "text": "Крап крап",
+          "text": "Кап кап",
           "interference_key": "HYPHEN_SEPARATION",
           "explanation": {
             "ua": "Написання частин повтору окремо є помилкою; повтори звуків з'єднуються дефісом.",
@@ -1458,8 +1458,8 @@
           "text": "Буль-буль",
           "interference_key": "INCORRECT_SOUND_SOURCE",
           "explanation": {
-            "ua": "«Буль-буль» імітує булькання води або рідини, тоді як падіння перших дощових крапель на підвіконня передає «крап-крап».",
-            "en": "'Буль-буль' imitates bubbling liquid, whereas raindrops falling on a windowsill are described by 'крап-крап'."
+            "ua": "«Буль-буль» імітує булькання води або рідини, тоді як падіння перших дощових крапель на підвіконня передає «кап-кап».",
+            "en": "'Буль-буль' imitates bubbling liquid, whereas raindrops falling on a windowsill are described by 'кап-кап'."
           }
         }
       ],
