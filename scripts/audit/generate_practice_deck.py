@@ -6353,16 +6353,11 @@ def apply_size_budgets(
 
         def surface_fits(selected: list[Any]) -> bool:
             apply_selection(selected)
-            for kind in oversized_surface:
-                if kind in level_shards:
-                    b = set_budget(level_shards[kind], kind)
-                    if not (
-                        b["ok"]
-                        and int(b["gzipBytes"]) <= int(b["gzipLimitBytes"]) - 128
-                        and int(b["rawBytes"]) <= int(b["rawLimitBytes"]) - 512
-                    ):
-                        return False
-            return True
+            return all(
+                set_budget(level_shards[kind], kind)["ok"]
+                for kind in oversized_surface
+                if kind in level_shards
+            )
 
         low = 0
         high = len(candidates)
