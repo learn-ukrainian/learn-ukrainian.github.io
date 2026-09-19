@@ -10,6 +10,7 @@ from pathlib import Path
 import yaml
 
 from scripts.build.alphabet_modules import banned_phrases_in, mentions_line_breaks
+from scripts.build.lesson_gates import md_to_text
 from scripts.generate_mdx.core import generate_mdx, parse_frontmatter
 from scripts.yaml_activities import ActivityParser
 
@@ -124,9 +125,12 @@ def _clean_a1_landing_prose(body: str) -> str | None:
     body = re.sub(r"\n{3,}", "\n\n", body).strip()
     if len(body) < 40:
         return None
-    plain = re.sub(r"\s+", " ", unicodedata.normalize("NFD", body).replace("\u0301", ""))
-    if banned_phrases_in(plain) or mentions_line_breaks(plain):
-        return None
+    # Check what the learner reads: inline `*`, `_` and backticks are not part of the
+    # words, whether they wrap a whole word (**mastery** of) or sit inside one (mas**tery**).
+    marked = unicodedata.normalize("NFD", body)
+    for plain in (md_to_text(marked), md_to_text(re.sub(r"[*_`]", "", marked))):
+        if banned_phrases_in(plain) or mentions_line_breaks(plain):
+            return None
     return body
 
 
