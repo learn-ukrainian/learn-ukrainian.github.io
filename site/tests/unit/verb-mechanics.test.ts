@@ -242,5 +242,17 @@ describe('verb-mechanics', () => {
     expect(fbPrynesshyUa.feedback).not.toContain('теперішнього часу');
     expect(fbPrynesshyEn.feedback).toContain('prynisshy');
     expect(fbPrynesshyEn.feedback).not.toContain('present-tense');
+
+    const sydiachyCard = payload.cards.find(
+      (c: any) => c.card_id === 'verb_gerund_sydiachy',
+    );
+    expect(sydiachyCard).toBeDefined();
+    const fbSydiachykhUa = verbMechanicsFeedbackFor(sydiachyCard, 'сидячих', 'ua');
+    const fbSydiachykhEn = verbMechanicsFeedbackFor(sydiachyCard, 'сидячих', 'en');
+    expect(fbSydiachykhUa.isCorrect).toBe(false);
+    expect(fbSydiachykhUa.feedback).toContain('форма прикметника/дієприкметника');
+    expect(fbSydiachykhEn.feedback).toContain('attributive modifier');
+    expect(fbSydiachykhEn.feedback).not.toContain('Active present participle calqued');
   });
+
 });

@@ -273,3 +273,9 @@ def test_gerund_distractors_feedback():
     assert "теперішнього часу" not in prynesshy.explanation["ua"]
     assert "present-tense" not in prynesshy.explanation["en"].lower()
     assert "prynisshy" in prynesshy.explanation["en"]
+
+    sydiachy_card = cards["verb_gerund_sydiachy"]
+    sydiachykh = next(d for d in sydiachy_card.distractors if d.text == "сидячих")
+    assert "форма прикметника/дієприкметника" in sydiachykh.explanation["ua"]
+    assert "adjectival/participle form" in sydiachykh.explanation["en"].lower()
+    assert "active present participle" not in sydiachykh.explanation["en"].lower()

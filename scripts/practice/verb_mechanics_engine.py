@@ -2616,7 +2616,10 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             {
                 "text": "сидячих",
                 "interference_type": VerbInterferenceType.RUSSIAN_CALQUE_ACTIVE_PARTICIPLE,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.RUSSIAN_CALQUE_ACTIVE_PARTICIPLE],
+                "explanation": {
+                    "ua": "«Сидячих» — це форма прикметника/дієприкметника у ролі означення (наприклад, «сидячих місць»), а не дієприслівник. Для позначення одночасної дії підмета («слухали, що роблячи?») потрібен дієприслівник «сидячи» (Правопис 2019 § 120).",
+                    "en": "'Sydiachykh' is an adjectival/participle form acting as an attributive modifier (e.g., 'sydiachykh mists'), not a gerund. Denoting a simultaneous subordinate action of the subject requires the gerund 'sydiachy' (Pravopys 2019 § 120).",
+                },
             },
         ],
         "pravopys_section": "Правопис 2019 § 120",
